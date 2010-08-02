@@ -29,7 +29,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-require_once('classes/_includes.php');
+require_once('../classes/_includes.php');
 
 header('ETag: etagforie7download'); //IE7 requires this header
 header('Content-type: application/octet_stream');

@@ -1,10 +1,14 @@
 
-Update 22 June 2010
+Update 2 August 2010
 
 Version Beta 1.15
 
 	Moved all web files in SVN to /trunk/web-app
 	Moved all flex files in SVN to /trunk/flex-app
+	Move FileSender2.swf file to www/swf/ to allow correct command line compiling 
+	Update relative include paths for updated structure
+	242 Move config to own folder /config
+	244 restructure svn to support branches and tags
 	
 
 Version Beta 1.14
