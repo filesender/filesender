@@ -1,0 +1,212 @@
+
+Update 22 June 2010
+
+Version Beta 1.15
+
+	Moved all web files in SVN to /trunk/web-app
+	Moved all flex files in SVN to /trunk/flex-app
+	
+
+Version Beta 1.14
+	Bug Fixes
+	129,130,132 valid email adresses are broken 
+	231 File size shows error when creating vouchers
+	230 Incorrect email message sent when using a voucher
+	228 Vouchers are deleted straight after being created
+	229 filename error when creating voucher
+	180	sender email address gets truncated beyond 3rd domain level
+	186	filenames with double singlequotes fail	
+	190	To: and from: reversed when uploading using a voucher
+	191	Help
+	192	About
+	194	Files and vouchers do not expire after expiry date
+	195	expiry date selection is open-ended when issuing voucher and adding a new recipient
+	196	Email everyone when voucher deleted	ricoshae
+	198	Voucher Deleted notification
+	
+	
+	Audit Fixes
+	2.5,2.6,2.7,2.2,2.3
+
+Version Beta 1.13
+	Bug Fixes
+	#107	incorrect warning ("browse for a file") on invalid recipient email input
+	#166	Screen Size
+	#170	language quirk in MyFiles "add new recipient"
+	#171	no-caching tags in all FileSender pages
+	#172	Fix Version Number State overide
+	#173	SAML Session expiration errors - instead of requesting logon
+	#174	size calculation wrong for larger files
+	#175	saml_uid_attribute parsing code not 100%
+	#177	unexpected voucher behaviour when voucher user is already logged in
+	#178	security bug: back button on download menu
+	#179	security: log-off behaviour across multiple browser tabs incorrect
+
+Version Beta 1.12
+	
+	Bug Fixes
+		*  #168: Admin email added to config
+		*  #167: Default config date format fixed 
+	
+
+Version Beta 1.11
+	
+	New Features
+		* #160: email address unsuitable as GUID
+		* #152: include voucher issuer on recipient list of file
+		* #164: Username Display show/hide UI
+	Bug Fixes
+		*  #161: Notification email not being sent back
+
+
+Version Beta 1.10 29th March 2010
+
+	New Features
+		* IP Name Resolution in Log Files 
+		* Log browser and OS
+		* Document Attribute required from IDP
+		* GLobal configurable date format and Postgress date format
+		* Configurable Attribute name
+		* 159	Fix size of Flex Application
+		* 157	available space depleted warning
+		* 155	remove deprecated config file directives from default config file
+		* 153	more control for voucher issuer
+		* 151	re-send a file without re-uploading 
+		* 145	Configurable maximum recipients per email 
+		* 141	Configurable AuP checkbox in Flash UI
+		* 140	Help button in Flash UI
+		* 137	splash screen
+		* 106	Add indicator 'uploaded using voucher' in admin overview screens
+		* 118	Default email subject configurable
+	
+	Bug Fixes
+		* Update Database Creation Script
+		* MIME type to HTML
+		* Fix IDP multiple entries in mail and cn
+		* Linux @key and other special charachters added
+		* 149	Size function to display alternate size MB GB KB
+		* 150	Return Path for non existant email
+		* 148	Replace Send File With Send
+		* 147	New File - Rename Button
+		* 138	Email address with 1 character refused with "Please select file to upload" error
+		* 124	Mime Type to HTML and test for spam count.
+		* 121	undesired message truncation in 'download' window
+		* 
+		
+
+Version Beta 1.9
+
+	New Features
+		* Updated Config
+		* Added about link and page
+		* IP name resolving in log File
+		* Storage space monitor
+		* Alternate logout URL
+		
+	Bug fixes
+		* Logoff Config updated
+		* Error message if email not sent
+		* change default simplesamlloction in config.php #113
+		* 3 directories not created by default in .tar.gz of beta-1.8 #114
+		* 2 files missing #112
+		* 3 times history.js #111
+		* Continue Loading in status bar fix for Firefox
+		* Download notification for separate users
+		* Email multiple send has all To emails listed
+		* Feide SML IDP array fields fixed
+
+Version Beta 1.8
+
+	New Features
+		* Updated Config
+		* Voucher and SAML Auth update to SAML 1.5.1 * send email notification on download
+		* Hide top menu while uploading
+		* Seperate SAML and Filesender to different URL
+
+	Bug fixes
+		* Security update
+		* Update Logging to show more errors
+		* Added Configurable Timezone
+		* Added Markus DB checks
+		* Fix Upload Gears Speed
+		* Move functions to non-web folder
+
+		NOTE: Please check installation instructions as this version requires a different folder structure 
+
+Version Beta 1.7
+
+	New Features
+		* send email notification on download
+		* hide browse while uploading
+
+	Bug fixes
+		* Fix EN_AU logging error
+		* depriciated php code update for php 5.3.x
+
+Version Beta 1.6
+
+	New Features
+		* send email notification on download
+		* hide browse while uploading
+		
+
+	Bug fixes
+		* Fix EN_AU logging error
+		* depriciated php code update for php 5.3.x
+
+
+Version Beta 1.6
+
+	New Features
+		* Complete rewrite of config
+		* functions re-written
+		* NEW config in services/config.php
+		* Updated error logging
+		* added base language file EN_AU ready for additional languages
+		* security update so all php except upload are function calls
+		* Action Message Format update for Flex to PHP
+		* additional steps to upload added
+		
+
+	Bug fixes
+		* Fix for Norwegian keyboard special charachters
+		
+
+Version Beta 1.4
+	
+	New features:
+		* Remove logo and name to allow cutom branding
+		* Hint to click on Gears logo
+		* Hinting, in the upload interface, that the recipient email line can take multiple email addresses
+		* Custom log for php and flex errors in /log folder
+		* correctly display upload errors to user
+			
+	Bug Fixes:
+		* Allow line breaks in description 
+		* Catch PHP errors
+		* Typo in file uploaded email
+		* Replace undefined in senders name or email if no senders name available
+		* Code update seperating gears and standard update
+		* rename progress bar to loading.
+		* catch gears upload errors to log  
+		* rename default to index.php
+		
+
+Version Beta 1.3 [18 October 2009]
+
+	New features:
+		* Updated linux install documentation
+		* config option for number of allowed days on server
+
+	Bug Fixes:	
+		* update logoff to default simple saml
+		* add expiry dat to emails
+		* stop negative expiry dates
+		* stop uploading files with invalid charachters
+		* postgres inter to allow bigint
+		* filesize precision to MB 2 decimal places
+		* add email addresses to database log
+		* remove hardcoded links
+		* update version numbers
+		
+		

@@ -1,0 +1,566 @@
+<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="100%" height="100%" title="{lang.Administration}">
+
+<mx:Script>
+	<![CDATA[
+
+ /*
+ *  Filsender www.filesender.org
+ *      
+ *  Copyright (c) 2009-2010, Aarnet, HEAnet, UNINETT
+ * 	All rights reserved.
+ *
+ * 	Redistribution and use in source and binary forms, with or without
+ *	modification, are permitted provided that the following conditions are met:
+ *	* 	Redistributions of source code must retain the above copyright
+ *   		notice, this list of conditions and the following disclaimer.
+ *   	* 	Redistributions in binary form must reproduce the above copyright
+ *   		notice, this list of conditions and the following disclaimer in the
+ *   		documentation and/or other materials provided with the distribution.
+ *   	* 	Neither the name of Aarnet, HEAnet and UNINETT nor the
+ *   		names of its contributors may be used to endorse or promote products
+ *   		derived from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY Aarnet, HEAnet and UNINETT ''AS IS'' AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL Aarnet, HEAnet or UNINETT BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+ 
+	import com.adobe.serialization.json.JSON;
+	
+	import flash.system.Capabilities;
+	
+	import mx.collections.ArrayCollection;
+	import mx.controls.Alert;
+	import mx.controls.dataGridClasses.DataGridColumn;
+	import mx.core.FlexGlobals;
+	import mx.events.CloseEvent;
+	import mx.managers.CursorManager;
+	import mx.rpc.events.FaultEvent;
+	import mx.rpc.events.ResultEvent;
+	import mx.utils.ArrayUtil;
+	import mx.utils.ObjectUtil;
+	
+	import org.ricoshae.core.*;
+
+	public var urlExcelExport:String = "createxls.php";
+
+	[Bindable] public var config:Object;
+	[Bindable] public var check:Object;
+ 	public var allUsers:ArrayCollection;
+	
+	[Bindable] public var URLvidLocal:String;
+	[Bindable] public var driveSpace:Object;
+	[Bindable] public var driveSpaceArray:Array;
+	[Bindable] public var allFiles:ArrayCollection;
+	[Bindable] public var allLogs:ArrayCollection;
+	[Bindable] public var allVouchers:ArrayCollection;
+	[Bindable] public var allUploads:ArrayCollection;
+	[Bindable] public var allDownloads:ArrayCollection;
+	[Bindable] public var allErrors:ArrayCollection;
+	[Bindable] public var allActive:ArrayCollection;
+	[Bindable] public var lang:Object;
+	
+public function init():void
+	{ 
+		CursorManager.removeBusyCursor();
+		config = FlexGlobals.topLevelApplication.config;
+		lang = FlexGlobals.topLevelApplication.lang;
+		URLvidLocal = FlexGlobals.topLevelApplication.URLvid;
+			var objSend:Object = new Object();
+	    	objSend.call = "getAdminFiles";
+	   		admin_main.send(objSend);
+	   		
+	   		objSend.call = "driveSpace";
+	   		space_main.send(objSend);    
+	}
+ 
+public function return_error(event:FaultEvent):void
+	{ 
+		 Alert.show("Fault: " + event.fault);	 	 
+	}
+        
+public function returnFiles(event:ResultEvent):void    
+	{ 
+		// Alert.show(event.result.toString());
+	
+		var rawData:String = String(event.result);
+    	CursorManager.removeBusyCursor();
+   	
+		try {
+			allFiles = new ArrayCollection(ArrayUtil.toArray(JSON.decode(rawData)));
+		}
+		catch (erObject:Error) {
+			FlexGlobals.topLevelApplication.currentState = "Message";
+			FlexGlobals.topLevelApplication.MessageLabel.htmlText = "There has been an error loading config data. Please check Log File<BR><BR>";
+			if(FlexGlobals.topLevelApplication.parameters.flexerrors ) {
+				FlexGlobals.topLevelApplication.MessageLabel.htmlText += event.result.toString();
+			}
+			return;	
+		}
+		
+   		var buffer2:ByteArray = new ByteArray();  
+		buffer2.writeObject(allFiles);  
+		buffer2.position = 0;  
+		allVouchers = buffer2.readObject(); 
+       	allVouchers.filterFunction = filterVoucher;
+		allVouchers.refresh();
+		
+		buffer2.position = 0;  
+		allActive = buffer2.readObject(); 
+       	allActive.filterFunction = filterActive;
+		allActive.refresh(); 
+		ff_fix.ff_fixStatus();// clear firefox status bar
+		
+		var objSend:Object = new Object();
+		objSend.call = "getAdminLogs";
+		logs_main.send(objSend);  
+		 
+	}
+        
+public function returnLogs(event:ResultEvent):void 
+    {
+    	//Alert.show(event.result.toString());
+
+  		var rawData:String = String(event.result);
+       	CursorManager.removeBusyCursor();
+
+		try {
+			allLogs = new ArrayCollection(ArrayUtil.toArray(JSON.decode(rawData)));
+		}
+		catch (erObject:Error) {
+			FlexGlobals.topLevelApplication.currentState = "Message";
+			FlexGlobals.topLevelApplication.MessageLabel.htmlText = "There has been an error loading config data. Please check Log File<BR><BR>";
+			if(FlexGlobals.topLevelApplication.parameters.flexerrors ) {
+				FlexGlobals.topLevelApplication.MessageLabel.htmlText += event.result.toString();
+			}
+			return;	
+		}
+		
+       	var buffer:ByteArray = new ByteArray();  
+		buffer.writeObject(allLogs);  
+		 
+		buffer.position = 0;    
+		allUploads = buffer.readObject();   
+       	allUploads.filterFunction = filterUpload;
+		allUploads.refresh();
+			 
+		buffer.position = 0;  
+		allDownloads= buffer.readObject(); 
+       	allDownloads.filterFunction = filterDownload;
+		allDownloads.refresh();
+			
+		buffer.position = 0;  
+		allErrors = buffer.readObject(); 
+       	allErrors.filterFunction = filterError;
+		allErrors.refresh();
+		ff_fix.ff_fixStatus();
+
+	}
+	
+	public function returnDriveSpace(event:ResultEvent):void 
+    {
+    	var rawData:String = String(event.result);
+
+       	CursorManager.removeBusyCursor();
+       	
+		driveSpace = JSON.decode(rawData) 
+		
+		driveSpaceArray = [     
+        {drivename:"Files",    
+        total:convertBytes(driveSpace["site_filestore_total"]),
+        used:convertBytes(driveSpace["site_filestore_total"]-driveSpace["site_filestore_free"]),
+        avail:convertBytes(driveSpace["site_filestore_free"]),
+        usepercentage:numform.format(driveSpace["site_filestore_free"]/driveSpace["site_filestore_total"] * 100)+"%"},
+         {drivename:"Temp Files", 
+        total:convertBytes(driveSpace["site_temp_filestore_total"]),
+        used:convertBytes(driveSpace["site_temp_filestore_total"]-driveSpace["site_temp_filestore_free"]),
+        avail:convertBytes(driveSpace["site_temp_filestore_free"]),
+        usepercentage:numform.format(driveSpace["site_temp_filestore_free"]/driveSpace["site_temp_filestore_total"] * 100)+"%"}
+        ];
+     
+	if(driveSpace["site_temp_filestore_free"]  < 1073741824)
+	Alert.show("Drive space is less than 1GB");
+
+    }
+        
+public function check_functions_result(event:ResultEvent):void 
+    { 
+    	
+    	check = event.result;
+    	
+    }
+   
+private function filterUpload(item:Object):Boolean
+    {
+		var isMatch:Boolean = false;
+		 try 
+        {
+        	isMatch = item.logtype.toString() == "Uploaded";
+        }
+        catch(erObject:Error)
+        {	
+        	
+        }
+         return isMatch;
+    }
+    
+private function filterDownload(item:Object):Boolean
+	{
+		var isMatch:Boolean = false;
+		try 
+        {
+        	isMatch = item.logtype.toString() == "Download";
+        }
+        catch(erObject:Error)
+        {	
+        	
+        }
+         return isMatch;
+    }
+    
+    
+private function filterError(item:Object):Boolean
+    {
+		var isMatch:Boolean = false;
+		 try 
+        {
+        	isMatch = item.logtype.toString() == "Error";
+        }
+        catch(erObject:Error)
+        {	
+        	
+        }
+         return isMatch;
+    }
+    
+private function filterVoucher(item:Object):Boolean
+    {
+		var isMatch:Boolean = false;
+		 try 
+        {
+        	isMatch = item.filestatus.toString() == "Voucher";
+        }
+        catch(erObject:Error)
+        {	
+        	
+        }
+         return isMatch;
+    }
+    
+private function filterActive(item:Object):Boolean
+	{
+		var isMatch:Boolean = false;
+		 try 
+        {
+        	isMatch = item.filestatus.toString() == "Available";
+        }
+        catch(erObject:Error)
+        {	
+        	
+        }
+         return isMatch;
+    }
+    
+private function dateFunc( item:Object, column:DataGridColumn):String
+	{
+	return df.format( item[column.dataField]); 
+	}
+   // execl export function
+   
+   public function convertBytes(bytes:Number):String
+     {
+     	var result:String = "";
+     	if(bytes > 1073741824) {
+     	result = numform.format(bytes/1024/1024/1024) + "GB";
+     	} else if (bytes > 1048576){
+     	result = numform.format(bytes/1024/1024) + "MB";     		
+     	}else if (bytes >= 1024){
+         	result = numform.format(bytes/1024) + "KB"; 		
+     	}else if (bytes < 1024) {
+     	     	result = numform.format(bytes) + "B";	
+     	}
+     return	result;	
+     		
+  
+     }
+     
+   public function convertDGToHTMLTable(dg:DataGrid):String
+		{
+		
+		   /** 
+            
+        //The location of the excel export file
+       
+         
+        /**
+         * Convert the datagrid to a html table
+         * Styling etc. can be done externally
+         * 
+         * @param: dg Datagrid Contains the datagrid that needs to be converted
+         * @returns: String
+         */
+       	//Set default values
+        	var font:String = dg.getStyle('fontFamily');
+        	var size:String = dg.getStyle('fontSize');
+        	var str:String = '';
+        	var colors:String = '';
+        	var style:String = 'style="font-family:'+font+';font-size:'+size+'pt;"';				
+        	var hcolor:Array;
+        	
+        	//Retrieve the headercolor
+        	if(dg.getStyle("headerColor") != undefined) {
+        		hcolor = [dg.getStyle("headerColor")];
+        	} else {
+        		hcolor = dg.getStyle("headerColors");
+        	}				
+        		 
+        	//Set the htmltabel based upon knowlegde from the datagrid
+        	str+= '<table width="'+dg.width+'"><thead><tr width="'+dg.width+'" style="background-color:#' +Number((hcolor[0])).toString(16)+'">';
+        	
+        	//Set the tableheader data (retrieves information from the datagrid header				
+        	for(var i:int = 0;i<dg.columns.length;i++) {
+        		colors = dg.getStyle("themeColor");
+        			
+        		if(dg.columns[i].headerText != undefined && dg.columns[i].headerText != null ) {
+        			str+="<th "+style+">"+dg.columns[i].headerText+"</th>";
+        		} else {
+        			str+= "<th "+style+">"+dg.columns[i].dataField+"</th>";
+        		}
+        	}
+        	
+        	str += "</tr></thead><tbody>";
+        	colors = dg.getStyle("alternatingRowColors");
+        	
+        	//Loop through the records in the dataprovider and 
+        	//insert the column information into the table
+        	for(var j:int =0;j<dg.dataProvider.length;j++) {					
+        		str+="<tr width=\""+Math.ceil(dg.width)+"\">";
+        			
+        		for(var k:int=0; k < dg.columns.length; k++) {
+        			
+        			//Do we still have a valid item?						
+        			if(dg.dataProvider.getItemAt(j) != undefined && dg.dataProvider.getItemAt(j) != null) {
+        				
+        				//Check to see if the user specified a labelfunction which we must
+        				//use instead of the dataField
+        				
+        				if(dg.columns[k].labelFunction != undefined) {
+        				try {
+        					str += "<td width=\""+Math.ceil(dg.columns[k].width)+"\" "+style+">"+dg.columns[k].labelFunction(dg.dataProvider.getItemAt(j),dg.columns[k].dataField)+"</td>";
+        				}
+        				catch(err:Error)
+        				{ 
+        					str += "<td width=\""+Math.ceil(dg.columns[k].width)+"\" "+style+">"+ dg.dataProvider.getItemAt(j)[dg.columns[k].dataField]+"</td>";
+        			
+        				}
+        				} else {
+        					try {
+        					//Our dataprovider contains the real data
+        					//We need the column information (dataField)
+        					//to specify which key to use.
+        					str += "<td width=\""+Math.ceil(dg.columns[k].width)+"\" "+style+">"+dg.dataProvider.getItemAt(j)[dg.columns[k].dataField]+"</td>";
+        					}
+        				catch(err:Error)
+        				{
+        					str += "<td width=\""+Math.ceil(dg.columns[k].width)+"\" "+style+">"+ dg.dataProvider.getItemAt(j)[dg.columns[k].dataField]+"</td>";
+        			
+        				}	
+        				}
+        			
+        				
+        			}
+        		}
+        		str += "</tr>";
+        	}
+        	str+="</tbody></table>";
+       
+        	return str;
+        }
+        
+        public function loadDGInExcel(dg:DataGrid):void {
+
+
+			//Pass the htmltable in a variable so that it can be delivered
+			//to the backend script
+			var variables:URLVariables = new URLVariables(); 
+			variables.htmltable	= convertDGToHTMLTable(dg);
+			
+			//Setup a new request and make sure that we are 
+			//sending the data through a post
+			var u:URLRequest = new URLRequest(urlExcelExport);
+			u.data = variables; //Pass the variables
+			u.method = URLRequestMethod.POST; //Don't forget that we need to send as POST 
+			
+			//Navigate to the script
+			//We can use _self here, since the script will through a filedownload header
+			//which results in offering a download to the user (and still remaining in you Flex app.)
+            navigateToURL(u,"_blank");
+        }    
+        
+         private function filesizeFunc(item:Object, column:DataGridColumn):String {
+                
+              if (!item.hasOwnProperty("logfilesize")) {
+				return ""; 
+              }
+ 				
+ 				if(item.logfilesize == 0){
+ 					return "";
+ 				}
+				return readablizeBytes(item.logfilesize);
+
+               
+            }
+
+        
+        public function readablizeBytes(bytes:uint):String {
+    var s:Array = ['bytes', 'kb', 'MB', 'GB', 'TB', 'PB'];
+    var e:Number = Math.floor(Math.log(bytes)/Math.log(1024));
+    return (bytes/Math.pow(1024, Math.floor(e))).toFixed(2)+" "+s[e];
+}
+ 
+	
+	]]>        
+</mx:Script>   
+<mx:HTTPService id="admin_main" url="../fs_main.php{URLvidLocal}" useProxy="false" method="POST" showBusyCursor="true"  resultFormat="text" result="returnFiles(event)" fault="return_error(event)"/>     
+<mx:HTTPService id="logs_main" url="../fs_main.php{URLvidLocal}" useProxy="false" method="POST" showBusyCursor="true"  resultFormat="text" result="returnLogs(event)" fault="return_error(event)"/> 
+<mx:HTTPService id="space_main" url="../fs_main.php{URLvidLocal}" useProxy="false" method="POST" showBusyCursor="true"  resultFormat="text" result="returnDriveSpace(event)" fault="return_error(event)"/>     
+<mx:NumberFormatter id="numform" rounding="nearest" precision="2"></mx:NumberFormatter>
+ <mx:DateFormatter id="df" formatString="{config.datedisplayformat}"/>
+  <mx:VBox left="4" top="6" bottom="4" right="4"> 
+		<mx:TabNavigator width="100%" height="100%" id="nav1"> 
+			<mx:Canvas label="{lang.General}" width="100%" height="100%">
+				<mx:VBox x="0" y="0" width="100%" height="100%">
+					<mx:HBox width="100%" height="100%">
+						<mx:VBox width="50%" height="100%"> 
+							<mx:Label width="50%" textAlign="center" fontStyle="normal" fontWeight="bold" text="{FlexGlobals.topLevelApplication.statsData} " id="label0" fontSize="14"/>
+							<mx:DataGrid width="100%" height="100%" dataProvider="{driveSpaceArray}">
+								<mx:columns>
+									<mx:DataGridColumn headerText="Drive" dataField="drivename"/>
+									<mx:DataGridColumn headerText="Total" dataField="total"/>
+									<mx:DataGridColumn headerText="Used" dataField="used"/>
+									<mx:DataGridColumn headerText="Available" dataField="avail"/>
+									<mx:DataGridColumn headerText="Use%" dataField="usepercentage"/>
+								</mx:columns>
+							</mx:DataGrid> 
+						</mx:VBox>
+					</mx:HBox> 
+				</mx:VBox>
+			</mx:Canvas>
+			<mx:Canvas label="{lang.Uploads}" width="100%" height="100%">
+				<mx:VBox x="0" y="0" width="100%" height="100%" horizontalAlign="right">
+					<mx:Button label="{lang.Export}" click="loadDGInExcel(vouchers_dg1);"/>
+					<mx:DataGrid width="100%" height="100%" id="vouchers_dg1" dataProvider="{allUploads}">
+					  <mx:columns>
+					    <mx:DataGridColumn headerText="Date" dataField="logdate" labelFunction="dateFunc" wordWrap="true"/>
+					    <mx:DataGridColumn headerText="Status" dataField="logtype" wordWrap="true"/>
+					    <mx:DataGridColumn headerText="From" dataField="logfrom" wordWrap="true"/>
+					    <mx:DataGridColumn headerText="To" dataField="logto" wordWrap="true"/>
+					    <mx:DataGridColumn headerText="File" dataField="logfilename" wordWrap="true"/>
+					     <mx:DataGridColumn headerText="Size" dataField="logfilesize"  labelFunction="filesizeFunc" wordWrap="true" />
+					    <mx:DataGridColumn headerText="Message" dataField="logmessage" wordWrap="true"/>
+					  </mx:columns>
+					</mx:DataGrid>
+				</mx:VBox>
+			</mx:Canvas>
+			<mx:Canvas label="{lang.Downloads}" width="100%" height="100%">
+				<mx:VBox x="0" y="0" width="100%" height="100%" horizontalAlign="right">
+					<mx:Button label="{lang.Export}" click="loadDGInExcel(vouchers_dg2);"/>
+					<mx:DataGrid width="100%" height="100%" id="vouchers_dg2" dataProvider="{allDownloads}">
+					  <mx:columns>
+					    <mx:DataGridColumn headerText="Date" dataField="logdate"  labelFunction="dateFunc" wordWrap="true"/>
+					    <mx:DataGridColumn headerText="Status" dataField="logtype" wordWrap="true"/>
+					     <mx:DataGridColumn headerText="From" dataField="logfrom" wordWrap="true"/>
+					    <mx:DataGridColumn headerText="To" dataField="logto" wordWrap="true"/>
+					    <mx:DataGridColumn headerText="File" dataField="logfilename" wordWrap="true"/>
+					     <mx:DataGridColumn headerText="Size" dataField="logfilesize"  labelFunction="filesizeFunc" wordWrap="true" />
+					    <mx:DataGridColumn headerText="Message" dataField="logmessage" wordWrap="true"/>
+					  </mx:columns>
+					</mx:DataGrid>
+				</mx:VBox>
+			</mx:Canvas>
+			<mx:Canvas label="{lang.Errors}" width="100%" height="100%">
+				<mx:VBox x="0" y="0" width="100%" height="100%" horizontalAlign="right">
+					<mx:Button label="{lang.Export}" click="loadDGInExcel(vouchers_dg3);"/>
+					<mx:DataGrid width="100%" height="100%" id="vouchers_dg3" dataProvider="{allErrors}">
+					  <mx:columns>
+					    <mx:DataGridColumn headerText="Date" dataField="logdate"  labelFunction="dateFunc" wordWrap="true"/>
+					    <mx:DataGridColumn headerText="Status" dataField="logtype" wordWrap="true"/>
+					    <mx:DataGridColumn headerText="To" dataField="logto" wordWrap="true"/>
+					    <mx:DataGridColumn headerText="From" dataField="logfrom" wordWrap="true"/>
+					    <mx:DataGridColumn headerText="File" dataField="logfilename" wordWrap="true"/>
+					     <mx:DataGridColumn headerText="Size" dataField="logfilesize"  labelFunction="filesizeFunc"  wordWrap="true"/>
+					    <mx:DataGridColumn headerText="Message" dataField="logmessage" wordWrap="true"/>
+					  </mx:columns>
+					</mx:DataGrid>
+				</mx:VBox>
+			</mx:Canvas>
+			<mx:Canvas label="{lang.Files_Available}" width="100%" height="100%">
+				<mx:VBox x="0" y="0" width="100%" height="100%" horizontalAlign="right">
+					<mx:Button label="{lang.Export}" click="loadDGInExcel(vouchers_dg4);"/>
+					<mx:DataGrid width="100%" height="100%" id="vouchers_dg4" dataProvider="{allActive}">
+					  <mx:columns>
+					    <mx:DataGridColumn headerText="Status" dataField="filestatus" wordWrap="true"/>
+					    <mx:DataGridColumn headerText="To" dataField="fileto" wordWrap="true"/>
+					    <mx:DataGridColumn headerText="From" dataField="filefrom" wordWrap="true"/>
+					    <mx:DataGridColumn headerText="File" dataField="fileoriginalname" wordWrap="true"/>
+					     <mx:DataGridColumn headerText="Size" dataField="filesize" labelFunction="filesizeFunc"  wordWrap="true"/>
+					    <mx:DataGridColumn headerText="Subject" dataField="filesubject" wordWrap="true"/>
+					    <mx:DataGridColumn headerText="Message" dataField="filemessage" wordWrap="true"/>
+					     <mx:DataGridColumn headerText="Expiry" dataField="fileexpirydate" labelFunction="dateFunc" wordWrap="true"/>
+					    <mx:DataGridColumn width="20" visible="false" >
+					      <mx:itemRenderer>
+					        <mx:Component>
+					          <mx:Button visible="false"  icon="@Embed(source='/assets/shape_square_delete.png')" height="20" width="20" label="Delete" />
+					        </mx:Component>
+					      </mx:itemRenderer>
+					    </mx:DataGridColumn>
+					  </mx:columns>    
+					</mx:DataGrid>   
+				</mx:VBox>  
+			</mx:Canvas>
+			<mx:Canvas label="{lang.Active_Vouchers}" width="100%" height="100%">
+				<mx:VBox x="0" y="0" width="100%" height="100%" horizontalAlign="right">
+					<mx:Button label="{lang.Export}" click="loadDGInExcel(vouchers_dg);"/>
+					<mx:DataGrid width="100%" height="100%" id="vouchers_dg" dataProvider="{allVouchers}">
+					  <mx:columns>
+					    <mx:DataGridColumn headerText="To" dataField="fileto" wordWrap="true"/>
+					    <mx:DataGridColumn headerText="From" dataField="filefrom" wordWrap="true"/>
+					    <mx:DataGridColumn headerText="Voucher Sent" dataField="fileactivitydate" labelFunction="dateFunc" wordWrap="true"/>
+					    <mx:DataGridColumn headerText="Valid To" dataField="fileexpirydate"  labelFunction="dateFunc" wordWrap="true"/>
+					    <mx:DataGridColumn width="20" visible="false" >
+					      <mx:itemRenderer>
+					        <mx:Component>
+					          <mx:Button visible="false"  icon="@Embed(source='/assets/shape_square_delete.png')" height="20" width="20" label="Delete" />
+					        </mx:Component>
+					      </mx:itemRenderer>
+					    </mx:DataGridColumn>
+					  </mx:columns>  
+					</mx:DataGrid>
+				</mx:VBox>
+			</mx:Canvas>
+			<mx:Canvas label="{lang.Complete_Log}" width="100%" height="100%">
+				<mx:VBox x="0" y="0" width="100%" height="100%" horizontalAlign="right">
+					<mx:Button label="{lang.Export}" click="loadDGInExcel(vouchers_dg0);"/>
+					<mx:DataGrid width="100%" height="100%" id="vouchers_dg0" dataProvider="{allLogs}">
+					  <mx:columns>
+					    <mx:DataGridColumn headerText="Date" dataField="logdate" labelFunction="dateFunc" wordWrap="true"/>
+					    <mx:DataGridColumn headerText="Type" dataField="logtype" wordWrap="true"/>
+					    <mx:DataGridColumn headerText="From" dataField="logfrom" wordWrap="true"/>
+					    <mx:DataGridColumn headerText="To" dataField="logto" wordWrap="true"/>
+					    <mx:DataGridColumn headerText="Size" dataField="logfilesize" labelFunction="filesizeFunc" wordWrap="true" />
+					    <mx:DataGridColumn headerText="File" dataField="logfilename" wordWrap="true"/>
+					    <mx:DataGridColumn headerText="Message" dataField="logmessage" wordWrap="true"/>
+					  </mx:columns>
+					</mx:DataGrid>
+				</mx:VBox>
+			</mx:Canvas>
+		</mx:TabNavigator>
+	</mx:VBox>
+</mx:Panel>
