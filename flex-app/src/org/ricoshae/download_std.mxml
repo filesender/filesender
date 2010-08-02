@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="100%" height="290" title="{lang.Download}">
+
+ <mx:Script>
+    <![CDATA[
+    
+ /*
+ *  Filsender www.filesender.org
+ *      
+ *  Copyright (c) 2009-2010, Aarnet, HEAnet, UNINETT
+ * 	All rights reserved.
+ *
+ * 	Redistribution and use in source and binary forms, with or without
+ *	modification, are permitted provided that the following conditions are met:
+ *	* 	Redistributions of source code must retain the above copyright
+ *   		notice, this list of conditions and the following disclaimer.
+ *   	* 	Redistributions in binary form must reproduce the above copyright
+ *   		notice, this list of conditions and the following disclaimer in the
+ *   		documentation and/or other materials provided with the distribution.
+ *   	* 	Neither the name of Aarnet, HEAnet and UNINETT nor the
+ *   		names of its contributors may be used to endorse or promote products
+ *   		derived from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY Aarnet, HEAnet and UNINETT ''AS IS'' AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL Aarnet, HEAnet or UNINETT BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */   
+          
+    import mx.controls.Alert;   
+		import org.ricoshae.core.*;     
+		import mx.core.FlexGlobals;
+		import mx.utils.ObjectProxy; 
+		import mx.collections.ArrayCollection;
+		import com.adobe.serialization.json.JSON;
+		import mx.utils.UIDUtil;
+		import flash.net.FileReference;
+		import mx.rpc.events.FaultEvent; 
+		import mx.rpc.events.ResultEvent;
+		import mx.managers.CursorManager;
+
+		 
+		[Bindable] public var currentDownloadFileObj:Object  = new Object();
+		[Bindable] public var currentUserObj:Object = new Object();
+		[Bindable] public var config:Object;
+		[Bindable] public var lang:Object;
+		[Bindable] public var URLvidLocal:String;
+		
+		public var fileRef:FileReference = new FileReference();
+		public var request:URLRequest;
+		public var currentFileUID:String;	
+		public var urlVars:URLVariables;
+		public var downloadSize:int;
+		public var fileRefDown:FileReference;
+			
+		public var urlReq:URLRequest;
+		
+		public function init():void
+			{
+			lang = FlexGlobals.topLevelApplication.lang;
+			currentUserObj = FlexGlobals.topLevelApplication.currentUser;
+			config = FlexGlobals.topLevelApplication.config;
+			currentDownloadFileObj = new Object();
+			currentDownloadFileObj = FlexGlobals.topLevelApplication.currentFileObj;
+			URLvidLocal = FlexGlobals.topLevelApplication.URLvid;
+			filesize.text = readablizeBytes(currentDownloadFileObj.filesize);
+			pbProgress.visible = false;
+			btn_cancel.visible = false;
+			}
+       
+       private function doProgress(event:ProgressEvent):void 
+{  
+	
+	 pbProgress.setProgress(event.bytesLoaded, currentDownloadFileObj.filesize);
+     pbProgress.label = "Downloading [" +  Math.round(event.bytesLoaded / currentDownloadFileObj.filesize * 100).toString() + "%]";
+     downloadSize =  event.bytesLoaded;
+	
+	 
+}     
+   
+	private function downloadFile():void {        
+	             
+	 			fileRefDown = new FileReference();  
+	    		// fileRef.addEventListener(Event.CANCEL, doEvent);
+               	fileRefDown.addEventListener(Event.COMPLETE, fileDownloadComplete);
+           		fileRef.addEventListener(HTTPStatusEvent.HTTP_STATUS, doEvent);
+           		fileRef.addEventListener(IOErrorEvent.IO_ERROR, doEvent);
+              	fileRefDown.addEventListener(ProgressEvent.PROGRESS, doProgress);  
+           		fileRef.addEventListener(SecurityErrorEvent.SECURITY_ERROR, doEvent);// 
+    	
+      			urlReq = new URLRequest(config.site_downloadurl + currentDownloadFileObj.fileuid + currentDownloadFileObj.fileoriginalname); 
+				fileRefDown.download(urlReq,currentDownloadFileObj.fileoriginalname.toString());
+					 
+				pbProgress.visible = true;
+				btn_cancel.visible = true;
+        
+       	}
+		public function cancelDownload():void
+		{
+		pbProgress.visible = false;
+		btn_cancel.visible = false;
+		pbProgress.setProgress(0, currentDownloadFileObj.filesize);
+		pbProgress.label = "";
+		fileRefDown.cancel();
+		
+		
+		}
+		
+	public function fileDownloadComplete(event:Event):void
+		{
+			
+		FlexGlobals.topLevelApplication.currentState="Message";
+		FlexGlobals.topLevelApplication.MessageLabel.text = "Your download is complete";
+				// compare download size 
+	   		
+		   		var objSend:Object = new Object();
+	   			objSend.call = "downloadedFile";
+	   			 var dataArray:ArrayCollection = new ArrayCollection();
+	        	dataArray.addItem(currentDownloadFileObj);
+	      		var dataString:String = JSON.encode(dataArray.toArray());
+	   			dataString = escape(dataString);
+	   			objSend.jsonSendData = dataString;
+	   			send_main.send(objSend);
+	 
+} 
+	public function returnMail(event:ResultEvent):void 
+		{
+		//	Alert.show(event.result.toString());
+			CursorManager.removeBusyCursor(); 
+			ff_fix.ff_fixStatus();
+		}  
+		
+	private function doEvent(evt:Event):void 
+		{
+			Alert.show(evt.type.toString() + ":" + evt.toString());
+		}
+
+	public function return_error(event:FaultEvent):void
+		{
+			CursorManager.removeBusyCursor();
+			Alert.show("Fault: " + event.fault);			 	 
+		} 
+			
+	public function readablizeBytes(bytes:Number):String 
+		{
+		    var s:Array = ['bytes', 'kb', 'MB', 'GB', 'TB', 'PB'];
+    		var e:Number = Math.floor(Math.log(bytes)/Math.log(1024));
+    		return (bytes/Math.pow(1024, Math.floor(e))).toFixed(2)+" "+s[e];
+		}
+    ]]> 
+  </mx:Script>
+     <mx:HTTPService id="send_main" url="../fs_main.php{URLvidLocal}" useProxy="false" method="POST" resultFormat="text" result="returnMail(event)" fault="return_error(event)"/>     
+    <mx:NumberFormatter id="numberFormatter" precision="2" useThousandsSeparator="true" useNegativeSign="true"/>
+  <mx:DateFormatter id="df" formatString="DD-MM-YYYY"/>
+	  <mx:HBox width="100%" height="100%">
+	<mx:VBox width="100%" height="100%"  paddingBottom="4" paddingLeft="4" paddingRight="4" paddingTop="4" id="panel_filedownload" borderStyle="none" verticalGap="4">
+	  <mx:HBox width="100%" height="20" horizontalGap="8">
+	    <mx:Label text="{lang.To}:" fontWeight="bold" width="130"/>
+	    <mx:Label text="{currentDownloadFileObj.fileto}" fontWeight="bold" width="100%"/>
+	  </mx:HBox>
+	  <mx:HBox width="100%" height="20" verticalAlign="middle">
+	    <mx:Label text="{lang.From}:" fontWeight="bold" width="130"/>
+	    <mx:Label text="{currentDownloadFileObj.filefrom}" fontWeight="bold" width="100%"/>
+	  </mx:HBox>  
+	  <mx:HBox width="100%" height="20" verticalAlign="middle">
+	    <mx:Label text="{lang.Subject}:" color="#000000" width="130"/>
+	    <mx:Label width="100%" text="{currentDownloadFileObj.filesubject}"/>
+	  </mx:HBox>
+	  <mx:HBox width="100%" height="61">
+	    <mx:Label text="{lang.Message}:" width="130"/>
+	    <mx:TextArea text="{currentDownloadFileObj.filemessage}"  borderStyle="none" editable="false" width="100%" height="57" wordWrap="true" verticalScrollPolicy="auto"/>
+	  </mx:HBox>
+	  <mx:HBox width="100%" height="20" verticalAlign="middle">
+	    <mx:Label text="{lang.File_Name}:" width="130"/>
+	    <mx:Label id="flename" width="100%" text="{currentDownloadFileObj.fileoriginalname}"/>
+	   	  </mx:HBox>
+	  <mx:HBox width="100%" height="20" verticalAlign="middle">
+	    <mx:Label text="{lang.File_Size}:" width="130"/>
+	    <mx:Label id="filesize" width="100%" text="{currentDownloadFileObj.filesize}"/>
+	   	  </mx:HBox>
+	  <mx:HBox width="100%" height="20" verticalAlign="middle">
+	    <mx:Label text="{lang.Expiry_Date}: " width="130"/>
+	    <mx:Label id="expDate" width="100%" text="{df.format(currentDownloadFileObj.fileexpirydate)}"/>
+	   	  </mx:HBox>
+	  <mx:HBox width="100%" height="30" id="downloadPanel" borderStyle="none" verticalAlign="middle" horizontalGap="8">
+	    <mx:Spacer width="2"/>
+	    <mx:Button id="downloadBtn0" label="{lang.Download_File}" click="downloadFile()" toolTip="Download" height="20"  width="110" color="#000000"/>
+	    <mx:ProgressBar width="100%" visible="true" mode="manual" label="" id="pbProgress" labelPlacement="center"/>
+	    <mx:Button label="Cancel" id="btn_cancel" visible="false" click="cancelDownload()"/>
+	    <mx:Spacer width="2"/>
+	  </mx:HBox>
+	</mx:VBox>
+	<mx:TextArea width="100%" borderStyle="none" editable="false" htmlText="{config.site_downloadinstructions}" height="100%"/>
+		  </mx:HBox>
+</mx:Panel>

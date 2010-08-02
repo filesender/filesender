@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="624" height="300" creationComplete="init()" backgroundColor="#999797">
+<mx:Script>
+	<![CDATA[
+
+/*
+ *  Filsender www.filesender.org
+ *      
+ *  Copyright (c) 2009-2010, Aarnet, HEAnet, UNINETT
+ * 	All rights reserved.
+ *
+ * 	Redistribution and use in source and binary forms, with or without
+ *	modification, are permitted provided that the following conditions are met:
+ *	* 	Redistributions of source code must retain the above copyright
+ *   		notice, this list of conditions and the following disclaimer.
+ *   	* 	Redistributions in binary form must reproduce the above copyright
+ *   		notice, this list of conditions and the following disclaimer in the
+ *   		documentation and/or other materials provided with the distribution.
+ *   	* 	Neither the name of Aarnet, HEAnet and UNINETT nor the
+ *   		names of its contributors may be used to endorse or promote products
+ *   		derived from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY Aarnet, HEAnet and UNINETT ''AS IS'' AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL Aarnet, HEAnet or UNINETT BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+ 
+	import com.adobe.serialization.json.JSON;
+	
+	import mx.collections.ArrayCollection;
+	import mx.controls.Alert;
+	import mx.core.FlexGlobals;
+	import mx.managers.PopUpManager;
+	import mx.rpc.events.FaultEvent;
+	import mx.rpc.events.ResultEvent;
+	import mx.utils.UIDUtil;
+	
+	import org.ricoshae.core.*;
+	
+	[Bindable]public var newObject:Object;
+	[Bindable] public var config:Object;
+	[Bindable] public var lang:Object;
+	public var selecteddgID:int;
+	public var dateRange:Object;
+	public var currentDate:Date = new Date();
+	
+	public function init():void
+	{
+		lang = FlexGlobals.topLevelApplication.lang;
+		config = FlexGlobals.topLevelApplication.config;
+		selecteddgID = FlexGlobals.topLevelApplication.myfiles.vouchers_dg.selectedIndex;
+		newObject = FlexGlobals.topLevelApplication.myfiles.usersFiles[selecteddgID]; 
+	
+		// set date
+		var d:Date=new Date();
+		FileExpiryDate.selectedDate = new Date(d.fullYear,d.month, d.date+parseInt(config["default_daysvalid"].toString() ));				
+			
+		// set file size
+		selectedFileSize.text = readablizeBytes(newObject.filesize);
+		
+		// set calendar date selection
+		dateRange = new Object();
+		dateRange["rangeStart"] = new Date(currentDate.fullYear,currentDate.month, currentDate.date+1);
+		dateRange["rangeEnd"] = new Date(d.fullYear,d.month, d.date+parseInt(config.default_daysvalid.toString()));
+		FileExpiryDate.selectableRange= dateRange;
+		
+		// clear fileto text
+		FileTo.text = "";
+	}
+
+	public function readablizeBytes(bytes:Number):String {
+    var s:Array = ['bytes', 'kb', 'MB', 'GB', 'TB', 'PB'];
+    var e:Number = Math.floor(Math.log(bytes)/Math.log(1024));
+    return (bytes/Math.pow(1024, Math.floor(e))).toFixed(2)+" "+s[e];
+}
+
+	
+	public function addNew():void 
+	{
+		// file uid must exist for this file
+		if(newObject.fileuid == null){
+			Alert.show(lang['E028'],lang['E000']);  // Enter an email adddress
+			return 		
+		}	
+		
+		
+		if(newObject.fileto == null){
+ 		Alert.show(lang['E001'],lang['E000']);  // Enter an email adddress
+ 		return 		
+ 		}	
+ 		
+ 		if(FS_Validation.isValidEmailList(newObject.fileto,',')) 
+ 	 {
+		
+		var temptext:String = newObject.fileto;
+   		var params:Array = temptext.split(',');
+   		
+		var tempCurrentFileObj:Object;
+    	
+    	newObject.filesubject = FileSubject.text;
+ 		newObject.filemessage  = FileMessage.text;
+ 		newObject.fileip6address  = " ";
+ 		newObject.filesendersname  = " ";
+ 		newObject.filereceiversname  = " ";
+ 		newObject.filevouchertype   = " ";
+ 		newObject.fileactivitydate   = "";
+ 		
+ 		tempCurrentFileObj = newObject;
+    	tempCurrentFileObj.filestatus = "Available"
+ 				
+		for (var i:int = 0; i < params.length; i++)
+   		{	
+   			
+   			if(params[i].replace(" ","").length > 0)
+   			{	     
+ 				
+ 				tempCurrentFileObj.fileto = params[i].toString();
+ 				
+        		// check if this is a voucher or an available file
+        		// close voucher and create new download vouchers
+        	        		
+        		// create new vouchers with unique filevoucheruid's
+	   			
+        		var UID:String = UIDUtil.createUID(); 
+   			    tempCurrentFileObj.filevoucheruid = UID;
+   			    
+   			    var objSend:Object = new Object();
+	   			objSend.call = "insertFile";
+	   			 var dataArray:ArrayCollection = new ArrayCollection();
+	        	dataArray.addItem(tempCurrentFileObj);
+	      		var dataString:String = JSON.encode(dataArray.toArray());
+	   			dataString = escape(dataString);
+	   			objSend.jsonSendData = dataString;
+	   			send_main.send(objSend);
+      		}	
+    			}
+		
+		
+		
+ 	} else {
+ 	// show email error
+ 	Alert.show(lang['E019']); // check email address
+ }
+		
+		
+		
+	}
+	
+	 public function fileSaved(event:ResultEvent):void
+     {
+     	// error checking here
+     	PopUpManager.removePopUp(this);
+     	Alert.show(lang["Email_Sent"]);
+		FlexGlobals.topLevelApplication.myfiles.init()
+     	//Application.application.currentState = "Message";
+		//Application.application.MessageLabel.text = "Your file has been sent.";
+     	//init();
+     }
+     
+     
+		private function canceldata():void
+		
+		{
+			PopUpManager.removePopUp(this);
+		}
+		   public function fileError(event:FaultEvent):void
+     {
+     	Alert.show(event.fault.toString());
+     }
+     
+	]]>
+</mx:Script>
+  <mx:HTTPService id="send_main" url="../fs_main.php{FlexGlobals.topLevelApplication.URLvid}" useProxy="false" method="POST" resultFormat="text" result="fileSaved(event)" fault="fileError(event)"/>     
+ 
+	<mx:Panel layout="absolute" id="addRecipient" title="Add Recipient" top="0" left="0" bottom="0" right="0">
+		<mx:VBox minWidth="425"  paddingBottom="4" paddingLeft="4" paddingRight="4" paddingTop="4" verticalAlign="top" verticalGap="0" height="100%" width="100%">
+		    
+		    
+		    <mx:HBox width="100%" height="23">
+		      <mx:Label text="{lang.To}" fontWeight="bold" width="150"/>
+		      <mx:TextInput  toolTip="Multiple email address can be entered seperated by comma (,)" width="100%" valueCommit="{newObject.fileto = FileTo.text;}" id="FileTo" text="{newObject.fileto}" editable="true"  change="FlexGlobals.topLevelApplication.correctLinux(event)"/>
+		    </mx:HBox>
+		    <mx:HBox width="100%" height="23" verticalAlign="middle">
+		      <mx:Label text="{lang.From}" fontWeight="bold" width="150"/>
+		      <mx:TextInput width="100%" id="FileFrom" valueCommit="{newObject.filefrom = FileFrom.text;}" text="{newObject.filefrom}" borderStyle="none" editable="false" change="FlexGlobals.topLevelApplication.correctLinux(event)"/>
+		    </mx:HBox>
+		    <mx:HBox width="100%" height="23" verticalAlign="middle">
+		      <mx:Label text="{lang.Subject} ({lang.Optional})" color="#000000" width="150"/>
+		      <mx:TextInput width="100%" id="FileSubject" text="{newObject.filesubject}" valueCommit="{newObject.filesubject = FileSubject.text;}" change="FlexGlobals.topLevelApplication.correctLinux(event)"/>
+		    </mx:HBox>
+		    <mx:HBox width="100%" height="45">
+		      <mx:Label text="{lang.Message} ({lang.Optional})" width="150"/>
+		      <mx:TextArea width="100%" id="FileMessage" height="45" valueCommit="{newObject.filemessage = FileMessage.text;}" text="{newObject.filemessage}" change="FlexGlobals.topLevelApplication.correctLinux(event)"/>
+		    </mx:HBox>
+		    <mx:HBox width="100%" height="27" verticalAlign="middle">
+		      <mx:Label text="{lang.Expiry_Date}: " width="150"/>
+		      <mx:DateField valueCommit="{newObject.fileexpirydate = FileExpiryDate.text;}" id="FileExpiryDate" formatString="DD-MM-YYYY" />
+		      <mx:Spacer width="100%"/>
+		      </mx:HBox> 
+		  
+		  <mx:HBox width="100%" height="47" id="uploadPanel" verticalAlign="middle">
+		    <mx:VBox width="100%" height="100%" verticalGap="1" verticalAlign="middle">
+		      <mx:HBox width="100%" height="21">
+		        <mx:Label text="{lang.File_to_be_Redistributed}:" width="150"/>
+		        <mx:Label id="selectedFilename" width="100%" text="{newObject.fileoriginalname}" enabled="true"/>
+		      </mx:HBox>
+		      <mx:HBox width="100%" height="20">
+		        <mx:Label text="{lang.Size}:" width="150"/>
+		        <mx:Label id="selectedFileSize" width="100%"/>
+		        <mx:Button label="{lang.Send_File}" click="addNew()" id="btUpload" enabled="true" height="20"/>
+		        <mx:Button label="{lang.Cancel}" click="canceldata()" id="btCancel" enabled="true" height="20"/>
+		      </mx:HBox>
+		    </mx:VBox>
+		  </mx:HBox>
+		  <mx:HBox width="100%" height="36" id="uploadMainPanel" verticalAlign="middle">
+		    <mx:Label id="speedLabel"/>
+		  </mx:HBox>
+		</mx:VBox>
+	
+	</mx:Panel>
+	
+</mx:Canvas>

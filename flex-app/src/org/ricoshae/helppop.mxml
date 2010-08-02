@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="624" height="300" creationComplete="init()" backgroundColor="#5C5B5B" cornerRadius="20">
+<mx:Script>
+	<![CDATA[
+
+/*
+ *  Filsender www.filesender.org
+ *      
+ *  Copyright (c) 2009-2010, Aarnet, HEAnet, UNINETT
+ * 	All rights reserved.
+ *
+ * 	Redistribution and use in source and binary forms, with or without
+ *	modification, are permitted provided that the following conditions are met:
+ *	* 	Redistributions of source code must retain the above copyright
+ *   		notice, this list of conditions and the following disclaimer.
+ *   	* 	Redistributions in binary form must reproduce the above copyright
+ *   		notice, this list of conditions and the following disclaimer in the
+ *   		documentation and/or other materials provided with the distribution.
+ *   	* 	Neither the name of Aarnet, HEAnet and UNINETT nor the
+ *   		names of its contributors may be used to endorse or promote products
+ *   		derived from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY Aarnet, HEAnet and UNINETT ''AS IS'' AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL Aarnet, HEAnet or UNINETT BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+ 	
+	import mx.core.FlexGlobals;
+	import mx.managers.PopUpManager;
+	import mx.controls.Alert;
+	import mx.utils.UIDUtil;
+	import org.ricoshae.core.*; 
+	import mx.rpc.events.ResultEvent;
+	import mx.rpc.events.FaultEvent;
+	import mx.collections.ArrayCollection;
+	import com.adobe.serialization.json.JSON;
+	
+	[Bindable] public var config:Object;
+	[Bindable] public var lang:Object;
+	
+	public function init():void
+	{
+		lang = FlexGlobals.topLevelApplication.lang;
+		config = FlexGlobals.topLevelApplication.config;
+	}
+     
+		private function canceldata():void
+		
+		{
+			PopUpManager.removePopUp(this);
+		}
+
+     
+	]]>
+</mx:Script>
+
+	<mx:Panel layout="absolute" id="addRecipient" title="{lang.Help}" top="0" left="0" bottom="0" right="0">
+		<mx:VBox top="4" left="4" right="4" bottom="4">
+			<mx:TextArea text="{lang.site_help_text}" wordWrap="true" editable="false" width="100%" height="100%" borderStyle="none"/>
+			<mx:HBox width="100%" height="25" verticalAlign="middle" horizontalAlign="right">
+				<mx:Button label="{lang.Cancel}" click="canceldata()" id="btCancel" enabled="true" height="20"/>
+			</mx:HBox>
+		</mx:VBox>
+	</mx:Panel>
+	
+</mx:Canvas>
