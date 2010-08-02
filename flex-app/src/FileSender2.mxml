@@ -726,7 +726,7 @@
 	<mx:HTTPService id="checkAuthAdmin" url="../fs_main.php{URLvid}" useProxy="false" method="POST" resultFormat="text" result="resultAuthAdmin(event)" fault="resultError(event)"/> 
 	<mx:HTTPService id="file_main" url="../fs_main.php{URLvid}" useProxy="false" method="POST" resultFormat="text" result="resultFile(event)" fault="resultError(event)"/>  
 	<mx:HTTPService id="logon_main" url="../fs_main.php{URLvid}" useProxy="false" method="POST" resultFormat="text" result="resultLogon(event)" fault="resultError(event)"/>     
-	  
+	 
 	<mx:NumberFormatter id="numberFormatter" precision="2" useThousandsSeparator="true" useNegativeSign="true"/>
 	<mx:DateFormatter id="df" formatString="{config.datedisplayformat}"/>
 	<mx:DateFormatter id="df_pg" formatString="{config.datedisplayformat}"/>
