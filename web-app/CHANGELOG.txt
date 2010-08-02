@@ -9,6 +9,11 @@ Version Beta 1.15
 	Update relative include paths for updated structure
 	242 Move config to own folder /config
 	244 restructure svn to support branches and tags
+	258 + sign replaced with _ in file name when upoading
+	240 expiry logic: with multiple recipients the shortest expiry wins
+	253 Outdated files in database that misses from disk halts system while removing outdated files
+	241 files, tmpfiles and log directory not present in 1.14
+	211 MyFiles -> Add Recipient: download link in resulting file voucher does not work
 	
 
 Version Beta 1.14
