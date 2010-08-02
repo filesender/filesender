@@ -29,7 +29,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-require_once('classes/_includes.php');
+require_once('../classes/_includes.php');
 
 $authsaml = AuthSaml::getInstance();
 $authvoucher = AuthVoucher::getInstance();
