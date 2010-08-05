@@ -503,19 +503,19 @@ private function fnCheckExtension(str:String):Boolean
 		</mx:VBox>
 		<mx:VBox width="250" height="100%">
 			<mx:HBox width="100%" height="30" verticalAlign="middle">
-				<mx:Image source="@Embed(source='assets/num_1.png')"/>
+				<mx:Image source="@Embed(source='/assets/num_1.png')"/>
 				<mx:Label text="{lang['Enter_delivery_email_address(es)']}"/>
 			</mx:HBox>
 			<mx:HBox width="100%" height="30" verticalAlign="middle">
-				<mx:Image source="@Embed(source='assets/num_2.png')"/>
+				<mx:Image source="@Embed(source='/assets/num_2.png')"/>
 				<mx:Label text="{lang.Set_expiry_date}"/>
 			</mx:HBox>
 			<mx:HBox width="100%" height="30" verticalAlign="middle">
-				<mx:Image source="@Embed(source='assets/num_3.png')"/>
+				<mx:Image source="@Embed(source='/assets/num_3.png')"/>
 				<mx:Label text="{lang.Browse_for_a_file}"/>
 			</mx:HBox>
 			<mx:HBox width="100%" height="30" verticalAlign="middle">
-				<mx:Image source="@Embed(source='assets/num_4.png')"/>
+				<mx:Image source="@Embed(source='/assets/num_4.png')"/>
 				<mx:Label text="{lang.Click_on_Send}"/>
 			</mx:HBox>
 
