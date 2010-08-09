@@ -105,7 +105,7 @@ if ( hasProductInstall && !hasRequestedVersion ) {
     var MMdoctitle = document.title;
 
 	AC_FL_RunContent(
-		"src", "playerProductInstall",
+		"src", "lib/swf/playerProductInstall",
 		"FlashVars", "flexerrors=<?php echo $flexerrors ?>&MMredirectURL="+MMredirectURL+'&MMplayerType='+MMPlayerType+'&MMdoctitle='+MMdoctitle+"",
 		"width", "800",
 		"height", "561",
