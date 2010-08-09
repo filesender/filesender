@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Application xmlns:mx="http://www.adobe.com/2006/mxml"  xmlns:comp="org.ricoshae.*" creationComplete="main_init()" layout="absolute" width="100%" height="100%" currentState="blank" minWidth="600" backgroundColor="#FFFFFF">
-	<mx:states>   
+	<mx:states>    
 		<mx:State name="vouchers_fed">     
 			<mx:AddChild position="lastChild"> 
 				<comp:vouchers id="vouchers" left="6" right="6" top="87" bottom="6">
@@ -9,9 +9,9 @@
 			<mx:AddChild relativeTo="{hbox0}" position="lastChild">
 				<mx:Label text="| About" click="aboutLink()" buttonMode="true" useHandCursor="true" mouseChildren="false" toolTip="Information about this application" />
 			</mx:AddChild> 
-			<mx:RemoveChild target="{label2}"/> 
+			<mx:RemoveChild target="{label2}"/>  
 		</mx:State>                       
-		<mx:State name="filedownload">              
+		<mx:State name="filedownload">               
 			<mx:AddChild position="lastChild">
 				<comp:download_std id="download_std" left="6" right="6" top="87" height="300"> 
 				</comp:download_std>
