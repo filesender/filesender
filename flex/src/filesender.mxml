@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Application xmlns:mx="http://www.adobe.com/2006/mxml"  xmlns:comp="org.ricoshae.*" creationComplete="main_init()" layout="absolute" width="100%" height="100%" currentState="blank" minWidth="600" backgroundColor="#FFFFFF">
 	<mx:states>    
-		<mx:State name="vouchers_fed">     
+		<mx:State name="vouchers_fed">      
 			<mx:AddChild position="lastChild"> 
 				<comp:vouchers id="vouchers" left="6" right="6" top="87" bottom="6">
 				</comp:vouchers>          

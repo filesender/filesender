@@ -37,11 +37,11 @@
  
 function gearsActive(){
 if (!window.google || !google.gears) {
-   getFlexApp('FileSender2').gearsActive("false");
+   getFlexApp('filesender').gearsActive("false");
 	}
 	else
      { 
-   getFlexApp('FileSender2').gearsActive("true");
+   getFlexApp('filesender').gearsActive("true");
   }
 }
 
@@ -53,13 +53,13 @@ function gearsup(){
  */
 function addStatus(s,m){ 
 	// return status to flex
-	getFlexApp('FileSender2').returnStatus(s,m);
+	getFlexApp('filesender').returnStatus(s,m);
 	return 1;
 }
 
 function addChunk(s,m){ 
 	// return status to flex
-	getFlexApp('FileSender2').returnChunk(s,m);
+	getFlexApp('filesender').returnChunk(s,m);
 	return 1;
 }
 
@@ -288,7 +288,7 @@ function gup( name )
   var regex = new RegExp( regexS );
   var results = regex.exec( window.location.href );
   if( results == null )
-   getFlexApp('FileSender2').checkVoucher("");
+   getFlexApp('filesender').checkVoucher("");
   else
-    getFlexApp('FileSender2').checkVoucher(results[1]); 
+    getFlexApp('filesender').checkVoucher(results[1]); 
 }

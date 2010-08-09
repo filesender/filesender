@@ -585,7 +585,7 @@ class Functions {
 
 		if (!$result) { $this->saveLog->saveLog($dataitem,"Error",pg_last_error()); return FALSE; }
 
-		if($dataitem['filestatus'] == "'Voucher'") {
+		if($dataitem['filestatus'] == "Voucher") {
 			$this->saveLog->saveLog($dataitem,"Voucher Sent","");
 			return $this->sendmail->sendEmail($dataitem,$config['voucherissuedemailbody']);
 		} else {
