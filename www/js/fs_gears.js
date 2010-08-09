@@ -31,11 +31,11 @@
  
 function gearsActive(){
 if (!window.google || !google.gears) {
-   getFlexApp('FileSender2').gearsActive("false");
+   getFlexApp('filesender').gearsActive("false");
 	}
 	else
      { 
-   getFlexApp('FileSender2').gearsActive("true");
+   getFlexApp('filesender').gearsActive("true");
   }
 }
 
@@ -56,7 +56,7 @@ if(jQuery.browser.mozilla) {
  */
 function addStatus(s,m){ 
 	// return status to flex
-	getFlexApp('FileSender2').returnStatus(s,m);
+	getFlexApp('filesender').returnStatus(s,m);
 	return 1;
 }
 
@@ -246,7 +246,7 @@ function gup( name )
 		gearsStatus = true;
   }
 	if( results == null )
-   getFlexApp('FileSender2').checkVoucher("",gearsStatus);
+   getFlexApp('filesender').checkVoucher("",gearsStatus);
   else
-    getFlexApp('FileSender2').checkVoucher(results[1],gearsStatus); 
+    getFlexApp('filesender').checkVoucher(results[1],gearsStatus); 
 }

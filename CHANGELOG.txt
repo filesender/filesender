@@ -1,6 +1,12 @@
 
 Update 2 August 2010
 
+Version Beta 1.16
+	Updated SVN structure
+	Moved Flash file to /www/swf/
+	Rename flash file filesender.swf
+	Fix voucher not sending out correct email message when created
+
 Version Beta 1.15
 
 	Moved all web files in SVN to /trunk/web-app
