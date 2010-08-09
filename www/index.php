@@ -56,7 +56,7 @@ $flexerrors = "true";
 <script type="text/javascript">
 
 window.onload = function() {
-//getFlexApp('FileSender2').returnStatus('error');
+//getFlexApp('filesender').returnStatus('error');
   if (!window.google || !google.gears) {
     addStatus('Gears is not installed', 'error');
       
@@ -110,10 +110,10 @@ if ( hasProductInstall && !hasRequestedVersion ) {
 		"width", "800",
 		"height", "561",
 		"align", "middle",
-		"id", "FileSender2",
+		"id", "filesender",
 		"quality", "high",
 		"bgcolor", "#869ca7",
-		"name", "FileSender2",
+		"name", "filesender",
 		"allowScriptAccess","sameDomain",
 		"type", "application/x-shockwave-flash",
 		"pluginspage", "http://www.adobe.com/go/getflashplayer"
@@ -122,15 +122,15 @@ if ( hasProductInstall && !hasRequestedVersion ) {
 	// if we've detected an acceptable version
 	// embed the Flash Content SWF when all tests are passed
 	AC_FL_RunContent(
-			"src", "swf/FileSender2",
+			"src", "swf/filesender",
 			"FlashVars", "flexerrors=<?php echo $flexerrors ?>",
 			"width", "800",
 			"height", "561",
 			"align", "middle",
-			"id", "FileSender2",
+			"id", "filesender",
 			"quality", "high",
 			"bgcolor", "#869ca7",
-			"name", "FileSender2",
+			"name", "filesender",
 			"allowScriptAccess","sameDomain",
 			"type", "application/x-shockwave-flash",
 			"pluginspage", "http://www.adobe.com/go/getflashplayer"
@@ -146,12 +146,12 @@ if ( hasProductInstall && !hasRequestedVersion ) {
     <noscript>
       <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" width="800" height="561"
 			codebase="http://fpdownload.macromedia.com/get/flashplayer/current/swflash.cab">
-        <param name="movie" value="swf/FileSender2.swf?flexerrors=<?php echo $flexerrors ?>" />
+        <param name="movie" value="swf/filesender.swf?flexerrors=<?php echo $flexerrors ?>" />
         <param name="quality" value="high" />
         <param name="bgcolor" value="#869ca7" />
         <param name="allowScriptAccess" value="sameDomain" />
-        <embed src="swf/FileSender2.swf?flexerrors=<?php echo $flexerrors ?>" quality="high" bgcolor="#869ca7"
-				width="800" height="561" name="FileSender2" align="middle"
+        <embed src="swf/filesender.swf?flexerrors=<?php echo $flexerrors ?>" quality="high" bgcolor="#869ca7"
+				width="800" height="561" name="filesender" align="middle"
 				play="true"
 				loop="false"
 				quality="high"
