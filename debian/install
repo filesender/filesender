@@ -1,13 +1,6 @@
-config/config.php etc/filesender
-debian/conf/*   etc/filesender
-classes		usr/share/filesender
-includes	usr/share/filesender
-scripts		usr/share/filesender
-tmp		var/lib/filesender/tmp
-www/files	var/lib/filesender/files
-www/*.php 	/usr/share/filesender/www
-www/css 	/usr/share/filesender/www
-www/favicon.ico	/usr/share/filesender/www
-www/js 		/usr/share/filesender/www
-www/lib 	/usr/share/filesender/www
-www/swf 	/usr/share/filesender/www
+config/config.php debian/conf/*  etc/filesender
+classes includes scripts		 usr/share/filesender
+tmp www/files		             var/lib/filesender
+scripts/filesender_db.sql        usr/share/dbconfig-common/data/filesender/install/pgsql
+www/*.php www/css www/favicon.ico www/js www/lib www/swf      usr/share/filesender/www
+
