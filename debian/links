@@ -1,0 +1,3 @@
+/etc/filesender                  usr/share/filesender/config
+/var/log/filesender		 usr/share/filesender/log
+/var/lib/filesender/tmpfiles	 usr/share/filesender/tmpfiles

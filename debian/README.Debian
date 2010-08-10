@@ -1,0 +1,8 @@
+filesender for Debian
+---------------------
+
+This is the debian packages of filesender. Everything is the same as
+a normal source installation. Please refer to the wiki how to configure
+this package.
+
+ -- Gijs Molenaar <gijs@pythonic.nl>  Thu, 01 Jul 2010 12:25:33 +0200

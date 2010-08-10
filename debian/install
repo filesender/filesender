@@ -1,0 +1,8 @@
+config/config.php etc/filesender
+debian/conf/*   etc/filesender
+classes		usr/share/filesender
+includes	usr/share/filesender
+scripts		usr/share/filesender
+www		usr/share/filesender
+tmp		usr/share/filesender
+
