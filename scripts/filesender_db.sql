@@ -23,9 +23,6 @@ CREATE TABLE files
   fileauthuseremail character varying(255),
   CONSTRAINT files_pkey PRIMARY KEY (fileid)
 );
-ALTER TABLE files OWNER TO postgres;
-GRANT ALL ON TABLE files TO postgres;
-GRANT ALL ON TABLE files TO public;
 
 CREATE SEQUENCE download_id_seq
   INCREMENT 1
@@ -33,7 +30,6 @@ CREATE SEQUENCE download_id_seq
   MAXVALUE 9223372036854775807
   START 1
   CACHE 1;
-ALTER TABLE download_id_seq OWNER TO postgres;
 
 CREATE SEQUENCE log_id_seq
   INCREMENT 1
@@ -41,7 +37,6 @@ CREATE SEQUENCE log_id_seq
   MAXVALUE 9223372036854775807
   START 207
   CACHE 1;
-ALTER TABLE log_id_seq OWNER TO postgres;
 
 CREATE TABLE logs
 (
@@ -60,4 +55,3 @@ CREATE TABLE logs
   logauthuseruid character varying(500),
   CONSTRAINT logs_pkey PRIMARY KEY (logid)
 );
-ALTER TABLE logs OWNER TO postgres;
