@@ -15,24 +15,14 @@ dbc_dbfile_perms="0660"
 dbc_dbuser=filesender
 dbc_dbname=filesender
 
+dbc_go filesender $@
+
 apache_install() {
     webserver=$1
     if [ -d /etc/$webserver/conf.d ] && [ ! -e /etc/$webserver/conf.d/filesender ]; then
                ln -s /etc/filesender/apache.conf /etc/$webserver/conf.d/filesender
     fi
 }
-
-# summary of how this script can be called:
-#        * <postinst> `configure' <most-recently-configured-version>
-#        * <old-postinst> `abort-upgrade' <new version>
-#        * <conflictor's-postinst> `abort-remove' `in-favour' <package>
-#          <new-version>
-#        * <postinst> `abort-remove'
-#        * <deconfigured's-postinst> `abort-deconfigure' `in-favour'
-#          <failed-install-package> <version> `removing'
-#          <conflicting-package> <version>
-# for details, see http://www.debian.org/doc/debian-policy/ or
-# the debian-policy package
 
 
 case "$1" in
@@ -44,7 +34,6 @@ case "$1" in
         chown www-data:www-data /var/lib/filesender/tmp
         chmod 750 /var/lib/filesender/tmp
 
-        dbc_go filesender $@
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)
