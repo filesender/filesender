@@ -8,7 +8,7 @@
  *
  * 	Redistribution and use in source and binary forms, with or without
  *	modification, are permitted provided that the following conditions are met:
- *	* 	Redistributions of source code must retain the above copyright
+ *	    * 	Redistributions of source code must retain the above copyright
  *   		notice, this list of conditions and the following disclaimer.
  *   	* 	Redistributions in binary form must reproduce the above copyright
  *   		notice, this list of conditions and the following disclaimer in the
@@ -91,17 +91,23 @@ public function loadConfig() {
 	$config['max_flash_upload_size'] = '2147483648'; // 2GB
 	$config['max_gears_upload_size'] = '100000000000'; // 100 GB
 	
-	$config['log_location'] = '/var/filesender/log/';				// absolute location e.g /var/filesender/log/
 	$config['available_space'] = '20000M';
 	
-	// site settings
-	$config['site_url'] = 'http://siteurl/cloudstor/'; // URL to Filesender
-	$config['site_simplesamllocation'] = '/var/simplesamlphp_1_5_1/'; // absolute location e.g /var/www/simplesamlphp/
+	// site URLS
+    $prot =  $_SERVER['HTTPS'] ? 'https://' : 'http://';
+    $config['site_url'] = $prot + $_SERVER['SERVER_NAME'] + '/filesender/'; // URL to Filesender
+	$config['site_simplesamlurl'] =  $prot + $_SERVER['SERVER_NAME'] + '/simplesaml/';
+	$config['site_downloadurl'] = $config['site_url'] + 'files/';
+	$config['site_logouturl'] = $config['site_url'] + 'logout.php';
+
+    // (absolute) file locations
+	$config['site_filestore'] = '/usr/share/filesender/www/files/'; // Make sure this is accessible by webserver
+	$config['site_temp_filestore'] = '/usr/share/filesender/tmp/'; 
+	$config['site_simplesamllocation'] = '/usr/share/simplesamlphp/';
+	$config['log_location'] = '/usr/share/filesender/log/';	
+
+    // site settings
 	$config['site_authenticationSource'] ="default-sp";
-	$config['site_simplesamlurl'] = 'http://siteurl/simplesamlphp/';
-	$config['site_filestore'] = '/var/filesender/www/files/';  			//use absolute locations e.g. /var/filesender/www/files. Make sure this location is accessible from the web root (the www directory)! Otherwise file downloads will fail!
-	$config['site_temp_filestore'] = '/var/filesender/tmpfiles/';	// use absolute locations e.g /var/filesender/tmpfiles/
-	$config['site_downloadurl'] = 'http://siteurl/cloudstor/files/';
 	$config['site_defaultlanguage'] = 'EN_AU';
 	$config['site_name'] = 'FileSender';
 	$config['site_icon'] = 'cloudstor.png';
@@ -110,7 +116,6 @@ public function loadConfig() {
 
 	$config['default_daysvalid'] = 20;
 	$config['gearsURL'] = 'http://tools.google.com/gears/';
-	$config['site_logouturl'] = 'http://siteurl/cloudstor/logout.php';
 
 	// database settings	
 	$config['pg_host'] = 'localhost';
