@@ -3,6 +3,11 @@ debian/conf/*   etc/filesender
 classes		usr/share/filesender
 includes	usr/share/filesender
 scripts		usr/share/filesender
-www		usr/share/filesender
-tmp		usr/share/filesender
-
+tmp		var/lib/filesender/tmp
+files		var/lib/filesender/files
+www/*.php 	/usr/share/filesender/www
+www/css 	/usr/share/filesender/www
+www/favicon.ico	/usr/share/filesender/www
+www/js 		/usr/share/filesender/www
+www/lib 	/usr/share/filesender/www
+www/swf 	/usr/share/filesender/www

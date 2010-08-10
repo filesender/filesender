@@ -1,4 +1,5 @@
 etc/filesender
-usr/share/filesender
+usr/share/filesender/www
+var/lib/filesender
 var/log/filesender
 
