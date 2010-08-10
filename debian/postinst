@@ -21,7 +21,7 @@ set -e
 case "$1" in
     configure)
     	chown www-data:www-data /var/log/filesender
-	chown www-data:www-data /var/lib/filesender/www/files
+	chown www-data:www-data /var/lib/filesender/files
 	chown www-data:www-data /var/lib/filesender/tmp
     ;;
 
