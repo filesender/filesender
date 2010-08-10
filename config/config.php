@@ -118,12 +118,11 @@ public function loadConfig() {
 	$config['gearsURL'] = 'http://tools.google.com/gears/';
 
 	// database settings	
-    include('/etc/filesender/debian-db.php');
-    $config['pg_host'] = empty($dbserver) ? 'localhost' : $dbserver;
-    $config['pg_database'] = empty($dbname) ? 'filesender' : $dbname;
-    $config['pg_port'] = empty($dbport) ? '5432' : $dbport;
-    $config['pg_username'] = empty($dbuser) ? 'filesender' : $dbuser;
-    $config['pg_password'] = empty($dbpass) ? 'filesender' : $dbpass;
+	$config['pg_host'] = 'localhost';
+	$config['pg_database'] = 'filesender';
+	$config['pg_port'] = '5432';
+	$config['pg_username'] = 'postgres';
+	$config['pg_password'] = 'yoursecretpassword';
 
 	// email
 	$config['default_emailsubject'] = "{siteName}: {filename}";
