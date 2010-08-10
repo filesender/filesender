@@ -2,4 +2,5 @@ etc/filesender
 usr/share/filesender/www
 var/lib/filesender
 var/log/filesender
+usr/share/dbconfig-common/data/filesender/install
 
