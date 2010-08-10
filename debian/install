@@ -1,6 +1,5 @@
 config/config.php debian/conf/*  etc/filesender
 classes includes scripts		 usr/share/filesender
 tmp www/files		             var/lib/filesender
-scripts/filesender_db.sql        usr/share/dbconfig-common/data/filesender/install/pgsql
 www/*.php www/css www/favicon.ico www/js www/lib www/swf      usr/share/filesender/www
 
