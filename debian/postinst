@@ -43,6 +43,8 @@ case "$1" in
         chmod 750 /var/lib/filesender/files
         chown www-data:www-data /var/lib/filesender/tmp
         chmod 750 /var/lib/filesender/tmp
+
+        dbc_go filesender $@
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)
