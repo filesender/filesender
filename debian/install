@@ -4,7 +4,7 @@ classes		usr/share/filesender
 includes	usr/share/filesender
 scripts		usr/share/filesender
 tmp		var/lib/filesender/tmp
-files		var/lib/filesender/files
+www/files	var/lib/filesender/files
 www/*.php 	/usr/share/filesender/www
 www/css 	/usr/share/filesender/www
 www/favicon.ico	/usr/share/filesender/www
