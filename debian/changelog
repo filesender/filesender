@@ -1,0 +1,5 @@
+filesender (0.1.14-1) stable; urgency=low
+
+  * Initial release
+
+ -- Gijs Molenaar <gijs@pythonic.nl>  Thu, 01 Jul 2010 12:25:33 +0200
