@@ -46,7 +46,7 @@ function gearsup(){
 function DoneLoading() {
 if(jQuery.browser.mozilla) {
     var img = new Image();
-    img.src = 'http://example.com/any_small_image_use_on_web_page.gif';
+    img.src = 'ff_icon.png';
 }
 }
 
