@@ -4,7 +4,7 @@
 <mx:Script>
     <![CDATA[
      
- /*
+ /* 
  *  Filsender www.filesender.org
  *      
  *  Copyright (c) 2009-2010, Aarnet, HEAnet, UNINETT
@@ -65,11 +65,13 @@
 			currentFileObj = new Object();
 			currentFileObj.fileuid = UIDUtil.createUID();
 			var d:Date=new Date();
-			voucherValidDate.selectedDate = new Date(d.fullYear,d.month, d.date+ parseInt(config["default_daysvalid"]));
+			
 			dateRange = new Object();
 			dateRange["rangeStart"] = new Date(currentDate.fullYear,currentDate.month, currentDate.date + 1); // disable parevious and todays date
 			dateRange["rangeEnd"] = new Date(d.fullYear,d.month, d.date+parseInt(config.default_daysvalid.toString()));
 			voucherValidDate.selectableRange= dateRange;
+			
+			voucherValidDate.selectedDate = new Date(d.fullYear,d.month, d.date+ parseInt(config["default_daysvalid"]));
 			// load current vouchers
 			voucherEmails.text = "";
 			 
@@ -261,9 +263,9 @@
 		    <mx:Label text="{lang.Send_Vouchers_to}:"/>
 		    <mx:TextInput width="100%" id="voucherEmails"  toolTip="Multiple email address can be entered seperated by comma (,)" change="FlexGlobals.topLevelApplication.correctLinux(event)"/>
 		    <mx:Label text="Valid to:" textAlign="right"/>
-		    <mx:DateField id="voucherValidDate"  formatString="DD-MM-YYY"/>
+		    <mx:DateField id="voucherValidDate"  formatString="{config.datedisplayformat}"/>
 		    <mx:Button label="{lang.Send_Voucher}" click="createVouchers()" id="sendVoucher_btn" enabled="true"/>
-		  </mx:HBox>
+		  </mx:HBox> 
 		  <mx:Label text="{lang.Current_Valid_Vouchers}"/>
 		  <mx:DataGrid width="100%" height="100%" id="vouchers_dg" dataProvider="{usersFiles}">
 		    <mx:columns>
@@ -273,7 +275,7 @@
 		      <mx:DataGridColumn headerText="{lang.Valid_To}" dataField="fileexpirydate" labelFunction="dateFunc"/>
 		      <mx:DataGridColumn width="20">
 		        <mx:itemRenderer>
-		          <mx:Component>
+		          <mx:Component> 
 		            <mx:Button  icon="@Embed(source='/assets/shape_square_delete.png')" height="20" width="20" label="Delete" click="outerDocument.functionNameBtn()"/>
 		          </mx:Component>
 		        </mx:itemRenderer>

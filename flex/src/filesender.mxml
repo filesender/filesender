@@ -28,7 +28,7 @@
 			</mx:AddChild>
 			<mx:AddChild relativeTo="{hbox1}" position="before"> 
 				<mx:HBox width="100%" height="200" horizontalAlign="center" verticalAlign="top" fontSize="14">
-					<mx:TextArea height="200" width="400" text="{splash.site_splashtext}" borderStyle="none" textAlign="center" wordWrap="true" id="siteSplash" editable="false"  visible="{authStatus}" alpha="1.0"/>
+					<mx:TextArea height="200" width="400" text="{splash.site_splashtext}" borderStyle="none" textAlign="center" wordWrap="true" id="siteSplash" editable="false"  visible="{authStatus}" alpha="1.0" backgroundAlpha="0.0"/>
 				</mx:HBox>
 			</mx:AddChild> 
 			<mx:AddChild relativeTo="{hbox1}" position="before">
@@ -37,7 +37,7 @@
 				</mx:HBox>
 			</mx:AddChild>  
 			<mx:AddChild relativeTo="{siteDomain}" position="before">
-				<mx:TextArea id="MessageLabel" width="100%" height="85" borderStyle="none" textAlign="center" fontSize="14" editable="false" alpha="1.0"/>
+				<mx:TextArea id="MessageLabel" width="100%" height="85" borderStyle="none" textAlign="center" fontSize="14" editable="false" alpha="1.0" backgroundAlpha="0.0"/>
 			</mx:AddChild>
 			<mx:RemoveChild target="{spacer2}"/>
 			<mx:AddChild relativeTo="{MessageLabel}" position="before">
@@ -745,7 +745,7 @@
 			<mx:Label text="{lang.Welcome} {currentUser.name} " id="displayUserName" visible="{config.displayUserName}"/>
 			<mx:Spacer width="100%"/>
 			<mx:Label textAlign="right" fontStyle="normal" id="site_showStats" fontWeight="normal" text="{statsData} " visible="{config.site_showStats}" includeInLayout="{config.site_showStats}"/>
-			<mx:Label text="Beta 0.1.15 |" id="versionNumber" visible="{config.versionNumber}" includeInLayout="{config.versionNumber}"/>
+			<mx:Label text="Beta 0.1.15r165 |" id="versionNumber" visible="{config.versionNumber}" includeInLayout="{config.versionNumber}"/>
 			<mx:Label text=" Help" click="helpLink()" buttonMode="true" useHandCursor="true" mouseChildren="false" toolTip="Help with this application"  id="label3"/>
 			<mx:Label text="| About" click="aboutLink()" buttonMode="true" useHandCursor="true" mouseChildren="false" toolTip="Information about this application"  id="label2"/>
 		</mx:HBox>
