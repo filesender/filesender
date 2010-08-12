@@ -145,6 +145,13 @@
 	  
 	public function doGearsUpload():void 
 	{
+	
+		if(FileTo.text == null)
+		{
+			Alert.show(lang.E018,lang.E000);  // Enter an email adddress
+			return;
+		}
+		
 	if(!FS_Validation.isValidEmailList(FileTo.text,","))
        	{
 	       	Alert.show(lang['E015'],lang['E000']);

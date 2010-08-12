@@ -177,7 +177,7 @@
     			//init();
     			} 
     			 else {
-	        		Alert.show("Please Check the Email Address","Email Error");
+					 Alert.show(lang['E018'],lang['E000']); // check email address
 	        	}
 	        } 
         	      

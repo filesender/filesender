@@ -146,7 +146,7 @@
     public function doupload():void 
       {
     	if(currentFileObj.fileto == null){
- 		Alert.show(lang.E001,lang.E000);  // Enter an email adddress
+ 		Alert.show(lang.E018,lang.E000);  // Enter an email adddress
  		return 		
  		}	
 
