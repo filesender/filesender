@@ -146,7 +146,7 @@
 		
  	} else {
  	// show email error
- 	Alert.show(lang['E019']); // check email address
+ 	Alert.show(lang['E018']); // check email address
  }
 		
 		
