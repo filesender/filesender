@@ -99,6 +99,8 @@
 				tempFromVoucher = currentFileObj.filefrom;	
 				FileFrom.text = currentFileObj.fileto;	
 				FileTo.text = "";
+				selectedFilename.text = "";
+				selectedFileSize.text = "";
 								
 				} else {
 				currentFileObj.fileuid = UIDUtil.createUID();
