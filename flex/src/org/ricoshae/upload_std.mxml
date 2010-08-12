@@ -101,7 +101,9 @@
 			currentFileObj = FlexGlobals.topLevelApplication.currentFileObj;
 			tempFromVoucher = currentFileObj.filefrom;	
 			FileFrom.text = currentFileObj.fileto;			
-			FileTo.text = "";
+			FileTo.text = ""; 
+			selectedFilename.text = "";
+			selectedFileSize.text = "";
 			} else {
 				FlexGlobals.topLevelApplication.currentFileObj = new Object();
 			currentFileObj = FlexGlobals.topLevelApplication.currentFileObj;
