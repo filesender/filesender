@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml"  xmlns:comp="org.ricoshae.*" creationComplete="main_init()" layout="absolute" width="100%" height="100%" currentState="blank" minWidth="600" backgroundColor="#FFFFFF">
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml"  xmlns:comp="org.ricoshae.*" creationComplete="main_init()" layout="absolute" width="100%" height="100%" currentState="blank" minWidth="600" backgroundColor="#FFFFFF" backgroundGradientAlphas="[1.0, 1.0]" backgroundGradientColors="[#FFFFFF, #FFFFFF]">
 	<mx:states>    
 		<mx:State name="vouchers_fed">      
 			<mx:AddChild position="lastChild"> 
@@ -28,7 +28,7 @@
 			</mx:AddChild>
 			<mx:AddChild relativeTo="{hbox1}" position="before"> 
 				<mx:HBox width="100%" height="200" horizontalAlign="center" verticalAlign="top" fontSize="14">
-					<mx:TextArea height="200" width="400" text="{splash.site_splashtext}" borderStyle="none" textAlign="center" wordWrap="true" id="siteSplash" editable="false"  visible="{authStatus}" alpha="1.0" backgroundAlpha="0.0"/>
+					<mx:TextArea height="200" width="400" text="{splash.site_splashtext}" borderStyle="none" textAlign="center" wordWrap="true" id="siteSplash" editable="false"  visible="{authStatus}" alpha="1.0" />
 				</mx:HBox>
 			</mx:AddChild> 
 			<mx:AddChild relativeTo="{hbox1}" position="before">
@@ -37,7 +37,7 @@
 				</mx:HBox>
 			</mx:AddChild>  
 			<mx:AddChild relativeTo="{siteDomain}" position="before">
-				<mx:TextArea id="MessageLabel" width="100%" height="85" borderStyle="none" textAlign="center" fontSize="14" editable="false" alpha="1.0" backgroundAlpha="0.0"/>
+				<mx:TextArea id="MessageLabel" width="100%" height="85" borderStyle="none" textAlign="center" fontSize="14" editable="false" alpha="1.0"/>
 			</mx:AddChild>
 			<mx:RemoveChild target="{spacer2}"/>
 			<mx:AddChild relativeTo="{MessageLabel}" position="before">
