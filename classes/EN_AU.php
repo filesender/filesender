@@ -1,4 +1,4 @@
-<?php
+ 	<?php
 
 /*
  *  Filsender www.filesender.org
@@ -112,7 +112,7 @@ $lang = array(
 	"notAuthenticated" => "Unable to Authenticate - You need to logon again.",
 	
 	// steps
-	"Enter_delivery_email_address(es)" => "Enter delivery email address(es)",
+	"Enter_delivery_email_address" => "Enter delivery email address(es)",
 	"Browse_for_a_file" => "Browse for a file",
 	"Set_expiry_date" => "Set expiry date",
 	"Select_Upload" => "Select Upload",
