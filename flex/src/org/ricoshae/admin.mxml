@@ -66,12 +66,14 @@
 	[Bindable] public var allErrors:ArrayCollection;
 	[Bindable] public var allActive:ArrayCollection;
 	[Bindable] public var lang:Object;
+	[Bindable] public var statsData:Object;
 	
 public function init():void
 	{ 
 		CursorManager.removeBusyCursor();
 		config = FlexGlobals.topLevelApplication.config;
 		lang = FlexGlobals.topLevelApplication.lang;
+		statsData = FlexGlobals.topLevelApplication.statsData;
 		URLvidLocal = FlexGlobals.topLevelApplication.URLvid;
 			var objSend:Object = new Object();
 	    	objSend.call = "getAdminFiles";
@@ -439,7 +441,7 @@ private function dateFunc( item:Object, column:DataGridColumn):String
 				<mx:VBox x="0" y="0" width="100%" height="100%">
 					<mx:HBox width="100%" height="100%">
 						<mx:VBox width="50%" height="100%"> 
-							<mx:Label width="50%" textAlign="center" fontStyle="normal" fontWeight="bold" text="{FlexGlobals.topLevelApplication.statsData} " id="label0" fontSize="14"/>
+							<mx:Label width="50%" textAlign="center" fontStyle="normal" fontWeight="bold" text="{statsData} " id="label0" fontSize="14"/>
 							<mx:DataGrid width="100%" height="100%" dataProvider="{driveSpaceArray}">
 								<mx:columns>
 									<mx:DataGridColumn headerText="Drive" dataField="drivename"/>

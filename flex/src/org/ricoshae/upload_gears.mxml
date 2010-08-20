@@ -513,7 +513,7 @@ private function fnCheckExtension(str:String):Boolean
 		<mx:VBox width="250" height="100%">
 			<mx:HBox width="100%" height="30" verticalAlign="middle">
 				<mx:Image source="@Embed(source='/assets/num_1.png')"/>
-				<mx:Label text="{lang['Enter_delivery_email_address(es)']}"/>
+				<mx:Label text="{lang.Enter_delivery_email_address}"/>
 			</mx:HBox>
 			<mx:HBox width="100%" height="30" verticalAlign="middle">
 				<mx:Image source="@Embed(source='/assets/num_2.png')"/>
