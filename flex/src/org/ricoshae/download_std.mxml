@@ -72,11 +72,13 @@
 			filesize.text = readablizeBytes(currentDownloadFileObj.filesize);
 			pbProgress.visible = false;
 			btn_cancel.visible = false;
+			FlexGlobals.topLevelApplication.logProcess("-------------------------------------------");
+			FlexGlobals.topLevelApplication.logProcess("Initialise - Download");
 			}
        
        private function doProgress(event:ProgressEvent):void 
 {  
-	
+	 FlexGlobals.topLevelApplication.logProcess("FileSize "+ currentDownloadFileObj.filesize +" > downloaded "+ event.bytesLoaded +" ["+ Math.round(event.bytesLoaded / currentDownloadFileObj.filesize * 100).toString() +"%]- Download");
 	 pbProgress.setProgress(event.bytesLoaded, currentDownloadFileObj.filesize);
      pbProgress.label = "Downloading [" +  Math.round(event.bytesLoaded / currentDownloadFileObj.filesize * 100).toString() + "%]";
      downloadSize =  event.bytesLoaded; 
@@ -86,6 +88,7 @@
    
 	private function downloadFile():void {        
 	             
+				FlexGlobals.topLevelApplication.logProcess("Start Download - Download");
 	 			fileRefDown = new FileReference();  
 	    		// fileRef.addEventListener(Event.CANCEL, doEvent);
                	fileRefDown.addEventListener(Event.COMPLETE, fileDownloadComplete);
@@ -103,6 +106,7 @@
        	}
 		public function cancelDownload():void
 		{
+		FlexGlobals.topLevelApplication.logProcess("Cancel Download - Download");
 		pbProgress.visible = false;
 		btn_cancel.visible = false;
 		pbProgress.setProgress(0, currentDownloadFileObj.filesize);
@@ -114,7 +118,7 @@
 		
 	public function fileDownloadComplete(event:Event):void
 		{
-			
+		FlexGlobals.topLevelApplication.logProcess("Download Complete - Download");	
 		FlexGlobals.topLevelApplication.currentState="Message";
 		FlexGlobals.topLevelApplication.MessageLabel.text = "Your download is complete";
 				// compare download size 
@@ -131,6 +135,7 @@
 } 
 	public function returnMail(event:ResultEvent):void 
 		{
+		FlexGlobals.topLevelApplication.logProcess("Confirmation Email Sent - Download");
 		//	Alert.show(event.result.toString());
 			CursorManager.removeBusyCursor(); 
 			ff_fix.ff_fixStatus();
@@ -143,6 +148,7 @@
 
 	public function return_error(event:FaultEvent):void
 		{
+		FlexGlobals.topLevelApplication.logProcess("Error: "+ event.fault.toString() +" - Download");
 			CursorManager.removeBusyCursor();
 			Alert.show("Fault: " + event.fault);			 	 
 		} 
