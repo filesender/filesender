@@ -80,6 +80,9 @@
 			config = FlexGlobals.topLevelApplication.config;
 			URLvid = FlexGlobals.topLevelApplication.URLvid;
 			
+			FlexGlobals.topLevelApplication.logProcess("---------------------------------------");
+			FlexGlobals.topLevelApplication.logProcess("Initialise Flash Upload");
+			
 			if( config["debug"] == true) 
 			{
 				textarea1.visible = true;	
@@ -138,7 +141,7 @@
    		{
     	if(FS_Validation.isValidEmailList(currentFileObj.fileto,","))
     	{
-    	btUpload.enabled = true;
+    		btUpload.enabled = true;
     	} else {
     		Alert.show(lang.E018,lang.E000); // check email address
     	}	
@@ -147,12 +150,14 @@
     
     public function doupload():void 
       {
+		FlexGlobals.topLevelApplication.logProcess("Start Upload - Flash Upload");
     	if(currentFileObj.fileto == null){
  		Alert.show(lang.E018,lang.E000);  // Enter an email adddress
  		return 		
  		}	
 
  		if(fileRef == null){
+			FlexGlobals.topLevelApplication.logProcess("Need to browse for a file - Flash Upload");
  			Alert.show(lang.E019,lang.E000); // browse for a file to upload
  			return ;		
  		}
@@ -160,13 +165,15 @@
  		// check file size
  		if(fileRef.size < 0 )
  		{ 
- 			Alert.show(lang.E019,lang.E019); 
+			FlexGlobals.topLevelApplication.logProcess("File Size is 0 - Flash Upload");
+			Alert.show(lang.E019,lang.E019); 
  			return ;
  		} 
  		else  
  		{
  		if(parseInt(fileRef.size.toString()) > parseInt(config.max_flash_upload_size))
  			{
+			FlexGlobals.topLevelApplication.logProcess("File Size too Large (" + fileRef.size.toString() + ") - Flash Upload");
  				Alert.show(lang.E020,lang.E000); 
  				return ;		 
  			}	  
@@ -174,6 +181,7 @@
  	
  		if(config.AuP &&   !AuPCB.selected) 
  		{
+			FlexGlobals.topLevelApplication.logProcess("AUP not selected - Flash Upload");
  			Alert.show(lang.E021,lang.E000); 
  			return ;	
  		}
@@ -188,6 +196,7 @@
  	
  	if(params.length > config.max_email_recipients )
     {
+		FlexGlobals.topLevelApplication.logProcess("Too many email accounts - Flash Upload");
     	Alert.show(lang.E022 + config.max_email_recipients,lang.E000);
     	return;
     }
@@ -225,8 +234,10 @@
         currentFileObj.filesize = fileRef.size;
         textarea1.text = "Uploading " + fileRef.name + "...";
         tm.start();
+		FlexGlobals.topLevelApplication.logProcess("Start Upload - Flash Upload");
      }
      catch (error:Error) {
+		 FlexGlobals.topLevelApplication.logProcess("Upload Error " + error.toString() + " - Flash Upload");
          Alert.show(lang['E016']);
      }
  } else {
@@ -245,6 +256,7 @@
 	{
 	pgBar.setProgress(event.bytesLoaded-1, event.bytesTotal);
 	currbytes = event.bytesLoaded;  
+	FlexGlobals.topLevelApplication.logProcess("Upload Progress [" + currbytes + " bytes] - Flash Upload");
 	}
  
  // Following dispatched when the file has been given to the server script
@@ -252,6 +264,7 @@
  // use DataEvent.UPLOAD_COMPLETE_DATA event as shown in uploadCompleteHandler
  public function completeHandler(event:Event):void 
  	{
+	 FlexGlobals.topLevelApplication.logProcess("File Uploaded - Flash Upload");
      trace("File uploaded");
      textarea1.text += "\nFile uploaded"; 
      textarea1.text += "\nMoving File"; 
@@ -265,11 +278,12 @@
  public function uploadCompleteHandler(event:DataEvent):void 
  	{
  		var uploadResult:String = event.data.toString();
- 		
+		FlexGlobals.topLevelApplication.logProcess(uploadResult + " - Flash Upload");
  		if(uploadResult == "moveOk") 
  			{
  				textarea1.text += "\n File Moved"; 
     			fileCompleted();
+				
     			return;
  			}
  		
@@ -367,7 +381,8 @@
         		// close voucher and create new download vouchers
         	        		
         		// create new vouchers with unique filevoucheruid's
-	   			
+				FlexGlobals.topLevelApplication.logProcess("Send file details to database - Flash Upload");
+				
         		var UID:String = UIDUtil.createUID(); 
    			    tempCurrentFileObj.filevoucheruid = UID;
    			    
@@ -393,7 +408,7 @@
      public function fileSaved(event:ResultEvent):void
      {
      	// error checking here 
-     	
+		 FlexGlobals.topLevelApplication.logProcess("Database updated successfully - Flash Upload");
 		 FlexGlobals.topLevelApplication.currentState = "Message";
 		 FlexGlobals.topLevelApplication.MessageLabel.text = lang['Your_file_has_been_sent'];
      	//init();
@@ -402,20 +417,24 @@
      public function fileError(event:FaultEvent):void
      {
      	Alert.show(event.fault.toString());
+		FlexGlobals.topLevelApplication.logProcess("Error " + event.fault.toString() + " - Flash Upload");
      }
 
  public function httpErrorHandler(event:HTTPStatusEvent):void 
  	{
  		Alert.show(event.status.toString());
+		FlexGlobals.topLevelApplication.logProcess("Error " + event.status.toString() + " - Flash Upload");
  	}
  
  public function httpIOErrorHandler(event:IOErrorEvent):void 
  	{
+		 FlexGlobals.topLevelApplication.logProcess("Error " + event.text.toString() + " - Flash Upload");
  		Alert.show(event.text.toString());
  	}
  
  public function httpSecurityErrorHandler(event:SecurityErrorEvent):void 
  	{
+		FlexGlobals.topLevelApplication.logProcess("Error " + event.text.toString() + " - Flash Upload");
   		Alert.show(event.text.toString());
  	}
 
@@ -443,6 +462,7 @@
    		var invalidExtension:String = config["ban_extension"];
         if (invalidExtension.indexOf(nameParts[nameParts.length-1].toString())<0) 
         	{   
+			FlexGlobals.topLevelApplication.logProcess("Invalid extension " + nameParts[nameParts.length-1].toString() + " - Flash Upload");
         		return false; 
         	}
     		return true;
@@ -450,7 +470,7 @@
 	
   public function selectHandler(event:Event):void {
   	// poulate selected file information
-  	
+	  FlexGlobals.topLevelApplication.logProcess("File Selected " + fileRef.name.toString() + " - Flash Upload");
   	if(fnCheckString(fileRef.name))
   	{
   		Alert.show("Invalid File Name (Must no contain the following charachters : * ? < > | %","Invalid Filename");
@@ -477,6 +497,7 @@
 
 public function cancelUpload():void 
 	{ 
+		FlexGlobals.topLevelApplication.logProcess("Upload Cancelled - Flash Upload");
 		fileRef.cancel(); 
 		currentFileObj.filefrom = tempFromVoucher;	
 		currentFileObj.fileto = FileFrom.text;	

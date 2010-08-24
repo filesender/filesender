@@ -79,6 +79,8 @@
 				uploadBtn.visible = true;
 				displayprogressBar = false;
 				cancelBtn.visible = false;
+				FlexGlobals.topLevelApplication.logProcess("---------------------------------------");
+				FlexGlobals.topLevelApplication.logProcess("Initialise Gears Upload - Gears Upload");
 				
 				pgBar.label = lang['Uploading'] + " %3%%";
 				
@@ -140,6 +142,7 @@
 	public function startuploadgears():void
 	{  
 		// select the file
+		FlexGlobals.topLevelApplication.logProcess("Select File - Gears Upload");
 		ExternalInterface.call("gearsup");
 	} 
 	  
@@ -148,12 +151,14 @@
 	
 		if(FileTo.text == null)
 		{
+			FlexGlobals.topLevelApplication.logProcess("Email Missing - Gears Upload");
 			Alert.show(lang.E018,lang.E000);  // Enter an email adddress
 			return;
 		}
 		
 	if(!FS_Validation.isValidEmailList(FileTo.text,","))
        	{
+			FlexGlobals.topLevelApplication.logProcess("Invalid Email ["+FileTo.text.toString()+"] - Gears Upload");
 	       	Alert.show(lang['E015'],lang['E000']);
     	   	return;
       	} 
@@ -169,12 +174,14 @@
  	
  	if(params.length > config["max_email_recipients"] )
     {
+		FlexGlobals.topLevelApplication.logProcess("Too Many Emails - Gears Upload");
     	Alert.show(lang['E022']+config["max_email_recipients"],lang['E000']);
     	return;
     }
        	
     if(config["AuP"] &&   !AuPCB.selected) 
     {
+		FlexGlobals.topLevelApplication.logProcess("AUP not Selected - Gears Upload");
  		Alert.show(lang['E021'],lang['E000']); 
  		return ;	
  	}
@@ -209,7 +216,8 @@ private function fnCheckExtension(str:String):Boolean
    
    // check if etension is listed in banned file types
     var invalidExtension:String = config["ban_extension"];
-   	if (invalidExtension.indexOf(nameParts[nameParts.length-1].toString())<0) {   
+   	if (invalidExtension.indexOf(nameParts[nameParts.length-1].toString())<0) { 
+		FlexGlobals.topLevelApplication.logProcess("Invalid Extension ["+nameParts[nameParts.length-1].toString()+"] - Gears Upload");
     	return false; 
     	}
     return true;
@@ -217,11 +225,16 @@ private function fnCheckExtension(str:String):Boolean
  	
 	public function returnStatus(sInfo:String,sType:String):void
 	{
-	//tempText.text += "\n" +sType + ":" + sInfo;
 	tempText.text = "\n" +sType + ":" + sInfo;
-		
+	
+	if(sType == "msg")
+	{
+		FlexGlobals.topLevelApplication.logProcess("Gears Notification ["+ sType + ":" + sInfo + "] - Gears Upload");
+	}
+	
 	if(sType == "filename")
 	{
+		FlexGlobals.topLevelApplication.logProcess("File Selected ["+sInfo.toString()+"] - Gears Upload");
 		//check for invalid file name charachters
 		if (fnCheckString(sInfo.toString()))
 		{
@@ -231,6 +244,7 @@ private function fnCheckExtension(str:String):Boolean
 
 		if (fnCheckExtension(sInfo.toString()))
 		{
+			FlexGlobals.topLevelApplication.logProcess("Invalid Extension Selected ["+sInfo.toString()+"] - Gears Upload");
 		Alert.show("File Extension type is invalid or is missing. You may like to zip the file and try again","Invalid File Extension");
 		return;
 		} 
@@ -240,6 +254,9 @@ private function fnCheckExtension(str:String):Boolean
 		FlexGlobals.topLevelApplication.uploadStarted(); 
 		btUpload.visible = true;
    		
+		
+		// get file size
+		FlexGlobals.topLevelApplication.logProcess("Get File Size - Gears Upload");
    		var objSend1:Object = new Object();
 	   	objSend1.call = "getFileSize";
 	   	objSend1.filename = currentFileObj.fileoriginalname;
@@ -248,11 +265,12 @@ private function fnCheckExtension(str:String):Boolean
 
 	if(sType == "error")
 	{
+		FlexGlobals.topLevelApplication.logProcess("Error in Gears Upload [" + sInfo.toString() + "] - Gears Upload");
 		FlexGlobals.topLevelApplication.fatalError(lang['E016']);
 	}
 	if(sType == "filesize")
 	{
-		
+		FlexGlobals.topLevelApplication.logProcess("File size returned [" + sInfo.toString() + "] - Gears Upload");
 		var thefileSize:Number = parseInt(sInfo.toString());
 		selectedFileSize.text = readablizeBytes(thefileSize);
 		currentFileObj.filesize = sInfo.toString();	
@@ -260,13 +278,16 @@ private function fnCheckExtension(str:String):Boolean
 	
 	if(sType == "percentage")
 	{
+	FlexGlobals.topLevelApplication.logProcess("Progress Percentage returned [" + sInfo.toString() + "%] - Gears Upload");
 	var percent:Number = parseInt(sInfo.toString())-1;
 	pgBar.setProgress(percent,100);
 	}
 			 
 	if(sType == "complete")
 	{
-
+	
+		FlexGlobals.topLevelApplication.logProcess("Upload Complete [" + sInfo.toString() + "] - Gears Upload");
+		FlexGlobals.topLevelApplication.logProcess("Attempt to move file - Gears Upload");
 	//	Application.application.saveLogs(currentFileObj,"Uploaded","File Uploaded");
     // move file to current data folder
  		var objSend:Object = new Object();
@@ -285,6 +306,7 @@ private function fnCheckExtension(str:String):Boolean
 	
 	if(sType == "cancelled")
 		{
+		FlexGlobals.topLevelApplication.logProcess("Upload Cancelled - Gears Upload");
 		FlexGlobals.topLevelApplication.uploadStopped(); 
 		currentFileObj.filefrom = tempFromVoucher;	
 		currentFileObj.fileto = FileFrom.text;
@@ -299,8 +321,10 @@ private function fnCheckExtension(str:String):Boolean
 	{
 		// check for move errors      
 		if(event.result == false){ 
+			FlexGlobals.topLevelApplication.logProcess("Error Moving File - Gears Upload");
 			Alert.show(lang['E017']);  // Error moving file
 		} else { 
+			FlexGlobals.topLevelApplication.logProcess("File Moved OK - Gears Upload");
 		fileComplete();
 		}
 	}   	
@@ -318,6 +342,7 @@ private function fnCheckExtension(str:String):Boolean
 		var sizeString:String  = event.result.toString();   
 		var myNumber:Number = new Number(sizeString);
 		 
+		FlexGlobals.topLevelApplication.logProcess("Get Resume position:" +myNumber+"["+ currentFileObj.fileoriginalname +"] - Gears Upload");
 		// send resume back to gears
 		ExternalInterface.call("setResumeposition('"+myNumber+"','"+currentFileObj.fileoriginalname+"')");
 
@@ -331,14 +356,15 @@ private function fnCheckExtension(str:String):Boolean
 
     public function OK_CancelUpload(event:CloseEvent):void    
 	{
-	  	if (event.detail == Alert.OK) {        		
+	  	if (event.detail == Alert.OK) {        	
+			FlexGlobals.topLevelApplication.logProcess("Cancel Upload - Gears Upload");
 	     	ExternalInterface.call("cancelUpload");
     	}
 	}
 	 	
     public function fileComplete():void 
   		{
-	
+		FlexGlobals.topLevelApplication.logProcess("File Uploaded > Send emails - Gears Upload");
 		// send email to each person in the to box
 
         if (currentFileObj.fileto != null)
@@ -391,7 +417,9 @@ private function fnCheckExtension(str:String):Boolean
         		// close voucher and create new download vouchers
         	        		
         		// create new vouchers with unique filevoucheruid's
-
+				
+				FlexGlobals.topLevelApplication.logProcess("Send email to ["+ params[i].toString() +"] - Gears Upload");
+				
         		var UID:String = UIDUtil.createUID(); 
    			    tempCurrentFileObj.filevoucheruid = UID;
    			    
@@ -415,21 +443,25 @@ private function fnCheckExtension(str:String):Boolean
         	         
   	public function fileSaved(event:ResultEvent):void
     {
+		
      	//Alert.show(event.result.toString());
 		if(event.result.toString() == 1){
+		FlexGlobals.topLevelApplication.logProcess("Email Sent OK  - Gears Upload");
      	CursorManager.removeBusyCursor();
 		FlexGlobals.topLevelApplication.currentState = "Message";
 		FlexGlobals.topLevelApplication.MessageLabel.text = lang.Your_file_has_been_sent;
      	init();
      	} else {
-			FlexGlobals.topLevelApplication.currentState = "Message";
-			FlexGlobals.topLevelApplication.MessageLabel.text = lang.E002; 
+			FlexGlobals.topLevelApplication.logProcess("Error Sending Email  - Gears Upload");
+		FlexGlobals.topLevelApplication.currentState = "Message";
+		FlexGlobals.topLevelApplication.MessageLabel.text = lang.E002; 
      	}
      	ff_fix.ff_fixStatus();
      }
      
      public function fileError(event:FaultEvent):void
      {
+		 FlexGlobals.topLevelApplication.logProcess("File Error ["+ event.fault.toString() +"]  - Gears Upload");
      	Alert.show(event.fault.toString(),"Unknown error");
      } 
        

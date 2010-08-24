@@ -161,7 +161,7 @@
 				site_showStats.visible = false;
 				site_showStats.visible = false;
 				displayUserName.visible = false;
-				
+				currentUser.name = "admin";
 				// get voucher URL and Gears status 
 				getVoucher();
 				
@@ -169,9 +169,7 @@
 			
 			public  function resultInit(event:ResultEvent):void
 			{
-				//Alert.show(event.result.toString());
-				//return;
-				 
+						 
 					
 				// Returns all initialisation data   
 				var rawData:String = String(event.result); 
@@ -180,6 +178,7 @@
 					var tempObj:Object = JSON.decode(rawData);//currentFileObj = JSON.decode(rawData);
 				}
 				catch (erObject:Error) {
+					logProcess("Error Loading Config :"+ event.result.toString());
 					currentState = "Message";
 					MessageLabel.htmlText = "There has been an error loading configuration data. Please check Log File<BR><BR>";
 					if(FlexGlobals.topLevelApplication.parameters.flexerrors ) {
@@ -224,7 +223,7 @@
 				
 				
 				if(tempObj["voucherauth"]) {
-					
+					logProcess("Voucher is Authenticated");
 					var urlRedirect:URLRequest = new URLRequest("invalidvoucher.php"); 
 					
 					if(tempObj["voucher"].toString() == "found") {
@@ -248,7 +247,7 @@
 				 
 				// if SAMLAuth
 				if(tempObj["samlauth"]) {
-					
+					logProcess("SAML is Authenticated");
 					logonOffStatus = true;
 					// load user data
 					var tempUser:Object = JSON.decode(tempObj["authUser"]);
@@ -263,7 +262,7 @@
 					{
 						adminStatus = false;
 						authStatus = false; 
-						
+						logProcess("Information missing from IDP");
 						Alert.show("Although you have authenticated with an Identity Provider. It appears your IdP has not provided enough information for this application to continue","Error: Contact Administrator")
 						return;
 					}
@@ -286,7 +285,7 @@
 						currentState="Upload";
 					}  
 				}
-				
+				logProcess("user Logged on");
 			}
 			
 
@@ -295,12 +294,14 @@
 				addEventListener(StateChangeEvent.CURRENT_STATE_CHANGE,handleStateChange); 
 				if (ExternalInterface.available)
 				{
+					
 					ExternalInterface.addCallback("checkVoucher", checkVoucher);
 					ExternalInterface.call("gup('vid')"); 
 					
 				} else {
 					// no external interface so cannot proceed
 					// suggets javascript is not enable on browser
+					
 					fatalError("Javascript not enabled - you cannot use file Sender"); 
 				}
 			}
@@ -348,7 +349,7 @@
 					fileName = currentFileObj.fileoriginalname.toString();
 				}
 				if(status == "Available") 
-				{
+				{ 
 					currentState = "filedownload";
 					return;	  
 				}
@@ -436,9 +437,12 @@
 			
 			public function checkVoucher(vid:String,gStatus:Boolean):void
 			{ 
+				
 				if(vid == "") {
 					URLvid = ""; 
+					logProcess("No Voucher Returned");
 				} else {
+					logProcess("Voucher Returned as " + vid.toString());
 					URLvid = "?vid="+vid; 
 				} 
 				
@@ -459,13 +463,14 @@
 				if(gears){
 					gearsImage.source = gearsYES; 
 					gearsImage.toolTip = "Installed: Gears allows you to upload extremely large files";
-					
+					logProcess("Gears Installed");
 				}
 				else 
 				{
 					// use standar flash filereference upload
 					gearsImage.source = gearsNo;  
 					gearsImage.toolTip = "NOT Installed: Install Gears to allow uploading of extremely large files. http://gears.google.com/";
+					logProcess("NO Gears");
 				} 
 			}
 			
@@ -553,7 +558,7 @@
 				if (event.result.toString() == ""){ 
 					currentState="Message";
 					MessageLabel.text = "This voucher is no longer valid"; 
-					
+					logProcess("Voucher No Longer Valid");
 				} else {
 					
 					var currentArray:ArrayCollection = new ArrayCollection(ArrayUtil.toArray(event.result));
@@ -589,11 +594,13 @@
 			// ---------
 			public function faultHandler(event:FaultEvent):void 
 			{
+				logProcess("Error : " +  event.fault.toString());
 				Alert.show("Fault",  event.fault.toString());
 			}
 			
 			public function logon():void
 			{
+				logProcess("Attempt Logon");
 				var objSend:Object = new Object();
 				objSend.call = "logon";
 				logon_main.send(objSend);		
@@ -671,6 +678,7 @@
 			}
 			public function fatalError(error:String):void
 			{
+				logProcess("Error : " + error.toString());
 				currentState="Message";
 				MessageLabel.text = error;
 			}
@@ -716,7 +724,21 @@
 					e.currentTarget.text = input;
 				}
 			}  
-			 
+			
+			// log client process process
+			public function logProcess(message:String):void
+			{
+				var objSend:Object = new Object();
+				objSend.call = "log_process";
+				objSend.message = message;
+				objSend.client =  currentUser.name.replace(" ","-");
+				logon_process.send(objSend);
+			}
+			
+			public function resultlog(event:ResultEvent):void 
+			{
+				// return from writing process log
+			} 
 			 
 	]]> 
 		  
@@ -726,6 +748,7 @@
 	<mx:HTTPService id="checkAuthAdmin" url="../fs_main.php{URLvid}" useProxy="false" method="POST" resultFormat="text" result="resultAuthAdmin(event)" fault="resultError(event)"/> 
 	<mx:HTTPService id="file_main" url="../fs_main.php{URLvid}" useProxy="false" method="POST" resultFormat="text" result="resultFile(event)" fault="resultError(event)"/>  
 	<mx:HTTPService id="logon_main" url="../fs_main.php{URLvid}" useProxy="false" method="POST" resultFormat="text" result="resultLogon(event)" fault="resultError(event)"/>     
+	<mx:HTTPService id="logon_process" url="../fs_main.php{URLvid}" useProxy="false" method="POST" resultFormat="text" result="resultlog(event)" fault="faultHandler(event)"/>     
 	 
 	<mx:NumberFormatter id="numberFormatter" precision="2" useThousandsSeparator="true" useNegativeSign="true"/>
 	<mx:DateFormatter id="df" formatString="{config.datedisplayformat}"/>
