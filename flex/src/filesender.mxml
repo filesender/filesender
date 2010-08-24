@@ -442,7 +442,7 @@
 					URLvid = ""; 
 					logProcess("No Voucher Returned");
 				} else {
-					logProcess("Voucher Returned as " + vid.toString());
+					//logProcess("Voucher Returned as " + vid.toString());
 					URLvid = "?vid="+vid; 
 				} 
 				
