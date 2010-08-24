@@ -66,7 +66,8 @@ public function saveLog($dataitem,$logType,$message){
 
 	// If authenticated also add authID to log
 	// add os, browser and gears version to log message
-	
+	if(isset($dataitem['fileuid'])) 
+	{
 	$logfileuid	= $dataitem['fileuid'];
 	$logvoucheruid	= $dataitem['filevoucheruid'];
 	$logtype	= $logType;
@@ -77,6 +78,19 @@ public function saveLog($dataitem,$logType,$message){
 	$logfilename	= $dataitem['fileoriginalname'];
 	$logmessage	= $message;
 	$logauthuseruid	= $authAttributes["eduPersonTargetedID"];
+	} else {
+	$logfileuid	= "";
+	$logvoucheruid	= "";
+	$logtype	= $logType;
+	$logfrom	= "";
+	$logto	= "";
+	$logdate	= date($config['postgresdateformat'], time());//use timestamp with timezone $dbCheck->checkString(pg_escape_string($dataitem['logdate']));
+	$logfilesize	= "";
+	$logfilename	= "";
+	$logmessage	= $message;
+	$logauthuseruid	= $authAttributes["eduPersonTargetedID"];
+	}
+	
 	$sqlQuery	= "
 					INSERT INTO 
 							logs 
@@ -128,6 +142,40 @@ public function saveLog($dataitem,$logType,$message){
 		}
 	
 	}
+	
+	// logfile for individual
 
+public function logProcess($client,$message)
+	{
+	global $config;
+	
+	if($config["debug"])
+	{
+		$ip = $_SERVER['REMOTE_ADDR']; //capture IP
+	
+		if($config['dnslookup'] == true) {
+			$domain = GetHostByName($ip);
+		} else {
+			$domain = "";
+		}
+	
+		$message .= "[".$ip."(".$domain.")] ";
+		$dateref = date("Ymd");
+		$data = date("Y/m/d H:i:s");
+		$myFile = $config['log_location'].$dateref."-".$client."-error.log.txt";
+		$fh = fopen($myFile, 'a') or die("can't open file");
+		// don't print errors on screen when there is no session.
+		if(isset($_REQUEST['PHPSESSID'])){
+			$sessionId = $_REQUEST['PHPSESSID'];
+		} else {
+			$sessionId = "none";
+		}
+		$stringData = $data.' [Session ID: '.$sessionId.'] '.$message."\n";
+		fwrite($fh, $stringData);
+		fclose($fh);
+		closelog();
+		}
+	}
 }
+
 ?>

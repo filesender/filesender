@@ -38,6 +38,7 @@ $lang = EN_AU::getInstance();
 $CFG = config::getInstance();
 $config = $CFG->loadConfig();
 $sendmail = Mail::getInstance();
+$log = Log::getInstance();
 
 $returnData = array(); // init return array
 
@@ -106,6 +107,9 @@ if(session_id() == ""){
 	
 	switch ($call) {
 	
+	case "log_process":
+    	echo $log->logProcess($_POST['client'],$_POST['message']);
+    	break;
 	
 	case "getAuth":
         echo $authsaml->isAuth();
