@@ -1,5 +1,5 @@
---- config/config.php	2010-08-10 15:11:37.398962326 +0200
-+++ config/config.php.new	2010-08-10 15:17:03.440881630 +0200
+--- config.php	2010-08-27 10:55:53.000000000 +0200
++++ config.php.new	2010-08-27 10:58:18.000000000 +0200
 @@ -118,11 +118,12 @@ public function loadConfig() {
  	$config['gearsURL'] = 'http://tools.google.com/gears/';
  
@@ -9,12 +9,12 @@
 -	$config['pg_port'] = '5432';
 -	$config['pg_username'] = 'postgres';
 -	$config['pg_password'] = 'yoursecretpassword';
-+    include('/etc/filesender/debian-db.php');
-+    $config['pg_host'] = empty($dbserver) ? 'localhost' : $dbserver;
-+    $config['pg_database'] = empty($dbname) ? 'filesender' : $dbname;
-+    $config['pg_port'] = empty($dbport) ? '5432' : $dbport;
-+    $config['pg_username'] = empty($dbuser) ? 'filesender' : $dbuser;
-+    $config['pg_password'] = empty($dbpass) ? 'filesender' : $dbpass;
++	include('/etc/filesender/debian-db.php');
++	$config['pg_host'] = empty($dbserver) ? 'localhost' : $dbserver;
++	$config['pg_database'] = empty($dbname) ? 'filesender' : $dbname;
++	$config['pg_port'] = empty($dbport) ? '5432' : $dbport;
++	$config['pg_username'] = empty($dbuser) ? 'filesender' : $dbuser;
++	$config['pg_password'] = empty($dbpass) ? 'filesender' : $dbpass;
  
  	// email
  	$config['default_emailsubject'] = "{siteName}: {filename}";
