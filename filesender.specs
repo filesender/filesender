@@ -1,28 +1,62 @@
-Name:		filesender
-Version:	0.1.14
-Release:	1%{?dist}
-Summary:	
-Group:		
-License:	
-URL:		
-Source0:	
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Name:           filesender
+Version:        0.1.16.201008271507
+Release:        1%{?dist}
+Summary:        Sharing large files with a browser
 
-BuildRequires:	
-Requires:	
+Group:          Applications/Internet
+License:        custom?
+URL:            http://www.assembla.com/spaces/file_sender/documents
+Source0:        http://filesender-dev.surfnet.nl/nightly/filesender-0.1.16.201008271507.tar.gz
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildArch: noarch
+
+Requires: httpd
+Requires: php
 
 %description
+FileSender is a web based application that allows authenticated users to
+securely and easily send arbitrarily large files to other users.
+Authentication of users is provided through SAML2, LDAP and RADIUS.
+Users without an account can be sent an upload voucher by an
+authenticated user. FileSender is developed to the requirements of the
+higher education and research community.
+.
+The purpose of the software is to send a large file to someone, have
+that file available for download for a certain number of downloads and/or
+a certain amount of time, and after that automatically delete the file.
+The software is not intended as a permanent file publishing platform.
+
 
 %prep
 %setup -q
 
 %build
-%configure
-make %{?_smp_mflags}
 
 %install
 rm -rf %{buildroot}
-make install DESTDIR=%{buildroot}
+%{__mkdir} -p %{buildroot}{%{_datadir}/%{name},%{_sysconfdir}/{httpd/conf.d,%{name}}}
+%{__mkdir} -p %{buildroot}%{_localstatedir}/lib/%{name}/{upload,save,config}
+%{__cp} -ad ./* %{buildroot}%{_datadir}/%{name}
+%{__cp} -p %{SOURCE2} %{buildroot}%{_sysconfdir}/httpd/conf.d/%{name}.conf
+%{__cp} -p %{SOURCE1} %{buildroot}%{_sysconfdir}/%{name}/config.inc.php
+
+%{__rm} -f %{buildroot}%{_datadir}/%{name}/{[CIRLT]*,*txt}
+%{__rm} -f %{buildroot}%{_datadir}/%{name}/{libraries,setup/lib}/.htaccess
+%{__rm} -rf %{buildroot}%{_datadir}/%{name}/{contrib,documentation-gsoc}
+
+#classes
+#config
+#filesender.specs
+#includes
+#INSTALL.txt
+#LICENCE.txt
+#CHANGELOG.txt
+#README.txt
+#log
+#scripts
+#tmp
+#www
+
 
 %clean
 rm -rf %{buildroot}
@@ -32,3 +66,5 @@ rm -rf %{buildroot}
 %doc
 
 
+
+%changelog
