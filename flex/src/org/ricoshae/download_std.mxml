@@ -56,7 +56,6 @@
 		public var request:URLRequest;
 		public var currentFileUID:String;	
 		public var urlVars:URLVariables;
-		public var downloadSize:int;
 		public var fileRefDown:FileReference;
 			
 		public var urlReq:URLRequest;
@@ -81,7 +80,6 @@
 	 FlexGlobals.topLevelApplication.logProcess("FileSize "+ currentDownloadFileObj.filesize +" > downloaded "+ event.bytesLoaded +" ["+ Math.round(event.bytesLoaded / currentDownloadFileObj.filesize * 100).toString() +"%]- Download");
 	 pbProgress.setProgress(event.bytesLoaded, currentDownloadFileObj.filesize);
      pbProgress.label = "Downloading [" +  Math.round(event.bytesLoaded / currentDownloadFileObj.filesize * 100).toString() + "%]";
-     downloadSize =  event.bytesLoaded; 
 	
 	 
 }     
