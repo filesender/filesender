@@ -35,35 +35,37 @@ $authsaml = AuthSaml::getInstance();
 $authvoucher = AuthVoucher::getInstance();
 $CFG = config::getInstance();
 $config = $CFG->loadConfig();
-
+$functions = Functions::getInstance();
+$saveLog = Log::getInstance();
+$sendmail = Mail::getInstance();
 
 if(!$authvoucher->aVoucher() && !$authsaml->isAuth()) {
 		echo "notAuthenticated";
 } else {
-	
-if (isset($_REQUEST["file"])) {
-	$file=$config['site_filestore'].$_REQUEST["file"];
-	if(file_exists($file)) {
-//  header("Content-type: application/force-download");
-//	header('Content-Type: application/octet-stream');
-//  header("Content-Transfer-Encoding: Binary");
-//  header("Content-length: ".filesize($file));
-//  header('Content-disposition: attachment; filename="aaa.txt"');
-//	readfile("$file");
-//	} else {
-//    echo "No file selected"; 
-//	}
+if (isset($_REQUEST["vid"])) {
 
-$download_rate = 20000.5;
+// load the voucher
+$fileArray =  json_decode($authvoucher->getVoucher(), true);
+$fileoriginalname = $fileArray[0]['fileoriginalname'];
+$fileuid = $fileArray[0]['fileuid'];	
+$file=$config['site_filestore'].$fileuid.$fileoriginalname;
+
+//$download_rate = 20000.5;
 if(file_exists($file) && is_file($file))
 {
-    header('Cache-control: private');
-	//header("Content-Type: application/force-download");
+
+	header("Content-Type: application/force-download");
 	header('Content-Type: application/octet-stream');
-	//header("Content-Transfer-Encoding: Binary");
-    header('Content-Length: '.filesize($file));
-    header('Content-Disposition: attachment; filename='.$download_file);
+    header('Content-Length: '.getFileSize($file));
+	header('Content-Disposition: attachment; filename='.$fileoriginalname);
+	set_time_limit(0);
 	readfile_chunked($file);
+	// email completed
+		$tempEmail = $fileArray[0]["fileto"];
+		$dataitem["fileto"] = $fileArray[0]["filefrom"];	
+		$dataitem["filefrom"] = $tempEmail;
+		$saveLog->saveLog($fileArray[0],"Download","");
+		$sendmail->sendEmail($fileArray[0],$config['filedownloadedemailbody']);
 }
 else 
 {
@@ -71,18 +73,55 @@ else
 }
 }
 }
-function readfile_chunked ($filename) {
-  $chunksize = 1*(1024*1024); // how many bytes per chunk
-  $buffer = '';
-  $handle = fopen($filename, 'rb');
-  if ($handle === false) {
-    return false;
-  }
-  while (!feof($handle)) {
-    $buffer = fread($handle, $chunksize);
-    print $buffer;
-  }
-  return fclose($handle);
-}
-} 
+
+function readfile_chunked($filename,$retbytes=true) {
+
+$chunksize = 1*(1024*1024); // how many bytes per chunk
+   $buffer = '';
+   $cnt =0;
+   $handle = fopen($filename, 'rb');
+   if ($handle === false) {
+       return false;
+   }
+   while (!feof($handle)) {
+       $buffer = fread($handle, $chunksize);
+       echo $buffer;
+       ob_flush();
+       flush();
+       if ($retbytes) {
+           $cnt += strlen($buffer);
+       }
+   }
+       $status = fclose($handle);
+   if ($retbytes && $status) {
+       return $cnt; // return num. bytes delivered like readfile() does.
+   }
+   return $status;
+    
+
+function getFileSize($filename){
+
+global $config;
+		
+	if($filename == "" ) {
+		return;
+	} else {
+		$file = $filename;//$config["site_filestore"].sanitizeFilename($filename);
+	
+		if (file_exists($file)) {
+			if (!(strtoupper(substr(PHP_OS, 0, 3)) == 'WIN')) 
+			{
+				$size = trim(shell_exec("stat -c%s ". escapeshellarg($file)));
+			} else { 
+			   	$fsobj = new COM("Scripting.FileSystemObject"); 
+				$f = $fsobj->GetFile($file); 
+				$size = $f->Size; 
+			}
+				return $size;
+			} else { 
+				return 0;
+			} 
+		}
+	}
+	
  ?>

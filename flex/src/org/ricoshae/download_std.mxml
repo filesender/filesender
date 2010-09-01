@@ -33,17 +33,20 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */   
           
-    import mx.controls.Alert;   
-		import org.ricoshae.core.*;     
-		import mx.core.FlexGlobals;
-		import mx.utils.ObjectProxy; 
-		import mx.collections.ArrayCollection;
-		import com.adobe.serialization.json.JSON;
-		import mx.utils.UIDUtil;
-		import flash.net.FileReference;
-		import mx.rpc.events.FaultEvent; 
-		import mx.rpc.events.ResultEvent;
-		import mx.managers.CursorManager;
+    import com.adobe.serialization.json.JSON;
+    
+    import flash.net.FileReference;
+    
+    import mx.collections.ArrayCollection;
+    import mx.controls.Alert;
+    import mx.core.FlexGlobals;
+    import mx.managers.CursorManager;
+    import mx.rpc.events.FaultEvent;
+    import mx.rpc.events.ResultEvent;
+    import mx.utils.ObjectProxy;
+    import mx.utils.UIDUtil;
+    
+    import org.ricoshae.core.*;
 
 		 
 		[Bindable] public var currentDownloadFileObj:Object  = new Object();
@@ -79,7 +82,7 @@
 {  
 	 FlexGlobals.topLevelApplication.logProcess("FileSize "+ currentDownloadFileObj.filesize +" > downloaded "+ event.bytesLoaded +" ["+ Math.round(event.bytesLoaded / currentDownloadFileObj.filesize * 100).toString() +"%]- Download");
 	 pbProgress.setProgress(event.bytesLoaded, currentDownloadFileObj.filesize);
-     pbProgress.label = "Downloading [" +  Math.round(event.bytesLoaded / currentDownloadFileObj.filesize * 100).toString() + "%]";
+     pbProgress.label = "" + event.bytesTotal;
 	
 	 
 }     
@@ -157,10 +160,29 @@
     		var e:Number = Math.floor(Math.log(bytes)/Math.log(1024));
     		return (bytes/Math.pow(1024, Math.floor(e))).toFixed(2)+" "+s[e];
 		}
+		
+	public function testBrowserDownload():void
+	{
+		//var objSend:Object = new Object();
+		//objSend.file = currentDownloadFileObj.fileuid + currentDownloadFileObj.fileoriginalname;
+		//send_browser.send(objSend);
+		var jumpLoc:String = config.site_url+ "download.php?vid=" + currentDownloadFileObj.filevoucheruid;
+		navigateToURL(new URLRequest(jumpLoc));
+		FlexGlobals.topLevelApplication.logProcess("Started Downloading - Download");
+		FlexGlobals.topLevelApplication.currentState="Message";
+		FlexGlobals.topLevelApplication.MessageLabel.text = "Your file should start downloading";
+	}
+		
+		public function returnBrowser(event:ResultEvent):void 
+		{
+			Alert.show(event.result.toString());
+		}
     ]]> 
   </mx:Script>
      <mx:HTTPService id="send_main" url="../fs_main.php{URLvidLocal}" useProxy="false" method="POST" resultFormat="text" result="returnMail(event)" fault="return_error(event)"/>     
-    <mx:NumberFormatter id="numberFormatter" precision="2" useThousandsSeparator="true" useNegativeSign="true"/>
+	<mx:HTTPService id="send_browser" url="../download.php{URLvidLocal}" useProxy="false" method="POST" resultFormat="text" result="returnBrowser(event)" fault="return_error(event)"/>     
+	
+	<mx:NumberFormatter id="numberFormatter" precision="2" useThousandsSeparator="true" useNegativeSign="true"/>
   <mx:DateFormatter id="df" formatString="DD-MM-YYYY"/>
 	  <mx:HBox width="100%" height="100%">
 	<mx:VBox width="100%" height="100%"  paddingBottom="4" paddingLeft="4" paddingRight="4" paddingTop="4" id="panel_filedownload" borderStyle="none" verticalGap="4">
@@ -199,6 +221,9 @@
 	    <mx:Button label="Cancel" id="btn_cancel" visible="false" click="cancelDownload()"/>
 	    <mx:Spacer width="2"/>
 	  </mx:HBox>
+	</mx:VBox>
+	<mx:VBox width="250" height="100%" horizontalAlign="center" verticalAlign="middle">
+		<mx:Button label="Test Browser Download" width="100%" height="71" click="testBrowserDownload()"/>
 	</mx:VBox>
 	<mx:TextArea width="100%" borderStyle="none" editable="false" htmlText="{config.site_downloadinstructions}" height="100%"/>
 		  </mx:HBox>
