@@ -53,11 +53,13 @@ rm -rf %{buildroot}
 
 %{__rm} -r %{buildroot}%{_datadir}/%{name}/config/config.php
 %{__rm} -rf %{buildroot}%{_datadir}/%{name}/tmp
+%{__rm} -rf %{buildroot}%{_datadir}/%{name}/log
 %{__rm} -rf %{buildroot}%{_datadir}/%{name}/www/files
 
 ln -s ../../../..%{_sysconfdir}/%{name}/config.inc.php %{buildroot}%{_datadir}/%{name}/config/config.php
 ln -s ../../..%{_localstatedir}/lib/%{name}/tmp %{buildroot}%{_datadir}/%{name}/tmp
-ln -s ../../..%{_localstatedir}/lib/%{name}/files %{buildroot}%{_datadir}/%{name}/www/files
+ln -s ../../../..%{_localstatedir}/lib/%{name}/files %{buildroot}%{_datadir}/%{name}/www/files
+ln -s ../../..%{_localstatedir}/log/%{name} %{buildroot}%{_datadir}/%{name}/log
 
 %clean
 rm -rf %{buildroot}

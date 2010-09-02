@@ -112,7 +112,7 @@ public function loadConfig() {
 	$config['site_name'] = 'FileSender';
 	$config['site_icon'] = 'cloudstor.png';
 	$config['site_css'] = '';
-	$config['forceSSL'] = true;
+	$config['forceSSL'] = false;
 
 	$config['default_daysvalid'] = 20;
 	$config['gearsURL'] = 'http://tools.google.com/gears/';
