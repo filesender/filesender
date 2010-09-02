@@ -1,0 +1,8 @@
+# filesender - Sharing large files with a browser
+
+Alias /filesender /usr/share/filesender/www
+
+<Directory /usr/share/filesender/www/>
+   Order Deny,Allow
+   Allow from All
+</Directory>
