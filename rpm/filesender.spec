@@ -41,7 +41,8 @@ rm -rf %{buildroot}
 %{__mkdir} -p %{buildroot}%{_datadir}/%{name}
 %{__mkdir} -p %{buildroot}%{_sysconfdir}/%{name}
 %{__mkdir} -p %{buildroot}%{_sysconfdir}/httpd/conf.d
-%{__mkdir} -p %{buildroot}%{_localstatedir}/lib/%{name}/{tmp,files}
+%{__mkdir} -p %{buildroot}%{_localstatedir}/lib/%{name}/files
+%{__mkdir} -p %{buildroot}%{_localstatedir}/lib/%{name}/tmp
 %{__mkdir} -p %{buildroot}%{_localstatedir}/log/%{name}
 
 %{__cp} -ad ./* %{buildroot}%{_datadir}/%{name}
