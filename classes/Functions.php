@@ -293,6 +293,8 @@ class Functions {
 		$flexconfig['site_name'] = $config['site_name'];
 		$flexconfig['aboutURL'] = $config['aboutURL']; // 
 		$flexconfig['helpURL'] = $config['helpURL']; //
+		$flexconfig['gearsURL'] = $config['gearsURL'];
+		$flexconfig["debug"] = $config["debug"];
 		return json_encode($flexconfig);
 		}
 		
@@ -337,6 +339,7 @@ class Functions {
 		$flexconfig['AuP_terms'] = $config["AuP_terms"];
 		$flexconfig['help_link_visible'] = $config["help_link_visible"];	// if drivespace is low send email to admins
 		$flexconfig['max_email_recipients'] = $config["max_email_recipients"];
+		
 	
 		if(disk_free_space($config['site_filestore'])/disk_total_space($config['site_filestore']) * 100 < $config["server_drivespace_warning"] ) { 
 		$this->saveLog->saveLog("","Drive Space Below ".$config["server_drivespace_warning"]."% ","");
@@ -737,7 +740,7 @@ class Functions {
 
 	//---------------------------------------
 	// Return filesize as integer from php
-	// Function also habdles windows servers
+	// Function also handles windows servers
 	// 
 	public function getFileSize($filename){
 
