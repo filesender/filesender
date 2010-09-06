@@ -216,14 +216,14 @@
 	   	  </mx:HBox>
 	  <mx:HBox width="100%" height="30" id="downloadPanel" borderStyle="none" verticalAlign="middle" horizontalGap="8">
 	    <mx:Spacer width="2"/>
-	    <mx:Button id="downloadBtn0" label="{lang.Download_File}" click="downloadFile()" toolTip="Download" height="20"  width="110" color="#000000"/>
-	    <mx:ProgressBar width="100%" visible="true" mode="manual" label="" id="pbProgress" labelPlacement="center"/>
-	    <mx:Button label="Cancel" id="btn_cancel" visible="false" click="cancelDownload()"/>
+	    <mx:Button label="Start Download" width="100%" height="24" click="testBrowserDownload()"/>
 	    <mx:Spacer width="2"/>
 	  </mx:HBox>
 	</mx:VBox>
 	<mx:VBox width="250" height="100%" horizontalAlign="center" verticalAlign="middle">
-		<mx:Button label="Test Browser Download" width="100%" height="71" click="testBrowserDownload()"/>
+		<mx:Button label="Cancel" id="btn_cancel" visible="false" click="cancelDownload()"/>
+		<mx:Button id="downloadBtn0" label="{lang.Download_File}" visible="false" click="downloadFile()" toolTip="Download" height="20"  width="110" color="#000000"/>
+		<mx:ProgressBar width="100%" visible="false" mode="manual" label="" id="pbProgress" labelPlacement="center"/>
 	</mx:VBox>
 	<mx:TextArea width="100%" borderStyle="none" editable="false" htmlText="{config.site_downloadinstructions}" height="100%"/>
 		  </mx:HBox>
