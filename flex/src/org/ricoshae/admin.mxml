@@ -415,13 +415,27 @@ private function dateFunc( item:Object, column:DataGridColumn):String
  				if(item.logfilesize == 0){
  					return "";
  				}
-				return readablizeBytes(item.logfilesize);
+				return convertBytes(item.logfilesize);
 
                
             }
+		
+		private function filesizeFuncFiles(item:Object, column:DataGridColumn):String {
+			
+			if (!item.hasOwnProperty("filesize")) {
+				return ""; 
+			}
+			
+			if(item.filesize == 0){
+				return "";
+			}
+			return convertBytes(item.filesize);
+			
+			
+		}
 
         
-        public function readablizeBytes(bytes:uint):String {
+        public function readablizeBytes(bytes:Number):String {
     var s:Array = ['bytes', 'kb', 'MB', 'GB', 'TB', 'PB'];
     var e:Number = Math.floor(Math.log(bytes)/Math.log(1024));
     return (bytes/Math.pow(1024, Math.floor(e))).toFixed(2)+" "+s[e];
@@ -512,7 +526,7 @@ private function dateFunc( item:Object, column:DataGridColumn):String
 					    <mx:DataGridColumn headerText="To" dataField="fileto" wordWrap="true"/>
 					    <mx:DataGridColumn headerText="From" dataField="filefrom" wordWrap="true"/>
 					    <mx:DataGridColumn headerText="File" dataField="fileoriginalname" wordWrap="true"/>
-					     <mx:DataGridColumn headerText="Size" dataField="filesize" labelFunction="filesizeFunc"  wordWrap="true"/>
+					     <mx:DataGridColumn headerText="Size" dataField="filesize" labelFunction="filesizeFuncFiles" wordWrap="true"/>
 					    <mx:DataGridColumn headerText="Subject" dataField="filesubject" wordWrap="true"/>
 					    <mx:DataGridColumn headerText="Message" dataField="filemessage" wordWrap="true"/>
 					     <mx:DataGridColumn headerText="Expiry" dataField="fileexpirydate" labelFunction="dateFunc" wordWrap="true"/>
