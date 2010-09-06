@@ -581,7 +581,7 @@
 			 
 			public function logoff(msg:String):void 
 			{
-				noAuth(msg);
+				//noAuth(msg);
 				var objSend:Object = new Object();
 				objSend.call = "logoff";
 				logon_main.send(objSend);
