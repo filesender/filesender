@@ -732,7 +732,11 @@
 				objSend.call = "log_process";
 				objSend.message = message;
 				objSend.client =  currentUser.name.replace(" ","-");
+				// check if config debug is true to create client logging
+				if(	config.debug ) 
+				{			
 				logon_process.send(objSend);
+				}
 			}
 			
 			public function resultlog(event:ResultEvent):void 
