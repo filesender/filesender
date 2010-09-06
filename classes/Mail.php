@@ -59,7 +59,7 @@ public function sendemail($mailobject,$template){
 	$template = str_replace("{filevoucheruid}", $mailobject["filevoucheruid"], $template);
 	$template = str_replace("{fileoriginalname}", $fileoriginalname, $template);
 	$template = str_replace("{filename}", $fileoriginalname, $template);
-	$template = str_replace("{fileexpirydate}", $mailobject["fileexpirydate"], $template);
+	$template = str_replace("{fileexpirydate}", date("d-M-Y",strtotime($mailobject["fileexpirydate"])), $template);
 	$template = str_replace("{filefrom}", $mailobject["filefrom"], $template);
 	$template = str_replace("{filemessage}", $mailobject["filemessage"], $template);
 	$template = str_replace("{filesize}", formatBytes($mailobject["filesize"]), $template);
