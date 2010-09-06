@@ -149,7 +149,7 @@
 	public function doGearsUpload():void 
 	{
 	
-		if(FileTo.text == null)
+		if(FileTo.text == null || FileTo.text == "")
 		{
 			FlexGlobals.topLevelApplication.logProcess("Email Missing - Gears Upload");
 			Alert.show(lang.E018,lang.E000);  // Enter an email adddress

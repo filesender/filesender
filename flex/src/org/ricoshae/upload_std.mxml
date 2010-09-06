@@ -151,7 +151,7 @@
     public function doupload():void 
       {
 		FlexGlobals.topLevelApplication.logProcess("Start Upload - Flash Upload");
-    	if(currentFileObj.fileto == null){
+    	if(currentFileObj.fileto == null || currentFileObj.fileto == ""){
  		Alert.show(lang.E018,lang.E000);  // Enter an email adddress
  		return 		
  		}	
