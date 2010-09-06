@@ -222,11 +222,11 @@ private function fnCheckExtension(str:String):Boolean
     	}
     return true;
 	}
- 	
+ 	 
 	public function returnStatus(sInfo:String,sType:String):void
 	{
 	tempText.text = "\n" +sType + ":" + sInfo;
-	
+	FlexGlobals.topLevelApplication.logProcess("Gears Notification ["+ sType + ":" + sInfo + "] - Gears Upload");
 	if(sType == "msg")
 	{
 		FlexGlobals.topLevelApplication.logProcess("Gears Notification ["+ sType + ":" + sInfo + "] - Gears Upload");
