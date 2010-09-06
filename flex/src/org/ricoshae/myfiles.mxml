@@ -256,17 +256,26 @@ public function deletedVoucher(event:ResultEvent):void
  				if(item.filesize == 0){ 
  					return "";
  				}
-				return readablizeBytes(item.filesize);
+				return convertBytes(item.filesize);
  
             }
 
-        
-        public function readablizeBytes(bytes:uint):String {
-    var s:Array = ['bytes', 'kB', 'MB', 'GB', 'TB', 'PB'];
-    var e:Number = Math.floor(Math.log(bytes)/Math.log(1024));
-    return (bytes/Math.pow(1024, Math.floor(e))).toFixed(2)+" "+s[e];
-}
-		
+ 		public function convertBytes(bytes:Number):String
+		{
+			var result:String = "";
+			if(bytes > 1073741824) {
+				result = numform.format(bytes/1024/1024/1024) + "GB";
+			} else if (bytes > 1048576){
+				result = numform.format(bytes/1024/1024) + "MB";     		
+			}else if (bytes >= 1024){
+				result = numform.format(bytes/1024) + "KB"; 		
+			}else if (bytes < 1024) {
+				result = numform.format(bytes) + "B";	
+			}
+			return	result;	
+			
+			
+		}
 		private function dateFunc( item:Object, column:DataGridColumn):String
 		{
 			return df.format( item[column.dataField]); 
@@ -276,10 +285,11 @@ public function deletedVoucher(event:ResultEvent):void
 <mx:HTTPService id="vouchers_main" url="../fs_main.php{URLvidLocal}" useProxy="false" method="POST" resultFormat="text" result="returnVouchers(event)" fault="return_error(event)"/>     
 <mx:HTTPService id="file_main" url="../fs_main.php{URLvidLocal}" useProxy="false" method="POST" resultFormat="text" result="returnInsertedVoucher(event)" fault="return_error(event)"/>     
 <mx:HTTPService id="delete_main" url="../fs_main.php{URLvidLocal}" useProxy="false" method="POST" resultFormat="text" result="deletedVoucher(event)" fault="return_error(event)"/>     
- <mx:HTTPService id="resend_main" url="../fs_main.php{URLvidLocal}" useProxy="false" method="POST" resultFormat="text" result="returnResendVoucher(event)" fault="return_error(event)"/>     
-  <mx:NumberFormatter id="numberFormatter" precision="2" useThousandsSeparator="true" useNegativeSign="true"/>
- <mx:DateFormatter id="df" formatString="{config.datedisplayformat}"/>
- <mx:DateFormatter id="df_pg" formatString="{config.datedisplayformat}"/> 
+<mx:HTTPService id="resend_main" url="../fs_main.php{URLvidLocal}" useProxy="false" method="POST" resultFormat="text" result="returnResendVoucher(event)" fault="return_error(event)"/>     
+<mx:NumberFormatter id="numberFormatter" precision="2" useThousandsSeparator="true" useNegativeSign="true"/>
+<mx:NumberFormatter id="numform" rounding="nearest" precision="2"></mx:NumberFormatter>
+<mx:DateFormatter id="df" formatString="{config.datedisplayformat}"/>
+<mx:DateFormatter id="df_pg" formatString="{config.datedisplayformat}"/> 
 	<mx:Canvas right="1" left="1" bottom="1" top="1">
 		<mx:VBox left="0" right="0" bottom="0" borderStyle="none" verticalAlign="top" top="00">
 		  <mx:DataGrid width="100%" height="100%" id="vouchers_dg" dataProvider="{usersFiles}" paddingLeft="0" paddingTop="0" paddingBottom="0" paddingRight="0">
