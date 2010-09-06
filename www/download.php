@@ -62,8 +62,8 @@ if(file_exists($file) && is_file($file))
 	readfile_chunked($file);
 	// email completed
 		$tempEmail = $fileArray[0]["fileto"];
-		$dataitem["fileto"] = $fileArray[0]["filefrom"];	
-		$dataitem["filefrom"] = $tempEmail;
+		$fileArray["fileto"] = $fileArray[0]["filefrom"];	
+		$fileArray["filefrom"] = $tempEmail;
 		$saveLog->saveLog($fileArray[0],"Download","");
 		$sendmail->sendEmail($fileArray[0],$config['filedownloadedemailbody']);
 }
