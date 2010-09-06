@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Application xmlns:mx="http://www.adobe.com/2006/mxml"  xmlns:comp="org.ricoshae.*" creationComplete="main_init()" layout="absolute" width="100%" height="100%" currentState="blank" minWidth="600" backgroundColor="#FFFFFF">
-	<mx:states>    
+	<mx:states>     
 		<mx:State name="vouchers_fed">      
 			<mx:AddChild position="lastChild"> 
 				<comp:vouchers id="vouchers" left="6" right="6" top="87" bottom="6">
@@ -388,47 +388,6 @@
 				}	
 			}
 			
-		/* 	public  function resultUser(event:ResultEvent):void
-			{
-				
-				if(event.result.toString() == "notAuthenticated") 
-				{ 
-					//btnLogon.visible = true; 
-					//btnLogon.width = 90;
-					btnVouchers.visible = false;
-					btnNew.visible = false;
-					btnLogonOff.visible = false;
-					btnMyFiles.visible = false; 
-					currentState = "Message";
-				} else {
-					//	btnLogon.width = 0;
-					btnVouchers.visible = true;
-					btnNew.visible = true;
-					btnLogonOff.visible = true;
-					btnMyFiles.visible = true;
-					
-					var rawArray:Object;  
-					var rawData:String = String(event.result); 
-					rawArray = JSON.decode(rawData); 
-					currentUser.email = rawArray.mail.toString();     
-					currentUser.name = rawArray.cn.toString();  
-					currentUser.SessionID =  rawArray.SessionID.toString();
-					
-					var adminStr:String = config["admin"];
-					
-					if(adminStr.toLowerCase().indexOf(currentUser.email.toLowerCase()) > -1 )
-					{ 	      
-						btnAdmin.visible = true; 
-					}     
-					
-					if(gearsStatus == true) 	
-					{
-						currentState="gearsUpload";
-					} else {
-						currentState="Upload";
-					}  
-				}
-			} */
 			public  function resultError(event:FaultEvent):void
 			{
 				Alert.show("ERROR:"+event.fault.toString());
@@ -477,11 +436,11 @@
 			public	function installGears():void
 			{   
 				// goto gears install URL
-				var urltest:URLRequest = new URLRequest(config["gearsURL"]); 
+				var urltest:URLRequest = new URLRequest(splash.gearsURL); 
 				navigateToURL(urltest,"_blank");  
 			}
 			
-			
+			 
 			public function handleStateChange(event:StateChangeEvent) :void
 			{
 				//
@@ -733,7 +692,7 @@
 				objSend.message = message;
 				objSend.client =  currentUser.name.replace(" ","-");
 				// check if config debug is true to create client logging
-				if(	config.debug ) 
+				if(splash && splash.debug ) 
 				{			
 				logon_process.send(objSend);
 				}
