@@ -97,7 +97,7 @@ $chunksize = 1*(1024*1024); // how many bytes per chunk
        return $cnt; // return num. bytes delivered like readfile() does.
    }
    return $status;
-    
+   }
 
 function getFileSize($filename){
 
