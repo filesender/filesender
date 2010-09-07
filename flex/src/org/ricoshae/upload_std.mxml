@@ -265,7 +265,6 @@
  public function completeHandler(event:Event):void 
  	{
 	 FlexGlobals.topLevelApplication.logProcess("File Uploaded - Flash Upload");
-     trace("File uploaded");
      textarea1.text += "\nFile uploaded"; 
      textarea1.text += "\nMoving File"; 
      speedLabel.text  = "";
@@ -396,11 +395,12 @@
 	   			send_main.send(objSend1);
       		}	  
     	} 
+		textarea1.text += "\n Checking uploaded file";
 		// on complete sending all emails
 		// go to sent screen
-		FlexGlobals.topLevelApplication.uploadStopped(); 
-		FlexGlobals.topLevelApplication.currentState = "Message";
-		FlexGlobals.topLevelApplication.MessageLabel.text = lang['Your_file_has_been_sent'];
+		//FlexGlobals.topLevelApplication.uploadStopped(); 
+		//FlexGlobals.topLevelApplication.currentState = "Message";
+		//FlexGlobals.topLevelApplication.MessageLabel.text = lang['Your_file_has_been_sent'];
 	} 
      ff_fix.ff_fixStatus();	
  }  
@@ -408,6 +408,7 @@
      public function fileSaved(event:ResultEvent):void
      {
      	// error checking here 
+		 FlexGlobals.topLevelApplication.uploadStopped(); 
 		 FlexGlobals.topLevelApplication.logProcess("Database updated successfully - Flash Upload");
 		 FlexGlobals.topLevelApplication.currentState = "Message";
 		 FlexGlobals.topLevelApplication.MessageLabel.text = lang['Your_file_has_been_sent'];
