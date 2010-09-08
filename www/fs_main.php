@@ -70,7 +70,6 @@ if(session_id() == ""){
 	if($call == "getInit") {
 	
 	$returnData["lang"] = json_encode($lang->language());
-	$returnData["cleanup"] =  $functions->cleanUp();
 	$returnData["samlauth"] = $authsaml->isAuth();
 	$returnData["voucherauth"] = $authvoucher->aVoucher();
 	$returnData["splash"] = $functions->getSplash();

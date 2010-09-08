@@ -167,21 +167,22 @@ class Functions {
 	public function cleanUp() 
 	{
 	
-		$config = $this->CFG->loadConfig();
+	$config = $this->CFG->loadConfig();
 		
 	if (!file_exists($config["log_location"])) {
-	
+	$this->saveLog->logProcess("CRON","Unable to find log_location location specified in config.php  :".$config["log_location"]);
 	customError("", "Unable to find log_location location specified in config.php", $config["log_location"],"");
 	return false;
 	}
 	
 	if (!file_exists($config["site_filestore"])) {
+		$this->saveLog->logProcess("CRON","Unable to find site_filestore location specified in config.php  :".$config["site_filestore"]);
 		customError("", "Unable to find site_filestore location specified in config.php", $config["site_filestore"],"");
 		return false;
 	}	
 	
 	if (!file_exists($config["site_temp_filestore"])) {
-	
+		$this->saveLog->logProcess("CRON","Unable to find site_temp_filestore location specified in config.php  :".$config["site_temp_filestore"]);
 		customError("", "Unable to find site_temp_filestore location specified in config.php", $config["site_temp_filestore"],"");
 		return false;
 	}	
@@ -207,7 +208,11 @@ class Functions {
 	$search = $this->db->fquery($searchquery, $today);
 		
 		// check for error in SQL
-	if (!$search) { $this->saveLog->saveLog("","Error",pg_last_error()); return FALSE; }
+	if (!$search) { 
+		$this->saveLog->logProcess("CRON","SQL Error on selecting files".pg_last_error());
+		$this->saveLog->saveLog("","Error",pg_last_error()); 
+		return FALSE; 
+		}
 	
 	while($row = pg_fetch_assoc($search)) {
 		
@@ -216,7 +221,11 @@ class Functions {
 		$result = $this->db->fquery($query, $row['fileid']);
 		
 		// check for error in SQL
-		if (!$result) { $this->saveLog->saveLog("","Error",pg_last_error()); return FALSE; }
+		if (!$result) { 
+			$this->saveLog->logProcess("CRON","SQL Error on updating files".pg_last_error());
+			$this->saveLog->saveLog("","Error",pg_last_error()); 
+			return FALSE; 
+		}
 		
 	}
 
@@ -246,6 +255,7 @@ class Functions {
 		if (file_exists($FilestoreDirectory.$file)) {
 		unlink($FilestoreDirectory.$file);
 		// log removal
+		$this->saveLog->logProcess("CRON","File Removed (Expired)".$FilestoreDirectory.$file);
 		$this->saveLog->saveLog($result[0],"File Removed (Expired)",$FilestoreDirectory.$file);	
 		}
 	}
@@ -269,11 +279,18 @@ class Functions {
 
 		// change status to closed in database
 		$query = "UPDATE Files SET filestatus = 'Closed' WHERE fileid='%s'";
-		$this->saveLog->saveLog($row,"Removed (File not Available)","");	
+		
 		$result = $this->db->fquery($query, $row['fileid']);
-
+		
 		// check for error in SQL
-		if (!$result) { $this->saveLog->saveLog("","Error",pg_last_error()); return FALSE; }
+		if (!$result) { 
+			$this->saveLog->logProcess("CRON","SQL Error Updating files ".pg_last_error());
+			$this->saveLog->saveLog("","Error",pg_last_error()); 
+			return FALSE; 
+		}
+		
+		$this->saveLog->logProcess("CRON","Removed (File not Available) ".$FilestoreDirectory."/".$row["fileuid"].$row["fileoriginalname"]);
+		$this->saveLog->saveLog($row,"Removed (File not Available)","");	
 		
 		}
 		
