@@ -52,7 +52,7 @@ public function loadConfig() {
 	$config["crlf"] = "\n"; // for email CRLF can be changed to \r\n if required 
 	$config["site_splashtext"] = "FileSender is a web based application that allows authenticated users to securely and easily send arbitrarily large files to other users. Authentication of users is provided through SAML2, LDAP and RADIUS. Users without an account can be sent an upload voucher by an authenticated user. FileSender is developed to the requirements of the higher education and research community.";
 
-	$config["max_email_recipients"] = 100; // maximum email addresses allowed to send at once for voucher or file sending
+	$config["max_email_recipients"] = 100; // maximum email addresses allowed to send at once for voucher or file sending, a value of 0 allows unlimited emails.
 	$config["server_drivespace_warning"] = 20; // as a percentage 20 = 20% space left on the storage drive
 
 	// UI Settings
