@@ -37,7 +37,7 @@ package org.ricoshae.core
     		var emailExp:RegExp = new RegExp("[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?");    
      		//var emailExp:RegExp = new RegExp("/^[a-z.+-]+@\w[\w.-]+\.[\w.-]*[a-z][a-z]$/i");		   
 			//var emailExp:RegExp = /^[a-z][\w.-]+@\w[\w.-]+\.[\w.-]*[a-z][a-z]$/i;              
-     		return emailExp.test( str );     
+     		return emailExp.test( str.toLowerCase());     
       	} 
       	//
       	
