@@ -754,6 +754,40 @@ class Functions {
 			return false;
 		}	
 	}
+	
+	//---------------------------------------
+	// Delete a file
+	// 
+	public function deleteFile($fileid){
+	
+			$config = $this->CFG->loadConfig();
+	
+			// check authentication SAML User
+			if( $this->authsaml->isAuth()) {
+			
+			$dbCheck = DB_Input_Checks::getInstance();	
+	
+			$sqlQuery = "
+					UPDATE 
+						files 
+					SET 
+						filestatus = 'Voucher Cancelled' 
+					WHERE 
+						fileid = %d
+				";
+	
+			$this->db->fquery($sqlQuery, $fileid);
+	
+			$fileArray =  $this->getVoucher($fileid);
+			
+			$this->sendmail->sendEmail($fileArray[0],$config['defaultfilecancelled']);	
+			$this->saveLog->saveLog($fileArray[0],"File Cancelled","");
+	
+			return true;
+		} else {
+			return false;
+		}	
+	}
 
 	//---------------------------------------
 	// Return filesize as integer from php
