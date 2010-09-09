@@ -194,7 +194,7 @@
     temptext = temptext.replace(pattern," ");
     var params:Array = temptext.split(' ');
  	
- 	if(params.length > config.max_email_recipients )
+ 	if(config.max_email_recipients != 0 && params.length > config.max_email_recipients)
     {
 		FlexGlobals.topLevelApplication.logProcess("Too many email accounts - Flash Upload");
     	Alert.show(lang.E022 + config.max_email_recipients,lang.E000);

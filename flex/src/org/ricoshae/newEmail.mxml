@@ -103,6 +103,14 @@
 		
 		var temptext:String = newObject.fileto;
    		var params:Array = temptext.split(',');
+		
+		// check if too many emails are added
+		if(config.max_email_recipients != 0 && params.length > config.max_email_recipients)
+		{
+			FlexGlobals.topLevelApplication.logProcess("Too many email accounts - Flash Upload");
+			Alert.show(lang.E022 + config.max_email_recipients,lang.E000);
+			return;
+		}
    		
 		var tempCurrentFileObj:Object;
     	
