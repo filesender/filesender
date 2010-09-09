@@ -560,7 +560,7 @@ private function fnCheckExtension(str:String):Boolean
 				<mx:Label text="{lang.Click_on_Send}"/>
 			</mx:HBox>
 
-			<mx:TextArea  width="234" height="201" id="tempText" borderStyle="none"/>
+			<mx:TextArea  width="234" height="201" id="tempText" borderStyle="none" editable="false"/>
 		</mx:VBox>
 	</mx:HBox>
 	
