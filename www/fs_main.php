@@ -168,6 +168,10 @@ if(session_id() == ""){
 	case "deleteVoucher": 
 		echo $functions->deleteVoucher($_POST['svid']);
 		break;
+	
+	case "deleteFile": 
+		echo $functions->deleteFile($_POST['svid']);
+		break;
 		
 	case "resendVoucher":
 		$fileArray =  $functions->getVoucher($_POST['svid']);

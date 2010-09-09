@@ -156,7 +156,7 @@ public function OK_DeleteVoucher(event:CloseEvent):void
 	      	if (event.detail == Alert.OK) {        		
 	      		
 	      	var objSend:Object = new Object();
-	   		objSend.call = "deleteVoucher";
+	   		objSend.call = "deleteFile";
 	   		objSend.svid = usersFiles[vouchers_dg.selectedIndex].fileid;
 	   		delete_main.send(objSend);
        		}
