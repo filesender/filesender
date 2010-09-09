@@ -717,7 +717,7 @@
 	<mx:DateFormatter id="df" formatString="{config.datedisplayformat}"/>
 	<mx:DateFormatter id="df_pg" formatString="{config.datedisplayformat}"/>
 	<mx:DateFormatter id="df_pg_timestamp" formatString="YYYY-MM-DD"/>  
-	<mx:VBox y="0" left="4" right="4" id="vbox1">     
+	<mx:VBox left="4" right="4" id="vbox1" backgroundColor="#FFFFFF" bottom="0" verticalAlign="top" top="0">     
 		<mx:HBox height="53" verticalAlign="middle" width="100%">  
 			<mx:Spacer width="100%" id="spacer1"/> 
 			<mx:Button label="{lang.Admin}" id="btnAdmin" click="adminClick()" visible="{adminStatus}" icon="@Embed(source='assets/arrow_refresh.png')"/>
