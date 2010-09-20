@@ -57,7 +57,7 @@ if(file_exists($file) && is_file($file))
 	header("Content-Type: application/force-download");
 	header('Content-Type: application/octet-stream');
     header('Content-Length: '.getFileSize($file));
-	header('Content-Disposition: attachment; filename='.$fileoriginalname);
+	header('Content-Disposition: attachment; filename="'.$fileoriginalname.'"');
 	set_time_limit(0);
 	readfile_chunked($file);
 	// email completed
@@ -125,3 +125,4 @@ global $config;
 	}
 	
  ?>
+>>>>>>> .r217
