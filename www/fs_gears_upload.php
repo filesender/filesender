@@ -36,6 +36,7 @@ require_once('../classes/_includes.php');
 
 $authsaml = AuthSaml::getInstance();
 $authvoucher = AuthVoucher::getInstance();
+$log =  Log::getInstance();
 
 $CFG = config::getInstance();
 $config = $CFG->loadConfig();
@@ -43,9 +44,32 @@ date_default_timezone_set($config['Default_TimeZone']);
 
 if($authvoucher->aVoucher()  || $authsaml->isAuth() ) { 
 
+	// generate unique filename
+	// tempFilename is created from ((uid or vid)+originalfilename+filesize)
+	$tempFilename = ""; 
+
+	// add SAML eduPersonTargetedID
+	if( $authsaml->isAuth()) {
+		$authAttributes = $authsaml->sAuth();
+		$tempFilename .= $authAttributes["eduPersonTargetedID"];	
+	} 
+	// add voucher if vid is available
+	if (isset($_REQUEST['vid'])) {
+		$tempFilename .= $_REQUEST['vid'];
+	}
+	
+	// add the file name
+	$tempFilename .=  sanitizeFilename($_GET['n']);
+
+	// add the file size to the filename
+	$tempFilename .=  $_GET['total'];
+
+	// md5 $tempFilename
+	$tempFilename = md5($tempFilename).'.tmp';
+	
 	if ( !empty( $_GET['n']) ) {
 		$fd = fopen("php://input", "r");
-		while( $data = fread( $fd,  1000000  ) ) file_put_contents( $config["site_temp_filestore"].sanitizeFilename($_GET['n']), $data, FILE_APPEND ) or die("Error");
+		while( $data = fread( $fd,  1000000  ) ) file_put_contents( $config["site_temp_filestore"].sanitizeFilename($tempFilename), $data, FILE_APPEND ) or die("Error");
 		fclose($fd);
 	}
 

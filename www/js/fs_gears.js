@@ -181,7 +181,7 @@ function sendChunk ( entry, chunk, start, end, total,voucheruid )
 	/**
 	 * Start Post
 	 */
-	req.open('POST', 'fs_gears_upload.php?n='+encodeURIComponent(fileName)+'&b='+encodeURIComponent(start)+'&vid='+voucheruid );
+	req.open('POST', 'fs_gears_upload.php?n='+encodeURIComponent(fileName)+'&b='+encodeURIComponent(start)+'&vid='+voucheruid+'&total='+total );
 	//req.open('POST', 'upload2.php?n='+encodeURIComponent(fileName)+'&b='+encodeURIComponent(start) );
 
 	/**
