@@ -56,7 +56,7 @@ $lang = array(
 	
 	//
 	"Active_Vouchers" => "Active Vouchers",
-	"Are_You_Sure_Resend" => "Are you sure you want to re-send this File?",
+	"Are_You_Sure_Resend" => "Are you sure you want to re-send this Email?",
 	"Administration" => "Administration",
 	"Browse" => "Browse",
 	"Cancel" => "Cancel",
