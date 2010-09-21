@@ -101,7 +101,7 @@ public function loadConfig() {
 	$config['site_logouturl'] = $config['site_url'] . 'logout.php';
 
     // (absolute) file locations
-	$config['site_filestore'] = '/usr/share/filesender/www/files/'; // Make sure this is accessible by webserver
+	$config['site_filestore'] = '/usr/share/filesender/files/'; 
 	$config['site_temp_filestore'] = '/usr/share/filesender/tmp/'; 
 	$config['site_simplesamllocation'] = '/usr/share/simplesamlphp/';
 	$config['log_location'] = '/usr/share/filesender/log/';	
