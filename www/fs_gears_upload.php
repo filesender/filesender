@@ -53,8 +53,8 @@ if($authvoucher->aVoucher()  || $authsaml->isAuth() ) {
 		$authAttributes = $authsaml->sAuth();
 		$tempFilename .= $authAttributes["eduPersonTargetedID"];	
 	} 
-	// add voucher if vid is available
-	if (isset($_REQUEST['vid'])) {
+	// else add voucher if vid is available
+	else if (isset($_REQUEST['vid'])) {
 		$tempFilename .= $_REQUEST['vid'];
 	}
 	
@@ -66,8 +66,8 @@ if($authvoucher->aVoucher()  || $authsaml->isAuth() ) {
 
 	// md5 $tempFilename
 	$tempFilename = md5($tempFilename).'.tmp';
-	
-	if ( !empty( $_GET['n']) ) {
+
+	if ( !empty( $tempFilename ) ) {
 		$fd = fopen("php://input", "r");
 		while( $data = fread( $fd,  1000000  ) ) file_put_contents( $config["site_temp_filestore"].sanitizeFilename($tempFilename), $data, FILE_APPEND ) or die("Error");
 		fclose($fd);

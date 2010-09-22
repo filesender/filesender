@@ -855,10 +855,10 @@ class Functions {
 			if( $this->authsaml->isAuth()) {
 			$authAttributes = $this->authsaml->sAuth();
 			$tempFilename .= $authAttributes["eduPersonTargetedID"];	
-			} 
-	
-		// add voucher id
+			} else {
+		// else add voucher id
 			$tempFilename .= $dataitem['filevoucheruid'];
+ 			}
 
 
 		// add the file name
