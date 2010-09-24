@@ -50,7 +50,7 @@ require_once('../classes/_includes.php');
   <p>
  
   </p>
-  <div align="center">This Voucher is not Valid
+  <div align="center">This Voucher is no longer Valid
   </div>
   <hr />
 </div>
