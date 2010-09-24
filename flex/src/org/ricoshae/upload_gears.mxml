@@ -1,39 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="790" height="420" title="{lang.Gears_Upload}">
 	
-
+ 
   <mx:Script>
     <![CDATA[
-
-/*
- *  Filsender www.filesender.org
- *      
- *  Copyright (c) 2009-2010, Aarnet, HEAnet, UNINETT
- * 	All rights reserved.
- *
- * 	Redistribution and use in source and binary forms, with or without
- *	modification, are permitted provided that the following conditions are met:
- *	* 	Redistributions of source code must retain the above copyright
- *   		notice, this list of conditions and the following disclaimer.
- *   	* 	Redistributions in binary form must reproduce the above copyright
- *   		notice, this list of conditions and the following disclaimer in the
- *   		documentation and/or other materials provided with the distribution.
- *   	* 	Neither the name of Aarnet, HEAnet and UNINETT nor the
- *   		names of its contributors may be used to endorse or promote products
- *   		derived from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY Aarnet, HEAnet and UNINETT ''AS IS'' AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL Aarnet, HEAnet or UNINETT BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-   
+    
  	  	import com.adobe.serialization.json.JSON;
  	  	
  	  	import flash.events.TimerEvent;
@@ -47,6 +18,8 @@
  	  	import mx.rpc.events.FaultEvent;
  	  	import mx.rpc.events.ResultEvent;
  	  	import mx.utils.UIDUtil;
+		import com.adobe.utils.IntUtil;
+		import com.adobe.crypto.*;
  	  	
  	  	import org.ricoshae.core.*;
 	
@@ -67,7 +40,7 @@
 		public var currbytes:Number = 0;
 		public var lastbytes:Number = 0;
 		public var tempFromVoucher:String; // Temp if voucher is cancelled to return correct to and from fields
-	
+		public var filenameGearsMD5:String = "";
 		
 		// initialise all arraysand set button defaults 
 	public function init():void
@@ -254,14 +227,26 @@ private function fnCheckExtension(str:String):Boolean
 		FlexGlobals.topLevelApplication.uploadStarted(); 
 		btUpload.visible = true;
    		
+		// generate file md5 from 
+		filenameGearsMD5 = "";
+		if(currentFileObj.filestatus == "Voucher")
+		{
+			filenameGearsMD5 +=  currentFileObj.filevoucheruid;	
+		} else {
+			filenameGearsMD5 += currentUserObj.eduPersonTargetedID;
+		}
+		filenameGearsMD5 += currentFileObj.fileoriginalname ;
+		filenameGearsMD5 += currentFileObj.filesize;
+		
+		filenameGearsMD5 = MD5.hash(filenameGearsMD5)+ ".tmp"; 
 		
 		// get file size
 		FlexGlobals.topLevelApplication.logProcess("Get File Size - Gears Upload");
    		var objSend1:Object = new Object();
 	   	objSend1.call = "getFileSize";
-	   	objSend1.filename = currentFileObj.fileoriginalname;
+	   	objSend1.filename = filenameGearsMD5;//currentFileObj.fileoriginalname;
 	   	filesize_main.send(objSend1);
-	}
+	} 
 
 	if(sType == "error")
 	{
