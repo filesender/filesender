@@ -69,7 +69,9 @@ if(file_exists($file) && is_file($file))
 }
 else 
 {
-    die('Error: The file '.$file.' does not exist!');
+	// redirect to fil is no longer available
+	 header( 'Location: invalidvoucher.php' ) ;
+    //die('Error: The file '.$file.' does not exist!');
 }
 }
 }
