@@ -40,7 +40,7 @@ function customException($exception){
 	);
 
 	// syslog
-	syslog(LOG_WARNING,$exceptionMsg);
+	syslog($exception->getCode(),$exceptionMsg);
 	// log to local log file
 	logEntry($exceptionMsg);
 
@@ -52,7 +52,7 @@ function customError($errno, $errstr, $errfile,$errline){
 
 	$errMsg = "Error: [$errno] $errstr : $errfile [$errline] ";
 	// syslog
-	syslog(LOG_WARNING,$errMsg);
+	syslog($errno,$errMsg);
 	// log to local log file
 	logEntry($errMsg);
 
@@ -63,6 +63,11 @@ function customError($errno, $errstr, $errfile,$errline){
 function logEntry($message){
 	
 	global $config;
+	
+	if(isset($config['log_location'])) 
+	{
+	date_default_timezone_set($config['Default_TimeZone']);
+	
 	$ip = $_SERVER['REMOTE_ADDR']; //capture IP
 	
 	if($config['dnslookup'] == true) {
@@ -86,11 +91,14 @@ function logEntry($message){
 	fwrite($fh, $stringData);
 	fclose($fh);
 	closelog();
-
+	}
 }
+	ini_set('display_errors', 'Off');
 
-if(!($config['debug'] === true || $config['debug'] === 1)){
-	set_error_handler("customError");
+if($config['debug'] == true || $config['debug'] == 1){
+
+	ini_set('log_errors', 'On');
+	set_error_handler("customError",E_ALL);
 	set_exception_handler("customException");
 }
 
