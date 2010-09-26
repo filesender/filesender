@@ -161,144 +161,7 @@ class Functions {
 	}
 	
 	
-	//---------------------------------------
-	// Clean up missing files
-	// Remove out of date files and vouchers
-	public function cleanUp() 
-	{
-	
-	$config = $this->CFG->loadConfig();
-		
-	if (!file_exists($config["log_location"])) {
-	$this->saveLog->logProcess("CRON","Unable to find log_location location specified in config.php  :".$config["log_location"]);
-	customError("", "Unable to find log_location location specified in config.php", $config["log_location"],"");
-	return false;
-	}
-	
-	if (!file_exists($config["site_filestore"])) {
-		$this->saveLog->logProcess("CRON","Unable to find site_filestore location specified in config.php  :".$config["site_filestore"]);
-		customError("", "Unable to find site_filestore location specified in config.php", $config["site_filestore"],"");
-		return false;
-	}	
-	
-	if (!file_exists($config["site_temp_filestore"])) {
-		$this->saveLog->logProcess("CRON","Unable to find site_temp_filestore location specified in config.php  :".$config["site_temp_filestore"]);
-		customError("", "Unable to find site_temp_filestore location specified in config.php", $config["site_temp_filestore"],"");
-		return false;
-	}	
-	
-	// remove any files with no uid - leftover from bug earlier beta that save files without uid's
-	$sqlQuery = "
-					DELETE FROM					 
-						files 
-					WHERE 
-						fileuid IS NULL
-				";
-	
-	$this->db->fquery($sqlQuery);
-	
-			 
-	$FilestoreDirectory = $config["site_filestore"];
-
-	// check for any expired files first and close status in database
-	$today = date($config['postgresdateformat']); 
-	
-	// if file not closed and past expiry date then close the file
-	$searchquery = "SELECT * FROM files WHERE  fileexpirydate < '%s' AND (filestatus = 'Available' or filestatus = 'Voucher')";
-	$search = $this->db->fquery($searchquery, $today);
-		
-		// check for error in SQL
-	if (!$search) { 
-		$this->saveLog->logProcess("CRON","SQL Error on selecting files".pg_last_error());
-		$this->saveLog->saveLog("","Error",pg_last_error()); 
-		return FALSE; 
-		}
-	
-	while($row = pg_fetch_assoc($search)) {
-		
-		// remove from database
-		$query = "UPDATE Files SET filestatus = 'Closed' WHERE fileid='%s'";
-		$result = $this->db->fquery($query, $row['fileid']);
-		
-		// check for error in SQL
-		if (!$result) { 
-			$this->saveLog->logProcess("CRON","SQL Error on updating files".pg_last_error());
-			$this->saveLog->saveLog("","Error",pg_last_error()); 
-			return FALSE; 
-		}
-		
-	}
-
-	// remove files that do not have at least one Available file associated with it
-	// loop through directory and check file is Available
-	
-    // Open the folder
-    $dir_handle = @opendir($FilestoreDirectory) or die("Unable to open $FilestoreDirectory"); 
-
-    // Loop through the files
-    while ($file = readdir($dir_handle)) {
-	
-	// skip . and ..
-	if($file == "." || $file == "..")
-	{
-		continue;
-	}
-	
-	// check filename in database
-	$query = "SELECT * FROM files WHERE  fileuid = '%s' AND filestatus = 'Available'";
-	$result = $this->db->fquery($query, substr($file,0,36));
-	
-	$total_results = pg_num_rows($result);
-	if($total_results < 1) {
-	// no Files Available match this file so delete the file
-		
-		if (file_exists($FilestoreDirectory.$file)) {
-		unlink($FilestoreDirectory.$file);
-		// log removal
-		$this->saveLog->logProcess("CRON","File Removed (Expired)".$FilestoreDirectory.$file);
-		$this->saveLog->saveLog($result[0],"File Removed (Expired)",$FilestoreDirectory.$file);	
-		}
-	}
-    }
-
-    // Close
-    closedir($dir_handle);
-
-	// close all entries that do not have a pyhsical file in storage
-	$search = $this->db->fquery("SELECT * FROM files WHERE filestatus = 'Available'"); 
-		
-		// check for error in SQL
-		if (!$search) { $this->saveLog->saveLog("","Error",pg_last_error()); return FALSE; }
-	
-	while($row = pg_fetch_assoc($search)) {
-
-		// we don't use ensureSaneFileUid()/sanitizeFilename() here because file_exists()
-		// is harmless, and the sanitized uid/filename might coincide with another file,
-		// in which case this file would never get status = Closed.
-		if (!file_exists($FilestoreDirectory."/".$row["fileuid"].$row["fileoriginalname"])) {
-
-		// change status to closed in database
-		$query = "UPDATE Files SET filestatus = 'Closed' WHERE fileid='%s'";
-		
-		$result = $this->db->fquery($query, $row['fileid']);
-		
-		// check for error in SQL
-		if (!$result) { 
-			$this->saveLog->logProcess("CRON","SQL Error Updating files ".pg_last_error());
-			$this->saveLog->saveLog("","Error",pg_last_error()); 
-			return FALSE; 
-		}
-		
-		$this->saveLog->logProcess("CRON","Removed (File not Available) ".$FilestoreDirectory."/".$row["fileuid"].$row["fileoriginalname"]);
-		$this->saveLog->saveLog($row,"Removed (File not Available)","");	
-		
-		}
-		
-	}
-	return true;
-	}
-	
-	//---------------------------------------
+		//---------------------------------------
 	// Get Splash Screen text for all users
 	public function getSplash() {
 	
@@ -357,7 +220,21 @@ class Functions {
 		$flexconfig['help_link_visible'] = $config["help_link_visible"];	// if drivespace is low send email to admins
 		$flexconfig['max_email_recipients'] = $config["max_email_recipients"];
 		
+		// check file locations are correct
+		if (!file_exists($config["log_location"])) {
+		trigger_error("Unable to find log_location location specified in config.php  :".$config["log_location"], E_USER_ERROR);
+		return false;
+		}
+		if (!file_exists($config["site_filestore"])) {
+		trigger_error("Unable to find site_filestore location specified in config.php  :".$config["site_filestore"], E_USER_ERROR);
+		return false;
+		}	
 	
+		if (!file_exists($config["site_temp_filestore"])) {
+		trigger_error("Unable to find site_temp_filestore location specified in config.php  :".$config["site_temp_filestore"], E_USER_ERROR);
+		return false;
+		}	
+			
 		if(disk_free_space($config['site_filestore'])/disk_total_space($config['site_filestore']) * 100 < $config["server_drivespace_warning"] ) { 
 		$this->saveLog->saveLog("","Drive Space Below ".$config["server_drivespace_warning"]."% ","");
 		$this->sendmail->sendemailAdmin("Drive space is below ".$config["server_drivespace_warning"]."% on ".$config['site_url']." (".$config['site_filestore'].").");
@@ -871,6 +748,7 @@ class Functions {
 			$tempFilename = md5($tempFilename).'.tmp';
 			
 			if( $dataitem['fileoriginalname'] == "" || $dataitem['fileuid'] == "" ) {
+				//customError("", "File name or UID not found ".$dataitem['fileoriginalname'] ." - ".dataitem['fileuid'] , "","");
 				return false;
 			} else {
 				$filename = $config["site_temp_filestore"].sanitizeFilename($tempFilename);
@@ -897,7 +775,7 @@ class Functions {
 					}
 				} else {
 					customError("", "Unable to find temp file ".$filename,"");
-					$this->saveLog->saveLog($dataitem,"Error","Cannot File in from Temp Folder");
+					$this->saveLog->saveLog($dataitem,"Error","Cannot find File in Temp Folder");
 					return false;
 				}
 			}
