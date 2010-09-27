@@ -78,6 +78,8 @@ else
 
 function readfile_chunked($filename,$retbytes=true) {
 
+ob_start();
+
 $chunksize = 1*(1024*1024); // how many bytes per chunk
    $buffer = '';
    $cnt =0;
