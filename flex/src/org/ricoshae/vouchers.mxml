@@ -270,7 +270,6 @@
 		  <mx:DataGrid width="100%" height="100%" id="vouchers_dg" dataProvider="{usersFiles}">
 		    <mx:columns>
 		      <mx:DataGridColumn headerText="{lang.To}" dataField="fileto" />
-		      <mx:DataGridColumn headerText="{lang.From}" dataField="filefrom"/>
 		      <mx:DataGridColumn headerText="{lang.Voucher_Sent}" dataField="fileactivitydate" labelFunction="dateFunc"/>
 		      <mx:DataGridColumn headerText="{lang.Valid_To}" dataField="fileexpirydate" labelFunction="dateFunc"/>
 		      <mx:DataGridColumn width="20">
