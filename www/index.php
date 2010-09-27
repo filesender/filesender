@@ -87,7 +87,7 @@ var requiredRevision = 0;
 
 <div id="wrap">
 	
-  <div id="header">  </div>
+  <div id="header"><img src="banner.png" width="800" height="60" border=0/></div>
   <script language="JavaScript" type="text/javascript">
 <!--
 // Version check for the Flash Player that has the ability to start Player Product Install (6.0r65)
