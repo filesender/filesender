@@ -56,7 +56,7 @@ function customError($errno, $errstr, $errfile,$errline){
 	// log to local log file
 	logEntry($errMsg);
 
-	exit;
+	return;
 
 }
 
@@ -93,11 +93,12 @@ function logEntry($message){
 	closelog();
 	}
 }
-	ini_set('display_errors', 'Off');
+
+ini_set('display_errors', 'Off');
 
 if($config['debug'] == true || $config['debug'] == 1){
 
-	ini_set('log_errors', 'On');
+//	ini_set('log_errors', 'On');
 	set_error_handler("customError",E_ALL);
 	set_exception_handler("customException");
 }
