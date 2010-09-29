@@ -1,6 +1,6 @@
 --- config/config.php	2010-08-27 10:55:53.000000000 +0200
 +++ config/config.php.new	2010-08-27 10:58:18.000000000 +0200
-@@ -118,11 +118,12 @@ public function loadConfig() {
+@@ -120,11 +120,12 @@ public function loadConfig() {
  	$config['gearsURL'] = 'http://tools.google.com/gears/';
  
  	// database settings	
