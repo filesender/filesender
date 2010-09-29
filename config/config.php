@@ -245,7 +245,7 @@ Best regards,
 	</TR>
 	<TR>
 		<TD WIDTH=100% BGCOLOR="#e6e6e6">
-			<P><I><pre>{filemessage}</pre></I></P>
+			<P><I><pre>{htmlfilemessage}</pre></I></P>
 		</TD>
 	</TR>
 </TABLE>
