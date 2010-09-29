@@ -1,11 +1,20 @@
 
-Update 2 August 2010
+Update 29 September 2010
 
 Version Beta 1.16
 	Updated SVN structure
 	Moved Flash file to /www/swf/
 	Rename flash file filesender.swf
 	Fix voucher not sending out correct email message when created
+	Update logging to provide client prcess logging
+	Details php loggin
+	Typos fixed
+	Download changed to use browser download instead of flash download
+	Gears upload resumefixed
+	Gears Upload temp file handling improved
+	Cron job added
+	Hostname updated in config
+	
 
 Version Beta 1.15
 
