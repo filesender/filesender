@@ -399,7 +399,7 @@ class Functions {
 		
 			
 		$jsonString = rawurldecode($_POST['jsonSendData']);
-		$jsonString = str_replace("\\", "", $jsonString);
+		//$jsonString = str_replace("\\", "", $jsonString);
 		$data = json_decode($jsonString, true);
 		$dataitem = $data[0];
 		$tempEmail = $dataitem["fileto"];
@@ -420,7 +420,7 @@ class Functions {
 		$dbCheck = DB_Input_Checks::getInstance();
 
 		$jsonString = rawurldecode($_POST['jsonSendData']);
-		$jsonString = str_replace("\\", "", $jsonString);
+		//$jsonString = str_replace("\\", "", $jsonString);
 		$data = json_decode($jsonString, true);
 		$dataitem = $data[0];
 
@@ -502,7 +502,7 @@ class Functions {
 		$dbCheck = DB_Input_Checks::getInstance();
 		
 		$jsonString = rawurldecode($_POST['jsonSendData']);
-		$jsonString = str_replace("\\", "", $jsonString);
+		//$jsonString = str_replace("\\", "", $jsonString);
 		$data = json_decode($jsonString, true);
 		$dataitem = $data[0];
 		
@@ -720,7 +720,7 @@ class Functions {
 	$config = $this->CFG->loadConfig();
 	
 		$jsonString = rawurldecode($_POST['jsonSendData']);
-		$jsonString = str_replace("\\", "", $jsonString);
+		//$jsonString = str_replace("\\", "", $jsonString);
 		$fileobj = json_decode($jsonString, true);
 		$dataitem = $fileobj[0];
 
