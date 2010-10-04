@@ -54,6 +54,7 @@ body { margin: 0px; overflow:hidden }
 <div id="wrap">
 	
   <div id="header">
+   <img src="displayimage.php" width="800" height="60" border=0/>
     <p class="style5">&nbsp;</p>
   </div>
   <p>

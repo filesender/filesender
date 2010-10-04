@@ -54,12 +54,13 @@ require_once('../classes/_includes.php');
 <div id="wrap">
 	
   <div id="header">
+  <img src="displayimage.php" width="800" height="60" border=0/>
     <p class="style5 style1">About</p>
   </div>
   <p>
 
   </p>
-  <div align="center">Custom About information </div>
+  <div align="center">Custom About</div>
   <hr />
 </div>
 <!-- #content -->
