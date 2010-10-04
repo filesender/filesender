@@ -39,6 +39,14 @@ $functions = Functions::getInstance();
 $saveLog = Log::getInstance();
 $sendmail = Mail::getInstance();
 
+date_default_timezone_set($config['Default_TimeZone']);
+
+if(session_id() == ""){
+	// start new session and mark it as valid because the system is a trusted source
+	session_start();
+	$_SESSION['validSession'] = true;
+} 
+
 if(!$authvoucher->aVoucher() && !$authsaml->isAuth()) {
 		echo "notAuthenticated";
 } else {

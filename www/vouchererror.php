@@ -54,6 +54,7 @@ require_once('../classes/_includes.php');
 <div id="wrap">
 	
   <div id="header">
+  <img src="displayimage.php" width="800" height="60" border=0/>
     <p class="style5 style1">Error</p>
   </div>
   <p>

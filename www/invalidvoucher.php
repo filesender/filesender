@@ -38,14 +38,23 @@ require_once('../classes/_includes.php');
 <title>FileSender:</title>
 <link rel="stylesheet" type="text/css" href="css/default.css" />
 <link rel="stylesheet" type="text/css" href="history/history.css" />
-
+<style type="text/css">
+<!--
+.style1 {
+	color: #FFFFFF;
+	font-weight: bold;
+}
+-->
+</style>
 </head>
+
 <body scroll="no">
 
 <div id="wrap">
 	
   <div id="header">
-    <p class="style5">Error</p>
+    <img src="displayimage.php" width="800" height="60" border=0/>
+    <p class="style1">Error</p>
   </div>
   <p>
  

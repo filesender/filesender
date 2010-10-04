@@ -1,5 +1,4 @@
 <?php
-
 /*
  *  Filsender www.filesender.org
  *      
@@ -28,45 +27,53 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-require_once('../classes/_includes.php');
  
-?>
+// Displays an image based on custom image location or default image location
+// config/banner.jpg or default banner.jpg
+// custom oerides default file
+$filesenderbase = dirname(dirname(__FILE__));
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>FileSender:</title>
-<link rel="stylesheet" type="text/css" href="css/default.css" />
-<link rel="stylesheet" type="text/css" href="history/history.css" />
+$customimage = "$filesenderbase/config/banner.png";
+$defaultimage = "$filesenderbase/www/banner.png"; 
 
+displayimage($customimage,$defaultimage);
 
-<style type="text/css">
-<!--
-.style1 {
-	color: #FFFFFF;
-	font-weight: bold;
-}
--->
-</style>
-</head>
-<body scroll="no">
+function displayimage($customimage,$defaultimage)
+{
+	$displayimage = "";
 
-<div id="wrap">
+	// check if default image exists  
+	if(file_exists($defaultimage) && is_file($defaultimage)) {
+	$displayimage = $defaultimage;
+	}
+
+	// check if custom image exists
+	if(file_exists($customimage) && is_file($customimage)) {
+
+	// if custom exists then overwrite default display image  
+	 $displayimage = $customimage; 
+	}
+	if (!$displayimage == "") 
+	{
+
+	// Make sure the file is an image
+		$imgData = getimagesize($displayimage);
+		if($imgData) {
+		// Set the appropriate content-type
+		// and provide the content-length.
 	
-  <div id="header">
-  <img src="displayimage.php" width="800" height="60" border=0/>
-    <p class="style5 style1">Help</p>
-  </div>
-  <p>
+		header("Pragma: public");
+		header("Expires: 0");
+		header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+	
+		header("Content-Type: image/jpg");
+		header("Content-length: " . filesize($displayimage));
+		
+		// Print the image data
+		readfile($displayimage);
 
-  </p>
-  <div align="center">Custom Help </div>
-  <hr />
-</div>
-<!-- #content -->
-
-</div><!-- #wrap -->
-
-</body>
-</html>
+		}  
+	}
+	return;
+}
+?>
