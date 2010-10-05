@@ -310,7 +310,14 @@ public function deletedVoucher(event:ResultEvent):void
 		      </mx:DataGridColumn>
 		    <mx:DataGridColumn headerText="To" dataField="fileto" wordWrap="true"/> 
 			<mx:DataGridColumn headerText="From" dataField="filefrom" wordWrap="true"/>
-		    <mx:DataGridColumn headerText="File" dataField="fileoriginalname" wordWrap="true"/>
+		    <mx:DataGridColumn headerText="File" dataField="fileoriginalname" wordWrap="true">
+				<mx:itemRenderer>
+					<mx:Component>
+						<mx:LinkButton click="navigateToURL(new URLRequest('download.php?vid='+ data.filevoucheruid), 'Download File')" toolTip="Click to Download {data.fileoriginalname}" label="{data.fileoriginalname}" labelPlacement="left">	
+						</mx:LinkButton>
+					</mx:Component>
+				</mx:itemRenderer>
+			</mx:DataGridColumn>
 		    <mx:DataGridColumn headerText="Size" dataField="filesize" labelFunction="filesizeFunc" wordWrap="true" />  
 		    <mx:DataGridColumn headerText="Subject" dataField="filesubject" wordWrap="true"/>
 		    <mx:DataGridColumn headerText="Message" dataField="filemessage" wordWrap="true"/>
