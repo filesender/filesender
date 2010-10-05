@@ -516,7 +516,7 @@ class Functions {
 		} else {
 			$filesubject 	= "NULL";
 		}
-		$fileactivitydate 	= date($config['postgresdateformat'],time());//dateConversion($dbCheck->checkString($dataitem['fileactivitydate']));
+		$fileactivitydate 	= dateConversion($dbCheck->checkString($dataitem['fileactivitydate']));//date($config['postgresdateformat'],time());//dateConversion($dbCheck->checkString($dataitem['fileactivitydate']));
 		$filevoucheruid 	= $dataitem['filevoucheruid'];
 
 		if(isset($dataitem['filemessage'])){
