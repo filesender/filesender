@@ -159,6 +159,7 @@
  		return ;	
  	}
  	
+	FlexGlobals.topLevelApplication.uploadStarted();
     uploadBtn.visible = false;
     btUpload.visible = false;	      
 	ExternalInterface.call("upload('"+currentFileObj.filevoucheruid+"')");
@@ -223,8 +224,7 @@ private function fnCheckExtension(str:String):Boolean
 		} 
 					
 		selectedFilename.text = sInfo.toString();
-		currentFileObj.fileoriginalname = sInfo.toString();
-		FlexGlobals.topLevelApplication.uploadStarted(); 
+		currentFileObj.fileoriginalname = sInfo.toString();		 
 		btUpload.visible = true;
    		
 		// generate file md5 from 
