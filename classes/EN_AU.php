@@ -107,7 +107,7 @@ $lang = array(
 	"Vouchers_Sent" => "Vouchers Sent",
 	"Voucher_has_been_sent" => "Voucher has been sent",
 	"Voucher_ID" => "Voucher ID",
-	"Your_file_has_been_sent" => "Your file has been sent",
+	"Your_file_has_been_sent" => "Your file has been uploaded and message sent.",
 	"You_need_to_logon_to " => "You need to logon to ",
 	"notAuthenticated" => "Unable to Authenticate - You need to logon again.",
 	
