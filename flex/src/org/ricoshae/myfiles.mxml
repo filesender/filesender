@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="100%" height="100%" title="{lang.My_Files} ({currentUserObj.email})">
+<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="100%" height="100%" title="{lang.My_Files}">
 
 <mx:Script> 
     <![CDATA[ 
@@ -308,7 +308,6 @@ public function deletedVoucher(event:ResultEvent):void
 		          </mx:Component> 
 		        </mx:itemRenderer> 
 		      </mx:DataGridColumn>
-		    <mx:DataGridColumn headerText="Status" dataField="filestatus" wordWrap="true"/>
 		    <mx:DataGridColumn headerText="To" dataField="fileto" wordWrap="true"/> 
 			<mx:DataGridColumn headerText="From" dataField="filefrom" wordWrap="true"/>
 		    <mx:DataGridColumn headerText="File" dataField="fileoriginalname" wordWrap="true"/>
