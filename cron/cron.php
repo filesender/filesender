@@ -142,10 +142,12 @@ function cleanUp()
     while ($file = readdir($dir_handle)) {
 	
 	// skip . and ..
-	if($file == "." || $file == "..")
+	if($file == "." || $file == ".." || strpos($config['cron_exclude prefix'],substr($file,0,1)) === 0)
 	{
+		logProcess("CRON","Ignored file: ".$FilestoreDirectory.$file);
 		continue;
 	}
+	
 	
 	// check filename in database
 	$query = "SELECT * FROM files WHERE  fileuid = '%s' AND filestatus = 'Available'";
@@ -154,8 +156,8 @@ function cleanUp()
 	$total_results = pg_num_rows($result);
 	if($total_results < 1) {
 	// no Files Available match this file so delete the file
-		
-		if (file_exists($FilestoreDirectory.$file)) {
+	
+		if (is_file($FilestoreDirectory.$file) && file_exists($FilestoreDirectory.$file)) {
 		unlink($FilestoreDirectory.$file);
 		// log removal
 		logProcess("CRON","File Removed (Expired)".$FilestoreDirectory.$file);	
