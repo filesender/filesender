@@ -126,6 +126,9 @@ public function loadConfig() {
 	$config['pg_username'] = 'postgres';
 	$config['pg_password'] = 'yoursecretpassword';
 
+	// cron settings
+	$config['cron_exclude prefix'] = '_'; // exclude deletion of files with the prefix charachter listed (can use multiple charachters eg '._' will igone .xxxx and _xxxx
+	
 	// email
 	$config['default_emailsubject'] = "{siteName}: {filename}";
 	$config['filedownloadedemailbody'] = '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset=iso-8859-1{CRLF}{CRLF}
