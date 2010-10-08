@@ -1,5 +1,4 @@
 config/config.php debian/conf/*  etc/filesender
-classes includes scripts cron		 usr/share/filesender
+www classes includes scripts cron		 usr/share/filesender
 tmp files		             var/lib/filesender
-www/*.php www/css www/favicon.ico www/banner.png www/js www/lib www/swf      usr/share/filesender/www
 
