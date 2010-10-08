@@ -148,7 +148,7 @@ if(session_id() == ""){
 		
     case "fileInfo":
 		$jsonString = rawurldecode($_POST['jsonSendData']);
-  		$jsonString = str_replace("\\", "", $jsonString);
+  		//$jsonString = str_replace("\\", "", $jsonString);
   		$data = json_decode($jsonString, true);
         echo $functions->getFile($data);
         break;
