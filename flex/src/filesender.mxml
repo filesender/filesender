@@ -731,7 +731,7 @@
 			<mx:Label text="{lang.Welcome} {currentUser.name} " id="displayUserName" visible="{config.displayUserName}"/>
 			<mx:Spacer width="100%"/>
 			<mx:Label textAlign="right" fontStyle="normal" id="site_showStats" fontWeight="normal" text="{statsData} " visible="{config.site_showStats}" includeInLayout="{config.site_showStats}"/>
-			<mx:Label text="Beta 0.1.16 |" id="versionNumber" visible="{config.versionNumber}" includeInLayout="{config.versionNumber}"/>
+			<mx:Label text="Beta 0.1.16.1 |" id="versionNumber" visible="{config.versionNumber}" includeInLayout="{config.versionNumber}"/>
 			<mx:Label text=" Help" click="helpLink()" buttonMode="true" useHandCursor="true" mouseChildren="false" toolTip="Help with this application"  id="label3"/>
 			<mx:Label text="| About" click="aboutLink()" buttonMode="true" useHandCursor="true" mouseChildren="false" toolTip="Information about this application"  id="label2"/>
 		</mx:HBox>
