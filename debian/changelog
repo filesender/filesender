@@ -1,3 +1,9 @@
+filesender (0.1.16.1-1) stable; urgency=low
+
+  * patch release 0.1.16.1
+
+ -- Filesender Development <filesender-dev@filesender.org>  Fri, 08 Oct 2010 14:27:45 +0200
+
 filesender (0.1.16-1) stable; urgency=low
   
   * New upstream release
