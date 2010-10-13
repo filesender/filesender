@@ -484,13 +484,34 @@
 		} 
 	// check if file size is readable.
 	try {
-			selectedFileSize.text = readablizeBytes(fileRef.size);
-			selectedFilename.text = fileRef.name;
+			var checkSizeExists:String = readablizeBytes(fileRef.size);
 	}
 	catch(error:Error) {
-		Alert.show(lang["E003"]);
+		Alert.show(lang["E020"]);
 		return;
 	}
+	
+	// check if larger than acceptable flash file upload size
+	
+	if(fileRef.size < 0 )
+	{ 
+		FlexGlobals.topLevelApplication.logProcess("File Size is 0 - Flash Upload");
+		Alert.show(lang.E019,lang.E019); 
+		return ;
+	} 
+	else  
+	{
+		if(parseInt(fileRef.size.toString()) > parseInt(config.max_flash_upload_size))
+		{
+			FlexGlobals.topLevelApplication.logProcess("File Size too Large (" + fileRef.size.toString() + ") - Flash Upload");
+			Alert.show(lang.E020,lang.E000); 
+			return ;		 
+		}	  
+	}    
+	// ok to display filesize and name
+	selectedFileSize.text = readablizeBytes(fileRef.size);
+	selectedFilename.text = fileRef.name;
+	
   			btUpload.visible = true;
 		} 
  // When a file is selected, we upload the file to the PHP file upload script on the server
