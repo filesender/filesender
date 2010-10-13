@@ -317,14 +317,14 @@ private function dateFunc( item:Object, column:DataGridColumn):String
         	var hcolor:Array;
         	
         	//Retrieve the headercolor
-        	if(dg.getStyle("headerColor") != undefined) {
-        		hcolor = [dg.getStyle("headerColor")];
-        	} else {
-        		hcolor = dg.getStyle("headerColors");
-        	}				
+        	//if(dg.getStyle("headerColor") != undefined) {
+        	//	hcolor = [dg.getStyle("headerColor")]; 
+        	//} else {
+        	//	hcolor = dg.getStyle("headerColors");
+        	//}				
         		 
         	//Set the htmltabel based upon knowlegde from the datagrid
-        	str+= '<table width="'+dg.width+'"><thead><tr width="'+dg.width+'" style="background-color:#' +Number((hcolor[0])).toString(16)+'">';
+        	str+= '<table width="'+dg.width+'"><thead><tr width="'+dg.width+'" >';//style="background-color:#' +Number((hcolor[0])).toString(16)+'">';
         	
         	//Set the tableheader data (retrieves information from the datagrid header				
         	for(var i:int = 0;i<dg.columns.length;i++) {
@@ -339,7 +339,7 @@ private function dateFunc( item:Object, column:DataGridColumn):String
         	
         	str += "</tr></thead><tbody>";
         	colors = dg.getStyle("alternatingRowColors");
-        	
+			
         	//Loop through the records in the dataprovider and 
         	//insert the column information into the table
         	for(var j:int =0;j<dg.dataProvider.length;j++) {					
@@ -382,7 +382,7 @@ private function dateFunc( item:Object, column:DataGridColumn):String
         		str += "</tr>";
         	}
         	str+="</tbody></table>";
-       
+			
         	return str;
         }
         
@@ -467,11 +467,11 @@ private function dateFunc( item:Object, column:DataGridColumn):String
 							</mx:DataGrid> 
 						</mx:VBox>
 					</mx:HBox> 
-				</mx:VBox>
+				</mx:VBox> 
 			</mx:Canvas>
 			<mx:Canvas label="{lang.Uploads}" width="100%" height="100%">
 				<mx:VBox x="0" y="0" width="100%" height="100%" horizontalAlign="right">
-					<mx:Button label="{lang.Export}" click="loadDGInExcel(vouchers_dg1);"/>
+					<mx:Button label="{lang.Export}" click="loadDGInExcel(vouchers_dg1)"/>
 					<mx:DataGrid width="100%" height="100%" id="vouchers_dg1" dataProvider="{allUploads}">
 					  <mx:columns>
 					    <mx:DataGridColumn headerText="Date" dataField="logdate" labelFunction="dateFunc" wordWrap="true"/>
