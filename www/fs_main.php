@@ -173,6 +173,10 @@ if(session_id() == ""){
 		echo $functions->deleteFile($_POST['svid']);
 		break;
 		
+	case "closeVoucher": 
+		echo $functions->closeVoucher($_POST['svid']);
+		break;
+		
 	case "resendVoucher":
 		$fileArray =  $functions->getVoucher($_POST['svid']);
 		
