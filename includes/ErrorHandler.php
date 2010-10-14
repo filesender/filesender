@@ -79,7 +79,7 @@ function logEntry($message){
 	$message .= "[".$ip."(".$domain.")] ";
 	$dateref = date("Ymd");
 	$data = date("Y/m/d H:i:s");
-	$myFile = $config['log_location'].$dateref."-error.log.txt";
+	$myFile = $config['log_location'].$dateref.".log.txt";
 	$fh = fopen($myFile, 'a') or die("can't open file");
 	// don't print errors on screen when there is no session.
 	if(isset($_REQUEST['PHPSESSID'])){
@@ -94,11 +94,11 @@ function logEntry($message){
 	}
 }
 
-ini_set('display_errors', 'Off');
+ini_set('display_errors', 'On');
 
 if($config['debug'] == true || $config['debug'] == 1){
 
-//	ini_set('log_errors', 'On');
+	ini_set('log_errors', 'On');
 	set_error_handler("customError",E_ALL);
 	set_exception_handler("customException");
 }
