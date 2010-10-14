@@ -123,7 +123,7 @@ $lang = array(
 	
 	
 	"site_sendfileinstructions" => "<B>To send a file.</B><BR>Type an email address into the To: box<BR>Select BROWSE to choose a file on your computer.<BR>Select SEND FILE to upload and send the file.",
-	"site_voucherinstructions" => "A Voucher allows someone to send you a file.<BR>To create a voucher, enter an email address then select Send Voucher.<BR>An email will be send to the recipient with a link to use the Voucher.",
+	"site_voucherinstructions" => "A Voucher allows someone to send you a file.<BR>To create a voucher, enter an email address then select Send Voucher.<BR>An email will be sent to the recipient with a link to use the Voucher.",
 	
 	// error messages
 	"E000" => "Message", // Message

@@ -68,7 +68,7 @@ public function loadConfig() {
 	// debug 
 	$config["debug"] = true;
 	$config['dnslookup'] = true; // log includes DNS lookup true/false
-	$config["client_specific_logging"] = true; // client looging true/false
+	$config["client_specific_logging"] = true; // client logging true/false
 	$config["client_specific_logging_uids"] = ""; // "" is log all clients, or log for specific userid's or voucheruid's seperated by comma 'xxxx,zzzzz'
 
 	// saml settings
@@ -129,7 +129,7 @@ public function loadConfig() {
 	$config['pg_password'] = 'yoursecretpassword';
 
 	// cron settings
-	$config['cron_exclude prefix'] = '_'; // exclude deletion of files with the prefix charachter listed (can use multiple charachters eg '._' will igone .xxxx and _xxxx
+	$config['cron_exclude prefix'] = '_'; // exclude deletion of files with the prefix character listed (can use multiple characters eg '._' will ignore .xxxx and _xxxx
 	
 	// email
 	$config['default_emailsubject'] = "{siteName}: {filename}";
@@ -340,7 +340,7 @@ Dear Sir, Madam,<BR><BR>The file '{filename}' from {filefrom} has been cancelled
 </HTML>{CRLF}{CRLF}--simple_mime_boundary--";
 
 	$config['site_sendfileinstructions'] = '<B>To send a file.</B><BR>Type an email address into the To: box<BR>Select BROWSE to choose a file on your computer.<BR>Select SEND FILE to upload and send the file.';
-	$config['site_voucherinstructions'] = 'A Voucher allows someone to send you a file.<BR>To create a voucher. Enter an email address then select Send Voucher.<BR>An email will be send to the recipient with a link to use the Voucher.';
+	$config['site_voucherinstructions'] = 'A Voucher allows someone to send you a file.<BR>To create a voucher. Enter an email address then select Send Voucher.<BR>An email will be sent to the recipient with a link to use the Voucher.';
 	$config['site_downloadinstructions'] = 'A file is available for you.<BR>Select Download File to download the file to your computer.';
 	
 
