@@ -69,7 +69,7 @@ public function loadConfig() {
 	$config["debug"] = true;
 	$config['dnslookup'] = true; // log includes DNS lookup true/false
 	$config["client_specific_logging"] = true; // client looging true/false
-	$config["client_specific_logging_uids"] = ""; // "" is log all clients, or log for specif userid's or voucheruid's seperated by semi-colon 'xxxx,zzzzz'
+	$config["client_specific_logging_uids"] = ""; // "" is log all clients, or log for specific userid's or voucheruid's seperated by comma 'xxxx,zzzzz'
 
 	// saml settings
 	$config['saml_email_attribute'] = 'mail';
