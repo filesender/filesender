@@ -175,6 +175,8 @@ class Functions {
 		$flexconfig['helpURL'] = $config['helpURL']; //
 		$flexconfig['gearsURL'] = $config['gearsURL'];
 		$flexconfig["debug"] = $config["debug"];
+		$flexconfig["client_specific_logging"] = $config["client_specific_logging"]; // client looging true/false
+		$flexconfig["client_specific_logging_uids"] = $config["client_specific_logging_uids"]; // "" is log all clients, or log for specif userid's or voucheruid's
 		return json_encode($flexconfig);
 		}
 		
@@ -631,7 +633,34 @@ class Functions {
 			return false;
 		}	
 	}
+	//---------------------------------------
+	// Close a voucher
+	// 
+	public function closeVoucher($fileid){
 	
+			$config = $this->CFG->loadConfig();
+	
+			
+			$dbCheck = DB_Input_Checks::getInstance();	
+	
+			$sqlQuery = "
+					UPDATE 
+						files 
+					SET 
+						filestatus = 'Closed' 
+					WHERE 
+						fileid = %d
+				";
+	
+			$this->db->fquery($sqlQuery, $fileid);
+	
+			$fileArray =  $this->getVoucher($fileid);
+			
+			//$this->sendmail->sendEmail($fileArray[0],$config['defaultvouchercancelled']);	
+			$this->saveLog->saveLog($fileArray[0],"Voucher Closed","");
+	return true;
+		
+	}
 	//---------------------------------------
 	// Delete a file
 	// 

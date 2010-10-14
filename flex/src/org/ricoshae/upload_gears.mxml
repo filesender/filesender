@@ -371,22 +371,16 @@ private function fnCheckExtension(str:String):Boolean
  	 
  	if(currentFileObj.filestatus == "Voucher") 
     	{	
- 			currentFileObj.filestatus = "Closed";  
-        		
-  			var objSend:Object = new Object(); 
-			objSend.call = "updateFile"; 
- 			var dataArray:ArrayCollection = new ArrayCollection();
-     		dataArray.addItem(currentFileObj);
-    		var dataString:String = JSON.encode(dataArray.toArray()); 
- 			dataString = escape(dataString);
- 			objSend.jsonSendData = dataString; 
+		currentFileObj.filestatus = "Closed";
+		
+		var objSend:Object = new Object();
+		objSend.call = "closeVoucher";
+		var dataArray:ArrayCollection = new ArrayCollection();
+		objSend.svid = currentFileObj.fileid;
+		send_main.send(objSend);
 			
-			//Alert.show(dataString.toString());
-			//return;
-			
- 			send_main.send(objSend);
-   		
-   		}	
+		}
+	
  		tempCurrentFileObj = currentFileObj;
     	tempCurrentFileObj.filestatus = "Available"
  				

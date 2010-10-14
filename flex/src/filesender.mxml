@@ -5,7 +5,7 @@
 			<mx:AddChild position="lastChild"> 
 				<comp:vouchers id="vouchers" left="6" right="6" top="87" bottom="6">
 				</comp:vouchers>          
-			</mx:AddChild>                 
+			</mx:AddChild>                  
 			<mx:AddChild relativeTo="{hbox0}" position="lastChild">
 				<mx:Label text="| About" click="aboutLink()" buttonMode="true" useHandCursor="true" mouseChildren="false" toolTip="Information about this application" />
 			</mx:AddChild> 
@@ -223,7 +223,7 @@
 				
 				
 				if(tempObj["voucherauth"]) {
-					logProcess("Voucher is Authenticated");
+					//logProcess("Voucher is Authenticated");
 					var urlRedirect:URLRequest = new URLRequest("invalidvoucher.php"); 
 					
 					if(tempObj["voucher"].toString() == "found") {
@@ -247,7 +247,7 @@
 				 
 				// if SAMLAuth
 				if(tempObj["samlauth"]) {
-					logProcess("SAML is Authenticated");
+					//logProcess("SAML is Authenticated");
 					logonOffStatus = true;
 					// load user data
 					var tempUser:Object = JSON.decode(tempObj["authUser"]);
@@ -687,14 +687,35 @@
 			// log client process process
 			public function logProcess(message:String):void
 			{
-				var objSend:Object = new Object();
-				objSend.call = "log_process";
-				objSend.message = message;
-				objSend.client =  currentUser.name.replace(" ","-");
-				// check if config debug is true to create client logging
-				if(splash && splash.debug ) 
-				{			
-				logon_process.send(objSend);
+				// check if client logging is on
+				if(splash && splash.client_specific_logging ) 
+				{
+					var objSend:Object = new Object();
+					objSend.call = "log_process";
+					objSend.message = message;
+					
+					objSend.client = "Guest";
+					var comparisonid:String = ""; // used to store the current userid or voucher id
+					
+					// check if the client_specific_logging is a client or voucher
+					if(currentFileObj && currentFileObj.filestatus == "Voucher")
+					{
+						comparisonid = currentFileObj.filevoucheruid;
+						objSend.client = "Voucher-"+currentFileObj.filevoucheruid;
+						
+					} else if (currentUser && currentUser.eduPersonTargetedID){
+						
+						comparisonid = currentUser.eduPersonTargetedID;
+						objSend.client =  currentUser.name.replace(" ","-");
+					}
+					
+					// check if comparisonid is in splash.client_specific_logging_uids
+					
+					if(splash.client_specific_logging_uids.search(comparisonid) > -1 || splash.client_specific_logging_uids == "")
+					{
+						
+						log_process.send(objSend);
+					}
 				}
 			}
 			
@@ -711,7 +732,7 @@
 	<mx:HTTPService id="checkAuthAdmin" url="../fs_main.php{URLvid}" useProxy="false" method="POST" resultFormat="text" result="resultAuthAdmin(event)" fault="resultError(event)"/> 
 	<mx:HTTPService id="file_main" url="../fs_main.php{URLvid}" useProxy="false" method="POST" resultFormat="text" result="resultFile(event)" fault="resultError(event)"/>  
 	<mx:HTTPService id="logon_main" url="../fs_main.php{URLvid}" useProxy="false" method="POST" resultFormat="text" result="resultLogon(event)" fault="resultError(event)"/>     
-	<mx:HTTPService id="logon_process" url="../fs_main.php{URLvid}" useProxy="false" method="POST" resultFormat="text" result="resultlog(event)" fault="faultHandler(event)"/>     
+	<mx:HTTPService id="log_process" url="../fs_main.php{URLvid}" useProxy="false" method="POST" resultFormat="text" result="resultlog(event)" fault="faultHandler(event)"/>     
 	 
 	<mx:NumberFormatter id="numberFormatter" precision="2" useThousandsSeparator="true" useNegativeSign="true"/>
 	<mx:DateFormatter id="df" formatString="{config.datedisplayformat}"/>

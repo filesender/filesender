@@ -346,12 +346,9 @@
     		currentFileObj.filestatus = "Closed";
         		
         	var objSend:Object = new Object();
-	   		objSend.call = "updateFile";
+	   		objSend.call = "closeVoucher";
 	   		var dataArray:ArrayCollection = new ArrayCollection();
-	    	dataArray.addItem(currentFileObj);
-	    	var dataString:String = JSON.encode(dataArray.toArray());
-	   		dataString = escape(dataString);
-	   		objSend.jsonSendData = dataString;
+			objSend.svid = currentFileObj.fileid;
 	   		send_main.send(objSend);
 	   	}		
     	var tempCurrentFileObj:Object;
