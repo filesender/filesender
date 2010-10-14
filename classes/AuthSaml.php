@@ -124,7 +124,7 @@ private static $instance = NULL;
 	 		
   		$dateref = date("Ymd");
 		$data = date("Y/m/d H:i:s");
-		$myFile = $config['log_location'].$dateref."-error.log.txt";
+		$myFile = $config['log_location'].$dateref.".log.txt";
 		$fh = fopen($myFile, 'a') or die("can't open file");
 		$stringData = $data.' [Session ID: '.session_id().'] '.$message."\n";
 		fwrite($fh, $stringData);
