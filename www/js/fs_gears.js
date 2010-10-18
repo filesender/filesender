@@ -29,6 +29,10 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
  
+// when cancelling an upload we need to wait till the chunk is complete before allowing the cancel to happen
+// setting cancell upload to true will trigger the upload to stop before uploading the next chunk
+var cancelUploadStatus = "false";
+ 
 function gearsActive(){
 if (!window.google || !google.gears) {
    getFlexApp('filesender').gearsActive("false");
@@ -153,7 +157,7 @@ function upload(voucheruid)
 		/**
 		 * Get the next chunk to send.
 		 */
-		 addStatus("","aaaaa");
+		 //addStatus("","aaaaa");
 		 chunk = mylist[file].blob.slice( mylist[file].uploaded, (chunkLength - mylist[file].uploaded) );
 		
 		/**
@@ -167,10 +171,7 @@ function upload(voucheruid)
 
 function cancelUpload ()
 {
-	var req = google.gears.factory.create('beta.httprequest');
-	req.abort();
-	mylist		= {};  // clear files list
-	addStatus("upload Cancelled","cancelled");
+	cancelUploadStatus = "true";
 }
 
 function sendChunk ( entry, chunk, start, end, total,voucheruid )
@@ -203,7 +204,17 @@ function sendChunk ( entry, chunk, start, end, total,voucheruid )
 	 */
 	 
 	req.onreadystatechange = function(){
-	
+
+			if (cancelUploadStatus == "true")
+			{
+				//var req = google.gears.factory.create('beta.httprequest');
+				req.abort();
+				mylist		= {};  // clear files list
+				addStatus("upload Cancelled","cancelled");
+				cancelUploadStatus = "false";
+				return;
+			}
+			
 		//addStatus(prcnt,"percentage");
 		if(req.responseText == "Error"){
 		req.abort();
@@ -224,8 +235,8 @@ function sendChunk ( entry, chunk, start, end, total,voucheruid )
 	 * Send Chunk
 	 */
 	req.send(chunk);
-}
 
+}
 	/**
 	 * return reference to the flash app to allow communication between gears and flash
 	 */
