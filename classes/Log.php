@@ -149,7 +149,7 @@ public function logProcess($client,$message)
 	{
 	global $config;
 	
-	if($config["debug"])
+	if($config["debug"] or $config["client_specific_logging"])
 	{
 		$ip = $_SERVER['REMOTE_ADDR']; //capture IP
 	
