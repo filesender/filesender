@@ -28,7 +28,7 @@
 			</mx:AddChild>
 			<mx:AddChild relativeTo="{hbox1}" position="before"> 
 				<mx:HBox width="100%" height="200" horizontalAlign="center" verticalAlign="top" fontSize="14">
-					<mx:TextArea height="200" width="400" text="{splash.site_splashtext}" borderStyle="none" textAlign="center" wordWrap="true" id="siteSplash" editable="false"  visible="{authStatus}" alpha="1.0" />
+					<mx:TextArea height="200" width="400" htmlText="{splash.site_splashtext}" borderStyle="none" textAlign="center" wordWrap="true" id="siteSplash" editable="false"  visible="{authStatus}" alpha="1.0" />
 				</mx:HBox>
 			</mx:AddChild> 
 			<mx:AddChild relativeTo="{hbox1}" position="before">
