@@ -1,6 +1,6 @@
 Name:           filesender
 Version:        0.1.16.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Sharing large files with a browser
 
 Group:          Applications/Internet
