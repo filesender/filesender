@@ -50,9 +50,9 @@ public function loadConfig() {
 	$config['postgresdateformat'] = "Y-m-d H:i:sP";
 	$config['datedisplayformat'] = "DD-MM-YYYY";
 	$config["crlf"] = "\n"; // for email CRLF can be changed to \r\n if required 
-	$config["site_splashtext"] = "FileSender is a web based application that allows authenticated users to securely and easily send arbitrarily large files to other users. Authentication of users is provided through SAML2, LDAP and RADIUS. Users without an account can be sent an upload voucher by an authenticated user. FileSender is developed to the requirements of the higher education and research community.";
+	$config["site_splashtext"] = "FileSender is a secure way to share large files with anyone! Log-in to upload your files or invite people to send you a file.";
 
-	$config["max_email_recipients"] = 100; // maximum email addresses allowed to send at once for voucher or file sending
+	$config["max_email_recipients"] = 100; // maximum email addresses allowed to send at once for voucher or file sending, a value of 0 allows unlimited emails.
 	$config["server_drivespace_warning"] = 20; // as a percentage 20 = 20% space left on the storage drive
 
 	// UI Settings
@@ -93,15 +93,17 @@ public function loadConfig() {
 	
 	$config['available_space'] = '20000M';
 	
-	// site URLS
+	// site URLS, only set these when run as web-app
+	if ( isset($_SERVER['SERVER_NAME']) ) {
 	$prot =  isset($_SERVER['HTTPS']) ? 'https://' : 'http://';
 	$config['site_url'] = $prot . $_SERVER['SERVER_NAME'] . '/filesender/'; // URL to Filesender
 	$config['site_simplesamlurl'] =  $prot . $_SERVER['SERVER_NAME'] . '/simplesaml/';
 	$config['site_downloadurl'] = $config['site_url'] . 'files/';
 	$config['site_logouturl'] = $config['site_url'] . 'logout.php';
+	}
 
     // (absolute) file locations
-	$config['site_filestore'] = '/usr/share/filesender/www/files/'; // Make sure this is accessible by webserver
+	$config['site_filestore'] = '/usr/share/filesender/files/'; 
 	$config['site_temp_filestore'] = '/usr/share/filesender/tmp/'; 
 	$config['site_simplesamllocation'] = '/usr/share/simplesamlphp/';
 	$config['log_location'] = '/usr/share/filesender/log/';	
@@ -243,7 +245,7 @@ Best regards,
 	</TR>
 	<TR>
 		<TD WIDTH=100% BGCOLOR="#e6e6e6">
-			<P><I><pre>{filemessage}</pre></I></P>
+			<P><I><pre>{htmlfilemessage}</pre></I></P>
 		</TD>
 	</TR>
 </TABLE>
@@ -312,6 +314,21 @@ Best regards,
 <HTML>
 <BODY>
 Dear Sir, Madam,<BR><BR>A voucher from {filefrom} has been cancelled.<BR><BR>
+	<P>Best regards,</P>
+<P>{siteName}</P>
+</BODY>
+</HTML>{CRLF}{CRLF}--simple_mime_boundary--";
+
+$config['defaultfilecancelled'] = "{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset=iso-8859-1{CRLF}{CRLF}
+Dear Sir, Madam,
+
+The file '{filename}' from {filefrom} has been cancelled and is no longer available to download.
+Best regards,
+
+{siteName}{CRLF}{CRLF}--simple_mime_boundary{CRLF}Content-type:text/html; charset=iso-8859-1{CRLF}{CRLF}
+<HTML>
+<BODY>
+Dear Sir, Madam,<BR><BR>The file '{filename}' from {filefrom} has been cancelled and is no longer available to download.<BR><BR>
 	<P>Best regards,</P>
 <P>{siteName}</P>
 </BODY>
