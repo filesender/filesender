@@ -48,15 +48,15 @@ if($authvoucher->aVoucher()  || $authsaml->isAuth() ) {
 	// tempFilename is created from ((uid or vid)+originalfilename+filesize)
 	$tempFilename = ""; 
 
-	// add SAML eduPersonTargetedID
-	if( $authsaml->isAuth()) {
+	// add voucher if this is a voucher upload
+	if ($authvoucher->aVoucher()) {
+		$tempFilename .= $_REQUEST['vid'];
+	}
+	// else add SAML eduPersonTargetedID
+	else if( $authsaml->isAuth()) {
 		$authAttributes = $authsaml->sAuth();
 		$tempFilename .= $authAttributes["eduPersonTargetedID"];	
 	} 
-	// else add voucher if vid is available
-	else if (isset($_REQUEST['vid'])) {
-		$tempFilename .= $_REQUEST['vid'];
-	}
 	
 	// add the file name
 	$tempFilename .=  sanitizeFilename($_GET['n']);
