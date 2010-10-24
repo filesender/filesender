@@ -99,6 +99,7 @@ class Functions {
 	private $CFG;
 	private $sendmail;
 	private $authsaml;
+	private $authvoucher;
 	
 	// the following fields are returned without fileUID to stop unauthorised users accessing the fileUID
 	public $returnFields = " fileid, fileexpirydate, fileto , filesubject, fileactivitydate, filemessage, filefrom, filesize, fileoriginalname, filestatus, fileip4address, fileip6address, filesendersname, filereceiversname, filevouchertype, fileauthuseruid, fileauthuseremail, filecreateddate, fileauthurl, fileuid, filevoucheruid ";	
@@ -110,6 +111,7 @@ class Functions {
 		$this->CFG = config::getInstance();
 		$this->sendmail = Mail::getInstance();
 		$this->authsaml = AuthSaml::getInstance();
+		$this->authvoucher = AuthVoucher::getInstance();
 	}
 	
 	public static function getInstance() {
@@ -757,14 +759,15 @@ class Functions {
 		// tempFilename is created from md5((uid or vid)+originalfilename+filesize)
 			$tempFilename = ""; 
 
-		// add SAML eduPersonTargetedID
-			if( $this->authsaml->isAuth()) {
+		// add voucher id if this is a voucher request
+			if ( $this->authvoucher->aVoucher() ) {
+			$tempFilename .= $dataitem['filevoucheruid'];
+			} 
+		// else add SAML eduPersonTargetedID
+			else if( $this->authsaml->isAuth()) {
 			$authAttributes = $this->authsaml->sAuth();
 			$tempFilename .= $authAttributes["eduPersonTargetedID"];	
-			} else {
-		// else add voucher id
-			$tempFilename .= $dataitem['filevoucheruid'];
- 			}
+			}
 
 
 		// add the file name
