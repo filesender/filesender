@@ -48,6 +48,7 @@ if(session_id() == ""){
 } 
 
 if(!$authvoucher->aVoucher() && !$authsaml->isAuth()) {
+		logEntry("Download: Fialed authentication");
 		echo "notAuthenticated";
 } else {
 if (isset($_REQUEST["vid"])) {
@@ -61,7 +62,7 @@ $file=$config['site_filestore'].$fileuid.$fileoriginalname;
 //$download_rate = 20000.5;
 if(file_exists($file) && is_file($file))
 {
-
+	logEntry("Download: Start Downloading - ".$file);
 	header("Content-Type: application/force-download");
 	header('Content-Type: application/octet-stream');
     header('Content-Length: '.getFileSize($file));
@@ -76,10 +77,12 @@ if(file_exists($file) && is_file($file))
 		$fileArray[0]["filefrom"] = $tempEmail;
 		$saveLog->saveLog($fileArray[0],"Download","");
 		$sendmail->sendEmail($fileArray[0],$config['filedownloadedemailbody']);
+		logEntry("Download: Email Sent - To:".$fileArray[0]["fileto"]."  From: ".$fileArray[0]["filefrom"] . " [".$file."]");
 
 }
 else 
 {
+	logEntry("Download: File Not Found - ".$file);
 	// redirect to fil is no longer available
 	 header( 'Location: invalidvoucher.php' ) ;
     //die('Error: The file '.$file.' does not exist!');
