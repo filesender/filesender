@@ -229,16 +229,26 @@ class Functions {
 		trigger_error("Unable to find log_location location specified in config.php  :".$config["log_location"], E_USER_ERROR);
 		return false;
 		}
+		if (!is_writable($config["log_location"])) {
+		trigger_error("Unable to write to log file location specified in config.php  :".$config["log_location"], E_USER_ERROR);
+		return false;
+		}
 		if (!file_exists($config["site_filestore"])) {
 		trigger_error("Unable to find site_filestore location specified in config.php  :".$config["site_filestore"], E_USER_ERROR);
 		return false;
 		}	
-	
+		if (!is_writable($config["site_filestore"])) {
+		trigger_error("Unable to write to site_filestore location specified in config.php  :".$config["site_filestore"], E_USER_ERROR);
+		return false;
+		}	
 		if (!file_exists($config["site_temp_filestore"])) {
 		trigger_error("Unable to find site_temp_filestore location specified in config.php  :".$config["site_temp_filestore"], E_USER_ERROR);
 		return false;
 		}	
-			
+		if (!is_writable($config["site_temp_filestore"])) {
+		trigger_error("Unable to write to site_temp_filestore location specified in config.php  :".$config["site_temp_filestore"], E_USER_ERROR);
+		return false;
+		}	
 		if(disk_free_space($config['site_filestore'])/disk_total_space($config['site_filestore']) * 100 < $config["server_drivespace_warning"] ) { 
 		$this->saveLog->saveLog("","Drive Space Below ".$config["server_drivespace_warning"]."% ","");
 		$this->sendmail->sendemailAdmin("Drive space is below ".$config["server_drivespace_warning"]."% on ".$config['site_url']." (".$config['site_filestore'].").");
