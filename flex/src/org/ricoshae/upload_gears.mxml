@@ -221,9 +221,10 @@ private function fnCheckExtension(str:String):Boolean
    // check if etension is listed in banned file types
     var invalidExtension:String = config["ban_extension"];
    	if (invalidExtension.indexOf(nameParts[nameParts.length-1].toString())<0) { 
-		FlexGlobals.topLevelApplication.logProcess("Invalid Extension ["+nameParts[nameParts.length-1].toString()+"] - Gears Upload");
+		
     	return false; 
     	}
+	FlexGlobals.topLevelApplication.logProcess("Invalid Extension ["+nameParts[nameParts.length-1].toString()+"] - Gears Upload");
     return true;
 	}
  	 

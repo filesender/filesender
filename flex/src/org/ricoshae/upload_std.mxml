@@ -460,9 +460,9 @@
    		var invalidExtension:String = config["ban_extension"];
         if (invalidExtension.indexOf(nameParts[nameParts.length-1].toString())<0) 
         	{   
-			FlexGlobals.topLevelApplication.logProcess("Invalid extension " + nameParts[nameParts.length-1].toString() + " - Flash Upload");
         		return false; 
         	}
+		FlexGlobals.topLevelApplication.logProcess("Invalid extension " + nameParts[nameParts.length-1].toString() + " - Flash Upload");
     		return true;
 		}
 	
