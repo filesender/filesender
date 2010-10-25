@@ -67,13 +67,16 @@ if(file_exists($file) && is_file($file))
     header('Content-Length: '.getFileSize($file));
 	header('Content-Disposition: attachment; filename="'.$fileoriginalname.'"');
 	set_time_limit(0);
-	readfile_chunked($file);
+	
+	// if the complete file is downloaded then send email
+	if(readfile_chunked($file) === getFileSize($file)); 
 	// email completed
 		$tempEmail = $fileArray[0]["fileto"];
 		$fileArray[0]["fileto"] = $fileArray[0]["filefrom"];	
 		$fileArray[0]["filefrom"] = $tempEmail;
 		$saveLog->saveLog($fileArray[0],"Download","");
 		$sendmail->sendEmail($fileArray[0],$config['filedownloadedemailbody']);
+
 }
 else 
 {
@@ -105,6 +108,8 @@ $chunksize = 1*(1024*1024); // how many bytes per chunk
        }
    }
        $status = fclose($handle);
+
+	   logEntry("Download Pogress: [". $filename. "] cnt-".$cnt.":retbytes-". $retbytes.": status-".$status );
    if ($retbytes && $status) {
        return $cnt; // return num. bytes delivered like readfile() does.
    }
