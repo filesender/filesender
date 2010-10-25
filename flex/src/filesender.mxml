@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Application xmlns:mx="http://www.adobe.com/2006/mxml"  xmlns:comp="org.ricoshae.*" creationComplete="main_init()" layout="absolute" width="100%" height="100%" currentState="blank" minWidth="600" backgroundColor="#FFFFFF">
-	<mx:states>     
+	<mx:states>
 		<mx:State name="vouchers_fed">      
 			<mx:AddChild position="lastChild"> 
 				<comp:vouchers id="vouchers" left="6" right="6" top="87" bottom="6">
@@ -185,17 +185,25 @@
 						MessageLabel.htmlText += event.result.toString();
 					}
 					return;	 
+				} 
+
+				lang = JSON.decode(tempObj["lang"]);					 	// Language	 
+
+				if(tempObj["config"].toString() == "false") {
+					logProcess("Error in Configuaration :"+ event.result.toString());
+					currentState = "Message";
+					MessageLabel.htmlText = "There has been an error loading configuration data. Please check Log File<BR><BR>";
+					btnLogon.visible = false;
+					return;
+				} else {
+					// config data not foundreturned to read config data
+					config = JSON.decode(tempObj["config"]);
 				}
 				
 				gearsActive(gearsStatus);
 				
 				currentUser.name = "Guest";  // default name incase voucer
 				
-				lang = JSON.decode(tempObj["lang"]);					 	// Language	 
-				
-				if(tempObj["config"]) {
-					config = JSON.decode(tempObj["config"]);
-				}
 				statsData = tempObj["statsdata"].toString();	// Stats
 				splash = JSON.decode(tempObj["splash"]);	
 				
