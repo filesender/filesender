@@ -74,7 +74,8 @@ if($authvoucher->aVoucher()  || $authsaml->isAuth() ) {
 	}
 
 } else {
-	echo "Error";
+	logEntry("Error authorising Gears upload :Voucher-".$authvoucher->aVoucher().":SAML-". $authsaml->isAuth());
+	echo "ErrorAuth";
 
 }
 

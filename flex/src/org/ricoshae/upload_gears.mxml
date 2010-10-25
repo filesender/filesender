@@ -284,6 +284,13 @@ private function fnCheckExtension(str:String):Boolean
 		FlexGlobals.topLevelApplication.logProcess("Error in Gears Upload [" + sInfo.toString() + "] - Gears Upload");
 		FlexGlobals.topLevelApplication.fatalError(lang['E016']);
 	}
+	
+	if(sType == "errorauth")
+	{
+		FlexGlobals.topLevelApplication.logProcess("Error authenticating user in Gears Upload [" + sInfo.toString() + "] - Gears Upload");
+		FlexGlobals.topLevelApplication.fatalError(lang['E029']);
+	}
+	
 	if(sType == "filesize")
 	{
 		FlexGlobals.topLevelApplication.logProcess("File size returned [" + sInfo.toString() + "] - Gears Upload");
