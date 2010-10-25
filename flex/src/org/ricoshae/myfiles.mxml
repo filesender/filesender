@@ -309,7 +309,13 @@ public function deletedVoucher(event:ResultEvent):void
 		        </mx:itemRenderer> 
 		      </mx:DataGridColumn>
 		    <mx:DataGridColumn headerText="To" dataField="fileto" wordWrap="true"/> 
-			<mx:DataGridColumn headerText="From" dataField="filefrom" wordWrap="true"/>
+			<mx:DataGridColumn headerText="From" wordWrap="true" width="50" textAlign="center">
+				<mx:itemRenderer>
+					<mx:Component>
+						<mx:Label text="You"></mx:Label>
+					</mx:Component> 
+				</mx:itemRenderer> 
+			</mx:DataGridColumn>
 		    <mx:DataGridColumn headerText="File" dataField="fileoriginalname" wordWrap="true">
 				<mx:itemRenderer>
 					<mx:Component>
