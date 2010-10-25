@@ -221,6 +221,13 @@ function sendChunk ( entry, chunk, start, end, total,voucheruid )
 		mylist		= {};  // clear files list
 		addStatus("Error Uploading","error");
 		}
+		
+		if(req.responseText == "ErrorAuth"){
+		req.abort();
+		mylist		= {};  // clear files list
+		addStatus("Error Unable to Authenticate","errorauth");
+		}
+		
 		if (req.readyState == 4 && addStatus( "Resp: (" + req.status + ")" ) && req.status == 200 ) {
 			entry.uploaded = end;
 			//addStatus( fileName + ( (end + 1) >= total ? " Finished" : ' Upload: so far ' + prcnt + '%' ),"msg" );

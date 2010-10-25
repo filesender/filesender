@@ -191,9 +191,10 @@ if(session_id() == ""){
 
 		break;
 		
-    case "updateFile":
-		echo $functions->updateFile();
-		break;
+	  case "updateFile":
+	  		echo $log->logProcess("log","update File is used here");
+			//echo $functions->updateFile();
+			break;
 		
 	case "insertFile":
 		echo $functions->insertFile();

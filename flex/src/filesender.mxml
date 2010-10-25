@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml"  xmlns:comp="org.ricoshae.*" creationComplete="main_init()" layout="absolute" width="100%" height="100%" currentState="blank" minWidth="600" backgroundColor="#FFFFFF">
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml"  xmlns:comp="org.ricoshae.*" creationComplete="main_init()" layout="absolute" width="100%" height="100%" currentState="blank" minWidth="800" minHeight="561" backgroundColor="#FFFFFF">
 	<mx:states>
 		<mx:State name="vouchers_fed">      
 			<mx:AddChild position="lastChild"> 
@@ -19,7 +19,7 @@
 		</mx:State> 
 		<mx:State name="Message">
 			<mx:AddChild relativeTo="{vbox1}" position="lastChild">   
-				<mx:HBox width="100%" height="20" borderStyle="solid" id="hbox1">
+				<mx:HBox width="100%" height="20" borderStyle="none" id="hbox1">
 				</mx:HBox> 
 			</mx:AddChild>         
 			<mx:SetProperty target="{vbox1}" name="height" value="100%"/>
@@ -173,7 +173,7 @@
 					
 				// Returns all initialisation data   
 				var rawData:String = String(event.result); 
-				  
+
 				try {
 					var tempObj:Object = JSON.decode(rawData);//currentFileObj = JSON.decode(rawData);
 				}
@@ -186,19 +186,8 @@
 					}
 					return;	 
 				} 
-
+				
 				lang = JSON.decode(tempObj["lang"]);					 	// Language	 
-
-				if(tempObj["config"].toString() == "false") {
-					logProcess("Error in Configuaration :"+ event.result.toString());
-					currentState = "Message";
-					MessageLabel.htmlText = "There has been an error loading configuration data. Please check Log File<BR><BR>";
-					btnLogon.visible = false;
-					return;
-				} else {
-					// config data not foundreturned to read config data
-					config = JSON.decode(tempObj["config"]);
-				}
 				
 				gearsActive(gearsStatus);
 				
@@ -218,6 +207,7 @@
 					btnVouchers.visible = false;
 					btnNew.visible = false;
 					btnMyFiles.visible = false; 
+					MessageLabel.height = 0;
 					currentState = "Message";
 					
 					return;	
@@ -227,7 +217,16 @@
 					authStatus = true;
 				}
 				
-				
+				if(tempObj["config"] == "false") {
+					logProcess("Error in Configuaration :"+ event.result.toString());
+					currentState = "Message";
+					MessageLabel.htmlText = "There has been an error loading configuration data. Please check Log File<BR><BR>";
+					btnLogon.visible = false;
+					return;
+				} else {
+					// config data not foundreturned to read config data
+					config = JSON.decode(tempObj["config"]);
+				}
 				
 				
 				if(tempObj["voucherauth"]) {

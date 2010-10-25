@@ -154,7 +154,8 @@ $lang = array(
 	"E025" => "This voucher is no longer valid.",
 	"E026" => "Unable to Browse for a file.",
 	"E027" => "Error sending email. Contact Administrator.",
-	"E028" => "Unable to forward this file, voucher ID is unavailable. Contact Administrator (E028)"
+	"E028" => "Unable to forward this file, voucher ID is unavailable. Contact Administrator (E028)",
+	"E029" => "Your session may have timed out, please logon again and re-try or contact your administrator." 
 );
 return $lang;
 }
