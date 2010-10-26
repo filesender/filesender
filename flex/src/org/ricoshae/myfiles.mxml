@@ -316,7 +316,7 @@ public function deletedVoucher(event:ResultEvent):void
 					</mx:Component> 
 				</mx:itemRenderer> 
 			</mx:DataGridColumn>
-		    <mx:DataGridColumn headerText="File" dataField="fileoriginalname" wordWrap="true">
+		    <mx:DataGridColumn headerText="File" dataField="fileoriginalname" wordWrap="true" textAlign="left">
 				<mx:itemRenderer>
 					<mx:Component>
 						<mx:LinkButton click="navigateToURL(new URLRequest('download.php?vid='+ data.filevoucheruid), 'Download File')" toolTip="Click to Download {data.fileoriginalname}" label="{data.fileoriginalname}" labelPlacement="left">	
@@ -326,7 +326,16 @@ public function deletedVoucher(event:ResultEvent):void
 			</mx:DataGridColumn>
 		    <mx:DataGridColumn headerText="Size" dataField="filesize" labelFunction="filesizeFunc" wordWrap="true" />  
 		    <mx:DataGridColumn headerText="Subject" dataField="filesubject" wordWrap="true"/>
-		    <mx:DataGridColumn headerText="Message" dataField="filemessage" wordWrap="true"/>
+		    <mx:DataGridColumn headerText="Message" dataField="filemessage" wordWrap="true"  textAlign="center" width="60">
+				<mx:itemRenderer>
+					<mx:Component>
+						<mx:Image toolTip="{data.filemessage}" scaleContent="false" source="@Embed(source='/assets/page_white_text_width.png')" width="16" height="16" maxHeight="16" maxWidth="16" horizontalAlign="center">
+						</mx:Image>
+	
+					</mx:Component>
+				</mx:itemRenderer>
+			
+			</mx:DataGridColumn>
 			<mx:DataGridColumn headerText="Created" dataField="filecreateddate" wordWrap="true" labelFunction="dateFunc"/>	
 		    <mx:DataGridColumn headerText="Expiry" dataField="fileexpirydate" wordWrap="true" labelFunction="dateFunc"/>
 			<mx:DataGridColumn width="26">
