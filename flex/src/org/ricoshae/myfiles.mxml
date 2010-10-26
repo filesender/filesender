@@ -45,6 +45,7 @@
 		import mx.utils.ArrayUtil;
 		import mx.managers.CursorManager;
 		import mx.managers.PopUpManager;
+
 		
 		[Bindable] public var currentFileObj:Object  = new Object();
 		[Bindable] public var currentUserObj:Object = new Object();
@@ -280,6 +281,15 @@ public function deletedVoucher(event:ResultEvent):void
 		{
 			return df.format( item[column.dataField]); 
 		}
+		
+		public function fromLabel_Func(item:Object, column:DataGridColumn):String {
+			if(item[column.dataField] == currentUserObj.email)
+			{
+				return "Me";
+			} 
+			return item.@filefrom;
+		}
+
      ]]>    
   </mx:Script> 
 <mx:HTTPService id="vouchers_main" url="../fs_main.php{URLvidLocal}" useProxy="false" method="POST" resultFormat="text" result="returnVouchers(event)" fault="return_error(event)"/>     
@@ -309,12 +319,7 @@ public function deletedVoucher(event:ResultEvent):void
 		        </mx:itemRenderer> 
 		      </mx:DataGridColumn>
 		    <mx:DataGridColumn headerText="To" dataField="fileto" wordWrap="true"/> 
-			<mx:DataGridColumn headerText="From" wordWrap="true" width="50" textAlign="center">
-				<mx:itemRenderer>
-					<mx:Component>
-						<mx:Label text="You"></mx:Label>
-					</mx:Component> 
-				</mx:itemRenderer> 
+			<mx:DataGridColumn headerText="From" wordWrap="true" textAlign="center" labelFunction="fromLabel_Func"   dataField="filefrom">
 			</mx:DataGridColumn>
 		    <mx:DataGridColumn headerText="File" dataField="fileoriginalname" wordWrap="true" textAlign="left">
 				<mx:itemRenderer>
