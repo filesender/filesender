@@ -230,6 +230,7 @@ private function fnCheckExtension(str:String):Boolean
  	 
 	public function returnStatus(sInfo:String,sType:String):void
 	{
+	//	Alert.show(sType + ":" + sInfo);
 	tempText.text = "\n" +sType + ":" + sInfo;
 	FlexGlobals.topLevelApplication.logProcess("Gears Notification ["+ sType + ":" + sInfo + "] - Gears Upload");
 	if(sType == "msg")
@@ -295,6 +296,16 @@ private function fnCheckExtension(str:String):Boolean
 	{
 		FlexGlobals.topLevelApplication.logProcess("File size returned [" + sInfo.toString() + "] - Gears Upload");
 		var thefileSize:Number = parseInt(sInfo.toString());
+		
+		if(thefileSize == 0)
+		{
+			Alert.show(lang['E030'],lang['E000']);	
+			selectedFilename.text = "";
+			selectedFileSize.text = "";
+			btUpload.visible = false;
+			return;
+		}
+		
 		selectedFileSize.text = readablizeBytes(thefileSize);
 		currentFileObj.filesize = sInfo.toString();	
 	}
