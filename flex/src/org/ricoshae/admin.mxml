@@ -1,4 +1,4 @@
-<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="100%" height="100%" title="{lang.Administration}">
+<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="100%" height="100%" minHeight="420" minWidth="790" title="{lang.Administration}">
 
 <mx:Script>
 	<![CDATA[

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="790" height="420" title="{lang.Gears_Upload}">
+<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="790" height="420" minHeight="420" minWidth="790" title="{lang.Gears_Upload}">
 	
- 
+  
   <mx:Script>
     <![CDATA[
 		

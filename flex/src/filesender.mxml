@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml"  xmlns:comp="org.ricoshae.*" creationComplete="main_init()" layout="absolute" width="100%" height="100%" currentState="blank" minWidth="800" minHeight="561" backgroundColor="#FFFFFF">
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml"  xmlns:comp="org.ricoshae.*" creationComplete="main_init()" layout="absolute" width="100%" height="100%" currentState="blank" backgroundColor="#FFFFFF">
 	<mx:states>
 		<mx:State name="vouchers_fed">      
 			<mx:AddChild position="lastChild"> 
@@ -748,6 +748,9 @@
 	<mx:VBox left="4" right="4" id="vbox1" backgroundColor="#FFFFFF" bottom="0" verticalAlign="top" top="0">     
 		<mx:HBox height="53" verticalAlign="middle" width="100%">  
 			<mx:Spacer width="100%" id="spacer1"/> 
+			<mx:Label id="totalMemory"
+					  text="{(System.totalMemory / 1024) + ' KB'}"
+					  render="totalMemory.text = (System.totalMemory / 1024) + ' KB'" />	
 			<mx:Button label="{lang.Admin}" id="btnAdmin" click="adminClick()" visible="{adminStatus}" icon="@Embed(source='assets/arrow_refresh.png')"/>
 			<mx:Button label="{lang.New_File}" id="btnNew" click="newUpload()" visible="false"/>
 			<mx:Button label="{lang.Vouchers}" id="btnVouchers" click="currentState=&quot;vouchers_fed&quot;;" visible="false"/>
