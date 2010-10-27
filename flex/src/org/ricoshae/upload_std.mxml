@@ -162,8 +162,8 @@
  			return ;		
  		}
  		
- 		// check file size
- 		if(fileRef.size < 0 )
+ 		// check file size 
+ 		if(fileRef.size == 0 )
  		{ 
 			FlexGlobals.topLevelApplication.logProcess("File Size is 0 - Flash Upload");
 			Alert.show(lang.E019,lang.E019); 
@@ -490,10 +490,10 @@
 	
 	// check if larger than acceptable flash file upload size
 	
-	if(fileRef.size < 0 )
+	if(fileRef.size == 0 )
 	{ 
 		FlexGlobals.topLevelApplication.logProcess("File Size is 0 - Flash Upload");
-		Alert.show(lang.E019,lang.E019); 
+		Alert.show(lang['E030'],lang['E000']);
 		return ;
 	} 
 	else  
