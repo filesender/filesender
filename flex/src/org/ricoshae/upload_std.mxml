@@ -517,6 +517,7 @@
 public function cancelUpload():void 
 	{ 
 		FlexGlobals.topLevelApplication.logProcess("Upload Cancelled - Flash Upload");
+		FlexGlobals.topLevelApplication.uploadStopped(); 
 		fileRef.cancel(); 
 		currentFileObj.filefrom = tempFromVoucher;	
 		currentFileObj.fileto = FileFrom.text;	
