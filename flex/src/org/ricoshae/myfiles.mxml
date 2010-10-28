@@ -287,7 +287,7 @@ public function deletedVoucher(event:ResultEvent):void
 			{
 				return "Me";
 			} 
-			return item.@filefrom;
+			return item[column.dataField];
 		}
 
      ]]>    
