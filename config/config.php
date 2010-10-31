@@ -96,8 +96,6 @@ public function loadConfig() {
 	// update max_flash_upload_size of php.ini post_max_size and upload_max_filesize is set lower
 	$config['max_flash_upload_size'] = min(let_to_num(ini_get('post_max_size')), let_to_num(ini_get('upload_max_filesize')),$config['max_flash_upload_size']);
 	
-	logEntry("max_flash_upload_size" . $config['max_flash_upload_size']);
-	
 	$config['available_space'] = '20000M';
 	
 	// site URLS, only set these when run as web-app
