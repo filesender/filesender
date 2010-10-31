@@ -1,2 +1,2 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<flexProperties enableServiceManager="false" flexServerFeatures="0" flexServerType="16" serverContextRoot="" serverRoot="D:/wwwroot/filesender_master/www" serverRootURL="http://localhost/filesender_master/www/" toolCompile="true" useServerFlexSDK="false" version="1"/>
+<flexProperties enableServiceManager="false" flexServerFeatures="0" flexServerType="16" serverContextRoot="" serverRoot="D:/wwwroot/filesender_current/temp" serverRootURL="http://localhost/filesender_current/temp" toolCompile="true" useServerFlexSDK="false" version="1"/>

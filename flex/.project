@@ -19,12 +19,12 @@
 		<link>
 			<name>bin-debug</name>
 			<type>2</type>
-			<location>D:/wwwroot/filesender_master/www/swf</location>
+			<location>D:/wwwroot/filesender_current/temp</location>
 		</link>
 		<link>
 			<name>bin-release</name>
 			<type>2</type>
-			<location>D:/wwwroot/filesender_master/www/FileSender3</location>
+			<location>D:/wwwroot/filesender_current/temp/FileSender3</location>
 		</link>
 		<link>
 			<name>bin-release1</name>
@@ -34,12 +34,17 @@
 		<link>
 			<name>bin-release2</name>
 			<type>2</type>
-			<location>D:/wwwroot/filesender_master/www/filesender3</location>
+			<location>D:/wwwroot/filesender_current/temp/filesender3</location>
 		</link>
 		<link>
 			<name>bin-release3</name>
 			<type>2</type>
-			<location>D:/wwwroot/filesender_master/www/swf</location>
+			<location>D:/wwwroot/filesender_current/temp/swf</location>
+		</link>
+		<link>
+			<name>bin-release4</name>
+			<type>2</type>
+			<location>D:/wwwroot/filesender_current/temp/flex</location>
 		</link>
 	</linkedResources>
 </projectDescription>

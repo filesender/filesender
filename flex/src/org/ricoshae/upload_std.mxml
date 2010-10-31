@@ -45,6 +45,9 @@
 	import mx.rpc.events.FaultEvent;
 	import mx.rpc.events.ResultEvent;
 	import mx.utils.UIDUtil;
+	import flash.utils.Timer;
+	import flash.events.TimerEvent;
+
 	
 	import org.ricoshae.core.*;
 	
@@ -71,7 +74,7 @@
 	public var lastbytes:Number = 0;
 	public var tempFromVoucher:String; // Temp if voucher is cancelled to return correct to and from fields
 		
-		
+	public var myTimer:Timer = new Timer(600000, 0);  // 600000 sends keep alive every 10 minutes
 	
 	public function init():void
 		{
@@ -126,9 +129,17 @@
 			// timer for upload speed
 			tm = new Timer( 1000 );
 			tm.addEventListener( TimerEvent.TIMER, updateSpeed );
-			 
+			
+			// keepalive handler
+			myTimer.addEventListener("timer", keepaliveHandler);
 		}
-		
+	
+	// sends request to keep alive to log - if logging is off then there is no message recorded 
+	public function keepaliveHandler(event:TimerEvent):void {
+		FlexGlobals.topLevelApplication.logProcess("Keep Session Alive - Flash Upload");
+	}
+
+	
 		private function updateSpeed( e:TimerEvent ):void{
 			speed = Math.round( (currbytes - lastbytes)/1024 );
 			lastbytes = currbytes;
@@ -224,6 +235,9 @@
      uploadBtn.visible = false;
      btUpload.visible = false;
      
+	// start keep alive timer
+	 myTimer.start();
+
 	 FlexGlobals.topLevelApplication.uploadStarted(); 
      try { 
      // upload file 
@@ -335,6 +349,8 @@
  public function fileCompleted():void
  {
  		tm.stop();
+		// stop keep alive timer
+		myTimer.start();
  	    if (currentFileObj.fileto != null)
 		{
 		var temptext:String = currentFileObj.fileto;
