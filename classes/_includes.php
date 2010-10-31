@@ -31,12 +31,12 @@
  
 $filesenderbase = dirname(dirname(__FILE__));
 
-require_once("$filesenderbase/config/config.php");
+require_once("$filesenderbase/config/dev_config.php");
 require_once("$filesenderbase/includes/ErrorHandler.php");
-require_once("$filesenderbase/includes/EnsureHTTPS.php");
+//require_once("$filesenderbase/includes/EnsureHTTPS.php");
 require_once("$filesenderbase/classes/Functions.php");
 require_once("$filesenderbase/classes/DB.php");
-require_once("$filesenderbase/classes/AuthSaml.php");
+require_once("$filesenderbase/classes/AuthSaml_dev.php");
 require_once("$filesenderbase/classes/AuthVoucher.php");
 require_once("$filesenderbase/classes/EN_AU.php");
 require_once("$filesenderbase/classes/Mail.php");

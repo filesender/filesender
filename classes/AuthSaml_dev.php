@@ -81,7 +81,7 @@ public function authIsAdmin() {
 		//	$attributes = $as->getAttributes();
 			//print_r($attributes);
 		$attributes["cn"] = "Chris Richter";
-		$attributes["email"] = "me@test.ricoshae.com.au";
+		$attributes["email"] = "chris@ricoshae.com.au";
 		$attributes["eduPersonTargetedID"] = "eee15a17c6de5c54ba5b36e33bdd6979be858cff";
 		// check for multidimensional array
 	
@@ -99,7 +99,7 @@ public function authIsAdmin() {
 	
   		$dateref = date("Ymd");
 		$data = date($config['postgresdateformat']);
-		$myFile = $config['log_location'].$dateref."-error.log.txt";
+		$myFile = $config['log_location'].$dateref.".log.txt";
 		$fh = fopen($myFile, 'a') or die("can't open file");
 		$stringData = $data.' [Session ID: '.session_id().'] '.$message."\n";
 		fwrite($fh, $stringData);
@@ -150,7 +150,7 @@ public function authIsAdmin() {
 				
 		//	$as = new SimpleSAML_Auth_Simple($config['site_authenticationSource']);
 		//	return $as->isAuthenticated();
-		return TRUE;
+		return true;
 			
 		}
 
