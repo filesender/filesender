@@ -30,6 +30,10 @@
 /*
  * Upload file from flex application and move into site_filestore folder
  */
+function upperHexNumber($matches)
+{
+  return '\u'.strtoupper($matches[1]);
+}
 
 require_once('../classes/_includes.php');
 
@@ -59,7 +63,11 @@ date_default_timezone_set($config['Default_TimeZone']);
 	
 if($authvoucher->aVoucher() || $authsaml->isAuth()) { 
 	$uploadfolder =  $config["site_filestore"];
-	$result = move_uploaded_file($_FILES['Filedata']['tmp_name'], $uploadfolder.ensureSaneFileUid($_POST['fid']).sanitizeFilename($_FILES['Filedata']['name']));
+	
+
+    $correctfilename = preg_replace_callback('/\\\\u([0-9a-fA-F]{4})/','upperHexNumber',trim(json_encode($_FILES['Filedata']['name']),"\""));
+
+	$result = move_uploaded_file($_FILES['Filedata']['tmp_name'], $uploadfolder.ensureSaneFileUid($_POST['fid']).sanitizeFilename($correctfilename));
 
 	if($result) {
 		logEntry("File Moved");
