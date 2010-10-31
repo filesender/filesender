@@ -1,6 +1,6 @@
---- config/config.php	2010-08-27 10:55:53.000000000 +0200
-+++ config/config.php.new	2010-08-27 10:58:18.000000000 +0200
-@@ -120,11 +120,12 @@ public function loadConfig() {
+--- config/config.php	2010-10-31 09:14:13.000000000 +0100
++++ config/config.php.new	2010-10-31 09:27:11.433795445 +0100
+@@ -125,11 +125,12 @@
  	$config['gearsURL'] = 'http://tools.google.com/gears/';
  
  	// database settings	
@@ -16,5 +16,5 @@
 +	$config['pg_username'] = empty($dbuser) ? 'filesender' : $dbuser;
 +	$config['pg_password'] = empty($dbpass) ? 'filesender' : $dbpass;
  
- 	// email
- 	$config['default_emailsubject'] = "{siteName}: {filename}";
+ 	// cron settings
+ 	$config['cron_exclude prefix'] = '_'; // exclude deletion of files with the prefix character listed (can use multiple characters eg '._' will ignore .xxxx and _xxxx
