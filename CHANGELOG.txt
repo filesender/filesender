@@ -1,5 +1,36 @@
 
-Update 2 August 2010
+Update 2 November 2010
+
+Version Beta 1.17
+	
+	Bug Fixes
+	254	Large filesizes (>4GB) are incorrectly presented in flash interface
+	255	Download progress bar stops at 2GB
+	256	4GB download limit on Windows ??
+	261	Reversed order of message prompts between File Upload and uploading a file using a Voucher
+	274	Inconsistent expiration date formats
+	277	After upload reverting to "Your file has been sent" after clicking on My Files or Vouchers button
+	279	FireFox with Firebug Enabled crashes downloads over 1.5Gb
+	253	Outdated files in database that misses from disk halts system while removing outdated files
+	154	use cronjob for clean up 
+	129	Valid email-adresses are refused on input
+	209	max_email_recipients
+	272	File deletion email incorrectly uses voucher deletion email template
+	275	msg:Content-Range:bytes in text box instead of upload steps when using Google Gears
+	123	"cancel" button on download page
+	232	gears upload tmpfile handling
+	263	Typos in voucher explanatory text
+	269	Prompt to install / upgrade flash if required
+	273	'rsend this file' could be 'resend this email'
+	285	Move /files out of www enabled directory
+	257	Flex Compiler Warnings
+	289	Gears upload resume - not working
+	278	security: user still logged in if closes tab when login page appears, prior to logout page appearing
+	188	Some downloads hang at 68%
+	234	about/help/gears links on logon screen are broken
+	249	IE8 download of files > 4GB hangs
+	
+	
 
 Version Beta 1.16
 	Updated SVN structure
