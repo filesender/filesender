@@ -57,11 +57,11 @@ $flexerrors = "true";
 
 window.onload = function() {
 //getFlexApp('filesender').returnStatus('error');
-  if (!window.google || !google.gears) {
-    addStatus('Gears is not installed', 'error');
+//  if (!window.google || !google.gears) {
+//   addStatus('Gears is not installed', 'error');
       
-    return;
-  }
+//    return;
+//  }
 }
 </script>
 <style>
