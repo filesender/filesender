@@ -694,8 +694,11 @@
 			// log client process process
 			public function logProcess(message:String):void
 			{
+				
+				// force log to keep session alive
+								
 				// check if client logging is on
-				if(splash && splash.client_specific_logging ) 
+				if((splash && splash.client_specific_logging) || message == "Keep Session Alive - Flash Upload" ) 
 				{
 					var objSend:Object = new Object();
 					objSend.call = "log_process";
@@ -718,9 +721,8 @@
 					
 					// check if comparisonid is in splash.client_specific_logging_uids
 					
-					if(splash.client_specific_logging_uids.search(comparisonid) > -1 || splash.client_specific_logging_uids == "")
+					if(splash.client_specific_logging_uids.search(comparisonid) > -1 || splash.client_specific_logging_uids == "" || message == "Keep Session Alive - Flash Upload")
 					{
-						
 						log_process.send(objSend);
 					}
 				}
