@@ -350,7 +350,7 @@
  {
  		tm.stop();
 		// stop keep alive timer
-		myTimer.start();
+		myTimer.stop();
  	    if (currentFileObj.fileto != null)
 		{
 		var temptext:String = currentFileObj.fileto;
@@ -542,6 +542,7 @@ public function cancelUpload():void
 		currentFileObj.fileoriginalname = "";
 		speedLabel.text  = "";
 		tm.stop();
+		myTimer.stop();
 		init();
 		//FlexGlobals.topLevelApplication.getFile();
 	} 
