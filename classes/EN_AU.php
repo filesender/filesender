@@ -156,7 +156,8 @@ $lang = array(
 	"E027" => "Error sending email. Contact Administrator.",
 	"E028" => "Unable to forward this file, voucher ID is unavailable. Contact Administrator (E028)",
 	"E029" => "Your session may have timed out, please logon again and re-try or contact your administrator.",
-	"E030" => "Cannot upload a file of 0 bytes. Please select another file."
+	"E030" => "Cannot upload a file of 0 bytes. Please select another file.",
+	"E031" => "Error uploading your file. Please contact your administrator (Error #031)"
 );
 return $lang;
 }
