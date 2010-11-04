@@ -26,9 +26,11 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-/*
+ *
+ * ------------------------------
  * Upload file from flex application and move into site_filestore folder
+ * ------------------------------
+ * returns string: moveOk, moveError,invalidAuth back to flex
  */
 function upperHexNumber($matches)
 {
@@ -36,8 +38,9 @@ function upperHexNumber($matches)
 }
 
 require_once('../classes/_includes.php');
-
-if(!empty($_REQUEST['s'])) { 
+	
+	// flash upoload creates a new session id https so we need to make sure we are using the same session  
+	if(!empty($_REQUEST['s'])) { 
 	session_id($_REQUEST['s']); 
 	session_start();
 
@@ -49,9 +52,11 @@ if(!empty($_REQUEST['s'])) {
 		session_regenerate_id();
 		$_SESSION['validSession'] = true;
 		trigger_error("Invalid session supplied.", E_USER_ERROR);
+		}
 	}
-}
+
 	$authvoucher = AuthVoucher::getInstance();
+
 // Check if there is a file supplied
 if(!isset($_FILES['Filedata'])) trigger_error("request without file upload", E_USER_ERROR);
 
@@ -64,9 +69,10 @@ date_default_timezone_set($config['Default_TimeZone']);
 if($authvoucher->aVoucher() || $authsaml->isAuth()) { 
 	$uploadfolder =  $config["site_filestore"];
 	
-
+	
     $correctfilename = preg_replace_callback('/\\\\u([0-9a-fA-F]{4})/','upperHexNumber',trim(json_encode($_FILES['Filedata']['name']),"\""));
 
+	// move file to correct uploadfolder destination
 	$result = move_uploaded_file($_FILES['Filedata']['tmp_name'], $uploadfolder.ensureSaneFileUid($_POST['fid']).sanitizeFilename($correctfilename));
 
 	if($result) {

@@ -1,4 +1,6 @@
-Updated: March 11th, 2010
+Updated: 2 November 2010
+
+If upgrading from an earlier version make sure you replace the config/config.php with your server information as the config has been extensively updated.
 
 All you need to know to install and configure FileSender is available at:
 https://www.assembla.com/wiki/show/file_sender/Documentation

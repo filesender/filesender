@@ -29,6 +29,9 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+// functions for database connection
+// uses config.php settings for database access
+// postgress only
 
 // Exception class for database errors
 class DbException extends Exception {}
@@ -48,6 +51,7 @@ class DB {
 		return self::$instance;
 	}
 
+// database connection 
 	public function connect() {
 		global $config;
 		

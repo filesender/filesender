@@ -29,6 +29,14 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+
+/*
+ * loads javascript
+ * js/gears_init.js  initialises google gears if gears is loaded
+ * js/fs_gears.js   manages all gears related functions and google gears uploading
+ * js/jquery-1.2.6.min.js  loaded in preparation for HTML 5 UI
+ */
+ 
 require_once('../classes/_includes.php');
 $flexerrors = "true";
 ?>

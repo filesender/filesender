@@ -29,6 +29,10 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
  
+ 
+ //  --------------------------------
+ // email class
+ // ---------------------------------
 class Mail {
 
 private static $instance = NULL;

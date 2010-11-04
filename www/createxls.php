@@ -29,6 +29,12 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+/* ---------------------------------
+ * displays spreadsheet using html data supplied by flex admin
+ * ---------------------------------
+ * 
+ */
+ 
 require_once('../classes/_includes.php');
 
 header('ETag: etagforie7download'); //IE7 requires this header

@@ -29,7 +29,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
  
-	/*
+	/*  --------------------------------
 	* This Class takes care of the input checks required in sql queries.
 	* Each check return the value or the report the error in errorReporting.
 	* All the Vars will go through a mysqlEscape function, in this funtion different ways of general string filtering can be used.
@@ -38,6 +38,7 @@
 	/*
 	* To make the errorReporting complete this file needs another file that defines the error messages.
 	* They can be build in here by a switch, but its better todo this in another file so the user/developer can easly adjust the message.
+	*  --------------------------------
 	*/
 	
 	// date check 

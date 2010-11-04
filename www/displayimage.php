@@ -28,9 +28,16 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
  
-// Displays an image based on custom image location or default image location
-// config/banner.jpg or default banner.jpg
-// custom oerides default file
+ 
+/* --------------------------------------
+ * Displays banner image config/banner.png 
+ * - if it doesnt exist then use from www/banner.png 
+ * --------------------------------------
+ * Displays an image based on custom image location or default image location
+ * config/banner.jpg or default banner.jpg
+ * custom overides default file
+ * have to use this function as the config file banner is outside the web folder 
+ */
 $filesenderbase = dirname(dirname(__FILE__));
 
 $customimage = "$filesenderbase/config/banner.png";

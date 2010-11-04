@@ -30,7 +30,7 @@
  */
  
 /*
- * convert integer for postgress from flex
+ * log functions
  */
 	
 
@@ -143,7 +143,8 @@ public function saveLog($dataitem,$logType,$message){
 	
 	}
 	
-	// logfile for individual
+	// logfile for individual client specific logging
+	// calls to this function are form glex/flash if client specific logging is on
 
 public function logProcess($client,$message)
 	{

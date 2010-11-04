@@ -28,13 +28,21 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
  
+//  --------------------------------
+// this file is called by CRON to remove files that have expired and close the expired files in the database
+// ---------------------------------
+
+ 
+// required as this page is called from CRON not from a web browser
 chdir(dirname(__FILE__));
 
+// force all error reporting
 error_reporting(E_ALL);
 
 $filesenderbase = dirname(dirname(__FILE__));
 
-require_once("$filesenderbase/config/config.php");
+// include all required classes
+require_once("$filesenderbase/config/dev_config.php");
 require_once("$filesenderbase/classes/DB.php");
 require_once("$filesenderbase/classes/EN_AU.php");
 require_once("$filesenderbase/classes/Mail.php");
@@ -48,12 +56,14 @@ $sendmail = Mail::getInstance();
 // set time zone for this session
 date_default_timezone_set($config['Default_TimeZone']);
 
+// check if session already exists
 if(session_id() == ""){
 	// start new session and mark it as valid because the system is a trusted source
 	session_start();
 	$_SESSION['validSession'] = true;
 } 
 
+// log that cron has started running
 logProcess("CRON","Cron started");
 if (cleanUp())
 {
@@ -76,17 +86,20 @@ function cleanUp()
 	
 	global $config;
 	$db = DB::getInstance();
-		
+	
+	// check log_location exists	
 	if (!file_exists($config["log_location"])) {
 	logProcess("CRON","Unable to find log_location location specified in config.php  :".$config["log_location"]);
 	return false;
 	}
 	
+	// check site_filestore exists
 	if (!file_exists($config["site_filestore"])) {
 		logProcess("CRON","Unable to find site_filestore location specified in config.php  :".$config["site_filestore"]);
 		return false;
 	}	
 	
+	// check site_temp_filestore exists
 	if (!file_exists($config["site_temp_filestore"])) {
 		logProcess("CRON","Unable to find site_temp_filestore location specified in config.php  :".$config["site_temp_filestore"]);
 		return false;
@@ -102,10 +115,12 @@ function cleanUp()
 	
 	$db->fquery($sqlQuery);
 	
-			 
+	 
 	$FilestoreDirectory = $config["site_filestore"];
 
+	//
 	// check for any expired files first and close status in database
+	//
 	$today = date($config['postgresdateformat']); 
 	
 	// if file not closed and past expiry date then close the file
@@ -138,7 +153,10 @@ function cleanUp()
     // Open the folder
     $dir_handle = @opendir($FilestoreDirectory) or die("Unable to open $FilestoreDirectory"); 
 
-    // Loop through the files
+    // 	- Loop through the files in  FilestoreDirectory 
+	//	- check in database if the file is closed
+	//	- if closed then delete the file
+	
     while ($file = readdir($dir_handle)) {
 	
 	// skip . and ..
@@ -147,8 +165,7 @@ function cleanUp()
 		logProcess("CRON","Ignored file: ".$FilestoreDirectory.$file);
 		continue;
 	}
-	
-	
+
 	// check filename in database
 	$query = "SELECT * FROM files WHERE  fileuid = '%s' AND filestatus = 'Available'";
 	$result = $db->fquery($query, substr($file,0,36));
@@ -167,8 +184,11 @@ function cleanUp()
 
     // Close
     closedir($dir_handle);
-
+	
+	//
+	// Final cleanup is to close any records in the database that do not have a physical file attached to them
 	// close all entries that do not have a pyhsical file in storage
+	
 	$search = $db->fquery("SELECT * FROM files WHERE filestatus = 'Available'"); 
 		
 		// check for error in SQL

@@ -29,6 +29,15 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+
+//
+// voucher related functions
+//
+// aVoucher() - check if a voucher exists and returns true/false
+// validVoucher() - check if a voucher exists and is available and returns found/notfound/invalid/none (for flex application)
+// getVoucher() - returns voucher as json array
+
+
 class AuthVoucher {
 
 private static $instance = NULL;
