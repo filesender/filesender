@@ -104,7 +104,7 @@
 			* (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 			* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 			*/
-			
+			 
 			import com.adobe.serialization.json.JSON;
 			
 			import flash.system.Capabilities;
@@ -750,7 +750,7 @@
 	<mx:VBox left="4" right="4" id="vbox1" backgroundColor="#FFFFFF" bottom="0" verticalAlign="top" top="0">     
 		<mx:HBox height="53" verticalAlign="middle" width="100%">  
 			<mx:Spacer width="100%" id="spacer1"/> 
-			<mx:Label id="totalMemory"
+			<mx:Label id="totalMemory" visible="false"
 					  text="{(System.totalMemory / 1024) + ' KB'}"
 					  render="totalMemory.text = (System.totalMemory / 1024) + ' KB'" />	
 			<mx:Button label="{lang.Admin}" id="btnAdmin" click="adminClick()" visible="{adminStatus}" icon="@Embed(source='assets/arrow_refresh.png')"/>

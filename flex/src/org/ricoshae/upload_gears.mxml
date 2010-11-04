@@ -490,7 +490,7 @@ private function fnCheckExtension(str:String):Boolean
      
      public function fileError(event:FaultEvent):void
      {
-		 FlexGlobals.topLevelApplication.logProcess("File Error ["+ event.fault.toString() +"]  - Gears Upload");
+		FlexGlobals.topLevelApplication.logProcess("File Error ["+ event.fault.toString() +"]  - Gears Upload");
      	Alert.show(event.fault.toString(),"Unknown error");
      } 
        

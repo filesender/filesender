@@ -424,12 +424,12 @@ class Functions {
 	
 }
 
-
 	//---------------------------------------
 	// Insert new file or voucher
 	// 
 	public function insertFile(){
 
+	
 		$config = $this->CFG->loadConfig();
 		$dbCheck = DB_Input_Checks::getInstance();
 
@@ -438,6 +438,12 @@ class Functions {
 		$data = json_decode($jsonString, true);
 		$dataitem = $data[0];
 
+	// check if filevoucheruid exists or exit
+		if($dataitem['filevoucheruid'] == "")
+		{
+			return "dataMissing";
+		}
+		
 		if( $this->authsaml->isAuth()) {
 			$authAttributes = $this->authsaml->sAuth();
 			$dataitem['fileauthuseruid'] = $authAttributes["eduPersonTargetedID"] ;

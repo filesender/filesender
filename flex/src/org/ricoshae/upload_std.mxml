@@ -377,7 +377,7 @@
  		currentFileObj.filereceiversname  = " ";
  		currentFileObj.filevouchertype   = " ";
  		currentFileObj.fileactivitydate   = "";
- 		
+		
  		tempCurrentFileObj = currentFileObj;
     	tempCurrentFileObj.filestatus = "Available"
  				
@@ -403,9 +403,10 @@
 	   			 var dataArray1:ArrayCollection = new ArrayCollection();
 	        	dataArray1.addItem(tempCurrentFileObj);
 	      		var dataString1:String = JSON.encode(dataArray1.toArray());
-	   			dataString1 = escape(dataString1);
+				FlexGlobals.topLevelApplication.logProcess("TEMP Object:" + dataString1);
+				dataString1 = escape(dataString1);
 	   			objSend1.jsonSendData = dataString1;
-	   			send_main.send(objSend1);
+				send_main.send(objSend1);
       		}	  
     	} 
 		textarea1.text += "\n Checking uploaded file";
@@ -421,6 +422,14 @@
      public function fileSaved(event:ResultEvent):void
      {
      	// error checking here 
+		 if(event.result.toString() == "dataMissing")
+		 {
+			 FlexGlobals.topLevelApplication.uploadStopped(); 
+			 FlexGlobals.topLevelApplication.logProcess("File data was missing - not sent to database - Flash Upload");
+			 FlexGlobals.topLevelApplication.currentState = "Message";
+			 FlexGlobals.topLevelApplication.MessageLabel.text = lang['E031'] 
+			 return;
+		 }
 		 FlexGlobals.topLevelApplication.uploadStopped(); 
 		 FlexGlobals.topLevelApplication.logProcess("Database updated successfully - Flash Upload");
 		 FlexGlobals.topLevelApplication.currentState = "Message";
