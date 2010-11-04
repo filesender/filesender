@@ -29,6 +29,9 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+ //  --------------------------------
+ // force https - redirects http to https
+ // ---------------------------------
 
 if(
 	// unless forceSSL is false or 0 ...

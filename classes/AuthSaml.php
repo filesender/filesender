@@ -29,6 +29,10 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
  
+  //  --------------------------------
+  // SAML authentication
+  //  --------------------------------
+
 class AuthSaml {
 
 private static $instance = NULL;
@@ -41,6 +45,8 @@ private static $instance = NULL;
 		return self::$instance;
 	} 
 
+	// checks if a user is SAML authenticated and is administrator: returns true/false
+	// used by flex to display admin features
 	public function authIsAdmin() {
 
 		$CFG = config::getInstance();
@@ -68,6 +74,7 @@ private static $instance = NULL;
 			
 	}
 
+	// returns SAML authenticated user information as josn array
 	public function sAuth() {
 	
 			$CFG = config::getInstance();
@@ -84,6 +91,8 @@ private static $instance = NULL;
 		
 		// need to capture email from SAML attribute
 		// may be single attribute or array 
+
+		// checks if an array and sets first child
 		if(isset($attributes[$config['saml_email_attribute']])) {
 		$attributes["email"] = $attributes[$config['saml_email_attribute']];
 		}
@@ -91,7 +100,6 @@ private static $instance = NULL;
 		if(isset($attributes[$config['saml_email_attribute']][0])) {
 		$attributes["email"] = $attributes[$config['saml_email_attribute']][0];
 		}
-		
 		
 		if(isset($attributes[$config['saml_name_attribute']][0])) {
 		$attributes["cn"] = $attributes[$config['saml_name_attribute']][0];
@@ -108,6 +116,8 @@ private static $instance = NULL;
 		$outglue = '&';
 		$message = "";
 		
+		// logs access by a user and users logged on array data
+		// this could be moved to logging function in future versions
 	   foreach ($attributes as $tk => $tv) {
      	 $message .= (isset($return) ? $return . $outglue : '') . $tk . $inglue . $tv . $outglue;
     	}
@@ -135,7 +145,8 @@ private static $instance = NULL;
 			$attributes["SessionID"] = session_id();
 			return $attributes;
 		}
-		
+	
+	// requests logon URL from SAML and returns string	for flex
 	public function logonURL() {
 	
 			$CFG = config::getInstance();
@@ -148,6 +159,7 @@ private static $instance = NULL;
 			return $lognurl; //$attributes;
 		}
 		
+		// requests logon OFF URL from SAML and returns string	for flex	
 		public function logoffURL() {
 	
 			$CFG = config::getInstance();
@@ -160,7 +172,8 @@ private static $instance = NULL;
 				
 			return $logoffurl; //$attributes;
 		}
-		
+	
+	// checks SAML for autheticated user: returns true/false	
 	public function isAuth() {
 	
 			// return bool if authenticated

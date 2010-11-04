@@ -29,6 +29,11 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+/* ---------------------------------------
+ * default invalid voucher
+ * ---------------------------------------
+ * if a voucher is not valid - expired, closed or doesn't exist the redirect to this page
+ */
 require_once('../classes/_includes.php');
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">

@@ -29,6 +29,11 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+/* ---------------------------------
+ * default help file
+ * ---------------------------------
+ * 
+ */
 require_once('../classes/_includes.php');
  
 ?>

@@ -29,6 +29,11 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+/* ---------------------------------
+ * download using PHP from a non web accessible folder
+ * ---------------------------------
+ *
+ */
 require_once('../classes/_includes.php');
 
 $authsaml = AuthSaml::getInstance();
@@ -47,6 +52,7 @@ if(session_id() == ""){
 	$_SESSION['validSession'] = true;
 } 
 
+// check we are authenticated as SAML or voucher user
 if(!$authvoucher->aVoucher() && !$authsaml->isAuth()) {
 		logEntry("Download: Fialed authentication");
 		echo "notAuthenticated";
@@ -60,13 +66,18 @@ $fileuid = $fileArray[0]['fileuid'];
 $file=$config['site_filestore'].$fileuid.$fileoriginalname;
 
 //$download_rate = 20000.5;
+
+// check file physically exists before downloading
 if(file_exists($file) && is_file($file))
 {
+	// set download file headers
 	logEntry("Download: Start Downloading - ".$file);
 	header("Content-Type: application/force-download");
 	header('Content-Type: application/octet-stream');
     header('Content-Length: '.getFileSize($file));
 	header('Content-Disposition: attachment; filename="'.$fileoriginalname.'"');
+	
+	// as files may be very large - stop it timing out
 	set_time_limit(0);
 	
 	// if the complete file is downloaded then send email
@@ -82,26 +93,27 @@ if(file_exists($file) && is_file($file))
 }
 else 
 {
+	// physical file was not found
 	logEntry("Download: File Not Found - ".$file);
 	// redirect to fil is no longer available
 	 header( 'Location: invalidvoucher.php' ) ;
-    //die('Error: The file '.$file.' does not exist!');
 }
 }
 }
 
+// function read the chunks from the non web enabled folder
 function readfile_chunked($filename,$retbytes=true) {
 
 ob_start();
 
-$chunksize = 1*(1024*1024); // how many bytes per chunk
-   $buffer = '';
-   $cnt =0;
-   $handle = fopen($filename, 'rb');
-   if ($handle === false) {
-       return false;
-   }
-   while (!feof($handle)) {
+	$chunksize = 1*(1024*1024); // how many bytes per chunk
+    $buffer = '';
+    $cnt =0;
+   	$handle = fopen($filename, 'rb'); // open the file
+   	if ($handle === false) {
+   	    return false;
+   	}
+   	while (!feof($handle)) { 
        $buffer = fread($handle, $chunksize);
        echo $buffer;
        ob_flush();
@@ -112,6 +124,7 @@ $chunksize = 1*(1024*1024); // how many bytes per chunk
    }
        $status = fclose($handle);
 
+		// log the download provess 
 	   logEntry("Download Pogress: [". $filename. "] cnt-".$cnt.":retbytes-". $retbytes.": status-".$status );
    if ($retbytes && $status) {
        return $cnt; // return num. bytes delivered like readfile() does.
@@ -119,9 +132,11 @@ $chunksize = 1*(1024*1024); // how many bytes per chunk
    return $status;
    }
 
-function getFileSize($filename){
+// need to get file size correctly as over 4Gb sizes error if using default 32bit PHP installation
+// can remove windows check as we do not support windows servers
+	function getFileSize($filename){
 
-global $config;
+	global $config;
 		
 	if($filename == "" ) {
 		return;

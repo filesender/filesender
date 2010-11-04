@@ -28,7 +28,14 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-// catch errors (and don't display them) unless debug is true
+	//  --------------------------------
+ 	// error handling functions
+ 	// --------------------------------
+ 
+	// catch errors (and don't display them) unless debug is true
+	// custom exception logs to syslog 
+	// custom exception logs to config log folder 
+	
 $CFG = config::getInstance();
 $config = $CFG->loadConfig();
 
@@ -48,6 +55,7 @@ function customException($exception){
 
 }
 
+// cusom errors
 function customError($errno, $errstr, $errfile,$errline){
 
 	$errMsg = "Error: [$errno] $errstr : $errfile [$errline] ";
@@ -60,6 +68,7 @@ function customError($errno, $errstr, $errfile,$errline){
 
 }
 
+// general log function for flex logging
 function logEntry($message){
 	
 	global $config;
@@ -96,6 +105,7 @@ function logEntry($message){
 
 ini_set('display_errors', 'On');
 
+// if debug is on then set the custom error handler
 if($config['debug'] == true || $config['debug'] == 1){
 
 	ini_set('log_errors', 'On');

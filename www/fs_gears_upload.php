@@ -29,8 +29,10 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*
- * default for filesender flash app
+/* ---------------------------------
+ * upload using gears
+ * ---------------------------------
+ * data is sent in chunks from google gears and appended to the file in the temporary folder
  */
 require_once('../classes/_includes.php');
 
@@ -42,6 +44,7 @@ $CFG = config::getInstance();
 $config = $CFG->loadConfig();
 date_default_timezone_set($config['Default_TimeZone']);
 
+// check we are authenticated first before uploading the chink
 if($authvoucher->aVoucher()  || $authsaml->isAuth() ) { 
 
 	// generate unique filename
@@ -67,13 +70,18 @@ if($authvoucher->aVoucher()  || $authsaml->isAuth() ) {
 	// md5 $tempFilename
 	$tempFilename = md5($tempFilename).'.tmp';
 
+	 
 	if ( !empty( $tempFilename ) ) {
+		// open the temp file
 		$fd = fopen("php://input", "r");
+		// append the chunk to the temp file
 		while( $data = fread( $fd,  1000000  ) ) file_put_contents( $config["site_temp_filestore"].sanitizeFilename($tempFilename), $data, FILE_APPEND ) or die("Error");
+		// close the file 
 		fclose($fd);
 	}
 
 } else {
+	// log and return errorAuth if not authenticated
 	logEntry("Error authorising Gears upload :Voucher-".$authvoucher->aVoucher().":SAML-". $authsaml->isAuth());
 	echo "ErrorAuth";
 
