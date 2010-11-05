@@ -42,7 +42,7 @@ error_reporting(E_ALL);
 $filesenderbase = dirname(dirname(__FILE__));
 
 // include all required classes
-require_once("$filesenderbase/config/dev_config.php");
+require_once("$filesenderbase/config/config.php");
 require_once("$filesenderbase/classes/DB.php");
 require_once("$filesenderbase/classes/EN_AU.php");
 require_once("$filesenderbase/classes/Mail.php");
