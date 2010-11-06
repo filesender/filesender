@@ -166,12 +166,12 @@ if(session_id() == ""){
 		break;
 	
 	// returns  file information as json array
-    case "fileInfo":
+	case "fileInfo":
 		$jsonString = rawurldecode($_POST['jsonSendData']);
-  		//$jsonString = str_replace("\\", "", $jsonString);
-  		$data = json_decode($jsonString, true);
-        echo $functions->getFile($data);
-        break;
+		$jsonString = utf8_encode($jsonString);
+		$data = json_decode($jsonString, true);
+		echo $functions->getFile($data);
+		break;
 	
 	// returns voucher information as json array for flex
 	case "getFile":

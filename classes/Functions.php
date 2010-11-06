@@ -413,7 +413,7 @@ class Functions {
 		
 			
 		$jsonString = rawurldecode($_POST['jsonSendData']);
-		//$jsonString = str_replace("\\", "", $jsonString);
+		$jsonString = utf8_encode($jsonString);
 		$data = json_decode($jsonString, true);
 		$dataitem = $data[0];
 		$tempEmail = $dataitem["fileto"];
@@ -434,7 +434,7 @@ class Functions {
 		$dbCheck = DB_Input_Checks::getInstance();
 
 		$jsonString = rawurldecode($_POST['jsonSendData']);
-		//$jsonString = str_replace("\\", "", $jsonString);
+		$jsonString = utf8_encode($jsonString);
 		$data = json_decode($jsonString, true);
 		$dataitem = $data[0];
 
@@ -522,10 +522,10 @@ class Functions {
 		$dbCheck = DB_Input_Checks::getInstance();
 		
 		$jsonString = rawurldecode($_POST['jsonSendData']);
-		//$jsonString = str_replace("\\", "", $jsonString);
+		$jsonString = utf8_encode($jsonString);
 		$data = json_decode($jsonString, true);
 		$dataitem = $data[0];
-		
+
 		$ip = $_SERVER['REMOTE_ADDR'];
 		
 		$fileexpirydate 	=  date($config['postgresdateformat'],strtotime($dataitem['fileexpirydate']));
@@ -767,7 +767,7 @@ class Functions {
 	$config = $this->CFG->loadConfig();
 	
 		$jsonString = rawurldecode($_POST['jsonSendData']);
-		//$jsonString = str_replace("\\", "", $jsonString);
+		$jsonString = utf8_encode($jsonString);
 		$fileobj = json_decode($jsonString, true);
 		$dataitem = $fileobj[0];
 
