@@ -796,7 +796,7 @@ class Functions {
 			$tempFilename = md5($tempFilename).'.tmp';
 			
 			if( $dataitem['fileoriginalname'] == "" || $dataitem['fileuid'] == "" ) {
-				//customError("", "File name or UID not found ".$dataitem['fileoriginalname'] ." - ".dataitem['fileuid'] , "","");
+				//customError(LOG_ERR, "File name or UID not found ".$dataitem['fileoriginalname'] ." - ".dataitem['fileuid'] , "","");
 				return false;
 			} else {
 				$filename = $config["site_temp_filestore"].sanitizeFilename($tempFilename);
@@ -806,7 +806,7 @@ class Functions {
 					//check if file size is correct first
 				//	if(getFileSize($filename) != $dataitem['filesize'])
 				//	{
-				//		customError("", "File did not upload correctly - size is incorrect".$filename." to ".$newlocation, "","");
+				//		customError(LOG_ERR, "File did not upload correctly - size is incorrect".$filename." to ".$newlocation, "","");
 				//		$this->saveLog->saveLog($dataitem,"Error","File did not upload correctly - size is incorrect");
 				//		return false;
 				//	}
@@ -817,12 +817,12 @@ class Functions {
 					$this->saveLog->saveLog($dataitem,"File Moved","");
 					return true;
 					} else {
-					customError("", "Unable to move file ".$filename." to ".$newlocation, "","");
+					customError(LOG_ERR, "Unable to move file ".$filename." to ".$newlocation, "","");
 					$this->saveLog->saveLog($dataitem,"Error","Cannot Move file from Temp Folder");
 					return false;
 					}
 				} else {
-					customError("", "Unable to find temp file ".$filename,"");
+					customError(LOG_ERR, "Unable to find temp file ".$filename,"","");
 					$this->saveLog->saveLog($dataitem,"Error","Cannot find File in Temp Folder");
 					return false;
 				}
