@@ -412,10 +412,15 @@ class Functions {
 		$config = $this->CFG->loadConfig();
 		
 			
+		logEntry("DEBUG downloadedFile: jsonSendData = " . $_POST['jsonSendData'] );
 		$jsonString = rawurldecode($_POST['jsonSendData']);
+		logEntry("DEBUG downloadedFile: \$jsonString = " . $jsonString . " - Detected encoding: " . mb_detect_encoding($jsonString) . ". ");
 		$jsonString = utf8_encode($jsonString);
+		logEntry("DEBUG downloadedFile: \$jsonString(UTF8) = " . $jsonString );
 		$data = json_decode($jsonString, true);
+		logEntry("DEBUG downloadedFile: \$data = " . print_r($data,true) );
 		$dataitem = $data[0];
+		logEntry("DEBUG downloadedFile: \$dataitem = " . print_r($dataitem,true) );
 		$tempEmail = $dataitem["fileto"];
 		$dataitem["fileto"] = $dataitem["filefrom"];	
 		$dataitem["filefrom"] = $tempEmail;
@@ -433,10 +438,15 @@ class Functions {
 		$config = $this->CFG->loadConfig();
 		$dbCheck = DB_Input_Checks::getInstance();
 
+		logEntry("DEBUG insertFile: jsonSendData = " . $_POST['jsonSendData'] );
 		$jsonString = rawurldecode($_POST['jsonSendData']);
+		logEntry("DEBUG insertFile: \$jsonString = " . $jsonString . " - Detected encoding: " . mb_detect_encoding($jsonString) . ". ");
 		$jsonString = utf8_encode($jsonString);
+		logEntry("DEBUG insertFile: \$jsonString(UTF8) = " . $jsonString );
 		$data = json_decode($jsonString, true);
+		logEntry("DEBUG insertFile: \$data = " . print_r($data,true) );
 		$dataitem = $data[0];
+		logEntry("DEBUG insertFile: \$dataitem = " . print_r($dataitem,true) );
 
 	// check if filevoucheruid exists or exit
 		if($dataitem['filevoucheruid'] == "")
@@ -521,10 +531,15 @@ class Functions {
 			
 		$dbCheck = DB_Input_Checks::getInstance();
 		
+		logEntry("DEBUG updateFile: jsonSendData = " . $_POST['jsonSendData'] );
 		$jsonString = rawurldecode($_POST['jsonSendData']);
+		logEntry("DEBUG updateFile: \$jsonString = " . $jsonString . " - Detected encoding: " . mb_detect_encoding($jsonString) . ". ");
 		$jsonString = utf8_encode($jsonString);
+		logEntry("DEBUG updateFile: \$jsonString(UTF8) = " . $jsonString );
 		$data = json_decode($jsonString, true);
+		logEntry("DEBUG updateFile: \$data = " . print_r($data,true) );
 		$dataitem = $data[0];
+		logEntry("DEBUG updateFile: \$dataitem = " . print_r($dataitem,true) );
 
 		$ip = $_SERVER['REMOTE_ADDR'];
 		
@@ -766,10 +781,15 @@ class Functions {
 		
 	$config = $this->CFG->loadConfig();
 	
+		logEntry("DEBUG moveFile: jsonSendData = " . $_POST['jsonSendData'] );
 		$jsonString = rawurldecode($_POST['jsonSendData']);
+		logEntry("DEBUG moveFile: \$jsonString = " . $jsonString . " - Detected encoding: " . mb_detect_encoding($jsonString) . ". ");
 		$jsonString = utf8_encode($jsonString);
+		logEntry("DEBUG moveFile: \$jsonString(UTF8) = " . $jsonString );
 		$fileobj = json_decode($jsonString, true);
+		logEntry("DEBUG moveFile: \$fileobj = " . print_r($fileobj,true) );
 		$dataitem = $fileobj[0];
+		logEntry("DEBUG moveFile: \$dataitem = " . print_r($dataitem,true) );
 
 		// generate unique filename
 		// tempFilename is created from md5((uid or vid)+originalfilename+filesize)
@@ -784,16 +804,20 @@ class Functions {
 			$authAttributes = $this->authsaml->sAuth();
 			$tempFilename .= $authAttributes["eduPersonTargetedID"];	
 			}
+			logEntry("DEBUG moveFile: Using ". $tempFilename . "(vid/uid)");
 
 
 		// add the file name
 			$tempFilename .=  sanitizeFilename($dataitem['fileoriginalname']);
+			logEntry("DEBUG moveFile: Using ". $tempFilename . "(filename)");
 	
 		// add the file size to the filename
 			$tempFilename .=  $dataitem['filesize'];
+			logEntry("DEBUG moveFile: Using ". $tempFilename . "(filesize)");
 	
 		// md5 $tempFilename
 			$tempFilename = md5($tempFilename).'.tmp';
+			logEntry("DEBUG moveFile: Using ". $tempFilename . "(md5)");
 			
 			if( $dataitem['fileoriginalname'] == "" || $dataitem['fileuid'] == "" ) {
 				//customError(LOG_ERR, "File name or UID not found ".$dataitem['fileoriginalname'] ." - ".dataitem['fileuid'] , "","");
