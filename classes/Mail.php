@@ -61,16 +61,23 @@ public function sendemail($mailobject,$template){
 	$template = str_replace("{fileto}", $mailobject["fileto"], $template);
 	$template = str_replace("{serverURL}", $config["site_url"], $template);
 	$template = str_replace("{filevoucheruid}", $mailobject["filevoucheruid"], $template);
-	$template = str_replace("{fileoriginalname}", $fileoriginalname, $template);
-	$template = str_replace("{filename}", $fileoriginalname, $template);
 	$template = str_replace("{fileexpirydate}", date("d-M-Y",strtotime($mailobject["fileexpirydate"])), $template);
 	$template = str_replace("{filefrom}", $mailobject["filefrom"], $template);
+	
 	// Convert (transliterate) the personal message to ISO-8859-1 when text is in UTF-8
 	logEntry("DEBUG sendemail: filemessage = " . $mailobject['filemessage'] . " - Detected encoding: " . mb_detect_encoding($mailobject['filemessage']) . ". ");
 	if ( mb_detect_encoding($mailobject['filemessage']) == 'UTF-8' )
 	{
 		$mailobject['filemessage'] = iconv("UTF-8", "ISO-8859-1//TRANSLIT", $mailobject['filemessage']);
 	}
+	// Convert (transliterate) the fileoriginalname to ISO-8859-1 when text is in UTF-8
+	if ( mb_detect_encoding($fileoriginalname) == 'UTF-8' )
+	{
+		$fileoriginalname = iconv("UTF-8", "ISO-8859-1//TRANSLIT", $fileoriginalname);
+	}
+
+	$template = str_replace("{fileoriginalname}", $fileoriginalname, $template);
+	$template = str_replace("{filename}", $fileoriginalname, $template);	
 	$template = str_replace("{filemessage}", $mailobject["filemessage"], $template);
 	$template = str_replace("{htmlfilemessage}", htmlentities($mailobject["filemessage"]), $template);
 	$template = str_replace("{filesize}", formatBytes($mailobject["filesize"]), $template);
@@ -94,6 +101,8 @@ public function sendemail($mailobject,$template){
 	$returnpath = "-r <".$mailobject['filefrom'].">".$crlf;
 		
 	$to = "<".$mailobject['fileto'].">".","."<".$mailobject['filefrom'].">";
+	
+			
 		if(isset($mailobject['filesubject']) && $mailobject['filesubject'] != ""){
 			// Properly encode the message subject when it contains UTF-8 characters
 			logEntry("DEBUG sendemail: filesubject = " . $mailobject['filesubject'] . " - Detected encoding: " . mb_detect_encoding($mailobject['filesubject']) . ". ");
