@@ -65,7 +65,7 @@ if (isset($_REQUEST["vid"])) {
 $fileArray =  json_decode($authvoucher->getVoucher(), true);
 $fileoriginalname = $fileArray[0]['fileoriginalname'];
 $fileuid = $fileArray[0]['fileuid'];	
-$file=$config['site_filestore'].$fileuid.$fileoriginalname;
+$file=$config['site_filestore'].$fileuid.".tmp";
 
 //$download_rate = 20000.5;
 

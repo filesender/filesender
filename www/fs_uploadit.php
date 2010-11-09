@@ -78,7 +78,7 @@ if($authvoucher->aVoucher() || $authsaml->isAuth()) {
 	logEntry("DEBUG fs_uploadit: Sanitized filename from flex: ". sanitizeFilename($correctfilename) );
 
 	// move file to correct uploadfolder destination
-	$result = move_uploaded_file($_FILES['Filedata']['tmp_name'], $uploadfolder.ensureSaneFileUid($_POST['fid']).sanitizeFilename($correctfilename));
+	$result = move_uploaded_file($_FILES['Filedata']['tmp_name'], $uploadfolder.ensureSaneFileUid($_POST['fid']).".tmp");
 
 	if($result) {
 		logEntry("File Moved");

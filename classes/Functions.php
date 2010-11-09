@@ -70,7 +70,8 @@ function sanitizeFilename($filename){
 	
 	if (!empty($filename)) {
 		$filename = preg_replace("/^\./", "_", $filename);
-		return preg_replace("/[^A-Za-z0-9_\-\. ]/", "_", $filename);
+		//return preg_replace("/[^A-Za-z0-9_\-\. ]/", "_", $filename);
+		return $filename;
 	} else {
 		//trigger_error("invalid empty filename", E_USER_ERROR);
 		return "";
@@ -824,7 +825,7 @@ class Functions {
 				return false;
 			} else {
 				$filename = $config["site_temp_filestore"].sanitizeFilename($tempFilename);
-				$newlocation = $config["site_filestore"].ensureSaneFileUid($dataitem['fileuid']).sanitizeFilename($dataitem['fileoriginalname']);
+				$newlocation = $config["site_filestore"].ensureSaneFileUid($dataitem['fileuid']).".tmp";
 				if (file_exists( $filename)) {
 				
 					//check if file size is correct first
