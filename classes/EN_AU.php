@@ -157,7 +157,8 @@ $lang = array(
 	"E028" => "Unable to forward this file, voucher ID is unavailable. Contact Administrator (E028)",
 	"E029" => "Your session may have timed out, please logon again and re-try or contact your administrator.",
 	"E030" => "Cannot upload a file of 0 bytes. Please select another file.",
-	"E031" => "Error uploading your file. Please contact your administrator (Error #031)"
+	"E031" => "Error uploading your file. Please contact your administrator (Error #031)",
+	"E032" => "Mac using gears cannot upload a file larger than 2 GB (Error #032)"
 );
 return $lang;
 }
