@@ -36,7 +36,6 @@
 */
 		
  	  	import com.adobe.serialization.json.JSON;
- 	  	
  	  	import flash.events.TimerEvent;
  	  	import flash.utils.Timer;
  	  	
@@ -50,6 +49,9 @@
  	  	import mx.utils.UIDUtil;
 		import com.adobe.utils.IntUtil;
 		import com.adobe.crypto.*;
+		
+	
+		
  	  	
  	  	import org.ricoshae.core.*;
 	
@@ -244,16 +246,25 @@ private function fnCheckExtension(str:String):Boolean
 		//check for invalid file name charachters
 		if (fnCheckString(sInfo.toString()))
 		{
-		Alert.show("Invalid File Name (Must no contain the following charachters : * ? < > | % '","Invalid Filename");
+			Alert.show("Invalid File Name (Must no contain the following charachters : * ? < > | % '","Invalid Filename");
 		return;
 		} 
 
 		if (fnCheckExtension(sInfo.toString()))
 		{
 			FlexGlobals.topLevelApplication.logProcess("Invalid Extension Selected ["+sInfo.toString()+"] - Gears Upload");
-		Alert.show("File Extension type is invalid or is missing. You may like to zip the file and try again","Invalid File Extension");
+			Alert.show("File Extension type is invalid or is missing. You may like to zip the file and try again","Invalid File Extension");
 		return;
 		} 
+		
+		// mac curently cannot upload over 2GB using gears
+		// notify user if over 2GB
+		if(flash.system.Capabilities.os.substr(0, 3) == "Mac" && currentFileObj.filesize > 2000000000 )
+		{
+			FlexGlobals.topLevelApplication.logProcess("File is too large for Gears on Mac upload - Gears Upload");
+			Alert.show(lang['E032']);
+		return;
+		}
 					
 		selectedFilename.text = sInfo.toString();
 		currentFileObj.fileoriginalname = sInfo.toString();		 
