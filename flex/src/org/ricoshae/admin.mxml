@@ -272,7 +272,7 @@ private function filterActive(item:Object):Boolean
     
 private function dateFunc( item:Object, column:DataGridColumn):String
 	{
-	return df.format( item[column.dataField]); 
+	return dtf.format( item[column.dataField]); 
 	}
    // execl export function
    
@@ -449,6 +449,7 @@ private function dateFunc( item:Object, column:DataGridColumn):String
 <mx:HTTPService id="space_main" url="../fs_main.php{URLvidLocal}" useProxy="false" method="POST" showBusyCursor="true"  resultFormat="text" result="returnDriveSpace(event)" fault="return_error(event)"/>     
 <mx:NumberFormatter id="numform" rounding="nearest" precision="2"></mx:NumberFormatter>
  <mx:DateFormatter id="df" formatString="{config.datedisplayformat}"/>
+	<mx:DateFormatter id="dtf" formatString="DD-MMM-YYYY L:NN A"/>
   <mx:VBox left="4" top="6" bottom="4" right="4"> 
 		<mx:TabNavigator width="100%" height="100%" id="nav1"> 
 			<mx:Canvas label="{lang.General}" width="100%" height="100%">
@@ -480,7 +481,15 @@ private function dateFunc( item:Object, column:DataGridColumn):String
 					    <mx:DataGridColumn headerText="To" dataField="logto" wordWrap="true"/>
 					    <mx:DataGridColumn headerText="File" dataField="logfilename" wordWrap="true"/>
 					     <mx:DataGridColumn headerText="Size" dataField="logfilesize"  labelFunction="filesizeFunc" wordWrap="true" />
-					    <mx:DataGridColumn headerText="Message" dataField="logmessage" wordWrap="true"/>
+						  <mx:DataGridColumn headerText="Message" dataField="logmessage" wordWrap="true"  textAlign="center" width="60">
+							  <mx:itemRenderer>
+								  <mx:Component>
+									  <mx:Image toolTip="{data.logmessage}" scaleContent="false" source="@Embed(source='/assets/page_white_text_width.png')" width="16" height="16" maxHeight="16" maxWidth="16" horizontalAlign="center">
+									  </mx:Image>
+									  
+								  </mx:Component>
+							  </mx:itemRenderer>
+						  </mx:DataGridColumn>
 					  </mx:columns>
 					</mx:DataGrid>
 				</mx:VBox>
@@ -496,7 +505,15 @@ private function dateFunc( item:Object, column:DataGridColumn):String
 					    <mx:DataGridColumn headerText="To" dataField="logto" wordWrap="true"/>
 					    <mx:DataGridColumn headerText="File" dataField="logfilename" wordWrap="true"/>
 					     <mx:DataGridColumn headerText="Size" dataField="logfilesize"  labelFunction="filesizeFunc" wordWrap="true" />
-					    <mx:DataGridColumn headerText="Message" dataField="logmessage" wordWrap="true"/>
+						  <mx:DataGridColumn headerText="Message" dataField="logmessage" wordWrap="true"  textAlign="center" width="60">
+							  <mx:itemRenderer>
+								  <mx:Component>
+									  <mx:Image toolTip="{data.logmessage}" scaleContent="false" source="@Embed(source='/assets/page_white_text_width.png')" width="16" height="16" maxHeight="16" maxWidth="16" horizontalAlign="center">
+									  </mx:Image>
+									  
+								  </mx:Component>
+							  </mx:itemRenderer>
+						  </mx:DataGridColumn>
 					  </mx:columns>
 					</mx:DataGrid>
 				</mx:VBox>
@@ -511,8 +528,16 @@ private function dateFunc( item:Object, column:DataGridColumn):String
 					    <mx:DataGridColumn headerText="To" dataField="logto" wordWrap="true"/>
 					    <mx:DataGridColumn headerText="From" dataField="logfrom" wordWrap="true"/>
 					    <mx:DataGridColumn headerText="File" dataField="logfilename" wordWrap="true"/>
-					     <mx:DataGridColumn headerText="Size" dataField="logfilesize"  labelFunction="filesizeFunc"  wordWrap="true"/>
-					    <mx:DataGridColumn headerText="Message" dataField="logmessage" wordWrap="true"/>
+					    <mx:DataGridColumn headerText="Size" dataField="logfilesize"  labelFunction="filesizeFunc"  wordWrap="true"/>
+					    <mx:DataGridColumn headerText="Message" dataField="logmessage" wordWrap="true"  textAlign="center" width="60">
+							  <mx:itemRenderer>
+								  <mx:Component>
+									  <mx:Image toolTip="{data.logmessage}" scaleContent="false" source="@Embed(source='/assets/page_white_text_width.png')" width="16" height="16" maxHeight="16" maxWidth="16" horizontalAlign="center">
+									  </mx:Image>
+									  
+								  </mx:Component>
+							  </mx:itemRenderer>
+						  </mx:DataGridColumn>
 					  </mx:columns>
 					</mx:DataGrid>
 				</mx:VBox>
@@ -528,7 +553,15 @@ private function dateFunc( item:Object, column:DataGridColumn):String
 					    <mx:DataGridColumn headerText="File" dataField="fileoriginalname" wordWrap="true"/>
 					     <mx:DataGridColumn headerText="Size" dataField="filesize" labelFunction="filesizeFuncFiles" wordWrap="true"/>
 					    <mx:DataGridColumn headerText="Subject" dataField="filesubject" wordWrap="true"/>
-					    <mx:DataGridColumn headerText="Message" dataField="filemessage" wordWrap="true"/>
+						  <mx:DataGridColumn headerText="Message" dataField="filemessage" wordWrap="true"  textAlign="center" width="60">
+							  <mx:itemRenderer>
+								  <mx:Component>
+									  <mx:Image toolTip="{data.filemessage}" scaleContent="false" source="@Embed(source='/assets/page_white_text_width.png')" width="16" height="16" maxHeight="16" maxWidth="16" horizontalAlign="center">
+									  </mx:Image>
+									  
+								  </mx:Component>
+							  </mx:itemRenderer>
+							  </mx:DataGridColumn>
 					     <mx:DataGridColumn headerText="Expiry" dataField="fileexpirydate" labelFunction="dateFunc" wordWrap="true"/>
 					    <mx:DataGridColumn width="20" visible="false" >
 					      <mx:itemRenderer>
@@ -572,7 +605,15 @@ private function dateFunc( item:Object, column:DataGridColumn):String
 					    <mx:DataGridColumn headerText="To" dataField="logto" wordWrap="true"/>
 					    <mx:DataGridColumn headerText="Size" dataField="logfilesize" labelFunction="filesizeFunc" wordWrap="true" />
 					    <mx:DataGridColumn headerText="File" dataField="logfilename" wordWrap="true"/>
-					    <mx:DataGridColumn headerText="Message" dataField="logmessage" wordWrap="true"/>
+						  <mx:DataGridColumn headerText="Message" dataField="logmessage" wordWrap="true"  textAlign="center" width="60">
+							  <mx:itemRenderer>
+								  <mx:Component>
+									  <mx:Image toolTip="{data.logmessage}" scaleContent="false" source="@Embed(source='/assets/page_white_text_width.png')" width="16" height="16" maxHeight="16" maxWidth="16" horizontalAlign="center">
+									  </mx:Image>
+									  
+								  </mx:Component>
+							  </mx:itemRenderer>
+						  </mx:DataGridColumn>
 					  </mx:columns>
 					</mx:DataGrid>
 				</mx:VBox>
