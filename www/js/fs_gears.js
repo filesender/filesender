@@ -120,11 +120,11 @@ function browse(){
 				status:		(files[i].blob.length>MAX_FILE_SIZE?"File too large":"Pending")};
 			
 			//addStatus( "Selected: " + files[i].name + " " + files[i].blob.length,"msg" );
-			addStatus( files[i].name,"filename");
 			addStatus( files[i].blob.length,"filesize");
-		    
+			addStatus( files[i].name,"filename");
+   
 		}
-		$('#upload').html('<a href="#upload" onclick="return upload();">Upload</a>');
+		//$('#upload').html('<a href="#upload" onclick="return upload();">Upload</a>');
 	},
     { singleFile: true  }
     //  { singleFile: true }
