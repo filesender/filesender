@@ -136,7 +136,7 @@ public function loadConfig() {
 	
 	// email
 	$config['default_emailsubject'] = "{siteName}: {filename}";
-	$config['filedownloadedemailbody'] = '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset=iso-8859-1{CRLF}{CRLF}
+	$config['filedownloadedemailbody'] = '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}
 Dear Sir, Madam,
 
 The file below has been downloaded from {siteName} by {filefrom}.
@@ -148,7 +148,7 @@ The file is available until {fileexpirydate} after which it will be automaticall
 
 Best regards,
 
-{siteName}{CRLF}{CRLF}--simple_mime_boundary{CRLF}Content-type:text/html; charset=iso-8859-1{CRLF}{CRLF}
+{siteName}{CRLF}{CRLF}--simple_mime_boundary{CRLF}Content-type:text/html; charset={charset}{CRLF}{CRLF}
 <HTML>
 <BODY>
 <P>Dear Sir, Madam,</P>
@@ -191,7 +191,7 @@ Best regards,
 <P>{siteName}</P>
 </BODY>
 </HTML>{CRLF}{CRLF}--simple_mime_boundary--';
-	$config['fileuploadedemailbody'] = '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset=iso-8859-1{CRLF}{CRLF}
+	$config['fileuploadedemailbody'] = '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}
 Dear Sir, Madam,
 
 The file below has been uploaded to {siteName} by {filefrom} and you have been granted permission to download this file.
@@ -204,7 +204,7 @@ Personal message from {filefrom} (optional) = {filemessage}
 
 Best regards,
 
-{siteName}{CRLF}{CRLF}--simple_mime_boundary{CRLF}Content-type:text/html; charset=iso-8859-1{CRLF}{CRLF}
+{siteName}{CRLF}{CRLF}--simple_mime_boundary{CRLF}Content-type:text/html; charset={charset}{CRLF}{CRLF}
 <HTML>
 <BODY>
 <P>Dear Sir, Madam,</P>
@@ -261,7 +261,7 @@ Best regards,
 <P>{siteName}</P>
 </BODY>
 </HTML>{CRLF}{CRLF}--simple_mime_boundary--';
-	$config['voucherissuedemailbody'] = '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset=iso-8859-1{CRLF}{CRLF}
+	$config['voucherissuedemailbody'] = '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}
 Dear Sir, Madam,
 
 Please, find below a voucher which grants access to {siteName}.
@@ -273,7 +273,7 @@ The file is available until {fileexpirydate} after which it will be automaticall
 
 Best regards,
 
-{siteName}{CRLF}{CRLF}--simple_mime_boundary{CRLF}Content-type:text/html; charset=iso-8859-1{CRLF}{CRLF}
+{siteName}{CRLF}{CRLF}--simple_mime_boundary{CRLF}Content-type:text/html; charset={charset}{CRLF}{CRLF}
 <HTML>
 <BODY>
 <P>Dear Sir, Madam,</P>
@@ -312,13 +312,13 @@ Best regards,
 </BODY>
 </HTML>{CRLF}{CRLF}--simple_mime_boundary--';
 
-$config['defaultvouchercancelled'] = "{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset=iso-8859-1{CRLF}{CRLF}
+$config['defaultvouchercancelled'] = "{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}
 Dear Sir, Madam,
 
 A voucher from {filefrom} has been cancelled.
 Best regards,
 
-{siteName}{CRLF}{CRLF}--simple_mime_boundary{CRLF}Content-type:text/html; charset=iso-8859-1{CRLF}{CRLF}
+{siteName}{CRLF}{CRLF}--simple_mime_boundary{CRLF}Content-type:text/html; charset={charset}{CRLF}{CRLF}
 <HTML>
 <BODY>
 Dear Sir, Madam,<BR><BR>A voucher from {filefrom} has been cancelled.<BR><BR>
@@ -327,13 +327,13 @@ Dear Sir, Madam,<BR><BR>A voucher from {filefrom} has been cancelled.<BR><BR>
 </BODY>
 </HTML>{CRLF}{CRLF}--simple_mime_boundary--";
 
-$config['defaultfilecancelled'] = "{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset=iso-8859-1{CRLF}{CRLF}
+$config['defaultfilecancelled'] = "{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}
 Dear Sir, Madam,
 
 The file '{filename}' from {filefrom} has been cancelled and is no longer available to download.
 Best regards,
 
-{siteName}{CRLF}{CRLF}--simple_mime_boundary{CRLF}Content-type:text/html; charset=iso-8859-1{CRLF}{CRLF}
+{siteName}{CRLF}{CRLF}--simple_mime_boundary{CRLF}Content-type:text/html; charset={charset}{CRLF}{CRLF}
 <HTML>
 <BODY>
 Dear Sir, Madam,<BR><BR>The file '{filename}' from {filefrom} has been cancelled and is no longer available to download.<BR><BR>
