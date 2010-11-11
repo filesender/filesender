@@ -46,6 +46,59 @@ class Mail {
     } 
 
     //---------------------------------------
+    // Functions to handle international characters
+    // 
+    private function detectLatin1($string) {
+        // Simple check for ISO-8859-1
+        return (preg_match("/^[\\x00-\\xFF]*$/u", $string) === 1);
+    }
+    
+    private function detectUTF8($string) {
+        // Simple check for UTF-8
+        // Returns true if $string is UTF-8 and false otherwise.
+        // From http://w3.org/International/questions/qa-forms-utf-8.html
+        // Modified to only fire on the non-ASCII multibyte chars (courtesy
+        // of chris AT w3style.co DOT uk)
+        return preg_match('%(?:
+        [\xC2-\xDF][\x80-\xBF]        # non-overlong 2-byte
+        |\xE0[\xA0-\xBF][\x80-\xBF]               # excluding overlongs
+        |[\xE1-\xEC\xEE\xEF][\x80-\xBF]{2}      # straight 3-byte
+        |\xED[\x80-\x9F][\x80-\xBF]               # excluding surrogates
+        |\xF0[\x90-\xBF][\x80-\xBF]{2}    # planes 1-3
+        |[\xF1-\xF3][\x80-\xBF]{3}                  # planes 4-15
+        |\xF4[\x80-\x8F][\x80-\xBF]{2}    # plane 16
+        )+%xs', $string);
+    }
+    
+    private function detect_char_encoding($string) {
+    // detect the required charset MIME encoding for $string
+    // only distinguishes between US-ASCII, ISO-8859-1 and UTF-8
+        if ($this->detectUTF8($string)) {
+            if ( $this->detectLatin1($string)) {
+                return "ISO-8859-1";
+            } else {
+                return "UTF-8";
+            }
+        } else { 
+            return "US-ASCII";
+        }
+    }
+    
+    private function mime_qp_encode_header_value($string,$charsetin,$charsetout,$crlf) {
+        // QP header encoding using iconv_mime_encode
+        $prefs = array(
+            'scheme' => 'Q',
+            'input-charset' => $charsetin,
+            'output-charset' => $charsetout,
+            'line-length' => 76,
+            'line-break-chars' => $crlf,
+        ); 
+        // iconv_mime_encode requires a header name so strip it including
+        // the ": "
+        return preg_replace('/^HEADER: /', '', iconv_mime_encode("HEADER", $string, $prefs)) ;
+    }
+
+    //---------------------------------------
     // Send mail
     // 
     public function sendemail($mailobject,$template){
@@ -63,23 +116,11 @@ class Mail {
         $template = str_replace("{filevoucheruid}", $mailobject["filevoucheruid"], $template);
         $template = str_replace("{fileexpirydate}", date("d-M-Y",strtotime($mailobject["fileexpirydate"])), $template);
         $template = str_replace("{filefrom}", $mailobject["filefrom"], $template);
-
-        // Convert (transliterate) the personal message to ISO-8859-1 when text is in UTF-8
-        logEntry("DEBUG sendemail: filemessage = " . $mailobject['filemessage'] . " - Detected encoding: " . mb_detect_encoding($mailobject['filemessage']) . ". ");
-        if ( mb_detect_encoding($mailobject['filemessage']) == 'UTF-8' )
-        {
-            $mailobject['filemessage'] = iconv("UTF-8", "ISO-8859-1//TRANSLIT", $mailobject['filemessage']);
-        }
-        // Convert (transliterate) the fileoriginalname to ISO-8859-1 when text is in UTF-8
-        if ( mb_detect_encoding($fileoriginalname) == 'UTF-8' )
-        {
-            $fileoriginalname = iconv("UTF-8", "ISO-8859-1//TRANSLIT", $fileoriginalname);
-        }
-
         $template = str_replace("{fileoriginalname}", $fileoriginalname, $template);
         $template = str_replace("{filename}", $fileoriginalname, $template);	
         $template = str_replace("{filemessage}", $mailobject["filemessage"], $template);
-        $template = str_replace("{htmlfilemessage}", htmlentities($mailobject["filemessage"]), $template);
+        // use mb_convert_encoding() instead of htmlentities() to allow for multibyte UTF-8 characters
+        $template = str_replace("{htmlfilemessage}", mb_convert_encoding($mailobject["filemessage"],'HTML-ENTITIES', "UTF-8"), $template);
         $template = str_replace("{filesize}", formatBytes($mailobject["filesize"]), $template);
         $template = str_replace("{CRLF}",  $config["crlf"], $template);
 
@@ -104,13 +145,6 @@ class Mail {
 
 
         if(isset($mailobject['filesubject']) && $mailobject['filesubject'] != ""){
-            // Properly encode the message subject when it contains UTF-8 characters
-            logEntry("DEBUG sendemail: filesubject = " . $mailobject['filesubject'] . " - Detected encoding: " . mb_detect_encoding($mailobject['filesubject']) . ". ");
-            if ( mb_detect_encoding($mailobject['filesubject']) == 'UTF-8' )
-            {
-                mb_internal_encoding("UTF-8");
-                $mailobject['filesubject'] = mb_encode_mimeheader($mailobject['filesubject'], "UTF-8", "Q", $crlf );
-            }
             $subject = $config["site_name"].": ".$mailobject['filesubject'];
         } else {
             $tempfilesubject = $config['default_emailsubject'];
@@ -121,6 +155,20 @@ class Mail {
             $subject =   $tempfilesubject;
 
         }
+        // Check needed encoding for $subject
+        // Assumes input string is UTF-8 encoded
+        $subj_encoding = $this->detect_char_encoding($subject) ;
+        if ($subj_encoding != 'US-ASCII') {
+            $subject = $this->mime_qp_encode_header_value($subject,'UTF-8',$subj_encoding,$crlf) ;
+        }
+
+        // Check and set the needed encoding for the body and convert if necessary
+        $body_encoding = $this->detect_char_encoding($template) ;
+        $template = str_replace("{charset}", $body_encoding , $template);
+        if ( $body_encoding == 'ISO-8859-1' ) {
+            $template = iconv("UTF-8", "ISO-8859-1", $template);
+        }
+
         $body = wordwrap($template,70);
 
         if (mail($to, $subject, $body, $headers, $returnpath)) {
