@@ -40,105 +40,105 @@
 
 class AuthVoucher {
 
-private static $instance = NULL;
+    private static $instance = NULL;
 
-	public static function getInstance() {
-		// Check for both equality and type		
-		if(self::$instance === NULL) {
-			self::$instance = new self();
-		}
-		return self::$instance;
-	} 
+    public static function getInstance() {
+        // Check for both equality and type		
+        if(self::$instance === NULL) {
+            self::$instance = new self();
+        }
+        return self::$instance;
+    } 
 
 
-	//---------------------------------------
-	// Check voucher exists and is available
-	// return TRUE if voucher exists and is available for use
-	public function aVoucher() {
-	
-		$db = DB::getInstance();
-		$CFG = config::getInstance();
-		$config = $CFG->loadConfig();
+    //---------------------------------------
+    // Check voucher exists and is available
+    // return TRUE if voucher exists and is available for use
+    public function aVoucher() {
 
-		if (isset($_REQUEST['vid'])) {
-			$vid = $_REQUEST['vid'];
-		
-		if (preg_match($config['voucherRegEx'], $vid) and strLen($vid) == $config['voucherUIDLength']) {
-		
-			//$search =  pg_query("SELECT * FROM files WHERE filevoucheruid='".$vid."' AND filestatus!='Closed'") or die("Error");
-			$search =  $db->fquery("SELECT * FROM files WHERE filevoucheruid='%s'", $vid) or die("Error");
-			$total_records = pg_num_rows($search);
-				if($total_records == 1){
-					return TRUE;
-				}
-			return FALSE;
-			} 
-		else {
-		// invalid vid format to match regex from config
-				return FALSE;
-			}
-			return FALSE;
-		}
-	}	
+        $db = DB::getInstance();
+        $CFG = config::getInstance();
+        $config = $CFG->loadConfig();
 
-//---------------------------------------
-	// Check voucher exists and is available
-	// return TRUE if voucher exists and is available for use	
-	public function validVoucher() {
-	
-		$db = DB::getInstance();
-		$CFG = config::getInstance();
-		$config = $CFG->loadConfig();
-		
-		if (isset($_REQUEST['vid'])) {
-			$vid = $_REQUEST['vid'];
-			
+        if (isset($_REQUEST['vid'])) {
+            $vid = $_REQUEST['vid'];
 
-		if (preg_match($config['voucherRegEx'], $vid) and strLen($vid) == $config['voucherUIDLength']) {
-		
-			$search =  $db->fquery("SELECT * FROM files WHERE filevoucheruid='%s'", $vid) or die("Error");
-			$total_records = pg_num_rows($search);
-				if($total_records == 1){
-					return "found";
-				}
-			return "notfound";
-			} 
-		else {
-		// invalid vid format to match regex from config
-				return "invalid";
-			}
-		} 
-		return "none";
-	}	
+            if (preg_match($config['voucherRegEx'], $vid) and strLen($vid) == $config['voucherUIDLength']) {
 
-	//---------------------------------------
-	// Get Voucher information
-	// TODO: Move this to Functions maybe??
-	public function getVoucher() {
-	
-		$db = DB::getInstance();
-		$CFG = config::getInstance();
-		$config = $CFG->loadConfig();
+                //$search =  pg_query("SELECT * FROM files WHERE filevoucheruid='".$vid."' AND filestatus!='Closed'") or die("Error");
+                $search =  $db->fquery("SELECT * FROM files WHERE filevoucheruid='%s'", $vid) or die("Error");
+                $total_records = pg_num_rows($search);
+                if($total_records == 1){
+                    return TRUE;
+                }
+                return FALSE;
+            } 
+            else {
+                // invalid vid format to match regex from config
+                return FALSE;
+            }
+            return FALSE;
+        }
+    }	
 
-		if (isset($_REQUEST['vid'])) {
-			$vid = $_REQUEST['vid'];
-		
-		if (preg_match($config['voucherRegEx'], $vid) and strLen($vid) == $config['voucherUIDLength']) {
-		
-			$search =  $db->fquery("SELECT * FROM files WHERE filevoucheruid='%s'", $vid) or die("Error");
-			$returnArray = array();
-			$returnArray["SessionID"] = session_id();
-			while($row = pg_fetch_assoc($search))
- 			 {
-   				 array_push($returnArray, $row);
- 			 }
-				return json_encode($returnArray);
-			} 
-		else {
-		// invalid vid format to match regex from config
-				return "error";
-			}
-		}
-	}	
+    //---------------------------------------
+    // Check voucher exists and is available
+    // return TRUE if voucher exists and is available for use	
+    public function validVoucher() {
+
+        $db = DB::getInstance();
+        $CFG = config::getInstance();
+        $config = $CFG->loadConfig();
+
+        if (isset($_REQUEST['vid'])) {
+            $vid = $_REQUEST['vid'];
+
+
+            if (preg_match($config['voucherRegEx'], $vid) and strLen($vid) == $config['voucherUIDLength']) {
+
+                $search =  $db->fquery("SELECT * FROM files WHERE filevoucheruid='%s'", $vid) or die("Error");
+                $total_records = pg_num_rows($search);
+                if($total_records == 1){
+                    return "found";
+                }
+                return "notfound";
+            } 
+            else {
+                // invalid vid format to match regex from config
+                return "invalid";
+            }
+        } 
+        return "none";
+    }	
+
+    //---------------------------------------
+    // Get Voucher information
+    // TODO: Move this to Functions maybe??
+    public function getVoucher() {
+
+        $db = DB::getInstance();
+        $CFG = config::getInstance();
+        $config = $CFG->loadConfig();
+
+        if (isset($_REQUEST['vid'])) {
+            $vid = $_REQUEST['vid'];
+
+            if (preg_match($config['voucherRegEx'], $vid) and strLen($vid) == $config['voucherUIDLength']) {
+
+                $search =  $db->fquery("SELECT * FROM files WHERE filevoucheruid='%s'", $vid) or die("Error");
+                $returnArray = array();
+                $returnArray["SessionID"] = session_id();
+                while($row = pg_fetch_assoc($search))
+                {
+                    array_push($returnArray, $row);
+                }
+                return json_encode($returnArray);
+            } 
+            else {
+                // invalid vid format to match regex from config
+                return "error";
+            }
+        }
+    }	
 }
 ?>
