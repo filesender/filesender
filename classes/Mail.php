@@ -119,8 +119,8 @@ class Mail {
         $template = str_replace("{fileoriginalname}", $fileoriginalname, $template);
         $template = str_replace("{filename}", $fileoriginalname, $template);	
         $template = str_replace("{filemessage}", $mailobject["filemessage"], $template);
-        // use mb_convert_encoding() instead of htmlentities() to allow for multibyte UTF-8 characters
-        $template = str_replace("{htmlfilemessage}", mb_convert_encoding($mailobject["filemessage"],'HTML-ENTITIES', "UTF-8"), $template);
+        // use mb_convert_encoding() in addition to htmlentities() to allow for multibyte UTF-8 characters
+        $template = str_replace("{htmlfilemessage}", htmlentities(mb_convert_encoding($mailobject["filemessage"],'HTML-ENTITIES', "UTF-8"),null,null,false), $template);
         $template = str_replace("{filesize}", formatBytes($mailobject["filesize"]), $template);
         $template = str_replace("{CRLF}",  $config["crlf"], $template);
 
