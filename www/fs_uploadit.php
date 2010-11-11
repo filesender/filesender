@@ -32,30 +32,29 @@
  * ------------------------------
  * returns string: moveOk, moveError,invalidAuth back to flex
  */
-function upperHexNumber($matches)
-{
-  return '\u'.strtoupper($matches[1]);
+function upperHexNumber($matches) {
+    return '\u'.strtoupper($matches[1]);
 }
 
 require_once('../classes/_includes.php');
-	
-	// flash upoload creates a new session id https so we need to make sure we are using the same session  
-	if(!empty($_REQUEST['s'])) { 
-	session_id($_REQUEST['s']); 
-	session_start();
 
-	// Ensure existing session, users don't have the permission to create
-	// a session because that would be a security vulnerability.
-	if (!isset($_SESSION['validSession'])) {
-		session_destroy();
-		session_start();
-		session_regenerate_id();
-		$_SESSION['validSession'] = true;
-		trigger_error("Invalid session supplied.", E_USER_ERROR);
-		}
-	}
+// flash upoload creates a new session id https so we need to make sure we are using the same session  
+if(!empty($_REQUEST['s'])) { 
+    session_id($_REQUEST['s']); 
+    session_start();
 
-	$authvoucher = AuthVoucher::getInstance();
+    // Ensure existing session, users don't have the permission to create
+    // a session because that would be a security vulnerability.
+    if (!isset($_SESSION['validSession'])) {
+        session_destroy();
+        session_start();
+        session_regenerate_id();
+        $_SESSION['validSession'] = true;
+        trigger_error("Invalid session supplied.", E_USER_ERROR);
+    }
+}
+
+$authvoucher = AuthVoucher::getInstance();
 
 // Check if there is a file supplied
 if(!isset($_FILES['Filedata'])) trigger_error("request without file upload", E_USER_ERROR);
@@ -63,33 +62,33 @@ if(!isset($_FILES['Filedata'])) trigger_error("request without file upload", E_U
 $authsaml = AuthSaml::getInstance();
 $authvoucher = AuthVoucher::getInstance();
 $CFG = config::getInstance();
-$config = $CFG->loadConfig();
+$cofig = $CFG->loadConfig();
 date_default_timezone_set($config['Default_TimeZone']);
-	
+
 if($authvoucher->aVoucher() || $authsaml->isAuth()) { 
-	$uploadfolder =  $config["site_filestore"];
+    $uploadfolder =  $config["site_filestore"];
 
-	
-	logEntry("DEBUG fs_uploadit: Original filename from flex: ". $_FILES['Filedata']['name'] );
-	logEntry("DEBUG fs_uploadit: json encoded filename: ". json_encode($_FILES['Filedata']['name']) );
-	logEntry("DEBUG fs_uploadit: trimmed json encoded filename: ". trim(json_encode($_FILES['Filedata']['name']),"\"") );
-	$correctfilename = preg_replace_callback('/\\\\u([0-9a-fA-F]{4})/','upperHexNumber',trim(json_encode($_FILES['Filedata']['name']),"\""));
-	logEntry("DEBUG fs_uploadit: Corrected filename from flex: ". $correctfilename );
-	logEntry("DEBUG fs_uploadit: Sanitized filename from flex: ". sanitizeFilename($correctfilename) );
 
-	// move file to correct uploadfolder destination
-	$result = move_uploaded_file($_FILES['Filedata']['tmp_name'], $uploadfolder.ensureSaneFileUid($_POST['fid']).".tmp");
+    logEntry("DEBUG fs_uploadit: Original filename from flex: ". $_FILES['Filedata']['name'] );
+    logEntry("DEBUG fs_uploadit: json encoded filename: ". json_encode($_FILES['Filedata']['name']) );
+    logEntry("DEBUG fs_uploadit: trimmed json encoded filename: ". trim(json_encode($_FILES['Filedata']['name']),"\"") );
+    $correctfilename = preg_replace_callback('/\\\\u([0-9a-fA-F]{4})/','upperHexNumber',trim(json_encode($_FILES['Filedata']['name']),"\""));
+    logEntry("DEBUG fs_uploadit: Corrected filename from flex: ". $correctfilename );
+    logEntry("DEBUG fs_uploadit: Sanitized filename from flex: ". sanitizeFilename($correctfilename) );
 
-	if($result) {
-		logEntry("File Moved");
-		echo "moveOk";
-	} else {
-		// error moving files
-		logEntry("Unable to move the file");
-		echo "moveError";
-	}
+    // move file to correct uploadfolder destination
+    $result = move_uploaded_file($_FILES['Filedata']['tmp_name'], $uploadfolder.ensureSaneFileUid($_POST['fid']).".tmp");
+
+    if($result) {
+        logEntry("File Moved");
+        echo "moveOk";
+    } else {
+        // error moving files
+        logEntry("Unable to move the file");
+        echo "moveError";
+    }
 } else {
-	logEntry("Error authorising Flash upload :Voucher-".$authvoucher->aVoucher().":SAML-". $authsaml->isAuth());
-	echo "invalidAuth";
+    logEntry("Error authorising Flash upload :Voucher-".$authvoucher->aVoucher().":SAML-". $authsaml->isAuth());
+    echo "invalidAuth";
 }
 ?>
