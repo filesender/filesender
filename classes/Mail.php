@@ -48,17 +48,18 @@ class Mail {
     //---------------------------------------
     // Functions to handle international characters
     // 
+
+    // Simple check for ISO-8859-1
     private function detectLatin1($string) {
-        // Simple check for ISO-8859-1
         return (preg_match("/^[\\x00-\\xFF]*$/u", $string) === 1);
     }
     
+    // Simple check for UTF-8
+    // Returns true if $string is UTF-8 and false otherwise.
+    // From http://w3.org/International/questions/qa-forms-utf-8.html
+    // Modified to only fire on the non-ASCII multibyte chars (courtesy
+    // of chris AT w3style.co DOT uk)
     private function detectUTF8($string) {
-        // Simple check for UTF-8
-        // Returns true if $string is UTF-8 and false otherwise.
-        // From http://w3.org/International/questions/qa-forms-utf-8.html
-        // Modified to only fire on the non-ASCII multibyte chars (courtesy
-        // of chris AT w3style.co DOT uk)
         return preg_match('%(?:
         [\xC2-\xDF][\x80-\xBF]        # non-overlong 2-byte
         |\xE0[\xA0-\xBF][\x80-\xBF]               # excluding overlongs
@@ -70,9 +71,9 @@ class Mail {
         )+%xs', $string);
     }
     
-    private function detect_char_encoding($string) {
     // detect the required charset MIME encoding for $string
     // only distinguishes between US-ASCII, ISO-8859-1 and UTF-8
+    private function detect_char_encoding($string) {
         if ($this->detectUTF8($string)) {
             if ( $this->detectLatin1($string)) {
                 return "ISO-8859-1";
@@ -84,8 +85,8 @@ class Mail {
         }
     }
     
+    // QP header encoding using iconv_mime_encode
     private function mime_qp_encode_header_value($string,$charsetin,$charsetout,$crlf) {
-        // QP header encoding using iconv_mime_encode
         $prefs = array(
             'scheme' => 'Q',
             'input-charset' => $charsetin,
