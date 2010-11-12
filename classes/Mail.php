@@ -99,6 +99,55 @@ class Mail {
         return preg_replace('/^HEADER: /', '', iconv_mime_encode("HEADER", $string, $prefs)) ;
     }
 
+    // converts a UTF8-string into HTML entities
+    //  - $utf8:        the UTF8-string to convert
+    //  - $encodeTags:  booloean. TRUE will convert "<" to "&lt;"
+    //  - return:       returns the converted HTML-string
+    // From: http://www.php.net/manual/en/function.htmlentities.php#96648
+    private function utf8tohtml($utf8, $encodeTags) {
+        $result = '';
+        for ($i = 0; $i < strlen($utf8); $i++) {
+            $char = $utf8[$i];
+            $ascii = ord($char);
+            if ($ascii < 128) {
+                // one-byte character
+                $result .= ($encodeTags) ? htmlentities($char) : $char;
+            } else if ($ascii < 192) {
+                // non-utf8 character or not a start byte
+            } else if ($ascii < 224) {
+                // two-byte character
+                $result .= htmlentities(substr($utf8, $i, 2), ENT_QUOTES, 'UTF-8');
+                $i++;
+            } else if ($ascii < 240) {
+                // three-byte character
+                $ascii1 = ord($utf8[$i+1]);
+                $ascii2 = ord($utf8[$i+2]);
+                $unicode = (15 & $ascii) * 4096 +
+                           (63 & $ascii1) * 64 +
+                           (63 & $ascii2);
+                $result .= "&#$unicode;";
+                $i += 2;
+            } else if ($ascii < 248) {
+                // four-byte character
+                $ascii1 = ord($utf8[$i+1]);
+                $ascii2 = ord($utf8[$i+2]);
+                $ascii3 = ord($utf8[$i+3]);
+                $unicode = (15 & $ascii) * 262144 +
+                           (63 & $ascii1) * 4096 +
+                           (63 & $ascii2) * 64 +
+                           (63 & $ascii3);
+                $result .= "&#$unicode;";
+                $i += 3;
+            }
+        }
+        // This function doesn't encode all UTF8 sequences to &#$unicode;
+        // Enable (uncomment) the following kludge to encode left over UTF-8
+        // chars by mb_convert_encoding() the result (needs the mbstring
+        // PHP extension).
+        // return mb_convert_encoding($result, 'HTML-ENTITIES', "UTF-8");
+	return $result;
+    }
+
     //---------------------------------------
     // Send mail
     // 
@@ -119,11 +168,11 @@ class Mail {
         $template = str_replace("{filefrom}", $mailobject["filefrom"], $template);
         $template = str_replace("{fileoriginalname}", $fileoriginalname, $template);
         $template = str_replace("{filename}", $fileoriginalname, $template);	
-        $template = str_replace("{filemessage}", $mailobject["filemessage"], $template);
-        // use mb_convert_encoding() in addition to htmlentities() to allow for multibyte UTF-8 characters
-        $template = str_replace("{htmlfilemessage}", htmlentities(mb_convert_encoding($mailobject["filemessage"],'HTML-ENTITIES', "UTF-8"),null,null,false), $template);
         $template = str_replace("{filesize}", formatBytes($mailobject["filesize"]), $template);
         $template = str_replace("{CRLF}",  $config["crlf"], $template);
+        $template = str_replace("{filemessage}", $mailobject["filemessage"], $template);
+        // Encode the 'filemessage' with a UTF8-safe version of htmlentities to allow for multibyte UTF-8 characters
+        $template = str_replace("{htmlfilemessage}", $this->utf8tohtml($mailobject["filemessage"],TRUE), $template);
 
         $crlf = $config["crlf"];
 

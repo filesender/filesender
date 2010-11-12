@@ -150,6 +150,9 @@ Best regards,
 
 {siteName}{CRLF}{CRLF}--simple_mime_boundary{CRLF}Content-type:text/html; charset={charset}{CRLF}{CRLF}
 <HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset={charset}">
+</HEAD>
 <BODY>
 <P>Dear Sir, Madam,</P>
 <P>The file below has been downloaded from {siteName} by {filefrom}.</P>
@@ -206,6 +209,9 @@ Best regards,
 
 {siteName}{CRLF}{CRLF}--simple_mime_boundary{CRLF}Content-type:text/html; charset={charset}{CRLF}{CRLF}
 <HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset={charset}">
+</HEAD>
 <BODY>
 <P>Dear Sir, Madam,</P>
 <P>The file below has been uploaded to {siteName} by {filefrom} and you have been granted permission to download this file.</P>
@@ -275,6 +281,9 @@ Best regards,
 
 {siteName}{CRLF}{CRLF}--simple_mime_boundary{CRLF}Content-type:text/html; charset={charset}{CRLF}{CRLF}
 <HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset={charset}">
+</HEAD>
 <BODY>
 <P>Dear Sir, Madam,</P>
 <P>Please, find below a voucher which grants access to {siteName}.</P>
@@ -320,6 +329,9 @@ Best regards,
 
 {siteName}{CRLF}{CRLF}--simple_mime_boundary{CRLF}Content-type:text/html; charset={charset}{CRLF}{CRLF}
 <HTML>
+<HEAD>
+<meta http-equiv=\"Content-Type\" content=\"text/html;charset={charset}\">
+</HEAD>
 <BODY>
 Dear Sir, Madam,<BR><BR>A voucher from {filefrom} has been cancelled.<BR><BR>
 	<P>Best regards,</P>
