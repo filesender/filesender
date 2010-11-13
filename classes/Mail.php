@@ -205,7 +205,8 @@ class Mail {
 
         $returnpath = "-r <".$mailobject['filefrom'].">".$crlf;
 
-        $to = "<".$mailobject['fileto'].">".","."<".$mailobject['filefrom'].">";
+        $headers .= "Cc: <" . $mailobject['filefrom'] . ">";
+        $to = "<".$mailobject['fileto'] . ">";
 
 
         if(isset($mailobject['filesubject']) && $mailobject['filesubject'] != ""){
