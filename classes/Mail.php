@@ -160,6 +160,8 @@ class Mail {
         $config = $CFG->loadConfig();
 
         $fileoriginalname = sanitizeFilename($mailobject['fileoriginalname']);
+        $crlf = $config["crlf"];
+
         $template = str_replace("{siteName}", $config["site_name"], $template);
         $template = str_replace("{fileto}", $mailobject["fileto"], $template);
         $template = str_replace("{serverURL}", $config["site_url"], $template);
@@ -169,12 +171,24 @@ class Mail {
         $template = str_replace("{fileoriginalname}", $fileoriginalname, $template);
         $template = str_replace("{filename}", $fileoriginalname, $template);	
         $template = str_replace("{filesize}", formatBytes($mailobject["filesize"]), $template);
-        $template = str_replace("{CRLF}",  $config["crlf"], $template);
-        $template = str_replace("{filemessage}", $mailobject["filemessage"], $template);
-        // Encode the 'filemessage' with a UTF8-safe version of htmlentities to allow for multibyte UTF-8 characters
-        $template = str_replace("{htmlfilemessage}", $this->utf8tohtml($mailobject["filemessage"],TRUE), $template);
+        $template = str_replace("{CRLF}", $crlf, $template);
 
-        $crlf = $config["crlf"];
+        // Replace 'newlines' (various formats) in filemessage with $crlf and count the number of lines
+        $mailobject["filemessage"] = preg_replace("/\r\n|\n|\r/", $crlf , $mailobject["filemessage"], -1, $nlcount);
+
+        // Encode the 'filemessage' with a UTF8-safe version of htmlentities to allow for multibyte UTF-8 characters
+        // Also insert <br /> linebreak tags to preserve intended formatting in the HTML body part
+        $mailobject["htmlfilemessage"] = nl2br($this->utf8tohtml($mailobject["filemessage"],TRUE));
+
+        // Add extra newlines when filemessage contains more than a few words
+        // (to get a better layout in the non HTML body part)
+        if ( $nlcount > 0 ) {
+             $mailobject["filemessage"] = $crlf . $crlf . $mailobject["filemessage"];
+        }
+
+        $template = str_replace("{filemessage}", $mailobject["filemessage"], $template);
+        $template = str_replace("{htmlfilemessage}", $mailobject["htmlfilemessage"], $template);
+
 
         $headers = "MIME-Version: 1.0".$crlf;
         $headers .= "Content-Type: multipart/alternative; boundary=simple_mime_boundary".$crlf;
