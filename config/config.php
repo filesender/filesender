@@ -278,7 +278,8 @@ With this voucher you can upload once one file and make it available for downloa
 
 Issuer: {filefrom}
 Voucher link: {serverURL}?vid={filevoucheruid}
-The file is available until {fileexpirydate} after which it will be automatically deleted
+
+The voucher is available until {fileexpirydate} after which it will be automatically deleted.
 
 Best regards,
 
@@ -328,6 +329,7 @@ $config['defaultvouchercancelled'] = "{CRLF}--simple_mime_boundary{CRLF}Content-
 Dear Sir, Madam,
 
 A voucher from {filefrom} has been cancelled.
+
 Best regards,
 
 {siteName}{CRLF}{CRLF}--simple_mime_boundary{CRLF}Content-type:text/html; charset={charset}{CRLF}{CRLF}
@@ -346,6 +348,7 @@ $config['defaultfilecancelled'] = "{CRLF}--simple_mime_boundary{CRLF}Content-typ
 Dear Sir, Madam,
 
 The file '{filename}' from {filefrom} has been cancelled and is no longer available to download.
+
 Best regards,
 
 {siteName}{CRLF}{CRLF}--simple_mime_boundary{CRLF}Content-type:text/html; charset={charset}{CRLF}{CRLF}
