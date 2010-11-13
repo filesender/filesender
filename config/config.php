@@ -141,10 +141,11 @@ Dear Sir, Madam,
 
 The file below has been downloaded from {siteName} by {filefrom}.
 
-Filename = {fileoriginalname}
-Filesize = {filesize}
-Download link = {serverURL}?vid={filevoucheruid}
-The file is available until {fileexpirydate} after which it will be automatically deleted
+Filename: {fileoriginalname}
+Filesize: {filesize}
+Download link: {serverURL}?vid={filevoucheruid}
+
+The file is available until {fileexpirydate} after which it will be automatically deleted.
 
 Best regards,
 
@@ -199,11 +200,13 @@ Dear Sir, Madam,
 
 The file below has been uploaded to {siteName} by {filefrom} and you have been granted permission to download this file.
 
-Filename = {fileoriginalname}
-Filesize = {filesize}
-Download link = {serverURL}?vid={filevoucheruid}
-The file is available until {fileexpirydate} after which it will be automatically deleted
-Personal message from {filefrom} (optional) = {filemessage}
+Filename: {fileoriginalname}
+Filesize: {filesize}
+Download link: {serverURL}?vid={filevoucheruid}
+
+The file is available until {fileexpirydate} after which it will be automatically deleted.
+
+Personal message from {filefrom} (optional): {filemessage}
 
 Best regards,
 
@@ -259,7 +262,7 @@ Best regards,
 	</TR>
 	<TR>
 		<TD WIDTH=100% BGCOLOR="#e6e6e6">
-			<P><I><pre>{htmlfilemessage}</pre></I></P>
+			<P><I>{htmlfilemessage}</I></P>
 		</TD>
 	</TR>
 </TABLE>
@@ -273,8 +276,8 @@ Dear Sir, Madam,
 Please, find below a voucher which grants access to {siteName}.
 With this voucher you can upload once one file and make it available for download to a group of people.
 
-Issuer = {filefrom}
-Voucher link = {serverURL}?vid={filevoucheruid}
+Issuer: {filefrom}
+Voucher link: {serverURL}?vid={filevoucheruid}
 The file is available until {fileexpirydate} after which it will be automatically deleted
 
 Best regards,
