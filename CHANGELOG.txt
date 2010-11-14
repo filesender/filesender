@@ -3,6 +3,14 @@ Update 2 November 2010
 
 Version Beta 1.17
 	
+	New features
+	FileSender now can handle filenames, subjects and personal messages in non-ISO-8859-1 charsets
+
+	IMPORTANT: a new naming scheme to store files on the server was introduced. Please
+	           run "php <filesenderbase>/scripts/convert-filenames.php" after upgrading
+	           to Beta 0.1.17. If you need to downgrade to a previous version run
+                   "php <filesenderbase>/scripts/convert-filenames.php revert" *before* downgrading.
+
 	Bug Fixes
 	254	Large filesizes (>4GB) are incorrectly presented in flash interface
 	255	Download progress bar stops at 2GB
