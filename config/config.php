@@ -50,7 +50,7 @@ public function loadConfig() {
 	$config['postgresdateformat'] = "Y-m-d H:i:sP";
 	$config['datedisplayformat'] = "DD-MM-YYYY";
 	$config["crlf"] = "\n"; // for email CRLF can be changed to \r\n if required 
-	$config["site_splashtext"] = "FileSender is a secure way to share large files with anyone! Log-in to upload your files or invite people to send you a file.";
+	$config["site_splashtext"] = "FileSender is a secure way to share large files with anyone! Logon to upload your files or invite people to send you a file.";
 
 	$config["max_email_recipients"] = 100; // maximum email addresses allowed to send at once for voucher or file sending, a value of 0 allows unlimited emails.
 	$config["server_drivespace_warning"] = 20; // as a percentage 20 = 20% space left on the storage drive
