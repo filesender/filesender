@@ -60,19 +60,15 @@ if($authvoucher->aVoucher()  || $authsaml->isAuth() ) {
 		$authAttributes = $authsaml->sAuth();
 		$tempFilename .= $authAttributes["eduPersonTargetedID"];	
 	} 
-	logEntry("DEBUG fs_gears_upload: Using ". $tempFilename . "(vid/uid)");
 	
 	// add the file name
 	$tempFilename .=  sanitizeFilename($_GET['n']);
-	logEntry("DEBUG fs_gears_upload: Using ". $tempFilename . "(filename)");
 
 	// add the file size to the filename
 	$tempFilename .=  $_GET['total'];
-	logEntry("DEBUG fs_gears_upload: Using ". $tempFilename . "(filesize)");
 
 	// md5 $tempFilename
 	$tempFilename = md5($tempFilename).'.tmp';
-	logEntry("DEBUG fs_gears_upload: Using ". $tempFilename . "(md5)");
 
 	 
 	if ( !empty( $tempFilename ) ) {
