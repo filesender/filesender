@@ -104,7 +104,17 @@
 			* (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 			* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 			*/
-			 
+			
+			/* -----------------------------------------
+			* flex default package for the filesender application
+			* -----------------------------------------
+			* the way flex communicates with PHP is to use HTTPservices
+			* a HTTP service calls a PHP file and returns a result in a similar fashion to calling a function
+			* typically the results are returned as a string or as JSON data
+			* data sent to PHP using the HTTP services can be a string or JSON
+			* each HTTP service call has a result function to return the service result and an error function to return PHP errors.
+			*/
+			
 			import com.adobe.serialization.json.JSON;
 			
 			import flash.system.Capabilities;
@@ -127,7 +137,7 @@
 			
 			public var fileRef:FileReference = new FileReference();
 			public var request:URLRequest;
-			 
+			
 			[Bindable] public var statsData:String = "";
 			[Bindable] public var currentFileObj:Object  = new Object();
 			[Bindable] public var currentUser:ObjectProxy = new ObjectProxy();  
@@ -136,7 +146,7 @@
 			[Bindable] public var config:Object;
 			[Bindable] public var lang:Object;     
 			[Bindable] public var splash:Object;
- 
+			
 			[Bindable]public var gearsStatus:Boolean;	
 			[Bindable]public var adminStatus:Boolean;
 			[Bindable]public var authStatus:Boolean;	
@@ -152,7 +162,7 @@
 			[Bindable]
 			public var gearsNo:Class;
 			
-			
+			// initial function to setup UI
 			public function main_init():void  
 			{
 				
@@ -167,17 +177,21 @@
 				
 			}	     
 			
+			// HTTPservice result from main_init
+			// returns all config data and SAML authentication information and voucher (if applicable) status in one result
 			public  function resultInit(event:ResultEvent):void
 			{
-						 
-					
+				
+				
 				// Returns all initialisation data   
 				var rawData:String = String(event.result); 
-
+				
+				// try/catch incase PHP returns configuration data did not return as valid JSON - Typically means there is an error in the config file.	
 				try {
 					var tempObj:Object = JSON.decode(rawData);//currentFileObj = JSON.decode(rawData);
 				}
 				catch (erObject:Error) {
+					// display error in config
 					logProcess("Error Loading Config :"+ event.result.toString());
 					currentState = "Message";
 					MessageLabel.htmlText = "There has been an error loading configuration data. Please check Log File<BR><BR>";
@@ -186,24 +200,30 @@
 					}
 					return;	 
 				} 
-				
+				// load language object
 				lang = JSON.decode(tempObj["lang"]);					 	// Language	 
 				
+				// check gears status (this calls a javascript function that checks if google gears is active for this client)
 				gearsActive(gearsStatus);
 				
-				currentUser.name = "Guest";  // default name incase voucer
+				// default name incase voucher 
+				currentUser.name = "Guest";  
 				
-				statsData = tempObj["statsdata"].toString();	// Stats
+				// load statistics information string
+				statsData = tempObj["statsdata"].toString();	
+				
+				// load splash screen string
 				splash = JSON.decode(tempObj["splash"]);	
 				
-				//Set Auth Type
+				// Set Auth Type
+				// check if NOT saml or voucher authenticated - defaults to logon
 				if(!tempObj["samlauth"] && !tempObj["voucherauth"]) 
 				{
 					authStatus = false;
 					
 					currentState = "Message";
 					
-					// check these ????????????
+					// setup UI for logon
 					btnVouchers.visible = false;
 					btnNew.visible = false;
 					btnMyFiles.visible = false; 
@@ -217,6 +237,7 @@
 					authStatus = true;
 				}
 				
+				// if config returned as false then there is an error in config
 				if(tempObj["config"] == "false") {
 					logProcess("Error in Configuaration :"+ event.result.toString());
 					currentState = "Message";
@@ -224,11 +245,11 @@
 					btnLogon.visible = false;
 					return;
 				} else {
-					// config data not foundreturned to read config data
+					// load config object
 					config = JSON.decode(tempObj["config"]);
 				}
 				
-				
+				// Voucher UI setup
 				if(tempObj["voucherauth"]) {
 					//logProcess("Voucher is Authenticated");
 					var urlRedirect:URLRequest = new URLRequest("invalidvoucher.php"); 
@@ -251,7 +272,7 @@
 						//navigateToURL(urlRedirect,"_parent");  
 					}
 				}
-				 
+				
 				// if SAMLAuth
 				if(tempObj["samlauth"]) {
 					//logProcess("SAML is Authenticated");
@@ -259,12 +280,15 @@
 					// load user data
 					var tempUser:Object = JSON.decode(tempObj["authUser"]);
 					
+					// if any of the information below is not available then there has been an issue providing data from SAML
 					try {
-					currentUser.email = tempUser.email.toString();       
-					currentUser.name = tempUser.cn.toString();   
-					currentUser.SessionID =  tempUser.SessionID.toString();
-					currentUser.eduPersonTargetedID = tempUser.eduPersonTargetedID.toString();
+						currentUser.email = tempUser.email.toString();       
+						currentUser.name = tempUser.cn.toString();   
+						currentUser.SessionID =  tempUser.SessionID.toString();
+						currentUser.eduPersonTargetedID = tempUser.eduPersonTargetedID.toString();
 					}
+					
+					// Notify user that there is an error in IDP provided information
 					catch(erObject:Error) 
 					{
 						adminStatus = false;
@@ -280,11 +304,11 @@
 					btnMyFiles.visible = true;
 					
 					// check if admin
-					
 					if(tempObj["authIsAdmin"]) { 
 						adminStatus = true;  
 					}     
 					
+					// load correct state if google gears is enabled - load gears state - no google gears then load flash upload state
 					if(gearsStatus == true) 	
 					{
 						currentState="gearsUpload";
@@ -295,7 +319,7 @@
 				logProcess("user Logged on");
 			}
 			
-
+			// call to javascript to get the current voucher id (vid) from the url if it exists
 			public function getVoucher():void
 			{
 				addEventListener(StateChangeEvent.CURRENT_STATE_CHANGE,handleStateChange); 
@@ -307,24 +331,29 @@
 					
 				} else {
 					// no external interface so cannot proceed
-					// suggets javascript is not enable on browser
+					// suggests javascript is not enabled on browser
 					
 					fatalError("Javascript not enabled - you cannot use file Sender"); 
 				}
 			}
 			
+			// HTTP service call for voucher data
 			public function getFile():void
 			{
 				var objSend:Object = new Object();
 				objSend.call = "getFile";
 				file_main.send(objSend);
 			}
+			
+			// Redirect for logon to SimpleSAML
 			public  function resultLogon(event:ResultEvent):void
 			{
 				var urlRedirect:URLRequest = new URLRequest( event.result.toString()); 
 				navigateToURL(urlRedirect,"_parent");  
 				
 			}
+			
+			// redirect to aboutLink
 			public  function aboutLink():void
 			{
 				var urlRedirect:URLRequest = new URLRequest(splash.aboutURL);  
@@ -332,6 +361,7 @@
 				
 			}
 			
+			// redirect to help link
 			public  function helpLink():void 
 			{
 				
@@ -339,13 +369,18 @@
 				navigateToURL(urlRedirect,"_blank");   	
 			}
 			
+			// HTTPService result from voucher call 
+			// this function checks the voucher status
+			// "available" - goes to download state to allow user to download the file
+			// "voucher" - user can upload a file using the voucher
+			// 
 			public  function resultFile(event:ResultEvent):void
 			{
-		
+				
 				var rawData:String = String(event.result);
 				currentFileObj = JSON.decode(rawData);
 				currentFileObj = currentFileObj[0];
-				//status of file 
+				// status of file 
 				// - available then go to download page
 				// - closed - show voucher unavailable
 				
@@ -372,9 +407,10 @@
 						currentState="Upload";
 					}  
 					return;	  
-					   
+					
 				} 
-				 
+				
+				// display closed messages
 				if(status == "Closed" && fileName != "") 
 				{
 					currentState = "Message";
@@ -395,12 +431,13 @@
 				}	
 			}
 			
+			// HTTPService has an error - this is a server error and PHP would log an error
 			public  function resultError(event:FaultEvent):void
 			{
 				Alert.show("ERROR:"+event.fault.toString());
 			}
 			
-			
+			// check if vid from javascript is returned
 			public function checkVoucher(vid:String,gStatus:Boolean):void
 			{ 
 				
@@ -417,12 +454,9 @@
 				var objSend1:Object = new Object();
 				objSend1.call = "getInit"; 
 				init_main.send(objSend1); 
-				// them do gears
-				//getUrlParamateres();
-				//main_test();
 			}
-			 
 			
+			// setup gears UI
 			public	function gearsActive(gears:Boolean):void
 			{
 				// change browse and upload to use gears function
@@ -433,13 +467,14 @@
 				}
 				else 
 				{
-					// use standar flash filereference upload
+					// use standard flash filereference upload
 					gearsImage.source = gearsNo;  
 					gearsImage.toolTip = "NOT Installed: Install Gears to allow uploading of extremely large files. http://gears.google.com/";
 					logProcess("NO Gears");
 				} 
 			}
 			
+			// redirect for gears install link
 			public	function installGears():void
 			{   
 				// goto gears install URL
@@ -447,7 +482,7 @@
 				navigateToURL(urltest,"_blank");  
 			}
 			
-			 
+			// whenever a state changes initialise the states UI  
 			public function handleStateChange(event:StateChangeEvent) :void
 			{
 				//
@@ -491,13 +526,7 @@
 				} 
 			}
 			
-			/* private function reloadStatistics():void
-			{
-			
-			}  */
-			
-			
-			
+			// when upload complete - update UI
 			public function uploadStopped():void 
 			{
 				btnAdmin.enabled = true;
@@ -508,6 +537,7 @@
 				
 			} 
 			
+			// when upload started - update UI
 			public function uploadStarted():void 
 			{
 				btnAdmin.enabled = false;
@@ -518,9 +548,10 @@
 				
 			} 
 			
+			// Not used - depricated
 			public function returnFiles(event:ResultEvent):void 
 			{
-			
+				
 				if (event.result.toString() == ""){ 
 					currentState="Message";
 					MessageLabel.text = "This voucher is no longer valid"; 
@@ -556,7 +587,7 @@
 			
 			
 			// ---------
-			// FAULT Handler
+			// FAULT Handler for logging HTTP requests
 			// ---------
 			public function faultHandler(event:FaultEvent):void 
 			{
@@ -564,6 +595,7 @@
 				Alert.show("Fault",  event.fault.toString());
 			}
 			
+			// called by logon button
 			public function logon():void
 			{
 				logProcess("Attempt Logon");
@@ -572,6 +604,7 @@
 				logon_main.send(objSend);		
 			}
 			
+			// not authenticated - update UI and display relevant message
 			public function noAuth(msg:String):void
 			{
 				authStatus = false;
@@ -585,7 +618,8 @@
 				btnMyFiles.visible = false;
 				displayUserName.visible = false;	
 			}
-			 
+			
+			// called by logoff button
 			public function logoff(msg:String):void 
 			{
 				//noAuth(msg);
@@ -594,6 +628,7 @@
 				logon_main.send(objSend);
 			} 
 			
+			// recheck that user is still authenticated before allowing new upload
 			public function newUpload():void
 			{ 
 				// check if authenticated before opening upload pages
@@ -602,6 +637,7 @@
 				checkAuth.send(objSend);
 			} 
 			
+			// if HTTPService - returns admin then update UI
 			public function resultAuthAdmin(event:ResultEvent):void 
 			{
 				
@@ -616,32 +652,36 @@
 					noAuth(lang.notAuthenticated);
 				}
 			} 
+			
+			// if HTTPService - returns authenticated then update UI
 			public function resultAuth(event:ResultEvent):void 
 			{
 				//Alert.show(event.result.toString());
 				if(event.result.toString() == "1") {
-				if(gearsStatus)
-				{
-					currentState="gearsUpload";	
-					upload_gears.init();
-				} else {
-					currentState="Upload";	
-					upload_std.init();	
-				}  
+					if(gearsStatus)
+					{
+						currentState="gearsUpload";	
+						upload_gears.init();
+					} else {
+						currentState="Upload";	
+						upload_std.init();	
+					}  
 				} else {
 					noAuth(lang.notAuthenticated);
 				}
 			}
 			
-			
+			// check auth before allowing admin
 			public function adminClick():void
 			{
 				
 				var objSend:Object = new Object();
 				objSend.call = "getAuthAdmin";
 				checkAuthAdmin.send(objSend);
-			
+				
 			}
+			
+			// fatal error display function
 			public function fatalError(error:String):void
 			{
 				logProcess("Error : " + error.toString());
@@ -649,10 +689,11 @@
 				MessageLabel.text = error;
 			}
 			
-			
+			// corrects keyboard characters entered when using linux
+			// use a listener to check what characters a pressed and updates text as it is typed in
 			public function correctLinux(e:Event):void
 			{
-				// if linux then fix Norwegian keyboard charachters
+				// if linux then fix Norwegian keyboard characters
 				
 				if(Capabilities.os.indexOf("Linux") == 0) 
 				{
@@ -683,7 +724,7 @@
 					input = input.split(String.fromCharCode(3) + "]").join("]");
 					input = input.split(String.fromCharCode(3) + "Â´").join("´");
 					input = input.split(String.fromCharCode(3) + "Â`").join("`");
-					// need to do the pound
+					// need to do pound
 					
 					input = input.split(String.fromCharCode(3) + "~").join("~");
 					//input = input.split(" ").join(""); 
@@ -691,12 +732,12 @@
 				}
 			}  
 			
-			// log client process process
+			// log client process
 			public function logProcess(message:String):void
 			{
 				
 				// force log to keep session alive
-								
+				
 				// check if client logging is on
 				if((splash && splash.client_specific_logging) || message == "Keep Session Alive - Flash Upload" ) 
 				{
@@ -728,13 +769,14 @@
 				}
 			}
 			
+			// HTTPRequest result from log
 			public function resultlog(event:ResultEvent):void 
 			{
 				// return from writing process log
 			} 
-			 
-	]]> 
-		  
+			
+		]]> 
+		
 	</mx:Script>   
 	<mx:HTTPService id="init_main" url="../fs_main.php{URLvid}" useProxy="false" method="POST" resultFormat="text" result="resultInit(event)" fault="resultError(event)"/> 
 	<mx:HTTPService id="checkAuth" url="../fs_main.php{URLvid}" useProxy="false" method="POST" resultFormat="text" result="resultAuth(event)" fault="resultError(event)"/> 
@@ -742,7 +784,7 @@
 	<mx:HTTPService id="file_main" url="../fs_main.php{URLvid}" useProxy="false" method="POST" resultFormat="text" result="resultFile(event)" fault="resultError(event)"/>  
 	<mx:HTTPService id="logon_main" url="../fs_main.php{URLvid}" useProxy="false" method="POST" resultFormat="text" result="resultLogon(event)" fault="resultError(event)"/>     
 	<mx:HTTPService id="log_process" url="../fs_main.php{URLvid}" useProxy="false" method="POST" resultFormat="text" result="resultlog(event)" fault="faultHandler(event)"/>     
-	 
+	
 	<mx:NumberFormatter id="numberFormatter" precision="2" useThousandsSeparator="true" useNegativeSign="true"/>
 	<mx:DateFormatter id="df" formatString="{config.datedisplayformat}"/>
 	<mx:DateFormatter id="df_pg" formatString="{config.datedisplayformat}"/>
