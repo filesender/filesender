@@ -4,7 +4,7 @@ Update 2 November 2010
 Version Beta 1.17
 	
 	New features
-	FileSender now can handle filenames, subjects and personal messages in non-ISO-8859-1 charsets
+	FileSender now can handle filenames, subjects and personal messages in non-US-ASCII charsets
 
 	IMPORTANT: a new naming scheme to store files on the server was introduced. Please
 	           run "php <filesenderbase>/scripts/convert-filenames.php" after upgrading
