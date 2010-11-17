@@ -69,12 +69,7 @@ if($authvoucher->aVoucher() || $authsaml->isAuth()) {
     $uploadfolder =  $config["site_filestore"];
 
 
-    logEntry("DEBUG fs_uploadit: Original filename from flex: ". $_FILES['Filedata']['name'] );
-    logEntry("DEBUG fs_uploadit: json encoded filename: ". json_encode($_FILES['Filedata']['name']) );
-    logEntry("DEBUG fs_uploadit: trimmed json encoded filename: ". trim(json_encode($_FILES['Filedata']['name']),"\"") );
     $correctfilename = preg_replace_callback('/\\\\u([0-9a-fA-F]{4})/','upperHexNumber',trim(json_encode($_FILES['Filedata']['name']),"\""));
-    logEntry("DEBUG fs_uploadit: Corrected filename from flex: ". $correctfilename );
-    logEntry("DEBUG fs_uploadit: Sanitized filename from flex: ". sanitizeFilename($correctfilename) );
 
     // move file to correct uploadfolder destination
     $result = move_uploaded_file($_FILES['Filedata']['tmp_name'], $uploadfolder.ensureSaneFileUid($_POST['fid']).".tmp");

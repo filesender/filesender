@@ -167,13 +167,9 @@ if (isset($_POST['call'])) {
 
             // returns  file information as json array
         case "fileInfo":
-            logEntry("DEBUG fileInfo: jsonSendData = " . $_POST['jsonSendData'] );
             $jsonString = rawurldecode($_POST['jsonSendData']);
-            logEntry("DEBUG fileInfo: \$jsonString = " . $jsonString . " - Detected encoding: " . mb_detect_encoding($jsonString) . ". ");
             $jsonString = utf8_encode($jsonString);
-            logEntry("DEBUG fileInfo: \$jsonString(UTF8) = " . $jsonString );
             $data = json_decode($jsonString, true);
-            logEntry("DEBUG fileInfo: \$data = " . print_r($data,true) );
             echo $functions->getFile($data);
             break;
 
