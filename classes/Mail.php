@@ -46,109 +46,6 @@ class Mail {
     } 
 
     //---------------------------------------
-    // Functions to handle international characters
-    // 
-
-    // Simple check for ISO-8859-1
-    private function detectLatin1($string) {
-        return (preg_match("/^[\\x00-\\xFF]*$/u", $string) === 1);
-    }
-    
-    // Simple check for UTF-8
-    // Returns true if $string is UTF-8 and false otherwise.
-    // From http://w3.org/International/questions/qa-forms-utf-8.html
-    // Modified to only fire on the non-ASCII multibyte chars (courtesy
-    // of chris AT w3style.co DOT uk)
-    private function detectUTF8($string) {
-        return preg_match('%(?:
-        [\xC2-\xDF][\x80-\xBF]        # non-overlong 2-byte
-        |\xE0[\xA0-\xBF][\x80-\xBF]               # excluding overlongs
-        |[\xE1-\xEC\xEE\xEF][\x80-\xBF]{2}      # straight 3-byte
-        |\xED[\x80-\x9F][\x80-\xBF]               # excluding surrogates
-        |\xF0[\x90-\xBF][\x80-\xBF]{2}    # planes 1-3
-        |[\xF1-\xF3][\x80-\xBF]{3}                  # planes 4-15
-        |\xF4[\x80-\x8F][\x80-\xBF]{2}    # plane 16
-        )+%xs', $string);
-    }
-    
-    // detect the required charset MIME encoding for $string
-    // only distinguishes between US-ASCII, ISO-8859-1 and UTF-8
-    private function detect_char_encoding($string) {
-        if ($this->detectUTF8($string)) {
-            if ( $this->detectLatin1($string)) {
-                return "ISO-8859-1";
-            } else {
-                return "UTF-8";
-            }
-        } else { 
-            return "US-ASCII";
-        }
-    }
-    
-    // QP header encoding using iconv_mime_encode
-    private function mime_qp_encode_header_value($string,$charsetin,$charsetout,$crlf) {
-        $prefs = array(
-            'scheme' => 'Q',
-            'input-charset' => $charsetin,
-            'output-charset' => $charsetout,
-            'line-length' => 76,
-            'line-break-chars' => $crlf,
-        ); 
-        // iconv_mime_encode requires a header name so strip it including
-        // the ": "
-        return preg_replace('/^HEADER: /', '', iconv_mime_encode("HEADER", $string, $prefs)) ;
-    }
-
-    // converts a UTF8-string into HTML entities
-    //  - $utf8:        the UTF8-string to convert
-    //  - $encodeTags:  booloean. TRUE will convert "<" to "&lt;"
-    //  - return:       returns the converted HTML-string
-    // From: http://www.php.net/manual/en/function.htmlentities.php#96648
-    private function utf8tohtml($utf8, $encodeTags) {
-        $result = '';
-        for ($i = 0; $i < strlen($utf8); $i++) {
-            $char = $utf8[$i];
-            $ascii = ord($char);
-            if ($ascii < 128) {
-                // one-byte character
-                $result .= ($encodeTags) ? htmlentities($char) : $char;
-            } else if ($ascii < 192) {
-                // non-utf8 character or not a start byte
-            } else if ($ascii < 224) {
-                // two-byte character
-                $result .= htmlentities(substr($utf8, $i, 2), ENT_QUOTES, 'UTF-8');
-                $i++;
-            } else if ($ascii < 240) {
-                // three-byte character
-                $ascii1 = ord($utf8[$i+1]);
-                $ascii2 = ord($utf8[$i+2]);
-                $unicode = (15 & $ascii) * 4096 +
-                           (63 & $ascii1) * 64 +
-                           (63 & $ascii2);
-                $result .= "&#$unicode;";
-                $i += 2;
-            } else if ($ascii < 248) {
-                // four-byte character
-                $ascii1 = ord($utf8[$i+1]);
-                $ascii2 = ord($utf8[$i+2]);
-                $ascii3 = ord($utf8[$i+3]);
-                $unicode = (15 & $ascii) * 262144 +
-                           (63 & $ascii1) * 4096 +
-                           (63 & $ascii2) * 64 +
-                           (63 & $ascii3);
-                $result .= "&#$unicode;";
-                $i += 3;
-            }
-        }
-        // This function doesn't encode all UTF8 sequences to &#$unicode;
-        // Enable (uncomment) the following kludge to encode left over UTF-8
-        // chars by mb_convert_encoding() the result (needs the mbstring
-        // PHP extension).
-        // return mb_convert_encoding($result, 'HTML-ENTITIES', "UTF-8");
-	return $result;
-    }
-
-    //---------------------------------------
     // Send mail
     // 
     public function sendemail($mailobject,$template){
@@ -178,7 +75,7 @@ class Mail {
 
         // Encode the 'filemessage' with a UTF8-safe version of htmlentities to allow for multibyte UTF-8 characters
         // Also insert <br /> linebreak tags to preserve intended formatting in the HTML body part
-        $mailobject["htmlfilemessage"] = nl2br($this->utf8tohtml($mailobject["filemessage"],TRUE));
+        $mailobject["htmlfilemessage"] = nl2br(utf8tohtml($mailobject["filemessage"],TRUE));
 
         // Add extra newlines when filemessage contains more than a few words
         // (to get a better layout in the non HTML body part)
@@ -222,13 +119,13 @@ class Mail {
         }
         // Check needed encoding for $subject
         // Assumes input string is UTF-8 encoded
-        $subj_encoding = $this->detect_char_encoding($subject) ;
+        $subj_encoding = detect_char_encoding($subject) ;
         if ($subj_encoding != 'US-ASCII') {
-            $subject = $this->mime_qp_encode_header_value($subject,'UTF-8',$subj_encoding,$crlf) ;
+            $subject = mime_qp_encode_header_value($subject,'UTF-8',$subj_encoding,$crlf) ;
         }
 
         // Check and set the needed encoding for the body and convert if necessary
-        $body_encoding = $this->detect_char_encoding($template) ;
+        $body_encoding = detect_char_encoding($template) ;
         $template = str_replace("{charset}", $body_encoding , $template);
         if ( $body_encoding == 'ISO-8859-1' ) {
             $template = iconv("UTF-8", "ISO-8859-1", $template);

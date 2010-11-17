@@ -34,6 +34,7 @@ $filesenderbase = dirname(dirname(__FILE__));
 require_once("$filesenderbase/config/config.php");
 require_once("$filesenderbase/includes/ErrorHandler.php");
 require_once("$filesenderbase/includes/EnsureHTTPS.php");
+require_once("$filesenderbase/includes/UTF8.php");
 require_once("$filesenderbase/classes/Functions.php");
 require_once("$filesenderbase/classes/DB.php");
 require_once("$filesenderbase/classes/AuthSaml.php");
