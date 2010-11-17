@@ -72,6 +72,11 @@ $file=$config['site_filestore'].$fileuid.".tmp";
 // check file physically exists before downloading
 if(file_exists($file) && is_file($file))
 {
+        // Check the encoding for the filename and convert if necessary
+        if (detect_char_encoding($fileoriginalname) == 'ISO-8859-1') { 
+            $fileoriginalname = iconv("UTF-8", "ISO-8859-1", $fileoriginalname);
+        }
+
 	// set download file headers
 	logEntry("Download: Start Downloading - ".$file);
 	header("Content-Type: application/force-download");
