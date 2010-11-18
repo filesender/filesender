@@ -1,0 +1,675 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute"  width="790" height="420" title="{lang.Upload}" minHeight="420" minWidth="790">
+	
+	<mx:Script>
+		<![CDATA[
+			
+			
+			/*
+			*  Filsender www.filesender.org
+			*      
+			*  Copyright (c) 2009-2010, Aarnet, HEAnet, UNINETT
+			* 	All rights reserved.
+			*
+			* 	Redistribution and use in source and binary forms, with or without
+			*	modification, are permitted provided that the following conditions are met:
+			*	* 	Redistributions of source code must retain the above copyright
+			*   		notice, this list of conditions and the following disclaimer.
+			*   	* 	Redistributions in binary form must reproduce the above copyright
+			*   		notice, this list of conditions and the following disclaimer in the
+			*   		documentation and/or other materials provided with the distribution.
+			*   	* 	Neither the name of Aarnet, HEAnet and UNINETT nor the
+			*   		names of its contributors may be used to endorse or promote products
+			*   		derived from this software without specific prior written permission.
+			*
+			* THIS SOFTWARE IS PROVIDED BY Aarnet, HEAnet and UNINETT ''AS IS'' AND ANY
+			* EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+			* WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+			* DISCLAIMED. IN NO EVENT SHALL Aarnet, HEAnet or UNINETT BE LIABLE FOR ANY
+			* DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+			* (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+			* LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+			* ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+			* (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+			* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+			*/
+			
+			/* -----------------------------------------
+			* flex - upload file using flash filereference
+			* -----------------------------------------
+			* 
+			*/
+			
+			import com.adobe.serialization.json.JSON;
+			import flash.events.TimerEvent;
+			import flash.utils.Timer;
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.core.FlexGlobals;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			import mx.utils.UIDUtil;
+			import flash.utils.Timer;
+			import flash.events.TimerEvent;
+			import org.ricoshae.core.*;
+			
+			[Bindable] public var currentFileObj:Object  = new Object();
+			[Bindable] public var currentUserObj:Object = new Object();
+			[Bindable] public var config:Object;
+			[Bindable] public var lang:Object;
+			[Bindable] public var displayprogressBar:Boolean = false;
+			[Bindable] public var URLvid:Object;
+			
+			public var maxDays:Number;
+			public var currentDate:Date = new Date();
+			public var fileRef:FileReference = new FileReference();
+			public var request:URLRequest;
+			public var currentFileUID:String;	
+			public var urlVars:URLVariables;
+			public var dateRange:Object;
+			public var tm:Timer;
+			[Bindable]
+			public var speedString:String;
+			public var speed:Number = 0;
+			public var currbytes:Number = 0;
+			public var lastbytes:Number = 0;
+			public var tempFromVoucher:String; // Temp if voucher is cancelled to return correct to and from fields
+			public var myTimer:Timer = new Timer(600000, 0);  // 600000 sends keep alive every 10 minutes
+			
+			// init UI
+			public function init():void
+			{
+				// get all global variables
+				lang = FlexGlobals.topLevelApplication.lang;
+				currentUserObj = FlexGlobals.topLevelApplication.currentUser; 
+				config = FlexGlobals.topLevelApplication.config;
+				URLvid = FlexGlobals.topLevelApplication.URLvid;
+				
+				FlexGlobals.topLevelApplication.logProcess("---------------------------------------");
+				FlexGlobals.topLevelApplication.logProcess("Initialise Flash Upload");
+				
+				// display debug text
+				if( config["debug"] == true) 
+				{
+					textarea1.visible = true;	
+				} else 
+				{
+					textarea1.visible = false;
+				}
+				
+				currentFileObj = new Object();
+				currentFileObj = FlexGlobals.topLevelApplication.currentFileObj;
+				
+				uploadBtn.visible = true;
+				cancelBtn.visible = false;
+				btUpload.visible = false;
+				speedLabel.text  = "";
+				fileRef = new FileReference();
+				
+				// check if this is a voucher
+				displayprogressBar = false;
+				
+				// check if voucher
+				if(currentFileObj.filestatus == "Voucher")
+				{
+					currentFileObj = FlexGlobals.topLevelApplication.currentFileObj;
+					tempFromVoucher = currentFileObj.filefrom;	
+					FileFrom.text = currentFileObj.fileto;			
+					FileTo.text = ""; 
+					selectedFilename.text = "";
+					selectedFileSize.text = "";
+				} else {
+					FlexGlobals.topLevelApplication.currentFileObj = new Object();
+					currentFileObj = FlexGlobals.topLevelApplication.currentFileObj;
+					currentFileObj.fileuid = UIDUtil.createUID();
+					currentFileObj.filevoucheruid = UIDUtil.createUID();
+					FileFrom.text = currentUserObj.email;	
+				}
+				
+				// Set default expiry date
+				var d:Date=new Date();
+				FileExpiryDate.selectedDate = new Date(d.fullYear,d.month, d.date+parseInt(config.default_daysvalid.toString() ));				
+				dateRange = new Object();
+				dateRange["rangeStart"] = new Date(currentDate.fullYear,currentDate.month, currentDate.date + 1); // disable parevious and todays date
+				dateRange["rangeEnd"] = new Date(d.fullYear,d.month, d.date+parseInt(config.default_daysvalid.toString()));
+				FileExpiryDate.selectableRange= dateRange;
+				
+				// timer for upload speed
+				tm = new Timer( 1000 );
+				tm.addEventListener( TimerEvent.TIMER, updateSpeed );
+				
+				// keepalive handler
+				myTimer.addEventListener("timer", keepaliveHandler);
+			}
+			
+			// sends request to keep alive to log - if logging is off then there is no message recorded 
+			public function keepaliveHandler(event:TimerEvent):void {
+				FlexGlobals.topLevelApplication.logProcess("Keep Session Alive - Flash Upload");
+			}
+			
+			// update upload speed
+			private function updateSpeed( e:TimerEvent ):void{
+				speed = Math.round( (currbytes - lastbytes)/1024 );
+				lastbytes = currbytes;
+				if(currbytes) {
+					speedString = readablizeBytes(speed)+'/s';
+				}
+			}
+			
+			// validate email address
+			public function vaildateToEmail():void
+			{
+				if(FS_Validation.isValidEmailList(currentFileObj.fileto,","))
+				{
+					btUpload.enabled = true;
+				} else {
+					Alert.show(lang.E018,lang.E000); // check email address
+				}	
+			}
+			
+			// start the upload process
+			public function doupload():void 
+			{
+				FlexGlobals.topLevelApplication.logProcess("Start Upload - Flash Upload");
+				if(currentFileObj.fileto == null || currentFileObj.fileto == ""){
+					Alert.show(lang.E018,lang.E000);  // Enter an email address
+					return 		
+				}	
+				
+				// error if no file selected
+				if(fileRef == null){
+					FlexGlobals.topLevelApplication.logProcess("Need to browse for a file - Flash Upload");
+					Alert.show(lang.E019,lang.E000); // browse for a file to upload
+					return ;		
+				}
+				
+				// check file size 
+				if(fileRef.size == 0 )
+				{ 
+					FlexGlobals.topLevelApplication.logProcess("File Size is 0 - Flash Upload");
+					Alert.show(lang.E019,lang.E019); 
+					return ;
+				} 
+				else  
+				{
+					if(parseInt(fileRef.size.toString()) > parseInt(config.max_flash_upload_size))
+					{
+						FlexGlobals.topLevelApplication.logProcess("File Size too Large (" + fileRef.size.toString() + ") - Flash Upload");
+						Alert.show(lang.E020+ " (Max "+ readablizeBytes(config.max_flash_upload_size) + ")",lang.E000);
+						return ;		 
+					}	  
+				}    
+				
+				// message - AUP selected
+				if(config.AuP &&   !AuPCB.selected) 
+				{
+					FlexGlobals.topLevelApplication.logProcess("AUP not selected - Flash Upload");
+					Alert.show(lang.E021,lang.E000); 
+					return ;	
+				}
+				
+				// check if too many email addresses
+				var temptext:String = currentFileObj.fileto; 
+				var pattern:RegExp = /,/gi;
+				temptext = temptext.replace(pattern," ");
+				pattern = /;/gi;
+				temptext = temptext.replace(pattern," ");
+				var params:Array = temptext.split(' ');
+				
+				// check number of emails
+				if(config.max_email_recipients != 0 && params.length > config.max_email_recipients)
+				{
+					FlexGlobals.topLevelApplication.logProcess("Too many email accounts - Flash Upload");
+					Alert.show(lang.E022 + config.max_email_recipients,lang.E000);
+					return;
+				}
+				
+				// validate emails
+				if(FS_Validation.isValidEmailList(currentFileObj.fileto,',')) 
+				{
+					// setup all requirements for flash upload
+					urlVars = new URLVariables();
+					urlVars.fid = currentFileObj.fileuid;
+					urlVars.vid = currentFileObj.filevoucheruid;
+					var sessionID:String = "";
+					if(currentFileObj.SessionID) {
+						sessionID = currentFileObj.SessionID.toString();
+					} 
+					if(FlexGlobals.topLevelApplication.currentUser.SessionID)
+					{
+						sessionID =FlexGlobals.topLevelApplication.currentUser.SessionID.toString();
+					}
+					request = new URLRequest(config.site_url + "fs_uploadit.php?s=" + sessionID);
+					request.data = urlVars;
+					request.method=URLRequestMethod.POST;
+					
+					// Alert.show(request.url.toString());
+					// hide button
+					uploadBtn.visible = false;
+					btUpload.visible = false;
+					
+					// start keep alive timer
+					myTimer.start();
+					
+					FlexGlobals.topLevelApplication.uploadStarted(); 
+					try { 
+						// upload file 
+						displayprogressBar = true;
+						cancelBtn.visible = true;
+						fileRef.upload(request);
+						currentFileObj.fileoriginalname = fileRef.name;
+						currentFileObj.filesize = fileRef.size;
+						textarea1.text = "Uploading " + fileRef.name + "...";
+						tm.start();
+						FlexGlobals.topLevelApplication.logProcess("Start Upload - Flash Upload");
+					}
+					catch (error:Error) {
+						FlexGlobals.topLevelApplication.logProcess("Upload Error " + error.toString() + " - Flash Upload");
+						Alert.show(lang['E016']);
+					}
+				} else {
+					// show email error
+					Alert.show(lang['E018']); // check email address
+				}
+			}
+			
+			// handler for file open
+			public function openHandler(event:Event):void {
+				
+			}
+			
+			// dispatched during file upload
+			public function progressHandler(event:ProgressEvent):void 
+			{
+				pgBar.setProgress(event.bytesLoaded-1, event.bytesTotal);
+				currbytes = event.bytesLoaded;  
+				FlexGlobals.topLevelApplication.logProcess("Upload Progress [" + currbytes + " bytes] - Flash Upload");
+			}
+			
+			// Following dispatched when the file has been given to the server script
+			// this event does not receive a response from the server
+			// use DataEvent.UPLOAD_COMPLETE_DATA event as shown in uploadCompleteHandler
+			public function completeHandler(event:Event):void 
+			{
+				FlexGlobals.topLevelApplication.logProcess("File Uploaded - Flash Upload");
+				textarea1.text += "\nFile uploaded"; 
+				textarea1.text += "\nMoving File"; 
+				speedLabel.text  = "";
+			} 
+			
+			// Following dispatched when a file upload has completed
+			// this event can contain a response from the server as opposed to the Event.COMPLETE event
+			// the PHP upload file can send back information if we want it to
+			// the event.data and event.text properties would contain a response if any
+			public function uploadCompleteHandler(event:DataEvent):void 
+			{
+				var uploadResult:String = event.data.toString();
+				FlexGlobals.topLevelApplication.logProcess(uploadResult + " - Flash Upload");
+				if(uploadResult == "moveOk") 
+				{
+					textarea1.text += "\n File Moved"; 
+					fileCompleted();
+					
+					return;
+				}
+				
+				if(uploadResult == "moveError") 
+				{
+					Alert.show(lang['E016'],lang['E017']);
+					return;
+				} 	
+				
+				if(uploadResult == "invalidAuth") 
+				{
+					FlexGlobals.topLevelApplication.uploadStopped(); 
+					FlexGlobals.topLevelApplication.currentState = "Message";
+					FlexGlobals.topLevelApplication.MessageLabel.text = lang['E023'];
+					return;
+				} 			
+				Alert.show(lang['E016'],lang['E017']);
+			}
+			
+			// setup file reference handler
+			public function uploadit():void 
+			{
+				fileRef = new FileReference();
+				selectedFilename.text = "";
+				selectedFileSize.text = "";
+				btUpload.visible = false;
+				
+				// Listen for the upload events
+				// http://livedocs.adobe.com/flex/3/html/17_Networking_and_communications_7.html
+				
+				fileRef.addEventListener(Event.SELECT, selectHandler);
+				fileRef.addEventListener(Event.OPEN, openHandler);
+				fileRef.addEventListener(ProgressEvent.PROGRESS, progressHandler);
+				fileRef.addEventListener(Event.COMPLETE, completeHandler);
+				fileRef.addEventListener(DataEvent.UPLOAD_COMPLETE_DATA, uploadCompleteHandler);
+				fileRef.addEventListener(SecurityErrorEvent.SECURITY_ERROR, httpSecurityErrorHandler);
+				fileRef.addEventListener(HTTPStatusEvent.HTTP_STATUS, httpErrorHandler);
+				fileRef.addEventListener(IOErrorEvent.IO_ERROR, httpIOErrorHandler);
+				
+				// browse for the file to upload
+				// when user selects a file the select handler is called
+				try {
+					var success:Boolean = fileRef.browse();
+				}
+				catch (error:Error) {
+					Alert.show(lang["E024"]);
+				}
+			}       
+			
+			// completed file uploaded
+			public function fileCompleted():void
+			{
+				tm.stop();
+				// stop keep alive timer
+				myTimer.stop();
+				if (currentFileObj.fileto != null)
+				{
+					var temptext:String = currentFileObj.fileto;
+					
+					var params:Array = temptext.split(',');
+					
+					if(currentFileObj.filestatus == "Voucher") 
+					{
+						currentFileObj.filestatus = "Closed";
+						
+						var objSend:Object = new Object();
+						objSend.call = "closeVoucher";
+						var dataArray:ArrayCollection = new ArrayCollection();
+						objSend.svid = currentFileObj.fileid;
+						send_main.send(objSend);
+					}		
+					var tempCurrentFileObj:Object;
+					
+					currentFileObj.filesubject = FileSubject.text;
+					currentFileObj.filemessage  = FileMessage.text;
+					currentFileObj.fileexpirydate = FileExpiryDate.selectedDate.toDateString();
+					currentFileObj.fileip6address  = " ";
+					currentFileObj.filesendersname  = " ";
+					currentFileObj.filereceiversname  = " ";
+					currentFileObj.filevouchertype   = " ";
+					currentFileObj.fileactivitydate   = "";
+					
+					tempCurrentFileObj = currentFileObj;
+					tempCurrentFileObj.filestatus = "Available"
+					
+					for (var i:int = 0; i < params.length; i++)
+					{	
+						
+						if(params[i].replace(" ","").length > 0)
+						{	     
+							
+							tempCurrentFileObj.fileto = params[i].toString();
+							
+							// check if this is a voucher or an available file
+							// close voucher and create new download vouchers
+							
+							// create new vouchers with unique filevoucheruid's
+							FlexGlobals.topLevelApplication.logProcess("Send file details to database - Flash Upload");
+							
+							var UID:String = UIDUtil.createUID(); 
+							tempCurrentFileObj.filevoucheruid = UID;
+							
+							var objSend1:Object = new Object();
+							objSend1.call = "insertFile";
+							var dataArray1:ArrayCollection = new ArrayCollection();
+							dataArray1.addItem(tempCurrentFileObj);
+							var dataString1:String = JSON.encode(dataArray1.toArray());
+							FlexGlobals.topLevelApplication.logProcess("TEMP Object:" + dataString1);
+							dataString1 = escape(dataString1);
+							objSend1.jsonSendData = dataString1;
+							send_main.send(objSend1);
+						}	  
+					} 
+					textarea1.text += "\n Checking uploaded file";
+				} 
+				ff_fix.ff_fixStatus();	
+			}  
+			
+			// HTTPService return from saving file data
+			public function fileSaved(event:ResultEvent):void
+			{
+				// error checking here 
+				if(event.result.toString() == "dataMissing")
+				{
+					FlexGlobals.topLevelApplication.uploadStopped(); 
+					FlexGlobals.topLevelApplication.logProcess("File data was missing - not sent to database - Flash Upload");
+					FlexGlobals.topLevelApplication.currentState = "Message";
+					FlexGlobals.topLevelApplication.MessageLabel.text = lang['E031'] 
+					return;
+				}
+				FlexGlobals.topLevelApplication.uploadStopped(); 
+				FlexGlobals.topLevelApplication.logProcess("Database updated successfully - Flash Upload");
+				FlexGlobals.topLevelApplication.currentState = "Message";
+				FlexGlobals.topLevelApplication.MessageLabel.text = lang['Your_file_has_been_sent'];
+				//init();
+			}
+			
+			// FileReference error
+			public function fileError(event:FaultEvent):void
+			{
+				Alert.show(event.fault.toString());
+				FlexGlobals.topLevelApplication.logProcess("Error " + event.fault.toString() + " - Flash Upload");
+			}
+			
+			// FileReference HTTP error
+			public function httpErrorHandler(event:HTTPStatusEvent):void 
+			{
+				Alert.show(event.status.toString());
+				FlexGlobals.topLevelApplication.logProcess("Error " + event.status.toString() + " - Flash Upload");
+			}
+			
+			// FileReference IO error
+			public function httpIOErrorHandler(event:IOErrorEvent):void 
+			{
+				FlexGlobals.topLevelApplication.logProcess("Error " + event.text.toString() + " - Flash Upload");
+				Alert.show(event.text.toString());
+			}
+			
+			// FileReference security error
+			public function httpSecurityErrorHandler(event:SecurityErrorEvent):void 
+			{
+				FlexGlobals.topLevelApplication.logProcess("Error " + event.text.toString() + " - Flash Upload");
+				Alert.show(event.text.toString());
+			}
+			
+			// check invalid characters
+			private function fnCheckString(str:String):Boolean
+			{
+				var invalidCharacters:Array = new Array(":", "*", "?", "<", ">", "|","%");
+				for (var i:Number = 0; i<invalidCharacters.length; i++) {
+					if (str.indexOf(invalidCharacters[i])>0) 
+					{
+						return true; 
+					}
+				}
+				return false;
+			}
+			
+			// check invalid extensions
+			private function fnCheckExtension(str:String):Boolean
+			{
+				// check if extension exists
+				var nameParts:Array = str.split(".");
+				if(nameParts.length < 2){
+					return true;
+				}
+				
+				// check if extension is listed in banned file types
+				var invalidExtension:String = config["ban_extension"];
+				if (invalidExtension.indexOf(nameParts[nameParts.length-1].toString())<0) 
+				{   
+					return false; 
+				}
+				FlexGlobals.topLevelApplication.logProcess("Invalid extension " + nameParts[nameParts.length-1].toString() + " - Flash Upload");
+				return true;
+			}
+			
+			// FileReference select handler
+			public function selectHandler(event:Event):void {
+				// poulate selected file information
+				FlexGlobals.topLevelApplication.logProcess("File Selected " + fileRef.name.toString() + " - Flash Upload");
+				if(fnCheckString(fileRef.name))
+				{
+					Alert.show("Invalid File Name (Must no contain the following charachters : * ? < > | %","Invalid Filename");
+					return;
+				}
+				if (fnCheckExtension(fileRef.name))
+				{
+					Alert.show("File Extension type is invalid or is missing. You may like to zip the file and try again.","Invalid File Extension");
+					return;
+				} 
+				// check if file size is readable.
+				try {
+					var checkSizeExists:String = readablizeBytes(fileRef.size);
+				}
+				catch(error:Error) {
+					Alert.show(lang["E020"]);
+					return;
+				}
+				
+				// check if larger than acceptable flash file upload size
+				
+				if(fileRef.size == 0 )
+				{ 
+					FlexGlobals.topLevelApplication.logProcess("File Size is 0 - Flash Upload");
+					Alert.show(lang['E030'],lang['E000']);
+					return ;
+				} 
+				else  
+				{
+					if(parseInt(fileRef.size.toString()) > parseInt(config.max_flash_upload_size))
+					{
+						FlexGlobals.topLevelApplication.logProcess("File Size too Large (" + fileRef.size.toString() + ") - Flash Upload");
+						Alert.show(lang.E020+ " (Max "+ readablizeBytes(config.max_flash_upload_size) + ")",lang.E000);
+						return ;		 
+					}	  
+				}    
+				// ok to display filesize and name
+				selectedFileSize.text = readablizeBytes(fileRef.size);
+				selectedFilename.text = fileRef.name;
+				
+				btUpload.visible = true;
+			} 
+			
+			// When a file is selected, we upload the file to the PHP file upload script on the server
+			// file is uploaded to php temp directory then moved to file upload directory
+			
+			//Cancel Flash Upload
+			public function cancelUpload():void 
+			{ 
+				FlexGlobals.topLevelApplication.logProcess("Upload Cancelled - Flash Upload");
+				FlexGlobals.topLevelApplication.uploadStopped(); 
+				fileRef.cancel(); 
+				currentFileObj.filefrom = tempFromVoucher;	
+				currentFileObj.fileto = FileFrom.text;	
+				// reset file size
+				currentFileObj.filesize = "";
+				currentFileObj.fileoriginalname = "";
+				speedLabel.text  = "";
+				tm.stop();
+				myTimer.stop();
+				init();
+				//FlexGlobals.topLevelApplication.getFile();
+			} 
+			
+			// display bytes correctly
+			public function readablizeBytes(bytes:Number):String 
+			{
+				var s:Array = ['bytes', 'kB', 'MB', 'GB', 'TB', 'PB'];
+				var e:Number = Math.floor(Math.log(bytes)/Math.log(1024));
+				return (bytes/Math.pow(1024, Math.floor(e))).toFixed(2)+" "+s[e];
+			}
+		]]>
+		
+	</mx:Script>
+	<mx:HTTPService id="send_main" url="../fs_main.php{URLvid}" useProxy="false" method="POST" resultFormat="text" result="fileSaved(event)" fault="fileError(event)"/>     
+	<mx:NumberFormatter id="numberFormatter" precision="2"
+						useThousandsSeparator="true" useNegativeSign="true"/>
+	
+	<mx:DateFormatter id="df" formatString="{config.datedisplayformat}"/>
+	<mx:DateFormatter id="df_pg" formatString="{config.datedisplayformat}"/>
+	<mx:HBox x="0" y="0" width="100%" height="100%">
+		<mx:VBox minWidth="425"  paddingBottom="4" paddingLeft="4" paddingRight="4" paddingTop="4" verticalAlign="top" verticalGap="0" height="100%" width="100%">
+			
+			
+			<mx:HBox width="100%" height="23">
+				<mx:Label text="{lang.To}:" fontWeight="bold" width="130"/>
+				<mx:TextInput  toolTip="Multiple email address can be entered seperated by comma (,)" width="100%" valueCommit="{currentFileObj.fileto = FileTo.text;}" id="FileTo" text="{currentFileObj.fileto}" editable="true"  change="FlexGlobals.topLevelApplication.correctLinux(event)"/>
+			</mx:HBox>
+			<mx:HBox width="100%" height="23" verticalAlign="middle">
+				<mx:Label text="{lang.From}:" fontWeight="bold" width="130"/>
+				<mx:TextInput width="100%" id="FileFrom" valueCommit="{currentFileObj.filefrom = FileFrom.text;}" text="{currentFileObj.filefrom}" borderStyle="none" editable="false" change="FlexGlobals.topLevelApplication.correctLinux(event)"/>
+			</mx:HBox>
+			<mx:HBox width="100%" height="23" verticalAlign="middle">
+				<mx:Label text="{lang.Subject}: ({lang.Optional})" color="#000000" width="130"/>
+				<mx:TextInput width="100%" id="FileSubject" text="{currentFileObj.filesubject}" valueCommit="{currentFileObj.filesubject = FileSubject.text;}" change="FlexGlobals.topLevelApplication.correctLinux(event)"/>
+			</mx:HBox>
+			<mx:HBox width="100%" height="45">
+				<mx:Label text="{lang.Message}: ({lang.Optional})" width="130"/>
+				<mx:TextArea width="100%" id="FileMessage" height="45" valueCommit="{currentFileObj.filemessage = FileMessage.text;}" text="{currentFileObj.filemessage}" change="FlexGlobals.topLevelApplication.correctLinux(event)"/>
+			</mx:HBox>
+			<mx:HBox width="100%" height="27" verticalAlign="middle">
+				<mx:Label text="{lang.Expiry_Date}:" width="130" fontWeight="bold"/>
+				<mx:DateField valueCommit="{currentFileObj.fileexpirydate = FileExpiryDate.selectedDate ;}" id="FileExpiryDate" formatString="{config.datedisplayformat}" />
+				<mx:Spacer width="100%"/>
+			</mx:HBox> 
+			
+			<mx:HBox width="100%" height="47" id="uploadPanel" verticalAlign="middle">
+				<mx:VBox width="100%" height="100%" verticalGap="1" verticalAlign="middle">
+					<mx:HBox width="100%" height="21">
+						<mx:Label text="{lang.File_to_Upload}:" width="130" fontWeight="bold"/>
+						<mx:Button label="{lang.Browse}" click="uploadit()" id="uploadBtn" height="20"/>
+						<mx:Label id="selectedFilename" width="230" text="{currentFileObj.fileoriginalname}" enabled="true"/>
+					</mx:HBox>
+					<mx:HBox width="100%" height="20">
+						<mx:Label text="{lang.Size}:" width="130"/> 
+						<mx:Label id="selectedFileSize" width="360" text="{currentFileObj.filesize}"/>
+					</mx:HBox>
+				</mx:VBox>
+			</mx:HBox> 
+			
+			<mx:HBox width="100%" maxHeight="21" visible="{config.AuP}" includeInLayout="{config.AuP}">
+				<mx:Spacer width="130"/>
+				<mx:CheckBox width="20"  selected="{config.AuP_default}" id="AuPCB"/>
+				<mx:TextArea width="331" text="{config.AuP_label}" wordWrap="true" editable="false" height="19" borderStyle="none" fontWeight="bold"/>
+			</mx:HBox>
+			<mx:HBox width="100%" height="52" id="AuPBox" visible="{config.AuP}" includeInLayout="{config.AuP}">
+				<mx:Spacer width="130"/>
+				<mx:TextArea width="100%" wordWrap="true" text="{config.AuP_terms}" editable="false" height="100%" fontWeight="normal"/>
+			</mx:HBox>  
+			<mx:HBox width="100%" height="36" id="uploadMainPanel" verticalAlign="middle" visible="{displayprogressBar}" includeInLayout="{displayprogressBar}">
+				<mx:Spacer width="130"/>
+				<mx:ProgressBar id="pgBar" mode="manual"  height="30" width="100%" labelPlacement="center" label="Uploading %3%% "/>
+				<mx:Label id="speedLabel" width="0"/>
+				<mx:Button label="{lang.Cancel}" height="20" click="cancelUpload()" id="cancelBtn"/>
+			</mx:HBox>
+			<mx:HBox width="100%" height="63" horizontalAlign="right" verticalAlign="middle">
+				<mx:Button label="{lang.Send_File}" click="doupload()" id="btUpload" enabled="true" height="56" width="148"/>
+			</mx:HBox>
+			
+		</mx:VBox>
+		<mx:VBox width="250" height="100%">
+			<mx:HBox width="100%" height="30" verticalAlign="middle">
+				<mx:Image source="@Embed(source='/assets/num_1.png')"/>
+				<mx:Label text="{lang.Enter_delivery_email_address}"/>
+			</mx:HBox>
+			<mx:HBox width="100%" height="30" verticalAlign="middle">
+				<mx:Image source="@Embed(source='/assets/num_2.png')"/>
+				<mx:Label text="{lang.Set_expiry_date}"/>
+			</mx:HBox>
+			<mx:HBox width="100%" height="30" verticalAlign="middle">
+				<mx:Image source="@Embed(source='/assets/num_3.png')"/>
+				<mx:Label text="{lang.Browse_for_a_file}"/>
+			</mx:HBox>
+			<mx:HBox width="100%" height="30" verticalAlign="middle">
+				<mx:Image source="@Embed(source='/assets/num_4.png')"/>
+				<mx:Label text="{lang.Click_on_Send}"/>
+			</mx:HBox>
+			<mx:TextArea visible="{config.debug}" width="242" height="194" id="textarea1" borderStyle="none" editable="false"/>
+		</mx:VBox>
+	</mx:HBox>
+	
+</mx:Panel>

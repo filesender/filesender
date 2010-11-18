@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="100%" height="100%" minHeight="420" minWidth="790" title="{lang.My_Files}">
+	
+	<mx:Script> 
+		<![CDATA[ 
+			
+			/*
+			*  Filsender www.filesender.org
+			*      
+			*  Copyright (c) 2009-2010, Aarnet, HEAnet, UNINETT
+			* 	All rights reserved.
+			*
+			* 	Redistribution and use in source and binary forms, with or without
+			*	modification, are permitted provided that the following conditions are met:
+			*	* 	Redistributions of source code must retain the above copyright
+			*   		notice, this list of conditions and the following disclaimer.
+			*   	* 	Redistributions in binary form must reproduce the above copyright
+			*   		notice, this list of conditions and the following disclaimer in the
+			*   		documentation and/or other materials provided with the distribution.
+			*   	* 	Neither the name of Aarnet, HEAnet and UNINETT nor the
+			*   		names of its contributors may be used to endorse or promote products
+			*   		derived from this software without specific prior written permission.
+			*
+			* THIS SOFTWARE IS PROVIDED BY Aarnet, HEAnet and UNINETT ''AS IS'' AND ANY
+			* EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+			* WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+			* DISCLAIMED. IN NO EVENT SHALL Aarnet, HEAnet or UNINETT BE LIABLE FOR ANY
+			* DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+			* (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+			* LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+			* ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+			* (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+			* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+			*/
+			
+			/* -----------------------------------------
+			* flex - display current users files
+			* -----------------------------------------
+			* allows delete, resend and add new recipient
+			*/
+			
+			import mx.controls.Alert;
+			import com.adobe.serialization.json.JSON;
+			import org.ricoshae.core.*;
+			import mx.core.FlexGlobals;
+			import mx.collections.ArrayCollection;
+			import mx.utils.UIDUtil;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			import mx.events.CloseEvent; 
+			import mx.utils.ArrayUtil;
+			import mx.managers.CursorManager;
+			import mx.managers.PopUpManager;
+			
+			
+			[Bindable] public var currentFileObj:Object  = new Object();
+			[Bindable] public var currentUserObj:Object = new Object();
+			[Bindable] public var config:Object;
+			[Bindable] public var usersFiles:ArrayCollection;
+			[Bindable] public var lang:Object;
+			[Bindable] public var URLvidLocal:String;
+			
+			[Bindable] public var selecteddgID:int;
+			
+			[Embed(source="/assets/email_go.png")]
+			public var emailGo:Class;
+			
+			[Embed(source="/assets/email_add.png")]
+			public var emailAdd:Class;
+			
+			[Embed(source="/assets/shape_square_delete.png")]
+			public var squareDelete:Class;
+			
+			// initialise UI	
+			public function init():void
+			{ 
+				ff_fix.ff_fixStatus();
+				lang = FlexGlobals.topLevelApplication.lang;
+				CursorManager.removeBusyCursor();
+				currentUserObj = FlexGlobals.topLevelApplication.currentUser;
+				config = FlexGlobals.topLevelApplication.config;
+				URLvidLocal = FlexGlobals.topLevelApplication.URLvid;
+				currentFileObj = new Object();
+				currentFileObj.fileuid = UIDUtil.createUID();
+				
+				// request users files
+				var d:Date=new Date();
+				var objSend:Object = new Object();
+				objSend.call = "getUserFiles";
+				objSend.userEmail = currentUserObj.email;
+				vouchers_main.send(objSend); 
+				
+			} 
+			
+			// deprecated - remove after confirm not used elsewhere
+			/* public function completeVoucher(event:ResultEvent):void 
+			{
+			CursorManager.removeBusyCursor(); 
+			// check if error saving voucher
+			if(!event.result){ 
+			Alert.show("Unable to create voucher");
+			} else {
+			Alert.show("Voucher has been sent");  
+			}
+			init();  
+			}  */
+			
+			// return users files
+			public function returnVouchers(event:ResultEvent):void 
+			{ 
+				//Alert.show(event.result.toString());
+				var rawData:String = String(event.result);
+				CursorManager.removeBusyCursor();
+				
+				
+				try {
+					usersFiles = new ArrayCollection(ArrayUtil.toArray(JSON.decode(rawData)));
+					ff_fix.ff_fixStatus();
+				}
+				catch (erObject:Error) {
+					FlexGlobals.topLevelApplication.currentState = "Message";
+					FlexGlobals.topLevelApplication.noAuth(lang.notAuthenticated);
+					return;	
+				}
+				
+			}
+			
+			// HTTPService - return inserted voucher
+			public function returnInsertedVoucher(event:ResultEvent):void 
+			{
+				// Show any error results by calling an error function or true if no errors 
+				Alert.show(lang["Voucher Sent"]);
+				init();
+				
+			}
+			
+			// HTTPService - return email sent
+			public function returnMail(event:ResultEvent):void 
+			{
+				Alert.show(event.result.toString());
+				CursorManager.removeBusyCursor(); 
+			}  
+			
+			// HTTPService - error accessing service
+			public function return_error(event:FaultEvent):void
+			{
+				CursorManager.removeBusyCursor();
+				Alert.show("Fault: " + event.fault);			 	 
+			}
+			
+			
+			// confirm delete a file
+			public function functionNameBtn():void   
+			{  
+				// delete this item the refresh list	
+				Alert.show("Are you sure?", "Delete File", Alert.OK | Alert.CANCEL,null,OK_DeleteVoucher);
+			} 
+			
+			// file ok to delete
+			public function OK_DeleteVoucher(event:CloseEvent):void    
+			{
+				if (event.detail == Alert.OK) {        		
+					
+					var objSend:Object = new Object();
+					objSend.call = "deleteFile";
+					objSend.svid = usersFiles[vouchers_dg.selectedIndex].fileid;
+					delete_main.send(objSend);
+				}
+			}
+			
+			// re-send confirmation
+			public function functionResendBtn():void   
+			{  
+				// delete this item then refresh list	
+				Alert.show(lang["Are_You_Sure_Resend"], lang["Re-send"], Alert.OK | Alert.CANCEL,null,OK_ResendVoucher);
+			}   	   
+			
+			// HTTPService - re-send 
+			public function OK_ResendVoucher(event:CloseEvent):void    
+			{ 
+				if (event.detail == Alert.OK) {        		
+					
+					var objSend:Object = new Object(); 
+					objSend.call = "resendFile";
+					objSend.svid = usersFiles[vouchers_dg.selectedIndex].fileid; 
+					resend_main.send(objSend);
+					
+				}   
+			} 
+			
+			// HTTPService - return from re-send
+			public function returnResendVoucher(event:ResultEvent):void  
+			{
+				if(event.result.toString() == true) { 
+					Alert.show(lang["Email_Sent"].toString()); 
+				} else {  
+					Alert.show(lang["E027"].toString());  
+				} 
+				
+				CursorManager.removeBusyCursor();  
+			}  
+			
+			// call to popup add new recipient
+			public function functionAddEmail():void   
+			{  
+
+				selecteddgID = vouchers_dg.selectedIndex;
+				var pop2:newEmail = newEmail(PopUpManager.createPopUp(this,newEmail,true));
+				PopUpManager.centerPopUp(pop2);
+				
+			}  
+			
+			// HTTPService - return from delete voucher
+			public function deletedVoucher(event:ResultEvent):void
+			{  
+				
+				if(event.result){
+					init();
+				} else {
+					Alert.show("Unable to delete File");
+				}
+			}  	        
+			
+			// HTTPService - save new file
+			public function saveVoucher(mailTo:String,VoucherUID:String):void 
+			{
+				var myDate:Date = new Date();  
+				var obj:Object = new Object();
+				obj.fileto = mailTo;
+				obj.filefrom = currentUserObj.email;  
+				obj.fileuid = UIDUtil.createUID(); 
+				obj.filesubject = "";
+				obj.filemessage = "";     
+				obj.filevoucheruid = VoucherUID; // new voucher for each item
+				obj.filesize = "";
+				obj.fileoriginalname = ""
+				obj.filestatus = "Available";
+				obj.fileserverpath = "";  
+				obj.fileip4address = "";
+				obj.fileip6address = "";   
+				obj.filesendersname = "";  
+				obj.filereceiversname = ""; 
+				obj.filevouchertype = "";  
+				obj.fileactivitydate = df_pg.format(myDate);
+				// send
+				// FlexGlobals.topLevelApplication.saveLogs(obj,"Voucher","Voucher Created");
+				//Alert.show(obj.toString());
+				
+				var objSend:Object = new Object();
+				objSend.call = "insertFile";
+				var dataArray:ArrayCollection = new ArrayCollection();
+				dataArray.addItem(obj);
+				var dataString:String = JSON.encode(dataArray.toArray());
+				dataString = escape(dataString);
+				objSend.jsonSendData = dataString;
+				file_main.send(objSend);
+			}	 
+			
+			// Display file size - datagrid
+			private function filesizeFunc(item:Object, column:DataGridColumn):String {
+				
+				if (!item.hasOwnProperty("filesize")) {
+					return ""; 
+				}
+				
+				if(item.filesize == 0){ 
+					return "";
+				}
+				return convertBytes(item.filesize);
+				
+			}
+			
+			// convert bytes for filesize display
+			public function convertBytes(bytes:Number):String
+			{
+				var result:String = "";
+				if(bytes > 1073741824) {
+					result = numform.format(bytes/1024/1024/1024) + "GB";
+				} else if (bytes > 1048576){
+					result = numform.format(bytes/1024/1024) + "MB";     		
+				}else if (bytes >= 1024){
+					result = numform.format(bytes/1024) + "KB"; 		
+				}else if (bytes < 1024) {
+					result = numform.format(bytes) + "B";	
+				}
+				return	result;	
+				
+				
+			}
+			
+			// display correct date in datagrid
+			private function dateFunc( item:Object, column:DataGridColumn):String
+			{
+				return df.format( item[column.dataField]); 
+			}
+			
+			// change 'from' label in datagrid if current user to display 'Me'
+			public function fromLabel_Func(item:Object, column:DataGridColumn):String {
+				if(item[column.dataField] == currentUserObj.email)
+				{
+					return "Me";
+				} 
+				return item[column.dataField];
+			}
+			
+		]]>    
+	</mx:Script> 
+	<mx:HTTPService id="vouchers_main" url="../fs_main.php{URLvidLocal}" useProxy="false" method="POST" resultFormat="text" result="returnVouchers(event)" fault="return_error(event)"/>     
+	<mx:HTTPService id="file_main" url="../fs_main.php{URLvidLocal}" useProxy="false" method="POST" resultFormat="text" result="returnInsertedVoucher(event)" fault="return_error(event)"/>     
+	<mx:HTTPService id="delete_main" url="../fs_main.php{URLvidLocal}" useProxy="false" method="POST" resultFormat="text" result="deletedVoucher(event)" fault="return_error(event)"/>     
+	<mx:HTTPService id="resend_main" url="../fs_main.php{URLvidLocal}" useProxy="false" method="POST" resultFormat="text" result="returnResendVoucher(event)" fault="return_error(event)"/>     
+	<mx:NumberFormatter id="numberFormatter" precision="2" useThousandsSeparator="true" useNegativeSign="true"/>
+	<mx:NumberFormatter id="numform" rounding="nearest" precision="2"></mx:NumberFormatter>
+	<mx:DateFormatter id="df" formatString="{config.datedisplayformat}"/>
+	<mx:DateFormatter id="df_pg" formatString="{config.datedisplayformat}"/> 
+	<mx:Canvas right="1" left="1" bottom="1" top="1">
+		<mx:VBox left="0" right="0" bottom="0" borderStyle="none" verticalAlign="top" top="00">
+			<mx:DataGrid width="100%" height="100%" id="vouchers_dg" dataProvider="{usersFiles}" paddingLeft="0" paddingTop="0" paddingBottom="0" paddingRight="0">
+				<mx:columns>
+					<mx:DataGridColumn width="20">
+						<mx:itemRenderer>
+							<mx:Component>
+								<mx:Button  icon="@Embed(source='/assets/email_go.png')" height="20" width="20" label="Re-Send Email" click="outerDocument.functionResendBtn()"/>
+							</mx:Component>
+						</mx:itemRenderer>
+					</mx:DataGridColumn>
+					<mx:DataGridColumn width="20">
+						<mx:itemRenderer>
+							<mx:Component>
+								<mx:Button  icon="@Embed(source='/assets/email_add.png')" height="20" width="20" toolTip="Add New Recipient" click="outerDocument.functionAddEmail()"/>
+							</mx:Component> 
+						</mx:itemRenderer> 
+					</mx:DataGridColumn>
+					<mx:DataGridColumn headerText="To" dataField="fileto" wordWrap="true"/> 
+					<mx:DataGridColumn headerText="From" wordWrap="true" textAlign="center" labelFunction="fromLabel_Func"   dataField="filefrom">
+					</mx:DataGridColumn>
+					<mx:DataGridColumn headerText="File" dataField="fileoriginalname" wordWrap="true" textAlign="left">
+						<mx:itemRenderer>
+							<mx:Component>
+								<mx:LinkButton click="navigateToURL(new URLRequest('download.php?vid='+ data.filevoucheruid), 'Download File')" toolTip="Click to Download {data.fileoriginalname}" label="{data.fileoriginalname}" labelPlacement="left">	
+								</mx:LinkButton>
+							</mx:Component>
+						</mx:itemRenderer>
+					</mx:DataGridColumn>
+					<mx:DataGridColumn headerText="Size" dataField="filesize" labelFunction="filesizeFunc" wordWrap="true" />  
+					<mx:DataGridColumn headerText="Subject" dataField="filesubject" wordWrap="true"/>
+					<mx:DataGridColumn headerText="Message" dataField="filemessage" wordWrap="true"  textAlign="center" width="60">
+						<mx:itemRenderer>
+							<mx:Component>
+								<mx:Image toolTip="{data.filemessage}" scaleContent="false" source="@Embed(source='/assets/page_white_text_width.png')" width="16" height="16" maxHeight="16" maxWidth="16" horizontalAlign="center">
+								</mx:Image>
+								
+							</mx:Component>
+						</mx:itemRenderer>
+						
+					</mx:DataGridColumn>
+					<mx:DataGridColumn headerText="Created" dataField="filecreateddate" wordWrap="true" labelFunction="dateFunc"/>	
+					<mx:DataGridColumn headerText="Expiry" dataField="fileexpirydate" wordWrap="true" labelFunction="dateFunc"/>
+					<mx:DataGridColumn width="26">
+						<mx:itemRenderer>
+							<mx:Component>
+								<mx:Button  icon="@Embed(source='/assets/shape_square_delete.png')" height="20" width="20" label="Delete" click="outerDocument.functionNameBtn()"/>
+							</mx:Component>
+						</mx:itemRenderer>
+					</mx:DataGridColumn>
+				</mx:columns>    
+			</mx:DataGrid>
+		</mx:VBox> 
+	</mx:Canvas>
+</mx:Panel>
