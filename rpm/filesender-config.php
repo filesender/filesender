@@ -50,7 +50,7 @@ public function loadConfig() {
 	$config['postgresdateformat'] = "Y-m-d H:i:sP";
 	$config['datedisplayformat'] = "DD-MM-YYYY";
 	$config["crlf"] = "\n"; // for email CRLF can be changed to \r\n if required 
-	$config["site_splashtext"] = "FileSender is a secure way to share large files with anyone! Log-in to upload your files or invite people to send you a file.";
+	$config["site_splashtext"] = "FileSender is a secure way to share large files with anyone! Logon to upload your files or invite people to send you a file.";
 
 	$config["max_email_recipients"] = 100; // maximum email addresses allowed to send at once for voucher or file sending, a value of 0 allows unlimited emails.
 	$config["server_drivespace_warning"] = 20; // as a percentage 20 = 20% space left on the storage drive
@@ -93,6 +93,9 @@ public function loadConfig() {
 	$config['max_flash_upload_size'] = '2147483648'; // 2GB
 	$config['max_gears_upload_size'] = '100000000000'; // 100 GB
 	
+	// update max_flash_upload_size if php.ini post_max_size and upload_max_filesize is set lower
+	$config['max_flash_upload_size'] = min(let_to_num(ini_get('post_max_size'))-2048, let_to_num(ini_get('upload_max_filesize')),$config['max_flash_upload_size']);
+	
 	$config['available_space'] = '20000M';
 	
 	// site URLS, only set these when run as web-app
@@ -133,20 +136,24 @@ public function loadConfig() {
 	
 	// email
 	$config['default_emailsubject'] = "{siteName}: {filename}";
-	$config['filedownloadedemailbody'] = '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset=iso-8859-1{CRLF}{CRLF}
+	$config['filedownloadedemailbody'] = '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}
 Dear Sir, Madam,
 
 The file below has been downloaded from {siteName} by {filefrom}.
 
-Filename = {fileoriginalname}
-Filesize = {filesize}
-Download link = {serverURL}?vid={filevoucheruid}
-The file is available until {fileexpirydate} after which it will be automatically deleted
+Filename: {fileoriginalname}
+Filesize: {filesize}
+Download link: {serverURL}?vid={filevoucheruid}
+
+The file is available until {fileexpirydate} after which it will be automatically deleted.
 
 Best regards,
 
-{siteName}{CRLF}{CRLF}--simple_mime_boundary{CRLF}Content-type:text/html; charset=iso-8859-1{CRLF}{CRLF}
+{siteName}{CRLF}{CRLF}--simple_mime_boundary{CRLF}Content-type:text/html; charset={charset}{CRLF}{CRLF}
 <HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset={charset}">
+</HEAD>
 <BODY>
 <P>Dear Sir, Madam,</P>
 <P>The file below has been downloaded from {siteName} by {filefrom}.</P>
@@ -188,21 +195,26 @@ Best regards,
 <P>{siteName}</P>
 </BODY>
 </HTML>{CRLF}{CRLF}--simple_mime_boundary--';
-	$config['fileuploadedemailbody'] = '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset=iso-8859-1{CRLF}{CRLF}
+	$config['fileuploadedemailbody'] = '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}
 Dear Sir, Madam,
 
 The file below has been uploaded to {siteName} by {filefrom} and you have been granted permission to download this file.
 
-Filename = {fileoriginalname}
-Filesize = {filesize}
-Download link = {serverURL}?vid={filevoucheruid}
-The file is available until {fileexpirydate} after which it will be automatically deleted
-Personal message from {filefrom} (optional) = {filemessage}
+Filename: {fileoriginalname}
+Filesize: {filesize}
+Download link: {serverURL}?vid={filevoucheruid}
+
+The file is available until {fileexpirydate} after which it will be automatically deleted.
+
+Personal message from {filefrom} (optional): {filemessage}
 
 Best regards,
 
-{siteName}{CRLF}{CRLF}--simple_mime_boundary{CRLF}Content-type:text/html; charset=iso-8859-1{CRLF}{CRLF}
+{siteName}{CRLF}{CRLF}--simple_mime_boundary{CRLF}Content-type:text/html; charset={charset}{CRLF}{CRLF}
 <HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset={charset}">
+</HEAD>
 <BODY>
 <P>Dear Sir, Madam,</P>
 <P>The file below has been uploaded to {siteName} by {filefrom} and you have been granted permission to download this file.</P>
@@ -250,7 +262,7 @@ Best regards,
 	</TR>
 	<TR>
 		<TD WIDTH=100% BGCOLOR="#e6e6e6">
-			<P><I><pre>{htmlfilemessage}</pre></I></P>
+			<P><I>{htmlfilemessage}</I></P>
 		</TD>
 	</TR>
 </TABLE>
@@ -258,20 +270,24 @@ Best regards,
 <P>{siteName}</P>
 </BODY>
 </HTML>{CRLF}{CRLF}--simple_mime_boundary--';
-	$config['voucherissuedemailbody'] = '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset=iso-8859-1{CRLF}{CRLF}
+	$config['voucherissuedemailbody'] = '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}
 Dear Sir, Madam,
 
 Please, find below a voucher which grants access to {siteName}.
 With this voucher you can upload once one file and make it available for download to a group of people.
 
-Issuer = {filefrom}
-Voucher link = {serverURL}?vid={filevoucheruid}
-The file is available until {fileexpirydate} after which it will be automatically deleted
+Issuer: {filefrom}
+Voucher link: {serverURL}?vid={filevoucheruid}
+
+The voucher is available until {fileexpirydate} after which it will be automatically deleted.
 
 Best regards,
 
-{siteName}{CRLF}{CRLF}--simple_mime_boundary{CRLF}Content-type:text/html; charset=iso-8859-1{CRLF}{CRLF}
+{siteName}{CRLF}{CRLF}--simple_mime_boundary{CRLF}Content-type:text/html; charset={charset}{CRLF}{CRLF}
 <HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset={charset}">
+</HEAD>
 <BODY>
 <P>Dear Sir, Madam,</P>
 <P>Please, find below a voucher which grants access to {siteName}.</P>
@@ -309,14 +325,18 @@ Best regards,
 </BODY>
 </HTML>{CRLF}{CRLF}--simple_mime_boundary--';
 
-$config['defaultvouchercancelled'] = "{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset=iso-8859-1{CRLF}{CRLF}
+$config['defaultvouchercancelled'] = "{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}
 Dear Sir, Madam,
 
 A voucher from {filefrom} has been cancelled.
+
 Best regards,
 
-{siteName}{CRLF}{CRLF}--simple_mime_boundary{CRLF}Content-type:text/html; charset=iso-8859-1{CRLF}{CRLF}
+{siteName}{CRLF}{CRLF}--simple_mime_boundary{CRLF}Content-type:text/html; charset={charset}{CRLF}{CRLF}
 <HTML>
+<HEAD>
+<meta http-equiv=\"Content-Type\" content=\"text/html;charset={charset}\">
+</HEAD>
 <BODY>
 Dear Sir, Madam,<BR><BR>A voucher from {filefrom} has been cancelled.<BR><BR>
 	<P>Best regards,</P>
@@ -324,13 +344,14 @@ Dear Sir, Madam,<BR><BR>A voucher from {filefrom} has been cancelled.<BR><BR>
 </BODY>
 </HTML>{CRLF}{CRLF}--simple_mime_boundary--";
 
-$config['defaultfilecancelled'] = "{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset=iso-8859-1{CRLF}{CRLF}
+$config['defaultfilecancelled'] = "{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}
 Dear Sir, Madam,
 
 The file '{filename}' from {filefrom} has been cancelled and is no longer available to download.
+
 Best regards,
 
-{siteName}{CRLF}{CRLF}--simple_mime_boundary{CRLF}Content-type:text/html; charset=iso-8859-1{CRLF}{CRLF}
+{siteName}{CRLF}{CRLF}--simple_mime_boundary{CRLF}Content-type:text/html; charset={charset}{CRLF}{CRLF}
 <HTML>
 <BODY>
 Dear Sir, Madam,<BR><BR>The file '{filename}' from {filefrom} has been cancelled and is no longer available to download.<BR><BR>
@@ -347,6 +368,24 @@ Dear Sir, Madam,<BR><BR>The file '{filename}' from {filefrom} has been cancelled
 	
 	return $config;
 	}
-	
 	}
+
+function let_to_num($v){ //This function transforms the php.ini notation for numbers (like '2M') to an integer (2*1024*1024 in this case)
+    $ret = trim($v);
+    $last = strtoupper($ret[strlen($ret)-1]);
+    switch($last) {
+    case 'P':
+        $ret *= 1024;
+    case 'T':
+        $ret *= 1024;
+    case 'G':
+        $ret *= 1024;
+    case 'M':
+        $ret *= 1024;
+    case 'K':
+        $ret *= 1024;
+        break;
+    }
+      return $ret;
+}	
 	?>
