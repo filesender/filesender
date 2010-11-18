@@ -1,5 +1,23 @@
-filesender (0.1.14-1) stable; urgency=low
+filesender (0.1.17-1) stable; urgency=low
 
-  * Initial release
+  * New features
+    - FileSender now can handle filenames, subjects and personal messages in non-US-ASCII charsets
+    - IMPORTANT: a new naming scheme to store files on the server was introduced. Please
+                 run "php <filesenderbase>/scripts/convert-filenames.php" after upgrading
+                 to Beta 0.1.17. If you need to downgrade to a previous version run
+                 "php <filesenderbase>/scripts/convert-filenames.php revert" *before* downgrading.
+    -  Many bug Fixes
 
- -- Gijs Molenaar <gijs@pythonic.nl>  Thu, 01 Jul 2010 12:25:33 +0200
+ -- Filesender Development <filesender-dev@filesender.org>  Thu, 18 Nov 2010 14:08:00 +0100
+
+filesender (0.1.16.1-1) stable; urgency=low
+
+  * patch release 0.1.16.1
+
+ -- Filesender Development <filesender-dev@filesender.org>  Fri, 08 Oct 2010 14:27:45 +0200
+
+filesender (0.1.16-1) stable; urgency=low
+  
+  * New upstream release
+
+ -- Filesender Development <filesender-dev@filesender.org>  Fri, 08 Oct 2010 11:48:53 +0200
