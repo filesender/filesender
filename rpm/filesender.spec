@@ -1,5 +1,5 @@
 Name:           filesender
-Version:        0.1.16.201008271507
+Version:        0.1.18.201011181907
 Release:        1%{?dist}
 Summary:        Sharing large files with a browser
 
