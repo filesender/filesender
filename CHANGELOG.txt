@@ -1,5 +1,5 @@
 
-Update 2 November 2010
+Update 19 November 2010
 
 Version Beta 1.17
 	
@@ -37,7 +37,11 @@ Version Beta 1.17
 	188	Some downloads hang at 68%
 	234	about/help/gears links on logon screen are broken
 	249	IE8 download of files > 4GB hangs
-	
+	333	Formatting of personal message in outgoing mails
+	310	Gears voucher upload restarts if paused (cancelled), rather than resuming
+	323	Compatibility Mode is required for current version when compiling
+	321	UTF 8 charachters in name deleted by CRON
+	334	Logon description modifications	
 	
 
 Version Beta 1.16
