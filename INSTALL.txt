@@ -1,0 +1,4 @@
+Updated: October 19th, 2009
+
+Installation documents are available at:
+https://www.assembla.com/wiki/show/file_sender/Documentation
