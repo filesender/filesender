@@ -46,13 +46,13 @@ $sendmail = Mail::getInstance();
 
 date_default_timezone_set($config['Default_TimeZone']);
 
-/* Temporarily commented out the following piece since it breaks IE downloads.
 if(session_id() == ""){
 	// start new session and mark it as valid because the system is a trusted source
+	// set cache headers to 'private' to allow IE downloads
+	session_cache_limiter('private_no_expire');
 	session_start();
 	$_SESSION['validSession'] = true;
-} 
-*/
+}
 
 // check we are authenticated as SAML or voucher user
 if(!$authvoucher->aVoucher() && !$authsaml->isAuth()) {
