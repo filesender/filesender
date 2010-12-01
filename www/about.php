@@ -41,8 +41,6 @@ require_once('../classes/_includes.php');
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>FileSender:</title>
 <link rel="stylesheet" type="text/css" href="css/default.css" />
-<link rel="stylesheet" type="text/css" href="history/history.css" />
-
 
 <style type="text/css">
 <!--
