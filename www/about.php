@@ -49,6 +49,7 @@ require_once('../classes/_includes.php');
 .style1 {
 	color: #FFFFFF;
 	font-weight: bold;
+	padding-left:5px;
 }
 -->
 </style>
@@ -61,10 +62,8 @@ require_once('../classes/_includes.php');
   <img src="displayimage.php" width="800" height="60" border=0/>
     <p class="style5 style1">About</p>
   </div>
-  <p>
-
-  </p>
-  <div align="center">Custom About</div>
+ 
+  <div align="left" style="padding:5px">FileSender is an installation of FileSender (<a rel="nofollow" href="http://www.filesender.org">www.filesender.org</a>), which is  developed to the requirements of the higher education and research  community.</div>
   <hr />
 </div>
 <!-- #content -->
