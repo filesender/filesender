@@ -696,7 +696,7 @@ class Functions {
                 UPDATE 
                 files 
                 SET 
-                filestatus = 'Voucher Cancelled' 
+                filestatus = 'Closed' 
                 WHERE 
                 fileid = %d
                 ";
