@@ -74,7 +74,10 @@ window.onload = function() {
 </script>
 <style>
 body { margin: 0px; }
-.style5 {color: #FFFFFF}
+.style5 {
+	color: #FFFFFF;
+	font-weight: bold;
+}
 </style>
 <script language="JavaScript" type="text/javascript">
 <!--
@@ -96,7 +99,12 @@ var requiredRevision = 0;
 <div id="wrap">
 	
   <div id="header">
-  <img src="displayimage.php" width="800" height="60" border=0/>
+    <div align="center"><img src="displayimage.php" width="800" height="60" border=0/>
+          <noscript>
+          <span class="style5">          JavaScript is turned off in your web browser. <br />
+          This application will not run without Javascript enabled in your web browser.          </span>
+          </noscript>
+      </div>
   </div>
   <script language="JavaScript" type="text/javascript">
 <!--
