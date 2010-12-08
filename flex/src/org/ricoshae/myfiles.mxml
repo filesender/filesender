@@ -347,9 +347,10 @@
 					<mx:DataGridColumn headerText="Message" dataField="filemessage" wordWrap="true"  textAlign="center" width="60">
 						<mx:itemRenderer>
 							<mx:Component>
-								<mx:Image toolTip="{data.filemessage}" scaleContent="false" source="@Embed(source='/assets/page_white_text_width.png')" width="16" height="16" maxHeight="16" maxWidth="16" horizontalAlign="center">
+								<mx:VBox  horizontalAlign="center">
+								<mx:Image toolTip="{data.filemessage}" visible="{(data.filemessage.length == 0) ? false : true}" scaleContent="false" source="@Embed(source='/assets/page_white_text_width.png')" width="16" height="16" maxHeight="16" maxWidth="16" horizontalAlign="center">
 								</mx:Image>
-								
+								</mx:VBox>
 							</mx:Component>
 						</mx:itemRenderer>
 						
