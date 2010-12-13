@@ -26,7 +26,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-   
+
 package org.ricoshae.core
 {
 	public class FS_Validation
@@ -34,8 +34,10 @@ package org.ricoshae.core
 		
 		private static function isValidEmail( str:String ):Boolean 
 		{  
-    		var emailExp:RegExp = new RegExp("[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?");    
-     		//var emailExp:RegExp = new RegExp("/^[a-z.+-]+@\w[\w.-]+\.[\w.-]*[a-z][a-z]$/i");		   
+    		//var emailExp:RegExp = new RegExp("[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?");    
+     		//var emailExp:RegExp =new RegExp("[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}");
+			var emailExp:RegExp =new RegExp("[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}");
+			//var emailExp:RegExp = new RegExp("/^[a-z.+-]+@\w[\w.-]+\.[\w.-]*[a-z][a-z]$/i");		   
 			//var emailExp:RegExp = /^[a-z][\w.-]+@\w[\w.-]+\.[\w.-]*[a-z][a-z]$/i;              
      		return emailExp.test( str.toLowerCase());     
       	} 
