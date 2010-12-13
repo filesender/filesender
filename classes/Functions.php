@@ -444,6 +444,13 @@ class Functions {
         {
             return "dataMissing";
         }
+		
+		// check if user supplied date is past the server configuration maximum date
+		if(strtotime($dataitem["fileexpirydate"]) > strtotime("+".$config['default_daysvalid']." day"))
+		{
+		// reset fileexpiry date to max config date from server
+		$dataitem["fileexpirydate"] = date($config['postgresdateformat'],strtotime("+".($config['default_daysvalid'])." day"));
+		}
 
         if( $this->authsaml->isAuth()) {
             $authAttributes = $this->authsaml->sAuth();
@@ -530,9 +537,16 @@ class Functions {
         $ip = $_SERVER['REMOTE_ADDR'];
 
         $fileexpirydate 	=  date($config['postgresdateformat'],strtotime($dataitem['fileexpirydate']));
+		
+			// check if user supplied date is past the server configuration maximum date
+		if(strtotime($fileexpirydate) > strtotime("+".$config['default_daysvalid']." day"))
+		{
+		$fileexpirydate = date($config['postgresdateformat'],strtotime("+".$config['default_daysvalid']." day"));
+		}
+		
         $fileto			=  $dataitem['fileto'];
 
-        if(isset($dataitem['filesubject'])){
+        if(isset($dataitem['filesubject'])){ 
             $filesubject 	= $dataitem['filesubject'];
         } else {
             $filesubject 	= "NULL";
