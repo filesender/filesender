@@ -158,7 +158,8 @@ class EN_AU {
             "E029" => "Your session may have timed out, please logon again and re-try or contact your administrator.",
             "E030" => "Cannot upload a file of 0 bytes. Please select another file.",
             "E031" => "Error uploading your file. Please contact your administrator (Error #031)",
-            "E032" => "Mac using gears cannot upload a file larger than 2 GB (Error #032)"
+            "E032" => "Mac using gears cannot upload a file larger than 2 GB (Error #032)",
+			"E033" => "This appears to be an invalid email address.  Email addresses can look like firstname.lastname@somewhere.edu, firstname@somewhere.edu, lastname@somewhere.edu.  Email addresses can contain characters (a-z), numbers (0-9), -, _ and +."
         );
         return $lang;
     }

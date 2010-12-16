@@ -29,17 +29,30 @@
 
 package org.ricoshae.core
 {
+	
+	import mx.core.FlexGlobals;
+	import mx.controls.Alert;
+	
 	public class FS_Validation
 	{
 		
 		private static function isValidEmail( str:String ):Boolean 
 		{  
+			
+			var config:Object;
+			config = FlexGlobals.topLevelApplication.config;
+			
     		//var emailExp:RegExp = new RegExp("[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?");    
-     		//var emailExp:RegExp =new RegExp("[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}");
-			var emailExp:RegExp =new RegExp("[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}");
+     		//var emailExp:RegExp = /[a-z0-9._%-]+@[a-z0-9.-]+\.[a-z]{2,4}/;
+			//var emailExp:RegExp = /([0-9a-zA-Z]+[-._+&])*[0-9a-zA-Z]+@([-0-9a-zA-Z]+[.])+[a-zA-Z]{2,6}/;
+			var emailExp:RegExp = new RegExp(config["emailRegEx"].toString());
+			//var emailExp:RegExp = /([0-9a-zA-Z]+[-._+&])*[0-9a-zA-Z]+@([-0-9a-zA-Z]+[.])+[a-zA-Z]{2,6}/;
+			//var emailExp:RegExp =new RegExp("[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}");
+			//var emailExp:RegExp = new RegExp("[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}");
 			//var emailExp:RegExp = new RegExp("/^[a-z.+-]+@\w[\w.-]+\.[\w.-]*[a-z][a-z]$/i");		   
-			//var emailExp:RegExp = /^[a-z][\w.-]+@\w[\w.-]+\.[\w.-]*[a-z][a-z]$/i;              
-     		return emailExp.test( str.toLowerCase());     
+			//var emailExp:RegExp = /^[a-z][\w.-]+@\w[\w.-]+\.[\w.-]*[a-z][a-z]$/i;   
+			//Alert.show(config["emailRegEx"].toString() + ":" + emailExp.test(str.toLowerCase()));
+     		return emailExp.test(str.toLowerCase());     
       	} 
       	//
       	
