@@ -224,6 +224,8 @@ class Functions {
         $flexconfig['AuP_terms'] = $config["AuP_terms"];
         $flexconfig['help_link_visible'] = $config["help_link_visible"];	// if drivespace is low send email to admins
         $flexconfig['max_email_recipients'] = $config["max_email_recipients"];
+		$flexconfig['emailRegEx'] = $config['emailRegEx'];
+	
 
         // check file locations are correct
         if (!file_exists($config["log_location"])) {
