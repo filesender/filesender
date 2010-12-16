@@ -87,6 +87,8 @@ if(file_exists($file) && is_file($file))
 	// as files may be very large - stop it timing out
 	set_time_limit(0);
 	
+	session_write_close();
+
 	// if the complete file is downloaded then send email
 	if(readfile_chunked($file) === getFileSize($file)); 
 	// email completed
