@@ -1,5 +1,25 @@
 
-Update 19 November 2010
+Update 24 december 2010
+
+Version Beta 1.19
+
+	Fixes
+	#340 email address validation in flex - removed auto validation - validates on send
+
+Version Beta 1.18
+
+	Fixes
+	#326 Download fails with IE7/8 over https (since changeset 251)
+	#331 download_id_seq removed
+	#336 Populate "Help" page
+	#335 Populate "About" page
+	#337 [cleanup] Pointers to "history/history.css"
+	#339 Prompt when clicking on link to deleted file uses voucher cancellation text
+	#343 JavaScript disabled warning added
+	#344 Tooltip in Admin on Mac updated
+	#340 email address validation in flex regex added to config
+	#353 Enfore max_expiry_time server-side
+	#338 download blocks other filesender operations in the same session/browser
 
 Version Beta 1.17
 	
