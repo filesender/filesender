@@ -560,7 +560,7 @@
 		<mx:VBox  paddingBottom="4" paddingLeft="4" paddingRight="4" paddingTop="4" verticalAlign="top" verticalGap="0" height="100%" width="100%">
 			<mx:HBox width="100%" height="23">
 				<mx:Label text="{lang.To}:" fontWeight="bold" width="130"/>
-				<mx:TextInput toolTip="Multiple email address can be entered seperated by comma (,)" width="100%" valueCommit="{currentFileObj.fileto = FileTo.text;}" id="FileTo" text="{currentFileObj.fileto}" editable="true" change="FlexGlobals.topLevelApplication.correctLinux(event)" focusOut="validateEmail()"/>
+				<mx:TextInput toolTip="Multiple email address can be entered seperated by comma (,)" width="100%" valueCommit="{currentFileObj.fileto = FileTo.text;}" id="FileTo" text="{currentFileObj.fileto}" editable="true" change="FlexGlobals.topLevelApplication.correctLinux(event)"/>
 			</mx:HBox>
 			<mx:HBox width="100%" height="23" verticalAlign="middle">
 				<mx:Label text="{lang.From}:" fontWeight="bold" width="130"/>

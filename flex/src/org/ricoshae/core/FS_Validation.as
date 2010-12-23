@@ -41,7 +41,7 @@ package org.ricoshae.core
 			
 			var config:Object;
 			config = FlexGlobals.topLevelApplication.config;
-			
+			// first one is default in config
     		//var emailExp:RegExp = new RegExp("[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?");    
      		//var emailExp:RegExp = /[a-z0-9._%-]+@[a-z0-9.-]+\.[a-z]{2,4}/;
 			//var emailExp:RegExp = /([0-9a-zA-Z]+[-._+&])*[0-9a-zA-Z]+@([-0-9a-zA-Z]+[.])+[a-zA-Z]{2,6}/;
