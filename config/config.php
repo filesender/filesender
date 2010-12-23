@@ -76,7 +76,6 @@ public function loadConfig() {
 	$config['saml_name_attribute'] = 'sn';
 	$config['saml_uid_attribute'] = 'eduPersonTargetedID';
 
-
 	// Aup	
 	$config["AuP_default"] = false; //AuP value is already ticked
 	$config["AuP"] = true; // Aup is displayed
