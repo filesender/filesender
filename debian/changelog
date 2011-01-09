@@ -1,3 +1,12 @@
+filesender (0.1.19-1) stable; urgency=low
+
+  * New features
+    - #340 email address validation in flex regex added to config
+      Please update your config.php
+  * Small bug fixes and cleanup
+
+ -- Filesender Development <filesender-dev@filesender.org>  Fri, 24 Dec 2010 14:08:00 +0100
+
 filesender (0.1.17-1) stable; urgency=low
 
   * New features

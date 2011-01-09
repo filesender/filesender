@@ -66,9 +66,9 @@ public function loadConfig() {
 	$config['helpURL'] = "help.php";
 	
 	// debug 
-	$config["debug"] = true;
+	$config["debug"] = false;
 	$config['dnslookup'] = true; // log includes DNS lookup true/false
-	$config["client_specific_logging"] = true; // client logging true/false
+	$config["client_specific_logging"] = false; // client logging true/false
 	$config["client_specific_logging_uids"] = ""; // "" is log all clients, or log for specific userid's or voucheruid's seperated by comma 'xxxx,zzzzz'
 
 	// saml settings
