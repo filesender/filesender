@@ -66,16 +66,15 @@ public function loadConfig() {
 	$config['helpURL'] = "help.php";
 	
 	// debug 
-	$config["debug"] = true;
+	$config["debug"] = false;
 	$config['dnslookup'] = true; // log includes DNS lookup true/false
-	$config["client_specific_logging"] = true; // client logging true/false
+	$config["client_specific_logging"] = false; // client logging true/false
 	$config["client_specific_logging_uids"] = ""; // "" is log all clients, or log for specific userid's or voucheruid's seperated by comma 'xxxx,zzzzz'
 
 	// saml settings
 	$config['saml_email_attribute'] = 'mail';
 	$config['saml_name_attribute'] = 'sn';
 	$config['saml_uid_attribute'] = 'eduPersonTargetedID';
-
 
 	// Aup	
 	$config["AuP_default"] = false; //AuP value is already ticked
@@ -85,6 +84,7 @@ public function loadConfig() {
 		
 	$config['voucherRegEx'] = "'[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}'";
 	$config['voucherUIDLength'] = 36;
+	$config['emailRegEx'] = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
 	$config['ban_extension'] = 'exe,bat';
 	$config['admin'] = '';
 	$config['adminEmail'] = '';
