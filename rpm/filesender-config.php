@@ -76,7 +76,6 @@ public function loadConfig() {
 	$config['saml_name_attribute'] = 'sn';
 	$config['saml_uid_attribute'] = 'eduPersonTargetedID';
 
-
 	// Aup	
 	$config["AuP_default"] = false; //AuP value is already ticked
 	$config["AuP"] = true; // Aup is displayed
@@ -85,6 +84,7 @@ public function loadConfig() {
 		
 	$config['voucherRegEx'] = "'[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}'";
 	$config['voucherUIDLength'] = 36;
+	$config['emailRegEx'] = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
 	$config['ban_extension'] = 'exe,bat';
 	$config['admin'] = '';
 	$config['adminEmail'] = '';
