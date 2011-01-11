@@ -1,5 +1,5 @@
 Name:           filesender
-Version:        0.1.19
+Version:        0.1.19+1.0rc1
 Release:        1%{?dist}
 Summary:        Sharing large files with a browser
 
@@ -80,5 +80,5 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Thu Sep 2 2010 Gijs Molenaar <gijs@pythonic.nl> %{Version}-1
-- first release
+* Wed Jan 12 2011 FileSender Development <filesender-dev@filesender.org> %{Version}-1
+- first release candidate

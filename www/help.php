@@ -73,7 +73,7 @@ require_once('../classes/_includes.php');
       Maximum recipient  addresses per email:</strong>  <?php echo $config["max_email_recipients"]?> multiple email addresses can be  separated by a comma.</p>
     <p>      <strong>Maximum number of files per  upload:</strong> one - to upload several files at once, zip them into a  single archive first</p>
     <p><strong>Maximum file size per upload, without  Gears: </strong> <?php echo formatBytes($config["max_flash_upload_size"])?></p>
-    <p><strong>Maximum file size per upload, with Gears: </strong> <?php echo formatBytes($config["max_gears_upload_size"])?> (file uploads over 2 GB currently not possible on Mac OSX 10.6.x)</p>
+    <p><strong>Maximum file size per upload, with Gears: </strong> <?php echo formatBytes($config["max_gears_upload_size"])?> (file uploads over 2 GB currently not possible on Mac OSX and Linux)</p>
     <p>      <strong>Maximum  file / voucher expiry days: </strong><?php echo $config["default_daysvalid"]?> </p>
   </div>
   </div>

@@ -1,5 +1,9 @@
 
-Update 24 december 2010
+Update 12 january 2011
+
+Version 1.0-RC1
+
+	Re-release of 0.1.19 as release candidate 1
 
 Version Beta 1.19
 
