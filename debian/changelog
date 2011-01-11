@@ -1,4 +1,10 @@
-filesender (0.1.19-1) stable; urgency=low
+filesender (0.1.19+1.0rc1) stable; urgency=low
+  * 1.0 Release Candidate 1
+    - re-release of beta 0.1.19
+
+ -- Filesender Development <filesender-dev@filesender.org>  Wed, 12 Jan 2011 00:00:00 +0100
+
+filesender (0.1.19) stable; urgency=low
 
   * New features
     - #340 email address validation in flex regex added to config
@@ -7,7 +13,7 @@ filesender (0.1.19-1) stable; urgency=low
 
  -- Filesender Development <filesender-dev@filesender.org>  Fri, 24 Dec 2010 14:08:00 +0100
 
-filesender (0.1.17-1) stable; urgency=low
+filesender (0.1.17) stable; urgency=low
 
   * New features
     - FileSender now can handle filenames, subjects and personal messages in non-US-ASCII charsets
@@ -19,13 +25,13 @@ filesender (0.1.17-1) stable; urgency=low
 
  -- Filesender Development <filesender-dev@filesender.org>  Thu, 18 Nov 2010 14:08:00 +0100
 
-filesender (0.1.16.1-1) stable; urgency=low
+filesender (0.1.16.1) stable; urgency=low
 
   * patch release 0.1.16.1
 
  -- Filesender Development <filesender-dev@filesender.org>  Fri, 08 Oct 2010 14:27:45 +0200
 
-filesender (0.1.16-1) stable; urgency=low
+filesender (0.1.16) stable; urgency=low
   
   * New upstream release
 
