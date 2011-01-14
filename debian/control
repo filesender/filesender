@@ -1,7 +1,7 @@
 Source: filesender
 Section: web
 Priority: extra
-Maintainer: Gijs Molenaar <gijs@pythonic.nl>
+Maintainer: Filesender Development <filesender-dev@filesender.org>
 Build-Depends: debhelper (>= 7), cdbs
 Homepage: http://www.filesender.org
 Vcs-Svn: http://subversion.assembla.com/svn/file_sender/filesender_packaging/debian/filesender/
