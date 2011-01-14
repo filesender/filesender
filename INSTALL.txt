@@ -1,12 +1,47 @@
+Updated: 14 January 2011
 
-Update 19 November 2010
+FileSender installation instructions are available at:
+   https://www.assembla.com/wiki/show/file_sender/Documentation
 
-Installation documents are available at:
-https://www.assembla.com/wiki/show/file_sender/Documentation
+Remember to read the ChangeLog!!
 
-Version Beta 0.1.17
-IMPORTANT: a new naming scheme to store files on the server was introduced. Please
-	           run "php <filesenderbase>/scripts/convert-filenames.php" after upgrading
-	           to Beta 0.1.17. If you need to downgrade to a previous version run
-                   "php <filesenderbase>/scripts/convert-filenames.php revert" *before* downgrading.
+IMPORTANT: UPGRADING FROM VERSIONS OLDER THEN 1.0-Beta-0.1.17
+=============================================================
+A new naming scheme to store files on the server was introduced in Beta-0.1.17.
+Please run "php <filesenderbase>/scripts/convert-filenames.php" after upgrading
+to Beta 0.1.17 or newer. If you need to downgrade to a previous version run
+"php <filesenderbase>/scripts/convert-filenames.php revert" *before* downgrading.
 
+YOU ONLY NEED TO DO THIS ONCE.  If you upgrade from for example Beta-0.1.18 to
+RELEASE-1.0 you do not need to repeat this step.
+
+
+IMPORTANT: Upgrading from previous betas
+========================================
+* you will need to re-apply any local changes you made
+* files that you are likely to have changed are:
+  - www/about.php
+  - www/banner.png
+  - www/help.php
+  - config/config.php
+  - www/js/fs_gears.js
+
+
+Upgrading and CONFIG.PHP
+========================
+When upgrading:
+* start with the fresh config.php and manually adjust it to reflect
+  your configuration.  Merging your old config.php with the new one is
+  discouraged.
+* through various beta cycles several new and required settings have
+  been added to the config.php that might not be present in your current
+  configuration
+* I repeat: when upgrading please start with a fresh configuration file
+  and take the time to go through all configuration directives to make
+  sure all is as it should be.
+
+Upgrading and Gears chunksize
+=============================
+You might have changed the chunksize used in the gears upload.  This value is
+found in www/js/fs_gears.js in the variable CHUNK_BYTES that has a default
+value of 200000 (200KB).  
