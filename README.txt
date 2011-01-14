@@ -13,7 +13,7 @@ automatically delete the file. The software is not intended as a permanent
 file publishing platform.
 
 All major workflow actions (such as files or vouchers becoming available, or
-being deleted) and are signalled to both sender as well as recipient by means of
+being deleted) are signalled to both sender as well as recipient by means of
 html-templated emails
 
 FileSender project home:
