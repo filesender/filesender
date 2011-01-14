@@ -1,47 +1,99 @@
 Updated: 14 January 2011
 
+Installation instructions
+=========================
+
 FileSender installation instructions are available at:
    https://www.assembla.com/wiki/show/file_sender/Documentation
 
-Remember to read the ChangeLog!!
+Be sure to read the parts about configuring PostgreSQL, PHP, Apache,
+SimpleSAMLphp and cron to get up and running.
 
-IMPORTANT: UPGRADING FROM VERSIONS OLDER THEN 1.0-Beta-0.1.17
-=============================================================
-A new naming scheme to store files on the server was introduced in Beta-0.1.17.
-Please run "php <filesenderbase>/scripts/convert-filenames.php" after upgrading
-to Beta 0.1.17 or newer. If you need to downgrade to a previous version run
-"php <filesenderbase>/scripts/convert-filenames.php revert" *before* downgrading.
+Upgrading from previous (beta) versions
+=======================================
 
-YOU ONLY NEED TO DO THIS ONCE.  If you upgrade from for example Beta-0.1.18 to
-RELEASE-1.0 you do not need to repeat this step.
+Please read the following notes before upgrading from a previous beta
+version to 1.0.
+
+IMPORTANT: Upgrading from versions older then Beta-0.1.17
+=========================================================
+
+* A new naming scheme to store files on the server was introduced in
+Beta-0.1.17. Please run 
+
+  php <filesenderbase>/scripts/convert-filenames.php
+
+*after* upgrading to Beta 0.1.17 or newer. If you need to downgrade
+to a previous version run
+
+  php <filesenderbase>/scripts/convert-filenames.php revert
+
+*before* downgrading.
+
+YOU ONLY NEED TO DO THIS ONCE. If you upgrade from for example Beta-0.1.18 to
+RELEASE-1.0 you do not need to repeat this step. So only run the script when
+upgrading from Beta-0.1.16 or older.
+
+* As of version Beta-0.1.17 the expiration of files and vouchers is handled
+by a script to be called by cron. Please see the installation instructions at
+https://www.assembla.com/wiki/show/file_sender/Documentation on how to
+install such a cron job.
 
 
-IMPORTANT: Upgrading from previous betas
-========================================
-* you will need to re-apply any local changes you made
-* files that you are likely to have changed are:
-  - www/about.php
-  - www/banner.png
-  - www/help.php
+IMPORTANT: Upgrading from previous betas in general
+===================================================
+
+It is strongly recommended that you do a fresh install after making a
+backup copy of your previous install and carefully re-apply any local
+changes you have made in previous versions.
+
+The following notes describe the files most likely to contain local changes:
+
+Configuration
+=============
+
   - config/config.php
+
+In the various beta cycles several new and required settings have
+been added to the config.php that might not be present in your current
+configuration.
+
+IMPORTANT: When upgrading please start with a fresh configuration file
+and take the time to go through all configuration directives to make
+sure all is as it should be. Merging new entries into your old config.php is
+discouraged.
+
+Customisation
+=============
+
+Site specific information will be in:
+
+  - www/about.php
+  - www/help.php
+
+Note that the default www/help.php now contains a list of settings about for
+example maximum sizes and expiry time which is automatically generated from
+the settings in the configuration file. You may want to integrate that
+information with your custom help info.
+
+You may have put a custom logo/banner in:
+
+  - www/banner.png
+
+As of version Beta-0.1.17 you can put a site specific banner in
+
+  - config/banner.png
+
+If this file is available FileSender will use that one instead of the
+default banner in www/banner.png.
+
+Performance
+===========
+
   - www/js/fs_gears.js
 
-
-Upgrading and CONFIG.PHP
-========================
-When upgrading:
-* start with the fresh config.php and manually adjust it to reflect
-  your configuration.  Merging your old config.php with the new one is
-  discouraged.
-* through various beta cycles several new and required settings have
-  been added to the config.php that might not be present in your current
-  configuration
-* I repeat: when upgrading please start with a fresh configuration file
-  and take the time to go through all configuration directives to make
-  sure all is as it should be.
-
-Upgrading and Gears chunksize
-=============================
-You might have changed the chunksize used in the gears upload.  This value is
+You may have changed the chunksize used in the gears upload. This value is
 found in www/js/fs_gears.js in the variable CHUNK_BYTES that has a default
-value of 200000 (200KB).  
+value of 200000 (200KB).
+
+For more details about other changes please see CHANGELOG.txt.
