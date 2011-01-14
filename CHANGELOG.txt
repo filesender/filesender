@@ -1,5 +1,10 @@
+Last update: 14 Januari 2010
 
-Last update: 24 december 2010
+Version 1.0-RC1 <14 Januari 2010>
+
+	Re-release of 0.1.19 as release candidate 1
+	Fix
+	#200 Make Common Name default name attribute 
 
 Version Beta 1.19 <24 December 2010>
 
