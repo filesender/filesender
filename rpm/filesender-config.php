@@ -74,7 +74,7 @@ public function loadConfig() {
 
 	// saml settings
 	$config['saml_email_attribute'] = 'mail';
-	$config['saml_name_attribute'] = 'sn';
+	$config['saml_name_attribute'] = 'cn';
 	$config['saml_uid_attribute'] = 'eduPersonTargetedID';
 
 	// Aup	
