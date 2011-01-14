@@ -4,7 +4,7 @@ FileSender is a software package that implements a web-based application that
 allows authenticated users to securely and easily send arbitrarily large files
 to other users. Authentication of users is provided through SAML2, LDAP and
 RADIUS. Users without an account can be sent an upload voucher by an
-authenticated user.  FileSender is developed to the requirements of the higher
+authenticated user. FileSender is developed to the requirements of the higher
 education and research community.
 
 The purpose of the software is to send a large file to someone, have that file
@@ -24,14 +24,15 @@ FileSender installation and configuration documentation is available at:
 
 
 Support is available on a best-effort basis through the FileSender development
-mailinglist filesender-dev@filesender.org.  For information on how to subscribe and the mailinglist archives:
+mailinglist filesender-dev@filesender.org. For information on how to subscribe
+and the mailinglist archives:
    http://www.assembla.com/wiki/show/file_sender/Support_and_Mailinglists
 
 
 Acknowledgements
 ================
 The 1.0 release of the FileSender software was developed by an international
-core team of contributors.  The FileSender 1.0 core team members were
+core team of contributors. The FileSender 1.0 core team members were
 Chris Richter, Gijs Molenaar, Guido Aben, Jan Meijer, Xander Jansen, Wendy Mason
 
 Many others have contributed to make FileSender 1.0 possible:
@@ -39,7 +40,7 @@ Many others have contributed to make FileSender 1.0 possible:
 
 FileSender 1.0 was funded by a consortium of the national research and
 educational networks (NREN) AARNet (Australia), HEAnet (Ireland), SURFnet
-(Netherlands) and UNINETT (Norway).   
+(Netherlands) and UNINETT (Norway).
 
-The FileSender project started in April 2009 and was initiated by AARNet, HEAnet
-and UNINETT.  
+The FileSender project started in April 2009 and was initiated by AARNet,
+HEAnet and UNINETT.
