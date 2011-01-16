@@ -1,16 +1,17 @@
+Last update: 14 Januari 2010
 
-Update 12 january 2011
-
-Version 1.0-RC1
+Version 1.0-RC1 <14 Januari 2010>
 
 	Re-release of 0.1.19 as release candidate 1
+	Fix
+	#200 Make Common Name default name attribute 
 
-Version Beta 1.19
+Version Beta 1.19 <24 December 2010>
 
 	Fixes
 	#340 email address validation in flex - removed auto validation - validates on send
 
-Version Beta 1.18
+Version Beta 1.18 <21 December 2010>
 
 	Fixes
 	#326 Download fails with IE7/8 over https (since changeset 251)
@@ -25,7 +26,7 @@ Version Beta 1.18
 	#353 Enfore max_expiry_time server-side
 	#338 download blocks other filesender operations in the same session/browser
 
-Version Beta 1.17
+Version Beta 1.17 <19 November 2010>
 	
 	New features
 	FileSender now can handle filenames, subjects and personal messages in non-US-ASCII charsets
@@ -68,13 +69,18 @@ Version Beta 1.17
 	334	Logon description modifications	
 	
 
-Version Beta 1.16
+Version Beta 1.16.1 <11 October 2010>
+
+	* Security: sanitising of HTML emails sent out
+	* Bug fix: sanitise message input by user
+	
+Version Beta 1.16 <29 September 2010>
 	Updated SVN structure
 	Moved Flash file to /www/swf/
 	Rename flash file filesender.swf
 	Fix voucher not sending out correct email message when created
 
-Version Beta 1.15
+Version Beta 1.15 <2 August 2010>
 
 	Moved all web files in SVN to /trunk/web-app
 	Moved all flex files in SVN to /trunk/flex-app
@@ -89,7 +95,7 @@ Version Beta 1.15
 	211 MyFiles -> Add Recipient: download link in resulting file voucher does not work
 	
 
-Version Beta 1.14
+Version Beta 1.14 <22 June 2010>
 	Bug Fixes
 	129,130,132 valid email adresses are broken 
 	231 File size shows error when creating vouchers
@@ -110,7 +116,7 @@ Version Beta 1.14
 	Audit Fixes
 	2.5,2.6,2.7,2.2,2.3
 
-Version Beta 1.13
+Version Beta 1.13 <6 May 2010>
 	Bug Fixes
 	#107	incorrect warning ("browse for a file") on invalid recipient email input
 	#166	Screen Size
@@ -124,14 +130,15 @@ Version Beta 1.13
 	#178	security bug: back button on download menu
 	#179	security: log-off behaviour across multiple browser tabs incorrect
 
-Version Beta 1.12
+
+Version Beta 1.12 <19 April 2010>
 	
 	Bug Fixes
 		*  #168: Admin email added to config
 		*  #167: Default config date format fixed 
 	
 
-Version Beta 1.11
+Version Beta 1.11 <16 April 2010>
 	
 	New Features
 		* #160: email address unsuitable as GUID
@@ -141,7 +148,7 @@ Version Beta 1.11
 		*  #161: Notification email not being sent back
 
 
-Version Beta 1.10 29th March 2010
+Version Beta 1.10 <31 March 2010>
 
 	New Features
 		* IP Name Resolution in Log Files 
@@ -176,7 +183,7 @@ Version Beta 1.10 29th March 2010
 		* 
 		
 
-Version Beta 1.9
+Version Beta 1.9 <11 March 2010>
 
 	New Features
 		* Updated Config
@@ -197,7 +204,8 @@ Version Beta 1.9
 		* Email multiple send has all To emails listed
 		* Feide SML IDP array fields fixed
 
-Version Beta 1.8
+
+Version Beta 1.8 <22 February 2010>
 
 	New Features
 		* Updated Config
@@ -215,7 +223,8 @@ Version Beta 1.8
 
 		NOTE: Please check installation instructions as this version requires a different folder structure 
 
-Version Beta 1.7
+
+Version Beta 1.7 <17 December 2009>
 
 	New Features
 		* send email notification on download
@@ -225,19 +234,8 @@ Version Beta 1.7
 		* Fix EN_AU logging error
 		* depriciated php code update for php 5.3.x
 
-Version Beta 1.6
 
-	New Features
-		* send email notification on download
-		* hide browse while uploading
-		
-
-	Bug fixes
-		* Fix EN_AU logging error
-		* depriciated php code update for php 5.3.x
-
-
-Version Beta 1.6
+Version Beta 1.6 <14 December 2009>
 
 	New Features
 		* Complete rewrite of config
@@ -254,7 +252,12 @@ Version Beta 1.6
 		* Fix for Norwegian keyboard special charachters
 		
 
-Version Beta 1.4
+Version Beta 1.5 <never>
+
+	Version Beta 1.5 was never released.
+
+
+Version Beta 1.4 <4 November 2009>
 	
 	New features:
 		* Remove logo and name to allow cutom branding
