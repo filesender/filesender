@@ -189,12 +189,12 @@
 						total:convertBytes(driveSpace["site_filestore_total"]),
 						used:convertBytes(driveSpace["site_filestore_total"]-driveSpace["site_filestore_free"]),
 						avail:convertBytes(driveSpace["site_filestore_free"]),
-						usepercentage:numform.format(driveSpace["site_filestore_free"]/driveSpace["site_filestore_total"] * 100)+"%"},
+						usepercentage:numform.format(100 - (driveSpace["site_filestore_free"]/driveSpace["site_filestore_total"] * 100))+"%"},
 					{drivename:"Temp Files", 
 						total:convertBytes(driveSpace["site_temp_filestore_total"]),
 						used:convertBytes(driveSpace["site_temp_filestore_total"]-driveSpace["site_temp_filestore_free"]),
 						avail:convertBytes(driveSpace["site_temp_filestore_free"]),
-						usepercentage:numform.format(driveSpace["site_temp_filestore_free"]/driveSpace["site_temp_filestore_total"] * 100)+"%"}
+						usepercentage:numform.format(100 - (driveSpace["site_temp_filestore_free"]/driveSpace["site_temp_filestore_total"] * 100))+"%"}
 				];
 				
 				if(driveSpace["site_temp_filestore_free"]  < 1073741824)
