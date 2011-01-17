@@ -162,7 +162,7 @@ class Mail {
         $to = $config['adminEmail'];
 
         $subject =   $config['site_name']." - Admin Message";
-        $body = wordwrap($crlf ."--simple_mime_boundary".$crlf ."Content-type:text/plain; charset=iso-8859-1".$crlf .$message,70);
+        $body = wordwrap($crlf ."--simple_mime_boundary".$crlf ."Content-type:text/plain; charset=iso-8859-1".$crlf.$crlf .$message,70);
 
         if (mail($to, $subject, $body, $headers)) {
             return true;
