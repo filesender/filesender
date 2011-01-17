@@ -223,7 +223,6 @@ class Functions {
         $flexconfig['AuP'] = $config['AuP']; //Degault AuP value
         $flexconfig['AuP_label'] = $config["AuP_label"];
         $flexconfig['AuP_terms'] = $config["AuP_terms"];
-        $flexconfig['help_link_visible'] = $config["help_link_visible"];	// if drivespace is low send email to admins
         $flexconfig['max_email_recipients'] = $config["max_email_recipients"];
 		$flexconfig['emailRegEx'] = $config['emailRegEx'];
 	
