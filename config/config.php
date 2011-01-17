@@ -47,7 +47,6 @@ public function loadConfig() {
 	$config = array();
 
 	// set  configs
-	// v Beta 0.1.10 additions
 	$config['postgresdateformat'] = "Y-m-d H:i:sP";
 	$config['datedisplayformat'] = "DD-MM-YYYY";
 	$config["crlf"] = "\n"; // for email CRLF can be changed to \r\n if required 
@@ -58,10 +57,8 @@ public function loadConfig() {
 
 	// UI Settings
 	$config["versionNumber"] = true;
-	$config['about'] = true;
 	$config['site_showStats'] = false;
 	$config['displayUserName'] = true; 
-	$config["help_link_visible"] = true;
 	
 	$config['aboutURL'] = "about.php";
 	$config['helpURL'] = "help.php";
