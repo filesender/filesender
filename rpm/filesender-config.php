@@ -52,8 +52,8 @@ public function loadConfig() {
 	// at www.filesender.org
 
 	// General settings
-	$config['admin'] = ''; // UID's that have Administrator permissions
-	$config['adminEmail'] = ''; // Email address to receive administrative messages (low disk space warning)
+	$config['admin'] = ''; // UID's (from $config['saml_uid_attribute']) that have Administrator permissions
+	$config['adminEmail'] = ''; // Email address(es, separated by ,) to receive administrative messages (low disk space warning)
 	$config['Default_TimeZone'] = 'Australia/Sydney';
 	$config['site_name'] = 'FileSender'; // Friendly name used for your FileSender instance
 	$config["site_splashtext"] = "FileSender is a secure way to share large files with anyone! Logon to upload your files or invite people to send you a file.";
@@ -75,14 +75,14 @@ public function loadConfig() {
 	$config['saml_name_attribute'] = 'cn'; // Attribute used to get the user's name
 	$config['saml_uid_attribute'] = 'eduPersonTargetedID'; // Attribute to uniquely identify the user
 
-	// AUP settings
+	// AuP settings
 	$config["AuP_default"] = false; //AuP value is already ticked
-	$config["AuP"] = true; // Aup is displayed
+	$config["AuP"] = true; // AuP is displayed
 	$config["AuP_label"] = "I accept the terms and conditions of this service";
 	$config["AuP_terms"] = "AuP Terms and conditions";
 
 	// Server settings
-	$config['default_daysvalid'] = 20; // Maximum number of days before expiry
+	$config['default_daysvalid'] = 20; // Maximum number of days before file/voucher is expired
 	$config['ban_extension'] = 'exe,bat'; // Possibly dangerous file extensions that are disallowed
 	$config["max_email_recipients"] = 100; // maximum email addresses allowed to send at once for voucher or file sending, a value of 0 allows unlimited emails.
 
