@@ -46,6 +46,11 @@ public function loadConfig() {
 	
 	$config = array();
 
+	// Start of configurable settings
+	// For more information about these settings please see the 
+	// Administrator Reference Manual in the documentation section
+	// at www.filesender.org
+
 	// General settings
 	$config['admin'] = ''; // UID's that have Administrator permissions
 	$config['adminEmail'] = ''; // Email address to receive administrative messages (low disk space warning)
@@ -82,7 +87,7 @@ public function loadConfig() {
 	$config["max_email_recipients"] = 100; // maximum email addresses allowed to send at once for voucher or file sending, a value of 0 allows unlimited emails.
 
 	$config['max_flash_upload_size'] = '2147483648'; // 2GB
-	$config['max_gears_upload_size'] = '100000000000'; // 100 GB (base 1000)
+	$config['max_gears_upload_size'] = '107374182400'; // 100 GB
 	
 	// update max_flash_upload_size if php.ini post_max_size and upload_max_filesize is set lower
 	$config['max_flash_upload_size'] = min(let_to_num(ini_get('post_max_size'))-2048, let_to_num(ini_get('upload_max_filesize')),$config['max_flash_upload_size']);
@@ -96,7 +101,7 @@ public function loadConfig() {
 	$config['voucherUIDLength'] = 36;
 	$config['emailRegEx'] = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
 
-	// site URLS, only set these when run as web-app
+	// site URL settings
 	if ( isset($_SERVER['SERVER_NAME']) ) {
 	$prot =  isset($_SERVER['HTTPS']) ? 'https://' : 'http://';
 	$config['site_url'] = $prot . $_SERVER['SERVER_NAME'] . '/filesender/'; // URL to Filesender
@@ -369,10 +374,11 @@ Dear Sir, Madam,<BR><BR>The file '{filename}' from {filefrom} has been cancelled
 	$config['site_icon'] = 'cloudstor.png';
 	$config['site_css'] = '';
 	
+	// End of configurable settings
+
 	return $config;
 	}
 }
-// End of configurable settings
 
 // Helper function used when calculating maximum upload size from the various maxsize configuration items
 function let_to_num($v){ //This function transforms the php.ini notation for numbers (like '2M') to an integer (2*1024*1024 in this case)
