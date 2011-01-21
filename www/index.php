@@ -47,19 +47,17 @@ $flexerrors = "true";
 <title>FileSender:</title>
 <link rel="stylesheet" type="text/css" href="css/default.css" />
 <link rel="stylesheet" type="text/css" href="lib/history/history.css" />
-<link rel="icon" href="favicon.ico"
-	type="image/x-icon">
+<link rel="icon" href="favicon.ico" type="image/x-icon" />
+<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
 
-<link rel="shortcut icon" href="favicon.ico"
-	type="image/x-icon">
 <script type="text/javascript" src="js/gears_init.js" ></script>
 <script type="text/javascript" src="js/fs_gears.js" ></script>
 <script type="text/javascript" src="js/jquery-1.2.6.min.js" ></script>
 	<meta name="robots" content="noindex, nofollow" />
-	<script src="lib/js/AC_OETags.js" language="javascript"></script>
+	<script type="text/javascript" src="lib/js/AC_OETags.js" language="javascript"></script>
 
 <!--  BEGIN Browser History required section -->
-<script src="lib/history/history.js" language="javascript"></script>
+<script type="text/javascript" src="lib/history/history.js" language="javascript"></script>
 <!--  END Browser History required section -->
 <script type="text/javascript">
 
@@ -72,7 +70,7 @@ window.onload = function() {
 //  }
 }
 </script>
-<style>
+<style type="text/css">
 body { margin: 0px; }
 .style5 {
 	color: #FFFFFF;
@@ -99,7 +97,7 @@ var requiredRevision = 0;
 <div id="wrap">
 	
   <div id="header">
-    <div align="center"><img src="displayimage.php" width="800" height="60" border=0/>
+    <div align="center"><img src="displayimage.php" width="800" height="60" border="0" alt="banner"/>
           <noscript>
           <span class="style5">          JavaScript is turned off in your web browser. <br />
           This application will not run without Javascript enabled in your web browser.          </span>
@@ -183,7 +181,6 @@ if ( hasProductInstall && !hasRequestedVersion ) {
   <noscript>
 </noscript>
   <p>
-  </div>
 </p>
   <div id="DoneLoading">
 </div>
