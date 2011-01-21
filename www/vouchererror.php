@@ -58,17 +58,17 @@ require_once('../classes/_includes.php');
 <div id="wrap">
 	
   <div id="header">
-  <img src="displayimage.php" width="800" height="60" border=0/>
+  <img src="displayimage.php" width="800" height="60" border="0" alt="banner"/>
     <p class="style5 style1">Error</p>
   </div>
   <p>
 
   </p>
-  <div align="center">This Voucher is not Valid
-  </div>
-  <hr />
-</div>
-<!-- #content -->
+  <div id="content">
+    <div align="center">This Voucher is not Valid
+    </div>
+    <hr />
+  </div><!-- #content -->
 
 </div><!-- #wrap -->
 
