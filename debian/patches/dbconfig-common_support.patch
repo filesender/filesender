@@ -1,6 +1,6 @@
 --- config/config.php	2011-01-18 21:59:01.000000000 +0100
 +++ config/config.php.new	2011-01-18 22:19:40.953092309 +0100
-@@ -118,11 +118,12 @@
+@@ -124,11 +124,12 @@
  	$config['log_location'] = '/usr/share/filesender/log/';	
  
  	// database settings	
