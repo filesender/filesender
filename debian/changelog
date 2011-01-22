@@ -1,8 +1,10 @@
+filesender (1.0) stable; urgency=medium
+
 filesender (0.1.19+1.0rc1) stable; urgency=low
   * 1.0 Release Candidate 1
     - re-release of beta 0.1.19
 
- -- Filesender Development <filesender-dev@filesender.org>  Wed, 12 Jan 2011 00:00:00 +0100
+ -- Filesender Development <filesender-dev@filesender.org>  Sun, 16 Jan 2011 13:09:35 +0100
 
 filesender (0.1.19) stable; urgency=low
 
