@@ -1,5 +1,5 @@
 Name:           filesender
-Version:        0.1.19+1.0rc1
+Version:        1.0
 Release:        1%{?dist}
 Summary:        Sharing large files with a browser
 
@@ -81,4 +81,4 @@ rm -rf %{buildroot}
 
 %changelog
 * Wed Jan 12 2011 FileSender Development <filesender-dev@filesender.org> %{Version}-1
-- first release candidate
+- Release 1.0
