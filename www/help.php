@@ -77,7 +77,7 @@ require_once('../classes/_includes.php');
 <ul>
 <li>A modern, current release of most popular browsers</li>
 <li><a href="http://get.adobe.com/flashplayer/">Flash Player</a> 10.x browser plugin</li>
-<li><a href="http://gears.google.com/download.html">Google Gears</a> browser plugin for uploading files larger than 2 GB and to enable pause/resume for uploads</li>
+<li><a href="<?php echo $config['gearsURL']?>">Google Gears</a> browser plugin for uploading files larger than 2 GB and to enable pause/resume for uploads</li>
 </ul>
 
 <h4>Limits</h4>
