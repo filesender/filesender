@@ -127,7 +127,7 @@ public function loadConfig() {
 	$config['pg_host'] = 'localhost';
 	$config['pg_database'] = 'filesender';
 	$config['pg_port'] = '5432';
-	$config['pg_username'] = 'postgres';
+	$config['pg_username'] = 'filesender';
 	$config['pg_password'] = 'yoursecretpassword';
 
 	// cron settings
