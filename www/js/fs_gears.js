@@ -85,7 +85,7 @@ function min(a,b){ return (a<b?a:b); }
 // Gears specific upload settings
 // will need to use config settings in next beta
 
-var CHUNK_BYTES		= 200000; 	// < 200MB Send file in packets of 200KB (200000) -50000000 works 50Mb
+var CHUNK_BYTES		= 2000000; 	// < 200MB Send file in chunks of 2MB (2000000) -50000000 works 50MB
 var MAX_FILE_SIZE	= 1000000000000;	// Limit the total upload size
 var UPLOAD_RETRIES	= 3;		// Number of retries
 var mylist		= {}; 		// Array of file and properties
