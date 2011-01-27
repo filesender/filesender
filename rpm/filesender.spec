@@ -38,10 +38,10 @@ The software is not intended as a permanent file publishing platform.
 
 %{__cat} >cron.daily <<EOF
 #!/bin/sh
-fs_location=%{buildroot}%{_datadir}/%{name}
-if [ -x %{_bindir}/php -a -f ${fs_location}/cron/cron.php ]
+fs_location=%{_datadir}/%{name}
+if [ -x %{_bindir}/php -a -f \${fs_location}/cron/cron.php ]
 then
-     %{_bindir}/php ${fs_location}/cron/cron.php
+     %{_bindir}/php \${fs_location}/cron/cron.php
 fi
 EOF
 
@@ -74,6 +74,7 @@ ln -s ../../../..%{_localstatedir}/lib/%{name}/files %{buildroot}%{_datadir}/%{n
 ln -s ../../..%{_localstatedir}/log/%{name} %{buildroot}%{_datadir}/%{name}/log
 
 %{__install} -Dp -m0755 cron.daily %{buildroot}%{_sysconfdir}/cron.daily/%{name}
+%{__rm} cron.daily
 
 %clean
 rm -rf %{buildroot}
