@@ -36,7 +36,7 @@ The software is not intended as a permanent file publishing platform.
 %prep
 %setup -q
 
-%{__cat} <cron.daily
+%{__cat} >cron.daily <<EOF
 #!/bin/sh
 fs_location=%{buildroot}%{_datadir}/%{name}
 if [ -x %{_bindir}/php -a -f ${fs_location}/cron/cron.php ]
