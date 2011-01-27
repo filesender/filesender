@@ -106,15 +106,16 @@ public function loadConfig() {
 	$prot =  isset($_SERVER['HTTPS']) ? 'https://' : 'http://';
 	$config['site_url'] = $prot . $_SERVER['SERVER_NAME'] . '/filesender/'; // URL to Filesender
 	$config['site_simplesamlurl'] =  $prot . $_SERVER['SERVER_NAME'] . '/simplesamlphp/';
-	$config['site_downloadurl'] = $config['site_url'] . 'files/';
+	$config['site_authenticationSource'] ="default-sp";
 	$config['site_logouturl'] = $config['site_url'] . 'logout.php';
+	$config['site_downloadurl'] = $config['site_url'] . 'files/'; // * Deprecated *
 	}
 	$config['forceSSL'] = false; // Always use SSL (true/false)
 	
+	// Support links
 	$config['aboutURL'] = "about.php";
 	$config['helpURL'] = "help.php";
 	$config['gearsURL'] = 'http://tools.google.com/gears/';
-	$config['site_authenticationSource'] ="default-sp";
 
 	// (absolute) file locations
 	$config['site_filestore'] = '/usr/share/filesender/files/'; 
