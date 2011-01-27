@@ -5,10 +5,11 @@ Summary:        Sharing large files with a browser
 
 Group:          Applications/Internet
 License:        custom?
-URL:            http://www.assembla.com/spaces/file_sender/documents
+URL:            http://www.filesender.org/
 Source0:        http://filesender-dev.surfnet.nl/nightly/%{name}-%{version}.tar.gz
 Source1:	%{name}-config.php
 Source2:	%{name}.htaccess
+Source3:	%{name}.cron.daily
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
 
@@ -36,15 +37,6 @@ The software is not intended as a permanent file publishing platform.
 %prep
 %setup -q
 
-%{__cat} >cron.daily <<EOF
-#!/bin/sh
-fs_location=%{_datadir}/%{name}
-if [ -x %{_bindir}/php -a -f \${fs_location}/cron/cron.php ]
-then
-     %{_bindir}/php \${fs_location}/cron/cron.php
-fi
-EOF
-
 %build
 
 %install
@@ -52,6 +44,7 @@ rm -rf %{buildroot}
 %{__mkdir} -p %{buildroot}%{_datadir}/%{name}
 %{__mkdir} -p %{buildroot}%{_sysconfdir}/%{name}
 %{__mkdir} -p %{buildroot}%{_sysconfdir}/httpd/conf.d
+%{__mkdir} -p %{buildroot}%{_sysconfdir}/cron.daily
 %{__mkdir} -p %{buildroot}%{_localstatedir}/lib/%{name}/files
 %{__mkdir} -p %{buildroot}%{_localstatedir}/lib/%{name}/tmp
 %{__mkdir} -p %{buildroot}%{_localstatedir}/log/%{name}
@@ -59,6 +52,8 @@ rm -rf %{buildroot}
 %{__cp} -ad ./* %{buildroot}%{_datadir}/%{name}
 %{__cp} -p %{SOURCE2} %{buildroot}%{_sysconfdir}/httpd/conf.d/%{name}.conf
 %{__cp} -p %{SOURCE1} %{buildroot}%{_sysconfdir}/%{name}/config.inc.php
+%{__cp} -p %{SOURCE3} %{buildroot}%{_sysconfdir}/cron.daily/%{name}
+%{__chmod} 0755 %{buildroot}%{_sysconfdir}/cron.daily/%{name}
 
 %{__rm} -f %{buildroot}%{_datadir}/%{name}/*.txt
 %{__rm} -f %{buildroot}%{_datadir}/%{name}/*.specs
@@ -72,9 +67,6 @@ ln -s ../../../..%{_sysconfdir}/%{name}/config.inc.php %{buildroot}%{_datadir}/%
 ln -s ../../..%{_localstatedir}/lib/%{name}/tmp %{buildroot}%{_datadir}/%{name}/tmp
 ln -s ../../../..%{_localstatedir}/lib/%{name}/files %{buildroot}%{_datadir}/%{name}/files
 ln -s ../../..%{_localstatedir}/log/%{name} %{buildroot}%{_datadir}/%{name}/log
-
-%{__install} -Dp -m0755 cron.daily %{buildroot}%{_sysconfdir}/cron.daily/%{name}
-%{__rm} cron.daily
 
 %clean
 rm -rf %{buildroot}
@@ -91,7 +83,6 @@ rm -rf %{buildroot}
 %dir %attr(0750,apache,apache) %{_localstatedir}/lib/%{name}/tmp
 %dir %attr(0750,apache,apache) %{_localstatedir}/lib/%{name}/files
 %dir %attr(0750,apache,apache) %{_localstatedir}/log/%{name}
-
 
 
 %changelog
