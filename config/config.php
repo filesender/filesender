@@ -46,96 +46,94 @@ public function loadConfig() {
 	
 	$config = array();
 
-	// set  configs
-	// v Beta 0.1.10 additions
-	$config['postgresdateformat'] = "Y-m-d H:i:sP";
-	$config['datedisplayformat'] = "DD-MM-YYYY";
-	$config["crlf"] = "\n"; // for email CRLF can be changed to \r\n if required 
+	// Start of configurable settings
+	// For more information about these settings please see the 
+	// Administrator Reference Manual in the documentation section
+	// at www.filesender.org
+
+	// General settings
+	$config['admin'] = ''; // UID's (from $config['saml_uid_attribute']) that have Administrator permissions
+	$config['adminEmail'] = ''; // Email address(es, separated by ,) to receive administrative messages (low disk space warning)
+	$config['Default_TimeZone'] = 'Australia/Sydney';
+	$config['site_name'] = 'FileSender'; // Friendly name used for your FileSender instance
 	$config["site_splashtext"] = "FileSender is a secure way to share large files with anyone! Logon to upload your files or invite people to send you a file.";
 
-	$config["max_email_recipients"] = 100; // maximum email addresses allowed to send at once for voucher or file sending, a value of 0 allows unlimited emails.
-	$config["server_drivespace_warning"] = 20; // as a percentage 20 = 20% space left on the storage drive
-
 	// UI Settings
-	$config["versionNumber"] = true;
-	$config['about'] = true;
-	$config['site_showStats'] = false;
-	$config['displayUserName'] = true; 
-	$config["help_link_visible"] = true;
+	$config['datedisplayformat'] = "DD-MM-YYYY"; // Format for displaying date/time, use Flex DateFormatter format specifier syntax
+	$config["versionNumber"] = true; // Show version number (true/false)
+	$config['site_showStats'] = false; // Show site upload/download stats (true/false)
+	$config['displayUserName'] = true; // Show 'Welcome user' (true/false)
 	
-	$config['aboutURL'] = "about.php";
-	$config['helpURL'] = "help.php";
-	
-	// debug 
-	$config["debug"] = false;
-	$config['dnslookup'] = true; // log includes DNS lookup true/false
-	$config["client_specific_logging"] = false; // client logging true/false
+	// debug settings
+	$config["debug"] = false; // Debug logging on/off (true/false)
+	$config['dnslookup'] = true; // log includes DNS lookup (true/false)
+	$config["client_specific_logging"] = false; // client logging (true/false)
 	$config["client_specific_logging_uids"] = ""; // "" is log all clients, or log for specific userid's or voucheruid's seperated by comma 'xxxx,zzzzz'
 
 	// saml settings
-	$config['saml_email_attribute'] = 'mail';
-	$config['saml_name_attribute'] = 'cn';
-	$config['saml_uid_attribute'] = 'eduPersonTargetedID';
+	$config['saml_email_attribute'] = 'mail'; // Attribute used for email address
+	$config['saml_name_attribute'] = 'cn'; // Attribute used to get the user's name
+	$config['saml_uid_attribute'] = 'eduPersonTargetedID'; // Attribute to uniquely identify the user
 
-	// Aup	
+	// AuP settings
 	$config["AuP_default"] = false; //AuP value is already ticked
-	$config["AuP"] = true; // Aup is displayed
+	$config["AuP"] = true; // AuP is displayed
 	$config["AuP_label"] = "I accept the terms and conditions of this service";
 	$config["AuP_terms"] = "AuP Terms and conditions";
-		
-	$config['voucherRegEx'] = "'[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}'";
-	$config['voucherUIDLength'] = 36;
-	$config['emailRegEx'] = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
-	$config['ban_extension'] = 'exe,bat';
-	$config['admin'] = '';
-	$config['adminEmail'] = '';
-	$config['Default_TimeZone'] = 'Australia/Sydney';
+
+	// Server settings
+	$config['default_daysvalid'] = 20; // Maximum number of days before file/voucher is expired
+	$config['ban_extension'] = 'exe,bat'; // Possibly dangerous file extensions that are disallowed
+	$config["max_email_recipients"] = 100; // maximum email addresses allowed to send at once for voucher or file sending, a value of 0 allows unlimited emails.
 
 	$config['max_flash_upload_size'] = '2147483648'; // 2GB
-	$config['max_gears_upload_size'] = '100000000000'; // 100 GB
+	$config['max_gears_upload_size'] = '107374182400'; // 100 GB
 	
 	// update max_flash_upload_size if php.ini post_max_size and upload_max_filesize is set lower
 	$config['max_flash_upload_size'] = min(let_to_num(ini_get('post_max_size'))-2048, let_to_num(ini_get('upload_max_filesize')),$config['max_flash_upload_size']);
 	
-	$config['available_space'] = '20000M';
+	$config["server_drivespace_warning"] = 20; // as a percentage 20 = 20% space left on the storage drive
 	
-	// site URLS, only set these when run as web-app
+	// Advanced server settings, do not change unless you have a very good reason.
+	$config['postgresdateformat'] = "Y-m-d H:i:sP"; // Date/Time format for PostgreSQL, use PHP date format specifier syntax
+	$config["crlf"] = "\n"; // for email CRLF can be changed to \r\n if required
+	$config['voucherRegEx'] = "'[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}'";
+	$config['voucherUIDLength'] = 36;
+	$config['emailRegEx'] = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
+
+	// site URL settings
 	if ( isset($_SERVER['SERVER_NAME']) ) {
 	$prot =  isset($_SERVER['HTTPS']) ? 'https://' : 'http://';
 	$config['site_url'] = $prot . $_SERVER['SERVER_NAME'] . '/filesender/'; // URL to Filesender
 	$config['site_simplesamlurl'] =  $prot . $_SERVER['SERVER_NAME'] . '/simplesaml/';
-	$config['site_downloadurl'] = $config['site_url'] . 'files/';
+	$config['site_authenticationSource'] ="default-sp";
 	$config['site_logouturl'] = $config['site_url'] . 'logout.php';
+	$config['site_downloadurl'] = $config['site_url'] . 'files/'; // * Deprecated *
 	}
+	$config['forceSSL'] = true; // Always use SSL (true/false)
+	
+	// Support links
+	$config['aboutURL'] = "about.php";
+	$config['helpURL'] = "help.php";
+	$config['gearsURL'] = 'http://tools.google.com/gears/';
 
-    // (absolute) file locations
+	// (absolute) file locations
 	$config['site_filestore'] = '/usr/share/filesender/files/'; 
 	$config['site_temp_filestore'] = '/usr/share/filesender/tmp/'; 
 	$config['site_simplesamllocation'] = '/usr/share/simplesamlphp/';
 	$config['log_location'] = '/usr/share/filesender/log/';	
 
-    // site settings
-	$config['site_authenticationSource'] ="default-sp";
-	$config['site_defaultlanguage'] = 'EN_AU';
-	$config['site_name'] = 'FileSender';
-	$config['site_icon'] = 'cloudstor.png';
-	$config['site_css'] = '';
-	$config['forceSSL'] = true;
-
-	$config['default_daysvalid'] = 20;
-	$config['gearsURL'] = 'http://tools.google.com/gears/';
-
 	// database settings	
 	$config['pg_host'] = 'localhost';
 	$config['pg_database'] = 'filesender';
 	$config['pg_port'] = '5432';
-	$config['pg_username'] = 'postgres';
+	$config['pg_username'] = 'filesender';
 	$config['pg_password'] = 'yoursecretpassword';
 
 	// cron settings
 	$config['cron_exclude prefix'] = '_'; // exclude deletion of files with the prefix character listed (can use multiple characters eg '._' will ignore .xxxx and _xxxx
 	
-	// email
+	// email templates section
 	$config['default_emailsubject'] = "{siteName}: {filename}";
 	$config['filedownloadedemailbody'] = '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}
 Dear Sir, Madam,
@@ -326,7 +324,7 @@ Best regards,
 </BODY>
 </HTML>{CRLF}{CRLF}--simple_mime_boundary--';
 
-$config['defaultvouchercancelled'] = "{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}
+	$config['defaultvouchercancelled'] = "{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}
 Dear Sir, Madam,
 
 A voucher from {filefrom} has been cancelled.
@@ -345,7 +343,7 @@ Dear Sir, Madam,<BR><BR>A voucher from {filefrom} has been cancelled.<BR><BR>
 </BODY>
 </HTML>{CRLF}{CRLF}--simple_mime_boundary--";
 
-$config['defaultfilecancelled'] = "{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}
+	$config['defaultfilecancelled'] = "{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}
 Dear Sir, Madam,
 
 The file '{filename}' from {filefrom} has been cancelled and is no longer available to download.
@@ -360,17 +358,30 @@ Dear Sir, Madam,<BR><BR>The file '{filename}' from {filefrom} has been cancelled
 <P>{siteName}</P>
 </BODY>
 </HTML>{CRLF}{CRLF}--simple_mime_boundary--";
+	// End of email templates section
 
+	// The settings below are not implemented yet in 1.0
+	// and may become deprecated.
+	// Instructions [NOT IMPLEMENTED in 1.0]
 	$config['site_sendfileinstructions'] = '<B>To send a file.</B><BR>Type an email address into the To: box<BR>Select BROWSE to choose a file on your computer.<BR>Select SEND FILE to upload and send the file.';
 	$config['site_voucherinstructions'] = 'A Voucher allows someone to send you a file.<BR>To create a voucher. Enter an email address then select Send Voucher.<BR>An email will be sent to the recipient with a link to use the Voucher.';
 	$config['site_downloadinstructions'] = 'A file is available for you.<BR>Select Download File to download the file to your computer.';
 	
-
+	// Other settings not implemented yet (1.0)
+	$config['available_space'] = '20000M';
+	$config['about'] = true;
+	$config["help_link_visible"] = true;
+	$config['site_defaultlanguage'] = 'EN_AU';
+	$config['site_icon'] = 'cloudstor.png';
+	$config['site_css'] = '';
 	
+	// End of configurable settings
+
 	return $config;
 	}
-	}
+}
 
+// Helper function used when calculating maximum upload size from the various maxsize configuration items
 function let_to_num($v){ //This function transforms the php.ini notation for numbers (like '2M') to an integer (2*1024*1024 in this case)
     $ret = trim($v);
     $last = strtoupper($ret[strlen($ret)-1]);
@@ -389,4 +400,4 @@ function let_to_num($v){ //This function transforms the php.ini notation for num
     }
       return $ret;
 }	
-	?>
+?>
