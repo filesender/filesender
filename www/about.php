@@ -58,14 +58,14 @@ require_once('../classes/_includes.php');
 <div id="wrap">
 	
   <div id="header">
-  <img src="displayimage.php" width="800" height="60" border=0/>
+  <img src="displayimage.php" width="800" height="60" border="0" alt="banner"/>
     <p class="style5 style1">About</p>
   </div>
  
-  <div align="left" style="padding:5px">FileSender is an installation of FileSender (<a rel="nofollow" href="http://www.filesender.org">www.filesender.org</a>), which is  developed to the requirements of the higher education and research  community.</div>
+  <div id="content">
+  <div align="left" style="padding:5px"><?php echo htmlentities($config['site_name'])?> is an installation of FileSender (<a rel="nofollow" href="http://www.filesender.org/">www.filesender.org</a>), which is developed to the requirements of the higher education and research community.</div>
   <hr />
-</div>
-<!-- #content -->
+  </div><!-- #content -->
 
 </div><!-- #wrap -->
 

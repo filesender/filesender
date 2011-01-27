@@ -45,7 +45,7 @@ require_once('../classes/_includes.php');
 <link rel="stylesheet" type="text/css" href="css/default.css" />
 
 
-<style>
+<style type="text/css">
 body { margin: 0px; overflow:hidden }
 .style5 {
 	color: #FFFFFF;
@@ -60,17 +60,17 @@ body { margin: 0px; overflow:hidden }
 <div id="wrap">
 	
   <div id="header">
-   <img src="displayimage.php" width="800" height="60" border=0/>
+   <img src="displayimage.php" width="800" height="60" border="0" alt="banner"/>
     <p class="style5">&nbsp;</p>
   </div>
   <p>
 
   </p>
-  <div align="center">Logout Complete.
-  </div>
-  <hr />
-</div>
-<!-- #content -->
+  <div id="content">
+    <div align="center">Logout Complete.
+    </div>
+    <hr />
+  </div><!-- #content -->
 
 </div><!-- #wrap -->
 

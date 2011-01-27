@@ -60,27 +60,39 @@ require_once('../classes/_includes.php');
 <div id="wrap">
 	
   <div id="header">
-  <img src="displayimage.php" width="800" height="60" border=0/>
+  <img src="displayimage.php" width="800" height="60" border="0" alt="banner"/>
     <p class="style5 style1">Help</p>
   </div>
   <p>
 
   </p>
-  <div align="left">
+  <div id="content">
   <div style="padding:5px">
-    <p><strong>Login issues:</strong> 
-      If you don’t see your institution in the  list of Identity Providers (IdPs), or your institutional login fails,  please contact your local IT support.</p>
-    <p><strong>
-      Maximum recipient  addresses per email:</strong>  <?php echo $config["max_email_recipients"]?> multiple email addresses can be  separated by a comma.</p>
-    <p>      <strong>Maximum number of files per  upload:</strong> one - to upload several files at once, zip them into a  single archive first</p>
-    <p><strong>Maximum file size per upload, without  Gears: </strong> <?php echo formatBytes($config["max_flash_upload_size"])?></p>
-    <p><strong>Maximum file size per upload, with Gears: </strong> <?php echo formatBytes($config["max_gears_upload_size"])?> (file uploads over 2 GB currently not possible on Mac OSX and Linux)</p>
-    <p>      <strong>Maximum  file / voucher expiry days: </strong><?php echo $config["default_daysvalid"]?> </p>
-  </div>
+    <h4>Login</h4> 
+    <ul>
+    <li>If you don't see your institution in the list of Identity Providers (IdPs), or your institutional login fails, please contact your local IT support</li>
+    </ul>
+
+<h4>Requirements</h4>
+<ul>
+<li>A modern, current release of most popular browsers</li>
+<li><a href="http://get.adobe.com/flashplayer/">Flash Player</a> 10.x browser plugin</li>
+<li><a href="<?php echo $config['gearsURL']?>">Google Gears</a> browser plugin for uploading files larger than 2 GB and to enable cancel/resume for uploads. File uploads over 2 GB are currently not possible on Mac OSX and Linux</li>
+</ul>
+
+<h4>Limits</h4>
+    <ul>
+    <li><strong>
+      Maximum recipient  addresses per email:</strong>  <?php echo $config["max_email_recipients"]?> multiple email addresses can be  separated by a comma</li>
+    <li><strong>Maximum number of files per  upload:</strong> one - to upload several files at once, zip them into a  single archive first</li>
+    <li><strong>Maximum file size per upload, without  Gears: </strong> <?php echo formatBytes($config["max_flash_upload_size"])?></li>
+    <li><strong>Maximum file size per upload, with Gears: </strong> <?php echo formatBytes($config["max_gears_upload_size"])?></li>
+    <li>      <strong>Maximum  file / voucher expiry days: </strong><?php echo $config["default_daysvalid"]?> </li>
+    </ul>
+    <p>For more information please visit <a href="http://www.filesender.org/">www.filesender.org</a></p>
   </div>
   <hr />
-</div>
-<!-- #content -->
+  </div> <!-- #content -->
 
 </div><!-- #wrap -->
 
