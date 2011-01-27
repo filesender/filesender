@@ -105,7 +105,7 @@ public function loadConfig() {
 	if ( isset($_SERVER['SERVER_NAME']) ) {
 	$prot =  isset($_SERVER['HTTPS']) ? 'https://' : 'http://';
 	$config['site_url'] = $prot . $_SERVER['SERVER_NAME'] . '/filesender/'; // URL to Filesender
-	$config['site_simplesamlurl'] =  $prot . $_SERVER['SERVER_NAME'] . '/simplesaml/';
+	$config['site_simplesamlurl'] =  $prot . $_SERVER['SERVER_NAME'] . '/simplesamlphp/';
 	$config['site_downloadurl'] = $config['site_url'] . 'files/';
 	$config['site_logouturl'] = $config['site_url'] . 'logout.php';
 	}

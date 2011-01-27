@@ -13,9 +13,11 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
 
 Requires: httpd
-Requires: php
+Requires: php >= 5.2.0
 Requires: php-pgsql
+Requires: php-xml
 Requires: simplesamlphp
+Requires: postgresql-server
 
 %description
 FileSender is a web based application that allows authenticated users to
@@ -55,11 +57,11 @@ rm -rf %{buildroot}
 %{__rm} -r %{buildroot}%{_datadir}/%{name}/config/config.php
 %{__rm} -rf %{buildroot}%{_datadir}/%{name}/tmp
 %{__rm} -rf %{buildroot}%{_datadir}/%{name}/log
-%{__rm} -rf %{buildroot}%{_datadir}/%{name}/www/files
+%{__rm} -rf %{buildroot}%{_datadir}/%{name}/files
 
 ln -s ../../../..%{_sysconfdir}/%{name}/config.inc.php %{buildroot}%{_datadir}/%{name}/config/config.php
 ln -s ../../..%{_localstatedir}/lib/%{name}/tmp %{buildroot}%{_datadir}/%{name}/tmp
-ln -s ../../../..%{_localstatedir}/lib/%{name}/files %{buildroot}%{_datadir}/%{name}/www/files
+ln -s ../../../..%{_localstatedir}/lib/%{name}/files %{buildroot}%{_datadir}/%{name}/files
 ln -s ../../..%{_localstatedir}/log/%{name} %{buildroot}%{_datadir}/%{name}/log
 
 %clean
