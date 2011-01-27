@@ -36,6 +36,15 @@ The software is not intended as a permanent file publishing platform.
 %prep
 %setup -q
 
+%{__cat} <cron.daily
+#!/bin/sh
+fs_location=%{buildroot}%{_datadir}/%{name}
+if [ -x %{_bindir}/php -a -f ${fs_location}/cron/cron.php ]
+then
+     %{_bindir}/php ${fs_location}/cron/cron.php
+fi
+EOF
+
 %build
 
 %install
@@ -64,6 +73,8 @@ ln -s ../../..%{_localstatedir}/lib/%{name}/tmp %{buildroot}%{_datadir}/%{name}/
 ln -s ../../../..%{_localstatedir}/lib/%{name}/files %{buildroot}%{_datadir}/%{name}/files
 ln -s ../../..%{_localstatedir}/log/%{name} %{buildroot}%{_datadir}/%{name}/log
 
+%{__install} -Dp -m0755 cron.daily %{buildroot}%{_sysconfdir}/cron.daily/%{name}
+
 %clean
 rm -rf %{buildroot}
 
@@ -74,6 +85,7 @@ rm -rf %{buildroot}
 %dir %{_sysconfdir}/%{name}/
 %config(noreplace) %{_sysconfdir}/%{name}/config.inc.php
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.conf
+%config(noreplace) %{_sysconfdir}/cron.daily/%{name}
 %dir %{_localstatedir}/lib/%{name}/
 %dir %attr(0750,apache,apache) %{_localstatedir}/lib/%{name}/tmp
 %dir %attr(0750,apache,apache) %{_localstatedir}/lib/%{name}/files
