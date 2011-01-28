@@ -4,11 +4,12 @@ Release:        1%{?dist}
 Summary:        Sharing large files with a browser
 
 Group:          Applications/Internet
-License:        custom?
-URL:            http://www.assembla.com/spaces/file_sender/documents
-Source0:        http://filesender-dev.surfnet.nl/nightly/%{name}-%{version}.tar.gz
+License:        BSD
+URL:            http://www.filesender.org/
+Source0:        http://filesender-dev.surfnet.nl/releases/%{name}-%{version}.tar.gz
 Source1:	%{name}-config.php
 Source2:	%{name}.htaccess
+Source3:	%{name}.cron.daily
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
 
@@ -43,6 +44,7 @@ rm -rf %{buildroot}
 %{__mkdir} -p %{buildroot}%{_datadir}/%{name}
 %{__mkdir} -p %{buildroot}%{_sysconfdir}/%{name}
 %{__mkdir} -p %{buildroot}%{_sysconfdir}/httpd/conf.d
+%{__mkdir} -p %{buildroot}%{_sysconfdir}/cron.daily
 %{__mkdir} -p %{buildroot}%{_localstatedir}/lib/%{name}/files
 %{__mkdir} -p %{buildroot}%{_localstatedir}/lib/%{name}/tmp
 %{__mkdir} -p %{buildroot}%{_localstatedir}/log/%{name}
@@ -50,6 +52,8 @@ rm -rf %{buildroot}
 %{__cp} -ad ./* %{buildroot}%{_datadir}/%{name}
 %{__cp} -p %{SOURCE2} %{buildroot}%{_sysconfdir}/httpd/conf.d/%{name}.conf
 %{__cp} -p %{SOURCE1} %{buildroot}%{_sysconfdir}/%{name}/config.inc.php
+%{__cp} -p %{SOURCE3} %{buildroot}%{_sysconfdir}/cron.daily/%{name}
+%{__chmod} 0755 %{buildroot}%{_sysconfdir}/cron.daily/%{name}
 
 %{__rm} -f %{buildroot}%{_datadir}/%{name}/*.txt
 %{__rm} -f %{buildroot}%{_datadir}/%{name}/*.specs
@@ -72,15 +76,15 @@ rm -rf %{buildroot}
 %doc CHANGELOG.txt  INSTALL.txt  LICENCE.txt  README.txt
 %{_datadir}/%{name}/
 %dir %{_sysconfdir}/%{name}/
-%config(noreplace) %{_sysconfdir}/%{name}/config.inc.php
+%config(noreplace) %attr(0640,root,apache) %{_sysconfdir}/%{name}/config.inc.php
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.conf
+%config(noreplace) %{_sysconfdir}/cron.daily/%{name}
 %dir %{_localstatedir}/lib/%{name}/
 %dir %attr(0750,apache,apache) %{_localstatedir}/lib/%{name}/tmp
 %dir %attr(0750,apache,apache) %{_localstatedir}/lib/%{name}/files
 %dir %attr(0750,apache,apache) %{_localstatedir}/log/%{name}
 
 
-
 %changelog
-* Wed Jan 12 2011 FileSender Development <filesender-dev@filesender.org> %{Version}-1
+* Mon Jan 31 2011 FileSender Development <filesender-dev@filesender.org> %{Version}-1
 - Release 1.0
