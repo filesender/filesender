@@ -1,6 +1,6 @@
-Last update: 29 Januari 2011
+Last update: 29 January 2011
 
-Version 1.0 <31 Januari 2011>
+Version 1.0 <31 January 2011>
 	Release 1.0
 
 	Documentation
@@ -18,7 +18,7 @@ Version 1.0 <31 Januari 2011>
 	#371 Change default pg_username from postgres to filesender
 	#375 Add 'start again' link to default logout page
 
-Version 1.0-RC1 <14 Januari 2011>
+Version 1.0-RC1 <14 January 2011>
 
 	Re-release of 0.1.19 as release candidate 1
 	Fix
