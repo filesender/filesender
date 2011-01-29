@@ -12,6 +12,7 @@ filesender (1.0) stable; urgency=medium
    * Fixes
      #360 Low diskspace warning administrator email message
      #368 Minor HTML fixes
+     #369 Gears CHUNK_BYTES increased to 2M (was 200KB)
      #371 Change default pg_username from postgres to filesender
      #375 Add 'start again' link to default logout page
 
