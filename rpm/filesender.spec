@@ -75,7 +75,7 @@ rm -rf %{buildroot}
 %doc CHANGELOG.txt  INSTALL.txt  LICENCE.txt  README.txt
 %{_datadir}/%{name}/
 %dir %{_sysconfdir}/%{name}/
-%config(noreplace) %attr(0640,root,apache) %{_sysconfdir}/%{name}/config.inc.php
+%config(noreplace) %attr(0640,root,apache) %{_sysconfdir}/%{name}/config.php
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.conf
 %config(noreplace) %attr(0775,root,root) %{_sysconfdir}/cron.daily/%{name}
 %dir %{_localstatedir}/lib/%{name}/
