@@ -1,4 +1,19 @@
 filesender (1.0) stable; urgency=medium
+   * Release 1.0
+
+   * Documentation
+     - Updated documentation on http://www.filesender.org/
+     - Updated config.php with documentation and grouping of related settings
+     - Updated help.php and about.php (#363, #367)
+
+   * Packaging
+     - Improvements in the packaging (tar, RPM, debian)
+
+   * Fixes
+     #360 Low diskspace warning administrator email message
+     #368 Minor HTML fixes
+     #371 Change default pg_username from postgres to filesender
+     #375 Add 'start again' link to default logout page
 
  -- Filesender Development <filesender-dev@filesender.org>  Mon, 31 Jan 2011 00:00:00 +0100
 
