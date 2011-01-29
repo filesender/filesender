@@ -61,13 +61,15 @@ body { margin: 0px; overflow:hidden }
 	
   <div id="header">
    <img src="displayimage.php" width="800" height="60" border="0" alt="banner"/>
-    <p class="style5">&nbsp;</p>
+    <p class="style5 style1">Logout</p>
   </div>
   <p>
 
   </p>
   <div id="content">
-    <div align="center">Logout Complete.
+    <div align="center">
+	<p>Logout Complete.</p>
+	<p><a href="<?php echo $config['site_url']?>">Start again.</a>
     </div>
     <hr />
   </div><!-- #content -->
