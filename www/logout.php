@@ -69,7 +69,7 @@ body { margin: 0px; overflow:hidden }
   <div id="content">
     <div align="center">
 	<p>Logout Complete.</p>
-	<p><a href="<?php echo $config['site_url']?>">Start again.</a>
+	<p><a href="<?php echo $config['site_url']?>">Start again.</a></p>
     </div>
     <hr />
   </div><!-- #content -->
