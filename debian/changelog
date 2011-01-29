@@ -9,7 +9,7 @@ filesender (1.0) stable; urgency=medium
    * Packaging
      - Improvements in the packaging (tar, RPM, debian)
 
-   * Fixes
+   * Fixes and changes
      #360 Low diskspace warning administrator email message
      #368 Minor HTML fixes
      #369 Gears CHUNK_BYTES increased to 2M (was 200KB)

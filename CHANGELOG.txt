@@ -1,6 +1,6 @@
-Last update: 29 Januari 2010
+Last update: 29 Januari 2011
 
-Version 1.0 <31 Januari 2010>
+Version 1.0 <31 Januari 2011>
 	Release 1.0
 
 	Documentation
@@ -11,14 +11,14 @@ Version 1.0 <31 Januari 2010>
 	Packaging
 	- Improvements in the packaging (tar, RPM, debian)
 	
-	Fixes
+	Fixes and changes
 	#360 Low diskspace warning administrator email message
 	#368 Minor HTML fixes
 	#369 Gears CHUNK_BYTES increased to 2M (was 200KB)
 	#371 Change default pg_username from postgres to filesender
 	#375 Add 'start again' link to default logout page
 
-Version 1.0-RC1 <14 Januari 2010>
+Version 1.0-RC1 <14 Januari 2011>
 
 	Re-release of 0.1.19 as release candidate 1
 	Fix
