@@ -1,4 +1,21 @@
-Last update: 14 Januari 2010
+Last update: 29 Januari 2010
+
+Version 1.0 <31 Januari 2010>
+	Release 1.0
+
+	Documentation
+	- Updated documentation on http://www.filesender.org/
+	- Updated config.php with documentation and grouping of related settings
+	- Updated help.php and about.php (#363, #367)
+
+	Packaging
+	- Improvements in the packaging (tar, RPM, debian)
+	
+	Fixes
+	#360 Low diskspace warning administrator email message
+	#368 Minor HTML fixes
+	#371 Change default pg_username from postgres to filesender
+	#375 Add 'start again' link to default logout page
 
 Version 1.0-RC1 <14 Januari 2010>
 

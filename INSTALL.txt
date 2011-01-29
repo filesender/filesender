@@ -4,7 +4,7 @@ Installation instructions
 =========================
 
 FileSender installation instructions are available at:
-   https://www.assembla.com/wiki/show/file_sender/Documentation
+   https://www.assembla.com/wiki/show/file_sender/Documentation_for_v1-0
 
 Be sure to read the parts about configuring PostgreSQL, PHP, Apache,
 SimpleSAMLphp and cron to get up and running.
@@ -36,8 +36,8 @@ upgrading from Beta-0.1.16 or older.
 
 * As of version Beta-0.1.17 the expiration of files and vouchers is handled
 by a script to be called by cron. Please see the installation instructions at
-https://www.assembla.com/wiki/show/file_sender/Documentation on how to
-install such a cron job.
+https://www.assembla.com/wiki/show/file_sender/Documentation_for_v1-0 on how
+to install such a cron job.
 
 
 IMPORTANT: Upgrading from previous betas in general
@@ -87,6 +87,10 @@ As of version Beta-0.1.17 you can put a site specific banner in
 If this file is available FileSender will use that one instead of the
 default banner in www/banner.png.
 
+Please refer to the section on Customisation in the Administrator reference
+guide at https://www.assembla.com/wiki/show/file_sender/Documentation_for_v1-0
+for instructions on how to customise your installation.
+
 Performance
 ===========
 
@@ -94,6 +98,6 @@ Performance
 
 You may have changed the chunksize used in the gears upload. This value is
 found in www/js/fs_gears.js in the variable CHUNK_BYTES that has a default
-value of 200000 (200KB).
+value of 2000000 (2M).
 
 For more details about other changes please see CHANGELOG.txt.
