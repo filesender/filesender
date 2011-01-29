@@ -8,10 +8,8 @@ set -e
 . /usr/share/debconf/confmodule
 . /usr/share/dbconfig-common/dpkg/postinst
 dbc_generate_include=php:/etc/filesender/debian-db.php
-dbc_generate_include_owner="www-data:www-data"
-dbc_generate_include_perms="660"
-dbc_dbfile_owner="www-data:www-data"
-dbc_dbfile_perms="0660"
+dbc_generate_include_owner="root:www-data"
+dbc_generate_include_perms="640"
 dbc_dbuser=filesender
 dbc_dbname=filesender
 
