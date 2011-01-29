@@ -50,20 +50,19 @@ rm -rf %{buildroot}
 %{__mkdir} -p %{buildroot}%{_localstatedir}/log/%{name}
 
 %{__cp} -ad ./* %{buildroot}%{_datadir}/%{name}
+%{__cp} -p %{SOURCE1} %{buildroot}%{_sysconfdir}/%{name}/config.php
 %{__cp} -p %{SOURCE2} %{buildroot}%{_sysconfdir}/httpd/conf.d/%{name}.conf
-%{__cp} -p %{SOURCE1} %{buildroot}%{_sysconfdir}/%{name}/config.inc.php
 %{__cp} -p %{SOURCE3} %{buildroot}%{_sysconfdir}/cron.daily/%{name}
-%{__chmod} 0755 %{buildroot}%{_sysconfdir}/cron.daily/%{name}
 
 %{__rm} -f %{buildroot}%{_datadir}/%{name}/*.txt
 %{__rm} -f %{buildroot}%{_datadir}/%{name}/*.specs
 
-%{__rm} -r %{buildroot}%{_datadir}/%{name}/config/config.php
+%{__rm} -rf %{buildroot}%{_datadir}/%{name}/config
 %{__rm} -rf %{buildroot}%{_datadir}/%{name}/tmp
 %{__rm} -rf %{buildroot}%{_datadir}/%{name}/log
 %{__rm} -rf %{buildroot}%{_datadir}/%{name}/files
 
-ln -s ../../../..%{_sysconfdir}/%{name}/config.inc.php %{buildroot}%{_datadir}/%{name}/config/config.php
+ln -s ../../../..%{_sysconfdir}/%{name} %{buildroot}%{_datadir}/%{name}/config
 ln -s ../../..%{_localstatedir}/lib/%{name}/tmp %{buildroot}%{_datadir}/%{name}/tmp
 ln -s ../../../..%{_localstatedir}/lib/%{name}/files %{buildroot}%{_datadir}/%{name}/files
 ln -s ../../..%{_localstatedir}/log/%{name} %{buildroot}%{_datadir}/%{name}/log
@@ -76,9 +75,9 @@ rm -rf %{buildroot}
 %doc CHANGELOG.txt  INSTALL.txt  LICENCE.txt  README.txt
 %{_datadir}/%{name}/
 %dir %{_sysconfdir}/%{name}/
-%config(noreplace) %attr(0640,root,apache) %{_sysconfdir}/%{name}/config.inc.php
+%config(noreplace) %attr(0640,root,apache) %{_sysconfdir}/%{name}/config.php
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.conf
-%config(noreplace) %{_sysconfdir}/cron.daily/%{name}
+%config(noreplace) %attr(0755,root,root) %{_sysconfdir}/cron.daily/%{name}
 %dir %{_localstatedir}/lib/%{name}/
 %dir %attr(0750,apache,apache) %{_localstatedir}/lib/%{name}/tmp
 %dir %attr(0750,apache,apache) %{_localstatedir}/lib/%{name}/files
