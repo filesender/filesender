@@ -16,7 +16,7 @@ filesender (1.0) stable; urgency=medium
      #371 Change default pg_username from postgres to filesender
      #375 Add 'start again' link to default logout page
 
- -- Filesender Development <filesender-dev@filesender.org>  Mon, 31 Jan 2011 00:00:00 +0100
+ -- Filesender Development <filesender-dev@filesender.org>  Sun, 30 Jan 2011 10:07:31 +0100
 
 filesender (0.1.19+1.0rc1) stable; urgency=low
   * 1.0 Release Candidate 1
