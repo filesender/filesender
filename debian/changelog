@@ -1,3 +1,29 @@
+filesender (1.0) stable; urgency=medium
+   * Release 1.0
+
+   * Documentation
+     - Updated documentation on http://www.filesender.org/
+     - Updated config.php with documentation and grouping of related settings
+     - Updated help.php and about.php (#363, #367)
+
+   * Packaging
+     - Improvements in the packaging (tar, RPM, debian)
+
+   * Fixes and changes
+     #360 Low diskspace warning administrator email message
+     #368 Minor HTML fixes
+     #369 Gears CHUNK_BYTES increased to 2M (was 200KB)
+     #371 Change default pg_username from postgres to filesender
+     #375 Add 'start again' link to default logout page
+
+ -- Filesender Development <filesender-dev@filesender.org>  Sun, 30 Jan 2011 10:07:31 +0100
+
+filesender (0.1.19+1.0rc1) stable; urgency=low
+  * 1.0 Release Candidate 1
+    - re-release of beta 0.1.19
+
+ -- Filesender Development <filesender-dev@filesender.org>  Sun, 16 Jan 2011 13:09:35 +0100
+
 filesender (0.1.19) stable; urgency=low
 
   * New features
@@ -7,7 +33,7 @@ filesender (0.1.19) stable; urgency=low
 
  -- Filesender Development <filesender-dev@filesender.org>  Fri, 24 Dec 2010 14:08:00 +0100
 
-filesender (0.1.17-1) stable; urgency=low
+filesender (0.1.17) stable; urgency=low
 
   * New features
     - FileSender now can handle filenames, subjects and personal messages in non-US-ASCII charsets
@@ -19,13 +45,13 @@ filesender (0.1.17-1) stable; urgency=low
 
  -- Filesender Development <filesender-dev@filesender.org>  Thu, 18 Nov 2010 14:08:00 +0100
 
-filesender (0.1.16.1-1) stable; urgency=low
+filesender (0.1.16.1) stable; urgency=low
 
   * patch release 0.1.16.1
 
  -- Filesender Development <filesender-dev@filesender.org>  Fri, 08 Oct 2010 14:27:45 +0200
 
-filesender (0.1.16-1) stable; urgency=low
+filesender (0.1.16) stable; urgency=low
   
   * New upstream release
 
