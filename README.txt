@@ -1,4 +1,4 @@
-Updated: 14 January 2011
+Updated: 29 January 2011
 
 FileSender is a software package that implements a web-based application that
 allows authenticated users to securely and easily send arbitrarily large files
@@ -20,7 +20,7 @@ FileSender project home:
    http://www.filesender.org/
 
 FileSender installation and configuration documentation is available at:
-   https://www.assembla.com/wiki/show/file_sender/Documentation
+   https://www.assembla.com/wiki/show/file_sender/Documentation_for_v1-0
 
 
 Support is available on a best-effort basis through the FileSender development
