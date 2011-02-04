@@ -223,7 +223,7 @@ if (isset($_POST['call'])) {
             // insert a new file or voucher
         case "insertFile":
 
-            logEntry("INSERT:".rawurldecode($_POST['jsonSendData']));
+            // logEntry("INSERT:".rawurldecode($_POST['jsonSendData']));
             echo $functions->insertFile();
             break;
 
