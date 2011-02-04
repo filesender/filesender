@@ -1,10 +1,10 @@
 Name:           filesender
-Version:        0.1.20.201101090000
+Version:        1.0.0
 Release:        1%{?dist}
 Summary:        Sharing large files with a browser
 
 Group:          Applications/Internet
-License:        custom?
+License:        BSD
 URL:            http://www.filesender.org/
 Source0:        http://filesender-dev.surfnet.nl/nightly/%{name}-%{version}.tar.gz
 Source1:	%{name}-config.php
@@ -85,5 +85,8 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Thu Sep 2 2010 Gijs Molenaar <gijs@pythonic.nl> %{Version}-1
-- first release
+* %(date) FileSender Development <filesender-dev@filesender.org> %{Version}-1
+- development build
+
+* Mon Jan 31 2011 FileSender Development <filesender-dev@filesender.org> 1.0-1
+- Release 1.0
