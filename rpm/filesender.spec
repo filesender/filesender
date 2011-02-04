@@ -85,7 +85,7 @@ rm -rf %{buildroot}
 
 
 %changelog
-* %(date) FileSender Development <filesender-dev@filesender.org> %{Version}-1
+* %(date '+%a %b %d %Y') FileSender Development <filesender-dev@filesender.org> %{Version}-1
 - development build
 
 * Mon Jan 31 2011 FileSender Development <filesender-dev@filesender.org> 1.0-1
