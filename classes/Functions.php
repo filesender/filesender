@@ -501,7 +501,7 @@ class Functions {
             : sanitizeFilename($dataitem['fileoriginalname']),
                 $dataitem['filestatus'],
                 $dbCheck->checkIp($_SERVER['REMOTE_ADDR']),
-                $dataitem['fileip6address'],
+                $dataitem['fileip6address'], // $dbCheck->checkIp6($_SERVER['REMOTE_ADDR']),
                 $dataitem['filesendersname'],
                 $dataitem['filereceiversname'],
                 $dataitem['filevouchertype'],
@@ -567,7 +567,7 @@ class Functions {
         $fileoriginalname 	= sanitizeFilename($dataitem['fileoriginalname']);
         $filestatus 		= $dataitem['filestatus'];
         $fileip4address 	= $dbCheck->checkIp($ip);
-        $fileip6address 	= "NULL";// stringconversion(pg_escape_string($dataitem['fileip6address']));
+        $fileip6address 	= "NULL";// dbCheck->checkIp6($ip);
         $filesendersname 	= "NULL";//stringconversion(pg_escape_string($dataitem['filesendersname']));
         $filereceiversname 	= "NULL";//  stringconversion(pg_escape_string($dataitem['filereceiversname']));
         $filevouchertype 	= "NULL";// stringconversion(pg_escape_string($dataitem['filevouchertype']));
