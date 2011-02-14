@@ -377,7 +377,7 @@ class Functions {
 
         $vid = $dataitem['filevoucheruid'];
 
-        $result = $this->db->fquery("SELECT * FROM files where filevoucherid = '%s'", $vid);
+        $result = $this->db->fquery("SELECT * FROM files where filevoucheruid = '%s'", $vid);
 
         if (!$result) { $this->saveLog->saveLog($dataitem,"Error",pg_last_error()); return FALSE; }
 
@@ -567,7 +567,7 @@ class Functions {
         $fileoriginalname 	= sanitizeFilename($dataitem['fileoriginalname']);
         $filestatus 		= $dataitem['filestatus'];
         $fileip4address 	= $dbCheck->checkIp($ip);
-        $fileip6address 	= "NULL";// dbCheck->checkIp6($ip);
+        $fileip6address 	= "NULL";// $dbCheck->checkIp6($ip);
         $filesendersname 	= "NULL";//stringconversion(pg_escape_string($dataitem['filesendersname']));
         $filereceiversname 	= "NULL";//  stringconversion(pg_escape_string($dataitem['filereceiversname']));
         $filevouchertype 	= "NULL";// stringconversion(pg_escape_string($dataitem['filevouchertype']));
