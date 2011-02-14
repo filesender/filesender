@@ -501,7 +501,7 @@ class Functions {
             : sanitizeFilename($dataitem['fileoriginalname']),
                 $dataitem['filestatus'],
                 $dbCheck->checkIp($_SERVER['REMOTE_ADDR']),
-                $dataitem['fileip6address'], // $dbCheck->checkIp6($_SERVER['REMOTE_ADDR']),
+                substr($dbCheck->checkIp6($_SERVER['REMOTE_ADDR']), 0, $this->getFieldSize('files','fileip6address')),
                 $dataitem['filesendersname'],
                 $dataitem['filereceiversname'],
                 $dataitem['filevouchertype'],
@@ -567,7 +567,7 @@ class Functions {
         $fileoriginalname 	= sanitizeFilename($dataitem['fileoriginalname']);
         $filestatus 		= $dataitem['filestatus'];
         $fileip4address 	= $dbCheck->checkIp($ip);
-        $fileip6address 	= "NULL";// $dbCheck->checkIp6($ip);
+        $fileip6address 	= substr($dbCheck->checkIp6($ip), 0, $this->getFieldSize('files','fileip6address'));
         $filesendersname 	= "NULL";//stringconversion(pg_escape_string($dataitem['filesendersname']));
         $filereceiversname 	= "NULL";//  stringconversion(pg_escape_string($dataitem['filereceiversname']));
         $filevouchertype 	= "NULL";// stringconversion(pg_escape_string($dataitem['filevouchertype']));
@@ -848,6 +848,18 @@ class Functions {
 
     }
 
+    //---------------------------------------
+    // Get the size of a database column/field (also for varchar fields)
+    // Requires table name and column name as parameters
+    private function getFieldSize($table,$field){
+        $config = $this->CFG->loadConfig();
+
+        $result = $this->db->fquery("select a.atttypmod,a.attrelid from pg_attribute as a, pg_class as c where c.relname='%s' AND a.attrelid=c.oid AND a.attname='%s'", $table, $field);                
+
+        $data = pg_fetch_object($result);
+        return ($data->atttypmod - 4);       
+
+    }
 }
 
 ?>
