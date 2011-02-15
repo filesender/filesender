@@ -1,4 +1,14 @@
-Last update: 29 January 2011
+Last update: 14 Februari 2011
+
+Version 1.0.0-dev (trunk) <14 Februari 2011>
+
+	Fixes and changes
+	#379 Log IPv6 address of connecting client. When upgrading from
+	     previous versions you should fix the relevant column size in the
+	     database with:
+	      #sudo -u postgres psql filesender
+	      ALTER TABLE files ALTER fileip6address TYPE character varying(45);
+	      \q
 
 Version 1.0 <31 January 2011>
 	Release 1.0
