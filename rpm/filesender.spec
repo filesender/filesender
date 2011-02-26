@@ -17,7 +17,7 @@ Requires: httpd
 Requires: php >= 5.2.0
 Requires: php-pgsql
 Requires: php-xml
-Requires: simplesamlphp
+Requires: simplesamlphp < 1.7.0
 Requires: postgresql-server
 
 %description
@@ -47,6 +47,10 @@ rm -rf %{buildroot}
 %{__mkdir} -p %{buildroot}%{_sysconfdir}/cron.daily
 %{__mkdir} -p %{buildroot}%{_localstatedir}/lib/%{name}/files
 %{__mkdir} -p %{buildroot}%{_localstatedir}/lib/%{name}/tmp
+%{__mkdir} -p %{buildroot}%{_localstatedir}/lib/%{name}/maildrop
+%{__mkdir} -p %{buildroot}%{_localstatedir}/lib/%{name}/maildrop/new
+%{__mkdir} -p %{buildroot}%{_localstatedir}/lib/%{name}/maildrop/done
+%{__mkdir} -p %{buildroot}%{_localstatedir}/lib/%{name}/maildrop/failures
 %{__mkdir} -p %{buildroot}%{_localstatedir}/log/%{name}
 
 %{__cp} -ad ./* %{buildroot}%{_datadir}/%{name}
@@ -61,10 +65,12 @@ rm -rf %{buildroot}
 %{__rm} -rf %{buildroot}%{_datadir}/%{name}/tmp
 %{__rm} -rf %{buildroot}%{_datadir}/%{name}/log
 %{__rm} -rf %{buildroot}%{_datadir}/%{name}/files
+%{__rm} -rf %{buildroot}%{_datadir}/%{name}/maildrop
 
 ln -s ../../../..%{_sysconfdir}/%{name} %{buildroot}%{_datadir}/%{name}/config
 ln -s ../../..%{_localstatedir}/lib/%{name}/tmp %{buildroot}%{_datadir}/%{name}/tmp
 ln -s ../../../..%{_localstatedir}/lib/%{name}/files %{buildroot}%{_datadir}/%{name}/files
+ln -s ../../../..%{_localstatedir}/lib/%{name}/maildrop %{buildroot}%{_datadir}/%{name}/maildrop
 ln -s ../../..%{_localstatedir}/log/%{name} %{buildroot}%{_datadir}/%{name}/log
 
 %clean
@@ -81,6 +87,8 @@ rm -rf %{buildroot}
 %dir %{_localstatedir}/lib/%{name}/
 %dir %attr(0750,apache,apache) %{_localstatedir}/lib/%{name}/tmp
 %dir %attr(0750,apache,apache) %{_localstatedir}/lib/%{name}/files
+%dir %attr(0750,apache,apache) %{_localstatedir}/lib/%{name}/maildrop
+%dir %attr(0750,apache,apache) %{_localstatedir}/lib/%{name}/maildrop/*
 %dir %attr(0750,apache,apache) %{_localstatedir}/log/%{name}
 
 
