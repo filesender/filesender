@@ -132,9 +132,14 @@ public function loadConfig() {
 
 	// cron settings
 	$config['cron_exclude prefix'] = '_'; // exclude deletion of files with the prefix character listed (can use multiple characters eg '._' will ignore .xxxx and _xxxx
-	
+
+	// email bounce handling
+	$config['return_path'] = "";
+	$config['emailbounce_location'] = '/usr/share/filesender/maildrop/new';
+
 	// email templates section
 	$config['default_emailsubject'] = "{siteName}: {filename}";
+	$config['emailbounce_subject'] = "{siteName}: Email notification sending failure";
 	$config['filedownloadedemailbody'] = '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}
 Dear Sir, Madam,
 
@@ -358,6 +363,36 @@ Dear Sir, Madam,<BR><BR>The file '{filename}' from {filefrom} has been cancelled
 <P>{siteName}</P>
 </BODY>
 </HTML>{CRLF}{CRLF}--simple_mime_boundary--";
+	$config['bouncenotification'] = '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}
+Dear Sir, Madam,
+
+The {siteName} service attempted to send an email to {fileoriginalto} on your behalf. 
+
+The message was rejected by the remote site, the most common reason 
+being an error in the email address entered for the recipient.
+
+Please log into {siteName} to check the recipient address.
+
+{siteName} allows adding new recipients to files without needing to upload the file again, from the table in "My Files". In the case of Vouchers however, a new voucher must be issued.
+
+Best regards,
+
+{siteName}{CRLF}{CRLF}--simple_mime_boundary{CRLF}Content-type:text/html; charset={charset}{CRLF}{CRLF}
+<HTML>
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html;charset={charset}">
+</HEAD>
+<BODY>
+<P>Dear Sir, Madam,</P>
+<P>The {siteName} service attempted to send an email to {fileoriginalto} on your behalf.</P>
+<P>The message was rejected by the remote site, the most common reason
+being an error in the email address entered for the recipient.</P>
+<P>Please log into {siteName} to check the recipient address.</P>
+<P>{siteName} allows adding new recipients to files without needing to upload the file again, from the table in "My Files". In the case of Vouchers however, a new voucher must be issued.</P>
+<P>Best regards,</P>
+<P>{siteName}</P> 
+</BODY>
+</HTML>{CRLF}{CRLF}--simple_mime_boundary--';
 	// End of email templates section
 
 	// The settings below are not implemented yet in 1.0
