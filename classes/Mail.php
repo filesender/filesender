@@ -138,7 +138,7 @@ class Mail {
         } else {
             return false;
         }
-    }
+	}
 
     //---------------------------------------
     // Send admin mail messages

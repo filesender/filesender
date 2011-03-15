@@ -1,33 +1,32 @@
 <?php
 
 /*
- * FileSender www.filesender.org
- * 
- * Copyright (c) 2009-2011, AARNet, HEAnet, SURFnet, UNINETT
- * All rights reserved.
- * 
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- * 
- * *	Redistributions of source code must retain the above copyright
- * 	notice, this list of conditions and the following disclaimer.
- * *	Redistributions in binary form must reproduce the above copyright
- * 	notice, this list of conditions and the following disclaimer in the
- * 	documentation and/or other materials provided with the distribution.
- * *	Neither the name of AARNet, HEAnet, SURFnet and UNINETT nor the
- * 	names of its contributors may be used to endorse or promote products
- * 	derived from this software without specific prior written permission.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *  Filesender www.filesender.org
+ *      
+ *  Copyright (c) 2009-2010, Aarnet, HEAnet, UNINETT
+ * 	All rights reserved.
+ *
+ * 	Redistribution and use in source and binary forms, with or without
+ *	modification, are permitted provided that the following conditions are met:
+ *	* 	Redistributions of source code must retain the above copyright
+ *   		notice, this list of conditions and the following disclaimer.
+ *   	* 	Redistributions in binary form must reproduce the above copyright
+ *   		notice, this list of conditions and the following disclaimer in the
+ *   		documentation and/or other materials provided with the distribution.
+ *   	* 	Neither the name of Aarnet, HEAnet and UNINETT nor the
+ *   		names of its contributors may be used to endorse or promote products
+ *   		derived from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY Aarnet, HEAnet and UNINETT ''AS IS'' AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL Aarnet, HEAnet or UNINETT BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
 // ---------------------------------------
@@ -290,7 +289,7 @@ class Functions {
         {
             array_push($returnArray, $row);
         }
-        echo json_encode($returnArray);
+        return json_encode($returnArray);
     }
 
     //---------------------------------------
@@ -319,7 +318,7 @@ class Functions {
         {
             array_push($returnArray, $row);
         }
-        echo json_encode($returnArray);
+        return json_encode($returnArray);
     }
 
     //---------------------------------------
@@ -332,7 +331,7 @@ class Functions {
         if($this->authsaml->authIsAdmin()) { 
 
 
-            $result = $this->db->fquery("SELECT logtype, logfrom , logto, logdate, logfilesize, logfilename, logmessage FROM logs ORDER BY logdate DESC");
+            $result = $this->db->fquery("SELECT logtype, logfrom , logto, logdate, logfilesize, logfilename, logmessage FROM logs WHERE EXTRACT( YEAR FROM logdate) = 2011 ORDER BY logdate DESC");
 
             if (!$result) { $this->saveLog->saveLog("","Error",pg_last_error()); return FALSE; }
 
@@ -341,7 +340,7 @@ class Functions {
             {
                 array_push($returnArray, $row);
             }
-            echo json_encode($returnArray);
+            return $returnArray;
         }
 
     }
@@ -362,7 +361,7 @@ class Functions {
             {
                 array_push($returnArray, $row);
             }
-            echo json_encode($returnArray);
+            return $returnArray;
         }
     }
 
@@ -398,6 +397,26 @@ class Functions {
         // check authentication as file UID is returned
 
         $result = $this->db->fquery("SELECT * FROM files where fileid = '%s'", $vid);
+
+        if (!$result) { $this->saveLog->saveLog($dataitem,"Error",pg_last_error()); return FALSE; }
+
+        $returnArray = array();
+        while($row = pg_fetch_assoc($result)){
+            array_push($returnArray, $row);
+        }
+        return $returnArray;
+    }
+	
+	   //---------------------------------------
+    // Return voucher information based on filervoucheruid
+    // 
+    public function getVoucherData($vid) {
+
+        $config = $this->CFG->loadConfig();
+
+        // check authentication as file UID is returned
+
+        $result = $this->db->fquery("SELECT * FROM files where filevoucheruid = '%s'", $vid);
 
         if (!$result) { $this->saveLog->saveLog($dataitem,"Error",pg_last_error()); return FALSE; }
 
@@ -522,6 +541,204 @@ class Functions {
             }
     }
 
+// added for HTML5 version
+public function insertVoucher($to,$expiry){
+
+
+        $config = $this->CFG->loadConfig();
+        $dbCheck = DB_Input_Checks::getInstance();
+		
+		// var  $dataitem = [];
+		
+		 $dataitem['fileexpirydate'] = $expiry;
+         $dataitem['fileto'] = $to;
+         $dataitem['filesubject'] = 'Voucher';
+         $dataitem['fileactivitydate'] = '';
+         $dataitem['filevoucheruid'] = getGUID();
+         $dataitem['filemessage'] = '';
+         $dataitem['filefrom'] = '';
+         $dataitem['filesize'] = 0;
+         $dataitem['fileoriginalname'] = '';
+         $dataitem['filestatus'] = "Voucher";
+         $dataitem['fileip4address'] = '';
+         $dataitem['fileip6address'] = '';
+         $dataitem['filesendersname'] = '';
+         $dataitem['filereceiversname'] = '';
+         $dataitem['filevouchertype'] = '';
+         $dataitem['fileuid'] = getGUID();
+         $dataitem['fileauthuseruid'] = '';
+         $dataitem['fileauthuseremail'] = '';
+         $dataitem['filecreateddate'] = '';
+		 
+		 if( $this->authsaml->isAuth()) {
+            $authAttributes = $this->authsaml->sAuth();
+            $dataitem['fileauthuseruid'] = $authAttributes["eduPersonTargetedID"] ;
+            $dataitem['fileauthuseremail'] = $authAttributes["email"];
+			 $dataitem['filefrom'] = $authAttributes["email"];
+		
+        }
+		
+				
+  		// check if user supplied date is past the server configuration maximum date
+		if(strtotime($expiry) > strtotime("+".$config['default_daysvalid']." day"))
+		{
+		// reset fileexpiry date to max config date from server
+		$expiry = date($config['postgresdateformat'],strtotime("+".($config['default_daysvalid'])." day"));
+		}
+
+       $dataitem['fileexpirydate'] = $expiry;
+
+        $result = $this->db->fquery("
+            INSERT INTO files (
+
+                fileexpirydate,
+                fileto,
+                filesubject,
+                fileactivitydate,
+                filevoucheruid,
+                filemessage,
+                filefrom,
+                filesize,
+                fileoriginalname,
+                filestatus,
+                fileip4address,
+                fileip6address,
+                filesendersname,
+                filereceiversname,
+                filevouchertype,
+                fileuid,
+                fileauthuseruid,
+                fileauthuseremail,
+                filecreateddate
+
+            ) VALUES
+            ( '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')",
+  			date($config['postgresdateformat'], strtotime($dataitem['fileexpirydate'])),
+            $dataitem['fileto'],
+            isset($dataitem['filesubject']) ? $dataitem['filesubject'] : "NULL",
+            date($config['postgresdateformat'], time()),
+            $dataitem['filevoucheruid'],
+            isset($dataitem['filemessage']) ? $dataitem['filemessage'] : "NULL",
+            $dataitem['filefrom'],
+            $dataitem['filesize'],
+            // inserted vouchers have no filenames, but inserted files must have a non-empty filename
+            (isset($dataitem['filestatus']) && $dataitem['filestatus'] == "Voucher")
+            ? "NULL"
+            : sanitizeFilename($dataitem['fileoriginalname']),
+                $dataitem['filestatus'],
+                $dbCheck->checkIp($_SERVER['REMOTE_ADDR']),
+                $dataitem['fileip6address'],
+                $dataitem['filesendersname'],
+                $dataitem['filereceiversname'],
+                $dataitem['filevouchertype'],
+                ensureSaneFileUid($dataitem['fileuid']),
+                $dataitem['fileauthuseruid'],
+                $dataitem["fileauthuseremail"],
+                date($config['postgresdateformat'], time())
+            );
+
+       		// if (!$result) { $this->saveLog->saveLog($dataitem,"Error",pg_last_error()); return FALSE; }
+
+            if($dataitem['filestatus'] == "Voucher") {
+                $this->saveLog->saveLog($dataitem,"Voucher Sent","");
+                return $this->sendmail->sendEmail($dataitem,$config['voucherissuedemailbody']);
+            } else {
+                $this->saveLog->saveLog($dataitem,"Uploaded","");
+                return $this->sendmail->sendEmail($dataitem,$config['fileuploadedemailbody']);
+            }
+    }
+
+
+   //---------------------------------------
+    // Insert new file or voucher HTML5
+    // 
+    public function inserFileHTML5($dataitem){
+
+
+        $config = $this->CFG->loadConfig();
+        $dbCheck = DB_Input_Checks::getInstance();
+
+       
+	    // check if filevoucheruid exists or exit
+        if($dataitem['filevoucheruid'] == "")
+        {
+            return "dataMissing";
+        }
+		
+		// check if user supplied date is past the server configuration maximum date
+		if(strtotime($dataitem["fileexpirydate"]) > strtotime("+".$config['default_daysvalid']." day"))
+		{
+		// reset fileexpiry date to max config date from server
+		$dataitem["fileexpirydate"] = date($config['postgresdateformat'],strtotime("+".($config['default_daysvalid'])." day"));
+		}
+
+        if( $this->authsaml->isAuth()) {
+            $authAttributes = $this->authsaml->sAuth();
+            $dataitem['fileauthuseruid'] = $authAttributes["eduPersonTargetedID"] ;
+            $dataitem['fileauthuseremail'] = $authAttributes["email"];
+        }
+
+        $result = $this->db->fquery("
+            INSERT INTO files (
+
+                fileexpirydate,
+                fileto,
+                filesubject,
+                fileactivitydate,
+                filevoucheruid,
+                filemessage,
+                filefrom,
+                filesize,
+                fileoriginalname,
+                filestatus,
+                fileip4address,
+                fileip6address,
+                filesendersname,
+                filereceiversname,
+                filevouchertype,
+                fileuid,
+                fileauthuseruid,
+                fileauthuseremail,
+                filecreateddate
+
+            ) VALUES
+            ( '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')",
+
+            date($config['postgresdateformat'], strtotime($dataitem['fileexpirydate'])),
+            $dataitem['fileto'],
+            isset($dataitem['filesubject']) ? $dataitem['filesubject'] : "NULL",
+            date($config['postgresdateformat'], time()),
+            $dataitem['filevoucheruid'],
+            isset($dataitem['filemessage']) ? $dataitem['filemessage'] : "NULL",
+            $dataitem['filefrom'],
+            $dataitem['filesize'],
+            // inserted vouchers have no filenames, but inserted files must have a non-empty filename
+            (isset($dataitem['filestatus']) && $dataitem['filestatus'] == "Voucher")
+            ? "NULL"
+            : sanitizeFilename($dataitem['fileoriginalname']),
+                $dataitem['filestatus'],
+                $dbCheck->checkIp($_SERVER['REMOTE_ADDR']),
+                isset($dataitem['fileip6address']) ? $dataitem['fileip6address'] : "NULL",
+				isset($dataitem['filesendersname']) ? $dataitem['filesendersname'] : "NULL",
+				isset($dataitem['filereceiversname']) ? $dataitem['filereceiversname'] : "NULL",
+				isset($dataitem['filevouchertype']) ? $dataitem['filevouchertype'] : "NULL",
+                ensureSaneFileUid($dataitem['fileuid']),
+                $dataitem['fileauthuseruid'],
+                $dataitem["fileauthuseremail"],
+                date($config['postgresdateformat'], time())
+            );
+
+        if (!$result) { $this->saveLog->saveLog($dataitem,"Error",pg_last_error()); return FALSE; }
+
+            if($dataitem['filestatus'] == "Voucher") {
+                $this->saveLog->saveLog($dataitem,"Voucher Sent","");
+                return $this->sendmail->sendEmail($dataitem,$config['voucherissuedemailbody']);
+            } else {
+                $this->saveLog->saveLog($dataitem,"Uploaded","");
+                return $this->sendmail->sendEmail($dataitem,$config['fileuploadedemailbody']);
+            }
+			return true;
+    }
 
     //---------------------------------------
     // Update file or voucher
@@ -773,9 +990,23 @@ class Functions {
         $result["site_filestore_free"] = disk_free_space($config['site_filestore']);   			// use absolute locations
         $result["site_temp_filestore_free"] = disk_free_space($config['site_temp_filestore']);   			// use absolute locations
 
-        return json_encode($result);
+        return $result;
 
     }
+	
+	  //---------------------------------------
+    // Load Language File
+    // Returns JSON array
+    public function loadLanguage() {
+
+        $config = $this->CFG->loadConfig();
+
+        require_once("../language/".$config['site_defaultlanguage'].".php");   			// use absolute locations result in bytes
+        
+        return $result;
+
+    }
+
 
     //---------------------------------------
     // Move the file
