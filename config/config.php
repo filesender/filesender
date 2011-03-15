@@ -371,7 +371,7 @@ Dear Sir, Madam,<BR><BR>The file '{filename}' from {filefrom} has been cancelled
 	$config['available_space'] = '20000M';
 	$config['about'] = true;
 	$config["help_link_visible"] = true;
-	$config['site_defaultlanguage'] = 'EN_AU';
+	$config['site_defaultlanguage'] = 'EN_AU'; // available languages EN_AU, NO_no, NL_nl
 	$config['site_icon'] = 'cloudstor.png';
 	$config['site_css'] = '';
 	

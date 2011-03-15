@@ -357,3 +357,58 @@ div#confirmation {
 	background: #eee;
 	padding: .6em 1em .1em 1em;
 }
+
+#tablediv {
+		    padding: 20px;
+		    border: 1px solid #cccccc;
+		    border-radius:10px;
+		    -moz-border-radius: 10px;
+			  -webkit-box-shadow:0 0 10px #ccc;
+			  -moz-box-shadow: 0 0 10px #ccc;
+			  box-shadow: 0 0 10px #ccc;
+		  
+		    width: 680px;
+		    margin: 20px auto;		  
+			  background-image: -moz-linear-gradient(top, #ffffff,#f2f2f2);
+			  background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#f2f2f2));			
+		  }
+		  
+		  #message
+		  {
+	background-color: #AAC1A4;
+	text-align: center;
+	width: 100%;
+		  }
+		  
+		  #tswcsstabs ul {
+	margin: 0 ;
+	padding: 0 ;
+	list-style: none ;
+	display: inline ;
+}
+#tswcsstabs ul li {
+	margin: 0 ;
+	padding: 0 ;
+	display: inline ;
+	text-align: center ;
+	list-style: none ;
+	font-family: Arial, Helvetica, sans-serif ;
+}
+#tswcsstabs li a {
+	padding: 10px;
+	border: 1px solid #cccccc;
+	border-radius:10px;
+		    -moz-border-radius: 10px;
+			  -webkit-box-shadow:0 0 10px #ccc;
+			  -moz-box-shadow: 0 0 10px #ccc;
+	box-shadow: 0 0 10px #ccc;
+	margin: 10px auto;
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#f2f2f2));
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#f2f2f2));
+	color: #666666;
+}
+#tswcsstabs li a:hover {
+	color: #000 ;
+	background-color: #c0c0c0 ;
+}
+ 
