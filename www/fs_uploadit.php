@@ -70,13 +70,34 @@ $cofig = $CFG->loadConfig();
 date_default_timezone_set($config['Default_TimeZone']);
 
 if($authvoucher->aVoucher() || $authsaml->isAuth()) { 
+ 
     $uploadfolder =  $config["site_filestore"];
 
+    // generate unique filename
+	// tempFilename is created from ((uid or vid)+originalfilename+filesize)
+	$tempFilename = ""; 
 
-    $correctfilename = preg_replace_callback('/\\\\u([0-9a-fA-F]{4})/','upperHexNumber',trim(json_encode($_FILES['Filedata']['name']),"\""));
+	// add voucher if this is a voucher upload
+	if ($authvoucher->aVoucher()) {
+		$tempFilename .= $_REQUEST['vid'];
+	}
+	// else add SAML eduPersonTargetedID
+	else if( $authsaml->isAuth()) {
+		$authAttributes = $authsaml->sAuth();
+		$tempFilename .= $authAttributes["eduPersonTargetedID"];	
+	} 
+	
+	// add the file name
+	$tempFilename .=  sanitizeFilename($_GET['n']);
 
+	// add the file size to the filename
+	$tempFilename .=  $_GET['total'];
+
+	// md5 $tempFilename
+	$tempFilename = md5($tempFilename).'.tmp';
+	
     // move file to correct uploadfolder destination
-    $result = move_uploaded_file($_FILES['Filedata']['tmp_name'], $uploadfolder.ensureSaneFileUid($_POST['fid']).".tmp");
+    $result = move_uploaded_file($_FILES['Filedata']['tmp_name'], $uploadfolder.sanitizeFilename(tempFilename).".tmp");
 
     if($result) {
         logEntry("File Moved");

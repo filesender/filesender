@@ -36,7 +36,12 @@
  * js/fs_gears.js   manages all gears related functions and google gears uploading
  * js/jquery-1.2.6.min.js  loaded in preparation for HTML 5 UI
  */
- 
+ if(session_id() == ""){
+	// start new session and mark it as valid because the system is a trusted source
+	session_start();
+	$_SESSION['validSession'] = true;
+} 
+
 require_once('../classes/_includes.php');
 
 
@@ -79,6 +84,7 @@ $functions->loadLanguage();
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>FileSender:</title>
+<!--<script type="text/javascript" src="https://getfirebug.com/firebug-lite.js"></script>-->
 <link rel="stylesheet" type="text/css" href="css/default.css" />
 <link rel="stylesheet" type="text/css" href="css/progress.css" />
 <link rel="icon" href="favicon.ico"	type="image/x-icon">
@@ -113,7 +119,7 @@ $functions->loadLanguage();
 	if($authsaml->isAuth() ) {echo '<li><a href="index.php?s=files">'._MY_FILES.'</a></li>'; }
 	echo '<li><a href="index.php?s=help">Help</a></li>';
 	echo '<li><a href="index.php?s=about">About</a></li>';
-	if(!$authsaml->isAuth() ) { echo '<li><a href="<?php echo $authsaml->logonURL(); ?>index.php">'._LOGON.'</a></li>';}
+	if(!$authsaml->isAuth() ) { echo '<li><a href="'.$authsaml->logonURL().'index.php">'._LOGON.'</a></li>';}
    	if($authsaml->isAuth() ) { echo '<li><a href="'.$authsaml->logoffURL().'">'._LOG_OFF.'</a></li>'; }
    // end menu
    ?>

@@ -83,4 +83,8 @@
 	DEFINE ("_SEND_NEW_VOUCHER", "Stuur een nieuwe uitnodiging");
 	DEFINE ("_EMAIL_SEPARATOR_MSG", "(Meerdere e-mails gescheiden door, of ;)");
 
+	// Flash button menu
+	DEFINE("_UPLOAD","Upload");
+    DEFINE("_BROWSE","Browse");
+    DEFINE("_CANCEL","Cancel");
 ?>

@@ -1003,7 +1003,7 @@ public function insertVoucher($to,$expiry){
 
         require_once("../language/".$config['site_defaultlanguage'].".php");   			// use absolute locations result in bytes
         
-        return $result;
+        return;
 
     }
 
