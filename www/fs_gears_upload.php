@@ -43,9 +43,27 @@ $log =  Log::getInstance();
 
 $CFG = config::getInstance();
 $config = $CFG->loadConfig();
-date_default_timezone_set($config['Default_TimeZone']);
 
-// check we are authenticated first before uploading the chink
+date_default_timezone_set($config['Default_TimeZone']);
+$tempuploadfolder =  $config["site_temp_filestore"];
+
+	// flash upload creates a new session id https so we need to make sure we are using the same session  
+	if(!empty($_REQUEST['s'])) { 
+   	 session_id($_REQUEST['s']); 
+   	 session_start();
+
+    // Ensure existing session, users don't have the permission to create
+    // a session because that would be a security vulnerability.
+    if (!isset($_SESSION['validSession'])) {
+        session_destroy();
+        session_start();
+        session_regenerate_id();
+        $_SESSION['validSession'] = true;
+        trigger_error("Invalid session supplied.", E_USER_ERROR);
+    }
+	}
+	
+// check we are authenticated first before uploading the chunk
 if($authvoucher->aVoucher()  || $authsaml->isAuth() ) { 
 
 	// generate unique filename
@@ -63,22 +81,54 @@ if($authvoucher->aVoucher()  || $authsaml->isAuth() ) {
 	} 
 	
 	// add the file name
-	$tempFilename .=  sanitizeFilename($_GET['n']);
+	$tempFilename .=  sanitizeFilename($_REQUEST['n']);
 
 	// add the file size to the filename
-	$tempFilename .=  $_GET['total'];
+	$tempFilename .=  $_REQUEST['total'];
 
 	// md5 $tempFilename
 	$tempFilename = md5($tempFilename).'.tmp';
 
 	 
 	if ( !empty( $tempFilename ) ) {
-		// open the temp file
+	
+	// ---------------------
+	// return file size if requested
+	// ---------------------
+	if(isset($_REQUEST["type"]) && $_REQUEST["type"] == "filesize")
+	{
+		echo checkFileSize($tempuploadfolder.$tempFilename);
+	}
+	// ---------------------
+	// single file upload
+	// ---------------------	
+	if(isset($_REQUEST["type"]) && $_REQUEST["type"] == "single")
+	{
+	
+		
+		 $result = move_uploaded_file($_FILES['Filedata']['tmp_name'], $tempuploadfolder.$tempFilename);
+		 if($result) {
+			echo "true";
+		 } else {
+			echo "false";
+		 }
+	} 
+	if(isset($_REQUEST["type"]) && $_REQUEST["type"] == "chunk")
+	{
+		// ---------------------	
+	// CHUNK file upload
+	// ---------------------	
+	// open the temp file
+	
 		$fd = fopen("php://input", "r");
 		// append the chunk to the temp file
 		while( $data = fread( $fd,  1000000  ) ) file_put_contents( $config["site_temp_filestore"].sanitizeFilename($tempFilename), $data, FILE_APPEND ) or die("Error");
 		// close the file 
 		fclose($fd);
+		
+		echo checkFileSize($tempuploadfolder.$tempFilename);
+	
+	}
 	}
 
 } else {
@@ -88,4 +138,21 @@ if($authvoucher->aVoucher()  || $authsaml->isAuth() ) {
 
 }
 
+function checkFileSize($fileLocation)
+{
+if (file_exists($fileLocation)) {
+	if (!(strtoupper(substr(PHP_OS, 0, 3)) == 'WIN')) 
+                {
+                    $size = trim(shell_exec("stat -c%s ". escapeshellarg($fileLocation)));
+                } else { 
+                    $fsobj = new COM("Scripting.FileSystemObject"); 
+                    $f = $fsobj->GetFile($fileLocation); 
+                    $size = $f->Size; 
+                }
+	return $size;
+	} else {
+
+	return 0;
+	}
+}
 ?>

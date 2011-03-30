@@ -54,9 +54,6 @@ if(!empty($_REQUEST['s'])) {
     }
 }
 
-// Check if there is a file supplied
-if(!isset($_FILES['fileToUpload'])) trigger_error("request without file upload", E_USER_ERROR);
-
 $authsaml = AuthSaml::getInstance();
 $authvoucher = AuthVoucher::getInstance();
 $CFG = config::getInstance();
@@ -65,21 +62,42 @@ $functions = Functions::getInstance();
 date_default_timezone_set($config['Default_TimeZone']);
 
 if($authvoucher->aVoucher() || $authsaml->isAuth()) { 
-    $uploadfolder =  $config["site_filestore"];
+$uploadfolder =  $config["site_filestore"];
+$tempuploadfolder =  $config["site_temp_filestore"];
 	
-	$fileuid = getGUID();
-    $filesize = $_FILES['fileToUpload']['size'];
+$fileuid = getGUID();
+$tempFilename = ""; 
 
-	$correctfilename = preg_replace_callback('/\\\\u([0-9a-fA-F]{4})/','upperHexNumber',trim(json_encode($_FILES['fileToUpload']['name']),"\""));
+	// add voucher if this is a voucher upload
+	if ($authvoucher->aVoucher()) {
+		$tempFilename .= $_POST['vid'];
+	}
+	// else add SAML eduPersonTargetedID
+	else if( $authsaml->isAuth()) {
+		$authAttributes = $authsaml->sAuth();
+		$tempFilename .= $authAttributes["eduPersonTargetedID"];	
+	} 
+	
+	// add the file name
+	$tempFilename .=  sanitizeFilename($_POST['n']);
+
+	// add the file size to the filename
+	$tempFilename .=  $_POST['total'];
+logEntry($tempFilename);
+	// md5 $tempFilename
+	$tempFilename = md5($tempFilename).'.tmp';
+
+	$correctfilename = preg_replace_callback('/\\\\u([0-9a-fA-F]{4})/','upperHexNumber',trim(json_encode($_REQUEST['n']),"\""));
 
     // move file to correct uploadfolder destination
-    $result = move_uploaded_file($_FILES['fileToUpload']['tmp_name'], $uploadfolder.$fileuid.".tmp");
+	$result = rename($tempuploadfolder.$tempFilename, $uploadfolder.$fileuid.".tmp");
 	
+		logEntry($result .":temp name - ".$tempFilename );
 	$filedata["filefrom"] = $_POST["filefrom"];
-	$filedata["filesize"] = $filesize;
+	$filedata["filesize"] = $_POST["total"];
 	$filedata["filesubject"] = $_POST["filesubject"];
 	$filedata["filemessage"] = $_POST["filemessage"];
-	$filedata["fileoriginalname"] =  $correctfilename;
+	$filedata["fileoriginalname"] =  $_POST["n"];
 	$filedata["fileuid"] = $fileuid;
 	$filedata["filestatus"]  = "Available";
 	$filedata["fileexpirydate"] = date($config["postgresdateformat"],strtotime($_POST["fileexpirydate"]));
@@ -94,8 +112,6 @@ if($authvoucher->aVoucher() || $authsaml->isAuth()) {
 	$functions->inserFileHTML5($filedata);
 	}
 	
-    if($result) {
-	
 	if(isset($_POST["filestatus"]) && $_POST["filestatus"] == "Voucher")
 		{
 		$tempData = $functions->getVoucherData($_POST["filevoucheruid"]);
@@ -104,21 +120,14 @@ if($authvoucher->aVoucher() || $authsaml->isAuth()) {
 		
 		if(isset($_POST["loadtype"]) && $_POST["loadtype"] == "standard")
 		{
-		$redirect = "index.php?s=complete";
-		echo('<script type="text/javascript">parent.completeupload();</script>');
+		$redirect = "Location: index.php?s=complete";
+		header( $redirect ) ;
 		}
 		
         echo "moveOk";
 		logEntry("File Moved");
 		// close voucher
-		
-    } else {
-	
-        // error moving files
-		echo "moveError";
-        logEntry("Unable to move the file");
-        
-    }
+
 } else {
 	    echo "invalidAuth";
     logEntry("Error authorising Flash upload :Voucher-".$authvoucher->aVoucher().":SAML-". $authsaml->isAuth());

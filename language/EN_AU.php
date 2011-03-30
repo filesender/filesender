@@ -81,6 +81,11 @@
 		   	DEFINE("_SELECT_FILE","Select a file to upload");
 		   	DEFINE("_UPLOADING_WAIT","Uploading file - please wait...");
 			
+			// Flash button menu
+			DEFINE("_UPLOAD","Upload");
+            DEFINE("_BROWSE","Browse");
+            DEFINE("_CANCEL","Cancel");
+			
 			// vouchers
 			DEFINE("_SEND_NEW_VOUCHER","Send a new voucher");
 			DEFINE("_EMAIL_SEPARATOR_MSG","(Multiple emails seperated by , or ;)");
@@ -88,8 +93,6 @@
 		    DEFINE("_Active_Vouchers","Active Vouchers");
             DEFINE("_Are_You_Sure_Resend","Are you sure you want to re-send this Email");
             DEFINE("_Administration","Administration");
-            DEFINE("_Browse","Browse");
-            DEFINE("_Cancel","Cancel");
             DEFINE("_Click_on_Send","Click on Send");
             DEFINE("_Current_Valid_Vouchers","Current Valid Vouchers");
             DEFINE("_Complete_Log","Complete Log");
