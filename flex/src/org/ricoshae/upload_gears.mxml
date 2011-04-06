@@ -187,13 +187,6 @@
 					return;
 				}
 				
-				if(parseInt(config["max_gears_upload_size"]) != 0 &&  currentFileObj.filesize > parseInt(config["max_gears_upload_size"])) 
-				{
-					FlexGlobals.topLevelApplication.logProcess("File too Large - Gears Upload");
-					Alert.show(lang['E003'],lang['E000']); 
-					return ;	
-				}
-				
 				if(config["AuP"] &&   !AuPCB.selected) 
 				{
 					FlexGlobals.topLevelApplication.logProcess("AUP not Selected - Gears Upload");
@@ -334,6 +327,14 @@
 						btUpload.visible = false;
 						return;
 					}
+					
+					if(parseInt(config["max_gears_upload_size"]) != 0 &&  thefileSize > parseInt(config["max_gears_upload_size"])) 
+					{
+						FlexGlobals.topLevelApplication.logProcess("File too Large - Gears Upload");
+						Alert.show(lang['E003']+ " (Max: " + readablizeBytes(parseInt(config["max_gears_upload_size"])) + ")",lang['E000'] ); 
+						return ;	
+					}
+					
 					
 					selectedFileSize.text = readablizeBytes(thefileSize);
 					currentFileObj.filesize = sInfo.toString();	
