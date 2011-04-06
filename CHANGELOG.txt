@@ -1,6 +1,6 @@
-Last update: 14 Februari 2011
+Last update: 6 April 2011
 
-Version 1.0.0-dev (trunk) <14 Februari 2011>
+Version 1.0.0-dev (trunk) <6 April 2011>
 
 	Fixes and changes
 	#379 Log IPv6 address of connecting client. When upgrading from
@@ -9,6 +9,9 @@ Version 1.0.0-dev (trunk) <14 Februari 2011>
 	      #sudo -u postgres psql filesender
 	      ALTER TABLE files ALTER fileip6address TYPE character varying(45);
 	      \q
+	#381 allow multiple email addresses to be separated by both a
+	     comma and a semi-colon
+	#382 fix the max_gears_upload_size check.
 
 Version 1.0 <31 January 2011>
 	Release 1.0
