@@ -9,7 +9,7 @@ CREATE TABLE files
   fileoriginalname character varying(500),
   filestatus character varying(60),
   fileip4address character varying(24),
-  fileip6address character varying(34),
+  fileip6address character varying(45),
   filesendersname character varying(250),
   filereceiversname character varying(250),
   filevouchertype character varying(60),
