@@ -9,9 +9,9 @@ Version 1.0.0-dev (trunk) <6 April 2011>
 	      #sudo -u postgres psql filesender
 	      ALTER TABLE files ALTER fileip6address TYPE character varying(45);
 	      \q
+	#380 fix the max_gears_upload_size check.
 	#381 allow multiple email addresses to be separated by both a
 	     comma and a semi-colon
-	#382 fix the max_gears_upload_size check.
 
 Version 1.0 <31 January 2011>
 	Release 1.0
