@@ -112,7 +112,12 @@ class AuthSaml {
         if(isset($attributes[$config['saml_uid_attribute']][0])) {
             $attributes["eduPersonTargetedID"] = $attributes[$config['saml_uid_attribute']][0];
         }
-
+		
+		// required for SAML 1.7.0+
+		$attributes['token'] = "";
+		if(isset($_COOKIE['SimpleSAMLAuthToken'])){
+		$attributes['token'] = $_COOKIE['SimpleSAMLAuthToken'];
+		}
         $inglue = '='; 
         $outglue = '&';
         $message = "";
