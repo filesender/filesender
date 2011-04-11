@@ -274,6 +274,11 @@
 						return;
 					}
 					
+					if(currentFileObj.filesize == 0 ) 
+					{
+					return;	
+					}
+					
 					selectedFilename.text = sInfo.toString();
 					currentFileObj.fileoriginalname = sInfo.toString();		 
 					btUpload.visible = true;
@@ -316,6 +321,7 @@
 				// file size returned from gears 
 				if(sType == "filesize")
 				{
+					currentFileObj.filesize = 0;
 					FlexGlobals.topLevelApplication.logProcess("File size returned [" + sInfo.toString() + "] - Gears Upload");
 					var thefileSize:Number = parseInt(sInfo.toString());
 					
