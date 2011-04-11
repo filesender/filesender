@@ -44,13 +44,13 @@ function upperHexNumber($matches) {
 if (isset($_POST['token']) && $_POST['token'] != "") {
 	
 	$_COOKIE['SimpleSAMLAuthToken'] = $_POST['token'];
-	} else {
+	} 
 	
 	// flash upoload creates a new session id https so we need to make sure we are using the same session  
 if(!empty($_REQUEST['s'])) { 
     session_id($_REQUEST['s']); 
     session_start();
-
+ 
     // Ensure existing session, users don't have the permission to create
     // a session because that would be a security vulnerability.
     if (!isset($_SESSION['validSession'])) {
@@ -59,8 +59,7 @@ if(!empty($_REQUEST['s'])) {
         session_regenerate_id();
         $_SESSION['validSession'] = true;
         trigger_error("Invalid session supplied.", E_USER_ERROR);
-    }
-	}	
+    }	
 }
 	
 require_once('../classes/_includes.php');
