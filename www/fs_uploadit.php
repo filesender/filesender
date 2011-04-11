@@ -40,13 +40,9 @@ function upperHexNumber($matches) {
     return '\u'.strtoupper($matches[1]);
 }
 
-// use token if available for SIMPLESAML 1.7 or set session if earlier version of SIMPLESAML
-if (isset($_POST['token']) && $_POST['token'] != "") {
-	
-	$_COOKIE['SimpleSAMLAuthToken'] = $_POST['token'];
-	} else {
-	
-	// flash upoload creates a new session id https so we need to make sure we are using the same session  
+require_once('../classes/_includes.php');
+
+// flash upoload creates a new session id https so we need to make sure we are using the same session  
 if(!empty($_REQUEST['s'])) { 
     session_id($_REQUEST['s']); 
     session_start();
@@ -60,11 +56,10 @@ if(!empty($_REQUEST['s'])) {
         $_SESSION['validSession'] = true;
         trigger_error("Invalid session supplied.", E_USER_ERROR);
     }
-	}	
 }
-	
-require_once('../classes/_includes.php');
- logEntry($_COOKIE['SimpleSAMLAuthToken'] .":". $_POST['token']);
+
+$authvoucher = AuthVoucher::getInstance();
+
 // Check if there is a file supplied
 if(!isset($_FILES['Filedata'])) trigger_error("request without file upload", E_USER_ERROR);
 
@@ -75,7 +70,6 @@ $cofig = $CFG->loadConfig();
 date_default_timezone_set($config['Default_TimeZone']);
 
 if($authvoucher->aVoucher() || $authsaml->isAuth()) { 
-
     $uploadfolder =  $config["site_filestore"];
 
 

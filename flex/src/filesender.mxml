@@ -287,7 +287,6 @@
 						currentUser.name = tempUser.cn.toString();   
 						currentUser.SessionID =  tempUser.SessionID.toString();
 						currentUser.eduPersonTargetedID = tempUser.eduPersonTargetedID.toString();
-						currentUser.token = tempUser.token.toString();
 					}
 					
 					// Notify user that there is an error in IDP provided information
