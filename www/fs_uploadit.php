@@ -63,7 +63,11 @@ if(!empty($_REQUEST['s'])) {
 }
 	
 require_once('../classes/_includes.php');
- logEntry($_COOKIE['SimpleSAMLAuthToken'] .":". $_POST['token']);
+
+if(isset($_COOKIE['SimpleSAMLAuthToken']) && isset($_POST['token']))
+{
+logEntry("SSP-token: ".$_COOKIE['SimpleSAMLAuthToken'] .":". $_POST['token']);
+}
 // Check if there is a file supplied
 if(!isset($_FILES['Filedata'])) trigger_error("request without file upload", E_USER_ERROR);
 
