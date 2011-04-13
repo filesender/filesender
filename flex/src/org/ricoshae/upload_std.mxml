@@ -49,6 +49,7 @@
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
 			import mx.utils.UIDUtil;
+			import mx.utils.StringUtil;
 			import flash.utils.Timer;
 			import flash.events.TimerEvent;
 			import org.ricoshae.core.*;
@@ -402,7 +403,7 @@
 						if(params[i].replace(" ","").length > 0)
 						{	     
 							
-							tempCurrentFileObj.fileto = params[i].toString();
+							tempCurrentFileObj.fileto = StringUtil.trim(params[i].toString());
 							
 							// check if this is a voucher or an available file
 							// close voucher and create new download vouchers
