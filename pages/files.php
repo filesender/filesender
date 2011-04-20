@@ -70,26 +70,30 @@ $filedata = $functions->getUserFiles();
 $json_o=json_decode($filedata,true);
 
 ?>
+ <div id="box">
 <?php echo '<div id="pageheading">'._MY_FILES.'</div>'; ?> 
 <div id="tablediv">
-<table width="100%" border="0" cellspacing="1">
-<tr bgcolor="#eeeeee">
-  <td bgcolor="#FFFFFF">&nbsp;</td>
-  <td bgcolor="#FFFFFF"><strong><?php echo _TO; ?></strong></td>
-<td bgcolor="#FFFFFF"><strong><?php echo _FILE_NAME; ?></strong></td>
-<td bgcolor="#FFFFFF"><strong><?php echo _SIZE; ?></strong></td>
-<td bgcolor="#FFFFFF"><strong><?php echo _SUBJECT; ?></strong></td>
-<td bgcolor="#FFFFFF"><strong><?php echo _CREATED; ?></strong></td>
-<td bgcolor="#FFFFFF"><strong><?php echo _EXPIRY; ?></strong></td>
-<td bgcolor="#FFFFFF">&nbsp;</td>
+<table id="myfiles" width="100%" border="0" cellspacing="1">
+<tr class="headerrow">
+  <td>&nbsp;</td>
+  <td><strong><?php echo _TO; ?></strong></td>
+<td><strong><?php echo _FILE_NAME; ?></strong></td>
+<td><strong><?php echo _SIZE; ?></strong></td>
+<td><strong><?php echo _SUBJECT; ?></strong></td>
+<td><strong><?php echo _CREATED; ?></strong></td>
+<td><strong><?php echo _EXPIRY; ?></strong></td>
+<td>&nbsp;</td>
 </tr>
 <?php 
 foreach($json_o as $item) {
-   echo "<tr  bgcolor='#eeeeee'><td><a href='index.php?s=files&a=resend&id=" .$item['filevoucheruid'] . "'><img src='images/email_go.png'></a></td><td>" .$item['fileto'] . "</td><td><a href='download.php?vid=". $item["filevoucheruid"]."' target='_blank'>" .$item['fileoriginalname']. "</a></td><td>" .formatBytes($item['filesize']). "</td><td>".$item['filesubject']. "</td><td>" .date("d/m/Y",strtotime($item['filecreateddate'])) . "</td><td>" .date("d/m/Y",strtotime($item['fileexpirydate'])) . "</td><td><a href='index.php?s=files&a=del&id=" .$item['filevoucheruid'] . "'><img src='images/shape_square_delete.png'></a></td></tr>"; //etc
+   echo "<tr><td><a href='index.php?s=files&a=resend&id=" .$item['filevoucheruid'] . "'><img src='images/email_go.png'></a></td><td>" .$item['fileto'] . "</td><td><a href='download.php?vid=". $item["filevoucheruid"]."' target='_blank'>" .$item['fileoriginalname']. "</a></td><td>" .formatBytes($item['filesize']). "</td><td>".$item['filesubject']. "</td><td>" .date("d/m/Y",strtotime($item['filecreateddate'])) . "</td><td>" .date("d/m/Y",strtotime($item['fileexpirydate'])) . "</td><td><a href='index.php?s=files&a=del&id=" .$item['filevoucheruid'] . "'><img src='images/shape_square_delete.png'></a></td></tr>"; //etc
 }
 
 
 ?>
 </table>
 </div>
-<p>.</p>
+</div>
+<script type="text/javascript">
+$("#myfiles tr:odd").not(':first').addClass('altcolor');
+</script>

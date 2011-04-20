@@ -47,7 +47,7 @@ $filedata = $filedata[0];
 
 ?>
 
-<blockquote>
+ <div id="box">
 <?php echo '<div id="pageheading">'._DOWNLOAD.'</div>'; ?> 
   <div id="tablediv">
   <p>To:<?php echo $filedata["fileto"];?></p>
@@ -60,5 +60,4 @@ $filedata = $filedata[0];
   <p><a href="download.php?vid=<?php echo $filedata["filevoucheruid"];?>" target="_blank">Download Link   </a></p>
   <p>&nbsp;</p>
   </div>
-  <p>.</p>
-</blockquote>
+</div>

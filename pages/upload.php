@@ -1,4 +1,3 @@
-<script type="text/javascript" src="js/upload.js"></script>
 <?php
 
 /*
@@ -69,12 +68,14 @@
 	return;
 	}
 	}
-	
+	if (isset($_COOKIE['SimpleSAMLAuthToken'])) {
+		$token = $_COOKIE['SimpleSAMLAuthToken'];
+	}
 	// set flash upload vairiables
-	$flashVARS = "vid=".$voucherUID."&sid=".session_id()."&buttonBrowse="._BROWSE."&buttonUpload="._UPLOAD."&buttonCancel="._CANCEL."&siteURL=".$config["site_url"];
+	$flashVARS = "vid=".$voucherUID."&sid=".session_id()."&buttonBrowse="._BROWSE."&buttonUpload="._UPLOAD."&buttonCancel="._CANCEL."&siteURL=".$config["site_url"]."&token=".$token;
  ?>
-<script type="text/javascript" src="js/fs_gears.js" ></script>
 <script type="text/javascript" src="lib/js/AC_OETags.js" language="javascript"></script>
+<script type="text/javascript" src="js/upload.js"></script>
 <script type="text/javascript">
 	
 	// all default settings
@@ -89,16 +90,16 @@
 	$(document).ready(function() { 
 		
 		// hide all upload objects
-		obj('uploadstandard').style.display = "none";
-		obj('uploadhtml5').style.display = "none";
-		obj('uploadstandardspinner').style.display = "none";
-		obj('progress_container').style.display = "none";
+		$('#uploadstandard').hide();
+		$('#uploadhtml5').hide();
+		$('#uploadstandardspinner').hide();
+		$('#progress_container').hide();
 		$("#dialog-toolarge").dialog({ autoOpen: false, height: 140, modal: true })
 		$("#dialog-invalidfilename").dialog({ autoOpen: false, height: 140, modal: true })
 		// set date picker
 		$(function() {
-			$( "#datepicker" ).datepicker({ minDate: 0, maxDate: "+"+maximumDate+"D",altField: "#fileexpirydate", altFormat: "d-m-yy" });
-			$( "#datepicker" ).datepicker( "option", "dateFormat", "d/m/yy" );
+			$("#datepicker" ).datepicker({ minDate: 0, maxDate: "+"+maximumDate+"D",altField: "#fileexpirydate", altFormat: "d-m-yy" });
+			$("#datepicker" ).datepicker( "option", "dateFormat", "d/m/yy" );
 		});	
 
 		//Check if HTML5 is enable and use HTML uploader
@@ -106,14 +107,15 @@
 			if (window.FormData)
 			{
 				// can use HTML5 upload functions
-				obj("uploadhtml5").style.display = 'block';
+				//$("#uploadhtml5").show();
+				$("#uploadhtml5").show();
 			} else {
 				// use standard upload functions
-				obj("uploadstandard").style.display = 'block';
+				$("#uploadstandard").show();
 			}
 		} else {
 			// use standard upload functions
-		obj("uploadstandard").style.display = 'block';
+		$("#uploadstandard").show();
 		}
 	// end document ready
 	});
@@ -225,10 +227,10 @@
 
 function fileInfo(name,size)
 {
+
 if(size > 2000000000)
 {
 	$("#dialog-toolarge").dialog('open');
-
 } else if (validatefilename(name) == false) 
 {
  $("#dialog-invalidfilename").dialog('open')
@@ -236,11 +238,17 @@ if(size > 2000000000)
 {
  alert("Invalid or missing email");
 } else {
-getFlexApp('filesender').returnMsg("upload")
-}
 
+$("#fileInfo").show();
 obj('n').value= name;
 obj('total').value = size;
+obj('fileName').value= name;
+obj('fileSize').value = size;
+
+getFlexApp('filesenderup').returnMsg("upload")
+
+}
+
 }
 
 function errormsg(msg)
@@ -263,7 +271,12 @@ function getFlexApp(appName)
 {
   if (navigator.appName.indexOf ("Microsoft") !=-1)
   {
-    return window[appName];
+	  if(window[appName] == undefined)
+	  {
+    	return document[appName];
+	  } else {
+		return window[appName];  
+	  }
   }
   else
   {
@@ -281,84 +294,151 @@ function validatefilename(name)
 	}
 }
     </script>
-<?php echo '<div id="pageheading">'._NEW_UPLOAD.'</div>'; ?>
 
-<form id="form1" enctype="multipart/form-data" method="POST" action="fs_uploadit5.php">
-  <div align="right">
-    <p align="left"><?php echo _TO; ?>:
-      <input name="fileto" type="text" id="fileto" size="40">
-      <?php echo _EMAIL_SEPARATOR_MSG; ?></p>
-    <p align="left"><?php echo _FROM; ?>: <?php echo $senderemail ?> 
-  </div>
-  <input name="filefrom" type="hidden" id="filefrom" value="<?php echo $senderemail ?>" size="40">
-  </p>
-  <p align="left"><?php echo _SUBJECT; ?>:
-    <input name="filesubject" type="text" id="filesubject" size="40">
-  </p>
-  <p align="left"><?php echo _MESSAGE; ?>:
-    <textarea name="filemessage" cols="40" rows="4" id="filemessage"></textarea>
-  </p>
-  <p align="left"><?php echo _EXPIRY; ?>:
-  <div id="datepicker"></div>
-  <input type="hidden" id="fileexpirydate" name="fileexpirydate" value="<?php echo date("d-m-Y",strtotime("+".$config['default_daysvalid']." day"));?>">
-  </p>
-  <p align="left">
-    <input name="checkbox" type="checkbox" value="checkbox" checked="checked">
-    <?php echo _TERMS_OF_AGREEMENT; ?>[<a href="#" onclick="toggleTOG()"><?php echo _SHOW_TERMS; ?></a>]</p>
-  <div id="TOG" style="display:none">
-    <hr />
-    <?php echo $config["AuP_terms"]; ?>
-    <hr />
-  </div>
-  <label for="fileToUpload"><?php echo _SELECT_FILE; ?></label>
-  <br />
-  <input type="hidden" id="filevoucheruid" value="<?php echo $voucherUID; ?>"/>
-  <input type="hidden" name="vid" id="vid" value="<?php echo $voucherUID; ?>"/>
-  <input type="hidden" name="total" id="total" value=""/>
-  <input type="hidden" name="n" id="n" value=""/>
-  <input type="hidden" id="filestatus" value="<?php echo $filestatus; ?>"/>
-  <input type="hidden" name="loadtype" id="loadtype" value="standard"/>
-  <div class="row">
-  <div id="uploadstandard">
-    <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" width="500" height="50"
+<div id="box"> <?php echo '<div id="pageheading">'._NEW_UPLOAD.'</div>'; ?>
+  <form id="form1" enctype="multipart/form-data" method="POST" action="fs_uploadit5.php">
+    <table width="100%" border="0">
+      <tr>
+        <td><?php echo _TO; ?></td>
+        <td><?php echo _EMAIL_SEPARATOR_MSG; ?> <br />
+          <input name="fileto" type="text" id="fileto" value="chris@ricoshae.com.au" size="40" /></td>
+      </tr>
+      <tr>
+        <td><?php echo _FROM; ?></td>
+        <td><?php echo $senderemail ?>
+          <input name="filefrom" type="hidden" id="filefrom" value="<?php echo $senderemail ?>" size="40" /></td>
+      </tr>
+      <tr>
+        <td><?php echo _SUBJECT; ?></td>
+        <td><input name="filesubject" type="text" id="filesubject" size="40" /></td>
+      </tr>
+      <tr>
+        <td><?php echo _MESSAGE; ?></td>
+        <td><textarea name="filemessage" cols="40" rows="4" id="filemessage"></textarea></td>
+      </tr>
+      <tr>
+        <td><?php echo _EXPIRY; ?>
+          <input type="hidden" id="fileexpirydate" name="fileexpirydate" value="<?php echo date("d-m-Y",strtotime("+".$config['default_daysvalid']." day"));?>" /></td>
+        <td><div id="datepicker"></div></td>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+        <td><input name="checkbox" type="checkbox" value="checkbox" checked="checked" />
+          <?php echo _TERMS_OF_AGREEMENT; ?>[<a href="#" onclick="toggleTOG()"><?php echo _SHOW_TERMS; ?></a>]
+          <div id="TOG" style="display:none"> <?php echo $config["AuP_terms"]; ?> </div></td>
+      </tr>
+      <tr>
+        <td><?php echo _SELECT_FILE; ?></td>
+        <td>
+        <div id="uploadstandard"> 
+      <script language="JavaScript" type="text/javascript">
+<!--
+// Version check for the Flash Player that has the ability to start Player Product Install (6.0r65)
+var hasProductInstall = DetectFlashVer(6, 0, 65);
+
+// Version check based upon the values defined in globals
+var hasRequestedVersion = DetectFlashVer(requiredMajorVersion, requiredMinorVersion, requiredRevision);
+
+if ( hasProductInstall && !hasRequestedVersion ) {
+	// DO NOT MODIFY THE FOLLOWING FOUR LINES
+	// Location visited after installation is complete if installation is required
+	var MMPlayerType = (isIE == true) ? "ActiveX" : "PlugIn";
+	var MMredirectURL = window.location;
+    document.title = document.title.slice(0, 47) + " - Flash Player Installation";
+    var MMdoctitle = document.title;
+
+	AC_FL_RunContent(
+		"src", "lib/swf/playerProductInstall",
+		"FlashVars", "flexerrors=<?php echo $flexerrors ?>&MMredirectURL="+MMredirectURL+'&MMplayerType='+MMPlayerType+'&MMdoctitle='+MMdoctitle+"",
+		"width", "500",
+		"height", "50",
+		"align", "middle",
+		"id", "filesenderup",
+		"quality", "high",
+		"bgcolor", "#ffffff",
+		"name", "filesenderup",
+		"allowScriptAccess","sameDomain",
+		"type", "application/x-shockwave-flash",
+		"pluginspage", "http://www.adobe.com/go/getflashplayer"
+	);
+} else if (hasRequestedVersion) {
+	// if we've detected an acceptable version
+	// embed the Flash Content SWF when all tests are passed
+	AC_FL_RunContent(
+			"src", "swf/filesenderup",
+			"FlashVars", "<?php echo $flashVARS ?>",
+			"width", "500",
+			"height", "50",
+			"align", "middle",
+			"id", "filesenderup",
+			"quality", "high",
+			"bgcolor", "#ffffff",
+			"name", "filesenderup",
+			"allowScriptAccess","sameDomain",
+			"type", "application/x-shockwave-flash",
+			"pluginspage", "http://www.adobe.com/go/getflashplayer"
+	);
+  } else {  // flash is too old or we can't detect the plugin
+    var alternateContent = '<div id="header"><h1>Install Flash Player<h1></div><BR><div align="center">This application requires Flash Player.<BR><BR>'
+  	+ 'To install Flash Player go to Adobe.com.<br> '
+   	+ '<a href=http://www.adobe.com/go/getflash/>Get Flash</a></div>';
+    document.write(alternateContent);  // insert non-flash content
+  }
+// -->
+</script>
+      <noscript>
+      <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" width="500" height="50"
 			codebase="http://fpdownload.macromedia.com/get/flashplayer/current/swflash.cab">
-      <param name="movie" value="swf/filesender.swf" />
-      <param name="quality" value="high" />
-      <param name='flashVars' value='<?php echo $flashVARS ?>'/>
-      <param name="allowScriptAccess" value="sameDomain" />
-      <embed src="swf/filesenderup.swf" quality="high" 
-				width="500" height="50" name="filesender" align="middle"
-                flashvars='<?php echo $flashVARS ?>'
+        <param name="movie" value="swf/filesenderup.swf" />
+        <param name="quality" value="high" />
+        <param name="bgcolor" value="#ffffff" />
+        <param name="allowScriptAccess" value="sameDomain" />
+        <embed src="swf/filesenderup.swf" quality="high" bgcolor="#869ca7"
+				width="500" height="50" name="filesenderup" align="middle"
 				play="true"
 				loop="false"
 				quality="high"
 				allowScriptAccess="sameDomain"
 				type="application/x-shockwave-flash"
 				pluginspage="http://www.adobe.com/go/getflashplayer">
-      </embed>
-    </object>
-    <div id="uploadstandardspinner" style="padding-top:10px"><img src="images/ajax-loader-sm.gif" border=0 align="left" style="padding-right:6px"/><?php echo _UPLOADING_WAIT; ?></div>
-    <BR />
-  </div>
-  <div id="uploadhtml5">
-   <input type="file" name="fileToUpload" id="fileToUpload" onChange="fileSelected();"/>  
-   <input type="button" onClick="startupload()" value="Upload" id="uploadbutton" />
+        </embed>
+      </object>
+      </noscript>
+      <div id="uploadstandardspinner" style="padding-top:10px"><img src="images/ajax-loader-sm.gif" border=0 align="left" style="padding-right:6px"/><?php echo _UPLOADING_WAIT; ?></div>
+      <BR />
+    </div>
+        <div id="uploadhtml5">
+      <input type="file" name="fileToUpload" id="fileToUpload" onChange="fileSelected();"/>
+      <input type="button" onClick="startupload()" value="Upload" id="uploadbutton" />
+    </div>
+    </td>
+      </tr>
+    </table>
+    <br />
+    <input type="hidden" id="filevoucheruid" value="<?php echo $voucherUID; ?>"/>
+    <input type="hidden" name="vid" id="vid" value="<?php echo $voucherUID; ?>"/>
+    <input type="hidden" name="total" id="total" value=""/>
+    <input type="hidden" name="n" id="n" value=""/>
+    <input type="hidden" id="filestatus" value="<?php echo $filestatus; ?>"/>
+    <input type="hidden" name="loadtype" id="loadtype" value="standard"/>
+    <div class="row">
+    
+
     <div id="fileInfo">
       <div id="fileName"></div>
       <div id="fileSize"></div>
       <div id="fileType"></div>
     </div>
-    <div class="row"></div>
-  </div>
-  <div id="progress_container">
-    <div id="progress_bar">
-      <div id="progress_completed"></div>
-      <br />
+    <div id="progress_container">
+      <div id="progress_bar">
+        <div id="progress_completed"></div>
+        <br />
+      </div>
     </div>
-  </div>
-  <div id="transferSpeedInfo"></div>
-  <div id="timeRemainingInfo"></div>
-</form>
+    <div id="transferSpeedInfo"></div>
+    <div id="timeRemainingInfo"></div>
+  </form>
+</div>
 <div id="dialog-toolarge" title="Error">
   <p>This file is larger than 2Gb. Please use a HTML5 enabled browser to upload larger files.</p>
 </div>
