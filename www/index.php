@@ -32,9 +32,8 @@
 
 /*
  * loads javascript
- * js/gears_init.js  initialises google gears if gears is loaded
- * js/fs_gears.js   manages all gears related functions and google gears uploading
- * js/jquery-1.2.6.min.js  loaded in preparation for HTML 5 UI
+ * js/upload.js   manages all html5 related functions and uploading
+ * js/jquery-1.3.2.min.js  loaded in preparation for HTML 5 UI
  */
  if(session_id() == ""){
 	// start new session and mark it as valid because the system is a trusted source
@@ -77,7 +76,6 @@ $s = "logon";
 }
 // load language file
 $functions->loadLanguage();
-
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
@@ -89,7 +87,7 @@ $functions->loadLanguage();
 <link rel="stylesheet" type="text/css" href="css/progress.css" />
 <link rel="icon" href="favicon.ico"	type="image/x-icon">
 <link rel="shortcut icon" href="favicon.ico"type="image/x-icon">
-<link type="text/css" href="css/smoothness/jquery-ui-1.8.2.custom.css" rel="Stylesheet" />	
+<link type="text/css" href="css/smoothness/jquery-ui-1.8.2.custom.css" rel="Stylesheet" />
 <script type="text/javascript" src="js/jquery-1.3.2.min.js" ></script>
 <script type="text/javascript" src="js/jquery-ui-1.8.1.custom.min.js"></script>
 <meta name="robots" content="noindex, nofollow" />
@@ -100,18 +98,14 @@ $functions->loadLanguage();
     <div align="center">
       <p><img src="displayimage.php" width="800" height="60" border=0/></p>
       <noscript>
-      <p class="style5">          JavaScript is turned off in your web browser. <br />
-        This application will not run without Javascript enabled in your web browser.      </p>
+      <p class="style5">JavaScript is turned off in your web browser. <br />
+        This application will not run without Javascript enabled in your web browser. </p>
       </noscript>
     </div>
   </div>
-  <div id="content">
-    <div align="center"><br />
-    <br />
-    </div>
-    <div id="tswcsstabs">
-  <ul>
-  <?php 
+  <div id="top-menu">
+    <ul>
+      <?php 
   // create menu
 	if($authsaml->authIsAdmin() ) { echo '<li><a href="index.php?s=admin">'._ADMIN.'</a></li>'; }
 	if($authsaml->isAuth() ) { echo '<li><a href="index.php?s=upload">'._NEW_UPLOAD.'</a></li>'; }
@@ -123,11 +117,9 @@ $functions->loadLanguage();
    	if($authsaml->isAuth() ) { echo '<li><a href="'.$authsaml->logoffURL().'">'._LOG_OFF.'</a></li>'; }
    // end menu
    ?>
-  </ul>
+    </ul>
   </div>
-    <div align="center"><br />
-    </div>
-    <p>
+  <div id="content">
     <?php 
 if(	$authvoucher->aVoucher())
 {
@@ -170,15 +162,8 @@ require_once('../pages/about.php');
 require_once('../pages/help.php');	
 }
 ?>
-    </p>
+  </div>
 </div>
-  <noscript>
-</noscript>
-  <p>
-</div>
-</p>
-  <div id="DoneLoading">
-</div>
-</div>
+<div id="DoneLoading"></div>
 </body>
 </html>

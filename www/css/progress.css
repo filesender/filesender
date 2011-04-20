@@ -8,22 +8,8 @@
 		  .floatRight { float: right; }
 		  .clear { clear: both; }
 		  
-		  form {
-		    padding: 20px;
-		    border: 1px solid #cccccc;
-		    border-radius:10px;
-		    -moz-border-radius: 10px;
-			  -webkit-box-shadow:0 0 10px #ccc;
-			  -moz-box-shadow: 0 0 10px #ccc;
-			  box-shadow: 0 0 10px #ccc;
-		  
-		    width: 720px;
-		    margin: 20px auto;		  
-			  background-image: -moz-linear-gradient(top, #ffffff,#f2f2f2);
-			  background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#f2f2f2));			
-		  }
-		  
-		  input {			
+				  
+		/*  input {			
 			  border:1px solid #ccc;
 			  font-size: 13pt;			
 			  padding: 5px 10px 5px 10px;			
@@ -48,12 +34,10 @@
 			-webkit-transform: scale(1.05);
 			-moz-transform: scale(1.05);
 			transform: scale(1.05);			
-		}
+		}*/
 		
-		#fileToUpload { width: 378px; }
-		
-		#progressIndicator { font-size: 10pt; }
-		
+	
+	/*	
 		#fileInfo 
 		{
 		  font-size: 10pt;
@@ -116,4 +100,4 @@
 	padding-left:4px;
 	color:#333333;
 	width: 100%;
-}
+}*/

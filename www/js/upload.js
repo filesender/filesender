@@ -33,19 +33,32 @@
 // when cancelling an upload we need to wait till the chunk is complete before allowing the cancel to happen
 // setting cancell upload to true will trigger the upload to stop before uploading the next chunk
 // JavaScript Document
-	 	var bytesUploaded = 0;
-	    var bytesTotal = 0;
-	    var previousBytesLoaded = 0;
-	    var intervalTimer = 0;
-		var currentlocation = 0;
-		var filename = "";
-		var chunksize = 2000000;
-		var uploadURI = "fs_gears_upload.php";
-	  	var filesize = 0;
+
+
+<!--
+// -----------------------------------------------------------------------------
+// Globals
+// Major version of Flash required
+var requiredMajorVersion = 10;
+// Minor version of Flash required
+var requiredMinorVersion = 0;
+// Minor version of Flash required
+var requiredRevision = 0;
+// -----------------------------------------------------------------------------
+// -->
+
+var bytesUploaded = 0;
+var bytesTotal = 0;
+var previousBytesLoaded = 0;
+var intervalTimer = 0;
+var currentlocation = 0;
+var filename = "";
+var chunksize = 2000000;
+var uploadURI = "fs_upload.php";
+var filesize = 0;
 	  
  	function fileSelected() {
 	
-		
 		//	document.getElementById('MSG').innerHTML = "";
         var file = document.getElementById('fileToUpload').files[0];
         var fileSize = file.size;
@@ -56,6 +69,7 @@
 		currentlocation = 0;
 		filename = "";
 		filesize = 0;
+		
 	  
 	  if (validatefilename(file.name) == false) 
 		{
@@ -93,10 +107,10 @@ function startupload()
 		var fileName = file.name;
 				
 		$.ajax({
-  		url: 'fs_gears_upload.php?n='+fileName+'&total='+fileSize+'&vid=&type=filesize',
+  		url: uploadURI + '?n='+fileName+'&total='+fileSize+'&vid=&type=filesize',
   		success: function(data) {
-			currentBytesUpload = parseFloat(data);
-			uploadFile(currentBytesUpload);
+		currentBytesUpload = parseFloat(data);
+		uploadFile(currentBytesUpload);
   		}
 		});	
 	
@@ -208,33 +222,8 @@ function processReqChange(){
       }
 
       function uploadProgress(evt) {
-	   
-		// bytesUploaded = bytesUploaded+(chunksize*(chunk_id -1));
-         // bytesUploaded = evt.loaded+(chunksize*(chunk_id -1));
-//          bytesTotal = filesize;//evt.total;
-//          var percentComplete = Math.round(bytesUploaded * 100 / bytesTotal);
-//          var bytesTransfered = '';
-//          if (bytesUploaded > 1024*1024)
-//            bytesTransfered = (Math.round(bytesUploaded * 100/(1024*1024))/100).toString() + 'MB';
-//          else if (bytesUploaded > 1024)
-//            bytesTransfered = (Math.round(bytesUploaded * 100/1024)/100).toString() + 'KB';
-//          else
-//            bytesTransfered = (Math.round(bytesUploaded * 100)/100).toString() + 'Bytes';
-//		
-//			document.getElementById('progressBar').style.display = 'block';
-//          document.getElementById('progressNumber').innerHTML = percentComplete.toString() + '%';
-//          document.getElementById('progressBar').style.width = (percentComplete * 3.55).toString() + 'px';
-//		  document.getElementById('transferBytesInfo').innerHTML = bytesTransfered;
-//          if (percentComplete == 100) {
-//            //document.getElementById('progressInfo').style.display = 'none';
-//			document.getElementById('uploadbutton').style.display = 'block';
-//		  	document.getElementById('fileToUpload').style.display = 'block';
-//            var uploadResponse = document.getElementById('uploadResponse');
-//            uploadResponse.innerHTML = '<span style="font-size: 18pt; font-weight: bold;">Upload Complete</span>';
-//            uploadResponse.style.display = 'block';
-			
-        //  }
 
+		
       }
 
       function uploadFailed(evt) {

@@ -39,7 +39,7 @@
 <script>
 	var maximumDate= '<?php echo $config['default_daysvalid'] ?>';
 	$(function() {
-		$( "#datepicker" ).datepicker({ minDate: 0, maxDate: "+"+maximumDate+"D",altField: "#altdate", altFormat: "d-m-yy" });
+		$( "#datepicker" ).datepicker({ minDate: 0, maxDate: "+"+maximumDate+"D",altField: "#altdate", altFormat: "d-m-yy",currentText:maximumDate });
 		$( "#datepicker" ).datepicker( "option", "dateFormat", "d/m/yy" );
 		
 
@@ -57,7 +57,6 @@
 		return true;
 		} 
 	</script>
-
 <?php 
 
 // add voucher
@@ -91,34 +90,46 @@ $filedata = $functions->getVouchers();
 $json_o=json_decode($filedata,true);
 
 ?>
-<?php echo '<div id="pageheading">'._VOUCHERS.'</div>'; ?> 
-<form name="form1" method="post" action="index.php?s=vouchers"  onSubmit="return checkform()">
-<p><?php echo _SEND_NEW_VOUCHER; ?></p>
-<p><?php echo _TO; ?>:
-  <input id="fileto" name="fileto" type="text" size="40" /> 
-  <?php echo _EMAIL_SEPARATOR_MSG; ?>
-</p>
-  <p><?php echo _EXPIRY; ?>:<div id="datepicker"></div><input type="hidden" id="altdate" name="altdate" value="<?php echo date("d-m-Y",strtotime("+".$config['default_daysvalid']." day"));?>">
-</p>
-<p></p>
-  <p><input type="submit" value="Send Voucher"/></p>
-</form>
-<?php echo _VOUCHERS; ?>
-<div id="tablediv">
-<table width="100%" border="0" cellspacing="1">
-<tr bgcolor="#eeeeee"><td><strong><?php echo _TO; ?></strong></td>
-<td><strong><?php echo _CREATED; ?></strong></td>
-<td><strong><?php echo _EXPIRY; ?></strong></td>
-<td></td>
-</tr>
-<?php 
+
+<div id="box">
+<?php echo '<div id="pageheading">'._VOUCHERS.'</div>'; ?>
+  <form name="form1" method="post" action="index.php?s=vouchers"  onSubmit="return checkform()">
+    <table width="100%" border="0">
+      <tr>
+        <td><?php echo _SEND_NEW_VOUCHER; ?></td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td><?php echo _TO; ?></td>
+        <td><?php echo _EMAIL_SEPARATOR_MSG; ?><br />
+          <input id="fileto" name="fileto" type="text" size="40" /></td>
+      </tr>
+      <tr>
+        <td><?php echo _EXPIRY; ?></td>
+        <td><div id="datepicker"></div></td>
+      </tr>
+      <tr>
+        <td><input type="hidden" id="altdate" name="altdate" value="<?php echo date("d-m-Y",strtotime("+".$config['default_daysvalid']." day"));?>" /></td>
+        <td><input type="submit" value="Send Voucher"/></td>
+      </tr>
+    </table>
+  </form>
+  </div>
+  <div id="box">
+  <table id="vouchertable" width="100%" border="0" cellspacing="1">
+    <tr class="headerrow">
+      <td><strong><?php echo _TO; ?></strong></td>
+      <td><strong><?php echo _CREATED; ?></strong></td>
+      <td><strong><?php echo _EXPIRY; ?></strong></td>
+      <td></td>
+    </tr>
+    <?php 
 foreach($json_o as $item) {
-   echo "<tr  bgcolor='#eeeeee'><td>" .$item['fileto'] . "</td><td>" .date("d/m/Y",strtotime($item['filecreateddate'])) . "</td><td>" .date("d/m/Y",strtotime($item['fileexpirydate'])) . "</td><td><a href='index.php?s=vouchers&a=del&id=" .$item['filevoucheruid'] . "'><img src='images/shape_square_delete.png'></a></td></tr>"; //etc
+   echo "<tr><td>" .$item['fileto'] . "</td><td>" .date("d/m/Y",strtotime($item['filecreateddate'])) . "</td><td>" .date("d/m/Y",strtotime($item['fileexpirydate'])) . "</td><td><a href='index.php?s=vouchers&a=del&id=" .$item['filevoucheruid'] . "'><img src='images/shape_square_delete.png'></a></td></tr>"; //etc
 }
 ?>
-</table>
+  </table>
 </div>
-<p>.</p>
 <script language = "Javascript">
 /**
  * DHTML email validation script. Courtesy of SmartWebby.com (http://www.smartwebby.com/dhtml/)
@@ -184,4 +195,9 @@ function ValidateForm(){
 	}
 	return true
  }
-</script>
+
+// stripe every second row in the tables
+$("#vouchertable tr:odd").addClass('altcolor');
+
+
+</script> 

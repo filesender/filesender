@@ -72,7 +72,7 @@
 			DEFINE("_CREATED","Created");
 			DEFINE("_FILE_NAME","File Name");
 			DEFINE("_SUBJECT","Subject");
-			DEFINE("_EXPIRY","Expiry date");
+			DEFINE("_EXPIRY","Expiry");
 			DEFINE("_MESSAGE","Message");
 			DEFINE("_TYPE","Type");
 			

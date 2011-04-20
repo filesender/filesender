@@ -36,12 +36,11 @@
  * 
  */
  ?>
- <script>
+<script>
 	$(function() {
 		$( "#tabs" ).tabs();
 	});
 	</script>
-
 <?php 
 
 // get file data
@@ -54,10 +53,11 @@ $json_log = $functions->adminLogs();
 $drivespace = $functions->driveSpace();
 
 ?>
-<?php echo '<div id="pageheading">'._ADMIN.'</div>'; ?> 
-<div id="tabs">
-	<ul>
-    <?php
+
+<div id="box"> <?php echo '<div id="pageheading">'._ADMIN.'</div>'; ?>
+  <div id="tabs">
+    <ul>
+      <?php
 	// admin tab names
 		echo '<li><a href="#tabs-1">'._GENERAL.'</a></li>';
 		echo '<li><a href="#tabs-2">'._UPLOADS.'</a></li>';
@@ -67,119 +67,103 @@ $drivespace = $functions->driveSpace();
 		echo '<li><a href="#tabs-6">'._ACTIVE_VOUCHERS.'</a></li>';
 		echo '<li><a href="#tabs-7">'._COMPLETE_LOG.'</a></li>';
 		?>
-	</ul>
-  <div id="tabs-1">
-	<?php echo  $functions->getStats(); ?><br />
-	<div id="tablediv1">
-	<table width="100%" border="0" cellpadding="4">
-      <tr>
-        <td>Drive</td>
-        <td>Total</td>
-        <td>Used</td>
-        <td>Available</td>
-        <td>Use %</td>
-      </tr>
-      <tr>
-        <td>Files</td>
-        <td><?php echo  formatBytes($drivespace["site_filestore_total"]) ?></td>
-        <td><?php echo  formatBytes($drivespace["site_filestore_total"]-$drivespace["site_filestore_free"]) ?></td>
-        <td><?php echo  formatBytes($drivespace["site_filestore_free"]) ?></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>Temp</td>
-        <td><?php echo  formatBytes($drivespace["site_temp_filestore_total"]) ?></td>
-        <td><?php echo  formatBytes($drivespace["site_temp_filestore_total"]-$drivespace["site_temp_filestore_free"]) ?></td>
-        <td><?php echo  formatBytes($drivespace["site_temp_filestore_free"]) ?></td>
-        <td></td>
-      </tr>
-    </table>
-	</div>
-	</div>
-	<div id="tabs-2">
-<div id="tablediv1">
-<table width="100%" border="0" cellspacing="1" bgcolor="#FFFFFF">
-<tr bgcolor="#eeeeee">
-<?php 
+    </ul>
+    <div id="tabs-1"> <?php echo  $functions->getStats(); ?><br />
+      <table width="100%" border="0" cellpadding="4">
+        <tr class="headerrow">
+          <td>Drive</td>
+          <td>Total</td>
+          <td>Used</td>
+          <td>Available</td>
+          <td>Use %</td>
+        </tr>
+        <tr>
+          <td>Files</td>
+          <td><?php echo  formatBytes($drivespace["site_filestore_total"]) ?></td>
+          <td><?php echo  formatBytes($drivespace["site_filestore_total"]-$drivespace["site_filestore_free"]) ?></td>
+          <td><?php echo  formatBytes($drivespace["site_filestore_free"]) ?></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>Temp</td>
+          <td><?php echo  formatBytes($drivespace["site_temp_filestore_total"]) ?></td>
+          <td><?php echo  formatBytes($drivespace["site_temp_filestore_total"]-$drivespace["site_temp_filestore_free"]) ?></td>
+          <td><?php echo  formatBytes($drivespace["site_temp_filestore_free"]) ?></td>
+          <td></td>
+        </tr>
+      </table>
+    </div>
+    <div id="tabs-2">
+      <table id="table2" width="100%" border="0" cellspacing="1" bgcolor="#FFFFFF">
+        <tr class="headerrow">
+          <?php 
 echo '<td><strong>'._TO.'</strong></td>';
 echo '<td><strong>'._FROM.'</strong></td>';
 echo '<td><strong>'._FILE_NAME.'</strong></td>';
 echo '<td><strong>'._SIZE.'</strong></td>';
 echo '<td><strong>'._CREATED.'</strong></td>';
 ?>
-</tr>
-<?php 
+        </tr>
+        <?php 
 foreach($json_log as $item) {
 if($item['logtype'] == "Uploaded")
 {
-   echo "<tr  bgcolor='#eeeeee'><td>" .$item['logto'] . "</td><td>" .$item['logfrom'] . "</td><td>" .$item['logfilename']. "</td><td>" .formatBytes($item['logfilesize']). "</td><td>" .date("d/m/Y",strtotime($item['logdate'])) . "</td></tr>"; //etc
+   echo "<tr><td>" .$item['logto'] . "</td><td>" .$item['logfrom'] . "</td><td>" .$item['logfilename']. "</td><td>" .formatBytes($item['logfilesize']). "</td><td>" .date("d/m/Y",strtotime($item['logdate'])) . "</td></tr>"; //etc
 }
 }
 
 ?>
-</table>
-</div>
-	</div>
-	<div id="tabs-3">
-	
-<div id="tablediv1">	
-<table width="100%" border="0" cellspacing="1" bgcolor="#FFFFFF">
-<tr bgcolor="#eeeeee">
-<?php
+      </table>
+    </div>
+    <div id="tabs-3">
+      <table id="table3" width="100%" border="0" cellspacing="1" bgcolor="#FFFFFF">
+        <tr class="headerrow">
+          <?php
 echo '<td><strong>'._TO.'</strong></td>';
 echo '<td><strong>'._FROM.'</strong></td>';
 echo '<td><strong>'._FILE_NAME.'</strong></td>';
 echo '<td><strong>'._SIZE.'</strong></td>';
 echo '<td><strong>'._CREATED.'</strong></td>';
 ?>
-</tr>
-<?php 
+        </tr>
+        <?php 
 foreach($json_log as $item) {
 if($item['logtype'] == "Download")
 {
-   echo "<tr  bgcolor='#eeeeee'><td>" .$item['logto'] . "</td><td>" .$item['logfrom'] . "</td><td>" .$item['logfilename']. "</td><td>" .formatBytes($item['logfilesize']). "</td><td>" .date("d/m/Y",strtotime($item['logdate'])) . "</td></tr>"; //etc
+   echo "<tr><td>" .$item['logto'] . "</td><td>" .$item['logfrom'] . "</td><td>" .$item['logfilename']. "</td><td>" .formatBytes($item['logfilesize']). "</td><td>" .date("d/m/Y",strtotime($item['logdate'])) . "</td></tr>"; //etc
 }
 }
 
 ?>
-</table>
-
-</div>
-
-	</div>
-	<div id="tabs-4">
-	
-	<div id="tablediv1">
-	<table width="100%" border="0" cellspacing="1" bgcolor="#FFFFFF">
-<tr bgcolor="#eeeeee">
-<?php 
+      </table>
+    </div>
+    <div id="tabs-4">
+      <table id="table4" width="100%" border="0" cellspacing="1" bgcolor="#FFFFFF">
+        <tr class="headerrow">
+          <?php 
 echo '<td><strong>'._TO.'</strong></td>';
 echo '<td><strong>'._FROM.'</strong></td>';
 echo '<td><strong>'._FILE_NAME.'</strong></td>';
 echo '<td><strong>'._SUBJECT.'</strong></td>';
 echo '<td><strong>'._CREATED.'</strong></td>';
 ?>
-</tr>
-<?php 
+        </tr>
+        <?php 
 foreach($json_log as $item) {
 if($item['logtype'] == "Error")
 {
-   echo "<tr  bgcolor='#eeeeee'><td>" .$item['logto'] . "</td><td>" .$item['logfrom'] . "</td><td>" .$item['logfilename']. "</td><td>" .date("d/m/Y",strtotime($item['logdate'])) . "</td></tr>"; //etc
+   echo "<tr><td>" .$item['logto'] . "</td><td>" .$item['logfrom'] . "</td><td>" .$item['logfilename']. "</td><td>" .date("d/m/Y",strtotime($item['logdate'])) . "</td></tr>"; //etc
 	echo "<tr><td colspan=4>".$item['logmessage']."</td></tr>";
 }
 }
 
 ?>
-</table>
-</div>
-
-	</div>
-	<div id="tabs-5">
-	
-	<div id="tablediv1">
-		<table width="100%" border="0" cellspacing="1" bgcolor="#FFFFFF">
-<tr bgcolor="#eeeeee">
-<?php 
+      </table>
+    </div>
+    <div id="tabs-5">
+      <table id="table5" width="100%" border="0" cellspacing="1" bgcolor="#FFFFFF">
+        <tr class="headerrow">
+          <?php 
 echo '<td><strong>'._TO.'</strong></td>';
 echo '<td><strong>'._FROM.'</strong></td>';
 echo '<td><strong>'._FILE_NAME.'</strong></td>';
@@ -188,24 +172,23 @@ echo '<td><strong>'._SUBJECT.'</strong></td>';
 echo '<td><strong>'._CREATED.'</strong></td>';
 echo '<td><strong>'._EXPIRY.'</strong></td>';
 ?>
-</tr>
-<?php 
+        </tr>
+        <?php 
 foreach($json_o as $item) {
 if($item['filestatus'] == "Available")
 {
-   echo "<tr  bgcolor='#eeeeee'><td>" .$item['fileto'] . "</td><td>" .$item['filefrom'] . "</td><td>" .$item['fileoriginalname']. "</td><td>" .formatBytes($item['filesize']). "</td><td>".$item['filesubject']. "</td><td>" .date("d/m/Y",strtotime($item['filecreateddate'])) . "</td><td>" .date("d/m/Y",strtotime($item['fileexpirydate'])) . "</td></tr>"; //etc
+   echo "<tr><td>" .$item['fileto'] . "</td><td>" .$item['filefrom'] . "</td><td>" .$item['fileoriginalname']. "</td><td>" .formatBytes($item['filesize']). "</td><td>".$item['filesubject']. "</td><td>" .date("d/m/Y",strtotime($item['filecreateddate'])) . "</td><td>" .date("d/m/Y",strtotime($item['fileexpirydate'])) . "</td></tr>"; //etc
 }
 }
 
 ?>
-</table>
-</div>
-	</div>
-	<div id="tabs-6">
-	<div id="tablediv1">
-			<table width="100%" border="0" cellspacing="1" bgcolor="#FFFFFF">
-<tr bgcolor="#eeeeee">
-<?php 
+      </table>
+    </div>
+    <div id="tabs-6">
+      <div id="tablediv1">
+        <table id="table6" width="100%" border="0" cellspacing="1" bgcolor="#FFFFFF">
+          <tr class="headerrow">
+            <?php 
 echo '<td><strong>'._TO.'</strong></td>';
 echo '<td><strong>'._FROM.'</strong></td>';
 echo '<td><strong>'._FILE_NAME.'</strong></td>';
@@ -214,43 +197,46 @@ echo '<td><strong>'._SUBJECT.'</strong></td>';
 echo '<td><strong>'._CREATED.'</strong></td>';
 echo '<td><strong>'._EXPIRY.'</strong></td>';
 ?>
-<?php 
+            <?php 
 foreach($json_o as $item) {
 if($item['filestatus'] == "Voucher")
 {
-   echo "<tr  bgcolor='#eeeeee'><td>" .$item['fileto'] . "</td><td>" .$item['filefrom'] . "</td><td>" .$item['fileoriginalname']. "</td><td>" .formatBytes($item['filesize']). "</td><td>".$item['filesubject']. "</td><td>" .date("d/m/Y",strtotime($item['filecreateddate'])) . "</td><td>" .date("d/m/Y",strtotime($item['fileexpirydate'])) . "</td></tr>"; //etc
+   echo "<tr><td>" .$item['fileto'] . "</td><td>" .$item['filefrom'] . "</td><td>" .$item['fileoriginalname']. "</td><td>" .formatBytes($item['filesize']). "</td><td>".$item['filesubject']. "</td><td>" .date("d/m/Y",strtotime($item['filecreateddate'])) . "</td><td>" .date("d/m/Y",strtotime($item['fileexpirydate'])) . "</td></tr>"; //etc
 }
 }
 
 ?>
-</table>
-</div>
-	</div>
-	<div id="tabs-7">
-
-<div id="tablediv1">
-	<table width="100%" border="0" cellspacing="1" bgcolor="#FFFFFF">
-<tr bgcolor="#eeeeee">
-<?php 
+        </table>
+      </div>
+    </div>
+    <div id="tabs-7">
+      <table id="table7" width="100%" border="0" cellspacing="1" bgcolor="#FFFFFF">
+        <tr class="headerrow">
+          <?php 
 echo '<td><strong>'._TYPE.'</strong></td>';
 echo '<td><strong>'._TO.'</strong></td>';
 echo '<td><strong>'._FROM.'</strong></td>';
 echo '<td><strong>'._FILE_NAME.'</strong></td>';
 echo '<td><strong>'._CREATED.'</strong></td>';
 ?>
-</tr>
-<?php 
+        </tr>
+        <?php 
 foreach($json_log as $item) {
-   echo "<tr  bgcolor='#eeeeee'><td><b>" .$item['logtype'] . "</b></td><td>" .$item['logto'] . "</td><td>" .$item['logfrom'] . "</td><td>" .$item['logfilename']. "</td><td>" .date("d/m/Y",strtotime($item['logdate'])) . "</td></tr>"; //etc
+   echo "<tr><td><b>" .$item['logtype'] . "</b></td><td>" .$item['logto'] . "</td><td>" .$item['logfrom'] . "</td><td>" .$item['logfilename']. "</td><td>" .date("d/m/Y",strtotime($item['logdate'])) . "</td></tr>"; //etc
 	echo "<tr><td colspan=5>".$item['logmessage']."</td></tr>";
 }
 
 ?>
-</table>
+      </table>
+    </div>
+  </div>
 </div>
-
-
-	</div>
-</div>
-
-<p>.</p>
+<script type="application/javascript">
+// stripe every second row in the tables
+$("#table2 tr:odd").not(':first').addClass('altcolor');
+$("#table3 tr:odd").not(':first').addClass('altcolor');
+$("#table4 tr:odd").not(':first').addClass('altcolor');
+$("#table5 tr:odd").not(':first').addClass('altcolor');
+$("#table6 tr:odd").not(':first').addClass('altcolor');
+$("#table7 tr:odd").not(':first').addClass('altcolor');
+</script> 
