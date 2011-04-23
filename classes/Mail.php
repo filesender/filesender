@@ -48,7 +48,7 @@ class Mail {
     //---------------------------------------
     // Send mail
     // 
-    public function sendemail($mailobject,$template){
+    public function sendemail($mailobject,$template,$type='full'){
 
         $authsaml = AuthSaml::getInstance();
         $authvoucher = AuthVoucher::getInstance();
@@ -61,7 +61,8 @@ class Mail {
 
         $template = str_replace("{siteName}", $config["site_name"], $template);
         $template = str_replace("{fileto}", $mailobject["fileto"], $template);
-        $template = str_replace("{serverURL}", $config["site_url"], $template);
+        if ($type == 'bounce') {$template = str_replace("{fileoriginalto}", $mailobject["fileoriginalto"], $template);}
+        if (isset($config["site_url"])) {$template = str_replace("{serverURL}", $config["site_url"], $template);}
         $template = str_replace("{filevoucheruid}", $mailobject["filevoucheruid"], $template);
         $template = str_replace("{fileexpirydate}", date("d-M-Y",strtotime($mailobject["fileexpirydate"])), $template);
         $template = str_replace("{filefrom}", $mailobject["filefrom"], $template);
@@ -89,7 +90,25 @@ class Mail {
 
         $headers = "MIME-Version: 1.0".$crlf;
         $headers .= "Content-Type: multipart/alternative; boundary=simple_mime_boundary".$crlf;
+        $headers .= "X-FileSenderUID: ".$mailobject["filevoucheruid"].$crlf;
+
+        // RFC2822 Originator of the message
         $headers .= "From: <".$mailobject['filefrom'].">".$crlf;
+
+        // RFC2821 (Envelope) originator of the message
+        if ($type == 'bounce') {
+            $returnpath = "-r <>".$crlf;
+        } else if (isset($config['return_path']) && ! empty($config['return_path'])) {
+            $returnpath = "-r <".$config['return_path'].">".$crlf;
+        } else {
+            $returnpath = "-r <".$mailobject['filefrom'].">".$crlf;
+        }
+
+        // Recipient(s) of the message
+        $to = "<".$mailobject['fileto'] . ">";
+        if ($type == 'full') {
+            $headers .= "Cc: <" . $mailobject['filefrom'] . ">".$crlf;
+        }
 
         // if voucher is being used then bcc fileauthuseremail a copy so voucher creator knows a file was sent as they are responsible for the use of the voucher
         if($authvoucher->aVoucher()) {
@@ -98,18 +117,15 @@ class Mail {
             }
         }
 
-        $headers .= "Reply-To: <".$mailobject['filefrom'].">".$crlf;
-
-        $returnpath = "-r <".$mailobject['filefrom'].">".$crlf;
-
-        $headers .= "Cc: <" . $mailobject['filefrom'] . ">".$crlf;
-        $to = "<".$mailobject['fileto'] . ">";
-
-
-        if(isset($mailobject['filesubject']) && $mailobject['filesubject'] != ""){
+        // Subject of message
+        if(isset($mailobject['filesubject']) && $mailobject['filesubject'] != "" && $type != 'bounce'){
             $subject = $config["site_name"].": ".$mailobject['filesubject'];
         } else {
-            $tempfilesubject = $config['default_emailsubject'];
+            if ($type == 'bounce') {
+                $tempfilesubject = $config['emailbounce_subject'];
+            } else {
+                $tempfilesubject = $config['default_emailsubject'];
+            }
             $tempfilesubject = str_replace("{siteName}", $config["site_name"], $tempfilesubject);
             $tempfilesubject = str_replace("{fileoriginalname}", $fileoriginalname, $tempfilesubject);
             $tempfilesubject = str_replace("{filename}", $fileoriginalname, $tempfilesubject);
