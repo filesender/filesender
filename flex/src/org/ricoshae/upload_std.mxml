@@ -232,6 +232,7 @@
 					urlVars = new URLVariables();
 					urlVars.fid = currentFileObj.fileuid;
 					urlVars.vid = currentFileObj.filevoucheruid;
+					urlVars.token = currentUserObj.token; 
 					var sessionID:String = "";
 					if(currentFileObj.SessionID) {
 						sessionID = currentFileObj.SessionID.toString();
