@@ -32,7 +32,7 @@
 //  --------------------------------
 // this file is called by CRON to process incoming email bounces
 // bounces are assumed to be stored in separate files per bounce
-// and shoud contain the original X-FileSenderUID: header somewhere in
+// and should contain the original X-FileSenderUID: header somewhere in
 // the message. If not bounces are moved to the '../failures' directory
 // for manual inspection.
 // ---------------------------------
