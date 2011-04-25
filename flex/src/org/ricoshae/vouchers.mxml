@@ -269,7 +269,7 @@
 			<mx:TextArea width="100%" htmlText="{lang.site_voucherinstructions}" editable="false" height="60" borderStyle="none"/>
 			<mx:HBox width="100%" height="30" borderStyle="solid" verticalAlign="middle">
 				<mx:Label text="{lang.Send_Vouchers_to}:"/>
-				<mx:TextInput width="100%" id="voucherEmails"  toolTip="Multiple email address can be entered seperated by comma (,)" change="FlexGlobals.topLevelApplication.correctLinux(event)"/>
+				<mx:TextInput width="100%" id="voucherEmails"  toolTip="Multiple email address can be entered seperated by comma or semi-colon ( , or ; )" change="FlexGlobals.topLevelApplication.correctLinux(event)"/>
 				<mx:Label text="Valid to:" textAlign="right"/>
 				<mx:DateField id="voucherValidDate"  formatString="{config.datedisplayformat}"/>
 				<mx:Button label="{lang.Send_Voucher}" click="createVouchers()" id="sendVoucher_btn" enabled="true"/>
