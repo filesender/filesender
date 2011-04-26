@@ -83,6 +83,7 @@ rm -rf %{buildroot}
 %{_datadir}/%{name}/
 %dir %{_sysconfdir}/%{name}/
 %config(noreplace) %attr(0640,root,apache) %{_sysconfdir}/%{name}/config.php
+%config(noreplace) %attr(0640,root,apache) %{_sysconfdir}/%{name}/config.test
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.conf
 %config(noreplace) %attr(0755,root,root) %{_sysconfdir}/cron.daily/%{name}
 %dir %{_localstatedir}/lib/%{name}/
