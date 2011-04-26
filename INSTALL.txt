@@ -1,4 +1,4 @@
-Updated: 14 January 2011
+Updated: 25 April 2011
 
 Installation instructions
 =========================
@@ -9,11 +9,26 @@ FileSender installation instructions are available at:
 Be sure to read the parts about configuring PostgreSQL, PHP, Apache,
 SimpleSAMLphp and cron to get up and running.
 
+Upgrading to 1.0.1 RELEASE
+==========================
+
+Version 1.0.1 is mainly a bugfix release (see CHANGELOG.txt for
+details about the fixes). When using IPv6 it is recommended to
+adjust the 'files' database table:
+
+	#sudo -u postgres psql filesender
+	ALTER TABLE files ALTER fileip6address TYPE character varying(45);
+	\q
+
+As usual it is recommended to make a backup of your current installation
+before upgrading, especially if you have made local modifications to the
+installed version.
+
 Upgrading from previous (beta) versions
 =======================================
 
 Please read the following notes before upgrading from a previous beta
-version to 1.0.
+version to 1.0.x.
 
 IMPORTANT: Upgrading from versions older then Beta-0.1.17
 =========================================================
@@ -31,7 +46,7 @@ to a previous version run
 *before* downgrading.
 
 YOU ONLY NEED TO DO THIS ONCE. If you upgrade from for example Beta-0.1.18 to
-RELEASE-1.0 you do not need to repeat this step. So only run the script when
+RELEASE-1.0.x you do not need to repeat this step. So only run the script when
 upgrading from Beta-0.1.16 or older.
 
 * As of version Beta-0.1.17 the expiration of files and vouchers is handled
@@ -58,10 +73,10 @@ In the various beta cycles several new and required settings have
 been added to the config.php that might not be present in your current
 configuration.
 
-IMPORTANT: When upgrading please start with a fresh configuration file
-and take the time to go through all configuration directives to make
-sure all is as it should be. Merging new entries into your old config.php is
-discouraged.
+IMPORTANT: When upgrading from a pre-1.0 version please start with a fresh
+configuration file and take the time to go through all configuration
+directives to make sure all is as it should be. Merging new entries into
+your old config.php is discouraged.
 
 Customisation
 =============
