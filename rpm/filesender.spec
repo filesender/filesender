@@ -17,7 +17,7 @@ Requires: httpd
 Requires: php >= 5.2.0
 Requires: php-pgsql
 Requires: php-xml
-Requires: simplesamlphp
+Requires: simplesamlphp < 1.7.0
 Requires: postgresql-server
 
 %description
@@ -55,7 +55,6 @@ rm -rf %{buildroot}
 
 %{__cp} -ad ./* %{buildroot}%{_datadir}/%{name}
 %{__cp} -p %{SOURCE1} %{buildroot}%{_sysconfdir}/%{name}/config.php
-%{__cp} -p ./config/config.test %{buildroot}%{_sysconfdir}/%{name}/
 %{__cp} -p %{SOURCE2} %{buildroot}%{_sysconfdir}/httpd/conf.d/%{name}.conf
 %{__cp} -p %{SOURCE3} %{buildroot}%{_sysconfdir}/cron.daily/%{name}
 
@@ -83,7 +82,6 @@ rm -rf %{buildroot}
 %{_datadir}/%{name}/
 %dir %{_sysconfdir}/%{name}/
 %config(noreplace) %attr(0640,root,apache) %{_sysconfdir}/%{name}/config.php
-%config(noreplace) %attr(0640,root,apache) %{_sysconfdir}/%{name}/config.test
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.conf
 %config(noreplace) %attr(0755,root,root) %{_sysconfdir}/cron.daily/%{name}
 %dir %{_localstatedir}/lib/%{name}/
