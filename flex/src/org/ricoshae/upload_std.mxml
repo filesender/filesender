@@ -529,7 +529,7 @@
 				}
 				catch(error:Error) {
 					// Alert.show(lang["E020"]);
-					FlexGlobals.topLevelApplication.logProcess("Catch error: File Size too Large (" + fileRef.size.toString() + ") - Flash Upload");
+					FlexGlobals.topLevelApplication.logProcess("Catch error: File Size too Large - Flash Upload");
 					Alert.show(lang.E020+ " (Max "+ readablizeBytes(config.max_flash_upload_size) + ")",lang.E000);
 					return;
 				}
