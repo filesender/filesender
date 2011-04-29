@@ -188,7 +188,7 @@
 				if(fileRef.size == 0 )
 				{ 
 					FlexGlobals.topLevelApplication.logProcess("File Size is 0 - Flash Upload");
-					Alert.show(lang.E019,lang.E019); 
+					Alert.show(lang.E030,lang.E000); 
 					return ;
 				} 
 				else  
@@ -196,7 +196,7 @@
 					if(parseInt(fileRef.size.toString()) > parseInt(config.max_flash_upload_size))
 					{
 						FlexGlobals.topLevelApplication.logProcess("File Size too Large (" + fileRef.size.toString() + ") - Flash Upload");
-						Alert.show(lang.E020+ " (Max "+ readablizeBytes(config.max_flash_upload_size) + ")",lang.E000);
+						Alert.show(lang.E020+ " (" + lang.E033 + ": " + readablizeBytes(config.max_flash_upload_size) + ")",lang.E000);
 						return ;		 
 					}	  
 				}    
