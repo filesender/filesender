@@ -2,6 +2,7 @@ filesender (1.0.1) stable; urgency=medium
    * Release 1.0.1
 
    * Fixes and changes
+     #271 compatibility fix for SimpleSAMLphp 1.7+
      #379 Log IPv6 address of connecting client. When upgrading from
           previous versions you should fix the relevant column size in the
           database with:
@@ -12,10 +13,13 @@ filesender (1.0.1) stable; urgency=medium
      #381 allow multiple email addresses to be separated by both a
           comma and a semi-colon
      #383 trim whitespace from email-addresses
-     #271 compatibility fix for SimpleSAMLphp 1.7+
-     #384 Mail bounce handling (code change only)
+     #394 "File too large, use Gears" warnings fixups
 
- -- Filesender Development <filesender-dev@filesender.org>  Sun, 24 Apr 2011 23:42:31 +0200
+   * Experimental feature
+     - Mail bounce handling (for details see
+       http://www.assembla.com/wiki/show/file_sender/Mail_Bounce_Handling )
+
+ -- Filesender Development <filesender-dev@filesender.org>  Fri, 29 Apr 2011 23:42:31 +0200
 
 filesender (1.0) stable; urgency=medium
    * Release 1.0
