@@ -1,8 +1,9 @@
-Last update: 13 April 2011
+Last update: 29 April 2011
 
-Version 1.0.0-dev (trunk) <13 April 2011>
+Version 1.0.0-dev (trunk) <29 April 2011>
 
 	Fixes and changes
+	#271 compatibility fix for SimpleSAMLphp 1.7+
 	#379 Log IPv6 address of connecting client. When upgrading from
 	     previous versions you should fix the relevant column size in the
 	     database with:
@@ -13,11 +14,11 @@ Version 1.0.0-dev (trunk) <13 April 2011>
 	#381 allow multiple email addresses to be separated by both a
 	     comma and a semi-colon
 	#383 trim whitespace from email-addresses
-	#271 compatibility fix for SimpleSAMLphp 1.7+
+	#394 "File too large, use Gears" warnings fixups
 
 	Experimental feature
 	- Mail bounce handling (for details see
-          http://www.assembla.com/wiki/show/file_sender/Mail_Bounce_Handling )
+	  http://www.assembla.com/wiki/show/file_sender/Mail_Bounce_Handling )
 
 Version 1.0 <31 January 2011>
 	Release 1.0
