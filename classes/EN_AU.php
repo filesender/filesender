@@ -147,7 +147,7 @@ class EN_AU {
             "E017" => "Cannot move file", // Cannot move file
             "E018" => "Please check email address", //Please check email address
             "E019" => "Please browse for a file to upload",  // Please browser for a file to upload
-            "E020" => "File is too large, Please install Google Gears (*see top right hand corner*) to upload large files.", // File is too large, install Google Gears to upload >2Gb files.
+            "E020" => "File is too large. Please install Google Gears (*see top right hand corner*) to upload large files.", // File is too large, install Google Gears to upload >2Gb files.
             "E021" => "You MUST agree to the terms and conditions.", // File is too large, install Google Gears to upload >2Gb files.
             "E022" => "The maximum number of email addresses allowed is ", // To many emails, maximum of x
             "E023" => "You are not authorised to upload a file.", // To many emails, maximum of x
@@ -160,7 +160,8 @@ class EN_AU {
             "E030" => "Cannot upload a file of 0 bytes. Please select another file.",
             "E031" => "Error uploading your file. Please contact your administrator (Error #031)",
             "E032" => "Mac using gears cannot upload a file larger than 2 GB (Error #032)",
-			"E033" => "This appears to be an invalid email address.  Email addresses can look like firstname.lastname@somewhere.edu, firstname@somewhere.edu, lastname@somewhere.edu.  Email addresses can contain characters (a-z), numbers (0-9), -, _ and +."
+            "E033" => "This appears to be an invalid email address.  Email addresses can look like firstname.lastname@somewhere.edu, firstname@somewhere.edu, lastname@somewhere.edu.  Email addresses can contain characters (a-z), numbers (0-9), -, _ and +.",
+            "E033" => "Maximum without Gears"
         );
         return $lang;
     }
