@@ -35,6 +35,12 @@ apache_remove() {
     fi
 }
 
+php_remove() {
+    if [ -d /etc/php5/conf.d ] && [ -L /etc/php5/conf.d/filesender.ini ]; then
+        rm -f /etc/php5/conf.d/filesender.ini
+    fi
+}    
+
 # summary of how this script can be called:
 #        * <postrm> `remove'
 #        * <postrm> `purge'
