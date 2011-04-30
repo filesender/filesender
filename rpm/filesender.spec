@@ -45,6 +45,7 @@ rm -rf %{buildroot}
 %{__mkdir} -p %{buildroot}%{_sysconfdir}/%{name}
 %{__mkdir} -p %{buildroot}%{_sysconfdir}/httpd/conf.d
 %{__mkdir} -p %{buildroot}%{_sysconfdir}/cron.daily
+%{__mkdir} -p %{buildroot}%{_sysconfdir}/php.d
 %{__mkdir} -p %{buildroot}%{_localstatedir}/lib/%{name}/files
 %{__mkdir} -p %{buildroot}%{_localstatedir}/lib/%{name}/tmp
 %{__mkdir} -p %{buildroot}%{_localstatedir}/lib/%{name}/maildrop
@@ -57,6 +58,7 @@ rm -rf %{buildroot}
 %{__cp} -p %{SOURCE1} %{buildroot}%{_sysconfdir}/%{name}/config.php
 %{__cp} -p %{SOURCE2} %{buildroot}%{_sysconfdir}/httpd/conf.d/%{name}.conf
 %{__cp} -p %{SOURCE3} %{buildroot}%{_sysconfdir}/cron.daily/%{name}
+%{__cp} -p config/filesender-php.ini %{buildroot}%{_sysconfdir}/php.d/%{name}.ini
 
 %{__rm} -f %{buildroot}%{_datadir}/%{name}/*.txt
 %{__rm} -f %{buildroot}%{_datadir}/%{name}/*.specs
@@ -84,6 +86,7 @@ rm -rf %{buildroot}
 %config(noreplace) %attr(0640,root,apache) %{_sysconfdir}/%{name}/config.php
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.conf
 %config(noreplace) %attr(0755,root,root) %{_sysconfdir}/cron.daily/%{name}
+%config(noreplace) %attr(0755,root,root) %{_sysconfdir}/php.d/%{name}.ini
 %dir %{_localstatedir}/lib/%{name}/
 %dir %attr(0750,apache,apache) %{_localstatedir}/lib/%{name}/tmp
 %dir %attr(0750,apache,apache) %{_localstatedir}/lib/%{name}/files

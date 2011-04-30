@@ -22,6 +22,11 @@ apache_install() {
     fi
 }
 
+php_install() {
+    if [ -d /etc/php5/conf.d ] && [ ! -e /etc/php5/conf.d/filesender.ini ]; then
+              ln -s /etc/filesender/filesender-php.ini /etc/php5/conf.d/filesender.ini
+    fi
+}
 
 case "$1" in
     configure)
@@ -33,7 +38,7 @@ case "$1" in
         chmod 750 /var/lib/filesender/tmp
         chown -R www-data:www-data /var/lib/filesender/maildrop
         chmod -R 750 /var/lib/filesender/maildrop
-
+        php_install
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)
