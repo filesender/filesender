@@ -64,6 +64,7 @@ case "$1" in
         fi
         rm -rf /var/log/filesender
         rm -rf /var/lib/filesender
+        php_remove
     ;;
     remove|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
     ;;
