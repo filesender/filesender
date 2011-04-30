@@ -19,6 +19,9 @@ filesender (1.0.1) stable; urgency=medium
      - Mail bounce handling (for details see
        http://www.assembla.com/wiki/show/file_sender/Mail_Bounce_Handling )
 
+   * Packaging
+     - Added filesender-php.ini with recommended PHP settings
+
  -- Filesender Development <filesender-dev@filesender.org>  Fri, 29 Apr 2011 23:42:31 +0200
 
 filesender (1.0) stable; urgency=medium
