@@ -1,5 +1,5 @@
---- config.php	2011-02-24 15:49:49.237396461 +0100
-+++ config.php.ssp1.8	2011-04-30 13:08:16.252519492 +0200
+--- config/config.php	2011-02-24 15:49:49.237396461 +0100
++++ config/config.php	2011-04-30 13:08:16.252519492 +0200
 @@ -105,7 +105,7 @@
  	if ( isset($_SERVER['SERVER_NAME']) ) {
  	$prot =  isset($_SERVER['HTTPS']) ? 'https://' : 'http://';
