@@ -1,6 +1,6 @@
-Last update: 29 April 2011
+Last update: 30 April 2011
 
-Version 1.0.0-dev (trunk) <29 April 2011>
+Version 1.0.0-dev (trunk) <30 April 2011>
 
 	Fixes and changes
 	#271 compatibility fix for SimpleSAMLphp 1.7+
@@ -19,6 +19,9 @@ Version 1.0.0-dev (trunk) <29 April 2011>
 	Experimental feature
 	- Mail bounce handling (for details see
 	  http://www.assembla.com/wiki/show/file_sender/Mail_Bounce_Handling )
+
+	Packaging
+	- Added filesender-php.ini with recommended PHP settings
 
 Version 1.0 <31 January 2011>
 	Release 1.0
