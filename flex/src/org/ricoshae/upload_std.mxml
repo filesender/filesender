@@ -53,6 +53,7 @@
 			import flash.utils.Timer;
 			import flash.events.TimerEvent;
 			import org.ricoshae.core.*;
+			import mx.events.CloseEvent;
 			
 			[Bindable] public var currentFileObj:Object  = new Object();
 			[Bindable] public var currentUserObj:Object = new Object();
@@ -560,9 +561,17 @@
 			// When a file is selected, we upload the file to the PHP file upload script on the server
 			// file is uploaded to php temp directory then moved to file upload directory
 			
+			// confirm cancel first
+			// upload cancelled confirmation
+			public function cancelUpload():void
+			{
+				Alert.show("Are you sure?", "Cancel Upload", Alert.OK | Alert.CANCEL,null,std_CancelUpload);
+			}
+			
 			//Cancel Flash Upload
-			public function cancelUpload():void 
+			public function std_CancelUpload(event:CloseEvent):void    
 			{ 
+				if (event.detail == Alert.OK) {   
 				FlexGlobals.topLevelApplication.logProcess("Upload Cancelled - Flash Upload");
 				FlexGlobals.topLevelApplication.uploadStopped(); 
 				fileRef.cancel(); 
@@ -577,6 +586,7 @@
 				init();
 				//FlexGlobals.topLevelApplication.getFile();
 			} 
+			}
 			
 			// display bytes correctly
 			public function readablizeBytes(bytes:Number):String 
