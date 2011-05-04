@@ -251,6 +251,7 @@
 				// filename returned from gears browse
 				if(sType == "filename")
 				{
+					btUpload.visible = false;
 					FlexGlobals.topLevelApplication.logProcess("File Selected ["+sInfo.toString()+"] - Gears Upload");
 					//check for invalid file name characters
 					if (fnCheckString(sInfo.toString()))
@@ -337,6 +338,9 @@
 					
 					if(parseInt(config["max_gears_upload_size"]) != 0 &&  thefileSize > parseInt(config["max_gears_upload_size"])) 
 					{
+						selectedFilename.text = "";
+						selectedFileSize.text = "";
+						btUpload.visible = false;
 						FlexGlobals.topLevelApplication.logProcess("File too Large - Gears Upload");
 						Alert.show(lang['E003']+ " (Max: " + readablizeBytes(parseInt(config["max_gears_upload_size"])) + ")",lang['E000'] ); 
 						return ;	
