@@ -315,20 +315,24 @@
 	<mx:DateFormatter id="df" formatString="{config.datedisplayformat}"/>
 	<mx:DateFormatter id="df_pg" formatString="{config.datedisplayformat}"/> 
 	<mx:Canvas right="1" left="1" bottom="1" top="1">
-		<mx:VBox left="0" right="0" bottom="0" borderStyle="none" verticalAlign="top" top="00">
-			<mx:DataGrid width="100%" height="100%" id="vouchers_dg" dataProvider="{usersFiles}" paddingLeft="0" paddingTop="0" paddingBottom="0" paddingRight="0">
+		<mx:VBox left="0" right="20" bottom="0" borderStyle="none" verticalAlign="top" top="0">
+			<mx:DataGrid width="100%" height="100%" id="vouchers_dg" dataProvider="{usersFiles}" paddingLeft="0" paddingTop="0" paddingBottom="0" variableRowHeight="true" paddingRight="0">
 				<mx:columns>
 					<mx:DataGridColumn width="20">
 						<mx:itemRenderer>
 							<mx:Component>
+								<mx:VBox  horizontalAlign="center">
 								<mx:Button  icon="@Embed(source='/assets/email_go.png')" height="20" width="20" label="Re-Send Email" click="outerDocument.functionResendBtn()"/>
+									</mx:VBox>
 							</mx:Component>
 						</mx:itemRenderer>
 					</mx:DataGridColumn>
 					<mx:DataGridColumn width="20">
 						<mx:itemRenderer>
 							<mx:Component>
+								<mx:VBox  horizontalAlign="center">
 								<mx:Button  icon="@Embed(source='/assets/email_add.png')" height="20" width="20" toolTip="Add New Recipient" click="outerDocument.functionAddEmail()"/>
+									</mx:VBox>
 							</mx:Component> 
 						</mx:itemRenderer> 
 					</mx:DataGridColumn>
@@ -338,8 +342,10 @@
 					<mx:DataGridColumn headerText="File" dataField="fileoriginalname" wordWrap="true" textAlign="left">
 						<mx:itemRenderer>
 							<mx:Component>
-								<mx:LinkButton click="navigateToURL(new URLRequest('download.php?vid='+ data.filevoucheruid), 'Download File')" toolTip="Click to Download {data.fileoriginalname}" label="{data.fileoriginalname}" labelPlacement="left">	
+								<mx:VBox  horizontalAlign="center" horizontalScrollPolicy="off">
+								<mx:LinkButton click="navigateToURL(new URLRequest('download.php?vid='+ data.filevoucheruid), 'Download File')" toolTip="Click to Download {data.fileoriginalname}" label="{data.fileoriginalname}" labelPlacement="top">	
 								</mx:LinkButton>
+									</mx:VBox>
 							</mx:Component>
 						</mx:itemRenderer>
 					</mx:DataGridColumn>
@@ -361,7 +367,9 @@
 					<mx:DataGridColumn width="26">
 						<mx:itemRenderer>
 							<mx:Component>
+								<mx:VBox  horizontalAlign="center">
 								<mx:Button  icon="@Embed(source='/assets/shape_square_delete.png')" height="20" width="20" label="Delete" click="outerDocument.functionNameBtn()"/>
+									</mx:VBox>
 							</mx:Component>
 						</mx:itemRenderer>
 					</mx:DataGridColumn>
