@@ -147,7 +147,7 @@ class EN_AU {
             "E017" => "Cannot move file", // Cannot move file
             "E018" => "Please check email address", //Please check email address
             "E019" => "Please browse for a file to upload",  // Please browser for a file to upload
-            "E020" => "File is too large. Please install Google Gears (*see top right hand corner*) to upload large files.", // File is too large, install Google Gears to upload >2Gb files.
+            "E020" => "File is too large. If using Windows, please install Google Gears (*see top right hand corner*) to upload large files (not possible on Mac OSX and Linux).", // File is too large, install Google Gears to upload >2Gb files.
             "E021" => "You MUST agree to the terms and conditions.", // File is too large, install Google Gears to upload >2Gb files.
             "E022" => "The maximum number of email addresses allowed is ", // To many emails, maximum of x
             "E023" => "You are not authorised to upload a file.", // To many emails, maximum of x
