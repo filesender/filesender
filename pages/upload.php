@@ -48,8 +48,10 @@
    $voucherUID = "";
    $senderemail = $useremail;
    
+   // get initial upload uid
+   $id = getGUID();
    // set id for progress bar upload
-   $id = md5(microtime() . rand());
+  // $id = md5(microtime() . rand());
    
    // check if this is a vooucher
   if($authvoucher->aVoucher())
@@ -78,6 +80,7 @@
 <script type="text/javascript" src="js/upload.js"></script>
 <script type="text/javascript">
 	
+	// 
 	// all default settings
 	var uploadid = '<?php echo $id ?>';
 	var maximumDate= '<?php echo $config['default_daysvalid']?>';
@@ -85,7 +88,7 @@
 	var bytesTotal = 0;
 	var previousBytesLoaded = 0;
 	var intervalTimer = 0;
- 
+ 	//var fileupload[uploadid].status = "draft";
  	// start document ready 
 	$(document).ready(function() { 
 		
@@ -103,19 +106,12 @@
 		});	
 
 		//Check if HTML5 is enable and use HTML uploader
-		if(window.File && window.FileReader && window.FileList){
-			if (window.FormData)
-			{
-				// can use HTML5 upload functions
-				//$("#uploadhtml5").show();
-				$("#uploadhtml5").show();
-			} else {
-				// use standard upload functions
-				$("#uploadstandard").show();
-			}
+		if(window.File && window.FileReader && window.FileList && window.Blob && window.FormData){
+			// use HTML5 upload functions
+			$("#uploadhtml5").show();
 		} else {
 			// use standard upload functions
-		$("#uploadstandard").show();
+			$("#uploadstandard").show();
 		}
 	// end document ready
 	});
@@ -301,7 +297,7 @@ function validatefilename(name)
       <tr>
         <td><?php echo _TO; ?></td>
         <td><?php echo _EMAIL_SEPARATOR_MSG; ?> <br />
-          <input name="fileto" type="text" id="fileto" value="chris@ricoshae.com.au" size="40" /></td>
+          <input name="fileto" type="text" id="fileto" value="chrisrichter@crcsmedia.com" size="40" /></td>
       </tr>
       <tr>
         <td><?php echo _FROM; ?></td>

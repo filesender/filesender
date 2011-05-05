@@ -56,6 +56,8 @@ var filename = "";
 var chunksize = 2000000;
 var uploadURI = "fs_upload.php";
 var filesize = 0;
+// a unique is created for each file that is uploaded.
+// An object with the unique stores all relevant information about the file upload
 	  
  	function fileSelected() {
 	
@@ -138,9 +140,20 @@ function uploadFile(currentBytesUpload) {
 		{
 		txferSize = filesize - bytesUploaded;
 		}
+		// check if firefox or Chrome slice supported 
+		if(file && file.webkitSlice )
+		{
+			var blob = file.webkitSlice(bytesUploaded, txferSize+bytesUploaded);
+		}
+		if(file && file.mozSlice )
+		{
+			var blob = file.mozSlice(bytesUploaded, txferSize+bytesUploaded);
+		}
+		if(file && file.slice )
+		{
+			var blob = file.slice(bytesUploaded, txferSize);
+		}
 		
-	var blob = file.slice(bytesUploaded, txferSize);
-	
 	var fileName = file.name; //Grab the file name
     var fileSize = file.size; //Grab the file size
     var fileType = file.type; //Grab the file type
@@ -160,13 +173,13 @@ function uploadFile(currentBytesUpload) {
         //Set up the body of the POST data includes the name & file data.
         var bodySend =  "";
 		bodySend = reader.result;
- 	    //Use sendAsBinary to send binary data. If you are sending text just use send.
-		//document.getElementById('uploadResponse').innerHTML = "Uploading...";
-			
-	    xhr.sendAsBinary(bodySend);
-		
-function processReqChange(){
 
+	    //Use sendAsBinary to send binary data. If you are sending text just use send.
+		//document.getElementById('uploadResponse').innerHTML = "Uploading...";
+		xhr.send(bodySend);
+	    //xhr.sendAsBinary(bodySend);
+
+function processReqChange(){
      if (xhr.readyState == 4) {
             if (xhr.status == 200) {
 			bytesUploaded = parseFloat(xhr.responseText);
