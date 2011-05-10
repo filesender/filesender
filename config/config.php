@@ -53,8 +53,8 @@ public function loadConfig() {
 
 	// General settings
 	$config['admin'] = ''; // UID's (from $config['saml_uid_attribute']) that have Administrator permissions
-	$config['adminEmail'] = ''; // Email address(es, separated by ,) to receive administrative messages (low disk space warning)
-	$config['Default_TimeZone'] = 'Australia/Sydney';
+	$config['adminEmail'] = 'me@vrijheid.net'; // Email address(es, separated by ,) to receive administrative messages (low disk space warning)
+	$config['Default_TimeZone'] = 'Europe/Berlin';
 	$config['site_name'] = 'FileSender'; // Friendly name used for your FileSender instance
 	$config["site_splashtext"] = "FileSender is a secure way to share large files with anyone! Logon to upload your files or invite people to send you a file.";
 
@@ -104,7 +104,7 @@ public function loadConfig() {
 	// site URL settings
 	if ( isset($_SERVER['SERVER_NAME']) ) {
 	$prot =  isset($_SERVER['HTTPS']) ? 'https://' : 'http://';
-	$config['site_url'] = $prot . $_SERVER['SERVER_NAME'] . '/filesender/'; // URL to Filesender
+	$config['site_url'] = $prot . $_SERVER['SERVER_NAME'] . '/'; // URL to Filesender
 	$config['site_simplesamlurl'] =  $prot . $_SERVER['SERVER_NAME'] . '/simplesaml/';
 	$config['site_authenticationSource'] ="default-sp";
 	$config['site_logouturl'] = $config['site_url'] . 'logout.php';
@@ -118,17 +118,17 @@ public function loadConfig() {
 	$config['gearsURL'] = 'http://tools.google.com/gears/';
 
 	// (absolute) file locations
-	$config['site_filestore'] = '/usr/share/filesender/files/'; 
-	$config['site_temp_filestore'] = '/usr/share/filesender/tmp/'; 
-	$config['site_simplesamllocation'] = '/usr/share/simplesamlphp/';
-	$config['log_location'] = '/usr/share/filesender/log/';	
+	$config['site_filestore'] = '/Users/maartenkoopmans/repos/file_sender/filesender/branches/filesender-1.5/files/'; 
+	$config['site_temp_filestore'] = '/Users/maartenkoopmans/repos/file_sender/filesender/branches/filesender-1.5/tmp/'; 
+	$config['site_simplesamllocation'] = '/var/simplesaml/';
+	$config['log_location'] = '/Users/maartenkoopmans/repos/file_sender/filesender/branches/filesender-1.5/log/';	
 
 	// database settings	
 	$config['pg_host'] = 'localhost';
 	$config['pg_database'] = 'filesender';
 	$config['pg_port'] = '5432';
 	$config['pg_username'] = 'filesender';
-	$config['pg_password'] = 'yoursecretpassword';
+	$config['pg_password'] = 'filesender';
 
 	// cron settings
 	$config['cron_exclude prefix'] = '_'; // exclude deletion of files with the prefix character listed (can use multiple characters eg '._' will ignore .xxxx and _xxxx
