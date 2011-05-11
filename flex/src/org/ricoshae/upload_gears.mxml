@@ -251,6 +251,7 @@
 				// filename returned from gears browse
 				if(sType == "filename")
 				{
+					btUpload.visible = false;
 					FlexGlobals.topLevelApplication.logProcess("File Selected ["+sInfo.toString()+"] - Gears Upload");
 					//check for invalid file name characters
 					if (fnCheckString(sInfo.toString()))
@@ -270,6 +271,8 @@
 					// notify user if over 2GB
 					if(flash.system.Capabilities.os.substr(0, 3) == "Mac" && currentFileObj.filesize > 2000000000 )
 					{
+						selectedFilename.text = "";
+						selectedFileSize.text = "";
 						FlexGlobals.topLevelApplication.logProcess("File is too large for Gears on Mac upload - Gears Upload");
 						Alert.show(lang['E032']);
 						return;
@@ -337,6 +340,9 @@
 					
 					if(parseInt(config["max_gears_upload_size"]) != 0 &&  thefileSize > parseInt(config["max_gears_upload_size"])) 
 					{
+						selectedFilename.text = "";
+						selectedFileSize.text = "";
+						btUpload.visible = false;
 						FlexGlobals.topLevelApplication.logProcess("File too Large - Gears Upload");
 						Alert.show(lang['E003']+ " (Max: " + readablizeBytes(parseInt(config["max_gears_upload_size"])) + ")",lang['E000'] ); 
 						return ;	
