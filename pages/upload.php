@@ -297,7 +297,7 @@ function validatefilename(name)
       <tr>
         <td><?php echo _TO; ?></td>
         <td><?php echo _EMAIL_SEPARATOR_MSG; ?> <br />
-          <input name="fileto" type="text" id="fileto" value="chrisrichter@crcsmedia.com" size="40" /></td>
+          <input name="fileto" type="text" id="fileto" size="40" /></td>
       </tr>
       <tr>
         <td><?php echo _FROM; ?></td>
