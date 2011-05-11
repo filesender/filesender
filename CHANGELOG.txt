@@ -1,6 +1,6 @@
-Last update: 30 April 2011
+Last update: 8 May 2011
 
-Version 1.0.0-dev (trunk) <30 April 2011>
+Version 1.0.0-dev (trunk) <8 May 2011>
 
 	Fixes and changes
 	#271 compatibility fix for SimpleSAMLphp 1.7+
@@ -15,6 +15,8 @@ Version 1.0.0-dev (trunk) <30 April 2011>
 	     comma and a semi-colon
 	#383 trim whitespace from email-addresses
 	#394 "File too large, use Gears" warnings fixups
+	#396 Confirmation when cancelling Flash upload
+	#397 Wrapping of Subject field in My Files table
 
 	Experimental feature
 	- Mail bounce handling (for details see
