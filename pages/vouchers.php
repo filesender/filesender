@@ -38,11 +38,22 @@
  ?>
 <script>
 	var maximumDate= '<?php echo $config['default_daysvalid'] ?>';
+	var selectedVoucher = "";
 	$(function() {
 		$( "#datepicker" ).datepicker({ minDate: 0, maxDate: "+"+maximumDate+"D",altField: "#altdate", altFormat: "d-m-yy",currentText:maximumDate });
 		$( "#datepicker" ).datepicker( "option", "dateFormat", "d/m/yy" );
+		$("#dialog-delete").dialog({ autoOpen: false, height: 140, modal: true,
 		
-
+		buttons: {
+				Cancel: function() {
+					$( this ).dialog( "close" );
+				},
+				Delete: function() { 
+				deletevoucher();
+				$( this ).dialog( "close" );
+				}
+		}
+		});
 	});
 	
    function checkform() {
@@ -56,6 +67,16 @@
 		}
 		return true;
 		} 
+		
+		function deletevoucher()
+		{
+		window.location.href="index.php?s=vouchers&a=del&id=" + selectedVoucher;
+		}
+		function confirmdelete(vid)
+		{
+			selectedVoucher = vid;
+			$( "#dialog-delete" ).dialog( "open" );
+		}
 	</script>
 <?php 
 
@@ -78,7 +99,7 @@ if($_REQUEST["a"] == "del" )
 {
 if($functions->deleteVoucher($myfileData[0]["fileid"]))
 {
-echo "<div id='message'>Voucher Cancelled</div>";
+echo "<div id='message'>Voucher Deleted</div>";
 }
 }
 }
@@ -125,10 +146,13 @@ $json_o=json_decode($filedata,true);
     </tr>
     <?php 
 foreach($json_o as $item) {
-   echo "<tr><td>" .$item['fileto'] . "</td><td>" .date("d/m/Y",strtotime($item['filecreateddate'])) . "</td><td>" .date("d/m/Y",strtotime($item['fileexpirydate'])) . "</td><td><a href='index.php?s=vouchers&a=del&id=" .$item['filevoucheruid'] . "'><img src='images/shape_square_delete.png'></a></td></tr>"; //etc
+   echo "<tr><td>" .$item['fileto'] . "</td><td>" .date("d/m/Y",strtotime($item['filecreateddate'])) . "</td><td>" .date("d/m/Y",strtotime($item['fileexpirydate'])) . "</td><td><a href='#' onclick='confirmdelete(".'"' .$item['filevoucheruid'] . '"'. ")'><img src='images/shape_square_delete.png'></a></td></tr>"; //etc
 }
 ?>
   </table>
+</div>
+<div id="dialog-delete" title="Delete Voucher">
+  <p>Are you sure you want to delete this voucher?</p>
 </div>
 <script language = "Javascript">
 /**
@@ -198,6 +222,4 @@ function ValidateForm(){
 
 // stripe every second row in the tables
 $("#vouchertable tr:odd").addClass('altcolor');
-
-
 </script> 
