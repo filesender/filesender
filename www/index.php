@@ -50,7 +50,6 @@ $flexerrors = "true";
 $authsaml = AuthSaml::getInstance();
 $authvoucher = AuthVoucher::getInstance();
 $functions = Functions::getInstance();
-$lang = EN_AU::getInstance();
 $CFG = config::getInstance();
 $config = $CFG->loadConfig();
 $sendmail = Mail::getInstance();
