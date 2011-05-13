@@ -106,7 +106,7 @@ require_once("$filesenderbase/language/".$lang_file);
 $required_lang_keys = array("_ADMIN","_NEW_UPLOAD","_VOUCHERS","_LOGON","_LOG_OFF","_MY_FILES","_HOME","Home","_ABOUT","_HELP","_VOUCHER_CANCELLED","_UPLOAD_COMPLETE","_DOWNLOAD","_GENERAL","_UPLOADS","_DOWNLOADS","_ERRORS","_FILES_AVAILABLE","_ACTIVE_VOUCHERS","_COMPLETE_LOG","_TO","_FROM","_SIZE","_CREATED","_FILE_NAME","_SUBJECT","_EXPIRY","_MESSAGE","_TYPE","_TERMS_OF_AGREEMENT","_SHOW_TERMS","_SELECT_FILE","_UPLOADING_WAIT","_UPLOAD","_BROWSE","_CANCEL","_SEND_NEW_VOUCHER","_EMAIL_SEPARATOR_MSG","_Active_Vouchers","_Are_You_Sure_Resend","_Administration","_Click_on_Send","_Current_Valid_Vouchers","_Complete_Log","_Date","_Database_Connection","_Download","_Download_File","_Downloads","_Email_Sent","_Expiry_Date","_Export","_Errors","_File","_File_Name","_File_Size","_Files_Available","_File_to_Upload","_File_to_be_Redistributed","_File_Storage","_From","_Logging","_Gears_Status","_Gears_Uplad","_General","_loading","_Message","_Optional","_Resend","_Resume","_Send_Vouchers_to","_Send_Voucher","_Send_File","_Size","_Status","_Subject","_Temporary_File_Storage","_To","_Upload","_Uploading","_Uploads","_Valid_To","_Welcome","_Voucher_Sent","_Vouchers_Sent","_Voucher_has_been_sent","_Voucher_ID","_Your_file_has_been_sent","_You_need_to_logon_to","_notAuthenticated","_Enter_delivery_email_address","_Browse_for_a_file","_Set_expiry_date","_Select_Upload","_site_help_text","_Help");
 
 
-foreach($required_lang_keys as $values){
+foreach($required_lang_keys as $value){
 
 	if(!defined($value)){
 		define($value,"The translation for ".$value." is not defined");
