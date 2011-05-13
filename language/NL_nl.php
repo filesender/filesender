@@ -42,7 +42,7 @@
      DEFINE ("_VOUCHERS", "Uitnodiging");
      DEFINE ("_LOGON", "Aanmelden");
      DEFINE ("_LOG_OFF", "Uitloggen");
-     DEFINE ("_MY_FILES", "Uitloggen");
+     DEFINE ("_MY_FILES", "Mijn bestanden");
 
             // Pagina titels
 	DEFINE ("_HOME", "Home");
