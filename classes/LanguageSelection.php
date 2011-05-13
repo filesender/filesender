@@ -98,9 +98,8 @@ switch($lang) {
 setcookie("lang-chosen",$lang);// [, string value [, int expire [, string path [, string domain [, bool secure [, bool httponly]]]]]])
 
 //Try and include the language file
-if(!defined("_ADMIN")) {
-	require_once("$filesenderbase/language/".$lang_file);
-}
+require_once("$filesenderbase/language/".$lang_file);
+
 
 //We might have an incomplete language file (not all keys defined)
 //So first we define all required language keys, then loop over the, If one is not defined, we do it dynamically with a message indictaing which key is not defined. 
