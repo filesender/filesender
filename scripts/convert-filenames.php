@@ -52,12 +52,10 @@ $filesenderbase = dirname(dirname(__FILE__));
 // include all required classes
 require_once("$filesenderbase/config/config.php");
 require_once("$filesenderbase/classes/DB.php");
-require_once("$filesenderbase/classes/EN_AU.php");
 require_once("$filesenderbase/classes/Mail.php");
 require_once("$filesenderbase/classes/DB_Input_Checks.php");
 require_once("$filesenderbase/classes/Functions.php");
 
-$lang = EN_AU::getInstance();
 $CFG = config::getInstance();
 $config = $CFG->loadConfig();
 $sendmail = Mail::getInstance();
