@@ -68,7 +68,6 @@ class DBAL {
 		$mdb2->setFetchMode(MDB2_FETCHMODE_ASSOC);
 		//Now, get our arguments
         $args = func_get_args();
-		echo(func_num_args().'||');
  		switch(func_num_args()) {
 			
 			//Empty query??
@@ -83,7 +82,6 @@ class DBAL {
 				    throw new DBALException("Error executing query: " . $res->getMessage());
 				}
 				//$res is a two-dimensional array, with each second dimension an associative array as per the query
-				print_r($res);
 				return $res;
 				
 				
@@ -96,10 +94,8 @@ class DBAL {
 		        }
 				//Now create the final query
 		        $query = vsprintf($format, $args);
-				print_r($query);
 				//...and execute
 				$res = $mdb2->queryAll($query);
-				print_r($res);
 				// Always check that result is not an error
 				if (PEAR::isError($res)) {
 				    throw new DBALException("Error executing query: " . $res->getMessage());
@@ -123,7 +119,6 @@ class DBAL {
 		}
 		//Now, get our arguments
         $args = func_get_args();
-		echo(func_num_args().'||');
  		switch(func_num_args()) {
 			
 			//Empty query??
@@ -138,7 +133,6 @@ class DBAL {
 				    throw new DBALException("Error executing query: " . $res->getMessage());
 				}
 				//$res is an integer denoting the number of rows affected
-				print_r($res);
 				return $res;
 				
 				
@@ -151,10 +145,8 @@ class DBAL {
 		        }
 				//Now create the final query
 		        $query = vsprintf($format, $args);
-				print_r($query);
 				//...and execute
 				$res = $mdb2->exec($query);
-				print_r($res);
 				// Always check that result is not an error
 				if (PEAR::isError($res)) {
 				    throw new DBALException("Error executing query: " . $res->getMessage());
