@@ -73,16 +73,9 @@ var filesize = 0;
 		filesize = 0;
 		
 	  
-	  if (validatefilename(file.name) == false) 
+	  if (validateForm()) 
 		{
-		 $("#dialog-invalidfilename").dialog('open')
-		} else if (!validateForm())
-		{
-		 alert("Invalid or missing email");
-
-		} else {
-		
-        document.getElementById('fileInfo').style.display = 'block';
+		document.getElementById('fileInfo').style.display = 'block';
         document.getElementById('fileName').innerHTML = 'Name: ' + file.name;
         document.getElementById('fileSize').innerHTML = 'Size: ' + fileSize;
         document.getElementById('fileType').innerHTML = 'Type: ' + file.type;
@@ -187,8 +180,8 @@ function processReqChange(){
 			uploadFile(bytesUploaded);
 			
            } else {
-                alert("There was a problem retrieving the data:\n" + req.statusText);
-                alert("Status Code = "+xhr.status);
+			   errorDialog("There was a problem retrieving the data:\n" + req.statusText);
+            //   alert("Status Code = "+xhr.status);
             // 	alert("There was a problem retrieving the data:\n");
             //	alert("Failed : object = "+xhr);
             //  alert(xhr.responseXML);
@@ -241,11 +234,11 @@ function processReqChange(){
 
       function uploadFailed(evt) {
         clearInterval(intervalTimer);
-        alert("An error occurred while uploading the file.");  
+		erorDialog("An error occurred while uploading the file.");  
       }  
   
       function uploadCanceled(evt) {
         clearInterval(intervalTimer);
-        alert("The upload has been canceled by the user or the browser dropped the connection.");  
+        erorDialog("The upload has been canceled by the user or the browser dropped the connection.");  
       }  
 	  
