@@ -63,7 +63,7 @@ require_once('../classes/_includes.php');
 $authsaml = AuthSaml::getInstance();
 $authvoucher = AuthVoucher::getInstance();
 $CFG = config::getInstance();
-$cofig = $CFG->loadConfig();
+$config = $CFG->loadConfig();
 $functions = Functions::getInstance();
 date_default_timezone_set($config['Default_TimeZone']);
 
