@@ -75,7 +75,14 @@ td {
 	border: 1px solid #cccccc;
 	border-radius:10px;
 	-moz-border-radius: 10px;
-	width: 100%;
+	margin: 20px auto;
+}
+
+#tog {
+	padding: 20px;
+	border: 1px solid #cccccc;
+	border-radius:10px;
+	-moz-border-radius: 10px;
 	margin: 20px auto;
 }
 	
@@ -83,12 +90,30 @@ td {
 	background-color: #EFEFEF;	
 
 }
+.validation_msg {
+	font-size: 10px;
+	color: #F00;
+}
+.formfieldheading {
+	font-size: 10px;
+	width: 250px;
+	font-weight: bold;
+}
+.formfield {
+	font-size: 10px;
+	width: 250px;
+}
+.formfiledmsg {
+	font-size: 9px;
+	width: 250px;
+	font-weight: normal;
+}
 input {
-	border:1px solid #ccc;
+	/*border:1px solid #ccc;
 	font-size: 13pt;
 	padding: 5px 10px 5px 10px;
 	border-radius:5px;
-	-moz-border-radius: 5px;
+	-moz-border-radius: 5px;*/
 }
 
 #fileToUpload {

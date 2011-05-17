@@ -97,8 +97,20 @@
 		$('#uploadhtml5').hide();
 		$('#uploadstandardspinner').hide();
 		$('#progress_container').hide();
-		$("#dialog-toolarge").dialog({ autoOpen: false, height: 140, modal: true })
-		$("#dialog-invalidfilename").dialog({ autoOpen: false, height: 140, modal: true })
+		$('#fileto_msg').hide();
+		$('#expiry_msg').hide();
+		$('#aup_msg').hide();
+		$('#file_msg').hide();
+		//$('#uploadbutton').hide();
+		// default error message dialogue
+		$("#dialog-default").dialog({ autoOpen: false, height: 140, modal: true,title: "Error",		
+		buttons: {
+			Ok: function() {
+				$("#dialog-default").html("");
+				$( this ).dialog( "close" );
+				}
+			}
+		})
 		// set date picker
 		$(function() {
 			$("#datepicker" ).datepicker({ minDate: 0, maxDate: "+"+maximumDate+"D",altField: "#fileexpirydate", altFormat: "d-m-yy" });
@@ -118,17 +130,11 @@
 
 	function toggleTOG()
 	{
-	if (obj('TOG').style.display == "block")
-	{
-	obj('TOG').style.display = "none"
-	} else {
-	obj('TOG').style.display = "block"
-	} 
+	obj('tog').style.display = (obj('tog').style.display == "block") ? "none" : "block";	
 	}
 
 	function uploadcomplete(msg)
 	{
-	alert(msg);
 	window.location="index.php?s=complete";
 
 	}
@@ -162,21 +168,107 @@
 	// --------------------------
 	// Validation functions
 	// --------------------------
+	// HTML5 form Validation
 	function validateForm()
 	{
+	// remove previouse vaildation messages
+	$('#fileto_msg').hide();
+	$('#expiry_msg').hide();
+	$('#aup_msg').hide();
+	$('#file_msg').hide();
+	
+	var validate = true;
+	
+	if(!validate_fileto() ){validate = false;};		// validate emails
+	if(!validate_file() ){validate = false;};		// check if file selected
+	if(!validate_aup() ){validate = false;};		// check AUP is selected
+	if(!validate_expiry() ){validate = false;};		// check date
+		
+	return validate;
+	}
+	// FLASH form Validation
+	function validateFormFlash()
+	{
+	// remove previouse vaildation messages
+	$('#fileto_msg').hide();
+	$('#expiry_msg').hide();
+	$('#aup_msg').hide();
+	$('#file_msg').hide();
+	
+	var validate = true;
+	
+	if(!validate_fileto() ){validate = false;};		// validate emails
+	if(!validate_aup() ){validate = false;};		// check AUP is selected
+	if(!validate_expiry() ){validate = false;};		// check date
+		
+	return validate;
+	}
+
+// Validate FILETO
+function validate_fileto()
+{
 	var tempemail = obj('fileto').value;
 	var email = tempemail.split(/,|;/);
 	for (var i = 0; i < email.length; i++) {
 		if (!echeck(email[i], 1, 0)) {
-		//alert('one or more email addresses entered is invalid');
+		$('#fileto_msg').show();
+		return false;
+		}
+		}
+	return true;	
+}
+
+// Validate EXPIRY
+function validate_expiry()
+{
+//	alert($('#fileexpirydate').datepicker("getDate"));
+	if($('#datepicker').datepicker("getDate") == null)
+	{
+		$('#expiry_msg').show();
+		return false;
+	}
+	$('#expiry_msg').hide();
+	return true;
+}
+
+//Validate AUP
+function validate_aup()
+{
+	if(	$('#aup').is(':checked'))
+	{
+		$('#aup_msg').hide();
+		return true;
+	} else {
+		$('#aup_msg').show();
+		return false;
+	}
+}
+
+// Validate FILE (HTML5 only)
+function validate_file()
+{
+	if(!document.getElementById('fileToUpload').files[0])
+	{
+		fileMsg("Please select a file");
+		return false;
+	} else 
+	{
+		var file = document.getElementById('fileToUpload').files[0];
+		// validate fiename 
+		if (!validatefilename(file.name)){
+		return false;
+		}
+		//validate file size
+		if(file.size < 1)
+		{
+		fileMsg("File size cannot be 0. Please select another file.");	
 		return false;
 		}
 		return true;
-		}
-	}
-
+	}	
+}
 //  validate single email	
-	function echeck(str) {
+function echeck(str) {
 
 		var at="@"
 		var dot="."
@@ -218,39 +310,35 @@
 		    return false
 		 }
 
- 		 return true					
-	}
+	 return true					
+}
 
 function fileInfo(name,size)
 {
 
 if(size > 2000000000)
 {
-	$("#dialog-toolarge").dialog('open');
-} else if (validatefilename(name) == false) 
+fileMsg("This file is larger than 2Gb. Please use a HTML5 enabled browser to upload larger files.");
+} else if (!validatefilename(name)) 
 {
- $("#dialog-invalidfilename").dialog('open')
-} else if (!validateForm())
+
+} else if (validateFormFlash())
 {
- alert("Invalid or missing email");
-} else {
-
-$("#fileInfo").show();
-obj('n').value= name;
-obj('total').value = size;
-obj('fileName').value= name;
-obj('fileSize').value = size;
-
 getFlexApp('filesenderup').returnMsg("upload")
+}// else {
+//
+//$("#fileInfo").show();
+//obj('n').value= name;
+//obj('total').value = size;
+//obj('fileName').value= name;
+//obj('fileSize').value = size;
+//
+//getFlexApp('filesenderup').returnMsg("upload")
+//
+//}
 
 }
 
-}
-
-function errormsg(msg)
-{
-
-}
 
 function uploadcomplete(name,size,vid)
 {
@@ -259,7 +347,7 @@ document.forms["form1"].submit();
 
 function uploaderror(name,size)
 {
-alert("Error uploading your file");
+errorDialog("Error uploading your file");
 }
 
 // check browser type
@@ -286,45 +374,81 @@ function validatefilename(name)
    {
 		return true; 
 	} else {
+		fileMsg("The name of the file you are uploading is invalid. Please rename your file and try again.");	
 		return false;
 	}
+}
+
+function validate() 
+{
+	// upload if validated
+	if(validateForm())
+	{
+	startupload();
+	}
+}
+
+function errorDialog(msg)
+{
+$("#dialog-default").html(msg);
+$("#dialog-default").dialog('open')
+}
+
+function fileMsg(msg)
+{
+	$("#file_msg").html(msg);
+	$('#file_msg').show();
 }
     </script>
 
 <div id="box"> <?php echo '<div id="pageheading">'._NEW_UPLOAD.'</div>'; ?>
   <form id="form1" enctype="multipart/form-data" method="POST" action="fs_uploadit5.php">
-    <table width="100%" border="0">
+    <table width="500" border="0">
       <tr>
-        <td><?php echo _TO; ?></td>
-        <td><?php echo _EMAIL_SEPARATOR_MSG; ?> <br />
-          <input name="fileto" type="text" id="fileto" size="40" /></td>
+        <td></td>
+        <td class="formfiledmsg"><?php echo _EMAIL_SEPARATOR_MSG; ?></td>
+        <td></td>
       </tr>
       <tr>
-        <td><?php echo _FROM; ?></td>
+        <td width="200" class="formfieldheading"><?php echo _TO; ?>:</td>
+        <td valign="middle"><input name="fileto" type="text" id="fileto" value="chrisrichter@crcsmedia.com" size="40" />
+        <div id="fileto_msg" class="validation_msg">Invalid or missing email</div></td>
+        <td valign="middle">&nbsp;</td>
+      </tr>
+      <tr>
+        <td class="formfieldheading"><?php echo _FROM; ?>:</td>
         <td><?php echo $senderemail ?>
           <input name="filefrom" type="hidden" id="filefrom" value="<?php echo $senderemail ?>" size="40" /></td>
-      </tr>
-      <tr>
-        <td><?php echo _SUBJECT; ?></td>
-        <td><input name="filesubject" type="text" id="filesubject" size="40" /></td>
-      </tr>
-      <tr>
-        <td><?php echo _MESSAGE; ?></td>
-        <td><textarea name="filemessage" cols="40" rows="4" id="filemessage"></textarea></td>
-      </tr>
-      <tr>
-        <td><?php echo _EXPIRY; ?>
-          <input type="hidden" id="fileexpirydate" name="fileexpirydate" value="<?php echo date("d-m-Y",strtotime("+".$config['default_daysvalid']." day"));?>" /></td>
-        <td><div id="datepicker"></div></td>
-      </tr>
-      <tr>
         <td>&nbsp;</td>
-        <td><input name="checkbox" type="checkbox" value="checkbox" checked="checked" />
-          <?php echo _TERMS_OF_AGREEMENT; ?>[<a href="#" onclick="toggleTOG()"><?php echo _SHOW_TERMS; ?></a>]
-          <div id="TOG" style="display:none"> <?php echo $config["AuP_terms"]; ?> </div></td>
       </tr>
       <tr>
-        <td><?php echo _SELECT_FILE; ?></td>
+        <td class="formfieldheading"><?php echo _SUBJECT; ?>: (<?php echo _OPTIONAL; ?>)</td>
+        <td><input name="filesubject" type="text" id="filesubject" size="40" /></td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td class="formfieldheading"><?php echo _MESSAGE; ?>: (<?php echo _OPTIONAL; ?>)</td>
+        <td><textarea name="filemessage" cols="40" rows="4" id="filemessage"></textarea></td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td class="formfieldheading"><?php echo _EXPIRY; ?>: 
+        <input type="hidden" id="fileexpirydate" name="fileexpirydate" value="<?php echo date("d-m-Y",strtotime("+".$config['default_daysvalid']." day"));?>"/></td>
+        <td><input id="datepicker" onchange="validate_expiry()"></input>
+        <div id="expiry_msg" class="validation_msg">Invalid expiry Date</div></td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td class="formfieldheading"></td>
+        <td><input name="aup" type="checkbox" value="true" checked="aup" id="aup" onchange="validate_aup()" />
+          <?php echo _TERMS_OF_AGREEMENT; ?>[<a href="#" onclick="toggleTOG()"><?php echo _SHOW_TERMS; ?></a>]
+          <div id="aup_msg" class="validation_msg">Please agree to the terms</div>
+          <div id="tog" style="display:none"> <?php echo $config["AuP_terms"]; ?> </div>
+          </td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td class="formfieldheading"><?php echo _SELECT_FILE; ?></td>
         <td>
         <div id="uploadstandard"> 
       <script language="JavaScript" type="text/javascript">
@@ -405,9 +529,16 @@ if ( hasProductInstall && !hasRequestedVersion ) {
     </div>
         <div id="uploadhtml5">
       <input type="file" name="fileToUpload" id="fileToUpload" onChange="fileSelected();"/>
-      <input type="button" onClick="startupload()" value="Upload" id="uploadbutton" />
-    </div>
+      <input type="button" onClick="validate()" value="Upload" id="uploadbutton" />
+      <div id="file_msg" class="validation_msg">Invalid Fil<span id="file_msg">e</span></div>
+        </div>
     </td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td class="formfieldheading">&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
       </tr>
     </table>
     <br />
@@ -418,8 +549,6 @@ if ( hasProductInstall && !hasRequestedVersion ) {
     <input type="hidden" id="filestatus" value="<?php echo $filestatus; ?>"/>
     <input type="hidden" name="loadtype" id="loadtype" value="standard"/>
     <div class="row">
-    
-
     <div id="fileInfo">
       <div id="fileName"></div>
       <div id="fileSize"></div>
@@ -434,10 +563,5 @@ if ( hasProductInstall && !hasRequestedVersion ) {
     <div id="transferSpeedInfo"></div>
     <div id="timeRemainingInfo"></div>
   </form>
-</div>
-<div id="dialog-toolarge" title="Error">
-  <p>This file is larger than 2Gb. Please use a HTML5 enabled browser to upload larger files.</p>
-</div>
-<div id="dialog-invalidfilename" title="Error">
-  <p>The name of the file you are uploading is invalid. Please rename your file and try again.</p>
+<div id="dialog-default" title="">  
 </div>
