@@ -1,0 +1,12 @@
+This file is used a sa placeholder to put notes about the new database
+abstraction layer based on MDB, a PEAR package. In so far it is not in your
+OS repository, google "install PEAR <platform>" and follow directions.
+
+Then, do a systemwide install of MDB2 and its mysql and pgsql drivers:
+
+pear install MDB2-2.5.0b3
+pear install MDB2_Driver_mysql-1.5.0b3
+pear install MDB2_Driver_pgsql-1.5.0b3
+
+Note that you have to use 2.5.0b3 or later for PHP 5.3 compatibility, same for the drivers.
+Also note that this version is fairly stable (more so than the stable version).
