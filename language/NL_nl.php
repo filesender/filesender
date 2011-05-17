@@ -73,6 +73,7 @@
 	DEFINE ("_EXPIRY", "Vervaldatum");
 	DEFINE ("_MESSAGE", "Bericht");
 	DEFINE ("_TYPE", "Type");
+	DEFINE ("_OPTIONAL","Optioneel");
 
 	DEFINE ("_TERMS_OF_AGREEMENT", "Algemene Overeenkomst");
 	DEFINE ("_SHOW_TERMS", "Toon Voorwaarden");
