@@ -146,15 +146,20 @@ if($authvoucher->aVoucher()  || $authsaml->isAuth() ) {
 function checkFileSize($fileLocation)
 {
 if (file_exists($fileLocation)) {
-	if (!(strtoupper(substr(PHP_OS, 0, 3)) == 'WIN')) 
-                {
-                    $size = trim(shell_exec("stat -c%s ". escapeshellarg($fileLocation)));
-                } else { 
-                    $fsobj = new COM("Scripting.FileSystemObject"); 
-                    $f = $fsobj->GetFile($fileLocation); 
-                    $size = $f->Size; 
-                }
-	return $size;
+		//We should turn this into a switch/case, exhaustive with a default case
+		if (PHP_OS == "Darwin") {
+            $size = trim(shell_exec("stat -f %z ". escapeshellarg($fileLocation)));
+		}
+		else if (!(strtoupper(substr(PHP_OS, 0, 3)) == 'WIN')) 
+    	{
+        	$size = trim(shell_exec("stat -c%s ". escapeshellarg($fileLocation)));
+    	}	
+		else { 
+                 $fsobj = new COM("Scripting.FileSystemObject"); 
+                 $f = $fsobj->GetFile($fileLocation); 
+                 $size = $f->Size; 
+        }
+		return $size;
 	} else {
 
 	return 0;
