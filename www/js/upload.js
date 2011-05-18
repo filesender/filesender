@@ -134,6 +134,10 @@ function uploadFile(currentBytesUpload) {
 		txferSize = filesize - bytesUploaded;
 		}
 		// check if firefox or Chrome slice supported 
+		if(file && file.slice )
+		{
+			var blob = file.slice(bytesUploaded, txferSize);
+		}
 		if(file && file.webkitSlice )
 		{
 			var blob = file.webkitSlice(bytesUploaded, txferSize+bytesUploaded);
@@ -142,10 +146,7 @@ function uploadFile(currentBytesUpload) {
 		{
 			var blob = file.mozSlice(bytesUploaded, txferSize+bytesUploaded);
 		}
-		if(file && file.slice )
-		{
-			var blob = file.slice(bytesUploaded, txferSize);
-		}
+		
 		
 	var fileName = file.name; //Grab the file name
     var fileSize = file.size; //Grab the file size
