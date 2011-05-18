@@ -54,7 +54,8 @@ class DB {
 
     // database connection 
     public function connect() {
-        global $config;
+        
+		global $config;
 
         if($this->connection){
             return $this->connection;

@@ -53,8 +53,8 @@ class Log {
     public function saveLog($dataitem,$logType,$message){
 
         $db = DB::getInstance();
-        $CFG = config::getInstance();
-        $config = $CFG->loadConfig();
+		
+        global $config;
 
         $authsaml = AuthSaml::getInstance();
         if( $authsaml->isAuth()) {

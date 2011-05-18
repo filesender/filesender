@@ -37,10 +37,10 @@
  */
 require_once('../classes/_includes.php');
 
+global $config;
+
 $authsaml = AuthSaml::getInstance();
 $authvoucher = AuthVoucher::getInstance();
-$CFG = config::getInstance();
-$config = $CFG->loadConfig();
 $functions = Functions::getInstance();
 $saveLog = Log::getInstance();
 $sendmail = Mail::getInstance();
