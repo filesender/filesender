@@ -962,12 +962,16 @@ public function insertVoucher($to,$expiry){
             return;
         } else {
             $file = $config["site_temp_filestore"].sanitizeFilename($filename);
-
+			//We should turn this into a switch/case, exhaustive with a default case
             if (file_exists($file)) {
-                if (!(strtoupper(substr(PHP_OS, 0, 3)) == 'WIN')) 
+				if (PHP_OS == "Darwin") {
+	                $size = trim(shell_exec("stat -f %z ". escapeshellarg($file)));
+				}
+                else if (!(strtoupper(substr(PHP_OS, 0, 3)) == 'WIN')) 
                 {
                     $size = trim(shell_exec("stat -c%s ". escapeshellarg($file)));
-                } else { 
+                } 
+				else { 
                     $fsobj = new COM("Scripting.FileSystemObject"); 
                     $f = $fsobj->GetFile($file); 
                     $size = $f->Size; 
