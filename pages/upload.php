@@ -72,6 +72,8 @@
 	}
 	if (isset($_COOKIE['SimpleSAMLAuthToken'])) {
 		$token = $_COOKIE['SimpleSAMLAuthToken'];
+	} else {
+		$token = "";
 	}
 	// set flash upload vairiables
 	$flashVARS = "vid=".$voucherUID."&sid=".session_id()."&buttonBrowse="._BROWSE."&buttonUpload="._UPLOAD."&buttonCancel="._CANCEL."&siteURL=".$config["site_url"]."&token=".$token;
