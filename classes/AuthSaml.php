@@ -50,8 +50,7 @@ class AuthSaml {
     // used by flex to display admin features
     public function authIsAdmin() {
 
-        $CFG = config::getInstance();
-        $config = $CFG->loadConfig();
+        global $config;
 
         require_once($config['site_simplesamllocation'].'lib/_autoload.php');
 
@@ -78,8 +77,7 @@ class AuthSaml {
     // returns SAML authenticated user information as josn array
     public function sAuth() {
 
-        $CFG = config::getInstance();
-        $config = $CFG->loadConfig();
+      	global $config;
 
         require_once($config['site_simplesamllocation'].'lib/_autoload.php');
 
@@ -150,8 +148,7 @@ class AuthSaml {
     // requests logon URL from SAML and returns string	for flex
     public function logonURL() {
 
-        $CFG = config::getInstance();
-        $config = $CFG->loadConfig();
+        global $config;
 
         //require_once($config['site_simplesamllocation'].'lib/_autoload.php');
         //$as = new SimpleSAML_Auth_Simple($config['site_authenticationSource']);
@@ -163,8 +160,7 @@ class AuthSaml {
     // requests logon OFF URL from SAML and returns string	for flex	
     public function logoffURL() {
 
-        $CFG = config::getInstance();
-        $config = $CFG->loadConfig();
+       	global $config;
 
         //require_once($config['site_simplesamllocation'].'lib/_autoload.php');
         //$as = new SimpleSAML_Auth_Simple($config['site_authenticationSource']);
@@ -178,8 +174,7 @@ class AuthSaml {
     public function isAuth() {
 
         // return bool if authenticated
-        $CFG = config::getInstance();
-        $config = $CFG->loadConfig();
+        global $config;
 
         require_once($config['site_simplesamllocation'].'lib/_autoload.php');
 

@@ -33,6 +33,10 @@
 $filesenderbase = dirname(dirname(__FILE__));
 
 require_once("$filesenderbase/config/config.php");
+
+$CFG = config::getInstance();
+$config = $CFG->loadConfig();  // use _global $config in all functions
+
 require_once("$filesenderbase/includes/ErrorHandler.php");
 require_once("$filesenderbase/includes/EnsureHTTPS.php");
 require_once("$filesenderbase/includes/UTF8.php");

@@ -53,8 +53,7 @@ class Mail {
         $authsaml = AuthSaml::getInstance();
         $authvoucher = AuthVoucher::getInstance();
 
-        $CFG = config::getInstance();
-        $config = $CFG->loadConfig();
+        global $config;
 
         $fileoriginalname = sanitizeFilename($mailobject['fileoriginalname']);
         $crlf = $config["crlf"];
@@ -147,8 +146,7 @@ class Mail {
 
         // send admin notifications via email
 
-        $CFG = config::getInstance();
-        $config = $CFG->loadConfig();
+        global $config;
 
         $crlf = $config["crlf"];
 

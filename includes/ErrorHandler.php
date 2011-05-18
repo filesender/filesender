@@ -38,9 +38,6 @@
 	// custom exception logs to syslog 
 	// custom exception logs to config log folder 
 	
-$CFG = config::getInstance();
-$config = $CFG->loadConfig();
-
 function customException($exception){
 
 	$exceptionMsg = sprintf(

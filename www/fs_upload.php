@@ -48,9 +48,6 @@ $authsaml = AuthSaml::getInstance();
 $authvoucher = AuthVoucher::getInstance();
 $log =  Log::getInstance();
 
-$CFG = config::getInstance();
-$config = $CFG->loadConfig();
-
 date_default_timezone_set($config['Default_TimeZone']);
 $tempuploadfolder =  $config["site_temp_filestore"];
 

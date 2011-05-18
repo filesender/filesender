@@ -1,32 +1,33 @@
 <?php
 
 /*
- *  Filesender www.filesender.org
- *      
- *  Copyright (c) 2009-2010, Aarnet, HEAnet, UNINETT
- * 	All rights reserved.
- *
- * 	Redistribution and use in source and binary forms, with or without
- *	modification, are permitted provided that the following conditions are met:
- *	* 	Redistributions of source code must retain the above copyright
- *   		notice, this list of conditions and the following disclaimer.
- *   	* 	Redistributions in binary form must reproduce the above copyright
- *   		notice, this list of conditions and the following disclaimer in the
- *   		documentation and/or other materials provided with the distribution.
- *   	* 	Neither the name of Aarnet, HEAnet and UNINETT nor the
- *   		names of its contributors may be used to endorse or promote products
- *   		derived from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY Aarnet, HEAnet and UNINETT ''AS IS'' AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL Aarnet, HEAnet or UNINETT BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * FileSender www.filesender.org
+ * 
+ * Copyright (c) 2009-2011, AARNet, HEAnet, SURFnet, UNINETT
+ * All rights reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ * 
+ * *	Redistributions of source code must retain the above copyright
+ * 	notice, this list of conditions and the following disclaimer.
+ * *	Redistributions in binary form must reproduce the above copyright
+ * 	notice, this list of conditions and the following disclaimer in the
+ * 	documentation and/or other materials provided with the distribution.
+ * *	Neither the name of AARNet, HEAnet, SURFnet and UNINETT nor the
+ * 	names of its contributors may be used to endorse or promote products
+ * 	derived from this software without specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
 // ---------------------------------------
@@ -97,7 +98,6 @@ class Functions {
     private static $instance = NULL;
     private $saveLog;
     private $db;
-    private $CFG;
     private $sendmail;
     private $authsaml;
     private $authvoucher;
@@ -109,7 +109,6 @@ class Functions {
 
         $this->saveLog = Log::getInstance();
         $this->db = DB::getInstance();
-        $this->CFG = config::getInstance();
         $this->sendmail = Mail::getInstance();
         $this->authsaml = AuthSaml::getInstance();
         $this->authvoucher = AuthVoucher::getInstance();
@@ -127,7 +126,7 @@ class Functions {
     // Return Basic Database Statistics e.g. Up xx Gb (files xx) | Down xx Gb (files xx)
     public function getStats() {
 
-        $config = $this->CFG->loadConfig();
+        global $config;
 
         $statString = "| UP: ";
         $search =  $this->db->fquery("SELECT * FROM logs WHERE logtype='Uploaded'");
@@ -169,7 +168,7 @@ class Functions {
     public function getSplash() {
 
         // return only splash data
-        $config = $this->CFG->loadConfig();
+        global $config;
 
         $flexconfig = array();
         $flexconfig['site_splashtext'] = $config['site_splashtext'];
@@ -187,8 +186,10 @@ class Functions {
     // Retrun Specific config fields required by flex
     // Returns as JSON Array	
     public function getConfig() {
-        $config = $this->CFG->loadConfig();
-        $flexconfig = array();
+		
+        global $config;
+        
+		$flexconfig = array();
 
         // set  configs
         $flexconfig['ban_extension'] = $config['ban_extension'];
@@ -265,7 +266,7 @@ class Functions {
     // Get Voucher for a specified user based on eduPersonTargetedID
     public function getVouchers() {
 
-        $config = $this->CFG->loadConfig();
+       global $config;
 
         $dbCheck = DB_Input_Checks::getInstance();
 
@@ -296,7 +297,7 @@ class Functions {
     // Get Files for a specified user based on eduPersonTargetedID
     public function getUserFiles() {
 
-        $config = $this->CFG->loadConfig();
+        global $config;
 
         $dbCheck = DB_Input_Checks::getInstance();
 
@@ -370,7 +371,7 @@ class Functions {
     // 
     public function getFile($dataitem) {
 
-        $config = $this->CFG->loadConfig();
+        global $config;
 
         // check authentication as File UID is returned
 
@@ -392,7 +393,7 @@ class Functions {
     // 
     public function getVoucher($vid) {
 
-        $config = $this->CFG->loadConfig();
+        global $config;
 
         // check authentication as file UID is returned
 
@@ -412,7 +413,7 @@ class Functions {
     // 
     public function getVoucherData($vid) {
 
-        $config = $this->CFG->loadConfig();
+        global $config;
 
         // check authentication as file UID is returned
 
@@ -432,7 +433,7 @@ class Functions {
     // 
     public function downloadedFile() {
 
-        $config = $this->CFG->loadConfig();
+        global $config;
 
 
         $jsonString = rawurldecode($_POST['jsonSendData']);
@@ -453,7 +454,7 @@ class Functions {
     public function insertFile(){
 
 
-        $config = $this->CFG->loadConfig();
+       	global $config;
         $dbCheck = DB_Input_Checks::getInstance();
 
         $jsonString = rawurldecode($_POST['jsonSendData']);
@@ -545,7 +546,7 @@ class Functions {
 public function insertVoucher($to,$expiry){
 
 
-        $config = $this->CFG->loadConfig();
+        global $config;
         $dbCheck = DB_Input_Checks::getInstance();
 		
 		// var  $dataitem = [];
@@ -655,7 +656,7 @@ public function insertVoucher($to,$expiry){
     public function inserFileHTML5($dataitem){
 
 
-        $config = $this->CFG->loadConfig();
+        global $config;
         $dbCheck = DB_Input_Checks::getInstance();
 
        
@@ -745,7 +746,7 @@ public function insertVoucher($to,$expiry){
     // 	
     public function updateFile(){
 
-        $config = $this->CFG->loadConfig();
+       	global $config;
 
         $dbCheck = DB_Input_Checks::getInstance();
 
@@ -858,7 +859,7 @@ public function insertVoucher($to,$expiry){
     // 
     public function deleteVoucher($fileid){
 
-        $config = $this->CFG->loadConfig();
+        global $config;
 
         // check authentication SAML User
         if( $this->authsaml->isAuth()) {
@@ -891,7 +892,7 @@ public function insertVoucher($to,$expiry){
     // 
     public function closeVoucher($fileid){
 
-        $config = $this->CFG->loadConfig();
+        global $config;
 
 
         $dbCheck = DB_Input_Checks::getInstance();	
@@ -919,7 +920,7 @@ public function insertVoucher($to,$expiry){
     // 
     public function deleteFile($fileid){
 
-        $config = $this->CFG->loadConfig();
+       	global $config;
 
         // check authentication SAML User
         if( $this->authsaml->isAuth()) {
@@ -955,7 +956,7 @@ public function insertVoucher($to,$expiry){
     public function getFileSize($filename){
 
 
-        $config = $this->CFG->loadConfig();
+        global $config;;
 
         if($filename == "" ) {
             return;
@@ -983,7 +984,7 @@ public function insertVoucher($to,$expiry){
     // Returns JSON array
     public function driveSpace() {
 
-        $config = $this->CFG->loadConfig();
+        global $config;
 
         $result["site_filestore_total"] = disk_total_space($config['site_filestore']);   			// use absolute locations result in bytes
         $result["site_temp_filestore_total"] = disk_total_space($config['site_temp_filestore']);   			// use absolute locations
@@ -999,7 +1000,7 @@ public function insertVoucher($to,$expiry){
     // Returns JSON array
     public function loadLanguage() {
 
-        $config = $this->CFG->loadConfig();
+        global $config;
 
         require_once("../language/".$config['site_defaultlanguage'].".php");   			// use absolute locations result in bytes
         
@@ -1013,7 +1014,7 @@ public function insertVoucher($to,$expiry){
     // move file from tmp directory to live directory and rename with Unique ID
     public function moveFile(){
 
-        $config = $this->CFG->loadConfig();
+        global $config;
 
         $jsonString = rawurldecode($_POST['jsonSendData']);
         $jsonString = utf8_encode($jsonString);

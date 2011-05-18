@@ -56,8 +56,7 @@ require_once("$filesenderbase/classes/Mail.php");
 require_once("$filesenderbase/classes/DB_Input_Checks.php");
 require_once("$filesenderbase/classes/Functions.php");
 
-$CFG = config::getInstance();
-$config = $CFG->loadConfig();
+global $config;
 $sendmail = Mail::getInstance();
 
 // set time zone for this session
