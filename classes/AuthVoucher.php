@@ -57,8 +57,8 @@ class AuthVoucher {
     public function aVoucher() {
 
         $db = DB::getInstance();
-        $CFG = config::getInstance();
-        $config = $CFG->loadConfig();
+        
+		global $config;
 
         if (isset($_REQUEST['vid'])) {
             $vid = $_REQUEST['vid'];
@@ -87,8 +87,7 @@ class AuthVoucher {
     public function validVoucher() {
 
         $db = DB::getInstance();
-        $CFG = config::getInstance();
-        $config = $CFG->loadConfig();
+        global $config;
 
         if (isset($_REQUEST['vid'])) {
             $vid = $_REQUEST['vid'];
@@ -117,8 +116,7 @@ class AuthVoucher {
     public function getVoucher() {
 
         $db = DB::getInstance();
-        $CFG = config::getInstance();
-        $config = $CFG->loadConfig();
+       	global $config;
 
         if (isset($_REQUEST['vid'])) {
             $vid = $_REQUEST['vid'];
@@ -132,7 +130,8 @@ class AuthVoucher {
                 {
                     array_push($returnArray, $row);
                 }
-                return json_encode($returnArray);
+				//return json_encode($returnArray);
+				return $returnArray;
             } 
             else {
                 // invalid vid format to match regex from config
