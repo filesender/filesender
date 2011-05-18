@@ -413,7 +413,7 @@ function fileMsg(msg)
       </tr>
       <tr>
         <td width="200" class="formfieldheading"><?php echo _TO; ?>:</td>
-        <td valign="middle"><input name="fileto" type="text" id="fileto" value="chrisrichter@crcsmedia.com" size="40" />
+        <td valign="middle"><input name="fileto" type="text" id="fileto" value="" size="40" />
         <div id="fileto_msg" class="validation_msg">Invalid or missing email</div></td>
         <td valign="middle">&nbsp;</td>
       </tr>
