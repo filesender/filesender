@@ -170,8 +170,8 @@ function uploadFile(currentBytesUpload) {
 
 	    //Use sendAsBinary to send binary data. If you are sending text just use send.
 		//document.getElementById('uploadResponse').innerHTML = "Uploading...";
-		xhr.send(bodySend);
-	    //xhr.sendAsBinary(bodySend);
+		//xhr.send(bodySend);
+	    xhr.sendAsBinary(bodySend);
 
 function processReqChange(){
      if (xhr.readyState == 4) {
