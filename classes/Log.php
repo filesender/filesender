@@ -52,7 +52,7 @@ class Log {
     //
     public function saveLog($dataitem,$logType,$message){
 
-        $db = DB::getInstance();
+        $db = DBAL::getInstance();
 		
         global $config;
 
@@ -121,7 +121,7 @@ class Log {
                 '%s'
             )";
 
-        $result = $db->fquery(
+        $result = $db->exec(
             $sqlQuery,
             $logfileuid,
             $logvoucheruid,

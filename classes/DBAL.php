@@ -89,15 +89,16 @@ class DBAL {
 				//More than one argument, create a prepared statement using substitution. This automatically escapes the substituted values
 				$format = array_shift($args);
 				//Loop over the remaining fields, and quote them
-		        for($i = 0; $i < sizeof($args); $i++) {
-		            $args[$i] = $mdb2->quote($args[$i]);
-		        }
+		        //for($i = 0; $i < sizeof($args); $i++) {
+		        //    $args[$i] = $mdb2->quote($args[$i]);
+		        //}
 				//Now create the final query
 		        $query = vsprintf($format, $args);
 				//...and execute
 				$res = $mdb2->queryAll($query);
 				// Always check that result is not an error
 				if (PEAR::isError($res)) {
+					print_r($query);
 				    throw new DBALException("Error executing query: " . $res->getMessage());
 				}
 
@@ -140,15 +141,17 @@ class DBAL {
 				//More than one argument, create a prepared statement using substitution. This automatically escapes the substituted values
 				$format = array_shift($args);
 				//Loop over the remaining fields, and quote them
-		        for($i = 0; $i < sizeof($args); $i++) {
-		            $args[$i] = $mdb2->quote($args[$i]);
-		        }
+		        //for($i = 0; $i < sizeof($args); $i++) {
+		         //   $args[$i] = $mdb2->quote($args[$i]);
+		        //}
 				//Now create the final query
 		        $query = vsprintf($format, $args);
+				
 				//...and execute
 				$res = $mdb2->exec($query);
 				// Always check that result is not an error
 				if (PEAR::isError($res)) {
+					print_r($query);
 				    throw new DBALException("Error executing query: " . $res->getMessage());
 				}
 

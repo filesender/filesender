@@ -51,7 +51,7 @@ $filesenderbase = dirname(dirname(__FILE__));
 
 // include all required classes
 require_once("$filesenderbase/config/config.php");
-require_once("$filesenderbase/classes/DB.php");
+require_once("$filesenderbase/classes/DBAL.php");
 require_once("$filesenderbase/classes/Mail.php");
 require_once("$filesenderbase/classes/DB_Input_Checks.php");
 require_once("$filesenderbase/classes/Functions.php");
@@ -98,7 +98,7 @@ function convertNames($rename_to_old_scheme)
 	{
 	
 	global $config;
-	$db = DB::getInstance();
+	$db = DBAL::getInstance();
 	
 	// check log_location exists	
 	if (!file_exists($config["log_location"])) {
@@ -123,16 +123,20 @@ function convertNames($rename_to_old_scheme)
 	
 	// Final cleanup is to close any records in the database that do not have a physical file attached to them
 	// close all entries that do not have a pyhsical file in storage
-	
-	$search = $db->fquery("SELECT * FROM files WHERE filestatus = 'Available'"); 
+	try {
+		$search = $db->query("SELECT * FROM files WHERE filestatus = 'Available'"); 
+	} catch (DBALException $e) {
+		logProcess("CONVERT","SQL Error on updating files".$e->getMessage());
+		return FALSE;
+	}
 		
-		// check for error in SQL
-		if (!$search) { 
-		logProcess("CONVERT","SQL Error on updating files".pg_last_error());
+	// check for empty result in SQL
+	if (empty($search)) { 
+		logProcess("CONVERT","SQL Error on updating files, empty resultset");
 		return FALSE; 
-		}
+	}
 	
-	while($row = pg_fetch_assoc($search)) {
+	foreach($search as $row) {
 
 		if ($rename_to_old_scheme) {
 		    $oldfile = $FilestoreDirectory."/".$row["fileuid"].".tmp";

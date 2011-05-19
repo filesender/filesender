@@ -56,7 +56,7 @@ class AuthVoucher {
     // return TRUE if voucher exists and is available for use
     public function aVoucher() {
 
-        $db = DB::getInstance();
+        $db = DBAL::getInstance();
         
 		global $config;
 
@@ -66,8 +66,8 @@ class AuthVoucher {
             if (preg_match($config['voucherRegEx'], $vid) and strLen($vid) == $config['voucherUIDLength']) {
 
                 //$search =  pg_query("SELECT * FROM files WHERE filevoucheruid='".$vid."' AND filestatus!='Closed'") or die("Error");
-                $search =  $db->fquery("SELECT * FROM files WHERE filevoucheruid='%s'", $vid) or die("Error");
-                $total_records = pg_num_rows($search);
+                $search =  $db->query("SELECT * FROM files WHERE filevoucheruid='%s'", $vid) or die("Error");
+                $total_records = sizeof($search);
                 if($total_records == 1){
                     return TRUE;
                 }
@@ -86,7 +86,7 @@ class AuthVoucher {
     // return TRUE if voucher exists and is available for use	
     public function validVoucher() {
 
-        $db = DB::getInstance();
+        $db = DBAL::getInstance();
         global $config;
 
         if (isset($_REQUEST['vid'])) {
@@ -95,8 +95,8 @@ class AuthVoucher {
 
             if (preg_match($config['voucherRegEx'], $vid) and strLen($vid) == $config['voucherUIDLength']) {
 
-                $search =  $db->fquery("SELECT * FROM files WHERE filevoucheruid='%s'", $vid) or die("Error");
-                $total_records = pg_num_rows($search);
+                $search =  $db->query("SELECT * FROM files WHERE filevoucheruid='%s'", $vid) or die("Error");
+                $total_records = sizeof($search);
                 if($total_records == 1){
                     return "found";
                 }
@@ -115,7 +115,7 @@ class AuthVoucher {
     // TODO: Move this to Functions maybe??
     public function getVoucher() {
 
-        $db = DB::getInstance();
+        $db = DBAL::getInstance();
        	global $config;
 
         if (isset($_REQUEST['vid'])) {
@@ -123,10 +123,10 @@ class AuthVoucher {
 
             if (preg_match($config['voucherRegEx'], $vid) and strLen($vid) == $config['voucherUIDLength']) {
 
-                $search =  $db->fquery("SELECT * FROM files WHERE filevoucheruid='%s'", $vid) or die("Error");
+                $search =  $db->query("SELECT * FROM files WHERE filevoucheruid='%s'", $vid) or die("Error");
                 $returnArray = array();
                 $returnArray["SessionID"] = session_id();
-                while($row = pg_fetch_assoc($search))
+                foreach($search as $row)
                 {
                     array_push($returnArray, $row);
                 }

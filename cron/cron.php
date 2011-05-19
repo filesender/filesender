@@ -45,7 +45,7 @@ $filesenderbase = dirname(dirname(__FILE__));
 
 // include all required classes
 require_once("$filesenderbase/config/config.php");
-require_once("$filesenderbase/classes/DB.php");
+require_once("$filesenderbase/classes/DBAL.php");
 require_once("$filesenderbase/classes/Mail.php");
 require_once("$filesenderbase/classes/DB_Input_Checks.php");
 
@@ -85,7 +85,7 @@ function cleanUp()
 	{
 	
 	global $config;
-	$db = DB::getInstance();
+	$db = DBAL::getInstance();
 	
 	// check log_location exists	
 	if (!file_exists($config["log_location"])) {
@@ -113,7 +113,7 @@ function cleanUp()
 						fileuid IS NULL
 				";
 	
-	$db->fquery($sqlQuery);
+	$db->exec($sqlQuery);
 	
 	 
 	$FilestoreDirectory = $config["site_filestore"];
@@ -125,24 +125,35 @@ function cleanUp()
 	
 	// if file not closed and past expiry date then close the file
 	$searchquery = "SELECT * FROM files WHERE  fileexpirydate < '%s' AND (filestatus = 'Available' or filestatus = 'Voucher')";
-	$search = $db->fquery($searchquery, $today);
+	try {
+		$search = $db->query($searchquery, $today);
+	} catch (DBALException $e) {
+		logProcess("CRON","SQL Error on selecting files". $e->getMessage());
+		return FALSE;
+	}
 		
-		// check for error in SQL
-	if (!$search) { 
-		logProcess("CRON","SQL Error on selecting files".pg_last_error());
+	// check for empty result set (should never happen) 
+	if (empty($search)) { 
+		logProcess("CRON","SQL Error on selecting files, empty result set");
 		return FALSE; 
-		}
+	}
 	
-	while($row = pg_fetch_assoc($search)) {
+	foreach($search as $row) {
 		
-		// remove from database
-		$query = "UPDATE Files SET filestatus = 'Closed' WHERE fileid='%s'";
-		$result = $db->fquery($query, $row['fileid']);
+		try {
+			// remove from database
+			$query = "UPDATE Files SET filestatus = 'Closed' WHERE fileid='%s'";
+			$result = $db->exec($query, $row['fileid']);			
+		} catch (DBALException $e) {
+			logProcess("CRON","SQL Error on updating files".e->getMessage());
+			return FALSE;	
+		}
+
 		
-		// check for error in SQL
-		if (!$result) { 
-			logProcess("CRON","SQL Error on updating files".pg_last_error());
-			return FALSE; 
+		// check for empty result set (should never happen) 
+		if (empty($result)) { 
+			logProcess("CRON","SQL Error on updating files, empty dataset");
+			return FALSE;
 		}
 		
 	}
@@ -168,9 +179,9 @@ function cleanUp()
 
 	// check filename in database
 	$query = "SELECT * FROM files WHERE  fileuid = '%s' AND filestatus = 'Available'";
-	$result = $db->fquery($query, substr($file,0,36));
+	$result = $db->query($query, substr($file,0,36));
 	
-	$total_results = pg_num_rows($result);
+	$total_results = sizeof($result);
 	if($total_results < 1) {
 	// no Files Available match this file so delete the file
 	
@@ -189,34 +200,31 @@ function cleanUp()
 	// Final cleanup is to close any records in the database that do not have a physical file attached to them
 	// close all entries that do not have a pyhsical file in storage
 	
-	$search = $db->fquery("SELECT * FROM files WHERE filestatus = 'Available'"); 
-		
-		// check for error in SQL
-		if (!$search) { 
-		logProcess("CRON","SQL Error on updating files".pg_last_error());
-		return FALSE; 
-		}
+	try {
+		$search = $db->query("SELECT * FROM files WHERE filestatus = 'Available'"); 
+	} catch	(DBALException $e) {
+		logProcess("CRON","SQL Error on updating files".$e->getMessage());
+		return FALSE;		
+	}
+
 	
-	while($row = pg_fetch_assoc($search)) {
+	foreach($search as $row) {
 
 		// we don't use ensureSaneFileUid()/sanitizeFilename() here because file_exists()
 		// is harmless, and the sanitized uid/filename might coincide with another file,
 		// in which case this file would never get status = Closed.
 		if (!file_exists($FilestoreDirectory."/".$row["fileuid"].".tmp")) {
 
-		// change status to closed in database
-		$query = "UPDATE Files SET filestatus = 'Closed' WHERE fileid='%s'";
-		
-		$result = $db->fquery($query, $row['fileid']);
-		
-		// check for error in SQL
-		if (!$result) { 
-			logProcess("CRON","SQL Error Updating files ".pg_last_error());
-			return FALSE; 
-		}
-		
-		logProcess("CRON","Removed (File not Available) ".$FilestoreDirectory."/".$row["fileuid"].".tmp");
-			
+			// change status to closed in database
+			try {
+				$query = "UPDATE Files SET filestatus = 'Closed' WHERE fileid='%s'";
+				$result = $db->exec($query, $row['fileid']);			
+			} catch (Exception $e) {
+				logProcess("CRON","SQL Error Updating files ".$e->getMessage());
+				return FALSE;
+			}
+
+			logProcess("CRON","Removed (File not Available) ".$FilestoreDirectory."/".$row["fileuid"].".tmp");
 		}
 		
 	}
