@@ -123,12 +123,15 @@ public function loadConfig() {
 	$config['site_simplesamllocation'] = '/usr/share/simplesamlphp/';
 	$config['log_location'] = '/usr/share/filesender/log/';	
 
-	// database settings	
-	$config['pg_host'] = 'localhost';
-	$config['pg_database'] = 'filesender';
-	$config['pg_port'] = '5432';
-	$config['pg_username'] = 'filesender';
-	$config['pg_password'] = 'yoursecretpassword';
+	//Old  database settings - these can go after testing
+	//$config['pg_host'] = 'localhost';
+	//$config['pg_database'] = 'filesender';
+    //$config['pg_port'] = '5432';
+    //$config['pg_username'] = 'filesender';
+    //$config['pg_password'] = 'yoursecretpassword';
+	
+	//NEW DB settings, URL like oneliner
+	$config['dsn'] = 'pgsql://user:password@tcp(localhost:5432)/dbname';
 
 	// cron settings
 	$config['cron_exclude prefix'] = '_'; // exclude deletion of files with the prefix character listed (can use multiple characters eg '._' will ignore .xxxx and _xxxx
