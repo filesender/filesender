@@ -63,7 +63,7 @@ if(!$authvoucher->aVoucher() && !$authsaml->isAuth()) {
 if (isset($_REQUEST["vid"])) {
 
 // load the voucher
-$fileArray =  json_decode($authvoucher->getVoucher(), true);
+$fileArray =  $authvoucher->getVoucher();
 $fileoriginalname = $fileArray[0]['fileoriginalname'];
 $fileuid = $fileArray[0]['fileuid'];	
 $file=$config['site_filestore'].$fileuid.".tmp";
@@ -102,7 +102,8 @@ if(file_exists($file) && is_file($file))
 
 }
 else 
-{
+{	
+	print_r("file not found clause");
 	// physical file was not found
 	logEntry("Download: File Not Found - ".$file);
 	// redirect to file is no longer available

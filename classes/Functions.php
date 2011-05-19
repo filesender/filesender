@@ -108,7 +108,7 @@ class Functions {
     public function __construct() {
 
         $this->saveLog = Log::getInstance();
-        $this->db = DB::getInstance();
+        $this->db = DBAL::getInstance();
         $this->sendmail = Mail::getInstance();
         $this->authsaml = AuthSaml::getInstance();
         $this->authvoucher = AuthVoucher::getInstance();
@@ -129,33 +129,40 @@ class Functions {
         global $config;
 
         $statString = "| UP: ";
-        $search =  $this->db->fquery("SELECT * FROM logs WHERE logtype='Uploaded'");
+        try {
+        	$search =  $this->db->query("SELECT * FROM logs WHERE logtype='Uploaded'");
+        } catch (DBALException $e) {
+        	$this->saveLog->saveLog("","Error",$e->getMessage()); return FALSE; 
+        }
 
-        if (!$search) {	$this->saveLog->saveLog("","Error",pg_last_error()); return FALSE; }
-
-        $total_records = pg_num_rows($search);
+        $total_records = sizeof($search);
         $statString = $statString.$total_records." files ";
-        $search = $this->db->fquery("SELECT SUM(logfilesize) as total_uploaded FROM logs WHERE logtype='Uploaded'");
+        
+		try {
+			$search = $this->db->query("SELECT SUM(logfilesize) as total_uploaded FROM logs WHERE logtype='Uploaded'");
+		} catch (Exception $e) {
+			$this->saveLog->saveLog("","Error",$e->getMessage()); return FALSE; 
+		}
 
-        if (!$search) {	$this->saveLog->saveLog("","Error",pg_last_error()); return FALSE; }
-
-        $sRow = pg_fetch_array($search);
-
-        $total = $sRow['total_uploaded'];
+        $total = $sRow[0]['total_uploaded'];
         $statString = $statString."(".round($total/1024/1024/1024)."GB) |" ;
-        $search =  $this->db->fquery("SELECT * FROM logs WHERE logtype='Download'");
 
-        if (!$search) {	$this->saveLog->saveLog("","Error",pg_last_error()); return FALSE; }
+		try {
+			$search =  $this->db->query("SELECT * FROM logs WHERE logtype='Download'");
+		} catch (Exception $e) {
+			$this->saveLog->saveLog("","Error",$e->getMessage()); return FALSE; 	
+		}
 
-        $total_records = pg_num_rows($search);
+        $total_records = sizeof($search);
         $statString = $statString." DOWN: ".$total_records." files ";
-        $search = $this->db->fquery("SELECT SUM(logfilesize) as total_downloaded FROM logs WHERE logtype='Download'");
 
-        if (!$search) {	$this->saveLog->saveLog("","Error",pg_last_error()); return FALSE; }
+		try {
+        	$search = $this->db->query("SELECT SUM(logfilesize) as total_downloaded FROM logs WHERE logtype='Download'");
+		} catch(DBALException $e) {
+			$this->saveLog->saveLog("","Error",$e->getMessage()); return FALSE; 		
+		}
 
-        $sRow = pg_fetch_array($search );
-
-        $total = $sRow['total_downloaded'];
+        $total = $sRow[0]['total_downloaded'];
         $statString = $statString."(".round($total/1024/1024/1024)."GB) |";
 
         return $statString;
@@ -277,16 +284,16 @@ class Functions {
             $authAttributes["eduPersonTargetedID"] = "";
         }
 
+        try {
+        	$result = $this->db->query("SELECT ".$this->returnFields." FROM files WHERE (fileauthuseruid = '%s') AND filestatus = 'Voucher'",$authAttributes["eduPersonTargetedID"]);
+        } catch (DBALException $e) {
+        	$this->saveLog->saveLog("","Error",$e->getMessage()); return FALSE;
+        }
 
-        $result = $this->db->fquery("SELECT %s FROM files WHERE (fileauthuseruid = '%s') AND filestatus = 'Voucher'",
-            $this->returnFields, 
-            $authAttributes["eduPersonTargetedID"]);
 
-        // check for error in SQL
-        if (!$result) { $this->saveLog->saveLog("","Error",pg_last_error()); return FALSE; }
 
-            $returnArray = array();
-        while($row = pg_fetch_assoc($result))
+        $returnArray = array();
+        foreach($result as $row)
         {
             array_push($returnArray, $row);
         }
@@ -306,16 +313,14 @@ class Functions {
         } else {
             $authAttributes["eduPersonTargetedID"] = "nonvalue";
         }
-
-        $result = $this->db->fquery("SELECT %s FROM files WHERE (fileauthuseruid = '%s') AND filestatus = 'Available'  ORDER BY fileactivitydate ASC",
-            $this->returnFields, 
-            $authAttributes["eduPersonTargetedID"]);
-
-        // check for error in SQL
-        if (!$result) { $this->saveLog->saveLog("","Error",pg_last_error()); return FALSE; }
-
-            $returnArray = array();
-        while($row = pg_fetch_assoc($result))
+		try {
+			$result = $this->db->query("SELECT ".$this->returnFields." FROM files WHERE (fileauthuseruid = '%s') AND filestatus = 'Available'  ORDER BY fileactivitydate ASC", $authAttributes["eduPersonTargetedID"]);	
+		} catch (DBALException $e) {
+			$this->saveLog->saveLog("","Error",$e->getMessage()); return FALSE;
+		}
+        
+        $returnArray = array();
+        foreach($result as $row )
         {
             array_push($returnArray, $row);
         }
@@ -332,12 +337,14 @@ class Functions {
         if($this->authsaml->authIsAdmin()) { 
 
 
-            $result = $this->db->fquery("SELECT logtype, logfrom , logto, logdate, logfilesize, logfilename, logmessage FROM logs WHERE EXTRACT( YEAR FROM logdate) = 2011 ORDER BY logdate DESC");
-
-            if (!$result) { $this->saveLog->saveLog("","Error",pg_last_error()); return FALSE; }
+            try {
+            	$result = $this->db->query("SELECT logtype, logfrom , logto, logdate, logfilesize, logfilename, logmessage FROM logs WHERE EXTRACT( YEAR FROM logdate) = 2011 ORDER BY logdate DESC");
+            } catch (Exception $e) {
+            	$this->saveLog->saveLog("","Error",$e->getMessage()); return FALSE;	
+            }
 
             $returnArray = array();
-            while($row = pg_fetch_assoc($result))
+            foreach($result as $row) 
             {
                 array_push($returnArray, $row);
             }
@@ -355,10 +362,13 @@ class Functions {
         if($this->authsaml->authIsAdmin()) { 
 
 
-            $result = $this->db->fquery("SELECT %s FROM files ORDER BY fileactivitydate DESC", $this->returnFields);
-            if (!$result) { $this->saveLog->saveLog("","Error",pg_last_error()); return FALSE; }
+            try {
+            	$result = $this->db->query("SELECT %s FROM files ORDER BY fileactivitydate DESC", $this->returnFields);
+            } catch (DBALException $e) {
+            	$this->saveLog->saveLog("","Error",$e->getMessage()); return FALSE;	
+            }
             $returnArray = array();
-            while($row = pg_fetch_assoc($result))
+            foreach($result as $row)
             {
                 array_push($returnArray, $row);
             }
@@ -376,13 +386,14 @@ class Functions {
         // check authentication as File UID is returned
 
         $vid = $dataitem['filevoucheruid'];
-
-        $result = $this->db->fquery("SELECT * FROM files where filevoucherid = '%s'", $vid);
-
-        if (!$result) { $this->saveLog->saveLog($dataitem,"Error",pg_last_error()); return FALSE; }
-
+		try {
+			$result = $this->db->query("SELECT * FROM files where filevoucherid = '%s'", $vid);	
+		} catch (DBALException $e) {
+			$this->saveLog->saveLog("","Error",$e->getMessage()); return FALSE;	
+		}
+       
         $returnArray = array();
-        while($row = pg_fetch_assoc($result)){
+        foreach($result as $row){
             array_push($returnArray, $row);
         }
         return json_encode($returnArray);
@@ -396,13 +407,14 @@ class Functions {
         global $config;
 
         // check authentication as file UID is returned
-
-        $result = $this->db->fquery("SELECT * FROM files where fileid = '%s'", $vid);
-
-        if (!$result) { $this->saveLog->saveLog($dataitem,"Error",pg_last_error()); return FALSE; }
+		try {
+			$result = $this->db->query("SELECT * FROM files where fileid = '%s'", $vid);
+		} catch (DBALException $e) {
+			$this->saveLog->saveLog("","Error",$e->getMessage()); return FALSE;		
+		}
 
         $returnArray = array();
-        while($row = pg_fetch_assoc($result)){
+        foreach($result as $row){
             array_push($returnArray, $row);
         }
         return $returnArray;
@@ -416,13 +428,14 @@ class Functions {
         global $config;
 
         // check authentication as file UID is returned
-
-        $result = $this->db->fquery("SELECT * FROM files where filevoucheruid = '%s'", $vid);
-
-        if (!$result) { $this->saveLog->saveLog($dataitem,"Error",pg_last_error()); return FALSE; }
+		try {
+	        $result = $this->db->query("SELECT * FROM files where filevoucheruid = '%s'", $vid);
+		} catch (DBALException $e) {
+			$this->saveLog->saveLog($dataitem,"Error",$e->getMessage()); return FALSE;		
+		}
 
         $returnArray = array();
-        while($row = pg_fetch_assoc($result)){
+        foreach($result as $row){
             array_push($returnArray, $row);
         }
         return $returnArray;
@@ -481,65 +494,68 @@ class Functions {
             $dataitem['fileauthuseremail'] = $authAttributes["email"];
         }
 
-        $result = $this->db->fquery("
-            INSERT INTO files (
+        try {
+        	
+	        $result = $this->db->exec("
+	            INSERT INTO files (
 
-                fileexpirydate,
-                fileto,
-                filesubject,
-                fileactivitydate,
-                filevoucheruid,
-                filemessage,
-                filefrom,
-                filesize,
-                fileoriginalname,
-                filestatus,
-                fileip4address,
-                fileip6address,
-                filesendersname,
-                filereceiversname,
-                filevouchertype,
-                fileuid,
-                fileauthuseruid,
-                fileauthuseremail,
-                filecreateddate
+	                fileexpirydate,
+	                fileto,
+	                filesubject,
+	                fileactivitydate,
+	                filevoucheruid,
+	                filemessage,
+	                filefrom,
+	                filesize,
+	                fileoriginalname,
+	                filestatus,
+	                fileip4address,
+	                fileip6address,
+	                filesendersname,
+	                filereceiversname,
+	                filevouchertype,
+	                fileuid,
+	                fileauthuseruid,
+	                fileauthuseremail,
+	                filecreateddate
 
-            ) VALUES
-            ( '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')",
+	            ) VALUES
+	            ( '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')",
 
-            date($config['postgresdateformat'], strtotime($dataitem['fileexpirydate'])),
-            $dataitem['fileto'],
-            isset($dataitem['filesubject']) ? $dataitem['filesubject'] : "NULL",
-            date($config['postgresdateformat'], time()),
-            $dataitem['filevoucheruid'],
-            isset($dataitem['filemessage']) ? $dataitem['filemessage'] : "NULL",
-            $dataitem['filefrom'],
-            $dataitem['filesize'],
-            // inserted vouchers have no filenames, but inserted files must have a non-empty filename
-            (isset($dataitem['filestatus']) && $dataitem['filestatus'] == "Voucher")
-            ? "NULL"
-            : sanitizeFilename($dataitem['fileoriginalname']),
-                $dataitem['filestatus'],
-                $dbCheck->checkIp($_SERVER['REMOTE_ADDR']),
-                $dataitem['fileip6address'],
-                $dataitem['filesendersname'],
-                $dataitem['filereceiversname'],
-                $dataitem['filevouchertype'],
-                ensureSaneFileUid($dataitem['fileuid']),
-                $dataitem['fileauthuseruid'],
-                $dataitem["fileauthuseremail"],
-                date($config['postgresdateformat'], time())
-            );
+	            date($config['postgresdateformat'], strtotime($dataitem['fileexpirydate'])),
+	            $dataitem['fileto'],
+	            isset($dataitem['filesubject']) ? $dataitem['filesubject'] : "NULL",
+	            date($config['postgresdateformat'], time()),
+	            $dataitem['filevoucheruid'],
+	            isset($dataitem['filemessage']) ? $dataitem['filemessage'] : "NULL",
+	            $dataitem['filefrom'],
+	            $dataitem['filesize'],
+	            // inserted vouchers have no filenames, but inserted files must have a non-empty filename
+	            (isset($dataitem['filestatus']) && $dataitem['filestatus'] == "Voucher")
+	            ? "NULL"
+	            : sanitizeFilename($dataitem['fileoriginalname']),
+	                $dataitem['filestatus'],
+	                $dbCheck->checkIp($_SERVER['REMOTE_ADDR']),
+	                $dataitem['fileip6address'],
+	                $dataitem['filesendersname'],
+	                $dataitem['filereceiversname'],
+	                $dataitem['filevouchertype'],
+	                ensureSaneFileUid($dataitem['fileuid']),
+	                $dataitem['fileauthuseruid'],
+	                $dataitem["fileauthuseremail"],
+	                date($config['postgresdateformat'], time())
+	            );
+		} catch(DBALException $e) {
+			 $this->saveLog->saveLog($dataitem,"Error",$e.getMessage()); return FALSE;
+		}
 
-        if (!$result) { $this->saveLog->saveLog($dataitem,"Error",pg_last_error()); return FALSE; }
-
-            if($dataitem['filestatus'] == "Voucher") {
-                $this->saveLog->saveLog($dataitem,"Voucher Sent","");
-                return $this->sendmail->sendEmail($dataitem,$config['voucherissuedemailbody']);
-            } else {
-                $this->saveLog->saveLog($dataitem,"Uploaded","");
-                return $this->sendmail->sendEmail($dataitem,$config['fileuploadedemailbody']);
-            }
+        if($dataitem['filestatus'] == "Voucher") {
+            $this->saveLog->saveLog($dataitem,"Voucher Sent","");
+            return $this->sendmail->sendEmail($dataitem,$config['voucherissuedemailbody']);
+        } else {
+            $this->saveLog->saveLog($dataitem,"Uploaded","");
+            return $this->sendmail->sendEmail($dataitem,$config['fileuploadedemailbody']);
+        }
     }
 
 // added for HTML5 version
@@ -589,7 +605,8 @@ public function insertVoucher($to,$expiry){
 
        $dataitem['fileexpirydate'] = $expiry;
 
-        $result = $this->db->fquery("
+        	
+       $result = $this->db->exec("
             INSERT INTO files (
 
                 fileexpirydate,
@@ -679,7 +696,8 @@ public function insertVoucher($to,$expiry){
             $dataitem['fileauthuseremail'] = $authAttributes["email"];
         }
 
-        $result = $this->db->fquery("
+        try {
+			$result = $this->db->exec("
             INSERT INTO files (
 
                 fileexpirydate,
@@ -728,8 +746,9 @@ public function insertVoucher($to,$expiry){
                 $dataitem["fileauthuseremail"],
                 date($config['postgresdateformat'], time())
             );
-
-        if (!$result) { $this->saveLog->saveLog($dataitem,"Error",pg_last_error()); return FALSE; }
+		} catch(DBALException $e) {
+			$this->saveLog->saveLog($dataitem,"Error",$e->getMessage()); return FALSE;
+		}
 
             if($dataitem['filestatus'] == "Voucher") {
                 $this->saveLog->saveLog($dataitem,"Voucher Sent","");
@@ -780,6 +799,7 @@ public function insertVoucher($to,$expiry){
         } else {
             $filemessage 	= "NULL";
         }
+
         $filefrom 		= $dataitem['filefrom'];
         $filesize 		= $dataitem['filesize'];
         $fileoriginalname 	= sanitizeFilename($dataitem['fileoriginalname']);
@@ -794,66 +814,67 @@ public function insertVoucher($to,$expiry){
         $fileauthuseremail 	= $dataitem["fileauthuseremail"];
         $filecreateddate 	= date($config['postgresdateformat'],strtotime($dataitem['filecreateddate']));
 
-        if (isset($dataitem['fileid'])){
-            $fileid =   $dataitem['fileid'];
-            $sqlQuery = "
-                UPDATE 
-                files 
-                SET 
-                fileexpirydate 		= '%s', 
-                fileto 			= '%s', 
-                filesubject 		= '%s', 
-                fileactivitydate 	= '%s', 
-                filevoucheruid 		= '%s', 
-                filemessage		= '%s', 
-                filefrom 		= '%s', 
-                filesize 		= '%s', 
-                fileoriginalname 	= '%s', 
-                filestatus 		= '%s', 
-                fileip4address		= '%s', 
-                fileip6address 		= '%s', 
-                filesendersname 	= '%s', 
-                filereceiversname 	= '%s', 
-                filevouchertype		= '%s', 
-                fileuid 		= '%s',
-                fileauthuseruid 	= '%s',
-                fileauthuseremail 	= '%s',
-                filecreateddate 	= '%s'  
-                WHERE 
-                fileid 			= %d";
+        try {
+			if (isset($dataitem['fileid'])) {
+	            $fileid =   $dataitem['fileid'];
+	            $sqlQuery = "
+	                UPDATE 
+	                files 
+	                SET 
+	                fileexpirydate 		= '%s', 
+	                fileto 			= '%s', 
+	                filesubject 		= '%s', 
+	                fileactivitydate 	= '%s', 
+	                filevoucheruid 		= '%s', 
+	                filemessage		= '%s', 
+	                filefrom 		= '%s', 
+	                filesize 		= '%s', 
+	                fileoriginalname 	= '%s', 
+	                filestatus 		= '%s', 
+	                fileip4address		= '%s', 
+	                fileip6address 		= '%s', 
+	                filesendersname 	= '%s', 
+	                filereceiversname 	= '%s', 
+	                filevouchertype		= '%s', 
+	                fileuid 		= '%s',
+	                fileauthuseruid 	= '%s',
+	                fileauthuseremail 	= '%s',
+	                filecreateddate 	= '%s'  
+	                WHERE 
+	                fileid 			= %d";
 
-            $result = $this->db->fquery($sqlQuery,
-                $fileexpirydate,
-                $fileto,
-                $filesubject,
-                $fileactivitydate,
-                $filevoucheruid,
-                $filemessage,
-                $filefrom,
-                $filesize,
-                $fileoriginalname,
-                $filestatus,
-                $fileip4address,
-                $fileip6address,
-                $filesendersname,
-                $filereceiversname,
-                $filevouchertype,
-                $fileuid,
-                $fileauthuseruid,
-                $fileauthuseremail,
-                $filecreateddate,
-                $fileid
-            ) or die("Error");
+	            $result = $this->db->exec($sqlQuery,
+	                $fileexpirydate,
+	                $fileto,
+	                $filesubject,
+	                $fileactivitydate,
+	                $filevoucheruid,
+	                $filemessage,
+	                $filefrom,
+	                $filesize,
+	                $fileoriginalname,
+	                $filestatus,
+	                $fileip4address,
+	                $fileip6address,
+	                $filesendersname,
+	                $filereceiversname,
+	                $filevouchertype,
+	                $fileuid,
+	                $fileauthuseruid,
+	                $fileauthuseremail,
+	                $filecreateddate,
+	                $fileid
+	            ) or die("Error");
+			}
+		} catch(DBALException $e) {
+			$this->saveLog->saveLog($dataitem,"Error",$e->getMessage()); return FALSE;
+		}
 
-
-
-            if (!$result) { $this->saveLog->saveLog($dataitem,"Error",pg_last_error()); return FALSE; }
-
-            $this->saveLog->saveLog($dataitem,"Updated","Using Voucher");
-            return true;//sendmail->sendEmail($dataitem,$config['defaultmailsendbody']);
+         $this->saveLog->saveLog($dataitem,"Updated","Using Voucher");
+         return true;//sendmail->sendEmail($dataitem,$config['defaultmailsendbody']);
 
         }	
-    }	
+    //}	
     //---------------------------------------
     // Delete a voucher
     // 
@@ -875,7 +896,7 @@ public function insertVoucher($to,$expiry){
                 fileid = %d
                 ";
 
-            $this->db->fquery($sqlQuery, $fileid);
+            $this->db->exec($sqlQuery, $fileid);
 
             $fileArray =  $this->getVoucher($fileid);
 
@@ -906,7 +927,7 @@ public function insertVoucher($to,$expiry){
             fileid = %d
             ";
 
-        $this->db->fquery($sqlQuery, $fileid);
+        $this->db->exec($sqlQuery, $fileid);
 
         $fileArray =  $this->getVoucher($fileid);
 
@@ -936,7 +957,7 @@ public function insertVoucher($to,$expiry){
                 fileid = %d
                 ";
 
-            $this->db->fquery($sqlQuery, $fileid);
+            $this->db->exec($sqlQuery, $fileid);
 
             $fileArray =  $this->getVoucher($fileid);
 
