@@ -145,7 +145,7 @@ function cleanUp()
 			$query = "UPDATE Files SET filestatus = 'Closed' WHERE fileid='%s'";
 			$result = $db->exec($query, $row['fileid']);			
 		} catch (DBALException $e) {
-			logProcess("CRON","SQL Error on updating files".e->getMessage());
+			logProcess("CRON","SQL Error on updating files".$e->getMessage());
 			return FALSE;	
 		}
 
