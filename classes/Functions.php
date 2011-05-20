@@ -361,9 +361,8 @@ class Functions {
         // check if this user has admin access before returning data
         if($this->authsaml->authIsAdmin()) { 
 
-
             try {
-            	$result = $this->db->query("SELECT %s FROM files ORDER BY fileactivitydate DESC", $this->returnFields);
+            	$result = $this->db->query("SELECT ".$this->returnFields."FROM files ORDER BY fileactivitydate DESC" );
             } catch (DBALException $e) {
             	$this->saveLog->saveLog("","Error",$e->getMessage()); return FALSE;	
             }
