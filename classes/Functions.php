@@ -144,7 +144,7 @@ class Functions {
 			$this->saveLog->saveLog("","Error",$e->getMessage()); return FALSE; 
 		}
 
-        $total = $sRow[0]['total_uploaded'];
+        $total = $search[0]['total_uploaded'];
         $statString = $statString."(".round($total/1024/1024/1024)."GB) |" ;
 
 		try {
@@ -162,7 +162,7 @@ class Functions {
 			$this->saveLog->saveLog("","Error",$e->getMessage()); return FALSE; 		
 		}
 
-        $total = $sRow[0]['total_downloaded'];
+        $total = $search[0]['total_downloaded'];
         $statString = $statString."(".round($total/1024/1024/1024)."GB) |";
 
         return $statString;
