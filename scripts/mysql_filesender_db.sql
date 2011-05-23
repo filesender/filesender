@@ -20,7 +20,7 @@ CREATE TABLE `files` (
   `fileid` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `fileexpirydate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `fileactivitydate` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `fileauthuseruid` varchar(60) DEFAULT NULL,
+  `fileauthuseruid` varchar(500) DEFAULT NULL,
   `filecreateddate` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `fileauthurl` varchar(500) DEFAULT NULL,
   `fileauthuseremail` varchar(255) DEFAULT NULL,
