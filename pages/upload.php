@@ -135,11 +135,11 @@
 	obj('tog').style.display = (obj('tog').style.display == "block") ? "none" : "block";	
 	}
 
-	function uploadcomplete(msg)
-	{
-	window.location="index.php?s=complete";
+	//function uploadcomplete(msg)
+	//{
+	//window.location="index.php?s=complete";
 
-	}
+	//}
 	
 	// --------------------------
 	// Common upload functions
@@ -344,14 +344,14 @@ getFlexApp('filesenderup').returnMsg("upload")
 }
 
 
-function uploadcomplete(name,size,vid)
+function uploadcomplete(name,size)
 {
 document.forms["form1"].submit();
 }
 
 function uploaderror(name,size)
 {
-errorDialog("Error uploading your file");
+errorDialog("Error uploading your file"+name+":"+size);
 }
 
 // check browser type
@@ -473,7 +473,7 @@ if ( hasProductInstall && !hasRequestedVersion ) {
 
 	AC_FL_RunContent(
 		"src", "lib/swf/playerProductInstall",
-		"FlashVars", "flexerrors=<?php echo $flexerrors ?>&MMredirectURL="+MMredirectURL+'&MMplayerType='+MMPlayerType+'&MMdoctitle='+MMdoctitle+"",
+		"FlashVars", "<?php echo $flashVARS ?>",
 		"width", "500",
 		"height", "50",
 		"align", "middle",

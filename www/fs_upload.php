@@ -35,14 +35,30 @@
  * ---------------------------------
  * data is sent in chunks from google gears and appended to the file in the temporary folder
  */
- if (isset($_REQUEST['token'])) {
+
+// use token if available for SIMPLESAML 1.7 or set session if earlier version of SIMPLESAML
+	if (isset($_POST['token']) && $_POST['token'] != "") {
+	$_COOKIE['SimpleSAMLAuthToken'] = $_POST['token'];
+	}	
+	// flash upoload creates a new session id https so we need to make sure we are using the same session  
+if(!empty($_POST['s'])) { 
+    session_id($_POST['s']); 
+    session_start();
+
+    // Ensure existing session, users don't have the permission to create
+    // a session because that would be a security vulnerability.
+    if (!isset($_SESSION['validSession'])) {
+        session_destroy();
+        session_start();
+        session_regenerate_id();
+        $_SESSION['validSession'] = true;
+        trigger_error("Invalid session supplied.", E_USER_ERROR);
+    }
 	
-	$_COOKIE['SimpleSAMLAuthToken'] = $_REQUEST['token'];
 }
-
+	
+	
 require_once('../classes/_includes.php');
-
-
 
 $authsaml = AuthSaml::getInstance();
 $authvoucher = AuthVoucher::getInstance();
@@ -50,23 +66,6 @@ $log =  Log::getInstance();
 
 date_default_timezone_set($config['Default_TimeZone']);
 $tempuploadfolder =  $config["site_temp_filestore"];
-
-	
-//	// flash upload creates a new session id https so we need to make sure we are using the same session  
-//	if(!empty($_REQUEST['s'])) { 
-//   	 session_id($_REQUEST['s']); 
-//   	 session_start();
-//
-//    // Ensure existing session, users don't have the permission to create
-//    // a session because that would be a security vulnerability.
-//    if (!isset($_SESSION['validSession'])) {
-//        session_destroy();
-//        session_start();
-//        session_regenerate_id();
-//        $_SESSION['validSession'] = true;
-//        trigger_error("Invalid session supplied.", E_USER_ERROR);
-//    }
-//	}
 	
 // check we are authenticated first before uploading the chunk
 if($authvoucher->aVoucher()  || $authsaml->isAuth() ) { 
