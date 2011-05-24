@@ -151,4 +151,5 @@
            	// site help
            	DEFINE("_site_help_text","Site help text");
            	DEFINE("_Help","Help");
+			DEFINE("_OPTIONAL","Optional");
 ?>

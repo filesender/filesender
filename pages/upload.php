@@ -326,14 +326,16 @@ fileMsg("This file is larger than 2Gb. Please use a HTML5 enabled browser to upl
 
 } else if (validateFormFlash())
 {
+$("#fileInfo").show();
+obj('n').value= name;
+obj('total').value = size;
+obj('fileName').value= name;
+obj('fileSize').value = size;
 getFlexApp('filesenderup').returnMsg("upload")
 }// else {
 //
-//$("#fileInfo").show();
-//obj('n').value= name;
-//obj('total').value = size;
-//obj('fileName').value= name;
-//obj('fileSize').value = size;
+//
+
 //
 //getFlexApp('filesenderup').returnMsg("upload")
 //
