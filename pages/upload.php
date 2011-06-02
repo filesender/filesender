@@ -216,6 +216,8 @@
 // Validate FILETO
 function validate_fileto()
 {
+	// remove white spaces 
+	obj('fileto').value = obj('fileto').value.split(' ').join('');
 	var tempemail = obj('fileto').value;
 	var email = tempemail.split(/,|;/);
 	for (var i = 0; i < email.length; i++) {
@@ -575,5 +577,6 @@ if ( hasProductInstall && !hasRequestedVersion ) {
       <?php } ?>
     </table>
   </form>
+  </div>
 <div id="dialog-default" title="">  
 </div>
