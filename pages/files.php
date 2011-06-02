@@ -85,11 +85,14 @@ $json_o=json_decode($filedata,true);
 <td>&nbsp;</td>
 </tr>
 <?php 
+if(sizeof($json_o) > 0)
+{
 foreach($json_o as $item) {
    echo "<tr><td><a href='index.php?s=files&a=resend&id=" .$item['filevoucheruid'] . "'><img src='images/email_go.png'></a></td><td>" .$item['fileto'] . "</td><td><a href='download.php?vid=". $item["filevoucheruid"]."' target='_blank'>" .$item['fileoriginalname']. "</a></td><td>" .formatBytes($item['filesize']). "</td><td>".$item['filesubject']. "</td><td>" .date("d/m/Y",strtotime($item['filecreateddate'])) . "</td><td>" .date("d/m/Y",strtotime($item['fileexpirydate'])) . "</td><td><a href='#' onclick='confirmdelete(".'"' .$item['filevoucheruid'] . '"'. ")'><img src='images/shape_square_delete.png'></a></td></tr>"; //etc
 }
-
-
+} else {
+	echo "<tr><td colspan='7'>There are currently no files available</td></tr>";
+}
 ?>
 </table>
 </div>
