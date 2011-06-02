@@ -86,6 +86,7 @@
 	// all default settings
 	var uploadid = '<?php echo $id ?>';
 	var maximumDate= '<?php echo $config['default_daysvalid']?>';
+	var aup = '<?php echo $config['AuP'] ?>';
 	var bytesUploaded = 0;
 	var bytesTotal = 0;
 	var previousBytesLoaded = 0;
@@ -183,7 +184,10 @@
 	
 	if(!validate_fileto() ){validate = false;};		// validate emails
 	if(!validate_file() ){validate = false;};		// check if file selected
+	if(aup == 'true') // check if AUP is required
+	{
 	if(!validate_aup() ){validate = false;};		// check AUP is selected
+	}
 	if(!validate_expiry() ){validate = false;};		// check date
 		
 	return validate;
@@ -200,7 +204,10 @@
 	var validate = true;
 	
 	if(!validate_fileto() ){validate = false;};		// validate emails
-	if(!validate_aup() ){validate = false;};		// check AUP is selected
+	if(aup == 'true') // check if AUP is required
+	{
+		if(!validate_aup() ){validate = false;};		// check AUP is selected
+	}
 	if(!validate_expiry() ){validate = false;};		// check date
 		
 	return validate;
@@ -442,16 +449,7 @@ function fileMsg(msg)
         <div id="expiry_msg" class="validation_msg">Invalid expiry Date</div></td>
         <td>&nbsp;</td>
       </tr>
-      <tr>
-        <td class="formfieldheading"></td>
-        <td><input name="aup" type="checkbox" value="true" checked="aup" id="aup" onchange="validate_aup()" />
-          <?php echo _TERMS_OF_AGREEMENT; ?>[<a href="#" onclick="toggleTOG()"><?php echo _SHOW_TERMS; ?></a>]
-          <div id="aup_msg" class="validation_msg">Please agree to the terms</div>
-          <div id="tog" style="display:none"> <?php echo $config["AuP_terms"]; ?> </div>
-          </td>
-        <td>&nbsp;</td>
-      </tr>
-      <tr>
+       <tr>
         <td class="formfieldheading"><?php echo _SELECT_FILE; ?></td>
         <td>
         <div id="uploadstandard"> 
@@ -539,13 +537,9 @@ if ( hasProductInstall && !hasRequestedVersion ) {
     </td>
         <td>&nbsp;</td>
       </tr>
-      <tr>
-        <td class="formfieldheading">&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-      </tr>
-    </table>
-    <br />
+    <tr>
+    <td></td>
+    <td>
     <input type="hidden" id="filevoucheruid" value="<?php echo $voucherUID; ?>"/>
     <input type="hidden" name="vid" id="vid" value="<?php echo $voucherUID; ?>"/>
     <input type="hidden" name="total" id="total" value=""/>
@@ -566,6 +560,20 @@ if ( hasProductInstall && !hasRequestedVersion ) {
     </div>
     <div id="transferSpeedInfo"></div>
     <div id="timeRemainingInfo"></div>
+    </td>
+    <?php if ($config["AuP"]) {?>
+    </tr>
+       <tr>
+        <td class="formfieldheading"></td>
+        <td><input name="aup" type="checkbox" value="true" checked="aup" id="aup" onchange="validate_aup()" />
+          <?php echo _TERMS_OF_AGREEMENT; ?>[<a href="#" onclick="toggleTOG()"><?php echo _SHOW_TERMS; ?></a>]
+          <div id="aup_msg" class="validation_msg">Please agree to the terms</div>
+          <div id="tog" style="display:none"> <?php echo $config["AuP_terms"]; ?> </div>
+          </td>
+        <td>&nbsp;</td>
+      </tr>
+      <?php } ?>
+    </table>
   </form>
 <div id="dialog-default" title="">  
 </div>
