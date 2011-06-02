@@ -163,6 +163,7 @@ require_once('../pages/help.php');
 ?>
   </div>
 </div>
+<div id="footer">Version 1.5 Beta</div>
 <div id="DoneLoading"></div>
 </body>
 </html>
