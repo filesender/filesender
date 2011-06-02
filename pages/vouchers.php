@@ -146,7 +146,7 @@ $json_o=json_decode($filedata,true);
       </tr>
       <tr>
         <td><?php echo _EXPIRY; ?></td>
-        <td><div id="datepicker"></div></td>
+        <td><input id="datepicker"></input></td>
       </tr>
       <tr>
         <td><input type="hidden" id="altdate" name="altdate" value="<?php echo date("d-m-Y",strtotime("+".$config['default_daysvalid']." day"));?>" /></td>
