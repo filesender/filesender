@@ -31,16 +31,13 @@
 
 html {
 }
-* {
-	margin: 0;
-	padding: 0;
-}
+
 body {
-	text-align: center;
-	padding: 10px 0;
 	background: #1c1c1c;
 	color: #333;
 	font: 83%/1.5 arial, tahoma, verdana, sans-serif;
+	padding:0;
+	text-align: center;
 }
 
 /* LISTS */
@@ -179,10 +176,11 @@ a:link, a:visited {
 }
 #wrap {
 	background: #fff;
-	position: relative;
 	text-align: left;
-	margin: 20px 75px 2em 75px;
 	width: 800px;
+		margin-left: auto;
+	margin-right: auto;
+
 }
 #header {
 	background: #666;
