@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml"  xmlns:comp="org.ricoshae.*" creationComplete="init()" layout="absolute" width="500" height="50" backgroundColor="#FFFFFF" backgroundGradientAlphas="[0.05, 0.0]" backgroundGradientColors="[#FFFFFF, #FFFFFF]">
+	
+	<mx:Script>
+		<![CDATA[
+			
+			
+			/*
+			*  Filsender www.filesender.org
+			*      
+			*  Copyright (c) 2009-2010, Aarnet, HEAnet, UNINETT
+			* 	All rights reserved.
+			*
+			* 	Redistribution and use in source and binary forms, with or without
+			*	modification, are permitted provided that the following conditions are met:
+			*	* 	Redistributions of source code must retain the above copyright
+			*   		notice, this list of conditions and the following disclaimer.
+			*   	* 	Redistributions in binary form must reproduce the above copyright
+			*   		notice, this list of conditions and the following disclaimer in the
+			*   		documentation and/or other materials provided with the distribution.
+			*   	* 	Neither the name of Aarnet, HEAnet and UNINETT nor the
+			*   		names of its contributors may be used to endorse or promote products
+			*   		derived from this software without specific prior written permission.
+			*
+			* THIS SOFTWARE IS PROVIDED BY Aarnet, HEAnet and UNINETT ''AS IS'' AND ANY
+			* EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+			* WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+			* DISCLAIMED. IN NO EVENT SHALL Aarnet, HEAnet or UNINETT BE LIABLE FOR ANY
+			* DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+			* (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+			* LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+			* ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+			* (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+			* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+			*/
+			
+			/* -----------------------------------------
+			* flex - upload file using flash filereference
+			* -----------------------------------------
+			* 
+			*/
+			
+			//import com.adobe.serialization.json.JSON;
+			import flash.events.TimerEvent;
+			import flash.utils.Timer;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			import mx.utils.UIDUtil;
+			import mx.controls.Button;
+			import mx.core.FlexGlobals;
+			
+			[bindable] public var vid:String;
+			[bindable] public var sid:String;
+			[bindable] public var buttonBrowse:String = "Browse";
+			[bindable] public var buttonUpload:String = "Upload";
+			[bindable] public var buttonCancel:String = "Cancel";
+			[bindable] public var siteURL:String;
+			[bindable] public var token:String;
+			
+			[Bindable] public var currentFileObj:Object  = new Object();
+			[Bindable] public var currentUserObj:Object = new Object();
+			[Bindable] public var config:Object;
+			[Bindable] public var lang:Object;
+			[Bindable] public var displayprogressBar:Boolean = false;
+			[Bindable] public var URLvid:Object;
+			
+			public var maxDays:Number;
+			public var currentDate:Date = new Date();
+			public var fileRef:FileReference = new FileReference();
+			public var request:URLRequest;
+			public var currentFileUID:String;	
+			public var urlVars:URLVariables;
+			public var dateRange:Object;
+			public var tm:Timer;
+			[Bindable]
+			public var speedString:String;
+			public var speed:Number = 0;
+			public var currbytes:Number = 0;
+			public var lastbytes:Number = 0;
+			public var tempFromVoucher:String; // Temp if voucher is cancelled to return correct to and from fields
+			public var myTimer:Timer = new Timer(600000, 0);  // 600000 sends keep alive every 10 minutes
+			 
+			// init UI
+			public function init():void
+			{
+				// Application requires:
+				vid =   FlexGlobals.topLevelApplication.parameters.tid;// = voucherID
+				buttonBrowse = FlexGlobals.topLevelApplication.parameters.buttonBrowse;;	// "Browse" language ref
+				buttonUpload = FlexGlobals.topLevelApplication.parameters.buttonUpload;; 	// "Upload" language ref
+				buttonCancel = FlexGlobals.topLevelApplication.parameters.buttonCancel;;	// Cancel" language ref
+				siteURL = FlexGlobals.topLevelApplication.parameters.siteURL;// Site url
+				token = FlexGlobals.topLevelApplication.parameters.token;
+				sid = FlexGlobals.topLevelApplication.parameters.sid;
+				// reset all buttons
+				uploadBtn.label = buttonBrowse;
+				if (ExternalInterface.available)
+				{
+					
+					ExternalInterface.addCallback("returnMsg", returnMsg);
+					
+				} 
+			}
+			
+			public function returnMsg(msg:String):void
+			{ 
+				//Alert.show(msg);
+				if(msg == "upload")
+				{
+
+				uploadBtn.label = buttonUpload;
+				
+				//uploadit
+				} else {
+				// must browse a different file
+				// clear browse
+				}
+			}
+			
+			// sends request to keep alive to log - if logging is off then there is no message recorded 
+			public function keepaliveHandler(event:TimerEvent):void {
+			//	FlexGlobals.topLevelApplication.logProcess("Keep Session Alive - Flash Upload");
+			}
+			
+			
+			// start the upload process
+			public function uploadit():void 
+			{
+				
+				urlVars = new URLVariables();
+				//urlVars.fid = currentFileObj.fileuid;
+				urlVars.vid = vid;
+				urlVars.total = fileRef.size;
+				urlVars.type = "single";
+				urlVars.n = fileRef.name;
+				urlVars.s = sid;
+				urlVars.token = token;
+								
+				request = new URLRequest(siteURL + "fs_upload.php");
+				request.data = urlVars;
+				request.method=URLRequestMethod.POST;
+				// upload file 
+				fileRef.upload(request);
+				displayprogressBar = true;
+				uploadBtn.label = buttonCancel;
+			}
+			
+			public function btnclick():void
+			{
+				if(uploadBtn.label == buttonBrowse)
+				{
+					browseit();
+				}
+				if(uploadBtn.label == buttonCancel)
+				{
+					cancelit();
+				}
+				if(uploadBtn.label == buttonUpload)
+				{
+					uploadit();
+				}
+			}
+			// handler for file open
+			public function openHandler(event:Event):void {
+				
+			}
+			
+			// dispatched during file upload
+			public function progressHandler(event:ProgressEvent):void 
+			{
+				pgBar.setProgress(event.bytesLoaded-1, event.bytesTotal);
+				currbytes = event.bytesLoaded;  
+			//	FlexGlobals.topLevelApplication.logProcess("Upload Progress [" + currbytes + " bytes] - Flash Upload");
+			}
+			
+			// Following dispatched when the file has been given to the server script
+			// this event does not receive a response from the server
+			// use DataEvent.UPLOAD_COMPLETE_DATA event as shown in uploadCompleteHandler
+			public function completeHandler(event:Event):void 
+			{
+			//	FlexGlobals.topLevelApplication.logProcess("File Uploaded - Flash Upload");
+			//	textarea1.text += "\nFile uploaded"; 
+			//	textarea1.text += "\nMoving File"; 
+			//	speedLabel.text  = "";
+			} 
+			
+			// Following dispatched when a file upload has completed
+			// this event can contain a response from the server as opposed to the Event.COMPLETE event
+			// the PHP upload file can send back information if we want it to
+			// the event.data and event.text properties would contain a response if any
+			public function uploadCompleteHandler(event:DataEvent):void 
+			{
+				var uploadResult:String = event.data.toString();
+				if(uploadResult=="true")  
+				{
+					ExternalInterface.call("uploadcomplete('"+fileRef.name+"','"+fileRef.size+"')"); 
+					
+				} else {
+				 
+					ExternalInterface.call("uploaderror('"+fileRef.name+"','"+fileRef.size+"')"); 	
+				}
+			}
+			// setup file reference handler
+			public function browseit():void 
+			{
+				fileRef = new FileReference();
+						
+				// Listen for the upload events
+				// http://livedocs.adobe.com/flex/3/html/17_Networking_and_communications_7.html
+				
+				fileRef.addEventListener(Event.SELECT, selectHandler);
+				fileRef.addEventListener(Event.OPEN, openHandler);
+				fileRef.addEventListener(ProgressEvent.PROGRESS, progressHandler);
+				fileRef.addEventListener(Event.COMPLETE, completeHandler);
+				fileRef.addEventListener(DataEvent.UPLOAD_COMPLETE_DATA, uploadCompleteHandler);
+				fileRef.addEventListener(SecurityErrorEvent.SECURITY_ERROR, httpSecurityErrorHandler);
+				fileRef.addEventListener(HTTPStatusEvent.HTTP_STATUS, httpErrorHandler);
+				fileRef.addEventListener(IOErrorEvent.IO_ERROR, httpIOErrorHandler);
+				
+				// browse for the file to upload
+				// when user selects a file the select handler is called
+				fileRef.browse();
+			}       
+			
+	
+				
+			// FileReference error
+			public function fileError(event:FaultEvent):void
+			{
+				Alert.show(event.fault.toString());
+			//	FlexGlobals.topLevelApplication.logProcess("Error " + event.fault.toString() + " - Flash Upload");
+			}
+			
+			// FileReference HTTP error
+			public function httpErrorHandler(event:HTTPStatusEvent):void 
+			{
+				Alert.show(event.status.toString());
+			//	FlexGlobals.topLevelApplication.logProcess("Error " + event.status.toString() + " - Flash Upload");
+			}
+			
+			// FileReference IO error
+			public function httpIOErrorHandler(event:IOErrorEvent):void 
+			{
+			//	FlexGlobals.topLevelApplication.logProcess("Error " + event.text.toString() + " - Flash Upload");
+				Alert.show(event.text.toString());
+			}
+			
+			// FileReference security error
+			public function httpSecurityErrorHandler(event:SecurityErrorEvent):void 
+			{
+			//	FlexGlobals.topLevelApplication.logProcess("Error " + event.text.toString() + " - Flash Upload");
+				Alert.show(event.text.toString());
+			}
+					
+			// FileReference select handler
+			public function selectHandler(event:Event):void {
+		
+				// send to js to check: fileRef.name fileRef.size
+				var callString:String = "fileInfo('"+fileRef.name+"','"+fileRef.size+"')";
+				ExternalInterface.call(callString); 
+			} 
+			
+			// When a file is selected, we upload the file to the PHP file upload script on the server
+			// file is uploaded to php temp directory then moved to file upload directory
+			
+			//Cancel Flash Upload
+			public function cancelit():void 
+			{ 
+				fileRef.cancel(); 
+				pgBar.setProgress(0,0)
+				// update button to browse
+				uploadBtn.label = buttonBrowse;
+				// send msg to js to cancel
+				ExternalInterface.call("cancel('tid')"); 
+				 
+			} 
+			
+			// display bytes correctly
+			public function readablizeBytes(bytes:Number):String 
+			{
+				var s:Array = ['bytes', 'kB', 'MB', 'GB', 'TB', 'PB'];
+				var e:Number = Math.floor(Math.log(bytes)/Math.log(1024));
+				return (bytes/Math.pow(1024, Math.floor(e))).toFixed(2)+" "+s[e];
+			}
+			
+		]]>
+		
+	</mx:Script>
+	<mx:NumberFormatter id="numberFormatter" precision="2" useThousandsSeparator="true" useNegativeSign="true"/>
+	<mx:HBox id="uploadMainPanel" verticalAlign="middle" includeInLayout="{displayprogressBar}" left="0" top="0" bottom="0" right="0">
+		<mx:Spacer/>
+		<mx:ProgressBar id="pgBar" mode="manual"  height="30" width="100%" labelPlacement="center" label="Uploading %3%% "/>
+		<mx:Button label="{lang.Browse}" click="btnclick()" id="uploadBtn" height="28"/>
+		<mx:Label text="v1.2" color="#8D9090"/>
+		<mx:Label id="speedLabel" width="0"/>
+	</mx:HBox>
+	
+</mx:Application>
