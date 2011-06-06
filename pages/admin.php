@@ -38,18 +38,28 @@
  ?>
 <script>
 	$(function() {
-		$( "#tabs" ).tabs();
+		$( "#tabs" ).tabs({
+   select: function(event, ui) { 
+   window.location ="index.php?s=admin&page=1#tabs-"+ (ui.index+1);
+    }
+   
+});
 	});
 	</script>
 <?php 
 
 // get file data
+$total_pages["Available"] = "";
+$total_pages["Voucher"] = "";
+$total_pages["Uploaded"] = "";
+$total_pages["Download"] = "";
+$total_pages["Error"] = "";
 
-$json_o = $functions->adminFiles();
-$json_log = $functions->adminLogs();
-//$filedata = $filedata[0];
-//$json_o=$filedata;
-//$json_log=$logdata;
+$Available = $functions->adminFiles("Available");
+$Voucher = $functions->adminFiles("Voucher");
+$Uploaded = $functions->adminLogs("Uploaded");
+$Download = $functions->adminLogs("Download");
+$Error = $functions->adminLogs("Error");
 $drivespace = $functions->driveSpace();
 
 ?>
@@ -65,7 +75,6 @@ $drivespace = $functions->driveSpace();
 		echo '<li><a href="#tabs-4">'._ERRORS.'</a></li>';
 		echo '<li><a href="#tabs-5">'._FILES_AVAILABLE.'</a></li>';
 		echo '<li><a href="#tabs-6">'._ACTIVE_VOUCHERS.'</a></li>';
-		echo '<li><a href="#tabs-7">'._COMPLETE_LOG.'</a></li>';
 		?>
     </ul>
     <div id="tabs-1"> <?php echo  $functions->getStats(); ?><br />
@@ -95,6 +104,25 @@ $drivespace = $functions->driveSpace();
     </div>
     <div id="tabs-2">
       <table id="table2" width="100%" border="0" cellspacing="1" bgcolor="#FFFFFF">
+      <tr>
+        <td colspan="5" align="right">
+	 <table border="0" cellpadding="5" align="left">
+  <tr>
+  <td>Page:</td>
+  <?php
+//  echo "::".$total_pages["Uploaded"];
+  for ($i = 1; $i <= $total_pages["Uploaded"]; $i++) {
+  $txt = $i;
+  if ($page != $i) {$txt = "<a href=\"" . $_SERVER["PHP_SELF"] . "?s=admin&page=$i#tabs-2\">".$txt."</a>";} else { $txt = "<b>".$i."</b>";};
+  ?>  
+  <td align="center"><?php	echo $txt ?></td>
+  <?php
+  }
+  ?>
+  </tr>
+  </table>
+
+	  </td></tr>
         <tr class="headerrow">
           <?php 
 echo '<td><strong>'._TO.'</strong></td>';
@@ -105,11 +133,8 @@ echo '<td><strong>'._CREATED.'</strong></td>';
 ?>
         </tr>
         <?php 
-foreach($json_log as $item) {
-if($item['logtype'] == "Uploaded")
-{
-   echo "<tr><td>" .$item['logto'] . "</td><td>" .$item['logfrom'] . "</td><td>" .$item['logfilename']. "</td><td>" .formatBytes($item['logfilesize']). "</td><td>" .date("d/m/Y",strtotime($item['logdate'])) . "</td></tr>"; //etc
-}
+foreach($Uploaded as $item) {
+	echo "<tr><td>" .$item['logto'] . "</td><td>" .$item['logfrom'] . "</td><td>" .$item['logfilename']. "</td><td>" .formatBytes($item['logfilesize']). "</td><td>" .date("d/m/Y",strtotime($item['logdate'])) . "</td></tr>"; //etc
 }
 
 ?>
@@ -117,6 +142,23 @@ if($item['logtype'] == "Uploaded")
     </div>
     <div id="tabs-3">
       <table id="table3" width="100%" border="0" cellspacing="1" bgcolor="#FFFFFF">
+           <tr>
+             <td colspan="5" align="right">
+	 <table border="0" cellpadding="5" align="left">
+  <tr>
+  <td> Page:</td>
+  <?php
+  for ($i = 1; $i <= $total_pages["Download"]; $i++) {
+  $txt = $i;
+  if ($page != $i) {$txt = "<a href=\"" . $_SERVER["PHP_SELF"] . "?s=admin&page=$i#tabs-3\">".$txt."</a>";} else { $txt = "<b>".$i."</b>";};
+  ?>  
+  <td align="center"><?php	echo $txt ?></td>
+  <?php
+  }
+  ?>
+  </tr>
+  </table>
+	  </td></tr>
         <tr class="headerrow">
           <?php
 echo '<td><strong>'._TO.'</strong></td>';
@@ -127,11 +169,8 @@ echo '<td><strong>'._CREATED.'</strong></td>';
 ?>
         </tr>
         <?php 
-foreach($json_log as $item) {
-if($item['logtype'] == "Download")
-{
-   echo "<tr><td>" .$item['logto'] . "</td><td>" .$item['logfrom'] . "</td><td>" .$item['logfilename']. "</td><td>" .formatBytes($item['logfilesize']). "</td><td>" .date("d/m/Y",strtotime($item['logdate'])) . "</td></tr>"; //etc
-}
+foreach($Download as $item) {
+echo "<tr><td>" .$item['logto'] . "</td><td>" .$item['logfrom'] . "</td><td>" .$item['logfilename']. "</td><td>" .formatBytes($item['logfilesize']). "</td><td>" .date("d/m/Y",strtotime($item['logdate'])) . "</td></tr>"; //etc
 }
 
 ?>
@@ -139,6 +178,24 @@ if($item['logtype'] == "Download")
     </div>
     <div id="tabs-4">
       <table id="table4" width="100%" border="0" cellspacing="1" bgcolor="#FFFFFF">
+                            <tr>
+                              <td colspan="5" align="right">
+	 <table border="0" cellpadding="5" align="left">
+  <tr>
+  <td> Page:</td>
+  <?php
+  for ($i = 1; $i <= $total_pages["Error"]; $i++) {
+  $txt = $i;
+  if ($page != $i) {$txt = "<a href=\"" . $_SERVER["PHP_SELF"] . "?s=admin&page=$i#tabs-4\">".$txt."</a>";} else { $txt = "<b>".$i."</b>";};
+  ?>  
+  <td align="center"><?php	echo $txt ?></td>
+  <?php
+  }
+  ?>
+  </tr>
+  </table>
+
+	  </td></tr>
         <tr class="headerrow">
           <?php 
 echo '<td><strong>'._TO.'</strong></td>';
@@ -149,12 +206,9 @@ echo '<td><strong>'._CREATED.'</strong></td>';
 ?>
         </tr>
         <?php 
-foreach($json_log as $item) {
-if($item['logtype'] == "Error")
-{
-   echo "<tr><td>" .$item['logto'] . "</td><td>" .$item['logfrom'] . "</td><td>" .$item['logfilename']. "</td><td>" .date("d/m/Y",strtotime($item['logdate'])) . "</td></tr>"; //etc
-	echo "<tr><td colspan=4>".$item['logmessage']."</td></tr>";
-}
+foreach($Error as $item) {
+echo "<tr><td>" .$item['logto'] . "</td><td>" .$item['logfrom'] . "</td><td>" .$item['logfilename']. "</td><td>" .date("d/m/Y",strtotime($item['logdate'])) . "</td></tr>"; //etc
+echo "<tr><td colspan=4>".$item['logmessage']."</td></tr>";
 }
 
 ?>
@@ -162,6 +216,24 @@ if($item['logtype'] == "Error")
     </div>
     <div id="tabs-5">
       <table id="table5" width="100%" border="0" cellspacing="1" bgcolor="#FFFFFF">
+            <tr>
+              <td colspan="5" align="right">
+	 <table border="0" cellpadding="5" align="left">
+  <tr>
+  <td> Page:</td>
+  <?php
+  for ($i = 1; $i <= $total_pages["Available"]; $i++) {
+  $txt = $i;
+  if ($page != $i) {  $txt = "<a href=\"" . $_SERVER["PHP_SELF"] . "?s=admin&page=$i#tabs-5\">".$txt."</a>";} else { $txt = "<b>".$i."</b>";};
+  ?>  
+  <td align="center"><?php	echo $txt ?></td>
+  <?php
+  }
+  ?>
+  </tr>
+  </table>
+
+	  </td></tr>
         <tr class="headerrow">
           <?php 
 echo '<td><strong>'._TO.'</strong></td>';
@@ -174,11 +246,8 @@ echo '<td><strong>'._EXPIRY.'</strong></td>';
 ?>
         </tr>
         <?php 
-foreach($json_o as $item) {
-if($item['filestatus'] == "Available")
-{
-   echo "<tr><td>" .$item['fileto'] . "</td><td>" .$item['filefrom'] . "</td><td>" .$item['fileoriginalname']. "</td><td>" .formatBytes($item['filesize']). "</td><td>".$item['filesubject']. "</td><td>" .date("d/m/Y",strtotime($item['filecreateddate'])) . "</td><td>" .date("d/m/Y",strtotime($item['fileexpirydate'])) . "</td></tr>"; //etc
-}
+foreach($Available as $item) {
+echo "<tr><td>" .$item['fileto'] . "</td><td>" .$item['filefrom'] . "</td><td>" .$item['fileoriginalname']. "</td><td>" .formatBytes($item['filesize']). "</td><td>".$item['filesubject']. "</td><td>" .date("d/m/Y",strtotime($item['filecreateddate'])) . "</td><td>" .date("d/m/Y",strtotime($item['fileexpirydate'])) . "</td></tr>"; //etc
 }
 
 ?>
@@ -187,6 +256,24 @@ if($item['filestatus'] == "Available")
     <div id="tabs-6">
       <div id="tablediv1">
         <table id="table6" width="100%" border="0" cellspacing="1" bgcolor="#FFFFFF">
+                        <tr>
+                          <td colspan="5" align="right">
+	 <table border="0" cellpadding="5" align="left">
+  <tr>
+  <td> Page:</td>
+  <?php
+  for ($i = 1; $i <= $total_pages["Voucher"]; $i++) {
+  $txt = $i;
+  if ($page != $i) { $txt = "<a href=\"" . $_SERVER["PHP_SELF"] . "?s=admin&page=$i#tabs-6\">".$txt."</a>";} else { $txt = "<b>".$i."</b>";};
+  ?>  
+  <td align="center"><?php	echo $txt ?></td>
+  <?php
+  }
+  ?>
+  </tr>
+  </table>
+
+	  </td></tr>
           <tr class="headerrow">
             <?php 
 echo '<td><strong>'._TO.'</strong></td>';
@@ -198,45 +285,22 @@ echo '<td><strong>'._CREATED.'</strong></td>';
 echo '<td><strong>'._EXPIRY.'</strong></td>';
 ?>
             <?php 
-foreach($json_o as $item) {
-if($item['filestatus'] == "Voucher")
-{
-   echo "<tr><td>" .$item['fileto'] . "</td><td>" .$item['filefrom'] . "</td><td>" .$item['fileoriginalname']. "</td><td>" .formatBytes($item['filesize']). "</td><td>".$item['filesubject']. "</td><td>" .date("d/m/Y",strtotime($item['filecreateddate'])) . "</td><td>" .date("d/m/Y",strtotime($item['fileexpirydate'])) . "</td></tr>"; //etc
-}
+foreach($Voucher as $item) {
+echo "<tr><td>" .$item['fileto'] . "</td><td>" .$item['filefrom'] . "</td><td>" .$item['fileoriginalname']. "</td><td>" .formatBytes($item['filesize']). "</td><td>".$item['filesubject']. "</td><td>" .date("d/m/Y",strtotime($item['filecreateddate'])) . "</td><td>" .date("d/m/Y",strtotime($item['fileexpirydate'])) . "</td></tr>"; //etc
 }
 
 ?>
         </table>
       </div>
-    </div>
-    <div id="tabs-7">
-      <table id="table7" width="100%" border="0" cellspacing="1" bgcolor="#FFFFFF">
-        <tr class="headerrow">
-          <?php 
-echo '<td><strong>'._TYPE.'</strong></td>';
-echo '<td><strong>'._TO.'</strong></td>';
-echo '<td><strong>'._FROM.'</strong></td>';
-echo '<td><strong>'._FILE_NAME.'</strong></td>';
-echo '<td><strong>'._CREATED.'</strong></td>';
-?>
-        </tr>
-        <?php 
-foreach($json_log as $item) {
-   echo "<tr><td><b>" .$item['logtype'] . "</b></td><td>" .$item['logto'] . "</td><td>" .$item['logfrom'] . "</td><td>" .$item['logfilename']. "</td><td>" .date("d/m/Y",strtotime($item['logdate'])) . "</td></tr>"; //etc
-	echo "<tr><td colspan=5>".$item['logmessage']."</td></tr>";
-}
-
-?>
-      </table>
-    </div>
-  </div>
+   </div>
+   </div>
 </div>
 <script type="application/javascript">
+
 // stripe every second row in the tables
 $("#table2 tr:odd").not(':first').addClass('altcolor');
 $("#table3 tr:odd").not(':first').addClass('altcolor');
 $("#table4 tr:odd").not(':first').addClass('altcolor');
 $("#table5 tr:odd").not(':first').addClass('altcolor');
 $("#table6 tr:odd").not(':first').addClass('altcolor');
-$("#table7 tr:odd").not(':first').addClass('altcolor');
 </script> 
