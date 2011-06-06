@@ -330,15 +330,35 @@ class Functions {
     //---------------------------------------
     // Return logs if users is admin
     // current email authenticated as per config["admin"]
-    public function adminLogs() {
+    public function adminLogs($type) {
 
         // check if this user has admin access before returning data
-
+		global $page;
+		global $total_pages;
+		$pagination = "";
+		$maxitems_perpage = 50;
+		if(isset($_REQUEST["page"]))
+		{
+		
+		$result = $this->db->query("SELECT logtype FROM logs WHERE logtype = '$type'");
+		$total = count($result );
+		
+		$total_pages[$type] = ceil($total/$maxitems_perpage);
+		$page = intval($_REQUEST["page"]); 
+  		if (0 == $page){
+  		$page = 1;
+  		}  
+  		$start = $maxitems_perpage * ($page - 1);
+  		$max = $maxitems_perpage;
+		$pagination = "LIMIT ".$maxitems_perpage." OFFSET ".$start;
+		} else {
+		$pagination = "LIMIT ".$maxitems_perpage." OFFSET 0";
+		}
         if($this->authsaml->authIsAdmin()) { 
 
 
             try {
-            	$result = $this->db->query("SELECT logtype, logfrom , logto, logdate, logfilesize, logfilename, logmessage FROM logs WHERE EXTRACT( YEAR FROM logdate) = 2011 ORDER BY logdate DESC");
+            	$result = $this->db->query("SELECT logtype, logfrom , logto, logdate, logfilesize, logfilename, logmessage FROM logs WHERE logtype = '$type' ORDER BY logdate DESC ".$pagination);
             } catch (Exception $e) {
             	$this->saveLog->saveLog("","Error",$e->getMessage()); return FALSE;	
             }
@@ -356,13 +376,35 @@ class Functions {
     //---------------------------------------
     // Return Files if users is admin
     // current email authenticated as per config["admin"]
-    public function adminFiles() {
+    public function adminFiles($type) {
 
+		global $page;
+		global $total_pages;
+		$pagination = "";
+		$maxitems_perpage = 50;
+		if(isset($_REQUEST["page"]))
+		{
+		$result = $this->db->query("SELECT fileid FROM files WHERE filestatus = '$type'");
+		$total = count($result);
+		//echo $total;
+  		$total_pages[$type] = ceil($total/$maxitems_perpage);
+  		$page = intval($_REQUEST["page"]); 
+  		if (0 == $page){
+  		$page = 1;
+  		}  
+  		$start = $maxitems_perpage * ($page - 1);
+  		$max = $maxitems_perpage;
+		$pagination = "LIMIT ".$maxitems_perpage." OFFSET ".$start;
+		} else {
+			$pagination = "LIMIT ".$maxitems_perpage." OFFSET 0";
+		}
+		
         // check if this user has admin access before returning data
         if($this->authsaml->authIsAdmin()) { 
 
+
             try {
-            	$result = $this->db->query("SELECT ".$this->returnFields."FROM files ORDER BY fileactivitydate DESC" );
+            	$result = $this->db->query("SELECT %s FROM files WHERE filestatus = '$type' ORDER BY fileactivitydate DESC ".$pagination, $this->returnFields);
             } catch (DBALException $e) {
             	$this->saveLog->saveLog("","Error",$e->getMessage()); return FALSE;	
             }
