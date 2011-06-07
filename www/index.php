@@ -87,7 +87,7 @@ $s = "logon";
 <link rel="icon" href="favicon.ico"	type="image/x-icon">
 <link rel="shortcut icon" href="favicon.ico"type="image/x-icon">
 <link type="text/css" href="css/smoothness/jquery-ui-1.8.2.custom.css" rel="Stylesheet" />
-<script type="text/javascript" src="js/jquery-1.3.2.min.js" ></script>
+<script type="text/javascript" src="js/jquery-1.5.2.min.js" ></script>
 <script type="text/javascript" src="js/jquery-ui-1.8.1.custom.min.js"></script>
 <meta name="robots" content="noindex, nofollow" />
 </head>
