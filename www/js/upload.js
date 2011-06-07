@@ -127,6 +127,9 @@ function uploadFile(currentBytesUpload) {
 
 		if(bytesUploaded > bytesTotal -1 )
 			{
+			var filecontrol = document.getElementById("fileToUpload");
+       		// Remove the new file control.
+    		filecontrol.parentNode.removeChild(filecontrol);
 			document.forms["form1"].submit();
 			return;
 			} 
