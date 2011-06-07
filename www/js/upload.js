@@ -101,10 +101,11 @@ function startupload()
 		var file = document.getElementById('fileToUpload').files[0];
 		var fileSize = file.size;
 		var fileName = file.name;
-
+		currentBytesUpload = 0;
 		$.ajax({
   		url: uploadURI + '?n='+fileName+'&total='+fileSize+'&vid=&type=filesize',
   		success: function(data) {
+		//alert("here");
 		currentBytesUpload = parseFloat(data);
 		uploadFile(currentBytesUpload);
   		}
