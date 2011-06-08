@@ -116,7 +116,7 @@
 		})
 		// set date picker
 		$(function() {
-			$("#datepicker" ).datepicker({ minDate: 0, maxDate: "+"+maximumDate+"D",altField: "#fileexpirydate", altFormat: "d-m-yy" });
+			$("#datepicker" ).datepicker({ minDate: 1, maxDate: "+"+maximumDate+"D",altField: "#fileexpirydate", altFormat: "d-m-yy" });
 			$("#datepicker" ).datepicker( "option", "dateFormat", "d/m/yy" );
 		});	
 

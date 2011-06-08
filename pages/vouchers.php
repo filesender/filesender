@@ -42,7 +42,7 @@
 	$(function() {
 		$('#fileto_msg').hide();
 		
-		$( "#datepicker" ).datepicker({ minDate: 0, maxDate: "+"+maximumDate+"D",altField: "#altdate", altFormat: "d-m-yy",currentText:maximumDate });
+		$( "#datepicker" ).datepicker({ minDate: 1, maxDate: "+"+maximumDate+"D",altField: "#altdate", altFormat: "d-m-yy",currentText:maximumDate });
 		$( "#datepicker" ).datepicker( "option", "dateFormat", "d/m/yy" );
 		$("#dialog-delete").dialog({ autoOpen: false, height: 140, modal: true,
 		
