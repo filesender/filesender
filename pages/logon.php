@@ -38,7 +38,7 @@
  ?>
   <div id="box">
 <?php echo '<div id="pageheading">'._LOGON.'</div>'; ?> 
-<p align="center">You must logon to access this service </p>
+<?php echo $config["site_splashtext"]; ?> 
 <p align="center"><a href="<?php echo $authsaml->logonURL();?>index.php">Click Here to Logon</a></p>
 </div>
 
