@@ -40,12 +40,10 @@
 <?php
  echo '<div id="pageheading">'._HELP.'</div>'; 
  ?>
-
-
   <ul>
     <li>If you don't see your institution in the list of Identity Providers (IdPs), or your institutional login fails, please contact your local IT support</li>
   </ul>
-  <h4>Requirements</h4>
+<h4>Requirements</h4>
   <ul>
     <li>A modern, current release of most popular browsers</li>
   </ul>

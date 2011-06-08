@@ -419,7 +419,7 @@ function fileMsg(msg)
     <table width="500" border="0">
       <tr>
         <td></td>
-        <td class="formfiledmsg"><?php echo _EMAIL_SEPARATOR_MSG; ?></td>
+        <td><?php echo _EMAIL_SEPARATOR_MSG; ?></td>
         <td></td>
       </tr>
       <tr>
