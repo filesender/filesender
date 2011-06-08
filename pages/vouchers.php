@@ -134,11 +134,11 @@ $json_o=json_decode($filedata,true);
   <form name="form1" method="post" action="index.php?s=vouchers"  onSubmit="return validateForm()">
     <table width="100%" border="0">
       <tr>
-        <td><?php echo _SEND_NEW_VOUCHER; ?></td>
+        <td width="200"><?php echo _SEND_NEW_VOUCHER; ?></td>
         <td>&nbsp;</td>
       </tr>
       <tr>
-        <td><?php echo _TO; ?></td>
+        <td width="200"><?php echo _TO; ?></td>
         <td><?php echo _EMAIL_SEPARATOR_MSG; ?><br />
         	<input id="fileto" name="fileto" type="text" size="40" /><br />
  			<div id="fileto_msg" class="validation_msg">Invalid or missing email</div>
