@@ -42,7 +42,7 @@ body {
 
 /* LISTS */
 ul {
-	margin: .3em 0 1.5em 2em;
+	/*margin: .3em 0 1.5em 2em;*/
 }
 
 ul.related {
@@ -50,7 +50,7 @@ ul.related {
 }
 
 li {
-	margin-left: 2em;
+	/*margin-left: 2em;*/
 }
 
 img {
