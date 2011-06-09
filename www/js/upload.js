@@ -73,20 +73,15 @@ var filesize = 0;
 		filename = "";
 		filesize = 0;
 		
-	  
-	  if (validateForm()) 
-		{
-		document.getElementById('fileInfo').style.display = 'block';
+	  	obj('n').value= file.name;
+		obj('total').value = fileSize;
+		
+	  	document.getElementById('fileInfo').style.display = 'block';
         document.getElementById('fileName').innerHTML = 'Name: ' + file.name;
         document.getElementById('fileSize').innerHTML = 'Size: ' + fileSize;
         document.getElementById('fileType').innerHTML = 'Type: ' + file.type;
-		obj('n').value= file.name;
-		obj('total').value = fileSize;
-		
-      }
+	   	validateForm();
 	}
-
-
 
 function startupload()
 {
