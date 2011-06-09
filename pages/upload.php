@@ -60,7 +60,6 @@
 	$voucherData =  $authvoucher->getVoucher();
 	$voucherUID = $voucherData[0]["filevoucheruid"];
 	$senderemail = $voucherData[0]["fileto"];
-	
 	// check if voucher is invalid (this should be an external function
 	if($voucherData[0]["filestatus"] == "Voucher") {
 	$filestatus = "Voucher";
@@ -69,7 +68,7 @@
 	require_once('../pages/vouchercancelled.php');
 	return;
 	}
-	}
+}
 	if (isset($_COOKIE['SimpleSAMLAuthToken'])) {
 		$token = $_COOKIE['SimpleSAMLAuthToken'];
 	} else {
@@ -91,6 +90,7 @@
 	var bytesTotal = 0;
 	var previousBytesLoaded = 0;
 	var intervalTimer = 0;
+	var vid='<?php if(isset($_REQUEST["vid"])){echo $_REQUEST["vid"];}; ?>';
  	//var fileupload[uploadid].status = "draft";
  	// start document ready 
 	$(document).ready(function() { 
