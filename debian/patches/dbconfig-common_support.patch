@@ -1,20 +1,16 @@
---- config/config.php	2011-01-18 21:59:01.000000000 +0100
-+++ config/config.php.new	2011-01-18 22:19:40.953092309 +0100
-@@ -124,11 +124,12 @@
- 	$config['log_location'] = '/usr/share/filesender/log/';	
- 
- 	// database settings	
--	$config['pg_host'] = 'localhost';
--	$config['pg_database'] = 'filesender';
--	$config['pg_port'] = '5432';
--	$config['pg_username'] = 'filesender';
--	$config['pg_password'] = 'yoursecretpassword';
+--- config/config.php	2011-06-09 14:49:40.788036988 +0200
++++ config/config.php.new	2011-06-09 14:48:56.032034508 +0200
+@@ -132,7 +132,12 @@
+ 	
+ 	//NEW DB settings, URL like oneliner, mysql or postgres
+ 	//$config['dsn'] = 'mysql://user:password@localhost:3306/filesender';
+-	$config['dsn'] = 'pgsql://user:password@tcp(localhost:5432)/dbname';
++	//$config['dsn'] = 'pgsql://user:password@tcp(localhost:5432)/dbname';
 +	include('/etc/filesender/debian-db.php');
-+	$config['pg_host'] = empty($dbserver) ? 'localhost' : $dbserver;
-+	$config['pg_database'] = empty($dbname) ? 'filesender' : $dbname;
-+	$config['pg_port'] = empty($dbport) ? '5432' : $dbport;
-+	$config['pg_username'] = empty($dbuser) ? 'filesender' : $dbuser;
-+	$config['pg_password'] = empty($dbpass) ? 'filesender' : $dbpass;
++	$config['dsn'] = 'pgsql://' . 
++	                 ( empty($dbuser) ? 'filesender' : $dbuser ) . ':' . ( empty($dbpass) ? 'filesender' : $dbpass ) .
++	                 '@tcp(' .  ( empty($dbserver) ? 'localhost' : $dbserver ) . ':' .  ( empty($dbport) ? '5432' : $dbport ) . ')' .
++	                 '/' . ( empty($dbname) ? 'filesender' : $dbname ) ;
  
  	// cron settings
  	$config['cron_exclude prefix'] = '_'; // exclude deletion of files with the prefix character listed (can use multiple characters eg '._' will ignore .xxxx and _xxxx
