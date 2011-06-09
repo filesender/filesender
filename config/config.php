@@ -126,9 +126,9 @@ public function loadConfig() {
 	//Old  database settings - these can go after testing
 	//$config['pg_host'] = 'localhost';
 	//$config['pg_database'] = 'filesender';
-    //$config['pg_port'] = '5432';
-    //$config['pg_username'] = 'filesender';
-    //$config['pg_password'] = 'yoursecretpassword';
+	//$config['pg_port'] = '5432';
+	//$config['pg_username'] = 'filesender';
+	//$config['pg_password'] = 'yoursecretpassword';
 	
 	//NEW DB settings, URL like oneliner, mysql or postgres
 	//$config['dsn'] = 'mysql://user:password@localhost:3306/filesender';
