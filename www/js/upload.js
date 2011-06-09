@@ -98,7 +98,7 @@ function startupload()
 		var fileName = file.name;
 		currentBytesUpload = 0;
 		$.ajax({
-  		url: uploadURI + '?n='+fileName+'&total='+fileSize+'&vid=&type=filesize',
+  		url: uploadURI + '?n='+fileName+'&total='+fileSize+'&vid='+vid+'&type=filesize',
   		success: function(data) {
 		//alert("here");
 		currentBytesUpload = parseFloat(data);
@@ -157,7 +157,7 @@ function uploadFile(currentBytesUpload) {
     reader.onload = function() { //Execute this when the blob is successfully read
  
         var boundary = "fileboundary"; //Boundary name
-        var uri = uploadURI + "?n="+fileName+"&total="+fileSize+"&type=chunk"; //Path to script for handling the file sent
+        var uri = uploadURI + "?n="+fileName+"&total="+fileSize+"&type=chunk&vid="+vid; //Path to script for handling the file sent
  
         var xhr = new XMLHttpRequest(); //Create the object to handle async requests
  		xhr.onreadystatechange = processReqChange;
