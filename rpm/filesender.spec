@@ -1,12 +1,12 @@
 Name:           filesender
-Version:        1.0
+Version:        1.5.0
 Release:        1%{?dist}
 Summary:        Sharing large files with a browser
 
 Group:          Applications/Internet
 License:        BSD
 URL:            http://www.filesender.org/
-Source0:        http://filesender-dev.surfnet.nl/releases/%{name}-%{version}.tar.gz
+Source0:        http://filesender-dev.surfnet.nl/nightly/%{name}-%{version}.tar.gz
 Source1:	%{name}-config.php
 Source2:	%{name}.htaccess
 Source3:	%{name}.cron.daily
@@ -45,6 +45,7 @@ rm -rf %{buildroot}
 %{__mkdir} -p %{buildroot}%{_sysconfdir}/%{name}
 %{__mkdir} -p %{buildroot}%{_sysconfdir}/httpd/conf.d
 %{__mkdir} -p %{buildroot}%{_sysconfdir}/cron.daily
+%{__mkdir} -p %{buildroot}%{_sysconfdir}/php.d
 %{__mkdir} -p %{buildroot}%{_localstatedir}/lib/%{name}/files
 %{__mkdir} -p %{buildroot}%{_localstatedir}/lib/%{name}/tmp
 %{__mkdir} -p %{buildroot}%{_localstatedir}/log/%{name}
@@ -53,6 +54,7 @@ rm -rf %{buildroot}
 %{__cp} -p %{SOURCE1} %{buildroot}%{_sysconfdir}/%{name}/config.php
 %{__cp} -p %{SOURCE2} %{buildroot}%{_sysconfdir}/httpd/conf.d/%{name}.conf
 %{__cp} -p %{SOURCE3} %{buildroot}%{_sysconfdir}/cron.daily/%{name}
+%{__cp} -p ./config/filesender-php.ini %{buildroot}%{_sysconfdir}/php.d/%{name}.ini
 
 %{__rm} -f %{buildroot}%{_datadir}/%{name}/*.txt
 %{__rm} -f %{buildroot}%{_datadir}/%{name}/*.specs
@@ -72,11 +74,12 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc CHANGELOG.txt  INSTALL.txt  LICENCE.txt  README.txt
+%doc CHANGELOG.txt  INSTALL.txt  LICENCE.txt  README.txt NEW_DB.txt
 %{_datadir}/%{name}/
 %dir %{_sysconfdir}/%{name}/
 %config(noreplace) %attr(0640,root,apache) %{_sysconfdir}/%{name}/config.php
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.conf
+%config(noreplace) %{_sysconfdir}/php.d/%{name}.ini
 %config(noreplace) %attr(0755,root,root) %{_sysconfdir}/cron.daily/%{name}
 %dir %{_localstatedir}/lib/%{name}/
 %dir %attr(0750,apache,apache) %{_localstatedir}/lib/%{name}/tmp
@@ -85,5 +88,11 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Mon Jan 31 2011 FileSender Development <filesender-dev@filesender.org> %{Version}-1
+* %(date '+%a %b %d %Y') FileSender Development <filesender-dev@filesender.org> %{version}-1
+- Version %{version} development build
+
+* Wed May 11 2011 FileSender Development <filesender-dev@filesender.org> 1.0.1-1
+- Release 1.0.1
+
+* Mon Jan 31 2011 FileSender Development <filesender-dev@filesender.org> 1.0-1
 - Release 1.0
