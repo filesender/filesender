@@ -542,11 +542,11 @@ if ( hasProductInstall && !hasRequestedVersion ) {
     <tr>
     <td></td>
     <td>
-    <input type="hidden" id="filevoucheruid" value="<?php echo $voucherUID; ?>"/>
+    <input type="hidden" id="filevoucheruid" name="filevoucheruid" value="<?php echo $voucherUID; ?>"/>
     <input type="hidden" name="vid" id="vid" value="<?php echo $voucherUID; ?>"/>
     <input type="hidden" name="total" id="total" value=""/>
     <input type="hidden" name="n" id="n" value=""/>
-    <input type="hidden" id="filestatus" value="<?php echo $filestatus; ?>"/>
+    <input type="hidden" id="filestatus" name="filestatus" value="<?php echo $filestatus; ?>"/>
     <input type="hidden" name="loadtype" id="loadtype" value="standard"/>
     <div class="row">
     <div id="fileInfo">
