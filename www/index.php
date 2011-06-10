@@ -131,6 +131,9 @@ require_once('../pages/upload.php');
 { 
 // allow download of voucher
 require_once('../pages/download.php');
+} else if($voucherData[0]["filestatus"] == "Closed")
+{
+require_once('../pages/vouchercancelled.php');
 }
 } else if($s == "upload") 
 {
