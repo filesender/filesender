@@ -50,14 +50,16 @@ $filedata = $filedata[0];
  <div id="box">
 <?php echo '<div id="pageheading">'._DOWNLOAD.'</div>'; ?> 
   <div id="tablediv">
-  <p>To:<?php echo $filedata["fileto"];?></p>
-  <p>From:<?php echo $filedata["filefrom"];?></p>
-  <p>Subject:<?php echo $filedata["filesubject"];?></p>
-  <p>Message:<?php echo $filedata["filemessage"];?></p>
-  <p>Filename:<?php echo $filedata["fileoriginalname"];?></p>
-  <p>File Size:<?php echo formatBytes($filedata["filesize"]);?></p>
-  <p>Expiry Date:<?php echo $filedata["fileexpirydate"];?></p>
-  <p><a href="download.php?vid=<?php echo $filedata["filevoucheruid"];?>" target="_blank">Download Link   </a></p>
+  <table>
+  <tr><td>To:</td><td><?php echo $filedata["fileto"];?></td></tr>
+  <tr><td>From:</td><td><?php echo $filedata["filefrom"];?></td></tr>
+  <tr><td>Subject:</td><td><?php echo $filedata["filesubject"];?></td></tr>
+  <tr><td>Message:</td><td><?php echo $filedata["filemessage"];?></td></tr>
+  <tr><td>Filename:</td><td><?php echo $filedata["fileoriginalname"];?></td></tr>
+  <tr><td>File Size:</td><td><?php echo formatBytes($filedata["filesize"]);?></td></tr>
+  <tr><td>Expiry Date:</td><td><?php echo date("d-M-Y",strtotime($filedata["fileexpirydate"]));?></td></tr>
+  </table>
+  <p> <div id="box"><a href="download.php?vid=<?php echo $filedata["filevoucheruid"];?>" target="_blank">Start Download </a></div></p>
   <p>&nbsp;</p>
   </div>
 </div>
