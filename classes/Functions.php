@@ -757,12 +757,10 @@ public function insertVoucher($to,$expiry){
                 filereceiversname,
                 filevouchertype,
                 fileuid,
-                fileauthuseruid,
-                fileauthuseremail,
                 filecreateddate
 
             ) VALUES
-            ( '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')",
+            ( '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')",
 
             date($config['postgresdateformat'], strtotime($dataitem['fileexpirydate'])),
             $dataitem['fileto'],
@@ -783,8 +781,6 @@ public function insertVoucher($to,$expiry){
 				isset($dataitem['filereceiversname']) ? $dataitem['filereceiversname'] : "NULL",
 				isset($dataitem['filevouchertype']) ? $dataitem['filevouchertype'] : "NULL",
                 ensureSaneFileUid($dataitem['fileuid']),
-                $dataitem['fileauthuseruid'],
-                $dataitem["fileauthuseremail"],
                 date($config['postgresdateformat'], time())
             );
 		} catch(DBALException $e) {
