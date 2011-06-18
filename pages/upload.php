@@ -339,7 +339,7 @@ $("#fileInfo").show();
 obj('n').value= name;
 obj('total').value = size;
 obj('fileName').value= name;
-obj('fileSize').value = size;
+obj('fileSize').value = bytesdisplay(size);
 getFlexApp('filesenderup').returnMsg("upload")
 }// else {
 //
