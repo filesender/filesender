@@ -111,13 +111,16 @@ $s = "logon";
 	if($authsaml->isAuth() ) {echo '<li><a href="index.php?s=files">'._MY_FILES.'</a></li>'; }
 	echo '<li><a href="index.php?s=help">Help</a></li>';
 	echo '<li><a href="index.php?s=about">About</a></li>';
-	if(!$authsaml->isAuth() ) { echo '<li><a href="'.$authsaml->logonURL().'index.php">'._LOGON.'</a></li>';}
+	if(!$authsaml->isAuth() ) { echo '<li><a href="'.$authsaml->logonURL().'">'._LOGON.'</a></li>';}
    	if($authsaml->isAuth() ) { echo '<li><a href="'.$authsaml->logoffURL().'">'._LOG_OFF.'</a></li>'; }
    // end menu
    ?>
     </ul>
   </div>
   <div id="content">
+  <?php 
+// $attributes = $authsaml->sAuth();
+ // if (isset($attributes["eduPersonTargetedID"])) {echo $attributes["eduPersonTargetedID"];} ?>
     <?php 
 if(	$authvoucher->aVoucher())
 {
