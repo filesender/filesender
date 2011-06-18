@@ -78,7 +78,7 @@ var filesize = 0;
 		
 	  	document.getElementById('fileInfo').style.display = 'block';
         document.getElementById('fileName').innerHTML = 'Name: ' + file.name;
-        document.getElementById('fileSize').innerHTML = 'Size: ' + fileSize;
+        document.getElementById('fileSize').innerHTML = 'Size: ' + readablizebytes(fileSize);
         document.getElementById('fileType').innerHTML = 'Type: ' + file.type;
 	   	validateForm();
 	}
@@ -244,4 +244,17 @@ function processReqChange(){
         clearInterval(intervalTimer);
         erorDialog("The upload has been canceled by the user or the browser dropped the connection.");  
       }  
+	  
+	  function readablizebytes(bytes)
+	  {
+		   	if (bytes > 1024*1024*1024)
+			bytesdisplay = (Math.round(bytes * 100/(1024*1024*1024))/100).toString() + 'GB';
+		 else if (bytes > 1024*1024)
+			bytesdisplay = (Math.round(bytes * 100/(1024*1024))/100).toString() + 'MB';
+		else if (bytes > 1024)
+			bytesdisplay = (Math.round(bytes * 100/1024)/100).toString() + 'KB';
+		else
+			bytesdisplay = (Math.round(bytes * 100)/100).toString() + 'Bytes';
+		return bytesdisplay;
+	  }
 	  
