@@ -46,7 +46,6 @@ $filedata = $filedata[0];
 }
 
 ?>
-
  <div id="box">
 <?php echo '<div id="pageheading">'._DOWNLOAD.'</div>'; ?> 
   <div id="tablediv">
@@ -59,7 +58,8 @@ $filedata = $filedata[0];
   <tr><td>File Size:</td><td><?php echo formatBytes($filedata["filesize"]);?></td></tr>
   <tr><td>Expiry Date:</td><td><?php echo date("d-M-Y",strtotime($filedata["fileexpirydate"]));?></td></tr>
   </table>
-  <p> <div id="box"><a href="download.php?vid=<?php echo $filedata["filevoucheruid"];?>" target="_blank">Start Download </a></div></p>
+    </div>
+  <p><div id="bigbtn"><a href="download.php?vid=<?php echo $filedata["filevoucheruid"];?>" target="_blank">Start Download</a></div></p>
   <p>&nbsp;</p>
-  </div>
+
 </div>
