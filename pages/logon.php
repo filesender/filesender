@@ -32,13 +32,13 @@
 
 /* ---------------------------------
  * Logon Page
- * ---------------------------------
+ * ---------------------------------	
  * 
  */
  ?>
-  <div id="box">
+ <div id="box">
 <?php echo '<div id="pageheading">'._LOGON.'</div>'; ?> 
 <?php echo $config["site_splashtext"]; ?> 
-<p align="center"><a href="<?php echo $authsaml->logonURL();?>index.php">Click Here to Logon</a></p>
+<p><div id="bigbtn" align="center"><a href="<?php echo $authsaml->logonURL();?>">Click Here to Logon</a></div></p>
 </div>
 
