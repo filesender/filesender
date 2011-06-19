@@ -428,7 +428,7 @@ class Functions {
 
         $vid = $dataitem['filevoucheruid'];
 		try {
-			$result = $this->db->query("SELECT * FROM files where filevoucherid = '%s'", $vid);	
+			$result = $this->db->query("SELECT * FROM files where filevoucheruid = '%s'", $vid);	
 		} catch (DBALException $e) {
 			$this->saveLog->saveLog("","Error",$e->getMessage()); return FALSE;	
 		}
