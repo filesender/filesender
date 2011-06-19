@@ -106,20 +106,24 @@ class DB_Input_Checks {
  */
 
 function ip2long6($ipv6) { 
-    $ip_n = inet_pton($ipv6); 
-    $bits = 15; // 16 x 8 bit = 128bit 
+    $ipv6long="";
+    if (strpos($ipv6, ':') !== FALSE) {
+       $ip_n = inet_pton($ipv6); 
+       $bits = 15; // 16 x 8 bit = 128bit 
 
-    while ($bits >= 0) { 
-        $bin = sprintf("%08b",(ord($ip_n[$bits]))); 
-        $ipv6long = $bin.$ipv6long; 
-        $bits--; 
-    } 
-
-    return gmp_strval(gmp_init($ipv6long,2),10); 
+       while ($bits >= 0) { 
+           $bin = sprintf("%08b",(ord($ip_n[$bits]))); 
+           $ipv6long = $bin.$ipv6long; 
+           $bits--; 
+       } 
+       return gmp_strval(gmp_init($ipv6long,2),10); 
+    } else {
+       return FALSE ;
+    }
 } 
 
 function long2ip6($ipv6long) { 
-
+    $ipv6="";
     $bin = gmp_strval(gmp_init($ipv6long,10),2); 
     if (strlen($bin) < 128) { 
         $pad = 128 - strlen($bin); 
