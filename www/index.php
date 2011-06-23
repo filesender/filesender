@@ -146,6 +146,10 @@ require_once('../pages/download.php');
 {
 require_once('../pages/vouchercancelled.php');
 }
+ else if($voucherData[0]["filestatus"] == "Voucher Cancelled")
+{
+require_once('../pages/vouchercancelled.php');
+}
 } else if($s == "upload") 
 {
 require_once('../pages/upload.php');
