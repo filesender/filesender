@@ -39,6 +39,6 @@
  <div id="box">
 <?php echo '<div id="pageheading">'._LOGON.'</div>'; ?> 
 <?php echo $config["site_splashtext"]; ?> 
-<p><div id="bigbtn" align="center"><a href="<?php echo $authsaml->logonURL();?>">Click Here to Logon</a></div></p>
+<p><div id="bigbtn" align="center"><a href="<?php echo $authsaml->logonURL();?>"><?php echo _LOGON ?></a></div></p>
 </div>
 
