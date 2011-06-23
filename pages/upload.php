@@ -414,7 +414,7 @@ function fileMsg(msg)
 }
     </script>
 
-<div id="box"> <?php echo '<div id="pageheading">'._NEW_UPLOAD.'</div>'; ?>
+<div id="box"> <?php echo '<div id="pageheading">'._UPLOAD.'</div>'; ?>
   <form id="form1" enctype="multipart/form-data" method="POST" action="fs_uploadit5.php">
     <table width="500" border="0">
       <tr>

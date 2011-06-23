@@ -61,7 +61,6 @@ date_default_timezone_set($config['Default_TimeZone']);
 $useremail = "";
 if($authsaml->isAuth() ) { 
 $userdata = $authsaml->sAuth();
-
 $useremail = $userdata["email"];
 } 
 
@@ -105,10 +104,13 @@ $s = "logon";
     <ul>
       <?php 
   // create menu
+  // disable all buttons if this is a voucher, even if the user is logged on
+  if (!$authvoucher->aVoucher()){
 	if($authsaml->authIsAdmin() ) { echo '<li><a href="index.php?s=admin">'._ADMIN.'</a></li>'; }
 	if($authsaml->isAuth() ) { echo '<li><a href="index.php?s=upload">'._NEW_UPLOAD.'</a></li>'; }
 	if($authsaml->isAuth() ) { echo '<li><a href="index.php?s=vouchers">'._VOUCHERS.'</a></li>'; }
 	if($authsaml->isAuth() ) {echo '<li><a href="index.php?s=files">'._MY_FILES.'</a></li>'; }
+  }
 	echo '<li><a href="index.php?s=help">Help</a></li>';
 	echo '<li><a href="index.php?s=about">About</a></li>';
 	if(!$authsaml->isAuth() ) { echo '<li><a href="'.$authsaml->logonURL().'">'._LOGON.'</a></li>';}
@@ -141,17 +143,17 @@ require_once('../pages/vouchercancelled.php');
 } else if($s == "upload") 
 {
 require_once('../pages/upload.php');
-} else if($s == "vouchers") 
+} else if($s == "vouchers" && !$authvoucher->aVoucher()) 
 {
 require_once('../pages/vouchers.php');
-} else if($s == "files") 
+} else if($s == "files" && !$authvoucher->aVoucher()) 
 {
 require_once('../pages/files.php');
 } else if($s == "logon") 
 {
 require_once('../pages/logon.php');
 }	
-else if($s == "admin") 
+else if($s == "admin" && !$authvoucher->aVoucher()) 
 {
 require_once('../pages/admin.php');
 }	
