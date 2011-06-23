@@ -69,7 +69,7 @@ if(isset($_REQUEST["s"]))
 {
 $s = $_REQUEST["s"];
 }
-if(!$authvoucher->aVoucher() && !$authsaml->isAuth() && $s != "help" && $s != "about" )
+if(!$authvoucher->aVoucher() && !$authsaml->isAuth() && $s != "help" && $s != "about" && $s != "complete" )
 {
 $s = "logon";
 }
