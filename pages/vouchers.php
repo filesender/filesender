@@ -43,8 +43,9 @@
 		$('#fileto_msg').hide();
 		$('#expiry_msg').hide();
 				
-		$( "#datepicker" ).datepicker({ minDate: 1, maxDate: "+"+maximumDate+"D",altField: "#altdate", altFormat: "d-m-yy",currentText:maximumDate });
-		$( "#datepicker" ).datepicker( "option", "dateFormat", "d/m/yy" );
+		$("#datepicker" ).datepicker({ minDate: 1, maxDate: "+"+maximumDate+"D",altField: "#altdate", altFormat: "d-m-yy",currentText:maximumDate });
+		$("#datepicker" ).datepicker( "option", "dateFormat", "d/m/yy" );
+		$("#datepicker").datepicker('setDate', new Date()+maximumDate);
 		$("#dialog-delete").dialog({ autoOpen: false, height: 140, modal: true,
 		
 		buttons: {

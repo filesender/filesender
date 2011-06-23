@@ -124,6 +124,7 @@
 		$(function() {
 			$("#datepicker" ).datepicker({ minDate: 1, maxDate: "+"+maximumDate+"D",altField: "#fileexpirydate", altFormat: "d-m-yy" });
 			$("#datepicker" ).datepicker( "option", "dateFormat", "d/m/yy" );
+			$("#datepicker").datepicker('setDate', new Date()+maximumDate);
 		});	
 
 		//Check if HTML5 is enable and use HTML uploader
