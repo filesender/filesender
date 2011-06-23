@@ -575,7 +575,7 @@ if ( hasProductInstall && !hasRequestedVersion ) {
        <tr>
         <td class="formfieldheading"></td>
         <td><input name="aup" type="checkbox" value="true" id="aup" onchange="validate_aup()" />
-          <?php echo "I accept the terms and conditions of this service"; ?>[<a href="#" onclick="toggleTOG()">+/-</a>]
+          <?php echo "I accept the terms and conditions of this service"; ?> [<a href="#" onclick="toggleTOG()">Show/Hide</a>]
           <div id="aup_msg" class="validation_msg">Please agree to the terms</div>
           <div id="tog" style="display:none"> <?php echo $config["AuP_terms"]; ?> </div>
           </td>
