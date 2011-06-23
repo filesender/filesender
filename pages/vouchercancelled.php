@@ -37,6 +37,6 @@
  */
  ?>
   <div id="box">
- <?php echo '<div id="pageheading">'._VOUCHERS.'</div>'; ?> 
-<p>This voucher is no longer available. </p>
+ <?php echo '<div id="pageheading"></div>'; ?> 
+<p>This file/voucher is no longer available.</p>
 </div>
