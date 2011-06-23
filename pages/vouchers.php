@@ -41,7 +41,8 @@
 	var selectedVoucher = "";
 	$(function() {
 		$('#fileto_msg').hide();
-		
+		$('#expiry_msg').hide();
+				
 		$( "#datepicker" ).datepicker({ minDate: 1, maxDate: "+"+maximumDate+"D",altField: "#altdate", altFormat: "d-m-yy",currentText:maximumDate });
 		$( "#datepicker" ).datepicker( "option", "dateFormat", "d/m/yy" );
 		$("#dialog-delete").dialog({ autoOpen: false, height: 140, modal: true,
@@ -61,11 +62,23 @@
 function validateForm()
 	{
 		$('#fileto_msg').hide();
-		if(!validate_fileto()){
-		return false;
-		}
+		if(!validate_fileto()){return false;}
+		if(!validate_expiry() ){return false;}
 		return true;
 	}
+	// Validate EXPIRY
+function validate_expiry()
+{
+//	alert($('#fileexpirydate').datepicker("getDate"));
+	if($('#datepicker').datepicker("getDate") == null)
+	{
+		$('#expiry_msg').show();
+		return false;
+	}
+	$('#expiry_msg').hide();
+	return true;
+}
+
 // Validate FILETO
 function validate_fileto()
 {
@@ -146,7 +159,7 @@ $json_o=json_decode($filedata,true);
       </tr>
       <tr>
         <td><?php echo _EXPIRY; ?></td>
-        <td><input id="datepicker"></input></td>
+        <td><input id="datepicker" onchange="validate_expiry()"></input> <div id="expiry_msg" class="validation_msg">Invalid expiry Date</div></td>
       </tr>
       <tr>
         <td><input type="hidden" id="altdate" name="altdate" value="<?php echo date("d-m-Y",strtotime("+".$config['default_daysvalid']." day"));?>" /></td>
