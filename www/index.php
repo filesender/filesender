@@ -160,7 +160,9 @@ require_once('../pages/admin.php');
 else if($s == "complete") 
 {
 require_once('../pages/uploadcomplete.php');
-} else if ($s == "" ){
+} else if ($s == "" && $authsaml->isAuth()){
+require_once('../pages/upload.php');	
+}else if ($s == "" ){
 require_once('../pages/home.php');	
 }else if ($s == "about" ){
 require_once('../pages/about.php');	
