@@ -104,6 +104,12 @@
 		$('#expiry_msg').hide();
 		$('#aup_msg').hide();
 		$('#file_msg').hide();
+		
+		// hide aup if not required
+		if(aup == '0') // check if AUP is required
+		{
+			$('#aup').hide();
+		}
 		//$('#uploadbutton').hide();
 		// default error message dialogue
 		$("#dialog-default").dialog({ autoOpen: false, height: 140, modal: true,title: "Error",		
@@ -184,7 +190,7 @@
 	
 	if(!validate_fileto() ){validate = false;};		// validate emails
 	if(!validate_file() ){validate = false;};		// check if file selected
-	if(aup == 'true') // check if AUP is required
+	if(aup == '1') // check if AUP is required
 	{
 	if(!validate_aup() ){validate = false;};		// check AUP is selected
 	}
@@ -204,7 +210,7 @@
 	var validate = true;
 	
 	if(!validate_fileto() ){validate = false;};		// validate emails
-	if(aup == 'true') // check if AUP is required
+	if(aup == '1') // check if AUP is required
 	{
 		if(!validate_aup() ){validate = false;};		// check AUP is selected
 	}
