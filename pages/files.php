@@ -77,6 +77,7 @@ $json_o=json_decode($filedata,true);
 <tr class="headerrow">
   <td>&nbsp;</td>
   <td><strong><?php echo _TO; ?></strong></td>
+    <td><strong><?php echo _TO; ?></strong></td>
 <td><strong><?php echo _FILE_NAME; ?></strong></td>
 <td><strong><?php echo _SIZE; ?></strong></td>
 <td><strong><?php echo _SUBJECT; ?></strong></td>
@@ -88,7 +89,7 @@ $json_o=json_decode($filedata,true);
 if(sizeof($json_o) > 0)
 {
 foreach($json_o as $item) {
-   echo "<tr><td><a href='index.php?s=files&a=resend&id=" .$item['filevoucheruid'] . "'><img src='images/email_go.png' title='Re-send Email'></a></td><td>" .$item['fileto'] . "</td><td><a href='download.php?vid=". $item["filevoucheruid"]."' target='_blank'>" .$item['fileoriginalname']. "</a></td><td>" .formatBytes($item['filesize']). "</td><td>".$item['filesubject']. "</td><td>" .date("d/m/Y",strtotime($item['filecreateddate'])) . "</td><td>" .date("d/m/Y",strtotime($item['fileexpirydate'])) . "</td><td><a href='#' onclick='confirmdelete(".'"' .$item['filevoucheruid'] . '"'. ")'><img src='images/shape_square_delete.png' title='Delete'></a></td></tr>"; //etc
+   echo "<tr><td><a href='index.php?s=files&a=resend&id=" .$item['filevoucheruid'] . "'><img src='images/email_go.png' title='Re-send Email'></a></td><td>" .$item['fileto'] . "</td><td>" .$item['filefrom'] . "</td><td><a href='download.php?vid=". $item["filevoucheruid"]."' target='_blank'>" .$item['fileoriginalname']. "</a></td><td>" .formatBytes($item['filesize']). "</td><td>".$item['filesubject']. "</td><td>" .date("d/m/Y",strtotime($item['filecreateddate'])) . "</td><td>" .date("d/m/Y",strtotime($item['fileexpirydate'])) . "</td><td><a href='#' onclick='confirmdelete(".'"' .$item['filevoucheruid'] . '"'. ")'><img src='images/shape_square_delete.png' title='Delete'></a></td></tr>"; //etc
 }
 } else {
 	echo "<tr><td colspan='7'>There are currently no files available</td></tr>";

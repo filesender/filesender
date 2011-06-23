@@ -78,6 +78,8 @@ $tempFilename = "";
 	// add voucher if this is a voucher upload
 	if ($authvoucher->aVoucher()) {
 		$tempFilename .= $_POST['vid'];
+		$tempData = $functions->getVoucherData($_POST["filevoucheruid"]);
+		$filedata["fileauthuseruid"] = $tempData[0]["fileauthuseruid"];	
 	}
 	// else add SAML eduPersonTargetedID
 	else if( $authsaml->isAuth()) {
