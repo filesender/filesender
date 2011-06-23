@@ -121,9 +121,15 @@ $s = "logon";
   </div>
   <div id="content">
   <?php 
-// $attributes = $authsaml->sAuth();
- // if (isset($attributes["eduPersonTargetedID"])) {echo $attributes["eduPersonTargetedID"];} ?>
-    <?php 
+// display user details if authenticated and not a voucher
+if(	$authvoucher->aVoucher()) { 
+echo "Welcome Guest";
+} else if ($authsaml->isAuth() ){
+$attributes = $authsaml->sAuth();
+echo "Welcome ".$attributes["cn"];
+}
+?>
+<?php
 if(	$authvoucher->aVoucher())
 {
 // check if it is Available or a Voucher for Uploading a New File
