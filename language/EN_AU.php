@@ -88,7 +88,7 @@
 			
 			// vouchers
 			DEFINE("_SEND_NEW_VOUCHER","Send a new voucher");
-			DEFINE("_EMAIL_SEPARATOR_MSG","(Multiple emails seperated by , or ;)");
+			DEFINE("_EMAIL_SEPARATOR_MSG","(Multiple emails separated by , or ;)");
 			
 		    DEFINE("_Active_Vouchers","Active Vouchers");
             DEFINE("_Are_You_Sure_Resend","Are you sure you want to re-send this Email");
