@@ -80,7 +80,7 @@ var filesize = 0;
         document.getElementById('fileName').innerHTML = 'Name: ' + file.name;
         document.getElementById('fileSize').innerHTML = 'Size: ' + readablizebytes(fileSize);
         document.getElementById('fileType').innerHTML = 'Type: ' + file.type;
-	   	validateForm();
+	   	validate_file();
 	}
 
 function startupload()

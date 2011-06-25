@@ -89,12 +89,11 @@ td {
 }
 .validation_msg {
 	font-size: 10px;
-	color: #F00;
+	color: #060;
 }
 .formfieldheading {
-	font-size: 10px;
+	font-size: 11px;
 	width: 250px;
-	font-weight: bold;
 }
 .formfield {
 	font-size: 10px;
@@ -270,3 +269,8 @@ a:link, a:visited {
 	color: #000;
 	background-color: #c0c0c0;
 }
+.mandatory{
+	color: #000;
+	font-weight: bold;
+}
+
