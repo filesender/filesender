@@ -421,6 +421,11 @@ function fileMsg(msg)
 	$("#file_msg").html(msg);
 	$('#file_msg').show();
 }
+
+function cancel()
+{
+	window.location.href=window.location.href;
+}
     </script>
 
 <div id="box"> <?php echo '<div id="pageheading">'._UPLOAD.'</div>'; ?>
@@ -434,7 +439,7 @@ function fileMsg(msg)
       <tr>
         <td width="200" class="formfieldheading mandatory"><?php echo _TO; ?>:</td>
         <td valign="middle"><input name="fileto" type="text" id="fileto" value="" size="40" onchange="validate_fileto()" />
-        <div id="fileto_msg" style="display: none" class="validation_msg">Invalid or missing email</div></td>
+          <div id="fileto_msg" style="display: none" class="validation_msg">Invalid or missing email</div></td>
         <td valign="middle">&nbsp;</td>
       </tr>
       <tr>
@@ -454,17 +459,17 @@ function fileMsg(msg)
         <td>&nbsp;</td>
       </tr>
       <tr>
-        <td class="formfieldheading mandatory"><?php echo _EXPIRY; ?>: 
-        <input type="hidden" id="fileexpirydate" name="fileexpirydate" value="<?php echo date("d-m-Y",strtotime("+".$config['default_daysvalid']." day"));?>"/></td>
-        <td><input id="datepicker" onchange="validate_expiry()"></input>
-        <div id="expiry_msg" class="validation_msg" style="display: none">Invalid expiry Date</div></td>
+        <td class="formfieldheading mandatory"><?php echo _EXPIRY; ?>:
+          <input type="hidden" id="fileexpirydate" name="fileexpirydate" value="<?php echo date("d-m-Y",strtotime("+".$config['default_daysvalid']." day"));?>"/></td>
+        <td><input id="datepicker" name="datepicker" onchange="validate_expiry()">
+          </input>
+          <div id="expiry_msg" class="validation_msg" style="display: none">Invalid expiry Date</div></td>
         <td>&nbsp;</td>
       </tr>
-       <tr>
+      <tr>
         <td class="formfieldheading mandatory"><?php echo _SELECT_FILE; ?></td>
-        <td>
-        <div id="uploadstandard"> 
-      <script language="JavaScript" type="text/javascript">
+        <td><div id="uploadstandard"> 
+            <script language="JavaScript" type="text/javascript">
 <!--
 // Version check for the Flash Player that has the ability to start Player Product Install (6.0r65)
 var hasProductInstall = DetectFlashVer(6, 0, 65);
@@ -519,14 +524,14 @@ if ( hasProductInstall && !hasRequestedVersion ) {
   }
 // -->
 </script>
-      <noscript>
-      <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" width="500" height="50"
+            <noscript>
+            <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" width="500" height="50"
 			codebase="http://fpdownload.macromedia.com/get/flashplayer/current/swflash.cab">
-        <param name="movie" value="swf/filesenderup.swf" />
-        <param name="quality" value="high" />
-        <param name="bgcolor" value="#ffffff" />
-        <param name="allowScriptAccess" value="sameDomain" />
-        <embed src="swf/filesenderup.swf" quality="high" bgcolor="#869ca7"
+              <param name="movie" value="swf/filesenderup.swf" />
+              <param name="quality" value="high" />
+              <param name="bgcolor" value="#ffffff" />
+              <param name="allowScriptAccess" value="sameDomain" />
+              <embed src="swf/filesenderup.swf" quality="high" bgcolor="#869ca7"
 				width="500" height="50" name="filesenderup" align="middle"
 				play="true"
 				loop="false"
@@ -534,58 +539,54 @@ if ( hasProductInstall && !hasRequestedVersion ) {
 				allowScriptAccess="sameDomain"
 				type="application/x-shockwave-flash"
 				pluginspage="http://www.adobe.com/go/getflashplayer">
-        </embed>
-      </object>
-      </noscript>
-      <div id="uploadstandardspinner" style="padding-top:10px"><img src="images/ajax-loader-sm.gif" border=0 align="left" style="padding-right:6px"/><?php echo _UPLOADING_WAIT; ?></div>
-      <BR />
-    </div>
-        <div id="uploadhtml5">
-      <input type="file" name="fileToUpload" id="fileToUpload" onChange="fileSelected();"/>
-      <input type="button" onClick="validate()" value="Upload" id="uploadbutton" />
-      <div id="file_msg" class="validation_msg" style="display: none">Invalid File</div>
-        </div>
-    </td>
+              </embed>
+            </object>
+            </noscript>
+            <div id="uploadstandardspinner" style="padding-top:10px"><img src="images/ajax-loader-sm.gif" border=0 align="left" style="padding-right:6px"/><?php echo _UPLOADING_WAIT; ?></div>
+            <BR />
+          </div>
+          <div id="uploadhtml5">
+            <input type="file" name="fileToUpload" id="fileToUpload" onChange="fileSelected();"/>
+            <input type="button" onClick="validate()" value="Upload" id="uploadbutton" name="uploadbutton"/>
+            <input type="button" onClick="cancel()" value="Cancel" id="cancelbutton" name="cancelbutton" style="display:none"/>
+            <div id="file_msg" class="validation_msg" style="display: none">Invalid File</div>
+          </div></td>
         <td>&nbsp;</td>
       </tr>
-    <tr>
-    <td></td>
-    <td>
-    <input type="hidden" id="filevoucheruid" name="filevoucheruid" value="<?php echo $voucherUID; ?>"/>
-    <input type="hidden" name="vid" id="vid" value="<?php echo $voucherUID; ?>"/>
-    <input type="hidden" name="total" id="total" value=""/>
-    <input type="hidden" name="n" id="n" value=""/>
-    <input type="hidden" id="filestatus" name="filestatus" value="<?php echo $filestatus; ?>"/>
-    <input type="hidden" name="loadtype" id="loadtype" value="standard"/>
-    <div class="row">
-    <div id="fileInfo">
-      <div id="fileName"></div>
-      <div id="fileSize"></div>
-      <div id="fileType"></div>
-    </div>
-    <div id="progress_container">
-      <div id="progress_bar">
-        <div id="progress_completed"></div>
-        <br />
-      </div>
-    </div>
-    <div id="transferSpeedInfo"></div>
-    <div id="timeRemainingInfo"></div>
-    </td>
-    <?php if ($config["AuP"]) {?>
-    </tr>
-       <tr>
+      <tr>
+        <td></td>
+        <td><input type="hidden" id="filevoucheruid" name="filevoucheruid" value="<?php echo $voucherUID; ?>"/>
+          <input type="hidden" name="vid" id="vid" value="<?php echo $voucherUID; ?>"/>
+          <input type="hidden" name="total" id="total" value=""/>
+          <input type="hidden" name="n" id="n" value=""/>
+          <input type="hidden" id="filestatus" name="filestatus" value="<?php echo $filestatus; ?>"/>
+          <input type="hidden" name="loadtype" id="loadtype" value="standard"/>
+          <div class="row">
+          <div id="fileInfo">
+            <div id="fileName"></div>
+            <div id="fileSize"></div>
+            <div id="fileType"></div>
+          </div>
+          <div id="progress_container">
+            <div id="progress_bar">
+              <div id="progress_completed"></div>
+              <br />
+            </div>
+          </div>
+          <div id="transferSpeedInfo"></div>
+          <div id="timeRemainingInfo"></div></td>
+        <?php if ($config["AuP"]) {?>
+      </tr>
+      <tr>
         <td class="formfieldheading"></td>
         <td><input name="aup" type="checkbox" value="true" id="aup" onchange="validate_aup()" />
           <?php echo "I accept the terms and conditions of this service"; ?> [<a href="#" onclick="toggleTOG()">Show/Hide</a>]
           <div id="aup_msg" class="validation_msg" style="display: none">Please agree to the terms</div>
-          <div id="tog" style="display:none"> <?php echo $config["AuP_terms"]; ?> </div>
-          </td>
+          <div id="tog" style="display:none"> <?php echo $config["AuP_terms"]; ?> </div></td>
         <td>&nbsp;</td>
       </tr>
       <?php } ?>
     </table>
   </form>
-  </div>
-<div id="dialog-default" title="">  
 </div>
+<div id="dialog-default" title=""> </div>

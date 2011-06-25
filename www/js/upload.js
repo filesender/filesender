@@ -85,6 +85,24 @@ var filesize = 0;
 
 function startupload()
 {
+		// lock all buttons and text boxes before uploading
+		$("#fileto").attr("disabled","disabled");// lock To box
+		$("#filesubject").attr("disabled","disabled");// lock subject
+		$("#filemessage").attr("disabled","disabled");// lock Message
+		$("#datepicker").attr("disabled","disabled");// Lock Expiry
+		$("#fileToUpload").attr("disabled","disabled");// lock Browse
+		$("#aup").attr("disabled","disabled");// lock accept btn
+		
+		// hide upload/show cancel
+		$("#uploadbutton").hide();
+		$("#cancelbutton").show();
+		
+		//Lock New upload
+		// lock Voucher
+		// lock My Files
+		// lock help
+		// lock about
+		// lock log off
 		
 		// hide upload button
 		var progressBar = obj('progress_bar');
@@ -100,7 +118,6 @@ function startupload()
 		$.ajax({
   		url: uploadURI + '?n='+fileName+'&total='+fileSize+'&vid='+vid+'&type=filesize',
   		success: function(data) {
-		//alert("here");
 		currentBytesUpload = parseFloat(data);
 		uploadFile(currentBytesUpload);
   		}
