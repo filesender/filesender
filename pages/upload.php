@@ -223,6 +223,7 @@
 // Validate FILETO
 function validate_fileto()
 {
+	$('#fileto_msg').hide();
 	// remove white spaces 
 	obj('fileto').value = obj('fileto').value.split(' ').join('');
 	var tempemail = obj('fileto').value;
@@ -265,6 +266,7 @@ function validate_aup()
 // Validate FILE (HTML5 only)
 function validate_file()
 {
+	fileMsg("");
 	if(!document.getElementById('fileToUpload').files[0])
 	{
 		fileMsg("Please select a file");
@@ -430,13 +432,13 @@ function fileMsg(msg)
         <td></td>
       </tr>
       <tr>
-        <td width="200" class="formfieldheading"><?php echo _TO; ?>:</td>
-        <td valign="middle"><input name="fileto" type="text" id="fileto" value="" size="40" />
-        <div id="fileto_msg" class="validation_msg">Invalid or missing email</div></td>
+        <td width="200" class="formfieldheading mandatory"><?php echo _TO; ?>:</td>
+        <td valign="middle"><input name="fileto" type="text" id="fileto" value="" size="40" onchange="validate_fileto()" />
+        <div id="fileto_msg" style="display: none" class="validation_msg">Invalid or missing email</div></td>
         <td valign="middle">&nbsp;</td>
       </tr>
       <tr>
-        <td class="formfieldheading"><?php echo _FROM; ?>:</td>
+        <td class="formfieldheading mandatory"><?php echo _FROM; ?>:</td>
         <td><?php echo $senderemail ?>
           <input name="filefrom" type="hidden" id="filefrom" value="<?php echo $senderemail ?>" size="40" /></td>
         <td>&nbsp;</td>
@@ -452,14 +454,14 @@ function fileMsg(msg)
         <td>&nbsp;</td>
       </tr>
       <tr>
-        <td class="formfieldheading"><?php echo _EXPIRY; ?>: 
+        <td class="formfieldheading mandatory"><?php echo _EXPIRY; ?>: 
         <input type="hidden" id="fileexpirydate" name="fileexpirydate" value="<?php echo date("d-m-Y",strtotime("+".$config['default_daysvalid']." day"));?>"/></td>
         <td><input id="datepicker" onchange="validate_expiry()"></input>
-        <div id="expiry_msg" class="validation_msg">Invalid expiry Date</div></td>
+        <div id="expiry_msg" class="validation_msg" style="display: none">Invalid expiry Date</div></td>
         <td>&nbsp;</td>
       </tr>
        <tr>
-        <td class="formfieldheading"><?php echo _SELECT_FILE; ?></td>
+        <td class="formfieldheading mandatory"><?php echo _SELECT_FILE; ?></td>
         <td>
         <div id="uploadstandard"> 
       <script language="JavaScript" type="text/javascript">
@@ -541,7 +543,7 @@ if ( hasProductInstall && !hasRequestedVersion ) {
         <div id="uploadhtml5">
       <input type="file" name="fileToUpload" id="fileToUpload" onChange="fileSelected();"/>
       <input type="button" onClick="validate()" value="Upload" id="uploadbutton" />
-      <div id="file_msg" class="validation_msg">Invalid Fil<span id="file_msg">e</span></div>
+      <div id="file_msg" class="validation_msg" style="display: none">Invalid File</div>
         </div>
     </td>
         <td>&nbsp;</td>
@@ -576,7 +578,7 @@ if ( hasProductInstall && !hasRequestedVersion ) {
         <td class="formfieldheading"></td>
         <td><input name="aup" type="checkbox" value="true" id="aup" onchange="validate_aup()" />
           <?php echo "I accept the terms and conditions of this service"; ?> [<a href="#" onclick="toggleTOG()">Show/Hide</a>]
-          <div id="aup_msg" class="validation_msg">Please agree to the terms</div>
+          <div id="aup_msg" class="validation_msg" style="display: none">Please agree to the terms</div>
           <div id="tog" style="display:none"> <?php echo $config["AuP_terms"]; ?> </div>
           </td>
         <td>&nbsp;</td>
