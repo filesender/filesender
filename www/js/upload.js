@@ -86,12 +86,12 @@ var filesize = 0;
 function startupload()
 {
 		// lock all buttons and text boxes before uploading
-		$("#fileto").attr("disabled","disabled");// lock To box
-		$("#filesubject").attr("disabled","disabled");// lock subject
-		$("#filemessage").attr("disabled","disabled");// lock Message
-		$("#datepicker").attr("disabled","disabled");// Lock Expiry
-		$("#fileToUpload").attr("disabled","disabled");// lock Browse
-		$("#aup").attr("disabled","disabled");// lock accept btn
+		//$("#fileto").attr("disabled","disabled");// lock To box
+		//$("#filesubject").attr("disabled","disabled");// lock subject
+		//$("#filemessage").attr("disabled","disabled");// lock Message
+		//$("#datepicker").attr("disabled","disabled");// Lock Expiry
+		//$("#fileToUpload").attr("disabled","disabled");// lock Browse
+		//$("#aup").attr("disabled","disabled");// lock accept btn
 		
 		// hide upload/show cancel
 		$("#uploadbutton").hide();
