@@ -1,6 +1,7 @@
 delimiter $$
 
 CREATE DATABASE `filesender` /*!40100 DEFAULT CHARACTER SET latin1 */$$
+ALTER SCHEMA `filesender`  DEFAULT CHARACTER SET utf8 ;
 
 CREATE TABLE `files` (
   `fileto` varchar(250) DEFAULT NULL,
