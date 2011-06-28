@@ -335,7 +335,6 @@ function echeck(str) {
 
 function fileInfo(name,size)
 {
-
 if(size > 2000000000)
 {
 fileMsg("This file is larger than 2Gb. Please use a HTML5 enabled browser to upload larger files.");
@@ -344,11 +343,12 @@ fileMsg("This file is larger than 2Gb. Please use a HTML5 enabled browser to upl
 
 } else if (validateFormFlash())
 {
+
 $("#fileInfo").show();
 obj('n').value= name;
 obj('total').value = size;
 obj('fileName').value= name;
-obj('fileSize').value = bytesdisplay(size);
+obj('fileSize').value = readablizebytes(size);
 getFlexApp('filesenderup').returnMsg("upload")
 }// else {
 //
@@ -563,9 +563,9 @@ if ( hasProductInstall && !hasRequestedVersion ) {
           <input type="hidden" name="loadtype" id="loadtype" value="standard"/>
           <div class="row">
           <div id="fileInfo">
-            <div id="fileName"></div>
-            <div id="fileSize"></div>
-            <div id="fileType"></div>
+            <div id="fileName" name="fileName"></div>
+            <div id="fileSize" name="fileSize"></div>
+            <div id="fileType" name="fileType"></div>
           </div>
           <div id="progress_container">
             <div id="progress_bar">
