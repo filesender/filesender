@@ -87,6 +87,7 @@ $s = "logon";
 <link type="text/css" href="css/smoothness/jquery-ui-1.8.2.custom.css" rel="Stylesheet" />
 <script type="text/javascript" src="js/jquery-1.5.2.min.js" ></script>
 <script type="text/javascript" src="js/jquery-ui-1.8.1.custom.min.js"></script>
+<script type="text/javascript" src="js/index.js"></script>
 <meta name="robots" content="noindex, nofollow" />
 </head>
 <body>
@@ -111,8 +112,8 @@ $s = "logon";
 	if($authsaml->isAuth() ) { echo '<li><a href="index.php?s=vouchers">'._VOUCHERS.'</a></li>'; }
 	if($authsaml->isAuth() ) {echo '<li><a href="index.php?s=files">'._MY_FILES.'</a></li>'; }
   }
-	echo '<li><a href="index.php?s=help">Help</a></li>';
-	echo '<li><a href="index.php?s=about">About</a></li>';
+	echo '<li><a href="#" onclick="openhelp()">Help</a></li>';
+	echo '<li><a href="#" onclick="openabout()">About</a></li>';
 	if(!$authsaml->isAuth() && $s != "logon" ) { echo '<li><a href="'.$authsaml->logonURL().'">'._LOGON.'</a></li>';}
    	if($authsaml->isAuth() ) { echo '<li><a href="'.$authsaml->logoffURL().'">'._LOG_OFF.'</a></li>'; }
    // end menu
@@ -181,6 +182,29 @@ require_once('../pages/help.php');
 }
 ?>
   </div>
+</div>
+<div id="dialog-help" title="Help">
+ <div align="left" style="padding:5px">
+<p>
+If you don't see your institution in the list of Identity Providers (IdPs), or your institutional login fails, please contact your local IT support
+</p>
+<p>
+<strong>Requirements</strong><br>
+A modern, current release of most popular browsers
+</p>
+<p>
+  <strong>Limits</strong><br>
+<strong> Maximum recipient  addresses per email:</strong> <?php echo $config["max_email_recipients"]?> multiple email addresses can be  separated by a comma<br>
+  <strong>Maximum number of files per  upload:</strong> one - to upload several files at once, zip them into a  single archive first<br>
+<strong>Maximum file size per upload, without HTML 5: </strong> <?php echo formatBytes($config["max_flash_upload_size"])?><br>
+  <strong>Maximum file size per upload, with HTML 5: </strong> <?php echo formatBytes($config["max_gears_upload_size"])?><br>
+  <strong>Maximum  file / voucher expiry days: </strong><?php echo $config["default_daysvalid"]?> <br>
+</p>
+<p>For more information please visit <a href="http://www.filesender.org/">www.filesender.org</a></p>
+</div>
+</div>
+<div id="dialog-about" title="About">
+ <div align="left" style="padding:5px"><?php echo htmlentities($config['site_name'])?> is an installation of FileSender (<a rel="nofollow" href="http://www.filesender.org/">www.filesender.org</a>), which is developed to the requirements of the higher education and research community.</div>
 </div>
 <div id="footer">Version 1.5 Beta</div>
 <div id="DoneLoading"></div>

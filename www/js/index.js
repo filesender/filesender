@@ -1,4 +1,4 @@
-<?php
+// JavaScript Document
 
 /*
  * FileSender www.filesender.org
@@ -29,31 +29,33 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-/* ---------------------------------
- * Help Page
- * ---------------------------------
- * 
- */
-?>
-<div id="box">
-<?php
- echo '<div id="pageheading">'._HELP.'</div>'; 
- ?>
-  <ul>
-    <li>If you don't see your institution in the list of Identity Providers (IdPs), or your institutional login fails, please contact your local IT support</li>
-  </ul>
-<h4>Requirements</h4>
-  <ul>
-    <li>A modern, current release of most popular browsers</li>
-  </ul>
-  <h4>Limits</h4>
-  <ul>
-    <li><strong> Maximum recipient  addresses per email:</strong> <?php echo $config["max_email_recipients"]?> multiple email addresses can be  separated by a comma</li>
-    <li><strong>Maximum number of files per  upload:</strong> one - to upload several files at once, zip them into a  single archive first</li>
-    <li><strong>Maximum file size per upload, without HTML 5: </strong> <?php echo formatBytes($config["max_flash_upload_size"])?></li>
-    <li><strong>Maximum file size per upload, with HTML 5: </strong> <?php echo formatBytes($config["max_gears_upload_size"])?></li>
-    <li> <strong>Maximum  file / voucher expiry days: </strong><?php echo $config["default_daysvalid"]?> </li>
-  </ul>
-  <p>For more information please visit <a href="http://www.filesender.org/">www.filesender.org</a></p>
-</div>
+// HTML5 Upload functions
+// when cancelling an upload we need to wait till the chunk is complete before allowing the cancel to happen
+// setting cancell upload to true will trigger the upload to stop before uploading the next chunk
+// JavaScript Document
+$(function() {
+$("#dialog-help").dialog({ autoOpen: false, height: 400,width: 400, modal: true,
+		
+		buttons: {
+				Close: function() {
+					$( this ).dialog( "close" );
+				}
+		}
+		});
+		$("#dialog-about").dialog({ autoOpen: false,  height: 400,width: 400, modal: true,
+		
+		buttons: {
+				Close: function() {
+					$( this ).dialog( "close" );
+				}
+		}
+		});
+	});
+	function openhelp()
+	{
+	$( "#dialog-help" ).dialog( "open" );
+	}
+	function openabout()
+	{
+	$( "#dialog-about" ).dialog( "open" );
+	}
