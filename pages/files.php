@@ -77,7 +77,7 @@ $json_o=json_decode($filedata,true);
 <tr class="headerrow">
   <td>&nbsp;</td>
   <td><strong><?php echo _TO; ?></strong></td>
-    <td><strong><?php echo _TO; ?></strong></td>
+    <td><strong><?php echo _FROM; ?></strong></td>
 <td><strong><?php echo _FILE_NAME; ?></strong></td>
 <td><strong><?php echo _SIZE; ?></strong></td>
 <td><strong><?php echo _SUBJECT; ?></strong></td>
