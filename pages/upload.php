@@ -131,7 +131,7 @@
 		if(window.File && window.FileReader && window.FileList && window.Blob && window.FormData){
 			// use HTML5 upload functions
 			$("#uploadhtml5").show();
-		} else {
+			} else {
 			// use standard upload functions
 			$("#uploadstandard").show();
 		}
@@ -140,14 +140,8 @@
 
 	function toggleTOG()
 	{
-	obj('tog').style.display = (obj('tog').style.display == "block") ? "none" : "block";	
+	$('#tog').toggle();
 	}
-
-	//function uploadcomplete(msg)
-	//{
-	//window.location="index.php?s=complete";
-
-	//}
 	
 	// --------------------------
 	// Common upload functions
@@ -166,7 +160,8 @@
 			bytesTransfered = (Math.round(bytesloaded * 100)/100).toString() + 'Bytes';
 
 			$('#progress_container').fadeIn(100);	//fade in progress bar	
-			$('#progress_bar').width(percentComplete +"% ");	//set width of progress bar based on the $status value (set at the top of this page)
+			$('#progress_bar').width(percentComplete/100 *$('#progress_container').width());	//set width of progress bar based on the $status value (set at the top of this page)
+			$('#progress_bar').html(percentComplete +"% ");
 			$('#progress_completed').html(parseInt(percentComplete) + "%(" + bytesTransfered + ")" );	//display the % completed within the progress bar
 		  
 	}
@@ -174,6 +169,16 @@
 	// get a dom element (just to reduce code)
 	function obj(id) {
 		return document.getElementById(id);
+	}
+	
+	function validateforflash()
+	{
+	if(validateFormFlash())
+	{
+	getFlexApp('filesenderup').returnMsg("true")
+	} else {
+	getFlexApp('filesenderup').returnMsg("false")
+	}
 	}
 	// --------------------------
 	// Validation functions
@@ -226,7 +231,7 @@ function validate_fileto()
 	$('#fileto_msg').hide();
 	// remove white spaces 
 	obj('fileto').value = obj('fileto').value.split(' ').join('');
-	var tempemail = obj('fileto').value;
+	var tempemail = $('#fileto').val();
 	var email = tempemail.split(/,|;/);
 	for (var i = 0; i < email.length; i++) {
 		if (!echeck(email[i], 1, 0)) {
@@ -332,39 +337,29 @@ function echeck(str) {
 
 	 return true					
 }
-
+// flex file information check
 function fileInfo(name,size)
 {
 if(size > 2000000000)
 {
 fileMsg("This file is larger than 2Gb. Please use a HTML5 enabled browser to upload larger files.");
-} else if (!validatefilename(name)) 
+} else if (validatefilename(name)) 
 {
 
-} else if (validateFormFlash())
-{
-
-$("#fileInfo").show();
-obj('n').value= name;
-obj('total').value = size;
-obj('fileName').value= name;
-obj('fileSize').value = readablizebytes(size);
+$("#fileInfoView").show();
+$('#n').val(name);
+$('#total').val(size);
+$('#fileName').val(name);
+$("#fileName").html('Name: ' + name);
+$("#fileSize").html('Size: ' + readablizebytes(size));
 getFlexApp('filesenderup').returnMsg("upload")
-}// else {
-//
-//
-
-//
-//getFlexApp('filesenderup').returnMsg("upload")
-//
-//}
-
+} 
 }
 
 
 function uploadcomplete(name,size)
 {
-document.forms["form1"].submit();
+$("#form1").submit();
 }
 
 function uploaderror(name,size)
@@ -412,13 +407,13 @@ function validate()
 
 function errorDialog(msg)
 {
-$("#dialog-default").html(msg);
-$("#dialog-default").dialog('open')
+$('#dialog-default').html(msg);
+$('#dialog-default').dialog('open')
 }
 
 function fileMsg(msg)
 {
-	$("#file_msg").html(msg);
+	$('#file_msg').html(msg);
 	$('#file_msg').show();
 }
 
@@ -562,7 +557,7 @@ if ( hasProductInstall && !hasRequestedVersion ) {
           <input type="hidden" id="filestatus" name="filestatus" value="<?php echo $filestatus; ?>"/>
           <input type="hidden" name="loadtype" id="loadtype" value="standard"/>
           <div class="row">
-          <div id="fileInfo">
+          <div id="fileInfoView">
             <div id="fileName" name="fileName"></div>
             <div id="fileSize" name="fileSize"></div>
             <div id="fileType" name="fileType"></div>
