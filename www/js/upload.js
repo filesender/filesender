@@ -73,13 +73,13 @@ var filesize = 0;
 		filename = "";
 		filesize = 0;
 		
-	  	obj('n').value= file.name;
-		obj('total').value = fileSize;
-		
-	  	document.getElementById('fileInfo').style.display = 'block';
-        document.getElementById('fileName').innerHTML = 'Name: ' + file.name;
-        document.getElementById('fileSize').innerHTML = 'Size: ' + readablizebytes(fileSize);
-        document.getElementById('fileType').innerHTML = 'Type: ' + file.type;
+	  	$("#n").val(file.name);
+		$("#total").val(fileSize);
+		$("#fileInfoView").show();
+		$("#fileName").html('Name: ' + file.name);
+		$("#fileSize").html('Size: ' + readablizebytes(fileSize));
+		$("#fileType").html('Type: ' + file.type);
+	  	
 	   	validate_file();
 	}
 
@@ -97,17 +97,8 @@ function startupload()
 		$("#uploadbutton").hide();
 		$("#cancelbutton").show();
 		
-		//Lock New upload
-		// lock Voucher
-		// lock My Files
-		// lock help
-		// lock about
-		// lock log off
-		
 		// hide upload button
-		var progressBar = obj('progress_bar');
-      	progressBar.style.display = 'block';
-      	progressBar.style.width = '0px';      
+		$('#progress_bar').show();    
 		$('#progress_completed').html("0%");
 		
 		// check if file is already on the server
@@ -122,8 +113,6 @@ function startupload()
 		uploadFile(currentBytesUpload);
   		}
 		});	
-	
-		//intervalTimer = setInterval(updateTransferSpeed, 500);
 }
 
 function uploadFile(currentBytesUpload) {
@@ -236,7 +225,7 @@ function processReqChange(){
           speed =  (Math.round(bytesDiff * 100/1024)/100).toString() + 'KBps';
         else
           speed = bytesDiff.toString() + 'Bps';
-        document.getElementById('transferSpeedInfo').innerHTML = speed;
+       $('#transferSpeedInfo').html(speed);
         //document.getElementById('timeRemainingInfo').innerHTML = '| ' + secondsToString(secondsRemaining);        
       }
 

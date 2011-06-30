@@ -113,9 +113,10 @@
 				uploadBtn.label = buttonUpload;
 				
 				//uploadit
-				} else {
-				// must browse a different file
-				// clear browse
+				} 
+				if(msg == "true")
+				{
+					uploadit();
 				}
 			}
 			
@@ -124,6 +125,12 @@
 			//	FlexGlobals.topLevelApplication.logProcess("Keep Session Alive - Flash Upload");
 			}
 			
+			public function validatebeforeupload():void
+			{
+				// send to js to check: fileRef.name fileRef.size
+				var callString:String = "validateforflash()";
+				ExternalInterface.call(callString); 
+			}
 			
 			// start the upload process
 			public function uploadit():void 
@@ -159,7 +166,7 @@
 				}
 				if(uploadBtn.label == buttonUpload)
 				{
-					uploadit();
+					validatebeforeupload();
 				}
 			}
 			// handler for file open
@@ -293,7 +300,7 @@
 		<mx:Spacer/>
 		<mx:ProgressBar id="pgBar" mode="manual"  height="30" width="100%" labelPlacement="center" label="Uploading %3%% "/>
 		<mx:Button label="{lang.Browse}" click="btnclick()" id="uploadBtn" height="28"/>
-		<mx:Label text="v1.2" color="#8D9090"/>
+		<mx:Label text="v1.3" color="#8D9090"/>
 		<mx:Label id="speedLabel" width="0"/>
 	</mx:HBox>
 	
