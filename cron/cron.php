@@ -132,11 +132,13 @@ function cleanUp()
 		return FALSE;
 	}
 		
+/* // Temporarily disabled, the empty set means that no files are to be expired afaik
 	// check for empty result set (should never happen) 
 	if (empty($search)) { 
 		logProcess("CRON","SQL Error on selecting files, empty result set");
 		return FALSE; 
 	}
+*/
 	
 	foreach($search as $row) {
 		
