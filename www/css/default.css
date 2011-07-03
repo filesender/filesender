@@ -245,6 +245,7 @@ a:link, a:visited {
 	margin-right: 6px;
 	margin-bottom: 10px;
 	margin-left: auto;
+	font-weight: bold;
 }
 #top-menu li a:hover {
 	color: #000;
