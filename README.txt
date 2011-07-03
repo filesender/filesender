@@ -1,4 +1,14 @@
-Updated: 29 January 2011
+Updated: 3 July 2011
+
+*********************
+This is the development branch of FileSender 1.5 which is stil being worked
+on and should not be used for production services. This file will be updated
+as soon as 1.5 will be release-ready. In the meantime have a look at
+
+http://www.assembla.com/spaces/file_sender/wiki/Installation_notes_for_1-5_development_code
+
+for more information.
+*********************
 
 FileSender is a software package that implements a web-based application that
 allows authenticated users to securely and easily send arbitrarily large files

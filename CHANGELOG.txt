@@ -1,4 +1,40 @@
-Last update: 29 January 2011
+Last update: 1 July 2011
+
+Version 1.5.0-* Development builds <1 July 2011>
+
+	Major changes since 1.0
+	- Replaced Flash User Interface with a HTML-only interface
+	- Dropped Gears dependency, upload of large (>2G) files now requires
+	  a modern HTML5 capable browser, other browsers are limited to 2G
+	  uploads (using a small Flash-application).
+	- Added automatic language selection (English, Norwegian, Dutch)
+	- Added Database Abstraction Layer (MDB2) to facilitate the use
+	  of MySQL as backend.
+
+Version 1.0.1 <8 May 2011>
+
+	Fixes and changes
+	#271 compatibility fix for SimpleSAMLphp 1.7+
+	#379 Log IPv6 address of connecting client. When upgrading from
+	     previous versions you should fix the relevant column size in the
+	     database with:
+	      #sudo -u postgres psql filesender
+	      ALTER TABLE files ALTER fileip6address TYPE character varying(45);
+	      \q
+	#380, #389, #390  fix the max_gears_upload_size check.
+	#381 allow multiple email addresses to be separated by both a
+	     comma and a semi-colon
+	#383 trim whitespace from email-addresses
+	#394 "File too large, use Gears" warnings fixups
+	#396 Confirmation when cancelling Flash upload
+	#397 Wrapping of Subject field in My Files table
+
+	Experimental feature
+	- Mail bounce handling (for details see
+	  http://www.assembla.com/wiki/show/file_sender/Mail_Bounce_Handling )
+
+	Packaging
+	- Added filesender-php.ini with recommended PHP settings
 
 Version 1.0 <31 January 2011>
 	Release 1.0
