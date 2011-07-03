@@ -75,7 +75,8 @@ $json_o=json_decode($filedata,true);
 <table id="myfiles" width="100%" border="0" cellspacing="1">
 <tr class="headerrow">
 <td>&nbsp;</td>
-<td><strong><?php echo _TO."/"._FROM; ?></strong></td>
+<td><strong><?php echo _TO; ?></strong></td>
+<td><strong><?php echo _FROM; ?></strong></td>
 <td><strong><?php echo _FILE_NAME; ?></strong></td>
 <td><strong><?php echo _SIZE; ?></strong></td>
 <td><strong><?php echo _SUBJECT; ?></strong></td>
@@ -88,7 +89,20 @@ $json_o=json_decode($filedata,true);
 if(sizeof($json_o) > 0)
 {
 foreach($json_o as $item) {
-   echo "<tr><td valign='top'><a href='index.php?s=files&a=resend&id=" .$item['filevoucheruid'] . "'><img src='images/email_go.png' title='Re-send Email'></a></td><td><table border='0' cellspacing='0' cellpadding='0'><tr><td>"._TO.":</td><td>" .$item['fileto'] . "</td></tr><tr><td>"._FROM.":</td><td>" .$item['filefrom'] . "</td></tr></table><td><a href='download.php?vid=". $item["filevoucheruid"]."' target='_blank'>" .$item['fileoriginalname']. "</a></td><td>" .formatBytes($item['filesize']). "</td><td>".$item['filesubject']. "</td><td>";
+   echo "<tr><td valign='top'><a href='index.php?s=files&a=resend&id=" .$item['filevoucheruid'] . "'><img src='images/email_go.png' title='Re-send Email'></a></td>";
+   if($item['fileto'] == $attributes["email"])
+   {
+   echo "<td>Me</td>";
+   } else {
+   echo "<td>" .$item['fileto'] . "</td>";
+   }
+    if($item['filefrom'] == $attributes["email"])
+   {
+   echo "<td>Me</td>";
+   } else {
+   echo "<td>" .$item['filefrom'] . "</td>";
+   }
+   echo "<td><a href='download.php?vid=". $item["filevoucheruid"]."' target='_blank'>" .$item['fileoriginalname']. "</a></td><td>" .formatBytes($item['filesize']). "</td><td>".$item['filesubject']. "</td><td>";
    if($item['filemessage'] != "")
    {
    echo "<img src='images/page_white_text_width.png' border='0' title='".$item['filemessage']. "'>";
