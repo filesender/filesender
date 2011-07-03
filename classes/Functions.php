@@ -605,7 +605,7 @@ public function insertVoucher($to,$expiry){
 
         global $config;
         $dbCheck = DB_Input_Checks::getInstance();
-		
+		$authAttributes = $this->authsaml->sAuth();
 		// var  $dataitem = [];
 		
 		 $dataitem['fileexpirydate'] = $expiry;
@@ -624,9 +624,9 @@ public function insertVoucher($to,$expiry){
          $dataitem['filereceiversname'] = '';
          $dataitem['filevouchertype'] = '';
          $dataitem['fileuid'] = getGUID();
-         $dataitem['fileauthuseruid'] = '';
-         $dataitem['fileauthuseremail'] = '';
-         $dataitem['filecreateddate'] = '';
+         $dataitem['fileauthuseruid'] = $authAttributes["eduPersonTargetedID"];
+         $dataitem['fileauthuseremail'] = $authAttributes["email"];
+         $dataitem['filecreateddate'] =  date($config['postgresdateformat'], time());
 		 
 		 if( $this->authsaml->isAuth()) {
             $authAttributes = $this->authsaml->sAuth();
