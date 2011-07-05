@@ -427,13 +427,8 @@ function cancel()
   <form id="form1" enctype="multipart/form-data" method="POST" action="fs_uploadit5.php">
     <table width="500" border="0">
       <tr>
-        <td></td>
-        <td  class="formfieldheading"><?php echo _EMAIL_SEPARATOR_MSG; ?></td>
-        <td></td>
-      </tr>
-      <tr>
         <td width="200" class="formfieldheading mandatory"><?php echo _TO; ?>:</td>
-        <td valign="middle"><input name="fileto" type="text" id="fileto" value="" size="40" onchange="validate_fileto()" />
+        <td valign="middle"><input name="fileto" title="<?php echo _EMAIL_SEPARATOR_MSG; ?>" type="text" id="fileto" value="" size="40" onchange="validate_fileto()" />
           <div id="fileto_msg" style="display: none" class="validation_msg">Invalid or missing email</div></td>
         <td valign="middle">&nbsp;</td>
       </tr>
