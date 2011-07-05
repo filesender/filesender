@@ -74,6 +74,7 @@ $tempuploadfolder =  $config["site_temp_filestore"];
 	
 $fileuid = getGUID();
 $tempFilename = ""; 
+$s = "complete";
 
 	// add voucher if this is a voucher upload
 	if ($authvoucher->aVoucher()) {
@@ -123,12 +124,13 @@ $tempFilename = "";
 	if(isset($_POST["filestatus"]) && $_POST["filestatus"] == "Voucher")
 		{
 		$tempData = $functions->getVoucherData($_POST["filevoucheruid"]);
-		$functions->closeVoucher($tempData[0]["fileid"]);	
+		$functions->closeVoucher($tempData[0]["fileid"]);
+		$s = "completev";	
         }
 		
 		if(isset($_POST["loadtype"]) && $_POST["loadtype"] == "standard")
 		{
-		$redirect = "Location: index.php?s=complete";
+		$redirect = "Location: index.php?s=".$s;
 		header( $redirect ) ;
 		}
 		

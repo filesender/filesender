@@ -69,7 +69,7 @@ if(isset($_REQUEST["s"]))
 {
 $s = $_REQUEST["s"];
 }
-if(!$authvoucher->aVoucher() && !$authsaml->isAuth() && $s != "help" && $s != "about" && $s != "complete" )
+if(!$authvoucher->aVoucher() && !$authsaml->isAuth() && $s != "help" && $s != "about" && $s != "complete" && $s != "completev" )
 {
 $s = "logon";
 }
@@ -106,7 +106,7 @@ $s = "logon";
       <?php 
   // create menu
   // disable all buttons if this is a voucher, even if the user is logged on
-  if (!$authvoucher->aVoucher()){
+  if (!$authvoucher->aVoucher()  &&  $s != "completev"){
 	if($authsaml->authIsAdmin() ) { echo '<li><a href="index.php?s=admin">'._ADMIN.'</a></li>'; }
 	if($authsaml->isAuth() ) { echo '<li><a href="index.php?s=upload">'._NEW_UPLOAD.'</a></li>'; }
 	if($authsaml->isAuth() ) { echo '<li><a href="index.php?s=vouchers">'._VOUCHERS.'</a></li>'; }
@@ -115,7 +115,7 @@ $s = "logon";
 	echo '<li><a href="#" onclick="openhelp()">Help</a></li>';
 	echo '<li><a href="#" onclick="openabout()">About</a></li>';
 	if(!$authsaml->isAuth() && $s != "logon" ) { echo '<li><a href="'.$authsaml->logonURL().'">'._LOGON.'</a></li>';}
-   	if($authsaml->isAuth() ) { echo '<li><a href="'.$authsaml->logoffURL().'">'._LOG_OFF.'</a></li>'; }
+   	if($authsaml->isAuth() && !$authvoucher->aVoucher() &&  $s != "completev" ) { echo '<li><a href="'.$authsaml->logoffURL().'">'._LOG_OFF.'</a></li>'; }
    // end menu
    ?>
     </ul>
@@ -123,7 +123,7 @@ $s = "logon";
   <div id="content">
   <?php 
 // display user details if authenticated and not a voucher
-if(	$authvoucher->aVoucher()) { 
+if(	$authvoucher->aVoucher() || $s == "completev") { 
 echo "Welcome Guest";
 } else if ($authsaml->isAuth() ){
 $attributes = $authsaml->sAuth();
@@ -168,7 +168,7 @@ else if($s == "admin" && !$authvoucher->aVoucher())
 {
 require_once('../pages/admin.php');
 }	
-else if($s == "complete") 
+else if($s == "complete" || $s == "completev") 
 {
 require_once('../pages/uploadcomplete.php');
 } else if ($s == "" && $authsaml->isAuth()){
