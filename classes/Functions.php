@@ -731,12 +731,6 @@ public function insertVoucher($to,$expiry){
 		$dataitem["fileexpirydate"] = date($config['postgresdateformat'],strtotime("+".($config['default_daysvalid'])." day"));
 		}
 
-        if( $this->authsaml->isAuth()) {
-            $authAttributes = $this->authsaml->sAuth();
-            $dataitem['fileauthuseruid'] = $authAttributes["eduPersonTargetedID"] ;
-            $dataitem['fileauthuseremail'] = $authAttributes["email"];
-        }
-
         try {
 			$result = $this->db->exec("
             INSERT INTO files (
