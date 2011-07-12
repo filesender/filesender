@@ -72,42 +72,42 @@ $json_o=json_decode($filedata,true);
  <div id="box">
 <?php echo '<div id="pageheading">'._MY_FILES.'</div>'; ?> 
 <div id="tablediv">
-<table id="myfiles" width="100%" border="0" cellspacing="1">
+<table id="myfiles" width="750" border="0" cellspacing="1" style="table-layout:fixed;">
 <tr class="headerrow">
-<td>&nbsp;</td>
+<td width="22">&nbsp;</td>
 <td><strong><?php echo _TO; ?></strong></td>
 <td><strong><?php echo _FROM; ?></strong></td>
 <td><strong><?php echo _FILE_NAME; ?></strong></td>
 <td><strong><?php echo _SIZE; ?></strong></td>
 <td><strong><?php echo _SUBJECT; ?></strong></td>
-<td><strong><?php echo _MESSAGE; ?></strong></td>
+<td  width="16"><strong></strong></td>
 <td><strong><?php echo _CREATED; ?></strong></td>
 <td><strong><?php echo _EXPIRY; ?></strong></td>
-<td>&nbsp;</td>
+<td width="22">&nbsp;</td>
 </tr>
 <?php 
 if(sizeof($json_o) > 0)
 {
 foreach($json_o as $item) {
-   echo "<tr><td valign='top'><a href='index.php?s=files&a=resend&id=" .$item['filevoucheruid'] . "'><img src='images/email_go.png' title='Re-send Email'></a></td>";
+   echo "<tr><td valign='top' width='22'><a href='index.php?s=files&a=resend&id=" .$item['filevoucheruid'] . "'><img src='images/email_go.png' title='Re-send Email'></a></td>";
    if($item['fileto'] == $attributes["email"])
    {
-   echo "<td>Me</td>";
+   echo "<td class='HardBreak' valign='top'>Me</td>";
    } else {
-   echo "<td>" .$item['fileto'] . "</td>";
+   echo "<td class='HardBreak'>" .$item['fileto'] . "</td>";
    }
     if($item['filefrom'] == $attributes["email"])
    {
-   echo "<td>Me</td>";
+   echo "<td class='HardBreak'>Me</td>";
    } else {
-   echo "<td>" .$item['filefrom'] . "</td>";
+   echo "<td class='HardBreak'>" .$item['filefrom'] . "</td>";
    }
-   echo "<td><a href='download.php?vid=". $item["filevoucheruid"]."' target='_blank'>" .$item['fileoriginalname']. "</a></td><td>" .formatBytes($item['filesize']). "</td><td>".$item['filesubject']. "</td><td>";
+   echo "<td class='HardBreak'><a href='download.php?vid=". $item["filevoucheruid"]."' target='_blank'>" .$item['fileoriginalname']. "</a></td><td>" .formatBytes($item['filesize']). "</td><td>".$item['filesubject']. "</td><td>";
    if($item['filemessage'] != "")
    {
    echo "<img src='images/page_white_text_width.png' border='0' title='".$item['filemessage']. "'>";
    }
-   echo "</td><td>" .date("d/m/Y",strtotime($item['filecreateddate'])) . "</td><td>" .date("d/m/Y",strtotime($item['fileexpirydate'])) . "</td><td><a href='#' onclick='confirmdelete(".'"' .$item['filevoucheruid'] . '"'. ")'><img src='images/shape_square_delete.png' title='Delete'></a></td></tr>"; //etc
+   echo "</td><td>" .date("d/m/Y",strtotime($item['filecreateddate'])) . "</td><td>" .date("d/m/Y",strtotime($item['fileexpirydate'])) . "</td><td  valign='top'  width='22'><a href='#' onclick='confirmdelete(".'"' .$item['filevoucheruid'] . '"'. ")'><img src='images/shape_square_delete.png' title='Delete'></a></td></tr>"; //etc
    }
 } else {
 	echo "<tr><td colspan='7'>There are currently no files available</td></tr>";
@@ -124,7 +124,7 @@ var selectedFile = "";
 
 	$(function() {
 	
-		//$("#myfiles tr:odd").not(':first').addClass('altcolor');
+		$("#myfiles tr:odd").not(':first').addClass('altcolor');
 		$("#dialog-delete").dialog({ autoOpen: false, height: 140, modal: true,
 		
 		buttons: {
