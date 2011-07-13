@@ -79,13 +79,13 @@ $s = "complete";
 	//  add SAML eduPersonTargetedID
 	if( $authsaml->isAuth()) {
 		$authAttributes = $authsaml->sAuth();
-		$tempFilename .= $authAttributes["eduPersonTargetedID"];
+		$tempFilename = $authAttributes["eduPersonTargetedID"];
 		$filedata["fileauthuseruid"] = $authAttributes["eduPersonTargetedID"];
 		$filedata["fileauthuseremail"] = $authAttributes["email"];
 	} 
 	// add voucher if this is a voucher upload
 	if ($authvoucher->aVoucher()) {
-		$tempFilename .= $_POST['vid'];
+		$tempFilename = $_POST['vid'];
 		$tempData = $functions->getVoucherData($_POST["filevoucheruid"]);
 		$filedata["fileauthuseruid"] = $tempData[0]["fileauthuseruid"];	
 		$filedata["fileauthuseremail"] = $tempData[0]["fileauthuseremail"];	
@@ -104,6 +104,10 @@ $s = "complete";
 
     // move file to correct uploadfolder destination
 	$result = rename($tempuploadfolder.$tempFilename, $uploadfolder.$fileuid.".tmp");
+	if(!$result) {
+		logEntry("Unable to move the file");
+		trigger_error("Unable to move the file", E_USER_ERROR);
+	}
 	
 	$filedata["filefrom"] = $_POST["filefrom"];
 	$filedata["filesize"] = $_POST["total"];
