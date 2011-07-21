@@ -87,7 +87,7 @@
 			public function init():void
 			{
 				// Application requires:
-				vid =   FlexGlobals.topLevelApplication.parameters.tid;// = voucherID
+				vid =   FlexGlobals.topLevelApplication.parameters.vid;// = voucherID
 				buttonBrowse = FlexGlobals.topLevelApplication.parameters.buttonBrowse;;	// "Browse" language ref
 				buttonUpload = FlexGlobals.topLevelApplication.parameters.buttonUpload;; 	// "Upload" language ref
 				buttonCancel = FlexGlobals.topLevelApplication.parameters.buttonCancel;;	// Cancel" language ref
