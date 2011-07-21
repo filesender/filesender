@@ -175,6 +175,7 @@
 	{
 	if(validateFormFlash())
 	{
+	lockformfields();
 	getFlexApp('filesenderup').returnMsg("true")
 	} else {
 	getFlexApp('filesenderup').returnMsg("false")
@@ -359,6 +360,7 @@ getFlexApp('filesenderup').returnMsg("upload")
 
 function uploadcomplete(name,size)
 {
+	unlockformfields();
 $("#form1").submit();
 }
 
@@ -457,7 +459,7 @@ function cancel()
         <td>&nbsp;</td>
       </tr>
       <tr>
-        <td class="formfieldheading mandatory"><?php echo _SELECT_FILE; ?></td>
+        <td class="formfieldheading mandatory"><div id="selectfile" name="selectfile"><?php echo _SELECT_FILE; ?></div></td>
         <td><div id="uploadstandard"> 
             <script language="JavaScript" type="text/javascript">
 <!--

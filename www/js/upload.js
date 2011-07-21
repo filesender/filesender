@@ -86,12 +86,10 @@ var filesize = 0;
 function startupload()
 {
 		// lock all buttons and text boxes before uploading
-		//$("#fileto").attr("disabled","disabled");// lock To box
-		//$("#filesubject").attr("disabled","disabled");// lock subject
-		//$("#filemessage").attr("disabled","disabled");// lock Message
-		//$("#datepicker").attr("disabled","disabled");// Lock Expiry
-		//$("#fileToUpload").attr("disabled","disabled");// lock Browse
-		//$("#aup").attr("disabled","disabled");// lock accept btn
+		lockformfields();
+		$("#fileToUpload").hide();// hide Browse
+		$("#selectfile").hide();// hide Browse message
+		
 		
 		// hide upload/show cancel
 		$("#uploadbutton").hide();
@@ -131,6 +129,7 @@ function uploadFile(currentBytesUpload) {
 			var filecontrol = document.getElementById("fileToUpload");
        		// Remove the new file control.
     		filecontrol.parentNode.removeChild(filecontrol);
+			unlockformfields();
 			document.forms["form1"].submit();
 			return;
 			} 
@@ -263,4 +262,27 @@ function processReqChange(){
 			bytesdisplay = (Math.round(bytes * 100)/100).toString() + 'Bytes';
 		return bytesdisplay;
 	  }
-	  
+
+function lockformfields()
+{
+			$("#fileto").attr("disabled",true);// unlock To box
+			$("#filesubject").attr("disabled",true);// lock subject
+			$("#filemessage").attr("disabled",true);// lock Message
+			$("#datepicker").attr("disabled",true);// Lock Expiry
+			$("#aup").attr("disabled",true);// lock accept btn
+}
+
+function unlockformfileds()
+{
+			$("#fileto").attr("disabled",false);// unlock To box
+			$("#filesubject").attr("disabled",false);// lock subject
+			$("#filemessage").attr("disabled",false);// lock Message
+			$("#datepicker").attr("disabled",false);// Lock Expiry
+			$("#aup").attr("disabled",false);// lock accept btn
+		
+}
+
+function postformdata(filenum)
+{
+	
+}
