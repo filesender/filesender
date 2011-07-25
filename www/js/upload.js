@@ -272,7 +272,7 @@ function lockformfields()
 			$("#aup").attr("disabled",true);// lock accept btn
 }
 
-function unlockformfileds()
+function unlockformfields()
 {
 			$("#fileto").attr("disabled",false);// unlock To box
 			$("#filesubject").attr("disabled",false);// lock subject
