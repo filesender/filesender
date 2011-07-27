@@ -150,6 +150,8 @@
 	// update the progress bar
 	function updatepb(bytesloaded,totalbytes)
 	{
+		$('#progress_bar').show();
+		
 		var percentComplete = Math.round(bytesloaded * 100 / totalbytes);
 		var bytesTransfered = '';
 		if (bytesloaded > 1024*1024)
@@ -341,9 +343,12 @@ function echeck(str) {
 // flex file information check
 function fileInfo(name,size)
 {
+fileMsg("");
 if(size > 2000000000)
 {
 fileMsg("This file is larger than 2Gb. Please use a HTML5 enabled browser to upload larger files.");
+// remove displayed file data
+$("#fileInfoView").hide();
 } else if (validatefilename(name)) 
 {
 
@@ -360,7 +365,7 @@ getFlexApp('filesenderup').returnMsg("upload")
 
 function uploadcomplete(name,size)
 {
-	unlockformfields();
+unlockformfields();
 $("#form1").submit();
 }
 
@@ -430,8 +435,8 @@ function cancel()
     <table width="500" border="0">
       <tr>
         <td width="200" class="formfieldheading mandatory"><?php echo _TO; ?>:</td>
-        <td valign="middle"><input name="fileto" title="<?php echo _EMAIL_SEPARATOR_MSG; ?>" type="text" id="fileto" value="" size="40" onchange="validate_fileto()" />
-          <div id="fileto_msg" style="display: none" class="validation_msg">Invalid or missing email</div></td>
+        <td valign="middle"><input name="fileto" title="<?php echo _EMAIL_SEPARATOR_MSG; ?>" type="text" id="fileto" value="chrisrichter@crcsmedia.com " size="40" onchange="validate_fileto()" />
+        <div id="fileto_msg" style="display: none" class="validation_msg">Invalid or missing email</div></td>
         <td valign="middle">&nbsp;</td>
       </tr>
       <tr>
@@ -480,8 +485,8 @@ if ( hasProductInstall && !hasRequestedVersion ) {
 	AC_FL_RunContent(
 		"src", "lib/swf/playerProductInstall",
 		"FlashVars", "<?php echo $flashVARS ?>",
-		"width", "500",
-		"height", "50",
+		"width", "300",
+		"height", "30",
 		"align", "middle",
 		"id", "filesenderup",
 		"quality", "high",
@@ -497,8 +502,8 @@ if ( hasProductInstall && !hasRequestedVersion ) {
 	AC_FL_RunContent(
 			"src", "swf/filesenderup",
 			"FlashVars", "<?php echo $flashVARS ?>",
-			"width", "500",
-			"height", "50",
+			"width", "300",
+			"height", "30",
 			"align", "middle",
 			"id", "filesenderup",
 			"quality", "high",
@@ -524,7 +529,7 @@ if ( hasProductInstall && !hasRequestedVersion ) {
               <param name="bgcolor" value="#ffffff" />
               <param name="allowScriptAccess" value="sameDomain" />
               <embed src="swf/filesenderup.swf" quality="high" bgcolor="#869ca7"
-				width="500" height="50" name="filesenderup" align="middle"
+				width="300" height="30" name="filesenderup" align="middle"
 				play="true"
 				loop="false"
 				quality="high"
@@ -541,8 +546,10 @@ if ( hasProductInstall && !hasRequestedVersion ) {
             <input type="file" name="fileToUpload" id="fileToUpload" onChange="fileSelected();"/>
             <input type="button" onClick="validate()" value="Upload" id="uploadbutton" name="uploadbutton"/>
             <input type="button" onClick="cancel()" value="Cancel" id="cancelbutton" name="cancelbutton" style="display:none"/>
-            <div id="file_msg" class="validation_msg" style="display: none">Invalid File</div>
-          </div></td>
+            
+          </div>
+          <div id="file_msg" class="validation_msg" style="display: none">Invalid File</div>
+          </td>
         <td>&nbsp;</td>
       </tr>
       <tr>
@@ -571,7 +578,7 @@ if ( hasProductInstall && !hasRequestedVersion ) {
       </tr>
       <tr>
         <td class="formfieldheading"></td>
-        <td><input name="aup" type="checkbox" value="true" id="aup" onchange="validate_aup()" />
+        <td><input name="aup" type="checkbox" id="aup" onchange="validate_aup()" value="true" checked="checked" />
           <?php echo "I accept the terms and conditions of this service"; ?> [<a href="#" onclick="toggleTOG()">Show/Hide</a>]
           <div id="aup_msg" class="validation_msg" style="display: none">You MUST agree to the terms and conditions.</div>
           <div id="tog" style="display:none"> <?php echo $config["AuP_terms"]; ?> </div></td>

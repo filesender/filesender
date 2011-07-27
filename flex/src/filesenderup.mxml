@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml"  xmlns:comp="org.ricoshae.*" creationComplete="init()" layout="absolute" width="500" height="50" backgroundColor="#FFFFFF" backgroundGradientAlphas="[0.05, 0.0]" backgroundGradientColors="[#FFFFFF, #FFFFFF]">
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml"  xmlns:comp="org.ricoshae.*" creationComplete="init()" layout="absolute" width="300" height="30" backgroundColor="#FFFFFF" backgroundGradientAlphas="[0.05, 0.0]" backgroundGradientColors="[#FFFFFF, #FFFFFF]">
 	
 	<mx:Script>
 		<![CDATA[
@@ -37,7 +37,7 @@
 			/* -----------------------------------------
 			* flex - upload file using flash filereference
 			* -----------------------------------------
-			* 
+			*  Version 1.4
 			*/
 			
 			//import com.adobe.serialization.json.JSON;
@@ -95,7 +95,9 @@
 				token = FlexGlobals.topLevelApplication.parameters.token;
 				sid = FlexGlobals.topLevelApplication.parameters.sid;
 				// reset all buttons
-				uploadBtn.label = buttonBrowse;
+				BrowseBtn.label = buttonBrowse;
+				uploadBtn.visible = false;
+				uploadBtn.label = buttonUpload;
 				if (ExternalInterface.available)
 				{
 					
@@ -109,13 +111,14 @@
 				//Alert.show(msg);
 				if(msg == "upload")
 				{
-
-				uploadBtn.label = buttonUpload;
+				
+				uploadBtn.visible = true;
 				
 				//uploadit
 				} 
 				if(msg == "true")
 				{
+				BrowseBtn.enabled = false;
 					uploadit();
 				}
 			}
@@ -150,17 +153,23 @@
 				request.method=URLRequestMethod.POST;
 				// upload file 
 				fileRef.upload(request);
-				displayprogressBar = true;
+				//displayprogressBar = true;
 				uploadBtn.label = buttonCancel;
 			}
 			
 			public function btnclick():void
 			{
-				if(uploadBtn.label == buttonBrowse)
+				if(BrowseBtn.label == buttonBrowse)
 				{
 					browseit();
 				}
-				if(uploadBtn.label == buttonCancel)
+			
+			}
+			
+			// upload btn btnUploadclick
+			public function btnUploadclick():void
+			{
+					if(uploadBtn.label == buttonCancel)
 				{
 					cancelit();
 				}
@@ -169,6 +178,7 @@
 					validatebeforeupload();
 				}
 			}
+			
 			// handler for file open
 			public function openHandler(event:Event):void {
 				
@@ -177,9 +187,11 @@
 			// dispatched during file upload
 			public function progressHandler(event:ProgressEvent):void 
 			{
-				pgBar.setProgress(event.bytesLoaded-1, event.bytesTotal);
-				currbytes = event.bytesLoaded;  
-			//	FlexGlobals.topLevelApplication.logProcess("Upload Progress [" + currbytes + " bytes] - Flash Upload");
+				//pgBar.setProgress(event.bytesLoaded-1, event.bytesTotal);
+				//currbytes = event.bytesLoaded;  
+				// use javascript to show progess instead of flex progress bar
+				ExternalInterface.call("updatepb('"+(event.bytesLoaded-1)+"','"+event.bytesTotal+"')"); 
+				//	FlexGlobals.topLevelApplication.logProcess("Upload Progress [" + currbytes + " bytes] - Flash Upload");
 			}
 			
 			// Following dispatched when the file has been given to the server script
@@ -263,10 +275,23 @@
 					
 			// FileReference select handler
 			public function selectHandler(event:Event):void {
-		
-				// send to js to check: fileRef.name fileRef.size
-				var callString:String = "fileInfo('"+fileRef.name+"','"+fileRef.size+"')";
-				ExternalInterface.call(callString); 
+				
+				var callString:String = "";
+				// check if filesize is too large for flex ( >2Gb)
+				 try { 
+				 	var fs:Number =  fileRef.size;
+					// no error so keep going
+					// send to js to check: fileRef.name fileRef.size
+					callString = "fileInfo('"+fileRef.name+"','"+fileRef.size+"')";
+					ExternalInterface.call(callString); 
+				 	}
+				 	catch (erObject:Error) {
+					uploadBtn.visible = false;
+				  	//display the error in JS
+					callString = "fileInfo('invalidFile','2000000000000')";
+					ExternalInterface.call(callString); 
+				 }
+
 			} 
 			
 			// When a file is selected, we upload the file to the PHP file upload script on the server
@@ -276,11 +301,9 @@
 			public function cancelit():void 
 			{ 
 				fileRef.cancel(); 
-				pgBar.setProgress(0,0)
-				// update button to browse
-				uploadBtn.label = buttonBrowse;
 				// send msg to js to cancel
 				ExternalInterface.call("cancel('tid')"); 
+				BrowseBtn.enabled = true;
 				 
 			} 
 			
@@ -296,12 +319,9 @@
 		
 	</mx:Script>
 	<mx:NumberFormatter id="numberFormatter" precision="2" useThousandsSeparator="true" useNegativeSign="true"/>
-	<mx:HBox id="uploadMainPanel" verticalAlign="middle" includeInLayout="{displayprogressBar}" left="0" top="0" bottom="0" right="0">
+	<mx:HBox id="uploadMainPanel" verticalAlign="middle" horizontalAlign = "left" top="0" left="0">
 		<mx:Spacer/>
-		<mx:ProgressBar id="pgBar" mode="manual"  height="30" width="100%" labelPlacement="center" label="Uploading %3%% "/>
-		<mx:Button label="{lang.Browse}" click="btnclick()" id="uploadBtn" height="28"/>
-		<mx:Label text="v1.3" color="#8D9090"/>
-		<mx:Label id="speedLabel" width="0"/>
+		<mx:Button label="{lang.Browse}" click="btnclick()" id="BrowseBtn" height="28"/>
+		<mx:Button label="{lang.Upload}" click="btnUploadclick()" id="uploadBtn" height="28" width="150"/>
 	</mx:HBox>
-	
 </mx:Application>
