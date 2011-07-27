@@ -344,9 +344,9 @@ function echeck(str) {
 function fileInfo(name,size)
 {
 fileMsg("");
-if(size > 2000000000)
+if(size > 2147483648)
 {
-fileMsg("This file is larger than 2Gb. Please use a HTML5 enabled browser to upload larger files.");
+fileMsg("This file is larger than 2GB. Please use a HTML5 enabled browser to upload larger files.");
 // remove displayed file data
 $("#fileInfoView").hide();
 } else if (validatefilename(name)) 
