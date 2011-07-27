@@ -130,7 +130,7 @@
 		//Check if HTML5 is enable and use HTML uploader
 		if(window.File && window.FileReader && window.FileList && window.Blob && window.FormData){
 			// use HTML5 upload functions
-			$("#uploadstandard").show();
+			$("#uploadhtml5").show();
 			} else {
 			// use standard upload functions
 			$("#uploadstandard").show();

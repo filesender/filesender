@@ -36,8 +36,6 @@
  * js/upload.js   manages all html5 related functions and uploading
  * js/jquery-1.3.2.min.js  loaded in preparation for HTML 5 UI
  */
- error_reporting(E_ALL);
-ini_set('display_errors', '1');
 
  if(session_id() == ""){
 	// start new session and mark it as valid because the system is a trusted source
