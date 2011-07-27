@@ -435,7 +435,7 @@ function cancel()
     <table width="500" border="0">
       <tr>
         <td width="200" class="formfieldheading mandatory"><?php echo _TO; ?>:</td>
-        <td valign="middle"><input name="fileto" title="<?php echo _EMAIL_SEPARATOR_MSG; ?>" type="text" id="fileto" value="chrisrichter@crcsmedia.com " size="40" onchange="validate_fileto()" />
+        <td valign="middle"><input name="fileto" title="<?php echo _EMAIL_SEPARATOR_MSG; ?>" type="text" id="fileto" size="40" onchange="validate_fileto()" />
         <div id="fileto_msg" style="display: none" class="validation_msg">Invalid or missing email</div></td>
         <td valign="middle">&nbsp;</td>
       </tr>
@@ -578,7 +578,7 @@ if ( hasProductInstall && !hasRequestedVersion ) {
       </tr>
       <tr>
         <td class="formfieldheading"></td>
-        <td><input name="aup" type="checkbox" id="aup" onchange="validate_aup()" value="true" checked="checked" />
+        <td><input name="aup" type="checkbox" id="aup" onchange="validate_aup()" value="true" />
           <?php echo "I accept the terms and conditions of this service"; ?> [<a href="#" onclick="toggleTOG()">Show/Hide</a>]
           <div id="aup_msg" class="validation_msg" style="display: none">You MUST agree to the terms and conditions.</div>
           <div id="tog" style="display:none"> <?php echo $config["AuP_terms"]; ?> </div></td>
