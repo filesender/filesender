@@ -432,36 +432,31 @@ function cancelupload()
 
 <div id="box"> <?php echo '<div id="pageheading">'._UPLOAD.'</div>'; ?>
   <form id="form1" enctype="multipart/form-data" method="POST" action="fs_uploadit5.php">
-    <table width="500" border="0">
+    <table width="600" border="0">
       <tr>
-        <td width="200" class="formfieldheading mandatory"><?php echo _TO; ?>:</td>
-        <td valign="middle"><input name="fileto" title="<?php echo _EMAIL_SEPARATOR_MSG; ?>" type="text" id="fileto" size="40" onchange="validate_fileto()" />
+        <td width="100" class="formfieldheading mandatory"><?php echo _TO; ?>:</td>
+        <td width="400" valign="middle"><input name="fileto" title="<?php echo _EMAIL_SEPARATOR_MSG; ?>" type="text" id="fileto" size="60" onchange="validate_fileto()" />
         <div id="fileto_msg" style="display: none" class="validation_msg">Invalid or missing email</div></td>
-        <td valign="middle">&nbsp;</td>
       </tr>
       <tr>
         <td class="formfieldheading mandatory"><?php echo _FROM; ?>:</td>
         <td><?php echo $senderemail ?>
           <input name="filefrom" type="hidden" id="filefrom" value="<?php echo $senderemail ?>" size="40" /></td>
-        <td>&nbsp;</td>
       </tr>
       <tr>
         <td class="formfieldheading"><?php echo _SUBJECT; ?>: (<?php echo _OPTIONAL; ?>)</td>
-        <td><input name="filesubject" type="text" id="filesubject" size="40" /></td>
-        <td>&nbsp;</td>
+        <td><input name="filesubject" type="text" id="filesubject" size="60" /></td>
       </tr>
       <tr>
         <td class="formfieldheading"><?php echo _MESSAGE; ?>: (<?php echo _OPTIONAL; ?>)</td>
-        <td><textarea name="filemessage" cols="40" rows="4" id="filemessage"></textarea></td>
-        <td>&nbsp;</td>
-      </tr>
+        <td><textarea name="filemessage" cols="45" rows="4" id="filemessage"></textarea></td>
+     </tr>
       <tr>
         <td class="formfieldheading mandatory"><?php echo _EXPIRY; ?>:
           <input type="hidden" id="fileexpirydate" name="fileexpirydate" value="<?php echo date("d-m-Y",strtotime("+".$config['default_daysvalid']." day"));?>"/></td>
         <td><input id="datepicker" name="datepicker" onchange="validate_expiry()">
           </input>
           <div id="expiry_msg" class="validation_msg" style="display: none">Invalid expiry Date</div></td>
-        <td>&nbsp;</td>
       </tr>
       <?php if ($config["AuP"]) {?>
       <tr>
@@ -470,8 +465,7 @@ function cancelupload()
           <?php echo "I accept the terms and conditions of this service"; ?> [<a href="#" onclick="toggleTOG()">Show/Hide</a>]
           <div id="aup_msg" class="validation_msg" style="display: none">You MUST agree to the terms and conditions.</div>
           <div id="tog" style="display:none"> <?php echo $config["AuP_terms"]; ?> </div></td>
-        <td>&nbsp;</td>
-      </tr>
+     </tr>
       <?php } ?>
 
       <tr>
@@ -561,7 +555,6 @@ if ( hasProductInstall && !hasRequestedVersion ) {
           </div>
           <div id="file_msg" class="validation_msg" style="display: none">Invalid File</div>
           </td>
-        <td>&nbsp;</td>
       </tr>
       <tr>
         <td></td>
