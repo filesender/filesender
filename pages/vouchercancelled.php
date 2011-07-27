@@ -38,5 +38,5 @@
  ?>
   <div id="box">
  <?php echo '<div id="pageheading"></div>'; ?> 
-<p>This file/voucher is no longer available.</p>
+<p>This voucher has been cancelled.</p>
 </div>
