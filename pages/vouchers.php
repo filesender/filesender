@@ -153,9 +153,9 @@ $json_o=json_decode($filedata,true);
       </tr>
       <tr>
         <td width="200"><?php echo _TO; ?></td>
-        <td><?php echo _EMAIL_SEPARATOR_MSG; ?><br />
-        	<input id="fileto" name="fileto" type="text" size="40" /><br />
- 			<div id="fileto_msg" class="validation_msg">Invalid or missing email</div>
+        <td>
+        <input id="fileto" name="fileto" title="<?php echo _EMAIL_SEPARATOR_MSG; ?>"  type="text" size="40" /><br />
+ 		<div id="fileto_msg" class="validation_msg">Invalid or missing email</div>
  		</td>
       </tr>
       <tr>
