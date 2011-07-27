@@ -138,16 +138,20 @@ input {
 }
 #progress_container {
 	width: 300px;
-	height: 30px;
+	height: 20px;
 	border: 1px solid #CCCCCC;
 	background-color:#CCCCCC;
 	display: block;
-	margin:5px 0px -15px 0px;
+	padding: 1px;
+	margin-top: 5px;
+	margin-right: 0px;
+	margin-bottom: -15px;
+	margin-left: 4px;
 }
 #progress_bar {
 	position: relative;
-	height: 30px;
-	background-color: #F3631C;
+	height: 20px;
+	background-color: #090;
 	width: 0%;
 	z-index:10;
 }

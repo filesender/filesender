@@ -169,11 +169,10 @@
 			// upload btn btnUploadclick
 			public function btnUploadclick():void
 			{
-					if(uploadBtn.label == buttonCancel)
+				if(uploadBtn.label == buttonCancel)
 				{
 					cancelit();
-				}
-				if(uploadBtn.label == buttonUpload)
+				} else if(uploadBtn.label == buttonUpload)
 				{
 					validatebeforeupload();
 				}
@@ -302,9 +301,9 @@
 			{ 
 				fileRef.cancel(); 
 				// send msg to js to cancel
-				ExternalInterface.call("cancel('tid')"); 
-				BrowseBtn.enabled = true;
-				 
+				ExternalInterface.call("cancelupload()"); 
+				//BrowseBtn.enabled = true;
+				//uploadBtn.label = buttonUpload;
 			} 
 			
 			// display bytes correctly

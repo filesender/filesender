@@ -130,7 +130,7 @@
 		//Check if HTML5 is enable and use HTML uploader
 		if(window.File && window.FileReader && window.FileList && window.Blob && window.FormData){
 			// use HTML5 upload functions
-			$("#uploadhtml5").show();
+			$("#uploadstandard").show();
 			} else {
 			// use standard upload functions
 			$("#uploadstandard").show();
@@ -424,7 +424,7 @@ function fileMsg(msg)
 	$('#file_msg').show();
 }
 
-function cancel()
+function cancelupload()
 {
 	window.location.href=window.location.href;
 }
@@ -463,6 +463,17 @@ function cancel()
           <div id="expiry_msg" class="validation_msg" style="display: none">Invalid expiry Date</div></td>
         <td>&nbsp;</td>
       </tr>
+      <?php if ($config["AuP"]) {?>
+      <tr>
+        <td class="formfieldheading"></td>
+        <td><input name="aup" type="checkbox" id="aup" onchange="validate_aup()" value="true" />
+          <?php echo "I accept the terms and conditions of this service"; ?> [<a href="#" onclick="toggleTOG()">Show/Hide</a>]
+          <div id="aup_msg" class="validation_msg" style="display: none">You MUST agree to the terms and conditions.</div>
+          <div id="tog" style="display:none"> <?php echo $config["AuP_terms"]; ?> </div></td>
+        <td>&nbsp;</td>
+      </tr>
+      <?php } ?>
+
       <tr>
         <td class="formfieldheading mandatory"><div id="selectfile" name="selectfile"><?php echo _SELECT_FILE; ?></div></td>
         <td><div id="uploadstandard"> 
@@ -545,7 +556,7 @@ if ( hasProductInstall && !hasRequestedVersion ) {
           <div id="uploadhtml5">
             <input type="file" name="fileToUpload" id="fileToUpload" onChange="fileSelected();"/>
             <input type="button" onClick="validate()" value="Upload" id="uploadbutton" name="uploadbutton"/>
-            <input type="button" onClick="cancel()" value="Cancel" id="cancelbutton" name="cancelbutton" style="display:none"/>
+            <input type="button" onClick="cancelupload()" value="Cancel" id="cancelbutton" name="cancelbutton" style="display:none"/>
             
           </div>
           <div id="file_msg" class="validation_msg" style="display: none">Invalid File</div>
@@ -574,18 +585,8 @@ if ( hasProductInstall && !hasRequestedVersion ) {
           </div>
           <div id="transferSpeedInfo"></div>
           <div id="timeRemainingInfo"></div></td>
-        <?php if ($config["AuP"]) {?>
       </tr>
-      <tr>
-        <td class="formfieldheading"></td>
-        <td><input name="aup" type="checkbox" id="aup" onchange="validate_aup()" value="true" />
-          <?php echo "I accept the terms and conditions of this service"; ?> [<a href="#" onclick="toggleTOG()">Show/Hide</a>]
-          <div id="aup_msg" class="validation_msg" style="display: none">You MUST agree to the terms and conditions.</div>
-          <div id="tog" style="display:none"> <?php echo $config["AuP_terms"]; ?> </div></td>
-        <td>&nbsp;</td>
-      </tr>
-      <?php } ?>
-    </table>
+         </table>
   </form>
 </div>
 <div id="dialog-default" title=""> </div>
