@@ -67,6 +67,9 @@ $log =  Log::getInstance();
 date_default_timezone_set($config['Default_TimeZone']);
 $tempuploadfolder =  $config["site_temp_filestore"];
 	
+logEntry("DEBUG fs_upload: REQUEST data: " . print_r($_REQUEST, true));
+logEntry("DEBUG fs_upload: POST data: " . print_r($_POST, true));
+
 // check we are authenticated first before uploading the chunk
 if($authvoucher->aVoucher()  || $authsaml->isAuth() ) { 
 
@@ -77,21 +80,26 @@ if($authvoucher->aVoucher()  || $authsaml->isAuth() ) {
 	// add voucher if this is a voucher upload
 	if ($authvoucher->aVoucher()) {
 		$tempFilename .= $_REQUEST['vid'];
+		logEntry("DEBUG fs_upload: tempfilename 1v : ".$tempFilename);
 	}
 	// else add SAML eduPersonTargetedID
 	else if( $authsaml->isAuth()) {
 		$authAttributes = $authsaml->sAuth();
 		$tempFilename .= $authAttributes["eduPersonTargetedID"];	
+		logEntry("DEBUG fs_upload: tempfilename 1a : ".$tempFilename);
 	} 
 	
 	// add the file name
 	$tempFilename .=  sanitizeFilename($_REQUEST['n']);
+	logEntry("DEBUG fs_upload: tempfilename 2 : ".$tempFilename);
 
 	// add the file size to the filename
 	$tempFilename .=  $_REQUEST['total'];
+	logEntry("DEBUG fs_upload: tempfilename 3 : ".$tempFilename);
 
 	// md5 $tempFilename
 	$tempFilename = md5($tempFilename).'.tmp';
+	logEntry("DEBUG fs_upload: tempfilename 4 : ".$tempFilename);
 
 	 
 	if ( !empty( $tempFilename ) ) {
@@ -112,8 +120,10 @@ if($authvoucher->aVoucher()  || $authsaml->isAuth() ) {
 		
 		 $result = move_uploaded_file($_FILES['Filedata']['tmp_name'], $tempuploadfolder.$tempFilename);
 		 if($result) {
+			logEntry("DEBUG fs_upload.php: file moved:". $_FILES['Filedata']['tmp_name'] . " <- ".$tempFilename );
 			echo "true";
 		 } else {
+			logEntry("DEBUG fs_upload.php: file NOT moved:". $_FILES['Filedata']['tmp_name'] . " <- ".$tempFilename );
 			echo "false";
 		 }
 	} 
@@ -137,7 +147,7 @@ if($authvoucher->aVoucher()  || $authsaml->isAuth() ) {
 
 } else {
 	// log and return errorAuth if not authenticated
-	logEntry("Error authorising Gears upload :Voucher-".$authvoucher->aVoucher().":SAML-". $authsaml->isAuth());
+	logEntry("fs_upload.php: Error authorising upload :Voucher-".$authvoucher->aVoucher().":SAML-". $authsaml->isAuth());
 	echo "ErrorAuth";
 
 }
