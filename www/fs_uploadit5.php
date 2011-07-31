@@ -68,6 +68,9 @@ $config = $CFG->loadConfig();
 $functions = Functions::getInstance();
 date_default_timezone_set($config['Default_TimeZone']);
 
+logEntry("DEBUG fs_uploadit5: REQUEST data: " . print_r($_REQUEST, true));
+logEntry("DEBUG fs_uploadit5: POST data: " . print_r($_POST, true));
+
 if($authvoucher->aVoucher() || $authsaml->isAuth()) { 
 $uploadfolder =  $config["site_filestore"];
 $tempuploadfolder =  $config["site_temp_filestore"];
@@ -82,6 +85,8 @@ $s = "complete";
 		$tempFilename = $authAttributes["eduPersonTargetedID"];
 		$filedata["fileauthuseruid"] = $authAttributes["eduPersonTargetedID"];
 		$filedata["fileauthuseremail"] = $authAttributes["email"];
+		logEntry("DEBUG fs_uploadit5: authsaml filedata " . print_r($filedata, true));
+		logEntry("DEBUG fs_uploadit5: tempfilename 1a : ".$tempFilename);
 	} 
 	// add voucher if this is a voucher upload
 	if ($authvoucher->aVoucher()) {
@@ -89,18 +94,25 @@ $s = "complete";
 		$tempData = $functions->getVoucherData($_POST["filevoucheruid"]);
 		$filedata["fileauthuseruid"] = $tempData[0]["fileauthuseruid"];	
 		$filedata["fileauthuseremail"] = $tempData[0]["fileauthuseremail"];	
+		logEntry("DEBUG fs_uploadit5: authvoucher filedata " . print_r($filedata, true));
+		logEntry("DEBUG fs_uploadit5: authvoucher tempData " . print_r($tempData, true));
+		logEntry("DEBUG fs_uploadit5: tempfilename 1v : ".$tempFilename);
 	}
 	
 	// add the file name
 	$tempFilename .=  sanitizeFilename($_POST['n']);
+	logEntry("DEBUG fs_uploadit5: tempfilename 2 : ".$tempFilename);
 
 	// add the file size to the filename
 	$tempFilename .=  $_POST['total'];
+	logEntry("DEBUG fs_uploadit5: tempfilename 3 : ".$tempFilename);
 
 	// md5 $tempFilename
 	$tempFilename = md5($tempFilename).'.tmp';
+	logEntry("DEBUG fs_uploadit5: tempfilename 4 : ".$tempFilename);
 
 	$correctfilename = preg_replace_callback('/\\\\u([0-9a-fA-F]{4})/','upperHexNumber',trim(json_encode($_REQUEST['n']),"\""));
+	logEntry("DEBUG fs_uploadit5: correctfilename  : ".$correctfilename);
 
     // move file to correct uploadfolder destination
 	$result = rename($tempuploadfolder.$tempFilename, $uploadfolder.$fileuid.".tmp");
@@ -147,7 +159,7 @@ $s = "complete";
 
 } else {
 	    echo "invalidAuth";
-    logEntry("Error authorising Flash upload :Voucher-".$authvoucher->aVoucher().":SAML-". $authsaml->isAuth());
+	    logEntry("fs_uploadit5.php: Error authorising upload :Voucher-".$authvoucher->aVoucher().":SAML-". $authsaml->isAuth());
 
 }
 ?>
