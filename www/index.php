@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  Filsender www.filesender.org
+ *  FileSender www.filesender.org
  *      
  * Copyright (c) 2009-2011, AARNet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
