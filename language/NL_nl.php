@@ -60,14 +60,14 @@
 	DEFINE ("_ERRORS", "Fouten");
 	DEFINE ("_FILES_AVAILABLE", "Beschikbare Bestanden");
 	DEFINE ("_ACTIVE_VOUCHERS", "Geldige uitnodigingen");
-	DEFINE ("_COMPLETE_LOG", "volledig logboek");
+	DEFINE ("_COMPLETE_LOG", "Volledig logboek");
 
 
 	// Formuliervelden
 	DEFINE ("_TO", "To");
 	DEFINE ("_FROM", "Van");
 	DEFINE ("_SIZE", "Grootte");
-	DEFINE ("_CREATED", "aangemaakt");
+	DEFINE ("_CREATED", "Aangemaakt");
 	DEFINE ("_FILE_NAME", "Bestandsnaam");
 	DEFINE ("_SUBJECT", "Onderwerp");
 	DEFINE ("_EXPIRY", "Vervaldatum");
@@ -78,7 +78,7 @@
 	DEFINE ("_TERMS_OF_AGREEMENT", "Algemene Overeenkomst");
 	DEFINE ("_SHOW_TERMS", "Toon Voorwaarden");
 	DEFINE ("_SELECT_FILE", "Selecteer een bestand om te uploaden");
-	DEFINE ("_UPLOADING_WAIT", "uploaden bestand - even geduld aub ...");
+	DEFINE ("_UPLOADING_WAIT", "Uploaden bestand - even geduld aub ...");
 
 	// Vouchers
 	DEFINE ("_SEND_NEW_VOUCHER", "Stuur een nieuwe uitnodiging");
