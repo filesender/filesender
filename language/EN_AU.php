@@ -87,7 +87,9 @@
             DEFINE("_CANCEL","Cancel");
 			
 			// vouchers
-			DEFINE("_SEND_NEW_VOUCHER","Send a new voucher");
+			DEFINE("_SEND_NEW_VOUCHER","A Voucher allows someone to send you a file.<br>
+To create a voucher, enter an email address then select Send Voucher.<BR>
+An email will be sent to the recipient with a link to use the Voucher.");
 			DEFINE("_EMAIL_SEPARATOR_MSG","(Multiple emails separated by , or ;)");
 			
 		    DEFINE("_Active_Vouchers","Active Vouchers");

@@ -299,7 +299,7 @@
 			//Cancel Flash Upload
 			public function cancelit():void 
 			{ 
-				fileRef.cancel(); 
+				//fileRef.cancel(); 
 				// send msg to js to cancel
 				ExternalInterface.call("cancelupload()"); 
 				//BrowseBtn.enabled = true;

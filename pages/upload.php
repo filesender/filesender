@@ -110,7 +110,19 @@
 		{
 			$('#aup').hide();
 		}
-		//$('#uploadbutton').hide();
+		
+		$("#dialog-cancel").dialog({ autoOpen: false, height: 140, modal: true,
+		
+		buttons: {
+				OK: function() {
+				$( this ).dialog( "close" );
+				window.location.href=window.location.href;
+				},
+				Cancel: function() { 
+				$( this ).dialog( "close" );
+				}
+		}
+		});
 		// default error message dialogue
 		$("#dialog-default").dialog({ autoOpen: false, height: 140, modal: true,title: "Error",		
 		buttons: {
@@ -426,7 +438,9 @@ function fileMsg(msg)
 
 function cancelupload()
 {
-	window.location.href=window.location.href;
+	//are you sure
+	$("#dialog-cancel").dialog('open');
+	
 }
     </script>
 
@@ -583,3 +597,4 @@ if ( hasProductInstall && !hasRequestedVersion ) {
   </form>
 </div>
 <div id="dialog-default" title=""> </div>
+<div id="dialog-cancel" title="Cancel Upload">Are you Sure?</div>
