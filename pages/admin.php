@@ -78,7 +78,7 @@ $drivespace = $functions->driveSpace();
 		?>
     </ul>
     <div id="tabs-1"> <?php echo  $functions->getStats(); ?><br />
-      <table width="100%" border="0" cellpadding="4">
+      <table border="0" cellpadding="4" width="720"style="table-layout:fixed;" >
         <tr class="headerrow">
           <td>Drive</td>
           <td>Total</td>
@@ -103,7 +103,7 @@ $drivespace = $functions->driveSpace();
       </table>
     </div>
     <div id="tabs-2">
-      <table id="table2" width="100%" border="0" cellspacing="1" bgcolor="#FFFFFF">
+      <table id="table2" width="720"style="table-layout:fixed;" border="0" cellspacing="1" bgcolor="#FFFFFF">
       <tr>
         <td colspan="5" align="right">
 	 <table border="0" cellpadding="5" align="left">
@@ -134,14 +134,14 @@ echo '<td><strong>'._CREATED.'</strong></td>';
         </tr>
         <?php 
 foreach($Uploaded as $item) {
-	echo "<tr><td>" .$item['logto'] . "</td><td>" .$item['logfrom'] . "</td><td>" .$item['logfilename']. "</td><td>" .formatBytes($item['logfilesize']). "</td><td>" .date("d/m/Y",strtotime($item['logdate'])) . "</td></tr>"; //etc
+	echo "<tr><td class='HardBreak'>" .$item['logto'] . "</td><td class='HardBreak'>" .$item['logfrom'] . "</td><td class='HardBreak'>" .$item['logfilename']. "</td><td>" .formatBytes($item['logfilesize']). "</td><td>" .date("d/m/Y",strtotime($item['logdate'])) . "</td></tr>"; //etc
 }
 
 ?>
       </table>
     </div>
     <div id="tabs-3">
-      <table id="table3" width="100%" border="0" cellspacing="1" bgcolor="#FFFFFF">
+      <table id="table3" width="720"style="table-layout:fixed;" border="0" cellspacing="1" bgcolor="#FFFFFF">
            <tr>
              <td colspan="5" align="right">
 	 <table border="0" cellpadding="5" align="left">
@@ -170,14 +170,14 @@ echo '<td><strong>'._CREATED.'</strong></td>';
         </tr>
         <?php 
 foreach($Download as $item) {
-echo "<tr><td>" .$item['logto'] . "</td><td>" .$item['logfrom'] . "</td><td>" .$item['logfilename']. "</td><td>" .formatBytes($item['logfilesize']). "</td><td>" .date("d/m/Y",strtotime($item['logdate'])) . "</td></tr>"; //etc
+echo "<tr><td class='HardBreak'>" .$item['logto'] . "</td><td class='HardBreak'>" .$item['logfrom'] . "</td><td class='HardBreak'>" .$item['logfilename']. "</td><td>" .formatBytes($item['logfilesize']). "</td><td>" .date("d/m/Y",strtotime($item['logdate'])) . "</td></tr>"; //etc
 }
 
 ?>
       </table>
     </div>
     <div id="tabs-4">
-      <table id="table4" width="100%" border="0" cellspacing="1" bgcolor="#FFFFFF">
+      <table id="table4" width="720"style="table-layout:fixed;" border="0" cellspacing="1" bgcolor="#FFFFFF">
                             <tr>
                               <td colspan="5" align="right">
 	 <table border="0" cellpadding="5" align="left">
@@ -207,7 +207,7 @@ echo '<td><strong>'._CREATED.'</strong></td>';
         </tr>
         <?php 
 foreach($Error as $item) {
-echo "<tr><td>" .$item['logto'] . "</td><td>" .$item['logfrom'] . "</td><td>" .$item['logfilename']. "</td><td>" .date("d/m/Y",strtotime($item['logdate'])) . "</td></tr>"; //etc
+echo "<tr><td class='HardBreak'>" .$item['logto'] . "</td><td class='HardBreak'>" .$item['logfrom'] . "</td><td class='HardBreak'>" .$item['logfilename']. "</td><td>" .date("d/m/Y",strtotime($item['logdate'])) . "</td></tr>"; //etc
 echo "<tr><td colspan=4>".$item['logmessage']."</td></tr>";
 }
 
@@ -215,7 +215,7 @@ echo "<tr><td colspan=4>".$item['logmessage']."</td></tr>";
       </table>
     </div>
     <div id="tabs-5">
-      <table id="table5" width="100%" border="0" cellspacing="1" bgcolor="#FFFFFF">
+      <table id="table5" width="720"style="table-layout:fixed;" border="0" cellspacing="1" bgcolor="#FFFFFF">
             <tr>
               <td colspan="5" align="right">
 	 <table border="0" cellpadding="5" align="left">
@@ -247,7 +247,7 @@ echo '<td><strong>'._EXPIRY.'</strong></td>';
         </tr>
         <?php 
 foreach($Available as $item) {
-echo "<tr><td>" .$item['fileto'] . "</td><td>" .$item['filefrom'] . "</td><td>" .$item['fileoriginalname']. "</td><td>" .formatBytes($item['filesize']). "</td><td>".$item['filesubject']. "</td><td>" .date("d/m/Y",strtotime($item['filecreateddate'])) . "</td><td>" .date("d/m/Y",strtotime($item['fileexpirydate'])) . "</td></tr>"; //etc
+echo "<tr><td class='HardBreak'>" .$item['fileto'] . "</td><td class='HardBreak'>" .$item['filefrom'] . "</td><td class='HardBreak'>" .$item['fileoriginalname']. "</td><td>" .formatBytes($item['filesize']). "</td><td>".$item['filesubject']. "</td><td>" .date("d/m/Y",strtotime($item['filecreateddate'])) . "</td><td>" .date("d/m/Y",strtotime($item['fileexpirydate'])) . "</td></tr>"; //etc
 }
 
 ?>
@@ -255,7 +255,7 @@ echo "<tr><td>" .$item['fileto'] . "</td><td>" .$item['filefrom'] . "</td><td>" 
     </div>
     <div id="tabs-6">
       <div id="tablediv1">
-        <table id="table6" width="100%" border="0" cellspacing="1" bgcolor="#FFFFFF">
+        <table id="table6" width="720"style="table-layout:fixed;" border="0" cellspacing="1" bgcolor="#FFFFFF">
                         <tr>
                           <td colspan="5" align="right">
 	 <table border="0" cellpadding="5" align="left">
@@ -286,7 +286,7 @@ echo '<td><strong>'._EXPIRY.'</strong></td>';
 ?>
             <?php 
 foreach($Voucher as $item) {
-echo "<tr><td>" .$item['fileto'] . "</td><td>" .$item['filefrom'] . "</td><td>" .$item['fileoriginalname']. "</td><td>" .formatBytes($item['filesize']). "</td><td>".$item['filesubject']. "</td><td>" .date("d/m/Y",strtotime($item['filecreateddate'])) . "</td><td>" .date("d/m/Y",strtotime($item['fileexpirydate'])) . "</td></tr>"; //etc
+echo "<tr><td class='HardBreak'>" .$item['fileto'] . "</td><td class='HardBreak'>" .$item['filefrom'] . "</td><td class='HardBreak'>" .$item['fileoriginalname']. "</td><td>" .formatBytes($item['filesize']). "</td><td>".$item['filesubject']. "</td><td>" .date("d/m/Y",strtotime($item['filecreateddate'])) . "</td><td>" .date("d/m/Y",strtotime($item['fileexpirydate'])) . "</td></tr>"; //etc
 }
 
 ?>
