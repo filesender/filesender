@@ -107,7 +107,7 @@ foreach($json_o as $item) {
    {
    echo "<img src='images/page_white_text_width.png' border='0' title='".$item['filemessage']. "'>";
    }
-   echo "</td><td>" .date("d/m/Y",strtotime($item['filecreateddate'])) . "</td><td>" .date("d/m/Y",strtotime($item['fileexpirydate'])) . "</td><td  valign='top'  width='22'><a href='#' onclick='confirmdelete(".'"' .$item['filevoucheruid'] . '"'. ")'><img src='images/shape_square_delete.png' title='Delete'></a></td></tr>"; //etc
+   echo "</td><td>" .date("d/m/Y",strtotime($item['filecreateddate'])) . "</td><td>" .date("d/m/Y",strtotime($item['fileexpirydate'])) . "</td><td  valign='top'  width='22'><div style='cursor:pointer;'><img onclick='confirmdelete(".'"' .$item['filevoucheruid'] . '")'. "' src='images/shape_square_delete.png' title='Delete' ></div></td></tr>"; //etc
    }
 } else {
 	echo "<tr><td colspan='7'>There are currently no files available</td></tr>";
