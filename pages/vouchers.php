@@ -143,14 +143,17 @@ $filedata = $functions->getVouchers();
 $json_o=json_decode($filedata,true);
 
 ?>
-<div id="box">
-<?php echo '<div id="pageheading">'._VOUCHERS.'</div>'; ?>
-  <form name="form1" method="post" action="index.php?s=vouchers"  onSubmit="return validateForm()">
+<form name="form1" method="post" action="index.php?s=vouchers"  onSubmit="return validateForm()">
+    <div id="box">
+  <?php echo '<div id="pageheading">'._VOUCHERS.'</div>'; ?>
     <table width="100%" border="0">
       <tr>
-        <td width="200"><?php echo _SEND_NEW_VOUCHER; ?></td>
-        <td>&nbsp;</td>
+        <td colspan="2" class="formfieldheading"><?php echo _SEND_NEW_VOUCHER; ?></td>
       </tr>
+      </table>
+      </div>
+      <div id="box">
+       <table width="100%" border="0">
       <tr>
         <td width="200"><?php echo _TO; ?></td>
         <td>
@@ -167,8 +170,8 @@ $json_o=json_decode($filedata,true);
         <td><input type="submit" value="Send Voucher"/></td>
       </tr>
     </table>
+     </div>
   </form>
-  </div>
   <div id="box">
   <table id="vouchertable" width="100%" border="0" cellspacing="1">
     <tr class="headerrow">
