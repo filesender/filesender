@@ -83,7 +83,7 @@ DEFINE ("_UPLOADING_WAIT", "Laster opp fil - vennligst vent ...");
 
 // Bilag
 DEFINE ("_SEND_NEW_VOUCHER", "Send en ny invitasjon");
-DEFINE ("_EMAIL_SEPARATOR_MSG", "(Flere epost-adresser avskilles med , eller ;)");
+DEFINE ("_EMAIL_SEPARATOR_MSG", "Flere epost-adresser avskilles med , eller ;");
 
 // Flash button menu
 DEFINE("_UPLOAD","Upload");
