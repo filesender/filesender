@@ -85,7 +85,7 @@
 	// all default settings
 	var uploadid = '<?php echo $id ?>';
 	var maximumDate= '<?php echo $config['default_daysvalid']?>';
-	var maxHTML5uploadsize = <?php echo $config['max_html5_upload_size'] ?>;
+	var maxHTML5uploadsize = <?php echo $config['max_gears_upload_size'] ?>;
 	var aup = '<?php echo $config['AuP'] ?>';
 	var bytesUploaded = 0;
 	var bytesTotal = 0;
