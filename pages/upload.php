@@ -85,6 +85,7 @@
 	// all default settings
 	var uploadid = '<?php echo $id ?>';
 	var maximumDate= '<?php echo $config['default_daysvalid']?>';
+	var maxHTML5uploadsize = <?php echo $config['max_html5_upload_size'] ?>;
 	var aup = '<?php echo $config['AuP'] ?>';
 	var bytesUploaded = 0;
 	var bytesTotal = 0;
@@ -302,6 +303,11 @@ function validate_file()
 		if(file.size < 1)
 		{
 		fileMsg("File size cannot be 0. Please select another file.");	
+		return false;
+		}
+		if(file.size > maxHTML5uploadsize)
+		{
+		fileMsg("File size cannot be greater than " + readablizebytes(maxHTML5uploadsize) + ". Please select another file.");	
 		return false;
 		}
 		return true;
