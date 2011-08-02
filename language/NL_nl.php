@@ -82,8 +82,8 @@
 
 	// Vouchers
 	DEFINE ("_SEND_NEW_VOUCHER", "Met een Uitnodiging kunt u iemand een bestand laten sturen.<br>
-Om een Uitnodiging te maken voer een emailadres in en klik op Stuur Uitnodiging.<BR>
-Er wordt dan een email verstuurd naar de ontvanger met daarin een link om de uitnodiging te gebruiken.");
+Om een Uitnodiging te maken voer een e-mailadres in en klik op Stuur Uitnodiging.<BR>
+Er wordt dan een e-mail verstuurd naar de ontvanger met daarin een link om de uitnodiging te gebruiken.");
 	DEFINE ("_EMAIL_SEPARATOR_MSG", "(Meerdere e-mails gescheiden door, of ;)");
 
 	// Flash button menu
