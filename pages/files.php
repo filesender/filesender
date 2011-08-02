@@ -74,22 +74,23 @@ $json_o=json_decode($filedata,true);
 <div id="tablediv">
 <table id="myfiles" width="750" border="0" cellspacing="1" style="table-layout:fixed;">
 <tr class="headerrow">
-<td width="22">&nbsp;</td>
+<td width="18">&nbsp;</td>
+<td width="18">&nbsp;</td>
 <td><strong><?php echo _TO; ?></strong></td>
 <td><strong><?php echo _FROM; ?></strong></td>
 <td><strong><?php echo _FILE_NAME; ?></strong></td>
-<td><strong><?php echo _SIZE; ?></strong></td>
+<td width="60"><strong><?php echo _SIZE; ?></strong></td>
 <td><strong><?php echo _SUBJECT; ?></strong></td>
-<td  width="16"><strong></strong></td>
-<td><strong><?php echo _CREATED; ?></strong></td>
-<td><strong><?php echo _EXPIRY; ?></strong></td>
-<td width="22">&nbsp;</td>
+<td width="16"><strong></strong></td>
+<td width="80"><strong><?php echo _CREATED; ?></strong></td>
+<td width="80"><strong><?php echo _EXPIRY; ?></strong></td>
+<td width="18">&nbsp;</td>
 </tr>
 <?php 
 if(sizeof($json_o) > 0)
 {
 foreach($json_o as $item) {
-   echo "<tr><td valign='top' width='22'><a href='index.php?s=files&a=resend&id=" .$item['filevoucheruid'] . "'><img src='images/email_go.png' title='Re-send Email'></a></td>";
+   echo "<tr><td valign='top'></td><td valign='top'><a href='index.php?s=files&a=resend&id=" .$item['filevoucheruid'] . "'><img src='images/email_go.png' title='Re-send Email'></a></td>";
    if($item['fileto'] == $attributes["email"])
    {
    echo "<td class='HardBreak' valign='top'>Me</td>";
