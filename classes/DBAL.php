@@ -42,11 +42,156 @@ class DBALException extends Exception {}
 class DBALConnectException extends DBALException {}
 
 class DBAL {
-
+	
+	// database settings	
+	//$config['pg_host'] = 'localhost';
+	//$config['pg_database'] = 'filesender';
+	//$config['pg_port'] = '5432';
+	//$config['pg_username'] = 'postgres';
+	//$config['pg_password'] = 'postgres';
     private static $instance = NULL;
 
+	private static function initDSNFromDBParameters() {
+		global $config;
+		//Sanity checking....
+		if (
+			//These must exist at a minimum
+			! (array_key_exists('db_database_type',$config)) ||
+			! (array_key_exists('db_database',$config)) ||
+			! (array_key_exists('db_username',$config)) ||
+			! (array_key_exists('db_password',$config)) 
+
+		) { 
+			return "Incomplete parameter specification for Postgres, using the deprecated pg_* parameters. Please check you config.php";
+		}
+		
+		switch ($config['database_type']) {
+			case 'mysql':
+				if(!array_key_exists('db_port',$config)) {
+					$config['dbport'] = '3306';
+				}
+				if(!array_key_exists('db_host',$config)) {
+					$config['dbport'] = 'localhost';
+				}
+				//Concat db string here
+				
+				//CODE_CC
+				return ''; 
+				
+			case 'postgres':
+				if(!array_key_exists('db_port',$config)) {
+					$config['dbport'] = '5432';
+				}
+				if(!array_key_exists('db_host',$config)) {
+					$config['dbport'] = 'localhost';
+				}
+				//And return the DSN string
+				return 'pgsql://' . $config['db_username'] . ':' . $config['db_password'] . '@tcp(' . $config['db_host']  . ':' . $config['db_port'] . ')/' . $config['db_database'];
+				
+			default:
+				return "Invalid database type sepcification in db_type. Try using MDB2 DSN syntax directly in config.php, e.g. \$config[\'dsn\'] = .....;";
+				
+		}
+	}
+	
+	
+
+	private static function initDSN() {
+		global $config;
+		
+		if (array_key_exists('dsn',$config)) {
+			return $config['dsn'];
+		} 
+		
+		
+		elseif (array_key_exists('db_host',$config)) {
+			global $config;
+			//Sanity checking....
+			if (
+				//These must exist at a minimum
+				! (array_key_exists('db_type',$config)) ||
+				! (array_key_exists('db_database',$config)) ||
+				! (array_key_exists('db_username',$config)) ||
+				! (array_key_exists('db_password',$config)) 
+
+			) { 
+				return "Incomplete parameter specification for Postgres, using the deprecated pg_* parameters. Please check you config.php";
+			}
+
+			switch ($config['db_type']) {
+				case 'mysql':
+					//Set defaults if necessary
+					if(!array_key_exists('db_port',$config)) {
+						$config['dbport'] = '3306';
+					}
+					if(!array_key_exists('db_host',$config)) {
+						$config['dbport'] = 'localhost';
+					}
+					//Concat db string here
+					return $config['dsn'] = 'mysql://'.$config['db_username'].':'.$config['db_password'].'@'.$config['db_host'].':'.$config['db_port'].'/'.$config['db_database'];
+
+
+				case 'postgres':
+				//Set defaults if necessary
+					if(!array_key_exists('db_port',$config)) {
+						$config['dbport'] = '5432';
+					}
+					if(!array_key_exists('db_host',$config)) {
+						$config['dbport'] = 'localhost';
+					}
+					//And return the DSN string
+					return 'pgsql://'.$config['db_username'].':'.$config['db_password'].'@tcp('.$config['db_host'] .':'.$config['db_port'].')/'.$config['db_database'];
+
+				default:
+					return "Invalid database type specification in db_type. Try using MDB2 DSN syntax directly in config.php, e.g. \$config[\'dsn\'] = .....;";
+
+			}		
+		}
+		
+		//Deprecated mode
+		elseif (array_key_exists('pg_host',$config)) {
+			global $config;
+			//Sanity checking....
+			if (
+				//These must exist at a minimum
+				(! (array_key_exists('pg_database',$config))) ||
+				(! (array_key_exists('pg_username',$config))) ||
+				(! (array_key_exists('pg_password',$config))) 
+
+			) { 
+				return "Incomplete parameter specification for Postgres, using the deprecated pg_* parameters. Please check you config.php";
+			}
+			//Set to default values if non-existant
+			if(!array_key_exists('pg_host',$config)){
+				$config['pg_host'] = 'localhost';
+			}
+			if(!array_key_exists('pg_port',$config)){
+				$config['pg_host'] = '5432';
+			}
+			//And return the DSN string
+			return 'pgsql://'.$config['pg_username'].':'.$config['pg_password'].'@tcp('.$config['pg_host'] .':'.$config['pg_port'].')/'.$config['pg_database'];
+		}
+		else {
+			//This wil end up in the DBALException error message on trying to connect
+			return 'no connection specified';
+		}
+	}
+
     public static function getInstance() {
-        // Check for both equality and type		
+		//Initialize the config['dsn'] entry
+		global $config;
+		$config['dsn'] = self::initDSN();
+		
+		//We have deprecated postgres specific parameters, but catch this as well
+		if(!(array_key_exists('db_dateformat',$config)) && (array_key_exists('postgresdateformat',$config))) {
+			$config['db_dateformat'] = $config['postgresdateformat'];
+		} 
+		//Or set sensible defaults if nothing is present
+		else if (!(array_key_exists('db_dateformat',$config))) {
+			$config['db_dateformat'] = 'Y-m-d H:i:sP';
+		}
+
+		// Check for both equality and type	
         if(self::$instance === NULL) {
             self::$instance = new self();
 			
@@ -98,7 +243,6 @@ class DBAL {
 				$res = $mdb2->queryAll($query);
 				// Always check that result is not an error
 				if (PEAR::isError($res)) {
-					print_r($query);
 				    throw new DBALException("Error executing query: " . $res->getMessage());
 				}
 
@@ -151,7 +295,6 @@ class DBAL {
 				$res = $mdb2->exec($query);
 				// Always check that result is not an error
 				if (PEAR::isError($res)) {
-					print_r($query);
 				    throw new DBALException("Error executing query: " . $res->getMessage());
 				}
 
