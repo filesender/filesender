@@ -74,7 +74,7 @@ class Log {
             $logtype	= $logType;
             $logfrom	= $dataitem['filefrom'];
             $logto	= $dataitem['fileto'];
-            $logdate	= date($config['postgresdateformat'], time());//use timestamp with timezone $dbCheck->checkString(pg_escape_string($dataitem['logdate']));
+            $logdate	= date($config['db_dateformat'], time());//use timestamp with timezone $dbCheck->checkString(pg_escape_string($dataitem['logdate']));
             $logfilesize	= $dataitem['filesize'];
             $logfilename	= $dataitem['fileoriginalname'];
             $logmessage	= $message;
@@ -85,7 +85,7 @@ class Log {
             $logtype	= $logType;
             $logfrom	= "";
             $logto	= "";
-            $logdate	= date($config['postgresdateformat'], time());//use timestamp with timezone $dbCheck->checkString(pg_escape_string($dataitem['logdate']));
+            $logdate	= date($config['db_dateformat'], time());//use timestamp with timezone $dbCheck->checkString(pg_escape_string($dataitem['logdate']));
             $logfilesize	= "";
             $logfilename	= "";
             $logmessage	= $message;

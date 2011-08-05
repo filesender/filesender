@@ -36,6 +36,7 @@ require_once("$filesenderbase/classes/LanguageSelection.php");
 require_once("$filesenderbase/config/config.php");
 
 $CFG = config::getInstance();
+global $config;
 $config = $CFG->loadConfig();  // use _global $config in all functions
 
 require_once("$filesenderbase/includes/ErrorHandler.php");

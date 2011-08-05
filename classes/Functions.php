@@ -526,7 +526,7 @@ class Functions {
 		if(strtotime($dataitem["fileexpirydate"]) > strtotime("+".$config['default_daysvalid']." day"))
 		{
 		// reset fileexpiry date to max config date from server
-		$dataitem["fileexpirydate"] = date($config['postgresdateformat'],strtotime("+".($config['default_daysvalid'])." day"));
+		$dataitem["fileexpirydate"] = date($config['db_dateformat'],strtotime("+".($config['default_daysvalid'])." day"));
 		}
 
         if( $this->authsaml->isAuth()) {
@@ -563,10 +563,10 @@ class Functions {
 	            ) VALUES
 	            ( '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')",
 
-	            date($config['postgresdateformat'], strtotime($dataitem['fileexpirydate'])),
+	            date($config['db_dateformat'], strtotime($dataitem['fileexpirydate'])),
 	            $dataitem['fileto'],
 	            isset($dataitem['filesubject']) ? $dataitem['filesubject'] : "NULL",
-	            date($config['postgresdateformat'], time()),
+	            date($config['db_dateformat'], time()),
 	            $dataitem['filevoucheruid'],
 	            isset($dataitem['filemessage']) ? $dataitem['filemessage'] : "NULL",
 	            $dataitem['filefrom'],
@@ -584,7 +584,7 @@ class Functions {
 	                ensureSaneFileUid($dataitem['fileuid']),
 	                $dataitem['fileauthuseruid'],
 	                $dataitem["fileauthuseremail"],
-	                date($config['postgresdateformat'], time())
+	                date($config['db_dateformat'], time())
 	            );
 		} catch(DBALException $e) {
 			 $this->saveLog->saveLog($dataitem,"Error",$e.getMessage()); return FALSE;
@@ -626,7 +626,7 @@ public function insertVoucher($to,$expiry){
          $dataitem['fileuid'] = getGUID();
          $dataitem['fileauthuseruid'] = $authAttributes["eduPersonTargetedID"];
          $dataitem['fileauthuseremail'] = $authAttributes["email"];
-         $dataitem['filecreateddate'] =  date($config['postgresdateformat'], time());
+         $dataitem['filecreateddate'] =  date($config['db_dateformat'], time());
 		 
 		 if( $this->authsaml->isAuth()) {
             $authAttributes = $this->authsaml->sAuth();
@@ -641,7 +641,7 @@ public function insertVoucher($to,$expiry){
 		if(strtotime($expiry) > strtotime("+".$config['default_daysvalid']." day"))
 		{
 		// reset fileexpiry date to max config date from server
-		$expiry = date($config['postgresdateformat'],strtotime("+".($config['default_daysvalid'])." day"));
+		$expiry = date($config['db_dateformat'],strtotime("+".($config['default_daysvalid'])." day"));
 		}
 
        $dataitem['fileexpirydate'] = $expiry;
@@ -672,10 +672,10 @@ public function insertVoucher($to,$expiry){
 
             ) VALUES
             ( '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')",
-  			date($config['postgresdateformat'], strtotime($dataitem['fileexpirydate'])),
+  			date($config['db_dateformat'], strtotime($dataitem['fileexpirydate'])),
             $dataitem['fileto'],
             isset($dataitem['filesubject']) ? $dataitem['filesubject'] : "NULL",
-            date($config['postgresdateformat'], time()),
+            date($config['db_dateformat'], time()),
             $dataitem['filevoucheruid'],
             isset($dataitem['filemessage']) ? $dataitem['filemessage'] : "NULL",
             $dataitem['filefrom'],
@@ -693,7 +693,7 @@ public function insertVoucher($to,$expiry){
                 ensureSaneFileUid($dataitem['fileuid']),
                 $dataitem['fileauthuseruid'],
                 $dataitem["fileauthuseremail"],
-                date($config['postgresdateformat'], time())
+                date($config['db_dateformat'], time())
             );
 
        		// if (!$result) { $this->saveLog->saveLog($dataitem,"Error",pg_last_error()); return FALSE; }
@@ -728,7 +728,7 @@ public function insertVoucher($to,$expiry){
 		if(strtotime($dataitem["fileexpirydate"]) > strtotime("+".$config['default_daysvalid']." day"))
 		{
 		// reset fileexpiry date to max config date from server
-		$dataitem["fileexpirydate"] = date($config['postgresdateformat'],strtotime("+".($config['default_daysvalid'])." day"));
+		$dataitem["fileexpirydate"] = date($config['db_dateformat'],strtotime("+".($config['default_daysvalid'])." day"));
 		}
 
         try {
@@ -758,10 +758,10 @@ public function insertVoucher($to,$expiry){
             ) VALUES
             ( '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')",
 
-            date($config['postgresdateformat'], strtotime($dataitem['fileexpirydate'])),
+            date($config['db_dateformat'], strtotime($dataitem['fileexpirydate'])),
             $dataitem['fileto'],
             isset($dataitem['filesubject']) ? $dataitem['filesubject'] : "NULL",
-            date($config['postgresdateformat'], time()),
+            date($config['db_dateformat'], time()),
             $dataitem['filevoucheruid'],
             isset($dataitem['filemessage']) ? $dataitem['filemessage'] : "NULL",
             $dataitem['filefrom'],
@@ -779,7 +779,7 @@ public function insertVoucher($to,$expiry){
                 ensureSaneFileUid($dataitem['fileuid']),
                 $dataitem['fileauthuseruid'],
                 $dataitem["fileauthuseremail"],
-                date($config['postgresdateformat'], time())
+                date($config['db_dateformat'], time())
             );
 		} catch(DBALException $e) {
 			$this->saveLog->saveLog($dataitem,"Error",$e->getMessage()); return FALSE;
@@ -811,12 +811,12 @@ public function insertVoucher($to,$expiry){
 
         $ip = $_SERVER['REMOTE_ADDR'];
 
-        $fileexpirydate 	=  date($config['postgresdateformat'],strtotime($dataitem['fileexpirydate']));
+        $fileexpirydate 	=  date($config['db_dateformat'],strtotime($dataitem['fileexpirydate']));
 		
 			// check if user supplied date is past the server configuration maximum date
 		if(strtotime($fileexpirydate) > strtotime("+".$config['default_daysvalid']." day"))
 		{
-		$fileexpirydate = date($config['postgresdateformat'],strtotime("+".$config['default_daysvalid']." day"));
+		$fileexpirydate = date($config['db_dateformat'],strtotime("+".$config['default_daysvalid']." day"));
 		}
 		
         $fileto			=  $dataitem['fileto'];
@@ -826,7 +826,7 @@ public function insertVoucher($to,$expiry){
         } else {
             $filesubject 	= "NULL";
         }
-        $fileactivitydate 	= dateConversion($dbCheck->checkString($dataitem['fileactivitydate']));//date($config['postgresdateformat'],time());//dateConversion($dbCheck->checkString($dataitem['fileactivitydate']));
+        $fileactivitydate 	= dateConversion($dbCheck->checkString($dataitem['fileactivitydate']));//date($config['db_dateformat'],time());//dateConversion($dbCheck->checkString($dataitem['fileactivitydate']));
         $filevoucheruid 	= $dataitem['filevoucheruid'];
 
         if(isset($dataitem['filemessage'])){
@@ -847,7 +847,7 @@ public function insertVoucher($to,$expiry){
         $fileuid 		= ensureSaneFileUid($dataitem['fileuid']);
         $fileauthuseruid 	= $dataitem["fileauthuseruid"];
         $fileauthuseremail 	= $dataitem["fileauthuseremail"];
-        $filecreateddate 	= date($config['postgresdateformat'],strtotime($dataitem['filecreateddate']));
+        $filecreateddate 	= date($config['db_dateformat'],strtotime($dataitem['filecreateddate']));
 
         try {
 			if (isset($dataitem['fileid'])) {
