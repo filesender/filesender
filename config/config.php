@@ -88,6 +88,7 @@ public function loadConfig() {
 
 	$config['max_flash_upload_size'] = '2147483648'; // 2GB
 	$config['max_gears_upload_size'] = '107374182400'; // 100 GB
+	$config['max_html5_upload_size'] = '1374182400'; // 1  GB
 	
 	// update max_flash_upload_size if php.ini post_max_size and upload_max_filesize is set lower
 	$config['max_flash_upload_size'] = min(let_to_num(ini_get('post_max_size'))-2048, let_to_num(ini_get('upload_max_filesize')),$config['max_flash_upload_size']);
