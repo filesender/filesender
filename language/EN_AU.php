@@ -134,6 +134,7 @@ An email will be sent to the recipient with a link to use the Voucher.");
            	DEFINE("_ To","To");
            	DEFINE("_ Upload","Upload");
            	DEFINE("_ Uploading","Uploading");
+			DEFINE("_UploadProgress","Upload Progress");
            	DEFINE("_Uploads","Uploads");
            	DEFINE("_ Valid_To","Valid to");
            	DEFINE("_ Welcome","Welcome");

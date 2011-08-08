@@ -89,6 +89,7 @@
 	var aup = '<?php echo $config['AuP'] ?>';
 	var bytesUploaded = 0;
 	var bytesTotal = 0;
+	var banextensions = '<?php echo $config['ban_extension']?>';
 	var previousBytesLoaded = 0;
 	var intervalTimer = 0;
 	var vid='<?php if(isset($_REQUEST["vid"])){echo $_REQUEST["vid"];}; ?>';
@@ -100,7 +101,7 @@
 		$('#uploadstandard').hide();
 		$('#uploadhtml5').hide();
 		$('#uploadstandardspinner').hide();
-		$('#progress_container').hide();
+		$('#progress_view').hide();
 		$('#fileto_msg').hide();
 		$('#expiry_msg').hide();
 		$('#aup_msg').hide();
@@ -174,7 +175,7 @@
 		else
 			bytesTransfered = (Math.round(bytesloaded * 100)/100).toString() + 'Bytes';
 
-			$('#progress_container').fadeIn(100);	//fade in progress bar	
+			$('#progress_view').fadeIn(100);	//fade in progress bar	
 			$('#progress_bar').width(percentComplete/100 *$('#progress_container').width());	//set width of progress bar based on the $status value (set at the top of this page)
 			$('#progress_bar').html(percentComplete +"% ");
 			$('#progress_completed').html(parseInt(percentComplete) + "%(" + bytesTransfered + ")" );	//display the % completed within the progress bar
@@ -217,7 +218,7 @@
 	if(!validate_aup() ){validate = false;};		// check AUP is selected
 	}
 	if(!validate_expiry() ){validate = false;};		// check date
-		
+	
 	return validate;
 	}
 	// FLASH form Validation
@@ -237,7 +238,7 @@
 		if(!validate_aup() ){validate = false;};		// check AUP is selected
 	}
 	if(!validate_expiry() ){validate = false;};		// check date
-		
+	
 	return validate;
 	}
 
@@ -284,6 +285,18 @@ function validate_aup()
 	}
 }
 
+// validate extension
+function validateextension(filename)
+{
+	alert(filename.split('.').pop().search(banextensions));
+	if(filename.split('.').pop().search(banextensions) == -1)
+	{
+	return true;
+	} else {
+	return false;
+	}
+}
+
 // Validate FILE (HTML5 only)
 function validate_file()
 {
@@ -308,6 +321,12 @@ function validate_file()
 		if(file.size > maxHTML5uploadsize)
 		{
 		fileMsg("File size cannot be greater than " + readablizebytes(maxHTML5uploadsize) + ". Please select another file.");	
+		return false;
+		}
+		var tmpExtension = file.name.split('.').pop();
+		if(banextensions.search(tmpExtension) != -1)
+		{
+		fileMsg("Invalid file extension. Please select another file.");	
 		return false;
 		}
 		return true;
@@ -412,6 +431,12 @@ function getFlexApp(appName)
 
 function validatefilename(name)
 {
+	var tmpExtension = name.split('.').pop();
+		if(banextensions.search(tmpExtension) != -1)
+		{
+		fileMsg("Invalid file extension. Please select another file.");	
+		return false;
+		}
    if (/^[^\\\/\:\*\?\"\<\>\|\.]+(\.[^\\\/\:\*\?\"\<\>\|\.]+)+$/.test(name)) 
    {
 		return true; 
@@ -590,7 +615,13 @@ if ( hasProductInstall && !hasRequestedVersion ) {
             <div id="fileSize" name="fileSize"></div>
             <div id="fileType" name="fileType"></div>
           </div>
-          <div id="progress_container">
+		
+        </td>
+      </tr>
+      <tr  id="progress_view"  class="formfieldheading"> 
+      <td height="20" valign="bottom"><?php echo _UploadProgress ?> </td>
+      <td height="20">
+         <div id="progress_container">
             <div id="progress_bar">
               <div id="progress_completed"></div>
               <br />
