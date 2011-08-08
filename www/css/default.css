@@ -143,9 +143,7 @@ input {
 	background-color:#CCCCCC;
 	display: block;
 	padding: 1px;
-	margin-top: 5px;
 	margin-right: 0px;
-	margin-bottom: -15px;
 	margin-left: 4px;
 }
 #progress_bar {
@@ -154,6 +152,8 @@ input {
 	background-color: #090;
 	width: 0%;
 	z-index:10;
+	color: #FFF;
+	padding-left: 3px;
 }
 #progress_completed {
 	font-size:14px;
