@@ -131,7 +131,7 @@ public function loadConfig() {
 	//$config['pg_username'] = 'filesender';
 	//$config['pg_password'] = 'verysecretpassword';
 	
-	//$config['db_type'] = 'postgres';
+	//$config['db_type'] = 'pgsql';
 	//$config['db_host'] = 'localhost';
 	//$config['db_database'] = 'filesender';
 	//$config['db_port'] = '5432';
