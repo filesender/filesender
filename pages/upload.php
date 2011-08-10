@@ -113,12 +113,14 @@
 			$('#aup').hide();
 		}
 		
-		$("#dialog-cancel").dialog({ autoOpen: false, height: 140, modal: true,
+		$("#dialog-cancel").dialog({ autoOpen: false, height: 140, width: 350, modal: true,
 		
 		buttons: {
 				OK: function() {
-				$( this ).dialog( "close" );
-				window.location.href=window.location.href;
+				//$( this ).dialog( "close" );
+				//$("#dialog-uploadprogress").dialog('close');
+				alert(window.location);
+				window.location = window.location;
 				},
 				Cancel: function() { 
 				$( this ).dialog( "close" );
@@ -132,6 +134,21 @@
 				$("#dialog-default").html("");
 				$( this ).dialog( "close" );
 				}
+			}
+		})
+		// default error message dialogue
+		$("#dialog-uploadprogress").dialog({ 
+		
+		    open: function() {
+          //Hide closing "X" for this dialog only.
+          $(this).parent().children().children("a.ui-dialog-titlebar-close").remove();
+    	},
+		autoOpen: false, height: 140,width: 350, modal: true,title: "Uploading",		
+		buttons: {
+			Cancel: function() {
+				// are you sure?
+				$("#dialog-cancel").dialog('open');
+				}	
 			}
 		})
 		// set date picker
@@ -154,7 +171,12 @@
 
 	function toggleTOG()
 	{
-	$('#tog').toggle();
+	if( $('#tog').is(':visible') ) {
+    	$('#tog').hide();
+	} else {
+	    $('#tog').show();
+	}
+	//$('#tog').toggle();
 	}
 	
 	// --------------------------
@@ -187,11 +209,14 @@
 		return document.getElementById(id);
 	}
 	
-	function validateforflash()
+	function validateforflash(fname,fsize)
 	{
 	if(validateFormFlash())
 	{
-	lockformfields();
+	// hide upload button
+	$('#dialog-uploadprogress').dialog('option', 'title', "Uploading " +  fname + " (" +readablizebytes(fsize) + ")");
+	$("#dialog-uploadprogress").dialog('open');	
+	//lockformfields();
 	getFlexApp('filesenderup').returnMsg("true")
 	} else {
 	getFlexApp('filesenderup').returnMsg("false")
@@ -402,7 +427,7 @@ getFlexApp('filesenderup').returnMsg("upload")
 
 function uploadcomplete(name,size)
 {
-unlockformfields();
+//unlockformfields();
 $("#form1").submit();
 }
 
@@ -467,12 +492,6 @@ function fileMsg(msg)
 	$('#file_msg').show();
 }
 
-function cancelupload()
-{
-	//are you sure
-	$("#dialog-cancel").dialog('open');
-	
-}
     </script>
 
 <div id="box"> <?php echo '<div id="pageheading">'._UPLOAD.'</div>'; ?>
@@ -507,9 +526,9 @@ function cancelupload()
       <tr>
         <td class="formfieldheading"></td>
         <td><input name="aup" type="checkbox" id="aup" onchange="validate_aup()" value="true" />
-          <?php echo "I accept the terms and conditions of this service"; ?> [<a href="#" onclick="toggleTOG()">Show/Hide</a>]
+          <div onclick="toggleTOG()"><?php echo "I accept the terms and conditions of this service"; ?> [Show/Hide]</div>
           <div id="aup_msg" class="validation_msg" style="display: none">You MUST agree to the terms and conditions.</div>
-          <div id="tog" style="display:none"> <?php echo $config["AuP_terms"]; ?> </div></td>
+          <div id="tog" name="tog" style="display:none"> <?php echo $config["AuP_terms"]; ?> </div></td>
      </tr>
       <?php } ?>
 
@@ -594,9 +613,7 @@ if ( hasProductInstall && !hasRequestedVersion ) {
           </div>
           <div id="uploadhtml5">
             <input type="file" name="fileToUpload" id="fileToUpload" onChange="fileSelected();"/>
-            <input type="button" onClick="validate()" value="Upload" id="uploadbutton" name="uploadbutton"/>
-            <input type="button" onClick="cancelupload()" value="Cancel" id="cancelbutton" name="cancelbutton" style="display:none"/>
-            
+            <input type="button" onClick="validate()" value="Upload" id="uploadbutton" name="uploadbutton"/> 
           </div>
           <div id="file_msg" class="validation_msg" style="display: none">Invalid File</div>
           </td>
@@ -609,7 +626,6 @@ if ( hasProductInstall && !hasRequestedVersion ) {
           <input type="hidden" name="n" id="n" value=""/>
           <input type="hidden" id="filestatus" name="filestatus" value="<?php echo $filestatus; ?>"/>
           <input type="hidden" name="loadtype" id="loadtype" value="standard"/>
-          <div class="row">
           <div id="fileInfoView">
             <div id="fileName" name="fileName"></div>
             <div id="fileSize" name="fileSize"></div>
@@ -618,20 +634,17 @@ if ( hasProductInstall && !hasRequestedVersion ) {
 		
         </td>
       </tr>
-      <tr  id="progress_view"  class="formfieldheading"> 
-      <td height="20" valign="bottom"><?php echo _UploadProgress ?> </td>
-      <td height="20">
-         <div id="progress_container">
-            <div id="progress_bar">
-              <div id="progress_completed"></div>
-              <br />
-            </div>
-          </div>
-          <div id="transferSpeedInfo"></div>
-          <div id="timeRemainingInfo"></div></td>
-      </tr>
          </table>
   </form>
 </div>
 <div id="dialog-default" title=""> </div>
 <div id="dialog-cancel" title="Cancel Upload">Are you Sure?</div>
+<div id="dialog-uploadprogress" title="">
+<div id="progress_container">
+  		    <div id="progress_bar">
+              <div id="progress_completed"></div>
+              <br />
+        </div>
+  </div>
+</div>
+
