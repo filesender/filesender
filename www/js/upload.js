@@ -86,24 +86,27 @@ var filesize = 0;
 function startupload()
 {
 		// lock all buttons and text boxes before uploading
-		lockformfields();
+		//lockformfields();
 		$("#fileToUpload").hide();// hide Browse
 		$("#selectfile").hide();// hide Browse message
-		
 		
 		// hide upload/show cancel
 		$("#uploadbutton").hide();
 		$("#cancelbutton").show();
 		
-		// hide upload button
-		$('#progress_bar').show();    
-		$('#progress_completed').html("0%");
+		//$('#progress_bar').show();    
+		//$('#progress_completed').html("0%");
 		
 		// check if file is already on the server
 		var file = document.getElementById('fileToUpload').files[0];
 		var fileSize = file.size;
 		var fileName = file.name;
 		currentBytesUpload = 0;
+		
+		// hide upload button
+		$('#dialog-uploadprogress').dialog('option', 'title', "Uploading " +  fileName + " (" +readablizebytes(fileSize) + ")");
+		$("#dialog-uploadprogress").dialog('open');
+		
 		$.ajax({
   		url: uploadURI + '?n='+fileName+'&total='+fileSize+'&vid='+vid+'&type=filesize',
   		success: function(data) {
@@ -129,7 +132,7 @@ function uploadFile(currentBytesUpload) {
 			var filecontrol = document.getElementById("fileToUpload");
        		// Remove the new file control.
     		filecontrol.parentNode.removeChild(filecontrol);
-			unlockformfields();
+			//unlockformfields();
 			document.forms["form1"].submit();
 			return;
 			} 
@@ -265,20 +268,20 @@ function processReqChange(){
 
 function lockformfields()
 {
-			$("#fileto").attr("disabled",true);// unlock To box
-			$("#filesubject").attr("disabled",true);// lock subject
-			$("#filemessage").attr("disabled",true);// lock Message
-			$("#datepicker").attr("disabled",true);// Lock Expiry
-			$("#aup").attr("disabled",true);// lock accept btn
+			//$("#fileto").attr("disabled",true);// unlock To box
+			//$("#filesubject").attr("disabled",true);// lock subject
+			//$("#filemessage").attr("disabled",true);// lock Message
+			//$("#datepicker").attr("disabled",true);// Lock Expiry
+			//$("#aup").attr("disabled",true);// lock accept btn
 }
 
 function unlockformfields()
 {
-			$("#fileto").attr("disabled",false);// unlock To box
-			$("#filesubject").attr("disabled",false);// lock subject
-			$("#filemessage").attr("disabled",false);// lock Message
-			$("#datepicker").attr("disabled",false);// Lock Expiry
-			$("#aup").attr("disabled",false);// lock accept btn
+			//$("#fileto").attr("disabled",false);// unlock To box
+			//$("#filesubject").attr("disabled",false);// lock subject
+			//$("#filemessage").attr("disabled",false);// lock Message
+			//$("#datepicker").attr("disabled",false);// Lock Expiry
+			//$("#aup").attr("disabled",false);// lock accept btn
 		
 }
 

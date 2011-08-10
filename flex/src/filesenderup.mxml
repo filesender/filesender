@@ -118,8 +118,9 @@
 				} 
 				if(msg == "true")
 				{
-				BrowseBtn.enabled = false;
-					uploadit();
+				BrowseBtn.visible = false;
+				uploadBtn.visible = false;
+				uploadit();
 				}
 			}
 			
@@ -131,7 +132,7 @@
 			public function validatebeforeupload():void
 			{
 				// send to js to check: fileRef.name fileRef.size
-				var callString:String = "validateforflash()";
+				var callString:String = "validateforflash('"+fileRef.name+"','"+fileRef.size+"')";
 				ExternalInterface.call(callString); 
 			}
 			
