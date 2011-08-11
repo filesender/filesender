@@ -86,7 +86,11 @@ class DB_Input_Checks {
     }
 
     public function checkIp6($ip) {
-        return long2ip6(ip2long6($ip));
+        if (strpos($ip, ':') !== FALSE) {
+            return long2ip6(ip2long6($ip));
+        } else {
+            return "::";
+        }
     }
 
     /*
