@@ -50,11 +50,11 @@ $filedata = $filedata[0];
 <?php echo '<div id="pageheading">'._DOWNLOAD.'</div>'; ?> 
   <div id="tablediv">
   <table>
-  <tr><td>To:</td><td><?php echo $filedata["fileto"];?></td></tr>
-  <tr><td>From:</td><td><?php echo $filedata["filefrom"];?></td></tr>
-  <tr><td>Subject:</td><td><?php echo $filedata["filesubject"];?></td></tr>
-  <tr><td>Message:</td><td><?php echo $filedata["filemessage"];?></td></tr>
-  <tr><td>Filename:</td><td><?php echo $filedata["fileoriginalname"];?></td></tr>
+  <tr><td>To:</td><td><?php echo htmlentities($filedata["fileto"]);?></td></tr>
+  <tr><td>From:</td><td><?php echo htmlentities($filedata["filefrom"]);?></td></tr>
+  <tr><td>Subject:</td><td><?php echo htmlentities($filedata["filesubject"]);?></td></tr>
+  <tr><td>Message:</td><td><?php echo htmlentities($filedata["filemessage"]);?></td></tr>
+  <tr><td>Filename:</td><td><?php echo htmlentities($filedata["fileoriginalname"]);?></td></tr>
   <tr><td>File Size:</td><td><?php echo formatBytes($filedata["filesize"]);?></td></tr>
   <tr><td>Expiry Date:</td><td><?php echo date("d-M-Y",strtotime($filedata["fileexpirydate"]));?></td></tr>
   </table>
