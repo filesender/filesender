@@ -119,7 +119,6 @@
 				OK: function() {
 				//$( this ).dialog( "close" );
 				//$("#dialog-uploadprogress").dialog('close');
-				alert(window.location);
 				window.location = window.location;
 				},
 				Cancel: function() { 
@@ -287,7 +286,7 @@ function validate_fileto()
 // Validate EXPIRY
 function validate_expiry()
 {
-//	alert($('#fileexpirydate').datepicker("getDate"));
+
 	if($('#datepicker').datepicker("getDate") == null)
 	{
 		$('#expiry_msg').show();
@@ -313,7 +312,6 @@ function validate_aup()
 // validate extension
 function validateextension(filename)
 {
-	alert(filename.split('.').pop().search(banextensions));
 	if(filename.split('.').pop().search(banextensions) == -1)
 	{
 	return true;
