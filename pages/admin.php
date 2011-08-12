@@ -91,14 +91,14 @@ $drivespace = $functions->driveSpace();
           <td><?php echo  formatBytes($drivespace["site_filestore_total"]) ?></td>
           <td><?php echo  formatBytes($drivespace["site_filestore_total"]-$drivespace["site_filestore_free"]) ?></td>
           <td><?php echo  formatBytes($drivespace["site_filestore_free"]) ?></td>
-          <td></td>
+          <td><?php echo  round(($drivespace["site_filestore_total"]-$drivespace["site_filestore_free"])/$drivespace["site_filestore_total"] * 100,0) ?>%</td>
         </tr>
         <tr>
           <td>Temp</td>
           <td><?php echo  formatBytes($drivespace["site_temp_filestore_total"]) ?></td>
           <td><?php echo  formatBytes($drivespace["site_temp_filestore_total"]-$drivespace["site_temp_filestore_free"]) ?></td>
           <td><?php echo  formatBytes($drivespace["site_temp_filestore_free"]) ?></td>
-          <td></td>
+          <td><?php echo  round(($drivespace["site_temp_filestore_total"]-$drivespace["site_temp_filestore_free"]) /$drivespace["site_temp_filestore_total"] *100,0)  ?>%</td>
         </tr>
       </table>
     </div>
