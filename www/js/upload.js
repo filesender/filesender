@@ -177,9 +177,6 @@ function uploadFile(currentBytesUpload) {
         //Set up the body of the POST data includes the name & file data.
         var bodySend =  "";
 		bodySend = reader.result;
-		
-	    //Use sendAsBinary to send binary data. If you are sending text just use send.
-		//document.getElementById('uploadResponse').innerHTML = "Uploading...";
 		xhr.send(blob);
 	   	//xhr.sendAsBinary(bodySend);
 
@@ -192,12 +189,6 @@ function processReqChange(){
 			
            } else {
 			   errorDialog("There was a problem retrieving the data:\n" + req.statusText);
-            //   alert("Status Code = "+xhr.status);
-            // 	alert("There was a problem retrieving the data:\n");
-            //	alert("Failed : object = "+xhr);
-            //  alert(xhr.responseXML);
-            // 	alert("Failed : response = "+xhr.responseText);
-            //	alert("Failed : status = "+xhr.statusText);
             }
         }else{
 		
@@ -265,27 +256,3 @@ function processReqChange(){
 			bytesdisplay = (Math.round(bytes * 100)/100).toString() + 'Bytes';
 		return bytesdisplay;
 	  }
-
-function lockformfields()
-{
-			//$("#fileto").attr("disabled",true);// unlock To box
-			//$("#filesubject").attr("disabled",true);// lock subject
-			//$("#filemessage").attr("disabled",true);// lock Message
-			//$("#datepicker").attr("disabled",true);// Lock Expiry
-			//$("#aup").attr("disabled",true);// lock accept btn
-}
-
-function unlockformfields()
-{
-			//$("#fileto").attr("disabled",false);// unlock To box
-			//$("#filesubject").attr("disabled",false);// lock subject
-			//$("#filemessage").attr("disabled",false);// lock Message
-			//$("#datepicker").attr("disabled",false);// Lock Expiry
-			//$("#aup").attr("disabled",false);// lock accept btn
-		
-}
-
-function postformdata(filenum)
-{
-	
-}
