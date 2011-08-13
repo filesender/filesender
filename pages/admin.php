@@ -38,12 +38,19 @@
  ?>
 <script>
 	$(function() {
-		$( "#tabs" ).tabs({
-   select: function(event, ui) { 
-   window.location ="index.php?s=admin&page=1#tabs-"+ (ui.index+1);
-    }
-   
-});
+	
+	// stripe every second row in the tables
+	$("#table2 tr:odd").not(":first").addClass("altcolor");
+	$("#table3 tr:odd").not(":first").addClass("altcolor");
+	$("#table4 tr:odd").not(":first").addClass("altcolor");
+	$("#table5 tr:odd").not(":first").addClass("altcolor");
+	$("#table6 tr:odd").not(":first").addClass("altcolor");
+	// tab selection
+	$( "#tabs" ).tabs({
+   		select: function(event, ui) { 
+  		window.location ="index.php?s=admin&page=1#tabs-"+ (ui.index+1);
+   	}
+  	});
 	});
 	</script>
 <?php 
@@ -104,25 +111,23 @@ $drivespace = $functions->driveSpace();
     </div>
     <div id="tabs-2">
       <table id="table2" width="720"style="table-layout:fixed;" border="0" cellspacing="1" bgcolor="#FFFFFF">
-      <tr>
-        <td colspan="5" align="right">
-	 <table border="0" cellpadding="5" align="left">
-  <tr>
-  <td>Page:</td>
-  <?php
+        <tr>
+          <td colspan="5" align="right"><table border="0" cellpadding="5" align="left">
+              <tr>
+                <td>Page:</td>
+                <?php
 //  echo "::".$total_pages["Uploaded"];
   for ($i = 1; $i <= $total_pages["Uploaded"]; $i++) {
   $txt = $i;
   if ($page != $i) {$txt = "<a href=\"" . $_SERVER["PHP_SELF"] . "?s=admin&page=$i#tabs-2\">".$txt."</a>";} else { $txt = "<b>".$i."</b>";};
-  ?>  
-  <td align="center"><?php	echo $txt ?></td>
-  <?php
+  ?>
+                <td align="center"><?php	echo $txt ?></td>
+                <?php
   }
   ?>
-  </tr>
-  </table>
-
-	  </td></tr>
+              </tr>
+            </table></td>
+        </tr>
         <tr class="headerrow">
           <?php 
 echo '<td><strong>'._TO.'</strong></td>';
@@ -142,23 +147,22 @@ foreach($Uploaded as $item) {
     </div>
     <div id="tabs-3">
       <table id="table3" width="720"style="table-layout:fixed;" border="0" cellspacing="1" bgcolor="#FFFFFF">
-           <tr>
-             <td colspan="5" align="right">
-	 <table border="0" cellpadding="5" align="left">
-  <tr>
-  <td> Page:</td>
-  <?php
+        <tr>
+          <td colspan="5" align="right"><table border="0" cellpadding="5" align="left">
+              <tr>
+                <td> Page:</td>
+                <?php
   for ($i = 1; $i <= $total_pages["Download"]; $i++) {
   $txt = $i;
   if ($page != $i) {$txt = "<a href=\"" . $_SERVER["PHP_SELF"] . "?s=admin&page=$i#tabs-3\">".$txt."</a>";} else { $txt = "<b>".$i."</b>";};
-  ?>  
-  <td align="center"><?php	echo $txt ?></td>
-  <?php
+  ?>
+                <td align="center"><?php	echo $txt ?></td>
+                <?php
   }
   ?>
-  </tr>
-  </table>
-	  </td></tr>
+              </tr>
+            </table></td>
+        </tr>
         <tr class="headerrow">
           <?php
 echo '<td><strong>'._TO.'</strong></td>';
@@ -178,24 +182,22 @@ echo "<tr><td class='HardBreak'>" .$item['logto'] . "</td><td class='HardBreak'>
     </div>
     <div id="tabs-4">
       <table id="table4" width="720"style="table-layout:fixed;" border="0" cellspacing="1" bgcolor="#FFFFFF">
-                            <tr>
-                              <td colspan="5" align="right">
-	 <table border="0" cellpadding="5" align="left">
-  <tr>
-  <td> Page:</td>
-  <?php
+        <tr>
+          <td colspan="5" align="right"><table border="0" cellpadding="5" align="left">
+              <tr>
+                <td> Page:</td>
+                <?php
   for ($i = 1; $i <= $total_pages["Error"]; $i++) {
   $txt = $i;
   if ($page != $i) {$txt = "<a href=\"" . $_SERVER["PHP_SELF"] . "?s=admin&page=$i#tabs-4\">".$txt."</a>";} else { $txt = "<b>".$i."</b>";};
-  ?>  
-  <td align="center"><?php	echo $txt ?></td>
-  <?php
+  ?>
+                <td align="center"><?php	echo $txt ?></td>
+                <?php
   }
   ?>
-  </tr>
-  </table>
-
-	  </td></tr>
+              </tr>
+            </table></td>
+        </tr>
         <tr class="headerrow">
           <?php 
 echo '<td><strong>'._TO.'</strong></td>';
@@ -216,24 +218,22 @@ echo "<tr><td colspan=4>".$item['logmessage']."</td></tr>";
     </div>
     <div id="tabs-5">
       <table id="table5" width="720"style="table-layout:fixed;" border="0" cellspacing="1" bgcolor="#FFFFFF">
-            <tr>
-              <td colspan="5" align="right">
-	 <table border="0" cellpadding="5" align="left">
-  <tr>
-  <td> Page:</td>
-  <?php
+        <tr>
+          <td colspan="5" align="right"><table border="0" cellpadding="5" align="left">
+              <tr>
+                <td> Page:</td>
+                <?php
   for ($i = 1; $i <= $total_pages["Available"]; $i++) {
   $txt = $i;
   if ($page != $i) {  $txt = "<a href=\"" . $_SERVER["PHP_SELF"] . "?s=admin&page=$i#tabs-5\">".$txt."</a>";} else { $txt = "<b>".$i."</b>";};
-  ?>  
-  <td align="center"><?php	echo $txt ?></td>
-  <?php
+  ?>
+                <td align="center"><?php	echo $txt ?></td>
+                <?php
   }
   ?>
-  </tr>
-  </table>
-
-	  </td></tr>
+              </tr>
+            </table></td>
+        </tr>
         <tr class="headerrow">
           <?php 
 echo '<td><strong>'._TO.'</strong></td>';
@@ -256,24 +256,22 @@ echo "<tr><td class='HardBreak'>" .$item['fileto'] . "</td><td class='HardBreak'
     <div id="tabs-6">
       <div id="tablediv1">
         <table id="table6" width="720"style="table-layout:fixed;" border="0" cellspacing="1" bgcolor="#FFFFFF">
-                        <tr>
-                          <td colspan="5" align="right">
-	 <table border="0" cellpadding="5" align="left">
-  <tr>
-  <td> Page:</td>
-  <?php
+          <tr>
+            <td colspan="5" align="right"><table border="0" cellpadding="5" align="left">
+                <tr>
+                  <td> Page:</td>
+                  <?php
   for ($i = 1; $i <= $total_pages["Voucher"]; $i++) {
   $txt = $i;
   if ($page != $i) { $txt = "<a href=\"" . $_SERVER["PHP_SELF"] . "?s=admin&page=$i#tabs-6\">".$txt."</a>";} else { $txt = "<b>".$i."</b>";};
-  ?>  
-  <td align="center"><?php	echo $txt ?></td>
-  <?php
+  ?>
+                  <td align="center"><?php	echo $txt ?></td>
+                  <?php
   }
   ?>
-  </tr>
-  </table>
-
-	  </td></tr>
+                </tr>
+              </table></td>
+          </tr>
           <tr class="headerrow">
             <?php 
 echo '<td><strong>'._TO.'</strong></td>';
@@ -292,15 +290,6 @@ echo "<tr><td class='HardBreak'>" .$item['fileto'] . "</td><td class='HardBreak'
 ?>
         </table>
       </div>
-   </div>
-   </div>
+    </div>
+  </div>
 </div>
-<script type="application/javascript">
-
-// stripe every second row in the tables
-$("#table2 tr:odd").not(':first').addClass('altcolor');
-$("#table3 tr:odd").not(':first').addClass('altcolor');
-$("#table4 tr:odd").not(':first').addClass('altcolor');
-$("#table5 tr:odd").not(':first').addClass('altcolor');
-$("#table6 tr:odd").not(':first').addClass('altcolor');
-</script> 
