@@ -37,7 +37,6 @@ body {
 	color: #333;
 	font: 83%/1.5 arial, tahoma, verdana, sans-serif;
 	padding:0;
-	text-align: center;
 }
 
 /* LISTS */
@@ -287,4 +286,9 @@ white-space: -pre-wrap; /* Opera 4-6 */
 white-space: -o-pre-wrap; /* Opera 7 */
 word-wrap: break-word; /* Internet Explorer 5.5+ */
 
+}
+
+#footer
+{
+	text-align: center;	
 }
