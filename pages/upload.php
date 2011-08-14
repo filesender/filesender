@@ -98,20 +98,20 @@
 	$(document).ready(function() { 
 		
 		// hide all upload objects
-		$('#uploadstandard').hide();
-		$('#uploadhtml5').hide();
-		$('#uploadstandardspinner').hide();
-		$('#progress_view').hide();
-		$('#fileto_msg').hide();
-		$('#expiry_msg').hide();
-		$('#aup_msg').hide();
-		$('#file_msg').hide();
+		$("#uploadstandard").hide();
+		$("#uploadhtml5").hide();
+		$("#uploadstandardspinner").hide();
+		$("#progress_view").hide();
+		$("#fileto_msg").hide();
+		$("#expiry_msg").hide();
+		$("#aup_msg").hide();
+		$("#file_msg").hide();
 		$("#uploadbutton").hide();
 		
 		// hide aup if not required
 		if(aup == '0') // check if AUP is required
 		{
-			$('#aup').hide();
+			$("#aup").hide();
 		}
 		
 		$("#dialog-cancel").dialog({ autoOpen: false, height: 140, width: 350, modal: true,
@@ -155,7 +155,7 @@
 		$(function() {
 			$("#datepicker" ).datepicker({ minDate: 1, maxDate: "+"+maximumDate+"D",altField: "#fileexpirydate", altFormat: "d-m-yy" });
 			$("#datepicker" ).datepicker( "option", "dateFormat", "d/m/yy" );
-			$("#datepicker").datepicker('setDate', new Date()+maximumDate);
+			$("#datepicker").datepicker("setDate", new Date()+maximumDate);
 		});	
 
 		//Check if HTML5 is enable and use HTML uploader
@@ -169,14 +169,14 @@
 	// end document ready
 	});
 
+	// toggle AUP display
 	function toggleTOG()
 	{
-	if( $('#tog').is(':visible') ) {
-    	$('#tog').hide();
+	if( $("#tog").is(":visible") ) {
+    	$("#tog").hide();
 	} else {
-	    $('#tog').show();
+	    $("#tog").show();
 	}
-	//$('#tog').toggle();
 	}
 	
 	// --------------------------
@@ -186,7 +186,7 @@
 	// update the progress bar
 	function updatepb(bytesloaded,totalbytes)
 	{
-		$('#progress_bar').show();
+		$("#progress_bar").show();
 		
 		var percentComplete = Math.round(bytesloaded * 100 / totalbytes);
 		var bytesTransfered = '';
@@ -197,29 +197,29 @@
 		else
 			bytesTransfered = (Math.round(bytesloaded * 100)/100).toString() + 'Bytes';
 
-			$('#progress_view').fadeIn(100);	//fade in progress bar	
-			$('#progress_bar').width(percentComplete/100 *$('#progress_container').width());	//set width of progress bar based on the $status value (set at the top of this page)
-			$('#progress_bar').html(percentComplete +"% ");
-			$('#progress_completed').html(parseInt(percentComplete) + "%(" + bytesTransfered + ")" );	//display the % completed within the progress bar
+			$("#progress_view").fadeIn(100);	//fade in progress bar	
+			$("#progress_bar").width(percentComplete/100 *$('#progress_container').width());	//set width of progress bar based on the $status value (set at the top of this page)
+			$("#progress_bar").html(percentComplete +"% ");
+			$("#progress_completed").html(parseInt(percentComplete) + "%(" + bytesTransfered + ")" );	//display the % completed within the progress bar
 		  
 	}
 
 	// get a dom element (just to reduce code)
-	function obj(id) {
-		return document.getElementById(id);
-	}
+	//function obj(id) {
+	//	return document.getElementById(id);
+	//}
 	
 	function validateforflash(fname,fsize)
 	{
 	if(validateFormFlash())
 	{
 	// hide upload button
-	$('#dialog-uploadprogress').dialog('option', 'title', "Uploading " +  fname + " (" +readablizebytes(fsize) + ")");
-	$("#dialog-uploadprogress").dialog('open');	
+	$("#dialog-uploadprogress").dialog("option", "title", "Uploading " +  fname + " (" +readablizebytes(fsize) + ")");
+	$("#dialog-uploadprogress").dialog("open");	
 	//lockformfields();
-	getFlexApp('filesenderup').returnMsg("true")
+	getFlexApp("filesenderup").returnMsg("true")
 	} else {
-	getFlexApp('filesenderup').returnMsg("false")
+	getFlexApp("filesenderup").returnMsg("false")
 	}
 	}
 	// --------------------------
@@ -229,10 +229,10 @@
 	function validateForm()
 	{
 	// remove previouse vaildation messages
-	$('#fileto_msg').hide();
-	$('#expiry_msg').hide();
-	$('#aup_msg').hide();
-	$('#file_msg').hide();
+	$("#fileto_msg").hide();
+	$("#expiry_msg").hide();
+	$("#aup_msg").hide();
+	$("#file_msg").hide();
 	
 	var validate = true;
 	
@@ -250,10 +250,10 @@
 	function validateFormFlash()
 	{
 	// remove previouse vaildation messages
-	$('#fileto_msg').hide();
-	$('#expiry_msg').hide();
-	$('#aup_msg').hide();
-	$('#file_msg').hide();
+	$("#fileto_msg").hide();
+	$("#expiry_msg").hide();
+	$("#aup_msg").hide();
+	$("#file_msg").hide();
 	
 	var validate = true;
 	
@@ -270,14 +270,15 @@
 // Validate FILETO
 function validate_fileto()
 {
-	$('#fileto_msg').hide();
+	$("#fileto_msg").hide();
 	// remove white spaces 
-	obj('fileto').value = obj('fileto').value.split(' ').join('');
-	var tempemail = $('#fileto').val();
-	var email = tempemail.split(/,|;/);
+	var email = $("#fileto").val();
+	email = email.split(" ").join("");
+	$("#fileto").val(email);
+	email = email.split(/,|;/);
 	for (var i = 0; i < email.length; i++) {
 		if (!echeck(email[i], 1, 0)) {
-		$('#fileto_msg').show();
+		$("#fileto_msg").show();
 		return false;
 		}
 		}
@@ -288,24 +289,24 @@ function validate_fileto()
 function validate_expiry()
 {
 
-	if($('#datepicker').datepicker("getDate") == null)
+	if($("#datepicker").datepicker("getDate") == null)
 	{
-		$('#expiry_msg').show();
+		$("#expiry_msg").show();
 		return false;
 	}
-	$('#expiry_msg').hide();
+	$("#expiry_msg").hide();
 	return true;
 }
 
 //Validate AUP
 function validate_aup()
 {
-	if(	$('#aup').is(':checked'))
+	if(	$("#aup").is(":checked"))
 	{
-		$('#aup_msg').hide();
+		$("#aup_msg").hide();
 		return true;
 	} else {
-		$('#aup_msg').show();
+		$("#aup_msg").show();
 		return false;
 	}
 }
@@ -325,13 +326,13 @@ function validateextension(filename)
 function validate_file()
 {
 	fileMsg("");
-	if(!document.getElementById('fileToUpload').files[0])
+	if(!document.getElementById("fileToUpload").files[0])
 	{
 		fileMsg("Please select a file");
 		return false;
 	} else 
 	{
-		var file = document.getElementById('fileToUpload').files[0];
+		var file = document.getElementById("fileToUpload").files[0];
 		// validate fiename 
 		if (!validatefilename(file.name)){
 		return false;
@@ -413,12 +414,12 @@ $("#fileInfoView").hide();
 } else if (validatefilename(name)) 
 {
 	$("#fileInfoView").show();
-	$('#n').val(name);
-	$('#total').val(size);
-	$('#fileName').val(name);
-	$("#fileName").html('Name: ' + name);
-	$("#fileSize").html('Size: ' + readablizebytes(size));
-	getFlexApp('filesenderup').returnMsg("upload")
+	$("#n").val(name);
+	$("#total").val(size);
+	$("#fileName").val(name);
+	$("#fileName").html("Name: " + name);
+	$("#fileSize").html("Size: " + readablizebytes(size));
+	getFlexApp("filesenderup").returnMsg("upload")
 } else {
 	$("#fileInfoView").hide();
 }
@@ -482,14 +483,14 @@ function validate()
 
 function errorDialog(msg)
 {
-$('#dialog-default').html(msg);
-$('#dialog-default').dialog('open')
+$("#dialog-default").html(msg);
+$("#dialog-default").dialog("open")
 }
 
 function fileMsg(msg)
 {
-	$('#file_msg').html(msg);
-	$('#file_msg').show();
+	$("#file_msg").html(msg);
+	$("#file_msg").show();
 }
 
     </script>
@@ -639,11 +640,11 @@ if ( hasProductInstall && !hasRequestedVersion ) {
 <div id="dialog-default" title=""> </div>
 <div id="dialog-cancel" title="Cancel Upload">Are you Sure?</div>
 <div id="dialog-uploadprogress" title="">
-<div id="progress_container">
-  		    <div id="progress_bar">
-              <div id="progress_completed"></div>
-              <br />
-        </div>
-  </div>
+	<div id="progress_container">
+ 			<div id="progress_bar">
+			<div id="progress_completed"></div>
+			<br />
+		</div>
+	</div>
 </div>
 

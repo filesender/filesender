@@ -63,7 +63,7 @@ var filesize = 0;
  	function fileSelected() {
 	
 		//	document.getElementById('MSG').innerHTML = "";
-        var file = document.getElementById('fileToUpload').files[0];
+        var file = document.getElementById("fileToUpload").files[0];
         var fileSize = file.size;
         bytesTotal = fileSize;
 		bytesUploaded = 0;
@@ -103,7 +103,7 @@ function startupload()
 		//$('#progress_completed').html("0%");
 		
 		// check if file is already on the server
-		var file = document.getElementById('fileToUpload').files[0];
+		var file = document.getElementById("fileToUpload").files[0];
 		var fileSize = file.size;
 		var fileName = file.name;
 		currentBytesUpload = 0;
@@ -217,12 +217,12 @@ function processReqChange(){
 
         var speed = "";
         if (bytesDiff > 1024 * 1024)
-          speed = (Math.round(bytesDiff * 100/(1024*1024))/100).toString() + 'MBps';
+          speed = (Math.round(bytesDiff * 100/(1024*1024))/100).toString() + "MBps";
         else if (bytesDiff > 1024)
-          speed =  (Math.round(bytesDiff * 100/1024)/100).toString() + 'KBps';
+          speed =  (Math.round(bytesDiff * 100/1024)/100).toString() + "KBps";
         else
           speed = bytesDiff.toString() + 'Bps';
-       $('#transferSpeedInfo').html(speed);
+       $("#transferSpeedInfo").html(speed);
         //document.getElementById('timeRemainingInfo').innerHTML = '| ' + secondsToString(secondsRemaining);        
       }
 
@@ -251,12 +251,12 @@ function processReqChange(){
 	  function readablizebytes(bytes)
 	  {
 		   	if (bytes > 1024*1024*1024)
-			bytesdisplay = (Math.round(bytes * 100/(1024*1024*1024))/100).toString() + 'GB';
+			bytesdisplay = (Math.round(bytes * 100/(1024*1024*1024))/100).toString() + "GB";
 		 else if (bytes > 1024*1024)
-			bytesdisplay = (Math.round(bytes * 100/(1024*1024))/100).toString() + 'MB';
+			bytesdisplay = (Math.round(bytes * 100/(1024*1024))/100).toString() + "MB";
 		else if (bytes > 1024)
-			bytesdisplay = (Math.round(bytes * 100/1024)/100).toString() + 'KB';
+			bytesdisplay = (Math.round(bytes * 100/1024)/100).toString() + "KB";
 		else
-			bytesdisplay = (Math.round(bytes * 100)/100).toString() + 'Bytes';
+			bytesdisplay = (Math.round(bytes * 100)/100).toString() + "Bytes";
 		return bytesdisplay;
 	  }

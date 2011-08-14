@@ -148,7 +148,7 @@ $json_o=json_decode($filedata,true);
 		{
 			// confirm deletion of selected file
 			selectedFile = vid;
-			$( "#dialog-delete" ).dialog( "open" );
+			$("#dialog-delete" ).dialog( "open" );
 		}
 		
 	function openAddRecipient(vid,filename,filesize,from)
@@ -166,35 +166,36 @@ $json_o=json_decode($filedata,true);
 	// display msg 
 	function fileMsg(msg)
 	{
-		$('#file_msg').html(msg);
-		$('#file_msg').show();
+		$("#file_msg").html(msg);
+		$("#file_msg").show();
 	}
 	
 	// display bytes in readable format
 	function readablizebytes(bytes)
 	  {
 		if (bytes > 1024*1024*1024)
-			bytesdisplay = (Math.round(bytes * 100/(1024*1024*1024))/100).toString() + 'GB';
+			bytesdisplay = (Math.round(bytes * 100/(1024*1024*1024))/100).toString() + "GB";
 		else if (bytes > 1024*1024)
-			bytesdisplay = (Math.round(bytes * 100/(1024*1024))/100).toString() + 'MB';
+			bytesdisplay = (Math.round(bytes * 100/(1024*1024))/100).toString() + "MB";
 		else if (bytes > 1024)
-			bytesdisplay = (Math.round(bytes * 100/1024)/100).toString() + 'KB';
+			bytesdisplay = (Math.round(bytes * 100/1024)/100).toString() + "KB";
 		else
-			bytesdisplay = (Math.round(bytes * 100)/100).toString() + 'Bytes';
+			bytesdisplay = (Math.round(bytes * 100)/100).toString() + "Bytes";
 		return bytesdisplay;
 	}	
 	
 	// Validate FILETO
 function validate_fileto()
 {
-	$('#fileto_msg').hide();
+	$("#fileto_msg").hide();
 	// remove white spaces 
-	var tempemail = $('#fileto').val();
-	$('#fileto').val(tempemail.split(' ').join(''));
-	var email = tempemail.split(/,|;/);
+	var email = $("#fileto").val();
+	email = email.split(" ").join("");
+	$("#fileto").val(email);
+	email = email.split(/,|;/);
 	for (var i = 0; i < email.length; i++) {
 		if (!echeck(email[i], 1, 0)) {
-		$('#fileto_msg').show();
+		$("#fileto_msg").show();
 		return false;
 		}
 		}
@@ -205,12 +206,12 @@ function validate_fileto()
 function validate_expiry()
 {
 
-	if($('#datepicker').datepicker("getDate") == null)
+	if($("#datepicker").datepicker("getDate") == null)
 	{
-		$('#expiry_msg').show();
+		$("#expiry_msg").show();
 		return false;
 	}
-	$('#expiry_msg').hide();
+	$("#expiry_msg").hide();
 	return true;
 }
 
