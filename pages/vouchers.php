@@ -155,14 +155,14 @@ $json_o=json_decode($filedata,true);
       <div id="box">
        <table width="100%" border="0">
       <tr>
-        <td width="200"><?php echo _TO; ?></td>
+        <td class="formfieldheading mandatory" width="200"><?php echo _Send_Vouchers_to; ?>:</td>
         <td>
         <input id="fileto" name="fileto" title="<?php echo _EMAIL_SEPARATOR_MSG; ?>"  type="text" size="40" /><br />
  		<div id="fileto_msg" class="validation_msg">Invalid or missing email</div>
  		</td>
       </tr>
       <tr>
-        <td><?php echo _EXPIRY; ?></td>
+        <td class="formfieldheading mandatory"><?php echo _Expiry_Date; ?>:</td>
         <td><input id="datepicker" onchange="validate_expiry()"></input> <div id="expiry_msg" class="validation_msg">Invalid expiry Date</div></td>
       </tr>
       <tr>

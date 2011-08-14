@@ -78,7 +78,7 @@
 			
 			DEFINE("_TERMS_OF_AGREEMENT","Terms of Agreement");
            	DEFINE("_SHOW_TERMS","Show Terms");
-		   	DEFINE("_SELECT_FILE","Select a file to upload");
+		   	DEFINE("_SELECT_FILE","File to Upload");
 		   	DEFINE("_UPLOADING_WAIT","Uploading file - please wait...");
 			
 			// Flash button menu
@@ -104,7 +104,7 @@ An email will be sent to the recipient with a link to use the Voucher.");
             DEFINE("_Download_File","Download File");
            	DEFINE("_ Downloads","Downloads");
            	DEFINE("_ Email_Sent",'Email has been sent');
-            DEFINE("_Expiry_Date","Expiry date");
+            DEFINE("_Expiry_Date","Expiry Date");
             DEFINE("_Export","Export");
             DEFINE("_Errors","Errors");
             DEFINE("_File","File");

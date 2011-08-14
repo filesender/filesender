@@ -516,7 +516,7 @@ function fileMsg(msg)
         <td><textarea name="filemessage" cols="45" rows="4" id="filemessage"></textarea></td>
      </tr>
       <tr>
-        <td class="formfieldheading mandatory"><?php echo _EXPIRY; ?>:
+        <td class="formfieldheading mandatory"><?php echo _Expiry_Date; ?>:
           <input type="hidden" id="fileexpirydate" name="fileexpirydate" value="<?php echo date("d-m-Y",strtotime("+".$config['default_daysvalid']." day"));?>"/></td>
         <td><input id="datepicker" name="datepicker" onchange="validate_expiry()">
           </input>
@@ -533,7 +533,7 @@ function fileMsg(msg)
       <?php } ?>
 
       <tr>
-        <td class="formfieldheading mandatory"><div id="selectfile" name="selectfile"><?php echo _SELECT_FILE; ?></div></td>
+        <td class="formfieldheading mandatory"><div id="selectfile" name="selectfile"><?php echo _SELECT_FILE; ?>:</div></td>
         <td><div id="uploadstandard"> 
             <script language="JavaScript" type="text/javascript">
 <!--
