@@ -99,7 +99,6 @@ if(file_exists($file) && is_file($file))
 		$saveLog->saveLog($fileArray[0],"Download","");
 		$sendmail->sendEmail($fileArray[0],$config['filedownloadedemailbody']);
 		logEntry("Download: Email Sent - To:".$fileArray[0]["fileto"]."  From: ".$fileArray[0]["filefrom"] . " [".$file."]");
-
 }
 else 
 {	

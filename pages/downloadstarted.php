@@ -31,46 +31,12 @@
  */
 
 /* ---------------------------------
- * My Downloads Page
+ *  Upload Complete
  * ---------------------------------
  * 
  */
-
-
-// get file data
-if (isset($_REQUEST['vid'])) {
-$vid = $_REQUEST['vid'];
-$filedata = $functions->getVoucherData($vid);
-$filedata = $filedata[0];
-
-}
-// if download started, display message
-if(isset($_REQUEST['s'])  &&  $_REQUEST['s'] == "downloadstarted") 
-{
-require_once('../pages/downloadstarted.php');
-}
-?>
-<script type="text/javascript">
-
-function startDownload()
-{
-	window.open( "download.php?vid=<?php echo $filedata["filevoucheruid"];?>");
-	window.location.href="index.php?s=downloadstarted&vid=<?php echo $filedata["filevoucheruid"];?>";
-}
-
-</script>
-<div id="box">
-<?php echo '<div id="pageheading">'._DOWNLOAD.'</div>'; ?> 
-  <div id="tablediv">
-  <table>
-  <tr><td>To:</td><td><?php echo htmlentities($filedata["fileto"]);?></td></tr>
-  <tr><td>From:</td><td><?php echo htmlentities($filedata["filefrom"]);?></td></tr>
-  <tr><td>Subject:</td><td><?php echo htmlentities($filedata["filesubject"]);?></td></tr>
-  <tr><td>Message:</td><td><?php echo htmlentities($filedata["filemessage"]);?></td></tr>
-  <tr><td>Filename:</td><td><?php echo htmlentities($filedata["fileoriginalname"]);?></td></tr>
-  <tr><td>File Size:</td><td><?php echo formatBytes($filedata["filesize"]);?></td></tr>
-  <tr><td>Expiry Date:</td><td><?php echo date("d-M-Y",strtotime($filedata["fileexpirydate"]));?></td></tr>
-  </table>
-  </div>
-  <p><div id="bigbtn"><a href="#" onclick="startDownload()">Start Download</a></div></p>
+ ?>
+ <div id="box">
+<?php echo '<div id="pageheading">Your file should start downloading.</div>'; ?> 
 </div>
+
