@@ -40,12 +40,15 @@
 	var maximumDate= '<?php echo $config['default_daysvalid'] ?>';
 	var selectedVoucher = "";
 	$(function() {
-		$('#fileto_msg').hide();
-		$('#expiry_msg').hide();
+		$("#fileto_msg").hide();
+		$("#expiry_msg").hide();
+		
+		// stripe every second row in the tables
+		$("#vouchertable tr:odd").addClass('altcolor');
 				
 		$("#datepicker" ).datepicker({ minDate: 1, maxDate: "+"+maximumDate+"D",altField: "#altdate", altFormat: "d-m-yy",currentText:maximumDate });
 		$("#datepicker" ).datepicker( "option", "dateFormat", "d/m/yy" );
-		$("#datepicker").datepicker('setDate', new Date()+maximumDate);
+		$("#datepicker").datepicker("setDate", new Date()+maximumDate);
 		$("#dialog-delete").dialog({ autoOpen: false, height: 140, modal: true,
 		
 		buttons: {
@@ -62,7 +65,7 @@
 
 function validateForm()
 	{
-		$('#fileto_msg').hide();
+		$("#fileto_msg").hide();
 		if(!validate_fileto()){return false;}
 		if(!validate_expiry() ){return false;}
 		return true;
@@ -71,12 +74,12 @@ function validateForm()
 function validate_expiry()
 {
 //	alert($('#fileexpirydate').datepicker("getDate"));
-	if($('#datepicker').datepicker("getDate") == null)
+	if($("#datepicker").datepicker("getDate") == null)
 	{
-		$('#expiry_msg').show();
+		$("#expiry_msg").show();
 		return false;
 	}
-	$('#expiry_msg').hide();
+	$("#expiry_msg").hide();
 	return true;
 }
 
@@ -84,9 +87,10 @@ function validate_expiry()
 function validate_fileto()
 {
 	// remove white spaces 
-	obj('fileto').value = obj('fileto').value.split(' ').join('');
-	var tempemail = obj('fileto').value;
-	var email = tempemail.split(/,|;/);
+	var email = $("#fileto").val();
+	email = email.split(" ").join("");
+	$("#fileto").val(email);
+	email = email.split(/,|;/);
 	for (var i = 0; i < email.length; i++) {
 		if (!echeck(email[i], 1, 0)) {
 		$('#fileto_msg').show();
@@ -103,11 +107,53 @@ function validate_fileto()
 		function confirmdelete(vid)
 		{
 			selectedVoucher = vid;
-			$( "#dialog-delete" ).dialog( "open" );
+			$("#dialog-delete").dialog("open");
 		}
-		// get a dom element (just to reduce code)
-	function obj(id) {
-		return document.getElementById(id);
+
+	
+	function echeck(str) {
+
+		var at="@"
+		var dot="."
+		var lat=str.indexOf(at)
+		var lstr=str.length
+		var ldot=str.indexOf(dot)
+		if (str.indexOf(at)==-1){
+		//   alert("Invalid E-mail")
+		   return false
+		}
+
+		if (str.indexOf(at)==-1 || str.indexOf(at)==0 || str.indexOf(at)==lstr){
+		//   alert("Invalid E-mail")
+		   return false
+		}
+
+		if (str.indexOf(dot)==-1 || str.indexOf(dot)==0 || str.indexOf(dot)==lstr){
+		//    alert("Invalid E-mail")
+		    return false
+		}
+
+		 if (str.indexOf(at,(lat+1))!=-1){
+		 //   alert("Invalid E-mail")
+		    return false
+		 }
+
+		 if (str.substring(lat-1,lat)==dot || str.substring(lat+1,lat+2)==dot){
+		 //   alert("Invalid E-mail")
+		    return false
+		 }
+
+		 if (str.indexOf(dot,(lat+2))==-1){
+		 //   alert("Invalid E-mail")
+		    return false
+		 }
+		
+		 if (str.indexOf(" ")!=-1){
+		 //   alert("Invalid E-mail")
+		    return false
+		 }
+
+ 		 return true					
 	}
 	</script>
 <?php 
@@ -190,56 +236,3 @@ foreach($json_o as $item) {
 <div id="dialog-delete" title="Delete Voucher">
   <p>Are you sure you want to delete this voucher?</p>
 </div>
-<script language = "Javascript">
-/**
- * DHTML email validation script. Courtesy of SmartWebby.com (http://www.smartwebby.com/dhtml/)
- */
-
-function echeck(str) {
-
-		var at="@"
-		var dot="."
-		var lat=str.indexOf(at)
-		var lstr=str.length
-		var ldot=str.indexOf(dot)
-		if (str.indexOf(at)==-1){
-		//   alert("Invalid E-mail")
-		   return false
-		}
-
-		if (str.indexOf(at)==-1 || str.indexOf(at)==0 || str.indexOf(at)==lstr){
-		//   alert("Invalid E-mail")
-		   return false
-		}
-
-		if (str.indexOf(dot)==-1 || str.indexOf(dot)==0 || str.indexOf(dot)==lstr){
-		//    alert("Invalid E-mail")
-		    return false
-		}
-
-		 if (str.indexOf(at,(lat+1))!=-1){
-		 //   alert("Invalid E-mail")
-		    return false
-		 }
-
-		 if (str.substring(lat-1,lat)==dot || str.substring(lat+1,lat+2)==dot){
-		 //   alert("Invalid E-mail")
-		    return false
-		 }
-
-		 if (str.indexOf(dot,(lat+2))==-1){
-		 //   alert("Invalid E-mail")
-		    return false
-		 }
-		
-		 if (str.indexOf(" ")!=-1){
-		 //   alert("Invalid E-mail")
-		    return false
-		 }
-
- 		 return true					
-	}
-
-// stripe every second row in the tables
-$("#vouchertable tr:odd").addClass('altcolor');
-</script> 

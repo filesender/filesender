@@ -34,28 +34,30 @@
 // setting cancell upload to true will trigger the upload to stop before uploading the next chunk
 // JavaScript Document
 $(function() {
-$("#dialog-help").dialog({ autoOpen: false, height: 400,width: 400, modal: true,
-		
+	
+	$("#dialog-help").dialog({ autoOpen: false, height: 400,width: 400, modal: true,
 		buttons: {
-				Close: function() {
-					$( this ).dialog( "close" );
+			Close: function() {
+				$( this ).dialog( "close" );
 				}
-		}
+			}
 		});
+		
 		$("#dialog-about").dialog({ autoOpen: false,  height: 400,width: 400, modal: true,
-		
-		buttons: {
+			buttons: {
 				Close: function() {
 					$( this ).dialog( "close" );
 				}
-		}
+			}
 		});
-	});
-	function openhelp()
+});
+	
+function openhelp()
 	{
-	$( "#dialog-help" ).dialog( "open" );
+		$( "#dialog-help" ).dialog( "open" );
 	}
-	function openabout()
+	
+function openabout()
 	{
-	$( "#dialog-about" ).dialog( "open" );
+		$( "#dialog-about" ).dialog( "open" );
 	}
