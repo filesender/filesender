@@ -81,10 +81,11 @@ DEFINE ("_TERMS_OF_AGREEMENT", "Brukervilkår");
 DEFINE ("_SHOW_TERMS", "Vis vilkår");
 DEFINE ("_SELECT_FILE", "Velg en fil til å laste opp");
 DEFINE ("_UPLOADING_WAIT", "Laster opp fil - vennligst vent ...");
+DEFINE ("_EMAIL_SEPARATOR_MSG", "Flere epost-adresser avskilles med , eller ;");
 
 // Bilag
 DEFINE ("_SEND_NEW_VOUCHER", "Send en ny invitasjon");
-DEFINE ("_EMAIL_SEPARATOR_MSG", "Flere epost-adresser avskilles med , eller ;");
+DEFINE ("_Send_Vouchers_to", "Send en invitasjon til");
 
 // Flash button menu
 DEFINE("_UPLOAD","Upload");
