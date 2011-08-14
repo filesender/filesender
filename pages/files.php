@@ -36,16 +36,13 @@
  * 
  */
 
-
 if(isset($_REQUEST["a"]) && isset($_REQUEST["id"])) 
 {
 $myfileData = $functions->getVoucherData($_REQUEST['id']);
-//if(isset($fileData["fileid"])
-//{
-//$fileID = $fileData["fileid"];
+$myfileData = $myfileData[0];
 if($_REQUEST["a"] == "del" )
 {
-if($functions->deleteFile($myfileData[0]["fileid"]))
+if($functions->deleteFile($myfileData["fileid"]))
 {
 echo "<div id='message'>File Deleted</div>";
 }
@@ -53,44 +50,238 @@ echo "<div id='message'>File Deleted</div>";
 
 if($_REQUEST["a"] == "resend")
 {
-$sendmail->sendEmail($myfileData[0] ,$config['fileuploadedemailbody']);
+$sendmail->sendEmail($myfileData ,$config['fileuploadedemailbody']);
 echo "<div id='message'>File Resent</div>";
 }
 
 if($_REQUEST["a"] == "add")
 {
-// display the add box
-}
+$myfileData["filemessage"] = $_POST["filemessage"];
+$myfileData["filesubject"] = $_POST["filesubject"];
+$myfileData["fileexpirydate"] = date($config["postgresdateformat"],strtotime($_POST["fileexpirydate"]));
 
-//}
+// loop emails in fileto
+$emailto = str_replace(",",";",$_POST["fileto"]);
+$emailArray = preg_split("/;/", $emailto);
+foreach ($emailArray as $Email) { 
+$myfileData["fileto"] = $Email;
+$myfileData["filevoucheruid"] = getGUID();
+$functions->inserFileHTML5($myfileData);
+}
+// display the add box
+echo "<div id='message'>Email has been sent.</div>";
+}
 }
 $filedata = $functions->getUserFiles();
 //$filedata = $filedata[0];
 //echo $filedata;
 $json_o=json_decode($filedata,true);
+
 ?>
- <div id="box">
-<?php echo '<div id="pageheading">'._MY_FILES.'</div>'; ?> 
-<div id="tablediv">
-<table id="myfiles" width="750" border="0" cellspacing="1" style="table-layout:fixed;">
-<tr class="headerrow">
-<td width="18">&nbsp;</td>
-<td width="18">&nbsp;</td>
-<td><strong><?php echo _TO; ?></strong></td>
-<td><strong><?php echo _FROM; ?></strong></td>
-<td><strong><?php echo _FILE_NAME; ?></strong></td>
-<td width="60"><strong><?php echo _SIZE; ?></strong></td>
-<td><strong><?php echo _SUBJECT; ?></strong></td>
-<td width="16"><strong></strong></td>
-<td width="80"><strong><?php echo _CREATED; ?></strong></td>
-<td width="80"><strong><?php echo _EXPIRY; ?></strong></td>
-<td width="18">&nbsp;</td>
-</tr>
-<?php 
+<script type="text/javascript">
+	
+	var selectedFile = ""; // file uid selected when deleteting
+	// set default maximum date for date datepicker
+	var maximumDate= '<?php echo $config['default_daysvalid']?>';
+
+	$(function() {
+		// initialise datepicker
+		$("#datepicker" ).datepicker({ minDate: 1, maxDate: "+"+maximumDate+"D",altField: "#fileexpirydate", altFormat: "d-m-yy" });
+		$("#datepicker" ).datepicker( "option", "dateFormat", "d/m/yy" );
+		$("#datepicker").datepicker('setDate', new Date()+maximumDate);
+		
+		// stripe every second row in the tables
+		$("#myfiles tr:odd").not(":first").addClass("altcolor");
+		
+		// delete modal dialog box
+		$("#dialog-delete").dialog({ autoOpen: false, height: 140, modal: true,
+			buttons: {
+				Cancel: function() {
+				$( this ).dialog( "close" );
+				},
+				Delete: function() { 
+				deletefile();
+				$( this ).dialog( "close" );
+				}
+			}
+		});
+		
+		// add new recipient modal dialog box
+		$("#dialog-addrecipient").dialog({ autoOpen: false, height: 360,width:650, modal: true,
+			buttons: {
+				Cancel: function() {
+					$( this ).dialog( "close" );
+				},
+				Send: function() { 
+				// calidate form before sending
+				if(validateForm())
+				{
+				// submit form to add new recipient/s
+				$("#form1").submit();
+				}
+				}
+			}
+		});
+		
+	});
+	
+	// validate form beofre sending
+	function validateForm()
+	{
+		// remove previouse vaildation messages
+		$("#fileto_msg").hide();
+		$("#expiry_msg").hide();
+		var validate = true;
+		if(!validate_fileto() ){validate = false;};		// validate emails
+		if(!validate_expiry() ){validate = false;};		// check date
+		return validate;
+	}
+	
+	function deletefile()
+		{
+		// reload page to delete selected file
+		// should add a tick box to delete multiple selected files	
+		window.location.href="index.php?s=files&a=del&id=" + selectedFile;
+		}
+	
+	function confirmdelete(vid)
+		{
+			// confirm deletion of selected file
+			selectedFile = vid;
+			$( "#dialog-delete" ).dialog( "open" );
+		}
+		
+	function openAddRecipient(vid,filename,filesize,from)
+	{
+		// populate form and open add-recipient modal form
+		$("#form1").attr("action", "index.php?s=files&a=add&id=" + vid );
+		$("#filevoucheruid").val(vid);
+		$("#filefrom").html(from);
+		$("#filename").html(filename);
+		$("#filesize").html(readablizebytes(filesize));
+		$("#dialog-addrecipient" ).dialog( "open" );
+		
+	}
+	
+	// display msg 
+	function fileMsg(msg)
+	{
+		$('#file_msg').html(msg);
+		$('#file_msg').show();
+	}
+	
+	// display bytes in readable format
+	function readablizebytes(bytes)
+	  {
+		if (bytes > 1024*1024*1024)
+			bytesdisplay = (Math.round(bytes * 100/(1024*1024*1024))/100).toString() + 'GB';
+		else if (bytes > 1024*1024)
+			bytesdisplay = (Math.round(bytes * 100/(1024*1024))/100).toString() + 'MB';
+		else if (bytes > 1024)
+			bytesdisplay = (Math.round(bytes * 100/1024)/100).toString() + 'KB';
+		else
+			bytesdisplay = (Math.round(bytes * 100)/100).toString() + 'Bytes';
+		return bytesdisplay;
+	}	
+	
+	// Validate FILETO
+function validate_fileto()
+{
+	$('#fileto_msg').hide();
+	// remove white spaces 
+	var tempemail = $('#fileto').val();
+	$('#fileto').val(tempemail.split(' ').join(''));
+	var email = tempemail.split(/,|;/);
+	for (var i = 0; i < email.length; i++) {
+		if (!echeck(email[i], 1, 0)) {
+		$('#fileto_msg').show();
+		return false;
+		}
+		}
+	return true;	
+}
+
+// Validate EXPIRY
+function validate_expiry()
+{
+
+	if($('#datepicker').datepicker("getDate") == null)
+	{
+		$('#expiry_msg').show();
+		return false;
+	}
+	$('#expiry_msg').hide();
+	return true;
+}
+
+//  validate single email	
+function echeck(str) {
+
+		var at="@"
+		var dot="."
+		var lat=str.indexOf(at)
+		var lstr=str.length
+		var ldot=str.indexOf(dot)
+		if (str.indexOf(at)==-1){
+		  // alert("Invalid E-mail")
+		   return false
+		}
+
+		if (str.indexOf(at)==-1 || str.indexOf(at)==0 || str.indexOf(at)==lstr){
+		   //alert("Invalid E-mail")
+		   return false
+		}
+
+		if (str.indexOf(dot)==-1 || str.indexOf(dot)==0 || str.indexOf(dot)==lstr){
+		   // alert("Invalid E-mail")
+		    return false
+		}
+
+		 if (str.indexOf(at,(lat+1))!=-1){
+		    //alert("Invalid E-mail")
+		    return false
+		 }
+
+		 if (str.substring(lat-1,lat)==dot || str.substring(lat+1,lat+2)==dot){
+		    //alert("Invalid E-mail")
+		    return false
+		 }
+
+		 if (str.indexOf(dot,(lat+2))==-1){
+		    //alert("Invalid E-mail")
+		    return false
+		 }
+		
+		 if (str.indexOf(" ")!=-1){
+		    //alert("Invalid E-mail")
+		    return false
+		 }
+
+	 return true					
+}
+</script>
+
+<div id="box"> <?php echo '<div id="pageheading">'._MY_FILES.'</div>'; ?>
+  <div id="tablediv">
+    <table id="myfiles" width="750" border="0" cellspacing="1" style="table-layout:fixed;">
+      <tr class="headerrow">
+        <td width="18">&nbsp;</td>
+        <td width="18">&nbsp;</td>
+        <td><strong><?php echo _TO; ?></strong></td>
+        <td><strong><?php echo _FROM; ?></strong></td>
+        <td><strong><?php echo _FILE_NAME; ?></strong></td>
+        <td width="60"><strong><?php echo _SIZE; ?></strong></td>
+        <td><strong><?php echo _SUBJECT; ?></strong></td>
+        <td width="16"><strong></strong></td>
+        <td width="80"><strong><?php echo _CREATED; ?></strong></td>
+        <td width="80"><strong><?php echo _EXPIRY; ?></strong></td>
+        <td width="18">&nbsp;</td>
+      </tr>
+      <?php 
 if(sizeof($json_o) > 0)
 {
 foreach($json_o as $item) {
-   echo "<tr><td valign='top'></td><td valign='top'><a href='index.php?s=files&a=resend&id=" .$item['filevoucheruid'] . "'><img src='images/email_go.png' title='Re-send Email'></a></td>";
+   echo '<tr><td valign="top"> <a href="index.php?s=files&a=resend&id=' .$item['filevoucheruid'] . '"><img src="images/email_go.png" title="Re-send Email"></a></td><td valign="top"><img src="images/email_add.png" title="Add New Recipient" onclick="openAddRecipient('."'".$item['filevoucheruid']."','".$item['fileoriginalname'] ."','".$item['filesize'] ."','".$item['filefrom']."'" .');"  style="cursor:pointer;"></td>';
    if($item['fileto'] == $attributes["email"])
    {
    echo "<td class='HardBreak' valign='top'>Me</td>";
@@ -114,43 +305,52 @@ foreach($json_o as $item) {
 	echo "<tr><td colspan='7'>There are currently no files available</td></tr>";
 }
 ?>
-</table>
-</div>
+    </table>
+  </div>
 </div>
 <div id="dialog-delete" title="Delete File">
-  <p>Are you sure you want to delete this File?</p>
+<p>Are you sure you want to delete this File?</p>
 </div>
-<script type="text/javascript">
-var selectedFile = "";
-
-	$(function() {
-	
-		$("#myfiles tr:odd").not(':first').addClass('altcolor');
-		$("#dialog-delete").dialog({ autoOpen: false, height: 140, modal: true,
-		
-		buttons: {
-				Cancel: function() {
-					$( this ).dialog( "close" );
-				},
-				Delete: function() { 
-				deletefile();
-				$( this ).dialog( "close" );
-				}
-		}
-		});
-	});
-	
-	
-	
-	function deletefile()
-		{
-		window.location.href="index.php?s=files&a=del&id=" + selectedFile;
-		}
-	
-	function confirmdelete(vid)
-		{
-			selectedFile = vid;
-			$( "#dialog-delete" ).dialog( "open" );
-		}
-		
-</script>
+<div id="dialog-addrecipient" title="Add Recipient">
+  <form id="form1" name="form1" enctype="multipart/form-data" method="POST" action="">
+    <table  width="600" border="0">
+      <tr>
+        <td width="100" class="formfieldheading mandatory"><?php echo _TO; ?>:</td>
+        <td width="400" valign="middle"><input name="fileto" title="<?php echo _EMAIL_SEPARATOR_MSG; ?>" type="text" id="fileto" size="60" onchange="validate_fileto()" />
+          <div id="fileto_msg" style="display: none" class="validation_msg">Invalid or missing email</div></td>
+      </tr>
+      <tr>
+        <td class="formfieldheading mandatory"><?php echo _FROM; ?>:</td>
+        <td><div id="filefrom" name="filefrom"></div></td>
+      </tr>
+      <tr>
+        <td class="formfieldheading"><?php echo _SUBJECT; ?>: (<?php echo _OPTIONAL; ?>)</td>
+        <td><input name="filesubject" type="text" id="filesubject" size="60" /></td>
+      </tr>
+      <tr>
+        <td class="formfieldheading"><?php echo _MESSAGE; ?>: (<?php echo _OPTIONAL; ?>)</td>
+        <td><textarea name="filemessage" cols="45" rows="4" id="filemessage"></textarea></td>
+      </tr>
+      <tr>
+        <td class="formfieldheading mandatory"><?php echo _EXPIRY; ?>:
+          <input type="hidden" id="fileexpirydate" name="fileexpirydate" value="<?php echo date("d-m-Y",strtotime("+".$config['default_daysvalid']." day"));?>"/></td>
+        <td><input id="datepicker" name="datepicker" onchange="validate_expiry()">
+          </input>
+          <div id="expiry_msg" class="validation_msg" style="display: none">Invalid expiry Date</div></td>
+      </tr>
+      <tr>
+        <td class="formfieldheading mandatory">File to be re-distributed:</td>
+        <td><div id="filename" name="filename"></div></td>
+      </tr>
+      <tr>
+        <td class="formfieldheading mandatory">Size:</td>
+        <td><div id="filesize" name="filesize"></div></td>
+      </tr>
+      <tr>
+        <td class="formfieldheading mandatory"></td>
+        <td><div id="file_msg" class="validation_msg" style="display: none">Invalid File</div></td>
+      </tr>
+    </table>
+    <input name="filevoucheruid" type="hidden" id="filevoucheruid"/>
+  </form>
+</div>
