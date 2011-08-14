@@ -71,6 +71,7 @@
 	DEFINE ("_FILE_NAME", "Bestandsnaam");
 	DEFINE ("_SUBJECT", "Onderwerp");
 	DEFINE ("_EXPIRY", "Vervaldatum");
+	DEFINE ("_Expiry_Date", "Vervaldatum");
 	DEFINE ("_MESSAGE", "Bericht");
 	DEFINE ("_TYPE", "Type");
 	DEFINE ("_OPTIONAL","Optioneel");
