@@ -73,6 +73,7 @@ DEFINE ("_CREATED", "Opprettet");
 DEFINE ("_FILE_NAME", "Filnavn");
 DEFINE ("_SUBJECT", "Subject");
 DEFINE ("_EXPIRY", "Utløpsdato");
+DEFINE ("_Expiry_Date", "Utløpsdato");
 DEFINE ("_MESSAGE", "Melding");
 DEFINE ("_TYPE", "Type");
 
