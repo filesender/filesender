@@ -106,6 +106,7 @@
 		$('#expiry_msg').hide();
 		$('#aup_msg').hide();
 		$('#file_msg').hide();
+		$("#uploadbutton").hide();
 		
 		// hide aup if not required
 		if(aup == '0') // check if AUP is required
@@ -411,15 +412,16 @@ fileMsg("This file is larger than 2GB. Please use a HTML5 enabled browser to upl
 $("#fileInfoView").hide();
 } else if (validatefilename(name)) 
 {
-
-$("#fileInfoView").show();
-$('#n').val(name);
-$('#total').val(size);
-$('#fileName').val(name);
-$("#fileName").html('Name: ' + name);
-$("#fileSize").html('Size: ' + readablizebytes(size));
-getFlexApp('filesenderup').returnMsg("upload")
-} 
+	$("#fileInfoView").show();
+	$('#n').val(name);
+	$('#total').val(size);
+	$('#fileName').val(name);
+	$("#fileName").html('Name: ' + name);
+	$("#fileSize").html('Size: ' + readablizebytes(size));
+	getFlexApp('filesenderup').returnMsg("upload")
+} else {
+	$("#fileInfoView").hide();
+}
 }
 
 
@@ -611,28 +613,27 @@ if ( hasProductInstall && !hasRequestedVersion ) {
           </div>
           <div id="uploadhtml5">
             <input type="file" name="fileToUpload" id="fileToUpload" onChange="fileSelected();"/>
-            <input type="button" onClick="validate()" value="Upload" id="uploadbutton" name="uploadbutton"/> 
+            <input type="button" onClick="validate()" value="Upload" id="uploadbutton" name="uploadbutton"> 
           </div>
           <div id="file_msg" class="validation_msg" style="display: none">Invalid File</div>
           </td>
       </tr>
       <tr>
         <td></td>
-        <td><input type="hidden" id="filevoucheruid" name="filevoucheruid" value="<?php echo $voucherUID; ?>"/>
-          <input type="hidden" name="vid" id="vid" value="<?php echo $voucherUID; ?>"/>
-          <input type="hidden" name="total" id="total" value=""/>
-          <input type="hidden" name="n" id="n" value=""/>
-          <input type="hidden" id="filestatus" name="filestatus" value="<?php echo $filestatus; ?>"/>
-          <input type="hidden" name="loadtype" id="loadtype" value="standard"/>
-          <div id="fileInfoView">
-            <div id="fileName" name="fileName"></div>
-            <div id="fileSize" name="fileSize"></div>
-            <div id="fileType" name="fileType"></div>
-          </div>
-		
+        <td>
+		<div id="fileInfoView">
+			<div id="fileName" name="fileName"></div>
+			<div id="fileSize" name="fileSize"></div>
+		</div>
         </td>
       </tr>
          </table>
+		<input type="hidden" id="filevoucheruid" name="filevoucheruid" value="<?php echo $voucherUID; ?>"/>
+		<input type="hidden" name="vid" id="vid" value="<?php echo $voucherUID; ?>"/>
+		<input type="hidden" name="total" id="total" value=""/>
+		<input type="hidden" name="n" id="n" value=""/>
+		<input type="hidden" id="filestatus" name="filestatus" value="<?php echo $filestatus; ?>"/>
+		<input type="hidden" name="loadtype" id="loadtype" value="standard"/>
   </form>
 </div>
 <div id="dialog-default" title=""> </div>

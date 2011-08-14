@@ -73,14 +73,19 @@ var filesize = 0;
 		filename = "";
 		filesize = 0;
 		
-	  	$("#n").val(file.name);
-		$("#total").val(fileSize);
-		$("#fileInfoView").show();
-		$("#fileName").html('Name: ' + file.name);
-		$("#fileSize").html('Size: ' + readablizebytes(fileSize));
-		$("#fileType").html('Type: ' + file.type);
-	  	
-	   	validate_file();
+	  	if(validate_file()) { 
+			$("#uploadbutton").show(); 
+			$("#n").val(file.name);
+			$("#total").val(fileSize);
+			$("#fileInfoView").show();
+			$("#fileName").html('Name: ' + file.name);
+			$("#fileSize").html('Size: ' + readablizebytes(fileSize));
+		} else { 
+			$("#uploadbutton").hide();
+			$("#fileInfoView").hide();
+			$("#fileName").html("");
+			$("#fileSize").html("");
+		};
 	}
 
 function startupload()
@@ -104,8 +109,8 @@ function startupload()
 		currentBytesUpload = 0;
 		
 		// hide upload button
-		$('#dialog-uploadprogress').dialog('option', 'title', "Uploading " +  fileName + " (" +readablizebytes(fileSize) + ")");
-		$("#dialog-uploadprogress").dialog('open');
+		$("#dialog-uploadprogress").dialog("option", "title", "Uploading " +  fileName + " (" +readablizebytes(fileSize) + ")");
+		$("#dialog-uploadprogress").dialog("open");
 		
 		$.ajax({
   		url: uploadURI + '?n='+fileName+'&total='+fileSize+'&vid='+vid+'&type=filesize',
@@ -121,7 +126,7 @@ function uploadFile(currentBytesUpload) {
 		bytesUploaded = currentBytesUpload;
 		
 		// move to next chunk
-		var file = document.getElementById('fileToUpload').files[0];
+		var file = document.getElementById("fileToUpload").files[0];
 		var txferSize = chunksize;
 		
 	  	filename = file.name;
@@ -156,7 +161,6 @@ function uploadFile(currentBytesUpload) {
 			var blob = file.slice(bytesUploaded, txferSize);
 		}
 		
-		
 	var fileName = file.name; //Grab the file name
     var fileSize = file.size; //Grab the file size
     var fileType = file.type; //Grab the file type
@@ -171,7 +175,7 @@ function uploadFile(currentBytesUpload) {
  		xhr.onreadystatechange = processReqChange;
  		xhr.upload.addEventListener("progress", uploadProgress, false);
         xhr.open("POST", uri, true); //Open a request to the web address set
-      	xhr.setRequestHeader("Content-Disposition"," attachment; name='fileToUpload'"); // n='" + fileName + "'; total='"+ fileSize +"'; type='chunk'"); //chunk_id = '"+chunk_id+"'; chunksize='"+chunksize+"'; totalchunks='"+totalchunks+"'");
+      	xhr.setRequestHeader("Content-Disposition"," attachment; name='fileToUpload'"); 
 		xhr.setRequestHeader("Content-Type", "application/octet-stream");
 		xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
         //Set up the body of the POST data includes the name & file data.
