@@ -54,7 +54,7 @@ function get_client_language($availableLanguages, $default='en-au'){
 }
 
 //Get the language based on the browser accepted langauge
-$languages = array("no","nl","en","en-au" ,"nl-nl","no-no");
+$languages = array("no","nl","en","en-au" ,"nl-nl","no-no","nb","nb-no");
 $lang = get_client_language($languages);
 
 //Set a default language file
@@ -89,6 +89,16 @@ switch($lang) {
 		break;
 		
 	case "no":
+		global $lang_file;
+		$lang_file = "NO_no.php";
+		break;		
+		
+	case "nb":
+		global $lang_file;
+		$lang_file = "NO_no.php";
+		break;		
+	
+	case "nb-no":
 		global $lang_file;
 		$lang_file = "NO_no.php";
 		break;		
