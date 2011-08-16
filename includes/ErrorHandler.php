@@ -108,7 +108,12 @@ ini_set('display_errors', 'On');
 if($config['debug'] == true || $config['debug'] == 1){
 
 	ini_set('log_errors', 'On');
-	set_error_handler("customError",E_ALL  & ~E_DEPRECATED);
+	if (defined('E_DEPRECATED')) {
+		set_error_handler("customError",E_ALL & ~E_DEPRECATED);
+	}
+	else {
+		set_error_handler("customError",E_ALL);
+	}
 	set_exception_handler("customException");
 }
 
