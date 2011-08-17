@@ -88,7 +88,37 @@ $s = "logon";
 <link type="text/css" href="css/smoothness/jquery-ui-1.8.2.custom.css" rel="Stylesheet" />
 <script type="text/javascript" src="js/jquery-1.5.2.min.js" ></script>
 <script type="text/javascript" src="js/jquery-ui-1.8.1.custom.min.js"></script>
-<script type="text/javascript" src="js/index.js"></script>
+<script type="text/javascript">
+$(function() {
+	
+	$("#dialog-help").dialog({ autoOpen: false, height: 400,width: 660, modal: true,
+		buttons: {
+			<?php echo lang("_CLOSE") ?>: function() {
+				$( this ).dialog( "close" );
+				}
+			}
+		});
+		
+		$("#dialog-about").dialog({ autoOpen: false,  height: 400,width: 400, modal: true,
+			buttons: {
+				<?php echo lang("_CLOSE") ?>: function() {
+					$( this ).dialog( "close" );
+				}
+			}
+		});
+});
+	
+function openhelp()
+	{
+		$( "#dialog-help" ).dialog( "open" );
+	}
+	
+function openabout()
+	{
+		$( "#dialog-about" ).dialog( "open" );
+	}
+</script>
+   
 <meta name="robots" content="noindex, nofollow" />
 </head>
 <body>
@@ -108,30 +138,30 @@ $s = "logon";
   // create menu
   // disable all buttons if this is a voucher, even if the user is logged on
   if (!$authvoucher->aVoucher()  &&  $s != "completev"){
-	if($authsaml->authIsAdmin() ) { echo '<li><a href="index.php?s=admin">'._ADMIN.'</a></li>'; }
-	if($authsaml->isAuth() ) { echo '<li><a href="index.php?s=upload">'._NEW_UPLOAD.'</a></li>'; }
-	if($authsaml->isAuth() ) { echo '<li><a href="index.php?s=vouchers">'._VOUCHERS.'</a></li>'; }
-	if($authsaml->isAuth() ) {echo '<li><a href="index.php?s=files">'._MY_FILES.'</a></li>'; }
+	if($authsaml->authIsAdmin() ) { echo '<li><a href="index.php?s=admin">'.lang("_ADMIN").'</a></li>'; }
+	if($authsaml->isAuth() ) { echo '<li><a href="index.php?s=upload">'.lang("_NEW_UPLOAD").'</a></li>'; }
+	if($authsaml->isAuth() ) { echo '<li><a href="index.php?s=vouchers">'.lang("_VOUCHERS").'</a></li>'; }
+	if($authsaml->isAuth() ) {echo '<li><a href="index.php?s=files">'.lang("_MY_FILES").'</a></li>'; }
   }
-	echo '<li><a href="#" onclick="openhelp()">Help</a></li>';
-	echo '<li><a href="#" onclick="openabout()">About</a></li>';
-	if(!$authsaml->isAuth() && $s != "logon" ) { echo '<li><a href="'.$authsaml->logonURL().'">'._LOGON.'</a></li>';}
-   	if($authsaml->isAuth() && !$authvoucher->aVoucher() &&  $s != "completev" ) { echo '<li><a href="'.$authsaml->logoffURL().'">'._LOG_OFF.'</a></li>'; }
+	echo '<li><a href="#" onclick="openhelp()">'.lang("_HELP").'</a></li>';
+	echo '<li><a href="#" onclick="openabout()">'.lang("_ABOUT").'</a></li>';
+	if(!$authsaml->isAuth() && $s != "logon" ) { echo '<li><a href="'.$authsaml->logonURL().'">'.lang("_LOGON").'</a></li>';}
+   	if($authsaml->isAuth() && !$authvoucher->aVoucher() &&  $s != "completev" ) { echo '<li><a href="'.$authsaml->logoffURL().'">'.lang("_LOG_OFF").'</a></li>'; }
    // end menu
    ?>
     </ul>
   </div>
   <div id="content">
-  <?php 
+    <?php 
 // display user details if authenticated and not a voucher
 if(	$authvoucher->aVoucher() || $s == "completev") { 
-echo "Welcome Guest";
+echo lang("_WELCOMEGUEST");
 } else if ($authsaml->isAuth() ){
 $attributes = $authsaml->sAuth();
-echo "Welcome ".$attributes["cn"];
+echo lang("_WELCOME")." ".$attributes["cn"];
 }
 ?>
-<?php
+    <?php
 if(	$authvoucher->aVoucher())
 {
 // check if it is Available or a Voucher for Uploading a New File
@@ -184,28 +214,23 @@ require_once('../pages/help.php');
 ?>
   </div>
 </div>
-<div id="dialog-help" title="Help">
- <div align="left" style="padding:5px">
-<p>
-If you don't see your institution in the list of Identity Providers (IdPs), or your institutional login fails, please contact your local IT support
-</p>
-<p>
-<strong>Requirements</strong><br>
-A modern, current release of most popular browsers
-</p>
-<p>
-  <strong>Limits</strong><br>
-<strong> Maximum recipient  addresses per email:</strong> <?php echo $config["max_email_recipients"]?> multiple email addresses can be  separated by a comma<br>
-  <strong>Maximum number of files per  upload:</strong> one - to upload several files at once, zip them into a  single archive first<br>
-<strong>Maximum file size per upload, without HTML 5: </strong> <?php echo formatBytes($config["max_flash_upload_size"])?><br>
-  <strong>Maximum file size per upload, with HTML 5: </strong> <?php echo formatBytes($config["max_gears_upload_size"])?><br>
-  <strong>Maximum  file / voucher expiry days: </strong><?php echo $config["default_daysvalid"]?> <br>
-</p>
-<p>For more information please visit <a href="http://www.filesender.org/">www.filesender.org</a></p>
+<div id="dialog-help" title="<?php echo lang("_HELP"); ?>">
+  <div align="left" style="padding:5px">
+    <p> If you don't see your institution in the list of Identity Providers (IdPs), or your institutional login fails, please contact your local IT support </p>
+    <p> <strong>Requirements</strong><br>
+      A modern, current release of most popular browsers </p>
+    <p> <strong>Limits</strong><br>
+      <strong> Maximum recipient  addresses per email:</strong> <?php echo $config["max_email_recipients"]?> multiple email addresses can be  separated by a comma<br>
+      <strong>Maximum number of files per  upload:</strong> one - to upload several files at once, zip them into a  single archive first<br>
+      <strong>Maximum file size per upload, without HTML 5: </strong> <?php echo formatBytes($config["max_flash_upload_size"])?><br>
+      <strong>Maximum file size per upload, with HTML 5: </strong> <?php echo formatBytes($config["max_gears_upload_size"])?><br>
+      <strong>Maximum  file / voucher expiry days: </strong><?php echo $config["default_daysvalid"]?> <br>
+    </p>
+    <p>For more information please visit <a href="http://www.filesender.org/">www.filesender.org</a></p>
+  </div>
 </div>
-</div>
-<div id="dialog-about" title="About">
- <div align="left" style="padding:5px"><?php echo htmlentities($config['site_name'])?> is an installation of FileSender (<a rel="nofollow" href="http://www.filesender.org/">www.filesender.org</a>), which is developed to the requirements of the higher education and research community.</div>
+<div id="dialog-about" title="<?php echo lang("_ABOUT"); ?>">
+  <div align="left" style="padding:5px"><?php echo htmlentities($config['site_name'])?> is an installation of FileSender (<a rel="nofollow" href="http://www.filesender.org/">www.filesender.org</a>), which is developed to the requirements of the higher education and research community.</div>
 </div>
 <div id="footer">Version 1.5 Beta</div>
 <div id="DoneLoading"></div>

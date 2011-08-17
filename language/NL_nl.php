@@ -37,59 +37,59 @@
  */
 			// main menu items
    		// Main menu-items
-     DEFINE ("_ADMIN", "Administratie");
-     DEFINE ("_NEW_UPLOAD", "Nieuwe Upload");
-     DEFINE ("_VOUCHERS", "Uitnodiging");
-     DEFINE ("_LOGON", "Aanmelden");
-     DEFINE ("_LOG_OFF", "Uitloggen");
-     DEFINE ("_MY_FILES", "Mijn bestanden");
+     $lang["_ADMIN"] = "Administratie";
+     $lang["_NEW_UPLOAD"] = "Nieuwe Upload";
+     $lang["_VOUCHERS"] = "Uitnodiging";
+     $lang["_LOGON"] = "Aanmelden";
+     $lang["_LOG_OFF"] = "Uitloggen";
+     $lang["_MY_FILES"] = "Mijn bestanden";
 
             // Pagina titels
-	DEFINE ("_HOME", "Home");
-	DEFINE ("_ABOUT", "Over");
-	DEFINE ("_HELP", "Help");
-	DEFINE ("_VOUCHER_CANCELLED", "Uitnodiging ingetrokken");
-	DEFINE ("_UPLOAD_COMPLETE", "Upload voltooid");
-	DEFINE ("_DOWNLOAD", "Download");
+	$lang["_HOME"] = "Home";
+	$lang["_ABOUT"] = "Over";
+	$lang["_HELP"] = "Help";
+	$lang["_VOUCHER_CANCELLED"] = "Uitnodiging ingetrokken";
+	$lang["_UPLOAD_COMPLETE"] = "Upload voltooid";
+	$lang["_DOWNLOAD"] = "Download";
 	
 
 	// Admin tabblad namen
-	DEFINE ("_GENERAL", "Algemeen");
-	DEFINE ("_UPLOADS", "Uploads");
-	DEFINE ("_DOWNLOADS", "Downloads");
-	DEFINE ("_ERRORS", "Fouten");
-	DEFINE ("_FILES_AVAILABLE", "Beschikbare Bestanden");
-	DEFINE ("_ACTIVE_VOUCHERS", "Geldige uitnodigingen");
-	DEFINE ("_COMPLETE_LOG", "Volledig logboek");
+	$lang["_GENERAL"] = "Algemeen";
+	$lang["_UPLOADS"] = "Uploads";
+	$lang["_DOWNLOADS"] = "Downloads";
+	$lang["_ERRORS"] = "Fouten";
+	$lang["_FILES_AVAILABLE"] = "Beschikbare Bestanden";
+	$lang["_ACTIVE_VOUCHERS"] = "Geldige uitnodigingen";
+	$lang["_COMPLETE_LOG"] = "Volledig logboek";
 
 
 	// Formuliervelden
-	DEFINE ("_TO", "To");
-	DEFINE ("_FROM", "Van");
-	DEFINE ("_SIZE", "Grootte");
-	DEFINE ("_CREATED", "Aangemaakt");
-	DEFINE ("_FILE_NAME", "Bestandsnaam");
-	DEFINE ("_SUBJECT", "Onderwerp");
-	DEFINE ("_EXPIRY", "Vervaldatum");
-	DEFINE ("_Expiry_Date", "Vervaldatum");
-	DEFINE ("_MESSAGE", "Bericht");
-	DEFINE ("_TYPE", "Type");
-	DEFINE ("_OPTIONAL","Optioneel");
+	$lang["_TO"] = "To";
+	$lang["_FROM"] = "Van";
+	$lang["_SIZE"] = "Grootte";
+	$lang["_CREATED"] = "Aangemaakt";
+	$lang["_FILE_NAME"] = "Bestandsnaam";
+	$lang["_SUBJECT"] = "Onderwerp";
+	$lang["_EXPIRY"] = "Vervaldatum";
+	$lang["_EXPIRY_DATE"] = "Vervaldatum";
+	$lang["_MESSAGE"] = "Bericht";
+	$lang["_TYPE"] = "Type";
+	$lang["_OPTIONAL"] = "Optioneel";
 
-	DEFINE ("_TERMS_OF_AGREEMENT", "Algemene Overeenkomst");
-	DEFINE ("_SHOW_TERMS", "Toon Voorwaarden");
-	DEFINE ("_SELECT_FILE", "Selecteer een bestand om te uploaden");
-	DEFINE ("_UPLOADING_WAIT", "Uploaden bestand - even geduld aub ...");
-	DEFINE ("_EMAIL_SEPARATOR_MSG", "Meerdere e-mailadressen gescheiden door, of ;");
+	$lang["_TERMS_OF_AGREEMENT"] = "Algemene Overeenkomst";
+	$lang["_SHOW_TERMS"] = "Toon Voorwaarden";
+	$lang["_SELECT_FILE"] = "Selecteer een bestand om te uploaden";
+	$lang["_UPLOADING_WAIT"] = "Uploaden bestand - even geduld aub ...";
 
 	// Vouchers
-	DEFINE ("_SEND_NEW_VOUCHER", "Met een Uitnodiging kunt u iemand een bestand laten sturen.<br>
+	$lang["_SEND_NEW_VOUCHER"] = "Met een Uitnodiging kunt u iemand een bestand laten sturen.<br>
 Om een Uitnodiging te maken voer een e-mailadres in en klik op Stuur Uitnodiging.<BR>
-Er wordt dan een e-mail verstuurd naar de ontvanger met daarin een link om de uitnodiging te gebruiken.");
-	DEFINE ("_Send_Vouchers_to", "Stuur uitnodiging naar");
+Er wordt dan een e-mail verstuurd naar de ontvanger met daarin een link om de uitnodiging te gebruiken.";
+	$lang["_EMAIL_SEPARATOR_MSG"] = "Meerdere e-mailadressen gescheiden door, of ;";
 
-	// Flash button menu
-	DEFINE("_UPLOAD","Upload");
-    DEFINE("_BROWSE","Browse");
-    DEFINE("_CANCEL","Cancel");
+// Flash button menu
+$lang["_UPLOAD"] = "Upload";
+$lang["_BROWSE"] = "Browse";
+$lang["_CANCEL"] = "Cancel";
+
 ?>

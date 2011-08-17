@@ -38,5 +38,5 @@
  ?>
   <div id="box">
  <?php echo '<div id="pageheading"></div>'; ?> 
-<p>This voucher has been cancelled.</p>
+<p><?php echo lang("_VOUCHER_CANCELLED"); ?></p>
 </div>

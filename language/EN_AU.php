@@ -36,123 +36,121 @@
  * 
  */
 			// main menu items
-           	DEFINE("_ADMIN","Administration");
-            DEFINE("_NEW_UPLOAD","New Upload");
-            DEFINE("_VOUCHERS","Vouchers");
-            DEFINE("_LOGON","Logon");
-            DEFINE("_LOG_OFF","Log Off");
-            DEFINE("_MY_FILES","My Files");
+           	$lang["_ADMIN"] = "Administration";
+            $lang["_NEW_UPLOAD"] = "New Upload";
+            $lang["_VOUCHERS"] = "Vouchers";
+            $lang["_LOGON"] = "Logon";
+            $lang["_LOG_OFF"] = "Log Off";
+            $lang["_MY_FILES"] = "My Files";
 
             // page titles
-			DEFINE("_HOME","Home");
-			DEFINE("_ABOUT","About");
-			DEFINE("_HELP","Help");
-			DEFINE("_VOUCHER_CANCELLED","Voucher Cancelled");
-			DEFINE("_UPLOAD_COMPLETE","Upload Complete");
-			DEFINE("_DOWNLOAD","Download");
-			//DEFINE("_","");
-
-			//DEFINE("_","");
+			$lang["_HOME"] = "Home";
+			$lang["_ABOUT"] = "About";
+			$lang["_HELP"] = "Help";
+			$lang["_VOUCHER_CANCELLED"] = "Voucher Cancelled";
+			$lang["_DELETE_VOUCHER"] = "Delete Voucher";
+			$lang["_UPLOAD_COMPLETE"] = "Upload Complete";
+			$lang["_DOWNLOAD"] = "Download";
+			$lang["_CANCEL_UPLOAD"] = "Cancel Upload";
 			
+			//$lang["_"] = "";
+			// admin
+			$lang["_PAGE"] = "Page";
+			$lang["_UP"] = "Up";
+			$lang["_DOWN"] = "Down";
+			$lang["_FILES"] = "Files";
+			$lang["_DRIVE"] = "Drive";
+			$lang["_TOTAL"] = "Total";
+			$lang["_USED"] = "Used";
+			$lang["_AVAILABLE"] = "Available";
+			$lang["_TEMP"] = "Temp"; // as in Temporary files
+			
+			$lang["_WELCOME"] = "Welcome"; 
+			$lang["_WELCOMEGUEST"] = "Welcome Guest"; 
 			
 			// admin tab names
-			DEFINE("_GENERAL","General");
-			DEFINE("_UPLOADS","Uploads");
-			DEFINE("_DOWNLOADS","Downloads");
-			DEFINE("_ERRORS","Errors");
-			DEFINE("_FILES_AVAILABLE","Files Available");
-			DEFINE("_ACTIVE_VOUCHERS","Active Vouchers");
-			DEFINE("_COMPLETE_LOG","Complete Log");
+			$lang["_GENERAL"] = "General";
+			$lang["_UPLOADS"] = "Uploads";
+			$lang["_DOWNLOADS"] = "Downloads";
+			$lang["_ERRORS"] = "Errors";
+			$lang["_FILES_AVAILABLE"] = "Files Available";
+			$lang["_ACTIVE_VOUCHERS"] = "Active Vouchers";
+			$lang["_COMPLETE_LOG"] = "Complete Log";
 			
 			
 			// Form Fields
-			DEFINE("_TO","To");
-			DEFINE("_FROM","From");
-			DEFINE("_SIZE","Size");
-			DEFINE("_CREATED","Created");
-			DEFINE("_FILE_NAME","File Name");
-			DEFINE("_SUBJECT","Subject");
-			DEFINE("_EXPIRY","Expiry");
-			DEFINE("_MESSAGE","Message");
-			DEFINE("_TYPE","Type");
+			$lang["_TO"] = "To";
+			$lang["_FROM"] = "From";
+			$lang["_SIZE"] = "Size";
+			$lang["_CREATED"] = "Created";
+			$lang["_FILE_NAME"] = "File Name";
+			$lang["_SUBJECT"] = "Subject";
+			$lang["_EXPIRY"] = "Expiry";
+			$lang["_MESSAGE"] = "Message";
+			$lang["_TYPE"] = "Type";
 			
-			DEFINE("_TERMS_OF_AGREEMENT","Terms of Agreement");
-           	DEFINE("_SHOW_TERMS","Show Terms");
-		   	DEFINE("_SELECT_FILE","File to Upload");
-		   	DEFINE("_UPLOADING_WAIT","Uploading file - please wait...");
+			$lang["_TERMS_OF_AGREEMENT"] = "Terms of Agreement";
+           	$lang["_SHOW_TERMS"] = "Show Terms";
+		   	$lang["_SELECT_FILE"] = "File to Upload";
+		   	$lang["_UPLOADING_WAIT"] = "Uploading file - please wait...";
 			
 			// Flash button menu
-			DEFINE("_UPLOAD","Upload");
-            DEFINE("_BROWSE","Browse");
-            DEFINE("_CANCEL","Cancel");
+			$lang["_UPLOAD"] = "Upload";
+            $lang["_BROWSE"] = "Browse";
+            $lang["_CANCEL"] = "Cancel";
+			$lang["_OPEN"] = "Open";
+			$lang["_CLOSE"] = "Close";
+			$lang["_OK"] = "Ok";
+			$lang["_SEND"] = "Send";
+			$lang["_DELETE"] = "Delete";
+			
+			$lang["_INVALID_MISSING_EMAIL"] = "Invalid or missing email";	
+			$lang["_INVALID_EXPIRY_DATE"] = "Invalid expiry Date";	
+			$lang["_INVALID_FILE"] = "Invalid File";	
+			$lang["_INVALID_FILESIZE_ZERO"] = "File size cannot be 0. Please select another file.";
+			$lang["_INVALID_FILE_EXT"] = "Invalid file extension. Please select another file.";
+			$lang["_INVALID_TOO_LARGE_1"] = "File size cannot be greater than";
+			$lang["_SELECT_ANOTHER_FILE"] = "Please select another file.";
+			$lang["_INVALID_FILE_NAME"] = "The name of the file you are uploading is invalid. Please rename your file and try again.";
+			$lang["_INVALID_2GB_USEHTML5"] = "This file is larger than 2GB. Please use a HTML5 enabled browser to upload larger files.";
+			$lang["_ACCEPTTOC"] = "I accept the terms and conditions of this service. [Show/Hide]";	
+			$lang["_AGREETOC"] = "You MUST agree to the terms and conditions.";
+			$lang["_FILE_TO_BE_RESENT"] = "File to be re-distributed";
+			$lang["_ERROR_UPLOADING_FILE"] = "Error uploading your file";
+			
+			$lang["_LOGOUT_COMPLETE"] = "Logout Complete";
 			
 			// vouchers
-			DEFINE("_SEND_NEW_VOUCHER","A Voucher allows someone to send you a file.<br>
+			$lang["_SEND_NEW_VOUCHER"] = "A Voucher allows someone to send you a file.<br>
 To create a voucher, enter an email address then select Send Voucher.<BR>
-An email will be sent to the recipient with a link to use the Voucher.");
-			DEFINE("_EMAIL_SEPARATOR_MSG","Multiple email addresses separated by , or ;");
+An email will be sent to the recipient with a link to use the Voucher.";
+			$lang["_EMAIL_SEPARATOR_MSG"] = "Multiple email addresses separated by , or ;";
 			
-		    DEFINE("_Active_Vouchers","Active Vouchers");
-            DEFINE("_Are_You_Sure_Resend","Are you sure you want to re-send this Email");
-            DEFINE("_Administration","Administration");
-            DEFINE("_Click_on_Send","Click on Send");
-            DEFINE("_Current_Valid_Vouchers","Current Valid Vouchers");
-            DEFINE("_Complete_Log","Complete Log");
-            DEFINE("_Date","Date");
-            DEFINE("_Database_Connection","Database Connection");
-            DEFINE("_Download","Download");
-            DEFINE("_Download_File","Download File");
-           	DEFINE("_ Downloads","Downloads");
-           	DEFINE("_ Email_Sent",'Email has been sent');
-            DEFINE("_Expiry_Date","Expiry Date");
-            DEFINE("_Export","Export");
-            DEFINE("_Errors","Errors");
-            DEFINE("_File","File");
-            DEFINE("_File_Name","File Name");
-            DEFINE("_File_Size","File Size");
-            DEFINE("_Files_Available","Files Available");
-            DEFINE("_File_to_Upload","File to Upload");
-            DEFINE("_File_to_be_Redistributed","File to be Redistributed");
-            DEFINE("_File_Storage","File Storage");
-            DEFINE("_From","From");
-            DEFINE("_Logging","Logging");
-            DEFINE("_Gears_Status","Gears Status");
-            DEFINE("_Gears_Upload","Gears Upload");
-            DEFINE("_General","General");
-           	DEFINE("_ loading","Loading.....");
-           	DEFINE("_ Message","Message");
-            DEFINE("_Optional","Optional");
-           	DEFINE("_ Re-send","Re-send");
-           	DEFINE("_ Resume","Resume");
-            DEFINE("_Send_Vouchers_to","Send Vouchers to");
-           	DEFINE("_ Send_Voucher","Send Voucher");
-           	DEFINE("_ Send_File","Send");
-           	DEFINE("_ Size","Size");
-           	DEFINE("_ Status","Status");
-           	DEFINE("_ Subject","Subject");
-           	DEFINE("_ Temporary_File_Storage","Temporary File Storage");
-           	DEFINE("_ To","To");
-           	DEFINE("_ Upload","Upload");
-           	DEFINE("_ Uploading","Uploading");
-			DEFINE("_UploadProgress","Upload Progress");
-           	DEFINE("_Uploads","Uploads");
-           	DEFINE("_ Valid_To","Valid to");
-           	DEFINE("_ Welcome","Welcome");
-           	DEFINE("_ Voucher_Sent","Voucher Sent");
-           	DEFINE("_Vouchers_Sent","Vouchers Sent");
-           	DEFINE("_Voucher_has_been_sent","Voucher has been sent");
-           	DEFINE("_Voucher_ID","Voucher ID");
-          	DEFINE("_ Your_file_has_been_sent","Your file has been uploaded and message sent.");
-          	DEFINE("_ You_need_to_logon_to ","You need to logon to ");
-          	DEFINE("_ notAuthenticated","Unable to Authenticate - You need to logon again.");
+			$lang["_ARE_YOU_SURE"] = "Are you Sure?";
+			$lang["_DELETE_FILE"] = "DeleteFile";
+           	$lang["_EMAIL_SENT"] = "Email has been sent";
+           	$lang["_EXPIRY_DATE"] = "Expiry Date";
+            $lang["_FILE_SIZE"] = "File Size";
+			$lang["_FILE_RESENT"] = "File Re-sent";			
+		  	$lang["_ME"] = "Me";
+            $lang["_SEND_VOUCHER_TO"] = "Send Vouchers to";
+			$lang["_START_DOWNLOAD"] = "Start Download";
+           	$lang["_VOUCHER_SENT"] = "Voucher Sent";
+			$lang["_VOUCHER_DELETED"] = "Voucher Deleted";
+			$lang["_VOUCHER_CANCELLED"] = "This voucher has been cancelled.";
+			$lang["_STARTED_DOWNLOADING"] = "Your file should start downloading.";
 
             // steps
-           	DEFINE("_Enter_delivery_email_address","Enter delivery email address(es)");
-           	DEFINE("_Browse_for_a_file","Browse for a file");
-           	DEFINE("_Set_expiry_date","Set expiry date");
-           	DEFINE("_Select_Upload","Select Upload");
+           	//$lang["_Enter_delivery_email_address"] = "Enter delivery email address(es)";
+           	//$lang["_Browse_for_a_file"] = "Browse for a file";
+           	//$lang["_Set_expiry_date"] = "Set expiry date";
+           	//$lang["_Select_Upload"] = "Select Upload";
            	// site help
-           	DEFINE("_site_help_text","Site help text");
-           	DEFINE("_Help","Help");
-			DEFINE("_OPTIONAL","Optional");
+           	//$lang["_site_help_text"] = "Site help text";
+           	//$lang["_Help"] = "Help";
+			$lang["_OPTIONAL"] = "Optional";
+			
+			// confirmation
+			$lang["_CONFIRM_DELETE_FILE"] = "Are you sure you want to delete this File?";
+			$lang["_CONFIRM_DELETE_VOUCHER"] = "Are you sure you want to delete this voucher?";
 ?>

@@ -36,61 +36,60 @@
  * 
  */
 // Main menyelementene
-DEFINE ("_ADMIN", "Administrasjon");
-DEFINE ("_NEW_UPLOAD", "Ny filsending");
-DEFINE ("_VOUCHERS", "Send invitasjon til filsending");
-DEFINE ("_LOGON", "Logg på");
-DEFINE ("_LOG_OFF", "Logg av");
-DEFINE ("_MY_FILES", "Mine filer");
+$lang["_ADMIN"] = "Administrasjon";
+$lang["_NEW_UPLOAD"] = "Ny filsending";
+$lang["_VOUCHERS"] = "Send invitasjon til filsending";
+$lang["_LOGON"] = "Logg på";
+$lang["_LOG_OFF"] = "Logg av";
+$lang["_MY_FILES"] = "Mine filer";
 
 // Siden titler
-DEFINE ("_HOME", "Hjem");
-DEFINE ("_ABOUT", "Om");
-DEFINE ("_HELP", "Hjelp");
-DEFINE ("_VOUCHER_CANCELLED", "Filsendingsinvitsjon kansellert");
-DEFINE ("_UPLOAD_COMPLETE", "Opplasting ferdig");
-DEFINE ("_DOWNLOAD", "Last ned");
-// DEFINE ("_","");
+$lang["_HOME"] = "Hjem";
+$lang["_ABOUT"] = "Om";
+$lang["_HELP"] = "Hjelp";
+$lang["_VOUCHER_CANCELLED"] = "Filsendingsinvitsjon kansellert";
+$lang["_UPLOAD_COMPLETE"] = "Opplasting ferdig";
+$lang["_DOWNLOAD"] = "Last ned";
+// $lang["_","";
 
-// DEFINE ("_","");
+// $lang["_","";
 
 
 // Admin kategorien navn
-DEFINE ("_GENERAL", "Generelt");
-DEFINE ("_UPLOADS", "Opplastninger");
-DEFINE ("_DOWNLOADS", "Nedlastninger");
-DEFINE ("_ERRORS", "Feil");
-DEFINE ("_FILES_AVAILABLE", "Tilgjengelige filer");
-DEFINE ("_ACTIVE_VOUCHERS", "Aktive invitasjoner");
-DEFINE ("_COMPLETE_LOG", "Alle logdata");
+$lang["_GENERAL"] = "Generelt";
+$lang["_UPLOADS"] = "Opplastninger";
+$lang["_DOWNLOADS"] = "Nedlastninger";
+$lang["_ERRORS"] = "Feil";
+$lang["_FILES_AVAILABLE"] = "Tilgjengelige filer";
+$lang["_ACTIVE_VOUCHERS"] = "Aktive invitasjoner";
+$lang["_COMPLETE_LOG"] = "Alle logdata";
 
 
 // Form Fields
-DEFINE ("_TO", "Til");
-DEFINE ("_FROM", "Fra");
-DEFINE ("_SIZE", "Størrelse");
-DEFINE ("_CREATED", "Opprettet");
-DEFINE ("_FILE_NAME", "Filnavn");
-DEFINE ("_SUBJECT", "Subject");
-DEFINE ("_EXPIRY", "Utløpsdato");
-DEFINE ("_Expiry_Date", "Utløpsdato");
-DEFINE ("_MESSAGE", "Melding");
-DEFINE ("_TYPE", "Type");
+$lang["_TO"] = "Til";
+$lang["_FROM"] = "Fra";
+$lang["_SIZE"] = "Størrelse";
+$lang["_CREATED"] = "Opprettet";
+$lang["_FILE_NAME"] = "Filnavn";
+$lang["_SUBJECT"] = "Subject";
+$lang["_EXPIRY"] = "Utløpsdato";
+$lang["_EXPIRY_DATE"] = "Utløpsdato";
+$lang["_MESSAGE"] = "Melding";
+$lang["_TYPE"] = "Type";
 
-DEFINE ("_TERMS_OF_AGREEMENT", "Brukervilkår");
-DEFINE ("_SHOW_TERMS", "Vis vilkår");
-DEFINE ("_SELECT_FILE", "Velg en fil til å laste opp");
-DEFINE ("_UPLOADING_WAIT", "Laster opp fil - vennligst vent ...");
-DEFINE ("_EMAIL_SEPARATOR_MSG", "Flere epost-adresser avskilles med , eller ;");
+$lang["_TERMS_OF_AGREEMENT"] = "Brukervilkår";
+$lang["_SHOW_TERMS"] = "Vis vilkår";
+$lang["_SELECT_FILE"] = "Velg en fil til å laste opp";
+$lang["_UPLOADING_WAIT"] = "Laster opp fil - vennligst vent ...";
 
 // Bilag
-DEFINE ("_SEND_NEW_VOUCHER", "Send en ny invitasjon");
-DEFINE ("_Send_Vouchers_to", "Send en invitasjon til");
+$lang["_SEND_NEW_VOUCHER"] = "Send en ny invitasjon";
+$lang["_EMAIL_SEPARATOR_MSG"] = "Flere epost-adresser avskilles med , eller ;";
 
 // Flash button menu
-DEFINE("_UPLOAD","Upload");
-DEFINE("_BROWSE","Browse");
-DEFINE("_CANCEL","Cancel");
+$lang["_UPLOAD"] = "Upload";
+$lang["_BROWSE"] = "Browse";
+$lang["_CANCEL"] = "Cancel";
 
 
 ?>

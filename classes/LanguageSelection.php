@@ -55,13 +55,14 @@ function get_client_language($availableLanguages, $default='en-au'){
 
 //Get the language based on the browser accepted langauge
 $languages = array("no","nl","en","en-au" ,"nl-nl","no-no","nb","nb-no");
-$lang = get_client_language($languages);
+$langs = get_client_language($languages);
 
 //Set a default language file
 $lang_file = "EN_AU.php";
+global $lang;
 //Switch based on the language from the user to the language file
 //If none present, we'll always have the default
-switch($lang) {
+switch($langs) {
 	
 	case "nl-nl":
 		global $lang_file;
@@ -105,11 +106,18 @@ switch($lang) {
 	
 }
 
-setcookie("lang-chosen",$lang);// [, string value [, int expire [, string path [, string domain [, bool secure [, bool httponly]]]]]])
+setcookie("lang-chosen",$langs);// [, string value [, int expire [, string path [, string domain [, bool secure [, bool httponly]]]]]])
 
 //Try and include the language file
+//require_once("$filesenderbase/language/".$lang_file);
+// default english
+if(isset($_REQUEST["lang"])) {
+require_once("$filesenderbase/language/".$_REQUEST["lang"].".php");
+} else {
+require_once("$filesenderbase/language/EN_AU.php");
+//Try and include the language file
 require_once("$filesenderbase/language/".$lang_file);
-
+}
 
 //We might have an incomplete language file (not all keys defined)
 //So first we define all required language keys, then loop over the, If one is not defined, we do it dynamically with a message indictaing which key is not defined. 
@@ -117,15 +125,25 @@ require_once("$filesenderbase/language/".$lang_file);
 //NOTE!!!!!!!!!!!!!!!!!!!!!!!!!
 //Constants not defined here won't be caught below!!!!
 
-$required_lang_keys = array("_ADMIN","_NEW_UPLOAD","_VOUCHERS","_LOGON","_LOG_OFF","_MY_FILES","_HOME","Home","_ABOUT","_HELP","_VOUCHER_CANCELLED","_UPLOAD_COMPLETE","_DOWNLOAD","_GENERAL","_UPLOADS","_DOWNLOADS","_ERRORS","_FILES_AVAILABLE","_ACTIVE_VOUCHERS","_COMPLETE_LOG","_TO","_FROM","_SIZE","_CREATED","_FILE_NAME","_SUBJECT","_EXPIRY","_MESSAGE","_TYPE","_TERMS_OF_AGREEMENT","_SHOW_TERMS","_SELECT_FILE","_UPLOADING_WAIT","_UPLOAD","_BROWSE","_CANCEL","_SEND_NEW_VOUCHER","_EMAIL_SEPARATOR_MSG","_Active_Vouchers","_Are_You_Sure_Resend","_Administration","_Click_on_Send","_Current_Valid_Vouchers","_Complete_Log","_Date","_Database_Connection","_Download","_Download_File","_Downloads","_Email_Sent","_Expiry_Date","_Export","_Errors","_File","_File_Name","_File_Size","_Files_Available","_File_to_Upload","_File_to_be_Redistributed","_File_Storage","_From","_Logging","_Gears_Status","_Gears_Uplad","_General","_loading","_Message","_Optional","_Resend","_Resume","_Send_Vouchers_to","_Send_Voucher","_Send_File","_Size","_Status","_Subject","_Temporary_File_Storage","_To","_Upload","_Uploading","_Uploads","_Valid_To","_Welcome","_Voucher_Sent","_Vouchers_Sent","_Voucher_has_been_sent","_Voucher_ID","_Your_file_has_been_sent","_You_need_to_logon_to","_notAuthenticated","_Enter_delivery_email_address","_Browse_for_a_file","_Set_expiry_date","_Select_Upload","_site_help_text","_Help","_OPTIONAL");
+//$required_lang_keys = array("_ADMIN","_NEW_UPLOAD","_VOUCHERS","_LOGON","_LOG_OFF","_MY_FILES","_HOME","Home","_ABOUT","_HELP","_VOUCHER_CANCELLED","_UPLOAD_COMPLETE","_DOWNLOAD","_GENERAL","_UPLOADS","_DOWNLOADS","_ERRORS","_FILES_AVAILABLE","_ACTIVE_VOUCHERS","_COMPLETE_LOG","_TO","_FROM","_SIZE","_CREATED","_FILE_NAME","_SUBJECT","_EXPIRY","_MESSAGE","_TYPE","_TERMS_OF_AGREEMENT","_SHOW_TERMS","_SELECT_FILE","_UPLOADING_WAIT","_UPLOAD","_BROWSE","_CANCEL","_SEND_NEW_VOUCHER","_EMAIL_SEPARATOR_MSG","_Active_Vouchers","_Are_You_Sure_Resend","_Administration","_Click_on_Send","_Current_Valid_Vouchers","_Complete_Log","_Date","_Database_Connection","_Download","_Download_File","_Downloads","_Email_Sent","_Expiry_Date","_Export","_Errors","_File","_File_Name","_File_Size","_Files_Available","_File_to_Upload","_File_to_be_Redistributed","_File_Storage","_From","_Logging","_Gears_Status","_Gears_Uplad","_General","_loading","_Message","_Optional","_Resend","_Resume","_Send_Vouchers_to","_Send_Voucher","_Send_File","_Size","_Status","_Subject","_Temporary_File_Storage","_To","_Upload","_Uploading","_Uploads","_Valid_To","_Welcome","_Voucher_Sent","_Vouchers_Sent","_Voucher_has_been_sent","_Voucher_ID","_Your_file_has_been_sent","_You_need_to_logon_to","_notAuthenticated","_Enter_delivery_email_address","_Browse_for_a_file","_Set_expiry_date","_Select_Upload","_site_help_text","_Help","_OPTIONAL");
 
 
-foreach($required_lang_keys as $value){
+//foreach($required_lang_keys as $value){
 
-	if(!defined($value)){
-		define($value,"The translation for ".$value." is not defined");
-	}
+//	if(!defined($value)){
+//		define($value,"The translation for ".$value." is not defined");
+//	}
 	
+//}
+function lang($item)
+{
+	global $lang;
+	if (isset($lang[$item])) 
+	{
+	return $lang[$item];	
+	} else {
+	return $item;
+	}
 }
 
 ?>

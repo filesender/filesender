@@ -71,37 +71,37 @@ $drivespace = $functions->driveSpace();
 
 ?>
 
-<div id="box"> <?php echo '<div id="pageheading">'._ADMIN.'</div>'; ?>
+<div id="box"> <?php echo '<div id="pageheading">'.lang("_ADMIN").'</div>'; ?>
   <div id="tabs">
     <ul>
       <?php
 	// admin tab names
-		echo '<li><a href="#tabs-1">'._GENERAL.'</a></li>';
-		echo '<li><a href="#tabs-2">'._UPLOADS.'</a></li>';
-		echo '<li><a href="#tabs-3">'._DOWNLOADS.'</a></li>';
-		echo '<li><a href="#tabs-4">'._ERRORS.'</a></li>';
-		echo '<li><a href="#tabs-5">'._FILES_AVAILABLE.'</a></li>';
-		echo '<li><a href="#tabs-6">'._ACTIVE_VOUCHERS.'</a></li>';
+		echo '<li><a href="#tabs-1">'.lang("_GENERAL").'</a></li>';
+		echo '<li><a href="#tabs-2">'.lang("_UPLOADS").'</a></li>';
+		echo '<li><a href="#tabs-3">'.lang("_DOWNLOADS").'</a></li>';
+		echo '<li><a href="#tabs-4">'.lang("_ERRORS").'</a></li>';
+		echo '<li><a href="#tabs-5">'.lang("_FILES_AVAILABLE").'</a></li>';
+		echo '<li><a href="#tabs-6">'.lang("_ACTIVE_VOUCHERS").'</a></li>';
 		?>
     </ul>
     <div id="tabs-1"> <?php echo  $functions->getStats(); ?><br />
       <table border="0" cellpadding="4" width="720"style="table-layout:fixed;" >
         <tr class="headerrow">
-          <td>Drive</td>
-          <td>Total</td>
-          <td>Used</td>
-          <td>Available</td>
-          <td>Use %</td>
+          <td><?php echo lang("_DRIVE") ?></td>
+          <td><?php echo lang("_TOTAL") ?></td>
+          <td><?php echo lang("_USED") ?></td>
+          <td><?php echo lang("_AVAILABLE") ?></td>
+          <td>% <?php echo lang("_USED") ?></td>
         </tr>
         <tr>
-          <td>Files</td>
+          <td><?php echo lang("_FILES") ?></td>
           <td><?php echo  formatBytes($drivespace["site_filestore_total"]) ?></td>
           <td><?php echo  formatBytes($drivespace["site_filestore_total"]-$drivespace["site_filestore_free"]) ?></td>
           <td><?php echo  formatBytes($drivespace["site_filestore_free"]) ?></td>
           <td><?php echo  round(($drivespace["site_filestore_total"]-$drivespace["site_filestore_free"])/$drivespace["site_filestore_total"] * 100,0) ?>%</td>
         </tr>
         <tr>
-          <td>Temp</td>
+          <td><?php echo lang("_TEMP") ?></td>
           <td><?php echo  formatBytes($drivespace["site_temp_filestore_total"]) ?></td>
           <td><?php echo  formatBytes($drivespace["site_temp_filestore_total"]-$drivespace["site_temp_filestore_free"]) ?></td>
           <td><?php echo  formatBytes($drivespace["site_temp_filestore_free"]) ?></td>
@@ -114,7 +114,7 @@ $drivespace = $functions->driveSpace();
         <tr>
           <td colspan="5" align="right"><table border="0" cellpadding="5" align="left">
               <tr>
-                <td>Page:</td>
+                <td><?php echo lang("_PAGE") ?>:</td>
                 <?php
 //  echo "::".$total_pages["Uploaded"];
   for ($i = 1; $i <= $total_pages["Uploaded"]; $i++) {
@@ -130,11 +130,11 @@ $drivespace = $functions->driveSpace();
         </tr>
         <tr class="headerrow">
           <?php 
-echo '<td><strong>'._TO.'</strong></td>';
-echo '<td><strong>'._FROM.'</strong></td>';
-echo '<td><strong>'._FILE_NAME.'</strong></td>';
-echo '<td><strong>'._SIZE.'</strong></td>';
-echo '<td><strong>'._CREATED.'</strong></td>';
+echo '<td><strong>'.lang("_TO").'</strong></td>';
+echo '<td><strong>'.lang("_FROM").'</strong></td>';
+echo '<td><strong>'.lang("_FILE_NAME").'</strong></td>';
+echo '<td><strong>'.lang("_SIZE").'</strong></td>';
+echo '<td><strong>'.lang("_CREATED").'</strong></td>';
 ?>
         </tr>
         <?php 
@@ -150,7 +150,7 @@ foreach($Uploaded as $item) {
         <tr>
           <td colspan="5" align="right"><table border="0" cellpadding="5" align="left">
               <tr>
-                <td> Page:</td>
+                <td> <?php echo lang("_PAGE") ?>:</td>
                 <?php
   for ($i = 1; $i <= $total_pages["Download"]; $i++) {
   $txt = $i;
@@ -165,11 +165,11 @@ foreach($Uploaded as $item) {
         </tr>
         <tr class="headerrow">
           <?php
-echo '<td><strong>'._TO.'</strong></td>';
-echo '<td><strong>'._FROM.'</strong></td>';
-echo '<td><strong>'._FILE_NAME.'</strong></td>';
-echo '<td><strong>'._SIZE.'</strong></td>';
-echo '<td><strong>'._CREATED.'</strong></td>';
+echo '<td><strong>'.lang("_TO").'</strong></td>';
+echo '<td><strong>'.lang("_FROM").'</strong></td>';
+echo '<td><strong>'.lang("_FILE_NAME").'</strong></td>';
+echo '<td><strong>'.lang("_SIZE").'</strong></td>';
+echo '<td><strong>'.lang("_CREATED").'</strong></td>';
 ?>
         </tr>
         <?php 
@@ -185,7 +185,7 @@ echo "<tr><td class='HardBreak'>" .$item['logto'] . "</td><td class='HardBreak'>
         <tr>
           <td colspan="5" align="right"><table border="0" cellpadding="5" align="left">
               <tr>
-                <td> Page:</td>
+                <td> <?php echo lang("_PAGE") ?>:</td>
                 <?php
   for ($i = 1; $i <= $total_pages["Error"]; $i++) {
   $txt = $i;
@@ -200,11 +200,11 @@ echo "<tr><td class='HardBreak'>" .$item['logto'] . "</td><td class='HardBreak'>
         </tr>
         <tr class="headerrow">
           <?php 
-echo '<td><strong>'._TO.'</strong></td>';
-echo '<td><strong>'._FROM.'</strong></td>';
-echo '<td><strong>'._FILE_NAME.'</strong></td>';
-echo '<td><strong>'._SUBJECT.'</strong></td>';
-echo '<td><strong>'._CREATED.'</strong></td>';
+echo '<td><strong>'.lang("_TO").'</strong></td>';
+echo '<td><strong>'.lang("_FROM").'</strong></td>';
+echo '<td><strong>'.lang("_FILE_NAME").'</strong></td>';
+echo '<td><strong>'.lang("_SUBJECT").'</strong></td>';
+echo '<td><strong>'.lang("_CREATED").'</strong></td>';
 ?>
         </tr>
         <?php 
@@ -221,7 +221,7 @@ echo "<tr><td colspan=4>".$item['logmessage']."</td></tr>";
         <tr>
           <td colspan="5" align="right"><table border="0" cellpadding="5" align="left">
               <tr>
-                <td> Page:</td>
+                <td> <?php echo lang("_PAGE") ?>:</td>
                 <?php
   for ($i = 1; $i <= $total_pages["Available"]; $i++) {
   $txt = $i;
@@ -236,13 +236,13 @@ echo "<tr><td colspan=4>".$item['logmessage']."</td></tr>";
         </tr>
         <tr class="headerrow">
           <?php 
-echo '<td><strong>'._TO.'</strong></td>';
-echo '<td><strong>'._FROM.'</strong></td>';
-echo '<td><strong>'._FILE_NAME.'</strong></td>';
-echo '<td><strong>'._SIZE.'</strong></td>';
-echo '<td><strong>'._SUBJECT.'</strong></td>';
-echo '<td><strong>'._CREATED.'</strong></td>';
-echo '<td><strong>'._EXPIRY.'</strong></td>';
+echo '<td><strong>'.lang("_TO").'</strong></td>';
+echo '<td><strong>'.lang("_FROM").'</strong></td>';
+echo '<td><strong>'.lang("_FILE_NAME").'</strong></td>';
+echo '<td><strong>'.lang("_SIZE").'</strong></td>';
+echo '<td><strong>'.lang("_SUBJECT").'</strong></td>';
+echo '<td><strong>'.lang("_CREATED").'</strong></td>';
+echo '<td><strong>'.lang("_EXPIRY").'</strong></td>';
 ?>
         </tr>
         <?php 
@@ -259,7 +259,7 @@ echo "<tr><td class='HardBreak'>" .$item['fileto'] . "</td><td class='HardBreak'
           <tr>
             <td colspan="5" align="right"><table border="0" cellpadding="5" align="left">
                 <tr>
-                  <td> Page:</td>
+                  <td> <?php echo lang("_PAGE") ?>:</td>
                   <?php
   for ($i = 1; $i <= $total_pages["Voucher"]; $i++) {
   $txt = $i;
@@ -274,13 +274,13 @@ echo "<tr><td class='HardBreak'>" .$item['fileto'] . "</td><td class='HardBreak'
           </tr>
           <tr class="headerrow">
             <?php 
-echo '<td><strong>'._TO.'</strong></td>';
-echo '<td><strong>'._FROM.'</strong></td>';
-echo '<td><strong>'._FILE_NAME.'</strong></td>';
-echo '<td><strong>'._SIZE.'</strong></td>';
-echo '<td><strong>'._SUBJECT.'</strong></td>';
-echo '<td><strong>'._CREATED.'</strong></td>';
-echo '<td><strong>'._EXPIRY.'</strong></td>';
+echo '<td><strong>'.lang("_TO").'</strong></td>';
+echo '<td><strong>'.lang("_FROM").'</strong></td>';
+echo '<td><strong>'.lang("_FILE_NAME").'</strong></td>';
+echo '<td><strong>'.lang("_SIZE").'</strong></td>';
+echo '<td><strong>'.lang("_SUBJECT").'</strong></td>';
+echo '<td><strong>'.lang("_CREATED").'</strong></td>';
+echo '<td><strong>'.lang("_EXPIRY").'</strong></td>';
 ?>
             <?php 
 foreach($Voucher as $item) {

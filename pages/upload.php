@@ -117,12 +117,12 @@
 		$("#dialog-cancel").dialog({ autoOpen: false, height: 140, width: 350, modal: true,
 		
 		buttons: {
-				OK: function() {
+				<?php echo lang("_OK") ?>: function() {
 				//$( this ).dialog( "close" );
 				//$("#dialog-uploadprogress").dialog('close');
 				window.location = window.location;
 				},
-				Cancel: function() { 
+				<?php echo lang("_CANCEL") ?>: function() { 
 				$( this ).dialog( "close" );
 				}
 		}
@@ -130,7 +130,7 @@
 		// default error message dialogue
 		$("#dialog-default").dialog({ autoOpen: false, height: 140, modal: true,title: "Error",		
 		buttons: {
-			Ok: function() {
+			<?php echo lang("_OK") ?>: function() {
 				$("#dialog-default").html("");
 				$( this ).dialog( "close" );
 				}
@@ -143,9 +143,9 @@
           //Hide closing "X" for this dialog only.
           $(this).parent().children().children("a.ui-dialog-titlebar-close").remove();
     	},
-		autoOpen: false, height: 140,width: 350, modal: true,title: "Uploading",		
+		autoOpen: false, height: 140,width: 350, modal: true,title: "<?php echo lang("_UPLOADING") ?>",		
 		buttons: {
-			Cancel: function() {
+			<?php echo lang("_CANCEL") ?>: function() {
 				// are you sure?
 				$("#dialog-cancel").dialog('open');
 				}	
@@ -340,18 +340,18 @@ function validate_file()
 		//validate file size
 		if(file.size < 1)
 		{
-		fileMsg("File size cannot be 0. Please select another file.");	
+		fileMsg("<?php echo lang("_INVALID_FILESIZE_ZERO") ?>");	
 		return false;
 		}
 		if(file.size > maxHTML5uploadsize)
 		{
-		fileMsg("File size cannot be greater than " + readablizebytes(maxHTML5uploadsize) + ". Please select another file.");	
+		fileMsg("<?php echo lang("_INVALID_TOO_LARGE_1") ?> " + readablizebytes(maxHTML5uploadsize) + ". <?php echo lang("_SELECT_ANOTHER_FILE") ?> ");	
 		return false;
 		}
 		var tmpExtension = file.name.split('.').pop();
 		if(banextensions.search(tmpExtension) != -1)
 		{
-		fileMsg("Invalid file extension. Please select another file.");	
+		fileMsg("<?php echo lang("_INVALID_FILE_EXT") ?>");	
 		return false;
 		}
 		return true;
@@ -408,7 +408,7 @@ function fileInfo(name,size)
 fileMsg("");
 if(size > 2147483648)
 {
-fileMsg("This file is larger than 2GB. Please use a HTML5 enabled browser to upload larger files.");
+fileMsg("<?php echo lang("_INVALID_2GB_USEHTML5") ?>");
 // remove displayed file data
 $("#fileInfoView").hide();
 } else if (validatefilename(name)) 
@@ -434,7 +434,7 @@ $("#form1").submit();
 
 function uploaderror(name,size)
 {
-errorDialog("Error uploading your file"+name+":"+size);
+errorDialog("<?php echo lang("_ERROR_UPLOADING_FILE") ?> "+name+":"+size);
 }
 
 // check browser type
@@ -460,14 +460,14 @@ function validatefilename(name)
 	var tmpExtension = name.split('.').pop();
 		if(banextensions.search(tmpExtension) != -1)
 		{
-		fileMsg("Invalid file extension. Please select another file.");	
+		fileMsg("<?php echo lang("_INVALID_FILE_EXT")." ".lang("_SELECT_ANOTHER_FILE") ?>");	
 		return false;
 		}
    if (/^[^\\\/\:\*\?\"\<\>\|\.]+(\.[^\\\/\:\*\?\"\<\>\|\.]+)+$/.test(name)) 
    {
 		return true; 
 	} else {
-		fileMsg("The name of the file you are uploading is invalid. Please rename your file and try again.");	
+		fileMsg("<?php echo lang("_INVALID_FILE_NAME") ?>");	
 		return false;
 	}
 }
@@ -495,46 +495,46 @@ function fileMsg(msg)
 
     </script>
 
-<div id="box"> <?php echo '<div id="pageheading">'._UPLOAD.'</div>'; ?>
+<div id="box"> <?php echo '<div id="pageheading">'.lang("_UPLOAD").'</div>'; ?>
   <form id="form1" enctype="multipart/form-data" method="POST" action="fs_uploadit5.php">
     <table width="600" border="0">
       <tr>
-        <td width="100" class="formfieldheading mandatory"><?php echo _TO; ?>:</td>
-        <td width="400" valign="middle"><input name="fileto" title="<?php echo _EMAIL_SEPARATOR_MSG; ?>" type="text" id="fileto" size="60" onchange="validate_fileto()" />
-        <div id="fileto_msg" style="display: none" class="validation_msg">Invalid or missing email</div></td>
+        <td width="100" class="formfieldheading mandatory"><?php echo lang("_TO") ; ?>:</td>
+        <td width="400" valign="middle"><input name="fileto" title="<?php echo lang("_EMAIL_SEPARATOR_MSG") ; ?>" type="text" id="fileto" size="60" onchange="validate_fileto()" />
+        <div id="fileto_msg" style="display: none" class="validation_msg"><?php echo lang("_INVALID_MISSING_EMAIL"); ?></div></td>
       </tr>
       <tr>
-        <td class="formfieldheading mandatory"><?php echo _FROM; ?>:</td>
+        <td class="formfieldheading mandatory"><?php echo lang("_FROM"); ?>:</td>
         <td><?php echo $senderemail ?>
           <input name="filefrom" type="hidden" id="filefrom" value="<?php echo $senderemail ?>" size="40" /></td>
       </tr>
       <tr>
-        <td class="formfieldheading"><?php echo _SUBJECT; ?>: (<?php echo _OPTIONAL; ?>)</td>
+        <td class="formfieldheading"><?php echo lang("_SUBJECT"); ?>: (<?php echo lang("_OPTIONAL"); ?>)</td>
         <td><input name="filesubject" type="text" id="filesubject" size="60" /></td>
       </tr>
       <tr>
-        <td class="formfieldheading"><?php echo _MESSAGE; ?>: (<?php echo _OPTIONAL; ?>)</td>
+        <td class="formfieldheading"><?php echo lang("_MESSAGE"); ?>: (<?php echo lang("_OPTIONAL"); ?>)</td>
         <td><textarea name="filemessage" cols="45" rows="4" id="filemessage"></textarea></td>
      </tr>
       <tr>
-        <td class="formfieldheading mandatory"><?php echo _Expiry_Date; ?>:
+        <td class="formfieldheading mandatory"><?php echo lang("_EXPIRY_DATE"); ?>:
           <input type="hidden" id="fileexpirydate" name="fileexpirydate" value="<?php echo date("d-m-Y",strtotime("+".$config['default_daysvalid']." day"));?>"/></td>
         <td><input id="datepicker" name="datepicker" onchange="validate_expiry()">
           </input>
-          <div id="expiry_msg" class="validation_msg" style="display: none">Invalid expiry Date</div></td>
+          <div id="expiry_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_EXPIRY_DATE"); ?></div></td>
       </tr>
       <?php if ($config["AuP"]) {?>
       <tr>
         <td class="formfieldheading"></td>
         <td><input name="aup" type="checkbox" id="aup" onchange="validate_aup()" value="true" />
-          <div onclick="toggleTOG()"><?php echo "I accept the terms and conditions of this service"; ?> [Show/Hide]</div>
-          <div id="aup_msg" class="validation_msg" style="display: none">You MUST agree to the terms and conditions.</div>
+          <div onclick="toggleTOG()"><?php echo lang("_ACCEPTTOC"); ?></div>
+          <div id="aup_msg" class="validation_msg" style="display: none"><?php echo lang("_AGREETOC"); ?></div>
           <div id="tog" name="tog" style="display:none"> <?php echo $config["AuP_terms"]; ?> </div></td>
      </tr>
       <?php } ?>
 
       <tr>
-        <td class="formfieldheading mandatory"><div id="selectfile" name="selectfile"><?php echo _SELECT_FILE; ?>:</div></td>
+        <td class="formfieldheading mandatory"><div id="selectfile" name="selectfile"><?php echo lang("_SELECT_FILE"); ?>:</div></td>
         <td><div id="uploadstandard"> 
             <script language="JavaScript" type="text/javascript">
 <!--
@@ -609,14 +609,14 @@ if ( hasProductInstall && !hasRequestedVersion ) {
               </embed>
             </object>
             </noscript>
-            <div id="uploadstandardspinner" style="padding-top:10px"><img src="images/ajax-loader-sm.gif" border=0 align="left" style="padding-right:6px"/><?php echo _UPLOADING_WAIT; ?></div>
+            <div id="uploadstandardspinner" style="padding-top:10px"><img src="images/ajax-loader-sm.gif" border=0 align="left" style="padding-right:6px"/><?php echo lang("_UPLOADING_WAIT"); ?></div>
             <BR />
           </div>
           <div id="uploadhtml5">
             <input type="file" name="fileToUpload" id="fileToUpload" onChange="fileSelected();"/>
             <input type="button" onClick="validate()" value="Upload" id="uploadbutton" name="uploadbutton"> 
           </div>
-          <div id="file_msg" class="validation_msg" style="display: none">Invalid File</div>
+          <div id="file_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_FILE"); ?></div>
           </td>
       </tr>
       <tr>
@@ -638,7 +638,7 @@ if ( hasProductInstall && !hasRequestedVersion ) {
   </form>
 </div>
 <div id="dialog-default" title=""> </div>
-<div id="dialog-cancel" title="Cancel Upload">Are you Sure?</div>
+<div id="dialog-cancel" title="<?php echo lang("_CANCEL_UPLOAD"); ?>"><?php echo lang("_ARE_YOU_SURE"); ?></div>
 <div id="dialog-uploadprogress" title="">
 	<div id="progress_container">
  			<div id="progress_bar">
@@ -647,4 +647,3 @@ if ( hasProductInstall && !hasRequestedVersion ) {
 		</div>
 	</div>
 </div>
-

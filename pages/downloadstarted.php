@@ -37,6 +37,6 @@
  */
  ?>
  <div id="box">
-<?php echo '<div id="pageheading">Your file should start downloading.</div>'; ?> 
+<?php echo '<div id="pageheading">'.lang("_STARTED_DOWNLOADING").'</div>'; ?> 
 </div>
 

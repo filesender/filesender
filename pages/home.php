@@ -38,7 +38,7 @@
  ?>
 <div id="box">
 <?php 
-echo '<div id="pageheading">'._HOME.'</div>'; 
+echo '<div id="pageheading">'.lang("_HOME").'</div>'; 
 echo $config["site_splashtext"];
 ?>
 </div>

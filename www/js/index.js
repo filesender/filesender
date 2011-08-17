@@ -35,7 +35,7 @@
 // JavaScript Document
 $(function() {
 	
-	$("#dialog-help").dialog({ autoOpen: false, height: 400,width: 400, modal: true,
+	$("#dialog-help").dialog({ autoOpen: false, height: 400,width: 660, modal: true,
 		buttons: {
 			Close: function() {
 				$( this ).dialog( "close" );
