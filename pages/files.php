@@ -51,7 +51,7 @@ echo "<div id='message'>File Deleted</div>";
 if($_REQUEST["a"] == "resend")
 {
 $sendmail->sendEmail($myfileData ,$config['fileuploadedemailbody']);
-echo "<div id='message'>File Resent</div>";
+echo "<div id='message'>".lang("_FILE_RESENT")."</div>";
 }
 
 if($_REQUEST["a"] == "add")
@@ -69,7 +69,7 @@ $myfileData["filevoucheruid"] = getGUID();
 $functions->inserFileHTML5($myfileData);
 }
 // display the add box
-echo "<div id='message'>Email has been sent.</div>";
+echo "<div id='message'>".lang("_EMAIL_SENT").".</div>";
 }
 }
 $filedata = $functions->getUserFiles();
@@ -96,10 +96,10 @@ $json_o=json_decode($filedata,true);
 		// delete modal dialog box
 		$("#dialog-delete").dialog({ autoOpen: false, height: 140, modal: true,
 			buttons: {
-				Cancel: function() {
+				<?php echo lang("_CANCEL") ?>: function() {
 				$( this ).dialog( "close" );
 				},
-				Delete: function() { 
+				<?php echo lang("_DELETE") ?>: function() { 
 				deletefile();
 				$( this ).dialog( "close" );
 				}
@@ -109,10 +109,10 @@ $json_o=json_decode($filedata,true);
 		// add new recipient modal dialog box
 		$("#dialog-addrecipient").dialog({ autoOpen: false, height: 360,width:650, modal: true,
 			buttons: {
-				Cancel: function() {
+				<?php echo lang("_CANCEL") ?>: function() {
 					$( this ).dialog( "close" );
 				},
-				Send: function() { 
+				<?php echo lang("_SEND") ?>: function() { 
 				// calidate form before sending
 				if(validateForm())
 				{
@@ -262,20 +262,20 @@ function echeck(str) {
 }
 </script>
 
-<div id="box"> <?php echo '<div id="pageheading">'._MY_FILES.'</div>'; ?>
+<div id="box"> <?php echo '<div id="pageheading">'.lang("_MY_FILES").'</div>'; ?>
   <div id="tablediv">
     <table id="myfiles" width="750" border="0" cellspacing="1" style="table-layout:fixed;">
       <tr class="headerrow">
         <td width="18">&nbsp;</td>
         <td width="18">&nbsp;</td>
-        <td><strong><?php echo _TO; ?></strong></td>
-        <td><strong><?php echo _FROM; ?></strong></td>
-        <td><strong><?php echo _FILE_NAME; ?></strong></td>
-        <td width="60"><strong><?php echo _SIZE; ?></strong></td>
-        <td><strong><?php echo _SUBJECT; ?></strong></td>
+        <td><strong><?php echo lang("_TO"); ?></strong></td>
+        <td><strong><?php echo lang("_FROM"); ?></strong></td>
+        <td><strong><?php echo lang("_FILE_NAME"); ?></strong></td>
+        <td width="60"><strong><?php echo lang("_SIZE"); ?></strong></td>
+        <td><strong><?php echo lang("_SUBJECT") ; ?></strong></td>
         <td width="16"><strong></strong></td>
-        <td width="80"><strong><?php echo _CREATED; ?></strong></td>
-        <td width="80"><strong><?php echo _EXPIRY; ?></strong></td>
+        <td width="80"><strong><?php echo lang("_CREATED"); ?></strong></td>
+        <td width="80"><strong><?php echo lang("_EXPIRY"); ?></strong></td>
         <td width="18">&nbsp;</td>
       </tr>
       <?php 
@@ -285,13 +285,13 @@ foreach($json_o as $item) {
    echo '<tr><td valign="top"> <a href="index.php?s=files&a=resend&id=' .$item['filevoucheruid'] . '"><img src="images/email_go.png" title="Re-send Email"></a></td><td valign="top"><img src="images/email_add.png" title="Add New Recipient" onclick="openAddRecipient('."'".$item['filevoucheruid']."','".$item['fileoriginalname'] ."','".$item['filesize'] ."','".$item['filefrom']."'" .');"  style="cursor:pointer;"></td>';
    if($item['fileto'] == $attributes["email"])
    {
-   echo "<td class='HardBreak' valign='top'>Me</td>";
+   echo "<td class='HardBreak' valign='top'>".lang("_ME")."</td>";
    } else {
    echo "<td class='HardBreak'>" .$item['fileto'] . "</td>";
    }
     if($item['filefrom'] == $attributes["email"])
    {
-   echo "<td class='HardBreak'>Me</td>";
+   echo "<td class='HardBreak'>".lang("_ME")."</td>";
    } else {
    echo "<td class='HardBreak'>" .$item['filefrom'] . "</td>";
    }
@@ -310,46 +310,46 @@ foreach($json_o as $item) {
   </div>
 </div>
 <div id="dialog-delete" title="Delete File">
-<p>Are you sure you want to delete this File?</p>
+<p><?php echo lang("_CONFIRM_DELETE_FILE");?></p>
 </div>
 <div id="dialog-addrecipient" title="Add Recipient">
   <form id="form1" name="form1" enctype="multipart/form-data" method="POST" action="">
     <table  width="600" border="0">
       <tr>
-        <td width="100" class="formfieldheading mandatory"><?php echo _TO; ?>:</td>
-        <td width="400" valign="middle"><input name="fileto" title="<?php echo _EMAIL_SEPARATOR_MSG; ?>" type="text" id="fileto" size="60" onchange="validate_fileto()" />
-          <div id="fileto_msg" style="display: none" class="validation_msg">Invalid or missing email</div></td>
+        <td width="100" class="formfieldheading mandatory"><?php echo  lang("_TO"); ?>:</td>
+        <td width="400" valign="middle"><input name="fileto" title="<?php echo  lang("_EMAIL_SEPARATOR_MSG"); ?>" type="text" id="fileto" size="60" onchange="validate_fileto()" />
+          <div id="fileto_msg" style="display: none" class="validation_msg"><?php echo lang("_INVALID_MISSING_EMAIL"); ?></div></td>
       </tr>
       <tr>
-        <td class="formfieldheading mandatory"><?php echo _FROM; ?>:</td>
+        <td class="formfieldheading mandatory"><?php echo lang("_FROM"); ?>:</td>
         <td><div id="filefrom" name="filefrom"></div></td>
       </tr>
       <tr>
-        <td class="formfieldheading"><?php echo _SUBJECT; ?>: (<?php echo _OPTIONAL; ?>)</td>
+        <td class="formfieldheading"><?php echo lang("_SUBJECT"); ?>: (<?php echo lang("_OPTIONAL"); ?>)</td>
         <td><input name="filesubject" type="text" id="filesubject" size="60" /></td>
       </tr>
       <tr>
-        <td class="formfieldheading"><?php echo _MESSAGE; ?>: (<?php echo _OPTIONAL; ?>)</td>
+        <td class="formfieldheading"><?php echo lang("_MESSAGE"); ?>: (<?php echo lang("_OPTIONAL"); ?>)</td>
         <td><textarea name="filemessage" cols="45" rows="4" id="filemessage"></textarea></td>
       </tr>
       <tr>
-        <td class="formfieldheading mandatory"><?php echo _EXPIRY; ?>:
+        <td class="formfieldheading mandatory"><?php echo lang("_EXPIRY"); ?>:
           <input type="hidden" id="fileexpirydate" name="fileexpirydate" value="<?php echo date("d-m-Y",strtotime("+".$config['default_daysvalid']." day"));?>"/></td>
         <td><input id="datepicker" name="datepicker" onchange="validate_expiry()">
           </input>
-          <div id="expiry_msg" class="validation_msg" style="display: none">Invalid expiry Date</div></td>
+          <div id="expiry_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_EXPIRY_DATE"); ?></div></td>
       </tr>
       <tr>
-        <td class="formfieldheading mandatory">File to be re-distributed:</td>
+        <td class="formfieldheading mandatory"><?php echo lang("_FILE_TO_BE_RESENT"); ?>:</td>
         <td><div id="filename" name="filename"></div></td>
       </tr>
       <tr>
-        <td class="formfieldheading mandatory">Size:</td>
+        <td class="formfieldheading mandatory"><?php echo lang("_SIZE"); ?>:</td>
         <td><div id="filesize" name="filesize"></div></td>
       </tr>
       <tr>
         <td class="formfieldheading mandatory"></td>
-        <td><div id="file_msg" class="validation_msg" style="display: none">Invalid File</div></td>
+        <td><div id="file_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_FILE"); ?></div></td>
       </tr>
     </table>
     <input name="filevoucheruid" type="hidden" id="filevoucheruid"/>

@@ -52,10 +52,10 @@
 		$("#dialog-delete").dialog({ autoOpen: false, height: 140, modal: true,
 		
 		buttons: {
-				Cancel: function() {
+				<?php echo lang("_CANCEL") ?>: function() {
 					$( this ).dialog( "close" );
 				},
-				Delete: function() { 
+				<?php echo lang("_DELETE") ?>: function() { 
 				deletevoucher();
 				$( this ).dialog( "close" );
 				}
@@ -167,7 +167,7 @@ $emailArray = preg_split("/;/", $emailto);
 foreach ($emailArray as $Email) { 
 $functions->insertVoucher($Email,$_POST["altdate"]);
 }
-echo "<div id='message'>Voucher Added</div>";
+echo "<div id='message'>".lang("_VOUCHER_SENT")."</div>";
 }
 // del
 if(isset($_REQUEST["a"]) && isset($_REQUEST["id"])) 
@@ -177,7 +177,7 @@ if($_REQUEST["a"] == "del" )
 {
 if($functions->deleteVoucher($myfileData[0]["fileid"]))
 {
-echo "<div id='message'>Voucher Deleted</div>";
+echo "<div id='message'>".lang("_VOUCHER_DELETED")."</div>";
 }
 }
 }
@@ -191,25 +191,25 @@ $json_o=json_decode($filedata,true);
 ?>
 <form name="form1" method="post" action="index.php?s=vouchers"  onSubmit="return validateForm()">
     <div id="box">
-  <?php echo '<div id="pageheading">'._VOUCHERS.'</div>'; ?>
+  <?php echo '<div id="pageheading">'.lang("_VOUCHERS").'</div>'; ?>
     <table width="100%" border="0">
       <tr>
-        <td colspan="2" class="formfieldheading"><?php echo _SEND_NEW_VOUCHER; ?></td>
+        <td colspan="2" class="formfieldheading"><?php echo html_entity_decode(lang("_SEND_NEW_VOUCHER")); ?></td>
       </tr>
       </table>
       </div>
       <div id="box">
        <table width="100%" border="0">
       <tr>
-        <td class="formfieldheading mandatory" width="200"><?php echo _Send_Vouchers_to; ?>:</td>
+        <td class="formfieldheading mandatory" width="200"><?php echo lang("_SEND_VOUCHER_TO"); ?>:</td>
         <td>
-        <input id="fileto" name="fileto" title="<?php echo _EMAIL_SEPARATOR_MSG; ?>"  type="text" size="40" /><br />
- 		<div id="fileto_msg" class="validation_msg">Invalid or missing email</div>
+        <input id="fileto" name="fileto" title="<?php echo lang("_EMAIL_SEPARATOR_MSG"); ?>"  type="text" size="40" /><br />
+ 		<div id="fileto_msg" class="validation_msg"><?php echo lang("_INVALID_MISSING_EMAIL"); ?></div>
  		</td>
       </tr>
       <tr>
-        <td class="formfieldheading mandatory"><?php echo _Expiry_Date; ?>:</td>
-        <td><input id="datepicker" onchange="validate_expiry()"></input> <div id="expiry_msg" class="validation_msg">Invalid expiry Date</div></td>
+        <td class="formfieldheading mandatory"><?php echo lang("_EXPIRY_DATE"); ?>:</td>
+        <td><input id="datepicker" onchange="validate_expiry()"></input> <div id="expiry_msg" class="validation_msg"><?php echo lang("_INVALID_EXPIRY_DATE"); ?></div></td>
       </tr>
       <tr>
         <td><input type="hidden" id="altdate" name="altdate" value="<?php echo date("d-m-Y",strtotime("+".$config['default_daysvalid']." day"));?>" /></td>
@@ -221,9 +221,9 @@ $json_o=json_decode($filedata,true);
   <div id="box">
   <table id="vouchertable" width="100%" border="0" cellspacing="1">
     <tr class="headerrow">
-      <td><strong><?php echo _TO; ?></strong></td>
-      <td><strong><?php echo _CREATED; ?></strong></td>
-      <td><strong><?php echo _EXPIRY; ?></strong></td>
+      <td><strong><?php echo lang("_TO"); ?></strong></td>
+      <td><strong><?php echo lang("_CREATED"); ?></strong></td>
+      <td><strong><?php echo lang("_EXPIRY"); ?></strong></td>
       <td></td>
     </tr>
     <?php 
@@ -233,6 +233,6 @@ foreach($json_o as $item) {
 ?>
   </table>
 </div>
-<div id="dialog-delete" title="Delete Voucher">
-  <p>Are you sure you want to delete this voucher?</p>
+<div id="dialog-delete" title="<?php echo lang("_DELETE_VOUCHER") ?>">
+  <p><?php echo lang("_CONFIRM_DELETE_VOUCHER"); ?></p>
 </div>
