@@ -75,7 +75,7 @@
 		$token = "";
 	}
 	// set flash upload vairiables
-	$flashVARS = "vid=".$voucherUID."&sid=".session_id()."&buttonBrowse="._BROWSE."&buttonUpload="._UPLOAD."&buttonCancel="._CANCEL."&siteURL=".$config["site_url"]."&token=".$token;
+	$flashVARS = "vid=".$voucherUID."&sid=".session_id()."&buttonBrowse=".lang("_BROWSE")."&buttonUpload=".lang("_UPLOAD")."&buttonCancel=".lang("_CANCEL")."&siteURL=".$config["site_url"]."&token=".$token;
  ?>
 <script type="text/javascript" src="lib/js/AC_OETags.js" language="javascript"></script>
 <script type="text/javascript" src="js/upload.js"></script>
