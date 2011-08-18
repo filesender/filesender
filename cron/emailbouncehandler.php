@@ -41,7 +41,12 @@
 chdir(dirname(__FILE__));
 
 // force all error reporting
-error_reporting(E_ALL);
+if (defined('E_DEPRECATED')) {
+	error_reporting(E_ALL & ~E_DEPRECATED);
+}       
+else {  
+	error_reporting(E_ALL);
+}       
 
 $filesenderbase = dirname(dirname(__FILE__));
 
