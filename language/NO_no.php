@@ -81,10 +81,11 @@ $lang["_TERMS_OF_AGREEMENT"] = "Brukervilkår";
 $lang["_SHOW_TERMS"] = "Vis vilkår";
 $lang["_SELECT_FILE"] = "Velg en fil til å laste opp";
 $lang["_UPLOADING_WAIT"] = "Laster opp fil - vennligst vent ...";
+$lang["_EMAIL_SEPARATOR_MSG"] = "Flere epost-adresser avskilles med , eller ;";
 
 // Bilag
 $lang["_SEND_NEW_VOUCHER"] = "Send en ny invitasjon";
-$lang["_EMAIL_SEPARATOR_MSG"] = "Flere epost-adresser avskilles med , eller ;";
+$lang["_SEND_VOUCHER_TO"] = "Send en invitasjon til";
 
 // Flash button menu
 $lang["_UPLOAD"] = "Upload";

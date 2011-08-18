@@ -80,12 +80,13 @@
 	$lang["_SHOW_TERMS"] = "Toon Voorwaarden";
 	$lang["_SELECT_FILE"] = "Selecteer een bestand om te uploaden";
 	$lang["_UPLOADING_WAIT"] = "Uploaden bestand - even geduld aub ...";
+	$lang["_EMAIL_SEPARATOR_MSG"] = "Meerdere e-mailadressen gescheiden door, of ;";
 
 	// Vouchers
 	$lang["_SEND_NEW_VOUCHER"] = "Met een Uitnodiging kunt u iemand een bestand laten sturen.<br>
 Om een Uitnodiging te maken voer een e-mailadres in en klik op Stuur Uitnodiging.<BR>
 Er wordt dan een e-mail verstuurd naar de ontvanger met daarin een link om de uitnodiging te gebruiken.";
-	$lang["_EMAIL_SEPARATOR_MSG"] = "Meerdere e-mailadressen gescheiden door, of ;";
+	$lang["_SEND_VOUCHER_TO"] = "Stuur uitnodiging naar";
 
 // Flash button menu
 $lang["_UPLOAD"] = "Upload";
