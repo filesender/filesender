@@ -50,6 +50,7 @@
 			$lang["_VOUCHER_CANCELLED"] = "Voucher Cancelled";
 			$lang["_DELETE_VOUCHER"] = "Delete Voucher";
 			$lang["_UPLOAD_COMPLETE"] = "Upload Complete";
+			$lang["_UPLOAD_PROGRESS"] = "Upload progress";
 			$lang["_DOWNLOAD"] = "Download";
 			$lang["_CANCEL_UPLOAD"] = "Cancel Upload";
 			
@@ -126,7 +127,7 @@ To create a voucher, enter an email address then select Send Voucher.<BR>
 An email will be sent to the recipient with a link to use the Voucher.";
 			$lang["_EMAIL_SEPARATOR_MSG"] = "Multiple email addresses separated by , or ;";
 			
-			$lang["_ARE_YOU_SURE"] = "Are you Sure?";
+			$lang["_ARE_YOU_SURE"] = "Are you sure?";
 			$lang["_DELETE_FILE"] = "DeleteFile";
            	$lang["_EMAIL_SENT"] = "Email has been sent";
            	$lang["_EXPIRY_DATE"] = "Expiry Date";
