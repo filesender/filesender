@@ -116,7 +116,7 @@
 			$lang["_INVALID_2GB_USEHTML5"] = "This file is larger than 2GB. Please use a HTML5 enabled browser to upload larger files.";
 			$lang["_ACCEPTTOC"] = "I accept the terms and conditions of this service. [Show/Hide]";	
 			$lang["_AGREETOC"] = "You MUST agree to the terms and conditions.";
-			$lang["_FILE_TO_BE_RESENT"] = "File to be re-distributed";
+			$lang["_FILE_TO_BE_RESENT"] = "File to be redistributed";
 			$lang["_ERROR_UPLOADING_FILE"] = "Error uploading your file";
 			
 			$lang["_LOGOUT_COMPLETE"] = "Logout Complete";
