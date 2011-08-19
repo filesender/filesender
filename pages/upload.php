@@ -493,6 +493,10 @@ function fileMsg(msg)
 	$("#file_msg").html(msg);
 	$("#file_msg").show();
 }
+function keepMeAlive()
+{
+$("#keepAliveIMG").attr("src","images/ka.png?x=" + escape(new Date()));
+}
 
     </script>
 
@@ -650,3 +654,4 @@ if ( hasProductInstall && !hasRequestedVersion ) {
 	</div>
 	</div>
 </div>
+<img id="keepAliveIMG" name="keepAliveIMG" width="1" height="1" src="images/ka.png" />
