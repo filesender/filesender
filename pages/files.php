@@ -174,13 +174,13 @@ $json_o=json_decode($filedata,true);
 	function readablizebytes(bytes)
 	  {
 		if (bytes > 1024*1024*1024)
-			bytesdisplay = (Math.round(bytes * 100/(1024*1024*1024))/100).toString() + "GB";
+			bytesdisplay = (Math.round(bytes * 100/(1024*1024*1024))/100).toString() + " GB";
 		else if (bytes > 1024*1024)
-			bytesdisplay = (Math.round(bytes * 100/(1024*1024))/100).toString() + "MB";
+			bytesdisplay = (Math.round(bytes * 100/(1024*1024))/100).toString() + " MB";
 		else if (bytes > 1024)
-			bytesdisplay = (Math.round(bytes * 100/1024)/100).toString() + "KB";
+			bytesdisplay = (Math.round(bytes * 100/1024)/100).toString() + " KB";
 		else
-			bytesdisplay = (Math.round(bytes * 100)/100).toString() + "Bytes";
+			bytesdisplay = (Math.round(bytes * 100)/100).toString() + " Bytes";
 		return bytesdisplay;
 	}	
 	
@@ -330,10 +330,10 @@ foreach($json_o as $item) {
       </tr>
       <tr>
         <td class="formfieldheading"><?php echo lang("_MESSAGE"); ?>: (<?php echo lang("_OPTIONAL"); ?>)</td>
-        <td><textarea name="filemessage" cols="45" rows="4" id="filemessage"></textarea></td>
+        <td><textarea name="filemessage" cols="57" rows="4" id="filemessage"></textarea></td>
       </tr>
       <tr>
-        <td class="formfieldheading mandatory"><?php echo lang("_EXPIRY"); ?>:
+        <td class="formfieldheading mandatory"><?php echo lang("_EXPIRY_DATE"); ?>:
           <input type="hidden" id="fileexpirydate" name="fileexpirydate" value="<?php echo date("d-m-Y",strtotime("+".$config['default_daysvalid']." day"));?>"/></td>
         <td><input id="datepicker" name="datepicker" onchange="validate_expiry()">
           </input>
