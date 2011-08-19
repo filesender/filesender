@@ -47,7 +47,7 @@ $filedata = $filedata[0];
 // if download started, display message
 if(isset($_REQUEST['s'])  &&  $_REQUEST['s'] == "downloadstarted") 
 {
-require_once('../pages/downloadstarted.php');
+	echo "<div id='message'>".lang("_STARTED_DOWNLOADING")."</div>";
 }
 ?>
 <script type="text/javascript">
