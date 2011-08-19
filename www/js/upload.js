@@ -109,7 +109,6 @@ function startupload()
 		currentBytesUpload = 0;
 		
 		// hide upload button
-		$("#dialog-uploadprogress").dialog("option", "title", "Uploading " +  fileName + " (" +readablizebytes(fileSize) + ")");
 		$("#dialog-uploadprogress").dialog("open");
 		
 		$.ajax({

@@ -143,7 +143,7 @@
           //Hide closing "X" for this dialog only.
           $(this).parent().children().children("a.ui-dialog-titlebar-close").remove();
     	},
-		autoOpen: false, height: 140,width: 350, modal: true,title: "<?php echo lang("_UPLOADING") ?>",		
+		autoOpen: false, height: 180,width: 400, modal: true,title: "<?php echo lang("_UPLOAD_PROGRESS") ?>:",		
 		buttons: {
 			<?php echo lang("_CANCEL") ?>: function() {
 				// are you sure?
@@ -214,7 +214,7 @@
 	if(validateFormFlash())
 	{
 	// hide upload button
-	$("#dialog-uploadprogress").dialog("option", "title", "Uploading " +  fname + " (" +readablizebytes(fsize) + ")");
+	$("#dialog-uploadprogress").dialog("option", "title", "<?php echo lang("_UPLOAD_PROGRESS") ?>: " +  fname + " (" +readablizebytes(fsize) + ")");
 	$("#dialog-uploadprogress").dialog("open");	
 	//lockformfields();
 	getFlexApp("filesenderup").returnMsg("true")
@@ -354,6 +354,7 @@ function validate_file()
 		fileMsg("<?php echo lang("_INVALID_FILE_EXT") ?>");	
 		return false;
 		}
+		$("#dialog-uploadprogress").dialog("option", "title", "<?php echo lang("_UPLOAD_PROGRESS") ?>:  " +  file.name + " (" +readablizebytes(file.size) + ")");
 		return true;
 	}	
 }
@@ -500,42 +501,44 @@ function fileMsg(msg)
     <table width="600" border="0">
       <tr>
         <td width="100" class="formfieldheading mandatory"><?php echo lang("_TO") ; ?>:</td>
-        <td width="400" valign="middle"><input name="fileto" title="<?php echo lang("_EMAIL_SEPARATOR_MSG") ; ?>" type="text" id="fileto" size="60" onchange="validate_fileto()" />
+        <td width="600" colspan="2" valign="middle"><input name="fileto" title="<?php echo lang("_EMAIL_SEPARATOR_MSG") ; ?>" type="text" id="fileto" size="60" onchange="validate_fileto()" />
         <div id="fileto_msg" style="display: none" class="validation_msg"><?php echo lang("_INVALID_MISSING_EMAIL"); ?></div></td>
       </tr>
       <tr>
         <td class="formfieldheading mandatory"><?php echo lang("_FROM"); ?>:</td>
-        <td><?php echo $senderemail ?>
+        <td colspan="2"><?php echo $senderemail ?>
           <input name="filefrom" type="hidden" id="filefrom" value="<?php echo $senderemail ?>" size="40" /></td>
       </tr>
       <tr>
         <td class="formfieldheading"><?php echo lang("_SUBJECT"); ?>: (<?php echo lang("_OPTIONAL"); ?>)</td>
-        <td><input name="filesubject" type="text" id="filesubject" size="60" /></td>
+        <td colspan="2"><input name="filesubject" type="text" id="filesubject" size="60" /></td>
       </tr>
       <tr>
         <td class="formfieldheading"><?php echo lang("_MESSAGE"); ?>: (<?php echo lang("_OPTIONAL"); ?>)</td>
-        <td><textarea name="filemessage" cols="45" rows="4" id="filemessage"></textarea></td>
+        <td colspan="2"><textarea name="filemessage" cols="45" rows="4" id="filemessage"></textarea></td>
      </tr>
       <tr>
         <td class="formfieldheading mandatory"><?php echo lang("_EXPIRY_DATE"); ?>:
           <input type="hidden" id="fileexpirydate" name="fileexpirydate" value="<?php echo date("d-m-Y",strtotime("+".$config['default_daysvalid']." day"));?>"/></td>
-        <td><input id="datepicker" name="datepicker" onchange="validate_expiry()">
+        <td colspan="2"><input id="datepicker" name="datepicker" onchange="validate_expiry()">
           </input>
           <div id="expiry_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_EXPIRY_DATE"); ?></div></td>
       </tr>
       <?php if ($config["AuP"]) {?>
       <tr>
         <td class="formfieldheading"></td>
-        <td><input name="aup" type="checkbox" id="aup" onchange="validate_aup()" value="true" />
-          <div onclick="toggleTOG()"><?php echo lang("_ACCEPTTOC"); ?></div>
+        <td><input name="aup" type="checkbox" id="aup" onchange="validate_aup()" value="true"/>
+         </td>
+        <td>
+         <div id="aup_label" name="aup_label" onclick="toggleTOG()" style="cursor:pointer;"><?php echo lang("_ACCEPTTOC"); ?></div>
           <div id="aup_msg" class="validation_msg" style="display: none"><?php echo lang("_AGREETOC"); ?></div>
-          <div id="tog" name="tog" style="display:none"> <?php echo $config["AuP_terms"]; ?> </div></td>
-     </tr>
+          <div id="tog" name="tog" style="display:none"> <?php echo $config["AuP_terms"]; ?> </div>
+          </td>
+      </tr>
       <?php } ?>
-
       <tr>
         <td class="formfieldheading mandatory"><div id="selectfile" name="selectfile"><?php echo lang("_SELECT_FILE"); ?>:</div></td>
-        <td><div id="uploadstandard"> 
+        <td colspan="2"><div id="uploadstandard"> 
             <script language="JavaScript" type="text/javascript">
 <!--
 // Version check for the Flash Player that has the ability to start Player Product Install (6.0r65)
@@ -621,7 +624,7 @@ if ( hasProductInstall && !hasRequestedVersion ) {
       </tr>
       <tr>
         <td></td>
-        <td>
+        <td colspan="2">
 		<div id="fileInfoView">
 			<div id="fileName" name="fileName"></div>
 			<div id="fileSize" name="fileSize"></div>
@@ -629,7 +632,7 @@ if ( hasProductInstall && !hasRequestedVersion ) {
         </td>
       </tr>
          </table>
-		<input type="hidden" id="filevoucheruid" name="filevoucheruid" value="<?php echo $voucherUID; ?>"/>
+	<input type="hidden" id="filevoucheruid" name="filevoucheruid" value="<?php echo $voucherUID; ?>"/>
 		<input type="hidden" name="vid" id="vid" value="<?php echo $voucherUID; ?>"/>
 		<input type="hidden" name="total" id="total" value=""/>
 		<input type="hidden" name="n" id="n" value=""/>
@@ -640,10 +643,10 @@ if ( hasProductInstall && !hasRequestedVersion ) {
 <div id="dialog-default" title=""> </div>
 <div id="dialog-cancel" title="<?php echo lang("_CANCEL_UPLOAD"); ?>"><?php echo lang("_ARE_YOU_SURE"); ?></div>
 <div id="dialog-uploadprogress" title="">
+<img id="progress_image" name="progress_image" src="images/ajax-loader-sm.gif" width="16" height="16" alt="Uploading" align="left"/> 
 	<div id="progress_container">
- 			<div id="progress_bar">
-			<div id="progress_completed"></div>
-			<br />
-		</div>
+   		<div id="progress_bar">
+		<div id="progress_completed"></div>
+	</div>
 	</div>
 </div>

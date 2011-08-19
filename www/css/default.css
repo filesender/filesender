@@ -117,6 +117,12 @@ input {
 	border-radius:5px;
 	-moz-border-radius: 5px;
 }
+
+#aup_label{
+	font-weight: bold;
+	font-size: 12px;
+}
+
 #progressIndicator {
 	font-size: 10pt;
 }
@@ -135,16 +141,25 @@ input {
 	width:400px;
 	display:none;
 }
+
+#progress_image {
+margin-top: 4px;
+}
+
 #progress_container {
 	width: 300px;
 	height: 20px;
 	border: 1px solid #CCCCCC;
 	background-color:#CCCCCC;
 	display: block;
-	padding: 1px;
 	margin-right: 0px;
-	margin-left: 4px;
+	margin-left: 20px;
+	padding-top: 1px;
+	padding-right: 1px;
+	padding-bottom: 1px;
+	padding-left: 1px;
 }
+
 #progress_bar {
 	position: relative;
 	height: 20px;
@@ -152,7 +167,7 @@ input {
 	width: 0%;
 	z-index:10;
 	color: #FFF;
-	padding-left: 3px;
+	padding-left: 4px;
 }
 #progress_completed {
 	font-size:14px;
