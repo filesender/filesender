@@ -81,7 +81,7 @@
 			public var currbytes:Number = 0;
 			public var lastbytes:Number = 0;
 			public var tempFromVoucher:String; // Temp if voucher is cancelled to return correct to and from fields
-			public var myTimer:Timer = new Timer(600000, 0);  // 600000 sends keep alive every 10 minutes
+			public var myTimer:Timer = new Timer(10000, 0);  // 600000 sends keep alive every 10 minutes
 			 
 			// init UI
 			public function init():void
@@ -91,6 +91,10 @@
 				buttonBrowse = FlexGlobals.topLevelApplication.parameters.buttonBrowse;;	// "Browse" language ref
 				buttonUpload = FlexGlobals.topLevelApplication.parameters.buttonUpload;; 	// "Upload" language ref
 				buttonCancel = FlexGlobals.topLevelApplication.parameters.buttonCancel;;	// Cancel" language ref
+				
+				// keepalive handler
+                myTimer.addEventListener("timer", keepaliveHandler);
+				
 				siteURL = FlexGlobals.topLevelApplication.parameters.siteURL;// Site url
 				token = FlexGlobals.topLevelApplication.parameters.token;
 				sid = FlexGlobals.topLevelApplication.parameters.sid;
@@ -126,7 +130,7 @@
 			
 			// sends request to keep alive to log - if logging is off then there is no message recorded 
 			public function keepaliveHandler(event:TimerEvent):void {
-			//	FlexGlobals.topLevelApplication.logProcess("Keep Session Alive - Flash Upload");
+			ExternalInterface.call("keepMeAlive()"); 
 			}
 			
 			public function validatebeforeupload():void
@@ -139,6 +143,8 @@
 			// start the upload process
 			public function uploadit():void 
 			{
+				// start keep alive timer
+				myTimer.start();
 				
 				urlVars = new URLVariables();
 				//urlVars.fid = currentFileObj.fileuid;
