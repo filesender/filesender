@@ -92,7 +92,7 @@ td {
 }
 .formfieldheading {
 	font-size: 11px;
-	width: 250px;
+	width: 200px;
 }
 .formfield {
 	font-size: 10px;
@@ -102,6 +102,12 @@ td {
 	font-size: 9px;
 	width: 250px;
 	font-weight: normal;
+}
+.forminstructions {
+	font-size: 10px;
+	width: 200px;
+	font-weight: normal;
+	vertical-align: middle;
 }
 input {
 	/*border:1px solid #ccc;
