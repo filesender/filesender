@@ -143,10 +143,10 @@ An email will be sent to the recipient with a link to use the Voucher.";
 			$lang["_STARTED_DOWNLOADING"] = "Your file should start downloading.";
 
             // steps
-           	//$lang["_Enter_delivery_email_address"] = "Enter delivery email address(es)";
-           	//$lang["_Browse_for_a_file"] = "Browse for a file";
-           	//$lang["_Set_expiry_date"] = "Set expiry date";
-           	//$lang["_Select_Upload"] = "Select Upload";
+           	$lang["_STEP1"] = "Enter delivery email address(es)";
+           	$lang["_STEP2"] = "Set expiry date";
+           	$lang["_STEP3"] = "Browse for a file";
+           	$lang["_STEP4"] = "Select Upload";
            	// site help
            	//$lang["_site_help_text"] = "Site help text";
            	//$lang["_Help"] = "Help";
