@@ -155,10 +155,14 @@ function openabout()
     <?php 
 // display user details if authenticated and not a voucher
 if(	$authvoucher->aVoucher() || $s == "completev") { 
-echo lang("_WELCOMEGUEST");
+echo "<div class='welcomeuser'>".lang("_WELCOMEGUEST")."</div>";
 } else if ($authsaml->isAuth() ){
 $attributes = $authsaml->sAuth();
-echo lang("_WELCOME")." ".$attributes["cn"];
+echo "<div class='welcomeuser'>".lang("_WELCOME")." ".$attributes["cn"]."</div>";
+}
+if($config["versionNumber"])
+{
+	echo "<div class='versionnumber'>Beta 1.5.0</div>";
 }
 ?>
     <?php
