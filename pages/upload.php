@@ -550,7 +550,7 @@ $("#keepAliveIMG").attr("src","images/ka.png?x=" + escape(new Date()));
         <td><input name="aup" type="checkbox" id="aup" onchange="validate_aup()" value="true"/>
          </td>
         <td>
-         <div id="aup_label" name="aup_label" onclick="toggleTOG()" style="cursor:pointer;"><?php echo lang("_ACCEPTTOC"); ?></div>
+         <div id="aup_label" name="aup_label" onclick="toggleTOG()" style="cursor:pointer;"><?php echo lang("_ACCEPTTOC"); ?> [<font color="#666666"><?php echo lang("_SHOWHIDE"); ?></font>]</div>
           <div id="aup_msg" class="validation_msg" style="display: none"><?php echo lang("_AGREETOC"); ?></div>
           <div id="tog" name="tog" style="display:none"> <?php echo $config["AuP_terms"]; ?> </div>
           </td>
