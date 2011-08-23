@@ -87,7 +87,7 @@ $json_o=json_decode($filedata,true);
 	$(function() {
 		// initialise datepicker
 		$("#datepicker" ).datepicker({ minDate: 1, maxDate: "+"+maximumDate+"D",altField: "#fileexpirydate", altFormat: "d-m-yy" });
-		$("#datepicker" ).datepicker( "option", "dateFormat", "d/m/yy" );
+		$("#datepicker" ).datepicker( "option", "dateFormat", "dd-mm-yy" );
 		$("#datepicker").datepicker('setDate', new Date()+maximumDate);
 		
 		// stripe every second row in the tables
@@ -205,7 +205,23 @@ function validate_fileto()
 // Validate EXPIRY
 function validate_expiry()
 {
-
+var validformat=/^\d{2}\-\d{2}\-\d{4}$/ //Basic check for format validity
+	
+	var returnval=false
+	if (!validformat.test($("#datepicker").val())) 
+	{
+	$("#expiry_msg").show();
+	return false;
+	}
+	var monthfield=$("#datepicker").val().split("-")[1]
+	var dayfield=$("#datepicker").val().split("-")[0]
+	var yearfield=$("#datepicker").val().split("-")[2]
+	var dayobj = new Date(yearfield, monthfield-1, dayfield)
+	if ((dayobj.getMonth()+1!=monthfield)||(dayobj.getDate()!=dayfield)||(dayobj.getFullYear()!=yearfield))
+	{
+	$("#expiry_msg").show();
+	return false;
+	}
 	if($("#datepicker").datepicker("getDate") == null)
 	{
 		$("#expiry_msg").show();
@@ -300,7 +316,7 @@ foreach($json_o as $item) {
    {
    echo "<img src='images/page_white_text_width.png' border='0' title='".$item['filemessage']. "'>";
    }
-   echo "</td><td>" .date("d/m/Y",strtotime($item['filecreateddate'])) . "</td><td>" .date("d/m/Y",strtotime($item['fileexpirydate'])) . "</td><td  valign='top'  width='22'><div style='cursor:pointer;'><img onclick='confirmdelete(".'"' .$item['filevoucheruid'] . '")'. "' src='images/shape_square_delete.png' title='Delete' ></div></td></tr>"; //etc
+   echo "</td><td>" .date("d-m-Y",strtotime($item['filecreateddate'])) . "</td><td>" .date("d-m-Y",strtotime($item['fileexpirydate'])) . "</td><td  valign='top'  width='22'><div style='cursor:pointer;'><img onclick='confirmdelete(".'"' .$item['filevoucheruid'] . '")'. "' src='images/shape_square_delete.png' title='Delete' ></div></td></tr>"; //etc
    }
 } else {
 	echo "<tr><td colspan='7'>There are currently no files available</td></tr>";
@@ -337,7 +353,7 @@ foreach($json_o as $item) {
           <input type="hidden" id="fileexpirydate" name="fileexpirydate" value="<?php echo date("d-m-Y",strtotime("+".$config['default_daysvalid']." day"));?>"/></td>
         <td><input id="datepicker" name="datepicker" onchange="validate_expiry()">
           </input>
-          <div id="expiry_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_EXPIRY_DATE"); ?></div></td>
+          <div id="expiry_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_EXPIRY_DATE"); ?></div><div class="">(dd-mm-yyyy)</div></td>
       </tr>
       <tr>
         <td class="formfieldheading mandatory"><?php echo lang("_FILE_TO_BE_RESENT"); ?>:</td>
