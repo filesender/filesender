@@ -47,7 +47,7 @@
 		$("#vouchertable tr:odd").addClass('altcolor');
 				
 		$("#datepicker" ).datepicker({ minDate: 1, maxDate: "+"+maximumDate+"D",altField: "#altdate", altFormat: "d-m-yy",currentText:maximumDate });
-		$("#datepicker" ).datepicker( "option", "dateFormat", "d/m/yy" );
+		$("#datepicker" ).datepicker( "option", "dateFormat", "d-m-Yy" );
 		$("#datepicker").datepicker("setDate", new Date()+maximumDate);
 		$("#dialog-delete").dialog({ autoOpen: false, height: 140, modal: true,
 		
@@ -228,7 +228,7 @@ $json_o=json_decode($filedata,true);
     </tr>
     <?php 
 foreach($json_o as $item) {
-   echo "<tr><td>" .$item['fileto'] . "</td><td>" .date("d/m/Y",strtotime($item['filecreateddate'])) . "</td><td>" .date("d/m/Y",strtotime($item['fileexpirydate'])) . "</td><td><div  style='cursor:pointer;'><img src='images/shape_square_delete.png' onclick='confirmdelete(".'"' .$item['filevoucheruid'] . '"'. ")' border='0'></div></td></tr>"; //etc
+   echo "<tr><td>" .$item['fileto'] . "</td><td>" .date("d-m-Y",strtotime($item['filecreateddate'])) . "</td><td>" .date("d-m-Y",strtotime($item['fileexpirydate'])) . "</td><td><div  style='cursor:pointer;'><img src='images/shape_square_delete.png' onclick='confirmdelete(".'"' .$item['filevoucheruid'] . '"'. ")' border='0'></div></td></tr>"; //etc
 }
 ?>
   </table>
