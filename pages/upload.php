@@ -510,7 +510,11 @@ function fileMsg(msg)
 }
 function keepMeAlive()
 {
-$("#keepAliveIMG").attr("src","images/ka.png?x=" + escape(new Date()));
+	$.ajax({
+  		url: "keepalive.php" + '?x=' + escape(new Date()),
+  		success: function(data) {
+		}
+		});	
 }
 
     </script>
