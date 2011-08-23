@@ -154,7 +154,7 @@
 		// set date picker
 		$(function() {
 			$("#datepicker" ).datepicker({ minDate: 1, maxDate: "+"+maximumDate+"D",altField: "#fileexpirydate", altFormat: "d-m-yy" });
-			$("#datepicker" ).datepicker( "option", "dateFormat", "d/m/yy" );
+			$("#datepicker" ).datepicker( "option", "dateFormat", "dd-mm-yy" );
 			$("#datepicker").datepicker("setDate", new Date()+maximumDate);
 		});	
 
@@ -288,7 +288,22 @@ function validate_fileto()
 // Validate EXPIRY
 function validate_expiry()
 {
-
+	var validformat=/^\d{2}\-\d{2}\-\d{4}$/ //Basic check for format validity
+	var returnval=false
+	if (!validformat.test($("#datepicker").val())) 
+	{
+	$("#expiry_msg").show();
+	return false;
+	}
+	var monthfield=$("#datepicker").val().split("-")[1]
+	var dayfield=$("#datepicker").val().split("-")[0]
+	var yearfield=$("#datepicker").val().split("-")[2]
+	var dayobj = new Date(yearfield, monthfield-1, dayfield)
+	if ((dayobj.getMonth()+1!=monthfield)||(dayobj.getDate()!=dayfield)||(dayobj.getFullYear()!=yearfield))
+	{
+	$("#expiry_msg").show();
+	return false;
+	}
 	if($("#datepicker").datepicker("getDate") == null)
 	{
 		$("#expiry_msg").show();
@@ -526,7 +541,8 @@ $("#keepAliveIMG").attr("src","images/ka.png?x=" + escape(new Date()));
           <input type="hidden" id="fileexpirydate" name="fileexpirydate" value="<?php echo date("d-m-Y",strtotime("+".$config['default_daysvalid']." day"));?>"/></td>
         <td colspan="2"><input id="datepicker" name="datepicker" onchange="validate_expiry()">
           </input>
-          <div id="expiry_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_EXPIRY_DATE"); ?></div></td>
+          <div id="expiry_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_EXPIRY_DATE"); ?></div>
+          <div class="">(dd-mm-yyyy)</div></td>
       </tr>
       <?php if ($config["AuP"]) {?>
       <tr>
