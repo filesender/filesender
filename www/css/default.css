@@ -308,7 +308,19 @@ white-space: -o-pre-wrap; /* Opera 7 */
 word-wrap: break-word; /* Internet Explorer 5.5+ */
 
 }
-
+.versionnumber
+{
+	text-align: right;
+	float: right;
+	position: static;
+	font-size: 10px;
+	color: #666;
+}
+.welcomeuser
+{
+	float:left;
+	text-align: left;	
+}
 #footer
 {
 	text-align: center;	
