@@ -569,7 +569,7 @@ function keepMeAlive()
         <td>
           <div id="aup_label" name="aup_label" onclick="toggleTOG()" style="cursor:pointer;"><?php echo lang("_ACCEPTTOC"); ?> [<font color="#666666"><?php echo lang("_SHOWHIDE"); ?></font>]</div>
           <div id="aup_msg" class="validation_msg" style="display: none"><?php echo lang("_AGREETOC"); ?></div>
-          <div id="tog" name="tog" style="display:none"> <?php echo $config["AuP_terms"]; ?> </div>
+          <div id="tog" name="tog" style="display:none"> <?php echo lang("_AUPTERMS"); ?> </div>
         </td>
         <td width="300" colspan="2" valign="top">&nbsp;</td>
       </tr>

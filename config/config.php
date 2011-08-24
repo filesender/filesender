@@ -79,7 +79,7 @@ public function loadConfig() {
 	$config["AuP_default"] = false; //AuP value is already ticked
 	$config["AuP"] = true; // AuP is displayed
 	$config["AuP_label"] = "I accept the terms and conditions of this service";
-	$config["AuP_terms"] = "AuP Terms and conditions";
+	//$config["AuP_terms"] = "AuP Terms and conditions"; // moved AUP to language files
 
 	// Server settings
 	$config['default_daysvalid'] = 20; // Maximum number of days before file/voucher is expired

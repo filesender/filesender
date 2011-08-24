@@ -155,4 +155,6 @@ An email will be sent to the recipient with a link to use the Voucher.";
 			// confirmation
 			$lang["_CONFIRM_DELETE_FILE"] = "Are you sure you want to delete this File?";
 			$lang["_CONFIRM_DELETE_VOUCHER"] = "Are you sure you want to delete this voucher?";
+			
+			$lang["_AUPTERMS"] = "AuP Terms and conditions";
 ?>
