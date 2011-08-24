@@ -59,9 +59,9 @@ public function loadConfig() {
 	$config["site_splashtext"] = "FileSender is a secure way to share large files with anyone! Logon to upload your files or invite people to send you a file.";
 
 	// UI Settings
-	$config['datedisplayformat'] = "DD-MM-YYYY"; // Format for displaying date/time, use Flex DateFormatter format specifier syntax
+	$config['datedisplayformat'] = "d-m-Y"; // Format for displaying date/time, use Flex DateFormatter format specifier syntax
 	$config["versionNumber"] = true; // Show version number (true/false)
-	$config['site_showStats'] = false; // Show site upload/download stats (true/false)
+	$config['site_showStats'] = true; // Show site upload/download stats (true/false)
 	$config['displayUserName'] = true; // Show 'Welcome user' (true/false)
 	
 	// debug settings

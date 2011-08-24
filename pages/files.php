@@ -316,7 +316,7 @@ foreach($json_o as $item) {
    {
    echo "<img src='images/page_white_text_width.png' border='0' title='".$item['filemessage']. "'>";
    }
-   echo "</td><td>" .date("d-m-Y",strtotime($item['filecreateddate'])) . "</td><td>" .date("d-m-Y",strtotime($item['fileexpirydate'])) . "</td><td  valign='top'  width='22'><div style='cursor:pointer;'><img onclick='confirmdelete(".'"' .$item['filevoucheruid'] . '")'. "' src='images/shape_square_delete.png' title='Delete' ></div></td></tr>"; //etc
+   echo "</td><td>" .date($config['datedisplayformat'],strtotime($item['filecreateddate'])) . "</td><td>" .date($config['datedisplayformat'],strtotime($item['fileexpirydate'])) . "</td><td  valign='top'  width='22'><div style='cursor:pointer;'><img onclick='confirmdelete(".'"' .$item['filevoucheruid'] . '")'. "' src='images/shape_square_delete.png' title='Delete' ></div></td></tr>"; //etc
    }
 } else {
 	echo "<tr><td colspan='7'>There are currently no files available</td></tr>";
@@ -350,7 +350,7 @@ foreach($json_o as $item) {
       </tr>
       <tr>
         <td class="formfieldheading mandatory"><?php echo lang("_EXPIRY_DATE"); ?>:
-          <input type="hidden" id="fileexpirydate" name="fileexpirydate" value="<?php echo date("d-m-Y",strtotime("+".$config['default_daysvalid']." day"));?>"/></td>
+          <input type="hidden" id="fileexpirydate" name="fileexpirydate" value="<?php echo date($config['datedisplayformat'],strtotime("+".$config['default_daysvalid']." day"));?>"/></td>
         <td><input id="datepicker" name="datepicker" onchange="validate_expiry()">
           </input>
           <div id="expiry_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_EXPIRY_DATE"); ?></div><div class="">(dd-mm-yyyy)</div></td>
