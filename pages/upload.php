@@ -527,7 +527,7 @@ function keepMeAlive()
         <td width="600" colspan="2" valign="middle"><input name="fileto" title="<?php echo lang("_EMAIL_SEPARATOR_MSG") ; ?>" type="text" id="fileto" size="60" onchange="validate_fileto()" />
         <div id="fileto_msg" style="display: none" class="validation_msg"><?php echo lang("_INVALID_MISSING_EMAIL"); ?></div>
         </td>
-        <td valign="top"><img src="../www/images/num_1.png" alt="" width="25" height="25" hspace="6" border="0" align="left" /></td>
+        <td valign="top"><img src="images/num_1.png" alt="" width="25" height="25" hspace="6" border="0" align="left" /></td>
         <td width="250" valign="top"><span class="forminstructions"><?php echo lang("_STEP1"); ?></span></td>
        </tr>
       <tr>
@@ -535,20 +535,20 @@ function keepMeAlive()
         <td colspan="2"><?php echo $senderemail ?>
           <input name="filefrom" type="hidden" id="filefrom" value="<?php echo $senderemail ?>" size="40" />
           </td>
-        <td valign="top"><img src="../www/images/num_2.png" width="25" height="25" hspace="6" border="0" align="left" /></td>
+        <td valign="top"><img src="images/num_2.png" width="25" height="25" hspace="6" border="0" align="left" /></td>
         <td valign="top"><span class="forminstructions"><?php echo lang("_STEP2"); ?></span></td>
         </tr>
       <tr>
         <td class="formfieldheading"><?php echo lang("_SUBJECT"); ?>: (<?php echo lang("_OPTIONAL"); ?>)</td>
         <td colspan="2"><input name="filesubject" type="text" id="filesubject" size="60" />
         </td>
-        <td valign="top"><img src="../www/images/num_3.png" width="25" height="25" hspace="6" border="0" align="left" /></td>
+        <td valign="top"><img src="images/num_3.png" width="25" height="25" hspace="6" border="0" align="left" /></td>
         <td valign="top"><span class="forminstructions"><?php echo lang("_STEP3"); ?></span></td>
         </tr>
       <tr>
         <td class="formfieldheading"><?php echo lang("_MESSAGE"); ?>: (<?php echo lang("_OPTIONAL"); ?>)</td>
         <td colspan="2"><textarea name="filemessage" cols="45" rows="4" id="filemessage"></textarea></td>
-        <td valign="top"><img src="../www/images/num_4.png" width="25" height="25" hspace="6" border="0" align="left" /></td>
+        <td valign="top"><img src="images/num_4.png" width="25" height="25" hspace="6" border="0" align="left" /></td>
         <td valign="top"><span class="forminstructions"><?php echo lang("_STEP4"); ?></span></td>
       </tr>
       <tr>
