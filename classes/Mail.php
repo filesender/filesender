@@ -63,7 +63,7 @@ class Mail {
         if ($type == 'bounce') {$template = str_replace("{fileoriginalto}", $mailobject["fileoriginalto"], $template);}
         if (isset($config["site_url"])) {$template = str_replace("{serverURL}", $config["site_url"], $template);}
         $template = str_replace("{filevoucheruid}", $mailobject["filevoucheruid"], $template);
-        $template = str_replace("{fileexpirydate}", date("d-M-Y",strtotime($mailobject["fileexpirydate"])), $template);
+        $template = str_replace("{fileexpirydate}", date($config['datedisplayformat'],strtotime($mailobject["fileexpirydate"])), $template);
         $template = str_replace("{filefrom}", $mailobject["filefrom"], $template);
         $template = str_replace("{fileoriginalname}", $fileoriginalname, $template);
         $template = str_replace("{filename}", $fileoriginalname, $template);	
