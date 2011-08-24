@@ -111,11 +111,14 @@ $(function() {
 function openhelp()
 	{
 		$( "#dialog-help" ).dialog( "open" );
+		$('.ui-dialog-buttonpane > button:last').focus();
+
 	}
 	
 function openabout()
 	{
 		$( "#dialog-about" ).dialog( "open" );
+		$('.ui-dialog-buttonpane > button:last').focus();
 	}
 </script>
    

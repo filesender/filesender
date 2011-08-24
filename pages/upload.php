@@ -148,6 +148,7 @@
 			<?php echo lang("_CANCEL") ?>: function() {
 				// are you sure?
 				$("#dialog-cancel").dialog('open');
+				$('.ui-dialog-buttonpane > button:last').focus();
 				}	
 			}
 		})
