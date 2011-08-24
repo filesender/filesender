@@ -92,5 +92,8 @@ $lang["_UPLOAD"] = "Upload";
 $lang["_BROWSE"] = "Browse";
 $lang["_CANCEL"] = "Cancel";
 
+$lang["_AUPTERMS"] = "Vilkår og betingelser";
+$lang["_ACCEPTTOC"] = "Jeg aksepterer vilkårene for denne tjenesten.";	
+$lang["_AGREETOC"] = "Du må akseptere vilkårene.";
 
 ?>
