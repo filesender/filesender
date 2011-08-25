@@ -59,7 +59,7 @@ public function loadConfig() {
 	$config["site_splashtext"] = "FileSender is a secure way to share large files with anyone! Logon to upload your files or invite people to send you a file.";
 
 	// UI Settings
-	$config['datedisplayformat'] = "DD-MM-YYYY"; // Format for displaying date/time, use Flex DateFormatter format specifier syntax
+	$config['datedisplayformat'] = "d-m-Y"; // Format for displaying date/time, use Flex DateFormatter format specifier syntax
 	$config["versionNumber"] = true; // Show version number (true/false)
 	$config['site_showStats'] = false; // Show site upload/download stats (true/false)
 	$config['displayUserName'] = true; // Show 'Welcome user' (true/false)
@@ -78,8 +78,8 @@ public function loadConfig() {
 	// AuP settings
 	$config["AuP_default"] = false; //AuP value is already ticked
 	$config["AuP"] = true; // AuP is displayed
-	$config["AuP_label"] = "I accept the terms and conditions of this service";
-	$config["AuP_terms"] = "AuP Terms and conditions";
+	//$config["AuP_label"] = "I accept the terms and conditions of this service"; // moved AUP to language files
+	//$config["AuP_terms"] = "AuP Terms and conditions"; // moved AUP to language files
 
 	// Server settings
 	$config['default_daysvalid'] = 20; // Maximum number of days before file/voucher is expired
@@ -88,6 +88,7 @@ public function loadConfig() {
 
 	$config['max_flash_upload_size'] = '2147483648'; // 2GB
 	$config['max_gears_upload_size'] = '107374182400'; // 100 GB
+	$config['max_html5_upload_size'] = '107374182400'; // 100  GB
 	
 	// update max_flash_upload_size if php.ini post_max_size and upload_max_filesize is set lower
 	$config['max_flash_upload_size'] = min(let_to_num(ini_get('post_max_size'))-2048, let_to_num(ini_get('upload_max_filesize')),$config['max_flash_upload_size']);
