@@ -78,6 +78,7 @@
 
 	$lang["_TERMS_OF_AGREEMENT"] = "Algemene Overeenkomst";
 	$lang["_SHOW_TERMS"] = "Toon Voorwaarden";
+	$lang["_SHOWHIDE"] = "Toon/Verberg";
 	$lang["_SELECT_FILE"] = "Selecteer een bestand om te uploaden";
 	$lang["_UPLOADING_WAIT"] = "Uploaden bestand - even geduld aub ...";
 	$lang["_EMAIL_SEPARATOR_MSG"] = "Meerdere e-mailadressen gescheiden door, of ;";

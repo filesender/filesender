@@ -78,7 +78,7 @@ public function loadConfig() {
 	// AuP settings
 	$config["AuP_default"] = false; //AuP value is already ticked
 	$config["AuP"] = true; // AuP is displayed
-	$config["AuP_label"] = "I accept the terms and conditions of this service";
+	//$config["AuP_label"] = "I accept the terms and conditions of this service"; // moved AUP to language files
 	//$config["AuP_terms"] = "AuP Terms and conditions"; // moved AUP to language files
 
 	// Server settings
