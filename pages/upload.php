@@ -291,7 +291,9 @@ function validate_expiry()
 {
 	var validformat=/^\d{2}\-\d{2}\-\d{4}$/ //Basic check for format validity
 	var returnval=false
-	if (!validformat.test($("#datepicker").val())) 
+	var today = new Date();
+    var maxDate = new Date(today.getFullYear(), today.getMonth(), today.getDate()+parseInt(maximumDate));
+    if (!validformat.test($("#datepicker").val())) 
 	{
 	$("#expiry_msg").show();
 	return false;
@@ -304,6 +306,11 @@ function validate_expiry()
 	{
 	$("#expiry_msg").show();
 	return false;
+	}
+	if(dayobj < today || dayobj > maxDate)
+	{
+		$("#expiry_msg").show();
+		return false;	
 	}
 	if($("#datepicker").datepicker("getDate") == null)
 	{
