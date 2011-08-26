@@ -48,14 +48,30 @@ $lang["_HOME"] = "Hjem";
 $lang["_ABOUT"] = "Om";
 $lang["_HELP"] = "Hjelp";
 $lang["_VOUCHER_CANCELLED"] = "Filsendingsinvitsjon kansellert";
+$lang["_DELETE_VOUCHER"] = "Kanseller invitasjon";
 $lang["_UPLOAD_COMPLETE"] = "Opplasting ferdig";
+$lang["_UPLOAD_PROGRESS"] = "Opplastingsframgang";
 $lang["_DOWNLOAD"] = "Last ned";
-// $lang["_","";
+$lang["_CANCEL_UPLOAD"] = "Avbryt opplasting";
 
 // $lang["_","";
+
+// Admin meny
 
 
 // Admin kategorien navn
+
+$lang["_PAGE"] = "Side";
+$lang["_UP"] = "Opp";
+$lang["_DOWN"] = "Ned";                        
+$lang["_FILES"] = "Filer";
+$lang["_DRIVE"] = "Disk";                        
+$lang["_TOTAL"] = "Totall";
+$lang["_USED"] = "I bruk";
+$lang["_AVAILABLE"] = "Tilgjengelig";
+$lang["_TEMP"] = "Temp"; // as in Temporary files
+
+// Admin interface: tab names
 $lang["_GENERAL"] = "Generelt";
 $lang["_UPLOADS"] = "Opplastninger";
 $lang["_DOWNLOADS"] = "Nedlastninger";
@@ -64,17 +80,21 @@ $lang["_FILES_AVAILABLE"] = "Tilgjengelige filer";
 $lang["_ACTIVE_VOUCHERS"] = "Aktive invitasjoner";
 $lang["_COMPLETE_LOG"] = "Alle logdata";
 
+// Upload page
+$lang["_WELCOME"] = "Welkommen";
+$lang["_WELCOMEGUEST"] = "Welkommen Gjest";
 
-// Form Fields
+// Upload page: Form Fields
 $lang["_TO"] = "Til";
 $lang["_FROM"] = "Fra";
 $lang["_SIZE"] = "Størrelse";
 $lang["_CREATED"] = "Opprettet";
 $lang["_FILE_NAME"] = "Filnavn";
-$lang["_SUBJECT"] = "Subject";
+$lang["_SUBJECT"] = "Emne";
+$lang["_MESSAGE"] = "Melding";
+$lang["_OPTIONAL"] = "Opsjonell";
 $lang["_EXPIRY"] = "Utløpsdato";
 $lang["_EXPIRY_DATE"] = "Utløpsdato";
-$lang["_MESSAGE"] = "Melding";
 $lang["_TYPE"] = "Type";
 
 $lang["_TERMS_OF_AGREEMENT"] = "Brukervilkår";
@@ -83,17 +103,63 @@ $lang["_SELECT_FILE"] = "Velg en fil til å laste opp";
 $lang["_UPLOADING_WAIT"] = "Laster opp fil - vennligst vent ...";
 $lang["_EMAIL_SEPARATOR_MSG"] = "Flere epost-adresser avskilles med , eller ;";
 
-// Bilag
-$lang["_SEND_NEW_VOUCHER"] = "Send en ny invitasjon";
-$lang["_SEND_VOUCHER_TO"] = "Send en invitasjon til";
-
-// Flash button menu
-$lang["_UPLOAD"] = "Upload";
-$lang["_BROWSE"] = "Browse";
-$lang["_CANCEL"] = "Cancel";
-
 $lang["_AUPTERMS"] = "Vilkår og betingelser";
 $lang["_ACCEPTTOC"] = "Jeg aksepterer vilkårene for denne tjenesten.";	
 $lang["_AGREETOC"] = "Du må akseptere vilkårene.";
+
+// Upload page: Flash button menu
+$lang["_UPLOAD"] = "Last opp";
+$lang["_BROWSE"] = "Velg fil";
+$lang["_CANCEL"] = "Avbryt";
+$lang["_OPEN"] = "Open";
+$lang["_CLOSE"] = "Lukk";
+$lang["_OK"] = "Ok";
+$lang["_SEND"] = "Send";
+$lang["_DELETE"] = "Slett";
+
+// Upload page: error messages, displayed on-input
+$lang["_INVALID_MISSING_EMAIL"] = "Feilaktig eller manglende epostadresse";
+$lang["_INVALID_EXPIRY_DATE"] = "Feil i utl�psdato";
+$lang["_INVALID_FILE"] = "Noe er galt med filen som ble valgt";
+$lang["_INVALID_FILESIZE_ZERO"] = "Filer med st�rrelse 0 kan ikke velges.  Velg en annen fil";
+$lang["_INVALID_FILE_EXT"] = "Feiltypen ikke tillat. Velg en annen fil.";
+$lang["_INVALID_TOO_LARGE_1"] = "Filst�rrelse kan ikke være mer enn";
+$lang["_SELECT_ANOTHER_FILE"] = "Velg en annen fil.";
+$lang["_INVALID_FILE_NAME"] = "Feilaktig filnavn, filen kan ikke lastes opp.  Gi filen et annet navn og prøv på nytt.";
+$lang["_INVALID_2GB_USEHTML5"] = "Filen er større enn 2GB. Please use a HTML5 enabled browser to upload larger files.";
+$lang["_FILE_TO_BE_RESENT"] = "Fil blir sendt på nytt";
+$lang["_ERROR_UPLOADING_FILE"] = "Feil under filopplasting";
+$lang["_LOGOUT_COMPLETE"] = "Avlogging utf�rt";
+
+$lang["_ARE_YOU_SURE"] = "Er du sikker?";
+$lang["_DELETE_FILE"] = "Slett fil";
+$lang["_EMAIL_SENT"] = "Epost sendt";
+$lang["_EXPIRY_DATE"] = "Utløpsdato";
+$lang["_FILE_SIZE"] = "Filstørrelse";
+$lang["_FILE_RESENT"] = "Sendt fil på nytt";
+$lang["_ME"] = "Meg";
+$lang["_SEND_VOUCHER_TO"] = "Send invitasjon til";
+$lang["_START_DOWNLOAD"] = "Begyn nedlastning";
+$lang["_VOUCHER_SENT"] = "Invitasjon sendt";
+$lang["_VOUCHER_DELETED"] = "Invitasjon slettet";
+$lang["_VOUCHER_CANCELLED"] = "Denne invitasjonen har blitt utilgjengeliggjort.";
+$lang["_STARTED_DOWNLOADING"] = "Filnedlastning burde starte nå";
+
+// Upload page: information on steps user needs to perform
+$lang["_STEP1"] = "Fyll ut epost-adress(ene)";
+$lang["_STEP2"] = "Set utløpsdato";
+$lang["_STEP3"] = "Velg en fil";
+$lang["_STEP4"] = "Klikk Send";
+
+//$lang["_site_help_text"] = "Hjelp tekst";
+//$lang["_Help"] = "Hjelp";
+
+
+
+// Voucher page
+$lang["_SEND_NEW_VOUCHER"] = "Send en ny invitasjon";
+$lang["_SEND_VOUCHER_TO"] = "Send en invitasjon til";
+
+
 
 ?>
