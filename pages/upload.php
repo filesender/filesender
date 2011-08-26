@@ -562,10 +562,10 @@ function keepMeAlive()
       <tr>
         <td class="formfieldheading mandatory"><?php echo lang("_EXPIRY_DATE"); ?>:
           <input type="hidden" id="fileexpirydate" name="fileexpirydate" value="<?php echo date($config['datedisplayformat'],strtotime("+".$config['default_daysvalid']." day"));?>"/></td>
-        <td colspan="2"><input id="datepicker" name="datepicker" onchange="validate_expiry()">
+        <td colspan="2"><input id="datepicker" name="datepicker" title="dd-mm-yyyy" onchange="validate_expiry()">
           </input>
           <div id="expiry_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_EXPIRY_DATE"); ?></div>
-          <div class="">(dd-mm-yyyy)</div></td>
+          </td>
         <td width="300" colspan="2" valign="top">&nbsp;</td>
       </tr>
       <?php if ($config["AuP"]) {?>
