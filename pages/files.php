@@ -205,8 +205,9 @@ function validate_fileto()
 // Validate EXPIRY
 function validate_expiry()
 {
-var validformat=/^\d{2}\-\d{2}\-\d{4}$/ //Basic check for format validity
-	
+	var validformat=/^\d{2}\-\d{2}\-\d{4}$/ //Basic check for format validity
+	var today = new Date();
+    var maxDate = new Date(today.getFullYear(), today.getMonth(), today.getDate()+parseInt(maximumDate));
 	var returnval=false
 	if (!validformat.test($("#datepicker").val())) 
 	{
@@ -221,6 +222,11 @@ var validformat=/^\d{2}\-\d{2}\-\d{4}$/ //Basic check for format validity
 	{
 	$("#expiry_msg").show();
 	return false;
+	}
+	if(dayobj < today || dayobj > maxDate)
+	{
+		$("#expiry_msg").show();
+		return false;	
 	}
 	if($("#datepicker").datepicker("getDate") == null)
 	{
@@ -351,9 +357,9 @@ foreach($json_o as $item) {
       <tr>
         <td class="formfieldheading mandatory"><?php echo lang("_EXPIRY_DATE"); ?>:
           <input type="hidden" id="fileexpirydate" name="fileexpirydate" value="<?php echo date($config['datedisplayformat'],strtotime("+".$config['default_daysvalid']." day"));?>"/></td>
-        <td><input id="datepicker" name="datepicker" onchange="validate_expiry()">
+        <td><input id="datepicker" name="datepicker" onchange="validate_expiry()" title="dd-mm-yyyy">
           </input>
-          <div id="expiry_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_EXPIRY_DATE"); ?></div><div class="">(dd-mm-yyyy)</div></td>
+          <div id="expiry_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_EXPIRY_DATE"); ?></div></td>
       </tr>
       <tr>
         <td class="formfieldheading mandatory"><?php echo lang("_FILE_TO_BE_RESENT"); ?>:</td>
