@@ -96,6 +96,6 @@ $lang["_CANCEL"] = "Cancel";
 
 $lang["_AUPTERMS"] = "Algemene voorwaarden";
 $lang["_ACCEPTTOC"] = "Ik ga akkoord met de bepalingen en voorwaarden van deze dienst.";	
-$lang["_AGREETOC"] = "Je MOET akkoord met de voorwaarden.";
+$lang["_AGREETOC"] = "Je moet akkoord gaan met de voorwaarden.";
 
 ?>
