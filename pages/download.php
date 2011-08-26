@@ -42,24 +42,20 @@ if (isset($_REQUEST['vid'])) {
 $vid = $_REQUEST['vid'];
 $filedata = $functions->getVoucherData($vid);
 $filedata = $filedata[0];
-
-}
-// if download started, display message
-if(isset($_REQUEST['s'])  &&  $_REQUEST['s'] == "downloadstarted") 
-{
-	echo "<div id='message'>".lang("_STARTED_DOWNLOADING")."</div>";
 }
 ?>
 <script type="text/javascript">
-
+$(document).ready(function() { 
+$("#message").hide();
+});
 function startDownload()
 {
-	window.open( "download.php?vid=<?php echo $filedata["filevoucheruid"];?>");
-	window.location.href="index.php?s=downloadstarted&vid=<?php echo $filedata["filevoucheruid"];?>";
+	$("#message").show();
+	window.location.href= "download.php?vid=<?php echo $filedata["filevoucheruid"];?>";
 }
-
 </script>
 <div id="box">
+<div id='message' name="message"><?php echo lang("_STARTED_DOWNLOADING") ?></div>
 <?php echo '<div id="pageheading">'.lang("_DOWNLOAD").'</div>'; ?> 
   <div id="tablediv">
   <table>
