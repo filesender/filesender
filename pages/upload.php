@@ -697,4 +697,3 @@ if ( hasProductInstall && !hasRequestedVersion ) {
 	</div>
 	</div>
 </div>
-<img id="keepAliveIMG" name="keepAliveIMG" width="1" height="1" src="images/ka.png" />
