@@ -45,7 +45,6 @@
 		
 		// stripe every second row in the tables
 		$("#vouchertable tr:odd").addClass('altcolor');
-				
 		$("#datepicker" ).datepicker({ minDate: 1, maxDate: "+"+maximumDate+"D",altField: "#altdate", altFormat: "d-m-yy",currentText:maximumDate });
 		$("#datepicker" ).datepicker( "option", "dateFormat", "dd-mm-yy" );
 		$("#datepicker").datepicker("setDate", new Date()+maximumDate);
@@ -207,8 +206,6 @@ echo "<div id='message'>".lang("_VOUCHER_DELETED")."</div>";
 
 // get file data
 $filedata = $functions->getVouchers();
-//$filedata = $filedata[0];
-//echo $filedata;
 $json_o=json_decode($filedata,true);
 
 ?>
@@ -226,7 +223,7 @@ $json_o=json_decode($filedata,true);
       <tr>
         <td class="formfieldheading mandatory" width="200"><?php echo lang("_SEND_VOUCHER_TO"); ?>:</td>
         <td>
-        <input id="fileto" name="fileto" title="<?php echo lang("_EMAIL_SEPARATOR_MSG"); ?>"  type="text" size="40" /><br />
+        <input id="fileto" name="fileto" title="<?php echo lang("_EMAIL_SEPARATOR_MSG"); ?>"  type="text" size="45" /><br />
  		<div id="fileto_msg" class="validation_msg"><?php echo lang("_INVALID_MISSING_EMAIL"); ?></div>
  		</td>
       </tr>
@@ -236,7 +233,7 @@ $json_o=json_decode($filedata,true);
       </tr>
       <tr>
         <td><input type="hidden" id="altdate" name="altdate" value="<?php echo date($config['datedisplayformat'],strtotime("+".$config['default_daysvalid']." day"));?>" /></td>
-        <td><input type="submit" value="Send Voucher"/></td>
+        <td><div id="bigbtn"><a href="#" onclick="document.forms['form1'].submit();"><?php echo lang("_SEND_VOUCHER"); ?></a></div></td>
       </tr>
     </table>
      </div>
