@@ -40,7 +40,7 @@ $lang["_ADMIN"] = "Administratie";
 $lang["_NEW_UPLOAD"] = "Nieuwe Upload";
 $lang["_VOUCHERS"] = "Uitnodiging";
 $lang["_LOGON"] = "Aanmelden";
-$lang["_LOG_OFF"] = "Uitloggen";
+$lang["_LOG_OFF"] = "Afmelden";
 $lang["_MY_FILES"] = "Mijn bestanden";
 
 // Pagina titels
@@ -110,6 +110,7 @@ $lang["_SEND_NEW_VOUCHER"] = "Met een Uitnodiging kunt u iemand een bestand late
 Om een Uitnodiging te maken voer een e-mailadres in en klik op Stuur Uitnodiging.<BR>
 Er wordt dan een e-mail verstuurd naar de ontvanger met daarin een link om de uitnodiging te gebruiken.";
 $lang["_SEND_VOUCHER_TO"] = "Stuur uitnodiging naar";
+$lang["_SEND_VOUCHER"] = "Stuur Uitnodiging";
 
 // Upload pagina: button menu
 $lang["_UPLOAD"] = "Upload";
@@ -139,7 +140,7 @@ $lang["_INVALID_FILE_NAME"] = "Ongeldige bestandsnaam. Hernoem het bestand en pr
 $lang["_INVALID_2GB_USEHTML5"] = "Bestand is groter dan 2GB. Gebruik een geschikte HTML5 browser voor grotere bestanden.";
 $lang["_FILE_TO_BE_RESENT"] = "Bestand om opnieuw te versturen";
 $lang["_ERROR_UPLOADING_FILE"] = "Fout bij het uploaden van het bestand";
-$lang["_LOGOUT_COMPLETE"] = "U bent uitgelogt";
+$lang["_LOGOUT_COMPLETE"] = "U bent afgemeld";
 
 $lang["_ARE_YOU_SURE"] = "Weet U dit zeker?";
 $lang["_DELETE_FILE"] = "Verwijder bestand";
@@ -152,5 +153,8 @@ $lang["_VOUCHER_SENT"] = "Uitnodiging verstuurd";
 $lang["_VOUCHER_DELETED"] = "Uitnodiging ingetrokken";
 $lang["_VOUCHER_CANCELLED"] = "Deze uitnodiging is ingetrokken.";
 $lang["_STARTED_DOWNLOADING"] = "De download van het bestand zal beginnen.";
+// confirmation
+$lang["_CONFIRM_DELETE_FILE"] = "Wilt U dit bestand echt verwijderen?";
+$lang["_CONFIRM_DELETE_VOUCHER"] = "Wilt U deze uitnodiging echt intrekken?";
 
 ?>
