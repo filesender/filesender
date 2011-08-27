@@ -155,6 +155,7 @@ function openabout()
     </ul>
   </div>
   <div id="content">
+  <div id="userinformation">
     <?php 
 // display user details if authenticated and not a voucher
 echo "<div class='welcomeuser'>";
@@ -179,6 +180,7 @@ if($config["versionNumber"])
 echo "<div class='versionnumber'>" .$versiondisplay."</div>";
 
 ?>
+</div>
     <?php
 if(	$authvoucher->aVoucher())
 {

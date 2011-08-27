@@ -71,7 +71,7 @@ td {
 	border: 1px solid #cccccc;
 	border-radius:10px;
 	-moz-border-radius: 10px;
-	margin: 20px auto;
+	margin: 5px auto;
 }
 
 #tog {
@@ -312,9 +312,13 @@ word-wrap: break-word; /* Internet Explorer 5.5+ */
 {
 	text-align: right;
 	float: right;
-	position: static;
+
 	font-size: 10px;
 	color: #666;
+}
+#userinformation 
+{
+	height: 20px;
 }
 .welcomeuser
 {
