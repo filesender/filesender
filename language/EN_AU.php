@@ -110,7 +110,7 @@
 			$lang["_INVALID_EXPIRY_DATE"] = "Invalid expiry Date";	
 			$lang["_INVALID_FILE"] = "Invalid File";	
 			$lang["_INVALID_FILESIZE_ZERO"] = "File size cannot be 0. Please select another file.";
-			$lang["_INVALID_FILE_EXT"] = "Invalid file extension. Please select another file.";
+			$lang["_INVALID_FILE_EXT"] = "Invalid file extension.";
 			$lang["_INVALID_TOO_LARGE_1"] = "File size cannot be greater than";
 			$lang["_SELECT_ANOTHER_FILE"] = "Please select another file.";
 			$lang["_INVALID_FILE_NAME"] = "The name of the file you are uploading is invalid. Please rename your file and try again.";
@@ -129,7 +129,7 @@ An email will be sent to the recipient with a link to use the Voucher.";
 			$lang["_EMAIL_SEPARATOR_MSG"] = "Multiple email addresses separated by , or ;";
 			
 			$lang["_ARE_YOU_SURE"] = "Are you sure?";
-			$lang["_DELETE_FILE"] = "DeleteFile";
+			$lang["_DELETE_FILE"] = "Delete File";
            	$lang["_EMAIL_SENT"] = "Email has been sent";
            	$lang["_EXPIRY_DATE"] = "Expiry Date";
             $lang["_FILE_SIZE"] = "File Size";
