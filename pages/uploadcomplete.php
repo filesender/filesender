@@ -37,6 +37,6 @@
  */
  ?>
  <div id="box">
-<?php echo '<div id="pageheading">'.lang("_UPLOAD_COMPLETE").'</div>'; ?> 
+<div id="message"><?php echo lang("_UPLOAD_COMPLETE"); ?></div> 
 </div>
 </div>
