@@ -47,7 +47,7 @@
 		$("#vouchertable tr:odd").addClass('altcolor');
 				
 		$("#datepicker" ).datepicker({ minDate: 1, maxDate: "+"+maximumDate+"D",altField: "#altdate", altFormat: "d-m-yy",currentText:maximumDate });
-		$("#datepicker" ).datepicker( "option", "dateFormat", "d-m-Yy" );
+		$("#datepicker" ).datepicker( "option", "dateFormat", "dd-mm-yy" );
 		$("#datepicker").datepicker("setDate", new Date()+maximumDate);
 		$("#dialog-delete").dialog({ autoOpen: false, height: 140, modal: true,
 		
@@ -73,7 +73,30 @@ function validateForm()
 	// Validate EXPIRY
 function validate_expiry()
 {
-//	alert($('#fileexpirydate').datepicker("getDate"));
+
+var validformat=/^\d{2}\-\d{2}\-\d{4}$/ //Basic check for format validity
+	var returnval=false
+	var today = new Date();
+    var maxDate = new Date(today.getFullYear(), today.getMonth(), today.getDate()+parseInt(maximumDate));
+    if (!validformat.test($("#datepicker").val())) 
+	{
+	$("#expiry_msg").show();
+	return false;
+	}
+	var monthfield=$("#datepicker").val().split("-")[1]
+	var dayfield=$("#datepicker").val().split("-")[0]
+	var yearfield=$("#datepicker").val().split("-")[2]
+	var dayobj = new Date(yearfield, monthfield-1, dayfield)
+	if ((dayobj.getMonth()+1!=monthfield)||(dayobj.getDate()!=dayfield)||(dayobj.getFullYear()!=yearfield))
+	{
+	$("#expiry_msg").show();
+	return false;
+	}
+	if(dayobj < today || dayobj > maxDate)
+	{
+		$("#expiry_msg").show();
+		return false;	
+	}
 	if($("#datepicker").datepicker("getDate") == null)
 	{
 		$("#expiry_msg").show();
