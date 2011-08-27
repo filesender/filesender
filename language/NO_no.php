@@ -119,17 +119,17 @@ $lang["_DELETE"] = "Slett";
 
 // Upload page: error messages, displayed on-input
 $lang["_INVALID_MISSING_EMAIL"] = "Feilaktig eller manglende epostadresse";
-$lang["_INVALID_EXPIRY_DATE"] = "Feil i utl�psdato";
+$lang["_INVALID_EXPIRY_DATE"] = "Feil i utløpsdato";
 $lang["_INVALID_FILE"] = "Noe er galt med filen som ble valgt";
-$lang["_INVALID_FILESIZE_ZERO"] = "Filer med st�rrelse 0 kan ikke velges.  Velg en annen fil";
+$lang["_INVALID_FILESIZE_ZERO"] = "Filer med størrelse 0 kan ikke velges.  Velg en annen fil";
 $lang["_INVALID_FILE_EXT"] = "Feiltypen ikke tillat. Velg en annen fil.";
-$lang["_INVALID_TOO_LARGE_1"] = "Filst�rrelse kan ikke være mer enn";
+$lang["_INVALID_TOO_LARGE_1"] = "Filstørrelse kan ikke være mer enn";
 $lang["_SELECT_ANOTHER_FILE"] = "Velg en annen fil.";
 $lang["_INVALID_FILE_NAME"] = "Feilaktig filnavn, filen kan ikke lastes opp.  Gi filen et annet navn og prøv på nytt.";
 $lang["_INVALID_2GB_USEHTML5"] = "Filen er større enn 2GB. Please use a HTML5 enabled browser to upload larger files.";
 $lang["_FILE_TO_BE_RESENT"] = "Fil blir sendt på nytt";
 $lang["_ERROR_UPLOADING_FILE"] = "Feil under filopplasting";
-$lang["_LOGOUT_COMPLETE"] = "Avlogging utf�rt";
+$lang["_LOGOUT_COMPLETE"] = "Avlogging utført";
 
 $lang["_ARE_YOU_SURE"] = "Er du sikker?";
 $lang["_DELETE_FILE"] = "Slett fil";
@@ -157,7 +157,6 @@ $lang["_STEP4"] = "Klikk Send";
 // Voucher page
 $lang["_SEND_NEW_VOUCHER"] = "Send en ny invitasjon";
 $lang["_SEND_VOUCHER_TO"] = "Send en invitasjon til";
-
-
+$lang["_SEND_VOUCHER"] = "Send invitasjon";
 
 ?>
