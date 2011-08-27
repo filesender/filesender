@@ -81,7 +81,7 @@
 			public var currbytes:Number = 0;
 			public var lastbytes:Number = 0;
 			public var tempFromVoucher:String; // Temp if voucher is cancelled to return correct to and from fields
-			public var myTimer:Timer = new Timer(10000, 0);  // 600000 sends keep alive every 10 minutes
+			public var myTimer:Timer = new Timer(600000, 0);  // 600000 sends keep alive every 10 minutes
 			 
 			// init UI
 			public function init():void
