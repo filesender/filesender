@@ -135,6 +135,7 @@ An email will be sent to the recipient with a link to use the Voucher.";
             $lang["_FILE_SIZE"] = "File Size";
 			$lang["_FILE_RESENT"] = "File Re-sent";			
 		  	$lang["_ME"] = "Me";
+			$lang["_SEND_VOUCHER"] = "Send Voucher";
             $lang["_SEND_VOUCHER_TO"] = "Send Vouchers to";
 			$lang["_START_DOWNLOAD"] = "Start Download";
            	$lang["_VOUCHER_SENT"] = "Voucher Sent";
