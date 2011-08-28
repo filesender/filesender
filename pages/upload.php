@@ -86,6 +86,7 @@
 	var uploadid = '<?php echo $id ?>';
 	var maximumDate= '<?php echo $config['default_daysvalid']?>';
 	var maxHTML5uploadsize = <?php echo $config['max_gears_upload_size'] ?>;
+	var maxFLASHuploadsize = <?php echo $config['max_flash_upload_size'] ?>;
 	var aup = '<?php echo $config['AuP'] ?>';
 	var bytesUploaded = 0;
 	var bytesTotal = 0;
@@ -430,9 +431,9 @@ function echeck(str) {
 function fileInfo(name,size)
 {
 fileMsg("");
-if(size > 2147483648)
+if(size > maxFLASHuploadsize)
 {
-fileMsg("<?php echo lang("_INVALID_2GB_USEHTML5") ?>");
+fileMsg("<?php echo lang("_INVALID_TOO_LARGE_1") ?> "+ readablizebytes(maxFLASHuploadsize));
 // remove displayed file data
 $("#fileInfoView").hide();
 } else if (validatefilename(name)) 
