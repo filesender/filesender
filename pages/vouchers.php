@@ -67,7 +67,7 @@ function validateForm()
 		$("#fileto_msg").hide();
 		if(!validate_fileto()){return false;}
 		if(!validate_expiry() ){return false;}
-		return true;
+		document.forms['form1'].submit();//return true;
 	}
 	// Validate EXPIRY
 function validate_expiry()
@@ -109,6 +109,7 @@ var validformat=/^\d{2}\-\d{2}\-\d{4}$/ //Basic check for format validity
 function validate_fileto()
 {
 	// remove white spaces 
+	
 	var email = $("#fileto").val();
 	email = email.split(" ").join("");
 	$("#fileto").val(email);
@@ -233,7 +234,7 @@ $json_o=json_decode($filedata,true);
       </tr>
       <tr>
         <td><input type="hidden" id="altdate" name="altdate" value="<?php echo date($config['datedisplayformat'],strtotime("+".$config['default_daysvalid']." day"));?>" /></td>
-        <td><div id="bigbtn"><a href="#" onclick="document.forms['form1'].submit();"><?php echo lang("_SEND_VOUCHER"); ?></a></div></td>
+        <td><div id="bigbtn"><a href="#" onclick="validateForm()"><?php echo lang("_SEND_VOUCHER"); ?></a></div></td>
       </tr>
     </table>
      </div>
