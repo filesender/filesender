@@ -433,7 +433,7 @@ function fileInfo(name,size)
 fileMsg("");
 if(size > maxFLASHuploadsize)
 {
-fileMsg("<?php echo lang("_INVALID_TOO_LARGE_1") ?> "+ readablizebytes(maxFLASHuploadsize));
+fileMsg("<?php echo lang("_INVALID_TOO_LARGE_1") ?> " + readablizebytes(maxFLASHuploadsize) + ". <?php echo lang("_INVALID_SIZE_USEHTML5") ?> ");	
 // remove displayed file data
 $("#fileInfoView").hide();
 } else if (validatefilename(name)) 
