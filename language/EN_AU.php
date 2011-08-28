@@ -114,7 +114,7 @@
 			$lang["_INVALID_TOO_LARGE_1"] = "File size cannot be greater than";
 			$lang["_SELECT_ANOTHER_FILE"] = "Please select another file.";
 			$lang["_INVALID_FILE_NAME"] = "The name of the file you are uploading is invalid. Please rename your file and try again.";
-			$lang["_INVALID_2GB_USEHTML5"] = "This file is larger than 2GB. Please use a HTML5 enabled browser to upload larger files.";
+			$lang["_INVALID_SIZE_USEHTML5"] = "Please select another file or use a HTML5 enabled browser to upload larger files.";
 			$lang["_ACCEPTTOC"] = "I accept the terms and conditions of this service.";	
 			$lang["_AGREETOC"] = "You MUST agree to the terms and conditions.";
 			$lang["_FILE_TO_BE_RESENT"] = "File to be redistributed";
