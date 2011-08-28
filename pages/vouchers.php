@@ -230,7 +230,7 @@ $json_o=json_decode($filedata,true);
       </tr>
       <tr>
         <td class="formfieldheading mandatory"><?php echo lang("_EXPIRY_DATE"); ?>:</td>
-        <td><input id="datepicker" onchange="validate_expiry()"></input> <div id="expiry_msg" class="validation_msg"><?php echo lang("_INVALID_EXPIRY_DATE"); ?></div></td>
+        <td><input id="datepicker" onchange="validate_expiry()" title="dd-mm-yyyy"></input> <div id="expiry_msg" class="validation_msg"><?php echo lang("_INVALID_EXPIRY_DATE"); ?></div></td>
       </tr>
       <tr>
         <td><input type="hidden" id="altdate" name="altdate" value="<?php echo date($config['datedisplayformat'],strtotime("+".$config['default_daysvalid']." day"));?>" /></td>
