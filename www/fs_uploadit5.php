@@ -139,7 +139,11 @@ $s = "complete";
 	
 	$functions->inserFileHTML5($filedata);
 	}
-	
+	// if AUP then add session variable to store that a user selected the session variable
+	if(isset($_POST["aup"]))
+	{
+		$_SESSION["aup"] = "true";
+	}
 	if(isset($_POST["filestatus"]) && $_POST["filestatus"] == "Voucher")
 		{
 		$tempData = $functions->getVoucherData($_POST["filevoucheruid"]);

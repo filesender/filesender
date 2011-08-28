@@ -539,7 +539,7 @@ function keepMeAlive()
       <?php if ($config["AuP"]) {?>
       <tr>
         <td class="formfieldheading"></td>
-        <td><input name="aup" type="checkbox" id="aup" onchange="validate_aup()" <?php echo ($config["AuP_default"]) ? "checked" : ""; ?> value="true"/>
+        <td><input name="aup" type="checkbox" id="aup" onchange="validate_aup()" <?php echo ($config["AuP_default"] ) ? "checked" : ""; ?> <?php echo (isset($_SESSION["aup"]) ) ? "checked" : ""; ?> value="true"/>
          </td>
         <td>
           <div id="aup_label" name="aup_label" onclick="toggleTOG()" style="cursor:pointer;"><?php echo lang("_ACCEPTTOC"); ?> [<font color="#666666"><?php echo lang("_SHOWHIDE"); ?></font>]</div>
