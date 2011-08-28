@@ -126,6 +126,11 @@
 				uploadBtn.visible = false;
 				uploadit();
 				}
+				if(msg == "hideupload")
+				{
+				BrowseBtn.visible = true;
+				uploadBtn.visible = false;
+				}
 			}
 			
 			// sends request to keep alive to log - if logging is off then there is no message recorded 
