@@ -111,6 +111,13 @@ if($authvoucher->aVoucher()  || $authsaml->isAuth() ) {
 	{
 		echo checkFileSize($tempuploadfolder.$tempFilename);
 	}
+	
+	// if AUP then add session variable to store that a user selected the session variable
+	if(isset($_REQUEST["aup"]))
+	{
+		$_SESSION["aup"] = "true";
+	}
+	
 	// ---------------------
 	// single file upload
 	// ---------------------	

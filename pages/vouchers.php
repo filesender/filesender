@@ -73,14 +73,14 @@ function validateForm()
 function validate_expiry()
 {
 
-var validformat=/^\d{2}\-\d{2}\-\d{4}$/ //Basic check for format validity
+	var validformat=/^\d{2}\-\d{2}\-\d{4}$/ //Basic check for format validity
 	var returnval=false
 	var today = new Date();
     var maxDate = new Date(today.getFullYear(), today.getMonth(), today.getDate()+parseInt(maximumDate));
     if (!validformat.test($("#datepicker").val())) 
 	{
-	$("#expiry_msg").show();
-	return false;
+		$("#expiry_msg").show();
+		return false;
 	}
 	var monthfield=$("#datepicker").val().split("-")[1]
 	var dayfield=$("#datepicker").val().split("-")[0]
@@ -88,8 +88,8 @@ var validformat=/^\d{2}\-\d{2}\-\d{4}$/ //Basic check for format validity
 	var dayobj = new Date(yearfield, monthfield-1, dayfield)
 	if ((dayobj.getMonth()+1!=monthfield)||(dayobj.getDate()!=dayfield)||(dayobj.getFullYear()!=yearfield))
 	{
-	$("#expiry_msg").show();
-	return false;
+		$("#expiry_msg").show();
+		return false;
 	}
 	if(dayobj < today || dayobj > maxDate)
 	{
@@ -119,7 +119,7 @@ function validate_fileto()
 		$('#fileto_msg').show();
 		return false;
 		}
-		}
+	}
 	return true;	
 }
 		
