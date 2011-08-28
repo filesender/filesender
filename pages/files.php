@@ -317,7 +317,8 @@ foreach($json_o as $item) {
    } else {
    echo "<td class='HardBreak'>" .$item['filefrom'] . "</td>";
    }
-   echo "<td class='HardBreak'><a href='download.php?vid=". $item["filevoucheruid"]."' target='_blank'>" .$item['fileoriginalname']. "</a></td><td>" .formatBytes($item['filesize']). "</td><td>".htmlentities($item['filesubject']). "</td><td>";
+   echo "<td class='HardBreak'><a href='download.php?vid=". $item["filevoucheruid"]."' target='_blank'>" .$item['fileoriginalname']. "</a></td>";
+   echo "<td>" .formatBytes($item['filesize']). "</td><td  class='HardBreak'>".htmlentities($item['filesubject']). "</td><td>";
    if($item['filemessage'] != "")
    {
    echo "<img src='images/page_white_text_width.png' border='0' title='".htmlentities($item['filemessage'],ENT_QUOTES). "'>";
