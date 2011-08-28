@@ -75,7 +75,7 @@
 		$token = "";
 	}
 	// set flash upload vairiables
-	$flashVARS = "vid=".$voucherUID."&sid=".session_id()."&buttonBrowse=".lang("_BROWSE")."&buttonUpload=".lang("_UPLOAD")."&buttonCancel=".lang("_CANCEL")."&siteURL=".$config["site_url"]."&token=".$token;
+	$flashVARS = "vid=".$voucherUID."&sid=".session_id()."&buttonBrowse=".lang("_BROWSE")."&buttonUpload=".lang("_SEND")."&buttonCancel=".lang("_CANCEL")."&siteURL=".$config["site_url"]."&token=".$token;
  ?>
 <script type="text/javascript" src="lib/js/AC_OETags.js" language="javascript"></script>
 <script type="text/javascript" src="js/upload.js"></script>
@@ -116,11 +116,8 @@
 		}
 		
 		$("#dialog-cancel").dialog({ autoOpen: false, height: 140, width: 350, modal: true,
-		
 		buttons: {
 				<?php echo lang("_OK") ?>: function() {
-				//$( this ).dialog( "close" );
-				//$("#dialog-uploadprogress").dialog('close');
 				window.location = window.location;
 				},
 				<?php echo lang("_CANCEL") ?>: function() { 
@@ -189,7 +186,6 @@
 	function updatepb(bytesloaded,totalbytes)
 	{
 		$("#progress_bar").show();
-		
 		var percentComplete = Math.round(bytesloaded * 100 / totalbytes);
 		var bytesTransfered = '';
 		if (bytesloaded > 1024*1024)
@@ -206,11 +202,6 @@
 		  
 	}
 
-	// get a dom element (just to reduce code)
-	//function obj(id) {
-	//	return document.getElementById(id);
-	//}
-	
 	function validateforflash(fname,fsize)
 	{
 	if(validateFormFlash())
@@ -385,47 +376,20 @@ function validate_file()
 //  validate single email	
 function echeck(str) {
 
-		var at="@"
-		var dot="."
-		var lat=str.indexOf(at)
-		var lstr=str.length
-		var ldot=str.indexOf(dot)
-		if (str.indexOf(at)==-1){
-		  // alert("Invalid E-mail")
-		   return false
-		}
-
-		if (str.indexOf(at)==-1 || str.indexOf(at)==0 || str.indexOf(at)==lstr){
-		   //alert("Invalid E-mail")
-		   return false
-		}
-
-		if (str.indexOf(dot)==-1 || str.indexOf(dot)==0 || str.indexOf(dot)==lstr){
-		   // alert("Invalid E-mail")
-		    return false
-		}
-
-		 if (str.indexOf(at,(lat+1))!=-1){
-		    //alert("Invalid E-mail")
-		    return false
-		 }
-
-		 if (str.substring(lat-1,lat)==dot || str.substring(lat+1,lat+2)==dot){
-		    //alert("Invalid E-mail")
-		    return false
-		 }
-
-		 if (str.indexOf(dot,(lat+2))==-1){
-		    //alert("Invalid E-mail")
-		    return false
-		 }
+	var at="@"
+	var dot="."
+	var lat=str.indexOf(at)
+	var lstr=str.length
+	var ldot=str.indexOf(dot)
 		
-		 if (str.indexOf(" ")!=-1){
-		    //alert("Invalid E-mail")
-		    return false
-		 }
-
-	 return true					
+	if (str.indexOf(at)==-1){	return false; }
+	if (str.indexOf(at)==-1 || str.indexOf(at)==0 || str.indexOf(at)==lstr){  return false;	}
+	if (str.indexOf(dot)==-1 || str.indexOf(dot)==0 || str.indexOf(dot)==lstr){ return false; }
+	if (str.indexOf(at,(lat+1))!=-1){	return false;}
+	if (str.substring(lat-1,lat)==dot || str.substring(lat+1,lat+2)==dot){ return false; }
+	if (str.indexOf(dot,(lat+2))==-1){ 	return false; }
+	if (str.indexOf(" ")!=-1){			return false; }
+	return true					
 }
 // flex file information check
 function fileInfo(name,size)
@@ -436,7 +400,9 @@ if(size > maxFLASHuploadsize)
 fileMsg("<?php echo lang("_INVALID_TOO_LARGE_1") ?> " + readablizebytes(maxFLASHuploadsize) + ". <?php echo lang("_INVALID_SIZE_USEHTML5") ?> ");	
 // remove displayed file data
 $("#fileInfoView").hide();
-} else if (validatefilename(name)) 
+return;
+} 
+if (validatefilename(name)) 
 {
 	$("#fileInfoView").show();
 	$("#n").val(name);
@@ -447,6 +413,7 @@ $("#fileInfoView").hide();
 	getFlexApp("filesenderup").returnMsg("upload")
 } else {
 	$("#fileInfoView").hide();
+	getFlexApp("filesenderup").returnMsg("hideupload")
 }
 }
 
@@ -663,7 +630,7 @@ if ( hasProductInstall && !hasRequestedVersion ) {
           </div>
           <div id="uploadhtml5">
             <input type="file" name="fileToUpload" id="fileToUpload" onChange="fileSelected();"/>
-            <input type="button" onClick="validate()" value="Upload" id="uploadbutton" name="uploadbutton"> 
+            <input type="button" onClick="validate()" value="<?php echo lang("_SEND"); ?>" id="uploadbutton" name="uploadbutton"> 
           </div>
           <div id="file_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_FILE"); ?></div>
           </td>

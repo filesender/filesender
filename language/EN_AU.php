@@ -49,7 +49,7 @@
 			$lang["_HELP"] = "Help";
 			$lang["_VOUCHER_CANCELLED"] = "Voucher Cancelled";
 			$lang["_DELETE_VOUCHER"] = "Delete Voucher";
-			$lang["_UPLOAD_COMPLETE"] = "Upload Complete";
+			$lang["_UPLOAD_COMPLETE"] = "Your file has been uploaded and message sent.";
 			$lang["_UPLOAD_PROGRESS"] = "Upload progress";
 			$lang["_DOWNLOAD"] = "Download";
 			$lang["_CANCEL_UPLOAD"] = "Cancel Upload";
