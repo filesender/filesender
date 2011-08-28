@@ -87,6 +87,7 @@
 	var maximumDate= '<?php echo $config['default_daysvalid']?>';
 	var maxHTML5uploadsize = <?php echo $config['max_gears_upload_size'] ?>;
 	var maxFLASHuploadsize = <?php echo $config['max_flash_upload_size'] ?>;
+	var maxEmailRecipients = <?php echo $config['max_email_recipients'] ?>;
 	var aup = '<?php echo $config['AuP'] ?>';
 	var bytesUploaded = 0;
 	var bytesTotal = 0;
@@ -264,11 +265,17 @@
 function validate_fileto()
 {
 	$("#fileto_msg").hide();
+	$("#maxemails_msg").hide();
 	// remove white spaces 
 	var email = $("#fileto").val();
 	email = email.split(" ").join("");
 	$("#fileto").val(email);
 	email = email.split(/,|;/);
+	if(email.length>maxEmailRecipients)
+	{
+	$("#maxemails_msg").show();
+		return false;
+	}
 	for (var i = 0; i < email.length; i++) {
 		if (!echeck(email[i], 1, 0)) {
 		$("#fileto_msg").show();
@@ -502,6 +509,7 @@ function keepMeAlive()
         <td width="50" class="formfieldheading mandatory"><?php echo lang("_TO") ; ?>:</td>
         <td width="600" colspan="2" valign="middle"><input name="fileto" title="<?php echo lang("_EMAIL_SEPARATOR_MSG") ; ?>" type="text" id="fileto" size="60" onchange="validate_fileto()" />
         <div id="fileto_msg" style="display: none" class="validation_msg"><?php echo lang("_INVALID_MISSING_EMAIL"); ?></div>
+        <div id="maxemails_msg" style="display: none" class="validation_msg"><?php echo lang("_MAXEMAILS"); ?> <?php echo $config['max_email_recipients'] ?>.</div>
         </td>
         <td valign="top"><img src="images/num_1.png" alt="" width="25" height="25" hspace="6" border="0" align="left" /></td>
         <td width="250" valign="top"><span class="forminstructions"><?php echo lang("_STEP1"); ?></span></td>

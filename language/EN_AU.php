@@ -119,6 +119,7 @@
 			$lang["_AGREETOC"] = "You MUST agree to the terms and conditions.";
 			$lang["_FILE_TO_BE_RESENT"] = "File to be redistributed";
 			$lang["_ERROR_UPLOADING_FILE"] = "Error uploading your file";
+			$lang["_MAXEMAILS"] = "The maximum number of email addresses allowed is ";
 			
 			$lang["_LOGOUT_COMPLETE"] = "Logout Complete";
 			
