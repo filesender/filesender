@@ -106,7 +106,7 @@ $lang["_EMAIL_SEPARATOR_MSG"] = "Flere epost-adresser avskilles med , eller ;";
 $lang["_AUPTERMS"] = "Vilkår og betingelser";
 $lang["_ACCEPTTOC"] = "Jeg aksepterer vilkårene for denne tjenesten.";	
 $lang["_AGREETOC"] = "Du må akseptere vilkårene.";
-$lang["_SHOWHIDE"] = "Vis/gjem"
+$lang["_SHOWHIDE"] = "Vis/gjem";
 
 // Upload page: Flash button menu
 $lang["_UPLOAD"] = "Last opp";
