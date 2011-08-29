@@ -106,6 +106,7 @@ $lang["_EMAIL_SEPARATOR_MSG"] = "Flere epost-adresser avskilles med , eller ;";
 $lang["_AUPTERMS"] = "Vilkår og betingelser";
 $lang["_ACCEPTTOC"] = "Jeg aksepterer vilkårene for denne tjenesten.";	
 $lang["_AGREETOC"] = "Du må akseptere vilkårene.";
+$lang["_SHOWHIDE"] = "Vis/gjem"
 
 // Upload page: Flash button menu
 $lang["_UPLOAD"] = "Last opp";
@@ -158,5 +159,11 @@ $lang["_STEP4"] = "Klikk Send";
 $lang["_SEND_NEW_VOUCHER"] = "Send en ny invitasjon";
 $lang["_SEND_VOUCHER_TO"] = "Send en invitasjon til";
 $lang["_SEND_VOUCHER"] = "Send invitasjon";
+
+// confirmation
+$lang["_CONFIRM_DELETE_FILE"] = "Er du sikker at du vil slette filen?";
+$lang["_CONFIRM_DELETE_VOUCHER"] = "Er du sikker at du ønsker å tilbaketrekke invitasjonen?";
+
+
 
 ?>
