@@ -38,6 +38,8 @@
  ?>
 <script>
 	var maximumDate= '<?php echo $config['default_daysvalid'] ?>';
+	var maxEmailRecipients = <?php echo $config['max_email_recipients'] ?>;
+	
 	var selectedVoucher = "";
 	$(function() {
 		$("#fileto_msg").hide();
@@ -109,11 +111,18 @@ function validate_expiry()
 function validate_fileto()
 {
 	// remove white spaces 
+	$("#maxemails_msg").hide();
+	$('#fileto_msg').hide();
 	
 	var email = $("#fileto").val();
 	email = email.split(" ").join("");
 	$("#fileto").val(email);
 	email = email.split(/,|;/);
+	if(email.length>maxEmailRecipients)
+	{
+	$("#maxemails_msg").show();
+		return false;
+	}
 	for (var i = 0; i < email.length; i++) {
 		if (!echeck(email[i], 1, 0)) {
 		$('#fileto_msg').show();
@@ -224,8 +233,9 @@ $json_o=json_decode($filedata,true);
       <tr>
         <td class="formfieldheading mandatory" width="200"><?php echo lang("_SEND_VOUCHER_TO"); ?>:</td>
         <td>
-        <input id="fileto" name="fileto" title="<?php echo lang("_EMAIL_SEPARATOR_MSG"); ?>"  type="text" size="45" /><br />
+        <input id="fileto" name="fileto" title="<?php echo lang("_EMAIL_SEPARATOR_MSG"); ?>"  type="text" size="45" onchange="validate_fileto()"/><br />
  		<div id="fileto_msg" class="validation_msg"><?php echo lang("_INVALID_MISSING_EMAIL"); ?></div>
+        <div id="maxemails_msg" style="display: none" class="validation_msg"><?php echo lang("_MAXEMAILS"); ?> <?php echo $config['max_email_recipients'] ?>.</div>
  		</td>
       </tr>
       <tr>

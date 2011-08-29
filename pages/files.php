@@ -83,7 +83,8 @@ $json_o=json_decode($filedata,true);
 	var selectedFile = ""; // file uid selected when deleteting
 	// set default maximum date for date datepicker
 	var maximumDate= '<?php echo $config['default_daysvalid']?>';
-
+	var maxEmailRecipients = <?php echo $config['max_email_recipients'] ?>;
+	
 	$(function() {
 		// initialise datepicker
 		$("#datepicker" ).datepicker({ minDate: 1, maxDate: "+"+maximumDate+"D",altField: "#fileexpirydate", altFormat: "d-m-yy" });
@@ -193,6 +194,11 @@ function validate_fileto()
 	email = email.split(" ").join("");
 	$("#fileto").val(email);
 	email = email.split(/,|;/);
+	if(email.length>maxEmailRecipients)
+	{
+	$("#maxemails_msg").show();
+		return false;
+	}
 	for (var i = 0; i < email.length; i++) {
 		if (!echeck(email[i], 1, 0)) {
 		$("#fileto_msg").show();
@@ -341,7 +347,9 @@ foreach($json_o as $item) {
       <tr>
         <td width="100" class="formfieldheading mandatory"><?php echo  lang("_TO"); ?>:</td>
         <td width="400" valign="middle"><input name="fileto" title="<?php echo  lang("_EMAIL_SEPARATOR_MSG"); ?>" type="text" id="fileto" size="60" onchange="validate_fileto()" />
-          <div id="fileto_msg" style="display: none" class="validation_msg"><?php echo lang("_INVALID_MISSING_EMAIL"); ?></div></td>
+          <div id="fileto_msg" style="display: none" class="validation_msg"><?php echo lang("_INVALID_MISSING_EMAIL"); ?></div>
+          <div id="maxemails_msg" style="display: none" class="validation_msg"><?php echo lang("_MAXEMAILS"); ?> <?php echo $config['max_email_recipients'] ?>.</div>
+          </td>
       </tr>
       <tr>
         <td class="formfieldheading mandatory"><?php echo lang("_FROM"); ?>:</td>
