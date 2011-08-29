@@ -88,8 +88,8 @@ var filesize = 0;
 		};
 	}
 
-function startupload()
-{
+	function startupload()
+	{
 		// lock all buttons and text boxes before uploading
 		//lockformfields();
 		$("#fileToUpload").hide();// hide Browse
@@ -118,7 +118,7 @@ function startupload()
 		uploadFile(currentBytesUpload);
   		}
 		});	
-}
+	}
 
 function uploadFile(currentBytesUpload) {
 		
@@ -167,95 +167,72 @@ function uploadFile(currentBytesUpload) {
     reader.readAsBinaryString(blob); //Start reading the blob out as binary data
     reader.onload = function() { //Execute this when the blob is successfully read
  
-        var boundary = "fileboundary"; //Boundary name
-        var uri = (uploadURI + "?n="+encodeURIComponent(fileName)+"&total="+fileSize+"&type=chunk&vid="+vid); //Path to script for handling the file sent
- 
-        var xhr = new XMLHttpRequest(); //Create the object to handle async requests
- 		xhr.onreadystatechange = processReqChange;
- 		xhr.upload.addEventListener("progress", uploadProgress, false);
-        xhr.open("POST", uri, true); //Open a request to the web address set
-      	xhr.setRequestHeader("Content-Disposition"," attachment; name='fileToUpload'"); 
-		xhr.setRequestHeader("Content-Type", "application/octet-stream");
-		xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-        //Set up the body of the POST data includes the name & file data.
-        var bodySend =  "";
-		bodySend = reader.result;
-		xhr.send(blob);
-	   	//xhr.sendAsBinary(bodySend);
+	var boundary = "fileboundary"; //Boundary name
+	var uri = (uploadURI + "?n="+encodeURIComponent(fileName)+"&total="+fileSize+"&type=chunk&vid="+vid); //Path to script for handling the file sent
+	var xhr = new XMLHttpRequest(); //Create the object to handle async requests
+	xhr.onreadystatechange = processReqChange;
+	xhr.upload.addEventListener("progress", uploadProgress, false);
+	xhr.open("POST", uri, true); //Open a request to the web address set
+	xhr.setRequestHeader("Content-Disposition"," attachment; name='fileToUpload'"); 
+	xhr.setRequestHeader("Content-Type", "application/octet-stream");
+	xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+    //Set up the body of the POST data includes the name & file data.
+    var bodySend =  "";
+	bodySend = reader.result;
+	xhr.send(blob);
+	//xhr.sendAsBinary(bodySend);
 
-function processReqChange(){
-     if (xhr.readyState == 4) {
-            if (xhr.status == 200) {
+	function processReqChange(){
+	    if (xhr.readyState == 4) {
+	    	if (xhr.status == 200) {
 			bytesUploaded = parseFloat(xhr.responseText);
 			updatepb(bytesUploaded,bytesTotal);	
 			uploadFile(bytesUploaded);
-			
-           } else {
-			   errorDialog("There was a problem retrieving the data:\n" + req.statusText);
-            }
-        }else{
-		
-     }
-    }
-
-		
-		
-    }
-
-    return true;
+			} else {
+			errorDialog("There was a problem retrieving the data:\n" + req.statusText);
+			}
+		}else{
+		}
+	}
 }
 
-      function updateTransferSpeed() {
-        var currentBytes = bytesUploaded+(chunksize*(chunk_id -1));
-        var bytesDiff = currentBytes - chunksize*(chunk_id -1);//previousBytesLoaded;
-        if (bytesDiff == 0) return;
-        previousBytesLoaded = currentBytes;
-        bytesDiff = bytesDiff * 2;
-        var bytesRemaining = bytesTotal - previousBytesLoaded;
-        var secondsRemaining = bytesRemaining / bytesDiff;
+return true;
+}
 
-        var speed = "";
-        if (bytesDiff > 1024 * 1024)
-          speed = (Math.round(bytesDiff * 100/(1024*1024))/100).toString() + "MBps";
-        else if (bytesDiff > 1024)
-          speed =  (Math.round(bytesDiff * 100/1024)/100).toString() + "KBps";
-        else
-          speed = bytesDiff.toString() + 'Bps';
+function updateTransferSpeed() {
+	var currentBytes = bytesUploaded+(chunksize*(chunk_id -1));
+	var bytesDiff = currentBytes - chunksize*(chunk_id -1);//previousBytesLoaded;
+    if (bytesDiff == 0) return;
+    previousBytesLoaded = currentBytes;
+    bytesDiff = bytesDiff * 2;
+    var bytesRemaining = bytesTotal - previousBytesLoaded;
+    var secondsRemaining = bytesRemaining / bytesDiff;
+    var speed = "";
+    if (bytesDiff > 1024 * 1024)
+		speed = (Math.round(bytesDiff * 100/(1024*1024))/100).toString() + "MBps";
+    	else if (bytesDiff > 1024)
+    	speed =  (Math.round(bytesDiff * 100/1024)/100).toString() + "KBps";
+     	else
+        speed = bytesDiff.toString() + 'Bps';
        $("#transferSpeedInfo").html(speed);
-        //document.getElementById('timeRemainingInfo').innerHTML = '| ' + secondsToString(secondsRemaining);        
-      }
+}
 
-      function secondsToString(seconds) {        
+function secondsToString(seconds) {        
         var h = Math.floor(seconds / 3600);
         var m = Math.floor(seconds % 3600 / 60);
         var s = Math.floor(seconds % 3600 % 60);
         return ((h > 0 ? h + ":" : "") + (m > 0 ? (h > 0 && m < 10 ? "0" : "") + m + ":" : "0:") + (s < 10 ? "0" : "") + s);
-      }
+}
 
-      function uploadProgress(evt) {
+function uploadProgress(evt) {
+	}
 
-		
-      }
-
-      function uploadFailed(evt) {
-        clearInterval(intervalTimer);
-		erorDialog("An error occurred while uploading the file.");  
-      }  
+function uploadFailed(evt) {
+	clearInterval(intervalTimer);
+	erorDialog("An error occurred while uploading the file.");  
+}  
   
-      function uploadCanceled(evt) {
-        clearInterval(intervalTimer);
-        erorDialog("The upload has been canceled by the user or the browser dropped the connection.");  
-      }  
-	  
-	  function readablizebytes(bytes)
-	  {
-		   	if (bytes > 1024*1024*1024)
-			bytesdisplay = (Math.round(bytes * 100/(1024*1024*1024))/100).toString() + "GB";
-		 else if (bytes > 1024*1024)
-			bytesdisplay = (Math.round(bytes * 100/(1024*1024))/100).toString() + "MB";
-		else if (bytes > 1024)
-			bytesdisplay = (Math.round(bytes * 100/1024)/100).toString() + "KB";
-		else
-			bytesdisplay = (Math.round(bytes * 100)/100).toString() + "Bytes";
-		return bytesdisplay;
-	  }
+function uploadCanceled(evt) {
+	clearInterval(intervalTimer);
+	erorDialog("The upload has been canceled by the user or the browser dropped the connection.");  
+	}  
