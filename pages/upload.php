@@ -261,65 +261,6 @@
 	return validate;
 	}
 
-// Validate FILETO
-function validate_fileto()
-{
-	$("#fileto_msg").hide();
-	$("#maxemails_msg").hide();
-	// remove white spaces 
-	var email = $("#fileto").val();
-	email = email.split(" ").join("");
-	$("#fileto").val(email);
-	email = email.split(/,|;/);
-	if(email.length>maxEmailRecipients)
-	{
-	$("#maxemails_msg").show();
-		return false;
-	}
-	for (var i = 0; i < email.length; i++) {
-		if (!echeck(email[i], 1, 0)) {
-		$("#fileto_msg").show();
-		return false;
-		}
-		}
-	return true;	
-}
-
-// Validate EXPIRY
-function validate_expiry()
-{
-	var validformat=/^\d{2}\-\d{2}\-\d{4}$/ //Basic check for format validity
-	var returnval=false
-	var today = new Date();
-    var maxDate = new Date(today.getFullYear(), today.getMonth(), today.getDate()+parseInt(maximumDate));
-    if (!validformat.test($("#datepicker").val())) 
-	{
-	$("#expiry_msg").show();
-	return false;
-	}
-	var monthfield=$("#datepicker").val().split("-")[1]
-	var dayfield=$("#datepicker").val().split("-")[0]
-	var yearfield=$("#datepicker").val().split("-")[2]
-	var dayobj = new Date(yearfield, monthfield-1, dayfield)
-	if ((dayobj.getMonth()+1!=monthfield)||(dayobj.getDate()!=dayfield)||(dayobj.getFullYear()!=yearfield))
-	{
-	$("#expiry_msg").show();
-	return false;
-	}
-	if(dayobj < today || dayobj > maxDate)
-	{
-		$("#expiry_msg").show();
-		return false;	
-	}
-	if($("#datepicker").datepicker("getDate") == null)
-	{
-		$("#expiry_msg").show();
-		return false;
-	}
-	$("#expiry_msg").hide();
-	return true;
-}
-
 //Validate AUP
 function validate_aup()
 {
@@ -380,24 +321,7 @@ function validate_file()
 		return true;
 	}	
 }
-//  validate single email	
-function echeck(str) {
 
-	var at="@"
-	var dot="."
-	var lat=str.indexOf(at)
-	var lstr=str.length
-	var ldot=str.indexOf(dot)
-		
-	if (str.indexOf(at)==-1){	return false; }
-	if (str.indexOf(at)==-1 || str.indexOf(at)==0 || str.indexOf(at)==lstr){  return false;	}
-	if (str.indexOf(dot)==-1 || str.indexOf(dot)==0 || str.indexOf(dot)==lstr){ return false; }
-	if (str.indexOf(at,(lat+1))!=-1){	return false;}
-	if (str.substring(lat-1,lat)==dot || str.substring(lat+1,lat+2)==dot){ return false; }
-	if (str.indexOf(dot,(lat+2))==-1){ 	return false; }
-	if (str.indexOf(" ")!=-1){			return false; }
-	return true					
-}
 // flex file information check
 function fileInfo(name,size)
 {
@@ -486,11 +410,7 @@ $("#dialog-default").html(msg);
 $("#dialog-default").dialog("open")
 }
 
-function fileMsg(msg)
-{
-	$("#file_msg").html(msg);
-	$("#file_msg").show();
-}
+
 function keepMeAlive()
 {
 	$.ajax({

@@ -37,32 +37,32 @@
  */
  ?>
 <script>
-	var maximumDate= '<?php echo $config['default_daysvalid'] ?>';
-	var maxEmailRecipients = <?php echo $config['max_email_recipients'] ?>;
+var maximumDate= '<?php echo $config['default_daysvalid'] ?>';
+var maxEmailRecipients = <?php echo $config['max_email_recipients'] ?>;
 	
-	var selectedVoucher = "";
-	$(function() {
-		$("#fileto_msg").hide();
-		$("#expiry_msg").hide();
-		
-		// stripe every second row in the tables
-		$("#vouchertable tr:odd").addClass('altcolor');
-		$("#datepicker" ).datepicker({ minDate: 1, maxDate: "+"+maximumDate+"D",altField: "#altdate", altFormat: "d-m-yy",currentText:maximumDate });
-		$("#datepicker" ).datepicker( "option", "dateFormat", "dd-mm-yy" );
-		$("#datepicker").datepicker("setDate", new Date()+maximumDate);
-		$("#dialog-delete").dialog({ autoOpen: false, height: 140, modal: true,
-		
-		buttons: {
-				<?php echo lang("_CANCEL") ?>: function() {
-					$( this ).dialog( "close" );
-				},
-				<?php echo lang("_DELETE") ?>: function() { 
-				deletevoucher();
+var selectedVoucher = "";
+$(function() {
+	$("#fileto_msg").hide();
+	$("#expiry_msg").hide();
+	
+	// stripe every second row in the tables
+	$("#vouchertable tr:odd").addClass('altcolor');
+	$("#datepicker" ).datepicker({ minDate: 1, maxDate: "+"+maximumDate+"D",altField: "#altdate", altFormat: "d-m-yy",currentText:maximumDate });
+	$("#datepicker" ).datepicker( "option", "dateFormat", "dd-mm-yy" );
+	$("#datepicker").datepicker("setDate", new Date()+maximumDate);
+	$("#dialog-delete").dialog({ autoOpen: false, height: 140, modal: true,
+	
+	buttons: {
+			<?php echo lang("_CANCEL") ?>: function() {
 				$( this ).dialog( "close" );
-				}
-		}
-		});
+			},
+			<?php echo lang("_DELETE") ?>: function() { 
+			deletevoucher();
+			$( this ).dialog( "close" );
+			}
+	}
 	});
+});
 
 function validateForm()
 	{
@@ -71,122 +71,18 @@ function validateForm()
 		if(!validate_expiry() ){return false;}
 		document.forms['form1'].submit();//return true;
 	}
-	// Validate EXPIRY
-function validate_expiry()
-{
-
-	var validformat=/^\d{2}\-\d{2}\-\d{4}$/ //Basic check for format validity
-	var returnval=false
-	var today = new Date();
-    var maxDate = new Date(today.getFullYear(), today.getMonth(), today.getDate()+parseInt(maximumDate));
-    if (!validformat.test($("#datepicker").val())) 
-	{
-		$("#expiry_msg").show();
-		return false;
-	}
-	var monthfield=$("#datepicker").val().split("-")[1]
-	var dayfield=$("#datepicker").val().split("-")[0]
-	var yearfield=$("#datepicker").val().split("-")[2]
-	var dayobj = new Date(yearfield, monthfield-1, dayfield)
-	if ((dayobj.getMonth()+1!=monthfield)||(dayobj.getDate()!=dayfield)||(dayobj.getFullYear()!=yearfield))
-	{
-		$("#expiry_msg").show();
-		return false;
-	}
-	if(dayobj < today || dayobj > maxDate)
-	{
-		$("#expiry_msg").show();
-		return false;	
-	}
-	if($("#datepicker").datepicker("getDate") == null)
-	{
-		$("#expiry_msg").show();
-		return false;
-	}
-	$("#expiry_msg").hide();
-	return true;
-}
-
-// Validate FILETO
-function validate_fileto()
-{
-	// remove white spaces 
-	$("#maxemails_msg").hide();
-	$('#fileto_msg').hide();
-	
-	var email = $("#fileto").val();
-	email = email.split(" ").join("");
-	$("#fileto").val(email);
-	email = email.split(/,|;/);
-	if(email.length>maxEmailRecipients)
-	{
-	$("#maxemails_msg").show();
-		return false;
-	}
-	for (var i = 0; i < email.length; i++) {
-		if (!echeck(email[i], 1, 0)) {
-		$('#fileto_msg').show();
-		return false;
-		}
-	}
-	return true;	
-}
 		
-		function deletevoucher()
-		{
+function deletevoucher()
+	{
 		window.location.href="index.php?s=vouchers&a=del&id=" + selectedVoucher;
-		}
-		function confirmdelete(vid)
-		{
-			selectedVoucher = vid;
-			$("#dialog-delete").dialog("open");
-		}
-
-	
-	function echeck(str) {
-
-		var at="@"
-		var dot="."
-		var lat=str.indexOf(at)
-		var lstr=str.length
-		var ldot=str.indexOf(dot)
-		if (str.indexOf(at)==-1){
-		//   alert("Invalid E-mail")
-		   return false
-		}
-
-		if (str.indexOf(at)==-1 || str.indexOf(at)==0 || str.indexOf(at)==lstr){
-		//   alert("Invalid E-mail")
-		   return false
-		}
-
-		if (str.indexOf(dot)==-1 || str.indexOf(dot)==0 || str.indexOf(dot)==lstr){
-		//    alert("Invalid E-mail")
-		    return false
-		}
-
-		 if (str.indexOf(at,(lat+1))!=-1){
-		 //   alert("Invalid E-mail")
-		    return false
-		 }
-
-		 if (str.substring(lat-1,lat)==dot || str.substring(lat+1,lat+2)==dot){
-		 //   alert("Invalid E-mail")
-		    return false
-		 }
-
-		 if (str.indexOf(dot,(lat+2))==-1){
-		 //   alert("Invalid E-mail")
-		    return false
-		 }
-		
-		 if (str.indexOf(" ")!=-1){
-		 //   alert("Invalid E-mail")
-		    return false
-		 }
-
- 		 return true					
 	}
+
+function confirmdelete(vid)
+	{
+		selectedVoucher = vid;
+		$("#dialog-delete").dialog("open");
+	}
+
 	</script>
 <?php 
 
