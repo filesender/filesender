@@ -131,6 +131,10 @@
 				BrowseBtn.visible = true;
 				uploadBtn.visible = false;
 				}
+				if(msg == "validatebeforeupload")
+				{
+				 validatebeforeupload();
+				}
 			}
 			
 			// sends request to keep alive to log - if logging is off then there is no message recorded 
