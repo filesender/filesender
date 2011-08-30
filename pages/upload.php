@@ -94,6 +94,7 @@
 	var banextensions = '<?php echo $config['ban_extension']?>';
 	var previousBytesLoaded = 0;
 	var intervalTimer = 0;
+	var html5 = true;
 	var vid='<?php if(isset($_REQUEST["vid"])){echo $_REQUEST["vid"];}; ?>';
  	//var fileupload[uploadid].status = "draft";
  	// start document ready 
@@ -109,17 +110,13 @@
 		$("#aup_msg").hide();
 		$("#file_msg").hide();
 		$("#uploadbutton").hide();
-		
-		// hide aup if not required
-		if(aup == '0') // check if AUP is required
-		{
-			$("#aup").hide();
-		}
-		
+		$("#fileInfoView").hide();
+			
 		$("#dialog-cancel").dialog({ autoOpen: false, height: 140, width: 350, modal: true,
 		buttons: {
 				<?php echo lang("_OK") ?>: function() {
-				window.location = window.location;
+				location.reload(true);
+
 				},
 				<?php echo lang("_CANCEL") ?>: function() { 
 				$( this ).dialog( "close" );
@@ -161,8 +158,10 @@
 		//Check if HTML5 is enable and use HTML uploader
 		if(window.File && window.FileReader && window.FileList && window.Blob && window.FormData){
 			// use HTML5 upload functions
+			html5 = true;
 			$("#uploadhtml5").show();
 			} else {
+			html5 = false;	
 			// use standard upload functions
 			$("#uploadstandard").show();
 		}
@@ -347,10 +346,11 @@ if (validatefilename(name))
 	$("#fileName").val(name);
 	$("#fileName").html("Name: " + name);
 	$("#fileSize").html("Size: " + readablizebytes(size));
-	getFlexApp("filesenderup").returnMsg("upload")
+	$("#uploadbutton").show(); 
+	
 } else {
 	$("#fileInfoView").hide();
-	getFlexApp("filesenderup").returnMsg("hideupload")
+	$("#uploadbutton").hide(); 
 }
 }
 
@@ -404,10 +404,15 @@ function validatefilename(name)
 function validate() 
 {
 	// upload if validated
+	if(html5) {
 	if(validateForm())
 	{
 	startupload();
 	}
+	} else {
+	getFlexApp("filesenderup").returnMsg("validatebeforeupload");
+	}
+	
 }
 
 function errorDialog(msg)
@@ -470,19 +475,6 @@ function keepMeAlive()
           </td>
         <td width="300" colspan="2" valign="top">&nbsp;</td>
       </tr>
-      <?php if ($config["AuP"]) {?>
-      <tr>
-        <td class="formfieldheading"></td>
-        <td><input name="aup" type="checkbox" id="aup" onchange="validate_aup()" <?php echo ($config["AuP_default"] ) ? "checked" : ""; ?> <?php echo (isset($_SESSION["aup"]) ) ? "checked" : ""; ?> value="true"/>
-         </td>
-        <td>
-          <div id="aup_label" name="aup_label" onclick="toggleTOG()" style="cursor:pointer;"><?php echo lang("_ACCEPTTOC"); ?> [<font color="#666666"><?php echo lang("_SHOWHIDE"); ?></font>]</div>
-          <div id="aup_msg" class="validation_msg" style="display: none"><?php echo lang("_AGREETOC"); ?></div>
-          <div id="tog" name="tog" style="display:none"> <?php echo lang("_AUPTERMS"); ?> </div>
-        </td>
-        <td width="300" colspan="2" valign="top">&nbsp;</td>
-      </tr>
-      <?php } ?>
       <tr>
         <td class="formfieldheading mandatory"><div id="selectfile" name="selectfile"><?php echo lang("_SELECT_FILE"); ?>:</div></td>
         <td colspan="2"><div id="uploadstandard"> 
@@ -564,21 +556,38 @@ if ( hasProductInstall && !hasRequestedVersion ) {
           </div>
           <div id="uploadhtml5">
             <input type="file" name="fileToUpload" id="fileToUpload" onChange="fileSelected();"/>
-            <input type="button" onClick="validate()" value="<?php echo lang("_SEND"); ?>" id="uploadbutton" name="uploadbutton"> 
           </div>
           <div id="file_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_FILE"); ?></div>
           </td>
         <td width="300" colspan="2" valign="top">&nbsp;</td>
       </tr>
-      <tr>
+      <tr id="fileInfoView">
         <td></td>
         <td colspan="2">
-          <div id="fileInfoView">
+          <div>
             <div id="fileName" name="fileName"></div>
             <div id="fileSize" name="fileSize"></div>
           </div>
         </td>
         <td width="300" colspan="2" valign="top">&nbsp;</td>
+      </tr>
+       <?php if ($config["AuP"]) {?>
+      <tr>
+        <td class="formfieldheading"></td>
+        <td><input name="aup" type="checkbox" id="aup" onchange="validate_aup()" <?php echo ($config["AuP_default"] ) ? "checked" : ""; ?> <?php echo (isset($_SESSION["aup"]) ) ? "checked" : ""; ?> value="true"/>
+         </td>
+        <td>
+          <div id="aup_label" name="aup_label" onclick="toggleTOG()" style="cursor:pointer;"><?php echo lang("_ACCEPTTOC"); ?> [<font color="#666666"><?php echo lang("_SHOWHIDE"); ?></font>]</div>
+          <div id="aup_msg" class="validation_msg" style="display: none"><?php echo lang("_AGREETOC"); ?></div>
+          <div id="tog" name="tog" style="display:none"> <?php echo lang("_AUPTERMS"); ?> </div>
+        </td>
+        <td width="300" colspan="2" valign="top">&nbsp;</td>
+      </tr>
+      <?php } ?>
+      <tr>
+      <td></td>
+      <td colspan="2"><div id="uploadbutton" name="uploadbutton"><a href="#" onClick="validate()"><?php echo lang("_SEND"); ?></a></div></td>
+      <td></td>
       </tr>
          </table>
 <input type="hidden" id="filevoucheruid" name="filevoucheruid" value="<?php echo $voucherUID; ?>"/>
