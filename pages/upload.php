@@ -326,12 +326,18 @@ function validate_file()
 function fileInfo(name,size)
 {
 fileMsg("");
+if(size < 1)
+{
+	getFlexApp("filesenderup").returnMsg("hideupload");
+	$("#fileInfoView").hide();
+	fileMsg("<?php echo lang("_INVALID_FILESIZE_ZERO") ?>");	
+	return false;
+}
 if(size > maxFLASHuploadsize)
 {
-fileMsg("<?php echo lang("_INVALID_TOO_LARGE_1") ?> " + readablizebytes(maxFLASHuploadsize) + ". <?php echo lang("_INVALID_SIZE_USEHTML5") ?> ");	
-// remove displayed file data
-$("#fileInfoView").hide();
-return;
+	fileMsg("<?php echo lang("_INVALID_TOO_LARGE_1") ?> " + readablizebytes(maxFLASHuploadsize) + ". <?php echo lang("_INVALID_SIZE_USEHTML5") ?> ");	
+	$("#fileInfoView").hide();
+	return false;
 } 
 if (validatefilename(name)) 
 {
