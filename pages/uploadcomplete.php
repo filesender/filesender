@@ -36,7 +36,5 @@
  * 
  */
  ?>
- <div id="box">
 <div id="message"><?php echo lang("_UPLOAD_COMPLETE"); ?></div> 
-</div>
 </div>
