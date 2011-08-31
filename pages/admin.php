@@ -247,7 +247,7 @@ echo '<td><strong>'.lang("_EXPIRY").'</strong></td>';
         </tr>
         <?php 
 foreach($Available as $item) {
-echo "<tr><td class='HardBreak'>" .$item['fileto'] . "</td><td class='HardBreak'>" .$item['filefrom'] . "</td><td class='HardBreak'>" .$item['fileoriginalname']. "</td><td>" .formatBytes($item['filesize']). "</td><td class='HardBreak'>".htmlentities($item['filesubject']). "</td><td>" .date($config['datedisplayformat'],strtotime($item['filecreateddate'])) . "</td><td>" .date($config['datedisplayformat'],strtotime($item['fileexpirydate'])) . "</td></tr>"; //etc
+echo "<tr><td class='HardBreak'>" .$item['fileto'] . "</td><td class='HardBreak'>" .$item['filefrom'] . "</td><td class='HardBreak'>" .$item['fileoriginalname']. "</td><td>" .formatBytes($item['filesize']). "</td><td class='HardBreak'>".utf8tohtml($item['filesubject'],TRUE). "</td><td>" .date($config['datedisplayformat'],strtotime($item['filecreateddate'])) . "</td><td>" .date($config['datedisplayformat'],strtotime($item['fileexpirydate'])) . "</td></tr>"; //etc
 }
 
 ?>
@@ -282,7 +282,7 @@ echo '<td><strong>'.lang("_EXPIRY").'</strong></td>';
 ?>
             <?php 
 foreach($Voucher as $item) {
-echo "<tr><td class='HardBreak'>" .$item['fileto'] . "</td><td class='HardBreak'>" .$item['filefrom'] . "</td><td class='HardBreak'>".htmlentities($item['filesubject']). "</td><td>" .date($config['datedisplayformat'],strtotime($item['filecreateddate'])) . "</td><td>" .date($config['datedisplayformat'],strtotime($item['fileexpirydate'])) . "</td></tr>"; //etc
+echo "<tr><td class='HardBreak'>" .$item['fileto'] . "</td><td class='HardBreak'>" .$item['filefrom'] . "</td><td class='HardBreak'>".utf8tohtml($item['filesubject'],TRUE). "</td><td>" .date($config['datedisplayformat'],strtotime($item['filecreateddate'])) . "</td><td>" .date($config['datedisplayformat'],strtotime($item['fileexpirydate'])) . "</td></tr>"; //etc
 }
 
 ?>
