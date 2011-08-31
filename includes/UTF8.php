@@ -99,7 +99,7 @@ function utf8tohtml($utf8, $encodeTags) {
         $ascii = ord($char);
         if ($ascii < 128) {
             // one-byte character
-            $result .= ($encodeTags) ? htmlentities($char) : $char;
+            $result .= ($encodeTags) ? htmlentities($char, ENT_QUOTES) : $char;
         } else if ($ascii < 192) {
             // non-utf8 character or not a start byte
         } else if ($ascii < 224) {
