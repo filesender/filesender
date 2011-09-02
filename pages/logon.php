@@ -44,6 +44,6 @@
  <div id="box">
 <?php echo '<div id="pageheading">'.lang("_LOGON").'</div>'; ?> 
 <?php echo $config["site_splashtext"]; ?> 
-<p><div id="bigbtn" align="center"><a href="<?php echo $authsaml->logonURL();?>" id="logonbutton"><?php echo lang("_LOGON") ?></a></div></p>
+<p><div class="menu" align="center"><a href="<?php echo $authsaml->logonURL();?>"><?php echo lang("_LOGON") ?></a></div></p>
 </div>
 

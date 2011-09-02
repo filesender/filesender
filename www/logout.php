@@ -44,6 +44,16 @@ $authsaml = AuthSaml::getInstance();
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>FileSender:</title>
 <link rel="stylesheet" type="text/css" href="css/default.css" />
+<link rel="shortcut icon" href="favicon.ico"type="image/x-icon">
+<link type="text/css" href="css/smoothness/jquery-ui-1.8.2.custom.css" rel="Stylesheet" />
+<script type="text/javascript" src="js/common.js" ></script>
+<script type="text/javascript" src="js/jquery-1.5.2.min.js" ></script>
+<script type="text/javascript" src="js/jquery-ui-1.8.1.custom.min.js"></script>
+<script>
+$(function() {
+$( "a", ".menu" ).button();
+})
+</script>
 <style type="text/css">
 body { margin: 0px; overflow:hidden }
 .style5 {
@@ -68,7 +78,7 @@ body { margin: 0px; overflow:hidden }
   <div id="content">
     <div align="center">
 	<p><?php echo lang("_LOGOUT_COMPLETE") ?></p>
-	<p><div id="bigbtn" align="center"><a href="<?php echo $authsaml->logonURL();?>" id="logonbutton"><?php echo lang("_LOGON") ?></a></div></p>
+	<p><div class="menu" align="center"><a href="<?php echo $authsaml->logonURL();?>" ><?php echo lang("_LOGON") ?></a></div></p>
     </div>
     <hr />
   </div><!-- #content -->

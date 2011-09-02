@@ -91,6 +91,8 @@ $s = "logon";
 <script type="text/javascript">
 $(function() {
 	
+	$( "a", ".menu" ).button();
+	
 	$("#dialog-help").dialog({ autoOpen: false, height: 400,width: 660, modal: true,
 		buttons: {
 			<?php echo lang("_CLOSE") ?>: function() {
@@ -134,24 +136,28 @@ function openabout()
       </noscript>
     </div>
   </div>
-  <div id="top-menu">
-    <ul>
+  <div id="topmenu">
+  <div class="menu" id="menuleft">
       <?php 
-  // create menu
-  // disable all buttons if this is a voucher, even if the user is logged on
-  if (!$authvoucher->aVoucher()  &&  $s != "completev"){
-	if($authsaml->authIsAdmin() ) { echo '<li><a href="index.php?s=admin">'.lang("_ADMIN").'</a></li>'; }
-	if($authsaml->isAuth() ) { echo '<li><a href="index.php?s=upload">'.lang("_NEW_UPLOAD").'</a></li>'; }
-	if($authsaml->isAuth() ) { echo '<li><a href="index.php?s=vouchers">'.lang("_VOUCHERS").'</a></li>'; }
-	if($authsaml->isAuth() ) {echo '<li><a href="index.php?s=files">'.lang("_MY_FILES").'</a></li>'; }
+  	// create menu
+  	// disable all buttons if this is a voucher, even if the user is logged on
+ 	if (!$authvoucher->aVoucher()  &&  $s != "completev"){
+	if($authsaml->isAuth() ) { echo '<a href="index.php?s=upload">'.lang("_NEW_UPLOAD").'</a>'; }
+	if($authsaml->isAuth() ) { echo '<a href="index.php?s=vouchers">'.lang("_VOUCHERS").'</a>'; }
+	if($authsaml->isAuth() ) {echo '<a href="index.php?s=files">'.lang("_MY_FILES").'</a>'; }
+	if($authsaml->authIsAdmin() ) { echo '<a href="index.php?s=admin">'.lang("_ADMIN").'</a>'; }
   }
-	echo '<li><a href="#" onclick="openhelp()">'.lang("_HELP").'</a></li>';
-	echo '<li><a href="#" onclick="openabout()">'.lang("_ABOUT").'</a></li>';
-	if(!$authsaml->isAuth() && $s != "logon" ) { echo '<li><a href="'.$authsaml->logonURL().'">'.lang("_LOGON").'</a></li>';}
-   	if($authsaml->isAuth() && !$authvoucher->aVoucher() &&  $s != "completev" ) { echo '<li><a href="'.$authsaml->logoffURL().'">'.lang("_LOG_OFF").'</a></li>'; }
+  ?>
+   <div class="menu" id="menuright">
+  <?php
+	echo '<a href="#" onclick="openhelp()">'.lang("_HELP").'</a></li>';
+	echo '<a href="#" onclick="openabout()">'.lang("_ABOUT").'</a></li>';
+	if(!$authsaml->isAuth() && $s != "logon" ) { echo '<a href="'.$authsaml->logonURL().'">'.lang("_LOGON").'</a>';}
+   	if($authsaml->isAuth() && !$authvoucher->aVoucher() &&  $s != "completev" ) { echo '<a href="'.$authsaml->logoffURL().'">'.lang("_LOG_OFF").'</a>'; }
    // end menu
    ?>
-    </ul>
+   </div>
+  </div>
   </div>
   <div id="content">
   <div id="userinformation">

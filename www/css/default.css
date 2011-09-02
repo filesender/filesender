@@ -66,6 +66,31 @@ td {
 	background-color: #CCC;
 }
 
+#topmenu
+{
+	padding-left: 20px;	
+}
+.menu a
+{
+
+	margin-right: 10px;
+}
+
+#menuright 
+{
+	float: right;
+	padding-left: 20px;
+}
+
+input 
+{
+	width:100%;
+}
+textarea 
+{
+	width:100%;
+}
+
 #box {
 	padding: 20px;
 	border: 1px solid #cccccc;
@@ -92,7 +117,7 @@ td {
 }
 .formfieldheading {
 	font-size: 11px;
-	width: 200px;
+	width: 110px;
 }
 .formfield {
 	font-size: 10px;
@@ -100,12 +125,11 @@ td {
 }
 .formfiledmsg {
 	font-size: 9px;
-	width: 250px;
+	width: 220px;
 	font-weight: normal;
 }
 .forminstructions {
 	font-size: 10px;
-	width: 200px;
 	font-weight: normal;
 	vertical-align: middle;
 }
@@ -276,23 +300,30 @@ a:link, a:visited {
 }
 
 #uploadbutton  a {
-	padding: 5px 100px 5px 100px;
-	border: 1px solid #cccccc;
-	border-radius:5px;
-	-moz-border-radius: 5px;
-	background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#f2f2f2));
-	color: #555;
-	margin-top: 10px;
-	margin-right: auto;
-	margin-bottom: 10px;
-	margin-left: auto;
+	width:100%;
+	padding-top: 20px;
+	padding-bottom: 20px;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	font-size: 18px;
+	font-weight: bold;
+}
+
+#downloadbutton  a {
+	width:100%;
+	padding-top: 20px;
+	padding-bottom: 20px;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	font-size: 18px;
+	font-weight: bold;
+}
+
+#voucherbutton  a {
 	width:100%;
 	font-weight: bold;
 }
-#uploadbutton a:hover {
-	color: #000;
-	background-color: #c0c0c0;
-}
+
 
 #bigbtn  a {
 	padding: 5px 100px 5px 100px;
