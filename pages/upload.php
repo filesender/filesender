@@ -437,7 +437,7 @@ function keepMeAlive()
   <form id="form1" enctype="multipart/form-data" method="POST" action="fs_uploadit5.php">
     <table width="100%" border="0">
       <tr>
-        <td width="50" class="formfieldheading mandatory"><?php echo lang("_TO") ; ?>:</td>
+        <td width="130" class=" mandatory"><?php echo lang("_TO") ; ?>:</td>
         <td colspan="2" valign="middle"><input name="fileto" title="<?php echo lang("_EMAIL_SEPARATOR_MSG") ; ?>" type="text" id="fileto" onchange="validate_fileto()"/>
         <div id="fileto_msg" style="display: none" class="validation_msg"><?php echo lang("_INVALID_MISSING_EMAIL"); ?></div>
         <div id="maxemails_msg" style="display: none" class="validation_msg"><?php echo lang("_MAXEMAILS"); ?> <?php echo $config['max_email_recipients'] ?>.</div>
@@ -446,7 +446,7 @@ function keepMeAlive()
         <td valign="top"><span class="forminstructions"><?php echo lang("_STEP1"); ?></span></td>
        </tr>
       <tr>
-        <td class="formfieldheading mandatory"><?php echo lang("_FROM"); ?>:</td>
+        <td class=" mandatory"><?php echo lang("_FROM"); ?>:</td>
         <td colspan="2"><?php echo $senderemail ?>
           <input name="filefrom" type="hidden" id="filefrom" value="<?php echo $senderemail ?>" size="40" />
           </td>
@@ -454,20 +454,20 @@ function keepMeAlive()
         <td valign="top"><span class="forminstructions"><?php echo lang("_STEP2"); ?></span></td>
         </tr>
       <tr>
-        <td class="formfieldheading"><?php echo lang("_SUBJECT"); ?>: (<?php echo lang("_OPTIONAL"); ?>)</td>
+        <td class=""><?php echo lang("_SUBJECT"); ?>: (<?php echo lang("_OPTIONAL"); ?>)</td>
         <td colspan="2"><input name="filesubject" type="text" id="filesubject" />
         </td>
         <td valign="top"><img src="images/num_3.png" width="25" height="25" hspace="6" border="0" align="left" /></td>
         <td valign="top"><span class="forminstructions"><?php echo lang("_STEP3"); ?></span></td>
         </tr>
       <tr>
-        <td class="formfieldheading"><?php echo lang("_MESSAGE"); ?>: (<?php echo lang("_OPTIONAL"); ?>)</td>
+        <td class=""><?php echo lang("_MESSAGE"); ?>: (<?php echo lang("_OPTIONAL"); ?>)</td>
         <td colspan="2"><textarea name="filemessage" rows="4" id="filemessage"></textarea></td>
         <td valign="top"><img src="images/num_4.png" width="25" height="25" hspace="6" border="0" align="left" /></td>
         <td valign="top"><span class="forminstructions"><?php echo lang("_STEP4"); ?></span></td>
       </tr>
       <tr>
-        <td class="formfieldheading mandatory"><?php echo lang("_EXPIRY_DATE"); ?>:
+        <td class=" mandatory"><?php echo lang("_EXPIRY_DATE"); ?>:
           <input type="hidden" id="fileexpirydate" name="fileexpirydate" value="<?php echo date($config['datedisplayformat'],strtotime("+".$config['default_daysvalid']." day"));?>"/></td>
         <td colspan="2"><input id="datepicker" name="datepicker" title="dd-mm-yyyy" onchange="validate_expiry()">
           </input>
@@ -476,7 +476,7 @@ function keepMeAlive()
         <td colspan="2" rowspan="5" valign="top">&nbsp;</td>
       </tr>
       <tr>
-        <td class="formfieldheading mandatory"><div id="selectfile" name="selectfile"><?php echo lang("_SELECT_FILE"); ?>:</div></td>
+        <td class=" mandatory"><div id="selectfile" name="selectfile"><?php echo lang("_SELECT_FILE"); ?>:</div></td>
         <td colspan="2"><div id="uploadstandard"> 
             <script language="JavaScript" type="text/javascript">
 <!--
@@ -571,7 +571,7 @@ if ( hasProductInstall && !hasRequestedVersion ) {
       </tr>
        <?php if ($config["AuP"]) {?>
       <tr>
-        <td class="formfieldheading"></td>
+        <td class=""></td>
         <td><input name="aup" type="checkbox" id="aup" onchange="validate_aup()" <?php echo ($config["AuP_default"] ) ? "checked" : ""; ?> <?php echo (isset($_SESSION["aup"]) ) ? "checked" : ""; ?> value="true"/>
          </td>
         <td>
