@@ -1,8 +1,0 @@
-/* CSS Document */
-
-		  h1, h2, h3, h4 { margin-top: 0px; }
-		  div.row { margin-bottom: 10px; }
-		  *:focus{ outline:none; }
-		  .floatLeft { float: left; }
-		  .floatRight { float: right; }
-		  .clear { clear: both; }
