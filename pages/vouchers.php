@@ -127,7 +127,7 @@ $json_o=json_decode($filedata,true);
       <div id="box">
        <table width="100%" border="0">
       <tr>
-        <td class="formfieldheading mandatory" width="200"><?php echo lang("_SEND_VOUCHER_TO"); ?>:</td>
+        <td class="mandatory" width="130"><?php echo lang("_SEND_VOUCHER_TO"); ?>:</td>
         <td>
         <input id="fileto" name="fileto" title="<?php echo lang("_EMAIL_SEPARATOR_MSG"); ?>"  type="text" size="45" onchange="validate_fileto()"/><br />
  		<div id="fileto_msg" class="validation_msg"><?php echo lang("_INVALID_MISSING_EMAIL"); ?></div>
@@ -135,7 +135,7 @@ $json_o=json_decode($filedata,true);
  		</td>
       </tr>
       <tr>
-        <td class="formfieldheading mandatory"><?php echo lang("_EXPIRY_DATE"); ?>:</td>
+        <td class="mandatory"><?php echo lang("_EXPIRY_DATE"); ?>:</td>
         <td><input id="datepicker" onchange="validate_expiry()" title="dd-mm-yyyy"></input> <div id="expiry_msg" class="validation_msg"><?php echo lang("_INVALID_EXPIRY_DATE"); ?></div></td>
       </tr>
       <tr>

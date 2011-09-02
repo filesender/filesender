@@ -35,8 +35,8 @@ html {
 body {
 	background: #1c1c1c;
 	color: #333;
-	font: 83%/1.5 arial, tahoma, verdana, sans-serif;
 	padding:0;
+	font-family: Verdana, Geneva, sans-serif;
 }
 
 /* LISTS */
@@ -72,8 +72,8 @@ td {
 }
 .menu a
 {
-
 	margin-right: 10px;
+	font-size: 12px;
 }
 
 #menuright 
@@ -116,20 +116,16 @@ textarea
 	color: #d00;
 }
 .formfieldheading {
-	font-size: 11px;
 	width: 110px;
 }
 .formfield {
-	font-size: 10px;
 	width: 250px;
 }
 .formfiledmsg {
-	font-size: 9px;
 	width: 220px;
 	font-weight: normal;
 }
 .forminstructions {
-	font-size: 10px;
 	font-weight: normal;
 	vertical-align: middle;
 }
@@ -150,11 +146,9 @@ input {
 
 #aup_label{
 	font-weight: bold;
-	font-size: 12px;
 }
 
 #progressIndicator {
-	font-size: 10pt;
 }
 #progressBar {
 	height: 14px;
@@ -200,7 +194,6 @@ margin-top: 4px;
 	padding-left: 4px;
 }
 #progress_completed {
-	font-size:14px;
 	z-index:40;
 	line-height:30px;
 	padding-left:4px;
@@ -245,6 +238,7 @@ a:link, a:visited {
 	padding-bottom: 20px;
 	padding-left: 20px;
 	position: relative;
+	font-size: 11px;
 	
 }
 
@@ -263,6 +257,8 @@ a:link, a:visited {
 	width: 100%;
 	font-size: 16px;
 	font-weight: bold;
+	padding-bottom: 10px;
+	padding-top: 4px;
 }
 #top-menu ul {
 	list-style: none;
@@ -361,9 +357,8 @@ word-wrap: break-word; /* Internet Explorer 5.5+ */
 {
 	text-align: right;
 	float: right;
-
-	font-size: 10px;
 	color: #666;
+	font-size: 9px;
 }
 #userinformation 
 {
