@@ -80,13 +80,13 @@ $s = "logon";
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>FileSender:</title>
-<link rel="stylesheet" type="text/css" href="css/default.css" />
 <link rel="icon" href="favicon.ico"	type="image/x-icon">
 <link rel="shortcut icon" href="favicon.ico"type="image/x-icon">
 <link type="text/css" href="css/smoothness/jquery-ui-1.8.2.custom.css" rel="Stylesheet" />
 <script type="text/javascript" src="js/common.js" ></script>
 <script type="text/javascript" src="js/jquery-1.5.2.min.js" ></script>
 <script type="text/javascript" src="js/jquery-ui-1.8.1.custom.min.js"></script>
+<link rel="stylesheet" type="text/css" href="css/default.css" />
 <script type="text/javascript">
 $(function() {
 	

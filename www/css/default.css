@@ -44,9 +44,9 @@ ul {
 	/*margin: .3em 0 1.5em 2em;*/
 }
 
-ul.related {
+/*ul.related {
 	margin-top: -1em;
-}
+}*/
 
 li {
 	/*margin-left: 2em;*/
@@ -82,11 +82,7 @@ td {
 	padding-left: 20px;
 }
 
-input 
-{
-	width:100%;
-}
-textarea 
+input,textarea  
 {
 	width:100%;
 }
@@ -136,6 +132,30 @@ input {
 	border-radius:5px;
 	-moz-border-radius: 5px;*/
 }
+/* overide button style */
+.ui-button
+{
+	/*background-color: #333;
+	border-top-style: solid;
+	border-bottom-style: solid;
+	border-top-color: #000;
+	border-right-color: #000;
+	border-bottom-color: #999;
+	border-left-color: #000;
+	border-bottom-left-radius: 0px;
+	border-bottom-right-radius: 0px;
+	border-top-left-radius: 0px;
+	border-top-right-radius: 0px;
+	color: #FFF;*/
+}
+.ui-button:hover
+{
+	/*background-color: #900;*/
+}
+.ui-state-default
+{
+	/*background-image: none;	*/
+}
 
 #fileToUpload {
 	border:1px solid #ccc;
@@ -145,13 +165,13 @@ input {
 }
 #aup 
 {
-	margin-left: -1px;
+	width: 20px;	/*margin-left: -1px;*/
 }
 #aup_label{
 	font-weight: bold;
 }
 
-#progressIndicator {
+/*#progressIndicator {
 }
 #progressBar {
 	height: 14px;
@@ -161,13 +181,13 @@ input {
 	-moz-border-radius: 10px;
 	background-image: -moz-linear-gradient(top, #66cc00, #4b9500);
 	background-image: -webkit-gradient(linear, left top, left bottom, from(#66cc00), to(#4b9500));
-}
-#upload_frame {
+}*/
+/*#upload_frame {
 	border:0px;
 	height:40px;
 	width:400px;
 	display:none;
-}
+}*/
 
 #progress_image {
 margin-top: 4px;
@@ -204,7 +224,7 @@ margin-top: 4px;
 	width: 100%;
 }
 /* LINKS */
-a, a:link, a:link, a:link, a:hover {
+/*a, a:link, a:link, a:link, a:hover {
 	text-decoration: none;
 	color: #777;
 	border-bottom: 1px dotted #ccc;
@@ -215,7 +235,7 @@ a:link, a:visited {
 	color: #777;
 	border-bottom: 1px dotted #ccc;
 	font-weight: normal;
-}
+}*/
 #wrap {
 	background: #fff;
 	text-align: left;
@@ -255,6 +275,8 @@ a:link, a:visited {
 	background-color: #AAC1A4;
 	text-align: center;
 	width: 100%;
+	font-size: 12px;
+	padding: 4px;
 }
 #pageheading {
 	width: 100%;
@@ -263,7 +285,7 @@ a:link, a:visited {
 	padding-bottom: 10px;
 	padding-top: 4px;
 }
-#top-menu ul {
+/*#top-menu ul {
 	list-style: none;
 	display: inline;
 	margin-top: 20px;
@@ -296,7 +318,7 @@ a:link, a:visited {
 #top-menu li a:hover {
 	color: #000;
 	background-color: #c0c0c0;
-}
+}*/
 
 #uploadbutton  a {
 	width:100%;
@@ -324,7 +346,7 @@ a:link, a:visited {
 }
 
 
-#bigbtn  a {
+/*#bigbtn  a {
 	padding: 5px 100px 5px 100px;
 	border: 1px solid #cccccc;
 	border-radius:5px;
@@ -341,7 +363,7 @@ a:link, a:visited {
 #bigbtn a:hover {
 	color: #000;
 	background-color: #c0c0c0;
-}
+}*/
 .mandatory{
 	color: #000;
 	font-weight: bold;
