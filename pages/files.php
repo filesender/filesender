@@ -170,8 +170,8 @@ $json_o=json_decode($filedata,true);
   <div id="tablediv">
     <table id="myfiles" width="750" border="0" cellspacing="1" style="table-layout:fixed;">
       <tr class="headerrow">
-        <td width="22">&nbsp;</td>
-        <td width="22">&nbsp;</td>
+        <td width="18">&nbsp;</td>
+        <td width="18">&nbsp;</td>
         <td><strong><?php echo lang("_TO"); ?></strong></td>
         <td><strong><?php echo lang("_FROM"); ?></strong></td>
         <td><strong><?php echo lang("_FILE_NAME"); ?></strong></td>

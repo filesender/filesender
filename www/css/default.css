@@ -143,7 +143,10 @@ input {
 	border-radius:5px;
 	-moz-border-radius: 5px;
 }
-
+#aup 
+{
+	margin-left: -1px;
+}
 #aup_label{
 	font-weight: bold;
 }
@@ -371,5 +374,7 @@ word-wrap: break-word; /* Internet Explorer 5.5+ */
 }
 #footer
 {
-	text-align: center;	
+	text-align: center;
+	font-size: 10px;
+	color: #666;
 }

@@ -335,7 +335,6 @@
 	</mx:Script>
 	<mx:NumberFormatter id="numberFormatter" precision="2" useThousandsSeparator="true" useNegativeSign="true"/>
 	<mx:HBox id="uploadMainPanel" verticalAlign="middle" horizontalAlign = "left" top="0" left="0">
-		<mx:Spacer/>
 		<mx:Button label="{lang.Browse}" click="btnclick()" id="BrowseBtn" height="28"/>
 		<mx:Button label="{lang.Upload}" click="btnUploadclick()" id="uploadBtn" height="28" width="150"/>
 	</mx:HBox>
