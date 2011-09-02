@@ -140,7 +140,7 @@ $json_o=json_decode($filedata,true);
       </tr>
       <tr>
         <td><input type="hidden" id="altdate" name="altdate" value="<?php echo date($config['datedisplayformat'],strtotime("+".$config['default_daysvalid']." day"));?>" /></td>
-        <td><div id="bigbtn"><a href="#" onclick="validateForm()"><?php echo lang("_SEND_VOUCHER"); ?></a></div></td>
+        <td><div class="menu" id="voucherbutton"><a href="#" onclick="validateForm()"><?php echo lang("_SEND_VOUCHER"); ?></a></div></td>
       </tr>
     </table>
      </div>

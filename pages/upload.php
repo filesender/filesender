@@ -438,12 +438,12 @@ function keepMeAlive()
     <table width="100%" border="0">
       <tr>
         <td width="50" class="formfieldheading mandatory"><?php echo lang("_TO") ; ?>:</td>
-        <td width="600" colspan="2" valign="middle"><input name="fileto" title="<?php echo lang("_EMAIL_SEPARATOR_MSG") ; ?>" type="text" id="fileto" size="60" onchange="validate_fileto()" />
+        <td colspan="2" valign="middle"><input name="fileto" title="<?php echo lang("_EMAIL_SEPARATOR_MSG") ; ?>" type="text" id="fileto" onchange="validate_fileto()"/>
         <div id="fileto_msg" style="display: none" class="validation_msg"><?php echo lang("_INVALID_MISSING_EMAIL"); ?></div>
         <div id="maxemails_msg" style="display: none" class="validation_msg"><?php echo lang("_MAXEMAILS"); ?> <?php echo $config['max_email_recipients'] ?>.</div>
         </td>
-        <td valign="top"><img src="images/num_1.png" alt="" width="25" height="25" hspace="6" border="0" align="left" /></td>
-        <td width="250" valign="top"><span class="forminstructions"><?php echo lang("_STEP1"); ?></span></td>
+        <td width="25" valign="top"><img src="images/num_1.png" alt="" width="25" height="25" hspace="6" border="0" align="left" /></td>
+        <td valign="top"><span class="forminstructions"><?php echo lang("_STEP1"); ?></span></td>
        </tr>
       <tr>
         <td class="formfieldheading mandatory"><?php echo lang("_FROM"); ?>:</td>
@@ -455,14 +455,14 @@ function keepMeAlive()
         </tr>
       <tr>
         <td class="formfieldheading"><?php echo lang("_SUBJECT"); ?>: (<?php echo lang("_OPTIONAL"); ?>)</td>
-        <td colspan="2"><input name="filesubject" type="text" id="filesubject" size="60" />
+        <td colspan="2"><input name="filesubject" type="text" id="filesubject" />
         </td>
         <td valign="top"><img src="images/num_3.png" width="25" height="25" hspace="6" border="0" align="left" /></td>
         <td valign="top"><span class="forminstructions"><?php echo lang("_STEP3"); ?></span></td>
         </tr>
       <tr>
         <td class="formfieldheading"><?php echo lang("_MESSAGE"); ?>: (<?php echo lang("_OPTIONAL"); ?>)</td>
-        <td colspan="2"><textarea name="filemessage" cols="45" rows="4" id="filemessage"></textarea></td>
+        <td colspan="2"><textarea name="filemessage" rows="4" id="filemessage"></textarea></td>
         <td valign="top"><img src="images/num_4.png" width="25" height="25" hspace="6" border="0" align="left" /></td>
         <td valign="top"><span class="forminstructions"><?php echo lang("_STEP4"); ?></span></td>
       </tr>
@@ -473,7 +473,7 @@ function keepMeAlive()
           </input>
           <div id="expiry_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_EXPIRY_DATE"); ?></div>
           </td>
-        <td width="300" colspan="2" valign="top">&nbsp;</td>
+        <td colspan="2" rowspan="5" valign="top">&nbsp;</td>
       </tr>
       <tr>
         <td class="formfieldheading mandatory"><div id="selectfile" name="selectfile"><?php echo lang("_SELECT_FILE"); ?>:</div></td>
@@ -559,7 +559,6 @@ if ( hasProductInstall && !hasRequestedVersion ) {
           </div>
           <div id="file_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_FILE"); ?></div>
           </td>
-        <td width="300" colspan="2" valign="top">&nbsp;</td>
       </tr>
       <tr id="fileInfoView">
         <td></td>
@@ -569,7 +568,6 @@ if ( hasProductInstall && !hasRequestedVersion ) {
             <div id="fileSize" name="fileSize"></div>
           </div>
         </td>
-        <td width="300" colspan="2" valign="top">&nbsp;</td>
       </tr>
        <?php if ($config["AuP"]) {?>
       <tr>
@@ -581,13 +579,11 @@ if ( hasProductInstall && !hasRequestedVersion ) {
           <div id="aup_msg" class="validation_msg" style="display: none"><?php echo lang("_AGREETOC"); ?></div>
           <div id="tog" name="tog" style="display:none"> <?php echo lang("_AUPTERMS"); ?> </div>
         </td>
-        <td width="300" colspan="2" valign="top">&nbsp;</td>
       </tr>
       <?php } ?>
       <tr>
       <td></td>
-      <td colspan="2"><div id="uploadbutton" name="uploadbutton"><a href="#" onClick="validate()"><?php echo lang("_SEND"); ?></a></div></td>
-      <td></td>
+      <td colspan="2"><div class="menu" id="uploadbutton" name="uploadbutton"><a href="#" onClick="validate()"><?php echo lang("_SEND"); ?></a></div></td>
       </tr>
          </table>
 <input type="hidden" id="filevoucheruid" name="filevoucheruid" value="<?php echo $voucherUID; ?>"/>
