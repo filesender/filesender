@@ -81,7 +81,6 @@
 <script type="text/javascript" src="js/upload.js"></script>
 <script type="text/javascript">
 	
-	// 
 	// all default settings
 	var uploadid = '<?php echo $id ?>';
 	var maximumDate= '<?php echo $config['default_daysvalid']?>';
@@ -96,22 +95,16 @@
 	var intervalTimer = 0;
 	var html5 = true;
 	var vid='<?php if(isset($_REQUEST["vid"])){echo $_REQUEST["vid"];}; ?>';
- 	//var fileupload[uploadid].status = "draft";
+
  	// start document ready 
-	$(document).ready(function() { 
+	$(function() { 
+	
+		// set date picker
+		$("#datepicker" ).datepicker({ minDate: 1, maxDate: "+"+maximumDate+"D",altField: "#fileexpirydate", altFormat: "d-m-yy" });
+		$("#datepicker" ).datepicker( "option", "dateFormat", "dd-mm-yy" );
+		$("#datepicker").datepicker("setDate", new Date()+maximumDate);
 		
-		// hide all upload objects
-		$("#uploadstandard").hide();
-		$("#uploadhtml5").hide();
-		$("#uploadstandardspinner").hide();
-		$("#progress_view").hide();
-		$("#fileto_msg").hide();
-		$("#expiry_msg").hide();
-		$("#aup_msg").hide();
-		$("#file_msg").hide();
-		$("#uploadbutton").hide();
-		$("#fileInfoView").hide();
-			
+		// set dialog cancel upload
 		$("#dialog-cancel").dialog({ autoOpen: false, height: 140, width: 350, modal: true,
 		buttons: {
 				<?php echo lang("_OK") ?>: function() {
@@ -123,6 +116,7 @@
 				}
 		}
 		});
+		
 		// default error message dialogue
 		$("#dialog-default").dialog({ autoOpen: false, height: 140, modal: true,title: "Error",		
 		buttons: {
@@ -132,6 +126,7 @@
 				}
 			}
 		})
+		
 		// default error message dialogue
 		$("#dialog-uploadprogress").dialog({ 
 		
@@ -148,13 +143,7 @@
 				}	
 			}
 		})
-		// set date picker
-		$(function() {
-			$("#datepicker" ).datepicker({ minDate: 1, maxDate: "+"+maximumDate+"D",altField: "#fileexpirydate", altFormat: "d-m-yy" });
-			$("#datepicker" ).datepicker( "option", "dateFormat", "dd-mm-yy" );
-			$("#datepicker").datepicker("setDate", new Date()+maximumDate);
-		});	
-
+		
 		//Check if HTML5 is enable and use HTML uploader
 		if(window.File && window.FileReader && window.FileList && window.Blob && window.FormData){
 			// use HTML5 upload functions
@@ -195,7 +184,7 @@
 		else
 			bytesTransfered = (Math.round(bytesloaded * 100)/100).toString() + 'Bytes';
 
-			$("#progress_view").fadeIn(100);	//fade in progress bar	
+			//$("#progress_view").fadeIn(100);	//fade in progress bar	
 			$("#progress_bar").width(percentComplete/100 *$('#progress_container').width());	//set width of progress bar based on the $status value (set at the top of this page)
 			$("#progress_bar").html(percentComplete +"% ");
 			$("#progress_completed").html(parseInt(percentComplete) + "%(" + bytesTransfered + ")" );	//display the % completed within the progress bar
@@ -209,7 +198,6 @@
 	// hide upload button
 	$("#dialog-uploadprogress").dialog("option", "title", "<?php echo lang("_UPLOAD_PROGRESS") ?>: " +  fname + " (" +readablizebytes(fsize) + ")");
 	$("#dialog-uploadprogress").dialog("open");	
-	//lockformfields();
 	getFlexApp("filesenderup").returnMsg("true")
 	} else {
 	getFlexApp("filesenderup").returnMsg("false")
@@ -231,10 +219,10 @@
 	
 	if(!validate_fileto() ){validate = false;};		// validate emails
 	if(!validate_file() ){validate = false;};		// check if file selected
-	if(aup == '1') // check if AUP is required
-	{
-	if(!validate_aup() ){validate = false;};		// check AUP is selected
-	}
+	//if(aup == '1') // check if AUP is required
+	//{
+	if(aup == '1' && !validate_aup() ){validate = false;};		// check AUP is selected
+	//}
 	if(!validate_expiry() ){validate = false;};		// check date
 	
 	return validate;
@@ -477,7 +465,7 @@ function keepMeAlive()
       </tr>
       <tr>
         <td class=" mandatory"><div id="selectfile" name="selectfile"><?php echo lang("_SELECT_FILE"); ?>:</div></td>
-        <td colspan="2"><div id="uploadstandard"> 
+        <td colspan="2"><div id="uploadstandard" style="display:none"> 
             <script language="JavaScript" type="text/javascript">
 <!--
 // Version check for the Flash Player that has the ability to start Player Product Install (6.0r65)
@@ -551,16 +539,16 @@ if ( hasProductInstall && !hasRequestedVersion ) {
               </embed>
             </object>
             </noscript>
-            <div id="uploadstandardspinner" style="padding-top:10px"><img src="images/ajax-loader-sm.gif" border=0 align="left" style="padding-right:6px"/><?php echo lang("_UPLOADING_WAIT"); ?></div>
+            <div id="uploadstandardspinner" style="padding-top:10px;display:none"><img src="images/ajax-loader-sm.gif" border=0 align="left" style="padding-right:6px"/><?php echo lang("_UPLOADING_WAIT"); ?></div>
             <BR />
           </div>
-          <div id="uploadhtml5">
+          <div id="uploadhtml5" style="display:none">
             <input type="file" name="fileToUpload" id="fileToUpload" onChange="fileSelected();"/>
           </div>
           <div id="file_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_FILE"); ?></div>
           </td>
       </tr>
-      <tr id="fileInfoView">
+      <tr id="fileInfoView" style="display:none">
         <td></td>
         <td colspan="2">
           <div>
@@ -583,7 +571,7 @@ if ( hasProductInstall && !hasRequestedVersion ) {
       <?php } ?>
       <tr>
       <td></td>
-      <td colspan="2"><div class="menu" id="uploadbutton" name="uploadbutton"><a href="#" onClick="validate()"><?php echo lang("_SEND"); ?></a></div></td>
+      <td colspan="2"><div class="menu" id="uploadbutton" name="uploadbutton" style="display:none"><a href="#" onClick="validate()"><?php echo lang("_SEND"); ?></a></div></td>
       </tr>
          </table>
 <input type="hidden" id="filevoucheruid" name="filevoucheruid" value="<?php echo $voucherUID; ?>"/>
