@@ -79,11 +79,11 @@ $fileuid = getGUID();
 $tempFilename = ""; 
 $s = "complete";
 
-	//  add SAML eduPersonTargetedID
+	//  add SAML saml_uid_attribute
 	if( $authsaml->isAuth()) {
 		$authAttributes = $authsaml->sAuth();
-		$tempFilename = $authAttributes["eduPersonTargetedID"];
-		$filedata["fileauthuseruid"] = $authAttributes["eduPersonTargetedID"];
+		$tempFilename = $authAttributes["saml_uid_attribute"];
+		$filedata["fileauthuseruid"] = $authAttributes["saml_uid_attribute"];
 		$filedata["fileauthuseremail"] = $authAttributes["email"];
 		logEntry("DEBUG fs_uploadit5: authsaml filedata " . print_r($filedata, true));
 		logEntry("DEBUG fs_uploadit5: tempfilename 1a : ".$tempFilename);

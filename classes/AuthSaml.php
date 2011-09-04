@@ -61,10 +61,12 @@ class AuthSaml {
 
             // compare config admin to userUID
             if(isset($attributes[$config['saml_uid_attribute']][0])) {
-                $attributes["eduPersonTargetedID"] = $attributes[$config['saml_uid_attribute']][0];
-            }
+                $attributes["'saml_uid_attribute"] = $attributes[$config['saml_uid_attribute']][0];
+            } else {
+				$attributes["'saml_uid_attribute"] = $attributes[$config['saml_uid_attribute']];
+			}
 
-            if(stristr($config['admin'], $attributes["eduPersonTargetedID"]) === FALSE) {
+            if(stristr($config['admin'], $attributes["'saml_uid_attribute"]) === FALSE) {
                 return FALSE;
             } else {
                 return TRUE;
@@ -108,8 +110,10 @@ class AuthSaml {
         }
 
         if(isset($attributes[$config['saml_uid_attribute']][0])) {
-            $attributes["eduPersonTargetedID"] = $attributes[$config['saml_uid_attribute']][0];
-        }
+            $attributes["saml_uid_attribute"] = $attributes[$config['saml_uid_attribute']][0];
+        } else {
+			$attributes["saml_uid_attribute"] = $attributes[$config['saml_uid_attribute']];
+		}
 
         $inglue = '='; 
         $outglue = '&';

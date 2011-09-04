@@ -60,7 +60,7 @@ class Log {
         if( $authsaml->isAuth()) {
             $authAttributes = $authsaml->sAuth();
         } else {
-            $authAttributes["eduPersonTargetedID"] = "";
+            $authAttributes["saml_uid_attribute"] = "";
         }
         $dbCheck = DB_Input_Checks::getInstance();
 
@@ -78,7 +78,7 @@ class Log {
             $logfilesize	= $dataitem['filesize'];
             $logfilename	= $dataitem['fileoriginalname'];
             $logmessage	= $message;
-            $logauthuseruid	= $authAttributes["eduPersonTargetedID"];
+            $logauthuseruid	= $authAttributes["saml_uid_attribute"];
         } else {
             $logfileuid	= "";
             $logvoucheruid	= "";
@@ -89,7 +89,7 @@ class Log {
             $logfilesize	= "";
             $logfilename	= "";
             $logmessage	= $message;
-            $logauthuseruid	= $authAttributes["eduPersonTargetedID"];
+            $logauthuseruid	= $authAttributes["saml_uid_attribute"];
         }
 
         $sqlQuery	= "

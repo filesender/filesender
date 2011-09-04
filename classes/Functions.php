@@ -270,7 +270,7 @@ class Functions {
     }
 
     //---------------------------------------
-    // Get Voucher for a specified user based on eduPersonTargetedID
+    // Get Voucher for a specified user based on saml_uid_attribute
     public function getVouchers() {
 
        global $config;
@@ -281,11 +281,11 @@ class Functions {
         if( $this->authsaml->isAuth()) {
             $authAttributes = $this->authsaml->sAuth();
         } else {
-            $authAttributes["eduPersonTargetedID"] = "";
+            $authAttributes["saml_uid_attribute"] = "";
         }
 
         try {
-        	$result = $this->db->query("SELECT ".$this->returnFields." FROM files WHERE (fileauthuseruid = '%s') AND filestatus = 'Voucher'",$authAttributes["eduPersonTargetedID"]);
+        	$result = $this->db->query("SELECT ".$this->returnFields." FROM files WHERE (fileauthuseruid = '%s') AND filestatus = 'Voucher'",$authAttributes["saml_uid_attribute"]);
         } catch (DBALException $e) {
         	$this->saveLog->saveLog("","Error",$e->getMessage()); return FALSE;
         }
@@ -301,7 +301,7 @@ class Functions {
     }
 
     //---------------------------------------
-    // Get Files for a specified user based on eduPersonTargetedID
+    // Get Files for a specified user based on saml_uid_attribute
     public function getUserFiles() {
 
         global $config;
@@ -311,10 +311,10 @@ class Functions {
         if( $this->authsaml->isAuth()) {
             $authAttributes = $this->authsaml->sAuth();
         } else {
-            $authAttributes["eduPersonTargetedID"] = "nonvalue";
+            $authAttributes["saml_uid_attribute"] = "nonvalue";
         }
 		try {
-			$result = $this->db->query("SELECT ".$this->returnFields." FROM files WHERE (fileauthuseruid = '%s') AND filestatus = 'Available'  ORDER BY fileactivitydate ASC", $authAttributes["eduPersonTargetedID"]);	
+			$result = $this->db->query("SELECT ".$this->returnFields." FROM files WHERE (fileauthuseruid = '%s') AND filestatus = 'Available'  ORDER BY fileactivitydate ASC", $authAttributes["saml_uid_attribute"]);	
 		} catch (DBALException $e) {
 			$this->saveLog->saveLog("","Error",$e->getMessage()); return FALSE;
 		}
@@ -531,7 +531,7 @@ class Functions {
 
         if( $this->authsaml->isAuth()) {
             $authAttributes = $this->authsaml->sAuth();
-            $dataitem['fileauthuseruid'] = $authAttributes["eduPersonTargetedID"] ;
+            $dataitem['fileauthuseruid'] = $authAttributes["saml_uid_attribute"] ;
             $dataitem['fileauthuseremail'] = $authAttributes["email"];
         }
 
@@ -624,13 +624,13 @@ public function insertVoucher($to,$expiry){
          $dataitem['filereceiversname'] = '';
          $dataitem['filevouchertype'] = '';
          $dataitem['fileuid'] = getGUID();
-         $dataitem['fileauthuseruid'] = $authAttributes["eduPersonTargetedID"];
+         $dataitem['fileauthuseruid'] = $authAttributes["saml_uid_attribute"];
          $dataitem['fileauthuseremail'] = $authAttributes["email"];
          $dataitem['filecreateddate'] =  date($config['db_dateformat'], time());
 		 
 		 if( $this->authsaml->isAuth()) {
             $authAttributes = $this->authsaml->sAuth();
-            $dataitem['fileauthuseruid'] = $authAttributes["eduPersonTargetedID"] ;
+            $dataitem['fileauthuseruid'] = $authAttributes["saml_uid_attribute"] ;
             $dataitem['fileauthuseremail'] = $authAttributes["email"];
 			 $dataitem['filefrom'] = $authAttributes["email"];
 		
@@ -1089,10 +1089,10 @@ public function insertVoucher($to,$expiry){
         if ( $this->authvoucher->aVoucher() ) {
             $tempFilename .= $dataitem['filevoucheruid'];
         } 
-        // else add SAML eduPersonTargetedID
+        // else add SAML saml_uid_attribute
         else if( $this->authsaml->isAuth()) {
             $authAttributes = $this->authsaml->sAuth();
-            $tempFilename .= $authAttributes["eduPersonTargetedID"];	
+            $tempFilename .= $authAttributes["saml_uid_attribute"];	
         }
 
 
