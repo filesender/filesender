@@ -346,6 +346,7 @@ if (validatefilename(name))
 function uploadcomplete(name,size)
 {
 //unlockformfields();
+$("#fileName").val(encodeURIComponent(name));
 $("#form1").submit();
 }
 
