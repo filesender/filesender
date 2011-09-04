@@ -129,6 +129,7 @@ To create a voucher, enter an email address then select Send Voucher.<BR>
 An email will be sent to the recipient with a link to use the Voucher.";
 			$lang["_EMAIL_SEPARATOR_MSG"] = "Multiple email addresses separated by , or ;";
 			
+			$lang["_NO_FILES"] = "There are currently no files available";
 			$lang["_ARE_YOU_SURE"] = "Are you sure?";
 			$lang["_DELETE_FILE"] = "Delete File";
            	$lang["_EMAIL_SENT"] = "Email has been sent";
@@ -137,6 +138,8 @@ An email will be sent to the recipient with a link to use the Voucher.";
 			$lang["_FILE_RESENT"] = "File Re-sent";			
 		  	$lang["_ME"] = "Me";
 			$lang["_SEND_VOUCHER"] = "Send Voucher";
+			$lang["_RE_SEND_EMAIL"] = "Re-send Email";
+			$lang["_NEW_RECIPIENT"] = "Add new recipient";
             $lang["_SEND_VOUCHER_TO"] = "Send Vouchers to";
 			$lang["_START_DOWNLOAD"] = "Start Download";
            	$lang["_VOUCHER_SENT"] = "Voucher Sent";
@@ -144,6 +147,8 @@ An email will be sent to the recipient with a link to use the Voucher.";
 			$lang["_VOUCHER_CANCELLED"] = "This voucher has been cancelled.";
 			$lang["_STARTED_DOWNLOADING"] = "Your file should start downloading.";
 
+			// files
+			$lang["_FILE_DELETED"] = "File Deleted";
             // steps
            	$lang["_STEP1"] = "Enter delivery email address(es)";
            	$lang["_STEP2"] = "Set expiry date";
