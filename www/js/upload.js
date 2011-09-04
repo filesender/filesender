@@ -112,7 +112,7 @@ var filesize = 0;
 		$("#dialog-uploadprogress").dialog("open");
 		
 		$.ajax({
-  		url: uploadURI + '?n='+fileName+'&total='+fileSize+'&vid='+vid+'&type=filesize',
+  		url: uploadURI + '?n='+encodeURIComponent(fileName)+'&total='+fileSize+'&vid='+vid+'&type=filesize',
   		success: function(data) {
 		currentBytesUpload = parseFloat(data);
 		uploadFile(currentBytesUpload);
@@ -137,6 +137,8 @@ function uploadFile(currentBytesUpload) {
        		// Remove the new file control.
     		filecontrol.parentNode.removeChild(filecontrol);
 			//unlockformfields();
+			// encodeURIComponent file name before sending
+			$("#fileName").val(encodeURIComponent(filename));
 			document.forms["form1"].submit();
 			return;
 			} 
