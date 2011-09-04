@@ -82,10 +82,10 @@ if($authvoucher->aVoucher()  || $authsaml->isAuth() ) {
 		$tempFilename .= $_REQUEST['vid'];
 		logEntry("DEBUG fs_upload: tempfilename 1v : ".$tempFilename);
 	}
-	// else add SAML eduPersonTargetedID
+	// else add SAML saml_uid_attribute
 	else if( $authsaml->isAuth()) {
 		$authAttributes = $authsaml->sAuth();
-		$tempFilename .= $authAttributes["eduPersonTargetedID"];	
+		$tempFilename .= $authAttributes["saml_uid_attribute"];	
 		logEntry("DEBUG fs_upload: tempfilename 1a : ".$tempFilename);
 	} 
 	

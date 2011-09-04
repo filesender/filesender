@@ -9,7 +9,6 @@ date_default_timezone_set($config['Default_TimeZone']);
 	if ($authvoucher->aVoucher()) {
 		logEntry("Voucher: * Keep alive *");
 	}
-	// else add SAML eduPersonTargetedID
 	else if( $authsaml->isAuth()) {
 		logEntry("Auth: * Keep alive *");
 	} 
