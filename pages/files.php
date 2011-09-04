@@ -44,7 +44,7 @@ if($_REQUEST["a"] == "del" )
 {
 if($functions->deleteFile($myfileData["fileid"]))
 {
-echo "<div id='message'>File Deleted</div>";
+echo "<div id='message'>".lang("_FILE_DELETED")."</div>";
 }
 }
 
@@ -95,7 +95,7 @@ $json_o=json_decode($filedata,true);
 		$("#myfiles tr:odd").not(":first").addClass("altcolor");
 		
 		// delete modal dialog box
-		$("#dialog-delete").dialog({ autoOpen: false, height: 140, modal: true,
+		$("#dialog-delete").dialog({ autoOpen: false, height: 180, modal: true,
 			buttons: {
 				<?php echo lang("_CANCEL") ?>: function() {
 				$( this ).dialog( "close" );
@@ -108,7 +108,7 @@ $json_o=json_decode($filedata,true);
 		});
 		
 		// add new recipient modal dialog box
-		$("#dialog-addrecipient").dialog({ autoOpen: false, height: 360,width:650, modal: true,
+		$("#dialog-addrecipient").dialog({ autoOpen: false, height: 410,width:650, modal: true,
 			buttons: {
 				<?php echo lang("_CANCEL") ?>: function() {
 					$( this ).dialog( "close" );
@@ -186,7 +186,7 @@ $json_o=json_decode($filedata,true);
 if(sizeof($json_o) > 0)
 {
 foreach($json_o as $item) {
-   echo '<tr><td valign="top"> <a href="index.php?s=files&a=resend&id=' .$item['filevoucheruid'] . '"><img src="images/email_go.png" title="Re-send Email"></a></td><td valign="top"><img src="images/email_add.png" title="Add New Recipient" onclick="openAddRecipient('."'".$item['filevoucheruid']."','".$item['fileoriginalname'] ."','".$item['filesize'] ."','".$item['filefrom']."'" .');"  style="cursor:pointer;"></td>';
+   echo '<tr><td valign="top"> <a href="index.php?s=files&a=resend&id=' .$item['filevoucheruid'] . '"><img src="images/email_go.png" title="'.lang("_RE_SEND_EMAIL").'"></a></td><td valign="top"><img src="images/email_add.png" title="'.lang("_NEW_RECIPIENT").'" onclick="openAddRecipient('."'".$item['filevoucheruid']."','".$item['fileoriginalname'] ."','".$item['filesize'] ."','".$item['filefrom']."'" .');"  style="cursor:pointer;"></td>';
    if($item['fileto'] == $attributes["email"])
    {
    echo "<td class='HardBreak' valign='top'>".lang("_ME")."</td>";
@@ -205,19 +205,19 @@ foreach($json_o as $item) {
    {
    echo "<img src='images/page_white_text_width.png' border='0' title='".utf8tohtml($item['filemessage'],TRUE). "'>";
    }
-   echo "</td><td>" .date($config['datedisplayformat'],strtotime($item['filecreateddate'])) . "</td><td>" .date($config['datedisplayformat'],strtotime($item['fileexpirydate'])) . "</td><td  valign='top'  width='22'><div style='cursor:pointer;'><img onclick='confirmdelete(".'"' .$item['filevoucheruid'] . '")'. "' src='images/shape_square_delete.png' title='Delete' ></div></td></tr>"; //etc
+   echo "</td><td>" .date($config['datedisplayformat'],strtotime($item['filecreateddate'])) . "</td><td>" .date($config['datedisplayformat'],strtotime($item['fileexpirydate'])) . "</td><td  valign='top'  width='22'><div style='cursor:pointer;'><img onclick='confirmdelete(".'"' .$item['filevoucheruid'] . '")'. "' src='images/shape_square_delete.png' title='".lang("_DELETE_FILE")."' ></div></td></tr>"; //etc
    }
 } else {
-	echo "<tr><td colspan='7'>There are currently no files available</td></tr>";
+	echo "<tr><td colspan='7'>".lang("_NO_FILES")."</td></tr>";
 }
 ?>
     </table>
   </div>
 </div>
-<div id="dialog-delete" title="Delete File">
+<div id="dialog-delete" title="<?php echo  lang("_DELETE_FILE"); ?>">
 <p><?php echo lang("_CONFIRM_DELETE_FILE");?></p>
 </div>
-<div id="dialog-addrecipient" title="Add Recipient">
+<div id="dialog-addrecipient" title="<?php echo  lang("_NEW_RECIPIENT"); ?>">
   <form id="form1" name="form1" enctype="multipart/form-data" method="POST" action="">
     <table  width="600" border="0">
       <tr>
