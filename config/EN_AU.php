@@ -16,4 +16,6 @@ $lang["_HELP_TEXT"] = '<div align="left" style="padding:5px">
 
 $lang["_ABOUT_TEXT"] = ' <div align="left" style="padding:5px">'. htmlentities($config['site_name']) .' is an installation of FileSender (<a rel="nofollow" href="http://www.filesender.org/">www.filesender.org</a>), which is developed to the requirements of the higher education and research community.</div>';
 
+$lang["_AUPTERMS"] = "AuP Terms and conditions...";
+
 ?>
