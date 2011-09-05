@@ -285,7 +285,7 @@ class Functions {
         }
 
         try {
-        	$result = $this->db->query("SELECT ".$this->returnFields." FROM files WHERE (fileauthuseruid = '%s') AND filestatus = 'Voucher'",$authAttributes["saml_uid_attribute"]);
+        	$result = $this->db->query("SELECT ".$this->returnFields." FROM files WHERE (fileauthuseruid = '%s') AND filestatus = 'Voucher' ORDER BY fileactivitydate DESC",$authAttributes["saml_uid_attribute"]);
         } catch (DBALException $e) {
         	$this->saveLog->saveLog("","Error",$e->getMessage()); return FALSE;
         }
@@ -314,7 +314,7 @@ class Functions {
             $authAttributes["saml_uid_attribute"] = "nonvalue";
         }
 		try {
-			$result = $this->db->query("SELECT ".$this->returnFields." FROM files WHERE (fileauthuseruid = '%s') AND filestatus = 'Available'  ORDER BY fileactivitydate ASC", $authAttributes["saml_uid_attribute"]);	
+			$result = $this->db->query("SELECT ".$this->returnFields." FROM files WHERE (fileauthuseruid = '%s') AND filestatus = 'Available'  ORDER BY fileactivitydate DESC", $authAttributes["saml_uid_attribute"]);	
 		} catch (DBALException $e) {
 			$this->saveLog->saveLog("","Error",$e->getMessage()); return FALSE;
 		}
