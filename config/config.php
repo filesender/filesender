@@ -116,7 +116,7 @@ public function loadConfig() {
 	// Support links
 	$config['aboutURL'] = "about.php";
 	$config['helpURL'] = "help.php";
-	$config['gearsURL'] = 'http://tools.google.com/gears/';
+	//config['gearsURL'] = 'http://tools.google.com/gears/';
 
 	// (absolute) file locations
 	$config['site_filestore'] = '/usr/share/filesender/files/'; 

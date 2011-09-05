@@ -32,7 +32,7 @@
 
 
 $filesenderbase = dirname(dirname(__FILE__));
-require_once("$filesenderbase/classes/LanguageSelection.php");
+
 require_once("$filesenderbase/config/config.php");
 
 $CFG = config::getInstance();
@@ -43,6 +43,7 @@ require_once("$filesenderbase/includes/ErrorHandler.php");
 require_once("$filesenderbase/includes/EnsureHTTPS.php");
 require_once("$filesenderbase/includes/UTF8.php");
 require_once("$filesenderbase/classes/Functions.php");
+require_once("$filesenderbase/classes/LanguageSelection.php");
 require_once("$filesenderbase/classes/DB.php");
 require_once("$filesenderbase/classes/DBAL.php");
 require_once("$filesenderbase/classes/AuthSaml.php");
