@@ -131,7 +131,7 @@ function lang($item)
 	global $lang;
 	if (isset($lang[$item])) 
 	{
-	return $lang[$item];	
+	return mb_convert_encoding($lang[$item], "HTML-ENTITIES");	
 	} else {
 	return $item;
 	}
