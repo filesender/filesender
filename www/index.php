@@ -247,10 +247,10 @@ require_once('../pages/help.php');
   </div>
 </div>
 <div id="dialog-help" title="<?php echo lang("_HELP"); ?>">
- <?php echo $lang["_HELP_TEXT"]; ?>
+ <?php echo lang("_HELP_TEXT"); ?>
 </div>
 <div id="dialog-about" title="<?php echo lang("_ABOUT"); ?>">
- <?php echo $lang["_ABOUT_TEXT"]; ?>
+ <?php echo lang("_ABOUT_TEXT"); ?>
 </div>
 <div id="footer">Version 1.5 Beta</div>
 <div id="DoneLoading"></div>
