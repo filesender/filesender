@@ -126,7 +126,7 @@ function cleanUp()
 	//
 	// check for any expired files first and close status in database
 	//
-	$today = date($config['postgresdateformat']); 
+	$today = date($config['dbdateformat']); 
 	
 	// if file not closed and past expiry date then close the file
 	$searchquery = "SELECT * FROM files WHERE  fileexpirydate < '%s' AND (filestatus = 'Available' or filestatus = 'Voucher')";
@@ -186,7 +186,7 @@ function cleanUp()
 
 	// check filename in database
 	$query = "SELECT * FROM files WHERE  fileuid = '%s' AND filestatus = 'Available'";
-	$result = $db->query($query, substr($file,0,36));
+	$result = $db->query($query, substr($file,0,36),$today);
 	
 	$total_results = sizeof($result);
 	if($total_results < 1) {
@@ -206,9 +206,10 @@ function cleanUp()
 	//
 	// Final cleanup is to close any records in the database that do not have a physical file attached to them
 	// close all entries that do not have a pyhsical file in storage
+	// We also check on the expiry date, so that files that are currently being uploaded and have "stale" records are left alone
 	
 	try {
-		$search = $db->query("SELECT * FROM files WHERE filestatus = 'Available'"); 
+		$search = $db->query("SELECT * FROM files WHERE filestatus = 'Available' AND fileexpirydate > %s",$today); 
 	} catch	(DBALException $e) {
 		logProcess("CRON","SQL Error on updating files".$e->getMessage());
 		return FALSE;		
