@@ -131,13 +131,12 @@ function lang($item)
 	global $lang;
 	if (isset($lang[$item])) 
 	{
- 		if (PHP_OS != "Darwin") {
-			return mb_convert_encoding($lang[$item], "HTML-ENTITIES");	
-		}
-		else return $lang[$item];
+		// Return the item html-encoded (for UTF8 strings). Don't encode tags
+		// (for basic formatting in help and about texts).
+		// NOTE: encoding the item here might be subject to change
+		return utf8tohtml($lang[$item], FALSE);	
 	} else {
 	return $item;
 	}
 }
-//print_r($lang);
 ?>
