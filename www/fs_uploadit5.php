@@ -116,7 +116,7 @@ $s = "complete";
     // rename file to correct name
 	$result = rename($uploadfolder.$tempFilename, $uploadfolder.$fileuid.".tmp");
 	if(!$result) {
-		logEntry("Unable to move the file");
+		logEntry("Unable to move the file ".$tempuploadfolder.$tempFilename);
 		trigger_error("Unable to move the file", E_USER_ERROR);
 	}
 	
@@ -127,7 +127,7 @@ $s = "complete";
 	$filedata["fileoriginalname"] =  $_POST["n"];
 	$filedata["fileuid"] = $fileuid;
 	$filedata["filestatus"]  = "Available";
-	$filedata["fileexpirydate"] = date($config["postgresdateformat"],strtotime($_POST["fileexpirydate"]));
+	$filedata["fileexpirydate"] = date($config["dbdateformat"],strtotime($_POST["fileexpirydate"]));
 	
 	// loop though multiple emails
 	$emailto = str_replace(",",";",$_POST["fileto"]);
