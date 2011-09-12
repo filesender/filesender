@@ -65,7 +65,7 @@ $authvoucher = AuthVoucher::getInstance();
 $log =  Log::getInstance();
 
 date_default_timezone_set($config['Default_TimeZone']);
-$tempuploadfolder =  $config["site_temp_filestore"];
+$uploadfolder =  $config["site_filestore"];
 	
 logEntry("DEBUG fs_upload: REQUEST data: " . print_r($_REQUEST, true));
 logEntry("DEBUG fs_upload: POST data: " . print_r($_POST, true));
@@ -109,7 +109,7 @@ if($authvoucher->aVoucher()  || $authsaml->isAuth() ) {
 	// ---------------------
 	if(isset($_REQUEST["type"]) && $_REQUEST["type"] == "filesize")
 	{
-		echo checkFileSize($tempuploadfolder.$tempFilename);
+		echo checkFileSize($uploadfolder.$tempFilename);
 	}
 	
 	// if AUP then add session variable to store that a user selected the session variable
@@ -125,7 +125,7 @@ if($authvoucher->aVoucher()  || $authsaml->isAuth() ) {
 	{
 	
 		
-		 $result = move_uploaded_file($_FILES['Filedata']['tmp_name'], $tempuploadfolder.$tempFilename);
+		 $result = move_uploaded_file($_FILES['Filedata']['tmp_name'], $uploadfolder.$tempFilename);
 		 if($result) {
 			logEntry("DEBUG fs_upload.php: file moved:". $_FILES['Filedata']['tmp_name'] . " <- ".$tempFilename );
 			echo "true";
@@ -143,11 +143,11 @@ if($authvoucher->aVoucher()  || $authsaml->isAuth() ) {
 	
 		$fd = fopen("php://input", "r");
 		// append the chunk to the temp file
-		while( $data = fread( $fd,  1000000  ) ) file_put_contents( $config["site_temp_filestore"].sanitizeFilename($tempFilename), $data, FILE_APPEND ) or die("Error");
+		while( $data = fread( $fd,  1000000  ) ) file_put_contents( $config["site_filestore"].sanitizeFilename($tempFilename), $data, FILE_APPEND ) or die("Error");
 		// close the file 
 		fclose($fd);
 		
-		echo checkFileSize($tempuploadfolder.$tempFilename);
+		echo checkFileSize($uploadfolder.$tempFilename);
 	
 	}
 	}
