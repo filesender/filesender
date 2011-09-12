@@ -104,12 +104,6 @@ function cleanUp()
 		return false;
 	}	
 	
-	// check site_temp_filestore exists
-	if (!file_exists($config["site_temp_filestore"])) {
-		logProcess("CRON","Unable to find site_temp_filestore location specified in config.php  :".$config["site_temp_filestore"]);
-		return false;
-	}	
-	
 	// remove any files with no uid - leftover from bug earlier beta that save files without uid's
 	$sqlQuery = "
 					DELETE FROM					 
