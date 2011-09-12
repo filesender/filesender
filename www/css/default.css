@@ -68,7 +68,8 @@ td {
 
 #topmenu
 {
-	padding-left: 20px;	
+	padding-left: 20px;
+	height: 30px;
 }
 .menu a
 {
