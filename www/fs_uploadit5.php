@@ -73,7 +73,6 @@ logEntry("DEBUG fs_uploadit5: POST data: " . print_r($_POST, true));
 
 if($authvoucher->aVoucher() || $authsaml->isAuth()) { 
 $uploadfolder =  $config["site_filestore"];
-$tempuploadfolder =  $config["site_temp_filestore"];
 	
 $fileuid = getGUID();
 $tempFilename = ""; 
@@ -114,8 +113,8 @@ $s = "complete";
 	$correctfilename = preg_replace_callback('/\\\\u([0-9a-fA-F]{4})/','upperHexNumber',trim(json_encode($_REQUEST['n']),"\""));
 	logEntry("DEBUG fs_uploadit5: correctfilename  : ".$correctfilename);
 
-    // move file to correct uploadfolder destination
-	$result = rename($tempuploadfolder.$tempFilename, $uploadfolder.$fileuid.".tmp");
+    // rename file to correct name
+	$result = rename($uploadfolder.$tempFilename, $uploadfolder.$fileuid.".tmp");
 	if(!$result) {
 		logEntry("Unable to move the file");
 		trigger_error("Unable to move the file", E_USER_ERROR);
