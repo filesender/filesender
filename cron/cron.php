@@ -209,7 +209,7 @@ function cleanUp()
 	// We also check on the expiry date, so that files that are currently being uploaded and have "stale" records are left alone
 	
 	try {
-		$search = $db->query("SELECT * FROM files WHERE filestatus = 'Available' AND fileexpirydate > %s",$today); 
+		$search = $db->query("SELECT * FROM files WHERE filestatus = 'Available'"); 
 	} catch	(DBALException $e) {
 		logProcess("CRON","SQL Error on updating files".$e->getMessage());
 		return FALSE;		
