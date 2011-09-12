@@ -146,7 +146,7 @@ if($authvoucher->aVoucher()  || $authsaml->isAuth() ) {
 		while( $data = fread( $fd,  1000000  ) ) file_put_contents( $config["site_filestore"].sanitizeFilename($tempFilename), $data, FILE_APPEND ) or die("Error");
 		// close the file 
 		fclose($fd);
-		
+		logEntry("Uploaded ".$config["site_filestore"].sanitizeFilename($tempFilename));
 		echo checkFileSize($uploadfolder.$tempFilename);
 	
 	}
