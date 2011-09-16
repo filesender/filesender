@@ -54,8 +54,8 @@ function startDownload()
 	window.location.href= "download.php?vid=<?php echo $filedata["filevoucheruid"];?>";
 }
 </script>
-<div id="box">
 <div id='message' name="message"><?php echo lang("_STARTED_DOWNLOADING") ?></div>
+<div id="box">
 <?php echo '<div id="pageheading">'.lang("_DOWNLOAD").'</div>'; ?> 
   <div id="tablediv">
   <table>
