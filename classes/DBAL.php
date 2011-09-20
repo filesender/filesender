@@ -177,7 +177,7 @@ class DBAL {
 				return array();
 			case 1:
 				//Directly perform the query, we just have a static string
-				$res = $mdb2->queryAll($args[0]);
+				$res = stripslashes($mdb2->queryAll($args[0]));
 				// Always check that result is not an error
 				if (PEAR::isError($res)) {
 				    throw new DBALException("Error executing query: " . $res->getMessage());
@@ -189,10 +189,7 @@ class DBAL {
 			default:
 				//More than one argument, create a prepared statement using substitution. This automatically escapes the substituted values
 				$format = array_shift($args);
-				//Loop over the remaining fields, and quote them
-		        //for($i = 0; $i < sizeof($args); $i++) {
-		        //    $args[$i] = $mdb2->quote($args[$i]);
-		        //}
+
 				//Now create the final query
 		        $query = vsprintf($format, $args);
 				//...and execute
@@ -201,8 +198,14 @@ class DBAL {
 				if (PEAR::isError($res)) {
 				    throw new DBALException("Error executing query: " . $res->getMessage());
 				}
-
 				//$res is a two-dimensional array, with each second dimension an associative array as per the query
+				//Loop over all rows. For each named entry, reassign the second dimension after calling stripslashes()
+				//Note that we have to loop inside a loop as, we iterate over ALL the rows. Also note that we have to reference the value in otder to change it.
+				foreach($res as $row) {
+					foreach($row as $key => &$value) {
+						$row[$key] = stripslashes($value);
+					}
+				}
 				return $res;
 		}
     }
@@ -240,13 +243,8 @@ class DBAL {
 			default:
 				//More than one argument, create a prepared statement using substitution. This automatically escapes the substituted values
 				$format = array_shift($args);
-				//Loop over the remaining fields, and quote them
-		        //for($i = 0; $i < sizeof($args); $i++) {
-		         //   $args[$i] = $mdb2->quote($args[$i]);
-		        //}
 				//Now create the final query
 		        $query = vsprintf($format, $args);
-				
 				//...and execute
 				$res = $mdb2->exec($query);
 				// Always check that result is not an error
