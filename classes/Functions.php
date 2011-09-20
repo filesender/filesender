@@ -1058,15 +1058,17 @@ public function insertVoucher($to,$expiry){
 	  //---------------------------------------
     // Load Language File
     // Returns JSON array
-    public function loadLanguage() {
 
-        global $config;
-
-        require_once("../language/".$config['site_defaultlanguage'].".php");   			// use absolute locations result in bytes
-        
-        return;
-
-    }
+	//DEAD CODE???
+    //public function loadLanguage() {
+    //
+    //    global $config;
+    //
+    //    require_once("../language/".$config['site_defaultlanguage'].".php");   			// use absolute locations result in bytes
+    //    
+    //    return;
+    //
+    //}
 
 
     //---------------------------------------
