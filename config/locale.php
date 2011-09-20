@@ -29,56 +29,21 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-global $lang;
-global $locales;
 
-$filesenderbase = dirname(dirname(__FILE__));
-
-//Get all possible locales
-require_once("$filesenderbase/config/locale.php");
-//Set a default language file via the parameter.
-//We distribute En-AU ALWAYS via the project!
-function get_client_language($availableLanguages, $default='en-au'){
- 
-	if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
- 
-		$langs=explode(',',$_SERVER['HTTP_ACCEPT_LANGUAGE']);
- 
-		//start going through each one
-		foreach ($langs as $value){
- 
-			//strtolower is needed for e.g. Chrome, that sends nl-NL
-			$choice =  strtolower($value);
-			if(in_array($choice, $availableLanguages)){
-				return $choice;
-			}
-		}
-	} 
-	return $default;
-}
-
-//Get the language based on the browser accepted langauge and the avaialable locales
-$langs = get_client_language(array_keys($locales));
-// Set the language file
-$lang_file = $locales[$langs];
-//Try and include the language file
-// default english
-//By including EN-AU first, we make sure ALL used keys actually exist!
-//require_once("$filesenderbase/language/EN_AU.php");
-require_once("$filesenderbase/language/". $lang_file);
+//The below array maps locales provided by the browser to your local translation.
+//Put yoour translated file in the "language" subdirectory.
+//Add relevant entries for browser locales here, and your translation will automagically be recognized and used....
 
 
-function lang($item)
-{
-	global $lang;
-	if (isset($lang[$item])) 
-	{
-		// Return the item html-encoded (for UTF8 strings). Don't encode tags
-		// (for basic formatting in help and about texts).
-		// NOTE: encoding the item here might be subject to change
-		return utf8tohtml($lang[$item], FALSE);	
-	} else {
-	return $item;
-	}
-}
+$locales  =  array( 
+	"nl-nl"  => "NL_nl.php",
+	"nl" => "NL_nl.php" ,
+	"en-au" => "EN_AU.php",
+    "en"=>  "EN_AU.php" ,
+	"no-no" => "NO_no.php", 	
+	"no" => "NO_no.php" ,
+	"nb" => "NO_no.php" ,
+	"nb-no" => "NO_no.php" 
+		 		
+);
 ?>
