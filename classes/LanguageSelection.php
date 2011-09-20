@@ -65,6 +65,7 @@ $lang_file = $locales[$langs];
 // default english
 //By including EN-AU first, we make sure ALL used keys actually exist!
 //require_once("$filesenderbase/language/EN_AU.php");
+require_once("$filesenderbase/language/". "EN_AU.php");
 require_once("$filesenderbase/language/". $lang_file);
 
 
