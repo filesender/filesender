@@ -127,7 +127,7 @@ $s = "complete";
 	$filedata["fileoriginalname"] =  $_POST["n"];
 	$filedata["fileuid"] = $fileuid;
 	$filedata["filestatus"]  = "Available";
-	$filedata["fileexpirydate"] = date($config["dbdateformat"],strtotime($_POST["fileexpirydate"]));
+	$filedata["fileexpirydate"] = date($config["db_dateformat"],strtotime($_POST["fileexpirydate"]));
 	
 	// loop though multiple emails
 	$emailto = str_replace(",",";",$_POST["fileto"]);

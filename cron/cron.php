@@ -120,7 +120,7 @@ function cleanUp()
 	//
 	// check for any expired files first and close status in database
 	//
-	$today = date($config['dbdateformat']); 
+	$today = date($config['db_dateformat']); 
 	
 	// if file not closed and past expiry date then close the file
 	$searchquery = "SELECT * FROM files WHERE  fileexpirydate < '%s' AND (filestatus = 'Available' or filestatus = 'Voucher')";
