@@ -51,7 +51,7 @@ echo "<div id='message'>".lang("_FILE_DELETED")."</div>";
 if($_REQUEST["a"] == "resend")
 {
 $sendmail->sendEmail($myfileData ,$config['fileuploadedemailbody']);
-echo "<div id='message'>".lang("_FILE_RESENT")."</div>";
+echo "<div id='message'>".lang("_MESSAGE_RESENT")."</div>";
 }
 
 if($_REQUEST["a"] == "add")
