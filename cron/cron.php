@@ -186,18 +186,18 @@ function cleanUp()
 	if($total_results < 1) {
 	// no Files Available match this file so delete the file
 	
-	if (is_file($FilestoreDirectory.$file) && file_exists($FilestoreDirectory.$file)) {
-		// Don't remove the file if mtime is less then 24 hours (86400 seconds) old
-		if (time() - filemtime($FilestoreDirectory.$file) < 86400) {
-			logProcess("CRON","File NOT removed (last modification less then 24 hours ago ago)".$FilestoreDirectory.$file);
-		} else {
-			unlink($FilestoreDirectory.$file);
-			// log removal
-			logProcess("CRON","File Removed (Expired)".$FilestoreDirectory.$file);    
+		if (is_file($FilestoreDirectory.$file) && file_exists($FilestoreDirectory.$file)) {
+			// Don't remove the file if mtime is less then 24 hours (86400 seconds) old
+			if (time() - filemtime($FilestoreDirectory.$file) < 86400) {
+				logProcess("CRON","File NOT removed (last modification less then 24 hours ago ago)".$FilestoreDirectory.$file);
+			} else {
+				unlink($FilestoreDirectory.$file);
+				// log removal
+				logProcess("CRON","File Removed (Expired)".$FilestoreDirectory.$file);    
+			}
 		}
 	}
-	
-
+    }
     // Close
     closedir($dir_handle);
 	
