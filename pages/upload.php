@@ -312,6 +312,7 @@ function validate_file()
 // flex file information check
 function fileInfo(name,size)
 {
+	$("#uploadbutton").hide(); 
 fileMsg("");
 if(size < 1)
 {
