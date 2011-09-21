@@ -56,6 +56,9 @@
    // check if this is a vooucher
   if($authvoucher->aVoucher())
   {
+	 // clear aup session
+	unset ($_SESSION['aup'], $var);
+
 	// get voucher information 
 	$voucherData =  $authvoucher->getVoucher();
 	$voucherUID = $voucherData[0]["filevoucheruid"];
