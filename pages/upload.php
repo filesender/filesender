@@ -86,10 +86,11 @@
 	
 	// all default settings
 	var uploadid = '<?php echo $id ?>';
-	var maximumDate= '<?php echo $config['default_daysvalid']?>';
-	var maxHTML5uploadsize = <?php echo $config['max_gears_upload_size'] ?>;
-	var maxFLASHuploadsize = <?php echo $config['max_flash_upload_size'] ?>;
-	var maxEmailRecipients = <?php echo $config['max_email_recipients'] ?>;
+	var maximumDate= '<?php echo $config['default_daysvalid']; ?>';
+	var maxHTML5uploadsize = <?php echo $config['max_gears_upload_size']; ?>;
+	var maxFLASHuploadsize = <?php echo $config['max_flash_upload_size']; ?>;
+	var maxEmailRecipients = <?php echo $config['max_email_recipients']; ?>;
+	var datepickerDateFormat = '<?php echo lang('_DP_dateFormat'); ?>';
 	var aup = '<?php echo $config['AuP'] ?>';
 	var bytesUploaded = 0;
 	var bytesTotal = 0;
@@ -104,8 +105,26 @@
 	
 		// set date picker
 		$("#datepicker" ).datepicker({ minDate: 1, maxDate: "+"+maximumDate+"D",altField: "#fileexpirydate", altFormat: "d-m-yy" });
-		$("#datepicker" ).datepicker( "option", "dateFormat", "dd-mm-yy" );
+		$("#datepicker" ).datepicker( "option", "dateFormat", "<?php echo lang("_DP_dateFormat"); ?>" );
 		$("#datepicker").datepicker("setDate", new Date()+maximumDate);
+		
+		// set datepicker language
+		$.datepicker.setDefaults({
+		closeText: '<?php echo lang("_DP_closeText"); ?>',
+		prevText: '<?php echo lang("_DP_prevText"); ?>',
+		nextText: '<?php echo lang("_DP_nextText"); ?>',
+		currentText: '<?php echo lang("_DP_currentText"); ?>',
+		monthNames: <?php echo lang("_DP_monthNames"); ?>,
+		monthNamesShort: <?php echo lang("_DP_monthNamesShort"); ?>,
+		dayNames: <?php echo lang("_DP_dayNames"); ?>,
+		dayNamesShort: <?php echo lang("_DP_dayNamesShort"); ?>,
+		dayNamesMin: <?php echo lang("_DP_dayNamesMin"); ?>,
+		weekHeader: '<?php echo lang("_DP_weekHeader"); ?>',
+		dateFormat: '<?php echo lang("_DP_dateFormat"); ?>',
+		firstDay: <?php echo lang("_DP_firstDay"); ?>,
+		isRTL: <?php echo lang("_DP_isRTL"); ?>,
+		showMonthAfterYear: <?php echo lang("_DP_showMonthAfterYear"); ?>,
+		yearSuffix: '<?php echo lang("_DP_yearSuffix"); ?>'});
 		
 		// set dialog cancel upload
 		$("#dialog-cancel").dialog({ autoOpen: false, height: 140, width: 350, modal: true,
@@ -191,7 +210,7 @@
 		else
 			bytesTransfered = (Math.round(bytesloaded * 100)/100).toString() + 'Bytes';
 
-			//$("#progress_view").fadeIn(100);	//fade in progress bar	
+		
 			$("#progress_bar").width(percentComplete/100 *$('#progress_container').width());	//set width of progress bar based on the $status value (set at the top of this page)
 			$("#progress_bar").html(percentComplete +"% ");
 			$("#progress_completed").html(parseInt(percentComplete) + "%(" + bytesTransfered + ")" );	//display the % completed within the progress bar
@@ -479,7 +498,7 @@ function keepMeAlive()
       <tr>
         <td class=" mandatory"><?php echo lang("_EXPIRY_DATE"); ?>:
           <input type="hidden" id="fileexpirydate" name="fileexpirydate" value="<?php echo date($config['datedisplayformat'],strtotime("+".$config['default_daysvalid']." day"));?>"/></td>
-        <td colspan="2"><input id="datepicker" name="datepicker" title="dd-mm-yyyy" onchange="validate_expiry()">
+        <td colspan="2"><input id="datepicker" name="datepicker" title="<?php echo lang('_DP_dateFormat'); ?>" onchange="validate_expiry()">
           </input>
           <div id="expiry_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_EXPIRY_DATE"); ?></div>
           </td>
@@ -590,6 +609,10 @@ if ( hasProductInstall && !hasRequestedVersion ) {
         </td>
       </tr>
       <?php } ?>
+      <tr>
+      <td></td>
+      <td colspan="2"><div class="menu" id="uploadbutton" name="uploadbutton" style="display:none"><a href="#" onClick="validate()"><?php echo lang("_SEND"); ?></a></div></td>
+      </tr>
       </table>
 <input type="hidden" id="filevoucheruid" name="filevoucheruid" value="<?php echo $voucherUID; ?>"/>
 		<input type="hidden" name="vid" id="vid" value="<?php echo $voucherUID; ?>"/>
