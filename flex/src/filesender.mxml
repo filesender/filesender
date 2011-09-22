@@ -464,14 +464,14 @@
 				// change browse and upload to use gears function
 				if(gears){
 					gearsImage.source = gearsYES; 
-					gearsImage.toolTip = "Installed: Gears allows you to upload extremely large files";
+					gearsImage.toolTip = "Passed: HTML5 allows you to upload extremely large files";
 					logProcess("Gears Installed");
 				}
 				else 
 				{
 					// use standard flash filereference upload
 					gearsImage.source = gearsNo;  
-					gearsImage.toolTip = "NOT Installed: Install Gears to allow uploading of extremely large files. http://gears.google.com/";
+					gearsImage.toolTip = "Not Available: Using a browser that supports HTML5 to allow uploading of extremely large files. http://html5test.com/";
 					logProcess("NO Gears");
 				} 
 			}
@@ -808,7 +808,7 @@
 			<mx:Label text="{lang.Welcome} {currentUser.name} " id="displayUserName" visible="{config.displayUserName}"/>
 			<mx:Spacer width="100%"/>
 			<mx:Label textAlign="right" fontStyle="normal" id="site_showStats" fontWeight="normal" text="{statsData} " visible="{config.site_showStats}" includeInLayout="{config.site_showStats}"/>
-			<mx:Label text="1.0.1 dev |" id="versionNumber" visible="{config.versionNumber}" includeInLayout="{config.versionNumber}"/>
+			<mx:Label text="1.0.1 dev (with HTML5 Mod. 0.1)|" id="versionNumber" visible="{config.versionNumber}" includeInLayout="{config.versionNumber}"/>
 			<mx:Label text=" Help" click="helpLink()" buttonMode="true" useHandCursor="true" mouseChildren="false" toolTip="Help with this application"  id="label3"/>
 			<mx:Label text="| About" click="aboutLink()" buttonMode="true" useHandCursor="true" mouseChildren="false" toolTip="Information about this application"  id="label2"/>
 		</mx:HBox>

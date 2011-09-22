@@ -269,14 +269,14 @@
 					
 					// mac curently cannot upload over 2GB using gears
 					// notify user if over 2GB
-					if(flash.system.Capabilities.os.substr(0, 3) == "Mac" && currentFileObj.filesize > 2000000000 )
-					{
-						selectedFilename.text = "";
-						selectedFileSize.text = "";
-						FlexGlobals.topLevelApplication.logProcess("File is too large for Gears on Mac upload - Gears Upload");
-						Alert.show(lang['E032']);
-						return;
-					}
+					//if(flash.system.Capabilities.os.substr(0, 3) == "Mac" && currentFileObj.filesize > 2000000000 )
+					//{
+					//	selectedFilename.text = "";
+					//	selectedFileSize.text = "";
+					//	FlexGlobals.topLevelApplication.logProcess("File is too large for Gears on Mac upload - Gears Upload");
+					//	Alert.show(lang['E032']);
+					//	return;
+					//}
 					
 					if(currentFileObj.filesize == 0 ) 
 					{
