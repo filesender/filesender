@@ -168,4 +168,21 @@ An email will be sent to the recipient with a link to use the Voucher.";
 			$lang["_CONFIRM_DELETE_VOUCHER"] = "Are you sure you want to delete this voucher?";
 			
 			$lang["_AUPTERMS"] = "AuP Terms and conditions";
+			
+			// datepicker localization
+			$lang["_DP_closeText"] = 'Done'; // Done
+			$lang["_DP_prevText"] = 'Prev'; //Prev
+			$lang["_DP_nextText"] = 'Next'; // Next
+			$lang["_DP_currentText"] = 'Today'; // Today
+			$lang["_DP_monthNames"] = "['January','February','March','April','May','June','July','August','September','October','November','December']";
+			$lang["_DP_monthNamesShort"] = "['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun','Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']";
+			$lang["_DP_dayNames"] = "['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']";
+			$lang["_DP_dayNamesShort"] = "['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']";
+			$lang["_DP_dayNamesMin"] = "['Su','Mo','Tu','We','Th','Fr','Sa']";
+			$lang["_DP_weekHeader"] = 'Wk';
+			$lang["_DP_dateFormat"] = 'dd/mm/yy';
+			$lang["_DP_firstDay"] = '1';
+			$lang["_DP_isRTL"] = 'false';
+			$lang["_DP_showMonthAfterYear"] = 'false';
+			$lang["_DP_yearSuffix"] = '';
 ?>

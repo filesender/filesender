@@ -80,29 +80,28 @@ function validate_fileto()
 // Validate EXPIRY - upload, voucher and files
 function validate_expiry()
 {
-	var validformat=/^\d{2}\-\d{2}\-\d{4}$/ //Basic check for format validity
+	//var validformat=/^\d{2}\-\d{2}\-\d{4}$/ //Basic check for format validity
 	var today = new Date();
     var maxDate = new Date(today.getFullYear(), today.getMonth(), today.getDate()+parseInt(maximumDate));
 	var returnval=false
-	if (!validformat.test($("#datepicker").val())) 
-	{
-	$("#expiry_msg").show();
-	return false;
-	}
-	var monthfield=$("#datepicker").val().split("-")[1]
-	var dayfield=$("#datepicker").val().split("-")[0]
-	var yearfield=$("#datepicker").val().split("-")[2]
-	var dayobj = new Date(yearfield, monthfield-1, dayfield)
-	if ((dayobj.getMonth()+1!=monthfield)||(dayobj.getDate()!=dayfield)||(dayobj.getFullYear()!=yearfield))
-	{
-	$("#expiry_msg").show();
-	return false;
-	}
-	if(dayobj < today || dayobj > maxDate)
-	{
-		$("#expiry_msg").show();
-		return false;	
-	}
+	
+	//var monthfield=$("#datepicker").val().split("-")[1]
+	//var dayfield=$("#datepicker").val().split("-")[0]
+	//var yearfield=$("#datepicker").val().split("-")[2]
+	//var dayobj = new Date(yearfield, monthfield-1, dayfield)
+	var selectedDate = $("#datepicker").val();
+	try {
+           $.datepicker.parseDate(datepickerDateFormat,selectedDate);
+        } catch (e) {
+            $("#expiry_msg").show();
+		return false;
+        };
+
+	//if(dayobj < today || dayobj > maxDate)
+	//{
+	//	$("#expiry_msg").show();
+	//	return false;	
+	//}
 	if($("#datepicker").datepicker("getDate") == null)
 	{
 		$("#expiry_msg").show();
@@ -136,4 +135,39 @@ function fileMsg(msg)
 {
 	$("#file_msg").html(msg);
 	$("#file_msg").show();
+}
+
+// validate date format
+// use: if (!isValidDate(myDateString, "DMY")) { alert("The date is not in the correct format."); }
+function isValidDate(dateStr, format) {
+   if (format == null) { format = "MDY"; }
+   format = format.toUpperCase();
+   if (format.length != 3) { format = "MDY"; }
+   if ( (format.indexOf("M") == -1) || (format.indexOf("D") == -1) || (format.indexOf("Y") == -1) ) { format = "MDY"; }
+   if (format.substring(0, 1) == "Y") { // If the year is first
+      var reg1 = /^\d{2}(\-|\/|\.)\d{1,2}\1\d{1,2}$/
+      var reg2 = /^\d{4}(\-|\/|\.)\d{1,2}\1\d{1,2}$/
+   } else if (format.substring(1, 2) == "Y") { // If the year is second
+      var reg1 = /^\d{1,2}(\-|\/|\.)\d{2}\1\d{1,2}$/
+      var reg2 = /^\d{1,2}(\-|\/|\.)\d{4}\1\d{1,2}$/
+   } else { // The year must be third
+      var reg1 = /^\d{1,2}(\-|\/|\.)\d{1,2}\1\d{2}$/
+      var reg2 = /^\d{1,2}(\-|\/|\.)\d{1,2}\1\d{4}$/
+   }
+   // If it doesn't conform to the right format (with either a 2 digit year or 4 digit year), fail
+   if ( (reg1.test(dateStr) == false) && (reg2.test(dateStr) == false) ) { return false; }
+   var parts = dateStr.split(RegExp.$1); // Split into 3 parts based on what the divider was
+   // Check to see if the 3 parts end up making a valid date
+   if (format.substring(0, 1) == "M") { var mm = parts[0]; } else 
+      if (format.substring(1, 2) == "M") { var mm = parts[1]; } else { var mm = parts[2]; }
+   if (format.substring(0, 1) == "D") { var dd = parts[0]; } else 
+      if (format.substring(1, 2) == "D") { var dd = parts[1]; } else { var dd = parts[2]; }
+   if (format.substring(0, 1) == "Y") { var yy = parts[0]; } else 
+      if (format.substring(1, 2) == "Y") { var yy = parts[1]; } else { var yy = parts[2]; }
+   if (parseFloat(yy) <= 50) { yy = (parseFloat(yy) + 2000).toString(); }
+   if (parseFloat(yy) <= 99) { yy = (parseFloat(yy) + 1900).toString(); }
+   var dt = new Date(parseFloat(yy), parseFloat(mm)-1, parseFloat(dd), 0, 0, 0, 0);
+   if (parseFloat(dd) != dt.getDate()) { return false; }
+   if (parseFloat(mm)-1 != dt.getMonth()) { return false; }
+   return true;
 }

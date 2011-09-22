@@ -164,6 +164,22 @@ $lang["_SEND_VOUCHER"] = "Send invitasjon";
 $lang["_CONFIRM_DELETE_FILE"] = "Er du sikker at du vil slette filen?";
 $lang["_CONFIRM_DELETE_VOUCHER"] = "Er du sikker at du ønsker å tilbaketrekke invitasjonen?";
 
+// datepicker localization
+$lang["_DP_closeText"] = 'Lukk'; // Done
+$lang["_DP_prevText"] = '&laquo;Forrige'; //Prev
+$lang["_DP_nextText"] = 'Neste&raquo;'; // Next
+$lang["_DP_currentText"] = 'I dag'; // Today
+$lang["_DP_monthNames"] = "['Januar','Februar','Mars','April','Mai','Juni','Juli','August','September','Oktober','November','Desember']";
+$lang["_DP_monthNamesShort"] = "['SÃ¸n','Man','Tir','Ons','Tor','Fre','LÃ¸r']";
+$lang["_DP_dayNames"] = "['SÃ¸ndag','Mandag','Tirsdag','Onsdag','Torsdag','Fredag','LÃ¸rdag']";
+$lang["_DP_dayNamesShort"] = "['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']";
+$lang["_DP_dayNamesMin"] = "['SÃ¸','Ma','Ti','On','To','Fr','LÃ¸']";
+$lang["_DP_weekHeader"] = 'Uke';
+$lang["_DP_dateFormat"] = 'yy-mm-dd';
+$lang["_DP_firstDay"] = '1';
+$lang["_DP_isRTL"] = 'false';
+$lang["_DP_showMonthAfterYear"] = 'false';
+$lang["_DP_yearSuffix"] = '';
 
 
 ?>
