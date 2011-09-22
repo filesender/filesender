@@ -50,8 +50,7 @@ $flexerrors = "true";
 <link rel="icon" href="favicon.ico" type="image/x-icon" />
 <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
 
-<script type="text/javascript" src="js/gears_init.js" ></script>
-<script type="text/javascript" src="js/fs_gears.js" ></script>
+<script type="text/javascript" src="js/fs_html5.js" ></script>
 <script type="text/javascript" src="js/jquery-1.2.6.min.js" ></script>
 	<meta name="robots" content="noindex, nofollow" />
 	<script type="text/javascript" src="lib/js/AC_OETags.js" language="javascript"></script>
@@ -184,5 +183,6 @@ if ( hasProductInstall && !hasRequestedVersion ) {
 </p>
   <div id="DoneLoading">
 </div>
+<input type="file" id="fileToUpload" onchange="browsecomplete()" style="display:none">
 </body>
 </html>
