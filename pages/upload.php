@@ -151,8 +151,12 @@
 		if(window.File && window.FileReader && window.FileList && window.Blob && window.FormData){
 			// use HTML5 upload functions
 			html5 = true;
+			$("#html5image").attr("src","images/html5_installed.png");
+			$("#html5text").html('<?php echo lang("_HTML5Supported"); ?>');
 			$("#uploadhtml5").show();
 			} else {
+			$("#html5image").attr("src","images/html5_none.png");
+			$("#html5text").html('<?php echo lang("_HTML5NotSupported"); ?>');
 			html5 = false;	
 			// use standard upload functions
 			$("#uploadstandard").show();
@@ -435,29 +439,42 @@ function keepMeAlive()
         <div id="fileto_msg" style="display: none" class="validation_msg"><?php echo lang("_INVALID_MISSING_EMAIL"); ?></div>
         <div id="maxemails_msg" style="display: none" class="validation_msg"><?php echo lang("_MAXEMAILS"); ?> <?php echo $config['max_email_recipients'] ?>.</div>
         </td>
-        <td width="25" valign="top"><img src="images/num_1.png" alt="" width="25" height="25" hspace="6" border="0" align="left" /></td>
-        <td valign="top"><span class="forminstructions"><?php echo lang("_STEP1"); ?></span></td>
+        <td colspan="2" rowspan="8" align="center" valign="top"><table width="100%" border="0">
+          <tr>
+            <td width="25"><img src="images/num_1.png" alt="" width="25" height="25" hspace="6" border="0" align="left" /></td>
+            <td align="left"><span class="forminstructions"><?php echo lang("_STEP1"); ?></span></td>
+            </tr>
+          <tr>
+            <td><img src="images/num_2.png" width="25" height="25" hspace="6" border="0" align="left" /></td>
+            <td align="left"><span class="forminstructions"><?php echo lang("_STEP2"); ?></span></td>
+            </tr>
+          <tr>
+            <td><img src="images/num_3.png" width="25" height="25" hspace="6" border="0" align="left" /></td>
+            <td align="left"><span class="forminstructions"><?php echo lang("_STEP3"); ?></span></td>
+            </tr>
+          <tr>
+            <td><img src="images/num_4.png" width="25" height="25" hspace="6" border="0" align="left" /></td>
+            <td align="left"><span class="forminstructions"><?php echo lang("_STEP4"); ?></span></td>
+            </tr>
+          <tr>
+            <td colspan="2" align="center"><a href="http://html5test.com/"><img src="images/html5_installed.png" title="HTML5 Support" name="html5image" width="75" height="18" border="0" id="html5image" /></a><div id="html5text" name="html5text"></div></td>
+            </tr>
+        </table></td>
        </tr>
       <tr>
         <td class=" mandatory"><?php echo lang("_FROM"); ?>:</td>
         <td colspan="2"><?php echo $senderemail ?>
           <input name="filefrom" type="hidden" id="filefrom" value="<?php echo $senderemail ?>" size="40" />
           </td>
-        <td valign="top"><img src="images/num_2.png" width="25" height="25" hspace="6" border="0" align="left" /></td>
-        <td valign="top"><span class="forminstructions"><?php echo lang("_STEP2"); ?></span></td>
         </tr>
       <tr>
         <td class=""><?php echo lang("_SUBJECT"); ?>: (<?php echo lang("_OPTIONAL"); ?>)</td>
         <td colspan="2"><input name="filesubject" type="text" id="filesubject" />
         </td>
-        <td valign="top"><img src="images/num_3.png" width="25" height="25" hspace="6" border="0" align="left" /></td>
-        <td valign="top"><span class="forminstructions"><?php echo lang("_STEP3"); ?></span></td>
         </tr>
       <tr>
         <td class=""><?php echo lang("_MESSAGE"); ?>: (<?php echo lang("_OPTIONAL"); ?>)</td>
         <td colspan="2"><textarea name="filemessage" rows="4" id="filemessage"></textarea></td>
-        <td valign="top"><img src="images/num_4.png" width="25" height="25" hspace="6" border="0" align="left" /></td>
-        <td valign="top"><span class="forminstructions"><?php echo lang("_STEP4"); ?></span></td>
       </tr>
       <tr>
         <td class=" mandatory"><?php echo lang("_EXPIRY_DATE"); ?>:
@@ -466,7 +483,6 @@ function keepMeAlive()
           </input>
           <div id="expiry_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_EXPIRY_DATE"); ?></div>
           </td>
-        <td colspan="2" rowspan="5" valign="top">&nbsp;</td>
       </tr>
       <tr>
         <td class=" mandatory"><div id="selectfile" name="selectfile"><?php echo lang("_SELECT_FILE"); ?>:</div></td>
@@ -574,11 +590,7 @@ if ( hasProductInstall && !hasRequestedVersion ) {
         </td>
       </tr>
       <?php } ?>
-      <tr>
-      <td></td>
-      <td colspan="2"><div class="menu" id="uploadbutton" name="uploadbutton" style="display:none"><a href="#" onClick="validate()"><?php echo lang("_SEND"); ?></a></div></td>
-      </tr>
-         </table>
+      </table>
 <input type="hidden" id="filevoucheruid" name="filevoucheruid" value="<?php echo $voucherUID; ?>"/>
 		<input type="hidden" name="vid" id="vid" value="<?php echo $voucherUID; ?>"/>
 		<input type="hidden" name="total" id="total" value=""/>
