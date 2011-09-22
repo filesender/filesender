@@ -177,12 +177,18 @@ class DBAL {
 				return array();
 			case 1:
 				//Directly perform the query, we just have a static string
-				$res = stripslashes($mdb2->queryAll($args[0]));
+				$res = $mdb2->queryAll($args[0]);
 				// Always check that result is not an error
 				if (PEAR::isError($res)) {
 				    throw new DBALException("Error executing query: " . $res->getMessage());
 				}
 				//$res is a two-dimensional array, with each second dimension an associative array as per the query
+				//Though the rsult is only one row, this might seem overkill.
+				foreach($res as $row) {
+					foreach($row as $key => &$value) {
+						$row[$key] = stripslashes($value);
+					}
+				}
 				return $res;
 				
 				
