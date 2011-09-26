@@ -68,16 +68,19 @@ $lang_file = $locales[$langs];
 require_once("$filesenderbase/language/". "EN_AU.php");
 require_once("$filesenderbase/language/". $lang_file);
 
+// check for custom language files in config
+// load EN_AU from config if it exists  
+if(file_exists("$filesenderbase/config/EN_AU.php")) { require_once("$filesenderbase/config/EN_AU.php"); }
+
+// load custom language from config if it exists
+if(file_exists("$filesenderbase/config/".$lang_file)) { require_once("$filesenderbase/config/".$lang_file); }
 
 function lang($item)
 {
 	global $lang;
 	if (isset($lang[$item])) 
 	{
-		// Return the item html-encoded (for UTF8 strings). Don't encode tags
-		// (for basic formatting in help and about texts).
-		// NOTE: encoding the item here might be subject to change
-		return utf8tohtml($lang[$item], FALSE);	
+		return $lang[$item];	
 	} else {
 	return $item;
 	}
