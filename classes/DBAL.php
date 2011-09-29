@@ -162,7 +162,7 @@ class DBAL {
 		//Next get a connection
 		//We use singleton, so that subsequent calls reuse the same connection from the MDB2 factory (preventing connection exhaustion)
 		$mdb2 = MDB2::singleton($config['dsn'],array('result_buffering' => false,));
-		$mdb2->setCharset(‘utf8′);
+		//$mdb2->setCharset(‘utf8′);
 		//Check to see that nothing went wrong while connecting.
 		if (PEAR::isError($mdb2)) {
 			throw new DBALConnectException(sprintf('MDB2::singleton: failed to connect to database on %s', $config['dsn']));
@@ -224,7 +224,7 @@ class DBAL {
 		//Next get a connection
 		//We use singleton, so that subsequent calls reuse the same connection from the MDB2 factory (preventing connection exhaustion)
 		$mdb2 =& MDB2::singleton($config['dsn'],array('result_buffering' => false,));
-		$mdb2->setCharset(‘utf8′);
+		//$mdb2->setCharset(‘utf8′);
 		//Check to see that nothing went wrong while connecting.
 		if (PEAR::isError($mdb2)) {
 			throw new DBALConnectException(sprintf('MDB2::singleton: failed to connect to database on %s', $config['dsn']));
