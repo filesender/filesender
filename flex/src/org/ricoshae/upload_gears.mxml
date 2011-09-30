@@ -157,7 +157,7 @@
 			// start the gears upload process
 			public function doGearsUpload():void 
 			{
-				
+				pgBar.setProgress(0,100);
 				if(FileTo.text == null || FileTo.text == "")
 				{
 					FlexGlobals.topLevelApplication.logProcess("Email Missing - Gears Upload");
