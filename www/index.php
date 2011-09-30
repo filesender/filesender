@@ -252,7 +252,7 @@ require_once('../pages/help.php');
 <div id="dialog-about" title="<?php echo lang("_ABOUT"); ?>">
  <?php echo lang("_ABOUT_TEXT"); ?>
 </div>
-<div id="footer">Version <?php echo FileSender::Version; ?></div>
+<div id="footer">Version <?php echo FileSender_Version::VERSION; ?></div>
 <div id="DoneLoading"></div>
 </body>
 </html>
