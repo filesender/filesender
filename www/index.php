@@ -187,7 +187,7 @@ if($config["site_showStats"])
 }
 if($config["versionNumber"])
 {
-	$versiondisplay .= "Beta 1.5.0";
+	$versiondisplay .= FileSender_Version::VERSION;
 }
 echo "<div class='versionnumber'>" .$versiondisplay."</div>";
 
@@ -252,7 +252,7 @@ require_once('../pages/help.php');
 <div id="dialog-about" title="<?php echo lang("_ABOUT"); ?>">
  <?php echo lang("_ABOUT_TEXT"); ?>
 </div>
-<div id="footer">Version 1.5 Beta</div>
+<div id="footer">Version <?php echo FileSender::Version; ?></div>
 <div id="DoneLoading"></div>
 </body>
 </html>
