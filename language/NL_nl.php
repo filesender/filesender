@@ -123,7 +123,7 @@ $lang["_SEND"] = "Stuur";
 $lang["_DELETE"] = "Verwijder";
 
 // steps
-$lang["_STEP1"] = "Voer één of meer e-mailadresen in";
+$lang["_STEP1"] = "Voer één of meer e-mailadressen in";
 $lang["_STEP2"] = "Stel een vervaldatum in";
 $lang["_STEP3"] = "Selecteer een bestand";
 $lang["_STEP4"] = "Selecteer Upload";
