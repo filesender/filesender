@@ -57,7 +57,7 @@
   if($authvoucher->aVoucher())
   {
 	 // clear aup session
-	unset ($_SESSION['aup'], $var);
+	//unset ($_SESSION['aup'], $var);
 
 	// get voucher information 
 	$voucherData =  $authvoucher->getVoucher();
@@ -460,7 +460,7 @@ function keepMeAlive()
         <div id="fileto_msg" style="display: none" class="validation_msg"><?php echo lang("_INVALID_MISSING_EMAIL"); ?></div>
         <div id="maxemails_msg" style="display: none" class="validation_msg"><?php echo lang("_MAXEMAILS"); ?> <?php echo $config['max_email_recipients'] ?>.</div>
         </td>
-        <td colspan="2" rowspan="8" align="center" valign="top"><table width="100%" border="0">
+        <td colspan="2" rowspan="4" align="center" valign="top"><table width="100%" border="0">
           <tr>
             <td width="25"><img src="images/num_1.png" alt="" width="25" height="25" hspace="6" border="0" align="left" /></td>
             <td align="left"><span class="forminstructions"><?php echo lang("_STEP1"); ?></span></td>
@@ -478,7 +478,7 @@ function keepMeAlive()
             <td align="left"><span class="forminstructions"><?php echo lang("_STEP4"); ?></span></td>
             </tr>
           <tr>
-            <td colspan="2" align="center"><a href="http://html5test.com/"><img src="images/html5_installed.png" title="HTML5 Support" name="html5image" width="75" height="18" border="0" id="html5image" /></a><div id="html5text" name="html5text"></div></td>
+            <td colspan="2" align="center">&nbsp;</td>
             </tr>
         </table></td>
        </tr>
@@ -503,7 +503,8 @@ function keepMeAlive()
         <td colspan="2"><input id="datepicker" name="datepicker" title="<?php echo lang('_DP_dateFormat'); ?>" onchange="validate_expiry()">
           </input>
           <div id="expiry_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_EXPIRY_DATE"); ?></div>
-          </td>
+        </td>
+        <td colspan="2" align="center" valign="top"><div id="html5text" name="html5text"></div></td>
       </tr>
       <tr>
         <td class=" mandatory"><div id="selectfile" name="selectfile"><?php echo lang("_SELECT_FILE"); ?>:</div></td>
@@ -588,7 +589,8 @@ if ( hasProductInstall && !hasRequestedVersion ) {
             <input type="file" name="fileToUpload" id="fileToUpload" onChange="fileSelected();"/>
           </div>
           <div id="file_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_FILE"); ?></div>
-          </td>
+        </td>
+        <td colspan="2" align="center" valign="top"><a href="http://html5test.com/"><img src="images/html5_installed.png" alt="" name="html5image" width="75" height="18" border="0" id="html5image" title="HTML5 Support" /></a></td>
       </tr>
       <tr id="fileInfoView" style="display:none">
         <td></td>
@@ -598,17 +600,19 @@ if ( hasProductInstall && !hasRequestedVersion ) {
             <div id="fileSize" name="fileSize"></div>
           </div>
         </td>
+        <td colspan="2" align="center" valign="top">&nbsp;</td>
       </tr>
        <?php if ($config["AuP"]) {?>
       <tr>
         <td class=""></td>
-        <td><input name="aup" type="checkbox" id="aup" onchange="validate_aup()" <?php echo ($config["AuP_default"] ) ? "checked" : ""; ?> <?php echo (isset($_SESSION["aup"]) ) ? "checked" : ""; ?> value="true"/>
+        <td><input name="aup" type="checkbox" id="aup" onchange="validate_aup()" <?php echo ($config["AuP_default"] ) ? "checked" : ""; ?> <?php echo (isset($_SESSION["aup"]) && !$authvoucher->aVoucher() ) ? "checked" : ""; ?> value="true"/>
          </td>
         <td>
           <div id="aup_label" name="aup_label" onclick="toggleTOG()" style="cursor:pointer;"><?php echo lang("_ACCEPTTOC"); ?> [<font color="#666666"><?php echo lang("_SHOWHIDE"); ?></font>]</div>
           <div id="aup_msg" class="validation_msg" style="display: none"><?php echo lang("_AGREETOC"); ?></div>
           <div id="tog" name="tog" style="display:none"> <?php echo lang("_AUPTERMS"); ?> </div>
         </td>
+        <td colspan="2" align="center" valign="top">&nbsp;</td>
       </tr>
       <?php } ?>
       <tr>
