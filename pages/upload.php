@@ -304,7 +304,9 @@ function validate_file()
 	fileMsg("");
 	if(!document.getElementById("fileToUpload").files[0])
 	{
-		fileMsg("Please select a file");
+		// display message if a user enters all form details and selects upload without selecting a file
+		// in theory this error should not appear as a browse button should not be visible without a file first being selected
+		fileMsg("<?php echo lang("_SELECT_FILE") ?>");
 		return false;
 	} else 
 	{
