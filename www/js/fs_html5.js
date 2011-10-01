@@ -60,7 +60,7 @@ function gearsActive(){
 }
 
 function gearsup(){
-	document.getElementById("fileToUpload").click();
+	$('#fileToUpload').click();
 	//return browse();
 }
 

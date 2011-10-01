@@ -183,6 +183,6 @@ if ( hasProductInstall && !hasRequestedVersion ) {
 </p>
   <div id="DoneLoading">
 </div>
-<input type="file" id="fileToUpload" onchange="browsecomplete()" style="display:none">
+<input type="file" id="fileToUpload" onchange="browsecomplete()" style="visibility:hidden">
 </body>
 </html>
