@@ -136,6 +136,8 @@ $s = "complete";
 	$filedata["fileto"] = $Email;
 	$filedata["filevoucheruid"] = getGUID();
 	
+	logEntry("Filedata = " . $filedata);
+	
 	$functions->inserFileHTML5($filedata);
 	}
 	// if AUP then add session variable to store that a user selected the session variable
