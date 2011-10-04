@@ -31,31 +31,15 @@
  */
 
 
-$filesenderbase = dirname(dirname(__FILE__));
-
-require_once("$filesenderbase/config/config.php");
-
-$CFG = config::getInstance();
-global $config;
-$config = $CFG->loadConfig();  // use _global $config in all functions
-
-require_once("$filesenderbase/classes/unstrip.php");
-require_once("$filesenderbase/includes/ErrorHandler.php");
-require_once("$filesenderbase/includes/EnsureHTTPS.php");
-require_once("$filesenderbase/includes/UTF8.php");
-require_once("$filesenderbase/classes/Version.php");
-require_once("$filesenderbase/classes/Functions.php");
-require_once("$filesenderbase/classes/LanguageSelection.php");
-require_once("$filesenderbase/classes/DB.php");
-require_once("$filesenderbase/classes/DBAL.php");
-require_once("$filesenderbase/classes/AuthSaml.php");
-require_once("$filesenderbase/classes/AuthVoucher.php");
-require_once("$filesenderbase/classes/Mail.php");
-require_once("$filesenderbase/classes/Log.php");
-require_once("$filesenderbase/classes/DB_Input_Checks.php");
-
-
-
-
+//$filesenderbase = dirname(dirname(__FILE__));
+//$CFG = config::getInstance();
+//global $config;
+//$config = $CFG->loadConfig();  // use _global $config in all functions
+//
+if(get_magic_quotes_gpc()) {
+		$_POST = array_map('stripslashes',$_POST);
+		$_GET = array_map('stripslashes',$_GET);
+		//$_COOKIES = array_map('stripslashes',$_COOKIES);
+	};
 
 ?>

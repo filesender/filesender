@@ -36,6 +36,7 @@
 
 require_once 'MDB2.php';
 
+
 // Exception class for database errors
 class DBALException extends Exception {}
 
@@ -49,8 +50,8 @@ class DBAL {
 	//$config['pg_port'] = '5432';
 	//$config['pg_username'] = 'postgres';
 	//$config['pg_password'] = 'postgres';
-    private static $instance = NULL;	
-	
+    private static $instance = NULL;
+	private static $dbtype = "unknown";
 
 	private static function initDSN() {
 		global $config;
@@ -71,10 +72,11 @@ class DBAL {
 				! (array_key_exists('db_password',$config)) 
 
 			) { 
-				return "Incomplete parameter specification for Postgres, using the deprecated pg_* parameters. Please check you config.php";
+				throw new DBALException( "Incomplete parameter specification for Postgres, using the deprecated pg_* parameters. Please check you config.php");
 			}
-
-			switch ($config['db_type']) {
+			
+			//Higher order functions don't work unless predifined, and then even hardly.
+			/*switch ($config['db_type']) {
 				case 'mysql':
 					//Set defaults if necessary
 					if(!array_key_exists('db_port',$config)) {
@@ -99,9 +101,10 @@ class DBAL {
 					return 'pgsql://'.$config['db_username'].':'.$config['db_password'].'@tcp('.$config['db_host'] .':'.$config['db_port'].')/'.$config['db_database'];
 
 				default:
-					return "Invalid database type specification in db_type. Try using MDB2 DSN syntax directly in config.php, e.g. \$config[\'dsn\'] = .....;";
+					throw new DBALException( "Invalid database type specification in db_type. Try using MDB2 DSN syntax directly in config.php, e.g. \$config[\'dsn\'] = …..;");
 
-			}		
+			}*/		
+
 		}
 		
 		//Deprecated mode
@@ -129,8 +132,9 @@ class DBAL {
 		}
 		else {
 			//This wil end up in the DBALException error message on trying to connect
-			return 'no connection specified';
+			throw new DBALException( 'no connection specified');
 		}
+		
 	}
 
     public static function getInstance() {
@@ -146,7 +150,23 @@ class DBAL {
 		else if (!(array_key_exists('db_dateformat',$config))) {
 			$config['db_dateformat'] = 'Y-m-d H:i:sP';
 		}
-
+		
+		logEntry('DSN  substr 0,5 = ' . substr($config['dsn'],0,5));
+		
+		//We have no suitable database connection, or escape function
+		switch (substr($config['dsn'],0,5)) {
+			
+			case 'mysql':
+					self::$dbtype = 'mysql';				
+				
+			case 'pgsql':
+					//This should set scapegoat to prevent basic sql injection
+					self::$dbtype = 'pgsql';
+				
+		}
+			
+		//No suitable database, no escape function, no… application
+		//if (NULL == $scapegoat) {throw new DBALException( "Invalid database type specification, could bnot define SQL injection protection functions. Try using MDB2 DSN syntax directly in config.php, e.g. \$config[\'dsn\'] = …..; for Postgres or MySQL.");}
 		// Check for both equality and type	
         if(self::$instance === NULL) {
             self::$instance = new self();
@@ -159,6 +179,7 @@ class DBAL {
     public function query(/* $query, $args */) {
 		//First, get our config
 		global $config;
+		//global $scapegoat;
 		//Next get a connection
 		//We use singleton, so that subsequent calls reuse the same connection from the MDB2 factory (preventing connection exhaustion)
 		$mdb2 = MDB2::singleton($config['dsn'],array('result_buffering' => false,));
@@ -177,41 +198,42 @@ class DBAL {
 				//Nothing in, nothing out.
 				return array();
 			case 1:
-				//Directly perform the query, we just have a static string
-				$res = $mdb2->queryAll($args[0]);
+				//Directly perform the query, we just have a static string. But escape it with scapegoat
+				$res = $mdb2->queryAll($scapegoat($args[0]));
 				// Always check that result is not an error
 				if (PEAR::isError($res)) {
 				    throw new DBALException("Error executing query: " . $res->getMessage());
-				}
-				//$res is a two-dimensional array, with each second dimension an associative array as per the query
-				//Though the rsult is only one row, this might seem overkill.
-				foreach($res as $row) {
-					foreach($row as $key => &$value) {
-						$row[$key] = stripslashes($value);
-					}
 				}
 				return $res;
 				
 				
 			default:
-				//More than one argument, create a prepared statement using substitution. This automatically escapes the substituted values
+				//More than one argument, create a statement using substitution. This automatically escapes the substituted values
 				$format = array_shift($args);
 
-				//Now create the final query
-		        $query = vsprintf($format, $args);
+				//Now create the final query, but first escape the args
+				//using a very long switch cause decent higher order functions don't work
+				$safer_args = $args;
+				switch (self::$dbtype){
+					
+					case 'mysql':
+						$safer_args = array_map('mysql_real_escape_string',$args);
+						$safer_args = array_map('strip_tags',$safer_args);
+					
+					case 'pgsql':
+						$safer_args = array_map('pg_escape_string',$args);
+						$safer_args = array_map('strip_tags',$safer_args);
+						
+					case 'unknown':
+						$safer_args = array_map('addslashes',$args);
+						$safer_args = array_map('strip_tags',$safer_args);					
+				}
+		        $query = vsprintf($format, $safer_args);
 				//...and execute
 				$res = $mdb2->queryAll($query);
 				// Always check that result is not an error
 				if (PEAR::isError($res)) {
 				    throw new DBALException("Error executing query: " . $res->getMessage());
-				}
-				//$res is a two-dimensional array, with each second dimension an associative array as per the query
-				//Loop over all rows. For each named entry, reassign the second dimension after calling stripslashes()
-				//Note that we have to loop inside a loop as, we iterate over ALL the rows. Also note that we have to reference the value in otder to change it.
-				foreach($res as $row) {
-					foreach($row as $key => &$value) {
-						$row[$key] = stripslashes($value);
-					}
 				}
 				return $res;
 		}
@@ -221,6 +243,7 @@ class DBAL {
 	public function exec(/* $query, $args */) {
 		//First, get our config
 		global $config;
+		//global $scapegoat;
 		//Next get a connection
 		//We use singleton, so that subsequent calls reuse the same connection from the MDB2 factory (preventing connection exhaustion)
 		$mdb2 =& MDB2::singleton($config['dsn'],array('result_buffering' => false,));
@@ -238,8 +261,8 @@ class DBAL {
 				//Nothing in, nothing out.
 				return array();
 			case 1:
-				//Directly perform the query, we just have a static string
-				$res = $mdb2->exec($args[0]);
+				//Directly perform the query, we just have a static string, but escape it
+				$res = $mdb2->exec($scapegoat($args[0]));
 				// Always check that result is not an error
 				if (PEAR::isError($res)) {
 				    throw new DBALException("Error executing query: " . $res->getMessage());
@@ -251,8 +274,24 @@ class DBAL {
 			default:
 				//More than one argument, create a prepared statement using substitution. This automatically escapes the substituted values
 				$format = array_shift($args);
-				//Now create the final query
-		        $query = vsprintf($format, $args);
+				//Now create the final query, but first escape the args
+				//using a very long switch cause decent higher order functions don't work
+				$safer_args = $args;
+				switch (self::$dbtype){
+					
+					case 'mysql':
+						$safer_args = array_map('mysql_real_escape_string',$args);
+						$safer_args = array_map('strip_tags',$safer_args);
+					
+					case 'pgsql':
+						$safer_args = array_map('pg_escape_string',$args);
+						$safer_args = array_map('strip_tags',$safer_args);
+						
+					case 'unknown':
+						$safer_args = array_map('addslashes',$args);
+						$safer_args = array_map('strip_tags',$safer_args);					
+				}
+		        $query = vsprintf($format, $safer_args);
 				//...and execute
 				$res = $mdb2->exec($query);
 				// Always check that result is not an error
