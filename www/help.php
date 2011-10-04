@@ -80,7 +80,9 @@ require_once('../classes/_includes.php');
 </ul>
 <h4>Requirements for uploads over 2GB</h4>
 <ul>
-<li>A browser that supports the required functionality HTML5 FileAPI.  Per October 2011 uploads larger then 2GB work with FireFox4+ and Chrome on Windows, Mac OSX and Linux.  The <a href="http://caniuse.com/#feat=fileapi">the When can I use website</A> monitors implementation progress of the HTML5 FileAPI for all major browsers.  In particular support for <a href="http://caniuse.com/#feat=filereader">FileReader API</A> and <A href="http://caniuse.com/#feat=bloburls">Blob URLs</A> needs to be light green (=supported)</li>
+<li>A browser that supports the required HTML5 FileAPI functionality HTML5.  Per October 2011 uploads larger then 2GB are known to work with FireFox4+ and Chrome on Windows, Mac OSX and Linux.  
+<br><br>
+Please use the <a href="http://caniuse.com/#feat=fileapi">"When can I use..."</A> website to monitor implementation progress of the HTML5 FileAPI for all major browsers.  In particular support for <a href="http://caniuse.com/#feat=filereader">FileReader API</A> and <A href="http://caniuse.com/#feat=bloburls">Blob URLs</A> needs to be light green (=supported) for a browser to support uploads larger then 2GB </li>
 </ul>
 
 <h4>Limits</h4>
