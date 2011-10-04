@@ -218,15 +218,15 @@ class DBAL {
 					
 					case 'mysql':
 						$safer_args = array_map('mysql_real_escape_string',$args);
-						$safer_args = array_map('strip_tags',$safer_args);
+						//$safer_args = array_map('strip_tags',$safer_args);
 					
 					case 'pgsql':
 						$safer_args = array_map('pg_escape_string',$args);
-						$safer_args = array_map('strip_tags',$safer_args);
+						//$safer_args = array_map('strip_tags',$safer_args);
 						
 					case 'unknown':
 						$safer_args = array_map('addslashes',$args);
-						$safer_args = array_map('strip_tags',$safer_args);					
+						//$safer_args = array_map('strip_tags',$safer_args);					
 				}
 		        $query = vsprintf($format, $safer_args);
 				//...and execute
@@ -281,15 +281,15 @@ class DBAL {
 					
 					case 'mysql':
 						$safer_args = array_map('mysql_real_escape_string',$args);
-						$safer_args = array_map('strip_tags',$safer_args);
+						//$safer_args = array_map('strip_tags',$safer_args);
 					
 					case 'pgsql':
 						$safer_args = array_map('pg_escape_string',$args);
-						$safer_args = array_map('strip_tags',$safer_args);
+						//$safer_args = array_map('strip_tags',$safer_args);
 						
 					case 'unknown':
 						$safer_args = array_map('addslashes',$args);
-						$safer_args = array_map('strip_tags',$safer_args);					
+						//$safer_args = array_map('strip_tags',$safer_args);					
 				}
 		        $query = vsprintf($format, $safer_args);
 				//...and execute
