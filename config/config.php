@@ -52,21 +52,20 @@ public function loadConfig() {
 	// at www.filesender.org
 
 	// General settings
-	$config['admin'] = '02a3c8f170b3ceaa1d8136398bb61042a88d9ef1'; // UID's (from $config['saml_uid_attribute']) that have Administrator permissions
-	$config['adminEmail'] = 'me@vrijheid.net'; // Email address(es, separated by ,) to receive administrative messages (low disk space warning)
-	$config['Default_TimeZone'] = 'Europe/Berlin';
+	$config['admin'] = ''; // UID's (from $config['saml_uid_attribute']) that have Administrator permissions
+	$config['adminEmail'] = ''; // Email address(es, separated by ,) to receive administrative messages (low disk space warning)
+	$config['Default_TimeZone'] = 'Australia/Sydney';
 	$config['site_name'] = 'FileSender'; // Friendly name used for your FileSender instance
 	$config["site_splashtext"] = "FileSender is a secure way to share large files with anyone! Logon to upload your files or invite people to send you a file.";
 
 	// UI Settings
-	$config['datedisplayformat'] = "d-m-Y"; // Format for displaying date/time, use PHP date() format string syntax
-	$config['postgresdateformat'] = "d-m-Y"; // Format for displaying date/time, use PHP date() format string syntax
+	$config['datedisplayformat'] = "DD-MM-YYYY"; // Format for displaying date/time, use Flex DateFormatter format specifier syntax
 	$config["versionNumber"] = true; // Show version number (true/false)
 	$config['site_showStats'] = false; // Show site upload/download stats (true/false)
 	$config['displayUserName'] = true; // Show 'Welcome user' (true/false)
 	
 	// debug settings
-	$config["debug"] = true; // Debug logging on/off (true/false)
+	$config["debug"] = false; // Debug logging on/off (true/false)
 	$config['dnslookup'] = true; // log includes DNS lookup (true/false)
 	$config["client_specific_logging"] = false; // client logging (true/false)
 	$config["client_specific_logging_uids"] = ""; // "" is log all clients, or log for specific userid's or voucheruid's seperated by comma 'xxxx,zzzzz'
@@ -74,13 +73,13 @@ public function loadConfig() {
 	// saml settings
 	$config['saml_email_attribute'] = 'mail'; // Attribute used for email address
 	$config['saml_name_attribute'] = 'cn'; // Attribute used to get the user's name
-	$config['2'] = 'eduPersonTargetedID'; // Attribute to uniquely identify the user
+	$config['saml_uid_attribute'] = 'eduPersonTargetedID'; // Attribute to uniquely identify the user
 
 	// AuP settings
 	$config["AuP_default"] = false; //AuP value is already ticked
 	$config["AuP"] = true; // AuP is displayed
-	//$config["AuP_label"] = "I accept the terms and conditions of this service"; // moved AUP to language files
-	//$config["AuP_terms"] = "AuP Terms and conditions"; // moved AUP to language files
+	$config["AuP_label"] = "I accept the terms and conditions of this service";
+	$config["AuP_terms"] = "AuP Terms and conditions";
 
 	// Server settings
 	$config['default_daysvalid'] = 20; // Maximum number of days before file/voucher is expired
@@ -97,8 +96,7 @@ public function loadConfig() {
 	$config["server_drivespace_warning"] = 20; // as a percentage 20 = 20% space left on the storage drive
 	
 	// Advanced server settings, do not change unless you have a very good reason.
-	//$config['postgresdateformat'] = "Y-m-d H:i:sP"; // Date/Time format for PostgreSQL, use PHP date format specifier syntax - DEPRECATED use:
-	$config['db_dateformat'] = "Y-m-d H:i:sP";
+	$config['postgresdateformat'] = "Y-m-d H:i:sP"; // Date/Time format for PostgreSQL, use PHP date format specifier syntax
 	$config["crlf"] = "\n"; // for email CRLF can be changed to \r\n if required
 	$config['voucherRegEx'] = "'[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}'";
 	$config['voucherUIDLength'] = 36;
@@ -107,7 +105,7 @@ public function loadConfig() {
 	// site URL settings
 	if ( isset($_SERVER['SERVER_NAME']) ) {
 	$prot =  isset($_SERVER['HTTPS']) ? 'https://' : 'http://';
-	$config['site_url'] = $prot . $_SERVER['SERVER_NAME'] . '/'; // URL to Filesender
+	$config['site_url'] = $prot . $_SERVER['SERVER_NAME'] . '/filesender/'; // URL to Filesender
 	$config['site_simplesamlurl'] =  $prot . $_SERVER['SERVER_NAME'] . '/simplesaml/';
 	$config['site_authenticationSource'] ="default-sp";
 	$config['site_logouturl'] = $config['site_url'] . 'logout.php';
@@ -118,41 +116,39 @@ public function loadConfig() {
 	// Support links
 	$config['aboutURL'] = "about.php";
 	$config['helpURL'] = "help.php";
-	//config['gearsURL'] = 'http://tools.google.com/gears/';
+	$config['gearsURL'] = 'http://tools.google.com/gears/';
 
 	// (absolute) file locations
-	$config['site_filestore'] = '/Users/maartenkoopmans/repos/file_sender/filesender/branches/filesender-1.5/files/'; 
-	$config['site_temp_filestore'] = '/Users/maartenkoopmans/repos/file_sender/filesender/branches/filesender-1.5/tmp/';
-	//$config['site_filestore'] = '/tmp/'; 
-	//$config['site_temp_filestore'] = '/tmp/';
-	$config['site_simplesamllocation'] = '/var/simplesaml/';
-	$config['log_location'] = '/Users/maartenkoopmans/repos/file_sender/filesender/branches/filesender-1.5/log/';	
+	$config['site_filestore'] = '/usr/share/filesender/files/'; 
+	$config['site_temp_filestore'] = '/usr/share/filesender/tmp/'; 
+	$config['site_simplesamllocation'] = '/usr/share/simplesamlphp/';
+	$config['log_location'] = '/usr/share/filesender/log/';	
 
 	// database settings	
 	//$config['pg_host'] = 'localhost';
 	//$config['pg_database'] = 'filesender';
 	//$config['pg_port'] = '5432';
-	//$config['pg_username'] = 'postgres';
-	//$config['pg_password'] = 'postgres';
+	//$config['pg_username'] = 'filesender';
+	//$config['pg_password'] = 'verysecretpassword';
 	
-	//$config['db_type'] = 'postgres';
+	//$config['db_type'] = 'pgsql';
 	//$config['db_host'] = 'localhost';
 	//$config['db_database'] = 'filesender';
 	//$config['db_port'] = '5432';
-	//$config['db_username'] = 'postgres';
-	//$config['db_password'] = 'postgres';
+	//$config['db_username'] = 'filesender';
+	//$config['db_password'] = 'verysecretpassword';
 	
-	//$config['db_type'] = 'mysql';
-	//$config['db_host'] = 'localhost';
-	//$config['db_database'] = 'fs_test';
-	//$config['db_port'] = '3306';
-	//$config['db_username'] = 'root';
-	//$config['db_password'] = 'geheim';	
+	$config['db_type'] = 'mysql';
+	$config['db_host'] = 'localhost';
+	$config['db_database'] = 'filesender';
+	$config['db_port'] = '3306';
+	$config['db_username'] = 'filesender';
+	$config['db_password'] = 'verysecretpassword';	
 	
 	//DB settings, URL like - these will be constructed under the hoods, but you may use them directly instead
-	//$config['dsn'] = 'pgsql://postgres:postgres@tcp(localhost:5432)/filesender';
-	$config['dsn'] = 'mysql://root:geheim@localhost:3306/fs_test';
-	
+	//$config['dsn'] = 'pgsql://filesender:verysecretpassword@tcp(localhost:5432)/filesender';
+	//$config['dsn'] = 'mysql://filesender:verysecretpassword@localhost:3306/filesender';
+
 	// cron settings
 	$config['cron_exclude prefix'] = '_'; // exclude deletion of files with the prefix character listed (can use multiple characters eg '._' will ignore .xxxx and _xxxx
 	
