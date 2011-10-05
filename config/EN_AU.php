@@ -11,7 +11,7 @@ $lang["_HELP_TEXT"] = '<div align="left" style="padding:5px">
       <strong>Maximum file size per upload, with HTML 5: </strong>' .formatBytes($config["max_gears_upload_size"]).'<br>
       <strong>Maximum  file / voucher expiry days: </strong>'. $config["default_daysvalid"].'<br>
     </p>
-    <p>For more information please visit <a href="http://www.filesender.org/">www.filesender.org</a></p>
+    <p>For more information please visit <a href="http://www.filesender.org/" target="_new tab">www.filesender.org</a></p>
   </div>';
 
 $lang["_ABOUT_TEXT"] = ' <div align="left" style="padding:5px">'. htmlentities($config['site_name']) .' is an installation of FileSender (<a rel="nofollow" href="http://www.filesender.org/">www.filesender.org</a>), which is developed to the requirements of the higher education and research community.</div>';
