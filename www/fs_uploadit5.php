@@ -136,7 +136,7 @@ $s = "complete";
 	$filedata["fileto"] = $Email;
 	$filedata["filevoucheruid"] = getGUID();
 	
-	logEntry("Filedata = " . $filedata);
+	logEntry("DEBUG fs_uploadit5: Filedata = " . $filedata);
 	
 	$functions->inserFileHTML5($filedata);
 	}
