@@ -62,7 +62,7 @@ function startDownload()
   <tr><td><?php echo lang("_TO"); ?>:</td><td><?php echo htmlentities($filedata["fileto"]);?></td></tr>
   <tr><td><?php echo lang("_FROM"); ?>:</td><td><?php echo htmlentities($filedata["filefrom"]);?></td></tr>
   <tr><td><?php echo lang("_SUBJECT"); ?>:</td><td><?php echo utf8tohtml($filedata["filesubject"],TRUE);?></td></tr>
-  <tr><td><?php echo lang("_MESSAGE"); ?>:</td><td><?php echo utf8tohtml($filedata["filemessage"],TRUE);?></td></tr>
+  <tr><td><?php echo lang("_MESSAGE"); ?>:</td><td><?php echo nl2br(utf8tohtml($filedata["filemessage"],TRUE));?></td></tr>
   <tr><td><?php echo lang("_FILE_NAME"); ?>:</td><td><?php echo utf8tohtml($filedata["fileoriginalname"],TRUE);?></td></tr>
   <tr><td><?php echo lang("_FILE_SIZE"); ?>:</td><td><?php echo formatBytes($filedata["filesize"]);?></td></tr>
   <tr><td><?php echo lang("_EXPIRY_DATE"); ?>:</td><td><?php echo date($config['datedisplayformat'],strtotime($filedata["fileexpirydate"]));?></td></tr>
