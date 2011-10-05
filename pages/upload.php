@@ -590,7 +590,7 @@ if ( hasProductInstall && !hasRequestedVersion ) {
           </div>
           <div id="file_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_FILE"); ?></div>
         </td>
-        <td colspan="2" align="center" valign="top"><a href="http://html5test.com/"><img src="images/html5_installed.png" alt="" name="html5image" width="75" height="18" border="0" id="html5image" title="HTML5 Support" /></a></td>
+        <td colspan="2" align="center" valign="top"><a href="http://html5test.com/" target="_newtab"><img src="images/html5_installed.png" alt="" name="html5image" width="75" height="18" border="0" id="html5image" title="HTML5 Support" /></a></td>
       </tr>
       <tr id="fileInfoView" style="display:none">
         <td></td>
