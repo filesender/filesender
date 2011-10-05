@@ -59,7 +59,7 @@ public function loadConfig() {
 	$config["site_splashtext"] = "FileSender is a secure way to share large files with anyone! Logon to upload your files or invite people to send you a file.";
 
 	// UI Settings
-	$config['datedisplayformat'] = "DD-MM-YYYY"; // Format for displaying date/time, use Flex DateFormatter format specifier syntax
+	$config['datedisplayformat'] = "d-m-Y"; // Format for displaying date/time, use PHP date() format string syntax
 	$config["versionNumber"] = true; // Show version number (true/false)
 	$config['site_showStats'] = false; // Show site upload/download stats (true/false)
 	$config['displayUserName'] = true; // Show 'Welcome user' (true/false)
@@ -78,8 +78,8 @@ public function loadConfig() {
 	// AuP settings
 	$config["AuP_default"] = false; //AuP value is already ticked
 	$config["AuP"] = true; // AuP is displayed
-	$config["AuP_label"] = "I accept the terms and conditions of this service";
-	$config["AuP_terms"] = "AuP Terms and conditions";
+	//$config["AuP_label"] = "I accept the terms and conditions of this service"; // moved AUP to language files
+	//$config["AuP_terms"] = "AuP Terms and conditions"; // moved AUP to language files
 
 	// Server settings
 	$config['default_daysvalid'] = 20; // Maximum number of days before file/voucher is expired
@@ -116,7 +116,7 @@ public function loadConfig() {
 	// Support links
 	$config['aboutURL'] = "about.php";
 	$config['helpURL'] = "help.php";
-	$config['gearsURL'] = 'http://tools.google.com/gears/';
+	//config['gearsURL'] = 'http://tools.google.com/gears/';
 
 	// (absolute) file locations
 	$config['site_filestore'] = '/usr/share/filesender/files/'; 
@@ -124,30 +124,16 @@ public function loadConfig() {
 	$config['site_simplesamllocation'] = '/usr/share/simplesamlphp/';
 	$config['log_location'] = '/usr/share/filesender/log/';	
 
-	// database settings	
+	//Old  database settings - these can go after testing
 	//$config['pg_host'] = 'localhost';
 	//$config['pg_database'] = 'filesender';
 	//$config['pg_port'] = '5432';
 	//$config['pg_username'] = 'filesender';
-	//$config['pg_password'] = 'verysecretpassword';
+	//$config['pg_password'] = 'yoursecretpassword';
 	
-	//$config['db_type'] = 'pgsql';
-	//$config['db_host'] = 'localhost';
-	//$config['db_database'] = 'filesender';
-	//$config['db_port'] = '5432';
-	//$config['db_username'] = 'filesender';
-	//$config['db_password'] = 'verysecretpassword';
-	
-	$config['db_type'] = 'mysql';
-	$config['db_host'] = 'localhost';
-	$config['db_database'] = 'filesender';
-	$config['db_port'] = '3306';
-	$config['db_username'] = 'filesender';
-	$config['db_password'] = 'verysecretpassword';	
-	
-	//DB settings, URL like - these will be constructed under the hoods, but you may use them directly instead
-	//$config['dsn'] = 'pgsql://filesender:verysecretpassword@tcp(localhost:5432)/filesender';
-	//$config['dsn'] = 'mysql://filesender:verysecretpassword@localhost:3306/filesender';
+	//NEW DB settings, URL like oneliner, mysql or postgres
+	//$config['dsn'] = 'mysql://user:password@localhost:3306/filesender';
+	$config['dsn'] = 'pgsql://user:password@tcp(localhost:5432)/dbname';
 
 	// cron settings
 	$config['cron_exclude prefix'] = '_'; // exclude deletion of files with the prefix character listed (can use multiple characters eg '._' will ignore .xxxx and _xxxx
