@@ -60,6 +60,30 @@ class DBAL {
 			return $config['dsn'];
 		} 
 		
+		elseif (array_key_exists('db_host',$config)) {
+			global $config;
+			//Sanity checking....
+			if (
+				//These must exist at a minimum
+				! (array_key_exists('db_type',$config)) ||
+				! (array_key_exists('db_database',$config)) ||
+				! (array_key_exists('db_username',$config)) ||
+				! (array_key_exists('db_password',$config)) ||
+				! (array_key_exists('db_port',$config)) 
+			) { 
+				throw new DBALException( "Incomplete parameter specification for Postgres, using the deprecated pg_* parameters. Please check you config.php");
+			} 
+			else {
+				if ($config['db_type'] == 'pgsql') { 
+					return 'pgsql://'.$config['db_username'].':'.$config['db_password'].'@tcp('.$config['db_host'] .':'.$config['db_port'].')/'.$config['db_database']; 
+				}
+				elseif ($config['db_type'] == 'mysql') {
+					$dsn = 'mysql://'.$config['db_username'].':'.$config['db_password'].'@'.$config['db_host'] .':'.$config['db_port'].'/'.$config['db_database'];
+					logEntry("mysql dsn in initDSN = ". $dsn);
+					return $dsn;
+				}
+			}
+		}		
 		
 		elseif (array_key_exists('db_host',$config)) {
 			global $config;
@@ -74,39 +98,7 @@ class DBAL {
 			) { 
 				throw new DBALException( "Incomplete parameter specification for Postgres, using the deprecated pg_* parameters. Please check you config.php");
 			}
-			
-			//Higher order functions don't work unless predifined, and then even hardly.
-			/*switch ($config['db_type']) {
-				case 'mysql':
-					//Set defaults if necessary
-					if(!array_key_exists('db_port',$config)) {
-						$config['dbport'] = '3306';
-					}
-					if(!array_key_exists('db_host',$config)) {
-						$config['dbport'] = 'localhost';
-					}
-					//Concat db string here
-					return $config['dsn'] = 'mysql://'.$config['db_username'].':'.$config['db_password'].'@'.$config['db_host'].':'.$config['db_port'].'/'.$config['db_database'];
-
-
-				case 'pgsql':
-				//Set defaults if necessary
-					if(!array_key_exists('db_port',$config)) {
-						$config['dbport'] = '5432';
-					}
-					if(!array_key_exists('db_host',$config)) {
-						$config['dbport'] = 'localhost';
-					}
-					//And return the DSN string
-					return 'pgsql://'.$config['db_username'].':'.$config['db_password'].'@tcp('.$config['db_host'] .':'.$config['db_port'].')/'.$config['db_database'];
-
-				default:
-					throw new DBALException( "Invalid database type specification in db_type. Try using MDB2 DSN syntax directly in config.php, e.g. \$config[\'dsn\'] = …..;");
-
-			}*/		
-
 		}
-		
 		//Deprecated mode
 		elseif (array_key_exists('pg_host',$config)) {
 			global $config;
@@ -118,7 +110,7 @@ class DBAL {
 				(! (array_key_exists('pg_password',$config))) 
 
 			) { 
-				return "Incomplete parameter specification for Postgres, using the deprecated pg_* parameters. Please check you config.php";
+				throw new DBALException ("Incomplete parameter specification for Postgres, using the deprecated pg_* parameters. Please check you config.php");
 			}
 			//Set to default values if non-existant
 			if(!array_key_exists('pg_host',$config)){
@@ -160,13 +152,10 @@ class DBAL {
 					self::$dbtype = 'mysql';				
 				
 			case 'pgsql':
-					//This should set scapegoat to prevent basic sql injection
 					self::$dbtype = 'pgsql';
 				
 		}
 			
-		//No suitable database, no escape function, no… application
-		//if (NULL == $scapegoat) {throw new DBALException( "Invalid database type specification, could bnot define SQL injection protection functions. Try using MDB2 DSN syntax directly in config.php, e.g. \$config[\'dsn\'] = …..; for Postgres or MySQL.");}
 		// Check for both equality and type	
         if(self::$instance === NULL) {
             self::$instance = new self();
@@ -179,7 +168,6 @@ class DBAL {
     public function query(/* $query, $args */) {
 		//First, get our config
 		global $config;
-		//global $scapegoat;
 		//Next get a connection
 		//We use singleton, so that subsequent calls reuse the same connection from the MDB2 factory (preventing connection exhaustion)
 		$mdb2 = MDB2::singleton($config['dsn'],array('result_buffering' => false,));
@@ -218,15 +206,12 @@ class DBAL {
 					
 					case 'mysql':
 						$safer_args = array_map('mysql_real_escape_string',$args);
-						//$safer_args = array_map('strip_tags',$safer_args);
 					
 					case 'pgsql':
 						$safer_args = array_map('pg_escape_string',$args);
-						//$safer_args = array_map('strip_tags',$safer_args);
 						
 					case 'unknown':
 						$safer_args = array_map('addslashes',$args);
-						//$safer_args = array_map('strip_tags',$safer_args);					
 				}
 		        $query = vsprintf($format, $safer_args);
 				//...and execute
@@ -243,11 +228,9 @@ class DBAL {
 	public function exec(/* $query, $args */) {
 		//First, get our config
 		global $config;
-		//global $scapegoat;
 		//Next get a connection
 		//We use singleton, so that subsequent calls reuse the same connection from the MDB2 factory (preventing connection exhaustion)
 		$mdb2 =& MDB2::singleton($config['dsn'],array('result_buffering' => false,));
-		//$mdb2->setCharset(‘utf8′);
 		//Check to see that nothing went wrong while connecting.
 		if (PEAR::isError($mdb2)) {
 			throw new DBALConnectException(sprintf('MDB2::singleton: failed to connect to database on %s', $config['dsn']));
@@ -281,15 +264,12 @@ class DBAL {
 					
 					case 'mysql':
 						$safer_args = array_map('mysql_real_escape_string',$args);
-						//$safer_args = array_map('strip_tags',$safer_args);
 					
 					case 'pgsql':
 						$safer_args = array_map('pg_escape_string',$args);
-						//$safer_args = array_map('strip_tags',$safer_args);
 						
 					case 'unknown':
 						$safer_args = array_map('addslashes',$args);
-						//$safer_args = array_map('strip_tags',$safer_args);					
 				}
 		        $query = vsprintf($format, $safer_args);
 				//...and execute
