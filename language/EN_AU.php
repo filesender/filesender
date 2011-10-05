@@ -113,7 +113,7 @@
 			$lang["_INVALID_FILE_EXT"] = "Invalid file extension.";
 			$lang["_INVALID_TOO_LARGE_1"] = "File size cannot be greater than";
 			$lang["_SELECT_ANOTHER_FILE"] = "Please select another file.";
-			$lang["_SELECT_FILE"] = "Please select a file.";
+			$lang["_SELECT_FILE"] = "Select your file";
 			$lang["_INVALID_FILE_NAME"] = "The name of the file you are uploading is invalid. Please rename your file and try again.";
 			$lang["_INVALID_SIZE_USEHTML5"] = "Please select another file or use a HTML5 enabled browser to upload larger files.";
 			$lang["_ACCEPTTOC"] = "I accept the terms and conditions of this service.";	
@@ -155,7 +155,7 @@ An email will be sent to the recipient with a link to use the Voucher.";
            	$lang["_STEP1"] = "Enter delivery email address(es)";
            	$lang["_STEP2"] = "Set expiry date";
            	$lang["_STEP3"] = "Browse for a file";
-           	$lang["_STEP4"] = "Select Upload";
+           	$lang["_STEP4"] = "Click Send";
 			$lang["_HTML5Supported"] = "Uploads over 2Gb supported!";
 			$lang["_HTML5NotSupported"] = "Uploads over 2GB not supported!";			
 	
