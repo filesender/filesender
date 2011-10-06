@@ -37,8 +37,8 @@
  */
 			// main menu items
            	$lang["_ADMIN"] = "Administration";
-            $lang["_NEW_UPLOAD"] = "New Upload";
-            $lang["_VOUCHERS"] = "Vouchers";
+            $lang["_NEW_UPLOAD"] = "Send File";
+            $lang["_VOUCHERS"] = "Guest invite";
             $lang["_LOGON"] = "Logon";
             $lang["_LOG_OFF"] = "Log Off";
             $lang["_MY_FILES"] = "My Files";
@@ -97,7 +97,7 @@
 		   	$lang["_UPLOADING_WAIT"] = "Uploading file - please wait...";
 			
 			// Flash button menu
-			$lang["_UPLOAD"] = "Upload";
+			$lang["_UPLOAD"] = "Send a file";
             $lang["_BROWSE"] = "Browse";
             $lang["_CANCEL"] = "Cancel";
 			$lang["_OPEN"] = "Open";
@@ -134,7 +134,7 @@ An email will be sent to the recipient with a link to use the Voucher.";
 			$lang["_ARE_YOU_SURE"] = "Are you sure?";
 			$lang["_DELETE_FILE"] = "Delete File";
            	$lang["_EMAIL_SENT"] = "Message Sent";
-           	$lang["_EXPIRY_DATE"] = "Expiry Date";
+           	$lang["_EXPIRY_DATE"] = "Expiry date";
             $lang["_FILE_SIZE"] = "File Size";
 			$lang["_FILE_RESENT"] = "File Re-sent";	
 			$lang["_MESSAGE_RESENT"] = "Message Re-sent";			
@@ -162,7 +162,7 @@ An email will be sent to the recipient with a link to use the Voucher.";
            	// site help
            	//$lang["_site_help_text"] = "Site help text";
            	//$lang["_Help"] = "Help";
-			$lang["_OPTIONAL"] = "Optional";
+			$lang["_OPTIONAL"] = "optional";
 			
 			// confirmation
 			$lang["_CONFIRM_DELETE_FILE"] = "Are you sure you want to delete this File?";
