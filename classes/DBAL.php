@@ -186,8 +186,23 @@ class DBAL {
 				//Nothing in, nothing out.
 				return array();
 			case 1:
-				//Directly perform the query, we just have a static string. But escape it with scapegoat
-				$res = $mdb2->queryAll($scapegoat($args[0]));
+				//Directly perform the query, we just have a static string.
+				//Now create the final query, but first escape the args
+				//using a very long switch cause decent higher order functions don't work
+				$safer_args = $args[0];
+				switch (self::$dbtype){
+					
+					case 'mysql':
+						$safer_args = array_map('mysql_real_escape_string',$args[0]);
+					
+					case 'pgsql':
+						$safer_args = array_map('pg_escape_string',$args[0]);
+						
+					case 'unknown':
+						$safer_args = array_map('addslashes',$args[0]);
+				}
+		        $query = vsprintf($format, $safer_args);
+				$res = $mdb2->queryAll($query);
 				// Always check that result is not an error
 				if (PEAR::isError($res)) {
 				    throw new DBALException("Error executing query: " . $res->getMessage());
@@ -243,14 +258,29 @@ class DBAL {
 			case 0: 
 				//Nothing in, nothing out.
 				return array();
+				
 			case 1:
-				//Directly perform the query, we just have a static string, but escape it
-				$res = $mdb2->exec($scapegoat($args[0]));
+				//Directly perform the query, we just have a static string.
+				//Now create the final query, but first escape the args
+				//using a very long switch cause decent higher order functions don't work
+				$safer_args = $args[0];
+				switch (self::$dbtype){
+
+					case 'mysql':
+						$safer_args = array_map('mysql_real_escape_string',$args[0]);
+
+					case 'pgsql':
+						$safer_args = array_map('pg_escape_string',$args[0]);
+
+					case 'unknown':
+						$safer_args = array_map('addslashes',$args[0]);
+				}
+		        $query = vsprintf($format, $safer_args);
+				$res = $mdb2->queryAll($query);
 				// Always check that result is not an error
 				if (PEAR::isError($res)) {
 				    throw new DBALException("Error executing query: " . $res->getMessage());
 				}
-				//$res is an integer denoting the number of rows affected
 				return $res;
 				
 				
