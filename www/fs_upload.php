@@ -66,9 +66,7 @@ $log =  Log::getInstance();
 
 date_default_timezone_set($config['Default_TimeZone']);
 $uploadfolder =  $config["site_filestore"];
-	
-logEntry("DEBUG fs_upload: REQUEST data: " . print_r($_REQUEST, true));
-logEntry("DEBUG fs_upload: POST data: " . print_r($_POST, true));
+
 
 // check we are authenticated first before uploading the chunk
 if($authvoucher->aVoucher()  || $authsaml->isAuth() ) { 
