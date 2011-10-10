@@ -44,6 +44,7 @@
 	// --------------------------------------------------------
 	
    // check if a voucher and load into form if it is
+   
    $filestatus = "Available";
    $voucherUID = "";
    $senderemail = $useremail;
@@ -261,7 +262,7 @@
 	
 	var validate = true;
 	
-	if(!validate_fileto() ){validate = false;};		// validate emails
+	//if(!validate_fileto() ){validate = false;};		// validate emails
 	if(!validate_file() ){validate = false;};		// check if file selected
 	//if(aup == '1') // check if AUP is required
 	//{
@@ -441,7 +442,7 @@ function validate()
 {
 	// upload if validated
 	if(html5) {
-	if(validateForm())
+		if(validateForm())
 	{
 	startupload();
 	}
@@ -472,6 +473,15 @@ function keepMeAlive()
 <div id="box"> <?php echo '<div id="pageheading">'.lang("_UPLOAD").'</div>'; ?>
   <form id="form1" enctype="multipart/form-data" method="POST" action="fs_uploadit5.php">
     <table width="100%" border="0">
+	  <tr>
+		<div id="scratch" class="scratch_msg">
+			<?php
+				if(array_key_exists("scratch", $GLOBALS )) {
+					echo $scratch;
+				}
+			?>
+		</div>
+	  </tr>
       <tr>
         <td width="130" class=" mandatory"><?php echo lang("_TO") ; ?>:</td>
         <td colspan="2" valign="middle"><input name="fileto" title="<?php echo lang("_EMAIL_SEPARATOR_MSG") ; ?>" type="text" id="fileto" onchange="validate_fileto()"/>

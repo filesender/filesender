@@ -122,6 +122,97 @@ class Functions {
         return self::$instance;
     } 
 
+	//Set the scratch message
+	public function setScratchMessage($message) {
+		$GLOBALS['scratch'] = $message;
+	}
+
+	//Append to the scratch message
+	public function appendScratchMessage($message) {
+		$GLOBALS['scratch'] = $GLOBALS['scratch'] .'<br/>' .$message;
+	}	
+	//Clear the scratch
+	public function clearScratchMessage() {
+		$GLOBALS['scratch'] = '';
+	}
+	
+	//Validate to: email addresses
+	public function validate_to($to_emails)
+	{	
+		$emailArray = preg_split("/;/", $_POST["fileto"]);
+		
+		foreach($emailArray as $email) {
+	        if (preg_match(';^([a-z0-9_-]+)(.[a-z0-9_-]+)*@([a-z0-9-]+)(.[a-z0-9-]+)*.[a-z]{2,4}$;i', $email)) {
+	            continue;
+	        } 
+			else {
+	            return false; 
+	        }
+		}
+		return true;
+	}
+	
+	//Validate date
+	public function validate_date()
+	{
+		if (strtotime($_POST["fileexpirydate"])) {return true;} else {return false;}
+	}
+	
+	//Validate AUP
+	public function validate_aup()
+	{
+		isset($_POST["aup"]);
+	}
+
+	//Validate if the file is not 0 bytes long
+	public function validate_zero_filesize()
+	{
+		if (isset($_POST["filesize"])) {return ($_POST["filesize"]= 0);}
+		else {return false;}
+	}
+	
+	// validate extension for banned file names
+	public function validate_extension($filename) {
+		if($filename.split('.').pop().search(banextensions) == -1)
+		{
+		return true;
+		} else {
+		return false;
+		}
+	}
+
+	public function validatePlainUpload() {
+		
+		$all_good = true;
+		
+		if(!validate_to()) { 
+			$all_good = false;
+			appendScratchMessage(lang("_INVALID_MISSING_EMAIL"));
+		}
+		/*if(!validate_date()) { 
+			$all_good = false;
+			appendScratchMessage(lang("_INVALID_FILE_EXT"));
+		}
+		if(!validate_aup()) { 
+			$all_good = false;
+			appendScratchMessage(lang("_AGREETOC"));
+		}
+		if(!validate_extension()) { 
+			$all_good = false;
+			appendScratchMessage(lang("_INVALID_MISSING_EMAIL"));
+		}
+		if(!validate_zero_filesize()) { 
+			$all_good = false;
+			appendScratchMessage(lang("_INVALID_FILESIZE_ZERO"));
+		}*/
+		
+		//If somethings is wrong, redirect with message in the scratch space
+		if(! $all_good) {
+			header('index.php?s=upload');
+		}
+	}
+
+
     //---------------------------------------
     // Return Basic Database Statistics e.g. Up xx Gb (files xx) | Down xx Gb (files xx)
     public function getStats() {
@@ -593,9 +684,9 @@ class Functions {
         if($dataitem['filestatus'] == "Voucher") {
             $this->saveLog->saveLog($dataitem,"Voucher Sent","");
             return $this->sendmail->sendEmail($dataitem,$config['voucherissuedemailbody']);
-        } else {
+        }  else {
             $this->saveLog->saveLog($dataitem,"Uploaded","");
-            return $this->sendmail->sendEmail($dataitem,$config['fileuploadedemailbody']);
+            return $this->sendmail->sendEmail($dataitem,$config['fileuploadedemailbody']); 
         }
     }
 
