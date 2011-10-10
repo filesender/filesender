@@ -9,14 +9,14 @@
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  * 
- * *	Redistributions of source code must retain the above copyright
- * 	notice, this list of conditions and the following disclaimer.
- * *	Redistributions in binary form must reproduce the above copyright
- * 	notice, this list of conditions and the following disclaimer in the
- * 	documentation and/or other materials provided with the distribution.
- * *	Neither the name of AARNet, HEAnet, SURFnet and UNINETT nor the
- * 	names of its contributors may be used to endorse or promote products
- * 	derived from this software without specific prior written permission.
+ * *    Redistributions of source code must retain the above copyright
+ *      notice, this list of conditions and the following disclaimer.
+ * *    Redistributions in binary form must reproduce the above copyright
+ *      notice, this list of conditions and the following disclaimer in the
+ *      documentation and/or other materials provided with the distribution.
+ * *    Neither the name of AARNet, HEAnet, SURFnet and UNINETT nor the
+ *      names of its contributors may be used to endorse or promote products
+ *      derived from this software without specific prior written permission.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -34,73 +34,75 @@ class config {
 
 private static $instance = NULL;
 
-	public static function getInstance() {
-		// Check for both equality and type		
-		if(self::$instance === NULL) {
-			self::$instance = new self();
-		}
-		return self::$instance;
-	} 
-	
+        public static function getInstance() {
+                // Check for both equality and type             
+                if(self::$instance === NULL) {
+                        self::$instance = new self();
+                }
+                return self::$instance;
+        } 
+        
 public function loadConfig() {
-	
-	$config = array();
+        
+        $config = array();
 
-	// Start of configurable settings
-	// For more information about these settings please see the 
-	// Administrator Reference Manual in the documentation section
-	// at www.filesender.org
+        // Start of configurable settings
+        // For more information about these settings please see the 
+        // Administrator Reference Manual in the documentation section
+        // at www.filesender.org
 
-	// General settings
-	$config['admin'] = ''; // UID's (from $config['saml_uid_attribute']) that have Administrator permissions
-	$config['adminEmail'] = ''; // Email address(es, separated by ,) to receive administrative messages (low disk space warning)
-	$config['Default_TimeZone'] = 'Australia/Sydney';
-	$config['site_name'] = 'FileSender'; // Friendly name used for your FileSender instance
-	$config["site_splashtext"] = "FileSender is a secure way to share large files with anyone! Logon to upload your files or invite people to send you a file.";
+        // General settings
+        $config['admin'] = '02a3c8f170b3ceaa1d8136398bb61042a88d9ef1'; // UID's (from $config['saml_uid_attribute']) that have Administrator permissions
+        $config['adminEmail'] = 'me@vrijheid.net'; // Email address(es, separated by ,) to receive administrative messages (low disk space warning)
+        $config['Default_TimeZone'] = 'Europe/Berlin';
+        $config['site_name'] = 'FileSender'; // Friendly name used for your FileSender instance
+        $config["site_splashtext"] = "FileSender is a secure way to share large files with anyone! Logon to upload your files or invite people to send you a file.";
 
-	// UI Settings
-	$config['datedisplayformat'] = "d-m-Y"; // Format for displaying date/time, use PHP date() format string syntax
-	$config["versionNumber"] = true; // Show version number (true/false)
-	$config['site_showStats'] = false; // Show site upload/download stats (true/false)
-	$config['displayUserName'] = true; // Show 'Welcome user' (true/false)
-	
-	// debug settings
-	$config["debug"] = false; // Debug logging on/off (true/false)
-	$config['dnslookup'] = true; // log includes DNS lookup (true/false)
-	$config["client_specific_logging"] = false; // client logging (true/false)
-	$config["client_specific_logging_uids"] = ""; // "" is log all clients, or log for specific userid's or voucheruid's seperated by comma 'xxxx,zzzzz'
+        // UI Settings
+        $config['datedisplayformat'] = "d-m-Y"; // Format for displaying date/time, use PHP date() format string syntax
+        $config['postgresdateformat'] = "d-m-Y"; // Format for displaying date/time, use PHP date() format string syntax
+        $config["versionNumber"] = true; // Show version number (true/false)
+        $config['site_showStats'] = false; // Show site upload/download stats (true/false)
+        $config['displayUserName'] = true; // Show 'Welcome user' (true/false)
+        
+        // debug settings
+        $config["debug"] = true; // Debug logging on/off (true/false)
+        $config['dnslookup'] = true; // log includes DNS lookup (true/false)
+        $config["client_specific_logging"] = false; // client logging (true/false)
+        $config["client_specific_logging_uids"] = ""; // "" is log all clients, or log for specific userid's or voucheruid's seperated by comma 'xxxx,zzzzz'
 
-	// saml settings
-	$config['saml_email_attribute'] = 'mail'; // Attribute used for email address
-	$config['saml_name_attribute'] = 'cn'; // Attribute used to get the user's name
-	$config['saml_uid_attribute'] = 'eduPersonTargetedID'; // Attribute to uniquely identify the user
+        // saml settings
+        $config['saml_email_attribute'] = 'mail'; // Attribute used for email address
+        $config['saml_name_attribute'] = 'cn'; // Attribute used to get the user's name
+        $config['saml_uid_attribute'] = 'eduPersonTargetedID'; // Attribute to uniquely identify the user
 
-	// AuP settings
-	$config["AuP_default"] = false; //AuP value is already ticked
-	$config["AuP"] = true; // AuP is displayed
-	//$config["AuP_label"] = "I accept the terms and conditions of this service"; // moved AUP to language files
-	//$config["AuP_terms"] = "AuP Terms and conditions"; // moved AUP to language files
+        // AuP settings
+        $config["AuP_default"] = false; //AuP value is already ticked
+        $config["AuP"] = true; // AuP is displayed
+        //$config["AuP_label"] = "I accept the terms and conditions of this service"; // moved AUP to language files
+        //$config["AuP_terms"] = "AuP Terms and conditions"; // moved AUP to language files
 
-	// Server settings
-	$config['default_daysvalid'] = 20; // Maximum number of days before file/voucher is expired
-	$config['ban_extension'] = 'exe,bat'; // Possibly dangerous file extensions that are disallowed
-	$config["max_email_recipients"] = 100; // maximum email addresses allowed to send at once for voucher or file sending, a value of 0 allows unlimited emails.
+        // Server settings
+        $config['default_daysvalid'] = 20; // Maximum number of days before file/voucher is expired
+        $config['ban_extension'] = 'exe,bat'; // Possibly dangerous file extensions that are disallowed
+        $config["max_email_recipients"] = 100; // maximum email addresses allowed to send at once for voucher or file sending, a value of 0 allows unlimited emails.
 
-	$config['max_flash_upload_size'] = '2147483648'; // 2GB
-	$config['max_gears_upload_size'] = '107374182400'; // 100 GB
-	$config['max_html5_upload_size'] = '107374182400'; // 100  GB
-	
-	// update max_flash_upload_size if php.ini post_max_size and upload_max_filesize is set lower
-	$config['max_flash_upload_size'] = min(let_to_num(ini_get('post_max_size'))-2048, let_to_num(ini_get('upload_max_filesize')),$config['max_flash_upload_size']);
-	
-	$config["server_drivespace_warning"] = 20; // as a percentage 20 = 20% space left on the storage drive
-	
-	// Advanced server settings, do not change unless you have a very good reason.
-	$config['postgresdateformat'] = "Y-m-d H:i:sP"; // Date/Time format for PostgreSQL, use PHP date format specifier syntax
-	$config["crlf"] = "\n"; // for email CRLF can be changed to \r\n if required
-	$config['voucherRegEx'] = "'[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}'";
-	$config['voucherUIDLength'] = 36;
-	$config['emailRegEx'] = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
+        $config['max_flash_upload_size'] = '2147483648'; // 2GB
+        $config['max_gears_upload_size'] = '107374182400'; // 100 GB
+        $config['max_html5_upload_size'] = '107374182400'; // 100  GB
+        
+        // update max_flash_upload_size if php.ini post_max_size and upload_max_filesize is set lower
+        $config['max_flash_upload_size'] = min(let_to_num(ini_get('post_max_size'))-2048, let_to_num(ini_get('upload_max_filesize')),$config['max_flash_upload_size']);
+        
+        $config["server_drivespace_warning"] = 20; // as a percentage 20 = 20% space left on the storage drive
+        
+        // Advanced server settings, do not change unless you have a very good reason.
+        //$config['postgresdateformat'] = "Y-m-d H:i:sP"; // Date/Time format for PostgreSQL, use PHP date format specifier syntax - DEPRECATED use:
+        $config['db_dateformat'] = "Y-m-d H:i:sP";
+        $config["crlf"] = "\n"; // for email CRLF can be changed to \r\n if required
+        $config['voucherRegEx'] = "'[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}'";
+        $config['voucherUIDLength'] = 36;
+        $config['emailRegEx'] = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
 
 	// site URL settings
 	if ( isset($_SERVER['SERVER_NAME']) ) {
@@ -114,33 +116,49 @@ public function loadConfig() {
 	$config['forceSSL'] = true; // Always use SSL (true/false)
 	
 	// Support links
-	$config['aboutURL'] = "";
-	$config['helpURL'] = "";
+	$config['aboutURL'] = "index.php";
+	$config['helpURL'] = "index.php";
 	$config['HTML5URL'] = 'http://html5test.com/';
 
-	// (absolute) file locations
-	$config['site_filestore'] = '/usr/share/filesender/files/'; 
-	$config['site_temp_filestore'] = '/usr/share/filesender/tmp/'; 
-	$config['site_simplesamllocation'] = '/usr/share/simplesamlphp/';
-	$config['log_location'] = '/usr/share/filesender/log/';	
+        // (absolute) file locations
+        $config['site_filestore'] = '/Users/maartenkoopmans/repos/file_sender/filesender/branches/filesender-1.5/files/'; 
+        $config['site_temp_filestore'] = '/Users/maartenkoopmans/repos/file_sender/filesender/branches/filesender-1.5/tmp/';
+        //$config['site_filestore'] = '/tmp/'; 
+        //$config['site_temp_filestore'] = '/tmp/';
+        $config['site_simplesamllocation'] = '/var/simplesaml/';
+        $config['log_location'] = '/Users/maartenkoopmans/repos/file_sender/filesender/branches/filesender-1.5/log/';   
 
-	//Old  database settings - these can go after testing
-	//$config['pg_host'] = 'localhost';
-	//$config['pg_database'] = 'filesender';
-	//$config['pg_port'] = '5432';
-	//$config['pg_username'] = 'filesender';
-	//$config['pg_password'] = 'yoursecretpassword';
-	
-	//NEW DB settings, URL like oneliner, mysql or postgres
-	//$config['dsn'] = 'mysql://user:password@localhost:3306/filesender';
-	$config['dsn'] = 'pgsql://user:password@tcp(localhost:5432)/dbname';
-
-	// cron settings
-	$config['cron_exclude prefix'] = '_'; // exclude deletion of files with the prefix character listed (can use multiple characters eg '._' will ignore .xxxx and _xxxx
-	
-	// email templates section
-	$config['default_emailsubject'] = "{siteName}: {filename}";
-	$config['filedownloadedemailbody'] = '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}
+        // database settings    
+        //$config['pg_host'] = 'localhost';
+        //$config['pg_database'] = 'filesender';
+        //$config['pg_port'] = '5432';
+        //$config['pg_username'] = 'postgres';
+        //$config['pg_password'] = 'postgres';
+        
+        //$config['db_type'] = 'postgres';
+        //$config['db_host'] = 'localhost';
+        //$config['db_database'] = 'filesender';
+        //$config['db_port'] = '5432';
+        //$config['db_username'] = 'postgres';
+        //$config['db_password'] = 'postgres';
+        
+        //$config['db_type'] = 'mysql';
+        //$config['db_host'] = 'localhost';
+        //$config['db_database'] = 'fs_test';
+        //$config['db_port'] = '3306';
+        //$config['db_username'] = 'root';
+        //$config['db_password'] = 'geheim';    
+        
+        //DB settings, URL like - these will be constructed under the hoods, but you may use them directly instead
+        $config['dsn'] = 'pgsql://postgres:postgres@tcp(localhost:5432)/filesender';
+        //$config['dsn'] = 'mysql://root:geheim@localhost:3306/fs_test';
+        
+        // cron settings
+        $config['cron_exclude prefix'] = '_'; // exclude deletion of files with the prefix character listed (can use multiple characters eg '._' will ignore .xxxx and _xxxx
+        
+        // email templates section
+        $config['default_emailsubject'] = "{siteName}: {filename}";
+        $config['filedownloadedemailbody'] = '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}
 Dear Sir, Madam,
 
 The file below has been downloaded from {siteName} by {filefrom}.
@@ -162,44 +180,44 @@ Best regards,
 <P>Dear Sir, Madam,</P>
 <P>The file below has been downloaded from {siteName} by {filefrom}.</P>
 <TABLE WIDTH=100% BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
-	<COL WIDTH=600>
-	<COL WIDTH=80>
-	<COL WIDTH=800>
-	<COL WIDTH=70>
-	<TR>
-		<TD WIDTH=600 BGCOLOR="#b3b3b3">
-			<P ALIGN=CENTER><B>Filename</B></P>
-		</TD>
-		<TD WIDTH=80 BGCOLOR="#b3b3b3">
-			<P ALIGN=CENTER><B>Filesize</B></P>
-		</TD>
-		<TD WIDTH=600 BGCOLOR="#b3b3b3">
-			<P ALIGN=CENTER><B>Download link</B></P>
-		</TD>
-		<TD WIDTH=70 BGCOLOR="#b3b3b3">
-			<P ALIGN=CENTER><B>Valid until</B></P>
-		</TD>
-	</TR>
-	<TR>
-		<TD WIDTH=600 BGCOLOR="#e6e6e6">
-			<P ALIGN=CENTER>{fileoriginalname}</P>
-		</TD>
-		<TD WIDTH=80 BGCOLOR="#e6e6e6">
-			<P ALIGN=CENTER>{filesize}</P>
-		</TD>
-		<TD WIDTH=800 BGCOLOR="#e6e6e6">
-			<P ALIGN=CENTER><A HREF="{serverURL}?vid={filevoucheruid}">{serverURL}?vid={filevoucheruid}</A></P>
-		</TD>
-		<TD WIDTH=70 BGCOLOR="#e6e6e6">
-			<P ALIGN=CENTER>{fileexpirydate}</P>
-		</TD>
-	</TR>
+        <COL WIDTH=600>
+        <COL WIDTH=80>
+        <COL WIDTH=800>
+        <COL WIDTH=70>
+        <TR>
+                <TD WIDTH=600 BGCOLOR="#b3b3b3">
+                        <P ALIGN=CENTER><B>Filename</B></P>
+                </TD>
+                <TD WIDTH=80 BGCOLOR="#b3b3b3">
+                        <P ALIGN=CENTER><B>Filesize</B></P>
+                </TD>
+                <TD WIDTH=600 BGCOLOR="#b3b3b3">
+                        <P ALIGN=CENTER><B>Download link</B></P>
+                </TD>
+                <TD WIDTH=70 BGCOLOR="#b3b3b3">
+                        <P ALIGN=CENTER><B>Valid until</B></P>
+                </TD>
+        </TR>
+        <TR>
+                <TD WIDTH=600 BGCOLOR="#e6e6e6">
+                        <P ALIGN=CENTER>{fileoriginalname}</P>
+                </TD>
+                <TD WIDTH=80 BGCOLOR="#e6e6e6">
+                        <P ALIGN=CENTER>{filesize}</P>
+                </TD>
+                <TD WIDTH=800 BGCOLOR="#e6e6e6">
+                        <P ALIGN=CENTER><A HREF="{serverURL}?vid={filevoucheruid}">{serverURL}?vid={filevoucheruid}</A></P>
+                </TD>
+                <TD WIDTH=70 BGCOLOR="#e6e6e6">
+                        <P ALIGN=CENTER>{fileexpirydate}</P>
+                </TD>
+        </TR>
 </TABLE>
 <P>Best regards,</P>
 <P>{siteName}</P>
 </BODY>
 </HTML>{CRLF}{CRLF}--simple_mime_boundary--';
-	$config['fileuploadedemailbody'] = '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}
+        $config['fileuploadedemailbody'] = '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}
 Dear Sir, Madam,
 
 The file below has been uploaded to {siteName} by {filefrom} and you have been granted permission to download this file.
@@ -223,58 +241,58 @@ Best regards,
 <P>Dear Sir, Madam,</P>
 <P>The file below has been uploaded to {siteName} by {filefrom} and you have been granted permission to download this file.</P>
 <TABLE WIDTH=100% BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
-	<COL WIDTH=600>
-	<COL WIDTH=80>
-	<COL WIDTH=800>
-	<COL WIDTH=70>
-	<TR>
-		<TD WIDTH=600 BGCOLOR="#b3b3b3">
-			<P ALIGN=CENTER><B>Filename</B></P>
-		</TD>
-		<TD WIDTH=80 BGCOLOR="#b3b3b3">
-			<P ALIGN=CENTER><B>Filesize</B></P>
-		</TD>
-		<TD WIDTH=600 BGCOLOR="#b3b3b3">
-			<P ALIGN=CENTER><B>Download link</B></P>
-		</TD>
-		<TD WIDTH=70 BGCOLOR="#b3b3b3">
-			<P ALIGN=CENTER><B>Valid until</B></P>
-		</TD>
-	</TR>
-	<TR>
-		<TD WIDTH=600 BGCOLOR="#e6e6e6">
-			<P ALIGN=CENTER>{fileoriginalname}</P>
-		</TD>
-		<TD WIDTH=80 BGCOLOR="#e6e6e6">
-			<P ALIGN=CENTER>{filesize}</P>
-		</TD>
-		<TD WIDTH=800 BGCOLOR="#e6e6e6">
-			<P ALIGN=CENTER><A HREF="{serverURL}?vid={filevoucheruid}">{serverURL}?vid={filevoucheruid}</A></P>
-		</TD>
-		<TD WIDTH=70 BGCOLOR="#e6e6e6">
-			<P ALIGN=CENTER>{fileexpirydate}</P>
-		</TD>
-	</TR>
+        <COL WIDTH=600>
+        <COL WIDTH=80>
+        <COL WIDTH=800>
+        <COL WIDTH=70>
+        <TR>
+                <TD WIDTH=600 BGCOLOR="#b3b3b3">
+                        <P ALIGN=CENTER><B>Filename</B></P>
+                </TD>
+                <TD WIDTH=80 BGCOLOR="#b3b3b3">
+                        <P ALIGN=CENTER><B>Filesize</B></P>
+                </TD>
+                <TD WIDTH=600 BGCOLOR="#b3b3b3">
+                        <P ALIGN=CENTER><B>Download link</B></P>
+                </TD>
+                <TD WIDTH=70 BGCOLOR="#b3b3b3">
+                        <P ALIGN=CENTER><B>Valid until</B></P>
+                </TD>
+        </TR>
+        <TR>
+                <TD WIDTH=600 BGCOLOR="#e6e6e6">
+                        <P ALIGN=CENTER>{fileoriginalname}</P>
+                </TD>
+                <TD WIDTH=80 BGCOLOR="#e6e6e6">
+                        <P ALIGN=CENTER>{filesize}</P>
+                </TD>
+                <TD WIDTH=800 BGCOLOR="#e6e6e6">
+                        <P ALIGN=CENTER><A HREF="{serverURL}?vid={filevoucheruid}">{serverURL}?vid={filevoucheruid}</A></P>
+                </TD>
+                <TD WIDTH=70 BGCOLOR="#e6e6e6">
+                        <P ALIGN=CENTER>{fileexpirydate}</P>
+                </TD>
+        </TR>
 </TABLE>
 <P></P>
 <TABLE WIDTH=100% BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
-	<COL WIDTH=100%>
-	<TR>
-		<TD WIDTH=100% BGCOLOR="#b3b3b3">
-			<P ALIGN=CENTER><B>Personal message from {filefrom} (optional):</B></P>
-		</TD>
-	</TR>
-	<TR>
-		<TD WIDTH=100% BGCOLOR="#e6e6e6">
-			<P><I>{htmlfilemessage}</I></P>
-		</TD>
-	</TR>
+        <COL WIDTH=100%>
+        <TR>
+                <TD WIDTH=100% BGCOLOR="#b3b3b3">
+                        <P ALIGN=CENTER><B>Personal message from {filefrom} (optional):</B></P>
+                </TD>
+        </TR>
+        <TR>
+                <TD WIDTH=100% BGCOLOR="#e6e6e6">
+                        <P><I>{htmlfilemessage}</I></P>
+                </TD>
+        </TR>
 </TABLE>
 <P>Best regards,</P>
 <P>{siteName}</P>
 </BODY>
 </HTML>{CRLF}{CRLF}--simple_mime_boundary--';
-	$config['voucherissuedemailbody'] = '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}
+        $config['voucherissuedemailbody'] = '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}
 Dear Sir, Madam,
 
 Please, find below a voucher which grants access to {siteName}.
@@ -297,31 +315,31 @@ Best regards,
 <P>Please, find below a voucher which grants access to {siteName}.</P>
 <P>With this voucher you can upload once one file and make it available for download to a group of people.</P>
 <TABLE WIDTH=100% BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
-	<COL WIDTH=75>
-	<COL WIDTH=800>
-	<COL WIDTH=70>
-	<TR>
-		<TD WIDTH=75 BGCOLOR="#b3b3b3">
-			<P ALIGN=CENTER><B>Issuer</B></P>
-		</TD>
-		<TD WIDTH=800 BGCOLOR="#b3b3b3">
-			<P ALIGN=CENTER><B>Voucher link</B></P>
-		</TD>
-		<TD WIDTH=70 BGCOLOR="#b3b3b3">
-			<P ALIGN=CENTER><B>Valid until</B></P>
-		</TD>
-	</TR>
-	<TR>
-		<TD WIDTH=75 BGCOLOR="#e6e6e6">
-			<P ALIGN=CENTER>{filefrom}</P>
-		</TD>
-		<TD WIDTH=800 BGCOLOR="#e6e6e6">
-			<P ALIGN=CENTER><A HREF="{serverURL}?vid={filevoucheruid}">{serverURL}?vid={filevoucheruid}</A></P>
-		</TD>
-		<TD WIDTH=70 BGCOLOR="#e6e6e6">
-			<P ALIGN=CENTER>{fileexpirydate}</P>
-		</TD>
-	</TR>
+        <COL WIDTH=75>
+        <COL WIDTH=800>
+        <COL WIDTH=70>
+        <TR>
+                <TD WIDTH=75 BGCOLOR="#b3b3b3">
+                        <P ALIGN=CENTER><B>Issuer</B></P>
+                </TD>
+                <TD WIDTH=800 BGCOLOR="#b3b3b3">
+                        <P ALIGN=CENTER><B>Voucher link</B></P>
+                </TD>
+                <TD WIDTH=70 BGCOLOR="#b3b3b3">
+                        <P ALIGN=CENTER><B>Valid until</B></P>
+                </TD>
+        </TR>
+        <TR>
+                <TD WIDTH=75 BGCOLOR="#e6e6e6">
+                        <P ALIGN=CENTER>{filefrom}</P>
+                </TD>
+                <TD WIDTH=800 BGCOLOR="#e6e6e6">
+                        <P ALIGN=CENTER><A HREF="{serverURL}?vid={filevoucheruid}">{serverURL}?vid={filevoucheruid}</A></P>
+                </TD>
+                <TD WIDTH=70 BGCOLOR="#e6e6e6">
+                        <P ALIGN=CENTER>{fileexpirydate}</P>
+                </TD>
+        </TR>
 </TABLE>
 <P></P>
 <P>Best regards,</P>
@@ -329,7 +347,7 @@ Best regards,
 </BODY>
 </HTML>{CRLF}{CRLF}--simple_mime_boundary--';
 
-	$config['defaultvouchercancelled'] = "{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}
+        $config['defaultvouchercancelled'] = "{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}
 Dear Sir, Madam,
 
 A voucher from {filefrom} has been cancelled.
@@ -343,12 +361,12 @@ Best regards,
 </HEAD>
 <BODY>
 Dear Sir, Madam,<BR><BR>A voucher from {filefrom} has been cancelled.<BR><BR>
-	<P>Best regards,</P>
+        <P>Best regards,</P>
 <P>{siteName}</P>
 </BODY>
 </HTML>{CRLF}{CRLF}--simple_mime_boundary--";
 
-	$config['defaultfilecancelled'] = "{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}
+        $config['defaultfilecancelled'] = "{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}
 Dear Sir, Madam,
 
 The file '{filename}' from {filefrom} has been cancelled and is no longer available to download.
@@ -359,31 +377,31 @@ Best regards,
 <HTML>
 <BODY>
 Dear Sir, Madam,<BR><BR>The file '{filename}' from {filefrom} has been cancelled and is no longer available to download.<BR><BR>
-	<P>Best regards,</P>
+        <P>Best regards,</P>
 <P>{siteName}</P>
 </BODY>
 </HTML>{CRLF}{CRLF}--simple_mime_boundary--";
-	// End of email templates section
+        // End of email templates section
 
-	// The settings below are not implemented yet in 1.0
-	// and may become deprecated.
-	// Instructions [NOT IMPLEMENTED in 1.0]
-	$config['site_sendfileinstructions'] = '<B>To send a file.</B><BR>Type an email address into the To: box<BR>Select BROWSE to choose a file on your computer.<BR>Select SEND FILE to upload and send the file.';
-	$config['site_voucherinstructions'] = 'A Voucher allows someone to send you a file.<BR>To create a voucher. Enter an email address then select Send Voucher.<BR>An email will be sent to the recipient with a link to use the Voucher.';
-	$config['site_downloadinstructions'] = 'A file is available for you.<BR>Select Download File to download the file to your computer.';
-	
-	// Other settings not implemented yet (1.0)
-	$config['available_space'] = '20000M';
-	$config['about'] = true;
-	$config["help_link_visible"] = true;
-	$config['site_defaultlanguage'] = 'EN_AU'; // available languages EN_AU, NO_no, NL_nl
-	$config['site_icon'] = 'cloudstor.png';
-	$config['site_css'] = '';
-	
-	// End of configurable settings
+        // The settings below are not implemented yet in 1.0
+        // and may become deprecated.
+        // Instructions [NOT IMPLEMENTED in 1.0]
+        $config['site_sendfileinstructions'] = '<B>To send a file.</B><BR>Type an email address into the To: box<BR>Select BROWSE to choose a file on your computer.<BR>Select SEND FILE to upload and send the file.';
+        $config['site_voucherinstructions'] = 'A Voucher allows someone to send you a file.<BR>To create a voucher. Enter an email address then select Send Voucher.<BR>An email will be sent to the recipient with a link to use the Voucher.';
+        $config['site_downloadinstructions'] = 'A file is available for you.<BR>Select Download File to download the file to your computer.';
+        
+        // Other settings not implemented yet (1.0)
+        $config['available_space'] = '20000M';
+        $config['about'] = true;
+        $config["help_link_visible"] = true;
+        $config['site_defaultlanguage'] = 'EN_AU'; // available languages EN_AU, NO_no, NL_nl
+        $config['site_icon'] = 'cloudstor.png';
+        $config['site_css'] = '';
+        
+        // End of configurable settings
 
-	return $config;
-	}
+        return $config;
+        }
 }
 
 // Helper function used when calculating maximum upload size from the various maxsize configuration items
@@ -404,5 +422,5 @@ function let_to_num($v){ //This function transforms the php.ini notation for num
         break;
     }
       return $ret;
-}	
+}       
 ?>
