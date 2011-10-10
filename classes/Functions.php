@@ -993,11 +993,13 @@ public function insertVoucher($to,$expiry){
                 ";
 
             $this->db->exec($sqlQuery, $fileid);
-
+			logEntry('In deleteFile, query'.$sqlQuery." executed");
             $fileArray =  $this->getVoucher($fileid);
-
+			logEntry('In deleteFile, fileArray = '.var_export($fileArray));
             $this->sendmail->sendEmail($fileArray[0],$config['defaultfilecancelled']);	
-            $this->saveLog->saveLog($fileArray[0],"File Cancelled","");
+            logEntry('In deleteFile, query'.$sqlQuery." executed, and mail sent");
+			$this->saveLog->saveLog($fileArray[0],"File Cancelled","");
+            logEntry('In deleteFile, query'.$sqlQuery." executed, and logged");
 
             return true;
         } else {

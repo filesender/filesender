@@ -138,7 +138,7 @@ $s = "complete";
 	
 	logEntry("DEBUG fs_uploadit5: Filedata = " . $filedata);
 	
-	$functions->inserFileHTML5($filedata);
+	$functions->insertFileHTML5($filedata);
 	}
 	// if AUP then add session variable to store that a user selected the session variable
 	if(isset($_POST["aup"]))

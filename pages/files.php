@@ -66,7 +66,7 @@ $emailArray = preg_split("/;/", $emailto);
 foreach ($emailArray as $Email) { 
 $myfileData["fileto"] = $Email;
 $myfileData["filevoucheruid"] = getGUID();
-$functions->inserFileHTML5($myfileData);
+$functions->insertFileHTML5($myfileData);
 }
 // display the add box
 echo "<div id='message'>".lang("_EMAIL_SENT").".</div>";
