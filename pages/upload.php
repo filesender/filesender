@@ -171,10 +171,12 @@
 			// use HTML5 upload functions
 			html5 = true;
 			$("#html5image").attr("src","images/html5_installed.png");
+			$("#html5image").attr("title","<?php echo lang("_HTML5Supported"); ?>");
 			$("#html5text").html('<?php echo lang("_HTML5Supported"); ?>');
 			$("#uploadhtml5").show();
 			} else {
 			$("#html5image").attr("src","images/html5_none.png");
+			$("#html5image").attr("title","<?php echo lang("_HTML5NotSupported"); ?>");
 			$("#html5text").html('<?php echo lang("_HTML5NotSupported"); ?>');
 			html5 = false;	
 			// use standard upload functions
@@ -504,7 +506,7 @@ function keepMeAlive()
           </input>
           <div id="expiry_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_EXPIRY_DATE"); ?></div>
         </td>
-        <td colspan="2" align="center" valign="top"><div id="html5text" name="html5text"></div></td>
+        <td colspan="2" align="center" valign="top"><a href="<?php echo $config['HTML5URL'] ?>" target="_newtab"><img src="images/html5_installed.png" alt="" name="html5image" width="75" height="18" border="0" id="html5image" title="" /></a></td>
       </tr>
       <tr>
         <td class=" mandatory"><div id="selectfile" name="selectfile"><?php echo lang("_SELECT_FILE"); ?>:</div></td>
@@ -590,7 +592,7 @@ if ( hasProductInstall && !hasRequestedVersion ) {
           </div>
           <div id="file_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_FILE"); ?></div>
         </td>
-        <td colspan="2" align="center" valign="top"><a href="http://html5test.com/" target="_newtab"><img src="images/html5_installed.png" alt="" name="html5image" width="75" height="18" border="0" id="html5image" title="HTML5 Support" /></a></td>
+        <td colspan="2" align="center" valign="top"><div id="html5text" name="html5text"></div></td>
       </tr>
       <tr id="fileInfoView" style="display:none">
         <td></td>

@@ -149,7 +149,8 @@ $lang["_STEP1"] = "Fyll ut epost-adress(ene)";
 $lang["_STEP2"] = "Set utløpsdato";
 $lang["_STEP3"] = "Velg en fil";
 $lang["_STEP4"] = "Klikk Send";
-
+$lang["_HTML5Supported"] = "Uploads over 2Gb supported!";
+$lang["_HTML5NotSupported"] = "Uploads over 2GB not supported!";	
 //$lang["_site_help_text"] = "Hjelp tekst";
 //$lang["_Help"] = "Hjelp";
 

@@ -127,6 +127,8 @@ $lang["_STEP1"] = "Voer één of meer e-mailadressen in";
 $lang["_STEP2"] = "Stel een vervaldatum in";
 $lang["_STEP3"] = "Selecteer een bestand";
 $lang["_STEP4"] = "Selecteer Upload";
+$lang["_HTML5Supported"] = "Uploads over 2Gb supported!";
+$lang["_HTML5NotSupported"] = "Uploads over 2GB not supported!";
 
 // Upload page: error messages, displayed on-input
 $lang["_INVALID_MISSING_EMAIL"] = "Ongeldig of ontbrekend e-mailadres";
