@@ -57,6 +57,9 @@ rm -rf %{buildroot}
 %{__cp} -p %{SOURCE3} %{buildroot}%{_sysconfdir}/cron.daily/%{name}
 %{__cp} -p ./config/filesender-php.ini %{buildroot}%{_sysconfdir}/php.d/%{name}.ini
 %{__cp} -p ./config/config.experimental-bounce-handling %{buildroot}%{_sysconfdir}/%{name}/
+%{__cp} -p ./config/locale.php %{buildroot}%{_sysconfdir}/%{name}/
+%{__cp} -p ./config/EN_AU.php %{buildroot}%{_sysconfdir}/%{name}/
+%{__cp} -p ./config/NO_no.php %{buildroot}%{_sysconfdir}/%{name}/
 
 %{__rm} -f %{buildroot}%{_datadir}/%{name}/*.txt
 %{__rm} -f %{buildroot}%{_datadir}/%{name}/*.specs
@@ -81,6 +84,9 @@ rm -rf %{buildroot}
 %dir %{_sysconfdir}/%{name}/
 %config(noreplace) %attr(0640,root,apache) %{_sysconfdir}/%{name}/config.php
 %config(noreplace) %attr(0640,root,apache) %{_sysconfdir}/%{name}/config.experimental-bounce-handling
+%config(noreplace) %attr(0644,root,apache) %{_sysconfdir}/%{name}/locale.php
+%config(noreplace) %attr(0644,root,apache) %{_sysconfdir}/%{name}/EN_AU.php
+%config(noreplace) %attr(0644,root,apache) %{_sysconfdir}/%{name}/NO_no.php
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.conf
 %config(noreplace) %{_sysconfdir}/php.d/%{name}.ini
 %config(noreplace) %attr(0755,root,root) %{_sysconfdir}/cron.daily/%{name}
