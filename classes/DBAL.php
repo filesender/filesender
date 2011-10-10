@@ -187,22 +187,7 @@ class DBAL {
 				return array();
 			case 1:
 				//Directly perform the query, we just have a static string.
-				//Now create the final query, but first escape the args
-				//using a very long switch cause decent higher order functions don't work
-				//$safer_args = $args[0];
-				switch (self::$dbtype){
-					
-					case 'mysql':
-						$safer_args = mysql_real_escape_string($args[0]);
-					
-					case 'pgsql':
-						$safer_args = pg_escape_string($args[0]);
-						
-					case 'unknown':
-						$safer_args = addslashes($args[0]);
-				}
-		        $query = vsprintf($safer_args);
-				$res = $mdb2->queryAll($query);
+				$res = $mdb2->queryAll($args[0]);
 				// Always check that result is not an error
 				if (PEAR::isError($res)) {
 				    throw new DBALException("Error executing query: " . $res->getMessage());
@@ -220,13 +205,13 @@ class DBAL {
 				switch (self::$dbtype){
 					
 					case 'mysql':
-						$safer_args = array_map('mysql_real_escape_string',$args[0]);
+						$safer_args = array_map('mysql_real_escape_string',$args);
 					
 					case 'pgsql':
-						$safer_args = array_map('pg_escape_string',$args[0]);
+						$safer_args = array_map('pg_escape_string',$args);
 						
 					case 'unknown':
-						$safer_args = array_map('addslashes',$args[0]);
+						$safer_args = array_map('addslashes',$args);
 				}
 		        $query = vsprintf($format, $safer_args);
 				//...and execute
@@ -261,20 +246,7 @@ class DBAL {
 				
 			case 1:
 				//Directly perform the query, we just have a static string.
-				//Now create the final query, but first escape the args
-				//using a very long switch cause decent higher order functions don't work
-				switch (self::$dbtype){
-					
-					case 'mysql':
-						$safer_args = mysql_real_escape_string($args[0]);
-					
-					case 'pgsql':
-						$safer_args = pg_escape_string($args[0]);
-						
-					case 'unknown':
-						$safer_args = addslashes($args[0]);
-				}
-		        $query = vsprintf($safer_args);
+		        $query = $args[0];
 				$res = $mdb2->queryAll($query);
 				// Always check that result is not an error
 				if (PEAR::isError($res)) {
