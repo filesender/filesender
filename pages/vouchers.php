@@ -73,10 +73,10 @@ $(function() {
 	$("#dialog-delete").dialog({ autoOpen: false, height: 140, modal: true,
 	
 	buttons: {
-			<?php echo lang("_CANCEL") ?>: function() {
+			'<?php echo lang("_CANCEL") ?>': function() {
 				$( this ).dialog( "close" );
 			},
-			<?php echo lang("_DELETE") ?>: function() { 
+			'<?php echo lang("_DELETE") ?>': function() { 
 			deletevoucher();
 			$( this ).dialog( "close" );
 			}
