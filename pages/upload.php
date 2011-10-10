@@ -564,6 +564,7 @@ if ( hasProductInstall && !hasRequestedVersion ) {
 			"src", "swf/filesenderup",
 			"FlashVars", "<?php echo $flashVARS ?>",
 			"width", "300",
+             'wmode',"transparent",
 			"height", "30",
 			"align", "middle",
 			"id", "filesenderup",
