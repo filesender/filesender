@@ -129,11 +129,11 @@
 		// set dialog cancel upload
 		$("#dialog-cancel").dialog({ autoOpen: false, height: 140, width: 350, modal: true,
 		buttons: {
-				<?php echo lang("_OK") ?>: function() {
+				'<?php echo lang("_OK") ?>': function() {
 				location.reload(true);
 
 				},
-				<?php echo lang("_CANCEL") ?>: function() { 
+				'<?php echo lang("_CANCEL") ?>': function() { 
 				$( this ).dialog( "close" );
 				}
 		}
@@ -142,7 +142,7 @@
 		// default error message dialogue
 		$("#dialog-default").dialog({ autoOpen: false, height: 140, modal: true,title: "Error",		
 		buttons: {
-			<?php echo lang("_OK") ?>: function() {
+			'<?php echo lang("_OK") ?>': function() {
 				$("#dialog-default").html("");
 				$( this ).dialog( "close" );
 				}
@@ -158,7 +158,7 @@
     	},
 		autoOpen: false, height: 180,width: 400, modal: true,title: "<?php echo lang("_UPLOAD_PROGRESS") ?>:",		
 		buttons: {
-			<?php echo lang("_CANCEL") ?>: function() {
+			'<?php echo lang("_CANCEL") ?>': function() {
 				// are you sure?
 				$("#dialog-cancel").dialog('open');
 				$('.ui-dialog-buttonpane > button:last').focus();

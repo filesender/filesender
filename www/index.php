@@ -94,7 +94,7 @@ $(function() {
 	
 	$("#dialog-help").dialog({ autoOpen: false, height: 400,width: 660, modal: true,
 		buttons: {
-			<?php echo lang("_CLOSE") ?>: function() {
+			'<?php echo lang("_CLOSE") ?>': function() {
 				$( this ).dialog( "close" );
 				}
 			}
@@ -102,7 +102,7 @@ $(function() {
 		
 		$("#dialog-about").dialog({ autoOpen: false,  height: 400,width: 400, modal: true,
 			buttons: {
-				<?php echo lang("_CLOSE") ?>: function() {
+				'<?php echo lang("_CLOSE") ?>': function() {
 					$( this ).dialog( "close" );
 				}
 			}

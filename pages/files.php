@@ -116,10 +116,10 @@ $json_o=json_decode($filedata,true);
 		// delete modal dialog box
 		$("#dialog-delete").dialog({ autoOpen: false, height: 180, modal: true,
 			buttons: {
-				<?php echo lang("_CANCEL") ?>: function() {
+				'<?php echo lang("_CANCEL") ?>': function() {
 				$( this ).dialog( "close" );
 				},
-				<?php echo lang("_DELETE") ?>: function() { 
+				'<?php echo lang("_DELETE") ?>': function() { 
 				deletefile();
 				$( this ).dialog( "close" );
 				}
@@ -129,10 +129,10 @@ $json_o=json_decode($filedata,true);
 		// add new recipient modal dialog box
 		$("#dialog-addrecipient").dialog({ autoOpen: false, height: 410,width:650, modal: true,
 			buttons: {
-				<?php echo lang("_CANCEL") ?>: function() {
+				'<?php echo lang("_CANCEL") ?>': function() {
 					$( this ).dialog( "close" );
 				},
-				<?php echo lang("_SEND") ?>: function() { 
+				'<?php echo lang("_SEND") ?>': function() { 
 				// calidate form before sending
 				if(validateForm())
 				{
