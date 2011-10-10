@@ -114,8 +114,8 @@ public function loadConfig() {
 	$config['forceSSL'] = true; // Always use SSL (true/false)
 	
 	// Support links
-	$config['aboutURL'] = "about.php";
-	$config['helpURL'] = "help.php";
+	$config['aboutURL'] = "";
+	$config['helpURL'] = "";
 	$config['HTML5URL'] = 'http://html5test.com/';
 
 	// (absolute) file locations
