@@ -186,11 +186,10 @@ class DBAL {
 				//Nothing in, nothing out.
 				return array();
 			case 1:
-				$format = array_shift($args);
 				//Directly perform the query, we just have a static string.
 				//Now create the final query, but first escape the args
 				//using a very long switch cause decent higher order functions don't work
-				$safer_args = $args[0];
+				//$safer_args = $args[0];
 				switch (self::$dbtype){
 					
 					case 'mysql':
@@ -202,7 +201,7 @@ class DBAL {
 					case 'unknown':
 						$safer_args = addslashes($args[0]);
 				}
-		        $query = vsprintf($format, $safer_args);
+		        $query = vsprintf($safer_args);
 				$res = $mdb2->queryAll($query);
 				// Always check that result is not an error
 				if (PEAR::isError($res)) {
@@ -221,13 +220,13 @@ class DBAL {
 				switch (self::$dbtype){
 					
 					case 'mysql':
-						$safer_args = array_map('mysql_real_escape_string',$args);
+						$safer_args = array_map('mysql_real_escape_string',$args[0]);
 					
 					case 'pgsql':
-						$safer_args = array_map('pg_escape_string',$args);
+						$safer_args = array_map('pg_escape_string',$args[0]);
 						
 					case 'unknown':
-						$safer_args = array_map('addslashes',$args);
+						$safer_args = array_map('addslashes',$args[0]);
 				}
 		        $query = vsprintf($format, $safer_args);
 				//...and execute
@@ -261,11 +260,9 @@ class DBAL {
 				return array();
 				
 			case 1:
-				$format = array_shift($args);
 				//Directly perform the query, we just have a static string.
 				//Now create the final query, but first escape the args
 				//using a very long switch cause decent higher order functions don't work
-				$safer_args = $args[0];
 				switch (self::$dbtype){
 					
 					case 'mysql':
@@ -277,7 +274,7 @@ class DBAL {
 					case 'unknown':
 						$safer_args = addslashes($args[0]);
 				}
-		        $query = vsprintf($format, $safer_args);
+		        $query = vsprintf($safer_args);
 				$res = $mdb2->queryAll($query);
 				// Always check that result is not an error
 				if (PEAR::isError($res)) {
