@@ -140,6 +140,15 @@
 		});
 		
 		// default error message dialogue
+		$("#dialog-support").dialog({ autoOpen: false, height: 400,width: 550, modal: true,title: "",		
+		buttons: {
+			'<?php echo lang("_OK") ?>': function() {
+				$( this ).dialog( "close" );
+				}
+			}
+		})
+		
+		// default error message dialogue
 		$("#dialog-default").dialog({ autoOpen: false, height: 140, modal: true,title: "Error",		
 		buttons: {
 			'<?php echo lang("_OK") ?>': function() {
@@ -166,8 +175,12 @@
 			}
 		})
 		
+		function displayhtml5support()
+		{
+		$("#dialog-support").dialog("open");		
+		}
 		//Check if HTML5 is enable and use HTML uploader
-		if(window.File && window.FileReader && window.FileList && window.Blob && window.FormData){
+		if(window.File && window.FileReader && window.FileList && window.Blob){
 			// use HTML5 upload functions
 			html5 = true;
 			$("#html5image").attr("src","images/html5_installed.png");
@@ -177,7 +190,10 @@
 			} else {
 			$("#html5image").attr("src","images/html5_none.png");
 			$("#html5image").attr("title","<?php echo lang("_HTML5NotSupported"); ?>");
-			$("#html5text").html('<?php echo lang("_HTML5NotSupported"); ?>');
+			$('#html5image').click(function() { displayhtml5support(); });
+			$("#html5text").html('');
+			
+			
 			html5 = false;	
 			// use standard upload functions
 			$("#uploadstandard").show();
@@ -639,4 +655,7 @@ if ( hasProductInstall && !hasRequestedVersion ) {
 		<div id="progress_completed"></div>
 	</div>
 	</div>
+</div>
+<div id="dialog-support" title="" style="display:none">
+<?php require_once("$filesenderbase/pages/html5display.php"); ?>
 </div>
