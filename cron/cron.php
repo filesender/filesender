@@ -143,7 +143,7 @@ function cleanUp()
 		
 		try {
 			// remove from database
-			$query = "UPDATE Files SET filestatus = 'Closed' WHERE fileid='%s'";
+			$query = "UPDATE files SET filestatus = 'Closed' WHERE fileid='%s'";
 			$result = $db->exec($query, $row['fileid']);			
 		} catch (DBALException $e) {
 			logProcess("CRON","SQL Error on updating files".$e->getMessage());
@@ -223,7 +223,7 @@ function cleanUp()
 
 			// change status to closed in database
 			try {
-				$query = "UPDATE Files SET filestatus = 'Closed' WHERE fileid='%s'";
+				$query = "UPDATE files SET filestatus = 'Closed' WHERE fileid='%s'";
 				$result = $db->exec($query, $row['fileid']);			
 			} catch (Exception $e) {
 				logProcess("CRON","SQL Error Updating files ".$e->getMessage());
