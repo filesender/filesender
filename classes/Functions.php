@@ -993,9 +993,11 @@ public function insertVoucher($to,$expiry){
                 ";
 
             $this->db->exec($sqlQuery, $fileid);
+
             $fileArray =  $this->getVoucher($fileid);
+
             $this->sendmail->sendEmail($fileArray[0],$config['defaultfilecancelled']);	
-			$this->saveLog->saveLog($fileArray[0],"File Cancelled","");
+            $this->saveLog->saveLog($fileArray[0],"File Cancelled","");
 
             return true;
         } else {
