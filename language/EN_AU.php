@@ -160,7 +160,7 @@ An email will be sent to the recipient with a link to use the Voucher.";
            	$lang["_STEP2"] = "Set expiry date";
            	$lang["_STEP3"] = "Browse for a file";
            	$lang["_STEP4"] = "Click Send";
-			$lang["_HTML5Supported"] = "Uploads over 2Gb supported!";
+			$lang["_HTML5Supported"] = "Uploads over 2GB supported!";
 			$lang["_HTML5NotSupported"] = "Uploads over 2GB not supported!";			
 	
            	// site help
