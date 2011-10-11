@@ -443,6 +443,7 @@ function validate()
 	// upload if validated
 	if(html5) {
 		if(validateForm())
+		//Use this to allow uplods with faulty parameters (and comment out the previouslone)if(true)
 	{
 	startupload();
 	}
@@ -477,7 +478,8 @@ function keepMeAlive()
 		<div id="scratch" class="scratch_msg">
 			<?php
 				if(array_key_exists("scratch", $GLOBALS )) {
-					echo $scratch;
+					echo $functions->getScratchMessage();
+					$functions->clearScratchMessages();
 				}
 			?>
 		</div>
