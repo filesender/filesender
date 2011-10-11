@@ -68,9 +68,7 @@ $authvoucher = AuthVoucher::getInstance();
 $CFG = config::getInstance();
 $config = $CFG->loadConfig();
 $functions = Functions::getInstance();
-//$functions->validatePlainUpload();
-
-logEntry("---in fs_uploadit5.php, after validation");
+$functions->validatePlainUpload();
 
 date_default_timezone_set($config['Default_TimeZone']);
 
