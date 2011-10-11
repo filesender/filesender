@@ -48,9 +48,9 @@ session_destroy();
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>FileSender:</title>
-<link rel="stylesheet" type="text/css" href="css/default.css" />
 <link rel="shortcut icon" href="favicon.ico"type="image/x-icon">
 <link type="text/css" href="css/smoothness/jquery-ui-1.8.2.custom.css" rel="Stylesheet" />
+<link rel="stylesheet" type="text/css" href="css/default.css" />
 <script type="text/javascript" src="js/common.js" ></script>
 <script type="text/javascript" src="js/jquery-1.5.2.min.js" ></script>
 <script type="text/javascript" src="js/jquery-ui-1.8.1.custom.min.js"></script>
@@ -59,33 +59,24 @@ $(function() {
 $( "a", ".menu" ).button();
 })
 </script>
-<style type="text/css">
-body { margin: 0px; overflow:hidden }
-.style5 {
-	color: #FFFFFF;
-	font-weight: bold;
-}
-</style>
-
 
 </head>
-<body scroll="no">
+<body>
 
 <div id="wrap">
 	
   <div id="header">
-   <img src="displayimage.php" width="800" height="60" border="0" alt="banner"/>
-    <p class="style5 style1"></p>
+    <div align="center">
+       <img src="displayimage.php" width="800" height="60" border="0" alt="banner"/>
+    </div>
   </div>
-  <p>
-
-  </p>
   <div id="content">
+   <div id="box">
     <div align="center">
 	<p><?php echo lang("_LOGOUT_COMPLETE") ?></p>
 	<p><div class="menu" align="center"><a href="<?php echo $authsaml->logonURL();?>" ><?php echo lang("_LOGON") ?></a></div></p>
     </div>
-    <hr />
+   </div>
   </div><!-- #content -->
 
 </div><!-- #wrap -->
