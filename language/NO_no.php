@@ -128,20 +128,38 @@ $lang["_INVALID_TOO_LARGE_1"] = "Filstørrelse kan ikke være mer enn";
 $lang["_SELECT_ANOTHER_FILE"] = "Velg en annen fil.";
 $lang["_INVALID_FILE_NAME"] = "Feilaktig filnavn, filen kan ikke lastes opp.  Gi filen et annet navn og prøv på nytt.";
 $lang["_INVALID_SIZE_USEHTML5"] = "Velg en annen fil or use a HTML5 enabled browser to upload larger files.";
-$lang["_FILE_TO_BE_RESENT"] = "Fil blir sendt på nytt";
+
 $lang["_ERROR_UPLOADING_FILE"] = "Feil under filopplasting";
 $lang["_LOGOUT_COMPLETE"] = "Avlogging utført";
 
 $lang["_ARE_YOU_SURE"] = "Er du sikker?";
-$lang["_DELETE_FILE"] = "Slett fil";
 $lang["_EMAIL_SENT"] = "Epost sendt";
+
 $lang["_FILE_SIZE"] = "Filstørrelse";
 $lang["_FILE_RESENT"] = "Sendt fil på nytt";
 $lang["_ME"] = "Meg";
+
+// MYFILES
+
+$lang["_NO_FILES"] = "Ingen filer funnet";
+
+// Myfiles: re-send email: tooltips, dialogue box and on-screen message 
+$lang["_RE_SEND_EMAIL"] = "Send epost på nytt";
+$lang["_FILE_TO_BE_RESENT"] = "Fil:";
+$lang["_MESSAGE_RESENT"] = "Epost med nedlastningslenken sendt på nytt"; 
+
+$lang["_NEW_RECIPIENT"] = "En mottaker til";
+
+// Myfiles: delete file: tooltips, dialogue box and on-screen message 
+$lang["_DELETE_FILE"] = "Slett fil";
+$lang["_FILE_DELETED"] = "Fil slettet";
+
+
+
 $lang["_START_DOWNLOAD"] = "Begyn nedlastning";
 $lang["_VOUCHER_SENT"] = "Invitasjon sendt";
 $lang["_VOUCHER_DELETED"] = "Invitasjon slettet";
-$lang["_VOUCHER_CANCELLED"] = "Denne invitasjonen har blitt utilgjengeliggjort.";
+$lang["_VOUCHER_CANCELLED"] = "Denne filen eller invitasjonen har blitt utilgjengeliggjort.";
 $lang["_STARTED_DOWNLOADING"] = "Filnedlastning burde starte nå";
 
 // Upload page: information on steps user needs to perform
@@ -149,8 +167,8 @@ $lang["_STEP1"] = "Fyll ut epost-adress(ene)";
 $lang["_STEP2"] = "Set utløpsdato";
 $lang["_STEP3"] = "Velg en fil";
 $lang["_STEP4"] = "Klikk Send";
-$lang["_HTML5Supported"] = "Uploads over 2Gb supported!";
-$lang["_HTML5NotSupported"] = "Uploads over 2GB not supported!";	
+$lang["_HTML5Supported"] = "Filopplasting over 2GB støttet!";
+$lang["_HTML5NotSupported"] = "Filopplasting over 2GB ikke støttet!";	
 //$lang["_site_help_text"] = "Hjelp tekst";
 //$lang["_Help"] = "Hjelp";
 
