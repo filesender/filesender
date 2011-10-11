@@ -169,11 +169,13 @@ function openabout()
   <div id="content">
   <div id="scratch" class="scratch_msg">
 	<?php
-		if(array_key_exists("scratch", $GLOBALS )) {
-			echo $functions->getScratchMessage();
-			$functions->clearScratchMessages();
+		if(array_key_exists("scratch", $_SESSION )) {
+			echo($functions->getScratchMessage());
+			//$functions->clearScratchMessages()
+			session_unregister("scratch");
 		}
 	?>
+	<?php    ?>
   </div>	
   <div id="userinformation">
     <?php 

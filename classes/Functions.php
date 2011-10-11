@@ -139,14 +139,11 @@ class Functions {
 		$_SESSION['scratch'] = $_SESSION['scratch'] .'<br/>' .$message;
 		logEntry("Message added");
 	}	
-	//Clear the scratch
-	public function clearScratchMessage() {
-
-		$_SESSION['scratch'] = '';
-	}
 	
 	public function getScratchMessage() {
+		logEntry('in getScratchMessage');
 		if(array_key_exists('scratch',$_SESSION)) {
+			logEntry('returning scratch message'. $_SESSION['scratch']);
 			return $_SESSION['scratch'];
 		} else {return '';}
 	}
@@ -268,11 +265,12 @@ class Functions {
 		}
 		
 		logEntry("5 All still good in validation = ".$all_good);
-		
+		print_r($all_good);
 		//If somethings is wrong, redirect with message in the scratch space
 		if(! $all_good) {
 			logEntry('Redirecting to page with scratch');
-			header($config['site_url'].'index.php');
+			header("Location: " . $config['site_url'].'index.php');
+			exit;
 		}
 	}
 

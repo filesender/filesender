@@ -443,7 +443,7 @@ function validate()
 	// upload if validated
 	if(html5) {
 		if(validateForm())
-		//Use this to allow uplods with faulty parameters (and comment out the previouslone)if(true)
+		//Use this to allow uplods with faulty parameters (and comment out the previouslone) if(true)
 	{
 	startupload();
 	}
@@ -474,16 +474,6 @@ function keepMeAlive()
 <div id="box"> <?php echo '<div id="pageheading">'.lang("_UPLOAD").'</div>'; ?>
   <form id="form1" enctype="multipart/form-data" method="POST" action="fs_uploadit5.php">
     <table width="100%" border="0">
-	  <tr>
-		<div id="scratch" class="scratch_msg">
-			<?php
-				if(array_key_exists("scratch", $GLOBALS )) {
-					echo $functions->getScratchMessage();
-					$functions->clearScratchMessages();
-				}
-			?>
-		</div>
-	  </tr>
       <tr>
         <td width="130" class=" mandatory"><?php echo lang("_TO") ; ?>:</td>
         <td colspan="2" valign="middle"><input name="fileto" title="<?php echo lang("_EMAIL_SEPARATOR_MSG") ; ?>" type="text" id="fileto" onchange="validate_fileto()"/>
