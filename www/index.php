@@ -167,16 +167,6 @@ function openabout()
   </div>
   </div>
   <div id="content">
-  <div id="scratch" class="scratch_msg">
-	<?php
-		if(array_key_exists("scratch", $_SESSION )) {
-			echo($functions->getScratchMessage());
-			//$functions->clearScratchMessages()
-			session_unregister("scratch");
-		}
-	?>
-	<?php    ?>
-  </div>	
   <div id="userinformation">
     <?php 
 // display user details if authenticated and not a voucher
