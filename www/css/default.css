@@ -112,6 +112,10 @@ input,textarea
 	font-size: 10px;
 	color: #d00;
 }
+.scratch_msg {
+	font-size: 10px;
+	color: #d00;
+}
 .formfieldheading {
 	width: 110px;
 }

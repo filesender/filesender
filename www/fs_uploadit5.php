@@ -61,11 +61,15 @@ if(!empty($_REQUEST['s'])) {
 	
 require_once('../classes/_includes.php');
 
+logEntry("---in fs_uploadit5.php");
+
 $authsaml = AuthSaml::getInstance();
 $authvoucher = AuthVoucher::getInstance();
 $CFG = config::getInstance();
 $config = $CFG->loadConfig();
 $functions = Functions::getInstance();
+$functions->validatePlainUpload();
+
 date_default_timezone_set($config['Default_TimeZone']);
 
 logEntry("DEBUG fs_uploadit5: REQUEST data: " . print_r($_REQUEST, true));
