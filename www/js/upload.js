@@ -161,7 +161,7 @@ function uploadFile(currentBytesUpload) {
 		{
 			var blob = file.slice(bytesUploaded, txferSize);
 		}
-		
+	
 	var fileName = file.name; //Grab the file name
     var fileSize = file.size; //Grab the file size
     var fileType = file.type; //Grab the file type
@@ -194,7 +194,6 @@ function uploadFile(currentBytesUpload) {
 			}
 		}else{
 		}
-	//}
 }
 
 return true;
