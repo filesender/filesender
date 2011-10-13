@@ -165,9 +165,6 @@ function uploadFile(currentBytesUpload) {
 	var fileName = file.name; //Grab the file name
     var fileSize = file.size; //Grab the file size
     var fileType = file.type; //Grab the file type
-    var reader = new FileReader(); //Create FileReader object to read the image data
-    reader.readAsBinaryString(blob); //Start reading the blob out as binary data
-    reader.onload = function() { //Execute this when the blob is successfully read
  
 	var boundary = "fileboundary"; //Boundary name
 	var uri = (uploadURI + "?n="+encodeURIComponent(fileName)+"&total="+fileSize+"&type=chunk&vid="+vid); //Path to script for handling the file sent
@@ -179,10 +176,7 @@ function uploadFile(currentBytesUpload) {
 	xhr.setRequestHeader("Content-Type", "application/octet-stream");
 	xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
     //Set up the body of the POST data includes the name & file data.
-    var bodySend =  "";
-	bodySend = reader.result;
 	xhr.send(blob);
-	//xhr.sendAsBinary(bodySend);
 
 	function processReqChange(){
 	    if (xhr.readyState == 4) {
@@ -200,7 +194,7 @@ function uploadFile(currentBytesUpload) {
 			}
 		}else{
 		}
-	}
+	//}
 }
 
 return true;
