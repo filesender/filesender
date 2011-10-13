@@ -44,7 +44,6 @@
 	// --------------------------------------------------------
 	
    // check if a voucher and load into form if it is
-   
    $filestatus = "Available";
    $voucherUID = "";
    $senderemail = $useremail;
