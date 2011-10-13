@@ -261,7 +261,7 @@
 	
 	var validate = true;
 	
-	if(!validate_fileto() ){validate = false;};		// validate emails
+	//if(!validate_fileto() ){validate = false;};		// validate emails
 	if(!validate_file() ){validate = false;};		// check if file selected
 	//if(aup == '1') // check if AUP is required
 	//{
@@ -441,7 +441,8 @@ function validate()
 {
 	// upload if validated
 	if(html5) {
-	if(validateForm())
+		if(validateForm())
+		//Use this to allow uplods with faulty parameters (and comment out the previouslone) if(true)
 	{
 	startupload();
 	}

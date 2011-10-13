@@ -122,6 +122,157 @@ class Functions {
         return self::$instance;
     } 
 
+	//Set the scratch message
+	public function setScratchMessage($message) {
+		$_SESSION['scratch'] = $message;
+	}
+
+	//Append to the scratch message
+	public function appendScratchMessage($message) {
+		logEntry("In appendScratchMessage");
+		session_start();
+		logEntry("session_start called");
+		if(! array_key_exists('scratch',$_SESSION)) {session_register("scratch");}
+		logEntry("Key didn't exist, registered");
+		$_SESSION['scratch'] = $_SESSION['scratch'] .'<br/>' .$message;
+		logEntry("Message added");
+	}	
+	
+	public function getScratchMessage() {
+		logEntry('in getScratchMessage');
+		if(array_key_exists('scratch',$_SESSION)) {
+			logEntry('returning scratch message'. $_SESSION['scratch']);
+			return $_SESSION['scratch'];
+		} else {return '';}
+	}
+	
+	//Validate to: email addresses
+	public function validate_to()
+	{	
+		global $config;
+		logEntry("In validate_to");
+		$emailto = str_replace(",",";",$_POST["fileto"]);
+		$emailArray = preg_split("/;/", $emailto);
+		logEntry("emailArray splitted");
+		//To many recipients - err out
+		if(count($emailArray) > $config['max_email_recipients'] ) {return false;}
+		logEntry("emailArray not to long (not to any recipients)");
+		
+		//Check if we have valid email adddresses
+		//We do have well thought out regular expressions, but I saw this one which seems to work and is maintained...
+		//Anyway, easy to change if we want the regex in.
+		foreach($emailArray as $email) {
+			logEntry("in loop");
+			if(filter_var($email,FILTER_VALIDATE_EMAIL)) {continue;}
+			else {
+				logEntry("no match for ".$email." returning false");
+	            return false; 
+	        }
+		}
+		logEntry("emails ok");
+		return true;
+	}
+	
+	//Validate date
+	public function validate_date()
+	{
+		global $config;
+		//date does a clever thing: if a value for a day or month is too high, it does a "right shift and prepends a 0
+		//E.g. day 33 -> 03 This protects us against nn-existing dates
+		$_POST['fileexpirydate'] = (date($config['datedisplayformat'],strtotime($_POST["fileexpirydate"])));
+		logEntry("Expiry date now is ". $_POST['fileexpirydate']);
+		return true;
+	}
+	
+	//Validate AUP
+	public function validate_aup()
+	{
+		return isset($_POST["aup"]);
+	}
+
+	
+	// validate extension for banned file names
+	public function validate_extension() {
+		global $config;
+		$outcome = true;
+		foreach( $_POST as $key => $value) {
+			logEntry("POST parameter " . $key . " = " .$value);
+		}
+		$lastelem = array_pop(explode(".",$_POST['n']));
+		logEntry('Last element = ' . $lastelem);
+		$banned = explode(",",$config['ban_extension']);
+		foreach($banned as $key => $naughty) {
+			if($lastelem == $naughty) {$outcome = false; break;}
+		}
+		logEntry('Outcome = ' . $outcome);
+		return $outcome;
+	}
+
+	//Validate if the file is not 0 bytes long
+	public function validate_zero_filesize()
+	{	
+		logEntry("Is numeric ". is_numeric($_POST['total']));
+		if (isset($_POST["total"])) {return (! $_POST["total"] == 0);}
+	}
+	
+	
+	public function validatePlainUpload() {
+		
+		global $config;
+		
+		lang("_INVALID_MISSING_EMAIL");
+		
+		logEntry("in validatePlainUpload");
+		$all_good = true;
+		logEntry("0All good in validation = ".$all_good);
+		
+		if(! $this->validate_to()) { 
+			logEntry("0-1 All wrong in email validation = ".$all_good);
+			
+			$all_good = false;
+			$this->appendScratchMessage(lang("_INVALID_MISSING_EMAIL"));
+			logEntry("0-2 All wrong in email validation = appended message");
+			
+		}
+		logEntry("1 All still good in validation? = ".$all_good);
+		if(! $this->validate_date()) { 
+			logEntry("1-A All wrong in validation date = ".$all_good);
+			$all_good = false;
+			$this->appendScratchMessage(lang("_INVALID_DATE_FORMAT"));
+			logEntry("1-b All wrong in validation date = ".$all_good);
+		}
+		logEntry("2 All still good in validation? = ".$all_good);
+		if(! $this->validate_aup()) { 
+			logEntry("2-A All wrong in validation AuP = ".$all_good);
+			$all_good = false;
+			logEntry("all_good = ".$all_good);
+			$this->appendScratchMessage(lang("_AGREETOC"));
+			logEntry("Scratch ".lang("_AGREETOC"). " added.");
+		}
+		logEntry("3 All still good in validation ? = ".$all_good);
+		if(! $this->validate_extension()) { 
+			logEntry("3-A All wrong in validation extensions = ".$all_good);
+			$all_good = false;
+			$this->appendScratchMessage(lang("_INVALID_FILE_EXT"));
+		}
+		logEntry("4 All still good in validation? = ".$all_good);
+		if(! $this->validate_zero_filesize()) { 
+			logEntry("4-A All wrong in validation zero filesize = ".$all_good);
+			$all_good = false;
+			$this->appendScratchMessage(lang("_INVALID_FILESIZE_ZERO"));
+		}
+		
+		logEntry("5 All still good in validation = ".$all_good);
+		print_r($all_good);
+		//If somethings is wrong, redirect with message in the scratch space
+		if(! $all_good) {
+			logEntry('Redirecting to page with scratch');
+			header("Location: " . $config['site_url'].'index.php');
+			exit;
+		}
+	}
+
+
     //---------------------------------------
     // Return Basic Database Statistics e.g. Up xx Gb (files xx) | Down xx Gb (files xx)
     public function getStats() {
