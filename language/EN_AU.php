@@ -115,6 +115,7 @@
 			$lang["_INVALID_FILE_EXT"] = "Invalid file extension.";
 			$lang["_INVALID_TOO_LARGE_1"] = "File size cannot be greater than";
 			$lang["_SELECT_ANOTHER_FILE"] = "Please select another file.";
+			$lang["_INVALID_VOUCHER"] = "This Voucher is no longer Valid. <BR>Please contact the person that issued this voucher";
 			$lang["_SELECT_FILE"] = "Select your file";
 			$lang["_INVALID_FILE_NAME"] = "The name of the file you are uploading is invalid. Please rename your file and try again.";
 			$lang["_INVALID_SIZE_USEHTML5"] = "Please select another file or use a HTML5 enabled browser to upload larger files.";
