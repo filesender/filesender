@@ -43,34 +43,18 @@ require_once('../classes/_includes.php');
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title><?php echo $config['site_name']; ?></title>
 <link rel="stylesheet" type="text/css" href="css/default.css" />
-
-<style type="text/css">
-<!--
-.style1 {
-	color: #FFFFFF;
-	font-weight: bold;
-}
--->
-</style>
 </head>
 <body scroll="no">
-
 <div id="wrap">
-	
   <div id="header">
   <img src="displayimage.php" width="800" height="60" border="0" alt="banner"/>
-    <p class="style5 style1">Error</p>
+     <div id="message"><?php echo lang($lang["_MESSAGE"]); ?></div>
   </div>
-  <p>
-
-  </p>
   <div id="content">
-    <div align="center">This Voucher is not Valid
+    <div align="center"><?php echo lang("_INVALID_VOUCHER"); ?>
     </div>
     <hr />
   </div><!-- #content -->
-
 </div><!-- #wrap -->
-
 </body>
 </html>
