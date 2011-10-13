@@ -110,7 +110,6 @@ function confirmdelete(vid)
 if(isset($_POST["fileto"]) && isset($_POST["altdate"]))
 {
 // insert voucher for each email
-//TODO INSERT VALIDATION HERE
 $emailto = str_replace(",",";",$_POST["fileto"]);
 $emailArray = preg_split("/;/", $emailto);
 foreach ($emailArray as $Email) { 
