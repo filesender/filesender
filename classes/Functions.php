@@ -93,8 +93,6 @@ function ensureSaneFileUid($fileuid){
     }
 }
 
-
-
 class Functions {
 
     private static $instance = NULL;
@@ -746,9 +744,9 @@ class Functions {
         if($dataitem['filestatus'] == "Voucher") {
             $this->saveLog->saveLog($dataitem,"Voucher Sent","");
             return $this->sendmail->sendEmail($dataitem,$config['voucherissuedemailbody']);
-        }  else {
+        } else {
             $this->saveLog->saveLog($dataitem,"Uploaded","");
-            return $this->sendmail->sendEmail($dataitem,$config['fileuploadedemailbody']); 
+            return $this->sendmail->sendEmail($dataitem,$config['fileuploadedemailbody']);
         }
     }
 
