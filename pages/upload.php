@@ -148,6 +148,15 @@
 			}
 		})
 		
+		// default auth error dialogue
+		$("#dialog-autherror").dialog({ autoOpen: false, height: 240,width: 350, modal: true,title: "",		
+		buttons: {
+			'<?php echo lang("_OK") ?>': function() {
+				location.reload(true);
+				}
+			}
+		})
+		
 		// default error message dialogue
 		$("#dialog-default").dialog({ autoOpen: false, height: 140, modal: true,title: "Error",		
 		buttons: {
@@ -661,3 +670,4 @@ if ( hasProductInstall && !hasRequestedVersion ) {
 <div id="dialog-support" title="" style="display:none">
 <?php require_once("$filesenderbase/pages/html5display.php"); ?>
 </div>
+<div id="dialog-autherror" title="<?php echo lang($lang["_MESSAGE"]); ?>" style="display:none"><?php echo lang($lang["_AUTH_ERROR"]); ?></div>

@@ -187,6 +187,11 @@ function uploadFile(currentBytesUpload) {
 	function processReqChange(){
 	    if (xhr.readyState == 4) {
 	    	if (xhr.status == 200) {
+				if(xhr.responseText == "ErrorAuth")
+				{
+					$("#dialog-autherror").dialog("open");
+					return;			
+				}
 			bytesUploaded = parseFloat(xhr.responseText);
 			updatepb(bytesUploaded,bytesTotal);	
 			uploadFile(bytesUploaded);
