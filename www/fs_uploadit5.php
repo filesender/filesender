@@ -61,14 +61,14 @@ if(!empty($_REQUEST['s'])) {
 	
 require_once('../classes/_includes.php');
 
-logEntry("---in fs_uploadit5.php");
-
 $authsaml = AuthSaml::getInstance();
 $authvoucher = AuthVoucher::getInstance();
 $CFG = config::getInstance();
 $config = $CFG->loadConfig();
 $functions = Functions::getInstance();
-$functions->validatePlainUpload();
+// Under development #517: Uncomment (and possibly relocate the next
+// line for server-side validation.
+//$functions->validatePlainUpload();
 
 date_default_timezone_set($config['Default_TimeZone']);
 
