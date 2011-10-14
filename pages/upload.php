@@ -270,7 +270,7 @@
 	
 	var validate = true;
 	
-	//if(!validate_fileto() ){validate = false;};		// validate emails
+	if(!validate_fileto() ){validate = false;};		// validate emails
 	if(!validate_file() ){validate = false;};		// check if file selected
 	//if(aup == '1') // check if AUP is required
 	//{
