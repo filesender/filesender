@@ -73,11 +73,16 @@ require_once('../classes/_includes.php');
     <li>If you don't see your institution in the list of Identity Providers (IdPs), or your institutional login fails, please contact your local IT support</li>
     </ul>
 
-<h4>Requirements</h4>
+<h4>Requirements for uploads up to 2GB</h4>
 <ul>
 <li>A modern, current release of most popular browsers</li>
 <li><a href="http://get.adobe.com/flashplayer/">Flash Player</a> 10.x browser plugin</li>
-<li><a href="<?php echo $config['gearsURL']?>">Google Gears</a> browser plugin for uploading files larger than 2 GB and to enable cancel/resume for uploads. File uploads over 2 GB are currently not possible on Mac OSX and Linux</li>
+</ul>
+<h4>Requirements for uploads over 2GB</h4>
+<ul>
+<li>A browser that supports the required HTML5 FileAPI functionality HTML5.  Per October 2011 uploads larger then 2GB are known to work with FireFox4+ and Chrome on Windows, Mac OSX and Linux.  
+<br><br>
+Please use the <a href="http://caniuse.com/#feat=fileapi">"When can I use..."</A> website to monitor implementation progress of the HTML5 FileAPI for all major browsers.  In particular support for <a href="http://caniuse.com/#feat=filereader">FileReader API</A> and <A href="http://caniuse.com/#feat=bloburls">Blob URLs</A> needs to be light green (=supported) for a browser to support uploads larger then 2GB </li>
 </ul>
 
 <h4>Limits</h4>
@@ -85,8 +90,8 @@ require_once('../classes/_includes.php');
     <li><strong>
       Maximum recipient  addresses per email:</strong>  <?php echo $config["max_email_recipients"]?> multiple email addresses (separated by comma or semi-colon)</li>
     <li><strong>Maximum number of files per  upload:</strong> one - to upload several files at once, zip them into a  single archive first</li>
-    <li><strong>Maximum file size per upload, without  Gears: </strong> <?php echo formatBytes($config["max_flash_upload_size"])?></li>
-    <li><strong>Maximum file size per upload, with Gears: </strong> <?php echo formatBytes($config["max_gears_upload_size"])?></li>
+    <li><strong>Maximum file size per upload, without  HTML5 support: </strong> <?php echo formatBytes($config["max_flash_upload_size"])?></li>
+    <li><strong>Maximum file size per upload, with HTML5 support: </strong> <?php echo formatBytes($config["max_gears_upload_size"])?></li>
     <li>      <strong>Maximum  file / voucher expiry days: </strong><?php echo $config["default_daysvalid"]?> </li>
     </ul>
     <p>For more information please visit <a href="http://www.filesender.org/">www.filesender.org</a></p>
