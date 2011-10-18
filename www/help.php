@@ -90,7 +90,7 @@ that's too big for this method. If you need to upload something bigger than
 2GB, you need method b)</li>
 
 <li> B]  you have a very recent browser version, and it supports HTML5, the latest version of the "language of the web". In this
-scenario, FileSender really comes into its own; larger-than-2Gb transfers become possible and upload suspend/resume
+scenario, FileSender really comes into its own; larger-than-2GB transfers become possible and upload suspend/resume
 functionality will work.
 It's a bit harder to say what browsers are "recent enough", but as of October 2011, an updated version of either Firefox4
 (and higher) or Chrome is known to work on both Windows, Mac OSX and Linux. FileSender itself will also tell you when your
