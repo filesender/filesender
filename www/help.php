@@ -69,32 +69,29 @@ require_once('../classes/_includes.php');
   <div id="content">
   <div style="padding:5px">
     <h4>Login</h4> 
+<P>
     <ul>
     <li>If you don't see your institution in the list of Identity Providers (IdPs), or your institutional login fails, please contact your local IT support</li>
     </ul>
+</P>
 
-<h4>Required for sending a file</h4>
+<h4>Uploads smaller than 2 Gigabyte (2GB) with Adobe Flash</h4>
+<P>
+<UL>
+	<LI>If you can watch YouTube videos this method should work for you</LI>
+	<LI>You need a modern browser running version 10.5 (or higher) of <a target="_blank" href="http://www.adobe.com/software/flash/about/">Adobe Flash.</A></LI>
+	<LI>FileSender will warn you should you try to upload a file that is too big for this method</LI>
+</UL>
 
-You'll be able to send (upload) files if one of these two situations applies to you:
+</P>
 
-<ul> 
+<h4>Uploads of <I>any size</I> with HTML5</h4>
+<UL>
+	<LI>If you see the green HTML5 tick next to FileSender's Log Off button this method works for you:
+		<img src="html5_installed.png" alt="green HTML5 tick" /></LI>
+	<LI>You need a very recent browser supporting HTML5, the latest version of the "language of the web".</LI>
+	<LI>Currently Firefox4 (and higher) and Chrome on both Windows, Mac OSX and Linux are known to work.</LI>
 
-<li><b>A]   your browser runs Adobe Flash.</b> <I>If you're able to watch
-youtube videos, it's safe to say this upload method will work for you. Another
-way of checking is by visiting this test page for Adobe Flash:
-<a href="http://www.adobe.com/software/flash/about/"> http://www.adobe.com/software/flash/about/</a>.
-
-This flash-based method suffices if the file you are uploading is smaller than
-2 Gigabyte (2GB). FIleSender will warn you should you try to upload a file
-that's too big for this method. If you need to upload something bigger than
-2GB, you need method b)</li>
-
-<li> B]  you have a very recent browser version, and it supports HTML5, the latest version of the "language of the web". In this
-scenario, FileSender really comes into its own; larger-than-2GB transfers become possible and upload suspend/resume
-functionality will work.
-It's a bit harder to say what browsers are "recent enough", but as of October 2011, an updated version of either Firefox4
-(and higher) or Chrome is known to work on both Windows, Mac OSX and Linux. FileSender itself will also tell you when your
-browser is "good enough", by placing a green "HTML5" tick on the right hand side of your main upload window.</li>
 
 <h4>Limits of this FileSender installation</h4>
     <ul>
