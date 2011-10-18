@@ -90,6 +90,7 @@ require_once('../classes/_includes.php');
 	<LI>If you see the green HTML5 tick next to FileSender's Log Off button this method works for you:
 		<img src="html5_installed.png" alt="green HTML5 tick" /></LI>
 	<LI>You need a very recent browser supporting HTML5, the latest version of the "language of the web".</LI>
+	<LI>Your browser also needs to run version 10.5 (or higher) of <a target="_blank" href="http://www.adobe.com/software/flash/about/">Adobe Flash.</A></LI>
 	<LI>Currently Firefox4 (and higher) and Chrome on both Windows, Mac OSX and Linux are known to work.</LI>
 
 
