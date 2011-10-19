@@ -74,26 +74,26 @@ require_once('../classes/_includes.php');
     </ul>
 
 <h4>Uploads smaller than 2 Gigabytes (2GB) with Adobe Flash</h4>
-<UL>
-	<LI>If you can watch YouTube videos this method should work for you</LI>
-	<LI>You need a modern browser running version 10.5 (or higher) of <a target="_blank" href="http://www.adobe.com/software/flash/about/">Adobe Flash.</A></LI>
-	<LI>FileSender will warn you should you try to upload a file that is too big for this method</LI>
-</UL>
+<ul>
+	<li>If you can watch YouTube videos this method should work for you</li>
+	<li>You need a modern browser running version 10.5 (or higher) of <a target="_blank" href="http://www.adobe.com/software/flash/about/">Adobe Flash.</a></li>
+	<li>FileSender will warn you should you try to upload a file that is too big for this method</li>
+</ul>
 
-<h4>Uploads of <I>any size</I> with HTML5</h4>
-<UL>
-	<LI>If you see the green HTML5 tick next to FileSender's Log Off button this method works for you:
-		<img src="html5_installed.png" alt="green HTML5 tick" /></LI>
-	<LI>You need a very recent browser supporting HTML5, the latest version of the "language of the web".</LI>
-	<LI>Currently Firefox4 (and higher) and Chrome on both Windows, Mac OSX and Linux are known to work.</LI>
-	<LI>Your browser also needs to run version 10.5 (or higher) of <a target="_blank" href="http://www.adobe.com/software/flash/about/">Adobe Flash.</A></LI>
-</UL>
+<h4>Uploads of <i>any size</i> with HTML5</h4>
+<ul>
+	<li>If you see the green HTML5 tick next to FileSender's Log Off button this method works for you:
+		<img src="html5_installed.png" alt="green HTML5 tick" /></li>
+	<li>You need a very recent browser supporting HTML5, the latest version of the "language of the web".</li>
+	<li>Currently Firefox4 (and higher) and Chrome on both Windows, Mac OSX and Linux are known to work.</li>
+	<li>Your browser also needs to run version 10.5 (or higher) of <a target="_blank" href="http://www.adobe.com/software/flash/about/">Adobe Flash.</a></li>
+</ul>
 
 <h4>Downloads</h4>
-<UL>
-	<LI>Any modern browser will do, nothing special is required for downloading files, of any size</LI>
-	<LI>Flash or HTML5 are <b>not</b> required for downloading files</LI>
-</UL>
+<ul>
+	<li>Any modern browser will do, nothing special is required for downloading files, of any size</li>
+	<li>Flash or HTML5 are <b>not</b> required for downloading files</li>
+</ul>
 
 
 <h4>Limits of this FileSender installation</h4>
