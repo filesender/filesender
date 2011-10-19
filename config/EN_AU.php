@@ -45,7 +45,7 @@ $lang["_HELP_TEXT"] = '
       Maximum recipient  addresses per email: </strong>'. $config["max_email_recipients"].' multiple email addresses (separated by comma or semi-colon)</li>
     <li><strong>Maximum number of files per  upload:</strong> one - to upload several files at once, zip them into a  single archive first</li>
     <li><strong>Maximum file size per upload, with Adobe Flash only: </strong>'. formatBytes($config["max_flash_upload_size"]).' </li>
-    <li><strong>Maximum file size per upload, with HTML5: </strong>'. formatBytes($config["max_gears_upload_size"]).'</li>
+    <li><strong>Maximum file size per upload, with HTML5: </strong>'. formatBytes($config["max_html5_upload_size"]).'</li>
     <li>      <strong>Maximum  file / voucher expiry days: </strong>'. $config["default_daysvalid"].' </li>
 </ul>
 <p>For more information please visit <a href="http://www.filesender.org/">www.filesender.org</a></p>
