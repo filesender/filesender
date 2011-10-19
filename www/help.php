@@ -69,29 +69,31 @@ require_once('../classes/_includes.php');
   <div id="content">
   <div style="padding:5px">
     <h4>Login</h4> 
-<P>
     <ul>
     <li>If you don't see your institution in the list of Identity Providers (IdPs), or your institutional login fails, please contact your local IT support</li>
     </ul>
-</P>
 
-<h4>Uploads smaller than 2 Gigabyte (2GB) with Adobe Flash</h4>
-<P>
+<h4>Uploads smaller than 2 Gigabytes (2GB) with Adobe Flash</h4>
 <UL>
 	<LI>If you can watch YouTube videos this method should work for you</LI>
 	<LI>You need a modern browser running version 10.5 (or higher) of <a target="_blank" href="http://www.adobe.com/software/flash/about/">Adobe Flash.</A></LI>
 	<LI>FileSender will warn you should you try to upload a file that is too big for this method</LI>
 </UL>
 
-</P>
-
 <h4>Uploads of <I>any size</I> with HTML5</h4>
 <UL>
 	<LI>If you see the green HTML5 tick next to FileSender's Log Off button this method works for you:
 		<img src="html5_installed.png" alt="green HTML5 tick" /></LI>
 	<LI>You need a very recent browser supporting HTML5, the latest version of the "language of the web".</LI>
-	<LI>Your browser also needs to run version 10.5 (or higher) of <a target="_blank" href="http://www.adobe.com/software/flash/about/">Adobe Flash.</A></LI>
 	<LI>Currently Firefox4 (and higher) and Chrome on both Windows, Mac OSX and Linux are known to work.</LI>
+	<LI>Your browser also needs to run version 10.5 (or higher) of <a target="_blank" href="http://www.adobe.com/software/flash/about/">Adobe Flash.</A></LI>
+</UL>
+
+<h4>Downloads</h4>
+<UL>
+	<LI>Any modern browser will do, nothing special is required for downloading files, of any size</LI>
+	<LI>Flash or HTML5 are <b>not</b> required for downloading files</LI>
+</UL>
 
 
 <h4>Limits of this FileSender installation</h4>
@@ -99,8 +101,8 @@ require_once('../classes/_includes.php');
     <li><strong>
       Maximum recipient  addresses per email:</strong>  <?php echo $config["max_email_recipients"]?> multiple email addresses (separated by comma or semi-colon)</li>
     <li><strong>Maximum number of files per  upload:</strong> one - to upload several files at once, zip them into a  single archive first</li>
-    <li><strong>Maximum file size per upload, without  HTML5 support: </strong> <?php echo formatBytes($config["max_flash_upload_size"])?></li>
-    <li><strong>Maximum file size per upload, with HTML5 support: </strong> <?php echo formatBytes($config["max_gears_upload_size"])?></li>
+    <li><strong>Maximum file size per upload, with Adobe Flash only: </strong> <?php echo formatBytes($config["max_flash_upload_size"])?></li>
+    <li><strong>Maximum file size per upload, with HTML5: </strong> <?php echo formatBytes($config["max_gears_upload_size"])?></li>
     <li>      <strong>Maximum  file / voucher expiry days: </strong><?php echo $config["default_daysvalid"]?> </li>
     </ul>
     <p>For more information please visit <a href="http://www.filesender.org/">www.filesender.org</a></p>
