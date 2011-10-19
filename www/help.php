@@ -46,13 +46,12 @@ require_once('../classes/_includes.php');
 <link rel="stylesheet" type="text/css" href="css/default.css" />
 
 <style type="text/css">
-<!--
-.style1 {
-	color: #FFFFFF;
-	font-weight: bold;
-	padding-left:5px;
+.textmiddle {
+        vertical-align:middle;
+        padding-right: 10px;
+        padding-top: 5px;
+        padding-bottom: 5px;
 }
--->
 </style>
 </head>
 <body scroll="no">
@@ -76,23 +75,21 @@ require_once('../classes/_includes.php');
 <h4>Uploads smaller than 2 Gigabytes (2GB) with Adobe Flash</h4>
 <ul>
 	<li>If you can watch YouTube videos this method should work for you</li>
-	<li>You need a modern browser running version 10.5 (or higher) of <a target="_blank" href="http://www.adobe.com/software/flash/about/">Adobe Flash.</a></li>
+	<li>You need a modern browser running version 10 (or higher) of <a target="_blank" href="http://www.adobe.com/software/flash/about/">Adobe Flash.</a></li>
 	<li>FileSender will warn you should you try to upload a file that is too big for this method</li>
 </ul>
 
 <h4>Uploads of <i>any size</i> with HTML5</h4>
 <ul>
-	<li>If you see the green HTML5 tick next to FileSender's Log Off button this method works for you:
-		<img src="html5_installed.png" alt="green HTML5 tick" /></li>
+        <li>If you see <img src="html5_installed.png" alt="green HTML5 tick" class="textmiddle" style="display:inline" /> next to FileSender's Log Off button this method works for you</li>
 	<li>You need a very recent browser supporting HTML5, the latest version of the "language of the web".</li>
 	<li>Currently Firefox4 (and higher) and Chrome on both Windows, Mac OSX and Linux are known to work.</li>
-	<li>Your browser also needs to run version 10.5 (or higher) of <a target="_blank" href="http://www.adobe.com/software/flash/about/">Adobe Flash.</a></li>
+	<li>Your browser also needs to run version 10 (or higher) of <a target="_blank" href="http://www.adobe.com/software/flash/about/">Adobe Flash.</a></li>
 </ul>
 
-<h4>Downloads</h4>
+<h4>Downloads of any size</h4>
 <ul>
-	<li>Any modern browser will do, nothing special is required for downloading files, of any size</li>
-	<li>Flash or HTML5 are <b>not</b> required for downloading files</li>
+        <li>You need a modern browser running version 10 (or higher) of <a target="_blank" href="http://www.adobe.com/software/flash/about/">Adobe Flash.</a></li>
 </ul>
 
 
