@@ -28,7 +28,7 @@ $lang["_HELP_TEXT"] = '
 
 <h4>Uploads of <i>any size</i> with HTML5</h4>
 <ul>
-        <li>If you see <img src="images/html5_installed.png" alt="green HTML5 tick" class="textmiddle" style="display:inline" /> next to FileSender\'s Log Off button this method works for you</li>
+        <li>If you see <img src="images/html5_installed.png" alt="green HTML5 tick" class="textmiddle" style="display:inline" /> in FileSender\'s top right-hand corner this method works for you</li>
 	<li>You need a very recent browser supporting HTML5, the latest version of the "language of the web".</li>
 	<li>Currently Firefox4 (and higher) and Chrome on both Windows, Mac OSX and Linux are known to work.</li>
 </ul>
