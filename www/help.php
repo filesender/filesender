@@ -46,6 +46,14 @@ require_once('../classes/_includes.php');
 <link rel="stylesheet" type="text/css" href="css/default.css" />
 
 <style type="text/css">
+<!--
+.style1 {
+	color: #FFFFFF;
+	font-weight: bold;
+	padding-left:5px;
+}
+-->
+
 .textmiddle {
         vertical-align:middle;
         padding-right: 10px;
@@ -62,9 +70,7 @@ require_once('../classes/_includes.php');
   <img src="displayimage.php" width="800" height="60" border="0" alt="banner"/>
     <p class="style5 style1">Help</p>
   </div>
-  <p>
 
-  </p>
   <div id="content">
   <div style="padding:5px">
     <h4>Login</h4> 
