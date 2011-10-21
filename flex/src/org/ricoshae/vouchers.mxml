@@ -46,6 +46,7 @@
 			import mx.core.FlexGlobals;
 			import mx.collections.ArrayCollection;
 			import mx.utils.UIDUtil;
+			import mx.utils.StringUtil;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
 			import mx.events.CloseEvent;
