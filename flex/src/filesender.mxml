@@ -471,7 +471,7 @@
 				{
 					// use standard flash filereference upload
 					gearsImage.source = gearsNo;  
-					gearsImage.toolTip = "Not Available: Using a browser that supports HTML5 to allow uploading of extremely large files. http://html5test.com/";
+					gearsImage.toolTip = "Not Available: Use a browser that supports HTML5 to allow uploading of extremely large files. http://html5test.com/";
 					logProcess("NO Gears");
 				} 
 			}
