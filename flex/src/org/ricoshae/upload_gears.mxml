@@ -344,7 +344,7 @@
 						selectedFileSize.text = "";
 						btUpload.visible = false;
 						FlexGlobals.topLevelApplication.logProcess("File too Large - Gears Upload");
-						Alert.show(lang['E003']+ " (Max: " + readablizeBytes(parseInt(config["max_gears_upload_size"])) + ")",lang['E000'] ); 
+						Alert.show(lang['E003']+ " (Maximum: " + readablizeBytes(parseInt(config["max_gears_upload_size"])) + ")",lang['E000'] ); 
 						return ;	
 					}
 					
