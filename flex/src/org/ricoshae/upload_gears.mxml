@@ -174,12 +174,12 @@
 				
 				// check if too many email addresses
 				
-				var temptext:String = currentFileObj.fileto;
+				var temptext:String = StringUtil.trim(currentFileObj.fileto);
 				var pattern:RegExp = /,/gi;
 				temptext = temptext.replace(pattern," ");
 				pattern = /;/gi;
 				temptext = temptext.replace(pattern," ");
-				var params:Array = temptext.split(' ');
+				var params:Array = temptext.split(/\s+/);
 				
 				if(config["max_email_recipients"] != 0 && params.length > config["max_email_recipients"])
 				{
