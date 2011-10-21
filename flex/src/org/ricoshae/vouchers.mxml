@@ -160,12 +160,12 @@
 				if(FS_Validation.isValidEmailList(voucherEmails.text.toString(),","))
 				{
 					
-					var temptext:String = voucherEmails.text;
+					var temptext:String = StringUtil.trim(voucherEmails.text);
 					var pattern:RegExp = /,/gi;
 					temptext = temptext.replace(pattern," ");
 					pattern = /;/gi;
 					temptext = temptext.replace(pattern," ");
-					var params:Array = temptext.split(' ');
+					var params:Array = temptext.split(/\s+/);
 					if(params.length > config["max_email_recipients"] )
 					{
 						Alert.show(lang['E022']+ config["max_email_recipients"],lang['E000']);
