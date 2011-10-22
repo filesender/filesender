@@ -207,7 +207,7 @@ function cleanUp()
 		if (!file_exists($FilestoreDirectory."/".$row["fileuid"].".tmp")) {
 
 		// change status to closed in database
-		$query = "UPDATE Files SET filestatus = 'Closed' WHERE fileid='%s'";
+		$query = "UPDATE files SET filestatus = 'Closed' WHERE fileid='%s'";
 		
 		$result = $db->fquery($query, $row['fileid']);
 		
