@@ -138,7 +138,7 @@ function cleanUp()
 	while($row = pg_fetch_assoc($search)) {
 		
 		// remove from database
-		$query = "UPDATE Files SET filestatus = 'Closed' WHERE fileid='%s'";
+		$query = "UPDATE files SET filestatus = 'Closed' WHERE fileid='%s'";
 		$result = $db->fquery($query, $row['fileid']);
 		
 		// check for error in SQL
