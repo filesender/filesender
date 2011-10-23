@@ -75,13 +75,19 @@ function logEntry($message){
 	if(isset($config['log_location'])) 
 	{
 	date_default_timezone_set($config['Default_TimeZone']);
+
+	if(isset($_SERVER['REMOTE_ADDR']))
+	{	
+		$ip = $_SERVER['REMOTE_ADDR']; //capture IP
 	
-	$ip = $_SERVER['REMOTE_ADDR']; //capture IP
-	
-	if($config['dnslookup'] == true) {
-		$domain = GetHostByName($ip);
+		if($config['dnslookup'] == true) {
+			$domain = GetHostByName($ip);
+		} else {
+			$domain = "";
+		}
 	} else {
-		$domain = "";
+		$ip = "none";	
+		$domain = "none";	
 	}
 	
 	$message .= "[".$ip."(".$domain.")] ";
