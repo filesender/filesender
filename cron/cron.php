@@ -50,12 +50,15 @@ $filesenderbase = dirname(dirname(__FILE__));
 
 // include all required classes
 require_once("$filesenderbase/config/config.php");
+
+$CFG = config::getInstance();
+$config = $CFG->loadConfig();
+
+require_once("$filesenderbase/includes/ErrorHandler.php");
 require_once("$filesenderbase/classes/DBAL.php");
 require_once("$filesenderbase/classes/Mail.php");
 require_once("$filesenderbase/classes/DB_Input_Checks.php");
 
-$CFG = config::getInstance();
-$config = $CFG->loadConfig();
 $sendmail = Mail::getInstance();
 
 // set time zone for this session
