@@ -516,7 +516,7 @@
 				FlexGlobals.topLevelApplication.logProcess("File Selected " + fileRef.name.toString() + " - Flash Upload");
 				if(fnCheckString(fileRef.name))
 				{
-					Alert.show("Invalid File Name (Must no contain the following charachters : * ? < > | %","Invalid Filename");
+					Alert.show("Invalid File Name (must not contain the following characters : * ? < > | %","Invalid Filename");
 					return;
 				}
 				if (fnCheckExtension(fileRef.name))
