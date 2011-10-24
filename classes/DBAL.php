@@ -79,7 +79,7 @@ class DBAL {
 				}
 				elseif ($config['db_type'] == 'mysql') {
 					$dsn = 'mysql://'.$config['db_username'].':'.$config['db_password'].'@'.$config['db_host'] .':'.$config['db_port'].'/'.$config['db_database'];
-					logEntry("mysql dsn in initDSN = ". $dsn);
+					// logEntry("mysql dsn in initDSN = ". $dsn); // DEBUG
 					return $dsn;
 				}
 			}
@@ -143,7 +143,7 @@ class DBAL {
 			$config['db_dateformat'] = 'Y-m-d H:i:sP';
 		}
 		
-		logEntry('DSN  substr 0,5 = ' . substr($config['dsn'],0,5));
+		// logEntry('DSN  substr 0,5 = ' . substr($config['dsn'],0,5)); // DEBUG
 		
 		//We have no suitable database connection, or escape function
 		switch (substr($config['dsn'],0,5)) {
