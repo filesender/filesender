@@ -60,11 +60,15 @@ class AuthSaml {
             $as->requireAuth();
             $attributes = $as->getAttributes();
 
-            // compare config admin to userUID
+            // Get the configured UID atribute (as array or as single value)
             if(isset($attributes[$config['saml_uid_attribute']][0])) {
                 $attributes["eduPersonTargetedID"] = $attributes[$config['saml_uid_attribute']][0];
             }
+            if(isset($attributes[$config['saml_uid_attribute']])) {
+                $attributes["eduPersonTargetedID"] = $attributes[$config['saml_uid_attribute']];
+            }
 
+            // compare config admin to userUID
             if(stristr($config['admin'], $attributes["eduPersonTargetedID"]) === FALSE) {
                 return FALSE;
             } else {
