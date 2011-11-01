@@ -1,3 +1,47 @@
+filesender (1.1) stable; urgency=medium
+   * Release 1.1
+     
+   * Major change since 1.0.1
+     - Dropped Gears dependency, upload of large (>2G) files now requires
+       a browser that supports the HTML5 FileAPI, other browsers are
+       limited to 2G uploads using the Flash upload mechanism. This change
+       also obsoletes the following Gears-related issues in 1.0:
+
+       #176 >2GB upload on MacOS hangs at ~2GB (Gears enabled)
+       #290 File select fails in Linux/Gears for files of 2G or more.
+       #358 Filename accents not displayed in GUI when using Gears
+
+       This means that FileSender 1.1 also allows large uploads from
+       the Mac OSX and Linux platforms, provided a supported HTML5 browser
+       is used.
+
+     - Note that only user visible references to Gears have been changed.
+       In the code and config.php references to 'gears' are still used. No
+       changes are required in config.php except for the URL pointing to
+       more information on HTML5:
+
+          $config['gearsURL'] = 'http://html5test.com/';
+
+   * Minor fixes and changes
+     r993 filesender_db.sql: make fileauthuserid character varying(500)
+          When upgrading from previous versions you should fix the relevant
+          column size in the database with:
+              #sudo -u postgres psql filesender
+              ALTER TABLE files ALTER fileauthuserid TYPE character varying(500);
+              \q
+     #563 Compare of UID attribute with admin uid broken when attribute is
+          not in an array
+     #569 Case-sensitive references to Files in cron.php
+     #582 Inconsistent file size limit warnings
+     #583 Email addresses rejected at maximum for uploads & voucher issue
+
+   * Packaging
+     - The Debian package has been adapted to use the default baseurl
+       of the simplesamlphp 1.7+ debian packages which changed from
+      'simplesaml' to 'simplesamlphp' to adhere to standard Debian policy.
+
+ -- Filesender Development <filesender-dev@filesender.org>  Tue, 1 Nov 2011 00:00:00 +0100
+
 filesender (1.0.1) stable; urgency=medium
    * Release 1.0.1
 

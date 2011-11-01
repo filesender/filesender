@@ -1,34 +1,43 @@
-Updated: 25 April 2011
+Updated: 1 November 2011
 
 Installation instructions
 =========================
 
 FileSender installation instructions are available at:
-   https://www.assembla.com/wiki/show/file_sender/Documentation_for_v1-0
+   https://www.assembla.com/wiki/show/file_sender/Documentation_for_v1-x
 
 Be sure to read the parts about configuring PostgreSQL, PHP, Apache,
 SimpleSAMLphp and cron to get up and running.
 
-Upgrading to 1.0.1 RELEASE
+Upgrading to 1.1 RELEASE
 ==========================
-
-Version 1.0.1 is mainly a bugfix release (see CHANGELOG.txt for
-details about the fixes). When using IPv6 it is recommended to
-adjust the 'files' database table:
-
-	#sudo -u postgres psql filesender
-	ALTER TABLE files ALTER fileip6address TYPE character varying(45);
-	\q
 
 As usual it is recommended to make a backup of your current installation
 before upgrading, especially if you have made local modifications to the
 installed version.
 
+Although 1.1 offers a major change in client side user functionality
+(replacing Gears with HTML5) on the server side it contains only a few
+minor bugfixes (see CHANGELOG.txt for details about the fixes). When
+upgrading from a previous version please adjust the 'gearsURL' 
+configuration setting:
+
+  $config['gearsURL'] = 'http://html5test.com/';
+
+When upgrading from a previous version it is also recommended to adjust
+the column sizes for 'fileauthuserid' and (if not already done)
+'fileip6address' in the 'files' database table:
+
+	#sudo -u postgres psql filesender
+	ALTER TABLE files ALTER fileauthuserid TYPE character varying(500);
+	ALTER TABLE files ALTER fileip6address TYPE character varying(45);
+	\q
+
 Upgrading from previous (beta) versions
 =======================================
 
 Please read the following notes before upgrading from a previous beta
-version to 1.0.x.
+version to a 1.x version.
 
 IMPORTANT: Upgrading from versions older then Beta-0.1.17
 =========================================================
@@ -109,10 +118,12 @@ for instructions on how to customise your installation.
 Performance
 ===========
 
-  - www/js/fs_gears.js
+  - www/js/fs_gears.js (version 1.0.x)
+  - www/js/fs_html5.js (version 1.1.x)
 
 You may have changed the chunksize used in the gears upload. This value is
 found in www/js/fs_gears.js in the variable CHUNK_BYTES that has a default
-value of 2000000 (2M).
+value of 2000000 (2M). As of 1.1 this is in the fs_html5.js and is used
+with uploads using the HTML5 FileAPI.
 
 For more details about other changes please see CHANGELOG.txt.
