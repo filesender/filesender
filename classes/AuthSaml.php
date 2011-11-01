@@ -63,8 +63,7 @@ class AuthSaml {
             // Get the configured UID atribute (as array or as single value)
             if(isset($attributes[$config['saml_uid_attribute']][0])) {
                 $attributes["eduPersonTargetedID"] = $attributes[$config['saml_uid_attribute']][0];
-            }
-            if(isset($attributes[$config['saml_uid_attribute']])) {
+            } else if(isset($attributes[$config['saml_uid_attribute']])) {
                 $attributes["eduPersonTargetedID"] = $attributes[$config['saml_uid_attribute']];
             }
 
