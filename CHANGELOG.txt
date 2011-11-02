@@ -1,4 +1,4 @@
-Last update: 1 November 2011
+Last update: 2 November 2011
 
 Version 1.1 <xx November 2011>
 
@@ -24,11 +24,11 @@ Version 1.1 <xx November 2011>
 	     $config['gearsURL'] = 'http://html5test.com/';
 
 	Minor fixes and changes
-	r993 filesender_db.sql: make fileauthuserid character varying(500)
+	r993 filesender_db.sql: make fileauthuseruid character varying(500)
 	     When upgrading from previous versions you should fix the relevant
 	     column size in the database with:
               #sudo -u postgres psql filesender
-              ALTER TABLE files ALTER fileauthuserid TYPE character varying(500);
+              ALTER TABLE files ALTER fileauthuseruid TYPE character varying(500);
               \q
 	#563 Compare of UID attribute with admin uid broken when attribute is
 	     not in an array
