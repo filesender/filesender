@@ -25,11 +25,11 @@ configuration setting:
   $config['gearsURL'] = 'http://html5test.com/';
 
 When upgrading from a previous version it is also recommended to adjust
-the column sizes for 'fileauthuserid' and (if not already done)
+the column sizes for 'fileauthuseruid' and (if not already done)
 'fileip6address' in the 'files' database table:
 
 	#sudo -u postgres psql filesender
-	ALTER TABLE files ALTER fileauthuserid TYPE character varying(500);
+	ALTER TABLE files ALTER fileauthuseruid TYPE character varying(500);
 	ALTER TABLE files ALTER fileip6address TYPE character varying(45);
 	\q
 
