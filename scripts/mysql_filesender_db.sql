@@ -1,7 +1,14 @@
-delimiter $$
+--
+-- Create Database: `filesender`
+--
 
-CREATE DATABASE `filesender` /*!40100 DEFAULT CHARACTER SET latin1 */$$
-ALTER SCHEMA `filesender`  DEFAULT CHARACTER SET utf8 ;
+CREATE DATABASE `filesender` ;
+
+USE `filesender`;
+
+--
+-- Table structure for table `files`
+--
 
 CREATE TABLE `files` (
   `fileto` varchar(250) DEFAULT NULL,
@@ -27,7 +34,11 @@ CREATE TABLE `files` (
   `fileauthuseremail` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`fileid`),
   UNIQUE KEY `fileid` (`fileid`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1$$
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+
+--
+-- Table structure for table `logs`
+--
 
 CREATE TABLE `logs` (
   `logid` int(11) NOT NULL AUTO_INCREMENT,
@@ -44,4 +55,15 @@ CREATE TABLE `logs` (
   `logvoucheruid` varchar(60) DEFAULT NULL,
   `logauthuseruid` varchar(500) DEFAULT NULL,
   PRIMARY KEY (`logid`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1$$
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+
+-- Use the following to grant the filesender user the
+-- right permissions and set the password.
+-- Note that these commands are commented out and should
+-- be adapted and used from your favourite interface to
+-- mysql. Other methods are possible.
+/* 
+grant INSERT,DELETE,UPDATE,SELECT on filesender.* to filesender@localhost;
+set password for filesender@localhost = password('yoursecretpassword');
+flush privileges;
+*/
