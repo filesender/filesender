@@ -1,6 +1,6 @@
-Last update: 2 November 2011
+Last update: 5 November 2011
 
-Version 1.1 <xx November 2011>
+Version 1.1 <5 November 2011>
 
 	Major change since 1.0.1
 	- Dropped Gears dependency, upload of large (>2G) files now requires

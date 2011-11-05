@@ -55,12 +55,12 @@ to a previous version run
 *before* downgrading.
 
 YOU ONLY NEED TO DO THIS ONCE. If you upgrade from for example Beta-0.1.18 to
-RELEASE-1.0.x you do not need to repeat this step. So only run the script when
+RELEASE-1.x you do not need to repeat this step. So only run the script when
 upgrading from Beta-0.1.16 or older.
 
 * As of version Beta-0.1.17 the expiration of files and vouchers is handled
 by a script to be called by cron. Please see the installation instructions at
-https://www.assembla.com/wiki/show/file_sender/Documentation_for_v1-0 on how
+https://www.assembla.com/wiki/show/file_sender/Documentation_for_v1-x on how
 to install such a cron job.
 
 
