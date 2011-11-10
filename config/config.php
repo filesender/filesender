@@ -97,6 +97,7 @@ public function loadConfig() {
 	
 	// Advanced server settings, do not change unless you have a very good reason.
 	$config['postgresdateformat'] = "Y-m-d H:i:sP"; // Date/Time format for PostgreSQL, use PHP date format specifier syntax
+	$config['db_dateformat'] = "Y-m-d H:i:sP"; // Date/Time format for PostgreSQL, use PHP date format specifier syntax
 	$config["crlf"] = "\n"; // for email CRLF can be changed to \r\n if required
 	$config['voucherRegEx'] = "'[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}'";
 	$config['voucherUIDLength'] = 36;
@@ -124,16 +125,17 @@ public function loadConfig() {
 	$config['site_simplesamllocation'] = '/usr/share/simplesamlphp/';
 	$config['log_location'] = '/usr/share/filesender/log/';	
 
-	//Old  database settings - these can go after testing
-	//$config['pg_host'] = 'localhost';
-	//$config['pg_database'] = 'filesender';
-	//$config['pg_port'] = '5432';
-	//$config['pg_username'] = 'filesender';
-	//$config['pg_password'] = 'yoursecretpassword';
+	$config["db_type"] = "pgsql";// pgsql or mysql
+	$config['pg_host'] = 'localhost';
+	$config['pg_database'] = 'filesender';
+	$config['pg_port'] = '5432';
+	$config['pg_username'] = 'filesender';
+	$config['pg_password'] = 'yoursecretpassword';
 	
-	//NEW DB settings, URL like oneliner, mysql or postgres
+	
+	//DB settings, URL like oneliner, mysql or postgres
 	//$config['dsn'] = 'mysql://user:password@localhost:3306/filesender';
-	$config['dsn'] = 'pgsql://user:password@tcp(localhost:5432)/dbname';
+	//$config['dsn'] = 'pgsql://user:password@tcp(localhost:5432)/dbname';
 
 	// cron settings
 	$config['cron_exclude prefix'] = '_'; // exclude deletion of files with the prefix character listed (can use multiple characters eg '._' will ignore .xxxx and _xxxx

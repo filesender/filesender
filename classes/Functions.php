@@ -108,8 +108,8 @@ class Functions {
     public function __construct() {
 
         $this->saveLog = Log::getInstance();
-        $this->db = DBAL::getInstance();
-        $this->sendmail = Mail::getInstance();
+        $this->db = DB::getInstance();
+	    $this->sendmail = Mail::getInstance();
         $this->authsaml = AuthSaml::getInstance();
         $this->authvoucher = AuthVoucher::getInstance();
     }
@@ -272,7 +272,6 @@ class Functions {
 		}
 	}
 
-
     //---------------------------------------
     // Return Basic Database Statistics e.g. Up xx Gb (files xx) | Down xx Gb (files xx)
     public function getStats() {
@@ -280,42 +279,32 @@ class Functions {
         global $config;
 
         $statString = "| UP: ";
-        try {
-        	$search =  $this->db->query("SELECT * FROM logs WHERE logtype='Uploaded'");
-        } catch (DBALException $e) {
-        	$this->saveLog->saveLog("","Error",$e->getMessage()); return FALSE; 
-        }
 
-        $total_records = sizeof($search);
-        $statString = $statString.$total_records." files ";
-        
-		try {
-			$search = $this->db->query("SELECT SUM(logfilesize) as total_uploaded FROM logs WHERE logtype='Uploaded'");
-		} catch (Exception $e) {
-			$this->saveLog->saveLog("","Error",$e->getMessage()); return FALSE; 
-		}
+        $statement =   $this->db->fquery("SELECT * FROM logs WHERE logtype='Uploaded'");
+		$statement->execute();
+		$count = $statement->rowCount();
 
-        $total = $search[0]['total_uploaded'];
-        $statString = $statString."(".round($total/1024/1024/1024)."GB) |" ;
+        $statString = $statString.$count." files ";
 
-		try {
-			$search =  $this->db->query("SELECT * FROM logs WHERE logtype='Download'");
-		} catch (Exception $e) {
-			$this->saveLog->saveLog("","Error",$e->getMessage()); return FALSE; 	
-		}
-
-        $total_records = sizeof($search);
-        $statString = $statString." DOWN: ".$total_records." files ";
-
-		try {
-        	$search = $this->db->query("SELECT SUM(logfilesize) as total_downloaded FROM logs WHERE logtype='Download'");
-		} catch(DBALException $e) {
-			$this->saveLog->saveLog("","Error",$e->getMessage()); return FALSE; 		
-		}
-
-        $total = $search[0]['total_downloaded'];
-        $statString = $statString."(".round($total/1024/1024/1024)."GB) |";
-
+        $statement =   $this->db->fquery("SELECT SUM(logfilesize) as total_uploaded FROM logs WHERE logtype='Uploaded'");
+		$statement->execute();
+		$totalResult = $statement->fetch(PDO::FETCH_NUM);
+		$totalResult = $totalResult[0];
+        $statString = $statString."(".round($totalResult/1024/1024/1024)."GB) |" ;
+		$stmnt = NULL;
+		
+      	$statement = $this->db->fquery("SELECT * FROM logs WHERE logtype='Download'");
+      	$statement->execute();
+		$count = $statement->rowCount();
+        $statString = $statString." DOWN: ".$count." files ";
+		
+       	$statement =  $this->db->fquery("SELECT SUM(logfilesize) FROM logs WHERE logtype='Download'");
+      	$statement->execute();
+		$totalResult = $statement->fetch(PDO::FETCH_NUM);
+		$totalResult = $totalResult[0];
+        $statString = $statString."(".round($totalResult/1024/1024/1024)."GB) |";
+		$stmnt = NULL;
+		
         return $statString;
 
     }
@@ -434,15 +423,8 @@ class Functions {
         } else {
             $authAttributes["saml_uid_attribute"] = "";
         }
-
-        try {
-        	$result = $this->db->query("SELECT ".$this->returnFields." FROM files WHERE (fileauthuseruid = '%s') AND filestatus = 'Voucher' ORDER BY fileactivitydate DESC",$authAttributes["saml_uid_attribute"]);
-        } catch (DBALException $e) {
-        	$this->saveLog->saveLog("","Error",$e->getMessage()); return FALSE;
-        }
-
-
-
+		
+		$result =  $this->db->fquery("SELECT ".$this->returnFields." FROM files WHERE (fileauthuseruid = %s) AND filestatus = 'Voucher' ORDER BY fileactivitydate DESC",$authAttributes["saml_uid_attribute"]);
         $returnArray = array();
         foreach($result as $row)
         {
@@ -464,12 +446,9 @@ class Functions {
         } else {
             $authAttributes["saml_uid_attribute"] = "nonvalue";
         }
-		try {
-			$result = $this->db->query("SELECT ".$this->returnFields." FROM files WHERE (fileauthuseruid = '%s') AND filestatus = 'Available'  ORDER BY fileactivitydate DESC", $authAttributes["saml_uid_attribute"]);	
-		} catch (DBALException $e) {
-			$this->saveLog->saveLog("","Error",$e->getMessage()); return FALSE;
-		}
-        
+	
+        $result =  $this->db->fquery("SELECT ".$this->returnFields." FROM files WHERE (fileauthuseruid = %s) AND filestatus = 'Available'  ORDER BY fileactivitydate DESC", $authAttributes["saml_uid_attribute"]);
+           
         $returnArray = array();
         foreach($result as $row )
         {
@@ -490,9 +469,10 @@ class Functions {
 		$maxitems_perpage = 50;
 		if(isset($_REQUEST["page"]))
 		{
-		
-		$result = $this->db->query("SELECT logtype FROM logs WHERE logtype = '$type'");
-		$total = count($result );
+        $statement =  $this->db->fquery("SELECT logtype FROM logs WHERE logtype = '$type'");
+ 		$statement->execute();
+		$count = $statement->rowCount();
+		$total = count($count );
 		
 		$total_pages[$type] = ceil($total/$maxitems_perpage);
 		$page = intval($_REQUEST["page"]); 
@@ -507,21 +487,15 @@ class Functions {
 		}
         if($this->authsaml->authIsAdmin()) { 
 
+        $result =  $this->db->fquery("SELECT logtype, logfrom , logto, logdate, logfilesize, logfilename, logmessage FROM logs WHERE logtype = '$type' ORDER BY logdate DESC ".$pagination);
 
-            try {
-            	$result = $this->db->query("SELECT logtype, logfrom , logto, logdate, logfilesize, logfilename, logmessage FROM logs WHERE logtype = '$type' ORDER BY logdate DESC ".$pagination);
-            } catch (Exception $e) {
-            	$this->saveLog->saveLog("","Error",$e->getMessage()); return FALSE;	
-            }
-
-            $returnArray = array();
-            foreach($result as $row) 
+        $returnArray = array();
+	        foreach($result as $row) 
             {
                 array_push($returnArray, $row);
             }
             return $returnArray;
         }
-
     }
 
     //---------------------------------------
@@ -535,9 +509,12 @@ class Functions {
 		$maxitems_perpage = 50;
 		if(isset($_REQUEST["page"]))
 		{
-		$result = $this->db->query("SELECT fileid FROM files WHERE filestatus = '$type'");
-		$total = count($result);
-		//echo $total;
+
+        $statement =  $this->db->fquery("SELECT fileid FROM files WHERE filestatus = '$type'");
+		$statement->execute();
+		$count = $statement->rowCount();
+		$total = count($count );
+
   		$total_pages[$type] = ceil($total/$maxitems_perpage);
   		$page = intval($_REQUEST["page"]); 
   		if (0 == $page){
@@ -554,17 +531,14 @@ class Functions {
         if($this->authsaml->authIsAdmin()) { 
 
 
-            try {
-            	$result = $this->db->query("SELECT %s FROM files WHERE filestatus = '$type' ORDER BY fileactivitydate DESC ".$pagination, $this->returnFields);
-            } catch (DBALException $e) {
-            	$this->saveLog->saveLog("","Error",$e->getMessage()); return FALSE;	
-            }
-            $returnArray = array();
-            foreach($result as $row)
-            {
-                array_push($returnArray, $row);
-            }
-            return $returnArray;
+        $result =  $this->db->fquery("SELECT ".$this->returnFields." FROM files WHERE filestatus = '$type' ORDER BY fileactivitydate DESC ".$pagination);
+
+        $returnArray = array();
+        foreach($result as $row)
+	        {
+    	        array_push($returnArray, $row);
+        	}
+        return $returnArray;
         }
     }
 
@@ -578,11 +552,14 @@ class Functions {
         // check authentication as File UID is returned
 
         $vid = $dataitem['filevoucheruid'];
-		try {
-			$result = $this->db->query("SELECT * FROM files where filevoucheruid = '%s'", $vid);	
-		} catch (DBALException $e) {
-			$this->saveLog->saveLog("","Error",$e->getMessage()); return FALSE;	
-		}
+       	$result =  $this->db->fquery("SELECT * FROM files where filevoucheruid = %s", $vid);
+
+		
+		//try {
+		//	$result = $this->db->query("SELECT * FROM files where filevoucheruid = '%s'", $vid);	
+		//} catch (DBALException $e) {
+		//	$this->saveLog->saveLog("","Error",$e->getMessage()); return FALSE;	
+		//}
        
         $returnArray = array();
         foreach($result as $row){
@@ -599,11 +576,13 @@ class Functions {
         global $config;
 
         // check authentication as file UID is returned
-		try {
-			$result = $this->db->query("SELECT * FROM files where fileid = '%s'", $vid);
-		} catch (DBALException $e) {
-			$this->saveLog->saveLog("","Error",$e->getMessage()); return FALSE;		
-		}
+        $result =  $this->db->fquery("SELECT * FROM files where fileid = %s", $vid);
+
+		//try {
+//			$result = $this->db->query("SELECT * FROM files where fileid = '%s'", $vid);
+//		} catch (DBALException $e) {
+//			$this->saveLog->saveLog("","Error",$e->getMessage()); return FALSE;		
+//		}
 
         $returnArray = array();
         foreach($result as $row){
@@ -620,11 +599,8 @@ class Functions {
         global $config;
 
         // check authentication as file UID is returned
-		try {
-	        $result = $this->db->query("SELECT * FROM files where filevoucheruid = '%s'", $vid);
-		} catch (DBALException $e) {
-			$this->saveLog->saveLog($dataitem,"Error",$e->getMessage()); return FALSE;		
-		}
+
+  		$result =  $this->db->fquery("SELECT * FROM files where filevoucheruid = %s", $vid);
 
         $returnArray = array();
         foreach($result as $row){
@@ -688,7 +664,7 @@ class Functions {
 
         try {
         	
-	        $result = $this->db->exec("
+	        $result = $this->db->fquery("
 	            INSERT INTO files (
 
 	                fileexpirydate,
@@ -712,7 +688,7 @@ class Functions {
 	                filecreateddate
 
 	            ) VALUES
-	            ( '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')",
+	            ( %s, %s, %s, %s, %s, %s, %s, %d, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
 
 	            date($config['db_dateformat'], strtotime($dataitem['fileexpirydate'])),
 	            $dataitem['fileto'],
@@ -796,9 +772,9 @@ public function insertVoucher($to,$expiry){
 		}
 
        $dataitem['fileexpirydate'] = $expiry;
-
+		 $this->saveLog->saveLog($dataitem['fileexpirydate'],"expiry","");
         	
-       $result = $this->db->exec("
+       $result = $this->db->fquery("
             INSERT INTO files (
 
                 fileexpirydate,
@@ -822,7 +798,7 @@ public function insertVoucher($to,$expiry){
                 filecreateddate
 
             ) VALUES
-            ( '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')",
+            ( %s, %s, %s, %s, %s, %s, %s, %d, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
   			date($config['db_dateformat'], strtotime($dataitem['fileexpirydate'])),
             $dataitem['fileto'],
             isset($dataitem['filesubject']) ? $dataitem['filesubject'] : "NULL",
@@ -883,7 +859,7 @@ public function insertVoucher($to,$expiry){
 		}
 
         try {
-			$result = $this->db->exec("
+			$result = $this->db->fquery("
             INSERT INTO files (
 
                 fileexpirydate,
@@ -907,7 +883,7 @@ public function insertVoucher($to,$expiry){
                 filecreateddate
 
             ) VALUES
-            ( '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')",
+            ( %d, %s, %s, %d, %s, %s, %s, %d, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %d)",
 
             date($config['db_dateformat'], strtotime($dataitem['fileexpirydate'])),
             $dataitem['fileto'],
@@ -1000,36 +976,35 @@ public function insertVoucher($to,$expiry){
         $fileauthuseremail 	= $dataitem["fileauthuseremail"];
         $filecreateddate 	= date($config['db_dateformat'],strtotime($dataitem['filecreateddate']));
 
-        try {
 			if (isset($dataitem['fileid'])) {
 	            $fileid =   $dataitem['fileid'];
 	            $sqlQuery = "
 	                UPDATE 
 	                files 
 	                SET 
-	                fileexpirydate 		= '%s', 
-	                fileto 			= '%s', 
-	                filesubject 		= '%s', 
-	                fileactivitydate 	= '%s', 
-	                filevoucheruid 		= '%s', 
-	                filemessage		= '%s', 
-	                filefrom 		= '%s', 
-	                filesize 		= '%s', 
-	                fileoriginalname 	= '%s', 
-	                filestatus 		= '%s', 
-	                fileip4address		= '%s', 
-	                fileip6address 		= '%s', 
-	                filesendersname 	= '%s', 
-	                filereceiversname 	= '%s', 
-	                filevouchertype		= '%s', 
-	                fileuid 		= '%s',
-	                fileauthuseruid 	= '%s',
-	                fileauthuseremail 	= '%s',
-	                filecreateddate 	= '%s'  
+	                fileexpirydate 		= %d, 
+	                fileto 				= %s, 
+	                filesubject 		= %s, 
+	                fileactivitydate 	= %d, 
+	                filevoucheruid 		= %s, 
+	                filemessage			= %s, 
+	                filefrom 			= %s, 
+	                filesize 			= %s, 
+	                fileoriginalname 	= %s, 
+	                filestatus 			= %s, 
+	                fileip4address		= %s, 
+	                fileip6address 		= %s, 
+	                filesendersname 	= %s, 
+	                filereceiversname 	= %s, 
+	                filevouchertype		= %s, 
+	                fileuid 			= %s,
+	                fileauthuseruid 	= %s,
+	                fileauthuseremail 	= %s,
+	                filecreateddate 	= %d  
 	                WHERE 
 	                fileid 			= %d";
 
-	            $result = $this->db->exec($sqlQuery,
+	            $result = $this->db->fquery($sqlQuery,
 	                $fileexpirydate,
 	                $fileto,
 	                $filesubject,
@@ -1052,9 +1027,6 @@ public function insertVoucher($to,$expiry){
 	                $fileid
 	            ) or die("Error");
 			}
-		} catch(DBALException $e) {
-			$this->saveLog->saveLog($dataitem,"Error",$e->getMessage()); return FALSE;
-		}
 
          $this->saveLog->saveLog($dataitem,"Updated","Using Voucher");
          return true;//sendmail->sendEmail($dataitem,$config['defaultmailsendbody']);
@@ -1071,23 +1043,20 @@ public function insertVoucher($to,$expiry){
         // check authentication SAML User
         if( $this->authsaml->isAuth()) {
 
-            $dbCheck = DB_Input_Checks::getInstance();	
-
             $sqlQuery = "
                 UPDATE 
                 files 
                 SET 
                 filestatus = 'Voucher Cancelled' 
                 WHERE 
-                fileid = %d
+                fileid = %s
                 ";
 
-            $this->db->exec($sqlQuery, $fileid);
-
-            $fileArray =  $this->getVoucher($fileid);
-
-            $this->sendmail->sendEmail($fileArray[0],$config['defaultvouchercancelled']);	
-            $this->saveLog->saveLog($fileArray[0],"Voucher Cancelled","");
+           $statement = $this->db->fquery($sqlQuery, $fileid);
+		   
+		   $fileArray =  $this->getVoucher($fileid);
+           $this->sendmail->sendEmail($fileArray[0],$config['defaultvouchercancelled']);	
+           $this->saveLog->saveLog($fileArray[0],"Voucher Cancelled","");
 
             return true;
         } else {
@@ -1110,11 +1079,11 @@ public function insertVoucher($to,$expiry){
             SET 
             filestatus = 'Closed' 
             WHERE 
-            fileid = %d
+            fileid = %s
             ";
 
-        $this->db->exec($sqlQuery, $fileid);
-
+        $statement = $this->db->fquery($sqlQuery, $fileid);
+		
         $fileArray =  $this->getVoucher($fileid);
 
         //$this->sendmail->sendEmail($fileArray[0],$config['defaultvouchercancelled']);	
@@ -1132,18 +1101,16 @@ public function insertVoucher($to,$expiry){
         // check authentication SAML User
         if( $this->authsaml->isAuth()) {
 
-            $dbCheck = DB_Input_Checks::getInstance();	
-
-            $sqlQuery = "
+    	        $sqlQuery = "
                 UPDATE 
                 files 
                 SET 
                 filestatus = 'Closed' 
                 WHERE 
-                fileid = %d
+                fileid = %s
                 ";
 
-            $this->db->exec($sqlQuery, $fileid);
+            $this->db->fquery($sqlQuery, $fileid);
 
             $fileArray =  $this->getVoucher($fileid);
 
