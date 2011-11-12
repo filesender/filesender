@@ -97,17 +97,18 @@
 	var banextensions = '<?php echo $config['ban_extension']?>';
 	var previousBytesLoaded = 0;
 	var intervalTimer = 0;
-	var html5 = true;
+	var html5 = false;
 	var vid='<?php if(isset($_REQUEST["vid"])){echo $_REQUEST["vid"];}; ?>';
-
+	// check if html5 functions are available
+	html5 = (window.File && window.FileReader && window.FileList && window.Blob) ? true : false;
  	// start document ready 
 	$(function() { 
-	
+
 		// set date picker
 		$("#datepicker" ).datepicker({ minDate: 1, maxDate: "+"+maximumDate+"D",altField: "#fileexpirydate", altFormat: "d-m-yy" });
 		$("#datepicker" ).datepicker( "option", "dateFormat", "<?php echo lang("_DP_dateFormat"); ?>" );
 		$("#datepicker").datepicker("setDate", new Date()+maximumDate);
-		
+			
 		// set datepicker language
 		$.datepicker.setDefaults({
 		closeText: '<?php echo lang("_DP_closeText"); ?>',
@@ -544,7 +545,7 @@ var hasProductInstall = DetectFlashVer(6, 0, 65);
 
 // Version check based upon the values defined in globals
 var hasRequestedVersion = DetectFlashVer(requiredMajorVersion, requiredMinorVersion, requiredRevision);
-
+if(!html5) {
 if ( hasProductInstall && !hasRequestedVersion ) {
 	// DO NOT MODIFY THE FOLLOWING FOUR LINES
 	// Location visited after installation is complete if installation is required
@@ -552,7 +553,6 @@ if ( hasProductInstall && !hasRequestedVersion ) {
 	var MMredirectURL = window.location;
     document.title = document.title.slice(0, 47) + " - Flash Player Installation";
     var MMdoctitle = document.title;
-
 	AC_FL_RunContent(
 		"src", "lib/swf/playerProductInstall",
 		"FlashVars", "<?php echo $flashVARS ?>",
@@ -585,32 +585,16 @@ if ( hasProductInstall && !hasRequestedVersion ) {
 			"type", "application/x-shockwave-flash",
 			"pluginspage", "http://www.adobe.com/go/getflashplayer"
 	);
+	
   } else {  // flash is too old or we can't detect the plugin
     var alternateContent = '<div id="header"><h1>Install Flash Player<h1></div><BR><div align="center">This application requires Flash Player.<BR><BR>'
   	+ 'To install Flash Player go to Adobe.com.<br> '
    	+ '<a href=http://www.adobe.com/go/getflash/>Get Flash</a></div>';
     document.write(alternateContent);  // insert non-flash content
   }
+}
 // -->
 </script>
-            <noscript>
-            <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" width="500" height="50"
-			codebase="http://fpdownload.macromedia.com/get/flashplayer/current/swflash.cab">
-              <param name="movie" value="swf/filesenderup.swf" />
-              <param name="quality" value="high" />
-              <param name="bgcolor" value="#ffffff" />
-              <param name="allowScriptAccess" value="sameDomain" />
-              <embed src="swf/filesenderup.swf" quality="high" bgcolor="#869ca7"
-				width="300" height="30" name="filesenderup" align="middle"
-				play="true"
-				loop="false"
-				quality="high"
-				allowScriptAccess="sameDomain"
-				type="application/x-shockwave-flash"
-				pluginspage="http://www.adobe.com/go/getflashplayer">
-              </embed>
-            </object>
-            </noscript>
             <div id="uploadstandardspinner" style="padding-top:10px;display:none"><img src="images/ajax-loader-sm.gif" border=0 align="left" style="padding-right:6px"/><?php echo lang("_UPLOADING_WAIT"); ?></div>
             <BR />
           </div>
