@@ -58,7 +58,7 @@ if($_REQUEST["a"] == "add")
 {
 $myfileData["filemessage"] = $_POST["filemessage"];
 $myfileData["filesubject"] = $_POST["filesubject"];
-$myfileData["fileexpirydate"] = date($config["postgresdateformat"],strtotime($_POST["fileexpirydate"]));
+$myfileData["fileexpirydate"] = date($config["db_dateformat"],strtotime($_POST["fileexpirydate"]));
 
 // loop emails in fileto
 $emailto = str_replace(",",";",$_POST["fileto"]);
