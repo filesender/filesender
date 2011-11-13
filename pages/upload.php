@@ -400,7 +400,7 @@ $.ajax({
 }).success(function( msg ) {
    if(msg = "true") 
   {
-	  window.location.href="index.php?s=completev";
+	  window.location.href="index.php?s=complete";
   } else {
 	  // error
 	  alert("error");

@@ -1192,73 +1192,73 @@ public function insertVoucher($to,$expiry){
     //---------------------------------------
     // Move the file
     // move file from tmp directory to live directory and rename with Unique ID
-    public function moveFile(){
-
-        global $config;
-
-        $jsonString = rawurldecode($_POST['jsonSendData']);
-        $jsonString = utf8_encode($jsonString);
-        $fileobj = json_decode($jsonString, true);
-        $dataitem = $fileobj[0];
-
-        // generate unique filename
-        // tempFilename is created from md5((uid or vid)+originalfilename+filesize)
-        $tempFilename = ""; 
-
-        // add voucher id if this is a voucher request
-        if ( $this->authvoucher->aVoucher() ) {
-            $tempFilename .= $dataitem['filevoucheruid'];
-        } 
-        // else add SAML saml_uid_attribute
-        else if( $this->authsaml->isAuth()) {
-            $authAttributes = $this->authsaml->sAuth();
-            $tempFilename .= $authAttributes["saml_uid_attribute"];	
-        }
-
-
-        // add the file name
-        $tempFilename .=  sanitizeFilename($dataitem['fileoriginalname']);
-
-        // add the file size to the filename
-        $tempFilename .=  $dataitem['filesize'];
-
-        // md5 $tempFilename
-        $tempFilename = md5($tempFilename).'.tmp';
-
-        if( $dataitem['fileoriginalname'] == "" || $dataitem['fileuid'] == "" ) {
-            //customError(LOG_ERR, "File name or UID not found ".$dataitem['fileoriginalname'] ." - ".dataitem['fileuid'] , "","");
-            return false;
-        } else {
-            $filename = $config["site_temp_filestore"].sanitizeFilename($tempFilename);
-            $newlocation = $config["site_filestore"].ensureSaneFileUid($dataitem['fileuid']).".tmp";
-            if (file_exists( $filename)) {
-
-                //check if file size is correct first
-                //	if(getFileSize($filename) != $dataitem['filesize'])
-                //	{
-                //		customError(LOG_ERR, "File did not upload correctly - size is incorrect".$filename." to ".$newlocation, "","");
-                //		$this->saveLog->saveLog($dataitem,"Error","File did not upload correctly - size is incorrect");
-                //		return false;
-                //	}
-
-                // move it
-                if(rename($filename, $newlocation))
-                {
-                    $this->saveLog->saveLog($dataitem,"File Moved","");
-                    return true;
-                } else {
-                    customError(LOG_ERR, "Unable to move file ".$filename." to ".$newlocation, "","");
-                    $this->saveLog->saveLog($dataitem,"Error","Cannot Move file from Temp Folder");
-                    return false;
-                }
-            } else {
-                customError(LOG_ERR, "Unable to find temp file ".$filename,"","");
-                $this->saveLog->saveLog($dataitem,"Error","Cannot find File in Temp Folder");
-                return false;
-            }
-        }
-
-    }
+   // public function moveFile(){
+//
+//        global $config;
+//
+//        $jsonString = rawurldecode($_POST['jsonSendData']);
+//        $jsonString = utf8_encode($jsonString);
+//        $fileobj = json_decode($jsonString, true);
+//        $dataitem = $fileobj[0];
+//
+//        // generate unique filename
+//        // tempFilename is created from md5((uid or vid)+originalfilename+filesize)
+//        $tempFilename = ""; 
+//
+//        // add voucher id if this is a voucher request
+//        if ( $this->authvoucher->aVoucher() ) {
+//            $tempFilename .= $dataitem['filevoucheruid'];
+//        } 
+//        // else add SAML saml_uid_attribute
+//        else if( $this->authsaml->isAuth()) {
+//            $authAttributes = $this->authsaml->sAuth();
+//            $tempFilename .= $authAttributes["saml_uid_attribute"];	
+//        }
+//
+//
+//        // add the file name
+//        $tempFilename .=  sanitizeFilename($dataitem['fileoriginalname']);
+//
+//        // add the file size to the filename
+//        $tempFilename .=  $dataitem['filesize'];
+//
+//        // md5 $tempFilename
+//        $tempFilename = md5($tempFilename).'.tmp';
+//
+//        if( $dataitem['fileoriginalname'] == "" || $dataitem['fileuid'] == "" ) {
+//            //customError(LOG_ERR, "File name or UID not found ".$dataitem['fileoriginalname'] ." - ".dataitem['fileuid'] , "","");
+//            return false;
+//        } else {
+//            $filename = $config["site_temp_filestore"].sanitizeFilename($tempFilename);
+//            $newlocation = $config["site_filestore"].ensureSaneFileUid($dataitem['fileuid']).".tmp";
+//            if (file_exists( $filename)) {
+//
+//                //check if file size is correct first
+//                //	if(getFileSize($filename) != $dataitem['filesize'])
+//                //	{
+//                //		customError(LOG_ERR, "File did not upload correctly - size is incorrect".$filename." to ".$newlocation, "","");
+//                //		$this->saveLog->saveLog($dataitem,"Error","File did not upload correctly - size is incorrect");
+//                //		return false;
+//                //	}
+//
+//                // move it
+//                if(rename($filename, $newlocation))
+//                {
+//                    $this->saveLog->saveLog($dataitem,"File Moved","");
+//                    return true;
+//                } else {
+//                    customError(LOG_ERR, "Unable to move file ".$filename." to ".$newlocation, "","");
+//                    $this->saveLog->saveLog($dataitem,"Error","Cannot Move file from Temp Folder");
+//                    return false;
+//                }
+//            } else {
+//                customError(LOG_ERR, "Unable to find temp file ".$filename,"","");
+//                $this->saveLog->saveLog($dataitem,"Error","Cannot find File in Temp Folder");
+//                return false;
+//            }
+//        }
+//
+//    }
 
 }
 
