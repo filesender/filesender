@@ -386,7 +386,7 @@ var query = $("#form1").serializeArray(),
 json = {};
 
 for (i in query) {
-json[query[i].name] = query[i].value
+json[query[i].name] = encodeURI(query[i].value);
 } 
 json["n"] = name;
 json["total"] = parseInt(size);

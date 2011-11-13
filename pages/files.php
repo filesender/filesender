@@ -219,10 +219,10 @@ foreach($json_o as $item) {
    echo "<td class='HardBreak'>" .$item['filefrom'] . "</td>";
    }
    echo "<td class='HardBreak'><a href='download.php?vid=". $item["filevoucheruid"]."' target='_blank'>" .$item['fileoriginalname']. "</a></td>";
-   echo "<td>" .formatBytes($item['filesize']). "</td><td  class='HardBreak'>".utf8tohtml($item['filesubject'],TRUE). "</td><td>";
+   echo "<td>" .formatBytes($item['filesize']). "</td><td  class='HardBreak'>".utf8tohtml(urldecode($item['filesubject']),TRUE). "</td><td>";
    if($item['filemessage'] != "")
    {
-   echo "<img src='images/page_white_text_width.png' border='0' title='".utf8tohtml($item['filemessage'],TRUE). "'>";
+   echo "<img src='images/page_white_text_width.png' border='0' title='".utf8tohtml(urldecode($item['filemessage']),TRUE). "'>";
    }
    echo "</td><td>" .date($config['datedisplayformat'],strtotime($item['filecreateddate'])) . "</td><td>" .date($config['datedisplayformat'],strtotime($item['fileexpirydate'])) . "</td><td  valign='top'  width='22'><div style='cursor:pointer;'><img onclick='confirmdelete(".'"' .$item['filevoucheruid'] . '")'. "' src='images/shape_square_delete.png' title='".lang("_DELETE_FILE")."' ></div></td></tr>"; //etc
    }
