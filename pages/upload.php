@@ -98,6 +98,8 @@
 	var previousBytesLoaded = 0;
 	var intervalTimer = 0;
 	var html5 = false;
+	var filedata=new Array(); 
+	
 	var vid='<?php if(isset($_REQUEST["vid"])){echo $_REQUEST["vid"];}; ?>';
 	// check if html5 functions are available
 	html5 = (window.File && window.FileReader && window.FileList && window.Blob) ? true : false;
@@ -190,9 +192,8 @@
 		$("#dialog-support").dialog("open");		
 		}
 		//Check if HTML5 is enable and use HTML uploader
-		if(window.File && window.FileReader && window.FileList && window.Blob){
+		if(html5){
 			// use HTML5 upload functions
-			html5 = true;
 			$("#html5image").attr("src","images/html5_installed.png");
 			$("#html5image").attr("title","<?php echo lang("_HTML5Supported"); ?>");
 			$("#html5text").html('<?php echo lang("_HTML5Supported"); ?>');
@@ -202,9 +203,6 @@
 			$("#html5image").attr("title","<?php echo lang("_HTML5NotSupported"); ?>");
 			$('#html5image').click(function() { displayhtml5support(); });
 			$("#html5text").html('');
-			
-			
-			html5 = false;	
 			// use standard upload functions
 			$("#uploadstandard").show();
 		}
@@ -222,29 +220,8 @@
 	}
 	
 	// --------------------------
-	// Common upload functions
+	// Validation functions
 	// --------------------------
-	
-	// update the progress bar
-	function updatepb(bytesloaded,totalbytes)
-	{
-		$("#progress_bar").show();
-		var percentComplete = Math.round(bytesloaded * 100 / totalbytes);
-		var bytesTransfered = '';
-		if (bytesloaded > 1024*1024)
-			bytesTransfered = (Math.round(bytesloaded * 100/(1024*1024))/100).toString() + 'MB';
-		else if (bytesloaded > 1024)
-			bytesTransfered = (Math.round(bytesloaded * 100/1024)/100).toString() + 'KB';
-		else
-			bytesTransfered = (Math.round(bytesloaded * 100)/100).toString() + 'Bytes';
-
-		
-			$("#progress_bar").width(percentComplete/100 *$('#progress_container').width());	//set width of progress bar based on the $status value (set at the top of this page)
-			$("#progress_bar").html(percentComplete +"% ");
-			$("#progress_completed").html(parseInt(percentComplete) + "%(" + bytesTransfered + ")" );	//display the % completed within the progress bar
-		  
-	}
-
 	function validateforflash(fname,fsize)
 	{
 	if(validateFormFlash())
@@ -257,9 +234,6 @@
 	getFlexApp("filesenderup").returnMsg("false")
 	}
 	}
-	// --------------------------
-	// Validation functions
-	// --------------------------
 	// HTML5 form Validation
 	function validateForm()
 	{
@@ -404,7 +378,34 @@ function uploadcomplete(name,size)
 {
 //unlockformfields();
 $("#fileName").val(encodeURIComponent(name));
-$("#form1").submit();
+
+// ajax form data to fs_upload.php
+$("#loadtype").val("savedata");
+
+var query = $("#form1").serializeArray(),
+json = {};
+
+for (i in query) {
+json[query[i].name] = query[i].value
+} 
+json["n"] = name;
+json["total"] = parseInt(size);
+json["fileoriginalname"] = name;
+json["filesize"] = parseInt(size);
+// post it
+$.ajax({
+  type: "POST",
+  url: "fs_upload.php?type=savedata&n="+encodeURIComponent(name)+"&total="+size+"&vid="+vid,
+  data: {myJson:  JSON.stringify(json)}
+}).success(function( msg ) {
+   if(msg = "true") 
+  {
+	  window.location.href="index.php?s=completev";
+  } else {
+	  // error
+	  alert("error");
+  }
+});
 }
 
 function uploaderror(name,size)
@@ -481,7 +482,7 @@ function keepMeAlive()
     </script>
 
 <div id="box"> <?php echo '<div id="pageheading">'.lang("_UPLOAD").'</div>'; ?>
-  <form id="form1" enctype="multipart/form-data" method="POST" action="fs_uploadit5.php">
+  <form id="form1" enctype="multipart/form-data" method="POST" action="fs_uploadit.php">
     <table width="100%" border="0">
       <tr>
         <td width="130" class=" mandatory"><?php echo lang("_TO") ; ?>:</td>

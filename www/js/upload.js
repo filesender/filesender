@@ -56,6 +56,7 @@ var filename = "";
 var chunksize = 2000000;
 var uploadURI = "fs_upload.php";
 var filesize = 0;
+
 // a unique is created for each file that is uploaded.
 // An object with the unique stores all relevant information about the file upload
 	
@@ -91,16 +92,12 @@ var filesize = 0;
 	function startupload()
 	{
 		// lock all buttons and text boxes before uploading
-		//lockformfields();
 		$("#fileToUpload").hide();// hide Browse
 		$("#selectfile").hide();// hide Browse message
 		
 		// hide upload/show cancel
 		$("#uploadbutton").hide();
 		$("#cancelbutton").show();
-		
-		//$('#progress_bar').show();    
-		//$('#progress_completed').html("0%");
 		
 		// check if file is already on the server
 		var file = document.getElementById("fileToUpload").files[0];
@@ -139,9 +136,36 @@ function uploadFile(currentBytesUpload) {
 			//unlockformfields();
 			// encodeURIComponent file name before sending
 			$("#fileName").val(encodeURIComponent(filename));
-			document.forms["form1"].submit();
-			return;
-			} 
+			
+			$("#loadtype").val("savedata");
+
+var query = $("#form1").serializeArray(),
+json = {};
+
+for (i in query) {
+json[query[i].name] = query[i].value
+} 
+json["n"] = filename;
+json["total"] = parseInt(filesize);
+json["fileoriginalname"] = filename;
+json["filesize"] = parseInt(filesize);
+// post it
+alert(JSON.stringify(json));
+$.ajax({
+  type: "POST",
+  url: "fs_upload.php?type=savedata&n="+encodeURIComponent(fileName)+"&total="+fileSize+"&vid="+vid,
+  data: {myJson:  JSON.stringify(json)}
+}).success(function( msg ) {
+  if(msg = "true") 
+  {
+	  window.location.href="index.php?s=completev";
+  } else {
+	  // error
+	  alert("error");
+  }
+});
+return;
+} 
 			
 		if(bytesUploaded + txferSize > filesize)
 		{
@@ -222,6 +246,25 @@ function secondsToString(seconds) {
         var m = Math.floor(seconds % 3600 / 60);
         var s = Math.floor(seconds % 3600 % 60);
         return ((h > 0 ? h + ":" : "") + (m > 0 ? (h > 0 && m < 10 ? "0" : "") + m + ":" : "0:") + (s < 10 ? "0" : "") + s);
+}
+
+// update the progress bar
+function updatepb(bytesloaded,totalbytes)
+{
+	$("#progress_bar").show();
+	var percentComplete = Math.round(bytesloaded * 100 / totalbytes);
+	var bytesTransfered = '';
+	if (bytesloaded > 1024*1024)
+		bytesTransfered = (Math.round(bytesloaded * 100/(1024*1024))/100).toString() + 'MB';
+	else if (bytesloaded > 1024)
+		bytesTransfered = (Math.round(bytesloaded * 100/1024)/100).toString() + 'KB';
+	else
+		bytesTransfered = (Math.round(bytesloaded * 100)/100).toString() + 'Bytes';
+	
+		$("#progress_bar").width(percentComplete/100 *$('#progress_container').width());	//set width of progress bar based on the $status value (set at the top of this page)
+		$("#progress_bar").html(percentComplete +"% ");
+		$("#progress_completed").html(parseInt(percentComplete) + "%(" + bytesTransfered + ")" );	//display the % completed within the progress bar
+	  
 }
 
 function uploadProgress(evt) {
