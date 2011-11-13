@@ -127,7 +127,6 @@ function uploadFile(currentBytesUpload) {
 		
 	  	filename = file.name;
 	  	filesize = file.size;
-
 		if(bytesUploaded > bytesTotal -1 )
 			{
 			var filecontrol = document.getElementById("fileToUpload");
@@ -136,7 +135,6 @@ function uploadFile(currentBytesUpload) {
 			//unlockformfields();
 			// encodeURIComponent file name before sending
 			$("#fileName").val(encodeURIComponent(filename));
-			
 			$("#loadtype").val("savedata");
 
 var query = $("#form1").serializeArray(),
@@ -150,15 +148,15 @@ json["total"] = parseInt(filesize);
 json["fileoriginalname"] = filename;
 json["filesize"] = parseInt(filesize);
 // post it
-alert(JSON.stringify(json));
+
 $.ajax({
   type: "POST",
-  url: "fs_upload.php?type=savedata&n="+encodeURIComponent(fileName)+"&total="+fileSize+"&vid="+vid,
+  url: "fs_upload.php?type=savedata&n="+encodeURIComponent(filename)+"&total="+filesize+"&vid="+vid,
   data: {myJson:  JSON.stringify(json)}
 }).success(function( msg ) {
   if(msg = "true") 
   {
-	  window.location.href="index.php?s=completev";
+	  window.location.href="index.php?s=complete";
   } else {
 	  // error
 	  alert("error");

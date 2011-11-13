@@ -38,9 +38,9 @@
  */
 
 // use token if available for SIMPLESAML 1.7 or set session if earlier version of SIMPLESAML
-	if (isset($_POST['token']) && $_POST['token'] != "") {
+if (isset($_POST['token']) && $_POST['token'] != "") {
 	$_COOKIE['SimpleSAMLAuthToken'] = $_POST['token'];
-	}	
+}	
 	// flash upoload creates a new session id https so we need to make sure we are using the same session  
 if(!empty($_POST['s'])) { 
     session_id($_POST['s']); 
@@ -55,7 +55,6 @@ if(!empty($_POST['s'])) {
         $_SESSION['validSession'] = true;
         trigger_error("Invalid session supplied.", E_USER_ERROR);
     }
-	
 }
 	
 	
@@ -75,14 +74,13 @@ logEntry("DEBUG fs_upload: POST data: " . print_r($_POST, true));
 // check we are authenticated first before uploading the chunk
 if($authvoucher->aVoucher()  || $authsaml->isAuth() ) { 
 
-	// generate unique filename
 	// tempFilename is created from ((uid or vid)+originalfilename+filesize)
 	$tempFilename = ""; 
 
 	// add voucher if this is a voucher upload
-	if (isset($_POST["filevoucheruid"]) && $authvoucher->aVoucher()) {
+	if ($authvoucher->aVoucher()) {
 		$tempFilename .= $_REQUEST['vid'];
-		$tempData = $functions->getVoucherData($_POST["filevoucheruid"]);
+		$tempData = $functions->getVoucherData($_REQUEST["vid"]);
 		$filedata["fileauthuseruid"] = $tempData[0]["fileauthuseruid"];	
 		$filedata["fileauthuseremail"] = $tempData[0]["fileauthuseremail"];	
 		logEntry("DEBUG fs_upload: tempfilename 1v : ".$tempFilename);
@@ -162,7 +160,17 @@ if($authvoucher->aVoucher()  || $authsaml->isAuth() ) {
 	if(isset($_REQUEST["type"]) && $_REQUEST["type"] == "savedata")
 	{
 	$fileuid = getGUID();
-	
+	// rename file to correct name
+	 logEntry("Move the file ".$uploadfolder.$tempFilename+":"+ $uploadfolder.$fileuid.".tmp");
+        $result = rename($uploadfolder.$tempFilename, $uploadfolder.$fileuid.".tmp");
+        if(!$result) {
+                logEntry("Unable to move the file ".$uploadfolder.$tempFilename);
+                trigger_error("Unable to move the file", E_USER_ERROR);
+        } else {
+			    logEntry("Rename the file ".$uploadfolder.$fileuid.".tmp");
+            
+		}
+
 	$filedata = json_decode(stripslashes($_POST['myJson']), true);
 	logEntry("DEBUG fs_uploadit: Filedata 'savedata' = " . $filedata);
 	if ($authvoucher->aVoucher()) {
