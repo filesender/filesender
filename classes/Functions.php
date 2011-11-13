@@ -312,102 +312,102 @@ class Functions {
 
     //---------------------------------------
     // Get Splash Screen text for all users
-    public function getSplash() {
-
-        // return only splash data
-        global $config;
-
-        $flexconfig = array();
-        $flexconfig['site_splashtext'] = $config['site_splashtext'];
-        $flexconfig['site_name'] = $config['site_name'];
-        $flexconfig['aboutURL'] = $config['aboutURL']; // 
-        $flexconfig['helpURL'] = $config['helpURL']; //
-        $flexconfig['gearsURL'] = $config['gearsURL'];
-        $flexconfig["debug"] = $config["debug"];
-        $flexconfig["client_specific_logging"] = $config["client_specific_logging"]; // client looging true/false
-        $flexconfig["client_specific_logging_uids"] = $config["client_specific_logging_uids"]; // "" is log all clients, or log for specif userid's or voucheruid's
-        return json_encode($flexconfig);
-    }
+   // public function getSplash() {
+//
+//        // return only splash data
+//        global $config;
+//
+//        $flexconfig = array();
+//        $flexconfig['site_splashtext'] = $config['site_splashtext'];
+//        $flexconfig['site_name'] = $config['site_name'];
+//        $flexconfig['aboutURL'] = $config['aboutURL']; // 
+//        $flexconfig['helpURL'] = $config['helpURL']; //
+//        $flexconfig['gearsURL'] = $config['gearsURL'];
+//        $flexconfig["debug"] = $config["debug"];
+//        $flexconfig["client_specific_logging"] = $config["client_specific_logging"]; // client looging true/false
+//        $flexconfig["client_specific_logging_uids"] = $config["client_specific_logging_uids"]; // "" is log all clients, or log for specif userid's or voucheruid's
+//        return json_encode($flexconfig);
+//    }
 
     //---------------------------------------
     // Retrun Specific config fields required by flex
     // Returns as JSON Array	
-    public function getConfig() {
-		
-        global $config;
-        
-		$flexconfig = array();
-
-        // set  configs
-        $flexconfig['ban_extension'] = $config['ban_extension'];
-        $flexconfig['admin'] = $config['admin'] ;
-        $flexconfig['site_showStats'] = $config['site_showStats'];
-        $flexconfig['versionNumber'] = $config['versionNumber'];
-        $flexconfig['displayUserName'] = $config['displayUserName'];
-        $flexconfig['site_splashtext'] = $config['site_splashtext'];
-
-        $flexconfig['aboutURL'] = $config['aboutURL'];
-        $flexconfig['helpURL'] = $config['helpURL'];
-
-        $flexconfig['site_voucherinstructions'] = $config['site_voucherinstructions']; 
-
-        //$flexconfig['max_file_size'] = $config['max_file_size'];  // depricated 23/3/2010
-        $flexconfig['max_flash_upload_size'] = $config['max_flash_upload_size']; // 2GB
-        $flexconfig['max_gears_upload_size'] = $config['max_gears_upload_size']; // 100 GB
-        $flexconfig["debug"] = $config["debug"];
-        $flexconfig['site_url'] = $config['site_url']; // URL to Filesender
-        $flexconfig['site_simplesamlurl'] =$config['site_simplesamlurl'] ;
-        $flexconfig['site_filestore'] = $config['site_filestore'];  			// use absolute locations
-        $flexconfig['site_temp_filestore'] = $config['site_temp_filestore'] ;	// use absolute locations
-        $flexconfig['site_downloadurl'] = $config['site_downloadurl'];
-        $flexconfig['site_defaultlanguage'] = $config['site_defaultlanguage'] ;
-        $flexconfig['site_name'] = $config['site_name'] ;
-        $flexconfig['site_icon'] = $config['site_icon'];
-        $flexconfig['default_daysvalid'] = $config['default_daysvalid'];
-        $flexconfig['gearsURL'] = $config['gearsURL'];
-        $flexconfig['datedisplayformat'] = $config['datedisplayformat'];
-        $flexconfig['AuP_default'] = $config['AuP_default']; //Show and request approval for AuP
-        $flexconfig['AuP'] = $config['AuP']; //Degault AuP value
-        $flexconfig['AuP_label'] = $config["AuP_label"];
-        $flexconfig['AuP_terms'] = $config["AuP_terms"];
-        $flexconfig['help_link_visible'] = $config["help_link_visible"];	// if drivespace is low send email to admins
-        $flexconfig['max_email_recipients'] = $config["max_email_recipients"];
-		$flexconfig['emailRegEx'] = $config['emailRegEx'];
-	
-
-        // check file locations are correct
-        if (!file_exists($config["log_location"])) {
-            trigger_error("Unable to find log_location location specified in config.php  :".$config["log_location"], E_USER_ERROR);
-            return false;
-        }
-        if (!is_writable($config["log_location"])) {
-            trigger_error("Unable to write to log file location specified in config.php  :".$config["log_location"], E_USER_ERROR);
-            return false;
-        }
-        if (!file_exists($config["site_filestore"])) {
-            trigger_error("Unable to find site_filestore location specified in config.php  :".$config["site_filestore"], E_USER_ERROR);
-            return false;
-        }	
-        if (!is_writable($config["site_filestore"])) {
-            trigger_error("Unable to write to site_filestore location specified in config.php  :".$config["site_filestore"], E_USER_ERROR);
-            return false;
-        }	
-        if (!file_exists($config["site_temp_filestore"])) {
-            trigger_error("Unable to find site_temp_filestore location specified in config.php  :".$config["site_temp_filestore"], E_USER_ERROR);
-            return false;
-        }	
-        if (!is_writable($config["site_temp_filestore"])) {
-            trigger_error("Unable to write to site_temp_filestore location specified in config.php  :".$config["site_temp_filestore"], E_USER_ERROR);
-            return false;
-        }	
-        if(disk_free_space($config['site_filestore'])/disk_total_space($config['site_filestore']) * 100 < $config["server_drivespace_warning"] ) { 
-            $this->saveLog->saveLog("","Drive Space Below ".$config["server_drivespace_warning"]."% ","");
-            $this->sendmail->sendemailAdmin("Drive space is below ".$config["server_drivespace_warning"]."% on ".$config['site_url']." (".$config['site_filestore'].").");
-
-        } 
-
-        return json_encode($flexconfig);
-    }
+   // public function getConfig() {
+//		
+//        global $config;
+//        
+//		$flexconfig = array();
+//
+//        // set  configs
+//        $flexconfig['ban_extension'] = $config['ban_extension'];
+//        $flexconfig['admin'] = $config['admin'] ;
+//        $flexconfig['site_showStats'] = $config['site_showStats'];
+//        $flexconfig['versionNumber'] = $config['versionNumber'];
+//        $flexconfig['displayUserName'] = $config['displayUserName'];
+//        $flexconfig['site_splashtext'] = $config['site_splashtext'];
+//
+//        $flexconfig['aboutURL'] = $config['aboutURL'];
+//        $flexconfig['helpURL'] = $config['helpURL'];
+//
+//        $flexconfig['site_voucherinstructions'] = $config['site_voucherinstructions']; 
+//
+//        //$flexconfig['max_file_size'] = $config['max_file_size'];  // depricated 23/3/2010
+//        $flexconfig['max_flash_upload_size'] = $config['max_flash_upload_size']; // 2GB
+//        $flexconfig['max_gears_upload_size'] = $config['max_gears_upload_size']; // 100 GB
+//        $flexconfig["debug"] = $config["debug"];
+//        $flexconfig['site_url'] = $config['site_url']; // URL to Filesender
+//        $flexconfig['site_simplesamlurl'] =$config['site_simplesamlurl'] ;
+//        $flexconfig['site_filestore'] = $config['site_filestore'];  			// use absolute locations
+//        $flexconfig['site_temp_filestore'] = $config['site_temp_filestore'] ;	// use absolute locations
+//        $flexconfig['site_downloadurl'] = $config['site_downloadurl'];
+//        $flexconfig['site_defaultlanguage'] = $config['site_defaultlanguage'] ;
+//        $flexconfig['site_name'] = $config['site_name'] ;
+//        $flexconfig['site_icon'] = $config['site_icon'];
+//        $flexconfig['default_daysvalid'] = $config['default_daysvalid'];
+//        $flexconfig['gearsURL'] = $config['gearsURL'];
+//        $flexconfig['datedisplayformat'] = $config['datedisplayformat'];
+//        $flexconfig['AuP_default'] = $config['AuP_default']; //Show and request approval for AuP
+//        $flexconfig['AuP'] = $config['AuP']; //Degault AuP value
+//        $flexconfig['AuP_label'] = $config["AuP_label"];
+//        $flexconfig['AuP_terms'] = $config["AuP_terms"];
+//        $flexconfig['help_link_visible'] = $config["help_link_visible"];	// if drivespace is low send email to admins
+//        $flexconfig['max_email_recipients'] = $config["max_email_recipients"];
+//		$flexconfig['emailRegEx'] = $config['emailRegEx'];
+//	
+//
+//        // check file locations are correct
+//        if (!file_exists($config["log_location"])) {
+//            trigger_error("Unable to find log_location location specified in config.php  :".$config["log_location"], E_USER_ERROR);
+//            return false;
+//        }
+//        if (!is_writable($config["log_location"])) {
+//            trigger_error("Unable to write to log file location specified in config.php  :".$config["log_location"], E_USER_ERROR);
+//            return false;
+//        }
+//        if (!file_exists($config["site_filestore"])) {
+//            trigger_error("Unable to find site_filestore location specified in config.php  :".$config["site_filestore"], E_USER_ERROR);
+//            return false;
+//        }	
+//        if (!is_writable($config["site_filestore"])) {
+//            trigger_error("Unable to write to site_filestore location specified in config.php  :".$config["site_filestore"], E_USER_ERROR);
+//            return false;
+//        }	
+//        if (!file_exists($config["site_temp_filestore"])) {
+//            trigger_error("Unable to find site_temp_filestore location specified in config.php  :".$config["site_temp_filestore"], E_USER_ERROR);
+//            return false;
+//        }	
+//        if (!is_writable($config["site_temp_filestore"])) {
+//            trigger_error("Unable to write to site_temp_filestore location specified in config.php  :".$config["site_temp_filestore"], E_USER_ERROR);
+//            return false;
+//        }	
+//        if(disk_free_space($config['site_filestore'])/disk_total_space($config['site_filestore']) * 100 < $config["server_drivespace_warning"] ) { 
+//            $this->saveLog->saveLog("","Drive Space Below ".$config["server_drivespace_warning"]."% ","");
+//            $this->sendmail->sendemailAdmin("Drive space is below ".$config["server_drivespace_warning"]."% on ".$config['site_url']." (".$config['site_filestore'].").");
+//
+//        } 
+//
+//        return json_encode($flexconfig);
+//    }
 
     //---------------------------------------
     // Get Voucher for a specified user based on saml_uid_attribute
@@ -883,7 +883,7 @@ public function insertVoucher($to,$expiry){
                 filecreateddate
 
             ) VALUES
-            ( %d, %s, %s, %d, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %d)",
+            ( %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
 
             date($config['db_dateformat'], strtotime($dataitem['fileexpirydate'])),
             $dataitem['fileto'],
@@ -982,10 +982,10 @@ public function insertVoucher($to,$expiry){
 	                UPDATE 
 	                files 
 	                SET 
-	                fileexpirydate 		= %d, 
+	                fileexpirydate 		= %s, 
 	                fileto 				= %s, 
 	                filesubject 		= %s, 
-	                fileactivitydate 	= %d, 
+	                fileactivitydate 	= %s, 
 	                filevoucheruid 		= %s, 
 	                filemessage			= %s, 
 	                filefrom 			= %s, 
@@ -1000,7 +1000,7 @@ public function insertVoucher($to,$expiry){
 	                fileuid 			= %s,
 	                fileauthuseruid 	= %s,
 	                fileauthuseremail 	= %s,
-	                filecreateddate 	= %d  
+	                filecreateddate 	= %s  
 	                WHERE 
 	                fileid 			= %d";
 
