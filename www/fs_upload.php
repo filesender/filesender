@@ -31,9 +31,10 @@
  */
 
 /* ---------------------------------
- * upload using gears
+ * upload using html5
  * ---------------------------------
- * data is sent in chunks from google gears and appended to the file in the temporary folder
+ * data is sent in chunks from html and appended to the file folder
+ * store current file information in $filedata[];
  */
 
 // use token if available for SIMPLESAML 1.7 or set session if earlier version of SIMPLESAML
@@ -63,6 +64,7 @@ require_once('../classes/_includes.php');
 $authsaml = AuthSaml::getInstance();
 $authvoucher = AuthVoucher::getInstance();
 $log =  Log::getInstance();
+$functions = Functions::getInstance();
 
 date_default_timezone_set($config['Default_TimeZone']);
 $uploadfolder =  $config["site_filestore"];
@@ -78,14 +80,19 @@ if($authvoucher->aVoucher()  || $authsaml->isAuth() ) {
 	$tempFilename = ""; 
 
 	// add voucher if this is a voucher upload
-	if ($authvoucher->aVoucher()) {
+	if (isset($_POST["filevoucheruid"]) && $authvoucher->aVoucher()) {
 		$tempFilename .= $_REQUEST['vid'];
+		$tempData = $functions->getVoucherData($_POST["filevoucheruid"]);
+		$filedata["fileauthuseruid"] = $tempData[0]["fileauthuseruid"];	
+		$filedata["fileauthuseremail"] = $tempData[0]["fileauthuseremail"];	
 		logEntry("DEBUG fs_upload: tempfilename 1v : ".$tempFilename);
 	}
 	// else add SAML saml_uid_attribute
 	else if( $authsaml->isAuth()) {
 		$authAttributes = $authsaml->sAuth();
 		$tempFilename .= $authAttributes["saml_uid_attribute"];	
+		$filedata["fileauthuseruid"] = $authAttributes["saml_uid_attribute"];
+		$filedata["fileauthuseremail"] = $authAttributes["email"];
 		logEntry("DEBUG fs_upload: tempfilename 1a : ".$tempFilename);
 	} 
 	
@@ -150,6 +157,49 @@ if($authvoucher->aVoucher()  || $authsaml->isAuth() ) {
 		echo checkFileSize($uploadfolder.$tempFilename);
 	
 	}
+	
+	// validate and save data to db
+	if(isset($_REQUEST["type"]) && $_REQUEST["type"] == "savedata")
+	{
+	$fileuid = getGUID();
+	
+	$filedata = json_decode(stripslashes($_POST['myJson']), true);
+	logEntry("DEBUG fs_uploadit: Filedata 'savedata' = " . $filedata);
+	if ($authvoucher->aVoucher()) {
+		$tempData = $functions->getVoucherData($filedata["filevoucheruid"]);
+		$filedata["fileauthuseruid"] = $tempData[0]["fileauthuseruid"];	
+		$filedata["fileauthuseremail"] = $tempData[0]["fileauthuseremail"];	
+	} else if( $authsaml->isAuth()) {
+		$authAttributes = $authsaml->sAuth();
+		$filedata["fileauthuseruid"] = $authAttributes["saml_uid_attribute"];
+		$filedata["fileauthuseremail"] = $authAttributes["email"];
+	}
+	// close current file if a voucher
+	if(isset($filedata["filestatus"]) && $filedata["filestatus"] == "Voucher")
+	{
+	logEntry("DEBUG fs_uploadit: Close Voucher = " . $filedata["filevoucheruid"]);	
+	$tempData = $functions->getVoucherData($filedata["filevoucheruid"]);
+	$functions->closeVoucher($tempData[0]["fileid"]);
+    }
+		
+	$filedata["fileuid"] = $fileuid;
+	$filedata["filestatus"]  = "Available";
+	$filedata["fileexpirydate"] = date($config["db_dateformat"],strtotime($filedata["fileexpirydate"]));
+	
+	// loop though multiple emails
+	$emailto = str_replace(",",";",$filedata["fileto"]);
+	$emailArray = preg_split("/;/", $emailto);
+	foreach ($emailArray as $Email) { 
+	$filedata["fileto"] = $Email;
+	$filedata["filevoucheruid"] = getGUID();
+	
+	logEntry("DEBUG fs_uploadit: Filedata = " . $filedata);
+	
+	$functions->insertFileHTML5($filedata);
+	echo "true";
+	}
+	}
+	
 	}
 
 } else {

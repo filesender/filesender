@@ -883,7 +883,7 @@ public function insertVoucher($to,$expiry){
                 filecreateddate
 
             ) VALUES
-            ( %d, %s, %s, %d, %s, %s, %s, %d, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %d)",
+            ( %d, %s, %s, %d, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %d)",
 
             date($config['db_dateformat'], strtotime($dataitem['fileexpirydate'])),
             $dataitem['fileto'],
