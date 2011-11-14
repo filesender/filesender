@@ -153,17 +153,17 @@ $.ajax({
   type: "POST",
   url: "fs_upload.php?type=savedata&n="+encodeURIComponent(filename)+"&total="+filesize+"&vid="+vid,
   data: {myJson:  JSON.stringify(json)}
-}).success(function( msg ) {
+	}).success(function( msg ) {
   if(msg = "true") 
-  {
-	  window.location.href="index.php?s=complete";
-  } else {
-	  // error
-	  alert("error");
-  }
-});
-return;
-} 
+	{
+		window.location.href="index.php?s=complete";
+  	} else {
+	  	// error
+		alert("error");
+ 	}
+	});
+	return;
+	} 
 			
 		if(bytesUploaded + txferSize > filesize)
 		{

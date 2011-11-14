@@ -139,7 +139,7 @@ echo '<td><strong>'.lang("_CREATED").'</strong></td>';
         </tr>
         <?php 
 foreach($Uploaded as $item) {
-	echo "<tr><td class='HardBreak'>" .$item['logto'] . "</td><td class='HardBreak'>" .$item['logfrom'] . "</td><td class='HardBreak'>" .$item['logfilename']. "</td><td>" .formatBytes($item['logfilesize']). "</td><td>" .date($config['datedisplayformat'],strtotime($item['logdate'])) . "</td></tr>"; //etc
+	echo "<tr><td class='HardBreak'>" .urldecode($item['logto']) . "</td><td class='HardBreak'>" .urldecode($item['logfrom']) . "</td><td class='HardBreak'>" .urldecode($item['logfilename']). "</td><td>" .formatBytes($item['logfilesize']). "</td><td>" .date($config['datedisplayformat'],strtotime($item['logdate'])) . "</td></tr>"; //etc
 }
 
 ?>
@@ -174,7 +174,7 @@ echo '<td><strong>'.lang("_CREATED").'</strong></td>';
         </tr>
         <?php 
 foreach($Download as $item) {
-echo "<tr><td class='HardBreak'>" .$item['logto'] . "</td><td class='HardBreak'>" .$item['logfrom'] . "</td><td class='HardBreak'>" .$item['logfilename']. "</td><td>" .formatBytes($item['logfilesize']). "</td><td>" .date($config['datedisplayformat'],strtotime($item['logdate'])) . "</td></tr>"; //etc
+echo "<tr><td class='HardBreak'>" .urldecode($item['logto']) . "</td><td class='HardBreak'>" .urldecode($item['logfrom']) . "</td><td class='HardBreak'>" .urldecode($item['logfilename']). "</td><td>" .formatBytes($item['logfilesize']). "</td><td>" .date($config['datedisplayformat'],strtotime($item['logdate'])) . "</td></tr>"; //etc
 }
 
 ?>
@@ -209,7 +209,7 @@ echo '<td><strong>'.lang("_CREATED").'</strong></td>';
         </tr>
         <?php 
 foreach($Error as $item) {
-echo "<tr><td class='HardBreak'>" .$item['logto'] . "</td><td class='HardBreak'>" .$item['logfrom'] . "</td><td class='HardBreak'>" .$item['logfilename']. "</td><td>" .date($config['datedisplayformat'],strtotime($item['logdate'])) . "</td></tr>"; //etc
+echo "<tr><td class='HardBreak'>" .urldecode($item['logto']). "</td><td class='HardBreak'>" .urldecode($item['logfrom']). "</td><td class='HardBreak'>" .urldecode($item['logfilename']). "</td><td>" .date($config['datedisplayformat'],strtotime($item['logdate'])) . "</td></tr>"; //etc
 echo "<tr><td colspan=4>".$item['logmessage']."</td></tr>";
 }
 
@@ -247,7 +247,7 @@ echo '<td><strong>'.lang("_EXPIRY").'</strong></td>';
         </tr>
         <?php 
 foreach($Available as $item) {
-echo "<tr><td class='HardBreak'>" .$item['fileto'] . "</td><td class='HardBreak'>" .$item['filefrom'] . "</td><td class='HardBreak'>" .$item['fileoriginalname']. "</td><td>" .formatBytes($item['filesize']). "</td><td class='HardBreak'>".utf8tohtml($item['filesubject'],TRUE). "</td><td>" .date($config['datedisplayformat'],strtotime($item['filecreateddate'])) . "</td><td>" .date($config['datedisplayformat'],strtotime($item['fileexpirydate'])) . "</td></tr>"; //etc
+echo "<tr><td class='HardBreak'>" .urldecode($item['fileto']) . "</td><td class='HardBreak'>" .urldecode($item['filefrom']) . "</td><td class='HardBreak'>" .urldecode($item['fileoriginalname']). "</td><td>" .formatBytes($item['filesize']). "</td><td class='HardBreak'>".utf8tohtml(urldecode($item['filesubject']),TRUE). "</td><td>" .date($config['datedisplayformat'],strtotime($item['filecreateddate'])) . "</td><td>" .date($config['datedisplayformat'],strtotime($item['fileexpirydate'])) . "</td></tr>"; //etc
 }
 
 ?>
@@ -282,7 +282,7 @@ echo '<td><strong>'.lang("_EXPIRY").'</strong></td>';
 ?>
             <?php 
 foreach($Voucher as $item) {
-echo "<tr><td class='HardBreak'>" .$item['fileto'] . "</td><td class='HardBreak'>" .$item['filefrom'] . "</td><td class='HardBreak'>".utf8tohtml($item['filesubject'],TRUE). "</td><td>" .date($config['datedisplayformat'],strtotime($item['filecreateddate'])) . "</td><td>" .date($config['datedisplayformat'],strtotime($item['fileexpirydate'])) . "</td></tr>"; //etc
+echo "<tr><td class='HardBreak'>" .urldecode($item['fileto']) . "</td><td class='HardBreak'>" .urldecode($item['filefrom']) . "</td><td class='HardBreak'>".utf8tohtml(urldecode($item['filesubject']),TRUE). "</td><td>" .date($config['datedisplayformat'],strtotime($item['filecreateddate'])) . "</td><td>" .date($config['datedisplayformat'],strtotime($item['fileexpirydate'])) . "</td></tr>"; //etc
 }
 
 ?>
