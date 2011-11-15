@@ -38,6 +38,8 @@
 
 if(isset($_REQUEST["a"]) && isset($_REQUEST["id"])) 
 {
+// validate id 
+if(	ensureSaneFileUid($_REQUEST["id"])) {
 $myfileData = $functions->getVoucherData($_REQUEST['id']);
 $myfileData = $myfileData[0];
 if($_REQUEST["a"] == "del" )
@@ -70,6 +72,9 @@ $functions->insertFileHTML5($myfileData);
 }
 // display the add box
 echo "<div id='message'>".lang("_EMAIL_SENT").".</div>";
+}
+} else {
+echo "<div id='message'>".lang("_INVALID_FILEVOUCHERID")."</div>";	
 }
 }
 $filedata = $functions->getUserFiles();

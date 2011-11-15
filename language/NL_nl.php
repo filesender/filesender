@@ -134,6 +134,7 @@ $lang["_HTML5NotSupported"] = "Uploads over 2GB not supported!";
 $lang["_INVALID_MISSING_EMAIL"] = "Ongeldig of ontbrekend e-mailadres";
 $lang["_INVALID_EXPIRY_DATE"] = "Ongeldige vervaldatum";
 $lang["_INVALID_FILE"] = "Ongeldig bestand";
+$lang["_INVALID_FILEVOUCHERID"] = "Invalid File or Voucher ID";	
 $lang["_INVALID_FILESIZE_ZERO"] = "Ongeldige bestandsgrootte van 0 bytes. Kies een ander bestand.";
 $lang["_INVALID_FILE_EXT"] = "Ongeldig bestandstype.";
 $lang["_INVALID_TOO_LARGE_1"] = "Bestand kan niet groter zijn dan";
