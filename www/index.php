@@ -44,7 +44,6 @@
 
 require_once('../classes/_includes.php');
 
-
 $flexerrors = "true";
 // load config
 $authsaml = AuthSaml::getInstance();
@@ -57,7 +56,6 @@ $log = Log::getInstance();
 
 date_default_timezone_set($config['Default_TimeZone']);
 
-
 $useremail = "";
 if($authsaml->isAuth() ) { 
 $userdata = $authsaml->sAuth();
@@ -69,7 +67,7 @@ if(isset($_REQUEST["s"]))
 {
 $s = $_REQUEST["s"];
 }
-if(!$authvoucher->aVoucher() && !$authsaml->isAuth() && $s != "help" && $s != "about" && $s != "complete" && $s != "completev" )
+if(!$authvoucher->aVoucher() && !$authsaml->isAuth() && $s != "complete" && $s != "completev" )
 {
 $s = "logon";
 }
@@ -248,10 +246,6 @@ require_once('../pages/uploadcomplete.php');
 require_once('../pages/upload.php');	
 }else if ($s == "" ){
 require_once('../pages/home.php');	
-}else if ($s == "about" ){
-require_once('../pages/about.php');	
-}else if ($s == "help" ){
-require_once('../pages/help.php');	
 }
 ?>
   </div>
