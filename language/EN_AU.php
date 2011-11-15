@@ -111,6 +111,7 @@
 			$lang["_INVALID_MISSING_EMAIL"] = "Invalid or missing email";	
 			$lang["_INVALID_EXPIRY_DATE"] = "Invalid expiry Date";	
 			$lang["_INVALID_FILE"] = "Invalid File";	
+			$lang["_INVALID_FILEVOUCHERID"] = "Invalid File or Voucher ID";	
 			$lang["_INVALID_FILESIZE_ZERO"] = "File size cannot be 0. Please select another file.";
 			$lang["_INVALID_FILE_EXT"] = "Invalid file extension.";
 			$lang["_INVALID_TOO_LARGE_1"] = "File size cannot be greater than";

@@ -122,6 +122,7 @@ $lang["_DELETE"] = "Slett";
 $lang["_INVALID_MISSING_EMAIL"] = "Feilaktig eller manglende epostadresse";
 $lang["_INVALID_EXPIRY_DATE"] = "Feil i utløpsdato";
 $lang["_INVALID_FILE"] = "Noe er galt med filen som ble valgt";
+$lang["_INVALID_FILEVOUCHERID"] = "Invalid File or Voucher ID";	
 $lang["_INVALID_FILESIZE_ZERO"] = "Filer med størrelse 0 kan ikke velges.  Velg en annen fil";
 $lang["_INVALID_FILE_EXT"] = "Feiltypen ikke tillat.";
 $lang["_INVALID_TOO_LARGE_1"] = "Filstørrelse kan ikke være mer enn";
