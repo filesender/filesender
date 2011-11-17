@@ -70,8 +70,7 @@ function getGUID() {
 function sanitizeFilename($filename){
 
     if (!empty($filename)) {
-        $filename = preg_replace("/^\./", "_", $filename);
-        //return preg_replace("/[^A-Za-z0-9_\-\. ]/", "_", $filename);
+        $filename = preg_replace("/^\./", "_", $filename); //return preg_replace("/[^A-Za-z0-9_\-\. ]/", "_", $filename);
         return $filename;
     } else {
         //trigger_error("invalid empty filename", E_USER_ERROR);
@@ -427,20 +426,17 @@ class Functions {
 			$pagination = "LIMIT ".$maxitems_perpage." OFFSET 0";
 		}
 		
-        // check if this user has admin access before returning data
-        if($this->authsaml->authIsAdmin()) { 
-
-
-        $result =  $this->db->fquery("SELECT ".$this->returnFields." FROM files WHERE filestatus = '$type' ORDER BY fileactivitydate DESC ".$pagination);
-
-        $returnArray = array();
-        foreach($result as $row)
-	        {
-    	        array_push($returnArray, $row);
-        	}
-        return $returnArray;
-        }
-    }
+	// check if this user has admin access before returning data
+	if($this->authsaml->authIsAdmin()) { 
+	$result =  $this->db->fquery("SELECT ".$this->returnFields." FROM files WHERE filestatus = '$type' ORDER BY fileactivitydate DESC ".$pagination);
+	$returnArray = array();
+	foreach($result as $row)
+	{
+		array_push($returnArray, $row);
+	}
+	return $returnArray;
+	}
+	}
 
     //---------------------------------------
     // Return file information based on filervoucheruid
@@ -454,13 +450,6 @@ class Functions {
         $vid = $dataitem['filevoucheruid'];
        	$result =  $this->db->fquery("SELECT * FROM files where filevoucheruid = %s", $vid);
 
-		
-		//try {
-		//	$result = $this->db->query("SELECT * FROM files where filevoucheruid = '%s'", $vid);	
-		//} catch (DBALException $e) {
-		//	$this->saveLog->saveLog("","Error",$e->getMessage()); return FALSE;	
-		//}
-       
         $returnArray = array();
         foreach($result as $row){
             array_push($returnArray, $row);
@@ -476,20 +465,13 @@ class Functions {
         global $config;
 
         // check authentication as file UID is returned
-        $result =  $this->db->fquery("SELECT * FROM files where fileid = %s", $vid);
-
-		//try {
-//			$result = $this->db->query("SELECT * FROM files where fileid = '%s'", $vid);
-//		} catch (DBALException $e) {
-//			$this->saveLog->saveLog("","Error",$e->getMessage()); return FALSE;		
-//		}
-
-        $returnArray = array();
-        foreach($result as $row){
-            array_push($returnArray, $row);
-        }
-        return $returnArray;
-    }
+		$result =  $this->db->fquery("SELECT * FROM files where fileid = %s", $vid);
+		$returnArray = array();
+		foreach($result as $row){
+			array_push($returnArray, $row);
+		}
+		return $returnArray;
+		}
 	
 	   //---------------------------------------
     // Return voucher information based on filervoucheruid
@@ -509,123 +491,6 @@ class Functions {
         return $returnArray;
     }
 
-    //---------------------------------------
-    // Email and log when a file is downloaded
-    // 
-    public function downloadedFile() {
-
-        global $config;
-
-
-        $jsonString = rawurldecode($_POST['jsonSendData']);
-        $jsonString = utf8_encode($jsonString);
-        $data = json_decode($jsonString, true);
-        $dataitem = $data[0];
-        $tempEmail = $dataitem["fileto"];
-        $dataitem["fileto"] = $dataitem["filefrom"];	
-        $dataitem["filefrom"] = $tempEmail;
-        $this->saveLog->saveLog($dataitem,"Download","");
-        return $this->sendmail->sendEmail($dataitem,$config['filedownloadedemailbody']);
-
-    }
-
-    //---------------------------------------
-    // Insert new file or voucher
-    // 
-    public function insertFile(){
-
-
-       	global $config;
-        $dbCheck = DB_Input_Checks::getInstance();
-
-        $jsonString = rawurldecode($_POST['jsonSendData']);
-        $jsonString = utf8_encode($jsonString);
-        $data = json_decode($jsonString, true);
-        $dataitem = $data[0];
-
-        // check if filevoucheruid exists or exit
-        if($dataitem['filevoucheruid'] == "")
-        {
-            return "dataMissing";
-        }
-		
-		// check if user supplied date is past the server configuration maximum date
-		if(strtotime($dataitem["fileexpirydate"]) > strtotime("+".$config['default_daysvalid']." day"))
-		{
-		// reset fileexpiry date to max config date from server
-		$dataitem["fileexpirydate"] = date($config['db_dateformat'],strtotime("+".($config['default_daysvalid'])." day"));
-		}
-
-        if( $this->authsaml->isAuth()) {
-            $authAttributes = $this->authsaml->sAuth();
-            $dataitem['fileauthuseruid'] = $authAttributes["saml_uid_attribute"] ;
-            $dataitem['fileauthuseremail'] = $authAttributes["email"];
-        }
-
-        try {
-        	
-	        $result = $this->db->fquery("
-	            INSERT INTO files (
-
-	                fileexpirydate,
-	                fileto,
-	                filesubject,
-	                fileactivitydate,
-	                filevoucheruid,
-	                filemessage,
-	                filefrom,
-	                filesize,
-	                fileoriginalname,
-	                filestatus,
-	                fileip4address,
-	                fileip6address,
-	                filesendersname,
-	                filereceiversname,
-	                filevouchertype,
-	                fileuid,
-	                fileauthuseruid,
-	                fileauthuseremail,
-	                filecreateddate
-
-	            ) VALUES
-	            ( %s, %s, %s, %s, %s, %s, %s, %d, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-
-	            date($config['db_dateformat'], strtotime($dataitem['fileexpirydate'])),
-	            $dataitem['fileto'],
-	            isset($dataitem['filesubject']) ? $dataitem['filesubject'] : "NULL",
-	            date($config['db_dateformat'], time()),
-	            $dataitem['filevoucheruid'],
-	            isset($dataitem['filemessage']) ? $dataitem['filemessage'] : "NULL",
-	            $dataitem['filefrom'],
-	            $dataitem['filesize'],
-	            // inserted vouchers have no filenames, but inserted files must have a non-empty filename
-	            (isset($dataitem['filestatus']) && $dataitem['filestatus'] == "Voucher")
-	            ? "NULL"
-	            : sanitizeFilename($dataitem['fileoriginalname']),
-	                $dataitem['filestatus'],
-	                $dbCheck->checkIp($_SERVER['REMOTE_ADDR']),
-	                $dbCheck->checkIp6($_SERVER['REMOTE_ADDR']),
-	                $dataitem['filesendersname'],
-	                $dataitem['filereceiversname'],
-	                $dataitem['filevouchertype'],
-	                ensureSaneFileUid($dataitem['fileuid']),
-	                $dataitem['fileauthuseruid'],
-	                $dataitem["fileauthuseremail"],
-	                date($config['db_dateformat'], time())
-	            );
-		} catch(DBALException $e) {
-			 $this->saveLog->saveLog($dataitem,"Error",$e.getMessage()); return FALSE;
-		}
-
-        if($dataitem['filestatus'] == "Voucher") {
-            $this->saveLog->saveLog($dataitem,"Voucher Sent","");
-            return $this->sendmail->sendEmail($dataitem,$config['voucherissuedemailbody']);
-        } else {
-            $this->saveLog->saveLog($dataitem,"Uploaded","");
-            return $this->sendmail->sendEmail($dataitem,$config['fileuploadedemailbody']);
-        }
-    }
-
 // added for HTML5 version
 public function insertVoucher($to,$expiry){
 
@@ -635,8 +500,7 @@ public function insertVoucher($to,$expiry){
 		$authAttributes = $this->authsaml->sAuth();
 		// var  $dataitem = [];
 		
-		 $dataitem['fileexpirydate'] = $expiry;
-         $dataitem['fileto'] = $to;
+		 $dataitem['fileto'] = $to;
          $dataitem['filesubject'] = 'Voucher';
          $dataitem['fileactivitydate'] = '';
          $dataitem['filevoucheruid'] = getGUID();
@@ -659,26 +523,21 @@ public function insertVoucher($to,$expiry){
             $authAttributes = $this->authsaml->sAuth();
             $dataitem['fileauthuseruid'] = $authAttributes["saml_uid_attribute"] ;
             $dataitem['fileauthuseremail'] = $authAttributes["email"];
-			 $dataitem['filefrom'] = $authAttributes["email"];
-		
+			$dataitem['filefrom'] = $authAttributes["email"];
         }
 		
-				
   		// check if user supplied date is past the server configuration maximum date
 		if(strtotime($expiry) > strtotime("+".$config['default_daysvalid']." day"))
 		{
 		// reset fileexpiry date to max config date from server
 		$expiry = date($config['db_dateformat'],strtotime("+".($config['default_daysvalid'])." day"));
 		}
-
-       $dataitem['fileexpirydate'] = $expiry;
-		 $this->saveLog->saveLog($dataitem['fileexpirydate'],"expiry","");
-        	
-       $result = $this->db->fquery("
+		$dataitem['fileexpirydate'] =$expiry;
+		        	
+		$result = $this->db->fquery("
             INSERT INTO files (
-
-                fileexpirydate,
-                fileto,
+			fileexpirydate,
+			fileto,
                 filesubject,
                 fileactivitydate,
                 filevoucheruid,
@@ -699,31 +558,27 @@ public function insertVoucher($to,$expiry){
 
             ) VALUES
             ( %s, %s, %s, %s, %s, %s, %s, %d, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-  			date($config['db_dateformat'], strtotime($dataitem['fileexpirydate'])),
+  			date($config['db_dateformat'], strtotime($expiry)),
             $dataitem['fileto'],
-            isset($dataitem['filesubject']) ? $dataitem['filesubject'] : "NULL",
+            $dataitem['filesubject'],
             date($config['db_dateformat'], time()),
             $dataitem['filevoucheruid'],
-            isset($dataitem['filemessage']) ? $dataitem['filemessage'] : "NULL",
+            $dataitem['filemessage'],
             $dataitem['filefrom'],
             $dataitem['filesize'],
             // inserted vouchers have no filenames, but inserted files must have a non-empty filename
-            (isset($dataitem['filestatus']) && $dataitem['filestatus'] == "Voucher")
-            ? "NULL"
-            : sanitizeFilename($dataitem['fileoriginalname']),
-                $dataitem['filestatus'],
-                $dbCheck->checkIp($_SERVER['REMOTE_ADDR']),
-                $dbCheck->checkIp6($_SERVER['REMOTE_ADDR']),
-                $dataitem['filesendersname'],
-                $dataitem['filereceiversname'],
-                $dataitem['filevouchertype'],
-                ensureSaneFileUid($dataitem['fileuid']),
-                $dataitem['fileauthuseruid'],
-                $dataitem["fileauthuseremail"],
-                date($config['db_dateformat'], time())
+           	$dataitem['fileoriginalname'],
+            $dataitem['filestatus'],
+            $dbCheck->checkIp($_SERVER['REMOTE_ADDR']),
+            $dbCheck->checkIp6($_SERVER['REMOTE_ADDR']),
+            $dataitem['filesendersname'],
+            $dataitem['filereceiversname'],
+            $dataitem['filevouchertype'],
+            $dataitem['fileuid'],
+            $dataitem['fileauthuseruid'],
+            $dataitem["fileauthuseremail"],
+            date($config['db_dateformat'], time())
             );
-
-       		// if (!$result) { $this->saveLog->saveLog($dataitem,"Error",pg_last_error()); return FALSE; }
 
             if($dataitem['filestatus'] == "Voucher") {
                 $this->saveLog->saveLog($dataitem,"Voucher Sent","");
@@ -823,117 +678,6 @@ public function insertVoucher($to,$expiry){
     }
 
     //---------------------------------------
-    // Update file or voucher
-    // 	
-   // public function updateFile(){
-//
-//       	global $config;
-//
-//        $dbCheck = DB_Input_Checks::getInstance();
-//
-//        $jsonString = rawurldecode($_POST['jsonSendData']);
-//        $jsonString = utf8_encode($jsonString);
-//        $data = json_decode($jsonString, true);
-//        $dataitem = $data[0];
-//
-//        $ip = $_SERVER['REMOTE_ADDR'];
-//
-//        $fileexpirydate 	=  date($config['db_dateformat'],strtotime($dataitem['fileexpirydate']));
-//		
-//			// check if user supplied date is past the server configuration maximum date
-//		if(strtotime($fileexpirydate) > strtotime("+".$config['default_daysvalid']." day"))
-//		{
-//		$fileexpirydate = date($config['db_dateformat'],strtotime("+".$config['default_daysvalid']." day"));
-//		}
-//		
-//        $fileto			=  $dataitem['fileto'];
-//
-//        if(isset($dataitem['filesubject'])){ 
-//            $filesubject 	= $dataitem['filesubject'];
-//        } else {
-//            $filesubject 	= "NULL";
-//        }
-//        $fileactivitydate 	= dateConversion($dbCheck->checkString($dataitem['fileactivitydate']));//date($config['db_dateformat'],time());//dateConversion($dbCheck->checkString($dataitem['fileactivitydate']));
-//        $filevoucheruid 	= $dataitem['filevoucheruid'];
-//
-//        if(isset($dataitem['filemessage'])){
-//            $filemessage 	= $dataitem['filemessage'];
-//        } else {
-//            $filemessage 	= "NULL";
-//        }
-//
-//        $filefrom 		= $dataitem['filefrom'];
-//        $filesize 		= $dataitem['filesize'];
-//        $fileoriginalname 	= sanitizeFilename($dataitem['fileoriginalname']);
-//        $filestatus 		= $dataitem['filestatus'];
-//        $fileip4address 	= $dbCheck->checkIp($ip);
-//        $fileip6address 	= $dbCheck->checkIp6($ip);
-//        $filesendersname 	= "NULL";//stringconversion(pg_escape_string($dataitem['filesendersname']));
-//        $filereceiversname 	= "NULL";//  stringconversion(pg_escape_string($dataitem['filereceiversname']));
-//        $filevouchertype 	= "NULL";// stringconversion(pg_escape_string($dataitem['filevouchertype']));
-//        $fileuid 		= ensureSaneFileUid($dataitem['fileuid']);
-//        $fileauthuseruid 	= $dataitem["fileauthuseruid"];
-//        $fileauthuseremail 	= $dataitem["fileauthuseremail"];
-//        $filecreateddate 	= date($config['db_dateformat'],strtotime($dataitem['filecreateddate']));
-//
-//			if (isset($dataitem['fileid'])) {
-//	            $fileid =   $dataitem['fileid'];
-//	            $sqlQuery = "
-//	                UPDATE 
-//	                files 
-//	                SET 
-//	                fileexpirydate 		= %s, 
-//	                fileto 				= %s, 
-//	                filesubject 		= %s, 
-//	                fileactivitydate 	= %s, 
-//	                filevoucheruid 		= %s, 
-//	                filemessage			= %s, 
-//	                filefrom 			= %s, 
-//	                filesize 			= %s, 
-//	                fileoriginalname 	= %s, 
-//	                filestatus 			= %s, 
-//	                fileip4address		= %s, 
-//	                fileip6address 		= %s, 
-//	                filesendersname 	= %s, 
-//	                filereceiversname 	= %s, 
-//	                filevouchertype		= %s, 
-//	                fileuid 			= %s,
-//	                fileauthuseruid 	= %s,
-//	                fileauthuseremail 	= %s,
-//	                filecreateddate 	= %s  
-//	                WHERE 
-//	                fileid 			= %d";
-//
-//	            $result = $this->db->fquery($sqlQuery,
-//	                $fileexpirydate,
-//	                $fileto,
-//	                $filesubject,
-//	                $fileactivitydate,
-//	                $filevoucheruid,
-//	                $filemessage,
-//	                $filefrom,
-//	                $filesize,
-//	                $fileoriginalname,
-//	                $filestatus,
-//	                $fileip4address,
-//	                $fileip6address,
-//	                $filesendersname,
-//	                $filereceiversname,
-//	                $filevouchertype,
-//	                $fileuid,
-//	                $fileauthuseruid,
-//	                $fileauthuseremail,
-//	                $filecreateddate,
-//	                $fileid
-//	            ) or die("Error");
-//			}
-//
-//         $this->saveLog->saveLog($dataitem,"Updated","Using Voucher");
-//         return true;//sendmail->sendEmail($dataitem,$config['defaultmailsendbody']);
-//
-//        }	
-    //}	
-    //---------------------------------------
     // Delete a voucher
     // 
     public function deleteVoucher($fileid){
@@ -989,8 +733,8 @@ public function insertVoucher($to,$expiry){
         //$this->sendmail->sendEmail($fileArray[0],$config['defaultvouchercancelled']);	
         $this->saveLog->saveLog($fileArray[0],"Voucher Closed","");
         return true;
-
     }
+	
     //---------------------------------------
     // Delete a file
     // 
@@ -1073,5 +817,4 @@ public function insertVoucher($to,$expiry){
 
     }
 }
-
 ?>

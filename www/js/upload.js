@@ -47,40 +47,40 @@ var requiredRevision = 0;
 // -----------------------------------------------------------------------------
 // -->
 
-var bytesUploaded = 0;
-var bytesTotal = 0;
-var previousBytesLoaded = 0;
+//var bytesUploaded = 0;
+//var bytesTotal = 0;
+//var previousBytesLoaded = 0;
 var intervalTimer = 0;
-var currentlocation = 0;
-var filename = "";
+//var currentlocation = 0;
+//var filename = "";
 var chunksize = 2000000;
 var uploadURI = "fs_upload.php";
-var filesize = 0;
+var fdata = []; // array of each file to be uploaded
+var n = 0; // file int currently uploading
 
 // a unique is created for each file that is uploaded.
 // An object with the unique stores all relevant information about the file upload
 	
 	  
  	function fileSelected() {
-	
+		fdata[n] = Array;
 		//	document.getElementById('MSG').innerHTML = "";
         var file = document.getElementById("fileToUpload").files[0];
-        var fileSize = file.size;
-        bytesTotal = fileSize;
-		bytesUploaded = 0;
-	    previousBytesLoaded = 0;
-	    intervalTimer = 0;
-		currentlocation = 0;
-		filename = "";
-		filesize = 0;
+        fdata[n].fileSize = file.size;
+		fdata[n].bytesTotal = file.size;
+		fdata[n].bytesUploaded = 0;
+	    fdata[n].previousBytesLoaded = 0;
+	    fdata[n].intervalTimer = 0;
+		fdata[n].currentlocation = 0;
+		fdata[n].filename = file.name;
+		fdata[n].filetype = file.type;
+		//fdata[n].filesize = 0;
 		
 	  	if(validate_file()) { 
 			$("#uploadbutton").show(); 
-			$("#n").val(file.name);
-			$("#total").val(fileSize);
 			$("#fileInfoView").show();
-			$("#fileName").html('Name: ' + file.name);
-			$("#fileSize").html('Size: ' + readablizebytes(fileSize));
+			$("#fileName").html('Name: ' + fdata[n].filename);
+			$("#fileSize").html('Size: ' + readablizebytes(fdata[n].fileSize));
 		} else { 
 			$("#uploadbutton").hide();
 			$("#fileInfoView").hide();
@@ -91,105 +91,97 @@ var filesize = 0;
 
 	function startupload()
 	{
-		// lock all buttons and text boxes before uploading
+		fdata[n].bytesUploaded = 0;
+		
+		// validate form data and return filesize or validation error
+		// load form into json array
+		var query = $("#form1").serializeArray(), json = {};
+		for (i in query) { json[query[i].name] = encodeURI(query[i].value); } 
+		// add file information fields
+		json["fileoriginalname"] = encodeURIComponent(fdata[n].filename);
+		json["filesize"] = parseInt(fdata[n].fileSize);
+		json["vid"] = vid;
+
+		$.ajax({
+  		type: "POST",
+  		url: "fs_upload.php?filename="+encodeURIComponent(fdata[n].filename)+"&filesize="+fdata[n].fileSize+"&type=validateupload&vid="+vid,
+  		data: {myJson:  JSON.stringify(json)}
+		}).success(function( data ) {
+		// error check first
+		if(data == "err_tomissing") { $("#fileto_msg").show();return;} // missing email data
+		if(data == "err_expmissing") { $("#expiry_msg").show();return;} // missing expiry date
+		if(data == "err_exoutofrange") { $("#expiry_msg").show();return;} // expiry date out of range
+		if(data == "err_invalidemail") { $("#fileto_msg").show();return;} // 1 or more emails invalid
+		//return;
+		
 		$("#fileToUpload").hide();// hide Browse
 		$("#selectfile").hide();// hide Browse message
-		
-		// hide upload/show cancel
-		$("#uploadbutton").hide();
-		$("#cancelbutton").show();
-		
-		// check if file is already on the server
-		var file = document.getElementById("fileToUpload").files[0];
-		var fileSize = file.size;
-		var fileName = file.name;
-		currentBytesUpload = 0;
-		
-		// hide upload button
+		$("#uploadbutton").hide(); // hide upload
+		$("#cancelbutton").show(); // show cancel
+		// show upload progress dialog
 		$("#dialog-uploadprogress").dialog("open");
-		
-		$.ajax({
-  		url: uploadURI + '?n='+encodeURIComponent(fileName)+'&total='+fileSize+'&vid='+vid+'&type=filesize',
-  		success: function(data) {
-		currentBytesUpload = parseFloat(data);
-		uploadFile(currentBytesUpload);
-  		}
-		});	
+		// no error so use reuslt as current bytes uploaded for file resume 
+		fdata[n].bytesUploaded = parseFloat(data);
+		uploadFile();
+  		});
 	}
 
-function uploadFile(currentBytesUpload) {
-		
-		bytesUploaded = currentBytesUpload;
+function uploadFile() {
 		
 		// move to next chunk
 		var file = document.getElementById("fileToUpload").files[0];
 		var txferSize = chunksize;
-		
-	  	filename = file.name;
-	  	filesize = file.size;
-		if(bytesUploaded > bytesTotal -1 )
+
+		if(fdata[n].bytesUploaded > fdata[n].bytesTotal -1 )
 			{
-			var filecontrol = document.getElementById("fileToUpload");
+			//var filecontrol = document.getElementById("fileToUpload");
        		// Remove the new file control.
-    		filecontrol.parentNode.removeChild(filecontrol);
-			//unlockformfields();
+    		//filecontrol.parentNode.removeChild(filecontrol);
 			// encodeURIComponent file name before sending
-			$("#fileName").val(encodeURIComponent(filename));
-			$("#loadtype").val("savedata");
+			// post completed data and email
+		var query = $("#form1").serializeArray(), json = {};
+		for (i in query) { json[query[i].name] = encodeURI(query[i].value); } 
+		// add file information fields
+		json["fileoriginalname"] = encodeURIComponent(fdata[n].filename);
+		json["filesize"] = parseInt(fdata[n].fileSize);
+		json["vid"] = vid;
 
-var query = $("#form1").serializeArray(),
-json = {};
-
-for (i in query) {
-json[query[i].name] = encodeURI(query[i].value);
-} 
-json["n"] = filename;
-json["total"] = parseInt(filesize);
-json["fileoriginalname"] = filename;
-json["filesize"] = parseInt(filesize);
-// post it
-
-$.ajax({
-  type: "POST",
-  url: "fs_upload.php?type=savedata&n="+encodeURIComponent(filename)+"&total="+filesize+"&vid="+vid,
-  data: {myJson:  JSON.stringify(json)}
-	}).success(function( msg ) {
-  if(msg = "true") 
-	{
+		$.ajax({
+  		type: "POST",
+  		url: "fs_upload.php?filename="+encodeURIComponent(fdata[n].filename)+"&filesize="+fdata[n].fileSize+"&type=savedata&vid="+vid,
+  		data: {myJson:  JSON.stringify(json)}
+		}).success(function( data ) {
+		// error check first
+		if(vid == ""){		
 		window.location.href="index.php?s=complete";
-  	} else {
-	  	// error
-		alert("error");
- 	}
-	});
-	return;
-	} 
+		} else {
+		window.location.href="index.php?s=completev";
+		}
+		return;
+  		});
+		} 
 			
-		if(bytesUploaded + txferSize > filesize)
+		if(fdata[n].bytesUploaded + txferSize > fdata[n].fileSize)
 		{
-		txferSize = filesize - bytesUploaded;
+		txferSize = fdata[n].fileSize - fdata[n].bytesUploaded;
 		}
 		// check if firefox or Chrome slice supported 
 		
 		if(file && file.webkitSlice )
 		{
-			var blob = file.webkitSlice(bytesUploaded, txferSize+bytesUploaded);
+			var blob = file.webkitSlice(fdata[n].bytesUploaded, txferSize+fdata[n].bytesUploaded);
 		} else
 		if(file && file.mozSlice )
 		{
-			var blob = file.mozSlice(bytesUploaded, txferSize+bytesUploaded);
+			var blob = file.mozSlice(fdata[n].bytesUploaded, txferSize+fdata[n].bytesUploaded);
 		} else
 		//if(file && file.slice )
 		{
-			var blob = file.slice(bytesUploaded, txferSize);
+			var blob = file.slice(fdata[n].bytesUploaded, txferSize);
 		}
 	
-	var fileName = file.name; //Grab the file name
-    var fileSize = file.size; //Grab the file size
-    var fileType = file.type; //Grab the file type
- 
 	var boundary = "fileboundary"; //Boundary name
-	var uri = (uploadURI + "?n="+encodeURIComponent(fileName)+"&total="+fileSize+"&type=chunk&vid="+vid); //Path to script for handling the file sent
+	var uri = (uploadURI + "?filename="+encodeURIComponent(fdata[n].filename)+"&filesize="+fdata[n].fileSize+"&type=chunk&vid="+vid); //Path to script for handling the file sent
 	var xhr = new XMLHttpRequest(); //Create the object to handle async requests
 	xhr.onreadystatechange = processReqChange;
 	xhr.upload.addEventListener("progress", uploadProgress, false);
@@ -201,16 +193,16 @@ $.ajax({
 	xhr.send(blob);
 
 	function processReqChange(){
-	    if (xhr.readyState == 4) {
+		 if (xhr.readyState == 4) {
 	    	if (xhr.status == 200) {
 				if(xhr.responseText == "ErrorAuth")
 				{
 					$("#dialog-autherror").dialog("open");
 					return;			
 				}
-			bytesUploaded = parseFloat(xhr.responseText);
-			updatepb(bytesUploaded,bytesTotal);	
-			uploadFile(bytesUploaded);
+			fdata[n].bytesUploaded = parseFloat(xhr.responseText);
+			updatepb(fdata[n].bytesUploaded,fdata[n].bytesTotal);	
+			uploadFile();
 			} else {
 			errorDialog("There was a problem retrieving the data:\n" + req.statusText);
 			}
