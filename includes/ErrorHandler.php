@@ -72,6 +72,7 @@ function logEntry($message){
 	
 	global $config;
 	
+	if($config["debug"] ) {
 	if(isset($config['log_location'])) 
 	{
 	date_default_timezone_set($config['Default_TimeZone']);
@@ -105,6 +106,7 @@ function logEntry($message){
 	fwrite($fh, $stringData);
 	fclose($fh);
 	closelog();
+	}
 	}
 }
 
