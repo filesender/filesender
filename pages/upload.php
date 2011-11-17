@@ -219,6 +219,14 @@
 	}
 	}
 	
+	function hidemessages()
+{
+		$("#fileto_msg").hide();
+		$("#expiry_msg").hide();
+		$("#maxemails_msg").hide();	
+		$("#file_msg").hide();
+		$("#aup_msg").hide();
+}
 	// --------------------------
 	// Validation functions
 	// --------------------------
@@ -238,10 +246,7 @@
 	function validateForm()
 	{
 	// remove previouse vaildation messages
-	$("#fileto_msg").hide();
-	$("#expiry_msg").hide();
-	$("#aup_msg").hide();
-	$("#file_msg").hide();
+	hidemessages();
 	
 	var validate = true;
 	
@@ -259,10 +264,7 @@
 	function validateFormFlash()
 	{
 	// remove previouse vaildation messages
-	$("#fileto_msg").hide();
-	$("#expiry_msg").hide();
-	$("#aup_msg").hide();
-	$("#file_msg").hide();
+	hidemessages();
 	
 	var validate = true;
 	
@@ -376,35 +378,32 @@ if (validatefilename(name))
 
 function uploadcomplete(name,size)
 {
-//unlockformfields();
-$("#fileName").val(encodeURIComponent(name));
+	$("#fileName").val(encodeURIComponent(name));
+	// ajax form data to fs_upload.php
+	$("#loadtype").val("savedata");
+	var query = $("#form1").serializeArray(),
+	json = {};
+	
+	for (i in query) {
+	json[query[i].name] = encodeURI(query[i].value);
+	} 
+	json["fileoriginalname"] = name;
+	json["filesize"] = parseInt(size);
+	// post it
+	$.ajax({
+	  type: "POST",
+	  url: "fs_upload.php?type=savedata&n="+encodeURIComponent(name)+"&total="+size+"&vid="+vid,
+	  data: {myJson:  JSON.stringify(json)}
+	}).success(function( msg ) {
 
-// ajax form data to fs_upload.php
-$("#loadtype").val("savedata");
-
-var query = $("#form1").serializeArray(),
-json = {};
-
-for (i in query) {
-json[query[i].name] = encodeURI(query[i].value);
-} 
-json["n"] = name;
-json["total"] = parseInt(size);
-json["fileoriginalname"] = name;
-json["filesize"] = parseInt(size);
-// post it
-$.ajax({
-  type: "POST",
-  url: "fs_upload.php?type=savedata&n="+encodeURIComponent(name)+"&total="+size+"&vid="+vid,
-  data: {myJson:  JSON.stringify(json)}
-}).success(function( msg ) {
-   if(msg = "true") 
-  {
-	  window.location.href="index.php?s=complete";
-  } else {
-	  // error
-	  alert("error");
-  }
+  	if(msg = "true") 
+  	{
+		window.location.href="index.php?s=complete";
+  	} 
+  	// error
+	if(msg == "err_tomissing") { $("#fileto_msg").show();}
+	if(msg == "err_expmissing") { $("#expiry_msg").show();}
+	if(msg == "err_exoutofrange") { $("#expiry_msg").show();}
 });
 }
 
@@ -451,8 +450,11 @@ function validatefilename(name)
 function validate() 
 {
 	// upload if validated
-	if(html5) {
-		if(validateForm())
+	if(html5) {		
+	if(validateForm()) // validate client side
+		// validate server side as well (check for drive space
+	
+
 		//Use this to allow uplods with faulty parameters (and comment out the previouslone) if(true)
 	{
 	startupload();

@@ -29,7 +29,6 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 /* ---------------------------------
  * Vouchers Page
  * ---------------------------------
@@ -40,15 +39,15 @@
 var maximumDate= '<?php echo $config['default_daysvalid'] ?>';
 var maxEmailRecipients = <?php echo $config['max_email_recipients'] ?>;
 var datepickerDateFormat = '<?php echo lang('_DP_dateFormat'); ?>';
-	
 var selectedVoucher = "";
+
 $(function() {
 	//$("#fileto_msg").hide();
 	$("#expiry_msg").hide();
 	
 	// stripe every second row in the tables
 	$("#vouchertable tr:odd").addClass('altcolor');
-	$("#datepicker" ).datepicker({ minDate: 1, maxDate: "+"+maximumDate+"D",altField: "#altdate", altFormat: "d-m-yy",currentText:maximumDate });
+	$("#datepicker" ).datepicker({ minDate: 1, maxDate: "+"+maximumDate+"D",altField: "#fileexpirydate", altFormat: "d-m-yy",currentText:maximumDate });
 	$("#datepicker" ).datepicker( "option", "dateFormat", "<?php echo lang('_DP_dateFormat'); ?>" );
 	$("#datepicker").datepicker("setDate", new Date()+maximumDate);
 	
@@ -80,16 +79,23 @@ $(function() {
 			deletevoucher();
 			$( this ).dialog( "close" );
 			}
-	}
+		}
 	});
 });
 
+function hidemessages()
+{
+		$("#fileto_msg").hide();
+		$("#expiry_msg").hide();
+		$("#maxemails_msg").hide();	
+}
+
 function validateForm()
 	{
-		$("#fileto_msg").hide();
+		hidemessages();
 		if(!validate_fileto()){return false;}
 		if(!validate_expiry() ){return false;}
-		document.forms['form1'].submit();//return true;
+		postVoucher();
 	}
 		
 function deletevoucher()
@@ -102,41 +108,57 @@ function confirmdelete(vid)
 		selectedVoucher = vid;
 		$("#dialog-delete").dialog("open");
 	}
-
-	</script>
+	
+function postVoucher()
+{
+	hidemessages();
+	// post voucher data from form
+		
+	var query = $("#form1").serializeArray(), json = {};
+	for (i in query) {json[query[i].name] = encodeURI(query[i].value);} // create json from form1
+	// post to fs_upload.php
+	$.ajax({
+	 type: "POST",
+	 url: "fs_upload.php?type=insertVoucherAjax",
+	 data: {myJson:  JSON.stringify(json)}
+		}).success(function( msg ) {
+		// complete or display validation messages 
+		if(msg == "complete") { window.location.href="index.php?s=vouchers&a=complete"; } 
+		if(msg == "err_tomissing") { $("#fileto_msg").show();} // missing email data
+		if(msg == "err_expmissing") { $("#expiry_msg").show();} // missing expiry date
+		if(msg == "err_exoutofrange") { $("#expiry_msg").show();} // expiry date out of range
+		if(msg == "err_invalidemail") { $("#fileto_msg").show();} // 1 or more emails invalid
+	});
+}
+</script>
 <?php 
 
-// add voucher
-if(isset($_POST["fileto"]) && isset($_POST["altdate"]))
+if(isset($_REQUEST["a"]))
 {
-// insert voucher for each email
-//TODO INSERT VALIDATION HERE
-$emailto = str_replace(",",";",$_POST["fileto"]);
-$emailArray = preg_split("/;/", $emailto);
-foreach ($emailArray as $Email) { 
-$functions->insertVoucher($Email,$_POST["altdate"]);
+	// add voucher
+	if($_REQUEST["a"] == "complete")
+	{	
+	echo "<div id='message'>".lang("_VOUCHER_SENT")."</div>";
+	}
+	// del
+	if(isset($_REQUEST["a"]) && isset($_REQUEST["id"])) 
+	{
+	$myfileData = $functions->getVoucherData($_REQUEST['id']);
+		if($_REQUEST["a"] == "del" )
+		{
+			if($functions->deleteVoucher($myfileData[0]["fileid"]))
+			{
+			echo "<div id='message'>".lang("_VOUCHER_DELETED")."</div>";
+			}
+		}
+	}
 }
-echo "<div id='message'>".lang("_VOUCHER_SENT")."</div>";
-}
-// del
-if(isset($_REQUEST["a"]) && isset($_REQUEST["id"])) 
-{
-$myfileData = $functions->getVoucherData($_REQUEST['id']);
-if($_REQUEST["a"] == "del" )
-{
-if($functions->deleteVoucher($myfileData[0]["fileid"]))
-{
-echo "<div id='message'>".lang("_VOUCHER_DELETED")."</div>";
-}
-}
-}
-
 // get file data
 $filedata = $functions->getVouchers();
 $json_o=json_decode($filedata,true);
 
 ?>
-<form name="form1" method="post" action="index.php?s=vouchers"  onSubmit="return validateForm()">
+<form name="form1" id="form1" method="post">
     <div id="box">
   <?php echo '<div id="pageheading">'.lang("_VOUCHERS").'</div>'; ?>
     <table width="100%" border="0">
@@ -144,7 +166,7 @@ $json_o=json_decode($filedata,true);
         <td colspan="2" class="formfieldheading"><?php echo html_entity_decode(lang("_SEND_NEW_VOUCHER")); ?></td>
       </tr>
       </table>
-      </div>
+  </div>
       <div id="box">
        <table width="100%" border="0">
       <tr>
@@ -157,15 +179,18 @@ $json_o=json_decode($filedata,true);
       </tr>
       <tr>
         <td class="mandatory"><?php echo lang("_EXPIRY_DATE"); ?>:</td>
-        <td><input id="datepicker" onchange="validate_expiry()" title="<?php echo lang('_DP_dateFormat'); ?>"></input> <div id="expiry_msg" class="validation_msg" style="display:none"><?php echo lang("_INVALID_EXPIRY_DATE"); ?></div></td>
+        <td><input id="datepicker" onchange="validate_expiry()" title="<?php echo lang('_DP_dateFormat'); ?>"></input> 
+        <div id="expiry_msg" name="expiry_msg" class="validation_msg" style="display:none"><?php echo lang("_INVALID_EXPIRY_DATE"); ?></div>
+        </td>
       </tr>
       <tr>
-        <td><input type="hidden" id="altdate" name="altdate" value="<?php echo date($config['datedisplayformat'],strtotime("+".$config['default_daysvalid']." day"));?>" /></td>
+        <td><input type="hidden" id="fileexpirydate" name="fileexpirydate" value="<?php echo date($config['datedisplayformat'],strtotime("+".$config['default_daysvalid']." day"));?>" />
+        <input type="hidden" name="filestatus" id="filestatus" value="voucher" /></td>
         <td><div class="menu" id="voucherbutton"><a href="#" onclick="validateForm()"><?php echo lang("_SEND_VOUCHER"); ?></a></div></td>
       </tr>
     </table>
      </div>
-  </form>
+</form>
   <div id="box">
   <table id="vouchertable" width="100%" border="0" cellspacing="1">
     <tr class="headerrow">
@@ -182,5 +207,5 @@ foreach($json_o as $item) {
   </table>
 </div>
 <div id="dialog-delete" title="<?php echo lang("_DELETE_VOUCHER") ?>">
-  <p><?php echo lang("_CONFIRM_DELETE_VOUCHER"); ?></p>
+<p><?php echo lang("_CONFIRM_DELETE_VOUCHER"); ?></p>
 </div>
