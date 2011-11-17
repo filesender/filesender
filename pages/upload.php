@@ -102,7 +102,7 @@
 	
 	var vid='<?php if(isset($_REQUEST["vid"])){echo $_REQUEST["vid"];}; ?>';
 	// check if html5 functions are available
-	html5 = (window.File && window.FileReader && window.FileList && window.Blob) ? true : false;
+	html5 = (window.File && window.FileReader && window.FileList && window.Blob && window.FormData) ? true : false;
  	// start document ready 
 	$(function() { 
 
