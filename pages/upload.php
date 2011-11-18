@@ -91,6 +91,7 @@
 	var maxFLASHuploadsize = <?php echo $config['max_flash_upload_size']; ?>;
 	var maxEmailRecipients = <?php echo $config['max_email_recipients']; ?>;
 	var datepickerDateFormat = '<?php echo lang('_DP_dateFormat'); ?>';
+	var chunksize =  <?php echo $config['upload_chunk_size']; ?>;
 	var aup = '<?php echo $config['AuP'] ?>';
 	var bytesUploaded = 0;
 	var bytesTotal = 0;
