@@ -98,6 +98,7 @@
 	var previousBytesLoaded = 0;
 	var intervalTimer = 0;
 	var html5 = false;
+	var errmsg_disk_space = '<?php echo lang($lang["_DISK_SPACE_ERROR"]); ?>';
 	var filedata=new Array(); 
 	
 	var vid='<?php if(isset($_REQUEST["vid"])){echo $_REQUEST["vid"];}; ?>';
@@ -161,7 +162,7 @@
 		})
 		
 		// default error message dialogue
-		$("#dialog-default").dialog({ autoOpen: false, height: 140, modal: true,title: "Error",		
+		$("#dialog-default").dialog({ autoOpen: false, height: 140, height: 200, modal: true,title: "Error",		
 		buttons: {
 			'<?php echo lang("_OK") ?>': function() {
 				$("#dialog-default").html("");
@@ -232,7 +233,38 @@
 	// --------------------------
 	function validateforflash(fname,fsize)
 	{
-	if(validateFormFlash())
+	// remove previouse vaildation messages
+	hidemessages();
+	
+	var validate = true;
+	
+	if(!validate_fileto() ){validate = false;};		// validate emails
+	if(aup == '1') // check if AUP is required
+	{
+		if(!validate_aup() ){validate = false;};		// check AUP is selected
+	}
+	if(!validate_expiry() ){validate = false;};		// check date
+		// vaildate with server
+		var query = $("#form1").serializeArray(), json = {};
+		for (i in query) { json[query[i].name] = encodeURI(query[i].value); } 
+		// add file information fields
+		json["fileoriginalname"] = encodeURIComponent(fname);
+		json["filesize"] = parseInt(fsize);
+		json["vid"] = vid;
+
+		$.ajax({
+  		type: "POST",
+  		url: "fs_upload.php?filename="+encodeURIComponent(fname)+"&filesize="+fsize+"&type=validateupload&vid="+vid,
+  		data: {myJson:  JSON.stringify(json)}
+		}).success(function( data ) {
+		// error check first
+		if(data == "err_tomissing") { $("#fileto_msg").show();validate = false;} // missing email data
+		if(data == "err_expmissing") { $("#expiry_msg").show();validate = false;} // missing expiry date
+		if(data == "err_exoutofrange") { $("#expiry_msg").show();validate = false;} // expiry date out of range
+		if(data == "err_invalidemail") { $("#fileto_msg").show();validate = false;} // 1 or more emails invalid
+		if(data == "err_nodiskspace") { errorDialog(errmsg_disk_space);validate = false;}
+
+	if(validate)
 	{
 	// hide upload button
 	$("#dialog-uploadprogress").dialog("option", "title", "<?php echo lang("_UPLOAD_PROGRESS") ?>: " +  fname + " (" +readablizebytes(fsize) + ")");
@@ -241,7 +273,9 @@
 	} else {
 	getFlexApp("filesenderup").returnMsg("false")
 	}
+	})
 	}
+	
 	// HTML5 form Validation
 	function validateForm()
 	{
@@ -260,23 +294,7 @@
 	
 	return validate;
 	}
-	// FLASH form Validation
-	function validateFormFlash()
-	{
-	// remove previouse vaildation messages
-	hidemessages();
-	
-	var validate = true;
-	
-	if(!validate_fileto() ){validate = false;};		// validate emails
-	if(aup == '1') // check if AUP is required
-	{
-		if(!validate_aup() ){validate = false;};		// check AUP is selected
-	}
-	if(!validate_expiry() ){validate = false;};		// check date
-	
-	return validate;
-	}
+
 
 //Validate AUP
 function validate_aup()
@@ -359,20 +377,19 @@ if(size > maxFLASHuploadsize)
 	$("#fileInfoView").hide();
 	return false;
 } 
-if (validatefilename(name)) 
-{
-	$("#fileInfoView").show();
-	$("#n").val(name);
-	$("#total").val(size);
-	$("#fileName").val(name);
-	$("#fileName").html("Name: " + name);
-	$("#fileSize").html("Size: " + readablizebytes(size));
-	$("#uploadbutton").show(); 
-	
-} else {
-	$("#fileInfoView").hide();
-	$("#uploadbutton").hide(); 
-}
+			if (validatefilename(name)) 
+		{
+			$("#fileInfoView").show();
+			$("#n").val(name);
+			$("#total").val(size);
+			$("#fileName").val(name);
+			$("#fileName").html("Name: " + name);
+			$("#fileSize").html("Size: " + readablizebytes(size));
+			$("#uploadbutton").show(); 
+		} else {
+			$("#fileInfoView").hide();
+			$("#uploadbutton").hide(); 
+		}
 }
 
 
@@ -404,6 +421,7 @@ function uploadcomplete(name,size)
 	if(msg == "err_tomissing") { $("#fileto_msg").show();}
 	if(msg == "err_expmissing") { $("#expiry_msg").show();}
 	if(msg == "err_exoutofrange") { $("#expiry_msg").show();}
+	if(msg == "err_nodiskspace") { errorDialog('<?php echo lang($lang["_DISK_SPACE_ERROR"]); ?>');}
 });
 }
 
