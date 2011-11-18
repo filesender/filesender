@@ -198,11 +198,13 @@ if($authvoucher->aVoucher()  || $authsaml->isAuth() ) {
 		$fileuid = getGUID();
 		// rename file to correct name
 		logEntry("Rename the file ".$uploadfolder.$tempFilename+":"+ $uploadfolder.$fileuid.".tmp");
-        $result = rename($uploadfolder.$tempFilename, $uploadfolder.$fileuid.".tmp");
-        if(!$result) {
+ 		if (!file_exists($uploadfolder.$tempFilename)) {
+			echo "err_cannotrenamefile"; exit;
+		}
+         if(!rename($uploadfolder.$tempFilename, $uploadfolder.$fileuid.".tmp")) {
+				echo "err_cannotrenamefile"; exit;
                 logEntry("Unable to move the file ".$uploadfolder.$tempFilename);
-                trigger_error("Unable to move the file", E_USER_ERROR);
-        } else {
+         } else {
 			    logEntry("Rename the file ".$uploadfolder.$fileuid.".tmp");
 		}
 
