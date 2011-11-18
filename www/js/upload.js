@@ -112,6 +112,7 @@ var n = 0; // file int currently uploading
 		if(data == "err_expmissing") { $("#expiry_msg").show();return;} // missing expiry date
 		if(data == "err_exoutofrange") { $("#expiry_msg").show();return;} // expiry date out of range
 		if(data == "err_invalidemail") { $("#fileto_msg").show();return;} // 1 or more emails invalid
+		if(data == "err_nodiskspace") { errorDialog(errmsg_disk_space);return;}
 		//return;
 		
 		$("#fileToUpload").hide();// hide Browse
