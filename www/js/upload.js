@@ -152,14 +152,16 @@ function uploadFile() {
   		url: "fs_upload.php?filename="+encodeURIComponent(fdata[n].filename)+"&filesize="+fdata[n].fileSize+"&type=savedata&vid="+vid,
   		data: {myJson:  JSON.stringify(json)}
 		}).success(function( data ) {
-		// error check first
-		if(vid == ""){		
+		if(data == "err_cannotrenamefile")
+		{
+		window.location.href="index.php?s=uploaderror";
+		} else if(vid == ""){		
 		window.location.href="index.php?s=complete";
 		} else {
 		window.location.href="index.php?s=completev";
 		}
+		});
 		return;
-  		});
 		} 
 			
 		if(fdata[n].bytesUploaded + txferSize > fdata[n].fileSize)

@@ -238,6 +238,10 @@ require_once('../pages/logon.php');
 else if($s == "admin" && !$authvoucher->aVoucher()) 
 {
 require_once('../pages/admin.php');
+}
+else if($s == "uploaderror") 
+{
+require_once('../pages/uploaderror.php');
 }	
 else if($s == "complete" || $s == "completev") 
 {
