@@ -223,7 +223,7 @@ foreach($json_o as $item) {
    } else {
    echo "<td class='HardBreak'>" .urldecode($item['filefrom']) . "</td>";
    }
-   echo "<td class='HardBreak'><a href='download.php?vid=". $item["filevoucheruid"]."' target='_blank'>" .$item['fileoriginalname']. "</a></td>";
+   echo "<td class='HardBreak'><a href='download.php?vid=". $item["filevoucheruid"]."' target='_blank'>" .utf8tohtml(urldecode($item['fileoriginalname'])). "</a></td>";
    echo "<td>" .formatBytes($item['filesize']). "</td><td  class='HardBreak'>".utf8tohtml(urldecode($item['filesubject']),TRUE). "</td><td>";
    if($item['filemessage'] != "")
    {
