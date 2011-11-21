@@ -66,7 +66,7 @@ class Log {
 
 
         // If authenticated also add authID to log
-        // add os, browser and gears version to log message
+        // add os, browser and html5 version to log message
         if(isset($dataitem['fileuid'])) 
         {
             $logfileuid	= $dataitem['fileuid'];

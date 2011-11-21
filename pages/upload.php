@@ -87,7 +87,7 @@
 	// all default settings
 	var uploadid = '<?php echo $id ?>';
 	var maximumDate= '<?php echo $config['default_daysvalid']; ?>';
-	var maxHTML5uploadsize = <?php echo $config['max_gears_upload_size']; ?>;
+	var maxHTML5uploadsize = <?php echo $config['max_html5_upload_size']; ?>;
 	var maxFLASHuploadsize = <?php echo $config['max_flash_upload_size']; ?>;
 	var maxEmailRecipients = <?php echo $config['max_email_recipients']; ?>;
 	var datepickerDateFormat = '<?php echo lang('_DP_dateFormat'); ?>';
