@@ -87,7 +87,6 @@ public function loadConfig() {
 	$config["max_email_recipients"] = 100; // maximum email addresses allowed to send at once for voucher or file sending, a value of 0 allows unlimited emails.
 
 	$config['max_flash_upload_size'] = '2147483648'; // 2GB
-	$config['max_gears_upload_size'] = '107374182400'; // 100 GB
 	$config['max_html5_upload_size'] = '107374182400'; // 100  GB
 	
 	// update max_flash_upload_size if php.ini post_max_size and upload_max_filesize is set lower
@@ -116,7 +115,6 @@ public function loadConfig() {
 	// Support links
 	$config['aboutURL'] = "about.php";
 	$config['helpURL'] = "help.php";
-	$config['gearsURL'] = 'http://tools.google.com/gears/';
 
 	// (absolute) file locations
 	$config['site_filestore'] = '/usr/share/filesender/files/'; 

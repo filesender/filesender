@@ -87,7 +87,6 @@ public function loadConfig() {
 	$config["max_email_recipients"] = 100; // maximum email addresses allowed to send at once for voucher or file sending, a value of 0 allows unlimited emails.
 
 	$config['max_flash_upload_size'] = '2147483648'; // 2GB
-	$config['max_gears_upload_size'] = '107374182400'; // 100 GB
 	$config['max_html5_upload_size'] = '107374182400'; // 100  GB
 	$config["upload_chunk_size"]  = '2000000';//
 	

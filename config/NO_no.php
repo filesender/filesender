@@ -8,7 +8,7 @@ $lang["_HELP_TEXT"] = '<div align="left" style="padding:5px">
       <strong> Maks. antall mottakere per sending:</strong> '. $config["max_email_recipients"].' flere mottaker adresser skilles med komma eller semikolon (eks. ole@norge.no, per@uninettt.no)<br>
       <strong>Antall filer per sending:</strong> 1 - for å sende flere filer samtidig kan du pakke dem i feks. en zip-fil først.<br>
       <strong>Største filstørrelse per sending, uten HTML 5: </strong>'. formatBytes($config["max_flash_upload_size"]) .'<br>
-      <strong>Største filstørrelse per sending, med HTML 5: </strong>' .formatBytes($config["max_gears_upload_size"]).'<br>
+      <strong>Største filstørrelse per sending, med HTML 5: </strong>' .formatBytes($config["max_html5_upload_size"]).'<br>
       <strong>Maksimum antall dager før utløp av sending: </strong>'. $config["default_daysvalid"].'<br>
     </p>
     <p>For mer informasjon besøk <a href="http://www.filesender.org/">www.filesender.org</a></p>
