@@ -28,6 +28,10 @@ $("#supportBlob").html('<?php echo lang("_NO"); ?>');
 <p>The following HTML5 API's must be supported in your browser to allow FileSender to upload your files using HTML5.</p>
 <table width="100%" border="0">
   <tr class="altcolor">
+    <td><strong>API</strong></td>
+    <td><strong>Supported</strong></td>
+  </tr>
+  <tr class="altcolor">
     <td>File API</td>
     <td><div id="supportFile" name="supportFile"></div></td>
   </tr>
