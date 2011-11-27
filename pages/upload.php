@@ -405,9 +405,9 @@ function uploadcomplete(name,size)
 	json = {};
 	
 	for (i in query) {
-	json[query[i].name] = encodeURI(query[i].value);
+	json[query[i].name] = query[i].value;
 	} 
-	json["fileoriginalname"] = encodeURIComponent(name);
+	json["fileoriginalname"] = name;
 	json["filesize"] = parseInt(size);
 	// post it
 	$.ajax({
