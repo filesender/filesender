@@ -87,6 +87,13 @@ function mime_qp_encode_header_value($string,$charsetin,$charsetout,$crlf) {
     return preg_replace('/^HEADER: /', '', iconv_mime_encode("HEADER", $string, $prefs)) ;
 }
 
+function utf8convert($utf8string)
+{
+ if (detect_char_encoding($utf8string) == 'ISO-8859-1') { 
+            $utf8string = iconv("UTF-8", "ISO-8859-1", $utf8string);
+ }
+return $utf8string;
+}
 // converts a UTF8-string into HTML entities
 //  - $utf8:        the UTF8-string to convert
 //  - $encodeTags:  booloean. TRUE will convert "<" to "&lt;"
