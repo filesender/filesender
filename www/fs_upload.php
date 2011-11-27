@@ -129,6 +129,7 @@ if($authvoucher->aVoucher()  || $authsaml->isAuth() ) {
 	case  'validateupload':
 	// validates form and adds pending file to files, returns filesize or validation message
 	
+			logEntry("DEBUG fs_uploadit: Filedata 'validateupload' myJson = " . $_POST['myJson'] );
 			$dataitem = json_decode(stripslashes($_POST['myJson']), true);
 			// validate date selector
 			if(!isset($dataitem["filesize"])){ echo "err_missingfilesize"; exit; }
@@ -208,8 +209,10 @@ if($authvoucher->aVoucher()  || $authsaml->isAuth() ) {
 			    logEntry("Rename the file ".$uploadfolder.$fileuid.".tmp");
 		}
 
-	$filedata = json_decode(stripslashes($_POST['myJson']), true);
-	logEntry("DEBUG fs_uploadit: Filedata 'savedata' = " . $filedata);
+	logEntry("DEBUG fs_uploadit: Filedata 'savedata' myJson = " . $_POST['myJson'] );
+	//$filedata = json_decode(stripslashes($_POST['myJson']), true);
+	$filedata = json_decode($_POST['myJson'], true);
+	logEntry("DEBUG fs_uploadit: Filedata 'savedata' = " . print_r($filedata,TRUE));
 	if ($authvoucher->aVoucher()) {
 		$tempData = $functions->getVoucherData($filedata["filevoucheruid"]);
 		$filedata["fileauthuseruid"] = $tempData[0]["fileauthuseruid"];	
@@ -238,7 +241,7 @@ if($authvoucher->aVoucher()  || $authsaml->isAuth() ) {
 	$filedata["fileto"] = $Email;
 	$filedata["filevoucheruid"] = getGUID();
 	
-	logEntry("DEBUG fs_uploadit: Filedata = " . $filedata);
+	logEntry("DEBUG fs_uploadit: Filedata = " . print_r($filedata,TRUE));
 	$functions->insertFileHTML5($filedata);
 	}
 	echo "true";
@@ -247,6 +250,7 @@ if($authvoucher->aVoucher()  || $authsaml->isAuth() ) {
 
 	case 'insertVoucherAjax': 
 
+			logEntry("DEBUG fs_uploadit: Filedata 'insertVoucherAjax' myJson = " . $_POST['myJson'] );
 			$dataitem = json_decode(stripslashes($_POST['myJson']), true);
 			// validate expiry missing
 			if(!isset($dataitem["fileexpirydate"])){ echo "err_expmissing"; exit; }
