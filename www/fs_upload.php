@@ -66,6 +66,7 @@ $functions = Functions::getInstance();
 date_default_timezone_set($config['Default_TimeZone']);
 $uploadfolder =  $config["site_filestore"];
 	
+logEntry("DEBUG fs_upload: magic_quotes_gpc=".get_magic_quotes_gpc());
 logEntry("DEBUG fs_upload: REQUEST data: " . print_r($_REQUEST, true));
 logEntry("DEBUG fs_upload: POST data: " . print_r($_POST, true));
 
