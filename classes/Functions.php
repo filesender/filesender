@@ -353,7 +353,7 @@ class Functions {
         {
             array_push($returnArray, $row);
         }
-        return $returnArray;
+        return json_encode($returnArray);
     }
 
     //---------------------------------------

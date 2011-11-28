@@ -78,6 +78,9 @@ echo "<div id='message'>".lang("_INVALID_FILEVOUCHERID")."</div>";
 }
 }
 $filedata = $functions->getUserFiles();
+//$filedata = $filedata[0];
+//echo $filedata;
+$json_o=json_decode($filedata,true);
 
 ?>
 <script type="text/javascript">
@@ -204,9 +207,9 @@ $filedata = $functions->getUserFiles();
         <td width="18">&nbsp;</td>
       </tr>
       <?php 
-if(sizeof($filedata) > 0)
+if(sizeof($json_o) > 0)
 {
-foreach($filedata as $item) {
+foreach($json_o as $item) {
    echo '<tr><td valign="top"> <a href="index.php?s=files&a=resend&id=' .$item['filevoucheruid'] . '"><img src="images/email_go.png" title="'.lang("_RE_SEND_EMAIL").'"></a></td><td valign="top"><img src="images/email_add.png" title="'.lang("_NEW_RECIPIENT").'" onclick="openAddRecipient('."'".$item['filevoucheruid']."','".$item['fileoriginalname'] ."','".$item['filesize'] ."','".$item['filefrom']."'" .');"  style="cursor:pointer;"></td>';
    if($item['fileto'] == $attributes["email"])
    {
