@@ -87,10 +87,9 @@ if (cleanUp())
 
 
 //---------------------------------------
-	// Clean up missing files
-	// Remove out of date files and vouchers
-function cleanUp() 
-	{
+// Clean up missing files
+// Remove out of date files and vouchers
+function cleanUp() {
 	
 	global $config;
 	$db = DBAL::getInstance();
@@ -120,6 +119,7 @@ function cleanUp()
 	 
 	$FilestoreDirectory = $config["site_filestore"];
 
+	// Step 1: Check in database for expired files and vouchers and close them
 	//
 	// check for any expired files first and close status in database
 	//
@@ -133,15 +133,8 @@ function cleanUp()
 		logProcess("CRON","SQL Error on selecting files". $e->getMessage());
 		return FALSE;
 	}
-		
-/* // Temporarily disabled, the empty set means that no files are to be expired afaik
-	// check for empty result set (should never happen) 
-	if (empty($search)) { 
-		logProcess("CRON","SQL Error on selecting files, empty result set");
-		return FALSE; 
-	}
-*/
-	
+
+	// Update status for all found expired files/vouchers in database
 	foreach($search as $row) {
 		
 		try {
@@ -162,49 +155,51 @@ function cleanUp()
 		
 	}
 
+	// Step 2: check for orphaned files on disk
 	// remove files that do not have at least one Available file associated with it
 	// loop through directory and check file is Available
 	
-    // Open the folder
-    $dir_handle = @opendir($FilestoreDirectory) or die("Unable to open $FilestoreDirectory"); 
+	// Open the folder
+	$dir_handle = @opendir($FilestoreDirectory) or die("Unable to open $FilestoreDirectory"); 
 
-    // 	- Loop through the files in  FilestoreDirectory 
+	// 	- Loop through the files in  FilestoreDirectory 
 	//	- check in database if the file is closed
 	//	- if closed then delete the file
 	
-    while ($file = readdir($dir_handle)) {
+	// get list of files
+	while ($file = readdir($dir_handle)) {
 	
-	// skip . and ..
-	if($file == "." || $file == ".." || strpos($config['cron_exclude prefix'],substr($file,0,1)) === 0)
-	{
-		logProcess("CRON","Ignored file: ".$FilestoreDirectory.$file);
-		continue;
-	}
+		// skip . and ..
+		if($file == "." || $file == ".." || strpos($config['cron_exclude prefix'],substr($file,0,1)) === 0)
+		{
+			logProcess("CRON","Ignored file: ".$FilestoreDirectory.$file);
+			continue;
+		}
 
-	// check filename in database
-	$query = "SELECT * FROM files WHERE  fileuid = '%s' AND filestatus = 'Available'";
-	$result = $db->query($query, substr($file,0,36),$today);
+		// check filename in database
+		$query = "SELECT * FROM files WHERE  fileuid = '%s' AND filestatus = 'Available'";
+		$result = $db->query($query, substr($file,0,36),$today);
 	
-	$total_results = sizeof($result);
-	if($total_results < 1) {
-	// no Files Available match this file so delete the file
+		$total_results = sizeof($result);
+		if($total_results < 1) {
+		// no Files Available match this file so delete the file (result can be more than 1!)
 	
-		if (is_file($FilestoreDirectory.$file) && file_exists($FilestoreDirectory.$file)) {
-			// Don't remove the file if mtime is less then 24 hours (86400 seconds) old
-			if (time() - filemtime($FilestoreDirectory.$file) < 86400) {
-				logProcess("CRON","File NOT removed (last modification less then 24 hours ago ago)".$FilestoreDirectory.$file);
-			} else {
-				unlink($FilestoreDirectory.$file);
-				// log removal
-				logProcess("CRON","File Removed (Expired)".$FilestoreDirectory.$file);    
+			if (is_file($FilestoreDirectory.$file) && file_exists($FilestoreDirectory.$file)) {
+				// Don't remove the file if mtime is less then 24 hours (86400 seconds) old
+				if (time() - filemtime($FilestoreDirectory.$file) < 86400) {
+					logProcess("CRON","File NOT removed (last modification less then 24 hours ago ago)".$FilestoreDirectory.$file);
+				} else {
+					unlink($FilestoreDirectory.$file);
+					// log removal
+					logProcess("CRON","File Removed (Expired)".$FilestoreDirectory.$file);    
+				}
 			}
 		}
 	}
-    }
-    // Close
-    closedir($dir_handle);
+	// Close
+	closedir($dir_handle);
 	
-	//
+	// Step 3:
 	// Final cleanup is to close any records in the database that do not have a physical file attached to them
 	// close all entries that do not have a pyhsical file in storage
 	// We also check on the expiry date, so that files that are currently being uploaded and have "stale" records are left alone
@@ -235,13 +230,11 @@ function cleanUp()
 
 			logProcess("CRON","Removed (File not Available) ".$FilestoreDirectory."/".$row["fileuid"].".tmp");
 		}
-		
 	}
 	return true;
-	}
+}
 
-function logProcess($client,$message)
-	{
+function logProcess($client,$message) {
 	global $config;
 	
 	if($config["debug"])
@@ -260,6 +253,6 @@ function logProcess($client,$message)
 		fwrite($fh, $stringData);
 		fclose($fh);
 		closelog();
-		}
 	}
+}
 ?>
