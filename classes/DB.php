@@ -95,7 +95,6 @@ class DB {
 		 
         for($i = 0; $i < sizeof($args); $i++) {
 			$args[$i]= get_magic_quotes_gpc() ? stripslashes($args[$i]) : $args[$i];
-			$args[$i] = urldecode($args[$i]);
 			$args[$i] =  $this->connection->quote($args[$i]);
 		}
         $query = vsprintf($format, $args);

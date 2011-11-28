@@ -141,9 +141,9 @@ function uploadFile() {
 			// encodeURIComponent file name before sending
 			// post completed data and email
 		var query = $("#form1").serializeArray(), json = {};
-		for (i in query) { json[query[i].name] = encodeURIComponent(query[i].value); } 
+		for (i in query) { json[query[i].name] = query[i].value; } 
 		// add file information fields
-		json["fileoriginalname"] = encodeURIComponent(fdata[n].filename);
+		json["fileoriginalname"] = fdata[n].filename;
 		json["filesize"] = parseInt(fdata[n].fileSize);
 		json["vid"] = vid;
 
