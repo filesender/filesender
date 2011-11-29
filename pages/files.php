@@ -215,13 +215,13 @@ foreach($json_o as $item) {
    {
    echo "<td class='HardBreak' valign='top'>".lang("_ME")."</td>";
    } else {
-   echo "<td class='HardBreak'>" .urldecode($item['fileto']) . "</td>";
+   echo "<td class='HardBreak'>" .$item['fileto'] . "</td>";
    }
     if($item['filefrom'] == $attributes["email"])
    {
    echo "<td class='HardBreak'>".lang("_ME")."</td>";
    } else {
-   echo "<td class='HardBreak'>" .urldecode($item['filefrom']) . "</td>";
+   echo "<td class='HardBreak'>" .$item['filefrom'] . "</td>";
    }
    echo "<td class='HardBreak'><a href='download.php?vid=". $item["filevoucheruid"]."' target='_blank'>" .utf8tohtml($item['fileoriginalname'],TRUE). "</a></td>";
    echo "<td>" .formatBytes($item['filesize']). "</td><td  class='HardBreak'>".utf8tohtml($item['filesubject'],TRUE). "</td><td>";
