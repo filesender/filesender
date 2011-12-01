@@ -128,8 +128,8 @@ if($config['debug'] == true || $config['debug'] == 1){
 function displayError($errmsg)
 {
 	global $config;
-	
-	if($config['debug'] )
+	logEntry($errmsg);
+	if($config['displayerrors'] )
 	{
 		echo "<br><div id='errmessage'>".$errmsg."</div>";
 	}
