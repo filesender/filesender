@@ -126,17 +126,18 @@ public function loadConfig() {
 	$config['log_location'] = '/usr/share/filesender/log/';	
 
 	$config["db_type"] = "pgsql";// pgsql or mysql
-	$config['pg_host'] = 'localhost';
-	$config['pg_database'] = 'filesender';
-	$config['pg_port'] = '5432';
-	$config['pg_username'] = 'filesender';
-	$config['pg_password'] = 'yoursecretpassword';
+	$config['db_host'] = 'localhost';
+	$config['db_database'] = 'filesender';
+	$config['db_port'] = '5432';
+	// database username and password
+	$config['db_username'] = 'filesender';
+	$config['db_password'] = 'yoursecretpassword';
 	
+	//Optional DSN format overides db_ settings
+	//$config['dsn'] = "pgsql:host=localhost;dbname=filesender";
+	//$config['dsn'] = 'pgsql:host=localhost;dbname=filesender';
+	// dsn requires username and password in $config['db_username'] and $config['db_password']
 	
-	//DB settings, URL like oneliner, mysql or postgres
-	//$config['dsn'] = 'mysql://user:password@localhost:3306/filesender';
-	//$config['dsn'] = 'pgsql://user:password@tcp(localhost:5432)/dbname';
-
 	// cron settings
 	$config['cron_exclude prefix'] = '_'; // exclude deletion of files with the prefix character listed (can use multiple characters eg '._' will ignore .xxxx and _xxxx
 	
