@@ -125,11 +125,21 @@ class DB {
         if(isset($args[0]) && is_array($args[0])) $args = $args[0]; // so that args can be passed as an array, as well as seperately.
         $query = $this->buildQuery(array_merge(array($this->connect()), $args));
 		$dbcon = $this->connect();
+		try
+		{
+		$this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
         $result = $dbcon->query($query);
-        if($result)
+		}
+		catch(PDOException $e)
+                {
+     					displayError($e->getMessage(). " on query: ".$query);
+						exit;
+                }
+
+		if($result)
             return $result;
         else
-		   	throw new DbException(sprintf('$self->fquery(): SQL error: running query: \"%s\"', $query));
+			return "";
     }
 
 

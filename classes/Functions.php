@@ -285,7 +285,7 @@ class Functions {
 
         $statString = $statString.$count." files ";
 
-        $statement =   $this->db->fquery("SELECT SUM(logfilesize) as total_uploaded FROM logs WHERE logtype='Uploaded'");
+        $statement = $this->db->fquery("SELECT SUM(logfilesize) as total_uploaded FROM logs WHERE logtype='Uploaded'");
 		$statement->execute();
 		$totalResult = $statement->fetch(PDO::FETCH_NUM);
 		$totalResult = $totalResult[0];
@@ -345,8 +345,7 @@ class Functions {
         } else {
             $authAttributes["saml_uid_attribute"] = "nonvalue";
         }
-	
-        $result =  $this->db->fquery("SELECT ".$this->returnFields." FROM files WHERE (fileauthuseruid = %s) AND filestatus = 'Available'  ORDER BY fileactivitydate DESC", $authAttributes["saml_uid_attribute"]);
+        $result =  $this->db->fquery("SELECT ".$this->returnFields." FROM filess WHERE (fileauthuseruid = %s) AND filestatus = 'Available'  ORDER BY fileactivitydate DESC", $authAttributes["saml_uid_attribute"]);
            
         $returnArray = array();
         foreach($result as $row )

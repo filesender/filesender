@@ -66,6 +66,7 @@ public function loadConfig() {
 	
 	// debug settings
 	$config["debug"] = false; // Debug logging on/off (true/false)
+	$config["displayerrors"] = false; // Display debug errors on screen (true/false)
 	$config['dnslookup'] = true; // log includes DNS lookup (true/false)
 	$config["client_specific_logging"] = false; // client logging (true/false)
 	$config["client_specific_logging_uids"] = ""; // "" is log all clients, or log for specific userid's or voucheruid's seperated by comma 'xxxx,zzzzz'
