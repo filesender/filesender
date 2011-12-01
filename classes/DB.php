@@ -59,11 +59,11 @@ class DB {
         if($this->connection){
             return $this->connection;
         }
+
+		$dsn = $this->initDSN();
+
 		try {
-			$dbtype = $config['db_type'];
-			$dbhost = $config['pg_host'];
-			$dbdatabase = $config['pg_database'];
-		 $this->connection = new PDO("$dbtype:host=$dbhost;dbname=$dbdatabase",$config['pg_username'],$config['pg_password']);
+		 	$this->connection = new PDO($dsn,$config['db_username'],$config['db_password']);
 		}
     	catch(PDOException $e)
     	{
@@ -71,6 +71,46 @@ class DB {
     	}
 		return $this->connection;
     }
+	
+	public function initDSN()
+	{
+		 global $config;
+		 // use dns if it exists
+		 if (array_key_exists('dsn',$config)) {
+			 if (
+				//These must exist at a minimum
+				// may change these to db_???? - ticket to discuss
+				(! (array_key_exists('db_username',$config))) ||
+				(! (array_key_exists('db_password',$config))) 
+
+			) { 
+				throw new DbException ("Incomplete parameter specification for Database, Username and password are required");
+			}
+			return $config['dsn'];
+		}
+		// default to pgsql if no db_type specified
+		if (!array_key_exists('db_type',$config)) {
+			
+			$config['db_type'] = "pgsql";
+		}
+		
+			//Sanity checking....
+			if (
+				//These must exist at a minimum
+				(! (array_key_exists('db_host',$config))) ||
+				(! (array_key_exists('db_database',$config))) ||
+				(! (array_key_exists('db_username',$config))) ||
+				(! (array_key_exists('db_password',$config))) 
+
+			) { 
+				throw new DbException ("Incomplete parameter specification for Database, Please check you config.php");
+			}
+			// create PDO DSN
+			$dbtype = $config['db_type'];
+			$dbhost = $config['db_host'];
+			$dbdatabase = $config['db_database'];
+		 	return "$dbtype:host=$dbhost;dbname=$dbdatabase";
+	}
 
     public function fquery(/* $query, $args */) {
         $args = func_get_args();
