@@ -271,6 +271,13 @@ margin-top: 4px;
 	font-size: 12px;
 	padding: 4px;
 }
+#errmessage {
+	background-color: #FFF;
+	text-align: center;
+	font-size: 12px;
+	padding: 4px;
+	border: 1px solid #F00;
+}
 #pageheading {
 	width: 100%;
 	font-size: 16px;

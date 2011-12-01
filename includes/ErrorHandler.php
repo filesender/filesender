@@ -125,4 +125,13 @@ if($config['debug'] == true || $config['debug'] == 1){
 	set_exception_handler("customException");
 }
 
+function displayError($errmsg)
+{
+	global $config;
+	
+	if($config['debug'] )
+	{
+		echo "<br><div id='errmessage'>".$errmsg."</div>";
+	}
+}
 ?>
