@@ -55,7 +55,7 @@ class DB {
     // database connection 
     public function connect() {
         global $config;
-
+		$log =  Log::getInstance();
         if($this->connection){
             return $this->connection;
         }
@@ -67,7 +67,8 @@ class DB {
 		}
     	catch(PDOException $e)
     	{
-    	echo $e->getMessage();
+		logEntry($e->getMessage());
+    	displayError($e->getMessage());
     	}
 		return $this->connection;
     }
@@ -75,6 +76,12 @@ class DB {
 	public function initDSN()
 	{
 		 global $config;
+		 
+		 // check if db_driver_options are available
+		 if (!array_key_exists('db_driver_options',$config)) {
+				// set default if options don't exist
+				$config['db_driver_options'] = "";
+			}
 		 // use dns if it exists
 		 if (array_key_exists('dsn',$config)) {
 			 if (
@@ -86,6 +93,7 @@ class DB {
 			) { 
 				throw new DbException ("Incomplete parameter specification for Database, Username and password are required");
 			}
+			
 			return $config['dsn'];
 		}
 		// default to pgsql if no db_type specified

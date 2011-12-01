@@ -136,6 +136,8 @@ public function loadConfig() {
 	//Optional DSN format overides db_ settings
 	//$config['dsn'] = "pgsql:host=localhost;dbname=filesender";
 	//$config['dsn'] = 'pgsql:host=localhost;dbname=filesender';
+	//$config['dsn'] = 'sqlite:/usr/share/filesender/db/filesender.sqlite';
+	//$config['dsn_driver_options'] = array();
 	// dsn requires username and password in $config['db_username'] and $config['db_password']
 	
 	// cron settings
