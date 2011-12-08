@@ -345,7 +345,7 @@ class Functions {
         } else {
             $authAttributes["saml_uid_attribute"] = "nonvalue";
         }
-        $result =  $this->db->fquery("SELECT ".$this->returnFields." FROM filess WHERE (fileauthuseruid = %s) AND filestatus = 'Available'  ORDER BY fileactivitydate DESC", $authAttributes["saml_uid_attribute"]);
+        $result =  $this->db->fquery("SELECT ".$this->returnFields." FROM files WHERE (fileauthuseruid = %s) AND filestatus = 'Available'  ORDER BY fileactivitydate DESC", $authAttributes["saml_uid_attribute"]);
            
         $returnArray = array();
         foreach($result as $row )
