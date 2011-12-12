@@ -251,31 +251,48 @@
 		var query = $("#form1").serializeArray(), json = {};
 		for (i in query) { json[query[i].name] = encodeURI(query[i].value); } 
 		// add file information fields
-		json["fileoriginalname"] = encodeURIComponent(fname);
+		json["fileoriginalname"] = fname;
 		json["filesize"] = parseInt(fsize);
 		json["vid"] = vid;
 
 		$.ajax({
   		type: "POST",
-  		url: "fs_upload.php?filename="+encodeURIComponent(fname)+"&filesize="+fsize+"&type=validateupload&vid="+vid,
+  		url: "fs_upload.php?type=validateupload&vid="+vid,
   		data: {myJson:  JSON.stringify(json)}
 		}).success(function( data ) {
-		// error check first
-		if(data == "err_tomissing") { $("#fileto_msg").show();validate = false;} // missing email data
-		if(data == "err_expmissing") { $("#expiry_msg").show();validate = false;} // missing expiry date
-		if(data == "err_exoutofrange") { $("#expiry_msg").show();validate = false;} // expiry date out of range
-		if(data == "err_invalidemail") { $("#fileto_msg").show();validate = false;} // 1 or more emails invalid
-		if(data == "err_nodiskspace") { errorDialog(errmsg_disk_space);validate = false;}
-
-	if(validate)
-	{
-	// hide upload button
-	$("#dialog-uploadprogress").dialog("option", "title", "<?php echo lang("_UPLOAD_PROGRESS") ?>: " +  fname + " (" +readablizebytes(fsize) + ")");
-	$("#dialog-uploadprogress").dialog("open");	
-	getFlexApp("filesenderup").returnMsg("true")
-	} else {
-	getFlexApp("filesenderup").returnMsg("false")
-	}
+		if(data == "") {
+		alert("No response from server");
+		return;	
+		}
+		var data =  JSON.parse(data);
+		if(data.errors)
+		{
+		$.each(data.errors, function(i,result){
+		if(result == "err_tomissing") { $("#fileto_msg").show();} // missing email data
+		if(result == "err_expmissing") { $("#expiry_msg").show();} // missing expiry date
+		if(result == "err_exoutofrange") { $("#expiry_msg").show();} // expiry date out of range
+		if(result == "err_invalidemail") { $("#fileto_msg").show();} // 1 or more emails invalid
+		if(result == "err_nodiskspace") { errorDialog(errmsg_disk_space);}
+		})
+		}
+		if(data.status && data.status == "complete")
+		{
+		$("#fileToUpload").hide();// hide Browse
+		$("#selectfile").hide();// hide Browse message
+		$("#uploadbutton").hide(); // hide upload
+		$("#cancelbutton").show(); // show cancel
+		// show upload progress dialog
+		$("#dialog-uploadprogress").dialog("open");
+		// no error so use reuslt as current bytes uploaded for file resume 
+		vid = data.vid;
+		// hide upload button
+		$("#dialog-uploadprogress").dialog("option", "title", "<?php echo lang("_UPLOAD_PROGRESS") ?>: " +  fname + " (" +readablizebytes(fsize) + ")");
+		$("#dialog-uploadprogress").dialog("open");	
+		getFlexApp("filesenderup").returnVoucher(vid)
+		} else {
+		getFlexApp("filesenderup").returnMsg(false)
+		}
+	
 	})
 	}
 	
@@ -401,30 +418,20 @@ function uploadcomplete(name,size)
 	$("#fileName").val(encodeURIComponent(name));
 	// ajax form data to fs_upload.php
 	$("#loadtype").val("savedata");
-	var query = $("#form1").serializeArray(),
-	json = {};
-	
-	for (i in query) {
-	json[query[i].name] = query[i].value;
-	} 
-	json["fileoriginalname"] = name;
-	json["filesize"] = parseInt(size);
-	// post it
 	$.ajax({
 	  type: "POST",
-	  url: "fs_upload.php?type=savedata&n="+encodeURIComponent(name)+"&total="+size+"&vid="+vid,
-	  data: {myJson:  JSON.stringify(json)}
-	}).success(function( msg ) {
+	  url: "fs_upload.php?type=uploadcomplete&vid="+vid//,
+	  //data: {myJson:  JSON.stringify(json)}
+	}).success(function( data ) {
 
-  	if(msg = "true") 
-  	{
+	if(data == "err_cannotrenamefile")
+		{
+		window.location.href="index.php?s=uploaderror";
+		} else if(data == "complete"){		
 		window.location.href="index.php?s=complete";
-  	} 
-  	// error
-	if(msg == "err_tomissing") { $("#fileto_msg").show();}
-	if(msg == "err_expmissing") { $("#expiry_msg").show();}
-	if(msg == "err_exoutofrange") { $("#expiry_msg").show();}
-	if(msg == "err_nodiskspace") { errorDialog('<?php echo lang($lang["_DISK_SPACE_ERROR"]); ?>');}
+		} else {
+		window.location.href="index.php?s=completev";
+		}
 });
 }
 

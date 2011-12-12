@@ -35,6 +35,8 @@
  * ---------------------------------
  * data is sent in chunks from html and appended to the file folder
  * store current file information in $filedata[];
+ * all data sent to this page must include ?vid= or be an authenticated user
+ * 
  */
 // use token if available for SIMPLESAML 1.7 or set session if earlier version of SIMPLESAML
 if (isset($_POST['token']) && $_POST['token'] != "") {
@@ -65,101 +67,123 @@ $functions = Functions::getInstance();
 
 date_default_timezone_set($config['Default_TimeZone']);
 $uploadfolder =  $config["site_filestore"];
+$resultArray = array();
 	
 logEntry("DEBUG fs_upload: magic_quotes_gpc=".get_magic_quotes_gpc());
 logEntry("DEBUG fs_upload: REQUEST data: " . print_r($_REQUEST, true));
 logEntry("DEBUG fs_upload: POST data: " . print_r($_POST, true));
 
-// check we are authenticated first before uploading the chunk
-if($authvoucher->aVoucher()  || $authsaml->isAuth() ) { 
+// check we are authenticated first before continuing
+if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"])) { 
 
 	// tempFilename is created from ((uid or vid)+originalfilename+filesize)
 	$tempFilename = ""; 
-	 
-	// add voucher if this is a voucher upload
-	if ($authvoucher->aVoucher()) {
-	
-		$tempFilename .= $_REQUEST['vid'];
-		$tempData = $functions->getVoucherData($_REQUEST["vid"]);
-		$filedata["fileauthuseruid"] = $tempData[0]["fileauthuseruid"];	
-		$filedata["fileauthuseremail"] = $tempData[0]["fileauthuseremail"];	
-		logEntry("DEBUG fs_upload: tempfilename 1v : ".$tempFilename);
-	}
-	// else add SAML saml_uid_attribute
-	else if( $authsaml->isAuth()) {
-		$authAttributes = $authsaml->sAuth();
-		$tempFilename .= $authAttributes["saml_uid_attribute"];	
-		$filedata["fileauthuseruid"] = $authAttributes["saml_uid_attribute"];
-		$filedata["fileauthuseremail"] = $authAttributes["email"];
-		logEntry("DEBUG fs_upload: tempfilename 1a : ".$tempFilename);
-	} 
-	
-	// add the file name
-	if(isset($_REQUEST['filename'])){
-	$tempFilename .=  sanitizeFilename($_REQUEST['filename']);
-	logEntry("DEBUG fs_upload: tempfilename 2 : ".$tempFilename);
-	}
-	// add the file size to the filename
-	if(isset($_REQUEST['filesize'])){
-	$tempFilename .=  $_REQUEST['filesize'];
-	logEntry("DEBUG fs_upload: tempfilename 3 : ".$tempFilename);
-	}
-	// md5 $tempFilename
-	$tempFilename = md5($tempFilename).'.tmp';
-	logEntry("DEBUG fs_upload: tempfilename 4 : ".$tempFilename);
 
-	 
-	if ( !empty( $tempFilename ) ) {
-	// ---------------------
-	// return file size if requested
-	// ---------------------
-	if(isset($_REQUEST["type"])){
-
-	//logEntry("type ".$config["site_filestore"].sanitizeFilename($tempFilename).":".$_REQUEST["type"]);
-		
 	switch ($_REQUEST["type"]) {
 			
 	case 'filesize':
+		$data = $functions->getVoucherData($_REQUEST["vid"]);
+		$tempFilename = generateTempFilename($data);
 		echo checkFileSize($uploadfolder.$tempFilename);
 		break;
 		
 	case 'uploadcomplete': 
 		// change each file from pending to done
+		$data = $functions->getVoucherData($_REQUEST["vid"]);
+		$tempFilename = generateTempFilename($data);
+		
+		// rename file to correct name
+		$fileuid = getGUID();
+		logEntry("Rename the file ".$uploadfolder.$tempFilename+":"+ $uploadfolder.$fileuid.".tmp");
+ 		if (!file_exists($uploadfolder.$tempFilename)) {
+			echo "err_cannotrenamefile"; exit;
+		}
+         if(!rename($uploadfolder.$tempFilename, $uploadfolder.$fileuid.".tmp")) {
+				echo "err_cannotrenamefile"; exit;
+                logEntry("Unable to move the file ".$uploadfolder.$tempFilename);
+         } else {
+			    logEntry("Rename the file ".$uploadfolder.$fileuid.".tmp");
+		}
+		
+		// close pending file
+		$functions->closeVoucher($data["fileid"]);
+		
+		$data["fileuid"] = $fileuid;
+		$data["filestatus"]  = "Available";
+		$data["fileexpirydate"] = date($config["db_dateformat"],strtotime($data["fileexpirydate"]));
+		
+		// loop though multiple emails
+		$emailto = str_replace(",",";",$data["fileto"]);
+		$emailArray = preg_split("/;/", $emailto);
+		foreach ($emailArray as $Email) { 
+		$data["fileto"] = $Email;
+		$data["filevoucheruid"] = getGUID();
+		
+		logEntry("DEBUG fs_uploadit: Filedata = " . print_r($data,TRUE));
+		$functions->insertFileHTML5($data);
+		}
+		if($authsaml->isAuth()) { 
+		echo "complete";
+		} else {
+		echo "completev";
+		}
 		break;
 		
 	case  'validateupload':
 	// validates form and adds pending file to files, returns filesize or validation message
 	
-			logEntry("DEBUG fs_uploadit: Filedata 'validateupload' myJson = " . $_POST['myJson'] );
-			$dataitem = json_decode(stripslashes($_POST['myJson']), true);
-			// validate date selector
-			if(!isset($dataitem["filesize"])){ echo "err_missingfilesize"; exit; }
-			// check drive space for file upload
-			if(disk_free_space($config['site_filestore']) - $dataitem["filesize"] < 1) {echo "err_nodiskspace"; exit; } // use absolute locations result in bytes
-			// validate expiry missing
-			if(!isset($dataitem["fileexpirydate"])){ echo "err_expmissing"; exit; }
-			// validate fileto missing
-			if(!isset($dataitem["fileto"])){ echo "err_tomissing"; exit;}
-			// validate expiry range
-			if(strtotime($dataitem["fileexpirydate"]) > strtotime("+".$config['default_daysvalid']." day") ||  strtotime($dataitem["fileexpirydate"]) < strtotime("now"))
-			{ echo "err_exoutofrange"; exit; }
-			// seperate emails
-			$emailto = str_replace(",",";",$dataitem["fileto"]);
-			$emailArray = preg_split("/;/", $emailto);
-			// validate number of emails
-			if(count($emailArray) > $config['max_email_recipients'] ) {echo "err_toomanyemail"; exit;}
-			// validate individual emails
-			foreach ($emailArray as $Email) {
-			if(!filter_var($Email,FILTER_VALIDATE_EMAIL)) {echo "err_invalidemail"; exit;}
-			}
-			// if AUP then add session variable to store that a user selected the session variable
-			if(isset($_POST["aup"]))
-			{
-				$_SESSION["aup"] = "true";
-			}
-	
-			echo checkFileSize($uploadfolder.$tempFilename);
-			break;
+		logEntry("DEBUG fs_uploadit: Filedata 'validateupload' myJson = " . $_POST['myJson'] );
+		$dataitem = json_decode($_POST['myJson'], true);
+		if(!isset($dataitem["fileuid"]))
+		{ 
+		$dataitem["fileuid"] = getGUID();
+		}
+		if ($authvoucher->aVoucher()) {
+		$tempData = $functions->getVoucherData($filedata["filevoucheruid"]);
+		$dataitem["fileauthuseruid"] = $tempData["fileauthuseruid"];	
+		$dataitem["fileauthuseremail"] = $tempData["fileauthuseremail"];	
+		} else if( $authsaml->isAuth()) {
+		$authAttributes = $authsaml->sAuth();
+		$dataitem["fileauthuseruid"] = $authAttributes["saml_uid_attribute"];
+		$dataitem["fileauthuseremail"] = $authAttributes["email"];
+		}
+
+		// validate date selector
+		if(!isset($dataitem["filesize"])){ echo "err_missingfilesize"; exit; }
+		// check drive space for file upload
+		if(disk_free_space($config['site_filestore']) - $dataitem["filesize"] < 1) {echo "err_nodiskspace"; exit; } // use absolute locations result in bytes
+		// validate expiry missing
+		if(!isset($dataitem["fileexpirydate"])){ echo "err_expmissing"; exit; }
+		// validate fileto missing
+		if(!isset($dataitem["fileto"])){ echo "err_tomissing"; exit;}
+		// validate expiry range
+		if(strtotime($dataitem["fileexpirydate"]) > strtotime("+".$config['default_daysvalid']." day") ||  strtotime($dataitem["fileexpirydate"]) < strtotime("now"))
+		{ echo "err_exoutofrange"; exit; }
+		// seperate emails
+		$emailto = str_replace(",",";",$dataitem["fileto"]);
+		$emailArray = preg_split("/;/", $emailto);
+		// validate number of emails
+		if(count($emailArray) > $config['max_email_recipients'] ) {echo "err_toomanyemail"; exit;}
+		// validate individual emails
+		foreach ($emailArray as $Email) {
+		if(!filter_var($Email,FILTER_VALIDATE_EMAIL)) {echo "err_invalidemail"; exit;}
+		}
+		// if AUP then add session variable to store that a user selected the session variable
+		if(isset($_POST["aup"]))
+		{
+			$_SESSION["aup"] = "true";
+		}
+		$dataitem["filevoucheruid"] = getGUID();
+		$tempFilename = generateTempFilename($dataitem);
+		$dataitem["filestatus"] = "Pending";
+		if($functions->insertFileHTML5($dataitem))
+		{
+			$resultArray["filesize"] = checkFileSize($uploadfolder.$tempFilename);
+			$resultArray["vid"] = $dataitem["filevoucheruid"];
+			$resultArray["status"] = "complete";
+			echo json_encode($resultArray);		
+		}
+		break;
 			
 	case 'single':
 	
@@ -167,22 +191,25 @@ if($authvoucher->aVoucher()  || $authsaml->isAuth() ) {
 	// single file upload
 	// ---------------------	
 	
-		
-		 $result = move_uploaded_file($_FILES['Filedata']['tmp_name'], $uploadfolder.$tempFilename);
-		 if($result) {
+		$data = $functions->getVoucherData($_REQUEST["vid"]);
+		$tempFilename = generateTempFilename($data);
+		$result = move_uploaded_file($_FILES['Filedata']['tmp_name'], $uploadfolder.$tempFilename);
+		if($result) {
 			logEntry("DEBUG fs_upload.php: file moved:". $_FILES['Filedata']['tmp_name'] . " <- ".$tempFilename );
 			echo "true";
-		 } else {
+		} else {
 			logEntry("DEBUG fs_upload.php: file NOT moved:". $_FILES['Filedata']['tmp_name'] . " <- ".$tempFilename );
 			echo "false";
-		 }
-		 break;
+		}
+		break;
 		 
 	case 'chunk': 
 	// ---------------------	
 	// CHUNK file upload
 	// ---------------------	
 	// open the temp file
+		$data = $functions->getVoucherData($_REQUEST["vid"]);
+		$tempFilename = generateTempFilename($data);
 		
 		$fd = fopen("php://input", "r");
 		// append the chunk to the temp file
@@ -196,8 +223,11 @@ if($authvoucher->aVoucher()  || $authsaml->isAuth() ) {
 	
 	case 'savedata': 
 	
+		$data = $functions->getVoucherData($_REQUEST["vid"]);
+		$tempFilename = generateTempFilename($data);
 	// validate and save data to db
 		$fileuid = getGUID();
+		
 		// rename file to correct name
 		logEntry("Rename the file ".$uploadfolder.$tempFilename+":"+ $uploadfolder.$fileuid.".tmp");
  		if (!file_exists($uploadfolder.$tempFilename)) {
@@ -216,8 +246,8 @@ if($authvoucher->aVoucher()  || $authsaml->isAuth() ) {
 	logEntry("DEBUG fs_uploadit: Filedata 'savedata' = " . print_r($filedata,TRUE));
 	if ($authvoucher->aVoucher()) {
 		$tempData = $functions->getVoucherData($filedata["filevoucheruid"]);
-		$filedata["fileauthuseruid"] = $tempData[0]["fileauthuseruid"];	
-		$filedata["fileauthuseremail"] = $tempData[0]["fileauthuseremail"];	
+		$filedata["fileauthuseruid"] = $tempData["fileauthuseruid"];	
+		$filedata["fileauthuseremail"] = $tempData["fileauthuseremail"];	
 	} else if( $authsaml->isAuth()) {
 		$authAttributes = $authsaml->sAuth();
 		$filedata["fileauthuseruid"] = $authAttributes["saml_uid_attribute"];
@@ -280,7 +310,46 @@ if($authvoucher->aVoucher()  || $authsaml->isAuth() ) {
 	logEntry("fs_upload.php: Error authorising upload :Voucher-".$authvoucher->aVoucher().":SAML-". $authsaml->isAuth());
 	echo "ErrorAuth";
 	}
-}
+
+
+function generateTempFilename($data)
+{
+	$authsaml = AuthSaml::getInstance();
+	$authvoucher = AuthVoucher::getInstance();
+	$functions = Functions::getInstance();
+	
+	$tempFilename= "";
+	
+if ($authvoucher->aVoucher()) {
+	
+		$tempFilename .= $_REQUEST['vid'];
+		$tempData = $functions->getVoucherData($_REQUEST['vid']);
+		logEntry("DEBUG fs_upload: tempfilename 1v : ".$tempFilename);
+	}
+	// else add SAML saml_uid_attribute
+	else if( $authsaml->isAuth()) {
+		$authAttributes = $authsaml->sAuth();
+		$tempFilename .= $authAttributes["saml_uid_attribute"];	
+		$filedata["fileauthuseruid"] = $authAttributes["saml_uid_attribute"];
+		$filedata["fileauthuseremail"] = $authAttributes["email"];
+		logEntry("DEBUG fs_upload: tempfilename 1a : ".$tempFilename);
+	} 
+	
+	// add the file name
+	if(isset($data['filename'])){
+	$tempFilename .=  sanitizeFilename($data['filename']);
+	logEntry("DEBUG fs_upload: tempfilename 2 : ".$tempFilename);
+	}
+	// add the file size to the filename
+	if(isset($data['filesize'])){
+	$tempFilename .=  $data['filesize'];
+	logEntry("DEBUG fs_upload: tempfilename 3 : ".$tempFilename);
+	}
+	// md5 $tempFilename
+	$tempFilename = md5($tempFilename).'.tmp';
+	logEntry("DEBUG fs_upload: tempfilename 4 : ".$tempFilename);	
+	
+	return $tempFilename;
 }
 	
 function checkFileSize($fileLocation)

@@ -41,7 +41,7 @@ if(isset($_REQUEST["a"]) && isset($_REQUEST["id"]))
 // validate id 
 if(	ensureSaneFileUid($_REQUEST["id"])) {
 $myfileData = $functions->getVoucherData($_REQUEST['id']);
-$myfileData = $myfileData[0];
+//$myfileData = $myfileData[0];
 if($_REQUEST["a"] == "del" )
 {
 if($functions->deleteFile($myfileData["fileid"]))

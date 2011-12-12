@@ -106,10 +106,20 @@
 				{
 					
 					ExternalInterface.addCallback("returnMsg", returnMsg);
-					
+					ExternalInterface.addCallback("returnVoucher", returnVoucher);
 				} 
 			}
 			
+			public function returnVoucher(voucher:String):void
+			{
+			if(voucher != "")
+				{
+				vid = voucher;
+				BrowseBtn.visible = false;
+				uploadBtn.visible = false;
+				uploadit();
+				}
+			}
 			public function returnMsg(msg:String):void
 			{ 
 				//Alert.show(msg);
