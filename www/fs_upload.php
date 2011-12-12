@@ -220,65 +220,7 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 		// return file size
 		echo checkFileSize($uploadfolder.$tempFilename);
 		break;
-	
-	case 'savedata': 
-	
-		$data = $functions->getVoucherData($_REQUEST["vid"]);
-		$tempFilename = generateTempFilename($data);
-	// validate and save data to db
-		$fileuid = getGUID();
 		
-		// rename file to correct name
-		logEntry("Rename the file ".$uploadfolder.$tempFilename+":"+ $uploadfolder.$fileuid.".tmp");
- 		if (!file_exists($uploadfolder.$tempFilename)) {
-			echo "err_cannotrenamefile"; exit;
-		}
-         if(!rename($uploadfolder.$tempFilename, $uploadfolder.$fileuid.".tmp")) {
-				echo "err_cannotrenamefile"; exit;
-                logEntry("Unable to move the file ".$uploadfolder.$tempFilename);
-         } else {
-			    logEntry("Rename the file ".$uploadfolder.$fileuid.".tmp");
-		}
-
-	logEntry("DEBUG fs_uploadit: Filedata 'savedata' myJson = " . $_POST['myJson'] );
-	//$filedata = json_decode(stripslashes($_POST['myJson']), true);
-	$filedata = json_decode($_POST['myJson'], true);
-	logEntry("DEBUG fs_uploadit: Filedata 'savedata' = " . print_r($filedata,TRUE));
-	if ($authvoucher->aVoucher()) {
-		$tempData = $functions->getVoucherData($filedata["filevoucheruid"]);
-		$filedata["fileauthuseruid"] = $tempData["fileauthuseruid"];	
-		$filedata["fileauthuseremail"] = $tempData["fileauthuseremail"];	
-	} else if( $authsaml->isAuth()) {
-		$authAttributes = $authsaml->sAuth();
-		$filedata["fileauthuseruid"] = $authAttributes["saml_uid_attribute"];
-		$filedata["fileauthuseremail"] = $authAttributes["email"];
-	}
-	// close current file if a voucher
-	if(isset($filedata["filestatus"]) && $filedata["filestatus"] == "Voucher")
-	{
-	logEntry("DEBUG fs_uploadit: Close Voucher = " . $filedata["filevoucheruid"]);	
-	$tempData = $functions->getVoucherData($filedata["filevoucheruid"]);
-	$functions->closeVoucher($tempData[0]["fileid"]);
-    }
-		
-	$filedata["fileuid"] = $fileuid;
-	$filedata["filestatus"]  = "Available";
-	$filedata["fileexpirydate"] = date($config["db_dateformat"],strtotime($filedata["fileexpirydate"]));
-	
-	// loop though multiple emails
-	$emailto = str_replace(",",";",$filedata["fileto"]);
-	$emailArray = preg_split("/;/", $emailto);
-	foreach ($emailArray as $Email) { 
-	$filedata["fileto"] = $Email;
-	$filedata["filevoucheruid"] = getGUID();
-	
-	logEntry("DEBUG fs_uploadit: Filedata = " . print_r($filedata,TRUE));
-	$functions->insertFileHTML5($filedata);
-	}
-	echo "true";
-
-	break;
-
 	case 'insertVoucherAjax': 
 
 			logEntry("DEBUG fs_uploadit: Filedata 'insertVoucherAjax' myJson = " . $_POST['myJson'] );

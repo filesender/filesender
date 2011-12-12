@@ -152,12 +152,6 @@ function uploadFile() {
 			// encodeURIComponent file name before sending
 			// post completed data and email
 		var query = $("#form1").serializeArray(), json = {};
-		//for (i in query) { json[query[i].name] = query[i].value; } 
-		// add file information fields
-		//json["fileoriginalname"] = fdata[n].filename;
-		//json["filesize"] = parseInt(fdata[n].fileSize);
-		//json["vid"] = vid;
-
 		$.ajax({
   		type: "POST",
   		url: "fs_upload.php?type=uploadcomplete&vid="+vid
