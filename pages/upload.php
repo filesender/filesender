@@ -417,7 +417,6 @@ function uploadcomplete(name,size)
 {
 	$("#fileName").val(encodeURIComponent(name));
 	// ajax form data to fs_upload.php
-	$("#loadtype").val("savedata");
 	$.ajax({
 	  type: "POST",
 	  url: "fs_upload.php?type=uploadcomplete&vid="+vid//,
