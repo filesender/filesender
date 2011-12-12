@@ -46,7 +46,7 @@ function customException($exception){
 	);
 
 	// syslog
-	syslog($exception->getCode(),$exceptionMsg);
+	syslog((int)$exception->getCode(),$exceptionMsg);
 	// log to local log file
 	logEntry($exceptionMsg);
 
