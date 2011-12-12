@@ -98,23 +98,32 @@ var n = 0; // file int currently uploading
 		var query = $("#form1").serializeArray(), json = {};
 		for (i in query) { json[query[i].name] = encodeURI(query[i].value); } 
 		// add file information fields
-		json["fileoriginalname"] = encodeURIComponent(fdata[n].filename);
+		json["fileoriginalname"] = fdata[n].filename;
 		json["filesize"] = parseInt(fdata[n].fileSize);
 		json["vid"] = vid;
 
 		$.ajax({
   		type: "POST",
-  		url: "fs_upload.php?filename="+encodeURIComponent(fdata[n].filename)+"&filesize="+fdata[n].fileSize+"&type=validateupload&vid="+vid,
+  		url: "fs_upload.php?type=validateupload&vid="+vid,
   		data: {myJson:  JSON.stringify(json)}
 		}).success(function( data ) {
-		// error check first
-		if(data == "err_tomissing") { $("#fileto_msg").show();return;} // missing email data
-		if(data == "err_expmissing") { $("#expiry_msg").show();return;} // missing expiry date
-		if(data == "err_exoutofrange") { $("#expiry_msg").show();return;} // expiry date out of range
-		if(data == "err_invalidemail") { $("#fileto_msg").show();return;} // 1 or more emails invalid
-		if(data == "err_nodiskspace") { errorDialog(errmsg_disk_space);return;}
-		//return;
-		
+		if(data == "") {
+		alert("No response from server");
+		return;	
+		}
+		var data =  JSON.parse(data);
+		if(data.errors)
+		{
+		$.each(data.errors, function(i,result){
+		if(result == "err_tomissing") { $("#fileto_msg").show();} // missing email data
+		if(result == "err_expmissing") { $("#expiry_msg").show();} // missing expiry date
+		if(result == "err_exoutofrange") { $("#expiry_msg").show();} // expiry date out of range
+		if(result == "err_invalidemail") { $("#fileto_msg").show();} // 1 or more emails invalid
+		if(result == "err_nodiskspace") { errorDialog(errmsg_disk_space);}
+		})
+		}
+		if(data.status && data.status == "complete")
+		{
 		$("#fileToUpload").hide();// hide Browse
 		$("#selectfile").hide();// hide Browse message
 		$("#uploadbutton").hide(); // hide upload
@@ -122,8 +131,10 @@ var n = 0; // file int currently uploading
 		// show upload progress dialog
 		$("#dialog-uploadprogress").dialog("open");
 		// no error so use reuslt as current bytes uploaded for file resume 
-		fdata[n].bytesUploaded = parseFloat(data);
+		vid = data.vid;
+		fdata[n].bytesUploaded = parseFloat(data.filesize);
 		uploadFile();
+		}
   		});
 	}
 
@@ -141,21 +152,20 @@ function uploadFile() {
 			// encodeURIComponent file name before sending
 			// post completed data and email
 		var query = $("#form1").serializeArray(), json = {};
-		for (i in query) { json[query[i].name] = query[i].value; } 
+		//for (i in query) { json[query[i].name] = query[i].value; } 
 		// add file information fields
-		json["fileoriginalname"] = fdata[n].filename;
-		json["filesize"] = parseInt(fdata[n].fileSize);
-		json["vid"] = vid;
+		//json["fileoriginalname"] = fdata[n].filename;
+		//json["filesize"] = parseInt(fdata[n].fileSize);
+		//json["vid"] = vid;
 
 		$.ajax({
   		type: "POST",
-  		url: "fs_upload.php?filename="+encodeURIComponent(fdata[n].filename)+"&filesize="+fdata[n].fileSize+"&type=savedata&vid="+vid,
-  		data: {myJson:  JSON.stringify(json)}
+  		url: "fs_upload.php?type=uploadcomplete&vid="+vid
 		}).success(function( data ) {
 		if(data == "err_cannotrenamefile")
 		{
 		window.location.href="index.php?s=uploaderror";
-		} else if(vid == ""){		
+		} else if(data == "complete"){		
 		window.location.href="index.php?s=complete";
 		} else {
 		window.location.href="index.php?s=completev";
@@ -184,7 +194,7 @@ function uploadFile() {
 		}
 	
 	var boundary = "fileboundary"; //Boundary name
-	var uri = (uploadURI + "?filename="+encodeURIComponent(fdata[n].filename)+"&filesize="+fdata[n].fileSize+"&type=chunk&vid="+vid); //Path to script for handling the file sent
+	var uri = (uploadURI + "?type=chunk&vid="+vid); //Path to script for handling the file sent
 	var xhr = new XMLHttpRequest(); //Create the object to handle async requests
 	xhr.onreadystatechange = processReqChange;
 	xhr.upload.addEventListener("progress", uploadProgress, false);

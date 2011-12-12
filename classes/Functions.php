@@ -487,7 +487,7 @@ class Functions {
         foreach($result as $row){
             array_push($returnArray, $row);
         }
-        return $returnArray;
+        return $returnArray[0];
     }
 
 // added for HTML5 version
@@ -666,13 +666,17 @@ public function insertVoucher($to,$expiry){
 			$this->saveLog->saveLog($dataitem,"Error",$e->getMessage()); return FALSE;
 		}
 
+			
             if($dataitem['filestatus'] == "Voucher") {
                 $this->saveLog->saveLog($dataitem,"Voucher Sent","");
                 return $this->sendmail->sendEmail($dataitem,$config['voucherissuedemailbody']);
-            } else {
+            } 
+			if($dataitem['filestatus'] == "Available")
+			{
                 $this->saveLog->saveLog($dataitem,"Uploaded","");
                 return $this->sendmail->sendEmail($dataitem,$config['fileuploadedemailbody']);
             }
+			
 			return true;
     }
 
