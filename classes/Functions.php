@@ -587,8 +587,99 @@ public function insertVoucher($to,$expiry){
                 return $this->sendmail->sendEmail($dataitem,$config['fileuploadedemailbody']);
             }
     }
-
-
+		// ensure valid fileexpirydate
+	public function ensureValidFileExpiryDate($data)
+	{
+		global $config;
+		// check fileexpirydate exists and is valid
+		if((strtotime($data) >= strtotime("+".$config['default_daysvalid']." day") ||  strtotime($data) <= strtotime("now")))
+		{
+		// reset fileexpiry date to max config date from server
+		$data = date($config['db_dateformat'],strtotime("+".($config['default_daysvalid'])." day"));
+		} 
+		return date($config['db_dateformat'],strtotime($data));
+	}
+	
+	function ensureValidFileTo($data)
+	{
+		global $config;
+		return $data;
+	}
+   	//---------------------------------------
+    // Validate $data and return data
+    // 
+	public function validateFileData($data)
+	{
+		// client must provide following minimum data
+		// fileto // filesize // filefrom // fileexpirydata // file voucher or authenticated uuid // filename
+		// ensure they exists and are valid
+		// return array of errors or 
+		global $config;
+		global $resultArray;
+		
+		$dbCheck = DB_Input_Checks::getInstance();
+	
+		$errorArray = array();
+		// test 
+		//array_push($errorArray, "err_nodiskspace");
+		//array_push($errorArray, "err_tomissing");
+		// filesize missing
+		if(!isset($data["filesize"])){ array_push($resultArray, "err_missingfilesize"); }
+		// check space is available on disk before uploading
+		if(isset($data["filesize"]) && disk_free_space($config['site_filestore']) - $data["filesize"] < 1) { array_push($resultArray, "err_nodiskspace");} 
+		// expiry missing
+		if(!isset($data["fileexpirydate"])){ array_push($resultArray,  "err_expmissing"); }
+		// fileto missing
+		if(!isset($data["fileto"])){ array_push($resultArray, "err_tomissing");}
+		// filename missing
+		if(!isset($data["fileoriginalname"])){ array_push($resultArray, "err_invalidfilename");}
+		// expiry out of range
+		if(strtotime($data["fileexpirydate"]) > strtotime("+".$config['default_daysvalid']." day") ||  strtotime($data["fileexpirydate"]) < strtotime("now"))
+		{ array_push($resultArray,"err_exoutofrange");}
+		// emmail missing
+		if(!isset($data["fileto"])){ array_push($resultArray,  "err_filetomissing"); 
+		} else {
+		$emailto = str_replace(",",";",$data["fileto"]);
+		$emailArray = preg_split("/;/", $emailto);
+		// validate number of emails
+		if(count($emailArray) > $config['max_email_recipients'] ) {array_push($resultArray,  "err_toomanyemail");}
+		// validate individual emails
+		foreach ($emailArray as $Email) {
+			if(!filter_var($Email,FILTER_VALIDATE_EMAIL)) {array_push($resultArray, "err_invalidemail");}
+		}
+		}
+		// if errors - return them via json to client
+		
+		if(count($errorArray) > 0 )
+		{
+		$resultArray["errors"] =  $errorArray;
+		echo json_encode($resultArray);
+		break;
+		}
+			
+		// no errors >> continue
+		// ensure valid fields before commiting to database
+		$data["fileexpirydate"] = $this->ensureValidFileExpiryDate($data["fileexpirydate"]);
+		$data["filesubject"] = (isset($data["filesubject"])) ? $data["filesubject"] : "";
+		$data["fileactivitydate"]= date($config['db_dateformat'], time());
+		$data["filevoucheruid"] = (isset($data["filevoucheruid"])) ? $data["filevoucheruid"] : getGUID();
+		$data["filemessage"] = (isset($data["filemessage"])) ? $data["filemessage"] : "";
+        $data["filefrom"]=$data["filefrom"];
+        $data["filesize"]=$data["filesize"];
+        $data["fileoriginalname"]= (isset($data['filestatus']) && $data['filestatus'] == "Voucher") ? NULL : sanitizeFilename($data['fileoriginalname']);
+        $data["filestatus"]="pending";//isset($data['filestatus']) ? $data['filestatus'] : "pending";
+        $data["fileip4address"]= $dbCheck->checkIp($_SERVER['REMOTE_ADDR']);
+        $data["fileip6address"]= $dbCheck->checkIp6($_SERVER['REMOTE_ADDR']);
+		$data["filesendersname"]=isset($data['filesendersname']) ? $data['filesendersname'] : NULL;
+		$data["filereceiversname"]=isset($data['filereceiversname']) ? $data['filereceiversname'] : NULL;
+		$data["filevouchertype"]=isset($data['filevouchertype']) ? $data['filevouchertype'] : NULL;
+        $data["fileuid"]=getGUID();
+        //$data["fileauthuseruid"]="null";
+        //$data["fileauthuseremail"]="null";
+        $data["filecreateddate"]= date($config['db_dateformat'], time()); 
+		
+		return $data;
+	}
    //---------------------------------------
     // Insert new file or voucher HTML5
     // 
