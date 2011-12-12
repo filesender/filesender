@@ -138,8 +138,9 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 		{ 
 		$dataitem["fileuid"] = getGUID();
 		}
+		
 		if ($authvoucher->aVoucher()) {
-		$tempData = $functions->getVoucherData($filedata["filevoucheruid"]);
+		$tempData = $functions->getVoucherData($_POST["vid"]);
 		$dataitem["fileauthuseruid"] = $tempData["fileauthuseruid"];	
 		$dataitem["fileauthuseremail"] = $tempData["fileauthuseremail"];	
 		} else if( $authsaml->isAuth()) {
@@ -148,26 +149,8 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 		$dataitem["fileauthuseremail"] = $authAttributes["email"];
 		}
 
-		// validate date selector
-		if(!isset($dataitem["filesize"])){ echo "err_missingfilesize"; exit; }
-		// check drive space for file upload
-		if(disk_free_space($config['site_filestore']) - $dataitem["filesize"] < 1) {echo "err_nodiskspace"; exit; } // use absolute locations result in bytes
-		// validate expiry missing
-		if(!isset($dataitem["fileexpirydate"])){ echo "err_expmissing"; exit; }
-		// validate fileto missing
-		if(!isset($dataitem["fileto"])){ echo "err_tomissing"; exit;}
-		// validate expiry range
-		if(strtotime($dataitem["fileexpirydate"]) > strtotime("+".$config['default_daysvalid']." day") ||  strtotime($dataitem["fileexpirydate"]) < strtotime("now"))
-		{ echo "err_exoutofrange"; exit; }
-		// seperate emails
-		$emailto = str_replace(",",";",$dataitem["fileto"]);
-		$emailArray = preg_split("/;/", $emailto);
-		// validate number of emails
-		if(count($emailArray) > $config['max_email_recipients'] ) {echo "err_toomanyemail"; exit;}
-		// validate individual emails
-		foreach ($emailArray as $Email) {
-		if(!filter_var($Email,FILTER_VALIDATE_EMAIL)) {echo "err_invalidemail"; exit;}
-		}
+		$dataitem = $functions->validateFileData($dataitem);
+
 		// if AUP then add session variable to store that a user selected the session variable
 		if(isset($_POST["aup"]))
 		{
