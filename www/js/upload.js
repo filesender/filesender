@@ -96,7 +96,7 @@ var n = 0; // file int currently uploading
 		// validate form data and return filesize or validation error
 		// load form into json array
 		var query = $("#form1").serializeArray(), json = {};
-		for (i in query) { json[query[i].name] = encodeURI(query[i].value); } 
+		for (i in query) { json[query[i].name] = query[i].value; } 
 		// add file information fields
 		json["fileoriginalname"] = fdata[n].filename;
 		json["filesize"] = parseInt(fdata[n].fileSize);
