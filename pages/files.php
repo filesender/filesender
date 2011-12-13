@@ -135,6 +135,9 @@ $json_o=json_decode($filedata,true);
 		$("#dialog-addrecipient").dialog({ autoOpen: false, height: 410,width:650, modal: true,
 			buttons: {
 				'<?php echo lang("_CANCEL") ?>': function() {
+					// clear form
+					$("#filesubject").val("");
+					$("#filemessage").val("");
 					$( this ).dialog( "close" );
 				},
 				'<?php echo lang("_SEND") ?>': function() { 
