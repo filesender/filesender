@@ -115,7 +115,7 @@ function postVoucher()
 	// post voucher data from form
 		
 	var query = $("#form1").serializeArray(), json = {};
-	for (i in query) {json[query[i].name] = encodeURI(query[i].value);} // create json from form1
+	for (i in query) {json[query[i].name] = query[i].value;} // create json from form1
 	// post to fs_upload.php
 	$.ajax({
 	 type: "POST",
