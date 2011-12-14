@@ -160,6 +160,9 @@ $lang["_STARTED_DOWNLOADING"] = "De download van het bestand zal beginnen.";
 $lang["_CONFIRM_DELETE_FILE"] = "Wilt U dit bestand echt verwijderen?";
 $lang["_CONFIRM_DELETE_VOUCHER"] = "Wilt U deze uitnodiging echt intrekken?";
 
+// standard date display format
+$lang['datedisplayformat'] = "d-m-Y"; // Format for displaying date/time, use PHP date() format string syntax 
+
 // datepicker localization
 $lang["_DP_closeText"] = 'Sluiten'; // Done
 $lang["_DP_prevText"] = '←'; //Prev

@@ -184,7 +184,7 @@ $json_o=json_decode($filedata,true);
         </td>
       </tr>
       <tr>
-        <td><input type="hidden" id="fileexpirydate" name="fileexpirydate" value="<?php echo date($config['datedisplayformat'],strtotime("+".$config['default_daysvalid']." day"));?>" />
+        <td><input type="hidden" id="fileexpirydate" name="fileexpirydate" value="<?php echo date($lang['datedisplayformat'],strtotime("+".$config['default_daysvalid']." day"));?>" />
         <input type="hidden" name="filestatus" id="filestatus" value="voucher" /></td>
         <td><div class="menu" id="voucherbutton"><a href="#" onclick="validateForm()"><?php echo lang("_SEND_VOUCHER"); ?></a></div></td>
       </tr>
@@ -201,7 +201,7 @@ $json_o=json_decode($filedata,true);
     </tr>
     <?php 
 foreach($json_o as $item) {
-   echo "<tr><td>" .$item['fileto'] . "</td><td>" .date($config['datedisplayformat'],strtotime($item['filecreateddate'])) . "</td><td>" .date($config['datedisplayformat'],strtotime($item['fileexpirydate'])) . "</td><td><div  style='cursor:pointer;'><img src='images/shape_square_delete.png' title='".lang("_DELETE")."' onclick='confirmdelete(".'"' .$item['filevoucheruid'] . '"'. ")' border='0'></div></td></tr>"; //etc
+   echo "<tr><td>" .$item['fileto'] . "</td><td>" .date($lang['datedisplayformat'],strtotime($item['filecreateddate'])) . "</td><td>" .date($lang['datedisplayformat'],strtotime($item['fileexpirydate'])) . "</td><td><div  style='cursor:pointer;'><img src='images/shape_square_delete.png' title='".lang("_DELETE")."' onclick='confirmdelete(".'"' .$item['filevoucheruid'] . '"'. ")' border='0'></div></td></tr>"; //etc
 }
 ?>
   </table>

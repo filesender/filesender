@@ -184,6 +184,9 @@ $lang["_SEND_VOUCHER"] = "Send invitasjon";
 $lang["_CONFIRM_DELETE_FILE"] = "Er du sikker at du vil slette filen?";
 $lang["_CONFIRM_DELETE_VOUCHER"] = "Er du sikker at du ønsker å tilbaketrekke invitasjonen?";
 
+// standard date display format
+$lang['datedisplayformat'] = "Y-m-d"; // Format for displaying date/time, use PHP date() format string syntax 
+
 // datepicker localization
 $lang["_DP_closeText"] = 'Lukk'; // Done
 $lang["_DP_prevText"] = '&laquo;Forrige'; //Prev
@@ -195,7 +198,7 @@ $lang["_DP_dayNames"] = "['Søndag','Mandag','Tirsdag','Onsdag','Torsdag','Freda
 $lang["_DP_dayNamesShort"] = "['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']";
 $lang["_DP_dayNamesMin"] = "['Sø','Ma','Ti','On','To','Fr','Lø']";
 $lang["_DP_weekHeader"] = 'Uke';
-$lang["_DP_dateFormat"] = 'yy-mm-dd';
+$lang["_DP_dateFormat"] = 'yy-mm-dd'; // uses datepicker specific format http://docs.jquery.com/UI/Datepicker/formatDate
 $lang["_DP_firstDay"] = '1';
 $lang["_DP_isRTL"] = 'false';
 $lang["_DP_showMonthAfterYear"] = 'false';

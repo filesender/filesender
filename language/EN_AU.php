@@ -177,7 +177,10 @@ An email will be sent to the recipient with a link to use the Voucher.";
 			$lang["_CONFIRM_DELETE_VOUCHER"] = "Are you sure you want to delete this voucher?";
 			
 			$lang["_AUPTERMS"] = "AuP Terms and conditions";
-			
+
+			// standard date display format
+			$lang['datedisplayformat'] = "d/m/Y"; // Format for displaying date/time, use PHP date() format string syntax 
+
 			// datepicker localization
 			$lang["_DP_closeText"] = 'Done'; // Done
 			$lang["_DP_prevText"] = 'Prev'; //Prev
