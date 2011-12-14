@@ -152,7 +152,7 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 		$dataitem = $functions->validateFileData($dataitem);
 
 		// if AUP then add session variable to store that a user selected the session variable
-		if(isset($_POST["aup"]))
+		if(isset($dataitem["aup"]))
 		{
 			$_SESSION["aup"] = "true";
 		}
