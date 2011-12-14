@@ -56,20 +56,9 @@ $sendmail->sendEmail($myfileData ,$config['fileuploadedemailbody']);
 echo "<div id='message'>".lang("_MESSAGE_RESENT")."</div>";
 }
 
-if($_REQUEST["a"] == "add")
+if($_REQUEST["a"] == "added")
 {
-$myfileData["filemessage"] = $_POST["filemessage"];
-$myfileData["filesubject"] = $_POST["filesubject"];
-$myfileData["fileexpirydate"] = date($config["db_dateformat"],strtotime($_POST["fileexpirydate"]));
 
-// loop emails in fileto
-$emailto = str_replace(",",";",$_POST["fileto"]);
-$emailArray = preg_split("/;/", $emailto);
-foreach ($emailArray as $Email) { 
-$myfileData["fileto"] = $Email;
-$myfileData["filevoucheruid"] = getGUID();
-$functions->insertFileHTML5($myfileData);
-}
 // display the add box
 echo "<div id='message'>".lang("_EMAIL_SENT").".</div>";
 }
@@ -144,8 +133,36 @@ $json_o=json_decode($filedata,true);
 				// calidate form before sending
 				if(validateForm())
 				{
-				// submit form to add new recipient/s
-				$("#form1").submit();
+				// post form1 as json
+				var query = $("#form1").serializeArray(), json = {};
+				for (i in query) { json[query[i].name] = query[i].value; } 
+				
+				$.ajax({
+  				type: "POST",
+				url: "fs_upload.php?type=addRecipient",
+				data: {myJson:  JSON.stringify(json)}
+				}).success(function( data ) {
+				if(data == "") {
+				alert("No response from server");
+				return;	
+				}
+				var data =  JSON.parse(data);
+				if(data.errors)
+				{
+				$.each(data.errors, function(i,result){
+				if(result == "err_tomissing") { $("#fileto_msg").show();} // missing email data
+				if(result == "err_expmissing") { $("#expiry_msg").show();} // missing expiry date
+				if(result == "err_exoutofrange") { $("#expiry_msg").show();} // expiry date out of range
+				if(result == "err_invalidemail") { $("#fileto_msg").show();} // 1 or more emails invalid
+				if(result == "err_nodiskspace") { errorDialog(errmsg_disk_space);}
+				})
+				}
+				if(data.status && data.status == "complete")
+				{
+				// done
+				window.location.href="index.php?s=files&a=added";
+				}
+				});
 				}
 				}
 			}

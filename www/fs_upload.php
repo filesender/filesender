@@ -229,6 +229,27 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 			} 
 			echo "complete";
 			break;
+			
+			// insert add new recipient to existing file 
+			case 'addRecipient':
+			$dataitem = json_decode(stripslashes($_POST['myJson']), true);
+			$myfileData = $functions->getVoucherData($dataitem["filevoucheruid"]);
+			$myfileData["filemessage"] = $dataitem["filemessage"];
+			$myfileData["filesubject"] = $dataitem["filesubject"];
+			$myfileData["fileexpirydate"] = date($config["db_dateformat"],strtotime($dataitem["fileexpirydate"]));
+
+			// loop emails in fileto
+			$emailto = str_replace(",",";",$dataitem["fileto"]);
+			$emailArray = preg_split("/;/", $emailto);
+			foreach ($emailArray as $Email) { 
+			$myfileData["fileto"] = $Email;
+			$myfileData["filevoucheruid"] = getGUID();
+			$functions->insertFileHTML5($myfileData);
+			}
+			$resultArray["status"] = "complete";
+			echo json_encode($resultArray);	
+			
+			break; 
 	}
 	} else {
 	// log and return errorAuth if not authenticated
