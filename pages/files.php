@@ -66,9 +66,8 @@ echo "<div id='message'>".lang("_EMAIL_SENT").".</div>";
 echo "<div id='message'>".lang("_INVALID_FILEVOUCHERID")."</div>";	
 }
 }
+
 $filedata = $functions->getUserFiles();
-//$filedata = $filedata[0];
-//echo $filedata;
 $json_o=json_decode($filedata,true);
 
 ?>
@@ -154,7 +153,6 @@ $json_o=json_decode($filedata,true);
 				if(result == "err_expmissing") { $("#expiry_msg").show();} // missing expiry date
 				if(result == "err_exoutofrange") { $("#expiry_msg").show();} // expiry date out of range
 				if(result == "err_invalidemail") { $("#fileto_msg").show();} // 1 or more emails invalid
-				if(result == "err_nodiskspace") { errorDialog(errmsg_disk_space);}
 				})
 				}
 				if(data.status && data.status == "complete")
