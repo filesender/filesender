@@ -624,28 +624,28 @@ public function insertVoucher($to,$expiry){
 		//array_push($errorArray, "err_nodiskspace");
 		//array_push($errorArray, "err_tomissing");
 		// filesize missing
-		if(!isset($data["filesize"])){ array_push($resultArray, "err_missingfilesize"); }
+		if(!isset($data["filesize"])){ array_push($errorArray, "err_missingfilesize"); }
 		// check space is available on disk before uploading
-		if(isset($data["filesize"]) && disk_free_space($config['site_filestore']) - $data["filesize"] < 1) { array_push($resultArray, "err_nodiskspace");} 
+		if(isset($data["filesize"]) && disk_free_space($config['site_filestore']) - $data["filesize"] < 1) { array_push($errorArray, "err_nodiskspace");} 
 		// expiry missing
-		if(!isset($data["fileexpirydate"])){ array_push($resultArray,  "err_expmissing"); }
+		if(!isset($data["fileexpirydate"])){ array_push($errorArray,  "err_expmissing"); }
 		// fileto missing
 		if(!isset($data["fileto"])){ array_push($resultArray, "err_tomissing");}
 		// filename missing
-		if(!isset($data["fileoriginalname"])){ array_push($resultArray, "err_invalidfilename");}
+		if(!isset($data["fileoriginalname"])){ array_push($errorArray, "err_invalidfilename");}
 		// expiry out of range
 		if(strtotime($data["fileexpirydate"]) > strtotime("+".$config['default_daysvalid']." day") ||  strtotime($data["fileexpirydate"]) < strtotime("now"))
 		{ array_push($resultArray,"err_exoutofrange");}
 		// emmail missing
-		if(!isset($data["fileto"])){ array_push($resultArray,  "err_filetomissing"); 
+		if(!isset($data["fileto"])){ array_push($errorArray,  "err_filetomissing"); 
 		} else {
 		$emailto = str_replace(",",";",$data["fileto"]);
 		$emailArray = preg_split("/;/", $emailto);
 		// validate number of emails
-		if(count($emailArray) > $config['max_email_recipients'] ) {array_push($resultArray,  "err_toomanyemail");}
+		if(count($emailArray) > $config['max_email_recipients'] ) {array_push($errorArray,  "err_toomanyemail");}
 		// validate individual emails
 		foreach ($emailArray as $Email) {
-			if(!filter_var($Email,FILTER_VALIDATE_EMAIL)) {array_push($resultArray, "err_invalidemail");}
+			if(!filter_var($Email,FILTER_VALIDATE_EMAIL)) {array_push($errorArray, "err_invalidemail");}
 		}
 		}
 		// if errors - return them via json to client
