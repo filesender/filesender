@@ -194,13 +194,15 @@ $json_o=json_decode($filedata,true);
 			$("#dialog-delete" ).dialog( "open" );
 		}
 		
-	function openAddRecipient(vid,filename,filesize,from)
+	function openAddRecipient(vid,filename,filesize,from, subject, message)
 	{
 		// populate form and open add-recipient modal form
 		$("#form1").attr("action", "index.php?s=files&a=add&id=" + vid );
 		$("#filevoucheruid").val(vid);
 		$("#filefrom").html(from);
 		$("#filename").html(filename);
+		$("#filesubject").val(decodeURIComponent(subject));
+		$("#filemessage").html(decodeURIComponent(message));
 		$("#filesize").html(readablizebytes(filesize));
 		$("#dialog-addrecipient" ).dialog( "open" );
 		
@@ -228,7 +230,7 @@ $json_o=json_decode($filedata,true);
 if(sizeof($json_o) > 0)
 {
 foreach($json_o as $item) {
-   echo '<tr><td valign="top"> <a href="index.php?s=files&a=resend&id=' .$item['filevoucheruid'] . '"><img src="images/email_go.png" title="'.lang("_RE_SEND_EMAIL").'"></a></td><td valign="top"><img src="images/email_add.png" title="'.lang("_NEW_RECIPIENT").'" onclick="openAddRecipient('."'".$item['filevoucheruid']."','".$item['fileoriginalname'] ."','".$item['filesize'] ."','".$item['filefrom']."'" .');"  style="cursor:pointer;"></td>';
+   echo '<tr><td valign="top"> <a href="index.php?s=files&a=resend&id=' .$item['filevoucheruid'] . '"><img src="images/email_go.png" title="'.lang("_RE_SEND_EMAIL").'"></a></td><td valign="top"><img src="images/email_add.png" title="'.lang("_NEW_RECIPIENT").'" onclick="openAddRecipient('."'".$item['filevoucheruid']."','".$item['fileoriginalname'] ."','".$item['filesize'] ."','".$item['filefrom']."','".rawurlencode($item['filesubject'])."','".rawurlencode($item['filemessage'])."'" .');"  style="cursor:pointer;"></td>';
    if($item['fileto'] == $attributes["email"])
    {
    echo "<td class='HardBreak' valign='top'>".lang("_ME")."</td>";

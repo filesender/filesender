@@ -185,12 +185,12 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 			echo "false";
 		}
 		break;
-		 
-	case 'chunk': 
+	
 	// ---------------------	
 	// CHUNK file upload
 	// ---------------------	
-	// open the temp file
+	case 'chunk': 
+		// open the temp file
 		$data = $functions->getVoucherData($_REQUEST["vid"]);
 		$tempFilename = generateTempFilename($data);
 		
@@ -206,77 +206,78 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 		
 	case 'insertVoucherAjax': 
 
-			logEntry("DEBUG fs_uploadit: Filedata 'insertVoucherAjax' myJson = " . $_POST['myJson'] );
-			$dataitem = json_decode(stripslashes($_POST['myJson']), true);
-			// validate expiry missing
-			if(!isset($dataitem["fileexpirydate"])){ echo "err_expmissing"; exit; }
-			// validate fileto missing
-			if(!isset($dataitem["fileto"])){ echo "err_tomissing"; exit;}
-			// validate expiry range
-			if(strtotime($dataitem["fileexpirydate"]) > strtotime("+".$config['default_daysvalid']." day") ||  strtotime($dataitem["fileexpirydate"]) < strtotime("now")) { echo "err_exoutofrange"; exit; }
-			// seperate emails
-			$emailto = str_replace(",",";",$dataitem["fileto"]);
-			$emailArray = preg_split("/;/", $emailto);
-			// validate number of emails
-			if(count($emailArray) > $config['max_email_recipients'] ) {echo "err_toomanyemail"; exit;}
-			// validate individual emails
-			foreach ($emailArray as $Email) {
-			if(!filter_var($Email,FILTER_VALIDATE_EMAIL)) {echo "err_invalidemail"; exit;}
-			}
-			// insert each voucher
-			foreach ($emailArray as $Email) { 
-			$functions->insertVoucher($Email,$dataitem["fileexpirydate"]);
-			} 
-			echo "complete";
-			break;
+		logEntry("DEBUG fs_uploadit: Filedata 'insertVoucherAjax' myJson = " . $_POST['myJson'] );
+		$dataitem = json_decode($_POST['myJson'], true);
+		// validate expiry missing
+		if(!isset($dataitem["fileexpirydate"])){ echo "err_expmissing"; exit; }
+		// validate fileto missing
+		if(!isset($dataitem["fileto"])){ echo "err_tomissing"; exit;}
+		// validate expiry range
+		if(strtotime($dataitem["fileexpirydate"]) > strtotime("+".$config['default_daysvalid']." day") ||  strtotime($dataitem["fileexpirydate"]) < strtotime("now")) { echo "err_exoutofrange"; exit; }
+		// seperate emails
+		$emailto = str_replace(",",";",$dataitem["fileto"]);
+		$emailArray = preg_split("/;/", $emailto);
+		// validate number of emails
+		if(count($emailArray) > $config['max_email_recipients'] ) {echo "err_toomanyemail"; exit;}
+		// validate individual emails
+		foreach ($emailArray as $Email) {
+		if(!filter_var($Email,FILTER_VALIDATE_EMAIL)) {echo "err_invalidemail"; exit;}
+		}
+		// insert each voucher
+		foreach ($emailArray as $Email) { 
+		$functions->insertVoucher($Email,$dataitem["fileexpirydate"]);
+		} 
+		echo "complete";
+		break;
 			
-			// insert add new recipient to existing file 
-			case 'addRecipient':
-			$errorArray = array();
-			// test
-			//array_push($errorArray, "err_invalidemail");
-			$dataitem = json_decode(stripslashes($_POST['myJson']), true);
-			$myfileData = $functions->getVoucherData($dataitem["filevoucheruid"]);
-			$myfileData["filemessage"] = $dataitem["filemessage"];
-			$myfileData["filesubject"] = $dataitem["filesubject"];
-			$myfileData["fileexpirydate"] = date($config["db_dateformat"],strtotime($dataitem["fileexpirydate"]));
-			// validate fileto and fileexpiry
-			// expiry missing
-			if(!isset($dataitem["fileexpirydate"])){ array_push($errorArray,  "err_expmissing"); }
-			// expiry out of range
-			if(strtotime($dataitem["fileexpirydate"]) > strtotime("+".$config['default_daysvalid']." day") ||  strtotime($dataitem["fileexpirydate"]) < strtotime("now"))
-			{ array_push($errorArray,"err_exoutofrange");}
-			// emmail missing
-			if(!isset($dataitem["fileto"])){ array_push($errorArray,  "err_filetomissing"); 
-			} else {
-			$emailto = str_replace(",",";",$dataitem["fileto"]);
-			$emailArray = preg_split("/;/", $emailto);
-			// validate number of emails
-			if(count($emailArray) > $config['max_email_recipients'] ) {array_push($errorArray,  "err_toomanyemail");}
-			// validate individual emails
-			foreach ($emailArray as $Email) {
-				if(!filter_var($Email,FILTER_VALIDATE_EMAIL)) {array_push($errorArray, "err_invalidemail");}
-			}
-			}
-			if(count($errorArray) > 0 )
+	// insert add new recipient to existing file 
+	case 'addRecipient':
+		$errorArray = array();
+		// test
+		//array_push($errorArray, "err_invalidemail");
+		$dataitem = json_decode($_POST['myJson'], true);
+		$myfileData = $functions->getVoucherData($dataitem["filevoucheruid"]);
+		$myfileData["filemessage"] = $dataitem["filemessage"];
+		$myfileData["filesubject"] = $dataitem["filesubject"];
+		$myfileData["fileexpirydate"] = date($config["db_dateformat"],strtotime($dataitem["fileexpirydate"]));
+		// validate fileto and fileexpiry
+		// expiry missing
+		if(!isset($dataitem["fileexpirydate"])){ array_push($errorArray,  "err_expmissing"); }
+		// expiry out of range
+		if(strtotime($dataitem["fileexpirydate"]) > strtotime("+".$config['default_daysvalid']." day") ||  strtotime($dataitem["fileexpirydate"]) < strtotime("now"))
+		{ array_push($errorArray,"err_exoutofrange");}
+		// emmail missing
+		if(!isset($dataitem["fileto"])){ array_push($errorArray,  "err_filetomissing"); 
+		} else {
+		$emailto = str_replace(",",";",$dataitem["fileto"]);
+		$emailArray = preg_split("/;/", $emailto);
+		// validate number of emails
+		if(count($emailArray) > $config['max_email_recipients'] ) {array_push($errorArray,  "err_toomanyemail");}
+		// validate individual emails
+		foreach ($emailArray as $Email) {
+			if(!filter_var($Email,FILTER_VALIDATE_EMAIL)) {array_push($errorArray, "err_invalidemail");}
+		}
+		}
+		if(count($errorArray) > 0 )
 			{
 			$resultArray["errors"] =  $errorArray;
 			echo json_encode($resultArray);
 			break;
 			}
 			
-			// loop emails in fileto
-			$emailto = str_replace(",",";",$dataitem["fileto"]);
-			$emailArray = preg_split("/;/", $emailto);
-			foreach ($emailArray as $Email) { 
-			$myfileData["fileto"] = $Email;
-			$myfileData["filevoucheruid"] = getGUID();
-			$functions->insertFileHTML5($myfileData);
-			}
-			$resultArray["status"] = "complete";
-			echo json_encode($resultArray);	
-			
-			break; 
+		// loop emails in fileto
+		$emailto = str_replace(",",";",$dataitem["fileto"]);
+		$emailArray = preg_split("/;/", $emailto);
+		foreach ($emailArray as $Email) { 
+		$myfileData["fileto"] = $Email;
+		$myfileData["filevoucheruid"] = getGUID();
+		$functions->insertFileHTML5($myfileData);
+		}
+		$resultArray["status"] = "complete";
+		echo json_encode($resultArray);	
+		
+		break; 
+		
 	}
 	} else {
 	// log and return errorAuth if not authenticated
