@@ -247,7 +247,7 @@ foreach($json_o as $item) {
    {
    echo "<img src='images/page_white_text_width.png' border='0' title='".utf8tohtml($item['filemessage'],TRUE). "'>";
    }
-   echo "</td><td>" .date($config['datedisplayformat'],strtotime($item['filecreateddate'])) . "</td><td>" .date($config['datedisplayformat'],strtotime($item['fileexpirydate'])) . "</td><td  valign='top'  width='22'><div style='cursor:pointer;'><img onclick='confirmdelete(".'"' .$item['filevoucheruid'] . '")'. "' src='images/shape_square_delete.png' title='".lang("_DELETE_FILE")."' ></div></td></tr>"; //etc
+   echo "</td><td>" .date($lang['datedisplayformat'],strtotime($item['filecreateddate'])) . "</td><td>" .date($lang['datedisplayformat'],strtotime($item['fileexpirydate'])) . "</td><td  valign='top'  width='22'><div style='cursor:pointer;'><img onclick='confirmdelete(".'"' .$item['filevoucheruid'] . '")'. "' src='images/shape_square_delete.png' title='".lang("_DELETE_FILE")."' ></div></td></tr>"; //etc
    }
 } else {
 	echo "<tr><td colspan='7'>".lang("_NO_FILES")."</td></tr>";
