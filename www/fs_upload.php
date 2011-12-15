@@ -140,7 +140,7 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 		}
 		
 		if ($authvoucher->aVoucher()) {
-		$tempData = $functions->getVoucherData($_POST["vid"]);
+		$tempData = $functions->getVoucherData($_REQUEST["vid"]);
 		$dataitem["fileauthuseruid"] = $tempData["fileauthuseruid"];	
 		$dataitem["fileauthuseremail"] = $tempData["fileauthuseremail"];	
 		} else if( $authsaml->isAuth()) {
