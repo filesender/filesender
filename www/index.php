@@ -92,19 +92,23 @@ $(function() {
 	
 	$("#dialog-help").dialog({ autoOpen: false, height: 400,width: 660, modal: true,
 		buttons: {
-			'<?php echo lang("_CLOSE") ?>': function() {
+			'helpBTN': function() {
 				$( this ).dialog( "close" );
 				}
 			}
 		});
+		$('.ui-dialog-buttonpane button:contains(helpBTN)').attr("id","btn_closehelp");            
+		$('#btn_closehelp').html('<?php echo lang("_CLOSE") ?>')  
 		
 		$("#dialog-about").dialog({ autoOpen: false,  height: 400,width: 400, modal: true,
 			buttons: {
-				'<?php echo lang("_CLOSE") ?>': function() {
+				'aboutBTN': function() {
 					$( this ).dialog( "close" );
 				}
 			}
 		});
+		$('.ui-dialog-buttonpane button:contains(aboutBTN)').attr("id","btn_closeabout");            
+		$('#btn_closeabout').html('<?php echo lang("_CLOSE") ?>')  
 });
 	
 function openhelp()
@@ -139,26 +143,26 @@ function openabout()
   	// create menu
   	// disable all buttons if this is a voucher, even if the user is logged on
  	if (!$authvoucher->aVoucher()  &&  $s != "completev"){
-	if($authsaml->isAuth() ) { echo '<a href="index.php?s=upload">'.lang("_NEW_UPLOAD").'</a>'; }
-	if($authsaml->isAuth() ) { echo '<a href="index.php?s=vouchers">'.lang("_VOUCHERS").'</a>'; }
-	if($authsaml->isAuth() ) {echo '<a href="index.php?s=files">'.lang("_MY_FILES").'</a>'; }
-	if($authsaml->authIsAdmin() ) { echo '<a href="index.php?s=admin">'.lang("_ADMIN").'</a>'; }
+	if($authsaml->isAuth() ) { echo '<a id="topmenu_newupload" href="index.php?s=upload">'.lang("_NEW_UPLOAD").'</a>'; }
+	if($authsaml->isAuth() ) { echo '<a id="topmenu_vouchers" href="index.php?s=vouchers">'.lang("_VOUCHERS").'</a>'; }
+	if($authsaml->isAuth() ) {echo '<a id="topmenu_myfiles" href="index.php?s=files">'.lang("_MY_FILES").'</a>'; }
+	if($authsaml->authIsAdmin() ) { echo '<a id="topmenu_admin" href="index.php?s=admin">'.lang("_ADMIN").'</a>'; }
   }
   ?>
    <div class="menu" id="menuright">
   <?php
 	if($config['helpURL'] == "") {
-		echo '<a href="#" onclick="openhelp()">'.lang("_HELP").'</a></li>';
+		echo '<a href="#" id="topmenu_help" onclick="openhelp()">'.lang("_HELP").'</a></li>';
 	} else {
-		echo '<a href="'.$config['helpURL'].'" target="_blank">'.lang("_HELP").'</a></li>';
+		echo '<a href="'.$config['helpURL'].'" target="_blank" id="topmenu_help">'.lang("_HELP").'</a></li>';
 	}
 	if($config['aboutURL'] == "") {
-		echo '<a href="#" onclick="openabout()">'.lang("_ABOUT").'</a></li>';
+		echo '<a href="#" id="topmenu_about" onclick="openabout()">'.lang("_ABOUT").'</a></li>';
 	} else {
-		echo '<a href="'.$config['aboutURL'].'" target="_blank">'.lang("_ABOUT").'</a></li>';	
+		echo '<a href="'.$config['aboutURL'].'" target="_blank" id="topmenu_about">'.lang("_ABOUT").'</a></li>';	
 	}
-	if(!$authsaml->isAuth() && $s != "logon" ) { echo '<a href="'.$authsaml->logonURL().'">'.lang("_LOGON").'</a>';}
-   	if($authsaml->isAuth() && !$authvoucher->aVoucher() &&  $s != "completev" ) { echo '<a href="'.$authsaml->logoffURL().'">'.lang("_LOG_OFF").'</a>'; }
+	if(!$authsaml->isAuth() && $s != "logon" ) { echo '<a href="'.$authsaml->logonURL().'" id="topmenu_logon">'.lang("_LOGON").'</a>';}
+   	if($authsaml->isAuth() && !$authvoucher->aVoucher() &&  $s != "completev" ) { echo '<a href="'.$authsaml->logoffURL().'" id="topmenu_logoff">'.lang("_LOG_OFF").'</a>'; }
    // end menu
    ?>
    </div>
