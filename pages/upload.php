@@ -249,7 +249,7 @@
 	if(!validate_expiry() ){validate = false;};		// check date
 		// vaildate with server
 		var query = $("#form1").serializeArray(), json = {};
-		for (i in query) { json[query[i].name] = encodeURI(query[i].value); } 
+		for (i in query) { json[query[i].name] = query[i].value; } 
 		// add file information fields
 		json["fileoriginalname"] = fname;
 		json["filesize"] = parseInt(fsize);
@@ -415,7 +415,7 @@ if(size > maxFLASHuploadsize)
 
 function uploadcomplete(name,size)
 {
-	$("#fileName").val(encodeURIComponent(name));
+	$("#fileName").val(name);
 	// ajax form data to fs_upload.php
 	$.ajax({
 	  type: "POST",
