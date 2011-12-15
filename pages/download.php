@@ -41,7 +41,6 @@
 if (isset($_REQUEST['vid'])) {
 $vid = $_REQUEST['vid'];
 $filedata = $functions->getVoucherData($vid);
-$filedata = $filedata[0];
 }
 ?>
 <script type="text/javascript">
