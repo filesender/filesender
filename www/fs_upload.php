@@ -161,6 +161,10 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 		$dataitem["filestatus"] = "Pending";
 		if($functions->insertFileHTML5($dataitem))
 		{
+			// voucher has been used so close it
+			if ($authvoucher->aVoucher()) {
+				$functions->closeVoucher($tempData["fileid"]);
+			}
 			$resultArray["filesize"] = checkFileSize($uploadfolder.$tempFilename);
 			$resultArray["vid"] = $dataitem["filevoucheruid"];
 			$resultArray["status"] = "complete";
@@ -294,7 +298,7 @@ function generateTempFilename($data)
 	
 	$tempFilename= "";
 	
-if ($authvoucher->aVoucher()) {
+	if ($authvoucher->aVoucher()) {
 	
 		$tempFilename .= $_REQUEST['vid'];
 		$tempData = $functions->getVoucherData($_REQUEST['vid']);
