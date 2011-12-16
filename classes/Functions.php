@@ -758,7 +758,7 @@ public function insertVoucher($to,$expiry){
 		if($dataitem['filestatus'] == "Voucher") {
 			$this->saveLog->saveLog($dataitem,"Voucher Sent","");
 				return $this->sendmail->sendEmail($dataitem,$config['voucherissuedemailbody']);
-			} else {
+			} elseif ($dataitem['filestatus'] == "Available") {
 				$this->saveLog->saveLog($dataitem,"Uploaded","");
 				return $this->sendmail->sendEmail($dataitem,$config['fileuploadedemailbody']);
 			}
