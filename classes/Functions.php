@@ -666,7 +666,7 @@ public function insertVoucher($to,$expiry){
 		$data["filemessage"] = (isset($data["filemessage"])) ? $data["filemessage"] : "";
         $data["filefrom"]=$data["filefrom"];
         $data["filesize"]=$data["filesize"];
-        $data["fileoriginalname"]= (isset($data['filestatus']) && $data['filestatus'] == "Voucher") ? NULL : sanitizeFilename($data['fileoriginalname']);
+        $data["fileoriginalname"]=  sanitizeFilename($data['fileoriginalname']);
         $data["filestatus"]="pending";//isset($data['filestatus']) ? $data['filestatus'] : "pending";
         $data["fileip4address"]= $dbCheck->checkIp($_SERVER['REMOTE_ADDR']);
         $data["fileip6address"]= $dbCheck->checkIp6($_SERVER['REMOTE_ADDR']);
