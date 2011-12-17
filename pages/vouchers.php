@@ -146,7 +146,7 @@ if(isset($_REQUEST["a"]))
 	$myfileData = $functions->getVoucherData($_REQUEST['id']);
 		if($_REQUEST["a"] == "del" )
 		{
-			if($functions->deleteVoucher($myfileData[0]["fileid"]))
+			if($functions->deleteVoucher($myfileData["fileid"]))
 			{
 			echo "<div id='message'>".lang("_VOUCHER_DELETED")."</div>";
 			}
