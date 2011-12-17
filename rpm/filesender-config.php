@@ -66,6 +66,7 @@ public function loadConfig() {
 	
 	// debug settings
 	$config["debug"] = false; // Debug logging on/off (true/false)
+	$config["displayerrors"] = false; // Display debug errors on screen (true/false)
 	$config['dnslookup'] = true; // log includes DNS lookup (true/false)
 	$config["client_specific_logging"] = false; // client logging (true/false)
 	$config["client_specific_logging_uids"] = ""; // "" is log all clients, or log for specific userid's or voucheruid's seperated by comma 'xxxx,zzzzz'
@@ -88,6 +89,7 @@ public function loadConfig() {
 
 	$config['max_flash_upload_size'] = '2147483648'; // 2GB
 	$config['max_html5_upload_size'] = '107374182400'; // 100  GB
+	$config["upload_chunk_size"]  = '2000000';//
 	
 	// update max_flash_upload_size if php.ini post_max_size and upload_max_filesize is set lower
 	$config['max_flash_upload_size'] = min(let_to_num(ini_get('post_max_size'))-2048, let_to_num(ini_get('upload_max_filesize')),$config['max_flash_upload_size']);
@@ -96,6 +98,7 @@ public function loadConfig() {
 	
 	// Advanced server settings, do not change unless you have a very good reason.
 	$config['postgresdateformat'] = "Y-m-d H:i:sP"; // Date/Time format for PostgreSQL, use PHP date format specifier syntax
+	$config['db_dateformat'] = "Y-m-d H:i:sP"; // Date/Time format for PostgreSQL, use PHP date format specifier syntax
 	$config["crlf"] = "\n"; // for email CRLF can be changed to \r\n if required
 	$config['voucherRegEx'] = "'[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}'";
 	$config['voucherUIDLength'] = 36;
@@ -123,17 +126,21 @@ public function loadConfig() {
 	$config['site_simplesamllocation'] = '/usr/share/simplesamlphp/';
 	$config['log_location'] = '/usr/share/filesender/log/';	
 
-	//Old  database settings - these can go after testing
-	//$config['pg_host'] = 'localhost';
-	//$config['pg_database'] = 'filesender';
-	//$config['pg_port'] = '5432';
-	//$config['pg_username'] = 'filesender';
-	//$config['pg_password'] = 'yoursecretpassword';
+	$config["db_type"] = "pgsql";// pgsql or mysql
+	$config['db_host'] = 'localhost';
+	$config['db_database'] = 'filesender';
+	$config['db_port'] = '5432';
+	// database username and password
+	$config['db_username'] = 'filesender';
+	$config['db_password'] = 'yoursecretpassword';
 	
-	//NEW DB settings, URL like oneliner, mysql or postgres
-	//$config['dsn'] = 'mysql://user:password@localhost:3306/filesender';
-	$config['dsn'] = 'pgsql://user:password@tcp(localhost:5432)/dbname';
-
+	//Optional DSN format overides db_ settings
+	//$config['dsn'] = "pgsql:host=localhost;dbname=filesender";
+	//$config['dsn'] = 'pgsql:host=localhost;dbname=filesender';
+	//$config['dsn'] = 'sqlite:/usr/share/filesender/db/filesender.sqlite';
+	//$config['dsn_driver_options'] = array();
+	// dsn requires username and password in $config['db_username'] and $config['db_password']
+	
 	// cron settings
 	$config['cron_exclude prefix'] = '_'; // exclude deletion of files with the prefix character listed (can use multiple characters eg '._' will ignore .xxxx and _xxxx
 	
