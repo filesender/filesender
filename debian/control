@@ -12,7 +12,6 @@ Package: filesender
 Architecture: all
 Depends: php5, libapache2-mod-php5 | php5-cgi, apache2 | httpd,
  postgresql, simplesamlphp, dbconfig-common, mail-transport-agent,
- php-mdb2 (>= 2.5.0b2), php-mdb2-driver-pgsql,
  ${misc:Depends}
 Recommends: postgresql-client
 Description: sharing large files with a browser

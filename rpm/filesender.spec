@@ -18,8 +18,6 @@ Requires: php >= 5.2.0
 Requires: php-xml
 Requires: simplesamlphp
 Requires: postgresql-server
-Requires: php-pear-MDB2 >= 2.5.0
-Requires: php-pear-MDB2-Driver-pgsql
 
 %description
 FileSender is a web based application that allows authenticated users to
