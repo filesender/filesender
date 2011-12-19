@@ -654,7 +654,7 @@ public function insertVoucher($to,$expiry){
 		{
 		$resultArray["errors"] =  $errorArray;
 		echo json_encode($resultArray);
-		break;
+		exit; // Stop further script execution
 		}
 			
 		// no errors >> continue
