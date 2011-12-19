@@ -202,7 +202,7 @@ $json_o=json_decode($filedata,true);
 		$("#filefrom").html(from);
 		$("#filename").html(filename);
 		$("#filesubject").val(decodeURIComponent(subject));
-		$("#filemessage").html(decodeURIComponent(message));
+		$("#filemessage").val(decodeURIComponent(message));
 		$("#filesize").html(readablizebytes(filesize));
 		$("#dialog-addrecipient" ).dialog( "open" );
 		
