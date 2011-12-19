@@ -75,15 +75,16 @@ $json_o=json_decode($filedata,true);
 	
 	var selectedFile = ""; // file uid selected when deleteting
 	// set default maximum date for date datepicker
-	var maximumDate= '<?php echo $config['default_daysvalid']?>';
+	var maximumDate = <?php echo (time()+($config['default_daysvalid']*86400))*1000 ?>;
+	var minimumDate = <?php echo (time()+86400)*1000 ?>;
 	var maxEmailRecipients = <?php echo $config['max_email_recipients'] ?>;
 	var datepickerDateFormat = '<?php echo lang('_DP_dateFormat'); ?>';
 	
 	$(function() {
 		// initialise datepicker
-		$("#datepicker" ).datepicker({ minDate: 1, maxDate: "+"+maximumDate+"D",altField: "#fileexpirydate", altFormat: "d-m-yy" });
+		$("#datepicker" ).datepicker({ minDate: new Date(minimumDate), maxDate: new Date(maximumDate),altField: "#fileexpirydate", altFormat: "d-m-yy" });
 		$("#datepicker" ).datepicker( "option", "dateFormat", "<?php echo lang('_DP_dateFormat'); ?>" );
-		$("#datepicker").datepicker('setDate', new Date()+maximumDate);
+		$("#datepicker").datepicker("setDate", new Date(maximumDate));
 		
 		// set datepicker language
 		$.datepicker.setDefaults({
