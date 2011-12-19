@@ -47,7 +47,7 @@ class AuthSaml {
     } 
 
     // checks if a user is SAML authenticated and is administrator: returns true/false
-    // used by flex to display admin features
+    // admins can be added in the configuration file using the configured $config['saml_uid_attribute']
     public function authIsAdmin() {
 
         global $config;
@@ -84,11 +84,8 @@ class AuthSaml {
         require_once($config['site_simplesamllocation'].'lib/_autoload.php');
 
         $as = new SimpleSAML_Auth_Simple($config['site_authenticationSource']);
-
         $as->requireAuth();
         $attributes = $as->getAttributes();
-
-        // check for multidimensional array	
 
         // need to capture email from SAML attribute
         // may be single attribute or array 
@@ -149,44 +146,33 @@ class AuthSaml {
         return $attributes;
     }
 
-    // requests logon URL from SAML and returns string	for flex
+    // requests logon URL from SAML and returns string
     public function logonURL() {
 
         global $config;
-
         //require_once($config['site_simplesamllocation'].'lib/_autoload.php');
         //$as = new SimpleSAML_Auth_Simple($config['site_authenticationSource']);
         $lognurl = $config['site_simplesamlurl']."module.php/core/as_login.php?AuthId=".$config['site_authenticationSource']."&ReturnTo=".$config['site_url']."index.php?s=upload";
-
         return $lognurl; //$attributes;
     }
 
-    // requests logon OFF URL from SAML and returns string	for flex	
+    // requests logon OFF URL from SAML and returns string	
     public function logoffURL() {
-
-       	global $config;
-
-        //require_once($config['site_simplesamllocation'].'lib/_autoload.php');
-        //$as = new SimpleSAML_Auth_Simple($config['site_authenticationSource']);
-
-        $logoffurl = $config['site_simplesamlurl']."module.php/core/as_logout.php?AuthId=".$config['site_authenticationSource']."&ReturnTo=".$config['site_logouturl']."" ;
-
+		global $config;
+		require_once($config['site_simplesamllocation'].'lib/_autoload.php');
+    	//$as = new SimpleSAML_Auth_Simple($config['site_authenticationSource']);
+    	$logoffurl = $config['site_simplesamlurl']."module.php/core/as_logout.php?AuthId=".$config['site_authenticationSource']."&ReturnTo=".$config['site_logouturl']."" ;
         return $logoffurl; //$attributes;
     }
 
     // checks SAML for autheticated user: returns true/false	
+	// return bool if authenticated
     public function isAuth() {
-
-        // return bool if authenticated
         global $config;
-
         require_once($config['site_simplesamllocation'].'lib/_autoload.php');
-
         $as = new SimpleSAML_Auth_Simple($config['site_authenticationSource']);
         return $as->isAuthenticated();
-
     }
-
 }
 
 ?>
