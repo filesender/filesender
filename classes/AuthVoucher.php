@@ -34,7 +34,7 @@
 // voucher related functions
 //
 // aVoucher() - check if a voucher exists and returns true/false
-// validVoucher() - check if a voucher exists and is available and returns found/notfound/invalid/none (for flex application)
+// validVoucher() - check if a voucher exists and is available and returns found/notfound/invalid/none 
 // getVoucher() - returns voucher as json array
 
 

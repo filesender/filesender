@@ -32,7 +32,8 @@
 
 // functions for database connection
 // uses config.php settings for database access
-// postgress only
+// uses config db_ settings or overide using single line DNS in config
+// Uses PDO to allow mutliple database types
 
 // Exception class for database errors
 class DbException extends Exception {}
@@ -132,8 +133,8 @@ class DB {
 		}
 		catch(PDOException $e)
                 {
-     					displayError($e->getMessage(). " on query: ".$query);
-						exit;
+     				displayError($e->getMessage(). " on query: ".$query);
+					exit;
                 }
 
 		if($result)
@@ -141,7 +142,6 @@ class DB {
         else
 			return "";
     }
-
 
     public function buildQuery(/* $query, $args */) {
 		global $config;
@@ -157,7 +157,6 @@ class DB {
         $query = vsprintf($format, $args);
         return $query;
     }
-
 }
 
 ?>
