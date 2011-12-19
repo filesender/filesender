@@ -36,7 +36,8 @@
  */
  ?>
 <script>
-var maximumDate= '<?php echo $config['default_daysvalid'] ?>';
+var maximumDate = <?php echo (time()+($config['default_daysvalid']*86400))*1000 ?>;
+var minimumDate = <?php echo (time()+86400)*1000 ?>;
 var maxEmailRecipients = <?php echo $config['max_email_recipients'] ?>;
 var datepickerDateFormat = '<?php echo lang('_DP_dateFormat'); ?>';
 var selectedVoucher = "";
@@ -47,9 +48,9 @@ $(function() {
 	
 	// stripe every second row in the tables
 	$("#vouchertable tr:odd").addClass('altcolor');
-	$("#datepicker" ).datepicker({ minDate: 1, maxDate: "+"+maximumDate+"D",altField: "#fileexpirydate", altFormat: "d-m-yy",currentText:maximumDate });
+	$("#datepicker" ).datepicker({ minDate: new Date(minimumDate), maxDate: new Date(maximumDate),altField: "#fileexpirydate", altFormat: "d-m-yy" });
 	$("#datepicker" ).datepicker( "option", "dateFormat", "<?php echo lang('_DP_dateFormat'); ?>" );
-	$("#datepicker").datepicker("setDate", new Date()+maximumDate);
+	$("#datepicker").datepicker("setDate", new Date(maximumDate));
 	
 	// set datepicker language
 	$.datepicker.setDefaults({
