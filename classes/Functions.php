@@ -364,16 +364,19 @@ class Functions {
 		global $page;
 		global $total_pages;
 		$pagination = "";
-		$maxitems_perpage = 50;
-		if(isset($_REQUEST["page"]))
-		{
-        $statement =  $this->db->fquery("SELECT logtype FROM logs WHERE logtype = '$type'");
- 		$statement->execute();
-		$count = $statement->rowCount();
-		$total = count($count );
+		$maxitems_perpage = 20;
+		$page = 1;
 		
+		$statement = $this->db->fquery("SELECT count(logtype)  FROM logs WHERE logtype = '$type'");
+		$statement->execute();
+		$total = $statement->fetch(PDO::FETCH_NUM);
+		$total = $total[0];
+
 		$total_pages[$type] = ceil($total/$maxitems_perpage);
-		$page = intval($_REQUEST["page"]); 
+		
+		if(isset($_REQUEST["page"]) && is_numeric($_REQUEST["page"]))
+		{
+       	$page = intval($_REQUEST["page"]); 
   		if (0 == $page){
   		$page = 1;
   		}  
@@ -386,8 +389,7 @@ class Functions {
         if($this->authsaml->authIsAdmin()) { 
 
         $result =  $this->db->fquery("SELECT logtype, logfrom , logto, logdate, logfilesize, logfilename, logmessage FROM logs WHERE logtype = '$type' ORDER BY logdate DESC ".$pagination);
-
-        $returnArray = array();
+		$returnArray = array();
 	        foreach($result as $row) 
             {
                 array_push($returnArray, $row);
@@ -404,16 +406,19 @@ class Functions {
 		global $page;
 		global $total_pages;
 		$pagination = "";
-		$maxitems_perpage = 50;
-		if(isset($_REQUEST["page"]))
-		{
-
-        $statement =  $this->db->fquery("SELECT fileid FROM files WHERE filestatus = '$type'");
+		$maxitems_perpage = 10;
+		$page = 1;
+		
+		$statement = $this->db->fquery("SELECT count(fileid) FROM files WHERE filestatus = '$type'");
 		$statement->execute();
-		$count = $statement->rowCount();
-		$total = count($count );
-
-  		$total_pages[$type] = ceil($total/$maxitems_perpage);
+		$total = $statement->fetch(PDO::FETCH_NUM);
+		$total = $total[0];
+		
+		$total_pages[$type] = ceil($total/$maxitems_perpage);
+		
+		if(isset($_REQUEST["page"]) && is_numeric($_REQUEST["page"]))
+		{
+       
   		$page = intval($_REQUEST["page"]); 
   		if (0 == $page){
   		$page = 1;
