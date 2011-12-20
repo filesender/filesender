@@ -115,7 +115,7 @@ class Log {
                 %s, 
                 %s,
                 %s,
-                %d,
+                %s,
                 %s,
                 %s,
                 %s
