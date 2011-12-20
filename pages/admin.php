@@ -116,7 +116,7 @@ $drivespace = $functions->driveSpace();
               <tr>
                 <td><?php echo lang("_PAGE") ?>:</td>
                 <?php
-//  echo "::".$total_pages["Uploaded"];
+  //echo "::".$total_pages["Uploaded"];
   for ($i = 1; $i <= $total_pages["Uploaded"]; $i++) {
   $txt = $i;
   if ($page != $i) {$txt = "<a href=\"" . $_SERVER["PHP_SELF"] . "?s=admin&page=$i#tabs-2\">".$txt."</a>";} else { $txt = "<b>".$i."</b>";};
@@ -191,8 +191,8 @@ echo "<tr><td class='HardBreak'>" .$item['logto'] . "</td><td class='HardBreak'>
   $txt = $i;
   if ($page != $i) {$txt = "<a href=\"" . $_SERVER["PHP_SELF"] . "?s=admin&page=$i#tabs-4\">".$txt."</a>";} else { $txt = "<b>".$i."</b>";};
   ?>
-                <td align="center"><?php	echo $txt ?></td>
-                <?php
+  <td align="center"><?php	echo $txt ?></td>
+  <?php
   }
   ?>
               </tr>
