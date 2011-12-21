@@ -36,7 +36,7 @@
  * js/upload.js   manages all html5 related functions and uploading
  */
 
- if(session_id() == ""){
+if(session_id() == ""){
 	// start new session and mark it as valid because the system is a trusted source
 	session_start();
 	$_SESSION['validSession'] = true;
@@ -57,19 +57,21 @@ $log = Log::getInstance();
 date_default_timezone_set($config['Default_TimeZone']);
 
 $useremail = "";
-if($authsaml->isAuth() ) { 
-$userdata = $authsaml->sAuth();
-$useremail = $userdata["email"];
+$s = "";
+
+if($authsaml->isAuth() ) 
+{ 
+	$userdata = $authsaml->sAuth();
+	$useremail = $userdata["email"];
 } 
 
-$s = "";
 if(isset($_REQUEST["s"]))
 {
-$s = $_REQUEST["s"];
+	$s = $_REQUEST["s"];
 }
 if(!$authvoucher->aVoucher() && !$authsaml->isAuth() && $s != "complete" && $s != "completev" )
 {
-$s = "logon";
+	$s = "logon";
 }
 
 ?>
@@ -162,122 +164,128 @@ function openabout()
 		echo '<a href="'.$config['aboutURL'].'" target="_blank" id="topmenu_about">'.lang("_ABOUT").'</a></li>';	
 	}
 	if(!$authsaml->isAuth() && $s != "logon" ) { echo '<a href="'.$authsaml->logonURL().'" id="topmenu_logon">'.lang("_LOGON").'</a>';}
-   	if($authsaml->isAuth() && !$authvoucher->aVoucher() &&  $s != "completev" ) { echo '<a href="'.$authsaml->logoffURL().'" id="topmenu_logoff">'.lang("_LOG_OFF").'</a>'; }
-   // end menu
-   ?>
-   </div>
-  </div>
-  </div>
-  <div id="content">
-  <div id="scratch" class="scratch_msg">
+	if($authsaml->isAuth() && !$authvoucher->aVoucher() &&  $s != "completev" ) { echo '<a href="'.$authsaml->logoffURL().'" id="topmenu_logoff">'.lang("_LOG_OFF").'</a>'; }
+	// end menu
+	?>
+	</div>
+	</div>
+	</div>
+	<div id="content">
+	<div id="scratch" class="scratch_msg">
 	<?php
 		if(array_key_exists("scratch", $_SESSION )) {
 			echo($functions->getScratchMessage());
-			//$functions->clearScratchMessages()
 			session_unregister("scratch");
 		}
 	?>
-	<?php    ?>
-  </div>	
-  <div id="userinformation">
-    <?php 
-// display user details if authenticated and not a voucher
-echo "<div class='welcomeuser'>";
-if(	$authvoucher->aVoucher() || $s == "completev") { 
-echo lang("_WELCOMEGUEST");
-} else if ($authsaml->isAuth() ){
-$attributes = $authsaml->sAuth();
-echo lang("_WELCOME")." ";
-if($config["displayUserName"]) { echo $attributes["cn"];};
-}
-echo "</div>";
+	</div>	
+	<div id="userinformation">
+	<?php 
+	// display user details if authenticated and not a voucher
+	echo "<div class='welcomeuser'>";
+	if(	$authvoucher->aVoucher() || $s == "completev") 
+	{ 
+		echo lang("_WELCOMEGUEST");
+	} 
+	else if ($authsaml->isAuth() )
+	{
+		$attributes = $authsaml->sAuth();
+		echo lang("_WELCOME")." ";
+		if($config["displayUserName"]) { 
+			echo $attributes["cn"];
+		}
+	}
+	echo "</div>";
 
-$versiondisplay = "";
-if($config["site_showStats"])
-{
-	$versiondisplay .= $functions->getStats();
-}
-if($config["versionNumber"])
-{
-	$versiondisplay .= FileSender_Version::VERSION;
-}
-echo "<div class='versionnumber'>" .$versiondisplay."</div>";
-
+	$versiondisplay = "";
+	if($config["site_showStats"])
+	{
+		$versiondisplay .= $functions->getStats();
+	}
+	if($config["versionNumber"])
+	{
+		$versiondisplay .= FileSender_Version::VERSION;
+	}
+	echo "<div class='versionnumber'>" .$versiondisplay."</div>";
 ?>
-</div>
-    <?php
-// checks if url has vid=xxxxxxx and that voucher is valid 
-if(	$authvoucher->aVoucher())
-{
-// check if it is Available or a Voucher for Uploading a New File
-$voucherData = $authvoucher->getVoucher();
-
-if($voucherData[0]["filestatus"] == "Voucher")
-{ // load voucher upload
-require_once('../pages/upload.php');
-} else if($voucherData[0]["filestatus"] == "Available")
-{ 
-// allow download of voucher
-require_once('../pages/download.php');
-} else if($voucherData[0]["filestatus"] == "Closed")
-{
-?>
-<p><?php echo lang("_VOUCHER_CANCELLED"); ?></p>
+	</div>
 <?php
-}
- else if($voucherData[0]["filestatus"] == "Voucher Cancelled")
-{
+	// checks if url has vid=xxxxxxx and that voucher is valid 
+	if(	$authvoucher->aVoucher())
+	{
+		// check if it is Available or a Voucher for Uploading a New File
+		$voucherData = $authvoucher->getVoucher();
+
+		if($voucherData[0]["filestatus"] == "Voucher")
+		{ // load voucher upload
+			require_once('../pages/upload.php');
+		} else if($voucherData[0]["filestatus"] == "Available")
+		{ 
+			// allow download of voucher
+			require_once('../pages/download.php');
+		} else if($voucherData[0]["filestatus"] == "Closed")
+		{
 ?>
-<div id="box">
-<?php echo '<div id="pageheading"></div>'; ?> 
-<p><?php echo lang("_VOUCHER_CANCELLED"); ?></p>
-</div>
+	<p>
+		<?php echo lang("_VOUCHER_CANCELLED"); ?>
+	</p>
 <?php
-}
-} else if($s == "upload") 
-{
-require_once('../pages/upload.php');
-} else if($s == "vouchers" && !$authvoucher->aVoucher()) 
-{
-require_once('../pages/vouchers.php');
-// must be authenticated and not using a voucher to view files
-} else if($s == "files" && !$authvoucher->aVoucher() && $authsaml->isAuth() ) 
-{
-require_once('../pages/files.php');
-} else if($s == "logon") 
-{
-require_once('../pages/logon.php');
-}	
-else if($s == "admin" && !$authvoucher->aVoucher()) 
-{
-require_once('../pages/admin.php');
-}
-else if($s == "uploaderror") 
-{
+	}
+ 	else if($voucherData[0]["filestatus"] == "Voucher Cancelled")
+	{
 ?>
-<div id="message"><?php echo lang("_ERROR_UPLOADING_FILE"); ?></div></div>
+	<div id="box">
+		<?php echo '<div id="pageheading"></div>'; ?> 
+		<p>
+		<?php echo lang("_VOUCHER_CANCELLED"); ?>
+		</p>
+	</div>
+<?php
+		}
+	} else if($s == "upload") 
+	{
+		require_once('../pages/upload.php');
+	} else if($s == "vouchers" && !$authvoucher->aVoucher()) 
+	{
+		require_once('../pages/vouchers.php');
+		// must be authenticated and not using a voucher to view files
+	} else if($s == "files" && !$authvoucher->aVoucher() && $authsaml->isAuth() ) 
+	{
+		require_once('../pages/files.php');
+	} else if($s == "logon") 
+	{
+		require_once('../pages/logon.php');
+	}	
+	else if($s == "admin" && !$authvoucher->aVoucher()) 
+	{
+		require_once('../pages/admin.php');
+	}
+		else if($s == "uploaderror") 
+	{
+?>
+	<div id="message"><?php echo lang("_ERROR_UPLOADING_FILE"); ?></div></div>
 <?php	
-}	
-else if($s == "complete" || $s == "completev") 
-{
+	}	
+	else if($s == "complete" || $s == "completev") 
+	{
 ?>
-<div id="message"><?php echo lang("_UPLOAD_COMPLETE"); ?></div></div>
+		<div id="message"><?php echo lang("_UPLOAD_COMPLETE"); ?></div></div>
 <?php
-} else if ($s == "" && $authsaml->isAuth()){
-require_once('../pages/upload.php');	
-}else if ($s == "" ){
-require_once('../pages/home.php');	
-}
+	} else if ($s == "" && $authsaml->isAuth()){
+		require_once('../pages/upload.php');	
+	}else if ($s == "" ){
+		require_once('../pages/home.php');	
+	}
 ?>
-  </div>
-</div>
-<div id="dialog-help" title="<?php echo lang("_HELP"); ?>">
- <?php echo lang("_HELP_TEXT"); ?>
-</div>
-<div id="dialog-about" title="<?php echo lang("_ABOUT"); ?>">
- <?php echo lang("_ABOUT_TEXT"); ?>
-</div>
-<div id="footer">Version <?php echo FileSender_Version::VERSION; ?></div>
-<div id="DoneLoading"></div>
-</body>
+	</div>
+	</div>
+	<div id="dialog-help" title="<?php echo lang("_HELP"); ?>">
+		<?php echo lang("_HELP_TEXT"); ?>
+	</div>
+	<div id="dialog-about" title="<?php echo lang("_ABOUT"); ?>">
+		<?php echo lang("_ABOUT_TEXT"); ?>
+	</div>
+		<div id="footer">Version <?php echo FileSender_Version::VERSION; ?></div>
+		<div id="DoneLoading"></div>
+	</body>
 </html>
