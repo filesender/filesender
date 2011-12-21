@@ -32,6 +32,9 @@
 
 /* ---------------------------------
  * MyFiles Page
+ * Display details about a users files
+ * Allow a user to re-send a file 
+ * Allow a user to Forward a file	
  * ---------------------------------
  * 
  */
@@ -41,7 +44,6 @@ if(isset($_REQUEST["a"]) && isset($_REQUEST["id"]))
 // validate id 
 if(	ensureSaneFileUid($_REQUEST["id"])) {
 $myfileData = $functions->getVoucherData($_REQUEST['id']);
-//$myfileData = $myfileData[0];
 if($_REQUEST["a"] == "del" )
 {
 if($functions->deleteFile($myfileData["fileid"]))
