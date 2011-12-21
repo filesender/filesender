@@ -47,7 +47,7 @@ class Log {
         return self::$instance;
     } 
 
-    //---------------------------------------
+    //--------------------------------------- NOTE PDO this
     // Save Log Data
     //
     public function saveLog($dataitem,$logType,$message){
