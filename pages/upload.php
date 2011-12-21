@@ -68,7 +68,9 @@
 	$filestatus = "Voucher";
 	} else if($voucherData[0]["filestatus"] == "Voucher Cancelled" || $voucherData[0]["filestatus"] == "Closed")
 	{
-	require_once('../pages/vouchercancelled.php');
+	?>
+    <p><?php echo lang("_VOUCHER_CANCELLED"); ?></p>
+    <?php
 	return;
 	}
 }
