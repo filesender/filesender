@@ -82,7 +82,7 @@ if(file_exists($file) && is_file($file))
 	logEntry("Download: Start Downloading - ".$file);
 	header("Content-Type: application/force-download");
 	header('Content-Type: application/octet-stream');
-	header('Content-Length: '.getFileSize($file));
+	header('Content-Length: '.$functions->getFileSize($file));
 	header('Content-Disposition: attachment; filename="'.$fileoriginalname.'"');
 	
 	// as files may be very large - stop it timing out
@@ -91,7 +91,7 @@ if(file_exists($file) && is_file($file))
 	session_write_close();
 
 	// if the complete file is downloaded then send email
-	if(readfile_chunked($file) === getFileSize($file)); 
+	if(readfile_chunked($file) === $functions->getFileSize($file)); 
 	// email completed
 		$tempEmail = $fileArray[0]["fileto"];
 		$fileArray[0]["fileto"] = $fileArray[0]["filefrom"];	
@@ -144,34 +144,34 @@ ob_start();
 
 // need to get file size correctly as over 4Gb sizes error if using default 32bit PHP installation
 // can remove windows check as we do not support windows servers
-	function getFileSize($filename){
-
-	global $config;
-		
-	if($filename == "" ) {
-		return;
-	} else {
-		$file = $filename;//$config["site_filestore"].sanitizeFilename($filename);
-	
-		if (file_exists($file)) {
-			//We should turn this into a switch/case, exhaustive with a default case
-			if (PHP_OS == "Darwin") {
-	                $size = trim(shell_exec("stat -f %z ". escapeshellarg($file)));
-			}
-			else if (!(strtoupper(substr(PHP_OS, 0, 3)) == 'WIN')) 
-			{
-				$size = trim(shell_exec("stat -c%s ". escapeshellarg($file)));
-			} 	
-			else { 
-			   	$fsobj = new COM("Scripting.FileSystemObject"); 
-				$f = $fsobj->GetFile($file); 
-				$size = $f->Size; 
-			}
-				return $size;
-			} else { 
-				return 0;
-			} 
-		}
-	}
+//	function getFileSize($filename){
+//
+//	global $config;
+//		
+//	if($filename == "" ) {
+//		return;
+//	} else {
+//		$file = $filename;//$config["site_filestore"].sanitizeFilename($filename);
+//	
+//		if (file_exists($file)) {
+//			//We should turn this into a switch/case, exhaustive with a default case
+//			if (PHP_OS == "Darwin") {
+//	                $size = trim(shell_exec("stat -f %z ". escapeshellarg($file)));
+//			}
+//			else if (!(strtoupper(substr(PHP_OS, 0, 3)) == 'WIN')) 
+//			{
+//				$size = trim(shell_exec("stat -c%s ". escapeshellarg($file)));
+//			} 	
+//			else { 
+//			   	$fsobj = new COM("Scripting.FileSystemObject"); 
+//				$f = $fsobj->GetFile($file); 
+//				$size = $f->Size; 
+//			}
+//				return $size;
+//			} else { 
+//				return 0;
+//			} 
+//		}
+//	}
 	
  ?>

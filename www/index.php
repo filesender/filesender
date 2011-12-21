@@ -206,6 +206,7 @@ echo "<div class='versionnumber'>" .$versiondisplay."</div>";
 ?>
 </div>
     <?php
+// checks if url has vid=xxxxxxx and that voucher is valid 
 if(	$authvoucher->aVoucher())
 {
 // check if it is Available or a Voucher for Uploading a New File
@@ -220,11 +221,18 @@ require_once('../pages/upload.php');
 require_once('../pages/download.php');
 } else if($voucherData[0]["filestatus"] == "Closed")
 {
-require_once('../pages/vouchercancelled.php');
+?>
+<p><?php echo lang("_VOUCHER_CANCELLED"); ?></p>
+<?php
 }
  else if($voucherData[0]["filestatus"] == "Voucher Cancelled")
 {
-require_once('../pages/vouchercancelled.php');
+?>
+<div id="box">
+<?php echo '<div id="pageheading"></div>'; ?> 
+<p><?php echo lang("_VOUCHER_CANCELLED"); ?></p>
+</div>
+<?php
 }
 } else if($s == "upload") 
 {
@@ -246,11 +254,15 @@ require_once('../pages/admin.php');
 }
 else if($s == "uploaderror") 
 {
-require_once('../pages/uploaderror.php');
+?>
+<div id="message"><?php echo lang("_ERROR_UPLOADING_FILE"); ?></div></div>
+<?php	
 }	
 else if($s == "complete" || $s == "completev") 
 {
-require_once('../pages/uploadcomplete.php');
+?>
+<div id="message"><?php echo lang("_UPLOAD_COMPLETE"); ?></div></div>
+<?php
 } else if ($s == "" && $authsaml->isAuth()){
 require_once('../pages/upload.php');	
 }else if ($s == "" ){
