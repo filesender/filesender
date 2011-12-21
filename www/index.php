@@ -232,7 +232,8 @@ require_once('../pages/upload.php');
 } else if($s == "vouchers" && !$authvoucher->aVoucher()) 
 {
 require_once('../pages/vouchers.php');
-} else if($s == "files" && !$authvoucher->aVoucher()) 
+// must be authenticated and not using a voucher to view files
+} else if($s == "files" && !$authvoucher->aVoucher() && $authsaml->isAuth() ) 
 {
 require_once('../pages/files.php');
 } else if($s == "logon") 
