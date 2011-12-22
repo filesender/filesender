@@ -178,7 +178,7 @@ class Functions {
 		
 		$pdo = $this->db->connect();
 		$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
-		$statement = $pdo->prepare("SELECT ".$this->returnFields.' FROM files WHERE (fileauthuseruid = :fileauthuseruid) AND filestatus = "Voucher"  ORDER BY fileactivitydate DESC');
+		$statement = $pdo->prepare("SELECT ".$this->returnFields." FROM files WHERE (fileauthuseruid = :fileauthuseruid) AND filestatus = 'Voucher'  ORDER BY fileactivitydate DESC");
 		$statement->bindParam(':fileauthuseruid', $authAttributes["saml_uid_attribute"]);
 		try 
 		{ 	
