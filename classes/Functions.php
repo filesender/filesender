@@ -604,6 +604,8 @@ class Functions {
 		// if errors - return them via json to client	
 		if(count($errorArray) > 0 )
 		{
+		logentry("Functions: validateFileData errors: ". print_r($resultArray,true));
+		logentry("Functions: validateFileData errors (json): ". print_r(json_encode($resultArray),true));
 		$resultArray["errors"] =  $errorArray;
 		echo json_encode($resultArray);
 		exit; // Stop further script execution
@@ -818,18 +820,17 @@ class Functions {
     //--------------------------------------- CHECKED
     // Return filesize as integer from php
     // Function also handles windows servers
-	// ---------------------------------------
+    // ---------------------------------------
     // 
     public function getFileSize($filename){
 
-
-        global $config;;
+        global $config;
 
         if($filename == "" ) {
             return;
         } else {
-            $file = $config["site_temp_filestore"].sanitizeFilename($filename);
-			//We should turn this into a switch/case, exhaustive with a default case
+            $file = $filename;//$config["site_filestore"].sanitizeFilename($filename);
+            //We should turn this into a switch/case, exhaustive with a default case
             if (file_exists($file)) {
 				if (PHP_OS == "Darwin") {
 	                $size = trim(shell_exec("stat -f %z ". escapeshellarg($file)));
