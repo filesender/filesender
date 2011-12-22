@@ -209,7 +209,8 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 		break;
 		
 	case 'insertVoucherAjax': 
-
+		// check authenticated first :NOTE:
+		if( $authsaml->isAuth()) {
 		logEntry("DEBUG fs_uploadit: Filedata 'insertVoucherAjax' myJson = " . $_POST['myJson'] );
 		$dataitem = json_decode($_POST['myJson'], true);
 		// validate expiry missing
@@ -229,9 +230,14 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 		}
 		// insert each voucher
 		foreach ($emailArray as $Email) { 
+		
 		$functions->insertVoucher($Email,$dataitem["fileexpirydate"]);
+
 		} 
-		echo "complete";
+			echo "complete";
+		} else {
+			echo "not_authenticated";
+		}
 		break;
 			
 	// insert add new recipient to existing file 
