@@ -176,8 +176,22 @@ class Functions {
             $authAttributes["saml_uid_attribute"] = "";
         }
 		
-		$result =  $this->db->fquery("SELECT ".$this->returnFields." FROM files WHERE (fileauthuseruid = %s) AND filestatus = 'Voucher' ORDER BY fileactivitydate DESC",$authAttributes["saml_uid_attribute"]);
-        $returnArray = array();
+		$pdo = $this->db->connect();
+		$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
+		$statement = $pdo->prepare("SELECT ".$this->returnFields.' FROM files WHERE (fileauthuseruid = :fileauthuseruid) AND filestatus = "Voucher"  ORDER BY fileactivitydate DESC');
+		$statement->bindParam(':fileauthuseruid', $authAttributes["saml_uid_attribute"]);
+		try 
+		{ 	
+			$statement->execute(); 
+		}
+		catch(PDOException $e)
+		{ 
+			logEntry($e->getMessage());	
+			displayError($e->getMessage()); 
+		}   
+		$result = $statement->fetchAll();
+		$pdo = NULL;
+		$returnArray = array();
         foreach($result as $row)
         {
             array_push($returnArray, $row);
@@ -197,14 +211,27 @@ class Functions {
         } else {
             $authAttributes["saml_uid_attribute"] = "nonvalue";
         }
-        $result =  $this->db->fquery("SELECT ".$this->returnFields." FROM files WHERE (fileauthuseruid = %s) AND filestatus = 'Available'  ORDER BY fileactivitydate DESC", $authAttributes["saml_uid_attribute"]);
-           
-        $returnArray = array();
-        foreach($result as $row )
-        {
-            array_push($returnArray, $row);
-        }
-        return json_encode($returnArray);
+		$pdo = $this->db->connect();
+		$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
+		$statement = $pdo->prepare("SELECT ".$this->returnFields.' FROM files WHERE (fileauthuseruid = :fileauthuseruid) AND filestatus = "Available"  ORDER BY fileactivitydate DESC');
+		$statement->bindParam(':fileauthuseruid', $authAttributes["saml_uid_attribute"]);
+		try 
+		{ 	
+			$statement->execute(); 
+		}
+		catch(PDOException $e)
+		{ 
+			logEntry($e->getMessage());	
+			displayError($e->getMessage()); 
+		}   
+		$result = $statement->fetchAll();
+		$pdo = NULL;
+		$returnArray = array();
+		foreach($result as $row )
+		{
+			array_push($returnArray, $row);
+		}
+		return json_encode($returnArray);
     }
 
     //--------------------------------------- CHECKED
@@ -240,9 +267,22 @@ class Functions {
 		$pagination = "LIMIT ".$maxitems_perpage." OFFSET 0";
 		}
         if($this->authsaml->authIsAdmin()) { 
-
-        $result =  $this->db->fquery("SELECT logtype, logfrom , logto, logdate, logfilesize, logfilename, logmessage FROM logs WHERE logtype = '$type' ORDER BY logdate DESC ".$pagination);
-		$returnArray = array();
+		$pdo = $this->db->connect();
+		$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
+		$statement = $pdo->prepare('SELECT logtype, logfrom , logto, logdate, logfilesize, logfilename, logmessage FROM logs WHERE logtype = :logtype ORDER BY logdate DESC '.$pagination);
+		$statement->bindParam(':logtype', $type);
+		try 
+		{ 	
+			$statement->execute(); 
+		}
+		catch(PDOException $e)
+		{ 
+			logEntry($e->getMessage());	
+			displayError($e->getMessage()); 
+		}   
+		$result = $statement->fetchAll();
+		$pdo = NULL;
+      	$returnArray = array();
 	        foreach($result as $row) 
             {
                 array_push($returnArray, $row);
@@ -285,12 +325,26 @@ class Functions {
 		
 		// check if this user has admin access before returning data
 		if($this->authsaml->authIsAdmin()) { 
-			$result =  $this->db->fquery("SELECT ".$this->returnFields." FROM files WHERE filestatus = '$type' ORDER BY fileactivitydate DESC ".$pagination);
-			$returnArray = array();
-			foreach($result as $row)
-			{
-				array_push($returnArray, $row);
-			}
+		$pdo = $this->db->connect();
+		$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
+		$statement = $pdo->prepare('SELECT '.$this->returnFields.' FROM files WHERE filestatus = :filestatus ORDER BY fileactivitydate DESC '. $pagination);
+		$statement->bindParam(':filestatus', $type);
+		try 
+		{ 	
+			$statement->execute(); 
+		}
+		catch(PDOException $e)
+		{ 
+			logEntry($e->getMessage());	
+			displayError($e->getMessage()); 
+		}   
+		$result = $statement->fetchAll();
+		$pdo = NULL;
+		$returnArray = array();
+		foreach($result as $row)
+		{
+			array_push($returnArray, $row);
+		}
 		return $returnArray;
 		}
 	}
@@ -301,19 +355,30 @@ class Functions {
     // 
     public function getFile($dataitem) {
 
-        global $config;
-
-        // check authentication as File UID is returned
-
-        $vid = $dataitem['filevoucheruid'];
-       	$result =  $this->db->fquery("SELECT * FROM files where filevoucheruid = %s", $vid);
-
-        $returnArray = array();
-        foreach($result as $row){
-            array_push($returnArray, $row);
-        }
-        return json_encode($returnArray);
-    }
+		$vid = $dataitem['filevoucheruid'];
+ 
+		$pdo = $this->db->connect();
+		$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
+		$statement = $pdo->prepare('SELECT * FROM files where filevoucheruid = :filevoucheruid');
+		$statement->bindParam(':filevoucheruid', $vid);
+		try 
+		{ 	
+			$statement->execute(); 
+		}
+		catch(PDOException $e)
+		{ 
+			logEntry($e->getMessage());	
+			displayError($e->getMessage()); 
+		}   
+		$result = $statement->fetchAll();
+		$pdo = NULL;
+		$returnArray = array();
+		foreach($result as $row)
+		{
+			array_push($returnArray, $row);
+		}
+		return json_encode($returnArray);
+	}
 
     //--------------------------------------- CHECKED NOTE
 	// Note: Function Name Duplicated in AuthVoucher.php but using $_Request["vid"]
@@ -323,14 +388,26 @@ class Functions {
     // 
     public function getVoucher($vid) {
 
-        global $config;
-
-        // check authentication as file UID is returned
-		$result =  $this->db->fquery("SELECT * FROM files where fileid = %s", $vid);
-		$returnArray = array();
-		foreach($result as $row){
-			array_push($returnArray, $row);
+       	$pdo = $this->db->connect();
+		$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
+		$statement = $pdo->prepare('SELECT * FROM files where fileid = :fileid');
+		$statement->bindParam(':fileid', $vid);
+		try 
+		{ 	
+			$statement->execute(); 
 		}
+		catch(PDOException $e)
+		{ 
+			logEntry($e->getMessage());	
+			displayError($e->getMessage()); 
+		}   
+		$result = $statement->fetchAll();
+		$pdo = NULL;
+  		$returnArray = array();
+        foreach($result as $row)
+		{
+            array_push($returnArray, $row);
+        }
 		return $returnArray;
 		}
 	
@@ -340,12 +417,23 @@ class Functions {
 	// 
 	public function getVoucherData($vid) {
 
-		global $config;
-
-		// check authentication as file UID is returned
-  		$result =  $this->db->fquery("SELECT * FROM files where filevoucheruid = %s", $vid);
-        $returnArray = array();
-        foreach($result as $row){
+		$pdo = $this->db->connect();
+		$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
+		$statement = $pdo->prepare('SELECT * FROM files where filevoucheruid = :filevoucheruid');
+		$statement->bindParam(':filevoucheruid', $vid);
+		try { 	
+			$statement->execute(); 
+			}
+		catch(PDOException $e)
+		{ 
+			logEntry($e->getMessage());	
+			displayError($e->getMessage()); 
+		}   
+		$result = $statement->fetchAll();
+		$pdo = NULL;
+  		$returnArray = array();
+        foreach($result as $row)
+		{
             array_push($returnArray, $row);
         }
         return $returnArray[0];
@@ -366,7 +454,6 @@ class Functions {
 		
 		$pdo = $this->db->connect();
 		$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
-	
 		
 		$statement = $pdo->prepare('INSERT INTO files (
 			fileexpirydate,
@@ -441,9 +528,10 @@ class Functions {
 			$statement->execute(); 
 			}
 			catch(PDOException $e){ 
-			logEntry($e->getMessage());	//displayError($e->getMessage()); 
+			logEntry($e->getMessage());	
+			displayError($e->getMessage()); 
 			}   
-			
+			$pdo = NULL;
 			// get voucherdata to email
 			$dataitem = $this->getVoucherData($filevoucheruid);
 			$this->saveLog->saveLog($dataitem,"Voucher Sent","");
@@ -621,6 +709,7 @@ class Functions {
 				}
 			catch(PDOException $e){ 
 				logEntry($e->getMessage());	
+				displayError($e->getMessage()); 
 				return false;
 				}   
 
