@@ -142,36 +142,4 @@ ob_start();
    return $status;
    }
 
-// need to get file size correctly as over 4Gb sizes error if using default 32bit PHP installation
-// can remove windows check as we do not support windows servers
-//	function getFileSize($filename){
-//
-//	global $config;
-//		
-//	if($filename == "" ) {
-//		return;
-//	} else {
-//		$file = $filename;//$config["site_filestore"].sanitizeFilename($filename);
-//	
-//		if (file_exists($file)) {
-//			//We should turn this into a switch/case, exhaustive with a default case
-//			if (PHP_OS == "Darwin") {
-//	                $size = trim(shell_exec("stat -f %z ". escapeshellarg($file)));
-//			}
-//			else if (!(strtoupper(substr(PHP_OS, 0, 3)) == 'WIN')) 
-//			{
-//				$size = trim(shell_exec("stat -c%s ". escapeshellarg($file)));
-//			} 	
-//			else { 
-//			   	$fsobj = new COM("Scripting.FileSystemObject"); 
-//				$f = $fsobj->GetFile($file); 
-//				$size = $f->Size; 
-//			}
-//				return $size;
-//			} else { 
-//				return 0;
-//			} 
-//		}
-//	}
-	
- ?>
+?>
