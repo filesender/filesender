@@ -32,6 +32,7 @@
 
 // ---------------------------------------
 // Format bytes into readbable text format
+// ---------------------------------------
 function formatBytes($bytes, $precision = 2) {
 
     if($bytes >  0) 
@@ -51,6 +52,7 @@ function formatBytes($bytes, $precision = 2) {
 
 // ---------------------------------------
 // Create Unique ID for vouchers
+// ---------------------------------------
 function getGUID() {
 
     return sprintf(
@@ -64,8 +66,9 @@ function getGUID() {
     );
 }
 
-//---------------------------------------
+// ---------------------------------------
 // Replace illegal chars with _ character in supplied filenames
+// ---------------------------------------
 
 function sanitizeFilename($filename){
 
@@ -78,8 +81,9 @@ function sanitizeFilename($filename){
     }
 }
 
-//---------------------------------------
+// ---------------------------------------
 // Error if fileUid doesn't look sane
+// ---------------------------------------
 
 function ensureSaneFileUid($fileuid){
 
@@ -123,6 +127,7 @@ class Functions {
 	
     //--------------------------------------- CHECKED
     // Return Basic Database Statistics e.g. Up xx Gb (files xx) | Down xx Gb (files xx)
+	// ---------------------------------------
     public function getStats() {
 
         global $config;
@@ -160,6 +165,7 @@ class Functions {
 
     //--------------------------------------- CHECKED
     // Get Voucher for a specified user based on saml_uid_attribute
+	// ---------------------------------------
     public function getVouchers() {
 
        global $config;
@@ -181,6 +187,7 @@ class Functions {
 
     //--------------------------------------- CHECKED
     // Get Files for a specified user based on saml_uid_attribute
+	// ---------------------------------------
     public function getUserFiles() {
 
         global $config;
@@ -203,6 +210,7 @@ class Functions {
     //--------------------------------------- CHECKED
     // Return logs if users is admin
     // current email authenticated as per config["admin"]
+	// ---------------------------------------
     public function adminLogs($type) {
 
         // check if this user has admin access before returning data
@@ -246,6 +254,7 @@ class Functions {
     //---------------------------------------CHECKED
     // Return Files if users is admin
     // current email authenticated as per config["admin"]
+	// ---------------------------------------
     public function adminFiles($type) {
 
 		global $page;
@@ -288,6 +297,7 @@ class Functions {
 
     //--------------------------------------- CHECKED
     // Return file information based on filervoucheruid
+	// ---------------------------------------
     // 
     public function getFile($dataitem) {
 
@@ -309,6 +319,7 @@ class Functions {
 	// Note: Function Name Duplicated in AuthVoucher.php but using $_Request["vid"]
 	// Note: Remove AuthVoucher.php getVocuher function and replace with similar function in Functions class
     // Return voucher information based on fileid
+	// ---------------------------------------
     // 
     public function getVoucher($vid) {
 
@@ -325,6 +336,7 @@ class Functions {
 	
 	//--------------------------------------- CHECKED
 	// Return voucher information based on filervoucheruid
+	// ---------------------------------------
 	// 
 	public function getVoucherData($vid) {
 
@@ -339,8 +351,10 @@ class Functions {
         return $returnArray[0];
     }
 	
-	//--------------------------------------- NOTE Replace with PDO version
-	// added for HTML5 version
+	//--------------------------------------- CHECKED
+	// insert a voucher
+	// ---------------------------------------
+
 	public function insertVoucher($to,$expiry){
 	
 		// must be authenticated
@@ -441,8 +455,9 @@ class Functions {
 		}
     }
 	
-	// ---------------------------- CHECKED
+	// --------------------------------------- CHECKED
 	// ensure valid fileexpirydate
+	// --------------------------------------- 
 	public function ensureValidFileExpiryDate($data)
 	{
 		global $config;
@@ -455,9 +470,9 @@ class Functions {
 		return date($config['db_dateformat'],strtotime($data));
 	}
 		
-   	//--------------------------------------- CHECKED
+	// ---------------------------------------CHECKED
     // Validate $data and return data
-    // 
+	// ---------------------------------------
 	public function validateFileData($data)
 	{
 		// client must provide following minimum data
@@ -498,8 +513,7 @@ class Functions {
 			if(!filter_var($Email,FILTER_VALIDATE_EMAIL)) {array_push($errorArray, "err_invalidemail");}
 		}
 		}
-		// if errors - return them via json to client
-		
+		// if errors - return them via json to client	
 		if(count($errorArray) > 0 )
 		{
 		$resultArray["errors"] =  $errorArray;
@@ -531,9 +545,9 @@ class Functions {
 		return $data;
 	}
 	
-	//--------------------------------------- CHECKED
+	// --------------------------------------- CHECKED
 	// Insert new file or voucher HTML5
-	// 
+	// ---------------------------------------
 	public function insertFileHTML5($dataitem){
 
         global $config;
@@ -542,107 +556,66 @@ class Functions {
 		$pdo = $this->db->connect();
 		$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
 		$statement = $pdo->prepare('INSERT INTO files (
-                fileexpirydate,
-                fileto,
-                filesubject,
-                fileactivitydate,
-                filevoucheruid,
-                filemessage,
-                filefrom,
-                filesize,
-                fileoriginalname,
-                filestatus,
-                fileip4address,
-                fileip6address,
-                filesendersname,
-                filereceiversname,
-                filevouchertype,
-                fileuid,
-                fileauthuseruid,
-                fileauthuseremail,
-                filecreateddate
-
+			fileexpirydate,
+			fileto,
+			filesubject,
+			fileactivitydate,
+			filevoucheruid,
+			filemessage,
+			filefrom,
+			filesize,
+			fileoriginalname,
+			filestatus,
+			fileip4address,
+			fileip6address,
+			filesendersname,
+			filereceiversname,
+			filevouchertype,
+			fileuid,
+			fileauthuseruid,
+			fileauthuseremail,
+			filecreateddate
             ) VALUES
             ( 	:fileexpirydate,
-               	:fileto,
-             	:filesubject,
-               	:fileactivitydate,
-               	:filevoucheruid,
-               	:filemessage,
-               	:filefrom,
-               	:filesize,
-               	:fileoriginalname,
-               	:filestatus,
-               	:fileip4address,
-               	:fileip6address,
-               	:filesendersname,
-               	:filereceiversname,
-               	:filevouchertype,
-               	:fileuid,
-               	:fileauthuseruid,
-               	:fileauthuseremail,
-               	:filecreateddate)');	
+			:fileto,
+			:filesubject,
+			:fileactivitydate,
+			:filevoucheruid,
+			:filemessage,
+			:filefrom,
+			:filesize,
+			:fileoriginalname,
+			:filestatus,
+			:fileip4address,
+			:fileip6address,
+			:filesendersname,
+			:filereceiversname,
+			:filevouchertype,
+			:fileuid,
+			:fileauthuseruid,
+			:fileauthuseremail,
+			:filecreateddate)');	
 				
-	$statement->bindParam(':fileexpirydate', $dataitem['fileexpirydate']);
-	$statement->bindParam(':fileto', $dataitem['fileto']);
-	$statement->bindParam(':filesubject', $dataitem['filesubject']);
-	$statement->bindParam(':fileactivitydate', $dataitem['fileactivitydate']);
-	$statement->bindParam(':filevoucheruid', $dataitem['filevoucheruid']);
-	$statement->bindParam(':filemessage', $dataitem['filemessage']);
-	$statement->bindParam(':filefrom', $dataitem['filefrom']);
-	$statement->bindParam(':filesize', $dataitem['filesize']);
-	$statement->bindParam(':fileoriginalname', $dataitem['fileoriginalname']);
-	$statement->bindParam(':filestatus', $dataitem['filestatus']);
-	$statement->bindParam(':fileip4address', $dataitem['fileip4address']);
-	$statement->bindParam(':fileip6address', $dataitem['fileip6address']);
-	$statement->bindParam(':filesendersname', $dataitem['filesendersname']);
-	$statement->bindParam(':filereceiversname', $dataitem['filereceiversname']);
-	$statement->bindParam(':filevouchertype', $dataitem['filevouchertype']);
-	$statement->bindParam(':fileuid', $dataitem['fileuid']);
-	$statement->bindParam(':fileauthuseruid', $dataitem['fileauthuseruid']);
-	$statement->bindParam(':fileauthuseremail', $dataitem['fileauthuseremail']);
-	$statement->bindParam(':filecreateddate', $dataitem['filecreateddate']);
-
-	try { 
-		$statement->execute(); 
-		}
-	catch(PDOException $e){ 
-		logEntry($e->getMessage());	
-		return false;
-	}   
-
-		if($dataitem['filestatus'] == "Voucher") {
-			$this->saveLog->saveLog($dataitem,"Voucher Sent","");
-				return $this->sendmail->sendEmail($dataitem,$config['voucherissuedemailbody']);
-			} elseif ($dataitem['filestatus'] == "Available") {
-				$this->saveLog->saveLog($dataitem,"Uploaded","");
-				return $this->sendmail->sendEmail($dataitem,$config['fileuploadedemailbody']);
-			}
-			return true;
-    }
+			$statement->bindParam(':fileexpirydate', $dataitem['fileexpirydate']);
+			$statement->bindParam(':fileto', $dataitem['fileto']);
+			$statement->bindParam(':filesubject', $dataitem['filesubject']);
+			$statement->bindParam(':fileactivitydate', $dataitem['fileactivitydate']);
+			$statement->bindParam(':filevoucheruid', $dataitem['filevoucheruid']);
+			$statement->bindParam(':filemessage', $dataitem['filemessage']);
+			$statement->bindParam(':filefrom', $dataitem['filefrom']);
+			$statement->bindParam(':filesize', $dataitem['filesize']);
+			$statement->bindParam(':fileoriginalname', $dataitem['fileoriginalname']);
+			$statement->bindParam(':filestatus', $dataitem['filestatus']);
+			$statement->bindParam(':fileip4address', $dataitem['fileip4address']);
+			$statement->bindParam(':fileip6address', $dataitem['fileip6address']);
+			$statement->bindParam(':filesendersname', $dataitem['filesendersname']);
+			$statement->bindParam(':filereceiversname', $dataitem['filereceiversname']);
+			$statement->bindParam(':filevouchertype', $dataitem['filevouchertype']);
+			$statement->bindParam(':fileuid', $dataitem['fileuid']);
+			$statement->bindParam(':fileauthuseruid', $dataitem['fileauthuseruid']);
+			$statement->bindParam(':fileauthuseremail', $dataitem['fileauthuseremail']);
+			$statement->bindParam(':filecreateddate', $dataitem['filecreateddate']);
 	
-    //--------------------------------------- CHECKED
-    // Delete a voucher
-    // 
-    public function deleteVoucher($fileid){
-
-        global $config;
-
-        // check authentication SAML User
-		if( $this->authsaml->isAuth()) {
-			
-			$pdo = $this->db->connect();
-			$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
-			
-			$statement = $pdo->prepare("UPDATE 
-            	files 
-            	SET 
-            	filestatus = 'Voucher Cancelled' 
-            	WHERE 
-            	fileid = :fileid");
-			
-			$statement->bindParam(':fileid', $fileid);
-			
 			try { 
 				$statement->execute(); 
 				}
@@ -650,75 +623,113 @@ class Functions {
 				logEntry($e->getMessage());	
 				return false;
 				}   
-				
-		   $fileArray =  $this->getVoucher($fileid);
-		   
-		   if($fileArray.count() > 0) 
-			{
-        	   $this->sendmail->sendEmail($fileArray[0],$config['defaultvouchercancelled']);	
-        	   $this->saveLog->saveLog($fileArray[0],"Voucher Cancelled","");
-			    return true;
+
+			if($dataitem['filestatus'] == "Voucher") {
+				$this->saveLog->saveLog($dataitem,"Voucher Sent","");
+				return $this->sendmail->sendEmail($dataitem,$config['voucherissuedemailbody']);
+			} elseif ($dataitem['filestatus'] == "Available") {
+				$this->saveLog->saveLog($dataitem,"Uploaded","");
+				return $this->sendmail->sendEmail($dataitem,$config['fileuploadedemailbody']);
 			}
-           return false;
-        } else {
-            return false;
-        }	
-    }
-    //--------------------------------------- CHECKED
+			return true;
+		}
+	
+    // --------------------------------------- CHECKED
+    // Delete a voucher
+    // ---------------------------------------
+    public function deleteVoucher($fileid){
+
+        global $config;
+
+		if( $this->authsaml->isAuth()) { // check authentication SAML User
+			
+			$pdo = $this->db->connect();
+			$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
+			$statement = $pdo->prepare("UPDATE files SET filestatus = 'Voucher Cancelled' WHERE fileid = :fileid");
+			$statement->bindParam(':fileid', $fileid);
+			
+			try { $statement->execute();}
+			catch(PDOException $e){ logEntry($e->getMessage());	return false; }   
+				
+			$fileArray =  $this->getVoucher($fileid);
+	
+			if(count($fileArray) > 0) 
+			{
+				$this->sendmail->sendEmail($fileArray[0],$config['defaultvouchercancelled']);	
+				$this->saveLog->saveLog($fileArray[0],"Voucher Cancelled","");
+				return true;
+			}
+			return false;
+		} else {
+			return false;
+		}	
+	}
+	
+    // --------------------------------------- CHECKED
     // Close a voucher
-    // 
+    // ---------------------------------------
     public function closeVoucher($fileid){
 
-        $dbCheck = DB_Input_Checks::getInstance();	
+        global $config;
 
-        $sqlQuery = "
-            UPDATE 
-            files 
-            SET 
-            filestatus = 'Closed' 
-            WHERE 
-            fileid = %s
-            ";
-
-        $statement = $this->db->fquery($sqlQuery, $fileid);
-        $fileArray =  $this->getVoucher($fileid);
-        $this->saveLog->saveLog($fileArray[0],"Voucher Closed","");
-        return true;
+		if( $this->authsaml->isAuth()) { // check authentication SAML User
+			
+			$pdo = $this->db->connect();
+			$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
+			$statement = $pdo->prepare("UPDATE files SET filestatus = 'Closed' WHERE fileid = :fileid");
+			$statement->bindParam(':fileid', $fileid);
+			
+			try { $statement->execute();}
+			catch(PDOException $e){ logEntry($e->getMessage());	return false; }   
+				
+			$fileArray =  $this->getVoucher($fileid);
+	
+			if(count($fileArray) > 0) 
+			{
+				$this->saveLog->saveLog($fileArray[0],"Voucher Cancelled","");
+				return true;
+			}
+			return false;
+		} else {
+			return false;
+		}	
     }
 	
-    //--------------------------------------- CHECKED
+    // --------------------------------------- CHECKED
     // Delete a file
-    // 
+    // ---------------------------------------
     public function deleteFile($fileid){
 
-       	global $config;
+            global $config;
 
-        // check authentication SAML User
-        if( $this->authsaml->isAuth()) {
-
-    	        $sqlQuery = "
-                UPDATE 
-                files 
-                SET 
-                filestatus = 'Closed' 
-                WHERE 
-                fileid = %s
-                ";
-
-            $this->db->fquery($sqlQuery, $fileid);
-            $fileArray =  $this->getVoucher($fileid);
-            $this->sendmail->sendEmail($fileArray[0],$config['defaultfilecancelled']);	
-            $this->saveLog->saveLog($fileArray[0],"File Cancelled","");
-
-            return true;
-        } else {
-            return false;
-        }	
+		if( $this->authsaml->isAuth()) { // check authentication SAML User
+			
+			$pdo = $this->db->connect();
+			$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
+			$statement = $pdo->prepare("UPDATE files SET filestatus = 'Closed' WHERE fileid = :fileid");
+			$statement->bindParam(':fileid', $fileid);
+			
+			try { $statement->execute();}
+			catch(PDOException $e){ logEntry($e->getMessage());	return false; }   
+				
+			$fileArray =  $this->getVoucher($fileid);
+	
+			if(count($fileArray) > 0) 
+			{
+				$this->sendmail->sendEmail($fileArray[0],$config['defaultfilecancelled']);	
+				$this->saveLog->saveLog($fileArray[0],"File Cancelled","");
+				return true;
+			}
+			return false;
+		} else {
+			return false;
+		}	
     }
 
     //--------------------------------------- CHECKED
     // Return filesize as integer from php
     // Function also handles windows servers
+	// ---------------------------------------
     // 
     public function getFileSize($filename){
 
@@ -753,6 +764,7 @@ class Functions {
     //--------------------------------------- CHECKED
     // Get drive space
     // Returns JSON array
+	// ---------------------------------------
     public function driveSpace() {
 
         global $config;

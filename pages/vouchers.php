@@ -153,7 +153,7 @@ if(isset($_REQUEST["a"]))
 			{
 			echo "<div id='message'>".lang("_VOUCHER_DELETED")."</div>";
 			} else {
-				// unable to delete voucher
+			
 			}
 		}
 	}
