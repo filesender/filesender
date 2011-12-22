@@ -129,6 +129,8 @@ function postVoucher()
 		if(msg == "err_expmissing") { $("#expiry_msg").show();} // missing expiry date
 		if(msg == "err_exoutofrange") { $("#expiry_msg").show();} // expiry date out of range
 		if(msg == "err_invalidemail") { $("#fileto_msg").show();} // 1 or more emails invalid
+		if(msg == "not_authenticated") { $("#_noauth").show();} // server returns not authenticated
+		if(msg == "") { $("#_noauth").show();} // server returns not authenticated
 	});
 }
 </script>
@@ -150,6 +152,8 @@ if(isset($_REQUEST["a"]))
 			if($functions->deleteVoucher($myfileData["fileid"]))
 			{
 			echo "<div id='message'>".lang("_VOUCHER_DELETED")."</div>";
+			} else {
+				// unable to delete voucher
 			}
 		}
 	}
@@ -187,7 +191,7 @@ $json_o=json_decode($filedata,true);
       <tr>
         <td><input type="hidden" id="fileexpirydate" name="fileexpirydate" value="<?php echo date($lang['datedisplayformat'],strtotime("+".$config['default_daysvalid']." day"));?>" />
         <input type="hidden" name="filestatus" id="filestatus" value="voucher" /></td>
-        <td><div class="menu" id="voucherbutton"><a href="#" onclick="validateForm()"><?php echo lang("_SEND_VOUCHER"); ?></a></div></td>
+        <td><div class="menu" id="voucherbutton"><a href="#" onclick="validateForm()"><?php echo lang("_SEND_VOUCHER"); ?></a></div><div id="_noauth" class="validation_msg" style="display:none"><?php echo lang("_AUTH_ERROR"); ?></div></td>
       </tr>
     </table>
      </div>

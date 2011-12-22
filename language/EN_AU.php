@@ -115,7 +115,7 @@
 			$lang["_INVALID_FILESIZE_ZERO"] = "File size cannot be 0. Please select another file.";
 			$lang["_INVALID_FILE_EXT"] = "Invalid file extension.";
 			$lang["_INVALID_TOO_LARGE_1"] = "File size cannot be greater than";
-			$lang["_AUTH_ERROR"] = "Your are no longer authenticated. <BR>Your upload session may have expired or there has been a server error. <BR><BR>Please logon again and re-try your upload.";	
+			$lang["_AUTH_ERROR"] = "Your are no longer authenticated. <BR>Your session may have expired or there has been a server error. <BR><BR>Please logon again and re-try.";	
 			$lang["_SELECT_ANOTHER_FILE"] = "Please select another file.";
 			$lang["_INVALID_VOUCHER"] = "This Voucher is no longer Valid. <BR>Please contact the person that issued this voucher";
 			$lang["_SELECT_FILE"] = "Select your file";

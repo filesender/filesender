@@ -120,157 +120,7 @@ class Functions {
         }
         return self::$instance;
     } 
-
-	//Set the scratch message
-	//public function setScratchMessage($message) {
-//		$_SESSION['scratch'] = $message;
-//	}
-//
-//	//Append to the scratch message
-//	public function appendScratchMessage($message) {
-//		logEntry("In appendScratchMessage");
-//		session_start();
-//		logEntry("session_start called");
-//		if(! array_key_exists('scratch',$_SESSION)) {session_register("scratch");}
-//		logEntry("Key didn't exist, registered");
-//		$_SESSION['scratch'] = $_SESSION['scratch'] .'<br/>' .$message;
-//		logEntry("Message added");
-//	}	
-//	
-//	public function getScratchMessage() {
-//		logEntry('in getScratchMessage');
-//		if(array_key_exists('scratch',$_SESSION)) {
-//			logEntry('returning scratch message'. $_SESSION['scratch']);
-//			return $_SESSION['scratch'];
-//		} else {return '';}
-//	}
-//	
-//	//Validate to: email addresses
-//	public function validate_to()
-//	{	
-//		global $config;
-//		logEntry("In validate_to");
-//		$emailto = str_replace(",",";",$_POST["fileto"]);
-//		$emailArray = preg_split("/;/", $emailto);
-//		logEntry("emailArray splitted");
-//		//To many recipients - err out
-//		if(count($emailArray) > $config['max_email_recipients'] ) {return false;}
-//		logEntry("emailArray not to long (not to any recipients)");
-//		
-//		//Check if we have valid email adddresses
-//		//We do have well thought out regular expressions, but I saw this one which seems to work and is maintained...
-//		//Anyway, easy to change if we want the regex in.
-//		foreach($emailArray as $email) {
-//			logEntry("in loop");
-//			if(filter_var($email,FILTER_VALIDATE_EMAIL)) {continue;}
-//			else {
-//				logEntry("no match for ".$email." returning false");
-//	            return false; 
-//	        }
-//		}
-//		logEntry("emails ok");
-//		return true;
-//	}
-//	
-//	//Validate date
-//	public function validate_date()
-//	{
-//		global $config;
-//		//date does a clever thing: if a value for a day or month is too high, it does a "right shift and prepends a 0
-//		//E.g. day 33 -> 03 This protects us against nn-existing dates
-//		$_POST['fileexpirydate'] = (date($config['datedisplayformat'],strtotime($_POST["fileexpirydate"])));
-//		logEntry("Expiry date now is ". $_POST['fileexpirydate']);
-//		return true;
-//	}
-//	
-//	//Validate AUP
-//	public function validate_aup()
-//	{
-//		return isset($_POST["aup"]);
-//	}
-//
-//	
-//	// validate extension for banned file names
-//	public function validate_extension() {
-//		global $config;
-//		$outcome = true;
-//		foreach( $_POST as $key => $value) {
-//			logEntry("POST parameter " . $key . " = " .$value);
-//		}
-//		$lastelem = array_pop(explode(".",$_POST['n']));
-//		logEntry('Last element = ' . $lastelem);
-//		$banned = explode(",",$config['ban_extension']);
-//		foreach($banned as $key => $naughty) {
-//			if($lastelem == $naughty) {$outcome = false; break;}
-//		}
-//		logEntry('Outcome = ' . $outcome);
-//		return $outcome;
-//	}
-//
-//	//Validate if the file is not 0 bytes long
-//	public function validate_zero_filesize()
-//	{	
-//		logEntry("Is numeric ". is_numeric($_POST['total']));
-//		if (isset($_POST["total"])) {return (! $_POST["total"] == 0);}
-//	}
-//	
-//	
-//	public function validatePlainUpload() {
-//		
-//		global $config;
-//		
-//		lang("_INVALID_MISSING_EMAIL");
-//		
-//		logEntry("in validatePlainUpload");
-//		$all_good = true;
-//		logEntry("0All good in validation = ".$all_good);
-//		
-//		if(! $this->validate_to()) { 
-//			logEntry("0-1 All wrong in email validation = ".$all_good);
-//			
-//			$all_good = false;
-//			$this->appendScratchMessage(lang("_INVALID_MISSING_EMAIL"));
-//			logEntry("0-2 All wrong in email validation = appended message");
-//			
-//		}
-//		logEntry("1 All still good in validation? = ".$all_good);
-//		if(! $this->validate_date()) { 
-//			logEntry("1-A All wrong in validation date = ".$all_good);
-//			$all_good = false;
-//			$this->appendScratchMessage(lang("_INVALID_DATE_FORMAT"));
-//			logEntry("1-b All wrong in validation date = ".$all_good);
-//		}
-//		logEntry("2 All still good in validation? = ".$all_good);
-//		if(! $this->validate_aup()) { 
-//			logEntry("2-A All wrong in validation AuP = ".$all_good);
-//			$all_good = false;
-//			logEntry("all_good = ".$all_good);
-//			$this->appendScratchMessage(lang("_AGREETOC"));
-//			logEntry("Scratch ".lang("_AGREETOC"). " added.");
-//		}
-//		logEntry("3 All still good in validation ? = ".$all_good);
-//		if(! $this->validate_extension()) { 
-//			logEntry("3-A All wrong in validation extensions = ".$all_good);
-//			$all_good = false;
-//			$this->appendScratchMessage(lang("_INVALID_FILE_EXT"));
-//		}
-//		logEntry("4 All still good in validation? = ".$all_good);
-//		if(! $this->validate_zero_filesize()) { 
-//			logEntry("4-A All wrong in validation zero filesize = ".$all_good);
-//			$all_good = false;
-//			$this->appendScratchMessage(lang("_INVALID_FILESIZE_ZERO"));
-//		}
-//		
-//		logEntry("5 All still good in validation = ".$all_good);
-//		print_r($all_good);
-//		//If somethings is wrong, redirect with message in the scratch space
-//		if(! $all_good) {
-//			logEntry('Redirecting to page with scratch');
-//			header("Location: " . $config['site_url'].'index.php');
-//			exit;
-//		}
-//	}
-
+	
     //--------------------------------------- CHECKED
     // Return Basic Database Statistics e.g. Up xx Gb (files xx) | Down xx Gb (files xx)
     public function getStats() {
@@ -492,100 +342,103 @@ class Functions {
 	//--------------------------------------- NOTE Replace with PDO version
 	// added for HTML5 version
 	public function insertVoucher($to,$expiry){
-
-
+	
+		// must be authenticated
+		if( $this->authsaml->isAuth()) {
+			
         global $config;
         $dbCheck = DB_Input_Checks::getInstance();
 		$authAttributes = $this->authsaml->sAuth();
-		// var  $dataitem = [];
 		
-		 $dataitem['fileto'] = $to;
-         $dataitem['filesubject'] = 'Voucher';
-         $dataitem['fileactivitydate'] = '';
-         $dataitem['filevoucheruid'] = getGUID();
-         $dataitem['filemessage'] = '';
-         $dataitem['filefrom'] = '';
-         $dataitem['filesize'] = 0;
-         $dataitem['fileoriginalname'] = '';
-         $dataitem['filestatus'] = "Voucher";
-         $dataitem['fileip4address'] = '';
-         $dataitem['fileip6address'] = '';
-         $dataitem['filesendersname'] = '';
-         $dataitem['filereceiversname'] = '';
-         $dataitem['filevouchertype'] = '';
-         $dataitem['fileuid'] = getGUID();
-         $dataitem['fileauthuseruid'] = $authAttributes["saml_uid_attribute"];
-         $dataitem['fileauthuseremail'] = $authAttributes["email"];
-         $dataitem['filecreateddate'] =  date($config['db_dateformat'], time());
-		 
-		 if( $this->authsaml->isAuth()) {
-            $authAttributes = $this->authsaml->sAuth();
-            $dataitem['fileauthuseruid'] = $authAttributes["saml_uid_attribute"] ;
-            $dataitem['fileauthuseremail'] = $authAttributes["email"];
-			$dataitem['filefrom'] = $authAttributes["email"];
-        }
+		$pdo = $this->db->connect();
+		$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
+	
 		
-  		// check if user supplied date is past the server configuration maximum date
-		if(strtotime($expiry) > strtotime("+".$config['default_daysvalid']." day"))
-		{
-		// reset fileexpiry date to max config date from server
-		$expiry = date($config['db_dateformat'],strtotime("+".($config['default_daysvalid'])." day"));
-		}
-		$dataitem['fileexpirydate'] =$expiry;
-		        	
-		$result = $this->db->fquery("
-            INSERT INTO files (
+		$statement = $pdo->prepare('INSERT INTO files (
 			fileexpirydate,
 			fileto,
-                filesubject,
-                fileactivitydate,
-                filevoucheruid,
-                filemessage,
-                filefrom,
-                filesize,
-                fileoriginalname,
-                filestatus,
-                fileip4address,
-                fileip6address,
-                filesendersname,
-                filereceiversname,
-                filevouchertype,
-                fileuid,
-                fileauthuseruid,
-                fileauthuseremail,
-                filecreateddate
+			filesubject,
+			fileactivitydate,
+			filevoucheruid,
+			filemessage,
+			filefrom,
+			filesize,
+			fileoriginalname,
+			filestatus,
+			fileip4address,
+			fileip6address,
+			filesendersname,
+			filereceiversname,
+			filevouchertype,
+			fileuid,
+			fileauthuseruid,
+			fileauthuseremail,
+			filecreateddate
 
             ) VALUES
-            ( %s, %s, %s, %s, %s, %s, %s, %d, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-  			date($config['db_dateformat'], strtotime($expiry)),
-            $dataitem['fileto'],
-            $dataitem['filesubject'],
-            date($config['db_dateformat'], time()),
-            $dataitem['filevoucheruid'],
-            $dataitem['filemessage'],
-            $dataitem['filefrom'],
-            $dataitem['filesize'],
-            // inserted vouchers have no filenames, but inserted files must have a non-empty filename
-           	$dataitem['fileoriginalname'],
-            $dataitem['filestatus'],
-            $dbCheck->checkIp($_SERVER['REMOTE_ADDR']),
-            $dbCheck->checkIp6($_SERVER['REMOTE_ADDR']),
-            $dataitem['filesendersname'],
-            $dataitem['filereceiversname'],
-            $dataitem['filevouchertype'],
-            $dataitem['fileuid'],
-            $dataitem['fileauthuseruid'],
-            $dataitem["fileauthuseremail"],
-            date($config['db_dateformat'], time())
-            );
-
-            if($dataitem['filestatus'] == "Voucher") {
-                $this->saveLog->saveLog($dataitem,"Voucher Sent","");
-                return $this->sendmail->sendEmail($dataitem,$config['voucherissuedemailbody']);
-            } else {
-                $this->saveLog->saveLog($dataitem,"Uploaded","");
-                return $this->sendmail->sendEmail($dataitem,$config['fileuploadedemailbody']);
-            }
+            ( 
+			:fileexpirydate,
+			:fileto,
+			:filesubject,
+			:fileactivitydate,
+			:filevoucheruid,
+			:filemessage,
+			:filefrom,
+			:filesize,
+			:fileoriginalname,
+			:filestatus,
+			:fileip4address,
+			:fileip6address,
+			:filesendersname,
+			:filereceiversname,
+			:filevouchertype,
+			:fileuid,
+			:fileauthuseruid,
+			:fileauthuseremail,
+			:filecreateddate)');
+			
+			$filevoucheruid = getGUID();
+			$voucher = 'Voucher';
+			$blank = '';
+			$zero = 0;
+			
+			$statement->bindParam(':fileexpirydate', date($config['db_dateformat'], strtotime($expiry)));
+			$statement->bindParam(':fileto', $to);
+			$statement->bindParam(':filesubject', $voucher);
+			$statement->bindParam(':fileactivitydate',  date($config['db_dateformat'], time()));
+			
+			$statement->bindParam(':filevoucheruid', $filevoucheruid );
+			$statement->bindParam(':filemessage', $blank);
+			$statement->bindParam(':filefrom', $authAttributes["email"]);
+			$statement->bindParam(':filesize', $zero);
+			$statement->bindParam(':fileoriginalname', $blank);
+			$statement->bindParam(':filestatus', $voucher);
+			
+			$statement->bindParam(':fileip4address', $dbCheck->checkIp($_SERVER['REMOTE_ADDR']));
+			$statement->bindParam(':fileip6address', $dbCheck->checkIp6($_SERVER['REMOTE_ADDR']));
+			$statement->bindParam(':filesendersname', $blank);
+			$statement->bindParam(':filereceiversname', $blank);
+			$statement->bindParam(':filevouchertype', $blank);
+			$statement->bindParam(':fileuid', getGUID());
+			$statement->bindParam(':fileauthuseruid', $authAttributes["saml_uid_attribute"]);
+			$statement->bindParam(':fileauthuseremail', $authAttributes["email"]);
+			$statement->bindParam(':filecreateddate', date($config['db_dateformat'], time()));
+			try { 	
+			$statement->execute(); 
+			}
+			catch(PDOException $e){ 
+			logEntry($e->getMessage());	//displayError($e->getMessage()); 
+			}   
+			
+			// get voucherdata to email
+			$dataitem = $this->getVoucherData($filevoucheruid);
+			$this->saveLog->saveLog($dataitem,"Voucher Sent","");
+			return $this->sendmail->sendEmail($dataitem,$config['voucherissuedemailbody']);
+			
+		} else {
+			
+			return false;
+		}
     }
 	
 	// ---------------------------- CHECKED
@@ -601,14 +454,7 @@ class Functions {
 		} 
 		return date($config['db_dateformat'],strtotime($data));
 	}
-	
-	//
-	//	function ensureValidFileTo($data)
-	//	{
-	//		global $config;
-	//		return $data;
-	//	}
-	
+		
    	//--------------------------------------- CHECKED
     // Validate $data and return data
     // 
@@ -757,7 +603,13 @@ class Functions {
 	$statement->bindParam(':fileauthuseremail', $dataitem['fileauthuseremail']);
 	$statement->bindParam(':filecreateddate', $dataitem['filecreateddate']);
 
-	$result = $statement->execute();    
+	try { 
+		$statement->execute(); 
+		}
+	catch(PDOException $e){ 
+		logEntry($e->getMessage());	
+		return false;
+	}   
 
 		if($dataitem['filestatus'] == "Voucher") {
 			$this->saveLog->saveLog($dataitem,"Voucher Sent","");
@@ -777,24 +629,37 @@ class Functions {
         global $config;
 
         // check authentication SAML User
-        if( $this->authsaml->isAuth()) {
-
-            $sqlQuery = "
-                UPDATE 
-                files 
-                SET 
-                filestatus = 'Voucher Cancelled' 
-                WHERE 
-                fileid = %s
-                ";
-
-           $statement = $this->db->fquery($sqlQuery, $fileid);
-		   
+		if( $this->authsaml->isAuth()) {
+			
+			$pdo = $this->db->connect();
+			$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
+			
+			$statement = $pdo->prepare("UPDATE 
+            	files 
+            	SET 
+            	filestatus = 'Voucher Cancelled' 
+            	WHERE 
+            	fileid = :fileid");
+			
+			$statement->bindParam(':fileid', $fileid);
+			
+			try { 
+				$statement->execute(); 
+				}
+			catch(PDOException $e){ 
+				logEntry($e->getMessage());	
+				return false;
+				}   
+				
 		   $fileArray =  $this->getVoucher($fileid);
-           $this->sendmail->sendEmail($fileArray[0],$config['defaultvouchercancelled']);	
-           $this->saveLog->saveLog($fileArray[0],"Voucher Cancelled","");
-
-            return true;
+		   
+		   if($fileArray.count() > 0) 
+			{
+        	   $this->sendmail->sendEmail($fileArray[0],$config['defaultvouchercancelled']);	
+        	   $this->saveLog->saveLog($fileArray[0],"Voucher Cancelled","");
+			    return true;
+			}
+           return false;
         } else {
             return false;
         }	
