@@ -604,8 +604,6 @@ class Functions {
 		// if errors - return them via json to client	
 		if(count($errorArray) > 0 )
 		{
-		logentry("Functions: validateFileData errors: ". print_r($resultArray,true));
-		logentry("Functions: validateFileData errors (json): ". print_r(json_encode($resultArray),true));
 		$resultArray["errors"] =  $errorArray;
 		echo json_encode($resultArray);
 		exit; // Stop further script execution
