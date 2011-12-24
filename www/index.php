@@ -80,8 +80,8 @@ if(!$authvoucher->aVoucher() && !$authsaml->isAuth() && $s != "complete" && $s !
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title><?php echo $config['site_name']; ?></title>
-<link rel="icon" href="favicon.ico"	type="image/x-icon">
-<link rel="shortcut icon" href="favicon.ico"type="image/x-icon">
+<link rel="icon" href="favicon.ico" type="image/x-icon"/>
+<link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
 <link type="text/css" href="css/smoothness/jquery-ui-1.8.2.custom.css" rel="Stylesheet" />
 <link rel="stylesheet" type="text/css" href="css/default.css" />
 <script type="text/javascript" src="js/common.js" ></script>
@@ -132,7 +132,7 @@ function openabout()
 <div id="wrap">
   <div id="header">
     <div align="center">
-      <p><img src="displayimage.php" width="800" height="60" border=0/></p>
+      <p><img src="displayimage.php" width="800" height="60" border="0" alt="banner"/></p>
       <noscript>
       <p class="style5">JavaScript is turned off in your web browser. <br />
         This application will not run without Javascript enabled in your web browser. </p>
@@ -154,14 +154,14 @@ function openabout()
    <div class="menu" id="menuright">
   <?php
 	if($config['helpURL'] == "") {
-		echo '<a href="#" id="topmenu_help" onclick="openhelp()">'.lang("_HELP").'</a></li>';
+		echo '<a href="#" id="topmenu_help" onclick="openhelp()">'.lang("_HELP").'</a>';
 	} else {
-		echo '<a href="'.$config['helpURL'].'" target="_blank" id="topmenu_help">'.lang("_HELP").'</a></li>';
+		echo '<a href="'.$config['helpURL'].'" target="_blank" id="topmenu_help">'.lang("_HELP").'</a>';
 	}
 	if($config['aboutURL'] == "") {
-		echo '<a href="#" id="topmenu_about" onclick="openabout()">'.lang("_ABOUT").'</a></li>';
+		echo '<a href="#" id="topmenu_about" onclick="openabout()">'.lang("_ABOUT").'</a>';
 	} else {
-		echo '<a href="'.$config['aboutURL'].'" target="_blank" id="topmenu_about">'.lang("_ABOUT").'</a></li>';	
+		echo '<a href="'.$config['aboutURL'].'" target="_blank" id="topmenu_about">'.lang("_ABOUT").'</a>';	
 	}
 	if(!$authsaml->isAuth() && $s != "logon" ) { echo '<a href="'.$authsaml->logonURL().'" id="topmenu_logon">'.lang("_LOGON").'</a>';}
 	if($authsaml->isAuth() && !$authvoucher->aVoucher() &&  $s != "completev" ) { echo '<a href="'.$authsaml->logoffURL().'" id="topmenu_logoff">'.lang("_LOG_OFF").'</a>'; }
