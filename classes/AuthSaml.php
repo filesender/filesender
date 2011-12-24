@@ -153,7 +153,7 @@ class AuthSaml {
         //require_once($config['site_simplesamllocation'].'lib/_autoload.php');
         //$as = new SimpleSAML_Auth_Simple($config['site_authenticationSource']);
         $lognurl = $config['site_simplesamlurl']."module.php/core/as_login.php?AuthId=".$config['site_authenticationSource']."&ReturnTo=".$config['site_url']."index.php?s=upload";
-        return $lognurl; //$attributes;
+        return htmlentities($lognurl); //$attributes;
     }
 
     // requests logon OFF URL from SAML and returns string	
@@ -162,7 +162,7 @@ class AuthSaml {
 		require_once($config['site_simplesamllocation'].'lib/_autoload.php');
     	//$as = new SimpleSAML_Auth_Simple($config['site_authenticationSource']);
     	$logoffurl = $config['site_simplesamlurl']."module.php/core/as_logout.php?AuthId=".$config['site_authenticationSource']."&ReturnTo=".$config['site_logouturl']."" ;
-        return $logoffurl; //$attributes;
+        return htmlentities($logoffurl); //$attributes;
     }
 
     // checks SAML for autheticated user: returns true/false	
