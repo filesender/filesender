@@ -518,7 +518,7 @@ function keepMeAlive()
     <table width="100%" border="0">
       <tr>
         <td width="130" class=" mandatory"><?php echo lang("_TO") ; ?>:</td>
-        <td colspan="2" valign="middle"><input name="fileto" title="<?php echo lang("_EMAIL_SEPARATOR_MSG") ; ?>" type="text" id="fileto" onchange="validate_fileto()"/>
+        <td colspan="2" valign="middle"><input name="fileto" title="<?php echo lang("_EMAIL_SEPARATOR_MSG") ; ?>" type="text" id="fileto" onchange="validate_fileto()" />
         <div id="fileto_msg" style="display: none" class="validation_msg"><?php echo lang("_INVALID_MISSING_EMAIL"); ?></div>
         <div id="maxemails_msg" style="display: none" class="validation_msg"><?php echo lang("_MAXEMAILS"); ?> <?php echo $config['max_email_recipients'] ?>.</div>
         </td>
@@ -561,7 +561,7 @@ function keepMeAlive()
       </tr>
       <tr>
         <td class=" mandatory"><?php echo lang("_EXPIRY_DATE"); ?>:
-          <input type="hidden" id="fileexpirydate" name="fileexpirydate" value="<?php echo date($config['datedisplayformat'],strtotime("+".$config['default_daysvalid']." day"));?>"/></td>
+          <input type="hidden" id="fileexpirydate" name="fileexpirydate" value="<?php echo date($config['datedisplayformat'],strtotime("+".$config['default_daysvalid']." day"));?>" /></td>
         <td colspan="2"><input id="datepicker" name="datepicker" title="<?php echo lang('_DP_dateFormat'); ?>" onchange="validate_expiry()">
           </input>
           <div id="expiry_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_EXPIRY_DATE"); ?></div>
@@ -628,11 +628,11 @@ if ( hasProductInstall && !hasRequestedVersion ) {
 }
 // -->
 </script>
-            <div id="uploadstandardspinner" style="padding-top:10px;display:none"><img src="images/ajax-loader-sm.gif" border=0 align="left" style="padding-right:6px"/><?php echo lang("_UPLOADING_WAIT"); ?></div>
+            <div id="uploadstandardspinner" style="padding-top:10px;display:none"><img src="images/ajax-loader-sm.gif" border=0 align="left" style="padding-right:6px" /><?php echo lang("_UPLOADING_WAIT"); ?></div>
             <BR />
           </div>
           <div id="uploadhtml5" style="display:none">
-            <input type="file" name="fileToUpload" id="fileToUpload" onChange="fileSelected();"/>
+            <input type="file" name="fileToUpload" id="fileToUpload" onChange="fileSelected();" />
           </div>
           <div id="file_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_FILE"); ?></div>
         </td>
@@ -651,7 +651,7 @@ if ( hasProductInstall && !hasRequestedVersion ) {
        <?php if ($config["AuP"]) {?>
       <tr>
         <td class=""></td>
-        <td><input name="aup" type="checkbox" id="aup" onchange="validate_aup()" <?php echo ($config["AuP_default"] ) ? "checked" : ""; ?> <?php echo (isset($_SESSION["aup"]) && !$authvoucher->aVoucher() ) ? "checked" : ""; ?> value="true"/>
+        <td><input name="aup" type="checkbox" id="aup" onchange="validate_aup()" <?php echo ($config["AuP_default"] ) ? "checked" : ""; ?> <?php echo (isset($_SESSION["aup"]) && !$authvoucher->aVoucher() ) ? "checked" : ""; ?> value="true" />
          </td>
         <td>
           <div id="aup_label" name="aup_label" onclick="toggleTOG()" style="cursor:pointer;"><?php echo lang("_ACCEPTTOC"); ?> [<font color="#666666"><?php echo lang("_SHOWHIDE"); ?></font>]</div>
@@ -666,18 +666,18 @@ if ( hasProductInstall && !hasRequestedVersion ) {
       <td colspan="2"><div class="menu" id="uploadbutton" name="uploadbutton" style="display:none"><a href="#" onClick="validate()"><?php echo lang("_SEND"); ?></a></div></td>
       </tr>
       </table>
-<input type="hidden" id="filevoucheruid" name="filevoucheruid" value="<?php echo $voucherUID; ?>"/>
-		<input type="hidden" name="vid" id="vid" value="<?php echo $voucherUID; ?>"/>
-		<input type="hidden" name="total" id="total" value=""/>
-		<input type="hidden" name="n" id="n" value=""/>
-		<input type="hidden" id="filestatus" name="filestatus" value="<?php echo $filestatus; ?>"/>
-		<input type="hidden" name="loadtype" id="loadtype" value="standard"/>
+<input type="hidden" id="filevoucheruid" name="filevoucheruid" value="<?php echo $voucherUID; ?>" />
+		<input type="hidden" name="vid" id="vid" value="<?php echo $voucherUID; ?>" />
+		<input type="hidden" name="total" id="total" value="" />
+		<input type="hidden" name="n" id="n" value="" />
+		<input type="hidden" id="filestatus" name="filestatus" value="<?php echo $filestatus; ?>" />
+		<input type="hidden" name="loadtype" id="loadtype" value="standard" />
   </form>
 </div>
 <div id="dialog-default" title=""> </div>
 <div id="dialog-cancel" title="<?php echo lang("_CANCEL_UPLOAD"); ?>"><?php echo lang("_ARE_YOU_SURE"); ?></div>
 <div id="dialog-uploadprogress" title="">
-<img id="progress_image" name="progress_image" src="images/ajax-loader-sm.gif" width="16" height="16" alt="Uploading" align="left"/> 
+<img id="progress_image" name="progress_image" src="images/ajax-loader-sm.gif" width="16" height="16" alt="Uploading" align="left" /> 
 	<div id="progress_container">
    		<div id="progress_bar">
 		<div id="progress_completed"></div>

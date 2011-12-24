@@ -288,7 +288,7 @@ foreach($json_o as $item) {
       </tr>
       <tr>
         <td class="formfieldheading mandatory"><?php echo lang("_EXPIRY_DATE"); ?>:
-          <input type="hidden" id="fileexpirydate" name="fileexpirydate" value="<?php echo date($config['datedisplayformat'],strtotime("+".$config['default_daysvalid']." day"));?>"/></td>
+          <input type="hidden" id="fileexpirydate" name="fileexpirydate" value="<?php echo date($config['datedisplayformat'],strtotime("+".$config['default_daysvalid']." day"));?>" /></td>
         <td><input id="datepicker" name="datepicker" onchange="validate_expiry()" title="<?php echo lang('_DP_dateFormat'); ?>">
           </input>
           <div id="expiry_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_EXPIRY_DATE"); ?></div></td>
@@ -306,6 +306,6 @@ foreach($json_o as $item) {
         <td><div id="file_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_FILE"); ?></div></td>
       </tr>
     </table>
-    <input name="filevoucheruid" type="hidden" id="filevoucheruid"/>
+    <input name="filevoucheruid" type="hidden" id="filevoucheruid" />
   </form>
 </div>

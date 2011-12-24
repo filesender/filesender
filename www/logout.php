@@ -48,7 +48,7 @@ session_destroy();
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title><?php echo $config['site_name']; ?></title>
-<link rel="shortcut icon" href="favicon.ico"type="image/x-icon">
+<link rel="shortcut icon" href="favicon.ico"type="image/x-icon" />
 <link type="text/css" href="css/smoothness/jquery-ui-1.8.2.custom.css" rel="Stylesheet" />
 <link rel="stylesheet" type="text/css" href="css/default.css" />
 <script type="text/javascript" src="js/common.js" ></script>
@@ -67,7 +67,7 @@ $( "a", ".menu" ).button();
 	
   <div id="header">
     <div align="center">
-       <img src="displayimage.php" width="800" height="60" border="0" alt="banner"/>
+       <img src="displayimage.php" width="800" height="60" border="0" alt="banner" />
     </div>
   </div>
   <div id="content">
