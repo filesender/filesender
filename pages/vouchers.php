@@ -35,7 +35,7 @@
  * 
  */
  ?>
-<script>
+<script type="text/javascript">
 var maximumDate = <?php echo (time()+($config['default_daysvalid']*86400))*1000 ?>;
 var minimumDate = <?php echo (time()+86400)*1000 ?>;
 var maxEmailRecipients = <?php echo $config['max_email_recipients'] ?>;
@@ -163,7 +163,7 @@ $filedata = $functions->getVouchers();
 $json_o=json_decode($filedata,true);
 
 ?>
-<form name="form1" id="form1" method="post">
+<form name="form1" id="form1" method="post" action="">
     <div id="box">
   <?php echo '<div id="pageheading">'.lang("_VOUCHERS").'</div>'; ?>
     <table width="100%" border="0">

@@ -48,13 +48,13 @@ session_destroy();
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title><?php echo $config['site_name']; ?></title>
-<link rel="shortcut icon" href="favicon.ico"type="image/x-icon" />
+<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
 <link type="text/css" href="css/smoothness/jquery-ui-1.8.2.custom.css" rel="Stylesheet" />
 <link rel="stylesheet" type="text/css" href="css/default.css" />
 <script type="text/javascript" src="js/common.js" ></script>
 <script type="text/javascript" src="js/jquery-1.7.min.js" ></script>
 <script type="text/javascript" src="js/jquery-ui-1.8.1.custom.min.js"></script>
-<script>
+<script type="text/javascript">
 $(function() {
 $( "a", ".menu" ).button();
 })
@@ -74,7 +74,7 @@ $( "a", ".menu" ).button();
    <div id="box">
     <div align="center">
 	<p><?php echo lang("_LOGOUT_COMPLETE") ?></p>
-	<p><div class="menu" align="center"><a href="<?php echo $authsaml->logonURL();?>" ><?php echo lang("_LOGON") ?></a></div></p>
+	<div class="menu" align="center"><p><a href="<?php echo $authsaml->logonURL();?>" ><?php echo lang("_LOGON") ?></a></p></div>
     </div>
    </div>
   </div><!-- #content -->
