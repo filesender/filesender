@@ -265,7 +265,7 @@ foreach($json_o as $item) {
 <p><?php echo lang("_CONFIRM_DELETE_FILE");?></p>
 </div>
 <div id="dialog-addrecipient" title="<?php echo  lang("_NEW_RECIPIENT"); ?>">
-  <form id="form1" name="form1" enctype="multipart/form-data" method="POST" action="">
+  <form id="form1" name="form1" enctype="multipart/form-data" method="post" action="">
     <table  width="600" border="0">
       <tr>
         <td width="100" class="formfieldheading mandatory"><?php echo  lang("_TO"); ?>:</td>
@@ -289,8 +289,7 @@ foreach($json_o as $item) {
       <tr>
         <td class="formfieldheading mandatory"><?php echo lang("_EXPIRY_DATE"); ?>:
           <input type="hidden" id="fileexpirydate" name="fileexpirydate" value="<?php echo date($config['datedisplayformat'],strtotime("+".$config['default_daysvalid']." day"));?>" /></td>
-        <td><input id="datepicker" name="datepicker" onchange="validate_expiry()" title="<?php echo lang('_DP_dateFormat'); ?>">
-          </input>
+        <td><input id="datepicker" name="datepicker" onchange="validate_expiry()" title="<?php echo lang('_DP_dateFormat'); ?>" />
           <div id="expiry_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_EXPIRY_DATE"); ?></div></td>
       </tr>
       <tr>

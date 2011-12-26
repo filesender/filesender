@@ -514,7 +514,7 @@ function keepMeAlive()
     </script>
 
 <div id="box"> <?php echo '<div id="pageheading">'.lang("_UPLOAD").'</div>'; ?>
-  <form id="form1" enctype="multipart/form-data" method="POST" action="fs_uploadit.php">
+  <form id="form1" enctype="multipart/form-data" method="post" action="fs_uploadit.php">
     <table width="100%" border="0">
       <tr>
         <td width="130" class=" mandatory"><?php echo lang("_TO") ; ?>:</td>
@@ -557,13 +557,12 @@ function keepMeAlive()
         </tr>
       <tr>
         <td class=""><?php echo lang("_MESSAGE"); ?>: (<?php echo lang("_OPTIONAL"); ?>)</td>
-        <td colspan="2"><textarea name="filemessage" rows="4" id="filemessage"></textarea></td>
+        <td colspan="2"><textarea name="filemessage" cols="57" rows="4" id="filemessage"></textarea></td>
       </tr>
       <tr>
         <td class=" mandatory"><?php echo lang("_EXPIRY_DATE"); ?>:
           <input type="hidden" id="fileexpirydate" name="fileexpirydate" value="<?php echo date($config['datedisplayformat'],strtotime("+".$config['default_daysvalid']." day"));?>" /></td>
-        <td colspan="2"><input id="datepicker" name="datepicker" title="<?php echo lang('_DP_dateFormat'); ?>" onchange="validate_expiry()">
-          </input>
+        <td colspan="2"><input id="datepicker" name="datepicker" title="<?php echo lang('_DP_dateFormat'); ?>" onchange="validate_expiry()" />
           <div id="expiry_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_EXPIRY_DATE"); ?></div>
         </td>
         <td colspan="2" align="center" valign="top"><a href="<?php echo $config['HTML5URL'] ?>" target="_newtab" id="html5link" name="html5link"><img src="images/html5_installed.png" alt="" name="html5image" width="75" height="18" border="0" id="html5image" title="" /></a></td>
@@ -628,11 +627,11 @@ if ( hasProductInstall && !hasRequestedVersion ) {
 }
 // -->
 </script>
-            <div id="uploadstandardspinner" style="padding-top:10px;display:none"><img src="images/ajax-loader-sm.gif" border=0 align="left" style="padding-right:6px" /><?php echo lang("_UPLOADING_WAIT"); ?></div>
+            <div id="uploadstandardspinner" style="padding-top:10px;display:none"><img src="images/ajax-loader-sm.gif" border="0" align="left" style="padding-right:6px" /><?php echo lang("_UPLOADING_WAIT"); ?></div>
             <BR />
           </div>
           <div id="uploadhtml5" style="display:none">
-            <input type="file" name="fileToUpload" id="fileToUpload" onChange="fileSelected();" />
+            <input type="file" name="fileToUpload" id="fileToUpload" onchange="fileSelected();" />
           </div>
           <div id="file_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_FILE"); ?></div>
         </td>
@@ -663,7 +662,7 @@ if ( hasProductInstall && !hasRequestedVersion ) {
       <?php } ?>
       <tr>
       <td></td>
-      <td colspan="2"><div class="menu" id="uploadbutton" name="uploadbutton" style="display:none"><a href="#" onClick="validate()"><?php echo lang("_SEND"); ?></a></div></td>
+      <td colspan="2"><div class="menu" id="uploadbutton" name="uploadbutton" style="display:none"><a href="#" onclick="validate()"><?php echo lang("_SEND"); ?></a></div></td>
       </tr>
       </table>
 <input type="hidden" id="filevoucheruid" name="filevoucheruid" value="<?php echo $voucherUID; ?>" />
