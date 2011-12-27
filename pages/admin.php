@@ -76,12 +76,12 @@ $drivespace = $functions->driveSpace();
     <ul>
       <?php
 	// admin tab names
-		echo '<li><a href="#tabs-1">'.lang("_GENERAL").'</a></li>';
-		echo '<li><a href="#tabs-2">'.lang("_UPLOADS").'</a></li>';
-		echo '<li><a href="#tabs-3">'.lang("_DOWNLOADS").'</a></li>';
-		echo '<li><a href="#tabs-4">'.lang("_ERRORS").'</a></li>';
-		echo '<li><a href="#tabs-5">'.lang("_FILES_AVAILABLE").'</a></li>';
-		echo '<li><a href="#tabs-6">'.lang("_ACTIVE_VOUCHERS").'</a></li>';
+		echo '<li><a id="tab_general" href="#tabs-1">'.lang("_GENERAL").'</a></li>';
+		echo '<li><a id="tab_uploads" href="#tabs-2">'.lang("_UPLOADS").'</a></li>';
+		echo '<li><a id="tab_downloads" href="#tabs-3">'.lang("_DOWNLOADS").'</a></li>';
+		echo '<li><a id="tab_errors" href="#tabs-4">'.lang("_ERRORS").'</a></li>';
+		echo '<li><a id="tab_available" href="#tabs-5">'.lang("_FILES_AVAILABLE").'</a></li>';
+		echo '<li><a id="tab_activevouchers" href="#tabs-6">'.lang("_ACTIVE_VOUCHERS").'</a></li>';
 		?>
     </ul>
     <div id="tabs-1"> <?php echo  $functions->getStats(); ?><br />
