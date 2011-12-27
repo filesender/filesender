@@ -115,9 +115,9 @@
 			$lang["_INVALID_FILESIZE_ZERO"] = "File size cannot be 0. Please select another file.";
 			$lang["_INVALID_FILE_EXT"] = "Invalid file extension.";
 			$lang["_INVALID_TOO_LARGE_1"] = "File size cannot be greater than";
-			$lang["_AUTH_ERROR"] = "Your are no longer authenticated. <BR>Your session may have expired or there has been a server error. <BR><BR>Please logon again and re-try.";	
+			$lang["_AUTH_ERROR"] = "Your are no longer authenticated. <br />Your session may have expired or there has been a server error. <br /><br />Please logon again and re-try.";	
 			$lang["_SELECT_ANOTHER_FILE"] = "Please select another file.";
-			$lang["_INVALID_VOUCHER"] = "This Voucher is no longer Valid. <BR>Please contact the person that issued this voucher";
+			$lang["_INVALID_VOUCHER"] = "This Voucher is no longer Valid. <br />Please contact the person that issued this voucher";
 			$lang["_SELECT_FILE"] = "Select your file";
 			$lang["_INVALID_FILE_NAME"] = "The name of the file you are uploading is invalid. Please rename your file and try again.";
 			$lang["_INVALID_SIZE_USEHTML5"] = "Please select another file or use a HTML5 enabled browser to upload larger files.";
@@ -133,8 +133,8 @@
 			$lang["_LOGOUT_COMPLETE"] = "Logout Complete";
 			
 			// vouchers
-			$lang["_SEND_NEW_VOUCHER"] = "A Voucher allows someone to send you a file.<br>
-To create a voucher, enter an email address then select Send Voucher.<BR>
+			$lang["_SEND_NEW_VOUCHER"] = "A Voucher allows someone to send you a file.<br />
+To create a voucher, enter an email address then select Send Voucher.<br />
 An email will be sent to the recipient with a link to use the Voucher.";
 			$lang["_EMAIL_SEPARATOR_MSG"] = "Multiple email addresses separated by , or ;";
 			
@@ -165,7 +165,7 @@ An email will be sent to the recipient with a link to use the Voucher.";
            	$lang["_STEP3"] = "Browse for a file";
            	$lang["_STEP4"] = "Click Send";
 			$lang["_HTML5Supported"] = "Uploads over 2GB supported!";
-			$lang["_HTML5NotSupported"] = "Uploads over 2GB<BR>not supported!";			
+			$lang["_HTML5NotSupported"] = "Uploads over 2GB<br />not supported!";			
 	
            	// site help
            	//$lang["_site_help_text"] = "Site help text";

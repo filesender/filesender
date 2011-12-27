@@ -106,8 +106,8 @@ $lang["_ACCEPTTOC"] = "Ik ga akkoord met de bepalingen en voorwaarden van deze d
 $lang["_AGREETOC"] = "U moet akkoord gaan met de voorwaarden.";
 
 // Vouchers
-$lang["_SEND_NEW_VOUCHER"] = "Met een Uitnodiging kunt u iemand een bestand laten sturen.<br>
-Om een Uitnodiging te maken voer een e-mailadres in en klik op Stuur Uitnodiging.<BR>
+$lang["_SEND_NEW_VOUCHER"] = "Met een Uitnodiging kunt u iemand een bestand laten sturen.<br />
+Om een Uitnodiging te maken voer een e-mailadres in en klik op Stuur Uitnodiging.<br />
 Er wordt dan een e-mail verstuurd naar de ontvanger met daarin een link om de uitnodiging te gebruiken.";
 $lang["_SEND_VOUCHER_TO"] = "Stuur uitnodiging naar";
 $lang["_SEND_VOUCHER"] = "Stuur Uitnodiging";

@@ -131,7 +131,7 @@ function displayError($errmsg)
 	logEntry($errmsg);
 	if($config['displayerrors'] )
 	{
-		echo "<br><div id='errmessage'>".$errmsg."</div>";
+		echo "<br /><div id='errmessage'>".$errmsg."</div>";
 	}
 }
 ?>

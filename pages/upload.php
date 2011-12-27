@@ -524,19 +524,19 @@ function keepMeAlive()
         </td>
         <td colspan="2" rowspan="4" align="center" valign="top"><table width="100%" border="0">
           <tr>
-            <td width="25"><img src="images/num_1.png" alt="" width="25" height="25" hspace="6" border="0" align="left" /></td>
+            <td width="25"><img src="images/num_1.png" alt="1" width="25" height="25" hspace="6" border="0" align="left" /></td>
             <td align="left"><span class="forminstructions"><?php echo lang("_STEP1"); ?></span></td>
             </tr>
           <tr>
-            <td><img src="images/num_2.png" width="25" height="25" hspace="6" border="0" align="left" /></td>
+            <td><img src="images/num_2.png" alt="2" width="25" height="25" hspace="6" border="0" align="left" /></td>
             <td align="left"><span class="forminstructions"><?php echo lang("_STEP2"); ?></span></td>
             </tr>
           <tr>
-            <td><img src="images/num_3.png" width="25" height="25" hspace="6" border="0" align="left" /></td>
+            <td><img src="images/num_3.png" alt="3" width="25" height="25" hspace="6" border="0" align="left" /></td>
             <td align="left"><span class="forminstructions"><?php echo lang("_STEP3"); ?></span></td>
             </tr>
           <tr>
-            <td><img src="images/num_4.png" width="25" height="25" hspace="6" border="0" align="left" /></td>
+            <td><img src="images/num_4.png" alt="4" width="25" height="25" hspace="6" border="0" align="left" /></td>
             <td align="left"><span class="forminstructions"><?php echo lang("_STEP4"); ?></span></td>
             </tr>
           <tr>
@@ -619,16 +619,16 @@ if ( hasProductInstall && !hasRequestedVersion ) {
 	);
 	
   } else {  // flash is too old or we can't detect the plugin
-    var alternateContent = '<div id="header"><h1>Install Flash Player<h1></div><BR><div align="center">This application requires Flash Player.<BR><BR>'
-  	+ 'To install Flash Player go to Adobe.com.<br> '
+    var alternateContent = '<div id="header"><h1>Install Flash Player<h1></div><br /><div align="center">This application requires Flash Player.<br /><br />'
+  	+ 'To install Flash Player go to Adobe.com.<br /> '
    	+ '<a href=http://www.adobe.com/go/getflash/>Get Flash</a></div>';
     document.write(alternateContent);  // insert non-flash content
   }
 }
 // -->
 </script>
-            <div id="uploadstandardspinner" style="padding-top:10px;display:none"><img src="images/ajax-loader-sm.gif" border="0" align="left" style="padding-right:6px" /><?php echo lang("_UPLOADING_WAIT"); ?></div>
-            <BR />
+            <div id="uploadstandardspinner" style="padding-top:10px;display:none"><img src="images/ajax-loader-sm.gif" alt="" border="0" align="left" style="padding-right:6px" /><?php echo lang("_UPLOADING_WAIT"); ?></div>
+            <br />
           </div>
           <div id="uploadhtml5" style="display:none">
             <input type="file" name="fileToUpload" id="fileToUpload" onchange="fileSelected();" />
