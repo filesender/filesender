@@ -74,7 +74,7 @@ $( "a", ".menu" ).button();
    <div id="box">
     <div align="center">
 	<p><?php echo lang("_LOGOUT_COMPLETE") ?></p>
-	<div class="menu" align="center"><p><a href="<?php echo $authsaml->logonURL();?>" ><?php echo lang("_LOGON") ?></a></p></div>
+	<div class="menu" align="center"><p><a id="btn_logon" href="<?php echo $authsaml->logonURL();?>" ><?php echo lang("_LOGON") ?></a></p></div>
     </div>
    </div>
   </div><!-- #content -->

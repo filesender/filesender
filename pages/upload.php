@@ -137,15 +137,20 @@
 		// set dialog cancel upload
 		$("#dialog-cancel").dialog({ autoOpen: false, height: 140, width: 350, modal: true,
 		buttons: {
-				'<?php echo lang("_OK") ?>': function() {
+				'uploadconfirmyesBTN': function() {
 				location.reload(true);
 
 				},
-				'<?php echo lang("_CANCEL") ?>': function() { 
+				'uploadconfirmnoBTN': function() { 
 				$( this ).dialog( "close" );
 				}
 		}
 		});
+		
+		$('.ui-dialog-buttonpane button:contains(uploadconfirmnoBTN)').attr("id","btn_uploadconfirmno");            
+		$('#btn_uploadconfirmno').html('<?php echo lang("_NO") ?>') 
+		$('.ui-dialog-buttonpane button:contains(uploadconfirmyesBTN)').attr("id","btn_uploadconfirmyes");            
+		$('#btn_uploadconfirmyes').html('<?php echo lang("_YES") ?>') 
 		
 		// default error message dialogue
 		$("#dialog-support").dialog({ autoOpen: false, height: 400,width: 550, modal: true,title: "",		
@@ -184,13 +189,17 @@
     	},
 		autoOpen: false, height: 180,width: 400, modal: true,title: "<?php echo lang("_UPLOAD_PROGRESS") ?>:",		
 		buttons: {
-			'<?php echo lang("_CANCEL") ?>': function() {
+			'uploadcancelBTN': function() {
 				// are you sure?
 				$("#dialog-cancel").dialog('open');
 				$('.ui-dialog-buttonpane > button:last').focus();
 				}	
 			}
 		})
+		
+		
+		$('.ui-dialog-buttonpane button:contains(uploadcancelBTN)').attr("id","btn_uploadcancel");            
+		$('#btn_uploadcancel').html('<?php echo lang("_CANCEL") ?>') 
 		
 		function displayhtml5support()
 		{
