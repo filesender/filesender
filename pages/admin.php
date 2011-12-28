@@ -49,7 +49,7 @@
 	// tab selection
 	$( "#tabs" ).tabs({
    		select: function(event, ui) { 
-  		window.location ="index.php?s=admin&amp;page=1#tabs-"+ (ui.index+1);
+  		window.location ="index.php?s=admin&page=1#tabs-"+ (ui.index+1);
    	}
   	});
 	});
