@@ -85,7 +85,7 @@
 <script type="text/javascript" src="lib/js/AC_OETags.js" language="javascript"></script>
 <script type="text/javascript" src="js/upload.js"></script>
 <script type="text/javascript">
-	
+//<![CDATA[
 	// all default settings
 	var uploadid = '<?php echo $id ?>';
 	var maximumDate = <?php echo (time()+($config['default_daysvalid']*86400))*1000 ?>;
@@ -519,7 +519,7 @@ function keepMeAlive()
 		}
 		});	
 }
-
+//]]>
     </script>
 
 <div id="box"> <?php echo '<div id="pageheading">'.lang("_UPLOAD").'</div>'; ?>
