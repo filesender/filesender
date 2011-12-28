@@ -286,7 +286,7 @@ foreach($json_o as $item) {
       </tr>
       <tr>
         <td class="formfieldheading mandatory"><?php echo lang("_FROM"); ?>:</td>
-        <td><div id="filefrom" name="filefrom"></div></td>
+        <td><div id="filefrom"></div></td>
       </tr>
       <tr>
         <td class="formfieldheading"><?php echo lang("_SUBJECT"); ?>: (<?php echo lang("_OPTIONAL"); ?>)</td>
@@ -304,11 +304,11 @@ foreach($json_o as $item) {
       </tr>
       <tr>
         <td class="formfieldheading mandatory"><?php echo lang("_FILE_TO_BE_RESENT"); ?>:</td>
-        <td><div id="filename" name="filename"></div></td>
+        <td><div id="filename"></div></td>
       </tr>
       <tr>
         <td class="formfieldheading mandatory"><?php echo lang("_SIZE"); ?>:</td>
-        <td><div id="filesize" name="filesize"></div></td>
+        <td><div id="filesize"></div></td>
       </tr>
       <tr>
         <td class="formfieldheading mandatory"></td>
