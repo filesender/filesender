@@ -170,7 +170,7 @@ $json_o=json_decode($filedata,true);
 
 ?>
 <form name="form1" id="form1" method="post" action="">
-    <div id="box">
+    <div id="box_1" class="box">
   <?php echo '<div id="pageheading">'.lang("_VOUCHERS").'</div>'; ?>
     <table width="100%" border="0">
       <tr>
@@ -178,7 +178,7 @@ $json_o=json_decode($filedata,true);
       </tr>
       </table>
   </div>
-      <div id="box">
+      <div id="box_2" class="box">
        <table width="100%" border="0">
       <tr>
         <td class="mandatory" width="130"><?php echo lang("_SEND_VOUCHER_TO"); ?>:</td>
@@ -202,7 +202,7 @@ $json_o=json_decode($filedata,true);
     </table>
      </div>
 </form>
-  <div id="box">
+  <div id="box_3" class="box">
   <table id="vouchertable" width="100%" border="0" cellspacing="1">
     <tr class="headerrow">
       <td><strong><?php echo lang("_TO"); ?></strong></td>
