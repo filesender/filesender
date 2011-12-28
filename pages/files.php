@@ -240,10 +240,12 @@ $json_o=json_decode($filedata,true);
         <td width="18">&nbsp;</td>
       </tr>
       <?php 
+$i = 0;	  
 if(sizeof($json_o) > 0)
 {
 foreach($json_o as $item) {
-   echo '<tr><td valign="top"> <a id="btn_resendemail" href="index.php?s=files&amp;a=resend&amp;id=' .$item['filevoucheruid'] . '"><img src="images/email_go.png" alt="" title="'.lang("_RE_SEND_EMAIL").'" /></a></td><td valign="top"><img id="btn_addrecipient" src="images/email_add.png" alt="" title="'.lang("_NEW_RECIPIENT").'" onclick="openAddRecipient('."'".$item['filevoucheruid']."','".$item['fileoriginalname'] ."','".$item['filesize'] ."','".rawurlencode($item['filefrom'])."','".rawurlencode($item['filesubject'])."','".rawurlencode($item['filemessage'])."'" .');"  style="cursor:pointer;" /></td>';
+	$i += 1; // counter for file id's
+   echo '<tr><td valign="top"> <a id="btn_resendemail_'.$i.'" href="index.php?s=files&amp;a=resend&amp;id=' .$item['filevoucheruid'] . '"><img src="images/email_go.png" alt="" title="'.lang("_RE_SEND_EMAIL").'" /></a></td><td valign="top"><img id="btn_addrecipient_'.$i.'" src="images/email_add.png" alt="" title="'.lang("_NEW_RECIPIENT").'" onclick="openAddRecipient('."'".$item['filevoucheruid']."','".$item['fileoriginalname'] ."','".$item['filesize'] ."','".rawurlencode($item['filefrom'])."','".rawurlencode($item['filesubject'])."','".rawurlencode($item['filemessage'])."'" .');"  style="cursor:pointer;" /></td>';
    if($item['fileto'] == $attributes["email"])
    {
    echo "<td class='HardBreak' valign='top'>".lang("_ME")."</td>";
@@ -256,13 +258,13 @@ foreach($json_o as $item) {
    } else {
    echo "<td class='HardBreak'>" .$item['filefrom'] . "</td>";
    }
-   echo "<td class='HardBreak'><a id='link_downloadfile' href='download.php?vid=". $item["filevoucheruid"]."' target='_blank'>" .utf8tohtml($item['fileoriginalname'],TRUE). "</a></td>";
+   echo "<td class='HardBreak'><a id='link_downloadfile_".$i."' href='download.php?vid=". $item["filevoucheruid"]."' target='_blank'>" .utf8tohtml($item['fileoriginalname'],TRUE). "</a></td>";
    echo "<td>" .formatBytes($item['filesize']). "</td><td  class='HardBreak'>".utf8tohtml($item['filesubject'],TRUE). "</td><td>";
    if($item['filemessage'] != "")
    {
    echo "<img src='images/page_white_text_width.png' border='0' alt='' title='".utf8tohtml($item['filemessage'],TRUE). "' />";
    }
-   echo "</td><td>" .date($lang['datedisplayformat'],strtotime($item['filecreateddate'])) . "</td><td>" .date($lang['datedisplayformat'],strtotime($item['fileexpirydate'])) . "</td><td  valign='top'  width='22'><div style='cursor:pointer;'><img id='btn_deletevoucher' onclick='confirmdelete(".'"' .$item['filevoucheruid'] . '")'. "' src='images/shape_square_delete.png' alt='' title='".lang("_DELETE_FILE")."' /></div></td></tr>"; //etc
+   echo "</td><td>" .date($lang['datedisplayformat'],strtotime($item['filecreateddate'])) . "</td><td>" .date($lang['datedisplayformat'],strtotime($item['fileexpirydate'])) . "</td><td  valign='top'  width='22'><div style='cursor:pointer;'><img id='btn_deletevoucher_".$i."' onclick='confirmdelete(".'"' .$item['filevoucheruid'] . '")'. "' src='images/shape_square_delete.png' alt='' title='".lang("_DELETE_FILE")."' /></div></td></tr>"; //etc
    }
 } else {
 	echo "<tr><td colspan='7'>".lang("_NO_FILES")."</td></tr>";
