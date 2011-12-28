@@ -87,7 +87,7 @@ $drivespace = $functions->driveSpace();
 		?>
     </ul>
     <div id="tabs-1"> <?php echo  $functions->getStats(); ?><br />
-      <table border="0" cellpadding="4" width="720"style="table-layout:fixed;" >
+      <table border="0" cellpadding="4" width="720" style="table-layout:fixed;" >
         <tr class="headerrow">
           <td><?php echo lang("_DRIVE") ?></td>
           <td><?php echo lang("_TOTAL") ?></td>
@@ -112,7 +112,7 @@ $drivespace = $functions->driveSpace();
       </table>
     </div>
     <div id="tabs-2">
-      <table id="table2" width="720"style="table-layout:fixed;" border="0" cellspacing="1" bgcolor="#FFFFFF">
+      <table id="table2" width="720" style="table-layout:fixed;" border="0" cellspacing="1" bgcolor="#FFFFFF">
         <tr>
           <td colspan="5" align="right"><table border="0" cellpadding="5" align="left">
               <tr>
@@ -148,7 +148,7 @@ foreach($Uploaded as $item) {
       </table>
     </div>
     <div id="tabs-3">
-      <table id="table3" width="720"style="table-layout:fixed;" border="0" cellspacing="1" bgcolor="#FFFFFF">
+      <table id="table3" width="720" style="table-layout:fixed;" border="0" cellspacing="1" bgcolor="#FFFFFF">
         <tr>
           <td colspan="5" align="right"><table border="0" cellpadding="5" align="left">
               <tr>
@@ -183,7 +183,7 @@ echo "<tr><td class='HardBreak'>" .$item['logto'] . "</td><td class='HardBreak'>
       </table>
     </div>
     <div id="tabs-4">
-      <table id="table4" width="720"style="table-layout:fixed;" border="0" cellspacing="1" bgcolor="#FFFFFF">
+      <table id="table4" width="720" style="table-layout:fixed;" border="0" cellspacing="1" bgcolor="#FFFFFF">
         <tr>
           <td colspan="5" align="right"><table border="0" cellpadding="5" align="left">
               <tr>
@@ -212,14 +212,14 @@ echo '<td><strong>'.lang("_CREATED").'</strong></td>';
         <?php 
 foreach($Error as $item) {
 echo "<tr><td class='HardBreak'>" .$item['logto']. "</td><td class='HardBreak'>" .$item['logfrom']. "</td><td class='HardBreak'>" .$item['logfilename']. "</td><td>" .date($lang['datedisplayformat'],strtotime($item['logdate'])) . "</td></tr>"; //etc
-echo "<tr><td colspan=4>".$item['logmessage']."</td></tr>";
+echo "<tr><td colspan='4'>".$item['logmessage']."</td></tr>";
 }
 
 ?>
       </table>
     </div>
     <div id="tabs-5">
-      <table id="table5" width="720"style="table-layout:fixed;" border="0" cellspacing="1" bgcolor="#FFFFFF">
+      <table id="table5" width="720" style="table-layout:fixed;" border="0" cellspacing="1" bgcolor="#FFFFFF">
         <tr>
           <td colspan="5" align="right"><table border="0" cellpadding="5" align="left">
               <tr>
@@ -257,7 +257,7 @@ echo "<tr><td class='HardBreak'>" .$item['fileto'] . "</td><td class='HardBreak'
     </div>
     <div id="tabs-6">
       <div id="tablediv1">
-        <table id="table6" width="720"style="table-layout:fixed;" border="0" cellspacing="1" bgcolor="#FFFFFF">
+        <table id="table6" width="720" style="table-layout:fixed;" border="0" cellspacing="1" bgcolor="#FFFFFF">
           <tr>
             <td colspan="5" align="right"><table border="0" cellpadding="5" align="left">
                 <tr>
@@ -282,6 +282,7 @@ echo '<td><strong>'.lang("_SUBJECT").'</strong></td>';
 echo '<td><strong>'.lang("_CREATED").'</strong></td>';
 echo '<td><strong>'.lang("_EXPIRY").'</strong></td>';
 ?>
+          </tr>
             <?php 
 foreach($Voucher as $item) {
 echo "<tr><td class='HardBreak'>" .$item['fileto'] . "</td><td class='HardBreak'>" .$item['filefrom'] . "</td><td class='HardBreak'>".utf8tohtml($item['filesubject'],TRUE). "</td><td>" .date($lang['datedisplayformat'],strtotime($item['filecreateddate'])) . "</td><td>" .date($lang['datedisplayformat'],strtotime($item['fileexpirydate'])) . "</td></tr>"; //etc
