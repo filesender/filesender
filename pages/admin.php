@@ -36,7 +36,8 @@
  * 
  */
  ?>
-<script>
+<script type="text/javascript">
+//<![CDATA[
 	$(function() {
 	
 	// stripe every second row in the tables
@@ -48,10 +49,11 @@
 	// tab selection
 	$( "#tabs" ).tabs({
    		select: function(event, ui) { 
-  		window.location ="index.php?s=admin&page=1#tabs-"+ (ui.index+1);
+  		window.location ="index.php?s=admin&amp;page=1#tabs-"+ (ui.index+1);
    	}
   	});
 	});
+//]]>
 	</script>
 <?php 
 
@@ -119,7 +121,7 @@ $drivespace = $functions->driveSpace();
   //echo "::".$total_pages["Uploaded"];
   for ($i = 1; $i <= $total_pages["Uploaded"]; $i++) {
   $txt = $i;
-  if ($page != $i) {$txt = "<a href=\"" . $_SERVER["PHP_SELF"] . "?s=admin&page=$i#tabs-2\">".$txt."</a>";} else { $txt = "<b>".$i."</b>";};
+  if ($page != $i) {$txt = "<a href=\"" . $_SERVER["PHP_SELF"] . "?s=admin&amp;page=$i#tabs-2\">".$txt."</a>";} else { $txt = "<b>".$i."</b>";};
   ?>
                 <td align="center"><?php	echo $txt ?></td>
                 <?php
@@ -154,7 +156,7 @@ foreach($Uploaded as $item) {
                 <?php
   for ($i = 1; $i <= $total_pages["Download"]; $i++) {
   $txt = $i;
-  if ($page != $i) {$txt = "<a href=\"" . $_SERVER["PHP_SELF"] . "?s=admin&page=$i#tabs-3\">".$txt."</a>";} else { $txt = "<b>".$i."</b>";};
+  if ($page != $i) {$txt = "<a href=\"" . $_SERVER["PHP_SELF"] . "?s=admin&amp;page=$i#tabs-3\">".$txt."</a>";} else { $txt = "<b>".$i."</b>";};
   ?>
                 <td align="center"><?php	echo $txt ?></td>
                 <?php
@@ -189,7 +191,7 @@ echo "<tr><td class='HardBreak'>" .$item['logto'] . "</td><td class='HardBreak'>
                 <?php
   for ($i = 1; $i <= $total_pages["Error"]; $i++) {
   $txt = $i;
-  if ($page != $i) {$txt = "<a href=\"" . $_SERVER["PHP_SELF"] . "?s=admin&page=$i#tabs-4\">".$txt."</a>";} else { $txt = "<b>".$i."</b>";};
+  if ($page != $i) {$txt = "<a href=\"" . $_SERVER["PHP_SELF"] . "?s=admin&amp;page=$i#tabs-4\">".$txt."</a>";} else { $txt = "<b>".$i."</b>";};
   ?>
   <td align="center"><?php	echo $txt ?></td>
   <?php
@@ -225,7 +227,7 @@ echo "<tr><td colspan=4>".$item['logmessage']."</td></tr>";
                 <?php
   for ($i = 1; $i <= $total_pages["Available"]; $i++) {
   $txt = $i;
-  if ($page != $i) {  $txt = "<a href=\"" . $_SERVER["PHP_SELF"] . "?s=admin&page=$i#tabs-5\">".$txt."</a>";} else { $txt = "<b>".$i."</b>";};
+  if ($page != $i) {  $txt = "<a href=\"" . $_SERVER["PHP_SELF"] . "?s=admin&amp;page=$i#tabs-5\">".$txt."</a>";} else { $txt = "<b>".$i."</b>";};
   ?>
                 <td align="center"><?php	echo $txt ?></td>
                 <?php
@@ -263,7 +265,7 @@ echo "<tr><td class='HardBreak'>" .$item['fileto'] . "</td><td class='HardBreak'
                   <?php
   for ($i = 1; $i <= $total_pages["Voucher"]; $i++) {
   $txt = $i;
-  if ($page != $i) { $txt = "<a href=\"" . $_SERVER["PHP_SELF"] . "?s=admin&page=$i#tabs-6\">".$txt."</a>";} else { $txt = "<b>".$i."</b>";};
+  if ($page != $i) { $txt = "<a href=\"" . $_SERVER["PHP_SELF"] . "?s=admin&amp;page=$i#tabs-6\">".$txt."</a>";} else { $txt = "<b>".$i."</b>";};
   ?>
                   <td align="center"><?php	echo $txt ?></td>
                   <?php
