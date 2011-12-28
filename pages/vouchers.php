@@ -36,6 +36,7 @@
  */
  ?>
 <script type="text/javascript">
+//<![CDATA[
 var maximumDate = <?php echo (time()+($config['default_daysvalid']*86400))*1000 ?>;
 var minimumDate = <?php echo (time()+86400)*1000 ?>;
 var maxEmailRecipients = <?php echo $config['max_email_recipients'] ?>;
@@ -137,6 +138,7 @@ function postVoucher()
 		if(msg == "") { $("#_noauth").show();} // server returns not authenticated
 	});
 }
+//]]>
 </script>
 <?php 
 

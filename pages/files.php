@@ -74,7 +74,7 @@ $json_o=json_decode($filedata,true);
 
 ?>
 <script type="text/javascript">
-	
+//<![CDATA[
 	var selectedFile = ""; // file uid selected when deleteting
 	// set default maximum date for date datepicker
 	var maximumDate = <?php echo (time()+($config['default_daysvalid']*86400))*1000 ?>;
@@ -220,7 +220,7 @@ $json_o=json_decode($filedata,true);
 		$("#dialog-addrecipient" ).dialog( "open" );
 		
 	}
-	
+//]]>
 </script>
 
 <div id="box"> <?php echo '<div id="pageheading">'.lang("_MY_FILES").'</div>'; ?>
