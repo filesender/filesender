@@ -215,6 +215,6 @@ foreach($json_o as $item) {
 ?>
   </table>
 </div>
-<div id="dialog-delete" title="<?php echo lang("_DELETE_VOUCHER") ?>">
+<div id="dialog-delete" style="display:none" title="<?php echo lang("_DELETE_VOUCHER") ?>">
 <p><?php echo lang("_CONFIRM_DELETE_VOUCHER"); ?></p>
 </div>
