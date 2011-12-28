@@ -67,5 +67,5 @@ function startDownload()
   <tr><td><?php echo lang("_EXPIRY_DATE"); ?>:</td><td><?php echo date($config['datedisplayformat'],strtotime($filedata["fileexpirydate"]));?></td></tr>
   </table>
   </div>
-  <p><div class="menu" id="downloadbutton"><a href="#" onclick="startDownload()"><?php echo lang("_START_DOWNLOAD"); ?></a></div></p>
+  <div class="menu" id="downloadbutton"><p><a href="#" onclick="startDownload()"><?php echo lang("_START_DOWNLOAD"); ?></a></p></div>
 </div>
