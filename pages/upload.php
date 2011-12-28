@@ -577,7 +577,7 @@ function keepMeAlive()
         <td colspan="2" align="center" valign="top"><a href="<?php echo $config['HTML5URL'] ?>" target="_newtab" id="html5link" name="html5link"><img src="images/html5_installed.png" alt="" name="html5image" width="75" height="18" border="0" id="html5image" title="" /></a></td>
       </tr>
       <tr>
-        <td class=" mandatory"><div id="selectfile" name="selectfile"><?php echo lang("_SELECT_FILE"); ?>:</div></td>
+        <td class=" mandatory"><div id="selectfile"><?php echo lang("_SELECT_FILE"); ?>:</div></td>
         <td colspan="2"><div id="uploadstandard" style="display:none"> 
             <script language="JavaScript" type="text/javascript">
 <!--
@@ -644,14 +644,14 @@ if ( hasProductInstall && !hasRequestedVersion ) {
           </div>
           <div id="file_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_FILE"); ?></div>
         </td>
-        <td colspan="2" align="center" valign="top"><div id="html5text" name="html5text"></div></td>
+        <td colspan="2" align="center" valign="top"><div id="html5text"></div></td>
       </tr>
       <tr id="fileInfoView" style="display:none">
         <td></td>
         <td colspan="2">
           <div>
-            <div id="fileName" name="fileName"></div>
-            <div id="fileSize" name="fileSize"></div>
+            <div id="fileName"></div>
+            <div id="fileSize"></div>
           </div>
         </td>
         <td colspan="2" align="center" valign="top">&nbsp;</td>
@@ -662,16 +662,16 @@ if ( hasProductInstall && !hasRequestedVersion ) {
         <td><input name="aup" type="checkbox" id="aup" onchange="validate_aup()" <?php echo ($config["AuP_default"] ) ? "checked" : ""; ?> <?php echo (isset($_SESSION["aup"]) && !$authvoucher->aVoucher() ) ? "checked" : ""; ?> value="true" />
          </td>
         <td>
-          <div id="aup_label" name="aup_label" onclick="toggleTOG()" style="cursor:pointer;"><?php echo lang("_ACCEPTTOC"); ?> [<font color="#666666"><?php echo lang("_SHOWHIDE"); ?></font>]</div>
+          <div id="aup_label" onclick="toggleTOG()" style="cursor:pointer;"><?php echo lang("_ACCEPTTOC"); ?> [<font color="#666666"><?php echo lang("_SHOWHIDE"); ?></font>]</div>
           <div id="aup_msg" class="validation_msg" style="display: none"><?php echo lang("_AGREETOC"); ?></div>
-          <div id="tog" name="tog" style="display:none"> <?php echo lang("_AUPTERMS"); ?> </div>
+          <div id="tog" style="display:none"> <?php echo lang("_AUPTERMS"); ?> </div>
         </td>
         <td colspan="2" align="center" valign="top">&nbsp;</td>
       </tr>
       <?php } ?>
       <tr>
       <td></td>
-      <td colspan="2"><div class="menu" id="uploadbutton" name="uploadbutton" style="display:none"><a href="#" onclick="validate()"><?php echo lang("_SEND"); ?></a></div></td>
+      <td colspan="2"><div class="menu" id="uploadbutton" style="display:none"><a href="#" onclick="validate()"><?php echo lang("_SEND"); ?></a></div></td>
       </tr>
       </table>
 <input type="hidden" id="filevoucheruid" name="filevoucheruid" value="<?php echo $voucherUID; ?>" />

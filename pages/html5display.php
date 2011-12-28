@@ -33,19 +33,19 @@ $("#supportBlob").html('<?php echo lang("_NO"); ?>');
   </tr>
   <tr class="altcolor">
     <td>File API</td>
-    <td><div id="supportFile" name="supportFile"></div></td>
+    <td><div id="supportFile"></div></td>
   </tr>
   <tr>
     <td><a href="http://dev.w3.org/2006/webapi/FileAPI/#filereader-interface">FileReader API</a></td>
-    <td><div id="supportFileReader" name="supportFileReader"></div></td>
+    <td><div id="supportFileReader"></div></td>
   </tr>
   <tr class="altcolor">
     <td><a href="http://dev.w3.org/2006/webapi/FileAPI/#dfn-filelist" target="_blank">FileList API</a></td>
-    <td><div id="supportFileList" name="supportFileList"></div></td>
+    <td><div id="supportFileList"></div></td>
   </tr>
   <tr>
     <td><a href="http://dev.w3.org/2006/webapi/FileAPI/#dfn-Blob" target="_blank">Blob API</a></td>
-    <td><div id="supportBlob" name="supportBlob"></div></td>
+    <td><div id="supportBlob"></div></td>
   </tr>
 </table>
 <p>If you would like to upload large files you require a browser that supports all of the above API's.</p>

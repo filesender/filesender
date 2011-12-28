@@ -191,7 +191,7 @@ $json_o=json_decode($filedata,true);
       <tr>
         <td class="mandatory"><?php echo lang("_EXPIRY_DATE"); ?>:</td>
         <td><input id="datepicker" onchange="validate_expiry()" title="<?php echo lang('_DP_dateFormat'); ?>"></input> 
-        <div id="expiry_msg" name="expiry_msg" class="validation_msg" style="display:none"><?php echo lang("_INVALID_EXPIRY_DATE"); ?></div>
+        <div id="expiry_msg" class="validation_msg" style="display:none"><?php echo lang("_INVALID_EXPIRY_DATE"); ?></div>
         </td>
       </tr>
       <tr>
