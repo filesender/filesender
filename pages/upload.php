@@ -152,14 +152,17 @@
 		$('.ui-dialog-buttonpane button:contains(uploadconfirmyesBTN)').attr("id","btn_uploadconfirmyes");            
 		$('#btn_uploadconfirmyes').html('<?php echo lang("_YES") ?>') 
 		
-		// default error message dialogue
+			// default error message dialogue
 		$("#dialog-support").dialog({ autoOpen: false, height: 400,width: 550, modal: true,title: "",		
 		buttons: {
-			'<?php echo lang("_OK") ?>': function() {
+			'supportBTN': function() {
 				$( this ).dialog( "close" );
 				}
 			}
 		})
+		
+		$('.ui-dialog-buttonpane button:contains(supportBTN)').attr("id","btn_support");            
+		$('#btn_support').html('<?php echo lang("_OK") ?>') 
 		
 		// default auth error dialogue
 		$("#dialog-autherror").dialog({ autoOpen: false, height: 240,width: 350, modal: true,title: "",		
