@@ -279,10 +279,10 @@ function openabout()
 ?>
 	</div>
 	</div>
-	<div id="dialog-help" title="<?php echo lang("_HELP"); ?>">
+	<div id="dialog-help" style="display:none" title="<?php echo lang("_HELP"); ?>">
 		<?php echo lang("_HELP_TEXT"); ?>
 	</div>
-	<div id="dialog-about" title="<?php echo lang("_ABOUT"); ?>">
+	<div id="dialog-about" style="display:none" title="<?php echo lang("_ABOUT"); ?>">
 		<?php echo lang("_ABOUT_TEXT"); ?>
 	</div>
 		<div id="footer">Version <?php echo FileSender_Version::VERSION; ?></div>

@@ -274,7 +274,7 @@ foreach($json_o as $item) {
 <div id="dialog-delete" title="<?php echo  lang("_DELETE_FILE"); ?>">
 <p><?php echo lang("_CONFIRM_DELETE_FILE");?></p>
 </div>
-<div id="dialog-addrecipient" title="<?php echo  lang("_NEW_RECIPIENT"); ?>">
+<div id="dialog-addrecipient" style="display:none" title="<?php echo  lang("_NEW_RECIPIENT"); ?>">
   <form id="form1" name="form1" enctype="multipart/form-data" method="post" action="">
     <table  width="600" border="0">
       <tr>

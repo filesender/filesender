@@ -682,9 +682,9 @@ if ( hasProductInstall && !hasRequestedVersion ) {
 		<input type="hidden" name="loadtype" id="loadtype" value="standard" />
   </form>
 </div>
-<div id="dialog-default" title=""> </div>
-<div id="dialog-cancel" title="<?php echo lang("_CANCEL_UPLOAD"); ?>"><?php echo lang("_ARE_YOU_SURE"); ?></div>
-<div id="dialog-uploadprogress" title="">
+<div id="dialog-default" style="display:none" title=""> </div>
+<div id="dialog-cancel" style="display:none" title="<?php echo lang("_CANCEL_UPLOAD"); ?>"><?php echo lang("_ARE_YOU_SURE"); ?></div>
+<div id="dialog-uploadprogress" title="" style="display:none">
 <img id="progress_image" name="progress_image" src="images/ajax-loader-sm.gif" width="16" height="16" alt="Uploading" align="left" /> 
 	<div id="progress_container">
    		<div id="progress_bar">
