@@ -229,14 +229,14 @@ $json_o=json_decode($filedata,true);
       <tr class="headerrow">
         <td width="18">&nbsp;</td>
         <td width="18">&nbsp;</td>
-        <td><strong><?php echo lang("_TO"); ?></strong></td>
-        <td><strong><?php echo lang("_FROM"); ?></strong></td>
-        <td><strong><?php echo lang("_FILE_NAME"); ?></strong></td>
-        <td><strong><?php echo lang("_SIZE"); ?></strong></td>
-        <td><strong><?php echo lang("_SUBJECT") ; ?></strong></td>
+        <td class="HardBreak" ><strong><?php echo lang("_TO"); ?></strong></td>
+        <td class="HardBreak" ><strong><?php echo lang("_FROM"); ?></strong></td>
+        <td class="HardBreak" ><strong><?php echo lang("_FILE_NAME"); ?></strong></td>
+        <td class="HardBreak" ><strong><?php echo lang("_SIZE"); ?></strong></td>
+        <td class="HardBreak" ><strong><?php echo lang("_SUBJECT") ; ?></strong></td>
         <td><strong></strong></td>
-        <td><strong><?php echo lang("_CREATED"); ?></strong></td>
-        <td><strong><?php echo lang("_EXPIRY"); ?></strong></td>
+        <td class="HardBreak" ><strong><?php echo lang("_CREATED"); ?></strong></td>
+        <td class="HardBreak" ><strong><?php echo lang("_EXPIRY"); ?></strong></td>
         <td width="18">&nbsp;</td>
       </tr>
       <?php 
