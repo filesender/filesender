@@ -121,6 +121,8 @@ $lang["_CLOSE"] = "Sluit";
 $lang["_OK"] = "OK";
 $lang["_SEND"] = "Stuur";
 $lang["_DELETE"] = "Verwijder";
+$lang["_YES"] = "Ja";
+$lang["_NO"] = "Nee";
 
 // steps
 $lang["_STEP1"] = "Voer één of meer e-mailadressen in";
