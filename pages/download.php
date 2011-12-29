@@ -64,7 +64,7 @@ function startDownload()
   <tr><td><?php echo lang("_MESSAGE"); ?>:</td><td><?php echo nl2br(utf8tohtml($filedata["filemessage"],TRUE));?></td></tr>
   <tr><td><?php echo lang("_FILE_NAME"); ?>:</td><td><?php echo utf8tohtml($filedata["fileoriginalname"],TRUE);?></td></tr>
   <tr><td><?php echo lang("_FILE_SIZE"); ?>:</td><td><?php echo formatBytes($filedata["filesize"]);?></td></tr>
-  <tr><td><?php echo lang("_EXPIRY_DATE"); ?>:</td><td><?php echo date($config['datedisplayformat'],strtotime($filedata["fileexpirydate"]));?></td></tr>
+  <tr><td><?php echo lang("_EXPIRY_DATE"); ?>:</td><td><?php echo date($lang['datedisplayformat'],strtotime($filedata["fileexpirydate"]));?></td></tr>
   </table>
   </div>
   <div class="menu" id="downloadbutton"><p><a href="#" onclick="startDownload()"><?php echo lang("_START_DOWNLOAD"); ?></a></p></div>
