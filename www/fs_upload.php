@@ -328,8 +328,8 @@ function generateTempFilename($data)
 	
 	
 	// add the file name
-	if(isset($data['filename'])){
-	$tempFilename .=  sanitizeFilename($data['filename']);
+	if(isset($data['fileoriginalname'])){
+	$tempFilename .=  sanitizeFilename($data['fileoriginalname']);
 	logEntry("DEBUG fs_upload: tempfilename 2 : ".$tempFilename);
 	}
 	// add the file size to the filename
