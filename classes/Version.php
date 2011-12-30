@@ -1,8 +1,9 @@
 <?php
+
 /*
  * FileSender www.filesender.org
  * 
- * Copyright (c) 2009-2011, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
