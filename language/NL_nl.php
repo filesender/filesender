@@ -54,7 +54,10 @@ $lang["_UPLOAD_PROGRESS"] = "Voortgang Upload";
 $lang["_DOWNLOAD"] = "Download";
 $lang["_CANCEL_UPLOAD"] = "Annuleer Upload";
 
-// Admin menu
+// site about
+$lang["_ABOUT_TEXT"] = ""; // overide in config/EN_AU.php
+// site help
+$lang["_HELP_TEXT"] = ""; // overide in config/EN_AU.php
 
 // Admin categorie namen
 

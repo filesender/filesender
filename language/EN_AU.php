@@ -167,9 +167,11 @@ An email will be sent to the recipient with a link to use the Voucher.";
 			$lang["_HTML5Supported"] = "Uploads over 2GB supported!";
 			$lang["_HTML5NotSupported"] = "Uploads over 2GB<br />not supported!";			
 	
+           	// site about
+           	$lang["_ABOUT_TEXT"] = "About ..."; // overide in config/EN_AU.php
            	// site help
-           	//$lang["_site_help_text"] = "Site help text";
-           	//$lang["_Help"] = "Help";
+           	$lang["_HELP_TEXT"] = "Help ..."; // overide in config/EN_AU.php
+			
 			$lang["_OPTIONAL"] = "optional";
 			
 			// confirmation
