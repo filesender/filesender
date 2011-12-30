@@ -111,10 +111,17 @@ var n = 0; // file int currently uploading
 		alert("No response from server");
 		return;	
 		}
+		if(data == "ErrorAuth")
+		{
+			$("#dialog-autherror").dialog("open");
+			return;			
+		}
 		var data =  JSON.parse(data);
+		
 		if(data.errors)
 		{
 		$.each(data.errors, function(i,result){
+		if(result == "err_notauthenticated") { errorDialog(errmsg_notauthenticated);} // not authenticated
 		if(result == "err_tomissing") { $("#fileto_msg").show();} // missing email data
 		if(result == "err_expmissing") { $("#expiry_msg").show();} // missing expiry date
 		if(result == "err_exoutofrange") { $("#expiry_msg").show();} // expiry date out of range
