@@ -800,15 +800,11 @@ class Functions {
 			
 			try { $statement->execute();}
 			catch(PDOException $e){ logEntry($e->getMessage());	return false; }   
-				
-			$fileArray =  $this->getVoucher($filevoucheruid);
-	
-			if(count($fileArray) > 0) 
-			{
-				$this->saveLog->saveLog($fileArray[0],"Voucher Cancelled","");
-				return true;
-			}
-			return false;
+			
+			logEntry("Voucher Closed: ".$filevoucheruid);	
+			
+			return true;
+		
 		} else {
 			return false;
 		}	
