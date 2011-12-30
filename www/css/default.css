@@ -81,6 +81,13 @@ td {
 {
 	float: right;
 	padding-right: 10px;
+	position: relative;
+}
+
+#menuleft
+{
+	position: relative;
+	float: left;	
 }
 
 input,textarea  

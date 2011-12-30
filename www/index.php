@@ -151,6 +151,7 @@ function openabout()
 	if($authsaml->authIsAdmin() ) { echo '<a id="topmenu_admin" href="index.php?s=admin">'.lang("_ADMIN").'</a>'; }
   }
   ?>
+  	</div>
    <div class="menu" id="menuright">
   <?php
 	if($config['helpURL'] == "") {
@@ -167,7 +168,6 @@ function openabout()
 	if($authsaml->isAuth() && !$authvoucher->aVoucher() &&  $s != "completev" ) { echo '<a href="'.$authsaml->logoffURL().'" id="topmenu_logoff">'.lang("_LOG_OFF").'</a>'; }
 	// end menu
 	?>
-	</div>
 	</div>
 	</div>
 	<div id="content">
