@@ -54,7 +54,10 @@ $lang["_UPLOAD_PROGRESS"] = "Opplastingsframgang";
 $lang["_DOWNLOAD"] = "Last ned";
 $lang["_CANCEL_UPLOAD"] = "Avbryt opplasting";
 
-// $lang["_","";
+// site about
+$lang["_ABOUT_TEXT"] = ""; // overide in config/EN_AU.php
+// site help
+$lang["_HELP_TEXT"] = ""; // overide in config/EN_AU.php
 
 // Admin meny
 
