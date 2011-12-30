@@ -174,7 +174,7 @@ $json_o=json_decode($filedata,true);
   <?php echo '<div id="pageheading">'.lang("_VOUCHERS").'</div>'; ?>
     <table width="100%" border="0">
       <tr>
-        <td colspan="2" class="formfieldheading"><?php echo html_entity_decode(lang("_SEND_NEW_VOUCHER")); ?></td>
+        <td colspan="2"><?php echo html_entity_decode(lang("_SEND_NEW_VOUCHER")); ?></td>
       </tr>
       </table>
   </div>
