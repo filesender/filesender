@@ -98,6 +98,7 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
  		if (!file_exists($uploadfolder.$tempFilename)) {
 			echo "err_cannotrenamefile"; exit;
 		}
+			
          if(!rename($uploadfolder.$tempFilename, $uploadfolder.$fileuid.".tmp")) {
 				echo "err_cannotrenamefile"; exit;
                 logEntry("Unable to move the file ".$uploadfolder.$tempFilename);
@@ -107,6 +108,11 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 		
 		// close pending file
 		$functions->closeVoucher($data["fileid"]);
+		
+			// voucher has been used so close it
+		if (isset($_SESSION['voucher'])) {
+			$functions->closeCompleteVoucher($_SESSION['voucher']);
+			}
 		
 		$data["fileuid"] = $fileuid;
 		$data["filestatus"]  = "Available";
@@ -163,7 +169,8 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 		{
 			// voucher has been used so close it
 			if ($authvoucher->aVoucher()) {
-				$functions->closeVoucher($tempData["fileid"]);
+			$_SESSION['voucher'] = $_REQUEST['vid'];
+			//	$functions->closeVoucher($tempData["fileid"]);
 			}
 			$resultArray["filesize"] = checkFileSize($uploadfolder.$tempFilename);
 			$resultArray["vid"] = $dataitem["filevoucheruid"];
@@ -304,20 +311,21 @@ function generateTempFilename($data)
 	
 	$tempFilename= "";
 	
+	// add SAML saml_uid_attribute
+	if( $authsaml->isAuth()) {
+		$authAttributes = $authsaml->sAuth();
+		$tempFilename .= $authAttributes["saml_uid_attribute"];	
+		//$data["fileauthuseruid"] = $authAttributes["saml_uid_attribute"];
+		//$data["fileauthuseremail"] = $authAttributes["email"];
+		logEntry("DEBUG fs_upload: tempfilename 1a : ".$tempFilename);
+	} else 
 	if ($authvoucher->aVoucher()) {
 	
 		$tempFilename .= $_REQUEST['vid'];
-		$tempData = $functions->getVoucherData($_REQUEST['vid']);
+		$data = $functions->getVoucherData($_REQUEST['vid']);
 		logEntry("DEBUG fs_upload: tempfilename 1v : ".$tempFilename);
 	}
-	// else add SAML saml_uid_attribute
-	else if( $authsaml->isAuth()) {
-		$authAttributes = $authsaml->sAuth();
-		$tempFilename .= $authAttributes["saml_uid_attribute"];	
-		$filedata["fileauthuseruid"] = $authAttributes["saml_uid_attribute"];
-		$filedata["fileauthuseremail"] = $authAttributes["email"];
-		logEntry("DEBUG fs_upload: tempfilename 1a : ".$tempFilename);
-	} 
+	
 	
 	// add the file name
 	if(isset($data['filename'])){
