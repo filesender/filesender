@@ -761,7 +761,7 @@ class Functions {
 
         global $config;
 
-		if( $this->authsaml->isAuth()) { // check authentication SAML User
+		if( $this->authsaml->isAuth() || $this->authvoucher->aVoucher()) { // check authentication SAML User
 			
 			$pdo = $this->db->connect();
 			$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
@@ -772,6 +772,36 @@ class Functions {
 			catch(PDOException $e){ logEntry($e->getMessage());	return false; }   
 				
 			$fileArray =  $this->getVoucher($fileid);
+	
+			if(count($fileArray) > 0) 
+			{
+				$this->saveLog->saveLog($fileArray[0],"Voucher Cancelled","");
+				return true;
+			}
+			return false;
+		} else {
+			return false;
+		}	
+    }
+	
+	 // --------------------------------------- CHECKED
+    // Close a voucher
+    // ---------------------------------------
+    public function closeCompleteVoucher($filevoucheruid){
+
+        global $config;
+
+		if( $this->authsaml->isAuth() || $this->authvoucher->aVoucher()) { // check authentication SAML User
+			
+			$pdo = $this->db->connect();
+			$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
+			$statement = $pdo->prepare("UPDATE files SET filestatus = 'Closed' WHERE filevoucheruid = :filevoucheruid");
+			$statement->bindParam(':filevoucheruid', $filevoucheruid);
+			
+			try { $statement->execute();}
+			catch(PDOException $e){ logEntry($e->getMessage());	return false; }   
+				
+			$fileArray =  $this->getVoucher($filevoucheruid);
 	
 			if(count($fileArray) > 0) 
 			{
