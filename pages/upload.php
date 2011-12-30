@@ -279,6 +279,11 @@
 		alert("No response from server");
 		return;	
 		}
+		if(data == "ErrorAuth")
+		{
+			$("#dialog-autherror").dialog("open");
+			return;			
+		}
 		var data =  JSON.parse(data);
 		if(data.errors)
 		{
