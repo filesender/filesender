@@ -38,6 +38,7 @@
  * all data sent to this page must include ?vid= or be an authenticated user
  * 
  */
+ session_start();
 // use token if available for SIMPLESAML 1.7 or set session if earlier version of SIMPLESAML
 if (isset($_POST['token']) && $_POST['token'] != "") {
 	$_COOKIE['SimpleSAMLAuthToken'] = $_POST['token'];
@@ -112,6 +113,8 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 			// voucher has been used so close it
 		if (isset($_SESSION['voucher'])) {
 			$functions->closeCompleteVoucher($_SESSION['voucher']);
+			logEntry("DEBUG fs_uploadit: Close voucher = " . $_SESSION['voucher']);
+			$_SESSION['voucher'] = NULL;
 			}
 		
 		$data["fileuid"] = $fileuid;
@@ -167,7 +170,7 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 		$dataitem["filestatus"] = "Pending";
 		if($functions->insertFileHTML5($dataitem))
 		{
-			// voucher has been used so close it
+			// voucher has been used so save it
 			if ($authvoucher->aVoucher()) {
 			$_SESSION['voucher'] = $_REQUEST['vid'];
 			//	$functions->closeVoucher($tempData["fileid"]);
@@ -301,18 +304,21 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 	logEntry("fs_upload.php: Error authorising upload :Voucher-".$authvoucher->aVoucher().":SAML-". $authsaml->isAuth());
 	echo "ErrorAuth";
 	}
-
-
+	
 function generateTempFilename($data)
 {
 	$authsaml = AuthSaml::getInstance();
 	$authvoucher = AuthVoucher::getInstance();
 	$functions = Functions::getInstance();
-	
 	$tempFilename= "";
-	
+
+	if(isset($_SESSION['voucher']))
+	{
+		$tempFilename .= $_SESSION['voucher'];	
+		$data = $functions->getVoucherData($_SESSION['voucher']);
+	} 
 	// add SAML saml_uid_attribute
-	if( $authsaml->isAuth()) {
+	else if( $authsaml->isAuth()) {
 		$authAttributes = $authsaml->sAuth();
 		$tempFilename .= $authAttributes["saml_uid_attribute"];	
 		//$data["fileauthuseruid"] = $authAttributes["saml_uid_attribute"];
@@ -320,7 +326,6 @@ function generateTempFilename($data)
 		logEntry("DEBUG fs_upload: tempfilename 1a : ".$tempFilename);
 	} else 
 	if ($authvoucher->aVoucher()) {
-	
 		$tempFilename .= $_REQUEST['vid'];
 		$data = $functions->getVoucherData($_REQUEST['vid']);
 		logEntry("DEBUG fs_upload: tempfilename 1v : ".$tempFilename);
