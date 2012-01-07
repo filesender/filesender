@@ -38,7 +38,6 @@
  * all data sent to this page must include ?vid= or be an authenticated user
  * 
  */
- session_start();
 // use token if available for SIMPLESAML 1.7 or set session if earlier version of SIMPLESAML
 if (isset($_POST['token']) && $_POST['token'] != "") {
 	$_COOKIE['SimpleSAMLAuthToken'] = $_POST['token'];
@@ -57,6 +56,8 @@ if(!empty($_POST['s'])) {
         $_SESSION['validSession'] = true;
         trigger_error("Invalid session supplied.", E_USER_ERROR);
     }
+} else {
+    session_start();
 }
 	
 require_once('../classes/_includes.php');
