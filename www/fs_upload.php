@@ -167,7 +167,6 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 			$_SESSION["aup"] = "true";
 		}
 		$dataitem["filevoucheruid"] = getGUID();
-		$tempFilename = generateTempFilename($dataitem);
 		$dataitem["filestatus"] = "Pending";
 		if($functions->insertFileHTML5($dataitem))
 		{
@@ -176,6 +175,7 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 			$_SESSION['voucher'] = $_REQUEST['vid'];
 			//	$functions->closeVoucher($tempData["fileid"]);
 			}
+			$tempFilename = generateTempFilename($dataitem);
 			$resultArray["filesize"] = checkFileSize($uploadfolder.$tempFilename);
 			$resultArray["vid"] = $dataitem["filevoucheruid"];
 			$resultArray["status"] = "complete";
