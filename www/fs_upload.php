@@ -316,6 +316,8 @@ function generateTempFilename($data)
 	{
 		$tempFilename .= $_SESSION['voucher'];	
 		$data = $functions->getVoucherData($_SESSION['voucher']);
+		$data = $functions->getVoucherData($_REQUEST['vid']);
+		logEntry("DEBUG fs_upload: tempfilename 1v1 : ".$tempFilename);
 	} 
 	// add SAML saml_uid_attribute
 	else if( $authsaml->isAuth()) {
@@ -328,7 +330,7 @@ function generateTempFilename($data)
 	if ($authvoucher->aVoucher()) {
 		$tempFilename .= $_REQUEST['vid'];
 		$data = $functions->getVoucherData($_REQUEST['vid']);
-		logEntry("DEBUG fs_upload: tempfilename 1v : ".$tempFilename);
+		logEntry("DEBUG fs_upload: tempfilename 1v2 : ".$tempFilename);
 	}
 	
 	
