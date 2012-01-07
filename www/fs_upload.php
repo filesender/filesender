@@ -316,7 +316,6 @@ function generateTempFilename($data)
 	{
 		$tempFilename .= $_SESSION['voucher'];	
 		$data = $functions->getVoucherData($_SESSION['voucher']);
-		$data = $functions->getVoucherData($_REQUEST['vid']);
 		logEntry("DEBUG fs_upload: tempfilename 1v1 : ".$tempFilename);
 	} 
 	// add SAML saml_uid_attribute
