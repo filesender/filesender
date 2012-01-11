@@ -43,7 +43,11 @@ $locales  =  array(
 	"no-no" => "NO_no.php", 	
 	"no" => "NO_no.php" ,
 	"nb" => "NO_no.php" ,
-	"nb-no" => "NO_no.php" 
+	"nb-no" => "NO_no.php", 
+	"de" => "DE_de.php" ,
+	"de-de" => "DE_de.php", 
+	"fr" => "FR_fr.php" ,
+	"fr-fr" => "FR_fr.php" 
 		 		
 );
 ?>

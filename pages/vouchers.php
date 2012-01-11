@@ -59,7 +59,7 @@ $(function() {
 	closeText: '<?php echo lang("_DP_closeText"); ?>',
 	prevText: '<?php echo lang("_DP_prevText"); ?>',
 	nextText: '<?php echo lang("_DP_nextText"); ?>',
-	currentText: '<?php echo lang("_DP_currentText"); ?>',
+	currentText: "<?php echo lang("_DP_currentText"); ?>",
 	monthNames: <?php echo lang("_DP_monthNames"); ?>,
 	monthNamesShort: <?php echo lang("_DP_monthNamesShort"); ?>,
 	dayNames: <?php echo lang("_DP_dayNames"); ?>,
