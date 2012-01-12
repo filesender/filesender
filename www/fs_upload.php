@@ -160,27 +160,35 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 		}
 
 		$dataitem = $functions->validateFileData($dataitem);
-
+		
 		// if AUP then add session variable to store that a user selected the session variable
 		if(isset($dataitem["aup"]))
 		{
 			$_SESSION["aup"] = "true";
 		}
+		// check if this is a pending upload so that we can continue
+		$tempFilename = generateTempFilename($dataitem);
+		$pendingData = $functions->checkPending($dataitem);
+		if($pendingData != "" && generateTempFilename($dataitem) == generateTempFilename($pendingData) && checkFileSize($uploadfolder.$tempFilename) > 0)
+		{
+		$dataitem["filevoucheruid"] = $pendingData["filevoucheruid"];
+		$functions->updateFile($dataitem);
+		} else {
 		$dataitem["filevoucheruid"] = getGUID();
 		$dataitem["filestatus"] = "Pending";
-		if($functions->insertFileHTML5($dataitem))
-		{
-			// voucher has been used so save it
-			if ($authvoucher->aVoucher()) {
-			$_SESSION['voucher'] = $_REQUEST['vid'];
-			//	$functions->closeVoucher($tempData["fileid"]);
-			}
-			$tempFilename = generateTempFilename($dataitem);
-			$resultArray["filesize"] = checkFileSize($uploadfolder.$tempFilename);
-			$resultArray["vid"] = $dataitem["filevoucheruid"];
-			$resultArray["status"] = "complete";
-			echo json_encode($resultArray);		
+		$functions->insertFileHTML5($dataitem);
 		}
+		// voucher has been used so save it
+		if ($authvoucher->aVoucher()) {
+		$_SESSION['voucher'] = $_REQUEST['vid'];
+		//	$functions->closeVoucher($tempData["fileid"]);
+		}
+		
+		$resultArray["filesize"] = checkFileSize($uploadfolder.$tempFilename);
+		$resultArray["vid"] = $dataitem["filevoucheruid"];
+		$resultArray["status"] = "complete";
+		echo json_encode($resultArray);		
+
 		break;
 			
 	case 'single':

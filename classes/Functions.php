@@ -349,6 +349,35 @@ class Functions {
 		}
 	}
 
+	// check if this upload already has a data entry
+	public function checkPending($dataitem) {
+		
+		$pdo = $this->db->connect();
+		$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
+		$statement = $pdo->prepare('SELECT * FROM files where fileoriginalname = :fileoriginalname AND filesize = :filesize AND filestatus = "Pending"');
+		$statement->bindParam(':fileoriginalname', $dataitem["fileoriginalname"]);
+		$statement->bindParam(':filesize', $dataitem["filesize"]);
+				
+		try 
+		{ 	
+			$statement->execute(); 
+		}
+		catch(PDOException $e)
+		{ 
+			logEntry($e->getMessage());	
+			displayError($e->getMessage()); 
+		}   
+		$result = $statement->fetchAll();
+		if($result)
+		{
+			return $result[0];
+		} else {
+			return "";
+		}
+		$pdo = NULL;
+		
+	}	
+	
     //--------------------------------------- CHECKED
     // Return file information based on filervoucheruid
 	// ---------------------------------------
@@ -723,6 +752,67 @@ class Functions {
 			return true;
 		}
 	
+	// --------------------------------------- CHECKED
+	// Insert new file or voucher HTML5
+	// ---------------------------------------
+	public function updateFile($dataitem){
+
+        global $config;
+
+		// prepare PDO insert statement
+		$pdo = $this->db->connect();
+		$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
+		$statement = $pdo->prepare('UPDATE files SET
+			fileexpirydate = :fileexpirydate,
+			fileto = :fileto,
+			filesubject = :filesubject,
+			fileactivitydate = :fileactivitydate,
+			filemessage = :filemessage,
+			filefrom = :filefrom,
+			filesize = :filesize,
+			fileoriginalname = :fileoriginalname,
+			filestatus = :filestatus,
+			fileip4address = :fileip4address,
+			fileip6address = :fileip6address,
+			filesendersname = :filesendersname,
+			filereceiversname = :filereceiversname,
+			filevouchertype = :filevouchertype,
+			fileuid = :fileuid,
+			fileauthuseruid = :fileauthuseruid,
+			fileauthuseremail = :fileauthuseremail,
+			filecreateddate = :filecreateddate
+			WHERE filevoucheruid = :filevoucheruid');	
+				
+			$statement->bindParam(':fileexpirydate', $dataitem['fileexpirydate']);
+			$statement->bindParam(':fileto', $dataitem['fileto']);
+			$statement->bindParam(':filesubject', $dataitem['filesubject']);
+			$statement->bindParam(':fileactivitydate', $dataitem['fileactivitydate']);
+			$statement->bindParam(':filevoucheruid', $dataitem['filevoucheruid']);
+			$statement->bindParam(':filemessage', $dataitem['filemessage']);
+			$statement->bindParam(':filefrom', $dataitem['filefrom']);
+			$statement->bindParam(':filesize', $dataitem['filesize']);
+			$statement->bindParam(':fileoriginalname', $dataitem['fileoriginalname']);
+			$statement->bindParam(':filestatus', $dataitem['filestatus']);
+			$statement->bindParam(':fileip4address', $dataitem['fileip4address']);
+			$statement->bindParam(':fileip6address', $dataitem['fileip6address']);
+			$statement->bindParam(':filesendersname', $dataitem['filesendersname']);
+			$statement->bindParam(':filereceiversname', $dataitem['filereceiversname']);
+			$statement->bindParam(':filevouchertype', $dataitem['filevouchertype']);
+			$statement->bindParam(':fileuid', $dataitem['fileuid']);
+			$statement->bindParam(':fileauthuseruid', $dataitem['fileauthuseruid']);
+			$statement->bindParam(':fileauthuseremail', $dataitem['fileauthuseremail']);
+			$statement->bindParam(':filecreateddate', $dataitem['filecreateddate']);
+	
+			try { 
+				$statement->execute(); 
+				}
+			catch(PDOException $e){ 
+				logEntry($e->getMessage());	
+				displayError($e->getMessage()); 
+				return false;
+				}   
+			return true;
+		}
     // --------------------------------------- CHECKED
     // Delete a voucher
     // ---------------------------------------
