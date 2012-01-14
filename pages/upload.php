@@ -102,7 +102,7 @@
 	var previousBytesLoaded = 0;
 	var intervalTimer = 0;
 	var html5 = false;
-	var errmsg_disk_space = '<?php echo lang($lang["_DISK_SPACE_ERROR"]); ?>';
+	var errmsg_disk_space = "<?php echo lang($lang["_DISK_SPACE_ERROR"]); ?>";
 	var filedata=new Array(); 
 	
 	var vid='<?php if(isset($_REQUEST["vid"])){echo $_REQUEST["vid"];}; ?>';
@@ -121,7 +121,7 @@
 		closeText: '<?php echo lang("_DP_closeText"); ?>',
 		prevText: '<?php echo lang("_DP_prevText"); ?>',
 		nextText: '<?php echo lang("_DP_nextText"); ?>',
-		currentText: '<?php echo lang("_DP_currentText"); ?>',
+		currentText: "<?php echo lang("_DP_currentText"); ?>",
 		monthNames: <?php echo lang("_DP_monthNames"); ?>,
 		monthNamesShort: <?php echo lang("_DP_monthNamesShort"); ?>,
 		dayNames: <?php echo lang("_DP_dayNames"); ?>,
