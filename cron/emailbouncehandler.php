@@ -92,7 +92,7 @@ if (is_dir($config['emailbounce_location'])) {
 					$dataitem["filemessage"] = $voucherinfo[0]['filemessage'];
 					$dataitem["filesize"] = $voucherinfo[0]['filesize'];
 
-					$sendmail->sendemail($dataitem,$config['bouncenotification'],'bounce');
+					$sendmail->sendEmail($dataitem,$config['bouncenotification'],'bounce');
 					fclose($fh);
 					rename($config['emailbounce_location'].'/'.$file, $config['emailbounce_location'].'/../done/'.$file);
 					// unlink($config['emailbounce_location'].'/'.$file);

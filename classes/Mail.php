@@ -49,7 +49,7 @@ class Mail {
     //---------------------------------------
     // Send mail
     // 
-    public function sendemail($mailobject,$template,$type='full'){
+    public function sendEmail($mailobject,$template,$type='full'){
 
         $authsaml = AuthSaml::getInstance();
         $authvoucher = AuthVoucher::getInstance();
@@ -159,7 +159,7 @@ class Mail {
     //---------------------------------------
     // Send admin mail messages
     // 	
-    public function sendemailAdmin($message){
+    public function sendEmailAdmin($message){
 
         // send admin notifications via email
 
