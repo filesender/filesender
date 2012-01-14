@@ -82,7 +82,7 @@ function lang($item)
 	global $lang;
 	if (isset($lang[$item])) 
 	{
-		return  $lang[$item];	
+		return $lang[$item];	
 	} else {
 	return $item;
 	}
