@@ -40,19 +40,19 @@ $lang["_ADMIN"] = "Administration";
 $lang["_NEW_UPLOAD"] = "Envoyer fichier";
 $lang["_VOUCHERS"] = "Inviter une personne";
 $lang["_LOGON"] = "Connexion";
-$lang["_LOG_OFF"] = "Déconnexion";
+$lang["_LOG_OFF"] = "DÃ©connexion";
 $lang["_MY_FILES"] = "Mes fichiers";
 
 // page titles
 $lang["_HOME"] = "Accueil";
 $lang["_ABOUT"] = "A propos";
 $lang["_HELP"] = "Aide";
-$lang["_VOUCHER_CANCELLED"] = "Ticket annulé";
+$lang["_VOUCHER_CANCELLED"] = "Ticket annulÃ©";
 $lang["_DELETE_VOUCHER"] = "Supprimer le ticket";
-$lang["_UPLOAD_COMPLETE"] = "Votre fichier a été téléchargé et un message a été envoyé.";
-$lang["_UPLOAD_PROGRESS"] = "Progrès du téléchargement";
-$lang["_DOWNLOAD"] = "Téléchargement";
-$lang["_CANCEL_UPLOAD"] = "Annuler le téléchargement";
+$lang["_UPLOAD_COMPLETE"] = "Votre fichier a Ã©tÃ© tÃ©lÃ©chargÃ© et un message a Ã©tÃ© envoyÃ©.";
+$lang["_UPLOAD_PROGRESS"] = "ProgrÃ¨s du tÃ©lÃ©chargement";
+$lang["_DOWNLOAD"] = "TÃ©lÃ©chargement";
+$lang["_CANCEL_UPLOAD"] = "Annuler le tÃ©lÃ©chargement";
 
 // admin
 $lang["_PAGE"] = "Page";
@@ -61,7 +61,7 @@ $lang["_DOWN"] = "Bas";
 $lang["_FILES"] = "Fichiers";
 $lang["_DRIVE"] = "Disque";
 $lang["_TOTAL"] = "Total";
-$lang["_USED"] = "Utilisé";
+$lang["_USED"] = "UtilisÃ©";
 $lang["_AVAILABLE"] = "Disponible";
 $lang["_TEMP"] = "Temp"; // as in Temporary files
 
@@ -69,9 +69,9 @@ $lang["_WELCOME"] = "Bienvenue";
 $lang["_WELCOMEGUEST"] = "Bienvenue"; 
 
 // admin tab names
-$lang["_GENERAL"] = "Général";
-$lang["_UPLOADS"] = "Téléchargements vers le serveur";
-$lang["_DOWNLOADS"] = "Téléchargements depuis le serveur";
+$lang["_GENERAL"] = "GÃ©nÃ©ral";
+$lang["_UPLOADS"] = "TÃ©lÃ©chargements vers le serveur";
+$lang["_DOWNLOADS"] = "TÃ©lÃ©chargements depuis le serveur";
 $lang["_ERRORS"] = "Erreurs";
 $lang["_FILES_AVAILABLE"] = "Fichiers disponibles";
 $lang["_ACTIVE_VOUCHERS"] = "Tickets actifs";
@@ -82,18 +82,18 @@ $lang["_COMPLETE_LOG"] = "Logs complets";
 $lang["_TO"] = "A";
 $lang["_FROM"] = "De";
 $lang["_SIZE"] = "Taille";
-$lang["_CREATED"] = "Créé";
+$lang["_CREATED"] = "CrÃ©Ã©";
 $lang["_FILE_NAME"] = "Nom de fichier";
 $lang["_SUBJECT"] = "Sujet";
 $lang["_EXPIRY"] = "Expiration";
 $lang["_MESSAGE"] = "Message";
 $lang["_TYPE"] = "Type";
 			
-$lang["_TERMS_OF_AGREEMENT"] = "Conditions générales d'utilisation";
+$lang["_TERMS_OF_AGREEMENT"] = "Conditions gÃ©nÃ©rales d'utilisation";
 $lang["_SHOW_TERMS"] = "Afficher les conditions";
 $lang["_SHOWHIDE"] = "Afficher/Cacher";
-$lang["_SELECT_FILE"] = "Fichier à télécharger";
-$lang["_UPLOADING_WAIT"] = "Téléchargement en cours - veuillez attendre...";
+$lang["_SELECT_FILE"] = "Fichier Ã  tÃ©lÃ©charger";
+$lang["_UPLOADING_WAIT"] = "TÃ©lÃ©chargement en cours - veuillez attendre...";
 			
 // Flash button menu
 $lang["_UPLOAD"] = "Envoyer un fichier";
@@ -111,60 +111,60 @@ $lang["_INVALID_MISSING_EMAIL"] = "Adresse mail non valide ou absente";
 $lang["_INVALID_EXPIRY_DATE"] = "Date d'expiration non valide";	
 $lang["_INVALID_FILE"] = "Fichier non valide";	
 $lang["_INVALID_FILEVOUCHERID"] = "Fichier ou ID de ticket non valide";	
-$lang["_INVALID_FILESIZE_ZERO"] = "La taille de fichier ne peut pas être 0. Veuillez choisir un autre fichier.";
+$lang["_INVALID_FILESIZE_ZERO"] = "La taille de fichier ne peut pas Ãªtre 0. Veuillez choisir un autre fichier.";
 $lang["_INVALID_FILE_EXT"] = "Extension de fichier non valide.";
-$lang["_INVALID_TOO_LARGE_1"] = "La taille de fichier ne peut pas être plus grande que";
-$lang["_AUTH_ERROR"] = "Vous n'êtes plus authentifié. <br />Votre session est peut-être expirée ou il y a eu une erreur sur le serveur. <br /><br />Veuillez vous authentifier à nouveau et réessayer.";	
+$lang["_INVALID_TOO_LARGE_1"] = "La taille de fichier ne peut pas Ãªtre plus grande que";
+$lang["_AUTH_ERROR"] = "Vous n'Ãªtes plus authentifiÃ©. <br />Votre session est peut-Ãªtre expirÃ©e ou il y a eu une erreur sur le serveur. <br /><br />Veuillez vous authentifier Ã  nouveau et rÃ©essayer.";	
 $lang["_SELECT_ANOTHER_FILE"] = "Veuillez choisir un autre fichier.";
-$lang["_INVALID_VOUCHER"] = "Ce ticket n'est plus valide. <br />Veuillez contacter la personne qui vous a envoyé le ticket.";
+$lang["_INVALID_VOUCHER"] = "Ce ticket n'est plus valide. <br />Veuillez contacter la personne qui vous a envoyÃ© le ticket.";
 $lang["_SELECT_FILE"] = "Choisissez votre fichier.";
-$lang["_INVALID_FILE_NAME"] = "Le nom du fichier que vous téléchargez n'est pas valide. Veuillez renommer le fichier et réessayer.";
-$lang["_INVALID_SIZE_USEHTML5"] = "Veuillez choisir un autre fichier ou utiliser un navigateur compatible HTML5 pour télécharger des fichiers plus grands.";
-$lang["_ACCEPTTOC"] = "J'accepte les conditions générales de ce service.";	
-$lang["_AGREETOC"] = "Vous DEVEZ accepter les conditions générales.";
-$lang["_FILE_TO_BE_RESENT"] = "Fichier à réenvoyer";
-$lang["_ERROR_UPLOADING_FILE"] = "Erreur de téléchargement du fichier";
-$lang["_MAXEMAILS"] = "Le nombre maximal d'adresses email acceptées est ";
+$lang["_INVALID_FILE_NAME"] = "Le nom du fichier que vous tÃ©lÃ©chargez n'est pas valide. Veuillez renommer le fichier et rÃ©essayer.";
+$lang["_INVALID_SIZE_USEHTML5"] = "Veuillez choisir un autre fichier ou utiliser un navigateur compatible HTML5 pour tÃ©lÃ©charger des fichiers plus grands.";
+$lang["_ACCEPTTOC"] = "J'accepte les conditions gÃ©nÃ©rales de ce service.";	
+$lang["_AGREETOC"] = "Vous DEVEZ accepter les conditions gÃ©nÃ©rales.";
+$lang["_FILE_TO_BE_RESENT"] = "Fichier Ã  rÃ©envoyer";
+$lang["_ERROR_UPLOADING_FILE"] = "Erreur de tÃ©lÃ©chargement du fichier";
+$lang["_MAXEMAILS"] = "Le nombre maximal d'adresses email acceptÃ©es est ";
 $lang["_INVALID_DATE_FORMAT"] = "Format de date non valide.";
-$lang["_DISK_SPACE_ERROR"] = "Il n'y a plus assez d'espace disque. Veuillez contacter l'administrateur du service ou télécharger un fichier plus petit.";
+$lang["_DISK_SPACE_ERROR"] = "Il n'y a plus assez d'espace disque. Veuillez contacter l'administrateur du service ou tÃ©lÃ©charger un fichier plus petit.";
 			
 			
-$lang["_LOGOUT_COMPLETE"] = "Déconnexion réussie";
+$lang["_LOGOUT_COMPLETE"] = "DÃ©connexion rÃ©ussie";
 			
 // vouchers
-$lang["_SEND_NEW_VOUCHER"] = "Un ticket permet à une personne quelconque de vous envoyer un fichier.<br />
-Pour créer un ticket, entrez une adresse email et cliquez Envoyer ticket.<br />
-Une email sera envoyée à la personne avec un lien sur le ticket.";
-$lang["_EMAIL_SEPARATOR_MSG"] = "Multiples adresses email séparées par , ou ;";
+$lang["_SEND_NEW_VOUCHER"] = "Un ticket permet Ã  une personne quelconque de vous envoyer un fichier.<br />
+Pour crÃ©er un ticket, entrez une adresse email et cliquez Envoyer ticket.<br />
+Une email sera envoyÃ©e Ã  la personne avec un lien sur le ticket.";
+$lang["_EMAIL_SEPARATOR_MSG"] = "Multiples adresses email sÃ©parÃ©es par , ou ;";
 			
 $lang["_NO_FILES"] = "Il n'y a pas de fichiers disponibles pour l'instant.";
 $lang["_ARE_YOU_SURE"] = "Etes-vous certain ?";
 $lang["_DELETE_FILE"] = "Supprimer fichier";
-$lang["_EMAIL_SENT"] = "Message envoyé";
+$lang["_EMAIL_SENT"] = "Message envoyÃ©";
 $lang["_EXPIRY_DATE"] = "Date d'expiration";
 $lang["_FILE_SIZE"] = "Taille de fichier";
-$lang["_FILE_RESENT"] = "Fichier réenvoyé";	
-$lang["_MESSAGE_RESENT"] = "Message réenvoyé";			
+$lang["_FILE_RESENT"] = "Fichier rÃ©envoyÃ©";	
+$lang["_MESSAGE_RESENT"] = "Message rÃ©envoyÃ©";			
 $lang["_ME"] = "Moi";
 $lang["_SEND_VOUCHER"] = "Envoyer ticket";
-$lang["_RE_SEND_EMAIL"] = "Ré-envoyer email";
+$lang["_RE_SEND_EMAIL"] = "RÃ©-envoyer email";
 $lang["_NEW_RECIPIENT"] = "Ajouter un nouveau destinataire";
-$lang["_SEND_VOUCHER_TO"] = "Envoyer ticket à";
-$lang["_START_DOWNLOAD"] = "Démarrer téléchargement";
-$lang["_VOUCHER_SENT"] = "Ticket envoyé";
-$lang["_VOUCHER_DELETED"] = "Ticket supprimé";
-$lang["_VOUCHER_CANCELLED"] = "Ce ticket a été annulé.";
-$lang["_STARTED_DOWNLOADING"] = "Votre fichier devrait commencer à être téléchargé.";
+$lang["_SEND_VOUCHER_TO"] = "Envoyer ticket Ã ";
+$lang["_START_DOWNLOAD"] = "DÃ©marrer tÃ©lÃ©chargement";
+$lang["_VOUCHER_SENT"] = "Ticket envoyÃ©";
+$lang["_VOUCHER_DELETED"] = "Ticket supprimÃ©";
+$lang["_VOUCHER_CANCELLED"] = "Ce ticket a Ã©tÃ© annulÃ©.";
+$lang["_STARTED_DOWNLOADING"] = "Votre fichier devrait commencer Ã  Ãªtre tÃ©lÃ©chargÃ©.";
 
 // files
-$lang["_FILE_DELETED"] = "Fichier supprimé";
+$lang["_FILE_DELETED"] = "Fichier supprimÃ©";
 // steps
 $lang["_STEP1"] = "Entrez les adresses email des destinataires";
-$lang["_STEP2"] = "Séléctionnez la date d'expiration";
+$lang["_STEP2"] = "SÃ©lÃ©ctionnez la date d'expiration";
 $lang["_STEP3"] = "Choisissez un fichier";
 $lang["_STEP4"] = "Cliquez Envoyer";
-$lang["_HTML5Supported"] = "Téléchargements de plus de 2GO supportés";
-$lang["_HTML5NotSupported"] = "Téléchargements de plus de 2GO <br />non supportés !";			
+$lang["_HTML5Supported"] = "TÃ©lÃ©chargements de plus de 2GO supportÃ©s";
+$lang["_HTML5NotSupported"] = "TÃ©lÃ©chargements de plus de 2GO <br />non supportÃ©s !";			
 	
 // site about
 $lang["_ABOUT_TEXT"] = "A propos ..."; // overide in config/EN_AU.php
@@ -174,20 +174,20 @@ $lang["_HELP_TEXT"] = "Aide ..."; // overide in config/EN_AU.php
 $lang["_OPTIONAL"] = "Optionnel";
 			
 // confirmation
-$lang["_CONFIRM_DELETE_FILE"] = "Etes-vous sûr de vouloir supprimer ce fichier ?";
-$lang["_CONFIRM_DELETE_VOUCHER"] = "Etes-vous sûr de vouloir supprimer ce ticket ?";
+$lang["_CONFIRM_DELETE_FILE"] = "Etes-vous sÃ»r de vouloir supprimer ce fichier ?";
+$lang["_CONFIRM_DELETE_VOUCHER"] = "Etes-vous sÃ»r de vouloir supprimer ce ticket ?";
 
-$lang["_AUPTERMS"] = "Conditions générales du service";
+$lang["_AUPTERMS"] = "Conditions gÃ©nÃ©rales du service";
 
 // standard date display format
 $lang['datedisplayformat'] = "d/m/Y"; // Format for displaying date/time, use PHP date() format string syntax 
 
 // datepicker localization
 $lang["_DP_closeText"] = 'OK'; // Done
-$lang["_DP_prevText"] = 'Préc'; //Prev
+$lang["_DP_prevText"] = 'PrÃ©c'; //Prev
 $lang["_DP_nextText"] = 'Suiv'; // Next
 $lang["_DP_currentText"] = 'Aujourd\'hui'; // Today
-$lang["_DP_monthNames"] = "['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre']";
+$lang["_DP_monthNames"] = "['Janvier','FÃ©vrier','Mars','Avril','Mai','Juin','Juillet','AoÃ»t','Septembre','Octobre','Novembre','DÃ©cembre']";
 $lang["_DP_monthNamesShort"] = "['Jan', 'Fev', 'Mar', 'Avr', 'Mai', 'Jun','Jul', 'Aou', 'Sep', 'Oct', 'Nov', 'Dec']";
 $lang["_DP_dayNames"] = "['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi']";
 $lang["_DP_dayNamesShort"] = "['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam']";
