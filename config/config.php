@@ -216,7 +216,7 @@ Download link: {serverURL}?vid={filevoucheruid}
 
 The file is available until {fileexpirydate} after which it will be automatically deleted.
 
-Personal message from {filefrom} (optional): {filemessage}
+{filemessage_start}Personal message from {filefrom}: {filemessage}{filemessage_end}
 
 Best regards,
 
@@ -263,11 +263,11 @@ Best regards,
 	</TR>
 </TABLE>
 <P></P>
-<TABLE WIDTH=100% BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
+{filemessage_start}<TABLE WIDTH=100% BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
 	<COL WIDTH=100%>
 	<TR>
 		<TD WIDTH=100% BGCOLOR="#b3b3b3">
-			<P ALIGN=CENTER><B>Personal message from {filefrom} (optional):</B></P>
+			<P ALIGN=CENTER><B>Personal message from {filefrom}:</B></P>
 		</TD>
 	</TR>
 	<TR>
@@ -275,7 +275,7 @@ Best regards,
 			<P><I>{htmlfilemessage}</I></P>
 		</TD>
 	</TR>
-</TABLE>
+</TABLE>{filemessage_end}
 <P>Best regards,</P>
 <P>{siteName}</P>
 </BODY>
