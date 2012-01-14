@@ -354,7 +354,7 @@ class Functions {
 		
 		$pdo = $this->db->connect();
 		$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
-		$statement = $pdo->prepare('SELECT * FROM files where fileoriginalname = :fileoriginalname AND filesize = :filesize AND filestatus = "Pending"');
+		$statement = $pdo->prepare("SELECT * FROM files where fileoriginalname = :fileoriginalname AND filesize = :filesize AND filestatus = 'Pending'");
 		$statement->bindParam(':fileoriginalname', $dataitem["fileoriginalname"]);
 		$statement->bindParam(':filesize', $dataitem["filesize"]);
 				
