@@ -169,7 +169,7 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 		// check if this is a pending upload so that we can continue
 		$tempFilename = generateTempFilename($dataitem);
 		$pendingData = $functions->checkPending($dataitem);
-		if($pendingData != "" && generateTempFilename($dataitem) == generateTempFilename($pendingData) && checkFileSize($uploadfolder.$tempFilename) > 0)
+		if($pendingData != "" && generateTempFilename($dataitem) == generateTempFilename($pendingData))
 		{
 		$dataitem["filevoucheruid"] = $pendingData["filevoucheruid"];
 		$functions->updateFile($dataitem);
