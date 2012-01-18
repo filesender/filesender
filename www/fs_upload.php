@@ -130,7 +130,7 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 		$data["filevoucheruid"] = getGUID();
 		
 		logEntry("DEBUG fs_uploadit: Filedata = " . print_r($data,TRUE));
-		$functions->insertFileHTML5($data);
+		$functions->insertFile($data);
 		}
 		if($authsaml->isAuth()) { 
 		echo "complete";
@@ -176,7 +176,7 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 		} else {
 		$dataitem["filevoucheruid"] = getGUID();
 		$dataitem["filestatus"] = "Pending";
-		$functions->insertFileHTML5($dataitem);
+		$functions->insertFile($dataitem);
 		}
 		// voucher has been used so save it
 		if ($authvoucher->aVoucher()) {
@@ -300,7 +300,7 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 		foreach ($emailArray as $Email) { 
 		$myfileData["fileto"] = $Email;
 		$myfileData["filevoucheruid"] = getGUID();
-		$functions->insertFileHTML5($myfileData);
+		$functions->insertFile($myfileData);
 		}
 		$resultArray["status"] = "complete";
 		echo json_encode($resultArray);	

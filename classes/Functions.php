@@ -665,7 +665,7 @@ class Functions {
 	// --------------------------------------- CHECKED
 	// Insert new file or voucher HTML5
 	// ---------------------------------------
-	public function insertFileHTML5($dataitem){
+	public function insertFile($dataitem){
 
         global $config;
 
