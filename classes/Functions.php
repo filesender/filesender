@@ -663,7 +663,7 @@ class Functions {
 	}
 	
 	// --------------------------------------- CHECKED
-	// Insert new file or voucher 
+	// Insert new file  
 	// ---------------------------------------
 	public function insertFile($dataitem){
 
@@ -753,7 +753,7 @@ class Functions {
 		}
 	
 	// --------------------------------------- CHECKED
-	// Insert new file or voucher 
+	// Update file 
 	// ---------------------------------------
 	public function updateFile($dataitem){
 
