@@ -67,11 +67,12 @@ $fileArray =  $authvoucher->getVoucher();
 $fileoriginalname = $fileArray[0]['fileoriginalname'];
 $fileuid = $fileArray[0]['fileuid'];	
 $file=$config['site_filestore'].$fileuid.".tmp";
+$filestatus = $fileArray[0]['filestatus'];
 
 //$download_rate = 20000.5;
 
-// check file physically exists before downloading
-if(file_exists($file) && is_file($file))
+// check if file physically exists and is marked 'Available' before downloading
+if(file_exists($file) && is_file($file) && $filestatus == 'Available')
 {
         // Check the encoding for the filename and convert if necessary
         if (detect_char_encoding($fileoriginalname) == 'ISO-8859-1') { 
