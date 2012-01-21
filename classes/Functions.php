@@ -618,7 +618,7 @@ class Functions {
 		// expiry out of range
 		if(strtotime($data["fileexpirydate"]) > strtotime("+".$config['default_daysvalid']." day") ||  strtotime($data["fileexpirydate"]) < strtotime("now"))
 		{ array_push($resultArray,"err_exoutofrange");}
-		// emmail missing
+		// Recipient email missing
 		if(!isset($data["fileto"])){ array_push($errorArray,  "err_filetomissing"); 
 		} else {
 		$emailto = str_replace(",",";",$data["fileto"]);
@@ -629,6 +629,13 @@ class Functions {
 		foreach ($emailArray as $Email) {
 			if(!filter_var($Email,FILTER_VALIDATE_EMAIL)) {array_push($errorArray, "err_invalidemail");}
 		}
+		}
+		// Sender email missing
+		if (!isset($data["filefrom"])){
+			array_push($errorArray,  "err_filefrommissing");
+		} else {
+			// Check if sender address is valid
+			if(!filter_var($data["filefrom"],FILTER_VALIDATE_EMAIL)) {array_push($errorArray, "err_invalidemail");}
 		}
 		// if errors - return them via json to client	
 		if(count($errorArray) > 0 )
