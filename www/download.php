@@ -56,7 +56,7 @@ if(session_id() == ""){
 }
 
 // check we are authenticated as SAML or voucher user
-if(!$authvoucher->aVoucher() && !$authsaml->isAuth()) {
+if(!$authvoucher->aVoucher()) {
 		logEntry("Download: Failed authentication");
 		echo "notAuthenticated";
 } else {
