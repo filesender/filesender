@@ -598,13 +598,26 @@ class Functions {
 		// return array of errors or 
 		global $config;
 		global $resultArray;
-		
+		$authsaml = AuthSaml::getInstance();
+		$authvoucher = AuthVoucher::getInstance();
 		$dbCheck = DB_Input_Checks::getInstance();
+		$functions = Functions::getInstance();
 	
 		$errorArray = array();
 		// test 
 		//array_push($errorArray, "err_nodiskspace");
-		//array_push($errorArray, "err_tomissing");
+		//array_push($errorArray, "err_invalidtoemail");
+		// filefrom missing
+		if(!isset($data["filefrom"])){ array_push($errorArray, "err_invalidtoemail");}
+		// filefrom matches current user
+		// If Voucher
+		if ($authvoucher->aVoucher()) {
+		$voucherdata = $functions->getVoucherData($_REQUEST['vid']);
+		if(isset($data["filefrom"]) && $data["filefrom"] <> $voucherdata["fileto"]){ array_push($errorArray, "err_invalidtoemail");}
+		} else if ($authsaml->isAuth()){
+		$authAttributes = $this->authsaml->sAuth();
+		if(isset($data["filefrom"]) && $data["filefrom"] <> $authAttributes["email"] ){ array_push($errorArray, "err_invalidtoemail");}
+		}
 		// filesize missing
 		if(!isset($data["filesize"])){ array_push($errorArray, "err_missingfilesize"); }
 		// check space is available on disk before uploading
@@ -617,7 +630,7 @@ class Functions {
 		if(!isset($data["fileoriginalname"])){ array_push($errorArray, "err_invalidfilename");}
 		// expiry out of range
 		if(strtotime($data["fileexpirydate"]) > strtotime("+".$config['default_daysvalid']." day") ||  strtotime($data["fileexpirydate"]) < strtotime("now"))
-		{ array_push($resultArray,"err_exoutofrange");}
+		{ array_push($errorArray,"err_exoutofrange");}
 		// Recipient email missing
 		if(!isset($data["fileto"])){ array_push($errorArray,  "err_filetomissing"); 
 		} else {
