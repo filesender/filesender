@@ -76,7 +76,7 @@ class AuthSaml {
 
     }
 
-    // returns SAML authenticated user information as josn array
+    // returns SAML authenticated user information as array
     public function sAuth() {
 
       	global $config;
@@ -86,10 +86,9 @@ class AuthSaml {
         $as = new SimpleSAML_Auth_Simple($config['site_authenticationSource']);
         $as->requireAuth();
         $attributes = $as->getAttributes();
-
-        // need to capture email from SAML attribute
+		// need to capture email from SAML attribute
         // may be single attribute or array 
-
+		try {
         // checks if an array and sets first child
         if(isset($attributes[$config['saml_email_attribute']])) {
             $attributes["email"] = $attributes[$config['saml_email_attribute']];
@@ -111,7 +110,14 @@ class AuthSaml {
         } else {
 			$attributes["saml_uid_attribute"] = $attributes[$config['saml_uid_attribute']];
 		}
-
+		} 
+		// ---------------
+		// if any attributes are not provided by the IDP - provide an error message
+		catch(Exception $e)
+		{
+			return "err_attributes";
+			// log the error
+		}
         $inglue = '='; 
         $outglue = '&';
         $message = "";
