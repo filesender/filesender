@@ -57,22 +57,32 @@ date_default_timezone_set($config['Default_TimeZone']);
 
 $useremail = "";
 $s = "";
-
-if($authsaml->isAuth() ) 
-{ 
-	$userdata = $authsaml->sAuth();
-	$useremail = $userdata["email"];
-} 
+$isAuth = $authsaml->isAuth();
+$isVoucher = $authvoucher->aVoucher();
+$isAdmin = $authsaml->authIsAdmin();
 
 if(isset($_REQUEST["s"]))
 {
 	$s = $_REQUEST["s"];
 }
-if(!$authvoucher->aVoucher() && !$authsaml->isAuth() && $s != "complete" && $s != "completev" )
+if(!$isVoucher && !$isAuth && $s != "complete" && $s != "completev")
 {
 	$s = "logon";
 }
 
+if($isAuth ) 
+{ 
+	$userdata = $authsaml->sAuth();
+	if($userdata == "err_attributes")
+	{
+		$s = "error";
+		$isAuth = false;
+		$isAdmin = false;
+		$functions->setScratchMessage(lang("_ERROR_ATTRIBUTES"));
+	} else {
+	$useremail = $userdata["email"];
+	}
+} 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
@@ -144,11 +154,11 @@ function openabout()
       <?php 
   	// create menu
   	// disable all buttons if this is a voucher, even if the user is logged on
- 	if (!$authvoucher->aVoucher()  &&  $s != "completev"){
-	if($authsaml->isAuth() ) { echo '<a id="topmenu_newupload" href="index.php?s=upload">'.lang("_NEW_UPLOAD").'</a>'; }
-	if($authsaml->isAuth() ) { echo '<a id="topmenu_vouchers" href="index.php?s=vouchers">'.lang("_VOUCHERS").'</a>'; }
-	if($authsaml->isAuth() ) {echo '<a id="topmenu_myfiles" href="index.php?s=files">'.lang("_MY_FILES").'</a>'; }
-	if($authsaml->authIsAdmin() ) { echo '<a id="topmenu_admin" href="index.php?s=admin">'.lang("_ADMIN").'</a>'; }
+ 	if (!$isVoucher  &&  $s != "completev"){
+	if($isAuth ) { echo '<a id="topmenu_newupload" href="index.php?s=upload">'.lang("_NEW_UPLOAD").'</a>'; }
+	if($isAuth ) { echo '<a id="topmenu_vouchers" href="index.php?s=vouchers">'.lang("_VOUCHERS").'</a>'; }
+	if($isAuth ) {echo '<a id="topmenu_myfiles" href="index.php?s=files">'.lang("_MY_FILES").'</a>'; }
+	if($isAdmin ) { echo '<a id="topmenu_admin" href="index.php?s=admin">'.lang("_ADMIN").'</a>'; }
   }
   ?>
   	</div>
@@ -164,30 +174,28 @@ function openabout()
 	} else {
 		echo '<a href="'.$config['aboutURL'].'" target="_blank" id="topmenu_about">'.lang("_ABOUT").'</a>';	
 	}
-	if(!$authsaml->isAuth() && $s != "logon" ) { echo '<a href="'.$authsaml->logonURL().'" id="topmenu_logon">'.lang("_LOGON").'</a>';}
-	if($authsaml->isAuth() && !$authvoucher->aVoucher() &&  $s != "completev" ) { echo '<a href="'.$authsaml->logoffURL().'" id="topmenu_logoff">'.lang("_LOG_OFF").'</a>'; }
+	if(!$isAuth && $s != "logon" ) { echo '<a href="'.$authsaml->logonURL().'" id="topmenu_logon">'.lang("_LOGON").'</a>';}
+	if($isAuth && !$isVoucher &&  $s != "completev" ) { echo '<a href="'.$authsaml->logoffURL().'" id="topmenu_logoff">'.lang("_LOG_OFF").'</a>'; }
 	// end menu
 	?>
 	</div>
 	</div>
 	<div id="content">
-	<div id="scratch" class="scratch_msg">
 	<?php
 		if(array_key_exists("scratch", $_SESSION )) {
 			echo($functions->getScratchMessage());
 			session_unregister("scratch");
 		}
 	?>
-	</div>	
 	<div id="userinformation">
 	<?php 
 	// display user details if authenticated and not a voucher
 	echo "<div class='welcomeuser'>";
-	if(	$authvoucher->aVoucher() || $s == "completev") 
+	if(	$isVoucher || $s == "completev") 
 	{ 
 		echo lang("_WELCOMEGUEST");
 	} 
-	else if ($authsaml->isAuth() )
+	else if ($isAuth )
 	{
 		$attributes = $authsaml->sAuth();
 		echo lang("_WELCOME")." ";
@@ -211,7 +219,7 @@ function openabout()
 	</div>
 <?php
 	// checks if url has vid=xxxxxxx and that voucher is valid 
-	if(	$authvoucher->aVoucher())
+	if(	$isVoucher)
 	{
 		// check if it is Available or a Voucher for Uploading a New File
 		$voucherData = $authvoucher->getVoucher();
@@ -245,18 +253,18 @@ function openabout()
 	} else if($s == "upload") 
 	{
 		require_once('../pages/upload.php');
-	} else if($s == "vouchers" && !$authvoucher->aVoucher()) 
+	} else if($s == "vouchers" && !$isVoucher) 
 	{
 		require_once('../pages/vouchers.php');
 		// must be authenticated and not using a voucher to view files
-	} else if($s == "files" && !$authvoucher->aVoucher() && $authsaml->isAuth() ) 
+	} else if($s == "files" && !$isVoucher && $isAuth ) 
 	{
 		require_once('../pages/files.php');
 	} else if($s == "logon") 
 	{
 		require_once('../pages/logon.php');
 	}	
-	else if($s == "admin" && !$authvoucher->aVoucher()) 
+	else if($s == "admin" && !$isVoucher) 
 	{
 		require_once('../pages/admin.php');
 	}
@@ -271,7 +279,7 @@ function openabout()
 ?>
 		<div id="message"><?php echo lang("_UPLOAD_COMPLETE"); ?></div></div>
 <?php
-	} else if ($s == "" && $authsaml->isAuth()){
+	} else if ($s == "" && $isAuth){
 		require_once('../pages/upload.php');	
 	}else if ($s == "" ){
 		require_once('../pages/home.php');	

@@ -125,6 +125,30 @@ class Functions {
         return self::$instance;
     } 
 	
+	//Set the scratch message
+	public function setScratchMessage($message) {
+		$_SESSION['scratch'] = $message;
+	}
+
+	//Append to the scratch message
+	public function appendScratchMessage($message) {
+		logEntry("In appendScratchMessage");
+		session_start();
+		logEntry("session_start called");
+		if(! array_key_exists('scratch',$_SESSION)) {session_register("scratch");}
+		logEntry("Key didn't exist, registered");
+		$_SESSION['scratch'] = $_SESSION['scratch'] .'<br/>' .$message;
+		logEntry("Message added");
+	}	
+	
+	public function getScratchMessage() {
+		logEntry('in getScratchMessage');
+		if(array_key_exists('scratch',$_SESSION)) {
+			logEntry('returning scratch message'. $_SESSION['scratch']);
+			return '<div id="scratch" class="scratch_msg">'.$_SESSION['scratch'].'</div>';
+		} else {return '';}
+	}
+	
     //--------------------------------------- CHECKED
     // Return Basic Database Statistics e.g. Up xx Gb (files xx) | Down xx Gb (files xx)
 	// ---------------------------------------

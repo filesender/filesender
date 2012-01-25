@@ -128,7 +128,7 @@
 			$lang["_MAXEMAILS"] = "The maximum number of email addresses allowed is ";
 			$lang["_INVALID_DATE_FORMAT"] = "The date format is invalid.";
 			$lang["_DISK_SPACE_ERROR"] = "There is not enough drive space on this service. Please contact the service administration or upload a smaller file.";
-			
+			$lang["_ERROR_ATTRIBUTES"] = "Your Identity Provider is not providing the required attributes. Contact your Administrator";	
 			
 			$lang["_LOGOUT_COMPLETE"] = "Logout Complete";
 			
