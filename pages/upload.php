@@ -289,6 +289,7 @@
 		if(data.errors)
 		{
 		$.each(data.errors, function(i,result){
+		if(result == "err_invalidtoemail") { errorDialog("Invalid 'From' Email. Please logon again or use a different voucher");}
 		if(result == "err_tomissing") { $("#fileto_msg").show();} // missing email data
 		if(result == "err_expmissing") { $("#expiry_msg").show();} // missing expiry date
 		if(result == "err_exoutofrange") { $("#expiry_msg").show();} // expiry date out of range
