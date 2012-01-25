@@ -165,7 +165,10 @@ function uploadFile() {
   		type: "POST",
   		url: "fs_upload.php?type=uploadcomplete&vid="+vid
 		}).success(function( data ) {
-		if(data == "err_cannotrenamefile")
+		if(data == "err_filesizemismatch")
+		{ 
+		window.location.href="index.php";
+		} else if(data == "err_cannotrenamefile")
 		{
 		window.location.href="index.php?s=uploaderror";
 		} else if(data == "complete"){		
