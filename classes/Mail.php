@@ -67,6 +67,7 @@ class Mail {
         $template = str_replace("{fileexpirydate}", date($config['datedisplayformat'],strtotime($mailobject["fileexpirydate"])), $template);
         $template = str_replace("{filefrom}", $mailobject["filefrom"], $template);
         $template = str_replace("{fileoriginalname}", $fileoriginalname, $template);
+        $template = str_replace("{htmlfileoriginalname}", utf8tohtml($fileoriginalname,TRUE), $template);
         $template = str_replace("{filename}", $fileoriginalname, $template);	
         $template = str_replace("{filesize}", formatBytes($mailobject["filesize"]), $template);
         $template = str_replace("{CRLF}", $crlf, $template);
