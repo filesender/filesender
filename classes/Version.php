@@ -32,7 +32,7 @@
 
 class FileSender_Version
 {
-	const VERSION = '1.5.0-beta';
+	const VERSION = '1.5.0-beta1';
 
 	//-------------------------------------------------------
 	// Compare the specified version with the current version.
