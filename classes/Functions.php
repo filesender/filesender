@@ -655,7 +655,7 @@ class Functions {
         $data["filefrom"]=$data["filefrom"];
         $data["filesize"]=$data["filesize"];
         $data["fileoriginalname"]=  sanitizeFilename($data['fileoriginalname']);
-        $data["filestatus"]="pending";//isset($data['filestatus']) ? $data['filestatus'] : "pending";
+        $data["filestatus"]="Pending";//isset($data['filestatus']) ? $data['filestatus'] : "Pending";
         $data["fileip4address"]= $dbCheck->checkIp($_SERVER['REMOTE_ADDR']);
         $data["fileip6address"]= $dbCheck->checkIp6($_SERVER['REMOTE_ADDR']);
 		$data["filesendersname"]=isset($data['filesendersname']) ? $data['filesendersname'] : NULL;
