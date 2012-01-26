@@ -188,7 +188,7 @@ Best regards,
 	</TR>
 	<TR>
 		<TD WIDTH=600 BGCOLOR="#e6e6e6">
-			<P ALIGN=CENTER>{fileoriginalname}</P>
+			<P ALIGN=CENTER>{htmlfileoriginalname}</P>
 		</TD>
 		<TD WIDTH=80 BGCOLOR="#e6e6e6">
 			<P ALIGN=CENTER>{filesize}</P>
@@ -216,7 +216,7 @@ Download link: {serverURL}?vid={filevoucheruid}
 
 The file is available until {fileexpirydate} after which it will be automatically deleted.
 
-Personal message from {filefrom} (optional): {filemessage}
+{filemessage_start}Personal message from {filefrom}: {filemessage}{filemessage_end}
 
 Best regards,
 
@@ -249,7 +249,7 @@ Best regards,
 	</TR>
 	<TR>
 		<TD WIDTH=600 BGCOLOR="#e6e6e6">
-			<P ALIGN=CENTER>{fileoriginalname}</P>
+			<P ALIGN=CENTER>{htmlfileoriginalname}</P>
 		</TD>
 		<TD WIDTH=80 BGCOLOR="#e6e6e6">
 			<P ALIGN=CENTER>{filesize}</P>
@@ -263,11 +263,11 @@ Best regards,
 	</TR>
 </TABLE>
 <P></P>
-<TABLE WIDTH=100% BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
+{filemessage_start}<TABLE WIDTH=100% BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
 	<COL WIDTH=100%>
 	<TR>
 		<TD WIDTH=100% BGCOLOR="#b3b3b3">
-			<P ALIGN=CENTER><B>Personal message from {filefrom} (optional):</B></P>
+			<P ALIGN=CENTER><B>Personal message from {filefrom}:</B></P>
 		</TD>
 	</TR>
 	<TR>
@@ -275,7 +275,7 @@ Best regards,
 			<P><I>{htmlfilemessage}</I></P>
 		</TD>
 	</TR>
-</TABLE>
+</TABLE>{filemessage_end}
 <P>Best regards,</P>
 <P>{siteName}</P>
 </BODY>
@@ -357,14 +357,14 @@ Dear Sir, Madam,<BR><BR>A voucher from {filefrom} has been cancelled.<BR><BR>
 	$config['defaultfilecancelled'] = "{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}
 Dear Sir, Madam,
 
-The file '{filename}' from {filefrom} has been cancelled and is no longer available to download.
+The file '{fileoriginalname}' from {filefrom} has been cancelled and is no longer available to download.
 
 Best regards,
 
 {siteName}{CRLF}{CRLF}--simple_mime_boundary{CRLF}Content-type:text/html; charset={charset}{CRLF}{CRLF}
 <HTML>
 <BODY>
-Dear Sir, Madam,<BR><BR>The file '{filename}' from {filefrom} has been cancelled and is no longer available to download.<BR><BR>
+Dear Sir, Madam,<BR><BR>The file '{htmlfileoriginalname}' from {filefrom} has been cancelled and is no longer available to download.<BR><BR>
 	<P>Best regards,</P>
 <P>{siteName}</P>
 </BODY>
