@@ -1,7 +1,7 @@
-Updated: 3 July 2011
+Updated: 26 Jan 2012
 
 *********************
-This is the development branch of FileSender 1.5 which is stil being worked
+This is the beta/development branch of FileSender 1.5 which is still being worked
 on and should not be used for production services. This file will be updated
 as soon as 1.5 will be release-ready. In the meantime have a look at
 
