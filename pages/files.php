@@ -213,7 +213,7 @@ $json_o=json_decode($filedata,true);
 		$("#form1").attr("action", "index.php?s=files&a=add&id=" + vid );
 		$("#filevoucheruid").val(vid);
 		$("#filefrom").html(decodeURIComponent(from));
-		$("#filename").html(filename);
+		$("#filename").html(decodeURIComponent(filename));
 		$("#filesubject").val(decodeURIComponent(subject));
 		$("#filemessage").val(decodeURIComponent(message));
 		$("#filesize").html(readablizebytes(filesize));
@@ -245,7 +245,7 @@ if(sizeof($json_o) > 0)
 {
 foreach($json_o as $item) {
 	$i += 1; // counter for file id's
-   echo '<tr><td valign="top"> <a id="btn_resendemail_'.$i.'" href="index.php?s=files&amp;a=resend&amp;id=' .$item['filevoucheruid'] . '"><img src="images/email_go.png" alt="" title="'.lang("_RE_SEND_EMAIL").'" /></a></td><td valign="top"><img id="btn_addrecipient_'.$i.'" src="images/email_add.png" alt="" title="'.lang("_NEW_RECIPIENT").'" onclick="openAddRecipient('."'".$item['filevoucheruid']."','".$item['fileoriginalname'] ."','".$item['filesize'] ."','".rawurlencode($item['filefrom'])."','".rawurlencode($item['filesubject'])."','".rawurlencode($item['filemessage'])."'" .');"  style="cursor:pointer;" /></td>';
+   echo '<tr><td valign="top"> <a id="btn_resendemail_'.$i.'" href="index.php?s=files&amp;a=resend&amp;id=' .$item['filevoucheruid'] . '"><img src="images/email_go.png" alt="" title="'.lang("_RE_SEND_EMAIL").'" /></a></td><td valign="top"><img id="btn_addrecipient_'.$i.'" src="images/email_add.png" alt="" title="'.lang("_NEW_RECIPIENT").'" onclick="openAddRecipient('."'".$item['filevoucheruid']."','".rawurlencode(utf8tohtml($item['fileoriginalname'],true)) ."','".$item['filesize'] ."','".rawurlencode($item['filefrom'])."','".rawurlencode($item['filesubject'])."','".rawurlencode($item['filemessage'])."'" .');"  style="cursor:pointer;" /></td>';
    if($item['fileto'] == $attributes["email"])
    {
    echo "<td class='HardBreak' valign='top'>".lang("_ME")."</td>";
