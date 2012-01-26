@@ -289,7 +289,6 @@
 		if(data.errors)
 		{
 		$.each(data.errors, function(i,result){
-		if(result == "err_invalidtoemail") { errorDialog("Invalid 'From' Email. Please logon again or use a different voucher");}
 		if(result == "err_tomissing") { $("#fileto_msg").show();} // missing email data
 		if(result == "err_expmissing") { $("#expiry_msg").show();} // missing expiry date
 		if(result == "err_exoutofrange") { $("#expiry_msg").show();} // expiry date out of range
@@ -445,17 +444,15 @@ function uploadcomplete(name,size)
 	  url: "fs_upload.php?type=uploadcomplete&vid="+vid//,
 	  //data: {myJson:  JSON.stringify(json)}
 	}).success(function( data ) {
-	if(data == "err_filesizemismatch")
-		{ 
-		window.location.href="index.php";
-		} else if(data == "err_cannotrenamefile")
+
+	if(data == "err_cannotrenamefile")
 		{
 		window.location.href="index.php?s=uploaderror";
 		} else if(data == "complete"){		
 		window.location.href="index.php?s=complete";
 		} else {
 		window.location.href="index.php?s=completev";
-	}
+		}
 });
 }
 

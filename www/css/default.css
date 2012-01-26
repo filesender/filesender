@@ -123,11 +123,6 @@ input,textarea
 .scratch_msg {
 	font-size: 10px;
 	color: #d00;
-	padding: 20px;
-	border: 1px solid #cccccc;
-	border-radius:10px;
-	-moz-border-radius: 10px;
-	margin: 20px auto;
 }
 .formfieldheading {
 	width: 110px;

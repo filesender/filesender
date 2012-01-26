@@ -125,30 +125,6 @@ class Functions {
         return self::$instance;
     } 
 	
-	//Set the scratch message
-	public function setScratchMessage($message) {
-		$_SESSION['scratch'] = $message;
-	}
-
-	//Append to the scratch message
-	public function appendScratchMessage($message) {
-		logEntry("In appendScratchMessage");
-		session_start();
-		logEntry("session_start called");
-		if(! array_key_exists('scratch',$_SESSION)) {session_register("scratch");}
-		logEntry("Key didn't exist, registered");
-		$_SESSION['scratch'] = $_SESSION['scratch'] .'<br/>' .$message;
-		logEntry("Message added");
-	}	
-	
-	public function getScratchMessage() {
-		logEntry('in getScratchMessage');
-		if(array_key_exists('scratch',$_SESSION)) {
-			logEntry('returning scratch message'. $_SESSION['scratch']);
-			return '<div id="scratch" class="scratch_msg">'.$_SESSION['scratch'].'</div>';
-		} else {return '';}
-	}
-	
     //--------------------------------------- CHECKED
     // Return Basic Database Statistics e.g. Up xx Gb (files xx) | Down xx Gb (files xx)
 	// ---------------------------------------
@@ -622,26 +598,13 @@ class Functions {
 		// return array of errors or 
 		global $config;
 		global $resultArray;
-		$authsaml = AuthSaml::getInstance();
-		$authvoucher = AuthVoucher::getInstance();
+		
 		$dbCheck = DB_Input_Checks::getInstance();
-		$functions = Functions::getInstance();
 	
 		$errorArray = array();
 		// test 
 		//array_push($errorArray, "err_nodiskspace");
-		//array_push($errorArray, "err_invalidtoemail");
-		// filefrom missing
-		if(!isset($data["filefrom"])){ array_push($errorArray, "err_invalidtoemail");}
-		// filefrom matches current user
-		// If Voucher
-		if ($authvoucher->aVoucher()) {
-		$voucherdata = $functions->getVoucherData($_REQUEST['vid']);
-		if(isset($data["filefrom"]) && $data["filefrom"] <> $voucherdata["fileto"]){ array_push($errorArray, "err_invalidtoemail");}
-		} else if ($authsaml->isAuth()){
-		$authAttributes = $this->authsaml->sAuth();
-		if(isset($data["filefrom"]) && $data["filefrom"] <> $authAttributes["email"] ){ array_push($errorArray, "err_invalidtoemail");}
-		}
+		//array_push($errorArray, "err_tomissing");
 		// filesize missing
 		if(!isset($data["filesize"])){ array_push($errorArray, "err_missingfilesize"); }
 		// check space is available on disk before uploading
@@ -654,7 +617,7 @@ class Functions {
 		if(!isset($data["fileoriginalname"])){ array_push($errorArray, "err_invalidfilename");}
 		// expiry out of range
 		if(strtotime($data["fileexpirydate"]) > strtotime("+".$config['default_daysvalid']." day") ||  strtotime($data["fileexpirydate"]) < strtotime("now"))
-		{ array_push($errorArray,"err_exoutofrange");}
+		{ array_push($resultArray,"err_exoutofrange");}
 		// Recipient email missing
 		if(!isset($data["fileto"])){ array_push($errorArray,  "err_filetomissing"); 
 		} else {

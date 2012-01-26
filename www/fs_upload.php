@@ -109,12 +109,7 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
          	} else {
 			logEntry("Rename the file ".$uploadfolder.$fileuid.".tmp");
 		}
-		// check filesizes match
-		if(checkFileSize($uploadfolder.$fileuid.".tmp") != $data["filesize"])
-		{
-			$functions->setScratchMessage(lang("_UPLOAD_INCORRECT_FILESIZE"));
-			echo "err_filesizemismatch"; exit;
-		}
+		
 		// close pending file
 		$functions->closeVoucher($data["fileid"]);
 		
@@ -139,7 +134,6 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 			logEntry("DEBUG fs_upload: Filedata = " . print_r($data,TRUE));
 			$functions->insertFile($data);
 		}
-		
 		if($authsaml->isAuth()) { 
 			echo "complete";
 		} else {
