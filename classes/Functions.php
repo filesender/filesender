@@ -612,12 +612,12 @@ class Functions {
 		// expiry missing
 		if(!isset($data["fileexpirydate"])){ array_push($errorArray,  "err_expmissing"); }
 		// fileto missing
-		if(!isset($data["fileto"])){ array_push($resultArray, "err_tomissing");}
+		if(!isset($data["fileto"])){ array_push($errorArray, "err_tomissing");}
 		// filename missing
 		if(!isset($data["fileoriginalname"])){ array_push($errorArray, "err_invalidfilename");}
 		// expiry out of range
 		if(strtotime($data["fileexpirydate"]) > strtotime("+".$config['default_daysvalid']." day") ||  strtotime($data["fileexpirydate"]) < strtotime("now"))
-		{ array_push($resultArray,"err_exoutofrange");}
+		{ array_push($errorArray,"err_exoutofrange");}
 		// Recipient email missing
 		if(!isset($data["fileto"])){ array_push($errorArray,  "err_filetomissing"); 
 		} else {
