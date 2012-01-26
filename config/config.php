@@ -188,7 +188,7 @@ Best regards,
 	</TR>
 	<TR>
 		<TD WIDTH=600 BGCOLOR="#e6e6e6">
-			<P ALIGN=CENTER>{fileoriginalname}</P>
+			<P ALIGN=CENTER>{htmlfileoriginalname}</P>
 		</TD>
 		<TD WIDTH=80 BGCOLOR="#e6e6e6">
 			<P ALIGN=CENTER>{filesize}</P>
@@ -249,7 +249,7 @@ Best regards,
 	</TR>
 	<TR>
 		<TD WIDTH=600 BGCOLOR="#e6e6e6">
-			<P ALIGN=CENTER>{fileoriginalname}</P>
+			<P ALIGN=CENTER>{htmlfileoriginalname}</P>
 		</TD>
 		<TD WIDTH=80 BGCOLOR="#e6e6e6">
 			<P ALIGN=CENTER>{filesize}</P>
@@ -357,14 +357,14 @@ Dear Sir, Madam,<BR><BR>A voucher from {filefrom} has been cancelled.<BR><BR>
 	$config['defaultfilecancelled'] = "{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}
 Dear Sir, Madam,
 
-The file '{filename}' from {filefrom} has been cancelled and is no longer available to download.
+The file '{fileoriginalname}' from {filefrom} has been cancelled and is no longer available to download.
 
 Best regards,
 
 {siteName}{CRLF}{CRLF}--simple_mime_boundary{CRLF}Content-type:text/html; charset={charset}{CRLF}{CRLF}
 <HTML>
 <BODY>
-Dear Sir, Madam,<BR><BR>The file '{filename}' from {filefrom} has been cancelled and is no longer available to download.<BR><BR>
+Dear Sir, Madam,<BR><BR>The file '{htmlfileoriginalname}' from {filefrom} has been cancelled and is no longer available to download.<BR><BR>
 	<P>Best regards,</P>
 <P>{siteName}</P>
 </BODY>
