@@ -134,6 +134,7 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 			logEntry("DEBUG fs_upload: Filedata = " . print_r($data,TRUE));
 			$functions->insertFile($data);
 		}
+		// NOTE: should we prefer voucher here?
 		if($authsaml->isAuth()) { 
 			echo "complete";
 		} else {
@@ -160,17 +161,23 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 			$dataitem["fileauthuseremail"] = $authAttributes["email"];
 		}
 
-		$dataitem = $functions->validateFileData($dataitem);
-		
 		// if AUP then add session variable to store that a user selected the session variable
 		if(isset($dataitem["aup"]))
 		{
 			$_SESSION["aup"] = "true";
 		}
+
+		// voucher has been used so add a SESSION variable
+		if ($authvoucher->aVoucher()) {
+			$_SESSION['voucher'] = $_REQUEST['vid'];
+		}
+
+		$dataitem = $functions->validateFileData($dataitem);
+		
 		// check if this is a pending upload so that we can continue
 		$tempFilename = generateTempFilename($dataitem);
 		$pendingData = $functions->checkPending($dataitem);
-		if($pendingData != "" && generateTempFilename($dataitem) == generateTempFilename($pendingData))
+		if($pendingData != "" && $tempFilename == generateTempFilename($pendingData))
 		{
 			$dataitem["filevoucheruid"] = $pendingData["filevoucheruid"];
 			$functions->updateFile($dataitem);
@@ -178,10 +185,6 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 			$dataitem["filevoucheruid"] = getGUID();
 			$dataitem["filestatus"] = "Pending";
 			$functions->insertFile($dataitem);
-		}
-		// voucher has been used so add a SESSION variable
-		if ($authvoucher->aVoucher()) {
-			$_SESSION['voucher'] = $_REQUEST['vid'];
 		}
 		
 		$resultArray["filesize"] = checkFileSize($uploadfolder.$tempFilename);
