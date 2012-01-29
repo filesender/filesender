@@ -325,26 +325,22 @@ function generateTempFilename($data)
 	$functions = Functions::getInstance();
 	$tempFilename= "";
 
+	// Add Guest Voucher id if a voucher is used
 	if(isset($_SESSION['voucher']))
 	{
 		$tempFilename .= $_SESSION['voucher'];	
-		$data = $functions->getVoucherData($_SESSION['voucher']);
 		logEntry("DEBUG fs_upload: tempfilename 1v1 : ".$tempFilename);
 	} 
-	// add SAML saml_uid_attribute
+	// else add SAML saml_uid_attribute
 	else if( $authsaml->isAuth()) {
 		$authAttributes = $authsaml->sAuth();
 		$tempFilename .= $authAttributes["saml_uid_attribute"];	
-		//$data["fileauthuseruid"] = $authAttributes["saml_uid_attribute"];
-		//$data["fileauthuseremail"] = $authAttributes["email"];
 		logEntry("DEBUG fs_upload: tempfilename 1a : ".$tempFilename);
-	} else 
-	if ($authvoucher->aVoucher()) {
+	} else if ($authvoucher->aVoucher()) {
+		// should not be used anymore
 		$tempFilename .= $_REQUEST['vid'];
-		$data = $functions->getVoucherData($_REQUEST['vid']);
 		logEntry("DEBUG fs_upload: tempfilename 1v2 : ".$tempFilename);
 	}
-	
 	
 	// add the file name
 	if(isset($data['fileoriginalname'])){
