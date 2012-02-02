@@ -1,13 +1,15 @@
---- config/config.php	2011-12-15 17:48:01.023376262 +0100
-+++ config/config.php.new	2011-12-17 11:21:34.337624961 +0100
-@@ -127,12 +127,13 @@
+--- config/config.php	2012-01-26 13:30:58.547535016 +0100
++++ config/config.php	2012-02-02 15:07:19.563179082 +0100
+@@ -126,13 +126,14 @@
+ 	$config['site_simplesamllocation'] = '/usr/share/simplesamlphp/';
  	$config['log_location'] = '/usr/share/filesender/log/';	
  
- 	$config["db_type"] = "pgsql";// pgsql or mysql
+-	$config["db_type"] = "pgsql";// pgsql or mysql
 -	$config['db_host'] = 'localhost';
 -	$config['db_database'] = 'filesender';
 -	$config['db_port'] = '5432';
 +	include('/etc/filesender/debian-db.php');
++	$config["db_type"] = empty($dbtype) ? 'pgsql' : $dbtype;
 +	$config['db_host'] = empty($dbserver) ? 'localhost' : $dbserver;
 +	$config['db_database'] = empty($dbname) ? 'filesender' : $dbname;
 +	$config['db_port'] = empty($dbport) ? '5432' : $dbport;
