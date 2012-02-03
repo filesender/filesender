@@ -617,7 +617,12 @@ class Functions {
 		if(!isset($data["fileoriginalname"])){ array_push($errorArray, "err_invalidfilename");}
 		// expiry out of range
 		if(strtotime($data["fileexpirydate"]) > strtotime("+".$config['default_daysvalid']." day") ||  strtotime($data["fileexpirydate"]) < strtotime("now"))
-		{ array_push($errorArray,"err_exoutofrange");}
+		{
+			// Don't generate error, expiry date will be fixed later on with:
+			// $data["fileexpirydate"] = $this->ensureValidFileExpiryDate($data["fileexpirydate"]);
+			// When generating an error use/uncomment the following code:
+			// array_push($errorArray,"err_exoutofrange");
+		}
 		// Recipient email missing
 		if(!isset($data["fileto"])){ array_push($errorArray,  "err_filetomissing"); 
 		} else {
