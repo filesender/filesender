@@ -240,7 +240,11 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 			// validate fileto missing
 			if(!isset($dataitem["fileto"])){ echo "err_tomissing"; exit;}
 			// validate expiry range
-			if(strtotime($dataitem["fileexpirydate"]) > strtotime("+".$config['default_daysvalid']." day") ||  strtotime($dataitem["fileexpirydate"]) < strtotime("now")) { echo "err_exoutofrange"; exit; }
+			// Don't generate a validation error but fix the expiry date to correct timezone/clock skew mishaps
+			if(strtotime($dataitem["fileexpirydate"]) > strtotime("+".$config['default_daysvalid']." day") ||  strtotime($dataitem["fileexpirydate"]) < strtotime("now")) { 
+				$dataitem["fileexpirydate"] = $functions->ensureValidFileExpiryDate($dataitem["fileexpirydate"]);
+				/* echo "err_exoutofrange"; exit; */ 
+			}
 			// seperate emails
 			$emailto = str_replace(",",";",$dataitem["fileto"]);
 			$emailArray = preg_split("/;/", $emailto);
@@ -274,9 +278,11 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 		// expiry missing
 		if(!isset($dataitem["fileexpirydate"])){ array_push($errorArray,  "err_expmissing"); }
 		// expiry out of range
+		// Don't generate a validation error but fix the expiry date to correct timezone/clock skew mishaps
 		if(strtotime($dataitem["fileexpirydate"]) > strtotime("+".$config['default_daysvalid']." day") ||  strtotime($dataitem["fileexpirydate"]) < strtotime("now"))
 		{
-			array_push($errorArray,"err_exoutofrange");
+			$myfileData["fileexpirydate"] = $functions->ensureValidFileExpiryDate($myfileData["fileexpirydate"]);
+			/* array_push($errorArray,"err_exoutofrange"); */
 		}
 		// emmail missing
 		if(!isset($dataitem["fileto"]))
