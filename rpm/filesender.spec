@@ -1,5 +1,6 @@
-# When this is a pre-release, define the prerel field - comment out for official release
-%define prerel beta1
+# The macros prerel, Version and Release are set by the builder-scripts
+# When this is a pre-release, define the prerel field
+%define prerel $PRERELEASE
 # also need a fsprerel field for a pre-release to get the correct tarball
 %if 0%{?prerel:1}
 %define fsprerel -%{prerel}
@@ -103,7 +104,7 @@ rm -rf %{buildroot}
 
 %changelog
 * %(date '+%a %b %d %Y') FileSender Development <filesender-dev@filesender.org> %{version}-%{release}
-- Version %{version}-%{release} build
+- Release %{version}%{?fsprerel}
 
 * Wed May 11 2011 FileSender Development <filesender-dev@filesender.org> 1.0.1-1
 - Release 1.0.1
