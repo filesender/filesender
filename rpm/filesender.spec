@@ -1,12 +1,18 @@
+# When this is a pre-release, define the prerel field - comment out for official release
+%define prerel beta1
+# also need a fsprerel field for a pre-release to get the correct tarball
+%ifdef prerel
+%define fsprerel -%{prerel}
+%endif
 Name:           filesender
-Version:        1.5.0
+Version:        1.5
 Release:        1%{?dist}
 Summary:        Sharing large files with a browser
 
 Group:          Applications/Internet
 License:        BSD
 URL:            http://www.filesender.org/
-Source0:        http://filesender-dev.surfnet.nl/nightly/%{name}-%{version}.tar.gz
+Source0:        http://filesender-dev.surfnet.nl/nightly/%{name}-%{version}%{?fsprerel}.tar.gz
 Source1:	%{name}-config.php
 Source2:	%{name}.htaccess
 Source3:	%{name}.cron.daily
