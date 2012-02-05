@@ -1,7 +1,7 @@
 # When this is a pre-release, define the prerel field - comment out for official release
 %define prerel beta1
 # also need a fsprerel field for a pre-release to get the correct tarball
-%if %{?prerel:1}
+%if 0%{?prerel:1}
 %define fsprerel -%{prerel}
 %endif
 Name:           filesender
