@@ -41,7 +41,7 @@ The software is not intended as a permanent file publishing platform.
 
 
 %prep
-%setup -q
+%setup -q -n %{name}-%{version}%{?fsprerel}
 
 %build
 
