@@ -344,9 +344,13 @@ function generateTempFilename($data)
 		$tempFilename .= $authAttributes["saml_uid_attribute"];	
 		logEntry("DEBUG fs_upload: tempfilename 1a : ".$tempFilename);
 	} else if ($authvoucher->aVoucher()) {
-		// should not be used anymore
+		// should not be used anymore. Since this means there is some error with the
+		// voucher upload (cancelled, used in anaother session etc) just generate an auth error.
 		$tempFilename .= $_REQUEST['vid'];
 		logEntry("DEBUG fs_upload: tempfilename 1v2 : ".$tempFilename);
+		logEntry("DEBUG fs_upload.php: Voucher upload error: ".$_REQUEST['vid']);
+	        echo "ErrorAuth";
+		exit;
 	}
 	
 	// add the file name
