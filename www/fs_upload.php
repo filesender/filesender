@@ -74,6 +74,7 @@ $resultArray = array();
 logEntry("DEBUG fs_upload: magic_quotes_gpc=".get_magic_quotes_gpc());
 logEntry("DEBUG fs_upload: REQUEST data: " . print_r($_REQUEST, true));
 logEntry("DEBUG fs_upload: POST data: " . print_r($_POST, true));
+logEntry("DEBUG fs_upload: SESSION data: " . print_r($_SESSION, true));
 
 // check we are authenticated first before continuing
 if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]))
