@@ -1,6 +1,15 @@
-Last update: 26 Jan 2012
+Last update: 13 February 2012
 
-Version 1.5.0-beta1 Development build <26 Jan 2012>
+Version 1.5-beta1 <13 February 2012>
+
+	Major changes since 1.0.1/1.1
+	- Replaced Flash User Interface with a HTML-only interface
+	- Dropped Gears dependency, upload of large (>2G) files now requires
+	  a modern HTML5 capable browser, other browsers are limited to 2G
+	  uploads (using a small Flash-application).
+	- Added automatic language selection (English, Norwegian, Dutch)
+	- Added Database Abstraction Layer to facilitate the use
+	  of MySQL possibly other databases as backend.
 
 	Major (visible) changes since earlier 1.5.0 development builds
 	- Added French and German languages (contributed by RESTENA)
