@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  * 
- * Copyright (c) 2009-2011, AARNet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
  * *	Redistributions in binary form must reproduce the above copyright
  * 	notice, this list of conditions and the following disclaimer in the
  * 	documentation and/or other materials provided with the distribution.
- * *	Neither the name of AARNet, HEAnet, SURFnet and UNINETT nor the
+ * *	Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
  * 	names of its contributors may be used to endorse or promote products
  * 	derived from this software without specific prior written permission.
  * 
@@ -47,11 +47,10 @@ class AuthSaml {
     } 
 
     // checks if a user is SAML authenticated and is administrator: returns true/false
-    // used by flex to display admin features
+    // admins can be added in the configuration file using the configured $config['saml_uid_attribute']
     public function authIsAdmin() {
 
-        $CFG = config::getInstance();
-        $config = $CFG->loadConfig();
+        global $config;
 
         require_once($config['site_simplesamllocation'].'lib/_autoload.php');
 
@@ -62,10 +61,12 @@ class AuthSaml {
 
             // compare config admin to userUID
             if(isset($attributes[$config['saml_uid_attribute']][0])) {
-                $attributes["eduPersonTargetedID"] = $attributes[$config['saml_uid_attribute']][0];
-            }
+                $attributes["'saml_uid_attribute"] = $attributes[$config['saml_uid_attribute']][0];
+            } else if(isset($attributes[$config['saml_uid_attribute']])) {
+				$attributes["'saml_uid_attribute"] = $attributes[$config['saml_uid_attribute']];
+			}
 
-            if(stristr($config['admin'], $attributes["eduPersonTargetedID"]) === FALSE) {
+            if(stristr($config['admin'], $attributes["'saml_uid_attribute"]) === FALSE) {
                 return FALSE;
             } else {
                 return TRUE;
@@ -78,17 +79,13 @@ class AuthSaml {
     // returns SAML authenticated user information as josn array
     public function sAuth() {
 
-        $CFG = config::getInstance();
-        $config = $CFG->loadConfig();
+      	global $config;
 
         require_once($config['site_simplesamllocation'].'lib/_autoload.php');
 
         $as = new SimpleSAML_Auth_Simple($config['site_authenticationSource']);
-
         $as->requireAuth();
         $attributes = $as->getAttributes();
-
-        // check for multidimensional array	
 
         // need to capture email from SAML attribute
         // may be single attribute or array 
@@ -110,14 +107,11 @@ class AuthSaml {
         }
 
         if(isset($attributes[$config['saml_uid_attribute']][0])) {
-            $attributes["eduPersonTargetedID"] = $attributes[$config['saml_uid_attribute']][0];
-        }
-		
-		// required for SAML 1.7.0+
-		$attributes['token'] = "";
-		if(isset($_COOKIE['SimpleSAMLAuthToken'])){
-		$attributes['token'] = $_COOKIE['SimpleSAMLAuthToken'];
+            $attributes["saml_uid_attribute"] = $attributes[$config['saml_uid_attribute']][0];
+        } else {
+			$attributes["saml_uid_attribute"] = $attributes[$config['saml_uid_attribute']];
 		}
+
         $inglue = '='; 
         $outglue = '&';
         $message = "";
@@ -152,47 +146,33 @@ class AuthSaml {
         return $attributes;
     }
 
-    // requests logon URL from SAML and returns string	for flex
+    // requests logon URL from SAML and returns string
     public function logonURL() {
 
-        $CFG = config::getInstance();
-        $config = $CFG->loadConfig();
-
+        global $config;
         //require_once($config['site_simplesamllocation'].'lib/_autoload.php');
         //$as = new SimpleSAML_Auth_Simple($config['site_authenticationSource']);
-        $lognurl = $config['site_simplesamlurl']."module.php/core/as_login.php?AuthId=".$config['site_authenticationSource']."&ReturnTo=".$config['site_url']."";
-
-        return $lognurl; //$attributes;
+        $lognurl = $config['site_simplesamlurl']."module.php/core/as_login.php?AuthId=".$config['site_authenticationSource']."&ReturnTo=".$config['site_url']."index.php?s=upload";
+        return htmlentities($lognurl); //$attributes;
     }
 
-    // requests logon OFF URL from SAML and returns string	for flex	
+    // requests logon OFF URL from SAML and returns string	
     public function logoffURL() {
-
-        $CFG = config::getInstance();
-        $config = $CFG->loadConfig();
-
-        //require_once($config['site_simplesamllocation'].'lib/_autoload.php');
-        //$as = new SimpleSAML_Auth_Simple($config['site_authenticationSource']);
-
-        $logoffurl = $config['site_simplesamlurl']."module.php/core/as_logout.php?AuthId=".$config['site_authenticationSource']."&ReturnTo=".$config['site_logouturl'] ;
-
-        return $logoffurl; //$attributes;
+		global $config;
+		require_once($config['site_simplesamllocation'].'lib/_autoload.php');
+    	//$as = new SimpleSAML_Auth_Simple($config['site_authenticationSource']);
+    	$logoffurl = $config['site_simplesamlurl']."module.php/core/as_logout.php?AuthId=".$config['site_authenticationSource']."&ReturnTo=".$config['site_logouturl']."" ;
+        return htmlentities($logoffurl); //$attributes;
     }
 
     // checks SAML for autheticated user: returns true/false	
+	// return bool if authenticated
     public function isAuth() {
-
-        // return bool if authenticated
-        $CFG = config::getInstance();
-        $config = $CFG->loadConfig();
-
+        global $config;
         require_once($config['site_simplesamllocation'].'lib/_autoload.php');
-
         $as = new SimpleSAML_Auth_Simple($config['site_authenticationSource']);
         return $as->isAuthenticated();
-
     }
-
 }
 
 ?>

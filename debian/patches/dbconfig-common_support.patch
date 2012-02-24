@@ -1,20 +1,23 @@
---- config/config.php	2011-01-18 21:59:01.000000000 +0100
-+++ config/config.php.new	2011-01-18 22:19:40.953092309 +0100
-@@ -124,11 +124,12 @@
+--- config/config.php	2012-01-26 13:30:58.547535016 +0100
++++ config/config.php	2012-02-02 15:07:19.563179082 +0100
+@@ -126,13 +126,14 @@
+ 	$config['site_simplesamllocation'] = '/usr/share/simplesamlphp/';
  	$config['log_location'] = '/usr/share/filesender/log/';	
  
- 	// database settings	
--	$config['pg_host'] = 'localhost';
--	$config['pg_database'] = 'filesender';
--	$config['pg_port'] = '5432';
--	$config['pg_username'] = 'filesender';
--	$config['pg_password'] = 'yoursecretpassword';
+-	$config["db_type"] = "pgsql";// pgsql or mysql
+-	$config['db_host'] = 'localhost';
+-	$config['db_database'] = 'filesender';
+-	$config['db_port'] = '5432';
 +	include('/etc/filesender/debian-db.php');
-+	$config['pg_host'] = empty($dbserver) ? 'localhost' : $dbserver;
-+	$config['pg_database'] = empty($dbname) ? 'filesender' : $dbname;
-+	$config['pg_port'] = empty($dbport) ? '5432' : $dbport;
-+	$config['pg_username'] = empty($dbuser) ? 'filesender' : $dbuser;
-+	$config['pg_password'] = empty($dbpass) ? 'filesender' : $dbpass;
- 
- 	// cron settings
- 	$config['cron_exclude prefix'] = '_'; // exclude deletion of files with the prefix character listed (can use multiple characters eg '._' will ignore .xxxx and _xxxx
++	$config["db_type"] = empty($dbtype) ? 'pgsql' : $dbtype;
++	$config['db_host'] = empty($dbserver) ? 'localhost' : $dbserver;
++	$config['db_database'] = empty($dbname) ? 'filesender' : $dbname;
++	$config['db_port'] = empty($dbport) ? '5432' : $dbport;
+ 	// database username and password
+-	$config['db_username'] = 'filesender';
+-	$config['db_password'] = 'yoursecretpassword';
++	$config['db_username'] = empty($dbuser) ? 'filesender' : $dbuser;
++	$config['db_password'] = empty($dbpass) ? 'filesender' : $dbpass;
+ 	
+ 	//Optional DSN format overides db_ settings
+ 	//$config['dsn'] = "pgsql:host=localhost;dbname=filesender";

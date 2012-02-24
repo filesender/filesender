@@ -1,3 +1,4 @@
 config/* debian/conf/*  etc/filesender
-www classes includes scripts cron		 usr/share/filesender
-tmp files maildrop		             var/lib/filesender
+www classes includes scripts cron language pages		 usr/share/filesender
+tmp files		             var/lib/filesender
+

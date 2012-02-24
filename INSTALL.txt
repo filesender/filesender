@@ -1,4 +1,14 @@
-Updated: 25 April 2011
+Updated: 26 Jan 2012
+
+*********************
+This is the beta/development branch of FileSender 1.5 which is still being worked
+on and should not be used for production services. This file will be updated
+as soon as 1.5 will be release-ready. In the meantime have a look at
+
+http://www.assembla.com/spaces/file_sender/wiki/Installation_notes_for_1-5_development_code
+
+for more information.
+*********************
 
 Installation instructions
 =========================

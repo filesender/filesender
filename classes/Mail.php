@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  * 
- * Copyright (c) 2009-2011, AARNet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
  * *	Redistributions in binary form must reproduce the above copyright
  * 	notice, this list of conditions and the following disclaimer in the
  * 	documentation and/or other materials provided with the distribution.
- * *	Neither the name of AARNet, HEAnet, SURFnet and UNINETT nor the
+ * *	Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
  * 	names of its contributors may be used to endorse or promote products
  * 	derived from this software without specific prior written permission.
  * 
@@ -29,7 +29,8 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
+ 
+ 
 //  --------------------------------
 // email class
 // ---------------------------------
@@ -48,13 +49,12 @@ class Mail {
     //---------------------------------------
     // Send mail
     // 
-    public function sendemail($mailobject,$template,$type='full'){
+    public function sendEmail($mailobject,$template,$type='full'){
 
         $authsaml = AuthSaml::getInstance();
         $authvoucher = AuthVoucher::getInstance();
 
-        $CFG = config::getInstance();
-        $config = $CFG->loadConfig();
+        global $config;
 
         $fileoriginalname = sanitizeFilename($mailobject['fileoriginalname']);
         $crlf = $config["crlf"];
@@ -64,55 +64,70 @@ class Mail {
         if ($type == 'bounce') {$template = str_replace("{fileoriginalto}", $mailobject["fileoriginalto"], $template);}
         if (isset($config["site_url"])) {$template = str_replace("{serverURL}", $config["site_url"], $template);}
         $template = str_replace("{filevoucheruid}", $mailobject["filevoucheruid"], $template);
-        $template = str_replace("{fileexpirydate}", date("d-M-Y",strtotime($mailobject["fileexpirydate"])), $template);
+        $template = str_replace("{fileexpirydate}", date($config['datedisplayformat'],strtotime($mailobject["fileexpirydate"])), $template);
         $template = str_replace("{filefrom}", $mailobject["filefrom"], $template);
         $template = str_replace("{fileoriginalname}", $fileoriginalname, $template);
+        $template = str_replace("{htmlfileoriginalname}", utf8tohtml($fileoriginalname,TRUE), $template);
         $template = str_replace("{filename}", $fileoriginalname, $template);	
         $template = str_replace("{filesize}", formatBytes($mailobject["filesize"]), $template);
         $template = str_replace("{CRLF}", $crlf, $template);
 
-        // Replace 'newlines' (various formats) in filemessage with $crlf and count the number of lines
-        $mailobject["filemessage"] = preg_replace("/\r\n|\n|\r/", $crlf , $mailobject["filemessage"], -1, $nlcount);
+	if(strlen($mailobject["filemessage"]) > 0) {
 
-        // Encode the 'filemessage' with a UTF8-safe version of htmlentities to allow for multibyte UTF-8 characters
-        // Also insert <br /> linebreak tags to preserve intended formatting in the HTML body part
-        $mailobject["htmlfilemessage"] = nl2br(utf8tohtml($mailobject["filemessage"],TRUE));
+		// Remove {filemessage_start} and {filemessage_end} tags, and keep what's in there
+		$template = preg_replace('/{filemessage_start}(.*?){filemessage_end}/sm', '$1', $template);
 
-        // Add extra newlines when filemessage contains more than a few words
-        // (to get a better layout in the non HTML body part)
-        if ( $nlcount > 0 ) {
-             $mailobject["filemessage"] = $crlf . $crlf . $mailobject["filemessage"];
-        }
+        	// Replace 'newlines' (various formats) in filemessage with $crlf and count the number of lines
+	        $mailobject["filemessage"] = preg_replace("/\r\n|\n|\r/", $crlf , $mailobject["filemessage"], -1, $nlcount);
 
-        $template = str_replace("{filemessage}", $mailobject["filemessage"], $template);
-        $template = str_replace("{htmlfilemessage}", $mailobject["htmlfilemessage"], $template);
+	        // Encode the 'filemessage' with a UTF8-safe version of htmlentities to allow for multibyte UTF-8 characters
+	        // Also insert <br /> linebreak tags to preserve intended formatting in the HTML body part
+	        $mailobject["htmlfilemessage"] = nl2br(utf8tohtml($mailobject["filemessage"],TRUE));
 
+	        // Add extra newlines when filemessage contains more than a few words
+        	// (to get a better layout in the non HTML body part)
+	        if ( $nlcount > 0 ) {
+        	     $mailobject["filemessage"] = $crlf . $crlf . $mailobject["filemessage"];
+	        }
+
+        	$template = str_replace("{filemessage}", $mailobject["filemessage"], $template);
+	        $template = str_replace("{htmlfilemessage}", $mailobject["htmlfilemessage"], $template);
+	} else {
+		// No file message, remove {filemessage_start} and {filemessage_end} tags, as well as what's in there
+		$template = preg_replace('/{filemessage_start}(.*?){filemessage_end}/sm', '', $template);
+	}
 
         $headers = "MIME-Version: 1.0".$crlf;
         $headers .= "Content-Type: multipart/alternative; boundary=simple_mime_boundary".$crlf;
         $headers .= "X-FileSenderUID: ".$mailobject["filevoucheruid"].$crlf;
 
         // RFC2822 Originator of the message
+        if(!filter_var($mailobject['filefrom'],FILTER_VALIDATE_EMAIL)) {return false;}
         $headers .= "From: <".$mailobject['filefrom'].">".$crlf;
 
         // RFC2821 (Envelope) originator of the message
         if ($type == 'bounce') {
             $returnpath = "-r <>".$crlf;
         } else if (isset($config['return_path']) && ! empty($config['return_path'])) {
+            if(!filter_var($config['return_path'],FILTER_VALIDATE_EMAIL)) {return false;}
             $returnpath = "-r <".$config['return_path'].">".$crlf;
         } else {
+            if(!filter_var($mailobject['filefrom'],FILTER_VALIDATE_EMAIL)) {return false;}
             $returnpath = "-r <".$mailobject['filefrom'].">".$crlf;
         }
 
         // Recipient(s) of the message
+        if(!filter_var($mailobject['fileto'],FILTER_VALIDATE_EMAIL)) {return false;}
         $to = "<".$mailobject['fileto'] . ">";
         if ($type == 'full') {
+            if(!filter_var($mailobject['filefrom'],FILTER_VALIDATE_EMAIL)) {return false;}
             $headers .= "Cc: <" . $mailobject['filefrom'] . ">".$crlf;
         }
 
         // if voucher is being used then bcc fileauthuseremail a copy so voucher creator knows a file was sent as they are responsible for the use of the voucher
         if($authvoucher->aVoucher()) {
             if(isset($mailobject['fileauthuseremail'])){
+                if(!filter_var($mailobject['fileauthuseremail'],FILTER_VALIDATE_EMAIL)) {return false;}
                 $headers .= "Bcc: <".$mailobject['fileauthuseremail'].">".$crlf;
             }
         }
@@ -159,12 +174,11 @@ class Mail {
     //---------------------------------------
     // Send admin mail messages
     // 	
-    public function sendemailAdmin($message){
+    public function sendEmailAdmin($message){
 
         // send admin notifications via email
 
-        $CFG = config::getInstance();
-        $config = $CFG->loadConfig();
+        global $config;
 
         $crlf = $config["crlf"];
 
@@ -176,6 +190,7 @@ class Mail {
         //$returnpath = "-r".$mailobject['filefrom'].$crlf;
 
         $to = $config['adminEmail'];
+        if(!filter_var($to,FILTER_VALIDATE_EMAIL)) {return false;}
 
         $subject =   $config['site_name']." - Admin Message";
         $body = wordwrap($crlf ."--simple_mime_boundary".$crlf ."Content-type:text/plain; charset=iso-8859-1".$crlf.$crlf .$message,70);

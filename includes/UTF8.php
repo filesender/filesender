@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  * 
- * Copyright (c) 2009-2011, AARNet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
  * *	Redistributions in binary form must reproduce the above copyright
  * 	notice, this list of conditions and the following disclaimer in the
  * 	documentation and/or other materials provided with the distribution.
- * *	Neither the name of AARNet, HEAnet, SURFnet and UNINETT nor the
+ * *	Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
  * 	names of its contributors may be used to endorse or promote products
  * 	derived from this software without specific prior written permission.
  * 
@@ -99,7 +99,7 @@ function utf8tohtml($utf8, $encodeTags) {
         $ascii = ord($char);
         if ($ascii < 128) {
             // one-byte character
-            $result .= ($encodeTags) ? htmlentities($char) : $char;
+            $result .= ($encodeTags) ? htmlentities($char, ENT_QUOTES) : $char;
         } else if ($ascii < 192) {
             // non-utf8 character or not a start byte
         } else if ($ascii < 224) {

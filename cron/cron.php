@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  * 
- * Copyright (c) 2009-2011, AARNet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
  * *	Redistributions in binary form must reproduce the above copyright
  * 	notice, this list of conditions and the following disclaimer in the
  * 	documentation and/or other materials provided with the distribution.
- * *	Neither the name of AARNet, HEAnet, SURFnet and UNINETT nor the
+ * *	Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
  * 	names of its contributors may be used to endorse or promote products
  * 	derived from this software without specific prior written permission.
  * 
@@ -39,20 +39,26 @@
 chdir(dirname(__FILE__));
 
 // force all error reporting
-error_reporting(E_ALL);
+if (defined('E_DEPRECATED')) {
+	error_reporting(E_ALL & ~E_DEPRECATED);
+} else {
+	error_reporting(E_ALL);
+}
 
 $filesenderbase = dirname(dirname(__FILE__));
 
 // include all required classes
 require_once("$filesenderbase/config/config.php");
-require_once("$filesenderbase/classes/DB.php");
-require_once("$filesenderbase/classes/EN_AU.php");
-require_once("$filesenderbase/classes/Mail.php");
-require_once("$filesenderbase/classes/DB_Input_Checks.php");
 
-$lang = EN_AU::getInstance();
 $CFG = config::getInstance();
 $config = $CFG->loadConfig();
+
+require_once("$filesenderbase/includes/ErrorHandler.php");
+require_once("$filesenderbase/classes/DB.php");
+require_once("$filesenderbase/classes/Mail.php");
+require_once("$filesenderbase/classes/DB_Input_Checks.php");
+require_once("$filesenderbase/classes/Log.php");
+
 $sendmail = Mail::getInstance();
 
 // set time zone for this session
@@ -67,13 +73,10 @@ if(session_id() == ""){
 
 // log that cron has started running
 logProcess("CRON","Cron started");
-if (cleanUp())
-{
+if (cleanUp()) {
 	// cron completed - log
 	logProcess("CRON","Cron Complete");
-} 
-	else 
-{
+} else {
 	// email admin - error in Cron
 	logProcess("CRON","Cron Error - check error log");
 }
@@ -83,8 +86,7 @@ if (cleanUp())
 //---------------------------------------
 	// Clean up missing files
 	// Remove out of date files and vouchers
-function cleanUp() 
-	{
+function cleanUp() {
 	
 	global $config;
 	$db = DB::getInstance();
@@ -101,132 +103,113 @@ function cleanUp()
 		return false;
 	}	
 	
-	// check site_temp_filestore exists
-	if (!file_exists($config["site_temp_filestore"])) {
-		logProcess("CRON","Unable to find site_temp_filestore location specified in config.php  :".$config["site_temp_filestore"]);
-		return false;
-	}	
-	
 	// remove any files with no uid - leftover from bug earlier beta that save files without uid's
-	$sqlQuery = "
-					DELETE FROM					 
-						files 
-					WHERE 
-						fileuid IS NULL
-				";
-	
+	$sqlQuery = "DELETE FROM files WHERE fileuid IS NULL";
 	$db->fquery($sqlQuery);
 	
 	 
 	$FilestoreDirectory = $config["site_filestore"];
 
 	//
-	// check for any expired files first and close status in database
+	// Phase 1: check for any expired files and vouchers in the database first and close status in database
 	//
-	$today = date($config['postgresdateformat']); 
+	$today = date($config['db_dateformat']); 
 	
 	// if file not closed and past expiry date then close the file
-	$searchquery = "SELECT * FROM files WHERE  fileexpirydate < '%s' AND (filestatus = 'Available' or filestatus = 'Voucher')";
-	$search = $db->fquery($searchquery, $today);
+	$searchquery = "SELECT * FROM files WHERE fileexpirydate < %s AND (filestatus = 'Available' OR filestatus = 'Voucher')";
+	try {
+		$search = $db->fquery($searchquery, $today);
+	} catch (DBException $e) {
+		logProcess("CRON","SQL Error on selecting files". $e->getMessage());
+		return FALSE;
+	}
 		
-		// check for error in SQL
-	if (!$search) { 
-		logProcess("CRON","SQL Error on selecting files".pg_last_error());
-		return FALSE; 
-		}
-	
-	while($row = pg_fetch_assoc($search)) {
-		
-		// remove from database
-		$query = "UPDATE Files SET filestatus = 'Closed' WHERE fileid='%s'";
-		$result = $db->fquery($query, $row['fileid']);
-		
-		// check for error in SQL
-		if (!$result) { 
-			logProcess("CRON","SQL Error on updating files".pg_last_error());
-			return FALSE; 
-		}
-		
+	try {
+		$query = "UPDATE files SET filestatus = 'Closed' WHERE fileexpirydate < %s AND
+			(filestatus = 'Available' OR filestatus = 'Voucher')";
+		$db->fquery($query, $today);
+	} catch (DBException $e) {
+		logProcess("CRON", "SQL error while trying to close expired files" . $e->getMesssage());
+		return FALSE;
 	}
 
-	// remove files that do not have at least one Available file associated with it
-	// loop through directory and check file is Available
-	
-    // Open the folder
-    $dir_handle = @opendir($FilestoreDirectory) or die("Unable to open $FilestoreDirectory"); 
+	// Phase 2: remove files on disk that do not have at least one Available file associated with it
+	// in the database (loop through directory and check if file has status Available)
 
-    // 	- Loop through the files in  FilestoreDirectory 
-	//	- check in database if the file is closed
-	//	- if closed then delete the file
-	
-    while ($file = readdir($dir_handle)) {
-	
-	// skip . and ..
-	if($file == "." || $file == ".." || strpos($config['cron_exclude prefix'],substr($file,0,1)) === 0)
-	{
-		logProcess("CRON","Ignored file: ".$FilestoreDirectory.$file);
-		continue;
-	}
+	// Open the folder
+	$dir_handle = @opendir($FilestoreDirectory) or die("Unable to open $FilestoreDirectory"); 
 
-	// check filename in database
-	$query = "SELECT * FROM files WHERE  fileuid = '%s' AND filestatus = 'Available'";
-	$result = $db->fquery($query, substr($file,0,36));
+	// First find Available fileuids in the database
+	$result = $db->fquery("SELECT fileuid FROM files WHERE filestatus = 'Available'");
+	$available_fileuids = $result->fetchAll(PDO::FETCH_COLUMN);
+
+	// Loop through the files in FilestoreDirectory 
+	while ($filename = readdir($dir_handle)) {
 	
-	$total_results = pg_num_rows($result);
-	if($total_results < 1) {
-	// no Files Available match this file so delete the file
-	
-		if (is_file($FilestoreDirectory.$file) && file_exists($FilestoreDirectory.$file)) {
-		unlink($FilestoreDirectory.$file);
-		// log removal
-		logProcess("CRON","File Removed (Expired)".$FilestoreDirectory.$file);	
+		// skip . and ..
+		if($filename == "." || $filename == "..") {
+			continue;
+		}
+		
+		if(strpos($config['cron_exclude prefix'], substr($filename,0,1)) === 0) {
+			logProcess("CRON","Ignored file: " . $FilestoreDirectory.$filename);
+			continue;
+		}
+
+		//check in list of Available files
+		if(!in_array(substr($filename,0,36), $available_fileuids)) {
+		// no Files Available match this file so delete the file
+			if (is_file($FilestoreDirectory.$filename)) {
+				// Don't remove the file if mtime is less then 24 hours (86400 seconds) old
+				if (time() - filemtime($FilestoreDirectory.$filename) < 86400) {
+					logProcess("CRON","File NOT removed (last modification less then 24 hours ago ago)".$FilestoreDirectory.$filename);
+				} else {
+					unlink($FilestoreDirectory.$filename);
+					// log removal
+					logProcess("CRON","File Removed (Expired)".$FilestoreDirectory.$filename);    
+				}
+			}
 		}
 	}
-    }
-
-    // Close
-    closedir($dir_handle);
+	// Close directory
+	closedir($dir_handle);
 	
-	//
+	// Phase 3:
 	// Final cleanup is to close any records in the database that do not have a physical file attached to them
 	// close all entries that do not have a pyhsical file in storage
+	// We also check on the expiry date, so that files that are currently being uploaded and have "stale" records are left alone
 	
-	$search = $db->fquery("SELECT * FROM files WHERE filestatus = 'Available'"); 
-		
-		// check for error in SQL
-		if (!$search) { 
-		logProcess("CRON","SQL Error on updating files".pg_last_error());
-		return FALSE; 
-		}
+	try {
+		$search = $db->fquery("SELECT * FROM files WHERE filestatus = 'Available'"); 
+	} catch	(DBException $e) {
+		logProcess("CRON","SQL Error on updating files".$e->getMessage());
+		return FALSE;		
+	}
+
 	
-	while($row = pg_fetch_assoc($search)) {
+	foreach($search as $row) {
 
 		// we don't use ensureSaneFileUid()/sanitizeFilename() here because file_exists()
 		// is harmless, and the sanitized uid/filename might coincide with another file,
 		// in which case this file would never get status = Closed.
 		if (!file_exists($FilestoreDirectory."/".$row["fileuid"].".tmp")) {
 
-		// change status to closed in database
-		$query = "UPDATE Files SET filestatus = 'Closed' WHERE fileid='%s'";
-		
-		$result = $db->fquery($query, $row['fileid']);
-		
-		// check for error in SQL
-		if (!$result) { 
-			logProcess("CRON","SQL Error Updating files ".pg_last_error());
-			return FALSE; 
+			// change status to closed in database
+			try {
+				$query = "UPDATE files SET filestatus = 'Closed' WHERE fileid = %s";
+				$db->fquery($query, $row['fileid']);
+			} catch (Exception $e) {
+				logProcess("CRON","SQL Error Updating files ".$e->getMessage());
+				return FALSE;
+			}
+
+			logProcess("CRON","Removed (File not Available) ".$FilestoreDirectory."/".$row["fileuid"].".tmp");
 		}
-		
-		logProcess("CRON","Removed (File not Available) ".$FilestoreDirectory."/".$row["fileuid"].".tmp");
-			
-		}
-		
 	}
 	return true;
-	}
+}
 
-function logProcess($client,$message)
-	{
+function logProcess($client,$message) {
 	global $config;
 	
 	if($config["debug"])
@@ -245,6 +228,6 @@ function logProcess($client,$message)
 		fwrite($fh, $stringData);
 		fclose($fh);
 		closelog();
-		}
 	}
+}
 ?>

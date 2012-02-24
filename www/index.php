@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  * 
- * Copyright (c) 2009-2011, AARNet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
  * *	Redistributions in binary form must reproduce the above copyright
  * 	notice, this list of conditions and the following disclaimer in the
  * 	documentation and/or other materials provided with the distribution.
- * *	Neither the name of AARNet, HEAnet, SURFnet and UNINETT nor the
+ * *	Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
  * 	names of its contributors may be used to endorse or promote products
  * 	derived from this software without specific prior written permission.
  * 
@@ -32,157 +32,260 @@
 
 /*
  * loads javascript
- * js/gears_init.js  initialises google gears if gears is loaded
- * js/fs_gears.js   manages all gears related functions and google gears uploading
- * js/jquery-1.2.6.min.js  loaded in preparation for HTML 5 UI
+ * js/upload.js   manages all html5 related functions and uploading
  */
- 
+
+if(session_id() == ""){
+	// start new session and mark it as valid because the system is a trusted source
+	session_start();
+	$_SESSION['validSession'] = true;
+} 
+
 require_once('../classes/_includes.php');
+
 $flexerrors = "true";
+// load config
+$authsaml = AuthSaml::getInstance();
+$authvoucher = AuthVoucher::getInstance();
+$functions = Functions::getInstance();
+$CFG = config::getInstance();
+$config = $CFG->loadConfig();
+$sendmail = Mail::getInstance();
+$log = Log::getInstance();
+
+date_default_timezone_set($config['Default_TimeZone']);
+
+$useremail = "";
+$s = "";
+
+if($authsaml->isAuth() ) 
+{ 
+	$userdata = $authsaml->sAuth();
+	$useremail = $userdata["email"];
+} 
+
+if(isset($_REQUEST["s"]))
+{
+	$s = $_REQUEST["s"];
+}
+if(!$authvoucher->aVoucher() && !$authsaml->isAuth() && $s != "complete" && $s != "completev" )
+{
+	$s = "logon";
+}
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>FileSender:</title>
-<link rel="stylesheet" type="text/css" href="css/default.css" />
-<link rel="stylesheet" type="text/css" href="lib/history/history.css" />
+<title><?php echo $config['site_name']; ?></title>
 <link rel="icon" href="favicon.ico" type="image/x-icon" />
 <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
-
-<script type="text/javascript" src="js/fs_html5.js" ></script>
-<script type="text/javascript" src="js/jquery-1.2.6.min.js" ></script>
-	<meta name="robots" content="noindex, nofollow" />
-	<script type="text/javascript" src="lib/js/AC_OETags.js" language="javascript"></script>
-
-<!--  BEGIN Browser History required section -->
-<script type="text/javascript" src="lib/history/history.js" language="javascript"></script>
-<!--  END Browser History required section -->
+<link type="text/css" href="css/smoothness/jquery-ui-1.8.2.custom.css" rel="Stylesheet" />
+<link rel="stylesheet" type="text/css" href="css/default.css" />
+<script type="text/javascript" src="js/json2.js" ></script>
+<script type="text/javascript" src="js/common.js" ></script>
+<script type="text/javascript" src="js/jquery-1.7.min.js" ></script>
+<script type="text/javascript" src="js/jquery-ui-1.8.1.custom.min.js"></script>
 <script type="text/javascript">
-
-window.onload = function() {
-//getFlexApp('filesender').returnStatus('error');
-//  if (!window.google || !google.gears) {
-//   addStatus('Gears is not installed', 'error');
-      
-//    return;
-//  }
-}
+$(function() {
+	
+	$( "a", ".menu" ).button();
+	
+	$("#dialog-help").dialog({ autoOpen: false, height: 400,width: 660, modal: true,
+		buttons: {
+			'helpBTN': function() {
+				$( this ).dialog( "close" );
+				}
+			}
+		});
+		$('.ui-dialog-buttonpane button:contains(helpBTN)').attr("id","btn_closehelp");            
+		$('#btn_closehelp').html('<?php echo lang("_CLOSE") ?>')  
+		
+		$("#dialog-about").dialog({ autoOpen: false,  height: 400,width: 400, modal: true,
+			buttons: {
+				'aboutBTN': function() {
+					$( this ).dialog( "close" );
+				}
+			}
+		});
+		$('.ui-dialog-buttonpane button:contains(aboutBTN)').attr("id","btn_closeabout");            
+		$('#btn_closeabout').html('<?php echo lang("_CLOSE") ?>')  
+});
+	
+function openhelp()
+	{
+		$( "#dialog-help" ).dialog( "open" );
+		$('.ui-dialog-buttonpane > button:last').focus();
+	}
+	
+function openabout()
+	{
+		$( "#dialog-about" ).dialog( "open" );
+		$('.ui-dialog-buttonpane > button:last').focus();
+	}
 </script>
-<style type="text/css">
-body { margin: 0px; }
-.style5 {
-	color: #FFFFFF;
-	font-weight: bold;
-}
-</style>
-<script language="JavaScript" type="text/javascript">
-<!--
-// -----------------------------------------------------------------------------
-// Globals
-// Major version of Flash required
-var requiredMajorVersion = 10;
-// Minor version of Flash required
-var requiredMinorVersion = 0;
-// Minor version of Flash required
-var requiredRevision = 0;
-// -----------------------------------------------------------------------------
-// -->
-</script>
-
+   
+<meta name="robots" content="noindex, nofollow" />
 </head>
 <body>
-
 <div id="wrap">
-	
   <div id="header">
-    <div align="center"><img src="displayimage.php" width="800" height="60" border="0" alt="banner"/>
-          <noscript>
-          <span class="style5">          JavaScript is turned off in your web browser. <br />
-          This application will not run without Javascript enabled in your web browser.          </span>
-          </noscript>
-      </div>
+    <div align="center">
+      <p><img src="displayimage.php" width="800" height="60" border="0" alt="banner" /></p>
+      <noscript>
+      <p class="style5">JavaScript is turned off in your web browser. <br />
+        This application will not run without Javascript enabled in your web browser. </p>
+      </noscript>
+    </div>
   </div>
-  <script language="JavaScript" type="text/javascript">
-<!--
-// Version check for the Flash Player that has the ability to start Player Product Install (6.0r65)
-var hasProductInstall = DetectFlashVer(6, 0, 65);
-
-// Version check based upon the values defined in globals
-var hasRequestedVersion = DetectFlashVer(requiredMajorVersion, requiredMinorVersion, requiredRevision);
-
-if ( hasProductInstall && !hasRequestedVersion ) {
-	// DO NOT MODIFY THE FOLLOWING FOUR LINES
-	// Location visited after installation is complete if installation is required
-	var MMPlayerType = (isIE == true) ? "ActiveX" : "PlugIn";
-	var MMredirectURL = window.location;
-    document.title = document.title.slice(0, 47) + " - Flash Player Installation";
-    var MMdoctitle = document.title;
-
-	AC_FL_RunContent(
-		"src", "lib/swf/playerProductInstall",
-		"FlashVars", "flexerrors=<?php echo $flexerrors ?>&MMredirectURL="+MMredirectURL+'&MMplayerType='+MMPlayerType+'&MMdoctitle='+MMdoctitle+"",
-		"width", "800",
-		"height", "561",
-		"align", "middle",
-		"id", "filesender",
-		"quality", "high",
-		"bgcolor", "#869ca7",
-		"name", "filesender",
-		"allowScriptAccess","sameDomain",
-		"type", "application/x-shockwave-flash",
-		"pluginspage", "http://www.adobe.com/go/getflashplayer"
-	);
-} else if (hasRequestedVersion) {
-	// if we've detected an acceptable version
-	// embed the Flash Content SWF when all tests are passed
-	AC_FL_RunContent(
-			"src", "swf/filesender",
-			"FlashVars", "flexerrors=<?php echo $flexerrors ?>",
-			"width", "800",
-			"height", "561",
-			"align", "middle",
-			"id", "filesender",
-			"quality", "high",
-			"bgcolor", "#869ca7",
-			"name", "filesender",
-			"allowScriptAccess","sameDomain",
-			"type", "application/x-shockwave-flash",
-			"pluginspage", "http://www.adobe.com/go/getflashplayer"
-	);
-  } else {  // flash is too old or we can't detect the plugin
-    var alternateContent = '<div id="header"><h1>Install Flash Player<h1></div><BR><div align="center">This application requires Flash Player.<BR><BR>'
-  	+ 'To install Flash Player go to Adobe.com.<br> '
-   	+ '<a href=http://www.adobe.com/go/getflash/>Get Flash</a></div>';
-    document.write(alternateContent);  // insert non-flash content
+  <div id="topmenu">
+  <div class="menu" id="menuleft">
+      <?php 
+  	// create menu
+  	// disable all buttons if this is a voucher, even if the user is logged on
+ 	if (!$authvoucher->aVoucher()  &&  $s != "completev"){
+	if($authsaml->isAuth() ) { echo '<a id="topmenu_newupload" href="index.php?s=upload">'.lang("_NEW_UPLOAD").'</a>'; }
+	if($authsaml->isAuth() ) { echo '<a id="topmenu_vouchers" href="index.php?s=vouchers">'.lang("_VOUCHERS").'</a>'; }
+	if($authsaml->isAuth() ) {echo '<a id="topmenu_myfiles" href="index.php?s=files">'.lang("_MY_FILES").'</a>'; }
+	if($authsaml->authIsAdmin() ) { echo '<a id="topmenu_admin" href="index.php?s=admin">'.lang("_ADMIN").'</a>'; }
   }
-// -->
-</script>
-    <noscript>
-      <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" width="800" height="561"
-			codebase="http://fpdownload.macromedia.com/get/flashplayer/current/swflash.cab">
-        <param name="movie" value="swf/filesender.swf?flexerrors=<?php echo $flexerrors ?>" />
-        <param name="quality" value="high" />
-        <param name="bgcolor" value="#869ca7" />
-        <param name="allowScriptAccess" value="sameDomain" />
-        <embed src="swf/filesender.swf?flexerrors=<?php echo $flexerrors ?>" quality="high" bgcolor="#869ca7"
-				width="800" height="561" name="filesender" align="middle"
-				play="true"
-				loop="false"
-				quality="high"
-				allowScriptAccess="sameDomain"
-				type="application/x-shockwave-flash"
-				pluginspage="http://www.adobe.com/go/getflashplayer">
-        </embed>
-    </object>
-    </noscript>
-</div>
-  <noscript>
-</noscript>
-  <p>
-</p>
-  <div id="DoneLoading">
-</div>
-<input type="file" id="fileToUpload" onchange="browsecomplete()" style="visibility:hidden">
-</body>
+  ?>
+  	</div>
+   <div class="menu" id="menuright">
+  <?php
+	if($config['helpURL'] == "") {
+		echo '<a href="#" id="topmenu_help" onclick="openhelp()">'.lang("_HELP").'</a>';
+	} else {
+		echo '<a href="'.$config['helpURL'].'" target="_blank" id="topmenu_help">'.lang("_HELP").'</a>';
+	}
+	if($config['aboutURL'] == "") {
+		echo '<a href="#" id="topmenu_about" onclick="openabout()">'.lang("_ABOUT").'</a>';
+	} else {
+		echo '<a href="'.$config['aboutURL'].'" target="_blank" id="topmenu_about">'.lang("_ABOUT").'</a>';	
+	}
+	if(!$authsaml->isAuth() && $s != "logon" ) { echo '<a href="'.$authsaml->logonURL().'" id="topmenu_logon">'.lang("_LOGON").'</a>';}
+	if($authsaml->isAuth() && !$authvoucher->aVoucher() &&  $s != "completev" ) { echo '<a href="'.$authsaml->logoffURL().'" id="topmenu_logoff">'.lang("_LOG_OFF").'</a>'; }
+	// end menu
+	?>
+	</div>
+	</div>
+	<div id="content">
+	<div id="scratch" class="scratch_msg">
+	<?php
+		if(array_key_exists("scratch", $_SESSION )) {
+			echo($functions->getScratchMessage());
+			session_unregister("scratch");
+		}
+	?>
+	</div>	
+	<div id="userinformation">
+	<?php 
+	// display user details if authenticated and not a voucher
+	echo "<div class='welcomeuser'>";
+	if(	$authvoucher->aVoucher() || $s == "completev") 
+	{ 
+		echo lang("_WELCOMEGUEST");
+	} 
+	else if ($authsaml->isAuth() )
+	{
+		$attributes = $authsaml->sAuth();
+		echo lang("_WELCOME")." ";
+		if($config["displayUserName"]) { 
+			echo $attributes["cn"];
+		}
+	}
+	echo "</div>";
+
+	$versiondisplay = "";
+	if($config["site_showStats"])
+	{
+		$versiondisplay .= $functions->getStats();
+	}
+	if($config["versionNumber"])
+	{
+		$versiondisplay .= FileSender_Version::VERSION;
+	}
+	echo "<div class='versionnumber'>" .$versiondisplay."</div>";
+?>
+	</div>
+<?php
+	// checks if url has vid=xxxxxxx and that voucher is valid 
+	if(	$authvoucher->aVoucher())
+	{
+		// check if it is Available or a Voucher for Uploading a New File
+		$voucherData = $authvoucher->getVoucher();
+
+		if($voucherData[0]["filestatus"] == "Voucher")
+		{ // load voucher upload
+			require_once('../pages/upload.php');
+		} else if($voucherData[0]["filestatus"] == "Available")
+		{ 
+			// allow download of voucher
+			require_once('../pages/download.php');
+		} else if($voucherData[0]["filestatus"] == "Closed")
+		{
+?>
+	<p>
+		<?php echo lang("_VOUCHER_CANCELLED"); ?>
+	</p>
+<?php
+	}
+ 	else if($voucherData[0]["filestatus"] == "Voucher Cancelled")
+	{
+?>
+	<div id="box">
+		<?php echo '<div id="pageheading"></div>'; ?> 
+		<p>
+		<?php echo lang("_VOUCHER_CANCELLED"); ?>
+		</p>
+	</div>
+<?php
+		}
+	} else if($s == "upload") 
+	{
+		require_once('../pages/upload.php');
+	} else if($s == "vouchers" && !$authvoucher->aVoucher()) 
+	{
+		require_once('../pages/vouchers.php');
+		// must be authenticated and not using a voucher to view files
+	} else if($s == "files" && !$authvoucher->aVoucher() && $authsaml->isAuth() ) 
+	{
+		require_once('../pages/files.php');
+	} else if($s == "logon") 
+	{
+		require_once('../pages/logon.php');
+	}	
+	else if($s == "admin" && !$authvoucher->aVoucher()) 
+	{
+		require_once('../pages/admin.php');
+	}
+		else if($s == "uploaderror") 
+	{
+?>
+	<div id="message"><?php echo lang("_ERROR_UPLOADING_FILE"); ?></div></div>
+<?php	
+	}	
+	else if($s == "complete" || $s == "completev") 
+	{
+?>
+		<div id="message"><?php echo lang("_UPLOAD_COMPLETE"); ?></div></div>
+<?php
+	} else if ($s == "" && $authsaml->isAuth()){
+		require_once('../pages/upload.php');	
+	}else if ($s == "" ){
+		require_once('../pages/home.php');	
+	}
+?>
+	</div>
+	</div>
+	<div id="dialog-help" style="display:none" title="<?php echo lang("_HELP"); ?>">
+		<?php echo lang("_HELP_TEXT"); ?>
+	</div>
+	<div id="dialog-about" style="display:none" title="<?php echo lang("_ABOUT"); ?>">
+		<?php echo lang("_ABOUT_TEXT"); ?>
+	</div>
+		<div id="footer">Version <?php echo FileSender_Version::VERSION; ?></div>
+		<div id="DoneLoading"></div>
+	</body>
 </html>

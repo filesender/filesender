@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  * 
- * Copyright (c) 2009-2011, AARNet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
  * *	Redistributions in binary form must reproduce the above copyright
  * 	notice, this list of conditions and the following disclaimer in the
  * 	documentation and/or other materials provided with the distribution.
- * *	Neither the name of AARNet, HEAnet, SURFnet and UNINETT nor the
+ * *	Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
  * 	names of its contributors may be used to endorse or promote products
  * 	derived from this software without specific prior written permission.
  * 
@@ -42,36 +42,20 @@ require_once('../classes/_includes.php');
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>FileSender:</title>
+<title><?php echo $config['site_name']; ?></title>
 <link rel="stylesheet" type="text/css" href="css/default.css" />
-<style type="text/css">
-<!--
-.style1 {
-	color: #FFFFFF;
-	font-weight: bold;
-}
--->
-</style>
 </head>
-
 <body scroll="no">
-
 <div id="wrap">
-	
   <div id="header">
     <img src="displayimage.php" width="800" height="60" border="0" alt="banner"/>
-    <p class="style1">Error</p>
-  </div>
-  <p>
- 
-  </p>
+  <div id="message"><?php echo lang($lang["_MESSAGE"]); ?></div>
+ </div>
   <div id="content">
-    <div align="center">This Voucher is no longer Valid
+    <div align="center"><?php echo lang("_INVALID_VOUCHER"); ?>
     </div>
     <hr />
   </div><!-- #content -->
-
 </div><!-- #wrap -->
-
 </body>
 </html>

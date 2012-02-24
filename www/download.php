@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  * 
- * Copyright (c) 2009-2011, AARNet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
  * *	Redistributions in binary form must reproduce the above copyright
  * 	notice, this list of conditions and the following disclaimer in the
  * 	documentation and/or other materials provided with the distribution.
- * *	Neither the name of AARNet, HEAnet, SURFnet and UNINETT nor the
+ * *	Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
  * 	names of its contributors may be used to endorse or promote products
  * 	derived from this software without specific prior written permission.
  * 
@@ -37,10 +37,10 @@
  */
 require_once('../classes/_includes.php');
 
+global $config;
+
 $authsaml = AuthSaml::getInstance();
 $authvoucher = AuthVoucher::getInstance();
-$CFG = config::getInstance();
-$config = $CFG->loadConfig();
 $functions = Functions::getInstance();
 $saveLog = Log::getInstance();
 $sendmail = Mail::getInstance();
@@ -56,22 +56,23 @@ if(session_id() == ""){
 }
 
 // check we are authenticated as SAML or voucher user
-if(!$authvoucher->aVoucher() && !$authsaml->isAuth()) {
+if(!$authvoucher->aVoucher()) {
 		logEntry("Download: Failed authentication");
 		echo "notAuthenticated";
 } else {
 if (isset($_REQUEST["vid"])) {
 
 // load the voucher
-$fileArray =  json_decode($authvoucher->getVoucher(), true);
+$fileArray =  $authvoucher->getVoucher();
 $fileoriginalname = $fileArray[0]['fileoriginalname'];
 $fileuid = $fileArray[0]['fileuid'];	
 $file=$config['site_filestore'].$fileuid.".tmp";
+$filestatus = $fileArray[0]['filestatus'];
 
 //$download_rate = 20000.5;
 
-// check file physically exists before downloading
-if(file_exists($file) && is_file($file))
+// check if file physically exists and is marked 'Available' before downloading
+if(file_exists($file) && is_file($file) && $filestatus == 'Available')
 {
         // Check the encoding for the filename and convert if necessary
         if (detect_char_encoding($fileoriginalname) == 'ISO-8859-1') { 
@@ -82,7 +83,7 @@ if(file_exists($file) && is_file($file))
 	logEntry("Download: Start Downloading - ".$file);
 	header("Content-Type: application/force-download");
 	header('Content-Type: application/octet-stream');
-	header('Content-Length: '.getFileSize($file));
+	header('Content-Length: '.$functions->getFileSize($file));
 	header('Content-Disposition: attachment; filename="'.$fileoriginalname.'"');
 	
 	// as files may be very large - stop it timing out
@@ -91,7 +92,7 @@ if(file_exists($file) && is_file($file))
 	session_write_close();
 
 	// if the complete file is downloaded then send email
-	if(readfile_chunked($file) === getFileSize($file)); 
+	if(readfile_chunked($file) === $functions->getFileSize($file)); 
 	// email completed
 		$tempEmail = $fileArray[0]["fileto"];
 		$fileArray[0]["fileto"] = $fileArray[0]["filefrom"];	
@@ -99,10 +100,10 @@ if(file_exists($file) && is_file($file))
 		$saveLog->saveLog($fileArray[0],"Download","");
 		$sendmail->sendEmail($fileArray[0],$config['filedownloadedemailbody']);
 		logEntry("Download: Email Sent - To:".$fileArray[0]["fileto"]."  From: ".$fileArray[0]["filefrom"] . " [".$file."]");
-
 }
 else 
-{
+{	
+	print_r("file not found clause");
 	// physical file was not found
 	logEntry("Download: File Not Found - ".$file);
 	// redirect to file is no longer available
@@ -142,31 +143,4 @@ ob_start();
    return $status;
    }
 
-// need to get file size correctly as over 4Gb sizes error if using default 32bit PHP installation
-// can remove windows check as we do not support windows servers
-	function getFileSize($filename){
-
-	global $config;
-		
-	if($filename == "" ) {
-		return;
-	} else {
-		$file = $filename;//$config["site_filestore"].sanitizeFilename($filename);
-	
-		if (file_exists($file)) {
-			if (!(strtoupper(substr(PHP_OS, 0, 3)) == 'WIN')) 
-			{
-				$size = trim(shell_exec("stat -c%s ". escapeshellarg($file)));
-			} else { 
-			   	$fsobj = new COM("Scripting.FileSystemObject"); 
-				$f = $fsobj->GetFile($file); 
-				$size = $f->Size; 
-			}
-				return $size;
-			} else { 
-				return 0;
-			} 
-		}
-	}
-	
- ?>
+?>
