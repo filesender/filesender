@@ -35,168 +35,168 @@
  * ---------------------------------
  * 
  */
-			// main menu items
-           	$lang["_ADMIN"] = "Administration";
-            $lang["_NEW_UPLOAD"] = "Send File";
-            $lang["_VOUCHERS"] = "Guest invite";
-            $lang["_LOGON"] = "Logon";
-            $lang["_LOG_OFF"] = "Log Off";
-            $lang["_MY_FILES"] = "My Files";
+// main menu items
+$lang["_ADMIN"] = "Administration";
+$lang["_NEW_UPLOAD"] = "Send File";
+$lang["_VOUCHERS"] = "Guest invite";
+$lang["_LOGON"] = "Logon";
+$lang["_LOG_OFF"] = "Log Off";
+$lang["_MY_FILES"] = "My Files";
 
-            // page titles
-			$lang["_HOME"] = "Home";
-			$lang["_ABOUT"] = "About";
-			$lang["_HELP"] = "Help";
-			$lang["_VOUCHER_CANCELLED"] = "Voucher Cancelled";
-			$lang["_DELETE_VOUCHER"] = "Delete Voucher";
-			$lang["_UPLOAD_COMPLETE"] = "Your file has been uploaded and message sent.";
-			$lang["_UPLOAD_PROGRESS"] = "Upload progress";
-			$lang["_DOWNLOAD"] = "Download";
-			$lang["_CANCEL_UPLOAD"] = "Cancel Upload";
-			
-			//$lang["_"] = "";
-			// admin
-			$lang["_PAGE"] = "Page";
-			$lang["_UP"] = "Up";
-			$lang["_DOWN"] = "Down";
-			$lang["_FILES"] = "Files";
-			$lang["_DRIVE"] = "Drive";
-			$lang["_TOTAL"] = "Total";
-			$lang["_USED"] = "Used";
-			$lang["_AVAILABLE"] = "Available";
-			$lang["_TEMP"] = "Temp"; // as in Temporary files
-			
-			$lang["_WELCOME"] = "Welcome"; 
-			$lang["_WELCOMEGUEST"] = "Welcome Guest"; 
-			
-			// admin tab names
-			$lang["_GENERAL"] = "General";
-			$lang["_UPLOADS"] = "Uploads";
-			$lang["_DOWNLOADS"] = "Downloads";
-			$lang["_ERRORS"] = "Errors";
-			$lang["_FILES_AVAILABLE"] = "Files Available";
-			$lang["_ACTIVE_VOUCHERS"] = "Active Vouchers";
-			$lang["_COMPLETE_LOG"] = "Complete Log";
-			
-			
-			// Form Fields
-			$lang["_TO"] = "To";
-			$lang["_FROM"] = "From";
-			$lang["_SIZE"] = "Size";
-			$lang["_CREATED"] = "Created";
-			$lang["_FILE_NAME"] = "File Name";
-			$lang["_SUBJECT"] = "Subject";
-			$lang["_EXPIRY"] = "Expiry";
-			$lang["_MESSAGE"] = "Message";
-			$lang["_TYPE"] = "Type";
-			
-			$lang["_TERMS_OF_AGREEMENT"] = "Terms of Agreement";
-           	$lang["_SHOW_TERMS"] = "Show Terms";
-			$lang["_SHOWHIDE"] = "Show/Hide";
-			$lang["_SELECT_FILE"] = "File to Upload";
-		   	$lang["_UPLOADING_WAIT"] = "Uploading file - please wait...";
-			
-			// Flash button menu
-			$lang["_UPLOAD"] = "Send a file";
-            $lang["_BROWSE"] = "Browse";
-            $lang["_CANCEL"] = "Cancel";
-			$lang["_OPEN"] = "Open";
-			$lang["_CLOSE"] = "Close";
-			$lang["_OK"] = "Ok";
-			$lang["_SEND"] = "Send";
-			$lang["_DELETE"] = "Delete";
-			$lang["_YES"] = "Yes";
-			$lang["_NO"] = "No";
-			
-			$lang["_INVALID_MISSING_EMAIL"] = "Invalid or missing email";	
-			$lang["_INVALID_EXPIRY_DATE"] = "Invalid expiry Date";	
-			$lang["_INVALID_FILE"] = "Invalid File";	
-			$lang["_INVALID_FILEVOUCHERID"] = "Invalid File or Voucher ID";	
-			$lang["_INVALID_FILESIZE_ZERO"] = "File size cannot be 0. Please select another file.";
-			$lang["_INVALID_FILE_EXT"] = "Invalid file extension.";
-			$lang["_INVALID_TOO_LARGE_1"] = "File size cannot be greater than";
-			$lang["_AUTH_ERROR"] = "Your are no longer authenticated. <br />Your session may have expired or there has been a server error. <br /><br />Please logon again and re-try.";	
-			$lang["_SELECT_ANOTHER_FILE"] = "Please select another file.";
-			$lang["_INVALID_VOUCHER"] = "This Voucher is no longer Valid. <br />Please contact the person that issued this voucher";
-			$lang["_SELECT_FILE"] = "Select your file";
-			$lang["_INVALID_FILE_NAME"] = "The name of the file you are uploading is invalid. Please rename your file and try again.";
-			$lang["_INVALID_SIZE_USEHTML5"] = "Please select another file or use a HTML5 enabled browser to upload larger files.";
-			$lang["_ACCEPTTOC"] = "I accept the terms and conditions of this service.";	
-			$lang["_AGREETOC"] = "You MUST agree to the terms and conditions.";
-			$lang["_FILE_TO_BE_RESENT"] = "File to be redistributed";
-			$lang["_ERROR_UPLOADING_FILE"] = "Error uploading your file";
-			$lang["_MAXEMAILS"] = "The maximum number of email addresses allowed is ";
-			$lang["_INVALID_DATE_FORMAT"] = "The date format is invalid.";
-			$lang["_DISK_SPACE_ERROR"] = "There is not enough drive space on this service. Please contact the service administration or upload a smaller file.";
-			
-			
-			$lang["_LOGOUT_COMPLETE"] = "Logout Complete";
-			
-			// vouchers
-			$lang["_SEND_NEW_VOUCHER"] = "A Voucher allows someone to send you a file.<br />
+// page titles
+$lang["_HOME"] = "Home";
+$lang["_ABOUT"] = "About";
+$lang["_HELP"] = "Help";
+$lang["_VOUCHER_CANCELLED"] = "Voucher Cancelled";
+$lang["_DELETE_VOUCHER"] = "Delete Voucher";
+$lang["_UPLOAD_COMPLETE"] = "Your file has been uploaded and message sent.";
+$lang["_UPLOAD_PROGRESS"] = "Upload progress";
+$lang["_DOWNLOAD"] = "Download";
+$lang["_CANCEL_UPLOAD"] = "Cancel Upload";
+
+//$lang["_"] = "";
+// admin
+$lang["_PAGE"] = "Page";
+$lang["_UP"] = "Up";
+$lang["_DOWN"] = "Down";
+$lang["_FILES"] = "Files";
+$lang["_DRIVE"] = "Drive";
+$lang["_TOTAL"] = "Total";
+$lang["_USED"] = "Used";
+$lang["_AVAILABLE"] = "Available";
+$lang["_TEMP"] = "Temp"; // as in Temporary files
+
+$lang["_WELCOME"] = "Welcome"; 
+$lang["_WELCOMEGUEST"] = "Welcome Guest"; 
+
+// admin tab names
+$lang["_GENERAL"] = "General";
+$lang["_UPLOADS"] = "Uploads";
+$lang["_DOWNLOADS"] = "Downloads";
+$lang["_ERRORS"] = "Errors";
+$lang["_FILES_AVAILABLE"] = "Files Available";
+$lang["_ACTIVE_VOUCHERS"] = "Active Vouchers";
+$lang["_COMPLETE_LOG"] = "Complete Log";
+
+
+// Form Fields
+$lang["_TO"] = "To";
+$lang["_FROM"] = "From";
+$lang["_SIZE"] = "Size";
+$lang["_CREATED"] = "Created";
+$lang["_FILE_NAME"] = "File Name";
+$lang["_SUBJECT"] = "Subject";
+$lang["_EXPIRY"] = "Expiry";
+$lang["_MESSAGE"] = "Message";
+$lang["_TYPE"] = "Type";
+
+$lang["_TERMS_OF_AGREEMENT"] = "Terms of Agreement";
+$lang["_SHOW_TERMS"] = "Show Terms";
+$lang["_SHOWHIDE"] = "Show/Hide";
+$lang["_SELECT_FILE"] = "File to Upload";
+$lang["_UPLOADING_WAIT"] = "Uploading file - please wait...";
+
+// Flash button menu
+$lang["_UPLOAD"] = "Send a file";
+$lang["_BROWSE"] = "Browse";
+$lang["_CANCEL"] = "Cancel";
+$lang["_OPEN"] = "Open";
+$lang["_CLOSE"] = "Close";
+$lang["_OK"] = "Ok";
+$lang["_SEND"] = "Send";
+$lang["_DELETE"] = "Delete";
+$lang["_YES"] = "Yes";
+$lang["_NO"] = "No";
+
+$lang["_INVALID_MISSING_EMAIL"] = "Invalid or missing email";	
+$lang["_INVALID_EXPIRY_DATE"] = "Invalid expiry Date";	
+$lang["_INVALID_FILE"] = "Invalid File";	
+$lang["_INVALID_FILEVOUCHERID"] = "Invalid File or Voucher ID";	
+$lang["_INVALID_FILESIZE_ZERO"] = "File size cannot be 0. Please select another file.";
+$lang["_INVALID_FILE_EXT"] = "Invalid file extension.";
+$lang["_INVALID_TOO_LARGE_1"] = "File size cannot be greater than";
+$lang["_AUTH_ERROR"] = "Your are no longer authenticated. <br />Your session may have expired or there has been a server error. <br /><br />Please logon again and re-try.";	
+$lang["_SELECT_ANOTHER_FILE"] = "Please select another file.";
+$lang["_INVALID_VOUCHER"] = "This Voucher is no longer Valid. <br />Please contact the person that issued this voucher";
+$lang["_SELECT_FILE"] = "Select your file";
+$lang["_INVALID_FILE_NAME"] = "The name of the file you are uploading is invalid. Please rename your file and try again.";
+$lang["_INVALID_SIZE_USEHTML5"] = "Please select another file or use a HTML5 enabled browser to upload larger files.";
+$lang["_ACCEPTTOC"] = "I accept the terms and conditions of this service.";	
+$lang["_AGREETOC"] = "You MUST agree to the terms and conditions.";
+$lang["_FILE_TO_BE_RESENT"] = "File to be redistributed";
+$lang["_ERROR_UPLOADING_FILE"] = "Error uploading your file";
+$lang["_MAXEMAILS"] = "The maximum number of email addresses allowed is ";
+$lang["_INVALID_DATE_FORMAT"] = "The date format is invalid.";
+$lang["_DISK_SPACE_ERROR"] = "There is not enough drive space on this service. Please contact the service administration or upload a smaller file.";
+
+
+$lang["_LOGOUT_COMPLETE"] = "Logout Complete";
+
+// vouchers
+$lang["_SEND_NEW_VOUCHER"] = "A Voucher allows someone to send you a file.<br />
 To create a voucher, enter an email address then select Send Voucher.<br />
 An email will be sent to the recipient with a link to use the Voucher.";
-			$lang["_EMAIL_SEPARATOR_MSG"] = "Multiple email addresses separated by , or ;";
-			
-			$lang["_NO_FILES"] = "There are currently no files available";
-			$lang["_ARE_YOU_SURE"] = "Are you sure?";
-			$lang["_DELETE_FILE"] = "Delete File";
-           	$lang["_EMAIL_SENT"] = "Message Sent";
-           	$lang["_EXPIRY_DATE"] = "Expiry date";
-            $lang["_FILE_SIZE"] = "File Size";
-			$lang["_FILE_RESENT"] = "File Re-sent";	
-			$lang["_MESSAGE_RESENT"] = "Message Re-sent";			
-		  	$lang["_ME"] = "Me";
-			$lang["_SEND_VOUCHER"] = "Send Voucher";
-			$lang["_RE_SEND_EMAIL"] = "Re-send Email";
-			$lang["_NEW_RECIPIENT"] = "Add new recipient";
-            $lang["_SEND_VOUCHER_TO"] = "Send Vouchers to";
-			$lang["_START_DOWNLOAD"] = "Start Download";
-           	$lang["_VOUCHER_SENT"] = "Voucher Sent";
-			$lang["_VOUCHER_DELETED"] = "Voucher Deleted";
-			$lang["_VOUCHER_CANCELLED"] = "This voucher has been cancelled.";
-			$lang["_STARTED_DOWNLOADING"] = "Your file should start downloading.";
+$lang["_EMAIL_SEPARATOR_MSG"] = "Multiple email addresses separated by , or ;";
 
-			// files
-			$lang["_FILE_DELETED"] = "File Deleted";
-            // steps
-           	$lang["_STEP1"] = "Enter delivery email address(es)";
-           	$lang["_STEP2"] = "Set expiry date";
-           	$lang["_STEP3"] = "Browse for a file";
-           	$lang["_STEP4"] = "Click Send";
-			$lang["_HTML5Supported"] = "Uploads over 2GB supported!";
-			$lang["_HTML5NotSupported"] = "Uploads over 2GB<br />not supported!";			
-	
-           	// site about
-           	$lang["_ABOUT_TEXT"] = "About ..."; // overide in config/EN_AU.php
-           	// site help
-           	$lang["_HELP_TEXT"] = "Help ..."; // overide in config/EN_AU.php
-			
-			$lang["_OPTIONAL"] = "optional";
-			
-			// confirmation
-			$lang["_CONFIRM_DELETE_FILE"] = "Are you sure you want to delete this File?";
-			$lang["_CONFIRM_DELETE_VOUCHER"] = "Are you sure you want to delete this voucher?";
-			
-			$lang["_AUPTERMS"] = "AuP Terms and conditions";
+$lang["_NO_FILES"] = "There are currently no files available";
+$lang["_ARE_YOU_SURE"] = "Are you sure?";
+$lang["_DELETE_FILE"] = "Delete File";
+$lang["_EMAIL_SENT"] = "Message Sent";
+$lang["_EXPIRY_DATE"] = "Expiry date";
+$lang["_FILE_SIZE"] = "File Size";
+$lang["_FILE_RESENT"] = "File Re-sent";	
+$lang["_MESSAGE_RESENT"] = "Message Re-sent";			
+$lang["_ME"] = "Me";
+$lang["_SEND_VOUCHER"] = "Send Voucher";
+$lang["_RE_SEND_EMAIL"] = "Re-send Email";
+$lang["_NEW_RECIPIENT"] = "Add new recipient";
+$lang["_SEND_VOUCHER_TO"] = "Send Vouchers to";
+$lang["_START_DOWNLOAD"] = "Start Download";
+$lang["_VOUCHER_SENT"] = "Voucher Sent";
+$lang["_VOUCHER_DELETED"] = "Voucher Deleted";
+$lang["_VOUCHER_CANCELLED"] = "This voucher has been cancelled.";
+$lang["_STARTED_DOWNLOADING"] = "Your file should start downloading.";
 
-			// standard date display format
-			$lang['datedisplayformat'] = "d/m/Y"; // Format for displaying date/time, use PHP date() format string syntax 
+// files
+$lang["_FILE_DELETED"] = "File Deleted";
+// steps
+$lang["_STEP1"] = "Enter delivery email address(es)";
+$lang["_STEP2"] = "Set expiry date";
+$lang["_STEP3"] = "Browse for a file";
+$lang["_STEP4"] = "Click Send";
+$lang["_HTML5Supported"] = "Uploads over 2GB supported!";
+$lang["_HTML5NotSupported"] = "Uploads over 2GB<br />not supported!";			
 
-			// datepicker localization
-			$lang["_DP_closeText"] = 'Done'; // Done
-			$lang["_DP_prevText"] = 'Prev'; //Prev
-			$lang["_DP_nextText"] = 'Next'; // Next
-			$lang["_DP_currentText"] = 'Today'; // Today
-			$lang["_DP_monthNames"] = "['January','February','March','April','May','June','July','August','September','October','November','December']";
-			$lang["_DP_monthNamesShort"] = "['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun','Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']";
-			$lang["_DP_dayNames"] = "['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']";
-			$lang["_DP_dayNamesShort"] = "['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']";
-			$lang["_DP_dayNamesMin"] = "['Su','Mo','Tu','We','Th','Fr','Sa']";
-			$lang["_DP_weekHeader"] = 'Wk';
-			$lang["_DP_dateFormat"] = 'dd/mm/yy';
-			$lang["_DP_firstDay"] = '1';
-			$lang["_DP_isRTL"] = 'false';
-			$lang["_DP_showMonthAfterYear"] = 'false';
-			$lang["_DP_yearSuffix"] = '';
+// site about
+$lang["_ABOUT_TEXT"] = "About ..."; // overide in config/EN_AU.php
+// site help
+$lang["_HELP_TEXT"] = "Help ..."; // overide in config/EN_AU.php
+
+$lang["_OPTIONAL"] = "optional";
+
+// confirmation
+$lang["_CONFIRM_DELETE_FILE"] = "Are you sure you want to delete this File?";
+$lang["_CONFIRM_DELETE_VOUCHER"] = "Are you sure you want to delete this voucher?";
+
+$lang["_AUPTERMS"] = "AuP Terms and conditions";
+
+// standard date display format
+$lang['datedisplayformat'] = "d/m/Y"; // Format for displaying date/time, use PHP date() format string syntax 
+
+// datepicker localization
+$lang["_DP_closeText"] = 'Done'; // Done
+$lang["_DP_prevText"] = 'Prev'; //Prev
+$lang["_DP_nextText"] = 'Next'; // Next
+$lang["_DP_currentText"] = 'Today'; // Today
+$lang["_DP_monthNames"] = "['January','February','March','April','May','June','July','August','September','October','November','December']";
+$lang["_DP_monthNamesShort"] = "['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun','Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']";
+$lang["_DP_dayNames"] = "['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']";
+$lang["_DP_dayNamesShort"] = "['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']";
+$lang["_DP_dayNamesMin"] = "['Su','Mo','Tu','We','Th','Fr','Sa']";
+$lang["_DP_weekHeader"] = 'Wk';
+$lang["_DP_dateFormat"] = 'dd/mm/yy';
+$lang["_DP_firstDay"] = '1';
+$lang["_DP_isRTL"] = 'false';
+$lang["_DP_showMonthAfterYear"] = 'false';
+$lang["_DP_yearSuffix"] = '';
 ?>
