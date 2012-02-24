@@ -17,7 +17,7 @@ CREATE TABLE files
   fileid serial NOT NULL,
   fileexpirydate timestamp without time zone,
   fileactivitydate timestamp without time zone,
-  fileauthuseruid character varying(60),
+  fileauthuseruid character varying(500),
   filecreateddate timestamp without time zone,
   fileauthurl character varying(500),
   fileauthuseremail character varying(255),

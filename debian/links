@@ -1,5 +1,4 @@
 /etc/filesender                  usr/share/filesender/config
 /var/lib/filesender/files	 usr/share/filesender/files
 /var/lib/filesender/tmp		 usr/share/filesender/tmp
-/var/lib/filesender/maildrop	 usr/share/filesender/maildrop
 /var/log/filesender		 usr/share/filesender/log

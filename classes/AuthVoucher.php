@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  * 
- * Copyright (c) 2009-2011, AARNet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
  * *	Redistributions in binary form must reproduce the above copyright
  * 	notice, this list of conditions and the following disclaimer in the
  * 	documentation and/or other materials provided with the distribution.
- * *	Neither the name of AARNet, HEAnet, SURFnet and UNINETT nor the
+ * *	Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
  * 	names of its contributors may be used to endorse or promote products
  * 	derived from this software without specific prior written permission.
  * 
@@ -34,7 +34,7 @@
 // voucher related functions
 //
 // aVoucher() - check if a voucher exists and returns true/false
-// validVoucher() - check if a voucher exists and is available and returns found/notfound/invalid/none (for flex application)
+// validVoucher() - check if a voucher exists and is available and returns found/notfound/invalid/none 
 // getVoucher() - returns voucher as json array
 
 
@@ -50,26 +50,29 @@ class AuthVoucher {
         return self::$instance;
     } 
 
-
+	 public function __construct() {
+	  $this->db = DB::getInstance();
+	 }
     //---------------------------------------
     // Check voucher exists and is available
     // return TRUE if voucher exists and is available for use
     public function aVoucher() {
 
         $db = DB::getInstance();
-        $CFG = config::getInstance();
-        $config = $CFG->loadConfig();
+        
+		global $config;
 
         if (isset($_REQUEST['vid'])) {
             $vid = $_REQUEST['vid'];
 
             if (preg_match($config['voucherRegEx'], $vid) and strLen($vid) == $config['voucherUIDLength']) {
 
-                //$search =  pg_query("SELECT * FROM files WHERE filevoucheruid='".$vid."' AND filestatus!='Closed'") or die("Error");
-                $search =  $db->fquery("SELECT * FROM files WHERE filevoucheruid='%s'", $vid) or die("Error");
-                $total_records = pg_num_rows($search);
-                if($total_records == 1){
-                    return TRUE;
+        	$statement =  $this->db->fquery("SELECT * FROM files WHERE filevoucheruid=%s", $vid);
+			$statement->execute();
+			$count = $statement->rowCount();
+ 
+            if($count == 1){
+ 	        	return TRUE;
                 }
                 return FALSE;
             } 
@@ -87,17 +90,20 @@ class AuthVoucher {
     public function validVoucher() {
 
         $db = DB::getInstance();
-        $CFG = config::getInstance();
-        $config = $CFG->loadConfig();
+        global $config;
 
         if (isset($_REQUEST['vid'])) {
             $vid = $_REQUEST['vid'];
 
 
             if (preg_match($config['voucherRegEx'], $vid) and strLen($vid) == $config['voucherUIDLength']) {
+				
 
-                $search =  $db->fquery("SELECT * FROM files WHERE filevoucheruid='%s'", $vid) or die("Error");
-                $total_records = pg_num_rows($search);
+        	$search =  $this->db->fquery("SELECT * FROM files WHERE filevoucheruid=%s", $vid);
+
+		
+          //      $search =  $db->query("SELECT * FROM files WHERE filevoucheruid='%s'", $vid) or die("Error");
+                $total_records = sizeof($search);
                 if($total_records == 1){
                     return "found";
                 }
@@ -117,22 +123,22 @@ class AuthVoucher {
     public function getVoucher() {
 
         $db = DB::getInstance();
-        $CFG = config::getInstance();
-        $config = $CFG->loadConfig();
+       	global $config;
 
         if (isset($_REQUEST['vid'])) {
             $vid = $_REQUEST['vid'];
 
             if (preg_match($config['voucherRegEx'], $vid) and strLen($vid) == $config['voucherUIDLength']) {
 
-                $search =  $db->fquery("SELECT * FROM files WHERE filevoucheruid='%s'", $vid) or die("Error");
-                $returnArray = array();
-                $returnArray["SessionID"] = session_id();
-                while($row = pg_fetch_assoc($search))
-                {
-                    array_push($returnArray, $row);
-                }
-                return json_encode($returnArray);
+            $result =  $this->db->fquery("SELECT * FROM files WHERE filevoucheruid=%s", $vid) or die("Error");
+            $returnArray = array();
+			$returnArray["SessionID"] = session_id();
+              
+	        foreach($result as $row) 
+            {
+                array_push($returnArray, $row);
+            }
+            return $returnArray;
             } 
             else {
                 // invalid vid format to match regex from config

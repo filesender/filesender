@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  * 
- * Copyright (c) 2009-2011, AARNet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
  * *	Redistributions in binary form must reproduce the above copyright
  * 	notice, this list of conditions and the following disclaimer in the
  * 	documentation and/or other materials provided with the distribution.
- * *	Neither the name of AARNet, HEAnet, SURFnet and UNINETT nor the
+ * *	Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
  * 	names of its contributors may be used to endorse or promote products
  * 	derived from this software without specific prior written permission.
  * 
@@ -38,9 +38,6 @@
 	// custom exception logs to syslog 
 	// custom exception logs to config log folder 
 	
-$CFG = config::getInstance();
-$config = $CFG->loadConfig();
-
 function customException($exception){
 
 	$exceptionMsg = sprintf(
@@ -49,7 +46,7 @@ function customException($exception){
 	);
 
 	// syslog
-	syslog($exception->getCode(),$exceptionMsg);
+	syslog((int)$exception->getCode(),$exceptionMsg);
 	// log to local log file
 	logEntry($exceptionMsg);
 
@@ -75,16 +72,23 @@ function logEntry($message){
 	
 	global $config;
 	
+	if($config["debug"] ) {
 	if(isset($config['log_location'])) 
 	{
 	date_default_timezone_set($config['Default_TimeZone']);
+
+	if(isset($_SERVER['REMOTE_ADDR']))
+	{	
+		$ip = $_SERVER['REMOTE_ADDR']; //capture IP
 	
-	$ip = $_SERVER['REMOTE_ADDR']; //capture IP
-	
-	if($config['dnslookup'] == true) {
-		$domain = GetHostByName($ip);
+		if($config['dnslookup'] == true) {
+			$domain = GetHostByName($ip);
+		} else {
+			$domain = "";
+		}
 	} else {
-		$domain = "";
+		$ip = "none";	
+		$domain = "none";	
 	}
 	
 	$message .= "[".$ip."(".$domain.")] ";
@@ -103,6 +107,7 @@ function logEntry($message){
 	fclose($fh);
 	closelog();
 	}
+	}
 }
 
 ini_set('display_errors', 'On');
@@ -111,8 +116,22 @@ ini_set('display_errors', 'On');
 if($config['debug'] == true || $config['debug'] == 1){
 
 	ini_set('log_errors', 'On');
-	set_error_handler("customError",E_ALL);
+	if (defined('E_DEPRECATED')) {
+		set_error_handler("customError",E_ALL & ~E_DEPRECATED);
+	}
+	else {
+		set_error_handler("customError",E_ALL);
+	}
 	set_exception_handler("customException");
 }
 
+function displayError($errmsg)
+{
+	global $config;
+	logEntry($errmsg);
+	if($config['displayerrors'] )
+	{
+		echo "<br /><div id='errmessage'>".$errmsg."</div>";
+	}
+}
 ?>

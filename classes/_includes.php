@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  * 
- * Copyright (c) 2009-2011, AARNet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
  * *	Redistributions in binary form must reproduce the above copyright
  * 	notice, this list of conditions and the following disclaimer in the
  * 	documentation and/or other materials provided with the distribution.
- * *	Neither the name of AARNet, HEAnet, SURFnet and UNINETT nor the
+ * *	Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
  * 	names of its contributors may be used to endorse or promote products
  * 	derived from this software without specific prior written permission.
  * 
@@ -30,19 +30,31 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+
 $filesenderbase = dirname(dirname(__FILE__));
 
 require_once("$filesenderbase/config/config.php");
+
+$CFG = config::getInstance();
+global $config;
+$config = $CFG->loadConfig();  // use _global $config in all functions
+
+require_once("$filesenderbase/classes/unstrip.php");
 require_once("$filesenderbase/includes/ErrorHandler.php");
 require_once("$filesenderbase/includes/EnsureHTTPS.php");
 require_once("$filesenderbase/includes/UTF8.php");
+require_once("$filesenderbase/classes/Version.php");
 require_once("$filesenderbase/classes/Functions.php");
+require_once("$filesenderbase/classes/LanguageSelection.php");
 require_once("$filesenderbase/classes/DB.php");
 require_once("$filesenderbase/classes/AuthSaml.php");
 require_once("$filesenderbase/classes/AuthVoucher.php");
-require_once("$filesenderbase/classes/EN_AU.php");
 require_once("$filesenderbase/classes/Mail.php");
 require_once("$filesenderbase/classes/Log.php");
 require_once("$filesenderbase/classes/DB_Input_Checks.php");
+
+
+
+
 
 ?>

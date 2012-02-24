@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  * 
- * Copyright (c) 2009-2011, AARNet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
  * *	Redistributions in binary form must reproduce the above copyright
  * 	notice, this list of conditions and the following disclaimer in the
  * 	documentation and/or other materials provided with the distribution.
- * *	Neither the name of AARNet, HEAnet, SURFnet and UNINETT nor the
+ * *	Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
  * 	names of its contributors may be used to endorse or promote products
  * 	derived from this software without specific prior written permission.
  * 
@@ -36,42 +36,47 @@
  * 
  */
 require_once('../classes/_includes.php');
+$authsaml = AuthSaml::getInstance();
+// force all session variable 
+session_start();
+session_unset();
+session_destroy();
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>FileSender:</title>
+<title><?php echo $config['site_name']; ?></title>
+<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+<link type="text/css" href="css/smoothness/jquery-ui-1.8.2.custom.css" rel="Stylesheet" />
 <link rel="stylesheet" type="text/css" href="css/default.css" />
-
-
-<style type="text/css">
-body { margin: 0px; overflow:hidden }
-.style5 {
-	color: #FFFFFF;
-	font-weight: bold;
-}
-</style>
-
+<script type="text/javascript" src="js/common.js" ></script>
+<script type="text/javascript" src="js/jquery-1.7.min.js" ></script>
+<script type="text/javascript" src="js/jquery-ui-1.8.1.custom.min.js"></script>
+<script type="text/javascript">
+$(function() {
+$( "a", ".menu" ).button();
+})
+</script>
 
 </head>
-<body scroll="no">
+<body>
 
 <div id="wrap">
 	
   <div id="header">
-   <img src="displayimage.php" width="800" height="60" border="0" alt="banner"/>
-    <p class="style5 style1">Logout</p>
-  </div>
-  <p>
-
-  </p>
-  <div id="content">
     <div align="center">
-	<p>Logout Complete.</p>
-	<p><a href="<?php echo $config['site_url']?>">Start again.</a></p>
+       <img src="displayimage.php" width="800" height="60" border="0" alt="banner" />
     </div>
-    <hr />
+  </div>
+  <div id="content">
+   <div id="box">
+    <div align="center">
+	<p><?php echo lang("_LOGOUT_COMPLETE") ?></p>
+	<div class="menu" align="center"><p><a id="btn_logon" href="<?php echo $authsaml->logonURL();?>" ><?php echo lang("_LOGON") ?></a></p></div>
+    </div>
+   </div>
   </div><!-- #content -->
 
 </div><!-- #wrap -->

@@ -1,6 +1,80 @@
-Last update: 8 May 2011
+Last update: 13 February 2012
 
-Version 1.0.0-dev (trunk) <8 May 2011>
+Version 1.5-beta1 <13 February 2012>
+
+	Major changes since 1.0.1/1.1
+	- Replaced Flash User Interface with a HTML-only interface
+	- Dropped Gears dependency, upload of large (>2G) files now requires
+	  a modern HTML5 capable browser, other browsers are limited to 2G
+	  uploads (using a small Flash-application).
+	- Added automatic language selection (English, Norwegian, Dutch)
+	- Added Database Abstraction Layer to facilitate the use
+	  of MySQL possibly other databases as backend.
+
+	Major (visible) changes since earlier 1.5.0 development builds
+	- Added French and German languages (contributed by RESTENA)
+	- Replaced MDB2 with PDO DB Abstraction Layer
+
+	Major (less visible) changes since earlier development builds
+	- Input/output pathways have been simplified
+	- Input/output sanitisation and validation is done
+	- Much code and program flow has been cleaned up and simplified
+	- We now use mostly prepared statements for database interaction
+	- All pages are now W3C compliant
+
+Version 1.1 <5 November 2011> (separate release branch)
+
+	Major change since 1.0.1
+	- Dropped Gears dependency, upload of large (>2G) files now requires
+	  a browser that supports the HTML5 FileAPI, other browsers are
+	  limited to 2G uploads using the Flash upload mechanism. This change
+	  also obsoletes the following Gears-related issues in 1.0:
+
+	  #176 >2GB upload on MacOS hangs at ~2GB (Gears enabled)
+	  #290 File select fails in Linux/Gears for files of 2G or more.
+	  #358 Filename accents not displayed in GUI when using Gears
+
+	  This means that FileSender 1.1 also allows large uploads from
+	  the Mac OSX and Linux platforms, provided a supported HTML5 browser
+	  is used.
+
+	- Note that only user visible references to Gears have been changed.
+	  In the code and config.php references to 'gears' are still used. No
+	  changes are required in config.php except for the URL pointing to
+	  more information on HTML5:
+
+	     $config['gearsURL'] = 'http://html5test.com/';
+
+	Minor fixes and changes
+	r993 filesender_db.sql: make fileauthuseruid character varying(500)
+	     When upgrading from previous versions you should fix the relevant
+	     column size in the database with:
+              #sudo -u postgres psql filesender
+              ALTER TABLE files ALTER fileauthuseruid TYPE character varying(500);
+              \q
+	#563 Compare of UID attribute with admin uid broken when attribute is
+	     not in an array
+	#569 Case-sensitive references to Files in cron.php
+	#582 Inconsistent file size limit warnings
+	#583 Email addresses rejected at maximum for uploads & voucher issue
+
+	Packaging
+	- The Debian package has been adapted to use the default baseurl
+	  of the simplesamlphp 1.7+ debian packages which changed from
+	 'simplesaml' to 'simplesamlphp' to adhere to standard Debian policy.
+
+Version 1.5.0-* Development builds <1 July 2011>
+
+	Major changes since 1.0
+	- Replaced Flash User Interface with a HTML-only interface
+	- Dropped Gears dependency, upload of large (>2G) files now requires
+	  a modern HTML5 capable browser, other browsers are limited to 2G
+	  uploads (using a small Flash-application).
+	- Added automatic language selection (English, Norwegian, Dutch)
+	- Added Database Abstraction Layer (MDB2) to facilitate the use
+	  of MySQL as backend.
+
+Version 1.0.1 <8 May 2011>
 
 	Fixes and changes
 	#271 compatibility fix for SimpleSAMLphp 1.7+

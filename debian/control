@@ -11,9 +11,10 @@ Standards-Version: 3.8.3
 Package: filesender
 Architecture: all
 Depends: php5, libapache2-mod-php5 | php5-cgi, apache2 | httpd,
- postgresql, php5-pgsql, simplesamlphp, dbconfig-common, mail-transport-agent,
+ simplesamlphp, dbconfig-common, mail-transport-agent,
+ postgresql | mysql-server, php5-pgsql | php5-mysql,
  ${misc:Depends}
-Recommends: postgresql-client
+Recommends: postgresql-client | mysql-client
 Description: sharing large files with a browser
  FileSender is a web based application that allows authenticated users to
  securely and easily send arbitrarily large files to other users.

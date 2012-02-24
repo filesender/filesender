@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  * 
- * Copyright (c) 2009-2011, AARNet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -14,7 +14,7 @@
  * *	Redistributions in binary form must reproduce the above copyright
  * 	notice, this list of conditions and the following disclaimer in the
  * 	documentation and/or other materials provided with the distribution.
- * *	Neither the name of AARNet, HEAnet, SURFnet and UNINETT nor the
+ * *	Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
  * 	names of its contributors may be used to endorse or promote products
  * 	derived from this software without specific prior written permission.
  * 
@@ -59,15 +59,16 @@ public function loadConfig() {
 	$config["site_splashtext"] = "FileSender is a secure way to share large files with anyone! Logon to upload your files or invite people to send you a file.";
 
 	// UI Settings
-	$config['datedisplayformat'] = "DD-MM-YYYY"; // Format for displaying date/time, use Flex DateFormatter format specifier syntax
+	$config['datedisplayformat'] = "d-m-Y"; // Format for displaying date/time, use PHP date() format string syntax
 	$config["versionNumber"] = true; // Show version number (true/false)
 	$config['site_showStats'] = false; // Show site upload/download stats (true/false)
 	$config['displayUserName'] = true; // Show 'Welcome user' (true/false)
 	
 	// debug settings
 	$config["debug"] = true; // Debug logging on/off (true/false)
+	$config["displayerrors"] = false; // Display debug errors on screen (true/false)
 	$config['dnslookup'] = true; // log includes DNS lookup (true/false)
-	$config["client_specific_logging"] = true; // client logging (true/false)
+	$config["client_specific_logging"] = false; // client logging (true/false)
 	$config["client_specific_logging_uids"] = ""; // "" is log all clients, or log for specific userid's or voucheruid's seperated by comma 'xxxx,zzzzz'
 
 	// saml settings
@@ -78,8 +79,8 @@ public function loadConfig() {
 	// AuP settings
 	$config["AuP_default"] = false; //AuP value is already ticked
 	$config["AuP"] = true; // AuP is displayed
-	$config["AuP_label"] = "I accept the terms and conditions of this service";
-	$config["AuP_terms"] = "AuP Terms and conditions";
+	//$config["AuP_label"] = "I accept the terms and conditions of this service"; // moved AUP to language files
+	//$config["AuP_terms"] = "AuP Terms and conditions"; // moved AUP to language files
 
 	// Server settings
 	$config['default_daysvalid'] = 20; // Maximum number of days before file/voucher is expired
@@ -87,7 +88,8 @@ public function loadConfig() {
 	$config["max_email_recipients"] = 100; // maximum email addresses allowed to send at once for voucher or file sending, a value of 0 allows unlimited emails.
 
 	$config['max_flash_upload_size'] = '2147483648'; // 2GB
-	$config['max_gears_upload_size'] = '107374182400'; // 100 GB
+	$config['max_html5_upload_size'] = '107374182400'; // 100  GB
+	$config["upload_chunk_size"]  = '2000000';//
 	
 	// update max_flash_upload_size if php.ini post_max_size and upload_max_filesize is set lower
 	$config['max_flash_upload_size'] = min(let_to_num(ini_get('post_max_size'))-2048, let_to_num(ini_get('upload_max_filesize')),$config['max_flash_upload_size']);
@@ -96,6 +98,7 @@ public function loadConfig() {
 	
 	// Advanced server settings, do not change unless you have a very good reason.
 	$config['postgresdateformat'] = "Y-m-d H:i:sP"; // Date/Time format for PostgreSQL, use PHP date format specifier syntax
+	$config['db_dateformat'] = "Y-m-d H:i:sP"; // Date/Time format for PostgreSQL, use PHP date format specifier syntax
 	$config["crlf"] = "\n"; // for email CRLF can be changed to \r\n if required
 	$config['voucherRegEx'] = "'[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}'";
 	$config['voucherUIDLength'] = 36;
@@ -113,9 +116,9 @@ public function loadConfig() {
 	$config['forceSSL'] = true; // Always use SSL (true/false)
 	
 	// Support links
-	$config['aboutURL'] = "about.php";
-	$config['helpURL'] = "help.php";
-	$config['gearsURL'] = 'http://tools.google.com/gears/';
+	$config['aboutURL'] = "";
+	$config['helpURL'] = "";
+	$config['HTML5URL'] = 'http://html5test.com/';
 
 	// (absolute) file locations
 	$config['site_filestore'] = '/usr/share/filesender/files/'; 
@@ -123,23 +126,26 @@ public function loadConfig() {
 	$config['site_simplesamllocation'] = '/usr/share/simplesamlphp/';
 	$config['log_location'] = '/usr/share/filesender/log/';	
 
-	// database settings	
-	$config['pg_host'] = 'localhost';
-	$config['pg_database'] = 'filesender';
-	$config['pg_port'] = '5432';
-	$config['pg_username'] = 'filesender';
-	$config['pg_password'] = 'yoursecretpassword';
-
+	$config["db_type"] = "pgsql";// pgsql or mysql
+	$config['db_host'] = 'localhost';
+	$config['db_database'] = 'filesender';
+	$config['db_port'] = '5432';
+	// database username and password
+	$config['db_username'] = 'filesender';
+	$config['db_password'] = 'yoursecretpassword';
+	
+	//Optional DSN format overides db_ settings
+	//$config['dsn'] = "pgsql:host=localhost;dbname=filesender";
+	//$config['dsn'] = 'pgsql:host=localhost;dbname=filesender';
+	//$config['dsn'] = 'sqlite:/usr/share/filesender/db/filesender.sqlite';
+	//$config['dsn_driver_options'] = array();
+	// dsn requires username and password in $config['db_username'] and $config['db_password']
+	
 	// cron settings
 	$config['cron_exclude prefix'] = '_'; // exclude deletion of files with the prefix character listed (can use multiple characters eg '._' will ignore .xxxx and _xxxx
-
-	// email bounce handling
-	$config['return_path'] = "";
-	$config['emailbounce_location'] = '/usr/share/filesender/maildrop/new';
-
+	
 	// email templates section
 	$config['default_emailsubject'] = "{siteName}: {filename}";
-	$config['emailbounce_subject'] = "{siteName}: Email notification sending failure";
 	$config['filedownloadedemailbody'] = '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}
 Dear Sir, Madam,
 
@@ -182,7 +188,7 @@ Best regards,
 	</TR>
 	<TR>
 		<TD WIDTH=600 BGCOLOR="#e6e6e6">
-			<P ALIGN=CENTER>{fileoriginalname}</P>
+			<P ALIGN=CENTER>{htmlfileoriginalname}</P>
 		</TD>
 		<TD WIDTH=80 BGCOLOR="#e6e6e6">
 			<P ALIGN=CENTER>{filesize}</P>
@@ -210,7 +216,7 @@ Download link: {serverURL}?vid={filevoucheruid}
 
 The file is available until {fileexpirydate} after which it will be automatically deleted.
 
-Personal message from {filefrom} (optional): {filemessage}
+{filemessage_start}Personal message from {filefrom}: {filemessage}{filemessage_end}
 
 Best regards,
 
@@ -243,7 +249,7 @@ Best regards,
 	</TR>
 	<TR>
 		<TD WIDTH=600 BGCOLOR="#e6e6e6">
-			<P ALIGN=CENTER>{fileoriginalname}</P>
+			<P ALIGN=CENTER>{htmlfileoriginalname}</P>
 		</TD>
 		<TD WIDTH=80 BGCOLOR="#e6e6e6">
 			<P ALIGN=CENTER>{filesize}</P>
@@ -257,11 +263,11 @@ Best regards,
 	</TR>
 </TABLE>
 <P></P>
-<TABLE WIDTH=100% BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
+{filemessage_start}<TABLE WIDTH=100% BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
 	<COL WIDTH=100%>
 	<TR>
 		<TD WIDTH=100% BGCOLOR="#b3b3b3">
-			<P ALIGN=CENTER><B>Personal message from {filefrom} (optional):</B></P>
+			<P ALIGN=CENTER><B>Personal message from {filefrom}:</B></P>
 		</TD>
 	</TR>
 	<TR>
@@ -269,7 +275,7 @@ Best regards,
 			<P><I>{htmlfilemessage}</I></P>
 		</TD>
 	</TR>
-</TABLE>
+</TABLE>{filemessage_end}
 <P>Best regards,</P>
 <P>{siteName}</P>
 </BODY>
@@ -351,48 +357,18 @@ Dear Sir, Madam,<BR><BR>A voucher from {filefrom} has been cancelled.<BR><BR>
 	$config['defaultfilecancelled'] = "{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}
 Dear Sir, Madam,
 
-The file '{filename}' from {filefrom} has been cancelled and is no longer available to download.
+The file '{fileoriginalname}' from {filefrom} has been cancelled and is no longer available to download.
 
 Best regards,
 
 {siteName}{CRLF}{CRLF}--simple_mime_boundary{CRLF}Content-type:text/html; charset={charset}{CRLF}{CRLF}
 <HTML>
 <BODY>
-Dear Sir, Madam,<BR><BR>The file '{filename}' from {filefrom} has been cancelled and is no longer available to download.<BR><BR>
+Dear Sir, Madam,<BR><BR>The file '{htmlfileoriginalname}' from {filefrom} has been cancelled and is no longer available to download.<BR><BR>
 	<P>Best regards,</P>
 <P>{siteName}</P>
 </BODY>
 </HTML>{CRLF}{CRLF}--simple_mime_boundary--";
-	$config['bouncenotification'] = '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}
-Dear Sir, Madam,
-
-The {siteName} service attempted to send an email to {fileoriginalto} on your behalf. 
-
-The message was rejected by the remote site, the most common reason 
-being an error in the email address entered for the recipient.
-
-Please log into {siteName} to check the recipient address.
-
-{siteName} allows adding new recipients to files without needing to upload the file again, from the table in "My Files". In the case of Vouchers however, a new voucher must be issued.
-
-Best regards,
-
-{siteName}{CRLF}{CRLF}--simple_mime_boundary{CRLF}Content-type:text/html; charset={charset}{CRLF}{CRLF}
-<HTML>
-<HEAD>
-<meta http-equiv="Content-Type" content="text/html;charset={charset}">
-</HEAD>
-<BODY>
-<P>Dear Sir, Madam,</P>
-<P>The {siteName} service attempted to send an email to {fileoriginalto} on your behalf.</P>
-<P>The message was rejected by the remote site, the most common reason
-being an error in the email address entered for the recipient.</P>
-<P>Please log into {siteName} to check the recipient address.</P>
-<P>{siteName} allows adding new recipients to files without needing to upload the file again, from the table in "My Files". In the case of Vouchers however, a new voucher must be issued.</P>
-<P>Best regards,</P>
-<P>{siteName}</P> 
-</BODY>
-</HTML>{CRLF}{CRLF}--simple_mime_boundary--';
 	// End of email templates section
 
 	// The settings below are not implemented yet in 1.0
@@ -406,7 +382,7 @@ being an error in the email address entered for the recipient.</P>
 	$config['available_space'] = '20000M';
 	$config['about'] = true;
 	$config["help_link_visible"] = true;
-	$config['site_defaultlanguage'] = 'EN_AU';
+	$config['site_defaultlanguage'] = 'EN_AU'; // available languages EN_AU, NO_no, NL_nl
 	$config['site_icon'] = 'cloudstor.png';
 	$config['site_css'] = '';
 	

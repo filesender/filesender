@@ -1,8 +1,9 @@
 <?php
+
 /*
  * FileSender www.filesender.org
  * 
- * Copyright (c) 2009-2011, AARNet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -13,7 +14,7 @@
  * *	Redistributions in binary form must reproduce the above copyright
  * 	notice, this list of conditions and the following disclaimer in the
  * 	documentation and/or other materials provided with the distribution.
- * *	Neither the name of AARNet, HEAnet, SURFnet and UNINETT nor the
+ * *	Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
  * 	names of its contributors may be used to endorse or promote products
  * 	derived from this software without specific prior written permission.
  * 
@@ -45,21 +46,23 @@
 chdir(dirname(__FILE__));
 
 // force all error reporting
-error_reporting(E_ALL);
+if (defined('E_DEPRECATED')) {
+	error_reporting(E_ALL & ~E_DEPRECATED);
+}       
+else {  
+	error_reporting(E_ALL);
+}       
 
 $filesenderbase = dirname(dirname(__FILE__));
 
 // include all required classes
 require_once("$filesenderbase/config/config.php");
-require_once("$filesenderbase/classes/DB.php");
-require_once("$filesenderbase/classes/EN_AU.php");
+require_once("$filesenderbase/classes/DBAL.php");
 require_once("$filesenderbase/classes/Mail.php");
 require_once("$filesenderbase/classes/DB_Input_Checks.php");
 require_once("$filesenderbase/classes/Functions.php");
 
-$lang = EN_AU::getInstance();
-$CFG = config::getInstance();
-$config = $CFG->loadConfig();
+global $config;
 $sendmail = Mail::getInstance();
 
 // set time zone for this session
@@ -101,7 +104,7 @@ function convertNames($rename_to_old_scheme)
 	{
 	
 	global $config;
-	$db = DB::getInstance();
+	$db = DBAL::getInstance();
 	
 	// check log_location exists	
 	if (!file_exists($config["log_location"])) {
@@ -126,16 +129,20 @@ function convertNames($rename_to_old_scheme)
 	
 	// Final cleanup is to close any records in the database that do not have a physical file attached to them
 	// close all entries that do not have a pyhsical file in storage
-	
-	$search = $db->fquery("SELECT * FROM files WHERE filestatus = 'Available'"); 
+	try {
+		$search = $db->query("SELECT * FROM files WHERE filestatus = 'Available'"); 
+	} catch (DBALException $e) {
+		logProcess("CONVERT","SQL Error on updating files".$e->getMessage());
+		return FALSE;
+	}
 		
-		// check for error in SQL
-		if (!$search) { 
-		logProcess("CONVERT","SQL Error on updating files".pg_last_error());
+	// check for empty result in SQL
+	if (empty($search)) { 
+		logProcess("CONVERT","SQL Error on updating files, empty resultset");
 		return FALSE; 
-		}
+	}
 	
-	while($row = pg_fetch_assoc($search)) {
+	foreach($search as $row) {
 
 		if ($rename_to_old_scheme) {
 		    $oldfile = $FilestoreDirectory."/".$row["fileuid"].".tmp";
