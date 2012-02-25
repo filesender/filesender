@@ -138,7 +138,7 @@ var n = 0; // file int currently uploading
 		$("#cancelbutton").show(); // show cancel
 		// show upload progress dialog
 		$("#dialog-uploadprogress").dialog("open");
-		// no error so use reuslt as current bytes uploaded for file resume 
+		// no error so use result as current bytes uploaded for file resume 
 		vid = data.vid;
 		fdata[n].bytesUploaded = parseFloat(data.filesize);
 		uploadFile();
@@ -277,7 +277,7 @@ function uploadProgress(evt) {
 
 function uploadFailed(evt) {
 	clearInterval(intervalTimer);
-	erorDialog("An error occurred while uploading the file.");  
+	errorDialog("An error occurred while uploading the file.");  
 }  
   
 function uploadCanceled(evt) {
