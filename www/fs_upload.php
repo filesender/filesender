@@ -96,7 +96,8 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 		// change each file from pending to done
 		$data = $functions->getVoucherData($_REQUEST["vid"]);
 		$tempFilename = generateTempFilename($data);
-		$complete = "complete";;
+		$complete = "complete";
+		
 		// rename file to correct name
 		$fileuid = getGUID();
 		logEntry("Rename the file ".$uploadfolder.$tempFilename+":"+ $uploadfolder.$fileuid.".tmp");
@@ -127,16 +128,16 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 		$data["fileexpirydate"] = date($config["db_dateformat"],strtotime($data["fileexpirydate"]));
 		
 		// loop though multiple emails
+		// TO DO: must error check here if emails do not send or fails with data insertion
 		$emailto = str_replace(",",";",$data["fileto"]);
 		$emailArray = preg_split("/;/", $emailto);
 		foreach ($emailArray as $Email) { 
 			$data["fileto"] = $Email;
 			$data["filevoucheruid"] = getGUID();
-		
+			
 			logEntry("DEBUG fs_upload: Filedata = " . print_r($data,TRUE));
 			$functions->insertFile($data);
 		}
-		// NOTE: should we prefer voucher here?
 		
 		echo $complete;
 
