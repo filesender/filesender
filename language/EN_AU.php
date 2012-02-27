@@ -155,6 +155,7 @@ $lang["_START_DOWNLOAD"] = "Start Download";
 $lang["_VOUCHER_SENT"] = "Voucher Sent";
 $lang["_VOUCHER_DELETED"] = "Voucher Deleted";
 $lang["_VOUCHER_CANCELLED"] = "This voucher has been cancelled.";
+$lang["_VOUCHER_USED"] = "This voucher has already been used.";
 $lang["_STARTED_DOWNLOADING"] = "Your file should start downloading.";
 
 // files
