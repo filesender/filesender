@@ -96,7 +96,7 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 		// change each file from pending to done
 		$data = $functions->getVoucherData($_REQUEST["vid"]);
 		$tempFilename = generateTempFilename($data);
-		
+		$complete = "complete";;
 		// rename file to correct name
 		$fileuid = getGUID();
 		logEntry("Rename the file ".$uploadfolder.$tempFilename+":"+ $uploadfolder.$fileuid.".tmp");
@@ -119,6 +119,7 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 			$functions->closeCompleteVoucher($_SESSION['voucher']);
 			logEntry("DEBUG fs_upload: Close voucher = " . $_SESSION['voucher']);
 			$_SESSION['voucher'] = NULL;
+			$complete = "completev";
 		}
 		
 		$data["fileuid"] = $fileuid;
@@ -136,11 +137,9 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 			$functions->insertFile($data);
 		}
 		// NOTE: should we prefer voucher here?
-		if($authsaml->isAuth()) { 
-			echo "complete";
-		} else {
-			echo "completev";
-		}
+		
+		echo $complete;
+
 		break;
 		
 	// validates form and adds pending file to files, returns filesize or validation message
