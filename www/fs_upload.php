@@ -120,6 +120,7 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 			$functions->closeCompleteVoucher($_SESSION['voucher']);
 			logEntry("DEBUG fs_upload: Close voucher = " . $_SESSION['voucher']);
 			$_SESSION['voucher'] = NULL;
+			$_SESSION["aup"] = NULL;
 			$complete = "completev";
 		}
 		
