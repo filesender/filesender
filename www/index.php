@@ -170,7 +170,6 @@ function openabout()
 	?>
 	</div>
 	</div>
-	<div id="content">
 	<div id="scratch" class="scratch_msg">
 	<?php
 		if(array_key_exists("scratch", $_SESSION )) {
@@ -209,6 +208,7 @@ function openabout()
 	echo "<div class='versionnumber'>" .$versiondisplay."</div>";
 ?>
 	</div>
+		<div id="content">
 <?php
 	// checks if url has vid=xxxxxxx and that voucher is valid 
 	if(	$authvoucher->aVoucher())
