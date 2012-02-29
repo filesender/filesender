@@ -619,7 +619,7 @@ class Functions {
 		if(isset($data["fileoriginalname"]) && strstr($config['ban_extension'],pathinfo($data["fileoriginalname"], PATHINFO_EXTENSION)) ){ array_push($errorArray, "err_invalidfilename");}
 		// filename blank
 		if(isset($data["fileoriginalname"]) && $data["fileoriginalname"] === ""){ array_push($errorArray, "err_invalidfilename");}
-		// filename contains invalid charachters
+		// filename contains invalid characters
 		if(isset($data["fileoriginalname"]) && preg_match('=^[^/?*;:{}\\\\]+\.[^/?*;:{}\\\\]+$=',$data["fileoriginalname"]) === 0){ array_push($errorArray, "err_invalidfilename");}
 		
 		// expiry out of range
