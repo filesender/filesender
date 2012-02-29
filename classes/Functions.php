@@ -615,6 +615,13 @@ class Functions {
 		if(!isset($data["fileto"])){ array_push($errorArray, "err_tomissing");}
 		// filename missing
 		if(!isset($data["fileoriginalname"])){ array_push($errorArray, "err_invalidfilename");}
+		// filename has invalid extension - $config['ban_extension'] as array
+		if(isset($data["fileoriginalname"]) && strstr($config['ban_extension'],pathinfo($data["fileoriginalname"], PATHINFO_EXTENSION)) > 0){ array_push($errorArray, "err_invalidfilename");}
+		// filename blank
+		if(isset($data["fileoriginalname"]) && isset($data["fileoriginalname"]) == ""){ array_push($errorArray, "err_invalidfilename");}
+		// filename contains invalid charachters
+		if(isset($data["fileoriginalname"]) && preg_match('=^[^/?*;:{}\\\\]+\.[^/?*;:{}\\\\]+$=',isset($data["fileoriginalname"]) > 0)){ array_push($errorArray, "err_invalidfilename");}
+		
 		// expiry out of range
 		if(strtotime($data["fileexpirydate"]) > strtotime("+".$config['default_daysvalid']." day") ||  strtotime($data["fileexpirydate"]) < strtotime("now"))
 		{
