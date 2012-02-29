@@ -155,6 +155,7 @@ $lang["_START_DOWNLOAD"] = "Herunterladen starten";
 $lang["_VOUCHER_SENT"] = "Voucher gesandt";
 $lang["_VOUCHER_DELETED"] = "Voucher gelöscht";
 $lang["_VOUCHER_CANCELLED"] = "Dieser Voucher wurde widerrufen.";
+$lang["_VOUCHER_USED"] = "Dieser voucher wurde bereits verwendet.";
 $lang["_STARTED_DOWNLOADING"] = "Der Download Ihrer Datei sollte starten.";
 
 // files

@@ -154,6 +154,7 @@ $lang["_START_DOWNLOAD"] = "Démarrer téléchargement";
 $lang["_VOUCHER_SENT"] = "Ticket envoyé";
 $lang["_VOUCHER_DELETED"] = "Ticket supprimé";
 $lang["_VOUCHER_CANCELLED"] = "Ce ticket a été annulé.";
+$lang["_VOUCHER_USED"] = "Ce ticket a déjà été utilisé.";
 $lang["_STARTED_DOWNLOADING"] = "Votre fichier devrait commencer à être téléchargé.";
 
 // files
