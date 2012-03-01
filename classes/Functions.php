@@ -531,28 +531,31 @@ class Functions {
 			$voucher = 'Voucher';
 			$blank = '';
 			$zero = 0;
-			
-			$statement->bindParam(':fileexpirydate', date($config['db_dateformat'], strtotime($expiry)));
+			$fileexpiryParam = date($config['db_dateformat'], strtotime($expiry));
+			$statement->bindParam(':fileexpirydate',$fileexpiryParam);
 			$statement->bindParam(':fileto', $to);
 			$statement->bindParam(':filesubject', $voucher);
-			$statement->bindParam(':fileactivitydate',  date($config['db_dateformat'], time()));
-			
+			$fileactivitydateParam =  date($config['db_dateformat'], time());
+			$statement->bindParam(':fileactivitydate',$fileactivitydateParam );	
 			$statement->bindParam(':filevoucheruid', $filevoucheruid );
 			$statement->bindParam(':filemessage', $blank);
 			$statement->bindParam(':filefrom', $authAttributes["email"]);
 			$statement->bindParam(':filesize', $zero);
 			$statement->bindParam(':fileoriginalname', $blank);
 			$statement->bindParam(':filestatus', $voucher);
-			
-			$statement->bindParam(':fileip4address', $dbCheck->checkIp($_SERVER['REMOTE_ADDR']));
-			$statement->bindParam(':fileip6address', $dbCheck->checkIp6($_SERVER['REMOTE_ADDR']));
+			$fileip4addressParam = $dbCheck->checkIp($_SERVER['REMOTE_ADDR']);
+			$statement->bindParam(':fileip4address',$fileip4addressParam );
+			$fileip6addressParam = $dbCheck->checkIp6($_SERVER['REMOTE_ADDR']);
+			$statement->bindParam(':fileip6address', $fileip6addressParam);
 			$statement->bindParam(':filesendersname', $blank);
 			$statement->bindParam(':filereceiversname', $blank);
 			$statement->bindParam(':filevouchertype', $blank);
-			$statement->bindParam(':fileuid', getGUID());
+			$fileuidParam = getGUID();
+			$statement->bindParam(':fileuid', $fileuidParam);
 			$statement->bindParam(':fileauthuseruid', $authAttributes["saml_uid_attribute"]);
 			$statement->bindParam(':fileauthuseremail', $authAttributes["email"]);
-			$statement->bindParam(':filecreateddate', date($config['db_dateformat'], time()));
+			$filecreateddateParam =  date($config['db_dateformat'], time());
+			$statement->bindParam(':filecreateddate',$filecreateddateParam);
 			try { 	
 			$statement->execute(); 
 			}
