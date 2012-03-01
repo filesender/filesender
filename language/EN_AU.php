@@ -159,7 +159,8 @@ $lang["_VOUCHER_USED"] = "This voucher has already been used.";
 $lang["_STARTED_DOWNLOADING"] = "Your file should start downloading.";
 
 // files
-$lang["_FILE_DELETED"] = "File Deleted";
+$lang["_FILE_DELETED"] = "This File has been deleted";
+
 // steps
 $lang["_STEP1"] = "Enter delivery email address(es)";
 $lang["_STEP2"] = "Set expiry date";
