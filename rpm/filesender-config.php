@@ -56,7 +56,6 @@ public function loadConfig() {
 	$config['adminEmail'] = ''; // Email address(es, separated by ,) to receive administrative messages (low disk space warning)
 	$config['Default_TimeZone'] = 'Australia/Sydney';
 	$config['site_name'] = 'FileSender'; // Friendly name used for your FileSender instance
-	$config["site_splashtext"] = "FileSender is a secure way to share large files with anyone! Logon to upload your files or invite people to send you a file.";
 
 	// UI Settings
 	$config['datedisplayformat'] = "d-m-Y"; // Format for displaying date/time, use PHP date() format string syntax

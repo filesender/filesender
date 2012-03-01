@@ -54,6 +54,7 @@ $lang["_UPLOAD_PROGRESS"] = "Upload progress";
 $lang["_DOWNLOAD"] = "Download";
 $lang["_CANCEL_UPLOAD"] = "Cancel Upload";
 
+$lang["_SITE_SPLASHTEXT"] = "FileSender is a secure way to share large files with anyone! Logon to upload your files or invite people to send you a file.";
 //$lang["_"] = "";
 // admin
 $lang["_PAGE"] = "Page";
