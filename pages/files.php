@@ -58,17 +58,17 @@ $sendmail->sendEmail($myfileData ,$config['fileuploadedemailbody']);
 echo "<div id='message'>".lang("_MESSAGE_RESENT")."</div>";
 }
 
+
+} else {
+echo "<div id='message'>".lang("_INVALID_FILEVOUCHERID")."</div>";	
+}
+}
 if($_REQUEST["a"] == "added")
 {
 
 // display the add box
 echo "<div id='message'>".lang("_EMAIL_SENT").".</div>";
 }
-} else {
-echo "<div id='message'>".lang("_INVALID_FILEVOUCHERID")."</div>";	
-}
-}
-
 $filedata = $functions->getUserFiles();
 $json_o=json_decode($filedata,true);
 
