@@ -930,7 +930,7 @@ class Functions {
 			
 			$pdo = $this->db->connect();
 			$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
-			$statement = $pdo->prepare("UPDATE files SET filestatus = 'Closed' WHERE fileid = :fileid");
+			$statement = $pdo->prepare("UPDATE files SET filestatus = 'Deleted' WHERE fileid = :fileid");
 			$statement->bindParam(':fileid', $fileid);
 			
 			try { $statement->execute();}
