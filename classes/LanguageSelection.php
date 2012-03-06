@@ -37,7 +37,7 @@ global $locales;
 $filesenderbase = dirname(dirname(__FILE__));
 
 //Get all possible locales
-require_once("$filesenderbase/config/locale.php");
+require_once("$filesenderbase/language/locale.php");
 //Set a default language file via the parameter.
 //We distribute En-AU ALWAYS via the project!
 function get_client_language($availableLanguages, $default='en-au'){
