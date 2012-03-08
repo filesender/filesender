@@ -234,7 +234,7 @@ $json_o=json_decode($filedata,true);
         <td class="HardBreak" ><strong><?php echo lang("_FILE_NAME"); ?></strong></td>
         <td class="HardBreak" ><strong><?php echo lang("_SIZE"); ?></strong></td>
         <td class="HardBreak" ><strong><?php echo lang("_SUBJECT") ; ?></strong></td>
-        <td><strong></strong></td>
+        <td class="HardBreak" ><strong><?php echo lang("_MESSAGE") ; ?></strong></td>
         <td class="HardBreak" ><strong><?php echo lang("_CREATED"); ?></strong></td>
         <td class="HardBreak" ><strong><?php echo lang("_EXPIRY"); ?></strong></td>
         <td width="18">&nbsp;</td>
