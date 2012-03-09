@@ -35,19 +35,20 @@
 //Add relevant entries for browser locales here, and your translation will automagically be recognized and used....
 
 
-$locales  =  array( 
-	"nl-nl"  => "NL_nl.php",
-	"nl" => "NL_nl.php" ,
+$locales  =  array(
+	"cs" => "CS_CZ.php",
+	"cs-cz" => "CS_CZ.php",
+	"de" => "DE_de.php",
+	"de-de" => "DE_de.php",
 	"en-au" => "EN_AU.php",
-	"en"=>  "EN_AU.php" ,
-	"no-no" => "NO_no.php", 	
-	"no" => "NO_no.php" ,
-	"nb" => "NO_no.php" ,
-	"nb-no" => "NO_no.php", 
-	"de" => "DE_de.php" ,
-	"de-de" => "DE_de.php", 
-	"fr" => "FR_fr.php" ,
-	"fr-fr" => "FR_fr.php" 
-		 		
+	"en"=>  "EN_AU.php",
+	"fr" => "FR_fr.php",
+	"fr-fr" => "FR_fr.php",
+	"nl-nl"  => "NL_nl.php",
+	"nl" => "NL_nl.php",
+	"no-no" => "NO_no.php",
+	"no" => "NO_no.php",
+	"nb" => "NO_no.php",
+	"nb-no" => "NO_no.php"
 );
 ?>
