@@ -153,6 +153,7 @@ $lang["_START_DOWNLOAD"] = "Zahájit stahování";
 $lang["_VOUCHER_SENT"] = "Pozvánka odeslána";
 $lang["_VOUCHER_DELETED"] = "Pozvánka smazána";
 $lang["_VOUCHER_CANCELLED"] = "Tato pozvánka byla zrušena.";
+$lang["_VOUCHER_USED"] = "Tato pozvánka již byla použita.";
 $lang["_STARTED_DOWNLOADING"] = "Stahování souboru může začít.";
 
 // files
@@ -190,6 +191,9 @@ $lang["_DP_firstDay"] = '1';
 $lang["_DP_isRTL"] = 'false';
 $lang["_DP_showMonthAfterYear"] = 'false';
 $lang["_DP_yearSuffix"] = '';
+
+// Login Splash text
+$lang["_SITE_SPLASHTEXT"] = "FileSender je bezpečná cesta pro sdílení velkých souborů mezi všemi! Přihlaš se a nahraj své soubory nebo pozvi ostatní, ať soubory nahrají oni."; 
 
 // site help
 $lang["_HELP_TEXT"] = '
