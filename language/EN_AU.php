@@ -47,15 +47,12 @@ $lang["_MY_FILES"] = "My Files";
 $lang["_HOME"] = "Home";
 $lang["_ABOUT"] = "About";
 $lang["_HELP"] = "Help";
-$lang["_VOUCHER_CANCELLED"] = "Voucher Cancelled";
 $lang["_DELETE_VOUCHER"] = "Delete Voucher";
 $lang["_UPLOAD_COMPLETE"] = "Your file has been uploaded and message sent.";
 $lang["_UPLOAD_PROGRESS"] = "Upload progress";
 $lang["_DOWNLOAD"] = "Download";
 $lang["_CANCEL_UPLOAD"] = "Cancel Upload";
 
-$lang["_SITE_SPLASHTEXT"] = "FileSender is a secure way to share large files with anyone! Logon to upload your files or invite people to send you a file.";
-//$lang["_"] = "";
 // admin
 $lang["_PAGE"] = "Page";
 $lang["_UP"] = "Up";
@@ -67,6 +64,7 @@ $lang["_USED"] = "Used";
 $lang["_AVAILABLE"] = "Available";
 $lang["_TEMP"] = "Temp"; // as in Temporary files
 
+// Greetings
 $lang["_WELCOME"] = "Welcome"; 
 $lang["_WELCOMEGUEST"] = "Welcome Guest"; 
 
@@ -78,7 +76,6 @@ $lang["_ERRORS"] = "Errors";
 $lang["_FILES_AVAILABLE"] = "Files Available";
 $lang["_ACTIVE_VOUCHERS"] = "Active Vouchers";
 $lang["_COMPLETE_LOG"] = "Complete Log";
-
 
 // Form Fields
 $lang["_TO"] = "To";
@@ -94,10 +91,9 @@ $lang["_TYPE"] = "Type";
 $lang["_TERMS_OF_AGREEMENT"] = "Terms of Agreement";
 $lang["_SHOW_TERMS"] = "Show Terms";
 $lang["_SHOWHIDE"] = "Show/Hide";
-$lang["_SELECT_FILE"] = "File to Upload";
 $lang["_UPLOADING_WAIT"] = "Uploading file - please wait...";
 
-// Flash button menu
+// button labels
 $lang["_UPLOAD"] = "Send a file";
 $lang["_BROWSE"] = "Browse";
 $lang["_CANCEL"] = "Cancel";
@@ -130,15 +126,16 @@ $lang["_MAXEMAILS"] = "The maximum number of email addresses allowed is ";
 $lang["_INVALID_DATE_FORMAT"] = "The date format is invalid.";
 $lang["_DISK_SPACE_ERROR"] = "There is not enough drive space on this service. Please contact the service administration or upload a smaller file.";
 
-
+// Logout page
 $lang["_LOGOUT_COMPLETE"] = "Logout Complete";
 
 // vouchers
 $lang["_SEND_NEW_VOUCHER"] = "A Voucher allows someone to send you a file.<br />
 To create a voucher, enter an email address then select Send Voucher.<br />
 An email will be sent to the recipient with a link to use the Voucher.";
-$lang["_EMAIL_SEPARATOR_MSG"] = "Multiple email addresses separated by , or ;";
 
+// User interaction
+$lang["_EMAIL_SEPARATOR_MSG"] = "Multiple email addresses separated by , or ;";
 $lang["_NO_FILES"] = "There are currently no files available";
 $lang["_ARE_YOU_SURE"] = "Are you sure?";
 $lang["_DELETE_FILE"] = "Delete File";
@@ -158,8 +155,6 @@ $lang["_VOUCHER_DELETED"] = "Voucher Deleted";
 $lang["_VOUCHER_CANCELLED"] = "This voucher has been cancelled.";
 $lang["_VOUCHER_USED"] = "This voucher has already been used.";
 $lang["_STARTED_DOWNLOADING"] = "Your file should start downloading.";
-
-// files
 $lang["_FILE_DELETED"] = "This file has been deleted.";
 
 // steps
@@ -170,18 +165,11 @@ $lang["_STEP4"] = "Click Send";
 $lang["_HTML5Supported"] = "Uploads over 2GB supported!";
 $lang["_HTML5NotSupported"] = "Uploads over 2GB<br />not supported!";			
 
-// site about
-$lang["_ABOUT_TEXT"] = "About ..."; // overide in config/EN_AU.php
-// site help
-$lang["_HELP_TEXT"] = "Help ..."; // overide in config/EN_AU.php
-
 $lang["_OPTIONAL"] = "optional";
 
 // confirmation
 $lang["_CONFIRM_DELETE_FILE"] = "Are you sure you want to delete this File?";
 $lang["_CONFIRM_DELETE_VOUCHER"] = "Are you sure you want to delete this voucher?";
-
-$lang["_AUPTERMS"] = "AuP Terms and conditions";
 
 // standard date display format
 $lang['datedisplayformat'] = "d/m/Y"; // Format for displaying date/time, use PHP date() format string syntax 
@@ -203,6 +191,10 @@ $lang["_DP_isRTL"] = 'false';
 $lang["_DP_showMonthAfterYear"] = 'false';
 $lang["_DP_yearSuffix"] = '';
 
+// Login Splash text
+$lang["_SITE_SPLASHTEXT"] = "FileSender is a secure way to share large files with anyone! Logon to upload your files or invite people to send you a file.";
+
+// site help
 $lang["_HELP_TEXT"] = '
 <div>
 <div align="left" style="padding:5px">
@@ -245,8 +237,10 @@ $lang["_HELP_TEXT"] = '
 </div>
 </div>';
 
+// site about
 $lang["_ABOUT_TEXT"] = ' <div align="left" style="padding:5px">'. htmlentities($config['site_name']) .' is an installation of FileSender (<a rel="nofollow" href="http://www.filesender.org/">www.filesender.org</a>), which is developed to the requirements of the higher education and research community.</div>';
 
+// site AUP terms
 $lang["_AUPTERMS"] = "AuP Terms and conditions...";
 
 ?>
