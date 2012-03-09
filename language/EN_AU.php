@@ -160,7 +160,7 @@ $lang["_VOUCHER_USED"] = "This voucher has already been used.";
 $lang["_STARTED_DOWNLOADING"] = "Your file should start downloading.";
 
 // files
-$lang["_FILE_DELETED"] = "This File has been deleted";
+$lang["_FILE_DELETED"] = "This file has been deleted.";
 
 // steps
 $lang["_STEP1"] = "Enter delivery email address(es)";
