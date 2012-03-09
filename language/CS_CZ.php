@@ -35,7 +35,8 @@
  * Contributed and maintained by Lubos Kopecky/CESNET
  * --------------------------------------------------
  */
-			// main menu items
+
+// main menu items
 $lang["_ADMIN"] = "Administrace";
 $lang["_NEW_UPLOAD"] = "Nahrát nový soubor";
 $lang["_VOUCHERS"] = "Pozvánky";
@@ -47,14 +48,12 @@ $lang["_MY_FILES"] = "Mé soubory";
 $lang["_HOME"] = "Domů";
 $lang["_ABOUT"] = "O programu";
 $lang["_HELP"] = "Pomoc";
-$lang["_VOUCHER_CANCELLED"] = "Pozvánka zrušena";
 $lang["_DELETE_VOUCHER"] = "Smazat poznámku";
 $lang["_UPLOAD_COMPLETE"] = "Váš soubor byl nahrán a zpráva odeslána.";
 $lang["_UPLOAD_PROGRESS"] = "Průběh nahrávání";
 $lang["_DOWNLOAD"] = "Stáhnout";
 $lang["_CANCEL_UPLOAD"] = "Nahrávání přerušeno";
 
-//$lang["_"] = "";
 // admin
 $lang["_PAGE"] = "Strana";
 $lang["_UP"] = "Nahoru";
@@ -93,7 +92,6 @@ $lang["_TYPE"] = "Type";
 $lang["_TERMS_OF_AGREEMENT"] = "Podmínky užití služby";
 $lang["_SHOW_TERMS"] = "Zobrazit podmínky";
 $lang["_SHOWHIDE"] = "Zobrazit/Skrýt";
-$lang["_SELECT_FILE"] = "Soubor k nahrání";
 $lang["_UPLOADING_WAIT"] = "Nahrávám soubor - čekejte, prosím...";
 
 // Flash button menu
@@ -167,18 +165,11 @@ $lang["_STEP4"] = "Klikněte na Odeslat";
 $lang["_HTML5Supported"] = "Nahrání souboru přesahující 2GB je podporováno!";
 $lang["_HTML5NotSupported"] = "Nahrání souboru přesahující 2GB<br />není podporováno!";			
 
-// site about
-$lang["_ABOUT_TEXT"] = "O programu ..."; // overide in config/EN_AU.php
-// site help
-$lang["_HELP_TEXT"] = "Pomoc ..."; // overide in config/EN_AU.php
-
 $lang["_OPTIONAL"] = "volitelné";
 
 // confirmation
 $lang["_CONFIRM_DELETE_FILE"] = "Jste si jist, že chcete smazat tento soubor?";
 $lang["_CONFIRM_DELETE_VOUCHER"] = "Jste si jist, že chcete smazat tuto pozvánku?";
-
-$lang["_AUPTERMS"] = "Podmínky užívání služby";
 
 // standard date display format - vouchers, sent files
 $lang['datedisplayformat'] = "d/m/y"; // Format for displaying date/time, use PHP date() format string syntax 
@@ -200,6 +191,7 @@ $lang["_DP_isRTL"] = 'false';
 $lang["_DP_showMonthAfterYear"] = 'false';
 $lang["_DP_yearSuffix"] = '';
 
+// site help
 $lang["_HELP_TEXT"] = '
 
 <div>
@@ -245,6 +237,7 @@ $lang["_HELP_TEXT"] = '
 </div>
 </div>';
 
+// site about
 $lang["_ABOUT_TEXT"] = ' <div align="left" style="padding:5px">'. htmlentities($config['site_name']) .' je instalace FileSender (<a rel="nofollow" href="http://www.filesender.org/">www.filesender.org</a>), který je vyvinut pro potřeby vzdělávací a výzkumné komunity.</div>';
 
 $lang["_AUPTERMS"] = "Kompletní znění podmínek užití této služby...";
