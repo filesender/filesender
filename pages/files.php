@@ -39,36 +39,35 @@
  * 
  */
 
+// Check for delete/resent/added actions and report back
 if(isset($_REQUEST["a"]) && isset($_REQUEST["id"])) 
 {
-// validate id 
-if(	ensureSaneFileUid($_REQUEST["id"])) {
-$myfileData = $functions->getVoucherData($_REQUEST['id']);
-if($_REQUEST["a"] == "del" )
-{
-if($functions->deleteFile($myfileData["fileid"]))
-{
-echo "<div id='message'>".lang("_FILE_DELETED")."</div>";
+	// validate id 
+	if(ensureSaneFileUid($_REQUEST["id"])) {
+		$myfileData = $functions->getVoucherData($_REQUEST['id']);
+		if($_REQUEST["a"] == "del" )
+		{
+			if($functions->deleteFile($myfileData["fileid"]))
+			{
+				echo "<div id='message'>".lang("_FILE_DELETED")."</div>";
+			}
+		}
+		if($_REQUEST["a"] == "resend")
+		{
+			$sendmail->sendEmail($myfileData ,$config['fileuploadedemailbody']);
+			echo "<div id='message'>".lang("_MESSAGE_RESENT")."</div>";
+		}
+	} else {
+		echo "<div id='message'>".lang("_INVALID_FILEVOUCHERID")."</div>";	
+	}
 }
+if(isset($_REQUEST["a"]) && $_REQUEST["a"] == "added")
+{
+	// display the add box
+	echo "<div id='message'>".lang("_EMAIL_SENT").".</div>";
 }
 
-if($_REQUEST["a"] == "resend")
-{
-$sendmail->sendEmail($myfileData ,$config['fileuploadedemailbody']);
-echo "<div id='message'>".lang("_MESSAGE_RESENT")."</div>";
-}
-
-
-} else {
-echo "<div id='message'>".lang("_INVALID_FILEVOUCHERID")."</div>";	
-}
-}
-if($_REQUEST["a"] == "added")
-{
-
-// display the add box
-echo "<div id='message'>".lang("_EMAIL_SENT").".</div>";
-}
+// Get list of user files and display page
 $filedata = $functions->getUserFiles();
 $json_o=json_decode($filedata,true);
 
