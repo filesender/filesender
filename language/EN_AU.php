@@ -203,13 +203,6 @@ $lang["_HELP_TEXT"] = '
     <li>If you do not see your institution in the list of Identity Providers (IdPs), or your institutional login fails, please contact your local IT support</li>
 </ul>
 
-<h4>Uploads smaller than 2 Gigabytes (2GB) with Adobe Flash</h4>
-<ul>
-	<li>If you can watch YouTube videos this method should work for you</li>
-	<li>You need a modern browser running version 10 (or higher) of <a target="_blank" href="http://www.adobe.com/software/flash/about/">Adobe Flash.</a></li>
-	<li>FileSender will warn you should you try to upload a file that is too big for this method</li>
-</ul>
-
 <h4>Uploads of <i>any size</i> with HTML5</h4>
 <ul>
         <li>If you see <img src="images/html5_installed.png" alt="green HTML5 tick" class="textmiddle" style="display:inline" /> in FileSender\'s top right-hand corner this method works for you</li>
@@ -223,12 +216,20 @@ $lang["_HELP_TEXT"] = '
         <li>You need a modern browser, Adobe Flash or HTML5 are <b>not</b> required for downloads</li>
 </ul>
 
+<h4>Uploads smaller than 2 Gigabytes (2GB) with Adobe Flash</h4>
+<ul>
+	<li>If you can watch YouTube videos this method should work for you</li>
+	<li>You need a modern browser running version 10 (or higher) of <a target="_blank" href="http://www.adobe.com/software/flash/about/">Adobe Flash.</a></li>
+	<li>FileSender will warn you should you try to upload a file that is too big for this method</li>
+</ul>
+
+
 
 <h4>Limits of this FileSender installation</h4>
 <ul>
     <li><strong>
-      Maximum recipient  addresses per email: </strong>'. $config["max_email_recipients"].' multiple email addresses (separated by comma or semi-colon)</li>
-    <li><strong>Maximum number of files per  upload:</strong> one - to upload several files at once, zip them into a  single archive first</li>
+      Maximum recipient  addresses per email:</strong> Up to '. $config["max_email_recipients"].' email addresses separated by  a comma or semi-colon</li>
+    <li><strong>Maximum number of files per  upload:</strong> one - to upload several files in one transaction, compress them into a  single archive first</li>
     <li><strong>Maximum file size per upload, with Adobe Flash only: </strong>'. formatBytes($config["max_flash_upload_size"]).' </li>
     <li><strong>Maximum file size per upload, with HTML5: </strong>'. formatBytes($config["max_html5_upload_size"]).'</li>
     <li><strong>Maximum file / voucher expiry days: </strong>'. $config["default_daysvalid"].' </li>
