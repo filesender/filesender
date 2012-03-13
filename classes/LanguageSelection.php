@@ -73,6 +73,10 @@ $lang_file = $locales[$langs];
 //By including EN-AU first, we make sure ALL used keys actually exist!
 //require_once("$filesenderbase/language/EN_AU.php");
 require_once("$filesenderbase/language/". "EN_AU.php");
+
+if(isset($config['site_defaultlanguage']) &&  file_exists("$filesenderbase/language/".$config['site_defaultlanguage'].".php")) { require_once("$filesenderbase/language/".$config['site_defaultlanguage'].".php"); };
+if(isset($config['site_defaultlanguage']) &&  file_exists("$filesenderbase/config/".$config['site_defaultlanguage'].".php")) { require_once("$filesenderbase/config/".$config['site_defaultlanguage'].".php"); };
+
 require_once("$filesenderbase/language/". $lang_file);
 
 // check for custom language files in config
