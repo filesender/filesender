@@ -55,6 +55,7 @@ public function loadConfig() {
 	$config['admin'] = ''; // UID's (from $config['saml_uid_attribute']) that have Administrator permissions
 	$config['adminEmail'] = ''; // Email address(es, separated by ,) to receive administrative messages (low disk space warning)
 	$config['Default_TimeZone'] = 'Australia/Sydney';
+	$config['site_defaultlanguage'] = 'EN_AU'; // available languages EN_AU, NO_no, NL_nl
 	$config['site_name'] = 'FileSender'; // Friendly name used for your FileSender instance
 	
 
@@ -382,7 +383,6 @@ Dear Sir, Madam,<BR><BR>The file '{htmlfileoriginalname}' from {filefrom} has be
 	$config['available_space'] = '20000M';
 	$config['about'] = true;
 	$config["help_link_visible"] = true;
-	$config['site_defaultlanguage'] = 'EN_AU'; // available languages EN_AU, NO_no, NL_nl
 	$config['site_icon'] = 'cloudstor.png';
 	$config['site_css'] = '';
 	
