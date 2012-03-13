@@ -181,21 +181,21 @@ function openabout()
 	<div id="userinformation">
 	<?php 
 	// display user details if authenticated and not a voucher
-	echo "<div class='welcomeuser'>";
-	if(	$authvoucher->aVoucher() || $s == "completev") 
-	{ 
-		echo lang("_WELCOMEGUEST");
-	} 
-	else if ($authsaml->isAuth() )
+	if($config["displayUserName"])
 	{
-		$attributes = $authsaml->sAuth();
-		echo lang("_WELCOME")." ";
-		if($config["displayUserName"]) { 
+		echo "<div class='welcomeuser'>";
+		if(	$authvoucher->aVoucher() || $s == "completev") 
+		{ 
+			echo lang("_WELCOMEGUEST");
+		} 
+		else if ($authsaml->isAuth() )
+		{
+			$attributes = $authsaml->sAuth();
+			echo lang("_WELCOME")." ";
 			echo $attributes["cn"];
 		}
+		echo "</div>";
 	}
-	echo "</div>";
-
 	$versiondisplay = "";
 	if($config["site_showStats"])
 	{
