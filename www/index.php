@@ -180,7 +180,15 @@ function openabout()
 	</div>	
 	<div id="userinformation">
 	<?php 
-	// display user details if authenticated and not a voucher
+
+	// set user attributes from identity provider
+	if ($authsaml->isAuth() )
+	{
+		$attributes = $authsaml->sAuth();
+	}
+
+
+	// display user details if desired
 	if($config["displayUserName"])
 	{
 		echo "<div class='welcomeuser'>";
@@ -190,7 +198,6 @@ function openabout()
 		} 
 		else if ($authsaml->isAuth() )
 		{
-			$attributes = $authsaml->sAuth();
 			echo lang("_WELCOME")." ";
 			echo $attributes["cn"];
 		}
