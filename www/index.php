@@ -286,6 +286,12 @@ function openabout()
 	<div id="message"><?php echo lang("_ERROR_UPLOADING_FILE"); ?></div></div>
 <?php	
 	}	
+	else if($s == "filesizeincorrect") 
+	{
+?>
+	<div id="message"><?php echo lang("_ERROR_INCORRECT_FILE_SIZE"); ?></div></div>
+<?php	
+	}	
 	else if($s == "complete" || $s == "completev") 
 	{
 ?>

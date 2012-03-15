@@ -168,6 +168,9 @@ function uploadFile() {
 		if(data == "err_cannotrenamefile")
 		{
 		window.location.href="index.php?s=uploaderror";
+		} else if(data == "err_filesizeincorrect")
+		{
+		window.location.href="index.php?s=filesizeincorrect";
 		} else if(data == "complete"){		
 		window.location.href="index.php?s=complete";
 		} else {
