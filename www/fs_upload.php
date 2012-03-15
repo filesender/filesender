@@ -157,10 +157,12 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 			$tempData = $functions->getVoucherData($_REQUEST["vid"]);
 			$dataitem["fileauthuseruid"] = $tempData["fileauthuseruid"];	
 			$dataitem["fileauthuseremail"] = $tempData["fileauthuseremail"];	
+			$dataitem["fileuid"] = $_REQUEST["vid"];	
 		} else if( $authsaml->isAuth()) {
 			$authAttributes = $authsaml->sAuth();
 			$dataitem["fileauthuseruid"] = $authAttributes["saml_uid_attribute"];
 			$dataitem["fileauthuseremail"] = $authAttributes["email"];
+			$dataitem["fileuid"] = $authAttributes["saml_uid_attribute"];
 		}
 
 		// if AUP then add session variable to store that a user selected the session variable
