@@ -228,14 +228,14 @@ $json_o=json_decode($filedata,true);
       <tr class="headerrow">
         <td width="18">&nbsp;</td>
         <td width="18">&nbsp;</td>
-        <td class="HardBreak" ><strong><?php echo lang("_TO"); ?></strong></td>
-        <td class="HardBreak" ><strong><?php echo lang("_FROM"); ?></strong></td>
-        <td class="HardBreak" ><strong><?php echo lang("_FILE_NAME"); ?></strong></td>
-        <td class="HardBreak" ><strong><?php echo lang("_SIZE"); ?></strong></td>
-        <td class="HardBreak" ><strong><?php echo lang("_SUBJECT") ; ?></strong></td>
-        <td class="HardBreak" ><strong><?php echo lang("_MESSAGE") ; ?></strong></td>
-        <td class="HardBreak" ><strong><?php echo lang("_CREATED"); ?></strong></td>
-        <td class="HardBreak" ><strong><?php echo lang("_EXPIRY"); ?></strong></td>
+        <td class="HardBreak" id="myfiles_header_to"><strong><?php echo lang("_TO"); ?></strong></td>
+        <td class="HardBreak" id="myfiles_header_from"><strong><?php echo lang("_FROM"); ?></strong></td>
+        <td class="HardBreak" id="myfiles_header_filename"><strong><?php echo lang("_FILE_NAME"); ?></strong></td>
+        <td class="HardBreak" id="myfiles_header_size"><strong><?php echo lang("_SIZE"); ?></strong></td>
+        <td class="HardBreak" id="myfiles_header_subject"><strong><?php echo lang("_SUBJECT") ; ?></strong></td>
+        <td class="HardBreak" id="myfiles_header_message"><strong><?php echo lang("_MESSAGE") ; ?></strong></td>
+        <td class="HardBreak" id="myfiles_header_created"><strong><?php echo lang("_CREATED"); ?></strong></td>
+        <td class="HardBreak" id="myfiles_header_expiry"><strong><?php echo lang("_EXPIRY"); ?></strong></td>
         <td width="18">&nbsp;</td>
       </tr>
       <?php 
