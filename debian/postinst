@@ -24,7 +24,7 @@ apache_install() {
 
 php_install() {
     if [ -d /etc/php5/conf.d ] && [ ! -e /etc/php5/conf.d/filesender.ini ]; then
-              ln -s /etc/filesender/filesender-php.ini /etc/php5/conf.d/filesender.ini
+              cp -p /usr/share/filesender/config-templates/filesender-php.ini /etc/php5/conf.d/filesender.ini
     fi
 }
 
