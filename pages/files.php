@@ -39,36 +39,35 @@
  * 
  */
 
+// Check for delete/resent/added actions and report back
 if(isset($_REQUEST["a"]) && isset($_REQUEST["id"])) 
 {
-// validate id 
-if(	ensureSaneFileUid($_REQUEST["id"])) {
-$myfileData = $functions->getVoucherData($_REQUEST['id']);
-if($_REQUEST["a"] == "del" )
-{
-if($functions->deleteFile($myfileData["fileid"]))
-{
-echo "<div id='message'>".lang("_FILE_DELETED")."</div>";
+	// validate id 
+	if(ensureSaneFileUid($_REQUEST["id"])) {
+		$myfileData = $functions->getVoucherData($_REQUEST['id']);
+		if($_REQUEST["a"] == "del" )
+		{
+			if($functions->deleteFile($myfileData["fileid"]))
+			{
+				echo "<div id='message'>".lang("_FILE_DELETED")."</div>";
+			}
+		}
+		if($_REQUEST["a"] == "resend")
+		{
+			$sendmail->sendEmail($myfileData ,$config['fileuploadedemailbody']);
+			echo "<div id='message'>".lang("_MESSAGE_RESENT")."</div>";
+		}
+	} else {
+		echo "<div id='message'>".lang("_INVALID_FILEVOUCHERID")."</div>";	
+	}
 }
+if(isset($_REQUEST["a"]) && $_REQUEST["a"] == "added")
+{
+	// display the add box
+	echo "<div id='message'>".lang("_EMAIL_SENT").".</div>";
 }
 
-if($_REQUEST["a"] == "resend")
-{
-$sendmail->sendEmail($myfileData ,$config['fileuploadedemailbody']);
-echo "<div id='message'>".lang("_MESSAGE_RESENT")."</div>";
-}
-
-if($_REQUEST["a"] == "added")
-{
-
-// display the add box
-echo "<div id='message'>".lang("_EMAIL_SENT").".</div>";
-}
-} else {
-echo "<div id='message'>".lang("_INVALID_FILEVOUCHERID")."</div>";	
-}
-}
-
+// Get list of user files and display page
 $filedata = $functions->getUserFiles();
 $json_o=json_decode($filedata,true);
 
@@ -123,9 +122,9 @@ $json_o=json_decode($filedata,true);
 		});
 		
 		$('.ui-dialog-buttonpane button:contains(cancelBTN)').attr("id","btn_cancel");            
-		$('#btn_cancel').html('<?php echo lang("_CANCEL") ?>')  
+		$('#btn_cancel').html('<?php echo lang("_NO") ?>')  
 		$('.ui-dialog-buttonpane button:contains(deleteBTN)').attr("id","btn_delete");            
-		$('#btn_delete').html('<?php echo lang("_DELETE") ?>')  
+		$('#btn_delete').html('<?php echo lang("_YES") ?>')  
 		
 		// add new recipient modal dialog box
 		$("#dialog-addrecipient").dialog({ autoOpen: false, height: 410,width:650, modal: true,
@@ -229,14 +228,14 @@ $json_o=json_decode($filedata,true);
       <tr class="headerrow">
         <td width="18">&nbsp;</td>
         <td width="18">&nbsp;</td>
-        <td class="HardBreak" ><strong><?php echo lang("_TO"); ?></strong></td>
-        <td class="HardBreak" ><strong><?php echo lang("_FROM"); ?></strong></td>
-        <td class="HardBreak" ><strong><?php echo lang("_FILE_NAME"); ?></strong></td>
-        <td class="HardBreak" ><strong><?php echo lang("_SIZE"); ?></strong></td>
-        <td class="HardBreak" ><strong><?php echo lang("_SUBJECT") ; ?></strong></td>
-        <td><strong></strong></td>
-        <td class="HardBreak" ><strong><?php echo lang("_CREATED"); ?></strong></td>
-        <td class="HardBreak" ><strong><?php echo lang("_EXPIRY"); ?></strong></td>
+        <td class="HardBreak" id="myfiles_header_to"><strong><?php echo lang("_TO"); ?></strong></td>
+        <td class="HardBreak" id="myfiles_header_from"><strong><?php echo lang("_FROM"); ?></strong></td>
+        <td class="HardBreak" id="myfiles_header_filename"><strong><?php echo lang("_FILE_NAME"); ?></strong></td>
+        <td class="HardBreak" id="myfiles_header_size"><strong><?php echo lang("_SIZE"); ?></strong></td>
+        <td class="HardBreak" id="myfiles_header_subject"><strong><?php echo lang("_SUBJECT") ; ?></strong></td>
+        <td class="HardBreak" id="myfiles_header_message"><strong><?php echo lang("_MESSAGE") ; ?></strong></td>
+        <td class="HardBreak" id="myfiles_header_created"><strong><?php echo lang("_CREATED"); ?></strong></td>
+        <td class="HardBreak" id="myfiles_header_expiry"><strong><?php echo lang("_EXPIRY"); ?></strong></td>
         <td width="18">&nbsp;</td>
       </tr>
       <?php 

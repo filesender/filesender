@@ -16,7 +16,6 @@ Group:          Applications/Internet
 License:        BSD
 URL:            http://www.filesender.org/
 Source0:        http://repository.filesender.org/releases/%{name}-%{version}%{?fsprerel}.tar.gz
-Source1:	%{name}-config.php
 Source2:	%{name}.htaccess
 Source3:	%{name}.cron.daily
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -60,14 +59,13 @@ rm -rf %{buildroot}
 %{__mkdir} -p %{buildroot}%{_localstatedir}/log/%{name}
 
 %{__cp} -ad ./* %{buildroot}%{_datadir}/%{name}
-%{__cp} -p %{SOURCE1} %{buildroot}%{_sysconfdir}/%{name}/config.php
 %{__cp} -p %{SOURCE2} %{buildroot}%{_sysconfdir}/httpd/conf.d/%{name}.conf
 %{__cp} -p %{SOURCE3} %{buildroot}%{_sysconfdir}/cron.daily/%{name}
-%{__cp} -p ./config/filesender-php.ini %{buildroot}%{_sysconfdir}/php.d/%{name}.ini
-%{__cp} -p ./config/config.experimental-bounce-handling %{buildroot}%{_sysconfdir}/%{name}/
-%{__cp} -p ./config/locale.php %{buildroot}%{_sysconfdir}/%{name}/
-%{__cp} -p ./config/EN_AU.php %{buildroot}%{_sysconfdir}/%{name}/
-%{__cp} -p ./config/NO_no.php %{buildroot}%{_sysconfdir}/%{name}/
+%{__cp} -p ./config-templates/filesender-php.ini %{buildroot}%{_sysconfdir}/php.d/%{name}.ini
+
+%{__cp} -p config/config-dist.php ${RPM_BUILD_ROOT}%{_sysconfdir}/%{name}/config-dist.php
+%{__sed} -i "s|'/simplesaml/'|'/simplesamlphp/'|g" ${RPM_BUILD_ROOT}%{_sysconfdir}/%{name}/config-dist.php
+%{__cp} -p ${RPM_BUILD_ROOT}%{_sysconfdir}/%{name}/config-dist.php ${RPM_BUILD_ROOT}%{_sysconfdir}/%{name}/config.php
 
 %{__rm} -f %{buildroot}%{_datadir}/%{name}/*.txt
 %{__rm} -f %{buildroot}%{_datadir}/%{name}/*.specs
@@ -90,11 +88,8 @@ rm -rf %{buildroot}
 %doc CHANGELOG.txt  INSTALL.txt  LICENCE.txt  README.txt
 %{_datadir}/%{name}/
 %dir %{_sysconfdir}/%{name}/
+%attr(0640,root,apache) %{_sysconfdir}/%{name}/config-dist.php
 %config(noreplace) %attr(0640,root,apache) %{_sysconfdir}/%{name}/config.php
-%config(noreplace) %attr(0640,root,apache) %{_sysconfdir}/%{name}/config.experimental-bounce-handling
-%config(noreplace) %attr(0644,root,apache) %{_sysconfdir}/%{name}/locale.php
-%config(noreplace) %attr(0644,root,apache) %{_sysconfdir}/%{name}/EN_AU.php
-%config(noreplace) %attr(0644,root,apache) %{_sysconfdir}/%{name}/NO_no.php
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.conf
 %config(noreplace) %{_sysconfdir}/php.d/%{name}.ini
 %config(noreplace) %attr(0755,root,root) %{_sysconfdir}/cron.daily/%{name}

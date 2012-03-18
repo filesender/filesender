@@ -69,7 +69,7 @@ class DB {
     	catch(PDOException $e)
     	{
 		logEntry($e->getMessage());
-    	displayError($e->getMessage());
+    	displayError("Configuration Error: Unable to connect to database");
     	}
 		return $this->connection;
     }
@@ -133,7 +133,8 @@ class DB {
 		}
 		catch(PDOException $e)
                 {
-     				displayError($e->getMessage(). " on query: ".$query);
+     				displayError("Error: There has been a database error, please check log file.");
+					logEntry($e->getMessage(). " on query: ".$query);
 					exit;
                 }
 

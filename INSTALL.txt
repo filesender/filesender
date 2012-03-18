@@ -43,27 +43,8 @@ version to 1.0.x.
 IMPORTANT: Upgrading from versions older then Beta-0.1.17
 =========================================================
 
-* A new naming scheme to store files on the server was introduced in
-Beta-0.1.17. Please run 
-
-  php <filesenderbase>/scripts/convert-filenames.php
-
-*after* upgrading to Beta 0.1.17 or newer. If you need to downgrade
-to a previous version run
-
-  php <filesenderbase>/scripts/convert-filenames.php revert
-
-*before* downgrading.
-
-YOU ONLY NEED TO DO THIS ONCE. If you upgrade from for example Beta-0.1.18 to
-RELEASE-1.0.x you do not need to repeat this step. So only run the script when
-upgrading from Beta-0.1.16 or older.
-
-* As of version Beta-0.1.17 the expiration of files and vouchers is handled
-by a script to be called by cron. Please see the installation instructions at
-https://www.assembla.com/wiki/show/file_sender/Documentation_for_v1-0 on how
-to install such a cron job.
-
+As of version 1.5 this is not supported anymore. If you need
+this please first upgrade to 1.1 and then to 1.5. 
 
 IMPORTANT: Upgrading from previous betas in general
 ===================================================

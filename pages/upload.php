@@ -293,6 +293,7 @@
 		if(result == "err_expmissing") { $("#expiry_msg").show();} // missing expiry date
 		if(result == "err_exoutofrange") { $("#expiry_msg").show();} // expiry date out of range
 		if(result == "err_invalidemail") { $("#fileto_msg").show();} // 1 or more emails invalid
+		if(result == "err_invalidfilename") { $("#file_msg").show();} //  invalid filename
 		if(result == "err_nodiskspace") { errorDialog(errmsg_disk_space);}
 		})
 		}
@@ -365,6 +366,7 @@ function validateextension(filename)
 // Validate FILE (HTML5 only)
 function validate_file()
 {
+
 	fileMsg("");
 	if(!document.getElementById("fileToUpload").files[0])
 	{
@@ -536,8 +538,8 @@ function keepMeAlive()
   <form id="form1" enctype="multipart/form-data" method="post" action="fs_uploadit.php">
     <table width="100%" border="0">
       <tr>
-        <td width="130" class=" mandatory"><?php echo lang("_TO") ; ?>:</td>
-        <td colspan="2" valign="middle"><input name="fileto" title="<?php echo lang("_EMAIL_SEPARATOR_MSG") ; ?>" type="text" id="fileto" onchange="validate_fileto()" />
+        <td width="130" class=" mandatory" id="upload_to"><?php echo lang("_TO") ; ?>:</td>
+        <td colspan="2" valign="middle"><input name="fileto" title="<?php echo lang("_EMAIL_SEPARATOR_MSG") ; ?>" type="text" id="fileto"/>
         <div id="fileto_msg" style="display: none" class="validation_msg"><?php echo lang("_INVALID_MISSING_EMAIL"); ?></div>
         <div id="maxemails_msg" style="display: none" class="validation_msg"><?php echo lang("_MAXEMAILS"); ?> <?php echo $config['max_email_recipients'] ?>.</div>
         </td>
@@ -564,22 +566,22 @@ function keepMeAlive()
         </table></td>
        </tr>
       <tr>
-        <td class=" mandatory"><?php echo lang("_FROM"); ?>:</td>
+        <td class=" mandatory" id="upload_from"><?php echo lang("_FROM"); ?>:</td>
         <td colspan="2"><?php echo $senderemail ?>
           <input name="filefrom" type="hidden" id="filefrom" value="<?php echo $senderemail ?>" size="40" />
           </td>
         </tr>
       <tr>
-        <td class=""><?php echo lang("_SUBJECT"); ?>: (<?php echo lang("_OPTIONAL"); ?>)</td>
+        <td class="" id="upload_subject"><?php echo lang("_SUBJECT"); ?>: (<?php echo lang("_OPTIONAL"); ?>)</td>
         <td colspan="2"><input name="filesubject" type="text" id="filesubject" />
         </td>
         </tr>
       <tr>
-        <td class=""><?php echo lang("_MESSAGE"); ?>: (<?php echo lang("_OPTIONAL"); ?>)</td>
+        <td class="" id="upload_message"><?php echo lang("_MESSAGE"); ?>: (<?php echo lang("_OPTIONAL"); ?>)</td>
         <td colspan="2"><textarea name="filemessage" cols="57" rows="4" id="filemessage"></textarea></td>
       </tr>
       <tr>
-        <td class=" mandatory"><?php echo lang("_EXPIRY_DATE"); ?>:
+        <td class=" mandatory" id="upload_expirydate"><?php echo lang("_EXPIRY_DATE"); ?>:
           <input type="hidden" id="fileexpirydate" name="fileexpirydate" value="<?php echo date($lang['datedisplayformat'],strtotime("+".$config['default_daysvalid']." day"));?>" /></td>
         <td colspan="2"><input id="datepicker" name="datepicker" title="<?php echo lang('_DP_dateFormat'); ?>" onchange="validate_expiry()" />
           <div id="expiry_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_EXPIRY_DATE"); ?></div>

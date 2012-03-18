@@ -55,8 +55,9 @@ public function loadConfig() {
 	$config['admin'] = ''; // UID's (from $config['saml_uid_attribute']) that have Administrator permissions
 	$config['adminEmail'] = ''; // Email address(es, separated by ,) to receive administrative messages (low disk space warning)
 	$config['Default_TimeZone'] = 'Australia/Sydney';
+	$config['site_defaultlanguage'] = 'EN_AU'; // available languages EN_AU, NO_no, NL_nl
 	$config['site_name'] = 'FileSender'; // Friendly name used for your FileSender instance
-	$config["site_splashtext"] = "FileSender is a secure way to share large files with anyone! Logon to upload your files or invite people to send you a file.";
+	
 
 	// UI Settings
 	$config['datedisplayformat'] = "d-m-Y"; // Format for displaying date/time, use PHP date() format string syntax
@@ -357,14 +358,14 @@ Dear Sir, Madam,<BR><BR>A voucher from {filefrom} has been cancelled.<BR><BR>
 	$config['defaultfilecancelled'] = "{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}
 Dear Sir, Madam,
 
-The file '{fileoriginalname}' from {filefrom} has been cancelled and is no longer available to download.
+The file '{fileoriginalname}' from {filefrom} has been deleted and is no longer available to download.
 
 Best regards,
 
 {siteName}{CRLF}{CRLF}--simple_mime_boundary{CRLF}Content-type:text/html; charset={charset}{CRLF}{CRLF}
 <HTML>
 <BODY>
-Dear Sir, Madam,<BR><BR>The file '{htmlfileoriginalname}' from {filefrom} has been cancelled and is no longer available to download.<BR><BR>
+Dear Sir, Madam,<BR><BR>The file '{htmlfileoriginalname}' from {filefrom} has been deleted and is no longer available to download.<BR><BR>
 	<P>Best regards,</P>
 <P>{siteName}</P>
 </BODY>
@@ -382,7 +383,6 @@ Dear Sir, Madam,<BR><BR>The file '{htmlfileoriginalname}' from {filefrom} has be
 	$config['available_space'] = '20000M';
 	$config['about'] = true;
 	$config["help_link_visible"] = true;
-	$config['site_defaultlanguage'] = 'EN_AU'; // available languages EN_AU, NO_no, NL_nl
 	$config['site_icon'] = 'cloudstor.png';
 	$config['site_css'] = '';
 	

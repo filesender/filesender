@@ -170,7 +170,6 @@ function openabout()
 	?>
 	</div>
 	</div>
-	<div id="content">
 	<div id="scratch" class="scratch_msg">
 	<?php
 		if(array_key_exists("scratch", $_SESSION )) {
@@ -181,22 +180,29 @@ function openabout()
 	</div>	
 	<div id="userinformation">
 	<?php 
-	// display user details if authenticated and not a voucher
-	echo "<div class='welcomeuser'>";
-	if(	$authvoucher->aVoucher() || $s == "completev") 
-	{ 
-		echo lang("_WELCOMEGUEST");
-	} 
-	else if ($authsaml->isAuth() )
+
+	// set user attributes from identity provider
+	if ($authsaml->isAuth() )
 	{
 		$attributes = $authsaml->sAuth();
-		echo lang("_WELCOME")." ";
-		if($config["displayUserName"]) { 
+	}
+
+
+	// display user details if desired
+	if($config["displayUserName"])
+	{
+		echo "<div class='welcomeuser'>";
+		if(	$authvoucher->aVoucher() || $s == "completev") 
+		{ 
+			echo lang("_WELCOMEGUEST");
+		} 
+		else if ($authsaml->isAuth() )
+		{
+			echo lang("_WELCOME")." ";
 			echo $attributes["cn"];
 		}
+		echo "</div>";
 	}
-	echo "</div>";
-
 	$versiondisplay = "";
 	if($config["site_showStats"])
 	{
@@ -209,6 +215,7 @@ function openabout()
 	echo "<div class='versionnumber'>" .$versiondisplay."</div>";
 ?>
 	</div>
+		<div id="content">
 <?php
 	// checks if url has vid=xxxxxxx and that voucher is valid 
 	if(	$authvoucher->aVoucher())
@@ -226,20 +233,33 @@ function openabout()
 		} else if($voucherData[0]["filestatus"] == "Closed")
 		{
 ?>
+	<div id="box">
 	<p>
-		<?php echo lang("_VOUCHER_CANCELLED"); ?>
+		<?php echo lang("_VOUCHER_USED"); ?>
 	</p>
+	</div>
 <?php
 	}
  	else if($voucherData[0]["filestatus"] == "Voucher Cancelled")
 	{
 ?>
-	<div id="box">
+		<div id="box">
 		<?php echo '<div id="pageheading"></div>'; ?> 
 		<p>
 		<?php echo lang("_VOUCHER_CANCELLED"); ?>
 		</p>
-	</div>
+		</div>
+<?php
+		}
+		else if($voucherData[0]["filestatus"] == "Deleted")
+	{
+?>
+		<div id="box">
+		<?php echo '<div id="pageheading"></div>'; ?> 
+		<p>
+		<?php echo lang("_FILE_DELETED"); ?>
+		</p>
+		</div>
 <?php
 		}
 	} else if($s == "upload") 
@@ -264,6 +284,12 @@ function openabout()
 	{
 ?>
 	<div id="message"><?php echo lang("_ERROR_UPLOADING_FILE"); ?></div></div>
+<?php	
+	}	
+	else if($s == "filesizeincorrect") 
+	{
+?>
+	<div id="message"><?php echo lang("_ERROR_INCORRECT_FILE_SIZE"); ?></div></div>
 <?php	
 	}	
 	else if($s == "complete" || $s == "completev") 
