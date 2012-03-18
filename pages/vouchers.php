@@ -85,9 +85,9 @@ $(function() {
 		}
 	});
 		$('.ui-dialog-buttonpane button:contains(cancelBTN)').attr("id","btn_cancel");            
-		$('#btn_cancel').html('<?php echo lang("_CANCEL") ?>')  
+		$('#btn_cancel').html('<?php echo lang("_NO") ?>')  
 		$('.ui-dialog-buttonpane button:contains(deleteBTN)').attr("id","btn_delete");            
-		$('#btn_delete').html('<?php echo lang("_DELETE") ?>')  
+		$('#btn_delete').html('<?php echo lang("_YES") ?>')  
 });
 
 function hidemessages()

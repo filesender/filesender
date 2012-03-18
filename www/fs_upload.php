@@ -93,23 +93,17 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 
 	// Finish an upload (called after a validateupload and single/chunk sequence)
 	case 'uploadcomplete': 
+	
+		$resultArray = array(); // clear result array for errors
+		
 		// change each file from pending to done
 		$data = $functions->getVoucherData($_REQUEST["vid"]);
 		$tempFilename = generateTempFilename($data);
+		$complete = "complete";
 		
 		// rename file to correct name
 		$fileuid = getGUID();
-		logEntry("Rename the file ".$uploadfolder.$tempFilename+":"+ $uploadfolder.$fileuid.".tmp");
-		if (!file_exists($uploadfolder.$tempFilename)) {
-			echo "err_cannotrenamefile"; exit;
-		}
-	
-        	if(!rename($uploadfolder.$tempFilename, $uploadfolder.$fileuid.".tmp")) {
-			echo "err_cannotrenamefile"; exit;
-                	logEntry("Unable to move the file ".$uploadfolder.$tempFilename);
-         	} else {
-			logEntry("Rename the file ".$uploadfolder.$fileuid.".tmp");
-		}
+		
 		
 		// close pending file
 		$functions->closeVoucher($data["fileid"]);
@@ -119,6 +113,34 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 			$functions->closeCompleteVoucher($_SESSION['voucher']);
 			logEntry("DEBUG fs_upload: Close voucher = " . $_SESSION['voucher']);
 			$_SESSION['voucher'] = NULL;
+			$_SESSION["aup"] = NULL;
+			$complete = "completev";
+		}
+		
+		// error if file size uploaded doesn't matches the file size intended to upload
+		// remove the offending file or it will assume resume evry re-attempt
+		if($data["filesize"] != checkFileSize($uploadfolder.$tempFilename))
+		{
+			logEntry("DEBUG fs_upload: File size incorrect after upload = Original:" .$data["filesize"] . " != Actual:". checkFileSize($uploadfolder.$tempFilename) );
+			logEntry("DEBUG fs_upload: File  ".$tempFilename." was removed to prevent resume");
+			if(file_exists($uploadfolder.$tempFilename))
+			{
+				unlink($uploadfolder.$tempFilename);
+			}
+			echo "err_filesizeincorrect";
+			exit;
+		}
+		
+		logEntry("Rename the file ".$uploadfolder.$tempFilename+":"+ $uploadfolder.$fileuid.".tmp");
+		if (!file_exists($uploadfolder.$tempFilename)) {
+			echo "err_cannotrenamefile"; exit;
+		}
+	
+        	if(!rename($uploadfolder.$tempFilename, $uploadfolder.$fileuid.".tmp")) {
+				echo "err_cannotrenamefile"; exit;
+            	logEntry("Unable to move the file ".$uploadfolder.$tempFilename);
+         	} else {
+				logEntry("Rename the file ".$uploadfolder.$fileuid.".tmp");
 		}
 		
 		$data["fileuid"] = $fileuid;
@@ -126,21 +148,19 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 		$data["fileexpirydate"] = date($config["db_dateformat"],strtotime($data["fileexpirydate"]));
 		
 		// loop though multiple emails
+		// TO DO: must error check here if emails do not send or fails with data insertion
 		$emailto = str_replace(",",";",$data["fileto"]);
 		$emailArray = preg_split("/;/", $emailto);
 		foreach ($emailArray as $Email) { 
 			$data["fileto"] = $Email;
 			$data["filevoucheruid"] = getGUID();
-		
+			
 			logEntry("DEBUG fs_upload: Filedata = " . print_r($data,TRUE));
 			$functions->insertFile($data);
 		}
-		// NOTE: should we prefer voucher here?
-		if($authsaml->isAuth()) { 
-			echo "complete";
-		} else {
-			echo "completev";
-		}
+		
+		echo $complete;
+
 		break;
 		
 	// validates form and adds pending file to files, returns filesize or validation message

@@ -47,17 +47,11 @@ $lang["_MY_FILES"] = "Mijn bestanden";
 $lang["_HOME"] = "Home";
 $lang["_ABOUT"] = "Over";
 $lang["_HELP"] = "Help";
-$lang["_VOUCHER_CANCELLED"] = "Uitnodiging ingetrokken";
 $lang["_DELETE_VOUCHER"] = "Trek uitnodiging in";
 $lang["_UPLOAD_COMPLETE"] = "Uw bestand is geupload en e-mail is verzonden.";
 $lang["_UPLOAD_PROGRESS"] = "Voortgang Upload";
 $lang["_DOWNLOAD"] = "Download";
 $lang["_CANCEL_UPLOAD"] = "Annuleer Upload";
-
-// site about
-$lang["_ABOUT_TEXT"] = ""; // overide in config/EN_AU.php
-// site help
-$lang["_HELP_TEXT"] = ""; // overide in config/EN_AU.php
 
 // Admin categorie namen
 
@@ -184,5 +178,8 @@ $lang["_DP_firstDay"] = '1';
 $lang["_DP_isRTL"] = 'false';
 $lang["_DP_showMonthAfterYear"] = 'false';
 $lang["_DP_yearSuffix"] = '';
+
+// Login Splash text
+$lang["_SITE_SPLASHTEXT"] = "FileSender is een veilige manier om bestanden te delen met iedereen! Meld U aan om een bestand te versturen of om iemand uit te nodigen om een bestand te sturen."; 
 
 ?>

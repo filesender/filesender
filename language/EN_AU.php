@@ -47,14 +47,12 @@ $lang["_MY_FILES"] = "My Files";
 $lang["_HOME"] = "Home";
 $lang["_ABOUT"] = "About";
 $lang["_HELP"] = "Help";
-$lang["_VOUCHER_CANCELLED"] = "Voucher Cancelled";
 $lang["_DELETE_VOUCHER"] = "Delete Voucher";
 $lang["_UPLOAD_COMPLETE"] = "Your file has been uploaded and message sent.";
 $lang["_UPLOAD_PROGRESS"] = "Upload progress";
 $lang["_DOWNLOAD"] = "Download";
 $lang["_CANCEL_UPLOAD"] = "Cancel Upload";
 
-//$lang["_"] = "";
 // admin
 $lang["_PAGE"] = "Page";
 $lang["_UP"] = "Up";
@@ -66,6 +64,7 @@ $lang["_USED"] = "Used";
 $lang["_AVAILABLE"] = "Available";
 $lang["_TEMP"] = "Temp"; // as in Temporary files
 
+// Greetings
 $lang["_WELCOME"] = "Welcome"; 
 $lang["_WELCOMEGUEST"] = "Welcome Guest"; 
 
@@ -77,7 +76,6 @@ $lang["_ERRORS"] = "Errors";
 $lang["_FILES_AVAILABLE"] = "Files Available";
 $lang["_ACTIVE_VOUCHERS"] = "Active Vouchers";
 $lang["_COMPLETE_LOG"] = "Complete Log";
-
 
 // Form Fields
 $lang["_TO"] = "To";
@@ -93,10 +91,9 @@ $lang["_TYPE"] = "Type";
 $lang["_TERMS_OF_AGREEMENT"] = "Terms of Agreement";
 $lang["_SHOW_TERMS"] = "Show Terms";
 $lang["_SHOWHIDE"] = "Show/Hide";
-$lang["_SELECT_FILE"] = "File to Upload";
 $lang["_UPLOADING_WAIT"] = "Uploading file - please wait...";
 
-// Flash button menu
+// button labels
 $lang["_UPLOAD"] = "Send a file";
 $lang["_BROWSE"] = "Browse";
 $lang["_CANCEL"] = "Cancel";
@@ -125,19 +122,21 @@ $lang["_ACCEPTTOC"] = "I accept the terms and conditions of this service.";
 $lang["_AGREETOC"] = "You MUST agree to the terms and conditions.";
 $lang["_FILE_TO_BE_RESENT"] = "File to be redistributed";
 $lang["_ERROR_UPLOADING_FILE"] = "Error uploading your file";
+$lang["_ERROR_INCORRECT_FILE_SIZE"] = "There has been a problem uploading your file. <br />The file size on the server does not match your original file. <br /><br />Please contact your Administrator.";
 $lang["_MAXEMAILS"] = "The maximum number of email addresses allowed is ";
 $lang["_INVALID_DATE_FORMAT"] = "The date format is invalid.";
 $lang["_DISK_SPACE_ERROR"] = "There is not enough drive space on this service. Please contact the service administration or upload a smaller file.";
 
-
+// Logout page
 $lang["_LOGOUT_COMPLETE"] = "Logout Complete";
 
 // vouchers
 $lang["_SEND_NEW_VOUCHER"] = "A Voucher allows someone to send you a file.<br />
 To create a voucher, enter an email address then select Send Voucher.<br />
 An email will be sent to the recipient with a link to use the Voucher.";
-$lang["_EMAIL_SEPARATOR_MSG"] = "Multiple email addresses separated by , or ;";
 
+// User interaction
+$lang["_EMAIL_SEPARATOR_MSG"] = "Multiple email addresses separated by , or ;";
 $lang["_NO_FILES"] = "There are currently no files available";
 $lang["_ARE_YOU_SURE"] = "Are you sure?";
 $lang["_DELETE_FILE"] = "Delete File";
@@ -155,10 +154,10 @@ $lang["_START_DOWNLOAD"] = "Start Download";
 $lang["_VOUCHER_SENT"] = "Voucher Sent";
 $lang["_VOUCHER_DELETED"] = "Voucher Deleted";
 $lang["_VOUCHER_CANCELLED"] = "This voucher has been cancelled.";
+$lang["_VOUCHER_USED"] = "This voucher has already been used.";
 $lang["_STARTED_DOWNLOADING"] = "Your file should start downloading.";
+$lang["_FILE_DELETED"] = "This file has been deleted.";
 
-// files
-$lang["_FILE_DELETED"] = "File Deleted";
 // steps
 $lang["_STEP1"] = "Enter delivery email address(es)";
 $lang["_STEP2"] = "Set expiry date";
@@ -167,18 +166,11 @@ $lang["_STEP4"] = "Click Send";
 $lang["_HTML5Supported"] = "Uploads over 2GB supported!";
 $lang["_HTML5NotSupported"] = "Uploads over 2GB<br />not supported!";			
 
-// site about
-$lang["_ABOUT_TEXT"] = "About ..."; // overide in config/EN_AU.php
-// site help
-$lang["_HELP_TEXT"] = "Help ..."; // overide in config/EN_AU.php
-
 $lang["_OPTIONAL"] = "optional";
 
 // confirmation
 $lang["_CONFIRM_DELETE_FILE"] = "Are you sure you want to delete this File?";
 $lang["_CONFIRM_DELETE_VOUCHER"] = "Are you sure you want to delete this voucher?";
-
-$lang["_AUPTERMS"] = "AuP Terms and conditions";
 
 // standard date display format
 $lang['datedisplayformat'] = "d/m/Y"; // Format for displaying date/time, use PHP date() format string syntax 
@@ -199,4 +191,58 @@ $lang["_DP_firstDay"] = '1';
 $lang["_DP_isRTL"] = 'false';
 $lang["_DP_showMonthAfterYear"] = 'false';
 $lang["_DP_yearSuffix"] = '';
+
+// Login Splash text
+$lang["_SITE_SPLASHTEXT"] = "FileSender is a secure way to share large files with anyone! Logon to upload your files or invite people to send you a file.";
+
+// site help
+$lang["_HELP_TEXT"] = '
+<div>
+<div align="left" style="padding:5px">
+<h4>Login</h4> 
+<ul>
+    <li>If you do not see your institution in the list of Identity Providers (IdPs), or your institutional login fails, please contact your local IT support</li>
+</ul>
+
+<h4>Uploads of <i>any size</i> with HTML5</h4>
+<ul>
+        <li>If you see <img src="images/html5_installed.png" alt="green HTML5 tick" class="textmiddle" style="display:inline" /> in FileSender\'s top right-hand corner this method works for you</li>
+	<li>You need a very recent browser supporting HTML5, the latest version of the "language of the web".</li>
+	<li>Currently Firefox4 (and higher) and Chrome on both Windows, Mac OSX and Linux are known to work.</li>
+	<li>Please use the <a href="http://caniuse.com/#feat=fileapi" target="_blank">"When can I use..."</A> website to monitor implementation progress of the HTML5 FileAPI for all major browsers.  In particular support for <a href="http://caniuse.com/#feat=filereader" target="_blank">FileReader API</A> and <A href="http://caniuse.com/#feat=bloburls" target="_blank">Blob URLs</A> needs to be light green (=supported) for a browser to support uploads larger then 2GB </li>
+</ul>
+
+<h4>Downloads of any size</h4>
+<ul>
+        <li>You need a modern browser, Adobe Flash or HTML5 are <b>not</b> required for downloads</li>
+</ul>
+
+<h4>Uploads smaller than 2 Gigabytes (2GB) with Adobe Flash</h4>
+<ul>
+	<li>If you can watch YouTube videos this method should work for you</li>
+	<li>You need a modern browser running version 10 (or higher) of <a target="_blank" href="http://www.adobe.com/software/flash/about/">Adobe Flash.</a></li>
+	<li>FileSender will warn you should you try to upload a file that is too big for this method</li>
+</ul>
+
+
+
+<h4>Limits of this FileSender installation</h4>
+<ul>
+    <li><strong>
+      Maximum recipient  addresses per email:</strong> Up to '. $config["max_email_recipients"].' email addresses separated by  a comma or semi-colon</li>
+    <li><strong>Maximum number of files per  upload:</strong> one - to upload several files in one transaction, compress them into a  single archive first</li>
+    <li><strong>Maximum file size per upload, with Adobe Flash only: </strong>'. formatBytes($config["max_flash_upload_size"]).' </li>
+    <li><strong>Maximum file size per upload, with HTML5: </strong>'. formatBytes($config["max_html5_upload_size"]).'</li>
+    <li><strong>Maximum file / voucher expiry days: </strong>'. $config["default_daysvalid"].' </li>
+</ul>
+<p>For more information please visit <a href="http://www.filesender.org/">www.filesender.org</a></p>
+</div>
+</div>';
+
+// site about
+$lang["_ABOUT_TEXT"] = ' <div align="left" style="padding:5px">'. htmlentities($config['site_name']) .' is an installation of FileSender (<a rel="nofollow" href="http://www.filesender.org/">www.filesender.org</a>), which is developed to the requirements of the higher education and research community.</div>';
+
+// site AUP terms
+$lang["_AUPTERMS"] = "AuP Terms and conditions...";
+
 ?>

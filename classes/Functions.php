@@ -531,28 +531,31 @@ class Functions {
 			$voucher = 'Voucher';
 			$blank = '';
 			$zero = 0;
-			
-			$statement->bindParam(':fileexpirydate', date($config['db_dateformat'], strtotime($expiry)));
+			$fileexpiryParam = date($config['db_dateformat'], strtotime($expiry));
+			$statement->bindParam(':fileexpirydate',$fileexpiryParam);
 			$statement->bindParam(':fileto', $to);
 			$statement->bindParam(':filesubject', $voucher);
-			$statement->bindParam(':fileactivitydate',  date($config['db_dateformat'], time()));
-			
+			$fileactivitydateParam =  date($config['db_dateformat'], time());
+			$statement->bindParam(':fileactivitydate',$fileactivitydateParam );	
 			$statement->bindParam(':filevoucheruid', $filevoucheruid );
 			$statement->bindParam(':filemessage', $blank);
 			$statement->bindParam(':filefrom', $authAttributes["email"]);
 			$statement->bindParam(':filesize', $zero);
 			$statement->bindParam(':fileoriginalname', $blank);
 			$statement->bindParam(':filestatus', $voucher);
-			
-			$statement->bindParam(':fileip4address', $dbCheck->checkIp($_SERVER['REMOTE_ADDR']));
-			$statement->bindParam(':fileip6address', $dbCheck->checkIp6($_SERVER['REMOTE_ADDR']));
+			$fileip4addressParam = $dbCheck->checkIp($_SERVER['REMOTE_ADDR']);
+			$statement->bindParam(':fileip4address',$fileip4addressParam );
+			$fileip6addressParam = $dbCheck->checkIp6($_SERVER['REMOTE_ADDR']);
+			$statement->bindParam(':fileip6address', $fileip6addressParam);
 			$statement->bindParam(':filesendersname', $blank);
 			$statement->bindParam(':filereceiversname', $blank);
 			$statement->bindParam(':filevouchertype', $blank);
-			$statement->bindParam(':fileuid', getGUID());
+			$fileuidParam = getGUID();
+			$statement->bindParam(':fileuid', $fileuidParam);
 			$statement->bindParam(':fileauthuseruid', $authAttributes["saml_uid_attribute"]);
 			$statement->bindParam(':fileauthuseremail', $authAttributes["email"]);
-			$statement->bindParam(':filecreateddate', date($config['db_dateformat'], time()));
+			$filecreateddateParam =  date($config['db_dateformat'], time());
+			$statement->bindParam(':filecreateddate',$filecreateddateParam);
 			try { 	
 			$statement->execute(); 
 			}
@@ -615,6 +618,13 @@ class Functions {
 		if(!isset($data["fileto"])){ array_push($errorArray, "err_tomissing");}
 		// filename missing
 		if(!isset($data["fileoriginalname"])){ array_push($errorArray, "err_invalidfilename");}
+		// filename has invalid extension - $config['ban_extension'] as array
+		if(isset($data["fileoriginalname"]) && strstr($config['ban_extension'],pathinfo($data["fileoriginalname"], PATHINFO_EXTENSION)) ){ array_push($errorArray, "err_invalidfilename");}
+		// filename blank
+		if(isset($data["fileoriginalname"]) && $data["fileoriginalname"] === ""){ array_push($errorArray, "err_invalidfilename");}
+		// filename contains invalid characters
+		if(isset($data["fileoriginalname"]) && preg_match('=^[^/?*;:{}\\\\]+\.[^/?*;:{}\\\\]+$=',$data["fileoriginalname"]) === 0){ array_push($errorArray, "err_invalidfilename");}
+		
 		// expiry out of range
 		if(strtotime($data["fileexpirydate"]) > strtotime("+".$config['default_daysvalid']." day") ||  strtotime($data["fileexpirydate"]) < strtotime("now"))
 		{
@@ -923,7 +933,7 @@ class Functions {
 			
 			$pdo = $this->db->connect();
 			$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
-			$statement = $pdo->prepare("UPDATE files SET filestatus = 'Closed' WHERE fileid = :fileid");
+			$statement = $pdo->prepare("UPDATE files SET filestatus = 'Deleted' WHERE fileid = :fileid");
 			$statement->bindParam(':fileid', $fileid);
 			
 			try { $statement->execute();}

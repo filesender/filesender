@@ -36,8 +36,13 @@ global $locales;
 
 $filesenderbase = dirname(dirname(__FILE__));
 
-//Get all possible locales
-require_once("$filesenderbase/config/locale.php");
+//Get locale override if it exists
+if(file_exists("$filesenderbase/config/locale.php")) { 
+require_once("$filesenderbase/config/locale.php"); 
+} else {
+require_once("$filesenderbase/language/locale.php");
+}
+
 //Set a default language file via the parameter.
 //We distribute En-AU ALWAYS via the project!
 function get_client_language($availableLanguages, $default='en-au'){
@@ -68,6 +73,10 @@ $lang_file = $locales[$langs];
 //By including EN-AU first, we make sure ALL used keys actually exist!
 //require_once("$filesenderbase/language/EN_AU.php");
 require_once("$filesenderbase/language/". "EN_AU.php");
+
+if(isset($config['site_defaultlanguage']) &&  file_exists("$filesenderbase/language/".$config['site_defaultlanguage'].".php")) { require_once("$filesenderbase/language/".$config['site_defaultlanguage'].".php"); };
+if(isset($config['site_defaultlanguage']) &&  file_exists("$filesenderbase/config/".$config['site_defaultlanguage'].".php")) { require_once("$filesenderbase/config/".$config['site_defaultlanguage'].".php"); };
+
 require_once("$filesenderbase/language/". $lang_file);
 
 // check for custom language files in config

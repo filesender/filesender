@@ -49,7 +49,6 @@ function customException($exception){
 	syslog((int)$exception->getCode(),$exceptionMsg);
 	// log to local log file
 	logEntry($exceptionMsg);
-
 	exit;
 
 }
@@ -110,8 +109,8 @@ function logEntry($message){
 	}
 }
 
-ini_set('display_errors', 'On');
-
+//ini_set('display_errors', 'Off');
+	
 // if debug is on then set the custom error handler
 if($config['debug'] == true || $config['debug'] == 1){
 
@@ -132,6 +131,6 @@ function displayError($errmsg)
 	if($config['displayerrors'] )
 	{
 		echo "<br /><div id='errmessage'>".$errmsg."</div>";
-	}
+	}	
 }
 ?>
