@@ -65,7 +65,11 @@ function get_client_language($availableLanguages, $default='en-au'){
 }
 
 //Get the language based on the browser accepted langauge and the avaialable locales
-$langs = get_client_language(array_keys($locales));
+if(isset($config['site_defaultlanguage'])) {
+	$langs = get_client_language(array_keys($locales), str_replace("_","-",strtolower($config['site_defaultlanguage'])));
+} else {
+	$langs = get_client_language(array_keys($locales));
+}
 // Set the language file
 $lang_file = $locales[$langs];
 //Try and include the language file
@@ -81,7 +85,7 @@ require("$filesenderbase/language/". $lang_file);
 
 // check for custom language files in config
 // load custom language from config if it exists
-if(file_exists("$filesenderbase/config/".$lang_file)) { require_once("$filesenderbase/config/".$lang_file); }
+if(file_exists("$filesenderbase/config/".$lang_file)) { require("$filesenderbase/config/".$lang_file); }
 
 function lang($item)
 {
