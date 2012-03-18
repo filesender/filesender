@@ -77,12 +77,9 @@ require_once("$filesenderbase/language/". "EN_AU.php");
 if(isset($config['site_defaultlanguage']) &&  file_exists("$filesenderbase/language/".$config['site_defaultlanguage'].".php")) { require_once("$filesenderbase/language/".$config['site_defaultlanguage'].".php"); };
 if(isset($config['site_defaultlanguage']) &&  file_exists("$filesenderbase/config/".$config['site_defaultlanguage'].".php")) { require_once("$filesenderbase/config/".$config['site_defaultlanguage'].".php"); };
 
-require_once("$filesenderbase/language/". $lang_file);
+require("$filesenderbase/language/". $lang_file);
 
 // check for custom language files in config
-// load EN_AU from config if it exists  
-if(file_exists("$filesenderbase/config/EN_AU.php")) { require_once("$filesenderbase/config/EN_AU.php"); }
-
 // load custom language from config if it exists
 if(file_exists("$filesenderbase/config/".$lang_file)) { require_once("$filesenderbase/config/".$lang_file); }
 
