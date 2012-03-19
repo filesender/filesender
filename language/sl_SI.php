@@ -30,10 +30,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/* ---------------------------------
+/* ------------------------------------------------
  * sl_SI Language File
- * Contributed by ARNES
- * ---------------------------------
+ * Contributed and maintained by Andrej Bagon/Arnes
+ * ------------------------------------------------
  * 
  */
 // main menu items
