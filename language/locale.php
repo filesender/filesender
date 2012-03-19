@@ -49,6 +49,8 @@ $locales  =  array(
 	"no-no" => "NO_no.php",
 	"no" => "NO_no.php",
 	"nb" => "NO_no.php",
-	"nb-no" => "NO_no.php"
+	"nb-no" => "NO_no.php",
+	"sl" => "sl_SI.php",
+	"sl-si" => "sl_SI.php"
 );
 ?>
