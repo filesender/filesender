@@ -38,7 +38,7 @@
 // main menu items
 $lang["_ADMIN"] = "Administration";
 $lang["_NEW_UPLOAD"] = "Send File";
-$lang["_VOUCHERS"] = "Guest invite";
+$lang["_VOUCHERS"] = "Guest Voucher";
 $lang["_LOGON"] = "Logon";
 $lang["_LOG_OFF"] = "Log Off";
 $lang["_MY_FILES"] = "My Files";
