@@ -36,7 +36,7 @@
  * 
  */
 // Hoofdmenu items
-$lang["_ADMIN"] = "Administratie";
+$lang["_ADMIN"] = "Beheer";
 $lang["_NEW_UPLOAD"] = "Nieuwe Upload";
 $lang["_VOUCHERS"] = "Uitnodiging";
 $lang["_LOGON"] = "Aanmelden";
@@ -48,7 +48,7 @@ $lang["_HOME"] = "Home";
 $lang["_ABOUT"] = "Over";
 $lang["_HELP"] = "Help";
 $lang["_DELETE_VOUCHER"] = "Trek uitnodiging in";
-$lang["_UPLOAD_COMPLETE"] = "Uw bestand is geupload en e-mail is verzonden.";
+$lang["_UPLOAD_COMPLETE"] = "Uw bestand is geüpload en e-mail is verzonden.";
 $lang["_UPLOAD_PROGRESS"] = "Voortgang Upload";
 $lang["_DOWNLOAD"] = "Download";
 $lang["_CANCEL_UPLOAD"] = "Annuleer Upload";
@@ -91,23 +91,31 @@ $lang["_EXPIRY"] = "Vervaldatum";
 $lang["_EXPIRY_DATE"] = "Vervaldatum";
 $lang["_TYPE"] = "Type";
 
-$lang["_TERMS_OF_AGREEMENT"] = "Algemene Overeenkomst";
+$lang["_TERMS_OF_AGREEMENT"] = "Algemene voorwaarden";
 $lang["_SHOW_TERMS"] = "Toon Voorwaarden";
 $lang["_SHOWHIDE"] = "Toon/Verberg";
 $lang["_SELECT_FILE"] = "Selecteer een bestand om te uploaden";
-$lang["_UPLOADING_WAIT"] = "Uploaden bestand - even geduld aub ...";
+$lang["_UPLOADING_WAIT"] = "Uploaden bestand - even geduld a.u.b. ...";
 $lang["_EMAIL_SEPARATOR_MSG"] = "Meerdere e-mailadressen gescheiden door, of ;";
+$lang["_NO_FILES"] = "Er zijn momenteel geen bestanden beschikbaar";
 
 $lang["_AUPTERMS"] = "Algemene voorwaarden";
 $lang["_ACCEPTTOC"] = "Ik ga akkoord met de bepalingen en voorwaarden van deze dienst.";	
 $lang["_AGREETOC"] = "U moet akkoord gaan met de voorwaarden.";
 
+$lang["_ERROR_INCORRECT_FILE_SIZE"] = "Er is een probleem opgetreden bij het uploaden van uw bestand. <br />De bestandsgrootte op de server wijkt af van de grootte van uw eigen kopie.<br /><br />Neem contact op met de beheerder.";
+$lang["_MAXEMAILS"] = "Het maximum aantal toegestane mailadressen is ";
+$lang["_INVALID_DATE_FORMAT"] = "De datum is in een ongeldig formaat.";
+$lang["_DISK_SPACE_ERROR"] = "Er is niet genoeg vrije ruimte op deze service. Neemt u s.v.p. contact op met de beheerder of upload een kleiner bestand.";
+
+
 // Vouchers
 $lang["_SEND_NEW_VOUCHER"] = "Met een Uitnodiging kunt u iemand een bestand laten sturen.<br />
-Om een Uitnodiging te maken voer een e-mailadres in en klik op Stuur Uitnodiging.<br />
+Om een Uitnodiging te maken, voer een e-mailadres in en klik op Stuur Uitnodiging.<br />
 Er wordt dan een e-mail verstuurd naar de ontvanger met daarin een link om de uitnodiging te gebruiken.";
 $lang["_SEND_VOUCHER_TO"] = "Stuur uitnodiging naar";
-$lang["_SEND_VOUCHER"] = "Stuur Uitnodiging";
+$lang["_SEND_VOUCHER"] = "Stuur uitnodiging";
+$lang["_VOUCHER_USED"] = "Deze uitnodiging is reeds gebruikt.";
 
 // Upload pagina: button menu
 $lang["_UPLOAD"] = "Upload";
@@ -116,7 +124,7 @@ $lang["_CANCEL"] = "Annuleer";
 $lang["_OPEN"] = "Open";
 $lang["_CLOSE"] = "Sluit";
 $lang["_OK"] = "OK";
-$lang["_SEND"] = "Stuur";
+$lang["_SEND"] = "Verzend";
 $lang["_DELETE"] = "Verwijder";
 $lang["_YES"] = "Ja";
 $lang["_NO"] = "Nee";
@@ -125,7 +133,7 @@ $lang["_NO"] = "Nee";
 $lang["_STEP1"] = "Voer één of meer e-mailadressen in";
 $lang["_STEP2"] = "Stel een vervaldatum in";
 $lang["_STEP3"] = "Selecteer een bestand";
-$lang["_STEP4"] = "Selecteer Upload";
+$lang["_STEP4"] = "Selecteer Verzend";
 $lang["_HTML5Supported"] = "Uploads groter dan 2GB mogelijk!";
 $lang["_HTML5NotSupported"] = "Uploads groter dan 2GB niet mogelijk!";
 
@@ -133,28 +141,35 @@ $lang["_HTML5NotSupported"] = "Uploads groter dan 2GB niet mogelijk!";
 $lang["_INVALID_MISSING_EMAIL"] = "Ongeldig of ontbrekend e-mailadres";
 $lang["_INVALID_EXPIRY_DATE"] = "Ongeldige vervaldatum";
 $lang["_INVALID_FILE"] = "Ongeldig bestand";
-$lang["_INVALID_FILEVOUCHERID"] = "Invalid File or Voucher ID";	
+$lang["_INVALID_FILEVOUCHERID"] = "Ongeldig bestands- of uitnodigings-ID";	
 $lang["_INVALID_FILESIZE_ZERO"] = "Ongeldige bestandsgrootte van 0 bytes. Kies een ander bestand.";
 $lang["_INVALID_FILE_EXT"] = "Ongeldig bestandstype.";
 $lang["_INVALID_TOO_LARGE_1"] = "Bestand kan niet groter zijn dan";
+$lang["_AUTH_ERROR"] = "U bent niet meer aangemeld.<br />Wellicht is uw sessie verlopen of was er een probleem op de server.<br /><br />Logt u s.v.p. opnieuw in en probeer het nogmaals.";
 $lang["_SELECT_ANOTHER_FILE"] = "Kies een ander bestand.";
+$lang["_INVALID_VOUCHER"] = "Deze uitnodiging is niet meer geldig.<br />Neem contact op met degene die u uitnodigde.";
 $lang["_INVALID_FILE_NAME"] = "Ongeldige bestandsnaam. Hernoem het bestand en probeer het opnieuw.";
-$lang["_INVALID_SIZE_USEHTML5"] = "Selecteer een ander bestand of gebruik een geschikte HTML5 browser voor grotere bestanden.";
+$lang["_INVALID_SIZE_USEHTML5"] = "Selecteer een ander bestand of gebruik een geschikte HTML5-browser voor grotere bestanden.";
 $lang["_FILE_TO_BE_RESENT"] = "Bestand om opnieuw te versturen";
 $lang["_ERROR_UPLOADING_FILE"] = "Fout bij het uploaden van het bestand";
 $lang["_LOGOUT_COMPLETE"] = "U bent afgemeld";
 
-$lang["_ARE_YOU_SURE"] = "Weet U dit zeker?";
+$lang["_ARE_YOU_SURE"] = "Weet u dit zeker?";
 $lang["_DELETE_FILE"] = "Verwijder bestand";
 $lang["_EMAIL_SENT"] = "E-mail verstuurd";
 $lang["_FILE_SIZE"] = "Bestandsgrootte";
 $lang["_FILE_RESENT"] = "Bestand opnieuw verstuurd";
+$lang["_MESSAGE_RESENT"] = "Bericht opnieuw verstuurd";
 $lang["_ME"] = "Mij";
+$lang["_RE_SEND_EMAIL"] = "E-mail opnieuw versturen";
+$lang["_NEW_RECIPIENT"] = "Ontvanger toevoegen";
 $lang["_START_DOWNLOAD"] = "Start Download";
 $lang["_VOUCHER_SENT"] = "Uitnodiging verstuurd";
 $lang["_VOUCHER_DELETED"] = "Uitnodiging ingetrokken";
 $lang["_VOUCHER_CANCELLED"] = "Deze uitnodiging is ingetrokken.";
 $lang["_STARTED_DOWNLOADING"] = "De download van het bestand zal beginnen.";
+$lang["_FILE_DELETED"] = "Dit bestand is verwijderd.";
+
 // confirmation
 $lang["_CONFIRM_DELETE_FILE"] = "Wilt U dit bestand echt verwijderen?";
 $lang["_CONFIRM_DELETE_VOUCHER"] = "Wilt U deze uitnodiging echt intrekken?";
@@ -168,7 +183,7 @@ $lang["_DP_prevText"] = '←'; //Prev
 $lang["_DP_nextText"] = '→'; // Next
 $lang["_DP_currentText"] = 'Vandaag'; // Today
 $lang["_DP_monthNames"] = "['januari', 'februari', 'maart', 'april', 'mei', 'juni','juli', 'augustus', 'september', 'oktober', 'november', 'december']";
-$lang["_DP_monthNamesShort"] = "['jan', 'feb', 'maa', 'apr', 'mei', 'jun','jul', 'aug', 'sep', 'okt', 'nov', 'dec']";
+$lang["_DP_monthNamesShort"] = "['jan', 'feb', 'mrt', 'apr', 'mei', 'jun','jul', 'aug', 'sep', 'okt', 'nov', 'dec']";
 $lang["_DP_dayNames"] = "['zondag', 'maandag', 'dinsdag', 'woensdag', 'donderdag', 'vrijdag', 'zaterdag']";
 $lang["_DP_dayNamesShort"] = "['zon', 'maa', 'din', 'woe', 'don', 'vri', 'zat']";
 $lang["_DP_dayNamesMin"] = "['zo', 'ma', 'di', 'wo', 'do', 'vr', 'za']";
@@ -181,5 +196,9 @@ $lang["_DP_yearSuffix"] = '';
 
 // Login Splash text
 $lang["_SITE_SPLASHTEXT"] = "FileSender is een veilige manier om bestanden te delen met iedereen! Meld U aan om een bestand te versturen of om iemand uit te nodigen om een bestand te sturen."; 
+
+// site about
+$lang["_ABOUT_TEXT"] = ' <div align="left" style="padding:5px">'. htmlentities($config['site_name']) .' is een instantie van FileSender (<a rel="nofollow" href="http://www.filesender.org/">www.filesender.org</a>), ontwikkeld om te voldoen aan de eisen van de hoger onderwijs en onderzoeksgemeenschap.</div>';
+
 
 ?>
