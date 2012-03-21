@@ -208,7 +208,7 @@ $lang["_HELP_TEXT"] = '
 
 <h4>Uploads van <i>willekeurig welke grootte</i> via HTML5</h4>
 <ul>
-        <li>Als u het <img src="images/html5_installed.png" alt="green HTML5 tick" class="textmiddle" style="display:inline" />-symbool ziet in het dan is deze methode voor u beschikbaar.</li>
+        <li>Als u het <img src="images/html5_installed.png" alt="green HTML5 tick" class="textmiddle" style="display:inline" />-symbool ziet dan is deze methode voor u beschikbaar.</li>
 	<li>Hiervoor is een relatief nieuwe browserversie nodig die HTML5 ondersteunt, de nieuwste editie van de "taal van het web".</li>
 	<li>Momenteel geldt dit in ieder geval voor Firefox 4 (en hoger) en Chrome op Windows, Mac OS X en Linux.</li>
 	<li>Gebruik de <a href="http://caniuse.com/#feat=fileapi" target="_blank">"When can I use..."</A>-website om de voortgang van de implementatie van HTML5 FileAPI in de belangrijkste browsers te zien. Met name ondersteuning voor de <a href="http://caniuse.com/#feat=filereader" target="_blank">FileReader API</A> en voor <A href="http://caniuse.com/#feat=bloburls" target="_blank">Blob URLs</A> moet groen licht (=ondersteund) krijgen, wil een browser uploads groter dan 2GB kunnen doen.</li>

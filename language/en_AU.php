@@ -206,9 +206,9 @@ $lang["_HELP_TEXT"] = '
 
 <h4>Uploads of <i>any size</i> with HTML5</h4>
 <ul>
-        <li>If you see <img src="images/html5_installed.png" alt="green HTML5 tick" class="textmiddle" style="display:inline" /> in FileSender\'s top right-hand corner this method works for you</li>
+        <li>If you see <img src="images/html5_installed.png" alt="green HTML5 tick" class="textmiddle" style="display:inline" /> this method works for you</li>
 	<li>You need a very recent browser supporting HTML5, the latest version of the "language of the web".</li>
-	<li>Currently Firefox4 (and higher) and Chrome on both Windows, Mac OSX and Linux are known to work.</li>
+	<li>Currently Firefox 4 (and higher) and Chrome on Windows, Mac OS X and Linux are known to work.</li>
 	<li>Please use the <a href="http://caniuse.com/#feat=fileapi" target="_blank">"When can I use..."</A> website to monitor implementation progress of the HTML5 FileAPI for all major browsers.  In particular support for <a href="http://caniuse.com/#feat=filereader" target="_blank">FileReader API</A> and <A href="http://caniuse.com/#feat=bloburls" target="_blank">Blob URLs</A> needs to be light green (=supported) for a browser to support uploads larger then 2GB </li>
 </ul>
 
