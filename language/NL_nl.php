@@ -197,6 +197,51 @@ $lang["_DP_yearSuffix"] = '';
 // Login Splash text
 $lang["_SITE_SPLASHTEXT"] = "FileSender is een veilige manier om bestanden te delen met iedereen! Meld U aan om een bestand te versturen of om iemand uit te nodigen om een bestand te sturen."; 
 
+// site help
+$lang["_HELP_TEXT"] = '
+<div>
+<div align="left" style="padding:5px">
+<h4>Aanmelden</h4> 
+<ul>
+    <li>Als uw instelling niet in de lijst met beschkbare identity providers staat, of u heeft problemen met inloggen, neemt u dan contact op met uw lokale IT-afdeling.</li>
+</ul>
+
+<h4>Uploads van <i>willekeurig welke grootte</i> via HTML5</h4>
+<ul>
+        <li>Als u het <img src="images/html5_installed.png" alt="green HTML5 tick" class="textmiddle" style="display:inline" />-symbool ziet in het dan is deze methode voor u beschikbaar.</li>
+	<li>Hiervoor is een relatief nieuwe browserversie nodig die HTML5 ondersteunt, de nieuwste editie van de "taal van het web".</li>
+	<li>Momenteel geldt dit in ieder geval voor Firefox 4 (en hoger) en Chrome op Windows, Mac OS X en Linux.</li>
+	<li>Gebruik de <a href="http://caniuse.com/#feat=fileapi" target="_blank">"When can I use..."</A>-website om de voortgang van de implementatie van HTML5 FileAPI in de belangrijkste browsers te zien. Met name ondersteuning voor de <a href="http://caniuse.com/#feat=filereader" target="_blank">FileReader API</A> en voor <A href="http://caniuse.com/#feat=bloburls" target="_blank">Blob URLs</A> moet groen licht (=ondersteund) krijgen, wil een browser uploads groter dan 2GB kunnen doen.</li>
+</ul>
+
+<h4>Downloads van willekeurig welke grootte</h4>
+<ul>
+        <li>Hiervoor is slechts een moderne browser noodzakelijk; Adobe Flash of HTML5 zijn <b>niet</b> nodig voor downloads.</li>
+</ul>
+
+<h4>Uploads kleinder dan 2 Gigabyte (2GB) via Adobe Flash</h4>
+<ul>
+	<li>Als u YouTube-video\'s kunt bekijken dan zou deze methode ook moeten werken.</li>
+	<li>U heeft een moderne browser nodig met minimaal versie 10 van <a target="_blank" href="http://www.adobe.com/software/flash/about/">Adobe Flash.</a></li>
+	<li>FileSender waarschuwt u als u een bestand wilt uploaden dat te groot is voor deze methode.</li>
+</ul>
+
+
+
+<h4>Beperkingen van deze FileSender-instantie</h4>
+<ul>
+    <li><strong>
+      Maximum aantal e-mail-ontvangers:</strong> Tot '. $config["max_email_recipients"].' e-mailadressen gescheiden door een komma of puntkomma</li>
+    <li><strong>Maximum aantal bestanden per upload:</strong> &eacute;&eacute;n - om meerdere bestanden ineens te versturen, kunt u ze eerst samenpakken in een archiefbestand zoals zip</li>
+    <li><strong>Maximum bestandsgrootte per upload, alleen gebruikmakend van Adobe Flash:</strong> '. formatBytes($config["max_flash_upload_size"]).'</li>
+    <li><strong>Maximum bestandsgrootte per upload, via HTML5:</strong> '. formatBytes($config["max_html5_upload_size"]).'</li>
+    <li><strong>Maximum geldigheidsduur van bestanden en uitnodigingen:</strong> '. $config["default_daysvalid"].' dagen</li>
+</ul>
+<p>Voor meer informatie, bezoek <a href="http://www.filesender.org/">www.filesender.org</a>.</p>
+</div>
+</div>';
+
+
 // site about
 $lang["_ABOUT_TEXT"] = ' <div align="left" style="padding:5px">'. htmlentities($config['site_name']) .' is een instantie van FileSender (<a rel="nofollow" href="http://www.filesender.org/">www.filesender.org</a>), ontwikkeld om te voldoen aan de eisen van de hoger onderwijs en onderzoeksgemeenschap.</div>';
 
