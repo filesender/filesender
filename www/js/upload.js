@@ -244,7 +244,7 @@ function updateTransferSpeed() {
     if (bytesDiff > 1024 * 1024)
 		speed = (Math.round(bytesDiff * 100/(1024*1024))/100).toString() + "MBps";
     	else if (bytesDiff > 1024)
-    	speed =  (Math.round(bytesDiff * 100/1024)/100).toString() + "KBps";
+    	speed =  (Math.round(bytesDiff * 100/1024)/100).toString() + "kBps";
      	else
         speed = bytesDiff.toString() + 'Bps';
        $("#transferSpeedInfo").html(speed);
@@ -266,7 +266,7 @@ function updatepb(bytesloaded,totalbytes)
 	if (bytesloaded > 1024*1024)
 		bytesTransfered = (Math.round(bytesloaded * 100/(1024*1024))/100).toString() + 'MB';
 	else if (bytesloaded > 1024)
-		bytesTransfered = (Math.round(bytesloaded * 100/1024)/100).toString() + 'KB';
+		bytesTransfered = (Math.round(bytesloaded * 100/1024)/100).toString() + 'kB';
 	else
 		bytesTransfered = (Math.round(bytesloaded * 100)/100).toString() + 'Bytes';
 	

@@ -37,7 +37,7 @@ function formatBytes($bytes, $precision = 2) {
 
     if($bytes >  0) 
     {
-        $units = array(' Bytes', ' KB', ' MB', ' GB', ' TB');
+        $units = array(' Bytes', ' kB', ' MB', ' GB', ' TB');
 
         $bytes = max($bytes, 0);
         $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
