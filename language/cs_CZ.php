@@ -31,7 +31,7 @@
  */
 
 /* --------------------------------------------------
- * CS_CZ Language File
+ * cs_CZ Language File
  * Contributed and maintained by Lubos Kopecky/CESNET
  * --------------------------------------------------
  */

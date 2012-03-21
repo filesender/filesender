@@ -55,7 +55,7 @@ public function loadConfig() {
 	$config['admin'] = ''; // UID's (from $config['saml_uid_attribute']) that have Administrator permissions
 	$config['adminEmail'] = ''; // Email address(es, separated by ,) to receive administrative messages (low disk space warning)
 	$config['Default_TimeZone'] = 'Australia/Sydney';
-	$config['site_defaultlanguage'] = 'EN_AU'; // available languages EN_AU, NO_no, NL_nl
+	$config['site_defaultlanguage'] = 'en_AU'; // for available languages see the ./language directory
 	$config['site_name'] = 'FileSender'; // Friendly name used for your FileSender instance
 	
 

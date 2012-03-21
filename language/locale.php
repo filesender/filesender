@@ -31,25 +31,27 @@
  */
 
 //The below array maps locales provided by the browser to your local translation.
-//Put yoour translated file in the "language" subdirectory.
+//Put your custom translated file in the "config" subdirectory.
 //Add relevant entries for browser locales here, and your translation will automagically be recognized and used....
 
 
 $locales  =  array(
-	"cs" => "CS_CZ.php",
-	"cs-cz" => "CS_CZ.php",
-	"de" => "DE_de.php",
-	"de-de" => "DE_de.php",
-	"en-au" => "EN_AU.php",
-	"en"=>  "EN_AU.php",
-	"fr" => "FR_fr.php",
-	"fr-fr" => "FR_fr.php",
-	"nl-nl"  => "NL_nl.php",
-	"nl" => "NL_nl.php",
-	"no-no" => "NO_no.php",
-	"no" => "NO_no.php",
-	"nb" => "NO_no.php",
-	"nb-no" => "NO_no.php",
+	"cs" => "cs_CZ.php",
+	"cs-cz" => "cs_CZ.php",
+	"de" => "de_DE.php",
+	"de-de" => "de_DE.php",
+	"en-au" => "en_AU.php",
+	"en-us" => "en_AU.php",
+	"en-gb" => "en_AU.php",
+	"en"=>  "en_AU.php",
+	"fr" => "fr_FR.php",
+	"fr-fr" => "fr_FR.php",
+	"nl-nl"  => "nl_NL.php",
+	"nl" => "nl_NL.php",
+	"no-no" => "no_NO.php",
+	"no" => "no_NO.php",
+	"nb" => "no_NO.php",
+	"nb-no" => "no_NO.php",
 	"sl" => "sl_SI.php",
 	"sl-si" => "sl_SI.php"
 );

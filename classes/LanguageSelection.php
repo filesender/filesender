@@ -74,9 +74,8 @@ if(isset($config['site_defaultlanguage'])) {
 $lang_file = $locales[$langs];
 //Try and include the language file
 // default english
-//By including EN-AU first, we make sure ALL used keys actually exist!
-//require_once("$filesenderbase/language/EN_AU.php");
-require_once("$filesenderbase/language/". "EN_AU.php");
+//By including en_AU first, we make sure ALL used keys actually exist!
+require_once("$filesenderbase/language/". "en_AU.php");
 
 if(isset($config['site_defaultlanguage']) &&  file_exists("$filesenderbase/language/".$config['site_defaultlanguage'].".php")) { require_once("$filesenderbase/language/".$config['site_defaultlanguage'].".php"); };
 if(isset($config['site_defaultlanguage']) &&  file_exists("$filesenderbase/config/".$config['site_defaultlanguage'].".php")) { require_once("$filesenderbase/config/".$config['site_defaultlanguage'].".php"); };
