@@ -38,7 +38,7 @@
 // Main meny-elementene
 $lang["_ADMIN"] = "Administrasjon";
 $lang["_NEW_UPLOAD"] = "Ny filsending";
-$lang["_VOUCHERS"] = "Invitasjon";
+$lang["_VOUCHERS"] = "Gjest-invitasjon";
 $lang["_LOGON"] = "Logg på";
 $lang["_LOG_OFF"] = "Logg av";
 $lang["_MY_FILES"] = "Mine filer";
@@ -199,7 +199,7 @@ $lang["_DP_showMonthAfterYear"] = 'false';
 $lang["_DP_yearSuffix"] = '';
 
 // Login Splash text
-//$lang["_SITE_SPLASHTEXT"] = "FileSender is a secure way to share large files with anyone! Logon to upload your files or invite people to send you a file.";
+$lang["_SITE_SPLASHTEXT"] = "FileSender tilbyr en sikker og enkel måte for å sende store filer til all dine samarbeidspartnere!  Logg på for å overføre dine filer eller for å invitere andre til å sende deg en fil.";
 
 // site help
 $lang["_HELP_TEXT"] = '<div align="left" style="padding:5px">
@@ -217,7 +217,7 @@ $lang["_HELP_TEXT"] = '<div align="left" style="padding:5px">
   </div>';
 
 // site about
-//$lang["_ABOUT_TEXT"] = ' <div align="left" style="padding:5px">'. htmlentities($config['site_name']) .' is an installation of FileSender (<a rel="nofollow" href="http://www.filesender.org/">www.filesender.org</a>), which is developed to the requirements of the higher education and research community.</div>';
+$lang["_ABOUT_TEXT"] = ' <div align="left" style="padding:5px">'. htmlentities($config['site_name']) .' er en FileSender (<a rel="nofollow" href="http://www.filesender.org/">www.filesender.org</a>) installasjon.  FileSender programvaren er optimalisert for bruk i høgere utdanning og forskning.</div>';
 
 // site AUP terms
 $lang["_AUPTERMS"] = "Oppfør deg pent ellers så kommer trollan...";
