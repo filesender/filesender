@@ -1,20 +1,30 @@
-The naming scheme of the language files in this directory and mapping of browser
-tags to language files is based on Best Current Practices as defined by BCP 47
-and related ICU/ISO guidelines:
+This directory contains the distribution files for the various language
+definitions. Definitions and mappings in these files can be over-ruled
+by a corresponding file (with the same name) in the main ./config directory. 
+Local customisations should be done in the ./config files. See
+http://www.assembla.com/spaces/filesendercontrib/ on how to report errors
+in the translations or contribute new translations.
 
-File naming:
+The naming scheme of the language files in this directory and mapping of
+browser tags to language files is based on Best Current Practices as defined
+by BCP 47 and related ICU/ISO guidelines:
+
+File naming
+===========
 
 <language>_<COUNTRY>.php
 
 <language> is the shortest two/three letter ISO 639 language code in lowercase
-<COUNTRY> (or better perhaps <REGION>) is the ISO 3166-1 country/region/territory code in UPPERcase
+<COUNTRY> is the ISO 3166-1 country/region/territory code in UPPERcase
 
-Use of "_" (underscore) in filenames follows the convention for defining 'locales'
-on modern Linux/Unix systems and defined/allowed by the related Unicode/ICU definitions,
-see http://www.unicode.org/reports/tr35/#Unicode_Language_and_Locale_Identifiers and
+Use of "_" (underscore) in filenames follows the convention for defining
+'locales' on modern Linux/Unix systems and defined/allowed by the related
+Unicode/ICU definitions, see 
+http://www.unicode.org/reports/tr35/#Unicode_Language_and_Locale_Identifiers and
 http://userguide.icu-project.org/locale).
 
-Browser tags mapping:
+Browser tags mapping
+====================
 
 Mapping from browser language tags to language files is done in locale.php.
 Note that browser tags for language preference use the "-" hyphen as defined
