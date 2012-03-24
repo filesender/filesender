@@ -170,7 +170,7 @@ $lang["_HTML5Supported"] = "Filopplasting over 2GB støttet!";
 $lang["_HTML5NotSupported"] = "Filopplasting over 2GB ikke støttet!";	
 
 // Voucher page
-$lang["_SEND_NEW_VOUCHER"] = "Med en gjeste-invitasjon kan en gjeste-bruker sende deg en fil.<br>For å sende en gjeste-invitasjon, skriv inn epost-adresse til gjesten og klikk på <b><i>Send</i></b>.  En epost med blir sendt med en lenke som gir gjesten mulighet til å sende 1 fil.<br>";
+$lang["_SEND_NEW_VOUCHER"] = "En gjeste-invitasjon gir en gjeste-bruker tilgang til tjenesten for å sende <b><i>en</i></b> fil.<br>Skriv inn epost-adresse til gjesten og klikk på <b><i>Send invitasjon</i></b>.<br> En epost med blir sendt med en lenke som gir gjesten mulighet til å sende 1 fil.<br>";
 
 $lang["_SEND_VOUCHER_TO"] = "Send en invitasjon til";
 $lang["_SEND_VOUCHER"] = "Send invitasjon";
