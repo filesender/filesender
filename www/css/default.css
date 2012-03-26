@@ -362,7 +362,8 @@ word-wrap: break-word; /* Internet Explorer 5.5+ */
 .welcomeuser
 {
 	float:left;
-	text-align: left;	
+	text-align: left;
+	font-size: 12px;
 }
 #footer
 {
