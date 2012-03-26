@@ -114,7 +114,7 @@ $lang["_OK"] = "Ok";
 $lang["_SEND"] = "Send";
 $lang["_DELETE"] = "Slett";
 $lang["_YES"] = "Ja";
-$lang["_NO"] = "No";
+$lang["_NO"] = "Nei";
 
 // Upload page: error messages, displayed on-input
 $lang["_INVALID_MISSING_EMAIL"] = "Feilaktig eller manglende epostadresse";
