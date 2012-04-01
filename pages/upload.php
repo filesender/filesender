@@ -105,7 +105,7 @@
 	var errmsg_disk_space = "<?php echo lang($lang["_DISK_SPACE_ERROR"]); ?>";
 	var filedata=new Array(); 
 	
-	var vid='<?php if(isset($_REQUEST["vid"])){echo $_REQUEST["vid"];}; ?>';
+	var vid='<?php if(isset($_REQUEST["vid"])){echo htmlspecialchars($_REQUEST["vid"]);}; ?>';
 	// check if html5 functions are available
 	html5 = (window.File && window.FileReader && window.FileList && window.Blob && window.FormData) ? true : false;
  	// start document ready 
