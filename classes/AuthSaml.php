@@ -114,12 +114,13 @@ class AuthSaml {
 
         $inglue = '='; 
         $outglue = '&';
+        $valsep = '|';
         $message = "";
 
         // logs access by a user and users logged on array data
         // this could be moved to logging function in future versions
         foreach ($attributes as $tk => $tv) {
-            $message .= (isset($return) ? $return . $outglue : '') . $tk . $inglue . $tv . $outglue;
+            $message .= (isset($return) ? $return . $outglue : '') . $tk . $inglue . (is_array($tv) ? implode($valsep, $tv) : $tv) . $outglue;
         }
 
         $ip = $_SERVER['REMOTE_ADDR'];//capture IP
