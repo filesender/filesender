@@ -354,10 +354,10 @@ class Functions {
 		
 		$pdo = $this->db->connect();
 		$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
-		$statement = $pdo->prepare("SELECT * FROM files where fileoriginalname = :fileoriginalname AND filesize = :filesize AND filestatus = 'Pending'");
+		$statement = $pdo->prepare("SELECT * FROM files where fileoriginalname = :fileoriginalname AND filesize = :filesize AND fileuid = :fileuid AND filestatus = 'Pending'");
 		$statement->bindParam(':fileoriginalname', $dataitem["fileoriginalname"]);
 		$statement->bindParam(':filesize', $dataitem["filesize"]);
-				
+		$statement->bindParam(':fileuid', $dataitem["fileuid"]);
 		try 
 		{ 	
 			$statement->execute(); 
@@ -676,7 +676,7 @@ class Functions {
 		$data["filesendersname"]=isset($data['filesendersname']) ? $data['filesendersname'] : NULL;
 		$data["filereceiversname"]=isset($data['filereceiversname']) ? $data['filereceiversname'] : NULL;
 		$data["filevouchertype"]=isset($data['filevouchertype']) ? $data['filevouchertype'] : NULL;
-        $data["fileuid"]=getGUID();
+        if($data["fileuid"] == "" ) {$data["fileuid"] = getGUID();};
         //$data["fileauthuseruid"]="null";
         //$data["fileauthuseremail"]="null";
         $data["filecreateddate"]= date($config['db_dateformat'], time()); 
