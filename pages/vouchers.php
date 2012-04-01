@@ -175,14 +175,14 @@ $json_o=json_decode($filedata,true);
   <?php echo '<div id="pageheading">'.lang("_VOUCHERS").'</div>'; ?>
     <table width="100%" border="0">
       <tr>
-        <td colspan="2"><?php echo html_entity_decode(lang("_SEND_NEW_VOUCHER")); ?></td>
+        <td colspan="2" id="invite_text"><?php echo html_entity_decode(lang("_SEND_NEW_VOUCHER")); ?></td>
       </tr>
       </table>
   </div>
       <div id="box_2" class="box">
        <table width="100%" border="0">
       <tr>
-        <td class="mandatory" width="130"><?php echo lang("_SEND_VOUCHER_TO"); ?>:</td>
+        <td class="mandatory" id="vouchers_to" width="130"><?php echo lang("_SEND_VOUCHER_TO"); ?>:</td>
         <td>
         <input id="fileto" name="fileto" title="<?php echo lang("_EMAIL_SEPARATOR_MSG"); ?>"  type="text" size="45" onchange="validate_fileto()" /><br />
  		<div id="fileto_msg" class="validation_msg" style="display:none"><?php echo lang("_INVALID_MISSING_EMAIL"); ?></div>
@@ -190,7 +190,7 @@ $json_o=json_decode($filedata,true);
  		</td>
       </tr>
       <tr>
-        <td class="mandatory"><?php echo lang("_EXPIRY_DATE"); ?>:</td>
+        <td class="mandatory" id="vouchers_expirydate"><?php echo lang("_EXPIRY_DATE"); ?>:</td>
         <td><input id="datepicker" onchange="validate_expiry()" title="<?php echo lang('_DP_dateFormat'); ?>"></input> 
         <div id="expiry_msg" class="validation_msg" style="display:none"><?php echo lang("_INVALID_EXPIRY_DATE"); ?></div>
         </td>
@@ -206,9 +206,9 @@ $json_o=json_decode($filedata,true);
   <div id="box_3" class="box">
   <table id="vouchertable" width="100%" border="0" cellspacing="1">
     <tr class="headerrow">
-      <td><strong><?php echo lang("_TO"); ?></strong></td>
-      <td><strong><?php echo lang("_CREATED"); ?></strong></td>
-      <td><strong><?php echo lang("_EXPIRY"); ?></strong></td>
+      <td id="vouchers_header_to"><strong><?php echo lang("_TO"); ?></strong></td>
+      <td id="vouchers_header_created"><strong><?php echo lang("_CREATED"); ?></strong></td>
+      <td id="vouchers_header_expiry"><strong><?php echo lang("_EXPIRY"); ?></strong></td>
       <td></td>
     </tr>
     <?php
