@@ -199,7 +199,7 @@ function openabout()
 		else if ($authsaml->isAuth() )
 		{
 			echo lang("_WELCOME")." ";
-			echo $attributes["cn"];
+			echo utf8tohtml($attributes["cn"],true);
 		}
 		echo "</div>";
 	}
