@@ -44,7 +44,7 @@ function readablizebytes(bytes)
 	else if (bytes > 1024*1024)
 		bytesdisplay = (Math.round(bytes * 100/(1024*1024))/100).toString() + " MB";
 	else if (bytes > 1024)
-		bytesdisplay = (Math.round(bytes * 100/1024)/100).toString() + " KB";
+		bytesdisplay = (Math.round(bytes * 100/1024)/100).toString() + " kB";
 	else
 		bytesdisplay = (Math.round(bytes * 100)/100).toString() + " Bytes";
 	return bytesdisplay;

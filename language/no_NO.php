@@ -31,14 +31,14 @@
  */
 
 /* ---------------------------------
- * NO_no Language File
+ * no_NO Language File
  * ---------------------------------
  * 
  */
-// Main menyelementene
+// Main meny-elementene
 $lang["_ADMIN"] = "Administrasjon";
 $lang["_NEW_UPLOAD"] = "Ny filsending";
-$lang["_VOUCHERS"] = "Send invitasjon til filsending";
+$lang["_VOUCHERS"] = "Gjeste-invitasjon";
 $lang["_LOGON"] = "Logg på";
 $lang["_LOG_OFF"] = "Logg av";
 $lang["_MY_FILES"] = "Mine filer";
@@ -66,7 +66,7 @@ $lang["_DRIVE"] = "Disk";
 $lang["_TOTAL"] = "Totall";
 $lang["_USED"] = "I bruk";
 $lang["_AVAILABLE"] = "Tilgjengelig";
-$lang["_TEMP"] = "Temp"; // as in Temporary files
+$lang["_TEMP"] = "Midlertidig"; // as in Temporary files
 
 // Admin interface: tab names
 $lang["_GENERAL"] = "Generelt";
@@ -78,8 +78,8 @@ $lang["_ACTIVE_VOUCHERS"] = "Aktive invitasjoner";
 $lang["_COMPLETE_LOG"] = "Alle logdata";
 
 // Upload page
-$lang["_WELCOME"] = "Welkommen";
-$lang["_WELCOMEGUEST"] = "Welkommen Gjest";
+$lang["_WELCOME"] = "Velkommen";
+$lang["_WELCOMEGUEST"] = "Velkommen Gjest";
 
 // Upload page: Form Fields
 $lang["_TO"] = "Til";
@@ -114,7 +114,7 @@ $lang["_OK"] = "Ok";
 $lang["_SEND"] = "Send";
 $lang["_DELETE"] = "Slett";
 $lang["_YES"] = "Ja";
-$lang["_NO"] = "No";
+$lang["_NO"] = "Nei";
 
 // Upload page: error messages, displayed on-input
 $lang["_INVALID_MISSING_EMAIL"] = "Feilaktig eller manglende epostadresse";
@@ -126,7 +126,7 @@ $lang["_INVALID_FILE_EXT"] = "Feiltypen ikke tillat.";
 $lang["_INVALID_TOO_LARGE_1"] = "Filstørrelse kan ikke være mer enn";
 $lang["_SELECT_ANOTHER_FILE"] = "Velg en annen fil.";
 $lang["_INVALID_FILE_NAME"] = "Feilaktig filnavn, filen kan ikke lastes opp.  Gi filen et annet navn og prøv på nytt.";
-//$lang["_INVALID_SIZE_USEHTML5"] = "Velg en annen fil or use a HTML5 enabled browser to upload larger files.";
+$lang["_INVALID_SIZE_USEHTML5"] = "For å sende filer større enn 2GB trenger du en nettleser som støtter HTML5, som f.eks. Chrome og nyerenyer FireFox.";
 
 $lang["_ERROR_UPLOADING_FILE"] = "Feil under filopplasting";
 $lang["_LOGOUT_COMPLETE"] = "Avlogging utført";
@@ -170,7 +170,8 @@ $lang["_HTML5Supported"] = "Filopplasting over 2GB støttet!";
 $lang["_HTML5NotSupported"] = "Filopplasting over 2GB ikke støttet!";	
 
 // Voucher page
-$lang["_SEND_NEW_VOUCHER"] = "Send en ny invitasjon";
+$lang["_SEND_NEW_VOUCHER"] = "En gjeste-invitasjon gir tilgang til tjenesten for å sende <b><i>en</i></b> fil.<br><br>Skriv inn epost-adressen til gjesten og klikk på <b><i>Send invitasjon</i></b>. En epost vil bli sendt med en lenke som gir gjesten mulighet til å sende 1 fil.<br>";
+
 $lang["_SEND_VOUCHER_TO"] = "Send en invitasjon til";
 $lang["_SEND_VOUCHER"] = "Send invitasjon";
 
@@ -199,7 +200,7 @@ $lang["_DP_showMonthAfterYear"] = 'false';
 $lang["_DP_yearSuffix"] = '';
 
 // Login Splash text
-//$lang["_SITE_SPLASHTEXT"] = "FileSender is a secure way to share large files with anyone! Logon to upload your files or invite people to send you a file.";
+$lang["_SITE_SPLASHTEXT"] = "FileSender tilbyr en sikker og enkel måte for å sende store filer til all dine samarbeidspartnere!  Logg på for å overføre dine filer eller for å invitere andre til å sende deg en fil.";
 
 // site help
 $lang["_HELP_TEXT"] = '<div align="left" style="padding:5px">
@@ -217,7 +218,7 @@ $lang["_HELP_TEXT"] = '<div align="left" style="padding:5px">
   </div>';
 
 // site about
-//$lang["_ABOUT_TEXT"] = ' <div align="left" style="padding:5px">'. htmlentities($config['site_name']) .' is an installation of FileSender (<a rel="nofollow" href="http://www.filesender.org/">www.filesender.org</a>), which is developed to the requirements of the higher education and research community.</div>';
+$lang["_ABOUT_TEXT"] = ' <div align="left" style="padding:5px">'. htmlentities($config['site_name']) .' er en FileSender (<a rel="nofollow" href="http://www.filesender.org/">www.filesender.org</a>) installasjon.  FileSender programvaren er optimalisert for bruk i høgere utdanning og forskning.</div>';
 
 // site AUP terms
 $lang["_AUPTERMS"] = "Oppfør deg pent ellers så kommer trollan...";
