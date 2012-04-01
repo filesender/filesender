@@ -1,4 +1,20 @@
-Last update: 13 February 2012
+Last update: 1 April 2012
+
+Version 1.5-beta2 <?? April 2012>
+
+	Major changes since 1.5-beta1
+	- The ./config directory as distributed now only contains a sample
+	  config-dist.php file. All other templates/sample files have been
+	  moved to ./config-templates or their contents have been merged
+	  into the ./language/* files.
+	- Changed and consolidated language file naming scheme.
+	- Added Czech and Slovenian language files.
+	- Updated Dutch and Norwegian language files.
+
+	Major (less visible) changes since 1.5-beta1
+	- Further improvements in workflow, validation/error handling and
+	  input/output pathways.
+	- Minor bug fixes and enhancements.
 
 Version 1.5-beta1 <13 February 2012>
 
