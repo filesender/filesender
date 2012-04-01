@@ -1,3 +1,22 @@
+filesender (1.5~beta2) unstable; urgency=medium
+   * Release 1.5-beta2
+
+   * Major changes since 1.5-beta1
+     - The ./config directory as distributed now only contains a sample
+       config-dist.php file. All other templates/sample files have been
+       moved to ./config-templates or their contents have been merged
+       into the ./language/* files.
+     - Changed and consolidated language file naming scheme.
+     - Added Czech and Slovenian language files.
+     - Updated Dutch and Norwegian language files.
+
+   * Major (less visible) changes since 1.5-beta1
+     - Further improvements in workflow, validation/error handling and
+       input/output pathways.
+     - Minor bug fixes and enhancements.
+
+ -- Filesender Development <filesender-dev@filesender.org>  Sun, 1 Apr 2012 14:00:00 +0100
+
 filesender (1.5~beta1) unstable; urgency=medium
    * Release 1.5-beta1
 
@@ -21,7 +40,7 @@ filesender (1.5~beta1) unstable; urgency=medium
      - We now use mostly prepared statements for database interaction
      - All pages are now W3C compliant
 
- -- Filesender Development <filesender-dev@filesender.org>  Mon, 13 Feb 2012 14:00:00 +0100
+ -- Filesender Development <filesender-dev@filesender.org>  Mon, 13 Feb 2012 17:45:58 +0100
 
 filesender (1.1) testing; urgency=medium
    * Release 1.1
