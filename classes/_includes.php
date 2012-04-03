@@ -45,7 +45,7 @@ $config = $CFG->loadConfig();  // use _global $config in all functions
 
 require_once("$filesenderbase/classes/unstrip.php");
 require_once("$filesenderbase/includes/ErrorHandler.php");
-//require_once("$filesenderbase/includes/EnsureHTTPS.php");
+require_once("$filesenderbase/includes/EnsureHTTPS.php");
 require_once("$filesenderbase/includes/UTF8.php");
 require_once("$filesenderbase/classes/Version.php");
 require_once("$filesenderbase/classes/Functions.php");
