@@ -125,7 +125,7 @@ function cleanUp() {
 	}
 		// expired voucher is closed
 	try {
-		$query = "UPDATE files SET filestatus = 'Closed' WHERE fileexpirydate < %s AND
+		$query = "UPDATE files SET filestatus = 'Voucher Cancelled' WHERE fileexpirydate < %s AND
 			(filestatus = 'Voucher')";
 		$db->fquery($query, $today);
 	} catch (DBException $e) {
