@@ -90,6 +90,11 @@ if(!$authvoucher->aVoucher() && !$authsaml->isAuth() && $s != "complete" && $s !
 <script type="text/javascript">
 $(function() {
 	
+	// display topmenu, content and userinformation
+	$("#topmenu").show();
+	$("#content").show();
+	$("#userinformation").show();
+	
 	$( "a", ".menu" ).button();
 	
 	$("#dialog-help").dialog({ autoOpen: false, height: 400,width: 660, modal: true,
@@ -127,6 +132,11 @@ function openabout()
 </script>
    
 <meta name="robots" content="noindex, nofollow" />
+<style type="text/css">
+<!--
+.style1 {color: #FFFFFF}
+-->
+</style>
 </head>
 <body>
 <div id="wrap">
@@ -134,12 +144,14 @@ function openabout()
     <div align="center">
       <p><img src="displayimage.php" width="800" height="60" border="0" alt="banner" /></p>
       <noscript>
-      <p class="style5">JavaScript is turned off in your web browser. <br />
-        This application will not run without Javascript enabled in your web browser. </p>
+      <p class="style5 style1">JavaScript is turned off in your web browser. <br />
+        This application will not run without Javascript enabled in your web browser. <br />
+        <br />
+      </p>
       </noscript>
     </div>
   </div>
-  <div id="topmenu">
+  <div id="topmenu" style="display:none">
   <div class="menu" id="menuleft">
       <?php 
   	// create menu
@@ -178,7 +190,7 @@ function openabout()
 		}
 	?>
 	</div>	
-	<div id="userinformation">
+	<div id="userinformation" style="display:none">
 	<?php 
 
 	// set user attributes from identity provider
@@ -215,7 +227,7 @@ function openabout()
 	echo "<div class='versionnumber'>" .$versiondisplay."</div>";
 ?>
 	</div>
-		<div id="content">
+		<div id="content" style="display:none">
 <?php
 	// checks if url has vid=xxxxxxx and that voucher is valid 
 	if(	$authvoucher->aVoucher())
