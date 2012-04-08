@@ -237,13 +237,13 @@ $lang["_HELP_TEXT"] = '
     <li><strong>Maximum bestandsgrootte per upload, via HTML5:</strong> '. formatBytes($config["max_html5_upload_size"]).'</li>
     <li><strong>Maximum geldigheidsduur van bestanden en uitnodigingen:</strong> '. $config["default_daysvalid"].' dagen</li>
 </ul>
-<p>Voor meer informatie, bezoek <a href="http://www.filesender.org/">www.filesender.org</a>.</p>
+<p>Voor meer informatie, bezoek <a href="http://www.filesender.org/" target="_blank">www.filesender.org</a>.</p>
 </div>
 </div>';
 
 
 // site about
-$lang["_ABOUT_TEXT"] = ' <div align="left" style="padding:5px">'. htmlentities($config['site_name']) .' is een instantie van FileSender (<a rel="nofollow" href="http://www.filesender.org/">www.filesender.org</a>), ontwikkeld om te voldoen aan de eisen van de hoger onderwijs en onderzoeksgemeenschap.</div>';
+$lang["_ABOUT_TEXT"] = ' <div align="left" style="padding:5px">'. htmlentities($config['site_name']) .' is een instantie van FileSender (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>), ontwikkeld om te voldoen aan de eisen van de hoger onderwijs en onderzoeksgemeenschap.</div>';
 
 
 ?>
