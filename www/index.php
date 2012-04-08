@@ -245,22 +245,13 @@ function openabout()
 		} else if($voucherData[0]["filestatus"] == "Closed")
 		{
 ?>
-	<div id="box">
-	<p>
-		<?php echo lang("_VOUCHER_USED"); ?>
-	</p>
-	</div>
+	<div id="box"><p><?php echo lang("_VOUCHER_USED"); ?></p></div>
 <?php
 	}
  	else if($voucherData[0]["filestatus"] == "Voucher Cancelled")
 	{
 ?>
-		<div id="box">
-		<?php echo '<div id="pageheading"></div>'; ?> 
-		<p>
-		<?php echo lang("_VOUCHER_CANCELLED"); ?>
-		</p>
-		</div>
+		<div id="box"><p><?php echo lang("_VOUCHER_CANCELLED"); ?></p></div>
 <?php
 		}
 		else if($voucherData[0]["filestatus"] == "Deleted")
