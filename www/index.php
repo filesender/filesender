@@ -323,7 +323,7 @@ function openabout()
 	<div id="dialog-about" style="display:none" title="<?php echo lang("_ABOUT"); ?>">
 		<?php echo lang("_ABOUT_TEXT"); ?>
 	</div>
-		<div id="footer">Version <?php echo FileSender_Version::VERSION; ?></div>
+		<div id="footer"></div>
 		<div id="DoneLoading"></div>
 	</body>
 </html>
