@@ -237,12 +237,12 @@ $lang["_HELP_TEXT"] = '
     <li><strong>Maximální velikost souboru na jedno nahrání (pouze pro HTML5): </strong>'. formatBytes($config["max_html5_upload_size"]).'</li>
     <li>      <strong>Maximum počet dní platnosti souborů / pozvánek: </strong>'. $config["default_daysvalid"].' </li>
 </ul>
-<p>Pro více informací prosím navštivte <a href="http://www.filesender.org/">www.filesender.org</a></p>
+<p>Pro více informací prosím navštivte <a href="http://www.filesender.org/" target="_blank">www.filesender.org</a></p>
 </div>
 </div>';
 
 // site about
-$lang["_ABOUT_TEXT"] = ' <div align="left" style="padding:5px">'. htmlentities($config['site_name']) .' je instalace FileSender (<a rel="nofollow" href="http://www.filesender.org/">www.filesender.org</a>), který je vyvinut pro potřeby vzdělávací a výzkumné komunity.</div>';
+$lang["_ABOUT_TEXT"] = ' <div align="left" style="padding:5px">'. htmlentities($config['site_name']) .' je instalace FileSender (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>), který je vyvinut pro potřeby vzdělávací a výzkumné komunity.</div>';
 
 $lang["_AUPTERMS"] = "Kompletní znění podmínek užití této služby...";
 
