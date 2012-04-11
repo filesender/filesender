@@ -257,12 +257,7 @@ function openabout()
 		else if($voucherData[0]["filestatus"] == "Deleted")
 	{
 ?>
-		<div id="box">
-		<?php echo '<div id="pageheading"></div>'; ?> 
-		<p>
-		<?php echo lang("_FILE_DELETED"); ?>
-		</p>
-		</div>
+		<div id="box"><p><?php echo lang("_FILE_DELETED"); ?></p></div>
 <?php
 		}
 	} else if($s == "upload") 
