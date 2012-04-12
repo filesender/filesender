@@ -235,12 +235,12 @@ $lang["_HELP_TEXT"] = '
     <li><strong>Taille maximale de fichier, pour HTML5 : </strong>'. formatBytes($config["max_html5_upload_size"]).'</li>
     <li><strong>Nombre maximal de jours pour l\'expiration de fichiers / tickets : </strong>'. $config["default_daysvalid"].' </li>
 </ul>
-<p>Pour plus d\'informations, veuillez visiter <a href="http://www.filesender.org/">www.filesender.org</a></p>
+<p>Pour plus d\'informations, veuillez visiter <a href="http://www.filesender.org/" target="_blank">www.filesender.org</a></p>
 </div>
 </div>';
 
 // site about
-$lang["_ABOUT_TEXT"] = ' <div align="left" style="padding:5px">'. htmlentities($config['site_name']) .' est une installation de FileSender (<a rel="nofollow" href="http://www.filesender.org/">www.filesender.org</a>), dévelopé pour les besoins de la communauté de l\'éducation supérieure et de la recherche.</div>';
+$lang["_ABOUT_TEXT"] = ' <div align="left" style="padding:5px">'. htmlentities($config['site_name']) .' est une installation de FileSender (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>), dévelopé pour les besoins de la communauté de l\'éducation supérieure et de la recherche.</div>';
 
 // site AUP terms
 $lang["_AUPTERMS"] = "Conditions générales d\'utilisation ...";
