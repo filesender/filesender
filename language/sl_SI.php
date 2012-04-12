@@ -233,12 +233,12 @@ $lang["_HELP_TEXT"] = '
     <li><strong>Največja velikost dokumenta, ki ga lahko naložite na strežnik z uporabo HTML5: </strong>'. formatBytes($config["max_html5_upload_size"]).'</li>
     <li>      <strong>Najdaljši čas veljavnosti dokumenta / vavčerja: </strong>'. $config["default_daysvalid"].' </li>
 </ul>
-<p>Za več informacij obiščite spletno stran <a href="http://www.filesender.org/">www.filesender.org</a></p>
+<p>Za več informacij obiščite spletno stran <a href="http://www.filesender.org/" target="_blank">www.filesender.org</a></p>
 </div>
 </div>';
 
 // site about
-$lang["_ABOUT_TEXT"] = ' <div align="left" style="padding:5px">'. htmlentities($config['site_name']) .' je storitev, osnovana na programu FileSender (<a rel="nofollow" href="http://www.filesender.org/">www.filesender.org</a>), ki so ga razvili za potrebe visokega šolstva in raziskovanja.</div>';
+$lang["_ABOUT_TEXT"] = ' <div align="left" style="padding:5px">'. htmlentities($config['site_name']) .' je storitev, osnovana na programu FileSender (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>), ki so ga razvili za potrebe visokega šolstva in raziskovanja.</div>';
 
 // site AUP terms
 $lang["_AUPTERMS"] = "Splošni pogoji in pravila uporabe";

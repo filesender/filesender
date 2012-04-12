@@ -214,11 +214,11 @@ $lang["_HELP_TEXT"] = '<div align="left" style="padding:5px">
       <strong>Største filstørrelse per sending, med HTML 5: </strong>' .formatBytes($config["max_html5_upload_size"]).'<br />
       <strong>Maksimum antall dager før utløp av sending: </strong>'. $config["default_daysvalid"].'<br />
     </p>
-    <p>For mer informasjon besøk <a href="http://www.filesender.org/">www.filesender.org</a></p>
+    <p>For mer informasjon besøk <a href="http://www.filesender.org/" target="_blank">www.filesender.org</a></p>
   </div>';
 
 // site about
-$lang["_ABOUT_TEXT"] = ' <div align="left" style="padding:5px">'. htmlentities($config['site_name']) .' er en FileSender (<a rel="nofollow" href="http://www.filesender.org/">www.filesender.org</a>) installasjon.  FileSender programvaren er optimalisert for bruk i høgere utdanning og forskning.</div>';
+$lang["_ABOUT_TEXT"] = ' <div align="left" style="padding:5px">'. htmlentities($config['site_name']) .' er en FileSender (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>) installasjon.  FileSender programvaren er optimalisert for bruk i høgere utdanning og forskning.</div>';
 
 // site AUP terms
 $lang["_AUPTERMS"] = "Oppfør deg pent ellers så kommer trollan...";
