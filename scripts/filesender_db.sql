@@ -1,6 +1,6 @@
 CREATE TABLE files
 ( 
-  fileto character varying(250),
+  fileto text,
   filesubject character varying(250),
   filevoucheruid character varying(60),
   filemessage text,
