@@ -131,7 +131,7 @@ $lang["_INVALID_FILE_NAME"] = "Feilaktig filnavn, filen kan ikke lastes opp.  Gi
 $lang["_INVALID_SIZE_USEHTML5"] = "For å sende filer større enn 2GB trenger du en nettleser som støtter HTML5, som f.eks. Chrome og nyerenyer FireFox.";
 
 $lang["_ERROR_UPLOADING_FILE"] = "Feil under filopplasting";
-$lang["_ERROR_INCORRECT_FILE_SIZE"] = "Det oppsto en feil under fil-opplasting.  <br/ >Fil har en annen størrelse på tjeneren enn på datamaskinen din. <br />Ta kontakt med tjeneeste-ansvarlig."
+$lang["_ERROR_INCORRECT_FILE_SIZE"] = "Det oppsto en feil under fil-opplasting.  <br/ >Fil har en annen størrelse på tjeneren enn på datamaskinen din. <br />Ta kontakt med tjeneeste-ansvarlig.";
 $lang["_MAXEMAILS"] = "Tillat antall epost-adresser er ";
 $lang["_INVALID_DATE_FORMAT"] = "Feil dato-format";
 $lang["_DISK_SPACE_ERROR"] = "Tjenesten har ikke nok diskplass.  Ta kontakt med tjeneste-ansvarlig og/eller prøv med en mindre stor fil";
