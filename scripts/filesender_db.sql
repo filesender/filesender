@@ -37,7 +37,7 @@ CREATE TABLE logs
   logfileuid character varying(60),
   logtype character varying(60),
   logfrom character varying(250),
-  logto character varying(250),
+  logto text,
   logdate timestamp without time zone,
   logtime time with time zone,
   logfilesize bigint,
