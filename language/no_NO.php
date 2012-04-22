@@ -96,6 +96,7 @@ $lang["_TYPE"] = "Type";
 
 $lang["_TERMS_OF_AGREEMENT"] = "Brukervilkår";
 $lang["_SHOW_TERMS"] = "Vis vilkår";
+$lang["_INVALID_VOUCHER"] = "Invitasjonen kan ikke lenger brukes. <br />Ta kontakt med personen som sendte deg invitasjonen for å få en ny en.";
 $lang["_SELECT_FILE"] = "Velg en fil til å laste opp";
 $lang["_UPLOADING_WAIT"] = "Laster opp fil - vennligst vent ...";
 $lang["_EMAIL_SEPARATOR_MSG"] = "Flere epost-adresser avskilles med , eller ;";
@@ -120,15 +121,21 @@ $lang["_NO"] = "Nei";
 $lang["_INVALID_MISSING_EMAIL"] = "Feilaktig eller manglende epostadresse";
 $lang["_INVALID_EXPIRY_DATE"] = "Feil i utløpsdato";
 $lang["_INVALID_FILE"] = "Noe er galt med filen som ble valgt";
-//$lang["_INVALID_FILEVOUCHERID"] = "Invalid File or Voucher ID";	
+$lang["_INVALID_FILEVOUCHERID"] = "Ugyldig fil-ID eller invitasjons-ID";
 $lang["_INVALID_FILESIZE_ZERO"] = "Filer med størrelse 0 kan ikke velges.  Velg en annen fil";
 $lang["_INVALID_FILE_EXT"] = "Feiltypen ikke tillat.";
 $lang["_INVALID_TOO_LARGE_1"] = "Filstørrelse kan ikke være mer enn";
+$lang["_AUTH_ERROR"] = "Du er ikke lenger pålogget.<br />Din sesjon kan ha gått ut eller det har blitt en feil på tjeneren. <br /><br />Logg på igjen og prøv igjen.";
 $lang["_SELECT_ANOTHER_FILE"] = "Velg en annen fil.";
 $lang["_INVALID_FILE_NAME"] = "Feilaktig filnavn, filen kan ikke lastes opp.  Gi filen et annet navn og prøv på nytt.";
 $lang["_INVALID_SIZE_USEHTML5"] = "For å sende filer større enn 2GB trenger du en nettleser som støtter HTML5, som f.eks. Chrome og nyerenyer FireFox.";
 
 $lang["_ERROR_UPLOADING_FILE"] = "Feil under filopplasting";
+$lang["_ERROR_INCORRECT_FILE_SIZE"] = "Det oppsto en feil under fil-opplasting.  <br/ >Fil har en annen størrelse på tjeneren enn på datamaskinen din. <br />Ta kontakt med tjeneeste-ansvarlig.";
+$lang["_MAXEMAILS"] = "Tillat antall epost-adresser er ";
+$lang["_INVALID_DATE_FORMAT"] = "Feil dato-format";
+$lang["_DISK_SPACE_ERROR"] = "Tjenesten har ikke nok diskplass.  Ta kontakt med tjeneste-ansvarlig og/eller prøv med en mindre stor fil";
+
 $lang["_LOGOUT_COMPLETE"] = "Avlogging utført";
 
 $lang["_ARE_YOU_SURE"] = "Er du sikker?";
@@ -159,6 +166,7 @@ $lang["_START_DOWNLOAD"] = "Begyn nedlastning";
 $lang["_VOUCHER_SENT"] = "Invitasjon sendt";
 $lang["_VOUCHER_DELETED"] = "Invitasjon slettet";
 $lang["_VOUCHER_CANCELLED"] = "Denne filen eller invitasjonen har blitt utilgjengeliggjort.";
+$lang["_VOUCHER_USED"] = "Filesendings-invitasjon kan kun brukes 1 gang, invitasjonen er allerede brukt";
 $lang["_STARTED_DOWNLOADING"] = "Filnedlastning burde starte nå";
 
 // Upload page: information on steps user needs to perform
