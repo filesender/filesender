@@ -52,35 +52,40 @@ function displayimage($customimage,$defaultimage)
 
 	// check if default image exists  
 	if(file_exists($defaultimage) && is_file($defaultimage)) {
-	$displayimage = $defaultimage;
+		$displayimage = $defaultimage;
 	}
 
 	// check if custom image exists
 	if(file_exists($customimage) && is_file($customimage)) {
 
-	// if custom exists then overwrite default display image  
-	 $displayimage = $customimage; 
+		// if custom exists then overwrite default display image  
+		$displayimage = $customimage; 
 	}
 	if (!$displayimage == "") 
 	{
 
-	// Make sure the file is an image
+		// Make sure the file is an image
 		$imgData = getimagesize($displayimage);
 		if($imgData) {
-		// Set the appropriate content-type
-		// and provide the content-length.
+			$lastmoddate = gmdate("D, d M Y H:i:s", filemtime($displayimage))." GMT";
+			// see if this is a conditional get
+			if ( isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) && $_SERVER['HTTP_IF_MODIFIED_SINCE'] == $lastmoddate ) {
+				header("HTTP/1.0 304 Not Modified");
+				exit;
+			}
+			// Set the appropriate content-type
+			// and provide the content-length.
 	
-		header("Pragma: public");
-		header("Expires: 0");
-		header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+			header("Pragma: public");
+			header("Last-Modified: ".$lastmoddate); 
 	
-		header("Content-Type: image/jpg");
-		header("Content-length: " . filesize($displayimage));
+			header("Content-Type: image/jpg");
+			header("Content-length: " . filesize($displayimage));
 		
-		// Print the image data
-		readfile($displayimage);
+			// Print the image data
+			readfile($displayimage);
 
-		}  
+		}
 	}
 	return;
 }
