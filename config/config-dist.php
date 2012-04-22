@@ -80,8 +80,6 @@ public function loadConfig() {
 	// AuP settings
 	$config["AuP_default"] = false; //AuP value is already ticked
 	$config["AuP"] = true; // AuP is displayed
-	//$config["AuP_label"] = "I accept the terms and conditions of this service"; // moved AUP to language files
-	//$config["AuP_terms"] = "AuP Terms and conditions"; // moved AUP to language files
 
 	// Server settings
 	$config['default_daysvalid'] = 20; // Maximum number of days before file/voucher is expired
@@ -371,20 +369,6 @@ Dear Sir, Madam,<BR><BR>The file '{htmlfileoriginalname}' from {filefrom} has be
 </BODY>
 </HTML>{CRLF}{CRLF}--simple_mime_boundary--";
 	// End of email templates section
-
-	// The settings below are not implemented yet in 1.0
-	// and may become deprecated.
-	// Instructions [NOT IMPLEMENTED in 1.0]
-	$config['site_sendfileinstructions'] = '<B>To send a file.</B><BR>Type an email address into the To: box<BR>Select BROWSE to choose a file on your computer.<BR>Select SEND FILE to upload and send the file.';
-	$config['site_voucherinstructions'] = 'A Voucher allows someone to send you a file.<BR>To create a voucher. Enter an email address then select Send Voucher.<BR>An email will be sent to the recipient with a link to use the Voucher.';
-	$config['site_downloadinstructions'] = 'A file is available for you.<BR>Select Download File to download the file to your computer.';
-	
-	// Other settings not implemented yet (1.0)
-	$config['available_space'] = '20000M';
-	$config['about'] = true;
-	$config["help_link_visible"] = true;
-	$config['site_icon'] = 'cloudstor.png';
-	$config['site_css'] = '';
 	
 	// End of configurable settings
 
