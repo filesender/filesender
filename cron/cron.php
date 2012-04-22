@@ -123,16 +123,24 @@ function cleanUp() {
 		logProcess("CRON","SQL Error on selecting files". $e->getMessage());
 		return FALSE;
 	}
-		
+		// expired voucher is closed
 	try {
-		$query = "UPDATE files SET filestatus = 'Closed' WHERE fileexpirydate < %s AND
-			(filestatus = 'Available' OR filestatus = 'Voucher')";
+		$query = "UPDATE files SET filestatus = 'Voucher Cancelled' WHERE fileexpirydate < %s AND
+			(filestatus = 'Voucher')";
 		$db->fquery($query, $today);
 	} catch (DBException $e) {
-		logProcess("CRON", "SQL error while trying to close expired files" . $e->getMesssage());
+		logProcess("CRON", "SQL error while trying to change status to closed in expired vouchers" . $e->getMesssage());
 		return FALSE;
 	}
-
+	// expired file is deleted
+	try {
+		$query = "UPDATE files SET filestatus = 'Deleted' WHERE fileexpirydate < %s AND
+			(filestatus = 'Available')";
+		$db->fquery($query, $today);
+	} catch (DBException $e) {
+		logProcess("CRON", "SQL error while trying to change status to deleted in expired files" . $e->getMesssage());
+		return FALSE;
+	}
 	// Phase 2: remove files on disk that do not have at least one Available file associated with it
 	// in the database (loop through directory and check if file has status Available)
 
@@ -196,7 +204,7 @@ function cleanUp() {
 
 			// change status to closed in database
 			try {
-				$query = "UPDATE files SET filestatus = 'Closed' WHERE fileid = %s";
+				$query = "UPDATE files SET filestatus = 'Deleted' WHERE fileid = %s";
 				$db->fquery($query, $row['fileid']);
 			} catch (Exception $e) {
 				logProcess("CRON","SQL Error Updating files ".$e->getMessage());
