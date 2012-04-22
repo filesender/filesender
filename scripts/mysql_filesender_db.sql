@@ -11,7 +11,7 @@ USE `filesender`;
 --
 
 CREATE TABLE `files` (
-  `fileto` varchar(250) DEFAULT NULL,
+  `fileto` text DEFAULT NULL,
   `filesubject` varchar(250) DEFAULT NULL,
   `filevoucheruid` varchar(60) DEFAULT NULL,
   `filemessage` text,
@@ -45,7 +45,7 @@ CREATE TABLE `logs` (
   `logfileuid` varchar(60) DEFAULT NULL,
   `logtype` varchar(60) DEFAULT NULL,
   `logfrom` varchar(250) DEFAULT NULL,
-  `logto` varchar(250) DEFAULT NULL,
+  `logto` text DEFAULT NULL,
   `logdate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `logtime` time DEFAULT NULL,
   `logfilesize` bigint(20) DEFAULT NULL,
