@@ -61,12 +61,12 @@ class AuthSaml {
 
             // compare config admin to userUID
             if(isset($attributes[$config['saml_uid_attribute']][0])) {
-                $attributes["'saml_uid_attribute"] = $attributes[$config['saml_uid_attribute']][0];
+                $attributes["saml_uid_attribute"] = $attributes[$config['saml_uid_attribute']][0];
             } else if(isset($attributes[$config['saml_uid_attribute']])) {
-				$attributes["'saml_uid_attribute"] = $attributes[$config['saml_uid_attribute']];
+				$attributes["saml_uid_attribute"] = $attributes[$config['saml_uid_attribute']];
 			}
 
-            if(stristr($config['admin'], $attributes["'saml_uid_attribute"]) === FALSE) {
+            if(stristr($config['admin'], $attributes["saml_uid_attribute"]) === FALSE) {
                 return FALSE;
             } else {
                 return TRUE;
