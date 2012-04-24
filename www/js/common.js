@@ -173,15 +173,17 @@ function isValidDate(dateStr, format) {
    return true;
 }
 
-// validate return code to make sure it is parsable JSON
+// validate ajax return code to make sure it is parsable JSON
 function parseJSON(json)
 {
 	try {
           var data = JSON.parse(json);
 		  return data;
         } catch (e) {
-            alert("Fatal error (" + e + ")");
-        };
+			var msg = "Error accessing server. ";
+			if(debug) { msg += "Fatal error (" + e + ")";};
+			$("#scratch").html('<div id="message">'+msg+'</>');	
+     };
 }
 
 // display erro state details if debug is on

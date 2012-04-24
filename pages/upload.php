@@ -285,7 +285,7 @@
 			$("#dialog-autherror").dialog("open");
 			return;			
 		}
-		var data =  JSON.parse(data);
+		var data =  parseJSON(data);
 		if(data.errors)
 		{
 		$.each(data.errors, function(i,result){
