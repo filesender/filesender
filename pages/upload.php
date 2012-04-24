@@ -275,7 +275,7 @@
   		type: "POST",
   		url: "fs_upload.php?type=validateupload&vid="+vid,
   		data: {myJson:  JSON.stringify(json)}
-		}).success(function( data ) {
+		,success:function( data ) {
 		if(data == "") {
 		alert("No response from server");
 		return;	
@@ -314,7 +314,10 @@
 		} else {
 		getFlexApp("filesenderup").returnMsg(false)
 		}
-	
+		},error:function(xhr,err){
+   		 alert("readyState: "+xhr.readyState+"\nstatus: "+xhr.status);
+    	alert("responseText: "+xhr.responseText);
+		}
 	})
 	}
 	}
@@ -445,7 +448,7 @@ function uploadcomplete(name,size)
 	  type: "POST",
 	  url: "fs_upload.php?type=uploadcomplete&vid="+vid//,
 	  //data: {myJson:  JSON.stringify(json)}
-	}).success(function( data ) {
+	,success:function( data ) {
 
 	if(data == "err_cannotrenamefile")
 		{
@@ -454,6 +457,10 @@ function uploadcomplete(name,size)
 		window.location.href="index.php?s=complete";
 		} else {
 		window.location.href="index.php?s=completev";
+		}
+		},error:function(xhr,err){
+			// error function to display error message e.g.404 page not found
+			ajaxerror(xhr.readyState,xhr.status,xhr.responseText);
 		}
 });
 }
