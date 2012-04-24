@@ -152,7 +152,7 @@ $json_o=json_decode($filedata,true);
 				alert("No response from server");
 				return;	
 				}
-				var data =  JSON.parse(data);
+				var data =  parseJSON(data);
 				if(data.errors)
 				{
 				$.each(data.errors, function(i,result){
