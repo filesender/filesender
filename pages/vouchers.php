@@ -128,7 +128,7 @@ function postVoucher()
 	 type: "POST",
 	 url: "fs_upload.php?type=insertVoucherAjax",
 	 data: {myJson:  JSON.stringify(json)}
-		}).success(function( msg ) {
+		,success:function( msg ) {
 		// complete or display validation messages 
 		if(msg == "complete") { window.location.href="index.php?s=vouchers&a=complete"; } 
 		if(msg == "err_tomissing") { $("#fileto_msg").show();} // missing email data
@@ -137,6 +137,10 @@ function postVoucher()
 		if(msg == "err_invalidemail") { $("#fileto_msg").show();} // 1 or more emails invalid
 		if(msg == "not_authenticated") { $("#_noauth").show();} // server returns not authenticated
 		if(msg == "") { $("#_noauth").show();} // server returns not authenticated
+		},error:function(xhr,err){
+			// error function to display error message e.g.404 page not found
+			ajaxerror(xhr.readyState,xhr.status,xhr.responseText);
+		}
 	});
 }
 //]]>

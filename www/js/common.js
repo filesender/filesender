@@ -172,3 +172,22 @@ function isValidDate(dateStr, format) {
    if (parseFloat(mm)-1 != dt.getMonth()) { return false; }
    return true;
 }
+
+// validate return code to make sure it is parsable JSON
+function parseJSON(json)
+{
+	try {
+          var data = JSON.parse(json);
+		  return data;
+        } catch (e) {
+            alert("Fatal error (" + e + ")");
+        };
+}
+
+// display erro state details if debug is on
+function ajaxerror(readyState,status,responseText)
+{
+	var msg = "Error accessing server. ";
+	if(debug) { msg += " Ready State:"+readyState + ", status:" + status + ",responseText" + responseText + "";};
+	$("#scratch").html('<div id="message">'+msg+'</>');						   
+}

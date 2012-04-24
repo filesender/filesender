@@ -147,7 +147,7 @@ $json_o=json_decode($filedata,true);
   				type: "POST",
 				url: "fs_upload.php?type=addRecipient",
 				data: {myJson:  JSON.stringify(json)}
-				}).success(function( data ) {
+				,success:function( data ) {
 				if(data == "") {
 				alert("No response from server");
 				return;	
@@ -166,6 +166,10 @@ $json_o=json_decode($filedata,true);
 				{
 				// done
 				window.location.href="index.php?s=files&a=added";
+				}
+				},error:function(xhr,err){
+				// error function to display error message e.g.404 page not found
+				ajaxerror(xhr.readyState,xhr.status,xhr.responseText);
 				}
 				});
 				}

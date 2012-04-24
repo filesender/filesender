@@ -88,6 +88,9 @@ if(!$authvoucher->aVoucher() && !$authsaml->isAuth() && $s != "complete" && $s !
 <script type="text/javascript" src="js/jquery-1.7.min.js" ></script>
 <script type="text/javascript" src="js/jquery-ui-1.8.1.custom.min.js"></script>
 <script type="text/javascript">
+
+var debug = <?php echo $config["debug"] ? 'true' : 'false'; ?> ;
+
 $(function() {
 	
 	// display topmenu, content and userinformation
