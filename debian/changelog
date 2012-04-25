@@ -8,6 +8,10 @@ filesender (1.5~beta2) unstable; urgency=medium
        config-dist.php file. All other templates/sample files have been
        moved to ./config-templates or their contents have been merged
        into the ./language/* files.
+     - The supplied config-dist.php has been cleaned up and contains some 
+       important changes. It is recommended to create an fresh config.php
+       from the supplied config-dist.php file and adapt that one with your
+       local settings.
      - Two database column type changes (needs manual adjustment when 
        upgrading).
      - Changed and consolidated language file naming scheme.
