@@ -648,7 +648,7 @@ if ( hasProductInstall && !hasRequestedVersion ) {
 	
   } else {  // flash is too old or we can't detect the plugin
     var alternateContent = '<div id="errmessage" align="center"><br />This application requires Flash for uploading files.<br /><br />'
-  	+ 'To install Flash Player go to www.adobe.com.<br /> <br /> '
+  	+ 'To install Flash Player go to <a href="http://www.adobe.com" target="_blank">www.adobe.com<a>.<br /> <br /> '
    	+ '</div>';
 	$("#content").html(alternateContent);
   }
