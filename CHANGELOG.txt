@@ -1,14 +1,19 @@
-Last update: 1 April 2012
+Last update: 25 April 2012
 
-Version 1.5-beta2 <?? April 2012>
+Version 1.5-beta2 <25 April 2012>
 
 	Major changes since 1.5-beta1
+        [ see http://www.assembla.com/spaces/file_sender/wiki/Installation_notes_for_1-5_development_code
+	  for important Upgrade notes ]
 	- The ./config directory as distributed now only contains a sample
 	  config-dist.php file. All other templates/sample files have been
 	  moved to ./config-templates or their contents have been merged
 	  into the ./language/* files.
+	- Two database column type changes (needs manual adjustment when 
+	  upgrading).
 	- Changed and consolidated language file naming scheme.
-	- Added Czech and Slovenian language files.
+	- Added Czech, Slovenian, Italian, Spanish, Croatian and Hungarian
+	  language files.
 	- Updated Dutch and Norwegian language files.
 
 	Major (less visible) changes since 1.5-beta1
