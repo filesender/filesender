@@ -98,7 +98,8 @@
 	var aup = '<?php echo $config['AuP'] ?>';
 	var bytesUploaded = 0;
 	var bytesTotal = 0;
-	var banextensions = '<?php echo $config['ban_extension']?>';
+	var ext = '<?php echo $config['ban_extension']?>';
+	var banextensions = ext.split(",")
 	var previousBytesLoaded = 0;
 	var intervalTimer = 0;
 	var html5 = false;
@@ -294,6 +295,7 @@
 		if(result == "err_exoutofrange") { $("#expiry_msg").show();} // expiry date out of range
 		if(result == "err_invalidemail") { $("#fileto_msg").show();} // 1 or more emails invalid
 		if(result == "err_invalidfilename") { $("#file_msg").show();} //  invalid filename
+		if(result == "err_invalidextension") { $("#extension_msg").show();} //  invalid extension
 		if(result == "err_nodiskspace") { errorDialog(errmsg_disk_space);}
 		})
 		}
@@ -355,14 +357,16 @@ function validate_aup()
 	}
 }
 
-// validate extension
+// validate extension - returns true if valid
 function validateextension(filename)
 {
-	if(filename.split('.').pop().search(banextensions) == -1)
-	{
-	return true;
-	} else {
-	return false;
+	for ( var i=0, len=banextensions.length; i<len; ++i ){
+		if(filename.split('.').pop() == banextensions[i])
+		{
+			return false;
+		} else {
+			return true;
+		}
 	}
 }
 
@@ -395,8 +399,7 @@ function validate_file()
 		fileMsg("<?php echo lang("_INVALID_TOO_LARGE_1") ?> " + readablizebytes(maxHTML5uploadsize) + ". <?php echo lang("_SELECT_ANOTHER_FILE") ?> ");	
 		return false;
 		}
-		var tmpExtension = file.name.split('.').pop();
-		if(banextensions.search(tmpExtension) != -1)
+		if(!validateextension(file.name))
 		{
 		fileMsg("<?php echo lang("_INVALID_FILE_EXT") ?>");	
 		return false;
@@ -490,8 +493,8 @@ function getFlexApp(appName)
 
 function validatefilename(name)
 {
-	var tmpExtension = name.split('.').pop();
-		if(banextensions.search(tmpExtension) != -1)
+	
+		if(!validateextension(name))
 		{
 		fileMsg("<?php echo lang("_INVALID_FILE_EXT")." ".lang("_SELECT_ANOTHER_FILE") ?>");	
 		return false;
@@ -662,6 +665,7 @@ if ( hasProductInstall && !hasRequestedVersion ) {
             <input type="file" name="fileToUpload" id="fileToUpload" onchange="fileSelected();" />
           </div>
           <div id="file_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_FILE"); ?></div>
+		  <div id="extension_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_FILE_EXT"); ?></div>
         </td>
         <td colspan="2" align="center" valign="top"><div id="html5text"></div></td>
       </tr>
