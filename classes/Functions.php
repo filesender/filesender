@@ -619,7 +619,10 @@ class Functions {
 		// filename missing
 		if(!isset($data["fileoriginalname"])){ array_push($errorArray, "err_invalidfilename");}
 		// filename has invalid extension - $config['ban_extension'] as array
-		if(isset($data["fileoriginalname"]) && strstr($config['ban_extension'],pathinfo($data["fileoriginalname"], PATHINFO_EXTENSION)) ){ array_push($errorArray, "err_invalidfilename");}
+		$ban_extension = explode(',', $config['ban_extension']);
+		foreach ($ban_extension as $extension) {
+			if(isset($data["fileoriginalname"]) && $extension == pathinfo($data["fileoriginalname"], PATHINFO_EXTENSION) ){ array_push($errorArray, "err_invalidextension");}
+		}
 		// filename blank
 		if(isset($data["fileoriginalname"]) && $data["fileoriginalname"] === ""){ array_push($errorArray, "err_invalidfilename");}
 		// filename contains invalid characters
