@@ -46,13 +46,16 @@ class Log {
         }
         return self::$instance;
     } 
-
+	
+	public function __construct() {
+	  $this->db = DB::getInstance();
+	 }
     //--------------------------------------- NOTE PDO this
     // Save Log Data
     //
     public function saveLog($dataitem,$logType,$message){
 
-        $db = DB::getInstance();
+		$db = DB::getInstance();
 		
         global $config;
 
@@ -62,7 +65,7 @@ class Log {
         } else {
             $authAttributes["saml_uid_attribute"] = "";
         }
-        $dbCheck = DB_Input_Checks::getInstance();
+        //$dbCheck = DB_Input_Checks::getInstance();
 
 
         // If authenticated also add authID to log
@@ -91,9 +94,10 @@ class Log {
             $logmessage	= $message;
             $logauthuseruid	= $authAttributes["saml_uid_attribute"];
         }
-
-        $sqlQuery	= "
-            INSERT INTO 
+		
+		$pdo = $this->db->connect();
+		$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
+		$statement = $pdo->prepare("INSERT INTO 
             logs 
             (
                 logfileuid,
@@ -109,39 +113,39 @@ class Log {
             ) 
             VALUES 
             (
-                %s,
-                %s, 
-                %s, 
-                %s, 
-                %s,
-                %s,
-                %s,
-                %s,
-                %s,
-                %s
-            )";
-
-        $result = $db->fquery(
-            $sqlQuery,
-            $logfileuid,
-            $logvoucheruid,
-            $logtype,
-            $logfrom,
-            $logto,
-            $logdate,
-            $logfilesize,
-            $logfilename,
-            $logmessage,
-            $logauthuseruid
-        ) or die("Error");
-
-        // error in log file
-        if(!$result){
-            return  false;
-        } else {
-            return true;
-        }
-
+                :logfileuid,
+                :logvoucheruid, 
+                :logtype , 
+                :logfrom, 
+                :logto, 
+                :logdate, 
+                :logfilesize, 
+                :logfilename, 
+                :logmessage,
+                :logauthuseruid
+            )");
+			
+			$statement->bindParam(':logfileuid',$logfileuid);
+			$statement->bindParam(':logvoucheruid',$logvoucheruid); 
+			$statement->bindParam(':logtype', $logtype);
+			$statement->bindParam(':logfrom', $logfrom);
+			$statement->bindParam(':logto', $logto);
+			$statement->bindParam(':logdate',$logdate); 
+			$statement->bindParam(':logfilesize', $logfilesize);
+			$statement->bindParam(':logfilename', $logfilename);
+			$statement->bindParam(':logmessage',$logmessage);
+			$statement->bindParam(':logauthuseruid',$logauthuseruid);
+		
+		try 
+		{ 	
+			$statement->execute(); 
+			 return true;
+		}
+		catch(PDOException $e)
+		{ 
+			displayError($e->getMessage()); 
+			return  false;
+		}
     }
 
     // logfile for individual client specific logging
