@@ -126,6 +126,7 @@ $lang["_ERROR_INCORRECT_FILE_SIZE"] = "Probléma a fájl feltöltése közben. <
 $lang["_MAXEMAILS"] = "A maximális email címek száma: ";
 $lang["_INVALID_DATE_FORMAT"] = "Az dátum formátuma érvénytelen.";
 $lang["_DISK_SPACE_ERROR"] = "Nincs elegendő hely a szolgáltatáshoz. Forduljon az adminisztrátorhoz vagy töltsön fel kisebb fájlt.";
+$lang["_ERROR_ATTRIBUTES"] = "Your Identity Provider is not providing the required attributes. Contact your Administrator";
 
 // Logout page
 $lang["_LOGOUT_COMPLETE"] = "A kijelentkezés sikerült";

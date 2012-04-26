@@ -126,7 +126,7 @@ $lang["_ERROR_UPLOADING_FILE"] = "Chyba při nahrávání souboru";
 $lang["_MAXEMAILS"] = "Maximálni počet povolených emailových adres je ";
 $lang["_INVALID_DATE_FORMAT"] = "Nesprávný formát datumu.";
 $lang["_DISK_SPACE_ERROR"] = "Není dostatek místa na disku. Prosím, kontaktujte správce této služby nebo nahrajte menší soubor.";
-
+$lang["_ERROR_ATTRIBUTES"] = "Your Identity Provider is not providing the required attributes. Contact your Administrator";
 
 $lang["_LOGOUT_COMPLETE"] = "Odhlášení proběhlo úspěšně";
 

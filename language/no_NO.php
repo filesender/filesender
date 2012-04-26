@@ -135,6 +135,7 @@ $lang["_ERROR_INCORRECT_FILE_SIZE"] = "Det oppsto en feil under fil-opplasting. 
 $lang["_MAXEMAILS"] = "Tillat antall epost-adresser er ";
 $lang["_INVALID_DATE_FORMAT"] = "Feil dato-format";
 $lang["_DISK_SPACE_ERROR"] = "Tjenesten har ikke nok diskplass.  Ta kontakt med tjeneste-ansvarlig og/eller prøv med en mindre stor fil";
+$lang["_ERROR_ATTRIBUTES"] = "Your Identity Provider is not providing the required attributes. Contact your Administrator";
 
 $lang["_LOGOUT_COMPLETE"] = "Avlogging utført";
 

@@ -125,6 +125,7 @@ $lang["_ERROR_UPLOADING_FILE"] = "Dogodila se greška tijekom prijenosa vaše da
 $lang["_MAXEMAILS"] = "Maksimalno dopušteni broj email adresa je ";
 $lang["_INVALID_DATE_FORMAT"] = "Format datuma je neispravan.";
 $lang["_DISK_SPACE_ERROR"] = "Nema dovoljno mjesta na poslužitelju za prijenos ove datoteke. Molimo kontaktirajte administratore ili prenesite manju datoteku.";
+$lang["_ERROR_ATTRIBUTES"] = "Your Identity Provider is not providing the required attributes. Contact your Administrator";
 
 
 $lang["_LOGOUT_COMPLETE"] = "Odjava završena";
