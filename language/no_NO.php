@@ -187,7 +187,7 @@ $lang["_SEND_VOUCHER"] = "Send invitasjon";
 // confirmation
 $lang["_CONFIRM_DELETE_FILE"] = "Er du sikker at du vil slette filen?";
 $lang["_CONFIRM_DELETE_VOUCHER"] = "Er du sikker at du ønsker å tilbaketrekke invitasjonen?";
-$lang["_CONFIRM_RESEND_EMAIL"] = "Are you sure you want to resend this email?";
+$lang["_CONFIRM_RESEND_EMAIL"] = "Er du sikker at du ønsker å sende eposten på nytt?";
 
 // standard date display format
 $lang['datedisplayformat'] = "Y-m-d"; // Format for displaying date/time, use PHP date() format string syntax 
