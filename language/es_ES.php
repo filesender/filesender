@@ -131,6 +131,7 @@ $lang["_ERROR_UPLOADING_FILE"] = "Error al subir el archivo";
 $lang["_MAXEMAILS"] = "El n&uacute;mero m&aaacute;ximo de destinatarios del correo son";
 $lang["_INVALID_DATE_FORMAT"] = "Formato de fecha err&oacute;o";
 $lang["_DISK_SPACE_ERROR"] = "Espacio de disco insuficiente. Contacte con el administrador del servicio o suba un archivo menor";
+$lang["_ERROR_ATTRIBUTES"] = "Your Identity Provider is not providing the required attributes. Contact your Administrator";
 
 $lang["_LOGOUT_COMPLETE"] = "Logout completado";
 

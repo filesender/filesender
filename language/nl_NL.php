@@ -107,6 +107,7 @@ $lang["_ERROR_INCORRECT_FILE_SIZE"] = "Er is een probleem opgetreden bij het upl
 $lang["_MAXEMAILS"] = "Het maximum aantal toegestane mailadressen is ";
 $lang["_INVALID_DATE_FORMAT"] = "De datum is in een ongeldig formaat.";
 $lang["_DISK_SPACE_ERROR"] = "Er is niet genoeg vrije ruimte op deze service. Neemt u s.v.p. contact op met de beheerder of upload een kleiner bestand.";
+$lang["_ERROR_ATTRIBUTES"] = "Your Identity Provider is not providing the required attributes. Contact your Administrator";
 
 
 // Vouchers

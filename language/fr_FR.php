@@ -124,6 +124,7 @@ $lang["_ERROR_UPLOADING_FILE"] = "Erreur de téléchargement du fichier";
 $lang["_MAXEMAILS"] = "Le nombre maximal d'adresses email acceptées est ";
 $lang["_INVALID_DATE_FORMAT"] = "Format de date non valide.";
 $lang["_DISK_SPACE_ERROR"] = "Il n'y a plus assez d'espace disque. Veuillez contacter l'administrateur du service ou télécharger un fichier plus petit.";
+$lang["_ERROR_ATTRIBUTES"] = "Your Identity Provider is not providing the required attributes. Contact your Administrator";
 			
 			
 $lang["_LOGOUT_COMPLETE"] = "Déconnexion réussie";

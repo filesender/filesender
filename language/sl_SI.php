@@ -126,6 +126,7 @@ $lang["_ERROR_UPLOADING_FILE"] = "Napaka pri nalaganju dokumenta";
 $lang["_MAXEMAILS"] = "Največje dovoljeno število naslovnikov je";
 $lang["_INVALID_DATE_FORMAT"] = "Zapis datuma je neveljaven.";
 $lang["_DISK_SPACE_ERROR"] = "Na strežniku je zmanjkalo prostora. Obvestite skrbnika storitve ali poskusite s prenosom manjšega dokumenta.";
+$lang["_ERROR_ATTRIBUTES"] = "Your Identity Provider is not providing the required attributes. Contact your Administrator";
 
 $lang["_LOGOUT_COMPLETE"] = "Odjava je uspela";
 

@@ -127,6 +127,7 @@ $lang["_ERROR_INCORRECT_FILE_SIZE"] = "Si è verificato un errore durante il car
 $lang["_MAXEMAILS"] = "Il numero massimo di indirizzi email è ";
 $lang["_INVALID_DATE_FORMAT"] = "Il formato della data non è valido";
 $lang["_DISK_SPACE_ERROR"] = "Non c'è sufficiente spazio disco su questo server. Per favore contatta l'amministrazione del servizio o carica un file di dimensioni minori.";
+$lang["_ERROR_ATTRIBUTES"] = "Your Identity Provider is not providing the required attributes. Contact your Administrator";
 
 // Logout page
 $lang["_LOGOUT_COMPLETE"] = "Logout completato.";

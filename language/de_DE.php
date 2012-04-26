@@ -125,7 +125,7 @@ $lang["_ERROR_UPLOADING_FILE"] = "Fehler beim Hochladen Ihrer Datei";
 $lang["_MAXEMAILS"] = "Die maximal erlaubte Zahl an E-Mail Adressen ist ";
 $lang["_INVALID_DATE_FORMAT"] = "Das Datumsformat ist ungültig.";
 $lang["_DISK_SPACE_ERROR"] = "Es ist nicht genügend Speicherplatz vorhanden. Bitte benachrichtigen Sie den Service Administrator oder laden Sie eine kleinere Datei hoch.";
-
+$lang["_ERROR_ATTRIBUTES"] = "Your Identity Provider is not providing the required attributes. Contact your Administrator";
 
 $lang["_LOGOUT_COMPLETE"] = "Logout abgeschlossen";
 
