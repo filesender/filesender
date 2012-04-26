@@ -169,7 +169,7 @@ $lang["_OPTIONAL"] = "izbirno";
 // confirmation
 $lang["_CONFIRM_DELETE_FILE"] = "Ste prepričani, da želite izbrisati ta dokument?";
 $lang["_CONFIRM_DELETE_VOUCHER"] = "Ste prepričani, da želite izbrisati ta vavčer?";
-
+$lang["_CONFIRM_RESEND_EMAIL"] = "Are you sure you want to resend this email?";
 
 // standard date display format
 $lang['datedisplayformat'] = "d/m/Y"; // Format for displaying date/time, use PHP date() format string syntax 
