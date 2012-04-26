@@ -171,6 +171,7 @@ $lang["_OPTIONAL"] = "választható";
 // confirmation
 $lang["_CONFIRM_DELETE_FILE"] = "Biztosan törölni akarja a fájlt?";
 $lang["_CONFIRM_DELETE_VOUCHER"] = "Biztosan törölni akarja a meghívót?";
+$lang["_CONFIRM_RESEND_EMAIL"] = "Are you sure you want to resend this email?";
 
 // standard date display format
 $lang['datedisplayformat'] = "Y-m-d"; // Format for displaying date/time, use PHP date() format string syntax 

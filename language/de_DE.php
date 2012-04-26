@@ -170,6 +170,7 @@ $lang["_OPTIONAL"] = "optional";
 // confirmation
 $lang["_CONFIRM_DELETE_FILE"] = "Sind Sie sicher, dass Sie diese Datei löschen wollen?";
 $lang["_CONFIRM_DELETE_VOUCHER"] = "Sind Sie sicher, dass Sie diesen Voucher löschen wollen?";
+$lang["_CONFIRM_RESEND_EMAIL"] = "Are you sure you want to resend this email?";
 
 // standard date display format
 $lang['datedisplayformat'] = "d.m.Y"; // Format for displaying date/time, use PHP date() format string syntax

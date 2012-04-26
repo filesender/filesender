@@ -169,6 +169,7 @@ $lang["_OPTIONAL"] = "opcionalno";
 // confirmation
 $lang["_CONFIRM_DELETE_FILE"] = "Jeste li sigurni da želite obrisati ovu datoteku?";
 $lang["_CONFIRM_DELETE_VOUCHER"] = "Jeste li sigurni da želite obrisati ovaj kupon?";
+$lang["_CONFIRM_RESEND_EMAIL"] = "Are you sure you want to resend this email?";
 
 // standard date display format
 $lang['datedisplayformat'] = "d.m.Y"; // Format for displaying date/time, use PHP date() format string syntax

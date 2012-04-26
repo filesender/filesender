@@ -174,6 +174,7 @@ $lang["_OPTIONAL"] = "opcional";
 // confirmation
 $lang["_CONFIRM_DELETE_FILE"] = "&iquest;Est&aacute; seguro de que quiere eliminar este archivo?";
 $lang["_CONFIRM_DELETE_VOUCHER"] = "&iquest;Est&aacute; seguro de que quiere eliminar esta Invitaci&oacute;n de env&iacute;o?";
+$lang["_CONFIRM_RESEND_EMAIL"] = "Are you sure you want to resend this email?";
 
 // standard date display format
 $lang['datedisplayformat'] = "d/m/Y"; // Format for displaying date/time, use PHP date() format string syntax 

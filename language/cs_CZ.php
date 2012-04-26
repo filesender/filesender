@@ -171,6 +171,7 @@ $lang["_OPTIONAL"] = "volitelné";
 // confirmation
 $lang["_CONFIRM_DELETE_FILE"] = "Jste si jist, že chcete smazat tento soubor?";
 $lang["_CONFIRM_DELETE_VOUCHER"] = "Jste si jist, že chcete smazat tuto pozvánku?";
+$lang["_CONFIRM_RESEND_EMAIL"] = "Are you sure you want to resend this email?";
 
 // standard date display format - vouchers, sent files
 $lang['datedisplayformat'] = "d/m/y"; // Format for displaying date/time, use PHP date() format string syntax 
