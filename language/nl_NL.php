@@ -174,7 +174,7 @@ $lang["_FILE_DELETED"] = "Dit bestand is verwijderd.";
 // confirmation
 $lang["_CONFIRM_DELETE_FILE"] = "Wilt U dit bestand echt verwijderen?";
 $lang["_CONFIRM_DELETE_VOUCHER"] = "Wilt U deze uitnodiging echt intrekken?";
-$lang["_CONFIRM_RESEND_EMAIL"] = "Are you sure you want to resend this email?";
+$lang["_CONFIRM_RESEND_EMAIL"] = "Wilt u deze e-mail echt opnieuw versturen?";
 
 // standard date display format
 $lang['datedisplayformat'] = "d-m-Y"; // Format for displaying date/time, use PHP date() format string syntax 
