@@ -148,7 +148,8 @@ function openabout()
       <p><img src="displayimage.php" width="800" height="60" border="0" alt="banner" /></p>
       <noscript>
       <p class="style5 style1">JavaScript is turned off in your web browser. <br />
-        This application will not run without Javascript enabled in your web browser. <br />
+        This application will not run without Javascript enabled in your web browser. <br /><br />
+		See <A href="http://www.filesender.org">www.filesender.org</A> for more information.<br />
         <br />
       </p>
       </noscript>
