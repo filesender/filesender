@@ -139,6 +139,7 @@ A meghívó emailben elküldésre kerül egy link amit a meghívott használhat.
 // User interaction
 $lang["_EMAIL_SEPARATOR_MSG"] = "Többszörös email cím hozzáadása ,-vel vagy ;-vel elválasztva lehetséges";
 $lang["_NO_FILES"] = "Jelenleg nincs elérhető fájl";
+$lang["_NO_VOUCHERS"] = "There are currently no vouchers available";
 $lang["_ARE_YOU_SURE"] = "Bizos benne?";
 $lang["_DELETE_FILE"] = "Fájl törlése";
 $lang["_EMAIL_SENT"] = "Üzenet elküldve";

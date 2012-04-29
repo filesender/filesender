@@ -149,6 +149,7 @@ $lang["_ME"] = "Meg";
 // MYFILES
 
 $lang["_NO_FILES"] = "Ingen filer funnet";
+$lang["_NO_VOUCHERS"] = "There are currently no vouchers available";
 
 // Myfiles: re-send email: tooltips, dialogue box and on-screen message 
 $lang["_RE_SEND_EMAIL"] = "Send epost på nytt";

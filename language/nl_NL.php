@@ -98,6 +98,7 @@ $lang["_SELECT_FILE"] = "Selecteer een bestand om te uploaden";
 $lang["_UPLOADING_WAIT"] = "Uploaden bestand - even geduld a.u.b. ...";
 $lang["_EMAIL_SEPARATOR_MSG"] = "Meerdere e-mailadressen gescheiden door, of ;";
 $lang["_NO_FILES"] = "Er zijn momenteel geen bestanden beschikbaar";
+$lang["_NO_VOUCHERS"] = "There are currently no vouchers available";
 
 $lang["_AUPTERMS"] = "Algemene voorwaarden";
 $lang["_ACCEPTTOC"] = "Ik ga akkoord met de bepalingen en voorwaarden van deze dienst.";	

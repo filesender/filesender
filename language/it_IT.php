@@ -139,6 +139,7 @@ Il destinatario riceverà un'email contenente il link per utilizzare il voucher.
 $lang["_EMAIL_SEPARATOR_MSG"] = "Indirizzi di posta elettronica separati da , o ;";
 
 $lang["_NO_FILES"] = "Al momento non ci sono file disponibili.";
+$lang["_NO_VOUCHERS"] = "There are currently no vouchers available";
 $lang["_ARE_YOU_SURE"] = "Sei sicura/o?";
 $lang["_DELETE_FILE"] = "Elimina File";
 $lang["_EMAIL_SENT"] = "Messaggio Inviato";

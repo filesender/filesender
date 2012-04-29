@@ -142,6 +142,7 @@ El destinatario recibir&aacute; un correo con un enlace a la invitaci&oacute;n.<
 $lang["_EMAIL_SEPARATOR_MSG"] = "M&uacute;ltiples direcciones de correo separadas por ',' o ';'";
 
 $lang["_NO_FILES"] = "No hay archivos disponbles";
+$lang["_NO_VOUCHERS"] = "There are currently no vouchers available";
 $lang["_ARE_YOU_SURE"] = "&iquest;Est&aacute; seguro?";
 $lang["_DELETE_FILE"] = "Eliminar archivo";
 $lang["_EMAIL_SENT"] = "Mensaje enviado";

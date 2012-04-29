@@ -139,6 +139,7 @@ An email will be sent to the recipient with a link to use the Voucher.";
 // User interaction
 $lang["_EMAIL_SEPARATOR_MSG"] = "Multiple email addresses separated by , or ;";
 $lang["_NO_FILES"] = "There are currently no files available";
+$lang["_NO_VOUCHERS"] = "There are currently no vouchers available";
 $lang["_ARE_YOU_SURE"] = "Are you sure?";
 $lang["_DELETE_FILE"] = "Delete File";
 $lang["_EMAIL_SENT"] = "Message Sent";

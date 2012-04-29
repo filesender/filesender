@@ -136,6 +136,7 @@ Dem Empfänger wird eine E-Mail mit einem Link zum Voucher erhalten.";
 $lang["_EMAIL_SEPARATOR_MSG"] = "Mehrere E-Mail Adressen trennen durch , oder ;";
 
 $lang["_NO_FILES"] = "Im Augenblick sind keine Dateien verfügbar";
+$lang["_NO_VOUCHERS"] = "There are currently no vouchers available";
 $lang["_ARE_YOU_SURE"] = "Sind Sie sicher?";
 $lang["_DELETE_FILE"] = "Datei löschen";
 $lang["_EMAIL_SENT"] = "E-Mail wurde versandt";

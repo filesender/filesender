@@ -136,6 +136,7 @@ Une email sera envoyée à la personne avec un lien sur le ticket.";
 $lang["_EMAIL_SEPARATOR_MSG"] = "Multiples adresses email séparées par , ou ;";
 			
 $lang["_NO_FILES"] = "Il n'y a pas de fichiers disponibles pour l'instant.";
+$lang["_NO_VOUCHERS"] = "There are currently no vouchers available";
 $lang["_ARE_YOU_SURE"] = "Etes-vous certain ?";
 $lang["_DELETE_FILE"] = "Supprimer fichier";
 $lang["_EMAIL_SENT"] = "Message envoyé";

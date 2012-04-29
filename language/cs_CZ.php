@@ -137,6 +137,7 @@ Email s odkazem na pozvánku bude odeslán příjemci.";
 $lang["_EMAIL_SEPARATOR_MSG"] = "Více emailových adres je možné oddělit pomocí , nebo ;";
 
 $lang["_NO_FILES"] = "Žádný soubor není momentálně dostupný";
+$lang["_NO_VOUCHERS"] = "There are currently no vouchers available";
 $lang["_ARE_YOU_SURE"] = "Jste si jist?";
 $lang["_DELETE_FILE"] = "Smazat soubor";
 $lang["_EMAIL_SENT"] = "Zpráva odeslána";

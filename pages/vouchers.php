@@ -225,6 +225,12 @@ $json_o=json_decode($filedata,true);
 	}
 ?>
   </table>
+ <?php
+  if($i==0)
+	{
+		echo lang("_NO_VOUCHERS");
+	}
+?>
 </div>
 <div id="dialog-delete" style="display:none" title="<?php echo lang("_DELETE_VOUCHER") ?>">
 <p><?php echo lang("_CONFIRM_DELETE_VOUCHER"); ?></p>
