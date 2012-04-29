@@ -137,6 +137,7 @@ Email će biti poslan primatelju sa vezom do kupona.";
 $lang["_EMAIL_SEPARATOR_MSG"] = "Više adresa razdijelite sa , ili ;";
 
 $lang["_NO_FILES"] = "Trenutno nema dostupnih datoteka";
+$lang["_NO_VOUCHERS"] = "There are currently no vouchers available";
 $lang["_ARE_YOU_SURE"] = "Jeste li sigurni?";
 $lang["_DELETE_FILE"] = "Izbriši datoteku";
 $lang["_EMAIL_SENT"] = "Poruka poslana";

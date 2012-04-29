@@ -137,6 +137,7 @@ Naslovniku bo poslano sporočilo, s povezavo do vavčerja.";
 $lang["_EMAIL_SEPARATOR_MSG"] = "Ob navedbi več naslovnikov, elektronske naslove ločite z , ali ;";
 
 $lang["_NO_FILES"] = "Trenutno ni na voljo nobenih dokumentov";
+$lang["_NO_VOUCHERS"] = "There are currently no vouchers available";
 $lang["_ARE_YOU_SURE"] = "Ste prepričani?";
 $lang["_DELETE_FILE"] = "Izbriši dokument";
 $lang["_EMAIL_SENT"] = "Sporočilo je poslano";
