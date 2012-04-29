@@ -124,7 +124,6 @@ $lang["_ERROR_UPLOADING_FILE"] = "Erreur de téléchargement du fichier";
 $lang["_MAXEMAILS"] = "Le nombre maximal d'adresses email acceptées est ";
 $lang["_INVALID_DATE_FORMAT"] = "Format de date non valide.";
 $lang["_DISK_SPACE_ERROR"] = "Il n'y a plus assez d'espace disque. Veuillez contacter l'administrateur du service ou télécharger un fichier plus petit.";
-$lang["_ERROR_ATTRIBUTES"] = "Your Identity Provider is not providing the required attributes. Contact your Administrator";
 			
 			
 $lang["_LOGOUT_COMPLETE"] = "Déconnexion réussie";
@@ -136,7 +135,6 @@ Une email sera envoyée à la personne avec un lien sur le ticket.";
 $lang["_EMAIL_SEPARATOR_MSG"] = "Multiples adresses email séparées par , ou ;";
 			
 $lang["_NO_FILES"] = "Il n'y a pas de fichiers disponibles pour l'instant.";
-$lang["_NO_VOUCHERS"] = "There are currently no vouchers available";
 $lang["_ARE_YOU_SURE"] = "Etes-vous certain ?";
 $lang["_DELETE_FILE"] = "Supprimer fichier";
 $lang["_EMAIL_SENT"] = "Message envoyé";
@@ -171,7 +169,6 @@ $lang["_OPTIONAL"] = "Optionnel";
 // confirmation
 $lang["_CONFIRM_DELETE_FILE"] = "Etes-vous sûr de vouloir supprimer ce fichier ?";
 $lang["_CONFIRM_DELETE_VOUCHER"] = "Etes-vous sûr de vouloir supprimer ce ticket ?";
-$lang["_CONFIRM_RESEND_EMAIL"] = "Are you sure you want to resend this email?";
 
 // standard date display format
 $lang['datedisplayformat'] = "d/m/Y"; // Format for displaying date/time, use PHP date() format string syntax 

@@ -125,7 +125,6 @@ $lang["_ERROR_UPLOADING_FILE"] = "Dogodila se greška tijekom prijenosa vaše da
 $lang["_MAXEMAILS"] = "Maksimalno dopušteni broj email adresa je ";
 $lang["_INVALID_DATE_FORMAT"] = "Format datuma je neispravan.";
 $lang["_DISK_SPACE_ERROR"] = "Nema dovoljno mjesta na poslužitelju za prijenos ove datoteke. Molimo kontaktirajte administratore ili prenesite manju datoteku.";
-$lang["_ERROR_ATTRIBUTES"] = "Your Identity Provider is not providing the required attributes. Contact your Administrator";
 
 
 $lang["_LOGOUT_COMPLETE"] = "Odjava završena";
@@ -137,7 +136,6 @@ Email će biti poslan primatelju sa vezom do kupona.";
 $lang["_EMAIL_SEPARATOR_MSG"] = "Više adresa razdijelite sa , ili ;";
 
 $lang["_NO_FILES"] = "Trenutno nema dostupnih datoteka";
-$lang["_NO_VOUCHERS"] = "There are currently no vouchers available";
 $lang["_ARE_YOU_SURE"] = "Jeste li sigurni?";
 $lang["_DELETE_FILE"] = "Izbriši datoteku";
 $lang["_EMAIL_SENT"] = "Poruka poslana";
@@ -171,7 +169,6 @@ $lang["_OPTIONAL"] = "opcionalno";
 // confirmation
 $lang["_CONFIRM_DELETE_FILE"] = "Jeste li sigurni da želite obrisati ovu datoteku?";
 $lang["_CONFIRM_DELETE_VOUCHER"] = "Jeste li sigurni da želite obrisati ovaj kupon?";
-$lang["_CONFIRM_RESEND_EMAIL"] = "Are you sure you want to resend this email?";
 
 // standard date display format
 $lang['datedisplayformat'] = "d.m.Y"; // Format for displaying date/time, use PHP date() format string syntax
