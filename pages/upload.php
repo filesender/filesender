@@ -701,10 +701,10 @@ if ( hasProductInstall && !hasRequestedVersion ) {
 <div id="dialog-uploadprogress" title="" style="display:none">
 <img id="progress_image" name="progress_image" src="images/ajax-loader-sm.gif" width="16" height="16" alt="Uploading" align="left" /> 
 	<div id="progress_container">
-   		<div id="progress_bar">
+   		<div id="progress_bar" style="display:none">
 		<div id="progress_completed"></div>
 	</div>
-	</div>
+	</div> 
 </div>
 <div id="dialog-support" title="" style="display:none">
 <?php require_once("$filesenderbase/pages/html5display.php"); ?>
