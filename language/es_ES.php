@@ -131,7 +131,6 @@ $lang["_ERROR_UPLOADING_FILE"] = "Error al subir el archivo";
 $lang["_MAXEMAILS"] = "El n&uacute;mero m&aaacute;ximo de destinatarios del correo son";
 $lang["_INVALID_DATE_FORMAT"] = "Formato de fecha err&oacute;o";
 $lang["_DISK_SPACE_ERROR"] = "Espacio de disco insuficiente. Contacte con el administrador del servicio o suba un archivo menor";
-$lang["_ERROR_ATTRIBUTES"] = "Your Identity Provider is not providing the required attributes. Contact your Administrator";
 
 $lang["_LOGOUT_COMPLETE"] = "Logout completado";
 
@@ -142,7 +141,6 @@ El destinatario recibir&aacute; un correo con un enlace a la invitaci&oacute;n.<
 $lang["_EMAIL_SEPARATOR_MSG"] = "M&uacute;ltiples direcciones de correo separadas por ',' o ';'";
 
 $lang["_NO_FILES"] = "No hay archivos disponbles";
-$lang["_NO_VOUCHERS"] = "There are currently no vouchers available";
 $lang["_ARE_YOU_SURE"] = "&iquest;Est&aacute; seguro?";
 $lang["_DELETE_FILE"] = "Eliminar archivo";
 $lang["_EMAIL_SENT"] = "Mensaje enviado";
@@ -176,7 +174,6 @@ $lang["_OPTIONAL"] = "opcional";
 // confirmation
 $lang["_CONFIRM_DELETE_FILE"] = "&iquest;Est&aacute; seguro de que quiere eliminar este archivo?";
 $lang["_CONFIRM_DELETE_VOUCHER"] = "&iquest;Est&aacute; seguro de que quiere eliminar esta Invitaci&oacute;n de env&iacute;o?";
-$lang["_CONFIRM_RESEND_EMAIL"] = "Are you sure you want to resend this email?";
 
 // standard date display format
 $lang['datedisplayformat'] = "d/m/Y"; // Format for displaying date/time, use PHP date() format string syntax 

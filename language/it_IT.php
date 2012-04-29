@@ -127,7 +127,6 @@ $lang["_ERROR_INCORRECT_FILE_SIZE"] = "Si è verificato un errore durante il car
 $lang["_MAXEMAILS"] = "Il numero massimo di indirizzi email è ";
 $lang["_INVALID_DATE_FORMAT"] = "Il formato della data non è valido";
 $lang["_DISK_SPACE_ERROR"] = "Non c'è sufficiente spazio disco su questo server. Per favore contatta l'amministrazione del servizio o carica un file di dimensioni minori.";
-$lang["_ERROR_ATTRIBUTES"] = "Your Identity Provider is not providing the required attributes. Contact your Administrator";
 
 // Logout page
 $lang["_LOGOUT_COMPLETE"] = "Logout completato.";
@@ -139,7 +138,6 @@ Il destinatario riceverà un'email contenente il link per utilizzare il voucher.
 $lang["_EMAIL_SEPARATOR_MSG"] = "Indirizzi di posta elettronica separati da , o ;";
 
 $lang["_NO_FILES"] = "Al momento non ci sono file disponibili.";
-$lang["_NO_VOUCHERS"] = "There are currently no vouchers available";
 $lang["_ARE_YOU_SURE"] = "Sei sicura/o?";
 $lang["_DELETE_FILE"] = "Elimina File";
 $lang["_EMAIL_SENT"] = "Messaggio Inviato";
@@ -173,7 +171,6 @@ $lang["_OPTIONAL"] = "opzionale";
 // confirmation
 $lang["_CONFIRM_DELETE_FILE"] = "Sei sicura/o di voler eliminare questo file?";
 $lang["_CONFIRM_DELETE_VOUCHER"] = "Sei sicura/o di voler eliminare questo voucher?";
-$lang["_CONFIRM_RESEND_EMAIL"] = "Are you sure you want to resend this email?";
 
 // standard date display format
 $lang['datedisplayformat'] = "d/m/Y"; // Format for displaying date/time, use PHP date() format string syntax 

@@ -125,7 +125,6 @@ $lang["_ERROR_UPLOADING_FILE"] = "Fehler beim Hochladen Ihrer Datei";
 $lang["_MAXEMAILS"] = "Die maximal erlaubte Zahl an E-Mail Adressen ist ";
 $lang["_INVALID_DATE_FORMAT"] = "Das Datumsformat ist ungültig.";
 $lang["_DISK_SPACE_ERROR"] = "Es ist nicht genügend Speicherplatz vorhanden. Bitte benachrichtigen Sie den Service Administrator oder laden Sie eine kleinere Datei hoch.";
-$lang["_ERROR_ATTRIBUTES"] = "Your Identity Provider is not providing the required attributes. Contact your Administrator";
 
 $lang["_LOGOUT_COMPLETE"] = "Logout abgeschlossen";
 
@@ -136,7 +135,6 @@ Dem Empfänger wird eine E-Mail mit einem Link zum Voucher erhalten.";
 $lang["_EMAIL_SEPARATOR_MSG"] = "Mehrere E-Mail Adressen trennen durch , oder ;";
 
 $lang["_NO_FILES"] = "Im Augenblick sind keine Dateien verfügbar";
-$lang["_NO_VOUCHERS"] = "There are currently no vouchers available";
 $lang["_ARE_YOU_SURE"] = "Sind Sie sicher?";
 $lang["_DELETE_FILE"] = "Datei löschen";
 $lang["_EMAIL_SENT"] = "E-Mail wurde versandt";
@@ -171,7 +169,6 @@ $lang["_OPTIONAL"] = "optional";
 // confirmation
 $lang["_CONFIRM_DELETE_FILE"] = "Sind Sie sicher, dass Sie diese Datei löschen wollen?";
 $lang["_CONFIRM_DELETE_VOUCHER"] = "Sind Sie sicher, dass Sie diesen Voucher löschen wollen?";
-$lang["_CONFIRM_RESEND_EMAIL"] = "Are you sure you want to resend this email?";
 
 // standard date display format
 $lang['datedisplayformat'] = "d.m.Y"; // Format for displaying date/time, use PHP date() format string syntax

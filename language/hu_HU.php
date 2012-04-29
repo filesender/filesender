@@ -126,7 +126,6 @@ $lang["_ERROR_INCORRECT_FILE_SIZE"] = "Probléma a fájl feltöltése közben. <
 $lang["_MAXEMAILS"] = "A maximális email címek száma: ";
 $lang["_INVALID_DATE_FORMAT"] = "Az dátum formátuma érvénytelen.";
 $lang["_DISK_SPACE_ERROR"] = "Nincs elegendő hely a szolgáltatáshoz. Forduljon az adminisztrátorhoz vagy töltsön fel kisebb fájlt.";
-$lang["_ERROR_ATTRIBUTES"] = "Your Identity Provider is not providing the required attributes. Contact your Administrator";
 
 // Logout page
 $lang["_LOGOUT_COMPLETE"] = "A kijelentkezés sikerült";
@@ -139,7 +138,6 @@ A meghívó emailben elküldésre kerül egy link amit a meghívott használhat.
 // User interaction
 $lang["_EMAIL_SEPARATOR_MSG"] = "Többszörös email cím hozzáadása ,-vel vagy ;-vel elválasztva lehetséges";
 $lang["_NO_FILES"] = "Jelenleg nincs elérhető fájl";
-$lang["_NO_VOUCHERS"] = "There are currently no vouchers available";
 $lang["_ARE_YOU_SURE"] = "Bizos benne?";
 $lang["_DELETE_FILE"] = "Fájl törlése";
 $lang["_EMAIL_SENT"] = "Üzenet elküldve";
@@ -173,7 +171,6 @@ $lang["_OPTIONAL"] = "választható";
 // confirmation
 $lang["_CONFIRM_DELETE_FILE"] = "Biztosan törölni akarja a fájlt?";
 $lang["_CONFIRM_DELETE_VOUCHER"] = "Biztosan törölni akarja a meghívót?";
-$lang["_CONFIRM_RESEND_EMAIL"] = "Are you sure you want to resend this email?";
 
 // standard date display format
 $lang['datedisplayformat'] = "Y-m-d"; // Format for displaying date/time, use PHP date() format string syntax 

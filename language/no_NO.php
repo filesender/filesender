@@ -135,7 +135,6 @@ $lang["_ERROR_INCORRECT_FILE_SIZE"] = "Det oppsto en feil under fil-opplasting. 
 $lang["_MAXEMAILS"] = "Tillat antall epost-adresser er ";
 $lang["_INVALID_DATE_FORMAT"] = "Feil dato-format";
 $lang["_DISK_SPACE_ERROR"] = "Tjenesten har ikke nok diskplass.  Ta kontakt med tjeneste-ansvarlig og/eller prøv med en mindre stor fil";
-$lang["_ERROR_ATTRIBUTES"] = "Your Identity Provider is not providing the required attributes. Contact your Administrator";
 
 $lang["_LOGOUT_COMPLETE"] = "Avlogging utført";
 
@@ -149,7 +148,6 @@ $lang["_ME"] = "Meg";
 // MYFILES
 
 $lang["_NO_FILES"] = "Ingen filer funnet";
-$lang["_NO_VOUCHERS"] = "There are currently no vouchers available";
 
 // Myfiles: re-send email: tooltips, dialogue box and on-screen message 
 $lang["_RE_SEND_EMAIL"] = "Send epost på nytt";
