@@ -98,7 +98,7 @@ function hidemessages()
 }
 
 function validateForm()
-	{
+	{	
 		hidemessages();
 		if(!validate_fileto()){return false;}
 		if(!validate_expiry() ){return false;}
@@ -200,9 +200,9 @@ $json_o=json_decode($filedata,true);
         </td>
       </tr>
       <tr>
-        <td><input type="hidden" id="fileexpirydate" name="fileexpirydate" value="<?php echo date($lang['datedisplayformat'],strtotime("+".$config['default_daysvalid']." day"));?>" />
+        <td align="right" valign="middle"><input type="hidden" id="fileexpirydate" name="fileexpirydate" value="<?php echo date($lang['datedisplayformat'],strtotime("+".$config['default_daysvalid']." day"));?>" />
         <input type="hidden" name="filestatus" id="filestatus" value="voucher" /></td>
-        <td><div class="menu" id="voucherbutton"><a href="#" id="btn_sendvoucher" onclick="validateForm()"><?php echo lang("_SEND_VOUCHER"); ?></a></div><div id="_noauth" class="validation_msg" style="display:none"><?php echo lang("_AUTH_ERROR"); ?></div></td>
+        <td><div class="menu" id="voucherbutton" onclick="validateForm()"><a href="#" id="btn_sendvoucher" ><?php echo lang("_SEND_VOUCHER"); ?></a></div><div id="_noauth" class="validation_msg" style="display:none"><?php echo lang("_AUTH_ERROR"); ?></div></td>
       </tr>
     </table>
      </div>
