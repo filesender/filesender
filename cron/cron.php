@@ -59,6 +59,9 @@ require_once("$filesenderbase/classes/Mail.php");
 require_once("$filesenderbase/classes/DB_Input_Checks.php");
 require_once("$filesenderbase/classes/Log.php");
 
+// set cron variable to force
+$cron = true;
+
 $sendmail = Mail::getInstance();
 
 // set time zone for this session
@@ -224,7 +227,7 @@ function logProcess($client,$message) {
 	{
 		$dateref = date("Ymd");
 		$data = date("Y/m/d H:i:s");
-		$myFile = $config['log_location'].$dateref."-".$client.".log.txt";
+		$myFile = $config['log_location'].$dateref."-".$client.".cron.log.txt";
 		$fh = fopen($myFile, 'a') or die("can't open file");
 		// don't print errors on screen when there is no session.
 		if(isset($_REQUEST['PHPSESSID'])){
