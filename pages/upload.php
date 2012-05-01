@@ -354,10 +354,9 @@ function validateextension(filename)
 		if(filename.split('.').pop() == banextensions[i])
 		{
 			return false;
-		} else {
-			return true;
-		}
+		} 
 	}
+	return true;
 }
 
 // Validate FILE (HTML5 only)
