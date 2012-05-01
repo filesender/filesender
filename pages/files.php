@@ -345,7 +345,7 @@ foreach($json_o as $item) {
       </tr>
       <tr>
         <td class="formfieldheading mandatory"></td>
-        <td><div id="file_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_FILE"); ?></div><div id="extension_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_EXTENSION"); ?></div></td>
+        <td><div id="file_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_FILE"); ?></div><div id="extension_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_FILE_EXT"); ?></div></td>
       </tr>
     </table>
     <input name="filevoucheruid" type="hidden" id="filevoucheruid" />
