@@ -311,36 +311,36 @@ foreach($json_o as $item) {
   <form id="form1" name="form1" enctype="multipart/form-data" method="post" action="">
     <table  width="600" border="0">
       <tr>
-        <td width="100" class="formfieldheading mandatory"><?php echo  lang("_TO"); ?>:</td>
+        <td width="100" class="formfieldheading mandatory" id="files_to"><?php echo  lang("_TO"); ?>:</td>
         <td width="400" valign="middle"><input name="fileto" title="<?php echo  lang("_EMAIL_SEPARATOR_MSG"); ?>" type="text" id="fileto" size="60" onchange="validate_fileto()" />
           <div id="fileto_msg" style="display: none" class="validation_msg"><?php echo lang("_INVALID_MISSING_EMAIL"); ?></div>
           <div id="maxemails_msg" style="display: none" class="validation_msg"><?php echo lang("_MAXEMAILS"); ?> <?php echo $config['max_email_recipients'] ?>.</div>
           </td>
       </tr>
       <tr>
-        <td class="formfieldheading mandatory"><?php echo lang("_FROM"); ?>:</td>
+        <td class="formfieldheading mandatory" id="files_from"><?php echo lang("_FROM"); ?>:</td>
         <td><div id="filefrom"></div></td>
       </tr>
       <tr>
-        <td class="formfieldheading"><?php echo lang("_SUBJECT"); ?>: (<?php echo lang("_OPTIONAL"); ?>)</td>
+        <td class="formfieldheading" id="files_subject"><?php echo lang("_SUBJECT"); ?>: (<?php echo lang("_OPTIONAL"); ?>)</td>
         <td><input name="filesubject" type="text" id="filesubject" size="60" /></td>
       </tr>
       <tr>
-        <td class="formfieldheading"><?php echo lang("_MESSAGE"); ?>: (<?php echo lang("_OPTIONAL"); ?>)</td>
+        <td class="formfieldheading" id="files_message"><?php echo lang("_MESSAGE"); ?>: (<?php echo lang("_OPTIONAL"); ?>)</td>
         <td><textarea name="filemessage" cols="57" rows="4" id="filemessage"></textarea></td>
       </tr>
       <tr>
-        <td class="formfieldheading mandatory"><?php echo lang("_EXPIRY_DATE"); ?>:
+        <td class="formfieldheading mandatory" id="files_expiry"><?php echo lang("_EXPIRY_DATE"); ?>:
           <input type="hidden" id="fileexpirydate" name="fileexpirydate" value="<?php echo date($lang['datedisplayformat'],strtotime("+".$config['default_daysvalid']." day"));?>" /></td>
         <td><input id="datepicker" name="datepicker" onchange="validate_expiry()" title="<?php echo lang('_DP_dateFormat'); ?>" />
           <div id="expiry_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_EXPIRY_DATE"); ?></div></td>
       </tr>
       <tr>
-        <td class="formfieldheading mandatory"><?php echo lang("_FILE_TO_BE_RESENT"); ?>:</td>
+        <td class="formfieldheading mandatory" id="files_to_be_resent"><?php echo lang("_FILE_TO_BE_RESENT"); ?>:</td>
         <td><div id="filename"></div></td>
       </tr>
       <tr>
-        <td class="formfieldheading mandatory"><?php echo lang("_SIZE"); ?>:</td>
+        <td class="formfieldheading mandatory" id="files_size"><?php echo lang("_SIZE"); ?>:</td>
         <td><div id="filesize"></div></td>
       </tr>
       <tr>
