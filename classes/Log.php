@@ -164,11 +164,15 @@ class Log {
             } else {
                 $domain = "";
             }
-
+			
+			$logext = ".log.txt";
+			// seperate con and normal logs
+			if(isset($cron) && $cron) { $logext = ".cron.log.txt";}
+			
             $message .= "[".$ip."(".$domain.")] ";
             $dateref = date("Ymd");
             $data = date("Y/m/d H:i:s");
-            $myFile = $config['log_location'].$dateref."-".$client.".log.txt";
+            $myFile = $config['log_location'].$dateref."-".$client.$logext;
             $fh = fopen($myFile, 'a') or die("can't open file");
             // don't print errors on screen when there is no session.
             if(isset($_REQUEST['PHPSESSID'])){
