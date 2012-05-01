@@ -661,7 +661,7 @@ class Functions {
 		{
 			$tempData = $functions->getVoucherData($_SESSION['voucher']);
 			//array_push($errorArray,  $data["filefrom"] .":". $tempData["filefrom"]);
-			if($data["filefrom"] != $tempData["filefrom"] ) {array_push($errorArray, "err_invalidemail");}
+			if($data["filefrom"] != $tempData["fileto"] ) {array_push($errorArray, "err_invalidemail");}
 		}	else if( $authsaml->isAuth()) 
 		{
 			$authAttributes = $authsaml->sAuth();
