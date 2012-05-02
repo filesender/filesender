@@ -112,7 +112,7 @@ function logEntry($message){
 	}
 }
 
-//ini_set('display_errors', 'Off');
+ini_set('display_errors', 'Off');
 	
 // if debug is on then set the custom error handler
 if($config['debug'] == true || $config['debug'] == 1){
