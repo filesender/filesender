@@ -260,6 +260,7 @@ function openabout()
 ?>
 	</div>
 		<div id="content" style="display:none">
+		<div id="scratch"></div>
 		<?php
 		foreach ($messageArray as $message) 
 		{
