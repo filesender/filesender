@@ -174,8 +174,8 @@ function uploadFile() {
 		if(result == "err_filesizeincorrect") { window.location.href="index.php?s=filesizeincorrect";} //	
 		})
 		}
-		if(data.result && data.result == "complete"){window.location.href="index.php?s=complete";}
-		if(data.result && data.result == "completev"){window.location.href="index.php?s=completev";}
+		if(data.status && data.status == "complete"){window.location.href="index.php?s=complete";}
+		if(data.status && data.status == "completev"){window.location.href="index.php?s=completev";}
 		}
 		,error:function(xhr,err){
 			// error function to display error message e.g.404 page not found
