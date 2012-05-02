@@ -55,7 +55,8 @@ class Mail {
         $authvoucher = AuthVoucher::getInstance();
 
         global $config;
-
+		global $errorArray;
+		
         $fileoriginalname = sanitizeFilename($mailobject['fileoriginalname']);
         $crlf = $config["crlf"];
 
@@ -161,14 +162,25 @@ class Mail {
         if ( $body_encoding == 'ISO-8859-1' ) {
             $template = iconv("UTF-8", "ISO-8859-1", $template);
         }
-
         $body = wordwrap($template,70);
-
-        if (mail($to, $subject, $body, $headers, $returnpath)) {
-            return true;
-        } else {
-            return false;
-       }
+		try
+		{
+		if(mail($to, $subject, $body, $headers, $returnpath))
+		 {
+		 	return TRUE;
+		 } else  { 
+		 	logEntry("Error sending email: ".$to);	
+			array_push($errorArray,  "err_emailnotsent");
+			return FALSE;
+		 }
+	   	}
+	   catch(Exception $e)
+	   {
+	   		logEntry($e->getMessage());	
+			array_push($errorArray,  "err_emailnotsent");
+		  return FALSE;
+	   }
+	    return TRUE;
     }
 
     //---------------------------------------

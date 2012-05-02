@@ -122,6 +122,7 @@ $lang["_ACCEPTTOC"] = "I accept the terms and conditions of this service.";
 $lang["_AGREETOC"] = "You MUST agree to the terms and conditions.";
 $lang["_FILE_TO_BE_RESENT"] = "File to be redistributed";
 $lang["_ERROR_UPLOADING_FILE"] = "Error uploading your file";
+$lang["_ERROR_SENDING_EMAIL"] = "There has been an error sending emails, please contact your administrator.";
 $lang["_ERROR_INCORRECT_FILE_SIZE"] = "There has been a problem uploading your file. <br />The file size on the server does not match your original file. <br /><br />Please contact your Administrator.";
 $lang["_MAXEMAILS"] = "The maximum number of email addresses allowed is ";
 $lang["_INVALID_DATE_FORMAT"] = "The date format is invalid.";
