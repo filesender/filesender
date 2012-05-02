@@ -181,7 +181,7 @@ function openabout()
       <noscript>
       <p class="style5 style1">JavaScript is turned off in your web browser. <br />
         This application will not run without Javascript enabled in your web browser. <br /><br />
-		See <A href="http://www.filesender.org">www.filesender.org</A> for more information.<br />
+		<br />
         <br />
       </p>
       </noscript>
@@ -226,7 +226,6 @@ function openabout()
 	{
 		$attributes = $authsaml->sAuth();
 	}
-
 
 	// display user details if desired
 	if($config["displayUserName"])
