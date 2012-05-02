@@ -160,7 +160,7 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 			$functions->insertFile($data);
 
 		}
-		if($errorArray.length > 0 ) { $resultArray["errors"] =  $errorArray; }
+		if(sizeof($errorArray) > 0 ) { $resultArray["errors"] =  $errorArray; }
 		$resultArray["status"] = $complete;
 		echo json_encode($resultArray);		
 		break;
