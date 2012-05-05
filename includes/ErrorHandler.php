@@ -70,6 +70,7 @@ function customError($errno, $errstr, $errfile,$errline){
 function logEntry($message){
 	
 	global $config;
+	global $cron;
 	
 	if($config["debug"] ) {
 	if(isset($config['log_location'])) 
@@ -90,8 +91,8 @@ function logEntry($message){
 		$domain = "none";	
 	}
 	$logext = ".log.txt";
-	// seperate con and normal logs
-	if(isset($cron) && $cron) { $logext = ".cron.log.txt";}
+	// seperate cron and normal logs
+	if(isset($cron) && $cron) { $logext = "-CRON.log.txt";}
 			
 	$message .= "[".$ip."(".$domain.")] ";
 	$dateref = date("Ymd");
