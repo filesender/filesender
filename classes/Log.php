@@ -154,6 +154,7 @@ class Log {
     public function logProcess($client,$message)
     {
         global $config;
+        global $cron;
 
         if($config["debug"] or $config["client_specific_logging"])
         {
@@ -164,11 +165,11 @@ class Log {
             } else {
                 $domain = "";
             }
-			
-			$logext = ".log.txt";
-			// seperate con and normal logs
-			if(isset($cron) && $cron) { $logext = ".cron.log.txt";}
-			
+
+            $logext = ".log.txt";
+            // seperate cron and normal logs
+            if(isset($cron) && $cron) { $logext = "-CRON.log.txt";}
+
             $message .= "[".$ip."(".$domain.")] ";
             $dateref = date("Ymd");
             $data = date("Y/m/d H:i:s");
