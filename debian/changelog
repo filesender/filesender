@@ -1,3 +1,7 @@
+filesender (1.5~beta3) unstable; urgency=medium
+
+ -- Filesender Development <filesender-dev@filesender.org>  Tue, 15 May 2012 10:46:58 +0200
+
 filesender (1.5~beta2) unstable; urgency=medium
    * Release 1.5-beta2
 
@@ -24,7 +28,7 @@ filesender (1.5~beta2) unstable; urgency=medium
        input/output pathways.
      - Minor bug fixes and enhancements.
 
- -- Filesender Development <filesender-dev@filesender.org>  Wed, 25 Apr 2012 14:00:00 +0100
+ -- Filesender Development <filesender-dev@filesender.org>  Wed, 25 Apr 2012 10:46:58 +0200
 
 filesender (1.5~beta1) unstable; urgency=medium
    * Release 1.5-beta1
