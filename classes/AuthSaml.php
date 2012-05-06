@@ -59,6 +59,10 @@ class AuthSaml {
             $as->requireAuth();
             $attributes = $as->getAttributes();
 
+		// check if attributes exist
+		 if(!isset($attributes[$config['saml_email_attribute']])) {logEntry("Email attribute not found in IDP (".$config['saml_email_attribute'].")"); return "err_attributes";}
+		 if(!isset($attributes[$config['saml_uid_attribute']])) { logEntry("UID attribute not found in IDP (".$config['saml_uid_attribute'].")");return "err_attributes";}
+		 
             // compare config admin to userUID
             if(isset($attributes[$config['saml_uid_attribute']][0])) {
                 $attributes["saml_uid_attribute"] = $attributes[$config['saml_uid_attribute']][0];
@@ -89,7 +93,10 @@ class AuthSaml {
 
         // need to capture email from SAML attribute
         // may be single attribute or array 
-
+		
+		// check if attributes exist
+		 if(!isset($attributes[$config['saml_email_attribute']])) {logEntry("Email attribute not found in IDP (".$config['saml_email_attribute'].")"); return "err_attributes";}
+		 if(!isset($attributes[$config['saml_uid_attribute']])) { logEntry("UID attribute not found in IDP (".$config['saml_uid_attribute'].")");return "err_attributes";}
         // checks if an array and sets first child
         if(isset($attributes[$config['saml_email_attribute']])) {
             $attributes["email"] = $attributes[$config['saml_email_attribute']];
