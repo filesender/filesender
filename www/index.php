@@ -243,7 +243,7 @@ function openabout()
 		echo "</div>";
 	}
 	?>
-	<div id="serviceinfo"">
+	<div id="serviceinfo">
 	<a href="<?php echo $config['HTML5URL'] ?>" target="_newtab" id="html5link" name="html5link"><img alt="" name="html5image" width="75" height="18" border="0" align="absmiddle" id="html5image" style="display:none" title=""/></a></div>
 	<?php
 	$versiondisplay = "";
@@ -353,7 +353,13 @@ function openabout()
 	<div id="dialog-about" style="display:none" title="<?php echo lang("_ABOUT"); ?>">
 		<?php echo lang("_ABOUT_TEXT"); ?>
 	</div>
-		<div id="footer"></div>
+		<div id="footer">Version <?php echo FileSender_Version::VERSION;
+		$status = @shell_exec('/usr/bin/svnversion '.realpath(dirname(__FILE__)));
+		if ( preg_match('/\d+.*/', $status, $match) ) {
+		    echo ' Revision: '.$match[0];
+		}
+		?>
+		</div>
 		<div id="DoneLoading"></div>
 	</body>
 </html>
