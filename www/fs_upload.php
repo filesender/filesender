@@ -289,7 +289,7 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 		} else {
 			$complete =  "not_authenticated";
 		}
-			$resultArray["errors"] =  $errorArray;
+			if(sizeof($errorArray) > 0 ) { $resultArray["errors"] =  $errorArray; }
 			$resultArray["status"] = $complete;
 			echo json_encode($resultArray);	
 		break;
@@ -301,6 +301,7 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 		//array_push($errorArray, "err_invalidemail");
 		$dataitem = json_decode($_POST['myJson'], true);
 		$myfileData = $functions->getVoucherData($dataitem["filevoucheruid"]);
+		$myfileData["filecreateddate"] = date($config['db_dateformat'], time());
 		$myfileData["filemessage"] = $dataitem["filemessage"];
 		$myfileData["filesubject"] = $dataitem["filesubject"];
 		$myfileData["fileexpirydate"] = date($config["db_dateformat"],strtotime($dataitem["fileexpirydate"]));
