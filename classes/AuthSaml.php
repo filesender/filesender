@@ -62,7 +62,6 @@ class AuthSaml {
 		// check if attributes exist
 		 if(!isset($attributes[$config['saml_email_attribute']])) {logEntry("Email attribute not found in IDP (".$config['saml_email_attribute'].")"); return "err_attributes";}
 		 if(!isset($attributes[$config['saml_uid_attribute']])) { logEntry("UID attribute not found in IDP (".$config['saml_uid_attribute'].")");return "err_attributes";}
-		 if(!isset($attributes[$config['saml_name_attribute']])) { logEntry("Name attribute not found in IDP (".$config['saml_name_attribute'].")");return "err_attributes";}
 		 
             // compare config admin to userUID
             if(isset($attributes[$config['saml_uid_attribute']][0])) {
@@ -98,7 +97,6 @@ class AuthSaml {
 		// check if attributes exist
 		 if(!isset($attributes[$config['saml_email_attribute']])) {logEntry("Email attribute not found in IDP (".$config['saml_email_attribute'].")"); return "err_attributes";}
 		 if(!isset($attributes[$config['saml_uid_attribute']])) { logEntry("UID attribute not found in IDP (".$config['saml_uid_attribute'].")");return "err_attributes";}
-		 if(!isset($attributes[$config['saml_name_attribute']])) { logEntry("Name attribute not found in IDP (".$config['saml_name_attribute'].")");return "err_attributes";}
         // checks if an array and sets first child
         if(isset($attributes[$config['saml_email_attribute']])) {
             $attributes["email"] = $attributes[$config['saml_email_attribute']];
