@@ -102,15 +102,13 @@
 	var banextensions = ext.split(",")
 	var previousBytesLoaded = 0;
 	var intervalTimer = 0;
-	var html5 = false;
 	var errmsg_disk_space = "<?php echo lang($lang["_DISK_SPACE_ERROR"]); ?>";
 	var filedata=new Array(); 
 	var nameLang = '<?php echo lang("_FILE_NAME"); ?>'
 	var sizeLang = '<?php echo lang("_SIZE"); ?>'
 	
 	var vid='<?php if(isset($_REQUEST["vid"])){echo htmlspecialchars($_REQUEST["vid"]);}; ?>';
-	// check if html5 functions are available
-	html5 = (window.File && window.FileReader && window.FileList && window.Blob && window.FormData) ? true : false;
+
  	// start document ready 
 	$(function() { 
 
@@ -214,17 +212,8 @@
 		//Check if HTML5 is enable and use HTML uploader
 		if(html5){
 			// use HTML5 upload functions
-			$("#html5image").attr("src","images/html5_installed.png");
-			$("#html5image").attr("title","<?php echo lang("_HTML5Supported"); ?>");
-			$("#html5text").html('<?php echo lang("_HTML5Supported"); ?>');
 			$("#uploadhtml5").show();
 			} else {
-			$("#html5image").attr("src","images/html5_none.png");
-			$("#html5image").attr("title","<?php echo lang("_HTML5NotSupported"); ?>");
-			$("#html5text").html('<?php echo lang("_HTML5NotSupported"); ?>');
-			$('#html5image').click(function() { displayhtml5support(); });
-			$("#html5link").removeAttr("href");
-			
 			// use standard upload functions
 			$("#uploadstandard").show();
 		}
@@ -590,7 +579,7 @@ function keepMeAlive()
         <td colspan="2"><input id="datepicker" name="datepicker" title="<?php echo lang('_DP_dateFormat'); ?>" onchange="validate_expiry()" />
           <div id="expiry_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_EXPIRY_DATE"); ?></div>
         </td>
-        <td colspan="2" align="center" valign="top"><a href="<?php echo $config['HTML5URL'] ?>" target="_newtab" id="html5link" name="html5link"><img src="images/html5_installed.png" alt="" name="html5image" width="75" height="18" border="0" id="html5image" title="" /></a></td>
+        <td colspan="2" align="center" valign="top"></td>
       </tr>
       <tr>
         <td class=" mandatory"><div id="selectfile"><?php echo lang("_SELECT_FILE"); ?>:</div></td>

@@ -102,6 +102,12 @@ if($isAuth )
 <script type="text/javascript" src="js/jquery-1.7.min.js" ></script>
 <script type="text/javascript" src="js/jquery-ui-1.8.1.custom.min.js"></script>
 <script type="text/javascript">
+
+var debug = <?php echo $config["debug"] ? 'true' : 'false'; ?> ;
+var html5 = false;
+// check if html5 functions are available
+html5 = (window.File && window.FileReader && window.FileList && window.Blob && window.FormData) ? true : false;
+	
 $(function() {
 	
 	// display topmenu, content and userinformation
@@ -129,7 +135,21 @@ $(function() {
 			}
 		});
 		$('.ui-dialog-buttonpane button:contains(aboutBTN)').attr("id","btn_closeabout");            
-		$('#btn_closeabout').html('<?php echo lang("_CLOSE") ?>')  
+		$('#btn_closeabout').html('<?php echo lang("_CLOSE") ?>') 
+		
+		if(html5){
+			// use HTML5 upload functions
+			$("#html5image").attr("src","images/html5_installed.png");
+			$("#html5image").attr("title","<?php echo lang("_HTML5Supported"); ?>");
+			//$("#html5text").html('<?php echo lang("_HTML5Supported"); ?>');
+			} else {
+			$("#html5image").attr("src","images/html5_none.png");
+			$("#html5image").attr("title","<?php echo lang("_HTML5NotSupported"); ?>");
+			//$("#html5text").html('<?php echo lang("_HTML5NotSupported"); ?>');
+			$('#html5image').click(function() { displayhtml5support(); });
+			$("#html5link").removeAttr("href");
+		}
+		 $("#html5image").show();
 });
 	
 function openhelp()
@@ -143,6 +163,7 @@ function openabout()
 		$( "#dialog-about" ).dialog( "open" );
 		$('.ui-dialog-buttonpane > button:last').focus();
 	}
+	
 </script>
    
 <meta name="robots" content="noindex, nofollow" />
@@ -197,7 +218,6 @@ function openabout()
 	?>
 	</div>
 	</div>
-
 	<div id="userinformation" style="display:none">
 	<?php 
 
@@ -222,6 +242,10 @@ function openabout()
 		}
 		echo "</div>";
 	}
+	?>
+	<div id="serviceinfo">
+	<a href="<?php echo $config['HTML5URL'] ?>" target="_newtab" id="html5link" name="html5link"><img alt="" name="html5image" width="75" height="18" border="0" align="absmiddle" id="html5image" style="display:none" title=""/></a></div>
+	<?php
 	$versiondisplay = "";
 	if($config["site_showStats"])
 	{
