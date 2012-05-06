@@ -124,13 +124,13 @@ class Mail {
             $headers .= "Cc: <" . $mailobject['filefrom'] . ">".$crlf;
         }
 
-        // if voucher is being used then bcc fileauthuseremail a copy so voucher creator knows a file was sent as they are responsible for the use of the voucher
-        if($authvoucher->aVoucher()) {
+        // file or voucher is being used then bcc fileauthuseremail a copy so voucher creator knows a file was sent as they are responsible for the use of the voucher
+       // if($authvoucher->aVoucher()) {
             if(isset($mailobject['fileauthuseremail'])){
                 if(!filter_var($mailobject['fileauthuseremail'],FILTER_VALIDATE_EMAIL)) {return false;}
                 $headers .= "Bcc: <".$mailobject['fileauthuseremail'].">".$crlf;
             }
-        }
+        //}
 
         // Subject of message
         if(isset($mailobject['filesubject']) && $mailobject['filesubject'] != "" && $type != 'bounce'){
@@ -168,7 +168,7 @@ class Mail {
             return true;
         } else {
             return false;
-        }
+       }
     }
 
     //---------------------------------------
