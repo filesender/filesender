@@ -603,7 +603,9 @@ class Functions {
 		global $resultArray;
 		
 		$dbCheck = DB_Input_Checks::getInstance();
-	
+		$authsaml = AuthSaml::getInstance();
+		$functions = Functions::getInstance();
+		
 		$errorArray = array();
 		// test 
 		//array_push($errorArray, "err_nodiskspace");
@@ -648,12 +650,25 @@ class Functions {
 			if(!filter_var($Email,FILTER_VALIDATE_EMAIL)) {array_push($errorArray, "err_invalidemail");}
 		}
 		}
-		// Sender email missing
+		// Sender email missing or not authuser or voucher sender
 		if (!isset($data["filefrom"])){
 			array_push($errorArray,  "err_filefrommissing");
 		} else {
 			// Check if sender address is valid
 			if(!filter_var($data["filefrom"],FILTER_VALIDATE_EMAIL)) {array_push($errorArray, "err_invalidemail");}
+			// check if filefrom matches voucher from or matches authenticated user
+		if(isset($_SESSION['voucher']))
+		{
+			$tempData = $functions->getVoucherData($_SESSION['voucher']);
+			//array_push($errorArray,  $data["filefrom"] .":". $tempData["filefrom"]);
+			if($data["filefrom"] != $tempData["fileto"] ) {array_push($errorArray, "err_invalidemail");}
+		}	else if( $authsaml->isAuth()) 
+		{
+			$authAttributes = $authsaml->sAuth();
+			//array_push($errorArray,  $data["filefrom"] .":". $authAttributes["email"]);	
+			if($data["filefrom"] != $authAttributes["email"]) {array_push($errorArray, "err_invalidemail");}
+		}
+			
 		}
 		// if errors - return them via json to client	
 		if(count($errorArray) > 0 )
