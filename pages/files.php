@@ -120,12 +120,26 @@ $json_o=json_decode($filedata,true);
 				}
 			}
 		});
-		
+		// resend email modal dialog box
+		$("#dialog-resend").dialog({ autoOpen: false, height: 180, modal: true,
+			buttons: {
+				'cancelsendBTN': function() {
+				$( this ).dialog( "close" );
+				},
+				'sendBTN': function() { 
+				resend();
+				$( this ).dialog( "close" );
+				}
+			}
+		});
 		$('.ui-dialog-buttonpane button:contains(cancelBTN)').attr("id","btn_cancel");            
-		$('#btn_cancel').html('<?php echo lang("_NO") ?>')  
+		$('#btn_cancel').html('<?php echo lang("_NO") ?>');  
 		$('.ui-dialog-buttonpane button:contains(deleteBTN)').attr("id","btn_delete");            
-		$('#btn_delete').html('<?php echo lang("_YES") ?>')  
-		
+		$('#btn_delete').html('<?php echo lang("_YES") ?>');  
+		$('.ui-dialog-buttonpane button:contains(cancelsendBTN)').attr("id","btn_cancelsend");            
+		$('#btn_cancelsend').html('<?php echo lang("_NO") ?>');  
+		$('.ui-dialog-buttonpane button:contains(sendBTN)').attr("id","btn_send");            
+		$('#btn_send').html('<?php echo lang("_YES") ?>');  
 		// add new recipient modal dialog box
 		$("#dialog-addrecipient").dialog({ autoOpen: false, height: 410,width:650, modal: true,
 			buttons: {
@@ -191,7 +205,17 @@ $json_o=json_decode($filedata,true);
 		if(!validate_expiry() ){validate = false;};		// check date
 		return validate;
 	}
+	function resend(uid)
+	{
+		window.location.href="index.php?s=files&a=resend&id=" + selectedFile;
+	}
 	
+	function confirmResend(vid)
+		{
+			// confirm deletion of selected file
+			selectedFile = vid;
+			$("#dialog-resend" ).dialog( "open" );
+		}
 	function deletefile()
 		{
 		// reload page to delete selected file
@@ -244,7 +268,8 @@ if(sizeof($json_o) > 0)
 {
 foreach($json_o as $item) {
 	$i += 1; // counter for file id's
-   echo '<tr><td valign="top"> <a id="btn_resendemail_'.$i.'" href="index.php?s=files&amp;a=resend&amp;id=' .$item['filevoucheruid'] . '"><img src="images/email_go.png" alt="" title="'.lang("_RE_SEND_EMAIL").'" /></a></td><td valign="top"><img id="btn_addrecipient_'.$i.'" src="images/email_add.png" alt="" title="'.lang("_NEW_RECIPIENT").'" onclick="openAddRecipient('."'".$item['filevoucheruid']."','".rawurlencode(utf8tohtml($item['fileoriginalname'],true)) ."','".$item['filesize'] ."','".rawurlencode($item['filefrom'])."','".rawurlencode($item['filesubject'])."','".rawurlencode($item['filemessage'])."'" .');"  style="cursor:pointer;" /></td>';
+	$onClick = "'" .$item['filevoucheruid'] ."'";
+   echo '<tr><td valign="top"> <div id="btn_resendemail_'.$i.'"><img src="images/email_go.png" alt="" title="'.lang("_RE_SEND_EMAIL").'"  style="cursor:pointer;"  onclick="confirmResend('.$onClick.')" /></div></td><td valign="top"><img id="btn_addrecipient_'.$i.'" src="images/email_add.png" alt="" title="'.lang("_NEW_RECIPIENT").'" onclick="openAddRecipient('."'".$item['filevoucheruid']."','".rawurlencode(utf8tohtml($item['fileoriginalname'],true)) ."','".$item['filesize'] ."','".rawurlencode($item['filefrom'])."','".rawurlencode($item['filesubject'])."','".rawurlencode($item['filemessage'])."'" .');"  style="cursor:pointer;" /></td>';
    if($item['fileto'] == $attributes["email"])
    {
    echo "<td class='HardBreak' valign='top'>".lang("_ME")."</td>";
@@ -274,6 +299,9 @@ foreach($json_o as $item) {
 </div>
 <div id="dialog-delete" title="<?php echo  lang("_DELETE_FILE"); ?>">
 <p><?php echo lang("_CONFIRM_DELETE_FILE");?></p>
+</div>
+<div id="dialog-resend" title="<?php echo  lang("_RE_SEND_EMAIL"); ?>">
+<p><?php echo lang("_CONFIRM_RESEND_EMAIL");?></p>
 </div>
 <div id="dialog-addrecipient" style="display:none" title="<?php echo  lang("_NEW_RECIPIENT"); ?>">
   <form id="form1" name="form1" enctype="multipart/form-data" method="post" action="">
