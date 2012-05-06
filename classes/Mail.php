@@ -169,14 +169,14 @@ class Mail {
 		 {
 		 	return TRUE;
 		 } else  { 
-		 	logEntry("Error sending email: ".$to);	
+		 	logEntry("Error sending email: ".$to,"E_ERROR");	
 			array_push($errorArray,  "err_emailnotsent");
 			return FALSE;
 		 }
 	   	}
 	   catch(Exception $e)
 	   {
-	   		logEntry($e->getMessage());	
+	   		logEntry($e->getMessage(),"E_ERROR");	
 			array_push($errorArray,  "err_emailnotsent");
 		  return FALSE;
 	   }
