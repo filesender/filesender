@@ -70,6 +70,7 @@ function customError($errno, $errstr, $errfile,$errline){
 function logEntry($message){
 	
 	global $config;
+	global $cron;
 	
 	if($config["debug"] ) {
 	if(isset($config['log_location'])) 
@@ -89,11 +90,14 @@ function logEntry($message){
 		$ip = "none";	
 		$domain = "none";	
 	}
-	
+	$logext = ".log.txt";
+	// seperate cron and normal logs
+	if(isset($cron) && $cron) { $logext = "-CRON.log.txt";}
+			
 	$message .= "[".$ip."(".$domain.")] ";
 	$dateref = date("Ymd");
 	$data = date("Y/m/d H:i:s");
-	$myFile = $config['log_location'].$dateref.".log.txt";
+	$myFile = $config['log_location'].$dateref.$logext;
 	$fh = fopen($myFile, 'a') or die("can't open file");
 	// don't print errors on screen when there is no session.
 	if(isset($_REQUEST['PHPSESSID'])){

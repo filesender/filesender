@@ -59,6 +59,9 @@ require_once("$filesenderbase/classes/Mail.php");
 require_once("$filesenderbase/classes/DB_Input_Checks.php");
 require_once("$filesenderbase/classes/Log.php");
 
+// set cron variable to force
+$cron = true;
+
 $sendmail = Mail::getInstance();
 
 // set time zone for this session
