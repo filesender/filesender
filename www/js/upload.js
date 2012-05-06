@@ -128,6 +128,7 @@ var n = 0; // file int currently uploading
 		if(result == "err_exoutofrange") { $("#expiry_msg").show();} // expiry date out of range
 		if(result == "err_invalidemail") { $("#fileto_msg").show();} // 1 or more emails invalid
 		if(result == "err_invalidfilename") { $("#file_msg").show();} // invalid filename
+		if(result == "err_invalidextension") { $("#extension_msg").show();} //  invalid extension
 		if(result == "err_nodiskspace") { errorDialog(errmsg_disk_space);}
 		})
 		}
