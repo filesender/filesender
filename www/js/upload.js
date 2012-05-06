@@ -80,8 +80,8 @@ var n = 0; // file int currently uploading
 	  	if(validate_file()) { 
 			$("#uploadbutton").show(); 
 			$("#fileInfoView").show();
-			$("#fileName").html('Name: ' + fdata[n].filename);
-			$("#fileSize").html('Size: ' + readablizebytes(fdata[n].fileSize));
+			$("#fileName").html(nameLang + ': ' + fdata[n].filename);
+			$("#fileSize").html(sizeLang + ': ' + readablizebytes(fdata[n].fileSize));
 		} else { 
 			$("#uploadbutton").hide();
 			$("#fileInfoView").hide();

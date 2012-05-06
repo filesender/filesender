@@ -104,6 +104,8 @@
 	var html5 = false;
 	var errmsg_disk_space = "<?php echo lang($lang["_DISK_SPACE_ERROR"]); ?>";
 	var filedata=new Array(); 
+	var nameLang = '<?php echo lang("_FILE_NAME"); ?>'
+	var sizeLang = '<?php echo lang("_SIZE"); ?>'
 	
 	var vid='<?php if(isset($_REQUEST["vid"])){echo htmlspecialchars($_REQUEST["vid"]);}; ?>';
 	// check if html5 functions are available
@@ -133,7 +135,7 @@
 		isRTL: <?php echo lang("_DP_isRTL"); ?>,
 		showMonthAfterYear: <?php echo lang("_DP_showMonthAfterYear"); ?>,
 		yearSuffix: '<?php echo lang("_DP_yearSuffix"); ?>'});
-		
+	
 		// set dialog cancel upload
 		$("#dialog-cancel").dialog({ autoOpen: false, height: 140, width: 350, modal: true,
 		buttons: {
@@ -427,8 +429,8 @@ if(size > maxFLASHuploadsize)
 			$("#n").val(name);
 			$("#total").val(size);
 			$("#fileName").val(name);
-			$("#fileName").html("Name: " + name);
-			$("#fileSize").html("Size: " + readablizebytes(size));
+			$("#fileName").html(nameLang + ": " + name);
+			$("#fileSize").html(sizeLang + ": " + readablizebytes(size));
 			$("#uploadbutton").show(); 
 		} else {
 			$("#fileInfoView").hide();

@@ -43,6 +43,8 @@ var minimumDate = <?php echo (time()+86400)*1000 ?>;
 var maxEmailRecipients = <?php echo $config['max_email_recipients'] ?>;
 var datepickerDateFormat = '<?php echo lang('_DP_dateFormat'); ?>';
 var selectedVoucher = "";
+var nameLang = '<?php echo lang("_FILE_NAME"); ?>'
+var sizeLang = '<?php echo lang("_SIZE"); ?>'
 
 $(function() {
 	//$("#fileto_msg").hide();
