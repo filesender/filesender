@@ -127,7 +127,6 @@ $lang["_MAXEMAILS"] = "Maximálni počet povolených emailových adres je ";
 $lang["_INVALID_DATE_FORMAT"] = "Nesprávný formát datumu.";
 $lang["_DISK_SPACE_ERROR"] = "Není dostatek místa na disku. Prosím, kontaktujte správce této služby nebo nahrajte menší soubor.";
 
-
 $lang["_LOGOUT_COMPLETE"] = "Odhlášení proběhlo úspěšně";
 
 // vouchers

@@ -98,6 +98,7 @@ $lang["_SELECT_FILE"] = "Selecteer een bestand om te uploaden";
 $lang["_UPLOADING_WAIT"] = "Uploaden bestand - even geduld a.u.b. ...";
 $lang["_EMAIL_SEPARATOR_MSG"] = "Meerdere e-mailadressen gescheiden door, of ;";
 $lang["_NO_FILES"] = "Er zijn momenteel geen bestanden beschikbaar";
+$lang["_NO_VOUCHERS"] = "Er zijn momenteel geen uitnodigingen beschikbaar";
 
 $lang["_AUPTERMS"] = "Algemene voorwaarden";
 $lang["_ACCEPTTOC"] = "Ik ga akkoord met de bepalingen en voorwaarden van deze dienst.";	
@@ -107,6 +108,7 @@ $lang["_ERROR_INCORRECT_FILE_SIZE"] = "Er is een probleem opgetreden bij het upl
 $lang["_MAXEMAILS"] = "Het maximum aantal toegestane mailadressen is ";
 $lang["_INVALID_DATE_FORMAT"] = "De datum is in een ongeldig formaat.";
 $lang["_DISK_SPACE_ERROR"] = "Er is niet genoeg vrije ruimte op deze service. Neemt u s.v.p. contact op met de beheerder of upload een kleiner bestand.";
+$lang["_ERROR_ATTRIBUTES"] = "Uw Identity Provider levert niet de benodigde attributen. Neemt u s.v.p. contact op met uw lokale IT-afdeling";
 
 
 // Vouchers
@@ -173,6 +175,7 @@ $lang["_FILE_DELETED"] = "Dit bestand is verwijderd.";
 // confirmation
 $lang["_CONFIRM_DELETE_FILE"] = "Wilt U dit bestand echt verwijderen?";
 $lang["_CONFIRM_DELETE_VOUCHER"] = "Wilt U deze uitnodiging echt intrekken?";
+$lang["_CONFIRM_RESEND_EMAIL"] = "Wilt u deze e-mail echt opnieuw versturen?";
 
 // standard date display format
 $lang['datedisplayformat'] = "d-m-Y"; // Format for displaying date/time, use PHP date() format string syntax 
@@ -203,7 +206,7 @@ $lang["_HELP_TEXT"] = '
 <div align="left" style="padding:5px">
 <h4>Aanmelden</h4> 
 <ul>
-    <li>Als uw instelling niet in de lijst met beschkbare identity providers staat, of u heeft problemen met inloggen, neemt u dan contact op met uw lokale IT-afdeling.</li>
+    <li>Als uw instelling niet in de lijst met beschikbare identity providers staat, of u heeft problemen met inloggen, neemt u dan contact op met uw lokale IT-afdeling.</li>
 </ul>
 
 <h4>Uploads van <i>willekeurig welke grootte</i> via HTML5</h4>
