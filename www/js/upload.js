@@ -143,6 +143,7 @@ var n = 0; // file int currently uploading
 		// no error so use result as current bytes uploaded for file resume 
 		vid = data.vid;
 		fdata[n].bytesUploaded = parseFloat(data.filesize);
+		updatepb(fdata[n].bytesUploaded, fdata[n].fileSize);	
 		uploadFile();
 		}
 		},error:function(xhr,err){
