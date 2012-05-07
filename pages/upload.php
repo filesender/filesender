@@ -441,15 +441,20 @@ function uploadcomplete(name,size)
 	  url: "fs_upload.php?type=uploadcomplete&vid="+vid//,
 	  //data: {myJson:  JSON.stringify(json)}
 	,success:function( data ) {
-
-	if(data == "err_cannotrenamefile")
+	
+	var data =  parseJSON(data);
+	
+	if(data.errors)
 		{
-		window.location.href="index.php?s=uploaderror";
-		} else if(data == "complete"){		
-		window.location.href="index.php?s=complete";
-		} else {
-		window.location.href="index.php?s=completev";
+		$.each(data.errors, function(i,result){
+		if(result == "err_cannotrenamefile") { window.location.href="index.php?s=uploaderror";} //	
+		if(result == "err_emailnotsent") { window.location.href="index.php?s=emailsenterror";} //
+		if(result == "err_filesizeincorrect") { window.location.href="index.php?s=filesizeincorrect";} //	
+		})
 		}
+		if(data.status && data.status == "complete"){window.location.href="index.php?s=complete";}
+		if(data.status && data.status == "completev"){window.location.href="index.php?s=completev";}
+		
 		},error:function(xhr,err){
 			// error function to display error message e.g.404 page not found
 			ajaxerror(xhr.readyState,xhr.status,xhr.responseText);
