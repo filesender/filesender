@@ -80,7 +80,7 @@ if(file_exists($file) && is_file($file) && $filestatus == 'Available')
         }
 
 	// set download file headers
-	logEntry("Download: Start Downloading - ".$file,"E_ERROR");
+	logEntry("Download: Start Downloading - ".$file,"E_NOTICE");
 	header("Content-Type: application/force-download");
 	header('Content-Type: application/octet-stream');
 	header('Content-Length: '.$functions->getFileSize($file));
