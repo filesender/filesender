@@ -73,7 +73,7 @@ function logEntry($message, $type = "E_NOTICE"){
 	global $config;
 	global $cron;
 	
-	$message .=$type.":";
+	$message =$type.": ".$message;
 	
 	if($config["debug"] &&  $type == "E_NOTICE" ||  $type == "E_ERROR" ) {
 	if(isset($config['log_location'])) 
