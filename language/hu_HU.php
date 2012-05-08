@@ -164,7 +164,7 @@ $lang["_STEP2"] = "Állítsa be a lejárati dátumot";
 $lang["_STEP3"] = "Válassza ki a küldendő fájlt";
 $lang["_STEP4"] = "Kattintson a küldésre";
 $lang["_HTML5Supported"] = "2GB-nál nagyobb fájl feltöltése támogatott!";
-$lang["_HTML5NotSupported"] = "2GB-nál nagyobb fájl feltöltése<br /><b>nem támogatott</b>!";                   
+$lang["_HTML5NotSupported"] = "2GB-nál nagyobb fájl feltöltése nem támogatott!";                   
 
 $lang["_OPTIONAL"] = "választható";
 
