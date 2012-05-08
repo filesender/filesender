@@ -243,6 +243,7 @@ function openabout()
 		echo "</div>";
 	}
 	?>
+	<img src="images/ajax-loader-sm.gif" alt="Sending" name="busySpinner" align="left" id="busySpinner" style="display:none;padding-left:6px" />	
 	<div id="serviceinfo">
 	<a href="<?php echo $config['HTML5URL'] ?>" target="_newtab" id="html5link" name="html5link"><img alt="" name="html5image" width="75" height="18" border="0" align="absmiddle" id="html5image" style="display:none" title=""/></a></div>
 	<?php

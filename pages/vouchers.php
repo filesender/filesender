@@ -121,6 +121,7 @@ function confirmdelete(vid)
 function postVoucher()
 {
 	hidemessages();
+	$("#busySpinner").show();
 	// post voucher data from form
 		
 	var query = $("#form1").serializeArray(), json = {};
@@ -146,10 +147,13 @@ function postVoucher()
 		return;
 		}
 		if(data.status && data.status == "complete") {  window.location.href="index.php?s=vouchers&a=complete";	}
+		$("#busySpinner").hide();
 		},error:function(xhr,err){
+		$("#busySpinner").hide();
 			// error function to display error message e.g.404 page not found
 			ajaxerror(xhr.readyState,xhr.status,xhr.responseText);
 		}
+		
 	});
 }
 //]]>
@@ -209,8 +213,10 @@ $json_o=json_decode($filedata,true);
         </td>
       </tr>
       <tr>
-        <td align="right" valign="middle"><input type="hidden" id="fileexpirydate" name="fileexpirydate" value="<?php echo date($lang['datedisplayformat'],strtotime("+".$config['default_daysvalid']." day"));?>" />
-        <input type="hidden" name="filestatus" id="filestatus" value="voucher" /></td>
+        <td align="right" valign="middle">
+		<input type="hidden" id="fileexpirydate" name="fileexpirydate" value="<?php echo date($lang['datedisplayformat'],strtotime("+".$config['default_daysvalid']." day"));?>" />
+        <input type="hidden" name="filestatus" id="filestatus" value="voucher" />
+		</td>
         <td><div class="menu" id="voucherbutton" onclick="validateForm()"><a href="#" id="btn_sendvoucher" ><?php echo lang("_SEND_VOUCHER"); ?></a></div><div id="_noauth" class="validation_msg" style="display:none"><?php echo lang("_AUTH_ERROR"); ?></div></td>
       </tr>
     </table>
