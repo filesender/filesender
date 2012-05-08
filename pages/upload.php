@@ -451,10 +451,10 @@ function uploadcomplete(name,size)
 		if(result == "err_emailnotsent") { window.location.href="index.php?s=emailsenterror";} //
 		if(result == "err_filesizeincorrect") { window.location.href="index.php?s=filesizeincorrect";} //	
 		})
-		}
+		} else {
 		if(data.status && data.status == "complete"){window.location.href="index.php?s=complete";}
 		if(data.status && data.status == "completev"){window.location.href="index.php?s=completev";}
-		
+		}
 		},error:function(xhr,err){
 			// error function to display error message e.g.404 page not found
 			ajaxerror(xhr.readyState,xhr.status,xhr.responseText);
