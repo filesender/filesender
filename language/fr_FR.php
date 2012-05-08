@@ -162,7 +162,7 @@ $lang["_STEP2"] = "Séléctionnez la date d'expiration";
 $lang["_STEP3"] = "Choisissez un fichier";
 $lang["_STEP4"] = "Cliquez Envoyer";
 $lang["_HTML5Supported"] = "Téléchargements de plus de 2GO supportés";
-$lang["_HTML5NotSupported"] = "Téléchargements de plus de 2GO <br />non supportés !";			
+$lang["_HTML5NotSupported"] = "Téléchargements de plus de 2GO non supportés !";			
 	
 $lang["_OPTIONAL"] = "Optionnel";
 			
