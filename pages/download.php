@@ -57,7 +57,7 @@ function startDownload()
 <?php echo '<div id="pageheading">'.lang("_DOWNLOAD").'</div>'; ?> 
   <div id="tablediv">
   <table>
-  <tr><td id="download_to_label"><?php echo lang("_TO"); ?>:</td><td id="to"><?php echo htmlentities($filedata["fileto"]);?></td></tr>
+  <tr><td id="download_to"><?php echo lang("_TO"); ?>:</td><td id="to"><?php echo htmlentities($filedata["fileto"]);?></td></tr>
   <tr><td id="download_from"><?php echo lang("_FROM"); ?>:</td><td id="from"><?php echo htmlentities($filedata["filefrom"]);?></td></tr>
   <tr><td id="download_subject"><?php echo lang("_SUBJECT"); ?>:</td><td id="subject"><?php echo utf8tohtml($filedata["filesubject"],TRUE);?></td></tr>
   <tr><td id="download_message"><?php echo lang("_MESSAGE"); ?>:</td><td id="message"><?php echo nl2br(utf8tohtml($filedata["filemessage"],TRUE));?></td></tr>
