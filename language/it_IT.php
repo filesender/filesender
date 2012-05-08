@@ -123,10 +123,13 @@ $lang["_ACCEPTTOC"] = "Accetto i termini e le condizioni di questo servizio.";
 $lang["_AGREETOC"] = "DEVI accettare i termini e le condizioni.";
 $lang["_FILE_TO_BE_RESENT"] = "File to be redistributed";
 $lang["_ERROR_UPLOADING_FILE"] = "Errore nel caricamento del file";
+$lang["_ERROR_SENDING_EMAIL"] = "Si è verificato un errore nell'invio delle email, si prega di contattare il tuo amministratore";
 $lang["_ERROR_INCORRECT_FILE_SIZE"] = "Si è verificato un errore durante il caricamento del file. <br />La dimensione del file sul server è differente da quella del file originale.<br /><br />Contatta il tuo amministratore.";
 $lang["_MAXEMAILS"] = "Il numero massimo di indirizzi email è ";
 $lang["_INVALID_DATE_FORMAT"] = "Il formato della data non è valido";
 $lang["_DISK_SPACE_ERROR"] = "Non c'è sufficiente spazio disco su questo server. Per favore contatta l'amministrazione del servizio o carica un file di dimensioni minori.";
+$lang["_ERROR_ATTRIBUTES"] = "Il tuo identity provider non sta rilasciando gli attributi richiesti. Contatta il tuo amministratore";
+$lang["_ERROR_CONTACT_ADMIN"] = "Si è verificato un errore, si prega di contattare il tuo amministratore";
 
 // Logout page
 $lang["_LOGOUT_COMPLETE"] = "Logout completato.";
@@ -138,6 +141,7 @@ Il destinatario riceverà un'email contenente il link per utilizzare il voucher.
 $lang["_EMAIL_SEPARATOR_MSG"] = "Indirizzi di posta elettronica separati da , o ;";
 
 $lang["_NO_FILES"] = "Al momento non ci sono file disponibili.";
+$lang["_NO_VOUCHERS"] = "Al momento non ci sono voucher disponibili";
 $lang["_ARE_YOU_SURE"] = "Sei sicura/o?";
 $lang["_DELETE_FILE"] = "Elimina File";
 $lang["_EMAIL_SENT"] = "Messaggio Inviato";
@@ -171,6 +175,7 @@ $lang["_OPTIONAL"] = "opzionale";
 // confirmation
 $lang["_CONFIRM_DELETE_FILE"] = "Sei sicura/o di voler eliminare questo file?";
 $lang["_CONFIRM_DELETE_VOUCHER"] = "Sei sicura/o di voler eliminare questo voucher?";
+$lang["_CONFIRM_RESEND_EMAIL"] = "Sei sicuro di voler reinviare questa email?";
 
 // standard date display format
 $lang['datedisplayformat'] = "d/m/Y"; // Format for displaying date/time, use PHP date() format string syntax 
