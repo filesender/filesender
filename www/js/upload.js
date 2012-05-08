@@ -170,13 +170,14 @@ function uploadFile() {
 		if(data.errors)
 		{
 		$.each(data.errors, function(i,result){
-		if(result == "err_cannotrenamefile") { window.location.href="index.php?s=uploaderror";} //	
-		if(result == "err_emailnotsent") { window.location.href="index.php?s=emailsenterror";} //
-		if(result == "err_filesizeincorrect") { window.location.href="index.php?s=filesizeincorrect";} //	
+		if(result == "err_cannotrenamefile") { window.location.href="index.php?s=uploaderror";return;} //	
+		if(result == "err_emailnotsent") { window.location.href="index.php?s=emailsenterror";return;} //
+		if(result == "err_filesizeincorrect") { window.location.href="index.php?s=filesizeincorrect";return;} //	
 		})
+		} else {
+		if(data.status && data.status == "complete"){window.location.href="index.php?s=complete";return;}
+		if(data.status && data.status == "completev"){window.location.href="index.php?s=completev";return;}
 		}
-		if(data.status && data.status == "complete"){window.location.href="index.php?s=complete";}
-		if(data.status && data.status == "completev"){window.location.href="index.php?s=completev";}
 		}
 		,error:function(xhr,err){
 			// error function to display error message e.g.404 page not found
