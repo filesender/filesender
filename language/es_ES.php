@@ -166,7 +166,7 @@ $lang["_STEP1"] = "Escriba las direcciones de destino";
 $lang["_STEP2"] = "Selecione la fecha de expiraci&oacute;n";
 $lang["_STEP3"] = "Busque y seleccione el archivo";
 $lang["_STEP4"] = "Pulse en \"Enviar\"";
-$lang["_HTML5Supported"] = "&iexcl;Permite archivos mayores de 2GB!";
+$lang["_HTML5Supported"] = "¡Permite archivos mayores de 2GB!";
 $lang["_HTML5NotSupported"] = "Archivos menores de 2GB";
 
 $lang["_OPTIONAL"] = "opcional";
