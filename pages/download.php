@@ -66,5 +66,5 @@ function startDownload()
   <tr><td><?php echo lang("_EXPIRY_DATE"); ?>:</td><td><?php echo date($lang['datedisplayformat'],strtotime($filedata["fileexpirydate"]));?></td></tr>
   </table>
   </div>
-  <div class="menu" id="downloadbutton"><p><a href="download.php?vid=<?php echo urlencode($filedata["filevoucheruid"]);?>" onclick="startDownload()"><?php echo lang("_START_DOWNLOAD"); ?></a></p></div>
+  <div class="menu"><p><a id="downloadbutton" href="download.php?vid=<?php echo urlencode($filedata["filevoucheruid"]);?>" onclick="startDownload()"><?php echo lang("_START_DOWNLOAD"); ?></a></p></div>
 </div>
