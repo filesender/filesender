@@ -143,7 +143,7 @@ class Log {
 		}
 		catch(PDOException $e)
 		{ 
-			displayError($e->getMessage()); 
+			displayError(lang("_ERROR_CONTACT_ADMIN"),$e->getMessage()); 
 			return  false;
 		}
     }

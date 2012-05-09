@@ -139,7 +139,7 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
         	if(!rename($uploadfolder.$tempFilename, $uploadfolder.$fileuid.".tmp")) {
 			array_push($errorArray,  "err_cannotrenamefile");
 			returnerrorandclose();
-            	logEntry("Unable to move the file ".$uploadfolder.$tempFilename);
+            	logEntry("Unable to move the file ".$uploadfolder.$tempFilename,"E_ERROR");
          	} else {
 				logEntry("Rename the file ".$uploadfolder.$fileuid.".tmp");
 		}

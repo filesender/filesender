@@ -57,7 +57,7 @@ if(session_id() == ""){
 
 // check we are authenticated as SAML or voucher user
 if(!$authvoucher->aVoucher()) {
-		logEntry("Download: Failed authentication");
+		logEntry("Download: Failed authentication","E_ERROR");
 		echo "notAuthenticated";
 } else {
 if (isset($_REQUEST["vid"])) {
@@ -80,7 +80,7 @@ if(file_exists($file) && is_file($file) && $filestatus == 'Available')
         }
 
 	// set download file headers
-	logEntry("Download: Start Downloading - ".$file);
+	logEntry("Download: Start Downloading - ".$file,"E_NOTICE");
 	header("Content-Type: application/force-download");
 	header('Content-Type: application/octet-stream');
 	header('Content-Length: '.$functions->getFileSize($file));
@@ -136,7 +136,7 @@ ob_start();
        $status = fclose($handle);
 
 		// log the download progress 
-	   logEntry("Download Pogress: [". $filename. "] cnt-".$cnt.":retbytes-". $retbytes.": status-".$status );
+	   logEntry("Download Pogress: [". $filename. "] cnt-".$cnt.":retbytes-". $retbytes.": status-".$status);
    if ($retbytes && $status) {
        return $cnt; // return num. bytes delivered like readfile() does.
    }

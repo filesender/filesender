@@ -186,8 +186,8 @@ class Functions {
 		}
 		catch(PDOException $e)
 		{ 
-			logEntry($e->getMessage());	
-			displayError($e->getMessage()); 
+			logEntry($e->getMessage(),"E_ERROR");	
+			displayError(lang("_ERROR_CONTACT_ADMIN"),$e->getMessage());
 		}   
 		$result = $statement->fetchAll();
 		$pdo = NULL;
@@ -221,8 +221,8 @@ class Functions {
 		}
 		catch(PDOException $e)
 		{ 
-			logEntry($e->getMessage());	
-			displayError($e->getMessage()); 
+			logEntry($e->getMessage(),"E_ERROR");	
+			displayError(lang("_ERROR_CONTACT_ADMIN"),$e->getMessage()); 
 		}   
 		$result = $statement->fetchAll();
 		$pdo = NULL;
@@ -277,8 +277,8 @@ class Functions {
 		}
 		catch(PDOException $e)
 		{ 
-			logEntry($e->getMessage());	
-			displayError($e->getMessage()); 
+			logEntry($e->getMessage(),"E_ERROR");	
+			displayError(lang("_ERROR_CONTACT_ADMIN"),$e->getMessage()); 
 		}   
 		$result = $statement->fetchAll();
 		$pdo = NULL;
@@ -335,8 +335,8 @@ class Functions {
 		}
 		catch(PDOException $e)
 		{ 
-			logEntry($e->getMessage());	
-			displayError($e->getMessage()); 
+			logEntry($e->getMessage(),"E_ERROR");	
+			displayError(lang("_ERROR_CONTACT_ADMIN"),$e->getMessage());
 		}   
 		$result = $statement->fetchAll();
 		$pdo = NULL;
@@ -364,8 +364,8 @@ class Functions {
 		}
 		catch(PDOException $e)
 		{ 
-			logEntry($e->getMessage());	
-			displayError($e->getMessage()); 
+			logEntry($e->getMessage(),"E_ERROR");	
+			displayError(lang("_ERROR_CONTACT_ADMIN"),$e->getMessage());
 		}   
 		$result = $statement->fetchAll();
 		if($result)
@@ -396,8 +396,8 @@ class Functions {
 		}
 		catch(PDOException $e)
 		{ 
-			logEntry($e->getMessage());	
-			displayError($e->getMessage()); 
+			logEntry($e->getMessage(),"E_ERROR");	
+			displayError(lang("_ERROR_CONTACT_ADMIN"),$e->getMessage()); 
 		}   
 		$result = $statement->fetchAll();
 		$pdo = NULL;
@@ -427,8 +427,8 @@ class Functions {
 		}
 		catch(PDOException $e)
 		{ 
-			logEntry($e->getMessage());	
-			displayError($e->getMessage()); 
+			logEntry($e->getMessage(),"E_ERROR");	
+			displayError(lang("_ERROR_CONTACT_ADMIN"),$e->getMessage());
 		}   
 		$result = $statement->fetchAll();
 		$pdo = NULL;
@@ -455,8 +455,8 @@ class Functions {
 			}
 		catch(PDOException $e)
 		{ 
-			logEntry($e->getMessage());	
-			displayError($e->getMessage()); 
+			logEntry($e->getMessage(),"E_ERROR");	
+			displayError(lang("_ERROR_CONTACT_ADMIN"),$e->getMessage()); 
 		}   
 		$result = $statement->fetchAll();
 		$pdo = NULL;
@@ -560,8 +560,8 @@ class Functions {
 			$statement->execute(); 
 			}
 			catch(PDOException $e){ 
-			logEntry($e->getMessage());	
-			displayError($e->getMessage()); 
+			logEntry($e->getMessage(),"E_ERROR");	
+			displayError(lang("_ERROR_CONTACT_ADMIN"),$e->getMessage()); 
 			}   
 			$pdo = NULL;
 			// get voucherdata to email
@@ -777,8 +777,8 @@ class Functions {
 				$statement->execute(); 
 				}
 			catch(PDOException $e){ 
-				logEntry($e->getMessage());	
-				displayError($e->getMessage()); 
+				logEntry($e->getMessage(),"E_ERROR");	
+				displayError(lang("_ERROR_CONTACT_ADMIN"),$e->getMessage());
 				return false;
 				}   
 
@@ -847,8 +847,8 @@ class Functions {
 				$statement->execute(); 
 				}
 			catch(PDOException $e){ 
-				logEntry($e->getMessage());	
-				displayError($e->getMessage()); 
+				logEntry($e->getMessage(),"E_ERROR");	
+				displayError(lang("_ERROR_CONTACT_ADMIN"),$e->getMessage()); 
 				return false;
 				}   
 			return true;
@@ -868,7 +868,7 @@ class Functions {
 			$statement->bindParam(':fileid', $fileid);
 			
 			try { $statement->execute();}
-			catch(PDOException $e){ logEntry($e->getMessage());	return false; }   
+			catch(PDOException $e){ logEntry($e->getMessage(),"E_ERROR");	return false; }   
 				
 			$fileArray =  $this->getVoucher($fileid);
 	
@@ -899,7 +899,7 @@ class Functions {
 			$statement->bindParam(':fileid', $fileid);
 			
 			try { $statement->execute();}
-			catch(PDOException $e){ logEntry($e->getMessage());	return false; }   
+			catch(PDOException $e){ logEntry($e->getMessage(),"E_ERROR");	return false; }   
 				
 			$fileArray =  $this->getVoucher($fileid);
 	
@@ -929,7 +929,7 @@ class Functions {
 			$statement->bindParam(':filevoucheruid', $filevoucheruid);
 			
 			try { $statement->execute();}
-			catch(PDOException $e){ logEntry($e->getMessage());	return false; }   
+			catch(PDOException $e){ logEntry($e->getMessage(),"E_ERROR");	return false; }   
 			
 			logEntry("Voucher Closed: ".$filevoucheruid);	
 			
@@ -955,7 +955,7 @@ class Functions {
 			$statement->bindParam(':fileid', $fileid);
 			
 			try { $statement->execute();}
-			catch(PDOException $e){ logEntry($e->getMessage());	return false; }   
+			catch(PDOException $e){ logEntry($e->getMessage(),"E_ERROR");	return false; }   
 				
 			$fileArray =  $this->getVoucher($fileid);
 	
