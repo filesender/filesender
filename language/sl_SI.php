@@ -162,7 +162,7 @@ $lang["_STEP2"] = "Nastavite datum poteka veljavnosti";
 $lang["_STEP3"] = "Pripnite dokument";
 $lang["_STEP4"] = "Kliknite na gumb Pošlji";
 $lang["_HTML5Supported"] = "Pošiljanje dokumentov nad 2GB je podprto!";
-$lang["_HTML5NotSupported"] = "Pošiljanje dokumentov nad 2GB<br />ni podprto!";
+$lang["_HTML5NotSupported"] = "Pošiljanje dokumentov nad 2GB ni podprto!";
 
 $lang["_OPTIONAL"] = "izbirno";
 

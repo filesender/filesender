@@ -162,7 +162,7 @@ $lang["_STEP2"] = "Postavi datum isteka";
 $lang["_STEP3"] = "Pronađi datoteku";
 $lang["_STEP4"] = "Klikni pošalji";
 $lang["_HTML5Supported"] = "Prijenos datoteka većih od 2GB podržan!";
-$lang["_HTML5NotSupported"] = "Prijenos datoteka većih od 2GB<br />nije podržan!";
+$lang["_HTML5NotSupported"] = "Prijenos datoteka većih od 2GB nije podržan!";
 
 $lang["_OPTIONAL"] = "opcionalno";
 
