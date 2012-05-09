@@ -139,7 +139,8 @@
 		$("#dialog-cancel").dialog({ autoOpen: false, height: 140, width: 350, modal: true,
 		buttons: {
 				'uploadconfirmyesBTN': function() {
-				window.location.href="index.php?s=upload";
+				location.reload(true);
+
 				},
 				'uploadconfirmnoBTN': function() { 
 				$( this ).dialog( "close" );
@@ -168,7 +169,7 @@
 		$("#dialog-autherror").dialog({ autoOpen: false, height: 240,width: 350, modal: true,title: "",		
 		buttons: {
 			'<?php echo lang("_OK") ?>': function() {
-				window.location.href="index.php?s=upload";
+				location.reload(true);
 				}
 			}
 		})
