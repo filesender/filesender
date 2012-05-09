@@ -163,7 +163,7 @@ $lang["_STEP2"] = "Nastavte datum expirace";
 $lang["_STEP3"] = "Vyberte soubor";
 $lang["_STEP4"] = "Klikněte na Odeslat";
 $lang["_HTML5Supported"] = "Nahrání souboru přesahující 2GB je podporováno!";
-$lang["_HTML5NotSupported"] = "Nahrání souboru přesahující 2GB<br />není podporováno!";			
+$lang["_HTML5NotSupported"] = "Nahrání souboru přesahující 2GB není podporováno!";			
 
 $lang["_OPTIONAL"] = "volitelné";
 

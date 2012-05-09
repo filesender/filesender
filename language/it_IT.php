@@ -163,8 +163,8 @@ $lang["_STEP1"] = "Inserisci l'indirizzo destinatario";
 $lang["_STEP2"] = "Imposta la data di scadenza";
 $lang["_STEP3"] = "Allega il file";
 $lang["_STEP4"] = "Clicca Invia";
-$lang["_HTML5Supported"] = "I file più grandi di 2GB<br /> sono supportati!";
-$lang["_HTML5NotSupported"] = "I file più grandi di 2GB<br /> non sono supportati!";
+$lang["_HTML5Supported"] = "I file più grandi di 2GB sono supportati!";
+$lang["_HTML5NotSupported"] = "I file più grandi di 2GB non sono supportati!";
 
 $lang["_OPTIONAL"] = "opzionale";
 
