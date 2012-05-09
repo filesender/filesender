@@ -54,8 +54,14 @@ if(isset($_REQUEST["a"]) && isset($_REQUEST["id"]))
 		}
 		if($_REQUEST["a"] == "resend")
 		{
-			$sendmail->sendEmail($myfileData ,$config['fileuploadedemailbody']);
-			echo "<div id='message'>".lang("_MESSAGE_RESENT")."</div>";
+			if($sendmail->sendEmail($myfileData ,$config['fileuploadedemailbody']))
+			{
+				echo "<div id='message'>".lang("_MESSAGE_RESENT")."</div>";
+			} else 
+			{
+				echo "<div id='message'>".lang("_ERROR_SENDING_EMAIL")."</div>";
+			}
+			
 		}
 	} else {
 		echo "<div id='message'>".lang("_INVALID_FILEVOUCHERID")."</div>";	
@@ -174,6 +180,7 @@ $json_o=json_decode($filedata,true);
 				if(result == "err_expmissing") { $("#expiry_msg").show();} // missing expiry date
 				if(result == "err_exoutofrange") { $("#expiry_msg").show();} // expiry date out of range
 				if(result == "err_invalidemail") { $("#fileto_msg").show();} // 1 or more emails invalid
+				if(result == "err_emailnotsent") {window.location.href="index.php?s=emailsenterror";} //
 				})
 				}
 				if(data.status && data.status == "complete")

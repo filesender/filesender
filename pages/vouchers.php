@@ -130,15 +130,22 @@ function postVoucher()
 	 type: "POST",
 	 url: "fs_upload.php?type=insertVoucherAjax",
 	 data: {myJson:  JSON.stringify(json)}
-		,success:function( msg ) {
-		// complete or display validation messages 
-		if(msg == "complete") { window.location.href="index.php?s=vouchers&a=complete"; } 
-		if(msg == "err_tomissing") { $("#fileto_msg").show();} // missing email data
-		if(msg == "err_expmissing") { $("#expiry_msg").show();} // missing expiry date
-		if(msg == "err_exoutofrange") { $("#expiry_msg").show();} // expiry date out of range
-		if(msg == "err_invalidemail") { $("#fileto_msg").show();} // 1 or more emails invalid
-		if(msg == "not_authenticated") { $("#_noauth").show();} // server returns not authenticated
-		if(msg == "") { $("#_noauth").show();} // server returns not authenticated
+		,success:function( data ) {
+		var data =  parseJSON(data);
+		if(data.errors)
+		{
+		$.each(data.errors, function(i,result){
+		if(result == "err_tomissing") { $("#fileto_msg").show();} // missing email data
+		if(result == "err_expmissing") { $("#expiry_msg").show();} // missing expiry date
+		if(result == "err_exoutofrange") { $("#expiry_msg").show();} // expiry date out of range
+		if(result == "err_invalidemail") { $("#fileto_msg").show();} // 1 or more emails invalid
+		if(result == "not_authenticated") { $("#_noauth").show();} // server returns not authenticated
+		if(result == "") { $("#_noauth").show();} // server returns not authenticated
+		if(result == "err_emailnotsent") {window.location.href="index.php?s=emailsenterror";} //
+		})
+		return;
+		}
+		if(data.status && data.status == "complete") {  window.location.href="index.php?s=vouchers&a=complete";	}
 		},error:function(xhr,err){
 			// error function to display error message e.g.404 page not found
 			ajaxerror(xhr.readyState,xhr.status,xhr.responseText);
