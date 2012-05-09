@@ -160,28 +160,23 @@ function uploadFile() {
 		var txferSize = chunksize;
 
 		if(fdata[n].bytesUploaded > fdata[n].bytesTotal -1 )
-			{
-			//var filecontrol = document.getElementById("fileToUpload");
-       		// Remove the new file control.
-    		//filecontrol.parentNode.removeChild(filecontrol);
-			// encodeURIComponent file name before sending
-			// post completed data and email
+		{
 		var query = $("#form1").serializeArray(), json = {};
 		$.ajax({
   		type: "POST",
   		url: "fs_upload.php?type=uploadcomplete&vid="+vid
 		,success:function( data ) {
-		if(data == "err_cannotrenamefile")
+		var data =  parseJSON(data);
+		if(data.errors)
 		{
-		window.location.href="index.php?s=uploaderror";
-		} else if(data == "err_filesizeincorrect")
-		{
-		window.location.href="index.php?s=filesizeincorrect";
-		} else if(data == "complete"){		
-		window.location.href="index.php?s=complete";
-		} else {
-		window.location.href="index.php?s=completev";
+		$.each(data.errors, function(i,result){
+		if(result == "err_cannotrenamefile") { window.location.href="index.php?s=uploaderror";} //	
+		if(result == "err_emailnotsent") { window.location.href="index.php?s=emailsenterror";} //
+		if(result == "err_filesizeincorrect") { window.location.href="index.php?s=filesizeincorrect";} //	
+		})
 		}
+		if(data.status && data.status == "complete"){window.location.href="index.php?s=complete";}
+		if(data.status && data.status == "completev"){window.location.href="index.php?s=completev";}
 		}
 		,error:function(xhr,err){
 			// error function to display error message e.g.404 page not found
