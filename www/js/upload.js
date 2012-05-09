@@ -107,7 +107,7 @@ var n = 0; // file int currently uploading
   		type: "POST",
   		url: "fs_upload.php?type=validateupload&vid="+vid,
   		data: {myJson:  JSON.stringify(json)}
-		}).success(function( data ) {
+		,success:function( data ) {
 		if(data == "") {
 		alert("No response from server");
 		return;	
@@ -117,7 +117,7 @@ var n = 0; // file int currently uploading
 			$("#dialog-autherror").dialog("open");
 			return;			
 		}
-		var data =  JSON.parse(data);
+		var data =  parseJSON(data);
 		
 		if(data.errors)
 		{
@@ -146,6 +146,10 @@ var n = 0; // file int currently uploading
 		updatepb(fdata[n].bytesUploaded, fdata[n].fileSize);	
 		uploadFile();
 		}
+		},error:function(xhr,err){
+			// error function to display error message e.g.404 page not found
+			ajaxerror(xhr.readyState,xhr.status,xhr.responseText);
+		}
   		});
 	}
 
@@ -166,7 +170,7 @@ function uploadFile() {
 		$.ajax({
   		type: "POST",
   		url: "fs_upload.php?type=uploadcomplete&vid="+vid
-		}).success(function( data ) {
+		,success:function( data ) {
 		if(data == "err_cannotrenamefile")
 		{
 		window.location.href="index.php?s=uploaderror";
@@ -177,6 +181,11 @@ function uploadFile() {
 		window.location.href="index.php?s=complete";
 		} else {
 		window.location.href="index.php?s=completev";
+		}
+		}
+		,error:function(xhr,err){
+			// error function to display error message e.g.404 page not found
+			ajaxerror(xhr.readyState,xhr.status,xhr.responseText);
 		}
 		});
 		return;
