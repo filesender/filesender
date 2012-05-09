@@ -182,11 +182,12 @@ $json_o=json_decode($filedata,true);
 				if(result == "err_invalidemail") { $("#fileto_msg").show();} // 1 or more emails invalid
 				if(result == "err_emailnotsent") {window.location.href="index.php?s=emailsenterror";} //
 				})
-				}
+				} else {
 				if(data.status && data.status == "complete")
 				{
 				// done
 				window.location.href="index.php?s=files&a=added";
+				}
 				}
 				},error:function(xhr,err){
 				// error function to display error message e.g.404 page not found
