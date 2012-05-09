@@ -183,7 +183,7 @@ function parseJSON(json)
 			var msg = "Error accessing server. ";
 			if(debug) { msg += "Fatal error (" + e + ")";};
 			$("#scratch").html('<div id="message">'+msg+'</>');	
-     };
+     	};
 }
 
 // display erro state details if debug is on
