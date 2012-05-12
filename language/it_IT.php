@@ -215,7 +215,7 @@ $lang["_HELP_TEXT"] = '
         
         <li>Devi utilizzare un browser molto recente per usufruire di HTML5, l\'ultima versione de "il linguaggio della rete".</li>
         <li>Attualmente Firefox 4 (o versioni superiori) e Chrome per Windows, Mac OS X e Linux funzionano correttamente</li>
-        <li>Per favore utilizza il sito <a href="http://caniuse.com/#feat=fileapi" target="_blank">"When can I use..."</A> per monitorare lo stato di sviluppo delle HTML5 FileAPI per la maggiorparte dei browser. Specialmente <a href="http://caniuse.com/#feat=filereader" target="_blank">FileReader API</A> and <A href="http://caniuse.com/#feat=bloburls" target="_blank">Blob URLs</A> devono essere verdi (=supporati) per permettere al browser di caricare file più grandi di 2GB </li>
+        <li>Per favore utilizza il sito <a href="http://caniuse.com/#feat=fileapi" target="_blank">"When can I use..."</a> per monitorare lo stato di sviluppo delle HTML5 FileAPI per la maggiorparte dei browser. Specialmente <a href="http://caniuse.com/#feat=filereader" target="_blank">FileReader API</a> and <a href="http://caniuse.com/#feat=bloburls" target="_blank">Blob URLs</a> devono essere verdi (=supporati) per permettere al browser di caricare file più grandi di 2GB </li>
 </ul>
 
 <h4>Downloads di qualsiasi dimensione</h4>
