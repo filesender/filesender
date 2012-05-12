@@ -321,25 +321,25 @@ function openabout()
 		else if($s == "uploaderror") 
 	{
 	?>
-	<div id="message"><?php echo lang("_ERROR_UPLOADING_FILE"); ?></div></div>
+	<div id="message"><?php echo lang("_ERROR_UPLOADING_FILE"); ?></div>
 	<?php	
 	}	
 		else if($s == "emailsenterror") 
 	{
 	?>
-	<div id="message"><?php echo lang("_ERROR_SENDING_EMAIL"); ?></div></div>
+	<div id="message"><?php echo lang("_ERROR_SENDING_EMAIL"); ?></div>
 	<?php	
 	}	
 	else if($s == "filesizeincorrect") 
 	{
 	?>
-	<div id="message"><?php echo lang("_ERROR_INCORRECT_FILE_SIZE"); ?></div></div>
+	<div id="message"><?php echo lang("_ERROR_INCORRECT_FILE_SIZE"); ?></div>
 <?php	
 	}	
 	else if($s == "complete" || $s == "completev") 
 	{
 ?>
-		<div id="message"><?php echo lang("_UPLOAD_COMPLETE"); ?></div></div>
+		<div id="message"><?php echo lang("_UPLOAD_COMPLETE"); ?></div>
 <?php
 	} else if ($s == "" && $isAuth){
 		require_once('../pages/upload.php');	
