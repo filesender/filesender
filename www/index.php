@@ -102,6 +102,7 @@ if($isAuth )
 <script type="text/javascript" src="js/jquery-1.7.min.js" ></script>
 <script type="text/javascript" src="js/jquery-ui-1.8.1.custom.min.js"></script>
 <script type="text/javascript">
+//<![CDATA[
 
 var debug = <?php echo $config["debug"] ? 'true' : 'false'; ?> ;
 var html5 = false;
@@ -163,7 +164,7 @@ function openabout()
 		$( "#dialog-about" ).dialog( "open" );
 		$('.ui-dialog-buttonpane > button:last').focus();
 	}
-	
+//]]>
 </script>
    
 <meta name="robots" content="noindex, nofollow" />
