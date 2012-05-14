@@ -191,7 +191,6 @@ $lang["_DP_showMonthAfterYear"] = 'false';
 $lang["_DP_yearSuffix"] = '';
 
 // Login Splash text
-//$lang["_SITE_SPLASHTEXT"] = "FileSender is a secure way to share large files with anyone! Logon to upload your files or invite people to send you a file.";
 
 // site help
 $lang["_HELP_TEXT"] = '

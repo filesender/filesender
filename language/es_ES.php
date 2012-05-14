@@ -196,7 +196,7 @@ $lang["_DP_showMonthAfterYear"] = 'false';
 $lang["_DP_yearSuffix"] = '';
 
 // Login Splash text
-$lang["_SITE_SPLASHTEXT"] = "FileSender es un medio seguro para compartir archivos grandes.<br />Entre para subir y enviar archivos o para generar \"Invitaciones de env&iacute;o\".<p>";
+$lang["_SITE_SPLASHTEXT"] = htmlentities($config['site_name']) ." es un medio seguro para compartir archivos grandes.<br />Entre para subir y enviar archivos o para generar \"Invitaciones de env&iacute;o\".<p>";
 
 // site help
 $lang["_HELP_TEXT"] = '
