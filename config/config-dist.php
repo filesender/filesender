@@ -142,6 +142,8 @@ public function loadConfig() {
 	
 	// cron settings
 	$config['cron_exclude prefix'] = '_'; // exclude deletion of files with the prefix character listed (can use multiple characters eg '._' will ignore .xxxx and _xxxx
+	$config['cron_shred'] = false; // instead of simply unlinking, overwrite expired files so they are hard to recover
+	$config['cron_shred_command'] = '/usr/bin/shred -f -u -n 1 -z'; // overwrite once (-n 1) with random data, once with zeros (-z), then remove (-u)
 	
 	// email templates section
 	$config['default_emailsubject'] = "{siteName}: {filename}";
