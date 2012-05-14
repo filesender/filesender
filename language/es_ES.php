@@ -222,7 +222,7 @@ $lang["_HELP_TEXT"] = '
         <li>Si le aparecece el icono <img src="images/html5_installed.png" alt="HTML5 OK" class="textmiddle" style="display:inline" /> en la esquina inferior derecha de la ventana de FileSender, esta es su opci&oacute;n </li>
 	<li>Precisa de un navegador que soporte HTML5, la &uacute;ltima versi&oacute;n del "lenguaje de Internet"</li>
 	<li>Firefox4 (y superiores) y Chrome, tanto en Windows, en Mac OSX como en Linux, "hablan" HTML5</li>
-	<li>Consulte la web <a href="http://caniuse.com/#feat=fileapi" target="_blank">"Cu&aacute;ndo podr&eacute; usar..."</A> para seguir los progresos de la "FileAPI" HTML5 en la mayor&iacute;a de los navegadores. En particular, el soporte para <a href="http://caniuse.com/#feat=filereader" target="_blank">FileReader API</a> and <a href="http://caniuse.com/#feat=bloburls" target="_blank">Blob URLs</A> ha de aparececer en "verde" (=soportado) para el navegador, indicando que con &eacute;ste podr&aacute; subir archivos mayores de 2GB</li>
+	<li>Consulte la web <a href="http://caniuse.com/#feat=fileapi" target="_blank">"Cu&aacute;ndo podr&eacute; usar..."</a> para seguir los progresos de la "FileAPI" HTML5 en la mayor&iacute;a de los navegadores. En particular, el soporte para <a href="http://caniuse.com/#feat=filereader" target="_blank">FileReader API</a> and <a href="http://caniuse.com/#feat=bloburls" target="_blank">Blob URLs</a> ha de aparececer en "verde" (=soportado) para el navegador, indicando que con &eacute;ste podr&aacute; subir archivos mayores de 2GB</li>
 </ul>
 
 <h4>Descargas de cualquier tama&ntilde;o</h4>

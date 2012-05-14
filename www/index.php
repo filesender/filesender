@@ -92,7 +92,7 @@ if($isAuth )
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title><?php echo $config['site_name']; ?></title>
+<title><?php echo htmlspecialchars($config['site_name']); ?></title>
 <link rel="icon" href="favicon.ico" type="image/x-icon" />
 <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
 <link type="text/css" href="css/smoothness/jquery-ui-1.8.2.custom.css" rel="Stylesheet" />
@@ -102,6 +102,7 @@ if($isAuth )
 <script type="text/javascript" src="js/jquery-1.7.min.js" ></script>
 <script type="text/javascript" src="js/jquery-ui-1.8.1.custom.min.js"></script>
 <script type="text/javascript">
+//<![CDATA[
 
 var debug = <?php echo $config["debug"] ? 'true' : 'false'; ?> ;
 var html5 = false;
@@ -163,7 +164,7 @@ function openabout()
 		$( "#dialog-about" ).dialog( "open" );
 		$('.ui-dialog-buttonpane > button:last').focus();
 	}
-	
+//]]>
 </script>
    
 <meta name="robots" content="noindex, nofollow" />
@@ -244,7 +245,7 @@ function openabout()
 	}
 	?>
 	<div id="serviceinfo">
-	<a href="<?php echo $config['HTML5URL'] ?>" target="_newtab" id="html5link" name="html5link"><img alt="" name="html5image" width="75" height="18" border="0" align="absmiddle" id="html5image" style="display:none" title=""/></a></div>
+	<a href="<?php echo $config['HTML5URL'] ?>" target="_newtab" id="html5link" name="html5link"><img alt="" name="html5image" width="75" height="18" border="0" id="html5image" style="display:none" title="" src=""/></a></div>
 	<?php
 	$versiondisplay = "";
 	if($config["site_showStats"])
@@ -319,25 +320,25 @@ function openabout()
 		else if($s == "uploaderror") 
 	{
 	?>
-	<div id="message"><?php echo lang("_ERROR_UPLOADING_FILE"); ?></div></div>
+	<div id="message"><?php echo lang("_ERROR_UPLOADING_FILE"); ?></div>
 	<?php	
 	}	
 		else if($s == "emailsenterror") 
 	{
 	?>
-	<div id="message"><?php echo lang("_ERROR_SENDING_EMAIL"); ?></div></div>
+	<div id="message"><?php echo lang("_ERROR_SENDING_EMAIL"); ?></div>
 	<?php	
 	}	
 	else if($s == "filesizeincorrect") 
 	{
 	?>
-	<div id="message"><?php echo lang("_ERROR_INCORRECT_FILE_SIZE"); ?></div></div>
+	<div id="message"><?php echo lang("_ERROR_INCORRECT_FILE_SIZE"); ?></div>
 <?php	
 	}	
 	else if($s == "complete" || $s == "completev") 
 	{
 ?>
-		<div id="message"><?php echo lang("_UPLOAD_COMPLETE"); ?></div></div>
+		<div id="message"><?php echo lang("_UPLOAD_COMPLETE"); ?></div>
 <?php
 	} else if ($s == "" && $isAuth){
 		require_once('../pages/upload.php');	
