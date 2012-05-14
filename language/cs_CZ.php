@@ -192,7 +192,7 @@ $lang["_DP_showMonthAfterYear"] = 'false';
 $lang["_DP_yearSuffix"] = '';
 
 // Login Splash text
-$lang["_SITE_SPLASHTEXT"] = htmlentities($config['site_name']) ." je bezpečná cesta pro sdílení velkých souborů mezi všemi! Přihlaš se a nahraj své soubory nebo pozvi ostatní, ať soubory nahrají oni."; 
+$lang["_SITE_SPLASHTEXT"] = htmlspecialchars($config['site_name']) ." je bezpečná cesta pro sdílení velkých souborů mezi všemi! Přihlaš se a nahraj své soubory nebo pozvi ostatní, ať soubory nahrají oni."; 
 
 // site help
 $lang["_HELP_TEXT"] = '
@@ -241,7 +241,7 @@ $lang["_HELP_TEXT"] = '
 </div>';
 
 // site about
-$lang["_ABOUT_TEXT"] = ' <div align="left" style="padding:5px">'. htmlentities($config['site_name']) .' je instalace FileSender (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>), který je vyvinut pro potřeby vzdělávací a výzkumné komunity.</div>';
+$lang["_ABOUT_TEXT"] = ' <div align="left" style="padding:5px">'. htmlspecialchars($config['site_name']) .' je instalace FileSender (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>), který je vyvinut pro potřeby vzdělávací a výzkumné komunity.</div>';
 
 $lang["_AUPTERMS"] = "Kompletní znění podmínek užití této služby...";
 

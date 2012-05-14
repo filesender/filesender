@@ -209,7 +209,7 @@ $lang["_DP_showMonthAfterYear"] = 'false';
 $lang["_DP_yearSuffix"] = '';
 
 // Login Splash text
-$lang["_SITE_SPLASHTEXT"] = htmlentities($config['site_name']) ." tilbyr en sikker og enkel måte for å sende store filer til all dine samarbeidspartnere!  Logg på for å overføre dine filer eller for å invitere andre til å sende deg en fil.";
+$lang["_SITE_SPLASHTEXT"] = htmlspecialchars($config['site_name']) ." tilbyr en sikker og enkel måte for å sende store filer til all dine samarbeidspartnere!  Logg på for å overføre dine filer eller for å invitere andre til å sende deg en fil.";
 
 // site help
 $lang["_HELP_TEXT"] = '<div align="left" style="padding:5px">
@@ -227,7 +227,7 @@ $lang["_HELP_TEXT"] = '<div align="left" style="padding:5px">
   </div>';
 
 // site about
-$lang["_ABOUT_TEXT"] = ' <div align="left" style="padding:5px">'. htmlentities($config['site_name']) .' er en FileSender (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>) installasjon.  FileSender programvaren er optimalisert for bruk i høgere utdanning og forskning.</div>';
+$lang["_ABOUT_TEXT"] = ' <div align="left" style="padding:5px">'. htmlspecialchars($config['site_name']) .' er en FileSender (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>) installasjon.  FileSender programvaren er optimalisert for bruk i høgere utdanning og forskning.</div>';
 
 // site AUP terms
 $lang["_AUPTERMS"] = "Oppfør deg pent ellers så kommer trollan...";

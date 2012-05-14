@@ -193,7 +193,7 @@ $lang["_DP_showMonthAfterYear"] = 'false';
 $lang["_DP_yearSuffix"] = '';
 
 // Login Splash text
-$lang["_SITE_SPLASHTEXT"] = "A " . htmlentities($config['site_name']) ." biztonságos módon oszthatunk meg nagy fájlokat bárkivel. Lépjen be és küldjön fájlt vagy meghívót, hogy más küldhessen önnek.";
+$lang["_SITE_SPLASHTEXT"] = "A " . htmlspecialchars($config['site_name']) ." biztonságos módon oszthatunk meg nagy fájlokat bárkivel. Lépjen be és küldjön fájlt vagy meghívót, hogy más küldhessen önnek.";
 
 // site about
 // site help

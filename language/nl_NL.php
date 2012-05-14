@@ -198,8 +198,8 @@ $lang["_DP_showMonthAfterYear"] = 'false';
 $lang["_DP_yearSuffix"] = '';
 
 // Login Splash text
-$lang["_SITE_SPLASHHEAD"] = "Welkom bij ". htmlentities($config['site_name']);
-$lang["_SITE_SPLASHTEXT"] = htmlentities($config['site_name']) ." is een veilige manier om bestanden te delen met iedereen! Meld U aan om een bestand te versturen of om iemand uit te nodigen om een bestand te sturen."; 
+$lang["_SITE_SPLASHHEAD"] = "Welkom bij ". htmlspecialchars($config['site_name']);
+$lang["_SITE_SPLASHTEXT"] = htmlspecialchars($config['site_name']) ." is een veilige manier om bestanden te delen met iedereen! Meld U aan om een bestand te versturen of om iemand uit te nodigen om een bestand te sturen."; 
 
 // site help
 $lang["_HELP_TEXT"] = '
@@ -247,7 +247,7 @@ $lang["_HELP_TEXT"] = '
 
 
 // site about
-$lang["_ABOUT_TEXT"] = ' <div align="left" style="padding:5px">'. htmlentities($config['site_name']) .' is een instantie van FileSender (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>), ontwikkeld om te voldoen aan de eisen van de hoger onderwijs en onderzoeksgemeenschap.</div>';
+$lang["_ABOUT_TEXT"] = ' <div align="left" style="padding:5px">'. htmlspecialchars($config['site_name']) .' is een instantie van FileSender (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>), ontwikkeld om te voldoen aan de eisen van de hoger onderwijs en onderzoeksgemeenschap.</div>';
 
 
 ?>
