@@ -198,8 +198,8 @@ $lang["_DP_showMonthAfterYear"] = 'false';
 $lang["_DP_yearSuffix"] = '';
 
 // Login Splash text
-$lang["_SITE_SPLASHHEAD"] = "Welkom bij FileSender";
-$lang["_SITE_SPLASHTEXT"] = "FileSender is een veilige manier om bestanden te delen met iedereen! Meld U aan om een bestand te versturen of om iemand uit te nodigen om een bestand te sturen."; 
+$lang["_SITE_SPLASHHEAD"] = "Welkom bij ". htmlentities($config['site_name']);
+$lang["_SITE_SPLASHTEXT"] = htmlentities($config['site_name']) ." is een veilige manier om bestanden te delen met iedereen! Meld U aan om een bestand te versturen of om iemand uit te nodigen om een bestand te sturen."; 
 
 // site help
 $lang["_HELP_TEXT"] = '

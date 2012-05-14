@@ -209,7 +209,7 @@ $lang["_DP_showMonthAfterYear"] = 'false';
 $lang["_DP_yearSuffix"] = '';
 
 // Login Splash text
-$lang["_SITE_SPLASHTEXT"] = "FileSender tilbyr en sikker og enkel måte for å sende store filer til all dine samarbeidspartnere!  Logg på for å overføre dine filer eller for å invitere andre til å sende deg en fil.";
+$lang["_SITE_SPLASHTEXT"] = htmlentities($config['site_name']) ." tilbyr en sikker og enkel måte for å sende store filer til all dine samarbeidspartnere!  Logg på for å overføre dine filer eller for å invitere andre til å sende deg en fil.";
 
 // site help
 $lang["_HELP_TEXT"] = '<div align="left" style="padding:5px">

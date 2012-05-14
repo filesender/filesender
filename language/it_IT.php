@@ -198,7 +198,7 @@ $lang["_DP_showMonthAfterYear"] = 'false';
 $lang["_DP_yearSuffix"] = '';
 
 // Login Splash text
-$lang["_SITE_SPLASHTEXT"] = "Filesender è un modo sicuro di condividere grossi file con tutti! Premete Logon per caricare i vostri file o invitare persone a spedirvene uno.";
+$lang["_SITE_SPLASHTEXT"] = htmlentities($config['site_name']) ." è un modo sicuro di condividere grossi file con tutti! Premete Logon per caricare i vostri file o invitare persone a spedirvene uno.";
 
 // site help
 $lang["_HELP_TEXT"] = '
