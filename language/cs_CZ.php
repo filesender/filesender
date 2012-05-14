@@ -218,7 +218,7 @@ $lang["_HELP_TEXT"] = '
         <li>HTML5 je dostupné, pokud vidíte <img src="images/html5_installed.png" alt="green HTML5 tick" class="textmiddle" style="display:inline" /> v horním pravém rohu FileSenderu.</li>
 	<li>Potřebujete aktuální prohlížeč podporující HTML5 (poslední verze webového programovacího jazyka).</li>
 	<li>Firefox4 (a vyšší) a Chrome na Windows, Mac OSX a Linux HTML5 podporují.</li>
-	<li>Prosím, projděte si stránku <a href="http://caniuse.com/#feat=fileapi" target="_blank">"When can I use..."</A> pro zjistění stavu implementace HTML5 FileAPI pro všechny hlavní používané prohlížeče. Zejména podpora <a href="http://caniuse.com/#feat=filereader" target="_blank">FileReader API</A> a <A href="http://caniuse.com/#feat=bloburls" target="_blank">Blob URLs</A> musí být zvýrazněno světle zeleně (=podporováno) pro prohlížeče podporující nahrání souborů větších než 2GB </li>
+	<li>Prosím, projděte si stránku <a href="http://caniuse.com/#feat=fileapi" target="_blank">"When can I use..."</a> pro zjistění stavu implementace HTML5 FileAPI pro všechny hlavní používané prohlížeče. Zejména podpora <a href="http://caniuse.com/#feat=filereader" target="_blank">FileReader API</a> a <a href="http://caniuse.com/#feat=bloburls" target="_blank">Blob URLs</a> musí být zvýrazněno světle zeleně (=podporováno) pro prohlížeče podporující nahrání souborů větších než 2GB </li>
 </ul>
 
 <h4>Stahování jakékoliv velikosti souboru</h4>
