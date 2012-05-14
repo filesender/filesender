@@ -198,8 +198,8 @@ $lang["_DP_showMonthAfterYear"] = 'false';
 $lang["_DP_yearSuffix"] = '';
 
 // Login Splash text
-$lang["_SITE_SPLASHHEAD"] = "Welcome to ". htmlentities($config['site_name']);
-$lang["_SITE_SPLASHTEXT"] = htmlentities($config['site_name']) ." is a secure way to share large files with anyone! Logon to upload your files or invite people to send you a file.";
+$lang["_SITE_SPLASHHEAD"] = "Welcome to ". htmlspecialchars($config['site_name']);
+$lang["_SITE_SPLASHTEXT"] = htmlspecialchars($config['site_name']) ." is a secure way to share large files with anyone! Logon to upload your files or invite people to send you a file.";
 
 // site help
 $lang["_HELP_TEXT"] = '
@@ -246,7 +246,7 @@ $lang["_HELP_TEXT"] = '
 </div>';
 
 // site about
-$lang["_ABOUT_TEXT"] = ' <div align="left" style="padding:5px">'. htmlentities($config['site_name']) .' is an installation of FileSender (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>), which is developed to the requirements of the higher education and research community.</div>';
+$lang["_ABOUT_TEXT"] = ' <div align="left" style="padding:5px">'. htmlspecialchars($config['site_name']) .' is an installation of FileSender (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>), which is developed to the requirements of the higher education and research community.</div>';
 
 // site AUP terms
 $lang["_AUPTERMS"] = "AuP Terms and conditions...";
