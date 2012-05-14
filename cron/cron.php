@@ -175,9 +175,20 @@ function cleanUp() {
 				if (time() - filemtime($FilestoreDirectory.$filename) < 86400) {
 					logProcess("CRON","File NOT removed (last modification less then 24 hours ago ago)".$FilestoreDirectory.$filename);
 				} else {
-					unlink($FilestoreDirectory.$filename);
-					// log removal
-					logProcess("CRON","File Removed (Expired)".$FilestoreDirectory.$filename);    
+					// setting to allow for file wiping
+					if ( empty($config['cron_shred']) ) {
+						// simply delete (unlink) the file
+						unlink($FilestoreDirectory.$filename);
+						logProcess("CRON","File Removed (Expired)".$FilestoreDirectory.$filename);    
+					} else {
+						// use gnu coreutils' shred to permanently remove the file from disk:
+						system ($config['cron_shred_command'] .' '. escapeshellarg($FilestoreDirectory.$filename), $retval);
+						if ( $retval === 0 ) {
+							logProcess("CRON","File Shredded (Expired)".$FilestoreDirectory.$filename);
+						} else {
+							logProcess("CRON","Error ($retval) while shredding".$FilestoreDirectory.$filename);
+						}
+					}
 				}
 			}
 		}
