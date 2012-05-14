@@ -196,7 +196,7 @@ $lang["_DP_showMonthAfterYear"] = 'false';
 $lang["_DP_yearSuffix"] = '';
 
 // Login Splash text
-$lang["_SITE_SPLASHTEXT"] = "FileSender es un medio seguro para compartir archivos grandes.<br />Entre para subir y enviar archivos o para generar \"Invitaciones de env&iacute;o\".<p>";
+$lang["_SITE_SPLASHTEXT"] = htmlspecialchars($config['site_name']) ." es un medio seguro para compartir archivos grandes.<br />Entre para subir y enviar archivos o para generar \"Invitaciones de env&iacute;o\".<p>";
 
 // site help
 $lang["_HELP_TEXT"] = '
@@ -245,7 +245,7 @@ $lang["_HELP_TEXT"] = '
 </div>';
 
 // site about
-$lang["_ABOUT_TEXT"] = ' <div align="left" style="padding:5px">'. '"'. htmlentities($config['site_name']) .'" es una instalaci&oacute;n de FileSender (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>), desarrollado siguiendo los requerimientos de la comunidad de investigaci&oacute;n y educaci&oacute;n superior.</div>';
+$lang["_ABOUT_TEXT"] = ' <div align="left" style="padding:5px">'. '"'. htmlspecialchars($config['site_name']) .'" es una instalaci&oacute;n de FileSender (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>), desarrollado siguiendo los requerimientos de la comunidad de investigaci&oacute;n y educaci&oacute;n superior.</div>';
 
 // site AUP terms
 $lang["_AUPTERMS"] = "Pol&iacute;tica de Uso Aceptable - Conciciones de Servicio";
