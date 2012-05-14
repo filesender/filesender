@@ -105,7 +105,7 @@ $lang["_ACCEPTTOC"] = "Ik ga akkoord met de bepalingen en voorwaarden van deze d
 $lang["_AGREETOC"] = "U moet akkoord gaan met de voorwaarden.";
 
 $lang["_ERROR_INCORRECT_FILE_SIZE"] = "Er is een probleem opgetreden bij het uploaden van uw bestand. <br />De bestandsgrootte op de server wijkt af van de grootte van uw eigen kopie.<br /><br />Neem contact op met de beheerder.";
-$lang["_MAXEMAILS"] = "Het maximum aantal toegestane mailadressen is ";
+$lang["_MAXEMAILS"] = "Het maximum aantal toegestane e-mailadressen is ";
 $lang["_INVALID_DATE_FORMAT"] = "De datum is in een ongeldig formaat.";
 $lang["_DISK_SPACE_ERROR"] = "Er is niet genoeg vrije ruimte op deze service. Neemt u s.v.p. contact op met de beheerder of upload een kleiner bestand.";
 $lang["_ERROR_ATTRIBUTES"] = "Uw Identity Provider levert niet de benodigde attributen. Neemt u s.v.p. contact op met uw lokale IT-afdeling";
@@ -140,6 +140,7 @@ $lang["_HTML5Supported"] = "Uploads groter dan 2GB mogelijk!";
 $lang["_HTML5NotSupported"] = "Uploads groter dan 2GB niet mogelijk!";
 
 // Upload page: error messages, displayed on-input
+$lang["_ERROR_CONTACT_ADMIN"] = "Er is een probleem opgetreden, neem contact op met de beheerder.";	
 $lang["_INVALID_MISSING_EMAIL"] = "Ongeldig of ontbrekend e-mailadres";
 $lang["_INVALID_EXPIRY_DATE"] = "Ongeldige vervaldatum";
 $lang["_INVALID_FILE"] = "Ongeldig bestand";
@@ -154,6 +155,7 @@ $lang["_INVALID_FILE_NAME"] = "Ongeldige bestandsnaam. Hernoem het bestand en pr
 $lang["_INVALID_SIZE_USEHTML5"] = "Selecteer een ander bestand of gebruik een geschikte HTML5-browser voor grotere bestanden.";
 $lang["_FILE_TO_BE_RESENT"] = "Bestand om opnieuw te versturen";
 $lang["_ERROR_UPLOADING_FILE"] = "Fout bij het uploaden van het bestand";
+$lang["_ERROR_SENDING_EMAIL"] = "Er is een probleem opgetreden bij het verzenden van de e-mail, neem contact op met de beheerder.";
 $lang["_LOGOUT_COMPLETE"] = "U bent afgemeld";
 
 $lang["_ARE_YOU_SURE"] = "Weet u dit zeker?";
