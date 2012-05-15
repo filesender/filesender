@@ -112,7 +112,7 @@ $json_o=json_decode($filedata,true);
 		yearSuffix: '<?php echo lang("_DP_yearSuffix"); ?>'});
 	
 		// stripe every second row in the tables
-		$("#myfiles tr:odd").addClass("altcolor");
+		$("#myfiles tr:odd").not(":first").addClass("altcolor");
 		
 		// delete modal dialog box
 		$("#dialog-delete").dialog({ autoOpen: false, height: 180, modal: true,
