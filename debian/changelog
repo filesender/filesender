@@ -1,13 +1,39 @@
+filesender (1.5~beta3) unstable; urgency=medium
+   * Release 1.5-beta3
+
+   * Changes since 1.5-beta2
+     - HTML5 upload support for the upcoming FireFox 13.
+     - Improvements in the User Interface.
+     - Improved user feedback and error reporting
+     - Improved server side logging.
+     - Various small bug fixes and enhancements.
+
+   * Changed features:
+     - Option to securely wipe (shred) expired files in the daily cron job.
+     - Separate text definitions for 'logon' button and title of the landing page.
+     - The configured 'Site Name' is now used on the landing page.
+
+ -- Filesender Development <filesender-dev@filesender.org>  Tue, 15 May 2012 17:13:15 +0200
+
 filesender (1.5~beta2) unstable; urgency=medium
    * Release 1.5-beta2
 
    * Major changes since 1.5-beta1
+     - see http://www.assembla.com/spaces/file_sender/wiki/Installation_notes_for_1-5_development_code
+       for important Upgrade notes
      - The ./config directory as distributed now only contains a sample
        config-dist.php file. All other templates/sample files have been
        moved to ./config-templates or their contents have been merged
        into the ./language/* files.
+     - The supplied config-dist.php has been cleaned up and contains some 
+       important changes. It is recommended to create an fresh config.php
+       from the supplied config-dist.php file and adapt that one with your
+       local settings.
+     - Two database column type changes (needs manual adjustment when 
+       upgrading).
      - Changed and consolidated language file naming scheme.
-     - Added Czech and Slovenian language files.
+     - Added Czech, Slovenian, Italian, Spanish, Croatian and Hungarian
+       language files.
      - Updated Dutch and Norwegian language files.
 
    * Major (less visible) changes since 1.5-beta1
@@ -15,7 +41,7 @@ filesender (1.5~beta2) unstable; urgency=medium
        input/output pathways.
      - Minor bug fixes and enhancements.
 
- -- Filesender Development <filesender-dev@filesender.org>  Sun, 1 Apr 2012 14:00:00 +0100
+ -- Filesender Development <filesender-dev@filesender.org>  Wed, 25 Apr 2012 10:46:58 +0200
 
 filesender (1.5~beta1) unstable; urgency=medium
    * Release 1.5-beta1
