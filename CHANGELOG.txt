@@ -1,4 +1,18 @@
-Last update: 25 April 2012
+Last update: 15 May 2012
+
+Version 1.5-beta3 <15 May 2012>
+
+	Changes since 1.5-beta2
+	-HTML5 upload support for the upcoming FireFox 13.
+	-Improvements in the User Interface.
+	-Improved user feedback and error reporting
+	-Improved server side logging.
+	-Various small bug fixes and enhancements.
+
+	Changed features:
+	-Option to securely wipe (shred) expired files in the daily cron job.
+	-Separate text definitions for 'logon' button and title of the landing page.
+	-The configured 'Site Name' is now used on the landing page.
 
 Version 1.5-beta2 <25 April 2012>
 
