@@ -13,7 +13,7 @@ filesender (1.5~beta3) unstable; urgency=medium
      - Separate text definitions for 'logon' button and title of the landing page.
      - The configured 'Site Name' is now used on the landing page.
 
- -- Filesender Development <filesender-dev@filesender.org>  Tue, 15 May 2012 10:46:58 +0200
+ -- Filesender Development <filesender-dev@filesender.org>  Tue, 15 May 2012 17:13:15 +0200
 
 filesender (1.5~beta2) unstable; urgency=medium
    * Release 1.5-beta2
