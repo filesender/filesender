@@ -48,14 +48,16 @@ require_once("$filesenderbase/language/locale.php");
 function get_client_language($availableLanguages, $default='en-au'){
  
 	if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
- 
+		// Example: af,nl;q=0.9,en-us;q=0.8,en;q=0.7,de;q=0.6,it-ch;q=0.5,no;q=0.5,nb;q=0.4,sl;q=0.3,it;q=0.2,ar;q=0.1 
 		$langs=explode(',',$_SERVER['HTTP_ACCEPT_LANGUAGE']);
  
 		//start going through each one
 		foreach ($langs as $value){
  
+			//Strip weight part (;q=..) if sent
+			$value = explode(';',$value,2);
 			//strtolower is needed for e.g. Chrome, that sends nl-NL
-			$choice =  strtolower($value);
+			$choice =  strtolower($value[0]);
 			if(in_array($choice, $availableLanguages)){
 				return $choice;
 			}
