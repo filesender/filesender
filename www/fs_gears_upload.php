@@ -63,7 +63,7 @@ if($authvoucher->aVoucher()  || $authsaml->isAuth() ) {
 	} 
 	
 	// add the file name
-	$tempFilename .=  sanitizeFilename($_GET['n']);
+	$tempFilename .=  sanitizeFilename(get_magic_quotes_gpc() ? stripslashes($_GET['n']) : $_GET['n']);
 
 	// add the file size to the filename
 	$tempFilename .=  $_GET['total'];
