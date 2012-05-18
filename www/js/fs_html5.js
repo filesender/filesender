@@ -208,7 +208,7 @@ function uploadFile(voucheruid) {
 		} else
 		//if(file && file.slice )
 		{
-			var blob = file.slice(bytesUploaded, txferSize);
+			var blob = file.slice(bytesUploaded, txferSize+bytesUploaded);
 		}
 		//alert("");
 	var fileName = file.name; //Grab the file name
