@@ -77,6 +77,8 @@ if(file_exists($file) && is_file($file))
         if (detect_char_encoding($fileoriginalname) == 'ISO-8859-1') { 
             $fileoriginalname = iconv("UTF-8", "ISO-8859-1", $fileoriginalname);
         }
+        // Replace double quotes with underscore
+        $fileoriginalname=str_replace('"',"_",$fileoriginalname);
 
 	// set download file headers
 	logEntry("Download: Start Downloading - ".$file);
