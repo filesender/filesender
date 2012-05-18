@@ -93,26 +93,32 @@ class Mail {
         $headers .= "X-FileSenderUID: ".$mailobject["filevoucheruid"].$crlf;
 
         // RFC2822 Originator of the message
+        if(!filter_var($mailobject['filefrom'],FILTER_VALIDATE_EMAIL)) {return false;}
         $headers .= "From: <".$mailobject['filefrom'].">".$crlf;
 
         // RFC2821 (Envelope) originator of the message
         if ($type == 'bounce') {
             $returnpath = "-r <>".$crlf;
         } else if (isset($config['return_path']) && ! empty($config['return_path'])) {
+            if(!filter_var($config['return_path'],FILTER_VALIDATE_EMAIL)) {return false;}
             $returnpath = "-r <".$config['return_path'].">".$crlf;
         } else {
+            if(!filter_var($mailobject['filefrom'],FILTER_VALIDATE_EMAIL)) {return false;}
             $returnpath = "-r <".$mailobject['filefrom'].">".$crlf;
         }
 
         // Recipient(s) of the message
+        if(!filter_var($mailobject['fileto'],FILTER_VALIDATE_EMAIL)) {return false;}
         $to = "<".$mailobject['fileto'] . ">";
         if ($type == 'full') {
+            if(!filter_var($mailobject['filefrom'],FILTER_VALIDATE_EMAIL)) {return false;}
             $headers .= "Cc: <" . $mailobject['filefrom'] . ">".$crlf;
         }
 
         // if voucher is being used then bcc fileauthuseremail a copy so voucher creator knows a file was sent as they are responsible for the use of the voucher
         if($authvoucher->aVoucher()) {
             if(isset($mailobject['fileauthuseremail'])){
+                if(!filter_var($mailobject['fileauthuseremail'],FILTER_VALIDATE_EMAIL)) {return false;}
                 $headers .= "Bcc: <".$mailobject['fileauthuseremail'].">".$crlf;
             }
         }
@@ -176,6 +182,7 @@ class Mail {
         //$returnpath = "-r".$mailobject['filefrom'].$crlf;
 
         $to = $config['adminEmail'];
+        if(!filter_var($to,FILTER_VALIDATE_EMAIL)) {return false;}
 
         $subject =   $config['site_name']." - Admin Message";
         $body = wordwrap($crlf ."--simple_mime_boundary".$crlf ."Content-type:text/plain; charset=iso-8859-1".$crlf.$crlf .$message,70);
