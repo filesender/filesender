@@ -1,0 +1,400 @@
+/*
+ * FileSender www.filesender.org
+ * 
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * All rights reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ * 
+ * *	Redistributions of source code must retain the above copyright
+ * 	notice, this list of conditions and the following disclaimer.
+ * *	Redistributions in binary form must reproduce the above copyright
+ * 	notice, this list of conditions and the following disclaimer in the
+ * 	documentation and/or other materials provided with the distribution.
+ * *	Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
+ * 	names of its contributors may be used to endorse or promote products
+ * 	derived from this software without specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+html {
+}
+
+body {
+/*	background: #1c1c1c;
+	color: #333;
+	padding:0;
+	font-family: Verdana, Geneva, sans-serif;*/
+}
+
+/* LISTS */
+ul {
+	/*margin: .3em 0 1.5em 2em;*/
+}
+
+/*ul.related {
+	margin-top: -1em;
+}*/
+
+li {
+	/*margin-left: 2em;*/
+}
+
+img {
+	border: none;
+	display: block;
+}
+
+td {
+	vertical-align: top;
+	padding: 3px;
+}
+
+.headerrow {
+	/*background-color: #CCC;*/
+}
+
+#topmenu
+{
+	padding-left: 10px;
+	/*height: 30px;*/
+}
+.menu a
+{
+	margin-right: 10px;
+	font-size: 12px;
+}
+
+#menuright 
+{
+	float: left;
+	width: 250px;
+	/*float: right;
+	padding-right: 10px;
+	position: relative;*/
+}
+#menuright a
+{
+	cursor: pointer;
+	display:block;
+	height:25px;
+	line-height: 25px;
+	text-indent: 10px;
+	text-decoration:none;
+	width:100%;
+	border: 1px solid #CCCCCC;
+}
+#menuleft
+{
+	float: left;
+	width: 250px;	
+	/*position: relative;
+	float: left;*/	
+	
+}
+#menuleft a
+{
+	cursor: pointer;
+	display:block;
+	height:25px;
+	line-height: 25px;
+	text-indent: 10px;
+	text-decoration:none;
+	width:100%;
+	border: 1px solid #CCCCCC;
+}
+
+input,textarea  
+{
+	width:100%;
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 12px;
+}
+
+#box {
+	padding: 20px;
+	border: 1px solid #cccccc;
+	border-radius:10px;
+	-moz-border-radius: 10px;
+	margin: 5px auto;
+}
+
+#tog {
+	padding: 20px;
+	border: 1px solid #cccccc;
+	border-radius:10px;
+	-moz-border-radius: 10px;
+	margin: 20px auto;
+}
+	
+.altcolor {
+	background-color: #EFEFEF;	
+
+}
+.validation_msg {
+	font-size: 10px;
+	color: #d00;
+}
+.scratch_msg {
+	font-size: 10px;
+	color: #d00;
+}
+.formfieldheading {
+	width: 110px;
+}
+.formfield {
+	width: 250px;
+}
+.formfiledmsg {
+	width: 220px;
+	font-weight: normal;
+}
+.forminstructions {
+	font-weight: normal;
+	vertical-align: middle;
+}
+input {
+	/*border:1px solid #ccc;
+	font-size: 13pt;
+	padding: 5px 10px 5px 10px;
+	border-radius:5px;
+	-moz-border-radius: 5px;*/
+}
+/* overide button style */
+.ui-button
+{
+	/*background-color: #333;
+	border-top-style: solid;
+	border-bottom-style: solid;
+	border-top-color: #000;
+	border-right-color: #000;
+	border-bottom-color: #999;
+	border-left-color: #000;
+	border-bottom-left-radius: 0px;
+	border-bottom-right-radius: 0px;
+	border-top-left-radius: 0px;
+	border-top-right-radius: 0px;
+	color: #FFF;*/
+}
+.ui-button:hover
+{
+	/*background-color: #900;*/
+}
+.ui-state-default
+{
+	/*background-image: none;	*/
+}
+
+#fileToUpload {
+	border:1px solid #ccc;
+	border-radius:5px;
+	-moz-border-radius: 5px;
+	padding-top: 5px;
+	padding-right: 0px;
+	padding-bottom: 5px;
+	
+	margin-right: 10px;
+}
+#aup 
+{
+	width: 20px;	/*margin-left: -1px;*/
+}
+#aup_label{
+	font-weight: bold;
+}
+
+/*#progressIndicator {
+}
+#progressBar {
+	height: 14px;
+	border: 1px solid #cccccc;
+	display: none;
+	border-radius:10px;
+	-moz-border-radius: 10px;
+	background-image: -moz-linear-gradient(top, #66cc00, #4b9500);
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#66cc00), to(#4b9500));
+}*/
+/*#upload_frame {
+	border:0px;
+	height:40px;
+	width:400px;
+	display:none;
+}*/
+
+#progress_image {
+margin-top: 4px;
+}
+
+#progress_container {
+	width: 300px;
+	height: 20px;
+	border: 1px solid #CCCCCC;
+	background-color:#CCCCCC;
+	display: block;
+	margin-right: 0px;
+	margin-left: 20px;
+	padding-top: 1px;
+	padding-right: 1px;
+	padding-bottom: 1px;
+	padding-left: 1px;
+}
+
+#progress_bar {
+	position: relative;
+	height: 20px;
+	background-color: #090;
+	width: 0%;
+	z-index:10;
+	color: #FFF;
+	padding-left: 4px;
+}
+#progress_completed {
+	z-index:40;
+	line-height:30px;
+	padding-left:4px;
+	color:#333333;
+	width: 100%;
+}
+
+#wrap {
+	/*background: #fff;
+	text-align: left;
+	width: 800px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: auto;
+	height: 100%;*/
+}
+#header {
+	/*background: #666;
+	padding-top: 0;
+	padding-right: 0;
+	padding-bottom: 0px;
+	padding-left: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 10px;
+	margin-left: 0px;*/
+}
+#content {
+	padding-top: 10px;
+	padding-right: 20px;
+	padding-bottom: 20px;
+	padding-left: 250px;
+	font-size: 12px;
+	height: auto;	
+}
+
+#box, .box  {
+	padding: 5px;
+	border: 1px solid #cccccc;
+	border-radius:5px;
+	-moz-border-radius: 5px;
+	margin-top: 4px;
+	margin-bottom: 4px;
+}
+#message {
+	background-color: #AAC1A4;
+	text-align: center;
+	font-size: 12px;
+	padding: 4px;
+	margin-top: 4px;
+	margin-bottom: 4px;
+}
+#errmessage {
+	background-color: #FFF;
+	text-align: center;
+	font-size: 12px;
+	padding: 4px;
+	border: 1px solid #F00;
+}
+#pageheading {
+	width: 100%;
+	font-size: 16px;
+	font-weight: bold;
+	padding-bottom: 10px;
+	padding-top: 4px;
+}
+
+#uploadbutton  a {
+	width:100%;
+	padding-top: 20px;
+	padding-bottom: 20px;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	font-size: 18px;
+	font-weight: bold;
+}
+
+#downloadbutton  a {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	width:80%;
+	padding-top: 20px;
+	padding-bottom: 20px;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	font-size: 18px;
+	font-weight: bold;
+}
+
+#voucherbutton  a {
+	width:100%;
+	font-weight: bold;
+}
+
+
+.mandatory{
+	color: #000;
+	font-weight: bold;
+}
+.HardBreak
+
+{
+white-space: pre-wrap; /* css-3 */
+white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+white-space: -pre-wrap; /* Opera 4-6 */
+white-space: -o-pre-wrap; /* Opera 7 */
+word-wrap: break-word; /* Internet Explorer 5.5+ */
+
+}
+.versionnumber
+{
+	text-align: right;
+	float: right;
+	color: #666;
+	font-size: 9px;
+}
+#userinformation 
+{
+	
+	padding-left: 20px;
+	padding-right: 20px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+.welcomeuser
+{
+	float:left;
+	text-align: left;
+	font-size: 12px;
+}
+#footer
+{
+	text-align: center;
+	font-size: 10px;
+	color: #666;
+}
+

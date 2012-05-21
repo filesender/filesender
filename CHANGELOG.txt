@@ -1,0 +1,430 @@
+Last update: 1 April 2012
+
+Version 1.5-beta2 <?? April 2012>
+
+	Major changes since 1.5-beta1
+	- The ./config directory as distributed now only contains a sample
+	  config-dist.php file. All other templates/sample files have been
+	  moved to ./config-templates or their contents have been merged
+	  into the ./language/* files.
+	- Changed and consolidated language file naming scheme.
+	- Added Czech and Slovenian language files.
+	- Updated Dutch and Norwegian language files.
+
+	Major (less visible) changes since 1.5-beta1
+	- Further improvements in workflow, validation/error handling and
+	  input/output pathways.
+	- Minor bug fixes and enhancements.
+
+Version 1.5-beta1 <13 February 2012>
+
+	Major changes since 1.0.1/1.1
+	- Replaced Flash User Interface with a HTML-only interface
+	- Dropped Gears dependency, upload of large (>2G) files now requires
+	  a modern HTML5 capable browser, other browsers are limited to 2G
+	  uploads (using a small Flash-application).
+	- Added automatic language selection (English, Norwegian, Dutch)
+	- Added Database Abstraction Layer to facilitate the use
+	  of MySQL possibly other databases as backend.
+
+	Major (visible) changes since earlier 1.5.0 development builds
+	- Added French and German languages (contributed by RESTENA)
+	- Replaced MDB2 with PDO DB Abstraction Layer
+
+	Major (less visible) changes since earlier development builds
+	- Input/output pathways have been simplified
+	- Input/output sanitisation and validation is done
+	- Much code and program flow has been cleaned up and simplified
+	- We now use mostly prepared statements for database interaction
+	- All pages are now W3C compliant
+
+Version 1.1 <5 November 2011> (separate release branch)
+
+	Major change since 1.0.1
+	- Dropped Gears dependency, upload of large (>2G) files now requires
+	  a browser that supports the HTML5 FileAPI, other browsers are
+	  limited to 2G uploads using the Flash upload mechanism. This change
+	  also obsoletes the following Gears-related issues in 1.0:
+
+	  #176 >2GB upload on MacOS hangs at ~2GB (Gears enabled)
+	  #290 File select fails in Linux/Gears for files of 2G or more.
+	  #358 Filename accents not displayed in GUI when using Gears
+
+	  This means that FileSender 1.1 also allows large uploads from
+	  the Mac OSX and Linux platforms, provided a supported HTML5 browser
+	  is used.
+
+	- Note that only user visible references to Gears have been changed.
+	  In the code and config.php references to 'gears' are still used. No
+	  changes are required in config.php except for the URL pointing to
+	  more information on HTML5:
+
+	     $config['gearsURL'] = 'http://html5test.com/';
+
+	Minor fixes and changes
+	r993 filesender_db.sql: make fileauthuseruid character varying(500)
+	     When upgrading from previous versions you should fix the relevant
+	     column size in the database with:
+              #sudo -u postgres psql filesender
+              ALTER TABLE files ALTER fileauthuseruid TYPE character varying(500);
+              \q
+	#563 Compare of UID attribute with admin uid broken when attribute is
+	     not in an array
+	#569 Case-sensitive references to Files in cron.php
+	#582 Inconsistent file size limit warnings
+	#583 Email addresses rejected at maximum for uploads & voucher issue
+
+	Packaging
+	- The Debian package has been adapted to use the default baseurl
+	  of the simplesamlphp 1.7+ debian packages which changed from
+	 'simplesaml' to 'simplesamlphp' to adhere to standard Debian policy.
+
+Version 1.5.0-* Development builds <1 July 2011>
+
+	Major changes since 1.0
+	- Replaced Flash User Interface with a HTML-only interface
+	- Dropped Gears dependency, upload of large (>2G) files now requires
+	  a modern HTML5 capable browser, other browsers are limited to 2G
+	  uploads (using a small Flash-application).
+	- Added automatic language selection (English, Norwegian, Dutch)
+	- Added Database Abstraction Layer (MDB2) to facilitate the use
+	  of MySQL as backend.
+
+Version 1.0.1 <8 May 2011>
+
+	Fixes and changes
+	#271 compatibility fix for SimpleSAMLphp 1.7+
+	#379 Log IPv6 address of connecting client. When upgrading from
+	     previous versions you should fix the relevant column size in the
+	     database with:
+	      #sudo -u postgres psql filesender
+	      ALTER TABLE files ALTER fileip6address TYPE character varying(45);
+	      \q
+	#380, #389, #390  fix the max_gears_upload_size check.
+	#381 allow multiple email addresses to be separated by both a
+	     comma and a semi-colon
+	#383 trim whitespace from email-addresses
+	#394 "File too large, use Gears" warnings fixups
+	#396 Confirmation when cancelling Flash upload
+	#397 Wrapping of Subject field in My Files table
+
+	Experimental feature
+	- Mail bounce handling (for details see
+	  http://www.assembla.com/wiki/show/file_sender/Mail_Bounce_Handling )
+
+	Packaging
+	- Added filesender-php.ini with recommended PHP settings
+
+Version 1.0 <31 January 2011>
+	Release 1.0
+
+	Documentation
+	- Updated documentation on http://www.filesender.org/
+	- Updated config.php with documentation and grouping of related settings
+	- Updated help.php and about.php (#363, #367)
+
+	Packaging
+	- Improvements in the packaging (tar, RPM, debian)
+	
+	Fixes and changes
+	#360 Low diskspace warning administrator email message
+	#368 Minor HTML fixes
+	#369 Gears CHUNK_BYTES increased to 2M (was 200KB)
+	#371 Change default pg_username from postgres to filesender
+	#375 Add 'start again' link to default logout page
+
+Version 1.0-RC1 <14 January 2011>
+
+	Re-release of 0.1.19 as release candidate 1
+	Fix
+	#200 Make Common Name default name attribute 
+
+Version Beta 1.19 <24 December 2010>
+
+	Fixes
+	#340 email address validation in flex - removed auto validation - validates on send
+
+Version Beta 1.18 <21 December 2010>
+
+	Fixes
+	#326 Download fails with IE7/8 over https (since changeset 251)
+	#331 download_id_seq removed
+	#336 Populate "Help" page
+	#335 Populate "About" page
+	#337 [cleanup] Pointers to "history/history.css"
+	#339 Prompt when clicking on link to deleted file uses voucher cancellation text
+	#343 JavaScript disabled warning added
+	#344 Tooltip in Admin on Mac updated
+	#340 email address validation in flex regex added to config
+	#353 Enfore max_expiry_time server-side
+	#338 download blocks other filesender operations in the same session/browser
+
+Version Beta 1.17 <19 November 2010>
+	
+	New features
+	FileSender now can handle filenames, subjects and personal messages in non-US-ASCII charsets
+
+	IMPORTANT: a new naming scheme to store files on the server was introduced. Please
+	           run "php <filesenderbase>/scripts/convert-filenames.php" after upgrading
+	           to Beta 0.1.17. If you need to downgrade to a previous version run
+                   "php <filesenderbase>/scripts/convert-filenames.php revert" *before* downgrading.
+
+	Bug Fixes
+	254	Large filesizes (>4GB) are incorrectly presented in flash interface
+	255	Download progress bar stops at 2GB
+	256	4GB download limit on Windows ??
+	261	Reversed order of message prompts between File Upload and uploading a file using a Voucher
+	274	Inconsistent expiration date formats
+	277	After upload reverting to "Your file has been sent" after clicking on My Files or Vouchers button
+	279	FireFox with Firebug Enabled crashes downloads over 1.5Gb
+	253	Outdated files in database that misses from disk halts system while removing outdated files
+	154	use cronjob for clean up 
+	129	Valid email-adresses are refused on input
+	209	max_email_recipients
+	272	File deletion email incorrectly uses voucher deletion email template
+	275	msg:Content-Range:bytes in text box instead of upload steps when using Google Gears
+	123	"cancel" button on download page
+	232	gears upload tmpfile handling
+	263	Typos in voucher explanatory text
+	269	Prompt to install / upgrade flash if required
+	273	'rsend this file' could be 'resend this email'
+	285	Move /files out of www enabled directory
+	257	Flex Compiler Warnings
+	289	Gears upload resume - not working
+	278	security: user still logged in if closes tab when login page appears, prior to logout page appearing
+	188	Some downloads hang at 68%
+	234	about/help/gears links on logon screen are broken
+	249	IE8 download of files > 4GB hangs
+	333	Formatting of personal message in outgoing mails
+	310	Gears voucher upload restarts if paused (cancelled), rather than resuming
+	323	Compatibility Mode is required for current version when compiling
+	321	UTF 8 charachters in name deleted by CRON
+	334	Logon description modifications	
+	
+
+Version Beta 1.16.1 <11 October 2010>
+
+	* Security: sanitising of HTML emails sent out
+	* Bug fix: sanitise message input by user
+	
+Version Beta 1.16 <29 September 2010>
+	Updated SVN structure
+	Moved Flash file to /www/swf/
+	Rename flash file filesender.swf
+	Fix voucher not sending out correct email message when created
+
+Version Beta 1.15 <2 August 2010>
+
+	Moved all web files in SVN to /trunk/web-app
+	Moved all flex files in SVN to /trunk/flex-app
+	Move FileSender2.swf file to www/swf/ to allow correct command line compiling 
+	Update relative include paths for updated structure
+	242 Move config to own folder /config
+	244 restructure svn to support branches and tags
+	258 + sign replaced with _ in file name when upoading
+	240 expiry logic: with multiple recipients the shortest expiry wins
+	253 Outdated files in database that misses from disk halts system while removing outdated files
+	241 files, tmpfiles and log directory not present in 1.14
+	211 MyFiles -> Add Recipient: download link in resulting file voucher does not work
+	
+
+Version Beta 1.14 <22 June 2010>
+	Bug Fixes
+	129,130,132 valid email adresses are broken 
+	231 File size shows error when creating vouchers
+	230 Incorrect email message sent when using a voucher
+	228 Vouchers are deleted straight after being created
+	229 filename error when creating voucher
+	180	sender email address gets truncated beyond 3rd domain level
+	186	filenames with double singlequotes fail	
+	190	To: and from: reversed when uploading using a voucher
+	191	Help
+	192	About
+	194	Files and vouchers do not expire after expiry date
+	195	expiry date selection is open-ended when issuing voucher and adding a new recipient
+	196	Email everyone when voucher deleted	ricoshae
+	198	Voucher Deleted notification
+	
+	
+	Audit Fixes
+	2.5,2.6,2.7,2.2,2.3
+
+Version Beta 1.13 <6 May 2010>
+	Bug Fixes
+	#107	incorrect warning ("browse for a file") on invalid recipient email input
+	#166	Screen Size
+	#170	language quirk in MyFiles "add new recipient"
+	#171	no-caching tags in all FileSender pages
+	#172	Fix Version Number State overide
+	#173	SAML Session expiration errors - instead of requesting logon
+	#174	size calculation wrong for larger files
+	#175	saml_uid_attribute parsing code not 100%
+	#177	unexpected voucher behaviour when voucher user is already logged in
+	#178	security bug: back button on download menu
+	#179	security: log-off behaviour across multiple browser tabs incorrect
+
+
+Version Beta 1.12 <19 April 2010>
+	
+	Bug Fixes
+		*  #168: Admin email added to config
+		*  #167: Default config date format fixed 
+	
+
+Version Beta 1.11 <16 April 2010>
+	
+	New Features
+		* #160: email address unsuitable as GUID
+		* #152: include voucher issuer on recipient list of file
+		* #164: Username Display show/hide UI
+	Bug Fixes
+		*  #161: Notification email not being sent back
+
+
+Version Beta 1.10 <31 March 2010>
+
+	New Features
+		* IP Name Resolution in Log Files 
+		* Log browser and OS
+		* Document Attribute required from IDP
+		* GLobal configurable date format and Postgress date format
+		* Configurable Attribute name
+		* 159	Fix size of Flex Application
+		* 157	available space depleted warning
+		* 155	remove deprecated config file directives from default config file
+		* 153	more control for voucher issuer
+		* 151	re-send a file without re-uploading 
+		* 145	Configurable maximum recipients per email 
+		* 141	Configurable AuP checkbox in Flash UI
+		* 140	Help button in Flash UI
+		* 137	splash screen
+		* 106	Add indicator 'uploaded using voucher' in admin overview screens
+		* 118	Default email subject configurable
+	
+	Bug Fixes
+		* Update Database Creation Script
+		* MIME type to HTML
+		* Fix IDP multiple entries in mail and cn
+		* Linux @key and other special charachters added
+		* 149	Size function to display alternate size MB GB KB
+		* 150	Return Path for non existant email
+		* 148	Replace Send File With Send
+		* 147	New File - Rename Button
+		* 138	Email address with 1 character refused with "Please select file to upload" error
+		* 124	Mime Type to HTML and test for spam count.
+		* 121	undesired message truncation in 'download' window
+		* 
+		
+
+Version Beta 1.9 <11 March 2010>
+
+	New Features
+		* Updated Config
+		* Added about link and page
+		* IP name resolving in log File
+		* Storage space monitor
+		* Alternate logout URL
+		
+	Bug fixes
+		* Logoff Config updated
+		* Error message if email not sent
+		* change default simplesamlloction in config.php #113
+		* 3 directories not created by default in .tar.gz of beta-1.8 #114
+		* 2 files missing #112
+		* 3 times history.js #111
+		* Continue Loading in status bar fix for Firefox
+		* Download notification for separate users
+		* Email multiple send has all To emails listed
+		* Feide SML IDP array fields fixed
+
+
+Version Beta 1.8 <22 February 2010>
+
+	New Features
+		* Updated Config
+		* Voucher and SAML Auth update to SAML 1.5.1 * send email notification on download
+		* Hide top menu while uploading
+		* Seperate SAML and Filesender to different URL
+
+	Bug fixes
+		* Security update
+		* Update Logging to show more errors
+		* Added Configurable Timezone
+		* Added Markus DB checks
+		* Fix Upload Gears Speed
+		* Move functions to non-web folder
+
+		NOTE: Please check installation instructions as this version requires a different folder structure 
+
+
+Version Beta 1.7 <17 December 2009>
+
+	New Features
+		* send email notification on download
+		* hide browse while uploading
+
+	Bug fixes
+		* Fix EN_AU logging error
+		* depriciated php code update for php 5.3.x
+
+
+Version Beta 1.6 <14 December 2009>
+
+	New Features
+		* Complete rewrite of config
+		* functions re-written
+		* NEW config in services/config.php
+		* Updated error logging
+		* added base language file EN_AU ready for additional languages
+		* security update so all php except upload are function calls
+		* Action Message Format update for Flex to PHP
+		* additional steps to upload added
+		
+
+	Bug fixes
+		* Fix for Norwegian keyboard special charachters
+		
+
+Version Beta 1.5 <never>
+
+	Version Beta 1.5 was never released.
+
+
+Version Beta 1.4 <4 November 2009>
+	
+	New features:
+		* Remove logo and name to allow cutom branding
+		* Hint to click on Gears logo
+		* Hinting, in the upload interface, that the recipient email line can take multiple email addresses
+		* Custom log for php and flex errors in /log folder
+		* correctly display upload errors to user
+			
+	Bug Fixes:
+		* Allow line breaks in description 
+		* Catch PHP errors
+		* Typo in file uploaded email
+		* Replace undefined in senders name or email if no senders name available
+		* Code update seperating gears and standard update
+		* rename progress bar to loading.
+		* catch gears upload errors to log  
+		* rename default to index.php
+		
+
+Version Beta 1.3 [18 October 2009]
+
+	New features:
+		* Updated linux install documentation
+		* config option for number of allowed days on server
+
+	Bug Fixes:	
+		* update logoff to default simple saml
+		* add expiry dat to emails
+		* stop negative expiry dates
+		* stop uploading files with invalid charachters
+		* postgres inter to allow bigint
+		* filesize precision to MB 2 decimal places
+		* add email addresses to database log
+		* remove hardcoded links
+		* update version numbers
+		
+		
