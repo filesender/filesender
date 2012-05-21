@@ -1,0 +1,109 @@
+Updated: 26 Jan 2012
+
+*********************
+This is the beta/development branch of FileSender 1.5 which is still being worked
+on and should not be used for production services. This file will be updated
+as soon as 1.5 will be release-ready. In the meantime have a look at
+
+http://www.assembla.com/spaces/file_sender/wiki/Installation_notes_for_1-5_development_code
+
+for more information.
+*********************
+
+Installation instructions
+=========================
+
+FileSender installation instructions are available at:
+   https://www.assembla.com/wiki/show/file_sender/Documentation_for_v1-0
+
+Be sure to read the parts about configuring PostgreSQL, PHP, Apache,
+SimpleSAMLphp and cron to get up and running.
+
+Upgrading to 1.0.1 RELEASE
+==========================
+
+Version 1.0.1 is mainly a bugfix release (see CHANGELOG.txt for
+details about the fixes). When using IPv6 it is recommended to
+adjust the 'files' database table:
+
+	#sudo -u postgres psql filesender
+	ALTER TABLE files ALTER fileip6address TYPE character varying(45);
+	\q
+
+As usual it is recommended to make a backup of your current installation
+before upgrading, especially if you have made local modifications to the
+installed version.
+
+Upgrading from previous (beta) versions
+=======================================
+
+Please read the following notes before upgrading from a previous beta
+version to 1.0.x.
+
+IMPORTANT: Upgrading from versions older then Beta-0.1.17
+=========================================================
+
+As of version 1.5 this is not supported anymore. If you need
+this please first upgrade to 1.1 and then to 1.5. 
+
+IMPORTANT: Upgrading from previous betas in general
+===================================================
+
+It is strongly recommended that you do a fresh install after making a
+backup copy of your previous install and carefully re-apply any local
+changes you have made in previous versions.
+
+The following notes describe the files most likely to contain local changes:
+
+Configuration
+=============
+
+  - config/config.php
+
+In the various beta cycles several new and required settings have
+been added to the config.php that might not be present in your current
+configuration.
+
+IMPORTANT: When upgrading from a pre-1.0 version please start with a fresh
+configuration file and take the time to go through all configuration
+directives to make sure all is as it should be. Merging new entries into
+your old config.php is discouraged.
+
+Customisation
+=============
+
+Site specific information will be in:
+
+  - www/about.php
+  - www/help.php
+
+Note that the default www/help.php now contains a list of settings about for
+example maximum sizes and expiry time which is automatically generated from
+the settings in the configuration file. You may want to integrate that
+information with your custom help info.
+
+You may have put a custom logo/banner in:
+
+  - www/banner.png
+
+As of version Beta-0.1.17 you can put a site specific banner in
+
+  - config/banner.png
+
+If this file is available FileSender will use that one instead of the
+default banner in www/banner.png.
+
+Please refer to the section on Customisation in the Administrator reference
+guide at https://www.assembla.com/wiki/show/file_sender/Documentation_for_v1-0
+for instructions on how to customise your installation.
+
+Performance
+===========
+
+  - www/js/fs_gears.js
+
+You may have changed the chunksize used in the gears upload. This value is
+found in www/js/fs_gears.js in the variable CHUNK_BYTES that has a default
+value of 2000000 (2M).
+
+For more details about other changes please see CHANGELOG.txt.
