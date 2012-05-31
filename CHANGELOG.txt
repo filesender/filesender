@@ -1,4 +1,27 @@
-Last update: 5 November 2011
+Last update: 31 May 2012
+
+Version 1.1.1 <31 May 2012>
+
+   * Important changes since 1.1
+     - Support for changed HTML5 semantics in Firefox 13+ (#730).
+     - Fixed potential privilege elevation issue which under certain
+       conditions could give a normal user access to the admin
+       interface (#750).
+     - Change in database column type for fileto/logto (#739).
+       When upgrading from previous versions you should manually alter
+       the relevant column type in the database with:
+
+       #sudo -u postgres psql filesender
+         ALTER TABLE files ALTER fileto TYPE text;
+         ALTER TABLE logs ALTER logto TYPE text;
+         \q
+
+   * Minor fixes and changes since 1.1
+     - Additional email validation in Mail.php (#746).
+     - Fix for multi-value SAML-attribute logging (#747).
+     - Fix for upload with a backslash or double quote in the filename (#601).
+     - Workaround for download of files with a double quote in the
+       filename (#602).
 
 Version 1.1 <5 November 2011>
 

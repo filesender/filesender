@@ -91,6 +91,9 @@ rm -rf %{buildroot}
 
 %changelog
 * %(date '+%a %b %d %Y') FileSender Development <filesender-dev@filesender.org> %{version}-1
+- Release 1.1.1
+
+* Sat Nov 05 2011 FileSender Development <filesender-dev@filesender.org> 1.1-1
 - Release 1.1
 
 * Wed May 11 2011 FileSender Development <filesender-dev@filesender.org> 1.0.1-1
