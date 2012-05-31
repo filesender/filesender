@@ -68,10 +68,11 @@ class AuthSaml {
             }
 
             // compare config admin to userUID
-            if(stristr($config['admin'], $attributes["eduPersonTargetedID"]) === FALSE) {
-                return FALSE;
-            } else {
+            $known_admins = explode(',', $config['admin']);
+            if(in_array($attributes["eduPersonTargetedID"], $known_admins)) {
                 return TRUE;
+            } else {
+                return FALSE;
             }
         }
         return FALSE;
