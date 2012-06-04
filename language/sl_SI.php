@@ -37,7 +37,7 @@
  * 
  */
 // main menu items
-$lang["_ADMIN"] = "Administration";
+$lang["_ADMIN"] = "Administracija";
 $lang["_NEW_UPLOAD"] = "Pošlji datoteko";
 $lang["_VOUCHERS"] = "Vavčerji";
 $lang["_LOGON"] = "Prijava";
@@ -65,6 +65,7 @@ $lang["_USED"] = "Porabljeno";
 $lang["_AVAILABLE"] = "Na voljo";
 $lang["_TEMP"] = "Temp"; // as in Temporary files
 
+// Greetings
 $lang["_WELCOME"] = "Pozdravljeni"; 
 $lang["_WELCOMEGUEST"] = "Pozdravjen Gost"; 
 
@@ -76,7 +77,6 @@ $lang["_ERRORS"] = "Napake";
 $lang["_FILES_AVAILABLE"] = "Razpoložljivi dokumenti";
 $lang["_ACTIVE_VOUCHERS"] = "Aktivni vavčerji";
 $lang["_COMPLETE_LOG"] = "Dnevnik";
-
 
 // Form Fields
 $lang["_TO"] = "Za";
@@ -94,7 +94,7 @@ $lang["_SHOW_TERMS"] = "Prikaži pogoje uporabe";
 $lang["_SHOWHIDE"] = "Prikaži/Skrij";
 $lang["_UPLOADING_WAIT"] = "Dokument se nalaga - prosimo počakajte...";
 
-// Flash button menu
+// button labels
 $lang["_UPLOAD"] = "Pošlji dokument";
 $lang["_BROWSE"] = "Prebrskaj";
 $lang["_CANCEL"] = "Prekliči";
@@ -106,6 +106,7 @@ $lang["_DELETE"] = "Izbriši";
 $lang["_YES"] = "Da";
 $lang["_NO"] = "Ne";
 
+$lang["_ERROR_CONTACT_ADMIN"] = "Prišlo je do napake - prosim obrnite se na vašega administratorja.";
 $lang["_INVALID_MISSING_EMAIL"] = "Preverite elektronski naslov";
 $lang["_INVALID_EXPIRY_DATE"] = "Preverite datum veljavnosti";
 $lang["_INVALID_FILE"] = "Neveljaven dokument";
@@ -123,19 +124,25 @@ $lang["_ACCEPTTOC"] = "Sprejemam pogoje uporabe za to storitev.";
 $lang["_AGREETOC"] = "Potrebno je vaše soglasje s splošnimi pogoji za uporabo storitve.";
 $lang["_FILE_TO_BE_RESENT"] = "Dokument za pošiljanje";
 $lang["_ERROR_UPLOADING_FILE"] = "Napaka pri nalaganju dokumenta";
+$lang["_ERROR_SENDING_EMAIL"] = "Prišlo je do napake pri pošiljanju emailov. Prosim obrnite se na vašega administratorja.";
+$lang["_ERROR_INCORRECT_FILE_SIZE"] = "Prišlo je do napake pri nalaganju vaše datoteke. <br />Velikost datoteke na strežniku se ne ujema z vašo datoteko. <br /><br />Prosim obrnite se na vašega administratorja.";
 $lang["_MAXEMAILS"] = "Največje dovoljeno število naslovnikov je";
 $lang["_INVALID_DATE_FORMAT"] = "Zapis datuma je neveljaven.";
 $lang["_DISK_SPACE_ERROR"] = "Na strežniku je zmanjkalo prostora. Obvestite skrbnika storitve ali poskusite s prenosom manjšega dokumenta.";
+$lang["_ERROR_ATTRIBUTES"] = "Vaš ponudnik identitete ne ponuja vseh zahtevanih atributov. Prosim obrnite se na vašega administratorja.";
 
+//Logout page
 $lang["_LOGOUT_COMPLETE"] = "Odjava je uspela";
 
 // vouchers
 $lang["_SEND_NEW_VOUCHER"] = "Vavčer uporabniku dovoljuje pošiljanje doumenta.<br />
 Za ustvarjanje vavčerja vpišite elektronski naslov naslovnika, nato kliknite na gumb Pošlji vavčer.<br />
 Naslovniku bo poslano sporočilo, s povezavo do vavčerja.";
-$lang["_EMAIL_SEPARATOR_MSG"] = "Ob navedbi več naslovnikov, elektronske naslove ločite z , ali ;";
 
+// User interaction
+$lang["_EMAIL_SEPARATOR_MSG"] = "Ob navedbi več naslovnikov, elektronske naslove ločite z , ali ;";
 $lang["_NO_FILES"] = "Trenutno ni na voljo nobenih dokumentov";
+$lang["_NO_VOUCHERS"] = "Trenutno nimate nobenega aktivnega vavčerja.";
 $lang["_ARE_YOU_SURE"] = "Ste prepričani?";
 $lang["_DELETE_FILE"] = "Izbriši dokument";
 $lang["_EMAIL_SENT"] = "Sporočilo je poslano";
@@ -152,10 +159,10 @@ $lang["_START_DOWNLOAD"] = "Začni s prenosom";
 $lang["_VOUCHER_SENT"] = "Vavčer je poslan";
 $lang["_VOUCHER_DELETED"] = "Vavčer je izbris";
 $lang["_VOUCHER_CANCELLED"] = "Ta vavčer je bil preklican.";
+$lang["_VOUCHER_USED"] = "Ta vavčer je že bil uporabljen.";
 $lang["_STARTED_DOWNLOADING"] = "Prenos dokumenta se bo pričel.";
-
-// files
 $lang["_FILE_DELETED"] = "Dokument je bil izbrisan";
+
 // steps
 $lang["_STEP1"] = "Vnesite naslovnika/e";
 $lang["_STEP2"] = "Nastavite datum poteka veljavnosti";
@@ -169,6 +176,7 @@ $lang["_OPTIONAL"] = "izbirno";
 // confirmation
 $lang["_CONFIRM_DELETE_FILE"] = "Ste prepričani, da želite izbrisati ta dokument?";
 $lang["_CONFIRM_DELETE_VOUCHER"] = "Ste prepričani, da želite izbrisati ta vavčer?";
+$lang["_CONFIRM_RESEND_EMAIL"] = "Ali ste prepričani, da želite ponovno poslati ta email?";
 
 // standard date display format
 $lang['datedisplayformat'] = "d/m/Y"; // Format for displaying date/time, use PHP date() format string syntax 
@@ -190,13 +198,14 @@ $lang["_DP_isRTL"] = 'false';
 $lang["_DP_showMonthAfterYear"] = 'false';
 $lang["_DP_yearSuffix"] = '';
 
+// Login Splash text
+$lang["_SITE_SPLASHHEAD"] = "Pozdravljeni na ". htmlspecialchars($config['site_name']);
+$lang["_SITE_SPLASHTEXT"] = htmlspecialchars($config['site_name']) ." je varen način delitve datotek med uporabniki. Priavite se in naložite datoteke ali povabite druge, da delijo datoteke z vami.";
+
 // site help
 $lang["_HELP_TEXT"] = '
-
 <div>
-
 <div align="left" style="padding:5px">
-
 <h4>Prijava</h4> 
 <ul>
     <li>V primeru da na seznamu ponudnikov identitet (IdP) ne najdete svoje organiyacije, ali je prijava spodletela, se obrnite na skrbnika na vaši organizaciji</li>
