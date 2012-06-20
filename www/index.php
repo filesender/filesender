@@ -79,9 +79,8 @@ if($isAuth )
 	if($userdata == "err_attributes")
 	{
 		$s = "error";
-		$isAuth = false;
 		$isAdmin = false;
-		array_push($messageArray,  lang("_ERROR_ATTRIBUTES"));
+		array_push($messageArray,  lang("_ERROR_ATTRIBUTES"));	
 	} else {
 		$useremail = $userdata["email"];
 	}
@@ -194,10 +193,10 @@ function openabout()
   	// create menu
   	// disable all buttons if this is a voucher, even if the user is logged on
  	if (!$isVoucher &&  $s != "completev"){
-	if($isAuth) { echo '<a id="topmenu_newupload" href="index.php?s=upload">'.lang("_NEW_UPLOAD").'</a>'; }
-	if($isAuth) { echo '<a id="topmenu_vouchers" href="index.php?s=vouchers">'.lang("_VOUCHERS").'</a>'; }
-	if($isAuth) {echo '<a id="topmenu_myfiles" href="index.php?s=files">'.lang("_MY_FILES").'</a>'; }
-	if($isAdmin) { echo '<a id="topmenu_admin" href="index.php?s=admin">'.lang("_ADMIN").'</a>'; }
+	if($isAuth && $s != "error") { echo '<a id="topmenu_newupload" href="index.php?s=upload">'.lang("_NEW_UPLOAD").'</a>'; }
+	if($isAuth && $s != "error") { echo '<a id="topmenu_vouchers" href="index.php?s=vouchers">'.lang("_VOUCHERS").'</a>'; }
+	if($isAuth && $s != "error") {echo '<a id="topmenu_myfiles" href="index.php?s=files">'.lang("_MY_FILES").'</a>'; }
+	if($isAdmin && $s != "error") { echo '<a id="topmenu_admin" href="index.php?s=admin">'.lang("_ADMIN").'</a>'; }
   }
   ?>
   	</div>
