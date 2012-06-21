@@ -72,7 +72,13 @@ if(isset($_REQUEST["a"]) && $_REQUEST["a"] == "added")
 	// display the add box
 	echo "<div id='message'>".lang("_EMAIL_SENT").".</div>";
 }
-
+foreach ($errorArray as $message) 
+		{
+		if($message == "err_emailnotsent")
+		{
+			echo '<div id="message">'.lang("_ERROR_SENDING_EMAIL").'</div>';
+		}
+		}
 // Get list of user files and display page
 $filedata = $functions->getUserFiles();
 $json_o=json_decode($filedata,true);

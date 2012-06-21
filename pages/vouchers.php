@@ -182,6 +182,13 @@ if(isset($_REQUEST["a"]))
 		}
 	}
 }
+foreach ($errorArray as $message) 
+		{
+		if($message == "err_emailnotsent")
+		{
+			echo '<div id="message">'.lang("_ERROR_SENDING_EMAIL").'</div>';
+		}
+		}
 // get file data
 $filedata = $functions->getVouchers();
 $json_o=json_decode($filedata,true);
