@@ -444,6 +444,7 @@ function gup( name )
 	} else {
 	gearsStatus = false;	
 	}
+	if(window.opera){gearsStatus=false;};
 	if( results == null )
    getFlexApp('filesender').checkVoucher("",gearsStatus);
   else
