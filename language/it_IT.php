@@ -198,6 +198,7 @@ $lang["_DP_showMonthAfterYear"] = 'false';
 $lang["_DP_yearSuffix"] = '';
 
 // Login Splash text
+$lang["_SITE_SPLASHHEAD"] = "Benvenuto su ". htmlspecialchars($config['site_name']);
 $lang["_SITE_SPLASHTEXT"] = htmlspecialchars($config['site_name']) ." è un modo sicuro di condividere grossi file con tutti! Premete Logon per caricare i vostri file o invitare persone a spedirvene uno.";
 
 // site help
