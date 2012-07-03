@@ -80,7 +80,7 @@ if($isAuth )
 	{
 		$s = "error";
 		$isAdmin = false;
-		array_push($messageArray,  lang("_ERROR_ATTRIBUTES"));	
+		array_push($messageArray,  lang("_ERROR_ATTRIBUTES"));
 	} else {
 		$useremail = $userdata["email"];
 	}
