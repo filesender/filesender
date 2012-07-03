@@ -59,16 +59,16 @@ class AuthSaml {
             $as->requireAuth();
             $attributes = $as->getAttributes();
 
-		// check if attributes exist
-		 if(!isset($attributes[$config['saml_email_attribute']])) {logEntry("Email attribute not found in IDP (".$config['saml_email_attribute'].")","E_ERROR"); return "err_attributes";}
-		 if(!isset($attributes[$config['saml_uid_attribute']])) { logEntry("UID attribute not found in IDP (".$config['saml_uid_attribute'].")","E_ERROR");return "err_attributes";}
-		 
             // compare config admin to userUID
             if(isset($attributes[$config['saml_uid_attribute']][0])) {
                 $attributes["saml_uid_attribute"] = $attributes[$config['saml_uid_attribute']][0];
             } else if(isset($attributes[$config['saml_uid_attribute']])) {
-				$attributes["saml_uid_attribute"] = $attributes[$config['saml_uid_attribute']];
-			}
+                $attributes["saml_uid_attribute"] = $attributes[$config['saml_uid_attribute']];
+            } else {
+                // required attribute does not exist
+                logEntry("UID attribute not found in IDP (".$config['saml_uid_attribute'].")","E_ERROR");
+                return FALSE;
+            }
 
             $known_admins = explode(',', $config['admin']);
             if(in_array($attributes["saml_uid_attribute"], $known_admins)) {
@@ -91,20 +91,22 @@ class AuthSaml {
         $as = new SimpleSAML_Auth_Simple($config['site_authenticationSource']);
         $as->requireAuth();
         $attributes = $as->getAttributes();
+        $missing_attributes = FALSE ;
 
         // need to capture email from SAML attribute
         // may be single attribute or array 
-		
-		// check if attributes exist
-		 if(!isset($attributes[$config['saml_email_attribute']])) {logEntry("Email attribute not found in IDP (".$config['saml_email_attribute'].")","E_ERROR"); return "err_attributes";}
-		 if(!isset($attributes[$config['saml_uid_attribute']])) { logEntry("UID attribute not found in IDP (".$config['saml_uid_attribute'].")","E_ERROR");return "err_attributes";}
+
         // checks if an array and sets first child
         if(isset($attributes[$config['saml_email_attribute']])) {
             $attributes["email"] = $attributes[$config['saml_email_attribute']];
-        }
-
+        } 
         if(isset($attributes[$config['saml_email_attribute']][0])) {
             $attributes["email"] = $attributes[$config['saml_email_attribute']][0];
+        }
+        // Check for empty or invalid email attribute
+        if (empty($attributes["email"]) || !filter_var($attributes["email"],FILTER_VALIDATE_EMAIL)) {
+            logEntry("No valid email attribute found in IDP (".$config['saml_email_attribute'].")","E_ERROR");
+            $missing_attributes = TRUE ;
         }
 
         if(isset($attributes[$config['saml_name_attribute']][0])) {
@@ -116,9 +118,13 @@ class AuthSaml {
 
         if(isset($attributes[$config['saml_uid_attribute']][0])) {
             $attributes["saml_uid_attribute"] = $attributes[$config['saml_uid_attribute']][0];
+        } else if (isset($attributes[$config['saml_uid_attribute']])) {
+            $attributes["saml_uid_attribute"] = $attributes[$config['saml_uid_attribute']];
         } else {
-			$attributes["saml_uid_attribute"] = $attributes[$config['saml_uid_attribute']];
-		}
+            // Required UID attribute missing
+            logEntry("UID attribute not found in IDP (".$config['saml_uid_attribute'].")","E_ERROR");
+            $missing_attributes = TRUE ;
+        }
 
         $inglue = '='; 
         $outglue = '&';
@@ -152,7 +158,12 @@ class AuthSaml {
 
         //print_r($attributes);
         $attributes["SessionID"] = session_id();
-        return $attributes;
+
+        if ($missing_attributes) {
+            return "err_attributes";
+        } else {
+            return $attributes;
+        }
     }
 
     // requests logon URL from SAML and returns string
