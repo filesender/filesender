@@ -108,7 +108,7 @@ var debug = <?php echo $config["debug"] ? 'true' : 'false'; ?> ;
 var html5 = false;
 // check if html5 functions are available
 html5 = (window.File && window.FileReader && window.FileList && window.Blob && window.FormData) ? true : false;
-	
+	if(window.opera){html5=false;};
 $(function() {
 	
 	// display topmenu, content and userinformation
