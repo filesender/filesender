@@ -70,10 +70,11 @@ class AuthSaml {
 				$attributes["saml_uid_attribute"] = $attributes[$config['saml_uid_attribute']];
 			}
 
-            if(stristr($config['admin'], $attributes["saml_uid_attribute"]) === FALSE) {
-                return FALSE;
-            } else {
+            $known_admins = explode(',', $config['admin']);
+            if(in_array($attributes["saml_uid_attribute"], $known_admins)) {
                 return TRUE;
+            } else {
+                return FALSE;
             }
         }
         return FALSE;
