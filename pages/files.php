@@ -112,7 +112,7 @@ $json_o=json_decode($filedata,true);
 		yearSuffix: '<?php echo lang("_DP_yearSuffix"); ?>'});
 	
 		// stripe every second row in the tables
-		$("#myfiles tr:odd").not(":first").addClass("altcolor");
+		$("#myfiles tr:odd").addClass("altcolor");
 		
 		// delete modal dialog box
 		$("#dialog-delete").dialog({ autoOpen: false, height: 180, modal: true,
@@ -302,11 +302,15 @@ foreach($json_o as $item) {
    }
    echo "</td><td>" .date($lang['datedisplayformat'],strtotime($item['filecreateddate'])) . "</td><td>" .date($lang['datedisplayformat'],strtotime($item['fileexpirydate'])) . "</td><td  valign='top'  width='22'><div style='cursor:pointer;'><img id='btn_deletevoucher_".$i."' onclick='confirmdelete(".'"' .$item['filevoucheruid'] . '")'. "' src='images/shape_square_delete.png' alt='' title='".lang("_DELETE_FILE")."' /></div></td></tr>"; //etc
    }
-} else {
-	echo "<tr><td colspan='7'>".lang("_NO_FILES")."</td></tr>";
 }
 ?>
-    </table>
+</table>
+<?php
+  if($i==0)
+	{
+		echo lang("_NO_FILES");
+	}
+?>
   </div>
 </div>
 <div id="dialog-delete" title="<?php echo  lang("_DELETE_FILE"); ?>">
