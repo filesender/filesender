@@ -242,7 +242,7 @@ function openabout()
 		{ 
 			echo lang("_WELCOMEGUEST");
 		} 
-		else if ($isAuth )
+		else if ($isAuth && $s != "error")
 		{
 			echo lang("_WELCOME")." ";
 			echo utf8tohtml($attributes["cn"],true);
