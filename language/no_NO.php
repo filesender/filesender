@@ -130,11 +130,14 @@ $lang["_SELECT_ANOTHER_FILE"] = "Velg en annen fil.";
 $lang["_INVALID_FILE_NAME"] = "Feilaktig filnavn, filen kan ikke lastes opp.  Gi filen et annet navn og prøv på nytt.";
 $lang["_INVALID_SIZE_USEHTML5"] = "For å sende filer større enn 2GB trenger du en nettleser som støtter HTML5, som f.eks. Chrome og nyerenyer FireFox.";
 
+$lang["_ERROR_CONTACT_ADMIN"] = "Det oppsto en feil.  <br/ >  Ta kontakt med tjeneste-ansvarlig.";
 $lang["_ERROR_UPLOADING_FILE"] = "Feil under filopplasting";
+$lang["_ERROR_SENDING_EMAIL"] = "Feil under sending av epostene. <br/ >Ta kontakt med tjeneste-ansvarlig.";
 $lang["_ERROR_INCORRECT_FILE_SIZE"] = "Det oppsto en feil under fil-opplasting.  <br/ >Fil har en annen størrelse på tjeneren enn på datamaskinen din. <br />Ta kontakt med tjeneeste-ansvarlig.";
 $lang["_MAXEMAILS"] = "Tillat antall epost-adresser er ";
 $lang["_INVALID_DATE_FORMAT"] = "Feil dato-format";
 $lang["_DISK_SPACE_ERROR"] = "Tjenesten har ikke nok diskplass.  Ta kontakt med tjeneste-ansvarlig og/eller prøv med en mindre stor fil";
+$lang["_ERROR_ATTRIBUTES"] = "Din påloggings-tjeneste leverer ikke alle obligatoriske attributter knyttet til din nett-identitet. <br/ >Ta kontakt med tjeneste-ansvarlig.";
 
 $lang["_LOGOUT_COMPLETE"] = "Avlogging utført";
 
@@ -147,9 +150,7 @@ $lang["_ME"] = "Meg";
 
 // MYFILES
 
-$lang["_NO_FILES"] = "Ingen filer funnet";
-
-// Myfiles: re-send email: tooltips, dialogue box and on-screen message 
+$lang["_NO_FILES"] = "Ingen aktive filer"; // Myfiles: re-send email: tooltips, dialogue box and on-screen message 
 $lang["_RE_SEND_EMAIL"] = "Send epost på nytt";
 $lang["_FILE_TO_BE_RESENT"] = "Fil:";
 $lang["_MESSAGE_RESENT"] = "Epost med nedlastningslenken sendt på nytt"; 
@@ -166,7 +167,7 @@ $lang["_START_DOWNLOAD"] = "Begyn nedlastning";
 $lang["_VOUCHER_SENT"] = "Invitasjon sendt";
 $lang["_VOUCHER_DELETED"] = "Invitasjon slettet";
 $lang["_VOUCHER_CANCELLED"] = "Denne filen eller invitasjonen har blitt utilgjengeliggjort.";
-$lang["_VOUCHER_USED"] = "Filesendings-invitasjon kan kun brukes 1 gang, invitasjonen er allerede brukt";
+$lang["_VOUCHER_USED"] = "Fileoverførings-invitasjon kan kun brukes 1 gang, invitasjonen er allerede brukt";
 $lang["_STARTED_DOWNLOADING"] = "Filnedlastning burde starte nå";
 
 // Upload page: information on steps user needs to perform
@@ -182,6 +183,7 @@ $lang["_SEND_NEW_VOUCHER"] = "En gjeste-invitasjon gir tilgang til tjenesten for
 
 $lang["_SEND_VOUCHER_TO"] = "Send en invitasjon til";
 $lang["_SEND_VOUCHER"] = "Send invitasjon";
+$lang["_NO_VOUCHERS"] = "Ingen aktive invitasjoner";
 
 // confirmation
 $lang["_CONFIRM_DELETE_FILE"] = "Er du sikker at du vil slette filen?";
@@ -209,7 +211,8 @@ $lang["_DP_showMonthAfterYear"] = 'false';
 $lang["_DP_yearSuffix"] = '';
 
 // Login Splash text
-$lang["_SITE_SPLASHTEXT"] = htmlspecialchars($config['site_name']) ." tilbyr en sikker og enkel måte for å sende store filer til all dine samarbeidspartnere!  Logg på for å overføre dine filer eller for å invitere andre til å sende deg en fil.";
+$lang["_SITE_SPLASHHEAD"] = "Velkommen til ". htmlspecialchars($config['site_name']);
+$lang["_SITE_SPLASHTEXT"] = "<B><I>". htmlspecialchars($config['site_name']) ."</I></B> tilbyr en sikker og enkel måte for å sende store filer til alle dine samarbeidspartnere!  Logg på for å overføre filer eller for å invitere andre til å sende deg en fil.";
 
 // site help
 $lang["_HELP_TEXT"] = '<div align="left" style="padding:5px">
