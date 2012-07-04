@@ -67,9 +67,6 @@ class Log {
         }
         //$dbCheck = DB_Input_Checks::getInstance();
 
-        // Reserved for future use
-        $logsessionid = "" ;
-
         // If authenticated also add authID to log
         // add os, browser and html5 version to log message
         if(isset($dataitem['fileuid'])) 
