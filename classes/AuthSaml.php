@@ -105,7 +105,7 @@ class AuthSaml {
         }
         // Check for empty or invalid email attribute
         if (empty($attributes["email"]) || !filter_var($attributes["email"],FILTER_VALIDATE_EMAIL)) {
-            logEntry("No valid email attribute found in IDP (".$config['saml_email_attribute'].")","E_ERROR");
+            logEntry("No valid email attribute for use in From field found in IDP (".$config['saml_email_attribute'].")","E_ERROR");
             $missing_attributes = TRUE ;
         }
 
