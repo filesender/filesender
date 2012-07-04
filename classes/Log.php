@@ -67,7 +67,9 @@ class Log {
         }
         //$dbCheck = DB_Input_Checks::getInstance();
 
-	
+        // Reserved for future use
+        $logsessionid = "" ;
+
         // If authenticated also add authID to log
         // add os, browser and html5 version to log message
         if(isset($dataitem['fileuid'])) 
@@ -108,9 +110,9 @@ class Log {
                 logdate, 
                 logfilesize, 
                 logfilename, 
+                logsessionid,
                 logmessage,
-                logauthuseruid,
-				logsessionid
+                logauthuseruid
             ) 
             VALUES 
             (
@@ -122,9 +124,9 @@ class Log {
                 :logdate, 
                 :logfilesize, 
                 :logfilename, 
+                :logsessionid,
                 :logmessage,
-                :logauthuseruid,
-				:logsessionid
+                :logauthuseruid
             )");
 			
 			$statement->bindParam(':logfileuid',$logfileuid);
@@ -135,9 +137,9 @@ class Log {
 			$statement->bindParam(':logdate',$logdate); 
 			$statement->bindParam(':logfilesize', $logfilesize);
 			$statement->bindParam(':logfilename', $logfilename);
+			$statement->bindParam(':logsessionid',session_id());
 			$statement->bindParam(':logmessage',$logmessage);
 			$statement->bindParam(':logauthuseruid',$logauthuseruid);
-			$statement->bindParam(':logsessionid',session_id());
 		try 
 		{ 	
 			$statement->execute(); 
