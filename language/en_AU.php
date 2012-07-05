@@ -207,7 +207,7 @@ $lang["_HELP_TEXT"] = '
 <div align="left" style="padding:5px">
 <h4>Login</h4> 
 <ul>
-    <li>If you do not see your institution in the list of Identity Providers (IdPs), or your institutional login fails, please contact your local IT support</li>
+    <li>You log in through one of the listed Identity Providers using your standard institutional account. If you do not see your institution in the list, or your login fails, please contact your local IT support</li>
 </ul>
 
 <h4>Uploads of <i>any size</i> with HTML5</h4>
@@ -215,7 +215,7 @@ $lang["_HELP_TEXT"] = '
         <li>If you see <img src="images/html5_installed.png" alt="green HTML5 tick" class="textmiddle" style="display:inline" /> this method works for you</li>
 	<li>You need a very recent browser supporting HTML5, the latest version of the "language of the web".</li>
 	<li>Currently Firefox 4 (and higher) and Chrome on Windows, Mac OS X and Linux are known to work.</li>
-	<li>Please use the <a href="http://caniuse.com/#feat=fileapi" target="_blank">"When can I use..."</a> website to monitor implementation progress of the HTML5 FileAPI for all major browsers.  In particular support for <a href="http://caniuse.com/#feat=filereader" target="_blank">FileReader API</a> and <a href="http://caniuse.com/#feat=bloburls" target="_blank">Blob URLs</a> needs to be light green (=supported) for a browser to support uploads larger then 2GB </li>
+	<li>You can <b><i>resume</i></b> an interrupted or cancelled upload.  Select the exact same file (the file must not be modified!), enter the recipients and click send.  You will notice the progress bar will hop to where the upload was stopped, and continue from there.  If you modified the file, please rename it first to make sure the upload starts with the beginning of the file again.</li>   
 </ul>
 
 <h4>Downloads of any size</h4>
@@ -241,6 +241,14 @@ $lang["_HELP_TEXT"] = '
     <li><strong>Maximum file size per upload, with HTML5: </strong>'. formatBytes($config["max_html5_upload_size"]).'</li>
     <li><strong>Maximum file / voucher expiry days: </strong>'. $config["default_daysvalid"].' </li>
 </ul>
+
+<h4>For your IT support</h4>
+<ul>
+	<li>FileSender indicates whether or not the HTML5 upload method is supported for a particular browser.  This depends mainly on the availability of advanced browser functionality, in particular the HTML5 FileAPI.  Please use the <a href="http://caniuse.com/#feat=fileapi" target="_blank">"When can I use..."</a> website to monitor implementation progress of the HTML5 FileAPI for all major browsers.  In particular support for <a href="http://can
+iuse.com/#feat=filereader" target="_blank">FileReader API</a> and <a href="http://caniuse.com/#feat=bloburls" target="_bla
+nk">Blob URLs</a> needs to be light green (=supported) for a browser to support uploads larger then 2GB.  Please note that although Opera 12 is listed to support the HTML5 FileAPI, it currently does not support all that is needed to support use of the HTML5 upload method in FileSender.</li>  
+</ul>
+
 <p>For more information please visit <a href="http://www.filesender.org/" target="_blank">www.filesender.org</a></p>
 </div>
 </div>';
