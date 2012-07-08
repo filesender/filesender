@@ -75,7 +75,7 @@
 	}
 }
 	if (isset($_COOKIE['SimpleSAMLAuthToken'])) {
-		$token = $_COOKIE['SimpleSAMLAuthToken'];
+		$token = urlencode($_COOKIE['SimpleSAMLAuthToken']);
 	} else {
 		$token = "";
 	}
