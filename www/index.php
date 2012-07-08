@@ -114,7 +114,7 @@ $(function() {
 	$("#topmenu").show();
 	$("#content").show();
 	$("#userinformation").show();
-	
+
 	$( "a", ".menu" ).button();
 	
 	$("#dialog-help").dialog({ autoOpen: false, height: 400,width: 660, modal: true,
@@ -150,6 +150,10 @@ $(function() {
 			$("#html5link").removeAttr("href");
 		}
 		 $("#html5image").show();
+		 
+		 // set draggable = false for all images and a href
+		 $("a").attr("draggable","false");
+		 $("img").attr("draggable","false");
 });
 	
 function openhelp()
