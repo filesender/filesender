@@ -197,7 +197,7 @@ $json_o=json_decode($filedata,true);
       <tr>
         <td class="mandatory" id="vouchers_to" width="130"><?php echo lang("_SEND_VOUCHER_TO"); ?>:</td>
         <td>
-        <input id="fileto" name="fileto" title="<?php echo lang("_EMAIL_SEPARATOR_MSG"); ?>"  type="text" size="45"/><br />
+        <input id="fileto" name="fileto" title="<?php echo lang("_EMAIL_SEPARATOR_MSG"); ?>" onfocus="$('#fileto_msg').hide();" type="text" size="45"/><br />
  		<div id="fileto_msg" class="validation_msg" style="display:none"><?php echo lang("_INVALID_MISSING_EMAIL"); ?></div>
         <div id="maxemails_msg" style="display: none" class="validation_msg"><?php echo lang("_MAXEMAILS"); ?> <?php echo $config['max_email_recipients'] ?>.</div>
  		</td>
