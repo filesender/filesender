@@ -42,10 +42,16 @@ if(
 ){
 	// destroy current session to prevent stealing session, because someone may have sniffed it during our http (not https) request
 	if(session_id() != ""){
-		session_destroy();
-
+		unset($_SESSION);
 		// unset the PHPSESSID cookie, so that the user will get a new session id on his next request
-		setcookie(ini_get('session.name'), '');
+		if (ini_get("session.use_cookies")) {
+		    $params = session_get_cookie_params();
+		    setcookie(session_name(), '', time() - 42000,
+		        $params["path"], $params["domain"],
+		        $params["secure"], $params["httponly"]
+		    );
+		}
+		session_destroy();
 	}
 	// ... redirect the user to https
 	$redirect = sprintf("location: https://%s%s",$_SERVER['HTTP_HOST'],$_SERVER['REQUEST_URI']);
