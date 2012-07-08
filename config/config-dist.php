@@ -117,7 +117,6 @@ public function loadConfig() {
 	// Support links
 	$config['aboutURL'] = "";
 	$config['helpURL'] = "";
-	$config['HTML5URL'] = 'http://html5test.com/';
 
 	// (absolute) file locations
 	$config['site_filestore'] = '/usr/share/filesender/files/'; 

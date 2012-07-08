@@ -248,7 +248,7 @@ function openabout()
 	}
 	?>
 	<div id="serviceinfo">
-	<a href="<?php echo $config['HTML5URL'] ?>" target="_newtab" id="html5link" name="html5link"><img alt="" name="html5image" width="75" height="18" border="0" id="html5image" style="display:none" title="" src=""/></a></div>
+	<a onclick="openhelp()" style="cursor:pointer;" id="html5link" name="html5link"><img alt="" name="html5image" width="75" height="18" border="0" id="html5image" style="display:none" title="" src=""/></a></div>
 	<?php
 	$versiondisplay = "";
 	if($config["site_showStats"])
