@@ -141,10 +141,10 @@ function displayError($errmsg,$detailederrormsg)
 {
 	global $config;
 
-	echo "<br /><div id='errmessage'>".$errmsg."</div>";
+	echo "<br /><div id='errmessage'>".htmlspecialchars($errmsg)."</div>";
 	if($config['displayerrors'] )
 	{
-		echo "<br /><div id='errmessage'>".$detailederrormsg."</div>";
+		echo "<br /><div id='errmessage'>".htmlspecialchars($detailederrormsg)."</div>";
 	}
 }
 ?>
