@@ -64,6 +64,12 @@ $isAuth = $authsaml->isAuth();
 $isVoucher = $authvoucher->aVoucher();
 $isAdmin = $authsaml->authIsAdmin();
 
+// add token for form posting if isauth or isvoucher
+if(($isAuth || $isVoucher) && !isset($_SESSION["s-token"])) 
+{
+	$_SESSION["s-token"] = getGUID();
+}
+
 if(isset($_REQUEST["s"]))
 {
 	$s = $_REQUEST["s"];

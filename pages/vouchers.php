@@ -141,6 +141,7 @@ function postVoucher()
 		if(result == "err_exoutofrange") { $("#expiry_msg").show();} // expiry date out of range
 		if(result == "err_invalidemail") { $("#fileto_msg").show();} // 1 or more emails invalid
 		if(result == "not_authenticated") { $("#_noauth").show();} // server returns not authenticated
+		if(result == "err_token") { $("#_noauth").show();} // token missing or error
 		if(result == "") { $("#_noauth").show();} // server returns not authenticated
 		if(result == "err_emailnotsent") {window.location.href="index.php?s=emailsenterror";} //
 		})
@@ -223,6 +224,7 @@ $json_o=json_decode($filedata,true);
         <td align="right" valign="middle">
 		<input type="hidden" id="fileexpirydate" name="fileexpirydate" value="<?php echo date($lang['datedisplayformat'],strtotime("+".$config['default_daysvalid']." day"));?>" />
         <input type="hidden" name="filestatus" id="filestatus" value="voucher" />
+		<input type="hidden" name="s-token" id="s-token" value="<?php echo (isset($_SESSION["s-token"])) ?  $_SESSION["s-token"] : "";?>" />
 		</td>
         <td><div class="menu" id="voucherbutton" onclick="validateForm()"><a href="#" id="btn_sendvoucher" ><?php echo lang("_SEND_VOUCHER"); ?></a></div><div id="_noauth" class="validation_msg" style="display:none"><?php echo lang("_AUTH_ERROR"); ?></div></td>
       </tr>
