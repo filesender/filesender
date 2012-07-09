@@ -57,11 +57,7 @@ if(isset($_REQUEST["a"]) && isset($_REQUEST["id"]))
 			if($sendmail->sendEmail($myfileData ,$config['fileuploadedemailbody']))
 			{
 				echo "<div id='message'>".lang("_MESSAGE_RESENT")."</div>";
-			} else 
-			{
-				echo "<div id='message'>".lang("_ERROR_SENDING_EMAIL")."</div>";
 			}
-			
 		}
 	} else {
 		echo "<div id='message'>".lang("_INVALID_FILEVOUCHERID")."</div>";	
