@@ -44,6 +44,7 @@ session_cache_limiter('nocache');
 if (isset($_POST['token']) && $_POST['token'] != "") {
 	$_COOKIE['SimpleSAMLAuthToken'] = htmlspecialchars($_POST['token']);
 }	
+
 	// flash upoload creates a new session id https so we need to make sure we are using the same session  
 if(!empty($_POST['s'])) { 
     session_id($_POST['s']); 
@@ -73,6 +74,9 @@ date_default_timezone_set($config['Default_TimeZone']);
 $uploadfolder =  $config["site_filestore"];
 $resultArray = array();
 $errorArray = array();
+
+// check if post and s-token is valid
+require_once('../includes/XSRF.php');
 
 logEntry("DEBUG fs_upload: magic_quotes_gpc=".get_magic_quotes_gpc());
 logEntry("DEBUG fs_upload: REQUEST data: " . print_r($_REQUEST, true));
