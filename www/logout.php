@@ -35,6 +35,10 @@
  * ---------------------------------
  * 
  */
+
+// set cache to default - nocache
+session_cache_limiter('nocache'); 
+ 
 require_once('../classes/_includes.php');
 $authsaml = AuthSaml::getInstance();
 // force all session variable 
