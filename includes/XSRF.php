@@ -1,5 +1,5 @@
 <?php
-// present cross site request forgery
+// prevent cross site request forgery
 // check if any data has been posted
 if($_SERVER['REQUEST_METHOD'] == 'POST')
 {
@@ -13,9 +13,11 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 		{
 			// no token
 			$_POST = array();
+			$_REQUEST = array();
 			array_push($errorArray, "err_token");
 			$resultArray["errors"] =  $errorArray;
 			echo json_encode($resultArray);	
+			logEntry("XSRF: no session token found","E_ERROR");
 			exit;
 		}	
 	// check if s-token matches the session variable
@@ -24,9 +26,11 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 			// do not allow post data as s-token does not match
 			// return error
 			$_POST = array();
+			$_REQUEST = array();
 			array_push($errorArray, "err_token");
 			$resultArray["errors"] =  $errorArray;
 			echo json_encode($resultArray);	
+			logEntry("XSRF: invalid session token found","E_ERROR");
 			exit;
 		}	
 	} 
