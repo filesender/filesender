@@ -35,6 +35,9 @@
  * js/upload.js   manages all html5 related functions and uploading
  */
 
+// set cache to default - nocache
+session_cache_limiter('nocache'); 
+
 if(session_id() == ""){
 	// start new session and mark it as valid because the system is a trusted source
 	session_start();
