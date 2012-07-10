@@ -35,6 +35,9 @@
  * js/upload.js   manages all html5 related functions and uploading
  */
 
+// set cache to default - nocache
+session_cache_limiter('nocache'); 
+
 if(session_id() == ""){
 	// start new session and mark it as valid because the system is a trusted source
 	session_start();
@@ -92,11 +95,6 @@ if($isAuth )
 	}
 } 
 
-// set cache to default - nocache
-session_cache_limiter('nocache'); 
-//header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
-//header("Cache-Control: no-store, no-cache, must-revalidate");
-//header('Pragma: no-cache');
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
