@@ -55,6 +55,8 @@ if(isset($_REQUEST["a"]) && isset($_REQUEST["id"]))
 					echo "<div id='message'>".lang("_FILE_DELETED")."</div>";
 				}
 			} else {
+			// log auth user tried to delete a file they do not have access to
+			logEntry("Permission denied - attempt to delete ".$myfileData["fileuid"],"E_ERROR");
 			// notify - not deleted - you do not have permission	
 			echo "<div id='message'>".lang("_PERMISSION_DENIED")."</div>";
 			}
@@ -69,6 +71,8 @@ if(isset($_REQUEST["a"]) && isset($_REQUEST["id"]))
 					echo "<div id='message'>".lang("_MESSAGE_RESENT")."</div>";
 				}
 			} else {
+			// log auth user tried to resend email for a file they do not have access to
+			logEntry("Permission denied - attempt to resend ".$myfileData["fileuid"],"E_ERROR");
 			// notify - not resent - you do not have permission	
 			echo "<div id='message'>".lang("_PERMISSION_DENIED")."</div>";		
 			}
