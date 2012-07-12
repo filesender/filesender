@@ -281,7 +281,7 @@
 		if(data.errors)
 		{
 		$.each(data.errors, function(i,result){
-		if(result == "err_token") { $("#dialog-autherror").show();} // token missing or error
+		if(result == "err_token") {$("#dialog-tokenerror").dialog("open");} // token missing or error
 		if(result == "err_tomissing") { $("#fileto_msg").show();} // missing email data
 		if(result == "err_expmissing") { $("#expiry_msg").show();} // missing expiry date
 		if(result == "err_exoutofrange") { $("#expiry_msg").show();} // expiry date out of range
@@ -449,7 +449,7 @@ function uploadcomplete(name,size)
 	if(data.errors)
 		{
 		$.each(data.errors, function(i,result){
-		if(result == "err_token") { $("#dialog-autherror").show();} // token missing or error
+		if(result == "err_token") { $("#dialog-tokenerror").dialog("open");} // token missing or error
 		if(result == "err_cannotrenamefile") { window.location.href="index.php?s=uploaderror";} //	
 		if(result == "err_emailnotsent") { window.location.href="index.php?s=emailsenterror";} //
 		if(result == "err_filesizeincorrect") { window.location.href="index.php?s=filesizeincorrect";} //	
