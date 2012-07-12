@@ -45,18 +45,32 @@ if(isset($_REQUEST["a"]) && isset($_REQUEST["id"]))
 	// validate id 
 	if(ensureSaneFileUid($_REQUEST["id"])) {
 		$myfileData = $functions->getVoucherData($_REQUEST['id']);
-		if($_REQUEST["a"] == "del" )
+		if($_REQUEST["a"] == "del")
 		{
-			if($functions->deleteFile($myfileData["fileid"]))
+			// check if user is authenticated and allowed to delete this file
+			if( $isAuth && $userdata["saml_uid_attribute"] == $myfileData["fileauthuseruid"])
 			{
-				echo "<div id='message'>".lang("_FILE_DELETED")."</div>";
+				if($functions->deleteFile($myfileData["fileid"]))
+				{
+					echo "<div id='message'>".lang("_FILE_DELETED")."</div>";
+				}
+			} else {
+			// notify - not resent - you do not have permission	
+			echo "<div id='message'>".lang("_PERMISSION_DENIED")."</div>";
 			}
 		}
 		if($_REQUEST["a"] == "resend")
 		{
-			if($sendmail->sendEmail($myfileData ,$config['fileuploadedemailbody']))
+		// check if user is authenticated and allowed to delete this file
+			if( $isAuth && $userdata["saml_uid_attribute"] == $myfileData["fileauthuseruid"])
 			{
-				echo "<div id='message'>".lang("_MESSAGE_RESENT")."</div>";
+				if($sendmail->sendEmail($myfileData ,$config['fileuploadedemailbody']))
+				{
+					echo "<div id='message'>".lang("_MESSAGE_RESENT")."</div>";
+				}
+			} else {
+			// notify - not resent - you do not have permission	
+			echo "<div id='message'>".lang("_PERMISSION_DENIED")."</div>";		
 			}
 		}
 	} else {
