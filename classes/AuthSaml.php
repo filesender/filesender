@@ -112,7 +112,7 @@ class AuthSaml {
         if(isset($attributes[$config['saml_name_attribute']][0])) {
             $attributes["cn"] = $attributes[$config['saml_name_attribute']][0];
         }
-        if(!isset($attributes[$config['saml_name_attribute']])) {
+        if(!isset($attributes[$config['saml_name_attribute']]) && isset($attributes["email"])) {
             $attributes["cn"] =   substr($attributes["email"],0, strpos($attributes["email"] , "@")) ;
         }
 
