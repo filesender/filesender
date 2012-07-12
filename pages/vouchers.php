@@ -141,7 +141,7 @@ function postVoucher()
 		if(result == "err_exoutofrange") { $("#expiry_msg").show();} // expiry date out of range
 		if(result == "err_invalidemail") { $("#fileto_msg").show();} // 1 or more emails invalid
 		if(result == "not_authenticated") { $("#_noauth").show();} // server returns not authenticated
-		if(result == "err_token") { $("#_noauth").show();} // token missing or error
+		if(result == "err_token") {$("#dialog-tokenerror").dialog("open");} // token missing or error
 		if(result == "") { $("#_noauth").show();} // server returns not authenticated
 		if(result == "err_emailnotsent") {window.location.href="index.php?s=emailsenterror";} //
 		})

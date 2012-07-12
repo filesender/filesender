@@ -122,7 +122,7 @@ var n = 0; // file int currently uploading
 		if(data.errors)
 		{
 		$.each(data.errors, function(i,result){
-		if(result == "err_token") { $("#dialog-autherror").dialog("open");} // token missing or error
+		if(result == "err_token") {$("#dialog-tokenerror").dialog("open");} // token missing or error
 		if(result == "err_notauthenticated") { $("#dialog-autherror").dialog("open");} // not authenticated
 		if(result == "err_tomissing") { $("#fileto_msg").show();} // missing email data
 		if(result == "err_expmissing") { $("#expiry_msg").show();} // missing expiry date
@@ -171,7 +171,7 @@ function uploadFile() {
 		if(data.errors)
 		{
 		$.each(data.errors, function(i,result){
-		if(result == "err_token") { $("#dialog-autherror").dialog("open");} // token missing or error
+		if(result == "err_token") { $("#dialog-tokenerror").dialog("open");} // token missing or error
 		if(result == "err_cannotrenamefile") { window.location.href="index.php?s=uploaderror";return;} //	
 		if(result == "err_emailnotsent") { window.location.href="index.php?s=emailsenterror";return;} //
 		if(result == "err_filesizeincorrect") { window.location.href="index.php?s=filesizeincorrect";return;} //	
