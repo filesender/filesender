@@ -55,7 +55,7 @@ if(isset($_REQUEST["a"]) && isset($_REQUEST["id"]))
 					echo "<div id='message'>".lang("_FILE_DELETED")."</div>";
 				}
 			} else {
-			// notify - not resent - you do not have permission	
+			// notify - not deleted - you do not have permission	
 			echo "<div id='message'>".lang("_PERMISSION_DENIED")."</div>";
 			}
 		}
