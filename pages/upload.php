@@ -281,6 +281,7 @@
 		if(data.errors)
 		{
 		$.each(data.errors, function(i,result){
+		if(result == "err_token") {$("#dialog-tokenerror").dialog("open");} // token missing or error
 		if(result == "err_tomissing") { $("#fileto_msg").show();} // missing email data
 		if(result == "err_expmissing") { $("#expiry_msg").show();} // missing expiry date
 		if(result == "err_exoutofrange") { $("#expiry_msg").show();} // expiry date out of range
@@ -448,6 +449,7 @@ function uploadcomplete(name,size)
 	if(data.errors)
 		{
 		$.each(data.errors, function(i,result){
+		if(result == "err_token") { $("#dialog-tokenerror").dialog("open");} // token missing or error
 		if(result == "err_cannotrenamefile") { window.location.href="index.php?s=uploaderror";} //	
 		if(result == "err_emailnotsent") { window.location.href="index.php?s=emailsenterror";} //
 		if(result == "err_filesizeincorrect") { window.location.href="index.php?s=filesizeincorrect";} //	
@@ -692,12 +694,13 @@ if ( hasProductInstall && !hasRequestedVersion ) {
       <td colspan="2"><div class="menu" id="uploadbutton" style="display:none"><a href="#" onclick="validate()"><?php echo lang("_SEND"); ?></a></div></td>
       </tr>
       </table>
-<input type="hidden" id="filevoucheruid" name="filevoucheruid" value="<?php echo $voucherUID; ?>" />
+		<input type="hidden" id="filevoucheruid" name="filevoucheruid" value="<?php echo $voucherUID; ?>" />
 		<input type="hidden" name="vid" id="vid" value="<?php echo $voucherUID; ?>" />
 		<input type="hidden" name="total" id="total" value="" />
 		<input type="hidden" name="n" id="n" value="" />
 		<input type="hidden" id="filestatus" name="filestatus" value="<?php echo $filestatus; ?>" />
 		<input type="hidden" name="loadtype" id="loadtype" value="standard" />
+		<input type="hidden" name="s-token" id="s-token" value="<?php echo (isset($_SESSION["s-token"])) ?  $_SESSION["s-token"] : "";?>" />
   </form>
 </div>
 <div id="dialog-default" style="display:none" title=""> </div>
