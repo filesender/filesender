@@ -244,9 +244,7 @@ $lang["_HELP_TEXT"] = '
 
 <h4>For your IT support</h4>
 <ul>
-	<li>FileSender indicates whether or not the HTML5 upload method is supported for a particular browser.  This depends mainly on the availability of advanced browser functionality, in particular the HTML5 FileAPI.  Please use the <a href="http://caniuse.com/#feat=fileapi" target="_blank">"When can I use..."</a> website to monitor implementation progress of the HTML5 FileAPI for all major browsers.  In particular support for <a href="http://can
-iuse.com/#feat=filereader" target="_blank">FileReader API</a> and <a href="http://caniuse.com/#feat=bloburls" target="_bla
-nk">Blob URLs</a> needs to be light green (=supported) for a browser to support uploads larger then 2GB.  Please note that although Opera 12 is listed to support the HTML5 FileAPI, it currently does not support all that is needed to support use of the HTML5 upload method in FileSender.</li>  
+	<li>FileSender indicates whether or not the HTML5 upload method is supported for a particular browser.  This depends mainly on the availability of advanced browser functionality, in particular the HTML5 FileAPI.  Please use the <a href="http://caniuse.com/#feat=fileapi" target="_blank">"When can I use..."</a> website to monitor implementation progress of the HTML5 FileAPI for all major browsers.  In particular support for <a href="http://caniuse.com/#feat=filereader" target="_blank">FileReader API</a> and <a href="http://caniuse.com/#feat=bloburls" target="_blank">Blob URLs</a> needs to be light green (=supported) for a browser to support uploads larger then 2GB.  Please note that although Opera 12 is listed to support the HTML5 FileAPI, it currently does not support all that is needed to support use of the HTML5 upload method in FileSender.</li>
 </ul>
 
 <p>For more information please visit <a href="http://www.filesender.org/" target="_blank">www.filesender.org</a></p>
