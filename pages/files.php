@@ -63,7 +63,7 @@ if(isset($_REQUEST["a"]) && isset($_REQUEST["id"]))
 		}
 		if($_REQUEST["a"] == "resend")
 		{
-		// check if user is authenticated and allowed to delete this file
+			// check if user is authenticated and allowed to resend this file
 			if( $isAuth && $userdata["saml_uid_attribute"] == $myfileData["fileauthuseruid"])
 			{
 				if($sendmail->sendEmail($myfileData ,$config['fileuploadedemailbody']))
