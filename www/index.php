@@ -67,6 +67,12 @@ $isAuth = $authsaml->isAuth();
 $isVoucher = $authvoucher->aVoucher();
 $isAdmin = $authsaml->authIsAdmin();
 
+// add token for form posting if isauth or isvoucher
+if(($isAuth || $isVoucher) && !isset($_SESSION["s-token"])) 
+{
+	$_SESSION["s-token"] = getGUID();
+}
+
 if(isset($_REQUEST["s"]))
 {
 	$s = $_REQUEST["s"];
@@ -127,6 +133,15 @@ $(function() {
 				}
 			}
 		});
+		// token error dialog
+		$("#dialog-tokenerror").dialog({ autoOpen: false, height: 240,width: 350, modal: true,title: "",		
+		buttons: {
+			'<?php echo lang("_OK") ?>': function() {
+				location.reload(true);
+				}
+			}
+		})
+		
 		$('.ui-dialog-buttonpane button:contains(helpBTN)').attr("id","btn_closehelp");            
 		$('#btn_closehelp').html('<?php echo lang("_CLOSE") ?>')  
 		
@@ -360,6 +375,7 @@ function openabout()
 	<div id="dialog-about" style="display:none" title="<?php echo lang("_ABOUT"); ?>">
 		<?php echo lang("_ABOUT_TEXT"); ?>
 	</div>
+	<div id="dialog-tokenerror" title="<?php echo lang($lang["_MESSAGE"]); ?>" style="display:none"><?php echo lang($lang["_ERROR_CONTACT_ADMIN"]); ?></div>
 		<div id="footer">Version <?php echo FileSender_Version::VERSION; ?></div>
 		<div id="DoneLoading"></div>
 	</body>

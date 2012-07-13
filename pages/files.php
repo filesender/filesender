@@ -140,6 +140,7 @@ $json_o=json_decode($filedata,true);
 				}
 			}
 		});
+		
 		$('.ui-dialog-buttonpane button:contains(cancelBTN)').attr("id","btn_cancel");            
 		$('#btn_cancel').html('<?php echo lang("_NO") ?>');  
 		$('.ui-dialog-buttonpane button:contains(deleteBTN)').attr("id","btn_delete");            
@@ -178,6 +179,7 @@ $json_o=json_decode($filedata,true);
 				if(data.errors)
 				{
 				$.each(data.errors, function(i,result){
+				if(result == "err_token") { $("#dialog-tokenerror").dialog("open");} // token missing or error
 				if(result == "err_tomissing") { $("#fileto_msg").show();} // missing email data
 				if(result == "err_expmissing") { $("#expiry_msg").show();} // missing expiry date
 				if(result == "err_exoutofrange") { $("#expiry_msg").show();} // expiry date out of range
@@ -362,6 +364,7 @@ foreach($json_o as $item) {
         <td><div id="file_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_FILE"); ?></div><div id="extension_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_FILE_EXT"); ?></div></td>
       </tr>
     </table>
-    <input name="filevoucheruid" type="hidden" id="filevoucheruid" />
-  </form>
+    <input name="filevoucheruid" type="hidden" id="filevoucheruid" /><br />
+	<input type="hidden" name="s-token" id="s-token" value="<?php echo (isset($_SESSION["s-token"])) ?  $_SESSION["s-token"] : "";?>" />
+  	</form>
 </div>
