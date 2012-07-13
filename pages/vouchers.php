@@ -174,7 +174,7 @@ if(isset($_REQUEST["a"]))
 	$myfileData = $functions->getVoucherData($_REQUEST['id']);
 		if($_REQUEST["a"] == "del" )
 		{
-		// check if user is authenticated and allowed to delete this file
+			// check if user is authenticated and allowed to delete this voucher
 			if( $isAuth && $userdata["saml_uid_attribute"] == $myfileData["fileauthuseruid"])
 			{
 				if($functions->deleteVoucher($myfileData["fileid"]))
@@ -182,7 +182,7 @@ if(isset($_REQUEST["a"]))
 				echo "<div id='message'>".lang("_VOUCHER_DELETED")."</div>";
 				} 
 			} else {
-				// log auth user tried to delete a file they do not have access to
+				// log auth user tried to delete a voucher they do not have access to
 				logEntry("Permission denied - attempt to delete voucher ".$myfileData["fileuid"],"E_ERROR");
 				// notify - not deleted - you do not have permission	
 				echo "<div id='message'>".lang("_PERMISSION_DENIED")."</div>";
