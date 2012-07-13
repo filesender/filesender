@@ -223,14 +223,13 @@ $json_o=json_decode($filedata,true);
       </tr>
       <tr>
         <td class="mandatory" id="vouchers_expirydate"><?php echo lang("_EXPIRY_DATE"); ?>:</td>
-        <td><input id="datepicker" onchange="validate_expiry()" title="<?php echo lang('_DP_dateFormat'); ?>"></input> 
+        <td><input id="datepicker" onchange="validate_expiry()" title="<?php echo lang('_DP_dateFormat'); ?>" />
         <div id="expiry_msg" class="validation_msg" style="display:none"><?php echo lang("_INVALID_EXPIRY_DATE"); ?></div>
         </td>
       </tr>
       <tr>
         <td align="right" valign="middle">
 		<input type="hidden" id="fileexpirydate" name="fileexpirydate" value="<?php echo date($lang['datedisplayformat'],strtotime("+".$config['default_daysvalid']." day"));?>" />
-        <input type="hidden" name="filestatus" id="filestatus" value="voucher" />
 		<input type="hidden" name="s-token" id="s-token" value="<?php echo (isset($_SESSION["s-token"])) ?  $_SESSION["s-token"] : "";?>" />
 		</td>
         <td><div class="menu" id="voucherbutton" onclick="validateForm()"><a href="#" id="btn_sendvoucher" ><?php echo lang("_SEND_VOUCHER"); ?></a></div><div id="_noauth" class="validation_msg" style="display:none"><?php echo lang("_AUTH_ERROR"); ?></div></td>
