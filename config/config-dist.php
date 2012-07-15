@@ -35,19 +35,19 @@ class config {
 private static $instance = NULL;
 
 	public static function getInstance() {
-		// Check for both equality and type		
+		// Check for both equality and type
 		if(self::$instance === NULL) {
 			self::$instance = new self();
 		}
 		return self::$instance;
-	} 
-	
+	}
+
 public function loadConfig() {
-	
+
 	$config = array();
 
 	// Start of configurable settings
-	// For more information about these settings please see the 
+	// For more information about these settings please see the
 	// Administrator Reference Manual in the documentation section
 	// at www.filesender.org
 
@@ -57,14 +57,13 @@ public function loadConfig() {
 	$config['Default_TimeZone'] = 'Australia/Sydney';
 	$config['site_defaultlanguage'] = 'en_AU'; // for available languages see the ./language directory
 	$config['site_name'] = 'FileSender'; // Friendly name used for your FileSender instance
-	
 
 	// UI Settings
 	$config['datedisplayformat'] = "d-m-Y"; // Format for displaying date/time, use PHP date() format string syntax
 	$config["versionNumber"] = true; // Show version number (true/false)
 	$config['site_showStats'] = false; // Show site upload/download stats (true/false)
 	$config['displayUserName'] = true; // Show 'Welcome user' (true/false)
-	
+
 	// debug settings
 	$config["debug"] = true; // Debug logging on/off (true/false)
 	$config["displayerrors"] = false; // Display debug errors on screen (true/false)
@@ -89,12 +88,12 @@ public function loadConfig() {
 	$config['max_flash_upload_size'] = '2147483648'; // 2GB
 	$config['max_html5_upload_size'] = '107374182400'; // 100  GB
 	$config["upload_chunk_size"]  = '2000000';//
-	
+
 	// update max_flash_upload_size if php.ini post_max_size and upload_max_filesize is set lower
 	$config['max_flash_upload_size'] = min(let_to_num(ini_get('post_max_size'))-2048, let_to_num(ini_get('upload_max_filesize')),$config['max_flash_upload_size']);
-	
+
 	$config["server_drivespace_warning"] = 20; // as a percentage 20 = 20% space left on the storage drive
-	
+
 	// Advanced server settings, do not change unless you have a very good reason.
 	$config['postgresdateformat'] = "Y-m-d H:i:sP"; // Date/Time format for PostgreSQL, use PHP date format specifier syntax
 	$config['db_dateformat'] = "Y-m-d H:i:sP"; // Date/Time format for PostgreSQL, use PHP date format specifier syntax
@@ -113,16 +112,16 @@ public function loadConfig() {
 	$config['site_downloadurl'] = $config['site_url'] . 'files/'; // * Deprecated *
 	}
 	$config['forceSSL'] = true; // Always use SSL (true/false)
-	
+
 	// Support links
 	$config['aboutURL'] = "";
 	$config['helpURL'] = "";
 
 	// (absolute) file locations
-	$config['site_filestore'] = '/usr/share/filesender/files/'; 
-	$config['site_temp_filestore'] = '/usr/share/filesender/tmp/'; 
+	$config['site_filestore'] = '/usr/share/filesender/files/';
+	$config['site_temp_filestore'] = '/usr/share/filesender/tmp/';
 	$config['site_simplesamllocation'] = '/usr/share/simplesamlphp/';
-	$config['log_location'] = '/usr/share/filesender/log/';	
+	$config['log_location'] = '/usr/share/filesender/log/';
 
 	$config["db_type"] = "pgsql";// pgsql or mysql
 	$config['db_host'] = 'localhost';
@@ -131,19 +130,19 @@ public function loadConfig() {
 	// database username and password
 	$config['db_username'] = 'filesender';
 	$config['db_password'] = 'yoursecretpassword';
-	
+
 	//Optional DSN format overides db_ settings
 	//$config['dsn'] = "pgsql:host=localhost;dbname=filesender";
 	//$config['dsn'] = 'pgsql:host=localhost;dbname=filesender';
 	//$config['dsn'] = 'sqlite:/usr/share/filesender/db/filesender.sqlite';
 	//$config['dsn_driver_options'] = array();
 	// dsn requires username and password in $config['db_username'] and $config['db_password']
-	
+
 	// cron settings
 	$config['cron_exclude prefix'] = '_'; // exclude deletion of files with the prefix character listed (can use multiple characters eg '._' will ignore .xxxx and _xxxx
 	$config['cron_shred'] = false; // instead of simply unlinking, overwrite expired files so they are hard to recover
 	$config['cron_shred_command'] = '/usr/bin/shred -f -u -n 1 -z'; // overwrite once (-n 1) with random data, once with zeros (-z), then remove (-u)
-	
+
 	// email templates section
 	$config['default_emailsubject'] = "{siteName}: {filename}";
 	$config['filedownloadedemailbody'] = '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}
@@ -370,7 +369,7 @@ Dear Sir, Madam,<BR><BR>The file '{htmlfileoriginalname}' from {filefrom} has be
 </BODY>
 </HTML>{CRLF}{CRLF}--simple_mime_boundary--";
 	// End of email templates section
-	
+
 	// End of configurable settings
 
 	return $config;
@@ -395,5 +394,5 @@ function let_to_num($v){ //This function transforms the php.ini notation for num
         break;
     }
       return $ret;
-}	
+}
 ?>
