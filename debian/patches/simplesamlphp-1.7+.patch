@@ -1,6 +1,6 @@
---- config/config.php	2011-02-24 15:49:49.237396461 +0100
-+++ config/config.php	2011-04-30 13:08:16.252519492 +0200
-@@ -105,7 +105,7 @@
+--- config/config.php	2012-07-15 22:27:39.304063050 +0200
++++ config/config.php	2012-07-15 22:29:27.259858710 +0200
+@@ -106,7 +106,7 @@
  	if ( isset($_SERVER['SERVER_NAME']) ) {
  	$prot =  isset($_SERVER['HTTPS']) ? 'https://' : 'http://';
  	$config['site_url'] = $prot . $_SERVER['SERVER_NAME'] . '/filesender/'; // URL to Filesender

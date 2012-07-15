@@ -1,8 +1,8 @@
---- config/config.php	2012-01-26 13:30:58.547535016 +0100
-+++ config/config.php	2012-02-02 15:07:19.563179082 +0100
-@@ -126,13 +126,14 @@
+--- config/config.php	2012-07-15 11:00:36.988305035 +0200
++++ config/config.php	2012-07-15 22:27:39.304063050 +0200
+@@ -123,13 +123,14 @@
  	$config['site_simplesamllocation'] = '/usr/share/simplesamlphp/';
- 	$config['log_location'] = '/usr/share/filesender/log/';	
+ 	$config['log_location'] = '/usr/share/filesender/log/';
  
 -	$config["db_type"] = "pgsql";// pgsql or mysql
 -	$config['db_host'] = 'localhost';
@@ -18,6 +18,6 @@
 -	$config['db_password'] = 'yoursecretpassword';
 +	$config['db_username'] = empty($dbuser) ? 'filesender' : $dbuser;
 +	$config['db_password'] = empty($dbpass) ? 'filesender' : $dbpass;
- 	
+ 
  	//Optional DSN format overides db_ settings
  	//$config['dsn'] = "pgsql:host=localhost;dbname=filesender";
