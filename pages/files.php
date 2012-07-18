@@ -159,6 +159,15 @@ $json_o=json_decode($filedata,true);
 			}
 		});
 		
+		// default auth error dialogue
+		$("#dialog-autherror").dialog({ autoOpen: false, height: 240,width: 350, modal: true,title: "",		
+		buttons: {
+			'<?php echo lang("_OK") ?>': function() {
+				location.reload(true);
+				}
+			}
+		})
+		
 		$('.ui-dialog-buttonpane button:contains(cancelBTN)').attr("id","btn_cancel");            
 		$('#btn_cancel').html('<?php echo lang("_NO") ?>');  
 		$('.ui-dialog-buttonpane button:contains(deleteBTN)').attr("id","btn_delete");            
@@ -192,6 +201,11 @@ $json_o=json_decode($filedata,true);
 				if(data == "") {
 				alert("No response from server");
 				return;	
+				}
+				if(data == "ErrorAuth")
+				{
+					$("#dialog-autherror").dialog("open");
+					return;			
 				}
 				var data =  parseJSON(data);
 				if(data.errors)
@@ -386,3 +400,4 @@ foreach($json_o as $item) {
 	<input type="hidden" name="s-token" id="s-token" value="<?php echo (isset($_SESSION["s-token"])) ?  $_SESSION["s-token"] : "";?>" />
   	</form>
 </div>
+<div id="dialog-autherror" title="<?php echo lang($lang["_MESSAGE"]); ?>" style="display:none"><?php echo lang($lang["_AUTH_ERROR"]); ?></div>
