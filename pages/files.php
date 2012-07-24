@@ -181,6 +181,8 @@ $json_o=json_decode($filedata,true);
 			buttons: {
 				'addrecipientcancelBTN': function() {
 					// clear form
+					$("#fileto").val("");
+					$("#datepicker").datepicker("setDate", new Date(maximumDate));
 					$("#filesubject").val("");
 					$("#filemessage").val("");
 					$( this ).dialog( "close" );
