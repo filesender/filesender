@@ -17,7 +17,7 @@ filesender (1.5~beta4) unstable; urgency=medium
      - Removed HTML5URL configuration setting (merged into Help text) (#744)
      - Various small bug fixes (#691, #731, #742, #794)
 
- -- Filesender Development <filesender-dev@filesender.org>  Mon, 16 July 2012 00:00:00 +0200
+ -- Filesender Development <filesender-dev@filesender.org>  Wed, 25 Jul 2012 16:01:25 +0200
 
 filesender (1.5~beta3) unstable; urgency=medium
    * Release 1.5-beta3
