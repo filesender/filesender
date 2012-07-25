@@ -1,5 +1,5 @@
 filesender (1.5~beta4) unstable; urgency=medium
-   * To be Release 1.5-beta4
+   * Release 1.5-beta4
 
    * Changes since 1.5-beta3
      - Security: make admin check more strict (#751)
@@ -15,7 +15,7 @@ filesender (1.5~beta4) unstable; urgency=medium
      - Bugfixes in mail error-handling (#713)
      - Improved  Help text (en_AU only) (#650, #651)
      - Removed HTML5URL configuration setting (merged into Help text) (#744)
-     - Minor fixes (#691, #731, #742)
+     - Various small bug fixes (#691, #731, #742, #794)
 
  -- Filesender Development <filesender-dev@filesender.org>  Mon, 16 July 2012 00:00:00 +0200
 
