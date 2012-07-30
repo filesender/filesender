@@ -32,8 +32,8 @@
 
 /*
 ** Spanish translation/version by:
-**  fco.sanchez@unia.es and vjhergom@cic.upo.es
-**  March 2012
+**  March 2012: fco.sanchez@unia.es and vjhergom@cic.upo.es
+**   July 2012: fco.sanchez@unia.es
 */
 
 /* ---------------------------------
@@ -111,6 +111,7 @@ $lang["_DELETE"] = "Eliminar";
 $lang["_YES"] = "Si";
 $lang["_NO"] = "No";
 
+$lang["_ERROR_CONTACT_ADMIN"] = "Ha habido un problema. P&oacute;ngase en contacto con su Centro de Atenci&oacute;n al Usuario";
 $lang["_INVALID_MISSING_EMAIL"] = "Falta la direcci&oacute;n o no es v&aacute;lida";	
 $lang["_INVALID_EXPIRY_DATE"] = "Fecha de expiraci&oacute;n no v&aacute;lida";	
 $lang["_INVALID_FILE"] = "Archivo no v&aacute;lido";	
@@ -118,9 +119,9 @@ $lang["_INVALID_FILEVOUCHERID"] = "Archivo o Invitaci&oacute;n de Env&iacute;o n
 $lang["_INVALID_FILESIZE_ZERO"] = "Archivo de tama&ntilde;o 0. Seleccione otro archivo";
 $lang["_INVALID_FILE_EXT"] = "Extensi&oacute;n de archivo no permitida";
 $lang["_INVALID_TOO_LARGE_1"] = "El tama&ntilde;o del archivo debe ser inferior a";
-$lang["_AUTH_ERROR"] = "Ya no est&aacute; autenticado. <br />Su sesi&oacute;n debe haber expirado o ha habido un error en el servidor /><br />Entre de nuevo y vuelva a intentarlo";
+$lang["_AUTH_ERROR"] = "Ya no est&aacute; autenticado. <br />Su sesi&oacute;n debe haber expirado o ha habido un problema en el servidor /><br />Entre de nuevo y vuelva a intentarlo";
 $lang["_SELECT_ANOTHER_FILE"] = "Seleccione otro archivo";
-$lang["_INVALID_VOUCHER"] = "Esta Invitaci&oacute;n de env&iacute;o ha caducado. <br />Contacte con el emisor del mismo";
+$lang["_INVALID_VOUCHER"] = "Esta Invitaci&oacute;n de env&iacute;o ha caducado. <br />P&oacute;ngase en contacto con el emisor del mismo";
 $lang["_SELECT_FILE"] = "Seleccione el archivo";
 $lang["_INVALID_FILE_NAME"] = "Nombre de archivo no v&aacute;lido. C&aacute;mbiele el nombre y vuelva a intentarlo";
 $lang["_INVALID_SIZE_USEHTML5"] = "Seleccione otro archivo o use un navegador compatible con HTLM5 para subir archivos mayores";
@@ -128,19 +129,25 @@ $lang["_ACCEPTTOC"] = "Acepto la Pol&iacute;tica y Condiciones de servicio";
 $lang["_AGREETOC"] = "DEBE aceptar la Pol&iacute;tica y Condiciones de servicio";
 $lang["_FILE_TO_BE_RESENT"] = "Archivo a compartir";
 $lang["_ERROR_UPLOADING_FILE"] = "Error al subir el archivo";
+$lang["_ERROR_SENDING_EMAIL"] = "Ha habido un problema con el envío de correo. P&oacute;ngase en contacto con su Centro de Atenci&oacute;n al Usuario";
+$lang["_ERROR_INCORRECT_FILE_SIZE"] = "Ha habido un problema con la subida del archivo. <br />El tamaño en el servidor no coincide con el del archivo origninal. <br />P&oacute;ngase en contacto con su Centro de Atenci&oacute;n al Usuario";
 $lang["_MAXEMAILS"] = "El n&uacute;mero m&aaacute;ximo de destinatarios del correo son";
 $lang["_INVALID_DATE_FORMAT"] = "Formato de fecha err&oacute;o";
-$lang["_DISK_SPACE_ERROR"] = "Espacio de disco insuficiente. Contacte con el administrador del servicio o suba un archivo menor";
+$lang["_DISK_SPACE_ERROR"] = "Espacio de disco insuficiente. P&oacute;ngase en contacto con su Centro de Atenci&oacute;n al Usuario o suba un archivo menor";
+$lang["_ERROR_ATTRIBUTES"] = "Su Proveedor de Identidad no est&aacute; enviando todos los atributos requeridos. P&oacute;ngase en contacto con su Centro de Atenci&oacute;n al Usuario.";
+$lang["_PERMISSION_DENIED"] = "No est&aacute; autorizado a relizar esta acción.";
 
+// Logout page
 $lang["_LOGOUT_COMPLETE"] = "Logout completado";
 
 // vouchers
 $lang["_SEND_NEW_VOUCHER"] = "Con las \"Invitaciones de env&iacute;o\", cualquiera puede enviale un archivo.<br />
-Para generar una \"Invitaci&oacute;n de env&iacute;o\", escriba una direcci&oacute;n de correo y pulse en \"Enviar la invitaci&oacute;n\".<br />
-El destinatario recibir&aacute; un correo con un enlace a la invitaci&oacute;n.<p>";
+Para generar una \"Invitaci&oacute;n de env&iacute;o\", escriba una direcci&oacute;n de correo y pulse en \"Enviar la Invitaci&oacute;n\".<br />
+El destinatario recibir&aacute; un correo con un enlace a la Invitaci&oacute;n.<p>";
 $lang["_EMAIL_SEPARATOR_MSG"] = "M&uacute;ltiples direcciones de correo separadas por ',' o ';'";
 
 $lang["_NO_FILES"] = "No hay archivos disponbles";
+$lang["_NO_VOUCHERS"] = "No hay Invitaciones disponibles";
 $lang["_ARE_YOU_SURE"] = "&iquest;Est&aacute; seguro?";
 $lang["_DELETE_FILE"] = "Eliminar archivo";
 $lang["_EMAIL_SENT"] = "Mensaje enviado";
@@ -149,14 +156,15 @@ $lang["_FILE_SIZE"] = "Tama&ntilde;o del archivo";
 $lang["_FILE_RESENT"] = "Archivo reenviado";
 $lang["_MESSAGE_RESENT"] = "Mensaje reenviado";
 $lang["_ME"] = "Yo";
-$lang["_SEND_VOUCHER"] = "Enviar la invitaci&oacute;n";
+$lang["_SEND_VOUCHER"] = "Enviar la Invitaci&oacute;n";
 $lang["_RE_SEND_EMAIL"] = "Renviar eMail";
 $lang["_NEW_RECIPIENT"] = "A&ntilde;adir nuevo destinatario";
 $lang["_SEND_VOUCHER_TO"] = "Invitar a";
 $lang["_START_DOWNLOAD"] = "Comenzar la descarga";
 $lang["_VOUCHER_SENT"] = "Invitaci&oacute;n enviada";
 $lang["_VOUCHER_DELETED"] = "Invitaci&oacute;n eliminada";
-$lang["_VOUCHER_CANCELLED"] = "Esta invitaci&oacute;n ha sido cancelada";
+$lang["_VOUCHER_CANCELLED"] = "Esta Invitaci&oacute;n ha sido cancelada";
+$lang["_VOUCHER_USED"] = "Esta Invitaci&oacute;n ha sido ya utilizada con anterioridad";
 $lang["_STARTED_DOWNLOADING"] = "Su archivo debe comenzar a descargarse";
 
 // files
@@ -174,6 +182,7 @@ $lang["_OPTIONAL"] = "opcional";
 // confirmation
 $lang["_CONFIRM_DELETE_FILE"] = "&iquest;Est&aacute; seguro de que quiere eliminar este archivo?";
 $lang["_CONFIRM_DELETE_VOUCHER"] = "&iquest;Est&aacute; seguro de que quiere eliminar esta Invitaci&oacute;n de env&iacute;o?";
+$lang["_CONFIRM_RESEND_EMAIL"] = "&iquest;Est&aacute; seguro de que quiere volver a enviar este correo?";
 
 // standard date display format
 $lang['datedisplayformat'] = "d/m/Y"; // Format for displaying date/time, use PHP date() format string syntax 
@@ -196,7 +205,8 @@ $lang["_DP_showMonthAfterYear"] = 'false';
 $lang["_DP_yearSuffix"] = '';
 
 // Login Splash text
-$lang["_SITE_SPLASHTEXT"] = htmlspecialchars($config['site_name']) ." es un medio seguro para compartir archivos grandes.<br />Entre para subir y enviar archivos o para generar \"Invitaciones de env&iacute;o\".<p>";
+$lang["_SITE_SPLASHHEAD"] = "Bienvenido a ". htmlspecialchars($config['site_name']);
+$lang["_SITE_SPLASHTEXT"] = htmlspecialchars($config['site_name']) ." es un medio fiable para compartir archivos grandes. Suba y env&iacute;e archivos o \"Invitaciones de env&iacute;o\".<p>";
 
 // site help
 $lang["_HELP_TEXT"] = '
@@ -207,45 +217,45 @@ $lang["_HELP_TEXT"] = '
 
 <h4>Login</h4> 
 <ul>
-    <li>Si su instituci&oacute;n no aparece en la lista de Proveedores de Identidad (IdPs), o si falla la autenticaci&oacute;n institucional, pongase en contacto con su Centro de Atenci&oacute;n al Usuario</li> 
-</ul>
-
-<h4>Subir archivos de <i>hasta</i> 2 Gigabytes (2GB) con el cliente Adobe Flash</h4>
-<ul>
-	<li>Si visualiza videos de YouTube, esta opci&oacute;n deber&iacute;a funcionarle</li>
-	<li>Precisa de un navegador con el complemento <a target="_blank" href="http://www.adobe.com/software/flash/about/">Adobe Flash</a> actualizado la versi&oacute;n 10 (y superiores)</li>
-	<li>FileSender le advertir&aacute; de cualquier intento de subir un archivo que exceda el l&iacute;mite establecido</li>
+    <li>Valide sus credenciales con el Proveedor de Identidad (IdP) de su Instituci&oacute;n. Si &eacute;ste no aparece en la lista, o si falla la autenticaci&oacute;n institucional, p&oacute;ngase en contacto con su Centro de Atenci&oacute;n al Usuario.</li> 
 </ul>
 
 <h4>Subir archivos de <i>cualquier tama&ntilde;o</i> con HTML5</h4>
 <ul>
-        <li>Si le aparecece el icono <img src="images/html5_installed.png" alt="HTML5 OK" class="textmiddle" style="display:inline" /> en la esquina inferior derecha de la ventana de FileSender, esta es su opci&oacute;n </li>
-	<li>Precisa de un navegador que soporte HTML5, la &uacute;ltima versi&oacute;n del "lenguaje de Internet"</li>
-	<li>Firefox4 (y superiores) y Chrome, tanto en Windows, en Mac OSX como en Linux, "hablan" HTML5</li>
-	<li>Consulte la web <a href="http://caniuse.com/#feat=fileapi" target="_blank">"Cu&aacute;ndo podr&eacute; usar..."</a> para seguir los progresos de la "FileAPI" HTML5 en la mayor&iacute;a de los navegadores. En particular, el soporte para <a href="http://caniuse.com/#feat=filereader" target="_blank">FileReader API</a> and <a href="http://caniuse.com/#feat=bloburls" target="_blank">Blob URLs</a> ha de aparececer en "verde" (=soportado) para el navegador, indicando que con &eacute;ste podr&aacute; subir archivos mayores de 2GB</li>
+        <li>Si le aparecece el icono <img src="images/html5_installed.png" alt="HTML5 OK" class="textmiddle" style="display:inline" /> esta es su opci&oacute;n. </li>
+	<li>Precisa de un navegador que soporte HTML5, la &uacute;ltima versi&oacute;n del "lenguaje de la Web".</li>
+	<li>Firefox4 (y superiores) y Chrome, tanto en Windows, en Mac OS X, como en Linux, "hablan" HTML5</li>
+	<li>Puede <b><i>continuar</i></b> la subida interrumpida o cancelada de un archivo.<br />Vuelva a seleccionar el mismo archivo (¡no puede haber sido modificado desde el &uacute;ltimo intento!), introduzca los destinatarios y pulse en "Enviar".<br />Ver&aacute; c&oacute;mo la barra de progreso avanza, hasta el punto en el que el proceso se detuvo anteriormente, y contin&uacute;a a partir de ah&iacute;.<br />Para evitar problemas con la subida, si ha modificado el archivo, tenga la precauci&oacute;n de renombralo previamente.</li>
 </ul>
 
 <h4>Descargas de cualquier tama&ntilde;o</h4>
 <ul>
-        <li>Precisa de un navegador "moderno" para las descargas, que soporte Adobe Flash o HTML5</li>
+        <li>Precisa de un navegador "moderno". No es necesario que soporte Adobe Flash ni HTML5 para la descarga.</li>
 </ul>
 
+<h4>Subir archivos de <i>hasta</i> 2 Gigabytes (2GB) con el cliente Adobe Flash</h4>
+<ul>
+	<li>Si puede visualizar videos de YouTube, esta opci&oacute;n deber&iacute;a funcionarle.</li>
+	<li>Precisa de un navegador con el complemento <a target="_blank" href="http://www.adobe.com/software/flash/about/">Adobe Flash</a> actualizado a la versi&oacute;n 10 (o superior).</li>
+	<li>FileSender le advertir&aacute; de cualquier intento de subir un archivo que exceda el l&iacute;mite establecido para esta opci&oacute;n.</li>
+</ul>
 
 <h4>L&iacute;mites de esta instalaci&oacute;n de FileSender</h4>
 <ul>
-    <li><strong>N&uacute;mero m&aacute;ximo de destinatarios por env&iacute;o: </strong>'. $config["max_email_recipients"].' direcciones de email (separadas por comas o puntos y coma)</li>
-    <li><strong>N&uacute;mero m&aacute;ximo de archivos por env&iacute;o: </strong>1, para envio de varios a la vez compr&iacute;malos en un &uacute;nico archivo</li>
+    <li><strong>N&uacute;mero m&aacute;ximo de destinatarios por env&iacute;o: </strong>'. $config["max_email_recipients"].' direcciones de correo (separadas por comas o puntos y coma).</li>
+    <li><strong>N&uacute;mero m&aacute;ximo de archivos por env&iacute;o: </strong>1, para envio de varios a la vez compr&iacute;malos en un &uacute;nico archivo.</li>
     <li><strong>Tama&ntilde;o m&aacute;ximo del archivo por env&iacute;o (Adobe Flash): </strong>'. formatBytes($config["max_flash_upload_size"]).' </li>
     <li><strong>Tama&ntilde;o m&aacute;ximo del archivo por env&iacute;o (HTML5): </strong>'. formatBytes($config["max_html5_upload_size"]).'</li>
     <li><strong>D&iacute;as hasta la expiraci&oacute;n de un archivo/invitaci&oacute;n de env&iacute;o (m&aacute;ximo): </strong>'. $config["default_daysvalid"].' </li>
 </ul>
+
 <p></p>
-<p>Para m&aacute;s informaci&oacute;n sobre FileSender, visite <a href="http://www.filesender.org/" target="_blank">www.filesender.org</a></p>
+<p>Para m&aacute;s informaci&oacute;n sobre FileSender, visite <a href="http://www.filesender.org/" target="_blank">www.filesender.org</a>.</p>
 </div>
 </div>';
 
 // site about
-$lang["_ABOUT_TEXT"] = ' <div align="left" style="padding:5px">'. '"'. htmlspecialchars($config['site_name']) .'" es una instalaci&oacute;n de FileSender (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>), desarrollado siguiendo los requerimientos de la comunidad de investigaci&oacute;n y educaci&oacute;n superior.</div>';
+$lang["_ABOUT_TEXT"] = ' <div align="left" style="padding:5px">'. '"'. htmlspecialchars($config['site_name']) .'" es una instalaci&oacute;n de FileSender (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>), desarrollado atendiendo a los requerimientos de la Comunidad de Investigaci&oacute;n y Educaci&oacute;n Superior.</div>';
 
 // site AUP terms
 $lang["_AUPTERMS"] = "Pol&iacute;tica de Uso Aceptable - Conciciones de Servicio";
