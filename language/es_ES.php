@@ -206,7 +206,7 @@ $lang["_DP_yearSuffix"] = '';
 
 // Login Splash text
 $lang["_SITE_SPLASHHEAD"] = "Bienvenido a ". htmlspecialchars($config['site_name']);
-$lang["_SITE_SPLASHTEXT"] = htmlspecialchars($config['site_name']) ." es un medio fiable para compartir archivos grandes. Suba y env&iacute;e archivos o \"Invitaciones de env&iacute;o\".<p>";
+$lang["_SITE_SPLASHTEXT"] = htmlspecialchars($config['site_name']) ." es un medio fiable para compartir archivos grandes. Suba y env&iacute;e archivos o \"Invitaciones de env&iacute;o\".";
 
 // site help
 $lang["_HELP_TEXT"] = '
