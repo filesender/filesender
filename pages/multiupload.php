@@ -654,7 +654,7 @@ if ( hasProductInstall && !hasRequestedVersion ) {
             <br />
           </div>
           <div id="uploadhtml5" style="display:none">
-            <input type="file" name="fileToUpload" id="fileToUpload" onchange="fileSelected();" multiple=""/>
+            <input type="file" name="fileToUpload" id="fileToUpload" onchange="fileSelected();" multiple=""/> (Ctrl to select multiple files or Browse to add more files)
           </div>
           <div id="file_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_FILE"); ?></div>
         </td>
