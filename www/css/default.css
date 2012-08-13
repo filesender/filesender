@@ -103,7 +103,23 @@ input,textarea
 	-moz-border-radius: 10px;
 	margin: 5px auto;
 }
-
+.delbtn
+{
+	background-color: #ddd;
+	float: right;
+	cursor:pointer;
+	border: 1px solid #bbb;
+}
+.delbtn:hover
+{
+	color: #990000;
+}
+.fileBox
+{
+	padding: 8px;
+	border: 1px solid #CCCCCC;
+	margin: 2px;
+}
 #tog {
 	padding: 20px;
 	border: 1px solid #cccccc;
@@ -243,7 +259,7 @@ margin-top: 4px;
 }
 .progress_container {
 	width: 300px;
-	height: 20px;
+	height: 16px;
 	border: 1px solid #CCCCCC;
 	display: block;
 	margin-right: 0px;
@@ -255,7 +271,7 @@ margin-top: 4px;
 
 .progress_bar {
 	position: relative;
-	height: 20px;
+	height: 16px;
 	background-color: #090;
 	width: 0%;
 	z-index:10;

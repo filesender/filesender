@@ -58,21 +58,21 @@ var intervalTimer = 0;
 var uploadURI = "fs_multi_upload.php";
 var fdata = []; // array of each file to be uploaded
 var n = -1; // file int currently uploading
-
+var nFiles = 0; // number of files currenlty vailable
 // a unique is created for each file that is uploaded.
 // An object with the unique stores all relevant information about the file upload
 	  
  	function fileSelected() {
-		 fdata = [];
+		 //fdata = [];
 		// multiple files selected
 		// loop through all files and show their valudes
-		$("#filestoupload").html("");
+		//$("#filestoupload").html("");
 		var files = document.getElementById("fileToUpload").files;
 		if (typeof files !== "undefined") {
 		for (var i=0, l=files.length; i<l; i++) {
-		n =i;
+		n = n + 1;
 		fdata[n] = Array(n);
-        fdata[n].file = files[n];
+        fdata[n].file = files[i];
         fdata[n].fileSize = fdata[n].file.size;
 		fdata[n].bytesTotal = fdata[n].file.size;
 		fdata[n].bytesUploaded = 0;
@@ -87,7 +87,7 @@ var n = -1; // file int currently uploading
 	  	if(validate_file()) { 
 			$("#uploadbutton").show(); 
 			$("#fileInfoView").show();
-			var progressString = 'Name: ' + fdata[n].filename + ' Size: ' + readablizebytes(fdata[n].fileSize)+'<BR><div class="progress_container" id="progress_container-'+n+'"><div  class="progress_bar"  id="progress_bar-'+n+'"></div>';
+			var progressString = '<div id="file_'+n+'" class="fileBox">File: ' + fdata[n].filename + ' Size: ' + readablizebytes(fdata[n].fileSize)+'<div class="delbtn" id="file_del_'+n+'" onclick="removeItem('+n+');">Remove</div><BR><div style="display:none" class="progress_container" id="progress_container-'+n+'"><div  class="progress_bar"  id="progress_bar-'+n+'"></div></div>';
 	
 			$("#filestoupload").append(progressString);
 			//$("#fileName").html('Name: ' + fdata[n].filename);
@@ -108,7 +108,8 @@ var n = -1; // file int currently uploading
 		// validate input data
 		// validate file details to upload
 		//$("#dialog-uploadprogress").dialog("option", "title", uploadprogress +  ":  " +  fdata[n].filename + " (" +readablizebytes(fdata[n].fileSize) + ")");
-		
+		$("#progress_container-"+n).show();
+		$("#file_del_"+n).hide();
 		fdata[n].bytesUploaded = 0;
 		fdata[n].bytesTotal = fdata[n].fileSize;
 		// validate form data and return filesize or validation error
@@ -329,3 +330,12 @@ function uploadCanceled(evt) {
 	clearInterval(intervalTimer);
 	erorDialog("The upload has been canceled by the user or the browser dropped the connection.");  
 	}  
+
+// remove file from upload array
+function removeItem(fileID)
+{
+	console.log(fileID);
+	$("#file_"+fileID).remove();
+	fdata.splice(fileID,1);
+	n = n -1;
+}
