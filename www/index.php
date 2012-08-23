@@ -114,6 +114,7 @@ $(function() {
 				}
 			}
 		});
+		
 		$('.ui-dialog-buttonpane button:contains(aboutBTN)').attr("id","btn_closeabout");            
 		$('#btn_closeabout').html('<?php echo lang("_CLOSE") ?>')  
 });
