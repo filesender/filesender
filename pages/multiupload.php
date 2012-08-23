@@ -539,60 +539,28 @@ function keepMeAlive()
 <div id="box"> <?php echo '<div id="pageheading">'.lang("_UPLOAD").'</div>'; ?>
   <form id="form1" enctype="multipart/form-data" method="post" action="fs_uploadit.php">
     <table width="100%" border="0">
+        <tr>
+          <td class=" mandatory" id="upload_to">&nbsp;</td>
+          <td colspan="2" align="right"><a href="<?php echo $config['HTML5URL'] ?>" target="_newtab" id="html5link" name="html5link"><img style="float:right;padding-left:6px;" src="images/html5_installed.png" alt="" name="html5image" width="75" height="18" border="0" id="html5image" title="" /></a><div id="html5text"></div></td>
+          <td colspan="2" rowspan="5" align="center" valign="top">
+            <table width="100%" border="0">
+              <tr><td></td><td></td></tr>
+          </table></td>
+        </tr>
       <tr>
         <td width="130" class=" mandatory" id="upload_to"><?php echo lang("_TO") ; ?>:</td>
         <td colspan="2" valign="middle"><input name="fileto" title="<?php echo lang("_EMAIL_SEPARATOR_MSG") ; ?>" type="text" id="fileto" onchange="validate_fileto()"/>
         <div id="fileto_msg" style="display: none" class="validation_msg"><?php echo lang("_INVALID_MISSING_EMAIL"); ?></div>
-        <div id="maxemails_msg" style="display: none" class="validation_msg"><?php echo lang("_MAXEMAILS"); ?> <?php echo $config['max_email_recipients'] ?>.</div>
-        </td>
-        <td colspan="2" rowspan="4" align="center" valign="top"><table width="100%" border="0">
-          <tr>
-            <td width="25"><img src="images/num_1.png" alt="1" width="25" height="25" hspace="6" border="0" align="left" /></td>
-            <td align="left"><span class="forminstructions"><?php echo lang("_STEP1"); ?></span></td>
-            </tr>
-          <tr>
-            <td><img src="images/num_2.png" alt="2" width="25" height="25" hspace="6" border="0" align="left" /></td>
-            <td align="left"><span class="forminstructions"><?php echo lang("_STEP2"); ?></span></td>
-            </tr>
-          <tr>
-            <td><img src="images/num_3.png" alt="3" width="25" height="25" hspace="6" border="0" align="left" /></td>
-            <td align="left"><span class="forminstructions"><?php echo lang("_STEP3"); ?></span></td>
-            </tr>
-          <tr>
-            <td><img src="images/num_4.png" alt="4" width="25" height="25" hspace="6" border="0" align="left" /></td>
-            <td align="left"><span class="forminstructions"><?php echo lang("_STEP4"); ?></span></td>
-            </tr>
-          <tr>
-            <td colspan="2" align="center">&nbsp;</td>
-            </tr>
-        </table></td>
+        <div id="maxemails_msg" style="display: none" class="validation_msg"><?php echo lang("_MAXEMAILS"); ?> <?php echo $config['max_email_recipients'] ?>.</div>        </td>
        </tr>
-      <tr>
+         <tr>
         <td class=" mandatory" id="upload_from"><?php echo lang("_FROM"); ?>:</td>
-        <td colspan="2"><?php echo $senderemail ?>
-          <input name="filefrom" type="hidden" id="filefrom" value="<?php echo $senderemail ?>" size="40" />
-          </td>
+        <td><?php echo $senderemail ?>
+          <input name="filefrom" type="hidden" id="filefrom" value="<?php echo $senderemail ?>" size="40" />          </td>
         </tr>
-      <tr>
-        <td class="" id="upload_subject"><?php echo lang("_SUBJECT"); ?>: (<?php echo lang("_OPTIONAL"); ?>)</td>
-        <td colspan="2"><input name="filesubject" type="text" id="filesubject" />
-        </td>
-        </tr>
-      <tr>
-        <td class="" id="upload_message"><?php echo lang("_MESSAGE"); ?>: (<?php echo lang("_OPTIONAL"); ?>)</td>
-        <td colspan="2"><textarea name="filemessage" cols="57" rows="4" id="filemessage"></textarea></td>
-      </tr>
-      <tr>
-        <td class=" mandatory" id="upload_expirydate"><?php echo lang("_EXPIRY_DATE"); ?>:
-          <input type="hidden" id="fileexpirydate" name="fileexpirydate" value="<?php echo date($lang['datedisplayformat'],strtotime("+".$config['default_daysvalid']." day"));?>" /></td>
-        <td colspan="2"><input id="datepicker" name="datepicker" title="<?php echo lang('_DP_dateFormat'); ?>" onchange="validate_expiry()" />
-          <div id="expiry_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_EXPIRY_DATE"); ?></div>
-        </td>
-        <td colspan="2" align="center" valign="top"><a href="<?php echo $config['HTML5URL'] ?>" target="_newtab" id="html5link" name="html5link"><img src="images/html5_installed.png" alt="" name="html5image" width="75" height="18" border="0" id="html5image" title="" /></a></td>
-      </tr>
-      <tr>
+	   <tr>
         <td class=" mandatory"><div id="selectfile"><?php echo lang("_SELECT_FILE"); ?>:</div></td>
-        <td colspan="2"><div id="uploadstandard" style="display:none"> 
+        <td colspan="3"><div id="uploadstandard" style="display:none"> 
             <script language="JavaScript" type="text/javascript">
 <!--
 // Version check for the Flash Player that has the ability to start Player Product Install (6.0r65)
@@ -654,35 +622,42 @@ if ( hasProductInstall && !hasRequestedVersion ) {
             <br />
           </div>
           <div id="uploadhtml5" style="display:none">
-            <input type="file" name="fileToUpload" id="fileToUpload" onchange="fileSelected();" multiple=""/> (Ctrl to select multiple files or Browse to add more files)
-          </div>
-          <div id="file_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_FILE"); ?></div>
-        </td>
-        <td colspan="2" align="center" valign="top"><div id="html5text"></div></td>
-      </tr>
+		  <img style="float:left;padding-right:6px;" src="images/add.png" width="16" height="16" border="0" align="absmiddle" onclick="browse()" style="cursor:pointer" />
+            <input style="display:none; padding-right:6px;" type="file" name="fileToUpload" id="fileToUpload" onchange="fileSelected();" multiple=""/>(Ctrl to select multiple files or Browse to add more files)          </div>
+          <div id="file_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_FILE"); ?></div>        </td>
+        </tr>
       <tr id="fileInfoView" style="display:none">
         <td></td>
         <td colspan="2"  id="filestoupload">
           <div>
             <div id="fileName"></div>
             <div id="fileSize"></div>
-          </div>
-        </td>
-        <td colspan="2" align="center" valign="top">&nbsp;</td>
+          </div> </td>
+        </tr>
+	   <tr>
+        <td class=" mandatory" id="upload_expirydate"><?php echo lang("_EXPIRY_DATE"); ?>:
+          <input type="hidden" id="fileexpirydate" name="fileexpirydate" value="<?php echo date($lang['datedisplayformat'],strtotime("+".$config['default_daysvalid']." day"));?>" /></td>
+        <td colspan="2"><input id="datepicker" name="datepicker" title="<?php echo lang('_DP_dateFormat'); ?>" onchange="validate_expiry()" />
+          <div id="expiry_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_EXPIRY_DATE"); ?></div>        </td>
       </tr>
+     
        <?php if ($config["AuP"]) {?>
       <tr>
         <td class=""></td>
-        <td><input name="aup" type="checkbox" id="aup" onchange="validate_aup()" <?php echo ($config["AuP_default"] ) ? "checked" : ""; ?> <?php echo (isset($_SESSION["aup"]) && !$authvoucher->aVoucher() ) ? "checked" : ""; ?> value="true" />
-         </td>
-        <td>
+        <td colspan="2" ><input style="float:left" name="aup" type="checkbox" id="aup" onchange="validate_aup()" <?php echo ($config["AuP_default"] ) ? "checked" : ""; ?> <?php echo (isset($_SESSION["aup"]) && !$authvoucher->aVoucher() ) ? "checked" : ""; ?> value="true" />
           <div id="aup_label" onclick="toggleTOG()" style="cursor:pointer;"><?php echo lang("_ACCEPTTOC"); ?> [<font color="#666666"><?php echo lang("_SHOWHIDE"); ?></font>]</div>
-          <div id="aup_msg" class="validation_msg" style="display: none"><?php echo lang("_AGREETOC"); ?></div>
-          <div id="tog" style="display:none"> <?php echo lang("_AUPTERMS"); ?> </div>
-        </td>
-        <td colspan="2" align="center" valign="top">&nbsp;</td>
+        <div id="aup_msg" class="validation_msg" style="display: none"><?php echo lang("_AGREETOC"); ?></div>          <div id="tog" style="display:none"> <?php echo lang("_AUPTERMS"); ?> </div></td>
       </tr>
       <?php } ?>
+	   <tr>
+        <td class="" id="upload_subject"><?php echo lang("_SUBJECT"); ?>: (<?php echo lang("_OPTIONAL"); ?>)</td>
+        <td colspan="2"><input name="filesubject" type="text" id="filesubject" />        </td>
+        </tr>
+      <tr>
+        <td class="" id="upload_message"><?php echo lang("_MESSAGE"); ?>: (<?php echo lang("_OPTIONAL"); ?>)</td>
+        <td colspan="2"><textarea name="filemessage" cols="57" rows="4" id="filemessage"></textarea></td>
+      </tr>
+     
       <tr>
       <td></td>
       <td colspan="2"><div class="menu" id="uploadbutton" style="display:none"><a href="#" onclick="validate()"><?php echo lang("_SEND"); ?></a></div></td>

@@ -61,7 +61,13 @@ var n = -1; // file int currently uploading
 var nFiles = 0; // number of files currenlty vailable
 // a unique is created for each file that is uploaded.
 // An object with the unique stores all relevant information about the file upload
-	  
+
+
+function browse(){
+	$('#fileToUpload').click();
+	//return browse();
+}
+
  	function fileSelected() {
 		 //fdata = [];
 		// multiple files selected
@@ -87,7 +93,7 @@ var nFiles = 0; // number of files currenlty vailable
 	  	if(validate_file()) { 
 			$("#uploadbutton").show(); 
 			$("#fileInfoView").show();
-			var progressString = '<div id="file_'+n+'" class="fileBox">File: ' + fdata[n].filename + ' Size: ' + readablizebytes(fdata[n].fileSize)+'<div class="delbtn" id="file_del_'+n+'" onclick="removeItem('+n+');">Remove</div><BR><div style="display:none" class="progress_container" id="progress_container-'+n+'"><div  class="progress_bar"  id="progress_bar-'+n+'"></div></div>';
+			var progressString = '<div id="file_'+n+'" class="fileBox">File: ' + fdata[n].filename + ' Size: ' + readablizebytes(fdata[n].fileSize)+'<div class="delbtn" id="file_del_'+n+'" onclick="removeItem('+n+');"><img src="images/delete.png" width="16" height="16" border="0" align="absmiddle" style="cursor:pointer"/></div><div style="display:none" style="float:right" class="progress_container" id="progress_container-'+n+'"><div class="progress_bar"  id="progress_bar-'+n+'"></div></div>';
 	
 			$("#filestoupload").append(progressString);
 			//$("#fileName").html('Name: ' + fdata[n].filename);
