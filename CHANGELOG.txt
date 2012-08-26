@@ -1,5 +1,7 @@
 Last update: 25 July 2012
 
+Version 1.5-rc1 <?? ?? 2012>
+
 Version 1.5-beta4 <25 July 2012>
 
    * Release 1.5-beta4
