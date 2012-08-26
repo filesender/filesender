@@ -109,7 +109,7 @@ $lang["_MAXEMAILS"] = "Het maximum aantal toegestane e-mailadressen is ";
 $lang["_INVALID_DATE_FORMAT"] = "De datum is in een ongeldig formaat.";
 $lang["_DISK_SPACE_ERROR"] = "Er is niet genoeg vrije ruimte op deze service. Neemt u s.v.p. contact op met de beheerder of upload een kleiner bestand.";
 $lang["_ERROR_ATTRIBUTES"] = "Uw Identity Provider levert niet de benodigde attributen. Neemt u s.v.p. contact op met uw lokale IT-afdeling";
-
+$lang["_PERMISSION_DENIED"] = "U heeft geen rechten om dit te doen.";
 
 // Vouchers
 $lang["_SEND_NEW_VOUCHER"] = "Met een Uitnodiging kunt u iemand een bestand laten sturen.<br />
