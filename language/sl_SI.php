@@ -130,6 +130,7 @@ $lang["_MAXEMAILS"] = "Največje dovoljeno število naslovnikov je";
 $lang["_INVALID_DATE_FORMAT"] = "Zapis datuma je neveljaven.";
 $lang["_DISK_SPACE_ERROR"] = "Na strežniku je zmanjkalo prostora. Obvestite skrbnika storitve ali poskusite s prenosom manjšega dokumenta.";
 $lang["_ERROR_ATTRIBUTES"] = "Vaš ponudnik identitete ne ponuja vseh zahtevanih atributov. Prosim obrnite se na vašega administratorja.";
+$lang["_PERMISSION_DENIED"] = "Nimate pravic za izvedbo te operacije.";
 
 //Logout page
 $lang["_LOGOUT_COMPLETE"] = "Odjava je uspela";

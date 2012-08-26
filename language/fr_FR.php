@@ -104,6 +104,7 @@ $lang["_DELETE"] = "Supprimer";
 $lang["_YES"] = "Oui";
 $lang["_NO"] = "Non";
 			
+$lang["_ERROR_CONTACT_ADMIN"] = "Une erreur s'est produite - veuillez contacter votre administrateur.";
 $lang["_INVALID_MISSING_EMAIL"] = "Adresse mail non valide ou absente";	
 $lang["_INVALID_EXPIRY_DATE"] = "Date d'expiration non valide";	
 $lang["_INVALID_FILE"] = "Fichier non valide";	
@@ -121,11 +122,14 @@ $lang["_ACCEPTTOC"] = "J'accepte les conditions générales de ce service.";
 $lang["_AGREETOC"] = "Vous DEVEZ accepter les conditions générales.";
 $lang["_FILE_TO_BE_RESENT"] = "Fichier à réenvoyer";
 $lang["_ERROR_UPLOADING_FILE"] = "Erreur de téléchargement du fichier";
+$lang["_ERROR_SENDING_EMAIL"] = "Une erreur s'est produite lors de l'envoi de votre message, veuillez contacter votre administrateur.";
+$lang["_ERROR_INCORRECT_FILE_SIZE"] = "Un problème s'est produit lors du téléchargement de votre fichier. <br />La taille du fichier sur le serveur est différente de celle du fichier original. <br /><br />Veuillez contacter votre administrateur.";
 $lang["_MAXEMAILS"] = "Le nombre maximal d'adresses email acceptées est ";
 $lang["_INVALID_DATE_FORMAT"] = "Format de date non valide.";
 $lang["_DISK_SPACE_ERROR"] = "Il n'y a plus assez d'espace disque. Veuillez contacter l'administrateur du service ou télécharger un fichier plus petit.";
-			
-			
+$lang["_ERROR_ATTRIBUTES"] = "Votre founisseur d'identité ne fournit pas les attributs nécessaires. Contactez votre administrateur";
+$lang["_PERMISSION_DENIED"] = "Vous n'avez pas la permission de faire ceci.";
+// Logout page
 $lang["_LOGOUT_COMPLETE"] = "Déconnexion réussie";
 			
 // vouchers
@@ -135,6 +139,7 @@ Une email sera envoyée à la personne avec un lien sur le ticket.";
 $lang["_EMAIL_SEPARATOR_MSG"] = "Multiples adresses email séparées par , ou ;";
 			
 $lang["_NO_FILES"] = "Il n'y a pas de fichiers disponibles pour l'instant.";
+$lang["_NO_VOUCHERS"] = "Il n'y a pas de tickets disponibles pour l'instant.";
 $lang["_ARE_YOU_SURE"] = "Etes-vous certain ?";
 $lang["_DELETE_FILE"] = "Supprimer fichier";
 $lang["_EMAIL_SENT"] = "Message envoyé";
@@ -169,6 +174,7 @@ $lang["_OPTIONAL"] = "Optionnel";
 // confirmation
 $lang["_CONFIRM_DELETE_FILE"] = "Etes-vous sûr de vouloir supprimer ce fichier ?";
 $lang["_CONFIRM_DELETE_VOUCHER"] = "Etes-vous sûr de vouloir supprimer ce ticket ?";
+$lang["_CONFIRM_RESEND_EMAIL"] = "Etes-vous sûr de vouloir ré-envoyer ce courrier ?";
 
 // standard date display format
 $lang['datedisplayformat'] = "d/m/Y"; // Format for displaying date/time, use PHP date() format string syntax 
@@ -191,6 +197,8 @@ $lang["_DP_showMonthAfterYear"] = 'false';
 $lang["_DP_yearSuffix"] = '';
 
 // Login Splash text
+$lang["_SITE_SPLASHHEAD"] = "Bienvenu sur ". htmlspecialchars($config['site_name']);
+$lang["_SITE_SPLASHTEXT"] = htmlspecialchars($config['site_name']) ." propose un moyen sécurisé pour partager des gros fichiers avec tout le monde! Connectez-vous pour envoyer vos fichiers ou pour inviter vos interlocuteurs à vous en envoyer.";
 
 // site help
 $lang["_HELP_TEXT"] = '

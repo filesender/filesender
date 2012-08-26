@@ -106,6 +106,7 @@ $lang["_DELETE"] = "Smazat";
 $lang["_YES"] = "Ano";
 $lang["_NO"] = "Ne";
 
+$lang["_ERROR_CONTACT_ADMIN"] = "Nastala neočekávaná chyba - prosím, kontaktujte svého administrátora.";
 $lang["_INVALID_MISSING_EMAIL"] = "Nesprávný vyplněný nebo chybějící email";	
 $lang["_INVALID_EXPIRY_DATE"] = "Chybný datum expirace";	
 $lang["_INVALID_FILE"] = "Chybný soubor";	
@@ -123,9 +124,13 @@ $lang["_ACCEPTTOC"] = "Souhlasím s podmínkami užití této služby.";
 $lang["_AGREETOC"] = "Musíte souhlasit s podmínkami užití této služby.";
 $lang["_FILE_TO_BE_RESENT"] = "Soubor bude přerozdělen";
 $lang["_ERROR_UPLOADING_FILE"] = "Chyba při nahrávání souboru";
+$lang["_ERROR_SENDING_EMAIL"] = "Chyba při odesílání souborů, prosím, kontaktujte svého administrátora.";
+$lang["_ERROR_INCORRECT_FILE_SIZE"] = "Chyba při odesílání souboru. <br />Velikost souboru na serveru nesouhlasí s velikosti originálního souboru. <br /><br />Prosím, kontaktujte svého administrátora.";
 $lang["_MAXEMAILS"] = "Maximálni počet povolených emailových adres je ";
 $lang["_INVALID_DATE_FORMAT"] = "Nesprávný formát datumu.";
 $lang["_DISK_SPACE_ERROR"] = "Není dostatek místa na disku. Prosím, kontaktujte správce této služby nebo nahrajte menší soubor.";
+$lang["_ERROR_ATTRIBUTES"] = "Váš poskytovatel identity (IdP) neposkytl všechny potřebné atributy. Kontaktujte, prosím, svého administrátora.";
+$lang["_PERMISSION_DENIED"] = "Nemáte dostatečná oprávnění k vykonání této akce.";
 
 $lang["_LOGOUT_COMPLETE"] = "Odhlášení proběhlo úspěšně";
 
@@ -136,6 +141,7 @@ Email s odkazem na pozvánku bude odeslán příjemci.";
 $lang["_EMAIL_SEPARATOR_MSG"] = "Více emailových adres je možné oddělit pomocí , nebo ;";
 
 $lang["_NO_FILES"] = "Žádný soubor není momentálně dostupný";
+$lang["_NO_VOUCHERS"] = "Žádné pozvánky nejsou v tuto chvíli dostupné.";
 $lang["_ARE_YOU_SURE"] = "Jste si jist?";
 $lang["_DELETE_FILE"] = "Smazat soubor";
 $lang["_EMAIL_SENT"] = "Zpráva odeslána";
@@ -170,6 +176,7 @@ $lang["_OPTIONAL"] = "volitelné";
 // confirmation
 $lang["_CONFIRM_DELETE_FILE"] = "Jste si jist, že chcete smazat tento soubor?";
 $lang["_CONFIRM_DELETE_VOUCHER"] = "Jste si jist, že chcete smazat tuto pozvánku?";
+$lang["_CONFIRM_RESEND_EMAIL"] = "Jste si jisti, že chcete znovu odeslat tento email?";
 
 // standard date display format - vouchers, sent files
 $lang['datedisplayformat'] = "d/m/y"; // Format for displaying date/time, use PHP date() format string syntax 
@@ -192,6 +199,7 @@ $lang["_DP_showMonthAfterYear"] = 'false';
 $lang["_DP_yearSuffix"] = '';
 
 // Login Splash text
+$lang["_SITE_SPLASHHEAD"] = "Vítejte na ". htmlspecialchars($config['site_name']);
 $lang["_SITE_SPLASHTEXT"] = htmlspecialchars($config['site_name']) ." je bezpečná cesta pro sdílení velkých souborů mezi všemi! Přihlaš se a nahraj své soubory nebo pozvi ostatní, ať soubory nahrají oni."; 
 
 // site help
