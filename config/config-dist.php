@@ -65,7 +65,7 @@ public function loadConfig() {
 	$config['displayUserName'] = true; // Show 'Welcome user' (true/false)
 
 	// debug settings
-	$config["debug"] = true; // Debug logging on/off (true/false)
+	$config["debug"] = false; // Debug logging on/off (true/false)
 	$config["displayerrors"] = false; // Display debug errors on screen (true/false)
 	$config['dnslookup'] = true; // log includes DNS lookup (true/false)
 	$config["client_specific_logging"] = false; // client logging (true/false)
