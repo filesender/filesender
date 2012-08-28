@@ -32,6 +32,7 @@
 
 /* ---------------------------------
  * nl_NL Language File
+ * Maintained by the FileSender Core Team
  * ---------------------------------
  * 
  */
