@@ -32,7 +32,7 @@
 
 /* ---------------------------------
  * hr_HR Croatian Language File
- * Contributed by Nikola Garafolic (SRCE)
+ * Contributed by SRCE
  * ---------------------------------
  *
  */
