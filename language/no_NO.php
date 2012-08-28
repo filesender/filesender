@@ -32,6 +32,7 @@
 
 /* ---------------------------------
  * no_NO Language File
+ * Maintained by the FileSender Core Team
  * ---------------------------------
  * 
  */

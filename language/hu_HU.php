@@ -31,7 +31,8 @@
  */
 
 /* -----------------------------------------------
- * hu_HU Language File contibuted by Csillag Tamas
+ * hu_HU Language File
+ * Contributed by Csillag Tamas (PPKE Információs Technológiai Kar/NIIF)
  * -----------------------------------------------
  * 
  */
