@@ -139,6 +139,8 @@ $lang["_MAXEMAILS"] = "Tillat antall epost-adresser er ";
 $lang["_INVALID_DATE_FORMAT"] = "Feil dato-format";
 $lang["_DISK_SPACE_ERROR"] = "Tjenesten har ikke nok diskplass.  Ta kontakt med tjeneste-ansvarlig og/eller prøv med en mindre stor fil";
 $lang["_ERROR_ATTRIBUTES"] = "Din påloggings-tjeneste leverer ikke alle obligatoriske attributter knyttet til din nett-identitet. <br/ >Ta kontakt med tjeneste-ansvarlig.";
+$lang["_PERMISSION_DENIED"] = "Det du vil gjøre er ikke tillat.";
+
 
 $lang["_LOGOUT_COMPLETE"] = "Avlogging utført";
 
