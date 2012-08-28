@@ -32,6 +32,7 @@
 
 /* ---------------------------------
  * en_AU Language File
+ * Maintained by the FileSender Core Team
  * ---------------------------------
  * 
  */
