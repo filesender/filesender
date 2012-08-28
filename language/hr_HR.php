@@ -32,6 +32,7 @@
 
 /* ---------------------------------
  * hr_HR Croatian Language File
+ * Contributed by SRCE
  * ---------------------------------
  *
  */

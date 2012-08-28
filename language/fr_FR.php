@@ -32,8 +32,8 @@
 
 /* ---------------------------------
  * fr_FR Language File
+ * Contributed by Claude Tompers (RESTENA)
  * ---------------------------------
- * 
  */
 // main menu items
 $lang["_ADMIN"] = "Administration";
