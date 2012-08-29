@@ -216,7 +216,7 @@ $lang["_HELP_TEXT"] = '
 <li>You\'ll be able to use this method if this sign is displayed: <img src="images/html5_installed.png" alt="green HTML5 tick" class="textmiddle" style="display:inline" /></li>
 <li>To get the <img src="images/html5_installed.png" alt="green HTML5 tick" class="textmiddle" style="display:inline" /> sign, simply use an up to date browser that supports HTML5, the latest version of the "language of the web".</li>
 <li>Up to date versions of Firefox and Chrome on Windows, Mac OS X and Linux are known to work.</li>
-<li>You can <b><i>resume</i></b> an interrupted or cancelled upload.  To resume an upload, simply send the exact same file again!  Make sure the file has the same name as before and FileSender will recognise it.  When your upload starts, you should notice the progress bar jump to where the upload was halted, and continue from there.<br><br>
+<li>You can <b><i>resume</i></b> an interrupted or cancelled upload.  To resume an upload, simply send the exact same file again!  Make sure the file has the same name as before and FileSender will recognise it.  When your upload starts, you should notice the progress bar jump to where the upload was halted, and continue from there.<br /><br />
 If you <b><i>modified the file</i></b> between the first and second attempt, please rename the file first.  This ensures FileSender starts a new, fresh upload and all your changes are properly transferred.</li>
 </ul>
 
