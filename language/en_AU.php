@@ -1,41 +1,41 @@
 <?php
 
 /*
- * FileSender www.filesender.org
- * 
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
- * All rights reserved.
- * 
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- * 
- * *	Redistributions of source code must retain the above copyright
- * 	notice, this list of conditions and the following disclaimer.
- * *	Redistributions in binary form must reproduce the above copyright
- * 	notice, this list of conditions and the following disclaimer in the
- * 	documentation and/or other materials provided with the distribution.
- * *	Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
- * 	names of its contributors may be used to endorse or promote products
- * 	derived from this software without specific prior written permission.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+* FileSender www.filesender.org
+* 
+* Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+* All rights reserved.
+* 
+* Redistribution and use in source and binary forms, with or without
+* modification, are permitted provided that the following conditions are met:
+* 
+* *	Redistributions of source code must retain the above copyright
+* 	notice, this list of conditions and the following disclaimer.
+* *	Redistributions in binary form must reproduce the above copyright
+* 	notice, this list of conditions and the following disclaimer in the
+* 	documentation and/or other materials provided with the distribution.
+* *	Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
+* 	names of its contributors may be used to endorse or promote products
+* 	derived from this software without specific prior written permission.
+* 
+* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+* OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
 
 /* ---------------------------------
- * en_AU Language File
- * Maintained by the FileSender Core Team
- * ---------------------------------
- * 
- */
+* en_AU Language File
+* Maintained by the FileSender Core Team
+* ---------------------------------
+* 
+*/
 // main menu items
 $lang["_ADMIN"] = "Administration";
 $lang["_NEW_UPLOAD"] = "Send File";
@@ -204,54 +204,52 @@ $lang["_SITE_SPLASHTEXT"] = htmlspecialchars($config['site_name']) ." is a secur
 
 // site help
 $lang["_HELP_TEXT"] = '
-<div>
 <div align="left" style="padding:5px">
 <h4>Login</h4> 
 <ul>
-    <li>You log in through one of the listed Identity Providers using your standard institutional account. If you do not see your institution in the list, or your login fails, please contact your local IT support</li>
+<li>You log in through one of the listed Identity Providers using your standard institutional account. If you do not see your institution in the list, or your login fails, please contact your local IT support</li>
 </ul>
 
 <h4>Uploads of <i>any size</i> with HTML5</h4>
 <ul>
-        <li>You\'ll be able to use this method if this sign is displayed: <img src="images/html5_installed.png" alt="green HTML5 tick" class="textmiddle" style="display:inline" /></li>
-	<li>To get the <img src="images/html5_installed.png" alt="green HTML5 tick" class="textmiddle" style="display:inline" /> sign, simply use an up to date browser that supports HTML5, the latest version of the "language of the web".</li>
-	<li>Up to date versions of Firefox and Chrome on Windows, Mac OS X and Linux are known to work.</li>
-	<li>You can <b><i>resume</i></b> an interrupted or cancelled upload.  To resume an upload, simply send the exact same file again!  Make sure the file has the same name as before and FileSender will recognise it.  When your upload starts, you should notice the progress bar jump to where the upload was halted, and continue from there.<br /><br />
-If you <b><i>modified the file</i></b> between the first and second attempt, please rename the file first.  This ensures FileSender starts a new, fresh upload and all your changes are properly transferred.</li>
+<li>You\'ll be able to use this method if this sign is displayed: <img src="images/html5_installed.png" alt="green HTML5 tick" class="textmiddle" style="display:inline" /></li>
+<li>To get the <img src="images/html5_installed.png" alt="green HTML5 tick" class="textmiddle" style="display:inline" /> sign, simply use an up to date browser that supports HTML5, the latest version of the "language of the web".</li>
+<li>Up to date versions of Firefox and Chrome on Windows, Mac OS X and Linux are known to work.</li>
+<li>You can <b><i>resume</i></b> an interrupted or cancelled upload.  To resume an upload, simply send the exact same file again!  Make sure the file has the same name as before and <i>'. htmlspecialchars($config['site_name']) .'</i> will recognise it.  When your upload starts, you should notice the progress bar jump to where the upload was halted, and continue from there.<br /><br />
+If you <b><i>modified the file</i></b> between the first and second attempt, please rename the file first.  This ensures a new, fresh upload is started and all your changes are properly transferred.</li>
 </ul>
 
 <h4>Downloads of any size</h4>
 <ul>
-        <li>Any modern browser will do just fine.  Don\'t worry about Adobe Flash or HTML5 - these only matter for uploads; nothing special is required for downloads</li>
+<li>Any modern browser will do just fine.  Don\'t worry about Adobe Flash or HTML5 - these only matter for uploads; nothing special is required for downloads</li>
 </ul>
 
 <h4>Uploads smaller than 2 Gigabytes (2GB) with Adobe Flash</h4>
 <ul>
-	<li>If you can watch YouTube videos this method should work for you</li>
-	<li>You need a modern browser with version 10 (or higher) of the <a target="_blank" href="http://www.adobe.com/software/flash/about/">Adobe Flash</a> plugin.</li>
-	<li>Using Adobe Flash you can upload file sizes of up to 2 Gigabytes (2GB).  FileSender will warn you should you try to upload a file that is too big for this method</li>
-	<li>Resuming uploads is not supported with this method</li>
+<li>If you can watch YouTube videos this method should work for you</li>
+<li>You need a modern browser with version 10 (or higher) of the <a target="_blank" href="http://www.adobe.com/software/flash/about/">Adobe Flash</a> plugin.</li>
+<li>Using Adobe Flash you can upload file sizes of up to 2 Gigabytes (2GB).  <i>'. htmlspecialchars($config['site_name']) .'</i> will warn you should you try to upload a file that is too big for this method</li>
+<li>Resuming uploads is not supported with this method</li>
 </ul>
 
 
 
-<h4>Limits of this FileSender installation</h4>
+<h4>Configured service constraints</h4>
 <ul>
-    <li><strong>
-      Maximum recipient  addresses per email:</strong> Up to '. $config["max_email_recipients"].' email addresses separated by  a comma or semi-colon</li>
-    <li><strong>Maximum number of files per  upload:</strong> one - to upload several files in one transaction, compress them into a  single archive first</li>
-    <li><strong>Maximum file size per upload, with Adobe Flash only: </strong>'. formatBytes($config["max_flash_upload_size"]).' </li>
-    <li><strong>Maximum file size per upload, with HTML5: </strong>'. formatBytes($config["max_html5_upload_size"]).'</li>
-    <li><strong>Maximum file / voucher expiry days: </strong>'. $config["default_daysvalid"].' </li>
+<li><strong>
+Maximum recipient  addresses per email:</strong> Up to '. $config["max_email_recipients"].' email addresses separated by  a comma or semi-colon</li>
+<li><strong>Maximum number of files per  upload:</strong> one - to upload several files in one transaction, compress them into a  single archive first</li>
+<li><strong>Maximum file size per upload, with Adobe Flash only: </strong>'. formatBytes($config["max_flash_upload_size"]).' </li>
+<li><strong>Maximum file size per upload, with HTML5: </strong>'. formatBytes($config["max_html5_upload_size"]).'</li>
+<li><strong>Maximum file / voucher expiry days: </strong>'. $config["default_daysvalid"].' </li>
 </ul>
 
 <h4>Technical details</h4>
 <ul>
-	<li>FileSender indicates whether or not the HTML5 upload method is supported for a particular browser.  This depends mainly on the availability of advanced browser functionality, in particular the HTML5 FileAPI.  Please use the <a href="http://caniuse.com/#feat=fileapi" target="_blank">"When can I use..."</a> website to monitor implementation progress of the HTML5 FileAPI for all major browsers.  In particular support for <a href="http://caniuse.com/#feat=filereader" target="_blank">FileReader API</a> and <a href="http://caniuse.com/#feat=bloburls" target="_blank">Blob URLs</a> needs to be light green (=supported) for a browser to support uploads larger then 2GB.  Please note that although Opera 12 is listed to support the HTML5 FileAPI, it currently does not support all that is needed to support use of the HTML5 upload method in FileSender.</li>
+<li><i>'. htmlspecialchars($config['site_name']) .'</i> uses the <a href="http://www.filesender.org/" target="_blank">FileSender software.</a>  FileSender indicates whether or not the HTML5 upload method is supported for a particular browser.  This depends mainly on the availability of advanced browser functionality, in particular the HTML5 FileAPI.  Please use the <a href="http://caniuse.com/#feat=fileapi" target="_blank">"When can I use..."</a> website to monitor implementation progress of the HTML5 FileAPI for all major browsers.  In particular support for <a href="http://caniuse.com/#feat=filereader" target="_blank">FileReader API</a> and <a href="http://caniuse.com/#feat=bloburls" target="_blank">Blob URLs</a> needs to be light green (=supported) for a browser to support uploads larger then 2GB.  Please note that although Opera 12 is listed to support the HTML5 FileAPI, it currently does not support all that is needed to support use of the HTML5 upload method in FileSender.</li>
 </ul>
 
-<p>For more information please visit <a href="http://www.filesender.org/" target="_blank">www.filesender.org</a></p>
-</div>
+<p>For more technical information about the FileSender software please visit <a href="http://www.filesender.org/" target="_blank">www.filesender.org</a></p>
 </div>';
 
 // site about
