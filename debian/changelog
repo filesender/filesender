@@ -1,3 +1,24 @@
+filesender (1.5~beta4) unstable; urgency=medium
+   * Release 1.5-beta4
+
+   * Changes since 1.5-beta3
+     - Security: make admin check more strict (#751)
+     - Security: Fixed reset of session cookie when switching to HTTPS (#757)
+     - Security: Fixed 2 potential XSS vulnerabilities (#754)
+     - Security: always prevent caching of sensitive pages (#762)
+     - Security: add XSRF checks for POSTs and additional auth-checks for GETs (#753)
+     - Security: add additional recommended PHP settings (#758)
+     - Fixes and improvements in language selection (#662, #745)
+     - Updated language definitions
+     - Disabled HTML5 capability for Opera (#527)
+     - Improvements on handling and reporting of missing required SAML attributes (#628)
+     - Bugfixes in mail error-handling (#713)
+     - Improved  Help text (en_AU only) (#650, #651)
+     - Removed HTML5URL configuration setting (merged into Help text) (#744)
+     - Various small bug fixes (#691, #731, #742, #794)
+
+ -- Filesender Development <filesender-dev@filesender.org>  Wed, 25 Jul 2012 16:01:25 +0200
+
 filesender (1.5~beta3) unstable; urgency=medium
    * Release 1.5-beta3
 
