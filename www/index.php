@@ -376,7 +376,8 @@ function openabout()
 		<?php echo lang("_ABOUT_TEXT"); ?>
 	</div>
 	<div id="dialog-tokenerror" title="<?php echo lang($lang["_MESSAGE"]); ?>" style="display:none"><?php echo lang($lang["_ERROR_CONTACT_ADMIN"]); ?></div>
-		<div id="footer">Version <?php echo FileSender_Version::VERSION; ?></div>
+		<div id="footer"></div>
 		<div id="DoneLoading"></div>
+		<!-- Version <?php echo FileSender_Version::VERSION; ?> -->
 	</body>
 </html>
