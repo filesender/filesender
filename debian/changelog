@@ -8,7 +8,7 @@ filesender (1.5~rc1) unstable; urgency=medium
      - Debug setting set to false in config-dist.php
      - Fixed include files in emailbouncehandler.php
 
- -- Filesender Development <filesender-dev@filesender.org>  ???, ?? ??? 2012 00:00:00 +0200
+ -- Filesender Development <filesender-dev@filesender.org>  Thu, 30 Aug 2012 00:00:00 +0200
 
 filesender (1.5~beta4) unstable; urgency=medium
    * Release 1.5-beta4
