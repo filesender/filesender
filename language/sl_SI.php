@@ -224,7 +224,7 @@ $lang["_HELP_TEXT"] = '
         <li>V primeru da je v zgornjem desnem kotu vmesnika mogoče videti ikono  <img src="images/html5_installed.png" alt="green HTML5 tick" class="textmiddle" style="display:inline" />, lahko prenašate tudi dokumente večje od 2GB.</li>
 	<li>Potrebujete novejši brskalnik, ki podpira HTML5, z zadnjo različico možnosti "jezik na spletu".</li>
 	<li>Trenutno HTML5 podpirajo brskalniki Firefox4 (in novejši) in Chrome, ta oblika prenosa pa preverjeno deluje (z navedenimi različicami) na operacijskih sistemih Windows, Mac OSX in Linux.</li>
-	<li>Uporabite <a href="http://caniuse.com/#feat=fileapi" target="_blank">"Kdaj lahko uporabljam..."</a> spletno stran, kjer je na voljo preglednica HTML5 FileAPI- podpore v glavnih brskalnikih. Bistvena je podpora za <a href="http://caniuse.com/#feat=filereader" target="_blank">FileReader API</a> in <a href="http://caniuse.com/#feat=bloburls" target="_blank">Blob URLs</a>, ki mora biti označena s svetlo zeleno barvo (=je podprto) za brskalnik, da podpira prenose nad 2GB </li>
+	<li>Uporabite <a href="http://caniuse.com/fileapi" target="_blank">"Kdaj lahko uporabljam..."</a> spletno stran, kjer je na voljo preglednica HTML5 FileAPI- podpore v glavnih brskalnikih. Bistvena je podpora za <a href="http://caniuse.com/filereader" target="_blank">FileReader API</a> in <a href="http://caniuse.com/bloburls" target="_blank">Blob URLs</a>, ki mora biti označena s svetlo zeleno barvo (=je podprto) za brskalnik, da podpira prenose nad 2GB </li>
 </ul>
 
 <h4>Prenosi dokumentov vseh velikosti</h4>
