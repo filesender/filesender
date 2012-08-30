@@ -131,14 +131,14 @@ $lang["_SELECT_ANOTHER_FILE"] = "Velg en annen fil.";
 $lang["_INVALID_FILE_NAME"] = "Feilaktig filnavn, filen kan ikke lastes opp.  Gi filen et annet navn og prøv på nytt.";
 $lang["_INVALID_SIZE_USEHTML5"] = "For å sende filer større enn 2GB trenger du en nettleser som støtter HTML5, som f.eks. Chrome og nyerenyer FireFox.";
 
-$lang["_ERROR_CONTACT_ADMIN"] = "Det oppsto en feil.  <br/ >  Ta kontakt med tjeneste-ansvarlig.";
+$lang["_ERROR_CONTACT_ADMIN"] = "Det oppsto en feil.  <br />  Ta kontakt med tjeneste-ansvarlig.";
 $lang["_ERROR_UPLOADING_FILE"] = "Feil under filopplasting";
-$lang["_ERROR_SENDING_EMAIL"] = "Feil under sending av epostene. <br/ >Ta kontakt med tjeneste-ansvarlig.";
-$lang["_ERROR_INCORRECT_FILE_SIZE"] = "Det oppsto en feil under fil-opplasting.  <br/ >Fil har en annen størrelse på tjeneren enn på datamaskinen din. <br />Ta kontakt med tjeneeste-ansvarlig.";
+$lang["_ERROR_SENDING_EMAIL"] = "Feil under sending av epostene. <br />Ta kontakt med tjeneste-ansvarlig.";
+$lang["_ERROR_INCORRECT_FILE_SIZE"] = "Det oppsto en feil under fil-opplasting.  <br />Fil har en annen størrelse på tjeneren enn på datamaskinen din. <br />Ta kontakt med tjeneeste-ansvarlig.";
 $lang["_MAXEMAILS"] = "Tillat antall epost-adresser er ";
 $lang["_INVALID_DATE_FORMAT"] = "Feil dato-format";
 $lang["_DISK_SPACE_ERROR"] = "Tjenesten har ikke nok diskplass.  Ta kontakt med tjeneste-ansvarlig og/eller prøv med en mindre stor fil";
-$lang["_ERROR_ATTRIBUTES"] = "Din påloggings-tjeneste leverer ikke alle obligatoriske attributter knyttet til din nett-identitet. <br/ >Ta kontakt med tjeneste-ansvarlig.";
+$lang["_ERROR_ATTRIBUTES"] = "Din påloggings-tjeneste leverer ikke alle obligatoriske attributter knyttet til din nett-identitet. <br />Ta kontakt med tjeneste-ansvarlig.";
 $lang["_PERMISSION_DENIED"] = "Det du vil gjøre er ikke tillat.";
 
 
@@ -261,7 +261,7 @@ $lang["_HELP_TEXT"] = '
 <h4>Tekniske detaljer</h4>
 <ul>
 <li>
-<i>'. htmlspecialchars($config['site_name']) .'</i> bruker <a href="http://www.filesender.org/" target="_blank">FileSender programvaren</a>.  FileSender antyder om HTML5 opplastning er støttet i en bestemt nettleser, eller ikke.  Dette er primært avhengig av avansert nettleserfunksjonalitet, primært støtte for HTML5 File APIen.  På <a href="http://caniuse.com/fileapi" target="_blank">"When can I use..."</a> nettsiden kan implementasjonsframgang av HTML5-støtten i alle populære nettlesere følges.  Spesielt støtte av <a href="http://caniuse.com/filereader" target="_blank">FileReader API</a> og <a href="http://caniuse.com/bloburls" target="_blank">Blob URL</a> trenger å være lyse-grønnt (=støttet) for at opplastninger større enn 2GB er støttet.  Vær obs på at selv om at det står at Opera 12 støtter HTML5 FileAPI, er det i skrivende stund fortsatt mangler i Operas implementasjon som fører til at HTML5 opplastning ikke fungerer med Opera.
+<i>'. htmlspecialchars($config['site_name']) .'</i> bruker <a href="http://www.filesender.org/" target="_blank">FileSender programvaren</a>.  FileSender antyder om HTML5 opplastning er støttet i en bestemt nettleser, eller ikke.  Dette er primært avhengig av avansert nettleserfunksjonalitet, primært støtte for HTML5 File APIen.  På <a href="http://caniuse.com/fileapi" target="_blank">"When can I use..."</a> nettsiden kan implementasjonsframgang av HTML5-støtten i alle populære nettlesere følges.  Spesielt støtte av <a href="http://caniuse.com/filereader" target="_blank">FileReader API</a> og <a href="http://caniuse.com/bloburls" target="_blank">Blob URL</a> trenger å være lyse-grønnt (=støttet) for at opplastninger større enn 2GB er støttet.  Vær obs på at selv om at det står at Opera 12 støtter HTML5 FileAPI, er det i skrivende stund fortsatt mangler i Operas implementasjon som fører til at HTML5 opplastning ikke fungerer med Opera.</li>
 </ul>
 
     <p>For mer informasjon henvises det til <a href="http://www.filesender.org/" target="_blank">www.filesender.org</a></p>
