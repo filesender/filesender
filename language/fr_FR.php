@@ -224,7 +224,7 @@ $lang["_HELP_TEXT"] = '
     <li>Si vous voyez <img src="images/html5_installed.png" alt="green HTML5 tick" class="textmiddle" style="display:inline" /> dans le coin en haut à droite, cette méthode fonctionne pour vous</li>
 	<li>Vous avez besoin d\'un navigateur web très récent qui supporte HTML5, la version la plus récente du "language du web".</li>
 	<li>Pour l\'instant Firefox4 (ou supérieur) et Chrome sous Windows, Mac OSX et Linux devraient fonctionner.</li>
-	<li>Veuillez utiliser le site web <a href="http://caniuse.com/#feat=fileapi" target="_blank">"When can I use..."</a> pour observer le progrès d\'implémentation de la "HTML5 FileAPI" pour tous les navigateurs web majeurs.  En particulier, <a href="http://caniuse.com/#feat=filereader" target="_blank">"FileReader API"</a> et <a href="http://caniuse.com/#feat=bloburls" target="_blank">"Blob URLs"</a> doivent être marqués en vert clair (=supportés) pour qu\'un navigateur web supporte des fichiers plus gros que 2GO </li>
+	<li>Veuillez utiliser le site web <a href="http://caniuse.com/fileapi" target="_blank">"When can I use..."</a> pour observer le progrès d\'implémentation de la "HTML5 FileAPI" pour tous les navigateurs web majeurs.  En particulier, <a href="http://caniuse.com/filereader" target="_blank">"FileReader API"</a> et <a href="http://caniuse.com/bloburls" target="_blank">"Blob URLs"</a> doivent être marqués en vert clair (=supportés) pour qu\'un navigateur web supporte des fichiers plus gros que 2GO </li>
 </ul>
 
 <h4>Téléchargements de FileSender de toutes tailles</h4>
