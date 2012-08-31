@@ -92,6 +92,8 @@ var n = 0; // file int currently uploading
 
 	function startupload()
 	{
+		
+		$("#uploadbutton").hide(); // hide upload button
 		fdata[n].bytesUploaded = 0;
 		
 		// validate form data and return filesize or validation error
@@ -132,6 +134,7 @@ var n = 0; // file int currently uploading
 		if(result == "err_invalidextension") { $("#extension_msg").show();} //  invalid extension
 		if(result == "err_nodiskspace") { errorDialog(errmsg_disk_space);}
 		})
+		$("#uploadbutton").show(); // show upload butto
 		}
 		if(data.status && data.status == "complete")
 		{
