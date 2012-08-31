@@ -371,6 +371,7 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 
 function returnerrorandclose()
 {
+	global $resultArray, $errorArray;
 	$resultArray["errors"] =  $errorArray;
 	echo json_encode($resultArray);	
 	exit;
