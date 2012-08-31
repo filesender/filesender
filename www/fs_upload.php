@@ -126,11 +126,11 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 		// remove the offending file or it will assume resume evry re-attempt
 		if($data["filesize"] != checkFileSize($uploadfolder.$tempFilename))
 		{
-			logEntry("DEBUG fs_upload: File size incorrect after upload = Original:" .$data["filesize"] . " != Actual:". checkFileSize($uploadfolder.$tempFilename) );
-			logEntry("DEBUG fs_upload: File  ".$tempFilename." was removed to prevent resume");
+			logEntry("DEBUG fs_upload: File size incorrect after upload = Original:" .$data["filesize"] . " != Actual:". checkFileSize($uploadfolder.$tempFilename), E_ERROR );
 			if(file_exists($uploadfolder.$tempFilename))
 			{
 				unlink($uploadfolder.$tempFilename);
+				logEntry("DEBUG fs_upload: File  ".$tempFilename." was removed to prevent resume", E_ERROR);
 			}
 			 array_push($errorArray,  "err_filesizeincorrect");
 			 returnerrorandclose();
@@ -144,8 +144,8 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 	
         	if(!rename($uploadfolder.$tempFilename, $uploadfolder.$fileuid.".tmp")) {
 			array_push($errorArray,  "err_cannotrenamefile");
+            		logEntry("Unable to move the file ".$uploadfolder.$tempFilename, E_ERROR);
 			returnerrorandclose();
-            	logEntry("Unable to move the file ".$uploadfolder.$tempFilename,"E_ERROR");
          	} else {
 				logEntry("Rename the file ".$uploadfolder.$fileuid.".tmp");
 		}
@@ -237,7 +237,7 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 			logEntry("DEBUG fs_upload.php: file moved:". $_FILES['Filedata']['tmp_name'] . " <- ".$tempFilename );
 			echo "true";
 		} else {
-			logEntry("DEBUG fs_upload.php: file NOT moved:". $_FILES['Filedata']['tmp_name'] . " <- ".$tempFilename );
+			logEntry("DEBUG fs_upload.php: file NOT moved:". $_FILES['Filedata']['tmp_name'] . " <- ".$tempFilename, E_ERROR );
 			echo "false";
 		}
 		break;
@@ -365,7 +365,7 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 	} // End switch
 } else {
 	// log and return errorAuth if not authenticated
-	logEntry("fs_upload.php: Error authorising upload :Voucher-".$authvoucher->aVoucher().":SAML-". $authsaml->isAuth());
+	logEntry("fs_upload.php: Error authorising upload :Voucher-".$authvoucher->aVoucher().":SAML-". $authsaml->isAuth(), E_ERROR);
 	echo "ErrorAuth";
 }
 
@@ -400,7 +400,7 @@ function generateTempFilename($data)
 		// voucher upload (cancelled, used in anaother session etc) just generate an auth error.
 		$tempFilename .= $_REQUEST['vid'];
 		logEntry("DEBUG fs_upload: tempfilename 1v2 : ".$tempFilename);
-		logEntry("DEBUG fs_upload.php: Voucher upload error: ".$_REQUEST['vid']);
+		logEntry("DEBUG fs_upload.php: Voucher upload error: ".$_REQUEST['vid'], E_ERROR);
 	        echo "ErrorAuth";
 		exit;
 	}
