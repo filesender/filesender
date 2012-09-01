@@ -173,7 +173,7 @@ function cleanUp() {
 			if (is_file($FilestoreDirectory.$filename)) {
 				// Don't remove the file if mtime is less then 24 hours (86400 seconds) old
 				if (time() - filemtime($FilestoreDirectory.$filename) < 86400) {
-					logProcess("CRON","File NOT removed (last modification less then 24 hours ago ago)".$FilestoreDirectory.$filename);
+					logProcess("CRON","File NOT removed (last modification less then 24 hours ago)".$FilestoreDirectory.$filename);
 				} else {
 					// setting to allow for file wiping
 					if ( empty($config['cron_shred']) ) {
