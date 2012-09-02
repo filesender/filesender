@@ -105,7 +105,7 @@ class AuthSaml {
         }
         // Check for empty or invalid email attribute
         if (empty($attributes["email"]) || !filter_var($attributes["email"],FILTER_VALIDATE_EMAIL)) {
-            logEntry("No valid email attribute found in IDP (".$config['saml_email_attribute'].")","E_ERROR");
+            logEntry("No valid email attribute found in IDP (looking for '".$config['saml_email_attribute']."')","E_ERROR");
             $missing_attributes = TRUE ;
         }
 
@@ -122,7 +122,7 @@ class AuthSaml {
             $attributes["saml_uid_attribute"] = $attributes[$config['saml_uid_attribute']];
         } else {
             // Required UID attribute missing
-            logEntry("UID attribute not found in IDP (".$config['saml_uid_attribute'].")","E_ERROR");
+            logEntry("UID attribute not found in IDP (looking for '".$config['saml_uid_attribute']."')","E_ERROR");
             $missing_attributes = TRUE ;
         }
 
