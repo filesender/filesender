@@ -126,13 +126,13 @@ class AuthSaml {
             $missing_attributes = TRUE ;
         }
 
+        // logs access by a user and users logged on array data
+        // this could be moved to logging function in future versions
         $inglue = '='; 
         $outglue = '&';
         $valsep = '|';
         $message = "";
 
-        // logs access by a user and users logged on array data
-        // this could be moved to logging function in future versions
         foreach ($attributes as $tk => $tv) {
             $message .= (isset($return) ? $return . $outglue : '') . $tk . $inglue . (is_array($tv) ? implode($valsep, $tv) : $tv) . $outglue;
         }
@@ -147,21 +147,13 @@ class AuthSaml {
 
         $message .= "[".$ip."(".$domain.")] ".$_SERVER['HTTP_USER_AGENT'];
 
-        $dateref = date("Ymd");
-        $data = date("Y/m/d H:i:s");
-        $myFile = $config['log_location'].$dateref.".log.txt";
-        $fh = fopen($myFile, 'a') or die("can't open file");
-        $stringData = $data.' [Session ID: '.session_id().'] '.$message."\n";
-        fwrite($fh, $stringData);
-        fclose($fh);
-        closelog();
-
-        //print_r($attributes);
         $attributes["SessionID"] = session_id();
 
         if ($missing_attributes) {
+            logEntry($message, "E_ERROR");
             return "err_attributes";
         } else {
+            logEntry($message, "E_NOTICE");
             return $attributes;
         }
     }
