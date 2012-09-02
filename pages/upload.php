@@ -254,8 +254,9 @@
 		if(!validate_aup() ){validate = false;};		// check AUP is selected
 	}
 	if(!validate_expiry() ){validate = false;};		// check date
-	// vaildate with server
+	// validate with server
 	if(validate) {	
+		$("#uploadbutton a").attr("onclick", ""); // prevent double clicks to start extra uploads
 		var query = $("#form1").serializeArray(), json = {};
 		for (i in query) { json[query[i].name] = query[i].value; } 
 		// add file information fields
@@ -290,6 +291,7 @@
 		if(result == "err_invalidextension") { $("#extension_msg").show();} //  invalid extension
 		if(result == "err_nodiskspace") { errorDialog(errmsg_disk_space);}
 		})
+		$("#uploadbutton a").attr("onclick", "validate()"); // re-activate upload button
 		}
 		if(data.status && data.status == "complete")
 		{
