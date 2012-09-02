@@ -2,10 +2,14 @@ filesender (1.5~rc1) unstable; urgency=medium
    * Release 1.5-rc1
 
    * Changes since 1.5-beta4
-     - Update of default Help text (English, Dutch, Norwegian)
-     - Fixed links to caniuse.com (all languages)
+     - Update of default Help text (English, Dutch, Norwegian) (#650, #651)
      - Updated language definitions
-     - Debug setting set to false in config-dist.php
+     - Fixed links to caniuse.com (all languages)
+     - Debug setting set to false in config-dist.php (#804)
+     - Only log user information when debug is true (#808)
+     - Fixes in error logging (#806)
+     - Disable Send button after first press (#805)
+     - Do not mark Guest Voucher as used when upload fails (#807)
      - Fixed include files in emailbouncehandler.php
 
  -- Filesender Development <filesender-dev@filesender.org>  Thu, 30 Aug 2012 00:00:00 +0200
