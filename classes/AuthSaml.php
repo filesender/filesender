@@ -105,7 +105,7 @@ class AuthSaml {
         }
         // Check for empty or invalid email attribute
         if (empty($attributes["email"]) || !filter_var($attributes["email"],FILTER_VALIDATE_EMAIL)) {
-            logEntry("No valid email attribute found in IDP (".$config['saml_email_attribute'].")","E_ERROR");
+            logEntry("No valid email attribute found in IDP (looking for '".$config['saml_email_attribute']."')","E_ERROR");
             $missing_attributes = TRUE ;
         }
 
@@ -122,17 +122,17 @@ class AuthSaml {
             $attributes["saml_uid_attribute"] = $attributes[$config['saml_uid_attribute']];
         } else {
             // Required UID attribute missing
-            logEntry("UID attribute not found in IDP (".$config['saml_uid_attribute'].")","E_ERROR");
+            logEntry("UID attribute not found in IDP (looking for '".$config['saml_uid_attribute']."')","E_ERROR");
             $missing_attributes = TRUE ;
         }
 
+        // logs access by a user and users logged on array data
+        // this could be moved to logging function in future versions
         $inglue = '='; 
         $outglue = '&';
         $valsep = '|';
         $message = "";
 
-        // logs access by a user and users logged on array data
-        // this could be moved to logging function in future versions
         foreach ($attributes as $tk => $tv) {
             $message .= (isset($return) ? $return . $outglue : '') . $tk . $inglue . (is_array($tv) ? implode($valsep, $tv) : $tv) . $outglue;
         }
@@ -147,21 +147,13 @@ class AuthSaml {
 
         $message .= "[".$ip."(".$domain.")] ".$_SERVER['HTTP_USER_AGENT'];
 
-        $dateref = date("Ymd");
-        $data = date("Y/m/d H:i:s");
-        $myFile = $config['log_location'].$dateref.".log.txt";
-        $fh = fopen($myFile, 'a') or die("can't open file");
-        $stringData = $data.' [Session ID: '.session_id().'] '.$message."\n";
-        fwrite($fh, $stringData);
-        fclose($fh);
-        closelog();
-
-        //print_r($attributes);
         $attributes["SessionID"] = session_id();
 
         if ($missing_attributes) {
+            logEntry($message, "E_ERROR");
             return "err_attributes";
         } else {
+            logEntry($message, "E_NOTICE");
             return $attributes;
         }
     }
