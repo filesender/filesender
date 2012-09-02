@@ -92,6 +92,8 @@ var n = 0; // file int currently uploading
 
 	function startupload()
 	{
+		$("#uploadbutton a").attr("onclick", ""); // prevent double clicks to start extra uploads
+
 		fdata[n].bytesUploaded = 0;
 		
 		// validate form data and return filesize or validation error
@@ -130,8 +132,9 @@ var n = 0; // file int currently uploading
 		if(result == "err_invalidemail") { $("#fileto_msg").show();} // 1 or more emails invalid
 		if(result == "err_invalidfilename") { $("#file_msg").show();} // invalid filename
 		if(result == "err_invalidextension") { $("#extension_msg").show();} //  invalid extension
-		if(result == "err_nodiskspace") { errorDialog(errmsg_disk_space);}
+		if(result == "err_nodiskspace") { errorDialog(errmsg_disk_space);} // not enough disk space on server
 		})
+		$("#uploadbutton a").attr("onclick", "validate()"); // re-activate upload button
 		}
 		if(data.status && data.status == "complete")
 		{
