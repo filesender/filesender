@@ -109,18 +109,8 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 		// rename file to correct name
 		$fileuid = getGUID();
 		
-		
 		// close pending file
 		$functions->closeVoucher($data["fileid"]);
-		
-		// voucher has been used so close it
-		if (isset($_SESSION['voucher'])) {
-			$functions->closeCompleteVoucher($_SESSION['voucher']);
-			logEntry("DEBUG fs_upload: Close voucher = " . $_SESSION['voucher']);
-			$_SESSION['voucher'] = NULL;
-			$_SESSION["aup"] = NULL;
-			$complete = "completev";
-		}
 		
 		// error if file size uploaded doesn't matches the file size intended to upload
 		// remove the offending file or it will assume resume evry re-attempt
@@ -148,6 +138,15 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 			returnerrorandclose();
          	} else {
 				logEntry("Rename the file ".$uploadfolder.$fileuid.".tmp");
+		}
+		
+		// voucher has been used so close it
+		if (isset($_SESSION['voucher'])) {
+			$functions->closeCompleteVoucher($_SESSION['voucher']);
+			logEntry("DEBUG fs_upload: Close voucher = " . $_SESSION['voucher']);
+			$_SESSION['voucher'] = NULL;
+			$_SESSION["aup"] = NULL;
+			$complete = "completev";
 		}
 		
 		$data["fileuid"] = $fileuid;
