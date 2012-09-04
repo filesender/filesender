@@ -290,6 +290,11 @@ $json_o=json_decode($filedata,true);
 		$("#filesubject").val(decodeURIComponent(subject));
 		$("#filemessage").val(decodeURIComponent(message));
 		$("#filesize").html(readablizebytes(filesize));
+		// clear error messages
+		$("#expiry_msg").hide();
+		$("#file_msg").hide();
+		$("#fileto_msg").hide();
+		$("#maxemails_msg").hide();
 		$("#dialog-addrecipient" ).dialog( "open" );
 		
 	}
