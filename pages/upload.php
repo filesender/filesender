@@ -186,7 +186,7 @@
 		
 		// default error message dialogue
 		$("#dialog-uploadprogress").dialog({ 
-		
+		 closeOnEscape: false,
 		    open: function() {
           //Hide closing "X" for this dialog only.
           $(this).parent().children().children("a.ui-dialog-titlebar-close").remove();
@@ -540,6 +540,9 @@ function keepMeAlive()
 		}
 		});	
 }
+
+// special fix for esc key on firefox stopping xhr
+window.addEventListener('keydown', function(e) {(e.keyCode == 27 && e.preventDefault())})
 //]]>
     </script>
 
