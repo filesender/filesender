@@ -540,10 +540,10 @@ function keepMeAlive()
 		}
 		});	
 }
-//]]>
 
-// sepcial fix for esc key on firefox stoping xhr
+// special fix for esc key on firefox stopping xhr
 window.addEventListener('keydown', function(e) {(e.keyCode == 27 && e.preventDefault())})
+//]]>
     </script>
 
 <div id="box"> <?php echo '<div id="pageheading">'.lang("_UPLOAD").'</div>'; ?>
