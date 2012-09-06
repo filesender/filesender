@@ -153,8 +153,9 @@ $json_o=json_decode($filedata,true);
 				$( this ).dialog( "close" );
 				},
 				'sendBTN': function() { 
-				resend();
+				$("#busySpinner").show();
 				$( this ).dialog( "close" );
+				resend();
 				}
 			}
 		});
@@ -187,8 +188,11 @@ $json_o=json_decode($filedata,true);
 					$("#filemessage").val("");
 					$( this ).dialog( "close" );
 				},
-				'addrecipientsendBTN': function() { 
-				// calidate form before sending
+				'addrecipientsendBTN': function(evt) { 
+				  var buttonDomElement = evt.target;
+                // Disable the send button to prevent duplicate sending
+                $(buttonDomElement).attr('disabled', true);
+
 				if(validateForm())
 				{
 				// post form1 as json
@@ -220,6 +224,8 @@ $json_o=json_decode($filedata,true);
 				if(result == "err_invalidemail") { $("#fileto_msg").show();} // 1 or more emails invalid
 				if(result == "err_emailnotsent") {window.location.href="index.php?s=emailsenterror";} //
 				})
+				// re-enable button if client needs to fix an issue
+				$('#btn_addrecipientsend').attr("disabled", false);
 				} else {
 				if(data.status && data.status == "complete")
 				{
