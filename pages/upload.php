@@ -186,7 +186,7 @@
 		
 		// default error message dialogue
 		$("#dialog-uploadprogress").dialog({ 
-		
+		 closeOnEscape: false,
 		    open: function() {
           //Hide closing "X" for this dialog only.
           $(this).parent().children().children("a.ui-dialog-titlebar-close").remove();
@@ -541,6 +541,9 @@ function keepMeAlive()
 		});	
 }
 //]]>
+
+// sepcial fix for esc key on firefox stoping xhr
+window.addEventListener('keydown', function(e) {(e.keyCode == 27 && e.preventDefault())})
     </script>
 
 <div id="box"> <?php echo '<div id="pageheading">'.lang("_UPLOAD").'</div>'; ?>
