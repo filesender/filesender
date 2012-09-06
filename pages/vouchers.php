@@ -123,7 +123,8 @@ function postVoucher()
 	hidemessages();
 	$("#busySpinner").show();
 	// post voucher data from form
-		
+	 $("#voucherbutton").attr('onclick', '');
+	 	
 	var query = $("#form1").serializeArray(), json = {};
 	for (i in query) {json[query[i].name] = query[i].value;} // create json from form1
 	// post to fs_upload.php
@@ -145,6 +146,9 @@ function postVoucher()
 		if(result == "") { $("#_noauth").show();} // server returns not authenticated
 		if(result == "err_emailnotsent") {window.location.href="index.php?s=emailsenterror";} //
 		})
+		// re-enable button if client needs to change form details
+		$("#voucherbutton").attr('onclick', 'validateForm()');
+		$("#busySpinner").hide();
 		return;
 		}
 		if(data.status && data.status == "complete") {  window.location.href="index.php?s=vouchers&a=complete";	}
