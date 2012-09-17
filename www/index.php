@@ -82,7 +82,9 @@ if(!$authvoucher->aVoucher() && !$authsaml->isAuth() && $s != "complete" && $s !
 <link rel="icon" href="favicon.ico" type="image/x-icon" />
 <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
 <link type="text/css" href="css/smoothness/jquery-ui-1.8.2.custom.css" rel="Stylesheet" />
+<link rel="stylesheet" type="text/css" href="css/jquery.dataTables.css" />
 <link rel="stylesheet" type="text/css" href="css/default.css" />
+<script type="text/javascript" src="js/jquery.dataTables.min.js" ></script>
 <script type="text/javascript" src="js/json2.js" ></script>
 <script type="text/javascript" src="js/common.js" ></script>
 <script type="text/javascript" src="js/jquery-1.7.min.js" ></script>
@@ -162,6 +164,7 @@ function openabout()
 	if($authsaml->isAuth() ) { echo '<a id="topmenu_vouchers" href="index.php?s=vouchers">'.lang("_VOUCHERS").'</a>'; }
 	if($authsaml->isAuth() ) {echo '<a id="topmenu_myfiles" href="index.php?s=files">'.lang("_MY_FILES").'</a>'; }
 	if($authsaml->authIsAdmin() ) { echo '<a id="topmenu_admin" href="index.php?s=admin">'.lang("_ADMIN").'</a>'; }
+	if($authsaml->isAuth() ) { echo '<a id="topmenu_summary" href="testsummary.php?email='.$useremail  .'" target="_blank">Send Summary</a>'; }
   }
   ?>
   	</div>

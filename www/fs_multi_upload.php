@@ -154,7 +154,7 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 		foreach ($emailArray as $Email) { 
 			$data["fileto"] = $Email;
 			$data["filevoucheruid"] = getGUID();
-			
+			$data["rtnemail"] = $_REQUEST['rtnemail']; // checkbox result to send email to auth user
 			logEntry("DEBUG fs_upload: Filedata = " . print_r($data,TRUE));
 			$functions->insertFile($data);
 		}

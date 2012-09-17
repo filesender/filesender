@@ -125,6 +125,68 @@ class Functions {
         return self::$instance;
     } 
 	
+	// cron runs a summary of all activity for the last 24 hours and sends a summary email to all users of their activity
+	public function emailSummary()
+	{
+	$addemail = "";
+	 if(isset($_REQUEST["email"]) && filter_var($_REQUEST["email"],FILTER_VALIDATE_EMAIL)) {
+	$addemail = " filefrom = '".$_REQUEST["email"]."' AND";
+	 }
+		
+		// get all authuserid's that have activity that has not been tagged as sent.
+		global $config;
+		// get todays date
+		$statement =   $this->db->fquery("SELECT DISTINCT(filefrom) FROM files INNER JOIN logs ON files.fileauthuseruid = logs.logauthuseruid WHERE ".$addemail. " (logtype = 'Uploaded' OR logtype = 'Download') AND logsent = 0  ORDER BY logdate ASC");
+		$statement->execute();
+		$count = $statement->rowCount();
+		if($count)
+		{
+		//echo "Users:".$count."<br><br>";
+		//// generate summary
+			$result = $statement->fetchAll();
+			
+       	 	foreach($result as $row)
+       	 	{
+				$summary = "File activity for '".$row["filefrom"]."'.\n\n";
+       		 	$statementFiles =   $this->db->fquery("SELECT DISTINCT(logfileuid) FROM logs WHERE logfrom = '".$row["filefrom"]."' AND (  logtype = 'Uploaded' OR logtype = 'Download') AND logsent = 0 ORDER BY logdate DESC");
+				$statementFiles->execute();
+				$resultFiles = $statementFiles->fetchAll();  
+				$countFiles = $statementFiles->rowCount();
+				if($countFiles > 0)
+				{
+				//echo "<br>$countFiles:".$countFiles;
+				foreach($resultFiles as $rowFiles)
+       	 			{
+							//echo "logfileuid:".$rowFiles["logfileuid"]."<br>";
+							$statementLogs =   $this->db->fquery("SELECT * FROM logs WHERE logfileuid = '".$rowFiles["logfileuid"]."' AND (  logtype = 'Uploaded'  OR logtype = 'Download')  AND logsent = 0 ORDER BY logdate ASC");
+							//echo "<BR><BR>SELECT * FROM logs WHERE logfileuid = '".$rowFiles["logfileuid"]."' AND (  logtype = 'Uploaded' OR logtype = 'Download' OR logtype = 'Voucher Created')  AND logsent = 0 ORDER BY logdate ASC";
+							$statementLogs->execute();
+							$resultLogs = $statementLogs->fetchAll();  
+							$countLogs = $statementLogs->rowCount();
+							//echo "<br>$countLogs:".$countLogs;
+							if($countLogs > 0)
+							{
+							
+							$summary .= "\n\n".$resultLogs[0]["logfilename"]." Size: ".formatBytes($resultLogs[0]["logfilesize"])."\n";
+			
+							foreach($resultLogs as $rowLogs)
+       	 						{
+									$summary .= "[".$rowLogs["logdate"]."] ".$rowLogs["logtype"]. " by ".$rowLogs["logfrom"]." \n";
+									// mark as sent
+									//$statementFilesSent =   $this->db->fquery("UPDATE logs SET logsent = 1 WHERE logid = '".$rowLogs["logid"]."'");
+									//$statementFilesSent->execute();
+								}
+							}
+						}	
+        			}	
+						echo $summary;
+						$summary .="\n";
+						// email this summary
+						$this->sendmail->sendSummary($row["filefrom"],$summary);
+						}
+		}	
+		$pdo = NULL;
+	}
     //--------------------------------------- CHECKED
     // Return Basic Database Statistics e.g. Up xx Gb (files xx) | Down xx Gb (files xx)
 	// ---------------------------------------
