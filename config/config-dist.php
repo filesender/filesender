@@ -57,7 +57,7 @@ public function loadConfig() {
 	$config['Default_TimeZone'] = 'Australia/Sydney';
 	$config['site_defaultlanguage'] = 'en_AU'; // for available languages see the ./language directory
 	$config['site_name'] = 'FileSender'; // Friendly name used for your FileSender instance
-	
+	$config['noreply'] = 'noreply@filesender.org'; // default no-reply email address 
 
 	// UI Settings
 	$config['datedisplayformat'] = "d-m-Y"; // Format for displaying date/time, use PHP date() format string syntax
@@ -113,6 +113,7 @@ public function loadConfig() {
 	$config['site_downloadurl'] = $config['site_url'] . 'files/'; // * Deprecated *
 	}
 	$config['forceSSL'] = true; // Always use SSL (true/false)
+	
 	
 	// Support links
 	$config['aboutURL'] = "";

@@ -650,6 +650,12 @@ if ( hasProductInstall && !hasRequestedVersion ) {
       </tr>
       <?php } ?>
 	   <tr>
+	     <td class="" id="upload_subject">&nbsp;</td>
+	     <td colspan="2">Send copy of emails to me
+	       <input name="rtnemail" type="checkbox" id="rtnemail" style="float:left; width:20px;" />
+	     </td>
+      </tr>
+	   <tr>
         <td class="" id="upload_subject"><?php echo lang("_SUBJECT"); ?>: (<?php echo lang("_OPTIONAL"); ?>)</td>
         <td colspan="2"><input name="filesubject" type="text" id="filesubject" />        </td>
         </tr>

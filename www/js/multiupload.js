@@ -190,7 +190,7 @@ function uploadFile() {
 			var query = $("#form1").serializeArray(), json = {};
 					$.ajax({
   					type: "POST",
-  					url: "fs_multi_upload.php?type=uploadcomplete&vid="+vid+"&n="+n
+  					url: "fs_multi_upload.php?type=uploadcomplete&vid="+vid+"&n="+n+"&rtnemail="+$("#rtnemail").prop('checked')
 					}).success(function( data ) {
 					if(data == "err_cannotrenamefile")
 					{

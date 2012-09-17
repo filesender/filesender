@@ -101,6 +101,13 @@ class Mail {
         $headers .= "Content-Type: multipart/alternative; boundary=simple_mime_boundary".$crlf;
         $headers .= "X-FileSenderUID: ".$mailobject["filevoucheruid"].$crlf;
 
+		//$template .= "rtnemail:".isset($mailobject['rtnemail']);
+		
+		// Need to use $config['noreply'] so that sender does not get bombarded with emails
+		if(isset($mailobject['rtnemail']) && $mailobject['rtnemail'] == "false" && isset($config['noreply']))
+		{
+		$mailobject['filefrom'] = $config['noreply'];
+		}
         // RFC2822 Originator of the message
         if(!filter_var($mailobject['filefrom'],FILTER_VALIDATE_EMAIL)) {return false;}
         $headers .= "From: <".$mailobject['filefrom'].">".$crlf;
@@ -126,11 +133,15 @@ class Mail {
 
         // file or voucher is being used then bcc fileauthuseremail a copy so voucher creator knows a file was sent as they are responsible for the use of the voucher
        // if($authvoucher->aVoucher()) {
-            if(isset($mailobject['fileauthuseremail'])){
-                if(!filter_var($mailobject['fileauthuseremail'],FILTER_VALIDATE_EMAIL)) {return false;}
-                $headers .= "Bcc: <".$mailobject['fileauthuseremail'].">".$crlf;
-            }
-        //}
+	   
+       // ------ They will get this in  the email summary instead - Chris R
+	   //     if(isset($mailobject['fileauthuseremail'])){
+       //         if(!filter_var($mailobject['fileauthuseremail'],FILTER_VALIDATE_EMAIL)) {return false;}
+       //         $headers .= "Bcc: <".$mailobject['fileauthuseremail'].">".$crlf;
+       //     }
+       // ------
+	   
+	    //}
 
         // Subject of message
         if(isset($mailobject['filesubject']) && $mailobject['filesubject'] != "" && $type != 'bounce'){
@@ -161,7 +172,7 @@ class Mail {
         if ( $body_encoding == 'ISO-8859-1' ) {
             $template = iconv("UTF-8", "ISO-8859-1", $template);
         }
-
+		
         $body = wordwrap($template,70);
 
         if (mail($to, $subject, $body, $headers, $returnpath)) {
@@ -171,6 +182,38 @@ class Mail {
        }
     }
 
+	//---------------------------------------
+    // Send summary 
+    // 	
+	
+	 public function sendSummary($to,$message){
+
+        // sends a summary 
+
+        global $config;
+
+        $crlf = $config["crlf"];
+
+        $headers = "MIME-Version: 1.0".$crlf;
+        $headers .= "Content-Type: multipart/alternative; boundary=simple_mime_boundary".$crlf;
+        //$headers .= "From: noreply@".$_SERVER['HTTP_HOST'].$crlf;
+ 		$headers .= "From: ".$to.$crlf;
+        //$headers .= "Reply-To: ".$to.$crlf;
+        //$returnpath = "-r".$mailobject['filefrom'].$crlf;
+
+        if(!filter_var($to,FILTER_VALIDATE_EMAIL)) {return false;}
+
+        $subject =   $config['site_name']." - Summary for " .$to;
+        $body = wordwrap($crlf ."--simple_mime_boundary".$crlf ."Content-type:text/plain; charset=iso-8859-1".$crlf.$crlf .$message,70);
+		
+		
+        if (mail($to, $subject, $message, $headers)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+	
     //---------------------------------------
     // Send admin mail messages
     // 	
