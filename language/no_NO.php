@@ -166,7 +166,7 @@ $lang["_FILE_DELETED"] = "Fil slettet";
 
 
 
-$lang["_START_DOWNLOAD"] = "Begyn nedlastning";
+$lang["_START_DOWNLOAD"] = "Begynn nedlastning";
 $lang["_VOUCHER_SENT"] = "Invitasjon sendt";
 $lang["_VOUCHER_DELETED"] = "Invitasjon slettet";
 $lang["_VOUCHER_CANCELLED"] = "Denne filen eller invitasjonen har blitt utilgjengeliggjort.";
