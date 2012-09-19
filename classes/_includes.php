@@ -30,7 +30,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 $filesenderbase = dirname(dirname(__FILE__));
 if(file_exists("$filesenderbase/config/config.php")) { 
 require_once("$filesenderbase/config/config.php");
@@ -56,9 +55,4 @@ require_once("$filesenderbase/classes/AuthVoucher.php");
 require_once("$filesenderbase/classes/Mail.php");
 require_once("$filesenderbase/classes/Log.php");
 require_once("$filesenderbase/classes/DB_Input_Checks.php");
-require_once("$filesenderbase/config/ud_db.php");
-
-
-
-
 ?>
