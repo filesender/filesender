@@ -131,12 +131,12 @@ class Functions {
 	$addemail = "";
 	 if(isset($_REQUEST["email"]) && filter_var($_REQUEST["email"],FILTER_VALIDATE_EMAIL)) {
 	$addemail = " filefrom = '".$_REQUEST["email"]."' AND";
-	 }
+	 } 
 		
 		// get all authuserid's that have activity that has not been tagged as sent.
 		global $config;
 		// get todays date
-		$statement =   $this->db->fquery("SELECT DISTINCT(filefrom) FROM files INNER JOIN logs ON files.fileauthuseruid = logs.logauthuseruid WHERE ".$addemail. " (logtype = 'Uploaded' OR logtype = 'Download') AND logsent = 0  ORDER BY logdate ASC");
+		$statement =   $this->db->fquery("SELECT DISTINCT(filefrom) FROM files INNER JOIN logs ON files.fileauthuseruid = logs.logauthuseruid WHERE ".$addemail. " (logtype = 'Uploaded' OR logtype = 'Download') AND (logs.logdate > DATE_SUB(CURDATE(), INTERVAL 7 DAY))  ORDER BY logdate ASC");
 		$statement->execute();
 		$count = $statement->rowCount();
 		if($count)
@@ -148,7 +148,7 @@ class Functions {
        	 	foreach($result as $row)
        	 	{
 				$summary = "File activity for '".$row["filefrom"]."'.\n\n";
-       		 	$statementFiles =   $this->db->fquery("SELECT DISTINCT(logfileuid) FROM logs WHERE logfrom = '".$row["filefrom"]."' AND (  logtype = 'Uploaded' OR logtype = 'Download') AND logsent = 0 ORDER BY logdate DESC");
+       		 	$statementFiles =   $this->db->fquery("SELECT DISTINCT(logfileuid) FROM logs WHERE logfrom = '".$row["filefrom"]."' AND (  logtype = 'Uploaded' OR logtype = 'Download') AND (logs.logdate > DATE_SUB(CURDATE(), INTERVAL 7 DAY)) ORDER BY logdate DESC");
 				$statementFiles->execute();
 				$resultFiles = $statementFiles->fetchAll();  
 				$countFiles = $statementFiles->rowCount();
@@ -158,7 +158,7 @@ class Functions {
 				foreach($resultFiles as $rowFiles)
        	 			{
 							//echo "logfileuid:".$rowFiles["logfileuid"]."<br>";
-							$statementLogs =   $this->db->fquery("SELECT * FROM logs WHERE logfileuid = '".$rowFiles["logfileuid"]."' AND (  logtype = 'Uploaded'  OR logtype = 'Download')  AND logsent = 0 ORDER BY logdate ASC");
+							$statementLogs =   $this->db->fquery("SELECT * FROM logs WHERE logfileuid = '".$rowFiles["logfileuid"]."' AND (  logtype = 'Uploaded'  OR logtype = 'Download')  AND (logs.logdate > DATE_SUB(CURDATE(), INTERVAL 7 DAY)) ORDER BY logdate ASC");
 							//echo "<BR><BR>SELECT * FROM logs WHERE logfileuid = '".$rowFiles["logfileuid"]."' AND (  logtype = 'Uploaded' OR logtype = 'Download' OR logtype = 'Voucher Created')  AND logsent = 0 ORDER BY logdate ASC";
 							$statementLogs->execute();
 							$resultLogs = $statementLogs->fetchAll();  
@@ -179,7 +179,7 @@ class Functions {
 							}
 						}	
         			}	
-						echo $summary;
+						echo "Summary for last 7 days has been emailed to ".$row["filefrom"].".<BR>";
 						$summary .="\n";
 						// email this summary
 						$this->sendmail->sendSummary($row["filefrom"],$summary);

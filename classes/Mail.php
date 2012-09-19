@@ -206,7 +206,6 @@ class Mail {
         $subject =   $config['site_name']." - Summary for " .$to;
         $body = wordwrap($crlf ."--simple_mime_boundary".$crlf ."Content-type:text/plain; charset=iso-8859-1".$crlf.$crlf .$message,70);
 		
-		
         if (mail($to, $subject, $message, $headers)) {
             return true;
         } else {
