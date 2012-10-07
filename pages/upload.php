@@ -116,7 +116,8 @@
 		$("#datepicker" ).datepicker({ minDate: new Date(minimumDate), maxDate: new Date(maximumDate),altField: "#fileexpirydate", altFormat: "d-m-yy" });
 		$("#datepicker" ).datepicker( "option", "dateFormat", "<?php echo lang("_DP_dateFormat"); ?>" );
 		$("#datepicker").datepicker("setDate", new Date(maximumDate));
-			
+		$('#ui-datepicker-div').css('display','none');
+	
 		// set datepicker language
 		$.datepicker.setDefaults({
 		closeText: '<?php echo lang("_DP_closeText"); ?>',
