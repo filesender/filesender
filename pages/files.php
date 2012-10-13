@@ -153,7 +153,6 @@ $json_o=json_decode($filedata,true);
 				$( this ).dialog( "close" );
 				},
 				'sendBTN': function() { 
-				$("#busySpinner").show();
 				$( this ).dialog( "close" );
 				resend();
 				}

@@ -265,7 +265,6 @@ function openabout()
 		echo "</div>";
 	}
 	?>
-	<img src="images/ajax-loader-sm.gif" alt="Sending" name="busySpinner" align="left" id="busySpinner" style="display:none;padding-left:6px" />	
 	<div id="serviceinfo">
 	<a onclick="openhelp()" style="cursor:pointer;" id="html5link" name="html5link"><img alt="" name="html5image" width="75" height="18" border="0" id="html5image" style="display:none" title="" src=""/></a></div>
 	<?php
