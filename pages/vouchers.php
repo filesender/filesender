@@ -121,7 +121,6 @@ function confirmdelete(vid)
 function postVoucher()
 {
 	hidemessages();
-	$("#busySpinner").show();
 	// post voucher data from form
 	 $("#voucherbutton").attr('onclick', '');
 	 	
@@ -148,17 +147,13 @@ function postVoucher()
 		})
 		// re-enable button if client needs to change form details
 		$("#voucherbutton").attr('onclick', 'validateForm()');
-		$("#busySpinner").hide();
 		return;
 		}
 		if(data.status && data.status == "complete") {  window.location.href="index.php?s=vouchers&a=complete";	}
-		$("#busySpinner").hide();
 		},error:function(xhr,err){
-		$("#busySpinner").hide();
 			// error function to display error message e.g.404 page not found
 			ajaxerror(xhr.readyState,xhr.status,xhr.responseText);
 		}
-		
 	});
 }
 //]]>
