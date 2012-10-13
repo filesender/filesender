@@ -32,8 +32,9 @@
 
 /*
 ** Spanish translation/version by:
-**  March 2012: fco.sanchez@unia.es and vjhergom@cic.upo.es
-**   July 2012: fco.sanchez@unia.es
+**     March 2012: fco.sanchez@unia.es and vjhergom@cic.upo.es
+**      July 2012: fco.sanchez@unia.es
+** September 2012: fco.sanchez@unia.es
 */
 
 /* ---------------------------------
@@ -131,7 +132,7 @@ $lang["_FILE_TO_BE_RESENT"] = "Archivo a compartir";
 $lang["_ERROR_UPLOADING_FILE"] = "Error al subir el archivo";
 $lang["_ERROR_SENDING_EMAIL"] = "Ha habido un problema con el envío de correo. P&oacute;ngase en contacto con su Centro de Atenci&oacute;n al Usuario";
 $lang["_ERROR_INCORRECT_FILE_SIZE"] = "Ha habido un problema con la subida del archivo. <br />El tamaño en el servidor no coincide con el del archivo origninal. <br />P&oacute;ngase en contacto con su Centro de Atenci&oacute;n al Usuario";
-$lang["_MAXEMAILS"] = "El n&uacute;mero m&aaacute;ximo de destinatarios del correo son";
+$lang["_MAXEMAILS"] = "El n&uacute;mero m&aacute;ximo de destinatarios del correo son";
 $lang["_INVALID_DATE_FORMAT"] = "Formato de fecha err&oacute;o";
 $lang["_DISK_SPACE_ERROR"] = "Espacio de disco insuficiente. P&oacute;ngase en contacto con su Centro de Atenci&oacute;n al Usuario o suba un archivo menor";
 $lang["_ERROR_ATTRIBUTES"] = "Su Proveedor de Identidad no est&aacute; enviando todos los atributos requeridos. P&oacute;ngase en contacto con su Centro de Atenci&oacute;n al Usuario.";
@@ -143,7 +144,7 @@ $lang["_LOGOUT_COMPLETE"] = "Logout completado";
 // vouchers
 $lang["_SEND_NEW_VOUCHER"] = "Con las \"Invitaciones de env&iacute;o\", cualquiera puede enviale un archivo.<br />
 Para generar una \"Invitaci&oacute;n de env&iacute;o\", escriba una direcci&oacute;n de correo y pulse en \"Enviar la Invitaci&oacute;n\".<br />
-El destinatario recibir&aacute; un correo con un enlace a la Invitaci&oacute;n.<p>";
+El destinatario recibir&aacute; un correo con un enlace a la Invitaci&oacute;n.";
 $lang["_EMAIL_SEPARATOR_MSG"] = "M&uacute;ltiples direcciones de correo separadas por ',' o ';'";
 
 $lang["_NO_FILES"] = "No hay archivos disponbles";
@@ -258,6 +259,6 @@ $lang["_HELP_TEXT"] = '
 $lang["_ABOUT_TEXT"] = ' <div align="left" style="padding:5px">'. '"'. htmlspecialchars($config['site_name']) .'" es una instalaci&oacute;n de FileSender (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>), desarrollado atendiendo a los requerimientos de la Comunidad de Investigaci&oacute;n y Educaci&oacute;n Superior.</div>';
 
 // site AUP terms
-$lang["_AUPTERMS"] = "Pol&iacute;tica de Uso Aceptable - Conciciones de Servicio";
+$lang["_AUPTERMS"] = "Pol&iacute;tica de Uso Aceptable - Condiciones de Servicio";
 
 ?>
