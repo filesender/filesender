@@ -129,6 +129,7 @@ $lang["_MAXEMAILS"] = "Il numero massimo di indirizzi email è ";
 $lang["_INVALID_DATE_FORMAT"] = "Il formato della data non è valido";
 $lang["_DISK_SPACE_ERROR"] = "Non c'è sufficiente spazio disco su questo server. Per favore contatta l'amministrazione del servizio o carica un file di dimensioni minori.";
 $lang["_ERROR_ATTRIBUTES"] = "Il tuo identity provider non sta rilasciando gli attributi richiesti. Contatta il tuo amministratore";
+$lang["_PERMISSION_DENIED"] = "Non hai l\'autorizzazione per fare questo.";
 $lang["_ERROR_CONTACT_ADMIN"] = "Si è verificato un errore, si prega di contattare il tuo amministratore";
 
 // Logout page
