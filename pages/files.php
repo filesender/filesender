@@ -290,6 +290,8 @@ $json_o=json_decode($filedata,true);
 		$("#filesubject").val(decodeURIComponent(subject));
 		$("#filemessage").val(decodeURIComponent(message));
 		$("#filesize").html(readablizebytes(filesize));
+		$("#fileto").val("");
+		$("#datepicker").datepicker("setDate", new Date(maximumDate));
 		// clear error messages
 		$("#expiry_msg").hide();
 		$("#file_msg").hide();
