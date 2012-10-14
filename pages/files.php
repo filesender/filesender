@@ -153,8 +153,8 @@ $json_o=json_decode($filedata,true);
 				$( this ).dialog( "close" );
 				},
 				'sendBTN': function() { 
-				resend();
 				$( this ).dialog( "close" );
+				resend();
 				}
 			}
 		});
@@ -188,51 +188,55 @@ $json_o=json_decode($filedata,true);
 					$( this ).dialog( "close" );
 				},
 				'addrecipientsendBTN': function() { 
-				// calidate form before sending
-				if(validateForm())
-				{
-				// post form1 as json
-				var query = $("#form1").serializeArray(), json = {};
-				for (i in query) { json[query[i].name] = query[i].value; } 
+					// Disable the send button to prevent duplicate sending
+					$('#btn_addrecipientsend').attr("disabled", true);
+
+					if(validateForm())
+					{
+						// post form1 as json
+						var query = $("#form1").serializeArray(), json = {};
+						for (i in query) { json[query[i].name] = query[i].value; } 
 				
-				$.ajax({
-  				type: "POST",
-				url: "fs_upload.php?type=addRecipient",
-				data: {myJson:  JSON.stringify(json)}
-				,success:function( data ) {
-				if(data == "") {
-				alert("No response from server");
-				return;	
-				}
-				if(data == "ErrorAuth")
-				{
-					$("#dialog-autherror").dialog("open");
-					return;			
-				}
-				var data =  parseJSON(data);
-				if(data.errors)
-				{
-				$.each(data.errors, function(i,result){
-				if(result == "err_token") { $("#dialog-tokenerror").dialog("open");} // token missing or error
-				if(result == "err_tomissing") { $("#fileto_msg").show();} // missing email data
-				if(result == "err_expmissing") { $("#expiry_msg").show();} // missing expiry date
-				if(result == "err_exoutofrange") { $("#expiry_msg").show();} // expiry date out of range
-				if(result == "err_invalidemail") { $("#fileto_msg").show();} // 1 or more emails invalid
-				if(result == "err_emailnotsent") {window.location.href="index.php?s=emailsenterror";} //
-				})
-				} else {
-				if(data.status && data.status == "complete")
-				{
-				// done
-				window.location.href="index.php?s=files&a=added";
-				}
-				}
-				},error:function(xhr,err){
-				// error function to display error message e.g.404 page not found
-				ajaxerror(xhr.readyState,xhr.status,xhr.responseText);
-				}
-				});
-				}
+						$.ajax({
+							type: "POST",
+							url: "fs_upload.php?type=addRecipient",
+							data: {myJson:  JSON.stringify(json)}
+							,success:function( data ) {
+								if(data == "") {
+									alert("No response from server");
+									return;	
+								}
+								if(data == "ErrorAuth")
+								{
+									$("#dialog-autherror").dialog("open");
+									return;
+								}
+								var data =  parseJSON(data);
+								if(data.errors)
+								{
+									$.each(data.errors, function(i,result){
+										if(result == "err_token") { $("#dialog-tokenerror").dialog("open");} // token missing or error
+										if(result == "err_tomissing") { $("#fileto_msg").show();} // missing email data
+										if(result == "err_expmissing") { $("#expiry_msg").show();} // missing expiry date
+										if(result == "err_exoutofrange") { $("#expiry_msg").show();} // expiry date out of range
+										if(result == "err_invalidemail") { $("#fileto_msg").show();} // 1 or more emails invalid
+										if(result == "err_emailnotsent") {window.location.href="index.php?s=emailsenterror";} //
+									})
+									// re-enable button if client needs to fix an issue
+									$('#btn_addrecipientsend').attr("disabled", false);
+								} else {
+									if(data.status && data.status == "complete")
+									{
+										// done
+										window.location.href="index.php?s=files&a=added";
+									}
+								}
+							},error:function(xhr,err){
+								// error function to display error message e.g.404 page not found
+								ajaxerror(xhr.readyState,xhr.status,xhr.responseText);
+							}
+						});
+					}
 				}
 			}
 		});
