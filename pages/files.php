@@ -187,10 +187,9 @@ $json_o=json_decode($filedata,true);
 					$("#filemessage").val("");
 					$( this ).dialog( "close" );
 				},
-				'addrecipientsendBTN': function(evt) { 
-				  var buttonDomElement = evt.target;
-                // Disable the send button to prevent duplicate sending
-                $(buttonDomElement).attr('disabled', true);
+				'addrecipientsendBTN': function() { 
+				// Disable the send button to prevent duplicate sending
+				$('#btn_addrecipientsend').attr("disabled", true);
 
 				if(validateForm())
 				{
