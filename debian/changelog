@@ -5,12 +5,15 @@ filesender (1.5~rc1) unstable; urgency=medium
      - Update of default Help text (English, Dutch, Norwegian) (#650, #651)
      - Updated language definitions
      - Fixed links to caniuse.com (all languages)
+     - Disable Send button after first press (#805, #811, #812)
+     - Do not mark Guest Voucher as used when upload fails (#807)
+     - Prevent erroneous showing of DatePicker in recent Chrome versions (#823)
      - Debug setting set to false in config-dist.php (#804)
      - Only log user information when debug is true (#808)
-     - Fixes in error logging (#806)
-     - Disable Send button after first press (#805)
-     - Do not mark Guest Voucher as used when upload fails (#807)
+     - Fixes and enhancements in error logging (#806, #808)
+     - Remove dependency on php-gmp (#813)
      - Fixed include files in emailbouncehandler.php
+     - Various small changes and bug fixes (#709, #794, #809, #810)
 
  -- Filesender Development <filesender-dev@filesender.org>  Thu, 30 Aug 2012 00:00:00 +0200
 
