@@ -237,6 +237,8 @@ $json_o=json_decode($filedata,true);
 							}
 						});
 					}
+					// enable button to allow fixing any validation errors
+					$('#btn_addrecipientsend').attr("disabled", false);
 				}
 			}
 		});
