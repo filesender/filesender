@@ -236,9 +236,10 @@ $json_o=json_decode($filedata,true);
 								ajaxerror(xhr.readyState,xhr.status,xhr.responseText);
 							}
 						});
+					} else {
+						// enable button to allow fixing any validation errors
+						$('#btn_addrecipientsend').attr("disabled", false);
 					}
-					// enable button to allow fixing any validation errors
-					$('#btn_addrecipientsend').attr("disabled", false);
 				}
 			}
 		});
