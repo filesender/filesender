@@ -16,7 +16,7 @@ Version 1.5-rc1 <?? ?? 2012>
      - Fixes in error logging (#806)
      - Remove dependency on php-gmp (#813)
      - Fixed include files in emailbouncehandler.php
-     - Various small changes and bug fixes (#709, #794, #809, #810)
+     - Various small changes and bug fixes (#709, #794, #809, #810, #828)
 
 Version 1.5-beta4 <25 July 2012>
 
