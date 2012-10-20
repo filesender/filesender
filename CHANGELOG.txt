@@ -13,7 +13,7 @@ Version 1.5-rc1 <?? ?? 2012>
      - Prevent erroneous showing of DatePicker in recent Chrome versions (#823)
      - Debug setting set to false in config-dist.php (#804)
      - Only log user information when debug is true (#808)
-     - Fixes and enhancements in error logging (#806, #808)
+     - Fixes in error logging (#806)
      - Remove dependency on php-gmp (#813)
      - Fixed include files in emailbouncehandler.php
      - Various small changes and bug fixes (#709, #794, #809, #810)
