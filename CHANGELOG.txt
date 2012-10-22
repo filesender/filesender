@@ -1,6 +1,6 @@
-Last update: 14 October 2012
+Last update: 22 October 2012
 
-Version 1.5-rc1 <?? ?? 2012>
+Version 1.5-rc1 <22 October 2012>
 
    * Release 1.5-rc1
 
