@@ -15,7 +15,7 @@ filesender (1.5~rc1) unstable; urgency=medium
      - Fixed include files in emailbouncehandler.php
      - Various small changes and bug fixes (#709, #794, #809, #810, #828)
 
- -- Filesender Development <filesender-dev@filesender.org>  Mon, 22 Oct 2012 00:00:00 +0200
+ -- Filesender Development <filesender-dev@filesender.org>  Mon, 22 Oct 2012 09:38:08 +0200
 
 filesender (1.5~beta4) unstable; urgency=medium
    * Release 1.5-beta4
