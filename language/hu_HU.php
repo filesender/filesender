@@ -106,6 +106,7 @@ $lang["_DELETE"] = "Törlés";
 $lang["_YES"] = "Igen";
 $lang["_NO"] = "Nem";
 
+$lang["_ERROR_CONTACT_ADMIN"] = "Hiba történt - kérd a rendszergazda segítségét!";
 $lang["_INVALID_MISSING_EMAIL"] = "Érvénytelen vagy hiányzó email cím";   
 $lang["_INVALID_EXPIRY_DATE"] = "Érvénytelen lejárati dátum";  
 $lang["_INVALID_FILE"] = "Érvénytelen fájl";        
@@ -123,10 +124,13 @@ $lang["_ACCEPTTOC"] = "Felhasználási feltételek elfogadása.";
 $lang["_AGREETOC"] = "A felhasználási feltételeket el KELL fogadni!";
 $lang["_FILE_TO_BE_RESENT"] = "A fájl újraküldére került";
 $lang["_ERROR_UPLOADING_FILE"] = "Fájl feltöltési hiba";
+$lang["_ERROR_SENDING_EMAIL"] = "Nem sikerült a levélküldés, kérd a rendszergazda segítségét!";
 $lang["_ERROR_INCORRECT_FILE_SIZE"] = "Probléma a fájl feltöltése közben. <br />A szerveren tárolt fájl mérete nem egyezik meg az eredeti mérettel. <br /><br />Forduljon az adminisztrátorhoz.";
 $lang["_MAXEMAILS"] = "A maximális email címek száma: ";
 $lang["_INVALID_DATE_FORMAT"] = "Az dátum formátuma érvénytelen.";
 $lang["_DISK_SPACE_ERROR"] = "Nincs elegendő hely a szolgáltatáshoz. Forduljon az adminisztrátorhoz vagy töltsön fel kisebb fájlt.";
+$lang["_ERROR_ATTRIBUTES"] = "A azonosító szerverzeted nem adja ki szükséges adatokat (attribútumokat). Szólj a rendszergazdának!";
+$lang["_PERMISSION_DENIED"] = "Ehhez nincs jogosultságod.";
 
 // Logout page
 $lang["_LOGOUT_COMPLETE"] = "A kijelentkezés sikerült";
@@ -139,6 +143,7 @@ A meghívó emailben elküldésre kerül egy link amit a meghívott használhat.
 // User interaction
 $lang["_EMAIL_SEPARATOR_MSG"] = "Többszörös email cím hozzáadása ,-vel vagy ;-vel elválasztva lehetséges";
 $lang["_NO_FILES"] = "Jelenleg nincs elérhető fájl";
+$lang["_NO_VOUCHERS"] = "Jelenleg nem érhető el meghívó!";
 $lang["_ARE_YOU_SURE"] = "Bizos benne?";
 $lang["_DELETE_FILE"] = "Fájl törlése";
 $lang["_EMAIL_SENT"] = "Üzenet elküldve";
@@ -172,6 +177,7 @@ $lang["_OPTIONAL"] = "választható";
 // confirmation
 $lang["_CONFIRM_DELETE_FILE"] = "Biztosan törölni akarja a fájlt?";
 $lang["_CONFIRM_DELETE_VOUCHER"] = "Biztosan törölni akarja a meghívót?";
+$lang["_CONFIRM_RESEND_EMAIL"] = "Biztosan újraküldjük az emailt?";
 
 // standard date display format
 $lang['datedisplayformat'] = "Y-m-d"; // Format for displaying date/time, use PHP date() format string syntax 
@@ -194,10 +200,14 @@ $lang["_DP_showMonthAfterYear"] = 'false';
 $lang["_DP_yearSuffix"] = '';
 
 // Login Splash text
+$lang["_SITE_SPLASHHEAD"] = "Üdv a ". htmlspecialchars($config['site_name']);
 $lang["_SITE_SPLASHTEXT"] = "A " . htmlspecialchars($config['site_name']) ." biztonságos módon oszthatunk meg nagy fájlokat bárkivel. Lépjen be és küldjön fájlt vagy meghívót, hogy más küldhessen önnek.";
 
 // site about
+$lang["_ABOUT_TEXT"] = ' <div align="left" style="padding:5px">'. htmlspecialchars($config['site_name']) .' a Filesender programot futattja (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>), ami a felsőoktatás és a kutatói közösség igényeihez készült.</div>';
+
 // site help
 // site AUP terms
+$lang["_AUPTERMS"] = "Általános felhasználási feltételek...";
 
 ?>
