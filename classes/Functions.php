@@ -166,8 +166,8 @@ class Functions {
 							//echo "<br>$countLogs:".$countLogs;
 							if($countLogs > 0)
 							{
-							
-							$summary .= "\n\n".$resultLogs[0]["logfilename"]." Size: ".formatBytes($resultLogs[0]["logfilesize"])."\n";
+							$summary .= "-----------------------------------------------------------------------------------------";
+							$summary .= "\n".$resultLogs[0]["logfilename"]." Size: ".formatBytes($resultLogs[0]["logfilesize"])."\n";
 			
 							foreach($resultLogs as $rowLogs)
        	 						{
@@ -176,6 +176,7 @@ class Functions {
 									//$statementFilesSent =   $this->db->fquery("UPDATE logs SET logsent = 1 WHERE logid = '".$rowLogs["logid"]."'");
 									//$statementFilesSent->execute();
 								}
+								$summary .= "\n";
 							}
 						}	
         			}	
