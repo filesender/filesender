@@ -1,4 +1,22 @@
-Last update: 25 July 2012
+Last update: 22 October 2012
+
+Version 1.5-rc1 <22 October 2012>
+
+   * Release 1.5-rc1
+
+   * Changes since 1.5-beta4
+     - Update of default Help text (English, Dutch, Norwegian) (#650, #651)
+     - Updated language definitions
+     - Fixed links to caniuse.com (all languages)
+     - Disable Send button after first press (#805, #811, #812)
+     - Do not mark Guest Voucher as used when upload fails (#807)
+     - Prevent erroneous showing of DatePicker in recent Chrome versions (#823)
+     - Debug setting set to false in config-dist.php (#804)
+     - Only log user information when debug is true (#808)
+     - Fixes in error logging (#806)
+     - Remove dependency on php-gmp (#813)
+     - Fixed include files in emailbouncehandler.php
+     - Various small changes and bug fixes (#709, #794, #809, #810, #828)
 
 Version 1.5-beta4 <25 July 2012>
 
