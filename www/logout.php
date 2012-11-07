@@ -54,7 +54,7 @@ session_destroy();
 <title><?php echo htmlspecialchars($config['site_name']); ?></title>
 <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
 <link type="text/css" href="css/smoothness/jquery-ui-1.8.2.custom.css" rel="Stylesheet" />
-<link rel="stylesheet" type="text/css" href="css/default.css" />
+<link rel="stylesheet" type="text/css" href="css/default.css?<?php echo FileSender_Version::VERSION; ?>" />
 <script type="text/javascript" src="js/common.js" ></script>
 <script type="text/javascript" src="js/jquery-1.7.min.js" ></script>
 <script type="text/javascript" src="js/jquery-ui-1.8.1.custom.min.js"></script>
