@@ -43,7 +43,7 @@ require_once('../classes/_includes.php');
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title><?php echo htmlspecialchars($config['site_name']); ?></title>
-<link rel="stylesheet" type="text/css" href="css/default.css" />
+<link rel="stylesheet" type="text/css" href="css/default.css?<?php echo FileSender_Version::VERSION; ?>" />
 </head>
 <body scroll="no">
 <div id="wrap">
