@@ -289,6 +289,8 @@ Voucher link: {serverURL}?vid={filevoucheruid}
 
 The voucher is available until {fileexpirydate} after which it will be automatically deleted.
 
+{filemessage_start}Personal message from {filefrom}: {filemessage}{filemessage_end}
+
 Best regards,
 
 {siteName}{CRLF}{CRLF}--simple_mime_boundary{CRLF}Content-type:text/html; charset={charset}{CRLF}{CRLF}
@@ -328,6 +330,20 @@ Best regards,
 	</TR>
 </TABLE>
 <P></P>
+{filemessage_start}<TABLE WIDTH=100% BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
+	<COL WIDTH=100%>
+	<TR>
+		<TD WIDTH=100% BGCOLOR="#b3b3b3">
+			<P ALIGN=CENTER><B>Personal message from {filefrom}:</B></P>
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=100% BGCOLOR="#e6e6e6">
+			<P><I>{htmlfilemessage}</I></P>
+		</TD>
+	</TR>
+</TABLE>{filemessage_end}
+<p></p>
 <P>Best regards,</P>
 <P>{siteName}</P>
 </BODY>
