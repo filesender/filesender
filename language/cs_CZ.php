@@ -66,7 +66,7 @@ $lang["_AVAILABLE"] = "Dostupné";
 $lang["_TEMP"] = "Dočasné soubory"; // as in Temporary files
 
 $lang["_WELCOME"] = "Vítejte"; 
-$lang["_WELCOMEGUEST"] = "Welcome Guest"; 
+$lang["_WELCOMEGUEST"] = "Vítejte"; 
 
 // admin tab names
 $lang["_GENERAL"] = "Obecné";
