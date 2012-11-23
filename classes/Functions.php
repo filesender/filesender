@@ -628,7 +628,7 @@ class Functions {
 		// filename blank
 		if(isset($data["fileoriginalname"]) && $data["fileoriginalname"] === ""){ array_push($errorArray, "err_invalidfilename");}
 		// filename contains invalid characters
-		if(isset($data["fileoriginalname"]) && preg_match('=^[^\\\\/:\*\?\"<>|]+(\.[^\\\\/:\*\?\"<>|]+)+$=',$data["fileoriginalname"]) === 0){ array_push($errorArray, "err_invalidfilename");}
+		if(isset($data["fileoriginalname"]) && preg_match('=^[^\\\\/:;\*\?\"<>|]+(\.[^\\\\/:;\*\?\"<>|]+)+$=',$data["fileoriginalname"]) === 0){ array_push($errorArray, "err_invalidfilename");}
 		
 		// expiry out of range
 		if(strtotime($data["fileexpirydate"]) > strtotime("+".$config['default_daysvalid']." day") ||  strtotime($data["fileexpirydate"]) < strtotime("now"))
