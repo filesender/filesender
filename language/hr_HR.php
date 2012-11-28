@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 /*
  * FileSender www.filesender.org
