@@ -106,6 +106,7 @@ $lang["_DELETE"] = "Izbriši";
 $lang["_YES"] = "Da";
 $lang["_NO"] = "Ne";
 
+$lang["_ERROR_CONTACT_ADMIN"] = "Došlo je do greške – molimo vas kontaktirajte administratora.";
 $lang["_INVALID_MISSING_EMAIL"] = "Email adresa nedostaje ili je pogrešna";
 $lang["_INVALID_EXPIRY_DATE"] = "Neispravan datum isteka";
 $lang["_INVALID_FILE"] = "Neispravan fajl";
@@ -123,10 +124,13 @@ $lang["_ACCEPTTOC"] = "Prihvatam uslove korišćenja ovog servisa.";
 $lang["_AGREETOC"] = "NEOPHODNO je da prihvatite uslove korišćenja.";
 $lang["_FILE_TO_BE_RESENT"] = "Fajl koji će biti ponovo poslan";
 $lang["_ERROR_UPLOADING_FILE"] = "Dogodila se greška tokom prenosa vašeg fajla.";
+$lang["_ERROR_SENDING_EMAIL"] = "Došlo je do greške prilikom slanja email-a. Molimo vas kontaktirajte administratora.";
+$lang["_ERROR_INCORRECT_FILE_SIZE"] = "Došlo je do greške pri prosleđivanju fajla. <br /> Veličina fajla na serveru se ne poklapa sa veličinom vašeg originalnog fajla. <br /><br />Molimo vas kontaktirajte administratora.";
 $lang["_MAXEMAILS"] = "Maksimalno dopušteni broj email adresa je ";
 $lang["_INVALID_DATE_FORMAT"] = "Format datuma je neispravan.";
 $lang["_DISK_SPACE_ERROR"] = "Nema dovoljno mesta na serveru za prenos ovog fajla. Molimo kontaktirajte administratore ili prenesite manji fajl.";
-
+$lang["_ERROR_ATTRIBUTES"] = "Vaš davalac identiteta ne prosleđuje neophodne podatke o vama. Molimo vas kontaktirajte administratora.";
+$lang["_PERMISSION_DENIED"] = "Nemate privilegiju za ovo.";
 
 $lang["_LOGOUT_COMPLETE"] = "Odjava završena";
 
@@ -137,6 +141,7 @@ Email sa vezom do vaučera će biti poslan primaocu.";
 $lang["_EMAIL_SEPARATOR_MSG"] = "Više adresa razdelite sa , ili ;";
 
 $lang["_NO_FILES"] = "Trenutno nema dostupnih fajlova";
+$lang["_NO_VOUCHERS"] = "Trenutno nijedan vaučer nije na raspolaganju.";
 $lang["_ARE_YOU_SURE"] = "Jeste li sigurni?";
 $lang["_DELETE_FILE"] = "Izbriši fajl";
 $lang["_EMAIL_SENT"] = "Poruka poslana";
@@ -153,6 +158,7 @@ $lang["_START_DOWNLOAD"] = "Počni preuzimanje";
 $lang["_VOUCHER_SENT"] = "Vaučer poslan";
 $lang["_VOUCHER_DELETED"] = "Vaučer izbrisan";
 $lang["_VOUCHER_CANCELLED"] = "Ovaj vaučer je poništen.";
+$lang["_VOUCHER_USED"] = "Ovaj vaučer je već iskorišćen";
 $lang["_STARTED_DOWNLOADING"] = "Preuzimanje vašeg fajla treba početi.";
 
 // files
@@ -170,9 +176,10 @@ $lang["_OPTIONAL"] = "opcionalno";
 // confirmation
 $lang["_CONFIRM_DELETE_FILE"] = "Jeste li sigurni da želite da obrišete ovaj fajl?";
 $lang["_CONFIRM_DELETE_VOUCHER"] = "Jeste li sigurni da želite da obrišete ovaj vaučer?";
+$lang["_CONFIRM_RESEND_EMAIL"] = "Da li ste sigurni da želite da obrišete ovaj fajl?";
 
 // standard date display format
-$lang['datedisplayformat'] = "d.m.G"; // Format for displaying date/time, use PHP date() format string syntax
+$lang['datedisplayformat'] = "d.m.Y"; // Format for displaying date/time, use PHP date() format string syntax
 
 // datepicker localization
 $lang["_DP_closeText"] = 'U redu'; // Done
@@ -190,6 +197,10 @@ $lang["_DP_firstDay"] = '1';
 $lang["_DP_isRTL"] = 'false';
 $lang["_DP_showMonthAfterYear"] = 'false';
 $lang["_DP_yearSuffix"] = '';
+
+// Login Splash text
+$lang["_SITE_SPLASHHEAD"] = "Dobrodošli na ". htmlspecialchars($config['site_name']);
+$lang["_SITE_SPLASHTEXT"] = htmlspecialchars($config['site_name']) ." je siguran način za deljenje velikih fajlova sa bilo kim! Prijavite se da prosledite vaše fajlove ili pozovete nekog drugog da vam pošalje fajl.";
 
 // site help
 $lang["_HELP_TEXT"] = '
