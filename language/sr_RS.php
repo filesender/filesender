@@ -31,7 +31,7 @@
  */
 
 /* ---------------------------------
- * sr_SR Serbian Language File
+ * sr_RS Serbian Language File
  * Contributed by AMRES
  * ---------------------------------
  *
