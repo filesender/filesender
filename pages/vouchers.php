@@ -225,7 +225,6 @@ $json_o=json_decode($filedata,true);
         <td colspan="2"><textarea name="vouchermessage" cols="57" rows="4" id="vouchermessage"></textarea></td>
       </tr>
       <tr>
-      <tr>
         <td class="mandatory" id="vouchers_expirydate"><?php echo lang("_EXPIRY_DATE"); ?>:</td>
         <td><input id="datepicker" onchange="validate_expiry()" title="<?php echo lang('_DP_dateFormat'); ?>" />
         <div id="expiry_msg" class="validation_msg" style="display:none"><?php echo lang("_INVALID_EXPIRY_DATE"); ?></div>
