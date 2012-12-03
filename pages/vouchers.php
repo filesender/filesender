@@ -244,6 +244,7 @@ $json_o=json_decode($filedata,true);
   <table id="vouchertable" width="100%" border="0" cellspacing="1">
     <tr class="headerrow">
       <td id="vouchers_header_to"><strong><?php echo lang("_TO"); ?></strong></td>
+	  <td id="vouchers_header_message"><strong><?php echo lang("_MESSAGE"); ?></strong></td>
       <td id="vouchers_header_created"><strong><?php echo lang("_CREATED"); ?></strong></td>
       <td id="vouchers_header_expiry"><strong><?php echo lang("_EXPIRY"); ?></strong></td>
       <td></td>
@@ -252,7 +253,7 @@ $json_o=json_decode($filedata,true);
 	$i = 0; 
 	foreach($json_o as $item) {
 		$i += 1; // counter for file id's
-		echo "<tr><td>" .$item['fileto'] . "</td><td>" .date($lang['datedisplayformat'],strtotime($item['filecreateddate'])) . "</td><td>" .date($lang['datedisplayformat'],strtotime($item['fileexpirydate'])) . "</td><td><div  style='cursor:pointer;'><img id='btn_deletevoucher_".$i."' src='images/shape_square_delete.png' alt='' title='".lang("_DELETE")."' onclick='confirmdelete(".'"' .$item['filevoucheruid'] . '"'. ")' border='0' /></div></td></tr>"; //etc
+		echo "<tr><td>" .$item['fileto'] . "</td><td class='HardBreak'>" .$item['filemessage'] . "</td><td>" .date($lang['datedisplayformat'],strtotime($item['filecreateddate'])) . "</td><td>" .date($lang['datedisplayformat'],strtotime($item['fileexpirydate'])) . "</td><td><div  style='cursor:pointer;'><img id='btn_deletevoucher_".$i."' src='images/shape_square_delete.png' alt='' title='".lang("_DELETE")."' onclick='confirmdelete(".'"' .$item['filevoucheruid'] . '"'. ")' border='0' /></div></td></tr>"; //etc
 	}
 ?>
   </table>
