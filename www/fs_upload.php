@@ -63,7 +63,7 @@ if(!empty($_POST['s'])) {
     session_start();
 }
 	
-require_once('../classes/_includes.php');
+require_once('../classes/_includes_minimal.php');
 
 $authsaml = AuthSaml::getInstance();
 $authvoucher = AuthVoucher::getInstance();

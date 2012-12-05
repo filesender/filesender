@@ -30,6 +30,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+// minimal includes
+// ------------------------------------------
+// Specifically for fs_upload.php to reduce db calls
+// ------------------------------------------
 
 $filesenderbase = dirname(dirname(__FILE__));
 if(file_exists("$filesenderbase/config/config.php")) { 
