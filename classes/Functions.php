@@ -1021,5 +1021,71 @@ class Functions {
         return $result;
 
     }
+	
+	 //--------------------------------------- 
+    // Check if table exists in DB
+    // Returns 1 if found
+	// ---------------------------------------
+	public function tableExists($table)
+	{
+	// table exists requires a different script for postgres and mysql
+	global $config;
+	if ($config["db_type"] == 'pgsql') {
+      $query = "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_name LIKE :table";
+    }
+    else {
+      $query = "show tables like :table";
+    }
+	$pdo = $this->db->connect();
+	$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
+	$statement = $pdo->prepare($query);
+	$statement->bindParam(':table', $table);
+	$statement->execute();
+	$count = $statement->rowCount();
+	//echo $count;
+	return $count;
+	}
+	
+	 //--------------------------------------- 
+    // Check if table column exists in DB
+    // Returns 1 if found
+	// ---------------------------------------
+	public function columnExists($table,$column)
+	{
+	// table column requires a different script for postgres and mysql
+	global $config;
+	if ($config["db_type"] == 'pgsql') 
+	{
+      $query = "SELECT column_name FROM information_schema.columns WHERE table_name=:table and column_name=:column";
+    }
+    else {
+      $query = "SHOW COLUMNS FROM :table WHERE Field = :column";
+    }
+	$pdo = $this->db->connect();
+	$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
+	$statement = $pdo->prepare($query);
+	$statement->bindParam(':table', $table);
+	$statement->bindParam(':column', $column);
+	$statement->execute();
+	$count = $statement->rowCount();
+	//echo $count;
+	return $count;
+	}
+	
+	//--------------------------------------- 
+    // DB version in database
+    // Returns version number
+	// ---------------------------------------
+	public function dbVersion()
+	{
+	global $config;
+	$pdo = $this->db->connect();
+	$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
+	$statement = $pdo->prepare("SELECT configvalue FROM config WHERE configfield = 'DBVersion'");
+	$statement->execute();
+	$result = $statement->fetch();
+	return $result["configvalue"];
+	}
+	
 }
 ?>
