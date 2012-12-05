@@ -33,13 +33,17 @@
 class FileSender_Version
 {
 	const VERSION = '1.5-trunk';
-
+	const DBVERSION  = '1.5'; 
 	//-------------------------------------------------------
 	// Compare the specified version with the current version.
 	// Return -1 if version is older, 0 if equal, and 1 if newer.
 	public static function compareVersion($version) {
 		$version = strtolower($version);
 		return version_compare($version, strtolower(self::VERSION));
+	}
+	public static function compareVersionReleased($version) {
+		$version = strtolower($version);
+		return version_compare($version, strtolower(self::DBVERSION));
 	}
 }
 ?>
