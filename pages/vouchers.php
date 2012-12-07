@@ -224,6 +224,15 @@ $json_o=json_decode($filedata,true);
 	   <td class="" id="voucher_message"><?php echo lang("_MESSAGE"); ?>: (<?php echo lang("_OPTIONAL"); ?>)</td>
         <td colspan="2"><textarea name="vouchermessage" cols="57" rows="4" id="vouchermessage"></textarea></td>
       </tr>
+	    <?php if(isset($config["vlts"]) && $config["vlts"]) { ?>
+      <tr>
+        <td class="mandatory" id="vouchers_expirydate">&nbsp;</td>
+        <td>
+          <label>
+          <input style="width:10px" name="vlts" type="checkbox" id="vlts" value="1" />
+		  <?php echo $lang["_VLTS"]; ?></label></td>
+      </tr>
+	  <?php } ?>
       <tr>
         <td class="mandatory" id="vouchers_expirydate"><?php echo lang("_EXPIRY_DATE"); ?>:</td>
         <td><input id="datepicker" onchange="validate_expiry()" title="<?php echo lang('_DP_dateFormat'); ?>" />

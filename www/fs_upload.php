@@ -174,6 +174,10 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 	case  'validateupload':
 		logEntry("DEBUG fs_upload: Filedata 'validateupload' myJson = " . $_POST['myJson'] );
 		$dataitem = json_decode($_POST['myJson'], true);
+		
+		// add custom options if available
+		$dataitem = $functions->customOptions($dataitem);
+		
 		if(!isset($dataitem["fileuid"]))
 		{ 
 		$dataitem["fileuid"] = getGUID();
@@ -267,6 +271,8 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 		if( $authsaml->isAuth()) {
 			logEntry("DEBUG fs_upload: Filedata 'insertVoucherAjax' myJson = " . $_POST['myJson'] );
 			$dataitem = json_decode($_POST['myJson'], true);
+			// add custom options if available
+			$dataitem = $functions->customOptions($dataitem);
 			// validate expiry missing
 			if(!isset($dataitem["fileexpirydate"])){ array_push($errorArray,  "err_expmissing"); }
 			// validate fileto missing
@@ -291,7 +297,7 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 			} else {
 				// insert each voucher
 				foreach ($emailArray as $Email) { 
-					$functions->insertVoucher($Email,$dataitem["fileexpirydate"],$dataitem["vouchermessage"]);
+					$functions->insertVoucher($Email,$dataitem["fileexpirydate"],$dataitem["vouchermessage"],$dataitem["fileoptions"]);
 				} 
 				$complete = "complete";
 			}
