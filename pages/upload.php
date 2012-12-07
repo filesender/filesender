@@ -52,17 +52,27 @@
    $id = getGUID();
    // set id for progress bar upload
   // $id = md5(microtime() . rand());
-   
+  
+   	// if $config["voucherreturnlock"] is true - do not allow users to enter new details into the fileto option - default is false
+   	$voucherreturnlock = false;
+	
    // check if this is a vooucher
   if($authvoucher->aVoucher())
   {
 	 // clear aup session
 	//unset ($_SESSION['aup'], $var);
-
+	
+	// set voucherreturnlock if available
+	if(isset($config["voucherreturnlock"]) && $config["voucherreturnlock"]) { $voucherreturnlock = true; };
+	
 	// get voucher information 
 	$voucherData =  $authvoucher->getVoucher();
 	$voucherUID = $voucherData[0]["filevoucheruid"];
 	$senderemail = $voucherData[0]["fileto"];
+	// custom options
+	$option = json_decode($voucherData[0]["fileoptions"]);
+	// prevent user from sending file to other users
+	if(isset($option) && isset($option->vlts) && $option->vlts) {$voucherreturnlock = true;}
 	// check if voucher is invalid (this should be an external function
 	if($voucherData[0]["filestatus"] == "Voucher") {
 	$filestatus = "Voucher";
@@ -552,7 +562,19 @@ window.addEventListener('keydown', function(e) {(e.keyCode == 27 && e.preventDef
     <table width="100%" border="0">
       <tr>
         <td width="130" class=" mandatory" id="upload_to"><?php echo lang("_TO") ; ?>:</td>
-        <td colspan="2" valign="middle"><input name="fileto" title="<?php echo lang("_EMAIL_SEPARATOR_MSG") ; ?>" type="text" id="fileto" onchange="validate_fileto()"/>
+        <td colspan="2" valign="middle">
+		<?php 
+		// voucherreturnlock - if true restricts voucher user to only upload back to the voucher creator
+		if($voucherreturnlock)
+			{
+				echo '<input name="fileto" title="'. lang("_EMAIL_SEPARATOR_MSG").'" value="'.$voucherData[0]["filefrom"].'" type="hidden" id="fileto" onblur="validate_fileto()"/>';
+				echo $voucherData[0]["filefrom"];
+			} 
+		else 
+			{
+				echo '<input name="fileto" title="'. lang("_EMAIL_SEPARATOR_MSG").'" type="text" id="fileto"/>';
+			}		
+		?>		
         <div id="fileto_msg" style="display: none" class="validation_msg"><?php echo lang("_INVALID_MISSING_EMAIL"); ?></div>
         <div id="maxemails_msg" style="display: none" class="validation_msg"><?php echo lang("_MAXEMAILS"); ?> <?php echo $config['max_email_recipients'] ?>.</div>
         </td>

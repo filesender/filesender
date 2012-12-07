@@ -106,7 +106,7 @@ class Functions {
     private $authvoucher;
 
     // the following fields are returned without fileUID to stop unauthorised users accessing the fileUID
-    public $returnFields = " fileid, fileexpirydate, fileto , filesubject, fileactivitydate, filemessage, filefrom, filesize, fileoriginalname, filestatus, fileip4address, fileip6address, filesendersname, filereceiversname, filevouchertype, fileauthuseruid, fileauthuseremail, filecreateddate, fileauthurl, fileuid, filevoucheruid ";	
+   public $returnFields = " fileid, fileexpirydate, fileto , filesubject, fileactivitydate, filemessage, filefrom, filesize, fileoriginalname, filestatus, fileip4address, fileip6address, filesendersname, filereceiversname, filevouchertype, fileauthuseruid, fileauthuseremail, filecreateddate, fileauthurl, fileoptions, fileuid, filevoucheruid ";	
 
     public function __construct() {
 
@@ -472,7 +472,7 @@ class Functions {
 	// insert a voucher
 	// ---------------------------------------
 
-	public function insertVoucher($to,$expiry,$vouchermessage){
+	public function insertVoucher($to,$expiry,$vouchermessage,$options){
 		// must be authenticated
 		if( $this->authsaml->isAuth()) {
 			
@@ -502,7 +502,8 @@ class Functions {
 			fileuid,
 			fileauthuseruid,
 			fileauthuseremail,
-			filecreateddate
+			filecreateddate,
+			fileoptions 
 
             ) VALUES
             ( 
@@ -524,7 +525,8 @@ class Functions {
 			:fileuid,
 			:fileauthuseruid,
 			:fileauthuseremail,
-			:filecreateddate)');
+			:filecreateddate,
+			:fileoptions)');
 			
 			$filevoucheruid = getGUID();
 			$voucher = 'Voucher';
@@ -556,6 +558,7 @@ class Functions {
 			$statement->bindParam(':fileauthuseremail', $authAttributes["email"]);
 			$filecreateddateParam =  date($config['db_dateformat'], time());
 			$statement->bindParam(':filecreateddate',$filecreateddateParam);
+			$statement->bindParam(':fileoptions',$options);
 			try { 	
 			$statement->execute(); 
 			}
@@ -731,7 +734,8 @@ class Functions {
 			fileuid,
 			fileauthuseruid,
 			fileauthuseremail,
-			filecreateddate
+			filecreateddate,
+			fileoptions
             ) VALUES
             ( 	:fileexpirydate,
 			:fileto,
@@ -751,7 +755,8 @@ class Functions {
 			:fileuid,
 			:fileauthuseruid,
 			:fileauthuseremail,
-			:filecreateddate)');	
+			:filecreateddate,
+			:fileoptions)');	
 				
 			$statement->bindParam(':fileexpirydate', $dataitem['fileexpirydate']);
 			$statement->bindParam(':fileto', $dataitem['fileto']);
@@ -772,7 +777,8 @@ class Functions {
 			$statement->bindParam(':fileauthuseruid', $dataitem['fileauthuseruid']);
 			$statement->bindParam(':fileauthuseremail', $dataitem['fileauthuseremail']);
 			$statement->bindParam(':filecreateddate', $dataitem['filecreateddate']);
-	
+			$statement->bindParam(':fileoptions', $dataitem['fileoptions']);
+			
 			try { 
 				$statement->execute(); 
 				}
@@ -1086,6 +1092,32 @@ class Functions {
 	$result = $statement->fetch();
 	return $result["configvalue"];
 	}
+
+	 //--------------------------------------- 
+    // convert custom options to json
+	// return json in fileoptions
+    // ---------------------------------------
+    // 
+	public function customOptions($itemdata)
+	{
+		global $config;
+		$options = array();
+		 	
+		$options["vlts"] = (isset($itemdata["vlts"]) && $itemdata["vlts"])?true:false;	// voucher locked to return to sender only 
+		
+		// add options to data	
+		$itemdata["fileoptions"] = json_encode($options);
+		return $itemdata;
+	}	
 	
+		//--------------------------------------- 
+    // check if string is json
+    // Returns bool true/false
+	// ---------------------------------------
+	 public function isJson($string) 
+	 {
+		 json_decode($string);
+		 return (json_last_error() == JSON_ERROR_NONE);
+	}
 }
 ?>
