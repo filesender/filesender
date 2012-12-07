@@ -94,6 +94,8 @@ $lang["_SHOW_TERMS"] = "Show Terms";
 $lang["_SHOWHIDE"] = "Show/Hide";
 $lang["_UPLOADING_WAIT"] = "Uploading file - please wait...";
 
+$lang["_VLTS"] = "Restrict voucher to only send a file back to me. ";
+
 // button labels
 $lang["_UPLOAD"] = "Send a file";
 $lang["_BROWSE"] = "Browse";
