@@ -535,6 +535,7 @@ class Functions {
 		if( $this->authsaml->isAuth()) {
 			
         global $config;
+		global $lang;
         $dbCheck = DB_Input_Checks::getInstance();
 		$authAttributes = $this->authsaml->sAuth();
 		
@@ -589,6 +590,8 @@ class Functions {
 			$filevoucheruid = getGUID();
 			$voucher = 'Voucher';
 			$voucherissuedemailsubject = (isset($config['voucherissuedemailsubject'])) ?  $config['voucherissuedemailsubject'] : "Voucher";
+			// TODO: move all mail text to language files
+			$voucherissuedemailsubject = (isset($lang['_VOUCHER_ISSUED_EMAIL_SUBJECT'])) ?  lang('_VOUCHER_ISSUED_EMAIL_SUBJECT') : $voucherissuedemailsubject;
 			$blank = '';
 			$zero = 0;
 			$fileexpiryParam = date($config['db_dateformat'], strtotime($expiry));
