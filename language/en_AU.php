@@ -51,6 +51,7 @@ $lang["_HELP"] = "Help";
 $lang["_DELETE_VOUCHER"] = "Delete Voucher";
 $lang["_UPLOAD_COMPLETE"] = "Your file has been uploaded and message sent.";
 $lang["_UPLOAD_PROGRESS"] = "Upload progress";
+$lang["_DOWNLOADED"] = "Downloaded";
 $lang["_DOWNLOAD"] = "Download";
 $lang["_CANCEL_UPLOAD"] = "Cancel Upload";
 
@@ -93,6 +94,7 @@ $lang["_TERMS_OF_AGREEMENT"] = "Terms of Agreement";
 $lang["_SHOW_TERMS"] = "Show Terms";
 $lang["_SHOWHIDE"] = "Show/Hide";
 $lang["_UPLOADING_WAIT"] = "Uploading file - please wait...";
+$lang["_SHOW_ALL"] = "Show/Hide Details";
 
 $lang["_VLTS"] = "Restrict voucher to only send a file back to me. ";
 
