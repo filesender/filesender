@@ -450,7 +450,7 @@ foreach($json_o as $item) {
 </div>
 <div id="dialog-addrecipient" style="display:none" title="<?php echo  lang("_NEW_RECIPIENT"); ?>">
   <form id="form1" name="form1" enctype="multipart/form-data" method="post" action="">
-    <table  width="600" border="0">
+    <table  width="100%" border="0">
       <tr>
         <td width="100" class="formfieldheading mandatory" id="files_to"><?php echo  lang("_TO"); ?>:</td>
         <td width="400" valign="middle"><input name="fileto" title="<?php echo  lang("_EMAIL_SEPARATOR_MSG"); ?>" type="text" id="fileto" size="60" onchange="validate_fileto()" />
