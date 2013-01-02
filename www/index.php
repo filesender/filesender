@@ -97,7 +97,7 @@ $(function() {
 	$("#content").show();
 	$("#userinformation").show();
 	
-	//$( "a", ".menu" ).button();
+	$( "a", ".menu" ).button();
 	
 	$("#dialog-help").dialog({ autoOpen: false, height: 400,width: 660, modal: true,
 		buttons: {
@@ -145,7 +145,7 @@ function openabout()
 <div id="wrap">
   <div id="header">
     <div align="center">
-      <p><img src="displayimage.php" width="800" height="60" border="0" alt="banner" /></p>
+      <img src="displayimage.php" width="800" height="60" border="0" alt="banner" />
       <noscript>
       <p class="style5 style1">JavaScript is turned off in your web browser. <br />
         This application will not run without Javascript enabled in your web browser. <br />
@@ -164,7 +164,7 @@ function openabout()
 	if($authsaml->isAuth() ) { echo '<a id="topmenu_vouchers" href="index.php?s=vouchers">'.lang("_VOUCHERS").'</a>'; }
 	if($authsaml->isAuth() ) {echo '<a id="topmenu_myfiles" href="index.php?s=files">'.lang("_MY_FILES").'</a>'; }
 	if($authsaml->authIsAdmin() ) { echo '<a id="topmenu_admin" href="index.php?s=admin">'.lang("_ADMIN").'</a>'; }
-	if($authsaml->isAuth() ) { echo '<a id="topmenu_summary" href="testsummary.php?email='.$useremail  .'" target="_blank">Send Summary</a>'; }
+	if($authsaml->isAuth() ) { echo '<a id="topmenu_summary" href="testsummary.php?email='.$useremail  .'" target="_blank">Summary</a>'; }
   }
   ?>
   	</div>
