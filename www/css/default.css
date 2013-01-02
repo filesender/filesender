@@ -83,6 +83,20 @@ td {
 	position: relative;
 }
 
+.formleft
+{
+	width: 50%;
+	float:left;
+	background-color: #FFFFFF;
+}
+
+.formright
+{
+	float: right;
+	width: 45%;
+	background-color: #FFFFFF;
+}
+
 #menuleft
 {
 	position: relative;
@@ -108,20 +122,31 @@ input,textarea
 	background-color: #ddd;
 	float: right;
 	cursor:pointer;
-	border: 1px solid #bbb;
 }
 .delbtn:hover
 {
 	color: #990000;
+}
+.heading
+{
+	font-size: 14px;
+	color: #666666;
+	font-weight: bold;
+}
+.auppanel
+{
+	padding-top: 10px;
+	padding-bottom: 10px;
 }
 .fileBox
 {
 	padding: 8px;
 	border: 1px solid #CCCCCC;
 	margin: 2px;
+	background-color: #dedede;
 }
 #tog {
-	padding: 20px;
+	padding-left: 20px;
 	border: 1px solid #cccccc;
 	border-radius:10px;
 	-moz-border-radius: 10px;
@@ -161,8 +186,8 @@ input {
 	border-radius:5px;
 	-moz-border-radius: 5px;*/
 }
-/* overide button style */
-.ui-button
+/* overide o style */
+.ui-o
 {
 	/*background-color: #333;
 	border-top-style: solid;
@@ -177,7 +202,7 @@ input {
 	border-top-right-radius: 0px;
 	color: #FFF;*/
 }
-.ui-button:hover
+.ui-o:hover
 {
 	/*background-color: #900;*/
 }
@@ -203,6 +228,7 @@ input {
 #aup_label{
 	font-weight: bold;
 }
+
 
 /*#progressIndicator {
 }
@@ -290,10 +316,9 @@ margin-top: 4px;
 	background: #fff;
 	text-align: left;
 	width: 800px;
-	margin-left: auto;
-	margin-right: auto;
-	margin-bottom: auto;
 	height: 100%;
+	float: left;
+	padding-bottom: 20px;
 }
 #header {
 	background: #666;
@@ -316,12 +341,13 @@ margin-top: 4px;
 }
 
 #box, .box  {
-	padding: 5px;
+	padding: 10px;
 	border: 1px solid #cccccc;
 	border-radius:5px;
 	-moz-border-radius: 5px;
 	margin-top: 4px;
 	margin-bottom: 4px;
+	background-color: #CCCCCC;
 }
 #message {
 	background-color: #AAC1A4;
@@ -376,11 +402,16 @@ margin-top: 4px;
 
 
 .mandatory{
-	color: #000;
 	font-weight: bold;
+	padding-top: 10px;
+}
+
+.html5text
+{
+	float: right;
+	display:none;
 }
 .HardBreak
-
 {
 white-space: pre-wrap; /* css-3 */
 white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
@@ -412,6 +443,7 @@ word-wrap: break-word; /* Internet Explorer 5.5+ */
 }
 #footer
 {
+	clear:left;
 	text-align: center;
 	font-size: 10px;
 	color: #666;
