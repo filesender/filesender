@@ -194,6 +194,9 @@ function browse(){
 			{
 				n += 1;		
 				startupload();
+			} else  {
+			// al files sent so complete
+			window.location.href="index.php?s=complete";
 			}
 	}
 	}
