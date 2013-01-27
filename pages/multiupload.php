@@ -135,6 +135,78 @@
 		showMonthAfterYear: <?php echo lang("_DP_showMonthAfterYear"); ?>,
 		yearSuffix: '<?php echo lang("_DP_yearSuffix"); ?>'});
 		
+		
+		// upload area filestoupload
+	$('#dragfilestoupload').on(
+    'dragover',
+    function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+)
+$('#dragfilestoupload').on(
+    'dragenter',
+    function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+)
+	$('#dragfilestoupload').on(
+    'drop',
+    function(e){
+        if(e.originalEvent.dataTransfer){
+            if(e.originalEvent.dataTransfer.files.length) {
+                e.preventDefault();
+                e.stopPropagation();
+                /*UPLOAD FILES HERE*/
+               var files = e.originalEvent.dataTransfer.files;
+  				for (var i = 0, f; f = files[i]; i++) 
+				{
+					n = n + 1;
+  				 	// --------------
+					fdata[n] = Array(n);
+        fdata[n].file = files[i];
+        fdata[n].fileSize = fdata[n].file.size;
+		fdata[n].bytesTotal = fdata[n].file.size;
+		fdata[n].bytesUploaded = 0;
+	    fdata[n].previousBytesLoaded = 0;
+	    fdata[n].intervalTimer = 0;
+		fdata[n].currentlocation = 0;
+		fdata[n].filename = fdata[n].file.name;
+		fdata[n].name = fdata[n].file.name;
+		fdata[n].filetype = fdata[n].file.type;
+		fdata[n].valid = false; // assume invalid until checked
+		fdata[n].status = true; // to allow removal of file from upload list
+		// validate file for upload
+		// Show in list 'invalid' with reason 
+		//fdata[n].filesize = 0;
+		var validfile = "";
+	  	if(validate_file(n)) { 
+			fdata[n].valid = true;
+		} else {
+			validfile = '<img style="float:left;padding-right:6px;" src="images/information.png" border=0 title="This file is invalid and will not be uploaded"/>';
+		}
+			$("#uploadbutton").show(); 
+			$("#fileInfoView").show();
+			var progressString = '<div id="file_'+n+'" class="fileBox valid'+ fdata[n].valid+ '">' + validfile + ' File: ' + fdata[n].filename + ' Size: ' + readablizebytes(fdata[n].fileSize)+'<div class="delbtn" id="file_del_'+n+'" onclick="removeItem('+n+');"><img src="images/delete.png" width="16" height="16" border="0" align="absmiddle" style="cursor:pointer"/></div><div style="display:none" class="progress_container" id="progress_container-'+n+'"><div class="progress_bar"  id="progress_bar-'+n+'"></div></div>';
+	
+			$("#filestoupload").append(progressString);
+			//$("#fileName").html('Name: ' + fdata[n].filename);
+			//$("#fileSize").html('Size: ' + readablizebytes(fdata[n].fileSize));
+		//} else { 
+		 // display invalid file
+			//$("#uploadbutton").hide();
+			//$("#fileInfoView").hide();
+			//$("#fileName").html("");
+			//$("#fileSize").html("");
+		//};
+	
+		//--------------
+ 				}
+            }   
+        }
+    }
+);
 		// set dialog cancel upload
 		$("#dialog-cancel").dialog({ autoOpen: false, height: 140, width: 350, modal: true,
 		buttons: {
@@ -647,6 +719,8 @@ if ( hasProductInstall && !hasRequestedVersion ) {
 </div>
         <div id="fileInfoView" class="formright">
 		<div class="heading">Files</div>
+		<div  id="dragfilestoupload" class="box">Drag Files here to upload
+		  </div>
         <div  id="filestoupload" class="box">
 		  </div>
 		    <div class="heading">Options</div>
