@@ -86,25 +86,33 @@ function browse(){
 	    fdata[n].intervalTimer = 0;
 		fdata[n].currentlocation = 0;
 		fdata[n].filename = fdata[n].file.name;
+		fdata[n].name = fdata[n].file.name;
 		fdata[n].filetype = fdata[n].file.type;
-		
+		fdata[n].valid = false; // assume invalid until checked
+		fdata[n].status = true; // to allow removal of file from upload list
+		// validate file for upload
+		// Show in list 'invalid' with reason 
 		//fdata[n].filesize = 0;
-		
-	  	if(validate_file()) { 
+		var validfile = "";
+	  	if(validate_file(n)) { 
+			fdata[n].valid = true;
+		} else {
+			validfile = '<img style="float:left;padding-right:6px;" src="images/information.png" border=0 title="This file is invalid and will not be uploaded"/>';
+		}
 			$("#uploadbutton").show(); 
 			$("#fileInfoView").show();
-			var progressString = '<div id="file_'+n+'" class="fileBox">File: ' + fdata[n].filename + ' Size: ' + readablizebytes(fdata[n].fileSize)+'<div class="delbtn" id="file_del_'+n+'" onclick="removeItem('+n+');"><img src="images/delete.png" width="16" height="16" border="0" align="absmiddle" style="cursor:pointer"/></div><div style="display:none" class="progress_container" id="progress_container-'+n+'"><div class="progress_bar"  id="progress_bar-'+n+'"></div></div>';
+			var progressString = '<div id="file_'+n+'" class="fileBox valid'+ fdata[n].valid+ '">' + validfile + ' File: ' + fdata[n].filename + ' Size: ' + readablizebytes(fdata[n].fileSize)+'<div class="delbtn" id="file_del_'+n+'" onclick="removeItem('+n+');"><img src="images/delete.png" width="16" height="16" border="0" align="absmiddle" style="cursor:pointer"/></div><div style="display:none" class="progress_container" id="progress_container-'+n+'"><div class="progress_bar"  id="progress_bar-'+n+'"></div></div>';
 	
 			$("#filestoupload").append(progressString);
 			//$("#fileName").html('Name: ' + fdata[n].filename);
 			//$("#fileSize").html('Size: ' + readablizebytes(fdata[n].fileSize));
-		} else { 
+		//} else { 
 		 // display invalid file
 			//$("#uploadbutton").hide();
 			//$("#fileInfoView").hide();
 			//$("#fileName").html("");
 			//$("#fileSize").html("");
-		};
+		//};
 		}
 		}
 	}
@@ -114,6 +122,10 @@ function browse(){
 		// validate input data
 		// validate file details to upload
 		//$("#dialog-uploadprogress").dialog("option", "title", uploadprogress +  ":  " +  fdata[n].filename + " (" +readablizebytes(fdata[n].fileSize) + ")");
+		
+		// check if file is validated before uploading
+	if(validate_file(n) && fdata[n].status) { 
+		
 		$("#progress_container-"+n).show();
 		$("#file_del_"+n).hide();
 		fdata[n].bytesUploaded = 0;
@@ -176,6 +188,14 @@ function browse(){
 		//}
 		}
   		});
+	} else {
+			// check if more files need uploading
+			if(	n < fdata.length-1 )
+			{
+				n += 1;		
+				startupload();
+			}
+	}
 	}
 
 function uploadFile() {
@@ -342,6 +362,8 @@ function removeItem(fileID)
 {
 	console.log(fileID);
 	$("#file_"+fileID).remove();
-	fdata.splice(fileID,1);
-	n = n -1;
+	//fdata.splice(fileID,1);
+	//n = n -1;
+	fdata[fileID].status = false;
 }
+
