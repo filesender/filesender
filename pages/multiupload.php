@@ -320,6 +320,46 @@
 	}
 	}
 	
+	// Validate FILE (HTML5 only)
+function validate_file(id)
+{
+	//alert(id);
+	fileMsg("");
+	//if(!document.getElementById("fileToUpload").files[0])
+	//{
+		// display message if a user enters all form details and selects upload without selecting a file
+		// in theory this error should not appear as a browse button should not be visible without a file first being selected
+	//	fileMsg("<?php echo lang("_SELECT_FILE") ?>");
+	//	return false;
+	//} else 
+	//{
+		var file = fdata[n];
+		// validate fiename 
+		if (!validatefilename(file.name)){
+		return false;
+		}
+		//validate file size
+		if(file.size < 1)
+		{
+		fileMsg("<?php echo lang("_INVALID_FILESIZE_ZERO") ?>");	
+		return false;
+		}
+		if(file.size > maxHTML5uploadsize)
+		{
+		fileMsg("<?php echo lang("_INVALID_TOO_LARGE_1") ?> " + readablizebytes(maxHTML5uploadsize) + ". <?php echo lang("_SELECT_ANOTHER_FILE") ?> ");	
+		return false;
+		}
+		var tmpExtension = file.name.split('.').pop();
+		if(banextensions.search(tmpExtension) != -1)
+		{
+		fileMsg("<?php echo lang("_INVALID_FILE_EXT") ?>");	
+		return false;
+		}
+		$("#dialog-uploadprogress").dialog("option", "title", "<?php echo lang("_UPLOAD_PROGRESS") ?>:  " +  file.name + " (" +readablizebytes(file.size) + ")");
+		return true;
+	//}	
+}
+
 	// HTML5 form Validation
 	function validateForm()
 	{
@@ -329,7 +369,7 @@
 	var validate = true;
 	
 	if(!validate_fileto() ){validate = false;};		// validate emails
-	if(!validate_file() ){validate = false;};		// check if file selected
+	//if(!validate_file() ){validate = false;};		// check if file selected
 	//if(aup == '1') // check if AUP is required
 	//{
 	if(aup == '1' && !validate_aup() ){validate = false;};		// check AUP is selected
@@ -362,46 +402,6 @@ function validateextension(filename)
 	} else {
 	return false;
 	}
-}
-
-// Validate FILE (HTML5 only)
-function validate_file()
-{
-
-	fileMsg("");
-	if(!document.getElementById("fileToUpload").files[0])
-	{
-		// display message if a user enters all form details and selects upload without selecting a file
-		// in theory this error should not appear as a browse button should not be visible without a file first being selected
-		fileMsg("<?php echo lang("_SELECT_FILE") ?>");
-		return false;
-	} else 
-	{
-		var file = document.getElementById("fileToUpload").files[0];
-		// validate fiename 
-		if (!validatefilename(file.name)){
-		return false;
-		}
-		//validate file size
-		if(file.size < 1)
-		{
-		fileMsg("<?php echo lang("_INVALID_FILESIZE_ZERO") ?>");	
-		return false;
-		}
-		if(file.size > maxHTML5uploadsize)
-		{
-		fileMsg("<?php echo lang("_INVALID_TOO_LARGE_1") ?> " + readablizebytes(maxHTML5uploadsize) + ". <?php echo lang("_SELECT_ANOTHER_FILE") ?> ");	
-		return false;
-		}
-		var tmpExtension = file.name.split('.').pop();
-		if(banextensions.search(tmpExtension) != -1)
-		{
-		fileMsg("<?php echo lang("_INVALID_FILE_EXT") ?>");	
-		return false;
-		}
-		$("#dialog-uploadprogress").dialog("option", "title", "<?php echo lang("_UPLOAD_PROGRESS") ?>:  " +  file.name + " (" +readablizebytes(file.size) + ")");
-		return true;
-	}	
 }
 
 // flex file information check
@@ -503,12 +503,12 @@ function validate()
 {
 	// upload if validated
 	if(html5) {		
-	if(validateForm()) // validate client side
-		// validate server side as well (check for drive space
-	
-
-		//Use this to allow uplods with faulty parameters (and comment out the previouslone) if(true)
+	if(validateForm()) 
 	{
+		// validate client side
+		// validate server side as well (check for drive space
+		//Use this to allow uplods with faulty parameters (and comment out the previous one) if(true)
+	
 	n=0;
 	startupload();
 	}

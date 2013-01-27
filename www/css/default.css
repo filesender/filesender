@@ -145,6 +145,16 @@ input,textarea
 	margin: 2px;
 	background-color: #dedede;
 }
+
+.validfalse
+{
+	padding: 8px;
+	border: 1px solid #CCCCCC;
+	margin: 2px;
+	color: #666666;
+	text-decoration: line-through;
+}
+
 #tog {
 	padding-left: 20px;
 	border: 1px solid #cccccc;
