@@ -231,6 +231,19 @@ input {
 	
 	margin-right: 10px;
 }
+
+#dragfilestoupload {
+	border:2px dashed #666666;
+	border-radius:5px;
+	-moz-border-radius: 5px;
+	padding-top: 5px;
+	padding-right: 0px;
+	padding-bottom: 5px;
+	background-color: #FFFFFF;
+	text-align: center;
+	font-weight: bold;
+}
+
 #aup 
 {
 	width: 20px;	/*margin-left: -1px;*/
