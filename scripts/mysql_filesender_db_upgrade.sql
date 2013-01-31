@@ -1,4 +1,4 @@
-﻿--
+--
 -- Notes: mySQL upgrade from 1.1.x DB to 1.5beta2
 -- Version: 1.5
 
