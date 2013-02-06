@@ -1,14 +1,6 @@
-Updated: 3 July 2011
+Updated: 6 February 2013
 
-*********************
-This is the development branch of FileSender 1.5 which is stil being worked
-on and should not be used for production services. This file will be updated
-as soon as 1.5 will be release-ready. In the meantime have a look at
-
-http://www.assembla.com/spaces/file_sender/wiki/Installation_notes_for_1-5_development_code
-
-for more information.
-*********************
+This is the README.txt for version 1.5 of the FileSender software.
 
 FileSender is a software package that implements a web-based application that
 allows authenticated users to securely and easily send arbitrarily large files
@@ -30,8 +22,7 @@ FileSender project home:
    http://www.filesender.org/
 
 FileSender installation and configuration documentation is available at:
-   https://www.assembla.com/wiki/show/file_sender/Documentation_for_v1-0
-
+   https://www.assembla.com/spaces/file_sender/wiki/Documentation_v1-5
 
 Support is available on a best-effort basis through the FileSender development
 mailinglist filesender-dev@filesender.org. For information on how to subscribe
@@ -41,16 +32,22 @@ and the mailinglist archives:
 
 Acknowledgements
 ================
-The 1.0 release of the FileSender software was developed by an international
-core team of contributors. The FileSender 1.0 core team members were
-Chris Richter, Gijs Molenaar, Guido Aben, Jan Meijer, Xander Jansen, Wendy Mason
 
-Many others have contributed to make FileSender 1.0 possible:
-   http://www.assembla.com/wiki/show/file_sender/Acknowledgements
+The 1.5 release of the FileSender software was developed by an international
+core team with many others contributing. The FileSender 1.5 core team members
+were Chris Richter, Guido Aben, Jan Meijer, Wendy Mason, Xander Jansen
 
-FileSender 1.0 was funded by a consortium of the national research and
-educational networks (NREN) AARNet (Australia), HEAnet (Ireland), SURFnet
-(Netherlands) and UNINETT (Norway).
+Many others have contributed to make FileSender 1.5 possible:
+   https://www.assembla.com/spaces/file_sender/wiki/Acknowledgements_for_v1-5
+
+Sustained funding, staff and other resources for the FileSender project are
+provided by the National Research and Educational Networks (NRENs) AARNet
+(Australia), HEAnet (Ireland), SURFnet (The Netherlands) and UNINETT (Norway).  
+
+For the 1.5 release FileSender received targeted financial contributions from
+ARNES (Slovenia), Belnet (Belgium), CSC/FUNET (Finland), CESNET (Czech
+Republic), the Hebrew University of Jerusalem (Israel) and UNI-C (Denmark).
+
 
 The FileSender project started in April 2009 and was initiated by AARNet,
 HEAnet and UNINETT.
