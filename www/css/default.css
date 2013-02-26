@@ -83,20 +83,47 @@ td {
 	position: relative;
 }
 
-.formleft
-{
-	width: 50%;
+/* common column settings */
+.colright,
+.colmid,
+.colleft {
+	width:100%;			/* width of page */
+	position:relative;
+}
+.col1,
+.col2,
+.col3 {
 	float:left;
-	background-color: #FFFFFF;
+	position:relative;
+	padding:0 0 1em 0;	/* no left and right padding on columns, we just make them narrower instead 
+					only padding top and bottom is included here, make it whatever value you need */
+	overflow:hidden;
 }
-
-.formright
-{
-	float: right;
-	width: 45%;
-	background-color: #FFFFFF;
+/* 3 Column settings */
+.threecol {
+	background:#eee;		/* right column background colour */
 }
-
+.threecol .colmid {
+	right:25%;			/* width of the right column */
+	background:#fff;		/* center column background colour */
+}
+.threecol .colleft {
+	right:32%;			/* width of the middle column */
+	background:#f4f4f4;	/* left column background colour */
+}
+.threecol .col1 {
+	width:32%;			/* width of center column content (column width minus padding on either side) */
+	left:91%;			/* 100% plus left padding of center column */
+}
+.threecol .col2 {
+	width:33%;			/* Width of left column content (column width minus padding on either side) */
+	left:25%;			/* width of (right column) plus (center column left and right padding) plus (left column left padding) */
+}
+.threecol .col3 {
+	width:33%;			/* Width of right column content (column width minus padding on either side) */
+	left:59%;			/* Please make note of the brackets here:
+					(100% - left column width) plus (center column left and right padding) plus (left column left and right padding) plus (right column left padding) */
+}
 #menuleft
 {
 	position: relative;
@@ -232,7 +259,7 @@ input {
 	margin-right: 10px;
 }
 
-#dragfilestoupload {
+#dragfilestouploadcss {
 	border:2px dashed #666666;
 	border-radius:5px;
 	-moz-border-radius: 5px;
@@ -338,13 +365,13 @@ margin-top: 4px;
 #wrap {
 	background: #fff;
 	text-align: left;
-	width: 800px;
+	width: 100%;
 	height: 100%;
 	float: left;
 	padding-bottom: 20px;
 }
 #header {
-	background: #666;
+	
 	padding-top: 0;
 	padding-right: 0;
 	padding-bottom: 0px;
