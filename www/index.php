@@ -223,12 +223,12 @@ function openabout()
    <div class="menu" id="menuright">
   <?php
 	if($config['helpURL'] == "") {
-		echo '<a href="#" id="topmenu_help" onclick="openhelp()">'.lang("_HELP").'</a>';
+		echo '<a id="topmenu_help" onclick="openhelp()" title="'.lang("_HELP").'">'.lang("_HELP").'</a>';
 	} else {
-		echo '<a href="'.$config['helpURL'].'" target="_blank" id="topmenu_help">'.lang("_HELP").'</a>';
+		echo '<a href="'.$config['helpURL'].'" target="_blank" title="'.lang("_HELP").'" id="topmenu_help">'.lang("_HELP").'</a>';
 	}
 	if($config['aboutURL'] == "") {
-		echo '<a href="#" id="topmenu_about" onclick="openabout()">'.lang("_ABOUT").'</a>';
+		echo '<a id="topmenu_about" onclick="openabout()">'.lang("_ABOUT").'</a>';
 	} else {
 		echo '<a href="'.$config['aboutURL'].'" target="_blank" id="topmenu_about">'.lang("_ABOUT").'</a>';	
 	}
