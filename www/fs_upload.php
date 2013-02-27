@@ -261,7 +261,8 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 
 	// Insert a new guest invite (voucher)
 	case 'insertVoucherAjax': 
-	$complete = "";
+		$complete = "";
+		$errorArray = array();
 		// check authenticated first :NOTE:
 		if( $authsaml->isAuth()) {
 			logEntry("DEBUG fs_upload: Filedata 'insertVoucherAjax' myJson = " . $_POST['myJson'] );
@@ -285,18 +286,20 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 			foreach ($emailArray as $Email) {
 				if(!filter_var($Email,FILTER_VALIDATE_EMAIL)) { array_push($errorArray,  "err_invalidemail"); }
 			}
-			// insert each voucher
-			foreach ($emailArray as $Email) { 
-				$functions->insertVoucher($Email,$dataitem["fileexpirydate"]);
-			} 
-			
-			$complete = "complete";
+			if(sizeof($errorArray) > 0 ) {
+				$resultArray["errors"] =  $errorArray;
+			} else {
+				// insert each voucher
+				foreach ($emailArray as $Email) { 
+					$functions->insertVoucher($Email,$dataitem["fileexpirydate"]);
+				} 
+				$complete = "complete";
+			}
 		} else {
 			$complete =  "not_authenticated";
 		}
-			if(sizeof($errorArray) > 0 ) { $resultArray["errors"] =  $errorArray; }
-			$resultArray["status"] = $complete;
-			echo json_encode($resultArray);	
+		$resultArray["status"] = $complete;
+		echo json_encode($resultArray);	
 		break;
 			
 	// insert add new recipient to existing file 
