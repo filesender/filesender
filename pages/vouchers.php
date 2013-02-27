@@ -226,7 +226,7 @@ $json_o=json_decode($filedata,true);
       </tr>
 	    <?php if(isset($config["vlts"]) && $config["vlts"]) { ?>
       <tr>
-        <td class="mandatory" id="vouchers_expirydate">&nbsp;</td>
+        <td class="mandatory" id="vouchers_limittosender">&nbsp;</td>
         <td>
           <label>
           <input style="width:10px" name="vlts" type="checkbox" id="vlts" value="1" />
