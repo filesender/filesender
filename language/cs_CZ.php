@@ -48,7 +48,7 @@ $lang["_MY_FILES"] = "Mé soubory";
 $lang["_HOME"] = "Domů";
 $lang["_ABOUT"] = "O programu";
 $lang["_HELP"] = "Pomoc";
-$lang["_DELETE_VOUCHER"] = "Smazat poznámku";
+$lang["_DELETE_VOUCHER"] = "Smazat pozvánku";
 $lang["_UPLOAD_COMPLETE"] = "Váš soubor byl nahrán a zpráva odeslána.";
 $lang["_UPLOAD_PROGRESS"] = "Průběh nahrávání";
 $lang["_DOWNLOAD"] = "Stáhnout";
@@ -112,7 +112,7 @@ $lang["_INVALID_EXPIRY_DATE"] = "Chybný datum expirace";
 $lang["_INVALID_FILE"] = "Chybný soubor";	
 $lang["_INVALID_FILEVOUCHERID"] = "Chybný soubor nebo ID pozvánky";	
 $lang["_INVALID_FILESIZE_ZERO"] = "Velikost souboru nemůže být 0. Prosím, vyberte jiný soubor.";
-$lang["_INVALID_FILE_EXT"] = "Chybný koncovka souboru.";
+$lang["_INVALID_FILE_EXT"] = "Chybná koncovka souboru.";
 $lang["_INVALID_TOO_LARGE_1"] = "Velikost souboru nemůže být více než";
 $lang["_AUTH_ERROR"] = "Nejste již přihlášen. <br />Vaše sezení vypršelo nebo nastala chyba serveru. <br /><br />Prosím, přihlašte se znovu.";	
 $lang["_SELECT_ANOTHER_FILE"] = "Prosím, vyberte jiný soubor.";
@@ -179,7 +179,7 @@ $lang["_CONFIRM_DELETE_VOUCHER"] = "Jste si jist, že chcete smazat tuto pozván
 $lang["_CONFIRM_RESEND_EMAIL"] = "Jste si jisti, že chcete znovu odeslat tento email?";
 
 // standard date display format - vouchers, sent files
-$lang['datedisplayformat'] = "d/m/y"; // Format for displaying date/time, use PHP date() format string syntax 
+$lang['datedisplayformat'] = "d. m. Y"; // Format for displaying date/time, use PHP date() format string syntax 
 
 // datepicker localization
 $lang["_DP_closeText"] = 'Hotovo'; // Done
@@ -192,7 +192,7 @@ $lang["_DP_dayNames"] = "['Neděle', 'Pondělí', 'Úterý', 'Středa', 'Čtvrte
 $lang["_DP_dayNamesShort"] = "['Ned', 'Pon', 'Úte', 'Stř', 'Čtv', 'Pát', 'Sob']";
 $lang["_DP_dayNamesMin"] = "['Ne','Po','Út','St','Čt','Pá','So']";
 $lang["_DP_weekHeader"] = 'Týden';
-$lang["_DP_dateFormat"] = 'dd/mm/yy';
+$lang["_DP_dateFormat"] = 'dd. mm. yy';
 $lang["_DP_firstDay"] = '1';
 $lang["_DP_isRTL"] = 'false';
 $lang["_DP_showMonthAfterYear"] = 'false';
