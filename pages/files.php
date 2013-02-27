@@ -353,7 +353,7 @@ $json_o=json_decode($filedata,true);
         <td class="HardBreak" width="100px" id="myfiles_header_size"><strong><?php echo lang("_SIZE"); ?></strong></td>
        <!-- <td class="HardBreak" id="myfiles_header_subject"><strong><?php //echo lang("_SUBJECT") ; ?></strong></td>-->
        <!-- <td class="HardBreak" id="myfiles_header_message"><strong><?php //echo lang("_MESSAGE") ; ?></strong></td>-->
-		<td class="HardBreak" width="100px" id="myfiles_header_expiry" align='center' title="# <?php echo lang("_DOWNLOADED"); ?>"><strong><?php echo lang("_DOWNLOADED"); ?></strong></td>
+		<td class="HardBreak" width="100px" id="myfiles_header_downloaded" align='center' title="# <?php echo lang("_DOWNLOADED"); ?>"><strong><?php echo lang("_DOWNLOADED"); ?></strong></td>
        <!-- <td class="HardBreak" id="myfiles_header_created"><strong><?php //echo lang("_CREATED"); ?></strong></td>-->
         <td class="HardBreak" width="100px" id="myfiles_header_expiry"><strong><?php echo lang("_EXPIRY"); ?></strong></td>
       </tr>
