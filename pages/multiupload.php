@@ -137,21 +137,21 @@
 		
 		
 		// upload area filestoupload
-	$('#dragfilestoupload').on(
+	$('#wrap').on(
     'dragover',
     function(e) {
         e.preventDefault();
         e.stopPropagation();
     }
 )
-$('#dragfilestoupload').on(
+$('#wrap').on(
     'dragenter',
     function(e) {
         e.preventDefault();
         e.stopPropagation();
     }
 )
-	$('#dragfilestoupload').on(
+	$('#wrap').on(
     'drop',
     function(e){
         if(e.originalEvent.dataTransfer){
