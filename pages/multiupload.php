@@ -617,7 +617,7 @@ function keepMeAlive()
     <!-- Col 1 start -->
    <div class="col1"> 
 	<div class="heading">Enter Recipient</div>
-	<div class="box" style="min-height:250px;">
+	<div class="box" style="min-height:300px;">
      <div class=" mandatory" id="upload_from"><?php echo lang("_FROM"); ?>:  <?php echo $senderemail ?></div>
       
         <div class=" mandatory" id="upload_to"><?php echo lang("_TO") ; ?>:</div>
@@ -647,7 +647,7 @@ function keepMeAlive()
     <!--- col 2 start -->
 	    <div id="fileInfoView" class="col2">
 		<div class="heading"><div id="selectfile"><?php echo lang("_SELECT_FILE"); ?>:</div></div>
-        <div class="box" style="min-height:250px;">
+        <div class="box" style="min-height:300px;">
            <div id="uploadhtml5" style="display:none">
 		  <div class="menu"><a href="#"  onclick="browse()" style="cursor:pointer;width:100%;">Browse</a></div>
             <input style="display:none; padding-right:6px;" type="file" name="fileToUpload" id="fileToUpload" onchange="fileSelected();" multiple/></div>
@@ -726,7 +726,7 @@ if ( hasProductInstall && !hasRequestedVersion ) {
 
         <div class="col3" >
     <div class="heading">&nbsp;</div>
-    <div class="box" style="min-height:100px;">
+    <div class="box" style="min-height:150px;">
     	   <?php if ($config["AuP"]) {?>
     <div class="auppanel">
       <input style="float:left" name="aup" type="checkbox" id="aup" onchange="validate_aup()" <?php echo ($config["AuP_default"] ) ? "checked" : ""; ?> <?php echo (isset($_SESSION["aup"]) && !$authvoucher->aVoucher() ) ? "checked" : ""; ?> value="true" />
