@@ -84,6 +84,10 @@ if(!$authvoucher->aVoucher() && !$authsaml->isAuth() && $s != "complete" && $s !
 <link type="text/css" href="css/smoothness/jquery-ui-1.8.2.custom.css" rel="Stylesheet" />
 <link rel="stylesheet" type="text/css" href="css/jquery.dataTables.css" />
 <link rel="stylesheet" type="text/css" href="css/default.css" />
+<?php if (isset($config["customCSS"])) {
+echo '<link rel="stylesheet" type="text/css" href="'.$config["customCSS"].'" />';
+}
+?>
 <script type="text/javascript" src="js/jquery.dataTables.min.js" ></script>
 <script type="text/javascript" src="js/json2.js" ></script>
 <script type="text/javascript" src="js/common.js" ></script>

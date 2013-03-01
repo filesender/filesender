@@ -64,6 +64,7 @@ public function loadConfig() {
 	$config["versionNumber"] = true; // Show version number (true/false)
 	$config['site_showStats'] = false; // Show site upload/download stats (true/false)
 	$config['displayUserName'] = true; // Show 'Welcome user' (true/false)
+	$config["customCSS"] = "css/custom1.css"; 
 	
 	// debug settings
 	$config["debug"] = true; // Debug logging on/off (true/false)
