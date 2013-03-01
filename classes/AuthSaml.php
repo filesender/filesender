@@ -70,7 +70,7 @@ class AuthSaml {
                 return FALSE;
             }
 
-            $known_admins = explode(',', $config['admin']);
+            $known_admins = array_map('trim',explode(',', $config['admin']));
             if(in_array($attributes["saml_uid_attribute"], $known_admins)) {
                 return TRUE;
             } else {
