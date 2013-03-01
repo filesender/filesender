@@ -727,15 +727,15 @@ if ( hasProductInstall && !hasRequestedVersion ) {
         <div class="col3" >
     <div class="heading">&nbsp;</div>
     <div class="box" style="min-height:160px;">
-    	   <?php if ($config["AuP"]) {?>
+   
+      <div class="menu" id="uploadbutton" style="display:"><a href="#" onclick="validate()"><?php echo lang("_SEND"); ?></a></div>
+		 <?php if ($config["AuP"]) {?>
     <div class="auppanel">
       <input style="float:left" name="aup" type="checkbox" id="aup" onchange="validate_aup()" <?php echo ($config["AuP_default"] ) ? "checked" : ""; ?> <?php echo (isset($_SESSION["aup"]) && !$authvoucher->aVoucher() ) ? "checked" : ""; ?> value="true" />
           <div id="aup_label" title="<?php echo lang("_SHOWHIDE"); ?>" onclick="toggleTOG()" style="cursor:pointer;"><?php echo lang("_ACCEPTTOC"); ?></div>
         <div id="aup_msg" class="validation_msg" style="display: none"><?php echo lang("_AGREETOC"); ?></div>          <div id="tog" style="display:none"> <?php echo lang("_AUPTERMS"); ?> </div>
 	</div>
       <?php } ?>
-      <div class="menu" id="uploadbutton" style="display:"><a href="#" onclick="validate()"><?php echo lang("_SEND"); ?></a></div>
-		
 	</div>
       		    <div class="heading" style="height:20px;">Options</div>
 		  <div id="options" class="box" style="min-height:100px;">
