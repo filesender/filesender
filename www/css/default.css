@@ -56,6 +56,11 @@ img {
 	display: block;
 }
 
+a 
+{
+	color: #333333;
+}
+
 td {
 	vertical-align: top;
 	padding: 3px;
