@@ -14,8 +14,8 @@ SimpleSAMLphp and cron to get up and running.
 Upgrading from version 1.0.1, 1.1 or 1.1.1
 ==========================================
 
-When upgrading from previous production releases to version 1.5 there are a number of
-important issues to pay attention to: 
+When upgrading from previous production releases to version 1.5 there are a
+number of important issues to pay attention to:
 
    - You MUST update your database schema.
 
@@ -90,7 +90,7 @@ of the administrator reference guide for details:
 
 https://www.assembla.com/spaces/file_sender/wiki/Administrator_reference_manual#customising_and_configuring_multi_language_support
 
-**Please note the email texts are still in the config.php configuration file! ** 
+**Please note the email texts are still in the config.php configuration file! **
 
 
 Customisation
