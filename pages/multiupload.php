@@ -374,7 +374,7 @@ $('#dragfilestoupload').on(
 		{
 		$("#fileToUpload").hide();// hide Browse
 		$("#selectfile").hide();// hide Browse message
-		$("#uploadbutton").hide(); // hide upload
+		//$("#uploadbutton").hide(); // hide upload
 		$("#cancelbutton").show(); // show cancel
 		// show upload progress dialog
 		$("#dialog-uploadprogress").dialog("open");
@@ -479,7 +479,7 @@ function validateextension(filename)
 // flex file information check
 function fileInfo(name,size)
 {
-	$("#uploadbutton").hide(); 
+	//$("#uploadbutton").hide(); 
 fileMsg("");
 if(size < 1)
 {
@@ -505,7 +505,7 @@ if(size > maxFLASHuploadsize)
 			$("#uploadbutton").show(); 
 		} else {
 			$("#fileInfoView").hide();
-			$("#uploadbutton").hide(); 
+			//$("#uploadbutton").hide(); 
 		}
 }
 
@@ -617,7 +617,7 @@ function keepMeAlive()
     <!-- Col 1 start -->
    <div class="col1"> 
 	<div class="heading">Enter Recipient</div>
-	<div class="box">
+	<div class="box" style="min-height:250px;">
      <div class=" mandatory" id="upload_from"><?php echo lang("_FROM"); ?>:  <?php echo $senderemail ?></div>
       
         <div class=" mandatory" id="upload_to"><?php echo lang("_TO") ; ?>:</div>
@@ -647,7 +647,7 @@ function keepMeAlive()
     <!--- col 2 start -->
 	    <div id="fileInfoView" class="col2">
 		<div class="heading"><div id="selectfile"><?php echo lang("_SELECT_FILE"); ?>:</div></div>
-        <div class="box">
+        <div class="box" style="min-height:250px;">
            <div id="uploadhtml5" style="display:none">
 		  <div class="menu"><a href="#"  onclick="browse()" style="cursor:pointer;width:100%;">Browse</a></div>
             <input style="display:none; padding-right:6px;" type="file" name="fileToUpload" id="fileToUpload" onchange="fileSelected();" multiple/></div>
@@ -717,7 +717,7 @@ if ( hasProductInstall && !hasRequestedVersion ) {
   <div  id="dragfilestouploadcss"><br />Drag Files here to upload<br /><br />
 		  </div>
           <br /> 
-        <div  id="filestoupload" class="box">
+        <div  id="filestoupload">
 		  </div>
           </div>
  </div>
@@ -726,7 +726,7 @@ if ( hasProductInstall && !hasRequestedVersion ) {
 
         <div class="col3" >
     <div class="heading">&nbsp;</div>
-    <div class="box">
+    <div class="box" style="min-height:100px;">
     	   <?php if ($config["AuP"]) {?>
     <div class="auppanel">
       <input style="float:left" name="aup" type="checkbox" id="aup" onchange="validate_aup()" <?php echo ($config["AuP_default"] ) ? "checked" : ""; ?> <?php echo (isset($_SESSION["aup"]) && !$authvoucher->aVoucher() ) ? "checked" : ""; ?> value="true" />
@@ -734,11 +734,11 @@ if ( hasProductInstall && !hasRequestedVersion ) {
         <div id="aup_msg" class="validation_msg" style="display: none"><?php echo lang("_AGREETOC"); ?></div>          <div id="tog" style="display:none"> <?php echo lang("_AUPTERMS"); ?> </div>
 	</div>
       <?php } ?>
-      <div class="menu" id="uploadbutton" style="display:none"><a href="#" onclick="validate()"><?php echo lang("_SEND"); ?></a></div>
+      <div class="menu" id="uploadbutton" style="display:"><a href="#" onclick="validate()"><?php echo lang("_SEND"); ?></a></div>
 		
-	
-      		    <div class="heading">Options</div>
-		  <div id="options">
+	</div>
+      		    <div class="heading" style="height:20px;">Options</div>
+		  <div id="options" class="box" style="min-height:100px;">
           <div class=" mandatory" id="upload_expirydate"><?php echo lang("_EXPIRY_DATE"); ?>:
           <input type="hidden" id="fileexpirydate" name="fileexpirydate" value="<?php echo date($lang['datedisplayformat'],strtotime("+".$config['default_daysvalid']." day"));?>" /></div>
        <input id="datepicker" name="datepicker" title="<?php echo lang('_DP_dateFormat'); ?>" onchange="validate_expiry()" />
@@ -748,7 +748,7 @@ if ( hasProductInstall && !hasRequestedVersion ) {
 	       <input name="rtnemail" type="checkbox" id="rtnemail" style="float:left; width:20px;" />
 		  </div>
 		 
-    </div>
+    
 	</div>
           </div>
           </div>
