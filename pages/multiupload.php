@@ -726,7 +726,7 @@ if ( hasProductInstall && !hasRequestedVersion ) {
 
         <div class="col3" >
     <div class="heading">&nbsp;</div>
-    <div class="box" style="min-height:150px;">
+    <div class="box" style="min-height:160px;">
     	   <?php if ($config["AuP"]) {?>
     <div class="auppanel">
       <input style="float:left" name="aup" type="checkbox" id="aup" onchange="validate_aup()" <?php echo ($config["AuP_default"] ) ? "checked" : ""; ?> <?php echo (isset($_SESSION["aup"]) && !$authvoucher->aVoucher() ) ? "checked" : ""; ?> value="true" />
