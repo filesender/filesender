@@ -1,4 +1,26 @@
-Last update: 22 October 2012
+Last update: 2 March 2013
+
+Version 1.5 <3 March 2013>
+
+   * Release 1.5
+
+   * Major changes since 1.1.1
+     - User interface is now HTML based, no Flash required except when
+       uploading files with a non-HTML5-capable browser
+     - Multilanguage support in web interface
+     - Support for multiple database backends (PDO)
+     - Changes in configuration (see Upgrade Notes)
+
+   * Changes since 1.5-rc1
+     - Added Serbian language file (#865)
+     - Updated language definitions (#666, #706, #720, #880)
+     - Consolidated filename validation (#863)
+     - Don't insert guest voucher(s) in case of validation errors (#862)
+     - Allow spaces in configurable setting for admin users (#869)
+     - Include version in call to default.css to prevent upgrade issues (#834)
+     - Add color style for links in default.css (#837)
+     - Debian packaging: 'default-mta' added to dependencies (#710)
+     - Documentation updated
 
 Version 1.5-rc1 <22 October 2012>
 
