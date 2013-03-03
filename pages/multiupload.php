@@ -618,20 +618,38 @@ function keepMeAlive()
    <div class="col1"> 
 	<div class="heading">Enter Recipient</div>
 	<div class="box" style="min-height:300px;">
-     <div class=" mandatory" id="upload_from"><?php echo lang("_FROM"); ?>:  <?php echo $senderemail ?></div>
-      
-        <div class=" mandatory" id="upload_to"><?php echo lang("_TO") ; ?>:</div>
-        <input name="fileto" title="<?php echo lang("_EMAIL_SEPARATOR_MSG") ; ?>" type="text" id="fileto" onchange="validate_fileto()"/>
-        <div id="fileto_msg" style="display: none" class="validation_msg"><?php echo lang("_INVALID_MISSING_EMAIL"); ?></div>
-        <div id="maxemails_msg" style="display: none" class="validation_msg"><?php echo lang("_MAXEMAILS"); ?> <?php echo $config['max_email_recipients'] ?>.</div>
+     <div class="fieldcontainer" id="upload_from">
+   			<div class="label"><?php echo lang("_FROM"); ?>:</div>
+    		<div class="field"><?php echo $senderemail ?></div>
+		</div>
+      	
+        <div class="fieldcontainer">
+   			<div class="label mandatory"id="upload_to" ><?php echo lang("_TO") ; ?>:</div>
+    		<div class="field"> 
+            <input name="fileto" title="<?php echo lang("_EMAIL_SEPARATOR_MSG") ; ?>" type="text" id="fileto" onchange="validate_fileto()"/>
+            <div id="fileto_msg" style="display: none" class="validation_msg field"  class=""><?php echo lang("_INVALID_MISSING_EMAIL"); ?>
+            <div id="maxemails_msg" style="display: none" class="validation_msg"><?php echo lang("_MAXEMAILS"); ?> <?php echo $config['max_email_recipients'] ?>.</div>
+            </div>
+            </div>
+		</div>
+  
+               
+         <div class="fieldcontainer" id="upload_subject">
+   			<div class="label"><?php echo lang("_SUBJECT"); ?>: (<?php echo lang("_OPTIONAL"); ?>)</div>
+    		<div class="field" > <input name="filesubject" type="text" id="filesubject" /> </div>
+		</div>
+        
+        
+        <div class="fieldcontainer" id="upload_message">
+   			<div class="label"><?php echo lang("_MESSAGE"); ?>: (<?php echo lang("_OPTIONAL"); ?>)</div>
+    		<div class="field"><textarea name="filemessage" cols="57" rows="4" id="filemessage"></textarea></div>
+		</div>
+        
+        
           <input name="filefrom" type="hidden" id="filefrom" value="<?php echo $senderemail ?>" size="40" /> 
 	   <div>
-        </br>
-	    <div class="" id="upload_subject"><?php echo lang("_SUBJECT"); ?>: (<?php echo lang("_OPTIONAL"); ?>)</div>
-       <input name="filesubject" type="text" id="filesubject" /> 
-       </br></br>
-        <div class="" id="upload_message"><?php echo lang("_MESSAGE"); ?>: (<?php echo lang("_OPTIONAL"); ?>)</div>
-       <textarea name="filemessage" cols="57" rows="4" id="filemessage"></textarea>
+
+       
 		
 
 <input type="hidden" id="filevoucheruid" name="filevoucheruid" value="<?php echo $voucherUID; ?>" />
@@ -737,13 +755,23 @@ if ( hasProductInstall && !hasRequestedVersion ) {
 	</div>
       <?php } ?>
 	</div>
-      		    <div class="heading" style="height:20px;">Options</div>
-		  <div id="options" class="box" style="min-height:100px;">
-          <div class=" mandatory" id="upload_expirydate"><?php echo lang("_EXPIRY_DATE"); ?>:
-          <input type="hidden" id="fileexpirydate" name="fileexpirydate" value="<?php echo date($lang['datedisplayformat'],strtotime("+".$config['default_daysvalid']." day"));?>" /></div>
-       <input id="datepicker" name="datepicker" title="<?php echo lang('_DP_dateFormat'); ?>" onchange="validate_expiry()" />
+      	<div class="heading" style="height:20px;">Options</div>
+		  <div id="options" class="box" style="min-height:68px;">
+        
+          <div class="fieldcontainer" id="upload_expirydate">
+   			<div class="label mandatory"><?php echo lang("_EXPIRY_DATE"); ?>:</div>
+    		<div class="field"> 
+            <input id="datepicker" name="datepicker" title="<?php echo lang('_DP_dateFormat'); ?>" onchange="validate_expiry()" />
           <div id="expiry_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_EXPIRY_DATE"); ?></div>
+          </div>
+		</div>
+        
+          <div class=" mandatory">
+          <input type="hidden" id="fileexpirydate" name="fileexpirydate" value="<?php echo date($lang['datedisplayformat'],strtotime("+".$config['default_daysvalid']." day"));?>" /></div>
+      
 	  <br/>
+      </div>
+      <div class="box">
        Send copy of emails to me
 	       <input name="rtnemail" type="checkbox" id="rtnemail" style="float:left; width:20px;" />
 		  </div>
