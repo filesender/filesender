@@ -17,6 +17,7 @@ Version 1.5 <3 March 2013>
      - Consolidated filename validation (#863)
      - Don't insert guest voucher(s) in case of validation errors (#862)
      - Allow spaces in configurable setting for admin users (#869)
+     - Restrict access to admin page skeleton (#881)
      - Include version in call to default.css to prevent upgrade issues (#834)
      - Add color style for links in default.css (#837)
      - Debian packaging: 'default-mta' added to dependencies (#710)
