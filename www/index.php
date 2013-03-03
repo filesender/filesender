@@ -332,7 +332,7 @@ function openabout()
 	{
 		require_once('../pages/logon.php');
 	}	
-	else if($s == "admin" && !$authvoucher->aVoucher()) 
+	else if($s == "admin" && $isAdmin && !$authvoucher->aVoucher()) 
 	{
 		require_once('../pages/admin.php');
 	}
