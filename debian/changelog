@@ -20,7 +20,7 @@ filesender (1.5) stable; urgency=medium
      - Debian packaging: 'default-mta' added to dependencies (#710)
      - Documentation updated
 
- -- Filesender Development <filesender-dev@filesender.org>  Sun, 03 Mar 2013 18:00:00 +0200
+ -- Filesender Development <filesender-dev@filesender.org>  Sun, 03 Mar 2013 20:24:49 +0100
 
 filesender (1.5~rc1) unstable; urgency=medium
    * Release 1.5-rc1
