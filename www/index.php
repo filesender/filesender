@@ -245,7 +245,7 @@ function openabout()
 
 		if($voucherData[0]["filestatus"] == "Voucher")
 		{ // load voucher upload
-			require_once('../pages/upload.php');
+			require_once('../pages/multiupload.php');
 		} else if($voucherData[0]["filestatus"] == "Available")
 		{ 
 			// allow download of voucher

@@ -267,7 +267,6 @@ input {
 	padding-right: 0px;
 	padding-bottom: 5px;
 	background-color: #FFFFFF;
-	text-align: center;
 	font-weight: bold;
 }
 
@@ -503,7 +502,7 @@ label {
 
 .fieldcontainer {
 	width: 100%;
-	height: 22px;
+	min-height: 22px;
 	/* border: 1px solid #F00;*/
 	padding: 4px;
 	margin: 2px;
@@ -513,8 +512,8 @@ label {
 
 .label {
 	float: left;
-	width: 70px;
+	/*width: 70px;*/
 	vertical-align: top;
 } 
 
-.field { float: left; width: 194px;} 
+.field { /*float: left; width: 194px; */} 
