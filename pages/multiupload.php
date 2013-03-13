@@ -613,45 +613,11 @@ function keepMeAlive()
 </div>
 <form id="form1" enctype="multipart/form-data" method="post" action="fs_uploadit.php" >
   <table width="100%" border="0" cellspacing="6">
-  <tr><td colspan="2"><div class="heading">Enter Recipient</div></td><td><div class="heading">Drag Files here to upload</div></td></tr>
+  <tr><td>
+    <div class="heading">Drag Files here to upload</div></td><td><div class="heading">Enter Recipient</div></td></tr>
     <tr>
-      <td colspan="2" class="box" rowspan="4" valign="top">
-        <div class="box" style="min-height:300px;">
-          <div class="fieldcontainer" id="upload_from">
-            <div class="mandatory"><?php echo lang("_FROM"); ?>:</div>
-            <div class="field"><?php echo $senderemail ?></div>
-          </div>
-          <div class="fieldcontainer">
-            <div class="label mandatory"id="upload_to" ><?php echo lang("_TO") ; ?>:</div>
-            <div class="field">
-              <input name="fileto" title="<?php echo lang("_EMAIL_SEPARATOR_MSG") ; ?>" type="text" id="fileto" onchange="validate_fileto()"/>
-              <div id="fileto_msg" style="display: none" class="validation_msg field"  class="">
-              <?php echo lang("_INVALID_MISSING_EMAIL"); ?>
-              <div id="maxemails_msg" style="display: none" class="validation_msg"><?php echo lang("_MAXEMAILS"); ?> <?php echo $config['max_email_recipients'] ?>.</div>
-            </div>
-          </div>
-        </div>
-        <div class="fieldcontainer" id="upload_subject">
-          <div class="label"><?php echo lang("_SUBJECT"); ?>: (<?php echo lang("_OPTIONAL"); ?>)</div>
-          <div class="field" >
-            <input name="filesubject" type="text" id="filesubject" />
-          </div>
-        </div>
-        <div class="fieldcontainer" id="upload_message">
-          <div class="label"><?php echo lang("_MESSAGE"); ?>: (<?php echo lang("_OPTIONAL"); ?>)</div>
-          <div class="field">
-            <textarea name="filemessage" cols="57" rows="4" id="filemessage"></textarea>
-          </div>
-        </div>
-        <input name="filefrom" type="hidden" id="filefrom" value="<?php echo $senderemail ?>" size="40" />
-        <div>
-          <input type="hidden" id="filevoucheruid" name="filevoucheruid" value="<?php echo $voucherUID; ?>" />
-          <input type="hidden" name="vid" id="vid" value="<?php echo $voucherUID; ?>" />
-          <input type="hidden" name="total" id="total" value="" />
-          <input type="hidden" name="n" id="n" value="" />
-          <input type="hidden" id="filestatus" name="filestatus" value="<?php echo $filestatus; ?>" />
-          <input type="hidden" name="loadtype" id="loadtype" value="standard" />
-          <div id="fileInfoView">
+      <td class="box" rowspan="4" valign="top">
+      <div id="fileInfoView">
             <div class="heading">
               <div id="selectfile"><?php echo lang("_SELECT_FILE"); ?>:</div>
             </div>
@@ -723,20 +689,53 @@ if ( hasProductInstall && !hasRequestedVersion ) {
               </div>
               <br />
             </div>
-          </div>
-          <?php if ($config["AuP"]) {?>
-          <div class="auppanel">
-            <input style="float:left" name="aup" type="checkbox" id="aup" onchange="validate_aup()" <?php echo ($config["AuP_default"] ) ? "checked" : ""; ?> <?php echo (isset($_SESSION["aup"]) && !$authvoucher->aVoucher() ) ? "checked" : ""; ?> value="true" />
-            <div id="aup_label" title="<?php echo lang("_SHOWHIDE"); ?>" onclick="toggleTOG()" style="cursor:pointer;"><?php echo lang("_ACCEPTTOC"); ?></div>
-            <div id="aup_msg" class="validation_msg" style="display: none"><?php echo lang("_AGREETOC"); ?></div>
-            <div id="tog" style="display:none"> <?php echo lang("_AUPTERMS"); ?> </div>
-          </div>
-          <?php } ?>
-        </div></td>
-      <td width="50%" height="100%" valign="top" class="box">
-        <div id="dragfilestouploadcss" style="height:220px" class="box">
+          </div>	
+  <div id="dragfilestouploadcss" style="height:220px" class="box">
           <div  id="filestoupload" style="width:100%; height:100%; overflow:auto;"> </div>
-        </div></td>
+      </div></td>
+      <td width="50%" height="100%" valign="top" class="box">
+      
+           <div class="box" style="min-height:300px;">
+          <div class="fieldcontainer" id="upload_from">
+            <div class="mandatory"><?php echo lang("_FROM"); ?>:</div>
+            <div class="field"><?php echo $senderemail ?></div>
+          </div>
+          <div class="fieldcontainer">
+            <div class="label mandatory"id="upload_to" ><?php echo lang("_TO") ; ?>:</div>
+            <div class="field">
+              <input name="fileto" title="<?php echo lang("_EMAIL_SEPARATOR_MSG") ; ?>" type="text" id="fileto" onchange="validate_fileto()"/>
+              <div id="fileto_msg" style="display: none" class="validation_msg field"  class="">
+              <?php echo lang("_INVALID_MISSING_EMAIL"); ?>
+              <div id="maxemails_msg" style="display: none" class="validation_msg"><?php echo lang("_MAXEMAILS"); ?> <?php echo $config['max_email_recipients'] ?>.</div>
+            </div>
+          </div>
+        </div>
+        <div class="fieldcontainer" id="upload_subject">
+          <div class="label"><?php echo lang("_SUBJECT"); ?>: (<?php echo lang("_OPTIONAL"); ?>)</div>
+          <div class="field" >
+            <input name="filesubject" type="text" id="filesubject" />
+          </div>
+        </div>
+        <div class="fieldcontainer" id="upload_message">
+          <div class="label"><?php echo lang("_MESSAGE"); ?>: (<?php echo lang("_OPTIONAL"); ?>)</div>
+          <div class="field">
+            <textarea name="filemessage" cols="57" rows="4" id="filemessage"></textarea>
+          </div>
+        </div>
+        <input name="filefrom" type="hidden" id="filefrom" value="<?php echo $senderemail ?>" size="40" />
+        <div>
+          <input type="hidden" id="filevoucheruid" name="filevoucheruid" value="<?php echo $voucherUID; ?>" />
+          <input type="hidden" name="vid" id="vid" value="<?php echo $voucherUID; ?>" />
+          <input type="hidden" name="total" id="total" value="" />
+          <input type="hidden" name="n" id="n" value="" />
+          <input type="hidden" id="filestatus" name="filestatus" value="<?php echo $filestatus; ?>" />
+          <input type="hidden" name="loadtype" id="loadtype" value="standard" />
+          
+        
+        </div>
+        
+        
+      </td>
     </tr>
     <tr><td><div class="heading">Options</div></td></tr>
     <tr>
@@ -759,7 +758,16 @@ if ( hasProductInstall && !hasRequestedVersion ) {
         </div></td>
     </tr>
     <tr>
-      <td class="box" height="20px"><div><div class="menu" id="uploadbutton" style="display:"><a href="#" onclick="validate()"><?php echo lang("_SEND"); ?></a></div></div></td>
+      <td class="box" height="20px">
+        <?php if ($config["AuP"]) {?>
+          <div class="auppanel">
+            <input style="float:left" name="aup" type="checkbox" id="aup" onchange="validate_aup()" <?php echo ($config["AuP_default"] ) ? "checked" : ""; ?> <?php echo (isset($_SESSION["aup"]) && !$authvoucher->aVoucher() ) ? "checked" : ""; ?> value="true" />
+            <div id="aup_label" title="<?php echo lang("_SHOWHIDE"); ?>" onclick="toggleTOG()" style="cursor:pointer;"><?php echo lang("_ACCEPTTOC"); ?></div>
+            <div id="aup_msg" class="validation_msg" style="display: none"><?php echo lang("_AGREETOC"); ?></div>
+            <div id="tog" style="display:none"> <?php echo lang("_AUPTERMS"); ?> </div>
+          </div>
+          <?php } ?>
+          <div><div class="menu" id="uploadbutton" style="display:"><a href="#" onclick="validate()"><?php echo lang("_SEND"); ?></a></div></div></td>
     </tr>
   </table>
   <div class="colmask threecol" id="dragfilestoupload"> </div>
