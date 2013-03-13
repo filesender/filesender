@@ -422,10 +422,11 @@ margin-top: 4px;
 }
 
 #uploadbutton  a {
-	width:100%;
+	width: 33%;
 	margin-top: 0px;
 	margin-bottom: 0px;
 	font-weight: bold;
+	text-align: center;
 }
 
 #downloadbutton  a {
