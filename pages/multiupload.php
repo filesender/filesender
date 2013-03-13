@@ -614,16 +614,13 @@ function keepMeAlive()
 <form id="form1" enctype="multipart/form-data" method="post" action="fs_uploadit.php" >
   <table width="100%" border="0" cellspacing="6">
   <tr><td>
-    <div class="heading">Drag Files here to upload</div></td><td><div class="heading">Enter Recipient</div></td></tr>
+    <div class="heading"><div id="selectfile"><?php echo lang("_SELECT_FILE"); ?>:</div></div></td><td><div class="heading">Enter Recipient</div></td></tr>
     <tr>
       <td class="box" rowspan="4" valign="top">
       <div id="fileInfoView">
-            <div class="heading">
-              <div id="selectfile"><?php echo lang("_SELECT_FILE"); ?>:</div>
-            </div>
-            <div class="box">
+           <div class="box">
               <div id="uploadhtml5" style="display:none">
-                <div class="menu"><a href="#"  onclick="browse()" style="cursor:pointer;width:100%;">Browse</a></div>
+                <div class="menu"><a href="#"  onclick="browse()" style="cursor:pointer;width:33%;">Browse</a></div>
                 <input style="display:none; padding-right:6px;" type="file" name="fileToUpload" id="fileToUpload" onchange="fileSelected();" multiple/>
               </div>
               <div id="file_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_FILE"); ?></div>
@@ -690,15 +687,15 @@ if ( hasProductInstall && !hasRequestedVersion ) {
               <br />
             </div>
           </div>	
-  <div id="dragfilestouploadcss" style="height:220px" class="box">
+            <div class="heading">Drag Files here to upload</div>
+  <div id="dragfilestouploadcss" style="height:400px" class="box">
           <div  id="filestoupload" style="width:100%; height:100%; overflow:auto;"> </div>
       </div></td>
       <td width="50%" height="100%" valign="top" class="box">
       
-           <div class="box" style="min-height:300px;">
+           <div class="box">
           <div class="fieldcontainer" id="upload_from">
-            <div class="mandatory"><?php echo lang("_FROM"); ?>:</div>
-            <div class="field"><?php echo $senderemail ?></div>
+            <div class="mandatory"><?php echo lang("_FROM"); ?>: <?php echo $senderemail ?></div>
           </div>
           <div class="fieldcontainer">
             <div class="label mandatory"id="upload_to" ><?php echo lang("_TO") ; ?>:</div>
@@ -719,7 +716,7 @@ if ( hasProductInstall && !hasRequestedVersion ) {
         <div class="fieldcontainer" id="upload_message">
           <div class="label"><?php echo lang("_MESSAGE"); ?>: (<?php echo lang("_OPTIONAL"); ?>)</div>
           <div class="field">
-            <textarea name="filemessage" cols="57" rows="4" id="filemessage"></textarea>
+            <textarea name="filemessage" cols="57" rows="5" id="filemessage"></textarea>
           </div>
         </div>
         <input name="filefrom" type="hidden" id="filefrom" value="<?php echo $senderemail ?>" size="40" />
