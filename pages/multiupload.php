@@ -733,7 +733,7 @@ if ( hasProductInstall && !hasRequestedVersion ) {
           </div>
           <?php } ?>
         </div></td>
-      <td width="300" height="100%" valign="top" class="box">
+      <td width="50%" height="100%" valign="top" class="box">
         <div id="dragfilestouploadcss" style="height:220px" class="box">
           <div  id="filestoupload" style="width:100%; height:100%; overflow:auto;"> </div>
         </div></td>
