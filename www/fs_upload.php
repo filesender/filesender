@@ -263,6 +263,19 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 		echo checkFileSize($uploadfolder.$tempFilename);
 		break;
 
+	// ---------------------------------
+	// Multithreaded (out-of-order) CHUNK file upload with HTML5 Web Workers
+	// By Edwin Schaap and René Klomp
+	// ---------------------------------
+	case 'tsunami':
+		require_once 'lib/tsunami/php/Tsunami.php';
+
+		$data = $functions->getVoucherData($_REQUEST["vid"]);
+		$tempFilename = generateTempFilename($data);
+		$fs = new Tsunami($config["site_filestore"].sanitizeFilename($tempFilename));
+		$fs->processChunk();
+		break;
+		
 	// Insert a new guest invite (voucher)
 	case 'insertVoucherAjax': 
 		$complete = "";

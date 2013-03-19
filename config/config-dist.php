@@ -58,6 +58,9 @@ public function loadConfig() {
 	$config['site_defaultlanguage'] = 'en_AU'; // for available languages see the ./language directory
 	$config['site_name'] = 'FileSender'; // Friendly name used for your FileSender instance
 
+	$config['terasender'] = true; // true/false - terasender (really fast uploads)uses html5 web workers to speed up file upload - effectively provding multi thread faster uploads
+	$config['terasenderadvanced'] = false; // true/false - terasender advanced - show advanced settings
+
 	// UI Settings
 	$config['datedisplayformat'] = "d-m-Y"; // Format for displaying date/time, use PHP date() format string syntax
 	$config["versionNumber"] = true; // Show version number (true/false)
