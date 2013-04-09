@@ -282,7 +282,7 @@ function openabout()
 	echo "<div class='versionnumber'>" .$versiondisplay."</div>";
 ?>
 	</div>
-		<div id="content" style="display:none">
+		<div id="content">
 		<div id="scratch"></div>
 		<?php
 		foreach ($messageArray as $message) 
