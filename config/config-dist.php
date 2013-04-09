@@ -60,7 +60,10 @@ public function loadConfig() {
 
 	$config['terasender'] = true; // true/false - terasender (really fast uploads)uses html5 web workers to speed up file upload - effectively provding multi thread faster uploads
 	$config['terasenderadvanced'] = false; // true/false - terasender advanced - show advanced settings
-
+	$config['terasender_chunksize'] = 5;		// default (5) terasender chunk size in Mb
+	$config['terasender_workerCount'] = 6;		// default (6) worker count
+	$config['terasender_jobsPerWorker'] = 1;	// default (1) jobs per worker
+	
 	// UI Settings
 	$config['datedisplayformat'] = "d-m-Y"; // Format for displaying date/time, use PHP date() format string syntax
 	$config["versionNumber"] = true; // Show version number (true/false)
