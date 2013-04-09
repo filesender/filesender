@@ -602,3 +602,16 @@ word-wrap: break-word; /* Internet Explorer 5.5+ */
 user-select: none;
 }
 
+/* JQuery UI overides */
+.ui-widget {
+    font-family: Verdana,Arial,sans-serif;
+    font-size: 0.8em;
+}
+
+.ui-dialog .ui-dialog-buttonpane button {
+    cursor: pointer;
+    margin: 0.5em 0.4em 0.5em 0;
+    padding: 6px;
+	padding-left:10px;
+	padding-right:10px;
+}
