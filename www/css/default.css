@@ -615,3 +615,11 @@ user-select: none;
 	padding-left:10px;
 	padding-right:10px;
 }
+
+#header
+{
+	background-image: url(../banner.png);
+	background-repeat: no-repeat;
+	height: 60px;
+	width: 800px;
+}
