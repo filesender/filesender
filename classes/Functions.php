@@ -570,7 +570,7 @@ class Functions {
 	// insert a voucher
 	// ---------------------------------------
 
-	public function insertVoucher($to,$expiry,$vouchermessage,$options){
+	public function insertVoucher($to,$from,$expiry,$vouchermessage,$options){
 		// must be authenticated
 		if( $this->authsaml->isAuth()) {
 			
@@ -642,7 +642,7 @@ class Functions {
 			$statement->bindParam(':fileactivitydate',$fileactivitydateParam );	
 			$statement->bindParam(':filevoucheruid', $filevoucheruid );
 			$statement->bindParam(':filemessage', $vouchermessage);
-			$statement->bindParam(':filefrom', $authAttributes["email"]);
+			$statement->bindParam(':filefrom', $from);
 			$statement->bindParam(':filesize', $zero);
 			$statement->bindParam(':fileoriginalname', $blank);
 			$statement->bindParam(':filestatus', $voucher);
@@ -656,7 +656,7 @@ class Functions {
 			$fileuidParam = getGUID();
 			$statement->bindParam(':fileuid', $fileuidParam);
 			$statement->bindParam(':fileauthuseruid', $authAttributes["saml_uid_attribute"]);
-			$statement->bindParam(':fileauthuseremail', $authAttributes["email"]);
+			$statement->bindParam(':fileauthuseremail', $from);
 			$filecreateddateParam =  date($config['db_dateformat'], time());
 			$statement->bindParam(':filecreateddate',$filecreateddateParam);
 			$statement->bindParam(':fileoptions',$options);
@@ -770,7 +770,9 @@ class Functions {
 		{
 			$authAttributes = $authsaml->sAuth();
 			//array_push($errorArray,  $data["filefrom"] .":". $authAttributes["email"]);	
-			if($data["filefrom"] != $authAttributes["email"]) {array_push($errorArray, "err_invalidemail");}
+			if ( !in_array($data["filefrom"],$authAttributes["email"]) ) {
+				array_push($errorArray, "err_invalidemail");
+			}
 		}
 			
 		}

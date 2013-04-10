@@ -68,7 +68,7 @@
 	// get voucher information 
 	$voucherData =  $authvoucher->getVoucher();
 	$voucherUID = $voucherData[0]["filevoucheruid"];
-	$senderemail = $voucherData[0]["fileto"];
+	$senderemail = array($voucherData[0]["fileto"]);
 	// custom options
 	$option = json_decode($voucherData[0]["fileoptions"]);
 	// prevent user from sending file to other users
@@ -646,8 +646,17 @@ window.addEventListener('keydown', function(e) {(e.keyCode == 27 && e.preventDef
        </tr>
       <tr>
         <td class=" mandatory" id="upload_from"><?php echo lang("_FROM"); ?>:</td>
-        <td colspan="2"><?php echo $senderemail ?>
-          <input name="filefrom" type="hidden" id="filefrom" value="<?php echo $senderemail ?>" size="40" />
+        <td colspan="2"><?php
+    if ( count($senderemail) > 1 ) {
+	    echo "<select name=\"filefrom\" id=\"filefrom\">\n";
+	    foreach($senderemail as $email) {
+		echo "<option>$email</option>\n";
+	}
+	echo "</select>\n";
+    } else {
+	    echo $senderemail[0] . "<input name=\"filefrom\" type=\"hidden\" id=\"filefrom\" value=\"" . $senderemail[0] . "\" />\n";
+    } 
+    ?>
           </td>
         </tr>
       <tr>
