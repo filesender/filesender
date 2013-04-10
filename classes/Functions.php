@@ -267,6 +267,46 @@ class Functions {
 		return $returnArray ; 
 	}
 	
+    //--------------------------------------- CHECKED
+    // returns uniqe emails for autocomnplete for current user
+	// ---------------------------------------
+	public function uniqeemailsforautocomnplete()
+	{
+		global $config;
+		 if( $this->authsaml->isAuth()) {
+            $authAttributes = $this->authsaml->sAuth();
+        } else {
+            $authAttributes["saml_uid_attribute"] = "nonvalue";
+        }
+		// limit results by config option
+		$count = isset($config["autocompleteHistoryMax"])? "LIMIT ".$config["autocompleteHistoryMax"]:"";
+		$sortby = (isset($config["autocompleteSortBy"]) && $config["autocompleteSortBy"] == "email")? "fileto":"filecreateddate";
+		$order = (isset($config["autocompleteSortOrder"]) && $config["autocompleteSortOrder"] == "DESC")? "DESC":"ASC";
+		
+		$pdo = $this->db->connect();
+		$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
+		$statement = $pdo->prepare("SELECT DISTINCT fileto FROM files WHERE  fileauthuseruid = :fileauthuseruid  ORDER BY ".$sortby." ".$order." ".$count);
+		$statement->bindParam(':fileauthuseruid', $authAttributes["saml_uid_attribute"]);
+		try 
+		{ 	
+			$statement->execute(); 
+		}
+		catch(PDOException $e)
+		{ 
+			logEntry($e->getMessage(),"E_ERROR");	
+			displayError(lang("_ERROR_CONTACT_ADMIN"),$e->getMessage()); 
+		}   
+		$result = $statement->fetchAll();
+		$returnArray = array();
+	    foreach($result as $row) 
+        {
+                array_push($returnArray, "'".$row["fileto"]."'");
+       }
+		$commaList = implode(', ', $returnArray);
+		$pdo = NULL;
+		return $commaList ; 
+	}
+    
 	 //--------------------------------------- CHECKED
     // returns the number of downloads for a file
 	// ---------------------------------------
