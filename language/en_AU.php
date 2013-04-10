@@ -66,6 +66,9 @@ $lang["_USED"] = "Used";
 $lang["_AVAILABLE"] = "Available";
 $lang["_TEMP"] = "Temp"; // as in Temporary files
 
+// Footer
+$lang["_FOOTER"] = 'Version '.FileSender_Version::VERSION; 
+
 // Greetings
 $lang["_WELCOME"] = "Welcome"; 
 $lang["_WELCOMEGUEST"] = "Welcome Guest"; 
