@@ -69,7 +69,10 @@ public function loadConfig() {
 	$config["versionNumber"] = true; // Show version number (true/false)
 	$config['site_showStats'] = false; // Show site upload/download stats (true/false)
 	$config['displayUserName'] = true; // Show 'Welcome user' (true/false)
-	
+    
+    // auto complete - provides auto complete in input field for emails
+    $config["autocomplete"] = true;
+    	
 	// options - stored as array in fileoptions 
 	// Voucher Locked To Sender
 	$config["vlts"] = true;  	// true/false - custom per voucher option to force voucher to return file upload to sender only 
