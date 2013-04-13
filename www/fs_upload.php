@@ -191,7 +191,7 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 		} else if( $authsaml->isAuth()) {
 			$authAttributes = $authsaml->sAuth();
 			$dataitem["fileauthuseruid"] = $authAttributes["saml_uid_attribute"];
-			$dataitem["fileauthuseremail"] = $tempData["filefrom"];	
+			$dataitem["fileauthuseremail"] = $dataitem["filefrom"];	
 			$dataitem["fileuid"] = $authAttributes["saml_uid_attribute"];
 		}
 
