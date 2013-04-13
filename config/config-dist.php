@@ -59,12 +59,6 @@ public function loadConfig() {
 	$config['site_name'] = 'FileSender'; // Friendly name used for your FileSender instance
 	$config["customCSS"] = ""; // set custom overide CSS file - example: css/custom1.css; 
 
-	$config['terasender'] = true; // true/false - terasender (really fast uploads)uses html5 web workers to speed up file upload - effectively provding multi thread faster uploads
-	$config['terasenderadvanced'] = false; // true/false - terasender advanced - show advanced settings
-	$config['terasender_chunksize'] = 5;		// default (5) terasender chunk size in Mb
-	$config['terasender_workerCount'] = 6;		// default (6) worker count
-	$config['terasender_jobsPerWorker'] = 1;	// default (1) jobs per worker
-	
 	// UI Settings
 	$config['datedisplayformat'] = "d-m-Y"; // Format for displaying date/time, use PHP date() format string syntax
 	$config["versionNumber"] = true; // Show version number (true/false)
@@ -107,6 +101,15 @@ public function loadConfig() {
 	$config['max_flash_upload_size'] = min(let_to_num(ini_get('post_max_size'))-2048, let_to_num(ini_get('upload_max_filesize')),$config['max_flash_upload_size']);
 
 	$config["server_drivespace_warning"] = 20; // as a percentage 20 = 20% space left on the storage drive
+
+	// Terasender (fast upload) settings
+	// - terasender (really fast uploads) uses html5 web workers to speed up file upload
+	// - effectively providing multi-threaded faster uploads
+	$config['terasender'] = true; // true/false
+	$config['terasenderadvanced'] = false; // true/false - terasender advanced - show advanced settings
+	$config['terasender_chunksize'] = 5;		// default (5) terasender chunk size in MB
+	$config['terasender_workerCount'] = 6;		// default (6) worker count
+	$config['terasender_jobsPerWorker'] = 1;	// default (1) jobs per worker
 
 	// Advanced server settings, do not change unless you have a very good reason.
 	$config['db_dateformat'] = "Y-m-d H:i:sP"; // Date/Time format for PostgreSQL, use PHP date format specifier syntax
