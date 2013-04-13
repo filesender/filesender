@@ -158,7 +158,8 @@ public function loadConfig() {
 	$config['cron_exclude prefix'] = '_'; // exclude deletion of files with the prefix character listed (can use multiple characters eg '._' will ignore .xxxx and _xxxx
 	$config['cron_shred'] = false; // instead of simply unlinking, overwrite expired files so they are hard to recover
 	$config['cron_shred_command'] = '/usr/bin/shred -f -u -n 1 -z'; // overwrite once (-n 1) with random data, once with zeros (-z), then remove (-u)
-	$config["cron_cleanuptempdays"] = 7;
+	$config["cron_cleanuptempdays"] = 7; // number of days to keep temporary files in the temp_filestore
+
 	// email templates section
 	$config['default_emailsubject'] = "{siteName}: {filename}";
 	$config['filedownloadedemailbody'] = '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}
