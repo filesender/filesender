@@ -647,16 +647,16 @@ window.addEventListener('keydown', function(e) {(e.keyCode == 27 && e.preventDef
       <tr>
         <td class=" mandatory" id="upload_from"><?php echo lang("_FROM"); ?>:</td>
         <td colspan="2"><?php
-    if ( count($senderemail) > 1 ) {
-	    echo "<select name=\"filefrom\" id=\"filefrom\">\n";
-	    foreach($senderemail as $email) {
-		echo "<option>$email</option>\n";
-	}
-	echo "</select>\n";
-    } else {
-	    echo $senderemail[0] . "<input name=\"filefrom\" type=\"hidden\" id=\"filefrom\" value=\"" . $senderemail[0] . "\" />\n";
-    } 
-    ?>
+if ( count($senderemail) > 1 ) {
+        echo "<select name=\"filefrom\" id=\"filefrom\">\n";
+        foreach($senderemail as $email) {
+                echo "<option>$email</option>\n";
+        }
+        echo "</select>\n";
+} else {
+        echo $senderemail[0] . "<input name=\"filefrom\" type=\"hidden\" id=\"filefrom\" value=\"" . $senderemail[0] . "\" />\n";
+}
+?>
           </td>
         </tr>
       <tr>

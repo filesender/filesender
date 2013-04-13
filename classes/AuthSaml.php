@@ -93,31 +93,27 @@ class AuthSaml {
         $attributes = $as->getAttributes();
         $missing_attributes = FALSE ;
 
-        // need to capture email from SAML attribute
-        // may be single attribute or array 
-
-        // checks if an array and sets first child
         // need to capture email from SAML attribute. may be single attribute or array 
-    	// ensure that it's always an array.
+        // ensure that it's always an array.
         if(isset($attributes[$config['saml_email_attribute']])) {
-           if ( is_array($attributes[$config['saml_email_attribute']]) ) {
-			$attributes["email"] = $attributes[$config['saml_email_attribute']];
-		} else {
-			$attributes["email"] = array($attributes[$config['saml_email_attribute']]);
-		}
+                if ( is_array($attributes[$config['saml_email_attribute']]) ) {
+                        $attributes["email"] = $attributes[$config['saml_email_attribute']];
+                } else {
+                        $attributes["email"] = array($attributes[$config['saml_email_attribute']]);
+                }
         } 
-       
+
         // Check for empty or invalid email attribute
         if ( empty($attributes["email"]) ) {
             logEntry("No valid email attribute found in IDP (looking for '".$config['saml_email_attribute']."')","E_ERROR");
             $missing_attributes = TRUE ;
         }
         foreach ($attributes["email"] as $email) {
-		if ( !filter_var($email,FILTER_VALIDATE_EMAIL) ) {
-			logEntry("Invalid email attribute received from IdP: '".$email."'","E_ERROR");
-			$missing_attributes = TRUE ;
-		}
-	}
+                if ( !filter_var($email,FILTER_VALIDATE_EMAIL) ) {
+                        logEntry("Invalid email attribute received from IdP: '".$email."'","E_ERROR");
+                        $missing_attributes = TRUE ;
+                }
+        }
 
         if(isset($attributes[$config['saml_name_attribute']][0])) {
             $attributes["cn"] = $attributes[$config['saml_name_attribute']][0];

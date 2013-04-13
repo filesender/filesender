@@ -769,13 +769,12 @@ class Functions {
 		}	else if( $authsaml->isAuth()) 
 		{
 			$authAttributes = $authsaml->sAuth();
-			//array_push($errorArray,  $data["filefrom"] .":". $authAttributes["email"]);	
 			if ( !in_array($data["filefrom"],$authAttributes["email"]) ) {
 				array_push($errorArray, "err_invalidemail");
 			}
 		}
-			
 		}
+			
 		// if errors - return them via json to client	
 		if(count($errorArray) > 0 )
 		{
@@ -863,6 +862,7 @@ class Functions {
 				
 			$statement->bindParam(':fileexpirydate', $dataitem['fileexpirydate']);
 			$statement->bindParam(':fileto', $dataitem['fileto']);
+			$statement->bindParam(':filefrom', $dataitem['filefrom']);
 			$statement->bindParam(':filesubject', $dataitem['filesubject']);
 			$statement->bindParam(':fileactivitydate', $dataitem['fileactivitydate']);
 			$statement->bindParam(':filevoucheruid', $dataitem['filevoucheruid']);
