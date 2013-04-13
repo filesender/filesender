@@ -182,12 +182,12 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 		if ($authvoucher->aVoucher()) {
 			$tempData = $functions->getVoucherData($_REQUEST["vid"]);
 			$dataitem["fileauthuseruid"] = $tempData["fileauthuseruid"];	
-			$dataitem["fileauthuseremail"] = $tempData["fileauthuseremail"];	
+			$dataitem["fileauthuseremail"] = $tempData["filefrom"];	
 			$dataitem["fileuid"] = $_REQUEST["vid"];	
 		} else if( $authsaml->isAuth()) {
 			$authAttributes = $authsaml->sAuth();
 			$dataitem["fileauthuseruid"] = $authAttributes["saml_uid_attribute"];
-			$dataitem["fileauthuseremail"] = $authAttributes["email"];
+			$dataitem["fileauthuseremail"] = $dataitem['filefrom'];
 			$dataitem["fileuid"] = $authAttributes["saml_uid_attribute"];
 		}
 
@@ -291,7 +291,7 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 			} else {
 				// insert each voucher
 				foreach ($emailArray as $Email) { 
-					$functions->insertVoucher($Email,$dataitem["fileexpirydate"]);
+					$functions->insertVoucher($Email,$dataitem['filefrom'],$dataitem["fileexpirydate"]);
 				} 
 				$complete = "complete";
 			}
