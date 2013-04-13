@@ -91,8 +91,8 @@ $(function() {
 		$('.ui-dialog-buttonpane button:contains(deleteBTN)').attr("id","btn_delete");            
 		$('#btn_delete').html('<?php echo lang("_YES") ?>')  
         
-    // autocomplete
-	var availableTags = [<?php  echo (isset($config["autocomplete"]) && $config["autocomplete"])?  $functions->uniqeemailsforautocomnplete():  ""; ?>];
+	// autocomplete
+	var availableTags = [<?php  echo (isset($config["autocomplete"]) && $config["autocomplete"])?  $functions->uniqueemailsforautocomplete():  ""; ?>];
 		
 		function split( val ) {
             return val.split( /,\s*/ );

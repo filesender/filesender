@@ -251,7 +251,7 @@ $json_o=json_decode($filedata,true);
 		$('#btn_addrecipientsend').html('<?php echo lang("_SEND") ?>')  
 		
 // autocomplete
-	var availableTags = [<?php  echo (isset($config["autocomplete"]) && $config["autocomplete"])?  $functions->uniqeemailsforautocomnplete():  ""; ?>];
+	var availableTags = [<?php  echo (isset($config["autocomplete"]) && $config["autocomplete"])?  $functions->uniqueemailsforautocomplete():  ""; ?>];
 		
 		function split( val ) {
             return val.split( /,\s*/ );
