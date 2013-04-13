@@ -267,10 +267,10 @@ class Functions {
 		return $returnArray ; 
 	}
 	
-    //--------------------------------------- CHECKED
-    // returns uniqe emails for autocomnplete for current user
+	//----------------------------------------
+	// returns unique emails for autocomplete for current user
 	// ---------------------------------------
-	public function uniqeemailsforautocomnplete()
+	public function uniqueemailsforautocomplete()
 	{
 		global $config;
 		 if( $this->authsaml->isAuth()) {

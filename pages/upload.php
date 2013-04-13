@@ -230,7 +230,7 @@
 		}
         
     // autocomplete
-	var availableTags = [<?php  echo (isset($config["autocomplete"]) && $config["autocomplete"])?  $functions->uniqeemailsforautocomnplete():  ""; ?>];
+	var availableTags = [<?php  echo (isset($config["autocomplete"]) && $config["autocomplete"])?  $functions->uniqueemailsforautocomplete():  ""; ?>];
 		
 		function split( val ) {
             return val.split( /,\s*/ );
