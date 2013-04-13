@@ -57,7 +57,7 @@ public function loadConfig() {
 	$config['Default_TimeZone'] = 'Australia/Sydney';
 	$config['site_defaultlanguage'] = 'en_AU'; // for available languages see the ./language directory
 	$config['site_name'] = 'FileSender'; // Friendly name used for your FileSender instance
-     $config["customCSS"] = ""; // set custom overide CSS file - example: css/custom1.css; 
+	$config["customCSS"] = ""; // set custom overide CSS file - example: css/custom1.css; 
 
 	$config['terasender'] = true; // true/false - terasender (really fast uploads)uses html5 web workers to speed up file upload - effectively provding multi thread faster uploads
 	$config['terasenderadvanced'] = false; // true/false - terasender advanced - show advanced settings
