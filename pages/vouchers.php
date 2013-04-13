@@ -220,6 +220,17 @@ $json_o=json_decode($filedata,true);
         <div id="maxemails_msg" style="display: none" class="validation_msg"><?php echo lang("_MAXEMAILS"); ?> <?php echo $config['max_email_recipients'] ?>.</div>
  		</td>
       </tr>
+<?php
+if ( count($useremail) > 1 ) {
+        echo "<tr><td class=\"mandatory\">" . lang("_FROM") . ":</td><td><select name=\"filefrom\" id=\"filefrom\">\n";
+        foreach($useremail as $email) {
+                echo "<option>$email</option>\n";
+        }
+        echo "</select></td></tr>\n";
+} else {
+        echo "<input name=\"filefrom\" type=\"hidden\" id=\"filefrom\" value=\"" . $useremail[0] . "\" />\n";
+}
+?>
       <tr>
         <td class="mandatory" id="vouchers_expirydate"><?php echo lang("_EXPIRY_DATE"); ?>:</td>
         <td><input id="datepicker" onchange="validate_expiry()" title="<?php echo lang('_DP_dateFormat'); ?>" />
