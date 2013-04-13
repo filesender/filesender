@@ -266,15 +266,15 @@ $json_o=json_decode($filedata,true);
  		</td>
       </tr>
 <?php
-        if ( count($useremail) > 1 ) {
-	       echo "<tr><td class=\"mandatory\">" . lang("_FROM") . ":</td><td><select name=\"filefrom\" id=\"filefrom\">\n";
-	        foreach($useremail as $email) {
-		    echo "<option>$email</option>\n";
-	    }
-	        echo "</select></td></tr>\n";
-        } else {
-	        echo "<input name=\"filefrom\" type=\"hidden\" id=\"filefrom\" value=\"" . $useremail[0] . "\" />\n";
+if ( count($useremail) > 1 ) {
+        echo "<tr><td class=\"mandatory\">" . lang("_FROM") . ":</td><td><select name=\"filefrom\" id=\"filefrom\">\n";
+        foreach($useremail as $email) {
+                echo "<option>$email</option>\n";
         }
+        echo "</select></td></tr>\n";
+} else {
+        echo "<input name=\"filefrom\" type=\"hidden\" id=\"filefrom\" value=\"" . $useremail[0] . "\" />\n";
+}
 ?>
 	  <tr>
 	   <td class="" id="voucher_message"><?php echo lang("_MESSAGE"); ?>: (<?php echo lang("_OPTIONAL"); ?>)</td>

@@ -185,13 +185,13 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 		
 		if ($authvoucher->aVoucher()) {
 			$tempData = $functions->getVoucherData($_REQUEST["vid"]);
-			$dataitem["fileauthuseruid"] = $tempData["fileauthuseruid"];	
-			$dataitem["fileauthuseremail"] = $tempData["filefrom"];		
-			$dataitem["fileuid"] = $_REQUEST["vid"];	
+			$dataitem["fileauthuseruid"] = $tempData["fileauthuseruid"];
+			$dataitem["fileauthuseremail"] = $tempData["filefrom"];
+			$dataitem["fileuid"] = $_REQUEST["vid"];
 		} else if( $authsaml->isAuth()) {
 			$authAttributes = $authsaml->sAuth();
 			$dataitem["fileauthuseruid"] = $authAttributes["saml_uid_attribute"];
-			$dataitem["fileauthuseremail"] = $dataitem["filefrom"];	
+			$dataitem["fileauthuseremail"] = $dataitem["filefrom"];
 			$dataitem["fileuid"] = $authAttributes["saml_uid_attribute"];
 		}
 
