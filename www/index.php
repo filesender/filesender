@@ -114,6 +114,10 @@ if($isAuth )
 
 var debug = <?php echo $config["debug"] ? 'true' : 'false'; ?> ;
 var html5 = false;
+var html5webworkers = false;
+//check if webworkers are available
+<?php if(isset($config['terasender']) && $config['terasender']) { echo 'html5webworkers = typeof(Worker)!=="undefined";'; }?>
+
 // check if html5 functions are available
 html5 = (window.File && window.FileReader && window.FileList && window.Blob && window.FormData) ? true : false;
 	if(window.opera){html5=false;};

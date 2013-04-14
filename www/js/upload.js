@@ -58,6 +58,7 @@ var intervalTimer = 0;
 var uploadURI = "fs_upload.php";
 var fdata = []; // array of each file to be uploaded
 var n = 0; // file int currently uploading
+var startTime = 0;
 
 // a unique is created for each file that is uploaded.
 // An object with the unique stores all relevant information about the file upload
@@ -148,7 +149,12 @@ var n = 0; // file int currently uploading
 		vid = data.vid;
 		fdata[n].bytesUploaded = parseFloat(data.filesize);
 		updatepb(fdata[n].bytesUploaded, fdata[n].fileSize);	
-		uploadFile();
+		startTime = new Date().getTime();
+                if(html5webworkers){
+                    uploadFileWebworkers();
+                }else{
+                    uploadFile();
+                }
 		}
 		},error:function(xhr,err){
 			// error function to display error message e.g.404 page not found
@@ -156,6 +162,93 @@ var n = 0; // file int currently uploading
 		}
   		});
 	}
+
+function uploadFileWebworkers() {
+    var files = document.getElementById("fileToUpload").files;
+    var path = document.location.pathname;
+    var dir = path.substring(0, path.lastIndexOf('/'));
+
+    $("head").append('<script type="text/javascript" src="lib/tsunami/js/tsunami.js"></script>');
+
+    if(fdata[n].bytesUploaded > fdata[n].bytesTotal -1 ) {
+        doUploadComplete();
+        return;
+    }
+
+    chunksize = parseInt($('#chunksize').val())*1024*1024;
+    console.log('Chunksize: '+ chunksize);
+
+    workerCount = parseInt($('#workerCount').val());
+    console.log('Using '+ workerCount+' worker(s)');
+    jobsPerWorker = parseInt($('#jobsPerWorker').val());
+    console.log('Setting '+ jobsPerWorker+' job(s) per worker');
+
+    var tsunami = new Tsunami({
+        uri: dir + '/' +uploadURI + "?type=tsunami&vid="+vid,
+        simultaneousUploads: workerCount,
+        jobsPerWorker: jobsPerWorker,
+        chunkSize: chunksize,
+        workerFile: 'lib/tsunami/js/tsunami_worker.js',
+        log: false,
+        onComplete: doUploadComplete,
+        onProgress: updatepb
+    });
+    tsunami.addFiles(files);
+    tsunami.upload();
+}
+
+function doUploadComplete(){
+    var end  = new Date().getTime();
+    var time = end-startTime;
+    var speed = fdata[n].bytesTotal / (time /1000) / 1024 / 1024 * 8;
+
+    console.log('Upload time:'+ (time /1000) + 'sec');
+    console.log('Speed: '+ speed.toFixed(2)+'Mbit/s' );
+
+    var query = $("#form1").serializeArray(), json = {};
+    $.ajax({
+        type: "POST",
+        url: "fs_upload.php?type=uploadcomplete&vid="+vid
+        ,
+        success:function( data ) {
+            var data =  parseJSON(data);
+            if(data.errors)
+            {
+                $.each(data.errors, function(i,result){
+                    if(result == "err_token") {
+                        $("#dialog-tokenerror").dialog("open");
+                    } // token missing or error
+                    if(result == "err_cannotrenamefile") {
+                        window.location.href="index.php?s=uploaderror";
+                        return;
+                    } //    
+                    if(result == "err_emailnotsent") {
+                        window.location.href="index.php?s=emailsenterror";
+                        return;
+                    } //
+                    if(result == "err_filesizeincorrect") {
+                        window.location.href="index.php?s=filesizeincorrect";
+                        return;
+                    } //    
+                })
+            } else {
+                if(data.status && data.status == "complete"){
+                    window.location.href="index.php?s=complete";
+                    return;
+                }
+                if(data.status && data.status == "completev"){
+                    window.location.href="index.php?s=completev";
+                    return;
+                }
+            }
+        }
+        ,
+        error:function(xhr,err){
+            // error function to display error message e.g.404 page not found
+            ajaxerror(xhr.readyState,xhr.status,xhr.responseText);
+        }
+    });
+}
 
 function uploadFile() {
 		
