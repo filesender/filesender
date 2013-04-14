@@ -34,7 +34,6 @@
 // voucher related functions
 //
 // aVoucher() - check if a voucher exists and returns true/false
-// validVoucher() - check if a voucher exists and is available and returns found/notfound/invalid/none 
 // getVoucher() - returns voucher as json array
 
 
@@ -67,9 +66,9 @@ class AuthVoucher {
 
             if (preg_match($config['voucherRegEx'], $vid) and strLen($vid) == $config['voucherUIDLength']) {
 
-        	$statement =  $this->db->fquery("SELECT * FROM files WHERE filevoucheruid=%s", $vid);
+        	$statement =  $this->db->fquery("SELECT COUNT(*) FROM files WHERE filevoucheruid=%s", $vid);
 			$statement->execute();
-			$count = $statement->rowCount();
+			$count = $statement->fetchColumn();
  
             if($count == 1){
  	        	return TRUE;
@@ -82,39 +81,6 @@ class AuthVoucher {
             }
             return FALSE;
         }
-    }	
-
-    //---------------------------------------
-    // Check voucher exists and is available
-    // return TRUE if voucher exists and is available for use	
-    public function validVoucher() {
-
-        $db = DB::getInstance();
-        global $config;
-
-        if (isset($_REQUEST['vid'])) {
-            $vid = $_REQUEST['vid'];
-
-
-            if (preg_match($config['voucherRegEx'], $vid) and strLen($vid) == $config['voucherUIDLength']) {
-				
-
-        	$search =  $this->db->fquery("SELECT * FROM files WHERE filevoucheruid=%s", $vid);
-
-		
-          //      $search =  $db->query("SELECT * FROM files WHERE filevoucheruid='%s'", $vid) or die("Error");
-                $total_records = sizeof($search);
-                if($total_records == 1){
-                    return "found";
-                }
-                return "notfound";
-            } 
-            else {
-                // invalid vid format to match regex from config
-                return "invalid";
-            }
-        } 
-        return "none";
     }	
 
     //---------------------------------------
