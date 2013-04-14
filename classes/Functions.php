@@ -134,9 +134,9 @@ class Functions {
 
         $statString = "| UP: ";
 
-        $statement =   $this->db->fquery("SELECT * FROM logs WHERE logtype='Uploaded'");
+        $statement =   $this->db->fquery("SELECT COUNT(*) FROM logs WHERE logtype='Uploaded'");
 		$statement->execute();
-		$count = $statement->rowCount();
+		$count = $statement->fetchColumn();
 
         $statString = $statString.$count." files ";
 
@@ -147,9 +147,9 @@ class Functions {
         $statString = $statString."(".round($totalResult/1024/1024/1024)."GB) |" ;
 		$stmnt = NULL;
 		
-      	$statement = $this->db->fquery("SELECT * FROM logs WHERE logtype='Download'");
+      	$statement = $this->db->fquery("SELECT COUNT(*) FROM logs WHERE logtype='Download'");
       	$statement->execute();
-		$count = $statement->rowCount();
+		$count = $statement->fetchColumn();
         $statString = $statString." DOWN: ".$count." files ";
 		
        	$statement =  $this->db->fquery("SELECT SUM(logfilesize) FROM logs WHERE logtype='Download'");
