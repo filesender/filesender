@@ -202,6 +202,9 @@ $lang["_DP_yearSuffix"] = '';
 $lang["_SITE_SPLASHHEAD"] = "Dobrodošli na ". htmlspecialchars($config['site_name']);
 $lang["_SITE_SPLASHTEXT"] = htmlspecialchars($config['site_name']) ." je siguran način za deljenje velikih fajlova sa bilo kim! Prijavite se da prosledite vaše fajlove ili pozovete nekog drugog da vam pošalje fajl.";
 
+// Footer to display
+$lang["_SITE_FOOTER"] = ""; 
+
 // site help
 $lang["_HELP_TEXT"] = '
 

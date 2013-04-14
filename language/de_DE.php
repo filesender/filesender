@@ -201,6 +201,9 @@ $lang["_DP_yearSuffix"] = '';
 $lang["_SITE_SPLASHHEAD"] = "Willkommen bei ". htmlspecialchars($config['site_name']);
 $lang["_SITE_SPLASHTEXT"] = htmlspecialchars($config['site_name']) ." ist eine sichere Methode grosse Dateien mit jedermann zu teilen! Verbinden Sie sich um Dateien zu verschicken oder um jemanden aufzufordern Ihnen eine Datei zu schicken.";
 
+// Footer to display
+$lang["_SITE_FOOTER"] = ""; 
+
 // site help
 $lang["_HELP_TEXT"] = '
 
