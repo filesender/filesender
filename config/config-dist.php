@@ -94,6 +94,15 @@ public function loadConfig() {
 
 	$config["server_drivespace_warning"] = 20; // as a percentage 20 = 20% space left on the storage drive
 
+	// Terasender (fast upload) settings
+	// - terasender (really fast uploads) uses html5 web workers to speed up file upload
+	// - effectively providing multi-threaded faster uploads
+	$config['terasender'] = true; // true/false
+	$config['terasenderadvanced'] = false; // true/false - terasender advanced - show advanced settings
+	$config['terasender_chunksize'] = 5;		// default (5) terasender chunk size in MB
+	$config['terasender_workerCount'] = 6;		// default (6) worker count
+	$config['terasender_jobsPerWorker'] = 1;	// default (1) jobs per worker
+
 	// Advanced server settings, do not change unless you have a very good reason.
 	$config['db_dateformat'] = "Y-m-d H:i:sP"; // Date/Time format for PostgreSQL, use PHP date format specifier syntax
 	$config["crlf"] = "\n"; // for email CRLF can be changed to \r\n if required
@@ -141,6 +150,7 @@ public function loadConfig() {
 	$config['cron_exclude prefix'] = '_'; // exclude deletion of files with the prefix character listed (can use multiple characters eg '._' will ignore .xxxx and _xxxx
 	$config['cron_shred'] = false; // instead of simply unlinking, overwrite expired files so they are hard to recover
 	$config['cron_shred_command'] = '/usr/bin/shred -f -u -n 1 -z'; // overwrite once (-n 1) with random data, once with zeros (-z), then remove (-u)
+	$config["cron_cleanuptempdays"] = 7; // number of days to keep temporary files in the temp_filestore
 
 	// email templates section
 	$config['default_emailsubject'] = "{siteName}: {filename}";
