@@ -2,6 +2,8 @@ Last update: 14 April 2013
 
 Version 1.6-development <???>
 
+     - #885 Add TeraSender code (without the UI part)
+       - Upgrade note: new configuration options
      - #888 Add sqlite init-script and 'how to'
        Patch contributed by Dick Visser
      - #888 PDO rowCount fixes/cleanup
