@@ -106,6 +106,12 @@ function cleanUp() {
 		return false;
 	}	
 	
+	// check site_temp_filestore exists
+	if (!file_exists($config["site_temp_filestore"])) {
+		logProcess("CRON","Unable to find site_temp_filestore location specified in config.php  :".$config["site_temp_filestore"]);
+		return false;
+	}	
+	
 	// remove any files with no uid - leftover from bug earlier beta that save files without uid's
 	$sqlQuery = "DELETE FROM files WHERE fileuid IS NULL";
 	$db->fquery($sqlQuery);
@@ -193,6 +199,7 @@ function cleanUp() {
 			}
 		}
 	}
+	
 	// Close directory
 	closedir($dir_handle);
 	
@@ -228,6 +235,55 @@ function cleanUp() {
 			logProcess("CRON","Removed (File not Available) ".$FilestoreDirectory."/".$row["fileuid"].".tmp");
 		}
 	}
+	
+	
+	// Phase 4: remove files in temp folder older than days specified in $config["cleanuptempdays"]
+	
+	$tempFilestoreDirectory = $config["site_temp_filestore"];
+
+	// Open the folder
+	$dir_handle = @opendir($tempFilestoreDirectory) or die("Unable to open $tempFilestoreDirectory"); 
+
+	// Loop through the files in tempFilestoreDirectory 
+	while ($filename = readdir($dir_handle)) {
+	
+		// skip . and ..
+		if($filename == "." || $filename == ".." || $filename == "index.html") {
+			continue;
+		}
+		
+		if(strpos($config['cron_exclude prefix'], substr($filename,0,1)) === 0) {
+			logProcess("CRON","Ignored file: " . $tempFilestoreDirectory.$filename);
+			continue;
+		}
+			// number of seconds before cleanup of temp files from $config["cron_cleanuptempdays"] or default 7 days (604800 seconds)
+			$cron_cleanuptemptime =(isset($config["cron_cleanuptempdays"])) ? $config["cron_cleanuptempdays"]*60*60*24 : 604800;
+			if (is_file($tempFilestoreDirectory.$filename)) {
+				// Don't remove the file if mtime is less then 24 hours (86400 seconds) old
+				if (time() - filemtime($tempFilestoreDirectory.$filename) < $cron_cleanuptemptime) {
+					logProcess("CRON","Temp File NOT removed (last modification less then $cron_cleanuptemptime seconds ago)".$tempFilestoreDirectory.$filename);
+				} else {
+					// setting to allow for file wiping
+					if ( empty($config['cron_shred']) ) {
+						// simply delete (unlink) the file
+						unlink($tempFilestoreDirectory.$filename);
+						logProcess("CRON","Temp File Removed (Expired)".$tempFilestoreDirectory.$filename);    
+					} else {
+						// use gnu coreutils' shred to permanently remove the file from disk:
+						system ($config['cron_shred_command'] .' '. escapeshellarg($tempFilestoreDirectory.$filename), $retval);
+						if ( $retval === 0 ) {
+							logProcess("CRON","Temp File Shredded (Expired)".$tempFilestoreDirectory.$filename);
+						} else {
+							logProcess("CRON","Error ($retval) while shredding".$tempFilestoreDirectory.$filename);
+						}
+					}
+				}
+		}
+	}
+	
+	// Close directory
+	closedir($dir_handle);
+	
 	return true;
 }
 
