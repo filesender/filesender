@@ -1,4 +1,25 @@
-Last update: 2 March 2013
+Last update: 14 April 2013
+
+Version 1.6-development <???>
+
+     - #888 Add sqlite init-script and 'how to'
+       Patch contributed by Dick Visser
+     - #888 PDO rowCount fixes/cleanup
+       Optimise PDO Query row count statements
+       - more efficient
+       - can also be used with sqlite
+       Patch from Dick Visser
+       Remove validVoucher() function
+       - not used anywhere
+       - functionality in aVoucher()
+       Patch from Thijs Kinkhorst
+     - #858 New download.php
+       - added partial download (HTTP range) functionality
+       - redo logic for mail sending and logging
+       - some cleanup
+     - #871 Add _SITE_FOOTER for a customisable footer through the language definitions
+       Modified patch from Jean-Philippe Evrard, BELNET
+     - #184 Add selector when multiple mail adresses are available
 
 Version 1.5 <3 March 2013>
 
