@@ -713,15 +713,15 @@ if ( hasProductInstall && !hasRequestedVersion ) {
       	<td style="padding: 0"></td>
       	<td colspan="2" style="padding: 0 3px">
       		<div id="workers-advanced-settings" style="display: none;" class="box">
-	      		Chunksize (Mb)<input id="chunksize" type="text" value="<?php echo (isset($config['terasender_chunksize']) ? $config['terasender_chunksize'] : 5) ?>"><br />
-	      		Worker count<input id="workerCount" type="text" value="<?php echo (isset($config['terasender_workerCount']) ? $config['terasender_workerCount'] : 6) ?>"><br />
-	      		Jobs per workers<input id="jobsPerWorker" type="text" value="<?php echo (isset($config['terasender_jobsPerWorker']) ? $config['terasender_jobsPerWorker'] : 1) ?>">
+	      		Chunksize (MB)<input id="chunksize" type="text" value="<?php echo (isset($config['terasender_chunksize']) ? $config['terasender_chunksize'] : 5) ?>"/><br />
+	      		Worker count<input id="workerCount" type="text" value="<?php echo (isset($config['terasender_workerCount']) ? $config['terasender_workerCount'] : 6) ?>"/><br />
+	      		Jobs per workers<input id="jobsPerWorker" type="text" value="<?php echo (isset($config['terasender_jobsPerWorker']) ? $config['terasender_jobsPerWorker'] : 1) ?>"/>
 	      	</div>
       	</td>
       </tr>
       <tr style=" <?php echo (isset($config['terasender']) && $config['terasender'] && isset($config['terasenderadvanced']) && $config['terasenderadvanced']) ?  '': ';display: none;'; ?>">
 	      <td></td>
-	      <td colspan="2"><a href="#" onclick="$('#workers-advanced-settings').slideToggle()">Advanced Settings</a></div></td>
+	      <td colspan="2"><a href="#" onclick="$('#workers-advanced-settings').slideToggle()">Advanced Settings</a></td>
       </tr>
       </table>
 		<input type="hidden" id="filevoucheruid" name="filevoucheruid" value="<?php echo $voucherUID; ?>" />
