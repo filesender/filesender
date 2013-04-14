@@ -204,6 +204,9 @@ $lang["_DP_yearSuffix"] = '';
 $lang["_SITE_SPLASHHEAD"] = "Welkom bij ". htmlspecialchars($config['site_name']);
 $lang["_SITE_SPLASHTEXT"] = htmlspecialchars($config['site_name']) ." is een veilige manier om bestanden te delen met iedereen! Meld u aan om een bestand te versturen of om iemand uit te nodigen om een bestand te sturen."; 
 
+// Footer to display
+$lang["_SITE_FOOTER"] = ""; 
+
 // site help
 $lang["_HELP_TEXT"] = '
 <div>
