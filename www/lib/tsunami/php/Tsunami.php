@@ -22,9 +22,9 @@ class Tsunami {
     }
 
     private function defaultConfig() {
-		global $config;
+        global $config;
         return array(
-		   'tmp_dir'=>$config['site_temp_filestore'],
+            'tmp_dir'=>$config['site_temp_filestore'],
             'reply_log'=>false
         );
     }

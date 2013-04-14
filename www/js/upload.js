@@ -59,6 +59,7 @@ var uploadURI = "fs_upload.php";
 var fdata = []; // array of each file to be uploaded
 var n = 0; // file int currently uploading
 var startTime = 0;
+
 // a unique is created for each file that is uploaded.
 // An object with the unique stores all relevant information about the file upload
 	
