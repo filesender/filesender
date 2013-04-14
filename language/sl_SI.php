@@ -203,6 +203,9 @@ $lang["_DP_yearSuffix"] = '';
 $lang["_SITE_SPLASHHEAD"] = "Pozdravljeni na ". htmlspecialchars($config['site_name']);
 $lang["_SITE_SPLASHTEXT"] = htmlspecialchars($config['site_name']) ." je varen način delitve datotek med uporabniki. Priavite se in naložite datoteke ali povabite druge, da delijo datoteke z vami.";
 
+// Footer to display
+$lang["_SITE_FOOTER"] = ""; 
+
 // site help
 $lang["_HELP_TEXT"] = '
 <div>
