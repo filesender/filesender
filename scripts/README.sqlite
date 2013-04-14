@@ -1,0 +1,17 @@
+sqlite support is contributed by Dick Visser from TERENA
+Note that this is untested by the core FileSender team and
+should be considered as an experimental feature.
+
+Mini how-to:
+
+* Uncomment the line that holds 'sqlite:/usr/share... etc ' in config/config.php
+* apt-get install php5-sqlite sqlite3
+* mkdir db
+* sqlite3 db/filesender.sqlite < scripts/sqlite_filesender_db.sql
+* chown -R www-data:www-data db
+
+At this point the database works.
+
+Despite the fact that there is no concept of usernames and passwords
+in SQLite, it is mandatory to keep both $config['db_username'] and
+$config['db_password'].
