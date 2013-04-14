@@ -268,7 +268,7 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 	// By Edwin Schaap and René Klomp
 	// ---------------------------------
 	case 'tsunami':
-		require_once 'lib/tsunami/php/Tsunami.php';
+		require_once '../classes/Tsunami.php';
 
 		$data = $functions->getVoucherData($_REQUEST["vid"]);
 		$tempFilename = generateTempFilename($data);
