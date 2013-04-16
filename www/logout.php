@@ -53,7 +53,7 @@ session_destroy();
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title><?php echo htmlspecialchars($config['site_name']); ?></title>
 <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
-<link type="text/css" href="css/smoothness/jquery-ui-1.10.2.custom.css" rel="Stylesheet" />
+<link type="text/css" href="css/smoothness/jquery-ui-1.10.2.custom.min.css" rel="Stylesheet" />
 <link rel="stylesheet" type="text/css" href="css/default.css?<?php echo FileSender_Version::VERSION; ?>" />
 <?php if (isset($config["customCSS"])) { echo '<link rel="stylesheet" type="text/css" href="'.$config["customCSS"].'?'.FileSender_Version::VERSION.'" />';}?>
 <script type="text/javascript" src="js/common.js" ></script>
