@@ -259,7 +259,7 @@ function cleanUp() {
 			// number of seconds before cleanup of temp files from $config["cron_cleanuptempdays"] or default 7 days (604800 seconds)
 			$cron_cleanuptemptime =(isset($config["cron_cleanuptempdays"])) ? $config["cron_cleanuptempdays"]*60*60*24 : 604800;
 			if (is_file($tempFilestoreDirectory.$filename)) {
-				// Don't remove the file if mtime is less then 24 hours (86400 seconds) old
+				// Don't remove the file if mtime is less then the configured cleanup time old
 				if (time() - filemtime($tempFilestoreDirectory.$filename) < $cron_cleanuptemptime) {
 					logProcess("CRON","Temp File NOT removed (last modification less then $cron_cleanuptemptime seconds ago)".$tempFilestoreDirectory.$filename);
 				} else {
