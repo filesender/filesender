@@ -473,7 +473,7 @@ foreach($json_o as $item) {
    echo "</table></td>";
    } 
    echo "</tr>";
-   echo "<tr><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr10'></td><td class='dr7'></td><td class='dr7'></td></tr>";
+   echo "<tr><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td></tr>";
    //}
 }
 ?>
