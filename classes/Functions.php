@@ -280,7 +280,7 @@ class Functions {
         }
 		// limit results by config option
 		$count = isset($config["autocompleteHistoryMax"])? "LIMIT ".$config["autocompleteHistoryMax"]:"";
-		$sortby = (isset($config["autocompleteSortBy"]) && $config["autocompleteSortBy"] == "email")? "fileto":"filecreateddate";
+		$sortby = "fileto"; 
 		$order = (isset($config["autocompleteSortOrder"]) && $config["autocompleteSortOrder"] == "DESC")? "DESC":"ASC";
 		
 		$pdo = $this->db->connect();
