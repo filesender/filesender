@@ -358,12 +358,12 @@ $json_o=json_decode($filedata,true);
 	{
 		if(!showall) {	
 			$('.hidden').css('display','');
-			$('img.expct').attr('src', 'images/openboth2.png');
+			$('img.expct').attr({src: 'images/openboth2.png', alt: ''});
 
 			showall = true;
 		} else {
 		$('.hidden').css('display','none');
-		$('img.expct').attr('src', 'images/openboth.png');
+		$('img.expct').attr({src: 'images/openboth.png', alt: ''});
 			showall = false;
 		}
 	}
@@ -375,9 +375,9 @@ $json_o=json_decode($filedata,true);
 	var $icon = $( "#showicon_"+i );
 
     if ( $("#show_"+i).is(':visible') ) {
-      $( "#showicon_"+i ).attr( "src", "images/openboth2.png" );
+      $( "#showicon_"+i ).attr( {src: "images/openboth2.png", alt: ""} );
     } else {
-      $( "#showicon_"+i ).attr( "src", "images/openboth.png" );
+      $( "#showicon_"+i ).attr( {src: "images/openboth.png", alt: ""} );
     }
 	}
 //]]>
@@ -388,7 +388,7 @@ $json_o=json_decode($filedata,true);
   <div id="tablediv">
     <table id="myfiles" width="100%" border="0" cellspacing="0" cellpadding="4" style="table-layout:fixed;">
       <tr class="headerrow">
-	  <td width="18" onclick="toggleDownloadSummary()" title="<?php echo lang("_SHOW_ALL"); ?>" style="cursor:pointer"><img class='expct' src="images/openboth.png" border="0" /></td>
+	  <td width="18" onclick="toggleDownloadSummary()" title="<?php echo lang("_SHOW_ALL"); ?>" style="cursor:pointer"><img class='expct' src="images/openboth.png" border="0" alt=""/></td>
         <td width="24">&nbsp;</td>
         <td width="24">&nbsp;</td>
 		<td width="24">&nbsp;</td>
@@ -413,7 +413,7 @@ foreach($json_o as $item) {
 	echo '<tr>';
   // if(sizeof($item["downloadsummary"]) > 0)
 	//{ 
-	echo "<td  class='dr1 expct' onclick='show(".$i.")'><img class='expct' id='showicon_".$i."'  style='cursor:pointer' title='". lang("_SHOW_ALL")."' src='images/openboth.png' border=0></td>";
+	echo "<td  class='dr1 expct' onclick='show(".$i.")'><img class='expct' id='showicon_".$i."'  style='cursor:pointer' title='". lang("_SHOW_ALL")."' src='images/openboth.png' border='0' alt=''/></td>";
 //	} else {
 //	echo "<td></td>";
 //	}
@@ -456,7 +456,7 @@ foreach($json_o as $item) {
    	echo "<td class='dr6 HardBreak'>" .$item['filefrom'] . "</td>";
    	}
 	echo "</tr>";
-	echo "<tr style='background-color:#cecece;'><td width='105px' class='dr4 sdheading'><strong>".lang("_SUBJECT")."</strong></td><td class='dr6' class='HardBreak'>".utf8tohtml($item['filesubject'],TRUE). "</td>";
+	echo "<tr style='background-color:#cecece;'><td width='105px' class='dr4 sdheading'><strong>".lang("_SUBJECT")."</strong></td><td class='dr6 HardBreak'>".utf8tohtml($item['filesubject'],TRUE). "</td>";
 	
    	echo "</tr>";
 	echo "<tr style='background-color:#cecece;'><td width='87px' class='dr11 sdheading'><strong>".lang("_MESSAGE")."</strong></td><td class='dr13' colspan='8'>";
