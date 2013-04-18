@@ -256,35 +256,11 @@ function uploadFile() {
 		var file = document.getElementById("fileToUpload").files[0];
 		var txferSize = chunksize;
 
-		if(fdata[n].bytesUploaded > fdata[n].bytesTotal -1 )
-		{
-		var query = $("#form1").serializeArray(), json = {};
-		$.ajax({
-  		type: "POST",
-  		url: "fs_upload.php?type=uploadcomplete&vid="+vid
-		,success:function( data ) {
-		var data =  parseJSON(data);
-		if(data.errors)
-		{
-		$.each(data.errors, function(i,result){
-		if(result == "err_token") { $("#dialog-tokenerror").dialog("open");} // token missing or error
-		if(result == "err_cannotrenamefile") { window.location.href="index.php?s=uploaderror";return;} //	
-		if(result == "err_emailnotsent") { window.location.href="index.php?s=emailsenterror";return;} //
-		if(result == "err_filesizeincorrect") { window.location.href="index.php?s=filesizeincorrect";return;} //	
-		})
-		} else {
-		if(data.status && data.status == "complete"){window.location.href="index.php?s=complete";return;}
-		if(data.status && data.status == "completev"){window.location.href="index.php?s=completev";return;}
-		}
-		}
-		,error:function(xhr,err){
-			// error function to display error message e.g.404 page not found
-			ajaxerror(xhr.readyState,xhr.status,xhr.responseText);
-		}
-		});
+		if(fdata[n].bytesUploaded > fdata[n].bytesTotal -1 ) {
+			doUploadComplete();
 		return;
-		} 
-			
+		}
+
 		if(fdata[n].bytesUploaded + txferSize > fdata[n].fileSize)
 		{
 		txferSize = fdata[n].fileSize - fdata[n].bytesUploaded;
