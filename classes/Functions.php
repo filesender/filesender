@@ -300,7 +300,7 @@ class Functions {
 		$returnArray = array();
 	    foreach($result as $row) 
         {
-                array_push($returnArray, "'".$row["fileto"]."'");
+                array_push($returnArray, "'".addslashes($row["fileto"])."'");
        }
 		$commaList = implode(', ', $returnArray);
 		$pdo = NULL;
