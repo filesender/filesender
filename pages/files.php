@@ -428,7 +428,7 @@ foreach($json_o as $item) {
    echo "<td class='dr2 HardBreak'><a id='link_downloadfile_".$i."' href='download.php?vid=". $item["filevoucheruid"]."' target='_blank'>" .utf8tohtml($item['fileoriginalname'],TRUE). "</a></td>";
    echo "<td class='dr2 HardBreak'>" .formatBytes($item['filesize']). "</td>";
    
-   echo "<td class='dr2 HardBreak' align='center'>" .utf8tohtml($item['downloads'],TRUE). "</td>";
+   echo "<td class='dr2 HardBreak' align='center'>" .$item['downloads']. "</td>";
   
   // echo "<td class='dr2'>" .date($lang['datedisplayformat'],strtotime($item['filecreateddate'])) . "</td>";
    echo "<td class='dr8'>" .date($lang['datedisplayformat'],strtotime($item['fileexpirydate'])) . "</td>"; //etc
