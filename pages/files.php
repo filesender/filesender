@@ -471,8 +471,8 @@ foreach($json_o as $item) {
 	//echo "<tr><td><strong>". lang("_DOWNLOADS")."</strong></td><td>".sizeof($item["downloadsummary"])."</td></tr>";
    
    echo "</table></td>";
-   } 
    echo "</tr>";
+   } 
    echo "<tr><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td></tr>";
    //}
 }
