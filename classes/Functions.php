@@ -279,13 +279,11 @@ class Functions {
             $authAttributes["saml_uid_attribute"] = "nonvalue";
         }
 		// limit results by config option
-		$count = isset($config["autocompleteHistoryMax"])? "LIMIT ".$config["autocompleteHistoryMax"]:"";
-		$sortby = "fileto"; 
-		$order = (isset($config["autocompleteSortOrder"]) && $config["autocompleteSortOrder"] == "DESC")? "DESC":"ASC";
+		$count = (isset($config["autocompleteHistoryMax"]) && $config["autocompleteHistoryMax"] !="")? "LIMIT ".$config["autocompleteHistoryMax"]:"";
 		
 		$pdo = $this->db->connect();
 		$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
-		$statement = $pdo->prepare("SELECT DISTINCT fileto FROM files WHERE  fileauthuseruid = :fileauthuseruid  ORDER BY ".$sortby." ".$order." ".$count);
+		$statement = $pdo->prepare("SELECT DISTINCT fileto FROM files WHERE  fileauthuseruid = :fileauthuseruid  ORDER BY fileto ".$count);
 		$statement->bindParam(':fileauthuseruid', $authAttributes["saml_uid_attribute"]);
 		try 
 		{ 	
