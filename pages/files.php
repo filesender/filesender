@@ -388,18 +388,18 @@ $json_o=json_decode($filedata,true);
   <div id="tablediv">
     <table id="myfiles" width="100%" border="0" cellspacing="0" cellpadding="4" style="table-layout:fixed;">
       <tr class="headerrow">
-	  <td width="18" onclick="toggleDownloadSummary()" title="<?php echo lang("_SHOW_ALL"); ?>" style="cursor:pointer"><img class='expct' src="images/openboth.png" border="0" alt=""/></td>
-        <td width="24">&nbsp;</td>
-        <td width="24">&nbsp;</td>
-		<td width="24">&nbsp;</td>
+	  <td class="tblmcw1" onclick="toggleDownloadSummary()" title="<?php echo lang("_SHOW_ALL"); ?>" style="cursor:pointer"><img class='expct' src="images/openboth.png" border="0" alt=""/></td>
+        <td class="tblmcw2">&nbsp;</td>
+        <td class="tblmcw2">&nbsp;</td>
+		<td class="tblmcw2">&nbsp;</td>
        <td class="HardBreak" id="myfiles_header_to"><strong><?php echo lang("_TO"); ?></strong></td>
         <td class="HardBreak" id="myfiles_header_filename"><strong><?php echo lang("_FILE_NAME"); ?></strong></td>
-        <td class="HardBreak" width="100px" id="myfiles_header_size"><strong><?php echo lang("_SIZE"); ?></strong></td>
+        <td class="HardBreak tblmcw3"  id="myfiles_header_size"><strong><?php echo lang("_SIZE"); ?></strong></td>
        <!-- <td class="HardBreak" id="myfiles_header_subject"><strong><?php //echo lang("_SUBJECT") ; ?></strong></td>-->
        <!-- <td class="HardBreak" id="myfiles_header_message"><strong><?php //echo lang("_MESSAGE") ; ?></strong></td>-->
-		<td class="HardBreak" width="100px" id="myfiles_header_downloaded" align='center' title="# <?php echo lang("_DOWNLOADED"); ?>"><strong><?php echo lang("_DOWNLOADED"); ?></strong></td>
+		<td class="HardBreak tblmcw3" id="myfiles_header_downloaded" align='center' title="# <?php echo lang("_DOWNLOADED"); ?>"><strong><?php echo lang("_DOWNLOADED"); ?></strong></td>
        <!-- <td class="HardBreak" id="myfiles_header_created"><strong><?php //echo lang("_CREATED"); ?></strong></td>-->
-        <td class="HardBreak" width="100px" id="myfiles_header_expiry"><strong><?php echo lang("_EXPIRY"); ?></strong></td>
+        <td class="HardBreak tblmcw3" id="myfiles_header_expiry"><strong><?php echo lang("_EXPIRY"); ?></strong></td>
       </tr>
        <?php 
 $i = 0;	  
@@ -441,14 +441,14 @@ foreach($json_o as $item) {
 	
 	// Summary table
 	echo "<table width='100%' border='0' cellpadding='1' cellspacing='0' >";
-	echo "<tr><td class='dr9'>Details</td><td class='dr12'></td></tr>";
+	echo "<tr><td class='dr9 headerrow'>".$lang['_DETAILS']."</td><td class='dr12'></td></tr>"; 
 	// display summary if it exists
    foreach($item["downloadsummary"] as $summaryitem) {
-   echo "<tr style='background-color:#ddd;'><td class='dr11 sdheading'><strong>Downloaded</strong></td><td class='HardBreak dr13'>".date($lang['datedisplayformat'],strtotime($summaryitem['logdate'])). "</td></tr>";
+   echo "<tr><td class='dr11 sdheading'><strong>Downloaded</strong></td><td class='HardBreak dr13'>".date($lang['datedisplayformat'],strtotime($summaryitem['logdate'])). "</td></tr>";
    }
-   	echo "<tr style='background-color:#cecece;'><td width='100px' class='dr4 sdheading'><strong>".lang("_CREATED")."</strong></td><td class='dr6 HardBreak'>".date($lang['datedisplayformat'],strtotime($item['filecreateddate'])). "</td></tr>"; 
+   	echo "<tr><td class='dr4 sdheading tblmcw3'><strong>".lang("_CREATED")."</strong></td><td class='dr6 HardBreak'>".date($lang['datedisplayformat'],strtotime($item['filecreateddate'])). "</td></tr>"; 
 
-	echo "<tr style='background-color:#cecece;'><td width='87px' class='dr4 sdheading'><strong>".lang("_FROM")."</strong></td>";
+	echo "<tr'><td class='dr4 sdheading'><strong>".lang("_FROM")."</strong></td>";
    	if($item['filefrom'] == $attributes["email"])
    	{
    	echo "<td class='dr6 HardBreak'>".lang("_ME")."</td>";
@@ -456,10 +456,10 @@ foreach($json_o as $item) {
    	echo "<td class='dr6 HardBreak'>" .$item['filefrom'] . "</td>";
    	}
 	echo "</tr>";
-	echo "<tr style='background-color:#cecece;'><td width='105px' class='dr4 sdheading'><strong>".lang("_SUBJECT")."</strong></td><td class='dr6 HardBreak'>".utf8tohtml($item['filesubject'],TRUE). "</td>";
+	echo "<tr><td class='dr4 sdheading tblmcw3'><strong>".lang("_SUBJECT")."</strong></td><td class='dr6 HardBreak'>".utf8tohtml($item['filesubject'],TRUE). "</td>";
 	
    	echo "</tr>";
-	echo "<tr style='background-color:#cecece;'><td width='87px' class='dr11 sdheading'><strong>".lang("_MESSAGE")."</strong></td><td class='dr13' colspan='8'>";
+	echo "<tr><td class='dr11 sdheading'><strong>".lang("_MESSAGE")."</strong></td><td class='dr13' colspan='8'>";
    	if($item['filemessage'] != "")
    	{
    		echo "<pre class='HardBreak'>".utf8tohtml($item['filemessage'],TRUE)."</pre>";
@@ -496,8 +496,8 @@ foreach($json_o as $item) {
   <form id="form1" name="form1" enctype="multipart/form-data" method="post" action="">
     <table  width="100%" border="0">
       <tr>
-        <td width="100" class="formfieldheading mandatory" id="files_to"><?php echo  lang("_TO"); ?>:</td>
-        <td width="400" valign="middle"><input name="fileto" title="<?php echo  lang("_EMAIL_SEPARATOR_MSG"); ?>" type="text" id="fileto" size="60" onchange="validate_fileto()" />
+        <td class="formfieldheading mandatory tblmcw3" id="files_to"><?php echo  lang("_TO"); ?>:</td>
+        <td valign="middle"><input name="fileto" title="<?php echo  lang("_EMAIL_SEPARATOR_MSG"); ?>" type="text" id="fileto" size="60" onchange="validate_fileto()" />
           <div id="fileto_msg" style="display: none" class="validation_msg"><?php echo lang("_INVALID_MISSING_EMAIL"); ?></div>
           <div id="maxemails_msg" style="display: none" class="validation_msg"><?php echo lang("_MAXEMAILS"); ?> <?php echo $config['max_email_recipients'] ?>.</div>
           </td>
