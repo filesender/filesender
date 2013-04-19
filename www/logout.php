@@ -82,8 +82,7 @@ $( "a", ".menu" ).button();
     </div>
    </div>
   </div><!-- #content -->
-
 </div><!-- #wrap -->
-
+<div id="footer"><?php echo lang('_SITE_FOOTER'); ?></div>
 </body>
 </html>
