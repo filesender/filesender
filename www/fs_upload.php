@@ -80,23 +80,86 @@ logEntry("DEBUG fs_upload: REQUEST data: " . print_r($_REQUEST, true));
 logEntry("DEBUG fs_upload: POST data: " . print_r($_POST, true));
 logEntry("DEBUG fs_upload: SESSION data: " . print_r($_SESSION, true));
 
+// upload a file  or chunk
+if(isset($_REQUEST["type"]))
+{ 
+    // check if post and s-token is valid
+	require_once('../includes/XSRF.php');
+
+	// tempFilename is created from ((uid or vid)+originalfilename+filesize)
+	$tempFilename = ""; 
+switch ($_REQUEST["type"]) {
+ 
+
+	case 'single':
+	// ----------------------------------
+	// single file upload used with Flash
+	// ----------------------------------
+	
+		$data = $functions->getVoucherData($_REQUEST["vid"]);
+		$tempFilename = generateTempFilename($data);
+		$result = move_uploaded_file($_FILES['Filedata']['tmp_name'], $uploadfolder.$tempFilename);
+		if($result) {
+			logEntry("DEBUG fs_upload.php: file moved:". $_FILES['Filedata']['tmp_name'] . " <- ".$tempFilename );
+			echo "true";
+		} else {
+			logEntry("DEBUG fs_upload.php: file NOT moved:". $_FILES['Filedata']['tmp_name'] . " <- ".$tempFilename, "E_ERROR" );
+			echo "false";
+		}
+		break;
+	
+	// ---------------------------------
+	// CHUNK file upload used with HTML5
+	// ---------------------------------
+	case 'chunk': 
+		// open the temp file
+		$data = $functions->getVoucherData($_REQUEST["vid"]);
+		$tempFilename = generateTempFilename($data);
+		
+		$fd = fopen("php://input", "r");
+		// append the chunk to the temp file
+		while( $data = fread( $fd,  1000000  ) ) file_put_contents( $config["site_filestore"].sanitizeFilename($tempFilename), $data, FILE_APPEND ) or die("Error");
+		// close the file 
+		fclose($fd);
+		logEntry("Uploaded ".$config["site_filestore"].sanitizeFilename($tempFilename));
+		// return file size
+		echo checkFileSize($uploadfolder.$tempFilename);
+		break;
+
+	// ---------------------------------
+	// Multithreaded (out-of-order) CHUNK file upload with HTML5 Web Workers
+	// By Edwin Schaap and René Klomp
+	// ---------------------------------
+	case 'tsunami':
+		require_once '../classes/Tsunami.php';
+
+		$data = $functions->getVoucherData($_REQUEST["vid"]);
+		$tempFilename = generateTempFilename($data);
+		$fs = new Tsunami($config["site_filestore"].sanitizeFilename($tempFilename));
+		$fs->processChunk();
+		break;
+        
+        // Get the current file size based on the voucher data
+	case 'filesize':
+		$data = $functions->getVoucherData($_REQUEST["vid"]);
+		$tempFilename = generateTempFilename($data);
+        logEntry("DEBUG fs_upload: Check File Size = " . checkFileSize($uploadfolder.$tempFilename));
+		echo checkFileSize($uploadfolder.$tempFilename);
+		break;
+}
+}
 // check we are authenticated first before continuing
 if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]))
 { 
 	// check if post and s-token is valid
-	require('../includes/XSRF.php');
+	require_once('../includes/XSRF.php');
 
 	// tempFilename is created from ((uid or vid)+originalfilename+filesize)
 	$tempFilename = ""; 
 
 	switch ($_REQUEST["type"]) {
 			
-	// Get the current file size based on the voucher data
-	case 'filesize':
-		$data = $functions->getVoucherData($_REQUEST["vid"]);
-		$tempFilename = generateTempFilename($data);
-		echo checkFileSize($uploadfolder.$tempFilename);
-		break;
+	
 
 	// Finish an upload (called after a validateupload and single/chunk sequence)
 	case 'uploadcomplete': 
@@ -228,53 +291,7 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 
 		break;
 			
-	case 'single':
-	// ----------------------------------
-	// single file upload used with Flash
-	// ----------------------------------
 	
-		$data = $functions->getVoucherData($_REQUEST["vid"]);
-		$tempFilename = generateTempFilename($data);
-		$result = move_uploaded_file($_FILES['Filedata']['tmp_name'], $uploadfolder.$tempFilename);
-		if($result) {
-			logEntry("DEBUG fs_upload.php: file moved:". $_FILES['Filedata']['tmp_name'] . " <- ".$tempFilename );
-			echo "true";
-		} else {
-			logEntry("DEBUG fs_upload.php: file NOT moved:". $_FILES['Filedata']['tmp_name'] . " <- ".$tempFilename, "E_ERROR" );
-			echo "false";
-		}
-		break;
-	
-	// ---------------------------------
-	// CHUNK file upload used with HTML5
-	// ---------------------------------
-	case 'chunk': 
-		// open the temp file
-		$data = $functions->getVoucherData($_REQUEST["vid"]);
-		$tempFilename = generateTempFilename($data);
-		
-		$fd = fopen("php://input", "r");
-		// append the chunk to the temp file
-		while( $data = fread( $fd,  1000000  ) ) file_put_contents( $config["site_filestore"].sanitizeFilename($tempFilename), $data, FILE_APPEND ) or die("Error");
-		// close the file 
-		fclose($fd);
-		logEntry("Uploaded ".$config["site_filestore"].sanitizeFilename($tempFilename));
-		// return file size
-		echo checkFileSize($uploadfolder.$tempFilename);
-		break;
-
-	// ---------------------------------
-	// Multithreaded (out-of-order) CHUNK file upload with HTML5 Web Workers
-	// By Edwin Schaap and René Klomp
-	// ---------------------------------
-	case 'tsunami':
-		require_once '../classes/Tsunami.php';
-
-		$data = $functions->getVoucherData($_REQUEST["vid"]);
-		$tempFilename = generateTempFilename($data);
-		$fs = new Tsunami($config["site_filestore"].sanitizeFilename($tempFilename));
-		$fs->processChunk();
-		break;
 		
 	// Insert a new guest invite (voucher)
 	case 'insertVoucherAjax': 
@@ -400,7 +417,7 @@ function returnerrorandclose()
 	
 function generateTempFilename($data)
 {
-	$authsaml = AuthSaml::getInstance();
+	//$authsaml = AuthSaml::getInstance();
 	$authvoucher = AuthVoucher::getInstance();
 	$functions = Functions::getInstance();
 	$tempFilename= "";
@@ -412,9 +429,9 @@ function generateTempFilename($data)
 		logEntry("DEBUG fs_upload: tempfilename 1v1 : ".$tempFilename);
 	} 
 	// else add SAML saml_uid_attribute
-	else if( $authsaml->isAuth()) {
-		$authAttributes = $authsaml->sAuth();
-		$tempFilename .= $authAttributes["saml_uid_attribute"];	
+	else if( $data["fileauthuseruid"] != "") {
+		//$authAttributes = $authsaml->sAuth();
+		$tempFilename .= $data["fileauthuseruid"];	
 		logEntry("DEBUG fs_upload: tempfilename 1a : ".$tempFilename);
 	} else if ($authvoucher->aVoucher()) {
 		// should not be used anymore. Since this means there is some error with the
