@@ -419,7 +419,7 @@ foreach($json_o as $item) {
 //	}
    echo '<td class="dr2" valign="top"> <div id="btn_resendemail_'.$i.'"><img src="images/email_go.png" alt="" title="'.lang("_RE_SEND_EMAIL").'"  style="cursor:pointer;"  onclick="confirmResend('.$onClick.')" /></div></td><td class="dr2" valign="top"><img id="btn_addrecipient_'.$i.'" src="images/email_add.png" alt="" title="'.lang("_NEW_RECIPIENT").'" onclick="openAddRecipient('."'".$item['filevoucheruid']."','".rawurlencode(utf8tohtml($item['fileoriginalname'],true)) ."','".$item['filesize'] ."','".rawurlencode($item['filefrom'])."','".rawurlencode($item['filesubject'])."','".rawurlencode($item['filemessage'])."'" .');"  style="cursor:pointer;" /></td>';
    echo "<td  class='dr2'  valign='top'  width='22'><div style='cursor:pointer;'><img id='btn_deletevoucher_".$i."' onclick='confirmdelete(".'"' .$item['filevoucheruid'] . '")'. "' src='images/shape_square_delete.png' alt='' title='".lang("_DELETE_FILE")."' /></div></td>";
-   if($item['fileto'] == $attributes["email"])
+   if(in_array($item['fileto'] ,$useremail))
    {
    echo "<td class='dr2 HardBreak' valign='top'>".lang("_ME")."</td>";
    } else {
@@ -449,7 +449,7 @@ foreach($json_o as $item) {
    	echo "<tr><td class='dr4 sdheading tblmcw3'><strong>".lang("_CREATED")."</strong></td><td class='dr6 HardBreak'>".date($lang['datedisplayformat'],strtotime($item['filecreateddate'])). "</td></tr>"; 
 
 	echo "<tr'><td class='dr4 sdheading'><strong>".lang("_FROM")."</strong></td>";
-   	if($item['filefrom'] == $attributes["email"])
+    if(in_array($item['filefrom'] ,$useremail))
    	{
    	echo "<td class='dr6 HardBreak'>".lang("_ME")."</td>";
    	} else {
