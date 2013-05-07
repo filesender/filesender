@@ -96,6 +96,26 @@ function ensureSaneFileUid($fileuid){
     }
 }
 
+ //--------------------------------------- 
+    //  Return custom css in /config if it exists
+    //  Returns String 
+    //  Ricoshae 07 May 2013
+	// ---------------------------------------
+  function customcss() 
+    {
+        global $config,$filesenderbase;
+   
+        $cssstring = "";
+        if(isset($config["customCSS"]) && file_exists($filesenderbase."/config/".$config["customCSS"]))
+        {
+            $css = file_get_contents("$filesenderbase/config/".$config["customCSS"]);
+            $cssstring .=  '<style type="text/css">';
+            $cssstring .= $css;
+            $cssstring .= '</style>';
+        }
+          return $cssstring;
+    }
+
 class Functions {
 
     private static $instance = NULL;
