@@ -77,6 +77,16 @@ if(isset($_REQUEST["s"]))
 {
 	$s = $_REQUEST["s"];
 }
+// display invalid voucher after - usually redirected from download page
+if($s == "invalidvoucher") 
+    {
+        array_push($messageArray,  lang("_INVALID_VOUCHER"));	
+	}	
+// display invalid voucher after - usually redirected from download page
+if($s == "logout") 
+    {
+    	 array_push($messageArray,  lang("_LOGOUT_COMPLETE"));	
+	}    
 if(!$isVoucher && !$isAuth && $s != "complete" && $s != "completev")
 {
 	$s = "logon";
@@ -94,7 +104,6 @@ if($isAuth )
 		$useremail = $userdata["email"];
 	}
 } 
-
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
@@ -358,8 +367,7 @@ function openabout()
 	?>
 	<div id="message"><?php echo lang("_ERROR_INCORRECT_FILE_SIZE"); ?></div>
 <?php	
-	}	
-	else if($s == "complete" || $s == "completev") 
+	} else if($s == "complete" || $s == "completev") 
 	{
 ?>
 		<div id="message"><?php echo lang("_UPLOAD_COMPLETE"); ?></div>
