@@ -88,8 +88,7 @@ if(isset($_REQUEST["type"]))
 
 	// tempFilename is created from ((uid or vid)+originalfilename+filesize)
 	$tempFilename = ""; 
-switch ($_REQUEST["type"]) {
- 
+    switch ($_REQUEST["type"]) {
 
 	case 'single':
 	// ----------------------------------
@@ -255,7 +254,7 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 			$authAttributes = $authsaml->sAuth();
 			$dataitem["fileauthuseruid"] = $authAttributes["saml_uid_attribute"];
 			$dataitem["fileauthuseremail"] = $dataitem["filefrom"];
-			$dataitem["fileuid"] = $authAttributes["saml_uid_attribute"];
+			$dataitem["fileuid"] = md5($authAttributes["saml_uid_attribute"]);
 		}
 
 		// if AUP then add session variable to store that a user selected the session variable
