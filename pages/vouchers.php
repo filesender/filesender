@@ -265,17 +265,21 @@ $json_o=json_decode($filedata,true);
         <div id="maxemails_msg" style="display: none" class="validation_msg"><?php echo lang("_MAXEMAILS"); ?> <?php echo $config['max_email_recipients'] ?>.</div>
  		</td>
       </tr>
+       <tr>
+        <td class=" mandatory" id="voucher_from"><?php echo lang("_FROM"); ?>:</td>
+        <td colspan="2">
 <?php
 if ( count($useremail) > 1 ) {
-        echo "<tr><td class=\"mandatory\">" . lang("_FROM") . ":</td><td><select name=\"filefrom\" id=\"filefrom\">\n";
+        echo "<select name=\"filefrom\" id=\"filefrom\">\n";
         foreach($useremail as $email) {
                 echo "<option>$email</option>\n";
         }
-        echo "</select></td></tr>\n";
+        echo "</select>\n";
 } else {
-        echo "<input name=\"filefrom\" type=\"hidden\" id=\"filefrom\" value=\"" . $useremail[0] . "\" />\n";
+        echo "<div id=\"filefrom\">".$useremail[0]."</div>" ."<input name=\"filefrom\" type=\"hidden\" id=\"filefrom\" value=\"" . $useremail[0] . "\" />\n";
 }
-?>
+?>   </td>
+        </tr>
 	  <tr>
 	   <td class="" id="voucher_message"><?php echo lang("_MESSAGE"); ?>: (<?php echo lang("_OPTIONAL"); ?>)</td>
         <td colspan="2"><textarea name="vouchermessage" cols="57" rows="4" id="vouchermessage"></textarea></td>
