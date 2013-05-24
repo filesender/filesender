@@ -158,38 +158,42 @@ function openabout()
       </noscript>
     </div>
   </div>
-  <div id="topmenu" style="display:none">
-  <div class="menu" id="menuleft">
+  <div class="menubar">
+  <div class="leftmenu">
+  <ul>
       <?php 
   	// create menu
   	// disable all buttons if this is a voucher, even if the user is logged on
  	if (!$authvoucher->aVoucher()  &&  $s != "completev"){
-	if($authsaml->isAuth() ) { echo '<a id="topmenu_newupload" href="index.php?s=upload">'.lang("_NEW_UPLOAD").'</a>'; }
-	if($authsaml->isAuth() ) { echo '<a id="topmenu_vouchers" href="index.php?s=vouchers">'.lang("_VOUCHERS").'</a>'; }
-	if($authsaml->isAuth() ) {echo '<a id="topmenu_myfiles" href="index.php?s=files">'.lang("_MY_FILES").'</a>'; }
-	if($authsaml->authIsAdmin() ) { echo '<a id="topmenu_admin" href="index.php?s=admin">'.lang("_ADMIN").'</a>'; }
-	if($authsaml->isAuth() ) { echo '<a id="topmenu_summary" href="testsummary.php?email='.$useremail  .'" target="_blank">Summary</a>'; }
+	if($authsaml->isAuth() ) { echo '<li><a class="'.$functions->active($s,'upload').'" id="topmenu_newupload" href="index.php?s=upload">'.lang("_NEW_UPLOAD").'</a></li>'; }
+	if($authsaml->isAuth() ) { echo '<li><a class="'.$functions->active($s,'vouchers').'" id="topmenu_vouchers" href="index.php?s=vouchers">'.lang("_VOUCHERS").'</a></li>'; }
+	if($authsaml->isAuth() ) {echo '<li><a class="'.$functions->active($s,'files').'" id="topmenu_myfiles" href="index.php?s=files">'.lang("_MY_FILES").'</a></li>'; }
+	if($authsaml->authIsAdmin() ) { echo '<li><a class="'.$functions->active($s,'admin').'" id="topmenu_admin" href="index.php?s=admin">'.lang("_ADMIN").'</a></li>'; }
+	if($authsaml->isAuth() ) { echo '<li><a class="'.$functions->active($s,'summary').'" id="topmenu_summary" href="testsummary.php?email='.$useremail  .'" target="_blank">Summary</a></li>'; }
   }
   ?>
-  	</div>
-   <div class="menu" id="menuright">
+  </ul>
+  </div>
+  <div class="rightmenu">
+  <ul>
   <?php
 	if($config['helpURL'] == "") {
-		echo '<a href="#" id="topmenu_help" onclick="openhelp()">'.lang("_HELP").'</a>';
+		echo '<li><a class="'.$functions->active($s,'help').'" href="#" id="topmenu_help" onclick="openhelp()">'.lang("_HELP").'</a></li>';
 	} else {
-		echo '<a href="'.$config['helpURL'].'" target="_blank" id="topmenu_help">'.lang("_HELP").'</a>';
+		echo '<li><a class="'.$functions->active($s,'help').'" href="'.$config['helpURL'].'" target="_blank" id="topmenu_help">'.lang("_HELP").'</a></li>';
 	}
 	if($config['aboutURL'] == "") {
-		echo '<a href="#" id="topmenu_about" onclick="openabout()">'.lang("_ABOUT").'</a>';
+		echo '<li><a class="'.$functions->active($s,'about').'" href="#" id="topmenu_about" onclick="openabout()">'.lang("_ABOUT").'</a></li>';
 	} else {
-		echo '<a href="'.$config['aboutURL'].'" target="_blank" id="topmenu_about">'.lang("_ABOUT").'</a>';	
+		echo '<li><a class="'.$functions->active($s,'about').'" href="'.$config['aboutURL'].'" target="_blank" id="topmenu_about">'.lang("_ABOUT").'</a></li>';	
 	}
-	if(!$authsaml->isAuth() && $s != "logon" ) { echo '<a href="'.$authsaml->logonURL().'" id="topmenu_logon">'.lang("_LOGON").'</a>';}
-	if($authsaml->isAuth() && !$authvoucher->aVoucher() &&  $s != "completev" ) { echo '<a href="'.$authsaml->logoffURL().'" id="topmenu_logoff">'.lang("_LOG_OFF").'</a>'; }
+	if(!$authsaml->isAuth() && $s != "logon" ) { echo '<li><a class="'.$functions->active($s,'logon').'" href="'.$authsaml->logonURL().'" id="topmenu_logon">'.lang("_LOGON").'</a></li>';}
+	if($authsaml->isAuth() && !$authvoucher->aVoucher() &&  $s != "completev" ) { echo '<li><a class="'.$functions->active($s,'about').'" href="'.$authsaml->logoffURL().'" id="topmenu_logoff">'.lang("_LOG_OFF").'</a></li>'; }
 	// end menu
 	?>
-	</div>
-	</div>
+	</ul>
+    </div>
+    </div>
 	<div id="scratch" class="scratch_msg">
 	<?php
 		if(array_key_exists("scratch", $_SESSION )) {
