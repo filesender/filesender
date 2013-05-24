@@ -1066,5 +1066,20 @@ class Functions {
         return $result;
 
     }
+    
+     //--------------------------------------- CHECKED
+    // Check if active menu item
+    // Returns 'active' or empty string
+	// ---------------------------------------
+    public function active($value,$menuname) {
+
+       if($value == $menuname)
+       {
+           return "active";
+       }
+
+        return "";
+
+    }
 }
 ?>

@@ -138,21 +138,21 @@
 		
 		
 		// upload area filestoupload
-	$('#wrap').on(
+	$('body').on(
     'dragover',
     function(e) {
         e.preventDefault();
         e.stopPropagation();
     }
 )
-$('#wrap').on(
+$('body').on(
     'dragenter',
     function(e) {
         e.preventDefault();
         e.stopPropagation();
     }
 )
-	$('#wrap').on(
+	$('body').on(
     'drop',
     function(e){
         if(e.originalEvent.dataTransfer){
@@ -700,7 +700,7 @@ if ( hasProductInstall && !hasRequestedVersion ) {
           <div class="fieldcontainer">
             <div class="label mandatory"id="upload_to" ><?php echo lang("_TO") ; ?>:</div>
             <div class="field">
-              <input name="fileto" title="<?php echo lang("_EMAIL_SEPARATOR_MSG") ; ?>" type="text" id="fileto" onchange="validate_fileto()"/>
+              <input name="fileto" type="text" id="fileto" title="<?php echo lang("_EMAIL_SEPARATOR_MSG") ; ?>" onchange="validate_fileto()" value="chris@ricoshae.com.au"/>
               <div id="fileto_msg" style="display: none" class="validation_msg field"  class="">
               <?php echo lang("_INVALID_MISSING_EMAIL"); ?>
               <div id="maxemails_msg" style="display: none" class="validation_msg"><?php echo lang("_MAXEMAILS"); ?> <?php echo $config['max_email_recipients'] ?>.</div>
