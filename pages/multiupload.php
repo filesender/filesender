@@ -608,13 +608,11 @@ function keepMeAlive()
 }
 //]]>
     </script>
-<div style="width:100%;height:20px;"><a href="<?php echo $config['HTML5URL'] ?>"  target="_newtab" id="html5link" name="html5link"><img style="float:right;padding-left:6px;" src="images/html5_installed.png" alt="" name="html5image" width="75" height="18" border="0" id="html5image" title="" /></a>
+<div style="width:100%;height:20px;display:none"><a href="<?php echo $config['HTML5URL'] ?>"  target="_newtab" id="html5link" name="html5link"><img style="float:right;padding-left:6px;" src="images/html5_installed.png" alt="" name="html5image" width="75" height="18" border="0" id="html5image" title="" /></a>
   <div class="html5text" id="html5text"></div>
 </div>
 <form id="form1" enctype="multipart/form-data" method="post" action="fs_uploadit.php" >
   <table width="100%" border="0" cellspacing="6">
-  <tr><td>
-    <div class="heading"><div id="selectfile"><?php echo lang("_SELECT_FILE"); ?>:</div></div></td><td><div class="heading">Enter Recipient</div></td></tr>
     <tr>
       <td class="box" rowspan="4" valign="top">
       <div id="fileInfoView">
@@ -687,20 +685,20 @@ if ( hasProductInstall && !hasRequestedVersion ) {
               <br />
             </div>
           </div>	
-            <div class="heading">Drag Files here to upload</div>
+            
   <div id="dragfilestouploadcss" style="height:400px" class="box">
-          <div  id="filestoupload" style="width:100%; height:100%; overflow:auto;"> </div>
+          <div  id="filestoupload" style="width:100%; height:100%; overflow:auto;"><div style="text-align:center; vertical-align:middle" class="heading">Drag Files here to upload</div> </div>
       </div></td>
       <td width="50%" height="100%" valign="top" class="box">
       
            <div class="box">
           <div class="fieldcontainer" id="upload_from">
-            <div class="mandatory"><?php echo lang("_FROM"); ?>: <?php echo $senderemail ?></div>
+            <div class="mandatory"><?php echo lang("_FROM"); ?>:</div> <div class="input"><?php echo $senderemail ?></div>
           </div>
           <div class="fieldcontainer">
             <div class="label mandatory"id="upload_to" ><?php echo lang("_TO") ; ?>:</div>
             <div class="field">
-              <input name="fileto" type="text" id="fileto" title="<?php echo lang("_EMAIL_SEPARATOR_MSG") ; ?>" onchange="validate_fileto()" value="chris@ricoshae.com.au"/>
+              <input name="fileto" type="text" id="fileto" title="<?php echo lang("_EMAIL_SEPARATOR_MSG") ; ?>" onchange="validate_fileto()" value="" placeholder="Enter recipient email"/>
               <div id="fileto_msg" style="display: none" class="validation_msg field"  class="">
               <?php echo lang("_INVALID_MISSING_EMAIL"); ?>
               <div id="maxemails_msg" style="display: none" class="validation_msg"><?php echo lang("_MAXEMAILS"); ?> <?php echo $config['max_email_recipients'] ?>.</div>
@@ -734,7 +732,6 @@ if ( hasProductInstall && !hasRequestedVersion ) {
         
       </td>
     </tr>
-    <tr><td><div class="heading">Options</div></td></tr>
     <tr>
       <td valign="top" height="100%" class="box">
       

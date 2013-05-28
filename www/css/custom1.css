@@ -49,14 +49,6 @@ body {
 	margin-left: 0px;
 	background-color: #FFFFFF;
 }
-#content {
-	padding-top: 10px;
-	padding-right: 20px;
-	padding-bottom: 20px;
-	padding-left: 20px;
-	font-size: 12px;
-	height: auto;	
-}
 
 .dr1
 {
@@ -571,14 +563,7 @@ word-wrap: break-word; /* Internet Explorer 5.5+ */
 	float: right;
 	position: relative;
 }
-.versionnumber
-{
-	text-align: right;
-	float: right;
-	color: #666;
-	font-size: 9px;
-	padding-top: 3px;
-}
+
 .html5link
 {
 	float: right;
@@ -599,10 +584,4 @@ word-wrap: break-word; /* Internet Explorer 5.5+ */
 	position: relative;
 	float: left;	
 	font-size: 12px;
-}
-#footer
-{
-	text-align: center;
-	font-size: 10px;
-	color: #666;
 }
