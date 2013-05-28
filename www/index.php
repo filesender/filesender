@@ -99,7 +99,7 @@ $(function() {
 	// display topmenu, content and userinformation
 	$("#topmenu").show();
 	$("#content").show();
-	$("#userinformation").show();
+	//$("#userinformation").show();
 	
 	$( "a", ".menu" ).button();
 	
@@ -194,6 +194,7 @@ function openabout()
 	</ul>
     </div>
     </div>
+    <div class="msgbox">&nbsp;
 	<div id="scratch" class="scratch_msg">
 	<?php
 		if(array_key_exists("scratch", $_SESSION )) {
@@ -202,6 +203,7 @@ function openabout()
 		}
 	?>
 	</div>	
+    </div>
 	<div id="userinformation" style="display:none">
 	<?php 
 
@@ -236,7 +238,7 @@ function openabout()
 	{
 		$versiondisplay .= FileSender_Version::VERSION;
 	}
-	echo "<div class='versionnumber'>" .$versiondisplay."</div>";
+	
 ?>
 	</div>
 		<div id="content" style="display:none">
@@ -314,14 +316,15 @@ function openabout()
 	}
 ?>
 	</div>
+   <div id="footer"> <?php echo "<div class='versionnumber'>" .$versiondisplay."</div>"; ?></div>
 	</div>
 	<div id="dialog-help" style="display:none" title="<?php echo lang("_HELP"); ?>">
 		<?php echo lang("_HELP_TEXT"); ?>
-	</div>
+</div>
 	<div id="dialog-about" style="display:none" title="<?php echo lang("_ABOUT"); ?>">
 		<?php echo lang("_ABOUT_TEXT"); ?>
 	</div>
-		<div id="footer"></div>
-		<div id="DoneLoading"></div>
+
+<div id="DoneLoading"></div>
 	</body>
 </html>
