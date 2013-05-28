@@ -618,7 +618,7 @@ function keepMeAlive()
       <div id="fileInfoView">
            <div class="box">
               <div id="uploadhtml5" style="display:none">
-                <div class="menu"><a href="#"  onclick="browse()" style="cursor:pointer;width:33%;">Browse</a></div>
+                <div class="menu"><a href="#"  onclick="browse()" style="cursor:pointer;width:33%;">Select files</a></div>
                 <input style="display:none; padding-right:6px;" type="file" name="fileToUpload" id="fileToUpload" onchange="fileSelected();" multiple/>
               </div>
               <div id="file_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_FILE"); ?></div>
@@ -687,7 +687,7 @@ if ( hasProductInstall && !hasRequestedVersion ) {
           </div>	
             
   <div id="dragfilestouploadcss" style="height:400px" class="box">
-          <div  id="filestoupload" style="width:100%; height:100%; overflow:auto;"><div style="text-align:center; vertical-align:middle" class="heading">Drag Files here to upload</div> </div>
+          <div  id="filestoupload" style="width:100%; height:100%; overflow:auto;"><div style="text-align:center; vertical-align:middle" class="heading">drag & drop your files here</div> </div>
       </div></td>
       <td width="50%" height="100%" valign="top" class="box">
       
