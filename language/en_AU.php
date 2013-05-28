@@ -37,8 +37,8 @@
  */
 // main menu items
 $lang["_ADMIN"] = "Administration";
-$lang["_NEW_UPLOAD"] = "Send File";
-$lang["_VOUCHERS"] = "Guest Voucher";
+$lang["_NEW_UPLOAD"] = "Send Files";
+$lang["_VOUCHERS"] = "Send upload invitation";
 $lang["_LOGON"] = "Logon";
 $lang["_LOG_OFF"] = "Log Off";
 $lang["_MY_FILES"] = "My Files";
@@ -94,13 +94,13 @@ $lang["_SHOWHIDE"] = "Show/Hide";
 $lang["_UPLOADING_WAIT"] = "Uploading file - please wait...";
 
 // button labels
-$lang["_UPLOAD"] = "Send a file";
-$lang["_BROWSE"] = "Browse";
+$lang["_UPLOAD"] = "Start sending";
+$lang["_BROWSE"] = "Select files";
 $lang["_CANCEL"] = "Cancel";
 $lang["_OPEN"] = "Open";
 $lang["_CLOSE"] = "Close";
 $lang["_OK"] = "Ok";
-$lang["_SEND"] = "Send";
+$lang["_SEND"] = "Send!";
 $lang["_DELETE"] = "Delete";
 $lang["_YES"] = "Yes";
 $lang["_NO"] = "No";
