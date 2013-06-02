@@ -464,6 +464,7 @@ margin-top: 4px;
 
 .mandatory{
 	font-weight: bold;
+	padding-bottom: 2px;
 }
 
 .html5text
@@ -525,6 +526,7 @@ label {
 	float: left;
 	/*width: 70px;*/
 	vertical-align: top;
+	padding-bottom: 2px;
 } 
 
 .field { /*float: left; width: 194px; */} 
@@ -539,6 +541,7 @@ label {
 	margin-left: 26px;
 	
 }
+
 .msgbox
 {
 	border-radius: 0px 0px 6px 6px;
@@ -546,6 +549,7 @@ label {
 	margin-right: 26px;
 	margin-left: 26px;
 	background-color: #D6D6D6;	
+	height: 34px;
 }
 .menubar li
 {
@@ -575,20 +579,25 @@ label {
     }
 .menubar ul
 {
-    border-left: 1px solid rgba(0, 0, 0, 0.35);
-    border-right: 1px solid rgba(255, 255, 255, 0.098);
-    display: inline;
-    float: left;
-    list-style: none outside none;
-    margin: 0;
-    text-align: left;
-    
+	/* [disabled]border-left: 1px solid rgba(0, 0, 0, 0.35); */
+	/* [disabled]border-right: 1px solid rgba(255, 255, 255, 0.098); */
+	display: inline;
+	float: left;
+	list-style: none outside none;
+	margin: 0;
+	text-align: left;
     }
 .constrain {
     margin: 0 auto;
     max-width: 1240px;
     padding: 0 20px;
+	
 }
+.rightmenu li:last-child
+{
+	border-right:none;
+}
+	
 .menubar ul li a {
     color: #E6E6E6;
     display: block;
