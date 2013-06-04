@@ -619,7 +619,7 @@ function keepMeAlive()
            <div class="box">
               <div id="uploadhtml5" style="display:none">
                
-                <src="images/act2/ style="display:none; padding-right:6px;" type="file" name="fileToUpload" id="fileToUpload" onchange="fileSelected();" multiple/>
+                <input style="display:none; padding-right:6px;" type="file" name="fileToUpload" id="fileToUpload" onchange="fileSelected();" multiple/>
               </div>
               <div id="file_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_FILE"); ?></div>
               <div id="uploadstandard" style="display:none"> 
