@@ -763,7 +763,7 @@ if ( hasProductInstall && !hasRequestedVersion ) {
             <div id="tog" style="display:none"> <?php echo lang("_AUPTERMS"); ?> </div>
           </div>
           <?php } ?>
-          <div><div class="menu" id="uploadbutton" style="display:"><a href="#" onclick="validate()"><?php echo lang("_SEND"); ?></a></div></div></td>
+          <div><div class="menu" id="uploadbutton" style="display:;text-align: center;"><a href="#" onclick="validate()"><?php echo lang("_SEND"); ?></a></div></div></td>
     </tr>
   </table>
   <div class="colmask threecol" id="dragfilestoupload"> </div>
