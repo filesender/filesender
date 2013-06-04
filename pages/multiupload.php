@@ -190,7 +190,7 @@ $('body').on(
 			$("#uploadbutton").show(); 
 			$("#fileInfoView").show();
 			var progressString = '<div id="file_'+n+'" class="fileBox valid'+ fdata[n].valid+ '">' + validfile + ' ' + fdata[n].filename + ' : ' + readablizebytes(fdata[n].fileSize)+'<div class="delbtn" id="file_del_'+n+'" onclick="removeItem('+n+');"><img src="images/delete.png" width="16" height="16" border="0" align="absmiddle" style="cursor:pointer"/></div><div style="display:none" class="progress_container" id="progress_container-'+n+'"><div class="progress_bar"  id="progress_bar-'+n+'"></div></div>';
-	
+			$("#draganddropmsg").remove();
 			$("#filestoupload").append(progressString);
 			//$("#fileName").html('Name: ' + fdata[n].filename);
 			//$("#fileSize").html('Size: ' + readablizebytes(fdata[n].fileSize));
@@ -687,7 +687,7 @@ if ( hasProductInstall && !hasRequestedVersion ) {
           </div>	
             
   <div id="dragfilestouploadcss" style="height:400px" class="box">
-          <div  id="filestoupload" style="width:100%; height:100%; overflow:auto;"><div style="text-align:center; vertical-align:middle" class="heading">drag & drop your files here</div> </div>
+          <div  id="filestoupload" style="display:table;width:100%; height:100%; overflow:auto;"><div id="draganddropmsg" style="text-align:center;display:table-cell; vertical-align:middle;" class="heading">drag & drop your files here</div> </div>
       </div><br>
        <div style="text-align:center;" class="menu"><a href="#"  onclick="browse()" style="cursor:pointer;width:33%;">Select files</a></div>
        </td>
