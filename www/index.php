@@ -169,7 +169,7 @@ function openabout()
 	if($authsaml->isAuth() ) { echo '<li><a class="'.$functions->active($s,'vouchers').'" id="topmenu_vouchers" href="index.php?s=vouchers">'.lang("_VOUCHERS").'</a></li>'; }
 	if($authsaml->isAuth() ) {echo '<li><a class="'.$functions->active($s,'files').'" id="topmenu_myfiles" href="index.php?s=files">'.lang("_MY_FILES").'</a></li>'; }
 	if($authsaml->authIsAdmin() ) { echo '<li><a class="'.$functions->active($s,'admin').'" id="topmenu_admin" href="index.php?s=admin">'.lang("_ADMIN").'</a></li>'; }
-	if($authsaml->isAuth() ) { echo '<li><a class="'.$functions->active($s,'summary').'" id="topmenu_summary" href="testsummary.php?email='.$useremail  .'" target="_blank">Summary</a></li>'; }
+	//if($authsaml->isAuth() ) { echo '<li><a class="'.$functions->active($s,'summary').'" id="topmenu_summary" href="testsummary.php?email='.$useremail  .'" target="_blank">Summary</a></li>'; }
   }
   ?>
   </ul>

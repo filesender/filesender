@@ -157,11 +157,17 @@ input,textarea
 }
 
 #box {
-	padding: 20px;
 	border: 1px solid #cccccc;
-	border-radius:10px;
+	border-radius: 10px;
 	-moz-border-radius: 10px;
-	margin: 5px auto;
+	margin-top: 5px;
+	margin-right: auto;
+	margin-bottom: 5px;
+	margin-left: auto;
+	padding-top: 5px;
+	padding-right: 20px;
+	padding-bottom: 20px;
+	padding-left: 20px;
 }
 .delbtn
 {
@@ -409,14 +415,25 @@ margin-top: 4px;
 	height: auto;	
 }
 
+#myfiles .headerrow
+{
+	color: rgb(255,255,255);
+	background-color: rgb(153,153,153);
+}
+
 #box, .box  {
-	padding: 10px;
 	border: 1px solid #cccccc;
-	border-radius:5px;
+	border-radius: 5px;
 	-moz-border-radius: 5px;
 	margin-top: 4px;
 	margin-bottom: 4px;
 	background-color: #CCCCCC;
+	padding-top: 2px;
+	padding-right: 10px;
+	padding-bottom: 10px;
+	padding-left: 10px;
+	margin-right: 6px;
+	margin-left: 6px;
 }
 #message {
 	background-color: #AAC1A4;
