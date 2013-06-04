@@ -224,7 +224,7 @@ $json_o=json_decode($filedata,true);
 
 <div id="box"> <?php echo '<div id="pageheading">'.lang("_MY_FILES").'</div>'; ?>
   <div id="tablediv">
-    <table id="myfiles" width="750" border="0" cellspacing="1" style="table-layout:fixed;">
+    <table id="myfiles" width="100%" border="0" cellspacing="1" style="table-layout:fixed;">
       <tr class="headerrow">
         <td width="18">&nbsp;</td>
         <td width="18">&nbsp;</td>
