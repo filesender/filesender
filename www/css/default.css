@@ -150,6 +150,12 @@ input,textarea
 	font-size: 12px;
 }
 
+#draganddropmsg
+{
+	padding-top: 0px;
+	padding-bottom: 0px;	
+}
+
 #box {
 	padding: 20px;
 	border: 1px solid #cccccc;
