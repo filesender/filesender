@@ -688,7 +688,7 @@ if ( hasProductInstall && !hasRequestedVersion ) {
             
   <div id="dragfilestouploadcss" style="height:400px" class="box">
           <div  id="filestoupload" style="display:table;width:100%; height:100%; overflow:auto;"><div id="draganddropmsg" style="text-align:center;display:table-cell; vertical-align:middle;" class="heading">drag & drop your files here</div> </div>
-      </div><br>
+      </div><br><br>
        <div style="text-align:center;" class="menu"><a href="#"  onclick="browse()" style="cursor:pointer;width:33%;">Select files</a></div>
        </td>
       <td width="50%" height="100%" valign="top" class="box">
