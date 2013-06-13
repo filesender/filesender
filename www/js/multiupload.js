@@ -94,15 +94,10 @@ function browse(){
 		// validate file for upload
 		// Show in list 'invalid' with reason 
 		//fdata[n].filesize = 0;
-		var validfile = "";
-	  	if(validate_file(n)) { 
-			fdata[n].valid = true;
-		} else {
-			validfile = '<img style="float:left;padding-right:6px;" src="images/information.png" border=0 title="This file is invalid and will not be uploaded"/>';
-		}
+
 			$("#uploadbutton").show(); 
 			$("#fileInfoView").show();
-			var progressString = '<div id="file_'+n+'" class="fileBox valid'+ fdata[n].valid+ '">' + validfile + '' + fdata[n].filename + ' Size: ' + readablizebytes(fdata[n].fileSize)+'<div class="delbtn" id="file_del_'+n+'" onclick="removeItem('+n+');"><img src="images/delete.png" width="16" height="16" border="0" align="absmiddle" style="cursor:pointer"/></div><div style="display:none" class="progress_container" id="progress_container-'+n+'"><div class="progress_bar"  id="progress_bar-'+n+'"></div></div>';
+			var progressString = generateFileBoxHtml();
 			$("#draganddropmsg").remove();
 			$("#filestoupload").append(progressString);
 			//$("#fileName").html('Name: ' + fdata[n].filename);
@@ -118,6 +113,25 @@ function browse(){
 		}
 	}
 
+    function generateFileBoxHtml() {
+        var validfile = "";
+        if(validate_file(n)) {
+            fdata[n].valid = true;
+        } else {
+            validfile = '<img style="float:left;padding-right:6px;" src="images/information.png" border=0 title="This file is invalid and will not be uploaded"/>';
+        }
+
+        var file_info = validfile + ' ' + fdata[n].filename + ' : ' + readablizebytes(fdata[n].fileSize);
+
+        return '<div id="file_'+n+'" class="fileBox valid'+ fdata[n].valid+ '">' +
+            '<span class="filebox_string" title="' + file_info + '">' + file_info + '</span>' +
+            '<span class="delbtn" id="file_del_'+n+'" onclick="removeItem('+n+');">' +
+            '<img src="images/delete.png" width="16" height="16" border="0" align="absmiddle" style="cursor:pointer"/>' +
+            '</span>' +
+            '<div class="progress_bar" id="progress_bar-'+ n + '"></div>' +
+            '</div>';
+    }
+
 	function startupload()
 	{
 		// validate input data
@@ -126,8 +140,7 @@ function browse(){
 		
 		// check if file is validated before uploading
 	if(validate_file(n) && fdata[n].status) { 
-		
-		$("#progress_container-"+n).show();
+
 		$("#file_del_"+n).hide();
 		fdata[n].bytesUploaded = 0;
 		fdata[n].bytesTotal = fdata[n].fileSize;
@@ -339,13 +352,13 @@ function updatepb(bytesloaded,totalbytes)
 		bytesTransfered = (Math.round(bytesloaded * 100/1024)/100).toString() + 'kB';
 	else
 		bytesTransfered = (Math.round(bytesloaded * 100)/100).toString() + 'Bytes';
+        $("#filemessage").html("Bytes transferred:" + bytesTransfered);
 		var progress_bar = '#progress_bar-'+n;
-		var progress_container = '#progress_container-'+n;
+		var file_box = '#file_'+n;
 		var progress_completed = '#progress_completed-'+n;
 		//$(fileref).width(percentComplete/100 *$(filebarref).width());	//set width of progress bar based on the $status value (set at the top of this page)
 		//$(fileref).html(percentComplete +"% ");
-		$(progress_bar).width(percentComplete/100 *$(progress_container).width());	//set width of progress bar based on the $status value (set at the top of this page)
-		$(progress_bar).html(percentComplete +"% ");
+		$(progress_bar).width(percentComplete/100 *$(file_box).width());	//set width of progress bar based on the $status value (set at the top of this page)
 		//$(progress_completed).html(parseInt(percentComplete) + "%(" + bytesTransfered + ")" );	//display the % completed within the progress bar
 	  
 }
