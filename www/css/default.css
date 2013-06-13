@@ -169,6 +169,21 @@ input,textarea
 	padding-bottom: 20px;
 	padding-left: 20px;
 }
+
+.filebox_string
+{
+    line-height: 20px;
+    height: 20px;
+    position:absolute;
+    display: inline-block;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    width:90%;
+    text-decoration: inherit;
+    z-index: 10;
+}
+
 .delbtn
 {
 	background-color: #ddd;
@@ -196,6 +211,10 @@ input,textarea
 	border: 1px solid #CCCCCC;
 	margin: 2px;
 	background-color: #dedede;
+    height: 20px;
+    border: 1px solid #CCCCCC;
+    position:relative;
+    vertical-align: middle;
 }
 
 .validfalse
@@ -340,16 +359,6 @@ margin-top: 4px;
 	padding-left: 1px;
 }
 
-#progress_bar {
-	position: relative;
-	height: 20px;
-	background-color: #090;
-	width: 0%;
-	z-index:10;
-	color: #FFF;
-	padding-left: 4px;
-}
-
 #progress_completed {
 	z-index:40;
 	line-height:30px;
@@ -371,12 +380,10 @@ margin-top: 4px;
 
 .progress_bar {
 	position: relative;
-	height: 16px;
-	background-color: #090;
-	width: 0%;
-	z-index:10;
+	height: 20px;
+	background-color: #5C5;
+	width: 0;
 	color: #FFF;
-	padding-left: 4px;
 }
 
 .progress_completed {

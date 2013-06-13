@@ -184,15 +184,21 @@ $('body').on(
                     // validate file for upload
                     // Show in list 'invalid' with reason
                     //fdata[n].filesize = 0;
-                    var validfile = "";
-                    if(validate_file(n)) {
-                        fdata[n].valid = true;
-                    } else {
-                        validfile = '<img style="float:left;padding-right:6px;" src="images/information.png" border=0 title="This file is invalid and will not be uploaded"/>';
-                    }
-                        $("#uploadbutton").show();
-                        $("#fileInfoView").show();
-                        var progressString = '<div id="file_'+n+'" class="fileBox valid'+ fdata[n].valid+ '">' + validfile + ' ' + fdata[n].filename + ' : ' + readablizebytes(fdata[n].fileSize)+'<div class="delbtn" id="file_del_'+n+'" onclick="removeItem('+n+');"><img src="images/delete.png" width="16" height="16" border="0" align="absmiddle" style="cursor:pointer"/></div><div style="display:none" class="progress_container" id="progress_container-'+n+'"><div class="progress_bar"  id="progress_bar-'+n+'"></div></div>';
+
+
+                    var progressString = generateFileBoxHtml();
+                    $("#uploadbutton").show();
+                    $("#fileInfoView").show();
+
+                        /*var progressString =
+                            '<div id="file_'+n+'" class="fileBox valid'+ fdata[n].valid+ '">' + validfile + ' ' + fdata[n].filename + ' : ' + readablizebytes(fdata[n].fileSize)+
+                                '<div class="delbtn" id="file_del_'+n+'" onclick="removeItem('+n+');">' +
+                                    '<img src="images/delete.png" width="16" height="16" border="0" align="absmiddle" style="cursor:pointer"/>' +
+                                '</div>' +
+                                '<div style="display:none" class="progress_container" id="progress_container-'+n+'">' +
+                                    '<div class="progress_bar"  id="progress_bar-'+n+'"></div>' +
+                                '</div>' +
+                            '</div>';*/
                         $("#draganddropmsg").remove();
                         $("#filestoupload").append(progressString);
                         //$("#fileName").html('Name: ' + fdata[n].filename);
@@ -211,6 +217,7 @@ $('body').on(
         }
     }
 );
+
 		// set dialog cancel upload
 		$("#dialog-cancel").dialog({ autoOpen: false, height: 140, width: 350, modal: true,
 		buttons: {
