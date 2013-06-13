@@ -32,6 +32,7 @@ CREATE TABLE `files` (
   `filecreateddate` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `fileauthurl` varchar(500) DEFAULT NULL,
   `fileauthuseremail` varchar(255) DEFAULT NULL,
+  `filegroupid` varchar(60) DEFAULT NULL,
   PRIMARY KEY (`fileid`),
   UNIQUE KEY `fileid` (`fileid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;

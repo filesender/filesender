@@ -66,6 +66,13 @@ function getGUID() {
     );
 }
 
+//--------------------------------- Unchecked
+// Create cryptographically secure key for group ID's.
+//---------------------------------
+function getOpenSSLKey(){
+     return bin2hex(openssl_random_pseudo_bytes(30));
+}
+
 // ---------------------------------------
 // Replace illegal chars with _ character in supplied filenames
 // ---------------------------------------
@@ -776,7 +783,8 @@ class Functions {
 			fileuid,
 			fileauthuseruid,
 			fileauthuseremail,
-			filecreateddate
+			filecreateddate,
+			filegroupid
             ) VALUES
             ( 	:fileexpirydate,
 			:fileto,
@@ -796,7 +804,8 @@ class Functions {
 			:fileuid,
 			:fileauthuseruid,
 			:fileauthuseremail,
-			:filecreateddate)');	
+			:filecreateddate,
+			:filegroupid)');
 				
 			$statement->bindParam(':fileexpirydate', $dataitem['fileexpirydate']);
 			$statement->bindParam(':fileto', $dataitem['fileto']);
@@ -817,6 +826,7 @@ class Functions {
 			$statement->bindParam(':fileauthuseruid', $dataitem['fileauthuseruid']);
 			$statement->bindParam(':fileauthuseremail', $dataitem['fileauthuseremail']);
 			$statement->bindParam(':filecreateddate', $dataitem['filecreateddate']);
+            $statement->bindParam(':filegroupid', $dataitem['filegroupid']);
 	
 			try { 
 				$statement->execute(); 
@@ -865,7 +875,8 @@ class Functions {
 			fileuid = :fileuid,
 			fileauthuseruid = :fileauthuseruid,
 			fileauthuseremail = :fileauthuseremail,
-			filecreateddate = :filecreateddate
+			filecreateddate = :filecreateddate,
+			filegroupid = :filegroupid
 			WHERE filevoucheruid = :filevoucheruid');	
 				
 			$statement->bindParam(':fileexpirydate', $dataitem['fileexpirydate']);
@@ -887,6 +898,7 @@ class Functions {
 			$statement->bindParam(':fileauthuseruid', $dataitem['fileauthuseruid']);
 			$statement->bindParam(':fileauthuseremail', $dataitem['fileauthuseremail']);
 			$statement->bindParam(':filecreateddate', $dataitem['filecreateddate']);
+            $statement->bindParam(':filegroupid', $dataitem['filegroupid']);
 	
 			try { 
 				$statement->execute(); 
