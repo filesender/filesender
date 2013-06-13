@@ -105,7 +105,8 @@
 	var intervalTimer = 0;
 	var html5 = false;
 	var errmsg_disk_space = "<?php echo lang($lang["_DISK_SPACE_ERROR"]); ?>";
-	var filedata=new Array(); 
+	var filedata=new Array();
+    var groupid = '<?php echo getOpenSSLKey(); ?>';
 	
 	var vid='<?php if(isset($_REQUEST["vid"])){echo htmlspecialchars($_REQUEST["vid"]);}; ?>';
 	// check if html5 functions are available
@@ -161,48 +162,50 @@ $('body').on(
                 e.stopPropagation();
                 /*UPLOAD FILES HERE*/
                var files = e.originalEvent.dataTransfer.files;
+
   				for (var i = 0, f; f = files[i]; i++) 
 				{
 					n = n + 1;
   				 	// --------------
 					fdata[n] = Array(n);
-        fdata[n].file = files[i];
-        fdata[n].fileSize = fdata[n].file.size;
-		fdata[n].bytesTotal = fdata[n].file.size;
-		fdata[n].bytesUploaded = 0;
-	    fdata[n].previousBytesLoaded = 0;
-	    fdata[n].intervalTimer = 0;
-		fdata[n].currentlocation = 0;
-		fdata[n].filename = fdata[n].file.name;
-		fdata[n].name = fdata[n].file.name;
-		fdata[n].filetype = fdata[n].file.type;
-		fdata[n].valid = false; // assume invalid until checked
-		fdata[n].status = true; // to allow removal of file from upload list
-		// validate file for upload
-		// Show in list 'invalid' with reason 
-		//fdata[n].filesize = 0;
-		var validfile = "";
-	  	if(validate_file(n)) { 
-			fdata[n].valid = true;
-		} else {
-			validfile = '<img style="float:left;padding-right:6px;" src="images/information.png" border=0 title="This file is invalid and will not be uploaded"/>';
-		}
-			$("#uploadbutton").show(); 
-			$("#fileInfoView").show();
-			var progressString = '<div id="file_'+n+'" class="fileBox valid'+ fdata[n].valid+ '">' + validfile + ' ' + fdata[n].filename + ' : ' + readablizebytes(fdata[n].fileSize)+'<div class="delbtn" id="file_del_'+n+'" onclick="removeItem('+n+');"><img src="images/delete.png" width="16" height="16" border="0" align="absmiddle" style="cursor:pointer"/></div><div style="display:none" class="progress_container" id="progress_container-'+n+'"><div class="progress_bar"  id="progress_bar-'+n+'"></div></div>';
-			$("#draganddropmsg").remove();
-			$("#filestoupload").append(progressString);
-			//$("#fileName").html('Name: ' + fdata[n].filename);
-			//$("#fileSize").html('Size: ' + readablizebytes(fdata[n].fileSize));
-		//} else { 
-		 // display invalid file
-			//$("#uploadbutton").hide();
-			//$("#fileInfoView").hide();
-			//$("#fileName").html("");
-			//$("#fileSize").html("");
-		//};
-	
-		//--------------
+                    fdata[n].filegroupid = groupid;
+                    fdata[n].file = files[i];
+                    fdata[n].fileSize = fdata[n].file.size;
+                    fdata[n].bytesTotal = fdata[n].file.size;
+                    fdata[n].bytesUploaded = 0;
+                    fdata[n].previousBytesLoaded = 0;
+                    fdata[n].intervalTimer = 0;
+                    fdata[n].currentlocation = 0;
+                    fdata[n].filename = fdata[n].file.name;
+                    fdata[n].name = fdata[n].file.name;
+                    fdata[n].filetype = fdata[n].file.type;
+                    fdata[n].valid = false; // assume invalid until checked
+                    fdata[n].status = true; // to allow removal of file from upload list
+                    // validate file for upload
+                    // Show in list 'invalid' with reason
+                    //fdata[n].filesize = 0;
+                    var validfile = "";
+                    if(validate_file(n)) {
+                        fdata[n].valid = true;
+                    } else {
+                        validfile = '<img style="float:left;padding-right:6px;" src="images/information.png" border=0 title="This file is invalid and will not be uploaded"/>';
+                    }
+                        $("#uploadbutton").show();
+                        $("#fileInfoView").show();
+                        var progressString = '<div id="file_'+n+'" class="fileBox valid'+ fdata[n].valid+ '">' + validfile + ' ' + fdata[n].filename + ' : ' + readablizebytes(fdata[n].fileSize)+'<div class="delbtn" id="file_del_'+n+'" onclick="removeItem('+n+');"><img src="images/delete.png" width="16" height="16" border="0" align="absmiddle" style="cursor:pointer"/></div><div style="display:none" class="progress_container" id="progress_container-'+n+'"><div class="progress_bar"  id="progress_bar-'+n+'"></div></div>';
+                        $("#draganddropmsg").remove();
+                        $("#filestoupload").append(progressString);
+                        //$("#fileName").html('Name: ' + fdata[n].filename);
+                        //$("#fileSize").html('Size: ' + readablizebytes(fdata[n].fileSize));
+                    //} else {
+                     // display invalid file
+                        //$("#uploadbutton").hide();
+                        //$("#fileInfoView").hide();
+                        //$("#fileName").html("");
+                        //$("#fileSize").html("");
+                    //};
+
+                    //--------------
  				}
             }   
         }

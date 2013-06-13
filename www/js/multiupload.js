@@ -36,7 +36,7 @@
 // JavaScript Document
 
 
-<!--
+
 // -----------------------------------------------------------------------------
 // Globals
 // Major version of Flash required
@@ -78,6 +78,7 @@ function browse(){
 		for (var i=0, l=files.length; i<l; i++) {
 		n = n + 1;
 		fdata[n] = Array(n);
+            fdata[n].filegroupid = groupid;
         fdata[n].file = files[i];
         fdata[n].fileSize = fdata[n].file.size;
 		fdata[n].bytesTotal = fdata[n].file.size;
@@ -138,6 +139,8 @@ function browse(){
 		json["fileoriginalname"] = fdata[n].filename;
 		json["filesize"] = parseInt(fdata[n].fileSize);
 		json["vid"] = vid;
+        json["filegroupid"] = fdata[n].filegroupid;
+
 
 		$.ajax({
   		type: "POST",
