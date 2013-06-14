@@ -278,7 +278,7 @@ function uploadFile() {
 		} else
 		//if(file && file.slice )
 		{
-			var blob = file.slice(fdata[n].bytesUploaded, txferSize);
+			var blob = file.slice(fdata[n].bytesUploaded, txferSize+fdata[n].bytesUploaded);
 		}
 	
 	var boundary = "fileboundary"; //Boundary name
