@@ -36,7 +36,7 @@
 // JavaScript Document
 
 
-<!--
+
 // -----------------------------------------------------------------------------
 // Globals
 // Major version of Flash required
@@ -138,14 +138,17 @@ var n = -1; // file int currently uploading
 		if(data.errors)
 		{
 		$.each(data.errors, function(i,result){
-		if(result == "err_notauthenticated") { errorDialog(errmsg_notauthenticated);} // not authenticated
+		if(result == "err_token") {$("#dialog-tokenerror").dialog("open");} // token missing or error
+		if(result == "err_notauthenticated") { $("#dialog-autherror").dialog("open");} // not authenticated
 		if(result == "err_tomissing") { $("#fileto_msg").show();} // missing email data
 		if(result == "err_expmissing") { $("#expiry_msg").show();} // missing expiry date
 		if(result == "err_exoutofrange") { $("#expiry_msg").show();} // expiry date out of range
 		if(result == "err_invalidemail") { $("#fileto_msg").show();} // 1 or more emails invalid
 		if(result == "err_invalidfilename") { $("#file_msg").show();} // invalid filename
-		if(result == "err_nodiskspace") { errorDialog(errmsg_disk_space);}
+		if(result == "err_invalidextension") { $("#extension_msg").show();} //  invalid extension
+		if(result == "err_nodiskspace") { errorDialog(errmsg_disk_space);} // not enough disk space on server
 		})
+		$("#uploadbutton a").attr("onclick", "validate()"); // re-activate upload button
 		}
 		if(data.status && data.status == "complete")
 		{
@@ -169,6 +172,93 @@ var n = -1; // file int currently uploading
 		}
   		});
 	}
+
+function uploadFileWebworkers() {
+    var files = document.getElementById("fileToUpload").files;
+    var path = document.location.pathname;
+    var dir = path.substring(0, path.lastIndexOf('/'));
+
+    $("head").append('<script type="text/javascript" src="lib/tsunami/js/tsunami.js"></script>');
+
+    if(fdata[n].bytesUploaded > fdata[n].bytesTotal -1 ) {
+        doUploadComplete();
+        return;
+    }
+
+    chunksize = parseInt($('#chunksize').val())*1024*1024;
+    console.log('Chunksize: '+ chunksize);
+
+    workerCount = parseInt($('#workerCount').val());
+    console.log('Using '+ workerCount+' worker(s)');
+    jobsPerWorker = parseInt($('#jobsPerWorker').val());
+    console.log('Setting '+ jobsPerWorker+' job(s) per worker');
+
+    var tsunami = new Tsunami({
+        uri: dir + '/' +uploadURI + "?type=tsunami&vid="+vid,
+        simultaneousUploads: workerCount,
+        jobsPerWorker: jobsPerWorker,
+        chunkSize: chunksize,
+        workerFile: 'lib/tsunami/js/tsunami_worker.js',
+        log: false,
+        onComplete: doUploadComplete,
+        onProgress: updatepb
+    });
+    tsunami.addFiles(files);
+    tsunami.upload();
+}
+
+function doUploadComplete(){
+    var end  = new Date().getTime();
+    var time = end-startTime;
+    var speed = fdata[n].bytesTotal / (time /1000) / 1024 / 1024 * 8;
+
+    console.log('Upload time:'+ (time /1000) + 'sec');
+    console.log('Speed: '+ speed.toFixed(2)+'Mbit/s' );
+
+    var query = $("#form1").serializeArray(), json = {};
+    $.ajax({
+        type: "POST",
+        url: "fs_upload.php?type=uploadcomplete&vid="+vid
+        ,
+        success:function( data ) {
+            var data =  parseJSON(data);
+            if(data.errors)
+            {
+                $.each(data.errors, function(i,result){
+                    if(result == "err_token") {
+                        $("#dialog-tokenerror").dialog("open");
+                    } // token missing or error
+                    if(result == "err_cannotrenamefile") {
+                        window.location.href="index.php?s=uploaderror";
+                        return;
+                    } //    
+                    if(result == "err_emailnotsent") {
+                        window.location.href="index.php?s=emailsenterror";
+                        return;
+                    } //
+                    if(result == "err_filesizeincorrect") {
+                        window.location.href="index.php?s=filesizeincorrect";
+                        return;
+                    } //    
+                })
+            } else {
+                if(data.status && data.status == "complete"){
+                    window.location.href="index.php?s=complete";
+                    return;
+                }
+                if(data.status && data.status == "completev"){
+                    window.location.href="index.php?s=completev";
+                    return;
+                }
+            }
+        }
+        ,
+        error:function(xhr,err){
+            // error function to display error message e.g.404 page not found
+            ajaxerror(xhr.readyState,xhr.status,xhr.responseText);
+        }
+    });
+}
 
 function uploadFile() {
 		
@@ -214,7 +304,7 @@ function uploadFile() {
 		//window.location.href="index.php?s=completev";
 		//}
 		}
-			
+
 		if(fdata[n].bytesUploaded + txferSize > fdata[n].fileSize)
 		{
 		txferSize = fdata[n].fileSize - fdata[n].bytesUploaded;

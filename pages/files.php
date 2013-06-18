@@ -45,17 +45,37 @@ if(isset($_REQUEST["a"]) && isset($_REQUEST["id"]))
 	// validate id 
 	if(ensureSaneFileUid($_REQUEST["id"])) {
 		$myfileData = $functions->getVoucherData($_REQUEST['id']);
-		if($_REQUEST["a"] == "del" )
+		if($_REQUEST["a"] == "del")
 		{
-			if($functions->deleteFile($myfileData["fileid"]))
+			// check if user is authenticated and allowed to delete this file
+			if( $isAuth && $userdata["saml_uid_attribute"] == $myfileData["fileauthuseruid"])
 			{
-				echo "<div id='message'>".lang("_FILE_DELETED")."</div>";
+				if($functions->deleteFile($myfileData["fileid"]))
+				{
+					echo "<div id='message'>".lang("_FILE_DELETED")."</div>";
+				}
+			} else {
+			// log auth user tried to delete a file they do not have access to
+			logEntry("Permission denied - attempt to delete ".$myfileData["fileuid"],"E_ERROR");
+			// notify - not deleted - you do not have permission	
+			echo "<div id='message'>".lang("_PERMISSION_DENIED")."</div>";
 			}
 		}
 		if($_REQUEST["a"] == "resend")
 		{
-			$sendmail->sendEmail($myfileData ,$config['fileuploadedemailbody']);
-			echo "<div id='message'>".lang("_MESSAGE_RESENT")."</div>";
+			// check if user is authenticated and allowed to resend this file
+			if( $isAuth && $userdata["saml_uid_attribute"] == $myfileData["fileauthuseruid"])
+			{
+				if($sendmail->sendEmail($myfileData ,$config['fileuploadedemailbody']))
+				{
+					echo "<div id='message'>".lang("_MESSAGE_RESENT")."</div>";
+				}
+			} else {
+			// log auth user tried to resend email for a file they do not have access to
+			logEntry("Permission denied - attempt to resend ".$myfileData["fileuid"],"E_ERROR");
+			// notify - not resent - you do not have permission	
+			echo "<div id='message'>".lang("_PERMISSION_DENIED")."</div>";		
+			}
 		}
 	} else {
 		echo "<div id='message'>".lang("_INVALID_FILEVOUCHERID")."</div>";	
@@ -66,7 +86,13 @@ if(isset($_REQUEST["a"]) && $_REQUEST["a"] == "added")
 	// display the add box
 	echo "<div id='message'>".lang("_EMAIL_SENT").".</div>";
 }
-
+foreach ($errorArray as $message) 
+		{
+		if($message == "err_emailnotsent")
+		{
+			echo '<div id="message">'.lang("_ERROR_SENDING_EMAIL").'</div>';
+		}
+		}
 // Get list of user files and display page
 $filedata = $functions->getUserFiles();
 $json_o=json_decode($filedata,true);
@@ -86,7 +112,7 @@ $json_o=json_decode($filedata,true);
 		$("#datepicker" ).datepicker({ minDate: new Date(minimumDate), maxDate: new Date(maximumDate),altField: "#fileexpirydate", altFormat: "d-m-yy" });
 		$("#datepicker" ).datepicker( "option", "dateFormat", "<?php echo lang('_DP_dateFormat'); ?>" );
 		$("#datepicker").datepicker("setDate", new Date(maximumDate));
-		
+		$('#ui-datepicker-div').css('display','none');
 		// set datepicker language
 		$.datepicker.setDefaults({
 		closeText: '<?php echo lang("_DP_closeText"); ?>',
@@ -106,7 +132,7 @@ $json_o=json_decode($filedata,true);
 		yearSuffix: '<?php echo lang("_DP_yearSuffix"); ?>'});
 	
 		// stripe every second row in the tables
-		$("#myfiles tr:odd").not(":first").addClass("altcolor");
+		$("#myfiles tr:odd").addClass("altcolor");
 		
 		// delete modal dialog box
 		$("#dialog-delete").dialog({ autoOpen: false, height: 180, modal: true,
@@ -120,55 +146,100 @@ $json_o=json_decode($filedata,true);
 				}
 			}
 		});
+		// resend email modal dialog box
+		$("#dialog-resend").dialog({ autoOpen: false, height: 180, modal: true,
+			buttons: {
+				'cancelsendBTN': function() {
+				$( this ).dialog( "close" );
+				},
+				'sendBTN': function() { 
+				$( this ).dialog( "close" );
+				resend();
+				}
+			}
+		});
+		
+		// default auth error dialogue
+		$("#dialog-autherror").dialog({ autoOpen: false, height: 240,width: 350, modal: true,title: "",		
+		buttons: {
+			'<?php echo lang("_OK") ?>': function() {
+				location.reload(true);
+				}
+			}
+		})
 		
 		$('.ui-dialog-buttonpane button:contains(cancelBTN)').attr("id","btn_cancel");            
-		$('#btn_cancel').html('<?php echo lang("_NO") ?>')  
+		$('#btn_cancel').html('<?php echo lang("_NO") ?>');  
 		$('.ui-dialog-buttonpane button:contains(deleteBTN)').attr("id","btn_delete");            
-		$('#btn_delete').html('<?php echo lang("_YES") ?>')  
-		
+		$('#btn_delete').html('<?php echo lang("_YES") ?>');  
+		$('.ui-dialog-buttonpane button:contains(cancelsendBTN)').attr("id","btn_cancelsend");            
+		$('#btn_cancelsend').html('<?php echo lang("_NO") ?>');  
+		$('.ui-dialog-buttonpane button:contains(sendBTN)').attr("id","btn_send");            
+		$('#btn_send').html('<?php echo lang("_YES") ?>');  
 		// add new recipient modal dialog box
 		$("#dialog-addrecipient").dialog({ autoOpen: false, height: 410,width:650, modal: true,
 			buttons: {
 				'addrecipientcancelBTN': function() {
 					// clear form
+					$("#fileto").val("");
+					$("#datepicker").datepicker("setDate", new Date(maximumDate));
 					$("#filesubject").val("");
 					$("#filemessage").val("");
 					$( this ).dialog( "close" );
 				},
 				'addrecipientsendBTN': function() { 
-				// calidate form before sending
-				if(validateForm())
-				{
-				// post form1 as json
-				var query = $("#form1").serializeArray(), json = {};
-				for (i in query) { json[query[i].name] = query[i].value; } 
+					// Disable the send button to prevent duplicate sending
+					$('#btn_addrecipientsend').attr("disabled", true);
+
+					if(validateForm())
+					{
+						// post form1 as json
+						var query = $("#form1").serializeArray(), json = {};
+						for (i in query) { json[query[i].name] = query[i].value; } 
 				
-				$.ajax({
-  				type: "POST",
-				url: "fs_upload.php?type=addRecipient",
-				data: {myJson:  JSON.stringify(json)}
-				}).success(function( data ) {
-				if(data == "") {
-				alert("No response from server");
-				return;	
-				}
-				var data =  JSON.parse(data);
-				if(data.errors)
-				{
-				$.each(data.errors, function(i,result){
-				if(result == "err_tomissing") { $("#fileto_msg").show();} // missing email data
-				if(result == "err_expmissing") { $("#expiry_msg").show();} // missing expiry date
-				if(result == "err_exoutofrange") { $("#expiry_msg").show();} // expiry date out of range
-				if(result == "err_invalidemail") { $("#fileto_msg").show();} // 1 or more emails invalid
-				})
-				}
-				if(data.status && data.status == "complete")
-				{
-				// done
-				window.location.href="index.php?s=files&a=added";
-				}
-				});
-				}
+						$.ajax({
+							type: "POST",
+							url: "fs_upload.php?type=addRecipient",
+							data: {myJson:  JSON.stringify(json)}
+							,success:function( data ) {
+								if(data == "") {
+									alert("No response from server");
+									return;	
+								}
+								if(data == "ErrorAuth")
+								{
+									$("#dialog-autherror").dialog("open");
+									return;
+								}
+								var data =  parseJSON(data);
+								if(data.errors)
+								{
+									$.each(data.errors, function(i,result){
+										if(result == "err_token") { $("#dialog-tokenerror").dialog("open");} // token missing or error
+										if(result == "err_tomissing") { $("#fileto_msg").show();} // missing email data
+										if(result == "err_expmissing") { $("#expiry_msg").show();} // missing expiry date
+										if(result == "err_exoutofrange") { $("#expiry_msg").show();} // expiry date out of range
+										if(result == "err_invalidemail") { $("#fileto_msg").show();} // 1 or more emails invalid
+										if(result == "err_emailnotsent") {window.location.href="index.php?s=emailsenterror";} //
+									})
+									// re-enable button if client needs to fix an issue
+									$('#btn_addrecipientsend').attr("disabled", false);
+								} else {
+									if(data.status && data.status == "complete")
+									{
+										// done
+										window.location.href="index.php?s=files&a=added";
+									}
+								}
+							},error:function(xhr,err){
+								// error function to display error message e.g.404 page not found
+								ajaxerror(xhr.readyState,xhr.status,xhr.responseText);
+							}
+						});
+					} else {
+						// enable button to allow fixing any validation errors
+						$('#btn_addrecipientsend').attr("disabled", false);
+					}
 				}
 			}
 		});
@@ -191,7 +262,17 @@ $json_o=json_decode($filedata,true);
 		if(!validate_expiry() ){validate = false;};		// check date
 		return validate;
 	}
+	function resend(uid)
+	{
+		window.location.href="index.php?s=files&a=resend&id=" + selectedFile;
+	}
 	
+	function confirmResend(vid)
+		{
+			// confirm deletion of selected file
+			selectedFile = vid;
+			$("#dialog-resend" ).dialog( "open" );
+		}
 	function deletefile()
 		{
 		// reload page to delete selected file
@@ -216,7 +297,14 @@ $json_o=json_decode($filedata,true);
 		$("#filesubject").val(decodeURIComponent(subject));
 		$("#filemessage").val(decodeURIComponent(message));
 		$("#filesize").html(readablizebytes(filesize));
-	//	$("#dialog-addrecipient" ).dialog( "open" );
+		$("#fileto").val("");
+		$("#datepicker").datepicker("setDate", new Date(maximumDate));
+		// clear error messages
+		$("#expiry_msg").hide();
+		$("#file_msg").hide();
+		$("#fileto_msg").hide();
+		$("#maxemails_msg").hide();
+//		$("#dialog-addrecipient" ).dialog( "open" );
 		
 	}
 //]]>
@@ -244,7 +332,8 @@ if(sizeof($json_o) > 0)
 {
 foreach($json_o as $item) {
 	$i += 1; // counter for file id's
-   echo '<tr><td valign="top"> <a id="btn_resendemail_'.$i.'" href="index.php?s=files&amp;a=resend&amp;id=' .$item['filevoucheruid'] . '"><img src="images/email_go.png" alt="" title="'.lang("_RE_SEND_EMAIL").'" /></a></td><td valign="top"><img id="btn_addrecipient_'.$i.'" src="images/email_add.png" alt="" title="'.lang("_NEW_RECIPIENT").'" onclick="openAddRecipient('."'".$item['filevoucheruid']."','".rawurlencode(utf8tohtml($item['fileoriginalname'],true)) ."','".$item['filesize'] ."','".rawurlencode($item['filefrom'])."','".rawurlencode($item['filesubject'])."','".rawurlencode($item['filemessage'])."'" .');"  style="cursor:pointer;" /></td>';
+	$onClick = "'" .$item['filevoucheruid'] ."'";
+   echo '<tr><td valign="top"> <div id="btn_resendemail_'.$i.'"><img src="images/email_go.png" alt="" title="'.lang("_RE_SEND_EMAIL").'"  style="cursor:pointer;"  onclick="confirmResend('.$onClick.')" /></div></td><td valign="top"><img id="btn_addrecipient_'.$i.'" src="images/email_add.png" alt="" title="'.lang("_NEW_RECIPIENT").'" onclick="openAddRecipient('."'".$item['filevoucheruid']."','".rawurlencode(utf8tohtml($item['fileoriginalname'],true)) ."','".$item['filesize'] ."','".rawurlencode($item['filefrom'])."','".rawurlencode($item['filesubject'])."','".rawurlencode($item['filemessage'])."'" .');"  style="cursor:pointer;" /></td>';
    if($item['fileto'] == $attributes["email"])
    {
    echo "<td class='HardBreak' valign='top'>".lang("_ME")."</td>";
@@ -265,57 +354,66 @@ foreach($json_o as $item) {
    }
    echo "</td><td>" .date($lang['datedisplayformat'],strtotime($item['filecreateddate'])) . "</td><td>" .date($lang['datedisplayformat'],strtotime($item['fileexpirydate'])) . "</td><td  valign='top'  width='22'><div style='cursor:pointer;'><img id='btn_deletevoucher_".$i."' onclick='confirmdelete(".'"' .$item['filevoucheruid'] . '")'. "' src='images/shape_square_delete.png' alt='' title='".lang("_DELETE_FILE")."' /></div></td></tr>"; //etc
    }
-} else {
-	echo "<tr><td colspan='7'>".lang("_NO_FILES")."</td></tr>";
 }
 ?>
-    </table>
+</table>
+<?php
+  if($i==0)
+	{
+		echo lang("_NO_FILES");
+	}
+?>
   </div>
 </div>
 <div id="dialog-delete" title="<?php echo  lang("_DELETE_FILE"); ?>">
 <p><?php echo lang("_CONFIRM_DELETE_FILE");?></p>
 </div>
+<div id="dialog-resend" title="<?php echo  lang("_RE_SEND_EMAIL"); ?>">
+<p><?php echo lang("_CONFIRM_RESEND_EMAIL");?></p>
+</div>
 <div id="dialog-addrecipient" style="display:none" title="<?php echo  lang("_NEW_RECIPIENT"); ?>">
   <form id="form1" name="form1" enctype="multipart/form-data" method="post" action="">
     <table  width="600" border="0">
       <tr>
-        <td width="100" class="formfieldheading mandatory"><?php echo  lang("_TO"); ?>:</td>
+        <td width="100" class="formfieldheading mandatory" id="files_to"><?php echo  lang("_TO"); ?>:</td>
         <td width="400" valign="middle"><input name="fileto" title="<?php echo  lang("_EMAIL_SEPARATOR_MSG"); ?>" type="text" id="fileto" size="60" onchange="validate_fileto()" />
           <div id="fileto_msg" style="display: none" class="validation_msg"><?php echo lang("_INVALID_MISSING_EMAIL"); ?></div>
           <div id="maxemails_msg" style="display: none" class="validation_msg"><?php echo lang("_MAXEMAILS"); ?> <?php echo $config['max_email_recipients'] ?>.</div>
           </td>
       </tr>
       <tr>
-        <td class="formfieldheading mandatory"><?php echo lang("_FROM"); ?>:</td>
+        <td class="formfieldheading mandatory" id="files_from"><?php echo lang("_FROM"); ?>:</td>
         <td><div id="filefrom"></div></td>
       </tr>
       <tr>
-        <td class="formfieldheading"><?php echo lang("_SUBJECT"); ?>: (<?php echo lang("_OPTIONAL"); ?>)</td>
+        <td class="formfieldheading" id="files_subject"><?php echo lang("_SUBJECT"); ?>: (<?php echo lang("_OPTIONAL"); ?>)</td>
         <td><input name="filesubject" type="text" id="filesubject" size="60" /></td>
       </tr>
       <tr>
-        <td class="formfieldheading"><?php echo lang("_MESSAGE"); ?>: (<?php echo lang("_OPTIONAL"); ?>)</td>
+        <td class="formfieldheading" id="files_message"><?php echo lang("_MESSAGE"); ?>: (<?php echo lang("_OPTIONAL"); ?>)</td>
         <td><textarea name="filemessage" cols="57" rows="4" id="filemessage"></textarea></td>
       </tr>
       <tr>
-        <td class="formfieldheading mandatory"><?php echo lang("_EXPIRY_DATE"); ?>:
+        <td class="formfieldheading mandatory" id="files_expiry"><?php echo lang("_EXPIRY_DATE"); ?>:
           <input type="hidden" id="fileexpirydate" name="fileexpirydate" value="<?php echo date($lang['datedisplayformat'],strtotime("+".$config['default_daysvalid']." day"));?>" /></td>
         <td><input id="datepicker" name="datepicker" onchange="validate_expiry()" title="<?php echo lang('_DP_dateFormat'); ?>" />
           <div id="expiry_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_EXPIRY_DATE"); ?></div></td>
       </tr>
       <tr>
-        <td class="formfieldheading mandatory"><?php echo lang("_FILE_TO_BE_RESENT"); ?>:</td>
+        <td class="formfieldheading mandatory" id="files_to_be_resent"><?php echo lang("_FILE_TO_BE_RESENT"); ?>:</td>
         <td><div id="filename"></div></td>
       </tr>
       <tr>
-        <td class="formfieldheading mandatory"><?php echo lang("_SIZE"); ?>:</td>
+        <td class="formfieldheading mandatory" id="files_size"><?php echo lang("_SIZE"); ?>:</td>
         <td><div id="filesize"></div></td>
       </tr>
       <tr>
         <td class="formfieldheading mandatory"></td>
-        <td><div id="file_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_FILE"); ?></div></td>
+        <td><div id="file_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_FILE"); ?></div><div id="extension_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_FILE_EXT"); ?></div></td>
       </tr>
     </table>
-    <input name="filevoucheruid" type="hidden" id="filevoucheruid" />
-  </form>
+    <input name="filevoucheruid" type="hidden" id="filevoucheruid" /><br />
+	<input type="hidden" name="s-token" id="s-token" value="<?php echo (isset($_SESSION["s-token"])) ?  $_SESSION["s-token"] : "";?>" />
+  	</form>
 </div>
+<div id="dialog-autherror" title="<?php echo lang($lang["_MESSAGE"]); ?>" style="display:none"><?php echo lang($lang["_AUTH_ERROR"]); ?></div>

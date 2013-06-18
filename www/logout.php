@@ -35,6 +35,10 @@
  * ---------------------------------
  * 
  */
+
+// set cache to default - nocache
+session_cache_limiter('nocache'); 
+ 
 require_once('../classes/_includes.php');
 $authsaml = AuthSaml::getInstance();
 // force all session variable 
@@ -47,13 +51,13 @@ session_destroy();
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title><?php echo $config['site_name']; ?></title>
+<title><?php echo htmlspecialchars($config['site_name']); ?></title>
 <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
-<link type="text/css" href="css/smoothness/jquery-ui-1.8.2.custom.css" rel="Stylesheet" />
-<link rel="stylesheet" type="text/css" href="css/default.css" />
+<link type="text/css" href="css/smoothness/jquery-ui-1.10.2.custom.min.css" rel="Stylesheet" />
+<link rel="stylesheet" type="text/css" href="css/default.css?<?php echo FileSender_Version::VERSION; ?>" />
 <script type="text/javascript" src="js/common.js" ></script>
-<script type="text/javascript" src="js/jquery-1.7.min.js" ></script>
-<script type="text/javascript" src="js/jquery-ui-1.8.1.custom.min.js"></script>
+<script type="text/javascript" src="js/jquery-1.9.1.min.js" ></script>
+<script type="text/javascript" src="js/jquery-ui-1.10.2.custom.min.js"></script>
 <script type="text/javascript">
 $(function() {
 $( "a", ".menu" ).button();

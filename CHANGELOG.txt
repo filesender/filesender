@@ -1,14 +1,121 @@
-Last update: 1 April 2012
+Last update: 14 April 2013
 
-Version 1.5-beta2 <?? April 2012>
+Version 1.6-development <???>
+
+     - #885 Add TeraSender code
+       - Upgrade note: new configuration options
+     - #888 Add sqlite init-script and 'how to'
+       Patch contributed by Dick Visser
+     - #888 PDO rowCount fixes/cleanup
+       Optimise PDO Query row count statements
+       - more efficient
+       - can also be used with sqlite
+       Patch from Dick Visser
+       Remove validVoucher() function
+       - not used anywhere
+       - functionality in aVoucher()
+       Patch from Thijs Kinkhorst
+     - #858 New download.php
+       - added partial download (HTTP range) functionality
+       - redo logic for mail sending and logging
+       - some cleanup
+     - #871 Add _SITE_FOOTER for a customisable footer through the language definitions
+       Modified patch from Jean-Philippe Evrard, BELNET
+     - #184 Add selector when multiple mail adresses are available
+
+Version 1.5 <3 March 2013>
+
+   * Release 1.5
+
+   * Major changes since 1.1.1
+     - User interface is now HTML based, no Flash required except when
+       uploading files with a non-HTML5-capable browser
+     - Multilanguage support in web interface
+     - Support for multiple database backends (PDO)
+     - Changes in configuration (see Upgrade Notes)
+
+   * Changes since 1.5-rc1
+     - Added Serbian language file (#865)
+     - Updated language definitions (#666, #706, #720, #880)
+     - Consolidated filename validation (#863)
+     - Don't insert guest voucher(s) in case of validation errors (#862)
+     - Allow spaces in configurable setting for admin users (#869)
+     - Restrict access to admin page skeleton (#881)
+     - Include version in call to default.css to prevent upgrade issues (#834)
+     - Add color style for links in default.css (#837)
+     - Debian packaging: 'default-mta' added to dependencies (#710)
+     - Documentation updated
+
+Version 1.5-rc1 <22 October 2012>
+
+   * Release 1.5-rc1
+
+   * Changes since 1.5-beta4
+     - Update of default Help text (English, Dutch, Norwegian) (#650, #651)
+     - Updated language definitions
+     - Fixed links to caniuse.com (all languages)
+     - Disable Send button after first press (#805, #811, #812)
+     - Do not mark Guest Voucher as used when upload fails (#807)
+     - Prevent erroneous showing of DatePicker in recent Chrome versions (#823)
+     - Debug setting set to false in config-dist.php (#804)
+     - Only log user information when debug is true (#808)
+     - Fixes in error logging (#806)
+     - Remove dependency on php-gmp (#813)
+     - Fixed include files in emailbouncehandler.php
+     - Various small changes and bug fixes (#709, #794, #809, #810, #828)
+
+Version 1.5-beta4 <25 July 2012>
+
+   * Release 1.5-beta4
+
+   * Changes since 1.5-beta3
+     - Security: make admin check more strict (#751)
+     - Security: Fixed reset of session cookie when switching to HTTPS (#757)
+     - Security: Fixed 2 potential XSS vulnerabilities (#754)
+     - Security: always prevent caching of sensitive pages (#762)
+     - Security: add XSRF checks for POSTs and additional auth-checks for GETs (#753)
+     - Security: add additional recommended PHP settings (#758)
+     - Fixes and improvements in language selection (#662, #745)
+     - Updated language definitions
+     - Disabled HTML5 capability for Opera (#527)
+     - Improvements on handling and reporting of missing required SAML attributes (#628)
+     - Bugfixes in mail error-handling (#713)
+     - Improved  Help text (en_AU only) (#650, #651)
+     - Removed HTML5URL configuration setting (merged into Help text) (#744)
+     - Various small bug fixes (#691, #731, #742, #794)
+
+Version 1.5-beta3 <15 May 2012>
+
+	Changes since 1.5-beta2
+	-HTML5 upload support for the upcoming FireFox 13.
+	-Improvements in the User Interface.
+	-Improved user feedback and error reporting
+	-Improved server side logging.
+	-Various small bug fixes and enhancements.
+
+	Changed features:
+	-Option to securely wipe (shred) expired files in the daily cron job.
+	-Separate text definitions for 'logon' button and title of the landing page.
+	-The configured 'Site Name' is now used on the landing page.
+
+Version 1.5-beta2 <25 April 2012>
 
 	Major changes since 1.5-beta1
+        [ see http://www.assembla.com/spaces/file_sender/wiki/Installation_notes_for_1-5_development_code
+	  for important Upgrade notes ]
 	- The ./config directory as distributed now only contains a sample
 	  config-dist.php file. All other templates/sample files have been
 	  moved to ./config-templates or their contents have been merged
 	  into the ./language/* files.
+	- The supplied config-dist.php has been cleaned up and contains some
+	  important changes. It is recommended to create an fresh config.php
+	  from the supplied config-dist.php file and adapt that one with your
+	  local settings.
+	- Two database column type changes (needs manual adjustment when 
+	  upgrading).
 	- Changed and consolidated language file naming scheme.
-	- Added Czech and Slovenian language files.
+	- Added Czech, Slovenian, Italian, Spanish, Croatian and Hungarian
+	  language files.
 	- Updated Dutch and Norwegian language files.
 
 	Major (less visible) changes since 1.5-beta1

@@ -56,6 +56,7 @@ class DB {
     // database connection 
     public function connect() {
         global $config;
+		global $messageArray;
 		$log =  Log::getInstance();
         if($this->connection){
             return $this->connection;
@@ -68,8 +69,9 @@ class DB {
 		}
     	catch(PDOException $e)
     	{
-		logEntry($e->getMessage());
-    	displayError("Configuration Error: Unable to connect to database");
+		logEntry($e->getMessage(),"E_ERROR");
+		displayError(lang("_ERROR_CONTACT_ADMIN"),$e->getMessage());
+		exit;
     	}
 		return $this->connection;
     }
@@ -133,8 +135,8 @@ class DB {
 		}
 		catch(PDOException $e)
                 {
-     				displayError("Error: There has been a database error, please check log file.");
-					logEntry($e->getMessage(). " on query: ".$query);
+					logEntry($e->getMessage(). " on query: ".$query,"E_ERROR");
+					displayError(lang("_ERROR_CONTACT_ADMIN"),$e->getMessage());
 					exit;
                 }
 

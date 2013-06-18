@@ -1,6 +1,6 @@
 CREATE TABLE files
 ( 
-  fileto character varying(250),
+  fileto text,
   filesubject character varying(250),
   filevoucheruid character varying(60),
   filemessage text,
@@ -21,7 +21,6 @@ CREATE TABLE files
   filecreateddate timestamp without time zone,
   fileauthurl character varying(500),
   fileauthuseremail character varying(255),
-  filegroupid character varying(60),
   CONSTRAINT files_pkey PRIMARY KEY (fileid)
 );
 
@@ -38,7 +37,7 @@ CREATE TABLE logs
   logfileuid character varying(60),
   logtype character varying(60),
   logfrom character varying(250),
-  logto character varying(250),
+  logto text,
   logdate timestamp without time zone,
   logtime time with time zone,
   logfilesize bigint,

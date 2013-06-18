@@ -62,7 +62,8 @@
 	// get voucher information 
 	$voucherData =  $authvoucher->getVoucher();
 	$voucherUID = $voucherData[0]["filevoucheruid"];
-	$senderemail = $voucherData[0]["fileto"];
+      logEntry("vid = " . $voucherUID, "E_ERROR");
+	$senderemail = array($voucherData[0]["fileto"]);
 	// check if voucher is invalid (this should be an external function
 	if($voucherData[0]["filestatus"] == "Voucher") {
 	$filestatus = "Voucher";
@@ -76,7 +77,7 @@
 	}
 }
 	if (isset($_COOKIE['SimpleSAMLAuthToken'])) {
-		$token = $_COOKIE['SimpleSAMLAuthToken'];
+		$token = urlencode($_COOKIE['SimpleSAMLAuthToken']);
 	} else {
 		$token = "";
 	}
@@ -99,18 +100,20 @@
 	var aup = '<?php echo $config['AuP'] ?>';
 	var bytesUploaded = 0;
 	var bytesTotal = 0;
-	var banextensions = '<?php echo $config['ban_extension']?>';
+	var ext = '<?php echo $config['ban_extension']?>';
+	var banextensions = ext.split(",")
 	var uploadprogress = '<?php echo lang($lang["_UPLOAD_PROGRESS"]); ?>';
 	var previousBytesLoaded = 0;
 	var intervalTimer = 0;
-	var html5 = false;
+
 	var errmsg_disk_space = "<?php echo lang($lang["_DISK_SPACE_ERROR"]); ?>";
 	var filedata=new Array();
+	var nameLang = '<?php echo lang("_FILE_NAME"); ?>'
+	var sizeLang = '<?php echo lang("_SIZE"); ?>'
     var groupid = '<?php echo getOpenSSLKey(); ?>';
 	
 	var vid='<?php if(isset($_REQUEST["vid"])){echo htmlspecialchars($_REQUEST["vid"]);}; ?>';
-	// check if html5 functions are available
-	html5 = (window.File && window.FileReader && window.FileList && window.Blob && window.FormData) ? true : false;
+
  	// start document ready 
 	$(function() { 
 
@@ -118,7 +121,8 @@
 		$("#datepicker" ).datepicker({ minDate: new Date(minimumDate), maxDate: new Date(maximumDate),altField: "#fileexpirydate", altFormat: "d-m-yy" });
 		$("#datepicker" ).datepicker( "option", "dateFormat", "<?php echo lang("_DP_dateFormat"); ?>" );
 		$("#datepicker").datepicker("setDate", new Date(maximumDate));
-			
+		$('#ui-datepicker-div').css('display','none');
+
 		// set datepicker language
 		$.datepicker.setDefaults({
 		closeText: '<?php echo lang("_DP_closeText"); ?>',
@@ -136,7 +140,7 @@
 		isRTL: <?php echo lang("_DP_isRTL"); ?>,
 		showMonthAfterYear: <?php echo lang("_DP_showMonthAfterYear"); ?>,
 		yearSuffix: '<?php echo lang("_DP_yearSuffix"); ?>'});
-		
+
 		
 		// upload area filestoupload
 	$('body').on(
@@ -158,6 +162,7 @@ $('body').on(
     function(e){
         if(e.originalEvent.dataTransfer){
             if(e.originalEvent.dataTransfer.files.length) {
+
                 e.preventDefault();
                 e.stopPropagation();
                 /*UPLOAD FILES HERE*/
@@ -166,6 +171,7 @@ $('body').on(
   				for (var i = 0, f; f = files[i]; i++) 
 				{
 					n = n + 1;
+
   				 	// --------------
 					fdata[n] = Array(n);
                     fdata[n].filegroupid = groupid;
@@ -184,7 +190,6 @@ $('body').on(
                     // validate file for upload
                     // Show in list 'invalid' with reason
                     //fdata[n].filesize = 0;
-
 
                     var progressString = generateFileBoxHtml();
                     $("#uploadbutton").show();
@@ -269,7 +274,7 @@ $('body').on(
 		
 		// default error message dialogue
 		$("#dialog-uploadprogress").dialog({ 
-		
+		 closeOnEscape: false,
 		    open: function() {
           //Hide closing "X" for this dialog only.
           $(this).parent().children().children("a.ui-dialog-titlebar-close").remove();
@@ -295,17 +300,8 @@ $('body').on(
 		//Check if HTML5 is enable and use HTML uploader
 		if(html5){
 			// use HTML5 upload functions
-			$("#html5image").attr("src","images/html5_installed.png");
-			$("#html5image").attr("title","<?php echo lang("_HTML5Supported"); ?>");
-			$("#html5text").html('<?php echo lang("_HTML5Supported"); ?>');
 			$("#uploadhtml5").show();
 			} else {
-			$("#html5image").attr("src","images/html5_none.png");
-			$("#html5image").attr("title","<?php echo lang("_HTML5NotSupported"); ?>");
-			$("#html5text").html('<?php echo lang("_HTML5NotSupported"); ?>');
-			$('#html5image').click(function() { displayhtml5support(); });
-			$("#html5link").removeAttr("href");
-			
 			// use standard upload functions
 			$("#uploadstandard").show();
 		}
@@ -346,8 +342,9 @@ $('body').on(
 		if(!validate_aup() ){validate = false;};		// check AUP is selected
 	}
 	if(!validate_expiry() ){validate = false;};		// check date
-	// vaildate with server
+	// validate with server
 	if(validate) {	
+		$("#uploadbutton a").attr("onclick", ""); // prevent double clicks to start extra uploads
 		var query = $("#form1").serializeArray(), json = {};
 		for (i in query) { json[query[i].name] = query[i].value; } 
 		// add file information fields
@@ -357,9 +354,9 @@ $('body').on(
 
 		$.ajax({
   		type: "POST",
-  		url: "fs_upload.php?type=validateupload&vid="+vid,
+  		url: "fs_multi_upload.php?type=validateupload&vid="+vid,
   		data: {myJson:  JSON.stringify(json)}
-		}).success(function( data ) {
+		,success:function( data ) {
 		if(data == "") {
 		alert("No response from server");
 		return;	
@@ -369,17 +366,20 @@ $('body').on(
 			$("#dialog-autherror").dialog("open");
 			return;			
 		}
-		var data =  JSON.parse(data);
+		var data =  parseJSON(data);
 		if(data.errors)
 		{
 		$.each(data.errors, function(i,result){
+		if(result == "err_token") {$("#dialog-tokenerror").dialog("open");} // token missing or error
 		if(result == "err_tomissing") { $("#fileto_msg").show();} // missing email data
 		if(result == "err_expmissing") { $("#expiry_msg").show();} // missing expiry date
 		if(result == "err_exoutofrange") { $("#expiry_msg").show();} // expiry date out of range
 		if(result == "err_invalidemail") { $("#fileto_msg").show();} // 1 or more emails invalid
 		if(result == "err_invalidfilename") { $("#file_msg").show();} //  invalid filename
+		if(result == "err_invalidextension") { $("#extension_msg").show();} //  invalid extension
 		if(result == "err_nodiskspace") { errorDialog(errmsg_disk_space);}
 		})
+		$("#uploadbutton a").attr("onclick", "validate()"); // re-activate upload button
 		}
 		if(data.status && data.status == "complete")
 		{
@@ -398,7 +398,10 @@ $('body').on(
 		} else {
 		getFlexApp("filesenderup").returnMsg(false)
 		}
-	
+		},error:function(xhr,err){
+   		 alert("readyState: "+xhr.readyState+"\nstatus: "+xhr.status);
+    	alert("responseText: "+xhr.responseText);
+		}
 	})
 	}
 	}
@@ -406,41 +409,41 @@ $('body').on(
 	// Validate FILE (HTML5 only)
 function validate_file(id)
 {
-	//alert(id);
 	fileMsg("");
-	//if(!document.getElementById("fileToUpload").files[0])
-	//{
+
+    if(!fdata[n])
+	{
 		// display message if a user enters all form details and selects upload without selecting a file
 		// in theory this error should not appear as a browse button should not be visible without a file first being selected
-	//	fileMsg("<?php echo lang("_SELECT_FILE") ?>");
-	//	return false;
-	//} else 
-	//{
-		var file = fdata[n];
-		// validate fiename 
-		if (!validatefilename(file.name)){
+		fileMsg("<?php echo lang("_SELECT_FILE") ?>");
 		return false;
-		}
-		//validate file size
-		if(file.size < 1)
-		{
-		fileMsg("<?php echo lang("_INVALID_FILESIZE_ZERO") ?>");	
-		return false;
-		}
-		if(file.size > maxHTML5uploadsize)
-		{
-		fileMsg("<?php echo lang("_INVALID_TOO_LARGE_1") ?> " + readablizebytes(maxHTML5uploadsize) + ". <?php echo lang("_SELECT_ANOTHER_FILE") ?> ");	
-		return false;
-		}
-		var tmpExtension = file.name.split('.').pop();
-		if(banextensions.search(tmpExtension) != -1)
-		{
-		fileMsg("<?php echo lang("_INVALID_FILE_EXT") ?>");	
-		return false;
-		}
-		$("#dialog-uploadprogress").dialog("option", "title", "<?php echo lang("_UPLOAD_PROGRESS") ?>:  " +  file.name + " (" +readablizebytes(file.size) + ")");
-		return true;
-	//}	
+	} else
+	{
+        var file = fdata[n];
+
+        // validate fiename
+        if (!validatefilename(file.name)){
+            return false;
+        }
+
+        //validate file size
+        if(file.size < 1)
+        {
+            fileMsg("<?php echo lang("_INVALID_FILESIZE_ZERO") ?>");
+            return false;
+        }
+
+        if(file.size > maxHTML5uploadsize)
+        {
+            fileMsg("<?php echo lang("_INVALID_TOO_LARGE_1") ?> " + readablizebytes(maxHTML5uploadsize) + ". <?php echo lang("_SELECT_ANOTHER_FILE") ?> ");
+            return false;
+        }
+
+        var tmpExtension = file.name.split('.').pop();
+
+        $("#dialog-uploadprogress").dialog("option", "title", "<?php echo lang("_UPLOAD_PROGRESS") ?>:  " +  file.name + " (" +readablizebytes(file.size) + ")");
+        return true;
+	}
 }
 
 	// HTML5 form Validation
@@ -452,7 +455,7 @@ function validate_file(id)
 	var validate = true;
 	
 	if(!validate_fileto() ){validate = false;};		// validate emails
-	//if(!validate_file() ){validate = false;};		// check if file selected
+	if(!validate_file(n) ){validate = false;};		// check if file selected
 	//if(aup == '1') // check if AUP is required
 	//{
 	if(aup == '1' && !validate_aup() ){validate = false;};		// check AUP is selected
@@ -479,11 +482,55 @@ function validate_aup()
 // validate extension
 function validateextension(filename)
 {
-	if(filename.split('.').pop().search(banextensions) == -1)
-	{
+	for ( var i=0, len=banextensions.length; i<len; ++i ){
+		if(filename.split('.').pop() == banextensions[i])
+		{
+			return false;
+		}
+	}
 	return true;
-	} else {
-	return false;
+}
+
+function checkFilesSelected() {
+    return document.getElementById("fileToUpload").files[0] != null || document.getElementById("file_0") != null;
+}
+
+// Validate FILE (HTML5 only)
+function validate_filezz()
+{
+
+	fileMsg("");
+	if(!checkFilesSelected())
+	{
+		// display message if a user enters all form details and selects upload without selecting a file
+		// in theory this error should not appear as a browse button should not be visible without a file first being selected
+		fileMsg("<?php echo lang("_SELECT_FILE") ?>");
+		return false;
+	} else
+	{
+		var file = document.getElementById("fileToUpload").files[0];
+		// validate fiename
+		if (!validatefilename(file.name)){
+		return false;
+		}
+		//validate file size
+		if(file.size < 1)
+		{
+		fileMsg("<?php echo lang("_INVALID_FILESIZE_ZERO") ?>");
+		return false;
+		}
+		if(file.size > maxHTML5uploadsize)
+		{
+		fileMsg("<?php echo lang("_INVALID_TOO_LARGE_1") ?> " + readablizebytes(maxHTML5uploadsize) + ". <?php echo lang("_SELECT_ANOTHER_FILE") ?> ");
+		return false;
+		}
+		if(!validateextension(file.name))
+		{
+		fileMsg("<?php echo lang("_INVALID_FILE_EXT") ?>");
+		return false;
+		}
+		$("#dialog-uploadprogress").dialog("option", "title", "<?php echo lang("_UPLOAD_PROGRESS") ?>:  " +  file.name + " (" +readablizebytes(file.size) + ")");
+		return true;
 	}
 }
 
@@ -511,8 +558,8 @@ if(size > maxFLASHuploadsize)
 			$("#n").val(name);
 			$("#total").val(size);
 			$("#fileName").val(name);
-			$("#fileName").html("Name: " + name);
-			$("#fileSize").html("Size: " + readablizebytes(size));
+			$("#fileName").html(nameLang + ": " + name);
+			$("#fileSize").html(sizeLang + ": " + readablizebytes(size));
 			$("#uploadbutton").show(); 
 		} else {
 			$("#fileInfoView").hide();
@@ -527,17 +574,27 @@ function uploadcomplete(name,size)
 	// ajax form data to fs_upload.php
 	$.ajax({
 	  type: "POST",
-	  url: "fs_upload.php?type=uploadcomplete&vid="+vid//,
+	  url: "fs_multi_upload.php?type=uploadcomplete&vid="+vid//,
 	  //data: {myJson:  JSON.stringify(json)}
-	}).success(function( data ) {
+	,success:function( data ) {
 
-	if(data == "err_cannotrenamefile")
+	var data =  parseJSON(data);
+
+	if(data.errors)
 		{
-		window.location.href="index.php?s=uploaderror";
-		} else if(data == "complete"){		
-		window.location.href="index.php?s=complete";
+		$.each(data.errors, function(i,result){
+		if(result == "err_token") { $("#dialog-tokenerror").dialog("open");} // token missing or error
+		if(result == "err_cannotrenamefile") { window.location.href="index.php?s=uploaderror";} //
+		if(result == "err_emailnotsent") { window.location.href="index.php?s=emailsenterror";} //
+		if(result == "err_filesizeincorrect") { window.location.href="index.php?s=filesizeincorrect";} //
+		})
 		} else {
-		window.location.href="index.php?s=completev";
+		if(data.status && data.status == "complete"){window.location.href="index.php?s=complete";}
+		if(data.status && data.status == "completev"){window.location.href="index.php?s=completev";}
+		}
+		},error:function(xhr,err){
+			// error function to display error message e.g.404 page not found
+			ajaxerror(xhr.readyState,xhr.status,xhr.responseText);
 		}
 });
 }
@@ -567,13 +624,13 @@ function getFlexApp(appName)
 
 function validatefilename(name)
 {
-	var tmpExtension = name.split('.').pop();
-		if(banextensions.search(tmpExtension) != -1)
+
+		if(!validateextension(name))
 		{
 		fileMsg("<?php echo lang("_INVALID_FILE_EXT")." ".lang("_SELECT_ANOTHER_FILE") ?>");	
 		return false;
 		}
-   if (/^[^\\\/\:\*\?\"\<\>\|\.]+(\.[^\\\/\:\*\?\"\<\>\|\.]+)+$/.test(name)) 
+   if (/^[^\\\/:;\*\?\"<>|]+(\.[^\\\/:;\*\?\"<>|]+)*$/.test(name))
    {
 		return true; 
 	} else {
@@ -586,12 +643,12 @@ function validate()
 {
 	// upload if validated
 	if(html5) {		
-	if(validateForm()) 
-	{
-		// validate client side
+	if(validateForm()) // validate client side
 		// validate server side as well (check for drive space
-		//Use this to allow uplods with faulty parameters (and comment out the previous one) if(true)
-	
+
+
+		//Use this to allow uplods with faulty parameters (and comment out the previouslone) if(true)
+	{
 	n=0;
 	startupload();
 	}
@@ -616,10 +673,13 @@ function keepMeAlive()
 		}
 		});	
 }
+
+// special fix for esc key on firefox stopping xhr
+window.addEventListener('keydown', function(e) {(e.keyCode == 27 && e.preventDefault())})
 //]]>
     </script>
-<div style="width:100%;height:20px;display:none"><a href="<?php echo $config['HTML5URL'] ?>"  target="_newtab" id="html5link" name="html5link"><img style="float:right;padding-left:6px;" src="images/html5_installed.png" alt="" name="html5image" width="75" height="18" border="0" id="html5image" title="" /></a>
-  <div class="html5text" id="html5text"></div>
+
+<div style="width:100%;height:20px;display:none"><img style="float:right;padding-left:6px;" src="images/html5_installed.png" alt="" name="html5image" width="75" height="18" border="0" id="html5image" title="" />
 </div>
 <form id="form1" enctype="multipart/form-data" method="post" action="fs_uploadit.php" >
   <table width="100%" border="0" cellspacing="6">
@@ -683,7 +743,7 @@ if ( hasProductInstall && !hasRequestedVersion ) {
 	
   } else {  // flash is too old or we can't detect the plugin
     var alternateContent = '<div id="errmessage" align="center"><br />This application requires Flash for uploading files.<br /><br />'
-  	+ 'To install Flash Player go to www.adobe.com.<br /> <br /> '
+  	+ 'To install Flash Player go to <a href="http://www.adobe.com" target="_blank">www.adobe.com<a>.<br /> <br /> '
    	+ '</div>';
 	$("#content").html(alternateContent);
   }
@@ -705,7 +765,17 @@ if ( hasProductInstall && !hasRequestedVersion ) {
       
            <div class="box">
           <div class="fieldcontainer" id="upload_from">
-            <div class="mandatory"><?php echo lang("_FROM"); ?>:</div> <div class="input"><?php echo $senderemail ?></div>
+            <div class="mandatory"><?php
+                if ( count($senderemail) > 1 ) {
+                    echo "<select name=\"filefrom\" id=\"filefrom\">\n";
+                    foreach($senderemail as $email) {
+                        echo "<option>$email</option>\n";
+                    }
+                    echo "</select>\n";
+                } else {
+                    echo $senderemail[0] . "<input name=\"filefrom\" type=\"hidden\" id=\"filefrom\" value=\"" . $senderemail[0] . "\" />\n";
+                }
+                ?></div>
           </div>
           <div class="fieldcontainer">
             <div class="label mandatory"id="upload_to" ><?php echo lang("_TO") ; ?>:</div>
@@ -729,7 +799,7 @@ if ( hasProductInstall && !hasRequestedVersion ) {
             <textarea name="filemessage" cols="57" rows="5" id="filemessage"></textarea>
           </div>
         </div>
-        <input name="filefrom" type="hidden" id="filefrom" value="<?php echo $senderemail ?>" size="40" />
+        <input name="filefrom" type="hidden" id="filefrom" value="<?php echo $senderemail[0] ?>" size="40" />
         <div>
           <input type="hidden" id="filevoucheruid" name="filevoucheruid" value="<?php echo $voucherUID; ?>" />
           <input type="hidden" name="vid" id="vid" value="<?php echo $voucherUID; ?>" />
@@ -737,6 +807,7 @@ if ( hasProductInstall && !hasRequestedVersion ) {
           <input type="hidden" name="n" id="n" value="" />
           <input type="hidden" id="filestatus" name="filestatus" value="<?php echo $filestatus; ?>" />
           <input type="hidden" name="loadtype" id="loadtype" value="standard" />
+          <input type="hidden" name="s-token" id="s-token" value="<?php echo (isset($_SESSION["s-token"])) ?  $_SESSION["s-token"] : "";?>" />
           
         
         </div>
@@ -773,7 +844,18 @@ if ( hasProductInstall && !hasRequestedVersion ) {
             <div id="tog" style="display:none"> <?php echo lang("_AUPTERMS"); ?> </div>
           </div>
           <?php } ?>
-          <div><div class="menu" id="uploadbutton" style="display:;text-align: center;"><a href="#" onclick="validate()"><?php echo lang("_SEND"); ?></a></div></div></td>
+          <div><div class="menu" id="uploadbutton" style="display:;text-align: center;"><a href="#" onclick="validate()"><?php echo lang("_SEND"); ?></a></div></div>
+
+          <div id="workers-advanced-settings" style="display: none;" class="box">
+              Chunksize (Mb)<input id="chunksize" type="text" value="<?php echo $config['terasender_chunksize']?>"><br />
+              Worker count<input id="workerCount" type="text" value="<?php echo $config['terasender_workerCount']?>"><br />
+              Jobs per workers<input id="jobsPerWorker" type="text" value="<?php echo $config['terasender_jobsPerWorker']?>">
+          </div>
+          <?php if ($config["terasender"] && $config["terasenderadvanced"]) { ?>
+        <div><a href="#" onclick="$('#workers-advanced-settings').slideToggle()">Advanced Settings</a></div>
+          <?php } ?>
+      </td>
+
     </tr>
   </table>
   <div class="colmask threecol" id="dragfilestoupload"> </div>

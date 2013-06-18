@@ -582,6 +582,5 @@ word-wrap: break-word; /* Internet Explorer 5.5+ */
 .welcomeuser
 {
 	position: relative;
-	float: left;	
 	font-size: 12px;
 }
