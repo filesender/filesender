@@ -58,6 +58,7 @@ var intervalTimer = 0;
 var uploadURI = "fs_multi_upload.php";
 var fdata = []; // array of each file to be uploaded
 var n = -1; // file int currently uploading
+var maxLimitWebWorkers = 16; // The highest number of web workers that is supported by all modern browsers (currently constrained by Opera).
 
 // a unique is created for each file that is uploaded.
 // An object with the unique stores all relevant information about the file upload
@@ -300,6 +301,7 @@ function uploadFileWebworkers() {
     console.log('Chunksize: '+ chunksize);
 
     workerCount = parseInt($('#workerCount').val());
+    workerCount = workerCount > maxLimitWebWorkers ? maxLimitWebWorkers : workerCount;
 
     console.log('Using '+ workerCount+' worker(s)');
     jobsPerWorker = parseInt($('#jobsPerWorker').val());
