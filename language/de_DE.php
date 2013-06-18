@@ -32,15 +32,15 @@
 
 /* ---------------------------------
  * de_DE Language File
+ * Contributed by Claude Tompers (RESTENA)
  * ---------------------------------
- *
  */
 // main menu items
 $lang["_ADMIN"] = "Administration";
 $lang["_NEW_UPLOAD"] = "Datei senden";
 $lang["_VOUCHERS"] = "Gast einladen";
 $lang["_LOGON"] = "Einloggen";
-$lang["_LOG_OFF"] = "Ausloggen";
+$lang["_LOG_OFF"] = "Abmelden";
 $lang["_MY_FILES"] = "Meine Dateien";
 
 // page titles
@@ -99,12 +99,13 @@ $lang["_BROWSE"] = "Durchsuchen";
 $lang["_CANCEL"] = "Abbrechen";
 $lang["_OPEN"] = "Öffnen";
 $lang["_CLOSE"] = "Schließen";
-$lang["_OK"] = "Ok";
+$lang["_OK"] = "OK";
 $lang["_SEND"] = "Senden";
 $lang["_DELETE"] = "Löschen";
 $lang["_YES"] = "Ja";
 $lang["_NO"] = "Nein";
 
+$lang["_ERROR_CONTACT_ADMIN"] = "Ein Fehler ist aufgetreten - bitte benachrichtigen Sie Ihren Administrator.";
 $lang["_INVALID_MISSING_EMAIL"] = "Ungültige oder fehlende E-Mail-Adresse";
 $lang["_INVALID_EXPIRY_DATE"] = "Ungültiges Ablaufdatum";
 $lang["_INVALID_FILE"] = "Ungültige Datei";
@@ -122,11 +123,14 @@ $lang["_ACCEPTTOC"] = "Ich bin mit den Nutzungsbedingungen einverstanden.";
 $lang["_AGREETOC"] = "Sie müssen den Nutzungsbedingungen zustimmen, wenn Sie die Datei herunterladen wollen.";
 $lang["_FILE_TO_BE_RESENT"] = "Datei zum weiterverteilen";
 $lang["_ERROR_UPLOADING_FILE"] = "Fehler beim Hochladen Ihrer Datei";
+$lang["_ERROR_SENDING_EMAIL"] = "Beim Senden der E-mail ist ein Fehler aufgetreten, bitte benachrichtigen Sie Ihren Administrator.";
+$lang["_ERROR_INCORRECT_FILE_SIZE"] = "Beim Hochladen Ihrer Datei ist ein Problem aufgetreten. <br />Die Dateigrösse auf dem Server ist unterschiedlech von jener der Originaldatei. <br /><br />Bitte benachrichtigen Sie Ihren Administrator.";
 $lang["_MAXEMAILS"] = "Die maximal erlaubte Zahl an E-Mail Adressen ist ";
 $lang["_INVALID_DATE_FORMAT"] = "Das Datumsformat ist ungültig.";
 $lang["_DISK_SPACE_ERROR"] = "Es ist nicht genügend Speicherplatz vorhanden. Bitte benachrichtigen Sie den Service Administrator oder laden Sie eine kleinere Datei hoch.";
-
-
+$lang["_ERROR_ATTRIBUTES"] = "Ihr Identity Provider stellt die nötigen Attribute nicht zur Verfügung. Benachrichtigen Sie Ihren Administrator";
+$lang["_PERMISSION_DENIED"] = "Sie sind nicht berechtigt dies zu tun.";
+// Logout page
 $lang["_LOGOUT_COMPLETE"] = "Logout abgeschlossen";
 
 // vouchers
@@ -136,6 +140,7 @@ Dem Empfänger wird eine E-Mail mit einem Link zum Voucher erhalten.";
 $lang["_EMAIL_SEPARATOR_MSG"] = "Mehrere E-Mail Adressen trennen durch , oder ;";
 
 $lang["_NO_FILES"] = "Im Augenblick sind keine Dateien verfügbar";
+$lang["_NO_VOUCHERS"] = "Im Augenblick sind keine Voucher verfügbar";
 $lang["_ARE_YOU_SURE"] = "Sind Sie sicher?";
 $lang["_DELETE_FILE"] = "Datei löschen";
 $lang["_EMAIL_SENT"] = "E-Mail wurde versandt";
@@ -170,6 +175,7 @@ $lang["_OPTIONAL"] = "optional";
 // confirmation
 $lang["_CONFIRM_DELETE_FILE"] = "Sind Sie sicher, dass Sie diese Datei löschen wollen?";
 $lang["_CONFIRM_DELETE_VOUCHER"] = "Sind Sie sicher, dass Sie diesen Voucher löschen wollen?";
+$lang["_CONFIRM_RESEND_EMAIL"] = "Sind Sie sicher, dass Sie diese E-mail nochmals senden wollen?";
 
 // standard date display format
 $lang['datedisplayformat'] = "d.m.Y"; // Format for displaying date/time, use PHP date() format string syntax
@@ -192,7 +198,11 @@ $lang["_DP_showMonthAfterYear"] = 'false';
 $lang["_DP_yearSuffix"] = '';
 
 // Login Splash text
-//$lang["_SITE_SPLASHTEXT"] = "FileSender is a secure way to share large files with anyone! Logon to upload your files or invite people to send you a file.";
+$lang["_SITE_SPLASHHEAD"] = "Willkommen bei ". htmlspecialchars($config['site_name']);
+$lang["_SITE_SPLASHTEXT"] = htmlspecialchars($config['site_name']) ." ist eine sichere Methode grosse Dateien mit jedermann zu teilen! Verbinden Sie sich um Dateien zu verschicken oder um jemanden aufzufordern Ihnen eine Datei zu schicken.";
+
+// Footer to display
+$lang["_SITE_FOOTER"] = ""; 
 
 // site help
 $lang["_HELP_TEXT"] = '
@@ -218,7 +228,7 @@ $lang["_HELP_TEXT"] = '
         <li>Wenn Sie <img src="images/html5_installed.png" alt="green HTML5 tick" class="textmiddle" style="display:inline" /> in der rechten oberen Ecke sehen, funktioniert dies Methode für Sie</li>
 	<li>Sie brauchen einen sehr neuen Browser der HTML5 unterstützt, die neueste Version der "Sprache des Web"</li>
 	<li>Momentan trifft das auf Firefox 4 (oder höher) und Chrome in Windows, Mac OSX und Linux zu</li>
-	<li>Bitte benutzen Sie die <a href="http://caniuse.com/#feat=fileapi" target="_blank">"When can I use..."</A> Webseite um den Fortschritt der HTML5 FileAPI in allen größeren Browsern zu verfolgen.  Speziell die Unterstützung für die <a href="http://caniuse.com/#feat=filereader" target="_blank">FileReader API</A> und die <A href="http://caniuse.com/#feat=bloburls" target="_blank">Blob URLs</A> müssen hellgrün sein (=unterstützt) damit ein Browser Dateien die grösser als 2GB sind hochladen kann </li>
+	<li>Bitte benutzen Sie die <a href="http://caniuse.com/fileapi" target="_blank">"When can I use..."</a> Webseite um den Fortschritt der HTML5 FileAPI in allen größeren Browsern zu verfolgen.  Speziell die Unterstützung für die <a href="http://caniuse.com/filereader" target="_blank">FileReader API</a> und die <a href="http://caniuse.com/bloburls" target="_blank">Blob URLs</a> müssen hellgrün sein (=unterstützt) damit ein Browser Dateien die grösser als 2GB sind hochladen kann </li>
 </ul>
 
 <h4>Herunterladen von Dateien beliebiger Größe</h4>
@@ -241,7 +251,7 @@ $lang["_HELP_TEXT"] = '
 </div>';
 
 // site about
-$lang["_ABOUT_TEXT"] = ' <div align="left" style="padding:5px">'. htmlentities($config['site_name']) .' ist eine Installation von FileSender (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>), entwickelt für die Anforderungen der Hochschul- und Forschungsgemeinschaften.</div>';
+$lang["_ABOUT_TEXT"] = ' <div align="left" style="padding:5px">'. htmlspecialchars($config['site_name']) .' ist eine Installation von FileSender (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>), entwickelt für die Anforderungen der Hochschul- und Forschungsgemeinschaften.</div>';
 
 // site AUP terms
 $lang["_AUPTERMS"] = "Nutzungsbedingungen...";

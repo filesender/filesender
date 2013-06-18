@@ -56,6 +56,11 @@ img {
 	display: block;
 }
 
+a 
+{
+	color: #333333;
+}
+
 td {
 	vertical-align: top;
 	padding: 3px;
@@ -143,8 +148,6 @@ td {
 
 input,textarea  
 {
-	border-radius:5px;
-	-moz-border-radius: 5px;
 	width:100%;
 	font-family: Verdana, Geneva, sans-serif;
 	font-size: 12px;
@@ -157,6 +160,7 @@ input,textarea
 }
 
 #box {
+	padding: 20px;
 	border: 1px solid #cccccc;
 	border-radius: 10px;
 	-moz-border-radius: 10px;
@@ -267,8 +271,8 @@ input {
 	border-radius:5px;
 	-moz-border-radius: 5px;*/
 }
-/* overide o style */
-.ui-o
+/* overide button style */
+.ui-button
 {
 	/*background-color: #333;
 	border-top-style: solid;
@@ -283,7 +287,7 @@ input {
 	border-top-right-radius: 0px;
 	color: #FFF;*/
 }
-.ui-o:hover
+.ui-button:hover
 {
 	/*background-color: #900;*/
 }
@@ -321,7 +325,6 @@ input {
 #aup_label{
 	font-weight: bold;
 }
-
 
 /*#progressIndicator {
 }
@@ -393,6 +396,7 @@ margin-top: 4px;
 	color:#333333;
 	width: 100%;
 }
+
 #wrap {
     background: #fff;
     text-align: left;
@@ -403,7 +407,7 @@ margin-top: 4px;
     padding-left: 10px;
 }
 #header {
-	
+	background: #666;
 	padding-top: 0;
 	padding-right: 0;
 	padding-bottom: 0px;
@@ -429,6 +433,7 @@ margin-top: 4px;
 }
 
 #box, .box  {
+	padding: 5px;
 	border: 1px solid #cccccc;
 	border-radius: 5px;
 	-moz-border-radius: 5px;
@@ -511,6 +516,11 @@ white-space: -o-pre-wrap; /* Opera 7 */
 word-wrap: break-word; /* Internet Explorer 5.5+ */
 
 }
+#serviceinfo
+{
+	float: right;
+	position: relative;
+}
 .versionnumber
 {
 	color: #333;
@@ -526,7 +536,6 @@ word-wrap: break-word; /* Internet Explorer 5.5+ */
 }
 .welcomeuser
 {
-	float:left;
 	text-align: left;
 	font-size: 12px;
 }

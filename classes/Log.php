@@ -46,13 +46,16 @@ class Log {
         }
         return self::$instance;
     } 
-
+	
+	public function __construct() {
+	  $this->db = DB::getInstance();
+	 }
     //--------------------------------------- NOTE PDO this
     // Save Log Data
     //
     public function saveLog($dataitem,$logType,$message){
 
-        $db = DB::getInstance();
+		$db = DB::getInstance();
 		
         global $config;
 
@@ -62,7 +65,7 @@ class Log {
         } else {
             $authAttributes["saml_uid_attribute"] = "";
         }
-        $dbCheck = DB_Input_Checks::getInstance();
+        //$dbCheck = DB_Input_Checks::getInstance();
 
 
         // If authenticated also add authID to log
@@ -91,9 +94,10 @@ class Log {
             $logmessage	= $message;
             $logauthuseruid	= $authAttributes["saml_uid_attribute"];
         }
-
-        $sqlQuery	= "
-            INSERT INTO 
+		
+		$pdo = $this->db->connect();
+		$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
+		$statement = $pdo->prepare("INSERT INTO 
             logs 
             (
                 logfileuid,
@@ -109,39 +113,39 @@ class Log {
             ) 
             VALUES 
             (
-                %s,
-                %s, 
-                %s, 
-                %s, 
-                %s,
-                %s,
-                %s,
-                %s,
-                %s,
-                %s
-            )";
-
-        $result = $db->fquery(
-            $sqlQuery,
-            $logfileuid,
-            $logvoucheruid,
-            $logtype,
-            $logfrom,
-            $logto,
-            $logdate,
-            $logfilesize,
-            $logfilename,
-            $logmessage,
-            $logauthuseruid
-        ) or die("Error");
-
-        // error in log file
-        if(!$result){
-            return  false;
-        } else {
-            return true;
-        }
-
+                :logfileuid,
+                :logvoucheruid, 
+                :logtype , 
+                :logfrom, 
+                :logto, 
+                :logdate, 
+                :logfilesize, 
+                :logfilename, 
+                :logmessage,
+                :logauthuseruid
+            )");
+			
+			$statement->bindParam(':logfileuid',$logfileuid);
+			$statement->bindParam(':logvoucheruid',$logvoucheruid); 
+			$statement->bindParam(':logtype', $logtype);
+			$statement->bindParam(':logfrom', $logfrom);
+			$statement->bindParam(':logto', $logto);
+			$statement->bindParam(':logdate',$logdate); 
+			$statement->bindParam(':logfilesize', $logfilesize);
+			$statement->bindParam(':logfilename', $logfilename);
+			$statement->bindParam(':logmessage',$logmessage);
+			$statement->bindParam(':logauthuseruid',$logauthuseruid);
+		
+		try 
+		{ 	
+			$statement->execute(); 
+			 return true;
+		}
+		catch(PDOException $e)
+		{ 
+			displayError(lang("_ERROR_CONTACT_ADMIN"),$e->getMessage()); 
+			return  false;
+		}
     }
 
     // logfile for individual client specific logging
@@ -150,6 +154,7 @@ class Log {
     public function logProcess($client,$message)
     {
         global $config;
+        global $cron;
 
         if($config["debug"] or $config["client_specific_logging"])
         {
@@ -161,10 +166,14 @@ class Log {
                 $domain = "";
             }
 
+            $logext = ".log.txt";
+            // seperate cron and normal logs
+            if(isset($cron) && $cron) { $logext = "-CRON.log.txt";}
+
             $message .= "[".$ip."(".$domain.")] ";
             $dateref = date("Ymd");
             $data = date("Y/m/d H:i:s");
-            $myFile = $config['log_location'].$dateref."-".$client.".log.txt";
+            $myFile = $config['log_location'].$dateref."-".$client.$logext;
             $fh = fopen($myFile, 'a') or die("can't open file");
             // don't print errors on screen when there is no session.
             if(isset($_REQUEST['PHPSESSID'])){

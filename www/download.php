@@ -55,17 +55,17 @@ if(session_id() == ""){
 	$_SESSION['validSession'] = true;
 }
 
-// check we are authenticated as SAML or voucher user
+// check we are authenticated (a valid download voucher id)
 if(!$authvoucher->aVoucher()) {
-		logEntry("Download: Failed authentication");
-		echo "notAuthenticated";
-} else {
+	logEntry("Download: Failed authentication","E_ERROR");
+	echo "notAuthenticated";
+} else { // Start authenticated clause
 if (isset($_REQUEST["vid"])) {
 
 // load the voucher
 $fileArray =  $authvoucher->getVoucher();
 $fileoriginalname = $fileArray[0]['fileoriginalname'];
-$fileuid = $fileArray[0]['fileuid'];	
+$fileuid = $fileArray[0]['fileuid'];
 $file=$config['site_filestore'].$fileuid.".tmp";
 $filestatus = $fileArray[0]['filestatus'];
 
@@ -74,73 +74,141 @@ $filestatus = $fileArray[0]['filestatus'];
 // check if file physically exists and is marked 'Available' before downloading
 if(file_exists($file) && is_file($file) && $filestatus == 'Available')
 {
-        // Check the encoding for the filename and convert if necessary
-        if (detect_char_encoding($fileoriginalname) == 'ISO-8859-1') { 
-            $fileoriginalname = iconv("UTF-8", "ISO-8859-1", $fileoriginalname);
-        }
+	// Check the encoding for the filename and convert if necessary
+	if (detect_char_encoding($fileoriginalname) == 'ISO-8859-1') {
+		$fileoriginalname = iconv("UTF-8", "ISO-8859-1", $fileoriginalname);
+	}
+
+	$filesize = $functions->getFileSize($file);
+	$downloadComplete=false;
+	$offset = 0;
+	$length = $filesize;
+	if ( isset($_SERVER['HTTP_RANGE']) ) {
+		// if the HTTP_RANGE header is set we're dealing with partial content
+
+		$partialContent = true;
+
+		// find the requested range
+		// this might be too simplistic, apparently the client can request
+		// multiple ranges, which can become pretty complex, so ignore it for now
+		preg_match('/bytes=(\d+)-(\d+)?/', $_SERVER['HTTP_RANGE'], $matches);
+
+		$offset = intval($matches[1]);
+		$length = intval($matches[2]) - $offset;
+
+		header('HTTP/1.1 206 Partial Content');
+		header('Content-Range: bytes ' . $offset . '-' . ($offset + $length) . '/' . $filesize);
+
+	} else {
+		$partialContent = false;
+	}
 
 	// set download file headers
-	logEntry("Download: Start Downloading - ".$file);
-	header("Content-Type: application/force-download");
+	// header("Content-Type: application/force-download"); // Check if this is needed ?
 	header('Content-Type: application/octet-stream');
-	header('Content-Length: '.$functions->getFileSize($file));
 	header('Content-Disposition: attachment; filename="'.$fileoriginalname.'"');
-	
+	header('Accept-Ranges: bytes');
+
 	// as files may be very large - stop it timing out
 	set_time_limit(0);
-	
+
 	session_write_close();
 
-	// if the complete file is downloaded then send email
-	if(readfile_chunked($file) === $functions->getFileSize($file)); 
-	// email completed
+	logEntry("Download: Start Downloading - ".$file,"E_NOTICE");
+	if($partialContent) {
+		// use range reading
+		$sentBytes=readfile_range($file, $offset, $length);
+		logEntry('Partial download requested HTTP_RANGE: ' . $_SERVER['HTTP_RANGE'],"E_NOTICE");
+		logEntry('Partial download header Content-Range: bytes ' . $offset . '-' . ($offset + $length) . '/' . $filesize,"E_NOTICE");
+		logEntry('Partial download sent '.$sentBytes.' bytes.',"E_NOTICE");
+		if ($offset + $sentBytes == $filesize){
+			// Last part downloaded so assume completed
+			$downloadComplete=true;
+		}
+	} else {
+		header('Content-Length: '.$filesize);
+		$sentBytes=readfile_chunked($file);
+		logEntry('Full download sent '.$sentBytes.' bytes.',"E_NOTICE");
+		if($sentBytes == $filesize){
+			// complete file is downloaded
+			$downloadComplete=true;
+		}
+	}
+	if ($downloadComplete) {
+		// Send completed email
 		$tempEmail = $fileArray[0]["fileto"];
-		$fileArray[0]["fileto"] = $fileArray[0]["filefrom"];	
+		$fileArray[0]["fileto"] = $fileArray[0]["filefrom"];
 		$fileArray[0]["filefrom"] = $tempEmail;
 		$saveLog->saveLog($fileArray[0],"Download","");
 		$sendmail->sendEmail($fileArray[0],$config['filedownloadedemailbody']);
-		logEntry("Download: Email Sent - To:".$fileArray[0]["fileto"]."  From: ".$fileArray[0]["filefrom"] . " [".$file."]");
-}
-else 
-{	
+		logEntry("Download complete: email sent - To: ".$fileArray[0]["fileto"]."  From: ".$fileArray[0]["filefrom"] . " [".$file."]","E_NOTICE");
+	}
+} else {
 	print_r("file not found clause");
 	// physical file was not found
-	logEntry("Download: File Not Found - ".$file);
+	logEntry("Download: File Not Found - ".$file,"E_ERROR");
 	// redirect to file is no longer available
 	 header( 'Location: invalidvoucher.php' ) ;
 }
-}
+} // End _REQUEST["vid"] clause
+} // End authenticated clause
+
+// function reads chunks for range download
+function readfile_range($filename, $offset, $length, $retbytes=true) {
+	ob_start();
+	$buffer = '';
+	$cnt =0;
+	$handle = fopen($filename, 'rb'); // open the file
+	if ($handle === false) {
+		return false;
+	}
+
+	fseek($handle, $offset);
+
+	$buffer = fread($handle, $length+1);
+	if ($retbytes) {
+		$cnt = strlen($buffer);
+		header('Content-Length: '.$cnt);
+	}
+	echo $buffer;
+	ob_flush();
+	flush();
+
+	$status = fclose($handle);
+
+	if ($retbytes && $status) {
+		return $cnt; // return num. bytes delivered like readfile() does.
+	}
+	return $status;
 }
 
 // function read the chunks from the non web enabled folder
 function readfile_chunked($filename,$retbytes=true) {
 
-ob_start();
+	ob_start();
 
 	$chunksize = 1*(1024*1024); // how many bytes per chunk
-    $buffer = '';
-    $cnt =0;
-   	$handle = fopen($filename, 'rb'); // open the file
-   	if ($handle === false) {
-   	    return false;
-   	}
-   	while (!feof($handle)) { 
-       $buffer = fread($handle, $chunksize);
-       echo $buffer;
-       ob_flush();
-       flush();
-       if ($retbytes) {
-           $cnt += strlen($buffer);
-       }
-   }
-       $status = fclose($handle);
+	$buffer = '';
+	$cnt =0;
+	$handle = fopen($filename, 'rb'); // open the file
+	if ($handle === false) {
+		return false;
+	}
+	while (!feof($handle)) {
+		$buffer = fread($handle, $chunksize);
+		echo $buffer;
+		ob_flush();
+		flush();
+		if ($retbytes) {
+			$cnt += strlen($buffer);
+		}
+	}
+	$status = fclose($handle);
 
-		// log the download progress 
-	   logEntry("Download Pogress: [". $filename. "] cnt-".$cnt.":retbytes-". $retbytes.": status-".$status );
-   if ($retbytes && $status) {
-       return $cnt; // return num. bytes delivered like readfile() does.
-   }
-   return $status;
-   }
+	if ($retbytes && $status) {
+		return $cnt; // return num. bytes delivered like readfile() does.
+	}
+	return $status;
+}
 
 ?>

@@ -44,18 +44,28 @@ chdir(dirname(__FILE__));
 // force all error reporting
 if (defined('E_DEPRECATED')) {
 	error_reporting(E_ALL & ~E_DEPRECATED);
-}       
-else {  
+} else {
 	error_reporting(E_ALL);
-}       
+}
 
 $filesenderbase = dirname(dirname(__FILE__));
 
 // include all required classes
-require_once("$filesenderbase/classes/_includes.php");
+require_once("$filesenderbase/config/config.php");
 
 $CFG = config::getInstance();
 $config = $CFG->loadConfig();
+
+require_once("$filesenderbase/includes/ErrorHandler.php");
+require_once("$filesenderbase/includes/UTF8.php");
+require_once("$filesenderbase/classes/Functions.php");
+require_once("$filesenderbase/classes/AuthSaml.php");
+require_once("$filesenderbase/classes/AuthVoucher.php");
+require_once("$filesenderbase/classes/DB.php");
+require_once("$filesenderbase/classes/Mail.php");
+require_once("$filesenderbase/classes/DB_Input_Checks.php");
+require_once("$filesenderbase/classes/Log.php");
+
 $sendmail = Mail::getInstance();
 $functions = Functions::getInstance();
 

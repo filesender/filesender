@@ -205,14 +205,13 @@ echo "<tr><td class='HardBreak'>" .$item['logto'] . "</td><td class='HardBreak'>
 echo '<td><strong>'.lang("_TO").'</strong></td>';
 echo '<td><strong>'.lang("_FROM").'</strong></td>';
 echo '<td><strong>'.lang("_FILE_NAME").'</strong></td>';
-echo '<td><strong>'.lang("_SUBJECT").'</strong></td>';
 echo '<td><strong>'.lang("_CREATED").'</strong></td>';
+echo '<td><strong>'.lang("_MESSAGE").'</strong></td>';
 ?>
         </tr>
         <?php 
 foreach($Error as $item) {
-echo "<tr><td class='HardBreak'>" .$item['logto']. "</td><td class='HardBreak'>" .$item['logfrom']. "</td><td class='HardBreak'>" .utf8tohtml($item['logfilename'],true). "</td><td>" .date($lang['datedisplayformat'],strtotime($item['logdate'])) . "</td></tr>"; //etc
-echo "<tr><td colspan='4'>".$item['logmessage']."</td></tr>";
+echo "<tr><td class='HardBreak'>" .$item['logto']. "</td><td class='HardBreak'>" .$item['logfrom']. "</td><td class='HardBreak'>" .utf8tohtml($item['logfilename'],true). "</td><td>" .date($lang['datedisplayformat'],strtotime($item['logdate'])) . "</td>" . "<td class='HardBreak'>" .utf8tohtml($item['logmessage'],true)."</td></tr>";
 }
 
 ?>

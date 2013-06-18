@@ -61,15 +61,20 @@ class AuthSaml {
 
             // compare config admin to userUID
             if(isset($attributes[$config['saml_uid_attribute']][0])) {
-                $attributes["'saml_uid_attribute"] = $attributes[$config['saml_uid_attribute']][0];
+                $attributes["saml_uid_attribute"] = $attributes[$config['saml_uid_attribute']][0];
             } else if(isset($attributes[$config['saml_uid_attribute']])) {
-				$attributes["'saml_uid_attribute"] = $attributes[$config['saml_uid_attribute']];
-			}
-
-            if(stristr($config['admin'], $attributes["'saml_uid_attribute"]) === FALSE) {
-                return FALSE;
+                $attributes["saml_uid_attribute"] = $attributes[$config['saml_uid_attribute']];
             } else {
+                // required attribute does not exist
+                logEntry("UID attribute not found in IDP (".$config['saml_uid_attribute'].")","E_ERROR");
+                return FALSE;
+            }
+
+            $known_admins = array_map('trim',explode(',', $config['admin']));
+            if(in_array($attributes["saml_uid_attribute"], $known_admins)) {
                 return TRUE;
+            } else {
+                return FALSE;
             }
         }
         return FALSE;
@@ -86,39 +91,54 @@ class AuthSaml {
         $as = new SimpleSAML_Auth_Simple($config['site_authenticationSource']);
         $as->requireAuth();
         $attributes = $as->getAttributes();
+        $missing_attributes = FALSE ;
 
-        // need to capture email from SAML attribute
-        // may be single attribute or array 
-
-        // checks if an array and sets first child
+        // need to capture email from SAML attribute. may be single attribute or array 
+        // ensure that it's always an array.
         if(isset($attributes[$config['saml_email_attribute']])) {
-            $attributes["email"] = $attributes[$config['saml_email_attribute']];
-        }
+                if ( is_array($attributes[$config['saml_email_attribute']]) ) {
+                        $attributes["email"] = $attributes[$config['saml_email_attribute']];
+                } else {
+                        $attributes["email"] = array($attributes[$config['saml_email_attribute']]);
+                }
+        } 
 
-        if(isset($attributes[$config['saml_email_attribute']][0])) {
-            $attributes["email"] = $attributes[$config['saml_email_attribute']][0];
+        // Check for empty or invalid email attribute
+        if ( empty($attributes["email"]) ) {
+            logEntry("No valid email attribute found in IDP (looking for '".$config['saml_email_attribute']."')","E_ERROR");
+            $missing_attributes = TRUE ;
+        }
+        foreach ($attributes["email"] as $email) {
+                if ( !filter_var($email,FILTER_VALIDATE_EMAIL) ) {
+                        logEntry("Invalid email attribute received from IdP: '".$email."'","E_ERROR");
+                        $missing_attributes = TRUE ;
+                }
         }
 
         if(isset($attributes[$config['saml_name_attribute']][0])) {
             $attributes["cn"] = $attributes[$config['saml_name_attribute']][0];
         }
-        if(!isset($attributes[$config['saml_name_attribute']])) {
+        if(!isset($attributes[$config['saml_name_attribute']]) && isset($attributes["email"])) {
             $attributes["cn"] =   substr($attributes["email"],0, strpos($attributes["email"] , "@")) ;
         }
 
         if(isset($attributes[$config['saml_uid_attribute']][0])) {
             $attributes["saml_uid_attribute"] = $attributes[$config['saml_uid_attribute']][0];
+        } else if (isset($attributes[$config['saml_uid_attribute']])) {
+            $attributes["saml_uid_attribute"] = $attributes[$config['saml_uid_attribute']];
         } else {
-			$attributes["saml_uid_attribute"] = $attributes[$config['saml_uid_attribute']];
-		}
+            // Required UID attribute missing
+            logEntry("UID attribute not found in IDP (looking for '".$config['saml_uid_attribute']."')","E_ERROR");
+            $missing_attributes = TRUE ;
+        }
 
+        // logs access by a user and users logged on array data
+        // this could be moved to logging function in future versions
         $inglue = '='; 
         $outglue = '&';
         $valsep = '|';
         $message = "";
 
-        // logs access by a user and users logged on array data
-        // this could be moved to logging function in future versions
         foreach ($attributes as $tk => $tv) {
             $message .= (isset($return) ? $return . $outglue : '') . $tk . $inglue . (is_array($tv) ? implode($valsep, $tv) : $tv) . $outglue;
         }
@@ -133,18 +153,15 @@ class AuthSaml {
 
         $message .= "[".$ip."(".$domain.")] ".$_SERVER['HTTP_USER_AGENT'];
 
-        $dateref = date("Ymd");
-        $data = date("Y/m/d H:i:s");
-        $myFile = $config['log_location'].$dateref.".log.txt";
-        $fh = fopen($myFile, 'a') or die("can't open file");
-        $stringData = $data.' [Session ID: '.session_id().'] '.$message."\n";
-        fwrite($fh, $stringData);
-        fclose($fh);
-        closelog();
-
-        //print_r($attributes);
         $attributes["SessionID"] = session_id();
-        return $attributes;
+
+        if ($missing_attributes) {
+            logEntry($message, "E_ERROR");
+            return "err_attributes";
+        } else {
+            logEntry($message, "E_NOTICE");
+            return $attributes;
+        }
     }
 
     // requests logon URL from SAML and returns string

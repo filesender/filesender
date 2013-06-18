@@ -11,7 +11,7 @@ USE `filesender`;
 --
 
 CREATE TABLE `files` (
-  `fileto` varchar(250) DEFAULT NULL,
+  `fileto` text DEFAULT NULL,
   `filesubject` varchar(250) DEFAULT NULL,
   `filevoucheruid` varchar(60) DEFAULT NULL,
   `filemessage` text,
@@ -32,7 +32,6 @@ CREATE TABLE `files` (
   `filecreateddate` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `fileauthurl` varchar(500) DEFAULT NULL,
   `fileauthuseremail` varchar(255) DEFAULT NULL,
-  `filegroupid` varchar(60) DEFAULT NULL,
   PRIMARY KEY (`fileid`),
   UNIQUE KEY `fileid` (`fileid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
@@ -46,7 +45,7 @@ CREATE TABLE `logs` (
   `logfileuid` varchar(60) DEFAULT NULL,
   `logtype` varchar(60) DEFAULT NULL,
   `logfrom` varchar(250) DEFAULT NULL,
-  `logto` varchar(250) DEFAULT NULL,
+  `logto` text DEFAULT NULL,
   `logdate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `logtime` time DEFAULT NULL,
   `logfilesize` bigint(20) DEFAULT NULL,

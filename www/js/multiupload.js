@@ -58,7 +58,7 @@ var intervalTimer = 0;
 var uploadURI = "fs_multi_upload.php";
 var fdata = []; // array of each file to be uploaded
 var n = -1; // file int currently uploading
-var nFiles = 0; // number of files currenlty vailable
+
 // a unique is created for each file that is uploaded.
 // An object with the unique stores all relevant information about the file upload
 
@@ -139,8 +139,7 @@ function browse(){
 		//$("#dialog-uploadprogress").dialog("option", "title", uploadprogress +  ":  " +  fdata[n].filename + " (" +readablizebytes(fdata[n].fileSize) + ")");
 		
 		// check if file is validated before uploading
-	if(validate_file(n) && fdata[n].status) { 
-
+	if(validate_file(n) && fdata[n].status) {
 		$("#file_del_"+n).hide();
 		fdata[n].bytesUploaded = 0;
 		fdata[n].bytesTotal = fdata[n].fileSize;
@@ -151,9 +150,9 @@ function browse(){
 		// add file information fields
 		json["fileoriginalname"] = fdata[n].filename;
 		json["filesize"] = parseInt(fdata[n].fileSize);
-		json["vid"] = vid;
+		json["vid"] = fdata[n].vid;
         json["filegroupid"] = fdata[n].filegroupid;
-
+        json["fileto"] = $("#fileto").val();
 
 		$.ajax({
   		type: "POST",
@@ -169,19 +168,22 @@ function browse(){
 			$("#dialog-autherror").dialog("open");
 			return;			
 		}
-		var data =  JSON.parse(data);
+		var data = JSON.parse(data);
 		
 		if(data.errors)
 		{
 		$.each(data.errors, function(i,result){
-		if(result == "err_notauthenticated") { errorDialog(errmsg_notauthenticated);} // not authenticated
+		if(result == "err_token") {$("#dialog-tokenerror").dialog("open");} // token missing or error
+		if(result == "err_notauthenticated") { $("#dialog-autherror").dialog("open");} // not authenticated
 		if(result == "err_tomissing") { $("#fileto_msg").show();} // missing email data
 		if(result == "err_expmissing") { $("#expiry_msg").show();} // missing expiry date
 		if(result == "err_exoutofrange") { $("#expiry_msg").show();} // expiry date out of range
 		if(result == "err_invalidemail") { $("#fileto_msg").show();} // 1 or more emails invalid
 		if(result == "err_invalidfilename") { $("#file_msg").show();} // invalid filename
-		if(result == "err_nodiskspace") { errorDialog(errmsg_disk_space);}
+		if(result == "err_invalidextension") { $("#extension_msg").show();} //  invalid extension
+		if(result == "err_nodiskspace") { errorDialog(errmsg_disk_space);} // not enough disk space on server
 		})
+		$("#uploadbutton a").attr("onclick", "validate()"); // re-activate upload button
 		}
 		if(data.status && data.status == "complete")
 		{
@@ -194,35 +196,135 @@ function browse(){
 		// no error so use result as current bytes uploaded for file resume 
 		vid = data.vid;
 		fdata[n].bytesUploaded = parseFloat(data.filesize);
-		// validated so upload all files
+            updatepb(fdata[n].bytesUploaded,fdata[n].bytesTotal);
+            // validated so upload all files
 		
 		//if (typeof files !== "undefined") {
 		//for (var i=0, l=files.length; i<l; i++) {
 		//n = i;
-		uploadFile();
+
+            startTime = new Date().getTime();
+            if(html5webworkers) {
+                uploadFileWebworkers();
+            } else { uploadFile(); }
 		//}
 		//}
 		}
   		});
-	} else {
+	} /*else {
 			// check if more files need uploading
-			if(	n < fdata.length-1 )
+			if(n < fdata.length - 1)
 			{
 				n += 1;		
 				startupload();
-			} else  {
-			// al files sent so complete
-			window.location.href="index.php?s=complete";
+			} else {
+			    // all files sent so complete
+			    window.location.href="index.php?s=complete";
 			}
+	    }*/
 	}
-	}
+
+function doUploadComplete(){
+    var end  = new Date().getTime();
+    var time = end-startTime;
+    var speed = fdata[n].bytesTotal / (time /1000) / 1024 / 1024 * 8;
+
+    console.log('Upload time:'+ (time /1000) + 'sec');
+    console.log('Speed: '+ speed.toFixed(2)+'Mbit/s' );
+
+    var query = $("#form1").serializeArray(), json = {};
+    $.ajax({
+        type: "POST",
+        url: "fs_multi_upload.php?type=uploadcomplete&vid="+vid+"&n="+n
+        ,
+        success:function( data ) {
+            var data =  parseJSON(data);
+            if(data.errors)
+            {
+                $.each(data.errors, function(i,result){
+                    if(result == "err_token") {
+                        $("#dialog-tokenerror").dialog("open");
+                    } // token missing or error
+                    if(result == "err_cannotrenamefile") {
+                        window.location.href="index.php?s=uploaderror";
+                        return;
+                    } //
+                    if(result == "err_emailnotsent") {
+                        window.location.href="index.php?s=emailsenterror";
+                        return;
+                    } //
+                    if(result == "err_filesizeincorrect") {
+                        window.location.href="index.php?s=filesizeincorrect";
+                        return;
+                    } //
+                })
+            } else if (n < fdata.length-1) {
+                n+=1;
+                startupload();
+                return;
+            } else {
+                window.location.href="index.php?s=complete";
+            }
+        }, error:function(xhr,err){
+            // error function to display error message e.g.404 page not found
+            ajaxerror(xhr.readyState,xhr.status,xhr.responseText);
+        }
+    });
+}
+
+function getFiles() {
+    var files = [];
+
+    for (var i = n; i < fdata.length; i++) {
+        files.push(fdata[i].file);
+    }
+
+    return files;
+}
+
+function uploadFileWebworkers() {
+    var files = getFiles();
+
+    //var files = document.getElementById("fileToUpload").files;
+    var path = document.location.pathname;
+    var dir = path.substring(0, path.lastIndexOf('/'));
+
+    $("head").append('<script type="text/javascript" src="lib/tsunami/js/tsunami.js"></script>');
+
+    if(fdata[n].bytesUploaded > fdata[n].bytesTotal -1 ) {
+        doUploadComplete();
+        return;
+    }
+
+    chunksize = parseInt($('#chunksize').val())*1024*1024;
+    console.log('Chunksize: '+ chunksize);
+
+    workerCount = parseInt($('#workerCount').val());
+
+    console.log('Using '+ workerCount+' worker(s)');
+    jobsPerWorker = parseInt($('#jobsPerWorker').val());
+    console.log('Setting '+ jobsPerWorker+' job(s) per worker');
+
+    var tsunami = new Tsunami({
+        uri: dir + '/' +uploadURI + "?type=tsunami&vid="+vid+"&n="+n,
+        simultaneousUploads: workerCount,
+        jobsPerWorker: jobsPerWorker,
+        chunkSize: chunksize,
+        workerFile: 'lib/tsunami/js/tsunami_worker.js',
+        log: false,
+        onComplete: doUploadComplete,
+        onProgress: updatepb
+    });
+    tsunami.addFiles(files);
+    tsunami.upload();
+}
 
 function uploadFile() {
 		
 		// move to next chunk
 		var file = fdata[n].file;
 		var txferSize = chunksize;
-		var allupoadscomplete = false;
+
 		if(fdata[n].bytesUploaded > fdata[n].bytesTotal -1 )
 			{
 			// COMPLETE THIS ONE
@@ -261,7 +363,7 @@ function uploadFile() {
 		//window.location.href="index.php?s=completev";
 		//}
 		}
-			
+
 		if(fdata[n].bytesUploaded + txferSize > fdata[n].fileSize)
 		{
 		txferSize = fdata[n].fileSize - fdata[n].bytesUploaded;
@@ -352,7 +454,6 @@ function updatepb(bytesloaded,totalbytes)
 		bytesTransfered = (Math.round(bytesloaded * 100/1024)/100).toString() + 'kB';
 	else
 		bytesTransfered = (Math.round(bytesloaded * 100)/100).toString() + 'Bytes';
-        $("#filemessage").html("Bytes transferred:" + bytesTransfered);
 		var progress_bar = '#progress_bar-'+n;
 		var file_box = '#file_'+n;
 		var progress_completed = '#progress_completed-'+n;
@@ -381,8 +482,8 @@ function removeItem(fileID)
 {
 	console.log(fileID);
 	$("#file_"+fileID).remove();
-	//fdata.splice(fileID,1);
-	//n = n -1;
-	fdata[fileID].status = false;
+    fdata[fileID].status = false;
+	//fdata.splice(fileID, 1);
+	n = n - 1;
 }
 

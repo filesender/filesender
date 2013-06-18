@@ -62,20 +62,21 @@
 	// get voucher information 
 	$voucherData =  $authvoucher->getVoucher();
 	$voucherUID = $voucherData[0]["filevoucheruid"];
-	$senderemail = $voucherData[0]["fileto"];
+	$senderemail = array($voucherData[0]["fileto"]);
 	// check if voucher is invalid (this should be an external function
 	if($voucherData[0]["filestatus"] == "Voucher") {
 	$filestatus = "Voucher";
 	} else if($voucherData[0]["filestatus"] == "Voucher Cancelled" || $voucherData[0]["filestatus"] == "Closed")
 	{
 	?>
-    <p><?php echo lang("_VOUCHER_CANCELLED"); ?></p>
-    <?php
+
+<p><?php echo lang("_VOUCHER_CANCELLED"); ?></p>
+<?php
 	return;
 	}
 }
 	if (isset($_COOKIE['SimpleSAMLAuthToken'])) {
-		$token = $_COOKIE['SimpleSAMLAuthToken'];
+		$token = urlencode($_COOKIE['SimpleSAMLAuthToken']);
 	} else {
 		$token = "";
 	}
@@ -98,17 +99,18 @@
 	var aup = '<?php echo $config['AuP'] ?>';
 	var bytesUploaded = 0;
 	var bytesTotal = 0;
-	var banextensions = '<?php echo $config['ban_extension']?>';
+	var ext = '<?php echo $config['ban_extension']?>';
+	var banextensions = ext.split(",")
 	var uploadprogress = '<?php echo lang($lang["_UPLOAD_PROGRESS"]); ?>';
 	var previousBytesLoaded = 0;
 	var intervalTimer = 0;
-	var html5 = false;
 	var errmsg_disk_space = "<?php echo lang($lang["_DISK_SPACE_ERROR"]); ?>";
 	var filedata=new Array(); 
+	var nameLang = '<?php echo lang("_FILE_NAME"); ?>'
+	var sizeLang = '<?php echo lang("_SIZE"); ?>'
 	
 	var vid='<?php if(isset($_REQUEST["vid"])){echo htmlspecialchars($_REQUEST["vid"]);}; ?>';
-	// check if html5 functions are available
-	html5 = (window.File && window.FileReader && window.FileList && window.Blob && window.FormData) ? true : false;
+
  	// start document ready 
 	$(function() { 
 
@@ -116,7 +118,8 @@
 		$("#datepicker" ).datepicker({ minDate: new Date(minimumDate), maxDate: new Date(maximumDate),altField: "#fileexpirydate", altFormat: "d-m-yy" });
 		$("#datepicker" ).datepicker( "option", "dateFormat", "<?php echo lang("_DP_dateFormat"); ?>" );
 		$("#datepicker").datepicker("setDate", new Date(maximumDate));
-			
+		$('#ui-datepicker-div').css('display','none');
+	
 		// set datepicker language
 		$.datepicker.setDefaults({
 		closeText: '<?php echo lang("_DP_closeText"); ?>',
@@ -134,7 +137,7 @@
 		isRTL: <?php echo lang("_DP_isRTL"); ?>,
 		showMonthAfterYear: <?php echo lang("_DP_showMonthAfterYear"); ?>,
 		yearSuffix: '<?php echo lang("_DP_yearSuffix"); ?>'});
-		
+	
 		// set dialog cancel upload
 		$("#dialog-cancel").dialog({ autoOpen: false, height: 140, width: 350, modal: true,
 		buttons: {
@@ -186,7 +189,7 @@
 		
 		// default error message dialogue
 		$("#dialog-uploadprogress").dialog({ 
-		
+		 closeOnEscape: false,
 		    open: function() {
           //Hide closing "X" for this dialog only.
           $(this).parent().children().children("a.ui-dialog-titlebar-close").remove();
@@ -212,17 +215,8 @@
 		//Check if HTML5 is enable and use HTML uploader
 		if(html5){
 			// use HTML5 upload functions
-			$("#html5image").attr("src","images/html5_installed.png");
-			$("#html5image").attr("title","<?php echo lang("_HTML5Supported"); ?>");
-			$("#html5text").html('<?php echo lang("_HTML5Supported"); ?>');
 			$("#uploadhtml5").show();
 			} else {
-			$("#html5image").attr("src","images/html5_none.png");
-			$("#html5image").attr("title","<?php echo lang("_HTML5NotSupported"); ?>");
-			$("#html5text").html('<?php echo lang("_HTML5NotSupported"); ?>');
-			$('#html5image').click(function() { displayhtml5support(); });
-			$("#html5link").removeAttr("href");
-			
 			// use standard upload functions
 			$("#uploadstandard").show();
 		}
@@ -263,8 +257,9 @@
 		if(!validate_aup() ){validate = false;};		// check AUP is selected
 	}
 	if(!validate_expiry() ){validate = false;};		// check date
-	// vaildate with server
+	// validate with server
 	if(validate) {	
+		$("#uploadbutton a").attr("onclick", ""); // prevent double clicks to start extra uploads
 		var query = $("#form1").serializeArray(), json = {};
 		for (i in query) { json[query[i].name] = query[i].value; } 
 		// add file information fields
@@ -276,7 +271,7 @@
   		type: "POST",
   		url: "fs_upload.php?type=validateupload&vid="+vid,
   		data: {myJson:  JSON.stringify(json)}
-		}).success(function( data ) {
+		,success:function( data ) {
 		if(data == "") {
 		alert("No response from server");
 		return;	
@@ -286,17 +281,20 @@
 			$("#dialog-autherror").dialog("open");
 			return;			
 		}
-		var data =  JSON.parse(data);
+		var data =  parseJSON(data);
 		if(data.errors)
 		{
 		$.each(data.errors, function(i,result){
+		if(result == "err_token") {$("#dialog-tokenerror").dialog("open");} // token missing or error
 		if(result == "err_tomissing") { $("#fileto_msg").show();} // missing email data
 		if(result == "err_expmissing") { $("#expiry_msg").show();} // missing expiry date
 		if(result == "err_exoutofrange") { $("#expiry_msg").show();} // expiry date out of range
 		if(result == "err_invalidemail") { $("#fileto_msg").show();} // 1 or more emails invalid
 		if(result == "err_invalidfilename") { $("#file_msg").show();} //  invalid filename
+		if(result == "err_invalidextension") { $("#extension_msg").show();} //  invalid extension
 		if(result == "err_nodiskspace") { errorDialog(errmsg_disk_space);}
 		})
+		$("#uploadbutton a").attr("onclick", "validate()"); // re-activate upload button
 		}
 		if(data.status && data.status == "complete")
 		{
@@ -315,7 +313,10 @@
 		} else {
 		getFlexApp("filesenderup").returnMsg(false)
 		}
-	
+		},error:function(xhr,err){
+   		 alert("readyState: "+xhr.readyState+"\nstatus: "+xhr.status);
+    	alert("responseText: "+xhr.responseText);
+		}
 	})
 	}
 	}
@@ -353,15 +354,16 @@ function validate_aup()
 	}
 }
 
-// validate extension
+// validate extension - returns true if valid
 function validateextension(filename)
 {
-	if(filename.split('.').pop().search(banextensions) == -1)
-	{
-	return true;
-	} else {
-	return false;
+	for ( var i=0, len=banextensions.length; i<len; ++i ){
+		if(filename.split('.').pop() == banextensions[i])
+		{
+			return false;
+		} 
 	}
+	return true;
 }
 
 // Validate FILE (HTML5 only)
@@ -393,8 +395,7 @@ function validate_file()
 		fileMsg("<?php echo lang("_INVALID_TOO_LARGE_1") ?> " + readablizebytes(maxHTML5uploadsize) + ". <?php echo lang("_SELECT_ANOTHER_FILE") ?> ");	
 		return false;
 		}
-		var tmpExtension = file.name.split('.').pop();
-		if(banextensions.search(tmpExtension) != -1)
+		if(!validateextension(file.name))
 		{
 		fileMsg("<?php echo lang("_INVALID_FILE_EXT") ?>");	
 		return false;
@@ -428,8 +429,8 @@ if(size > maxFLASHuploadsize)
 			$("#n").val(name);
 			$("#total").val(size);
 			$("#fileName").val(name);
-			$("#fileName").html("Name: " + name);
-			$("#fileSize").html("Size: " + readablizebytes(size));
+			$("#fileName").html(nameLang + ": " + name);
+			$("#fileSize").html(sizeLang + ": " + readablizebytes(size));
 			$("#uploadbutton").show(); 
 		} else {
 			$("#fileInfoView").hide();
@@ -446,15 +447,25 @@ function uploadcomplete(name,size)
 	  type: "POST",
 	  url: "fs_upload.php?type=uploadcomplete&vid="+vid//,
 	  //data: {myJson:  JSON.stringify(json)}
-	}).success(function( data ) {
-
-	if(data == "err_cannotrenamefile")
+	,success:function( data ) {
+	
+	var data =  parseJSON(data);
+	
+	if(data.errors)
 		{
-		window.location.href="index.php?s=uploaderror";
-		} else if(data == "complete"){		
-		window.location.href="index.php?s=complete";
+		$.each(data.errors, function(i,result){
+		if(result == "err_token") { $("#dialog-tokenerror").dialog("open");} // token missing or error
+		if(result == "err_cannotrenamefile") { window.location.href="index.php?s=uploaderror";} //	
+		if(result == "err_emailnotsent") { window.location.href="index.php?s=emailsenterror";} //
+		if(result == "err_filesizeincorrect") { window.location.href="index.php?s=filesizeincorrect";} //	
+		})
 		} else {
-		window.location.href="index.php?s=completev";
+		if(data.status && data.status == "complete"){window.location.href="index.php?s=complete";}
+		if(data.status && data.status == "completev"){window.location.href="index.php?s=completev";}
+		}
+		},error:function(xhr,err){
+			// error function to display error message e.g.404 page not found
+			ajaxerror(xhr.readyState,xhr.status,xhr.responseText);
 		}
 });
 }
@@ -484,13 +495,13 @@ function getFlexApp(appName)
 
 function validatefilename(name)
 {
-	var tmpExtension = name.split('.').pop();
-		if(banextensions.search(tmpExtension) != -1)
+	
+		if(!validateextension(name))
 		{
 		fileMsg("<?php echo lang("_INVALID_FILE_EXT")." ".lang("_SELECT_ANOTHER_FILE") ?>");	
 		return false;
 		}
-   if (/^[^\\\/\:\*\?\"\<\>\|\.]+(\.[^\\\/\:\*\?\"\<\>\|\.]+)+$/.test(name)) 
+   if (/^[^\\\/:;\*\?\"<>|]+(\.[^\\\/:;\*\?\"<>|]+)*$/.test(name)) 
    {
 		return true; 
 	} else {
@@ -533,6 +544,9 @@ function keepMeAlive()
 		}
 		});	
 }
+
+// special fix for esc key on firefox stopping xhr
+window.addEventListener('keydown', function(e) {(e.keyCode == 27 && e.preventDefault())})
 //]]>
     </script>
 
@@ -569,8 +583,17 @@ function keepMeAlive()
        </tr>
       <tr>
         <td class=" mandatory" id="upload_from"><?php echo lang("_FROM"); ?>:</td>
-        <td colspan="2"><?php echo $senderemail ?>
-          <input name="filefrom" type="hidden" id="filefrom" value="<?php echo $senderemail ?>" size="40" />
+        <td colspan="2"><?php
+if ( count($senderemail) > 1 ) {
+        echo "<select name=\"filefrom\" id=\"filefrom\">\n";
+        foreach($senderemail as $email) {
+                echo "<option>$email</option>\n";
+        }
+        echo "</select>\n";
+} else {
+        echo $senderemail[0] . "<input name=\"filefrom\" type=\"hidden\" id=\"filefrom\" value=\"" . $senderemail[0] . "\" />\n";
+}
+?>
           </td>
         </tr>
       <tr>
@@ -588,7 +611,7 @@ function keepMeAlive()
         <td colspan="2"><input id="datepicker" name="datepicker" title="<?php echo lang('_DP_dateFormat'); ?>" onchange="validate_expiry()" />
           <div id="expiry_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_EXPIRY_DATE"); ?></div>
         </td>
-        <td colspan="2" align="center" valign="top"><a href="<?php echo $config['HTML5URL'] ?>" target="_newtab" id="html5link" name="html5link"><img src="images/html5_installed.png" alt="" name="html5image" width="75" height="18" border="0" id="html5image" title="" /></a></td>
+        <td colspan="2" align="center" valign="top"></td>
       </tr>
       <tr>
         <td class=" mandatory"><div id="selectfile"><?php echo lang("_SELECT_FILE"); ?>:</div></td>
@@ -643,7 +666,7 @@ if ( hasProductInstall && !hasRequestedVersion ) {
 	
   } else {  // flash is too old or we can't detect the plugin
     var alternateContent = '<div id="errmessage" align="center"><br />This application requires Flash for uploading files.<br /><br />'
-  	+ 'To install Flash Player go to www.adobe.com.<br /> <br /> '
+  	+ 'To install Flash Player go to <a href="http://www.adobe.com" target="_blank">www.adobe.com<a>.<br /> <br /> '
    	+ '</div>';
 	$("#content").html(alternateContent);
   }
@@ -657,6 +680,7 @@ if ( hasProductInstall && !hasRequestedVersion ) {
             <input type="file" name="fileToUpload" id="fileToUpload" onchange="fileSelected();" multiple=""/>
           </div>
           <div id="file_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_FILE"); ?></div>
+		  <div id="extension_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_FILE_EXT"); ?></div>
         </td>
         <td colspan="2" align="center" valign="top"><div id="html5text"></div></td>
       </tr>
@@ -673,7 +697,7 @@ if ( hasProductInstall && !hasRequestedVersion ) {
        <?php if ($config["AuP"]) {?>
       <tr>
         <td class=""></td>
-        <td><input name="aup" type="checkbox" id="aup" onchange="validate_aup()" <?php echo ($config["AuP_default"] ) ? "checked" : ""; ?> <?php echo (isset($_SESSION["aup"]) && !$authvoucher->aVoucher() ) ? "checked" : ""; ?> value="true" />
+        <td><input name="aup" type="checkbox" id="aup" onchange="validate_aup()" <?php echo ($config["AuP_default"] ) ? 'checked="checked"' : ""; ?> <?php echo (isset($_SESSION["aup"]) && !$authvoucher->aVoucher() ) ? 'checked="checked"' : ""; ?> value="true" />
          </td>
         <td>
           <div id="aup_label" onclick="toggleTOG()" style="cursor:pointer;"><?php echo lang("_ACCEPTTOC"); ?> [<font color="#666666"><?php echo lang("_SHOWHIDE"); ?></font>]</div>
@@ -687,13 +711,29 @@ if ( hasProductInstall && !hasRequestedVersion ) {
       <td></td>
       <td colspan="2"><div class="menu" id="uploadbutton" style="display:none"><a href="#" onclick="validate()"><?php echo lang("_SEND"); ?></a></div></td>
       </tr>
+     
+      <tr style="padding: 0">
+      	<td style="padding: 0"></td>
+      	<td colspan="2" style="padding: 0 3px">
+      		<div id="workers-advanced-settings" style="display: none;" class="box">
+	      		Chunksize (MB)<input id="chunksize" type="text" value="<?php echo (isset($config['terasender_chunksize']) ? $config['terasender_chunksize'] : 5) ?>"/><br />
+	      		Worker count<input id="workerCount" type="text" value="<?php echo (isset($config['terasender_workerCount']) ? $config['terasender_workerCount'] : 6) ?>"/><br />
+	      		Jobs per workers<input id="jobsPerWorker" type="text" value="<?php echo (isset($config['terasender_jobsPerWorker']) ? $config['terasender_jobsPerWorker'] : 1) ?>"/>
+	      	</div>
+      	</td>
+      </tr>
+      <tr style=" <?php echo (isset($config['terasender']) && $config['terasender'] && isset($config['terasenderadvanced']) && $config['terasenderadvanced']) ?  '': ';display: none;'; ?>">
+	      <td></td>
+	      <td colspan="2"><a href="#" onclick="$('#workers-advanced-settings').slideToggle()">Advanced Settings</a></td>
+      </tr>
       </table>
-<input type="hidden" id="filevoucheruid" name="filevoucheruid" value="<?php echo $voucherUID; ?>" />
+		<input type="hidden" id="filevoucheruid" name="filevoucheruid" value="<?php echo $voucherUID; ?>" />
 		<input type="hidden" name="vid" id="vid" value="<?php echo $voucherUID; ?>" />
 		<input type="hidden" name="total" id="total" value="" />
 		<input type="hidden" name="n" id="n" value="" />
 		<input type="hidden" id="filestatus" name="filestatus" value="<?php echo $filestatus; ?>" />
 		<input type="hidden" name="loadtype" id="loadtype" value="standard" />
+		<input type="hidden" name="s-token" id="s-token" value="<?php echo (isset($_SESSION["s-token"])) ?  $_SESSION["s-token"] : "";?>" />
   </form>
 </div>
 <div id="dialog-default" style="display:none" title=""> </div>
@@ -701,10 +741,10 @@ if ( hasProductInstall && !hasRequestedVersion ) {
 <div id="dialog-uploadprogress" title="" style="display:none">
 <img id="progress_image" name="progress_image" src="images/ajax-loader-sm.gif" width="16" height="16" alt="Uploading" align="left" /> 
 	<div id="progress_container">
-   		<div id="progress_bar">
+   		<div id="progress_bar" style="display:none">
 		<div id="progress_completed"></div>
 	</div>
-	</div>
+	</div> 
 </div>
 <div id="dialog-support" title="" style="display:none">
 <?php require_once("$filesenderbase/pages/html5display.php"); ?>

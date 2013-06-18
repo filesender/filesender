@@ -43,6 +43,8 @@ var minimumDate = <?php echo (time()+86400)*1000 ?>;
 var maxEmailRecipients = <?php echo $config['max_email_recipients'] ?>;
 var datepickerDateFormat = '<?php echo lang('_DP_dateFormat'); ?>';
 var selectedVoucher = "";
+var nameLang = '<?php echo lang("_FILE_NAME"); ?>'
+var sizeLang = '<?php echo lang("_SIZE"); ?>'
 
 $(function() {
 	//$("#fileto_msg").hide();
@@ -53,7 +55,7 @@ $(function() {
 	$("#datepicker" ).datepicker({ minDate: new Date(minimumDate), maxDate: new Date(maximumDate),altField: "#fileexpirydate", altFormat: "d-m-yy" });
 	$("#datepicker" ).datepicker( "option", "dateFormat", "<?php echo lang('_DP_dateFormat'); ?>" );
 	$("#datepicker").datepicker("setDate", new Date(maximumDate));
-	
+	$('#ui-datepicker-div').css('display','none');
 	// set datepicker language
 	$.datepicker.setDefaults({
 	closeText: '<?php echo lang("_DP_closeText"); ?>',
@@ -98,7 +100,7 @@ function hidemessages()
 }
 
 function validateForm()
-	{
+	{	
 		hidemessages();
 		if(!validate_fileto()){return false;}
 		if(!validate_expiry() ){return false;}
@@ -120,7 +122,8 @@ function postVoucher()
 {
 	hidemessages();
 	// post voucher data from form
-		
+	 $("#voucherbutton").attr('onclick', '');
+	 	
 	var query = $("#form1").serializeArray(), json = {};
 	for (i in query) {json[query[i].name] = query[i].value;} // create json from form1
 	// post to fs_upload.php
@@ -128,15 +131,29 @@ function postVoucher()
 	 type: "POST",
 	 url: "fs_upload.php?type=insertVoucherAjax",
 	 data: {myJson:  JSON.stringify(json)}
-		}).success(function( msg ) {
-		// complete or display validation messages 
-		if(msg == "complete") { window.location.href="index.php?s=vouchers&a=complete"; } 
-		if(msg == "err_tomissing") { $("#fileto_msg").show();} // missing email data
-		if(msg == "err_expmissing") { $("#expiry_msg").show();} // missing expiry date
-		if(msg == "err_exoutofrange") { $("#expiry_msg").show();} // expiry date out of range
-		if(msg == "err_invalidemail") { $("#fileto_msg").show();} // 1 or more emails invalid
-		if(msg == "not_authenticated") { $("#_noauth").show();} // server returns not authenticated
-		if(msg == "") { $("#_noauth").show();} // server returns not authenticated
+		,success:function( data ) {
+		var data =  parseJSON(data);
+		if(data.errors)
+		{
+		$.each(data.errors, function(i,result){
+		if(result == "err_tomissing") { $("#fileto_msg").show();} // missing email data
+		if(result == "err_expmissing") { $("#expiry_msg").show();} // missing expiry date
+		if(result == "err_exoutofrange") { $("#expiry_msg").show();} // expiry date out of range
+		if(result == "err_invalidemail") { $("#fileto_msg").show();} // 1 or more emails invalid
+		if(result == "not_authenticated") { $("#_noauth").show();} // server returns not authenticated
+		if(result == "err_token") {$("#dialog-tokenerror").dialog("open");} // token missing or error
+		if(result == "") { $("#_noauth").show();} // server returns not authenticated
+		if(result == "err_emailnotsent") {window.location.href="index.php?s=emailsenterror";} //
+		})
+		// re-enable button if client needs to change form details
+		$("#voucherbutton").attr('onclick', 'validateForm()');
+		return;
+		}
+		if(data.status && data.status == "complete") {  window.location.href="index.php?s=vouchers&a=complete";	}
+		},error:function(xhr,err){
+			// error function to display error message e.g.404 page not found
+			ajaxerror(xhr.readyState,xhr.status,xhr.responseText);
+		}
 	});
 }
 //]]>
@@ -156,15 +173,29 @@ if(isset($_REQUEST["a"]))
 	$myfileData = $functions->getVoucherData($_REQUEST['id']);
 		if($_REQUEST["a"] == "del" )
 		{
-			if($functions->deleteVoucher($myfileData["fileid"]))
+			// check if user is authenticated and allowed to delete this voucher
+			if( $isAuth && $userdata["saml_uid_attribute"] == $myfileData["fileauthuseruid"])
 			{
-			echo "<div id='message'>".lang("_VOUCHER_DELETED")."</div>";
+				if($functions->deleteVoucher($myfileData["fileid"]))
+				{
+				echo "<div id='message'>".lang("_VOUCHER_DELETED")."</div>";
+				} 
 			} else {
-			
+				// log auth user tried to delete a voucher they do not have access to
+				logEntry("Permission denied - attempt to delete voucher ".$myfileData["fileuid"],"E_ERROR");
+				// notify - not deleted - you do not have permission	
+				echo "<div id='message'>".lang("_PERMISSION_DENIED")."</div>";
 			}
 		}
 	}
 }
+foreach ($errorArray as $message) 
+		{
+		if($message == "err_emailnotsent")
+		{
+			echo '<div id="message">'.lang("_ERROR_SENDING_EMAIL").'</div>';
+		}
+		}
 // get file data
 $filedata = $functions->getVouchers();
 $json_o=json_decode($filedata,true);
@@ -184,21 +215,34 @@ $json_o=json_decode($filedata,true);
       <tr>
         <td class="mandatory" id="vouchers_to" width="130"><?php echo lang("_SEND_VOUCHER_TO"); ?>:</td>
         <td>
-        <input id="fileto" name="fileto" title="<?php echo lang("_EMAIL_SEPARATOR_MSG"); ?>"  type="text" size="45" onchange="validate_fileto()" /><br />
+        <input id="fileto" name="fileto" title="<?php echo lang("_EMAIL_SEPARATOR_MSG"); ?>" onfocus="$('#fileto_msg').hide();" type="text" size="45"/><br />
  		<div id="fileto_msg" class="validation_msg" style="display:none"><?php echo lang("_INVALID_MISSING_EMAIL"); ?></div>
         <div id="maxemails_msg" style="display: none" class="validation_msg"><?php echo lang("_MAXEMAILS"); ?> <?php echo $config['max_email_recipients'] ?>.</div>
  		</td>
       </tr>
+<?php
+if ( count($useremail) > 1 ) {
+        echo "<tr><td class=\"mandatory\">" . lang("_FROM") . ":</td><td><select name=\"filefrom\" id=\"filefrom\">\n";
+        foreach($useremail as $email) {
+                echo "<option>$email</option>\n";
+        }
+        echo "</select></td></tr>\n";
+} else {
+        echo "<input name=\"filefrom\" type=\"hidden\" id=\"filefrom\" value=\"" . $useremail[0] . "\" />\n";
+}
+?>
       <tr>
         <td class="mandatory" id="vouchers_expirydate"><?php echo lang("_EXPIRY_DATE"); ?>:</td>
-        <td><input id="datepicker" onchange="validate_expiry()" title="<?php echo lang('_DP_dateFormat'); ?>"></input> 
+        <td><input id="datepicker" onchange="validate_expiry()" title="<?php echo lang('_DP_dateFormat'); ?>" />
         <div id="expiry_msg" class="validation_msg" style="display:none"><?php echo lang("_INVALID_EXPIRY_DATE"); ?></div>
         </td>
       </tr>
       <tr>
-        <td><input type="hidden" id="fileexpirydate" name="fileexpirydate" value="<?php echo date($lang['datedisplayformat'],strtotime("+".$config['default_daysvalid']." day"));?>" />
-        <input type="hidden" name="filestatus" id="filestatus" value="voucher" /></td>
-        <td><div class="menu" id="voucherbutton"><a href="#" id="btn_sendvoucher" onclick="validateForm()"><?php echo lang("_SEND_VOUCHER"); ?></a></div><div id="_noauth" class="validation_msg" style="display:none"><?php echo lang("_AUTH_ERROR"); ?></div></td>
+        <td align="right" valign="middle">
+		<input type="hidden" id="fileexpirydate" name="fileexpirydate" value="<?php echo date($lang['datedisplayformat'],strtotime("+".$config['default_daysvalid']." day"));?>" />
+		<input type="hidden" name="s-token" id="s-token" value="<?php echo (isset($_SESSION["s-token"])) ?  $_SESSION["s-token"] : "";?>" />
+		</td>
+        <td><div class="menu" id="voucherbutton" onclick="validateForm()"><a href="#" id="btn_sendvoucher" ><?php echo lang("_SEND_VOUCHER"); ?></a></div><div id="_noauth" class="validation_msg" style="display:none"><?php echo lang("_AUTH_ERROR"); ?></div></td>
       </tr>
     </table>
      </div>
@@ -219,6 +263,12 @@ $json_o=json_decode($filedata,true);
 	}
 ?>
   </table>
+ <?php
+  if($i==0)
+	{
+		echo lang("_NO_VOUCHERS");
+	}
+?>
 </div>
 <div id="dialog-delete" style="display:none" title="<?php echo lang("_DELETE_VOUCHER") ?>">
 <p><?php echo lang("_CONFIRM_DELETE_VOUCHER"); ?></p>

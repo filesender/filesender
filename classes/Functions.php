@@ -204,9 +204,9 @@ class Functions {
 
         $statString = "| UP: ";
 
-        $statement =   $this->db->fquery("SELECT * FROM logs WHERE logtype='Uploaded'");
+        $statement =   $this->db->fquery("SELECT COUNT(*) FROM logs WHERE logtype='Uploaded'");
 		$statement->execute();
-		$count = $statement->rowCount();
+		$count = $statement->fetchColumn();
 
         $statString = $statString.$count." files ";
 
@@ -217,9 +217,9 @@ class Functions {
         $statString = $statString."(".round($totalResult/1024/1024/1024)."GB) |" ;
 		$stmnt = NULL;
 		
-      	$statement = $this->db->fquery("SELECT * FROM logs WHERE logtype='Download'");
+      	$statement = $this->db->fquery("SELECT COUNT(*) FROM logs WHERE logtype='Download'");
       	$statement->execute();
-		$count = $statement->rowCount();
+		$count = $statement->fetchColumn();
         $statString = $statString." DOWN: ".$count." files ";
 		
        	$statement =  $this->db->fquery("SELECT SUM(logfilesize) FROM logs WHERE logtype='Download'");
@@ -256,8 +256,8 @@ class Functions {
 		}
 		catch(PDOException $e)
 		{ 
-			logEntry($e->getMessage());	
-			displayError($e->getMessage()); 
+			logEntry($e->getMessage(),"E_ERROR");	
+			displayError(lang("_ERROR_CONTACT_ADMIN"),$e->getMessage());
 		}   
 		$result = $statement->fetchAll();
 		$pdo = NULL;
@@ -283,7 +283,7 @@ class Functions {
         }
 		$pdo = $this->db->connect();
 		$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
-		$statement = $pdo->prepare("SELECT ".$this->returnFields." FROM files WHERE (fileauthuseruid = :fileauthuseruid) AND filestatus = 'Available'  ORDER BY fileactivitydate DESC");
+		$statement = $pdo->prepare("SELECT ".$this->returnFields." FROM files WHERE (fileauthuseruid = :fileauthuseruid) AND filestatus = 'Available'  ORDER BY filecreateddate DESC");
 		$statement->bindParam(':fileauthuseruid', $authAttributes["saml_uid_attribute"]);
 		try 
 		{ 	
@@ -291,8 +291,8 @@ class Functions {
 		}
 		catch(PDOException $e)
 		{ 
-			logEntry($e->getMessage());	
-			displayError($e->getMessage()); 
+			logEntry($e->getMessage(),"E_ERROR");	
+			displayError(lang("_ERROR_CONTACT_ADMIN"),$e->getMessage()); 
 		}   
 		$result = $statement->fetchAll();
 		$pdo = NULL;
@@ -347,8 +347,8 @@ class Functions {
 		}
 		catch(PDOException $e)
 		{ 
-			logEntry($e->getMessage());	
-			displayError($e->getMessage()); 
+			logEntry($e->getMessage(),"E_ERROR");	
+			displayError(lang("_ERROR_CONTACT_ADMIN"),$e->getMessage()); 
 		}   
 		$result = $statement->fetchAll();
 		$pdo = NULL;
@@ -405,8 +405,8 @@ class Functions {
 		}
 		catch(PDOException $e)
 		{ 
-			logEntry($e->getMessage());	
-			displayError($e->getMessage()); 
+			logEntry($e->getMessage(),"E_ERROR");	
+			displayError(lang("_ERROR_CONTACT_ADMIN"),$e->getMessage());
 		}   
 		$result = $statement->fetchAll();
 		$pdo = NULL;
@@ -434,8 +434,8 @@ class Functions {
 		}
 		catch(PDOException $e)
 		{ 
-			logEntry($e->getMessage());	
-			displayError($e->getMessage()); 
+			logEntry($e->getMessage(),"E_ERROR");	
+			displayError(lang("_ERROR_CONTACT_ADMIN"),$e->getMessage());
 		}   
 		$result = $statement->fetchAll();
 		if($result)
@@ -466,8 +466,8 @@ class Functions {
 		}
 		catch(PDOException $e)
 		{ 
-			logEntry($e->getMessage());	
-			displayError($e->getMessage()); 
+			logEntry($e->getMessage(),"E_ERROR");	
+			displayError(lang("_ERROR_CONTACT_ADMIN"),$e->getMessage()); 
 		}   
 		$result = $statement->fetchAll();
 		$pdo = NULL;
@@ -497,8 +497,8 @@ class Functions {
 		}
 		catch(PDOException $e)
 		{ 
-			logEntry($e->getMessage());	
-			displayError($e->getMessage()); 
+			logEntry($e->getMessage(),"E_ERROR");	
+			displayError(lang("_ERROR_CONTACT_ADMIN"),$e->getMessage());
 		}   
 		$result = $statement->fetchAll();
 		$pdo = NULL;
@@ -525,8 +525,8 @@ class Functions {
 			}
 		catch(PDOException $e)
 		{ 
-			logEntry($e->getMessage());	
-			displayError($e->getMessage()); 
+			logEntry($e->getMessage(),"E_ERROR");	
+			displayError(lang("_ERROR_CONTACT_ADMIN"),$e->getMessage()); 
 		}   
 		$result = $statement->fetchAll();
 		$pdo = NULL;
@@ -535,6 +535,7 @@ class Functions {
 		{
             array_push($returnArray, $row);
         }
+
         return $returnArray[0];
     }
 	
@@ -542,7 +543,7 @@ class Functions {
 	// insert a voucher
 	// ---------------------------------------
 
-	public function insertVoucher($to,$expiry){
+	public function insertVoucher($to,$from,$expiry){
 	
 		// must be authenticated
 		if( $this->authsaml->isAuth()) {
@@ -609,7 +610,7 @@ class Functions {
 			$statement->bindParam(':fileactivitydate',$fileactivitydateParam );	
 			$statement->bindParam(':filevoucheruid', $filevoucheruid );
 			$statement->bindParam(':filemessage', $blank);
-			$statement->bindParam(':filefrom', $authAttributes["email"]);
+			$statement->bindParam(':filefrom', $from);
 			$statement->bindParam(':filesize', $zero);
 			$statement->bindParam(':fileoriginalname', $blank);
 			$statement->bindParam(':filestatus', $voucher);
@@ -623,15 +624,15 @@ class Functions {
 			$fileuidParam = getGUID();
 			$statement->bindParam(':fileuid', $fileuidParam);
 			$statement->bindParam(':fileauthuseruid', $authAttributes["saml_uid_attribute"]);
-			$statement->bindParam(':fileauthuseremail', $authAttributes["email"]);
+			$statement->bindParam(':fileauthuseremail', $from);
 			$filecreateddateParam =  date($config['db_dateformat'], time());
 			$statement->bindParam(':filecreateddate',$filecreateddateParam);
 			try { 	
 			$statement->execute(); 
 			}
 			catch(PDOException $e){ 
-			logEntry($e->getMessage());	
-			displayError($e->getMessage()); 
+			logEntry($e->getMessage(),"E_ERROR");	
+			displayError(lang("_ERROR_CONTACT_ADMIN"),$e->getMessage()); 
 			}   
 			$pdo = NULL;
 			// get voucherdata to email
@@ -673,7 +674,9 @@ class Functions {
 		global $resultArray;
 		
 		$dbCheck = DB_Input_Checks::getInstance();
-	
+		$authsaml = AuthSaml::getInstance();
+		$functions = Functions::getInstance();
+		
 		$errorArray = array();
 		// test 
 		//array_push($errorArray, "err_nodiskspace");
@@ -689,11 +692,14 @@ class Functions {
 		// filename missing
 		if(!isset($data["fileoriginalname"])){ array_push($errorArray, "err_invalidfilename");}
 		// filename has invalid extension - $config['ban_extension'] as array
-		if(isset($data["fileoriginalname"]) && strstr($config['ban_extension'],pathinfo($data["fileoriginalname"], PATHINFO_EXTENSION)) ){ array_push($errorArray, "err_invalidfilename");}
+		$ban_extension = explode(',', $config['ban_extension']);
+		foreach ($ban_extension as $extension) {
+			if(isset($data["fileoriginalname"]) && $extension == pathinfo($data["fileoriginalname"], PATHINFO_EXTENSION) ){ array_push($errorArray, "err_invalidextension");}
+		}
 		// filename blank
 		if(isset($data["fileoriginalname"]) && $data["fileoriginalname"] === ""){ array_push($errorArray, "err_invalidfilename");}
 		// filename contains invalid characters
-		if(isset($data["fileoriginalname"]) && preg_match('=^[^/?*;:{}\\\\]+\.[^/?*;:{}\\\\]+$=',$data["fileoriginalname"]) === 0){ array_push($errorArray, "err_invalidfilename");}
+		if(isset($data["fileoriginalname"]) && preg_match('=^[^\\\\/:;\*\?\"<>|]+(\.[^\\\\/:;\*\?\"<>|]+)*$=',$data["fileoriginalname"]) === 0){ array_push($errorArray, "err_invalidfilename");}
 		
 		// expiry out of range
 		if(strtotime($data["fileexpirydate"]) > strtotime("+".$config['default_daysvalid']." day") ||  strtotime($data["fileexpirydate"]) < strtotime("now"))
@@ -715,13 +721,27 @@ class Functions {
 			if(!filter_var($Email,FILTER_VALIDATE_EMAIL)) {array_push($errorArray, "err_invalidemail");}
 		}
 		}
-		// Sender email missing
+		// Sender email missing or not authuser or voucher sender
 		if (!isset($data["filefrom"])){
 			array_push($errorArray,  "err_filefrommissing");
 		} else {
 			// Check if sender address is valid
 			if(!filter_var($data["filefrom"],FILTER_VALIDATE_EMAIL)) {array_push($errorArray, "err_invalidemail");}
+			// check if filefrom matches voucher from or matches authenticated user
+		if(isset($_SESSION['voucher']))
+		{
+			$tempData = $functions->getVoucherData($_SESSION['voucher']);
+			//array_push($errorArray,  $data["filefrom"] .":". $tempData["filefrom"]);
+			if($data["filefrom"] != $tempData["fileto"] ) {array_push($errorArray, "err_invalidemail");}
+		}	else if( $authsaml->isAuth()) 
+		{
+			$authAttributes = $authsaml->sAuth();
+			if ( !in_array($data["filefrom"],$authAttributes["email"]) ) {
+				array_push($errorArray, "err_invalidemail");
+			}
 		}
+		}
+			
 		// if errors - return them via json to client	
 		if(count($errorArray) > 0 )
 		{
@@ -809,6 +829,7 @@ class Functions {
 				
 			$statement->bindParam(':fileexpirydate', $dataitem['fileexpirydate']);
 			$statement->bindParam(':fileto', $dataitem['fileto']);
+			$statement->bindParam(':filefrom', $dataitem['filefrom']);
 			$statement->bindParam(':filesubject', $dataitem['filesubject']);
 			$statement->bindParam(':fileactivitydate', $dataitem['fileactivitydate']);
 			$statement->bindParam(':filevoucheruid', $dataitem['filevoucheruid']);
@@ -832,8 +853,8 @@ class Functions {
 				$statement->execute(); 
 				}
 			catch(PDOException $e){ 
-				logEntry($e->getMessage());	
-				displayError($e->getMessage()); 
+				logEntry($e->getMessage(),"E_ERROR");	
+				displayError(lang("_ERROR_CONTACT_ADMIN"),$e->getMessage());
 				return false;
 				}   
 
@@ -904,8 +925,8 @@ class Functions {
 				$statement->execute(); 
 				}
 			catch(PDOException $e){ 
-				logEntry($e->getMessage());	
-				displayError($e->getMessage()); 
+				logEntry($e->getMessage(),"E_ERROR");	
+				displayError(lang("_ERROR_CONTACT_ADMIN"),$e->getMessage()); 
 				return false;
 				}   
 			return true;
@@ -925,7 +946,7 @@ class Functions {
 			$statement->bindParam(':fileid', $fileid);
 			
 			try { $statement->execute();}
-			catch(PDOException $e){ logEntry($e->getMessage());	return false; }   
+			catch(PDOException $e){ logEntry($e->getMessage(),"E_ERROR");	return false; }   
 				
 			$fileArray =  $this->getVoucher($fileid);
 	
@@ -956,7 +977,7 @@ class Functions {
 			$statement->bindParam(':fileid', $fileid);
 			
 			try { $statement->execute();}
-			catch(PDOException $e){ logEntry($e->getMessage());	return false; }   
+			catch(PDOException $e){ logEntry($e->getMessage(),"E_ERROR");	return false; }   
 				
 			$fileArray =  $this->getVoucher($fileid);
 	
@@ -986,7 +1007,7 @@ class Functions {
 			$statement->bindParam(':filevoucheruid', $filevoucheruid);
 			
 			try { $statement->execute();}
-			catch(PDOException $e){ logEntry($e->getMessage());	return false; }   
+			catch(PDOException $e){ logEntry($e->getMessage(),"E_ERROR");	return false; }   
 			
 			logEntry("Voucher Closed: ".$filevoucheruid);	
 			
@@ -1012,7 +1033,7 @@ class Functions {
 			$statement->bindParam(':fileid', $fileid);
 			
 			try { $statement->execute();}
-			catch(PDOException $e){ logEntry($e->getMessage());	return false; }   
+			catch(PDOException $e){ logEntry($e->getMessage(),"E_ERROR");	return false; }   
 				
 			$fileArray =  $this->getVoucher($fileid);
 	

@@ -48,7 +48,7 @@ function customException($exception){
 	// syslog
 	syslog((int)$exception->getCode(),$exceptionMsg);
 	// log to local log file
-	logEntry($exceptionMsg);
+	logEntry($exceptionMsg,"E_ERROR");
 	exit;
 
 }
@@ -60,18 +60,22 @@ function customError($errno, $errstr, $errfile,$errline){
 	// syslog
 	syslog($errno,$errMsg);
 	// log to local log file
-	logEntry($errMsg);
+	logEntry($errMsg,"E_ERROR");
 
 	return;
 
 }
 
 // general log function for flex logging
-function logEntry($message){
+// log all exceptions, errors
+function logEntry($message, $type = "E_NOTICE"){
 	
 	global $config;
+	global $cron;
 	
-	if($config["debug"] ) {
+	$message =$type.": ".$message;
+	
+	if($config["debug"] &&  $type == "E_NOTICE" ||  $type == "E_ERROR" ) {
 	if(isset($config['log_location'])) 
 	{
 	date_default_timezone_set($config['Default_TimeZone']);
@@ -89,11 +93,14 @@ function logEntry($message){
 		$ip = "none";	
 		$domain = "none";	
 	}
-	
+	$logext = ".log.txt";
+	// seperate cron and normal logs
+	if(isset($cron) && $cron) { $logext = "-CRON.log.txt";}
+			
 	$message .= "[".$ip."(".$domain.")] ";
 	$dateref = date("Ymd");
 	$data = date("Y/m/d H:i:s");
-	$myFile = $config['log_location'].$dateref.".log.txt";
+	$myFile = $config['log_location'].$dateref.$logext;
 	$fh = fopen($myFile, 'a') or die("can't open file");
 	// don't print errors on screen when there is no session.
 	if(isset($_REQUEST['PHPSESSID'])){
@@ -109,8 +116,14 @@ function logEntry($message){
 	}
 }
 
-//ini_set('display_errors', 'Off');
-	
+
+if($config['displayerrors'] )
+{
+	ini_set('display_errors', 'On');
+} else 
+{
+	ini_set('display_errors', 'Off');
+}
 // if debug is on then set the custom error handler
 if($config['debug'] == true || $config['debug'] == 1){
 
@@ -124,13 +137,14 @@ if($config['debug'] == true || $config['debug'] == 1){
 	set_exception_handler("customException");
 }
 
-function displayError($errmsg)
+function displayError($errmsg,$detailederrormsg)
 {
 	global $config;
-	logEntry($errmsg);
+
+	echo "<br /><div id='errmessage'>".htmlspecialchars($errmsg)."</div>";
 	if($config['displayerrors'] )
 	{
-		echo "<br /><div id='errmessage'>".$errmsg."</div>";
-	}	
+		echo "<br /><div id='errmessage'>".htmlspecialchars($detailederrormsg)."</div>";
+	}
 }
 ?>

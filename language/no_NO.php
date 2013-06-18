@@ -32,6 +32,7 @@
 
 /* ---------------------------------
  * no_NO Language File
+ * Maintained by the FileSender Core Team
  * ---------------------------------
  * 
  */
@@ -110,7 +111,7 @@ $lang["_BROWSE"] = "Velg fil";
 $lang["_CANCEL"] = "Avbryt";
 $lang["_OPEN"] = "Open";
 $lang["_CLOSE"] = "Lukk";
-$lang["_OK"] = "Ok";
+$lang["_OK"] = "OK";
 $lang["_SEND"] = "Send";
 $lang["_DELETE"] = "Slett";
 $lang["_YES"] = "Ja";
@@ -120,15 +121,26 @@ $lang["_NO"] = "Nei";
 $lang["_INVALID_MISSING_EMAIL"] = "Feilaktig eller manglende epostadresse";
 $lang["_INVALID_EXPIRY_DATE"] = "Feil i utløpsdato";
 $lang["_INVALID_FILE"] = "Noe er galt med filen som ble valgt";
-//$lang["_INVALID_FILEVOUCHERID"] = "Invalid File or Voucher ID";	
+$lang["_INVALID_FILEVOUCHERID"] = "Ugyldig fil-ID eller invitasjons-ID";
 $lang["_INVALID_FILESIZE_ZERO"] = "Filer med størrelse 0 kan ikke velges.  Velg en annen fil";
-$lang["_INVALID_FILE_EXT"] = "Feiltypen ikke tillat.";
+$lang["_INVALID_FILE_EXT"] = "Filtypen ikke tillatt.";
 $lang["_INVALID_TOO_LARGE_1"] = "Filstørrelse kan ikke være mer enn";
+$lang["_AUTH_ERROR"] = "Du er ikke lenger pålogget.<br />Din sesjon kan ha gått ut eller det har blitt en feil på tjeneren. <br /><br />Logg på igjen og prøv igjen.";
 $lang["_SELECT_ANOTHER_FILE"] = "Velg en annen fil.";
 $lang["_INVALID_FILE_NAME"] = "Feilaktig filnavn, filen kan ikke lastes opp.  Gi filen et annet navn og prøv på nytt.";
 $lang["_INVALID_SIZE_USEHTML5"] = "For å sende filer større enn 2GB trenger du en nettleser som støtter HTML5, som f.eks. Chrome og nyerenyer FireFox.";
 
+$lang["_ERROR_CONTACT_ADMIN"] = "Det oppsto en feil.  <br />  Ta kontakt med tjeneste-ansvarlig.";
 $lang["_ERROR_UPLOADING_FILE"] = "Feil under filopplasting";
+$lang["_ERROR_SENDING_EMAIL"] = "Feil under sending av epostene. <br />Ta kontakt med tjeneste-ansvarlig.";
+$lang["_ERROR_INCORRECT_FILE_SIZE"] = "Det oppsto en feil under fil-opplasting.  <br />Fil har en annen størrelse på tjeneren enn på datamaskinen din. <br />Ta kontakt med tjeneeste-ansvarlig.";
+$lang["_MAXEMAILS"] = "Tillat antall epost-adresser er ";
+$lang["_INVALID_DATE_FORMAT"] = "Feil dato-format";
+$lang["_DISK_SPACE_ERROR"] = "Tjenesten har ikke nok diskplass.  Ta kontakt med tjeneste-ansvarlig og/eller prøv med en mindre stor fil";
+$lang["_ERROR_ATTRIBUTES"] = "Din påloggings-tjeneste leverer ikke alle obligatoriske attributter knyttet til din nett-identitet. <br />Ta kontakt med tjeneste-ansvarlig.";
+$lang["_PERMISSION_DENIED"] = "Det du vil gjøre er ikke tillat.";
+
+
 $lang["_LOGOUT_COMPLETE"] = "Avlogging utført";
 
 $lang["_ARE_YOU_SURE"] = "Er du sikker?";
@@ -140,9 +152,7 @@ $lang["_ME"] = "Meg";
 
 // MYFILES
 
-$lang["_NO_FILES"] = "Ingen filer funnet";
-
-// Myfiles: re-send email: tooltips, dialogue box and on-screen message 
+$lang["_NO_FILES"] = "Ingen aktive filer"; // Myfiles: re-send email: tooltips, dialogue box and on-screen message 
 $lang["_RE_SEND_EMAIL"] = "Send epost på nytt";
 $lang["_FILE_TO_BE_RESENT"] = "Fil:";
 $lang["_MESSAGE_RESENT"] = "Epost med nedlastningslenken sendt på nytt"; 
@@ -155,10 +165,11 @@ $lang["_FILE_DELETED"] = "Fil slettet";
 
 
 
-$lang["_START_DOWNLOAD"] = "Begyn nedlastning";
+$lang["_START_DOWNLOAD"] = "Begynn nedlastning";
 $lang["_VOUCHER_SENT"] = "Invitasjon sendt";
 $lang["_VOUCHER_DELETED"] = "Invitasjon slettet";
 $lang["_VOUCHER_CANCELLED"] = "Denne filen eller invitasjonen har blitt utilgjengeliggjort.";
+$lang["_VOUCHER_USED"] = "Fileoverførings-invitasjon kan kun brukes 1 gang, invitasjonen er allerede brukt";
 $lang["_STARTED_DOWNLOADING"] = "Filnedlastning burde starte nå";
 
 // Upload page: information on steps user needs to perform
@@ -170,14 +181,16 @@ $lang["_HTML5Supported"] = "Filopplasting over 2GB støttet!";
 $lang["_HTML5NotSupported"] = "Filopplasting over 2GB ikke støttet!";	
 
 // Voucher page
-$lang["_SEND_NEW_VOUCHER"] = "En gjeste-invitasjon gir tilgang til tjenesten for å sende <b><i>en</i></b> fil.<br><br>Skriv inn epost-adressen til gjesten og klikk på <b><i>Send invitasjon</i></b>. En epost vil bli sendt med en lenke som gir gjesten mulighet til å sende 1 fil.<br>";
+$lang["_SEND_NEW_VOUCHER"] = "En gjeste-invitasjon gir tilgang til tjenesten for å sende <b><i>en</i></b> fil.<br /><br />Skriv inn epost-adressen til gjesten og klikk på <b><i>Send invitasjon</i></b>. En epost vil bli sendt med en lenke som gir gjesten mulighet til å sende 1 fil.<br />";
 
 $lang["_SEND_VOUCHER_TO"] = "Send en invitasjon til";
 $lang["_SEND_VOUCHER"] = "Send invitasjon";
+$lang["_NO_VOUCHERS"] = "Ingen aktive invitasjoner";
 
 // confirmation
 $lang["_CONFIRM_DELETE_FILE"] = "Er du sikker at du vil slette filen?";
 $lang["_CONFIRM_DELETE_VOUCHER"] = "Er du sikker at du ønsker å tilbaketrekke invitasjonen?";
+$lang["_CONFIRM_RESEND_EMAIL"] = "Er du sikker at du ønsker å sende eposten på nytt?";
 
 // standard date display format
 $lang['datedisplayformat'] = "Y-m-d"; // Format for displaying date/time, use PHP date() format string syntax 
@@ -200,25 +213,65 @@ $lang["_DP_showMonthAfterYear"] = 'false';
 $lang["_DP_yearSuffix"] = '';
 
 // Login Splash text
-$lang["_SITE_SPLASHTEXT"] = "FileSender tilbyr en sikker og enkel måte for å sende store filer til all dine samarbeidspartnere!  Logg på for å overføre dine filer eller for å invitere andre til å sende deg en fil.";
+$lang["_SITE_SPLASHHEAD"] = "Velkommen til ". htmlspecialchars($config['site_name']);
+$lang["_SITE_SPLASHTEXT"] = htmlspecialchars($config['site_name']) ." tilbyr en sikker og enkel måte for å sende store filer til alle dine samarbeidspartnere!  Logg på for å overføre filer eller for å invitere andre til å sende deg en fil.";
+
+// Footer to display
+$lang["_SITE_FOOTER"] = ""; 
 
 // site help
-$lang["_HELP_TEXT"] = '<div align="left" style="padding:5px">
-    <p> Ta kontakt med din lokale IT-avdeling hvis pålogging feiler eller du ikke finner din institusjon i listen av hjemmeinstitusjoner. </p>
-    <p> <strong>Systemkrav</strong><br />
-      En nyere utgave av en populær nettleser</p>
-    <p> <strong>Begrensninger</strong><br />
-      <strong> Maks. antall mottakere per sending:</strong> '. $config["max_email_recipients"].' flere mottaker adresser skilles med komma eller semikolon (eks. ole@norge.no, per@uninettt.no)<br />
-      <strong>Antall filer per sending:</strong> 1 - for å sende flere filer samtidig kan du pakke dem i feks. en zip-fil først.<br />
-      <strong>Største filstørrelse per sending, uten HTML 5: </strong>'. formatBytes($config["max_flash_upload_size"]) .'<br />
-      <strong>Største filstørrelse per sending, med HTML 5: </strong>' .formatBytes($config["max_html5_upload_size"]).'<br />
-      <strong>Maksimum antall dager før utløp av sending: </strong>'. $config["default_daysvalid"].'<br />
-    </p>
-    <p>For mer informasjon besøk <a href="http://www.filesender.org/" target="_blank">www.filesender.org</a></p>
+$lang["_HELP_TEXT"] = '
+<div>
+<div align="left" style="padding:5px">
+<h4>Pålogging</h4>
+<ul>
+	<li>Du logger på med brukerkontoen du bruker hos din institusjon.  Ta kontakt med din lokale IT-helpdesk hvis pålogging feiler eller du ikke finner din institusjon i listen.</li>
+</ul>
+
+<h4>Opplastninger av <i>enhver størrelse</i> med HTML5</h4>
+<ul>
+	<li>Du kan bruke denne metoden hvis dette symbolet vises: <img src="images/html5_installed.png" alt="green HTML5 tick" class="textmiddle" style="display:inline" /></li>
+	<li>For å få <img src="images/html5_installed.png" alt="green HTML5 tick" class="textmiddle" style="display:inline" /> symbolet, trenger du en modern nettleser som støtter HTML5, siste versjonen av webbens språk.</li>
+	<li>Nyere versjoner av Firefox og Chrome, på Windows, Mac OS X og Linux er kjent for å fungere</li>
+	<li>Du kan <b><i>gjenoppta</i></b> en opplastning som er avbrutt ved å sende nøyaktig samme fil på nytt. Så lenge filen har akkurat samme navn som sist vil <i>'. htmlspecialchars($config['site_name']) .'</i> gjenoppta opplastningen.  Når opplastningen starter burde du se framdriftsindikatoren hoppe til hvor den var ved siste avbrudd, og fortsette derfra.<br /><br />
+	Har du <b><i>endret filen</i></b> mellom første og andre forsøk, bør du først gi filen et nytt navn.  Dermed forsikres det at det startes en ny, fersk opplastning og at alle dine endringer vil bli overført uten problemer.</li>
+</ul>
+
+<h4>Nedlastninger av enhver størrelse</h4>
+<ul>
+	<li>Alle nyere populære nettlesere vil fungere fint når det gjelder nedlastninger av vilkårlig store filer.  Ikke bekymre deg om Adobe Flash eller HTML5 - disse er bare relevant for opplastninger; ikke noe spesielt kreves for nedlastninger.</li>
+</ul>
+
+<h4>Opplastninger opp til 2 Gigabytes (2GB) med Adobe Flash</h4>
+<ul>
+	<li>Hvis du kan se video på YouTube burde denne metoden fungere for deg.</li>
+	<li>Du trenger en nyere nettleser med versjon 10 (og oppover) av <a target="_blank" href="http://www.adobe.com/software/flash/about/">Adobe Flash</a>.</li>
+	<li>Ved bruk av Adobe Flash kan du laste opp filer opp til 2 Gigabytes (2GB).  Du vil bli varslet skulle du prøve å laste opp en fil som er for stor.</li>
+	<li>Gjennoptagelse av opplastninger er ikke støttet med denne metoden.</li>
+
+</ul>
+
+<h4>Konfigurerte begrensninger til tjenesten</h4>
+<ul>
+<li><b>Maks. antall mottakere per sending: </b>'. $config["max_email_recipients"].' To eller flere epost-adresser skilles med komma eller semikolon (f.eks. ole@norge.no, per@uninettt.no).</li>
+      <li><b>Maks. antall filer per sending: </b> 1 - for å sende flere filer samtidig kan du pakke dem i f.eks. en zip-fil først.</li>
+      <li>Største mulige filstørrelse per sending <b>uten</b> HTML 5: '. formatBytes($config["max_flash_upload_size"]) .'</li>
+      <li>Største mulige filstørrelse per sending <b>med</b> HTML 5: ' .formatBytes($config["max_html5_upload_size"]).'</li>
+      <li>Maksimum antall dager før utløp av sending: '. $config["default_daysvalid"].'</li>
+</ul>
+
+<h4>Tekniske detaljer</h4>
+<ul>
+<li>
+<i>'. htmlspecialchars($config['site_name']) .'</i> bruker <a href="http://www.filesender.org/" target="_blank">FileSender programvaren</a>.  FileSender antyder om HTML5 opplastning er støttet i en bestemt nettleser, eller ikke.  Dette er primært avhengig av avansert nettleserfunksjonalitet, primært støtte for HTML5 File APIen.  På <a href="http://caniuse.com/fileapi" target="_blank">"When can I use..."</a> nettsiden kan implementasjonsframgang av HTML5-støtten i alle populære nettlesere følges.  Spesielt støtte av <a href="http://caniuse.com/filereader" target="_blank">FileReader API</a> og <a href="http://caniuse.com/bloburls" target="_blank">Blob URL</a> trenger å være lyse-grønt (=støttet) for at opplastninger større enn 2GB er støttet.  Vær obs på at selv om det står at Opera 12 støtter HTML5 FileAPI, er det i skrivende stund fortsatt mangler i Operas implementasjon som fører til at HTML5 opplastning ikke fungerer med Opera.</li>
+</ul>
+
+    <p>For mer informasjon henvises det til <a href="http://www.filesender.org/" target="_blank">www.filesender.org</a></p>
+</div>
   </div>';
 
 // site about
-$lang["_ABOUT_TEXT"] = ' <div align="left" style="padding:5px">'. htmlentities($config['site_name']) .' er en FileSender (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>) installasjon.  FileSender programvaren er optimalisert for bruk i høgere utdanning og forskning.</div>';
+$lang["_ABOUT_TEXT"] = ' <div align="left" style="padding:5px">'. htmlspecialchars($config['site_name']) .' er en FileSender (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>) installasjon.  FileSender programvaren er optimalisert for bruk i høgere utdanning og forskning.</div>';
 
 // site AUP terms
 $lang["_AUPTERMS"] = "Oppfør deg pent ellers så kommer trollan...";

@@ -48,7 +48,7 @@ $lang["_MY_FILES"] = "Mé soubory";
 $lang["_HOME"] = "Domů";
 $lang["_ABOUT"] = "O programu";
 $lang["_HELP"] = "Pomoc";
-$lang["_DELETE_VOUCHER"] = "Smazat poznámku";
+$lang["_DELETE_VOUCHER"] = "Smazat pozvánku";
 $lang["_UPLOAD_COMPLETE"] = "Váš soubor byl nahrán a zpráva odeslána.";
 $lang["_UPLOAD_PROGRESS"] = "Průběh nahrávání";
 $lang["_DOWNLOAD"] = "Stáhnout";
@@ -66,7 +66,7 @@ $lang["_AVAILABLE"] = "Dostupné";
 $lang["_TEMP"] = "Dočasné soubory"; // as in Temporary files
 
 $lang["_WELCOME"] = "Vítejte"; 
-$lang["_WELCOMEGUEST"] = "Welcome Guest"; 
+$lang["_WELCOMEGUEST"] = "Vítejte"; 
 
 // admin tab names
 $lang["_GENERAL"] = "Obecné";
@@ -100,18 +100,19 @@ $lang["_BROWSE"] = "Procházet";
 $lang["_CANCEL"] = "Zrušit";
 $lang["_OPEN"] = "Otevřít";
 $lang["_CLOSE"] = "Zavřít";
-$lang["_OK"] = "Ok";
+$lang["_OK"] = "OK";
 $lang["_SEND"] = "Odeslat";
 $lang["_DELETE"] = "Smazat";
 $lang["_YES"] = "Ano";
 $lang["_NO"] = "Ne";
 
+$lang["_ERROR_CONTACT_ADMIN"] = "Nastala neočekávaná chyba - prosím, kontaktujte svého administrátora.";
 $lang["_INVALID_MISSING_EMAIL"] = "Nesprávný vyplněný nebo chybějící email";	
 $lang["_INVALID_EXPIRY_DATE"] = "Chybný datum expirace";	
 $lang["_INVALID_FILE"] = "Chybný soubor";	
 $lang["_INVALID_FILEVOUCHERID"] = "Chybný soubor nebo ID pozvánky";	
 $lang["_INVALID_FILESIZE_ZERO"] = "Velikost souboru nemůže být 0. Prosím, vyberte jiný soubor.";
-$lang["_INVALID_FILE_EXT"] = "Chybný koncovka souboru.";
+$lang["_INVALID_FILE_EXT"] = "Chybná koncovka souboru.";
 $lang["_INVALID_TOO_LARGE_1"] = "Velikost souboru nemůže být více než";
 $lang["_AUTH_ERROR"] = "Nejste již přihlášen. <br />Vaše sezení vypršelo nebo nastala chyba serveru. <br /><br />Prosím, přihlašte se znovu.";	
 $lang["_SELECT_ANOTHER_FILE"] = "Prosím, vyberte jiný soubor.";
@@ -123,10 +124,13 @@ $lang["_ACCEPTTOC"] = "Souhlasím s podmínkami užití této služby.";
 $lang["_AGREETOC"] = "Musíte souhlasit s podmínkami užití této služby.";
 $lang["_FILE_TO_BE_RESENT"] = "Soubor bude přerozdělen";
 $lang["_ERROR_UPLOADING_FILE"] = "Chyba při nahrávání souboru";
+$lang["_ERROR_SENDING_EMAIL"] = "Chyba při odesílání souborů, prosím, kontaktujte svého administrátora.";
+$lang["_ERROR_INCORRECT_FILE_SIZE"] = "Chyba při odesílání souboru. <br />Velikost souboru na serveru nesouhlasí s velikosti originálního souboru. <br /><br />Prosím, kontaktujte svého administrátora.";
 $lang["_MAXEMAILS"] = "Maximálni počet povolených emailových adres je ";
 $lang["_INVALID_DATE_FORMAT"] = "Nesprávný formát datumu.";
 $lang["_DISK_SPACE_ERROR"] = "Není dostatek místa na disku. Prosím, kontaktujte správce této služby nebo nahrajte menší soubor.";
-
+$lang["_ERROR_ATTRIBUTES"] = "Váš poskytovatel identity (IdP) neposkytl všechny potřebné atributy. Kontaktujte, prosím, svého administrátora.";
+$lang["_PERMISSION_DENIED"] = "Nemáte dostatečná oprávnění k vykonání této akce.";
 
 $lang["_LOGOUT_COMPLETE"] = "Odhlášení proběhlo úspěšně";
 
@@ -137,6 +141,7 @@ Email s odkazem na pozvánku bude odeslán příjemci.";
 $lang["_EMAIL_SEPARATOR_MSG"] = "Více emailových adres je možné oddělit pomocí , nebo ;";
 
 $lang["_NO_FILES"] = "Žádný soubor není momentálně dostupný";
+$lang["_NO_VOUCHERS"] = "Žádné pozvánky nejsou v tuto chvíli dostupné.";
 $lang["_ARE_YOU_SURE"] = "Jste si jist?";
 $lang["_DELETE_FILE"] = "Smazat soubor";
 $lang["_EMAIL_SENT"] = "Zpráva odeslána";
@@ -164,16 +169,17 @@ $lang["_STEP2"] = "Nastavte datum expirace";
 $lang["_STEP3"] = "Vyberte soubor";
 $lang["_STEP4"] = "Klikněte na Odeslat";
 $lang["_HTML5Supported"] = "Nahrání souboru přesahující 2GB je podporováno!";
-$lang["_HTML5NotSupported"] = "Nahrání souboru přesahující 2GB<br />není podporováno!";			
+$lang["_HTML5NotSupported"] = "Nahrání souboru přesahující 2GB není podporováno!";			
 
 $lang["_OPTIONAL"] = "volitelné";
 
 // confirmation
 $lang["_CONFIRM_DELETE_FILE"] = "Jste si jist, že chcete smazat tento soubor?";
 $lang["_CONFIRM_DELETE_VOUCHER"] = "Jste si jist, že chcete smazat tuto pozvánku?";
+$lang["_CONFIRM_RESEND_EMAIL"] = "Jste si jisti, že chcete znovu odeslat tento email?";
 
 // standard date display format - vouchers, sent files
-$lang['datedisplayformat'] = "d/m/y"; // Format for displaying date/time, use PHP date() format string syntax 
+$lang['datedisplayformat'] = "d. m. Y"; // Format for displaying date/time, use PHP date() format string syntax 
 
 // datepicker localization
 $lang["_DP_closeText"] = 'Hotovo'; // Done
@@ -186,14 +192,18 @@ $lang["_DP_dayNames"] = "['Neděle', 'Pondělí', 'Úterý', 'Středa', 'Čtvrte
 $lang["_DP_dayNamesShort"] = "['Ned', 'Pon', 'Úte', 'Stř', 'Čtv', 'Pát', 'Sob']";
 $lang["_DP_dayNamesMin"] = "['Ne','Po','Út','St','Čt','Pá','So']";
 $lang["_DP_weekHeader"] = 'Týden';
-$lang["_DP_dateFormat"] = 'dd/mm/yy';
+$lang["_DP_dateFormat"] = 'dd. mm. yy';
 $lang["_DP_firstDay"] = '1';
 $lang["_DP_isRTL"] = 'false';
 $lang["_DP_showMonthAfterYear"] = 'false';
 $lang["_DP_yearSuffix"] = '';
 
 // Login Splash text
-$lang["_SITE_SPLASHTEXT"] = "FileSender je bezpečná cesta pro sdílení velkých souborů mezi všemi! Přihlaš se a nahraj své soubory nebo pozvi ostatní, ať soubory nahrají oni."; 
+$lang["_SITE_SPLASHHEAD"] = "Vítejte na ". htmlspecialchars($config['site_name']);
+$lang["_SITE_SPLASHTEXT"] = htmlspecialchars($config['site_name']) ." je bezpečná cesta pro sdílení velkých souborů mezi všemi! Přihlaš se a nahraj své soubory nebo pozvi ostatní, ať soubory nahrají oni."; 
+
+// Footer to display
+$lang["_SITE_FOOTER"] = ""; 
 
 // site help
 $lang["_HELP_TEXT"] = '
@@ -219,7 +229,7 @@ $lang["_HELP_TEXT"] = '
         <li>HTML5 je dostupné, pokud vidíte <img src="images/html5_installed.png" alt="green HTML5 tick" class="textmiddle" style="display:inline" /> v horním pravém rohu FileSenderu.</li>
 	<li>Potřebujete aktuální prohlížeč podporující HTML5 (poslední verze webového programovacího jazyka).</li>
 	<li>Firefox4 (a vyšší) a Chrome na Windows, Mac OSX a Linux HTML5 podporují.</li>
-	<li>Prosím, projděte si stránku <a href="http://caniuse.com/#feat=fileapi" target="_blank">"When can I use..."</A> pro zjistění stavu implementace HTML5 FileAPI pro všechny hlavní používané prohlížeče. Zejména podpora <a href="http://caniuse.com/#feat=filereader" target="_blank">FileReader API</A> a <A href="http://caniuse.com/#feat=bloburls" target="_blank">Blob URLs</A> musí být zvýrazněno světle zeleně (=podporováno) pro prohlížeče podporující nahrání souborů větších než 2GB </li>
+	<li>Prosím, projděte si stránku <a href="http://caniuse.com/fileapi" target="_blank">"When can I use..."</a> pro zjistění stavu implementace HTML5 FileAPI pro všechny hlavní používané prohlížeče. Zejména podpora <a href="http://caniuse.com/filereader" target="_blank">FileReader API</a> a <a href="http://caniuse.com/bloburls" target="_blank">Blob URLs</a> musí být zvýrazněno světle zeleně (=podporováno) pro prohlížeče podporující nahrání souborů větších než 2GB </li>
 </ul>
 
 <h4>Stahování jakékoliv velikosti souboru</h4>
@@ -242,7 +252,7 @@ $lang["_HELP_TEXT"] = '
 </div>';
 
 // site about
-$lang["_ABOUT_TEXT"] = ' <div align="left" style="padding:5px">'. htmlentities($config['site_name']) .' je instalace FileSender (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>), který je vyvinut pro potřeby vzdělávací a výzkumné komunity.</div>';
+$lang["_ABOUT_TEXT"] = ' <div align="left" style="padding:5px">'. htmlspecialchars($config['site_name']) .' je instalace FileSender (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>), který je vyvinut pro potřeby vzdělávací a výzkumné komunity.</div>';
 
 $lang["_AUPTERMS"] = "Kompletní znění podmínek užití této služby...";
 

@@ -44,8 +44,17 @@ $locales  =  array(
 	"en-us" => "en_AU.php",
 	"en-gb" => "en_AU.php",
 	"en"=>  "en_AU.php",
+	"es"=>  "es_ES.php",
+	"es-es"=>  "es_ES.php",
 	"fr" => "fr_FR.php",
 	"fr-fr" => "fr_FR.php",
+	"hr" => "hr_HR.php",
+	"hr-hr" => "hr_HR.php",
+	"hu" => "hu_HU.php",
+	"hu-hu" => "hu_HU.php",
+	"it" => "it_IT.php",
+	"it-it" => "it_IT.php",
+	"it-ch" => "it_IT.php",
 	"nl-nl"  => "nl_NL.php",
 	"nl" => "nl_NL.php",
 	"no-no" => "no_NO.php",
@@ -53,6 +62,7 @@ $locales  =  array(
 	"nb" => "no_NO.php",
 	"nb-no" => "no_NO.php",
 	"sl" => "sl_SI.php",
-	"sl-si" => "sl_SI.php"
+	"sl-si" => "sl_SI.php",
+	"sr" => "sr_RS.php"
 );
 ?>

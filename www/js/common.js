@@ -70,10 +70,11 @@ function validate_fileto()
 		return false;
 	}
 	for (var i = 0; i < email.length; i++) {
-		if (!echeck(email[i], 1, 0)) {
-		$("#fileto_msg").show();
-		return false;
-	}
+
+        if (!echeck(email[i])) {
+		    $("#fileto_msg").show();
+		    return false;
+	    }
 	}
 	return true;		
 }
@@ -171,4 +172,25 @@ function isValidDate(dateStr, format) {
    if (parseFloat(dd) != dt.getDate()) { return false; }
    if (parseFloat(mm)-1 != dt.getMonth()) { return false; }
    return true;
+}
+
+// validate ajax return code to make sure it is parsable JSON
+function parseJSON(json)
+{
+	try {
+          var data = JSON.parse(json);
+		  return data;
+        } catch (e) {
+			var msg = "Error accessing server. ";
+			if(debug) { msg += "Fatal error (" + e + ")";};
+			$("#scratch").html('<div id="message">'+msg+'</>');	
+     	};
+}
+
+// display erro state details if debug is on
+function ajaxerror(readyState,status,responseText)
+{
+	var msg = "Error accessing server. ";
+	if(debug) { msg += " Ready State:"+readyState + ", status:" + status + ",responseText" + responseText + "";};
+	$("#scratch").html('<div id="message">'+msg+'</>');						   
 }

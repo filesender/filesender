@@ -35,19 +35,19 @@ class config {
 private static $instance = NULL;
 
 	public static function getInstance() {
-		// Check for both equality and type		
+		// Check for both equality and type
 		if(self::$instance === NULL) {
 			self::$instance = new self();
 		}
 		return self::$instance;
-	} 
-	
+	}
+
 public function loadConfig() {
-	
+
 	$config = array();
 
 	// Start of configurable settings
-	// For more information about these settings please see the 
+	// For more information about these settings please see the
 	// Administrator Reference Manual in the documentation section
 	// at www.filesender.org
 
@@ -90,12 +90,21 @@ public function loadConfig() {
 	$config['max_flash_upload_size'] = '2147483648'; // 2GB
 	$config['max_html5_upload_size'] = '107374182400'; // 100  GB
 	$config["upload_chunk_size"]  = '2000000';//
-	
+
 	// update max_flash_upload_size if php.ini post_max_size and upload_max_filesize is set lower
 	$config['max_flash_upload_size'] = min(let_to_num(ini_get('post_max_size'))-2048, let_to_num(ini_get('upload_max_filesize')),$config['max_flash_upload_size']);
-	
+
 	$config["server_drivespace_warning"] = 20; // as a percentage 20 = 20% space left on the storage drive
-	
+
+	// Terasender (fast upload) settings
+	// - terasender (really fast uploads) uses html5 web workers to speed up file upload
+	// - effectively providing multi-threaded faster uploads
+	$config['terasender'] = true; // true/false
+	$config['terasenderadvanced'] = false; // true/false - terasender advanced - show advanced settings
+	$config['terasender_chunksize'] = 5;		// default (5) terasender chunk size in MB
+	$config['terasender_workerCount'] = 6;		// default (6) worker count
+	$config['terasender_jobsPerWorker'] = 1;	// default (1) jobs per worker
+
 	// Advanced server settings, do not change unless you have a very good reason.
 	$config['postgresdateformat'] = "Y-m-d H:i:sP"; // Date/Time format for PostgreSQL, use PHP date format specifier syntax
 	$config['db_dateformat'] = "Y-m-d H:i:sP"; // Date/Time format for PostgreSQL, use PHP date format specifier syntax
@@ -114,18 +123,16 @@ public function loadConfig() {
 	$config['site_downloadurl'] = $config['site_url'] . 'files/'; // * Deprecated *
 	}
 	$config['forceSSL'] = true; // Always use SSL (true/false)
-	
-	
+
 	// Support links
 	$config['aboutURL'] = "";
 	$config['helpURL'] = "";
-	$config['HTML5URL'] = 'http://html5test.com/';
 
 	// (absolute) file locations
-	$config['site_filestore'] = '/usr/share/filesender/files/'; 
-	$config['site_temp_filestore'] = '/usr/share/filesender/tmp/'; 
+	$config['site_filestore'] = '/usr/share/filesender/files/';
+	$config['site_temp_filestore'] = '/usr/share/filesender/tmp/';
 	$config['site_simplesamllocation'] = '/usr/share/simplesamlphp/';
-	$config['log_location'] = '/usr/share/filesender/log/';	
+	$config['log_location'] = '/usr/share/filesender/log/';
 
 	$config["db_type"] = "pgsql";// pgsql or mysql
 	$config['db_host'] = 'localhost';
@@ -134,17 +141,20 @@ public function loadConfig() {
 	// database username and password
 	$config['db_username'] = 'filesender';
 	$config['db_password'] = 'yoursecretpassword';
-	
+
 	//Optional DSN format overides db_ settings
 	//$config['dsn'] = "pgsql:host=localhost;dbname=filesender";
 	//$config['dsn'] = 'pgsql:host=localhost;dbname=filesender';
 	//$config['dsn'] = 'sqlite:/usr/share/filesender/db/filesender.sqlite';
 	//$config['dsn_driver_options'] = array();
 	// dsn requires username and password in $config['db_username'] and $config['db_password']
-	
+
 	// cron settings
 	$config['cron_exclude prefix'] = '_'; // exclude deletion of files with the prefix character listed (can use multiple characters eg '._' will ignore .xxxx and _xxxx
-	
+	$config['cron_shred'] = false; // instead of simply unlinking, overwrite expired files so they are hard to recover
+	$config['cron_shred_command'] = '/usr/bin/shred -f -u -n 1 -z'; // overwrite once (-n 1) with random data, once with zeros (-z), then remove (-u)
+	$config["cron_cleanuptempdays"] = 7; // number of days to keep temporary files in the temp_filestore
+
 	// email templates section
 	$config['default_emailsubject'] = "{siteName}: {filename}";
 	$config['filedownloadedemailbody'] = '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}
@@ -371,7 +381,7 @@ Dear Sir, Madam,<BR><BR>The file '{htmlfileoriginalname}' from {filefrom} has be
 </BODY>
 </HTML>{CRLF}{CRLF}--simple_mime_boundary--";
 	// End of email templates section
-	
+
 	// End of configurable settings
 
 	return $config;
@@ -396,5 +406,5 @@ function let_to_num($v){ //This function transforms the php.ini notation for num
         break;
     }
       return $ret;
-}	
+}
 ?>
