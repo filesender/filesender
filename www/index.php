@@ -223,7 +223,7 @@ function openabout()
       <?php 
   	// create menu
   	// disable all buttons if this is a voucher, even if the user is logged on
- 	if (!$authvoucher->aVoucher()  &&  $s != "completev"){
+ 	if (!$authvoucher->aVoucher()  &&  $s != "completev" && !isset($_REQUEST["gid"])){
 	if($authsaml->isAuth() ) { echo '<li><a class="'.$functions->active($s,'upload').'" id="topmenu_newupload" href="index.php?s=upload">'.lang("_NEW_UPLOAD").'</a></li>'; }
 	if($authsaml->isAuth() ) { echo '<li><a class="'.$functions->active($s,'vouchers').'" id="topmenu_vouchers" href="index.php?s=vouchers">'.lang("_VOUCHERS").'</a></li>'; }
 	if($authsaml->isAuth() ) {echo '<li><a class="'.$functions->active($s,'files').'" id="topmenu_myfiles" href="index.php?s=files">'.lang("_MY_FILES").'</a></li>'; }
@@ -247,7 +247,7 @@ function openabout()
 		echo '<li><a class="'.$functions->active($s,'about').'" href="'.$config['aboutURL'].'" target="_blank" id="topmenu_about">'.lang("_ABOUT").'</a></li>';	
 	}
 	if(!$authsaml->isAuth() && $s != "logon" ) { echo '<li><a class="'.$functions->active($s,'logon').'" href="'.$authsaml->logonURL().'" id="topmenu_logon">'.lang("_LOGON").'</a></li>';}
-	if($authsaml->isAuth() && !$authvoucher->aVoucher() &&  $s != "completev" ) { echo '<li><a class="'.$functions->active($s,'about').'" href="'.$authsaml->logoffURL().'" id="topmenu_logoff">'.lang("_LOG_OFF").'</a></li>'; }
+	if($authsaml->isAuth() && !$authvoucher->aVoucher() &&  $s != "completev"  && !isset($_REQUEST["gid"])) { echo '<li><a class="'.$functions->active($s,'about').'" href="'.$authsaml->logoffURL().'" id="topmenu_logoff">'.lang("_LOG_OFF").'</a></li>'; }
 	// end menu
 	?>
 	</ul>
@@ -276,7 +276,7 @@ function openabout()
 	if($config["displayUserName"])
 	{
 		echo "<div class='welcomeuser'>";
-		if(	$isVoucher || $s == "completev") 
+		if(	$isVoucher || $s == "completev"  || isset($_REQUEST["gid"]))
 		{ 
 			echo lang("_WELCOMEGUEST");
 		} 
@@ -342,7 +342,9 @@ function openabout()
 		<div id="box"><p><?php echo lang("_FILE_DELETED"); ?></p></div>
 <?php
 		}
-	} else if($s == "upload") 
+	} else if(isset($_REQUEST['gid'])) {
+        require_once('../pages/multidownload.php');
+    } else if($s == "upload")
 	{
 		require_once('../pages/multiupload.php');
 	} else if($s == "vouchers" && !$authvoucher->aVoucher()) 

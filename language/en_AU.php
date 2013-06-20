@@ -146,6 +146,7 @@ $lang["_NO_VOUCHERS"] = "There are currently no vouchers available";
 $lang["_ARE_YOU_SURE"] = "Are you sure?";
 $lang["_DELETE_FILE"] = "Delete File";
 $lang["_EMAIL_SENT"] = "Message Sent";
+$lang["_SENT_DATE"] = "Sent date";
 $lang["_EXPIRY_DATE"] = "Expiry date";
 $lang["_FILE_SIZE"] = "File Size";
 $lang["_FILE_RESENT"] = "File Re-sent";	
