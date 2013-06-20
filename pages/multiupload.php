@@ -765,9 +765,10 @@ if ( hasProductInstall && !hasRequestedVersion ) {
       
            <div class="box">
           <div class="fieldcontainer" id="upload_from">
-            <div class="mandatory"><?php
+            <div class="label mandatory"><?php echo lang("_FROM"); ?>:&nbsp;</div>
+              <div class="field"><?php
                 if ( count($senderemail) > 1 ) {
-                    echo "<select name=\"filefrom\" id=\"filefrom\">\n";
+                    echo "<select name=\"filefrom\" id=\"filefrom\" style=\"width:98%;font-size:12px;font-family: Verdana, Geneva, sans-serif;\">\n";
                     foreach($senderemail as $email) {
                         echo "<option>$email</option>\n";
                     }
