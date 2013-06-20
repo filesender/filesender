@@ -112,6 +112,7 @@ public function loadConfig() {
 	$config['voucherRegEx'] = "'[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}'";
 	$config['voucherUIDLength'] = 36;
 	$config['emailRegEx'] = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
+    $config['webWorkersLimit'] = 16; // The highest number of web workers that is supported by all modern browsers (currently constrained by Opera).
 
 	// site URL settings
 	if ( isset($_SERVER['SERVER_NAME']) ) {
