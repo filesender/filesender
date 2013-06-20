@@ -461,10 +461,28 @@ function validate_file(id)
 	if(aup == '1' && !validate_aup() ){validate = false;};		// check AUP is selected
 	//}
 	if(!validate_expiry() ){validate = false;};		// check date
+
+    if(!validate_advanced_settings()) { validate = false;}
 	
 	return validate;
 	}
 
+
+function validate_advanced_settings() {
+    <?php
+        $limit = "undefined";
+        if (isset($config["webWorkersLimit"])) {
+            $limit = $config["webWorkersLimit"];
+        }
+    ?>
+
+    var maxLimitWebWorkers = <?php echo $limit; ?>;
+    if (maxLimitWebWorkers != "undefined" && parseInt($('#workerCount').val()) > maxLimitWebWorkers) {
+        $('#workerCount').val(maxLimitWebWorkers);
+    }
+
+    return true;
+}
 
 //Validate AUP
 function validate_aup()
