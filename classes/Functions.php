@@ -538,6 +538,34 @@ class Functions {
 
         return $returnArray[0];
     }
+
+    function getMultiFileData($groupId) {
+        $pdo = $this->db->connect();
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
+        $statement = $pdo->prepare('SELECT * FROM files where filegroupid = :filegroupid');
+        $statement->bindParam(':filegroupid', $groupId);
+        try {
+            $statement->execute();
+        }
+        catch(PDOException $e)
+        {
+            logEntry($e->getMessage(),"E_ERROR");
+            displayError(lang("_ERROR_CONTACT_ADMIN"),$e->getMessage());
+        }
+
+        $result = $statement->fetchAll();
+        $pdo = NULL;
+        $returnArray = array();
+        foreach($result as $row)
+        {
+            if ($row['filestatus'] == 'Available')
+            {
+                array_push($returnArray, $row);
+            }
+        }
+
+        return $returnArray;
+    }
 	
 	//--------------------------------------- CHECKED
 	// insert a voucher
