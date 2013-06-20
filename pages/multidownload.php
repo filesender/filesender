@@ -64,11 +64,11 @@ if (isset($_REQUEST['gid'])) {
 
         <?php
         if (!empty($filedata[0]["filesubject"])) {
-            echo '<p id="download_subject"><?php echo lang("_SUBJECT") . ": " . utf8tohtml($filedata[0]["filesubject"], TRUE); ?></p>';
+            echo '<p id="download_subject">' . lang("_SUBJECT") . ": " . utf8tohtml($filedata[0]["filesubject"], TRUE) . '</p>';
         }
 
         if (!empty($filedata[0]["filemessage"])) {
-            echo '<p id="download_message"><?php echo lang("_MESSAGE") . ": " . nl2br(utf8tohtml($filedata[0]["filemessage"], TRUE)); ?></p>';
+            echo '<p id="download_message">' . lang("_MESSAGE") . ": " . nl2br(utf8tohtml($filedata[0]["filemessage"], TRUE)) . '</p>';
         }
         ?>
 
