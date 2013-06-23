@@ -58,7 +58,7 @@ if(session_id() == ""){
 // check we are authenticated (a valid download voucher id)
 if(!$authvoucher->aVoucher()) {
 	logEntry("Download: Failed authentication","E_ERROR");
-	echo "notAuthenticated";
+	 header( 'Location: index.php?s=invalidvoucher' ) ;
 } else { // Start authenticated clause
 if (isset($_REQUEST["vid"])) {
 
@@ -148,7 +148,7 @@ if(file_exists($file) && is_file($file) && $filestatus == 'Available')
 	// physical file was not found
 	logEntry("Download: File Not Found - ".$file,"E_ERROR");
 	// redirect to file is no longer available
-	 header( 'Location: invalidvoucher.php' ) ;
+	 header( 'Location: index.php?s=invalidvoucher' ) ;
 }
 } // End _REQUEST["vid"] clause
 } // End authenticated clause
