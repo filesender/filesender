@@ -47,6 +47,8 @@
    $filestatus = "Available";
    $voucherUID = "";
    $senderemail = $useremail;
+   $functions = Functions::getInstance();
+
    
    // get initial upload uid
    $id = getGUID();
@@ -62,6 +64,7 @@
 	// get voucher information 
 	$voucherData =  $authvoucher->getVoucher();
 	$voucherUID = $voucherData[0]["filevoucheruid"];
+    $filetrackingcode = $voucherData[0]["fileauthuseruid"];
       logEntry("vid = " . $voucherUID, "E_ERROR");
 	$senderemail = array($voucherData[0]["fileto"]);
 	// check if voucher is invalid (this should be an external function
@@ -101,21 +104,25 @@
 	var bytesUploaded = 0;
 	var bytesTotal = 0;
 	var ext = '<?php echo $config['ban_extension']?>';
-	var banextensions = ext.split(",")
+	var banextensions = ext.split(",");
 	var uploadprogress = '<?php echo lang($lang["_UPLOAD_PROGRESS"]); ?>';
 	var previousBytesLoaded = 0;
 	var intervalTimer = 0;
 
 	var errmsg_disk_space = "<?php echo lang($lang["_DISK_SPACE_ERROR"]); ?>";
 	var filedata=new Array();
-	var nameLang = '<?php echo lang("_FILE_NAME"); ?>'
-	var sizeLang = '<?php echo lang("_SIZE"); ?>'
+	var nameLang = '<?php echo lang("_FILE_NAME"); ?>';
+	var sizeLang = '<?php echo lang("_SIZE"); ?>';
     var groupid = '<?php echo getOpenSSLKey(); ?>';
+
+    <?php $userdata = $authsaml->sAuth(); ?>
+    var trackingCode = '<?php echo $functions->getTrackingCode($userdata["saml_uid_attribute"]); ?>';
+
 	
 	var vid='<?php if(isset($_REQUEST["vid"])){echo htmlspecialchars($_REQUEST["vid"]);}; ?>';
 
  	// start document ready 
-	$(function() { 
+	$(function() {
 
 		// set date picker
 		$("#datepicker" ).datepicker({ minDate: new Date(minimumDate), maxDate: new Date(maximumDate),altField: "#fileexpirydate", altFormat: "d-m-yy" });
@@ -175,6 +182,7 @@ $('body').on(
   				 	// --------------
 					fdata[n] = Array(n);
                     fdata[n].filegroupid = groupid;
+                    fdata[n].filetrackingcode = trackingCode;
                     fdata[n].file = files[i];
                     fdata[n].fileSize = fdata[n].file.size;
                     fdata[n].bytesTotal = fdata[n].file.size;

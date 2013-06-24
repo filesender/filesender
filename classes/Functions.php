@@ -130,7 +130,22 @@ class Functions {
             self::$instance = new self();
         }
         return self::$instance;
-    } 
+    }
+
+    public function getTrackingCode($id){
+        $statement = $this->db->fquery("SELECT max(filetrackingcode) FROM files WHERE fileauthuseruid='".$id."'");
+        $statement->execute();
+
+        $result = $statement->fetchColumn();
+        $trackingCode = $result;
+
+        if (empty($trackingCode)) {
+            return 'AAA';
+        } else {
+            return ++$trackingCode;
+        }
+
+    }
 	
 	// cron runs a summary of all activity for the last 24 hours and sends a summary email to all users of their activity
 	public function emailSummary()
@@ -566,8 +581,15 @@ class Functions {
 
         return $returnArray;
     }
-	
-	//--------------------------------------- CHECKED
+
+    function isValidGroupId($groupId) {
+        $files = $this->getMultiFileData($groupId);
+
+        return !empty($files);
+    }
+
+
+    //--------------------------------------- CHECKED
 	// insert a voucher
 	// ---------------------------------------
 
@@ -832,9 +854,11 @@ class Functions {
 			fileauthuseruid,
 			fileauthuseremail,
 			filecreateddate,
-			filegroupid
+			filegroupid,
+			filetrackingcode
             ) VALUES
-            ( 	:fileexpirydate,
+            (
+            :fileexpirydate,
 			:fileto,
 			:filesubject,
 			:fileactivitydate,
@@ -853,7 +877,8 @@ class Functions {
 			:fileauthuseruid,
 			:fileauthuseremail,
 			:filecreateddate,
-			:filegroupid)');
+			:filegroupid,
+			:filetrackingcode)');
 				
 			$statement->bindParam(':fileexpirydate', $dataitem['fileexpirydate']);
 			$statement->bindParam(':fileto', $dataitem['fileto']);
@@ -876,6 +901,7 @@ class Functions {
 			$statement->bindParam(':fileauthuseremail', $dataitem['fileauthuseremail']);
 			$statement->bindParam(':filecreateddate', $dataitem['filecreateddate']);
             $statement->bindParam(':filegroupid', $dataitem['filegroupid']);
+            $statement->bindParam(':filetrackingcode', $dataitem['filetrackingcode']);
 	
 			try { 
 				$statement->execute(); 
@@ -925,7 +951,8 @@ class Functions {
 			fileauthuseruid = :fileauthuseruid,
 			fileauthuseremail = :fileauthuseremail,
 			filecreateddate = :filecreateddate,
-			filegroupid = :filegroupid
+			filegroupid = :filegroupid,
+			filetrackingcode = :filetrackingcode
 			WHERE filevoucheruid = :filevoucheruid');	
 				
 			$statement->bindParam(':fileexpirydate', $dataitem['fileexpirydate']);
@@ -948,6 +975,7 @@ class Functions {
 			$statement->bindParam(':fileauthuseremail', $dataitem['fileauthuseremail']);
 			$statement->bindParam(':filecreateddate', $dataitem['filecreateddate']);
             $statement->bindParam(':filegroupid', $dataitem['filegroupid']);
+            $statement->bindParam(':filetrackingcode', $dataitem['filetrackingcode']);
 	
 			try { 
 				$statement->execute(); 
