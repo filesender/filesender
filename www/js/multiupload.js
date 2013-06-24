@@ -78,7 +78,8 @@ function browse(){
 		for (var i=0, l=files.length; i<l; i++) {
 		n = n + 1;
 		fdata[n] = Array(n);
-            fdata[n].filegroupid = groupid;
+        fdata[n].filegroupid = groupid;
+        fdata[n].filetrackingcode = trackingCode;
         fdata[n].file = files[i];
         fdata[n].fileSize = fdata[n].file.size;
 		fdata[n].bytesTotal = fdata[n].file.size;
@@ -152,6 +153,7 @@ function browse(){
 		json["filesize"] = parseInt(fdata[n].fileSize);
 		json["vid"] = fdata[n].vid;
         json["filegroupid"] = fdata[n].filegroupid;
+        json["filetrackingcode"] = fdata[n].filetrackingcode;
         json["fileto"] = $("#fileto").val();
 
 		$.ajax({

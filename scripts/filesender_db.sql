@@ -21,6 +21,8 @@ CREATE TABLE files
   filecreateddate timestamp without time zone,
   fileauthurl character varying(500),
   fileauthuseremail character varying(255),
+  filegroupid character varying(60),
+  filetrackingcode character varying(5),
   CONSTRAINT files_pkey PRIMARY KEY (fileid)
 );
 

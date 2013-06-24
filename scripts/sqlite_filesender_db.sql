@@ -26,7 +26,9 @@ CREATE TABLE files (
 	fileauthuseruid TEXT,
 	filecreateddate TEXT,
 	fileauthurl TEXT,
-	fileauthuseremail TEXT
+	fileauthuseremail TEXT,
+	filegroupid TEXT,
+  filetrackingcode TEXT,
 );
 
 CREATE TRIGGER UPDATE_FILEEXPIRYDATE AFTER UPDATE ON files
