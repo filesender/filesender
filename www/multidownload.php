@@ -57,9 +57,10 @@ if (session_id() == "") {
     $_SESSION['validSession'] = true;
 }
 
-
 if (isset($_REQUEST["gid"])) {
     $fileArray = $functions->getMultiFileData($_REQUEST["gid"]);
+
+    redirectIfSingleDownload();
 
     sendHttpHeaders($fileArray);
 
@@ -227,6 +228,15 @@ function calculateTotalFileSize($fileArray)
     }
 
     return $fileSize;
+}
+
+// If only one file was selected, redirect to the single-file download page. The $_REQUEST array contains the gid followed by
+// the file voucher IDs and an "isformrequest" flag. Fetch the second key from the array to get the vid of the single file.
+function redirectIfSingleDownload() {
+    if (count($_REQUEST) == 3) {
+        next($_REQUEST);
+        header('Location: download.php?vid=' . key($_REQUEST));
+    }
 }
 
 // Returns true if the file is selected for download, false otherwise.

@@ -47,8 +47,11 @@ if (isset($_REQUEST['gid'])) {
     });
 
     function startDownload() {
-        $("#message").show();
-        $("#fileform").submit();
+        if ($(".checkboxes:checked").length > 0) {
+            // At least one file is selected, start downloading.
+            $("#message").show();
+            $("#fileform").submit();
+        } // TODO: else show error message ("you need to select at least one file").
     }
 </script>
 
