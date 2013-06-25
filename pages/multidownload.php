@@ -37,8 +37,7 @@
 
 
 if (isset($_REQUEST['gid'])) {
-    $filedata = $functions->getMultiFileData($_REQUEST['gid']);
-}
+    $fileData = $functions->getMultiFileData($_REQUEST['gid']);
 ?>
 
 <script type="text/javascript">
@@ -56,19 +55,19 @@ if (isset($_REQUEST['gid'])) {
 <div id="box" style="background:#fff">
     <?php echo '<div id="pageheading">' . lang("_DOWNLOAD") . '</div>' ?>
     <div id="fileinfo">
-        <p id="download_from"><?php echo lang("_FROM") . ": " . htmlentities($filedata[0]["filefrom"]); ?></p>
+        <p id="download_from"><?php echo lang("_FROM") . ": " . htmlentities($fileData[0]["filefrom"]); ?></p>
 
-        <p id="download_sent"><?php echo lang("_SENT_DATE") . ": " . date(lang('datedisplayformat'), strtotime($filedata[0]["filecreateddate"])); ?></p>
+        <p id="download_sent"><?php echo lang("_SENT_DATE") . ": " . date(lang('datedisplayformat'), strtotime($fileData[0]["filecreateddate"])); ?></p>
 
-        <p id="download_expiry"><?php echo lang("_EXPIRY_DATE") . ": " . date(lang('datedisplayformat'), strtotime($filedata[0]["fileexpirydate"])); ?></p>
+        <p id="download_expiry"><?php echo lang("_EXPIRY_DATE") . ": " . date(lang('datedisplayformat'), strtotime($fileData[0]["fileexpirydate"])); ?></p>
 
         <?php
-        if (!empty($filedata[0]["filesubject"])) {
-            echo '<p id="download_subject">' . lang("_SUBJECT") . ": " . utf8tohtml($filedata[0]["filesubject"], TRUE) . '</p>';
+        if (!empty($fileData[0]["filesubject"])) {
+            echo '<p id="download_subject">' . lang("_SUBJECT") . ": " . utf8tohtml($fileData[0]["filesubject"], TRUE) . '</p>';
         }
 
-        if (!empty($filedata[0]["filemessage"])) {
-            echo '<p id="download_message">' . lang("_MESSAGE") . ": " . nl2br(utf8tohtml($filedata[0]["filemessage"], TRUE)) . '</p>';
+        if (!empty($fileData[0]["filemessage"])) {
+            echo '<p id="download_message">' . lang("_MESSAGE") . ": " . nl2br(utf8tohtml($fileData[0]["filemessage"], TRUE)) . '</p>';
         }
         ?>
 
@@ -81,14 +80,14 @@ if (isset($_REQUEST['gid'])) {
                 <td class="HardBreak tblmcw3" id="myfiles_header_size" style="vertical-align: middle"><strong><?php echo lang("_SIZE"); ?></strong></td>
             </tr>
             <?php
-            for ($i = 0; $i < sizeof($filedata); $i++) {
+            for ($i = 0; $i < sizeof($fileData); $i++) {
                 echo '<tr><td class="dr7"></td><td class="dr7"></td><td class="dr7"></td></tr>';
 
                 echo
                     '<tr>' .
                     '<td style="text-align: center; vertical-align: middle" class="dr1"><input type="checkbox" class="checkboxes" name="select-' . $i . '" style="margin-left: 0; margin-right: 0; width: 11px; height: 11px;" /></td>' .
-                    '<td class="dr2 HardBreak"><a id="link_downloadfile_' . $i .'" href="download.php?vid=' .$filedata[$i]['filevoucheruid'] . '">' . utf8tohtml($filedata[$i]['fileoriginalname'], TRUE) . '</a></td>' .
-                    '<td class="dr8 HardBreak">' . formatBytes($filedata[$i]['filesize']) . '</td>' .
+                    '<td class="dr2 HardBreak"><a id="link_downloadfile_' . $i .'" href="download.php?vid=' .$fileData[$i]['filevoucheruid'] . '">' . utf8tohtml($fileData[$i]['fileoriginalname'], TRUE) . '</a></td>' .
+                    '<td class="dr8 HardBreak">' . formatBytes($fileData[$i]['filesize']) . '</td>' .
                     '</tr>';
 
             }
@@ -98,7 +97,7 @@ if (isset($_REQUEST['gid'])) {
 
         <div class="menu" id="downloadbutton" >
             <p>
-                <a id="download" href="download.php?vid=<?php echo urlencode($filedata[0]["filevoucheruid"]);?>" onclick="startDownload()">
+                <a id="download" href="multidownload.php?gid=<?php echo urlencode($_REQUEST['gid'])?>" onclick="startDownload()">
                     <?php echo lang("_START_DOWNLOAD"); ?>
                 </a>
             </p>
@@ -106,3 +105,4 @@ if (isset($_REQUEST['gid'])) {
     </div>
 </div>
 
+<?php } ?>
