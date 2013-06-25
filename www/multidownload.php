@@ -112,8 +112,9 @@ if (isset($_REQUEST["gid"])) {
 
 function sendHttpHeaders($fileArray)
 {
+    global $config;
     header('Content-Type: application/octet-stream');
-    header('Content-Disposition: attachment; filename="' . $fileArray[0]["filetrackingcode"] . '.zip"');
+    header('Content-Disposition: attachment; filename="' . $config['site_name'] . '-' . $fileArray[0]['filetrackingcode'] . '.zip"');
     header('Content-Transfer-Encoding: binary');
     header('Content-Length: ' . calculateTotalFileSize($fileArray));
 }
