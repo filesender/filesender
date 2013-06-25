@@ -157,7 +157,7 @@ var Tsunami = function(opts) {
                     break;
                 case 'progress':
                     $.currentProgress += data.uploaded;
-                    $.trigger('onProgress', [$.currentProgress, $.currentFile.size]);
+                    $.trigger('onProgress', [$.currentProgress, $.currentFile.size, data.uploaded]);
                     break;
                         
             }

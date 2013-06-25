@@ -664,3 +664,8 @@ label {
 {
     background-color: rgb(51,51,51);
 }
+
+.ui-widget
+{
+    font-size: 0.8em;
+}
