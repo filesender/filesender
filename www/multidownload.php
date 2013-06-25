@@ -67,6 +67,8 @@ if (isset($_REQUEST["gid"])) {
     $offset = 0;
 
     foreach ($fileArray as $file) {
+        if (!shouldDownloadFile($file)) continue; // File is not selected for download, skip it.
+
         $path = $config['site_filestore'] . $file['fileuid'] . '.tmp';
         $timestamp = unixToDosTime(strtotime($file["filecreateddate"]));
 
@@ -218,11 +220,18 @@ function calculateTotalFileSize($fileArray)
     $fileSize = 22; // Size of the end-of-file central directory record.
 
     foreach ($fileArray as $file) {
+        if (!shouldDownloadFile($file)) continue;
+
         $fileSize += 88 + strlen($file["fileoriginalname"]) * 2; // Size of the local file header, descriptor and per-file CDR entry.
         $fileSize += $file["filesize"]; // File data size.
     }
 
     return $fileSize;
+}
+
+// Returns true if the file is selected for download, false otherwise.
+function shouldDownloadFile($file) {
+    return !isset($_REQUEST["isformrequest"]) || isset($_REQUEST[$file["filevoucheruid"]]);
 }
 
 // Converts from UNIX to DOS style timestamp, for use in .ZIP "Last modified time/date" fields.

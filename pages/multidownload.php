@@ -48,6 +48,7 @@ if (isset($_REQUEST['gid'])) {
 
     function startDownload() {
         $("#message").show();
+        $("#fileform").submit();
     }
 </script>
 
@@ -71,33 +72,36 @@ if (isset($_REQUEST['gid'])) {
         }
         ?>
 
-        <table id="myfiles" width="100%" border="0" cellspacing="0" cellpadding="4" style="table-layout:fixed;">
-            <tr class="headerrow" >
-                <td class="tblmcw2"><input type="checkbox" style="margin-left: 0; margin-right: 0" name="selectall"
-                                      id="selectall"
-                                      onclick="$('.checkboxes').prop('checked', $('#selectall').prop('checked'))"/></td>
-                <td class="HardBreak" id="myfiles_header_filename" style="vertical-align: middle"><strong><?php echo lang("_FILE_NAME"); ?></strong></td>
-                <td class="HardBreak tblmcw3" id="myfiles_header_size" style="vertical-align: middle"><strong><?php echo lang("_SIZE"); ?></strong></td>
-            </tr>
-            <?php
-            for ($i = 0; $i < sizeof($fileData); $i++) {
+        <form id="fileform" method="post" action="multidownload.php?gid=<?php echo urlencode($_REQUEST['gid'])?>">
+            <table id="myfiles" width="100%" border="0" cellspacing="0" cellpadding="4" style="table-layout:fixed;">
+                <tr class="headerrow" >
+                    <td class="tblmcw2"><input type="checkbox" style="margin-left: 0; margin-right: 0" name="selectall"
+                                          id="selectall"
+                                          onclick="$('.checkboxes').prop('checked', $('#selectall').prop('checked'))"/></td>
+                    <td class="HardBreak" id="myfiles_header_filename" style="vertical-align: middle"><strong><?php echo lang("_FILE_NAME"); ?></strong></td>
+                    <td class="HardBreak tblmcw3" id="myfiles_header_size" style="vertical-align: middle"><strong><?php echo lang("_SIZE"); ?></strong></td>
+                </tr>
+                <?php
+                for ($i = 0; $i < sizeof($fileData); $i++) {
+                    echo '<tr><td class="dr7"></td><td class="dr7"></td><td class="dr7"></td></tr>';
+
+                    echo
+                        '<tr>' .
+                        '<td style="text-align: center; vertical-align: middle" class="dr1"><input type="checkbox" class="checkboxes" name="' . $fileData[$i]['filevoucheruid'] . '" style="margin-left: 0; margin-right: 0; width: 11px; height: 11px;" /></td>' .
+                        '<td class="dr2 HardBreak"><a id="link_downloadfile_' . $i .'" href="download.php?vid=' .$fileData[$i]['filevoucheruid'] . '">' . utf8tohtml($fileData[$i]['fileoriginalname'], TRUE) . '</a></td>' .
+                        '<td class="dr8 HardBreak">' . formatBytes($fileData[$i]['filesize']) . '</td>' .
+                        '</tr>';
+                }
                 echo '<tr><td class="dr7"></td><td class="dr7"></td><td class="dr7"></td></tr>';
 
-                echo
-                    '<tr>' .
-                    '<td style="text-align: center; vertical-align: middle" class="dr1"><input type="checkbox" class="checkboxes" name="select-' . $i . '" style="margin-left: 0; margin-right: 0; width: 11px; height: 11px;" /></td>' .
-                    '<td class="dr2 HardBreak"><a id="link_downloadfile_' . $i .'" href="download.php?vid=' .$fileData[$i]['filevoucheruid'] . '">' . utf8tohtml($fileData[$i]['fileoriginalname'], TRUE) . '</a></td>' .
-                    '<td class="dr8 HardBreak">' . formatBytes($fileData[$i]['filesize']) . '</td>' .
-                    '</tr>';
-
-            }
-            echo '<tr><td class="dr7"></td><td class="dr7"></td><td class="dr7"></td></tr>';
-            ?>
-        </table>
+                ?>
+            </table>
+            <input type="hidden" name="isformrequest" value="true" />
+        </form>
 
         <div class="menu" id="downloadbutton" >
             <p>
-                <a id="download" href="multidownload.php?gid=<?php echo urlencode($_REQUEST['gid'])?>" onclick="startDownload()">
+                <a id="download" href="" onclick="startDownload(); return false;">
                     <?php echo lang("_START_DOWNLOAD"); ?>
                 </a>
             </p>
