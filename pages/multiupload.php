@@ -119,7 +119,7 @@
     var trackingCode = '<?php echo $functions->getTrackingCode($userdata["saml_uid_attribute"]); ?>';
 
 	
-	var vid='<?php if(isset($_REQUEST["vid"])){echo htmlspecialchars($_REQUEST["vid"]);}; ?>';
+	var vid='<?php if(isset($_REQUEST["vid"])){ echo htmlspecialchars($_REQUEST["vid"]);}; ?>';
 
  	// start document ready 
 	$(function() {
@@ -132,21 +132,22 @@
 
 		// set datepicker language
 		$.datepicker.setDefaults({
-		closeText: '<?php echo lang("_DP_closeText"); ?>',
-		prevText: '<?php echo lang("_DP_prevText"); ?>',
-		nextText: '<?php echo lang("_DP_nextText"); ?>',
-		currentText: "<?php echo lang("_DP_currentText"); ?>",
-		monthNames: <?php echo lang("_DP_monthNames"); ?>,
-		monthNamesShort: <?php echo lang("_DP_monthNamesShort"); ?>,
-		dayNames: <?php echo lang("_DP_dayNames"); ?>,
-		dayNamesShort: <?php echo lang("_DP_dayNamesShort"); ?>,
-		dayNamesMin: <?php echo lang("_DP_dayNamesMin"); ?>,
-		weekHeader: '<?php echo lang("_DP_weekHeader"); ?>',
-		dateFormat: '<?php echo lang("_DP_dateFormat"); ?>',
-		firstDay: <?php echo lang("_DP_firstDay"); ?>,
-		isRTL: <?php echo lang("_DP_isRTL"); ?>,
-		showMonthAfterYear: <?php echo lang("_DP_showMonthAfterYear"); ?>,
-		yearSuffix: '<?php echo lang("_DP_yearSuffix"); ?>'});
+            closeText: '<?php echo lang("_DP_closeText"); ?>',
+            prevText: '<?php echo lang("_DP_prevText"); ?>',
+            nextText: '<?php echo lang("_DP_nextText"); ?>',
+            currentText: "<?php echo lang("_DP_currentText"); ?>",
+            monthNames: <?php echo lang("_DP_monthNames"); ?>,
+            monthNamesShort: <?php echo lang("_DP_monthNamesShort"); ?>,
+            dayNames: <?php echo lang("_DP_dayNames"); ?>,
+            dayNamesShort: <?php echo lang("_DP_dayNamesShort"); ?>,
+            dayNamesMin: <?php echo lang("_DP_dayNamesMin"); ?>,
+            weekHeader: '<?php echo lang("_DP_weekHeader"); ?>',
+            dateFormat: '<?php echo lang("_DP_dateFormat"); ?>',
+            firstDay: <?php echo lang("_DP_firstDay"); ?>,
+            isRTL: <?php echo lang("_DP_isRTL"); ?>,
+            showMonthAfterYear: <?php echo lang("_DP_showMonthAfterYear"); ?>,
+            yearSuffix: '<?php echo lang("_DP_yearSuffix"); ?>'
+        });
 
 		
 		// upload area filestoupload
@@ -177,6 +178,16 @@ $('body').on(
 
   				for (var i = 0, f; f = files[i]; i++) 
 				{
+                var dupFound = false;
+
+                    for (var j = 0; j < fdata.length; j++){
+                        if (fdata[j].filename == files.item(i).name){
+                            dupFound = true;
+                            break;
+                        }
+                    }
+
+                    if(!dupFound) {
 					n = n + 1;
 
   				 	// --------------
@@ -199,7 +210,8 @@ $('body').on(
                     // Show in list 'invalid' with reason
                     //fdata[n].filesize = 0;
 
-                    var progressString = generateFileBoxHtml();
+                        totalFileLengths += fdata[n].fileSize;
+                        var progressString = generateFileBoxHtml();
                     $("#uploadbutton").show();
                     $("#fileInfoView").show();
 
@@ -212,8 +224,9 @@ $('body').on(
                                     '<div class="progress_bar"  id="progress_bar-'+n+'"></div>' +
                                 '</div>' +
                             '</div>';*/
-                        $("#draganddropmsg").remove();
+                        $("#draganddropmsg").hide();
                         $("#filestoupload").append(progressString);
+                    }
                         //$("#fileName").html('Name: ' + fdata[n].filename);
                         //$("#fileSize").html('Size: ' + readablizebytes(fdata[n].fileSize));
                     //} else {
@@ -226,6 +239,11 @@ $('body').on(
 
                     //--------------
  				}
+                if ($("#aggregate_progress").length == 0 && files.length > 1)
+                {
+                    $("#filestoupload").append(generateAggregateProgressBar());
+                    $("#aggregate_progress").hide();
+                }
             }   
         }
     }
@@ -235,16 +253,16 @@ $('body').on(
 		$("#dialog-cancel").dialog({ autoOpen: false, height: 140, width: 350, modal: true,
 		buttons: {
 				'uploadconfirmyesBTN': function() {
-				location.reload(true);
+				    location.reload(true);
 
 				},
 				'uploadconfirmnoBTN': function() { 
-				$( this ).dialog( "close" );
+				    $( this ).dialog( "close" );
 				}
 		}
 		});
 		
-		$('.ui-dialog-buttonpane button:contains(uploadconfirmnoBTN)').attr("id","btn_uploadconfirmno");            
+		$('.ui-dialog-buttonpane button:contains(uploadconfirmnoBTN)').attr("id","btn_uploadconfirmno");
 		$('#btn_uploadconfirmno').html('<?php echo lang("_NO") ?>') 
 		$('.ui-dialog-buttonpane button:contains(uploadconfirmyesBTN)').attr("id","btn_uploadconfirmyes");            
 		$('#btn_uploadconfirmyes').html('<?php echo lang("_YES") ?>') 
@@ -676,6 +694,8 @@ function validate()
 		//Use this to allow uplods with faulty parameters (and comment out the previouslone) if(true)
 	{
 	n=0;
+        // Calling before first upload stops progress bar opening for every download (when attempting to close it)
+        openProgressBar();
 	startupload();
 	}
 	} else {
@@ -782,8 +802,8 @@ if ( hasProductInstall && !hasRequestedVersion ) {
             </div>
           </div>	
             
-  <div id="dragfilestouploadcss" style="height:400px" class="box">
-          <div  id="filestoupload" style="display:table;width:100%; height:100%; overflow:auto;"><div id="draganddropmsg" style="text-align:center;display:table-cell; vertical-align:middle;" class="heading">drag & drop your files here</div> </div>
+  <div id="dragfilestouploadcss" style="height:400px; overflow:auto;" class="box">
+          <div  id="filestoupload" style="display:table;width:100%; height:100%;"><div id="draganddropmsg" style="text-align:center;display:table-cell; vertical-align:middle;" class="heading">drag & drop your files here</div> </div>
       </div><br><br>
        <div style="text-align:center;" class="menu"><a href="#"  onclick="browse()" style="cursor:pointer;width:33%;">Select files</a></div>
        </td>

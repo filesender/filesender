@@ -62,6 +62,10 @@ var n = -1; // file int currently uploading
 // a unique is created for each file that is uploaded.
 // An object with the unique stores all relevant information about the file upload
 
+// Used for aggregate upload bar
+var totalFileLengths = 0;
+var totalBytesLoaded = 0;
+var percentageComplete = 0;
 
 function browse(){
 	$('#fileToUpload').click();
@@ -75,44 +79,71 @@ function browse(){
 		//$("#filestoupload").html("");
 		var files = document.getElementById("fileToUpload").files;
 		if (typeof files !== "undefined") {
-		for (var i=0, l=files.length; i<l; i++) {
-		n = n + 1;
-		fdata[n] = Array(n);
-        fdata[n].filegroupid = groupid;
-        fdata[n].filetrackingcode = trackingCode;
-        fdata[n].file = files[i];
-        fdata[n].fileSize = fdata[n].file.size;
-		fdata[n].bytesTotal = fdata[n].file.size;
-		fdata[n].bytesUploaded = 0;
-	    fdata[n].previousBytesLoaded = 0;
-	    fdata[n].intervalTimer = 0;
-		fdata[n].currentlocation = 0;
-		fdata[n].filename = fdata[n].file.name;
-		fdata[n].name = fdata[n].file.name;
-		fdata[n].filetype = fdata[n].file.type;
-		fdata[n].valid = false; // assume invalid until checked
-		fdata[n].status = true; // to allow removal of file from upload list
-		// validate file for upload
-		// Show in list 'invalid' with reason 
-		//fdata[n].filesize = 0;
 
-			$("#uploadbutton").show(); 
-			$("#fileInfoView").show();
-			var progressString = generateFileBoxHtml();
-			$("#draganddropmsg").remove();
-			$("#filestoupload").append(progressString);
+            for (var i=0, l=files.length; i<l; i++) {
+            var dupFound = false;
+
+                for (var j = 0; j < fdata.length; j++){
+                    if (fdata[j].filename == files.item(i).name){
+                        dupFound = true;
+                        break;
+                    }
+                }
+
+                if (!dupFound){
+                    n = n + 1;
+                    fdata[n] = Array(n);
+                    fdata[n].filegroupid = groupid;
+                    fdata[n].filetrackingcode = trackingCode;
+                    fdata[n].file = files[i];
+                    fdata[n].fileSize = fdata[n].file.size;
+                    fdata[n].bytesTotal = fdata[n].file.size;
+                    fdata[n].bytesUploaded = 0;
+                    fdata[n].previousBytesLoaded = 0;
+                    fdata[n].intervalTimer = 0;
+                    fdata[n].currentlocation = 0;
+                    fdata[n].filename = fdata[n].file.name;
+                    fdata[n].name = fdata[n].file.name;
+                    fdata[n].filetype = fdata[n].file.type;
+                    fdata[n].valid = false; // assume invalid until checked
+                    fdata[n].status = true; // to allow removal of file from upload list
+                    // validate file for upload
+                    // Show in list 'invalid' with reason
+                    //fdata[n].filesize = 0;
+
+
+                    totalFileLengths += fdata[n].fileSize;
+                    $("#uploadbutton").show();
+                    $("#fileInfoView").show();
+                    var progressString = generateFileBoxHtml();
+                    $("#draganddropmsg").hide();
+                    $("#filestoupload").append(progressString);
+                }
 			//$("#fileName").html('Name: ' + fdata[n].filename);
 			//$("#fileSize").html('Size: ' + readablizebytes(fdata[n].fileSize));
-		//} else { 
+		//} else {
 		 // display invalid file
 			//$("#uploadbutton").hide();
 			//$("#fileInfoView").hide();
 			//$("#fileName").html("");
 			//$("#fileSize").html("");
 		//};
-		}
+
+            }
+            if ($("#aggregate_progress").length == 0 && files.length > 1)
+            {
+                $("#filestoupload").append(generateAggregateProgressBar());
+                $("#aggregate_progress").hide();
+            }
 		}
 	}
+
+    function generateAggregateProgressBar(){
+        return '<div id="aggregate_progress" title="Upload Progress for tracking code: ' + trackingCode + '" class="fileBox">' +
+            '<span class="filebox_string" id="aggregate_string" style="text-align: center"></span>' +
+            '<div class="progress_bar" id="aggregate_bar"/>' + '</div>' +
+            '</div>'
+    }
 
     function generateFileBoxHtml() {
         var validfile = "";
@@ -198,7 +229,7 @@ function browse(){
 		// no error so use result as current bytes uploaded for file resume 
 		vid = data.vid;
 		fdata[n].bytesUploaded = parseFloat(data.filesize);
-            updatepb(fdata[n].bytesUploaded,fdata[n].bytesTotal);
+            updatepb(fdata[n].bytesUploaded,fdata[n].bytesTotal, 0);
             // validated so upload all files
 		
 		//if (typeof files !== "undefined") {
@@ -225,6 +256,16 @@ function browse(){
 			}
 	    }*/
 	}
+
+
+function openProgressBar(){
+    $("#aggregate_progress").dialog({ minWidth: 600,
+        buttons: {
+            'Close': function() {
+                $(this).dialog('destroy');
+            }
+        }});
+}
 
 function doUploadComplete(){
     var end  = new Date().getTime();
@@ -347,20 +388,20 @@ function uploadFile() {
 					// IF MORE FILES NEED UPLOADING THEN
 			if(	n < fdata.length-1 )
 			{
-				n += 1;		
+				n += 1;
 					startupload();
 					return;
-				}  else 
+				}  else
 				{
 					window.location.href="index.php?s=complete";
 				}
-				return;	
+				return;
 			});
 			return;
-			
+
 				// all uploaded so return
-		//if(data == "complete"){		
-			
+		//if(data == "complete"){
+
 		//} else {
 		//window.location.href="index.php?s=completev";
 		//}
@@ -370,8 +411,8 @@ function uploadFile() {
 		{
 		txferSize = fdata[n].fileSize - fdata[n].bytesUploaded;
 		}
-		// check if firefox or Chrome slice supported 
-		
+		// check if firefox or Chrome slice supported
+
 		if(file && file.webkitSlice )
 		{
 			var blob = file.webkitSlice(fdata[n].bytesUploaded, txferSize+fdata[n].bytesUploaded);
@@ -406,7 +447,7 @@ function uploadFile() {
 					return;			
 				}
 			fdata[n].bytesUploaded = parseFloat(xhr.responseText);
-			updatepb(fdata[n].bytesUploaded,fdata[n].bytesTotal);	
+			updatepb(fdata[n].bytesUploaded,fdata[n].bytesTotal, 0);
 			uploadFile();
 			} else {
 			errorDialog("There was a problem retrieving the data:\n" + req.statusText);
@@ -444,9 +485,9 @@ function secondsToString(seconds) {
 }
 
 // update the progress bar
-function updatepb(bytesloaded,totalbytes)
+function updatepb(bytesloaded,totalbytes, amountUploaded)
 {
-	
+
 	//$("#progress_bar").show();
 	var percentComplete = Math.round(bytesloaded * 100 / totalbytes);
 	var bytesTransfered = '';
@@ -463,29 +504,47 @@ function updatepb(bytesloaded,totalbytes)
 		//$(fileref).html(percentComplete +"% ");
 		$(progress_bar).width(percentComplete/100 *$(file_box).width());	//set width of progress bar based on the $status value (set at the top of this page)
 		//$(progress_completed).html(parseInt(percentComplete) + "%(" + bytesTransfered + ")" );	//display the % completed within the progress bar
+
+
+    // Adds the amount of data uploaded this call to the total (for all files)
+    totalBytesLoaded += amountUploaded;
+
+    // Calculates the new length of the progress bar based on the total bytes uploaded
+    percentageComplete = Math.round(totalBytesLoaded*100 / totalFileLengths);
+    $('#aggregate_string').html(percentageComplete + '%');
+    $('#aggregate_bar').width(percentageComplete/100 *$('#aggregate_progress').width());
 	  
 }
 
 function uploadProgress(evt) {
 	}
 
-function uploadFailed(evt) {
+function uploadFailed(evt)
+{
 	clearInterval(intervalTimer);
 	errorDialog("An error occurred while uploading the file.");  
 }  
   
-function uploadCanceled(evt) {
+function uploadCanceled(evt)
+{
 	clearInterval(intervalTimer);
 	erorDialog("The upload has been canceled by the user or the browser dropped the connection.");  
-	}  
+}
 
 // remove file from upload array
 function removeItem(fileID)
 {
-	console.log(fileID);
+    // Updates the combined file lengths
+    totalFileLengths -= fdata[fileID].fileSize;
 	$("#file_"+fileID).remove();
+    fdata[n] = [];
     fdata[fileID].status = false;
 	//fdata.splice(fileID, 1);
 	n = n - 1;
+    if (n < 0) {
+        $("#aggregate_progress").hide();
+        $("#fileToUpload").val(""); // Needed to allow reselection of files.
+        $("#draganddropmsg").show();
+    }
 }
 
