@@ -67,6 +67,9 @@ var totalFileLengths = 0;
 var totalBytesLoaded = 0;
 var percentageComplete = 0;
 
+// Used for calculating average upload speed in updatepb
+var aggregateStartTime = 0;
+
 function browse(){
 	$('#fileToUpload').click();
 	//return browse();
@@ -130,20 +133,12 @@ function browse(){
 		//};
 
             }
-            if ($("#aggregate_progress").length == 0 && files.length > 1)
-            {
-                $("#filestoupload").append(generateAggregateProgressBar());
-                $("#aggregate_progress").hide();
+
+            if (n>-1) {
+                $("#clearallbtn").button("enable");
             }
 		}
 	}
-
-    function generateAggregateProgressBar(){
-        return '<div id="aggregate_progress" title="Upload Progress for tracking code: ' + trackingCode + '" class="fileBox">' +
-            '<span class="filebox_string" id="aggregate_string" style="text-align: center"></span>' +
-            '<div class="progress_bar" id="aggregate_bar"/>' + '</div>' +
-            '</div>'
-    }
 
     function generateFileBoxHtml() {
         var validfile = "";
@@ -229,7 +224,7 @@ function browse(){
 		// no error so use result as current bytes uploaded for file resume 
 		vid = data.vid;
 		fdata[n].bytesUploaded = parseFloat(data.filesize);
-            updatepb(fdata[n].bytesUploaded,fdata[n].bytesTotal, 0);
+            updatepb(fdata[n].bytesUploaded,fdata[n].bytesTotal, fdata[n].bytesUploaded);
             // validated so upload all files
 		
 		//if (typeof files !== "undefined") {
@@ -237,6 +232,7 @@ function browse(){
 		//n = i;
 
             startTime = new Date().getTime();
+
             if(html5webworkers) {
                 uploadFileWebworkers();
             } else { uploadFile(); }
@@ -259,11 +255,23 @@ function browse(){
 
 
 function openProgressBar(){
-    $("#aggregate_progress").dialog({ minWidth: 600,
+    $("#aggregate_dialog_contents").dialog({
+        title: "Upload progress for tracking code: " + trackingCode,
+        minWidth: 600,
         buttons: {
+            'Pause': function() {
+                //TODO
+            },
+            'Suspend': function() {
+                //TODO
+            },
+            'Cancel Upload': function(){
+                //TODO
+            },
             'Close': function() {
                 $(this).dialog('destroy');
             }
+
         }});
 }
 
@@ -484,10 +492,9 @@ function secondsToString(seconds) {
         return ((h > 0 ? h + ":" : "") + (m > 0 ? (h > 0 && m < 10 ? "0" : "") + m + ":" : "0:") + (s < 10 ? "0" : "") + s);
 }
 
-// update the progress bar
+// update the progress bar (Also used for aggregate progress bar)
 function updatepb(bytesloaded,totalbytes, amountUploaded)
 {
-
 	//$("#progress_bar").show();
 	var percentComplete = Math.round(bytesloaded * 100 / totalbytes);
 	var bytesTransfered = '';
@@ -506,12 +513,32 @@ function updatepb(bytesloaded,totalbytes, amountUploaded)
 		//$(progress_completed).html(parseInt(percentComplete) + "%(" + bytesTransfered + ")" );	//display the % completed within the progress bar
 
 
+
+    // use time elapsed from start to calculate averages
+    var now = new Date().getTime();
+
+    // get the result in seconds
+    var timeSinceStart = (now - aggregateStartTime)/1000;
     // Adds the amount of data uploaded this call to the total (for all files)
     totalBytesLoaded += amountUploaded;
 
+    // get the result in MB to make it easier to calculate the time remaining
+    var uploadSpeed = (totalBytesLoaded/timeSinceStart)/1024/1024;
+    var bytesRemaining = totalFileLengths-totalBytesLoaded;
+
+    // Check for uploadSpeed 0 to avoid 'Infinity' caused by /0.
+    var timeRemaining = (uploadSpeed ==0 ? 0 : ((bytesRemaining/1024/1024) / uploadSpeed));
+
     // Calculates the new length of the progress bar based on the total bytes uploaded
     percentageComplete = Math.round(totalBytesLoaded*100 / totalFileLengths);
+
+    // Updates the html contents of the <p> tags in generateAggregateProgressBar
     $('#aggregate_string').html(percentageComplete + '%');
+    $('#totalUploaded').html("Total uploaded: " + readablizebytes(totalBytesLoaded) + "/" + readablizebytes(totalFileLengths));
+
+    // x8 to gives the upload speed in Mbits rather than MBytes
+    $('#averageUploadSpeed').html("Average upload Speed:" + uploadSpeed.toFixed(2)*8 + "MBit/s");
+    $('#timeRemaining').html("Approx time remaining: " + secondsToString(timeRemaining));
     $('#aggregate_bar').width(percentageComplete/100 *$('#aggregate_progress').width());
 	  
 }
@@ -537,7 +564,7 @@ function removeItem(fileID)
     // Updates the combined file lengths
     totalFileLengths -= fdata[fileID].fileSize;
 	$("#file_"+fileID).remove();
-    fdata[n] = [];
+    fdata[fileID] = [];
     fdata[fileID].status = false;
 	//fdata.splice(fileID, 1);
 	n = n - 1;
@@ -545,6 +572,15 @@ function removeItem(fileID)
         $("#aggregate_progress").hide();
         $("#fileToUpload").val(""); // Needed to allow reselection of files.
         $("#draganddropmsg").show();
+        $("#clearallbtn").button("disable");
+    }
+}
+
+// clears the contents of the files-to-upload
+function clearFileBox() {
+    var temp = fdata.length;
+    for (var i = 0; i < temp; i++){
+        removeItem(i);
     }
 }
 

@@ -123,7 +123,7 @@
 
  	// start document ready 
 	$(function() {
-
+        $("#clearallbtn").button("disable");
 		// set date picker
 		$("#datepicker" ).datepicker({ minDate: new Date(minimumDate), maxDate: new Date(maximumDate),altField: "#fileexpirydate", altFormat: "d-m-yy" });
 		$("#datepicker" ).datepicker( "option", "dateFormat", "<?php echo lang("_DP_dateFormat"); ?>" );
@@ -239,10 +239,8 @@ $('body').on(
 
                     //--------------
  				}
-                if ($("#aggregate_progress").length == 0 && files.length > 1)
-                {
-                    $("#filestoupload").append(generateAggregateProgressBar());
-                    $("#aggregate_progress").hide();
+                if (n>-1) {
+                    $("#clearallbtn").button("enable");
                 }
             }   
         }
@@ -695,7 +693,8 @@ function validate()
 	{
 	n=0;
         // Calling before first upload stops progress bar opening for every download (when attempting to close it)
-        openProgressBar();
+    openProgressBar();
+    aggregateStartTime = new Date().getTime();
 	startupload();
 	}
 	} else {
@@ -798,14 +797,21 @@ if ( hasProductInstall && !hasRequestedVersion ) {
 </script>
                 <div id="uploadstandardspinner" style="padding-top:10px;display:none"><img src="images/ajax-loader-sm.gif" alt="" border="0" align="left" style="padding-right:6px" /><?php echo lang("_UPLOADING_WAIT"); ?></div>
               </div>
-              <br />
+<!--              <br />-->
             </div>
-          </div>	
-            
+          <div style="text-align:right;" class="menu"><a id="clearallbtn" href="#"  onclick="clearFileBox()" style="cursor:pointer;width:20%;">Clear all</a></div>
+          <br />
+          </div>
+
   <div id="dragfilestouploadcss" style="height:400px; overflow:auto;" class="box">
-          <div  id="filestoupload" style="display:table;width:100%; height:100%;"><div id="draganddropmsg" style="text-align:center;display:table-cell; vertical-align:middle;" class="heading">drag & drop your files here</div> </div>
-      </div><br><br>
+          <div  id="filestoupload" style="display:table;width:100%; height:100%;"><div id="draganddropmsg" style="text-align:center;display:table-cell; vertical-align:middle;" class="heading">drag & drop your files here</div>
+
+          </div>
+      </div>
+          <br />
        <div style="text-align:center;" class="menu"><a href="#"  onclick="browse()" style="cursor:pointer;width:33%;">Select files</a></div>
+          <br />
+
        </td>
       <td width="50%" height="100%" valign="top" class="box">
       
@@ -920,3 +926,14 @@ if ( hasProductInstall && !hasRequestedVersion ) {
   <?php require_once("$filesenderbase/pages/html5display.php"); ?>
 </div>
 <div id="dialog-autherror" title="<?php echo lang($lang["_MESSAGE"]); ?>" style="display:none"><?php echo lang($lang["_AUTH_ERROR"]); ?></div>
+
+<!--Aggregate progress bar contents-->
+<div id="aggregate_dialog_contents" style="display: none;">
+    <div id="aggregate_progress"  class="fileBox">
+        <span class="filebox_string" id="aggregate_string" style="text-align: center"></span>
+        <div class="progress_bar" id="aggregate_bar"></div>
+    </div>
+    <p id="totalUploaded"></p>
+    <p id="averageUploadSpeed"></p>
+    <p id="timeRemaining"></p>
+</div>
