@@ -1170,5 +1170,24 @@ class Functions {
         return "";
 
     }
+
+    // --------------------------------------- UNCHECKED
+    // Converts from UNIX to DOS style timestamp.
+    // Defaults to current time if $timestamp parameter is missing or 0.
+    // ---------------------------------------
+    function unixToDosTime($timestamp = 0)
+    {
+        $timeBit = ($timestamp == 0) ? getdate() : getdate($timestamp);
+
+        if ($timeBit['year'] < 1980) {
+            return (1 << 21 | 1 << 16);
+        }
+
+        $timeBit['year'] -= 1980;
+
+        return ($timeBit['year'] << 25 | $timeBit['mon'] << 21 |
+            $timeBit['mday'] << 16 | $timeBit['hours'] << 11 |
+            $timeBit['minutes'] << 5 | $timeBit['seconds'] >> 1);
+    }
 }
 ?>
