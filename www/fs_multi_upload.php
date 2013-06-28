@@ -116,7 +116,7 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 		$functions->closeVoucher($data["fileid"]);
 		
 		// voucher has been used so close it
-		if (isset($_SESSION['voucher'])) {
+		if (isset($_SESSION['voucher']) && !isset($_REQUEST["morefiles"])) {
 			$functions->closeCompleteVoucher($_SESSION['voucher']);
 			logEntry("DEBUG fs_upload: Close voucher = " . $_SESSION['voucher']);
 			$_SESSION['voucher'] = NULL;
@@ -154,7 +154,7 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 		}
 		
 		// voucher has been used so close it
-		if (isset($_SESSION['voucher'])) {
+		if (isset($_SESSION['voucher']) && !isset($_REQUEST["morefiles"])) {
 			$functions->closeCompleteVoucher($_SESSION['voucher']);
 			logEntry("DEBUG fs_upload: Close voucher = " . $_SESSION['voucher']);
 			$_SESSION['voucher'] = NULL;
@@ -211,7 +211,7 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 		}
 
 		// voucher has been used so add a SESSION variable
-		if ($authvoucher->aVoucher()) {
+		if ($authvoucher->aVoucher() && isset($_REQUEST["firstfile"])) {
 			$_SESSION['voucher'] = $_REQUEST['vid'];
 		}
 
