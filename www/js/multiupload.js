@@ -182,9 +182,11 @@ function browse(){
         json["filetrackingcode"] = fdata[n].filetrackingcode;
         json["fileto"] = $("#fileto").val();
 
+        var firstFile = n == 0 ? '&firstfile=true' : '';
+
 		$.ajax({
   		type: "POST",
-  		url: "fs_multi_upload.php?type=validateupload&vid="+vid+"&n="+n,
+  		url: "fs_multi_upload.php?type=validateupload&vid="+vid+"&n="+n+firstFile,
   		data: {myJson:  JSON.stringify(json)}
 		}).success(function( data ) {
 		if(data == "") {
@@ -283,10 +285,12 @@ function doUploadComplete(){
     console.log('Upload time:'+ (time /1000) + 'sec');
     console.log('Speed: '+ speed.toFixed(2)+'Mbit/s' );
 
+    var moreFiles = n < fdata.length - 1 ? '&morefiles=true' : '';
+
     var query = $("#form1").serializeArray(), json = {};
     $.ajax({
         type: "POST",
-        url: "fs_multi_upload.php?type=uploadcomplete&vid="+vid+"&n="+n
+        url: "fs_multi_upload.php?type=uploadcomplete&vid="+vid+"&n="+n+moreFiles
         ,
         success:function( data ) {
             var data =  parseJSON(data);
@@ -306,13 +310,11 @@ function doUploadComplete(){
                     } //
                     if(result == "err_filesizeincorrect") {
                         window.location.href="index.php?s=filesizeincorrect";
-                        return;
                     } //
                 })
             } else if (n < fdata.length-1) {
                 n+=1;
                 startupload();
-                return;
             } else {
                 window.location.href="index.php?s=complete";
             }
