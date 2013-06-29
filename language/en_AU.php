@@ -198,6 +198,12 @@ $lang["_DP_isRTL"] = 'false';
 $lang["_DP_showMonthAfterYear"] = 'false';
 $lang["_DP_yearSuffix"] = '';
 
+// Terasender Advanced Settings
+$lang["_TERA_ADVANCED_SETTINGS"] = "Advanced Settings";
+$lang["_TERA_CHUNKSIZE"] = "Chunksize (MB)";
+$lang["_TERA_WORKER_COUNT"] = "Worker count";
+$lang["_TERA_JOBS_PER_WORKER"] = "Jobs per workers";
+
 // Login Splash text
 $lang["_SITE_SPLASHHEAD"] = "Welcome to ". htmlspecialchars($config['site_name']);
 $lang["_SITE_SPLASHTEXT"] = htmlspecialchars($config['site_name']) ." is a secure way to share large files with anyone! Logon to upload your files or invite people to send you a file.";
