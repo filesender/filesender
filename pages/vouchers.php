@@ -312,9 +312,9 @@ if ( count($useremail) > 1 ) {
   <div id="box_3" class="box">
   <table id="vouchertable" width="100%" border="0" cellspacing="1">
     <tr class="headerrow">
-      <td id="vouchers_header_from"><strong><?php echo lang("_FROM"); ?></strong></td>
+        <td id="vouchers_header_from"><strong><?php echo lang("_FROM"); ?></strong></td>
       <td id="vouchers_header_to"><strong><?php echo lang("_TO"); ?></strong></td>
-      <td id="vouchers_header_message"><strong><?php echo lang("_MESSAGE"); ?></strong></td>
+	  <td id="vouchers_header_message"><strong><?php echo lang("_MESSAGE"); ?></strong></td>
       <td id="vouchers_header_created"><strong><?php echo lang("_CREATED"); ?></strong></td>
       <td id="vouchers_header_expiry"><strong><?php echo lang("_EXPIRY"); ?></strong></td>
       <td></td>
