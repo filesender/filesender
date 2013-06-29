@@ -376,7 +376,19 @@ word-wrap: break-word; /* Internet Explorer 5.5+ */
 	padding-left: 20px;
 	height:auto;
 }
+.tblmcw1
+{
+    width: 18px;    
+}
 
+.tblmcw2
+{
+    width: 24px;    
+}
+.tblmcw3
+{
+    width: 100px;    
+}
 
 .welcomeuser
 {
