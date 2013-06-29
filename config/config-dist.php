@@ -67,7 +67,7 @@ public function loadConfig() {
     
 	// auto complete - provides auto complete in input field for emails
 	$config["autocomplete"] = true;
-    $config["autocompleteHistoryMax"] = ""; // "" - unlimited or integer, number of results displayed in autocomplete
+	$config["autocompleteHistoryMax"] = ""; // "" - unlimited or integer, number of results displayed in autocomplete
 
 	// options - stored as array in fileoptions 
 	// Voucher Locked To Sender
