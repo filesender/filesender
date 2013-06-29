@@ -298,8 +298,8 @@ Best regards,
 </BODY>
 </HTML>{CRLF}{CRLF}--simple_mime_boundary--';
 
-$config['voucherissuedemailsubject'] = 'Voucher';
-$config['voucherissuedemailbody'] = '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}
+	$config['voucherissuedemailsubject'] = 'Voucher';
+	$config['voucherissuedemailbody'] = '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}
 Dear Sir, Madam,
 
 Please, find below a voucher which grants access to {siteName}.
