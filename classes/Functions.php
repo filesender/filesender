@@ -625,12 +625,13 @@ class Functions {
 			
 			$filevoucheruid = getGUID();
 			$voucher = 'Voucher';
+			$voucherissuedemailsubject = (isset($config['voucherissuedemailsubject'])) ?  $config['voucherissuedemailsubject'] : "Voucher";
 			$blank = '';
 			$zero = 0;
 			$fileexpiryParam = date($config['db_dateformat'], strtotime($expiry));
 			$statement->bindParam(':fileexpirydate',$fileexpiryParam);
 			$statement->bindParam(':fileto', $to);
-			$statement->bindParam(':filesubject', $voucher);
+			$statement->bindParam(':filesubject', $voucherissuedemailsubject);
 			$fileactivitydateParam =  date($config['db_dateformat'], time());
 			$statement->bindParam(':fileactivitydate',$fileactivitydateParam );	
 			$statement->bindParam(':filevoucheruid', $filevoucheruid );
