@@ -97,8 +97,6 @@ $lang["_UPLOADING_WAIT"] = "Uploading file - please wait...";
 $lang["_SHOW_ALL"] = "Show/Hide Details";
 $lang["_DETAILS"] = "Details";
 
-$lang["_VLTS"] = "Restrict voucher to only send a file back to me. ";
-
 // button labels
 $lang["_UPLOAD"] = "Send a file";
 $lang["_BROWSE"] = "Browse";
@@ -110,11 +108,6 @@ $lang["_SEND"] = "Send";
 $lang["_DELETE"] = "Delete";
 $lang["_YES"] = "Yes";
 $lang["_NO"] = "No";
-
-$lang["_ADVANCED_SETTINGS"] = "Advanced Settings";
-$lang["_CHUNKSIZE"] = "Chunksize (MB)";
-$lang["_WORKER_COUNT"] = "Worker count";
-$lang["_JOBS_PER_WORKER"] = "Jobs per workers";
 
 $lang["_ERROR_CONTACT_ADMIN"] = "There has been an error - please contact your administrator.";	
 $lang["_INVALID_MISSING_EMAIL"] = "Invalid or missing email";	
@@ -148,7 +141,8 @@ $lang["_LOGOUT_COMPLETE"] = "Logout Complete";
 $lang["_SEND_NEW_VOUCHER"] = "A Voucher allows someone to send you a file.<br />
 To create a voucher, enter an email address then select Send Voucher.<br />
 An email will be sent to the recipient with a link to use the Voucher.";
-$lang['_VOUCHER_ISSUED_EMAIL_SUBJECT'] = 'Voucher';
+$lang["_VOUCHER_ISSUED_EMAIL_SUBJECT"] = "Voucher";
+$lang["_VLTS"] = "Restrict voucher to only send a file back to me.";
 
 // User interaction
 $lang["_EMAIL_SEPARATOR_MSG"] = "Multiple email addresses separated by , or ;";
@@ -208,6 +202,12 @@ $lang["_DP_firstDay"] = '1';
 $lang["_DP_isRTL"] = 'false';
 $lang["_DP_showMonthAfterYear"] = 'false';
 $lang["_DP_yearSuffix"] = '';
+
+// Terasender Advanced Settings
+$lang["_ADVANCED_SETTINGS"] = "Advanced Settings";
+$lang["_CHUNKSIZE"] = "Chunksize (MB)";
+$lang["_WORKER_COUNT"] = "Worker count";
+$lang["_JOBS_PER_WORKER"] = "Jobs per workers";
 
 // Login Splash text
 $lang["_SITE_SPLASHHEAD"] = "Welcome to ". htmlspecialchars($config['site_name']);
