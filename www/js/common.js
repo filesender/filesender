@@ -62,6 +62,10 @@ function validate_fileto()
 	// remove white spaces 
 	var email = $("#fileto").val();
 	email = email.split(" ").join("");
+    if(email != "") {
+	// if not empty - check and remove trailing , added by autocomplete
+	email = email.replace(/,$/, "");
+	email = email.replace(/;$/, "");
 	$("#fileto").val(email);
 	email = email.split(/,|;/);
 	if(email.length>maxEmailRecipients)
@@ -74,6 +78,7 @@ function validate_fileto()
 		$("#fileto_msg").show();
 		return false;
 	}
+    }
 	}
 	return true;		
 }
