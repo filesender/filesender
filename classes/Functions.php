@@ -299,7 +299,7 @@ class Functions {
             $authAttributes["saml_uid_attribute"] = "nonvalue";
         }
 		// limit results by config option
-		$count = (isset($config["autocompleteHistoryMax"]) && $config["autocompleteHistoryMax"] !="")? "LIMIT ".$config["autocompleteHistoryMax"]:"";
+		$count = (isset($config["autocompleteHistoryMax"]) && is_numeric($config["autocompleteHistoryMax"]))? "LIMIT ".$config["autocompleteHistoryMax"]:"";
 		
 		$pdo = $this->db->connect();
 		$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
