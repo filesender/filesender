@@ -204,10 +204,10 @@ $lang["_DP_showMonthAfterYear"] = 'false';
 $lang["_DP_yearSuffix"] = '';
 
 // Terasender Advanced Settings
-$lang["_ADVANCED_SETTINGS"] = "Advanced Settings";
-$lang["_CHUNKSIZE"] = "Chunksize (MB)";
-$lang["_WORKER_COUNT"] = "Worker count";
-$lang["_JOBS_PER_WORKER"] = "Jobs per workers";
+$lang["_TERA_ADVANCED_SETTINGS"] = "Advanced Settings";
+$lang["_TERA_CHUNKSIZE"] = "Chunksize (MB)";
+$lang["_TERA_WORKER_COUNT"] = "Worker count";
+$lang["_TERA_JOBS_PER_WORKER"] = "Jobs per workers";
 
 // Login Splash text
 $lang["_SITE_SPLASHHEAD"] = "Welcome to ". htmlspecialchars($config['site_name']);
