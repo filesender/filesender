@@ -778,7 +778,7 @@ if ( hasProductInstall && !hasRequestedVersion ) {
       <tr style="padding: 0">
       	<td style="padding: 0"></td>
       	<td colspan="2" style="padding: 0 3px">
-      		<div id="workers-advanced-settings" style="display: none;" class="box">
+      		<div id="terasender-advanced-settings" style="display: none;" class="box">
 	      		 <?php echo lang("_TERA_CHUNKSIZE"); ?><input id="chunksize" type="text" value="<?php echo (isset($config['terasender_chunksize']) ? $config['terasender_chunksize'] : 5) ?>"/><br />
 	      		 <?php echo lang("_TERA_WORKER_COUNT"); ?><input id="workerCount" type="text" value="<?php echo (isset($config['terasender_workerCount']) ? $config['terasender_workerCount'] : 6) ?>"/><br />
 	      		 <?php echo lang("_TERA_JOBS_PER_WORKER"); ?><input id="jobsPerWorker" type="text" value="<?php echo (isset($config['terasender_jobsPerWorker']) ? $config['terasender_jobsPerWorker'] : 1) ?>"/>
@@ -787,7 +787,7 @@ if ( hasProductInstall && !hasRequestedVersion ) {
       </tr>
       <tr style=" <?php echo (isset($config['terasender']) && $config['terasender'] && isset($config['terasenderadvanced']) && $config['terasenderadvanced']) ?  '': ';display: none;'; ?>">
 	      <td></td>
-	      <td colspan="2"><a href="#" onclick="$('#workers-advanced-settings').slideToggle()"><?php echo lang("_TERA_ADVANCED_SETTINGS"); ?></a></td>
+	      <td colspan="2"><a href="#" onclick="$('#terasender-advanced-settings').slideToggle()"><?php echo lang("_TERA_ADVANCED_SETTINGS"); ?></a></td>
       </tr>
       </table>
 		<input type="hidden" id="filevoucheruid" name="filevoucheruid" value="<?php echo $voucherUID; ?>" />
