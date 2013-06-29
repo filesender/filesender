@@ -229,11 +229,69 @@ class Functions {
 		$returnArray = array();
 		foreach($result as $row )
 		{
+			// return number of downloads for a file
+			$row["downloads"] =  $this->countDownloads($row["filevoucheruid"]);
+			$row["downloadsummary"] = $this->downloadSummary($row["filevoucheruid"]);
 			array_push($returnArray, $row);
 		}
 		return json_encode($returnArray);
     }
-
+	
+ 	//--------------------------------------- CHECKED
+    // returns download summary as array for a specified voucher
+	// ---------------------------------------
+	public function downloadSummary($vid)
+	{
+		global $config;
+		
+		$pdo = $this->db->connect();
+		$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
+		$statement = $pdo->prepare("SELECT * FROM logs WHERE  logvoucheruid = :logvoucheruid AND logtype = 'Download' ORDER BY logdate DESC");
+		$statement->bindParam(':logvoucheruid', $vid);
+		try 
+		{ 	
+			$statement->execute(); 
+		}
+		catch(PDOException $e)
+		{ 
+			logEntry($e->getMessage(),"E_ERROR");	
+			displayError(lang("_ERROR_CONTACT_ADMIN"),$e->getMessage()); 
+		}   
+		$result = $statement->fetchAll();
+		$pdo = NULL;
+		$returnArray = array();
+		foreach($result as $row )
+		{
+			array_push($returnArray, $row);
+		}
+		return $returnArray ; 
+	}
+	
+	 //--------------------------------------- CHECKED
+    // returns the number of downloads for a file
+	// ---------------------------------------
+	public function countDownloads($vid)
+	{
+		global $config;
+		
+		$pdo = $this->db->connect();
+		$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
+		$statement = $pdo->prepare("SELECT count(*)  FROM logs WHERE logvoucheruid = :logvoucheruid AND logtype = 'Download'");
+		
+		$statement->bindParam(':logvoucheruid', $vid);
+		try 
+		{ 	
+			$statement->execute(); 
+		}
+		catch(PDOException $e)
+		{ 
+			logEntry($e->getMessage(),"E_ERROR");	
+			displayError(lang("_ERROR_CONTACT_ADMIN"),$e->getMessage()); 
+		}   
+		$total = $statement->fetch(PDO::FETCH_NUM);
+		return $total[0];
+	}
+	
     //--------------------------------------- CHECKED
     // Return logs if users is admin
     // current email authenticated as per config["admin"]
