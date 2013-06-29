@@ -63,6 +63,10 @@ public function loadConfig() {
 	$config["versionNumber"] = true; // Show version number (true/false)
 	$config['site_showStats'] = false; // Show site upload/download stats (true/false)
 	$config['displayUserName'] = true; // Show 'Welcome user' (true/false)
+    
+	// auto complete - provides auto complete in input field for emails
+	$config["autocomplete"] = true;
+	$config["autocompleteHistoryMax"] = ""; // "" - unlimited or integer, number of results displayed in autocomplete
 
 	// debug settings
 	$config["debug"] = false; // Debug logging on/off (true/false)
