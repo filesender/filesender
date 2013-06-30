@@ -32,7 +32,7 @@
 
 class FileSender_Version
 {
-	const VERSION = '1.5-trunk-terasender';
+	const VERSION = '1.6-trunk-terasender';
 	const DBVERSION  = '1.5'; 
 	//-------------------------------------------------------
 	// Compare the specified version with the current version.

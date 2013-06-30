@@ -1,3 +1,27 @@
+filesender (1.5) stable; urgency=medium
+   * Release 1.5
+
+   * Major changes since 1.1.1
+     - User interface is now HTML based, no Flash required except when
+       uploading files with a non-HTML5-capable browser
+     - Multilanguage support in web interface
+     - Support for multiple database backends (PDO)
+     - Changes in configuration (see Upgrade Notes)
+
+   * Changes since 1.5-rc1
+     - Added Serbian language file (#865)
+     - Updated language definitions (#666, #706, #720, #880)
+     - Consolidated filename validation (#863)
+     - Don't insert guest voucher(s) in case of validation errors (#862)
+     - Allow spaces in configurable setting for admin users (#869)
+     - Restrict access to admin page skeleton (#881)
+     - Include version in call to default.css to prevent upgrade issues (#834)
+     - Add color style for links in default.css (#837)
+     - Debian packaging: 'default-mta' added to dependencies (#710)
+     - Documentation updated
+
+ -- Filesender Development <filesender-dev@filesender.org>  Sun, 03 Mar 2013 20:24:49 +0100
+
 filesender (1.5~rc1) unstable; urgency=medium
    * Release 1.5-rc1
 
