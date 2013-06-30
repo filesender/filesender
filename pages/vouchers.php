@@ -276,7 +276,7 @@ if ( count($useremail) > 1 ) {
         }
         echo "</select>\n";
 } else {
-        echo "<div id=\"filefrom\">".$useremail[0]."</div>" ."<input name=\"filefrom\" type=\"hidden\" id=\"filefrom\" value=\"" . $useremail[0] . "\" />\n";
+        echo "<div id=\"visible_filefrom\">".$useremail[0]."</div>" ."<input name=\"filefrom\" type=\"hidden\" id=\"filefrom\" value=\"" . $useremail[0] . "\" />\n";
 }
 ?>   </td>
         </tr>
