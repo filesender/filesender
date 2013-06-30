@@ -449,7 +449,7 @@ foreach($json_o as $item) {
    	echo "<tr><td class='dr4 sdheading tblmcw3'><strong>".lang("_CREATED")."</strong></td><td class='dr6 HardBreak'>".date($lang['datedisplayformat'],strtotime($item['filecreateddate'])). "</td></tr>"; 
 
 	echo "<tr><td class='dr4 sdheading'><strong>".lang("_FROM")."</strong></td>";
-    if(in_array($item['filefrom'] ,$useremail))
+   	if(in_array($item['filefrom'] ,$useremail))
    	{
    	echo "<td class='dr6 HardBreak'>".lang("_ME")."</td>";
    	} else {
