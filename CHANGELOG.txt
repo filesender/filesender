@@ -1,27 +1,41 @@
-Last update: 14 April 2013
+Last update: 30 June 2013
 
 Version 1.6-development <???>
 
-     - #885 Add TeraSender code
+   * Major changes since 1.5
+     - Add TeraSender code (#885, #899)
+       - Allows for faster HTML5 uploads
        - Upgrade note: new configuration options
-     - #888 Add sqlite init-script and 'how to'
-       Patch contributed by Dick Visser
-     - #888 PDO rowCount fixes/cleanup
-       Optimise PDO Query row count statements
-       - more efficient
-       - can also be used with sqlite
-       Patch from Dick Visser
-       Remove validVoucher() function
-       - not used anywhere
-       - functionality in aVoucher()
-       Patch from Thijs Kinkhorst
-     - #858 New download.php
-       - added partial download (HTTP range) functionality
-       - redo logic for mail sending and logging
-       - some cleanup
-     - #871 Add _SITE_FOOTER for a customisable footer through the language definitions
+     - New layout of My Files page (#597)
+       - add number of downloads
+     - Recipient address autocomplete based on previous recipients (#821)
+     - Add selector when multiple mail adresses are available (#184)
+       Modified patch from Thijs Kinkhorst
+
+   * Changes since 1.5
+     - Voucher Subject configurable (#774)
+       Patch contributed by Thijs Kinkhorst
+     - Add a customisable footer through the language definitions (#871)
        Modified patch from Jean-Philippe Evrard, BELNET
-     - #184 Add selector when multiple mail adresses are available
+     - logout.php and invalidvoucher.php removed and integrated in
+       the core index.php (#904)
+       - Upgrade note: needs change in config.php when upgrading,
+         logout page breaks if config.php isn't adapted
+     - New download.php (#858)
+       - redo logic for mail sending and logging
+       - added partial download (HTTP range) functionality (not used yet)
+       - some cleanup
+     - Add sqlite init-script and 'how to' (#898)
+       Patch contributed by Dick Visser
+
+   * Fixes since 1.5
+     - Optimise PDO Query row count statements (#888)
+       Patch from Dick Visser
+     - Remove unused validVoucher() function
+       Patch from Thijs Kinkhorst
+     - Hash fileuid for pending/validateupload entry (#884)
+     - Replace $_REQUEST['PHPSESSID'] with session_id() (#897)
+     - Fix declarations for fileexpirydate and logdate in mysql init script (#932)
 
 Version 1.5 <3 March 2013>
 
