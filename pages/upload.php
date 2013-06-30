@@ -632,7 +632,7 @@ if ( count($senderemail) > 1 ) {
         }
         echo "</select>\n";
 } else {
-        echo $senderemail[0] . "<input name=\"filefrom\" type=\"hidden\" id=\"filefrom\" value=\"" . $senderemail[0] . "\" />\n";
+        echo "<div id=\"visible_filefrom\">".$senderemail[0]."</div>" . "<input name=\"filefrom\" type=\"hidden\" id=\"filefrom\" value=\"" . $senderemail[0] . "\" />\n";
 }
 ?>
           </td>
