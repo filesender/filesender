@@ -126,7 +126,6 @@ public function loadConfig() {
 	$config['site_simplesamlurl'] =  $prot . $_SERVER['SERVER_NAME'] . '/simplesaml/';
 	$config['site_authenticationSource'] ="default-sp";
 	$config['site_logouturl'] = $config['site_url'] . '?s=logout';
-	$config['site_downloadurl'] = $config['site_url'] . 'files/'; // * Deprecated *
 	}
 	$config['forceSSL'] = true; // Always use SSL (true/false)
 
