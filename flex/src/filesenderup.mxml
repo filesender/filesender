@@ -37,7 +37,7 @@
 			/* -----------------------------------------
 			* flex - upload file using flash filereference
 			* -----------------------------------------
-			*  Version 1.5
+			*  Version 1.4
 			*/
 			
 			//import com.adobe.serialization.json.JSON;
@@ -155,7 +155,7 @@
 			public function validatebeforeupload():void
 			{
 				// send to js to check: fileRef.name fileRef.size
-				var callString:String = 'validateforflash("'+fileRef.name+'","'+fileRef.size+'")';
+				var callString:String = "validateforflash('"+fileRef.name+"','"+fileRef.size+"')";
 				ExternalInterface.call(callString); 
 			}
 			
