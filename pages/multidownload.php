@@ -78,7 +78,7 @@ if (isset($_REQUEST['gid'])) {
         <form id="fileform" method="post" action="multidownload.php?gid=<?php echo urlencode($_REQUEST['gid'])?>">
             <table id="myfiles" width="100%" border="0" cellspacing="0" cellpadding="4" style="table-layout:fixed;">
                 <tr class="headerrow" >
-                    <td class="tblmcw2"><input type="checkbox" style="margin-left: 0; margin-right: 0" name="selectall"
+                    <td class="tblmcw2"><input type="checkbox" checked="true" style="margin-left: 0; margin-right: 0" name="selectall"
                                           id="selectall"
                                           onclick="$('.checkboxes').prop('checked', $('#selectall').prop('checked'))"/></td>
                     <td class="HardBreak" id="myfiles_header_filename" style="vertical-align: middle"><strong><?php echo lang("_FILE_NAME"); ?></strong></td>
@@ -90,7 +90,7 @@ if (isset($_REQUEST['gid'])) {
 
                     echo
                         '<tr>' .
-                        '<td style="text-align: center; vertical-align: middle" class="dr1"><input type="checkbox" class="checkboxes" name="' . $fileData[$i]['filevoucheruid'] . '" style="margin-left: 0; margin-right: 0; width: 11px; height: 11px;" /></td>' .
+                        '<td style="text-align: center; vertical-align: middle" class="dr1"><input type="checkbox" checked="true" class="checkboxes" name="' . $fileData[$i]['filevoucheruid'] . '" style="margin-left: 0; margin-right: 0; width: 11px; height: 11px;" /></td>' .
                         '<td class="dr2 HardBreak"><a id="link_downloadfile_' . $i .'" href="download.php?vid=' .$fileData[$i]['filevoucheruid'] . '">' . utf8tohtml($fileData[$i]['fileoriginalname'], TRUE) . '</a></td>' .
                         '<td class="dr8 HardBreak">' . formatBytes($fileData[$i]['filesize']) . '</td>' .
                         '</tr>';
