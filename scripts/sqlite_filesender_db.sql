@@ -31,13 +31,6 @@ CREATE TABLE files (
   filetrackingcode TEXT,
 );
 
-CREATE TRIGGER UPDATE_FILEEXPIRYDATE AFTER UPDATE ON files
-	BEGIN
-		UPDATE files SET fileexpirydate = datetime('now')
-		WHERE rowid = new.rowid;
-	END
-;
-
 CREATE TABLE logs (
 	logid INTEGER PRIMARY KEY AUTOINCREMENT,
 	logfileuid TEXT,

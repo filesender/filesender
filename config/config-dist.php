@@ -64,10 +64,13 @@ public function loadConfig() {
 	$config["versionNumber"] = true; // Show version number (true/false)
 	$config['site_showStats'] = false; // Show site upload/download stats (true/false)
 	$config['displayUserName'] = true; // Show 'Welcome user' (true/false)
-	$config["customCSS"] = "css/custom1.css"; 
-	
+    
+	// auto complete - provides auto complete in input field for emails
+	$config["autocomplete"] = true;
+	$config["autocompleteHistoryMax"] = ""; // "" - unlimited or integer, number of results displayed in autocomplete
+
 	// debug settings
-	$config["debug"] = true; // Debug logging on/off (true/false)
+	$config["debug"] = false; // Debug logging on/off (true/false)
 	$config["displayerrors"] = false; // Display debug errors on screen (true/false)
 	$config['dnslookup'] = true; // log includes DNS lookup (true/false)
 	$config["client_specific_logging"] = false; // client logging (true/false)
@@ -107,7 +110,6 @@ public function loadConfig() {
 	$config['terasender_jobsPerWorker'] = 1;	// default (1) jobs per worker
 
 	// Advanced server settings, do not change unless you have a very good reason.
-	$config['postgresdateformat'] = "Y-m-d H:i:sP"; // Date/Time format for PostgreSQL, use PHP date format specifier syntax
 	$config['db_dateformat'] = "Y-m-d H:i:sP"; // Date/Time format for PostgreSQL, use PHP date format specifier syntax
 	$config["crlf"] = "\n"; // for email CRLF can be changed to \r\n if required
 	$config['voucherRegEx'] = "'[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}'";
@@ -121,8 +123,7 @@ public function loadConfig() {
 	$config['site_url'] = $prot . $_SERVER['SERVER_NAME'] . '/filesender/'; // URL to Filesender
 	$config['site_simplesamlurl'] =  $prot . $_SERVER['SERVER_NAME'] . '/simplesaml/';
 	$config['site_authenticationSource'] ="default-sp";
-	$config['site_logouturl'] = $config['site_url'] . 'logout.php';
-	$config['site_downloadurl'] = $config['site_url'] . 'files/'; // * Deprecated *
+	$config['site_logouturl'] = $config['site_url'] . '?s=logout';
 	}
 	$config['forceSSL'] = true; // Always use SSL (true/false)
 
@@ -293,6 +294,8 @@ Best regards,
 <P>{siteName}</P>
 </BODY>
 </HTML>{CRLF}{CRLF}--simple_mime_boundary--';
+
+	$config['voucherissuedemailsubject'] = 'Voucher';
 	$config['voucherissuedemailbody'] = '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}
 Dear Sir, Madam,
 

@@ -62,6 +62,10 @@ function validate_fileto()
 	// remove white spaces 
 	var email = $("#fileto").val();
 	email = email.split(" ").join("");
+    if(email != "") {
+	// if not empty - check and remove trailing , added by autocomplete
+	email = email.replace(/,$/, "");
+	email = email.replace(/;$/, "");
 	$("#fileto").val(email);
 	email = email.split(/,|;/);
 	if(email.length>maxEmailRecipients)
@@ -70,11 +74,11 @@ function validate_fileto()
 		return false;
 	}
 	for (var i = 0; i < email.length; i++) {
-
-        if (!echeck(email[i])) {
-		    $("#fileto_msg").show();
-		    return false;
-	    }
+		if (!echeck(email[i], 1, 0)) {
+		$("#fileto_msg").show();
+		return false;
+	}
+    }
 	}
 	return true;		
 }

@@ -90,6 +90,51 @@ $(function() {
 		$('#btn_cancel').html('<?php echo lang("_NO") ?>')  
 		$('.ui-dialog-buttonpane button:contains(deleteBTN)').attr("id","btn_delete");            
 		$('#btn_delete').html('<?php echo lang("_YES") ?>')  
+        
+	// autocomplete
+	var availableTags = [<?php  echo (isset($config["autocomplete"]) && $config["autocomplete"])?  $functions->uniqueemailsforautocomplete():  ""; ?>];
+		
+		function split( val ) {
+            return val.split( /,\s*/ );
+        }
+        function extractLast( term ) {
+            return split( term ).pop();
+        }
+		
+		$( "#fileto" )
+            // don't navigate away from the field on tab when selecting an item
+            .bind( "keydown", function( event ) {
+                if ( event.keyCode === $.ui.keyCode.TAB &&
+                        $( this ).data( "uiAutocomplete" ).menu.active ) {
+                    event.preventDefault();
+                }
+            })
+            .autocomplete({
+                minLength: 0,
+                source: function( request, response ) {
+                    // delegate back to autocomplete, but extract the last term
+                    response( $.ui.autocomplete.filter(
+                        availableTags, extractLast( request.term ) ) );
+                },
+                focus: function() {
+                    // prevent value inserted on focus
+                    return false;
+                },
+                select: function( event, ui ) {
+                    var terms = split( this.value );
+                    // remove the current input
+                    terms.pop();
+                    // add the selected item
+                    terms.push( ui.item.value );
+                    // add placeholder to get the comma-and-space at the end
+                    terms.push( "" );
+                    this.value = terms;//.join( ", " );
+                    return false;
+                }
+            });
+            // end autocomplete
+        
+        // end document ready
 });
 
 function hidemessages()
@@ -206,7 +251,7 @@ $json_o=json_decode($filedata,true);
   <?php echo '<div id="pageheading">'.lang("_VOUCHERS").'</div>'; ?>
     <table width="100%" border="0">
       <tr>
-        <td colspan="2" id="invite_text"><?php echo html_entity_decode(lang("_SEND_NEW_VOUCHER")); ?></td>
+        <td colspan="2" id="invite_text"><?php echo lang("_SEND_NEW_VOUCHER"); ?></td>
       </tr>
       </table>
   </div>
@@ -220,17 +265,21 @@ $json_o=json_decode($filedata,true);
         <div id="maxemails_msg" style="display: none" class="validation_msg"><?php echo lang("_MAXEMAILS"); ?> <?php echo $config['max_email_recipients'] ?>.</div>
  		</td>
       </tr>
+       <tr>
+        <td class="mandatory" id="voucher_from"><?php echo lang("_FROM"); ?>:</td>
+        <td colspan="2">
 <?php
 if ( count($useremail) > 1 ) {
-        echo "<tr><td class=\"mandatory\">" . lang("_FROM") . ":</td><td><select name=\"filefrom\" id=\"filefrom\">\n";
+        echo "<select name=\"filefrom\" id=\"filefrom\">\n";
         foreach($useremail as $email) {
                 echo "<option>$email</option>\n";
         }
-        echo "</select></td></tr>\n";
+        echo "</select>\n";
 } else {
-        echo "<input name=\"filefrom\" type=\"hidden\" id=\"filefrom\" value=\"" . $useremail[0] . "\" />\n";
+        echo "<div id=\"visible_filefrom\">".$useremail[0]."</div>" ."<input name=\"filefrom\" type=\"hidden\" id=\"filefrom\" value=\"" . $useremail[0] . "\" />\n";
 }
-?>
+?>   </td>
+        </tr>
       <tr>
         <td class="mandatory" id="vouchers_expirydate"><?php echo lang("_EXPIRY_DATE"); ?>:</td>
         <td><input id="datepicker" onchange="validate_expiry()" title="<?php echo lang('_DP_dateFormat'); ?>" />
@@ -250,6 +299,7 @@ if ( count($useremail) > 1 ) {
   <div id="box_3" class="box">
   <table id="vouchertable" width="100%" border="0" cellspacing="1">
     <tr class="headerrow">
+      <td id="vouchers_header_from"><strong><?php echo lang("_FROM"); ?></strong></td>
       <td id="vouchers_header_to"><strong><?php echo lang("_TO"); ?></strong></td>
       <td id="vouchers_header_created"><strong><?php echo lang("_CREATED"); ?></strong></td>
       <td id="vouchers_header_expiry"><strong><?php echo lang("_EXPIRY"); ?></strong></td>
@@ -259,7 +309,7 @@ if ( count($useremail) > 1 ) {
 	$i = 0; 
 	foreach($json_o as $item) {
 		$i += 1; // counter for file id's
-		echo "<tr><td>" .$item['fileto'] . "</td><td>" .date($lang['datedisplayformat'],strtotime($item['filecreateddate'])) . "</td><td>" .date($lang['datedisplayformat'],strtotime($item['fileexpirydate'])) . "</td><td><div  style='cursor:pointer;'><img id='btn_deletevoucher_".$i."' src='images/shape_square_delete.png' alt='' title='".lang("_DELETE")."' onclick='confirmdelete(".'"' .$item['filevoucheruid'] . '"'. ")' border='0' /></div></td></tr>"; //etc
+		echo "<tr><td>" .$item['filefrom'] . "</td><td>" .$item['fileto'] . "</td><td>" .date($lang['datedisplayformat'],strtotime($item['filecreateddate'])) . "</td><td>" .date($lang['datedisplayformat'],strtotime($item['fileexpirydate'])) . "</td><td><div  style='cursor:pointer;'><img id='btn_deletevoucher_".$i."' src='images/shape_square_delete.png' alt='' title='".lang("_DELETE")."' onclick='confirmdelete(".'"' .$item['filevoucheruid'] . '"'. ")' border='0' /></div></td></tr>"; //etc
 	}
 ?>
   </table>

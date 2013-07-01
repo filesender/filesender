@@ -39,7 +39,7 @@
 // main menu items
 $lang["_ADMIN"] = "Administration";
 $lang["_NEW_UPLOAD"] = "Send Files";
-$lang["_VOUCHERS"] = "Send upload invitation";
+$lang["_VOUCHERS"] = "Guest Voucher";
 $lang["_LOGON"] = "Logon";
 $lang["_LOG_OFF"] = "Log Off";
 $lang["_MY_FILES"] = "My Files";
@@ -51,6 +51,7 @@ $lang["_HELP"] = "Help";
 $lang["_DELETE_VOUCHER"] = "Delete Voucher";
 $lang["_UPLOAD_COMPLETE"] = "Your file has been uploaded and message sent.";
 $lang["_UPLOAD_PROGRESS"] = "Upload progress";
+$lang["_DOWNLOADED"] = "Downloaded";
 $lang["_DOWNLOAD"] = "Download";
 $lang["_CANCEL_UPLOAD"] = "Cancel Upload";
 
@@ -93,15 +94,17 @@ $lang["_TERMS_OF_AGREEMENT"] = "Terms of Agreement";
 $lang["_SHOW_TERMS"] = "Show Terms";
 $lang["_SHOWHIDE"] = "Show/Hide";
 $lang["_UPLOADING_WAIT"] = "Uploading file - please wait...";
+$lang["_SHOW_ALL"] = "Show/Hide Details";
+$lang["_DETAILS"] = "Details";
 
 // button labels
 $lang["_UPLOAD"] = "Start sending";
-$lang["_BROWSE"] = "Select files";
+$lang["_BROWSE"] = "Browse";
 $lang["_CANCEL"] = "Cancel";
 $lang["_OPEN"] = "Open";
 $lang["_CLOSE"] = "Close";
 $lang["_OK"] = "OK";
-$lang["_SEND"] = "Send!";
+$lang["_SEND"] = "Send";
 $lang["_DELETE"] = "Delete";
 $lang["_YES"] = "Yes";
 $lang["_NO"] = "No";
@@ -198,6 +201,12 @@ $lang["_DP_firstDay"] = '1';
 $lang["_DP_isRTL"] = 'false';
 $lang["_DP_showMonthAfterYear"] = 'false';
 $lang["_DP_yearSuffix"] = '';
+
+// Terasender Advanced Settings
+$lang["_TERA_ADVANCED_SETTINGS"] = "Advanced Settings";
+$lang["_TERA_CHUNKSIZE"] = "Chunksize (MB)";
+$lang["_TERA_WORKER_COUNT"] = "Worker count";
+$lang["_TERA_JOBS_PER_WORKER"] = "Jobs per workers";
 
 // Login Splash text
 $lang["_SITE_SPLASHHEAD"] = "Welcome to ". htmlspecialchars($config['site_name']);

@@ -297,8 +297,8 @@ function logProcess($client,$message) {
 		$myFile = $config['log_location'].$dateref."-".$client.".log.txt";
 		$fh = fopen($myFile, 'a') or die("can't open file");
 		// don't print errors on screen when there is no session.
-		if(isset($_REQUEST['PHPSESSID'])){
-			$sessionId = $_REQUEST['PHPSESSID'];
+		if(session_id()){
+			$sessionId = session_id();
 		} else {
 			$sessionId = "none";
 		}
