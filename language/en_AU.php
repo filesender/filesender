@@ -89,6 +89,8 @@ $lang["_SUBJECT"] = "Subject";
 $lang["_EXPIRY"] = "Expiry";
 $lang["_MESSAGE"] = "Message";
 $lang["_TYPE"] = "Type";
+$lang["_SEND_COPY_EMAILS"] = "Send copy of emails to me";
+$lang["_ENTER_TO_EMAIL"] = "Enter recipient email(s)";
 
 $lang["_TERMS_OF_AGREEMENT"] = "Terms of Agreement";
 $lang["_SHOW_TERMS"] = "Show Terms";
@@ -108,6 +110,7 @@ $lang["_SEND"] = "Send";
 $lang["_DELETE"] = "Delete";
 $lang["_YES"] = "Yes";
 $lang["_NO"] = "No";
+$lang["_CLEAR_ALL"] = "Clear all";
 
 $lang["_ERROR_CONTACT_ADMIN"] = "There has been an error - please contact your administrator.";	
 $lang["_INVALID_MISSING_EMAIL"] = "Invalid or missing email";	
@@ -121,6 +124,8 @@ $lang["_AUTH_ERROR"] = "Your are no longer authenticated. <br />Your session may
 $lang["_SELECT_ANOTHER_FILE"] = "Please select another file.";
 $lang["_INVALID_VOUCHER"] = "This Voucher is no longer Valid. <br />Please contact the person that issued this voucher";
 $lang["_SELECT_FILE"] = "Select your file";
+$lang["_SELECT_FILES"] = "Select files";
+$lang["_DRAG_AND_DROP"] = "drag & drop your files here";
 $lang["_INVALID_FILE_NAME"] = "The name of the file you are uploading is invalid. Please rename your file and try again.";
 $lang["_INVALID_SIZE_USEHTML5"] = "Please select another file or use a HTML5 enabled browser to upload larger files.";
 $lang["_ACCEPTTOC"] = "I accept the terms and conditions of this service.";	
@@ -174,7 +179,7 @@ $lang["_STEP2"] = "Set expiry date";
 $lang["_STEP3"] = "Browse for a file";
 $lang["_STEP4"] = "Click Send";
 $lang["_HTML5Supported"] = "Uploads over 2GB supported!";
-$lang["_HTML5NotSupported"] = "Uploads over 2GB not supported!";			
+$lang["_HTML5NotSupported"] = "Uploads over 2GB not supported!";
 
 $lang["_OPTIONAL"] = "optional";
 

@@ -398,20 +398,20 @@ window.addEventListener('keydown', function (e) {
                         </div>
                     </div>
                     <div style="text-align:right;" class="menu">
-                        <a id="clearallbtn" href="#" onclick="clearFileBox()" style="cursor:pointer;width:20%;">Clear all</a>
+                        <a id="clearallbtn" href="#" onclick="clearFileBox()" style="cursor:pointer;width:20%;"><?php echo lang('_CLEAR_ALL'); ?></a>
                     </div>
                     <br/>
                 </div>
 
                 <div id="dragfilestouploadcss" style="height:400px; overflow:auto;" class="box">
                     <div id="filestoupload" style="display:table;width:100%; height:100%;">
-                        <div id="draganddropmsg" style="text-align:center;display:table-cell; vertical-align:middle;" class="heading">drag & drop your files here</div>
+                        <div id="draganddropmsg" style="text-align:center;display:table-cell; vertical-align:middle;" class="heading"><?php echo lang('_DRAG_AND_DROP'); ?></div>
                     </div>
                 </div>
                 <br/>
 
                 <div style="text-align:center;" class="menu">
-                    <a href="#" onclick="browse()" style="cursor:pointer;width:33%;">Select files</a>
+                    <a href="#" onclick="browse()" style="cursor:pointer;width:33%;"><?php echo lang('_SELECT_FILES'); ?></a>
                 </div>
                 <br/>
             </td>
@@ -438,7 +438,7 @@ window.addEventListener('keydown', function (e) {
                     <label for="fileto"><?php echo lang("_TO"); ?>:</label>
                     <input name="fileto" type="text" id="fileto"
                                title="<?php echo lang("_EMAIL_SEPARATOR_MSG"); ?>" onchange="validate_fileto()"
-                               value="" placeholder="Enter recipient email"/>
+                               value="" placeholder="<?php echo lang('_ENTER_TO_EMAIL'); ?>" />
 
                     <div id="fileto_msg" style="display: none" class="validation_msg field" class="">
                         <?php echo lang('_INVALID_MISSING_EMAIL'); ?>
@@ -488,7 +488,7 @@ window.addEventListener('keydown', function (e) {
                                ); ?>"/>
                     </div>
                     <br/>
-                    <label for="rtnemail">Send copy of emails to me</label>
+                    <label for="rtnemail"><?php echo lang("_SEND_COPY_EMAILS"); ?></label>
                     <input name="rtnemail" type="checkbox" id="rtnemail" style="float:left; width:20px;"/>
                 </div>
             </td>
@@ -519,16 +519,16 @@ window.addEventListener('keydown', function (e) {
                 </div>
 
                 <div id="workers-advanced-settings" style="display: none;" class="box">
-                    <label for="chunksize">Chunk size (Mb)</label>
+                    <label for="chunksize"><?php echo lang('_TERA_CHUNKSIZE'); ?></label>
                     <input id="chunksize" type="text" value="<?php echo $config['terasender_chunksize'] ?>"><br/>
-                    <label for="workerCount">Worker count</label>
+                    <label for="workerCount"><?php echo lang('_TERA_WORKER_COUNT'); ?></label>
                     <input id="workerCount" type="text" value="<?php echo $config['terasender_workerCount'] ?>"><br/>
-                    <label for="jobsPerWorker">Jobs per workers</label>
+                    <label for="jobsPerWorker"><?php echo lang('_TERA_JOBS_PER_WORKER'); ?></label>
                     <input id="jobsPerWorker" type="text"value="<?php echo $config['terasender_jobsPerWorker'] ?>">
                 </div>
                 <?php if ($config['terasender'] && $config['terasenderadvanced']) { ?>
                     <div>
-                        <a href="#" onclick="$('#workers-advanced-settings').slideToggle()">Advanced Settings</a>
+                        <a href="#" onclick="$('#workers-advanced-settings').slideToggle()"><?php echo lang('_TERA_ADVANCED_SETTINGS'); ?></a>
                     </div>
                 <?php } ?>
             </td>
