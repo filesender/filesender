@@ -43,19 +43,35 @@ if (isset($_REQUEST['gid'])) {
 <script type="text/javascript">
     $(document).ready(function () {
         $("#message").hide();
+        $("#errmessage").hide();
         $("#myfiles tr:odd").addClass("altcolor");
+
+        $('input[type="checkbox"]').change(function() {
+            // Show or hide the "no files selected" message depending on current state.
+            if (this.checked) {
+                $("#errmessage").hide();
+            } else if ($(".checkboxes:checked").length == 0) {
+                $("#errmessage").show();
+            }
+        });
     });
 
     function startDownload() {
         if ($(".checkboxes:checked").length > 0) {
             // At least one file is selected, start downloading.
+            $("#errmessage").hide();
             $("#message").show();
             $("#fileform").submit();
-        } // TODO: else show error message ("you need to select at least one file").
+        } else {
+            // No files selected, show error message.
+            $("#message").hide();
+            $("#errmessage").show();
+        }
     }
 </script>
 
 <div id='message'><?php echo lang("_STARTED_DOWNLOADING") ?></div>
+<div id='errmessage'><?php echo lang("_NO_FILES_SELECTED") ?></div>
 <div id="box" style="background:#fff">
     <?php echo '<div id="pageheading">' . lang("_DOWNLOAD") . '</div>' ?>
     <div id="fileinfo">
