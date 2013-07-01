@@ -69,9 +69,8 @@
 	} else if($voucherData[0]["filestatus"] == "Voucher Cancelled" || $voucherData[0]["filestatus"] == "Closed")
 	{
 	?>
-
-<p><?php echo lang("_VOUCHER_CANCELLED"); ?></p>
-<?php
+    <p><?php echo lang("_VOUCHER_CANCELLED"); ?></p>
+    <?php
 	return;
 	}
 }
@@ -101,7 +100,6 @@
 	var bytesTotal = 0;
 	var ext = '<?php echo $config['ban_extension']?>';
 	var banextensions = ext.split(",")
-	var uploadprogress = '<?php echo lang($lang["_UPLOAD_PROGRESS"]); ?>';
 	var previousBytesLoaded = 0;
 	var intervalTimer = 0;
 	var errmsg_disk_space = "<?php echo lang($lang["_DISK_SPACE_ERROR"]); ?>";
@@ -220,6 +218,50 @@
 			// use standard upload functions
 			$("#uploadstandard").show();
 		}
+        
+    // autocomplete
+	var availableTags = [<?php  echo (isset($config["autocomplete"]) && $config["autocomplete"])?  $functions->uniqueemailsforautocomplete():  ""; ?>];
+		
+		function split( val ) {
+            return val.split( /,\s*/ );
+        }
+        function extractLast( term ) {
+            return split( term ).pop();
+        }
+		
+		$( "#fileto" )
+            // don't navigate away from the field on tab when selecting an item
+            .bind( "keydown", function( event ) {
+                if ( event.keyCode === $.ui.keyCode.TAB &&
+                        $( this ).data( "uiAutocomplete" ).menu.active ) {
+                    event.preventDefault();
+                }
+            })
+            .autocomplete({
+                minLength: 0,
+                source: function( request, response ) {
+                    // delegate back to autocomplete, but extract the last term
+                    response( $.ui.autocomplete.filter(
+                        availableTags, extractLast( request.term ) ) );
+                },
+                focus: function() {
+                    // prevent value inserted on focus
+                    return false;
+                },
+                select: function( event, ui ) {
+                    var terms = split( this.value );
+                    // remove the current input
+                    terms.pop();
+                    // add the selected item
+                    terms.push( ui.item.value );
+                    // add placeholder to get the comma-and-space at the end
+                    terms.push( "" );
+                    this.value = terms;//.join( ", " );
+                    return false;
+                }
+            });
+            // end autocomplete
+        
 	// end document ready
 	});
 
@@ -520,7 +562,6 @@ function validate()
 
 		//Use this to allow uplods with faulty parameters (and comment out the previouslone) if(true)
 	{
-	n=0;
 	startupload();
 	}
 	} else {
@@ -591,7 +632,7 @@ if ( count($senderemail) > 1 ) {
         }
         echo "</select>\n";
 } else {
-        echo $senderemail[0] . "<input name=\"filefrom\" type=\"hidden\" id=\"filefrom\" value=\"" . $senderemail[0] . "\" />\n";
+        echo "<div id=\"visible_filefrom\">".$senderemail[0]."</div>" . "<input name=\"filefrom\" type=\"hidden\" id=\"filefrom\" value=\"" . $senderemail[0] . "\" />\n";
 }
 ?>
           </td>
@@ -677,7 +718,7 @@ if ( hasProductInstall && !hasRequestedVersion ) {
             <br />
           </div>
           <div id="uploadhtml5" style="display:none">
-            <input type="file" name="fileToUpload" id="fileToUpload" onchange="fileSelected();" multiple=""/>
+            <input type="file" name="fileToUpload" id="fileToUpload" onchange="fileSelected();" />
           </div>
           <div id="file_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_FILE"); ?></div>
 		  <div id="extension_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_FILE_EXT"); ?></div>
@@ -686,7 +727,7 @@ if ( hasProductInstall && !hasRequestedVersion ) {
       </tr>
       <tr id="fileInfoView" style="display:none">
         <td></td>
-        <td colspan="2"  id="filestoupload">
+        <td colspan="2">
           <div>
             <div id="fileName"></div>
             <div id="fileSize"></div>
@@ -715,16 +756,16 @@ if ( hasProductInstall && !hasRequestedVersion ) {
       <tr style="padding: 0">
       	<td style="padding: 0"></td>
       	<td colspan="2" style="padding: 0 3px">
-      		<div id="workers-advanced-settings" style="display: none;" class="box">
-	      		Chunksize (MB)<input id="chunksize" type="text" value="<?php echo (isset($config['terasender_chunksize']) ? $config['terasender_chunksize'] : 5) ?>"/><br />
-	      		Worker count<input id="workerCount" type="text" value="<?php echo (isset($config['terasender_workerCount']) ? $config['terasender_workerCount'] : 6) ?>"/><br />
-	      		Jobs per workers<input id="jobsPerWorker" type="text" value="<?php echo (isset($config['terasender_jobsPerWorker']) ? $config['terasender_jobsPerWorker'] : 1) ?>"/>
+      		<div id="terasender-advanced-settings" style="display: none;" class="box">
+	      		 <?php echo lang("_TERA_CHUNKSIZE"); ?><input id="chunksize" type="text" value="<?php echo (isset($config['terasender_chunksize']) ? $config['terasender_chunksize'] : 5) ?>"/><br />
+	      		 <?php echo lang("_TERA_WORKER_COUNT"); ?><input id="workerCount" type="text" value="<?php echo (isset($config['terasender_workerCount']) ? $config['terasender_workerCount'] : 6) ?>"/><br />
+	      		 <?php echo lang("_TERA_JOBS_PER_WORKER"); ?><input id="jobsPerWorker" type="text" value="<?php echo (isset($config['terasender_jobsPerWorker']) ? $config['terasender_jobsPerWorker'] : 1) ?>"/>
 	      	</div>
       	</td>
       </tr>
       <tr style=" <?php echo (isset($config['terasender']) && $config['terasender'] && isset($config['terasenderadvanced']) && $config['terasenderadvanced']) ?  '': ';display: none;'; ?>">
 	      <td></td>
-	      <td colspan="2"><a href="#" onclick="$('#workers-advanced-settings').slideToggle()">Advanced Settings</a></td>
+	      <td colspan="2"><a href="#" onclick="$('#terasender-advanced-settings').slideToggle()"><?php echo lang("_TERA_ADVANCED_SETTINGS"); ?></a></td>
       </tr>
       </table>
 		<input type="hidden" id="filevoucheruid" name="filevoucheruid" value="<?php echo $voucherUID; ?>" />

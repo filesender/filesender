@@ -314,11 +314,107 @@ class Functions {
 		$returnArray = array();
 		foreach($result as $row )
 		{
+			// return number of downloads for a file
+			$row["downloads"] =  $this->countDownloads($row["filevoucheruid"]);
+			$row["downloadsummary"] = $this->downloadSummary($row["filevoucheruid"]);
 			array_push($returnArray, $row);
 		}
 		return json_encode($returnArray);
     }
-
+	
+ 	//--------------------------------------- CHECKED
+    // returns download summary as array for a specified voucher
+	// ---------------------------------------
+	public function downloadSummary($vid)
+	{
+		global $config;
+		
+		$pdo = $this->db->connect();
+		$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
+		$statement = $pdo->prepare("SELECT * FROM logs WHERE  logvoucheruid = :logvoucheruid AND logtype = 'Download' ORDER BY logdate DESC");
+		$statement->bindParam(':logvoucheruid', $vid);
+		try 
+		{ 	
+			$statement->execute(); 
+		}
+		catch(PDOException $e)
+		{ 
+			logEntry($e->getMessage(),"E_ERROR");	
+			displayError(lang("_ERROR_CONTACT_ADMIN"),$e->getMessage()); 
+		}   
+		$result = $statement->fetchAll();
+		$pdo = NULL;
+		$returnArray = array();
+		foreach($result as $row )
+		{
+			array_push($returnArray, $row);
+		}
+		return $returnArray ; 
+	}
+	
+	//----------------------------------------
+	// returns unique emails for autocomplete for current user
+	// ---------------------------------------
+	public function uniqueemailsforautocomplete()
+	{
+		global $config;
+		 if( $this->authsaml->isAuth()) {
+            $authAttributes = $this->authsaml->sAuth();
+        } else {
+            $authAttributes["saml_uid_attribute"] = "nonvalue";
+        }
+		// limit results by config option
+		$count = (isset($config["autocompleteHistoryMax"]) && is_numeric($config["autocompleteHistoryMax"]))? "LIMIT ".$config["autocompleteHistoryMax"]:"";
+		
+		$pdo = $this->db->connect();
+		$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
+		$statement = $pdo->prepare("SELECT DISTINCT fileto FROM files WHERE  fileauthuseruid = :fileauthuseruid  ORDER BY fileto ".$count);
+		$statement->bindParam(':fileauthuseruid', $authAttributes["saml_uid_attribute"]);
+		try 
+		{ 	
+			$statement->execute(); 
+		}
+		catch(PDOException $e)
+		{ 
+			logEntry($e->getMessage(),"E_ERROR");	
+			displayError(lang("_ERROR_CONTACT_ADMIN"),$e->getMessage()); 
+		}   
+		$result = $statement->fetchAll();
+		$returnArray = array();
+	    foreach($result as $row) 
+        {
+                array_push($returnArray, "'".addslashes($row["fileto"])."'");
+       }
+		$commaList = implode(', ', $returnArray);
+		$pdo = NULL;
+		return $commaList ; 
+	}
+    
+	 //--------------------------------------- CHECKED
+    // returns the number of downloads for a file
+	// ---------------------------------------
+	public function countDownloads($vid)
+	{
+		global $config;
+		
+		$pdo = $this->db->connect();
+		$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
+		$statement = $pdo->prepare("SELECT count(*)  FROM logs WHERE logvoucheruid = :logvoucheruid AND logtype = 'Download'");
+		
+		$statement->bindParam(':logvoucheruid', $vid);
+		try 
+		{ 	
+			$statement->execute(); 
+		}
+		catch(PDOException $e)
+		{ 
+			logEntry($e->getMessage(),"E_ERROR");	
+			displayError(lang("_ERROR_CONTACT_ADMIN"),$e->getMessage()); 
+		}   
+		$total = $statement->fetch(PDO::FETCH_NUM);
+		return $total[0];
+	}
+	
     //--------------------------------------- CHECKED
     // Return logs if users is admin
     // current email authenticated as per config["admin"]
@@ -550,7 +646,6 @@ class Functions {
 		{
             array_push($returnArray, $row);
         }
-
         return $returnArray[0];
     }
 
@@ -650,12 +745,13 @@ class Functions {
 			
 			$filevoucheruid = getGUID();
 			$voucher = 'Voucher';
+			$voucherissuedemailsubject = (isset($config['voucherissuedemailsubject'])) ?  $config['voucherissuedemailsubject'] : "Voucher";
 			$blank = '';
 			$zero = 0;
 			$fileexpiryParam = date($config['db_dateformat'], strtotime($expiry));
 			$statement->bindParam(':fileexpirydate',$fileexpiryParam);
 			$statement->bindParam(':fileto', $to);
-			$statement->bindParam(':filesubject', $voucher);
+			$statement->bindParam(':filesubject', $voucherissuedemailsubject);
 			$fileactivitydateParam =  date($config['db_dateformat'], time());
 			$statement->bindParam(':fileactivitydate',$fileactivitydateParam );	
 			$statement->bindParam(':filevoucheruid', $filevoucheruid );

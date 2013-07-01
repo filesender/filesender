@@ -72,16 +72,17 @@ var Tsunami = function(opts) {
         function processReqChange(){
             if (xhr.readyState == 4) {
                 if (xhr.status == 200) {
-                    var response = parseJSON(xhr.responseText);
+
+                    var response = JSON.parse(xhr.responseText);
                     $.currentStartByte = parseInt(response.filesize);
                     $.currentProgress = $.currentStartByte;
-                    $.log('Server filesize response: "'+response.filesize+'"');
+                    $.log('Server filesize response: "'+response.filesize+'"')
                     // Start workers
                     $.setupWorkers();
 
                 }
             }
-        }
+        };
         xhr.open("POST", $.opts.uri, true); //Open a request to the web address set
         xhr.setRequestHeader("Content-Disposition"," attachment; name='fileToUpload'"); 
         xhr.setRequestHeader("Content-Type", "application/octet-stream");
@@ -129,7 +130,7 @@ var Tsunami = function(opts) {
                     } else {
                         $.isUploading = false;
                         $.log('Upload done');
-
+                        
                         // Check if all workers are done
                         // and send empty chunk to let the server
                         // clean up
@@ -182,7 +183,6 @@ var Tsunami = function(opts) {
                 $.workersInProgress++;
             }
             $.workers.push(worker);
-
             $.log('Worker '+num+" is created");
             
         }

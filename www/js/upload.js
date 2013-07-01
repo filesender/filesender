@@ -36,7 +36,7 @@
 // JavaScript Document
 
 
-
+<!--
 // -----------------------------------------------------------------------------
 // Globals
 // Major version of Flash required
@@ -57,59 +57,46 @@ var intervalTimer = 0;
 //var chunksize = 2000000;
 var uploadURI = "fs_upload.php";
 var fdata = []; // array of each file to be uploaded
-var n = -1; // file int currently uploading
+var n = 0; // file int currently uploading
+var startTime = 0;
 
 // a unique is created for each file that is uploaded.
 // An object with the unique stores all relevant information about the file upload
 	
 	  
  	function fileSelected() {
-		 fdata = [];
-		// multiple files selected
-		// loop through all files and show their valudes
-		$("#filestoupload").html("");
-		var files = document.getElementById("fileToUpload").files;
-		if (typeof files !== "undefined") {
-		for (var i=0, l=files.length; i<l; i++) {
-		n =i;
-		fdata[n] = Array(n);
-        fdata[n].file = files[n];
-        fdata[n].fileSize = fdata[n].file.size;
-		fdata[n].bytesTotal = fdata[n].file.size;
+		fdata[n] = Array;
+		//	document.getElementById('MSG').innerHTML = "";
+        var file = document.getElementById("fileToUpload").files[0];
+        fdata[n].fileSize = file.size;
+		fdata[n].bytesTotal = file.size;
 		fdata[n].bytesUploaded = 0;
 	    fdata[n].previousBytesLoaded = 0;
 	    fdata[n].intervalTimer = 0;
 		fdata[n].currentlocation = 0;
-		fdata[n].filename = fdata[n].file.name;
-		fdata[n].filetype = fdata[n].file.type;
-		
+		fdata[n].filename = file.name;
+		fdata[n].filetype = file.type;
 		//fdata[n].filesize = 0;
 		
 	  	if(validate_file()) { 
 			$("#uploadbutton").show(); 
 			$("#fileInfoView").show();
-			$("#filestoupload").append('Name: ' + fdata[n].filename + ' Size: ' + readablizebytes(fdata[n].fileSize) + "</br>");
-			//$("#fileName").html('Name: ' + fdata[n].filename);
-			//$("#fileSize").html('Size: ' + readablizebytes(fdata[n].fileSize));
+			$("#fileName").html(nameLang + ': ' + fdata[n].filename);
+			$("#fileSize").html(sizeLang + ': ' + readablizebytes(fdata[n].fileSize));
 		} else { 
-		 // display invalid file
-			//$("#uploadbutton").hide();
-			//$("#fileInfoView").hide();
-			//$("#fileName").html("");
-			//$("#fileSize").html("");
+			$("#uploadbutton").hide();
+			$("#fileInfoView").hide();
+			$("#fileName").html("");
+			$("#fileSize").html("");
 		};
-		}
-		}
 	}
 
 	function startupload()
 	{
-		// validate input data
-		// validate file details to upload
-		$("#dialog-uploadprogress").dialog("option", "title", uploadprogress +  ":  " +  fdata[n].filename + " (" +readablizebytes(fdata[n].fileSize) + ")");
-		
+		$("#uploadbutton a").attr("onclick", ""); // prevent double clicks to start extra uploads
+
 		fdata[n].bytesUploaded = 0;
-		fdata[n].bytesTotal = fdata[n].fileSize;
+		
 		// validate form data and return filesize or validation error
 		// load form into json array
 		var query = $("#form1").serializeArray(), json = {};
@@ -121,9 +108,9 @@ var n = -1; // file int currently uploading
 
 		$.ajax({
   		type: "POST",
-  		url: "fs_upload.php?type=validateupload&vid="+vid+"&n="+n,
+  		url: "fs_upload.php?type=validateupload&vid="+vid,
   		data: {myJson:  JSON.stringify(json)}
-		}).success(function( data ) {
+		,success:function( data ) {
 		if(data == "") {
 		alert("No response from server");
 		return;	
@@ -133,7 +120,7 @@ var n = -1; // file int currently uploading
 			$("#dialog-autherror").dialog("open");
 			return;			
 		}
-		var data =  JSON.parse(data);
+		var data =  parseJSON(data);
 		
 		if(data.errors)
 		{
@@ -161,14 +148,17 @@ var n = -1; // file int currently uploading
 		// no error so use result as current bytes uploaded for file resume 
 		vid = data.vid;
 		fdata[n].bytesUploaded = parseFloat(data.filesize);
-		// validated so upload all files
-		
-		//if (typeof files !== "undefined") {
-		//for (var i=0, l=files.length; i<l; i++) {
-		//n = i;
-		uploadFile();
-		//}
-		//}
+		updatepb(fdata[n].bytesUploaded, fdata[n].fileSize);	
+		startTime = new Date().getTime();
+                if(html5webworkers){
+                    uploadFileWebworkers();
+                }else{
+                    uploadFile();
+                }
+		}
+		},error:function(xhr,err){
+			// error function to display error message e.g.404 page not found
+			ajaxerror(xhr.readyState,xhr.status,xhr.responseText);
 		}
   		});
 	}
@@ -263,46 +253,12 @@ function doUploadComplete(){
 function uploadFile() {
 		
 		// move to next chunk
-		var file = fdata[n].file;
+		var file = document.getElementById("fileToUpload").files[0];
 		var txferSize = chunksize;
-		var allupoadscomplete = false;
-		if(fdata[n].bytesUploaded > fdata[n].bytesTotal -1 )
-			{
-			// COMPLETE THIS ONE
-			var query = $("#form1").serializeArray(), json = {};
-					$.ajax({
-  					type: "POST",
-  					url: "fs_upload.php?type=uploadcomplete&vid="+vid+"&n="+n
-					}).success(function( data ) {
-					if(data == "err_cannotrenamefile")
-					{
-						window.location.href="index.php?s=uploaderror";
-						return;
-					} else if(data == "err_filesizeincorrect")
-					{
-						window.location.href="index.php?s=filesizeincorrect";
-						return;
-					}
-					// IF MORE FILES NEED UPLOADING THEN
-			if(	n < fdata.length-1 )
-			{
-				n += 1;		
-					startupload();
-					return;
-				}  else 
-				{
-					window.location.href="index.php?s=complete";
-				}
-				return;	
-			});
-			return;
-			
-				// all uploaded so return
-		//if(data == "complete"){		
-			
-		//} else {
-		//window.location.href="index.php?s=completev";
-		//}
+
+		if(fdata[n].bytesUploaded > fdata[n].bytesTotal -1 ) {
+			doUploadComplete();
+		return;
 		}
 
 		if(fdata[n].bytesUploaded + txferSize > fdata[n].fileSize)
@@ -325,7 +281,7 @@ function uploadFile() {
 		}
 	
 	var boundary = "fileboundary"; //Boundary name
-	var uri = (uploadURI + "?type=chunk&vid="+vid+ "&n="+n); //Path to script for handling the file sent
+	var uri = (uploadURI + "?type=chunk&vid="+vid); //Path to script for handling the file sent
 	var xhr = new XMLHttpRequest(); //Create the object to handle async requests
 	xhr.onreadystatechange = processReqChange;
 	xhr.upload.addEventListener("progress", uploadProgress, false);

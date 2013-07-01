@@ -77,7 +77,7 @@ class Log {
             $logtype	= $logType;
             $logfrom	= $dataitem['filefrom'];
             $logto	= $dataitem['fileto'];
-            $logdate	= date($config['postgresdateformat'], time());//use timestamp with timezone $dbCheck->checkString(pg_escape_string($dataitem['logdate']));
+            $logdate	= date($config['db_dateformat'], time());//use timestamp with timezone $dbCheck->checkString(pg_escape_string($dataitem['logdate']));
             $logfilesize	= $dataitem['filesize'];
             $logfilename	= $dataitem['fileoriginalname'];
             $logmessage	= $message;
@@ -176,8 +176,8 @@ class Log {
             $myFile = $config['log_location'].$dateref."-".$client.$logext;
             $fh = fopen($myFile, 'a') or die("can't open file");
             // don't print errors on screen when there is no session.
-            if(isset($_REQUEST['PHPSESSID'])){
-                $sessionId = $_REQUEST['PHPSESSID'];
+            if(session_id()){
+                $sessionId = session_id();
             } else {
                 $sessionId = "none";
             }

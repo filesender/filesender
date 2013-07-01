@@ -97,6 +97,7 @@ $lang["_TYPE"] = "Type";
 
 $lang["_TERMS_OF_AGREEMENT"] = "Brukervilkår";
 $lang["_SHOW_TERMS"] = "Vis vilkår";
+$lang["_INVALID_VOUCHER"] = "Invitasjonen kan ikke lenger brukes. <br />Ta kontakt med personen som sendte deg invitasjonen for å få en ny en.";
 $lang["_SELECT_FILE"] = "Velg en fil til å laste opp";
 $lang["_UPLOADING_WAIT"] = "Laster opp fil - vennligst vent ...";
 $lang["_EMAIL_SEPARATOR_MSG"] = "Flere epost-adresser avskilles med , eller ;";

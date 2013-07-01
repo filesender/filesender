@@ -81,7 +81,16 @@ if(isset($_REQUEST["s"]))
 {
 	$s = $_REQUEST["s"];
 }
-
+// display invalid voucher after - usually redirected from download page
+if($s == "invalidvoucher") 
+    {
+        array_push($messageArray,  lang("_INVALID_VOUCHER"));	
+	}	
+// display invalid voucher after - usually redirected from download page
+if($s == "logout") 
+    {
+    	 array_push($messageArray,  lang("_LOGOUT_COMPLETE"));	
+	}    
 if(!$isVoucher && !$isAuth && $s != "complete" && $s != "completev")
 {
 	$s = "logon";
@@ -99,7 +108,6 @@ if($isAuth )
 		$useremail = $userdata["email"];
 	}
 } 
-
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
@@ -110,10 +118,6 @@ if($isAuth )
 <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
 <link type="text/css" href="css/smoothness/jquery-ui-1.10.2.custom.min.css" rel="Stylesheet" />
 <link rel="stylesheet" type="text/css" href="css/default.css?<?php echo FileSender_Version::VERSION; ?>" />
-<?php if (isset($config["customCSS"])) {
-echo '<link rel="stylesheet" type="text/css" href="'.$config["customCSS"].'" />';
-}
-?>
 <script type="text/javascript" src="js/json2.js" ></script>
 <script type="text/javascript" src="js/common.js" ></script>
 <script type="text/javascript" src="js/jquery-1.9.1.min.js" ></script>
@@ -222,52 +226,37 @@ function openabout()
       </noscript>
     </div>
   </div>
-  <div class="menubar">
-  <div class="leftmenu">
-  <ul>
+  <div id="topmenu" style="display:none">
+  <div class="menu" id="menuleft">
       <?php 
   	// create menu
   	// disable all buttons if this is a voucher, even if the user is logged on
- 	if (!$authvoucher->aVoucher()  &&  $s != "completev" && !isset($gid)){
-	if($authsaml->isAuth() ) { echo '<li><a class="'.$functions->active($s,'upload').'" id="topmenu_newupload" href="index.php?s=upload">'.lang("_NEW_UPLOAD").'</a></li>'; }
-	if($authsaml->isAuth() ) { echo '<li><a class="'.$functions->active($s,'vouchers').'" id="topmenu_vouchers" href="index.php?s=vouchers">'.lang("_VOUCHERS").'</a></li>'; }
-	if($authsaml->isAuth() ) {echo '<li><a class="'.$functions->active($s,'files').'" id="topmenu_myfiles" href="index.php?s=files">'.lang("_MY_FILES").'</a></li>'; }
-	if($authsaml->authIsAdmin() ) { echo '<li><a class="'.$functions->active($s,'admin').'" id="topmenu_admin" href="index.php?s=admin">'.lang("_ADMIN").'</a></li>'; }
-	//if($authsaml->isAuth() ) { echo '<li><a class="'.$functions->active($s,'summary').'" id="topmenu_summary" href="testsummary.php?email='.$useremail  .'" target="_blank">Summary</a></li>'; }
+ 	if (!$isVoucher &&  $s != "completev" && !isset($gid)){
+	if($isAuth && $s != "error") { echo '<a id="topmenu_newupload" href="index.php?s=upload">'.lang("_NEW_UPLOAD").'</a>'; }
+	if($isAuth && $s != "error") { echo '<a id="topmenu_vouchers" href="index.php?s=vouchers">'.lang("_VOUCHERS").'</a>'; }
+	if($isAuth && $s != "error") {echo '<a id="topmenu_myfiles" href="index.php?s=files">'.lang("_MY_FILES").'</a>'; }
+	if($isAdmin && $s != "error") { echo '<a id="topmenu_admin" href="index.php?s=admin">'.lang("_ADMIN").'</a>'; }
   }
   ?>
-  </ul>
-  </div>
-  <div class="rightmenu">
-  <ul>
+  	</div>
+   <div class="menu" id="menuright">
   <?php
 	if($config['helpURL'] == "") {
-		echo '<li><a class="'.$functions->active($s,'help').'" href="#" id="topmenu_help" onclick="openhelp()">'.lang("_HELP").'</a></li>';
+		echo '<a href="#" id="topmenu_help" onclick="openhelp()">'.lang("_HELP").'</a>';
 	} else {
-		echo '<li><a class="'.$functions->active($s,'help').'" href="'.$config['helpURL'].'" target="_blank" id="topmenu_help">'.lang("_HELP").'</a></li>';
+		echo '<a href="'.$config['helpURL'].'" target="_blank" id="topmenu_help">'.lang("_HELP").'</a>';
 	}
 	if($config['aboutURL'] == "") {
-		echo '<li><a class="'.$functions->active($s,'about').'" href="#" id="topmenu_about" onclick="openabout()">'.lang("_ABOUT").'</a></li>';
+		echo '<a href="#" id="topmenu_about" onclick="openabout()">'.lang("_ABOUT").'</a>';
 	} else {
-		echo '<li><a class="'.$functions->active($s,'about').'" href="'.$config['aboutURL'].'" target="_blank" id="topmenu_about">'.lang("_ABOUT").'</a></li>';	
+		echo '<a href="'.$config['aboutURL'].'" target="_blank" id="topmenu_about">'.lang("_ABOUT").'</a>';	
 	}
-	if(!$authsaml->isAuth() && $s != "logon" ) { echo '<li><a class="'.$functions->active($s,'logon').'" href="'.$authsaml->logonURL().'" id="topmenu_logon">'.lang("_LOGON").'</a></li>';}
-	if($authsaml->isAuth() && !$authvoucher->aVoucher() &&  $s != "completev"  && !isset($gid)) { echo '<li><a class="'.$functions->active($s,'about').'" href="'.$authsaml->logoffURL().'" id="topmenu_logoff">'.lang("_LOG_OFF").'</a></li>'; }
+	if(!$isAuth && $s != "logon" ) { echo '<a href="'.$authsaml->logonURL().'" id="topmenu_logon">'.lang("_LOGON").'</a>';}
+	if($isAuth && !$isVoucher &&  $s != "completev" ) { echo '<a href="'.$authsaml->logoffURL().'" id="topmenu_logoff">'.lang("_LOG_OFF").'</a>'; }
 	// end menu
 	?>
-	</ul>
-    </div>
-    </div>
-    <div class="msgbox">&nbsp;
-	<div id="scratch" class="scratch_msg">
-	<?php
-		if(array_key_exists("scratch", $_SESSION )) {
-			echo($functions->getScratchMessage());
-			session_unregister("scratch");
-		}
-	?>
-	</div>	
-    </div>
+	</div>
+	</div>
 	<div id="userinformation" style="display:none">
 	<?php 
 
@@ -281,7 +270,7 @@ function openabout()
 	if($config["displayUserName"])
 	{
 		echo "<div class='welcomeuser'>";
-		if(	$isVoucher || $s == "completev"  || isset($gid))
+		if(	$isVoucher || $s == "completev" || isset($gid))
 		{ 
 			echo lang("_WELCOMEGUEST");
 		} 
@@ -305,6 +294,7 @@ function openabout()
 	{
 		$versiondisplay .= FileSender_Version::VERSION;
 	}
+	echo "<div class='versionnumber'>" .$versiondisplay."</div>";
 ?>
 	</div>
 		<div id="content" style="display:none">
@@ -390,8 +380,7 @@ function openabout()
 	?>
 	<div id="message"><?php echo lang("_ERROR_INCORRECT_FILE_SIZE"); ?></div>
 <?php	
-	}	
-	else if($s == "complete" || $s == "completev") 
+	} else if($s == "complete" || $s == "completev") 
 	{
 ?>
 		<div id="message"><?php echo lang("_UPLOAD_COMPLETE"); ?></div>
@@ -403,7 +392,6 @@ function openabout()
 	}
 ?>
 	</div>
-   <div id="footer"> <?php echo "<div class='versionnumber'>" .$versiondisplay."</div>"; ?></div>
 	</div>
 	<div id="dialog-help" style="display:none" title="<?php echo lang("_HELP"); ?>">
 		<?php echo lang("_HELP_TEXT"); ?>
