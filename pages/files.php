@@ -346,7 +346,7 @@ foreach($json_o as $item) {
    } else {
    echo "<td class='HardBreak'>" .$item['filefrom'] . "</td>";
    }
-   echo "<td class='HardBreak'><a id='link_downloadfile_".$i."' href='download.php?vid=". $item["filevoucheruid"]."' target='_blank'>" .utf8tohtml($item['fileoriginalname'],TRUE). "</a></td>";
+   echo "<td class='HardBreak'><a id='link_downloadfile_".$i."' href='?gid=". $item["filegroupid"]."'>" .utf8tohtml($item['fileoriginalname'],TRUE). "</a></td>";
    echo "<td>" .formatBytes($item['filesize']). "</td><td  class='HardBreak'>".utf8tohtml($item['filesubject'],TRUE). "</td><td>";
    if($item['filemessage'] != "")
    {
