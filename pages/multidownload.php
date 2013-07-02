@@ -121,7 +121,7 @@ if (isset($_REQUEST['gid'])) {
         <div class="menu" id="downloadbutton" >
             <p>
                 <a id="download" href="" onclick="startDownload(); return false;">
-                    <?php echo lang("_START_DOWNLOAD"); ?>
+                    <?php echo lang("_DOWNLOAD_SELECTED"); ?>
                 </a>
             </p>
         </div>

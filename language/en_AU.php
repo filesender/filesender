@@ -164,6 +164,7 @@ $lang["_SEND_VOUCHER"] = "Send Voucher";
 $lang["_RE_SEND_EMAIL"] = "Re-send Email";
 $lang["_NEW_RECIPIENT"] = "Add new recipient";
 $lang["_SEND_VOUCHER_TO"] = "Send voucher to";
+$lang["_DOWNLOAD_SELECTED"] = "Download selected files";
 $lang["_START_DOWNLOAD"] = "Start Download";
 $lang["_VOUCHER_SENT"] = "Voucher Sent";
 $lang["_VOUCHER_DELETED"] = "Voucher Deleted";
