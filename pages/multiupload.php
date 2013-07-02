@@ -49,10 +49,6 @@ $voucherUID = '';
 $senderemail = $useremail;
 $functions = Functions::getInstance();
 
-
-
-
-
 // get initial upload uid
 $id = getGUID();
 // set id for progress bar upload
@@ -87,10 +83,9 @@ if (isset($_COOKIE['SimpleSAMLAuthToken'])) {
 }
 
 global $config;
-// set flash upload variables
-$flashVARS = 'vid=' . $voucherUID . '&sid=' . session_id() . '&buttonBrowse=' . lang('_BROWSE') . '&buttonUpload=' . lang('_SEND') . '&buttonCancel=' . lang('_CANCEL') . '&siteURL=' . $config['site_url'] . '&token=' . $token;
 
 ?>
+
 <script type='text/javascript' src='lib/js/AC_OETags.js' language='javascript'></script>
 <script type='text/javascript' src='js/multiupload.js'></script>
 <script type='text/javascript'>
@@ -100,9 +95,6 @@ var uploadID = '<?php echo $id ?>';
 var maximumDate = <?php echo (time()+($config['default_daysvalid']*86400))*1000 ?>;
 var minimumDate = <?php echo (time()+86400)*1000 ?>;
 var maxHTML5UploadSize = <?php echo $config['max_html5_upload_size']; ?>;
-
-// TODO: Can remove?
-var maxFLASHuploadsize = <?php echo $config['max_flash_upload_size']; ?>;
 var maxEmailRecipients = <?php echo $config['max_email_recipients']; ?>;
 var datepickerDateFormat = '<?php echo lang('_DP_dateFormat'); ?>';
 var chunksize =  <?php echo $config['upload_chunk_size']; ?>;
@@ -122,9 +114,7 @@ var groupid = '<?php echo getOpenSSLKey(); ?>';
 
 <?php if(!$authvoucher->aVoucher()) $userData = $authsaml->sAuth(); ?>
 var trackingCode = '<?php echo $functions->getTrackingCode($userData['saml_uid_attribute']); ?>';
-
-
-var vid = '<?php if(isset($_REQUEST['vid'])){ echo htmlspecialchars($_REQUEST['vid']);}; ?>';
+var vid = '<?php if (isset($_REQUEST['vid'])){ echo htmlspecialchars($_REQUEST['vid']);}; ?>';
 
 // start document ready
 $(function () {
@@ -180,7 +170,6 @@ $(function () {
 
                     e.preventDefault();
                     e.stopPropagation();
-                    /*UPLOAD FILES HERE*/
 
                     var files = e.originalEvent.dataTransfer.files;
                     addFiles(files);
@@ -198,7 +187,10 @@ $(function () {
         }
     });
 
-    $('.ui-dialog-buttonpane button:contains(supportBTN)').attr('id', 'btn_support');
+    var uiDialogButtonpane = $('.ui-dialog-buttonpane');
+
+    uiDialogButtonpane.find('button:contains(supportBTN)').attr('id', 'btn_support');
+    //$('.ui-dialog-buttonpane button:contains(supportBTN)').attr('id', 'btn_support');
     $('#btn_support').html('<?php echo lang('_OK') ?>');
 
     // default auth error dialog
@@ -220,7 +212,7 @@ $(function () {
         }
     });
 
-    $('.ui-dialog-buttonpane button:contains(uploadcancelBTN)').attr('id', 'btn_uploadcancel');
+    uiDialogButtonpane.find('button:contains(uploadcancelBTN)').attr('id', 'btn_uploadcancel');
     $('#btn_uploadcancel').html('<?php echo lang('_CANCEL') ?>');
 
     $('#uploadhtml5').show();
@@ -244,11 +236,12 @@ function hidemessages() {
     $('#file_msg').hide();
     $('#aup_msg').hide();
 }
+
 // --------------------------
 // Validation functions
 // --------------------------
 
-// Validate FILE
+// Validate FILE (with embedded calls to check filename and file-extension)
 function validate_file(id) {
     fileMsg('');
 
@@ -260,35 +253,25 @@ function validate_file(id) {
     } else {
         var file = fileData[id];
 
-        // validate filename
         if (!validateFileName(file.name)) {
             return false;
-        }
-
-        //validate file size
-        if (file.size < 1) {
+        } else if (file.size < 1) {
             fileMsg('<?php echo lang('_INVALID_FILESIZE_ZERO') ?>');
             return false;
-        }
-
-        if (file.size > maxHTML5UploadSize) {
+        } else if (file.size > maxHTML5UploadSize) {
             fileMsg('<?php echo lang('_INVALID_TOO_LARGE_1') ?> ' + readablizebytes(maxHTML5UploadSize) + '. <?php echo lang('_SELECT_ANOTHER_FILE') ?> ');
             return false;
         }
-
-        return true;
     }
+    return true;
 }
 
 // HTML5 form Validation
 function validateForm() {
-    // remove previous validation messages
+    // remove messages from any previous attempt
     hidemessages();
-
     return (validate_fileto() && validate_file(n) && validate_expiry() && validateAUP());
 }
-
-
 
 function constrainNumWebWorkers() {
     <?php
@@ -305,8 +288,8 @@ function constrainNumWebWorkers() {
     }
 }
 
-//Validate AUP
 function validateAUP() {
+    // Checks if the AUP is required in config and if users have checked the box
     if ($('#aup').is(':checked') && aup == '1') {
         $('#aup_msg').hide();
         return true;
@@ -316,8 +299,8 @@ function validateAUP() {
     }
 }
 
-// validate extension
 function validateExtension(fileName) {
+    // Loops through the list of banned extensions and returns false if there is a match
     for (var i = 0, len = bannedExtensions.length; i < len; ++i) {
         if (fileName.split('.').pop() == bannedExtensions[i]) {
             return false;
@@ -397,7 +380,7 @@ window.addEventListener('keydown', function (e) {
                              style="display: none"><?php echo lang("_INVALID_FILE"); ?>
                         </div>
                     </div>
-                    <div style="text-align:right;" class="menu">
+                    <div style="text-align:left;" class="menu">
                         <a id="clearallbtn" href="#" onclick="clearFileBox()" style="cursor:pointer;width:20%;"><?php echo lang('_CLEAR_ALL'); ?></a>
                     </div>
                     <br/>
@@ -435,7 +418,7 @@ window.addEventListener('keydown', function (e) {
                         ?>
                     </div>
 
-                    <label for="fileto"><?php echo lang("_TO"); ?>:</label>
+                    <label for="fileto" class="mandatory"><?php echo lang("_TO"); ?>:</label>
                     <input name="fileto" type="text" id="fileto"
                                title="<?php echo lang("_EMAIL_SEPARATOR_MSG"); ?>" onchange="validate_fileto()"
                                value="" placeholder="<?php echo lang('_ENTER_TO_EMAIL'); ?>" />
@@ -497,15 +480,13 @@ window.addEventListener('keydown', function (e) {
             <td class="box" style="height:20px">
                 <?php if ($config['AuP']) { ?>
                     <div class="auppanel">
+                        <label id="aup_label" for="aup"style="cursor:pointer;" title="<?php echo lang('_SHOWHIDE'); ?>"
+                               onclick="toggleTOG();return false;"><?php echo lang('_ACCEPTTOC'); ?></label>
                         <input style="float:left" name="aup" type="checkbox" id="aup"
-                               onchange="validateAUP()"
+                               onchange="validateAUP();"
                             <?php echo ($config['AuP_default']) ? 'checked' : ''; ?>
                             <?php echo (isset($_SESSION['aup']) && !$authvoucher->aVoucher()) ? 'checked' : ''; ?>
                                value="true"/>
-
-                        <div id="aup_label" title="<?php echo lang('_SHOWHIDE'); ?>" onclick="toggleTOG()"
-                             style="cursor:pointer;"><?php echo lang('_ACCEPTTOC'); ?>
-                        </div>
                         <div id="aup_msg" class="validation_msg"
                              style="display: none"><?php echo lang('_AGREETOC'); ?>
                         </div>

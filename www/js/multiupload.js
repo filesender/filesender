@@ -66,7 +66,7 @@ var totalFileLengths = 0;
 var totalBytesLoaded = 0;
 var percentageComplete = 0;
 
-// Used for calculating average upload speed in updatepb
+// Used for calculating average upload speed in updateProgressBar
 var aggregateStartTime = 0;
 
 // Used for undoing a clear-all call
@@ -74,14 +74,11 @@ var filesToRestore;
 
 function browse() {
     $('#fileToUpload').click();
-    //return browse();
 }
 
 function fileSelected() {
-    //fileData = [];
     // multiple files selected
     // loop through all files and show their values
-    //$('#filestoupload').html('');
     var files = document.getElementById('fileToUpload').files;
     if (typeof files !== 'undefined') {
         addFiles(files);
@@ -134,6 +131,45 @@ function addFiles(files) {
         $('#clearallbtn').button('enable');
         $('#draganddropmsg').hide();
         $('#uploadbutton').show();
+        setButtonToClear();
+        filesToRestore = "";
+    }
+}
+
+// Part of the undo clear button, re-adds files which may have been cleared accidentally.
+function reAddFiles(files){
+    for (var i = 0; i < files.length; i++) {
+
+        if(files[i].filename == undefined) continue;
+
+        n = n + 1;
+        fileData[n] = new Array(n);
+        fileData[n].filegroupid = files[i].filegroupid;
+        fileData[n].filetrackingcode = files[i].filetrackingcode;
+        fileData[n].file = files[i].file;
+        fileData[n].fileSize = files[i].fileSize;
+        fileData[n].bytesTotal = files[i].bytesTotal;
+        fileData[n].bytesUploaded = 0;
+        fileData[n].previousBytesLoaded = 0;
+        fileData[n].intervalTimer = 0;
+        fileData[n].currentlocation = 0;
+        fileData[n].filename = files[i].filename;
+        fileData[n].name = files[i].name;
+        fileData[n].filetype = files[i].filetype;
+        fileData[n].valid = false; // assume invalid until checked
+        fileData[n].status = true; // to allow removal of file from upload list
+
+        // Update total file lengths to cater for the new file
+        totalFileLengths += fileData[n].fileSize;
+        // Give each file its own file box + info
+        $('#filestoupload').append(generateFileBoxHtml());
+    }
+
+    if (n > -1) {
+        $('#fileInfoView').show();
+        $('#clearallbtn').button('enable');
+        $('#draganddropmsg').hide();
+        $('#uploadbutton').show();
     }
 }
 
@@ -156,7 +192,7 @@ function generateFileBoxHtml() {
         '</div>';
 }
 
-function startupload() {
+function startUpload() {
     // validate input data
     // validate file details to upload
     //$('#dialog-uploadprogress').dialog('option', 'title', uploadprogress +  ':  ' +  fileData[n].filename + ' (' +readablizebytes(fileData[n].fileSize) + ')');
@@ -184,91 +220,87 @@ function startupload() {
 
         $.ajax({
             type: 'POST',
-            url: 'fs_multi_upload.php?type=validateupload&vid=' + vid + '&n=' + n + firstFile,
+            url: uploadURI + '?type=validateupload&vid=' + vid + '&n=' + n + firstFile,
             data: {myJson: JSON.stringify(json)}
         }).success(function (data) {
-                if (data == '') {
-                    alert('No response from server');
-                    return;
+            if (data == '') {
+            alert('No response from server');
+            return;
+        }
+        if (data == 'ErrorAuth') {
+            $('#dialog-autherror').dialog('open');
+            return;
+        }
+        var data = JSON.parse(data);
+
+        if (data.errors) {
+            $.each(data.errors, function (i, result) {
+                // token missing or error
+                if (result == 'err_token') {
+                    $('#dialog-tokenerror').dialog('open');
                 }
-                if (data == 'ErrorAuth') {
+                // not authenticated
+                if (result == 'err_notauthenticated') {
                     $('#dialog-autherror').dialog('open');
-                    return;
                 }
-                var data = JSON.parse(data);
-
-                if (data.errors) {
-                    $.each(data.errors, function (i, result) {
-                        if (result == 'err_token') {
-                            $('#dialog-tokenerror').dialog('open');
-                        } // token missing or error
-                        if (result == 'err_notauthenticated') {
-                            $('#dialog-autherror').dialog('open');
-                        } // not authenticated
-                        if (result == 'err_tomissing') {
-                            $('#fileto_msg').show();
-                        } // missing email data
-                        if (result == 'err_expmissing') {
-                            $('#expiry_msg').show();
-                        } // missing expiry date
-                        if (result == 'err_exoutofrange') {
-                            $('#expiry_msg').show();
-                        } // expiry date out of range
-                        if (result == 'err_invalidemail') {
-                            $('#fileto_msg').show();
-                        } // 1 or more emails invalid
-                        if (result == 'err_invalidfilename') {
-                            $('#file_msg').show();
-                        } // invalid filename
-                        if (result == 'err_invalidextension') {
-                            $('#extension_msg').show();
-                        } //  invalid extension
-                        if (result == 'err_nodiskspace') {
-                            errorDialog(errmsg_disk_space);
-                        } // not enough disk space on server
-                    });
-                    $('#uploadbutton a').attr('onclick', 'validate()'); // re-activate upload button
+                // missing email data
+                if (result == 'err_tomissing') {
+                    $('#fileto_msg').show();
                 }
-                if (data.status && data.status == 'complete') {
-                    $('#fileToUpload').hide();// hide Browse
-                    $('#selectfile').hide();// hide Browse message
-                    $('#uploadbutton').hide(); // hide upload
-                    $('#cancelbutton').show(); // show cancel
-                    // show upload progress dialog
-                    //$('#dialog-uploadprogress').dialog('open');
-                    // no error so use result as current bytes uploaded for file resume
-                    vid = data.vid;
-                    fileData[n].bytesUploaded = parseFloat(data.filesize);
-                    updatepb(fileData[n].bytesUploaded, fileData[n].bytesTotal, fileData[n].bytesUploaded);
-                    // validated so upload all files
-
-                    //if (typeof files !== 'undefined') {
-                    //for (var i=0, l=files.length; i<l; i++) {
-                    //n = i;
-
-                    startTime = new Date().getTime();
-
-                    if (html5webworkers) {
-                        uploadFileWebworkers();
-                    } else {
-                        uploadFile();
-                    }
-                    //}
-                    //}
+                // missing expiry date
+                if (result == 'err_expmissing') {
+                    $('#expiry_msg').show();
+                }
+                // expiry date out of range
+                if (result == 'err_exoutofrange') {
+                    $('#expiry_msg').show();
+                }
+                // 1 or more emails invalid
+                if (result == 'err_invalidemail') {
+                    $('#fileto_msg').show();
+                }
+                // invalid filename
+                if (result == 'err_invalidfilename') {
+                    $('#file_msg').show();
+                }
+                //  invalid extension
+                if (result == 'err_invalidextension') {
+                    $('#extension_msg').show();
+                }
+                // not enough disk space on server
+                if (result == 'err_nodiskspace') {
+                    errorDialog(errmsg_disk_space);
                 }
             });
+            $('#uploadbutton').find('a').attr('onclick', 'validate()');
+        }
+        if (data.status && data.status == 'complete') {
+            $('#fileToUpload').hide();// hide Browse
+            $('#selectfile').hide();// hide Browse message
+            $('#uploadbutton').hide(); // hide upload
+            $('#cancelbutton').show(); // show cancel
+            // show upload progress dialog
+            //$('#dialog-uploadprogress').dialog('open');
+            // no error so use result as current bytes uploaded for file resume
+            vid = data.vid;
+            fileData[n].bytesUploaded = parseFloat(data.filesize);
+            updateProgressBar(fileData[n].bytesUploaded, fileData[n].bytesTotal, fileData[n].bytesUploaded);
+            // validated so upload all files
+
+            //if (typeof files !== 'undefined') {
+            //for (var i=0, l=files.length; i<l; i++) {
+            //n = i;
+
+            startTime = new Date().getTime();
+
+            if (html5webworkers) {
+                uploadFileWebworkers();
+            } else {
+                uploadFile();
+            }
+        }
+    });
     }
-    /*else {
-     // check if more files need uploading
-     if(n < fileData.length - 1)
-     {
-     n += 1;
-     startupload();
-     } else {
-     // all files sent so complete
-     window.location.href='index.php?s=complete';
-     }
-     }*/
 }
 
 
@@ -315,29 +347,30 @@ function doUploadComplete() {
     var query = $('#form1').serializeArray(), json = {};
     $.ajax({
         type: 'POST',
-        url: 'fs_multi_upload.php?type=uploadcomplete&vid=' + vid + '&n=' + n + moreFiles,
+        url: uploadURI + '?type=uploadcomplete&vid=' + vid + '&n=' + n + moreFiles,
         success: function (data) {
-            var data = parseJSON(data);
+
+            var data = JSON.parse(data);
             if (data.errors) {
                 $.each(data.errors, function (i, result) {
-                    if (result == 'err_token') {
-                        $('#dialog-tokenerror').dialog('open');
-                    } // token missing or error
-                    if (result == 'err_cannotrenamefile') {
-                        window.location.href = 'index.php?s=uploaderror';
-                        return;
-                    } //
-                    if (result == 'err_emailnotsent') {
-                        window.location.href = 'index.php?s=emailsenterror';
-                        return;
-                    } //
-                    if (result == 'err_filesizeincorrect') {
-                        window.location.href = 'index.php?s=filesizeincorrect';
-                    } //
-                })
+                    switch(result) {
+                        case 'err_token':
+                            $('#dialog-tokenerror').dialog('open');
+                            break;
+                        case 'err_cannotrenamefile':
+                            window.location.href = 'index.php?s=uploaderror';
+                            break;
+                        case 'err_emailnotsent':
+                            window.location.href = 'index.php?s=emailsenterror';
+                            break;
+                        case 'err_filesizeincorrect':
+                            window.location.href = 'index.php?s=filesizeincorrect';
+                            break;
+                    }
+                });
             } else if (n < fileData.length - 1) {
                 n += 1;
-                startupload();
+                startUpload();
             } else {
                 window.location.href = 'index.php?s=complete';
             }
@@ -389,7 +422,7 @@ function uploadFileWebworkers() {
         workerFile: 'lib/tsunami/js/tsunami_worker.js',
         log: false,
         onComplete: doUploadComplete,
-        onProgress: updatepb
+        onProgress: updateProgressBar
     });
     tsunami.addFiles(files);
     tsunami.upload();
@@ -399,14 +432,14 @@ function uploadFile() {
 
     // move to next chunk
     var file = fileData[n].file;
-    var txferSize = chunksize;
+    var transferSize = chunksize;
 
     if (fileData[n].bytesUploaded > fileData[n].bytesTotal - 1) {
         // COMPLETE THIS ONE
         var query = $('#form1').serializeArray(), json = {};
         $.ajax({
             type: 'POST',
-            url: 'fs_multi_upload.php?type=uploadcomplete&vid=' + vid + '&n=' + n + '&rtnemail=' + $('#rtnemail').prop('checked')
+            url: uploadURI + '?type=uploadcomplete&vid=' + vid + '&n=' + n + '&rtnemail=' + $('#rtnemail').prop('checked')
         }).success(function (data) {
                 if (data == 'err_cannotrenamefile') {
                     window.location.href = 'index.php?s=uploaderror';
@@ -418,34 +451,27 @@ function uploadFile() {
                 // IF MORE FILES NEED UPLOADING THEN
                 if (n < fileData.length - 1) {
                     n += 1;
-                    startupload();
-                    return;
+                    startUpload();
                 } else {
                     window.location.href = 'index.php?s=complete';
                 }
-                return;
             });
         return;
-
-        // all uploaded so return
-        //if(data == 'complete'){
-
-        //} else {
-        //window.location.href='index.php?s=completev';
-        //}
     }
 
-    if (fileData[n].bytesUploaded + txferSize > fileData[n].fileSize) {
-        txferSize = fileData[n].fileSize - fileData[n].bytesUploaded;
+    // Lowers the transfer size to amount left to download if there is less than a chunks worth to go
+    if (fileData[n].bytesUploaded + transferSize > fileData[n].fileSize) {
+        transferSize = fileData[n].fileSize - fileData[n].bytesUploaded;
     }
-    // check if firefox or Chrome slice supported
 
+    var blob;
+    // check if firefox or Chrome slice supported, otherwise use standard version
     if (file && file.webkitSlice) {
-        var blob = file.webkitSlice(fileData[n].bytesUploaded, txferSize + fileData[n].bytesUploaded);
+        blob = file.webkitSlice(fileData[n].bytesUploaded, transferSize + fileData[n].bytesUploaded);
     } else if (file && file.mozSlice) {
-        var blob = file.mozSlice(fileData[n].bytesUploaded, txferSize + fileData[n].bytesUploaded);
-    } else { //if(file && file.slice )
-        var blob = file.slice(fileData[n].bytesUploaded, txferSize + fileData[n].bytesUploaded);
+        blob = file.mozSlice(fileData[n].bytesUploaded, transferSize + fileData[n].bytesUploaded);
+    } else {
+        blob = file.slice(fileData[n].bytesUploaded, transferSize + fileData[n].bytesUploaded);
     }
 
     var boundary = 'fileboundary'; //Boundary name
@@ -468,18 +494,18 @@ function uploadFile() {
                     return;
                 }
                 fileData[n].bytesUploaded = parseFloat(xhr.responseText);
-                updatepb(fileData[n].bytesUploaded, fileData[n].bytesTotal, 0);
+                updateProgressBar(fileData[n].bytesUploaded, fileData[n].bytesTotal, 0);
                 uploadFile();
             } else {
                 errorDialog('There was a problem retrieving the data:\n' + req.statusText);
             }
-        } else {
         }
     }
 
     return true;
 }
 
+// TODO: Can go?
 function updateTransferSpeed() {
     var currentBytes = bytesUploaded + (chunksize * (chunk_id - 1));
     var bytesDiff = currentBytes - chunksize * (chunk_id - 1);//previousBytesLoaded;
@@ -498,6 +524,7 @@ function updateTransferSpeed() {
     $('#transferSpeedInfo').html(speed);
 }
 
+// Creates a HH:MM:SS string from seconds.
 function secondsToString(seconds) {
     var h = Math.floor(seconds / 3600);
     var m = Math.floor(seconds % 3600 / 60);
@@ -506,23 +533,23 @@ function secondsToString(seconds) {
 }
 
 // update the progress bar (Also used for aggregate progress bar)
-function updatepb(bytesloaded, totalbytes, amountUploaded) {
-    //$('#progress_bar').show();
+function updateProgressBar(bytesloaded, totalbytes, amountUploaded) {
+
     var percentComplete = Math.round(bytesloaded * 100 / totalbytes);
     var bytesTransfered = '';
-    if (bytesloaded > 1024 * 1024)
+
+    // TODO: can go?
+    if (bytesloaded > 1024 * 1024) {
         bytesTransfered = (Math.round(bytesloaded * 100 / (1024 * 1024)) / 100).toString() + 'MB';
-    else if (bytesloaded > 1024)
+    } else if (bytesloaded > 1024) {
         bytesTransfered = (Math.round(bytesloaded * 100 / 1024) / 100).toString() + 'kB';
-    else
+    } else {
         bytesTransfered = (Math.round(bytesloaded * 100) / 100).toString() + 'Bytes';
+    }
     var progress_bar = '#progress_bar-' + n;
     var file_box = '#file_' + n;
     var progress_completed = '#progress_completed-' + n;
-    //$(fileref).width(percentComplete/100 *$(filebarref).width());	//set width of progress bar based on the $status value (set at the top of this page)
-    //$(fileref).html(percentComplete +'% ');
     $(progress_bar).width(percentComplete / 100 * $(file_box).width());	//set width of progress bar based on the $status value (set at the top of this page)
-    //$(progress_completed).html(parseInt(percentComplete) + '%(' + bytesTransfered + ')' );	//display the % completed within the progress bar
 
 
     // use time elapsed from start to calculate averages
@@ -554,14 +581,17 @@ function updatepb(bytesloaded, totalbytes, amountUploaded) {
 
 }
 
+// TODO: can go?
 function uploadProgress(evt) {
 }
 
+// TODO: can go?
 function uploadFailed(evt) {
     clearInterval(intervalTimer);
     errorDialog('An error occurred while uploading the file.');
 }
 
+// TODO: can go?
 function uploadCanceled(evt) {
     clearInterval(intervalTimer);
     erorDialog('The upload has been canceled by the user or the browser dropped the connection.');
@@ -569,7 +599,6 @@ function uploadCanceled(evt) {
 
 // remove file from upload array
 function removeItem(fileID) {
-    filesToRestore = fileData[fileID];
     // Updates the combined file lengths
     totalFileLengths -= fileData[fileID].fileSize;
     $('#file_' + fileID).remove();
@@ -578,21 +607,43 @@ function removeItem(fileID) {
     //fileData.splice(fileID, 1);
     n--;
     if (n < 0) {
-        $('#aggregate_progress').hide();
         $('#fileToUpload').val(''); // Needed to allow reselection of files.
         $('#draganddropmsg').show();
-        $('#clearallbtn').button('disable');
     }
 }
 
 // clears the contents of the files-to-upload
 function clearFileBox() {
-    filesToRestore = fileData;
+    if(n == -1) return;
+    filesToRestore = fileData.slice();
     var temp = fileData.length;
-    for (var i = 0; i < temp; i++) {
+    for (var i = 0; i < fileData.length; i++) {
         removeItem(i);
     }
+    // value of n should be this if the box is empty.
     n = -1;
+    fileData = [];
+    setButtonToUndo();
+}
+
+function undoClearFileBox() {
+    reAddFiles(filesToRestore);
+    setButtonToClear();
+
+}
+
+
+// Functions which change the onclick event on the button based on the previous click event.
+function setButtonToClear(){
+    var clearAll = $('#clearallbtn');
+    clearAll.find('.ui-button-text').html("Clear all");
+    clearAll.attr('onclick', 'clearFileBox()');
+}
+
+function setButtonToUndo(){
+    var clearAll = $('#clearallbtn');
+    clearAll.find('.ui-button-text').html("Undo clear");
+    clearAll.attr('onclick', 'undoClearFileBox()');
 }
 
 
