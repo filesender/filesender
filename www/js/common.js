@@ -63,23 +63,27 @@ function validate_fileto()
 	var email = $("#fileto").val();
 	email = email.split(" ").join("");
     if(email != "") {
-	// if not empty - check and remove trailing , added by autocomplete
-	email = email.replace(/,$/, "");
-	email = email.replace(/;$/, "");
-	$("#fileto").val(email);
-	email = email.split(/,|;/);
-	if(email.length>maxEmailRecipients)
-	{
-		$("#maxemails_msg").show();
-		return false;
-	}
-	for (var i = 0; i < email.length; i++) {
-		if (!echeck(email[i], 1, 0)) {
-		$("#fileto_msg").show();
-		return false;
-	}
+        // if not empty - check and remove trailing , added by autocomplete
+        email = email.replace(/,$/, "");
+        email = email.replace(/;$/, "");
+        $("#fileto").val(email);
+        email = email.split(/,|;/);
+
+        if(email.length>maxEmailRecipients) {
+            $("#maxemails_msg").show();
+            return false;
+        }
+
+        for (var i = 0; i < email.length; i++) {
+            if (!echeck(email[i], 1, 0)) {
+            $("#fileto_msg").show();
+            return false;
+            }
+        }
+	} else {
+        $('#fileto_msg').show();
+        return false;
     }
-	}
 	return true;		
 }
 	
