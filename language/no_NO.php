@@ -165,7 +165,7 @@ $lang["_DELETE_FILE"] = "Slett fil";
 $lang["_FILE_DELETED"] = "Fil slettet";
 
 
-
+$lang["_DOWNLOAD_SELECTED"] = "Last ned valgte filer";
 $lang["_START_DOWNLOAD"] = "Begynn nedlastning";
 $lang["_VOUCHER_SENT"] = "Invitasjon sendt";
 $lang["_VOUCHER_DELETED"] = "Invitasjon slettet";
