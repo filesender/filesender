@@ -56,6 +56,8 @@ CREATE TABLE `logs` (
   `logmessage` text,
   `logvoucheruid` varchar(60) DEFAULT NULL,
   `logauthuseruid` varchar(500) DEFAULT NULL,
+  `logfilegroupid` varchar(60) DEFAULT NULL,
+  `logfiletrackingcode` varchar(5) DEFAULT NULL,
   PRIMARY KEY (`logid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 

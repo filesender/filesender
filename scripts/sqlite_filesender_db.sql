@@ -44,7 +44,9 @@ CREATE TABLE logs (
 	logsessionid TEXT,
 	logmessage TEXT,
 	logvoucheruid TEXT,
-	logauthuseruid TEXT
+	logauthuseruid TEXT,
+	logfilegroupid TEXT,
+  logfiletrackingcode TEXT,
 );
 
 CREATE TRIGGER UPDATE_LOGDATE AFTER UPDATE ON logs

@@ -82,6 +82,8 @@ class Log {
             $logfilename	= $dataitem['fileoriginalname'];
             $logmessage	= $message;
             $logauthuseruid	= $authAttributes["saml_uid_attribute"];
+            $logfilegroupid = $dataitem['filegroupid'];
+            $logfiletrackingcode = $dataitem['filetrackingcode'];
         } else {
             $logfileuid	= "";
             $logvoucheruid	= "";
@@ -93,6 +95,8 @@ class Log {
             $logfilename	= "";
             $logmessage	= $message;
             $logauthuseruid	= $authAttributes["saml_uid_attribute"];
+            $logfilegroupid = "";
+            $logfiletrackingcode = "";
         }
 		
 		$pdo = $this->db->connect();
@@ -109,7 +113,9 @@ class Log {
                 logfilesize, 
                 logfilename, 
                 logmessage,
-                logauthuseruid
+                logauthuseruid,
+                logfilegroupid,
+                logfiletrackingcode
             ) 
             VALUES 
             (
@@ -122,7 +128,9 @@ class Log {
                 :logfilesize, 
                 :logfilename, 
                 :logmessage,
-                :logauthuseruid
+                :logauthuseruid,
+                :logfilegroupid,
+                :logfiletrackingcode
             )");
 			
 			$statement->bindParam(':logfileuid',$logfileuid);
@@ -135,6 +143,9 @@ class Log {
 			$statement->bindParam(':logfilename', $logfilename);
 			$statement->bindParam(':logmessage',$logmessage);
 			$statement->bindParam(':logauthuseruid',$logauthuseruid);
+            $statement->bindParam(':logfilegroupid',$logfilegroupid);
+            $statement->bindParam(':logfiletrackingcode',$logfiletrackingcode);
+
 		
 		try 
 		{ 	

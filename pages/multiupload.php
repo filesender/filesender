@@ -330,7 +330,7 @@ function checkFilesSelected() {
     return document.getElementById('fileToUpload').files[0] != null || document.getElementById('file_0') != null;
 }
 
-function uploaderror(name, size) {
+function uploadError(name, size) {
     errorDialog('<?php echo lang('_ERROR_UPLOADING_FILE') ?> ' + name + ':' + size);
 }
 
@@ -352,10 +352,10 @@ function validate() {
     if (validateForm()) {
         constrainNumWebWorkers(); // make sure selected web workers isn't over the config limit
         n = 0;
-        // Calling before first upload stops progress bar opening for every download (when attempting to close it)
         openProgressBar();
-        aggregateStartTime = new Date().getTime();
-        startupload();
+        aggregateStartTime = new Date().getTime();// Calling before first upload stops progress bar opening for every download (when attempting to close it)
+        startUpload();
+
     }
 }
 
