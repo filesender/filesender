@@ -48,5 +48,7 @@ CREATE TABLE logs
   logmessage text,
   logvoucheruid character varying(60),
   logauthuseruid character varying(500),
+  logfilegroupid character varying(60),
+  logfiletrackingcode character varying(5),
   CONSTRAINT logs_pkey PRIMARY KEY (logid)
 );
