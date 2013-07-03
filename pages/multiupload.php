@@ -417,7 +417,7 @@ window.addEventListener('keydown', function (e) {
                         <div id="uploadhtml5" style="display:none">
 
                             <input style="display:none; padding-right:6px;" type="file" name="fileToUpload"
-                                   id="fileToUpload" onchange="fileSelected();" multiple/>
+                                   id="fileToUpload" onchange="fileSelected();" multiple />
                         </div>
                         <div id="file_msg" class="validation_msg"
                              style="display: none"><?php echo lang("_INVALID_FILE"); ?>
@@ -442,56 +442,53 @@ window.addEventListener('keydown', function (e) {
                 <br/>
             </td>
             <td class="box" style="width:50%; height:100%; vertical-align:top;">
-                <div class="box">
-                    <div class="fieldcontainer" id="upload_from">
-                        <div class="label mandatory"><?php echo lang('_FROM'); ?>:&nbsp;</div>
-                        <?php
-                            if (count($senderemail) > 1) {
-                                echo '<select name=\"filefrom\" id=\"filefrom\" style=\"width:98%;font-size:12px;font-family: Verdana, Geneva, sans-serif;\">\n';
-                                foreach ($senderemail as $email) {
-                                    echo '<option>$email</option>\n';
-                                }
-                                echo '</select>\n';
-                            } else {
-                                echo $senderemail[0]
-                                    . "<input name=\"filefrom\" type=\"hidden\" id=\"filefrom\" value=\""
-                                    . $senderemail[0]
-                                    . "\" />\n";
+                <div class="fieldcontainer" id="upload_from">
+                    <label for="filefrom" class="mandatory"><?php echo lang('_FROM'); ?>:&nbsp;</label>
+                    <?php
+                        if (count($senderemail) > 1) {
+                            echo '<select name=\"filefrom\" id=\"filefrom\" style=\"width:98%;font-size:12px;font-family: Verdana, Geneva, sans-serif;\">\n';
+                            foreach ($senderemail as $email) {
+                                echo '<option>' . $email . '</option>';
                             }
-                        ?>
+                            echo '</select>';
+                        } else {
+                            echo $senderemail[0]
+                                . "<input name=\"filefrom\" type=\"hidden\" id=\"filefrom\" value=\""
+                                . $senderemail[0]
+                                . "\" />";
+                        }
+                    ?>
+                </div><br />
+
+                <label for="fileto" class="mandatory"><?php echo lang("_TO"); ?>:</label>
+                <input name="fileto" type="text" id="fileto"
+                           title="<?php echo lang("_EMAIL_SEPARATOR_MSG"); ?>" onchange="validate_fileto()"
+                           value="" placeholder="<?php echo lang('_ENTER_TO_EMAIL'); ?>" />
+
+                <div id="fileto_msg" style="display: none" class="validation_msg field">
+                    <?php echo lang('_INVALID_MISSING_EMAIL'); ?>
+                    <div id="maxemails_msg" style="display: none"
+                         class="validation_msg"><?php echo lang('_MAXEMAILS') . $config['max_email_recipients']; ?>
                     </div>
+                </div>
 
-                    <label for="fileto" class="mandatory"><?php echo lang("_TO"); ?>:</label>
-                    <input name="fileto" type="text" id="fileto"
-                               title="<?php echo lang("_EMAIL_SEPARATOR_MSG"); ?>" onchange="validate_fileto()"
-                               value="" placeholder="<?php echo lang('_ENTER_TO_EMAIL'); ?>" />
+                <label for="filesubject"><?php echo lang('_SUBJECT') . ': (' . lang('_OPTIONAL'); ?>)</label>
+                <input name="filesubject" type="text" id="filesubject"/>
 
-                    <div id="fileto_msg" style="display: none" class="validation_msg field" class="">
-                        <?php echo lang('_INVALID_MISSING_EMAIL'); ?>
-                        <div id="maxemails_msg" style="display: none"
-                             class="validation_msg"><?php echo lang('_MAXEMAILS') . $config['max_email_recipients']; ?>
-                        </div>
-                    </div>
+                <label for="filemessage"><?php echo lang('_MESSAGE') . ': (' . lang('_OPTIONAL'); ?>)</label>
+                <textarea name="filemessage" cols="57" rows="5" id="filemessage"></textarea>
 
-                    <label for="filesubject"><?php echo lang('_SUBJECT') . ': (' . lang('_OPTIONAL'); ?>)</label>
-                    <input name="filesubject" type="text" id="filesubject"/>
-
-                    <label for="filemessage"><?php echo lang('_MESSAGE') . ': (' . lang('_OPTIONAL'); ?>)</label>
-                    <textarea name="filemessage" cols="57" rows="5" id="filemessage"></textarea>
-
-                    <input name="filefrom" type="hidden" id="filefrom" value="<?php echo $senderemail[0]; ?>" size="40"/>
-
-                    <div>
-                        <input type="hidden" id="filevoucheruid" name="filevoucheruid"
-                               value="<?php echo $voucherUID; ?>"/>
-                        <input type="hidden" name="vid" id="vid" value="<?php echo $voucherUID; ?>"/>
-                        <input type="hidden" name="total" id="total" value=""/>
-                        <input type="hidden" name="n" id="n" value=""/>
-                        <input type="hidden" id="filestatus" name="filestatus" value="<?php echo $filestatus; ?>"/>
-                        <input type="hidden" name="loadtype" id="loadtype" value="standard"/>
-                        <input type="hidden" name="s-token" id="s-token"
-                               value="<?php echo (isset($_SESSION['s-token'])) ? $_SESSION['s-token'] : ''; ?>"/>
-                    </div>
+                <div>
+                    <input type="hidden" id="filevoucheruid" name="filevoucheruid"
+                           value="<?php echo $voucherUID; ?>"/>
+                    <input type="hidden" name="vid" id="vid" value="<?php echo $voucherUID; ?>"/>
+                    <input type="hidden" name="total" id="total" value=""/>
+                    <input type="hidden" name="n" id="n" value=""/>
+                    <input type="hidden" id="filestatus" name="filestatus" value="<?php echo $filestatus; ?>"/>
+                    <input type="hidden" name="loadtype" id="loadtype" value="standard"/>
+                    <input type="hidden" name="s-token" id="s-token"
+                           value="<?php echo (isset($_SESSION['s-token'])) ? $_SESSION['s-token'] : ''; ?>"/>
+                </div>
             </td>
         </tr>
         <tr>
@@ -525,11 +522,14 @@ window.addEventListener('keydown', function (e) {
                     <div class="auppanel">
                         <label id="aup_label" for="aup"style="cursor:pointer;" title="<?php echo lang('_SHOWHIDE'); ?>"
                                onclick="toggleTOG();return false;"><?php echo lang('_ACCEPTTOC'); ?></label>
-                        <input style="float:left" name="aup" type="checkbox" id="aup"
-                               onchange="validateAUP();"
-                            <?php echo ($config['AuP_default']) ? 'checked' : ''; ?>
-                            <?php echo (isset($_SESSION['aup']) && !$authvoucher->aVoucher()) ? 'checked' : ''; ?>
-                               value="true"/>
+                        <?php
+                        $aupChecked = '';
+                        if ($config['AuP_default'] || (isset($_SESSION['aup']) && !$authvoucher->aVoucher())) {
+                            $aupChecked = 'checked="checked"';
+                        }
+                        ?>
+
+                        <input style="float:left" name="aup" type="checkbox" id="aup" onchange="validateAUP();" <?php echo $aupChecked; ?> value="true" />
                         <div id="aup_msg" class="validation_msg"
                              style="display: none"><?php echo lang('_AGREETOC'); ?>
                         </div>
@@ -544,11 +544,11 @@ window.addEventListener('keydown', function (e) {
 
                 <div id="workers-advanced-settings" style="display: none;" class="box">
                     <label for="chunksize"><?php echo lang('_TERA_CHUNKSIZE'); ?></label>
-                    <input id="chunksize" type="text" value="<?php echo $config['terasender_chunksize'] ?>"><br/>
+                    <input id="chunksize" type="text" value="<?php echo $config['terasender_chunksize'] ?>" /><br/>
                     <label for="workerCount"><?php echo lang('_TERA_WORKER_COUNT'); ?></label>
-                    <input id="workerCount" type="text" value="<?php echo $config['terasender_workerCount'] ?>"><br/>
+                    <input id="workerCount" type="text" value="<?php echo $config['terasender_workerCount'] ?>" /><br/>
                     <label for="jobsPerWorker"><?php echo lang('_TERA_JOBS_PER_WORKER'); ?></label>
-                    <input id="jobsPerWorker" type="text"value="<?php echo $config['terasender_jobsPerWorker'] ?>">
+                    <input id="jobsPerWorker" type="text"value="<?php echo $config['terasender_jobsPerWorker'] ?>" />
                 </div>
                 <?php if ($config['terasender'] && $config['terasenderadvanced']) { ?>
                     <div>
