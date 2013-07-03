@@ -341,27 +341,14 @@ input {
 margin-top: 4px;
 }
 
-#progress_container {
-	width: 300px;
-	height: 20px;
-	border: 1px solid #CCCCCC;
-	background-color:#CCCCCC;
-	display: block;
-	margin-right: 0px;
-	margin-left: 20px;
-	padding-top: 1px;
-	padding-right: 1px;
-	padding-bottom: 1px;
-	padding-left: 1px;
+#progress_completed {
+    z-index:40;
+    line-height:30px;
+    padding-left:4px;
+    color:#333333;
+    width: 100%;
 }
 
-#progress_completed {
-	z-index:40;
-	line-height:30px;
-	padding-left:4px;
-	color:#333333;
-	width: 100%;
-}
 .progress_container {
 	width: 300px;
 	height: 16px;

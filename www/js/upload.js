@@ -29,14 +29,13 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
- 
+
 // HTML5 Upload functions
 // when cancelling an upload we need to wait till the chunk is complete before allowing the cancel to happen
 // setting cancell upload to true will trigger the upload to stop before uploading the next chunk
 // JavaScript Document
 
 
-<!--
 // -----------------------------------------------------------------------------
 // Globals
 // Major version of Flash required
@@ -46,7 +45,7 @@ var requiredMinorVersion = 0;
 // Minor version of Flash required
 var requiredRevision = 0;
 // -----------------------------------------------------------------------------
-// -->
+
 
 //var bytesUploaded = 0;
 //var bytesTotal = 0;
@@ -62,47 +61,47 @@ var startTime = 0;
 
 // a unique is created for each file that is uploaded.
 // An object with the unique stores all relevant information about the file upload
-	
-	  
- 	function fileSelected() {
-		fdata[n] = Array;
-		//	document.getElementById('MSG').innerHTML = "";
-        var file = document.getElementById("fileToUpload").files[0];
-        fdata[n].fileSize = file.size;
-		fdata[n].bytesTotal = file.size;
-		fdata[n].bytesUploaded = 0;
-	    fdata[n].previousBytesLoaded = 0;
-	    fdata[n].intervalTimer = 0;
-		fdata[n].currentlocation = 0;
-		fdata[n].filename = file.name;
-		fdata[n].filetype = file.type;
-		//fdata[n].filesize = 0;
-		
-	  	if(validate_file()) { 
-			$("#uploadbutton").show(); 
-			$("#fileInfoView").show();
-			$("#fileName").html(nameLang + ': ' + fdata[n].filename);
-			$("#fileSize").html(sizeLang + ': ' + readablizebytes(fdata[n].fileSize));
-		} else { 
-			$("#uploadbutton").hide();
-			$("#fileInfoView").hide();
-			$("#fileName").html("");
-			$("#fileSize").html("");
-		};
-	}
 
-	function startupload()
+
+function fileSelected() {
+    fdata[n] = Array;
+    //	document.getElementById('MSG').innerHTML = "";
+    var file = document.getElementById("fileToUpload").files[0];
+    fdata[n].fileSize = file.size;
+    fdata[n].bytesTotal = file.size;
+    fdata[n].bytesUploaded = 0;
+    fdata[n].previousBytesLoaded = 0;
+    fdata[n].intervalTimer = 0;
+    fdata[n].currentlocation = 0;
+    fdata[n].filename = file.name;
+    fdata[n].filetype = file.type;
+    //fdata[n].filesize = 0;
+
+    if(validate_file()) {
+    $("#uploadbutton").show();
+    $("#fileInfoView").show();
+    $("#fileName").html(nameLang + ': ' + fdata[n].filename);
+    $("#fileSize").html(sizeLang + ': ' + readablizebytes(fdata[n].fileSize));
+    } else {
+    $("#uploadbutton").hide();
+    $("#fileInfoView").hide();
+    $("#fileName").html("");
+    $("#fileSize").html("");
+    }
+}
+
+function startupload()
 	{
-		$("#uploadbutton a").attr("onclick", ""); // prevent double clicks to start extra uploads
+        $("#uploadbutton a").attr("onclick", ""); // prevent double clicks to start extra uploads
 
-		fdata[n].bytesUploaded = 0;
-		
-		// validate form data and return filesize or validation error
-		// load form into json array
-		var query = $("#form1").serializeArray(), json = {};
-		for (i in query) { json[query[i].name] = query[i].value; } 
-		// add file information fields
-		json["fileoriginalname"] = fdata[n].filename;
+        fdata[n].bytesUploaded = 0;
+
+        // validate form data and return filesize or validation error
+        // load form into json array
+        var query = $("#form1").serializeArray(), json = {};
+for (i in query) { json[query[i].name] = query[i].value; }
+// add file information fields
+json["fileoriginalname"] = fdata[n].filename;
 		json["filesize"] = parseInt(fdata[n].fileSize);
 		json["vid"] = vid;
 
@@ -136,65 +135,33 @@ var startTime = 0;
 		if(result == "err_nodiskspace") { errorDialog(errmsg_disk_space);} // not enough disk space on server
 		})
 		$("#uploadbutton a").attr("onclick", "validate()"); // re-activate upload button
-		}
-		if(data.status && data.status == "complete")
+}
+if(data.status && data.status == "complete")
 		{
-		$("#fileToUpload").hide();// hide Browse
-		$("#selectfile").hide();// hide Browse message
-		$("#uploadbutton").hide(); // hide upload
-		$("#cancelbutton").show(); // show cancel
-		// show upload progress dialog
-		$("#dialog-uploadprogress").dialog("open");
-		// no error so use result as current bytes uploaded for file resume 
-		vid = data.vid;
-		fdata[n].bytesUploaded = parseFloat(data.filesize);
-		updatepb(fdata[n].bytesUploaded, fdata[n].fileSize);	
-		startTime = new Date().getTime();
-                if(html5webworkers){
-                    uploadFileWebworkers();
-                }else{
-                    uploadFile();
-                }
-		}
-		},error:function(xhr,err){
-			// error function to display error message e.g.404 page not found
-			ajaxerror(xhr.readyState,xhr.status,xhr.responseText);
-		}
-  		});
-	}
 
-function uploadFileWebworkers() {
-    var files = document.getElementById("fileToUpload").files;
-    var path = document.location.pathname;
-    var dir = path.substring(0, path.lastIndexOf('/'));
+            $("#fileToUpload").hide();// hide Browse
+            $("#selectfile").hide();// hide Browse message
+            $("#uploadbutton").hide(); // hide upload
+            $("#cancelbutton").show(); // show cancel
+            // show upload progress dialog
+            openProgressBar(fdata[n].filename);
+            // no error so use result as current bytes uploaded for file resume
+            vid = data.vid;
+            fdata[n].bytesUploaded = parseFloat(data.filesize);
+            updatepb(fdata[n].bytesUploaded, fdata[n].fileSize, fdata[n].bytesUploaded);
 
-    $("head").append('<script type="text/javascript" src="lib/tsunami/js/tsunami.js"></script>');
 
-    if(fdata[n].bytesUploaded > fdata[n].bytesTotal -1 ) {
-        doUploadComplete();
-        return;
+//            if(html5webworkers){
+//            uploadFileWebworkers();
+//            }else{
+    uploadFile();
+    //}
+}
+},error:function(xhr,err){
+    // error function to display error message e.g.404 page not found
+    ajaxerror(xhr.readyState,xhr.status,xhr.responseText);
     }
-
-    chunksize = parseInt($('#chunksize').val())*1024*1024;
-    console.log('Chunksize: '+ chunksize);
-
-    workerCount = parseInt($('#workerCount').val());
-    console.log('Using '+ workerCount+' worker(s)');
-    jobsPerWorker = parseInt($('#jobsPerWorker').val());
-    console.log('Setting '+ jobsPerWorker+' job(s) per worker');
-
-    var tsunami = new Tsunami({
-        uri: dir + '/' +uploadURI + "?type=tsunami&vid="+vid,
-        simultaneousUploads: workerCount,
-        jobsPerWorker: jobsPerWorker,
-        chunkSize: chunksize,
-        workerFile: 'lib/tsunami/js/tsunami_worker.js',
-        log: false,
-        onComplete: doUploadComplete,
-        onProgress: updatepb
-    });
-    tsunami.addFiles(files);
-    tsunami.upload();
+});
 }
 
 function doUploadComplete(){
@@ -301,16 +268,15 @@ function uploadFile() {
 					return;			
 				}
 			fdata[n].bytesUploaded = parseFloat(xhr.responseText);
-			updatepb(fdata[n].bytesUploaded,fdata[n].bytesTotal);	
+			updatepb(fdata[n].bytesUploaded,fdata[n].bytesTotal, blob);
 			uploadFile();
 			} else {
 			errorDialog("There was a problem retrieving the data:\n" + req.statusText);
 			}
-		}else{
 		}
-}
+    }
 
-return true;
+    return true;
 }
 
 function updateTransferSpeed() {
@@ -339,33 +305,42 @@ function secondsToString(seconds) {
 }
 
 // update the progress bar
-function updatepb(bytesloaded,totalbytes)
+function updatepb(bytesloaded,totalbytes, amountUploaded)
 {
-	$("#progress_bar").show();
-	var percentComplete = Math.round(bytesloaded * 100 / totalbytes);
-	var bytesTransfered = '';
-	if (bytesloaded > 1024*1024)
-		bytesTransfered = (Math.round(bytesloaded * 100/(1024*1024))/100).toString() + 'MB';
-	else if (bytesloaded > 1024)
-		bytesTransfered = (Math.round(bytesloaded * 100/1024)/100).toString() + 'kB';
-	else
-		bytesTransfered = (Math.round(bytesloaded * 100)/100).toString() + 'Bytes';
-	
-		$("#progress_bar").width(percentComplete/100 *$('#progress_container').width());	//set width of progress bar based on the $status value (set at the top of this page)
-		$("#progress_bar").html(percentComplete +"% ");
-		$("#progress_completed").html(parseInt(percentComplete) + "%(" + bytesTransfered + ")" );	//display the % completed within the progress bar
-	  
+    var percentComplete = Math.round(bytesloaded * 100 / totalbytes);
+    var bytesTransfered = '';
+
+    if (bytesloaded > 1024*1024)
+    bytesTransfered = (Math.round(bytesloaded * 100/(1024*1024))/100).toString() + 'MB';
+    else if (bytesloaded > 1024)
+    bytesTransfered = (Math.round(bytesloaded * 100/1024)/100).toString() + 'kB';
+    else
+    bytesTransfered = (Math.round(bytesloaded * 100)/100).toString() + 'Bytes';
+
+    var now = new Date().getTime();
+    var timeSinceStart = (now - startTime) / 1000;
+
+    var uploadSpeed = (bytesloaded/timeSinceStart) / 1024 / 1024;
+    var bytesRemaining = totalbytes - bytesloaded;
+    var timeRemaining = (uploadSpeed == 0 ? 0 : ((bytesRemaining / 1024 / 1024) / uploadSpeed));
+
+    $('#progress_string').html(percentComplete + '%');
+    $('#progress_bar').width(percentComplete/100 * $('#progress_container').width());	//set width of progress bar based on the $status value (set at the top of this page)
+
+    $('#totalUploaded').html('Total uploaded: ' + readablizebytes(bytesloaded) + '/' + readablizebytes(totalbytes));
+    $('#averageUploadSpeed').html('Average upload Speed: ' + uploadSpeed.toFixed(2) * 8 + 'MBit/s');
+    $('#timeRemaining').html('Approx time remaining: ' + secondsToString(timeRemaining));
 }
 
 function uploadProgress(evt) {
-	}
+    }
 
 function uploadFailed(evt) {
-	clearInterval(intervalTimer);
-	errorDialog("An error occurred while uploading the file.");  
-}  
-  
+    clearInterval(intervalTimer);
+    errorDialog("An error occurred while uploading the file.");
+    }
+
 function uploadCanceled(evt) {
-	clearInterval(intervalTimer);
-	erorDialog("The upload has been canceled by the user or the browser dropped the connection.");  
-	}  
+    clearInterval(intervalTimer);
+    erorDialog("The upload has been canceled by the user or the browser dropped the connection.");
+    }
