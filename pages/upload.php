@@ -79,6 +79,8 @@ if (isset($_COOKIE['SimpleSAMLAuthToken'])) {
 } else {
     $token = "";
 }
+
+global $config;
 // set flash upload vairiables
 $flashVARS = "vid=".$voucherUID."&sid=".session_id()."&buttonBrowse=".lang("_BROWSE")."&buttonUpload=".lang("_SEND")."&buttonCancel=".lang("_CANCEL")."&siteURL=".$config["site_url"]."&token=".$token;
 ?>
@@ -90,22 +92,20 @@ $flashVARS = "vid=".$voucherUID."&sid=".session_id()."&buttonBrowse=".lang("_BRO
 var uploadid = '<?php echo $id ?>';
 var maximumDate = <?php echo (time()+($config['default_daysvalid']*86400))*1000 ?>;
 var minimumDate = <?php echo (time()+86400)*1000 ?>;
-var maxHTML5uploadsize = <?php echo $config['max_html5_upload_size']; ?>;
 var maxFLASHuploadsize = <?php echo $config['max_flash_upload_size']; ?>;
 var maxEmailRecipients = <?php echo $config['max_email_recipients']; ?>;
 var datepickerDateFormat = '<?php echo lang('_DP_dateFormat'); ?>';
-var chunksize =  <?php echo $config['upload_chunk_size']; ?>;
 var aup = '<?php echo $config['AuP'] ?>';
 var bytesUploaded = 0;
 var bytesTotal = 0;
 var ext = '<?php echo $config['ban_extension']?>';
-var banextensions = ext.split(",")
+var banextensions = ext.split(",");
 var previousBytesLoaded = 0;
 var intervalTimer = 0;
-var errmsg_disk_space = "<?php echo lang($lang["_DISK_SPACE_ERROR"]); ?>";
+var errmsg_disk_space = "<?php echo lang("_DISK_SPACE_ERROR"); ?>";
 var filedata=new Array();
-var nameLang = '<?php echo lang("_FILE_NAME"); ?>'
-var sizeLang = '<?php echo lang("_SIZE"); ?>'
+var nameLang = '<?php echo lang("_FILE_NAME"); ?>';
+var sizeLang = '<?php echo lang("_SIZE"); ?>';
 
 var vid='<?php if(isset($_REQUEST["vid"])){echo htmlspecialchars($_REQUEST["vid"]);}; ?>';
 
@@ -113,8 +113,8 @@ var vid='<?php if(isset($_REQUEST["vid"])){echo htmlspecialchars($_REQUEST["vid"
 $(function() {
 
     // set date picker
-    $("#datepicker" ).datepicker({ minDate: new Date(minimumDate), maxDate: new Date(maximumDate),altField: "#fileexpirydate", altFormat: "d-m-yy" });
-    $("#datepicker" ).datepicker( "option", "dateFormat", "<?php echo lang("_DP_dateFormat"); ?>" );
+    $("#datepicker").datepicker({ minDate: new Date(minimumDate), maxDate: new Date(maximumDate),altField: "#fileexpirydate", altFormat: "d-m-yy" });
+    $("#datepicker").datepicker( "option", "dateFormat", "<?php echo lang("_DP_dateFormat"); ?>" );
     $("#datepicker").datepicker("setDate", new Date(maximumDate));
     $('#ui-datepicker-div').css('display','none');
 
@@ -154,26 +154,14 @@ $(function() {
     $('.ui-dialog-buttonpane button:contains(uploadconfirmyesBTN)').attr("id","btn_uploadconfirmyes");
     $('#btn_uploadconfirmyes').html('<?php echo lang("_YES") ?>')
 
-    // default error message dialogue
-    $("#dialog-support").dialog({ autoOpen: false, height: 400,width: 550, modal: true,title: "",
-        buttons: {
-            'supportBTN': function() {
-                $( this ).dialog( "close" );
-            }
-        }
-    })
-
-    $('.ui-dialog-buttonpane button:contains(supportBTN)').attr("id","btn_support");
-    $('#btn_support').html('<?php echo lang("_OK") ?>')
-
     // default auth error dialogue
     $("#dialog-autherror").dialog({ autoOpen: false, height: 240,width: 350, modal: true,title: "",
         buttons: {
             '<?php echo lang("_OK") ?>': function() {
-                location.reload(true);
+                location.reload();
             }
         }
-    })
+    });
 
     // default error message dialogue
     $("#dialog-default").dialog({ autoOpen: false, height: 140, height: 200, modal: true,title: "Error",
@@ -183,24 +171,20 @@ $(function() {
                 $( this ).dialog( "close" );
             }
         }
-    })
+    });
 
 
-    $('.ui-dialog-buttonpane button:contains(uploadcancelBTN)').attr("id","btn_uploadcancel");
-    $('#btn_uploadcancel').html('<?php echo lang("_CANCEL") ?>')
+    $('.ui-dialog-buttonpane').find('button:contains(uploadcancelBTN)').attr("id","btn_uploadcancel");
+    $('#btn_uploadcancel').html('<?php echo lang("_CANCEL") ?>');
 
     function displayhtml5support()
     {
         $("#dialog-support").dialog("open");
     }
-    //Check if HTML5 is enable and use HTML uploader
-    if(html5){
-        // use HTML5 upload functions
-        $("#uploadhtml5").show();
-    } else {
-        // use standard upload functions
-        $("#uploadstandard").show();
-    }
+
+    // Display flash upload button
+    $("#uploadstandard").show();
+
 
     // autocomplete
     var availableTags = [<?php  echo (isset($config["autocomplete"]) && $config["autocomplete"])?  $functions->uniqueemailsforautocomplete():  ""; ?>];
@@ -271,20 +255,20 @@ function hidemessages()
 // --------------------------
 function validateforflash(fname,fsize)
 {
-    // remove previouse vaildation messages
+    // remove previous validation messages
     hidemessages();
 
     var validate = true;
 
-    if(!validate_fileto() ){validate = false;};		// validate emails
+    if(!validate_fileto() ){validate = false;}	// validate emails
     if(aup == '1') // check if AUP is required
     {
-        if(!validate_aup() ){validate = false;};		// check AUP is selected
+        if(!validate_aup() ){validate = false;}		// check AUP is selected
     }
-    if(!validate_expiry() ){validate = false;};		// check date
+    if(!validate_expiry() ){validate = false;}	// check date
     // validate with server
     if(validate) {
-        $("#uploadbutton a").attr("onclick", ""); // prevent double clicks to start extra uploads
+        $("#uploadbutton").find("a").attr("onclick", ""); // prevent double clicks to start extra uploads
         var query = $("#form1").serializeArray(), json = {};
         for (i in query) { json[query[i].name] = query[i].value; }
         // add file information fields
@@ -318,8 +302,8 @@ function validateforflash(fname,fsize)
                         if(result == "err_invalidfilename") { $("#file_msg").show();} //  invalid filename
                         if(result == "err_invalidextension") { $("#extension_msg").show();} //  invalid extension
                         if(result == "err_nodiskspace") { errorDialog(errmsg_disk_space);}
-                    })
-                    $("#uploadbutton a").attr("onclick", "validate()"); // re-activate upload button
+                    });
+                    $("#uploadbutton").find("a").attr("onclick", "validate()"); // re-activate upload button
                 }
                 if(data.status && data.status == "complete")
                 {
@@ -377,26 +361,6 @@ function openProgressBar(fname) {
     });
 }
 
-// HTML5 form Validation
-function validateForm()
-{
-    // remove previouse vaildation messages
-    hidemessages();
-
-    var validate = true;
-
-    if(!validate_fileto() ){validate = false;};		// validate emails
-    if(!validate_file() ){validate = false;};		// check if file selected
-    //if(aup == '1') // check if AUP is required
-    //{
-    if(aup == '1' && !validate_aup() ){validate = false;};		// check AUP is selected
-    //}
-    if(!validate_expiry() ){validate = false;};		// check date
-
-    return validate;
-}
-
-
 //Validate AUP
 function validate_aup()
 {
@@ -420,44 +384,6 @@ function validateextension(filename)
         }
     }
     return true;
-}
-
-// Validate FILE (HTML5 only)
-function validate_file()
-{
-
-    fileMsg("");
-    if(!document.getElementById("fileToUpload").files[0])
-    {
-        // display message if a user enters all form details and selects upload without selecting a file
-        // in theory this error should not appear as a browse button should not be visible without a file first being selected
-        fileMsg("<?php echo lang("_SELECT_FILE") ?>");
-        return false;
-    } else
-    {
-        var file = document.getElementById("fileToUpload").files[0];
-        // validate fiename
-        if (!validatefilename(file.name)){
-            return false;
-        }
-        //validate file size
-        if(file.size < 1)
-        {
-            fileMsg("<?php echo lang("_INVALID_FILESIZE_ZERO") ?>");
-            return false;
-        }
-        if(file.size > maxHTML5uploadsize)
-        {
-            fileMsg("<?php echo lang("_INVALID_TOO_LARGE_1") ?> " + readablizebytes(maxHTML5uploadsize) + ". <?php echo lang("_SELECT_ANOTHER_FILE") ?> ");
-            return false;
-        }
-        if(!validateextension(file.name))
-        {
-            fileMsg("<?php echo lang("_INVALID_FILE_EXT") ?>");
-            return false;
-        }
-        return true;
-    }
 }
 
 // flex file information check
@@ -567,20 +493,7 @@ function validatefilename(name)
 
 function validate()
 {
-    // upload if validated
-    if(html5) {
-        if(validateForm()) // validate client side
-        // validate server side as well (check for drive space
-
-
-        //Use this to allow uplods with faulty parameters (and comment out the previouslone) if(true)
-        {
-            startupload();
-        }
-    } else {
-        getFlexApp("filesenderup").returnMsg("validatebeforeupload");
-    }
-
+    getFlexApp("filesenderup").returnMsg("validatebeforeupload");
 }
 
 function errorDialog(msg)
@@ -730,9 +643,6 @@ window.addEventListener('keydown', function(e) {(e.keyCode == 27 && e.preventDef
                         <div id="uploadstandardspinner" style="padding-top:10px;display:none"><img src="images/ajax-loader-sm.gif" alt="" border="0" align="left" style="padding-right:6px" /><?php echo lang("_UPLOADING_WAIT"); ?></div>
                         <br />
                     </div>
-                    <div id="uploadhtml5" style="display:none">
-                        <input type="file" name="fileToUpload" id="fileToUpload" onchange="fileSelected();" />
-                    </div>
                     <div id="file_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_FILE"); ?></div>
                     <div id="extension_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_FILE_EXT"); ?></div>
                 </td>
@@ -766,20 +676,6 @@ window.addEventListener('keydown', function(e) {(e.keyCode == 27 && e.preventDef
                 <td colspan="2"><div class="menu" id="uploadbutton" style="display:none"><a href="#" onclick="validate()"><?php echo lang("_SEND"); ?></a></div></td>
             </tr>
 
-            <tr style="padding: 0">
-                <td style="padding: 0"></td>
-                <td colspan="2" style="padding: 0 3px">
-                    <div id="terasender-advanced-settings" style="display: none;" class="box">
-                        <?php echo lang("_TERA_CHUNKSIZE"); ?><input id="chunksize" type="text" value="<?php echo (isset($config['terasender_chunksize']) ? $config['terasender_chunksize'] : 5) ?>"/><br />
-                        <?php echo lang("_TERA_WORKER_COUNT"); ?><input id="workerCount" type="text" value="<?php echo (isset($config['terasender_workerCount']) ? $config['terasender_workerCount'] : 6) ?>"/><br />
-                        <?php echo lang("_TERA_JOBS_PER_WORKER"); ?><input id="jobsPerWorker" type="text" value="<?php echo (isset($config['terasender_jobsPerWorker']) ? $config['terasender_jobsPerWorker'] : 1) ?>"/>
-                    </div>
-                </td>
-            </tr>
-            <tr style=" <?php echo (isset($config['terasender']) && $config['terasender'] && isset($config['terasenderadvanced']) && $config['terasenderadvanced']) ?  '': ';display: none;'; ?>">
-                <td></td>
-                <td colspan="2"><a href="#" onclick="$('#terasender-advanced-settings').slideToggle()"><?php echo lang("_TERA_ADVANCED_SETTINGS"); ?></a></td>
-            </tr>
         </table>
         <input type="hidden" id="filevoucheruid" name="filevoucheruid" value="<?php echo $voucherUID; ?>" />
         <input type="hidden" name="vid" id="vid" value="<?php echo $voucherUID; ?>" />
@@ -792,16 +688,6 @@ window.addEventListener('keydown', function(e) {(e.keyCode == 27 && e.preventDef
 </div>
 <div id="dialog-default" style="display:none" title=""> </div>
 <div id="dialog-cancel" style="display:none" title="<?php echo lang("_CANCEL_UPLOAD"); ?>"><?php echo lang("_ARE_YOU_SURE"); ?></div>
-<!--<div id="dialog-uploadprogress" title="" style="display:none">-->
-<!--    <img id="progress_image" name="progress_image" src="images/ajax-loader-sm.gif" width="16" height="16" alt="Uploading" align="left" />-->
-<!--    <div id="progress_container">-->
-<!--        <div id="progress_bar_single"></div>-->
-<!--        <div id="progress_completed" class="progress_completed"></div>-->
-<!--    </div>-->
-<!--    <p id="totalUploaded"></p>-->
-<!--    <p id="averageUploadSpeed"></p>-->
-<!--    <p id="timeRemaining"></p>-->
-<!--</div>-->
 
 <div id="dialog-uploadprogress" style="display:none;">
     <div id="progress_container" class="fileBox">
@@ -813,7 +699,4 @@ window.addEventListener('keydown', function(e) {(e.keyCode == 27 && e.preventDef
     <p id="timeRemaining"></p>
 </div>
 
-<div id="dialog-support" title="" style="display:none">
-    <?php require_once("$filesenderbase/pages/html5display.php"); ?>
-</div>
 <div id="dialog-autherror" title="<?php echo lang($lang["_MESSAGE"]); ?>" style="display:none"><?php echo lang($lang["_AUTH_ERROR"]); ?></div>
