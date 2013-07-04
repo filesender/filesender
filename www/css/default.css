@@ -257,6 +257,9 @@ input,textarea
 	font-weight: normal;
 	vertical-align: middle;
 }
+.fieldcontainer {
+    padding: 5px;
+}
 input {
 	/*border:1px solid #ccc;
 	font-size: 13pt;
@@ -301,13 +304,13 @@ input {
 }
 
 #dragfilestouploadcss {
-	border:2px dashed #666666;
+	border: 1px dashed #666;
 	border-radius:5px;
 	-moz-border-radius: 5px;
 	padding-top: 5px;
-	padding-right: 0px;
+	padding-right: 0;
 	padding-bottom: 5px;
-	background-color: #FFFFFF;
+	background-color: #FFF;
 	font-weight: bold;
 }
 
@@ -408,7 +411,7 @@ margin-top: 4px;
 
 #box, .box  {
 	padding: 5px;
-	border: 1px solid #cccccc;
+	border: 1px solid #aaa;
 	border-radius:5px;
 	-moz-border-radius: 5px;
 	margin-top: 4px;
@@ -541,7 +544,6 @@ word-wrap: break-word; /* Internet Explorer 5.5+ */
 }
 
 label {
-    width: 200px;
     display: inline-block;
     text-align: left;
     padding-bottom: 2px;
