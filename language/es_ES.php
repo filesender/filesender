@@ -217,7 +217,7 @@ $lang["_HELP_TEXT"] = '
 
 <div>
 
-<div align="left" style="padding:5px">
+<div style="padding: 5px; text-align: left;">
 
 <h4>Login</h4> 
 <ul>
@@ -259,7 +259,7 @@ $lang["_HELP_TEXT"] = '
 </div>';
 
 // site about
-$lang["_ABOUT_TEXT"] = ' <div align="left" style="padding:5px">'. '"'. htmlspecialchars($config['site_name']) .'" es una instalaci&oacute;n de FileSender (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>), desarrollado atendiendo a los requerimientos de la Comunidad de Investigaci&oacute;n y Educaci&oacute;n Superior.</div>';
+$lang["_ABOUT_TEXT"] = ' <div style="padding: 5px; text-align: left;">'. '"'. htmlspecialchars($config['site_name']) .'" es una instalaci&oacute;n de FileSender (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>), desarrollado atendiendo a los requerimientos de la Comunidad de Investigaci&oacute;n y Educaci&oacute;n Superior.</div>';
 
 // site AUP terms
 $lang["_AUPTERMS"] = "Pol&iacute;tica de Uso Aceptable - Condiciones de Servicio";

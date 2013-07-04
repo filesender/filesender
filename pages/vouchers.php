@@ -246,19 +246,19 @@ $filedata = $functions->getVouchers();
 $json_o=json_decode($filedata,true);
 
 ?>
-<form name="form1" id="form1" method="post" action="">
+<form name="form1" id="form1" method="post">
     <div id="box_1" class="box">
   <?php echo '<div id="pageheading">'.lang("_VOUCHERS").'</div>'; ?>
-    <table width="100%" border="0">
+    <table style="border: 0; width: 100%;">
       <tr>
-        <td colspan="2" id="invite_text"><?php echo lang("_SEND_NEW_VOUCHER"); ?></td>
+        <td id="invite_text"><?php echo lang("_SEND_NEW_VOUCHER"); ?></td>
       </tr>
       </table>
   </div>
       <div id="box_2" class="box">
-       <table width="100%" border="0">
+       <table style="border: 0; width: 100%;">
       <tr>
-        <td class="mandatory" id="vouchers_to" width="130"><?php echo lang("_SEND_VOUCHER_TO"); ?>:</td>
+        <td class="mandatory" id="vouchers_to" style="width: 130px"><?php echo lang("_SEND_VOUCHER_TO"); ?>:</td>
         <td>
         <input id="fileto" name="fileto" title="<?php echo lang("_EMAIL_SEPARATOR_MSG"); ?>" onfocus="$('#fileto_msg').hide();" type="text" size="45"/><br />
  		<div id="fileto_msg" class="validation_msg" style="display:none"><?php echo lang("_INVALID_MISSING_EMAIL"); ?></div>
@@ -267,7 +267,7 @@ $json_o=json_decode($filedata,true);
       </tr>
        <tr>
         <td class="mandatory" id="voucher_from"><?php echo lang("_FROM"); ?>:</td>
-        <td colspan="2">
+        <td>
 <?php
 if ( count($useremail) > 1 ) {
         echo "<select name=\"filefrom\" id=\"filefrom\">\n";
@@ -287,7 +287,7 @@ if ( count($useremail) > 1 ) {
         </td>
       </tr>
       <tr>
-        <td align="right" valign="middle">
+        <td style="text-align: right; vertical-align: middle;">
 		<input type="hidden" id="fileexpirydate" name="fileexpirydate" value="<?php echo date($lang['datedisplayformat'],strtotime("+".$config['default_daysvalid']." day"));?>" />
 		<input type="hidden" name="s-token" id="s-token" value="<?php echo (isset($_SESSION["s-token"])) ?  $_SESSION["s-token"] : "";?>" />
 		</td>
@@ -297,7 +297,7 @@ if ( count($useremail) > 1 ) {
      </div>
 </form>
   <div id="box_3" class="box">
-  <table id="vouchertable" width="100%" border="0" cellspacing="1">
+  <table id="vouchertable" style="border: 0; width: 100%; border-spacing: 1px">
     <tr class="headerrow">
       <td id="vouchers_header_from"><strong><?php echo lang("_FROM"); ?></strong></td>
       <td id="vouchers_header_to"><strong><?php echo lang("_TO"); ?></strong></td>
@@ -309,7 +309,7 @@ if ( count($useremail) > 1 ) {
 	$i = 0; 
 	foreach($json_o as $item) {
 		$i += 1; // counter for file id's
-		echo "<tr><td>" .$item['filefrom'] . "</td><td>" .$item['fileto'] . "</td><td>" .date($lang['datedisplayformat'],strtotime($item['filecreateddate'])) . "</td><td>" .date($lang['datedisplayformat'],strtotime($item['fileexpirydate'])) . "</td><td><div  style='cursor:pointer;'><img id='btn_deletevoucher_".$i."' src='images/shape_square_delete.png' alt='' title='".lang("_DELETE")."' onclick='confirmdelete(".'"' .$item['filevoucheruid'] . '"'. ")' border='0' /></div></td></tr>"; //etc
+		echo "<tr><td>" .$item['filefrom'] . "</td><td>" .$item['fileto'] . "</td><td>" .date($lang['datedisplayformat'],strtotime($item['filecreateddate'])) . "</td><td>" .date($lang['datedisplayformat'],strtotime($item['fileexpirydate'])) . "</td><td><div  style='cursor:pointer;border:0'><img id='btn_deletevoucher_".$i."' src='images/shape_square_delete.png' alt='' title='".lang("_DELETE")."' onclick='confirmdelete(".'"' .$item['filevoucheruid'] . '"'. ")' /></div></td></tr>"; //etc
 	}
 ?>
   </table>

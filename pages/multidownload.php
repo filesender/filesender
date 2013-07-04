@@ -92,7 +92,7 @@ if (isset($_REQUEST['gid'])) {
         ?>
 
         <form id="fileform" method="post" action="multidownload.php?gid=<?php echo urlencode($_REQUEST['gid'])?>">
-            <table id="myfiles" width="100%" border="0" cellspacing="0" cellpadding="4" style="table-layout:fixed;">
+            <table id="myfiles" width="100%" cellspacing="0" cellpadding="4" style="table-layout:fixed; border: 0;">
                 <tr class="headerrow" >
                     <td class="tblmcw2"><input type="checkbox" checked="checked" style="margin-left: 0; margin-right: 0" name="selectall"
                                           id="selectall"

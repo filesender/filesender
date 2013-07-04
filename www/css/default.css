@@ -66,6 +66,13 @@ td {
 	padding: 3px;
 }
 
+#myfiles {
+    table-layout:fixed;
+    width: 100%;
+    border: 0;
+    border-spacing: 0;
+}
+
 .headerrow {
 	background-color: #CCC;
 }

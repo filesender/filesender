@@ -86,7 +86,7 @@ global $config;
 
 ?>
 
-<script type='text/javascript' src='lib/js/AC_OETags.js' language='javascript'></script>
+<script type='text/javascript' src='lib/js/AC_OETags.js'></script>
 <script type='text/javascript' src='js/multiupload.js'></script>
 <script type='text/javascript'>
 //<![CDATA[
@@ -444,16 +444,17 @@ window.addEventListener('keydown', function (e) {
             <tr>
                 <td class="box" style="height:100%; vertical-align:top;width:50%" id="col1">
                     <div class="fieldcontainer" id="upload_from">
-                        <label for="filefrom" class="mandatory"><?php echo lang('_FROM'); ?>:&nbsp;</label>
                         <?php
                         if (count($senderemail) > 1) {
+                            echo '<label for="filefrom" class="mandatory">' . lang('_FROM') . ':&nbsp;</label>';
                             echo '<select name=\"filefrom\" id=\"filefrom\" style=\"width:98%;font-size:12px;font-family: Verdana, Geneva, sans-serif;\">\n';
                             foreach ($senderemail as $email) {
                                 echo '<option>' . $email . '</option>';
                             }
                             echo '</select>';
                         } else {
-                            echo $senderemail[0] . "<input name=\"filefrom\" type=\"hidden\" id=\"filefrom\" value=\"$senderemail[0]\" />";
+                            echo '<span class="mandatory">' . lang('_FROM') . ':&nbsp;</span>';
+                            echo $senderemail[0] . "<input name=\"filefrom\" type=\"hidden\" id=\"filefrom\" value=\"$senderemail[0]\" />\n";
                         }
                         ?>
                     </div>

@@ -223,7 +223,7 @@ $lang["_SITE_FOOTER"] = "";
 // site help
 $lang["_HELP_TEXT"] = '
 <div>
-<div align="left" style="padding:5px">
+<div style="padding: 5px; text-align: left;">
 <h4>Pålogging</h4>
 <ul>
 	<li>Du logger på med brukerkontoen du bruker hos din institusjon.  Ta kontakt med din lokale IT-helpdesk hvis pålogging feiler eller du ikke finner din institusjon i listen.</li>
@@ -272,7 +272,7 @@ $lang["_HELP_TEXT"] = '
   </div>';
 
 // site about
-$lang["_ABOUT_TEXT"] = ' <div align="left" style="padding:5px">'. htmlspecialchars($config['site_name']) .' er en FileSender (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>) installasjon.  FileSender programvaren er optimalisert for bruk i høgere utdanning og forskning.</div>';
+$lang["_ABOUT_TEXT"] = ' <div style="padding: 5px; text-align: left;">'. htmlspecialchars($config['site_name']) .' er en FileSender (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>) installasjon.  FileSender programvaren er optimalisert for bruk i høgere utdanning og forskning.</div>';
 
 // site AUP terms
 $lang["_AUPTERMS"] = "Oppfør deg pent ellers så kommer trollan...";
