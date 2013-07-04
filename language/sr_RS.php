@@ -210,7 +210,7 @@ $lang["_HELP_TEXT"] = '
 
 <div>
 
-<div align="left" style="padding:5px">
+<div style="padding: 5px; text-align: left;">
 
 <h4>Prijava</h4>
 <ul>
@@ -252,7 +252,7 @@ $lang["_HELP_TEXT"] = '
 </div>';
 
 // site about
-$lang["_ABOUT_TEXT"] = ' <div align="left" style="padding:5px">'. htmlspecialchars($config['site_name']) .' je instalacija FileSender-a (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>), koja je razvijena za potrebe zajednica višeg obrazovanja i istraživanja.</div>';
+$lang["_ABOUT_TEXT"] = ' <div style="padding: 5px; text-align: left;">'. htmlspecialchars($config['site_name']) .' je instalacija FileSender-a (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>), koja je razvijena za potrebe zajednica višeg obrazovanja i istraživanja.</div>';
 
 // AUP terms
 $lang["_AUPTERMS"] = "Uslovi korišćenja...";

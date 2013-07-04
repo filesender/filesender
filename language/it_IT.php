@@ -208,7 +208,7 @@ $lang["_SITE_FOOTER"] = "";
 // site help
 $lang["_HELP_TEXT"] = '
 <div>
-<div align="left" style="padding:5px">
+<div style="padding: 5px; text-align: left;">
 <h4>Login</h4> 
 <ul>
     <li>Se non visualizzi la tua istutuzione nella lista degli Identity Provider(IdPs) o il login istituzionale fallisce, contatta il supporto del tuo dipartimento IT.</li> 
@@ -252,7 +252,7 @@ $lang["_HELP_TEXT"] = '
 </div>';
 
 // site about
-$lang["_ABOUT_TEXT"] = ' <div align="left" style="padding:5px">'. htmlspecialchars($config['site_name']) .' è un\'installazione di FileSender (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>), sviluppato secondo i requisiti della comunità di ricerca e di istruzione superiore.</div>';
+$lang["_ABOUT_TEXT"] = ' <div style="padding: 5px; text-align: left;">'. htmlspecialchars($config['site_name']) .' è un\'installazione di FileSender (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>), sviluppato secondo i requisiti della comunità di ricerca e di istruzione superiore.</div>';
 
 // site AUP terms
 $lang["_AUPTERMS"] = 'Termini e condizioni d\'uso';

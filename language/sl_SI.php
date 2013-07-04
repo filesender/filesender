@@ -209,7 +209,7 @@ $lang["_SITE_FOOTER"] = "";
 // site help
 $lang["_HELP_TEXT"] = '
 <div>
-<div align="left" style="padding:5px">
+<div style="padding: 5px; text-align: left;">
 <h4>Prijava</h4> 
 <ul>
     <li>V primeru da na seznamu ponudnikov identitet (IdP) ne najdete svoje organiyacije, ali je prijava spodletela, se obrnite na skrbnika na vaši organizaciji</li>
@@ -250,7 +250,7 @@ $lang["_HELP_TEXT"] = '
 </div>';
 
 // site about
-$lang["_ABOUT_TEXT"] = ' <div align="left" style="padding:5px">'. htmlspecialchars($config['site_name']) .' je storitev, osnovana na programu FileSender (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>), ki so ga razvili za potrebe visokega šolstva in raziskovanja.</div>';
+$lang["_ABOUT_TEXT"] = ' <div style="padding: 5px; text-align: left;">'. htmlspecialchars($config['site_name']) .' je storitev, osnovana na programu FileSender (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>), ki so ga razvili za potrebe visokega šolstva in raziskovanja.</div>';
 
 // site AUP terms
 $lang["_AUPTERMS"] = "Splošni pogoji in pravila uporabe";

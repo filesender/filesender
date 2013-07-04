@@ -210,7 +210,7 @@ $lang["_SITE_FOOTER"] = "";
 // site help
 $lang["_HELP_TEXT"] = '
 <div>
-<div align="left" style="padding:5px">
+<div style="padding: 5px; text-align: left;">
 <h4>Aanmelden</h4> 
 <ul>
     <li>U kunt inloggen door middel van uw bestaande instellings-logingegevens; kies daartoe uw instellingsnaam uit de lijst van Identity Providers. Als uw instelling niet voorkomt in de lijst of u heeft problemen met het inloggen, neemt u dan alstublieft contact op met uw locale IT-helpdesk.</li>
@@ -261,7 +261,7 @@ de belangrijkste browsers te volgen. Met name ondersteuning voor de <a href="htt
 
 
 // site about
-$lang["_ABOUT_TEXT"] = ' <div align="left" style="padding:5px">'. htmlspecialchars($config['site_name']) .' is een instantie van FileSender (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>), ontwikkeld om te voldoen aan de eisen van de hoger onderwijs en onderzoeksgemeenschap.</div>';
+$lang["_ABOUT_TEXT"] = ' <div style="padding: 5px; text-align: left;">'. htmlspecialchars($config['site_name']) .' is een instantie van FileSender (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>), ontwikkeld om te voldoen aan de eisen van de hoger onderwijs en onderzoeksgemeenschap.</div>';
 
 
 ?>

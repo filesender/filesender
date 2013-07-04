@@ -207,7 +207,7 @@ $lang["_SITE_SPLASHTEXT"] = "A " . htmlspecialchars($config['site_name']) ." biz
 $lang["_SITE_FOOTER"] = ""; 
 
 // site about
-$lang["_ABOUT_TEXT"] = ' <div align="left" style="padding:5px">'. htmlspecialchars($config['site_name']) .' a Filesender programot futattja (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>), ami a felsőoktatás és a kutatói közösség igényeihez készült.</div>';
+$lang["_ABOUT_TEXT"] = ' <div style="padding: 5px; text-align: left;">'. htmlspecialchars($config['site_name']) .' a Filesender programot futattja (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>), ami a felsőoktatás és a kutatói közösség igényeihez készült.</div>';
 
 // site help
 // site AUP terms

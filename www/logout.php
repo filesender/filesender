@@ -71,7 +71,7 @@ $( "a", ".menu" ).button();
 	
   <div id="header">
     <div align="center">
-       <img src="displayimage.php" width="800" height="60" border="0" alt="banner" />
+       <img src="displayimage.php" width="800" height="60" style="border: 0" alt="banner" />
     </div>
   </div>
   <div id="content">
