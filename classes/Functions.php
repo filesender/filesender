@@ -132,14 +132,14 @@ class Functions {
         return self::$instance;
     }
 
-    public function getTrackingCode($id){
+    public function getTrackingCode($id = null){
         $statement = $this->db->fquery("SELECT max(filetrackingcode) FROM files WHERE fileauthuseruid='".$id."'");
         $statement->execute();
 
         $result = $statement->fetchColumn();
         $trackingCode = $result;
 
-        if (empty($trackingCode)) {
+        if ($id == null || empty($trackingCode)) {
             return 'AAA';
         } else {
             return ++$trackingCode;
