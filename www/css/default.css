@@ -387,6 +387,14 @@ margin-top: 4px;
 	width: 100%;
 }
 
+#spinner {
+    background: url('../images/ajax-loader-sm.gif') no-repeat center center;
+    width: 10%;
+    height: 42px;
+    float:left;
+    text-align: center;
+}
+
 #wrap {
 	background: #fff;
 	text-align: left;

@@ -538,7 +538,6 @@ function updateProgressBar(bytesloaded, totalbytes, amountUploaded) {
     var percentComplete = Math.round(bytesloaded * 100 / totalbytes);
     var bytesTransfered = '';
 
-    // TODO: can go?
     if (bytesloaded > 1024 * 1024) {
         bytesTransfered = (Math.round(bytesloaded * 100 / (1024 * 1024)) / 100).toString() + 'MB';
     } else if (bytesloaded > 1024) {
@@ -556,7 +555,7 @@ function updateProgressBar(bytesloaded, totalbytes, amountUploaded) {
     var now = new Date().getTime();
 
     // get the result in seconds
-    var timeSinceStart = (now - aggregateStartTime) / 1000;
+    var timeSinceStart = (now - startTime) / 1000;
     // Adds the amount of data uploaded this call to the total (for all files)
     totalBytesLoaded += amountUploaded;
 
@@ -571,13 +570,13 @@ function updateProgressBar(bytesloaded, totalbytes, amountUploaded) {
     percentageComplete = Math.round(totalBytesLoaded * 100 / totalFileLengths);
 
     // Updates the html contents of the <p> tags in generateAggregateProgressBar
-    $('#aggregate_string').html(percentageComplete + '%');
+    $('#progress_string').html(percentageComplete + '%');
     $('#totalUploaded').html('Total uploaded: ' + readablizebytes(totalBytesLoaded) + '/' + readablizebytes(totalFileLengths));
 
     // x8 to gives the upload speed in Mbits rather than MBytes
     $('#averageUploadSpeed').html('Average upload Speed:' + uploadSpeed.toFixed(2) * 8 + 'MBit/s');
     $('#timeRemaining').html('Approx time remaining: ' + secondsToString(timeRemaining));
-    $('#aggregate_bar').width(percentageComplete / 100 * $('#aggregate_progress').width());
+    $('#progress_bar').width(percentageComplete / 100 * $('#progress_container').width());
 
 }
 
