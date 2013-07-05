@@ -108,6 +108,7 @@ if($isAuth )
         $useremail = $userdata["email"];
     }
 }
+
 ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
@@ -293,12 +294,14 @@ if($isAuth )
     <div id="content" style="display:none">
         <div id="scratch"></div>
         <?php
+
+        require_once('calendar_js.php');
         foreach ($messageArray as $message)
         {
             echo '<div id="message">'.$message.'</div>';
         }
-        ?>
-        <?php
+
+
         // checks if url has vid=xxxxxxx and that voucher is valid
         if(	$isVoucher)
         {
