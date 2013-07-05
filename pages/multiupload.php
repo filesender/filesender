@@ -391,7 +391,7 @@ function errorDialog(msg) {
 function keepMeAlive() {
     $.ajax({
         // TODO: maybe encodeURI(new Date()) is a better alternative
-        url: 'keepalive.php' + '?x=' + escape(new Date()),
+        url: 'keepalive.php' + '?x=' + encodeURIComponent(new Date().toString()),
         success: function (data) {
         }
     });
