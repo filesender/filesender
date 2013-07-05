@@ -584,16 +584,19 @@ window.addEventListener('keydown', function (e) {
 </div>
 
 <!--Aggregate progress bar contents-->
-<div id="aggregate_dialog_contents" style="display: none;">
-    <div id="aggregate_progress" class="fileBox">
-        <span class="filebox_string" id="aggregate_string" style="text-align: center"></span>
-
-        <div class="progress_bar" id="aggregate_bar"></div>
+<div id="dialog-uploadprogress" style="display:none;">
+    <div id="topart" style="width:100%; height:42px; margin:auto;">
+        <div id="spinner" ></div>
+        <div id="bar" style="width:90%; float:right;" >
+            <div id="progress_container" class="fileBox">
+                <span class="filebox_string" id="progress_string" style="text-align: center"></span>
+                <div class="progress_bar" id="progress_bar"></div>
+            </div>
+        </div>
     </div>
+
     <p id="totalUploaded"></p>
-
     <p id="averageUploadSpeed"></p>
-
     <p id="timeRemaining"></p>
 </div>
 

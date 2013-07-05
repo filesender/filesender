@@ -690,10 +690,16 @@ window.addEventListener('keydown', function(e) {(e.keyCode == 27 && e.preventDef
 <div id="dialog-cancel" style="display:none" title="<?php echo lang("_CANCEL_UPLOAD"); ?>"><?php echo lang("_ARE_YOU_SURE"); ?></div>
 
 <div id="dialog-uploadprogress" style="display:none;">
-    <div id="progress_container" class="fileBox">
-        <span class="filebox_string" id="progress_string" style="text-align: center"></span>
-        <div class="progress_bar" id="progress_bar"></div>
+    <div style="width:100%; height:42px; margin:auto;">
+        <div id="spinner" ></div>
+        <div id="bar" style="width:90%; float:right;" >
+            <div id="progress_container" class="fileBox">
+                <span class="filebox_string" id="progress_string" style="text-align: center"></span>
+                <div class="progress_bar" id="progress_bar"></div>
+            </div>
+        </div>
     </div>
+
     <p id="totalUploaded"></p>
     <p id="averageUploadSpeed"></p>
     <p id="timeRemaining"></p>

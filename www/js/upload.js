@@ -148,7 +148,7 @@ if(data.status && data.status == "complete")
             // no error so use result as current bytes uploaded for file resume
             vid = data.vid;
             fdata[n].bytesUploaded = parseFloat(data.filesize);
-            updatepb(fdata[n].bytesUploaded, fdata[n].fileSize, fdata[n].bytesUploaded);
+            updatepb(fdata[n].bytesUploaded, fdata[n].fileSize);
 
 
 //            if(html5webworkers){
@@ -268,7 +268,7 @@ function uploadFile() {
 					return;			
 				}
 			fdata[n].bytesUploaded = parseFloat(xhr.responseText);
-			updatepb(fdata[n].bytesUploaded,fdata[n].bytesTotal, blob);
+			updatepb(fdata[n].bytesUploaded,fdata[n].bytesTotal);
 			uploadFile();
 			} else {
 			errorDialog("There was a problem retrieving the data:\n" + req.statusText);
@@ -305,7 +305,7 @@ function secondsToString(seconds) {
 }
 
 // update the progress bar
-function updatepb(bytesloaded,totalbytes, amountUploaded)
+function updatepb(bytesloaded,totalbytes)
 {
     var percentComplete = Math.round(bytesloaded * 100 / totalbytes);
     var bytesTransfered = '';
@@ -344,3 +344,5 @@ function uploadCanceled(evt) {
     clearInterval(intervalTimer);
     erorDialog("The upload has been canceled by the user or the browser dropped the connection.");
     }
+
+
