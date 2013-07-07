@@ -106,7 +106,7 @@ function ensureSaneFileUid($fileuid){
         global $config,$filesenderbase;
    
         $cssstring = "";
-        if(isset($config["customCSS"]) && !empty($config["customCSS"]) && file_exists($filesenderbase."/config/".$config["customCSS"]))
+        if(isset($config["customCSS"]) && file_exists($filesenderbase."/config/".$config["customCSS"]))
         {
             $css = file_get_contents("$filesenderbase/config/".$config["customCSS"]);
             $cssstring .=  '<style type="text/css">';
