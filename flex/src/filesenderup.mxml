@@ -155,7 +155,7 @@
 			public function validatebeforeupload():void
 			{
 				// send to js to check: fileRef.name fileRef.size
-				var callString:String = "validateforflash('"+escape(fileRef.name)+"','"+fileRef.size+"')";
+				var callString:String = "validateforflash('"+fileRef.name+"','"+fileRef.size+"')";
 				ExternalInterface.call(callString); 
 			}
 			
@@ -239,11 +239,11 @@
 				var uploadResult:String = event.data.toString();
 				if(uploadResult=="true")  
 				{
-					ExternalInterface.call("uploadcomplete('"+escape(fileRef.name)+"','"+fileRef.size+"')"); 
+					ExternalInterface.call("uploadcomplete('"+fileRef.name+"','"+fileRef.size+"')"); 
 					
 				} else {
 				 
-					ExternalInterface.call("uploaderror('"+escape(fileRef.name)+"','"+fileRef.size+"')"); 	
+					ExternalInterface.call("uploaderror('"+fileRef.name+"','"+fileRef.size+"')"); 	
 				}
 			}
 			// setup file reference handler
@@ -307,7 +307,7 @@
 				 	var fs:Number =  fileRef.size;
 					// no error so keep going
 					// send to js to check: fileRef.name fileRef.size
-					callString = "fileInfo('"+escape(fileRef.name)+"','"+fileRef.size+"')";
+					callString = "fileInfo('"+fileRef.name+"','"+fileRef.size+"')";
 					ExternalInterface.call(callString); 
 				 	}
 				 	catch (erObject:Error) {
