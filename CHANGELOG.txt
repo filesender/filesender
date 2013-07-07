@@ -1,4 +1,4 @@
-Last update: 30 June 2013
+Last update: 07 July 2013
 
 Version 1.6-development <???>
 
@@ -8,7 +8,10 @@ Version 1.6-development <???>
        - Upgrade note: new configuration options
      - New layout of My Files page (#597)
        - add number of downloads
+     - Add optional personal message to guest vouchers (#637)
+       - Upgrade note: change in configuration mail template
      - Recipient address autocomplete based on previous recipients (#821)
+       - Upgrade note: new configuration options
      - Add selector when multiple mail adresses are available (#184)
        Modified patch from Thijs Kinkhorst
 
@@ -34,6 +37,7 @@ Version 1.6-development <???>
      - Remove unused validVoucher() function
        Patch from Thijs Kinkhorst
      - Hash fileuid for pending/validateupload entry (#884)
+       Bug noticed by Dick Visser
      - Replace $_REQUEST['PHPSESSID'] with session_id() (#897)
      - Fix declarations for fileexpirydate and logdate in mysql init script (#932)
 
