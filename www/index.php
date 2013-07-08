@@ -174,9 +174,7 @@ if($isAuth )
             $('#btn_closeabout').html('<?php echo lang("_CLOSE") ?>')
 
             if(!html5){
-                $('#html5image').click(function() { displayhtml5support(); });
                 $("#html5image").show();
-                $("#html5link").removeAttr("href");
             }
             // set draggable = false for all images and a href
             $("a").attr("draggable","false");
