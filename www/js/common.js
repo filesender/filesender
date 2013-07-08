@@ -202,3 +202,21 @@ function ajaxerror(readyState,status,responseText)
 	if(debug) { msg += " Ready State:"+readyState + ", status:" + status + ",responseText" + responseText + "";};
 	$("#scratch").html('<div id="message">'+msg+'</>');						   
 }
+
+function hideMessages() {
+    $("#fileto_msg").hide();
+    $("#expiry_msg").hide();
+    $("#maxemails_msg").hide();
+    $("#file_msg").hide();
+    $("#aup_msg").hide();
+}
+
+function validate_aup() {
+    if ($("#aup").is(":checked")) {
+        $("#aup_msg").hide();
+        return true;
+    } else {
+        $("#aup_msg").show();
+        return false;
+    }
+}
