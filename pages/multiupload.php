@@ -43,88 +43,12 @@
 // If the server is not able to return the information about the file upload then a default spinner is loaded
 // --------------------------------------------------------
 
-// check if a voucher and load into form if it is
-$filestatus = 'Available';
-$voucherUID = '';
-$senderemail = $useremail;
-$functions = Functions::getInstance();
-
-// get initial upload uid
-$id = getGUID();
-// set id for progress bar upload
-// $id = md5(microtime() . rand());
-
-// check if this is a voucher
-if ($authvoucher->aVoucher()) {
-    // clear aup session
-    //unset ($_SESSION['aup'], $var);
-
-    // get voucher information
-    $voucherData = $authvoucher->getVoucher();
-    $voucherUID = $voucherData[0]['filevoucheruid'];
-    $filetrackingcode = $voucherData[0]['fileauthuseruid'];
-    logEntry('vid = ' . $voucherUID, 'E_ERROR');
-    $senderemail = array($voucherData[0]['fileto']);
-    // check if voucher is invalid (this should be an external function
-    if ($voucherData[0]['filestatus'] == 'Voucher') {
-        $filestatus = 'Voucher';
-    } else {
-        if ($voucherData[0]['filestatus'] == 'Voucher Cancelled' || $voucherData[0]['filestatus'] == 'Closed') {
-            echo '<p>' . lang('_VOUCHER_CANCELLED') . '</p>';
-            return;
-        }
-    }
-}
-
-if (isset($_COOKIE['SimpleSAMLAuthToken'])) {
-    $token = urlencode($_COOKIE['SimpleSAMLAuthToken']);
-} else {
-    $token = '';
-}
-
-global $config;
-
+require_once('../www/upload_common_js.php');
 ?>
 
 <script type='text/javascript' src='lib/js/AC_OETags.js'></script>
 <script type='text/javascript' src='js/multiupload.js'></script>
 <script type='text/javascript'>
-//<![CDATA[
-// all default settings
-var uploadID = '<?php echo $id ?>';
-var maximumDate = <?php echo (time()+($config['default_daysvalid']*86400))*1000 ?>;
-var minimumDate = <?php echo (time()+86400)*1000 ?>;
-var maxHTML5UploadSize = <?php echo $config['max_html5_upload_size']; ?>;
-var maxEmailRecipients = <?php echo $config['max_email_recipients']; ?>;
-var datepickerDateFormat = '<?php echo lang('_DP_dateFormat'); ?>';
-var chunksize =  <?php echo $config['upload_chunk_size']; ?>;
-var aup = '<?php echo $config['AuP'] ?>';
-var bytesUploaded = 0;
-var bytesTotal = 0;
-var ext = '<?php echo $config['ban_extension']?>';
-var bannedExtensions = ext.split(",");
-var previousBytesLoaded = 0;
-var intervalTimer = 0;
-
-var errmsg_disk_space = '<?php echo lang('_DISK_SPACE_ERROR'); ?>';
-var filedata = [];
-var nameLang = '<?php echo lang('_FILE_NAME'); ?>';
-var sizeLang = '<?php echo lang('_SIZE'); ?>';
-
-var groupid = '<?php echo getOpenSSLKey(); ?>';
-<?php
-if (!$authvoucher->aVoucher()) {
-    $userData = $authsaml->sAuth();
-    echo "var trackingCode = '" . $functions->getTrackingCode($userData['saml_uid_attribute']) . "';";
-} else {
-    echo "var trackingCode = '" . $functions->getTrackingCode() . "';";
-}
-
-if (isset($_REQUEST['vid'])) {
-    echo "\nvar vid = '" . htmlspecialchars($_REQUEST['vid']) . "';\n";
-}
-?>
-
 // start document ready
 $(function () {
     $('#clearallbtn').button('disable');
@@ -201,48 +125,7 @@ $(function () {
 
     $('#uploadhtml5').show();
 
-    // Auto completion.
-    var availableTags = [<?php  echo (isset($config["autocomplete"]) && $config["autocomplete"])?  $functions->uniqueemailsforautocomplete():  ""; ?>];
-
-    function split(val) {
-        return val.split(/,\s*/);
-    }
-
-    function extractLast(term) {
-        return split(term).pop();
-    }
-
-    $("#fileto")
-        // Don't navigate away from the field on tab when selecting an item.
-        .bind("keydown", function (event) {
-            if (event.keyCode === $.ui.keyCode.TAB &&
-                $(this).data("uiAutocomplete").menu.active) {
-                event.preventDefault();
-            }
-        })
-        .autocomplete({
-            minLength: 0,
-            source: function (request, response) {
-                // Delegate back to autocomplete, but extract the last term.
-                response($.ui.autocomplete.filter(
-                    availableTags, extractLast(request.term)));
-            },
-            focus: function () {
-                // Prevent value inserted on focus.
-                return false;
-            },
-            select: function (event, ui) {
-                var terms = split(this.value);
-                // Remove the current input.
-                terms.pop();
-                // Add the selected item.
-                terms.push(ui.item.value);
-                // Add placeholder to get the comma-and-space at the end.
-                terms.push("");
-                this.value = terms;
-                return false;
-            }
-        });
+    autoCompleteEmails();
 });
 
 // --------------------------
@@ -277,8 +160,8 @@ function validate_file(id) {
 // HTML5 form Validation
 function validateForm() {
     // remove messages from any previous attempt
-    hidemessages();
-    return (validate_fileto() && validate_file(n) && validate_expiry() && validateAUP());
+    hideMessages();
+    return (validate_fileto() && validate_file(n) && validate_expiry() && validate_aup());
 }
 
 function constrainNumWebWorkers() {
@@ -296,63 +179,8 @@ function constrainNumWebWorkers() {
     }
 }
 
-function validateExtension(fileName) {
-    // Loops through the list of banned extensions and returns false if there is a match
-    for (var i = 0, len = bannedExtensions.length; i < len; ++i) {
-        if (fileName.split('.').pop() == bannedExtensions[i]) {
-            return false;
-        }
-    }
-    return true;
-}
-
 function checkFilesSelected() {
     return document.getElementById('fileToUpload').files[0] != null || document.getElementById('file_0') != null;
-}
-
-function uploadError(name, size) {
-    errorDialog('<?php echo lang('_ERROR_UPLOADING_FILE') ?> ' + name + ':' + size);
-}
-
-function validateFileName(name) {
-    if (!validateExtension(name)) {
-        fileMsg('<?php echo lang('_INVALID_FILE_EXT').' '.lang('_SELECT_ANOTHER_FILE') ?>');
-        return false;
-    }
-    if (/^[^\\\/:;\*\?\"<>|]+(\.[^\\\/:;\*\?\"<>|]+)*$/.test(name)) {
-        return true;
-    } else {
-        fileMsg('<?php echo lang('_INVALID_FILE_NAME') ?>');
-        return false;
-    }
-}
-
-function validate() {
-    // upload if validated
-    if (validateForm()) {
-        constrainNumWebWorkers(); // make sure selected web workers isn't over the config limit
-        n = 0;
-        openProgressBar();
-        startTime = new Date().getTime();// Calling before first upload stops progress bar opening for every download (when attempting to close it)
-        startUpload();
-
-    }
-}
-
-function errorDialog(msg) {
-    var dialogDefault = $('#dialog-default');
-    dialogDefault.html(msg);
-    dialogDefault.dialog('open');
-}
-
-
-function keepMeAlive() {
-    $.ajax({
-        // TODO: maybe encodeURI(new Date()) is a better alternative
-        url: 'keepalive.php' + '?x=' + encodeURIComponent(new Date().toString()),
-        success: function (data) {
-        }
-    });
 }
 
 // special fix for esc key on firefox stopping xhr
@@ -514,7 +342,7 @@ window.addEventListener('keydown', function (e) {
                 ?>
 
                 <input style="float:left" name="aup" type="checkbox" id="aup"
-                       onchange="validateAUP();" <?php echo $aupChecked; ?> value="true"/>
+                       onchange="validate_aup();" <?php echo $aupChecked; ?> value="true"/>
 
                 <div id="aup_msg" class="validation_msg"
                      style="display: none"><?php echo lang('_AGREETOC'); ?>
@@ -537,28 +365,31 @@ window.addEventListener('keydown', function (e) {
     <?php echo lang('_ARE_YOU_SURE'); ?>
 </div>
 
-<div id="dialog-autherror" title="<?php echo lang('_MESSAGE'); ?>"
-     style="display:none"><?php echo lang('_AUTH_ERROR'); ?>
-</div>
 
 <!--Aggregate progress bar contents-->
 <div id="dialog-uploadprogress" style="display:none;">
-    <div id="topart" style="width:100%; height:42px; margin:auto;">
-        <div id="spinner" ></div>
-        <div id="bar" style="width:90%; float:right;" >
-            <div id="progress_container" class="fileBox">
-                <span class="filebox_string" id="progress_string" style="text-align: center"></span>
-                <div class="progress_bar" id="progress_bar"></div>
-            </div>
+
+    <div id="spinner"></div>
+    <div id="bar" style="width:90%; float:right;">
+        <div id="progress_container" class="fileBox">
+            <span class="filebox_string" id="progress_string" style="text-align: center"></span>
+
+            <div class="progress_bar" id="progress_bar"></div>
         </div>
     </div>
 
     <p id="totalUploaded"></p>
+
     <p id="averageUploadSpeed"></p>
+
     <p id="timeRemaining"></p>
 </div>
 
 <!-- Upload Cancel -->
-<div id="dialog-confirm" title="Are you Sure?" style="display: none">
+<div id="dialog-confirm" title="<?php echo lang("_ARE_YOU_SURE"); ?>" style="display: none">
     <p>All files will be deleted</p> <!-- TODO: need a lang for this -->
+</div>
+
+<div id="dialog-autherror" title="<?php echo lang('_MESSAGE'); ?>"
+     style="display: none"><?php echo lang('_AUTH_ERROR'); ?>
 </div>
