@@ -87,16 +87,6 @@ $(function () {
         }
     );
 
-    // HTML5 support dialog.
-    $('#dialog-support').dialog({ autoOpen: false, height: 400, width: 550, modal: true, title: '',
-        buttons: {
-            'supportBTN': function () {
-                $(this).dialog('close');
-            }
-        }
-    });
-
-
     var uiDialogButtonpane = $('.ui-dialog-buttonpane');
     uiDialogButtonpane.find('button:contains(supportBTN)').attr('id', 'btn_support');
     $('#btn_support').html('<?php echo lang('_OK') ?>');

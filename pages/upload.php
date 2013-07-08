@@ -155,11 +155,6 @@ $(function() {
     $('.ui-dialog-buttonpane').find('button:contains(uploadcancelBTN)').attr("id","btn_uploadcancel");
     $('#btn_uploadcancel').html('<?php echo lang("_CANCEL") ?>');
 
-    function displayhtml5support()
-    {
-        $("#dialog-support").dialog("open");
-    }
-
     // Display flash upload button
     $("#uploadstandard").show();
 
