@@ -245,15 +245,6 @@ $(function () {
         });
 });
 
-// hides every error message on the form
-function hidemessages() {
-    $('#fileto_msg').hide();
-    $('#expiry_msg').hide();
-    $('#maxemails_msg').hide();
-    $('#file_msg').hide();
-    $('#aup_msg').hide();
-}
-
 // --------------------------
 // Validation functions
 // --------------------------
@@ -302,17 +293,6 @@ function constrainNumWebWorkers() {
     var workerCount = $('#workerCount');
     if (maxLimitWebWorkers != 'undefined' && parseInt(workerCount.val()) > maxLimitWebWorkers) {
         workerCount.val(maxLimitWebWorkers);
-    }
-}
-
-function validateAUP() {
-    // Checks if the AUP is required in config and if users have checked the box
-    if ($('#aup').is(':checked') && aup == '1') {
-        $('#aup_msg').hide();
-        return true;
-    } else {
-        $('#aup_msg').show();
-        return false;
     }
 }
 
