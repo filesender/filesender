@@ -303,37 +303,6 @@ function startUpload() {
     }
 }
 
-
-function openProgressBar() {
-    $('#aggregate_dialog_contents').dialog({
-        title: 'Upload progress for tracking code: ' + trackingCode,
-        minWidth: 600,
-        buttons: {
-            'Pause': function () {
-                //TODO
-            },
-            'Suspend': function () {
-                //TODO
-            },
-            'Cancel Upload': function() {
-                $( "#dialog-confirm" ).dialog({
-                    resizable: false,
-                    height:140,
-                    modal: true,
-                    buttons: {
-                        "Yes": function() {
-                            location.reload();
-                        },
-                        "No": function() {
-                            $( this ).dialog( "close" );
-                        }
-                    }
-                });
-            }
-        }
-    });
-}
-
 function doUploadComplete() {
     var end = new Date().getTime();
     var time = end - startTime;

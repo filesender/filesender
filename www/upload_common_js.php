@@ -128,6 +128,37 @@ global $config;
         });
     }
 
+    function openProgressBar(fname) {
+        $("#dialog-uploadprogress").dialog({
+            title: "<?php echo lang("_UPLOAD_PROGRESS") ?>: " + fname,
+            minWidth: 500,
+            minHeight: 250,
+            buttons: {
+                'Pause': function () {
+                    //TODO
+                },
+                'Suspend': function () {
+                    //TODO
+                },
+                'Cancel Upload': function () {
+                    $("#dialog-cancel").dialog({
+                        resizable: false,
+                        height: 140,
+                        modal: true,
+                        buttons: {
+                            "Yes": function () {
+                                location.reload();
+                            },
+                            "No": function () {
+                                $(this).dialog("close");
+                            }
+                        }
+                    });
+                }
+            }
+        });
+    }
+
     function validateExtension(filename) {
         for (var i = 0, len = bannedExtensions.length; i < len; ++i) {
             if (filename.split('.').pop() == bannedExtensions[i]) {
@@ -198,3 +229,30 @@ global $config;
 
 </script>
 
+<!--Aggregate progress bar contents-->
+<div id="dialog-uploadprogress" style="display:none;">
+
+    <div id="spinner"></div>
+    <div id="bar" style="width:90%; float:right;">
+        <div id="progress_container" class="fileBox">
+            <span class="filebox_string" id="progress_string" style="text-align: center"></span>
+
+            <div class="progress_bar" id="progress_bar"></div>
+        </div>
+    </div>
+
+    <p id="totalUploaded"></p>
+
+    <p id="averageUploadSpeed"></p>
+
+    <p id="timeRemaining"></p>
+</div>
+
+<!-- Upload Cancel -->
+<div id="dialog-confirm" title="<?php echo lang("_ARE_YOU_SURE"); ?>" style="display: none">
+    <p>All files will be deleted</p> <!-- TODO: need a lang for this -->
+</div>
+
+<div id="dialog-autherror" title="<?php echo lang('_MESSAGE'); ?>"
+     style="display: none"><?php echo lang('_AUTH_ERROR'); ?>
+</div>
