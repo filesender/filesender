@@ -109,28 +109,8 @@ $json_o=json_decode($filedata,true);
 	var showall = false; // flag for show all switch to show or hide download summaries
 
 	$(function() {
-		// initialise datepicker
-		$("#datepicker" ).datepicker({ minDate: new Date(minimumDate), maxDate: new Date(maximumDate),altField: "#fileexpirydate", altFormat: "d-m-yy" });
-		$("#datepicker" ).datepicker( "option", "dateFormat", "<?php echo lang('_DP_dateFormat'); ?>" );
-		$("#datepicker").datepicker("setDate", new Date(maximumDate));
-		$('#ui-datepicker-div').css('display','none');
-		// set datepicker language
-		$.datepicker.setDefaults({
-		closeText: '<?php echo lang("_DP_closeText"); ?>',
-		prevText: '<?php echo lang("_DP_prevText"); ?>',
-		nextText: '<?php echo lang("_DP_nextText"); ?>',
-		currentText: "<?php echo lang("_DP_currentText"); ?>",
-		monthNames: <?php echo lang("_DP_monthNames"); ?>,
-		monthNamesShort: <?php echo lang("_DP_monthNamesShort"); ?>,
-		dayNames: <?php echo lang("_DP_dayNames"); ?>,
-		dayNamesShort: <?php echo lang("_DP_dayNamesShort"); ?>,
-		dayNamesMin: <?php echo lang("_DP_dayNamesMin"); ?>,
-		weekHeader: '<?php echo lang("_DP_weekHeader"); ?>',
-		dateFormat: '<?php echo lang("_DP_dateFormat"); ?>',
-		firstDay: <?php echo lang("_DP_firstDay"); ?>,
-		isRTL: <?php echo lang("_DP_isRTL"); ?>,
-		showMonthAfterYear: <?php echo lang("_DP_showMonthAfterYear"); ?>,
-		yearSuffix: '<?php echo lang("_DP_yearSuffix"); ?>'});
+
+        getDatePicker();
 
 		// stripe every second row in the tables
 		$("#myfiles tr:odd").addClass("altcolor");
