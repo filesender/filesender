@@ -577,6 +577,7 @@ function removeItem(fileID) {
     if (n < 0) {
         $('#fileToUpload').val(''); // Needed to allow reselection of files.
         $('#draganddropmsg').show();
+        $('#clearallbtn').button('disable');
     }
 }
 
