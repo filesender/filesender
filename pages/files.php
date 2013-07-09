@@ -2,13 +2,13 @@
 
 /*
  * FileSender www.filesender.org
- * 
+ *
  * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * *	Redistributions of source code must retain the above copyright
  * 	notice, this list of conditions and the following disclaimer.
  * *	Redistributions in binary form must reproduce the above copyright
@@ -17,7 +17,7 @@
  * *	Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
  * 	names of its contributors may be used to endorse or promote products
  * 	derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -33,16 +33,16 @@
 /* ---------------------------------
  * MyFiles Page
  * Display details about a users files
- * Allow a user to re-send a file 
- * Allow a user to Forward a file	
+ * Allow a user to re-send a file
+ * Allow a user to Forward a file
  * ---------------------------------
- * 
+ *
  */
 
 // Check for delete/resent/added actions and report back
-if(isset($_REQUEST["a"]) && isset($_REQUEST["id"])) 
+if(isset($_REQUEST["a"]) && isset($_REQUEST["id"]))
 {
-	// validate id 
+	// validate id
 	if(ensureSaneFileUid($_REQUEST["id"])) {
 		$myfileData = $functions->getVoucherData($_REQUEST['id']);
 		if($_REQUEST["a"] == "del")
@@ -57,7 +57,7 @@ if(isset($_REQUEST["a"]) && isset($_REQUEST["id"]))
 			} else {
 			// log auth user tried to delete a file they do not have access to
 			logEntry("Permission denied - attempt to delete ".$myfileData["fileuid"],"E_ERROR");
-			// notify - not deleted - you do not have permission	
+			// notify - not deleted - you do not have permission
 			echo "<div id='message'>".lang("_PERMISSION_DENIED")."</div>";
 			}
 		}
@@ -73,12 +73,12 @@ if(isset($_REQUEST["a"]) && isset($_REQUEST["id"]))
 			} else {
 			// log auth user tried to resend email for a file they do not have access to
 			logEntry("Permission denied - attempt to resend ".$myfileData["fileuid"],"E_ERROR");
-			// notify - not resent - you do not have permission	
-			echo "<div id='message'>".lang("_PERMISSION_DENIED")."</div>";		
+			// notify - not resent - you do not have permission
+			echo "<div id='message'>".lang("_PERMISSION_DENIED")."</div>";
 			}
 		}
 	} else {
-		echo "<div id='message'>".lang("_INVALID_FILEVOUCHERID")."</div>";	
+		echo "<div id='message'>".lang("_INVALID_FILEVOUCHERID")."</div>";
 	}
 }
 if(isset($_REQUEST["a"]) && $_REQUEST["a"] == "added")
@@ -86,7 +86,7 @@ if(isset($_REQUEST["a"]) && $_REQUEST["a"] == "added")
 	// display the add box
 	echo "<div id='message'>".lang("_EMAIL_SENT").".</div>";
 }
-foreach ($errorArray as $message) 
+foreach ($errorArray as $message)
 		{
 		if($message == "err_emailnotsent")
 		{
@@ -94,7 +94,7 @@ foreach ($errorArray as $message)
 		}
 		}
 // Get list of user files and display page
-$filedata = $functions->getUserFiles();
+$filedata = $functions->getUserTrackingCodes();
 $json_o=json_decode($filedata,true);
 
 ?>
@@ -107,7 +107,7 @@ $json_o=json_decode($filedata,true);
 	var maxEmailRecipients = <?php echo $config['max_email_recipients'] ?>;
 	var datepickerDateFormat = '<?php echo lang('_DP_dateFormat'); ?>';
 	var showall = false; // flag for show all switch to show or hide download summaries
-	
+
 	$(function() {
 		// initialise datepicker
 		$("#datepicker" ).datepicker({ minDate: new Date(minimumDate), maxDate: new Date(maximumDate),altField: "#fileexpirydate", altFormat: "d-m-yy" });
@@ -131,17 +131,17 @@ $json_o=json_decode($filedata,true);
 		isRTL: <?php echo lang("_DP_isRTL"); ?>,
 		showMonthAfterYear: <?php echo lang("_DP_showMonthAfterYear"); ?>,
 		yearSuffix: '<?php echo lang("_DP_yearSuffix"); ?>'});
-	
+
 		// stripe every second row in the tables
 		$("#myfiles tr:odd").addClass("altcolor");
-		
+
 		// delete modal dialog box
 		$("#dialog-delete").dialog({ autoOpen: false, height: 180, modal: true,
 			buttons: {
 				'cancelBTN': function() {
 				$( this ).dialog( "close" );
 				},
-				'deleteBTN': function() { 
+				'deleteBTN': function() {
 				deletefile();
 				$( this ).dialog( "close" );
 				}
@@ -153,30 +153,30 @@ $json_o=json_decode($filedata,true);
 				'cancelsendBTN': function() {
 				$( this ).dialog( "close" );
 				},
-				'sendBTN': function() { 
+				'sendBTN': function() {
 				$( this ).dialog( "close" );
 				resend();
 				}
 			}
 		});
-		
+
 		// default auth error dialogue
-		$("#dialog-autherror").dialog({ autoOpen: false, height: 240,width: 350, modal: true,title: "",		
+		$("#dialog-autherror").dialog({ autoOpen: false, height: 240,width: 350, modal: true,title: "",
 		buttons: {
 			'<?php echo lang("_OK") ?>': function() {
 				location.reload(true);
 				}
 			}
 		})
-		
-		$('.ui-dialog-buttonpane button:contains(cancelBTN)').attr("id","btn_cancel");            
-		$('#btn_cancel').html('<?php echo lang("_NO") ?>');  
-		$('.ui-dialog-buttonpane button:contains(deleteBTN)').attr("id","btn_delete");            
-		$('#btn_delete').html('<?php echo lang("_YES") ?>');  
-		$('.ui-dialog-buttonpane button:contains(cancelsendBTN)').attr("id","btn_cancelsend");            
-		$('#btn_cancelsend').html('<?php echo lang("_NO") ?>');  
-		$('.ui-dialog-buttonpane button:contains(sendBTN)').attr("id","btn_send");            
-		$('#btn_send').html('<?php echo lang("_YES") ?>');  
+
+		$('.ui-dialog-buttonpane button:contains(cancelBTN)').attr("id","btn_cancel");
+		$('#btn_cancel').html('<?php echo lang("_NO") ?>');
+		$('.ui-dialog-buttonpane button:contains(deleteBTN)').attr("id","btn_delete");
+		$('#btn_delete').html('<?php echo lang("_YES") ?>');
+		$('.ui-dialog-buttonpane button:contains(cancelsendBTN)').attr("id","btn_cancelsend");
+		$('#btn_cancelsend').html('<?php echo lang("_NO") ?>');
+		$('.ui-dialog-buttonpane button:contains(sendBTN)').attr("id","btn_send");
+		$('#btn_send').html('<?php echo lang("_YES") ?>');
 		// add new recipient modal dialog box
 		$("#dialog-addrecipient").dialog({ autoOpen: false, height: 410,width:650, modal: true,
 			buttons: {
@@ -188,7 +188,7 @@ $json_o=json_decode($filedata,true);
 					$("#filemessage").val("");
 					$( this ).dialog( "close" );
 				},
-				'addrecipientsendBTN': function() { 
+				'addrecipientsendBTN': function() {
 					// Disable the send button to prevent duplicate sending
 					$('#btn_addrecipientsend').attr("disabled", true);
 
@@ -196,8 +196,8 @@ $json_o=json_decode($filedata,true);
 					{
 						// post form1 as json
 						var query = $("#form1").serializeArray(), json = {};
-						for (i in query) { json[query[i].name] = query[i].value; } 
-				
+						for (i in query) { json[query[i].name] = query[i].value; }
+
 						$.ajax({
 							type: "POST",
 							url: "fs_upload.php?type=addRecipient",
@@ -205,7 +205,7 @@ $json_o=json_decode($filedata,true);
 							,success:function( data ) {
 								if(data == "") {
 									alert("No response from server");
-									return;	
+									return;
 								}
 								if(data == "ErrorAuth")
 								{
@@ -244,22 +244,22 @@ $json_o=json_decode($filedata,true);
 				}
 			}
 		});
-		
-		$('.ui-dialog-buttonpane button:contains(addrecipientcancelBTN)').attr("id","btn_addrecipientcancel");            
-		$('#btn_addrecipientcancel').html('<?php echo lang("_CANCEL") ?>')  
-		$('.ui-dialog-buttonpane button:contains(addrecipientsendBTN)').attr("id","btn_addrecipientsend");            
-		$('#btn_addrecipientsend').html('<?php echo lang("_SEND") ?>')  
-		
+
+		$('.ui-dialog-buttonpane button:contains(addrecipientcancelBTN)').attr("id","btn_addrecipientcancel");
+		$('#btn_addrecipientcancel').html('<?php echo lang("_CANCEL") ?>')
+		$('.ui-dialog-buttonpane button:contains(addrecipientsendBTN)').attr("id","btn_addrecipientsend");
+		$('#btn_addrecipientsend').html('<?php echo lang("_SEND") ?>')
+
 // autocomplete
 	var availableTags = [<?php  echo (isset($config["autocomplete"]) && $config["autocomplete"])?  $functions->uniqueemailsforautocomplete():  ""; ?>];
-		
+
 		function split( val ) {
             return val.split( /,\s*/ );
         }
         function extractLast( term ) {
             return split( term ).pop();
         }
-		
+
 		$( "#fileto" )
             // don't navigate away from the field on tab when selecting an item
             .bind( "keydown", function( event ) {
@@ -292,10 +292,10 @@ $json_o=json_decode($filedata,true);
                 }
             });
             // End autocomplete
-                    
+
         // End document ready
 	});
-	
+
 	// validate form beofre sending
 	function validateForm()
 	{
@@ -311,7 +311,7 @@ $json_o=json_decode($filedata,true);
 	{
 		window.location.href="index.php?s=files&a=resend&id=" + selectedFile;
 	}
-	
+
 	function confirmResend(vid)
 		{
 			// confirm deletion of selected file
@@ -321,17 +321,17 @@ $json_o=json_decode($filedata,true);
 	function deletefile()
 		{
 		// reload page to delete selected file
-		// should add a tick box to delete multiple selected files	
+		// should add a tick box to delete multiple selected files
 		window.location.href="index.php?s=files&a=del&id=" + selectedFile;
 		}
-	
+
 	function confirmdelete(vid)
 		{
 			// confirm deletion of selected file
 			selectedFile = vid;
 			$("#dialog-delete" ).dialog( "open" );
 		}
-		
+
 	function openAddRecipient(vid,filename,filesize,from, subject, message)
 	{
 		// populate form and open add-recipient modal form
@@ -350,13 +350,13 @@ $json_o=json_decode($filedata,true);
 		$("#fileto_msg").hide();
 		$("#maxemails_msg").hide();
 		$("#dialog-addrecipient" ).dialog( "open" );
-		
+
 	}
-	
+
 		// toggle downloadsummary results
 	function toggleDownloadSummary()
 	{
-		if(!showall) {	
+		if(!showall) {
 			$('.hidden').css('display','');
 			$('img.expct').attr({src: 'images/openboth2.png', alt: ''});
 
@@ -367,10 +367,10 @@ $json_o=json_decode($filedata,true);
 			showall = false;
 		}
 	}
-	
+
 	function show(i)
 	{
-	
+
 	$("#show_"+i).toggle();
 	var $icon = $( "#showicon_"+i );
 
@@ -383,108 +383,129 @@ $json_o=json_decode($filedata,true);
 //]]>
 </script>
 
-<div id="box"> 
-<?php echo '<div id="pageheading">'.lang("_MY_FILES").'</div>'; ?>
-  <div id="tablediv">
-    <table id="myfiles" width="100%" border="0" cellspacing="0" cellpadding="4" style="table-layout:fixed;">
-      <tr class="headerrow">
-	  <td class="tblmcw1" onclick="toggleDownloadSummary()" title="<?php echo lang("_SHOW_ALL"); ?>" style="cursor:pointer"><img class='expct' src="images/openboth.png" border="0" alt=""/></td>
-        <td class="tblmcw2">&nbsp;</td>
-        <td class="tblmcw2">&nbsp;</td>
-		<td class="tblmcw2">&nbsp;</td>
-       <td class="HardBreak" id="myfiles_header_to"><strong><?php echo lang("_TO"); ?></strong></td>
-        <td class="HardBreak" id="myfiles_header_filename"><strong><?php echo lang("_FILE_NAME"); ?></strong></td>
-        <td class="HardBreak tblmcw3"  id="myfiles_header_size"><strong><?php echo lang("_SIZE"); ?></strong></td>
-       <!-- <td class="HardBreak" id="myfiles_header_subject"><strong><?php //echo lang("_SUBJECT") ; ?></strong></td>-->
-       <!-- <td class="HardBreak" id="myfiles_header_message"><strong><?php //echo lang("_MESSAGE") ; ?></strong></td>-->
-		<td class="HardBreak tblmcw3" id="myfiles_header_downloaded" align='center' title="# <?php echo lang("_DOWNLOADED"); ?>"><strong><?php echo lang("_DOWNLOADED"); ?></strong></td>
-       <!-- <td class="HardBreak" id="myfiles_header_created"><strong><?php //echo lang("_CREATED"); ?></strong></td>-->
-        <td class="HardBreak tblmcw3" id="myfiles_header_expiry"><strong><?php echo lang("_EXPIRY"); ?></strong></td>
-      </tr>
-       <?php 
-$i = 0;	  
-if(sizeof($json_o) > 0)
-{
-foreach($json_o as $item) {
-	$i += 1; // counter for file id's
-	$onClick = "'" .$item['filevoucheruid'] ."'";
-	echo "<tr><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td></tr>";
+<div id="box">
+    <?php echo '<div id="pageheading">'.lang("_MY_FILES").'</div>'; ?>
+    <div id="tablediv">
+        <table id="myfiles" width="100%" border="0" cellspacing="0" cellpadding="4" style="table-layout:fixed;">
+            <tr class="headerrow">
+                <td class="tblmcw1" onclick="toggleDownloadSummary()" title="<?php echo lang("_SHOW_ALL"); ?>" style="cursor:pointer"><img class='expct' src="images/openboth.png" border="0" alt=""/></td>
+                <td class="tblmcw2">&nbsp;</td>
+                <td class="tblmcw2">&nbsp;</td>
+                <td class="tblmcw2">&nbsp;</td>
+                <td class="HardBreak" id="myfiles_header_to"><strong><?php echo lang("_TO"); ?></strong></td>
+                <td class="HardBreak" id="myfiles_header_filename"><strong>Tracking Code</strong></td>
+                <td class="HardBreak tblmcw3"  id="myfiles_header_size"><strong>Total Size</strong></td>
+                <!-- <td class="HardBreak" id="myfiles_header_subject"><strong><?php //echo lang("_SUBJECT") ; ?></strong></td>-->
+                <!-- <td class="HardBreak" id="myfiles_header_message"><strong><?php //echo lang("_MESSAGE") ; ?></strong></td>-->
+                <td class="HardBreak tblmcw3" id="myfiles_header_downloaded" align='center' title="# <?php echo lang("_DOWNLOADED"); ?>"><strong><?php echo lang("_DOWNLOADED"); ?></strong></td>
+                <!-- <td class="HardBreak" id="myfiles_header_created"><strong><?php //echo lang("_CREATED"); ?></strong></td>-->
+                <td class="HardBreak tblmcw3" id="myfiles_header_expiry"><strong><?php echo lang("_EXPIRY"); ?></strong></td>
+            </tr>
+            <?php
+            $i = 0;
+            if(sizeof($json_o) > 0)
+            {
+                foreach($json_o as $item) {
+                    $i += 1; // counter for file id's
+                    $onClick = "'" .$item['filevoucheruid'] ."'";
+                    $itemContents = $functions->getMultiFileData($item['filegroupid']);
 
-	echo '<tr>';
-  // if(sizeof($item["downloadsummary"]) > 0)
-	//{ 
-	echo "<td  class='dr1 expct' onclick='show(".$i.")'><img class='expct' id='showicon_".$i."'  style='cursor:pointer' title='". lang("_SHOW_ALL")."' src='images/openboth.png' border='0' alt=''/></td>";
+                    echo "<tr><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td></tr>";
+
+                    echo '<tr>';
+                    // if(sizeof($item["downloadsummary"]) > 0)
+                    //{
+                    echo "<td  class='dr1 expct' onclick='show(".$i.")'><img class='expct' id='showicon_".$i."'  style='cursor:pointer' title='". lang("_SHOW_ALL")."' src='images/openboth.png' border='0' alt=''/></td>";
 //	} else {
 //	echo "<td></td>";
 //	}
-   echo '<td class="dr2" valign="top"> <div id="btn_resendemail_'.$i.'"><img src="images/email_go.png" alt="" title="'.lang("_RE_SEND_EMAIL").'"  style="cursor:pointer;"  onclick="confirmResend('.$onClick.')" /></div></td><td class="dr2" valign="top"><img id="btn_addrecipient_'.$i.'" src="images/email_add.png" alt="" title="'.lang("_NEW_RECIPIENT").'" onclick="openAddRecipient('."'".$item['filevoucheruid']."','".rawurlencode(utf8tohtml($item['fileoriginalname'],true)) ."','".$item['filesize'] ."','".rawurlencode($item['filefrom'])."','".rawurlencode($item['filesubject'])."','".rawurlencode($item['filemessage'])."'" .');"  style="cursor:pointer;" /></td>';
-   echo "<td  class='dr2'  valign='top'  width='22'><div style='cursor:pointer;'><img id='btn_deletevoucher_".$i."' onclick='confirmdelete(".'"' .$item['filevoucheruid'] . '")'. "' src='images/shape_square_delete.png' alt='' title='".lang("_DELETE_FILE")."' /></div></td>";
-   if(in_array($item['fileto'] ,$useremail))
-   {
-   echo "<td class='dr2 HardBreak' valign='top'>".lang("_ME")."</td>";
-   } else {
-   echo "<td class='dr2 HardBreak'>" .$item['fileto'] . "</td>";
-   }
-   echo "<td class='dr2 HardBreak'><a id='link_downloadfile_".$i."' href='?gid=". $item["filegroupid"]."'>" .utf8tohtml($item['fileoriginalname'],TRUE). "</a></td>";
-   echo "<td class='dr2 HardBreak'>" .formatBytes($item['filesize']). "</td>";
-   
-   echo "<td class='dr2 HardBreak' align='center'>" .$item['downloads']. "</td>";
-  
-  // echo "<td class='dr2'>" .date($lang['datedisplayformat'],strtotime($item['filecreateddate'])) . "</td>";
-   echo "<td class='dr8'>" .date($lang['datedisplayformat'],strtotime($item['fileexpirydate'])) . "</td>"; //etc
-	//if(sizeof($item["downloadsummary"]) > 0)
-	//{ 
-	echo "</tr>";
-	echo "<tr class='hidden' style='display:none' id='show_".$i."'><td class='dr4'></td><td class='dr6' colspan='8'>";
+                    echo '<td class="dr2" valign="top"> <div id="btn_resendemail_'.$i.'"><img src="images/email_go.png" alt="" title="'.lang("_RE_SEND_EMAIL").'"  style="cursor:pointer;"  onclick="confirmResend('.$onClick.')" /></div></td><td class="dr2" valign="top"><img id="btn_addrecipient_'.$i.'" src="images/email_add.png" alt="" title="'.lang("_NEW_RECIPIENT").'" onclick="openAddRecipient('."'".$itemContents[0]['filevoucheruid']."','".rawurlencode(utf8tohtml($itemContents[0]['fileoriginalname'],true)) ."','".$itemContents[0]['filesize'] ."','".rawurlencode($itemContents[0]['filefrom'])."','".rawurlencode($itemContents[0]['filesubject'])."','".rawurlencode($itemContents[0]['filemessage'])."'" .');"  style="cursor:pointer;" /></td>';
+                    echo "<td  class='dr2'  valign='top'  width='22'><div style='cursor:pointer;'><img id='btn_deletevoucher_".$i."' onclick='confirmdelete(".'"' .$item['filevoucheruid'] . '")'. "' src='images/shape_square_delete.png' alt='' title='".lang("_DELETE_FILE")."' /></div></td>";
+                    if(in_array($itemContents[0]['fileto'] ,$useremail))
+                    {
+                        echo "<td class='dr2 HardBreak' valign='top'>".lang("_ME")."</td>";
+                    } else {
+                        echo "<td class='dr2 HardBreak'>" .$itemContents[0]['fileto'] . "</td>";
+                    }
+                    echo "<td class='dr2 HardBreak'><a id='link_downloadfile_".$i."' href='?gid=". $itemContents[0]["filegroupid"]."'>" .utf8tohtml($itemContents[0]['filetrackingcode'],TRUE). "</a></td>";
+                    echo "<td class='dr2 HardBreak'>" .formatBytes($itemContents[0]['filesize']). "</td>";
 
-	//echo '<td class="HardBreak" id="myfiles_header_from"><strong>'.<?php echo lang("_FROM");</strong></td>';
-	
-	// Summary table
-	echo "<table width='100%' border='0' cellpadding='1' cellspacing='0' >";
-	echo "<tr><td class='dr9 headerrow'>".$lang['_DETAILS']."</td><td class='dr12'></td></tr>"; 
-	// display summary if it exists
-   foreach($item["downloadsummary"] as $summaryitem) {
-   echo "<tr><td class='dr11 sdheading'><strong>".lang("_DOWNLOADED")."</strong></td><td class='HardBreak dr13'>".date($lang['datedisplayformat'],strtotime($summaryitem['logdate'])). "</td></tr>";
-   }
-   	echo "<tr><td class='dr4 sdheading tblmcw3'><strong>".lang("_CREATED")."</strong></td><td class='dr6 HardBreak'>".date($lang['datedisplayformat'],strtotime($item['filecreateddate'])). "</td></tr>"; 
+                    echo "<td class='dr2 HardBreak' align='center'>" .$itemContents[0]['downloads']. "</td>";
 
-	echo "<tr><td class='dr4 sdheading'><strong>".lang("_FROM")."</strong></td>";
-   	if(in_array($item['filefrom'] ,$useremail))
-   	{
-   	echo "<td class='dr6 HardBreak'>".lang("_ME")."</td>";
-   	} else {
-   	echo "<td class='dr6 HardBreak'>" .$item['filefrom'] . "</td>";
-   	}
-	echo "</tr>";
-	echo "<tr><td class='dr4 sdheading tblmcw3'><strong>".lang("_SUBJECT")."</strong></td><td class='dr6 HardBreak'>".utf8tohtml($item['filesubject'],TRUE). "</td>";
-	
-   	echo "</tr>";
-	echo "<tr><td class='dr11 sdheading'><strong>".lang("_MESSAGE")."</strong></td><td class='dr13' colspan='8'>";
-   	if($item['filemessage'] != "")
-   	{
-   		echo "<pre class='HardBreak'>".utf8tohtml($item['filemessage'],TRUE)."</pre>";
-   	}
-   	echo "</td>";
-	echo"</tr>";
+                    // echo "<td class='dr2'>" .date($lang['datedisplayformat'],strtotime($item['filecreateddate'])) . "</td>";
+                    echo "<td class='dr8'>" .date(lang('datedisplayformat'),strtotime($itemContents[0]['fileexpirydate'])) . "</td>"; //etc
+                    //if(sizeof($item["downloadsummary"]) > 0)
+                    //{
+                    echo "</tr>";
+                    echo "<tr class='hidden' style='display:none' id='show_".$i."'><td class='dr4'></td><td class='dr6' colspan='8'>";
 
-	
-	//echo "<tr><td><strong>". lang("_DOWNLOADS")."</strong></td><td>".sizeof($item["downloadsummary"])."</td></tr>";
-   
-   echo "</table></td>";
-   echo "</tr>";
-   } 
-   echo "<tr><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td></tr>";
-   //}
-}
-?>
-</table>
-<?php
-  if($i==0)
-	{
-		echo lang("_NO_FILES");
-	}
-?>
-  </div>
+                    //echo '<td class="HardBreak" id="myfiles_header_from"><strong>'.<?php echo lang("_FROM");</strong></td>';
+
+                    // Summary table
+                    echo "<table width='100%' border='0' cellpadding='1' cellspacing='0' >";
+                    echo "<tr><td class='dr9 headerrow'>".lang('_DETAILS')."</td><td class='dr12'></td></tr>";
+                    // display summary if it exists
+
+                    echo "<tr><td class='dr4 sdheading tblmcw3'><strong>".lang("_CREATED")."</strong></td><td class='dr6 HardBreak'>".date(lang('datedisplayformat'),strtotime($itemContents[0]['filecreateddate'])). "</td></tr>";
+
+                    echo "<tr><td class='dr4 sdheading'><strong>".lang("_FROM")."</strong></td>";
+                    if(in_array($itemContents[0]['filefrom'] ,$useremail))
+                    {
+                        echo "<td class='dr6 HardBreak'>".lang("_ME")."</td>";
+                    } else {
+                        echo "<td class='dr6 HardBreak'>" .$itemContents[0]['filefrom'] . "</td>";
+                    }
+                    echo "</tr>";
+                    echo "<tr><td class='dr4 sdheading tblmcw3'><strong>".lang("_SUBJECT")."</strong></td><td class='dr6 HardBreak'>".utf8tohtml($itemContents[0]['filesubject'],TRUE). "</td>";
+
+                    echo "</tr>";
+                    echo "<tr><td class='dr11 sdheading'><strong>".lang("_MESSAGE")."</strong></td><td class='dr13' colspan='8'>";
+                    if($itemContents[0]['filemessage'] != "")
+                    {
+                        echo "<pre class='HardBreak'>".utf8tohtml($itemContents[0]['filemessage'],TRUE)."</pre>";
+                    }
+                    echo "</td>";
+                    echo"</tr>";
+                    //echo "<tr><td><strong>". lang("_DOWNLOADS")."</strong></td><td>".sizeof($item["downloadsummary"])."</td></tr>";
+                    echo "</table>";
+                    echo "<br />";
+
+
+                    // Individual Files table
+                    echo "<table width='100%' border='0' cellpadding='1' cellspacing='0' >";
+                    echo "<tr><td class='dr9 headerrow'>Contents</td><td class='dr12'></td></tr>";
+                    echo '<tr><td class="dr4 HardBreak" style="width: 66%"><strong>File Name</strong></td>';
+                    echo '<td class="dr6 HardBreak" style="width: 34%"><strong>File Size</strong></td></tr>';
+                    // display summary if it exists
+                    for($file = 0; $file < sizeof($itemContents); $file++) {
+                        if ($file == sizeof($itemContents)-1){
+                            echo '<tr><td class="dr11 HardBreak">' . $itemContents[$file]['fileoriginalname'] . '</td>';
+                            echo '<td class="dr13 HardBreak">' . formatBytes($itemContents[$file]['filesize']) . '</td></tr>';
+                        } else {
+                            echo '<tr><td class="dr4 HardBreak">' . $itemContents[$file]['fileoriginalname'] . '</td>';
+                            echo '<td class="dr6 HardBreak">' . formatBytes($itemContents[$file]['filesize']) . '</td></tr>';
+                        }
+                    }
+
+                    echo "</td>";
+                    echo"</tr>";
+                    echo "</table><br />";
+
+                    echo "</td>";
+                    echo "</tr>";
+                }
+                echo "<tr><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td></tr>";
+                //}
+            }
+            ?>
+        </table>
+        <?php
+        if($i==0)
+        {
+            echo lang("_NO_FILES");
+        }
+        ?>
+    </div>
 </div>
 <div id="dialog-delete" title="<?php echo  lang("_DELETE_FILE"); ?>">
 <p><?php echo lang("_CONFIRM_DELETE_FILE");?></p>

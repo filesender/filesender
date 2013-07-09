@@ -321,6 +321,35 @@ class Functions {
 		}
 		return json_encode($returnArray);
     }
+
+    public function getUserTrackingCodes(){
+        if( $this->authsaml->isAuth()) {
+            $authAttributes = $this->authsaml->sAuth();
+        } else {
+            $authAttributes["saml_uid_attribute"] = "nonvalue";
+        }
+        $pdo = $this->db->connect();
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
+        $statement = $pdo->prepare("SELECT DISTINCT(filegroupid), filetrackingcode, fileauthuseruid FROM files WHERE (fileauthuseruid = :fileauthuseruid) ORDER BY filetrackingcode DESC");
+        $statement->bindParam(':fileauthuseruid', $authAttributes["saml_uid_attribute"]);
+        try
+        {
+            $statement->execute();
+        }
+        catch(PDOException $e)
+        {
+            logEntry($e->getMessage(),"E_ERROR");
+            displayError(lang("_ERROR_CONTACT_ADMIN"),$e->getMessage());
+        }
+        $result = $statement->fetchAll();
+        $pdo = NULL;
+        $returnArray = array();
+
+        foreach($result as $row) {
+            array_push($returnArray, $row);
+        }
+        return json_encode($returnArray);
+    }
 	
  	//--------------------------------------- CHECKED
     // returns download summary as array for a specified voucher
