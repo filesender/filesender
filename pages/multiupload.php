@@ -56,8 +56,7 @@ $(function () {
 
     getDatePicker();
 
-
-    // Set up the drag-and-drop behaviour.
+   // Set up the drag-and-drop behaviour.
     var body = $('body');
     body.on(
         'dragover',
@@ -118,12 +117,6 @@ $(function () {
 
     autoCompleteEmails();
 });
-
-// special fix for esc key on firefox stopping xhr
-window.addEventListener('keydown', function (e) {
-    (e.keyCode == 27 && e.preventDefault())
-});
-//]]>
 </script>
 
 <form id="form1" enctype="multipart/form-data" method="post" action="fs_uploadit.php">
