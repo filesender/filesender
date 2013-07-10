@@ -75,6 +75,8 @@ function fileSelected() {
     fdata[n].currentlocation = 0;
     fdata[n].filename = file.name;
     fdata[n].filetype = file.type;
+    fdata[n].filetrackingcode = trackingCode;
+    fdata[n].filegroupid = groupid;
     //fdata[n].filesize = 0;
 
     if(validate_file()) {
