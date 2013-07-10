@@ -424,7 +424,7 @@ $json_o=json_decode($filedata,true);
 
                         echo "<td class='dr2 HardBreak' align='center'>" . $maxDownloaded . "</td>";
 
-                        // echo "<td class='dr2'>" .date($lang['datedisplayformat'],strtotime($item['filecreateddate'])) . "</td>";
+                        // echo "<td class='dr2'>" .date(lang('datedisplayformat'),strtotime($item['filecreateddate'])) . "</td>";
                         echo "<td class='dr2' style='text-align: center'>" .date(lang('datedisplayformat'),strtotime($itemContents[0]['fileexpirydate'])) . "</td>"; //etc
                         echo "<td class='dr8' style='text-align: center'><a id='link_downloadfile_".$i."' href='?gid=". $itemContents[0]["filegroupid"]."'>" .utf8tohtml($itemContents[0]['filetrackingcode'],TRUE). "</a></td>";
                         //if(sizeof($item["downloadsummary"]) > 0)
@@ -535,7 +535,7 @@ $json_o=json_decode($filedata,true);
       </tr>
       <tr>
         <td class="formfieldheading mandatory" id="files_expiry"><?php echo lang("_EXPIRY_DATE"); ?>:
-          <input type="hidden" id="fileexpirydate" name="fileexpirydate" value="<?php echo date($lang['datedisplayformat'],strtotime("+".$config['default_daysvalid']." day"));?>" /></td>
+          <input type="hidden" id="fileexpirydate" name="fileexpirydate" value="<?php echo date(lang('datedisplayformat'),strtotime("+".$config['default_daysvalid']." day"));?>" /></td>
         <td><input id="datepicker" name="datepicker" onchange="validate_expiry()" title="<?php echo lang('_DP_dateFormat'); ?>" />
           <div id="expiry_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_EXPIRY_DATE"); ?></div></td>
       </tr>
@@ -556,4 +556,4 @@ $json_o=json_decode($filedata,true);
 	<input type="hidden" name="s-token" id="s-token" value="<?php echo (isset($_SESSION["s-token"])) ?  $_SESSION["s-token"] : "";?>" />
   	</form>
 </div>
-<div id="dialog-autherror" title="<?php echo lang($lang["_MESSAGE"]); ?>" style="display:none"><?php echo lang($lang["_AUTH_ERROR"]); ?></div>
+<div id="dialog-autherror" title="<?php echo lang("_MESSAGE"); ?>" style="display:none"><?php echo lang("_AUTH_ERROR"); ?></div>

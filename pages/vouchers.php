@@ -268,7 +268,7 @@ if ( count($useremail) > 1 ) {
       </tr>
       <tr>
         <td style="text-align: right; vertical-align: middle;">
-		<input type="hidden" id="fileexpirydate" name="fileexpirydate" value="<?php echo date($lang['datedisplayformat'],strtotime("+".$config['default_daysvalid']." day"));?>" />
+		<input type="hidden" id="fileexpirydate" name="fileexpirydate" value="<?php echo date(lang('datedisplayformat'),strtotime("+".$config['default_daysvalid']." day"));?>" />
 		<input type="hidden" name="s-token" id="s-token" value="<?php echo (isset($_SESSION["s-token"])) ?  $_SESSION["s-token"] : "";?>" />
 		</td>
         <td><div class="menu" id="voucherbutton" onclick="validateForm()"><a href="#" id="btn_sendvoucher" ><?php echo lang("_SEND_VOUCHER"); ?></a></div><div id="_noauth" class="validation_msg" style="display:none"><?php echo lang("_AUTH_ERROR"); ?></div></td>
@@ -289,7 +289,7 @@ if ( count($useremail) > 1 ) {
 	$i = 0; 
 	foreach($json_o as $item) {
 		$i += 1; // counter for file id's
-		echo "<tr><td>" .$item['filefrom'] . "</td><td>" .$item['fileto'] . "</td><td>" .date($lang['datedisplayformat'],strtotime($item['filecreateddate'])) . "</td><td>" .date($lang['datedisplayformat'],strtotime($item['fileexpirydate'])) . "</td><td><div  style='cursor:pointer;border:0'><img id='btn_deletevoucher_".$i."' src='images/shape_square_delete.png' alt='' title='".lang("_DELETE")."' onclick='confirmdelete(".'"' .$item['filevoucheruid'] . '"'. ")' /></div></td></tr>"; //etc
+		echo "<tr><td>" .$item['filefrom'] . "</td><td>" .$item['fileto'] . "</td><td>" .date(lang('datedisplayformat'),strtotime($item['filecreateddate'])) . "</td><td>" .date(lang('datedisplayformat'),strtotime($item['fileexpirydate'])) . "</td><td><div  style='cursor:pointer;border:0'><img id='btn_deletevoucher_".$i."' src='images/shape_square_delete.png' alt='' title='".lang("_DELETE")."' onclick='confirmdelete(".'"' .$item['filevoucheruid'] . '"'. ")' /></div></td></tr>"; //etc
 	}
 ?>
   </table>
