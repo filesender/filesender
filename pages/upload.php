@@ -109,6 +109,21 @@ var sizeLang = '<?php echo lang("_SIZE"); ?>';
 
 var vid='<?php if(isset($_REQUEST["vid"])){echo htmlspecialchars($_REQUEST["vid"]);}; ?>';
 
+var groupid = '<?php echo getOpenSSLKey(); ?>';
+
+<?php
+    if (!$authvoucher->aVoucher()) {
+        $userData = $authsaml->sAuth();
+        echo "var trackingCode = '" . $functions->getTrackingCode($userData['saml_uid_attribute']) . "';";
+    } else {
+        echo "var trackingCode = '" . $functions->getTrackingCode() . "';";
+    }
+
+    if (isset($_REQUEST['vid'])) {
+        echo "\nvar vid = '" . htmlspecialchars($_REQUEST['vid']) . "';\n";
+    }
+?>
+
 // start document ready
 $(function() {
 
@@ -248,6 +263,8 @@ function validateforflash(fname,fsize)
         json["fileoriginalname"] = fname;
         json["filesize"] = parseInt(fsize);
         json["vid"] = vid;
+        json["filetrackingcode"] = trackingCode;
+        json["filegroupid"] = groupid;
 
         $.ajax({
             type: "POST",
