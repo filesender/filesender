@@ -466,21 +466,24 @@ $json_o=json_decode($filedata,true);
 
                         // Individual Files table
                         echo "<table width='100%' border='0' cellpadding='1' cellspacing='0' >";
-                        echo "<tr><td class='dr9 headerrow'>Contents</td><td class='dr12'></td></tr>";
-                        echo '<tr><td class="dr4 HardBreak" style="width: 66%"><strong>File Name</strong></td>';
-                        echo '<td class="dr6 HardBreak" style="width: 34%"><strong>File Size</strong></td></tr>';
+                        echo "<tr><td class='dr9 headerrow'>Contents</td><td class='dr12'></td><td class='dr12'></td></tr>";
+                        echo '<tr><td class="dr4 HardBreak" style="width: 66%; text-align: center"><strong>File Name</strong></td>';
+                        echo '<td class="HardBreak" style="width: 17%; text-align: center"><strong>File Size</strong></td>';
+                        echo '<td class="dr6 HardBreak" style="width: 17%; text-align: center"><strong>Downloads</strong></td></tr>';
                         // display summary if it exists
                         for($file = 0; $file < sizeof($itemContents); $file++) {
                             if ($file == sizeof($itemContents)-1){
                                 echo '<tr><td class="dr11">' .
                                 ' <a id="link_downloadfile_'.$i.'" href="download.php?vid='. $itemContents[$file]['filevoucheruid'].'" target="_blank">'
                                     . $itemContents[$file]['fileoriginalname'] . '</a></td>';
-                                echo '<td class="dr13 HardBreak">' . formatBytes($itemContents[$file]['filesize']) . '</td></tr>';
+                                echo '<td class="dr12 HardBreak" style="text-align: center">' . formatBytes($itemContents[$file]['filesize']) . '</td>';
+                                echo '<td class="dr13 HardBreak" style="text-align: center">' . $itemContents[$file]['downloads'] . '</td></tr>';
                             } else {
                                 echo '<tr><td class="dr4">' .
                                 '<a id="link_downloadfile_'.$i.'" href="download.php?vid='. $itemContents[$file]['filevoucheruid'].'" target="_blank">'
                                     . $itemContents[$file]['fileoriginalname'] . '</a></td>';
-                                echo '<td class="dr6 HardBreak">' . formatBytes($itemContents[$file]['filesize']) . '</td></tr>';
+                                echo '<td class="HardBreak" style="text-align: center">' . formatBytes($itemContents[$file]['filesize']) . '</td>';
+                                echo '<td class="dr6 HardBreak" style="text-align: center">' . $itemContents[$file]['downloads'] . '</td></tr>';
                             }
                         }
 
