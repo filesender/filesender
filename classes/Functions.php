@@ -699,6 +699,7 @@ class Functions {
         {
             if ($row['filestatus'] == 'Available')
             {
+                $row["downloads"] =  $this->countDownloads($row["filevoucheruid"]);
                 array_push($returnArray, $row);
             }
         }
