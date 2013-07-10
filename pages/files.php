@@ -392,10 +392,12 @@ $json_o=json_decode($filedata,true);
                     $itemContents = $functions->getMultiFileData($item['filegroupid']);
 
                     $maxDownloaded = 0;
+                    $totalSize = 0;
                     for($temp = 0; $temp < sizeOf($itemContents); $temp++){
                         if($itemContents[$temp]['downloads'] > $maxDownloaded){
                             $maxDownloaded = $itemContents[$temp]['downloads'];
                         }
+                        $totalSize += $itemContents[$temp]['filesize'];
                     }
 
                     if ($itemContents[0]['filestatus'] == 'Available') {
@@ -418,7 +420,7 @@ $json_o=json_decode($filedata,true);
                             echo "<td class='dr2 HardBreak'>" .$itemContents[0]['fileto'] . "</td>";
                         }
 
-                        echo "<td class='dr2 HardBreak' style='text-align: center'>" .formatBytes($itemContents[0]['filesize']). "</td>";
+                        echo "<td class='dr2 HardBreak' style='text-align: center'>" .formatBytes($totalSize). "</td>";
 
                         echo "<td class='dr2 HardBreak' align='center'>" . $maxDownloaded . "</td>";
 
