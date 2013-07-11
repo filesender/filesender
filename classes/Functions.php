@@ -681,7 +681,7 @@ class Functions {
     function getMultiFileData($groupId) {
         $pdo = $this->db->connect();
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
-        $statement = $pdo->prepare('SELECT * FROM files where filegroupid = :filegroupid');
+        $statement = $pdo->prepare('SELECT * FROM files where filegroupid = :filegroupid ORDER BY fileoriginalname ASC');
         $statement->bindParam(':filegroupid', $groupId);
         try {
             $statement->execute();
@@ -695,13 +695,17 @@ class Functions {
         $result = $statement->fetchAll();
         $pdo = NULL;
         $returnArray = array();
+
+        $previousRow = null;
         foreach($result as $row)
         {
-            if ($row['filestatus'] == 'Available')
-            {
-                $row["downloads"] =  $this->countDownloads($row["filevoucheruid"]);
-                array_push($returnArray, $row);
+            if ($row['filestatus'] != 'Available') continue;
+            if ($previousRow == null || $previousRow['fileoriginalname'] != $row['fileoriginalname']) {
+                    $row["downloads"] =  $this->countDownloads($row["filevoucheruid"]);
+                    array_push($returnArray, $row);
             }
+
+            $previousRow = $row;
         }
 
         return $returnArray;
