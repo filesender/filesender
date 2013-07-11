@@ -611,6 +611,7 @@ function setButtonToClear(){
 
 function setButtonToUndo(){
     var clearAll = $('#clearallbtn');
+    clearAll.button('enable');
     clearAll.find('.ui-button-text').html("Undo clear");
     clearAll.attr('onclick', 'undoClearFileBox()');
 }
