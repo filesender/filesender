@@ -183,7 +183,8 @@ $(function () {
                         <div id="fileto_msg" style="display: none" class="validation_msg field">
                             <?php echo lang('_INVALID_MISSING_EMAIL'); ?>
                             <div id="maxemails_msg" style="display: none"
-                                 class="validation_msg"><?php echo lang('_MAXEMAILS') . $config['max_email_recipients']; ?>
+                                 class="validation_msg"><?php echo lang('_MAXEMAILS')
+                                    . $config['max_email_recipients']; ?>
                             </div>
                         </div>
                     </div>
@@ -195,11 +196,13 @@ $(function () {
 
                     <div class="fieldcontainer">
                         <label for="filemessage"><?php echo lang('_MESSAGE') . ': (' . lang('_OPTIONAL'); ?>)</label>
-                        <textarea name="filemessage" cols="57" rows="5" id="filemessage" style="resize:vertical"></textarea>
+                        <textarea name="filemessage" cols="57" rows="5" id="filemessage"
+                                  style="resize:vertical"></textarea>
                     </div>
 
                     <div>
-                        <input type="hidden" id="filevoucheruid" name="filevoucheruid" value="<?php echo $voucherUID; ?>"/>
+                        <input type="hidden" id="filevoucheruid" name="filevoucheruid"
+                               value="<?php echo $voucherUID; ?>"/>
                         <input type="hidden" name="vid" id="vid" value="<?php echo $voucherUID; ?>"/>
                         <input type="hidden" name="total" id="total" value=""/>
                         <input type="hidden" name="n" id="n" value=""/>
@@ -234,12 +237,14 @@ $(function () {
                     <div id="workers-advanced-settings" style="display: none;">
                         <div class="fieldcontainer">
                             <label for="chunksize"><?php echo lang('_TERA_CHUNKSIZE'); ?></label>
-                            <input id="chunksize" type="text" value="<?php echo $config['terasender_chunksize'] ?>"/><br/>
+                            <input id="chunksize" type="text" value="<?php echo $config['terasender_chunksize'] ?>"/>
+                            <br/>
                         </div>
                         <div class="fieldcontainer">
                             <label for="workerCount"><?php echo lang('_TERA_WORKER_COUNT'); ?></label>
                             <input id="workerCount" type="text"
-                                   value="<?php echo $config['terasender_workerCount'] ?>"/><br/>
+                                   value="<?php echo $config['terasender_workerCount'] ?>"/>
+                            <br/>
                         </div>
                         <div class="fieldcontainer">
                             <label for="jobsPerWorker"><?php echo lang('_TERA_JOBS_PER_WORKER'); ?></label>
@@ -249,8 +254,9 @@ $(function () {
                     </div>
                     <?php if ($config['terasender'] && $config['terasenderadvanced']) { ?>
                         <div class="fieldcontainer">
-                            <a href="#"
-                               onclick="$('#workers-advanced-settings').slideToggle()"><?php echo lang('_TERA_ADVANCED_SETTINGS'); ?></a>
+                            <a href="#" onclick="$('#workers-advanced-settings').slideToggle()">
+                                <?php echo lang('_TERA_ADVANCED_SETTINGS'); ?>
+                            </a>
                         </div>
                     <?php } ?>
                 </td>
