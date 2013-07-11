@@ -1,7 +1,8 @@
 <script type="text/javascript">
 
     // Validate FILE (with embedded calls to check filename and file-extension)
-    function validate_file(id) {
+    function validate_file(id)
+    {
         fileMsg('');
 
         if (!fileData[id]) {
