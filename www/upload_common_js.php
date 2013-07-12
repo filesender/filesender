@@ -60,6 +60,7 @@ global $config;
     var nameLang = '<?php echo lang("_FILE_NAME"); ?>';
     var sizeLang = '<?php echo lang("_SIZE"); ?>';
     var groupid = '<?php echo getOpenSSLKey(); ?>';
+    var maxUploads = <?php echo $config['html5_max_uploads']; ?>;
 
     <?php
         if (!$authvoucher->aVoucher()) {
