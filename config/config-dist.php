@@ -95,6 +95,8 @@ public function loadConfig() {
 	$config["upload_chunk_size"]  = '2000000';//
     $config["download_chunk_size"] = '5242880'; // The maximum amount of data that will be read into memory at once during multi-file downloads, default 5MB.
 
+    $config['html5_max_uploads'] = '30';
+
 	// update max_flash_upload_size if php.ini post_max_size and upload_max_filesize is set lower
 	$config['max_flash_upload_size'] = min(let_to_num(ini_get('post_max_size'))-2048, let_to_num(ini_get('upload_max_filesize')),$config['max_flash_upload_size']);
 

@@ -91,6 +91,13 @@ function addFiles(files) {
     for (var i = 0; i < files.length; i++) {
         var dupFound = false;
 
+        if (n >= maxUploads) {
+            openErrorDialog('You have reached the max number of uploads of: ' + maxUploads);
+            return;
+        }
+
+
+
         // Loops through list of files already in the list and prevents any duplicates from being created
         for (var j = 0; j < fileData.length; j++) {
             if (fileData[j].filename == files.item(i).name) {
