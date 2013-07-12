@@ -717,6 +717,37 @@ class Functions {
         return !empty($files);
     }
 
+    function getMultiRecipientDetails($groupID)
+    {
+        $pdo = $this->db->connect();
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
+        $statement = $pdo->prepare('SELECT fileto, filestatus FROM files where filegroupid = :filegroupid ORDER BY fileto ASC');
+        $statement->bindParam(':filegroupid', $groupID);
+        try {
+            $statement->execute();
+        }
+        catch(PDOException $e)
+        {
+            logEntry($e->getMessage(),"E_ERROR");
+            displayError(lang("_ERROR_CONTACT_ADMIN"),$e->getMessage());
+        }
+
+        $result = $statement->fetchAll();
+        $pdo = NULL;
+        $returnArray = array();
+
+        $previousRow = null;
+        foreach($result as $row)
+        {
+            if ($row['filestatus'] != 'Available') continue;
+            if ($previousRow == null || $previousRow['fileto'] != $row['fileto']) {
+                array_push($returnArray, $row);
+            }
+            $previousRow = $row;
+        }
+        return $returnArray;
+    }
+
 
     //--------------------------------------- CHECKED
 	// insert a voucher

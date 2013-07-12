@@ -390,6 +390,13 @@ $json_o=json_decode($filedata,true);
                     $i += 1; // counter for file id's
                     $onClick = "'" .$item['filevoucheruid'] ."'";
                     $itemContents = $functions->getMultiFileData($item['filegroupid']);
+                    $recipientsArray = $functions->getMultiRecipientDetails($item['filegroupid']);
+                    $recipientsString = '';
+
+                    for ($temp = 0; $temp < sizeOf($recipientsArray); $temp++){
+                        $recipientsString .= $recipientsArray[$temp]['fileto'];
+                        if ($temp != sizeOf($recipientsArray)-1) $recipientsString .= ', ';
+                    }
 
                     $maxDownloaded = 0;
                     $totalSize = 0;
@@ -449,6 +456,9 @@ $json_o=json_decode($filedata,true);
                             echo "<td class='dr6 HardBreak'>" .$itemContents[0]['filefrom'] . "</td>";
                         }
                         echo "</tr>";
+
+                        echo '<tr><td class="dr4 sdheading tblmcw3"><strong>'.lang("_TO").'</strong></td><td class="dr6 HardBreak">'.$recipientsString.'</td>';
+
                         echo "<tr><td class='dr4 sdheading tblmcw3'><strong>".lang("_SUBJECT")."</strong></td><td class='dr6 HardBreak'>".utf8tohtml($itemContents[0]['filesubject'],TRUE). "</td>";
 
                         echo "</tr>";
