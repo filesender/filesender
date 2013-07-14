@@ -298,7 +298,7 @@
 	// --------------------------
 	function validateforflash(fname,fsize)
 	{
-		fname = unescape(fname);
+		fname = decodeURIComponent(fname);
 	// remove previouse vaildation messages
 	hidemessages();
 	
@@ -461,7 +461,7 @@ function validate_file()
 // flex file information check
 function fileInfo(name,size)
 {
-	name = unescape(name);
+	name = decodeURIComponent(name);
 	$("#uploadbutton").hide(); 
 fileMsg("");
 if(size < 1)
@@ -495,7 +495,7 @@ if(size > maxFLASHuploadsize)
 
 function uploadcomplete(name,size)
 {
-	name = unescape(name);
+	name = decodeURIComponent(name);
 	$("#fileName").val(name);
 	// ajax form data to fs_upload.php
 	$.ajax({
@@ -527,7 +527,7 @@ function uploadcomplete(name,size)
 
 function uploaderror(name,size)
 {
-name = unescape(name);
+name = decodeURIComponent(name);
 errorDialog("<?php echo lang("_ERROR_UPLOADING_FILE") ?> "+name+":"+size);
 }
 
