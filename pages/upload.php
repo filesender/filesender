@@ -150,6 +150,8 @@
 		$("#dialog-cancel").dialog({ autoOpen: false, height: 140, width: 350, modal: true,
 		buttons: {
 				'uploadconfirmyesBTN': function() {
+				// display cancel in progress
+				$("#dialog-cancel").html('<img src="images/ajax-loader-sm.gif" border=0 style="float:left;padding-right:10px;"><?php echo lang("_PLEASE_WAIT"); ?>');
 				location.reload(true);
 
 				},
