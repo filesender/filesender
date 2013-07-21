@@ -174,7 +174,13 @@
 				}
 			}
 		})
-		
+		$("#dialog-aup").dialog({ autoOpen: false, height: 400,width: 550, modal: true,title: "<?php echo lang("_TERMS_OF_AGREEMENT") ?>",		
+		buttons: {
+			'<?php echo lang("_OK") ?>': function() {
+				$( this ).dialog( "close" );
+				}
+			}
+		})
 		$('.ui-dialog-buttonpane button:contains(supportBTN)').attr("id","btn_support");            
 		$('#btn_support').html('<?php echo lang("_OK") ?>') 
 		
@@ -280,11 +286,8 @@
 	// toggle AUP display
 	function toggleTOG()
 	{
-	if( $("#tog").is(":visible") ) {
-    	$("#tog").hide();
-	} else {
-	    $("#tog").show();
-	}
+		$( "#dialog-aup" ).dialog( "open" );
+		$('.ui-dialog-buttonpane > button:last').focus();
 	}
 	
 	function hidemessages()
@@ -769,9 +772,8 @@ if ( hasProductInstall && !hasRequestedVersion ) {
         <td><input name="aup" type="checkbox" id="aup" onchange="validate_aup()" <?php echo ($config["AuP_default"] ) ? 'checked="checked"' : ""; ?> <?php echo (isset($_SESSION["aup"]) && !$authvoucher->aVoucher() ) ? 'checked="checked"' : ""; ?> value="true" />
          </td>
         <td>
-          <div id="aup_label" onclick="toggleTOG()" style="cursor:pointer;"><?php echo lang("_ACCEPTTOC"); ?> [<font color="#666666"><?php echo lang("_SHOWHIDE"); ?></font>]</div>
+          <div id="aup_label" onclick="toggleTOG()" style="cursor:pointer;"><?php echo lang("_ACCEPTTOC"); ?> [<font color="#666666"><?php echo lang("_SHOW_TERMS"); ?></font>]</div>
           <div id="aup_msg" class="validation_msg" style="display: none"><?php echo lang("_AGREETOC"); ?></div>
-          <div id="tog" style="display:none"> <?php echo lang("_AUPTERMS"); ?> </div>
         </td>
         <td colspan="2" align="center" valign="top">&nbsp;</td>
       </tr>
@@ -817,5 +819,8 @@ if ( hasProductInstall && !hasRequestedVersion ) {
 </div>
 <div id="dialog-support" title="" style="display:none">
 <?php require_once("$filesenderbase/pages/html5display.php"); ?>
+</div>
+<div id="dialog-aup" title="" style="display:none">
+<?php echo lang("_AUPTERMS"); ?>
 </div>
 <div id="dialog-autherror" title="<?php echo lang($lang["_MESSAGE"]); ?>" style="display:none"><?php echo lang($lang["_AUTH_ERROR"]); ?></div>
