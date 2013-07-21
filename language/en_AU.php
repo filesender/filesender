@@ -90,8 +90,8 @@ $lang["_EXPIRY"] = "Expiry";
 $lang["_MESSAGE"] = "Message";
 $lang["_TYPE"] = "Type";
 
-$lang["_TERMS_OF_AGREEMENT"] = "Terms of Agreement";
-$lang["_SHOW_TERMS"] = "Show Terms";
+$lang["_TERMS_OF_AGREEMENT"] = "Terms and Conditions";
+$lang["_SHOW_TERMS"] = "Show Terms and Conditions";
 $lang["_SHOWHIDE"] = "Show/Hide";
 $lang["_UPLOADING_WAIT"] = "Uploading file - please wait...";
 $lang["_SHOW_ALL"] = "Show/Hide Details";
