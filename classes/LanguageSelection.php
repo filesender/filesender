@@ -82,7 +82,13 @@ if (!empty($locales[$langs])) {
 	$lang_file = $locales[$langs];
 	logEntry("Using ".$langs."/".$lang_file." as preferred language.","E_NOTICE");
 } else {
+	if($langs != "en_AU")
+	{
 	logEntry("No mapping for ".$langs." found. Please check your language configuration.","E_ERROR");
+	} else {
+		// FIlesender defaults to en_AU
+		logEntry("Using en_AU as preferred language.","E_NOTICE");
+	}
 }
 
 // Try and include the various language files:
