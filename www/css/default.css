@@ -267,6 +267,96 @@ input,textarea
 .fieldcontainer {
     padding: 5px;
 }
+
+.menubar
+{
+    height: 34px;
+    background: url("../images/jq-global-nav.png") repeat-x scroll 0 bottom #1B1B1B;
+    border-radius: 6px 6px 0px 0px;
+    -moz-border-radius: 6px 6px 0px 0px;
+    margin-right: 26px;
+    margin-left: 26px;
+
+}
+
+.msgbox
+{
+    border-radius: 0px 0px 6px 6px;
+    -moz-border-radius: 0px 0px 6px 6px;
+    margin-right: 26px;
+    margin-left: 26px;
+    background-color: #D6D6D6;
+    height: 34px;
+}
+
+.menubar li
+{
+    border-left: 1px solid rgba(255, 255, 255, 0.098);
+    border-right: 1px solid rgba(0, 0, 0, 0.35);
+    cursor: pointer;
+    display: inline-block;
+    float: left;
+    font: bold 13px/17px "Helvetica Neue",Helvetica,Arial,Geneva,sans-serif;
+    position: relative;
+    text-shadow: 0 0 2px #000000;
+    top: 1px;
+    transition: all 0.2s ease 0s;
+}
+
+.menubar ul .spacer
+{
+    width: 100%;
+}
+
+.menubar .leftmenu
+{
+    float:left;
+}
+
+.menubar .rightmenu
+{
+    float:right;
+}
+
+.menubar ul
+{
+    /* [disabled]border-left: 1px solid rgba(0, 0, 0, 0.35); */
+    /* [disabled]border-right: 1px solid rgba(255, 255, 255, 0.098); */
+    display: inline;
+    float: left;
+    list-style: none outside none;
+    margin: 0;
+    text-align: left;
+}
+
+.constrain {
+    margin: 0 auto;
+    max-width: 1240px;
+    padding: 0 20px;
+
+}
+.rightmenu li:last-child
+{
+    border-right:none;
+}
+
+.menubar ul li a {
+    color: #E6E6E6;
+    display: block;
+    font-style: normal;
+    font-weight: normal;
+    padding: 8px 12px;
+    text-decoration: none;
+}
+.menubar a:hover,.active, a:active
+{
+    background-color: rgb(51,51,51);
+}
+.menubar a:hover
+{
+    background-color: rgb(51,51,51);
+}
+
 input {
 	/*border:1px solid #ccc;
 	font-size: 13pt;
@@ -399,6 +489,7 @@ margin-top: 4px;
 	background: #fff;
 	text-align: left;
 	width: 800px;
+    padding-bottom: 20px;
 	margin-left: auto;
 	margin-right: auto;
 	margin-bottom: auto;
@@ -511,11 +602,8 @@ word-wrap: break-word; /* Internet Explorer 5.5+ */
 }
 .versionnumber
 {
-	text-align: right;
-	float: right;
-	color: #666;
+	color: #333;
 	font-size: 9px;
-	padding-top: 3px;
 }
 .html5link
 {
