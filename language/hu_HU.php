@@ -65,10 +65,6 @@ $lang["_CANCEL_UPLOAD"] = "Feltöltés megszakítása";
 //$lang["_AVAILABLE"] = "Available";
 //$lang["_TEMP"] = "Temp"; // as in Temporary files
 
-// Greetings
-$lang["_WELCOME"] = "Üdv!"; 
-$lang["_WELCOMEGUEST"] = "Üdv. vendég!"; 
-
 // admin tab names
 //$lang["_GENERAL"] = "General";
 //$lang["_UPLOADS"] = "Uploads";

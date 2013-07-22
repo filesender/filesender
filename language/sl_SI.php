@@ -65,10 +65,6 @@ $lang["_USED"] = "Porabljeno";
 $lang["_AVAILABLE"] = "Na voljo";
 $lang["_TEMP"] = "Temp"; // as in Temporary files
 
-// Greetings
-$lang["_WELCOME"] = "Pozdravljeni"; 
-$lang["_WELCOMEGUEST"] = "Pozdravjen Gost"; 
-
 // admin tab names
 $lang["_GENERAL"] = "Splošno";
 $lang["_UPLOADS"] = "Nalaganje";
