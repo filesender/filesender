@@ -30,7 +30,20 @@
     function validateForm() {
         // remove messages from any previous attempt
         hideMessages();
-        return (validate_fileto() && validate_file(n) && validate_expiry() && validate_aup());
+        var isValid = true;
+        if (!validate_fileto()){
+            isValid = false;
+        }
+        if (!validate_file(n)){
+            isValid = false;
+        }
+        if (!validate_expiry()) {
+            isValid = false;
+        }
+        if (!validate_aup()) {
+            isValid = false;
+        }
+        return isValid;
     }
 
     function constrainNumWebWorkers() {
