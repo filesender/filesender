@@ -114,7 +114,7 @@ class Zipper
         $fileSize = 22; // Size of the end-of-file central directory record.
 
         foreach ($this->files as $file) {
-            $fileSize += 88 + strlen($file["fileoriginalname"]) * 2; // Size of the local file header, descriptor and per-file CDR entry.
+            $fileSize += 92 + strlen($file["fileoriginalname"]) * 2; // Size of the local file header, descriptor and per-file CDR entry.
             $fileSize += $file["filesize"]; // File data size.
         }
 
@@ -126,7 +126,7 @@ class Zipper
         $nameLength = strlen($filename);
 
         $header = pack('V', 0x04034b50) // Local file header signature.
-            . pack('v', 45) // Version needed to extract.
+            . pack('v', 0x000A) // Version needed to extract.
             . pack('v', 0x08) // General purpose bit flag (third bit is set to allow us to send the hash later, in the file descriptor).
             . pack('v', 0x00) // Compression method (0x00 means no compression).
             . pack('V', $timestamp) // Last modified time and date (as a DOS timestamp).
@@ -165,7 +165,8 @@ class Zipper
     private function sendFileDescriptor($fileSize, $crc32)
     {
         // Send the file descriptor that goes at the end of each file entry.
-        $descriptor = pack('V', $crc32)
+        $descriptor = pack('V', 0x08074b50)
+            . pack('V', $crc32)
             . pack('V', $fileSize)
             . pack('V', $fileSize);
 
@@ -192,7 +193,7 @@ class Zipper
         // Send the central directory record belonging to a file.
         $record = pack('V', 0x02014b50) // Central file header signature.
             . pack('v', 0) // Made by version.
-            . pack('v', 45) // Version needed to extract.
+            . pack('v', 0x000A) // Version needed to extract.
             . pack('v', 0x00) // General purpose bit flag.
             . pack('v', 0x00) // Compression method (0x00 means no compression).
             . pack('V', $file["timestamp"]) // Last modified time and date (as a DOS timestamp).
