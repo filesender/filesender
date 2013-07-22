@@ -64,9 +64,6 @@ $lang["_USED"] = "Utilisé";
 $lang["_AVAILABLE"] = "Disponible";
 $lang["_TEMP"] = "Temp"; // as in Temporary files
 
-$lang["_WELCOME"] = "Bienvenue"; 
-$lang["_WELCOMEGUEST"] = "Bienvenue"; 
-
 // admin tab names
 $lang["_GENERAL"] = "Général";
 $lang["_UPLOADS"] = "Téléchargements vers le serveur";

@@ -75,10 +75,6 @@ $lang["_FILES_AVAILABLE"] = "Beschikbare Bestanden";
 $lang["_ACTIVE_VOUCHERS"] = "Geldige uitnodigingen";
 $lang["_COMPLETE_LOG"] = "Volledig logboek";
 
-// Upload page
-$lang["_WELCOME"] = "Welkom";
-$lang["_WELCOMEGUEST"] = "Welkom Gast";
-
 // Upload pagina: Formuliervelden
 $lang["_TO"] = "Aan";
 $lang["_FROM"] = "Van";

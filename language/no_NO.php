@@ -78,10 +78,6 @@ $lang["_FILES_AVAILABLE"] = "Tilgjengelige filer";
 $lang["_ACTIVE_VOUCHERS"] = "Aktive invitasjoner";
 $lang["_COMPLETE_LOG"] = "Alle logdata";
 
-// Upload page
-$lang["_WELCOME"] = "Velkommen";
-$lang["_WELCOMEGUEST"] = "Velkommen Gjest";
-
 // Upload page: Form Fields
 $lang["_TO"] = "Til";
 $lang["_FROM"] = "Fra";
