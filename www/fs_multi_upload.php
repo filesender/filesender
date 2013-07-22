@@ -211,7 +211,7 @@ if (!isAuthenticated()) {
                 } else {
                     // Insert the voucher(s).
                     foreach ($emailArray as $email) {
-                        $functions->insertVoucher($email, $dataItem['filefrom'], $dataItem['fileexpirydate']);
+                        $functions->insertVoucher($email, $dataItem['filefrom'], $dataItem["fileexpirydate"], $dataItem["vouchermessage"]);
                     }
 
                     $complete = 'complete';

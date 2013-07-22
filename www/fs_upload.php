@@ -304,7 +304,7 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
                 } else {
                     // insert each voucher
                     foreach ($emailArray as $Email) {
-                        $functions->insertVoucher($Email,$dataitem['filefrom'],$dataitem["fileexpirydate"]);
+                        $functions->insertVoucher($Email,$dataitem['filefrom'],$dataitem["fileexpirydate"],$dataitem["vouchermessage"]);
                     }
                     $complete = "complete";
                 }
