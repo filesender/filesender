@@ -26,6 +26,13 @@
         return true;
     }
 
+    function validate_files() {
+        for(var i = 0; i < n; i++) {
+            if(!validate_file(i)) return false;
+        }
+        return true;
+    }
+
     // HTML5 form Validation
     function validateForm() {
         // remove messages from any previous attempt
@@ -34,7 +41,7 @@
         if (!validate_fileto()){
             isValid = false;
         }
-        if (!validate_file(n)){
+        if (!validate_files()){
             isValid = false;
         }
         if (!validate_expiry()) {
