@@ -348,11 +348,7 @@ input,textarea
     padding: 8px 12px;
     text-decoration: none;
 }
-.menubar a:hover,.active, a:active
-{
-    background-color: rgb(51,51,51);
-}
-.menubar a:hover
+.menubar a:hover, .active, .menubar a:active
 {
     background-color: rgb(51,51,51);
 }
