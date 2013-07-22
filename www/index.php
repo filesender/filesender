@@ -216,79 +216,46 @@ if($isAuth )
             </noscript>
         </div>
     </div>
-    <div id="topmenu" style="display:none">
-        <div class="menu" id="menuleft">
+    <div class="menubar">
+        <div class="leftmenu">
+            <ul>
             <?php
             // create menu
             // disable all buttons if this is a voucher, even if the user is logged on
             if (!$isVoucher &&  $s != "completev" && !isset($gid)){
-                if($isAuth && $s != "error") { echo '<a id="topmenu_newupload" href="index.php?s=upload">'.lang("_NEW_UPLOAD").'</a>'; }
-                if($isAuth && $s != "error") { echo '<a id="topmenu_vouchers" href="index.php?s=vouchers">'.lang("_VOUCHERS").'</a>'; }
-                if($isAuth && $s != "error") {echo '<a id="topmenu_myfiles" href="index.php?s=files">'.lang("_MY_FILES").'</a>'; }
-                if($isAdmin && $s != "error") { echo '<a id="topmenu_admin" href="index.php?s=admin">'.lang("_ADMIN").'</a>'; }
+                if($isAuth && $s != "error") { echo '<li><a class="'.$functions->active($s,'upload').'" id="topmenu_newupload" href="index.php?s=upload">'.lang("_NEW_UPLOAD").'</a></li>'; }
+                if($isAuth && $s != "error") { echo '<li><a class="'.$functions->active($s,'vouchers').'" id="topmenu_vouchers" href="index.php?s=vouchers">'.lang("_VOUCHERS").'</a></li>'; }
+                if($isAuth && $s != "error") {echo '<li><a class="'.$functions->active($s,'files').'" id="topmenu_myfiles" href="index.php?s=files">'.lang("_MY_FILES").'</a></li>'; }
+                if($isAdmin && $s != "error") { echo '<li><a class="'.$functions->active($s,'admin').'" id="topmenu_admin" href="index.php?s=admin">'.lang("_ADMIN").'</a></li>'; }
             }
             ?>
+            </ul>
         </div>
-        <div class="menu" id="menuright">
+        <div class="rightmenu">
+            <ul>
             <?php
             if($config['helpURL'] == "") {
-                echo '<a href="#" id="topmenu_help" onclick="openhelp()">'.lang("_HELP").'</a>';
+                echo '<li><a class="'.$functions->active($s,'help').'" href="#" id="topmenu_help" onclick="openhelp()">'.lang("_HELP").'</a></li>';
             } else {
-                echo '<a href="'.$config['helpURL'].'" target="_blank" id="topmenu_help">'.lang("_HELP").'</a>';
+                echo '<li><a class="'.$functions->active($s,'help').'" href="'.$config['helpURL'].'" target="_blank" id="topmenu_help">'.lang("_HELP").'</a></li>';
             }
             if($config['aboutURL'] == "") {
-                echo '<a href="#" id="topmenu_about" onclick="openabout()">'.lang("_ABOUT").'</a>';
+                echo '<li><a class="'.$functions->active($s,'about').'" href="#" id="topmenu_about" onclick="openabout()">'.lang("_ABOUT").'</a></li>';
             } else {
-                echo '<a href="'.$config['aboutURL'].'" target="_blank" id="topmenu_about">'.lang("_ABOUT").'</a>';
+                echo '<li><a class="'.$functions->active($s,'about').'" href="'.$config['aboutURL'].'" target="_blank" id="topmenu_about">'.lang("_ABOUT").'</a></li>';
             }
-            if(!$isAuth && $s != "logon" ) { echo '<a href="'.$authsaml->logonURL().'" id="topmenu_logon">'.lang("_LOGON").'</a>';}
-            if($isAuth && !$isVoucher &&  $s != "completev" ) { echo '<a href="'.$authsaml->logoffURL().'" id="topmenu_logoff">'.lang("_LOG_OFF").'</a>'; }
+            if(!$isAuth && $s != "logon" ) { echo '<li><a class="'.$functions->active($s,'logon').'" href="'.$authsaml->logonURL().'" id="topmenu_logon">'.lang("_LOGON").'</a></li>';}
+            if($isAuth && !$isVoucher &&  $s != "completev" ) { echo '<li><a class="'.$functions->active($s,'about').'" href="'.$authsaml->logoffURL().'" id="topmenu_logoff">'.lang("_LOG_OFF").'</a></li>'; }
             // end menu
             ?>
+            </ul>
         </div>
     </div>
-    <div id="userinformation" style="display:none">
-        <?php
 
-        // set user attributes from identity provider
-        if ($isAuth )
-        {
-            $attributes = $authsaml->sAuth();
-        }
+    <div class="msgbox">&nbsp;
 
-        // display user details if desired
-        if($config["displayUserName"])
-        {
-            echo "<div class='welcomeuser'>";
-            if(	$isVoucher || $s == "completev" || isset($gid))
-            {
-                echo lang("_WELCOMEGUEST");
-            }
-            else if ($isAuth && $s != "error")
-            {
-                echo lang("_WELCOME")." ";
-                echo utf8tohtml($attributes["cn"],true);
-            }
-            echo "</div>";
-        }
-        ?>
-        <div id="serviceinfo">
-            <a onclick="openhelp()" style="cursor:pointer;" id="html5link">
-                <img alt="" width="75" height="18" id="html5image" style="display:none; border: 0;" title="<?php echo lang('_HTML5NotSupported'); ?>" src="images/html5_none.png" />
-            </a></div>
-        <?php
-        $versiondisplay = "";
-        if($config["site_showStats"])
-        {
-            $versiondisplay .= $functions->getStats();
-        }
-        if($config["versionNumber"])
-        {
-            $versiondisplay .= FileSender_Version::VERSION;
-        }
-        echo "<div class='versionnumber'>" .$versiondisplay."</div>";
-        ?>
     </div>
+
     <div id="content" style="display:none">
         <div id="scratch"></div>
         <?php
@@ -388,6 +355,25 @@ if($isAuth )
         }
         ?>
     </div>
+
+    <div id="footer">
+        <?php
+        echo lang('_SITE_FOOTER');
+
+        $versionDisplay = "";
+        if($config["site_showStats"])
+        {
+            $versionDisplay .= $functions->getStats();
+        }
+
+        if($config["versionNumber"])
+        {
+            $versionDisplay .= FileSender_Version::VERSION;
+        }
+
+        echo '<div class="versionnumber">' . $versionDisplay .'</div>';
+        ?>
+    </div>
 </div>
 <div id="dialog-help" style="display:none" title="<?php echo lang("_HELP"); ?>">
     <?php echo lang("_HELP_TEXT"); ?>
@@ -395,8 +381,7 @@ if($isAuth )
 <div id="dialog-about" style="display:none" title="<?php echo lang("_ABOUT"); ?>">
     <?php echo lang("_ABOUT_TEXT"); ?>
 </div>
-<div id="dialog-tokenerror" title="<?php echo lang($lang["_MESSAGE"]); ?>" style="display:none"><?php echo lang($lang["_ERROR_CONTACT_ADMIN"]); ?></div>
-<div id="footer"><?php echo lang('_SITE_FOOTER'); ?></div>
+<div id="dialog-tokenerror" title="<?php echo lang("_MESSAGE"); ?>" style="display:none"><?php echo lang("_ERROR_CONTACT_ADMIN"); ?></div>
 <div id="DoneLoading"></div>
 <!-- Version <?php echo FileSender_Version::VERSION; ?> -->
 </body>
