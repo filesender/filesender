@@ -106,6 +106,10 @@ function addFiles(files) {
             }
         }
 
+        if (totalFileLengths + files.item(i).size > maxHTML5UploadSize) {
+            openErrorDialog(errmsg_disk_space);
+            continue;
+        }
         if (!dupFound) {
             n = n + 1;
 
@@ -276,7 +280,7 @@ function startUpload() {
                 }
                 // not enough disk space on server
                 if (result == 'err_nodiskspace') {
-                    errorDialog(errmsg_disk_space);
+                    openErrorDialog(errmsg_disk_space);
                 }
             });
             $('#uploadbutton').find('a').attr('onclick', 'validate()');
@@ -473,7 +477,7 @@ function uploadFile() {
                 updateProgressBar(fileData[n].bytesUploaded, fileData[n].bytesTotal, 0);
                 uploadFile();
             } else {
-                errorDialog('There was a problem retrieving the data:\n' + req.statusText);
+                openErrorDialog('There was a problem retrieving the data:\n' + req.statusText);
             }
         }
     }
@@ -563,7 +567,7 @@ function uploadProgress(evt) {
 // TODO: can go?
 function uploadFailed(evt) {
     clearInterval(intervalTimer);
-    errorDialog('An error occurred while uploading the file.');
+    openErrorDialog('An error occurred while uploading the file.');
 }
 
 // TODO: can go?
