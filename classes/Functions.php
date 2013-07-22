@@ -753,7 +753,7 @@ class Functions {
 	// insert a voucher
 	// ---------------------------------------
 
-	public function insertVoucher($to,$from,$expiry){
+	public function insertVoucher($to,$from,$expiry,$vouchermessage){
 	
 		// must be authenticated
 		if( $this->authsaml->isAuth()) {
@@ -820,7 +820,7 @@ class Functions {
 			$fileactivitydateParam =  date($config['db_dateformat'], time());
 			$statement->bindParam(':fileactivitydate',$fileactivitydateParam );	
 			$statement->bindParam(':filevoucheruid', $filevoucheruid );
-			$statement->bindParam(':filemessage', $blank);
+            $statement->bindParam(':filemessage', $vouchermessage);
 			$statement->bindParam(':filefrom', $from);
 			$statement->bindParam(':filesize', $zero);
 			$statement->bindParam(':fileoriginalname', $blank);
