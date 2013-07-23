@@ -96,7 +96,16 @@ class Zipper
             $offset += $localHeaderLength + $fileDataLength + $descriptorLength;
         }
 
-        $this->sendCentralDirectory($offset);
+        $bytesSent = $this->sendCentralDirectory($offset) + $offset;
+
+        if ($bytesSent == $this->calculateTotalFileSize()) {
+            // Download was completed, save a log entry for each of the downloaded files.
+            $log = Log::getInstance();
+
+            foreach ($this->files as $file) {
+                $log->saveLog($file, "Download", "");
+            }
+        }
     }
 
     private function sendHttpHeaders()
@@ -184,8 +193,8 @@ class Zipper
             $cdrOffset += $this->sendFileCDR($file);
         }
 
-        // Send the final end-of-file central directory record.
-        $this->sendFinalCDR($cdrOffset, $offset);
+        // Send the final end-of-file central directory record and return # bytes sent.
+        return $this->sendFinalCDR($cdrOffset, $offset) + $cdrOffset;
     }
 
     private function sendFileCDR($file)
@@ -230,5 +239,6 @@ class Zipper
             . pack('v', 0); // Length of the file comment.
 
         echo $record;
+        return strlen($record);
     }
 }
