@@ -46,12 +46,21 @@ if (isset($_REQUEST['gid'])) {
         $("#errmessage").hide();
         $("#myfiles tr:odd").addClass("altcolor");
 
-        $('input[type="checkbox"]').change(function() {
+        $('.checkboxes').change(function() {
             // Show or hide the "no files selected" message depending on current state.
+            var numChecked = $(".checkboxes:checked").length;
+
             if (this.checked) {
                 $("#errmessage").hide();
-            } else if ($(".checkboxes:checked").length == 0) {
+            } else if (numChecked == 0) {
                 $("#errmessage").show();
+            }
+
+            // Check or un-check the top checkbox depending on how many files are selected.
+            if (numChecked == 3) {
+                $("#selectall").prop("checked", "checked");
+            } else {
+                $("#selectall").prop("checked", "");
             }
         });
     });
@@ -94,8 +103,7 @@ if (isset($_REQUEST['gid'])) {
         <form id="fileform" method="post" action="multidownload.php?gid=<?php echo urlencode($_REQUEST['gid'])?>">
             <table id="myfiles" style="table-layout: fixed; border: 0; width: 100%; border-spacing: 0;">
                 <tr class="headerrow" >
-                    <td class="tblmcw2"><input type="checkbox" checked="checked" style="margin-left: 0; margin-right: 0" name="selectall"
-                                          id="selectall"
+                    <td class="tblmcw2"><input type="checkbox" checked="checked" style="margin-left: 0; margin-right: 0" id="selectall"
                                           onclick="$('.checkboxes').prop('checked', $('#selectall').prop('checked'))"/></td>
                     <td class="HardBreak" id="myfiles_header_filename" style="vertical-align: middle"><strong><?php echo lang("_FILE_NAME"); ?></strong></td>
                     <td class="HardBreak tblmcw3" id="myfiles_header_size" style="vertical-align: middle"><strong><?php echo lang("_SIZE"); ?></strong></td>
