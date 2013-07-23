@@ -110,6 +110,7 @@ function addFiles(files) {
             openErrorDialog(errmsg_disk_space);
             continue;
         }
+
         if (!dupFound) {
             n = n + 1;
 
@@ -133,6 +134,7 @@ function addFiles(files) {
             totalFileLengths += fileData[n].fileSize;
             // Give each file its own file box + info
             $('#filestoupload').append(generateFileBoxHtml());
+            updateBoxStats();
         }
     }
 
@@ -145,6 +147,7 @@ function addFiles(files) {
         setButtonToClear();
         filesToRestore = "";
     }
+
 }
 
 // Part of the undo clear button, re-adds files which may have been cleared accidentally.
@@ -174,6 +177,7 @@ function reAddFiles(files){
         totalFileLengths += fileData[n].fileSize;
         // Give each file its own file box + info
         $('#filestoupload').append(generateFileBoxHtml());
+        updateBoxStats();
     }
 
     if (n > -1) {
@@ -359,6 +363,16 @@ function doUploadComplete() {
             ajaxerror(xhr.readyState, xhr.status, xhr.responseText);
         }
     });
+}
+
+function updateBoxStats() {
+    var numFiles = n + 1;
+    if (n >= 0) {
+        $('#uploadBoxStats').html('Number of Files: ' + numFiles + '/' + maxUploads + '<br /> Size: ' + readablizebytes(totalFileLengths) + '/' + readablizebytes(maxHTML5UploadSize));
+        $('#uploadBoxStats').show();
+    } else {
+        $('#uploadBoxStats').hide();
+    }
 }
 
 function getFiles() {
@@ -582,7 +596,7 @@ function removeItem(fileID) {
     totalFileLengths -= fileData[fileID].fileSize;
     $('#file_' + fileID).remove();
     fileData[fileID] = [];
-    fileData[fileID].status = false;
+    //fileData[fileID].status = false;
     //fileData.splice(fileID, 1);
     n--;
     if (n < 0) {
@@ -590,6 +604,7 @@ function removeItem(fileID) {
         $('#draganddropmsg').show();
         $('#clearallbtn').button('disable');
     }
+    updateBoxStats();
 }
 
 // clears the contents of the files-to-upload
@@ -598,12 +613,15 @@ function clearFileBox() {
     filesToRestore = fileData.slice();
     var temp = fileData.length;
     for (var i = 0; i < fileData.length; i++) {
-        removeItem(i);
+        if (fileData[i].fileSize != null){
+            removeItem(i);
+        }
     }
     // value of n should be this if the box is empty.
     n = -1;
     fileData = [];
     setButtonToUndo();
+    updateBoxStats();
 }
 
 function undoClearFileBox() {

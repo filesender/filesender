@@ -136,6 +136,8 @@ $(function () {
                 <div style="text-align:left;" class="menu">
                     <a id="clearallbtn" href="#" onclick="clearFileBox()"
                        style="cursor:pointer;width:20%;"><?php echo lang('_CLEAR_ALL'); ?></a>
+
+                    <span id="uploadBoxStats" style="float: right; padding-right: 20px;"></span>
                 </div>
                 <br/>
             </div>
@@ -289,7 +291,6 @@ $(function () {
             <div class="menu" id="uploadbutton" style="display:;text-align: center;">
                 <a href="#" onclick="validate()"><?php echo lang('_SEND'); ?></a>
             </div>
-        </div>
     </div>
     <div class="colmask threecol" id="dragfilestoupload"></div>
 </form>
