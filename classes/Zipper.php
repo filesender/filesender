@@ -194,7 +194,7 @@ class Zipper
         $record = pack('V', 0x02014b50) // Central file header signature.
             . pack('v', 0) // Made by version.
             . pack('v', 0x000A) // Version needed to extract.
-            . pack('v', 0x00) // General purpose bit flag.
+            . pack('v', 0x08) // General purpose bit flag.
             . pack('v', 0x00) // Compression method (0x00 means no compression).
             . pack('V', $file["timestamp"]) // Last modified time and date (as a DOS timestamp).
             . pack('V', $file["crc"]) // CRC-32 hash of file contents.
