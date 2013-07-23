@@ -61,6 +61,7 @@ function redirectIfSingleDownload()
     if (count($_REQUEST) == 3) {
         next($_REQUEST);
         header('Location: download.php?vid=' . key($_REQUEST));
+        exit;
     }
 }
 
