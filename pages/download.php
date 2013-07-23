@@ -49,10 +49,10 @@ $("#message").hide();
 });
 function startDownload()
 {
-	$("#message").show();
+    $('#statusmessage').html('<?php echo lang("_STARTED_DOWNLOADING"); ?>');
+    $('#statusmessage').attr('class', 'green');
 }
 </script>
-<div id='message'><?php echo lang("_STARTED_DOWNLOADING") ?></div>
 <div id="box">
 <?php echo '<div id="pageheading">'.lang("_DOWNLOAD").'</div>'; ?> 
   <div id="tablediv">

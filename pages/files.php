@@ -40,6 +40,10 @@
  */
 
 // Check for delete/resent/added actions and report back
+
+$statusErr = '';
+$statusClass = '';
+
 if(isset($_REQUEST["a"]) && isset($_REQUEST["id"]))
 {
 	// validate id
@@ -52,13 +56,17 @@ if(isset($_REQUEST["a"]) && isset($_REQUEST["id"]))
 			{
 				if($functions->deleteFile($myfileData["fileid"]))
 				{
-					echo "<div id='message'>".lang("_FILE_DELETED")."</div>";
+                    $statusErr = lang("_FILE_DELETED");
+                    $statusClass = 'green';
+					//echo "<div id='message'>".lang("_FILE_DELETED")."</div>";
 				}
 			} else {
 			// log auth user tried to delete a file they do not have access to
 			logEntry("Permission denied - attempt to delete ".$myfileData["fileuid"],"E_ERROR");
 			// notify - not deleted - you do not have permission
-			echo "<div id='message'>".lang("_PERMISSION_DENIED")."</div>";
+            $statusErr = lang("_PERMISSION_DENIED");
+            $statusClass = 'red';
+			//echo "<div id='message'>".lang("_PERMISSION_DENIED")."</div>";
 			}
 		}
 		if($_REQUEST["a"] == "resend")
@@ -68,29 +76,39 @@ if(isset($_REQUEST["a"]) && isset($_REQUEST["id"]))
 			{
 				if($sendmail->sendEmail($myfileData ,$config['fileuploadedemailbody']))
 				{
-					echo "<div id='message'>".lang("_MESSAGE_RESENT")."</div>";
+                    $statusErr = lang("_MESSAGE_RESENT");
+                    $statusClass = 'green';
+					//echo "<div id='message'>".lang("_MESSAGE_RESENT")."</div>";
 				}
 			} else {
 			// log auth user tried to resend email for a file they do not have access to
 			logEntry("Permission denied - attempt to resend ".$myfileData["fileuid"],"E_ERROR");
 			// notify - not resent - you do not have permission
-			echo "<div id='message'>".lang("_PERMISSION_DENIED")."</div>";
+            $statusError = lang("_PERMISSION_DENIED");
+                $statusClass = 'red';
+			//echo "<div id='message'>".lang("_PERMISSION_DENIED")."</div>";
 			}
 		}
 	} else {
-		echo "<div id='message'>".lang("_INVALID_FILEVOUCHERID")."</div>";
+        $statusErr = lang("_INVALID_FILEVOUCHERID");
+        $statusClass = 'red';
+		//echo "<div id='message'>".lang("_INVALID_FILEVOUCHERID")."</div>";
 	}
 }
 if(isset($_REQUEST["a"]) && $_REQUEST["a"] == "added")
 {
 	// display the add box
-	echo "<div id='message'>".lang("_EMAIL_SENT").".</div>";
+    $statusErr = lang("_EMAIL_SENT");
+    $statusClass = 'green';
+	//echo "<div id='message'>".lang("_EMAIL_SENT").".</div>";
 }
 foreach ($errorArray as $message)
 		{
 		if($message == "err_emailnotsent")
 		{
-			echo '<div id="message">'.lang("_ERROR_SENDING_EMAIL").'</div>';
+            $statusErr = lang('_ERROR_SENDING_EMAIL');
+            $statusClass = 'red';
+			//echo '<div id="message">'.lang("_ERROR_SENDING_EMAIL").'</div>';
 		}
 		}
 // Get list of user files and display page
@@ -107,9 +125,15 @@ $json_o=json_decode($filedata,true);
 	var maxEmailRecipients = <?php echo $config['max_email_recipients'] ?>;
 	var datepickerDateFormat = '<?php echo lang('_DP_dateFormat'); ?>';
 	var showall = false; // flag for show all switch to show or hide download summaries
+    var statusError = '<?php echo $statusErr ?>';
+    var statusClass = '<?php echo $statusClass ?>';
 
 	$(function() {
 
+        if (statusError != '' && statusClass != '') {
+            $('#statusmessage').html(statusError);
+            $('#statusmessage').attr('class', statusClass);
+        }
         getDatePicker();
 
 		// stripe every second row in the tables
@@ -372,7 +396,7 @@ $json_o=json_decode($filedata,true);
                 <td class="tblmcw2">&nbsp;</td>
                 <td class="tblmcw2">&nbsp;</td>
                 <td class="tblmcw2">&nbsp;</td>
-                <td class="HardBreak" style="text-align: center" id="myfiles_header_to"><strong><?php echo lang("_TO"); ?></strong></td>
+                <td class="HardBreak" style="text-align: left" id="myfiles_header_to"><strong><?php echo lang("_TO"); ?></strong></td>
 
                 <td class="HardBreak tblmcw3" style="text-align: center" id="myfiles_header_size"><strong>Total Size</strong></td>
                 <!-- <td class="HardBreak" id="myfiles_header_subject"><strong><?php //echo lang("_SUBJECT") ; ?></strong></td>-->

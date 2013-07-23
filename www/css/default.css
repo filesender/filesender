@@ -881,3 +881,19 @@ user-select: none;
     border-spacing: 1px;
     background: #FFF;
 }
+
+#statusmessage {
+    text-align: center;
+    vertical-align: middle;
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 34px;
+}
+
+.red {
+    color: #d00;
+}
+
+.green {
+    color: #5c2;
+}
