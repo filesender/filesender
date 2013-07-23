@@ -274,8 +274,8 @@ input,textarea
     background: url("../images/jq-global-nav.png") repeat-x scroll 0 bottom #1B1B1B;
     border-radius: 6px 6px 0px 0px;
     -moz-border-radius: 6px 6px 0px 0px;
-    margin-right: 26px;
-    margin-left: 26px;
+    margin-right: 20px;
+    margin-left: 20px;
 
 }
 
@@ -283,8 +283,8 @@ input,textarea
 {
     border-radius: 0px 0px 6px 6px;
     -moz-border-radius: 0px 0px 6px 6px;
-    margin-right: 26px;
-    margin-left: 26px;
+    margin-right: 20px;
+    margin-left: 20px;
     background-color: #D6D6D6;
     height: 34px;
 }
@@ -505,7 +505,7 @@ margin-top: 4px;
 #content {
 	padding-top: 10px;
 	padding-right: 20px;
-	padding-bottom: 20px;
+	padding-bottom: 10px;
 	padding-left: 20px;
 	font-size: 12px;
 	height: auto;	
@@ -519,6 +519,7 @@ margin-top: 4px;
 	margin-top: 4px;
 	margin-bottom: 4px;
 }
+
 #message {
 	background-color: #AAC1A4;
 	text-align: center;
@@ -534,6 +535,7 @@ margin-top: 4px;
 	padding: 4px;
 	border: 1px solid #F00;
 }
+
 #pageheading {
 	width: 100%;
 	font-size: 16px;
@@ -543,13 +545,12 @@ margin-top: 4px;
 }
 
 #uploadbutton  a {
-	width:100%;
-	padding-top: 20px;
-	padding-bottom: 20px;
-	margin-top: 0px;
-	margin-bottom: 0px;
-	font-size: 18px;
-	font-weight: bold;
+    width: 20%;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    font-weight: bold;
 }
 
 #downloadbutton  a {
