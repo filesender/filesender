@@ -52,7 +52,7 @@ require_once('../classes/_includes.php');
   <div id="message"><?php echo lang($lang["_MESSAGE"]); ?></div>
  </div>
   <div id="content">
-    <div align="center"><?php echo lang("_INVALID_VOUCHER"); ?>
+    <div style="text-align: center"><?php echo lang("_INVALID_VOUCHER"); ?>
     </div>
     <hr />
   </div><!-- #content -->

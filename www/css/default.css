@@ -873,3 +873,11 @@ user-select: none;
 	padding-left:10px;
 	padding-right:10px;
 }
+
+.admintable {
+    table-layout: fixed;
+    width: 720px;
+    border: 0;
+    border-spacing: 1px;
+    background: #FFF;
+}

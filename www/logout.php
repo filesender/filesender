@@ -70,15 +70,15 @@ $( "a", ".menu" ).button();
 <div id="wrap">
 	
   <div id="header">
-    <div align="center">
+    <div style="text-align: center">
        <img src="displayimage.php" width="800" height="60" style="border: 0" alt="banner" />
     </div>
   </div>
   <div id="content">
    <div id="box">
-    <div align="center">
+    <div style="text-align: center">
 	<p><?php echo lang("_LOGOUT_COMPLETE") ?></p>
-	<div class="menu" align="center"><p><a id="btn_logon" href="<?php echo $authsaml->logonURL();?>" ><?php echo lang("_LOGON") ?></a></p></div>
+	<div class="menu" style="text-align: center"><p><a id="btn_logon" href="<?php echo $authsaml->logonURL();?>" ><?php echo lang("_LOGON") ?></a></p></div>
     </div>
    </div>
   </div><!-- #content -->
