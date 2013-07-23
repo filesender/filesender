@@ -87,7 +87,7 @@ $drivespace = $functions->driveSpace();
 		?>
     </ul>
     <div id="tabs-1"> <?php echo  $functions->getStats(); ?><br />
-      <table border="0" cellpadding="4" width="720" style="table-layout:fixed;" >
+      <table class="admintable">
         <tr class="headerrow">
           <td><?php echo lang("_DRIVE") ?></td>
           <td><?php echo lang("_TOTAL") ?></td>
@@ -112,18 +112,18 @@ $drivespace = $functions->driveSpace();
       </table>
     </div>
     <div id="tabs-2">
-      <table id="table2" width="720" style="table-layout:fixed;" border="0" cellspacing="1" bgcolor="#FFFFFF">
+      <table class="admintable" id="table2">
         <tr>
-          <td colspan="5" align="right"><table border="0" cellpadding="5" align="left">
+          <td colspan="5" style="text-align: right"><table style="text-align: left; border: 0;">
               <tr>
-                <td><?php echo lang("_PAGE") ?>:</td>
+                <td style="padding: 5px;"><?php echo lang("_PAGE") ?>:</td>
                 <?php
   //echo "::".$total_pages["Uploaded"];
   for ($i = 1; $i <= $total_pages["Uploaded"]; $i++) {
   $txt = $i;
   if ($page != $i) {$txt = "<a href=\"" . $_SERVER["PHP_SELF"] . "?s=admin&amp;page=$i#tabs-2\">".$txt."</a>";} else { $txt = "<b>".$i."</b>";};
   ?>
-                <td align="center"><?php	echo $txt ?></td>
+                <td style="text-align: center;"><?php	echo $txt ?></td>
                 <?php
   }
   ?>
@@ -148,17 +148,17 @@ foreach($Uploaded as $item) {
       </table>
     </div>
     <div id="tabs-3">
-      <table id="table3" width="720" style="table-layout:fixed;" border="0" cellspacing="1" bgcolor="#FFFFFF">
+      <table class="admintable" id="table3">
         <tr>
-          <td colspan="5" align="right"><table border="0" cellpadding="5" align="left">
+          <td colspan="5" style="text-align: right;"><table style="border: 0; text-align: left;">
               <tr>
-                <td> <?php echo lang("_PAGE") ?>:</td>
+                <td style="padding: 5px;"> <?php echo lang("_PAGE") ?>:</td>
                 <?php
   for ($i = 1; $i <= $total_pages["Download"]; $i++) {
   $txt = $i;
   if ($page != $i) {$txt = "<a href=\"" . $_SERVER["PHP_SELF"] . "?s=admin&amp;page=$i#tabs-3\">".$txt."</a>";} else { $txt = "<b>".$i."</b>";};
   ?>
-                <td align="center"><?php	echo $txt ?></td>
+                <td style="text-align: center;"><?php	echo $txt ?></td>
                 <?php
   }
   ?>
@@ -183,17 +183,17 @@ echo "<tr><td class='HardBreak'>" .$item['logto'] . "</td><td class='HardBreak'>
       </table>
     </div>
     <div id="tabs-4">
-      <table id="table4" width="720" style="table-layout:fixed;" border="0" cellspacing="1" bgcolor="#FFFFFF">
+      <table class="admintable" id="table4">
         <tr>
-          <td colspan="5" align="right"><table border="0" cellpadding="5" align="left">
+          <td colspan="5" style="text-align: right"><table style="border: 0; text-align: left;">
               <tr>
-                <td> <?php echo lang("_PAGE") ?>:</td>
+                <td style="padding: 5px;"> <?php echo lang("_PAGE") ?>:</td>
                 <?php
   for ($i = 1; $i <= $total_pages["Error"]; $i++) {
   $txt = $i;
   if ($page != $i) {$txt = "<a href=\"" . $_SERVER["PHP_SELF"] . "?s=admin&amp;page=$i#tabs-4\">".$txt."</a>";} else { $txt = "<b>".$i."</b>";};
   ?>
-  <td align="center"><?php	echo $txt ?></td>
+  <td style="text-align: center;"><?php	echo $txt ?></td>
   <?php
   }
   ?>
@@ -218,17 +218,17 @@ echo "<tr><td class='HardBreak'>" .$item['logto']. "</td><td class='HardBreak'>"
       </table>
     </div>
     <div id="tabs-5">
-      <table id="table5" width="720" style="table-layout:fixed;" border="0" cellspacing="1" bgcolor="#FFFFFF">
+      <table class="admintable" id="table5">
         <tr>
-          <td colspan="5" align="right"><table border="0" cellpadding="5" align="left">
+          <td colspan="7" style="text-align: right;"><table style="border: 0; text-align: left;">
               <tr>
-                <td> <?php echo lang("_PAGE") ?>:</td>
+                <td style="padding: 5px;"> <?php echo lang("_PAGE") ?>:</td>
                 <?php
   for ($i = 1; $i <= $total_pages["Available"]; $i++) {
   $txt = $i;
   if ($page != $i) {  $txt = "<a href=\"" . $_SERVER["PHP_SELF"] . "?s=admin&amp;page=$i#tabs-5\">".$txt."</a>";} else { $txt = "<b>".$i."</b>";};
   ?>
-                <td align="center"><?php	echo $txt ?></td>
+                <td style="text-align: center;"><?php	echo $txt ?></td>
                 <?php
   }
   ?>
@@ -256,17 +256,17 @@ echo "<tr><td class='HardBreak'>" .$item['fileto'] . "</td><td class='HardBreak'
     </div>
     <div id="tabs-6">
       <div id="tablediv1">
-        <table id="table6" width="720" style="table-layout:fixed;" border="0" cellspacing="1" bgcolor="#FFFFFF">
+        <table class="admintable" id="table6">
           <tr>
-            <td colspan="5" align="right"><table border="0" cellpadding="5" align="left">
+            <td colspan="5" style="text-align: right;"><table style="border: 0; text-align: left;">
                 <tr>
-                  <td> <?php echo lang("_PAGE") ?>:</td>
+                  <td style="padding: 5px;"> <?php echo lang("_PAGE") ?>:</td>
                   <?php
   for ($i = 1; $i <= $total_pages["Voucher"]; $i++) {
   $txt = $i;
   if ($page != $i) { $txt = "<a href=\"" . $_SERVER["PHP_SELF"] . "?s=admin&amp;page=$i#tabs-6\">".$txt."</a>";} else { $txt = "<b>".$i."</b>";};
   ?>
-                  <td align="center"><?php	echo $txt ?></td>
+                  <td style="text-align: center;"><?php	echo $txt ?></td>
                   <?php
   }
   ?>

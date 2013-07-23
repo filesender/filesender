@@ -44,6 +44,6 @@
  <div id="box">
 <?php echo '<div id="pageheading">'.lang("_SITE_SPLASHHEAD").'</div>'; ?> 
 <?php echo lang("_SITE_SPLASHTEXT"); ?> 
-<div class="menu" align="center"><p><a id="btn_logon" href="<?php echo $authsaml->logonURL();?>"><?php echo lang("_LOGON") ?></a></p></div>
+<div class="menu" style="text-align: center"><p><a id="btn_logon" href="<?php echo $authsaml->logonURL();?>"><?php echo lang("_LOGON") ?></a></p></div>
 </div>
 

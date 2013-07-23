@@ -262,7 +262,7 @@ if ( count($useremail) > 1 ) {
         </tr>
       <tr>
         <td class="" id="voucher_message"><?php echo lang("_MESSAGE"); ?>: (<?php echo lang("_OPTIONAL"); ?>)</td>
-        <td colspan="2"><textarea name="vouchermessage" cols="57" rows="4" id="vouchermessage"></textarea></td>
+        <td><textarea name="vouchermessage" cols="57" rows="4" id="vouchermessage"></textarea></td>
       </tr>
       <tr>
         <td class="mandatory" id="vouchers_expirydate"><?php echo lang("_EXPIRY_DATE"); ?>:</td>
@@ -299,7 +299,7 @@ if ( count($useremail) > 1 ) {
         {
             echo "<img src='images/page_white_text_width.png' border='0' alt='' title='".utf8tohtml($item['filemessage'],TRUE). "' />";
         }
-        echo "</td><td>" .date($lang['datedisplayformat'],strtotime($item['filecreateddate'])) . "</td><td>" .date($lang['datedisplayformat'],strtotime($item['fileexpirydate'])) . "</td><td><div  style='cursor:pointer;'><img id='btn_deletevoucher_".$i."' src='images/shape_square_delete.png' alt='' title='".lang("_DELETE")."' onclick='confirmdelete(".'"' .$item['filevoucheruid'] . '"'. ")' border='0' /></div></td></tr>"; //etc
+        echo "</td><td>" .date($lang['datedisplayformat'],strtotime($item['filecreateddate'])) . "</td><td>" .date($lang['datedisplayformat'],strtotime($item['fileexpirydate'])) . "</td><td><div  style='cursor:pointer;'><img id='btn_deletevoucher_".$i."' src='images/shape_square_delete.png' alt='' title='".lang("_DELETE")."' onclick='confirmdelete(".'"' .$item['filevoucheruid'] . '"'. ")' style='border: 0;' /></div></td></tr>"; //etc
 	}
 ?>
   </table>
