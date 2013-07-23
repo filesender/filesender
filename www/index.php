@@ -252,8 +252,8 @@ if($isAuth )
         </div>
     </div>
 
-    <div class="msgbox">&nbsp;
-
+    <div class="msgbox">
+        <div id="statusmessage"></div>
     </div>
 
     <div id="content" style="display:none">
