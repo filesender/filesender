@@ -220,3 +220,9 @@ function validate_aup() {
         return false;
     }
 }
+
+function statusMessage(msg, color) {
+    if(msg == null) { $('#statusmessage').html(''); }
+        $('#statusmessage').html(msg);
+        $('#statusmessage').attr('class', color);
+}
