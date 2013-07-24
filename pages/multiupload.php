@@ -123,38 +123,29 @@ $(function () {
     <div style="width:100%; border-spacing:6px">
         <div class="box" style="vertical-align: top;">
             <div id="fileInfoView">
-                <div class="box" style="border: none">
                     <div id="uploadhtml5" style="display:none">
 
                         <input style="display:none; padding-right:6px;" type="file" name="fileToUpload"
                                id="fileToUpload" onchange="fileSelected();" multiple/>
                     </div>
                     <div id="file_msg" class="validation_msg"
-                         style="display: none"><?php echo lang("_INVALID_FILE"); ?>
-                    </div>
-                </div>
-                <div style="text-align:left;" class="menu">
-                    <a id="clearallbtn" href="#" onclick="clearFileBox()"
-                       style="cursor:pointer;width:20%;"><?php echo lang('_CLEAR_ALL'); ?></a>
-
-                    <span id="uploadBoxStats" style="float: right; padding-right: 20px;"></span>
-                </div>
-                <br/>
+                         style="display: none"><?php echo lang("_INVALID_FILE"); ?></div>
             </div>
-
             <div id="dragfilestouploadcss" style="height:200px; overflow:auto;" class="box">
                 <div id="filestoupload" style="display:table;width:100%; height:100%;">
                     <div id="draganddropmsg" style="text-align:center;display:table-cell; vertical-align:middle;"
                          class="heading"><?php echo lang('_DRAG_AND_DROP'); ?></div>
                 </div>
             </div>
-            <br/>
-
-            <div style="text-align:center;" class="menu">
-                <a href="#" onclick="browse()"
-                   style="cursor:pointer;width:33%;"><?php echo lang('_SELECT_FILES'); ?></a>
+            <div style="width:100%; display: table" class="menu">
+                <div style="display: table-cell; width: 33%">
+                    <a id="clearallbtn" href="#" onclick="clearFileBox()" style="cursor:pointer;width:45%;" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false" draggable="false">Clear all</a>
+                </div>
+                <div style="display: table-cell; text-align:center; width: 34%">
+                    <a href="#" onclick="browse()" style="cursor:pointer;width:50%" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false" draggable="false">Select files</a>
+                </div>
+                <span id="uploadBoxStats" style="text-align: right; width: 33%; display: table-cell; font-size: 0.8em; vertical-align: middle"></span>
             </div>
-            <br/>
         </div>
 
         <table id="columns" style="border-spacing: 0">
