@@ -409,7 +409,7 @@ input {
 
 #aup 
 {
-	width: 20px;	/*margin-left: -1px;*/
+	width: 14px;	/*margin-left: -1px;*/
 }
 #aup_label{
 	font-weight: bold;
@@ -896,4 +896,11 @@ user-select: none;
 
 .green {
     color: #5c2;
+}
+
+.errorglow {
+    //background-color: #ffaaaa;
+    -webkit-box-shadow:0 0 4px red;
+    -moz-box-shadow: 0 0 4px red;
+    box-shadow:0 0 4px red;
 }

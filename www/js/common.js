@@ -57,6 +57,8 @@ function readablizebytes(bytes)
 // Validate FILETO - upload, voucher and files
 function validate_fileto()
 {
+    var isValid = true;
+
 	$("#fileto_msg").hide();
 	$("#maxemails_msg").hide();
 	// remove white spaces 
@@ -71,20 +73,28 @@ function validate_fileto()
 
         if(email.length>maxEmailRecipients) {
             $("#maxemails_msg").show();
-            return false;
+            isValid = false;
+
         }
 
         for (var i = 0; i < email.length; i++) {
             if (!echeck(email[i], 1, 0)) {
-            $("#fileto_msg").show();
-            return false;
+                $("#fileto_msg").show();
+                isValid = false;
             }
         }
 	} else {
         $('#fileto_msg').show();
+        isValid = false;
+    }
+
+    if (isValid) {
+        $('#fileto').removeClass('errorglow');
+        return true;
+    } else {
+        $('#fileto').addClass('errorglow');
         return false;
     }
-	return true;		
 }
 	
 // Validate EXPIRY - upload, voucher and files
@@ -213,10 +223,10 @@ function hideMessages() {
 
 function validate_aup() {
     if ($("#aup").is(":checked")) {
-        $("#aup_msg").hide();
+        $('#aup').removeClass('errorglow');
         return true;
     } else {
-        $("#aup_msg").show();
+        $('#aup').addClass('errorglow');
         return false;
     }
 }
