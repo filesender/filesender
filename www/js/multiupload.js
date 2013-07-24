@@ -369,9 +369,9 @@ function updateBoxStats() {
     var numFiles = n + 1;
     if (n >= 0) {
         $('#uploadBoxStats').html('Number of Files: ' + numFiles + '/' + maxUploads + '<br /> Size: ' + readablizebytes(totalFileLengths) + '/' + readablizebytes(maxHTML5UploadSize));
-        $('#uploadBoxStats').show();
+
     } else {
-        $('#uploadBoxStats').hide();
+        $('#uploadBoxStats').html('');
     }
 }
 
