@@ -130,10 +130,8 @@ $json_o=json_decode($filedata,true);
 
 	$(function() {
 
-        if (statusError != '' && statusClass != '') {
-            $('#statusmessage').html(statusError);
-            $('#statusmessage').attr('class', statusClass);
-        }
+        statusMessage(statusError, statusClass);
+
         getDatePicker();
 
 		// stripe every second row in the tables
