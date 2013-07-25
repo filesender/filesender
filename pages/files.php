@@ -553,6 +553,37 @@ $json_o=json_decode($filedata,true);
                         }
                         echo '</table><br />';
 
+                        /* RECIPIENTS TABLE WILL GO HERE */
+
+                        echo '<table style="width: 100%; border-spacing: 0; border: 0">
+
+                            <tr class="headerrow" style="background-color: #CCC;">
+                                <td class="tblmcw1" style="cursor:pointer; width:5%;"><img class="expct" src="images/openboth.png" alt="" draggable="false"></td>
+                                <td class="HardBreak" style="text-align: center; width:48%;" id="myfiles_header_to"><strong>Recipient</strong></td>
+                                <td class="HardBreak tblmcw3" id="myfiles_header_downloaded" style="text-align: center; width:47%;"><strong>'. lang("_DOWNLOADED"). '</strong></td>
+                            </tr>';
+                            echo '<tr><td class="dr7"></td><td class="dr7"></td><td class="dr7"></tr>';
+                            /* LOOP PEOPLE */
+                            for ($temp = 0; $temp < sizeOf($recipientsArray); $temp++){
+
+                                echo '<tr>';
+                                // if(sizeof($item["downloadsummary"]) > 0)
+                                // if(sizeof($item["downloadsummary"]) > 0)
+                                //{
+                                echo '<td  class="dr1 expct" style="width: 5%;" >
+                                    <img class="expct" id="showicon_'.$i.'"  style="cursor:pointer" src="images/openboth.png" alt=""/>
+                                </td>';
+                                echo '<td class="dr2 HardBreak" style="text-align: center;">' . $recipientsArray[$temp]['fileto'] . '</td>';
+                                echo '<td class="dr8 HardBreak" style="text-align: center;"> x </td></tr>';
+                                echo '<tr><td class="dr7"></td><td class="dr7"></td><td class="dr7"></tr>';
+                            }
+
+
+                        // end of recipients table
+                        echo '</table>';
+
+
+
                         echo '</td>';
                         echo '</tr>';
                     }
