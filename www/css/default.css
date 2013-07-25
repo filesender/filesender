@@ -899,8 +899,12 @@ user-select: none;
 }
 
 .errorglow {
-    //background-color: #ffaaaa;
     -webkit-box-shadow:0 0 4px red;
     -moz-box-shadow: 0 0 4px red;
     box-shadow:0 0 4px red;
+}
+
+pre {
+    font-family: Verdana, Geneva, sans-serif;
+    margin: 0;
 }
