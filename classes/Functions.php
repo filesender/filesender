@@ -599,7 +599,7 @@ class Functions {
 	// insert a voucher
 	// ---------------------------------------
 
-	public function insertVoucher($to,$from,$expiry,$vouchermessage,$options){
+	public function insertVoucher($to,$from,$expiry,$vouchermessage,$vouchersubject,$options){
 		// must be authenticated
 		if( $this->authsaml->isAuth()) {
 			
@@ -660,7 +660,10 @@ class Functions {
 			$voucher = 'Voucher';
 			$voucherissuedemailsubject = (isset($config['voucherissuedemailsubject'])) ?  $config['voucherissuedemailsubject'] : "Voucher";
 			// TODO: move all mail text to language files
+			// set default subject 
 			$voucherissuedemailsubject = (isset($lang['_VOUCHER_ISSUED_EMAIL_SUBJECT'])) ?  lang('_VOUCHER_ISSUED_EMAIL_SUBJECT') : $voucherissuedemailsubject;
+			// overide if optional subject is added by user
+			$voucherissuedemailsubject = ($vouchersubject != "")?$vouchersubject:$voucherissuedemailsubject;
 			$blank = '';
 			$zero = 0;
 			$fileexpiryParam = date($config['db_dateformat'], strtotime($expiry));
