@@ -458,7 +458,7 @@ foreach($json_o as $item) {
 	echo "<tr><td class='dr11 sdheading'><strong>".lang("_MESSAGE")."</strong></td><td class='dr13' colspan='8'>";
    	if($item['filemessage'] != "")
    	{
-   		echo "<pre class='HardBreak'>".utf8tohtml($item['filemessage'],TRUE)."</pre>";
+   		echo "<div class='HardBreak'>".utf8tohtml($item['filemessage'],TRUE)."</div>";
    	}
    	echo "</td>";
 	echo"</tr>";
