@@ -133,7 +133,7 @@ $json_o=json_decode($filedata,true);
 		yearSuffix: '<?php echo lang("_DP_yearSuffix"); ?>'});
 	
 		// stripe every second row in the tables
-		$("#myfiles tr:odd").addClass("altcolor");
+		//$(".rowdetails").addClass("rowdivider");
 		
 		// delete modal dialog box
 		$("#dialog-delete").dialog({ autoOpen: false, height: 180, modal: true,
@@ -408,9 +408,11 @@ if(sizeof($json_o) > 0)
 foreach($json_o as $item) {
 	$i += 1; // counter for file id's
 	$onClick = "'" .$item['filevoucheruid'] ."'";
+	// alternating rows
+	$rowClass = ($i % 2 == 0)? "class='altcolor'":"";
 	echo "<tr><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td></tr>";
 
-	echo '<tr>';
+	echo '<tr  '.$rowClass.'>';
   // if(sizeof($item["downloadsummary"]) > 0)
 	//{ 
 	echo "<td  class='dr1 expct' onclick='show(".$i.")'><img class='expct' id='showicon_".$i."'  style='cursor:pointer' title='". lang("_SHOW_ALL")."' src='images/openboth.png' border='0' alt=''/></td>";
@@ -440,13 +442,13 @@ foreach($json_o as $item) {
 	//echo '<td class="HardBreak" id="myfiles_header_from"><strong>'.<?php echo lang("_FROM");</strong></td>';
 	
 	// Summary table
-	echo "<table width='100%' border='0' cellpadding='1' cellspacing='0' >";
+	echo "<table width='100%' class='rowdetails' border='0' cellpadding='1' cellspacing='0' >";
 	echo "<tr><td class='dr9 headerrow'>".$lang['_DETAILS']."</td><td class='dr12'></td></tr>"; 
 	// display summary if it exists
    foreach($item["downloadsummary"] as $summaryitem) {
    echo "<tr><td class='dr11 sdheading'><strong>".lang("_DOWNLOADED")."</strong></td><td class='HardBreak dr13'>".date($lang['datedisplayformat'],strtotime($summaryitem['logdate'])). "</td></tr>";
    }
-   	echo "<tr><td class='dr4 sdheading tblmcw3'><strong>".lang("_CREATED")."</strong></td><td class='dr6 HardBreak'>".date($lang['datedisplayformat'],strtotime($item['filecreateddate'])). "</td></tr>"; 
+   	echo "<tr class='rowdivider'><td class='dr4 sdheading tblmcw3 '><strong>".lang("_CREATED")."</strong></td><td class='dr6 HardBreak'>".date($lang['datedisplayformat'],strtotime($item['filecreateddate'])). "</td></tr>"; 
 
 	echo "<tr><td class='dr4 sdheading'><strong>".lang("_FROM")."</strong></td>";
    	if(in_array($item['filefrom'] ,$useremail))
@@ -456,7 +458,7 @@ foreach($json_o as $item) {
    	echo "<td class='dr6 HardBreak'>" .$item['filefrom'] . "</td>";
    	}
 	echo "</tr>";
-	echo "<tr><td class='dr4 sdheading tblmcw3'><strong>".lang("_SUBJECT")."</strong></td><td class='dr6 HardBreak'>".utf8tohtml($item['filesubject'],TRUE). "</td>";
+	echo "<tr class='rowdivider'><td class='dr4 sdheading tblmcw3'><strong>".lang("_SUBJECT")."</strong></td><td class='dr6 HardBreak'>".utf8tohtml($item['filesubject'],TRUE). "</td>";
 	
    	echo "</tr>";
 	echo "<tr><td class='dr11 sdheading'><strong>".lang("_MESSAGE")."</strong></td><td class='dr13' colspan='8'>";
