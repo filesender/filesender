@@ -627,3 +627,16 @@ user-select: none;
 	padding-left:10px;
 	padding-right:10px;
 }
+
+.rowdivider
+{
+	background-color: rgb(229,229,229);
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-top-style: solid;
+	border-bottom-style: solid;
+	border-top-color: rgb(255,255,255);
+	border-bottom-color: rgb(223,223,223);
+}
