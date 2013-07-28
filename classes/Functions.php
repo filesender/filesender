@@ -568,7 +568,7 @@ class Functions {
 	// insert a voucher
 	// ---------------------------------------
 
-	public function insertVoucher($to,$from,$expiry,$vouchermessage){
+	public function insertVoucher($to,$from,$expiry,$vouchermessage,$vouchersubject){
 		// must be authenticated
 		if( $this->authsaml->isAuth()) {
 			
@@ -623,8 +623,11 @@ class Functions {
 			:filecreateddate)');
 			
 			$filevoucheruid = getGUID();
+			// set default subject 
 			$voucher = 'Voucher';
 			$voucherissuedemailsubject = (isset($config['voucherissuedemailsubject'])) ?  $config['voucherissuedemailsubject'] : "Voucher";
+			// overide if optional subject is added by user
+			$voucherissuedemailsubject = ($vouchersubject != "")?$vouchersubject:$voucherissuedemailsubject;
 			$blank = '';
 			$zero = 0;
 			$fileexpiryParam = date($config['db_dateformat'], strtotime($expiry));
