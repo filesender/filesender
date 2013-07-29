@@ -170,7 +170,7 @@ $(function () {
                     <div class="fieldcontainer">
                         <label for="fileto" class="mandatory"><?php echo lang("_TO"); ?>:</label>
                         <input name="fileto" type="text" id="fileto"
-                               title="<?php echo lang("_EMAIL_SEPARATOR_MSG"); ?>" onchange="validate_fileto()"
+                               title="<?php echo lang("_EMAIL_SEPARATOR_MSG"); ?>" onblur="validate_fileto()"
                                value="" placeholder="<?php echo lang('_ENTER_TO_EMAIL'); ?>"/>
 
                         <div id="fileto_msg" style="display: none" class="validation_msg field">
