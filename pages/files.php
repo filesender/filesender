@@ -136,7 +136,7 @@ $json_o=json_decode($filedata,true);
         getDatePicker();
 
 		// stripe every second row in the tables
-		$("#myfiles tr:odd").addClass("altcolor");
+        //$(".rowdetails").addClass("rowdivider");
 
 		// delete modal dialog box
 		$("#dialog-delete").dialog({ autoOpen: false, height: 180, modal: true,
@@ -435,6 +435,8 @@ $json_o=json_decode($filedata,true);
                 foreach($json_o as $item) {
                     $i += 1; // counter for file id's
                     $onClick = "'" .$item['filevoucheruid'] ."'";
+                    // alternating rows
+                    $rowClass = ($i % 2 != 0)? "class='altcolor'":"";
                     $itemContents = $functions->getMultiFileData($item['filegroupid']);
                     $recipientsArray = $functions->getMultiRecipientDetails($item['filegroupid']);
                     $recipientsString = '';
@@ -454,9 +456,10 @@ $json_o=json_decode($filedata,true);
                     }
 
                     if ($itemContents[0]['filestatus'] == 'Available') {
+                        $rowCount += 1;
                         echo '<tr><td class="dr7" colspan="10"></tr>';
 
-                        echo '<tr>';
+                        echo '<tr  '.$rowClass.'>';
                         // if(sizeof($item["downloadsummary"]) > 0)
                         // if(sizeof($item["downloadsummary"]) > 0)
                         //{
@@ -487,12 +490,7 @@ $json_o=json_decode($filedata,true);
                                 src="images/shape_square_delete.png" alt="" title="'.lang("_DELETE_FILE").'" />
                             </div></td>';
 
-                        if(in_array($itemContents[0]['fileto'] ,$useremail))
-                        {
-                            echo '<td class="dr2 HardBreak" style="text-align: top;">'.lang("_ME").'</td>';
-                        } else {
-                            echo '<td class="dr2 HardBreak">' .$itemContents[0]['fileto'] . '</td>';
-                        }
+                        echo '<td class="dr2 HardBreak">' .$itemContents[0]['fileto'] . '</td>';
 
                         echo '<td class="dr2 HardBreak" style="text-align: center">' .formatBytes($totalSize). '</td>';
 
@@ -514,31 +512,26 @@ $json_o=json_decode($filedata,true);
 
                         /* SUMMARY TABLE */
 
-                        echo '<table style="width: 100%; padding: 0; border-collapse: collapse; border: 0;">';
+                        echo '<table style="width: 100%; padding: 0; border-collapse: collapse; border: 0;" class="rowdetails">';
                         echo '<tr><td class="dr9 headerrow">' .lang('_DETAILS'). '</td><td class="dr12"></td></tr>';
                         // display summary if it exists
 
-                        echo '<tr><td class="dr4 sdheading tblmcw3"><strong>' .lang("_CREATED"). '</strong></td>
+                        echo '<tr class="rowdivider"><td class="dr4 sdheading tblmcw3 "><strong>' .lang("_CREATED"). '</strong></td>
                             <td class="dr6 HardBreak">' .date(lang('datedisplayformat'),strtotime($itemContents[0]['filecreateddate'])). '</td>
                             </tr>';
 
                         echo '<tr><td class="dr4 sdheading"><strong>'.lang("_FROM").'</strong></td>';
-                        if(in_array($itemContents[0]['filefrom'] ,$useremail))
-                        {
-                            echo '<td class="dr6 HardBreak">'.lang("_ME").'</td>';
-                        } else {
-                            echo '<td class="dr6 HardBreak">' .$itemContents[0]['filefrom'] . '</td>';
-                        }
+                        echo '<td class="dr6 HardBreak">' .$itemContents[0]['filefrom'] . '</td>';
                         echo '</tr>';
 
-                        echo '<tr><td class="dr4 sdheading tblmcw3"><strong>'.lang("_TO").'</strong></td>
+                        echo '<tr class="rowdivider"><td class="dr4 sdheading tblmcw3"><strong>'.lang("_TO").'</strong></td>
                             <td class="dr6 HardBreak">'.$recipientsString.'</td>';
 
                         echo '<tr><td class="dr4 sdheading tblmcw3"><strong>'.lang("_SUBJECT").'</strong></td>
                             <td class="dr6 HardBreak">'.utf8tohtml($itemContents[0]['filesubject'],TRUE). '</td>';
 
                         echo '</tr>';
-                        echo '<tr><td class="dr11 sdheading"><strong>'.lang("_MESSAGE").'</strong></td>
+                        echo '<tr class="rowdivider"><td class="dr11 sdheading"><strong>'.lang("_MESSAGE").'</strong></td>
                             <td class="dr13" >';
 
                         if($itemContents[0]['filemessage'] != "")
@@ -562,14 +555,15 @@ $json_o=json_decode($filedata,true);
                         echo '<td class="dr6 HardBreak" style="width: 17%; text-align: center"><strong>Downloads</strong></td></tr>';
 
                         for($file = 0; $file < sizeof($itemContents); $file++) {
+                            $row = $file % 2 == 0 ? '<tr class="rowdivider">' : '<tr>';
                             if ($file == sizeof($itemContents)-1){
-                                echo '<tr><td class="dr11">' .
+                                echo $row . '<td class="dr11">' .
                                 ' <a id="link_downloadfile_'.$i.'_'.$file.'" href="download.php?vid='. $itemContents[$file]['filevoucheruid'].'" target="_blank">'
                                     . utf8tohtml($itemContents[$file]['fileoriginalname'],true) . '</a></td>';
                                 echo '<td class="dr12 HardBreak" style="text-align: center">' . formatBytes($itemContents[$file]['filesize']) . '</td>';
                                 echo '<td class="dr13 HardBreak" style="text-align: center">' . $itemContents[$file]['downloads'] . '</td></tr>';
                             } else {
-                                echo '<tr><td class="dr4">' .
+                                echo $row . '<td class="dr4">' .
                                 '<a id="link_downloadfile_'.$i.'_'.$file.'" href="download.php?vid='. $itemContents[$file]['filevoucheruid'].'" target="_blank">'
                                     . utf8tohtml($itemContents[$file]['fileoriginalname'], true) . '</a></td>';
                                 echo '<td class="HardBreak" style="text-align: center">' . formatBytes($itemContents[$file]['filesize']) . '</td>';
@@ -593,7 +587,9 @@ $json_o=json_decode($filedata,true);
                         /* Individual recipients information */
 
                         for ($temp = 0; $temp < sizeOf($recipientsArray); $temp++){
-                            echo '<tr><td  class="dr1 expct" style="width: 5%;" onclick="show(&quot;'.$i.'_'.$temp.'_recipients&quot;)">
+                            $row = $temp % 2 != 0 ? '<tr class="altcolor">' : '<tr>';
+
+                            echo $row . '<td  class="dr1 expct" style="width: 5%;" onclick="show(&quot;'.$i.'_'.$temp.'_recipients&quot;)">
                                 <img class="expct" id="showicon_'.$i.'_'.$temp.'_recipients"  style="cursor:pointer" src="images/openboth.png"  alt=""/>
                             </td>';
                             echo '<td class="dr2 HardBreak" style="text-align: left;">' . $recipientsArray[$temp]['fileto'] . '</td>';
@@ -610,7 +606,8 @@ $json_o=json_decode($filedata,true);
                             echo '<tr><td class="dr9 headerrow" style="width:48%">Download Statistics</td><td class="dr12"></td></tr>'; // Needs a Lang[] for contents;
 
                             for($file = 0; $file < sizeof($itemContents); $file++) {
-                                echo '<tr>';
+                                $row = $file % 2 == 0 ? '<tr class="rowdivider">' : '<tr>';
+                                echo $row;
                                 //echo '<td  class="expct dr4" style="width: 5%;" ></td>';
                                 echo '<td class="HardBreak dr4" >' . utf8tohtml($itemContents[$file]['fileoriginalname'], true) . '</td>';
                                 echo '<td class="HardBreak dr6" style="text-align: center">' . $itemContents[$file]['downloads'] . '</td>';
@@ -667,7 +664,7 @@ $json_o=json_decode($filedata,true);
     <table  style="width: 600px; border: 0">
       <tr>
         <td class="formfieldheading mandatory tblmcw3" id="files_to"><?php echo  lang("_TO"); ?>:</td>
-        <td style="text-align: center"><input name="fileto" title="<?php echo  lang("_EMAIL_SEPARATOR_MSG"); ?>" type="text" id="fileto" size="60" onchange="validate_fileto()" />
+        <td style="text-align: center"><input name="fileto" title="<?php echo  lang("_EMAIL_SEPARATOR_MSG"); ?>" type="text" id="fileto" size="60" onblur="validate_fileto()" />
           <div id="fileto_msg" style="display: none" class="validation_msg"><?php echo lang("_INVALID_MISSING_EMAIL"); ?></div>
           <div id="maxemails_msg" style="display: none" class="validation_msg"><?php echo lang("_MAXEMAILS"); ?> <?php echo $config['max_email_recipients'] ?>.</div>
           </td>

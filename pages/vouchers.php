@@ -240,7 +240,7 @@ $json_o=json_decode($filedata,true);
       <tr>
         <td class="mandatory" id="vouchers_to" style="width: 130px"><?php echo lang("_SEND_VOUCHER_TO"); ?>:</td>
         <td>
-        <input id="fileto" name="fileto" title="<?php echo lang("_EMAIL_SEPARATOR_MSG"); ?>" onfocus="$('#fileto_msg').hide();" type="text" size="45"/><br />
+        <input id="fileto" name="fileto" title="<?php echo lang("_EMAIL_SEPARATOR_MSG"); ?>" onfocus="$('#fileto_msg').hide();" onblur="validate_fileto()" type="text" size="45"/><br />
  		<div id="fileto_msg" class="validation_msg" style="display:none"><?php echo lang("_INVALID_MISSING_EMAIL"); ?></div>
         <div id="maxemails_msg" style="display: none" class="validation_msg"><?php echo lang("_MAXEMAILS"); ?> <?php echo $config['max_email_recipients'] ?>.</div>
  		</td>
@@ -260,6 +260,10 @@ if ( count($useremail) > 1 ) {
 }
 ?>   </td>
         </tr>
+       <tr>
+         <td class="" id="voucher_subject"><?php echo lang("_SUBJECT"); ?>: (<?php echo lang("_OPTIONAL"); ?>)</td>
+         <td colspan="2"><input name="vouchersubject" type="text" id="vouchersubject" /></td>
+       </tr>
       <tr>
         <td class="" id="voucher_message"><?php echo lang("_MESSAGE"); ?>: (<?php echo lang("_OPTIONAL"); ?>)</td>
         <td><textarea name="vouchermessage" cols="57" rows="4" id="vouchermessage"></textarea></td>
@@ -285,6 +289,7 @@ if ( count($useremail) > 1 ) {
     <tr class="headerrow">
       <td id="vouchers_header_from"><strong><?php echo lang("_FROM"); ?></strong></td>
       <td id="vouchers_header_to"><strong><?php echo lang("_TO"); ?></strong></td>
+      <td id="vouchers_header_subject"><strong><?php echo lang("_SUBJECT"); ?></strong></td>
       <td id="vouchers_header_message"><strong><?php echo lang("_MESSAGE"); ?></strong></td>
       <td id="vouchers_header_created"><strong><?php echo lang("_CREATED"); ?></strong></td>
       <td id="vouchers_header_expiry"><strong><?php echo lang("_EXPIRY"); ?></strong></td>
@@ -295,6 +300,12 @@ if ( count($useremail) > 1 ) {
 	foreach($json_o as $item) {
 		$i += 1; // counter for file id's
         echo "<tr><td>" .$item['filefrom'] . "</td><td>" .$item['fileto'] . "</td><td class='HardBreak'>";
+        if($item['filesubject'] != "")
+        {
+            echo "<img src='images/page_white_text_width.png' border='0' alt='' title='".utf8tohtml($item['filesubject'],TRUE). "' />";
+        }
+        echo "</td><td>";
+
         if($item['filemessage'] != "")
         {
             echo "<img src='images/page_white_text_width.png' border='0' alt='' title='".utf8tohtml($item['filemessage'],TRUE). "' />";

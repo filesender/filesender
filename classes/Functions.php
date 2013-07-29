@@ -410,10 +410,21 @@ class Functions {
 		}   
 		$result = $statement->fetchAll();
 		$returnArray = array();
-	    foreach($result as $row) 
+        foreach($result as $row)
         {
-                array_push($returnArray, "'".addslashes($row["fileto"])."'");
-       }
+            // split multiple emails into single emails
+            // replace ; with ,
+            $row["fileto"] = str_replace(";",",",$row["fileto"]);
+            // explode filto into $emails array
+            $emails = explode(",",$row["fileto"]);
+            // loop through emails
+            foreach($emails as $email) {
+                // add to returnArray as array object
+                $returnArray[$email] = "'".addslashes($email)."'";
+            }
+        }
+        // sort array before implode
+        asort($returnArray);
 		$commaList = implode(', ', $returnArray);
 		$pdo = NULL;
 		return $commaList ; 
@@ -753,7 +764,7 @@ class Functions {
 	// insert a voucher
 	// ---------------------------------------
 
-	public function insertVoucher($to,$from,$expiry,$vouchermessage){
+	public function insertVoucher($to,$from,$expiry,$vouchermessage,$vouchersubject){
 	
 		// must be authenticated
 		if( $this->authsaml->isAuth()) {
@@ -809,8 +820,11 @@ class Functions {
 			:filecreateddate)');
 			
 			$filevoucheruid = getGUID();
+            // set default subject
 			$voucher = 'Voucher';
 			$voucherissuedemailsubject = (isset($config['voucherissuedemailsubject'])) ?  $config['voucherissuedemailsubject'] : "Voucher";
+            // overide if optional subject is added by user
+            $voucherissuedemailsubject = ($vouchersubject != "")?$vouchersubject:$voucherissuedemailsubject;
 			$blank = '';
 			$zero = 0;
 			$fileexpiryParam = date($config['db_dateformat'], strtotime($expiry));
