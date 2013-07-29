@@ -31,62 +31,56 @@
  */
 
 /* --------------------------------------
- * Displays banner image config/banner.png 
- * - if it doesnt exist then use from www/banner.png 
+ * Allows overriding of banner or favicon by placing new versions in config/.
  * --------------------------------------
- * Displays an image based on custom image location or default image location
- * config/banner.jpg or default banner.jpg
- * custom overides default file
- * have to use this function as the config file banner is outside the web folder 
+ * Displays an image based on custom image location or default image location.
+ * Call using href="displayimage.php?type=imagetype" (e.g. banner).
+ * If they exist, custom files will override default versions.
+ * Have to use this function as config/ is outside the web folder.
  */
-$filesenderbase = dirname(dirname(__FILE__));
+$filesenderBase = dirname(dirname(__FILE__));
 
-$customimage = "$filesenderbase/config/banner.png";
-$defaultimage = "$filesenderbase/www/banner.png"; 
-
-displayimage($customimage,$defaultimage);
-
-function displayimage($customimage,$defaultimage)
-{
-	$displayimage = "";
-
-	// check if default image exists  
-	if(file_exists($defaultimage) && is_file($defaultimage)) {
-		$displayimage = $defaultimage;
-	}
-
-	// check if custom image exists
-	if(file_exists($customimage) && is_file($customimage)) {
-
-		// if custom exists then overwrite default display image  
-		$displayimage = $customimage; 
-	}
-	if (!$displayimage == "") 
-	{
-
-		// Make sure the file is an image
-		$imgData = getimagesize($displayimage);
-		if($imgData) {
-			$lastmoddate = gmdate("D, d M Y H:i:s", filemtime($displayimage))." GMT";
-			// see if this is a conditional get
-			if ( isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) && $_SERVER['HTTP_IF_MODIFIED_SINCE'] == $lastmoddate ) {
-				header("HTTP/1.0 304 Not Modified");
-				exit;
-			}
-			// Set the appropriate content-type
-			// and provide the content-length.
-	
-			header("Pragma: public");
-			header("Last-Modified: ".$lastmoddate); 
-	
-			header("Content-Type: image/jpg");
-			header("Content-length: " . filesize($displayimage));
-		
-			// Print the image data
-			readfile($displayimage);
-
-		}
-	}
-	return;
+if (isset($_REQUEST["type"])) {
+    if ($_REQUEST["type"] == "banner") {
+        displayImage("$filesenderBase/config/banner.png", "$filesenderBase/www/banner.png");
+    } else if ($_REQUEST["type"] == "favicon") {
+        displayImage("$filesenderBase/config/favicon.ico", "$filesenderBase/www/favicon.ico");
+    }
 }
-?>
+
+function displayImage($customImage, $defaultImage) {
+    $displayImage = "";
+
+    // Check if default image exists.
+    if(file_exists($defaultImage) && is_file($defaultImage)) {
+        $displayImage = $defaultImage;
+    }
+
+    // Check if custom image exists.
+    if(file_exists($customImage) && is_file($customImage)) {
+        $displayImage = $customImage; // Overwrite default display image
+    }
+
+    if ($displayImage != "") {
+        // Make sure the file is an image.
+        $imgData = getimagesize($displayImage);
+        if($imgData) {
+            $lastModDate = gmdate("D, d M Y H:i:s", filemtime($displayImage))." GMT";
+
+            // See if this is a conditional get.
+            if (isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) && $_SERVER['HTTP_IF_MODIFIED_SINCE'] == $lastModDate) {
+                header("HTTP/1.0 304 Not Modified");
+                exit;
+            }
+
+            // Set the appropriate HTTP headers.
+            header("Pragma: public");
+            header("Last-Modified: ".$lastModDate);
+            header("Content-Type: image/jpg");
+            header("Content-length: " . filesize($displayImage));
+
+            // Print the image data.
+            readfile($displayImage);
+        }
+    }
+}
