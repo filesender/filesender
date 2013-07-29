@@ -115,8 +115,8 @@ if($isAuth )
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title><?php echo htmlspecialchars($config['site_name']); ?></title>
-    <link rel="icon" href="favicon.ico" type="image/x-icon" />
-    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+    <link rel="icon" href="displayimage.php?type=favicon" type="image/x-icon" />
+    <link rel="shortcut icon" href="displayimage.php?type=favicon" type="image/x-icon" />
     <link type="text/css" href="css/smoothness/jquery-ui-1.10.2.custom.min.css" rel="Stylesheet" />
     <link rel="stylesheet" type="text/css" href="css/default.css?<?php echo FileSender_Version::VERSION; ?>" />
     <script type="text/javascript" src="js/json2.js" ></script>
@@ -206,7 +206,7 @@ if($isAuth )
 <div id="wrap">
     <div id="header">
         <div style="text-align: center">
-            <p><img src="displayimage.php" width="800" height="60" style="border: 0;" alt="banner" /></p>
+            <p><img src="displayimage.php?type=banner" width="800" height="60" style="border: 0;" alt="banner" /></p>
             <noscript>
                 <p class="style5 style1">JavaScript is turned off in your web browser. <br />
                     This application will not run without Javascript enabled in your web browser. <br /><br />

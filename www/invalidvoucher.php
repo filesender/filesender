@@ -48,7 +48,7 @@ require_once('../classes/_includes.php');
 <body scroll="no">
 <div id="wrap">
   <div id="header">
-    <img src="displayimage.php" width="800" height="60" style="border: 0;" alt="banner"/>
+    <img src="displayimage.php?type=banner" width="800" height="60" style="border: 0;" alt="banner"/>
   <div id="message"><?php echo lang($lang["_MESSAGE"]); ?></div>
  </div>
   <div id="content">
