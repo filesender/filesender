@@ -283,6 +283,7 @@ $(function () {
                 <a href="#" onclick="validate()"><?php echo lang('_SEND'); ?></a>
             </div>
     </div>
+    </div>
     <div class="colmask threecol" id="dragfilestoupload"></div>
 </form>
 <div id="dialog-default" style="display:none" title=""></div>
