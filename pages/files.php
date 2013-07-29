@@ -44,49 +44,42 @@
 $statusErr = '';
 $statusClass = '';
 
-if(isset($_REQUEST["a"]) && isset($_REQUEST["id"]))
-{
+if(isset($_REQUEST["a"]) && isset($_REQUEST["id"])) {
 	// validate id
 	if(ensureSaneFileUid($_REQUEST["id"])) {
 		$myfileData = $functions->getVoucherData($_REQUEST['id']);
-		if($_REQUEST["a"] == "del")
-		{
+		if($_REQUEST["a"] == "del") {
 			// check if user is authenticated and allowed to delete this file
-			if( $isAuth && $userdata["saml_uid_attribute"] == $myfileData["fileauthuseruid"])
-			{
-				if($functions->deleteFile($myfileData["fileid"]))
-				{
+			if( $isAuth && $userdata["saml_uid_attribute"] == $myfileData["fileauthuseruid"]) {
+				if($functions->deleteFile($myfileData["fileid"])) {
                     $statusErr = lang("_FILE_DELETED");
                     $statusClass = 'green';
 					//echo "<div id='message'>".lang("_FILE_DELETED")."</div>";
 				}
 			} else {
-			// log auth user tried to delete a file they do not have access to
-			logEntry("Permission denied - attempt to delete ".$myfileData["fileuid"],"E_ERROR");
-			// notify - not deleted - you do not have permission
-            $statusErr = lang("_PERMISSION_DENIED");
-            $statusClass = 'red';
-			//echo "<div id='message'>".lang("_PERMISSION_DENIED")."</div>";
+                // log auth user tried to delete a file they do not have access to
+                logEntry("Permission denied - attempt to delete ".$myfileData["fileuid"],"E_ERROR");
+                // notify - not deleted - you do not have permission
+                $statusErr = lang("_PERMISSION_DENIED");
+                $statusClass = 'red';
+                //echo "<div id='message'>".lang("_PERMISSION_DENIED")."</div>";
 			}
 		}
-		if($_REQUEST["a"] == "resend")
-		{
+		if($_REQUEST["a"] == "resend") {
 			// check if user is authenticated and allowed to resend this file
-			if( $isAuth && $userdata["saml_uid_attribute"] == $myfileData["fileauthuseruid"])
-			{
-				if($sendmail->sendEmail($myfileData ,$config['fileuploadedemailbody']))
-				{
+			if( $isAuth && $userdata["saml_uid_attribute"] == $myfileData["fileauthuseruid"]) {
+				if($sendmail->sendEmail($myfileData ,$config['fileuploadedemailbody'])) {
                     $statusErr = lang("_MESSAGE_RESENT");
                     $statusClass = 'green';
 					//echo "<div id='message'>".lang("_MESSAGE_RESENT")."</div>";
 				}
 			} else {
-			// log auth user tried to resend email for a file they do not have access to
-			logEntry("Permission denied - attempt to resend ".$myfileData["fileuid"],"E_ERROR");
-			// notify - not resent - you do not have permission
-            $statusError = lang("_PERMISSION_DENIED");
+                // log auth user tried to resend email for a file they do not have access to
+                logEntry("Permission denied - attempt to resend ".$myfileData["fileuid"],"E_ERROR");
+                // notify - not resent - you do not have permission
+                $statusError = lang("_PERMISSION_DENIED");
                 $statusClass = 'red';
-			//echo "<div id='message'>".lang("_PERMISSION_DENIED")."</div>";
+                //echo "<div id='message'>".lang("_PERMISSION_DENIED")."</div>";
 			}
 		}
 	} else {
@@ -95,22 +88,21 @@ if(isset($_REQUEST["a"]) && isset($_REQUEST["id"]))
 		//echo "<div id='message'>".lang("_INVALID_FILEVOUCHERID")."</div>";
 	}
 }
-if(isset($_REQUEST["a"]) && $_REQUEST["a"] == "added")
-{
+
+if(isset($_REQUEST["a"]) && $_REQUEST["a"] == "added") {
 	// display the add box
     $statusErr = lang("_EMAIL_SENT");
     $statusClass = 'green';
 	//echo "<div id='message'>".lang("_EMAIL_SENT").".</div>";
 }
-foreach ($errorArray as $message)
-		{
-		if($message == "err_emailnotsent")
-		{
-            $statusErr = lang('_ERROR_SENDING_EMAIL');
-            $statusClass = 'red';
-			//echo '<div id="message">'.lang("_ERROR_SENDING_EMAIL").'</div>';
-		}
-		}
+
+foreach ($errorArray as $message) {
+    if($message == "err_emailnotsent") {
+        $statusErr = lang('_ERROR_SENDING_EMAIL');
+        $statusClass = 'red';
+        //echo '<div id="message">'.lang("_ERROR_SENDING_EMAIL").'</div>';
+    }
+}
 // Get list of user files and display page
 $filedata = $functions->getUserTrackingCodes();
 $json_o=json_decode($filedata,true);
@@ -142,23 +134,24 @@ $json_o=json_decode($filedata,true);
 		$("#dialog-delete").dialog({ autoOpen: false, height: 180, modal: true,
 			buttons: {
 				'cancelBTN': function() {
-				$( this ).dialog( "close" );
+				    $( this ).dialog( "close" );
 				},
 				'deleteBTN': function() {
-				deletefile();
-				$( this ).dialog( "close" );
+				    deleteFile();
+                    $( this ).dialog( "close" );
 				}
 			}
 		});
+
 		// resend email modal dialog box
 		$("#dialog-resend").dialog({ autoOpen: false, height: 180, modal: true,
 			buttons: {
 				'cancelsendBTN': function() {
-				$( this ).dialog( "close" );
+				    $( this ).dialog( "close" );
 				},
 				'sendBTN': function() {
-				$( this ).dialog( "close" );
-				resend();
+				    $( this ).dialog( "close" );
+				    resend();
 				}
 			}
 		});
@@ -170,7 +163,7 @@ $json_o=json_decode($filedata,true);
 				location.reload(true);
 				}
 			}
-		})
+		});
 
 		$('.ui-dialog-buttonpane button:contains(cancelBTN)').attr("id","btn_cancel");
 		$('#btn_cancel').html('<?php echo lang("_NO") ?>');
@@ -210,14 +203,12 @@ $json_o=json_decode($filedata,true);
 									alert("No response from server");
 									return;
 								}
-								if(data == "ErrorAuth")
-								{
+								if(data == "ErrorAuth") {
 									$("#dialog-autherror").dialog("open");
 									return;
 								}
 								var data =  parseJSON(data);
-								if(data.errors)
-								{
+								if(data.errors) {
 									$.each(data.errors, function(i,result){
 										if(result == "err_token") { $("#dialog-tokenerror").dialog("open");} // token missing or error
 										if(result == "err_tomissing") { $("#fileto_msg").show();} // missing email data
@@ -225,7 +216,7 @@ $json_o=json_decode($filedata,true);
 										if(result == "err_exoutofrange") { $("#expiry_msg").show();} // expiry date out of range
 										if(result == "err_invalidemail") { $("#fileto_msg").show();} // 1 or more emails invalid
 										if(result == "err_emailnotsent") {window.location.href="index.php?s=emailsenterror";} //
-									})
+									});
 									// re-enable button if client needs to fix an issue
 									$('#btn_addrecipientsend').attr("disabled", false);
 								} else {
@@ -253,12 +244,13 @@ $json_o=json_decode($filedata,true);
 		$('.ui-dialog-buttonpane button:contains(addrecipientsendBTN)').attr("id","btn_addrecipientsend");
 		$('#btn_addrecipientsend').html('<?php echo lang("_SEND") ?>')
 
-// autocomplete
+    // autocomplete
 	var availableTags = [<?php  echo (isset($config["autocomplete"]) && $config["autocomplete"])?  $functions->uniqueemailsforautocomplete():  ""; ?>];
 
 		function split( val ) {
             return val.split( /,\s*/ );
         }
+
         function extractLast( term ) {
             return split( term ).pop();
         }
@@ -299,41 +291,42 @@ $json_o=json_decode($filedata,true);
         // End document ready
 	});
 
-	// validate form beofre sending
+	// validate form before sending
 	function validateForm()
 	{
-		// remove previouse vaildation messages
+		// remove previous validation messages
 		$("#fileto_msg").hide();
 		$("#expiry_msg").hide();
 		var validate = true;
-		if(!validate_fileto() ){validate = false;};		// validate emails
-		if(!validate_expiry() ){validate = false;};		// check date
+		if(!validate_fileto() || !validate_expiry()) validate = false;		// validate emails && date
 		return validate;
 	}
+
 	function resend(uid)
 	{
 		window.location.href="index.php?s=files&a=resend&id=" + selectedFile;
 	}
 
 	function confirmResend(vid)
-		{
-			// confirm deletion of selected file
-			selectedFile = vid;
-			$("#dialog-resend" ).dialog( "open" );
-		}
-	function deletefile()
-		{
-		// reload page to delete selected file
-		// should add a tick box to delete multiple selected files
-		window.location.href="index.php?s=files&a=del&id=" + selectedFile;
-		}
+    {
+        // confirm deletion of selected file
+        selectedFile = vid;
+        $("#dialog-resend" ).dialog( "open" );
+    }
 
-	function confirmdelete(vid)
-		{
-			// confirm deletion of selected file
-			selectedFile = vid;
-			$("#dialog-delete" ).dialog( "open" );
-		}
+	function deleteFile()
+    {
+        // reload page to delete selected file
+        // should add a tick box to delete multiple selected files
+        window.location.href="index.php?s=files&a=del&id=" + selectedFile;
+    }
+
+	function confirmDelete(vid)
+    {
+        // confirm deletion of selected file
+        selectedFile = vid;
+        $("#dialog-delete" ).dialog( "open" );
+    }
 
 	function openAddRecipient(vid,filename,filesize,from, subject, message)
 	{
@@ -353,7 +346,6 @@ $json_o=json_decode($filedata,true);
 		$("#fileto_msg").hide();
 		$("#maxemails_msg").hide();
 		$("#dialog-addrecipient" ).dialog( "open" );
-
 	}
 
 		// toggle downloadsummary results
@@ -364,16 +356,18 @@ $json_o=json_decode($filedata,true);
 			$('img.expct').attr({src: 'images/openboth2.png', alt: ''});
 			showall = true;
 		} else {
-		$('.hidden').css('display','none');
-		$('img.expct').attr({src: 'images/openboth.png', alt: ''});
-			showall = false;
+            $('.hidden').css('display','none');
+            $('img.expct').attr({src: 'images/openboth.png', alt: ''});
+            showall = false;
 		}
 	}
 
     function expandRecipients(i, j) {
+        var temp = 0;
+        var elemDisplay;
         if(!showAllRecipients) {
-            for (var temp = 0; temp < j; temp++){
-                var elemDisplay = $('#show_'+i+'_'+temp+'_recipients').css('display');
+            for (temp; temp < j; temp++) {
+                elemDisplay = $('#show_'+i+'_'+temp+'_recipients').css('display');
                 if (elemDisplay  == 'none') {
                     show(i+"_"+temp+"_recipients");
                 }
@@ -381,8 +375,8 @@ $json_o=json_decode($filedata,true);
             $('#showicon_'+i+'_recipients').attr({src: 'images/openboth2.png', alt: ''});
             showAllRecipients = true;
         } else {
-            for (var temp = 0; temp < j; temp++){
-                var elemDisplay = $('#show_'+i+'_'+temp+'_recipients').css('display');
+            for (temp; temp < j; temp++) {
+                elemDisplay = $('#show_'+i+'_'+temp+'_recipients').css('display');
                 if (elemDisplay  == 'table-row') {
                     show(i+"_"+temp+"_recipients");
                 }
@@ -390,20 +384,19 @@ $json_o=json_decode($filedata,true);
             $('#showicon_'+i+'_recipients').attr({src: 'images/openboth.png', alt: ''});
             showAllRecipients = false;
         }
-
     }
 
 	function show(i)
 	{
+        var show = $('#show_'+i);
+        show.toggle();
+        var $icon = $("#showicon_"+i);
 
-	$("#show_"+i).toggle();
-	var $icon = $( "#showicon_"+i );
-
-    if ( $("#show_"+i).is(':visible') ) {
-      $( "#showicon_"+i ).attr( {src: "images/openboth2.png", alt: ""} );
-    } else {
-      $( "#showicon_"+i ).attr( {src: "images/openboth.png", alt: ""} );
-    }
+        if (show.is(':visible')) {
+            $icon.attr({src: "images/openboth2.png", alt: ""});
+        } else {
+            $icon.attr({src: "images/openboth.png", alt: ""});
+        }
 	}
 //]]>
 </script>
@@ -434,10 +427,10 @@ $json_o=json_decode($filedata,true);
             {
                 foreach($json_o as $item) {
                     $i += 1; // counter for file id's
-                    $onClick = "'" .$item['filevoucheruid'] ."'";
                     // alternating rows
                     $rowClass = ($i % 2 != 0)? "class='altcolor'":"";
                     $itemContents = $functions->getMultiFileData($item['filegroupid']);
+                    $onClick = "'" . $itemContents[0]['filevoucheruid'] . "'";
                     $recipientsArray = $functions->getMultiRecipientDetails($item['filegroupid']);
                     $recipientsString = '';
 
@@ -455,19 +448,15 @@ $json_o=json_decode($filedata,true);
                         $totalSize += $itemContents[$temp]['filesize'];
                     }
 
-                    if ($itemContents[0]['filestatus'] == 'Available') {
+                    if (isset($itemContents[0]) && $itemContents[0]['filestatus'] == 'Available') {
                         echo '<tr><td class="dr7" colspan="10"></tr>';
 
                         echo '<tr  '.$rowClass.'>';
-                        // if(sizeof($item["downloadsummary"]) > 0)
-                        // if(sizeof($item["downloadsummary"]) > 0)
-                        //{
+
                         echo '<td  class="dr1 expct" onclick="show('.$i.')">
                             <img class="expct" id="showicon_'.$i.'"  style="cursor:pointer" title="'. lang("_SHOW_ALL").'" src="images/openboth.png" alt=""/>
                             </td>';
-    //	} else {
-    //	echo "<td></td>";
-    //	}
+
                         echo '<td class="dr2" style="text-align: top;">
                             <div id="btn_resendemail_'.$i.'">
                             <img src="images/email_go.png" alt="" title="'.lang("_RE_SEND_EMAIL").'"
@@ -482,10 +471,11 @@ $json_o=json_decode($filedata,true);
                                 '".rawurlencode($itemContents[0]['filemessage'])."'" .');"  style="cursor:pointer;" />
                             </td>';
 
+
                         echo '<td  class="dr2"  style="text-align: top; width: 22px;">
                             <div style="cursor:pointer;">
                             <img id="btn_deletevoucher_'.$i.'"
-                                onclick="confirmdelete('."'" .$item['filevoucheruid'] . "')". '"
+                                onclick="confirmDelete('."'" .$itemContents[0]['filevoucheruid'] . "')". '"
                                 src="images/shape_square_delete.png" alt="" title="'.lang("_DELETE_FILE").'" />
                             </div></td>';
 
@@ -495,19 +485,14 @@ $json_o=json_decode($filedata,true);
 
                         echo '<td class="dr2 HardBreak" style="text-align: center">' . $maxDownloaded . '</td>';
 
-                        // echo "<td class='dr2'>" .date(lang('datedisplayformat'),strtotime($item['filecreateddate'])) . "</td>";
                         echo '<td class="dr2" style="text-align: center">' .date(lang('datedisplayformat'),strtotime($itemContents[0]['fileexpirydate'])) . '</td>'; //etc
                         echo '<td class="dr2" style="text-align: center">
                             <a id="link_downloadfilegroup_'.$i.'" href="?gid='. $itemContents[0]["filegroupid"].'">'
                                 .utf8tohtml($itemContents[0]['filetrackingcode'],TRUE). '
                             </a></td>';
                         echo '<td class="dr8"></td>';
-                        //if(sizeof($item["downloadsummary"]) > 0)
-                        //{
                         echo '</tr>';
                         echo '<tr class="hidden" style="display:none" id="show_'.$i.'"><td class="dr4"></td><td colspan="8">';
-
-                        //echo '<td class="HardBreak" id="myfiles_header_from"><strong>'.<?php echo lang("_FROM");</strong></td>';
 
                         /* SUMMARY TABLE */
 
@@ -539,7 +524,6 @@ $json_o=json_decode($filedata,true);
                         }
                         echo '</td>';
                         echo '</tr>';
-                        //echo "<tr><td><strong>". lang("_DOWNLOADS")."</strong></td><td>".sizeof($item["downloadsummary"])."</td></tr>";
                         echo '</table>';
                         echo '<br />';
 
@@ -607,11 +591,8 @@ $json_o=json_decode($filedata,true);
                             for($file = 0; $file < sizeof($itemContents); $file++) {
                                 $row = $file % 2 == 0 ? '<tr class="rowdivider">' : '<tr>';
                                 echo $row;
-                                //echo '<td  class="expct dr4" style="width: 5%;" ></td>';
                                 echo '<td class="HardBreak dr4" >' . utf8tohtml($itemContents[$file]['fileoriginalname'], true) . '</td>';
                                 echo '<td class="HardBreak dr6" style="text-align: center">' . $itemContents[$file]['downloads'] . '</td>';
-                                //echo '<td class="tblmcw1"></td>';
-                                //echo '<td class="tblmcw1 dr6"></td>';
                                 echo '</tr>';
 
                             }
@@ -628,11 +609,9 @@ $json_o=json_decode($filedata,true);
                                '".$itemContents[0]['filesize'] ."','".rawurlencode($itemContents[0]['filefrom'])."',
                                 '".rawurlencode($itemContents[0]['filesubject'])."',
                                 '".rawurlencode($itemContents[0]['filemessage'])."'" .');">Click here to Add a new Recipient</a></td></tr>';
-                     // end of recipients table
+                        // end of recipients table
                         echo '</table>';
                         echo '<br />';
-
-
 
                         echo '</td>';
                         echo '<td class="dr6"></td>';
@@ -640,7 +619,6 @@ $json_o=json_decode($filedata,true);
                     }
                 }
                 echo '<tr><td class="dr7" colspan="10"></tr>';
-                //}
             }
             ?>
         </table>
