@@ -260,8 +260,8 @@ $(function () {
 
         <?php if ($config['AuP']) { ?>
             <div class="auppanel">
-                <label id="aup_label" for="aup" style="cursor:pointer;" title="<?php echo lang('_SHOWHIDE'); ?>"
-                       onclick="$('#tog').slideToggle();return false;"><?php echo lang('_ACCEPTTOC'); ?></label>
+                <label id="aup_label" for="aup" style="cursor:pointer; margin-left: 10px" title="<?php echo lang('_SHOWHIDE'); ?>"
+                       onclick="$('#tog').slideToggle();return false;"><?php echo lang('_ACCEPTTOC'); ?> <br />[<span style="color: #666666;"><?php echo lang("_SHOWHIDE"); ?></span>]</label>
                 <?php
                 $aupChecked = '';
                 if ($config['AuP_default'] || (isset($_SESSION['aup']) && !$authvoucher->aVoucher())) {
