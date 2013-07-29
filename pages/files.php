@@ -456,7 +456,6 @@ $json_o=json_decode($filedata,true);
                     }
 
                     if ($itemContents[0]['filestatus'] == 'Available') {
-                        $rowCount += 1;
                         echo '<tr><td class="dr7" colspan="10"></tr>';
 
                         echo '<tr  '.$rowClass.'>';
