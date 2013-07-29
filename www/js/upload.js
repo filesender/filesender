@@ -201,12 +201,12 @@ function doUploadComplete(){
                     } //    
                 })
             } else {
-                if(data.status && data.status == "complete"){
-                    window.location.href="index.php?s=complete";
+                if(data.status && data.status == "complete" && data['gid']){
+                    window.location.href="index.php?s=complete&gid="+data['gid'];
                     return;
                 }
-                if(data.status && data.status == "completev"){
-                    window.location.href="index.php?s=completev";
+                if(data.status && data.status == "completev" && data['gid']){
+                    window.location.href="index.php?s=completev&gid="+data['gid'];
                     return;
                 }
             }

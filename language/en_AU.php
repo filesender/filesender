@@ -127,9 +127,10 @@ $lang["_INVALID_SIZE_USEHTML5"] = "Please select another file or use a HTML5 ena
 $lang["_ACCEPTTOC"] = "I accept the terms and conditions of this service.";	
 $lang["_AGREETOC"] = "You MUST agree to the terms and conditions.";
 $lang["_FILE_TO_BE_RESENT"] = "File to be redistributed";
-$lang["_ERROR_UPLOADING_FILE"] = "Error uploading your file";
-$lang["_ERROR_SENDING_EMAIL"] = "There has been an error sending emails, please contact your administrator.";
-$lang["_ERROR_INCORRECT_FILE_SIZE"] = "There has been a problem uploading your file. <br />The file size on the server does not match your original file. <br /><br />Please contact your Administrator.";
+$lang["_ERROR_UPLOAD_FAILED"] = "Upload failed";
+$lang["_ERROR_UPLOADING_FILE"] = "An error occurred while uploading your file(s). <br /><br />Please contact your administrator.";
+$lang["_ERROR_SENDING_EMAIL"] = "There has been an error sending emails. <br /><br />Please contact your administrator.";
+$lang["_ERROR_INCORRECT_FILE_SIZE"] = "There has been a problem uploading your file. <br />The file size on the server does not match your original file. <br /><br />Please contact your administrator.";
 $lang["_MAXEMAILS"] = "The maximum number of email addresses allowed is ";
 $lang["_INVALID_DATE_FORMAT"] = "The date format is invalid.";
 $lang["_DISK_SPACE_ERROR"] = "There is not enough drive space on this service. Please contact the service administration or upload a smaller file.";
@@ -137,6 +138,11 @@ $lang["_ERROR_ATTRIBUTES"] = "Your Identity Provider is not providing the requir
 $lang["_PERMISSION_DENIED"] = "You do not have permission to do this.";
 // Logout page
 $lang["_LOGOUT_COMPLETE"] = "Logout Complete";
+
+// Multi-upload
+$lang["_TRACKING_CODE"] = "Tracking code";
+$lang["_UPLOADED_LIST"] = "The following files have been uploaded:";
+$lang["_REFER_TO_MY_FILES"] = "You can access your files and view download statistics on the My Files page.";
 
 // vouchers
 $lang["_SEND_NEW_VOUCHER"] = "A Voucher allows someone to send you a file.<br />

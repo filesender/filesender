@@ -149,8 +149,8 @@
                         if(result == "err_filesizeincorrect") { window.location.href="index.php?s=filesizeincorrect";} //
                     })
                 } else {
-                    if(data.status && data.status == "complete"){window.location.href="index.php?s=complete";}
-                    if(data.status && data.status == "completev"){window.location.href="index.php?s=completev";}
+                    if(data.status && data["gid"] && data.status == "complete"){window.location.href="index.php?s=complete&gid="+data["gid"];}
+                    if(data.status && data["gid"] && data.status == "completev"){window.location.href="index.php?s=completev&gid="+data["gid"];}
                 }
             },error:function(xhr,err){
                 // error function to display error message e.g.404 page not found

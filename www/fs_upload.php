@@ -167,6 +167,7 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
             }
             if(sizeof($errorArray) > 0 ) { $resultArray["errors"] =  $errorArray; }
             $resultArray["status"] = $complete;
+            $resultArray['gid'] = $data['filegroupid'];
             echo json_encode($resultArray);
             break;
 

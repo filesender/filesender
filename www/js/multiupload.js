@@ -356,7 +356,7 @@ function doUploadComplete() {
                 n += 1;
                 startUpload();
             } else {
-                window.location.href = 'index.php?s=complete';
+                window.location.href = 'index.php?s=complete&gid='+data['gid'];
             }
         }, error: function (xhr, err) {
             // error function to display error message e.g.404 page not found
@@ -447,7 +447,7 @@ function uploadFile() {
                     n += 1;
                     startUpload();
                 } else {
-                    window.location.href = 'index.php?s=complete';
+                    window.location.href = 'index.php?s=complete&gid='+data['gid'];
                 }
             });
         return;
