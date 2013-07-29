@@ -222,7 +222,7 @@ if($isAuth )
             <?php
             // create menu
             // disable all buttons if this is a voucher, even if the user is logged on
-            if (!$isVoucher &&  $s != "completev" && !isset($gid)){
+            if (!$isVoucher &&  $s != "completev" && (!isset($gid) || (isset($gid) && $s == "complete"))){
                 if($isAuth && $s != "error") { echo '<li><a class="'.$functions->active($s,'upload').'" id="topmenu_newupload" href="index.php?s=upload">'.lang("_NEW_UPLOAD").'</a></li>'; }
                 if($isAuth && $s != "error") { echo '<li><a class="'.$functions->active($s,'vouchers').'" id="topmenu_vouchers" href="index.php?s=vouchers">'.lang("_VOUCHERS").'</a></li>'; }
                 if($isAuth && $s != "error") {echo '<li><a class="'.$functions->active($s,'files').'" id="topmenu_myfiles" href="index.php?s=files">'.lang("_MY_FILES").'</a></li>'; }
@@ -298,7 +298,7 @@ if($isAuth )
                 <div id="box"><p><?php echo lang("_FILE_DELETED"); ?></p></div>
             <?php
             }
-        } else if(isset($gid)) {
+        } else if(isset($gid) && !isset($_REQUEST['s'])) {
             $files = $functions->getMultiFileData($gid);
             if (sizeof($files) == 1) {
                 $_REQUEST["vid"] = $files[0]["filevoucheruid"];
@@ -326,28 +326,9 @@ if($isAuth )
         {
             require_once('../pages/admin.php');
         }
-        else if($s == "uploaderror")
+        else if($s == "uploaderror" || $s == "emailsenterror" || $s == "filesizeincorrect" || $s == "complete" || $s == "completev")
         {
-            ?>
-            <div id="message"><?php echo lang("_ERROR_UPLOADING_FILE"); ?></div>
-        <?php
-        }
-        else if($s == "emailsenterror")
-        {
-            ?>
-            <div id="message"><?php echo lang("_ERROR_SENDING_EMAIL"); ?></div>
-        <?php
-        }
-        else if($s == "filesizeincorrect")
-        {
-            ?>
-            <div id="message"><?php echo lang("_ERROR_INCORRECT_FILE_SIZE"); ?></div>
-        <?php
-        } else if($s == "complete" || $s == "completev")
-        {
-            ?>
-            <div id="message"><?php echo lang("_UPLOAD_COMPLETE"); ?></div>
-        <?php
+            require_once("../pages/result.php");
         } else if ($s == "" && $isAuth){
             require_once('../pages/multiupload.php');
         }else if ($s == "" ){

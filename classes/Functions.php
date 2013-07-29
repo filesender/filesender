@@ -70,7 +70,8 @@ function getGUID() {
 // Create cryptographically secure key for group ID's.
 //---------------------------------
 function getOpenSSLKey(){
-     return bin2hex(openssl_random_pseudo_bytes(30));
+    global $config;
+     return bin2hex(openssl_random_pseudo_bytes($config['openSSLKeyLength']));
 }
 
 // ---------------------------------------
@@ -100,6 +101,15 @@ function ensureSaneFileUid($fileuid){
         return $fileuid;
     } else {
         trigger_error("invalid file uid $fileuid", E_USER_ERROR);
+    }
+}
+
+function ensureSaneOpenSSLKey($key) {
+    global $config;
+    if (ctype_alnum($key) && strlen($key) == $config['openSSLKeyLength'] * 2) {
+        return $key;
+    } else {
+        trigger_error("invalid openssl key $key", E_USER_ERROR);
     }
 }
 
@@ -723,9 +733,13 @@ class Functions {
     }
 
     function isValidGroupId($groupId) {
-        $files = $this->getMultiFileData($groupId);
+        if (ensureSaneOpenSSLKey($groupId)) {
+            $files = $this->getMultiFileData($groupId);
 
-        return !empty($files);
+            return !empty($files);
+        }
+
+        return false;
     }
 
     function getMultiRecipientDetails($groupID)

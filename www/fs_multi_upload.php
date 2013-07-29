@@ -116,6 +116,7 @@ if (!isAuthenticated()) {
             }
 
             $resultArray['status'] = $complete;
+            $resultArray['gid'] = $data['filegroupid'];
             echo json_encode($resultArray);
             break;
 

@@ -36,7 +36,7 @@
  */
 
 
-if (isset($_REQUEST['gid'])) {
+if (isset($_REQUEST['gid']) && ensureSaneOpenSSLKey($_REQUEST['gid'])) {
     $fileData = $functions->getMultiFileData($_REQUEST['gid']);
 ?>
 
