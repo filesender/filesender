@@ -125,6 +125,7 @@ $json_o=json_decode($filedata,true);
 	var maxEmailRecipients = <?php echo $config['max_email_recipients'] ?>;
 	var datepickerDateFormat = '<?php echo lang('_DP_dateFormat'); ?>';
 	var showall = false; // flag for show all switch to show or hide download summaries
+    var showAllRecipients = false; // flag for expanding all download summaries for individual recipients
     var statusError = '<?php echo $statusErr ?>';
     var statusClass = '<?php echo $statusClass ?>';
 
@@ -361,7 +362,6 @@ $json_o=json_decode($filedata,true);
 		if(!showall) {
 			$('.hidden').css('display','');
 			$('img.expct').attr({src: 'images/openboth2.png', alt: ''});
-
 			showall = true;
 		} else {
 		$('.hidden').css('display','none');
@@ -369,6 +369,29 @@ $json_o=json_decode($filedata,true);
 			showall = false;
 		}
 	}
+
+    function expandRecipients(i, j) {
+        if(!showAllRecipients) {
+            for (var temp = 0; temp < j; temp++){
+                var elemDisplay = $('#show_'+i+'_'+temp+'_recipients').css('display');
+                if (elemDisplay  == 'none') {
+                    show(i+"_"+temp+"_recipients");
+                }
+            }
+            $('#showicon_'+i+'_recipients').attr({src: 'images/openboth2.png', alt: ''});
+            showAllRecipients = true;
+        } else {
+            for (var temp = 0; temp < j; temp++){
+                var elemDisplay = $('#show_'+i+'_'+temp+'_recipients').css('display');
+                if (elemDisplay  == 'table-row') {
+                    show(i+"_"+temp+"_recipients");
+                }
+            }
+            $('#showicon_'+i+'_recipients').attr({src: 'images/openboth.png', alt: ''});
+            showAllRecipients = false;
+        }
+
+    }
 
 	function show(i)
 	{
@@ -403,6 +426,7 @@ $json_o=json_decode($filedata,true);
                 <!-- <td class="HardBreak" id="myfiles_header_created"><strong><?php //echo lang("_CREATED"); ?></strong></td>-->
                 <td class="HardBreak tblmcw3" id="myfiles_header_expiry" style="text-align: center"><strong><?php echo lang("_EXPIRY"); ?></strong></td>
                 <td class="HardBreak" id="myfiles_header_filename" style="text-align: center"><strong>Tracking Code</strong></td>
+                <td class="tblmcw1 HardBreak"></td>
             </tr>
             <?php
             $i = 0;
@@ -430,10 +454,7 @@ $json_o=json_decode($filedata,true);
                     }
 
                     if ($itemContents[0]['filestatus'] == 'Available') {
-                        echo '<tr><td class="dr7"></td><td class="dr7"></td>
-                            <td class="dr7"></td><td class="dr7"></td><td class="dr7"></td>
-                            <td class="dr7"></td><td class="dr7"></td><td class="dr7"></td>
-                            <td class="dr7"></td></tr>';
+                        echo '<tr><td class="dr7" colspan="10"></tr>';
 
                         echo '<tr>';
                         // if(sizeof($item["downloadsummary"]) > 0)
@@ -479,18 +500,20 @@ $json_o=json_decode($filedata,true);
 
                         // echo "<td class='dr2'>" .date(lang('datedisplayformat'),strtotime($item['filecreateddate'])) . "</td>";
                         echo '<td class="dr2" style="text-align: center">' .date(lang('datedisplayformat'),strtotime($itemContents[0]['fileexpirydate'])) . '</td>'; //etc
-                        echo '<td class="dr8" style="text-align: center">
+                        echo '<td class="dr2" style="text-align: center">
                             <a id="link_downloadfilegroup_'.$i.'" href="?gid='. $itemContents[0]["filegroupid"].'">'
                                 .utf8tohtml($itemContents[0]['filetrackingcode'],TRUE). '
                             </a></td>';
+                        echo '<td class="dr8"></td>';
                         //if(sizeof($item["downloadsummary"]) > 0)
                         //{
                         echo '</tr>';
-                        echo '<tr class="hidden" style="display:none" id="show_'.$i.'"><td class="dr4"></td><td class="dr6" colspan="8">';
+                        echo '<tr class="hidden" style="display:none" id="show_'.$i.'"><td class="dr4"></td><td colspan="8">';
 
                         //echo '<td class="HardBreak" id="myfiles_header_from"><strong>'.<?php echo lang("_FROM");</strong></td>';
 
-                        // Summary table
+                        /* SUMMARY TABLE */
+
                         echo '<table style="width: 100%; padding: 0; border-collapse: collapse; border: 0;">';
                         echo '<tr><td class="dr9 headerrow">' .lang('_DETAILS'). '</td><td class="dr12"></td></tr>';
                         // display summary if it exists
@@ -529,13 +552,15 @@ $json_o=json_decode($filedata,true);
                         echo '<br />';
 
 
-                        // Individual Files table
+
+                        /* INDIVIDUAL FILES TABLE */
+
                         echo '<table style="width: 100%; padding: 0; border-collapse: collapse; border: 0;">';
                         echo '<tr><td class="dr9 headerrow">Contents</td><td class="dr12"></td><td class="dr12"></td></tr>'; // Needs a Lang[] for contents
                         echo '<tr><td class="dr4 HardBreak" style="width: 66%; text-align: left"><strong>File Name</strong></td>';
                         echo '<td class="HardBreak" style="width: 17%; text-align: center"><strong>File Size</strong></td>';
                         echo '<td class="dr6 HardBreak" style="width: 17%; text-align: center"><strong>Downloads</strong></td></tr>';
-                        // display summary if it exists
+
                         for($file = 0; $file < sizeof($itemContents); $file++) {
                             if ($file == sizeof($itemContents)-1){
                                 echo '<tr><td class="dr11">' .
@@ -553,45 +578,72 @@ $json_o=json_decode($filedata,true);
                         }
                         echo '</table><br />';
 
-                        /* RECIPIENTS TABLE WILL GO HERE */
+                        /* RECIPIENTS TABLE */
 
-                        echo '<table style="width: 100%; border-spacing: 0; border: 0">
+                        echo '<table style="width: 100%; border-spacing: 0; border: 0">';
+                        echo '<tr class="headerrow" style="background-color: #CCC;">';
+                        echo '<td class="tblmcw1" onclick="expandRecipients(&quot;'.$i.'&quot;,&quot;'.sizeOf($recipientsArray).'&quot;)" style="cursor:pointer; width:5%;">
+                              <img class="expct" id="showicon_'.$i.'_recipients" src="images/openboth.png" alt="" draggable="false"></td>';
+                        echo '<td class="HardBreak" style="text-align: left; width:48%;" ><strong>Recipient</strong></td>';
+                        echo '<td class="HardBreak tblmcw3" style="text-align: center; width:47%;"><strong>'. lang("_DOWNLOADED").'</strong></td>';
+                        echo '<td class="tbl1mcw1" style="cursor:pointer; width:5%;">&nbsp;</td><td class="tbl1mcw1" style="cursor:pointer; width:5%;">&nbsp;</td></tr>';
 
-                            <tr class="headerrow" style="background-color: #CCC;">
-                                <td class="tblmcw1" style="cursor:pointer; width:5%;"><img class="expct" src="images/openboth.png" alt="" draggable="false"></td>
-                                <td class="HardBreak" style="text-align: center; width:48%;" id="myfiles_header_to"><strong>Recipient</strong></td>
-                                <td class="HardBreak tblmcw3" id="myfiles_header_downloaded" style="text-align: center; width:47%;"><strong>'. lang("_DOWNLOADED"). '</strong></td>
-                            </tr>';
-                            echo '<tr><td class="dr7"></td><td class="dr7"></td><td class="dr7"></tr>';
-                            /* LOOP PEOPLE */
-                            for ($temp = 0; $temp < sizeOf($recipientsArray); $temp++){
+                        echo '<tr ><td class="dr7" colspan="5"></td></tr>';
 
+                        /* Individual recipients information */
+
+                        for ($temp = 0; $temp < sizeOf($recipientsArray); $temp++){
+                            echo '<tr><td  class="dr1 expct" style="width: 5%;" onclick="show(&quot;'.$i.'_'.$temp.'_recipients&quot;)">
+                                <img class="expct" id="showicon_'.$i.'_'.$temp.'_recipients"  style="cursor:pointer" src="images/openboth.png"  alt=""/>
+                            </td>';
+                            echo '<td class="dr2 HardBreak" style="text-align: left;">' . $recipientsArray[$temp]['fileto'] . '</td>';
+                            echo '<td class="dr2 HardBreak" style="text-align: center;"> x </td>';
+                            echo '<td class="tblmcw1 dr2" style="cursor:pointer; width:10%;"><img src="images/email_go.png" alt="" title="'.lang("_RE_SEND_EMAIL").'"
+                                style="cursor:pointer;"  onclick="confirmResend('.$onClick.')" /></td>
+                            <td class="tblmcw1 dr8" style="cursor:pointer; width:10%;"><img src="images/shape_square_delete.png" alt="" title="'.lang("_RE_SEND_EMAIL").'"
+                                style="cursor:pointer;"  onclick="confirmResend('.$onClick.')" /></td></tr>';
+
+                            echo '<tr class="hidden" style="display:none" id="show_'.$i.'_'.$temp.'_recipients">';
+                            echo '<td class="dr4"></td>';
+                            echo '<td class="" colspan="3" style="">';
+                            echo '<table style="width: 100%; border-collapse: collapse; border: 0;padding: 10px;">';
+                            echo '<tr><td class="dr9 headerrow" style="width:48%">Download Statistics</td><td class="dr12"></td></tr>'; // Needs a Lang[] for contents;
+
+                            for($file = 0; $file < sizeof($itemContents); $file++) {
                                 echo '<tr>';
-                                // if(sizeof($item["downloadsummary"]) > 0)
-                                // if(sizeof($item["downloadsummary"]) > 0)
-                                //{
-                                echo '<td  class="dr1 expct" style="width: 5%;" >
-                                    <img class="expct" id="showicon_'.$i.'"  style="cursor:pointer" src="images/openboth.png" alt=""/>
-                                </td>';
-                                echo '<td class="dr2 HardBreak" style="text-align: center;">' . $recipientsArray[$temp]['fileto'] . '</td>';
-                                echo '<td class="dr8 HardBreak" style="text-align: center;"> x </td></tr>';
-                                echo '<tr><td class="dr7"></td><td class="dr7"></td><td class="dr7"></tr>';
+                                //echo '<td  class="expct dr4" style="width: 5%;" ></td>';
+                                echo '<td class="HardBreak dr4" >' . utf8tohtml($itemContents[$file]['fileoriginalname'], true) . '</td>';
+                                echo '<td class="HardBreak dr6" style="text-align: center">' . $itemContents[$file]['downloads'] . '</td>';
+                                //echo '<td class="tblmcw1"></td>';
+                                //echo '<td class="tblmcw1 dr6"></td>';
+                                echo '</tr>';
+
                             }
+                            echo '<tr><td class="dr7" colspan="2"></td></tr>';
+                            echo '</table></td><td class="dr6"></td> ';
+                            echo '</tr>';
+                            echo '<tr><td class="dr7" colspan="5"></td></tr>';
+                        }
 
 
-                        // end of recipients table
+
+                        echo '<tr><td colspan="5" style="text-align: center; border: 1px solid #999;"><a target="_blank" style="cursor:pointer;" onclick="openAddRecipient('."'".$itemContents[0]['filevoucheruid']."',
+                                '".rawurlencode(utf8tohtml($itemContents[0]['fileoriginalname'],true)) ."',
+                               '".$itemContents[0]['filesize'] ."','".rawurlencode($itemContents[0]['filefrom'])."',
+                                '".rawurlencode($itemContents[0]['filesubject'])."',
+                                '".rawurlencode($itemContents[0]['filemessage'])."'" .');">Click here to Add a new Recipient</a></td></tr>';
+                     // end of recipients table
                         echo '</table>';
+                        echo '<br />';
 
 
 
                         echo '</td>';
+                        echo '<td class="dr6"></td>';
                         echo '</tr>';
                     }
                 }
-                echo '<tr><td class="dr7"></td><td class="dr7"></td>
-                    <td class="dr7"></td><td class="dr7"></td><td class="dr7"></td>
-                    <td class="dr7"></td><td class="dr7"></td><td class="dr7"></td>
-                    <td class="dr7"></td></tr>';
+                echo '<tr><td class="dr7" colspan="10"></tr>';
                 //}
             }
             ?>
