@@ -480,7 +480,7 @@ $json_o=json_decode($filedata,true);
                                         src="images/shape_square_delete.png" alt="" title="'.lang("_DELETE_FILE").'" />
                                 </div>
                             </td>
-                            <td class="dr2 HardBreak" >' . $fileToString . '</td>
+                            <td class="dr2 HardBreak" title="'. $recipientsString . '">' . $fileToString . '</td>
                             <td class="dr2 HardBreak" style="text-align: center">' .formatBytes($totalSize). '</td>
                             <td class="dr2 HardBreak" style="text-align: center">' . $maxDownloaded . '</td>
                             <td class="dr2" style="text-align: center">
