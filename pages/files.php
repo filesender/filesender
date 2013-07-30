@@ -429,9 +429,9 @@ $json_o=json_decode($filedata,true);
                     $i += 1; // counter for file id's
                     // alternating rows
                     $rowClass = ($i % 2 != 0)? "class='altcolor'":"";
-                    $itemContents = $functions->getMultiFileData($item['filegroupid']);
+                    $itemContents = $functions->getTransactionDetails($item['filetrackingcode'], $item['fileauthuseruid']);
                     $onClick = "'" . $itemContents[0]['filevoucheruid'] . "'";
-                    $recipientsArray = $functions->getMultiRecipientDetails($item['filegroupid']);
+                    $recipientsArray = $functions->getMultiRecipientDetails($item['filetrackingcode'], $item['fileauthuseruid']);
                     $numExtraRecipients = sizeof($recipientsArray)-1;
                     $fileToString = $numExtraRecipients == 0 ? $itemContents[0]['fileto']  : $itemContents[0]['fileto'] . ' ... (' . $numExtraRecipients . ')';
                     $recipientsString = '';
@@ -566,23 +566,13 @@ $json_o=json_decode($filedata,true);
                                     $row = $file % 2 == 0 ? '<tr class="rowdivider">' : '<tr>';
                                     if ($file == sizeof($itemContents)-1){
                                         echo $row .
-                                            '<td class="dr11">
-                                                <a id="link_downloadfile_'.$i.'_'.$file.'"
-                                                    href="download.php?vid='. $itemContents[$file]['filevoucheruid'].'" target="_blank">
-                                                     ' . utf8tohtml($itemContents[$file]['fileoriginalname'],true) . '
-                                                </a>
-                                            </td>
+                                            '<td class="dr11">' . utf8tohtml($itemContents[$file]['fileoriginalname'],true) . '</td>
                                             <td class="dr12 HardBreak" style="text-align: center">' . formatBytes($itemContents[$file]['filesize']) . '</td>
                                             <td class="dr13 HardBreak" style="text-align: center">' . $itemContents[$file]['downloads'] . '</td>
                                         </tr>';
                                     } else {
                                         echo $row .
-                                            '<td class="dr4">
-                                                <a id="link_downloadfile_'.$i.'_'.$file.'"
-                                                    href="download.php?vid='. $itemContents[$file]['filevoucheruid'].'" target="_blank">
-                                                    ' . utf8tohtml($itemContents[$file]['fileoriginalname'], true) . '
-                                                </a>
-                                            </td>
+                                            '<td class="dr4">' . utf8tohtml($itemContents[$file]['fileoriginalname'], true) . '</td>
                                             <td class="HardBreak" style="text-align: center">' . formatBytes($itemContents[$file]['filesize']) . '</td>
                                             <td class="dr6 HardBreak" style="text-align: center">' . $itemContents[$file]['downloads'] . '</td>
                                         </tr>';
@@ -614,13 +604,22 @@ $json_o=json_decode($filedata,true);
                             for ($temp = 0; $temp < sizeOf($recipientsArray); $temp++) {
                                 $row = $temp % 2 != 0 ? '<tr class="altcolor">' : '<tr>';
 
+                                $files = $functions->getTransactionDownloadsForRecipient($recipientsArray[$temp]['fileto'], $item['filetrackingcode'], $item['fileauthuseruid']);
+
+                                $maxDownloaded = 0;
+                                for($file = 0; $file < sizeOf($files); $file++){
+                                    if($files[$file]['downloads'] > $maxDownloaded){
+                                        $maxDownloaded = $files[$file]['downloads'];
+                                    }
+                                }
+
                                 echo $row .
                                     '<td  class="dr4 expct" style="width: 5%;" onclick="show(&quot;'.$i.'_'.$temp.'_recipients&quot;)">
                                         <img class="expct" id="showicon_'.$i.'_'.$temp.'_recipients"
                                             style="cursor:pointer" src="images/openboth.png"  alt=""/>
                                     </td>
                                     <td class="HardBreak" style="text-align: left;">' . $recipientsArray[$temp]['fileto'] . '</td>
-                                    <td class="HardBreak" style="text-align: center;"> x </td>
+                                    <td class="HardBreak" style="text-align: center;">' . $maxDownloaded . '</td>
                                     <td class="tblmcw1" style="cursor:pointer; width:5%;">
                                         <img src="images/email_go.png" alt="" title="'.lang("_RE_SEND_EMAIL").'"
                                             style="cursor:pointer;"  onclick="confirmResend('.$onClick.')" />
@@ -638,11 +637,11 @@ $json_o=json_decode($filedata,true);
                                                 <td class="dr9 headerrow" colspan="2">Download Statistics</td>
                                             </tr>'; // Needs a Lang[] for contents;
 
-                                            for($file = 0; $file < sizeof($itemContents); $file++) {
+                                            for($file = 0; $file < sizeof($files); $file++) {
                                                 $row = $file % 2 == 0 ? '<tr class="rowdivider">' : '<tr>';
                                                 echo $row . '
-                                                    <td class="HardBreak dr4" style="width:64%">' . utf8tohtml($itemContents[$file]['fileoriginalname'], true) . '</td>
-                                                    <td class="HardBreak dr6" style="text-align: center">' . $itemContents[$file]['downloads'] . '</td>
+                                                    <td class="HardBreak dr4" >' . utf8tohtml($files[$file]['fileoriginalname'], true) . '</td>
+                                                    <td class="HardBreak dr6" style="text-align: center">' . $files[$file]['downloads'] . '</td>
                                                 </tr>';
                                             }
                                             echo '<tr>

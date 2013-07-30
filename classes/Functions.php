@@ -340,7 +340,8 @@ class Functions {
         }
         $pdo = $this->db->connect();
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
-        $statement = $pdo->prepare("SELECT DISTINCT(filegroupid), filetrackingcode, fileauthuseruid FROM files WHERE (fileauthuseruid = :fileauthuseruid) ORDER BY filetrackingcode DESC");
+        //$statement = $pdo->prepare("SELECT DISTINCT(filegroupid), filetrackingcode, fileauthuseruid FROM files WHERE (fileauthuseruid = :fileauthuseruid) ORDER BY filetrackingcode DESC");
+        $statement = $pdo->prepare("SELECT DISTINCT(filetrackingcode), fileauthuseruid FROM files WHERE fileauthuseruid = :fileauthuseruid ORDER BY filetrackingcode DESC");
         $statement->bindParam(':fileauthuseruid', $authAttributes["saml_uid_attribute"]);
         try
         {
@@ -699,6 +700,71 @@ class Functions {
         return $returnArray[0];
     }
 
+    function getTransactionDetails($trackingCode, $authuseruid) {
+        $pdo = $this->db->connect();
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
+        $statement = $pdo->prepare('SELECT * FROM files WHERE filetrackingcode = :filetrackingcode AND fileauthuseruid = :fileauthuseruid ORDER BY fileoriginalname ASC');
+        $statement->bindParam(':filetrackingcode', $trackingCode);
+        $statement->bindParam(':fileauthuseruid', $authuseruid);
+
+        try {
+            $statement->execute();
+        }
+        catch(PDOException $e)
+        {
+            logEntry($e->getMessage(),"E_ERROR");
+            displayError(lang("_ERROR_CONTACT_ADMIN"),$e->getMessage());
+        }
+
+        $result = $statement->fetchAll();
+        $pdo = NULL;
+        $returnArray = array();
+
+        $previousRow = null;
+        foreach($result as $row)
+        {
+            if ($row['filestatus'] != 'Available') continue;
+            if ($previousRow == null || $previousRow['fileoriginalname'] != $row['fileoriginalname']) {
+                $row["downloads"] =  $this->countDownloads($row["filevoucheruid"]);
+                array_push($returnArray, $row);
+            }
+
+            $previousRow = $row;
+        }
+
+        return $returnArray;
+    }
+
+    function getTransactionDownloadsForRecipient($recipientEmail, $trackingCode, $authuseruid) {
+        $pdo = $this->db->connect();
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
+        $statement = $pdo->prepare('SELECT fileoriginalname, filevoucheruid FROM files WHERE fileto = :fileto AND filetrackingcode = :filetrackingcode AND fileauthuseruid = :fileauthuseruid ORDER BY fileoriginalname ASC');
+        $statement->bindParam(':fileto', $recipientEmail);
+        $statement->bindParam(':filetrackingcode', $trackingCode);
+        $statement->bindParam(':fileauthuseruid', $authuseruid);
+
+        try {
+            $statement->execute();
+        }
+        catch(PDOException $e)
+        {
+            logEntry($e->getMessage(),"E_ERROR");
+            displayError(lang("_ERROR_CONTACT_ADMIN"),$e->getMessage());
+        }
+
+        $result = $statement->fetchAll();
+        $pdo = NULL;
+
+        $returnArray = array();
+        foreach($result as $row)
+        {
+            $returnArray[] = array('fileoriginalname' => $row['fileoriginalname'], 'downloads' => $this->countDownloads($row['filevoucheruid']));
+        }
+
+        logEntry("The return array: " . print_r($returnArray, true));
+        return $returnArray;
+    }
+
     function getMultiFileData($groupId) {
         $pdo = $this->db->connect();
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
@@ -742,12 +808,13 @@ class Functions {
         return false;
     }
 
-    function getMultiRecipientDetails($groupID)
+    function getMultiRecipientDetails($trackingCode, $authuseruid)
     {
         $pdo = $this->db->connect();
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
-        $statement = $pdo->prepare('SELECT fileto, filestatus FROM files where filegroupid = :filegroupid ORDER BY fileto ASC');
-        $statement->bindParam(':filegroupid', $groupID);
+        $statement = $pdo->prepare('SELECT fileto, filestatus, filegroupid FROM files where filetrackingcode = :filetrackingcode AND fileauthuseruid = :fileauthuseruid ORDER BY fileto ASC');
+        $statement->bindParam(':filetrackingcode', $trackingCode);
+        $statement->bindParam(':fileauthuseruid', $authuseruid);
         try {
             $statement->execute();
         }

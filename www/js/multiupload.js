@@ -356,10 +356,23 @@ function doUploadComplete() {
                 n += 1;
                 startUpload();
             } else {
-                window.location.href = 'index.php?s=complete&gid='+data['gid'];
+                transactionComplete(data['gid']);
             }
         }, error: function (xhr, err) {
             // error function to display error message e.g.404 page not found
+            ajaxerror(xhr.readyState, xhr.status, xhr.responseText);
+        }
+    });
+}
+
+function transactionComplete(gid) {
+    $.ajax({
+        type: 'POST',
+        url: uploadURI + '?type=transactioncomplete&gid=' + gid,
+        success: function (data) {
+            console.log("Transaction complete successful");
+            window.location.href = 'index.php?s=complete&gid='+data['gid'];
+        }, error: function (xhr, err) {
             ajaxerror(xhr.readyState, xhr.status, xhr.responseText);
         }
     });

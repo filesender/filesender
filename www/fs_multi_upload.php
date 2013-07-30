@@ -89,7 +89,7 @@ if (!isAuthenticated()) {
             break;
 
         case 'uploadcomplete':
-            // Finish an upload (called after a validateupload and single/chunk sequence).
+            // Finish an individual file upload (called after a validateupload and single/chunk sequence).
             $resultArray = array(); // Clear result array for errors.
 
             // Change each file from pending to done.
@@ -118,6 +118,29 @@ if (!isAuthenticated()) {
             $resultArray['status'] = $complete;
             $resultArray['gid'] = $data['filegroupid'];
             echo json_encode($resultArray);
+            break;
+
+        case 'transactioncomplete':
+            // Finish a transaction (entire upload complete).
+            $data = $functions->getMultiFileData($_REQUEST['gid']);
+            logEntry("Transaction complete: " . print_r($data, true));
+
+            $groupIdArray = array();
+            foreach ($data as $dataItem) {
+                // Update group IDs to be individual for each recipient.
+                if (!isset($groupIdArray[$dataItem['fileto']])) {
+                    $groupIdArray[$dataItem['fileto']] = getOpenSSLKey();
+                }
+
+                $dataItem['filegroupid'] = $groupIdArray[$dataItem['fileto']];
+                $functions->updateFile($dataItem);
+            }
+
+            foreach ($groupIdArray as $email => $groupId) {
+                $dataItem = $functions->getMultiFileData($groupId);
+                // send emails.
+            }
+
             break;
 
         case 'validateupload':
