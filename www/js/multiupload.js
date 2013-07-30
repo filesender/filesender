@@ -539,54 +539,6 @@ function secondsToString(seconds) {
     return ((h > 0 ? h + ":" : "") + (m > 0 ? (h > 0 && m < 10 ? "0" : "") + m + ":" : "0:") + (s < 10 ? "0" : "") + s);
 }
 
-// update the progress bar (Also used for aggregate progress bar)
-function updateProgressBar(bytesloaded, totalbytes, amountUploaded) {
-
-    var percentComplete = Math.round(bytesloaded * 100 / totalbytes);
-    var bytesTransfered = '';
-
-    if (bytesloaded > 1024 * 1024) {
-        bytesTransfered = (Math.round(bytesloaded * 100 / (1024 * 1024)) / 100).toString() + 'MB';
-    } else if (bytesloaded > 1024) {
-        bytesTransfered = (Math.round(bytesloaded * 100 / 1024) / 100).toString() + 'kB';
-    } else {
-        bytesTransfered = (Math.round(bytesloaded * 100) / 100).toString() + 'Bytes';
-    }
-    var progress_bar = '#progress_bar-' + n;
-    var file_box = '#file_' + n;
-    var progress_completed = '#progress_completed-' + n;
-    $(progress_bar).width(percentComplete / 100 * $(file_box).width());	//set width of progress bar based on the $status value (set at the top of this page)
-
-
-    // use time elapsed from start to calculate averages
-    var now = new Date().getTime();
-
-    // get the result in seconds
-    var timeSinceStart = (now - startTime) / 1000;
-    // Adds the amount of data uploaded this call to the total (for all files)
-    totalBytesLoaded += amountUploaded;
-
-    // get the result in MB to make it easier to calculate the time remaining
-    var uploadSpeed = (totalBytesLoaded / timeSinceStart) / 1024 / 1024;
-    var bytesRemaining = totalFileLengths - totalBytesLoaded;
-
-    // Check for uploadSpeed 0 to avoid 'Infinity' caused by /0.
-    var timeRemaining = (uploadSpeed == 0 ? 0 : ((bytesRemaining / 1024 / 1024) / uploadSpeed));
-
-    // Calculates the new length of the progress bar based on the total bytes uploaded
-    percentageComplete = Math.round(totalBytesLoaded * 100 / totalFileLengths);
-
-    // Updates the html contents of the <p> tags in generateAggregateProgressBar
-    $('#progress_string').html(percentageComplete + '%');
-    $('#totalUploaded').html('Total uploaded: ' + readablizebytes(totalBytesLoaded) + '/' + readablizebytes(totalFileLengths));
-
-    // x8 to gives the upload speed in Mbits rather than MBytes
-    $('#averageUploadSpeed').html('Average upload Speed:' + uploadSpeed.toFixed(2) * 8 + 'MBit/s');
-    $('#timeRemaining').html('Approx time remaining: ' + secondsToString(timeRemaining));
-    $('#progress_bar').width(percentageComplete / 100 * $('#progress_container').width());
-
-}
-
 // TODO: can go?
 function uploadProgress(evt) {
 }

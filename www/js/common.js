@@ -236,3 +236,56 @@ function statusMessage(msg, color) {
         $('#statusmessage').html(msg);
         $('#statusmessage').attr('class', color);
 }
+
+
+var totalBytesLoaded = 0;
+
+function updateProgressBar(bytesloaded, totalbytes, amountUploaded) {
+
+    var percentComplete = Math.round(bytesloaded * 100 / totalbytes);
+    var bytesTransfered = '';
+    var bytesRemaining;
+    var uploadSpeed;
+    var timeRemaining;
+
+    if (bytesloaded > 1024 * 1024) {
+        bytesTransfered = (Math.round(bytesloaded * 100 / (1024 * 1024)) / 100).toString() + 'MB';
+    } else if (bytesloaded > 1024) {
+        bytesTransfered = (Math.round(bytesloaded * 100 / 1024) / 100).toString() + 'kB';
+    } else {
+        bytesTransfered = (Math.round(bytesloaded * 100) / 100).toString() + 'Bytes';
+    }
+
+    // use time elapsed from start to calculate averages
+    var now = new Date().getTime();
+    var timeSinceStart = (now - startTime) / 1000;
+    // Adds the amount of data uploaded this call to the total (for all files)
+
+    if (totalFileLengths != 0) {
+        var progress_bar = '#progress_bar-' + n;
+        var file_box = '#file_' + n;
+        var progress_completed = '#progress_completed-' + n;
+        $(progress_bar).width(percentComplete / 100 * $(file_box).width());	//set width of progress bar based on the $status value (set at the top of this page)
+        percentComplete = Math.round(totalBytesLoaded * 100 / totalFileLengths);
+        totalBytesLoaded += amountUploaded;
+        uploadSpeed = (totalBytesLoaded / timeSinceStart) / 1024 / 1024;
+        bytesRemaining = totalFileLengths - totalBytesLoaded;
+        timeRemaining = (uploadSpeed == 0 ? 0 : ((bytesRemaining / 1024 / 1024) / uploadSpeed));
+        $('#progress_string').html(percentComplete + '%');
+        $('#progress_bar').width(percentComplete / 100 * $('#progress_container').width());
+        $('#totalUploaded').html('Total uploaded: ' + readablizebytes(totalBytesLoaded) + '/' + readablizebytes(totalFileLengths));
+        $('#averageUploadSpeed').html('Average upload Speed:' + uploadSpeed.toFixed(2) + 'MB/s');
+        $('#timeRemaining').html('Approx time remaining: ' + secondsToString(timeRemaining));
+    } else {
+        uploadSpeed = (bytesloaded/timeSinceStart) / 1024 / 1024;
+        bytesRemaining = totalbytes - bytesloaded;
+        timeRemaining = (uploadSpeed == 0 ? 0 : ((bytesRemaining / 1024 / 1024) / uploadSpeed));
+        $('#progress_string').html(percentComplete + '%');
+        $('#progress_bar').width(percentComplete/100 * $('#progress_container').width());	//set width of progress bar based on the $status value (set at the top of this page)
+        $('#totalUploaded').html('Total uploaded: ' + readablizebytes(bytesloaded) + '/' + readablizebytes(totalbytes));
+        $('#averageUploadSpeed').html('Average upload Speed: ' + uploadSpeed.toFixed(2) * 8 + 'MBit/s');
+        $('#timeRemaining').html('Approx time remaining: ' + secondsToString(timeRemaining));
+
+    }
+
+}
