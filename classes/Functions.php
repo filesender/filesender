@@ -340,7 +340,6 @@ class Functions {
         }
         $pdo = $this->db->connect();
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
-        //$statement = $pdo->prepare("SELECT DISTINCT(filegroupid), filetrackingcode, fileauthuseruid FROM files WHERE (fileauthuseruid = :fileauthuseruid) ORDER BY filetrackingcode DESC");
         $statement = $pdo->prepare("SELECT DISTINCT(filetrackingcode), fileauthuseruid FROM files WHERE fileauthuseruid = :fileauthuseruid ORDER BY filetrackingcode DESC");
         $statement->bindParam(':fileauthuseruid', $authAttributes["saml_uid_attribute"]);
         try
@@ -738,7 +737,7 @@ class Functions {
     function getTransactionDownloadsForRecipient($recipientEmail, $trackingCode, $authuseruid) {
         $pdo = $this->db->connect();
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
-        $statement = $pdo->prepare('SELECT fileoriginalname, filevoucheruid FROM files WHERE fileto = :fileto AND filetrackingcode = :filetrackingcode AND fileauthuseruid = :fileauthuseruid ORDER BY fileoriginalname ASC');
+        $statement = $pdo->prepare('SELECT fileoriginalname, filevoucheruid, filestatus FROM files WHERE fileto = :fileto AND filetrackingcode = :filetrackingcode AND fileauthuseruid = :fileauthuseruid ORDER BY fileoriginalname ASC');
         $statement->bindParam(':fileto', $recipientEmail);
         $statement->bindParam(':filetrackingcode', $trackingCode);
         $statement->bindParam(':fileauthuseruid', $authuseruid);
@@ -758,10 +757,11 @@ class Functions {
         $returnArray = array();
         foreach($result as $row)
         {
-            $returnArray[] = array('fileoriginalname' => $row['fileoriginalname'], 'downloads' => $this->countDownloads($row['filevoucheruid']));
+            if ($row['filestatus'] == 'Available') {
+                $returnArray[] = array('fileoriginalname' => $row['fileoriginalname'], 'downloads' => $this->countDownloads($row['filevoucheruid']));
+            }
         }
 
-        logEntry("The return array: " . print_r($returnArray, true));
         return $returnArray;
     }
 
@@ -783,16 +783,11 @@ class Functions {
         $pdo = NULL;
         $returnArray = array();
 
-        $previousRow = null;
         foreach($result as $row)
         {
             if ($row['filestatus'] != 'Available') continue;
-            if ($previousRow == null || $previousRow['fileoriginalname'] != $row['fileoriginalname']) {
-                    $row["downloads"] =  $this->countDownloads($row["filevoucheruid"]);
-                    array_push($returnArray, $row);
-            }
-
-            $previousRow = $row;
+                $row["downloads"] =  $this->countDownloads($row["filevoucheruid"]);
+                array_push($returnArray, $row);
         }
 
         return $returnArray;
@@ -1173,7 +1168,7 @@ class Functions {
 				return $this->sendmail->sendEmail($dataitem,$config['voucherissuedemailbody']);
 			} elseif ($dataitem['filestatus'] == "Available") {
 				$this->saveLog->saveLog($dataitem,"Uploaded","");
-				return $this->sendmail->sendEmail($dataitem,$config['fileuploadedemailbody']);
+				//return $this->sendmail->sendEmail($dataitem,$config['fileuploadedemailbody']);
 			}
 			return true;
 		}
