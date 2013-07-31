@@ -94,6 +94,8 @@ $lang["_SHOWHIDE"] = "Show/Hide";
 $lang["_UPLOADING_WAIT"] = "Uploading file - please wait...";
 $lang["_SHOW_ALL"] = "Show/Hide Details";
 $lang["_DETAILS"] = "Details";
+$lang["_CONTENTS"] = "Contents";
+$lang["_RECIPIENTS"] = "Recipients";
 
 // button labels
 $lang["_UPLOAD"] = "Start sending";
@@ -155,6 +157,7 @@ $lang["_NO_FILES"] = "There are currently no files available";
 $lang["_NO_VOUCHERS"] = "There are currently no vouchers available";
 $lang["_ARE_YOU_SURE"] = "Are you sure?";
 $lang["_DELETE_FILE"] = "Delete File";
+$lang["_DELETE_RECIPIENT"] = "Delete Recipient";
 $lang["_EMAIL_SENT"] = "Message Sent";
 $lang["_SENT_DATE"] = "Sent date";
 $lang["_EXPIRY_DATE"] = "Expiry date";
@@ -190,6 +193,7 @@ $lang["_OPTIONAL"] = "optional";
 $lang["_CONFIRM_DELETE_FILE"] = "Are you sure you want to delete this File?";
 $lang["_CONFIRM_DELETE_VOUCHER"] = "Are you sure you want to delete this voucher?";
 $lang["_CONFIRM_RESEND_EMAIL"] = "Are you sure you want to re-send this email?";
+$lang["_CONFIRM_DELETE_RECIPIENT"] = "Are you sure you want to delete this recipient?";
 
 // standard date display format
 $lang['datedisplayformat'] = "d/m/Y"; // Format for displaying date/time, use PHP date() format string syntax 

@@ -558,7 +558,7 @@ $json_o=json_decode($filedata,true);
 
                             echo '<table style="width: 100%; padding: 0; border-collapse: collapse; border: 0;">
                                 <tr>
-                                    <td colspan="3" class="dr9 headerrow">Contents</td>
+                                    <td colspan="3" class="dr9 headerrow">' . lang("_CONTENTS") . '</td>
                                 </tr>
                                 <tr>
                                     <td class="dr4 HardBreak" style="width: 66%; text-align: left"><strong>File Name</strong></td>
@@ -589,7 +589,7 @@ $json_o=json_decode($filedata,true);
 
                             echo '<table style="width: 100%; border-spacing: 0; border: 0">
                                 <tr>
-                                    <td colspan="5" class="dr9 headerrow">Recipients</td>
+                                    <td colspan="5" class="dr9 headerrow">' . lang("_RECIPIENTS") . '</td>
                                 </tr>
                                 <tr>
                                     <td class="dr4 tblmcw1"
@@ -629,7 +629,7 @@ $json_o=json_decode($filedata,true);
                                             style="cursor:pointer;"  onclick="confirmResend('.$onClick.')" />
                                     </td>
                                     <td class="tblmcw1 dr6" style="cursor:pointer; width:5%;">
-                                        <img src="images/shape_square_delete.png" alt="" title="'.lang("_DELETE_FILE").'"
+                                        <img src="images/shape_square_delete.png" alt="" title="'.lang("_DELETE_RECIPIENT").'"
                                             style="cursor:pointer;"  onclick="confirmDeleteRecipient(&quot;'.$recipientsArray[$temp]['filegroupid'].'&quot;)" />
                                     </td>
                                 </tr>
@@ -689,8 +689,8 @@ $json_o=json_decode($filedata,true);
     </div>
 </div>
 
-<div id="dialog-delete" title="<?php echo  lang("_DELETE_FILE"); ?>">
-    <p><?php echo lang("_CONFIRM_DELETE_FILE");?></p>
+<div id="dialog-delete" title="<?php echo  lang("_DELETE_RECIPIENT"); ?>">
+    <p><?php echo lang("_CONFIRM_DELETE_RECIPIENT");?></p>
 </div>
 
 <div id="dialog-resend" title="<?php echo  lang("_RE_SEND_EMAIL"); ?>">
