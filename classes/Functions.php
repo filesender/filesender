@@ -835,6 +835,26 @@ class Functions {
         return $returnArray;
     }
 
+    function deleteRecipient($groupid)
+    {
+        $pdo = $this->db->connect();
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $statement = $pdo->prepare("UPDATE files SET filestatus = 'Deleted' WHERE filegroupid = :filegroupid");
+        $statement->bindParam(':filegroupid', $groupid);
+
+        try {
+            $statement->execute();
+        }
+        catch(PDOException $e){
+            logEntry($e->getMessage(),"E_ERROR");
+            return false;
+        }
+
+        $result = $statement->rowCount();
+
+        if ($result != 0) return true;
+        return false;
+    }
 
     //--------------------------------------- CHECKED
 	// insert a voucher
