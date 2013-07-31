@@ -49,7 +49,7 @@ class Mail {
     //---------------------------------------
     // Send mail
     // 
-    public function sendEmail($mailobject,$template,$type='full'){
+    public function sendEmail($mailobject,$template,$type='full', $multifiledetails = null){
 
         $authsaml = AuthSaml::getInstance();
         $authvoucher = AuthVoucher::getInstance();
@@ -65,6 +65,8 @@ class Mail {
         if ($type == 'bounce') {$template = str_replace("{fileoriginalto}", $mailobject["fileoriginalto"], $template);}
         if (isset($config["site_url"])) {$template = str_replace("{serverURL}", $config["site_url"], $template);}
         $template = str_replace("{filevoucheruid}", $mailobject["filevoucheruid"], $template);
+        $template = str_replace("{filegroupid}", $mailobject["filegroupid"], $template);
+        $template = str_replace("{filetrackingcode}", $mailobject["filetrackingcode"], $template);
         $template = str_replace("{fileexpirydate}", date($config['datedisplayformat'],strtotime($mailobject["fileexpirydate"])), $template);
         $template = str_replace("{filefrom}", $mailobject["filefrom"], $template);
         $template = str_replace("{fileoriginalname}", $fileoriginalname, $template);
@@ -72,6 +74,18 @@ class Mail {
         $template = str_replace("{filename}", $fileoriginalname, $template);	
         $template = str_replace("{filesize}", formatBytes($mailobject["filesize"]), $template);
         $template = str_replace("{CRLF}", $crlf, $template);
+
+        if ($multifiledetails != null) {
+            $fileinfo = "";
+            $fileinfohtml = "";
+            foreach ($multifiledetails as $file) {
+                $fileString = $file['fileoriginalname'] . " (" . formatBytes($file['filesize']) . ")";
+                $fileinfo .= " - " . $fileString . "\n";
+                $fileinfohtml .= "&nbsp;&bull;&nbsp;" . $fileString . "<br />";
+            }
+            $template = str_replace("{fileinfo}", $fileinfo, $template);
+            $template = str_replace("{fileinfohtml}", $fileinfohtml, $template);
+        }
 
 	if(strlen($mailobject["filemessage"]) > 0) {
 
@@ -156,6 +170,7 @@ class Mail {
             $tempfilesubject = str_replace("{siteName}", $config["site_name"], $tempfilesubject);
             $tempfilesubject = str_replace("{fileoriginalname}", $fileoriginalname, $tempfilesubject);
             $tempfilesubject = str_replace("{filename}", $fileoriginalname, $tempfilesubject);
+            $tempfilesubject = str_replace("{filetrackingcode}", $mailobject["filetrackingcode"], $tempfilesubject);
 
             $subject =   $tempfilesubject;
 
