@@ -89,6 +89,21 @@ if(isset($_REQUEST["a"]) && isset($_REQUEST["id"])) {
 	}
 }
 
+if(isset($_REQUEST["a"]) && isset($_REQUEST["gid"])) {
+    $recipient = $_REQUEST["gid"];
+    if ($_REQUEST["a"] == "del") {
+
+            if ($functions->deleteRecipient($recipient)) {
+                $statusErr = "Removed Recipient from transaction";
+                $statusClass = 'green';
+            } else {
+                $statusErr = "FAILEDFAILEDFAILEDFAILEDFAILEDFAILED!222";
+                $statusClass = "red";
+            }
+
+    }
+}
+
 if(isset($_REQUEST["a"]) && $_REQUEST["a"] == "added") {
 	// display the add box
     $statusErr = lang("_EMAIL_SENT");
@@ -120,6 +135,7 @@ $json_o=json_decode($filedata,true);
     var showAllRecipients = false; // flag for expanding all download summaries for individual recipients
     var statusError = '<?php echo $statusErr ?>';
     var statusClass = '<?php echo $statusClass ?>';
+    var selectedRecipient = "";
 
 	$(function() {
 
@@ -137,7 +153,7 @@ $json_o=json_decode($filedata,true);
 				    $( this ).dialog( "close" );
 				},
 				'deleteBTN': function() {
-				    deleteFile();
+				    deleteRecipient();
                     $( this ).dialog( "close" );
 				}
 			}
@@ -314,18 +330,18 @@ $json_o=json_decode($filedata,true);
         $("#dialog-resend" ).dialog( "open" );
     }
 
-	function deleteFile()
+	function deleteRecipient()
     {
         // reload page to delete selected file
         // should add a tick box to delete multiple selected files
-        window.location.href="index.php?s=files&a=del&id=" + selectedFile;
+        window.location.href="index.php?s=files&a=del&gid=" + selectedRecipient;
     }
 
-	function confirmDelete(vid)
+	function confirmDeleteRecipient(gid)
     {
-        // confirm deletion of selected file
-        selectedFile = vid;
-        $("#dialog-delete" ).dialog( "open" );
+        // confirm deletion of selected person
+        selectedRecipient = gid;
+        $("#dialog-delete").dialog("open");
     }
 
 	function openAddRecipient(vid,filename,filesize,from, subject, message)
@@ -613,8 +629,8 @@ $json_o=json_decode($filedata,true);
                                             style="cursor:pointer;"  onclick="confirmResend('.$onClick.')" />
                                     </td>
                                     <td class="tblmcw1 dr6" style="cursor:pointer; width:5%;">
-                                        <img src="images/shape_square_delete.png" alt="" title="'.lang("_RE_SEND_EMAIL").'"
-                                            style="cursor:pointer;"  onclick="confirmResend('.$onClick.')" />
+                                        <img src="images/shape_square_delete.png" alt="" title="'.lang("_DELETE_FILE").'"
+                                            style="cursor:pointer;"  onclick="confirmDeleteRecipient(&quot;'.$recipientsArray[$temp]['filegroupid'].'&quot;)" />
                                     </td>
                                 </tr>
                                 <tr class="hidden" style="display:none" id="show_'.$i.'_'.$temp.'_recipients">
