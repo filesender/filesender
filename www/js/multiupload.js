@@ -370,8 +370,9 @@ function transactionComplete(gid) {
         type: 'POST',
         url: uploadURI + '?type=transactioncomplete&gid=' + gid,
         success: function (data) {
+            var data = JSON.parse(data);
             console.log("Transaction complete successful");
-            window.location.href = 'index.php?s=complete&gid='+data['gid'];
+            window.location.href = 'index.php?s=complete&gid=' + data['gid'];
         }, error: function (xhr, err) {
             ajaxerror(xhr.readyState, xhr.status, xhr.responseText);
         }

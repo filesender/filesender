@@ -60,6 +60,7 @@ $authSaml = AuthSaml::getInstance();
 $authVoucher = AuthVoucher::getInstance();
 $log = Log::getInstance();
 $functions = Functions::getInstance();
+$sendMail = Mail::getInstance();
 
 global $config;
 date_default_timezone_set($config['Default_TimeZone']);
@@ -117,13 +118,15 @@ if (!isAuthenticated()) {
 
             $resultArray['status'] = $complete;
             $resultArray['gid'] = $data['filegroupid'];
+            logEntry("gid sent to multiupload.js: " . $resultArray['gid']);
             echo json_encode($resultArray);
             break;
 
         case 'transactioncomplete':
             // Finish a transaction (entire upload complete).
+            $resultArray = array();
+
             $data = $functions->getMultiFileData($_REQUEST['gid']);
-            logEntry("Transaction complete: " . print_r($data, true));
 
             $groupIdArray = array();
             foreach ($data as $dataItem) {
@@ -136,10 +139,16 @@ if (!isAuthenticated()) {
                 $functions->updateFile($dataItem);
             }
 
-            foreach ($groupIdArray as $email => $groupId) {
+            foreach ($groupIdArray as $groupId) {
+                // Send emails.
                 $dataItem = $functions->getMultiFileData($groupId);
-                // send emails.
+                $sendMail->sendEmail($dataItem[0], $config['transactionuploadedemailbody'], 'full', $dataItem);
             }
+
+            $resultArray['status'] = 'complete';
+            $resultArray['gid'] = reset($groupIdArray); // The first group ID.
+            echo json_encode($resultArray);
+            logEntry("Transaction complete");
 
             break;
 
