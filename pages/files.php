@@ -348,41 +348,53 @@ $json_o=json_decode($filedata,true);
 		$("#dialog-addrecipient" ).dialog( "open" );
 	}
 
-		// toggle downloadsummary results
-	function toggleDownloadSummary()
-	{
-		if(!showall) {
-			$('.hidden').css('display','');
-			$('img.expct').attr({src: 'images/openboth2.png', alt: ''});
-			showall = true;
-		} else {
-            $('.hidden').css('display','none');
-            $('img.expct').attr({src: 'images/openboth.png', alt: ''});
-            showall = false;
-		}
-	}
-
-    function expandRecipients(i, j) {
-        var temp = 0;
+    function expandRecipients(i, j)
+    {
+        var num = 0;
         var elemDisplay;
         if(!showAllRecipients) {
-            for (temp; temp < j; temp++) {
-                elemDisplay = $('#show_'+i+'_'+temp+'_recipients').css('display');
+            for (num; num < j; num++) {
+                elemDisplay = $('#show_'+i+'_'+num+'_recipients').css('display');
                 if (elemDisplay  == 'none') {
-                    show(i+"_"+temp+"_recipients");
+                    show(i+"_"+num+"_recipients");
                 }
             }
             $('#showicon_'+i+'_recipients').attr({src: 'images/openboth2.png', alt: ''});
             showAllRecipients = true;
         } else {
-            for (temp; temp < j; temp++) {
-                elemDisplay = $('#show_'+i+'_'+temp+'_recipients').css('display');
+            for (num; num < j; num++) {
+                elemDisplay = $('#show_'+i+'_'+num+'_recipients').css('display');
                 if (elemDisplay  == 'table-row') {
-                    show(i+"_"+temp+"_recipients");
+                    show(i+"_"+num+"_recipients");
                 }
             }
             $('#showicon_'+i+'_recipients').attr({src: 'images/openboth.png', alt: ''});
             showAllRecipients = false;
+        }
+    }
+
+    function expandTopMenu(numRows)
+    {
+        var row = 0;
+        var elemDisplay;
+        if (!showall) {
+            for (row; row<numRows; row++) {
+                elemDisplay = $('#show_'+row).css('display');
+                if (elemDisplay == 'none') {
+                    show(row);
+                }
+            }
+            $('#showicon_top').attr({src: 'images/openboth2.png', alt: ''});
+            showall = true;
+        } else {
+            for (row; row<numRows; row++) {
+                elemDisplay = $('#show_'+row).css('display');
+                if (elemDisplay == 'table-row') {
+                    show(row);
+                }
+            }
+            $('#showicon_top').attr({src: 'images/openboth.png', alt: ''});
+            showall = false;
         }
     }
 
@@ -406,13 +418,11 @@ $json_o=json_decode($filedata,true);
     <div id="tablediv">
         <table id="myfiles" style="table-layout:fixed; width: 100%; padding: 4px; border-spacing: 0; border: 0">
             <tr class="headerrow">
-                <td class="tblmcw1" onclick="toggleDownloadSummary()" title="<?php echo lang("_SHOW_ALL"); ?>" style="cursor:pointer">
-                    <img class="expct" src="images/openboth.png" alt=""/>
+                <td class="tblmcw1" onclick="expandTopMenu(<?php echo sizeof($json_o); ?>)" title="<?php echo lang("_SHOW_ALL"); ?>" style="cursor:pointer">
+                    <img class="expct" id="showicon_top" src="images/openboth.png" alt=""/>
                 </td>
-                <td class="tblmcw2">&nbsp;</td>
-                <td class="tblmcw2">&nbsp;</td>
-                <td class="tblmcw2">&nbsp;</td>
-                <td class="HardBreak" style="text-align: left" id="myfiles_header_to"><strong><?php echo lang("_TO"); ?></strong></td>
+
+                <td class="HardBreak" colspan="4" style="text-align: center" id="myfiles_header_to"><strong><?php echo lang("_TO"); ?></strong></td>
                 <td class="HardBreak tblmcw3" style="text-align: center" id="myfiles_header_size"><strong>Total Size</strong></td>
                 <td class="HardBreak tblmcw3" id="myfiles_header_downloaded" style="text-align: center"
                     title="# <?php echo lang("_DOWNLOADED"); ?>"><strong><?php echo lang("_DOWNLOADED"); ?></strong>
@@ -457,30 +467,8 @@ $json_o=json_decode($filedata,true);
                                 <img class="expct" id="showicon_'.$i.'"  style="cursor:pointer"
                                     title="'. lang("_SHOW_ALL").'" src="images/openboth.png" alt=""/>
                             </td>
-                            <td class="dr2" style="text-align: top;">
-                                <div id="btn_resendemail_'.$i.'">
-                                    <img src="images/email_go.png" alt="" title="'.lang("_RE_SEND_EMAIL").'"
-                                        style="cursor:pointer;"  onclick="confirmResend('.$onClick.')" />
-                                </div>
-                            </td>
-                            <td class="dr2" style="text-align: top;">
-                                <img id="btn_addrecipient_'.$i.'" src="images/email_add.png" alt=""
-                                    title="'.lang("_NEW_RECIPIENT").'"
-                                    onclick="openAddRecipient('."'".$itemContents[0]['filevoucheruid']."',
-                                    '".rawurlencode(utf8tohtml($itemContents[0]['fileoriginalname'],true)) ."',
-                                    '".$itemContents[0]['filesize'] ."','".rawurlencode($itemContents[0]['filefrom'])."',
-                                    '".rawurlencode($itemContents[0]['filesubject'])."',
-                                    '".rawurlencode($itemContents[0]['filemessage'])."'" .');"  style="cursor:pointer;"
-                                />
-                            </td>
-                            <td  class="dr2"  style="text-align: top; width: 22px;">
-                                <div style="cursor:pointer;">
-                                    <img id="btn_deletevoucher_'.$i.'"
-                                        onclick="confirmDelete('."'" .$itemContents[0]['filevoucheruid'] . "')". '"
-                                        src="images/shape_square_delete.png" alt="" title="'.lang("_DELETE_FILE").'" />
-                                </div>
-                            </td>
-                            <td class="dr2 HardBreak" title="'. $recipientsString . '">' . $fileToString . '</td>
+
+                            <td colspan="4" class="dr2 HardBreak" title="'. $recipientsString . '">' . $fileToString . '</td>
                             <td class="dr2 HardBreak" style="text-align: center">' .formatBytes($totalSize). '</td>
                             <td class="dr2 HardBreak" style="text-align: center">' . $maxDownloaded . '</td>
                             <td class="dr2" style="text-align: center">
