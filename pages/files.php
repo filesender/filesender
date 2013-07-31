@@ -439,12 +439,12 @@ $json_o=json_decode($filedata,true);
                 </td>
 
                 <td class="HardBreak" colspan="4" style="text-align: center" id="myfiles_header_to"><strong><?php echo lang("_TO"); ?></strong></td>
-                <td class="HardBreak tblmcw3" style="text-align: center" id="myfiles_header_size"><strong>Total Size</strong></td>
+                <td class="HardBreak tblmcw3" style="text-align: center" id="myfiles_header_size"><strong><?php echo lang("_TOTAL_SIZE") ?></strong></td>
                 <td class="HardBreak tblmcw3" id="myfiles_header_downloaded" style="text-align: center"
-                    title="# <?php echo lang("_DOWNLOADED"); ?>"><strong><?php echo lang("_DOWNLOADED"); ?></strong>
+                    title="# <?php echo lang("_DOWNLOADS"); ?>"><strong><?php echo lang("_DOWNLOADS"); ?></strong>
                 </td>
                 <td class="HardBreak tblmcw3" id="myfiles_header_expiry" style="text-align: center"><strong><?php echo lang("_EXPIRY"); ?></strong></td>
-                <td class="HardBreak" id="myfiles_header_filename" style="text-align: center"><strong>Tracking Code</strong></td>
+                <td class="HardBreak" id="myfiles_header_filename" style="text-align: center"><strong><?php echo lang("_TRACKING_CODE") ?></strong></td>
                 <td class="tblmcw1 HardBreak"></td>
             </tr>
             <?php
@@ -561,9 +561,9 @@ $json_o=json_decode($filedata,true);
                                     <td colspan="3" class="dr9 headerrow">' . lang("_CONTENTS") . '</td>
                                 </tr>
                                 <tr>
-                                    <td class="dr4 HardBreak" style="width: 66%; text-align: left"><strong>File Name</strong></td>
-                                    <td class="HardBreak" style="width: 17%; text-align: center"><strong>File Size</strong></td>
-                                    <td class="dr6 HardBreak" style="width: 17%; text-align: center"><strong>Downloads</strong></td>
+                                    <td class="dr4 HardBreak" style="width: 66%; text-align: left"><strong>' . lang("_FILE_NAME") . '</strong></td>
+                                    <td class="HardBreak" style="width: 17%; text-align: center"><strong>' . lang("_FILE_SIZE") . '</strong></td>
+                                    <td class="dr6 HardBreak" style="width: 17%; text-align: center"><strong>' . lang("_DOWNLOADS") . '</strong></td>
                                 </tr>';
 
                                 for($file = 0; $file < sizeof($itemContents); $file++) {
@@ -598,7 +598,7 @@ $json_o=json_decode($filedata,true);
                                             <img class="expct" id="showicon_'.$i.'_recipients" src="images/openboth.png" alt="" draggable="false" />
                                     </td>
                                     <td class="HardBreak" style="text-align: left; width:61%;" ><strong>Email</strong></td>
-                                    <td class="HardBreak tblmcw3" style="text-align: center; width:24%"><strong>'. lang("_DOWNLOADED").'</strong></td>
+                                    <td class="HardBreak tblmcw3" style="text-align: center; width:24%"><strong>'. lang("_DOWNLOADS").'</strong></td>
                                     <td class="tbl1mcw1" style="cursor:pointer; width:5%;">&nbsp;</td>
                                     <td class="tbl1mcw1 dr6" style="cursor:pointer; width:5%;">&nbsp;</td>
                                 </tr>';

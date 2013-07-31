@@ -96,6 +96,7 @@ $lang["_SHOW_ALL"] = "Show/Hide Details";
 $lang["_DETAILS"] = "Details";
 $lang["_CONTENTS"] = "Contents";
 $lang["_RECIPIENTS"] = "Recipients";
+$lang["_TOTAL_SIZE"] = "Total size";
 
 // button labels
 $lang["_UPLOAD"] = "Start sending";
