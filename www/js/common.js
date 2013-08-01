@@ -289,3 +289,12 @@ function updateProgressBar(bytesloaded, totalbytes, amountUploaded) {
     }
 
 }
+
+// Creates a HH:MM:SS string from seconds.
+function secondsToString(seconds) {
+    var h = Math.floor(seconds / 3600);
+    var m = Math.floor(seconds % 3600 / 60);
+    var s = Math.floor(seconds % 3600 % 60);
+    return ((h > 0 ? h + ":" : "") + (m > 0 ? (h > 0 && m < 10 ? "0" : "") + m + ":" : "0:") + (s < 10 ? "0" : "") + s);
+}
+
