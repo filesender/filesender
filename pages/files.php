@@ -82,6 +82,16 @@ if(isset($_REQUEST["a"]) && isset($_REQUEST["id"])) {
                 //echo "<div id='message'>".lang("_PERMISSION_DENIED")."</div>";
 			}
 		}
+
+        if($_REQUEST['a'] == "add" && isset($_REQUEST['tc'])){
+            if(isset($_REQUEST['fileto'])) {
+                $listOfEmails = explode(",", $_REQUEST['fileto']);
+                $newIDs = $functions->addRecipientsToTransaction($listOfEmails, $_REQUEST['tc'], $myfileData['fileauthuseruid']);
+            }
+            if( $isAuth && $userdata["saml_uid_attribute"] == $myfileData["fileauthuseruid"]) {
+
+            }
+        }
 	} else {
         $statusErr = lang("_INVALID_FILEVOUCHERID");
         $statusClass = 'red';
@@ -202,55 +212,8 @@ $json_o=json_decode($filedata,true);
 				},
 				'addrecipientsendBTN': function() {
 					// Disable the send button to prevent duplicate sending
+                    $("#form1").submit();
 					$('#btn_addrecipientsend').attr("disabled", true);
-
-					if(validateForm())
-					{
-						// post form1 as json
-						var query = $("#form1").serializeArray(), json = {};
-						for (i in query) { json[query[i].name] = query[i].value; }
-
-						$.ajax({
-							type: "POST",
-							url: "fs_upload.php?type=addRecipient",
-							data: {myJson:  JSON.stringify(json)}
-							,success:function( data ) {
-								if(data == "") {
-									alert("No response from server");
-									return;
-								}
-								if(data == "ErrorAuth") {
-									$("#dialog-autherror").dialog("open");
-									return;
-								}
-								var data =  parseJSON(data);
-								if(data.errors) {
-									$.each(data.errors, function(i,result){
-										if(result == "err_token") { $("#dialog-tokenerror").dialog("open");} // token missing or error
-										if(result == "err_tomissing") { $("#fileto_msg").show();} // missing email data
-										if(result == "err_expmissing") { $("#expiry_msg").show();} // missing expiry date
-										if(result == "err_exoutofrange") { $("#expiry_msg").show();} // expiry date out of range
-										if(result == "err_invalidemail") { $("#fileto_msg").show();} // 1 or more emails invalid
-										if(result == "err_emailnotsent") {window.location.href="index.php?s=emailsenterror";} //
-									});
-									// re-enable button if client needs to fix an issue
-									$('#btn_addrecipientsend').attr("disabled", false);
-								} else {
-									if(data.status && data.status == "complete")
-									{
-										// done
-										window.location.href="index.php?s=files&a=added";
-									}
-								}
-							},error:function(xhr,err){
-								// error function to display error message e.g.404 page not found
-								ajaxerror(xhr.readyState,xhr.status,xhr.responseText);
-							}
-						});
-					} else {
-						// enable button to allow fixing any validation errors
-						$('#btn_addrecipientsend').attr("disabled", false);
-					}
 				}
 			}
 		});
@@ -344,11 +307,12 @@ $json_o=json_decode($filedata,true);
         $("#dialog-delete").dialog("open");
     }
 
-	function openAddRecipient(vid,filename,filesize,from, subject, message)
+	function openAddRecipient(vid,filename,filesize,from, subject, message, trackingCode)
 	{
 		// populate form and open add-recipient modal form
-		$("#form1").attr("action", "index.php?s=files&a=add&id=" + vid );
+		$("#form1").attr("action", "index.php?s=files&a=add&id=" + vid  + "&tc=" + trackingCode);
 		$("#filevoucheruid").val(vid);
+        $("#trackingCode").val(trackingCode);
 		$("#filefrom").html(decodeURIComponent(from));
 		$("#filename").html(decodeURIComponent(filename));
 		$("#filesubject").val(decodeURIComponent(subject));
@@ -664,7 +628,8 @@ $json_o=json_decode($filedata,true);
                                             '".rawurlencode(utf8tohtml($itemContents[0]['fileoriginalname'],true)) ."',
                                             '".$itemContents[0]['filesize'] ."','".rawurlencode($itemContents[0]['filefrom'])."',
                                             '".rawurlencode($itemContents[0]['filesubject'])."',
-                                            '".rawurlencode($itemContents[0]['filemessage'])."'" .');">Click here to Add a new Recipient
+                                            '".rawurlencode($itemContents[0]['filemessage'])."',
+                                            '".$item['filetrackingcode']."'". ');">Click here to Add a new Recipient
                                         </a>
                                     </td>
                                 </tr>
@@ -699,6 +664,8 @@ $json_o=json_decode($filedata,true);
 
 <div id="dialog-addrecipient" style="display:none" title="<?php echo  lang("_NEW_RECIPIENT"); ?>">
     <form id="form1" name="form1" enctype="multipart/form-data" method="post" action="#">
+        <input type="hidden" name="a" value="add" />
+        <input id="trackingCode" type="hidden" name="tc" value="" />
         <table  style="width: 600px; border: 0">
             <tr>
                 <td class="formfieldheading mandatory tblmcw3" id="files_to"><?php echo  lang("_TO"); ?>:</td>

@@ -734,6 +734,67 @@ class Functions {
         return $returnArray;
     }
 
+    function addRecipientsToTransaction($emailList, $trackingCode, $uid) {
+
+        $transactionDetails = $this->getTransactionDetails($trackingCode, $uid);
+        //used to get a list of the existing recipients for the specified transaction.
+        $existingDetails = $this->getMultiRecipientDetails($trackingCode, $uid);
+
+        $groupIDs = array();
+
+        foreach ($emailList as $email) {
+            global $config;
+            $duplicateFound = false;
+
+            // Checks if the current email is already part of the transaction
+            foreach($existingDetails as $existingEmail) {
+                if ($existingEmail['fileto'] == $email) {
+                    $duplicateFound = true;
+                    break;
+                }
+            }
+
+            if($duplicateFound) continue;
+
+            // Assigns the email address a new GroupID for the transaction.
+            $emailGroupID = getOpenSSLKey();
+            $fileData['filegroupid'] = $emailGroupID;
+
+            // All of the fields that aren't directly related to specific files of a transaction
+            // should be the same for all recipients of that transaction
+            $fileData['fileexpirydate'] = $transactionDetails[0]['fileexpirydate'];
+            $fileData['fileto'] = $email;
+            $fileData['filesubject'] = $transactionDetails[0]['filesubject'];
+            $fileData['fileactivitydate'] = $transactionDetails[0]['fileactivitydate'];
+            $fileData['filemessage'] = $transactionDetails[0]['filemessage'];
+            $fileData['fileip4address'] = $transactionDetails[0]['fileip4address'];
+            $fileData['fileip6address'] = $transactionDetails[0]['fileip6address'];
+            $fileData['filesendersname'] = $transactionDetails[0]['filesendersname'];
+            $fileData['fileauthuseruid'] = $uid;
+            $fileData['fileaughuseremail'] = $transactionDetails[0]['fileauthuseremail'];
+            $fileData['filetrackingcode'] = $trackingCode;
+
+            // Assigns the create date to the time they were added to the transaction, and NOT the time the transaction was created.
+            $fileData['filecreateddate'] = date($config['db_dateformat'], time());
+
+            // Add each individual file of the transaction to the new recipient
+            for($file=0; $file < sizeof($transactionDetails); $file++) {
+                $fileData['filesize'] = $transactionDetails[$file]['filesize'];
+                $fileData['fileoriginalname'] = $transactionDetails[$file]['fileoriginalname'];
+                $fileData['filestatus'] = $transactionDetails[$file]['filestatus'];
+                $fileData['fileuid'] = $transactionDetails[$file]['fileuid'];
+
+                $this->insertFile($fileData);
+                $groupIDs[] = $emailGroupID;
+            }
+
+
+        }
+
+        // Used to handle the sending of emails to the new recipient(s)
+        return $groupIDs;
+    }
+
     function getTransactionDownloadsForRecipient($recipientEmail, $trackingCode, $authuseruid) {
         $pdo = $this->db->connect();
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
