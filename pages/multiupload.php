@@ -116,6 +116,7 @@ $(function () {
     $('#uploadhtml5').show();
 
     autoCompleteEmails();
+    fileSelected(); // For back button issues.
 });
 </script>
 

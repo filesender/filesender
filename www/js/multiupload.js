@@ -79,6 +79,10 @@ function browse() {
 function fileSelected() {
     // multiple files selected
     // loop through all files and show their values
+    if (document.readyState != 'complete' && document.readyState != 'interactive') {
+        return;
+    }
+
     var files = document.getElementById('fileToUpload').files;
     if (typeof files !== 'undefined') {
         addFiles(files);
@@ -370,6 +374,7 @@ function transactionComplete(gid) {
         type: 'POST',
         url: uploadURI + '?type=transactioncomplete&gid=' + gid,
         success: function (data) {
+            clearForm();
             var data = JSON.parse(data);
             console.log("Transaction complete successful");
             window.location.href = 'index.php?s=complete&gid=' + data['gid'];
@@ -377,6 +382,13 @@ function transactionComplete(gid) {
             ajaxerror(xhr.readyState, xhr.status, xhr.responseText);
         }
     });
+}
+
+function clearForm() {
+    clearFileBox();
+    $("#fileto").val("");
+    $("#filesubject").val("");
+    $("#filemessage").val("");
 }
 
 function updateBoxStats() {
