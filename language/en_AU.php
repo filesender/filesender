@@ -179,6 +179,7 @@ $lang["_VOUCHER_USED"] = "This voucher has already been used.";
 $lang["_STARTED_DOWNLOADING"] = "Your file should start downloading.";
 $lang["_NO_FILES_SELECTED"] = "You need to select at least one file.";
 $lang["_FILE_DELETED"] = "This file has been deleted.";
+$lang["_RECIPIENT_DELETED"] = "Selected recipient has been deleted";
 
 // steps
 $lang["_STEP1"] = "Enter delivery email address(es)";

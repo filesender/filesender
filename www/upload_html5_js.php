@@ -1,5 +1,7 @@
 <script type="text/javascript">
 
+    var emailCache = '';
+
     // Validate FILE (with embedded calls to check filename and file-extension)
     function validate_file(id)
     {
@@ -44,6 +46,8 @@
 
     // HTML5 form Validation
     function validateForm() {
+
+        processEmailSettings();
         // remove messages from any previous attempt
         hideMessages();
         var isValid = true;
@@ -86,4 +90,26 @@
     function checkFilesSelected() {
         return document.getElementById('fileToUpload').files[0] != null || document.getElementById('file_0') != null;
     }
+
+    function disableToField(){
+        emailCache = $('#fileto').val();
+        $('#fileto').val($('#filefrom').val());
+        $('#fileto').attr('disabled', 'disabled');
+    }
+
+    function reenableToField(){
+        $('#fileto').val(emailCache);
+        $('#fileto').removeAttr('disabled');
+    }
+
+    function processEmailSettings() {
+        var emailBitString = '';
+        $('#email-upload-complete').is(':checked') ? emailBitString+='1' : emailBitString+='0';
+        $('#email-inform-download').is(':checked') ? emailBitString+='1' : emailBitString+='0';
+        $('#email-inform-daily').is(':checked') ? emailBitString+='1' : emailBitString+='0';
+        $('#email-enable-confirmation').is(':checked') ? emailBitString+='1' : emailBitString+='0';
+
+        alert(emailBitString);
+    }
+
 </script>

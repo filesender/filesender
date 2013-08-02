@@ -117,6 +117,13 @@ $(function () {
 
     autoCompleteEmails();
     fileSelected(); // For back button issues.
+
+    $('#email-only-me').click(function() {
+        $('#email-only-me').is(':checked') ? disableToField() : reenableToField();
+        if ($('#fileto').val() != '') {
+            validate_fileto();
+        }
+    });
 });
 </script>
 
@@ -223,10 +230,51 @@ $(function () {
                                    lang('datedisplayformat'),
                                    strtotime('+' . $config['default_daysvalid'] . ' day')
                                ); ?>"/>
-                        <br/>
-                        <label for="rtnemail"><?php echo lang("_SEND_COPY_EMAILS"); ?></label>
-                        <input name="rtnemail" type="checkbox" id="rtnemail" style="float:left; width:20px;"/>
+                        <div class="fieldcontainer" >
+                            <label for="rtnemail"><?php echo lang("_SEND_COPY_EMAILS"); ?></label>
+                            <input name="rtnemail" type="checkbox" id="rtnemail" style="float:left; width:20px;"/>
+                        </div>
+                        <?php if ($config['upload_complete_email_display'] == 'always') { ?>
+                            <div class="fieldcontainer">
+                                <label for="email-upload-complete">Email me on upload complete</label>
+                                <input type="checkbox" id="email-upload-complete" style="float:left; width:20px;" checked/>
+                            </div>
+                        <?php } ?>
+                        <?php if ($config['inform_download_email_display'] == 'always') { ?>
+                            <div class="fieldcontainer">
+                                <label for="email-inform-download">Email me every time a file is downloaded</label>
+                                <input id="email-inform-download" type="checkbox" style="float:left; width:20px;" checked/>
+                            </div>
+                        <?php } ?>
+                        <?php if ($config['email_me_daily_statistcis_display'] == 'always') { ?>
+                            <div class="fieldcontainer">
+                                <label for="email-inform-daily">Email me daily statistics with user activity</label>
+                                <input id="email-inform-daily" type="checkbox" style="float:left; width:20px;" />
+                            </div>
+                        <?php } ?>
+                        <?php if ($config['download_confirmation_enabled_display'] == 'always') { ?>
+                            <div class="fieldcontainer">
+                                <label for="email-enable-confirmation">Enable download confirmation email for recipients</label>
+                                <input id="email-enable-confirmation" type="checkbox" style="float:left; width:20px;" />
+                            </div>
+                        <?php } ?>
+                        <?php if ($config['email_only_me_display'] == 'always') { ?>
+                            <div class="fieldcontainer">
+                                <label for="email-only-me">Send only me download link (I'll distribute it)</label>
+                                <input id="email-only-me" type="checkbox" style="float:left; width:20px;" />
+                            </div>
+                        <?php } ?>
+
+
                     </div>
+
+                    <?php if ($config['terasender'] && $config['terasenderadvanced']) { ?>
+                        <div class="fieldcontainer">
+                            <a href="#" onclick="$('#workers-advanced-settings').slideToggle()">
+                                <?php echo lang('_TERA_ADVANCED_SETTINGS'); ?>
+                            </a>
+                        </div>
+                    <?php } ?>
 
                     <div id="workers-advanced-settings" style="display: none;">
                         <div class="fieldcontainer">
@@ -246,13 +294,45 @@ $(function () {
                                    value="<?php echo $config['terasender_jobsPerWorker'] ?>"/>
                         </div>
                     </div>
-                    <?php if ($config['terasender'] && $config['terasenderadvanced']) { ?>
-                        <div class="fieldcontainer">
-                            <a href="#" onclick="$('#workers-advanced-settings').slideToggle()">
-                                <?php echo lang('_TERA_ADVANCED_SETTINGS'); ?>
-                            </a>
-                        </div>
-                    <?php } ?>
+
+                    <div class="fieldcontainer">
+                        <a href="#" onclick="$('#email-flow-settings').slideToggle()">
+                            More settings
+                        </a>
+                    </div>
+
+                    <div id="email-flow-settings" style="display:none;">
+                        <?php if ($config['upload_complete_email_display'] == 'hidden') { ?>
+                            <div class="fieldcontainer">
+                                <label for="email-upload-complete">Email me on upload complete</label>
+                                <input type="checkbox" id="email-upload-complete" style="float:left; width:20px;" checked/>
+                            </div>
+                        <?php } ?>
+                        <?php if ($config['inform_download_email_display'] == 'hidden') { ?>
+                            <div class="fieldcontainer">
+                                <label for="email-inform-download">Email me every time a file is downloaded</label>
+                                <input id="email-inform-download" type="checkbox" style="float:left; width:20px;" checked/>
+                            </div>
+                        <?php } ?>
+                        <?php if ($config['email_me_daily_statistcis_display'] == 'hidden') { ?>
+                            <div class="fieldcontainer">
+                                <label for="email-inform-daily">Email me daily statistics with user activity</label>
+                                <input id="email-inform-daily" type="checkbox" style="float:left; width:20px;" />
+                            </div>
+                        <?php } ?>
+                        <?php if ($config['download_confirmation_enabled_display'] == 'hidden') { ?>
+                            <div class="fieldcontainer">
+                                <label for="email-enable-confirmation">Enable download confirmation email for recipients</label>
+                                <input id="email-enable-confirmation" type="checkbox" style="float:left; width:20px;" />
+                            </div>
+                        <?php } ?>
+                        <?php if ($config['email_only_me_display'] == 'hidden') { ?>
+                            <div class="fieldcontainer">
+                                <label for="email-only-me">Send only me download link (I'll distribute it)</label>
+                                <input id="email-only-me" type="checkbox" style="float:left; width:20px;" />
+                            </div>
+                        <?php } ?>
+                    </div>
                 </td>
             </tr>
         </table>
