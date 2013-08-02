@@ -49,164 +49,193 @@ class Mail {
     //---------------------------------------
     // Send mail
     // 
-    public function sendEmail($mailobject,$template,$type='full', $multifiledetails = null){
-
-        $authsaml = AuthSaml::getInstance();
-        $authvoucher = AuthVoucher::getInstance();
-
+    public function sendEmail($mailObject, $template, $type = 'full', $multiFileDetails = null){
         global $config;
 		global $errorArray;
-		
-        $fileoriginalname = sanitizeFilename($mailobject['fileoriginalname']);
-        $crlf = $config["crlf"];
 
-        $template = str_replace("{siteName}", $config["site_name"], $template);
-        $template = str_replace("{fileto}", $mailobject["fileto"], $template);
-        if ($type == 'bounce') {$template = str_replace("{fileoriginalto}", $mailobject["fileoriginalto"], $template);}
-        if (isset($config["site_url"])) {$template = str_replace("{serverURL}", $config["site_url"], $template);}
-        $template = str_replace("{filevoucheruid}", $mailobject["filevoucheruid"], $template);
-        $template = str_replace("{filegroupid}", $mailobject["filegroupid"], $template);
-        $template = str_replace("{filetrackingcode}", $mailobject["filetrackingcode"], $template);
-        $template = str_replace("{fileexpirydate}", date($config['datedisplayformat'],strtotime($mailobject["fileexpirydate"])), $template);
-        $template = str_replace("{filefrom}", $mailobject["filefrom"], $template);
-        $template = str_replace("{fileoriginalname}", $fileoriginalname, $template);
-        $template = str_replace("{htmlfileoriginalname}", utf8tohtml($fileoriginalname,TRUE), $template);
-        $template = str_replace("{filename}", $fileoriginalname, $template);	
-        $template = str_replace("{filesize}", formatBytes($mailobject["filesize"]), $template);
-        $template = str_replace("{CRLF}", $crlf, $template);
-
-        if ($multifiledetails != null) {
-            $fileinfo = "";
-            $fileinfohtml = "";
-            foreach ($multifiledetails as $file) {
-                $fileString = $file['fileoriginalname'] . " (" . formatBytes($file['filesize']) . ")";
-                $fileinfo .= " - " . $fileString . "\n";
-                $fileinfohtml .= "&nbsp;&bull;&nbsp;" . $fileString . "<br />";
-            }
-            $template = str_replace("{fileinfo}", $fileinfo, $template);
-            $template = str_replace("{fileinfohtml}", $fileinfohtml, $template);
+        if (!filter_var($mailObject['filefrom'], FILTER_VALIDATE_EMAIL) || !filter_var($mailObject['fileto'], FILTER_VALIDATE_EMAIL)) {
+            // Invalid email address(es).
+            return false;
         }
 
-	if(strlen($mailobject["filemessage"]) > 0) {
-
-		// Remove {filemessage_start} and {filemessage_end} tags, and keep what's in there
-		$template = preg_replace('/{filemessage_start}(.*?){filemessage_end}/sm', '$1', $template);
-
-        	// Replace 'newlines' (various formats) in filemessage with $crlf and count the number of lines
-	        $mailobject["filemessage"] = preg_replace("/\r\n|\n|\r/", $crlf , $mailobject["filemessage"], -1, $nlcount);
-
-	        // Encode the 'filemessage' with a UTF8-safe version of htmlentities to allow for multibyte UTF-8 characters
-	        // Also insert <br /> linebreak tags to preserve intended formatting in the HTML body part
-	        $mailobject["htmlfilemessage"] = nl2br(utf8tohtml($mailobject["filemessage"],TRUE));
-
-	        // Add extra newlines when filemessage contains more than a few words
-        	// (to get a better layout in the non HTML body part)
-	        if ( $nlcount > 0 ) {
-        	     $mailobject["filemessage"] = $crlf . $crlf . $mailobject["filemessage"];
-	        }
-
-        	$template = str_replace("{filemessage}", $mailobject["filemessage"], $template);
-	        $template = str_replace("{htmlfilemessage}", $mailobject["htmlfilemessage"], $template);
-	} else {
-		// No file message, remove {filemessage_start} and {filemessage_end} tags, as well as what's in there
-		$template = preg_replace('/{filemessage_start}(.*?){filemessage_end}/sm', '', $template);
-	}
-
-        $headers = "MIME-Version: 1.0".$crlf;
-        $headers .= "Content-Type: multipart/alternative; boundary=simple_mime_boundary".$crlf;
-        $headers .= "X-FileSenderUID: ".$mailobject["filevoucheruid"].$crlf;
-
-		//$template .= "rtnemail:".isset($mailobject['rtnemail']);
+        if ($multiFileDetails == null) {
+            $template = $this->replaceTemplateVariables($template, $mailObject);
+        } else {
+            $template = $this->replaceMultiFileTemplateVariables($template, $multiFileDetails);
+        }
 		
 		// Need to use $config['noreply'] so that sender does not get bombarded with emails
-		if(isset($mailobject['rtnemail']) && $mailobject['rtnemail'] == "false" && isset($config['noreply']))
-		{
-		$mailobject['filefrom'] = $config['noreply'];
+		if (isset($mailObject['rtnemail']) && $mailObject['rtnemail'] == 'false' && isset($config['noreply'])) {
+		    $mailObject['filefrom'] = $config['noreply'];
 		}
-        // RFC2822 Originator of the message
-        if(!filter_var($mailobject['filefrom'],FILTER_VALIDATE_EMAIL)) {return false;}
-        $headers .= "From: <".$mailobject['filefrom'].">".$crlf;
 
-        // RFC2821 (Envelope) originator of the message
+        $to = '<' . $mailObject['fileto'] . '>';
+        $returnPath = $this->createEmailReturnPath($mailObject, $type);
+        $headers = $this->createEmailHeaders($mailObject);
+        $subject = $this->createEmailSubject($mailObject);
+        $body = $this->createEmailBody($template);
+
+		try {
+		    if (mail($to, $subject, $body, $headers, $returnPath)) {
+		 	    return true;
+		    } else {
+		 	    logEntry('Error sending email: ' . $to, 'E_ERROR');
+			    array_push($errorArray, 'err_emailnotsent');
+			    return false;
+		    }
+        } catch(Exception $e) {
+            logEntry($e->getMessage(), 'E_ERROR');
+			array_push($errorArray,  'err_emailnotsent');
+		    return false;
+        }
+    }
+
+    private function replaceTemplateVariables($template, $mailObject, $type = 'full') {
+        global $config;
+
+        $fileoriginalname = sanitizeFilename($mailObject['fileoriginalname']);
+        $crlf = $config['crlf'];
+
+        if (isset($config['site_url'])) {
+            $template = str_replace('{serverURL}', $config['site_url'], $template);
+        }
+
+        $template = str_replace('{siteName}', $config['site_name'], $template);
+        $template = str_replace('{fileto}', $mailObject['fileto'], $template);
+        $template = str_replace('{filevoucheruid}', $mailObject['filevoucheruid'], $template);
+        $template = str_replace('{filegroupid}', $mailObject['filegroupid'], $template);
+        $template = str_replace('{filetrackingcode}', $mailObject['filetrackingcode'], $template);
+        $template = str_replace('{fileexpirydate}', date($config['datedisplayformat'], strtotime($mailObject['fileexpirydate'])), $template);
+        $template = str_replace('{filefrom}', $mailObject['filefrom'], $template);
+        $template = str_replace('{fileoriginalname}', $fileoriginalname, $template);
+        $template = str_replace('{htmlfileoriginalname}', utf8tohtml($fileoriginalname, TRUE), $template);
+        $template = str_replace('{filename}', $fileoriginalname, $template);
+        $template = str_replace('{filesize}', formatBytes($mailObject['filesize']), $template);
+        $template = str_replace('{CRLF}', $crlf, $template);
+
         if ($type == 'bounce') {
-            $returnpath = "-r <>".$crlf;
-        } else if (isset($config['return_path']) && ! empty($config['return_path'])) {
-            if(!filter_var($config['return_path'],FILTER_VALIDATE_EMAIL)) {return false;}
-            $returnpath = "-r <".$config['return_path'].">".$crlf;
+            $template = str_replace('{fileoriginalto}', $mailObject['fileoriginalto'], $template);
+        }
+
+        if(strlen($mailObject['filemessage']) > 0) {
+            // Remove {filemessage_start} and {filemessage_end} tags, and keep what's in there.
+            $template = preg_replace('/{filemessage_start}(.*?){filemessage_end}/sm', '$1', $template);
+
+            // Replace 'newlines' (various formats) in filemessage with $crlf and count the number of lines.
+            $mailObject['filemessage'] = preg_replace("/\r\n|\n|\r/", $crlf , $mailObject["filemessage"], -1, $nlcount);
+
+            // Encode the 'filemessage' with a UTF8-safe version of htmlentities to allow for multibyte UTF-8 characters.
+            // Also insert <br /> linebreak tags to preserve intended formatting in the HTML body part.
+            $mailObject['htmlfilemessage'] = nl2br(utf8tohtml($mailObject['filemessage'], TRUE));
+
+            // Add extra newlines when filemessage contains more than a few words
+            // (to get a better layout in the non HTML body part)
+            if ($nlcount > 0) {
+                $mailObject['filemessage'] = $crlf . $crlf . $mailObject['filemessage'];
+            }
+
+            $template = str_replace('{filemessage}', $mailObject['filemessage'], $template);
+            $template = str_replace('{htmlfilemessage}', $mailObject['htmlfilemessage'], $template);
         } else {
-            if(!filter_var($mailobject['filefrom'],FILTER_VALIDATE_EMAIL)) {return false;}
-            $returnpath = "-r <".$mailobject['filefrom'].">".$crlf;
+            // No file message, remove {filemessage_start} and {filemessage_end} tags, as well as what's in there.
+            $template = preg_replace('/{filemessage_start}(.*?){filemessage_end}/sm', '', $template);
         }
 
-        // Recipient(s) of the message
-        if(!filter_var($mailobject['fileto'],FILTER_VALIDATE_EMAIL)) {return false;}
-        $to = "<".$mailobject['fileto'] . ">";
-        if ($type == 'full') {
-            if(!filter_var($mailobject['filefrom'],FILTER_VALIDATE_EMAIL)) {return false;}
-            $headers .= "Cc: <" . $mailobject['filefrom'] . ">".$crlf;
+        return $template;
+    }
+
+    private function replaceMultiFileTemplateVariables($template, $transactionDetails) {
+        $template = $this->replaceTemplateVariables($template, $transactionDetails[0]);
+
+        $fileInfo = '';
+        $htmlFileInfo = '';
+
+        foreach ($transactionDetails as $file) {
+            $fileString = $file['fileoriginalname'] . ' (' . formatBytes($file['filesize']) . ')';
+            $fileInfo .= ' - ' . $fileString . "\n";
+            $htmlFileInfo .= '&nbsp;&bull;&nbsp;' . $fileString . '<br />';
         }
 
-        // file or voucher is being used then bcc fileauthuseremail a copy so voucher creator knows a file was sent as they are responsible for the use of the voucher
-       // if($authvoucher->aVoucher()) {
-	   
-       // ------ They will get this in  the email summary instead - Chris R
-	   //     if(isset($mailobject['fileauthuseremail'])){
-       //         if(!filter_var($mailobject['fileauthuseremail'],FILTER_VALIDATE_EMAIL)) {return false;}
-       //         $headers .= "Bcc: <".$mailobject['fileauthuseremail'].">".$crlf;
-       //     }
-       // ------
-	   
-	    //}
+        $template = str_replace('{fileinfo}', $fileInfo, $template);
+        $template = str_replace('{htmlfileinfo}', $htmlFileInfo, $template);
 
-        // Subject of message
-        if(isset($mailobject['filesubject']) && $mailobject['filesubject'] != "" && $type != 'bounce'){
-            $subject = $config["site_name"].": ".$mailobject['filesubject'];
+        return $template;
+    }
+
+    private function createEmailHeaders($mailObject) {
+        global $config;
+        $crlf = $config['crlf'];
+
+        $headers = 'MIME-Version: 1.0' . $crlf;
+        $headers .= 'Content-Type: multipart/alternative; boundary=simple_mime_boundary' . $crlf;
+        $headers .= 'X-FileSenderUID: ' . $mailObject['filevoucheruid'] . $crlf;
+        $headers .= 'From: <' . $mailObject['filefrom'] . '>' . $crlf; // RFC2822 Originator of the message
+        $headers .= 'Cc: <' . $mailObject['filefrom'] . '>' . $crlf;
+
+        return $headers;
+    }
+
+    private function createEmailSubject($mailObject, $type = 'full') {
+        global $config;
+
+        if (isset($mailObject['filesubject']) && $mailObject['filesubject'] != "" && $type != 'bounce') {
+            $subject = $config['site_name'] . ': ' . $mailObject['filesubject'];
         } else {
             if ($type == 'bounce') {
-                $tempfilesubject = $config['emailbounce_subject'];
+                $tempFileSubject = $config['emailbounce_subject'];
             } else {
-                $tempfilesubject = $config['default_emailsubject'];
+                $tempFileSubject = $config['default_emailsubject'];
             }
-            $tempfilesubject = str_replace("{siteName}", $config["site_name"], $tempfilesubject);
-            $tempfilesubject = str_replace("{fileoriginalname}", $fileoriginalname, $tempfilesubject);
-            $tempfilesubject = str_replace("{filename}", $fileoriginalname, $tempfilesubject);
-            $tempfilesubject = str_replace("{filetrackingcode}", $mailobject["filetrackingcode"], $tempfilesubject);
 
-            $subject =   $tempfilesubject;
+            $fileOriginalName = sanitizeFilename($mailObject['fileoriginalname']);
+            $tempFileSubject = str_replace('{siteName}', $config['site_name'], $tempFileSubject);
+            $tempFileSubject = str_replace('{fileoriginalname}', $fileOriginalName, $tempFileSubject);
+            $tempFileSubject = str_replace('{filename}', $fileOriginalName, $tempFileSubject);
+            $tempFileSubject = str_replace('{filetrackingcode}', $mailObject['filetrackingcode'], $tempFileSubject);
 
-        }
-        // Check needed encoding for $subject
-        // Assumes input string is UTF-8 encoded
-        $subj_encoding = detect_char_encoding($subject) ;
-        if ($subj_encoding != 'US-ASCII') {
-            $subject = mime_qp_encode_header_value($subject,'UTF-8',$subj_encoding,$crlf) ;
+            $subject = $tempFileSubject;
         }
 
-        // Check and set the needed encoding for the body and convert if necessary
+        // Check needed encoding for subject (assumes UTF-8).
+        $encoding = detect_char_encoding($subject) ;
+
+        if ($encoding != 'US-ASCII') {
+            $subject = mime_qp_encode_header_value($subject, 'UTF-8', $encoding, $config['crlf']) ;
+        }
+
+        return $subject;
+    }
+
+    private function createEmailReturnPath($mailObject, $type = 'full') {
+        // RFC2821 (Envelope) originator of the message
+        global $config;
+        $crlf = $config['crlf'];
+
+        if ($type == 'bounce') {
+            $returnPath = '-r <>' . $crlf;
+        } else if (isset($config['return_path']) && !empty($config['return_path'])) {
+            if (!filter_var($config['return_path'], FILTER_VALIDATE_EMAIL)) {
+                return false;
+            }
+
+            $returnPath = '-r <' . $config['return_path'] . '>' . $crlf;
+        } else {
+            $returnPath = '-r <' . $mailObject['filefrom'] . '>' . $crlf;
+        }
+
+        return $returnPath;
+    }
+
+    private function createEmailBody($template) {
+        // Check and set the needed encoding for the body, convert if necessary.
         $body_encoding = detect_char_encoding($template) ;
-        $template = str_replace("{charset}", $body_encoding , $template);
-        if ( $body_encoding == 'ISO-8859-1' ) {
-            $template = iconv("UTF-8", "ISO-8859-1", $template);
+        $template = str_replace('{charset}', $body_encoding, $template);
+
+        if ($body_encoding == 'ISO-8859-1') {
+            $template = iconv('UTF-8', 'ISO-8859-1', $template);
         }
-        $body = wordwrap($template,70);
-		try
-		{
-		if(mail($to, $subject, $body, $headers, $returnpath))
-		 {
-		 	return TRUE;
-		 } else  { 
-		 	logEntry("Error sending email: ".$to,"E_ERROR");	
-			array_push($errorArray,  "err_emailnotsent");
-			return FALSE;
-		 }
-	   	}
-	   catch(Exception $e)
-	   {
-	   		logEntry($e->getMessage(),"E_ERROR");	
-			array_push($errorArray,  "err_emailnotsent");
-		  return FALSE;
-	   }
-	    return TRUE;
+
+        return wordwrap($template, 70);
     }
 
 	//---------------------------------------

@@ -221,7 +221,7 @@ Best regards,
 </BODY>
 </HTML>{CRLF}{CRLF}--simple_mime_boundary--';
 
-    $config['transactionuploadedemailbody'] = '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}Dear Sir, Madam,
+    $config['transactionavailableemailbody'] = '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}Dear Sir, Madam,
 
 The following file transaction has been uploaded to {siteName} by {filefrom} and you have been granted permission to download its contents.
 
@@ -261,7 +261,7 @@ Best regards,
 				</tr>
 				<tr valign="top">
 					<td width="100"><strong>Files</strong></td>
-					<td>{fileinfohtml}</ul>
+					<td>{htmlfileinfo}</ul>
 					</td>
 				</tr>
 			</tbody>
