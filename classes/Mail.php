@@ -44,7 +44,59 @@ class Mail {
             self::$instance = new self();
         }
         return self::$instance;
-    } 
+    }
+
+    // ---------------------------------------
+    // Send an upload confirmation email to the file sender ("filefrom" field).
+    // $fileDetails should be an array returned from getMultiFileData() or getTransactionDetails().
+    // ---------------------------------------
+    public function sendUploadConfirmation($fileDetails) {
+        global $config;
+
+        $fileDetails[0]['fileto'] = $fileDetails[0]['filefrom'];
+        return $this->sendEmail($fileDetails[0], $config['transactionuploadedemailbody'], 'full', $fileDetails);
+    }
+
+    // ---------------------------------------
+    // Send a "Download is available" email to recipient(s).
+    // $groupIds can be either an array of IDs (for multiple recipients) or a string (single recipient).
+    // ---------------------------------------
+    public function sendDownloadAvailable($groupIds) {
+        global $config;
+        $functions = Functions::getInstance();
+
+        if (is_string($groupIds)) {
+            // Convert to array to enable looping.
+            $groupIds = array($groupIds);
+        }
+
+        if (!is_array($groupIds)) {
+            logEntry('Mail.php: Invalid parameter $groupIds - must be string or array', 'E_ERROR');
+            return false;
+        }
+
+        foreach($groupIds as $groupId) {
+            // Send email(s) if group ID is valid.
+            if (!ensureSaneOpenSSLKey($groupId)) {
+                logEntry('Mail.php: Invalid group ID ' . $groupId, 'E_ERROR');
+                return false;
+            }
+
+            $emailData = $functions->getMultiFileData($groupId);
+
+            if (empty($emailData)) {
+                logEntry('Mail.php: No file data was found for group ID ' . $groupId, 'E_ERROR');
+                return false;
+            }
+
+            if (!$this->sendEmail($emailData[0], $config['transactionavailableemailbody'], 'full', $emailData)) {
+                // Sending failed, no need to log as sendEmail() does that.
+                return false;
+            }
+        }
+
+        return true; // Email(s) sent successfully.
+    }
 
     //---------------------------------------
     // Send mail
@@ -145,14 +197,15 @@ class Mail {
     }
 
     private function replaceMultiFileTemplateVariables($template, $transactionDetails) {
-        $template = $this->replaceTemplateVariables($template, $transactionDetails[0]);
+        global $config;
 
+        $template = $this->replaceTemplateVariables($template, $transactionDetails[0]);
         $fileInfo = '';
         $htmlFileInfo = '';
 
         foreach ($transactionDetails as $file) {
             $fileString = $file['fileoriginalname'] . ' (' . formatBytes($file['filesize']) . ')';
-            $fileInfo .= ' - ' . $fileString . "\n";
+            $fileInfo .= ' - ' . $fileString . $config['crlf'];
             $htmlFileInfo .= '&nbsp;&bull;&nbsp;' . $fileString . '<br />';
         }
 
