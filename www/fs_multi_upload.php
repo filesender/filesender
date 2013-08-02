@@ -141,9 +141,12 @@ if (!isAuthenticated()) {
 
             foreach ($groupIdArray as $groupId) {
                 // Send emails.
-                $dataItem = $functions->getMultiFileData($groupId);
-                $sendMail->sendEmail($dataItem[0], $config['transactionuploadedemailbody'], 'full', $dataItem);
+                $data = $functions->getMultiFileData($groupId);
+                $sendMail->sendEmail($data[0], $config['transactionavailableemailbody'], 'full', $data);
             }
+
+            $data[0]['fileto'] = $data[0]['filefrom'];
+            $sendMail->sendEmail($data[0], $config['transactionuploadedemailbody'], 'full', $data);
 
             $resultArray['status'] = 'complete';
             $resultArray['gid'] = reset($groupIdArray); // The first group ID.
