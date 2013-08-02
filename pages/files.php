@@ -102,14 +102,13 @@ if(isset($_REQUEST["a"]) && isset($_REQUEST["id"])) {
 if(isset($_REQUEST["a"]) && isset($_REQUEST["gid"])) {
     $recipient = $_REQUEST["gid"];
     if ($_REQUEST["a"] == "del") {
-
-            if ($functions->deleteRecipient($recipient)) {
-                $statusErr = "Removed Recipient from transaction";
-                $statusClass = 'green';
-            } else {
-                $statusErr = "FAILEDFAILEDFAILEDFAILEDFAILEDFAILED!222";
-                $statusClass = "red";
-            }
+        if ($functions->deleteRecipient($recipient)) {
+            $statusErr = lang("_RECIPIENT_DELETED");
+            $statusClass = 'green';
+        } else {
+            $statusErr = lang("_PERMISSION_DENIED");
+            $statusClass = "red";
+        }
 
     }
 }

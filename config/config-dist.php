@@ -109,6 +109,17 @@ public function loadConfig() {
 	$config['terasender_workerCount'] = 6;		// default (6) worker count
 	$config['terasender_jobsPerWorker'] = 1;	// default (1) jobs per worker
 
+    // Email flow settings
+    // Can be either 'always' 'hidden' or 'off'
+    // settings marked as 'always' will be displayed in the right hand column of the upload page
+    // settings marked as 'hidden' will be contained in 'More options' in the right hand column of the upload page
+    // settings marked as 'off' are completely disabled and are not displayed anywhere
+    $config['upload_complete_email_display'] = 'always';
+    $config['inform_download_email_display'] = 'hidden';
+    $config['email_me_daily_statistcis_display'] = 'always';
+    $config['download_confirmation_enabled_display'] = 'hidden';
+    $config['email_only_me_display'] = 'hidden';
+
 	// Advanced server settings, do not change unless you have a very good reason.
 	$config['db_dateformat'] = "Y-m-d H:i:sP"; // Date/Time format for PostgreSQL, use PHP date format specifier syntax
 	$config["crlf"] = "\n"; // for email CRLF can be changed to \r\n if required
