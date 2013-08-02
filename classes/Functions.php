@@ -742,6 +742,7 @@ class Functions {
 
         $groupIDs = array();
 
+        logEntry("EmailList" . print_r($emailList, true));
         foreach ($emailList as $email) {
             global $config;
             $duplicateFound = false;
@@ -758,17 +759,20 @@ class Functions {
 
             // Assigns the email address a new GroupID for the transaction.
             $emailGroupID = getOpenSSLKey();
+
             $fileData['filegroupid'] = $emailGroupID;
 
             // All of the fields that aren't directly related to specific files of a transaction
             // should be the same for all recipients of that transaction
             $fileData['fileexpirydate'] = $transactionDetails[0]['fileexpirydate'];
             $fileData['fileto'] = $email;
+            $fileData['filefrom'] = $transactionDetails[0]['filefrom'];
             $fileData['filesubject'] = $transactionDetails[0]['filesubject'];
             $fileData['fileactivitydate'] = $transactionDetails[0]['fileactivitydate'];
             $fileData['filemessage'] = $transactionDetails[0]['filemessage'];
             $fileData['fileip4address'] = $transactionDetails[0]['fileip4address'];
             $fileData['fileip6address'] = $transactionDetails[0]['fileip6address'];
+            $fileData['fileauthurl'] = $transactionDetails[0]['fileauthurl'];
             $fileData['filesendersname'] = $transactionDetails[0]['filesendersname'];
             $fileData['fileauthuseruid'] = $uid;
             $fileData['fileaughuseremail'] = $transactionDetails[0]['fileauthuseremail'];
@@ -783,16 +787,13 @@ class Functions {
                 $fileData['fileoriginalname'] = $transactionDetails[$file]['fileoriginalname'];
                 $fileData['filestatus'] = $transactionDetails[$file]['filestatus'];
                 $fileData['fileuid'] = $transactionDetails[$file]['fileuid'];
+                $fileData['filevoucheruid'] = $transactionDetails[$file]['filevoucheruid'];
 
                 $this->insertFile($fileData);
-                $groupIDs[] = $emailGroupID;
             }
-
-
+            $groupIDs[] = $emailGroupID;
         }
-
-        // Used to handle the sending of emails to the new recipient(s)
-        return $groupIDs;
+        $this->sendmail->sendDownloadAvailable($groupIDs);
     }
 
     function getTransactionDownloadsForRecipient($recipientEmail, $trackingCode, $authuseruid) {

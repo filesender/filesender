@@ -86,7 +86,7 @@ if(isset($_REQUEST["a"]) && isset($_REQUEST["id"])) {
         if($_REQUEST['a'] == "add" && isset($_REQUEST['tc'])){
             if(isset($_REQUEST['fileto'])) {
                 $listOfEmails = explode(",", $_REQUEST['fileto']);
-                $newIDs = $functions->addRecipientsToTransaction($listOfEmails, $_REQUEST['tc'], $myfileData['fileauthuseruid']);
+                $functions->addRecipientsToTransaction($listOfEmails, $_REQUEST['tc'], $myfileData['fileauthuseruid']);
             }
             if( $isAuth && $userdata["saml_uid_attribute"] == $myfileData["fileauthuseruid"]) {
 
@@ -418,7 +418,14 @@ $json_o=json_decode($filedata,true);
                     $i += 1; // counter for file id's
                     // alternating rows
                     $rowClass = ($i % 2 != 0)? "class='altcolor'":"";
+
+
                     $itemContents = $functions->getTransactionDetails($item['filetrackingcode'], $item['fileauthuseruid']);
+
+                    // skips closed entries
+                    if (empty($itemContents)) {
+                        continue;
+                    }
                     $onClick = "'" . $itemContents[0]['filevoucheruid'] . "'";
                     $recipientsArray = $functions->getMultiRecipientDetails($item['filetrackingcode'], $item['fileauthuseruid']);
                     $numExtraRecipients = sizeof($recipientsArray)-1;
