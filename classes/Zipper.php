@@ -67,7 +67,7 @@ class Zipper
         global $functions, $config;
 
         // Enable the ZIP64 format if total file size exceeds 4 GiB.
-        $this->useZip64 = $this->calculateTotalFileSize() >= 4 * 1024 * 1024 * 1024;
+        $this->useZip64 = true; //$this->calculateTotalFileSize() >= 4 * 1024 * 1024 * 1024;
 
         $this->sendHttpHeaders();
         $offset = 0;
