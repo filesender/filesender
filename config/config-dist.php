@@ -116,7 +116,7 @@ public function loadConfig() {
     // settings marked as 'off' are completely disabled and are not displayed anywhere
     $config['upload_complete_email_display'] = 'always';
     $config['inform_download_email_display'] = 'hidden';
-    $config['email_me_daily_statistcis_display'] = 'always';
+    $config['email_me_daily_statistics_display'] = 'always';
     $config['download_confirmation_enabled_display'] = 'hidden';
     $config['email_only_me_display'] = 'hidden';
 

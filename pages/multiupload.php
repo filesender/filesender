@@ -246,7 +246,7 @@ $(function () {
                                 <input id="email-inform-download" type="checkbox" style="float:left; width:20px;" checked/>
                             </div>
                         <?php } ?>
-                        <?php if ($config['email_me_daily_statistcis_display'] == 'always') { ?>
+                        <?php if ($config['email_me_daily_statistics_display'] == 'always') { ?>
                             <div class="fieldcontainer">
                                 <label for="email-inform-daily">Email me daily statistics with user activity</label>
                                 <input id="email-inform-daily" type="checkbox" style="float:left; width:20px;" />
@@ -314,7 +314,7 @@ $(function () {
                                 <input id="email-inform-download" type="checkbox" style="float:left; width:20px;" checked/>
                             </div>
                         <?php } ?>
-                        <?php if ($config['email_me_daily_statistcis_display'] == 'hidden') { ?>
+                        <?php if ($config['email_me_daily_statistics_display'] == 'hidden') { ?>
                             <div class="fieldcontainer">
                                 <label for="email-inform-daily">Email me daily statistics with user activity</label>
                                 <input id="email-inform-daily" type="checkbox" style="float:left; width:20px;" />
