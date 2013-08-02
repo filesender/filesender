@@ -787,7 +787,7 @@ class Functions {
                 $fileData['fileoriginalname'] = $transactionDetails[$file]['fileoriginalname'];
                 $fileData['filestatus'] = $transactionDetails[$file]['filestatus'];
                 $fileData['fileuid'] = $transactionDetails[$file]['fileuid'];
-                $fileData['filevoucheruid'] = $transactionDetails[$file]['filevoucheruid'];
+                $fileData['filevoucheruid'] = getGUID();
 
                 $this->insertFile($fileData);
             }
