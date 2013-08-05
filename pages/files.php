@@ -472,7 +472,8 @@ $json_o=json_decode($filedata,true);
                                 }
 
                                 if ($itemContents[0]['filemessage'] != "") {
-                                    echo '<tr class="rowdivider">
+                                    $itemContents[0]['filesubject'] != "" ? $messageClass = "rowdivider" : $messageClass = "";
+                                    echo '<tr class="' . $messageClass . '">
                                         <td class="dr11 sdheading"><strong>'.lang("_MESSAGE").'</strong></td>
                                         <td class="dr13" >
                                             <pre class="HardBreak">'.utf8tohtml($itemContents[0]['filemessage'],TRUE).'</pre>
