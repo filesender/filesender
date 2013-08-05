@@ -153,7 +153,7 @@ if (!isAuthenticated()) {
                 $sendMail->sendDownloadAvailable($groupIdArray);
             }
 
-            if ($data[0]['senduploadconfirmation']) {
+            if ($data[0]['senduploadconfirmation'] == 'true') {
                 $sendMail->sendUploadConfirmation($data);
             }
 
