@@ -114,11 +114,24 @@ public function loadConfig() {
     // settings marked as 'always' will be displayed in the right hand column of the upload page
     // settings marked as 'hidden' will be contained in 'More options' in the right hand column of the upload page
     // settings marked as 'off' are completely disabled and are not displayed anywhere
+    // true/false on default fields specify whether or not boxes are checked on page load
+    $config['email_me_copies_display'] = 'always';
+    $config['email_me_copies_default'] = false;
+
     $config['upload_complete_email_display'] = 'always';
+    $config['upload_complete_email_default'] = true;
+
     $config['inform_download_email_display'] = 'hidden';
+    $config['inform_download_email_default'] = true;
+
     $config['email_me_daily_statistics_display'] = 'always';
+    $config['email_me_daily_statistics_default'] = false;
+
     $config['download_confirmation_enabled_display'] = 'hidden';
+    $config['download_confirmation_enabled_default'] = true;
+
     $config['email_only_me_display'] = 'hidden';
+    $config['email_only_me_default'] = false;
 
 	// Advanced server settings, do not change unless you have a very good reason.
 	$config['db_dateformat'] = "Y-m-d H:i:sP"; // Date/Time format for PostgreSQL, use PHP date format specifier syntax
