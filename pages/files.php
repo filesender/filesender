@@ -59,7 +59,7 @@ if($_REQUEST['a'] == "add" && isset($_REQUEST['tc']) && isset($_REQUEST['fileaut
 
 if(isset($_REQUEST["a"]) && isset($_REQUEST["groupid"])) {
     $recipient = $_REQUEST["groupid"];
-    if ($_REQUEST["a"] == "del") {
+    if ($_REQUEST["a"] == "del") { // TODO: Needs some sort of authentication before deletion
         if ($functions->deleteRecipient($recipient)) {
             $statusErr = lang("_RECIPIENT_DELETED");
             $statusClass = 'green';
@@ -268,8 +268,7 @@ $json_o=json_decode($filedata,true);
     }
 
 	function openAddRecipient(fileauth,filename,filesize,from, subject, message, trackingCode)
-	{
-		// populate form and open add-recipient modal form
+	{// populate form and open add-recipient modal form
 		$("#form1").attr("action", "index.php?s=files&a=add&fileauth=" + fileauth  + "&tc=" + trackingCode);
         $("#trackingCode").val(trackingCode);
 		$("#filefrom").html(decodeURIComponent(from));
@@ -541,10 +540,13 @@ $json_o=json_decode($filedata,true);
                                 $files = $functions->getTransactionDownloadsForRecipient($recipientsArray[$temp]['fileto'], $item['filetrackingcode'], $item['fileauthuseruid']);
 
                                 $maxDownloaded = 0;
+                                $fileNames = "";
                                 for($file = 0; $file < sizeOf($files); $file++){
                                     if($files[$file]['downloads'] > $maxDownloaded){
                                         $maxDownloaded = $files[$file]['downloads'];
+
                                     }
+                                    $fileNames .= $files[$file]['fileoriginalname'] . "<br />";
                                 }
 
                                 echo $row .
@@ -591,7 +593,7 @@ $json_o=json_decode($filedata,true);
                                     <td colspan="5" style="text-align: center; border: 1px solid #999;">
                                         <a target="_blank" style="cursor:pointer;"
                                             onclick="openAddRecipient('."'".$itemContents[0]['fileauthuseruid']."',
-                                            '".rawurlencode(utf8tohtml($itemContents[0]['fileoriginalname'],true)) ."',
+                                            '". utf8tohtml(addslashes($fileNames), true) ."',
                                             '".$itemContents[0]['filesize'] ."','".rawurlencode($itemContents[0]['filefrom'])."',
                                             '".rawurlencode($itemContents[0]['filesubject'])."',
                                             '".rawurlencode($itemContents[0]['filemessage'])."',
