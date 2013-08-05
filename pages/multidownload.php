@@ -84,6 +84,8 @@ if (isset($_REQUEST['gid']) && ensureSaneOpenSSLKey($_REQUEST['gid'])) {
 <div id="box" style="background:#fff">
     <?php echo '<div id="pageheading">' . lang("_DOWNLOAD") . '</div>' ?>
     <div id="fileinfo">
+        <p id="tracking_code"><?php echo lang("_TRACKING_CODE") . ": " . htmlentities($fileData[0]['filetrackingcode']); ?></p>
+
         <p id="download_from"><?php echo lang("_FROM") . ": " . htmlentities($fileData[0]["filefrom"]); ?></p>
 
         <p id="download_sent"><?php echo lang("_SENT_DATE") . ": " . date(lang('datedisplayformat'), strtotime($fileData[0]["filecreateddate"])); ?></p>
