@@ -44,59 +44,17 @@
 $statusErr = '';
 $statusClass = '';
 
-if(isset($_REQUEST["a"]) && isset($_REQUEST["id"])) {
-	// validate id
-	if(ensureSaneFileUid($_REQUEST["id"])) {
-		$myfileData = $functions->getVoucherData($_REQUEST['id']);
-		if($_REQUEST["a"] == "del") {
-			// check if user is authenticated and allowed to delete this file
-			if( $isAuth && $userdata["saml_uid_attribute"] == $myfileData["fileauthuseruid"]) {
-				if($functions->deleteFile($myfileData["fileid"])) {
-                    $statusErr = lang("_FILE_DELETED");
-                    $statusClass = 'green';
-					//echo "<div id='message'>".lang("_FILE_DELETED")."</div>";
-				}
-			} else {
-                // log auth user tried to delete a file they do not have access to
-                logEntry("Permission denied - attempt to delete ".$myfileData["fileuid"],"E_ERROR");
-                // notify - not deleted - you do not have permission
-                $statusErr = lang("_PERMISSION_DENIED");
-                $statusClass = 'red';
-                //echo "<div id='message'>".lang("_PERMISSION_DENIED")."</div>";
-			}
-		}
-		if($_REQUEST["a"] == "resend") {
-			// check if user is authenticated and allowed to resend this file
-			if( $isAuth && $userdata["saml_uid_attribute"] == $myfileData["fileauthuseruid"]) {
-				if($sendmail->sendEmail($myfileData ,$config['fileuploadedemailbody'])) {
-                    $statusErr = lang("_MESSAGE_RESENT");
-                    $statusClass = 'green';
-					//echo "<div id='message'>".lang("_MESSAGE_RESENT")."</div>";
-				}
-			} else {
-                // log auth user tried to resend email for a file they do not have access to
-                logEntry("Permission denied - attempt to resend ".$myfileData["fileuid"],"E_ERROR");
-                // notify - not resent - you do not have permission
-                $statusError = lang("_PERMISSION_DENIED");
-                $statusClass = 'red';
-                //echo "<div id='message'>".lang("_PERMISSION_DENIED")."</div>";
-			}
-		}
-
-        if($_REQUEST['a'] == "add" && isset($_REQUEST['tc'])){
-            if(isset($_REQUEST['fileto'])) {
-                $listOfEmails = explode(",", $_REQUEST['fileto']);
-                $functions->addRecipientsToTransaction($listOfEmails, $_REQUEST['tc'], $myfileData['fileauthuseruid']);
-            }
-            if( $isAuth && $userdata["saml_uid_attribute"] == $myfileData["fileauthuseruid"]) {
-
-            }
+if($_REQUEST['a'] == "add" && isset($_REQUEST['tc']) && isset($_REQUEST['fileauth'])){
+    if(isset($_REQUEST['fileto'])) {
+        $listOfEmails = explode(",", $_REQUEST['fileto']);
+        if($functions->addRecipientsToTransaction($listOfEmails, $_REQUEST['tc'], $_REQUEST['fileauth'])) {
+            $statusErr = lang("_EMAIL_SENT");
+            $statusClass = 'green';
+        } else {
+            $statusErr = lang('_ERROR_SENDING_EMAIL');
+            $statusClass = 'red';
         }
-	} else {
-        $statusErr = lang("_INVALID_FILEVOUCHERID");
-        $statusClass = 'red';
-		//echo "<div id='message'>".lang("_INVALID_FILEVOUCHERID")."</div>";
-	}
+    }
 }
 
 if(isset($_REQUEST["a"]) && isset($_REQUEST["groupid"])) {
@@ -111,20 +69,13 @@ if(isset($_REQUEST["a"]) && isset($_REQUEST["groupid"])) {
         }
     } else if ($_REQUEST["a"] == "resend") {
         if ($sendmail->sendDownloadAvailable($recipient)){
-            $statusErr = lang("_MESSAGE_RESENT");
+            $statusErr = lang("_EMAIL_RESENT");
             $statusClass = 'green';
         } else {
             $statusErr = lang("_PERMISSION_DENIED");
             $statusClass = "red";
         }
     }
-}
-
-if(isset($_REQUEST["a"]) && $_REQUEST["a"] == "added") {
-	// display the add box
-    $statusErr = lang("_EMAIL_SENT");
-    $statusClass = 'green';
-	//echo "<div id='message'>".lang("_EMAIL_SENT").".</div>";
 }
 
 foreach ($errorArray as $message) {
@@ -218,8 +169,11 @@ $json_o=json_decode($filedata,true);
 				},
 				'addrecipientsendBTN': function() {
 					// Disable the send button to prevent duplicate sending
-                    $("#form1").submit();
-					$('#btn_addrecipientsend').attr("disabled", true);
+                    if (validateForm()) {
+                        $("#form1").submit();
+                        $('#btn_addrecipientsend').attr("disabled", true);
+                    }
+
 				}
 			}
 		});
@@ -313,11 +267,10 @@ $json_o=json_decode($filedata,true);
         $("#dialog-delete").dialog("open");
     }
 
-	function openAddRecipient(vid,filename,filesize,from, subject, message, trackingCode)
+	function openAddRecipient(fileauth,filename,filesize,from, subject, message, trackingCode)
 	{
 		// populate form and open add-recipient modal form
-		$("#form1").attr("action", "index.php?s=files&a=add&id=" + vid  + "&tc=" + trackingCode);
-		$("#filevoucheruid").val(vid);
+		$("#form1").attr("action", "index.php?s=files&a=add&fileauth=" + fileauth  + "&tc=" + trackingCode);
         $("#trackingCode").val(trackingCode);
 		$("#filefrom").html(decodeURIComponent(from));
 		$("#filename").html(decodeURIComponent(filename));
@@ -637,7 +590,7 @@ $json_o=json_decode($filedata,true);
                                 echo '<tr>
                                     <td colspan="5" style="text-align: center; border: 1px solid #999;">
                                         <a target="_blank" style="cursor:pointer;"
-                                            onclick="openAddRecipient('."'".$itemContents[0]['filevoucheruid']."',
+                                            onclick="openAddRecipient('."'".$itemContents[0]['fileauthuseruid']."',
                                             '".rawurlencode(utf8tohtml($itemContents[0]['fileoriginalname'],true)) ."',
                                             '".$itemContents[0]['filesize'] ."','".rawurlencode($itemContents[0]['filefrom'])."',
                                             '".rawurlencode($itemContents[0]['filesubject'])."',

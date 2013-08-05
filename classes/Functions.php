@@ -793,7 +793,8 @@ class Functions {
             }
             $groupIDs[] = $emailGroupID;
         }
-        $this->sendmail->sendDownloadAvailable($groupIDs);
+        return ($this->sendmail->sendDownloadAvailable($groupIDs));
+
     }
 
     function getTransactionDownloadsForRecipient($recipientEmail, $trackingCode, $authuseruid) {
