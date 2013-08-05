@@ -172,66 +172,89 @@ public function loadConfig() {
 
 	// email templates section
 	$config['default_emailsubject'] = "{siteName}: {filetrackingcode}";
-	$config['filedownloadedemailbody'] = '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}
-Dear Sir, Madam,
+	$config['filedownloadedemailbody'] = '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}Dear Sir or Madam,
 
-The file below has been downloaded from {siteName} by {filefrom}.
+One or more of your uploaded files have been downloaded from {siteName} by {filefrom}. You can access your files and view download statistics on the My Files page at {serverURL}?s=files.
 
-Filename: {fileoriginalname}
-Filesize: {filesize}
-Download link: {serverURL}?vid={filevoucheruid}
+Tracking code: {filetrackingcode}
 
-The file is available until {fileexpirydate} after which it will be automatically deleted.
+Files:
+{fileinfo}
+The transaction will remain available until {fileexpirydate}, after which time it will be automatically deleted.
 
 Best regards,
-
 {siteName}{CRLF}{CRLF}--simple_mime_boundary{CRLF}Content-type:text/html; charset={charset}{CRLF}{CRLF}
-<HTML>
-<HEAD>
-<meta http-equiv="Content-Type" content="text/html;charset={charset}">
-</HEAD>
-<BODY>
-<P>Dear Sir, Madam,</P>
-<P>The file below has been downloaded from {siteName} by {filefrom}.</P>
-<TABLE WIDTH=100% BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
-	<COL WIDTH=600>
-	<COL WIDTH=80>
-	<COL WIDTH=800>
-	<COL WIDTH=70>
-	<TR>
-		<TD WIDTH=600 BGCOLOR="#b3b3b3">
-			<P ALIGN=CENTER><B>Filename</B></P>
-		</TD>
-		<TD WIDTH=80 BGCOLOR="#b3b3b3">
-			<P ALIGN=CENTER><B>Filesize</B></P>
-		</TD>
-		<TD WIDTH=600 BGCOLOR="#b3b3b3">
-			<P ALIGN=CENTER><B>Download link</B></P>
-		</TD>
-		<TD WIDTH=70 BGCOLOR="#b3b3b3">
-			<P ALIGN=CENTER><B>Valid until</B></P>
-		</TD>
-	</TR>
-	<TR>
-		<TD WIDTH=600 BGCOLOR="#e6e6e6">
-			<P ALIGN=CENTER>{htmlfileoriginalname}</P>
-		</TD>
-		<TD WIDTH=80 BGCOLOR="#e6e6e6">
-			<P ALIGN=CENTER>{filesize}</P>
-		</TD>
-		<TD WIDTH=800 BGCOLOR="#e6e6e6">
-			<P ALIGN=CENTER><A HREF="{serverURL}?vid={filevoucheruid}">{serverURL}?vid={filevoucheruid}</A></P>
-		</TD>
-		<TD WIDTH=70 BGCOLOR="#e6e6e6">
-			<P ALIGN=CENTER>{fileexpirydate}</P>
-		</TD>
-	</TR>
-</TABLE>
-<P>Best regards,</P>
-<P>{siteName}</P>
-</BODY>
-</HTML>{CRLF}{CRLF}--simple_mime_boundary--';
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset={charset}">
+	</head>
+	<body bgcolor="#ffffff">
+		<p>Dear Sir or Madam</p>
+		<p>One or more of your uploaded files have been downloaded from <a href="{serverURL}">{siteName}</a> by <a href="mailto:{filefrom}">{filefrom}</a>. You can access your files and view download statistics on the <a href="{serverURL}?s=files">My Files</a> page.</p>
+		<table width="960" cellspacing="0" cellpadding="3" border="1" bordercolor="#bbbbbb" rules="rows">
+			<tbody>
+				<tr bgcolor="#cccccc">
+					<td colspan="2" height="30"><strong>Transaction details</strong></td>
+				</tr>
+				<tr bgcolor="#e5e5e5" valign="top">
+					<td width="100"><strong>Tracking code</strong></td>
+					<td>{filetrackingcode}</td>
+				</tr>
+				<tr valign="top">
+					<td width="100"><strong>Expiry date</strong></td>
+					<td>{fileexpirydate}</td>
+				</tr>
+				<tr bgcolor="#e5e5e5" valign="top">
+					<td width="100"><strong>Files</strong></td>
+					<td>{htmlfileinfo}</td>
+				</tr>
+			</tbody>
+		</table>
+		<p>Best regards,<br />
+		{siteName}</p>
+	</body>
+</html>{CRLF}{CRLF}--simple_mime_boundary--';
+    $config['transactionuploadedemailbody'] = '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}Dear Sir, Madam,
 
+The following file transaction has been successfully uploaded to {siteName}. You can access your files and view download statistics on the My Files page at {serverURL}?s=files.
+
+Files:
+{fileinfo}
+The transaction has been made available until {fileexpirydate} after which time it will be automatically deleted.
+
+Best regards,
+{siteName}{CRLF}{CRLF}--simple_mime_boundary{CRLF}Content-type:text/html; charset={charset}{CRLF}{CRLF}
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset={charset}">
+	</head>
+	<body bgcolor="#ffffff">
+		<p>Dear Sir or Madam</p>
+		<p>The following file transaction has been successfully uploaded to <a href="{serverURL}">{siteName}</a>. You can access your files and view download statistics on the <a href="{serverURL}?s=files">My Files</a> page.</p>
+		<table width="960" cellspacing="0" cellpadding="3" border="1" bordercolor="#bbbbbb" rules="rows">
+			<tbody>
+				<tr bgcolor="#cccccc">
+					<td colspan="2" height="30"><strong>Transaction details</strong></td>
+				</tr>
+				<tr bgcolor="#e5e5e5" valign="top">
+					<td width="100"><strong>Tracking code</strong></td>
+					<td>{filetrackingcode}</td>
+				</tr>
+				<tr valign="top">
+					<td width="100"><strong>Expiry date</strong></td>
+					<td>{fileexpirydate}</td>
+				</tr>
+				<tr bgcolor="#e5e5e5" valign="top">
+					<td width="100"><strong>Files</strong></td>
+					<td>{htmlfileinfo}</ul>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<p>Best regards,<br />
+		{siteName}</p>
+	</body>
+</html>{CRLF}{CRLF}--simple_mime_boundary--';
     $config['transactionavailableemailbody'] = '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}Dear Sir, Madam,
 
 The following file transaction has been uploaded to {siteName} by {filefrom} and you have been granted permission to download its contents.

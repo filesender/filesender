@@ -98,6 +98,13 @@ class Log {
             $logfilegroupid = "";
             $logfiletrackingcode = "";
         }
+
+        if ($logType == "Download") {
+            // Swap sender/recipient.
+            $temp = $logto;
+            $logto = $logfrom;
+            $logfrom = $temp;
+        }
 		
 		$pdo = $this->db->connect();
 		$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception

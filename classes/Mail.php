@@ -98,6 +98,53 @@ class Mail {
         return true; // Email(s) sent successfully.
     }
 
+    // ---------------------------------------
+    // Send a "file has been downloaded" email to sender.
+    // $voucherIds can be either an array of IDs (for multiple files) or a string (single file).
+    // ---------------------------------------
+    public function sendDownloadNotification($voucherIds) {
+        global $config;
+        $functions = Functions::getInstance();
+
+        if (is_string($voucherIds)) {
+            // Convert to array to enable looping.
+            $voucherIds = array($voucherIds);
+        }
+
+        if (!is_array($voucherIds)) {
+            logEntry('Mail.php: Invalid parameter $voucherIds - must be string or array', 'E_ERROR');
+            return false;
+        }
+
+        $files = array();
+        foreach ($voucherIds as $voucherId) {
+            if (!ensureSaneFileUid($voucherId)) {
+                logEntry('Mail.php: Invalid voucher ID ' . $voucherId, 'E_ERROR');
+                return false;
+            }
+
+            $voucherData = $functions->getVoucherData($voucherId);
+
+            if (empty($voucherData)) {
+                logEntry('Mail.php: No file data was found for voucher ID ' . $voucherData, 'E_ERROR');
+                return false;
+            }
+
+            $files[] = $voucherData;
+        }
+
+        $temp = $files[0]['fileto'];
+        $files[0]['fileto'] = $files[0]['filefrom'];
+        $files[0]['filefrom'] = $temp;
+
+        if (!$this->sendEmail($files[0], $config['filedownloadedemailbody'], 'full', $files)) {
+            // Sending failed, no need to log as sendEmail() does that.
+            return false;
+        }
+
+        return true;
+    }
+
     //---------------------------------------
     // Send mail
     // 
