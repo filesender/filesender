@@ -123,7 +123,7 @@ class Functions {
     private $authvoucher;
 
     // the following fields are returned without fileUID to stop unauthorised users accessing the fileUID
-    public $returnFields = " fileid, fileexpirydate, fileto , filesubject, fileactivitydate, filemessage, filefrom, filesize, fileoriginalname, filestatus, fileip4address, fileip6address, filesendersname, filereceiversname, filevouchertype, fileauthuseruid, fileauthuseremail, filecreateddate, fileauthurl, fileuid, filevoucheruid, filegroupid, filetrackingcode ";
+    public $returnFields = " fileid, fileexpirydate, fileto , filesubject, fileactivitydate, filemessage, filefrom, filesize, fileoriginalname, filestatus, fileip4address, fileip6address, filesendersname, filereceiversname, filevouchertype, fileauthuseruid, fileauthuseremail, filecreateddate, fileauthurl, fileuid, filevoucheruid, filegroupid, filetrackingcode, filedownloadconfirmations, fileenabledownloadreceipts, filedailysummary ";
 
     public function __construct() {
 
@@ -775,8 +775,11 @@ class Functions {
             $fileData['fileauthurl'] = $transactionDetails[0]['fileauthurl'];
             $fileData['filesendersname'] = $transactionDetails[0]['filesendersname'];
             $fileData['fileauthuseruid'] = $uid;
-            $fileData['fileaughuseremail'] = $transactionDetails[0]['fileauthuseremail'];
+            $fileData['fileauthuseremail'] = $transactionDetails[0]['fileauthuseremail'];
             $fileData['filetrackingcode'] = $trackingCode;
+            $fileData['filedownloadconfirmations'] = $transactionDetails[0]['filedownloadconfirmations'];
+            $fileData['fileenabledownloadreceipts'] = $transactionDetails[0]['fileenabledownloadreceipts'];
+            $fileData['filedailysummary'] = $transactionDetails[0]['filedailysummary'];
 
             // Assigns the create date to the time they were added to the transaction, and NOT the time the transaction was created.
             $fileData['filecreateddate'] = date($config['db_dateformat'], time());
@@ -1189,7 +1192,10 @@ class Functions {
 			fileauthuseremail,
 			filecreateddate,
 			filegroupid,
-			filetrackingcode
+			filetrackingcode,
+			filedownloadconfirmations,
+			fileenabledownloadreceipts,
+			filedailysummary
             ) VALUES
             (
             :fileexpirydate,
@@ -1212,7 +1218,10 @@ class Functions {
 			:fileauthuseremail,
 			:filecreateddate,
 			:filegroupid,
-			:filetrackingcode)');
+			:filetrackingcode,
+			:filedownloadconfirmations,
+			:fileenabledownloadreceipts,
+			:filedailysummary)');
 				
 			$statement->bindParam(':fileexpirydate', $dataitem['fileexpirydate']);
 			$statement->bindParam(':fileto', $dataitem['fileto']);
@@ -1236,7 +1245,10 @@ class Functions {
 			$statement->bindParam(':filecreateddate', $dataitem['filecreateddate']);
             $statement->bindParam(':filegroupid', $dataitem['filegroupid']);
             $statement->bindParam(':filetrackingcode', $dataitem['filetrackingcode']);
-	
+            $statement->bindParam(':filedownloadconfirmations', $dataitem['filedownloadconfirmations']);
+            $statement->bindParam(':fileenabledownloadreceipts', $dataitem['fileenabledownloadreceipts']);
+            $statement->bindParam(':filedailysummary', $dataitem['filedailysummary']);
+
 			try { 
 				$statement->execute(); 
 				}
@@ -1251,7 +1263,6 @@ class Functions {
 				return $this->sendmail->sendEmail($dataitem,$config['voucherissuedemailbody']);
 			} elseif ($dataitem['filestatus'] == "Available") {
 				$this->saveLog->saveLog($dataitem,"Uploaded","");
-				//return $this->sendmail->sendEmail($dataitem,$config['fileuploadedemailbody']);
 			}
 			return true;
 		}
@@ -1286,7 +1297,10 @@ class Functions {
 			fileauthuseremail = :fileauthuseremail,
 			filecreateddate = :filecreateddate,
 			filegroupid = :filegroupid,
-			filetrackingcode = :filetrackingcode
+			filetrackingcode = :filetrackingcode,
+			filedownloadconfirmations = :filedownloadconfirmations,
+			fileenabledownloadreceipts = :fileenabledownloadreceipts,
+			filedailysummary = :filedailysummary
 			WHERE filevoucheruid = :filevoucheruid');	
 				
 			$statement->bindParam(':fileexpirydate', $dataitem['fileexpirydate']);
@@ -1310,7 +1324,10 @@ class Functions {
 			$statement->bindParam(':filecreateddate', $dataitem['filecreateddate']);
             $statement->bindParam(':filegroupid', $dataitem['filegroupid']);
             $statement->bindParam(':filetrackingcode', $dataitem['filetrackingcode']);
-	
+            $statement->bindParam(':filedownloadconfirmations', $dataitem['filedownloadconfirmations']);
+            $statement->bindParam(':fileenabledownloadreceipts', $dataitem['fileenabledownloadreceipts']);
+            $statement->bindParam(':filedailysummary', $dataitem['filedailysummary']);
+
 			try { 
 				$statement->execute(); 
 				}

@@ -108,6 +108,11 @@ if (!isAuthenticated()) {
                 $complete = 'completev';
             }
 
+            $emailSettings = json_decode($_POST['emailSettings'], true);
+            $data['filedownloadconfirmations'] = $emailSettings['email-inform-download'] ? 'true' : 'false';
+            $data['fileenabledownloadreceipts'] = $emailSettings['email-enable-confirmation'] ? 'true' : 'false';
+            $data['filedailysummary'] = $emailSettings['email-inform-daily'] ? 'true' : 'false';
+
             ensureFileSizesMatch($data, $uploadFolder, $tempFilename);
             renameTempFile($tempFilePath, $uploadFolder . $fileUid);
             addDatabaseRecords($data, $fileUid);
@@ -129,6 +134,7 @@ if (!isAuthenticated()) {
             $data = $functions->getMultiFileData($_REQUEST['gid']);
 
             $groupIdArray = array();
+            $emailSettings = json_decode($_POST['emailSettings'], true);
             foreach ($data as $dataItem) {
                 // Update group IDs to be individual for each recipient.
                 if (!isset($groupIdArray[$dataItem['fileto']])) {
@@ -137,10 +143,19 @@ if (!isAuthenticated()) {
 
                 $dataItem['filegroupid'] = $groupIdArray[$dataItem['fileto']];
                 $functions->updateFile($dataItem);
+
+                $dataItem['rtnemail'] = $emailSettings['rtnemail'] ? 'true' : 'false';
+                $dataItem['senduploadconfirmation'] = $emailSettings['email-upload-complete'] ? 'true' : 'false';
             }
 
-            $sendMail->sendDownloadAvailable($groupIdArray);
-            $sendMail->sendUploadConfirmation($data);
+
+            if ($data[0]['filedownloadconfirmations'] == 'true') {
+                $sendMail->sendDownloadAvailable($groupIdArray);
+            }
+
+            if ($data[0]['senduploadconfirmation']) {
+                $sendMail->sendUploadConfirmation($data);
+            }
 
             $resultArray['status'] = 'complete';
             $resultArray['gid'] = reset($groupIdArray); // The first group ID.
