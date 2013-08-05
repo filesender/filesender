@@ -250,6 +250,7 @@ function startUpload() {
             $('#dialog-autherror').dialog('open');
             return;
         }
+
         var data = JSON.parse(data);
 
         if (data.errors) {
@@ -333,9 +334,13 @@ function doUploadComplete() {
     var moreFiles = n < fileData.length - 1 ? '&morefiles=true' : '';
 
     var query = $('#form1').serializeArray(), json = {};
+    json['email-inform-download'] = $('#email-inform-download').prop('checked');
+    json['email-enable-confirmation'] = $('#email-enable-confirmation').prop('checked');
+    json['email-inform-daily'] = $('#email-inform-daily').prop('checked');
     $.ajax({
         type: 'POST',
         url: uploadURI + '?type=uploadcomplete&vid=' + vid + '&n=' + n + moreFiles,
+        data: {emailSettings: JSON.stringify(json)},
         success: function (data) {
 
             var data = JSON.parse(data);
@@ -370,9 +375,14 @@ function doUploadComplete() {
 }
 
 function transactionComplete(gid) {
+    var json = {};
+    json['rtnemail'] = $('#rtnemail').prop('checked');
+    json['email-upload-complete'] = $('#email-upload-complete').prop('checked');
+
     $.ajax({
         type: 'POST',
         url: uploadURI + '?type=transactioncomplete&gid=' + gid,
+        data: {emailSettings: JSON.stringify(json)},
         success: function (data) {
             clearForm();
             var data = JSON.parse(data);

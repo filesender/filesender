@@ -270,7 +270,10 @@ class Mail {
         $headers .= 'Content-Type: multipart/alternative; boundary=simple_mime_boundary' . $crlf;
         $headers .= 'X-FileSenderUID: ' . $mailObject['filevoucheruid'] . $crlf;
         $headers .= 'From: <' . $mailObject['filefrom'] . '>' . $crlf; // RFC2822 Originator of the message
-        $headers .= 'Cc: <' . $mailObject['filefrom'] . '>' . $crlf;
+
+        if (isset($mailObject['rtnemail']) && $mailObject['rtnemail'] == 'true') {
+            $headers .= 'Cc: <' . $mailObject['filefrom'] . '>' . $crlf;
+        }
 
         return $headers;
     }
