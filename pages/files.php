@@ -99,8 +99,8 @@ if(isset($_REQUEST["a"]) && isset($_REQUEST["id"])) {
 	}
 }
 
-if(isset($_REQUEST["a"]) && isset($_REQUEST["gid"])) {
-    $recipient = $_REQUEST["gid"];
+if(isset($_REQUEST["a"]) && isset($_REQUEST["groupid"])) {
+    $recipient = $_REQUEST["groupid"];
     if ($_REQUEST["a"] == "del") {
         if ($functions->deleteRecipient($recipient)) {
             $statusErr = lang("_RECIPIENT_DELETED");
@@ -109,7 +109,14 @@ if(isset($_REQUEST["a"]) && isset($_REQUEST["gid"])) {
             $statusErr = lang("_PERMISSION_DENIED");
             $statusClass = "red";
         }
-
+    } else if ($_REQUEST["a"] == "resend") {
+        if ($sendmail->sendDownloadAvailable($recipient)){
+            $statusErr = lang("_MESSAGE_RESENT");
+            $statusClass = 'green';
+        } else {
+            $statusErr = lang("_PERMISSION_DENIED");
+            $statusClass = "red";
+        }
     }
 }
 
@@ -282,13 +289,13 @@ $json_o=json_decode($filedata,true);
 
 	function resend(uid)
 	{
-		window.location.href="index.php?s=files&a=resend&id=" + selectedFile;
+		window.location.href="index.php?s=files&a=resend&groupid=" + selectedRecipient;
 	}
 
 	function confirmResend(vid)
     {
         // confirm deletion of selected file
-        selectedFile = vid;
+        selectedRecipient = vid;
         $("#dialog-resend" ).dialog( "open" );
     }
 
@@ -296,7 +303,7 @@ $json_o=json_decode($filedata,true);
     {
         // reload page to delete selected file
         // should add a tick box to delete multiple selected files
-        window.location.href="index.php?s=files&a=del&gid=" + selectedRecipient;
+        window.location.href="index.php?s=files&a=del&groupid=" + selectedRecipient;
     }
 
 	function confirmDeleteRecipient(gid)
@@ -596,7 +603,7 @@ $json_o=json_decode($filedata,true);
                                     <td class="HardBreak" style="text-align: center;">' . $maxDownloaded . '</td>
                                     <td class="tblmcw1" style="cursor:pointer; width:5%;">
                                         <img src="images/email_go.png" alt="" title="'.lang("_RE_SEND_EMAIL").'"
-                                            style="cursor:pointer;"  onclick="confirmResend('.$onClick.')" />
+                                            style="cursor:pointer;"  onclick="confirmResend(&quot;'.$recipientsArray[$temp]['filegroupid'].'&quot;)" />
                                     </td>
                                     <td class="tblmcw1 dr6" style="cursor:pointer; width:5%;">
                                         <img src="images/shape_square_delete.png" alt="" title="'.lang("_DELETE_RECIPIENT").'"
