@@ -337,8 +337,8 @@ $json_o=json_decode($filedata,true);
                     echo "<img src='images/page_white_text_width.png' border='0' alt='' title='".utf8tohtml($item['filemessage'],TRUE). "' />";
                 }
 
-                echo "</td><td>" .date($lang['datedisplayformat'],strtotime($item['filecreateddate'])) . "</td>
-                    <td>" .date($lang['datedisplayformat'],strtotime($item['fileexpirydate'])) . "</td>
+                echo "</td><td>" .date(lang('datedisplayformat'),strtotime($item['filecreateddate'])) . "</td>
+                    <td>" .date(lang('datedisplayformat'),strtotime($item['fileexpirydate'])) . "</td>
                     <td>
                         <div  style='cursor:pointer;'>
                             <img id='btn_deletevoucher_".$i."'
