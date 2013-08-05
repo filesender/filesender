@@ -105,10 +105,15 @@ class Zipper
         if ($bytesSent == $this->calculateTotalFileSize()) {
             // Download was completed, save a log entry for each of the downloaded files.
             $log = Log::getInstance();
+            $sendMail = Mail::getInstance();
+            $voucherIds = array();
 
             foreach ($this->files as $file) {
-                $log->saveLog($file, "Download", "");
+                $log->saveLog($file, 'Download', '');
+                $voucherIds[] = $file['filevoucheruid'];
             }
+
+            $sendMail->sendDownloadNotification($voucherIds);
         }
     }
 

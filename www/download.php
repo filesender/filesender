@@ -136,11 +136,8 @@ if(file_exists($file) && is_file($file) && $filestatus == 'Available')
 	}
 	if ($downloadComplete) {
 		// Send completed email
-		$tempEmail = $fileArray[0]["fileto"];
-		$fileArray[0]["fileto"] = $fileArray[0]["filefrom"];
-		$fileArray[0]["filefrom"] = $tempEmail;
+        $sendmail->sendDownloadNotification($fileArray[0]["filevoucheruid"]);
 		$saveLog->saveLog($fileArray[0],"Download","");
-		$sendmail->sendEmail($fileArray[0],$config['filedownloadedemailbody']);
 		logEntry("Download complete: email sent - To: ".$fileArray[0]["fileto"]."  From: ".$fileArray[0]["filefrom"] . " [".$file."]","E_NOTICE");
 	}
 } else {
