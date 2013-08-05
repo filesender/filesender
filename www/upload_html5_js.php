@@ -46,8 +46,6 @@
 
     // HTML5 form Validation
     function validateForm() {
-
-        processEmailSettings();
         // remove messages from any previous attempt
         hideMessages();
         var isValid = true;
@@ -100,16 +98,6 @@
     function reenableToField(){
         $('#fileto').val(emailCache);
         $('#fileto').removeAttr('disabled');
-    }
-
-    function processEmailSettings() {
-        var emailBitString = '';
-        $('#email-upload-complete').is(':checked') ? emailBitString+='1' : emailBitString+='0';
-        $('#email-inform-download').is(':checked') ? emailBitString+='1' : emailBitString+='0';
-        $('#email-inform-daily').is(':checked') ? emailBitString+='1' : emailBitString+='0';
-        $('#email-enable-confirmation').is(':checked') ? emailBitString+='1' : emailBitString+='0';
-
-        alert(emailBitString);
     }
 
 </script>
