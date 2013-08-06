@@ -792,7 +792,7 @@ class Functions {
                 $fileData['fileuid'] = $transactionDetails[$file]['fileuid'];
                 $fileData['filevoucheruid'] = getGUID();
 
-                $this->insertFile($fileData);
+                $this->insertFile($fileData, 'Added');
             }
             $groupIDs[] = $emailGroupID;
         }
@@ -1186,7 +1186,7 @@ class Functions {
 	// --------------------------------------- CHECKED
 	// Insert new file  
 	// ---------------------------------------
-	public function insertFile($dataitem){
+	public function insertFile($dataitem, $logtype = 'Uploaded'){
 
         global $config;
 
@@ -1284,7 +1284,7 @@ class Functions {
 				$this->saveLog->saveLog($dataitem,"Voucher Sent","");
 				return $this->sendmail->sendEmail($dataitem,$config['voucherissuedemailbody']);
 			} elseif ($dataitem['filestatus'] == "Available") {
-				$this->saveLog->saveLog($dataitem,"Uploaded","");
+				$this->saveLog->saveLog($dataitem,$logtype,"");
 			}
 			return true;
 		}
