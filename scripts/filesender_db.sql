@@ -23,6 +23,9 @@ CREATE TABLE files
   fileauthuseremail character varying(255),
   filegroupid character varying(60),
   filetrackingcode character varying(5),
+  filedownloadconfirmations character varying(5),
+  fileenabledownloadrecipients character varying(5),
+  filedailysummary character varying(5),
   CONSTRAINT files_pkey PRIMARY KEY (fileid)
 );
 
@@ -50,5 +53,6 @@ CREATE TABLE logs
   logauthuseruid character varying(500),
   logfilegroupid character varying(60),
   logfiletrackingcode character varying(5),
+  logdailysummary character varying(5),
   CONSTRAINT logs_pkey PRIMARY KEY (logid)
 );

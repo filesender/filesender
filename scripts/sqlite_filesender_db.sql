@@ -27,8 +27,11 @@ CREATE TABLE files (
 	filecreateddate TEXT,
 	fileauthurl TEXT,
 	fileauthuseremail TEXT,
-	filegroupid TEXT,
-  filetrackingcode TEXT,
+    filegroupid TEXT,
+    filetrackingcode TEXT,
+    filedownloadconfirmations TEXT,
+    fileenabledownloadrecipients TEXT,
+    filedailysummary TEXT
 );
 
 CREATE TABLE logs (
@@ -46,7 +49,8 @@ CREATE TABLE logs (
 	logvoucheruid TEXT,
 	logauthuseruid TEXT,
 	logfilegroupid TEXT,
-  logfiletrackingcode TEXT,
+    logfiletrackingcode TEXT,
+    logdailysummary TEXT
 );
 
 CREATE TRIGGER UPDATE_LOGDATE AFTER UPDATE ON logs

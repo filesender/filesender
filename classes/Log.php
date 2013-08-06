@@ -84,6 +84,7 @@ class Log {
             $logauthuseruid	= $authAttributes["saml_uid_attribute"];
             $logfilegroupid = $dataitem['filegroupid'];
             $logfiletrackingcode = $dataitem['filetrackingcode'];
+            $logdailysummary = $dataitem['filedailysummary'];
         } else {
             $logfileuid	= "";
             $logvoucheruid	= "";
@@ -97,6 +98,7 @@ class Log {
             $logauthuseruid	= $authAttributes["saml_uid_attribute"];
             $logfilegroupid = "";
             $logfiletrackingcode = "";
+            $logdailysummary = $config['email_me_daily_statistics_default'] ? 'true' : 'false';
         }
 
         if ($logType == "Download") {
@@ -122,7 +124,8 @@ class Log {
                 logmessage,
                 logauthuseruid,
                 logfilegroupid,
-                logfiletrackingcode
+                logfiletrackingcode,
+                logdailysummary
             ) 
             VALUES 
             (
@@ -137,7 +140,8 @@ class Log {
                 :logmessage,
                 :logauthuseruid,
                 :logfilegroupid,
-                :logfiletrackingcode
+                :logfiletrackingcode,
+                :logdailysummary
             )");
 			
 			$statement->bindParam(':logfileuid',$logfileuid);
@@ -152,6 +156,7 @@ class Log {
 			$statement->bindParam(':logauthuseruid',$logauthuseruid);
             $statement->bindParam(':logfilegroupid',$logfilegroupid);
             $statement->bindParam(':logfiletrackingcode',$logfiletrackingcode);
+            $statement->bindParam(':logdailysummary',$logdailysummary);
 
 		
 		try 
@@ -161,7 +166,7 @@ class Log {
 		}
 		catch(PDOException $e)
 		{ 
-			displayError(lang("_ERROR_CONTACT_ADMIN"),$e->getMessage()); 
+			displayError(lang("_ERROR_CONTACT_ADMIN"),$e->getMessage());
 			return  false;
 		}
     }

@@ -34,6 +34,9 @@ CREATE TABLE `files` (
   `fileauthuseremail` varchar(255) DEFAULT NULL,
   `filegroupid` varchar(60) DEFAULT NULL,
   `filetrackingcode` varchar(5) DEFAULT NULL,
+  `filedownloadconfirmations` varchar(5) DEFAULT NULL,
+  `fileenabledownloadrecipients` varchar(5) DEFAULT NULL,
+  `filedailysummary` varchar(5) DEFAULT NULL,
   PRIMARY KEY (`fileid`),
   UNIQUE KEY `fileid` (`fileid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
@@ -58,6 +61,7 @@ CREATE TABLE `logs` (
   `logauthuseruid` varchar(500) DEFAULT NULL,
   `logfilegroupid` varchar(60) DEFAULT NULL,
   `logfiletrackingcode` varchar(5) DEFAULT NULL,
+  `logdailysummary` varchar(5) DEFAULT NULL,
   PRIMARY KEY (`logid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 
