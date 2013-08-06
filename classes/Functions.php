@@ -903,6 +903,7 @@ class Functions {
 
     function deleteRecipient($groupid)
     {
+        $files = $this->getMultiFileData($groupid);
         $pdo = $this->db->connect();
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $statement = $pdo->prepare("UPDATE files SET filestatus = 'Deleted' WHERE filegroupid = :filegroupid");
@@ -918,7 +919,10 @@ class Functions {
 
         $result = $statement->rowCount();
 
-        if ($result != 0) return true;
+        if ($result != 0) {
+            $this->saveLog->saveLog($files[0], 'Removed', '');
+            return true;
+        }
         return false;
     }
 
