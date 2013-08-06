@@ -145,6 +145,111 @@ class Mail {
         return true;
     }
 
+    // ---------------------------------------
+    // Send a daily transaction summary email. Uses information from the logs table, so does not use sendEmail().
+    // $transactionDetails is an array of transactions (from logs) by a given user within the last 24 hours.
+    // ---------------------------------------
+    public function sendSummary($transactionDetails) {
+        global $config;
+
+        if (!filter_var($transactionDetails[0]['logto'], FILTER_VALIDATE_EMAIL)) {
+            logEntry('Invalid email address ' . $transactionDetails[0]['logto']);
+            return false;
+        }
+
+        // Replace template variables.
+        $to = $transactionDetails[0]['logfrom'];
+
+        $headers = "MIME-Version: 1.0" . $config['crlf'];
+        $headers .= "Content-Type: multipart/alternative; boundary=simple_mime_boundary" . $config['crlf'];
+        $headers .= "From: " . $config['noreply'] . $config['crlf'];
+
+        $subject = $config['summary_email_subject'];
+        $subject = str_replace('{siteName}',  $config['site_name'], $subject);
+        $subject = str_replace('{filetrackingcode}', $transactionDetails[0]['logfiletrackingcode'], $subject);
+
+        $message = $config['summaryemailbody'];
+        $message = str_replace('{siteName}',  $config['site_name'], $message);
+        $message = str_replace('{filetrackingcode}', $transactionDetails[0]['logfiletrackingcode'], $message);
+        $message = str_replace('{CRLF}', $config['crlf'], $message);
+        $message = $this->createEmailBody($message);
+
+        $activities = array();
+
+        foreach ($transactionDetails as $transaction) {
+            // Truncate the seconds from the logdate field in order to join together events that happened in the same minute.
+            $transaction['logdate'] = floor(strtotime($transaction['logdate']) / 60) * 60;
+            $found = false;
+
+            // Count the number of files that the user downloaded from this transaction within the same minute.
+            foreach ($activities as &$activity) {
+                if ($transaction['logtype'] == $activity['logtype'] && $transaction['logdate'] == $activity['logdate'] && $transaction['logto'] == $activity['logto']) {
+                    $activity['count'] += 1;
+                    $found = true;
+                }
+            }
+
+            unset($activity); // Need unset() because of pass-by-reference in the above loop.
+
+            if (!$found) {
+                // First download by this user, set count to 1.
+                $transaction['count'] = 1;
+                $activities[] = $transaction;
+            }
+        }
+
+        $activityTemplate = '';
+        $htmlActivityTemplate = '';
+
+        foreach ($activities as $activity) {
+            // Build the activity string that is output to the email.
+            $fileCount = $activity['count'] == 1 ? ' file' : ' files';
+
+            switch ($activity['logtype']) {
+                case 'Download':
+                    // E.g. "16:38: recipient@email.com downloaded 3 files".
+                    $str = $activity['logto'] . ' downloaded ' . $activity['count'] . $fileCount;
+                    break;
+                case 'Added':
+                    // E.g. "16:35: recipient2@email.com was added to the transaction".
+                    $str = $activity['logto'] . ' was added to the transaction';
+                    break;
+                case 'Uploaded':
+                    // E.g. "16:30: uploader@email.com sent 3 files to recipient@email.com".
+                    $str = $activity['logfrom'] . ' sent ' . $activity['count'] . $fileCount . ' to ' . $activity['logto'];
+                    break;
+                case 'Removed':
+                    // E.g. "16:45: recipient2@email.com was removed from the transaction".
+                    $str = $activity['logto'] . ' was removed from the transaction';
+                    break;
+            }
+
+            if (isset($str)) {
+                // Add the timestamp, bullet points and line shifts.
+                $str = date("H:i", $activity['logdate']) . ': ' . $str;
+                $activityTemplate .= ' - ' . $str . $config['crlf'];
+                $htmlActivityTemplate .= '&nbsp;&bull;&nbsp;' . $str . '<br />';
+            }
+
+            unset($str);
+        }
+
+        $message = str_replace('{transactionactivity}', $activityTemplate, $message);
+        $message = str_replace('{htmltransactionactivity}', $htmlActivityTemplate, $message);
+
+        try {
+            if (mail($to, $subject, $message, $headers)) {
+                return true;
+            } else {
+                logEntry('Error sending email: ' . $to, 'E_ERROR');
+                return false;
+            }
+        } catch (Exception $e) {
+            logEntry($e->getMessage(), 'E_ERROR');
+            return false;
+        }
+    }
+
     //---------------------------------------
     // Send mail
     // 
@@ -331,6 +436,7 @@ class Mail {
 
     private function createEmailBody($template) {
         // Check and set the needed encoding for the body, convert if necessary.
+        require_once("../includes/UTF8.php");
         $body_encoding = detect_char_encoding($template) ;
         $template = str_replace('{charset}', $body_encoding, $template);
 
@@ -345,7 +451,7 @@ class Mail {
     // Send summary 
     // 	
 	
-	 public function sendSummary($to,$message){
+	 /*public function sendSummary($to,$message){
 
         // sends a summary 
 
@@ -362,7 +468,7 @@ class Mail {
 
         if(!filter_var($to,FILTER_VALIDATE_EMAIL)) {return false;}
 
-        $subject =   $config['site_name']." - Summary for " .$to;
+        $subject = $config['site_name']." - Summary for " .$to;
         $body = wordwrap($crlf ."--simple_mime_boundary".$crlf ."Content-type:text/plain; charset=iso-8859-1".$crlf.$crlf .$message,70);
 		
         if (mail($to, $subject, $message, $headers)) {
@@ -370,7 +476,7 @@ class Mail {
         } else {
             return false;
         }
-    }
+    }*/
 	
     //---------------------------------------
     // Send admin mail messages

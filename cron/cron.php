@@ -76,7 +76,7 @@ if(session_id() == ""){
 
 // log that cron has started running
 logProcess("CRON","Cron started");
-if (cleanUp()) {
+if (cleanUp() && sendSummaryEmails()) {
 	// cron completed - log
 	logProcess("CRON","Cron Complete");
 } else {
@@ -285,6 +285,62 @@ function cleanUp() {
 	closedir($dir_handle);
 	
 	return true;
+}
+
+// Send emails with summaries of all activity on a user's transactions within the last 24 hours.
+function sendSummaryEmails() {
+    global $config;
+    $db = DB::getInstance();
+    $sendMail = Mail::getInstance();
+
+    $last24h = date($config['db_dateformat'], time() - 60 * 60 * 24);
+
+    $query = "SELECT logdate, logfilename, logfrom, logto, logfiletrackingcode, logtype FROM logs WHERE logdailysummary = 'true' AND logdate >= %s ORDER BY logdate DESC";
+
+    try {
+        $search = $db->fquery($query, $last24h);
+    } catch (Exception $e) {
+        logProcess('CRON', 'SQL Error selecting summary details: ' . $e->getMessage());
+        return false;
+    }
+
+    // Turn query results into an array of transactions with associated activity logs.
+    $transactions = array();
+
+    foreach($search as $row) {
+        $added = false;
+
+        if ($row['logtype'] == 'Download') {
+            // 'Download' log entries swap the recipient and uploader. Swap them back for this purpose.
+            $tmp = $row['logfrom'];
+            $row['logfrom'] = $row['logto'];
+            $row['logto'] = $tmp;
+        }
+
+        foreach ($transactions as &$transaction) {
+            // A transaction can be identified by the combination of tracking code and uploader email.
+            if ($transaction[0]['logfrom'] == $row['logfrom'] && $transaction[0]['logfiletrackingcode'] == $row['logfiletrackingcode']) {
+                $transaction[] = $row;
+                $added = true;
+                break;
+            }
+        }
+
+        unset($transaction);
+
+        if (!$added) {
+            $transactions[][0] = $row;
+        }
+    }
+
+    // Send an email for each of the transactions.
+    foreach ($transactions as $transaction) {
+        if (!$sendMail->sendSummary($transaction)) {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 function logProcess($client,$message) {

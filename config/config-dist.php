@@ -185,9 +185,47 @@ public function loadConfig() {
 
 	// email templates section
 	$config['default_emailsubject'] = "{siteName}: {filetrackingcode}";
+    $config['summary_email_subject'] = "{siteName}: Daily summary for transaction {filetrackingcode}";
+
+    $config['summaryemailbody'] = '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}Dear Sir, Madam,
+
+This is a daily transaction activity summary for your upload {filetrackingcode} on {siteName}. You can access your files and view detailed download statistics on the My Files page.
+
+Activity:
+{transactionactivity}
+Best regards,
+{siteName}{CRLF}{CRLF}--simple_mime_boundary{CRLF}Content-type:text/html; charset={charset}{CRLF}{CRLF}
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset={charset}">
+	</head>
+	<body bgcolor="#ffffff">
+		<p>Dear Sir or Madam</p>
+		<p>This is a daily transaction activity summary for your upload {filetrackingcode} on {siteName}. You can access your files and view detailed download statistics on the My Files page.</p>
+		<table width="960" cellspacing="0" cellpadding="3" border="1" bordercolor="#bbbbbb" rules="rows">
+			<tbody>
+				<tr bgcolor="#cccccc">
+					<td colspan="2" height="30"><strong>Transaction details</strong></td>
+				</tr>
+				<tr bgcolor="#e5e5e5" valign="top">
+					<td width="100"><strong>Tracking code</strong></td>
+					<td>{filetrackingcode}</td>
+				</tr>
+				<tr valign="top">
+					<td width="100"><strong>Activity</strong></td>
+					<td>{htmltransactionactivity}</ul>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<p>Best regards,<br />
+		{siteName}</p>
+	</body>
+</html>{CRLF}{CRLF}--simple_mime_boundary--';
+
 	$config['filedownloadedemailbody'] = '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}Dear Sir or Madam,
 
-One or more of your uploaded files have been downloaded from {siteName} by {filefrom}. You can access your files and view download statistics on the My Files page at {serverURL}?s=files.
+One or more of your uploaded files have been downloaded from {siteName} by {filefrom}. You can access your files and view detailed download statistics on the My Files page at {serverURL}?s=files.
 
 Tracking code: {filetrackingcode}
 
@@ -203,7 +241,7 @@ Best regards,
 	</head>
 	<body bgcolor="#ffffff">
 		<p>Dear Sir or Madam</p>
-		<p>One or more of your uploaded files have been downloaded from <a href="{serverURL}">{siteName}</a> by <a href="mailto:{filefrom}">{filefrom}</a>. You can access your files and view download statistics on the <a href="{serverURL}?s=files">My Files</a> page.</p>
+		<p>One or more of your uploaded files have been downloaded from <a href="{serverURL}">{siteName}</a> by <a href="mailto:{filefrom}">{filefrom}</a>. You can access your files and view detailed download statistics on the <a href="{serverURL}?s=files">My Files</a> page.</p>
 		<table width="960" cellspacing="0" cellpadding="3" border="1" bordercolor="#bbbbbb" rules="rows">
 			<tbody>
 				<tr bgcolor="#cccccc">
@@ -229,7 +267,7 @@ Best regards,
 </html>{CRLF}{CRLF}--simple_mime_boundary--';
     $config['transactionuploadedemailbody'] = '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}Dear Sir, Madam,
 
-The following file transaction has been successfully uploaded to {siteName}. You can access your files and view download statistics on the My Files page at {serverURL}?s=files.
+The following file transaction has been successfully uploaded to {siteName}. You can access your files and view detailed download statistics on the My Files page at {serverURL}?s=files.
 
 Files:
 {fileinfo}
@@ -243,7 +281,7 @@ Best regards,
 	</head>
 	<body bgcolor="#ffffff">
 		<p>Dear Sir or Madam</p>
-		<p>The following file transaction has been successfully uploaded to <a href="{serverURL}">{siteName}</a>. You can access your files and view download statistics on the <a href="{serverURL}?s=files">My Files</a> page.</p>
+		<p>The following file transaction has been successfully uploaded to <a href="{serverURL}">{siteName}</a>. You can access your files and view detailed download statistics on the <a href="{serverURL}?s=files">My Files</a> page.</p>
 		<table width="960" cellspacing="0" cellpadding="3" border="1" bordercolor="#bbbbbb" rules="rows">
 			<tbody>
 				<tr bgcolor="#cccccc">
