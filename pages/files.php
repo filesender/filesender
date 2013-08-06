@@ -44,14 +44,24 @@
 $statusErr = '';
 $statusClass = '';
 
-if($_REQUEST['a'] == "add" && isset($_REQUEST['tc']) && isset($_REQUEST['fileauth'])){
-    if(isset($_REQUEST['fileto'])) {
-        $listOfEmails = explode(",", $_REQUEST['fileto']);
-        if($functions->addRecipientsToTransaction($listOfEmails, $_REQUEST['tc'], $_REQUEST['fileauth'])) {
-            $statusErr = lang("_EMAIL_SENT");
+if(isset($_REQUEST['tc']) && isset($_REQUEST['fileauth'])){
+    if($_REQUEST['a'] == "add") {
+        if(isset($_REQUEST['fileto'])) {
+            $listOfEmails = explode(",", $_REQUEST['fileto']);
+            if($functions->addRecipientsToTransaction($listOfEmails, $_REQUEST['tc'], $_REQUEST['fileauth'])) {
+                $statusErr = lang("_EMAIL_SENT");
+                $statusClass = 'green';
+            } else {
+                $statusErr = lang('_ERROR_SENDING_EMAIL');
+                $statusClass = 'red';
+            }
+        }
+    } else if ($_REQUEST['a'] == 'deltrans'){
+        if($functions->deleteTransaction($_REQUEST['tc'], $_REQUEST['fileauth'])) {
+            $statusErr = lang('_TRANSACTION_DELETED');
             $statusClass = 'green';
         } else {
-            $statusErr = lang('_ERROR_SENDING_EMAIL');
+            $statusErr = lang('_ERROR_DELETING_RECIPIENT');
             $statusClass = 'red';
         }
     }
@@ -69,7 +79,7 @@ if(isset($_REQUEST["a"]) && isset($_REQUEST["groupid"])) {
         }
     } else if ($_REQUEST["a"] == "resend") {
         if ($sendmail->sendDownloadAvailable($recipient)){
-            $statusErr = lang("_EMAIL_RESENT");
+            $statusErr = lang("_EMAIL_SENT");
             $statusClass = 'green';
         } else {
             $statusErr = lang("_PERMISSION_DENIED");
@@ -267,6 +277,22 @@ $json_o=json_decode($filedata,true);
         $("#dialog-delete").dialog("open");
     }
 
+    function confirmDeleteTransaction(trackingCode, fileauth)
+    {
+        $("#dialog-delete-transaction").dialog({ autoOpen: false, height: 180, modal: true,
+            buttons: {
+                'Cancel': function() {
+                    $(this).dialog("close");
+                },
+                'Confirm': function() {
+                    $(this).dialog("close");
+                    window.location.href="index.php?s=files&a=deltrans&fileauth="+fileauth + "&tc=" + trackingCode;
+                }
+            }
+        });
+        $("#dialog-delete-transaction").dialog("open");
+    }
+
 	function openAddRecipient(fileauth,filename,filesize,from, subject, message, trackingCode)
 	{// populate form and open add-recipient modal form
 		$("#form1").attr("action", "index.php?s=files&a=add&fileauth=" + fileauth  + "&tc=" + trackingCode);
@@ -424,7 +450,11 @@ $json_o=json_decode($filedata,true);
                                     .utf8tohtml($itemContents[0]['filetrackingcode'],TRUE). '
                                 </a>
                             </td>
-                            <td class="dr8"></td>
+                            <td class="dr8">
+                                <img src="images/shape_square_delete.png" alt="" title="'. lang("_DELETE_RECIPIENT") . '"
+                                    style="cursor:pointer;"  onclick="confirmDeleteTransaction(&quot;'.$itemContents[0]['filetrackingcode'].'&quot;,&quot;'.$item['fileauthuseruid'].'&quot;)"
+                                />
+                            </td>
                         </tr>
                         <tr class="hidden" style="display:none" id="show_'.$i.'">
                             <td class="dr4"></td>
@@ -623,8 +653,12 @@ $json_o=json_decode($filedata,true);
     </div>
 </div>
 
-<div id="dialog-delete" title="<?php echo  lang("_DELETE_RECIPIENT"); ?>">
+<div id="dialog-delete" title="<?php echo lang("_DELETE_RECIPIENT"); ?>">
     <p><?php echo lang("_CONFIRM_DELETE_RECIPIENT");?></p>
+</div>
+
+<div style="display: none;" id="dialog-delete-transaction" title="<?php echo lang("_DELETE_TRANSACTION"); ?>">
+    <p><?php echo lang("_CONFIRM_DELETE_TRANSACTION");?></p>
 </div>
 
 <div id="dialog-resend" title="<?php echo  lang("_RE_SEND_EMAIL"); ?>">

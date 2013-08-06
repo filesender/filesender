@@ -922,6 +922,28 @@ class Functions {
         return false;
     }
 
+    function deleteTransaction($trackingCode, $authuid)
+    {
+        $pdo = $this->db->connect();
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $statement = $pdo->prepare("UPDATE files set filestatus = 'Deleted' WHERE filetrackingcode = :filetrackingcode AND fileauthuseruid = :fileauthuseruid");
+        $statement->bindParam(':filetrackingcode', $trackingCode);
+        $statement->bindParam(':fileauthuseruid', $authuid);
+
+        try {
+            $statement->execute();
+        }
+        catch(PDOException $e){
+            logEntry($e->getMessage(),"E_ERROR");
+            return false;
+        }
+
+        $result = $statement->rowCount();
+
+        if ($result != 0) return true;
+        return false;
+    }
+
     //--------------------------------------- CHECKED
 	// insert a voucher
 	// ---------------------------------------

@@ -159,6 +159,7 @@ $lang["_NO_VOUCHERS"] = "There are currently no vouchers available";
 $lang["_ARE_YOU_SURE"] = "Are you sure?";
 $lang["_DELETE_FILE"] = "Delete File";
 $lang["_DELETE_RECIPIENT"] = "Delete Recipient";
+$lang["_DELETE_TRANSACTION"] = "Delete Transaction";
 $lang["_EMAIL_SENT"] = "Message Sent";
 $lang["_SENT_DATE"] = "Sent date";
 $lang["_EXPIRY_DATE"] = "Expiry date";
@@ -180,6 +181,7 @@ $lang["_STARTED_DOWNLOADING"] = "Your file should start downloading.";
 $lang["_NO_FILES_SELECTED"] = "You need to select at least one file.";
 $lang["_FILE_DELETED"] = "This file has been deleted.";
 $lang["_RECIPIENT_DELETED"] = "Selected recipient has been deleted";
+$lang["_TRANSACTION_DELETED"] = "Selected transaction has been deleted";
 
 // steps
 $lang["_STEP1"] = "Enter delivery email address(es)";
@@ -196,6 +198,7 @@ $lang["_CONFIRM_DELETE_FILE"] = "Are you sure you want to delete this File?";
 $lang["_CONFIRM_DELETE_VOUCHER"] = "Are you sure you want to delete this voucher?";
 $lang["_CONFIRM_RESEND_EMAIL"] = "Are you sure you want to re-send this email?";
 $lang["_CONFIRM_DELETE_RECIPIENT"] = "Are you sure you want to delete this recipient?";
+$lang["_CONFIRM_DELETE_TRANSACTION"] = "Are you sure you want to delete this transaction?";
 
 // standard date display format
 $lang['datedisplayformat'] = "d/m/Y"; // Format for displaying date/time, use PHP date() format string syntax 
