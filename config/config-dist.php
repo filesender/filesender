@@ -189,7 +189,7 @@ public function loadConfig() {
 
     $config['summaryemailbody'] = '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}Dear Sir, Madam,
 
-This is a daily transaction activity summary for your upload {filetrackingcode} on {siteName}. You can access your files and view detailed download statistics on the My Files page.
+This is a daily transaction activity summary for your upload on {siteName}. You can access your files and view detailed download statistics on the My Files page.
 
 Activity:
 {transactionactivity}
@@ -201,7 +201,7 @@ Best regards,
 	</head>
 	<body bgcolor="#ffffff">
 		<p>Dear Sir or Madam</p>
-		<p>This is a daily transaction activity summary for your upload {filetrackingcode} on {siteName}. You can access your files and view detailed download statistics on the My Files page.</p>
+		<p>This is a daily transaction activity summary for your upload on {siteName}. You can access your files and view detailed download statistics on the My Files page.</p>
 		<table width="960" cellspacing="0" cellpadding="3" border="1" bordercolor="#bbbbbb" rules="rows">
 			<tbody>
 				<tr bgcolor="#cccccc">
