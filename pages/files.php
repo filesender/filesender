@@ -423,7 +423,16 @@ $json_o=json_decode($filedata,true);
                     }
 
                     $maxDownloaded = 0;
+                    $totalDownloaded = 0;
                     $totalSize = 0;
+
+                    $downloadTotals = $functions->getFileDownloadTotals($item['filetrackingcode'], $item['fileauthuseruid']);
+
+                    for ($download = 0; $download < sizeof($downloadTotals); $download++) {
+                        $totalDownloaded += $downloadTotals[$download]['count'];
+                    }
+
+
                     for($temp = 0; $temp < sizeOf($itemContents); $temp++){
                         if($itemContents[$temp]['downloads'] > $maxDownloaded){
                             $maxDownloaded = $itemContents[$temp]['downloads'];
@@ -441,7 +450,7 @@ $json_o=json_decode($filedata,true);
 
                             <td colspan="4" class="dr2 HardBreak" title="'. $recipientsString . '">' . $fileToString . '</td>
                             <td class="dr2 HardBreak" style="text-align: center">' .formatBytes($totalSize). '</td>
-                            <td class="dr2 HardBreak" style="text-align: center">' . $maxDownloaded . '</td>
+                            <td class="dr2 HardBreak" style="text-align: center">' . $totalDownloaded . '</td>
                             <td class="dr2" style="text-align: center">
                                 ' .date(lang('datedisplayformat'),strtotime($itemContents[0]['fileexpirydate'])) . '
                             </td>
@@ -528,17 +537,24 @@ $json_o=json_decode($filedata,true);
 
                                 for($file = 0; $file < sizeof($itemContents); $file++) {
                                     $row = $file % 2 == 0 ? '<tr class="rowdivider">' : '<tr>';
+
+                                    if ($downloadTotals[$file]['logfilename'] != $itemContents[$file]['fileoriginalname']) {
+                                        array_splice($downloadTotals, $file, 0, array(array('count' => 0, 'logfilename' => $itemContents[$file]['fileoriginalname'])));
+                                    }
+
+                                    $numDownloaded = $downloadTotals[$file]['count'];
+
                                     if ($file == sizeof($itemContents)-1){
                                         echo $row .
                                             '<td class="dr11">' . utf8tohtml($itemContents[$file]['fileoriginalname'],true) . '</td>
                                             <td class="dr12 HardBreak" style="text-align: center">' . formatBytes($itemContents[$file]['filesize']) . '</td>
-                                            <td class="dr13 HardBreak" style="text-align: center">' . $itemContents[$file]['downloads'] . '</td>
+                                            <td class="dr13 HardBreak" style="text-align: center">' . $downloadTotals[$file]['count'] . '</td>
                                         </tr>';
                                     } else {
                                         echo $row .
                                             '<td class="dr4">' . utf8tohtml($itemContents[$file]['fileoriginalname'], true) . '</td>
                                             <td class="HardBreak" style="text-align: center">' . formatBytes($itemContents[$file]['filesize']) . '</td>
-                                            <td class="dr6 HardBreak" style="text-align: center">' . $itemContents[$file]['downloads'] . '</td>
+                                            <td class="dr6 HardBreak" style="text-align: center">' . $downloadTotals[$file]['count'] . '</td>
                                         </tr>';
                                     }
                                 }
@@ -570,11 +586,11 @@ $json_o=json_decode($filedata,true);
 
                                 $files = $functions->getTransactionDownloadsForRecipient($recipientsArray[$temp]['fileto'], $item['filetrackingcode'], $item['fileauthuseruid']);
 
-                                $maxDownloaded = 0;
+                                $maxDownloadedIndividual = 0;
                                 $fileNames = "";
                                 for($file = 0; $file < sizeOf($files); $file++){
-                                    if($files[$file]['downloads'] > $maxDownloaded){
-                                        $maxDownloaded = $files[$file]['downloads'];
+                                    if($files[$file]['downloads'] > $maxDownloadedIndividual){
+                                        $maxDownloadedIndividual = $files[$file]['downloads'];
 
                                     }
                                     $fileNames .= $files[$file]['fileoriginalname'] . "<br />";
@@ -586,7 +602,7 @@ $json_o=json_decode($filedata,true);
                                             style="cursor:pointer" src="images/openboth.png"  alt=""/>
                                     </td>
                                     <td class="HardBreak" style="text-align: left;">' . $recipientsArray[$temp]['fileto'] . '</td>
-                                    <td class="HardBreak" style="text-align: center;">' . $maxDownloaded . '</td>
+                                    <td class="HardBreak" style="text-align: center;">' . $maxDownloadedIndividual . '</td>
                                     <td class="tblmcw1" style="cursor:pointer; width:5%;">
                                         <img src="images/email_go.png" alt="" title="'.lang("_RE_SEND_EMAIL").'"
                                             style="cursor:pointer;"  onclick="confirmResend(&quot;'.$recipientsArray[$temp]['filegroupid'].'&quot;)" />

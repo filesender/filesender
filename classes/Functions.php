@@ -901,6 +901,25 @@ class Functions {
         return $returnArray;
     }
 
+    function getFileDownloadTotals($trackingCode, $fileAuth)
+    {
+        $pdo = $this->db->connect();
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
+        $statement = $pdo->prepare("SELECT COUNT(*), logfilename FROM logs WHERE logfiletrackingcode = :logfiletrackingcode AND logtype='Download' AND logauthuseruid = :logauthuserid GROUP BY logfilename ORDER BY logfilename ASC");
+        $statement->bindParam(':logfiletrackingcode', $trackingCode);
+        $statement->bindParam(':logauthuserid', $fileAuth);
+        try {
+            $statement->execute();
+        }
+        catch(PDOException $e)
+        {
+            logEntry($e->getMessage(),"E_ERROR");
+            displayError(lang("_ERROR_CONTACT_ADMIN"),$e->getMessage());
+        }
+
+        return $statement->fetchAll();
+    }
+
     function deleteRecipient($groupid)
     {
         $files = $this->getMultiFileData($groupid);
