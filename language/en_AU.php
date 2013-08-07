@@ -87,6 +87,12 @@ $lang["_MESSAGE"] = "Message";
 $lang["_TYPE"] = "Type";
 $lang["_SEND_COPY_EMAILS"] = "Send copy of emails to me";
 $lang["_ENTER_TO_EMAIL"] = "Enter recipient email(s)";
+$lang["_EMAIL_ME_COMPLETE"] = "Email me on upload complete";
+$lang["_EMAIL_ME_ON_DOWNLOAD"] = "Email me every time a file is downloaded";
+$lang["_EMAIL_DAILY_STATS"] = "Email me daily statistics with user activity";
+$lang["_ENABLE_EMAIL_CONFIRMATION"] = "Enable download confirmation email for recipients";
+$lang["_EMAIL_ONLY_ME"] = "Send only me download link (I'll distribute it)";
+
 
 $lang["_TERMS_OF_AGREEMENT"] = "Terms of Agreement";
 $lang["_SHOW_TERMS"] = "Show Terms";

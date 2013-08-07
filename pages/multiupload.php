@@ -245,31 +245,31 @@ $(function () {
                         <?php } ?>
                         <?php if ($config['upload_complete_email_display'] == 'always') { ?>
                             <div class="fieldcontainer">
-                                <label for="email-upload-complete">Email me on upload complete</label>
+                                <label for="email-upload-complete"><?php echo lang("_EMAIL_ME_COMPLETE") ?></label>
                                 <input type="checkbox" id="email-upload-complete" style="float:left; width:20px;" <?php echo isChecked($config['upload_complete_email_default']); ?>/>
                             </div>
                         <?php } ?>
                         <?php if ($config['inform_download_email_display'] == 'always') { ?>
                             <div class="fieldcontainer">
-                                <label for="email-inform-download">Email me every time a file is downloaded</label>
+                                <label for="email-inform-download"><?php echo lang("_EMAIL_ME_ON_DOWNLOAD") ?></label>
                                 <input id="email-inform-download" type="checkbox" style="float:left; width:20px;" <?php echo isChecked($config['inform_download_email_default']); ?>/>
                             </div>
                         <?php } ?>
                         <?php if ($config['email_me_daily_statistics_display'] == 'always') { ?>
                             <div class="fieldcontainer">
-                                <label for="email-inform-daily">Email me daily statistics with user activity</label>
+                                <label for="email-inform-daily"><?php echo lang("_EMAIL_DAILY_STATS") ?></label>
                                 <input id="email-inform-daily" type="checkbox" style="float:left; width:20px;" <?php echo isChecked($config['email_me_daily_statistics_default']); ?>/>
                             </div>
                         <?php } ?>
                         <?php if ($config['download_confirmation_enabled_display'] == 'always') { ?>
                             <div class="fieldcontainer">
-                                <label for="email-enable-confirmation">Enable download confirmation email for recipients</label>
+                                <label for="email-enable-confirmation"><?php echo lang("_ENABLE_EMAIL_CONFIRMATION") ?></label>
                                 <input id="email-enable-confirmation" type="checkbox" style="float:left; width:20px;" <?php echo isChecked($config['download_confirmation_enabled_default']); ?>/>
                             </div>
                         <?php } ?>
                         <?php if ($config['email_only_me_display'] == 'always') { ?>
                             <div class="fieldcontainer">
-                                <label for="email-only-me">Send only me download link (I'll distribute it)</label>
+                                <label for="email-only-me"><?php echo lang("_EMAIL_ONLY_ME") ?></label>
                                 <input id="email-only-me" type="checkbox" style="float:left; width:20px;" <?php echo isChecked($config['email_only_me_default']); ?>/>
                             </div>
                         <?php } ?>
@@ -313,31 +313,31 @@ $(function () {
                     <div id="email-flow-settings" style="display:none;">
                         <?php if ($config['upload_complete_email_display'] == 'hidden') { ?>
                             <div class="fieldcontainer">
-                                <label for="email-upload-complete">Email me on upload complete</label>
+                                <label for="email-upload-complete"><?php echo lang("_EMAIL_ME_COMPLETE") ?></label>
                                 <input type="checkbox" id="email-upload-complete" style="float:left; width:20px;" <?php echo isChecked($config['upload_complete_email_default']); ?>/>
                             </div>
                         <?php } ?>
                         <?php if ($config['inform_download_email_display'] == 'hidden') { ?>
                             <div class="fieldcontainer">
-                                <label for="email-inform-download">Email me every time a file is downloaded</label>
+                                <label for="email-inform-download"><?php echo lang("_EMAIL_ME_ON_DOWNLOAD") ?></label>
                                 <input id="email-inform-download" type="checkbox" style="float:left; width:20px;" <?php echo isChecked($config['inform_download_email_default']); ?>/>
                             </div>
                         <?php } ?>
                         <?php if ($config['email_me_daily_statistics_display'] == 'hidden') { ?>
                             <div class="fieldcontainer">
-                                <label for="email-inform-daily">Email me daily statistics with user activity</label>
+                                <label for="email-inform-daily"><?php echo lang("_EMAIL_DAILY_STATS") ?></label>
                                 <input id="email-inform-daily" type="checkbox" style="float:left; width:20px;" <?php echo isChecked($config['email_me_daily_statistics_default']); ?>/>
                             </div>
                         <?php } ?>
                         <?php if ($config['download_confirmation_enabled_display'] == 'hidden') { ?>
                             <div class="fieldcontainer">
-                                <label for="email-enable-confirmation">Enable download confirmation email for recipients</label>
+                                <label for="email-enable-confirmation"><?php echo lang("_ENABLE_EMAIL_CONFIRMATION") ?></label>
                                 <input id="email-enable-confirmation" type="checkbox" style="float:left; width:20px;" <?php echo isChecked($config['download_confirmation_enabled_default']); ?>/>
                             </div>
                         <?php } ?>
                         <?php if ($config['email_only_me_display'] == 'hidden') { ?>
                             <div class="fieldcontainer">
-                                <label for="email-only-me">Send only me download link (I'll distribute it)</label>
+                                <label for="email-only-me"><?php echo lang("_EMAIL_ONLY_ME") ?></label>
                                 <input id="email-only-me" type="checkbox" style="float:left; width:20px;" <?php echo isChecked($config['email_only_me_default']); ?>/>
                             </div>
                         <?php } ?>
