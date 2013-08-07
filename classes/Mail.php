@@ -198,6 +198,30 @@ class Mail {
         return true;
     }
 
+    public function sendVoucherIssued($voucherId) {
+        global $config;
+        global $functions;
+
+        $data = $functions->getVoucherData($voucherId);
+
+        // Email a receipt to the uploader.
+        $data['recemail'] = $data['fileto'];
+        $data['fileto'] = $data['filefrom'];
+
+        if (!$this->sendEmail($data, $config['vouchersentemailbody'])) {
+            return false;
+        }
+
+        // Send email to recipient.
+        $data['fileto'] = $data['recemail'];
+
+        if (!$this->sendEmail($data, $config['voucherissuedemailbody'])) {
+            return false;
+        }
+
+        return true;
+    }
+
     // ---------------------------------------
     // Send a daily transaction summary email. Uses information from the logs table, so does not use sendEmail().
     // $transactionDetails is an array of transactions (from logs) by a given user within the last 24 hours.
