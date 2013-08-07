@@ -357,6 +357,24 @@ Best regards,
 	</body>
 </html>{CRLF}{CRLF}--simple_mime_boundary--';
 
+    $config['recipientdeletedemailbody'] =  '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}Dear Sir, Madam,
+
+Recipient {recemail} has been removed from your file shipment on {siteName} with tracking code {filetrackingcode}. You can access your files and view detailed download statistics on the My Files page at {serverURL}?s=files.
+
+Best regards,
+{siteName}{CRLF}{CRLF}--simple_mime_boundary{CRLF}Content-type:text/html; charset={charset}{CRLF}{CRLF}
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset={charset}">
+	</head>
+	<body bgcolor="#ffffff">
+		<p>Dear Sir or Madam</p>
+		<p>Recipient {recemail} has been removed from your file shipment on <a href="{serverURL}">{siteName}</a> with tracking code {filetrackingcode}. You can access your files and view detailed download statistics on the <a href="{serverURL}?s=files">My Files</a> page.</p>
+		<p>Best regards,<br />
+		{siteName}</p>
+	</body>
+</html>{CRLF}{CRLF}--simple_mime_boundary--';
+
     $config['transactiondeletedemailbody'] = '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}Dear Sir, Madam,
 
 Your file shipment with tracking code {filetrackingcode} has been deleted from {siteName} and is no longer available for download.

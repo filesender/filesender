@@ -920,7 +920,7 @@ class Functions {
         return $statement->fetchAll();
     }
 
-    function deleteRecipient($groupid)
+    function deleteRecipient($groupid, $notifyRecipient)
     {
         $files = $this->getMultiFileData($groupid);
         $pdo = $this->db->connect();
@@ -939,6 +939,7 @@ class Functions {
         $result = $statement->rowCount();
 
         if ($result != 0) {
+            $this->sendmail->sendRecipientDeleted($files, $notifyRecipient);
             $this->saveLog->saveLog($files[0], 'Removed', '');
             return true;
         }
@@ -963,9 +964,10 @@ class Functions {
 
         $result = $statement->rowCount();
 
-        $this->sendmail->sendTransactionDeleted($recipients, $notifyRecipients);
-
-        if ($result != 0) return true;
+        if ($result != 0) {
+            $this->sendmail->sendTransactionDeleted($recipients, $notifyRecipients);
+            return true;
+        }
         return false;
     }
 

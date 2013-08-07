@@ -147,6 +147,32 @@ class Mail {
 
     // ---------------------------------------
     // Send a notification that a transaction has been deleted.
+    // $recipient should be an array from getMultiFileData().
+    // $notifyRecipient is a boolean indicating whether to notify the recipients (and not just the sender).
+    // ---------------------------------------
+    public function sendRecipientDeleted($recipient, $notifyRecipient) {
+        global $config;
+
+        $recipient[0]['recemail'] = $recipient[0]['fileto'];
+        $recipient[0]['fileto'] = $recipient[0]['filefrom'];
+
+        if (!$this->sendEmail($recipient[0], $config['recipientdeletedemailbody'])) {
+            return false;
+        }
+
+        if ($notifyRecipient) {
+            $recipient[0]['fileto'] = $recipient[0]['recemail'];
+
+            if (!$this->sendEmail($recipient[0], $config['transactionnolongeravailableemailbody'])) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    // ---------------------------------------
+    // Send a notification that a transaction has been deleted.
     // $recipients should be an array from getMultiRecipientDetails().
     // $notifyRecipients is a boolean indicating whether to notify the recipients (and not just the sender).
     // ---------------------------------------
@@ -329,6 +355,10 @@ class Mail {
 
         if (isset($config['site_url'])) {
             $template = str_replace('{serverURL}', $config['site_url'], $template);
+        }
+
+        if (isset($mailObject['recemail'])) {
+            $template = str_replace('{recemail}', $mailObject['recemail'], $template);
         }
 
         $template = str_replace('{siteName}', $config['site_name'], $template);
