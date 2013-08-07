@@ -873,7 +873,7 @@ class Functions {
     {
         $pdo = $this->db->connect();
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
-        $statement = $pdo->prepare('SELECT fileto, filestatus, filegroupid FROM files where filetrackingcode = :filetrackingcode AND fileauthuseruid = :fileauthuseruid ORDER BY fileto ASC');
+        $statement = $pdo->prepare('SELECT * FROM files where filetrackingcode = :filetrackingcode AND fileauthuseruid = :fileauthuseruid ORDER BY fileto ASC');
         $statement->bindParam(':filetrackingcode', $trackingCode);
         $statement->bindParam(':fileauthuseruid', $authuseruid);
         try {
@@ -945,8 +945,8 @@ class Functions {
         return false;
     }
 
-    function deleteTransaction($trackingCode, $authuid)
-    {
+    function deleteTransaction($trackingCode, $authuid, $notifyRecipients) {
+        $recipients = $this->getMultiRecipientDetails($trackingCode, $authuid);
         $pdo = $this->db->connect();
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $statement = $pdo->prepare("UPDATE files set filestatus = 'Deleted' WHERE filetrackingcode = :filetrackingcode AND fileauthuseruid = :fileauthuseruid");
@@ -962,6 +962,8 @@ class Functions {
         }
 
         $result = $statement->rowCount();
+
+        $this->sendmail->sendTransactionDeleted($recipients, $notifyRecipients);
 
         if ($result != 0) return true;
         return false;
