@@ -187,7 +187,7 @@ public function loadConfig() {
 	$config['default_emailsubject'] = "{siteName}: {filetrackingcode}";
     $config['summary_email_subject'] = "{siteName}: Daily summary for transaction {filetrackingcode}";
 
-    $config['summaryemailbody'] = '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}Dear Sir, Madam,
+    $config['summaryemailbody'] = '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}Dear Sir or Madam,
 
 This is a daily transaction activity summary for your file shipment on {siteName}. You can access your files and view detailed download statistics on the My Files page.
 
@@ -265,7 +265,7 @@ Best regards,
 		{siteName}</p>
 	</body>
 </html>{CRLF}{CRLF}--simple_mime_boundary--';
-    $config['transactionuploadedemailbody'] = '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}Dear Sir, Madam,
+    $config['transactionuploadedemailbody'] = '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}Dear Sir or Madam,
 
 The following file transaction has been successfully uploaded to {siteName}. You can access your files and view detailed download statistics on the My Files page at {serverURL}?s=files.
 
@@ -306,7 +306,8 @@ Best regards,
 		{siteName}</p>
 	</body>
 </html>{CRLF}{CRLF}--simple_mime_boundary--';
-    $config['transactionavailableemailbody'] = '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}Dear Sir, Madam,
+
+    $config['transactionavailableemailbody'] = '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}Dear Sir or Madam,
 
 The following file transaction has been uploaded to {siteName} by {filefrom} and you have been granted permission to download its contents.
 
@@ -375,7 +376,7 @@ Best regards,
 	</body>
 </html>{CRLF}{CRLF}--simple_mime_boundary--';
 
-    $config['transactiondeletedemailbody'] = '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}Dear Sir, Madam,
+    $config['transactiondeletedemailbody'] = '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}Dear Sir or Madam,
 
 Your file shipment with tracking code {filetrackingcode} has been deleted from {siteName} and is no longer available for download.
 
@@ -393,7 +394,7 @@ Best regards,
 	</body>
 </html>{CRLF}{CRLF}--simple_mime_boundary--';
 
-    $config['transactionnolongeravailableemailbody'] = '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}Dear Sir, Madam,
+    $config['transactionnolongeravailableemailbody'] = '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}Dear Sir or Madam,
 
 The file shipment with tracking code {filetrackingcode} has been deleted from {siteName} by the sender ({filefrom}) and is no longer available for download.
 
@@ -411,188 +412,69 @@ Best regards,
 	</body>
 </html>{CRLF}{CRLF}--simple_mime_boundary--';
 
-	$config['fileuploadedemailbody'] = '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}
-Dear Sir, Madam,
-
-The file below has been uploaded to {siteName} by {filefrom} and you have been granted permission to download this file.
-
-Filename: {fileoriginalname}
-Filesize: {filesize}
-Download link: {serverURL}?vid={filevoucheruid}
-
-The file is available until {fileexpirydate} after which it will be automatically deleted.
-
-{filemessage_start}Personal message from {filefrom}: {filemessage}{filemessage_end}
-
-Best regards,
-
-{siteName}{CRLF}{CRLF}--simple_mime_boundary{CRLF}Content-type:text/html; charset={charset}{CRLF}{CRLF}
-<HTML>
-<HEAD>
-<meta http-equiv="Content-Type" content="text/html;charset={charset}">
-</HEAD>
-<BODY>
-<P>Dear Sir, Madam,</P>
-<P>The file below has been uploaded to {siteName} by {filefrom} and you have been granted permission to download this file.</P>
-<TABLE WIDTH=100% BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
-	<COL WIDTH=600>
-	<COL WIDTH=80>
-	<COL WIDTH=800>
-	<COL WIDTH=70>
-	<TR>
-		<TD WIDTH=600 BGCOLOR="#b3b3b3">
-			<P ALIGN=CENTER><B>Filename</B></P>
-		</TD>
-		<TD WIDTH=80 BGCOLOR="#b3b3b3">
-			<P ALIGN=CENTER><B>Filesize</B></P>
-		</TD>
-		<TD WIDTH=600 BGCOLOR="#b3b3b3">
-			<P ALIGN=CENTER><B>Download link</B></P>
-		</TD>
-		<TD WIDTH=70 BGCOLOR="#b3b3b3">
-			<P ALIGN=CENTER><B>Valid until</B></P>
-		</TD>
-	</TR>
-	<TR>
-		<TD WIDTH=600 BGCOLOR="#e6e6e6">
-			<P ALIGN=CENTER>{htmlfileoriginalname}</P>
-		</TD>
-		<TD WIDTH=80 BGCOLOR="#e6e6e6">
-			<P ALIGN=CENTER>{filesize}</P>
-		</TD>
-		<TD WIDTH=800 BGCOLOR="#e6e6e6">
-			<P ALIGN=CENTER><A HREF="{serverURL}?vid={filevoucheruid}">{serverURL}?vid={filevoucheruid}</A></P>
-		</TD>
-		<TD WIDTH=70 BGCOLOR="#e6e6e6">
-			<P ALIGN=CENTER>{fileexpirydate}</P>
-		</TD>
-	</TR>
-</TABLE>
-<P></P>
-{filemessage_start}<TABLE WIDTH=100% BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
-	<COL WIDTH=100%>
-	<TR>
-		<TD WIDTH=100% BGCOLOR="#b3b3b3">
-			<P ALIGN=CENTER><B>Personal message from {filefrom}:</B></P>
-		</TD>
-	</TR>
-	<TR>
-		<TD WIDTH=100% BGCOLOR="#e6e6e6">
-			<P><I>{htmlfilemessage}</I></P>
-		</TD>
-	</TR>
-</TABLE>{filemessage_end}
-<P>Best regards,</P>
-<P>{siteName}</P>
-</BODY>
-</HTML>{CRLF}{CRLF}--simple_mime_boundary--';
-
 	$config['voucherissuedemailsubject'] = 'Voucher';
-	$config['voucherissuedemailbody'] = '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}
-Dear Sir, Madam,
+    $config['voucherissuedemailbody'] = '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}Dear Sir or Madam,
 
-Please, find below a voucher which grants access to {siteName}.
-With this voucher you can upload once one file and make it available for download to a group of people.
+Please find below a voucher which grants access to {siteName}. You can use this voucher to upload one set of files and make it available for download to a group of people.
 
 Issuer: {filefrom}
 Voucher link: {serverURL}?vid={filevoucheruid}
 
-The voucher is available until {fileexpirydate} after which it will be automatically deleted.
-
-{filemessage_start}Personal message from {filefrom}: {filemessage}{filemessage_end}
-
+The voucher is available until {fileexpirydate} after which time it will be automatically deleted.
+{filemessage_start}
+Personal message from {filefrom}: {filemessage}
+{filemessage_end}
 Best regards,
-
 {siteName}{CRLF}{CRLF}--simple_mime_boundary{CRLF}Content-type:text/html; charset={charset}{CRLF}{CRLF}
-<HTML>
-<HEAD>
-<meta http-equiv="Content-Type" content="text/html;charset={charset}">
-</HEAD>
-<BODY>
-<P>Dear Sir, Madam,</P>
-<P>Please, find below a voucher which grants access to {siteName}.</P>
-<P>With this voucher you can upload once one file and make it available for download to a group of people.</P>
-<TABLE WIDTH=100% BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
-	<COL WIDTH=75>
-	<COL WIDTH=800>
-	<COL WIDTH=70>
-	<TR>
-		<TD WIDTH=75 BGCOLOR="#b3b3b3">
-			<P ALIGN=CENTER><B>Issuer</B></P>
-		</TD>
-		<TD WIDTH=800 BGCOLOR="#b3b3b3">
-			<P ALIGN=CENTER><B>Voucher link</B></P>
-		</TD>
-		<TD WIDTH=70 BGCOLOR="#b3b3b3">
-			<P ALIGN=CENTER><B>Valid until</B></P>
-		</TD>
-	</TR>
-	<TR>
-		<TD WIDTH=75 BGCOLOR="#e6e6e6">
-			<P ALIGN=CENTER>{filefrom}</P>
-		</TD>
-		<TD WIDTH=800 BGCOLOR="#e6e6e6">
-			<P ALIGN=CENTER><A HREF="{serverURL}?vid={filevoucheruid}">{serverURL}?vid={filevoucheruid}</A></P>
-		</TD>
-		<TD WIDTH=70 BGCOLOR="#e6e6e6">
-			<P ALIGN=CENTER>{fileexpirydate}</P>
-		</TD>
-	</TR>
-</TABLE>
-<P></P>
-{filemessage_start}<TABLE WIDTH=100% BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
-	<COL WIDTH=100%>
-	<TR>
-		<TD WIDTH=100% BGCOLOR="#b3b3b3">
-			<P ALIGN=CENTER><B>Personal message from {filefrom}:</B></P>
-		</TD>
-	</TR>
-	<TR>
-		<TD WIDTH=100% BGCOLOR="#e6e6e6">
-			<P><I>{htmlfilemessage}</I></P>
-		</TD>
-	</TR>
-</TABLE>{filemessage_end}
-<p></p>
-<P>Best regards,</P>
-<P>{siteName}</P>
-</BODY>
-</HTML>{CRLF}{CRLF}--simple_mime_boundary--';
+<html>
+    <head>
+    <meta http-equiv="Content-Type" content="text/html;charset={charset}">
+    </head>
+    <body>
+        <p>Dear Sir or Madam,</p>
+        <p>Please find below a voucher which grants access to <a href="{serverURL}">{siteName}</a>. You can use this voucher to upload one set of files and make it available for download to a group of people.</p>
+        <table width="960" cellspacing="0" cellpadding="3" border="1" bordercolor="#bbbbbb" rules="rows">
+            <tbody>
+                <tr bgcolor="#cccccc">
+                    <td colspan="2" height="30"><strong>Voucher details</strong></td>
+                </tr>
+                <tr bgcolor="#e5e5e5" valign="top">
+                    <td width="100"><strong>Issuer</strong></td>
+                    <td>{filefrom}</td>
+                </tr>
+                <tr valign="top">
+                    <td width="100"><strong>Voucher link</strong></td>
+                    <td><a href="{serverURL}?vid={filevoucheruid}">{serverURL}?vid={filevoucheruid}</a></td>
+                </tr>
+                <tr bgcolor="#e5e5e5" valign="top">
+                    <td width="100"><strong>Valid until</strong></td>
+                    <td>{fileexpirydate}</td>
+                </tr>
+            </tbody>
+        </table>
+        {filemessage_start}<p>Personal message from {filefrom}: {filemessage}</p>{filemessage_end}
+        <p>Best regards,<br />
+        {siteName}</p>
+    </body>
+</html>{CRLF}{CRLF}--simple_mime_boundary--';
 
-	$config['defaultvouchercancelled'] = "{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}
-Dear Sir, Madam,
+    $config['defaultvouchercancelled'] = '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}Dear Sir or Madam,
 
 A voucher from {filefrom} has been cancelled.
 
 Best regards,
-
 {siteName}{CRLF}{CRLF}--simple_mime_boundary{CRLF}Content-type:text/html; charset={charset}{CRLF}{CRLF}
-<HTML>
-<HEAD>
-<meta http-equiv=\"Content-Type\" content=\"text/html;charset={charset}\">
-</HEAD>
-<BODY>
-Dear Sir, Madam,<BR><BR>A voucher from {filefrom} has been cancelled.<BR><BR>
-	<P>Best regards,</P>
-<P>{siteName}</P>
-</BODY>
-</HTML>{CRLF}{CRLF}--simple_mime_boundary--";
-
-	$config['defaultfilecancelled'] = "{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}
-Dear Sir, Madam,
-
-The file '{fileoriginalname}' from {filefrom} has been deleted and is no longer available to download.
-
-Best regards,
-
-{siteName}{CRLF}{CRLF}--simple_mime_boundary{CRLF}Content-type:text/html; charset={charset}{CRLF}{CRLF}
-<HTML>
-<BODY>
-Dear Sir, Madam,<BR><BR>The file '{htmlfileoriginalname}' from {filefrom} has been deleted and is no longer available to download.<BR><BR>
-	<P>Best regards,</P>
-<P>{siteName}</P>
-</BODY>
-</HTML>{CRLF}{CRLF}--simple_mime_boundary--";
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html;charset={charset}">
+    </head>
+    <body>
+        <p>Dear Sir or Madam</p>
+        <p>A voucher from <a href="{serverURL}">{filefrom}</a> has been cancelled.</p>
+	    <p>Best regards,<br />
+	    {siteName}</p>
+    </body>
+</html>{CRLF}{CRLF}--simple_mime_boundary--';
 	// End of email templates section
 
 	// End of configurable settings
