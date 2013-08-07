@@ -454,11 +454,7 @@ $json_o=json_decode($filedata,true);
                             <td class="dr2" style="text-align: center">
                                 ' .date(lang('datedisplayformat'),strtotime($itemContents[0]['fileexpirydate'])) . '
                             </td>
-                            <td class="dr2" style="text-align: center">
-                                <a id="link_downloadfilegroup_'.$i.'" href="?gid='. $itemContents[0]["filegroupid"].'">'
-                                    .utf8tohtml($itemContents[0]['filetrackingcode'],TRUE). '
-                                </a>
-                            </td>
+                            <td class="dr2" style="text-align: center">' . utf8tohtml($itemContents[0]['filetrackingcode'],TRUE) . '</td>
                             <td class="dr8">
                                 <img src="images/shape_square_delete.png" alt="" title="'. lang("_DELETE_RECIPIENT") . '"
                                     style="cursor:pointer;"  onclick="confirmDeleteTransaction(&quot;'.$itemContents[0]['filetrackingcode'].'&quot;,&quot;'.$item['fileauthuseruid'].'&quot;)"
