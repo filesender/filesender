@@ -135,7 +135,7 @@ if (!isAuthenticated()) {
 
             $groupIdArray = array();
             $emailSettings = json_decode($_POST['emailSettings'], true);
-            foreach ($data as $dataItem) {
+            foreach ($data as &$dataItem) {
                 // Update group IDs to be individual for each recipient.
                 if (!isset($groupIdArray[$dataItem['fileto']])) {
                     $groupIdArray[$dataItem['fileto']] = getOpenSSLKey();
@@ -148,6 +148,7 @@ if (!isAuthenticated()) {
                 $dataItem['senduploadconfirmation'] = $emailSettings['email-upload-complete'] ? 'true' : 'false';
             }
 
+            unset($dataItem);
 
             if ($data[0]['filedownloadconfirmations'] == 'true') {
                 $sendMail->sendDownloadAvailable($groupIdArray);
