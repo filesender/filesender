@@ -189,7 +189,7 @@ public function loadConfig() {
 
     $config['summaryemailbody'] = '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}Dear Sir, Madam,
 
-This is a daily transaction activity summary for your upload on {siteName}. You can access your files and view detailed download statistics on the My Files page.
+This is a daily transaction activity summary for your file shipment on {siteName}. You can access your files and view detailed download statistics on the My Files page.
 
 Activity:
 {transactionactivity}
@@ -201,7 +201,7 @@ Best regards,
 	</head>
 	<body bgcolor="#ffffff">
 		<p>Dear Sir or Madam</p>
-		<p>This is a daily transaction activity summary for your upload on {siteName}. You can access your files and view detailed download statistics on the My Files page.</p>
+		<p>This is a daily transaction activity summary for your file shipment on {siteName}. You can access your files and view detailed download statistics on the My Files page.</p>
 		<table width="960" cellspacing="0" cellpadding="3" border="1" bordercolor="#bbbbbb" rules="rows">
 			<tbody>
 				<tr bgcolor="#cccccc">
@@ -352,6 +352,42 @@ Best regards,
 			</tbody>
 		</table>
 		{filemessage_start}<p>Personal message from {filefrom}: {filemessage}</p>{filemessage_end}
+		<p>Best regards,<br />
+		{siteName}</p>
+	</body>
+</html>{CRLF}{CRLF}--simple_mime_boundary--';
+
+    $config['transactiondeletedemailbody'] = '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}Dear Sir, Madam,
+
+Your file shipment with tracking code {filetrackingcode} has been deleted from {siteName} and is no longer available for download.
+
+Best regards,
+{siteName}{CRLF}{CRLF}--simple_mime_boundary{CRLF}Content-type:text/html; charset={charset}{CRLF}{CRLF}
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset={charset}">
+	</head>
+	<body bgcolor="#ffffff">
+		<p>Dear Sir or Madam</p>
+		<p>Your file shipment with tracking code {filetrackingcode} has been deleted from <a href="{serverURL}">{siteName}</a> and is no longer available for download.</p>
+		<p>Best regards,<br />
+		{siteName}</p>
+	</body>
+</html>{CRLF}{CRLF}--simple_mime_boundary--';
+
+    $config['transactionnolongeravailableemailbody'] = '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}Dear Sir, Madam,
+
+The file shipment with tracking code {filetrackingcode} has been deleted from {siteName} by the sender ({filefrom}) and is no longer available for download.
+
+Best regards,
+{siteName}{CRLF}{CRLF}--simple_mime_boundary{CRLF}Content-type:text/html; charset={charset}{CRLF}{CRLF}
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset={charset}">
+	</head>
+	<body bgcolor="#ffffff">
+		<p>Dear Sir or Madam</p>
+		<p>The file shipment with tracking code {filetrackingcode} has been deleted from <a href="{serverURL}">{siteName}</a> by the sender ({filefrom}) and is no longer available for download.</p>
 		<p>Best regards,<br />
 		{siteName}</p>
 	</body>

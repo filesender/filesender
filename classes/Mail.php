@@ -146,6 +146,33 @@ class Mail {
     }
 
     // ---------------------------------------
+    // Send a notification that a transaction has been deleted.
+    // $recipients should be an array from getMultiRecipientDetails().
+    // $notifyRecipients is a boolean indicating whether to notify the recipients (and not just the sender).
+    // ---------------------------------------
+    public function sendTransactionDeleted($recipients, $notifyRecipients) {
+        global $config;
+
+        $temp = $recipients[0]['fileto'];
+        $recipients[0]['fileto'] = $recipients[0]['filefrom'];
+
+        if (!$this->sendEmail($recipients[0], $config['transactiondeletedemailbody'])) {
+            return false;
+        }
+
+        if ($notifyRecipients) {
+            $recipients[0]['fileto'] = $temp;
+            foreach ($recipients as $recipient) {
+                if (!$this->sendEmail($recipient, $config['transactionnolongeravailableemailbody'])) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    // ---------------------------------------
     // Send a daily transaction summary email. Uses information from the logs table, so does not use sendEmail().
     // $transactionDetails is an array of transactions (from logs) by a given user within the last 24 hours.
     // ---------------------------------------
