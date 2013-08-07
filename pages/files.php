@@ -586,13 +586,10 @@ $json_o=json_decode($filedata,true);
 
                                 $files = $functions->getTransactionDownloadsForRecipient($recipientsArray[$temp]['fileto'], $item['filetrackingcode'], $item['fileauthuseruid']);
 
-                                $maxDownloadedIndividual = 0;
+                                $totalDownloadedIndividual = 0;
                                 $fileNames = "";
                                 for($file = 0; $file < sizeOf($files); $file++){
-                                    if($files[$file]['downloads'] > $maxDownloadedIndividual){
-                                        $maxDownloadedIndividual = $files[$file]['downloads'];
-
-                                    }
+                                    $totalDownloadedIndividual += $files[$file]['downloads'];
                                     $fileNames .= $files[$file]['fileoriginalname'] . "<br />";
                                 }
 
@@ -602,7 +599,7 @@ $json_o=json_decode($filedata,true);
                                             style="cursor:pointer" src="images/openboth.png"  alt=""/>
                                     </td>
                                     <td class="HardBreak" style="text-align: left;">' . $recipientsArray[$temp]['fileto'] . '</td>
-                                    <td class="HardBreak" style="text-align: center;">' . $maxDownloadedIndividual . '</td>
+                                    <td class="HardBreak" style="text-align: center;">' . $totalDownloadedIndividual . '</td>
                                     <td class="tblmcw1" style="cursor:pointer; width:5%;">
                                         <img src="images/email_go.png" alt="" title="'.lang("_RE_SEND_EMAIL").'"
                                             style="cursor:pointer;"  onclick="confirmResend(&quot;'.$recipientsArray[$temp]['filegroupid'].'&quot;)" />
