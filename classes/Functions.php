@@ -1409,9 +1409,8 @@ class Functions {
 	
 			if(count($fileArray) > 0) 
 			{
-				$this->sendmail->sendEmail($fileArray[0],$config['defaultvouchercancelled']);	
 				$this->saveLog->saveLog($fileArray[0],"Voucher Cancelled","");
-				return true;
+				return $this->sendmail->sendVoucherCancelled($fileArray[0]['filevoucheruid']);;
 			}
 			return false;
 		} else {
