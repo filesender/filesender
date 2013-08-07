@@ -57,7 +57,8 @@ if(isset($_REQUEST['tc']) && isset($_REQUEST['fileauth'])){
             }
         }
     } else if ($_REQUEST['a'] == 'deltrans'){
-        if($functions->deleteTransaction($_REQUEST['tc'], $_REQUEST['fileauth'])) {
+        $requestConfirmation = $_REQUEST['notifyRecipients'] == 'true' ? true : false;
+        if($functions->deleteTransaction($_REQUEST['tc'], $_REQUEST['fileauth'], $requestConfirmation)) {
             $statusErr = lang('_TRANSACTION_DELETED');
             $statusClass = 'green';
         } else {
@@ -279,14 +280,14 @@ $json_o=json_decode($filedata,true);
 
     function confirmDeleteTransaction(trackingCode, fileauth)
     {
-        $("#dialog-delete-transaction").dialog({ autoOpen: false, height: 180, modal: true,
+        $("#dialog-delete-transaction").dialog({ autoOpen: false, height: 200, width: 400, modal: true,
             buttons: {
                 'Cancel': function() {
                     $(this).dialog("close");
                 },
                 'Confirm': function() {
-                    $(this).dialog("close");
-                    window.location.href="index.php?s=files&a=deltrans&fileauth="+fileauth + "&tc=" + trackingCode;
+                    var checked = $('form #informRecipients').is(':checked');
+                    window.location.href="index.php?s=files&a=deltrans&fileauth="+fileauth + "&tc=" + trackingCode + "&notifyRecipients=" + checked;
                 }
             }
         });
@@ -668,6 +669,13 @@ $json_o=json_decode($filedata,true);
 
 <div style="display: none;" id="dialog-delete-transaction" title="<?php echo lang("_DELETE_TRANSACTION"); ?>">
     <p><?php echo lang("_CONFIRM_DELETE_TRANSACTION");?></p>
+    <form id="deleteTransactiontForm" name="deleteTransactionForm" method="post" action="#">
+        <input type="hidden" name="a" value="deltrans" />
+        <input id="trackingCode" type="hidden" name="tc" value="" />
+        <input id="fileAuth" type="hidden" name="fileauth" value="" />
+        <label for="informRecipients">Email recipients with confirmation of deletion</label>
+        <input type="checkbox" name="informRecipients" id="informRecipients" style="float:left; width:20px;" />
+    </form>
 </div>
 
 <div id="dialog-resend" title="<?php echo  lang("_RE_SEND_EMAIL"); ?>">
