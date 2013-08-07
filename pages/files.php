@@ -70,8 +70,9 @@ if(isset($_REQUEST['tc']) && isset($_REQUEST['fileauth'])){
 
 if(isset($_REQUEST["a"]) && isset($_REQUEST["groupid"])) {
     $recipient = $_REQUEST["groupid"];
-    if ($_REQUEST["a"] == "del") { // TODO: Needs some sort of authentication before deletion
-        if ($functions->deleteRecipient($recipient)) {
+    if ($_REQUEST["a"] == "delrecip") { // TODO: Needs some sort of authentication before deletion
+        $requestConfirmation = $_REQUEST['notifyRecipient'] == 'true' ? true : false;
+        if ($functions->deleteRecipient($recipient, $requestConfirmation)) {
             $statusErr = lang("_RECIPIENT_DELETED");
             $statusClass = 'green';
         } else {
@@ -125,17 +126,6 @@ $json_o=json_decode($filedata,true);
         //$(".rowdetails").addClass("rowdivider");
 
 		// delete modal dialog box
-		$("#dialog-delete").dialog({ autoOpen: false, height: 180, modal: true,
-			buttons: {
-				'cancelBTN': function() {
-				    $( this ).dialog( "close" );
-				},
-				'deleteBTN': function() {
-				    deleteRecipient();
-                    $( this ).dialog( "close" );
-				}
-			}
-		});
 
 		// resend email modal dialog box
 		$("#dialog-resend").dialog({ autoOpen: false, height: 180, modal: true,
@@ -264,18 +254,20 @@ $json_o=json_decode($filedata,true);
         $("#dialog-resend" ).dialog( "open" );
     }
 
-	function deleteRecipient()
-    {
-        // reload page to delete selected file
-        // should add a tick box to delete multiple selected files
-        window.location.href="index.php?s=files&a=del&groupid=" + selectedRecipient;
-    }
-
 	function confirmDeleteRecipient(gid)
     {
-        // confirm deletion of selected person
-        selectedRecipient = gid;
-        $("#dialog-delete").dialog("open");
+        $("#dialog-delete-recipient").dialog({ autoOpen: false, height: 200, width: 400, modal: true,
+            buttons: {
+                'Cancel': function() {
+                    $( this ).dialog( "close" );
+                },
+                'Confirm': function() {
+                    var checked = $('#informRecipient').is(':checked');
+                    window.location.href="index.php?s=files&a=delrecip&groupid=" + gid + "&notifyRecipient=" + checked;
+                }
+            }
+        });
+        $("#dialog-delete-recipient").dialog("open");
     }
 
     function confirmDeleteTransaction(trackingCode, fileauth)
@@ -286,7 +278,7 @@ $json_o=json_decode($filedata,true);
                     $(this).dialog("close");
                 },
                 'Confirm': function() {
-                    var checked = $('form #informRecipients').is(':checked');
+                    var checked = $('#informRecipients').is(':checked');
                     window.location.href="index.php?s=files&a=deltrans&fileauth="+fileauth + "&tc=" + trackingCode + "&notifyRecipients=" + checked;
                 }
             }
@@ -663,16 +655,17 @@ $json_o=json_decode($filedata,true);
     </div>
 </div>
 
-<div id="dialog-delete" title="<?php echo lang("_DELETE_RECIPIENT"); ?>">
+<div style="display: none;" id="dialog-delete-recipient" title="<?php echo lang("_DELETE_RECIPIENT"); ?>">
     <p><?php echo lang("_CONFIRM_DELETE_RECIPIENT");?></p>
+    <form id="deleteRecipForm" name="deleteRecipForm" method="post" action="#">
+        <label for="informRecipient">Email recipient with confirmation of deletion</label>
+        <input type="checkbox" name="informRecipient" id="informRecipient" style="float:left; width:20px;" />
+    </form>
 </div>
 
 <div style="display: none;" id="dialog-delete-transaction" title="<?php echo lang("_DELETE_TRANSACTION"); ?>">
     <p><?php echo lang("_CONFIRM_DELETE_TRANSACTION");?></p>
-    <form id="deleteTransactiontForm" name="deleteTransactionForm" method="post" action="#">
-        <input type="hidden" name="a" value="deltrans" />
-        <input id="trackingCode" type="hidden" name="tc" value="" />
-        <input id="fileAuth" type="hidden" name="fileauth" value="" />
+    <form id="deleteTransForm" name="deleteTransForm" method="post" action="#">
         <label for="informRecipients">Email recipients with confirmation of deletion</label>
         <input type="checkbox" name="informRecipients" id="informRecipients" style="float:left; width:20px;" />
     </form>
