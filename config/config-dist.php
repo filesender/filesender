@@ -458,6 +458,24 @@ Best regards,
     </body>
 </html>{CRLF}{CRLF}--simple_mime_boundary--';
 
+    $config['vouchersentemailbody'] = '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}Dear Sir or Madam,
+
+A guest voucher granting access to {siteName} has been sent to {recemail}.
+
+Best regards,
+{siteName}{CRLF}{CRLF}--simple_mime_boundary{CRLF}Content-type:text/html; charset={charset}{CRLF}{CRLF}
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html;charset={charset}">
+    </head>
+    <body>
+        <p>Dear Sir or Madam</p>
+        <p>A guest voucher granting access to <a href="{serverURL}">{siteName}</a> has been sent to {recemail}.</p>
+	    <p>Best regards,<br />
+	    {siteName}</p>
+    </body>
+</html>{CRLF}{CRLF}--simple_mime_boundary--';
+
     $config['defaultvouchercancelled'] = '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}Dear Sir or Madam,
 
 A voucher from {filefrom} has been cancelled.

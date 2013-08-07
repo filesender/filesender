@@ -1074,7 +1074,8 @@ class Functions {
 			// get voucherdata to email
 			$dataitem = $this->getVoucherData($filevoucheruid);
 			$this->saveLog->saveLog($dataitem,"Voucher Sent","");
-			return $this->sendmail->sendEmail($dataitem,$config['voucherissuedemailbody']);
+
+            return $this->sendmail->sendVoucherIssued($filevoucheruid);
 			
 		} else {
 			
@@ -1309,7 +1310,7 @@ class Functions {
 
 			if($dataitem['filestatus'] == "Voucher") {
 				$this->saveLog->saveLog($dataitem,"Voucher Sent","");
-				return $this->sendmail->sendEmail($dataitem,$config['voucherissuedemailbody']);
+				return $this->sendmail->sendVoucherIssued($dataitem['filevoucheruid']);
 			} elseif ($dataitem['filestatus'] == "Available") {
 				$this->saveLog->saveLog($dataitem,$logtype,"");
 			}
