@@ -67,7 +67,7 @@ class Zipper
         global $functions, $config;
 
         // Enable the ZIP64 format if total file size exceeds 4 GiB.
-        $this->useZip64 = true; //$this->calculateTotalFileSize() >= 4 * 1024 * 1024 * 1024;
+        $this->useZip64 = $this->calculateTotalFileSize() >= 4 * 1024 * 1024 * 1024;
 
         $this->sendHttpHeaders();
         $offset = 0;
@@ -235,7 +235,12 @@ class Zipper
         }
 
         // Send the final end-of-file central directory record and return # bytes sent.
-        $bytesSent = $this->sendZip64CDR($cdrOffset, $offset);
+        $bytesSent = 0;
+
+        if ($this->useZip64) {
+            $bytesSent = $this->sendZip64CDR($cdrOffset, $offset);
+        }
+
         return $bytesSent + $this->sendFinalCDR($cdrOffset, $offset) + $cdrOffset;
     }
 
