@@ -200,7 +200,7 @@ Best regards,
 		<meta http-equiv="Content-Type" content="text/html;charset={charset}">
 	</head>
 	<body bgcolor="#ffffff">
-		<p>Dear Sir or Madam</p>
+		<p>Dear Sir or Madam,</p>
 		<p>This is a daily transaction activity summary for your file shipment on {siteName}. You can access your files and view detailed download statistics on the My Files page.</p>
 		<table width="960" cellspacing="0" cellpadding="3" border="1" bordercolor="#bbbbbb" rules="rows">
 			<tbody>
@@ -240,7 +240,7 @@ Best regards,
 		<meta http-equiv="Content-Type" content="text/html;charset={charset}">
 	</head>
 	<body bgcolor="#ffffff">
-		<p>Dear Sir or Madam</p>
+		<p>Dear Sir or Madam,</p>
 		<p>One or more of your uploaded files have been downloaded from <a href="{serverURL}">{siteName}</a> by <a href="mailto:{filefrom}">{filefrom}</a>. You can access your files and view detailed download statistics on the <a href="{serverURL}?s=files">My Files</a> page.</p>
 		<table width="960" cellspacing="0" cellpadding="3" border="1" bordercolor="#bbbbbb" rules="rows">
 			<tbody>
@@ -280,7 +280,7 @@ Best regards,
 		<meta http-equiv="Content-Type" content="text/html;charset={charset}">
 	</head>
 	<body bgcolor="#ffffff">
-		<p>Dear Sir or Madam</p>
+		<p>Dear Sir or Madam,</p>
 		<p>The following file transaction has been successfully uploaded to <a href="{serverURL}">{siteName}</a>. You can access your files and view detailed download statistics on the <a href="{serverURL}?s=files">My Files</a> page.</p>
 		<table width="960" cellspacing="0" cellpadding="3" border="1" bordercolor="#bbbbbb" rules="rows">
 			<tbody>
@@ -326,7 +326,7 @@ Best regards,
 		<meta http-equiv="Content-Type" content="text/html;charset={charset}">
 	</head>
 	<body bgcolor="#ffffff">
-		<p>Dear Sir or Madam</p>
+		<p>Dear Sir or Madam,</p>
 		<p>The following file transaction has been uploaded to <a href="{serverURL}">{siteName}</a> by <a href="mailto:{filefrom}">{filefrom}</a> and you have been granted permission to download its contents.</p>
 		<table width="960" cellspacing="0" cellpadding="3" border="1" bordercolor="#bbbbbb" rules="rows">
 			<tbody>
@@ -358,7 +358,7 @@ Best regards,
 	</body>
 </html>{CRLF}{CRLF}--simple_mime_boundary--';
 
-    $config['recipientdeletedemailbody'] =  '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}Dear Sir, Madam,
+    $config['recipientdeletedemailbody'] =  '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}Dear Sir or Madam,
 
 Recipient {recemail} has been removed from your file shipment on {siteName} with tracking code {filetrackingcode}. You can access your files and view detailed download statistics on the My Files page at {serverURL}?s=files.
 
@@ -369,7 +369,7 @@ Best regards,
 		<meta http-equiv="Content-Type" content="text/html;charset={charset}">
 	</head>
 	<body bgcolor="#ffffff">
-		<p>Dear Sir or Madam</p>
+		<p>Dear Sir or Madam,</p>
 		<p>Recipient {recemail} has been removed from your file shipment on <a href="{serverURL}">{siteName}</a> with tracking code {filetrackingcode}. You can access your files and view detailed download statistics on the <a href="{serverURL}?s=files">My Files</a> page.</p>
 		<p>Best regards,<br />
 		{siteName}</p>
@@ -387,7 +387,7 @@ Best regards,
 		<meta http-equiv="Content-Type" content="text/html;charset={charset}">
 	</head>
 	<body bgcolor="#ffffff">
-		<p>Dear Sir or Madam</p>
+		<p>Dear Sir or Madam,</p>
 		<p>Your file shipment with tracking code {filetrackingcode} has been deleted from <a href="{serverURL}">{siteName}</a> and is no longer available for download.</p>
 		<p>Best regards,<br />
 		{siteName}</p>
@@ -405,7 +405,7 @@ Best regards,
 		<meta http-equiv="Content-Type" content="text/html;charset={charset}">
 	</head>
 	<body bgcolor="#ffffff">
-		<p>Dear Sir or Madam</p>
+		<p>Dear Sir or Madam,</p>
 		<p>The file shipment with tracking code {filetrackingcode} has been deleted from <a href="{serverURL}">{siteName}</a> by the sender ({filefrom}) and is no longer available for download.</p>
 		<p>Best regards,<br />
 		{siteName}</p>
@@ -469,16 +469,16 @@ Best regards,
         <meta http-equiv="Content-Type" content="text/html;charset={charset}">
     </head>
     <body>
-        <p>Dear Sir or Madam</p>
+        <p>Dear Sir or Madam,</p>
         <p>A guest voucher granting access to <a href="{serverURL}">{siteName}</a> has been sent to {recemail}.</p>
 	    <p>Best regards,<br />
 	    {siteName}</p>
     </body>
 </html>{CRLF}{CRLF}--simple_mime_boundary--';
 
-    $config['defaultvouchercancelled'] = '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}Dear Sir or Madam,
+    $config['vouchercancelledemailbody'] = '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}Dear Sir or Madam,
 
-A voucher from {filefrom} has been cancelled.
+A guest voucher from {filefrom} has been cancelled.
 
 Best regards,
 {siteName}{CRLF}{CRLF}--simple_mime_boundary{CRLF}Content-type:text/html; charset={charset}{CRLF}{CRLF}
@@ -487,8 +487,26 @@ Best regards,
         <meta http-equiv="Content-Type" content="text/html;charset={charset}">
     </head>
     <body>
-        <p>Dear Sir or Madam</p>
-        <p>A voucher from <a href="{serverURL}">{filefrom}</a> has been cancelled.</p>
+        <p>Dear Sir or Madam,</p>
+        <p>A guest voucher from <a href="{serverURL}">{filefrom}</a> has been cancelled.</p>
+	    <p>Best regards,<br />
+	    {siteName}</p>
+    </body>
+</html>{CRLF}{CRLF}--simple_mime_boundary--';
+
+    $config['vouchercancelledreceipt'] = '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}Dear Sir or Madam,
+
+A guest voucher that was sent to {recemail} has been cancelled.
+
+Best regards,
+{siteName}{CRLF}{CRLF}--simple_mime_boundary{CRLF}Content-type:text/html; charset={charset}{CRLF}{CRLF}
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html;charset={charset}">
+    </head>
+    <body>
+        <p>Dear Sir or Madam,</p>
+        <p>A guest voucher that was sent to <a href="{serverURL}">{recemail}</a> has been cancelled.</p>
 	    <p>Best regards,<br />
 	    {siteName}</p>
     </body>
