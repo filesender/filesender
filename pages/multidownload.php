@@ -34,29 +34,60 @@ if (isset($_REQUEST['gid']) && ensureSaneOpenSSLKey($_REQUEST['gid'])) {
 ?>
 
 <script type="text/javascript">
+    // From http://stackoverflow.com/a/11752084.
+    var isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+
     $(document).ready(function () {
         $('#message').hide();
         $('#errmessage').hide();
         $('#myfiles tr:odd').addClass('altcolor');
 
+        if (!isMac) {
+            $('#macmessage').hide();
+        }
+
         $('.checkboxes').change(function() {
             // Show or hide the 'no files selected' message depending on current state.
             var numChecked = $('.checkboxes:checked').length;
 
-            if (this.checked) {
-                $('#errmessage').hide();
-            } else if (numChecked == 0) {
-                $('#errmessage').show();
-            }
+            showOrHideErrorMessage();
 
             // Check or un-check the top checkbox depending on how many files are selected.
-            if (numChecked == 3) {
+            if (numChecked == $('.checkboxes').length) {
                 $('#selectall').prop('checked', 'checked');
             } else {
                 $('#selectall').prop('checked', '');
             }
+
+            showOrHideZipMessages();
         });
     });
+
+    function showOrHideErrorMessage() {
+        var numChecked = $('.checkboxes:checked').length;
+
+        if (numChecked == 0) {
+            $('#errmessage').show();
+        } else {
+            $('#errmessage').hide();
+        }
+    }
+
+    function showOrHideZipMessages() {
+        // Show link to Mac alternative unzip utility if more than one file is checked.
+        var numChecked = $('.checkboxes:checked').length;
+
+        if (numChecked > 1) {
+            if (isMac) {
+                $('#macmessage').show();
+            }
+
+            $('#zipmessage').show();
+        } else {
+            $('#macmessage').hide();
+            $('#zipmessage').hide();
+        }
+    }
 
     function startDownload() {
         if ($('.checkboxes:checked').length > 0) {
@@ -99,7 +130,7 @@ if (isset($_REQUEST['gid']) && ensureSaneOpenSSLKey($_REQUEST['gid'])) {
             <table id="myfiles" style="table-layout: fixed; border: 0; width: 100%; border-spacing: 0;">
                 <tr class="headerrow" >
                     <td class="tblmcw2"><input type="checkbox" checked="checked" style="margin-left: 0; margin-right: 0" id="selectall"
-                                          onclick="$('.checkboxes').prop('checked', $('#selectall').prop('checked'))"/></td>
+                                          onclick="$('.checkboxes').prop('checked', $('#selectall').prop('checked')); showOrHideErrorMessage(); showOrHideZipMessages();"/></td>
                     <td class="HardBreak" id="myfiles_header_filename" style="vertical-align: middle"><strong><?php echo lang('_FILE_NAME'); ?></strong></td>
                     <td class="HardBreak tblmcw3" id="myfiles_header_size" style="vertical-align: middle"><strong><?php echo lang('_SIZE'); ?></strong></td>
                 </tr>
@@ -121,6 +152,14 @@ if (isset($_REQUEST['gid']) && ensureSaneOpenSSLKey($_REQUEST['gid'])) {
             <input type="hidden" name="isformrequest" value="true" />
         </form>
 
+        <div id="zipmessage">
+            <p><?php echo lang('_ZIP_MESSAGE'); ?></p>
+        </div>
+
+        <div id="macmessage">
+            <p><?php echo lang('_MAC_ZIP_MESSAGE'); ?><a href="<?php echo $config['mac_unzip_link']; ?>"><?php echo $config['mac_unzip_name']; ?></a>.</p>
+        </div>
+        
         <div class="menu" id="downloadbutton" >
             <p>
                 <a id="download" href="" onclick="startDownload(); return false;">
