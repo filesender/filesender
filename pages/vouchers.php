@@ -37,6 +37,54 @@
  */
 
 global $config;
+
+$statusMsg = '';
+$statusClass = '';
+
+if(isset($_REQUEST["a"]))
+{
+    // add voucher
+    if($_REQUEST["a"] == "complete") {
+        $statusMsg = lang('_VOUCHER_SENT');
+        $statusClass = 'green';
+    }
+    // del
+    if(isset($_REQUEST["a"]) && isset($_REQUEST["id"])) {
+        $myfileData = $functions->getVoucherData($_REQUEST['id']);
+
+        if($_REQUEST["a"] == "del" ) {
+            // check if user is authenticated and allowed to delete this voucher
+            if( $isAuth && $userdata["saml_uid_attribute"] == $myfileData["fileauthuseruid"]) {
+                if($functions->deleteVoucher($myfileData["fileid"])) {
+                    $statusMsg = lang('_VOUCHER_DELETED');
+                    $statusClass = 'green';
+                }
+            } else {
+                // log auth user tried to delete a voucher they do not have access to
+                logEntry("Permission denied - attempt to delete voucher ".$myfileData["fileuid"],"E_ERROR");
+                // notify - not deleted - you do not have permission
+                $statusMsg = lang('_PERMISSION_DENIED');
+                $statusClass = 'red';
+            }
+        }
+    }
+}
+
+foreach ($errorArray as $message) {
+    if($message == "err_emailnotsent") {
+        $statusMsg = lang('_ERROR_SENDING_EMAIL');
+        $statusClass = 'red';
+    }
+}
+
+// get file data
+$filedata = $functions->getVouchers();
+$json_o=json_decode($filedata,true);
+
+// get file data
+$filedata = $functions->getVouchers();
+$json_o=json_decode($filedata,true);
+
  ?>
 <script type="text/javascript">
 //<![CDATA[
@@ -47,8 +95,12 @@ var datepickerDateFormat = '<?php echo lang('_DP_dateFormat'); ?>';
 var selectedVoucher = "";
 var nameLang = '<?php echo lang("_FILE_NAME"); ?>';
 var sizeLang = '<?php echo lang("_SIZE"); ?>';
+var statusMsg = '<?php echo $statusMsg; ?>';
+var statusClass = '<?php echo $statusClass; ?>';
 
 $(function() {
+
+    statusMessage(statusMsg, statusClass);
 	//$("#fileto_msg").hide();
 	$("#expiry_msg").hide();
 	
@@ -189,45 +241,6 @@ function postVoucher()
 }
 //]]>
 </script>
-<?php 
-
-if(isset($_REQUEST["a"]))
-{
-	// add voucher
-	if($_REQUEST["a"] == "complete") {
-	    echo "<div id='message'>".lang("_VOUCHER_SENT")."</div>";
-	}
-	// del
-	if(isset($_REQUEST["a"]) && isset($_REQUEST["id"])) {
-	    $myfileData = $functions->getVoucherData($_REQUEST['id']);
-
-		if($_REQUEST["a"] == "del" ) {
-			// check if user is authenticated and allowed to delete this voucher
-			if( $isAuth && $userdata["saml_uid_attribute"] == $myfileData["fileauthuseruid"]) {
-				if($functions->deleteVoucher($myfileData["fileid"])) {
-				    echo "<div id='message'>".lang("_VOUCHER_DELETED")."</div>";
-				} 
-			} else {
-				// log auth user tried to delete a voucher they do not have access to
-				logEntry("Permission denied - attempt to delete voucher ".$myfileData["fileuid"],"E_ERROR");
-				// notify - not deleted - you do not have permission	
-				echo "<div id='message'>".lang("_PERMISSION_DENIED")."</div>";
-			}
-		}
-	}
-}
-
-foreach ($errorArray as $message) {
-    if($message == "err_emailnotsent") {
-        echo '<div id="message">'.lang("_ERROR_SENDING_EMAIL").'</div>';
-    }
-}
-
-// get file data
-$filedata = $functions->getVouchers();
-$json_o=json_decode($filedata,true);
-
-?>
 <form name="form1" id="form1" method="post">
     <div id="box_1" class="box">
         <?php echo '<div id="pageheading">'.lang("_VOUCHERS").'</div>'; ?>
