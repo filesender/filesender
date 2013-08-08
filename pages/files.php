@@ -41,7 +41,7 @@
 
 // Check for delete/resent/added actions and report back
 
-$statusErr = '';
+$statusMsg = '';
 $statusClass = '';
 
 if(isset($_REQUEST['tc']) && isset($_REQUEST['fileauth'])){
@@ -49,20 +49,20 @@ if(isset($_REQUEST['tc']) && isset($_REQUEST['fileauth'])){
         if(isset($_REQUEST['fileto'])) {
             $listOfEmails = explode(",", $_REQUEST['fileto']);
             if($functions->addRecipientsToTransaction($listOfEmails, $_REQUEST['tc'], $_REQUEST['fileauth'])) {
-                $statusErr = lang("_EMAIL_SENT");
+                $statusMsg = lang("_EMAIL_SENT");
                 $statusClass = 'green';
             } else {
-                $statusErr = lang('_ERROR_SENDING_EMAIL');
+                $statusMsg = lang('_ERROR_SENDING_EMAIL');
                 $statusClass = 'red';
             }
         }
     } else if ($_REQUEST['a'] == 'deltrans'){
         $requestConfirmation = $_REQUEST['notifyRecipients'] == 'true' ? true : false;
         if($functions->deleteTransaction($_REQUEST['tc'], $_REQUEST['fileauth'], $requestConfirmation)) {
-            $statusErr = lang('_TRANSACTION_DELETED');
+            $statusMsg = lang('_TRANSACTION_DELETED');
             $statusClass = 'green';
         } else {
-            $statusErr = lang('_ERROR_DELETING_RECIPIENT');
+            $statusMsg = lang('_ERROR_DELETING_RECIPIENT');
             $statusClass = 'red';
         }
     }
@@ -73,18 +73,18 @@ if(isset($_REQUEST["a"]) && isset($_REQUEST["groupid"])) {
     if ($_REQUEST["a"] == "delrecip") { // TODO: Needs some sort of authentication before deletion
         $requestConfirmation = $_REQUEST['notifyRecipient'] == 'true' ? true : false;
         if ($functions->deleteRecipient($recipient, $requestConfirmation)) {
-            $statusErr = lang("_RECIPIENT_DELETED");
+            $statusMsg = lang("_RECIPIENT_DELETED");
             $statusClass = 'green';
         } else {
-            $statusErr = lang("_PERMISSION_DENIED");
+            $statusMsg = lang("_PERMISSION_DENIED");
             $statusClass = "red";
         }
     } else if ($_REQUEST["a"] == "resend") {
         if ($sendmail->sendDownloadAvailable($recipient)){
-            $statusErr = lang("_EMAIL_SENT");
+            $statusMsg = lang("_EMAIL_SENT");
             $statusClass = 'green';
         } else {
-            $statusErr = lang("_PERMISSION_DENIED");
+            $statusMsg = lang("_PERMISSION_DENIED");
             $statusClass = "red";
         }
     }
@@ -92,9 +92,8 @@ if(isset($_REQUEST["a"]) && isset($_REQUEST["groupid"])) {
 
 foreach ($errorArray as $message) {
     if($message == "err_emailnotsent") {
-        $statusErr = lang('_ERROR_SENDING_EMAIL');
+        $statusMsg = lang('_ERROR_SENDING_EMAIL');
         $statusClass = 'red';
-        //echo '<div id="message">'.lang("_ERROR_SENDING_EMAIL").'</div>';
     }
 }
 // Get list of user files and display page
@@ -112,13 +111,13 @@ $json_o=json_decode($filedata,true);
 	var datepickerDateFormat = '<?php echo lang('_DP_dateFormat'); ?>';
 	var showall = false; // flag for show all switch to show or hide download summaries
     var showAllRecipients = false; // flag for expanding all download summaries for individual recipients
-    var statusError = '<?php echo $statusErr ?>';
+    var statusMsg = '<?php echo $statusMsg ?>';
     var statusClass = '<?php echo $statusClass ?>';
     var selectedRecipient = "";
 
 	$(function() {
 
-        statusMessage(statusError, statusClass);
+        statusMessage(statusMsg, statusClass);
 
         getDatePicker();
 
@@ -527,7 +526,7 @@ $json_o=json_decode($filedata,true);
                                 for($file = 0; $file < sizeof($itemContents); $file++) {
                                     $row = $file % 2 == 0 ? '<tr class="rowdivider">' : '<tr>';
 
-                                    if ($downloadTotals[$file]['logfilename'] != $itemContents[$file]['fileoriginalname']) {
+                                    if (!isset($downloadTotals[$file]) || $downloadTotals[$file]['logfilename'] != $itemContents[$file]['fileoriginalname']) {
                                         array_splice($downloadTotals, $file, 0, array(array('count' => 0, 'logfilename' => $itemContents[$file]['fileoriginalname'])));
                                     }
 

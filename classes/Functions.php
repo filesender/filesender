@@ -734,7 +734,7 @@ class Functions {
         return $returnArray;
     }
 
-    function addRecipientsToTransaction($emailList, $trackingCode, $uid) {
+    function addRecipientsToTransaction($emailList, $trackingCode, $uid, $subject, $message) {
 
         $transactionDetails = $this->getTransactionDetails($trackingCode, $uid);
         //used to get a list of the existing recipients for the specified transaction.
@@ -769,7 +769,8 @@ class Functions {
             $fileData['filefrom'] = $transactionDetails[0]['filefrom'];
             $fileData['filesubject'] = $transactionDetails[0]['filesubject'];
             $fileData['fileactivitydate'] = $transactionDetails[0]['fileactivitydate'];
-            $fileData['filemessage'] = $transactionDetails[0]['filemessage'];
+            $fileData['filesubject'] = isset($subject) ? $subject : $transactionDetails[0]['filesubject'];
+            $fileData['filemessage'] = isset($message) ? $message : $transactionDetails[0]['filemessage'];
             $fileData['fileip4address'] = $transactionDetails[0]['fileip4address'];
             $fileData['fileip6address'] = $transactionDetails[0]['fileip6address'];
             $fileData['fileauthurl'] = $transactionDetails[0]['fileauthurl'];
