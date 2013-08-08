@@ -29,76 +29,69 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/* ---------------------------------
- * Multiple Downloads page
- * ---------------------------------
- *
- */
-
-
 if (isset($_REQUEST['gid']) && ensureSaneOpenSSLKey($_REQUEST['gid'])) {
     $fileData = $functions->getMultiFileData($_REQUEST['gid']);
 ?>
 
 <script type="text/javascript">
     $(document).ready(function () {
-        $("#message").hide();
-        $("#errmessage").hide();
-        $("#myfiles tr:odd").addClass("altcolor");
+        $('#message').hide();
+        $('#errmessage').hide();
+        $('#myfiles tr:odd').addClass('altcolor');
 
         $('.checkboxes').change(function() {
-            // Show or hide the "no files selected" message depending on current state.
-            var numChecked = $(".checkboxes:checked").length;
+            // Show or hide the 'no files selected' message depending on current state.
+            var numChecked = $('.checkboxes:checked').length;
 
             if (this.checked) {
-                $("#errmessage").hide();
+                $('#errmessage').hide();
             } else if (numChecked == 0) {
-                $("#errmessage").show();
+                $('#errmessage').show();
             }
 
             // Check or un-check the top checkbox depending on how many files are selected.
             if (numChecked == 3) {
-                $("#selectall").prop("checked", "checked");
+                $('#selectall').prop('checked', 'checked');
             } else {
-                $("#selectall").prop("checked", "");
+                $('#selectall').prop('checked', '');
             }
         });
     });
 
     function startDownload() {
-        if ($(".checkboxes:checked").length > 0) {
+        if ($('.checkboxes:checked').length > 0) {
             // At least one file is selected, start downloading.
-            $("#errmessage").hide();
-            $("#message").show();
-            $("#fileform").submit();
+            $('#errmessage').hide();
+            $('#message').show();
+            $('#fileform').submit();
         } else {
             // No files selected, show error message.
-            $("#message").hide();
-            $("#errmessage").show();
+            $('#message').hide();
+            $('#errmessage').show();
         }
     }
 </script>
 
-<div id='message'><?php echo lang("_STARTED_DOWNLOADING") ?></div>
-<div id='errmessage'><?php echo lang("_NO_FILES_SELECTED") ?></div>
+<div id='message'><?php echo lang('_STARTED_DOWNLOADING') ?></div>
+<div id='errmessage'><?php echo lang('_NO_FILES_SELECTED') ?></div>
 <div id="box" style="background:#fff">
-    <?php echo '<div id="pageheading">' . lang("_DOWNLOAD") . '</div>' ?>
+    <?php echo '<div id="pageheading">' . lang('_DOWNLOAD') . '</div>' ?>
     <div id="fileinfo">
-        <p id="tracking_code"><?php echo lang("_TRACKING_CODE") . ": " . htmlentities($fileData[0]['filetrackingcode']); ?></p>
+        <p id="tracking_code"><?php echo lang('_TRACKING_CODE') . ': ' . htmlentities($fileData[0]['filetrackingcode']); ?></p>
 
-        <p id="download_from"><?php echo lang("_FROM") . ": " . htmlentities($fileData[0]["filefrom"]); ?></p>
+        <p id="download_from"><?php echo lang('_FROM') . ': ' . htmlentities($fileData[0]['filefrom']); ?></p>
 
-        <p id="download_sent"><?php echo lang("_SENT_DATE") . ": " . date(lang('datedisplayformat'), strtotime($fileData[0]["filecreateddate"])); ?></p>
+        <p id="download_sent"><?php echo lang('_SENT_DATE') . ': ' . date(lang('datedisplayformat'), strtotime($fileData[0]['filecreateddate'])); ?></p>
 
-        <p id="download_expiry"><?php echo lang("_EXPIRY_DATE") . ": " . date(lang('datedisplayformat'), strtotime($fileData[0]["fileexpirydate"])); ?></p>
+        <p id="download_expiry"><?php echo lang('_EXPIRY_DATE') . ': ' . date(lang('datedisplayformat'), strtotime($fileData[0]['fileexpirydate'])); ?></p>
 
         <?php
-        if (!empty($fileData[0]["filesubject"])) {
-            echo '<p id="download_subject">' . lang("_SUBJECT") . ": " . utf8tohtml($fileData[0]["filesubject"], TRUE) . '</p>';
+        if (!empty($fileData[0]['filesubject'])) {
+            echo '<p id="download_subject">' . lang('_SUBJECT') . ': ' . utf8tohtml($fileData[0]['filesubject'], TRUE) . '</p>';
         }
 
-        if (!empty($fileData[0]["filemessage"])) {
-            echo '<p id="download_message">' . lang("_MESSAGE") . ": " . nl2br(utf8tohtml($fileData[0]["filemessage"], TRUE)) . '</p>';
+        if (!empty($fileData[0]['filemessage'])) {
+            echo '<p id="download_message">' . lang('_MESSAGE') . ': ' . nl2br(utf8tohtml($fileData[0]['filemessage'], TRUE)) . '</p>';
         }
         ?>
 
@@ -107,8 +100,8 @@ if (isset($_REQUEST['gid']) && ensureSaneOpenSSLKey($_REQUEST['gid'])) {
                 <tr class="headerrow" >
                     <td class="tblmcw2"><input type="checkbox" checked="checked" style="margin-left: 0; margin-right: 0" id="selectall"
                                           onclick="$('.checkboxes').prop('checked', $('#selectall').prop('checked'))"/></td>
-                    <td class="HardBreak" id="myfiles_header_filename" style="vertical-align: middle"><strong><?php echo lang("_FILE_NAME"); ?></strong></td>
-                    <td class="HardBreak tblmcw3" id="myfiles_header_size" style="vertical-align: middle"><strong><?php echo lang("_SIZE"); ?></strong></td>
+                    <td class="HardBreak" id="myfiles_header_filename" style="vertical-align: middle"><strong><?php echo lang('_FILE_NAME'); ?></strong></td>
+                    <td class="HardBreak tblmcw3" id="myfiles_header_size" style="vertical-align: middle"><strong><?php echo lang('_SIZE'); ?></strong></td>
                 </tr>
                 <?php
                 for ($i = 0; $i < sizeof($fileData); $i++) {
@@ -131,7 +124,7 @@ if (isset($_REQUEST['gid']) && ensureSaneOpenSSLKey($_REQUEST['gid'])) {
         <div class="menu" id="downloadbutton" >
             <p>
                 <a id="download" href="" onclick="startDownload(); return false;">
-                    <?php echo lang("_DOWNLOAD_SELECTED"); ?>
+                    <?php echo lang('_DOWNLOAD_SELECTED'); ?>
                 </a>
             </p>
         </div>
