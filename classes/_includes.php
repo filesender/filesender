@@ -30,36 +30,30 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+$filesenderBase = dirname(dirname(__FILE__));
 
-$filesenderbase = dirname(dirname(__FILE__));
-if(file_exists("$filesenderbase/config/config.php")) { 
-require_once("$filesenderbase/config/config.php");
+if (file_exists("$filesenderBase/config/config.php")) {
+    require_once("$filesenderBase/config/config.php");
 } else {
-echo "Configuration file is missing - please contact your administrator.";
-exit;
+    echo "Configuration file is missing - please contact your administrator.";
+    exit;
 }
 
 $CFG = config::getInstance();
 global $config;
-$config = $CFG->loadConfig();  // use _global $config in all functions
+$config = $CFG->loadConfig(); // Use _global $config in all functions.
 
-require_once("$filesenderbase/classes/unstrip.php");
-require_once("$filesenderbase/includes/ErrorHandler.php");
-require_once("$filesenderbase/includes/EnsureHTTPS.php");
-require_once("$filesenderbase/includes/UTF8.php");
-require_once("$filesenderbase/classes/Version.php");
-require_once("$filesenderbase/classes/Functions.php");
-require_once("$filesenderbase/classes/LanguageSelection.php");
-require_once("$filesenderbase/classes/DB.php");
-require_once("$filesenderbase/classes/AuthSaml.php");
-require_once("$filesenderbase/classes/AuthVoucher.php");
-require_once("$filesenderbase/classes/Mail.php");
-require_once("$filesenderbase/classes/Log.php");
-require_once("$filesenderbase/classes/DB_Input_Checks.php");
-require_once("$filesenderbase/classes/Zipper.php");
-
-
-
-
-
-?>
+require_once("$filesenderBase/classes/unstrip.php");
+require_once("$filesenderBase/includes/ErrorHandler.php");
+require_once("$filesenderBase/includes/EnsureHTTPS.php");
+require_once("$filesenderBase/includes/UTF8.php");
+require_once("$filesenderBase/classes/Version.php");
+require_once("$filesenderBase/classes/Functions.php");
+require_once("$filesenderBase/classes/LanguageSelection.php");
+require_once("$filesenderBase/classes/DB.php");
+require_once("$filesenderBase/classes/AuthSaml.php");
+require_once("$filesenderBase/classes/AuthVoucher.php");
+require_once("$filesenderBase/classes/Mail.php");
+require_once("$filesenderBase/classes/Log.php");
+require_once("$filesenderBase/classes/DB_Input_Checks.php");
+require_once("$filesenderBase/classes/Zipper.php");
