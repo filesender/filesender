@@ -87,11 +87,11 @@ if (isset($_REQUEST['gid']) && ensureSaneOpenSSLKey($_REQUEST['gid'])) {
 
         <?php
         if (!empty($fileData[0]['filesubject'])) {
-            echo '<p id="download_subject">' . lang('_SUBJECT') . ': ' . utf8tohtml($fileData[0]['filesubject'], TRUE) . '</p>';
+            echo '<p id="download_subject">' . lang('_SUBJECT') . ': ' . utf8tohtml($fileData[0]['filesubject'], true) . '</p>';
         }
 
         if (!empty($fileData[0]['filemessage'])) {
-            echo '<p id="download_message">' . lang('_MESSAGE') . ': ' . nl2br(utf8tohtml($fileData[0]['filemessage'], TRUE)) . '</p>';
+            echo '<p id="download_message">' . lang('_MESSAGE') . ': ' . nl2br(utf8tohtml($fileData[0]['filemessage'], true)) . '</p>';
         }
         ?>
 
@@ -110,7 +110,7 @@ if (isset($_REQUEST['gid']) && ensureSaneOpenSSLKey($_REQUEST['gid'])) {
                     echo
                         '<tr>' .
                         '<td style="text-align: center; vertical-align: middle" class="dr1"><input type="checkbox" checked="checked" class="checkboxes" name="' . $fileData[$i]['filevoucheruid'] . '" style="margin-left: 0; margin-right: 0; width: 11px; height: 11px;" /></td>' .
-                        '<td class="dr2 HardBreak"><a id="link_downloadfile_' . $i .'" href="download.php?vid=' .$fileData[$i]['filevoucheruid'] . '">' . utf8tohtml($fileData[$i]['fileoriginalname'], TRUE) . '</a></td>' .
+                        '<td class="dr2 HardBreak"><a id="link_downloadfile_' . $i .'" href="download.php?vid=' .$fileData[$i]['filevoucheruid'] . '">' . utf8tohtml($fileData[$i]['fileoriginalname'], true) . '</a></td>' .
                         '<td class="dr8 HardBreak">' . formatBytes($fileData[$i]['filesize']) . '</td>' .
                         '</tr>';
                 }
