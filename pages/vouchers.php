@@ -341,13 +341,13 @@ function postVoucher()
                 echo "<tr><td>" .$item['filefrom'] . "</td><td>" .$item['fileto'] . "</td><td class='HardBreak'>";
 
                 if($item['filesubject'] != "") {
-                    echo "<img src='images/page_white_text_width.png' border='0' alt='' title='".utf8tohtml($item['filesubject'],TRUE). "' />";
+                    echo "<img src='images/page_white_text_width.png' border='0' alt='' title='".utf8ToHtml($item['filesubject'],TRUE). "' />";
                 }
 
                 echo "</td><td>";
 
                 if($item['filemessage'] != "") {
-                    echo "<img src='images/page_white_text_width.png' border='0' alt='' title='".utf8tohtml($item['filemessage'],TRUE). "' />";
+                    echo "<img src='images/page_white_text_width.png' border='0' alt='' title='".utf8ToHtml($item['filemessage'],TRUE). "' />";
                 }
 
                 echo "</td><td>" .date(lang('datedisplayformat'),strtotime($item['filecreateddate'])) . "</td>

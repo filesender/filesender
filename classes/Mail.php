@@ -410,7 +410,7 @@ class Mail {
         $template = str_replace('{fileexpirydate}', date($config['datedisplayformat'], strtotime($mailObject['fileexpirydate'])), $template);
         $template = str_replace('{filefrom}', $mailObject['filefrom'], $template);
         $template = str_replace('{fileoriginalname}', $fileoriginalname, $template);
-        $template = str_replace('{htmlfileoriginalname}', utf8tohtml($fileoriginalname, TRUE), $template);
+        $template = str_replace('{htmlfileoriginalname}', utf8ToHtml($fileoriginalname, TRUE), $template);
         $template = str_replace('{filename}', $fileoriginalname, $template);
         $template = str_replace('{filesize}', formatBytes($mailObject['filesize']), $template);
         $template = str_replace('{CRLF}', $crlf, $template);
@@ -428,7 +428,7 @@ class Mail {
 
             // Encode the 'filemessage' with a UTF8-safe version of htmlentities to allow for multibyte UTF-8 characters.
             // Also insert <br /> linebreak tags to preserve intended formatting in the HTML body part.
-            $mailObject['htmlfilemessage'] = nl2br(utf8tohtml($mailObject['filemessage'], TRUE));
+            $mailObject['htmlfilemessage'] = nl2br(utf8ToHtml($mailObject['filemessage'], TRUE));
 
             // Add extra newlines when filemessage contains more than a few words
             // (to get a better layout in the non HTML body part)
@@ -503,10 +503,10 @@ class Mail {
         }
 
         // Check needed encoding for subject (assumes UTF-8).
-        $encoding = detect_char_encoding($subject) ;
+        $encoding = detectCharEncoding($subject) ;
 
         if ($encoding != 'US-ASCII') {
-            $subject = mime_qp_encode_header_value($subject, 'UTF-8', $encoding, $config['crlf']) ;
+            $subject = mimeQpEncodeHeaderValue($subject, 'UTF-8', $encoding, $config['crlf']) ;
         }
 
         return $subject;
@@ -535,7 +535,7 @@ class Mail {
     private function createEmailBody($template) {
         // Check and set the needed encoding for the body, convert if necessary.
         require_once("../includes/UTF8.php");
-        $body_encoding = detect_char_encoding($template) ;
+        $body_encoding = detectCharEncoding($template) ;
         $template = str_replace('{charset}', $body_encoding, $template);
 
         if ($body_encoding == 'ISO-8859-1') {
