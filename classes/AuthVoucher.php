@@ -30,87 +30,74 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-//
-// voucher related functions
-//
-// aVoucher() - check if a voucher exists and returns true/false
-// getVoucher() - returns voucher as json array
+// --------------------------------
+// Voucher related functions
+// --------------------------------
+class AuthVoucher
+{
+    private static $instance = null;
 
+    public function __construct()
+    {
+        $this->db = DB::getInstance();
+    }
 
-class AuthVoucher {
-
-    private static $instance = NULL;
-
-    public static function getInstance() {
-        // Check for both equality and type		
-        if(self::$instance === NULL) {
+    public static function getInstance()
+    {
+        // Check for both equality and type.
+        if (self::$instance === null) {
             self::$instance = new self();
         }
+
         return self::$instance;
-    } 
+    }
 
-	 public function __construct() {
-	  $this->db = DB::getInstance();
-	 }
-    //---------------------------------------
-    // Check voucher exists and is available
-    // return TRUE if voucher exists and is available for use
-    public function aVoucher() {
+    // --------------------------------
+    // Check voucher exists and is available, returns true or false.
+    // --------------------------------
+    public function aVoucher()
+    {
+        global $config;
 
-        $db = DB::getInstance();
-        
-		global $config;
+        if (isset($_REQUEST['vid'])) {
+            $vid = $_REQUEST['vid'];
+
+            if (preg_match($config['voucherRegEx'], $vid) and strLen($vid) == $config['voucherUIDLength']) {
+                $statement = $this->db->fquery("SELECT COUNT(*) FROM files WHERE filevoucheruid = %s", $vid);
+                $statement->execute();
+                $count = $statement->fetchColumn();
+
+                return $count == 1;
+            }
+        }
+
+        return false;
+    }
+
+    // --------------------------------
+    // Get voucher information.
+    // TODO: Move this to Functions maybe?
+    // --------------------------------
+    public function getVoucher()
+    {
+        global $config;
 
         if (isset($_REQUEST['vid'])) {
             $vid = $_REQUEST['vid'];
 
             if (preg_match($config['voucherRegEx'], $vid) and strLen($vid) == $config['voucherUIDLength']) {
 
-        	$statement =  $this->db->fquery("SELECT COUNT(*) FROM files WHERE filevoucheruid=%s", $vid);
-			$statement->execute();
-			$count = $statement->fetchColumn();
- 
-            if($count == 1){
- 	        	return TRUE;
+                $result = $this->db->fquery("SELECT * FROM files WHERE filevoucheruid = %s", $vid) or die("Error");
+                $returnArray = array();
+                $returnArray["SessionID"] = session_id();
+
+                foreach ($result as $row) {
+                    array_push($returnArray, $row);
                 }
-                return FALSE;
-            } 
-            else {
-                // invalid vid format to match regex from config
-                return FALSE;
-            }
-            return FALSE;
-        }
-    }	
 
-    //---------------------------------------
-    // Get Voucher information
-    // TODO: Move this to Functions maybe??
-    public function getVoucher() {
-
-        $db = DB::getInstance();
-       	global $config;
-
-        if (isset($_REQUEST['vid'])) {
-            $vid = $_REQUEST['vid'];
-
-            if (preg_match($config['voucherRegEx'], $vid) and strLen($vid) == $config['voucherUIDLength']) {
-
-            $result =  $this->db->fquery("SELECT * FROM files WHERE filevoucheruid=%s", $vid) or die("Error");
-            $returnArray = array();
-			$returnArray["SessionID"] = session_id();
-              
-	        foreach($result as $row) 
-            {
-                array_push($returnArray, $row);
-            }
-            return $returnArray;
-            } 
-            else {
-                // invalid vid format to match regex from config
-                return "error";
+                return $returnArray;
             }
         }
-    }	
+        return "error";
+    }
 }
-?>
