@@ -769,8 +769,8 @@ class Functions {
             $fileData['filefrom'] = $transactionDetails[0]['filefrom'];
             $fileData['filesubject'] = $transactionDetails[0]['filesubject'];
             $fileData['fileactivitydate'] = $transactionDetails[0]['fileactivitydate'];
-            $fileData['filesubject'] = isset($subject) ? $subject : $transactionDetails[0]['filesubject'];
-            $fileData['filemessage'] = isset($message) ? $message : $transactionDetails[0]['filemessage'];
+            if (isset($subject)) $fileData['filesubject'] = $subject;
+            if (isset($message)) $fileData['filemessage'] = $message;
             $fileData['fileip4address'] = $transactionDetails[0]['fileip4address'];
             $fileData['fileip6address'] = $transactionDetails[0]['fileip6address'];
             $fileData['fileauthurl'] = $transactionDetails[0]['fileauthurl'];

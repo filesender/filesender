@@ -48,7 +48,7 @@ if(isset($_REQUEST['tc']) && isset($_REQUEST['fileauth'])){
     if($_REQUEST['a'] == "add") {
         if(isset($_REQUEST['fileto'])) {
             $listOfEmails = explode(",", $_REQUEST['fileto']);
-            if($functions->addRecipientsToTransaction($listOfEmails, $_REQUEST['tc'], $_REQUEST['fileauth'])) {
+            if($functions->addRecipientsToTransaction($listOfEmails, $_REQUEST['tc'], $_REQUEST['fileauth'], $_REQUEST['filesubject'], $_REQUEST['filemessage'])) {
                 $statusMsg = lang("_EMAIL_SENT");
                 $statusClass = 'green';
             } else {
