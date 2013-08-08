@@ -75,7 +75,7 @@ $filestatus = $fileArray[0]['filestatus'];
 if(file_exists($file) && is_file($file) && $filestatus == 'Available')
 {
 	// Check the encoding for the filename and convert if necessary
-	if (detect_char_encoding($fileoriginalname) == 'ISO-8859-1') {
+	if (detectCharEncoding($fileoriginalname) == 'ISO-8859-1') {
 		$fileoriginalname = iconv("UTF-8", "ISO-8859-1", $fileoriginalname);
 	}
 

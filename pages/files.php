@@ -437,7 +437,7 @@ $json_o=json_decode($filedata,true);
                             <td class="dr2" style="text-align: center">
                                 ' .date(lang('datedisplayformat'),strtotime($itemContents[0]['fileexpirydate'])) . '
                             </td>
-                            <td class="dr2" style="text-align: center">' . utf8tohtml($itemContents[0]['filetrackingcode'],TRUE) . '</td>
+                            <td class="dr2" style="text-align: center">' . utf8ToHtml($itemContents[0]['filetrackingcode'],TRUE) . '</td>
                             <td class="dr8">
                                 <img src="images/shape_square_delete.png" alt="" title="'. lang("_DELETE_RECIPIENT") . '"
                                     style="cursor:pointer;"  onclick="confirmDeleteTransaction(&quot;'.$itemContents[0]['filetrackingcode'].'&quot;,&quot;'.$item['fileauthuseruid'].'&quot;)"
@@ -479,12 +479,12 @@ $json_o=json_decode($filedata,true);
                                     if ($hasMessage) {
                                         echo '<tr>
                                             <td class="dr4 sdheading tblmcw3"><strong>'.lang("_SUBJECT").'</strong></td>
-                                            <td class="dr6 HardBreak">'.utf8tohtml($itemContents[0]['filesubject'],TRUE). '</td>
+                                            <td class="dr6 HardBreak">'.utf8ToHtml($itemContents[0]['filesubject'],TRUE). '</td>
                                         </tr>';
                                     } else {
                                         echo '<tr>
                                             <td class="dr11 sdheading tblmcw3"><strong>'.lang("_SUBJECT").'</strong></td>
-                                            <td class="dr13 HardBreak">'.utf8tohtml($itemContents[0]['filesubject'],TRUE). '</td>
+                                            <td class="dr13 HardBreak">'.utf8ToHtml($itemContents[0]['filesubject'],TRUE). '</td>
                                         </tr>';
                                     }
                                 }
@@ -494,7 +494,7 @@ $json_o=json_decode($filedata,true);
                                     echo '<tr class="' . $messageClass . '">
                                         <td class="dr11 sdheading"><strong>'.lang("_MESSAGE").'</strong></td>
                                         <td class="dr13" >
-                                            <pre class="HardBreak">'.utf8tohtml($itemContents[0]['filemessage'],TRUE).'</pre>
+                                            <pre class="HardBreak">'.utf8ToHtml($itemContents[0]['filemessage'],TRUE).'</pre>
                                         </td>
                                     </tr>';
                                 }
@@ -525,13 +525,13 @@ $json_o=json_decode($filedata,true);
 
                                     if ($file == sizeof($itemContents)-1){
                                         echo $row .
-                                            '<td class="dr11">' . utf8tohtml($itemContents[$file]['fileoriginalname'],true) . '</td>
+                                            '<td class="dr11">' . utf8ToHtml($itemContents[$file]['fileoriginalname'],true) . '</td>
                                             <td class="dr12 HardBreak" style="text-align: center">' . formatBytes($itemContents[$file]['filesize']) . '</td>
                                             <td class="dr13 HardBreak" style="text-align: center">' . $downloadTotals[$file]['count'] . '</td>
                                         </tr>';
                                     } else {
                                         echo $row .
-                                            '<td class="dr4">' . utf8tohtml($itemContents[$file]['fileoriginalname'], true) . '</td>
+                                            '<td class="dr4">' . utf8ToHtml($itemContents[$file]['fileoriginalname'], true) . '</td>
                                             <td class="HardBreak" style="text-align: center">' . formatBytes($itemContents[$file]['filesize']) . '</td>
                                             <td class="dr6 HardBreak" style="text-align: center">' . $downloadTotals[$file]['count'] . '</td>
                                         </tr>';
@@ -599,7 +599,7 @@ $json_o=json_decode($filedata,true);
                                             for($file = 0; $file < sizeof($files); $file++) {
                                                 $row = $file % 2 == 0 ? '<tr class="rowdivider">' : '<tr>';
                                                 echo $row . '
-                                                    <td class="HardBreak dr4" >' . utf8tohtml($files[$file]['fileoriginalname'], true) . '</td>
+                                                    <td class="HardBreak dr4" >' . utf8ToHtml($files[$file]['fileoriginalname'], true) . '</td>
                                                     <td class="HardBreak dr6" style="text-align: center">' . $files[$file]['downloads'] . '</td>
                                                 </tr>';
                                             }
@@ -616,7 +616,7 @@ $json_o=json_decode($filedata,true);
                                     <td colspan="5" style="text-align: center; border: 1px solid #999;">
                                         <a target="_blank" style="cursor:pointer;"
                                             onclick="openAddRecipient('."'".$itemContents[0]['fileauthuseruid']."',
-                                            '". utf8tohtml(addslashes($fileNames), true) ."',
+                                            '". utf8ToHtml(addslashes($fileNames), true) ."',
                                             '".$itemContents[0]['filesize'] ."','".rawurlencode($itemContents[0]['filefrom'])."',
                                             '".rawurlencode($itemContents[0]['filesubject'])."',
                                             '".rawurlencode($itemContents[0]['filemessage'])."',

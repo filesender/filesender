@@ -57,7 +57,7 @@ if (isset($_REQUEST['vid'])) {
 <div id="box" style="background:#fff">
     <?php echo '<div id="pageheading">' . lang("_DOWNLOAD") . '</div>'; ?>
     <div id="fileinfo">
-        <p id="download_filename"><?php echo lang('_FILE_NAME') . ': ' . utf8tohtml($fileData['fileoriginalname'], true); ?></p>
+        <p id="download_filename"><?php echo lang('_FILE_NAME') . ': ' . utf8ToHtml($fileData['fileoriginalname'], true); ?></p>
 
         <p id="download_filesize"><?php echo lang('_FILE_SIZE') . ': ' . formatBytes($fileData['filesize'], true); ?></p>
 
@@ -71,11 +71,11 @@ if (isset($_REQUEST['vid'])) {
 
         <?php
         if (!empty($fileData[0]['filesubject'])) {
-            echo '<p id="download_subject">' . lang('_SUBJECT') . ': ' . utf8tohtml($fileData['filesubject'], true) . '</p>';
+            echo '<p id="download_subject">' . lang('_SUBJECT') . ': ' . utf8ToHtml($fileData['filesubject'], true) . '</p>';
         }
 
         if (!empty($fileData[0]['filemessage'])) {
-            echo '<p id="download_message">' . lang('_MESSAGE') . ': ' . nl2br(utf8tohtml($fileData['filemessage'], true)) . '</p>';
+            echo '<p id="download_message">' . lang('_MESSAGE') . ': ' . nl2br(utf8ToHtml($fileData['filemessage'], true)) . '</p>';
         }
         ?>
     </div>

@@ -108,7 +108,7 @@ if (!isAuthenticated()) {
                 $complete = 'completev';
             }
 
-            $emailSettings = json_decode($_POST['emailSettings'], true);
+            $emailSettings = json_decode($_POST['myJson'], true);
             $data['filedownloadconfirmations'] = $emailSettings['email-inform-download'] ? 'true' : 'false';
             $data['fileenabledownloadreceipts'] = $emailSettings['email-enable-confirmation'] ? 'true' : 'false';
             $data['filedailysummary'] = $emailSettings['email-inform-daily'] ? 'true' : 'false';
@@ -134,7 +134,7 @@ if (!isAuthenticated()) {
             $data = $functions->getMultiFileData($_REQUEST['gid']);
 
             $groupIdArray = array();
-            $emailSettings = json_decode($_POST['emailSettings'], true);
+            $emailSettings = json_decode($_POST['myJson'], true);
             foreach ($data as &$dataItem) {
                 // Update group IDs to be individual for each recipient.
                 if (!isset($groupIdArray[$dataItem['fileto']])) {
