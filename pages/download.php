@@ -39,32 +39,48 @@
 
 // get file data
 if (isset($_REQUEST['vid'])) {
-$vid = $_REQUEST['vid'];
-$filedata = $functions->getVoucherData($vid);
+    $vid = $_REQUEST['vid'];
+    $fileData = $functions->getVoucherData($vid);
 }
 ?>
+
 <script type="text/javascript">
-$(document).ready(function() { 
-$("#message").hide();
-});
-function startDownload()
-{
-    $('#statusmessage').html('<?php echo lang("_STARTED_DOWNLOADING"); ?>');
-    $('#statusmessage').attr('class', 'green');
-}
+    $(document).ready(function () {
+        $("#message").hide();
+    });
+
+    function startDownload() {
+        $('#statusmessage').html('<?php echo lang("_STARTED_DOWNLOADING"); ?>').attr('class', 'green');
+    }
+
 </script>
-<div id="box">
-<?php echo '<div id="pageheading">'.lang("_DOWNLOAD").'</div>'; ?> 
-  <div id="tablediv">
-  <table>
-  <tr><td id="download_to"><?php echo lang("_TO"); ?>:</td><td id="to"><?php echo htmlentities($filedata["fileto"]);?></td></tr>
-  <tr><td id="download_from"><?php echo lang("_FROM"); ?>:</td><td id="from"><?php echo htmlentities($filedata["filefrom"]);?></td></tr>
-  <tr><td id="download_subject"><?php echo lang("_SUBJECT"); ?>:</td><td id="subject"><?php echo utf8tohtml($filedata["filesubject"],TRUE);?></td></tr>
-  <tr><td id="download_message"><?php echo lang("_MESSAGE"); ?>:</td><td id="filemessage"><?php echo nl2br(utf8tohtml($filedata["filemessage"],TRUE));?></td></tr>
-  <tr><td id="download_filename"><?php echo lang("_FILE_NAME"); ?>:</td><td id="filename"><?php echo utf8tohtml($filedata["fileoriginalname"],TRUE);?></td></tr>
-  <tr><td id="download_filesize"><?php echo lang("_FILE_SIZE"); ?>:</td><td id="filesize"><?php echo formatBytes($filedata["filesize"]);?></td></tr>
-  <tr><td id="download_expiry"><?php echo lang("_EXPIRY_DATE"); ?>:</td><td id="expiry"><?php echo date(lang('datedisplayformat'),strtotime($filedata["fileexpirydate"]));?></td></tr>
-  </table>
-  </div>
-  <div class="menu" id="downloadbutton" ><p><a id="download" href="download.php?vid=<?php echo urlencode($filedata["filevoucheruid"]);?>" onclick="startDownload()"><?php echo lang("_START_DOWNLOAD"); ?></a></p></div>
+<div id="box" style="background:#fff">
+    <?php echo '<div id="pageheading">' . lang("_DOWNLOAD") . '</div>'; ?>
+    <div id="fileinfo">
+        <p id="download_filename"><?php echo lang('_FILE_NAME') . ': ' . utf8tohtml($fileData['fileoriginalname'], true); ?></p>
+
+        <p id="download_filesize"><?php echo lang('_FILE_SIZE') . ': ' . formatBytes($fileData['filesize'], true); ?></p>
+
+        <p id="tracking_code"><?php echo lang('_TRACKING_CODE') . ': ' . htmlentities($fileData['filetrackingcode']); ?></p>
+
+        <p id="download_from"><?php echo lang('_FROM') . ': ' . htmlentities($fileData['filefrom']); ?></p>
+
+        <p id="download_sent"><?php echo lang('_SENT_DATE') . ': ' . date(lang('datedisplayformat'), strtotime($fileData['filecreateddate'])); ?></p>
+
+        <p id="download_expiry"><?php echo lang('_EXPIRY_DATE') . ': ' . date(lang('datedisplayformat'), strtotime($fileData['fileexpirydate'])); ?></p>
+
+        <?php
+        if (!empty($fileData[0]['filesubject'])) {
+            echo '<p id="download_subject">' . lang('_SUBJECT') . ': ' . utf8tohtml($fileData['filesubject'], true) . '</p>';
+        }
+
+        if (!empty($fileData[0]['filemessage'])) {
+            echo '<p id="download_message">' . lang('_MESSAGE') . ': ' . nl2br(utf8tohtml($fileData['filemessage'], true)) . '</p>';
+        }
+        ?>
+    </div>
+
+    <div class="menu" id="downloadbutton"><p><a id="download"href="download.php?vid=<?php echo urlencode($fileData["filevoucheruid"]); ?>"
+            onclick="startDownload()"><?php echo lang("_START_DOWNLOAD"); ?></a></p>
+    </div>
 </div>
