@@ -99,6 +99,7 @@ if (!empty($locales[$langs])) {
 
 // 1. By including en_AU first, we make sure ALL used keys actually exist!
 require_once("$filesenderbase/language/". "en_AU.php");
+require_once("$filesenderbase/language/". "en_AU_emails.php");
 
 // 2. Override definitions if a non-en_AU default language is configured
 if(isset($config['site_defaultlanguage']) && $config['site_defaultlanguage'] != "en_AU") 

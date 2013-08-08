@@ -54,7 +54,7 @@ class Mail {
         global $config;
 
         $fileDetails[0]['fileto'] = $fileDetails[0]['filefrom'];
-        return $this->sendEmail($fileDetails[0], $config['transactionuploadedemailbody'], 'full', $fileDetails);
+        return $this->sendEmail($fileDetails[0], lang('_EMAIL_BODY_FILES_UPLOADED'), 'full', $fileDetails);
     }
 
     // ---------------------------------------
@@ -62,7 +62,6 @@ class Mail {
     // $groupIds can be either an array of IDs (for multiple recipients) or a string (single recipient).
     // ---------------------------------------
     public function sendDownloadAvailable($groupIds) {
-        global $config;
         $functions = Functions::getInstance();
 
         if (is_string($groupIds)) {
@@ -89,7 +88,7 @@ class Mail {
                 return false;
             }
 
-            if (!$this->sendEmail($emailData[0], $config['transactionavailableemailbody'], 'full', $emailData)) {
+            if (!$this->sendEmail($emailData[0], lang('_EMAIL_BODY_DOWNLOAD_AVAILABLE'), 'full', $emailData)) {
                 // Sending failed, no need to log as sendEmail() does that.
                 return false;
             }
@@ -103,7 +102,6 @@ class Mail {
     // $voucherIds can be either an array of IDs (for multiple files) or a string (single file).
     // ---------------------------------------
     public function sendDownloadNotification($voucherIds) {
-        global $config;
         $functions = Functions::getInstance();
 
         if (is_string($voucherIds)) {
@@ -137,7 +135,7 @@ class Mail {
         $files[0]['fileto'] = $files[0]['filefrom'];
         $files[0]['filefrom'] = $temp;
 
-        if (!$this->sendEmail($files[0], $config['filedownloadedemailbody'], 'full', $files)) {
+        if (!$this->sendEmail($files[0], lang('_EMAIL_BODY_FILES_DOWNLOADED'), 'full', $files)) {
             // Sending failed, no need to log as sendEmail() does that.
             return false;
         }
@@ -151,19 +149,17 @@ class Mail {
     // $notifyRecipient is a boolean indicating whether to notify the recipients (and not just the sender).
     // ---------------------------------------
     public function sendRecipientDeleted($recipient, $notifyRecipient) {
-        global $config;
-
         $recipient[0]['recemail'] = $recipient[0]['fileto'];
         $recipient[0]['fileto'] = $recipient[0]['filefrom'];
 
-        if (!$this->sendEmail($recipient[0], $config['recipientdeletedemailbody'])) {
+        if (!$this->sendEmail($recipient[0], lang('_EMAIL_BODY_RECIPIENT_DELETED'))) {
             return false;
         }
 
         if ($notifyRecipient) {
             $recipient[0]['fileto'] = $recipient[0]['recemail'];
 
-            if (!$this->sendEmail($recipient[0], $config['transactionnolongeravailableemailbody'])) {
+            if (!$this->sendEmail($recipient[0], lang('_EMAIL_BODY_TRANSACTION_NO_LONGER_AVAILABLE'))) {
                 return false;
             }
         }
@@ -177,19 +173,17 @@ class Mail {
     // $notifyRecipients is a boolean indicating whether to notify the recipients (and not just the sender).
     // ---------------------------------------
     public function sendTransactionDeleted($recipients, $notifyRecipients) {
-        global $config;
-
         $temp = $recipients[0]['fileto'];
         $recipients[0]['fileto'] = $recipients[0]['filefrom'];
 
-        if (!$this->sendEmail($recipients[0], $config['transactiondeletedemailbody'])) {
+        if (!$this->sendEmail($recipients[0], lang('_EMAIL_BODY_TRANSACTION_DELETED'))) {
             return false;
         }
 
         if ($notifyRecipients) {
             $recipients[0]['fileto'] = $temp;
             foreach ($recipients as $recipient) {
-                if (!$this->sendEmail($recipient, $config['transactionnolongeravailableemailbody'])) {
+                if (!$this->sendEmail($recipient, lang('_EMAIL_BODY_TRANSACTION_NO_LONGER_AVAILABLE'))) {
                     return false;
                 }
             }
@@ -199,7 +193,6 @@ class Mail {
     }
 
     public function sendVoucherIssued($voucherId) {
-        global $config;
         global $functions;
 
         $data = $functions->getVoucherData($voucherId);
@@ -208,14 +201,14 @@ class Mail {
         $data['recemail'] = $data['fileto'];
         $data['fileto'] = $data['filefrom'];
 
-        if (!$this->sendEmail($data, $config['vouchersentemailbody'])) {
+        if (!$this->sendEmail($data, lang('_EMAIL_BODY_VOUCHER_ISSUED_RECEIPT'))) {
             return false;
         }
 
         // Send email to recipient.
         $data['fileto'] = $data['recemail'];
 
-        if (!$this->sendEmail($data, $config['voucherissuedemailbody'])) {
+        if (!$this->sendEmail($data, lang('_EMAIL_BODY_VOUCHER_ISSUED'))) {
             return false;
         }
 
@@ -223,7 +216,6 @@ class Mail {
     }
 
     public function sendVoucherCancelled($voucherId) {
-        global $config;
         global $functions;
 
         $data = $functions->getVoucherData($voucherId);
@@ -232,14 +224,14 @@ class Mail {
         $data['recemail'] = $data['fileto'];
         $data['fileto'] = $data['filefrom'];
 
-        if (!$this->sendEmail($data, $config['vouchercancelledreceipt'])) {
+        if (!$this->sendEmail($data, lang('_EMAIL_BODY_VOUCHER_CANCELLED_RECEIPT'))) {
             return false;
         }
 
         // Send email to recipient.
         $data['fileto'] = $data['recemail'];
 
-        if (!$this->sendEmail($data, $config['vouchercancelledemailbody'])) {
+        if (!$this->sendEmail($data, lang('_EMAIL_BODY_VOUCHER_CANCELLED'))) {
             return false;
         }
 
@@ -265,11 +257,11 @@ class Mail {
         $headers .= "Content-Type: multipart/alternative; boundary=simple_mime_boundary" . $config['crlf'];
         $headers .= "From: " . $config['noreply'] . $config['crlf'];
 
-        $subject = $config['summary_email_subject'];
+        $subject = lang('_EMAIL_SUBJECT_SUMMARY');
         $subject = str_replace('{siteName}',  $config['site_name'], $subject);
         $subject = str_replace('{filetrackingcode}', $transactionDetails[0]['logfiletrackingcode'], $subject);
 
-        $message = $config['summaryemailbody'];
+        $message = lang('_EMAIL_BODY_SUMMARY');
         $message = str_replace('{siteName}',  $config['site_name'], $message);
         $message = str_replace('{filetrackingcode}', $transactionDetails[0]['logfiletrackingcode'], $message);
         $message = str_replace('{CRLF}', $config['crlf'], $message);
@@ -495,9 +487,9 @@ class Mail {
             $subject = $config['site_name'] . ': ' . $mailObject['filesubject'];
         } else {
             if ($type == 'bounce') {
-                $tempFileSubject = $config['emailbounce_subject'];
+                $tempFileSubject = lang('_EMAIL_SUBJECT_BOUNCE');
             } else {
-                $tempFileSubject = $config['default_emailsubject'];
+                $tempFileSubject = lang('_EMAIL_SUBJECT_DEFAULT');
             }
 
             $fileOriginalName = sanitizeFilename($mailObject['fileoriginalname']);

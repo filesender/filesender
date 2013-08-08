@@ -1033,7 +1033,7 @@ class Functions {
 			$filevoucheruid = getGUID();
             // set default subject
 			$voucher = 'Voucher';
-			$voucherissuedemailsubject = (isset($config['voucherissuedemailsubject'])) ?  $config['voucherissuedemailsubject'] : "Voucher";
+			$voucherissuedemailsubject = lang('_EMAIL_SUBJECT_VOUCHER');
             // overide if optional subject is added by user
             $voucherissuedemailsubject = ($vouchersubject != "")?$vouchersubject:$voucherissuedemailsubject;
 			$blank = '';
