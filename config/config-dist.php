@@ -84,6 +84,10 @@ public function loadConfig() {
 	$config["AuP_default"] = false; //AuP value is already ticked
 	$config["AuP"] = true; // AuP is displayed
 
+    // Mac OS X alternative unzip application (for multiple file downloads where the default Archive Utility will not work).
+    $config['mac_unzip_name'] = 'The Unarchiver';
+    $config['mac_unzip_link'] = 'http://unarchiver.c3.cx/unarchiver';
+
 	// Server settings
 	$config['default_daysvalid'] = 20; // Maximum number of days before file/voucher is expired
 	$config['ban_extension'] = 'exe,bat'; // Possibly dangerous file extensions that are disallowed
