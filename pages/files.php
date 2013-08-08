@@ -129,15 +129,43 @@ $json_o=json_decode($filedata,true);
 		// resend email modal dialog box
 		$("#dialog-resend").dialog({ autoOpen: false, height: 180, modal: true,
 			buttons: {
-				'cancelsendBTN': function() {
+				'cancelBTN': function() {
 				    $( this ).dialog( "close" );
 				},
-				'sendBTN': function() {
+				'confirmBTN': function() {
 				    $( this ).dialog( "close" );
-				    resend();
+                    window.location.href="index.php?s=files&a=resend&groupid=" + selectedRecipient;
 				}
 			}
 		});
+
+        $("#dialog-delete-recipient").dialog({ autoOpen: false, height: 200, width: 400, modal: true,
+            buttons: {
+                'cancelBTN': function() {
+                    $(this).dialog("close");
+                },
+                'confirmBTN': function() {
+                    var deleteRecipForm = $('#deleteRecipForm');
+                    var checked = $('#informRecipient').is(':checked');
+                    deleteRecipForm.attr('action', deleteRecipForm.attr('action') + checked);
+                    deleteRecipForm.submit();
+                }
+            }
+        });
+
+        $("#dialog-delete-transaction").dialog({ autoOpen: false, height: 200, width: 400, modal: true,
+            buttons: {
+                'cancelBTN': function() {
+                    $(this).dialog("close");
+                },
+                'confirmBTN': function() {
+                    var deleteTransForm = $('#deleteTransForm');
+                    var checked = $('#informRecipients').is(':checked');
+                    deleteTransForm.attr('action', deleteTransForm.attr('action') + checked);
+                    deleteTransForm.submit();
+                }
+            }
+        });
 
 		// default auth error dialogue
 		$("#dialog-autherror").dialog({ autoOpen: false, height: 240,width: 350, modal: true,title: "",
@@ -148,18 +176,10 @@ $json_o=json_decode($filedata,true);
 			}
 		});
 
-		$('.ui-dialog-buttonpane button:contains(cancelBTN)').attr("id","btn_cancel");
-		$('#btn_cancel').html('<?php echo lang("_NO") ?>');
-		$('.ui-dialog-buttonpane button:contains(deleteBTN)').attr("id","btn_delete");
-		$('#btn_delete').html('<?php echo lang("_YES") ?>');
-		$('.ui-dialog-buttonpane button:contains(cancelsendBTN)').attr("id","btn_cancelsend");
-		$('#btn_cancelsend').html('<?php echo lang("_NO") ?>');
-		$('.ui-dialog-buttonpane button:contains(sendBTN)').attr("id","btn_send");
-		$('#btn_send').html('<?php echo lang("_YES") ?>');
 		// add new recipient modal dialog box
 		$("#dialog-addrecipient").dialog({ autoOpen: false, height: 410,width:650, modal: true,
 			buttons: {
-				'addrecipientcancelBTN': function() {
+				'cancelBTN': function() {
 					// clear form
 					$("#fileto").val("");
 					$("#datepicker").datepicker("setDate", new Date(maximumDate));
@@ -167,7 +187,7 @@ $json_o=json_decode($filedata,true);
 					$("#filemessage").val("");
 					$( this ).dialog( "close" );
 				},
-				'addrecipientsendBTN': function() {
+				'sendBTN': function() {
 					// Disable the send button to prevent duplicate sending
                     if (validateForm()) {
                         $("#form1").submit();
@@ -178,13 +198,12 @@ $json_o=json_decode($filedata,true);
 			}
 		});
 
-		$('.ui-dialog-buttonpane button:contains(addrecipientcancelBTN)').attr("id","btn_addrecipientcancel");
-		$('#btn_addrecipientcancel').html('<?php echo lang("_CANCEL") ?>')
-		$('.ui-dialog-buttonpane button:contains(addrecipientsendBTN)').attr("id","btn_addrecipientsend");
-		$('#btn_addrecipientsend').html('<?php echo lang("_SEND") ?>')
+        $('.ui-dialog-buttonpane button:contains(cancelBTN)').html('<?php echo lang("_CANCEL") ?>');
+        $('.ui-dialog-buttonpane button:contains(confirmBTN)').html('<?php echo lang("_YES") ?>');
+		$('.ui-dialog-buttonpane button:contains(sendBTN)').html('<?php echo lang("_SEND") ?>');
 
-    // autocomplete
-	var availableTags = [<?php  echo (isset($config["autocomplete"]) && $config["autocomplete"])?  $functions->uniqueemailsforautocomplete():  ""; ?>];
+        // autocomplete
+        var availableTags = [<?php  echo (isset($config["autocomplete"]) && $config["autocomplete"])?  $functions->uniqueemailsforautocomplete():  ""; ?>];
 
 		function split( val ) {
             return val.split( /,\s*/ );
@@ -225,9 +244,6 @@ $json_o=json_decode($filedata,true);
                     return false;
                 }
             });
-            // End autocomplete
-
-        // End document ready
 	});
 
 	// validate form before sending
@@ -241,11 +257,6 @@ $json_o=json_decode($filedata,true);
 		return validate;
 	}
 
-	function resend(uid)
-	{
-		window.location.href="index.php?s=files&a=resend&groupid=" + selectedRecipient;
-	}
-
 	function confirmResend(vid)
     {
         // confirm deletion of selected file
@@ -255,33 +266,13 @@ $json_o=json_decode($filedata,true);
 
 	function confirmDeleteRecipient(gid)
     {
-        $("#dialog-delete-recipient").dialog({ autoOpen: false, height: 200, width: 400, modal: true,
-            buttons: {
-                'Cancel': function() {
-                    $( this ).dialog( "close" );
-                },
-                'Confirm': function() {
-                    var checked = $('#informRecipient').is(':checked');
-                    window.location.href="index.php?s=files&a=delrecip&groupid=" + gid + "&notifyRecipient=" + checked;
-                }
-            }
-        });
+        $('#deleteRecipForm').attr('action', "index.php?s=files&a=delrecip&groupid=" + gid + "&notifyRecipient=");
         $("#dialog-delete-recipient").dialog("open");
     }
 
     function confirmDeleteTransaction(trackingCode, fileauth)
     {
-        $("#dialog-delete-transaction").dialog({ autoOpen: false, height: 200, width: 400, modal: true,
-            buttons: {
-                'Cancel': function() {
-                    $(this).dialog("close");
-                },
-                'Confirm': function() {
-                    var checked = $('#informRecipients').is(':checked');
-                    window.location.href="index.php?s=files&a=deltrans&fileauth="+fileauth + "&tc=" + trackingCode + "&notifyRecipients=" + checked;
-                }
-            }
-        });
+        $('#deleteTransForm').attr("action", "index.php?s=files&a=deltrans&fileauth="+fileauth + "&tc=" + trackingCode + "&notifyRecipients=");
         $("#dialog-delete-transaction").dialog("open");
     }
 
