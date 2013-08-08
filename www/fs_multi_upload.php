@@ -155,7 +155,7 @@ if (!isAuthenticated()) {
             }
 
             if ($data[0]['senduploadconfirmation'] == 'true') {
-                $sendMail->sendUploadConfirmation($data);
+                $sendMail->sendUploadConfirmation(reset($groupIdArray));
             }
 
             $resultArray['status'] = 'complete';

@@ -48,11 +48,12 @@ class Mail {
 
     // ---------------------------------------
     // Send an upload confirmation email to the file sender ("filefrom" field).
-    // $fileDetails should be an array returned from getMultiFileData() or getTransactionDetails().
+    // $groupId can be any of the group IDs from the transaction.
     // ---------------------------------------
-    public function sendUploadConfirmation($fileDetails) {
-        global $config;
+    public function sendUploadConfirmation($groupId) {
+        global $functions;
 
+        $fileDetails = $functions->getMultiFileData($groupId);
         $fileDetails[0]['fileto'] = $fileDetails[0]['filefrom'];
         return $this->sendEmail($fileDetails[0], lang('_EMAIL_BODY_FILES_UPLOADED'), 'full', $fileDetails);
     }
