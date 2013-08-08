@@ -134,14 +134,12 @@ global $config;
             title: "<?php echo lang("_UPLOAD_PROGRESS") ?>: " + fname,
             minWidth: 500,
             minHeight: 250,
+            modal: true,
             buttons: {
-                'Pause': function () {
+                'pauseBTN': function () {
                     //TODO
                 },
-                'Suspend': function () {
-                    //TODO
-                },
-                'Cancel Upload': function () {
+                'canceluploadBTN': function () {
                     $("#dialog-cancel").dialog({
                         resizable: false,
                         height: 140,
@@ -158,6 +156,8 @@ global $config;
                 }
             }
         });
+        $('.ui-dialog-buttonpane button:contains(pauseBTN)').html('<?php echo lang("_PAUSE") ?>');
+        $('.ui-dialog-buttonpane button:contains(canceluploadBTN)').html('<?php echo lang("_CANCEL") ?>');
     }
 
     function validateExtension(filename) {
@@ -235,21 +235,22 @@ global $config;
 
 <!--Aggregate progress bar contents-->
 <div id="dialog-uploadprogress" style="display:none;">
+    <div id="uploadProgressBar">
+        <div id="spinner"></div>
+        <div id="bar">
+            <div id="progress_container" class="fileBox">
+                <span class="filebox_string" id="progress_string" style="text-align: center"></span>
 
-    <div id="spinner"></div>
-    <div id="bar" style="width:90%; float:right;">
-        <div id="progress_container" class="fileBox">
-            <span class="filebox_string" id="progress_string" style="text-align: center"></span>
-
-            <div class="progress_bar" id="progress_bar"></div>
+                <div class="progress_bar" id="progress_bar"></div>
+            </div>
         </div>
     </div>
 
-    <p id="totalUploaded"></p>
-
-    <p id="averageUploadSpeed"></p>
-
-    <p id="timeRemaining"></p>
+    <div id="uploadProgressStats">
+        <p id="totalUploaded"></p>
+        <p id="averageUploadSpeed"></p>
+        <p id="timeRemaining"></p>
+    </div>
 </div>
 
 <!-- Upload Cancel -->

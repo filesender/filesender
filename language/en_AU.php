@@ -116,6 +116,7 @@ $lang["_DELETE"] = "Delete";
 $lang["_YES"] = "Yes";
 $lang["_NO"] = "No";
 $lang["_CLEAR_ALL"] = "Clear all";
+$lang["_PAUSE"] = "Pause";
 
 $lang["_ERROR_CONTACT_ADMIN"] = "There has been an error - please contact your administrator.";	
 $lang["_INVALID_MISSING_EMAIL"] = "Invalid or missing email";	
