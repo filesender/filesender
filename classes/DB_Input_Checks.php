@@ -30,77 +30,67 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*  --------------------------------
- * This Class takes care of the input checks required in sql queries.
- * Each check return the value or the report the error in errorReporting.
- * All the Vars will go through a mysqlEscape function, in this funtion different ways of general string filtering can be used.
- */
+// --------------------------------
+// Functions for the input checks requires in SQL queries.
+// --------------------------------
+class DB_Input_Checks
+{
+    private static $instance = null;
 
-/*
- * To make the errorReporting complete this file needs another file that defines the error messages.
- * They can be build in here by a switch, but its better todo this in another file so the user/developer can easly adjust the message.
- *  --------------------------------
- */
-
-// date check 
-
-class DB_Input_Checks {
-
-    /*
-     * Public Functions
-     */
-    private static $instance = NULL;
-
-    public static function getInstance() {
-        // Check for both equality and type		
-        if(self::$instance === NULL) {
+    public static function getInstance()
+    {
+        // Check for both equality and type.
+        if (self::$instance === null) {
             self::$instance = new self();
         }
+
         return self::$instance;
-    } 
-
-    public function checkEmail($email) {
-
-        if (preg_match(';^([a-z0-9_-]+)(.[a-z0-9_-]+)*@([a-z0-9-]+)(.[a-z0-9-]+)*.[a-z]{2,4}$;i', $email)) {
-            //if (preg_match("[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", $email)) {
-
-            return $email;
-        } else {
-            $this->errorReport('email'); 
-        }
     }
 
-    public function checkURL($url) {
+    public function checkEmail($email)
+    {
+        if (preg_match(';^([a-z0-9_-]+)(.[a-z0-9_-]+)*@([a-z0-9-]+)(.[a-z0-9-]+)*.[a-z]{2,4}$;i', $email)) {
+            return $email;
+        } else {
+            $this->errorReport('email');
+        }
 
+        return false;
+    }
+
+
+    private function errorReport($errorMessage)
+    {
+        // TODO: ...something?
+    }
+
+    public function checkURL($url)
+    {
         if (preg_match(';^http\:\/\/[a-z0-9-]+.([a-z0-9-]+.)?[a-z]+;i', $url)) {
             return $url;
         } else {
-            $this->errorReport('url'); 
+            $this->errorReport('url');
         }
+
+        return false;
     }
 
-
-    public function checkIp($ip) {
-        // Creates a long2ip string and then creates and IP from that string. So if the string is invalide the ip will the remade to a normal ip.
+    // --------------------------------
+    // Creates a long2ip string and then creates an IP from that string.
+    // If the string is invalid, the IP is remade to a normal IP.
+    // --------------------------------
+    public function checkIP($ip)
+    {
         return long2ip(ip2long($ip));
     }
 
-    public function checkIp6($ip) {
+    public function checkIPv6($ip)
+    {
         if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
             return $ip;
         }
+
         return "::";
     }
-
-    /*
-     * Private Functions
-     */
-
-    private function errorReport($errorMessage) {
-        // errorReport will handle the default error messaging. 
-
-        //Todo: Fix proper error handleing with proper message towards the Flex frontend.
-    }
-
 }
 
