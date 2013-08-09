@@ -126,6 +126,7 @@ $lang["_INVALID_FILEVOUCHERID"] = "Invalid File or Voucher ID";
 $lang["_INVALID_FILESIZE_ZERO"] = "File size cannot be 0. Please select another file.";
 $lang["_INVALID_FILE_EXT"] = "Invalid file extension.";
 $lang["_INVALID_TOO_LARGE_1"] = "File size cannot be greater than";
+$lang["_AUTH_ERROR_TITLE"] = "Authentication error";
 $lang["_AUTH_ERROR"] = "Your are no longer authenticated. <br />Your session may have expired or there has been a server error. <br /><br />Please logon again and re-try.";	
 $lang["_SELECT_ANOTHER_FILE"] = "Please select another file.";
 $lang["_INVALID_VOUCHER"] = "This Voucher is no longer Valid. <br />Please contact the person that issued this voucher";
