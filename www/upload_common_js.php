@@ -75,58 +75,20 @@ global $config;
         }
     ?>
 
-    function autoCompleteEmails() {
-        var availableTags = [<?php  echo (isset($config["autocomplete"]) && $config["autocomplete"])?  $functions->uniqueemailsforautocomplete():  ""; ?>];
-
-        function split(val) {
-            return val.split(/,\s*/);
-        }
-
-        function extractLast(term) {
-            return split(term).pop();
-        }
-
-        $("#fileto")
-            // don't navigate away from the field on tab when selecting an item
-            .bind("keydown", function (event) {
-                if (event.keyCode === $.ui.keyCode.TAB &&
-                    $(this).data("uiAutocomplete").menu.active) {
-                    event.preventDefault();
-                }
-            })
-            .autocomplete({
-                minLength: 0,
-                source: function (request, response) {
-                    // delegate back to autocomplete, but extract the last term
-                    response($.ui.autocomplete.filter(
-                        availableTags, extractLast(request.term)));
-                },
-                focus: function () {
-                    // prevent value inserted on focus
-                    return false;
-                },
-                select: function (event, ui) {
-                    var terms = split(this.value);
-                    // remove the current input
-                    terms.pop();
-                    // add the selected item
-                    terms.push(ui.item.value);
-                    // add placeholder to get the comma-and-space at the end
-                    terms.push("");
-                    this.value = terms;//.join( ", " );
-                    return false;
-                }
-            });
-    }
-
     function displayAuthError(){
-        $("#dialog-autherror").dialog({ height: 400, width: 550, modal: true, title: '',
+        $("#dialog-autherror").dialog({
+            height: 200,
+            width: 500,
+            autoOpen: true,
+            modal: true,
+            title: '<?php echo lang("_AUTH_ERROR_TITLE") ?>',
             buttons: {
-                '<?php echo lang('_OK') ?>': function () {
+                'okBTN': function () {
                     location.reload();
                 }
             }
         });
+        addButtonText();
     }
 
     function openProgressBar(fname) {
@@ -145,10 +107,10 @@ global $config;
                         height: 140,
                         modal: true,
                         buttons: {
-                            "Yes": function () {
+                            'confirmBTN': function () {
                                 location.reload();
                             },
-                            "No": function () {
+                            'cancelBTN': function () {
                                 $(this).dialog("close");
                             }
                         }
@@ -156,8 +118,7 @@ global $config;
                 }
             }
         });
-        $('.ui-dialog-buttonpane button:contains(pauseBTN)').html('<?php echo lang("_PAUSE") ?>');
-        $('.ui-dialog-buttonpane button:contains(canceluploadBTN)').html('<?php echo lang("_CANCEL") ?>');
+        addButtonText();
     }
 
     function validateExtension(filename) {
@@ -209,14 +170,14 @@ global $config;
         var dialogDefault = $("#dialog-default");
         dialogDefault.dialog({ height: 200, modal: true, title: 'Error',
             buttons: {
-                '<?php echo lang('_OK') ?>': function () {
-
+                'okBTN': function () {
                     $(this).dialog('close');
                 }
             }
         });
         dialogDefault.html(msg);
         dialogDefault.dialog('open');
+        addButtonText();
     }
 
 
@@ -229,7 +190,9 @@ global $config;
     }
 
     // special fix for esc key on firefox stopping xhr
-    window.addEventListener('keydown', function(e) {(e.keyCode == 27 && e.preventDefault())})
+    window.addEventListener('keydown', function(e) {
+        (e.keyCode == 27 && e.preventDefault())
+    });
     //]]>
 </script>
 
@@ -252,6 +215,8 @@ global $config;
         <p id="timeRemaining"></p>
     </div>
 </div>
+
+<div id="dialog-default" style="display:none" title=""> </div>
 
 <!-- Upload Cancel -->
 <div id="dialog-confirm" title="<?php echo lang("_ARE_YOU_SURE"); ?>" style="display: none">
