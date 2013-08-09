@@ -93,32 +93,6 @@ $(function () {
         }
     );
 
-    var uiDialogButtonpane = $('.ui-dialog-buttonpane');
-    uiDialogButtonpane.find('button:contains(supportBTN)').attr('id', 'btn_support');
-    $('#btn_support').html('<?php echo lang('_OK') ?>');
-
-    // Default auth error dialog.
-    $('#dialog-autherror').dialog({ autoOpen: false, height: 240, width: 350, modal: true, title: '',
-        buttons: {
-            '<?php echo lang('_OK') ?>': function () {
-                location.reload();
-            }
-        }
-    });
-
-    // Default error message dialog.
-    $('#dialog-default').dialog({ autoOpen: false, height: 200, modal: true, title: 'Error',
-        buttons: {
-            '<?php echo lang('_OK') ?>': function () {
-                $('#dialog-default').html('');
-                $(this).dialog('close');
-            }
-        }
-    });
-
-    uiDialogButtonpane.find('button:contains(uploadcancelBTN)').attr('id', 'btn_uploadcancel');
-    $('#btn_uploadcancel').html('<?php echo lang('_CANCEL') ?>');
-
     $('#uploadhtml5').show();
 
     autoCompleteEmails();
@@ -376,7 +350,6 @@ $(function () {
     </div>
     <div class="colmask threecol" id="dragfilestoupload"></div>
 </form>
-<div id="dialog-default" style="display:none" title=""></div>
 <div id="dialog-cancel" style="display:none"
      title="<?php echo lang('_CANCEL_UPLOAD'); ?>">
     <?php echo lang('_ARE_YOU_SURE'); ?>

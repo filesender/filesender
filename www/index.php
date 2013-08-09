@@ -260,7 +260,7 @@ if($isAuth )
         <div id="scratch"></div>
         <?php
 
-        require_once('calendar_js.php');
+        require_once('common_js.php');
         foreach ($messageArray as $message)
         {
             echo '<div id="message">'.$message.'</div>';
