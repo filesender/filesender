@@ -143,7 +143,7 @@ class Functions {
     }
 
     public function getTrackingCode($id = null){
-        $statement = $this->db->fquery("SELECT max(filetrackingcode) FROM files WHERE fileauthuseruid='".$id."'");
+        $statement = $this->db->query("SELECT max(filetrackingcode) FROM files WHERE fileauthuseruid='".$id."'");
         $statement->execute();
 
         $result = $statement->fetchColumn();
@@ -168,7 +168,7 @@ class Functions {
 		// get all authuserid's that have activity that has not been tagged as sent.
 		global $config;
 		// get todays date
-		$statement =   $this->db->fquery("SELECT DISTINCT(filefrom) FROM files INNER JOIN logs ON files.fileauthuseruid = logs.logauthuseruid WHERE ".$addemail. " (logtype = 'Uploaded' OR logtype = 'Download') AND (logs.logdate > DATE_SUB(CURDATE(), INTERVAL 7 DAY))  ORDER BY logdate ASC");
+		$statement =   $this->db->query("SELECT DISTINCT(filefrom) FROM files INNER JOIN logs ON files.fileauthuseruid = logs.logauthuseruid WHERE ".$addemail. " (logtype = 'Uploaded' OR logtype = 'Download') AND (logs.logdate > DATE_SUB(CURDATE(), INTERVAL 7 DAY))  ORDER BY logdate ASC");
 		$statement->execute();
 		$count = $statement->rowCount();
 		if($count)
@@ -180,7 +180,7 @@ class Functions {
        	 	foreach($result as $row)
        	 	{
 				$summary = "File activity for '".$row["filefrom"]."'.\n\n";
-       		 	$statementFiles =   $this->db->fquery("SELECT DISTINCT(logfileuid) FROM logs WHERE logfrom = '".$row["filefrom"]."' AND (  logtype = 'Uploaded' OR logtype = 'Download') AND (logs.logdate > DATE_SUB(CURDATE(), INTERVAL 7 DAY)) ORDER BY logdate DESC");
+       		 	$statementFiles =   $this->db->query("SELECT DISTINCT(logfileuid) FROM logs WHERE logfrom = '".$row["filefrom"]."' AND (  logtype = 'Uploaded' OR logtype = 'Download') AND (logs.logdate > DATE_SUB(CURDATE(), INTERVAL 7 DAY)) ORDER BY logdate DESC");
 				$statementFiles->execute();
 				$resultFiles = $statementFiles->fetchAll();  
 				$countFiles = $statementFiles->rowCount();
@@ -190,7 +190,7 @@ class Functions {
 				foreach($resultFiles as $rowFiles)
        	 			{
 							//echo "logfileuid:".$rowFiles["logfileuid"]."<br>";
-							$statementLogs =   $this->db->fquery("SELECT * FROM logs WHERE logfileuid = '".$rowFiles["logfileuid"]."' AND (  logtype = 'Uploaded'  OR logtype = 'Download')  AND (logs.logdate > DATE_SUB(CURDATE(), INTERVAL 7 DAY)) ORDER BY logdate ASC");
+							$statementLogs =   $this->db->query("SELECT * FROM logs WHERE logfileuid = '".$rowFiles["logfileuid"]."' AND (  logtype = 'Uploaded'  OR logtype = 'Download')  AND (logs.logdate > DATE_SUB(CURDATE(), INTERVAL 7 DAY)) ORDER BY logdate ASC");
 							//echo "<BR><BR>SELECT * FROM logs WHERE logfileuid = '".$rowFiles["logfileuid"]."' AND (  logtype = 'Uploaded' OR logtype = 'Download' OR logtype = 'Voucher Created')  AND logsent = 0 ORDER BY logdate ASC";
 							$statementLogs->execute();
 							$resultLogs = $statementLogs->fetchAll();  
@@ -229,25 +229,25 @@ class Functions {
 
         $statString = "| UP: ";
 
-        $statement =   $this->db->fquery("SELECT COUNT(*) FROM logs WHERE logtype='Uploaded'");
+        $statement =   $this->db->query("SELECT COUNT(*) FROM logs WHERE logtype='Uploaded'");
 		$statement->execute();
 		$count = $statement->fetchColumn();
 
         $statString = $statString.$count." files ";
 
-        $statement = $this->db->fquery("SELECT SUM(logfilesize) as total_uploaded FROM logs WHERE logtype='Uploaded'");
+        $statement = $this->db->query("SELECT SUM(logfilesize) as total_uploaded FROM logs WHERE logtype='Uploaded'");
 		$statement->execute();
 		$totalResult = $statement->fetch(PDO::FETCH_NUM);
 		$totalResult = $totalResult[0];
         $statString = $statString."(".round($totalResult/1024/1024/1024)."GB) |" ;
 		$stmnt = NULL;
 		
-      	$statement = $this->db->fquery("SELECT COUNT(*) FROM logs WHERE logtype='Download'");
+      	$statement = $this->db->query("SELECT COUNT(*) FROM logs WHERE logtype='Download'");
       	$statement->execute();
 		$count = $statement->fetchColumn();
         $statString = $statString." DOWN: ".$count." files ";
 		
-       	$statement =  $this->db->fquery("SELECT SUM(logfilesize) FROM logs WHERE logtype='Download'");
+       	$statement =  $this->db->query("SELECT SUM(logfilesize) FROM logs WHERE logtype='Download'");
       	$statement->execute();
 		$totalResult = $statement->fetch(PDO::FETCH_NUM);
 		$totalResult = $totalResult[0];
@@ -478,7 +478,7 @@ class Functions {
 		$maxitems_perpage = 20;
 		$page = 1;
 		
-		$statement = $this->db->fquery("SELECT count(logtype)  FROM logs WHERE logtype = '$type'");
+		$statement = $this->db->query("SELECT count(logtype)  FROM logs WHERE logtype = '$type'");
 		$statement->execute();
 		$total = $statement->fetch(PDO::FETCH_NUM);
 		$total = $total[0];
@@ -534,7 +534,7 @@ class Functions {
 		$maxitems_perpage = 10;
 		$page = 1;
 		
-		$statement = $this->db->fquery("SELECT count(fileid) FROM files WHERE filestatus = '$type'");
+		$statement = $this->db->query("SELECT count(fileid) FROM files WHERE filestatus = '$type'");
 		$statement->execute();
 		$total = $statement->fetch(PDO::FETCH_NUM);
 		$total = $total[0];
@@ -1051,9 +1051,9 @@ class Functions {
 			$statement->bindParam(':filesize', $zero);
 			$statement->bindParam(':fileoriginalname', $blank);
 			$statement->bindParam(':filestatus', $voucher);
-			$fileip4addressParam = $dbCheck->checkIp($_SERVER['REMOTE_ADDR']);
+			$fileip4addressParam = $dbCheck->checkIP($_SERVER['REMOTE_ADDR']);
 			$statement->bindParam(':fileip4address',$fileip4addressParam );
-			$fileip6addressParam = $dbCheck->checkIp6($_SERVER['REMOTE_ADDR']);
+			$fileip6addressParam = $dbCheck->checkIPv6($_SERVER['REMOTE_ADDR']);
 			$statement->bindParam(':fileip6address', $fileip6addressParam);
 			$statement->bindParam(':filesendersname', $blank);
 			$statement->bindParam(':filereceiversname', $blank);
@@ -1199,8 +1199,8 @@ class Functions {
         $data["filesize"]=$data["filesize"];
         $data["fileoriginalname"]=  sanitizeFilename($data['fileoriginalname']);
         $data["filestatus"]="Pending";//isset($data['filestatus']) ? $data['filestatus'] : "Pending";
-        $data["fileip4address"]= $dbCheck->checkIp($_SERVER['REMOTE_ADDR']);
-        $data["fileip6address"]= $dbCheck->checkIp6($_SERVER['REMOTE_ADDR']);
+        $data["fileip4address"]= $dbCheck->checkIP($_SERVER['REMOTE_ADDR']);
+        $data["fileip6address"]= $dbCheck->checkIPv6($_SERVER['REMOTE_ADDR']);
 		$data["filesendersname"]=isset($data['filesendersname']) ? $data['filesendersname'] : NULL;
 		$data["filereceiversname"]=isset($data['filereceiversname']) ? $data['filereceiversname'] : NULL;
 		$data["filevouchertype"]=isset($data['filevouchertype']) ? $data['filevouchertype'] : NULL;

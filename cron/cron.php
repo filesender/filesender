@@ -114,7 +114,7 @@ function cleanUp() {
 	
 	// remove any files with no uid - leftover from bug earlier beta that save files without uid's
 	$sqlQuery = "DELETE FROM files WHERE fileuid IS NULL";
-	$db->fquery($sqlQuery);
+	$db->query($sqlQuery);
 	
 	 
 	$FilestoreDirectory = $config["site_filestore"];
@@ -127,7 +127,7 @@ function cleanUp() {
 	// if file not closed and past expiry date then close the file
 	$searchquery = "SELECT * FROM files WHERE fileexpirydate < %s AND (filestatus = 'Available' OR filestatus = 'Voucher')";
 	try {
-		$search = $db->fquery($searchquery, $today);
+		$search = $db->query($searchquery, $today);
 	} catch (DBException $e) {
 		logProcess("CRON","SQL Error on selecting files". $e->getMessage());
 		return FALSE;
@@ -136,7 +136,7 @@ function cleanUp() {
 	try {
 		$query = "UPDATE files SET filestatus = 'Voucher Cancelled' WHERE fileexpirydate < %s AND
 			(filestatus = 'Voucher')";
-		$db->fquery($query, $today);
+		$db->query($query, $today);
 	} catch (DBException $e) {
 		logProcess("CRON", "SQL error while trying to change status to closed in expired vouchers" . $e->getMesssage());
 		return FALSE;
@@ -145,7 +145,7 @@ function cleanUp() {
 	try {
 		$query = "UPDATE files SET filestatus = 'Deleted' WHERE fileexpirydate < %s AND
 			(filestatus = 'Available')";
-		$db->fquery($query, $today);
+		$db->query($query, $today);
 	} catch (DBException $e) {
 		logProcess("CRON", "SQL error while trying to change status to deleted in expired files" . $e->getMesssage());
 		return FALSE;
@@ -157,7 +157,7 @@ function cleanUp() {
 	$dir_handle = @opendir($FilestoreDirectory) or die("Unable to open $FilestoreDirectory"); 
 
 	// First find Available fileuids in the database
-	$result = $db->fquery("SELECT fileuid FROM files WHERE filestatus = 'Available'");
+	$result = $db->query("SELECT fileuid FROM files WHERE filestatus = 'Available'");
 	$available_fileuids = $result->fetchAll(PDO::FETCH_COLUMN);
 
 	// Loop through the files in FilestoreDirectory 
@@ -209,7 +209,7 @@ function cleanUp() {
 	// We also check on the expiry date, so that files that are currently being uploaded and have "stale" records are left alone
 	
 	try {
-		$search = $db->fquery("SELECT * FROM files WHERE filestatus = 'Available'"); 
+		$search = $db->query("SELECT * FROM files WHERE filestatus = 'Available'");
 	} catch	(DBException $e) {
 		logProcess("CRON","SQL Error on updating files".$e->getMessage());
 		return FALSE;		
@@ -226,7 +226,7 @@ function cleanUp() {
 			// change status to closed in database
 			try {
 				$query = "UPDATE files SET filestatus = 'Deleted' WHERE fileid = %s";
-				$db->fquery($query, $row['fileid']);
+				$db->query($query, $row['fileid']);
 			} catch (Exception $e) {
 				logProcess("CRON","SQL Error Updating files ".$e->getMessage());
 				return FALSE;
@@ -298,7 +298,7 @@ function sendSummaryEmails() {
     $query = "SELECT logdate, logfilename, logfrom, logto, logfiletrackingcode, logtype FROM logs WHERE logdailysummary = 'true' AND logdate >= %s ORDER BY logdate DESC";
 
     try {
-        $search = $db->fquery($query, $last24h);
+        $search = $db->query($query, $last24h);
     } catch (Exception $e) {
         logProcess('CRON', 'SQL Error selecting summary details: ' . $e->getMessage());
         return false;
