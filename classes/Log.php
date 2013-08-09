@@ -30,186 +30,181 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*
- * log functions
- */
+// --------------------------------
+// Functions for log writing.
+// --------------------------------
+class Log
+{
+    private static $instance = null;
 
+    public function __construct()
+    {
+        $this->db = DB::getInstance();
+    }
 
-class Log {
-
-    private static $instance = NULL;
-
-    public static function getInstance() {
-        // Check for both equality and type		
-        if(self::$instance === NULL) {
+    public static function getInstance()
+    {
+        // Check for both equality and type.
+        if (self::$instance === null) {
             self::$instance = new self();
         }
-        return self::$instance;
-    } 
-	
-	public function __construct() {
-	  $this->db = DB::getInstance();
-	 }
-    //--------------------------------------- NOTE PDO this
-    // Save Log Data
-    //
-    public function saveLog($dataitem,$logType,$message){
 
-		$db = DB::getInstance();
-		
+        return self::$instance;
+    }
+
+    // --------------------------------
+    // Save data to database 'logs' table.
+    // --------------------------------
+    public function saveLog($dataItem, $logType, $message)
+    {
         global $config;
 
-        $authsaml = AuthSaml::getInstance();
-        if( $authsaml->isAuth()) {
-            $authAttributes = $authsaml->sAuth();
+        $authSaml = AuthSaml::getInstance();
+
+        if ($authSaml->isAuth()) {
+            $authAttributes = $authSaml->sAuth();
         } else {
-            $authAttributes["saml_uid_attribute"] = "";
+            $authAttributes['saml_uid_attribute'] = '';
         }
-        //$dbCheck = DB_Input_Checks::getInstance();
 
-
-        // If authenticated also add authID to log
-        // add os, browser and html5 version to log message
-        if(isset($dataitem['fileuid'])) 
-        {
-            $logfileuid	= $dataitem['fileuid'];
-            $logvoucheruid	= $dataitem['filevoucheruid'];
-            $logtype	= $logType;
-            $logfrom	= $dataitem['filefrom'];
-            $logto	= $dataitem['fileto'];
-            $logdate	= date($config['db_dateformat'], time());//use timestamp with timezone $dbCheck->checkString(pg_escape_string($dataitem['logdate']));
-            $logfilesize	= $dataitem['filesize'];
-            $logfilename	= $dataitem['fileoriginalname'];
-            $logmessage	= $message;
-            $logauthuseruid	= $authAttributes["saml_uid_attribute"];
-            $logfilegroupid = $dataitem['filegroupid'];
-            $logfiletrackingcode = $dataitem['filetrackingcode'];
-            $logdailysummary = $dataitem['filedailysummary'];
+        if (isset($dataItem['fileuid'])) {
+            $logFileUid = $dataItem['fileuid'];
+            $logVoucherUid = $dataItem['filevoucheruid'];
+            $logFrom = $dataItem['filefrom'];
+            $logTo = $dataItem['fileto'];
+            $logDate = date($config['db_dateformat'], time());
+            $logFileSize = $dataItem['filesize'];
+            $logFileName = $dataItem['fileoriginalname'];
+            $logMessage = $message;
+            $logAuthUserUid = $authAttributes['saml_uid_attribute'];
+            $logFileGroupId = $dataItem['filegroupid'];
+            $logFileTrackingCode = $dataItem['filetrackingcode'];
+            $logDailySummary = $dataItem['filedailysummary'];
         } else {
-            $logfileuid	= "";
-            $logvoucheruid	= "";
-            $logtype	= $logType;
-            $logfrom	= "";
-            $logto	= "";
-            $logdate	= date($config['db_dateformat'], time());//use timestamp with timezone $dbCheck->checkString(pg_escape_string($dataitem['logdate']));
-            $logfilesize	= "";
-            $logfilename	= "";
-            $logmessage	= $message;
-            $logauthuseruid	= $authAttributes["saml_uid_attribute"];
-            $logfilegroupid = "";
-            $logfiletrackingcode = "";
-            $logdailysummary = $config['email_me_daily_statistics_default'] ? 'true' : 'false';
+            $logFileUid = '';
+            $logVoucherUid = '';
+            $logFrom = '';
+            $logTo = '';
+            $logDate = date($config['db_dateformat'], time());
+            $logFileSize = '';
+            $logFileName = '';
+            $logMessage = $message;
+            $logAuthUserUid = $authAttributes["saml_uid_attribute"];
+            $logFileGroupId = '';
+            $logFileTrackingCode = '';
+            $logDailySummary = $config['email_me_daily_statistics_default'] ? 'true' : 'false';
         }
 
-        if ($logType == "Download") {
-            // Swap sender/recipient.
-            $temp = $logto;
-            $logto = $logfrom;
-            $logfrom = $temp;
+        if ($logType == 'Download') {
+            // Swap sender and recipient.
+            $temp = $logTo;
+            $logTo = $logFrom;
+            $logFrom = $temp;
         }
-		
-		$pdo = $this->db->connect();
-		$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
-		$statement = $pdo->prepare("INSERT INTO 
-            logs 
-            (
+
+        $pdo = $this->db->connect();
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Throw exception if error occurs.
+
+        $statement = $pdo->prepare(
+            "INSERT INTO logs (
                 logfileuid,
-                logvoucheruid, 
-                logtype , 
-                logfrom, 
-                logto, 
-                logdate, 
-                logfilesize, 
-                logfilename, 
+                logvoucheruid,
+                logtype ,
+                logfrom,
+                logto,
+                logdate,
+                logfilesize,
+                logfilename,
                 logmessage,
                 logauthuseruid,
                 logfilegroupid,
                 logfiletrackingcode,
                 logdailysummary
-            ) 
-            VALUES 
-            (
+            ) VALUES (
                 :logfileuid,
-                :logvoucheruid, 
-                :logtype , 
-                :logfrom, 
-                :logto, 
-                :logdate, 
-                :logfilesize, 
-                :logfilename, 
+                :logvoucheruid,
+                :logtype ,
+                :logfrom,
+                :logto,
+                :logdate,
+                :logfilesize,
+                :logfilename,
                 :logmessage,
                 :logauthuseruid,
                 :logfilegroupid,
                 :logfiletrackingcode,
                 :logdailysummary
-            )");
-			
-			$statement->bindParam(':logfileuid',$logfileuid);
-			$statement->bindParam(':logvoucheruid',$logvoucheruid); 
-			$statement->bindParam(':logtype', $logtype);
-			$statement->bindParam(':logfrom', $logfrom);
-			$statement->bindParam(':logto', $logto);
-			$statement->bindParam(':logdate',$logdate); 
-			$statement->bindParam(':logfilesize', $logfilesize);
-			$statement->bindParam(':logfilename', $logfilename);
-			$statement->bindParam(':logmessage',$logmessage);
-			$statement->bindParam(':logauthuseruid',$logauthuseruid);
-            $statement->bindParam(':logfilegroupid',$logfilegroupid);
-            $statement->bindParam(':logfiletrackingcode',$logfiletrackingcode);
-            $statement->bindParam(':logdailysummary',$logdailysummary);
+            )"
+        );
 
-		
-		try 
-		{ 	
-			$statement->execute(); 
-			 return true;
-		}
-		catch(PDOException $e)
-		{ 
-			displayError(lang("_ERROR_CONTACT_ADMIN"),$e->getMessage());
-			return  false;
-		}
+        $statement->bindParam(':logfileuid', $logFileUid);
+        $statement->bindParam(':logvoucheruid', $logVoucherUid);
+        $statement->bindParam(':logtype', $logType);
+        $statement->bindParam(':logfrom', $logFrom);
+        $statement->bindParam(':logto', $logTo);
+        $statement->bindParam(':logdate', $logDate);
+        $statement->bindParam(':logfilesize', $logFileSize);
+        $statement->bindParam(':logfilename', $logFileName);
+        $statement->bindParam(':logmessage', $logMessage);
+        $statement->bindParam(':logauthuseruid', $logAuthUserUid);
+        $statement->bindParam(':logfilegroupid', $logFileGroupId);
+        $statement->bindParam(':logfiletrackingcode', $logFileTrackingCode);
+        $statement->bindParam(':logdailysummary', $logDailySummary);
+
+
+        try {
+            $statement->execute();
+            return true;
+        } catch (PDOException $e) {
+            displayError(lang('_ERROR_CONTACT_ADMIN'), $e->getMessage());
+            return false;
+        }
     }
 
-    // logfile for individual client specific logging
-    // calls to this function are form glex/flash if client specific logging is on
 
-    public function logProcess($client,$message)
+    // --------------------------------
+    // Log file for individual, client specific logging.
+    // TODO: Duplicate of ErrorHandler::logEntry()? Is this needed?
+    // --------------------------------
+    public function logProcess($client, $message)
     {
         global $config;
         global $cron;
 
-        if($config["debug"] or $config["client_specific_logging"])
-        {
-            $ip = $_SERVER['REMOTE_ADDR']; //capture IP
+        if ($config['debug'] or $config['client_specific_logging']) {
+            $ip = $_SERVER['REMOTE_ADDR']; // Capture IP.
 
-            if($config['dnslookup'] == true) {
+            if ($config['dnslookup'] == true) {
                 $domain = GetHostByName($ip);
             } else {
-                $domain = "";
+                $domain = '';
             }
 
-            $logext = ".log.txt";
-            // seperate cron and normal logs
-            if(isset($cron) && $cron) { $logext = "-CRON.log.txt";}
+            $logExt = ".log.txt";
 
-            $message .= "[".$ip."(".$domain.")] ";
-            $dateref = date("Ymd");
-            $data = date("Y/m/d H:i:s");
-            $myFile = $config['log_location'].$dateref."-".$client.$logext;
-            $fh = fopen($myFile, 'a') or die("can't open file");
-            // don't print errors on screen when there is no session.
-            if(session_id()){
+            // Separate cron and normal logs.
+            if (isset($cron) && $cron) {
+                $logExt = "-CRON.log.txt";
+            }
+
+            $message .= '[' . $ip . '(' . $domain . ')] ';
+            $dateRef = date('Ymd');
+            $date = date('Y/m/d H:i:s');
+            $myFile = $config['log_location'] . $dateRef . '-' . $client . $logExt;
+            $fh = fopen($myFile, 'a') or die('cannot open file');
+
+            // Don't print errors on screen when there is no session.
+            if (session_id()) {
                 $sessionId = session_id();
             } else {
                 $sessionId = "none";
             }
-            $stringData = $data.' [Session ID: '.$sessionId.'] '.$message."\n";
+
+            $stringData = $date . ' [Session ID: ' . $sessionId . '] ' . $message . "\n";
             fwrite($fh, $stringData);
+
             fclose($fh);
             closelog();
         }
     }
 }
-
-?>
