@@ -30,16 +30,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
-//$filesenderbase = dirname(dirname(__FILE__));
-//$CFG = config::getInstance();
-//global $config;
-//$config = $CFG->loadConfig();  // use _global $config in all functions
-//
-if(get_magic_quotes_gpc()) {
-		$_POST = array_map('stripslashes',$_POST);
-		$_GET = array_map('stripslashes',$_GET);
-		//$_COOKIES = array_map('stripslashes',$_COOKIES);
-	};
-
-?>
+if (get_magic_quotes_gpc()) {
+    $_POST = array_map('stripslashes', $_POST);
+    $_GET = array_map('stripslashes', $_GET);
+};

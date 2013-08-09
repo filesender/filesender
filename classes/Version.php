@@ -32,14 +32,15 @@
 
 class FileSender_Version
 {
-	const VERSION = '1.6-multiupload-3';
+    const VERSION = '1.6-multiupload-3';
 
-	//-------------------------------------------------------
-	// Compare the specified version with the current version.
-	// Return -1 if version is older, 0 if equal, and 1 if newer.
-	public static function compareVersion($version) {
-		$version = strtolower($version);
-		return version_compare($version, strtolower(self::VERSION));
-	}
+    // --------------------------------
+    // Compare the specified version with the current version.
+    // Return -1 if version is older, 0 if equal, and 1 if newer.
+    // --------------------------------
+    public static function compareVersion($version)
+    {
+        $version = strtolower($version);
+        return version_compare($version, strtolower(self::VERSION));
+    }
 }
-?>
