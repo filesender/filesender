@@ -159,8 +159,8 @@ $lang["_REFER_TO_MY_FILES"] = "You can access your files and view download stati
 $lang["_ZIP_MESSAGE"] = "Please note: if you download multiple files using the below button, your file shipment will
 be packed together into a compressed (zipped) folder which must be extracted before you can access the files.
 If you do not wish to do this, you can also download each file individually by clicking on its filename above.";
-$lang["_MAC_ZIP_MESSAGE"] = "You appear to be using a Macintosh computer. Please note that you will need a third-party
-application to open the compressed folder after downloading it. We suggest ";
+$lang["_MAC_ZIP_MESSAGE"] = "You appear to be using a Macintosh computer. Please note that you will need to use a
+third-party application to open this archive, as it is larger than 4 GiB. We suggest ";
 
 // vouchers
 $lang["_SEND_NEW_VOUCHER"] = "A Voucher allows someone to send you a file.<br />

@@ -31,18 +31,25 @@
 
 if (isset($_REQUEST['gid']) && ensureSaneOpenSSLKey($_REQUEST['gid'])) {
     $fileData = $functions->getMultiFileData($_REQUEST['gid']);
+
+    $totalFileSize = 0;
+
+    foreach ($fileData as $file) {
+        $totalFileSize += $file['filesize'];
+    }
 ?>
 
 <script type="text/javascript">
     // From http://stackoverflow.com/a/11752084.
     var isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+    var isZip64 = <?php echo $totalFileSize; ?> >= (4 * 1024 * 1024 * 1024);
 
     $(document).ready(function () {
         $('#message').hide();
         $('#errmessage').hide();
         $('#myfiles tr:odd').addClass('altcolor');
 
-        if (!isMac) {
+        if (!isMac || !isZip64) {
             $('#macmessage').hide();
         }
 
@@ -78,7 +85,7 @@ if (isset($_REQUEST['gid']) && ensureSaneOpenSSLKey($_REQUEST['gid'])) {
         var numChecked = $('.checkboxes:checked').length;
 
         if (numChecked > 1) {
-            if (isMac) {
+            if (isMac && isZip64) {
                 $('#macmessage').show();
             }
 
