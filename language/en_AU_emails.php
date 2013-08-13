@@ -30,11 +30,22 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-$lang['_EMAIL_SUBJECT_DEFAULT'] = "{siteName}: {filetrackingcode}";
-$lang['_EMAIL_SUBJECT_SUMMARY'] = "{siteName}: Daily summary for transaction {filetrackingcode}";
+// Email subjects.
+$lang['_EMAIL_SUBJECT_DEFAULT'] = '{siteName}: {filetrackingcode}';
+$lang['_EMAIL_SUBJECT_SUMMARY'] = '{siteName}: Daily summary for transaction {filetrackingcode}';
+$lang['_EMAIL_SUBJECT_FILES_DOWNLOADED'] = '{siteName}: Download receipt - {filetrackingcode}';
+$lang['_EMAIL_SUBJECT_FILES_UPLOADED'] = '{siteName}: File(s) uploaded - {filetrackingcode}';
+$lang['_EMAIL_SUBJECT_DOWNLOAD_AVAILABLE'] = '{siteName}: File(s) available for download - {filetrackingcode}';
+$lang['_EMAIL_SUBJECT_RECIPIENT_DELETED'] = '{siteName}: Recipient deleted - {filetrackingcode}';
+$lang['_EMAIL_SUBJECT_TRANSACTION_DELETED'] = '{siteName}: File(s) deleted - {filetrackingcode}';
+$lang['_EMAIL_SUBJECT_TRANSACTION_NO_LONGER_AVAILABLE'] = '{siteName}: File(s) no longer available for download - {filetrackingcode}';
 $lang['_EMAIL_SUBJECT_VOUCHER'] = 'Voucher';
-$lang['_EMAIL_SUBJECT_BOUNCE'] = "{siteName}: Email notification sending failure";
+$lang['_EMAIL_SUBJECT_VOUCHER_ISSUED'] = '{siteName}: Voucher received';
+$lang['_EMAIL_SUBJECT_VOUCHER_ISSUED_RECEIPT'] = '{siteName}: Voucher sent';
+$lang['_EMAIL_SUBJECT_VOUCHER_CANCELLED'] = '{siteName}: Voucher cancelled';
+$lang['_EMAIL_SUBJECT_BOUNCE'] = '{siteName}: Email notification sending failure';
 
+// Email bodies.
 $lang['_EMAIL_BODY_SUMMARY'] = '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}Dear Sir or Madam,
 
 This is a daily transaction activity summary for your file shipment on {siteName}. You can access your files and view detailed download statistics on the My Files page.

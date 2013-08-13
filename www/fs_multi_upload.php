@@ -109,9 +109,9 @@ if (!isAuthenticated()) {
             }
 
             $emailSettings = json_decode($_POST['myJson'], true);
-            $data['filedownloadconfirmations'] = $emailSettings['email-inform-download'] ? 'true' : 'false';
-            $data['fileenabledownloadreceipts'] = $emailSettings['email-enable-confirmation'] ? 'true' : 'false';
-            $data['filedailysummary'] = $emailSettings['email-inform-daily'] ? 'true' : 'false';
+            $data['filedownloadconfirmations'] = isset($emailSettings['email-inform-download']) && $emailSettings['email-inform-download'] ? 'true' : 'false';
+            $data['fileenabledownloadreceipts'] = isset($emailSettings['email-enable-confirmation']) && $emailSettings['email-enable-confirmation'] ? 'true' : 'false';
+            $data['filedailysummary'] = isset($emailSettings['email-inform-daily']) && $emailSettings['email-inform-daily'] ? 'true' : 'false';
 
             ensureFileSizesMatch($data, $uploadFolder, $tempFilename);
             renameTempFile($tempFilePath, $uploadFolder . $fileUid);
@@ -144,8 +144,8 @@ if (!isAuthenticated()) {
                 $dataItem['filegroupid'] = $groupIdArray[$dataItem['fileto']];
                 $functions->updateFile($dataItem);
 
-                $dataItem['rtnemail'] = $emailSettings['rtnemail'] ? 'true' : 'false';
-                $dataItem['senduploadconfirmation'] = $emailSettings['email-upload-complete'] ? 'true' : 'false';
+                $dataItem['rtnemail'] = isset($emailSettings['rtnemail']) && $emailSettings['rtnemail'] ? 'true' : 'false';
+                $dataItem['senduploadconfirmation'] = isset($emailSettings['email-upload-complete']) && $emailSettings['email-upload-complete'] ? 'true' : 'false';
             }
 
             unset($dataItem);
