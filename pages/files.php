@@ -117,7 +117,9 @@ $json_o=json_decode($filedata,true);
 
 	$(function() {
 
-        statusMessage(statusMsg, statusClass);
+        if(statusMsg != '' && statusClass != ''){
+            statusMessage(statusMsg, statusClass);
+        }
 
         getDatePicker();
 
