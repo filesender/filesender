@@ -129,13 +129,17 @@ if($isAuth )
         var debug = <?php echo $config["debug"] ? 'true' : 'false'; ?> ;
         var html5 = false;
         var html5webworkers = false;
+        var statusMsg = '<?php echo $statusMsg; ?>';
+        var statusClass = '<?php echo $statusClass; ?>';
         //check if webworkers are available
         <?php if(isset($config['terasender']) && $config['terasender']) { echo 'html5webworkers = typeof(Worker)!=="undefined";'; }?>
 
         // check if html5 functions are available
         html5 = (window.File && window.FileReader && window.FileList && window.Blob && window.FormData) ? true : false;
-        if(window.opera){html5=false;};
+        if(window.opera){html5=false;}
         $(function() {
+
+            statusMessage('Logged on as: <?php echo $useremail[0]; ?>', 'blue' );
 
             // display topmenu, content and userinformation
             $("#topmenu").show();

@@ -915,6 +915,10 @@ user-select: none;
     color: #5c2;
 }
 
+.blue {
+    color: #00d;
+}
+
 .errorglow {
     -webkit-box-shadow:0 0 4px red;
     -moz-box-shadow: 0 0 4px red;
