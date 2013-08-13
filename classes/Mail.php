@@ -55,6 +55,7 @@ class Mail {
 
         $fileDetails = $functions->getMultiFileData($groupId);
         $fileDetails[0]['fileto'] = $fileDetails[0]['filefrom'];
+        $fileDetails[0]['filesubject'] = lang('_EMAIL_SUBJECT_FILES_UPLOADED');
         return $this->sendEmail($fileDetails[0], lang('_EMAIL_BODY_FILES_UPLOADED'), 'full', $fileDetails);
     }
 
@@ -87,6 +88,10 @@ class Mail {
             if (empty($emailData)) {
                 logEntry('Mail.php: No file data was found for group ID ' . $groupId, 'E_ERROR');
                 return false;
+            }
+
+            if (!isset($emailData[0]['filesubject']) || $emailData[0]['filesubject'] == '') {
+                $emailData[0]['filesubject'] = lang('_EMAIL_SUBJECT_DOWNLOAD_AVAILABLE');
             }
 
             if (!$this->sendEmail($emailData[0], lang('_EMAIL_BODY_DOWNLOAD_AVAILABLE'), 'full', $emailData)) {
@@ -136,6 +141,8 @@ class Mail {
         $files[0]['fileto'] = $files[0]['filefrom'];
         $files[0]['filefrom'] = $temp;
 
+        $files[0]['filesubject'] = lang('_EMAIL_SUBJECT_FILES_DOWNLOADED');
+
         if (!$this->sendEmail($files[0], lang('_EMAIL_BODY_FILES_DOWNLOADED'), 'full', $files)) {
             // Sending failed, no need to log as sendEmail() does that.
             return false;
@@ -152,6 +159,7 @@ class Mail {
     public function sendRecipientDeleted($recipient, $notifyRecipient) {
         $recipient[0]['recemail'] = $recipient[0]['fileto'];
         $recipient[0]['fileto'] = $recipient[0]['filefrom'];
+        $recipient[0]['filesubject'] = lang('_EMAIL_SUBJECT_RECIPIENT_DELETED');
 
         if (!$this->sendEmail($recipient[0], lang('_EMAIL_BODY_RECIPIENT_DELETED'))) {
             return false;
@@ -159,6 +167,7 @@ class Mail {
 
         if ($notifyRecipient) {
             $recipient[0]['fileto'] = $recipient[0]['recemail'];
+            $recipient[0]['filesubject'] = lang('_EMAIL_SUBJECT_TRANSACTION_NO_LONGER_AVAILABLE');
 
             if (!$this->sendEmail($recipient[0], lang('_EMAIL_BODY_TRANSACTION_NO_LONGER_AVAILABLE'))) {
                 return false;
@@ -177,13 +186,18 @@ class Mail {
         $temp = $recipients[0]['fileto'];
         $recipients[0]['fileto'] = $recipients[0]['filefrom'];
 
+        $recipients[0]['filesubject'] = lang('_EMAIL_SUBJECT_TRANSACTION_DELETED');
+
         if (!$this->sendEmail($recipients[0], lang('_EMAIL_BODY_TRANSACTION_DELETED'))) {
             return false;
         }
 
         if ($notifyRecipients) {
             $recipients[0]['fileto'] = $temp;
+
             foreach ($recipients as $recipient) {
+                $recipient['filesubject'] = lang('_EMAIL_SUBJECT_TRANSACTION_NO_LONGER_AVAILABLE');
+
                 if (!$this->sendEmail($recipient, lang('_EMAIL_BODY_TRANSACTION_NO_LONGER_AVAILABLE'))) {
                     return false;
                 }
@@ -198,18 +212,21 @@ class Mail {
 
         $data = $functions->getVoucherData($voucherId);
 
-        // Email a receipt to the uploader.
-        $data['recemail'] = $data['fileto'];
-        $data['fileto'] = $data['filefrom'];
+        // Send email to recipient.
+        if (!isset($data['filesubject'])) {
+            $data['filesubject'] = lang('_EMAIL_SUBJECT_VOUCHER_ISSUED');
+        }
 
-        if (!$this->sendEmail($data, lang('_EMAIL_BODY_VOUCHER_ISSUED_RECEIPT'))) {
+        if (!$this->sendEmail($data, lang('_EMAIL_BODY_VOUCHER_ISSUED'))) {
             return false;
         }
 
-        // Send email to recipient.
-        $data['fileto'] = $data['recemail'];
+        // Email a receipt to the uploader.
+        $data['recemail'] = $data['fileto'];
+        $data['fileto'] = $data['filefrom'];
+        $data['filesubject'] = lang('_EMAIL_SUBJECT_VOUCHER_ISSUED_RECEIPT');
 
-        if (!$this->sendEmail($data, lang('_EMAIL_BODY_VOUCHER_ISSUED'))) {
+        if (!$this->sendEmail($data, lang('_EMAIL_BODY_VOUCHER_ISSUED_RECEIPT'))) {
             return false;
         }
 
@@ -224,6 +241,7 @@ class Mail {
         // Email a receipt to the uploader.
         $data['recemail'] = $data['fileto'];
         $data['fileto'] = $data['filefrom'];
+        $data['filesubject'] = lang('_EMAIL_SUBJECT_VOUCHER_CANCELLED_RECEIPT');
 
         if (!$this->sendEmail($data, lang('_EMAIL_BODY_VOUCHER_CANCELLED_RECEIPT'))) {
             return false;
@@ -231,6 +249,7 @@ class Mail {
 
         // Send email to recipient.
         $data['fileto'] = $data['recemail'];
+        $data['filesubject'] = lang('_EMAIL_SUBJECT_VOUCHER_CANCELLED');
 
         if (!$this->sendEmail($data, lang('_EMAIL_BODY_VOUCHER_CANCELLED'))) {
             return false;
@@ -484,23 +503,19 @@ class Mail {
     private function createEmailSubject($mailObject, $type = 'full') {
         global $config;
 
-        if (isset($mailObject['filesubject']) && $mailObject['filesubject'] != "" && $type != 'bounce') {
-            $subject = $config['site_name'] . ': ' . $mailObject['filesubject'];
+        if ($type == 'bounce') {
+            $subject = lang('_EMAIL_SUBJECT_BOUNCE');
+        } elseif (!isset($mailObject['filesubject']) || $mailObject['filesubject'] == '') {
+            $subject = lang('_EMAIL_SUBJECT_DEFAULT');
         } else {
-            if ($type == 'bounce') {
-                $tempFileSubject = lang('_EMAIL_SUBJECT_BOUNCE');
-            } else {
-                $tempFileSubject = lang('_EMAIL_SUBJECT_DEFAULT');
-            }
-
-            $fileOriginalName = sanitizeFilename($mailObject['fileoriginalname']);
-            $tempFileSubject = str_replace('{siteName}', $config['site_name'], $tempFileSubject);
-            $tempFileSubject = str_replace('{fileoriginalname}', $fileOriginalName, $tempFileSubject);
-            $tempFileSubject = str_replace('{filename}', $fileOriginalName, $tempFileSubject);
-            $tempFileSubject = str_replace('{filetrackingcode}', $mailObject['filetrackingcode'], $tempFileSubject);
-
-            $subject = $tempFileSubject;
+            $subject = $mailObject['filesubject'];
         }
+
+        $fileOriginalName = sanitizeFilename($mailObject['fileoriginalname']);
+        $subject = str_replace('{siteName}', $config['site_name'], $subject);
+        $subject = str_replace('{fileoriginalname}', $fileOriginalName, $subject);
+        $subject = str_replace('{filename}', $fileOriginalName, $subject);
+        $subject = str_replace('{filetrackingcode}', $mailObject['filetrackingcode'], $subject);
 
         // Check needed encoding for subject (assumes UTF-8).
         $encoding = detectCharEncoding($subject) ;

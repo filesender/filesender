@@ -119,7 +119,7 @@ public function loadConfig() {
     // settings marked as 'hidden' will be contained in 'More options' in the right hand column of the upload page
     // settings marked as 'off' are completely disabled and are not displayed anywhere
     // true/false on default fields specify whether or not boxes are checked on page load
-    $config['email_me_copies_display'] = 'always';
+    $config['email_me_copies_display'] = 'off';
     $config['email_me_copies_default'] = false;
 
     $config['upload_complete_email_display'] = 'always';
