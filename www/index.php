@@ -145,7 +145,7 @@ if($isAuth )
                 if ($isVoucher) { ?>
                     statusMessage('You are using a guest voucher', 'blue' );
                 <?php } else { ?>
-                    statusMessage('Logged on as: <?php echo $useremail[0]; ?>', 'blue' );
+                    statusMessage('<?php echo lang("_LOGGED_IN_AS") . $useremail[0]; ?>', 'blue' );
                 <?php }
             } ?>
 
@@ -218,7 +218,7 @@ if($isAuth )
 <div id="wrap">
     <div id="header">
         <div style="text-align: center">
-            <p><img src="displayimage.php?type=banner" width="800" height="60" style="border: 0;" alt="banner" /></p>
+            <img src="displayimage.php?type=banner" width="800" height="60" style="border: 0;" alt="banner" />
             <noscript>
                 <p class="style5 style1">JavaScript is turned off in your web browser. <br />
                     This application will not run without Javascript enabled in your web browser. <br /><br />

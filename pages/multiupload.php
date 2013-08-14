@@ -177,7 +177,7 @@ $(function () {
 
                     <div class="fieldcontainer">
                         <label for="filemessage"><?php echo lang('_MESSAGE') . ': (' . lang('_OPTIONAL'); ?>)</label>
-                        <textarea name="filemessage" cols="57" rows="5" id="filemessage"
+                        <textarea name="filemessage" cols="57" rows="3" id="filemessage"
                                   style="resize:vertical"></textarea>
                     </div>
 
@@ -325,7 +325,7 @@ $(function () {
         <?php if ($config['AuP']) { ?>
             <div class="auppanel">
                 <label id="aup_label" for="aup" style="cursor:pointer; margin-left: 10px" title="<?php echo lang('_SHOWHIDE'); ?>"
-                       onclick="$('#tog').slideToggle();return false;"><?php echo lang('_ACCEPTTOC'); ?> <br />[<span style="color: #666666;"><?php echo lang("_SHOWHIDE"); ?></span>]</label>
+                       onclick="$('#tog').slideToggle();return false;"><?php echo lang('_ACCEPTTOC'); ?> [<span style="color: #666666;"><?php echo lang("_SHOWHIDE"); ?></span>]</label>
                 <?php
                 $aupChecked = '';
                 if ($config['AuP_default'] || (isset($_SESSION['aup']) && !$authvoucher->aVoucher())) {
