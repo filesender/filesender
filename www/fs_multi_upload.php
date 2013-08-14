@@ -303,6 +303,15 @@ if (!isAuthenticated()) {
             echo json_encode($resultArray);
 
             break;
+        case 'cancelUpload':
+            if ($functions->cancelUpload($_REQUEST['fileauth'], $_REQUEST['trackingcode'])) {
+                $resultArray['status'] = 'complete';
+            } else {
+                returnErrorAndClose();
+            }
+            echo json_encode($resultArray);
+            break;
+
     } // End switch
 }
 
