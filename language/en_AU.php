@@ -153,7 +153,7 @@ $lang["_LOGOUT_COMPLETE"] = "Logout Complete";
 // Multi-upload
 $lang["_TRACKING_CODE"] = "Tracking code";
 $lang["_UPLOADED_LIST"] = "The following files have been uploaded:";
-$lang["_REFER_TO_MY_FILES"] = "You can access your files and view download statistics on the My Files page.";
+$lang["_REFER_TO_MY_FILES"] = 'You can access your files and view download statistics on the <a href="index.php?s=files">My Files</a> page.';
 
 // Multi-download
 $lang["_ZIP_MESSAGE"] = "Please note: if you download multiple files using the below button, your file shipment will

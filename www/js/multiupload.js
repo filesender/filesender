@@ -67,7 +67,7 @@ var totalBytesLoaded = 0;
 var percentageComplete = 0;
 
 // Used for calculating average upload speed in updateProgressBar
-var aggregateStartTime = 0;
+var initialStartTime = 0;
 
 // Used for undoing a clear-all call
 var filesToRestore;
@@ -237,7 +237,11 @@ function startUpload() {
         json['filetrackingcode'] = fileData[n].filetrackingcode;
         json['fileto'] = $('#fileto').val();
 
-        var firstFile = n == 0 ? '&firstfile=true' : '';
+        var firstFile = '';
+        if (n == 0) {
+            firstFile = '&firstfile=true';
+            initialStartTime = new Date().getTime();
+        }
 
         $.ajax({
             type: 'POST',
@@ -399,7 +403,7 @@ function transactionComplete(gid) {
             clearForm();
             var data = JSON.parse(data);
             console.log("Transaction complete successful");
-            window.location.href = 'index.php?s=complete&gid=' + data['gid'];
+            window.location.href = 'index.php?s=complete&gid=' + data['gid'] + '&start=' + Math.floor(initialStartTime / 1000) + '&end=' + Math.floor(new Date().getTime() / 1000);
         }, error: function (xhr, err) {
             ajaxerror(xhr.readyState, xhr.status, xhr.responseText);
         }
