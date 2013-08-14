@@ -241,7 +241,7 @@ class Mail {
         // Email a receipt to the uploader.
         $data['recemail'] = $data['fileto'];
         $data['fileto'] = $data['filefrom'];
-        $data['filesubject'] = lang('_EMAIL_SUBJECT_VOUCHER_CANCELLED_RECEIPT');
+        $data['filesubject'] = lang('_EMAIL_SUBJECT_VOUCHER_CANCELLED');
 
         if (!$this->sendEmail($data, lang('_EMAIL_BODY_VOUCHER_CANCELLED_RECEIPT'))) {
             return false;
