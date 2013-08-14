@@ -903,19 +903,23 @@ user-select: none;
     text-align: center;
     vertical-align: middle;
     font-size: 12px;
-    font-weight: bold;
     line-height: 34px;
 }
 
 .red {
+    font-weight: bold;
     color: #d00;
+
 }
 
 .green {
+    font-weight: bold;
     color: #5c2;
+
 }
 
 .blue {
+    font-weight: normal;
     color: #00d;
 }
 
