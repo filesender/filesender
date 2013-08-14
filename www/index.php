@@ -269,7 +269,6 @@ if($isAuth )
     </div>
 
     <div id="content" style="display:none">
-        <div id="scratch"></div>
         <?php
 
         require_once('common_js.php');

@@ -165,8 +165,7 @@ function parseJSON(json)
         if(debug) {
             msg += "Fatal error (" + e + ")";
         }
-
-        $("#scratch").html('<div id="message">'+msg+'</>');
+        statusMessage(msg, 'red');
     }
 }
 
@@ -178,8 +177,7 @@ function ajaxerror(readyState,status,responseText)
 	if(debug) {
         msg += " Ready State:"+readyState + ", status:" + status + ",responseText" + responseText + "";
     }
-
-	$("#scratch").html('<div id="message">'+msg+'</>');						   
+    statusMessage(msg, 'red');
 }
 
 function hideMessages()
