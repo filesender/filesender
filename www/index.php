@@ -137,9 +137,17 @@ if($isAuth )
         // check if html5 functions are available
         html5 = (window.File && window.FileReader && window.FileList && window.Blob && window.FormData) ? true : false;
         if(window.opera){html5=false;}
+
         $(function() {
 
-            statusMessage('Logged on as: <?php echo $useremail[0]; ?>', 'blue' );
+            <?php
+            if ($useremail != "") {
+                if ($isVoucher) { ?>
+                    statusMessage('You are using a guest voucher', 'blue' );
+                <?php } else { ?>
+                    statusMessage('Logged on as: <?php echo $useremail[0]; ?>', 'blue' );
+                <?php }
+            } ?>
 
             // display topmenu, content and userinformation
             $("#topmenu").show();
