@@ -1490,7 +1490,7 @@ class Functions {
 			$statement->bindParam(':fileid', $fileid);
 			
 			try { $statement->execute();}
-			catch(PDOException $e){ logEntry($e->getMessage(),"E_ERROR");	return false; }   
+			catch(PDOException $e){ logEntry($e->getMessage(),"E_ERROR");	return false; }
 				
 			$fileArray =  $this->getVoucher($fileid);
 	
@@ -1504,6 +1504,26 @@ class Functions {
 		} else {
 			return false;
 		}	
+    }
+
+    public function cancelUpload($fileauth, $trackingcode) {
+        $pdo = $this->db->connect();
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $statement = $pdo->prepare("DELETE FROM files WHERE fileauthuseruid  = :fileauthuseruid AND filetrackingcode = :filetrackingcode");
+        $statement->bindParam(':fileauthuseruid', $fileauth);
+        $statement->bindParam(':filetrackingcode', $trackingcode);
+
+        try {
+            $statement->execute();
+        } catch(PDOException $e) {
+            logEntry($e->getMessage(),"E_ERROR");
+            return false;
+        }
+
+        $success = $statement->rowCount();
+
+        return($success);
+
     }
 
     //--------------------------------------- CHECKED

@@ -36,6 +36,16 @@ if (isset($_COOKIE['SimpleSAMLAuthToken'])) {
     $token = '';
 }
 
+if(isset($_REQUEST['cancelSuccess'])) {
+    echo '<script type="text/javascript">'
+        .   'statusMessage("Upload Cancelled", "green");'
+        . '</script>';
+} else if(isset($_REQUEST['cancelFailed'])) {
+    echo '<script type="text/javascript">'
+        .   'statusMessage("Upload cancellation failed with errors", "green");'
+        . '</script>';
+}
+
 global $config;
 ?>
 
@@ -65,9 +75,12 @@ global $config;
     <?php
         if (!$authvoucher->aVoucher()) {
             $userData = $authsaml->sAuth();
-            echo "var trackingCode = '" . $functions->getTrackingCode($userData['saml_uid_attribute']) . "';";
+            echo "var fileAuth = '" . $userData['saml_uid_attribute'] . "';";
+            $trackingCode = $functions->getTrackingCode($userData['saml_uid_attribute']);
+            echo "var trackingCode = '" . $trackingCode . "';";
         } else {
-            echo "var trackingCode = '" . $functions->getTrackingCode() . "';";
+            $trackingCode =  $functions->getTrackingCode();
+            echo "var trackingCode = '" . $trackingCode . "';";
         }
 
         if (isset($_REQUEST['vid'])) {
@@ -108,7 +121,26 @@ global $config;
                         modal: true,
                         buttons: {
                             'confirmBTN': function () {
-                                location.reload();
+                                var query = $('#form1').serializeArray(), json = {};
+
+                                for (var i in query) {
+                                    json[query[i].name] = query[i].value;
+                                }
+
+                                $.ajax({
+                                    type: 'POST',
+                                    url: uploadURI + '?type=cancelUpload&fileauth=' + fileAuth + '&trackingcode=' + trackingCode,
+                                    data: {myJson: JSON.stringify(json)},
+                                    success: function(data) {
+                                        if (data == ''){
+                                            alert("Failed with errors");
+                                        } else {
+                                            location.reload();
+                                        }
+                                    }, error: function() {
+                                        statusMessage("Upload cancellation failed", "red");
+                                    }
+                                });
                             },
                             'cancelBTN': function () {
                                 $(this).dialog("close");
