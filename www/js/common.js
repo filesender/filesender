@@ -227,7 +227,7 @@ function updateProgressBar(bytesloaded, totalbytes, amountUploaded)
     var timeSinceStart = (now - startTime) / 1000;
     // Adds the amount of data uploaded this call to the total (for all files)
 
-    if (totalFileLengths != 0) {
+    if (amountUploaded != 0) {
         var progress_bar = '#progress_bar-' + n;
         var file_box = '#file_' + n;
         var progress_completed = '#progress_completed-' + n;
