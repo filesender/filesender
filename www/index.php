@@ -44,6 +44,11 @@ if(session_id() == ""){
     $_SESSION['validSession'] = true;
 }
 
+if (PHP_INT_SIZE !== 8) {
+    echo 'FileSender requires a 64-bit PHP installation to work. Please contact your administrator.';
+    exit;
+}
+
 require_once('../classes/_includes.php');
 
 $flexerrors = "true";
