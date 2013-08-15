@@ -47,10 +47,6 @@ if ($s == "complete" || $s == "completev") {
             require_once('../pages/logon.php');
         }
     }
-} else if ($s == "cancelled") {
-    echo '<div class="box">';
-    echo 'Upload successfully cancelled';
-    echo '</div>';
 } else {
     // An error occurred, display error message.
     echo '<script type="text/javascript">'

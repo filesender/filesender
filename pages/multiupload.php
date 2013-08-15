@@ -46,18 +46,34 @@
 require_once('../www/upload_common_js.php');
 require_once('../www/upload_html5_js.php');
 
+$statusMsg = '';
+$statusClass = '';
+
 function isChecked($checkbox) {
     if ($checkbox) {
         return 'checked';
     } else return '';
+}
+
+if(isset($_REQUEST['a']) && $_REQUEST['a'] == "cancelled") {
+    $statusMsg = lang("_UPLOAD_CANCEL_SUCCESS");
+    $statusClass = "green";
 }
 ?>
 
 <script type='text/javascript' src='lib/js/AC_OETags.js'></script>
 <script type='text/javascript' src='js/multiupload.js'></script>
 <script type='text/javascript'>
+
+    var statusMsg = '<?php echo $statusMsg; ?>';
+    var statusClass = '<?php echo $statusClass; ?>';
 // start document ready
 $(function () {
+
+    if (statusMsg != '') {
+        statusMessage(statusMsg, statusClass);
+    }
+
     $('#clearallbtn').button('disable');
 
     getDatePicker();

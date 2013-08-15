@@ -36,16 +36,6 @@ if (isset($_COOKIE['SimpleSAMLAuthToken'])) {
     $token = '';
 }
 
-if(isset($_REQUEST['cancelSuccess'])) {
-    echo '<script type="text/javascript">'
-        .   'statusMessage("Upload Cancelled", "green");'
-        . '</script>';
-} else if(isset($_REQUEST['cancelFailed'])) {
-    echo '<script type="text/javascript">'
-        .   'statusMessage("Upload cancellation failed with errors", "green");'
-        . '</script>';
-}
-
 global $config;
 ?>
 
@@ -132,7 +122,7 @@ global $config;
                                     url: uploadURI + '?type=cancelUpload&fileauth=' + fileAuth + '&trackingcode=' + trackingCode,
                                     data: {myJson: JSON.stringify(json)},
                                     success: function(data) {
-                                        window.location.href="index.php?s=cancelled";
+                                        window.location.href="index.php?s=upload&a=cancelled";
                                     }, error: function (xhr, err) {
                                         ajaxerror(xhr.readyState, xhr.status, xhr.responseText);
                                     }
