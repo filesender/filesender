@@ -397,7 +397,7 @@ $json_o=json_decode($filedata,true);
                             </td>
                             <td class="dr2" style="text-align: center">' . utf8ToHtml($itemContents[0]['filetrackingcode'],TRUE) . '</td>
                             <td class="dr8">
-                                <img src="images/shape_square_delete.png" alt="" title="'. lang("_DELETE_RECIPIENT") . '"
+                                <img src="images/shape_square_delete.png" alt="" title="'. lang("_DELETE_TRANSACTION") . '"
                                     style="cursor:pointer;"  onclick="confirmDeleteTransaction(&quot;'.$itemContents[0]['filetrackingcode'].'&quot;,&quot;'.$item['fileauthuseruid'].'&quot;)"
                                 />
                             </td>
