@@ -155,7 +155,9 @@
 			public function validatebeforeupload():void
 			{
 				// send to js to check: fileRef.name fileRef.size
-				var callString:String = "validateforflash('"+fileRef.name+"','"+fileRef.size+"')";
+				var tempfileRef:String = encodeURIComponent(fileRef.name);
+				tempfileRef = tempfileRef.replace("'","%27");
+				var callString:String = "validateforflash('"+tempfileRef+"','"+fileRef.size+"')";
 				ExternalInterface.call(callString); 
 			}
 			
@@ -215,7 +217,7 @@
 				//pgBar.setProgress(event.bytesLoaded-1, event.bytesTotal);
 				//currbytes = event.bytesLoaded;  
 				// use javascript to show progess instead of flex progress bar
-				ExternalInterface.call("updatepb('"+(event.bytesLoaded-1)+"','"+event.bytesTotal+"')"); 
+				ExternalInterface.call("updateProgressBar('"+(event.bytesLoaded-1)+"','"+event.bytesTotal+"','"+0+"')");
 				//	FlexGlobals.topLevelApplication.logProcess("Upload Progress [" + currbytes + " bytes] - Flash Upload");
 			}
 			
@@ -237,13 +239,15 @@
 			public function uploadCompleteHandler(event:DataEvent):void 
 			{
 				var uploadResult:String = event.data.toString();
+				var tempfileRef:String = encodeURIComponent(fileRef.name);
+				tempfileRef = tempfileRef.replace("'","%27");
 				if(uploadResult=="true")  
 				{
-					ExternalInterface.call("uploadcomplete('"+fileRef.name+"','"+fileRef.size+"')"); 
+					ExternalInterface.call("uploadcomplete('"+tempfileRef+"','"+fileRef.size+"')"); 
 					
 				} else {
 				 
-					ExternalInterface.call("uploaderror('"+fileRef.name+"','"+fileRef.size+"')"); 	
+					ExternalInterface.call("uploaderror('"+tempfileRef+"','"+fileRef.size+"')"); 	
 				}
 			}
 			// setup file reference handler
@@ -307,7 +311,9 @@
 				 	var fs:Number =  fileRef.size;
 					// no error so keep going
 					// send to js to check: fileRef.name fileRef.size
-					callString = "fileInfo('"+fileRef.name+"','"+fileRef.size+"')";
+					var tempfileRef:String = encodeURIComponent(fileRef.name);
+					tempfileRef = tempfileRef.replace("'","%27");
+					callString = "fileInfo('"+tempfileRef+"','"+fileRef.size+"')";
 					ExternalInterface.call(callString); 
 				 	}
 				 	catch (erObject:Error) {

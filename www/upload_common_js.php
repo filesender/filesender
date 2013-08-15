@@ -96,7 +96,7 @@ global $config;
 
     function openProgressBar(fname) {
         $("#dialog-uploadprogress").dialog({
-            title: "<?php echo lang("_UPLOAD_PROGRESS") ?>: " + fname,
+            title: "<?php echo lang("_UPLOAD_PROGRESS") ?>: " + decodeURIComponent(fname),
             minWidth: 500,
             minHeight: 250,
             modal: true,
@@ -149,6 +149,7 @@ global $config;
     }
 
     function uploadError(name, size) {
+        name = decodeURIComponent(name);
         openErrorDialog("<?php echo lang("_ERROR_UPLOADING_FILE") ?> " + name + ":" + size);
     }
 

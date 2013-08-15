@@ -150,7 +150,7 @@ if(data.status && data.status == "complete")
             // no error so use result as current bytes uploaded for file resume
             vid = data.vid;
             fdata[n].bytesUploaded = parseFloat(data.filesize);
-            updatepb(fdata[n].bytesUploaded, fdata[n].fileSize);
+            updateProgressBar(fdata[n].bytesUploaded, fdata[n].fileSize, 0);
 
 
 //            if(html5webworkers){
@@ -270,7 +270,7 @@ function uploadFile() {
 					return;			
 				}
 			fdata[n].bytesUploaded = parseFloat(xhr.responseText);
-			updatepb(fdata[n].bytesUploaded,fdata[n].bytesTotal);
+			updateProgressBar(fdata[n].bytesUploaded,fdata[n].bytesTotal, 0);
 			uploadFile();
 			} else {
 			errorDialog("There was a problem retrieving the data:\n" + req.statusText);
@@ -279,52 +279,6 @@ function uploadFile() {
     }
 
     return true;
-}
-
-function updateTransferSpeed() {
-	var currentBytes = bytesUploaded+(chunksize*(chunk_id -1));
-	var bytesDiff = currentBytes - chunksize*(chunk_id -1);//previousBytesLoaded;
-    if (bytesDiff == 0) return;
-    previousBytesLoaded = currentBytes;
-    bytesDiff = bytesDiff * 2;
-    var bytesRemaining = bytesTotal - previousBytesLoaded;
-    var secondsRemaining = bytesRemaining / bytesDiff;
-    var speed = "";
-    if (bytesDiff > 1024 * 1024)
-		speed = (Math.round(bytesDiff * 100/(1024*1024))/100).toString() + "MBps";
-    	else if (bytesDiff > 1024)
-    	speed =  (Math.round(bytesDiff * 100/1024)/100).toString() + "kBps";
-     	else
-        speed = bytesDiff.toString() + 'Bps';
-       $("#transferSpeedInfo").html(speed);
-}
-
-// update the progress bar
-function updatepb(bytesloaded,totalbytes)
-{
-    var percentComplete = Math.round(bytesloaded * 100 / totalbytes);
-    var bytesTransfered = '';
-
-    if (bytesloaded > 1024*1024)
-    bytesTransfered = (Math.round(bytesloaded * 100/(1024*1024))/100).toString() + 'MB';
-    else if (bytesloaded > 1024)
-    bytesTransfered = (Math.round(bytesloaded * 100/1024)/100).toString() + 'kB';
-    else
-    bytesTransfered = (Math.round(bytesloaded * 100)/100).toString() + 'Bytes';
-
-    var now = new Date().getTime();
-    var timeSinceStart = (now - startTime) / 1000;
-
-    var uploadSpeed = (bytesloaded/timeSinceStart) / 1024 / 1024;
-    var bytesRemaining = totalbytes - bytesloaded;
-    var timeRemaining = (uploadSpeed == 0 ? 0 : ((bytesRemaining / 1024 / 1024) / uploadSpeed));
-
-    $('#progress_string').html(percentComplete + '%');
-    $('#progress_bar').width(percentComplete/100 * $('#progress_container').width());	//set width of progress bar based on the $status value (set at the top of this page)
-
-    $('#totalUploaded').html('Total uploaded: ' + readablizebytes(bytesloaded) + '/' + readablizebytes(totalbytes));
-    $('#averageUploadSpeed').html('Average upload Speed: ' + uploadSpeed.toFixed(2) * 8 + 'MBit/s');
-    $('#timeRemaining').html('Approx time remaining: ' + secondsToString(timeRemaining));
 }
 
 function uploadProgress(evt) {

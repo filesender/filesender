@@ -3,6 +3,8 @@
 <script type="text/javascript">
     function validateforflash(fname,fsize)
     {
+        fname = decodeURIComponent(fname);
+
         // remove previous validation messages
         hideMessages();
 
@@ -83,6 +85,8 @@
     // flex file information check
     function fileInfo(name,size)
     {
+        name = decodeURIComponent(name);
+
         $("#uploadbutton").hide();
         fileMsg("");
         if(size < 1)
@@ -116,6 +120,8 @@
 
     function uploadcomplete(name,size)
     {
+        name = decodeURIComponent(name);
+
         $("#fileName").val(name);
         // ajax form data to fs_upload.php
         $.ajax({
