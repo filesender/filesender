@@ -199,6 +199,7 @@ $lang["_FILE_DELETED"] = "This file has been deleted.";
 $lang["_RECIPIENT_DELETED"] = "Selected recipient has been deleted";
 $lang["_TRANSACTION_DELETED"] = "Selected transaction has been deleted";
 $lang["_LOGGED_IN_AS"] = "Logged in as: ";
+$lang["_UPLOAD_CANCEL_SUCCESS"] = "Upload successfully cancelled";
 
 // steps
 $lang["_STEP1"] = "Enter delivery email address(es)";
