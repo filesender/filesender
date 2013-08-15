@@ -307,9 +307,12 @@ if (!isAuthenticated()) {
             if ($functions->cancelUpload($_REQUEST['fileauth'], $_REQUEST['trackingcode'])) {
                 $resultArray['status'] = 'complete';
             } else {
-                returnErrorAndClose();
+                $resultArray['status'] = 'incomplete';
             }
+
             echo json_encode($resultArray);
+
+            logEntry("Upload cancelled");
             break;
 
     } // End switch
