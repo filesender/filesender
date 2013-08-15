@@ -337,7 +337,7 @@ if($isAuth )
         {
             require_once('../pages/admin.php');
         }
-        else if($s == "uploaderror" || $s == "emailsenterror" || $s == "filesizeincorrect" || $s == "complete" || $s == "completev")
+        else if($s == "uploaderror" || $s == "emailsenterror" || $s == "filesizeincorrect" || $s == "complete" || $s == "completev" || $s == "cancelled")
         {
             require_once("../pages/result.php");
         } else if ($s == "" && $isAuth){

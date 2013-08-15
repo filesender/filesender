@@ -132,13 +132,9 @@ global $config;
                                     url: uploadURI + '?type=cancelUpload&fileauth=' + fileAuth + '&trackingcode=' + trackingCode,
                                     data: {myJson: JSON.stringify(json)},
                                     success: function(data) {
-                                        if (data == ''){
-                                            alert("Failed with errors");
-                                        } else {
-                                            location.reload();
-                                        }
-                                    }, error: function() {
-                                        statusMessage("Upload cancellation failed", "red");
+                                        window.location.href="index.php?s=cancelled";
+                                    }, error: function (xhr, err) {
+                                        ajaxerror(xhr.readyState, xhr.status, xhr.responseText);
                                     }
                                 });
                             },
