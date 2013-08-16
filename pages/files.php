@@ -380,6 +380,30 @@ $json_o=json_decode($filedata,true);
       $( "#showicon_"+i ).attr( {src: "images/openboth.png", alt: ""} );
     }
 	}
+	function downloadfile(uid)
+	{
+		var today = new Date();
+		var thedate = "<?php echo lang('_TODAY'); ?> "+ formatAMPM(today);
+		location.href = "download.php?vid="+ uid;
+		var dl = parseInt($("#dl_"+uid).html().toString());
+		dl = dl + 1;
+		$("#dl_"+uid).html(dl);
+		$("#dltable_"+uid+" tr:first").after('<tr><td class="dr11 sdheading"><strong><?php echo lang("_DOWNLOADED"); ?></strong></td><td class="HardBreak dr13">: '+thedate+'</td></tr>')
+
+
+	}
+	function formatAMPM(date) {
+  var hours = date.getHours();
+  var minutes = date.getMinutes();
+  var ampm = hours >= 12 ? 'PM' : 'AM';
+  hours = hours % 12;
+  hours = hours ? hours : 12; // the hour '0' should be '12'
+  minutes = minutes < 10 ? '0'+minutes : minutes;
+  var strTime = hours + ':' + minutes + ' ' + ampm;
+  return strTime;
+}
+
+
 //]]>
 </script>
 
@@ -424,10 +448,10 @@ foreach($json_o as $item) {
 
    echo "<td class='dr2 HardBreak'>" .$item['fileto'] . "</td>";
 
-   echo "<td class='dr2 HardBreak'><a id='link_downloadfile_".$i."' href='download.php?vid=". $item["filevoucheruid"]."' target='_blank'>" .utf8tohtml($item['fileoriginalname'],TRUE). "</a></td>";
+   echo "<td class='dr2 HardBreak'><div id='link_downloadfile_".$i."' onclick='downloadfile(&quot;". $item["filevoucheruid"]."&quot;)'>" .utf8tohtml($item['fileoriginalname'],TRUE). "</div></td>";
    echo "<td class='dr2 HardBreak'>" .formatBytes($item['filesize']). "</td>";
    
-   echo "<td class='dr2 HardBreak' align='center'>" .$item['downloads']. "</td>";
+   echo "<td class='dr2 HardBreak' align='center' id='dl_".$item["filevoucheruid"]."'>" .$item['downloads']. "</td>";
   
   // echo "<td class='dr2'>" .date($lang['datedisplayformat'],strtotime($item['filecreateddate'])) . "</td>";
    echo "<td class='dr8'>" .date($lang['datedisplayformat'],strtotime($item['fileexpirydate'])) . "</td>"; //etc
@@ -439,23 +463,23 @@ foreach($json_o as $item) {
 	//echo '<td class="HardBreak" id="myfiles_header_from"><strong>'.<?php echo lang("_FROM");</strong></td>';
 	
 	// Summary table
-	echo "<table width='100%' class='rowdetails' border='0' cellpadding='1' cellspacing='0' >";
+	echo "<table id='dltable_".$item["filevoucheruid"]."' width='100%' class='rowdetails' border='0' cellpadding='1' cellspacing='0' >";
 	echo "<tr><td class='dr9 headerrow'>".$lang['_DETAILS']."</td><td class='dr12'></td></tr>"; 
 	// display summary if it exists
    foreach($item["downloadsummary"] as $summaryitem) {
-   echo "<tr><td class='dr11 sdheading'><strong>".lang("_DOWNLOADED")."</strong></td><td class='HardBreak dr13'>".date($lang['datedisplayformat']." g:i A P",strtotime($summaryitem['logdate'])). "</td></tr>";
+   echo "<tr><td class='dr11 sdheading'><strong>".lang("_DOWNLOADED")."</strong></td><td class='HardBreak dr13'>: ".date($lang['datedisplayformat']." g:i A P",strtotime($summaryitem['logdate'])). "</td></tr>";
    }
-   	echo "<tr class='rowdivider'><td class='dr4 sdheading tblmcw3 '><strong>".lang("_CREATED")."</strong></td><td class='dr6 HardBreak'>".date($lang['datedisplayformat'],strtotime($item['filecreateddate'])). "</td></tr>"; 
+   	echo "<tr class='rowdivider'><td class='dr4 sdheading tblmcw3 '><strong>".lang("_CREATED")."</strong></td><td class='dr6 HardBreak'>: ".date($lang['datedisplayformat'],strtotime($item['filecreateddate'])). "</td></tr>"; 
 
 	echo "<tr><td class='dr4 sdheading'><strong>".lang("_FROM")."</strong></td>";
 
-   	echo "<td class='dr6 HardBreak'>" .$item['filefrom'] . "</td>";
+   	echo "<td class='dr6 HardBreak'>: " .$item['filefrom'] . "</td>";
 
 	echo "</tr>";
-	echo "<tr class='rowdivider'><td class='dr4 sdheading tblmcw3'><strong>".lang("_SUBJECT")."</strong></td><td class='dr6 HardBreak'>".utf8tohtml($item['filesubject'],TRUE). "</td>";
+	echo "<tr class='rowdivider'><td class='dr4 sdheading tblmcw3'><strong>".lang("_SUBJECT")."</strong></td><td class='dr6 HardBreak'>: ".utf8tohtml($item['filesubject'],TRUE). "</td>";
 	
    	echo "</tr>";
-	echo "<tr><td class='dr11 sdheading'><strong>".lang("_MESSAGE")."</strong></td><td class='dr13' colspan='8'>";
+	echo "<tr><td class='dr11 sdheading'><strong>".lang("_MESSAGE")."</strong></td><td class='dr13' colspan='8'>: ";
    	if($item['filemessage'] != "")
    	{
    		echo "<pre class='HardBreak'>".utf8tohtml($item['filemessage'],TRUE)."</pre>";
