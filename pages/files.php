@@ -395,11 +395,11 @@ $json_o=json_decode($filedata,true);
 	function formatAMPM(date) {
   var hours = date.getHours();
   var minutes = date.getMinutes();
-  var ampm = hours >= 12 ? 'PM' : 'AM';
-  hours = hours % 12;
-  hours = hours ? hours : 12; // the hour '0' should be '12'
+ // var ampm = hours >= 12 ? 'PM' : 'AM';
+ // hours = hours % 12;
+ // hours = hours ? hours : 12; // the hour '0' should be '12'
   minutes = minutes < 10 ? '0'+minutes : minutes;
-  var strTime = hours + ':' + minutes + ' ' + ampm;
+  var strTime = hours + ':' + minutes; // + ' ' + ampm;
   return strTime;
 }
 
@@ -467,7 +467,7 @@ foreach($json_o as $item) {
 	echo "<tr><td class='dr9 headerrow'>".$lang['_DETAILS']."</td><td class='dr12'></td></tr>"; 
 	// display summary if it exists
    foreach($item["downloadsummary"] as $summaryitem) {
-   echo "<tr><td class='dr11 sdheading'><strong>".lang("_DOWNLOADED")."</strong></td><td class='HardBreak dr13'>: ".date($lang['datedisplayformat']." g:i A P",strtotime($summaryitem['logdate'])). "</td></tr>";
+   echo "<tr><td class='dr11 sdheading'><strong>".lang("_DOWNLOADED")."</strong></td><td class='HardBreak dr13'>: ".date($lang['datedisplayformat']." G:i P",strtotime($summaryitem['logdate'])). "</td></tr>";
    }
    	echo "<tr class='rowdivider'><td class='dr4 sdheading tblmcw3 '><strong>".lang("_CREATED")."</strong></td><td class='dr6 HardBreak'>: ".date($lang['datedisplayformat'],strtotime($item['filecreateddate'])). "</td></tr>"; 
 
