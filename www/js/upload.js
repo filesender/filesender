@@ -63,7 +63,8 @@ var startTime = 0;
 // An object with the unique stores all relevant information about the file upload
 
 
-function fileSelected() {
+function fileSelected()
+{
     fdata[n] = Array;
     //	document.getElementById('MSG').innerHTML = "";
     var file = document.getElementById("fileToUpload").files[0];
@@ -79,91 +80,89 @@ function fileSelected() {
     fdata[n].filegroupid = groupid;
     //fdata[n].filesize = 0;
 
-    if(validate_file()) {
-    $("#uploadbutton").show();
-    $("#fileInfoView").show();
-    $("#fileName").html(nameLang + ': ' + fdata[n].filename);
-    $("#fileSize").html(sizeLang + ': ' + readablizebytes(fdata[n].fileSize));
+    if (validate_file()) {
+        $("#uploadbutton").show();
+        $("#fileInfoView").show();
+        $("#fileName").html(nameLang + ': ' + fdata[n].filename);
+        $("#fileSize").html(sizeLang + ': ' + readablizebytes(fdata[n].fileSize));
     } else {
-    $("#uploadbutton").hide();
-    $("#fileInfoView").hide();
-    $("#fileName").html("");
-    $("#fileSize").html("");
+        $("#uploadbutton").hide();
+        $("#fileInfoView").hide();
+        $("#fileName").html("");
+        $("#fileSize").html("");
     }
 }
 
 function startupload()
-	{
-        $("#uploadbutton a").attr("onclick", ""); // prevent double clicks to start extra uploads
+{
+    $("#uploadbutton a").attr("onclick", ""); // prevent double clicks to start extra uploads
 
-        fdata[n].bytesUploaded = 0;
+    fdata[n].bytesUploaded = 0;
 
-        // validate form data and return filesize or validation error
-        // load form into json array
-        var query = $("#form1").serializeArray(), json = {};
-for (i in query) { json[query[i].name] = query[i].value; }
-// add file information fields
-json["fileoriginalname"] = fdata[n].filename;
-		json["filesize"] = parseInt(fdata[n].fileSize);
-		json["vid"] = vid;
+    // validate form data and return filesize or validation error
+    // load form into json array
+    var query = $("#form1").serializeArray(), json = {};
 
-		$.ajax({
+    for (i in query) {
+        json[query[i].name] = query[i].value;
+    }
+
+    // add file information fields
+    json["fileoriginalname"] = fdata[n].filename;
+    json["filesize"] = parseInt(fdata[n].fileSize);
+    json["vid"] = vid;
+
+    $.ajax({
   		type: "POST",
   		url: "fs_upload.php?type=validateupload&vid="+vid,
-  		data: {myJson:  JSON.stringify(json)}
+  		data: { myJson:  JSON.stringify(json) }
 		,success:function( data ) {
-		if(data == "") {
-		alert("No response from server");
-		return;	
-		}
-		if(data == "ErrorAuth")
-		{
-			$("#dialog-autherror").dialog("open");
-			return;			
-		}
-		var data =  parseJSON(data);
+		    if (data == "") {
+		        alert("No response from server");
+		        return;
+		    }
+		    if (data == "ErrorAuth") {
+			    $("#dialog-autherror").dialog("open");
+			    return;
+		    }
+
+		    var data =  parseJSON(data);
 		
-		if(data.errors)
-		{
-		$.each(data.errors, function(i,result){
-		if(result == "err_token") {$("#dialog-tokenerror").dialog("open");} // token missing or error
-		if(result == "err_notauthenticated") { $("#dialog-autherror").dialog("open");} // not authenticated
-		if(result == "err_tomissing") { $("#fileto_msg").show();} // missing email data
-		if(result == "err_expmissing") { $("#expiry_msg").show();} // missing expiry date
-		if(result == "err_exoutofrange") { $("#expiry_msg").show();} // expiry date out of range
-		if(result == "err_invalidemail") { $("#fileto_msg").show();} // 1 or more emails invalid
-		if(result == "err_invalidfilename") { $("#file_msg").show();} // invalid filename
-		if(result == "err_invalidextension") { $("#extension_msg").show();} //  invalid extension
-		if(result == "err_nodiskspace") { errorDialog(errmsg_disk_space);} // not enough disk space on server
-		})
-		$("#uploadbutton a").attr("onclick", "validate()"); // re-activate upload button
-}
-if(data.status && data.status == "complete")
-		{
+		    if (data.errors) {
+		        $.each(data.errors, function(i,result){
+                    if(result == "err_token") {$("#dialog-tokenerror").dialog("open");} // token missing or error
+                    if(result == "err_notauthenticated") { $("#dialog-autherror").dialog("open");} // not authenticated
+                    if(result == "err_tomissing") { $("#fileto_msg").show();} // missing email data
+                    if(result == "err_expmissing") { $("#expiry_msg").show();} // missing expiry date
+                    if(result == "err_exoutofrange") { $("#expiry_msg").show();} // expiry date out of range
+                    if(result == "err_invalidemail") { $("#fileto_msg").show();} // 1 or more emails invalid
+                    if(result == "err_invalidfilename") { $("#file_msg").show();} // invalid filename
+                    if(result == "err_invalidextension") { $("#extension_msg").show();} //  invalid extension
+                    if(result == "err_nodiskspace") { errorDialog(errmsg_disk_space);} // not enough disk space on server
+		        });
 
-            $("#fileToUpload").hide();// hide Browse
-            $("#selectfile").hide();// hide Browse message
-            $("#uploadbutton").hide(); // hide upload
-            $("#cancelbutton").show(); // show cancel
-            // show upload progress dialog
-            openProgressBar(fdata[n].filename);
-            // no error so use result as current bytes uploaded for file resume
-            vid = data.vid;
-            fdata[n].bytesUploaded = parseFloat(data.filesize);
-            updateProgressBar(fdata[n].bytesUploaded, fdata[n].fileSize, 0);
+                $("#uploadbutton a").attr("onclick", "validate()"); // re-activate upload button
+            }
 
+            if (data.status && data.status == "complete") {
+                $("#fileToUpload").hide();// hide Browse
+                $("#selectfile").hide();// hide Browse message
+                $("#uploadbutton").hide(); // hide upload
+                $("#cancelbutton").show(); // show cancel
+                // show upload progress dialog
+                openProgressBar(fdata[n].filename);
+                // no error so use result as current bytes uploaded for file resume
+                vid = data.vid;
+                fdata[n].bytesUploaded = parseFloat(data.filesize);
+                updateProgressBar(fdata[n].bytesUploaded, fdata[n].fileSize, 0);
+                uploadFile();
+            }
 
-//            if(html5webworkers){
-//            uploadFileWebworkers();
-//            }else{
-    uploadFile();
-    //}
-}
-},error:function(xhr,err){
-    // error function to display error message e.g.404 page not found
-    ajaxerror(xhr.readyState,xhr.status,xhr.responseText);
-    }
-});
+        },error:function(xhr,err){
+            // error function to display error message e.g.404 page not found
+            ajaxerror(xhr.readyState,xhr.status,xhr.responseText);
+        }
+    });
 }
 
 function doUploadComplete(){
@@ -181,73 +180,55 @@ function doUploadComplete(){
         ,
         success:function( data ) {
             var data =  parseJSON(data);
-            if(data.errors)
-            {
+            if (data.errors) {
                 $.each(data.errors, function(i,result){
-                    if(result == "err_token") {
+                    if (result == "err_token") {
                         $("#dialog-tokenerror").dialog("open");
-                    } // token missing or error
-                    if(result == "err_cannotrenamefile") {
+                    } else if (result == "err_cannotrenamefile") {
                         window.location.href="index.php?s=uploaderror";
-                        return;
-                    } //    
-                    if(result == "err_emailnotsent") {
+                    } else if (result == "err_emailnotsent") {
                         window.location.href="index.php?s=emailsenterror";
-                        return;
-                    } //
-                    if(result == "err_filesizeincorrect") {
+                    } else if (result == "err_filesizeincorrect") {
                         window.location.href="index.php?s=filesizeincorrect";
-                        return;
-                    } //    
-                })
+                    }
+                });
             } else {
-                if(data.status && data.status == "complete" && data['gid']){
+                if (data.status && data.status == "complete" && data['gid']){
                     window.location.href="index.php?s=complete&gid="+data['gid'];
-                    return;
-                }
-                if(data.status && data.status == "completev" && data['gid']){
+                } else if (data.status && data.status == "completev" && data['gid']){
                     window.location.href="index.php?s=completev&gid="+data['gid'];
-                    return;
                 }
             }
-        }
-        ,
-        error:function(xhr,err){
+        },error:function(xhr,err){
             // error function to display error message e.g.404 page not found
             ajaxerror(xhr.readyState,xhr.status,xhr.responseText);
         }
     });
 }
 
-function uploadFile() {
-		
-		// move to next chunk
-		var file = document.getElementById("fileToUpload").files[0];
-		var txferSize = chunksize;
+function uploadFile()
+{
+    // move to next chunk
+    var file = document.getElementById("fileToUpload").files[0];
+    var txferSize = chunksize;
 
-		if(fdata[n].bytesUploaded > fdata[n].bytesTotal -1 ) {
-			doUploadComplete();
-		return;
-		}
+    if (fdata[n].bytesUploaded > fdata[n].bytesTotal -1) {
+        doUploadComplete();
+        return;
+    }
 
-		if(fdata[n].bytesUploaded + txferSize > fdata[n].fileSize)
-		{
-		txferSize = fdata[n].fileSize - fdata[n].bytesUploaded;
-		}
-		// check if firefox or Chrome slice supported 
-		
-		if(file && file.webkitSlice )
-		{
-			var blob = file.webkitSlice(fdata[n].bytesUploaded, txferSize+fdata[n].bytesUploaded);
-		} else
-		if(file && file.mozSlice )
-		{
-			var blob = file.mozSlice(fdata[n].bytesUploaded, txferSize+fdata[n].bytesUploaded);
-		} else
-		//if(file && file.slice )
-		{
-			var blob = file.slice(fdata[n].bytesUploaded, txferSize+fdata[n].bytesUploaded);
-		}
+    if (fdata[n].bytesUploaded + txferSize > fdata[n].fileSize) {
+        txferSize = fdata[n].fileSize - fdata[n].bytesUploaded;
+    }
+    // check if firefox or Chrome slice supported
+
+    if (file && file.webkitSlice) {
+        var blob = file.webkitSlice(fdata[n].bytesUploaded, txferSize+fdata[n].bytesUploaded);
+    } else if (file && file.mozSlice) {
+        var blob = file.mozSlice(fdata[n].bytesUploaded, txferSize+fdata[n].bytesUploaded);
+    } else {
+        var blob = file.slice(fdata[n].bytesUploaded, txferSize+fdata[n].bytesUploaded);
+    }
 	
 	var boundary = "fileboundary"; //Boundary name
 	var uri = (uploadURI + "?type=chunk&vid="+vid); //Path to script for handling the file sent
@@ -264,34 +245,36 @@ function uploadFile() {
 	function processReqChange(){
 		 if (xhr.readyState == 4) {
 	    	if (xhr.status == 200) {
-				if(xhr.responseText == "ErrorAuth")
-				{
+				if (xhr.responseText == "ErrorAuth") {
 					$("#dialog-autherror").dialog("open");
 					return;			
 				}
-			fdata[n].bytesUploaded = parseFloat(xhr.responseText);
-			updateProgressBar(fdata[n].bytesUploaded,fdata[n].bytesTotal, 0);
-			uploadFile();
+
+                fdata[n].bytesUploaded = parseFloat(xhr.responseText);
+                updateProgressBar(fdata[n].bytesUploaded,fdata[n].bytesTotal, 0);
+                uploadFile();
 			} else {
-			errorDialog("There was a problem retrieving the data:\n" + req.statusText);
+			    errorDialog("There was a problem retrieving the data:\n" + req.statusText);
 			}
 		}
     }
-
     return true;
 }
 
-function uploadProgress(evt) {
-    }
+function uploadProgress(evt)
+{
+}
 
-function uploadFailed(evt) {
+function uploadFailed(evt)
+{
     clearInterval(intervalTimer);
     errorDialog("An error occurred while uploading the file.");
-    }
+}
 
-function uploadCanceled(evt) {
+function uploadCanceled(evt)
+{
     clearInterval(intervalTimer);
     erorDialog("The upload has been canceled by the user or the browser dropped the connection.");
-    }
+}
 
 
