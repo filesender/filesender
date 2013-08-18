@@ -58,11 +58,11 @@
 <?php 
 
 // get file data
-$total_pages["Available"] = "";
-$total_pages["Voucher"] = "";
-$total_pages["Uploaded"] = "";
-$total_pages["Download"] = "";
-$total_pages["Error"] = "";
+$totalPages["Available"] = "";
+$totalPages["Voucher"] = "";
+$totalPages["Uploaded"] = "";
+$totalPages["Download"] = "";
+$totalPages["Error"] = "";
 
 $Available = $functions->adminFiles("Available");
 $Voucher = $functions->adminFiles("Voucher");
@@ -119,7 +119,7 @@ $drivespace = $functions->driveSpace();
                 <td style="padding: 5px;"><?php echo lang("_PAGE") ?>:</td>
                 <?php
   //echo "::".$total_pages["Uploaded"];
-  for ($i = 1; $i <= $total_pages["Uploaded"]; $i++) {
+  for ($i = 1; $i <= $totalPages["Uploaded"]; $i++) {
   $txt = $i;
   if ($page != $i) {$txt = "<a href=\"" . $_SERVER["PHP_SELF"] . "?s=admin&amp;page=$i#tabs-2\">".$txt."</a>";} else { $txt = "<b>".$i."</b>";};
   ?>
@@ -154,7 +154,7 @@ foreach($Uploaded as $item) {
               <tr>
                 <td style="padding: 5px;"> <?php echo lang("_PAGE") ?>:</td>
                 <?php
-  for ($i = 1; $i <= $total_pages["Download"]; $i++) {
+  for ($i = 1; $i <= $totalPages["Download"]; $i++) {
   $txt = $i;
   if ($page != $i) {$txt = "<a href=\"" . $_SERVER["PHP_SELF"] . "?s=admin&amp;page=$i#tabs-3\">".$txt."</a>";} else { $txt = "<b>".$i."</b>";};
   ?>
@@ -189,7 +189,7 @@ echo "<tr><td class='HardBreak'>" .$item['logto'] . "</td><td class='HardBreak'>
               <tr>
                 <td style="padding: 5px;"> <?php echo lang("_PAGE") ?>:</td>
                 <?php
-  for ($i = 1; $i <= $total_pages["Error"]; $i++) {
+  for ($i = 1; $i <= $totalPages["Error"]; $i++) {
   $txt = $i;
   if ($page != $i) {$txt = "<a href=\"" . $_SERVER["PHP_SELF"] . "?s=admin&amp;page=$i#tabs-4\">".$txt."</a>";} else { $txt = "<b>".$i."</b>";};
   ?>
@@ -224,7 +224,7 @@ echo "<tr><td class='HardBreak'>" .$item['logto']. "</td><td class='HardBreak'>"
               <tr>
                 <td style="padding: 5px;"> <?php echo lang("_PAGE") ?>:</td>
                 <?php
-  for ($i = 1; $i <= $total_pages["Available"]; $i++) {
+  for ($i = 1; $i <= $totalPages["Available"]; $i++) {
   $txt = $i;
   if ($page != $i) {  $txt = "<a href=\"" . $_SERVER["PHP_SELF"] . "?s=admin&amp;page=$i#tabs-5\">".$txt."</a>";} else { $txt = "<b>".$i."</b>";};
   ?>
@@ -262,7 +262,7 @@ echo "<tr><td class='HardBreak'>" .$item['fileto'] . "</td><td class='HardBreak'
                 <tr>
                   <td style="padding: 5px;"> <?php echo lang("_PAGE") ?>:</td>
                   <?php
-  for ($i = 1; $i <= $total_pages["Voucher"]; $i++) {
+  for ($i = 1; $i <= $totalPages["Voucher"]; $i++) {
   $txt = $i;
   if ($page != $i) { $txt = "<a href=\"" . $_SERVER["PHP_SELF"] . "?s=admin&amp;page=$i#tabs-6\">".$txt."</a>";} else { $txt = "<b>".$i."</b>";};
   ?>
