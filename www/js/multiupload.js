@@ -58,6 +58,8 @@ var uploadURI = 'fs_multi_upload.php';
 var fileData = []; // array of each file to be uploaded
 var n = -1; // file int currently uploading
 
+var tsunami;
+
 // a unique is created for each file that is uploaded.
 // An object with the unique stores all relevant information about the file upload
 
@@ -71,6 +73,8 @@ var initialStartTime = 0;
 
 // Used for undoing a clear-all call
 var filesToRestore;
+
+var pausedUpload = false;
 
 function browse() {
     $('#fileToUpload').click();
@@ -212,10 +216,6 @@ function generateFileBoxHtml() {
 }
 
 function startUpload() {
-    // validate input data
-    // validate file details to upload
-    //$('#dialog-uploadprogress').dialog('option', 'title', uploadprogress +  ':  ' +  fileData[n].filename + ' (' +readablizebytes(fileData[n].fileSize) + ')');
-
     // check if file is validated before uploading
     if (validate_file(n) && fileData[n].status) {
         $('#file_del_' + n).hide();
@@ -236,6 +236,8 @@ function startUpload() {
         json['filegroupid'] = fileData[n].filegroupid;
         json['filetrackingcode'] = fileData[n].filetrackingcode;
         json['fileto'] = $('#fileto').val();
+        json['filevoucheruid'] = fileData[n].filevoucheruid;
+
 
         var firstFile = '';
         if (n == 0) {
@@ -251,81 +253,80 @@ function startUpload() {
             if (data == '') {
             alert('No response from server');
             return;
-        }
-        if (data == 'ErrorAuth') {
-            $('#dialog-autherror').dialog('open');
-            return;
-        }
-
-        var data = JSON.parse(data);
-
-        if (data.errors) {
-            $.each(data.errors, function (i, result) {
-                // token missing or error
-                if (result == 'err_token') {
-                    $('#dialog-tokenerror').dialog('open');
-                }
-                // not authenticated
-                if (result == 'err_notauthenticated') {
-                    $('#dialog-autherror').dialog('open');
-                }
-                // missing email data
-                if (result == 'err_tomissing') {
-                    $('#fileto_msg').show();
-                }
-                // missing expiry date
-                if (result == 'err_expmissing') {
-                    $('#expiry_msg').show();
-                }
-                // expiry date out of range
-                if (result == 'err_exoutofrange') {
-                    $('#expiry_msg').show();
-                }
-                // 1 or more emails invalid
-                if (result == 'err_invalidemail') {
-                    $('#fileto_msg').show();
-                }
-                // invalid filename
-                if (result == 'err_invalidfilename') {
-                    $('#file_msg').show();
-                }
-                //  invalid extension
-                if (result == 'err_invalidextension') {
-                    $('#extension_msg').show();
-                }
-                // not enough disk space on server
-                if (result == 'err_nodiskspace') {
-                    openErrorDialog(errmsg_disk_space);
-                }
-            });
-            $('#uploadbutton').find('a').attr('onclick', 'validate()');
-        }
-        if (data.status && data.status == 'complete') {
-            $('#fileToUpload').hide();// hide Browse
-            $('#selectfile').hide();// hide Browse message
-            $('#uploadbutton').hide(); // hide upload
-            $('#cancelbutton').show(); // show cancel
-            // show upload progress dialog
-            //$('#dialog-uploadprogress').dialog('open');
-            // no error so use result as current bytes uploaded for file resume
-            vid = data.vid;
-            fileData[n].bytesUploaded = parseFloat(data.filesize);
-            updateProgressBar(fileData[n].bytesUploaded, fileData[n].bytesTotal, fileData[n].bytesUploaded);
-            // validated so upload all files
-
-            //if (typeof files !== 'undefined') {
-            //for (var i=0, l=files.length; i<l; i++) {
-            //n = i;
-
-            startTime = new Date().getTime();
-
-            if (html5webworkers) {
-                uploadFileWebworkers();
-            } else {
-                uploadFile();
             }
-        }
-    });
+
+            if (data == 'ErrorAuth') {
+                $('#dialog-autherror').dialog('open');
+                return;
+            }
+
+            var data = JSON.parse(data);
+
+            if (data.errors) {
+                $.each(data.errors, function (i, result) {
+                    // token missing or error
+                    if (result == 'err_token') {
+                        $('#dialog-tokenerror').dialog('open');
+                    }
+                    // not authenticated
+                    if (result == 'err_notauthenticated') {
+                        $('#dialog-autherror').dialog('open');
+                    }
+                    // missing email data
+                    if (result == 'err_tomissing') {
+                        $('#fileto_msg').show();
+                    }
+                    // missing expiry date
+                    if (result == 'err_expmissing') {
+                        $('#expiry_msg').show();
+                    }
+                    // expiry date out of range
+                    if (result == 'err_exoutofrange') {
+                        $('#expiry_msg').show();
+                    }
+                    // 1 or more emails invalid
+                    if (result == 'err_invalidemail') {
+                        $('#fileto_msg').show();
+                    }
+                    // invalid filename
+                    if (result == 'err_invalidfilename') {
+                        $('#file_msg').show();
+                    }
+                    //  invalid extension
+                    if (result == 'err_invalidextension') {
+                        $('#extension_msg').show();
+                    }
+                    // not enough disk space on server
+                    if (result == 'err_nodiskspace') {
+                        openErrorDialog(errmsg_disk_space);
+                    }
+                });
+                $('#uploadbutton').find('a').attr('onclick', 'validate()');
+            }
+            if (data.status && data.status == 'complete') {
+                $('#fileToUpload').hide();// hide Browse
+                $('#selectfile').hide();// hide Browse message
+                $('#uploadbutton').hide(); // hide upload
+                $('#cancelbutton').show(); // show cancel
+                // no error so use result as current bytes uploaded for file resume
+                vid = data.vid;
+                fileData[n].bytesUploaded = parseFloat(data.filesize);
+
+                if (!pausedUpload) {
+                    updateProgressBar(fileData[n].bytesUploaded, fileData[n].bytesTotal, fileData[n].bytesUploaded);
+                }
+
+                // validated so upload all files
+
+                startTime = new Date().getTime();
+
+                if (html5webworkers) {
+                    uploadFileWebworkers();
+                } else {
+                    uploadFile();
+                }
+            }
+        });
     }
 }
 
@@ -460,7 +461,7 @@ function uploadFileWebworkers() {
     jobsPerWorker = parseInt($('#jobsPerWorker').val());
     console.log('Setting ' + jobsPerWorker + ' job(s) per worker');
 
-    var tsunami = new Tsunami({
+    tsunami = new Tsunami({
         uri: dir + '/' + uploadURI + '?type=tsunami&vid=' + vid + '&n=' + n,
         simultaneousUploads: workerCount,
         jobsPerWorker: jobsPerWorker,
@@ -640,6 +641,19 @@ function setButtonToUndo(){
     clearAll.find('.ui-button-text').html("Undo clear");
     clearAll.attr('onclick', 'undoClearFileBox()');
 }
+
+function pauseUpload() {
+    tsunami.pauseUpload();
+    $('.progress_bar').css('background-color', '#FF8800');
+    vid = fileData[n].filevoucheruid;
+    pausedUpload = true;
+}
+
+function resumeUpload() {
+    startUpload();
+    $('.progress_bar').css('background-color', '#5c5');
+}
+
 
 
 

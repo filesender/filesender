@@ -70,6 +70,14 @@
     }
 
     function addButtonText(){
+        $('#pauseBTN').html('<?php echo lang("_PAUSE") ?>');
+        $('#cancelBTN').html('<?php echo lang("_CANCEL") ?>');
+        $('#confirmBTN').html('<?php echo lang("_YES") ?>');
+        $('#sendBTN').html('<?php echo lang("_SEND") ?>');
+        $('#canceluploadBTN').html('<?php echo lang("_CANCEL") ?>');
+        $('#okBTN').html('<?php echo lang("_OK") ?>');
+
+
         $('.ui-dialog-buttonpane button:contains(cancelBTN)').html('<?php echo lang("_CANCEL") ?>');
         $('.ui-dialog-buttonpane button:contains(confirmBTN)').html('<?php echo lang("_YES") ?>');
         $('.ui-dialog-buttonpane button:contains(sendBTN)').html('<?php echo lang("_SEND") ?>');

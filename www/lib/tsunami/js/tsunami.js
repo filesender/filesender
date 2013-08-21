@@ -186,7 +186,16 @@ var Tsunami = function(opts) {
             $.log('Worker '+num+" is created");
             
         }
-    }    
+    }
+
+    $.pauseUpload = function() {
+        $.log('Pausing workers');
+        for(var num = 0; num < $.workers.length; num++){
+            $.log('Terminating: ' + num);
+            $.workers[num].terminate();
+        }
+    };
+
 
     $.log = function(message) {
         if($.opts.log){
