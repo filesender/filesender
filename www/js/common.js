@@ -227,13 +227,13 @@ function updateProgressBar(bytesloaded, totalbytes, amountUploaded)
     var timeSinceStart = (now - startTime) / 1000;
     // Adds the amount of data uploaded this call to the total (for all files)
 
-    if (amountUploaded != 0) {
+    if (html5) {
         var progress_bar = '#progress_bar-' + n;
         var file_box = '#file_' + n;
         var progress_completed = '#progress_completed-' + n;
         $(progress_bar).width(percentComplete / 100 * $(file_box).width());	//set width of progress bar based on the $status value (set at the top of this page)
-        percentComplete = Math.round(totalBytesLoaded * 100 / totalFileLengths);
         totalBytesLoaded += amountUploaded;
+        percentComplete = Math.round(totalBytesLoaded * 100 / totalFileLengths);
         uploadSpeed = (totalBytesLoaded / timeSinceStart) / 1024 / 1024;
         bytesRemaining = totalFileLengths - totalBytesLoaded;
         timeRemaining = (uploadSpeed == 0 ? 0 : ((bytesRemaining / 1024 / 1024) / uploadSpeed));

@@ -100,17 +100,34 @@ global $config;
             minWidth: 500,
             minHeight: 250,
             modal: true,
-            buttons: {
-                'pauseBTN': function () {
-                    //TODO
-                },
-                'canceluploadBTN': function () {
+            buttons: [
+            {
+                "id" : "pauseBTN",
+                click: function() {
+                    if (html5) {
+                        if($('#pauseBTN').html() == "Pause") {
+                            $('#pauseBTN').html('Resume');
+                            pauseUpload();
+                        }else {
+                            $('#pauseBTN').html('Pause');
+                            resumeUpload();
+                        }
+                    } else {
+                        alert("Feature not currently supported by flash uploads");
+                    }
+                }
+            },
+            {
+                "id": "canceluploadBTN",
+                click: function() {
                     $("#dialog-cancel").dialog({
                         resizable: false,
                         height: 140,
                         modal: true,
-                        buttons: {
-                            'confirmBTN': function () {
+                        buttons: [
+                        {
+                            "id" : "confirmBTN",
+                            click: function () {
                                 var query = $('#form1').serializeArray(), json = {};
 
                                 for (var i in query) {
@@ -127,14 +144,18 @@ global $config;
                                         ajaxerror(xhr.readyState, xhr.status, xhr.responseText);
                                     }
                                 });
-                            },
-                            'cancelBTN': function () {
+                            }
+                        },
+                        {
+                            "id": "cancelBTN",
+                            click: function () {
                                 $(this).dialog("close");
                             }
-                        }
+                        }]
                     });
+                    addButtonText();
                 }
-            }
+            }]
         });
         addButtonText();
     }
