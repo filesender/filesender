@@ -180,6 +180,8 @@ if (!isAuthenticated()) {
             if ($authVoucher->aVoucher() && isset($_REQUEST['firstfile'])) {
                 // A voucher is being used, add a session variable.
                 $_SESSION['voucher'] = $_REQUEST['vid'];
+            } else {
+                unset($_SESSION['voucher']);
             }
 
             $dataItem = $functions->validateFileData($dataItem);

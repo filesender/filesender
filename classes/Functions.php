@@ -995,6 +995,7 @@ class Functions
 
     public function getVoucherData($vid)
     {
+        ensureSaneFileUid($vid);
 
         $pdo = $this->db->connect();
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
@@ -1007,12 +1008,8 @@ class Functions
             displayError(lang("_ERROR_CONTACT_ADMIN"), $e->getMessage());
         }
         $result = $statement->fetchAll();
-        $pdo = null;
-        $returnArray = array();
-        foreach ($result as $row) {
-            array_push($returnArray, $row);
-        }
-        return $returnArray[0];
+
+        return $result[0];
     }
 
     //--------------------------------------- CHECKED
