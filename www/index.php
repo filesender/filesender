@@ -291,7 +291,7 @@ if($isAuth )
 
             if($voucherData[0]["filestatus"] == "Voucher")
             { // load voucher upload
-                require_once('../pages/multiupload.php');
+                require_once('../pages/uploadcheck.php');
             } else if($voucherData[0]["filestatus"] == "Available")
             {
                 // allow download of voucher
@@ -322,11 +322,9 @@ if($isAuth )
             } else {
                 require_once('../pages/multidownload.php');
             }
-        } else if ($s == "singleupload") {
-            require_once('../pages/upload.php');
         } else if($s == "upload")
         {
-            require_once('../pages/multiupload.php');
+            require_once('../pages/uploadcheck.php');
         } else if($s == "vouchers" && !$authvoucher->aVoucher())
         {
             require_once('../pages/vouchers.php');
@@ -346,7 +344,7 @@ if($isAuth )
         {
             require_once("../pages/result.php");
         } else if ($s == "" && $isAuth){
-            require_once('../pages/multiupload.php');
+            require_once('../pages/uploadcheck.php');
         }else if ($s == "" ){
             require_once('../pages/home.php');
         }
