@@ -461,9 +461,9 @@ margin-top: 4px;
 	position: relative;
 	height: 20px;
 	background-color: #5C5;
-	width: 0;
-	color: #FFF;
-}
+width: 0;
+color: #FFF;
+    }
 
 .progress_completed {
 	z-index:40;
@@ -520,7 +520,7 @@ margin-top: 4px;
 	margin-left: 0px;
 }
 #content {
-	padding-top: 10px;
+	padding-top: 5px;
 	padding-right: 20px;
 	padding-bottom: 10px;
 	padding-left: 20px;
