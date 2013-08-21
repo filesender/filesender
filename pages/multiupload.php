@@ -135,7 +135,7 @@ $(function () {
                     <div id="file_msg" class="validation_msg"
                          style="display: none"><?php echo lang("_INVALID_FILE"); ?></div>
             </div>
-            <div id="dragfilestouploadcss" style="height:200px; overflow:auto;" class="box">
+            <div id="dragfilestouploadcss" style="height:170px; overflow:auto;" class="box">
                 <div id="filestoupload" style="display:table;width:100%; height:100%;">
                     <div id="draganddropmsg" style="text-align:center;display:table-cell; vertical-align:middle;"
                          class="heading"><?php echo lang('_DRAG_AND_DROP'); ?></div>
