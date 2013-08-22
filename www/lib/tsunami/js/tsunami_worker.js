@@ -3,6 +3,7 @@ var file = null;
 var uri;
 var func;
 var wid;
+var paused = false;
 
 self.addEventListener('message' , function(e) {
     var data = e.data;
@@ -47,6 +48,13 @@ self.addEventListener('message' , function(e) {
         case 'setId':
             wid = data.id;
             break;
+        case 'pause':
+            paused = true;
+            postMessage({
+                'cmd':'log',
+                'message':wid+': Will terminate after chunk'
+            });
+
     }
 });
 
@@ -91,6 +99,13 @@ function uploadChunk(startByte, endByte)
                 postMessage({
                     'cmd':'ready'
                 });
+                if(paused){
+                    postMessage({
+                        'cmd':'log',
+                        'message':wid+': Paused'
+                    });
+                    self.close();
+                }
             } else {
                 postMessage({
                     'cmd':'error',

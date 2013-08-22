@@ -67,6 +67,8 @@
         } else {
             statusMessage('Your upload has started', 'green');
         }
+//        $('#filesubject').html(htmlentities($('#filesubject')));
+//        $('#filemessage').html(htmlentities($('#filemessage')));
         return isValid;
     }
 

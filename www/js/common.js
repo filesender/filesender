@@ -217,7 +217,6 @@ var totalBytesLoaded = 0;
 function updateProgressBar(bytesloaded, totalbytes, amountUploaded)
 {
     var percentComplete = Math.round(bytesloaded * 100 / totalbytes);
-    var bytesTransfered = '';
     var bytesRemaining;
     var uploadSpeed;
     var timeRemaining;

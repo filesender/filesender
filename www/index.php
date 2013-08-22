@@ -134,8 +134,6 @@ if($isAuth )
         var debug = <?php echo $config["debug"] ? 'true' : 'false'; ?> ;
         var html5 = false;
         var html5webworkers = false;
-        var statusMsg = '<?php echo $statusMsg; ?>';
-        var statusClass = '<?php echo $statusClass; ?>';
         //check if webworkers are available
         <?php if(isset($config['terasender']) && $config['terasender']) { echo 'html5webworkers = typeof(Worker)!=="undefined";'; }?>
 
@@ -150,7 +148,7 @@ if($isAuth )
                 if ($isVoucher) { ?>
                     statusMessage('You are using a guest voucher', 'blue' );
                 <?php } else { ?>
-                    statusMessage('<?php echo lang("_LOGGED_IN_AS") . $useremail[0]; ?>', 'blue' );
+                    statusMessage('<?php echo lang("_LOGGED_IN_AS") . addslashes($useremail[0]); ?>', 'blue' );
                 <?php }
             } ?>
 
