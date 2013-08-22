@@ -314,6 +314,8 @@ function startUpload() {
 
                 if (!pausedUpload) {
                     updateProgressBar(fileData[n].bytesUploaded, fileData[n].bytesTotal, fileData[n].bytesUploaded);
+                } else {
+                    pausedUpload = false;
                 }
 
                 // validated so upload all files
@@ -467,7 +469,7 @@ function uploadFileWebworkers() {
         jobsPerWorker: jobsPerWorker,
         chunkSize: chunksize,
         workerFile: 'lib/tsunami/js/tsunami_worker.js',
-        log: false,
+        log: true,
         onComplete: doUploadComplete,
         onProgress: updateProgressBar
     });

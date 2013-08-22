@@ -191,8 +191,9 @@ var Tsunami = function(opts) {
     $.pauseUpload = function() {
         $.log('Pausing workers');
         for(var num = 0; num < $.workers.length; num++){
-            $.log('Terminating: ' + num);
-            $.workers[num].terminate();
+            $.workers[num].postMessage({
+                'cmd': 'pause'
+            })
         }
     };
 
