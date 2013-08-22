@@ -60,55 +60,29 @@ class DB
         return self::$instance;
     }
 
-    // --------------------------------
-    // Executes a database query. Returns the result or empty string on failure.
-    // --------------------------------
-    public function query(/* $query, $args */)
-    {
-        $args = func_get_args();
-
-        // Ensure that args can be passed as an array, as well as separately.
-        if (isset($args[0]) && is_array($args[0])) {
-            $args = $args[0];
+    public function prepare($query) {
+        if (!is_string($query) || empty($query)) {
+            logEntry('Invalid query ' . $query, 'E_ERROR');
+            displayError(lang('_ERROR_CONTACT_ADMIN'), 'Invalid query: ' . $query);
+            exit;
         }
 
-        $query = $this->buildQuery(array_merge(array($this->connect()), $args));
-        $dbConnection = $this->connect();
+        $connection = $this->connect();
+        $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
+        return $connection->prepare($query);
+    }
+
+    public function execute(PDOStatement $statement) {
         try {
-            $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Throw exception if error occurs.
-            $result = $dbConnection->query($query);
+            $statement->execute();
         } catch (PDOException $e) {
-            logEntry($e->getMessage() . ' on query: ' . $query, 'E_ERROR');
+            logEntry($e->getMessage(), 'E_ERROR');
             displayError(lang('_ERROR_CONTACT_ADMIN'), $e->getMessage());
             exit;
         }
 
-        return $result ? $result : '';
-    }
-
-    // --------------------------------
-    // Prepares a database query, quoting the arguments as necessary.
-    // --------------------------------
-    public function buildQuery(/* $query, $args */)
-    {
-        $args = func_get_args();
-
-        // Ensure that args can be passed as an array, as well as separately.
-        if (isset($args[0]) && is_array($args[0])) {
-            $args = $args[0];
-        }
-
-        array_shift($args); // Value not needed.
-        $format = array_shift($args);
-
-        // Quote the arguments.
-        for ($i = 0; $i < sizeof($args); $i++) {
-            $args[$i] = $this->connection->quote($args[$i]);
-        }
-
-        $query = vsprintf($format, $args);
-        return $query;
+        return $statement;
     }
 
     // --------------------------------

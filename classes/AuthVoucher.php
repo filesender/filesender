@@ -63,8 +63,10 @@ class AuthVoucher
             $vid = $_REQUEST['vid'];
 
             if (preg_match($config['voucherRegEx'], $vid) and strLen($vid) == $config['voucherUIDLength']) {
-                $statement = $this->db->query("SELECT COUNT(*) FROM files WHERE filevoucheruid = %s", $vid);
-                $statement->execute();
+                $statement = $this->db->prepare('SELECT COUNT(*) FROM files WHERE filevoucheruid = :filevoucheruid');
+                $statement->bindParam(':filevoucheruid', $vid);
+
+                $statement = $this->db->execute($statement);
                 $count = $statement->fetchColumn();
 
                 return $count == 1;
@@ -87,7 +89,11 @@ class AuthVoucher
 
             if (preg_match($config['voucherRegEx'], $vid) and strLen($vid) == $config['voucherUIDLength']) {
 
-                $result = $this->db->query("SELECT * FROM files WHERE filevoucheruid = %s", $vid) or die("Error");
+                $statement = $this->db->prepare("SELECT * FROM files WHERE filevoucheruid = :filevoucheruid");
+                $statement->bindParam(':filevoucheruid', $vid);
+                $statement = $this->db->execute($statement);
+
+                $result = $statement->fetchAll(PDO::FETCH_NUM);
                 $returnArray = array();
                 $returnArray["SessionID"] = session_id();
 

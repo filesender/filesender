@@ -102,10 +102,7 @@ class Log
             $logFrom = $temp;
         }
 
-        $pdo = $this->db->connect();
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Throw exception if error occurs.
-
-        $statement = $pdo->prepare(
+        $statement = $this->db->prepare(
             "INSERT INTO logs (
                 logfileuid,
                 logvoucheruid,
@@ -152,13 +149,7 @@ class Log
         $statement->bindParam(':logdailysummary', $logDailySummary);
 
 
-        try {
-            $statement->execute();
-            return true;
-        } catch (PDOException $e) {
-            displayError(lang('_ERROR_CONTACT_ADMIN'), $e->getMessage());
-            return false;
-        }
+        $this->db->execute($statement);
     }
 
 
