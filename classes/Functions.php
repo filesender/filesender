@@ -143,9 +143,10 @@ class Functions
     // --------------------------------
     public function getTrackingCode($authUser = null)
     {
-        $statement = $this->db->query('SELECT MAX(filetrackingcode) FROM files WHERE fileauthuseruid = %s', $authUser);
-        $statement->execute();
+        $statement = $this->db->prepare('SELECT MAX(filetrackingcode) FROM files WHERE fileauthuseruid = :fileauthuseruid');
+        $statement->bindParam(':fileauthuseruid', $authUser);
 
+        $statement = $this->db->execute($statement);
         $result = $statement->fetchColumn();
         $trackingCode = $result;
 
@@ -163,8 +164,8 @@ class Functions
     {
         // Get upload statistics.
         $statString = 'UP: ';
-        $statement = $this->db->query("SELECT COUNT(*), SUM(logfilesize) FROM logs WHERE logtype = 'Uploaded'");
-        $statement->execute();
+        $statement = $this->db->prepare("SELECT COUNT(*), SUM(logfilesize) FROM logs WHERE logtype = 'Uploaded'");
+        $statement = $this->db->execute($statement);
         $result = $statement->fetch(PDO::FETCH_NUM);
 
         $count = $result[0];
@@ -172,8 +173,8 @@ class Functions
         $statString .= $count . ' files (' . formatBytes($sumFileSize) . ') |';
 
         // Get download statistics.
-        $statement = $this->db->query("SELECT COUNT(*), SUM(logfilesize) FROM logs WHERE logtype = 'Download'");
-        $statement->execute();
+        $statement = $this->db->prepare("SELECT COUNT(*), SUM(logfilesize) FROM logs WHERE logtype = 'Download'");
+        $statement = $this->db->execute($statement);
         $result = $statement->fetch(PDO::FETCH_NUM);
 
         $count = $result[0];
@@ -190,21 +191,12 @@ class Functions
     {
         $authAttributes = $this->getAuthAttributes();
 
-        $pdo = $this->db->connect();
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-        $statement = $pdo->prepare("SELECT " . $this->getReturnFields() . " FROM files WHERE (fileauthuseruid = :fileauthuseruid) AND filestatus = 'Voucher' ORDER BY fileactivitydate DESC");
+        $statement = $this->db->prepare("SELECT " . $this->getReturnFields() . " FROM files WHERE (fileauthuseruid = :fileauthuseruid) AND filestatus = 'Voucher' ORDER BY fileactivitydate DESC");
         $statement->bindParam(':fileauthuseruid', $authAttributes['saml_uid_attribute']);
 
-        try {
-            $statement->execute();
-        } catch (PDOException $e) {
-            logEntry($e->getMessage(), 'E_ERROR');
-            displayError(lang('_ERROR_CONTACT_ADMIN'), $e->getMessage());
-        }
-
+        $statement = $this->db->execute($statement);
         $result = $statement->fetchAll();
-        $pdo = null;
+
         $returnArray = array();
 
         foreach ($result as $row) {
@@ -234,31 +226,9 @@ class Functions
         . 'filegroupid, filetrackingcode, filedownloadconfirmations, fileenabledownloadreceipts, filedailysummary ';
     }
 
-    private function prepareStatement($query) {
-        if (!is_string($query) || empty($query)) {
-            logEntry('Invalid query ' . $query);
-            displayError(lang('_ERROR_CONTACT_ADMIN'), 'Invalid query ' . $query);
-            exit;
-        }
-
-        $pdo = $this->db->connect();
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-        return $pdo->prepare($query);
-    }
-
-    private function executeStatement(PDOStatement &$statement) {
-        try {
-            $statement->execute();
-        } catch (PDOException $e) {
-            logEntry($e->getMessage(), 'E_ERROR');
-            displayError(lang('_ERROR_CONTACT_ADMIN'), $e->getMessage());
-        }
-    }
-
     public function countDownloads($vid)
     {
-        $statement = $this->prepareStatement(
+        $statement = $this->db->prepare(
             "SELECT COUNT(*) " .
             "FROM logs " .
             "WHERE logvoucheruid = :logvoucheruid " .
@@ -267,7 +237,7 @@ class Functions
 
         $statement->bindParam(':logvoucheruid', $vid);
 
-        $this->executeStatement($statement);
+        $statement = $this->db->execute($statement);
         $total = $statement->fetch(PDO::FETCH_NUM);
 
         return $total[0];
@@ -275,7 +245,7 @@ class Functions
 
     public function getUserTrackingCodes()
     {
-        $statement = $this->prepareStatement(
+        $statement = $this->db->prepare(
             "SELECT DISTINCT(filetrackingcode), fileauthuseruid " .
             "FROM files " .
             "WHERE fileauthuseruid = :fileauthuseruid " .
@@ -285,7 +255,7 @@ class Functions
         $authAttributes = $this->getAuthAttributes();
         $statement->bindParam(':fileauthuseruid', $authAttributes['saml_uid_attribute']);
 
-        $this->executeStatement($statement);
+        $statement = $this->db->execute($statement);
         return json_encode($statement->fetchAll());
     }
 
@@ -301,7 +271,7 @@ class Functions
         $isLimited = isset($config['autocompleteHistoryMax']) && is_numeric($config['autocompleteHistoryMax']);
         $limit = $isLimited ? 'LIMIT ' . $config['autocompleteHistoryMax'] : '';
 
-        $statement = $this->prepareStatement(
+        $statement = $this->db->prepare(
             "SELECT DISTINCT fileto " .
             "FROM files " .
             "WHERE fileauthuseruid = :fileauthuseruid " .
@@ -312,7 +282,7 @@ class Functions
         $authAttributes = $this->getAuthAttributes();
         $statement->bindParam(':fileauthuseruid', $authAttributes['saml_uid_attribute']);
 
-        $this->executeStatement($statement);
+        $statement = $this->db->execute($statement);
         $result = $statement->fetchAll();
 
         $emailArray = array();
@@ -340,13 +310,14 @@ class Functions
         global $page;
         global $totalPages;
 
-        $statement = $this->db->query(
-            "SELECT COUNT(logtype) " .
-            "FROM logs " .
-            "WHERE logtype = '$type'"
+        $statement = $this->db->prepare(
+            'SELECT COUNT(logtype) ' .
+            'FROM logs ' .
+            'WHERE logtype = :logtype'
         );
 
-        $statement->execute();
+        $statement->bindParam(':logtype', $type);
+        $statement = $this->db->execute($statement);
         $total = $statement->fetch(PDO::FETCH_NUM);
         $total = $total[0];
 
@@ -369,7 +340,7 @@ class Functions
 
         // Check that user has admin access before returning data.
         if ($this->authSaml->authIsAdmin()) {
-            $statement = $this->prepareStatement(
+            $statement = $this->db->prepare(
                 'SELECT logtype, logfrom, logto, logdate, logfilesize, logfilename, logmessage ' .
                 'FROM logs ' .
                 'WHERE logtype = :logtype ' .
@@ -378,8 +349,7 @@ class Functions
             );
 
             $statement->bindParam(':logtype', $type);
-
-            $this->executeStatement($statement);
+            $statement = $this->db->execute($statement);
             return $statement->fetchAll();
         }
 
@@ -396,13 +366,14 @@ class Functions
         global $page;
         global $totalPages;
 
-        $statement = $this->db->query(
-            "SELECT COUNT(fileid) " .
-            "FROM files " .
-            "WHERE filestatus = '$type'"
+        $statement = $this->db->prepare(
+            'SELECT COUNT(fileid) ' .
+            'FROM files ' .
+            'WHERE filestatus = :logtype'
         );
 
-        $statement->execute();
+        $statement->bindParam(':logtype', $type);
+        $statement = $this->db->execute($statement);
         $total = $statement->fetch(PDO::FETCH_NUM);
         $total = $total[0];
 
@@ -425,7 +396,7 @@ class Functions
 
         // Check that user has admin access before returning data.
         if ($this->authSaml->authIsAdmin()) {
-            $statement = $this->prepareStatement(
+            $statement = $this->db->prepare(
                 'SELECT ' . $this->getReturnFields() . ' ' .
                 'FROM files ' .
                 'WHERE filestatus = :filestatus ' .
@@ -435,7 +406,7 @@ class Functions
 
             $statement->bindParam(':filestatus', $type);
 
-            $this->executeStatement($statement);
+            $statement = $this->db->execute($statement);
             return $statement->fetchAll();
         }
 
@@ -449,7 +420,7 @@ class Functions
 
     public function checkPending($dataItem)
     {
-        $statement = $this->prepareStatement(
+        $statement = $this->db->prepare(
             "SELECT * " .
             "FROM files " .
             "WHERE fileoriginalname = :fileoriginalname " .
@@ -462,7 +433,7 @@ class Functions
         $statement->bindParam(':filesize', $dataItem['filesize']);
         $statement->bindParam(':fileuid', $dataItem['fileuid']);
 
-        $this->executeStatement($statement);
+        $statement = $this->db->execute($statement);
         $result = $statement->fetchAll();
 
         return $result ? $result[0] : '';
@@ -472,7 +443,7 @@ class Functions
 
     public function getFile($dataItem)
     {
-        $statement = $this->prepareStatement(
+        $statement = $this->db->prepare(
             'SELECT * ' .
             'FROM files ' .
             'WHERE filevoucheruid = :filevoucheruid'
@@ -480,7 +451,7 @@ class Functions
 
         $statement->bindParam(':filevoucheruid', $dataItem['filevoucheruid']);
 
-        $this->executeStatement($statement);
+        $statement = $this->db->execute($statement);
         return json_encode($statement->fetchAll());
     }
 
@@ -571,24 +542,16 @@ class Functions
 
     function getTransactionDetails($trackingCode, $authuseruid)
     {
-        $pdo = $this->db->connect();
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
-        $statement = $pdo->prepare('SELECT * FROM files WHERE filetrackingcode = :filetrackingcode AND fileauthuseruid = :fileauthuseruid ORDER BY fileoriginalname ASC');
+        $statement = $this->db->prepare('SELECT * FROM files WHERE filetrackingcode = :filetrackingcode AND fileauthuseruid = :fileauthuseruid ORDER BY fileoriginalname ASC');
         $statement->bindParam(':filetrackingcode', $trackingCode);
         $statement->bindParam(':fileauthuseruid', $authuseruid);
 
-        try {
-            $statement->execute();
-        } catch (PDOException $e) {
-            logEntry($e->getMessage(), "E_ERROR");
-            displayError(lang("_ERROR_CONTACT_ADMIN"), $e->getMessage());
-        }
-
+        $statement = $this->db->execute($statement);
         $result = $statement->fetchAll();
-        $pdo = null;
-        $returnArray = array();
 
+        $returnArray = array();
         $previousRow = null;
+
         foreach ($result as $row) {
             if ($row['filestatus'] != 'Available') {
                 continue;
@@ -611,23 +574,16 @@ class Functions
 
     function getMultiRecipientDetails($trackingCode, $authuseruid)
     {
-        $pdo = $this->db->connect();
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
-        $statement = $pdo->prepare('SELECT * FROM files where filetrackingcode = :filetrackingcode AND fileauthuseruid = :fileauthuseruid ORDER BY fileto ASC');
+        $statement = $this->db->prepare('SELECT * FROM files where filetrackingcode = :filetrackingcode AND fileauthuseruid = :fileauthuseruid ORDER BY fileto ASC');
         $statement->bindParam(':filetrackingcode', $trackingCode);
         $statement->bindParam(':fileauthuseruid', $authuseruid);
-        try {
-            $statement->execute();
-        } catch (PDOException $e) {
-            logEntry($e->getMessage(), "E_ERROR");
-            displayError(lang("_ERROR_CONTACT_ADMIN"), $e->getMessage());
-        }
 
+        $statement = $this->db->execute($statement);
         $result = $statement->fetchAll();
-        $pdo = null;
-        $returnArray = array();
 
+        $returnArray = array();
         $previousRow = null;
+
         foreach ($result as $row) {
             if ($row['filestatus'] != 'Available') {
                 continue;
@@ -642,13 +598,8 @@ class Functions
 
     public function insertFile($dataitem, $logtype = 'Uploaded')
     {
-
-        global $config;
-
         // prepare PDO insert statement
-        $pdo = $this->db->connect();
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
-        $statement = $pdo->prepare(
+        $statement = $this->db->prepare(
             'INSERT INTO files (
                         fileexpirydate,
                         fileto,
@@ -728,13 +679,7 @@ class Functions
         $statement->bindParam(':fileenabledownloadreceipts', $dataitem['fileenabledownloadreceipts']);
         $statement->bindParam(':filedailysummary', $dataitem['filedailysummary']);
 
-        try {
-            $statement->execute();
-        } catch (PDOException $e) {
-            logEntry($e->getMessage(), "E_ERROR");
-            displayError(lang("_ERROR_CONTACT_ADMIN"), $e->getMessage());
-            return false;
-        }
+        $this->db->execute($statement);
 
         if ($dataitem['filestatus'] == "Voucher") {
             $this->saveLog->saveLog($dataitem, "Voucher Sent", "");
@@ -747,22 +692,13 @@ class Functions
 
     function getTransactionDownloadsForRecipient($recipientEmail, $trackingCode, $authuseruid)
     {
-        $pdo = $this->db->connect();
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
-        $statement = $pdo->prepare('SELECT fileoriginalname, filevoucheruid, filestatus FROM files WHERE fileto = :fileto AND filetrackingcode = :filetrackingcode AND fileauthuseruid = :fileauthuseruid ORDER BY fileoriginalname ASC');
+        $statement = $this->db->prepare('SELECT fileoriginalname, filevoucheruid, filestatus FROM files WHERE fileto = :fileto AND filetrackingcode = :filetrackingcode AND fileauthuseruid = :fileauthuseruid ORDER BY fileoriginalname ASC');
         $statement->bindParam(':fileto', $recipientEmail);
         $statement->bindParam(':filetrackingcode', $trackingCode);
         $statement->bindParam(':fileauthuseruid', $authuseruid);
 
-        try {
-            $statement->execute();
-        } catch (PDOException $e) {
-            logEntry($e->getMessage(), "E_ERROR");
-            displayError(lang("_ERROR_CONTACT_ADMIN"), $e->getMessage());
-        }
-
+        $statement = $this->db->execute($statement);
         $result = $statement->fetchAll();
-        $pdo = null;
 
         $returnArray = array();
         foreach ($result as $row) {
@@ -790,19 +726,12 @@ class Functions
 
     function getMultiFileData($groupId)
     {
-        $pdo = $this->db->connect();
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
-        $statement = $pdo->prepare('SELECT * FROM files where filegroupid = :filegroupid ORDER BY fileoriginalname ASC');
+        $statement = $this->db->prepare('SELECT * FROM files where filegroupid = :filegroupid ORDER BY fileoriginalname ASC');
         $statement->bindParam(':filegroupid', $groupId);
-        try {
-            $statement->execute();
-        } catch (PDOException $e) {
-            logEntry($e->getMessage(), "E_ERROR");
-            displayError(lang("_ERROR_CONTACT_ADMIN"), $e->getMessage());
-        }
 
+        $statement = $this->db->execute($statement);
         $result = $statement->fetchAll();
-        $pdo = null;
+
         $returnArray = array();
 
         foreach ($result as $row) {
@@ -818,36 +747,22 @@ class Functions
 
     function getFileDownloadTotals($trackingCode, $fileAuth)
     {
-        $pdo = $this->db->connect();
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
-        $statement = $pdo->prepare("SELECT COUNT(*), logfilename FROM logs WHERE logfiletrackingcode = :logfiletrackingcode AND logtype='Download' AND logauthuseruid = :logauthuserid GROUP BY logfilename ORDER BY logfilename ASC");
+        $statement = $this->db->prepare("SELECT COUNT(*), logfilename FROM logs WHERE logfiletrackingcode = :logfiletrackingcode AND logtype='Download' AND logauthuseruid = :logauthuserid GROUP BY logfilename ORDER BY logfilename ASC");
         $statement->bindParam(':logfiletrackingcode', $trackingCode);
         $statement->bindParam(':logauthuserid', $fileAuth);
-        try {
-            $statement->execute();
-        } catch (PDOException $e) {
-            logEntry($e->getMessage(), "E_ERROR");
-            displayError(lang("_ERROR_CONTACT_ADMIN"), $e->getMessage());
-        }
 
+        $statement = $this->db->execute($statement);
         return $statement->fetchAll();
     }
 
     function deleteRecipient($groupid, $notifyRecipient)
     {
         $files = $this->getMultiFileData($groupid);
-        $pdo = $this->db->connect();
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $statement = $pdo->prepare("UPDATE files SET filestatus = 'Deleted' WHERE filegroupid = :filegroupid");
+
+        $statement = $this->db->prepare("UPDATE files SET filestatus = 'Deleted' WHERE filegroupid = :filegroupid");
         $statement->bindParam(':filegroupid', $groupid);
 
-        try {
-            $statement->execute();
-        } catch (PDOException $e) {
-            logEntry($e->getMessage(), "E_ERROR");
-            return false;
-        }
-
+        $statement = $this->db->execute($statement);
         $result = $statement->rowCount();
 
         if ($result != 0) {
@@ -861,19 +776,12 @@ class Functions
     function deleteTransaction($trackingCode, $authuid, $notifyRecipients)
     {
         $recipients = $this->getMultiRecipientDetails($trackingCode, $authuid);
-        $pdo = $this->db->connect();
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $statement = $pdo->prepare("UPDATE files set filestatus = 'Deleted' WHERE filetrackingcode = :filetrackingcode AND fileauthuseruid = :fileauthuseruid");
+
+        $statement = $this->db->prepare("UPDATE files set filestatus = 'Deleted' WHERE filetrackingcode = :filetrackingcode AND fileauthuseruid = :fileauthuseruid");
         $statement->bindParam(':filetrackingcode', $trackingCode);
         $statement->bindParam(':fileauthuseruid', $authuid);
 
-        try {
-            $statement->execute();
-        } catch (PDOException $e) {
-            logEntry($e->getMessage(), "E_ERROR");
-            return false;
-        }
-
+        $statement = $this->db->execute($statement);
         $result = $statement->rowCount();
 
         if ($result != 0) {
@@ -893,10 +801,7 @@ class Functions
             $dbCheck = DB_Input_Checks::getInstance();
             $authAttributes = $this->authSaml->sAuth();
 
-            $pdo = $this->db->connect();
-            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
-
-            $statement = $pdo->prepare(
+            $statement = $this->db->prepare(
                 'INSERT INTO files (
                             fileexpirydate,
                             fileto,
@@ -974,13 +879,9 @@ class Functions
             $statement->bindParam(':fileauthuseremail', $from);
             $filecreateddateParam = date($config['db_dateformat'], time());
             $statement->bindParam(':filecreateddate', $filecreateddateParam);
-            try {
-                $statement->execute();
-            } catch (PDOException $e) {
-                logEntry($e->getMessage(), "E_ERROR");
-                displayError(lang("_ERROR_CONTACT_ADMIN"), $e->getMessage());
-            }
-            $pdo = null;
+
+            $this->db->execute($statement);
+
             // get voucherdata to email
             $dataitem = $this->getVoucherData($filevoucheruid);
             $this->saveLog->saveLog($dataitem, "Voucher Sent", "");
@@ -997,16 +898,10 @@ class Functions
     {
         ensureSaneFileUid($vid);
 
-        $pdo = $this->db->connect();
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
-        $statement = $pdo->prepare('SELECT * FROM files where filevoucheruid = :filevoucheruid');
+        $statement = $this->db->prepare('SELECT * FROM files where filevoucheruid = :filevoucheruid');
         $statement->bindParam(':filevoucheruid', $vid);
-        try {
-            $statement->execute();
-        } catch (PDOException $e) {
-            logEntry($e->getMessage(), "E_ERROR");
-            displayError(lang("_ERROR_CONTACT_ADMIN"), $e->getMessage());
-        }
+
+        $statement = $this->db->execute($statement);
         $result = $statement->fetchAll();
 
         return $result[0];
@@ -1184,12 +1079,7 @@ class Functions
     public function updateFile($dataitem)
     {
 
-        global $config;
-
-        // prepare PDO insert statement
-        $pdo = $this->db->connect();
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
-        $statement = $pdo->prepare(
+        $statement = $this->db->prepare(
             'UPDATE files SET
                         fileexpirydate = :fileexpirydate,
                         fileto = :fileto,
@@ -1242,14 +1132,7 @@ class Functions
         $statement->bindParam(':fileenabledownloadreceipts', $dataitem['fileenabledownloadreceipts']);
         $statement->bindParam(':filedailysummary', $dataitem['filedailysummary']);
 
-        try {
-            $statement->execute();
-        } catch (PDOException $e) {
-            logEntry($e->getMessage(), "E_ERROR");
-            displayError(lang("_ERROR_CONTACT_ADMIN"), $e->getMessage());
-            return false;
-        }
-        return true;
+        $this->db->execute($statement);
     }
 
     // --------------------------------------- CHECKED
@@ -1263,17 +1146,10 @@ class Functions
 
         if ($this->authSaml->isAuth()) { // check authentication SAML User
 
-            $pdo = $this->db->connect();
-            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
-            $statement = $pdo->prepare("UPDATE files SET filestatus = 'Voucher Cancelled' WHERE fileid = :fileid");
+            $statement = $this->db->prepare("UPDATE files SET filestatus = 'Voucher Cancelled' WHERE fileid = :fileid");
             $statement->bindParam(':fileid', $fileid);
 
-            try {
-                $statement->execute();
-            } catch (PDOException $e) {
-                logEntry($e->getMessage(), "E_ERROR");
-                return false;
-            }
+            $this->db->execute($statement);
 
             $fileArray = $this->getVoucher($fileid);
 
@@ -1293,24 +1169,11 @@ class Functions
 
     public function getVoucher($vid)
     {
-
-        $pdo = $this->db->connect();
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
-        $statement = $pdo->prepare('SELECT * FROM files where fileid = :fileid');
+        $statement = $this->db->prepare('SELECT * FROM files where fileid = :fileid');
         $statement->bindParam(':fileid', $vid);
-        try {
-            $statement->execute();
-        } catch (PDOException $e) {
-            logEntry($e->getMessage(), "E_ERROR");
-            displayError(lang("_ERROR_CONTACT_ADMIN"), $e->getMessage());
-        }
-        $result = $statement->fetchAll();
-        $pdo = null;
-        $returnArray = array();
-        foreach ($result as $row) {
-            array_push($returnArray, $row);
-        }
-        return $returnArray;
+
+        $statement = $this->db->execute($statement);
+        return $statement->fetchAll();
     }
 
     // --------------------------------------- CHECKED
@@ -1324,17 +1187,10 @@ class Functions
 
         if ($this->authSaml->isAuth() || $this->authVoucher->aVoucher()) { // check authentication SAML User
 
-            $pdo = $this->db->connect();
-            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
-            $statement = $pdo->prepare("UPDATE files SET filestatus = 'Closed' WHERE fileid = :fileid");
+            $statement = $this->db->prepare("UPDATE files SET filestatus = 'Closed' WHERE fileid = :fileid");
             $statement->bindParam(':fileid', $fileid);
 
-            try {
-                $statement->execute();
-            } catch (PDOException $e) {
-                logEntry($e->getMessage(), "E_ERROR");
-                return false;
-            }
+            $this->db->execute($statement);
 
             $fileArray = $this->getVoucher($fileid);
 
@@ -1354,29 +1210,13 @@ class Functions
 
     public function closeCompleteVoucher($filevoucheruid)
     {
-
-        global $config;
-
         if ($this->authSaml->isAuth() || $this->authVoucher->aVoucher()) { // check authentication SAML User
 
-            $pdo = $this->db->connect();
-            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
-            $statement = $pdo->prepare("UPDATE files SET filestatus = 'Closed' WHERE filevoucheruid = :filevoucheruid");
+            $statement = $this->db->prepare("UPDATE files SET filestatus = 'Closed' WHERE filevoucheruid = :filevoucheruid");
             $statement->bindParam(':filevoucheruid', $filevoucheruid);
 
-            try {
-                $statement->execute();
-            } catch (PDOException $e) {
-                logEntry($e->getMessage(), "E_ERROR");
-                return false;
-            }
-
+            $this->db->execute($statement);
             logEntry("Voucher Closed: " . $filevoucheruid);
-
-            return true;
-
-        } else {
-            return false;
         }
     }
 
@@ -1391,17 +1231,10 @@ class Functions
 
         if ($this->authSaml->isAuth()) { // check authentication SAML User
 
-            $pdo = $this->db->connect();
-            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set Errorhandling to Exception
-            $statement = $pdo->prepare("UPDATE files SET filestatus = 'Deleted' WHERE fileid = :fileid");
+            $statement = $this->db->prepare("UPDATE files SET filestatus = 'Deleted' WHERE fileid = :fileid");
             $statement->bindParam(':fileid', $fileid);
 
-            try {
-                $statement->execute();
-            } catch (PDOException $e) {
-                logEntry($e->getMessage(), "E_ERROR");
-                return false;
-            }
+            $this->db->execute($statement);
 
             $fileArray = $this->getVoucher($fileid);
 
@@ -1418,23 +1251,12 @@ class Functions
 
     public function cancelUpload($fileauth, $trackingcode)
     {
-        $pdo = $this->db->connect();
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $statement = $pdo->prepare("DELETE FROM files WHERE fileauthuseruid  = :fileauthuseruid AND filetrackingcode = :filetrackingcode");
+        $statement = $this->db->prepare("DELETE FROM files WHERE fileauthuseruid  = :fileauthuseruid AND filetrackingcode = :filetrackingcode");
         $statement->bindParam(':fileauthuseruid', $fileauth);
         $statement->bindParam(':filetrackingcode', $trackingcode);
 
-        try {
-            $statement->execute();
-        } catch (PDOException $e) {
-            logEntry($e->getMessage(), "E_ERROR");
-            return false;
-        }
-
-        $success = $statement->rowCount();
-
-        return ($success);
-
+        $statement = $this->db->execute($statement);
+        return $statement->rowCount();
     }
 
     //--------------------------------------- CHECKED
