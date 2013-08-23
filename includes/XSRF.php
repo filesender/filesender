@@ -21,7 +21,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 			exit;
 		}	
 	// check if s-token matches the session variable
-		if( isset($data["s-token"]) && $data["s-token"] != $_SESSION["s-token"])
+		if( isset($data["s-token"]) && isset($_SESSION["s-token"]) && $data["s-token"] != $_SESSION["s-token"])
 		{
 			// do not allow post data as s-token does not match
 			// return error
