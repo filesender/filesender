@@ -634,17 +634,13 @@ class Functions {
 			:filecreateddate)');
 			
 			$filevoucheruid = getGUID();
-			// set default subject 
 			$voucher = 'Voucher';
-			$voucherissuedemailsubject = (isset($config['voucherissuedemailsubject'])) ?  $config['voucherissuedemailsubject'] : "Voucher";
-			// overide if optional subject is added by user
-			$voucherissuedemailsubject = ($vouchersubject != "")?$vouchersubject:$voucherissuedemailsubject;
 			$blank = '';
 			$zero = 0;
 			$fileexpiryParam = date($config['db_dateformat'], strtotime($expiry));
 			$statement->bindParam(':fileexpirydate',$fileexpiryParam);
 			$statement->bindParam(':fileto', $to);
-			$statement->bindParam(':filesubject', $voucherissuedemailsubject);
+			$statement->bindParam(':filesubject', $vouchersubject);
 			$fileactivitydateParam =  date($config['db_dateformat'], time());
 			$statement->bindParam(':fileactivitydate',$fileactivitydateParam );	
 			$statement->bindParam(':filevoucheruid', $filevoucheruid );
@@ -676,6 +672,10 @@ class Functions {
 			$pdo = NULL;
 			// get voucherdata to email
 			$dataitem = $this->getVoucherData($filevoucheruid);
+			// add default subject for email
+			$voucheremailsubject = (isset($config['voucherissuedemailsubject'])) ?  $config['voucherissuedemailsubject'] : "Voucher";
+			// overide if optional subject is added by user
+			$dataitem["filesubject"] = ($vouchersubject != "")?$vouchersubject:$voucheremailsubject;
 			$this->saveLog->saveLog($dataitem,"Voucher Sent","");
 			return $this->sendmail->sendEmail($dataitem,$config['voucherissuedemailbody']);
 			
