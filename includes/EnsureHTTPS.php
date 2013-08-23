@@ -54,8 +54,13 @@ if(
 		session_destroy();
 	}
 	// ... redirect the user to https
-	$redirect = sprintf("location: https://%s%s",$_SERVER['HTTP_HOST'],$_SERVER['REQUEST_URI']);
-	header($redirect);
+	if (isset($_SERVER['HTTP_HOST']) && isset($_SERVER['REQUEST_URI'])) {
+		$redirect = sprintf("location: https://%s%s",$_SERVER['HTTP_HOST'],$_SERVER['REQUEST_URI']);
+		header($redirect);
+	} else {
+		header('HTTP/1.0 400 Bad Request');
+		echo "400 Bad request\n";
+	}
 	exit;
 }
 
