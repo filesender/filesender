@@ -90,7 +90,16 @@ $(function() {
 		$('#btn_cancel').html('<?php echo lang("_NO") ?>')  
 		$('.ui-dialog-buttonpane button:contains(deleteBTN)').attr("id","btn_delete");            
 		$('#btn_delete').html('<?php echo lang("_YES") ?>')  
-        
+     
+	  // default auth error dialogue
+		$("#dialog-autherror").dialog({ autoOpen: false, height: 240,width: 350, modal: true,title: "",		
+		buttons: {
+			'<?php echo lang("_OK") ?>': function() {
+				location.reload(true);
+				}
+			}
+		})  
+		
 	// autocomplete
 	var availableTags = [<?php  echo (isset($config["autocomplete"]) && $config["autocomplete"])?  $functions->uniqueemailsforautocomplete():  ""; ?>];
 		
@@ -176,7 +185,13 @@ function postVoucher()
 	 type: "POST",
 	 url: "fs_upload.php?type=insertVoucherAjax",
 	 data: {myJson:  JSON.stringify(json)}
+	 
 		,success:function( data ) {
+			if(data == "ErrorAuth")
+		{
+			$("#dialog-autherror").dialog("open");
+			return;			
+		}
 		var data =  parseJSON(data);
 		if(data.errors)
 		{
@@ -345,3 +360,4 @@ if ( count($useremail) > 1 ) {
 <div id="dialog-delete" style="display:none" title="<?php echo lang("_DELETE_VOUCHER") ?>">
 <p><?php echo lang("_CONFIRM_DELETE_VOUCHER"); ?></p>
 </div>
+<div id="dialog-autherror" title="<?php echo lang($lang["_MESSAGE"]); ?>" style="display:none"><?php echo lang($lang["_AUTH_ERROR"]); ?></div>
