@@ -186,7 +186,6 @@ $lang["_PLEASE_WAIT"] = "Please Wait...";
 
 // standard date display format
 $lang['datedisplayformat'] = "d/m/Y"; // Format for displaying date/time, use PHP date() format string syntax 
-$lang['_TODAY'] = "Today";
 
 // datepicker localization
 $lang["_DP_closeText"] = 'Done'; // Done
