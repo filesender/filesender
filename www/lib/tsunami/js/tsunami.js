@@ -5,14 +5,13 @@ var Tsunami = function(opts) {
     
     var $ = this;
     $.defaults = {
-        chunkSize: 1*1024*1024,
+        chunkSize: 1024*1024,
         simultaneousUploads: 3,
         jobsPerWorker: 1,
         target: '/',
         workerFile: 'tsunami_worker.js',
         log: true
     };
-    
     
     // useful stuff
     $.isUploading = false;
@@ -33,28 +32,31 @@ var Tsunami = function(opts) {
         if(callback != undefined && typeof(callback)=='function') {
             callback.apply($, data);
         }
-    }
+    };
     
-    
-    $h = {
+    $.h = {
         each: function(o,callback){
             if(typeof(o.length)!=='undefined') {
                 for (var i=0; i<o.length; i++) {
                     // Array or FileList
-                    if(callback(o[i])===false) return;
+                    if (callback(o[i]) === false){
+                        return;
+                    }
                 }
             } else {
                 for (i in o) {
                     // Object
-                    if(callback(i,o[i])===false) return;
+                    if (callback(i,o[i]) === false) {
+                        return;
+                    }
                 }
             }
         }
-    }
+    };
     
     $.addFiles = function(files) {
         $.files = files;
-    }
+    };
     
     $.upload = function(){
         // Make sure we don't start too many uploads at once
@@ -76,13 +78,13 @@ var Tsunami = function(opts) {
                     var response = JSON.parse(xhr.responseText);
                     $.currentStartByte = parseInt(response.filesize);
                     $.currentProgress = $.currentStartByte;
-                    $.log('Server filesize response: "'+response.filesize+'"')
+                    $.log('Server filesize response: "'+response.filesize+'"');
                     // Start workers
                     $.setupWorkers();
 
                 }
             }
-        };
+        }
         xhr.open("POST", $.opts.uri, true); //Open a request to the web address set
         xhr.setRequestHeader("Content-Disposition"," attachment; name='fileToUpload'"); 
         xhr.setRequestHeader("Content-Type", "application/octet-stream");
@@ -92,14 +94,13 @@ var Tsunami = function(opts) {
         xhr.send();
     };
     
-    
     $.setupWorkers = function() {
         $.log('Seting up workers');
         var workerHandler = function(e) {
             var data = e.data;
-            if(!data.cmd)
+            if(!data.cmd){
                 return;
-            
+            }
             
             switch (data.cmd) {
                 case 'ready':
@@ -110,7 +111,7 @@ var Tsunami = function(opts) {
                         e.target.postMessage({
                             'cmd':'setFile',
                             'file': $.currentFile
-                        })
+                        });
                     }
                     // upload next chunk
                     if($.currentStartByte < $.currentFile.size){
@@ -160,9 +161,16 @@ var Tsunami = function(opts) {
                     $.currentProgress += data.uploaded;
                     $.trigger('onProgress', [$.currentProgress, $.currentFile.size, data.uploaded]);
                     break;
-                        
+                case 'paused':
+                    $.workers.pop();
+
+                    if ($.workers.length == 0) {
+                        uploadPaused();
+                    }
+
+                    break;
             }
-        }
+        };
         
         for (var num=1; num<=$.opts.simultaneousUploads; num++) {
             var worker = new Worker($.opts.workerFile);
@@ -171,7 +179,7 @@ var Tsunami = function(opts) {
             worker.postMessage({
                 'cmd':'setId',
                 'id' : num
-            })
+            });
             worker.postMessage({
                 'cmd':'setUri',
                 'uri':$.opts.uri
@@ -186,31 +194,30 @@ var Tsunami = function(opts) {
             $.log('Worker '+num+" is created");
             
         }
-    }
+    };
 
     $.pauseUpload = function() {
         $.log('Pausing workers');
         for(var num = 0; num < $.workers.length; num++){
             $.workers[num].postMessage({
                 'cmd': 'pause'
-            })
+            });
         }
     };
-
 
     $.log = function(message) {
         if($.opts.log){
             console.log(message);
         }
-    }
+    };
     
     // Settings
     $.opts = opts||{};
     
     // Set default values
-    $h.each($.defaults, function(key,value){
+    $.h.each($.defaults, function(key,value){
         if(typeof($.opts[key])==='undefined') $.opts[key] = value;
     });
     // Return object
     return(this);
-}
+};

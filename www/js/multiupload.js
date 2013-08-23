@@ -70,6 +70,9 @@ var percentageComplete = 0;
 
 // Used for calculating average upload speed in updateProgressBar
 var initialStartTime = 0;
+var pauseTime;
+var resumeTime;
+var timeSpentPaused =0;
 
 // Used for undoing a clear-all call
 var filesToRestore;
@@ -240,7 +243,7 @@ function startUpload() {
 
 
         var firstFile = '';
-        if (n == 0) {
+        if (n == 0 && !pausedUpload) {
             firstFile = '&firstfile=true';
             initialStartTime = new Date().getTime();
         }
@@ -406,7 +409,10 @@ function transactionComplete(gid) {
             clearForm();
             var data = JSON.parse(data);
             console.log("Transaction complete successful");
-            window.location.href = 'index.php?s=complete&gid=' + data['gid'] + '&start=' + Math.floor(initialStartTime / 1000) + '&end=' + Math.floor(new Date().getTime() / 1000);
+            window.location.href = 'index.php?s=complete&gid=' + data['gid'] +
+                '&start=' + Math.floor(initialStartTime / 1000) +
+                '&end=' + Math.floor(new Date().getTime() / 1000) +
+                '&timepaused=' + Math.floor(timeSpentPaused / 1000);
         }, error: function (xhr, err) {
             ajaxerror(xhr.readyState, xhr.status, xhr.responseText);
         }
@@ -626,7 +632,6 @@ function clearFileBox() {
 function undoClearFileBox() {
     reAddFiles(filesToRestore);
     setButtonToClear();
-
 }
 
 
@@ -647,15 +652,21 @@ function setButtonToUndo(){
 function pauseUpload() {
     tsunami.pauseUpload();
     $('.progress_bar').css('background-color', '#FF8800');
+    $('#progress_string').html('Pausing...');
     vid = fileData[n].filevoucheruid;
     pausedUpload = true;
+
 }
 
 function resumeUpload() {
+    $('#progress_string').html(percentComplete + '%');
     startUpload();
     $('.progress_bar').css('background-color', '#5c5');
+    resumeTime = new Date().getTime();
+    timeSpentPaused += resumeTime - pauseTime;
 }
 
-
-
-
+function uploadPaused() {
+    $('#progress_string').html('Paused');
+    pauseTime = new Date().getTime();
+}

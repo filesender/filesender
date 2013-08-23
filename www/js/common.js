@@ -213,10 +213,11 @@ function statusMessage(msg, color)
 
 
 var totalBytesLoaded = 0;
+var percentComplete = 0;
 
 function updateProgressBar(bytesloaded, totalbytes, amountUploaded)
 {
-    var percentComplete = Math.round(bytesloaded * 100 / totalbytes);
+    percentComplete = Math.round(bytesloaded * 100 / totalbytes);
     var bytesRemaining;
     var uploadSpeed;
     var timeRemaining;

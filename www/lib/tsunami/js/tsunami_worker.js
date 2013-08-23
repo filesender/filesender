@@ -104,6 +104,10 @@ function uploadChunk(startByte, endByte)
                         'cmd':'log',
                         'message':wid+': Paused'
                     });
+
+                    postMessage({
+                        'cmd':'paused'
+                    });
                     self.close();
                 }
             } else {
@@ -115,5 +119,6 @@ function uploadChunk(startByte, endByte)
         }else{
         //
         }
+
     }
 }
