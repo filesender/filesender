@@ -95,9 +95,11 @@ function validate_fileto()
 
     if (isValid) {
         $('#fileto').removeClass('errorglow');
+        $('#fileto_label').removeClass('errorglow_label');
         return true;
     } else {
         $('#fileto').addClass('errorglow');
+        $('#fileto_label').addClass('errorglow_label');
         return false;
     }
 }
@@ -193,9 +195,11 @@ function validate_aup()
 {
     if ($("#aup").is(":checked")) {
         $('#aup').removeClass('errorglow');
+        $('#aup_label').removeClass('errorglow_label');
         return true;
     } else {
         $('#aup').addClass('errorglow');
+        $('#aup_label').addClass('errorglow_label');
         return false;
     }
 }

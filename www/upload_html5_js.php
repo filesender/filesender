@@ -20,6 +20,7 @@
 
         if (isValid) {
             $('#dragfilestouploadcss').removeClass('errorglow');
+            $("#file_msg").hide();
             return true;
         } else {
             $('#dragfilestouploadcss').addClass('errorglow');
