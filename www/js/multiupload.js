@@ -78,6 +78,7 @@ var timeSpentPaused =0;
 var filesToRestore;
 
 var pausedUpload = false;
+var vid = '';
 
 function browse() {
     $('#fileToUpload').click();

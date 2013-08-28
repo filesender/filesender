@@ -93,7 +93,7 @@ class AuthVoucher
                 $statement->bindParam(':filevoucheruid', $vid);
                 $statement = $this->db->execute($statement);
 
-                $result = $statement->fetchAll(PDO::FETCH_NUM);
+                $result = $statement->fetchAll(PDO::FETCH_ASSOC);
                 $returnArray = array();
                 $returnArray["SessionID"] = session_id();
 

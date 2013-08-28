@@ -179,7 +179,7 @@ class Mail {
 
     // ---------------------------------------
     // Send a notification that a transaction has been deleted.
-    // $recipients should be an array from getMultiRecipientDetails().
+    // $recipients should be an array from getTransactionRecipients().
     // $notifyRecipients is a boolean indicating whether to notify the recipients (and not just the sender).
     // ---------------------------------------
     public function sendTransactionDeleted($recipients, $notifyRecipients) {
