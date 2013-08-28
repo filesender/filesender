@@ -353,7 +353,7 @@ $json_o=json_decode($filedata,true);
                         continue;
                     }
                     $onClick = "'" . $itemContents[0]['filevoucheruid'] . "'";
-                    $recipientsArray = $functions->getMultiRecipientDetails($item['filetrackingcode'], $item['fileauthuseruid']);
+                    $recipientsArray = $functions->getTransactionRecipients($item['filetrackingcode'], $item['fileauthuseruid']);
                     $numExtraRecipients = sizeof($recipientsArray)-1;
                     $fileToString = $numExtraRecipients == 0 ? $itemContents[0]['fileto']  : $itemContents[0]['fileto'] . ' ... (' . $numExtraRecipients . ')';
                     $recipientsString = '';

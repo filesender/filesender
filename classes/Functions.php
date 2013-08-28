@@ -30,9 +30,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-// ---------------------------------------
+// --------------------------------
 // Format bytes into readable text format
-// ---------------------------------------
+// --------------------------------
 function formatBytes($bytes, $precision = 2)
 {
 
@@ -50,9 +50,9 @@ function formatBytes($bytes, $precision = 2)
     return 0;
 }
 
-// ---------------------------------------
-// Create Unique ID for vouchers
-// ---------------------------------------
+// --------------------------------
+// Create Unique ID for vouchers.
+// --------------------------------
 function getGUID()
 {
     return sprintf(
@@ -66,44 +66,42 @@ function getGUID()
     );
 }
 
-//--------------------------------- Unchecked
+// --------------------------------
 // Create cryptographically secure key for group ID's.
-//---------------------------------
+// --------------------------------
 function getOpenSSLKey()
 {
     global $config;
     return bin2hex(openssl_random_pseudo_bytes($config['openSSLKeyLength']));
 }
 
-// ---------------------------------------
-// Replace illegal chars with _ character in supplied filenames
-// ---------------------------------------
-
-function sanitizeFilename($filename)
+// --------------------------------
+// Replace illegal chars with _ character in supplied file names.
+// --------------------------------
+function sanitizeFilename($fileName)
 {
 
-    if (!empty($filename)) {
-        $filename = preg_replace("/^\./", "_", $filename); //return preg_replace("/[^A-Za-z0-9_\-\. ]/", "_", $filename);
-        return $filename;
+    if (!empty($fileName)) {
+        $fileName = preg_replace("/^\./", "_", $fileName); //return preg_replace("/[^A-Za-z0-9_\-\. ]/", "_", $filename);
+        return $fileName;
     } else {
         //trigger_error("invalid empty filename", E_USER_ERROR);
         return "";
     }
 }
 
-// ---------------------------------------
-// Error if fileUid doesn't look sane
-// ---------------------------------------
-
-function ensureSaneFileUid($fileuid)
+// --------------------------------
+// Error if fileUid doesn't look sane.
+// --------------------------------
+function ensureSaneFileUid($fileUid)
 {
 
     global $config;
 
-    if (preg_match($config['voucherRegEx'], $fileuid) and strLen($fileuid) == $config['voucherUIDLength']) {
-        return $fileuid;
+    if (preg_match($config['voucherRegEx'], $fileUid) and strLen($fileUid) == $config['voucherUIDLength']) {
+        return $fileUid;
     } else {
-        trigger_error("invalid file uid $fileuid", E_USER_ERROR);
+        trigger_error("invalid file uid $fileUid", E_USER_ERROR);
         return false;
     }
 }
@@ -138,6 +136,18 @@ class Functions
     }
 
     // --------------------------------
+    // Singleton: creates a Functions object (if one hasn't been created already) and returns it.
+    // --------------------------------
+    public static function getInstance()
+    {
+        if (self::$instance === null) {
+            self::$instance = new self();
+        }
+
+        return self::$instance;
+    }
+
+    // --------------------------------
     // Returns a 3-letter tracking code which is unique for the given user. 'AAA' is returned if no previous
     // tracking codes are found for the user, or if no user is specified.
     // --------------------------------
@@ -163,17 +173,26 @@ class Functions
     public function getStats()
     {
         // Get upload statistics.
-        $statString = 'UP: ';
-        $statement = $this->db->prepare("SELECT COUNT(*), SUM(logfilesize) FROM logs WHERE logtype = 'Uploaded'");
+        $statement = $this->db->prepare(
+            "SELECT COUNT(*), SUM(logfilesize) " .
+            "FROM logs " .
+            "WHERE logtype = 'Uploaded'"
+        );
+
         $statement = $this->db->execute($statement);
         $result = $statement->fetch(PDO::FETCH_NUM);
 
         $count = $result[0];
         $sumFileSize = $result[1];
-        $statString .= $count . ' files (' . formatBytes($sumFileSize) . ') |';
+        $statString = 'UP: ' . $count . ' files (' . formatBytes($sumFileSize) . ') |';
 
         // Get download statistics.
-        $statement = $this->db->prepare("SELECT COUNT(*), SUM(logfilesize) FROM logs WHERE logtype = 'Download'");
+        $statement = $this->db->prepare(
+            "SELECT COUNT(*), SUM(logfilesize) " .
+            "FROM logs " .
+            "WHERE logtype = 'Download'"
+        );
+
         $statement = $this->db->execute($statement);
         $result = $statement->fetch(PDO::FETCH_NUM);
 
@@ -191,22 +210,25 @@ class Functions
     {
         $authAttributes = $this->getAuthAttributes();
 
-        $statement = $this->db->prepare("SELECT " . $this->getReturnFields() . " FROM files WHERE (fileauthuseruid = :fileauthuseruid) AND filestatus = 'Voucher' ORDER BY fileactivitydate DESC");
+        $statement = $this->db->prepare(
+            "SELECT " . $this->getReturnFields() .
+            "FROM files " .
+            "WHERE (fileauthuseruid = :fileauthuseruid) " .
+            "AND filestatus = 'Voucher' " .
+            "ORDER BY fileactivitydate DESC"
+        );
+
         $statement->bindParam(':fileauthuseruid', $authAttributes['saml_uid_attribute']);
-
         $statement = $this->db->execute($statement);
-        $result = $statement->fetchAll();
 
-        $returnArray = array();
-
-        foreach ($result as $row) {
-            array_push($returnArray, $row);
-        }
-
-        return json_encode($returnArray);
+        return json_encode($statement->fetchAll(PDO::FETCH_ASSOC));
     }
 
-    private function getAuthAttributes() {
+    // --------------------------------
+    // Gets the user SAML uid attribute if user is authenticated.
+    // --------------------------------
+    private function getAuthAttributes()
+    {
         if ($this->authSaml->isAuth()) {
             return $this->authSaml->sAuth();
         }
@@ -226,30 +248,16 @@ class Functions
         . 'filegroupid, filetrackingcode, filedownloadconfirmations, fileenabledownloadreceipts, filedailysummary ';
     }
 
-    public function countDownloads($vid)
-    {
-        $statement = $this->db->prepare(
-            "SELECT COUNT(*) " .
-            "FROM logs " .
-            "WHERE logvoucheruid = :logvoucheruid " .
-            "AND logtype = 'Download'"
-        );
-
-        $statement->bindParam(':logvoucheruid', $vid);
-
-        $statement = $this->db->execute($statement);
-        $total = $statement->fetch(PDO::FETCH_NUM);
-
-        return $total[0];
-    }
-
+    // --------------------------------
+    // Gets all tracking codes belonging to the authenticated user.
+    // --------------------------------
     public function getUserTrackingCodes()
     {
         $statement = $this->db->prepare(
-            "SELECT DISTINCT(filetrackingcode), fileauthuseruid " .
-            "FROM files " .
-            "WHERE fileauthuseruid = :fileauthuseruid " .
-            "ORDER BY filetrackingcode DESC"
+            'SELECT DISTINCT(filetrackingcode), fileauthuseruid ' .
+            'FROM files ' .
+            'WHERE fileauthuseruid = :fileauthuseruid ' .
+            'ORDER BY filetrackingcode DESC'
         );
 
         $authAttributes = $this->getAuthAttributes();
@@ -259,10 +267,9 @@ class Functions
         return json_encode($statement->fetchAll());
     }
 
-    //----------------------------------------
-    // returns unique emails for autocomplete for current user
-    // ---------------------------------------
-
+    // --------------------------------
+    // Returns a list of unique emails for auto complete for the current user.
+    // --------------------------------
     public function uniqueEmailsForAutoComplete()
     {
         global $config;
@@ -305,6 +312,9 @@ class Functions
         return $commaList;
     }
 
+    // --------------------------------
+    // Returns data for admin.php from the logs table (if user has admin access).
+    // --------------------------------
     public function adminLogs($type)
     {
         global $page;
@@ -356,11 +366,9 @@ class Functions
         return '';
     }
 
-    //--------------------------------------- CHECKED
-    // Return logs if users is admin
-    // current email authenticated as per config["admin"]
-    // ---------------------------------------
-
+    // --------------------------------
+    // Returns data for admin.php from the files table (if user has admin access).
+    // --------------------------------
     public function adminFiles($type)
     {
         global $page;
@@ -413,11 +421,9 @@ class Functions
         return '';
     }
 
-    //---------------------------------------CHECKED
-    // Return Files if users is admin
-    // current email authenticated as per config["admin"]
-    // ---------------------------------------
-
+    // --------------------------------
+    // Check if a file upload already has a pending database entry.
+    // --------------------------------
     public function checkPending($dataItem)
     {
         $statement = $this->db->prepare(
@@ -439,8 +445,10 @@ class Functions
         return $result ? $result[0] : '';
     }
 
-    // check if this upload already has a data entry
 
+    // --------------------------------
+    // Returns file information based on filevoucheruid.
+    // --------------------------------
     public function getFile($dataItem)
     {
         $statement = $this->db->prepare(
@@ -455,97 +463,67 @@ class Functions
         return json_encode($statement->fetchAll());
     }
 
-    //--------------------------------------- CHECKED
-    // Return file information based on filervoucheruid
-    // ---------------------------------------
-    //
-
-    function addRecipientsToTransaction($emailList, $trackingCode, $uid, $subject, $message)
+    // --------------------------------
+    // Adds a list of email recipients to the transaction identified by $trackingCode and $authUserUid.
+    // --------------------------------
+    function addRecipientsToTransaction($emailList, $trackingCode, $authUserUid, $subject, $message)
     {
-        $transactionDetails = $this->getTransactionDetails($trackingCode, $uid);
-        //used to get a list of the existing recipients for the specified transaction.
-        $existingDetails = $this->getMultiRecipientDetails($trackingCode, $uid);
-
+        $transactionDetails = $this->getTransactionDetails($trackingCode, $authUserUid); // Transaction file list.
+        $existingDetails = $this->getTransactionRecipients($trackingCode, $authUserUid); // Existing recipients list.
         $groupIDs = array();
 
-        logEntry("EmailList" . print_r($emailList, true));
         foreach ($emailList as $email) {
             global $config;
-            $duplicateFound = false;
 
-            // Checks if the current email is already part of the transaction
-            foreach ($existingDetails as $existingEmail) {
-                if ($existingEmail['fileto'] == $email) {
-                    $duplicateFound = true;
-                    break;
-                }
-            }
-
-            if ($duplicateFound) {
+            // Skip any recipients that already have access to the transaction.
+            if ($this->isDuplicateRecipient($email, $existingDetails)) {
                 continue;
             }
 
-            // Assigns the email address a new GroupID for the transaction.
-            $emailGroupID = getOpenSSLKey();
-
-            $fileData['filegroupid'] = $emailGroupID;
-
-            // All of the fields that aren't directly related to specific files of a transaction
-            // should be the same for all recipients of that transaction
-            $fileData['fileexpirydate'] = $transactionDetails[0]['fileexpirydate'];
+            // Add the fields that are common for all of the files in the transaction.
+            $fileData = $transactionDetails[0];
+            $fileData['filegroupid'] = getOpenSSLKey(); // Assign a new group ID to the email address.
             $fileData['fileto'] = $email;
-            $fileData['filefrom'] = $transactionDetails[0]['filefrom'];
-            $fileData['filesubject'] = $transactionDetails[0]['filesubject'];
-            $fileData['fileactivitydate'] = $transactionDetails[0]['fileactivitydate'];
-            if (isset($subject)) {
-                $fileData['filesubject'] = $subject;
-            }
-            if (isset($message)) {
-                $fileData['filemessage'] = $message;
-            }
-            $fileData['fileip4address'] = $transactionDetails[0]['fileip4address'];
-            $fileData['fileip6address'] = $transactionDetails[0]['fileip6address'];
-            $fileData['fileauthurl'] = $transactionDetails[0]['fileauthurl'];
-            $fileData['filesendersname'] = $transactionDetails[0]['filesendersname'];
-            $fileData['fileauthuseruid'] = $uid;
-            $fileData['fileauthuseremail'] = $transactionDetails[0]['fileauthuseremail'];
+            $fileData['fileauthuseruid'] = $authUserUid;
             $fileData['filetrackingcode'] = $trackingCode;
-            $fileData['filedownloadconfirmations'] = $transactionDetails[0]['filedownloadconfirmations'];
-            $fileData['fileenabledownloadreceipts'] = $transactionDetails[0]['fileenabledownloadreceipts'];
-            $fileData['filedailysummary'] = $transactionDetails[0]['filedailysummary'];
+            $fileData['filesubject'] = $subject;
+            $fileData['filemessage'] = $message;
 
-            // Assigns the create date to the time they were added to the transaction, and NOT the time the transaction was created.
+            // Set created date to now, not the time the transaction was created.
             $fileData['filecreateddate'] = date($config['db_dateformat'], time());
 
-            // Add each individual file of the transaction to the new recipient
-            for ($file = 0; $file < sizeof($transactionDetails); $file++) {
-                $fileData['filesize'] = $transactionDetails[$file]['filesize'];
-                $fileData['fileoriginalname'] = $transactionDetails[$file]['fileoriginalname'];
-                $fileData['filestatus'] = $transactionDetails[$file]['filestatus'];
-                $fileData['fileuid'] = $transactionDetails[$file]['fileuid'];
+            // Add each individual file to the new recipient.
+            foreach ($transactionDetails as $transaction) {
+                $fileData['filesize'] = $transaction['filesize'];
+                $fileData['fileoriginalname'] = $transaction['fileoriginalname'];
+                $fileData['filestatus'] = $transaction['filestatus'];
+                $fileData['fileuid'] = $transaction['fileuid'];
                 $fileData['filevoucheruid'] = getGUID();
 
                 $this->insertFile($fileData, 'Added');
             }
-            $groupIDs[] = $emailGroupID;
-        }
-        return ($this->sendMail->sendDownloadAvailable($groupIDs));
 
+            $groupIDs[] = $fileData['filegroupid']; // Needed for emails.
+        }
+
+        return ($this->sendMail->sendDownloadAvailable($groupIDs));
     }
 
-    //--------------------------------------- CHECKED NOTE
-    // Note: Function Name Duplicated in AuthVoucher.php but using $_Request["vid"]
-    // Note: Remove AuthVoucher.php getVocuher function and replace with similar function in Functions class
-    // Return voucher information based on fileid
-    // ---------------------------------------
-    //
-
-    function getTransactionDetails($trackingCode, $authuseruid)
+    // --------------------------------
+    // Gets information about a specific transaction.
+    // --------------------------------
+    function getTransactionDetails($trackingCode, $authUserUid)
     {
-        $statement = $this->db->prepare('SELECT * FROM files WHERE filetrackingcode = :filetrackingcode AND fileauthuseruid = :fileauthuseruid ORDER BY fileoriginalname ASC');
-        $statement->bindParam(':filetrackingcode', $trackingCode);
-        $statement->bindParam(':fileauthuseruid', $authuseruid);
+        $statement = $this->db->prepare(
+            'SELECT * ' .
+            'FROM files ' .
+            'WHERE filetrackingcode = :filetrackingcode ' .
+            'AND fileauthuseruid = :fileauthuseruid ' .
+            'ORDER BY fileoriginalname ASC'
+        );
 
+        $statement->bindParam(':filetrackingcode', $trackingCode);
+        $statement->bindParam(':fileauthuseruid', $authUserUid);
         $statement = $this->db->execute($statement);
         $result = $statement->fetchAll();
 
@@ -553,9 +531,12 @@ class Functions
         $previousRow = null;
 
         foreach ($result as $row) {
+            // Only return 'Available' rows.
             if ($row['filestatus'] != 'Available') {
                 continue;
             }
+
+            // List each file only once and include downloads.
             if ($previousRow == null || $previousRow['fileoriginalname'] != $row['fileoriginalname']) {
                 $row["downloads"] = $this->countDownloads($row["filevoucheruid"]);
                 array_push($returnArray, $row);
@@ -567,140 +548,159 @@ class Functions
         return $returnArray;
     }
 
-    //--------------------------------------- CHECKED
-    // Return voucher information based on filervoucheruid
-    // ---------------------------------------
-    //
-
-    function getMultiRecipientDetails($trackingCode, $authuseruid)
+    // --------------------------------
+    // Returns the number of times a single file has been downloaded, based on filevoucheruid.
+    // --------------------------------
+    public function countDownloads($vid)
     {
-        $statement = $this->db->prepare('SELECT * FROM files where filetrackingcode = :filetrackingcode AND fileauthuseruid = :fileauthuseruid ORDER BY fileto ASC');
-        $statement->bindParam(':filetrackingcode', $trackingCode);
-        $statement->bindParam(':fileauthuseruid', $authuseruid);
+        $statement = $this->db->prepare(
+            "SELECT COUNT(*) " .
+            "FROM logs " .
+            "WHERE logvoucheruid = :logvoucheruid " .
+            "AND logtype = 'Download'"
+        );
+
+        $statement->bindParam(':logvoucheruid', $vid);
 
         $statement = $this->db->execute($statement);
-        $result = $statement->fetchAll();
+        $total = $statement->fetch(PDO::FETCH_NUM);
+
+        return $total[0];
+    }
+
+    // --------------------------------
+    // Returns a list of recipients for a specific transaction.
+    // --------------------------------
+    function getTransactionRecipients($trackingCode, $authUserUid)
+    {
+        $statement = $this->db->prepare(
+            'SELECT * ' .
+            'FROM files ' .
+            'WHERE filetrackingcode = :filetrackingcode ' .
+            'AND fileauthuseruid = :fileauthuseruid ' .
+            'ORDER BY fileto ASC'
+        );
+
+        $statement->bindParam(':filetrackingcode', $trackingCode);
+        $statement->bindParam(':fileauthuseruid', $authUserUid);
+
+        $statement = $this->db->execute($statement);
+        $result = $statement->fetchAll(PDO::FETCH_ASSOC);
 
         $returnArray = array();
         $previousRow = null;
 
         foreach ($result as $row) {
+            // Only return 'Available' rows.
             if ($row['filestatus'] != 'Available') {
                 continue;
             }
+
+            // Remove duplicate file names.
             if ($previousRow == null || $previousRow['fileto'] != $row['fileto']) {
                 array_push($returnArray, $row);
             }
+
             $previousRow = $row;
         }
+
         return $returnArray;
     }
 
-    public function insertFile($dataitem, $logtype = 'Uploaded')
+    // --------------------------------
+    // Checks if a recipient email address already exists in array $recipientsList.
+    // --------------------------------
+    private function isDuplicateRecipient($email, $recipientsList)
+    {
+        foreach ($recipientsList as $recipient) {
+            if (isset($recipient['fileto']) && $recipient['fileto'] == $email) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    // --------------------------------
+    // Adds a table record for uploaded file/voucher and sends email(s).
+    // --------------------------------
+    public function insertFile($dataItem, $logType = 'Uploaded')
     {
         // prepare PDO insert statement
         $statement = $this->db->prepare(
-            'INSERT INTO files (
-                        fileexpirydate,
-                        fileto,
-                        filesubject,
-                        fileactivitydate,
-                        filevoucheruid,
-                        filemessage,
-                        filefrom,
-                        filesize,
-                        fileoriginalname,
-                        filestatus,
-                        fileip4address,
-                        fileip6address,
-                        filesendersname,
-                        filereceiversname,
-                        filevouchertype,
-                        fileuid,
-                        fileauthuseruid,
-                        fileauthuseremail,
-                        filecreateddate,
-                        filegroupid,
-                        filetrackingcode,
-                        filedownloadconfirmations,
-                        fileenabledownloadreceipts,
-                        filedailysummary
-                        ) VALUES
-                        (
-                        :fileexpirydate,
-                        :fileto,
-                        :filesubject,
-                        :fileactivitydate,
-                        :filevoucheruid,
-                        :filemessage,
-                        :filefrom,
-                        :filesize,
-                        :fileoriginalname,
-                        :filestatus,
-                        :fileip4address,
-                        :fileip6address,
-                        :filesendersname,
-                        :filereceiversname,
-                        :filevouchertype,
-                        :fileuid,
-                        :fileauthuseruid,
-                        :fileauthuseremail,
-                        :filecreateddate,
-                        :filegroupid,
-                        :filetrackingcode,
-                        :filedownloadconfirmations,
-                        :fileenabledownloadreceipts,
-                        :filedailysummary)'
+            'INSERT INTO files ( ' .
+            'fileexpirydate, fileto, filesubject, fileactivitydate, filevoucheruid, filemessage, filefrom, ' .
+            'filesize, fileoriginalname, filestatus, fileip4address,fileip6address, filesendersname, ' .
+            'filereceiversname, filevouchertype, fileuid, fileauthuseruid, fileauthuseremail, filecreateddate, ' .
+            'filegroupid, filetrackingcode, filedownloadconfirmations, fileenabledownloadreceipts, filedailysummary ' .
+            ') VALUES ( ' .
+            ':fileexpirydate, :fileto, :filesubject, :fileactivitydate, :filevoucheruid, :filemessage, :filefrom, ' .
+            ':filesize, :fileoriginalname, :filestatus, :fileip4address, :fileip6address, :filesendersname, ' .
+            ':filereceiversname, :filevouchertype, :fileuid, :fileauthuseruid, :fileauthuseremail, :filecreateddate, ' .
+            ':filegroupid, :filetrackingcode, :filedownloadconfirmations, :fileenabledownloadreceipts, :filedailysummary ' .
+            ')'
         );
 
-        $statement->bindParam(':fileexpirydate', $dataitem['fileexpirydate']);
-        $statement->bindParam(':fileto', $dataitem['fileto']);
-        $statement->bindParam(':filefrom', $dataitem['filefrom']);
-        $statement->bindParam(':filesubject', $dataitem['filesubject']);
-        $statement->bindParam(':fileactivitydate', $dataitem['fileactivitydate']);
-        $statement->bindParam(':filevoucheruid', $dataitem['filevoucheruid']);
-        $statement->bindParam(':filemessage', $dataitem['filemessage']);
-        $statement->bindParam(':filefrom', $dataitem['filefrom']);
-        $statement->bindParam(':filesize', $dataitem['filesize']);
-        $statement->bindParam(':fileoriginalname', $dataitem['fileoriginalname']);
-        $statement->bindParam(':filestatus', $dataitem['filestatus']);
-        $statement->bindParam(':fileip4address', $dataitem['fileip4address']);
-        $statement->bindParam(':fileip6address', $dataitem['fileip6address']);
-        $statement->bindParam(':filesendersname', $dataitem['filesendersname']);
-        $statement->bindParam(':filereceiversname', $dataitem['filereceiversname']);
-        $statement->bindParam(':filevouchertype', $dataitem['filevouchertype']);
-        $statement->bindParam(':fileuid', $dataitem['fileuid']);
-        $statement->bindParam(':fileauthuseruid', $dataitem['fileauthuseruid']);
-        $statement->bindParam(':fileauthuseremail', $dataitem['fileauthuseremail']);
-        $statement->bindParam(':filecreateddate', $dataitem['filecreateddate']);
-        $statement->bindParam(':filegroupid', $dataitem['filegroupid']);
-        $statement->bindParam(':filetrackingcode', $dataitem['filetrackingcode']);
-        $statement->bindParam(':filedownloadconfirmations', $dataitem['filedownloadconfirmations']);
-        $statement->bindParam(':fileenabledownloadreceipts', $dataitem['fileenabledownloadreceipts']);
-        $statement->bindParam(':filedailysummary', $dataitem['filedailysummary']);
+        $statement->bindParam(':fileexpirydate', $dataItem['fileexpirydate']);
+        $statement->bindParam(':fileto', $dataItem['fileto']);
+        $statement->bindParam(':filefrom', $dataItem['filefrom']);
+        $statement->bindParam(':filesubject', $dataItem['filesubject']);
+        $statement->bindParam(':fileactivitydate', $dataItem['fileactivitydate']);
+        $statement->bindParam(':filevoucheruid', $dataItem['filevoucheruid']);
+        $statement->bindParam(':filemessage', $dataItem['filemessage']);
+        $statement->bindParam(':filesize', $dataItem['filesize']);
+        $statement->bindParam(':fileoriginalname', $dataItem['fileoriginalname']);
+        $statement->bindParam(':filestatus', $dataItem['filestatus']);
+        $statement->bindParam(':fileip4address', $dataItem['fileip4address']);
+        $statement->bindParam(':fileip6address', $dataItem['fileip6address']);
+        $statement->bindParam(':filesendersname', $dataItem['filesendersname']);
+        $statement->bindParam(':filereceiversname', $dataItem['filereceiversname']);
+        $statement->bindParam(':filevouchertype', $dataItem['filevouchertype']);
+        $statement->bindParam(':fileuid', $dataItem['fileuid']);
+        $statement->bindParam(':fileauthuseruid', $dataItem['fileauthuseruid']);
+        $statement->bindParam(':fileauthuseremail', $dataItem['fileauthuseremail']);
+        $statement->bindParam(':filecreateddate', $dataItem['filecreateddate']);
+        $statement->bindParam(':filegroupid', $dataItem['filegroupid']);
+        $statement->bindParam(':filetrackingcode', $dataItem['filetrackingcode']);
+        $statement->bindParam(':filedownloadconfirmations', $dataItem['filedownloadconfirmations']);
+        $statement->bindParam(':fileenabledownloadreceipts', $dataItem['fileenabledownloadreceipts']);
+        $statement->bindParam(':filedailysummary', $dataItem['filedailysummary']);
 
         $this->db->execute($statement);
 
-        if ($dataitem['filestatus'] == "Voucher") {
-            $this->saveLog->saveLog($dataitem, "Voucher Sent", "");
-            return $this->sendMail->sendVoucherIssued($dataitem['filevoucheruid']);
-        } elseif ($dataitem['filestatus'] == "Available") {
-            $this->saveLog->saveLog($dataitem, $logtype, "");
+        if ($dataItem['filestatus'] == 'Voucher') {
+            $this->saveLog->saveLog($dataItem, 'Voucher Sent', '');
+            return $this->sendMail->sendVoucherIssued($dataItem['filevoucheruid']);
+        } elseif ($dataItem['filestatus'] == 'Available') {
+            $this->saveLog->saveLog($dataItem, $logType, '');
         }
+
         return true;
     }
 
-    function getTransactionDownloadsForRecipient($recipientEmail, $trackingCode, $authuseruid)
+    // --------------------------------
+    // Returns the number of times a given recipient has downloaded each file from a given transaction.
+    // --------------------------------
+    function getTransactionDownloadsForRecipient($recipientEmail, $trackingCode, $authUserUid)
     {
-        $statement = $this->db->prepare('SELECT fileoriginalname, filevoucheruid, filestatus FROM files WHERE fileto = :fileto AND filetrackingcode = :filetrackingcode AND fileauthuseruid = :fileauthuseruid ORDER BY fileoriginalname ASC');
+        $statement = $this->db->prepare(
+            'SELECT fileoriginalname, filevoucheruid, filestatus ' .
+            'FROM files ' .
+            'WHERE fileto = :fileto ' .
+            'AND filetrackingcode = :filetrackingcode ' .
+            'AND fileauthuseruid = :fileauthuseruid ' .
+            'ORDER BY fileoriginalname ASC'
+        );
+
         $statement->bindParam(':fileto', $recipientEmail);
         $statement->bindParam(':filetrackingcode', $trackingCode);
-        $statement->bindParam(':fileauthuseruid', $authuseruid);
+        $statement->bindParam(':fileauthuseruid', $authUserUid);
 
         $statement = $this->db->execute($statement);
-        $result = $statement->fetchAll();
+        $result = $statement->fetchAll(PDO::FETCH_ASSOC);
 
         $returnArray = array();
+
         foreach ($result as $row) {
             if ($row['filestatus'] == 'Available') {
                 $returnArray[] = array(
@@ -713,6 +713,9 @@ class Functions
         return $returnArray;
     }
 
+    // --------------------------------
+    // Check if a group ID is valid and does not already exist.
+    // --------------------------------
     function isValidGroupId($groupId)
     {
         if (ensureSaneOpenSSLKey($groupId)) {
@@ -724,43 +727,72 @@ class Functions
         return false;
     }
 
+
+    // --------------------------------
+    // Gets information about a transaction based on group ID.
+    // --------------------------------
     function getMultiFileData($groupId)
     {
-        $statement = $this->db->prepare('SELECT * FROM files where filegroupid = :filegroupid ORDER BY fileoriginalname ASC');
+        $statement = $this->db->prepare(
+            'SELECT * ' .
+            'FROM files ' .
+            'WHERE filegroupid = :filegroupid ' .
+            'ORDER BY fileoriginalname ASC'
+        );
+
         $statement->bindParam(':filegroupid', $groupId);
 
         $statement = $this->db->execute($statement);
-        $result = $statement->fetchAll();
+        $result = $statement->fetchAll(PDO::FETCH_ASSOC);
 
         $returnArray = array();
 
         foreach ($result as $row) {
-            if ($row['filestatus'] != 'Available') {
-                continue;
+            if ($row['filestatus'] == 'Available') {
+                $row["downloads"] = $this->countDownloads($row["filevoucheruid"]);
+                array_push($returnArray, $row);
             }
-            $row["downloads"] = $this->countDownloads($row["filevoucheruid"]);
-            array_push($returnArray, $row);
         }
 
         return $returnArray;
     }
 
-    function getFileDownloadTotals($trackingCode, $fileAuth)
+    // --------------------------------
+    // Returns total number of times each file in a transaction has been downloaded (total, not per-user).
+    // --------------------------------
+    function getFileDownloadTotals($trackingCode, $authUserUid)
     {
-        $statement = $this->db->prepare("SELECT COUNT(*), logfilename FROM logs WHERE logfiletrackingcode = :logfiletrackingcode AND logtype='Download' AND logauthuseruid = :logauthuserid GROUP BY logfilename ORDER BY logfilename ASC");
+        $statement = $this->db->prepare(
+            "SELECT COUNT(*), logfilename " .
+            "FROM logs " .
+            "WHERE logfiletrackingcode = :logfiletrackingcode " .
+            "AND logtype= 'Download' " .
+            "AND logauthuseruid = :logauthuserid " .
+            "GROUP BY logfilename " .
+            "ORDER BY logfilename ASC"
+        );
+
         $statement->bindParam(':logfiletrackingcode', $trackingCode);
-        $statement->bindParam(':logauthuserid', $fileAuth);
+        $statement->bindParam(':logauthuserid', $authUserUid);
 
         $statement = $this->db->execute($statement);
-        return $statement->fetchAll();
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    function deleteRecipient($groupid, $notifyRecipient)
+    // --------------------------------
+    // Removes a recipient from a transaction and sends email(s).
+    // --------------------------------
+    function deleteRecipient($groupId, $notifyRecipient)
     {
-        $files = $this->getMultiFileData($groupid);
+        $files = $this->getMultiFileData($groupId);
 
-        $statement = $this->db->prepare("UPDATE files SET filestatus = 'Deleted' WHERE filegroupid = :filegroupid");
-        $statement->bindParam(':filegroupid', $groupid);
+        $statement = $this->db->prepare(
+            "UPDATE files " .
+            "SET filestatus = 'Deleted' " .
+            "WHERE filegroupid = :filegroupid"
+        );
+
+        $statement->bindParam(':filegroupid', $groupId);
 
         $statement = $this->db->execute($statement);
         $result = $statement->rowCount();
@@ -770,16 +802,26 @@ class Functions
             $this->saveLog->saveLog($files[0], 'Removed', '');
             return true;
         }
+
         return false;
     }
 
-    function deleteTransaction($trackingCode, $authuid, $notifyRecipients)
+    // --------------------------------
+    // Deletes all files in a transaction.
+    // --------------------------------
+    function deleteTransaction($trackingCode, $authUserUid, $notifyRecipients)
     {
-        $recipients = $this->getMultiRecipientDetails($trackingCode, $authuid);
+        $recipients = $this->getTransactionRecipients($trackingCode, $authUserUid);
 
-        $statement = $this->db->prepare("UPDATE files set filestatus = 'Deleted' WHERE filetrackingcode = :filetrackingcode AND fileauthuseruid = :fileauthuseruid");
+        $statement = $this->db->prepare(
+            "UPDATE files " .
+            "SET filestatus = 'Deleted' " .
+            "WHERE filetrackingcode = :filetrackingcode " .
+            "AND fileauthuseruid = :fileauthuseruid"
+        );
+
         $statement->bindParam(':filetrackingcode', $trackingCode);
-        $statement->bindParam(':fileauthuseruid', $authuid);
+        $statement->bindParam(':fileauthuseruid', $authUserUid);
 
         $statement = $this->db->execute($statement);
         $result = $statement->rowCount();
@@ -788,13 +830,15 @@ class Functions
             $this->sendMail->sendTransactionDeleted($recipients, $notifyRecipients);
             return true;
         }
+
         return false;
     }
 
-    public function insertVoucher($to, $from, $expiry, $vouchermessage, $vouchersubject)
+    // --------------------------------
+    // Adds a table record for a created voucher and sends email(s).
+    // --------------------------------
+    public function insertVoucher($to, $from, $expiry, $message, $subject)
     {
-
-        // must be authenticated
         if ($this->authSaml->isAuth()) {
 
             global $config;
@@ -802,536 +846,511 @@ class Functions
             $authAttributes = $this->authSaml->sAuth();
 
             $statement = $this->db->prepare(
-                'INSERT INTO files (
-                            fileexpirydate,
-                            fileto,
-                            filesubject,
-                            fileactivitydate,
-                            filevoucheruid,
-                            filemessage,
-                            filefrom,
-                            filesize,
-                            fileoriginalname,
-                            filestatus,
-                            fileip4address,
-                            fileip6address,
-                            filesendersname,
-                            filereceiversname,
-                            filevouchertype,
-                            fileuid,
-                            fileauthuseruid,
-                            fileauthuseremail,
-                            filecreateddate
-
-                            ) VALUES
-                            (
-                            :fileexpirydate,
-                            :fileto,
-                            :filesubject,
-                            :fileactivitydate,
-                            :filevoucheruid,
-                            :filemessage,
-                            :filefrom,
-                            :filesize,
-                            :fileoriginalname,
-                            :filestatus,
-                            :fileip4address,
-                            :fileip6address,
-                            :filesendersname,
-                            :filereceiversname,
-                            :filevouchertype,
-                            :fileuid,
-                            :fileauthuseruid,
-                            :fileauthuseremail,
-                            :filecreateddate)'
+                'INSERT INTO files (' .
+                'fileexpirydate, fileto, filesubject, fileactivitydate, filevoucheruid, filemessage, ' .
+                'filefrom, filesize, fileoriginalname, filestatus, fileip4address, fileip6address, ' .
+                'filesendersname, filereceiversname, filevouchertype, fileuid, fileauthuseruid, ' .
+                'fileauthuseremail, filecreateddate ' .
+                ') VALUES ( ' .
+                ':fileexpirydate, :fileto, :filesubject, :fileactivitydate, :filevoucheruid, :filemessage, ' .
+                ':filefrom, :filesize, :fileoriginalname, :filestatus, :fileip4address, :fileip6address, ' .
+                ':filesendersname, :filereceiversname, :filevouchertype, :fileuid, :fileauthuseruid, ' .
+                ':fileauthuseremail, :filecreateddate ' .
+                ')'
             );
 
-            $filevoucheruid = getGUID();
-            // set default subject
-            $voucher = 'Voucher';
-            $voucherissuedemailsubject = lang('_EMAIL_SUBJECT_VOUCHER');
-            // overide if optional subject is added by user
-            $voucherissuedemailsubject = ($vouchersubject != "") ? $vouchersubject : $voucherissuedemailsubject;
             $blank = '';
             $zero = 0;
-            $fileexpiryParam = date($config['db_dateformat'], strtotime($expiry));
-            $statement->bindParam(':fileexpirydate', $fileexpiryParam);
+
+            // Set subject, overriding the default if one is passed as argument.
+            $fileSubject = ($subject != '') ? $subject : lang('_EMAIL_SUBJECT_VOUCHER');
+            $statement->bindParam(':filesubject', $fileSubject);
+
+            // Set expiry, activity and created dates.
+            $fileExpiryDate = date($config['db_dateformat'], strtotime($expiry));
+            $statement->bindParam(':fileexpirydate', $fileExpiryDate);
+            $fileActivityDate = date($config['db_dateformat'], time());
+            $statement->bindParam(':fileactivitydate', $fileActivityDate);
+            $statement->bindParam(':filecreateddate', $fileActivityDate);
+
+            $fileVoucherUid = getGUID();
+            $statement->bindParam(':filevoucheruid', $fileVoucherUid);
             $statement->bindParam(':fileto', $to);
-            $statement->bindParam(':filesubject', $voucherissuedemailsubject);
-            $fileactivitydateParam = date($config['db_dateformat'], time());
-            $statement->bindParam(':fileactivitydate', $fileactivitydateParam);
-            $statement->bindParam(':filevoucheruid', $filevoucheruid);
-            $statement->bindParam(':filemessage', $vouchermessage);
             $statement->bindParam(':filefrom', $from);
+            $statement->bindParam(':filemessage', $message);
             $statement->bindParam(':filesize', $zero);
             $statement->bindParam(':fileoriginalname', $blank);
-            $statement->bindParam(':filestatus', $voucher);
-            $fileip4addressParam = $dbCheck->checkIP($_SERVER['REMOTE_ADDR']);
-            $statement->bindParam(':fileip4address', $fileip4addressParam);
-            $fileip6addressParam = $dbCheck->checkIPv6($_SERVER['REMOTE_ADDR']);
-            $statement->bindParam(':fileip6address', $fileip6addressParam);
+
+            $fileStatus = 'Voucher';
+            $statement->bindParam(':filestatus', $fileStatus);
+
+            $fileIp4Address = $dbCheck->checkIP($_SERVER['REMOTE_ADDR']);
+            $statement->bindParam(':fileip4address', $fileIp4Address);
+            $fileIp6Address = $dbCheck->checkIPv6($_SERVER['REMOTE_ADDR']);
+            $statement->bindParam(':fileip6address', $fileIp6Address);
+
             $statement->bindParam(':filesendersname', $blank);
             $statement->bindParam(':filereceiversname', $blank);
             $statement->bindParam(':filevouchertype', $blank);
-            $fileuidParam = getGUID();
-            $statement->bindParam(':fileuid', $fileuidParam);
+
+            $fileUid = getGUID();
+            $statement->bindParam(':fileuid', $fileUid);
             $statement->bindParam(':fileauthuseruid', $authAttributes["saml_uid_attribute"]);
             $statement->bindParam(':fileauthuseremail', $from);
-            $filecreateddateParam = date($config['db_dateformat'], time());
-            $statement->bindParam(':filecreateddate', $filecreateddateParam);
 
             $this->db->execute($statement);
 
-            // get voucherdata to email
-            $dataitem = $this->getVoucherData($filevoucheruid);
-            $this->saveLog->saveLog($dataitem, "Voucher Sent", "");
+            // Get voucher data to log and email.
+            $dataItem = $this->getVoucherData($fileVoucherUid);
+            $this->saveLog->saveLog($dataItem, "Voucher Sent", "");
 
-            return $this->sendMail->sendVoucherIssued($filevoucheruid);
-
-        } else {
-
-            return false;
+            return $this->sendMail->sendVoucherIssued($fileVoucherUid);
         }
+
+        return false; // Not authenticated.
     }
 
+    // --------------------------------
+    // Returns information about a voucher, based on filevoucheruid.
+    // --------------------------------
     public function getVoucherData($vid)
     {
         ensureSaneFileUid($vid);
 
-        $statement = $this->db->prepare('SELECT * FROM files where filevoucheruid = :filevoucheruid');
+        $statement = $this->db->prepare(
+            'SELECT * ' .
+            'FROM files ' .
+            'WHERE filevoucheruid = :filevoucheruid'
+        );
+
         $statement->bindParam(':filevoucheruid', $vid);
 
         $statement = $this->db->execute($statement);
-        $result = $statement->fetchAll();
+        $result = $statement->fetchAll(PDO::FETCH_ASSOC);
 
         return $result[0];
     }
 
-    //--------------------------------------- CHECKED
-    // insert a voucher
-    // ---------------------------------------
-
+    // --------------------------------
+    // Validates fields of the $data array to ensure it is a valid file.
+    // --------------------------------
     public function validateFileData($data)
     {
-        // client must provide following minimum data
-        // fileto // filesize // filefrom // fileexpirydata // file voucher or authenticated uuid // filename
-        // ensure they exists and are valid
-        // return array of errors or
         global $config;
         global $resultArray;
 
-        $dbCheck = DB_Input_Checks::getInstance();
-        $authsaml = AuthSaml::getInstance();
-        $functions = Functions::getInstance();
-
         $errorArray = array();
-        // test
-        //array_push($errorArray, "err_nodiskspace");
-        //array_push($errorArray, "err_tomissing");
-        // filesize missing
+
         if (!isset($data["filesize"])) {
             array_push($errorArray, "err_missingfilesize");
-        }
-        // check space is available on disk before uploading
-        if (isset($data["filesize"]) && disk_free_space($config['site_filestore']) - $data["filesize"] < 1) {
+        } elseif (disk_free_space($config['site_filestore']) - $data["filesize"] < 1) {
             array_push($errorArray, "err_nodiskspace");
         }
-        // expiry missing
+
         if (!isset($data["fileexpirydate"])) {
             array_push($errorArray, "err_expmissing");
         }
-        // fileto missing
+
         if (!isset($data["fileto"])) {
             array_push($errorArray, "err_tomissing");
         }
-        // filename missing
-        if (!isset($data["fileoriginalname"])) {
-            array_push($errorArray, "err_invalidfilename");
-        }
-        // filename has invalid extension - $config['ban_extension'] as array
-        $ban_extension = explode(',', $config['ban_extension']);
-        foreach ($ban_extension as $extension) {
-            if (isset($data["fileoriginalname"]) && $extension == pathinfo($data["fileoriginalname"], PATHINFO_EXTENSION)) {
-                array_push($errorArray, "err_invalidextension");
-            }
-        }
-        // filename blank
-        if (isset($data["fileoriginalname"]) && $data["fileoriginalname"] === "") {
-            array_push($errorArray, "err_invalidfilename");
-        }
-        // filename contains invalid characters
-        if (isset($data["fileoriginalname"]) && preg_match('=^[^\\\\/:;\*\?\"<>|]+(\.[^\\\\/:;\*\?\"<>|]+)*$=', $data["fileoriginalname"]) === 0) {
+
+        if (!$this->isValidFileName($data)) {
             array_push($errorArray, "err_invalidfilename");
         }
 
-        // expiry out of range
-        if (strtotime($data["fileexpirydate"]) > strtotime("+" . $config['default_daysvalid'] . " day") || strtotime($data["fileexpirydate"]) < strtotime("now")) {
-            // Don't generate error, expiry date will be fixed later on with:
-            // $data["fileexpirydate"] = $this->ensureValidFileExpiryDate($data["fileexpirydate"]);
-            // When generating an error use/uncomment the following code:
-            // array_push($errorArray,"err_exoutofrange");
-        }
-        // Recipient email missing
-        if (!isset($data["fileto"])) {
-            array_push($errorArray, "err_filetomissing");
-        } else {
-            $emailto = str_replace(",", ";", $data["fileto"]);
-            $emailArray = preg_split("/;/", $emailto);
-            // validate number of emails
-            if (count($emailArray) > $config['max_email_recipients']) {
-                array_push($errorArray, "err_toomanyemail");
-            }
-            // validate individual emails
-            foreach ($emailArray as $Email) {
-                if (!filter_var($Email, FILTER_VALIDATE_EMAIL)) {
-                    array_push($errorArray, "err_invalidemail");
-                }
-            }
-        }
-        // Sender email missing or not authuser or voucher sender
-        if (!isset($data["filefrom"])) {
-            array_push($errorArray, "err_filefrommissing");
-        } else {
-            // Check if sender address is valid
-            if (!filter_var($data["filefrom"], FILTER_VALIDATE_EMAIL)) {
-                array_push($errorArray, "err_invalidemail");
-            }
-            // check if filefrom matches voucher from or matches authenticated user
-            if (isset($_SESSION['voucher'])) {
-                $tempData = $functions->getVoucherData($_SESSION['voucher']);
-                //array_push($errorArray,  $data["filefrom"] .":". $tempData["filefrom"]);
-                if ($data["filefrom"] != $tempData["fileto"]) {
-                    array_push($errorArray, "err_invalidemail");
-                }
-            } elseif ($authsaml->isAuth()) {
-                $authAttributes = $authsaml->sAuth();
-                if (!in_array($data["filefrom"], $authAttributes["email"])) {
-                    array_push($errorArray, "err_invalidemail");
-                }
-            }
+        if (!$this->isValidFileExtension($data)) {
+            array_push($errorArray, 'err_invalidextension');
         }
 
-        // if errors - return them via json to client
+        $errorArray = $this->validateRecipientEmail($data, $errorArray);
+        $errorArray = $this->validateSenderEmail($data, $errorArray);
+
+        // If any errors were found, return them to client as JSON.
         if (count($errorArray) > 0) {
             $resultArray["errors"] = $errorArray;
             echo json_encode($resultArray);
-            exit; // Stop further script execution
+            exit;
         }
 
-        // no errors >> continue
-        // ensure valid fields before commiting to database
+        // No errors; ensure valid fields for database insert.
+        $dbCheck = DB_Input_Checks::getInstance();
+
         $data["fileexpirydate"] = $this->ensureValidFileExpiryDate($data["fileexpirydate"]);
         $data["filesubject"] = (isset($data["filesubject"])) ? $data["filesubject"] : "";
         $data["fileactivitydate"] = date($config['db_dateformat'], time());
         $data["filevoucheruid"] = (isset($data["filevoucheruid"])) ? $data["filevoucheruid"] : getGUID();
         $data["filemessage"] = (isset($data["filemessage"])) ? $data["filemessage"] : "";
-        $data["filefrom"] = $data["filefrom"];
-        $data["filesize"] = $data["filesize"];
         $data["fileoriginalname"] = sanitizeFilename($data['fileoriginalname']);
-        $data["filestatus"] = "Pending"; //isset($data['filestatus']) ? $data['filestatus'] : "Pending";
+        $data["filestatus"] = "Pending";
+
         $data["fileip4address"] = $dbCheck->checkIP($_SERVER['REMOTE_ADDR']);
         $data["fileip6address"] = $dbCheck->checkIPv6($_SERVER['REMOTE_ADDR']);
         $data["filesendersname"] = isset($data['filesendersname']) ? $data['filesendersname'] : null;
         $data["filereceiversname"] = isset($data['filereceiversname']) ? $data['filereceiversname'] : null;
         $data["filevouchertype"] = isset($data['filevouchertype']) ? $data['filevouchertype'] : null;
-        if ($data["fileuid"] == "") {
-            $data["fileuid"] = getGUID();
-        };
-        //$data["fileauthuseruid"]="null";
-        //$data["fileauthuseremail"]="null";
         $data["filecreateddate"] = date($config['db_dateformat'], time());
+        $data['fileuid'] = $data['fileuid'] == '' ? '' : getGUID();
 
         return $data;
     }
 
-    // --------------------------------------- CHECKED
-    // ensure valid fileexpirydate
-    // ---------------------------------------
-
-    public static function getInstance()
+    // --------------------------------
+    // Checks if a file name is valid (i.e. is not empty and does not contain illegal characters).
+    // --------------------------------
+    private function isValidFileName($data)
     {
-        // Check for both equality and type
-        if (self::$instance === null) {
-            self::$instance = new self();
-        }
-        return self::$instance;
+        return isset($data['fileoriginalname']) && $data['fileoriginalname'] !== ''
+        && preg_match('=^[^\\\\/:;\*\?\"<>|]+(\.[^\\\\/:;\*\?\"<>|]+)*$=', $data["fileoriginalname"]) !== 0;
     }
 
-    // ---------------------------------------CHECKED
-    // Validate $data and return data
-    // ---------------------------------------
+    // --------------------------------
+    // Checks if a file extension is valid (i.e. is not banned in config.php).
+    // --------------------------------
+    private function isValidFileExtension($data)
+    {
+        global $config;
+        $ban_extension = explode(',', $config['ban_extension']);
 
+        if (!isset($data['fileoriginalname'])) {
+            return false;
+        }
+
+        foreach ($ban_extension as $extension) {
+            if ($extension == pathinfo($data['fileoriginalname'], PATHINFO_EXTENSION)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    // --------------------------------
+    // Validation for the 'fileto' field.
+    // --------------------------------
+    private function validateRecipientEmail($data, $errorArray)
+    {
+        global $config;
+
+        if (!isset($data["fileto"])) {
+            array_push($errorArray, "err_filetomissing");
+            return $errorArray;
+        }
+
+        $emailTo = str_replace(",", ";", $data["fileto"]);
+        $emailArray = preg_split("/;/", $emailTo);
+
+        if (count($emailArray) > $config['max_email_recipients']) {
+            array_push($errorArray, "err_toomanyemail");
+        }
+
+        foreach ($emailArray as $email) {
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                array_push($errorArray, "err_invalidemail");
+            }
+        }
+
+        return $errorArray;
+    }
+
+    // --------------------------------
+    // Validation for the 'filefrom' field.
+    // --------------------------------
+    private function validateSenderEmail($data, $errorArray)
+    {
+        $authSaml = AuthSaml::getInstance();
+
+        if (!isset($data['filefrom'])) {
+            array_push($errorArray, 'err_filefrommissing');
+            return $errorArray;
+        }
+
+        if (!filter_var($data['filefrom'], FILTER_VALIDATE_EMAIL)) {
+            array_push($errorArray, 'err_invalidemail');
+        }
+
+        if (isset($_SESSION['voucher'])) {
+            // Check that the voucher to address matches the sender email.
+            $voucherData = $this->getVoucherData($_SESSION['voucher']);
+
+            if ($data['filefrom'] != $voucherData['fileto']) {
+                array_push($errorArray, 'err_invalidemail');
+            }
+        } elseif ($authSaml->isAuth()) {
+            // Check that the authenticated email matches the sender email.
+            $authAttributes = $authSaml->sAuth();
+
+            if (!in_array($data['filefrom'], $authAttributes['email'])) {
+                array_push($errorArray, 'err_invalidemail');
+            }
+        }
+
+        return $errorArray;
+    }
+
+    // --------------------------------
+    // Check that the file expiry date is valid, resetting it to a default value if not.
+    // --------------------------------
     public function ensureValidFileExpiryDate($data)
     {
         global $config;
-        // check fileexpirydate exists and is valid
-        if ((strtotime($data) >= strtotime("+" . $config['default_daysvalid'] . " day") || strtotime($data) <= strtotime("now"))) {
-            // reset fileexpiry date to max config date from server
-            $data = date($config['db_dateformat'], strtotime("+" . ($config['default_daysvalid']) . " day"));
+        $latestValidDate = strtotime('+' . $config['default_daysvalid'] . ' day');
+
+        if ((strtotime($data) >= $latestValidDate || strtotime($data) <= strtotime('now'))) {
+            // Expiry date is invalid, reset it to max date from server config.
+            $data = date($config['db_dateformat'], $latestValidDate);
         }
+
         return date($config['db_dateformat'], strtotime($data));
     }
 
-    // --------------------------------------- CHECKED
-    // Insert new file
-    // ---------------------------------------
-
-    public function updateFile($dataitem)
+    // --------------------------------
+    // Updates the table record for a given file.
+    // --------------------------------
+    public function updateFile($dataItem)
     {
-
         $statement = $this->db->prepare(
             'UPDATE files SET
-                        fileexpirydate = :fileexpirydate,
-                        fileto = :fileto,
-                        filesubject = :filesubject,
-                        fileactivitydate = :fileactivitydate,
-                        filemessage = :filemessage,
-                        filefrom = :filefrom,
-                        filesize = :filesize,
-                        fileoriginalname = :fileoriginalname,
-                        filestatus = :filestatus,
-                        fileip4address = :fileip4address,
-                        fileip6address = :fileip6address,
-                        filesendersname = :filesendersname,
-                        filereceiversname = :filereceiversname,
-                        filevouchertype = :filevouchertype,
-                        fileuid = :fileuid,
-                        fileauthuseruid = :fileauthuseruid,
-                        fileauthuseremail = :fileauthuseremail,
-                        filecreateddate = :filecreateddate,
-                        filegroupid = :filegroupid,
-                        filetrackingcode = :filetrackingcode,
-                        filedownloadconfirmations = :filedownloadconfirmations,
-                        fileenabledownloadreceipts = :fileenabledownloadreceipts,
-                        filedailysummary = :filedailysummary
-                        WHERE filevoucheruid = :filevoucheruid'
+            fileexpirydate = :fileexpirydate,
+            fileto = :fileto,
+            filesubject = :filesubject,
+            fileactivitydate = :fileactivitydate,
+            filemessage = :filemessage,
+            filefrom = :filefrom,
+            filesize = :filesize,
+            fileoriginalname = :fileoriginalname,
+            filestatus = :filestatus,
+            fileip4address = :fileip4address,
+            fileip6address = :fileip6address,
+            filesendersname = :filesendersname,
+            filereceiversname = :filereceiversname,
+            filevouchertype = :filevouchertype,
+            fileuid = :fileuid,
+            fileauthuseruid = :fileauthuseruid,
+            fileauthuseremail = :fileauthuseremail,
+            filecreateddate = :filecreateddate,
+            filegroupid = :filegroupid,
+            filetrackingcode = :filetrackingcode,
+            filedownloadconfirmations = :filedownloadconfirmations,
+            fileenabledownloadreceipts = :fileenabledownloadreceipts,
+            filedailysummary = :filedailysummary
+            WHERE filevoucheruid = :filevoucheruid'
         );
 
-        $statement->bindParam(':fileexpirydate', $dataitem['fileexpirydate']);
-        $statement->bindParam(':fileto', $dataitem['fileto']);
-        $statement->bindParam(':filesubject', $dataitem['filesubject']);
-        $statement->bindParam(':fileactivitydate', $dataitem['fileactivitydate']);
-        $statement->bindParam(':filevoucheruid', $dataitem['filevoucheruid']);
-        $statement->bindParam(':filemessage', $dataitem['filemessage']);
-        $statement->bindParam(':filefrom', $dataitem['filefrom']);
-        $statement->bindParam(':filesize', $dataitem['filesize']);
-        $statement->bindParam(':fileoriginalname', $dataitem['fileoriginalname']);
-        $statement->bindParam(':filestatus', $dataitem['filestatus']);
-        $statement->bindParam(':fileip4address', $dataitem['fileip4address']);
-        $statement->bindParam(':fileip6address', $dataitem['fileip6address']);
-        $statement->bindParam(':filesendersname', $dataitem['filesendersname']);
-        $statement->bindParam(':filereceiversname', $dataitem['filereceiversname']);
-        $statement->bindParam(':filevouchertype', $dataitem['filevouchertype']);
-        $statement->bindParam(':fileuid', $dataitem['fileuid']);
-        $statement->bindParam(':fileauthuseruid', $dataitem['fileauthuseruid']);
-        $statement->bindParam(':fileauthuseremail', $dataitem['fileauthuseremail']);
-        $statement->bindParam(':filecreateddate', $dataitem['filecreateddate']);
-        $statement->bindParam(':filegroupid', $dataitem['filegroupid']);
-        $statement->bindParam(':filetrackingcode', $dataitem['filetrackingcode']);
-        $statement->bindParam(':filedownloadconfirmations', $dataitem['filedownloadconfirmations']);
-        $statement->bindParam(':fileenabledownloadreceipts', $dataitem['fileenabledownloadreceipts']);
-        $statement->bindParam(':filedailysummary', $dataitem['filedailysummary']);
+        $statement->bindParam(':fileexpirydate', $dataItem['fileexpirydate']);
+        $statement->bindParam(':fileto', $dataItem['fileto']);
+        $statement->bindParam(':filesubject', $dataItem['filesubject']);
+        $statement->bindParam(':fileactivitydate', $dataItem['fileactivitydate']);
+        $statement->bindParam(':filevoucheruid', $dataItem['filevoucheruid']);
+        $statement->bindParam(':filemessage', $dataItem['filemessage']);
+        $statement->bindParam(':filefrom', $dataItem['filefrom']);
+        $statement->bindParam(':filesize', $dataItem['filesize']);
+        $statement->bindParam(':fileoriginalname', $dataItem['fileoriginalname']);
+        $statement->bindParam(':filestatus', $dataItem['filestatus']);
+        $statement->bindParam(':fileip4address', $dataItem['fileip4address']);
+        $statement->bindParam(':fileip6address', $dataItem['fileip6address']);
+        $statement->bindParam(':filesendersname', $dataItem['filesendersname']);
+        $statement->bindParam(':filereceiversname', $dataItem['filereceiversname']);
+        $statement->bindParam(':filevouchertype', $dataItem['filevouchertype']);
+        $statement->bindParam(':fileuid', $dataItem['fileuid']);
+        $statement->bindParam(':fileauthuseruid', $dataItem['fileauthuseruid']);
+        $statement->bindParam(':fileauthuseremail', $dataItem['fileauthuseremail']);
+        $statement->bindParam(':filecreateddate', $dataItem['filecreateddate']);
+        $statement->bindParam(':filegroupid', $dataItem['filegroupid']);
+        $statement->bindParam(':filetrackingcode', $dataItem['filetrackingcode']);
+        $statement->bindParam(':filedownloadconfirmations', $dataItem['filedownloadconfirmations']);
+        $statement->bindParam(':fileenabledownloadreceipts', $dataItem['fileenabledownloadreceipts']);
+        $statement->bindParam(':filedailysummary', $dataItem['filedailysummary']);
 
         $this->db->execute($statement);
     }
 
-    // --------------------------------------- CHECKED
-    // Update file
-    // ---------------------------------------
-
-    public function deleteVoucher($fileid)
+    // --------------------------------
+    // Removes a voucher and sends email(s).
+    // --------------------------------
+    public function deleteVoucher($fileId)
     {
+        if ($this->authSaml->isAuth()) {
+            $statement = $this->db->prepare(
+                "UPDATE files " .
+                "SET filestatus = 'Voucher Cancelled' " .
+                "WHERE fileid = :fileid"
+            );
 
-        global $config;
-
-        if ($this->authSaml->isAuth()) { // check authentication SAML User
-
-            $statement = $this->db->prepare("UPDATE files SET filestatus = 'Voucher Cancelled' WHERE fileid = :fileid");
-            $statement->bindParam(':fileid', $fileid);
-
+            $statement->bindParam(':fileid', $fileId);
             $this->db->execute($statement);
 
-            $fileArray = $this->getVoucher($fileid);
+            $fileArray = $this->getVoucher($fileId);
 
             if (count($fileArray) > 0) {
-                $this->saveLog->saveLog($fileArray[0], "Voucher Cancelled", "");
-                return $this->sendMail->sendVoucherCancelled($fileArray[0]['filevoucheruid']);;
+                $this->saveLog->saveLog($fileArray[0], 'Voucher Cancelled', '');
+                return $this->sendMail->sendVoucherCancelled($fileArray[0]['filevoucheruid']);
             }
-            return false;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
-    // --------------------------------------- CHECKED
-    // Delete a voucher
-    // ---------------------------------------
-
+    // --------------------------------
+    // Returns information about a voucher, based on filevoucheruid.
+    // --------------------------------
     public function getVoucher($vid)
     {
-        $statement = $this->db->prepare('SELECT * FROM files where fileid = :fileid');
-        $statement->bindParam(':fileid', $vid);
+        $statement = $this->db->prepare(
+            'SELECT * ' .
+            'FROM files ' .
+            'WHERE fileid = :fileid'
+        );
 
+        $statement->bindParam(':fileid', $vid);
         $statement = $this->db->execute($statement);
-        return $statement->fetchAll();
+
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // --------------------------------------- CHECKED
-    // Close a voucher
-    // ---------------------------------------
-
-    public function closeVoucher($fileid)
+    // --------------------------------
+    // Closes a voucher (cancelling it), returning true if successful.
+    // --------------------------------
+    public function closeVoucher($fileId)
     {
+        if ($this->authSaml->isAuth() || $this->authVoucher->aVoucher()) {
+            $statement = $this->db->prepare(
+                "UPDATE files " .
+                "SET filestatus = 'Closed' " .
+                "WHERE fileid = :fileid"
+            );
 
-        global $config;
-
-        if ($this->authSaml->isAuth() || $this->authVoucher->aVoucher()) { // check authentication SAML User
-
-            $statement = $this->db->prepare("UPDATE files SET filestatus = 'Closed' WHERE fileid = :fileid");
-            $statement->bindParam(':fileid', $fileid);
-
+            $statement->bindParam(':fileid', $fileId);
             $this->db->execute($statement);
 
-            $fileArray = $this->getVoucher($fileid);
+            $fileArray = $this->getVoucher($fileId);
 
             if (count($fileArray) > 0) {
-                $this->saveLog->saveLog($fileArray[0], "Voucher Cancelled", "");
+                $this->saveLog->saveLog($fileArray[0], 'Voucher Cancelled', '');
                 return true;
             }
-            return false;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
-    // --------------------------------------- CHECKED
-    // Close a voucher
-    // ---------------------------------------
-
-    public function closeCompleteVoucher($filevoucheruid)
+    // --------------------------------
+    // Closes a complete voucher based on filevoucheruid.
+    // --------------------------------
+    public function closeCompleteVoucher($fileVoucherUid)
     {
-        if ($this->authSaml->isAuth() || $this->authVoucher->aVoucher()) { // check authentication SAML User
+        if ($this->authSaml->isAuth() || $this->authVoucher->aVoucher()) {
+            $statement = $this->db->prepare(
+                "UPDATE files " .
+                "SET filestatus = 'Closed' " .
+                "WHERE filevoucheruid = :filevoucheruid"
+            );
 
-            $statement = $this->db->prepare("UPDATE files SET filestatus = 'Closed' WHERE filevoucheruid = :filevoucheruid");
-            $statement->bindParam(':filevoucheruid', $filevoucheruid);
-
+            $statement->bindParam(':filevoucheruid', $fileVoucherUid);
             $this->db->execute($statement);
-            logEntry("Voucher Closed: " . $filevoucheruid);
+
+            logEntry('Voucher Closed: ' . $fileVoucherUid);
         }
     }
 
-    // --------------------------------------- CHECKED
-    // Delete a file
-    // ---------------------------------------
-
-    public function deleteFile($fileid)
+    // --------------------------------
+    // Deletes a file.
+    // --------------------------------
+    public function deleteFile($fileId)
     {
-
         global $config;
 
-        if ($this->authSaml->isAuth()) { // check authentication SAML User
+        if ($this->authSaml->isAuth()) {
+            $statement = $this->db->prepare(
+                "UPDATE files " .
+                "SET filestatus = 'Deleted' " .
+                "WHERE fileid = :fileid"
+            );
 
-            $statement = $this->db->prepare("UPDATE files SET filestatus = 'Deleted' WHERE fileid = :fileid");
-            $statement->bindParam(':fileid', $fileid);
-
+            $statement->bindParam(':fileid', $fileId);
             $this->db->execute($statement);
 
-            $fileArray = $this->getVoucher($fileid);
+            $fileArray = $this->getVoucher($fileId);
 
             if (count($fileArray) > 0) {
                 $this->sendMail->sendEmail($fileArray[0], $config['defaultfilecancelled']);
-                $this->saveLog->saveLog($fileArray[0], "File Cancelled", "");
+                $this->saveLog->saveLog($fileArray[0], 'File Cancelled', '');
                 return true;
             }
-            return false;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
-    public function cancelUpload($fileauth, $trackingcode)
+    // --------------------------------
+    // Deletes a transaction and returns result.
+    // --------------------------------
+    public function cancelUpload($authUserUid, $trackingCode)
     {
-        $statement = $this->db->prepare("DELETE FROM files WHERE fileauthuseruid  = :fileauthuseruid AND filetrackingcode = :filetrackingcode");
-        $statement->bindParam(':fileauthuseruid', $fileauth);
-        $statement->bindParam(':filetrackingcode', $trackingcode);
+        $statement = $this->db->prepare(
+            'DELETE FROM files ' .
+            'WHERE fileauthuseruid  = :fileauthuseruid ' .
+            'AND filetrackingcode = :filetrackingcode'
+        );
+
+        $statement->bindParam(':fileauthuseruid', $authUserUid);
+        $statement->bindParam(':filetrackingcode', $trackingCode);
 
         $statement = $this->db->execute($statement);
         return $statement->rowCount();
     }
 
-    //--------------------------------------- CHECKED
-    // Return filesize as integer from php
-    // Function also handles windows servers
-    // ---------------------------------------
-    //
-
-    public function getFileSize($filename)
+    // --------------------------------
+    // Returns file size or 0 if file not found.
+    // --------------------------------
+    public function getFileSize($fileName)
     {
-
-        global $config;
-
-        if ($filename == "") {
-            return;
-        } else {
-            $file = $filename; //$config["site_filestore"].sanitizeFilename($filename);
-            //We should turn this into a switch/case, exhaustive with a default case
-            if (file_exists($file)) {
-                if (PHP_OS == "Darwin") {
-                    $size = trim(shell_exec("stat -f %z " . escapeshellarg($file)));
-                } elseif (!(strtoupper(substr(PHP_OS, 0, 3)) == 'WIN')) {
-                    $size = trim(shell_exec("stat -c%s " . escapeshellarg($file)));
-                } else {
-                    $fsobj = new COM("Scripting.FileSystemObject");
-                    $f = $fsobj->GetFile($file);
-                    $size = $f->Size;
-                }
-                return $size;
+        if ($fileName != '' && file_exists($fileName)) {
+            if (PHP_OS == "Darwin") {
+                $size = trim(shell_exec("stat -f %z " . escapeshellarg($fileName)));
+            } elseif (!(strtoupper(substr(PHP_OS, 0, 3)) == 'WIN')) {
+                $size = trim(shell_exec("stat -c%s " . escapeshellarg($fileName)));
             } else {
-                return 0;
+                $fsObj = new COM("Scripting.FileSystemObject");
+                $f = $fsObj->GetFile($fileName);
+                $size = $f->Size;
             }
+
+            return $size;
         }
+
+        return 0;
     }
 
-    //--------------------------------------- CHECKED
-    // Get drive space
-    // Returns JSON array
-    // ---------------------------------------
-
+    // --------------------------------
+    // Returns an array containing fields for total and available drive space on the server.
+    // --------------------------------
     public function driveSpace()
     {
-
         global $config;
 
-        $result["site_filestore_total"] = disk_total_space($config['site_filestore']); // use absolute locations result in bytes
-        $result["site_temp_filestore_total"] = disk_total_space($config['site_temp_filestore']); // use absolute locations
-        $result["site_filestore_free"] = disk_free_space($config['site_filestore']); // use absolute locations
-        $result["site_temp_filestore_free"] = disk_free_space($config['site_temp_filestore']); // use absolute locations
+        // Use absolute locations.
+        $result["site_filestore_total"] = disk_total_space($config['site_filestore']);
+        $result["site_temp_filestore_total"] = disk_total_space($config['site_temp_filestore']);
+        $result["site_filestore_free"] = disk_free_space($config['site_filestore']);
+        $result["site_temp_filestore_free"] = disk_free_space($config['site_temp_filestore']);
 
         return $result;
 
     }
 
-    //--------------------------------------- CHECKED
-    // Check if active menu item
-    // Returns 'active' or empty string
-    // ---------------------------------------
-
-    public function active($value, $menuname)
+    // --------------------------------
+    // Checks if active menu item, returns 'active' or empty string.
+    // --------------------------------
+    public function active($value, $menuName)
     {
-
-        if ($value == $menuname) {
-            return "active";
-        }
-
-        return "";
-
+        return $value == $menuName ? 'active' : '';
     }
 
-    // --------------------------------------- UNCHECKED
+    // --------------------------------
     // Converts from UNIX to DOS style timestamp.
     // Defaults to current time if $timestamp parameter is missing or 0.
-    // ---------------------------------------
-
+    // --------------------------------
     function unixToDosTime($timestamp = 0)
     {
         $timeBit = ($timestamp == 0) ? getdate() : getdate($timestamp);
