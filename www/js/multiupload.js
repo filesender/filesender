@@ -80,11 +80,13 @@ var filesToRestore;
 var pausedUpload = false;
 var vid = '';
 
-function browse() {
+function browse()
+{
     $('#fileToUpload').click();
 }
 
-function fileSelected() {
+function fileSelected()
+{
     // multiple files selected
     // loop through all files and show their values
     if (document.readyState != 'complete' && document.readyState != 'interactive') {
@@ -99,7 +101,8 @@ function fileSelected() {
 
 // Loops through an array of files and adds them to the upload queue & creates file-boxes for them
 // Used in multiupload.php as well
-function addFiles(files) {
+function addFiles(files)
+{
     for (var i = 0; i < files.length; i++) {
         var dupFound = false;
 
@@ -107,8 +110,6 @@ function addFiles(files) {
             openErrorDialog('You have reached the max number of uploads of: ' + maxUploads);
             return;
         }
-
-
 
         // Loops through list of files already in the list and prevents any duplicates from being created
         for (var j = 0; j < fileData.length; j++) {
@@ -127,7 +128,7 @@ function addFiles(files) {
             n = n + 1;
 
             fileData[n] = new Array(n);
-            fileData[n].filegroupid = groupid;
+            fileData[n].filegroupid = groupID;
             fileData[n].filetrackingcode = trackingCode;
             fileData[n].file = files[i];
             fileData[n].fileSize = fileData[n].file.size;
@@ -163,9 +164,9 @@ function addFiles(files) {
 }
 
 // Part of the undo clear button, re-adds files which may have been cleared accidentally.
-function reAddFiles(files){
+function reAddFiles(files)
+{
     for (var i = 0; i < files.length; i++) {
-
         if(files[i].filename == undefined) continue;
 
         n = n + 1;
@@ -200,7 +201,8 @@ function reAddFiles(files){
     }
 }
 
-function generateFileBoxHtml() {
+function generateFileBoxHtml()
+{
     var validfile = '';
     if (validate_file(n)) {
         fileData[n].valid = true;
@@ -219,7 +221,8 @@ function generateFileBoxHtml() {
         '</div>';
 }
 
-function startUpload() {
+function startUpload()
+{
     // check if file is validated before uploading
     if (validate_file(n) && fileData[n].status) {
         $('#file_del_' + n).hide();
@@ -255,8 +258,8 @@ function startUpload() {
             data: {myJson: JSON.stringify(json)}
         }).success(function (data) {
             if (data == '') {
-            alert('No response from server');
-            return;
+                alert('No response from server');
+                return;
             }
 
             if (data == 'ErrorAuth') {
@@ -336,7 +339,8 @@ function startUpload() {
     }
 }
 
-function doUploadComplete() {
+function doUploadComplete()
+{
     var end = new Date().getTime();
     var time = end - startTime;
     var speed = fileData[n].bytesTotal / (time / 1000) / 1024 / 1024 * 8;
@@ -392,7 +396,8 @@ function doUploadComplete() {
     });
 }
 
-function transactionComplete(gid) {
+function transactionComplete(gid)
+{
     var query = $('#form1').serializeArray(), json = {};
 
     for (var i in query) {
@@ -420,14 +425,16 @@ function transactionComplete(gid) {
     });
 }
 
-function clearForm() {
+function clearForm()
+{
     clearFileBox();
     $("#fileto").val("");
     $("#filesubject").val("");
     $("#filemessage").val("");
 }
 
-function updateBoxStats() {
+function updateBoxStats()
+{
     var numFiles = n + 1;
     if (n >= 0) {
         $('#uploadBoxStats').html('Number of Files: ' + numFiles + '/' + maxUploads + '<br /> Size: ' + readablizebytes(totalFileLengths) + '/' + readablizebytes(maxHTML5UploadSize));
@@ -437,7 +444,8 @@ function updateBoxStats() {
     }
 }
 
-function getFiles() {
+function getFiles()
+{
     var files = [];
 
     for (var i = n; i < fileData.length; i++) {
@@ -447,7 +455,8 @@ function getFiles() {
     return files;
 }
 
-function uploadFileWebworkers() {
+function uploadFileWebworkers()
+{
     var files = getFiles();
 
     //var files = document.getElementById('fileToUpload').files;
@@ -484,7 +493,8 @@ function uploadFileWebworkers() {
     tsunami.upload();
 }
 
-function uploadFile() {
+function uploadFile()
+{
 
     // move to next chunk
     var file = fileData[n].file;
@@ -557,7 +567,6 @@ function uploadFile() {
             }
         }
     }
-
     return true;
 }
 
@@ -597,7 +606,8 @@ function uploadCanceled(evt) {
 }
 
 // remove file from upload array
-function removeItem(fileID) {
+function removeItem(fileID)
+{
     // Updates the combined file lengths
     totalFileLengths -= fileData[fileID].fileSize;
     $('#file_' + fileID).remove();
@@ -614,7 +624,8 @@ function removeItem(fileID) {
 }
 
 // clears the contents of the files-to-upload
-function clearFileBox() {
+function clearFileBox()
+{
     if(n == -1) return;
     filesToRestore = fileData.slice();
     var temp = fileData.length;
@@ -630,27 +641,31 @@ function clearFileBox() {
     updateBoxStats();
 }
 
-function undoClearFileBox() {
+function undoClearFileBox()
+{
     reAddFiles(filesToRestore);
     setButtonToClear();
 }
 
 
 // Functions which change the onclick event on the button based on the previous click event.
-function setButtonToClear(){
+function setButtonToClear()
+{
     var clearAll = $('#clearallbtn');
     clearAll.find('.ui-button-text').html("Clear all");
     clearAll.attr('onclick', 'clearFileBox()');
 }
 
-function setButtonToUndo(){
+function setButtonToUndo()
+{
     var clearAll = $('#clearallbtn');
     clearAll.button('enable');
     clearAll.find('.ui-button-text').html("Undo clear");
     clearAll.attr('onclick', 'undoClearFileBox()');
 }
 
-function pauseUpload() {
+function pauseUpload()
+{
     tsunami.pauseUpload();
     $('.progress_bar').css('background-color', '#FF8800');
     $('#progress_string').html('Pausing...');
@@ -667,7 +682,8 @@ function resumeUpload() {
     timeSpentPaused += resumeTime - pauseTime;
 }
 
-function uploadPaused() {
+function uploadPaused()
+{
     $('#progress_string').html('Paused');
     pauseTime = new Date().getTime();
 }
