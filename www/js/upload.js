@@ -77,7 +77,7 @@ function fileSelected()
     fdata[n].filename = file.name;
     fdata[n].filetype = file.type;
     fdata[n].filetrackingcode = trackingCode;
-    fdata[n].filegroupid = groupid;
+    fdata[n].filegroupid = groupID;
     //fdata[n].filesize = 0;
 
     if (validate_file()) {
@@ -165,7 +165,8 @@ function startupload()
     });
 }
 
-function doUploadComplete(){
+function doUploadComplete()
+{
     var end  = new Date().getTime();
     var time = end-startTime;
     var speed = fdata[n].bytesTotal / (time /1000) / 1024 / 1024 * 8;

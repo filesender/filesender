@@ -56,10 +56,9 @@ global $config;
     var previousBytesLoaded = 0;
     var intervalTimer = 0;
     var errmsg_disk_space = "<?php echo lang("_DISK_SPACE_ERROR"); ?>";
-    var filedata = [];
     var nameLang = '<?php echo lang("_FILE_NAME"); ?>';
     var sizeLang = '<?php echo lang("_SIZE"); ?>';
-    var groupid = '<?php echo getOpenSSLKey(); ?>';
+    var groupID = '<?php echo getOpenSSLKey(); ?>';
     var maxUploads = <?php echo $config['html5_max_uploads']; ?>;
 
     <?php
@@ -78,7 +77,8 @@ global $config;
         }
     ?>
 
-    function displayAuthError(){
+    function displayAuthError()
+    {
         $("#dialog-autherror").dialog({
             height: 200,
             width: 500,
@@ -94,7 +94,8 @@ global $config;
         addButtonText();
     }
 
-    function openProgressBar(fname) {
+    function openProgressBar(fname)
+    {
         $("#dialog-uploadprogress").dialog({
             title: "<?php echo lang("_UPLOAD_PROGRESS") ?>: " + decodeURIComponent(fname),
             minWidth: 500,
@@ -160,7 +161,8 @@ global $config;
         addButtonText();
     }
 
-    function validateExtension(filename) {
+    function validateExtension(filename)
+    {
         for (var i = 0, len = bannedExtensions.length; i < len; ++i) {
             if (filename.split('.').pop() == bannedExtensions[i]) {
                 return false;
@@ -169,19 +171,21 @@ global $config;
         return true;
     }
 
-    function uploadError(name, size) {
+    function uploadError(name, size)
+    {
         name = decodeURIComponent(name);
         openErrorDialog("<?php echo lang("_ERROR_UPLOADING_FILE") ?> " + name + ":" + size);
     }
 
 
-    function validate() {
+    function validate()
+    {
         if (html5) {
             if (validateForm()) {
                 constrainNumWebWorkers(); // make sure selected web workers isn't over the config limit
                 n = 0;
                 openProgressBar(trackingCode);
-                startTime = new Date().getTime();// Calling before first upload stops progress bar opening for every download (when attempting to close it)
+                startTime = new Date().getTime(); // Calling before first upload stops progress bar opening for every download (when attempting to close it)
                 startUpload();
 
             }
@@ -192,7 +196,6 @@ global $config;
 
     function validateFileName(name)
     {
-
         if (!validateExtension(name)) {
             fileMsg("<?php echo lang("_INVALID_FILE_EXT")." ".lang("_SELECT_ANOTHER_FILE") ?>");
             return false;
@@ -205,7 +208,8 @@ global $config;
         }
     }
 
-    function openErrorDialog(msg) {
+    function openErrorDialog(msg)
+    {
         // Default error message dialog.
         var dialogDefault = $("#dialog-default");
         dialogDefault.dialog({ height: 200, modal: true, title: 'Error',
@@ -221,7 +225,8 @@ global $config;
     }
 
 
-    function keepMeAlive() {
+    function keepMeAlive()
+    {
         $.ajax({
             url: "keepalive.php" + '?x=' + encodeURIComponent(new Date().toString()),
             success: function (data) {
@@ -233,7 +238,6 @@ global $config;
     window.addEventListener('keydown', function(e) {
         (e.keyCode == 27 && e.preventDefault())
     });
-    //]]>
 </script>
 
 <!--Aggregate progress bar contents-->
@@ -263,6 +267,6 @@ global $config;
     <p>All files will be deleted</p> <!-- TODO: need a lang for this -->
 </div>
 
-<div id="dialog-autherror" title="<?php echo lang('_MESSAGE'); ?>"
-     style="display: none"><?php echo lang('_AUTH_ERROR'); ?>
+<div id="dialog-autherror" title="<?php echo lang('_MESSAGE'); ?>" style="display: none">
+    <?php echo lang('_AUTH_ERROR'); ?>
 </div>

@@ -26,7 +26,7 @@
             json["filesize"] = parseInt(fsize);
             json["vid"] = vid;
             json["filetrackingcode"] = trackingCode;
-            json["filegroupid"] = groupid;
+            json["filegroupid"] = groupID;
 
             $.ajax({
                 type: "POST",
