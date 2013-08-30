@@ -73,6 +73,7 @@ var initialStartTime = 0;
 var pauseTime;
 var resumeTime;
 var timeSpentPaused =0;
+var firstFile = true;
 
 // Used for undoing a clear-all call
 var filesToRestore;
@@ -225,8 +226,12 @@ function startUpload()
 {
     // Checks if this file has been removed from the upload box and uploads accordingly
     if (!fileData[n].name) {
-        n+=1;
-        startUpload();
+        if (n+1 == fileData.length){
+            transactionComplete(groupID);
+        } else {
+            n+=1;
+            startUpload();
+        }
         return;
     }
 
@@ -253,15 +258,13 @@ function startUpload()
         json['filevoucheruid'] = fileData[n].filevoucheruid;
 
 
-        var firstFile = '';
-        if (n == 0 && !pausedUpload) {
-            firstFile = '&firstfile=true';
+        if (firstFile && !pausedUpload) {
             initialStartTime = new Date().getTime();
         }
 
         $.ajax({
             type: 'POST',
-            url: uploadURI + '?type=validateupload&vid=' + vid + '&n=' + n + firstFile,
+            url: uploadURI + '?type=validateupload&vid=' + vid + '&n=' + n + '^&firstfile=' + firstFile,
             data: {myJson: JSON.stringify(json)}
         }).success(function (data) {
             if (data == '') {
@@ -335,6 +338,7 @@ function startUpload()
                 // validated so upload all files
 
                 startTime = new Date().getTime();
+                firstFile = false;
 
                 if (html5webworkers) {
                     uploadFileWebworkers();
