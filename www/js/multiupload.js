@@ -223,6 +223,13 @@ function generateFileBoxHtml()
 
 function startUpload()
 {
+    // Checks if this file has been removed from the upload box and uploads accordingly
+    if (!fileData[n].name) {
+        n+=1;
+        startUpload();
+        return;
+    }
+
     // check if file is validated before uploading
     if (validate_file(n) && fileData[n].status) {
         $('#file_del_' + n).hide();
