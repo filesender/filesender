@@ -107,11 +107,6 @@ function addFiles(files)
     for (var i = 0; i < files.length; i++) {
         var dupFound = false;
 
-        if (n >= maxUploads) {
-            openErrorDialog('You have reached the max number of uploads of: ' + maxUploads);
-            return;
-        }
-
         // Loops through list of files already in the list and prevents any duplicates from being created
         for (var j = 0; j < fileData.length; j++) {
             if (fileData[j].filename == files.item(i).name) {
@@ -160,6 +155,7 @@ function addFiles(files)
         $('#uploadbutton').show();
         setButtonToClear();
         filesToRestore = "";
+        validateNumFiles();
     }
 
 }
@@ -199,6 +195,7 @@ function reAddFiles(files)
         $('#clearallbtn').button('enable');
         $('#draganddropmsg').hide();
         $('#uploadbutton').show();
+        validateNumFiles();
     }
 }
 
@@ -632,12 +629,13 @@ function removeItem(fileID)
         $('#clearallbtn').button('disable');
     }
     updateBoxStats();
+    validateNumFiles();
 }
 
 // clears the contents of the files-to-upload
 function clearFileBox()
 {
-    if(n == -1) return;
+    if (n == -1) return;
     filesToRestore = fileData.slice();
     var temp = fileData.length;
     for (var i = 0; i < fileData.length; i++) {
