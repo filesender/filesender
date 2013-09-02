@@ -28,6 +28,19 @@
         }
     }
 
+    function validateNumFiles() {
+        if (n >= maxUploads) {
+            fileMsg('<?php echo lang("_MAX_FILES_REACHED") ?>' + maxUploads);
+            $('#dragfilestouploadcss').addClass('errorglow');
+            return false;
+        } else {
+            $("#file_msg").hide();
+            $('#dragfilestouploadcss').removeClass('errorglow');
+            return true;
+        }
+    }
+
+
     function validate_files() {
 
         if (n == -1) {
@@ -43,7 +56,7 @@
             if(!validate_file(i)) return false;
         }
 
-        return true;
+        return validateNumFiles();
     }
 
     // HTML5 form Validation

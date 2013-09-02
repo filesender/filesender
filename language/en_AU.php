@@ -147,6 +147,7 @@ $lang["_INVALID_DATE_FORMAT"] = "The date format is invalid.";
 $lang["_DISK_SPACE_ERROR"] = "There is not enough drive space on this service. Please contact the service administration or upload a smaller file.";
 $lang["_ERROR_ATTRIBUTES"] = "Your Identity Provider is not providing the required attributes. Contact your Administrator";
 $lang["_PERMISSION_DENIED"] = "You do not have permission to do this.";
+$lang["_MAX_FILES_REACHED"] = "You have exceeded the file upload limit of: ";
 // Logout page
 $lang["_LOGOUT_COMPLETE"] = "Logout Complete";
 
