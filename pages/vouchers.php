@@ -81,10 +81,6 @@ foreach ($errorArray as $message) {
 $filedata = $functions->getVouchers();
 $json_o=json_decode($filedata,true);
 
-// get file data
-$filedata = $functions->getVouchers();
-$json_o=json_decode($filedata,true);
-
  ?>
 <script type="text/javascript">
 //<![CDATA[

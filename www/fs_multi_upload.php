@@ -102,12 +102,6 @@ if (!isAuthenticated()) {
             $fileUid = getGUID(); // Rename file to correct name
             $functions->closeVoucher($data['fileid']); // Close pending file.
 
-            if (isset($_SESSION['voucher']) && !isset($_REQUEST['morefiles'])) {
-                // The voucher has been used, so close it.
-                closeVoucher();
-                $complete = 'completev';
-            }
-
             $emailSettings = json_decode($_POST['myJson'], true);
             $data['filedownloadconfirmations'] = isset($emailSettings['email-inform-download']) && $emailSettings['email-inform-download'] ? 'true' : 'false';
             $data['fileenabledownloadreceipts'] = isset($emailSettings['email-enable-confirmation']) && $emailSettings['email-enable-confirmation'] ? 'true' : 'false';
@@ -158,7 +152,15 @@ if (!isAuthenticated()) {
                 $sendMail->sendUploadConfirmation(reset($groupIdArray));
             }
 
-            $resultArray['status'] = 'complete';
+            $complete = 'complete';
+
+            if (isset($_SESSION['voucher']) && !isset($_REQUEST['morefiles'])) {
+                // The voucher has been used, so close it.
+                closeVoucher();
+                $complete = 'completev';
+            }
+
+            $resultArray['status'] = $complete;
             $resultArray['gid'] = reset($groupIdArray); // The first group ID.
             echo json_encode($resultArray);
             logEntry("Transaction complete");

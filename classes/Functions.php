@@ -224,6 +224,47 @@ class Functions
         return json_encode($statement->fetchAll(PDO::FETCH_ASSOC));
     }
 
+    public function getUsedVoucherTransactions() {
+        $authAttributes = $this->getAuthAttributes();
+        $emailList = '';
+
+        for ($i = 0; $i < count($authAttributes['email']); $i++) {
+            $emailList .= ':filefrom_' . $i . ', ';
+        }
+
+        $emailList = $this->getCommaSeparatedEmailParameters();
+
+        $statement = $this->db->prepare(
+            "SELECT DISTINCT(filetrackingcode), fileauthuseruid " .
+            "FROM files " .
+            "WHERE (fileauthuseruid = :fileauthuseruid) " .
+            "AND filestatus = 'Available' " .
+            "AND filefrom NOT IN ($emailList) " .
+            "ORDER BY filetrackingcode DESC"
+        );
+
+        $statement->bindParam(':fileauthuseruid', $authAttributes['saml_uid_attribute']);
+
+        for ($i = 0; $i < count($authAttributes['email']); $i++) {
+            $statement->bindParam(':email_' . $i, $authAttributes['email'][$i]);
+        }
+
+        $statement = $this->db->execute($statement);
+
+        return json_encode($statement->fetchAll(PDO::FETCH_ASSOC));
+    }
+
+    private function getCommaSeparatedEmailParameters() {
+        $authAttributes = $this->getAuthAttributes();
+        $emailList = '';
+
+        for ($i = 0; $i < count($authAttributes['email']); $i++) {
+            $emailList .= ':email_' . $i . ', ';
+        }
+
+        return rtrim($emailList, ', ');
+    }
+
     // --------------------------------
     // Gets the user SAML uid attribute if user is authenticated.
     // --------------------------------
@@ -249,19 +290,28 @@ class Functions
     }
 
     // --------------------------------
-    // Gets all tracking codes belonging to the authenticated user.
+    // Gets all active tracking codes belonging to the authenticated user.
     // --------------------------------
     public function getUserTrackingCodes()
     {
+        $emailList = $this->getCommaSeparatedEmailParameters();
+
         $statement = $this->db->prepare(
-            'SELECT DISTINCT(filetrackingcode), fileauthuseruid ' .
-            'FROM files ' .
-            'WHERE fileauthuseruid = :fileauthuseruid ' .
-            'ORDER BY filetrackingcode DESC'
+            "SELECT DISTINCT(filetrackingcode), fileauthuseruid " .
+            "FROM files " .
+            "WHERE fileauthuseruid = :fileauthuseruid " .
+            "AND filestatus = 'Available' " .
+            "AND filefrom IN ($emailList) " .
+            "ORDER BY filetrackingcode DESC"
         );
 
         $authAttributes = $this->getAuthAttributes();
+
         $statement->bindParam(':fileauthuseruid', $authAttributes['saml_uid_attribute']);
+
+        for ($i = 0; $i < count($authAttributes['email']); $i++) {
+            $statement->bindParam(':email_' . $i, $authAttributes['email'][$i]);
+        }
 
         $statement = $this->db->execute($statement);
         return json_encode($statement->fetchAll());
