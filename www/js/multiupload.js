@@ -79,7 +79,9 @@ var firstFile = true;
 var filesToRestore;
 
 var pausedUpload = false;
+
 var vid = '';
+var isVoucher = false;
 
 function browse()
 {
@@ -243,6 +245,14 @@ function startUpload()
 
         for (var i in query) {
             json[query[i].name] = query[i].value;
+            if (query[i].name == 'filestatus'){
+                console.log(query[i].value);
+                isVoucher = true;
+            }
+        }
+
+        if (isVoucher){
+            vid = json['filevoucheruid'];
         }
 
         // add file information fields
@@ -415,9 +425,17 @@ function transactionComplete(gid)
     json['rtnemail'] = $('#rtnemail').prop('checked');
     json['email-upload-complete'] = $('#email-upload-complete').prop('checked');
 
+    var transactionCompleteString = '';
+    if (isVoucher) {
+        transactionCompleteString = '?type=transactioncomplete&gid=' + gid + '&vid=' + vid;
+    } else {
+        transactionCompleteString = '?type=transactioncomplete&gid=' + gid;
+    }
+
     $.ajax({
         type: 'POST',
-        url: uploadURI + '?type=transactioncomplete&gid=' + gid,
+
+        url: uploadURI + transactionCompleteString,
         data: {myJson: JSON.stringify(json)},
         success: function (data) {
             clearForm();
