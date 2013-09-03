@@ -92,7 +92,7 @@ global $config;
             }
         });
         addButtonText();
-    }
+    };
 
     function openProgressBar(fname)
     {
@@ -135,16 +135,20 @@ global $config;
                                     json[query[i].name] = query[i].value;
                                 }
 
-                                $.ajax({
-                                    type: 'POST',
-                                    url: uploadURI + '?type=cancelUpload&fileauth=' + fileAuth + '&trackingcode=' + trackingCode,
-                                    data: {myJson: JSON.stringify(json)},
-                                    success: function(data) {
-                                        window.location.href="index.php?s=upload&a=cancelled";
-                                    }, error: function (xhr, err) {
-                                        ajaxerror(xhr.readyState, xhr.status, xhr.responseText);
-                                    }
-                                });
+                                if (isVoucher) {
+                                    window.location.reload();
+                                } else {
+                                     $.ajax({
+                                        type: 'POST',
+                                        url: uploadURI + '?type=cancelUpload&fileauth=' + fileAuth + '&trackingcode=' + trackingCode,
+                                        data: {myJson: JSON.stringify(json)},
+                                        success: function(data) {
+                                            window.location.href="index.php?s=upload&a=cancelled";
+                                        }, error: function (xhr, err) {
+                                            ajaxerror(xhr.readyState, xhr.status, xhr.responseText);
+                                        }
+                                    });
+                                }
                             }
                         },
                         {
