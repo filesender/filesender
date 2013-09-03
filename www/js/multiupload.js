@@ -83,6 +83,9 @@ var pausedUpload = false;
 var vid = '';
 var isVoucher = false;
 
+var fileBoxErrorPosition = 0;
+var fileBoxErrorFound = false;
+
 function browse()
 {
     $('#fileToUpload').click();
@@ -149,6 +152,10 @@ function addFiles(files)
         }
     }
 
+    if (fileBoxErrorPosition > 0) {
+        $('#dragfilestouploadcss').scrollTop(2 * parseInt($('#dragfilestouploadcss').css('padding')) + fileBoxErrorPosition * ($('.fileBox').outerHeight()+ parseInt($('.fileBox').css('margin'))));
+    }
+
     // enable the use of the 'Clear all' button only if there is something to clear
     if (n > -1) {
         $('#fileInfoView').show();
@@ -192,6 +199,10 @@ function reAddFiles(files)
         updateBoxStats();
     }
 
+    if (fileBoxErrorPosition > 0) {
+        $('#dragfilestouploadcss').scrollTop(2 * parseInt($('#dragfilestouploadcss').css('padding')) + fileBoxErrorPosition * ($('.fileBox').outerHeight()+ parseInt($('.fileBox').css('margin'))));
+    }
+
     if (n > -1) {
         $('#fileInfoView').show();
         $('#clearallbtn').button('enable');
@@ -204,15 +215,23 @@ function reAddFiles(files)
 function generateFileBoxHtml()
 {
     var validfile = '';
+    var errorclass ='';
     if (validate_file(n)) {
         fileData[n].valid = true;
     } else {
         validfile = '<img style="float:left;padding-right:6px;" src="images/information.png" border=0 title="This file is invalid and will not be uploaded"/>';
+        errorclass = ' errorglow';
+        if (!fileBoxErrorFound){
+            fileBoxErrorFound = true;
+            fileBoxErrorPosition = n;
+
+        }
+
     }
 
     var file_info = validfile + ' ' + fileData[n].filename + ' : ' + readablizebytes(fileData[n].fileSize);
 
-    return '<div id="file_' + n + '" class="fileBox valid' + fileData[n].valid + '">' +
+    return '<div id="file_' + n + '" class="fileBox valid' + fileData[n].valid + errorclass +'">' +
         '<span class="filebox_string" title="' + file_info + '">' + file_info + '</span>' +
         '<span class="delbtn" id="file_del_' + n + '" onclick="removeItem(' + n + ');">' +
         '<img src="images/delete.png" width="16" height="16" border="0" align="absmiddle" style="cursor:pointer"/>' +
@@ -439,9 +458,9 @@ function transactionComplete(gid)
         data: {myJson: JSON.stringify(json)},
         success: function (data) {
             clearForm();
-            var data = JSON.parse(data);
+            data = JSON.parse(data);
             console.log("Transaction complete successful");
-            window.location.href = 'index.php?s=complete&gid=' + data['gid'] +
+            window.location.href = 'index.php?s=' + data['status'] + '&gid=' + data['gid'] +
                 '&start=' + Math.floor(initialStartTime / 1000) +
                 '&end=' + Math.floor(new Date().getTime() / 1000) +
                 '&timepaused=' + Math.floor(timeSpentPaused / 1000);
@@ -666,6 +685,8 @@ function clearFileBox()
     fileData = [];
     setButtonToUndo();
     updateBoxStats();
+    fileBoxErrorFound = false;
+    fileBoxErrorPosition = 0;
 }
 
 function undoClearFileBox()
