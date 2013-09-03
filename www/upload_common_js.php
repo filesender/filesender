@@ -68,7 +68,7 @@ global $config;
             $trackingCode = $functions->getTrackingCode($userData['saml_uid_attribute']);
             echo "var trackingCode = '" . $trackingCode . "';";
         } else {
-            $trackingCode =  $functions->getTrackingCode();
+            $trackingCode =  $functions->getTrackingCode($voucherData[0]['fileauthuseruid']);
             echo "var trackingCode = '" . $trackingCode . "';";
         }
 
