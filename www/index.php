@@ -145,12 +145,12 @@ if($isAuth )
 
             <?php
             if ($useremail != "") {
-                if ($isVoucher) { ?>
-                    statusMessage('You are using a guest voucher', 'blue' );
-                <?php } else { ?>
-                    statusMessage('<?php echo lang("_LOGGED_IN_AS") . addslashes($useremail[0]); ?>', 'blue' );
-                <?php }
-            } ?>
+                ?>
+                statusMessage('<?php echo lang("_LOGGED_IN_AS") . addslashes($useremail[0]); ?>', 'blue' );
+                <?php
+            } else if ($isVoucher) { ?>
+                statusMessage('You are using a guest voucher', 'blue' );
+            <?php } ?>
 
             // display topmenu, content and userinformation
             $("#topmenu").show();
