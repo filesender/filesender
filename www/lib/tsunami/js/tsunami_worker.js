@@ -116,9 +116,6 @@ function uploadChunk(startByte, endByte)
                     'message': 'There was a problem retrieving the data:\n' + xhr.statusText
                 });
             }
-        }else{
-        //
         }
-
     }
 }

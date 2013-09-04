@@ -223,7 +223,7 @@ if (!isAuthenticated()) {
             $fd = fopen('php://input', 'r');
 
             // Append the chunk to the temp file.
-            while ($data = fread($fd, 1000000)) {
+            while ($data = fread($fd, $_REQUEST['chunksize'])) {
                 file_put_contents($config['site_filestore'] . sanitizeFilename($tempFilename), $data, FILE_APPEND) or die('Error');
             }
 
@@ -239,7 +239,7 @@ if (!isAuthenticated()) {
 
             $data = $functions->getVoucherData($_REQUEST['vid']);
             $tempFilename = generateTempFilename($data, $_REQUEST['n']);
-            $fs = new Tsunami($config['site_filestore'] . sanitizeFilename($tempFilename));
+            $fs = new Tsunami($config['site_filestore'] . sanitizeFilename($tempFilename), $_REQUEST['chunksize']);
             $fs->processChunk();
             break;
 
