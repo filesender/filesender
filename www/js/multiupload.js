@@ -221,12 +221,10 @@ function generateFileBoxHtml()
     } else {
         validfile = '<img style="float:left;padding-right:6px;" src="images/information.png" border=0 title="This file is invalid and will not be uploaded"/>';
         errorclass = ' errorglow';
-        if (!fileBoxErrorFound){
+        if (!fileBoxErrorFound) {
             fileBoxErrorFound = true;
             fileBoxErrorPosition = n;
-
         }
-
     }
 
     var file_info =  fileData[n].filename + ' : ' + readablizebytes(fileData[n].fileSize);
@@ -540,7 +538,7 @@ function uploadFileWebworkers()
 
 function uploadFile()
 {
-
+    var previousAmount = 0;
     // move to next chunk
     var file = fileData[n].file;
     var transferSize = chunksize;
@@ -564,7 +562,7 @@ function uploadFile()
                     n += 1;
                     startUpload();
                 } else {
-                    window.location.href = 'index.php?s=complete&gid='+data['gid'];
+                    transactionComplete(groupID);
                 }
             });
         return;
@@ -589,7 +587,14 @@ function uploadFile()
     var uri = (uploadURI + '?type=chunk&vid=' + vid + '&n=' + n); //Path to script for handling the file sent
     var xhr = new XMLHttpRequest(); //Create the object to handle async requests
     xhr.onreadystatechange = processReqChange;
-    xhr.upload.addEventListener('progress', uploadProgress, false);
+    xhr.upload.onprogress = function(evt) {
+        if (evt.lengthComputable) {
+            var amountUploaded = parseInt(evt.loaded) - previousAmount;
+            previousAmount = parseInt(evt.loaded);
+            fileData[n].bytesUploaded += amountUploaded;
+            updateProgressBar(fileData[n].bytesUploaded, fileData[n].bytesTotal, amountUploaded);
+        }
+    };
     xhr.open('POST', uri, true); //Open a request to the web address set
     xhr.setRequestHeader('Content-Disposition', " attachment; name='fileToUpload'");
     xhr.setRequestHeader('Content-Type', 'application/octet-stream');
@@ -605,49 +610,13 @@ function uploadFile()
                     return;
                 }
                 fileData[n].bytesUploaded = parseFloat(xhr.responseText);
-                updateProgressBar(fileData[n].bytesUploaded, fileData[n].bytesTotal, 0);
                 uploadFile();
             } else {
-                openErrorDialog('There was a problem retrieving the data:\n' + req.statusText);
+                openErrorDialog('There was a problem retrieving the data:\n' + xhr.statusText);
             }
         }
     }
     return true;
-}
-
-// TODO: Can go?
-function updateTransferSpeed() {
-    var currentBytes = bytesUploaded + (chunksize * (chunk_id - 1));
-    var bytesDiff = currentBytes - chunksize * (chunk_id - 1);//previousBytesLoaded;
-    if (bytesDiff == 0) return;
-    previousBytesLoaded = currentBytes;
-    bytesDiff = bytesDiff * 2;
-    var bytesRemaining = bytesTotal - previousBytesLoaded;
-    var secondsRemaining = bytesRemaining / bytesDiff;
-    var speed = '';
-    if (bytesDiff > 1024 * 1024)
-        speed = (Math.round(bytesDiff * 100 / (1024 * 1024)) / 100).toString() + 'MBps';
-    else if (bytesDiff > 1024)
-        speed = (Math.round(bytesDiff * 100 / 1024) / 100).toString() + 'kBps';
-    else
-        speed = bytesDiff.toString() + 'Bps';
-    $('#transferSpeedInfo').html(speed);
-}
-
-// TODO: can go?
-function uploadProgress(evt) {
-}
-
-// TODO: can go?
-function uploadFailed(evt) {
-    clearInterval(intervalTimer);
-    openErrorDialog('An error occurred while uploading the file.');
-}
-
-// TODO: can go?
-function uploadCanceled(evt) {
-    clearInterval(intervalTimer);
-    erorDialog('The upload has been canceled by the user or the browser dropped the connection.');
 }
 
 // remove file from upload array
