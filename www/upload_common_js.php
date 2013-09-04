@@ -60,6 +60,7 @@ global $config;
     var sizeLang = '<?php echo lang("_SIZE"); ?>';
     var groupID = '<?php echo getOpenSSLKey(); ?>';
     var maxUploads = <?php echo $config['html5_max_uploads']; ?>;
+    var fileStatus = '<?php echo $filestatus; ?>';
 
     <?php
         if (!$authvoucher->aVoucher()) {
@@ -92,7 +93,7 @@ global $config;
             }
         });
         addButtonText();
-    };
+    }
 
     function openProgressBar(fname)
     {
@@ -135,7 +136,7 @@ global $config;
                                     json[query[i].name] = query[i].value;
                                 }
 
-                                if (isVoucher) {
+                                if (fileStatus == 'Voucher') {
                                     window.location.reload();
                                 } else {
                                      $.ajax({
