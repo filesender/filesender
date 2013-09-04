@@ -229,10 +229,10 @@ function generateFileBoxHtml()
 
     }
 
-    var file_info = validfile + ' ' + fileData[n].filename + ' : ' + readablizebytes(fileData[n].fileSize);
+    var file_info =  fileData[n].filename + ' : ' + readablizebytes(fileData[n].fileSize);
 
     return '<div id="file_' + n + '" class="fileBox valid' + fileData[n].valid + errorclass +'">' +
-        '<span class="filebox_string" title="' + file_info + '">' + file_info + '</span>' +
+        '<span class="filebox_string" title="' + file_info + '">' + validfile + ' ' + file_info + '</span>' +
         '<span class="delbtn" id="file_del_' + n + '" onclick="removeItem(' + n + ');">' +
         '<img src="images/delete.png" width="16" height="16" border="0" align="absmiddle" style="cursor:pointer"/>' +
         '</span>' +
