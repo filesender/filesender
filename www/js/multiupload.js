@@ -263,7 +263,6 @@ function startUpload()
         for (var i in query) {
             json[query[i].name] = query[i].value;
             if (query[i].name == 'filestatus'){
-                console.log(query[i].value);
                 isVoucher = true;
             }
         }
@@ -523,7 +522,7 @@ function uploadFileWebworkers()
     console.log('Setting ' + jobsPerWorker + ' job(s) per worker');
 
     tsunami = new Tsunami({
-        uri: dir + '/' + uploadURI + '?type=tsunami&vid=' + vid + '&n=' + n,
+        uri: dir + '/' + uploadURI + '?type=tsunami&vid=' + vid + '&n=' + n + '&chunksize=' + chunksize,
         simultaneousUploads: workerCount,
         jobsPerWorker: jobsPerWorker,
         chunkSize: chunksize,
@@ -584,7 +583,7 @@ function uploadFile()
     }
 
     var boundary = 'fileboundary'; //Boundary name
-    var uri = (uploadURI + '?type=chunk&vid=' + vid + '&n=' + n); //Path to script for handling the file sent
+    var uri = (uploadURI + '?type=chunk&vid=' + vid + '&n=' + n + '&chunksize=' + transferSize); //Path to script for handling the file sent
     var xhr = new XMLHttpRequest(); //Create the object to handle async requests
     xhr.onreadystatechange = processReqChange;
     xhr.upload.onprogress = function(evt) {
