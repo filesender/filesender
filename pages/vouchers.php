@@ -281,37 +281,42 @@ function postVoucher()
 </form>
 
 <div id="box_3" class="box">
-    <table id="vouchertable" style="border: 0; width: 100%; border-spacing: 1px">
+    <table id="myfiles" style="table-layout:fixed; width: 100%; padding: 4px; border-spacing: 0; border: 0">
         <tr class="headerrow">
-            <td id="vouchers_header_from"><strong><?php echo lang("_FROM"); ?></strong></td>
-            <td id="vouchers_header_to"><strong><?php echo lang("_TO"); ?></strong></td>
-            <td id="vouchers_header_subject"><strong><?php echo lang("_SUBJECT"); ?></strong></td>
-            <td id="vouchers_header_message"><strong><?php echo lang("_MESSAGE"); ?></strong></td>
-            <td id="vouchers_header_created"><strong><?php echo lang("_CREATED"); ?></strong></td>
-            <td id="vouchers_header_expiry"><strong><?php echo lang("_EXPIRY"); ?></strong></td>
-            <td></td>
+            <td id="vouchers_header_from" class="tblmcw3 HardBreak" style="vertical-align: middle"><strong><?php echo lang("_FROM"); ?></strong></td>
+            <td id="vouchers_header_to" class="tblmcw3 HardBreak" style="vertical-align: middle"><strong><?php echo lang("_TO"); ?></strong></td>
+            <td id="vouchers_header_subject" class="HardBreak" style="width: 50px; vertical-align: middle"><strong><?php echo lang("_SUBJECT"); ?></strong></td>
+            <td id="vouchers_header_message" class="HardBreak" style="width: 50px; vertical-align: middle"><strong><?php echo lang("_MESSAGE"); ?></strong></td>
+            <td id="vouchers_header_created" class="tblmcw3 HardBreak" style="vertical-align: middle"><strong><?php echo lang("_CREATED"); ?></strong></td>
+            <td id="vouchers_header_expiry" class="tblmcw3 HardBreak" style="vertical-align: middle"><strong><?php echo lang("_EXPIRY"); ?></strong></td>
+            <td class="tblmcw1"></td>
         </tr>
         <?php
             $i = 0;
 
             foreach($json_o as $item) {
                 $i += 1; // counter for file id's
-                echo "<tr><td>" .$item['filefrom'] . "</td><td>" .$item['fileto'] . "</td><td class='HardBreak'>";
+                $altColor = ($i % 2 != 0)? 'altcolor' : '';
+                echo '<tr><td class="dr7"></td><td class="dr7 ' . $altColor . '"></td><td class="dr7"></td><td class="dr7"></td><td class="dr7"></td><td class="dr7"></td><td class="dr7"></td></tr>';
+                echo '<tr><td class="dr1 ' . $altColor . '" style="vertical-align: middle">' .$item['filefrom'] . '</td>';
+                echo '<td class="dr2 HardBreak ' . $altColor . '" style="vertical-align: middle">' .$item['fileto'] . '</td>';
+
+                echo '<td class="dr2 HardBreak ' . $altColor . '" style="text-align: center; vertical-align: middle">';
 
                 if($item['filesubject'] != "") {
                     echo "<img src='images/page_white_text_width.png' border='0' alt='' title='".utf8ToHtml($item['filesubject'],TRUE). "' />";
                 }
 
-                echo "</td><td>";
+                echo '</td><td class="dr2 HardBreak ' . $altColor . '" style="text-align: center; vertical-align: middle">';
 
                 if($item['filemessage'] != "") {
-                    echo "<img src='images/page_white_text_width.png' border='0' alt='' title='".utf8ToHtml($item['filemessage'],TRUE). "' />";
+                    echo "<img src='images/page_white_text_width.png' border='0' alt='' title='".utf8ToHtml($item['filemessage'],TRUE). "' /></td>";
                 }
 
-                echo "</td><td>" .date(lang('datedisplayformat'),strtotime($item['filecreateddate'])) . "</td>
-                    <td>" .date(lang('datedisplayformat'),strtotime($item['fileexpirydate'])) . "</td>
-                    <td>
-                        <div  style='cursor:pointer;'>
+                echo '<td class="dr2 HardBreak ' . $altColor . '" style="vertical-align: middle">' .date(lang('datedisplayformat'),strtotime($item['filecreateddate'])) . '</td>';
+                echo '<td class="dr2 HardBreak ' . $altColor . '" style="vertical-align: middle">' .date(lang('datedisplayformat'),strtotime($item['fileexpirydate'])) . '</td>';
+                echo "<td class='dr8 " . $altColor . "' style='text-align: center; vertical-align: middle'>
+                        <div style='cursor:pointer;'>
                             <img id='btn_deletevoucher_".$i."'
                                 src='images/shape_square_delete.png' alt='' title='".lang("_DELETE")."'
                                 onclick='confirmdelete(".'"' .$item['filevoucheruid'] . '"'. ")' style='border: 0;'
@@ -320,6 +325,7 @@ function postVoucher()
                     </td>
                 </tr>"; //etc
             }
+        echo '<tr><td class="dr7"></td><td class="dr7"></td><td class="dr7"></td><td class="dr7"></td><td class="dr7"></td><td class="dr7"></td><td class="dr7"></td></tr>';
         ?>
     </table>
     <?php
@@ -328,6 +334,7 @@ function postVoucher()
         }
     ?>
 </div>
+<?php //require_once('files.php'); ?>
 <div id="dialog-delete" style="display:none" title="<?php echo lang("_DELETE_VOUCHER") ?>">
     <p><?php echo lang("_CONFIRM_DELETE_VOUCHER"); ?></p>
 </div>
