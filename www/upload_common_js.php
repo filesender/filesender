@@ -229,6 +229,20 @@ global $config;
         addButtonText();
     }
 
+    function addEmailRecipientBox(email, i) {
+        var firstPartOfEmail = email.split('@')[0];
+        var currentContents = $('#recipients_box').html();
+        if (currentContents.indexOf(email) == -1) {
+            var boxString = '<div id="email_' + i + '" class="email_box" ><span  title="'+email+'">' + firstPartOfEmail + '</span><span id="email_delete_'+i+'" title="Click here to delete this recipient" onclick="removeEmailFromBox('+i+')"> x </span></div>';
+            $('#recipients_box').append(boxString);
+            $('#recipients_box').show();
+        }
+    }
+
+    function removeEmailFromBox(i) {
+        $('#email_' + i).remove();
+    }
+
 
     function keepMeAlive()
     {

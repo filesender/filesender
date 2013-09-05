@@ -407,6 +407,27 @@ input {
 	font-weight: bold;
 }
 
+#recipients_box {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.email_box {
+    /*height: 10px;*/
+    border-radius: 5px;
+    background-color: #eee;
+    border: 1px solid;
+    padding: 4px;
+    display: inline-block;
+    cursor: pointer;
+    margin-left: 3px;
+    border-color: #555;
+}
+
+.email_box:hover {
+    border-color: #000;
+}
+
 #aup 
 {
 	width: 14px;	/*margin-left: -1px;*/
@@ -664,7 +685,7 @@ label {
     display: inline-block;
     text-align: left;
     padding-bottom: 2px;
-    vertical-align: top;
+    /* vertical-align: top; */
 }
 
 .dr1
