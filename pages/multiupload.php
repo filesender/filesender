@@ -184,6 +184,7 @@ $(function () {
                                     . $config['max_email_recipients']; ?>
                             </div>
                         </div>
+                        <div id="recipients_box" style="display: none"></div>
                     </div>
 
                     <div class="fieldcontainer">
@@ -214,7 +215,7 @@ $(function () {
                     <div id="options">
                         <div class="fieldcontainer" id="upload_expirydate">
                             <label for="datepicker" class="mandatory"><?php echo lang("_EXPIRY_DATE"); ?>:</label>
-                            <input id="datepicker" name="datepicker" title="<?php echo lang('_DP_dateFormat'); ?>"
+                            <input id="datepicker" style="width: 70%;" name="datepicker" title="<?php echo lang('_DP_dateFormat'); ?>"
                                    onchange="validate_expiry()"/>
 
                             <div id="expiry_msg" class="validation_msg"
