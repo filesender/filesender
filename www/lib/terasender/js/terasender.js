@@ -1,6 +1,6 @@
-var Tsunami = function(opts) {
-    if ( !(this instanceof Tsunami)) {
-        return new Tsunami(opts);
+var TeraSender = function(opts) {
+    if ( !(this instanceof TeraSender)) {
+        return new TeraSender(opts);
     }
     
     var $ = this;
@@ -9,7 +9,7 @@ var Tsunami = function(opts) {
         simultaneousUploads: 3,
         jobsPerWorker: 1,
         target: '/',
-        workerFile: 'tsunami_worker.js',
+        workerFile: 'terasender_worker.js',
         log: true
     };
     

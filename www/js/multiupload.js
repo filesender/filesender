@@ -58,7 +58,7 @@ var uploadURI = 'fs_multi_upload.php';
 var fileData = []; // array of each file to be uploaded
 var n = -1; // file int currently uploading
 
-var tsunami;
+var terasender;
 
 // a unique is created for each file that is uploaded.
 // An object with the unique stores all relevant information about the file upload
@@ -505,7 +505,7 @@ function uploadFileWebworkers()
     var path = document.location.pathname;
     var dir = path.substring(0, path.lastIndexOf('/'));
 
-    $('head').append('<script type="text/javascript" src="lib/tsunami/js/tsunami.js"></script>');
+    $('head').append('<script type="text/javascript" src="lib/terasender/js/terasender.js"></script>');
 
     if (fileData[n].bytesUploaded > fileData[n].bytesTotal - 1) {
         doUploadComplete();
@@ -521,18 +521,18 @@ function uploadFileWebworkers()
     jobsPerWorker = parseInt($('#jobsPerWorker').val());
     console.log('Setting ' + jobsPerWorker + ' job(s) per worker');
 
-    tsunami = new Tsunami({
-        uri: dir + '/' + uploadURI + '?type=tsunami&vid=' + vid + '&n=' + n + '&chunksize=' + chunksize,
+    terasender = new TeraSender({
+        uri: dir + '/' + uploadURI + '?type=terasender&vid=' + vid + '&n=' + n + '&chunksize=' + chunksize,
         simultaneousUploads: workerCount,
         jobsPerWorker: jobsPerWorker,
         chunkSize: chunksize,
-        workerFile: 'lib/tsunami/js/tsunami_worker.js',
+        workerFile: 'lib/terasender/js/terasender_worker.js',
         log: true,
         onComplete: doUploadComplete,
         onProgress: updateProgressBar
     });
-    tsunami.addFiles(files);
-    tsunami.upload();
+    terasender.addFiles(files);
+    terasender.upload();
 }
 
 function uploadFile()
@@ -682,7 +682,7 @@ function setButtonToUndo()
 
 function pauseUpload()
 {
-    tsunami.pauseUpload();
+    terasender.pauseUpload();
     $('.progress_bar').css('background-color', '#FF8800');
     $('#progress_string').html('Pausing...');
     vid = fileData[n].filevoucheruid;

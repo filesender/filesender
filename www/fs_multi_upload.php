@@ -233,13 +233,13 @@ if (!isAuthenticated()) {
             echo checkFileSize($uploadFolder . $tempFilename);
             break;
 
-        case 'tsunami':
+        case 'terasender':
             // Multi-threaded (out-of-order) CHUNK file upload with HTML5 Web Workers, by Edwin Schaap and René Klomp.
-            require_once '../classes/Tsunami.php';
+            require_once '../classes/TeraSender.php';
 
             $data = $functions->getVoucherData($_REQUEST['vid']);
             $tempFilename = generateTempFilename($data, $_REQUEST['n']);
-            $fs = new Tsunami($config['site_filestore'] . sanitizeFilename($tempFilename), $_REQUEST['chunksize']);
+            $fs = new TeraSender($config['site_filestore'] . sanitizeFilename($tempFilename), $_REQUEST['chunksize']);
             $fs->processChunk();
             break;
 

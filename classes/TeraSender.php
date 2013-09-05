@@ -1,10 +1,10 @@
 <?php
 /*
- * Tsunami PHP Class
+ * TeraSender PHP Class
  * Created by Edwin Schaap and René Klomp
  */
 
-class Tsunami {
+class TeraSender {
     private $x,
             $filename,
             $fd,
