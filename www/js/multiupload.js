@@ -277,7 +277,7 @@ function startUpload()
         json['vid'] = fileData[n].vid;
         json['filegroupid'] = fileData[n].filegroupid;
         json['filetrackingcode'] = fileData[n].filetrackingcode;
-        json['fileto'] = $('#fileto').val();
+        json['fileto'] = getRecipientsList();
         json['filevoucheruid'] = fileData[n].filevoucheruid;
 
 
