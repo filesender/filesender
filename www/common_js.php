@@ -1,4 +1,8 @@
 <script type="text/javascript">
+    var recipientID = 0;
+    var numRecipients = 0;
+    var recipientsString = '';
+
     function getDatePicker() {
         var datePicker = $('#datepicker');
         datePicker.datepicker({ minDate: new Date(minimumDate), maxDate: new Date(maximumDate), altField: '#fileexpirydate', altFormat: 'd-m-yy' });
@@ -84,5 +88,48 @@
         $('.ui-dialog-buttonpane button:contains(pauseBTN)').html('<?php echo lang("_PAUSE") ?>');
         $('.ui-dialog-buttonpane button:contains(canceluploadBTN)').html('<?php echo lang("_CANCEL") ?>');
         $('.ui-dialog-buttonpane button:contains(okBTN)').html('<?php echo lang("_OK") ?>');
+    }
+
+    function addEmailRecipientBox(emails) {
+        if (validate_fileto()) {
+            var emailList= emails.split(",");
+
+            for (var i=0; i < emailList.length; i++) {
+                var email = emailList[i];
+                var firstPartOfEmail = email.split('@')[0];
+                var currentContents = $('#recipients_box').html();
+
+                if (currentContents.indexOf(email) == -1) {
+                    if (numRecipients > maxEmailRecipients) {
+                        $("#maxemails_msg").show();
+                        return;
+                    }
+
+                    var boxString = '<div id="email_' + recipientID + '" class="email_box" >' +
+                        '<span class="emailEntry" title="'+email+'">' + firstPartOfEmail + '</span>' +
+                        '<span id="email_delete_'+recipientID+'" title="Click here to delete this recipient" onclick="removeEmailFromBox('+recipientID+')"> x </span>' +
+                    '</div>';
+
+                    $('#recipients_box').append(boxString);
+                    $('#recipients_box').show();
+                    recipientID++;
+                    numRecipients++;
+                }
+            }
+            $('#fileto').val("");
+        }
+    }
+
+    function getRecipientsList() {
+        $('.emailEntry').each(function() {
+            recipientsString += $(this).attr('title') + ',';
+        });
+
+        return(recipientsString.slice(0, recipientsString.length-1));
+    }
+
+    function removeEmailFromBox(i) {
+        $('#email_' + i).remove();
+        numRecipients--;
     }
 </script>

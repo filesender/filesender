@@ -83,7 +83,6 @@ function validate_fileto()
         }
 
         for (var i = 0; i < email.length; i++) {
-            addEmailRecipientBox(email[i], i);
             if (!echeck(email[i])) {
                 $("#fileto_msg").show();
                 isValid = false;

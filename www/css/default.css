@@ -413,14 +413,13 @@ input {
 }
 
 .email_box {
-    /*height: 10px;*/
     border-radius: 5px;
     background-color: #eee;
     border: 1px solid;
     padding: 4px;
     display: inline-block;
     cursor: pointer;
-    margin-left: 3px;
+    margin: 2px;
     border-color: #555;
 }
 
