@@ -64,7 +64,7 @@
         // remove messages from any previous attempt
         hideMessages();
         var isValid = true;
-        isValid = $('#recipients_box') == "";
+        isValid = $('#recipients_box') != "";
 //        if (!validate_fileto()){
 //            isValid = false;
 //        }

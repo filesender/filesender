@@ -121,6 +121,7 @@
     }
 
     function getRecipientsList() {
+        recipientsString = "";
         $('.emailEntry').each(function() {
             recipientsString += $(this).attr('title') + ',';
         });

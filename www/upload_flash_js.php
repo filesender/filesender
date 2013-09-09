@@ -10,7 +10,7 @@
 
         var validate = true;
 
-        if(!validate_fileto() ){validate = false;}	// validate emails
+        if($('#recipients_box') == ""){validate = false;}	// validate emails
         if(aup == '1') // check if AUP is required
         {
             if(!validate_aup() ){validate = false;}		// check AUP is selected
@@ -25,6 +25,7 @@
             json["fileoriginalname"] = fname;
             json["filesize"] = parseInt(fsize);
             json["vid"] = vid;
+            json["fileto"] = getRecipientsList();
             json["filetrackingcode"] = trackingCode;
             json["filegroupid"] = groupID;
 
@@ -72,7 +73,7 @@
                         openProgressBar(fname);
                         getFlexApp("filesenderup").returnVoucher(vid)
                     } else {
-                        getFlexApp("filesenderup").returnM^sg(false)
+                        getFlexApp("filesenderup").returnMsg(false)
                     }
                 },error:function(xhr,err){
                     alert("readyState: "+xhr.readyState+"\nstatus: "+xhr.status);
