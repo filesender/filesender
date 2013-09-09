@@ -75,10 +75,12 @@ $(function() {
         <table width="100%" border="0">
             <tr>
                 <td width="130" class=" mandatory" id="upload_to"><?php echo lang("_TO") ; ?>:</td>
-                <td colspan="2" valign="middle"><input name="fileto" title="<?php echo lang("_EMAIL_SEPARATOR_MSG") ; ?>" type="text" id="fileto" onchange="validate_fileto()"/>
+                <td colspan="2" valign="middle"><input name="fileto" title="<?php echo lang("_EMAIL_SEPARATOR_MSG") ; ?>" type="text" id="fileto" onblur="addEmailRecipientBox($('#fileto').val());"/>
                     <div id="fileto_msg" style="display: none" class="validation_msg"><?php echo lang("_INVALID_MISSING_EMAIL"); ?></div>
                     <div id="maxemails_msg" style="display: none" class="validation_msg"><?php echo lang("_MAXEMAILS"); ?> <?php echo $config['max_email_recipients'] ?>.</div>
+                    <div id="recipients_box" style="display: none"></div>
                 </td>
+
                 <td colspan="2" rowspan="4" align="center" valign="top"><table width="100%" border="0">
                         <tr>
                             <td width="25"><img src="images/num_1.png" alt="1" width="25" height="25" hspace="6" border="0" align="left" /></td>
