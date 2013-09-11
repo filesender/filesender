@@ -63,6 +63,7 @@ public function loadConfig() {
 	$config['datedisplayformat'] = "d-m-Y"; // Format for displaying date/time, use PHP date() format string syntax
 	$config["versionNumber"] = true; // Show version number (true/false)
 	$config['site_showStats'] = false; // Show site upload/download stats (true/false)
+    $config['upload_box_default_size'] = 3; // Default number of files that fit in the upload box before a scroll-bar appears
     
 	// auto complete - provides auto complete in input field for emails
 	$config["autocomplete"] = true;
