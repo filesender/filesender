@@ -10,7 +10,7 @@
 
         var validate = true;
 
-        if($('#recipients_box') == ""){validate = false;}	// validate emails
+        if(!validate_fileto(getRecipientsList())){ validate = false; }	// validate emails
         if(aup == '1') // check if AUP is required
         {
             if(!validate_aup() ){validate = false;}		// check AUP is selected
