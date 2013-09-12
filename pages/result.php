@@ -19,7 +19,11 @@ if ($s == "complete" || $s == "completev") {
         if (isset($_REQUEST['start']) && isset($_REQUEST['end'])) {
             $start = intval($_REQUEST['start']);
             $end = intval($_REQUEST['end']);
-            $timePaused = intval($_REQUEST['timepaused']);
+            if (isset($_REQUEST['timepaused'])){
+                $timePaused = intval($_REQUEST['timepaused']);
+            } else {
+                $timePaused = 0;
+            }
 
             echo 'Upload start time: ' . date('H:i:s', $start) . '<br />';
             echo 'Upload end time: ' . date('H:i:s', $end) . '<br />';

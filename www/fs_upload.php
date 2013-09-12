@@ -69,6 +69,7 @@ $authsaml = AuthSaml::getInstance();
 $authvoucher = AuthVoucher::getInstance();
 $log =  Log::getInstance();
 $functions = Functions::getInstance();
+$sendMail = Mail::getInstance();
 
 date_default_timezone_set($config['Default_TimeZone']);
 $uploadfolder =  $config["site_filestore"];
@@ -157,17 +158,26 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
             // TO DO: must error check here if emails do not send or fails with data insertion
             $emailto = str_replace(",",";",$data["fileto"]);
             $emailArray = preg_split("/;/", $emailto);
+            $groupIdArray = array();
+            $emailCount = 0;
             foreach ($emailArray as $Email) {
+                $groupIdArray[$emailCount] = getOpenSSLKey();
                 $data["fileto"] = $Email;
+                $data["filegroupid"] = $groupIdArray[$emailCount];
                 $data["filevoucheruid"] = getGUID();
 
                 logEntry("DEBUG fs_upload: Filedata = " . print_r($data,TRUE));
                 $functions->insertFile($data);
-
+                $emailCount++;
             }
+
+            unset($emailCount);
+
+            $sendMail->sendDownloadAvailable($groupIdArray);
+
             if(sizeof($errorArray) > 0 ) { $resultArray["errors"] =  $errorArray; }
             $resultArray["status"] = $complete;
-            $resultArray['gid'] = $data['filegroupid'];
+            $resultArray['gid'] = reset($groupIdArray);
             echo json_encode($resultArray);
             break;
 
