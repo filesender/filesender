@@ -142,8 +142,9 @@
                         if(result == "err_filesizeincorrect") { window.location.href="index.php?s=filesizeincorrect";} //
                     })
                 } else {
-                    if(data.status && data["gid"] && data.status == "complete"){window.location.href="index.php?s=complete&gid="+data["gid"];}
-                    if(data.status && data["gid"] && data.status == "completev"){window.location.href="index.php?s=completev&gid="+data["gid"];}
+                    window.location.href = 'index.php?s=' + data['status'] + '&gid=' + data['gid'] +
+                        '&start=' + Math.floor(startTime / 1000) +
+                        '&end=' + Math.floor(new Date().getTime() / 1000);
                 }
             },error:function(xhr,err){
                 // error function to display error message e.g.404 page not found
