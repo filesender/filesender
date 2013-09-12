@@ -59,22 +59,23 @@ function readablizebytes(bytes)
 // -------------------
 
 // Validate FILETO - upload, voucher and files
-function validate_fileto()
+function validate_fileto(email)
 {
+    // Default parameter of fileto field if nothing else is supplied
+    email = typeof email !== 'undefined' ? email : $('#fileto').val();
     var isValid = true;
 
 	$("#fileto_msg").hide();
 	$("#maxemails_msg").hide();
 
-	// remove white spaces 
-	var email = $("#fileto").val();
+	// remove white spaces
 	email = email.split(" ").join("");
 
     if(email != "") {
         // if not empty - check and remove trailing , added by autocomplete
         email = email.replace(/,$/, "");
         email = email.replace(/;$/, "");
-        $("#fileto").val(email);
+        $("#fileto").val(email); // This can be removed once all occurrences of 'fileto' is updated to use the new email styling
         email = email.split(/,|;/);
 
         if(email.length>maxEmailRecipients) {
