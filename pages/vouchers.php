@@ -139,7 +139,7 @@ function hidemessages()
 function validateForm()
 {
     hidemessages();
-    if(!validate_fileto()){return false;}
+    if(!validate_recipients()){return false;}
     if(!validate_expiry() ){return false;}
     postVoucher();
 }
@@ -163,6 +163,7 @@ function postVoucher()
 	 	
 	var query = $("#form1").serializeArray(), json = {};
 	for (i in query) {json[query[i].name] = query[i].value;} // create json from form1
+    json['fileto'] = getRecipientsList();
 	// post to fs_upload.php
 	$.ajax({
 	 type: "POST",
@@ -215,7 +216,7 @@ function postVoucher()
                 <td>
                     <input id="fileto" name="fileto"
                            title="<?php echo lang("_EMAIL_SEPARATOR_MSG"); ?>" onfocus="$('#fileto_msg').hide();"
-                           onblur="validate_fileto()" type="text" size="45"
+                           onblur="addEmailRecipientBox($('#fileto').val());" type="text" size="45"
                         />
                     <br />
  		            <div id="fileto_msg" class="validation_msg" style="display:none">
@@ -224,6 +225,7 @@ function postVoucher()
                     <div id="maxemails_msg" style="display: none" class="validation_msg">
                         <?php echo lang("_MAXEMAILS") . $config['max_email_recipients'] ?>
                     </div>
+                    <div id="recipients_box" style="display: none"></div>
  		        </td>
             </tr>
             <tr>
@@ -297,20 +299,21 @@ function postVoucher()
             foreach($json_o as $item) {
                 $i += 1; // counter for file id's
                 $altColor = ($i % 2 != 0)? 'altcolor' : '';
-                echo '<tr><td class="dr7"></td><td class="dr7 ' . $altColor . '"></td><td class="dr7"></td><td class="dr7"></td><td class="dr7"></td><td class="dr7"></td><td class="dr7"></td></tr>';
-                echo '<tr><td class="dr1 ' . $altColor . '" style="vertical-align: middle">' .$item['filefrom'] . '</td>';
+                echo '<tr>'
+                    . '<td class="dr7 HardBreak"></td><td class="dr7 ' . $altColor . '"></td><td class="dr7"></td><td class="dr7"></td><td class="dr7"></td><td class="dr7"></td><td class="dr7"></td></tr>';
+                echo '<tr><td class="dr1 HardBreak ' . $altColor . '" style="vertical-align: middle">' .$item['filefrom'] . '</td>';
                 echo '<td class="dr2 HardBreak ' . $altColor . '" style="vertical-align: middle">' .$item['fileto'] . '</td>';
 
                 echo '<td class="dr2 HardBreak ' . $altColor . '" style="text-align: center; vertical-align: middle">';
 
                 if($item['filesubject'] != "") {
-                    echo "<img src='images/page_white_text_width.png' border='0' alt='' title='".utf8ToHtml($item['filesubject'],TRUE). "' />";
+                    echo '<img src="images/page_white_text_width.png" border="0" alt="" style="display:block; margin:auto" title="' . utf8ToHtml($item['filesubject'], TRUE). '" />';
                 }
 
                 echo '</td><td class="dr2 HardBreak ' . $altColor . '" style="text-align: center; vertical-align: middle">';
 
                 if($item['filemessage'] != "") {
-                    echo "<img src='images/page_white_text_width.png' border='0' alt='' title='".utf8ToHtml($item['filemessage'],TRUE). "' /></td>";
+                    echo "<img src='images/page_white_text_width.png' border='0' alt='' style='display:block; margin:auto' title='".utf8ToHtml($item['filemessage'],TRUE). "' /></td>";
                 }
 
                 echo '<td class="dr2 HardBreak ' . $altColor . '" style="vertical-align: middle">' .date(lang('datedisplayformat'),strtotime($item['filecreateddate'])) . '</td>';
