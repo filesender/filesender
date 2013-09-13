@@ -232,6 +232,7 @@ $(function () {
             'sendBTN': function () {
                 // Disable the send button to prevent duplicate sending
                 if (validateForm()) {
+                    $('#fileto').val(getRecipientsList());
                     $("#form1").submit();
                     $('#btn_addrecipientsend').attr("disabled", true);
                 }
@@ -250,7 +251,7 @@ function validateForm() {
     $("#fileto_msg").hide();
     $("#expiry_msg").hide();
     var validate = true;
-    if (!validate_fileto() || !validate_expiry()) validate = false;		// validate emails && date
+    if (!validate_recipients() || !validate_expiry()) validate = false;		// validate emails && date
     return validate;
 }
 
@@ -692,9 +693,10 @@ if($i==0) {
             <tr>
                 <td class="formfieldheading mandatory tblmcw3" id="files_to"><?php echo  lang("_TO"); ?>:</td>
                 <td style="text-align: center">
-                    <input name="fileto" title="<?php echo  lang("_EMAIL_SEPARATOR_MSG"); ?>" type="text" id="fileto" size="60" onblur="validate_fileto()" />
+                    <input name="fileto" title="<?php echo  lang("_EMAIL_SEPARATOR_MSG"); ?>" type="text" id="fileto" size="60" onblur="addEmailRecipientBox($('#fileto').val());" />
                     <div id="fileto_msg" style="display: none" class="validation_msg"><?php echo lang("_INVALID_MISSING_EMAIL"); ?></div>
                     <div id="maxemails_msg" style="display: none" class="validation_msg"><?php echo lang("_MAXEMAILS"); ?> <?php echo $config['max_email_recipients'] ?>.</div>
+                    <div id="recipients_box" style="display: none"></div>
                 </td>
             </tr>
             <tr>
