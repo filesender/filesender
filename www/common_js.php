@@ -91,33 +91,32 @@
     }
 
     function addEmailRecipientBox(emails) {
-        if (validate_fileto()) {
-            var emailList= emails.split(",");
+        var emailList= emails.split(",");
 
-            for (var i=0; i < emailList.length; i++) {
-                var email = emailList[i];
-                var firstPartOfEmail = email.split('@')[0];
-                var currentContents = $('#recipients_box').html();
+        for (var i=0; i < emailList.length; i++) {
+            var email = emailList[i];
+            var firstPartOfEmail = email.split('@')[0];
+            var currentContents = $('#recipients_box').html();
 
-                if (currentContents.indexOf(email) == -1) {
-                    if (numRecipients > maxEmailRecipients) {
-                        $("#maxemails_msg").show();
-                        return;
-                    }
-
-                    var boxString = '<div id="email_' + recipientID + '" class="email_box" >' +
-                        '<span class="emailEntry" title="'+email+'">' + firstPartOfEmail + '</span>' +
-                        '<span id="email_delete_'+recipientID+'" title="Click here to delete this recipient" onclick="removeEmailFromBox('+recipientID+')"> x </span>' +
-                    '</div>';
-
-                    $('#recipients_box').append(boxString);
-                    $('#recipients_box').show();
-                    recipientID++;
-                    numRecipients++;
+            if (currentContents.indexOf(email) == -1) {
+                if (numRecipients > maxEmailRecipients) {
+                    $("#maxemails_msg").show();
+                    return;
                 }
+
+                var boxString = '<div id="email_' + recipientID + '" class="email_box" >' +
+                    '<span class="emailEntry" title="'+email+'">' + firstPartOfEmail + '</span>' +
+                    '<span id="email_delete_'+recipientID+'" title="Click here to delete this recipient" onclick="removeEmailFromBox('+recipientID+')"> x </span>' +
+                '</div>';
+
+                $('#recipients_box').append(boxString);
+                $('#recipients_box').show();
+                recipientID++;
+                numRecipients++;
             }
-            $('#fileto').val("");
         }
+        $('#fileto').val("");
+        validate_recipients();
     }
 
     function getRecipientsList() {

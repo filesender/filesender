@@ -64,7 +64,7 @@
         // remove messages from any previous attempt
         hideMessages();
         var isValid = true;
-        if (!validate_fileto(getRecipientsList())){
+        if (!validate_recipients()){
             isValid = false;
         }
         if (!validate_files()){
