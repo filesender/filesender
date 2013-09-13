@@ -58,6 +58,19 @@ function readablizebytes(bytes)
 // validation
 // -------------------
 
+
+function validate_recipients() {
+    var isValid = true;
+    $('#recipients_box').children().each(function() {
+        if(!validate_fileto($(this).children().attr('title'))) {
+            isValid = false;
+            $(this).addClass('errorglow');
+            $(this).children().addClass('errorglow_label');
+        }
+    });
+    return isValid;
+}
+
 // Validate FILETO - upload, voucher and files
 function validate_fileto(email)
 {
@@ -94,6 +107,7 @@ function validate_fileto(email)
         isValid = false;
     }
 
+    // This should be removed once all pages use new email styling.
     if (isValid) {
         $('#fileto').removeClass('errorglow');
         $('#fileto_label').removeClass('errorglow_label');
