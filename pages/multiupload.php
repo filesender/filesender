@@ -67,6 +67,7 @@ if(isset($_REQUEST['a']) && $_REQUEST['a'] == "cancelled") {
 
     var statusMsg = '<?php echo $statusMsg; ?>';
     var statusClass = '<?php echo $statusClass; ?>';
+    var userEmail = '<?php echo $senderemail[0]; ?>';
 // start document ready
 $(function () {
     $('#dragfilestouploadcss').css('height', 14+(40*<?php echo $config['upload_box_default_size']; ?>));
@@ -116,8 +117,8 @@ $(function () {
     autoCompleteEmails();
     fileSelected(); // For back button issues.
 
-    $('#email-only-me').click(function() {
-        $('#email-only-me').is(':checked') ? disableToField() : reenableToField();
+    $('#add_me_to_recipients').click(function() {
+        $('#add_me_to_recipients').is(':checked') ? addEmailRecipientBox(userEmail) : removeEmailNameFromBox(userEmail);
         if ($('#fileto').val() != '') {
             validate_fileto();
         }
@@ -260,10 +261,10 @@ $(function () {
                                 <input id="email-enable-confirmation" type="checkbox" style="float:left; width:20px;" <?php echo isChecked($config['download_confirmation_enabled_default']); ?>/>
                             </div>
                         <?php } ?>
-                        <?php if ($config['email_only_me_display'] == 'always') { ?>
+                        <?php if ($config['add_me_to_recipients_display'] == 'always') { ?>
                             <div class="fieldcontainer">
-                                <label for="email-only-me"><?php echo lang("_EMAIL_ONLY_ME") ?></label>
-                                <input id="email-only-me" type="checkbox" style="float:left; width:20px;" <?php echo isChecked($config['email_only_me_default']); ?>/>
+                                <label for="add_me_to_recipients"><?php echo lang("_ADD_ME_TO_RECIPIENTS") ?></label>
+                                <input id="add_me_to_recipients" type="checkbox" style="float:left; width:20px;" <?php echo isChecked($config['add_me_to_recipients_default']); ?>/>
                             </div>
                         <?php } ?>
 
@@ -328,10 +329,10 @@ $(function () {
                                 <input id="email-enable-confirmation" type="checkbox" style="float:left; width:20px;" <?php echo isChecked($config['download_confirmation_enabled_default']); ?>/>
                             </div>
                         <?php } ?>
-                        <?php if ($config['email_only_me_display'] == 'hidden') { ?>
+                        <?php if ($config['add_me_to_recipients_display'] == 'hidden') { ?>
                             <div class="fieldcontainer">
-                                <label for="email-only-me"><?php echo lang("_EMAIL_ONLY_ME") ?></label>
-                                <input id="email-only-me" type="checkbox" style="float:left; width:20px;" <?php echo isChecked($config['email_only_me_default']); ?>/>
+                                <label for="add_me_to_recipients"><?php echo lang("_ADD_ME_TO_RECIPIENTS") ?></label>
+                                <input id="add_me_to_recipients" type="checkbox" style="float:left; width:20px;" <?php echo isChecked($config['add_me_to_recipients_default']); ?>/>
                             </div>
                         <?php } ?>
                     </div>

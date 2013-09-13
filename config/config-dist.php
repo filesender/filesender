@@ -135,8 +135,8 @@ public function loadConfig() {
     $config['download_confirmation_enabled_display'] = 'hidden';
     $config['download_confirmation_enabled_default'] = true;
 
-    $config['email_only_me_display'] = 'hidden';
-    $config['email_only_me_default'] = false;
+    $config['add_me_to_recipients_display'] = 'hidden';
+    $config['add_me_to_recipients_default'] = false;
 
 	// Advanced server settings, do not change unless you have a very good reason.
 	$config['db_dateformat'] = "Y-m-d H:i:sP"; // Date/Time format for PostgreSQL, use PHP date format specifier syntax

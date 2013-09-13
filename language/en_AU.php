@@ -91,7 +91,7 @@ $lang["_EMAIL_ME_COMPLETE"] = "Email me on upload complete";
 $lang["_EMAIL_ME_ON_DOWNLOAD"] = "Email me every time a file is downloaded";
 $lang["_EMAIL_DAILY_STATS"] = "Email me daily statistics with user activity";
 $lang["_ENABLE_EMAIL_CONFIRMATION"] = "Enable download confirmation email for recipients";
-$lang["_EMAIL_ONLY_ME"] = "Send only me download link (I'll distribute it)";
+$lang["_ADD_ME_TO_RECIPIENTS"] = "Include me as a recipient";
 
 
 $lang["_TERMS_OF_AGREEMENT"] = "Terms of Agreement";
