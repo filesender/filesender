@@ -2,34 +2,16 @@
 // Tests for Filsender Version 1.6
 require_once('../simpletest/autorun.php');
 require_once('../classes/_includes.php');
+require_once('utconfig.php');
 
 class testFileSender_coreUT extends UnitTestCase {
 	 function test_coreUT()  
     {
-		// TODO: Fix ensure sans file uid to return bool
-		// Test ensureSaneFileUid accepts a GUID as specified
-		//$testGUID = "6bf0eeed-e341-a8c8-22a6-00004e587673";
-		//$this->assertTrue(ensureSaneFileUid($testGUID));
+		global $config, $default,$obj;
 		
-		// Test ensureSaneFileUid returns false if not a correct guid
-		//$testGUID = "xxxxxx-xxx-xx-x-x";
-		//$this->assertFalse(ensureSaneFileUid($testGUID));
-		
-		// Test ensureSaneFileUid returns false if no guid empty
-		//$testGUID = "";
-		//$this->assertTrue(ensureSaneFileUid($testGUID));
-		
-		// Test that getGUID() returns areal GUID
-		$testGUID = getGUID();
-		$this->assertEqual(ensureSaneFileUid($testGUID),$testGUID);
-		
-		// NTFS / ? < > \ : * | ”
-		// MAC :
-		//$originalFilename = "abcdefghijklmnopqrstuvwxyz1234567890-=!@#$%^&*()_+[]{};':,./<>?~`";
-		//$sanitisedFilename = "abcdefghijklmnopqrstuvwxyz1234567890-=!@#$%^&*()_+[]{};'_,./<>?~`";
-		//$this->assertEqual(sanitizeFilename($originalFilename),$sanitisedFilename);
 		// ----- GENERAL --------
-	
+		
+	// ----- FORMAT BYTES START -------- 
 	// TEST: format Bytes functions formatBytes
 	// test for Kb, Mb, Gb - default precision is 2
 	$val = 1000; $result = "1000 Bytes"; 	
@@ -42,16 +24,37 @@ class testFileSender_coreUT extends UnitTestCase {
 	$this->assertEqual(formatBytes($val,2),$result);
 	$val = 100000000000000; $result = "90.95 TB"; 	
 	$this->assertEqual(formatBytes($val,2),$result);
-	// TESWT: get a valid GUID
+	// ----- FORMAT BYTES END -------- 
+	
+	
+	// ----- ENSURE SANE FILE UID START -------- 
+	$testGUID = $obj["filevoucheruid"];
+	$testInsaneGUID = " xxx-xx";
+	$this->assertTrue(preg_match($config['voucherRegEx'], $testGUID) and strLen($testGUID) == $config['voucherUIDLength']);
+	$this->assertEqual(ensureSaneFileUid($testGUID),$testGUID );
+	// TODO: Remove trigger error in ensureSaneFileUid as it block false return
+	//$this->assertFalse(ensureSaneFileUid($testInsaneGUID));
+	// ----- ENSURE SANE FILE UID END -------- 
+	
+	
+	// ----- GET GUID START -------- 		
 	// Test that getGUID() returns areal GUID
+	// Assumes ENSURE SANE FILE UID is ok
 	$testGUID = getGUID();
 	$this->assertEqual(ensureSaneFileUid($testGUID),$testGUID );
+	// ----- GET GUID END -------- 
+	
 	
 	// TEST: get open SSL getOpenSSLKey
 	
-	// TEST: sanitize a Filename
 	
-	// TEST: ensure sane FIle UID ensureSaneFileUid
+	// ----- SANITISE FILENAME START -------- 
+	// NTFS / ? < > \ : * | ”
+	// MAC :
+	$originalFilename = "abcdefghijklmnopqrstuvwxyz1234567890-=!@#$%^&*()_+[]{};':,./<>?~`";
+	$sanitisedFilename = "abcdefghijklmnopqrstuvwxyz1234567890-=!@#$%^&*()_+[]{};':,./<>?~`";
+	$this->assertEqual(sanitizeFilename($originalFilename),$sanitisedFilename);
+	// ----- SANITISE FILENAME END -------- 
 	
 	// TEST: ensureSaneOpenSSLKey	
 	
@@ -75,19 +78,17 @@ class testFileSender_coreUT extends UnitTestCase {
 	
 	// TEST: URL
 	// Check function returns url if it is valid
-	$val = "http://filesender.org";
-	$result = $val;
-	$this->assertEqual($DB_Input_Checks->checkURL($val),$result);
+	$validURL = "http://filesender.org";
+	$this->assertEqual($DB_Input_Checks->checkURL($validURL),$validURL);
 	
 	// returns false for invalid url
-	$val = "h://filesender.org";
-	$this->assertFalse($DB_Input_Checks->checkURL($val));
+	$invalidURL = "h://filesender.org";
+	$this->assertFalse($DB_Input_Checks->checkURL($invalidURL));
 	
 	// TEST: IP
-	// TODO: CHECK
-	
 	$val = "20.255.05.5";
 	$result = "020.255.005.005";
+	// TODO: CHECK
 	//$this->assertEqual($DB_Input_Checks->checkIP($val),$result);
 	
 	$val = "255.255.255.255.54";
@@ -118,9 +119,18 @@ class testFileSender_coreUT extends UnitTestCase {
 	
 	// TEST: Check if log saves to DB
 	
-	// ----- VERSION --------
-	// TEST: check version
+	// ----- VERSION START -------- 
+	// TEST: check version function is correct 
+	// NOTE: Set correct version in default['version']
 	
+	$FileSender_Version = new FileSender_Version();
+	$testversion = $default["version"];
+	$this->assertEqual($FileSender_Version->compareVersion($testversion),0);
+	$testversion = "1.6-multiupload-0";
+	$this->assertEqual($FileSender_Version->compareVersion($testversion),-1);
+	$testversion = "1.6-multiupload-9999999";
+	$this->assertEqual($FileSender_Version->compareVersion($testversion),1);
+	// ----- VERSION END -------- 
 	}
 	
 	
