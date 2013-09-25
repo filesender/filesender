@@ -64,13 +64,13 @@ if(isset($_REQUEST['a']) && $_REQUEST['a'] == "cancelled") {
 <script type='text/javascript' src='lib/js/AC_OETags.js'></script>
 <script type='text/javascript' src='js/multiupload.js'></script>
 <script type='text/javascript'>
-
+    var fileBoxSize = <?php echo $config['upload_box_default_size']; ?>;
     var statusMsg = '<?php echo $statusMsg; ?>';
     var statusClass = '<?php echo $statusClass; ?>';
     var userEmail = '<?php echo $senderemail[0]; ?>';
 // start document ready
 $(function () {
-    $('#dragfilestouploadcss').css('height', 14+(40*<?php echo $config['upload_box_default_size']; ?>));
+    $('#dragfilestouploadcss').css('height', 14+(40* fileBoxSize));
 
     if (statusMsg != '') {
         statusMessage(statusMsg, statusClass);
