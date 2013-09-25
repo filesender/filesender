@@ -375,7 +375,7 @@ function startUpload()
 
 function doUploadComplete()
 {
-    if (n % fileBoxSize == 0) {
+    if (n % fileBoxSize == 0 && n != 0) {
         $('#dragfilestouploadcss').scrollTop(2 * parseInt($('#dragfilestouploadcss').css('padding')) + n * ($('.fileBox').outerHeight()+ parseInt($('.fileBox').css('margin'))));
     }
     var end = new Date().getTime();
