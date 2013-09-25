@@ -214,10 +214,12 @@ function postVoucher()
             <tr>
                 <td class="mandatory" id="vouchers_to" style="width: 130px"><?php echo lang("_SEND_VOUCHER_TO"); ?>:</td>
                 <td>
+                    <div id="recipients_box" style="display: none"></div>
                     <input id="fileto" name="fileto"
                            title="<?php echo lang("_EMAIL_SEPARATOR_MSG"); ?>" onfocus="$('#fileto_msg').hide();"
                            onblur="addEmailRecipientBox($('#fileto').val());" type="text" size="45"
                         />
+
                     <br />
  		            <div id="fileto_msg" class="validation_msg" style="display:none">
                         <?php echo lang("_INVALID_MISSING_EMAIL"); ?>
@@ -225,7 +227,7 @@ function postVoucher()
                     <div id="maxemails_msg" style="display: none" class="validation_msg">
                         <?php echo lang("_MAXEMAILS") . $config['max_email_recipients'] ?>
                     </div>
-                    <div id="recipients_box" style="display: none"></div>
+
  		        </td>
             </tr>
             <tr>

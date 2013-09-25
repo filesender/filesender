@@ -88,7 +88,6 @@ function validate_fileto(email)
         // if not empty - check and remove trailing , added by autocomplete
         email = email.replace(/,$/, "");
         email = email.replace(/;$/, "");
-        $("#fileto").val(email); // This can be removed once all occurrences of 'fileto' is updated to use the new email styling
         email = email.split(/,|;/);
 
         if(email.length>maxEmailRecipients) {
