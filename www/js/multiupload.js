@@ -375,6 +375,9 @@ function startUpload()
 
 function doUploadComplete()
 {
+    if (n % fileBoxSize == 0) {
+        $('#dragfilestouploadcss').scrollTop(2 * parseInt($('#dragfilestouploadcss').css('padding')) + n * ($('.fileBox').outerHeight()+ parseInt($('.fileBox').css('margin'))));
+    }
     var end = new Date().getTime();
     var time = end - startTime;
     var speed = fileData[n].bytesTotal / (time / 1000) / 1024 / 1024 * 8;
