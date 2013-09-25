@@ -91,12 +91,17 @@
     }
 
     function addEmailRecipientBox(emails) {
+        var recipientsBox = $('#recipients_box');
         var emailList= emails.split(",");
 
         for (var i=0; i < emailList.length; i++) {
             var email = emailList[i];
+
+            if (email == userEmail) {
+                $('#add_me_to_recipients').prop('checked', true);
+            }
             var firstPartOfEmail = email.split('@')[0];
-            var currentContents = $('#recipients_box').html();
+            var currentContents = recipientsBox.html();
 
             if (currentContents.indexOf(email) == -1) {
                 if (numRecipients > maxEmailRecipients) {
@@ -109,8 +114,8 @@
                     '<span id="email_delete_'+recipientID+'" title="Click here to delete this recipient" onclick="removeEmailIDFromBox('+recipientID+')"> x </span>' +
                 '</div>';
 
-                $('#recipients_box').append(boxString);
-                $('#recipients_box').show();
+                recipientsBox.append(boxString);
+                recipientsBox.show();
                 recipientID++;
                 numRecipients++;
             }
@@ -129,7 +134,11 @@
     }
 
     function removeEmailIDFromBox(i) {
-        $('#email_' + i).remove();
+        var emailBox = $('#email_' + i);
+        if (emailBox.children().attr('title') == userEmail) {
+            $('#add_me_to_recipients').prop('checked', false);
+        }
+        emailBox.remove();
         numRecipients--;
     }
 
