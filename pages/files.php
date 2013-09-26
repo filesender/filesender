@@ -45,10 +45,10 @@ if (isset($_REQUEST['s'])) {
 
     if ($_REQUEST['s'] == 'vouchers') {
         $filedata = $functions->getUsedVoucherTransactions();
-        $heading = 'Uploads from your vouchers';
+        $heading = '<div class="heading">' . lang('_VOUCHER_UPLOADS') . '</div>';
     } elseif ($_REQUEST['s'] == 'files') {
         $filedata = $functions->getUserTrackingCodes();
-        $heading = lang('_MY_FILES');
+        $heading = '<div id="pageheading">' . lang('_MY_FILES') . '</div>';
     }
 
     $json_o = json_decode($filedata, true);
@@ -155,7 +155,7 @@ var maximumDate = <?php echo (time()+($config['default_daysvalid']*86400))*1000 
 var minimumDate = <?php echo (time()+86400)*1000 ?>;
 var maxEmailRecipients = <?php echo $config['max_email_recipients'] ?>;
 var datepickerDateFormat = '<?php echo lang('_DP_dateFormat'); ?>';
-var showall = false; // flag for show all switch to show or hide download summaries
+var showall = false; // flag for toggleDisplayRow all switch to toggleDisplayRow or hide download summaries
 var showAllRecipients = false; // flag for expanding all download summaries for individual recipients
 var statusMsg = '<?php echo $statusMsg ?>';
 var statusClass = '<?php echo $statusClass ?>';
@@ -296,7 +296,7 @@ function expandRecipients(i, j) {
         for (num; num < j; num++) {
             elemDisplay = $('#show_' + i + '_' + num + '_recipients').css('display');
             if (elemDisplay == 'none') {
-                show(i + "_" + num + "_recipients");
+                toggleDisplayRow(i + "_" + num + "_recipients");
             }
         }
         $('#showicon_' + i + '_recipients').attr({src: 'images/openboth2.png', alt: ''});
@@ -305,7 +305,7 @@ function expandRecipients(i, j) {
         for (num; num < j; num++) {
             elemDisplay = $('#show_' + i + '_' + num + '_recipients').css('display');
             if (elemDisplay == 'table-row') {
-                show(i + "_" + num + "_recipients");
+                toggleDisplayRow(i + "_" + num + "_recipients");
             }
         }
         $('#showicon_' + i + '_recipients').attr({src: 'images/openboth.png', alt: ''});
@@ -314,30 +314,20 @@ function expandRecipients(i, j) {
 }
 
 function expandTopMenu(numRows) {
-    var row = 0;
-    var elemDisplay;
-    if (!showall) {
-        for (row; row < numRows; row++) {
-            elemDisplay = $('#show_' + row).css('display');
-            if (elemDisplay == 'none') {
-                show(row);
-            }
+    showall = !showall;
+
+    for (var row = 1; row <= numRows; row++) {
+        var elemDisplay = $('#show_' + row).css('display');
+        if ((showall && elemDisplay == 'none') || (!showall && elemDisplay == 'table-row')) {
+            toggleDisplayRow(row);
         }
-        $('#showicon_top').attr({src: 'images/openboth2.png', alt: ''});
-        showall = true;
-    } else {
-        for (row; row < numRows; row++) {
-            elemDisplay = $('#show_' + row).css('display');
-            if (elemDisplay == 'table-row') {
-                show(row);
-            }
-        }
-        $('#showicon_top').attr({src: 'images/openboth.png', alt: ''});
-        showall = false;
+
+        var imageSrc = showall ? 'images/openboth2.png' : 'images/openboth.png';
+        $('#showicon_top').attr({src: imageSrc, alt: ''});
     }
 }
 
-function show(i) {
+function toggleDisplayRow(i) {
     var show = $('#show_' + i);
     show.toggle();
     var $icon = $("#showicon_" + i);
@@ -352,22 +342,17 @@ function show(i) {
 </script>
 
 <div id="box">
-<?php echo '<div id="pageheading">'. $heading .'</div>'; ?>
+<?php echo $heading; ?>
 <div id="tablediv">
 <table id="myfiles" style="table-layout:fixed; width: 100%; padding: 4px; border-spacing: 0; border: 0">
 <tr class="headerrow">
-    <td class="tblmcw1" onclick="expandTopMenu(<?php echo sizeof($json_o); ?>)" title="<?php echo lang("_SHOW_ALL"); ?>" style="cursor:pointer">
-        <img class="expct" id="showicon_top" src="images/openboth.png" alt=""/>
-    </td>
-
-    <td class="HardBreak" colspan="4" style="text-align: center" id="myfiles_header_to"><strong><?php echo lang("_TO"); ?></strong></td>
-    <td class="HardBreak tblmcw3" style="text-align: center" id="myfiles_header_size"><strong><?php echo lang("_TOTAL_SIZE") ?></strong></td>
-    <td class="HardBreak tblmcw3" id="myfiles_header_downloaded" style="text-align: center"
-        title="# <?php echo lang("_DOWNLOADS"); ?>"><strong><?php echo lang("_DOWNLOADS"); ?></strong>
-    </td>
-    <td class="HardBreak tblmcw3" id="myfiles_header_expiry" style="text-align: center"><strong><?php echo lang("_EXPIRY"); ?></strong></td>
-    <td class="HardBreak" id="myfiles_header_filename" style="text-align: center"><strong><?php echo lang("_TRACKING_CODE") ?></strong></td>
-    <td class="tblmcw1 HardBreak"></td>
+    <td class="tblmcw1" onclick="expandTopMenu(<?php echo sizeof($json_o); ?>)" title="<?php echo lang("_SHOW_ALL"); ?>" style="vertical-align: middle; cursor:pointer"><img class="expct" id="showicon_top" src="images/openboth.png" alt=""/></td>
+    <td class="HardBreak" colspan="4" style="width: 35%; vertical-align: middle; text-align: center" id="myfiles_header_to"><strong><?php echo lang("_TO"); ?></strong></td>
+    <td class="HardBreak tblmcw3" style="vertical-align: middle; text-align: center" id="myfiles_header_size"><strong><?php echo lang("_TOTAL_SIZE") ?></strong></td>
+    <td class="HardBreak tblmcw3" id="myfiles_header_downloaded" style="vertical-align: middle; text-align: center"><strong><?php echo lang("_DOWNLOADS"); ?></strong></td>
+    <td class="HardBreak tblmcw3" id="myfiles_header_expiry" style="vertical-align: middle; text-align: center"><strong><?php echo lang("_EXPIRY"); ?></strong></td>
+    <td class="HardBreak" id="myfiles_header_filename" style="vertical-align: middle; text-align: center"><strong><?php echo lang("_TRACKING_CODE") ?></strong></td>
+    <td class="tblmcw1 HardBreak" style="vertical-align: middle"></td>
 </tr>
 <?php
 $i = 0;
@@ -446,7 +431,7 @@ if(sizeof($json_o) > 0)
         if (isset($itemContents[0]) && $itemContents[0]['filestatus'] == 'Available') {
             echo '<tr><td class="dr7" colspan="10"></tr>
                         <tr  '.$rowClass.'>
-                            <td  class="dr1 expct" onclick="show('.$i.')">
+                            <td  class="dr1 expct" onclick="toggleDisplayRow('.$i.')">
                                 <img class="expct" id="showicon_'.$i.'"  style="cursor:pointer"
                                     title="'. lang("_SHOW_ALL").'" src="images/openboth.png" alt=""/>
                             </td>
@@ -593,7 +578,7 @@ if(sizeof($json_o) > 0)
                 }
 
                 echo $row .
-                    '<td  class="dr4 expct" style="width: 5%;" onclick="show(&quot;'.$i.'_'.$temp.'_recipients&quot;)">
+                    '<td  class="dr4 expct" style="width: 5%;" onclick="toggleDisplayRow(&quot;'.$i.'_'.$temp.'_recipients&quot;)">
                                         <img class="expct" id="showicon_'.$i.'_'.$temp.'_recipients"
                                             style="cursor:pointer" src="images/openboth.png"  alt=""/>
                                     </td>
