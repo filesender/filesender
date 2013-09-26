@@ -67,7 +67,6 @@ if(isset($_REQUEST['a']) && $_REQUEST['a'] == "cancelled") {
     var fileBoxSize = <?php echo $config['upload_box_default_size']; ?>;
     var statusMsg = '<?php echo $statusMsg; ?>';
     var statusClass = '<?php echo $statusClass; ?>';
-    var userEmail = '<?php echo $senderemail[0]; ?>';
 // start document ready
 $(function () {
     $('#dragfilestouploadcss').css('height', 14+(40* fileBoxSize));
@@ -176,7 +175,7 @@ $(function () {
 
                     <div class="fieldcontainer">
                         <label id="fileto_label" for="fileto" class="mandatory"><?php echo lang("_TO"); ?>:</label>
-                        <div id="recipients_box" style="display: none"></div>
+                        <span id="recipients_box" style="display: none"></div>
                         <input name="fileto" type="text" id="fileto"
                                title="<?php echo lang("_EMAIL_SEPARATOR_MSG"); ?>" onblur="addEmailRecipientBox($('#fileto').val());"
                                value="" placeholder="<?php echo lang('_ENTER_TO_EMAIL'); ?>"/>
