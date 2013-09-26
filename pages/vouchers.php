@@ -136,7 +136,7 @@ function hidemessages()
     $("#maxemails_msg").hide();
 }
 
-function validateForm()
+function validateVoucherForm()
 {
     hidemessages();
     if(!validate_recipients()){return false;}
@@ -185,7 +185,7 @@ function postVoucher()
                 });
 
                 // re-enable button if client needs to change form details
-                $("#voucherbutton").attr('onclick', 'validateForm()');
+                $("#voucherbutton").attr('onclick', 'validateVoucherForm()');
                 return;
 		    }
 
@@ -274,7 +274,7 @@ function postVoucher()
                         />
 		        </td>
                 <td>
-                    <div class="menu" id="voucherbutton" onclick="validateForm()">
+                    <div class="menu" id="voucherbutton" onclick="validateVoucherForm()">
                         <a href="#" id="btn_sendvoucher" ><?php echo lang("_SEND_VOUCHER"); ?></a>
                     </div>
                     <div id="_noauth" class="validation_msg" style="display:none"><?php echo lang("_AUTH_ERROR"); ?></div>
@@ -285,6 +285,7 @@ function postVoucher()
 </form>
 
 <div id="box_3" class="box">
+    <div class="heading"><?php echo lang('_ACTIVE_VOUCHERS'); ?></div>
     <table id="myfiles" style="table-layout:fixed; width: 100%; padding: 4px; border-spacing: 0; border: 0">
         <tr class="headerrow">
             <td id="vouchers_header_from" class="tblmcw3 HardBreak" style="vertical-align: middle"><strong><?php echo lang("_FROM"); ?></strong></td>
@@ -339,7 +340,7 @@ function postVoucher()
         }
     ?>
 </div>
-<?php //require_once('files.php'); ?>
+<?php require_once('files.php'); ?>
 <div id="dialog-delete" style="display:none" title="<?php echo lang("_DELETE_VOUCHER") ?>">
     <p><?php echo lang("_CONFIRM_DELETE_VOUCHER"); ?></p>
 </div>

@@ -167,6 +167,7 @@ third-party application to open this archive, as it is larger than 4 GiB. We sug
 $lang["_SEND_NEW_VOUCHER"] = "A Voucher allows someone to send you a file.<br />
 To create a voucher, enter an email address then select Send Voucher.<br />
 An email will be sent to the recipient with a link to use the Voucher.";
+$lang["_VOUCHER_UPLOADS"] = "Files sent using your vouchers";
 
 // User interaction
 $lang["_EMAIL_SEPARATOR_MSG"] = "Multiple email addresses separated by , or ;";
