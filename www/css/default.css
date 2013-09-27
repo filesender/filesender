@@ -418,7 +418,7 @@ input {
     border: 1px solid;
     padding: 4px;
     display: inline-block;
-    cursor: pointer;
+    cursor: default;
     margin: 2px;
     border-color: #555;
 }
@@ -427,11 +427,19 @@ input {
     border-color: #000;
 }
 
-#aup 
+.removeEmail {
+    float:right;
+    width:16px;
+    margin-left:5px;
+    background: url('../images/delete.png') no-repeat center center;
+    cursor: pointer;
+}
+
+#aup
 {
 	width: 14px;	/*margin-left: -1px;*/
 }
-#aup_label{
+#aup_label {
 	font-weight: bold;
 }
 
@@ -454,7 +462,7 @@ input {
 }*/
 
 #progress_image {
-margin-top: 4px;
+    margin-top: 4px;
 }
 
 #progress_completed {
@@ -481,9 +489,9 @@ margin-top: 4px;
 	position: relative;
 	height: 20px;
 	background-color: #5C5;
-width: 0;
-color: #FFF;
-    }
+    width: 0;
+    color: #FFF;
+}
 
 .progress_completed {
 	z-index:40;
@@ -497,7 +505,6 @@ color: #FFF;
     width: 100%;
     height: 43px;
 }
-
 
 #spinner {
     background: url('../images/ajax-loader-sm.gif') no-repeat center center;
