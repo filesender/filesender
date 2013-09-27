@@ -109,10 +109,10 @@
                     return;
                 }
 
-                var boxString = '<div id="email_' + recipientID + '" class="email_box" >' +
+                var boxString = '<span id="email_' + recipientID + '" class="email_box" >' +
                     '<span class="emailEntry" title="'+email+'">' + firstPartOfEmail + '</span>' +
-                    '<span id="email_delete_'+recipientID+'" title="Click here to delete this recipient" onclick="removeEmailIDFromBox('+recipientID+')"> x </span>' +
-                '</div>';
+                    '<span id="email_delete_'+recipientID+'" class="removeEmail" title="Click here to delete this recipient" onclick="removeEmailIDFromBox('+recipientID+')">&nbsp;</span>' +
+                '</span>';
 
                 recipientsBox.append(boxString);
                 recipientsBox.show();
