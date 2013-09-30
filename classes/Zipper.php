@@ -177,7 +177,7 @@ class Zipper
 
         $header = pack('V', 0x04034b50) // Local file header signature.
             . pack('v', 0x000A) // Version needed to extract.
-            . pack('v', 0x08) // General purpose bit flag (third bit is set to allow us to send the hash later, in the file descriptor).
+            . pack('v', 0x08 | 0x0800) // General purpose bit flag: set bit 3 (file descriptor) and bit 11 (utf-8 file names).
             . pack('v', 0x00) // Compression method (0x00 means no compression).
             . pack('V', $timestamp) // Last modified time and date (as a DOS timestamp).
             . pack('V', 0x00) // CRC-32 hash of file contents. 0x00 because it is specified in the file descriptor.
@@ -287,7 +287,7 @@ class Zipper
         $record = pack('V', 0x02014b50) // Central file header signature.
             . pack('v', 0) // Made by version.
             . pack('v', 0x000A) // Version needed to extract.
-            . pack('v', 0x08) // General purpose bit flag.
+            . pack('v', 0x08 | 0x0800) // General purpose bit flag: set bit 3 (file descriptor) and bit 11 (utf-8 file names).
             . pack('v', 0x00) // Compression method (0x00 means no compression).
             . pack('V', $file['timestamp']) // Last modified time and date (as a DOS timestamp).
             . pack('V', $file['crc']) // CRC-32 hash of file contents.
