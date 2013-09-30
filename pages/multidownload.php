@@ -45,8 +45,6 @@ if (isset($_REQUEST['gid']) && ensureSaneOpenSSLKey($_REQUEST['gid'])) {
     var isZip64 = <?php echo $totalFileSize; ?> >= (4 * 1024 * 1024 * 1024);
 
     $(document).ready(function () {
-        $('#message').hide();
-        $('#errmessage').hide();
         $('#myfiles tr:odd').addClass('altcolor');
 
         if (!isMac || !isZip64) {
@@ -74,9 +72,9 @@ if (isset($_REQUEST['gid']) && ensureSaneOpenSSLKey($_REQUEST['gid'])) {
         var numChecked = $('.checkboxes:checked').length;
 
         if (numChecked == 0) {
-            $('#errmessage').show();
+            statusMessage('<?php echo lang('_NO_FILES_SELECTED') ?>', 'red');
         } else {
-            $('#errmessage').hide();
+            clearStatusBar();
         }
     }
 
@@ -99,19 +97,16 @@ if (isset($_REQUEST['gid']) && ensureSaneOpenSSLKey($_REQUEST['gid'])) {
     function startDownload() {
         if ($('.checkboxes:checked').length > 0) {
             // At least one file is selected, start downloading.
-            $('#errmessage').hide();
-            $('#message').show();
+            statusMessage('<?php echo lang('_STARTED_DOWNLOADING') ?>', 'green');
             $('#fileform').submit();
         } else {
             // No files selected, show error message.
-            $('#message').hide();
-            $('#errmessage').show();
+            clearStatusBar();
+            statusMessage('<?php echo lang('_NO_FILES_SELECTED') ?>', 'red');
         }
     }
 </script>
 
-<div id='message'><?php echo lang('_STARTED_DOWNLOADING') ?></div>
-<div id='errmessage'><?php echo lang('_NO_FILES_SELECTED') ?></div>
 <div id="box" style="background:#fff">
     <?php echo '<div id="pageheading">' . lang('_DOWNLOAD') . '</div>' ?>
     <div id="fileinfo">

@@ -229,6 +229,10 @@ function statusMessage(msg, color)
     statusMsg.attr('class', color);
 }
 
+function clearStatusBar() {
+    $('#statusmessage').empty();
+}
+
 
 var totalBytesLoaded = 0;
 var percentComplete = 0;

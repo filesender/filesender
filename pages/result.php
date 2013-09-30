@@ -1,4 +1,8 @@
 <?php
+
+$statusMsg = '';
+$statusClass = '';
+
 if ($s == "complete" || $s == "completev") {
     if (isset($_REQUEST['gid']) && ensureSaneOpenSSLKey($_REQUEST['gid']) && $functions->isValidGroupId($_REQUEST['gid'])) {
         // Upload completed, display list of uploaded files.
@@ -42,9 +46,8 @@ if ($s == "complete" || $s == "completev") {
         }
         echo '</div>';
 
-        echo '<script type="text/javascript">'
-            .   'statusMessage("' . lang("_UPLOAD_COMPLETE") . '", "green");'
-            . '</script>';
+        $statusMsg = lang("_UPLOAD_COMPLETE");
+        $statusClass = 'green';
     } else {
         // Group ID wasn't supplied, so nothing to show here.
         if ($isAuth) {
@@ -55,9 +58,9 @@ if ($s == "complete" || $s == "completev") {
     }
 } else {
     // An error occurred, display error message.
-    echo '<script type="text/javascript">'
-        .   'statusMessage("' . lang("_ERROR_UPLOAD_FAILED") . '", "red");'
-        . '</script>';
+
+    $statusMsg = lang("_ERROR_UPLOAD_FAILED");
+    $statusClass = 'red';
 
     echo '<div class="box" style="text-align: center">';
 
@@ -71,3 +74,15 @@ if ($s == "complete" || $s == "completev") {
 
     echo '</div>';
 }
+?>
+
+<script type="text/javascript">
+    var statusMsg = '<?php echo $statusMsg; ?>';
+    var statusClass = '<?php echo $statusClass; ?>';
+    // doc ready
+    $(function() {
+        if (statusMsg != '') {
+            statusMessage(statusMsg, statusClass);
+        }
+    });
+</script>
