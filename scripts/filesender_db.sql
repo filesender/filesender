@@ -56,3 +56,5 @@ CREATE TABLE logs
   logdailysummary character varying(5),
   CONSTRAINT logs_pkey PRIMARY KEY (logid)
 );
+
+CREATE INDEX id_logvoucheruid ON logs (logvoucheruid);

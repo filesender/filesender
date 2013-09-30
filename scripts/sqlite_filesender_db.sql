@@ -53,6 +53,8 @@ CREATE TABLE logs (
     logdailysummary TEXT
 );
 
+CREATE INDEX id_logvoucheruid ON logs (logvoucheruid);
+
 CREATE TRIGGER UPDATE_LOGDATE AFTER UPDATE ON logs
 	BEGIN
 		UPDATE logs SET logdate = datetime('now')
