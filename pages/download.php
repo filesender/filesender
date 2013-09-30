@@ -50,7 +50,7 @@ if (isset($_REQUEST['vid'])) {
     });
 
     function startDownload() {
-        $('#statusmessage').html('<?php echo lang("_STARTED_DOWNLOADING"); ?>').attr('class', 'green');
+        statusMessage('<?php echo lang("_STARTED_DOWNLOADING"); ?>', 'green');
     }
 
 </script>
