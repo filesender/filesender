@@ -24,7 +24,7 @@ CREATE TABLE files
   filegroupid character varying(60),
   filetrackingcode character varying(5),
   filedownloadconfirmations character varying(5),
-  fileenabledownloadrecipients character varying(5),
+  fileenabledownloadreceipts character varying(5),
   filedailysummary character varying(5),
   CONSTRAINT files_pkey PRIMARY KEY (fileid)
 );

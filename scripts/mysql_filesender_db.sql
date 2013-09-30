@@ -35,7 +35,7 @@ CREATE TABLE `files` (
   `filegroupid` varchar(60) DEFAULT NULL,
   `filetrackingcode` varchar(5) DEFAULT NULL,
   `filedownloadconfirmations` varchar(5) DEFAULT NULL,
-  `fileenabledownloadrecipients` varchar(5) DEFAULT NULL,
+  `fileenabledownloadreceipts` varchar(5) DEFAULT NULL,
   `filedailysummary` varchar(5) DEFAULT NULL,
   PRIMARY KEY (`fileid`),
   UNIQUE KEY `fileid` (`fileid`)

@@ -30,7 +30,7 @@ CREATE TABLE files (
     filegroupid TEXT,
     filetrackingcode TEXT,
     filedownloadconfirmations TEXT,
-    fileenabledownloadrecipients TEXT,
+    fileenabledownloadreceipts TEXT,
     filedailysummary TEXT
 );
 
