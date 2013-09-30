@@ -61,7 +61,6 @@ if(isset($_REQUEST['a']) && $_REQUEST['a'] == "cancelled") {
 }
 ?>
 
-<script type='text/javascript' src='lib/js/AC_OETags.js'></script>
 <script type='text/javascript' src='js/multiupload.js'></script>
 <script type='text/javascript'>
     var fileBoxSize = <?php echo $config['upload_box_default_size']; ?>;
