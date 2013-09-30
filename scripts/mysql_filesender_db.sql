@@ -65,6 +65,8 @@ CREATE TABLE `logs` (
   PRIMARY KEY (`logid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 
+CREATE INDEX id_logvoucheruid ON logs (logvoucheruid);
+
 -- Use the following to grant the filesender user the
 -- right permissions and set the password.
 -- Note that these commands are commented out and should
