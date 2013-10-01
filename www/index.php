@@ -82,10 +82,9 @@ if(($isAuth || $isVoucher) && !isset($_SESSION["s-token"]))
     $_SESSION["s-token"] = getGUID();
 }
 
-if(isset($_REQUEST["s"]))
-{
-    $s = $_REQUEST["s"];
-}
+// Make 'upload' the default value if no page is specified.
+$s = isset($_REQUEST['s']) ? $_REQUEST['s'] : 'upload';
+
 // display invalid voucher after - usually redirected from download page
 if($s == "invalidvoucher")
 {
