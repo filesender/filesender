@@ -91,13 +91,13 @@ var datepickerDateFormat = '<?php echo lang('_DP_dateFormat'); ?>';
 var selectedVoucher = "";
 var nameLang = '<?php echo lang("_FILE_NAME"); ?>';
 var sizeLang = '<?php echo lang("_SIZE"); ?>';
-var statusMsg = '<?php echo $statusMsg; ?>';
-var statusClass = '<?php echo $statusClass; ?>';
+var statusBarMsg = '<?php echo $statusMsg; ?>';
+var statusBarClass = '<?php echo $statusClass; ?>';
 
 $(function() {
 
-    if (statusMsg != '') {
-        statusMessage(statusMsg, statusClass);
+    if (statusBarMsg != '') {
+        statusMessage(statusBarMsg, statusBarClass);
     }
 
 	//$("#fileto_msg").hide();
