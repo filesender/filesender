@@ -262,14 +262,14 @@ function startUpload()
 
         for (var i in query) {
             json[query[i].name] = query[i].value;
-            if (query[i].name == 'filestatus'){
+            if (query[i].name == 'filestatus' && query[i].value == 'Voucher'){
                 isVoucher = true;
+
             }
         }
 
-        if (isVoucher){
-            vid = json['filevoucheruid'];
-        }
+        // Used in validate upload
+        vid = json['filevoucheruid'];
 
         // add file information fields
         json['fileoriginalname'] = fileData[n].filename;
@@ -444,11 +444,9 @@ function transactionComplete(gid)
     json['rtnemail'] = $('#rtnemail').prop('checked');
     json['email-upload-complete'] = $('#email-upload-complete').prop('checked');
 
-    var transactionCompleteString = '';
+    var transactionCompleteString = '?type=transactioncomplete&gid=' + gid;
     if (isVoucher) {
-        transactionCompleteString = '?type=transactioncomplete&gid=' + gid + '&vid=' + vid;
-    } else {
-        transactionCompleteString = '?type=transactioncomplete&gid=' + gid;
+        transactionCompleteString += '&vid=' + vid;
     }
 
     $.ajax({
