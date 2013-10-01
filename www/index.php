@@ -340,9 +340,9 @@ if($isAuth )
         else if($s == "uploaderror" || $s == "emailsenterror" || $s == "filesizeincorrect" || $s == "complete" || $s == "completev")
         {
             require_once("../pages/result.php");
-        } else if ($s == "" && $isAuth){
+        } else if ($isAuth){
             require_once('../pages/uploadcheck.php');
-        }else if ($s == "" ){
+        } else {
             require_once('../pages/home.php');
         }
         ?>
