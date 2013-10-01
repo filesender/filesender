@@ -131,11 +131,16 @@ function validate_expiry()
 
 	if($("#datepicker").datepicker("getDate") == null)
 	{
+        $('#datepicker').addClass('errorglow');
+        $('#datepicker_label').addClass('errorglow_label');
         $("#expiry_msg").show();
 		return false;
-	}
-	$("#expiry_msg").hide();
-	return true;
+	} else {
+        $('#datepicker').removeClass('errorglow');
+        $('#datepicker_label').removeClass('errorglow_label');
+        $("#expiry_msg").hide();
+        return true;
+    }
 }
 
 //  validate single email	- upload, voucher and files
@@ -232,7 +237,6 @@ function statusMessage(msg, color)
 function clearStatusBar() {
     $('#statusmessage').empty();
 }
-
 
 var totalBytesLoaded = 0;
 var percentComplete = 0;

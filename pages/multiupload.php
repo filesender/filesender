@@ -216,7 +216,7 @@ $(function () {
                 <td class="box" style="vertical-align:top; height:100%;width:50%;" id="col2">
                     <div id="options">
                         <div class="fieldcontainer" id="upload_expirydate">
-                            <label for="datepicker" class="mandatory"><?php echo lang("_EXPIRY_DATE"); ?>:</label>
+                            <label for="datepicker" id="datepicker_label" class="mandatory"><?php echo lang("_EXPIRY_DATE"); ?>:</label>
                             <input id="datepicker" style="width: 70%;" name="datepicker" title="<?php echo lang('_DP_dateFormat'); ?>"
                                    onchange="validate_expiry()"/>
 
