@@ -161,9 +161,10 @@ class Functions
         $trackingCode = $result;
 
         if ($authUser == null || empty($trackingCode)) {
-            return 'AAA'; // No user or no previous tracking code, return default value.
+            return 'AAA';
         } else {
-            return ++$trackingCode; // Return previous tracking code incremented by one.
+            // Return the next unused tracking code (turns 'AAA' into 'AAB', 'AAZ' into 'ABA', etc).
+            return ++$trackingCode;
         }
     }
 
