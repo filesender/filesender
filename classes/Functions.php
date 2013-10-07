@@ -287,7 +287,7 @@ class Functions
         return ' fileid, fileexpirydate, fileto, filesubject, fileactivitydate, filemessage, filefrom, filesize, '
         . 'fileoriginalname, filestatus, fileip4address, fileip6address, filesendersname, filereceiversname, '
         . 'filevouchertype, fileauthuseruid, fileauthuseremail, filecreateddate, fileauthurl, fileuid, filevoucheruid, '
-        . 'filegroupid, filetrackingcode, filedownloadconfirmations, fileenabledownloadreceipts, filedailysummary ';
+        . 'filegroupid, filetrackingcode, filedownloadconfirmations, fileenabledownloadreceipts, filedailysummary, filenumdownloads ';
     }
 
     // --------------------------------
@@ -539,6 +539,7 @@ class Functions
             $fileData['filetrackingcode'] = $trackingCode;
             $fileData['filesubject'] = $subject;
             $fileData['filemessage'] = $message;
+            $fileData['filenumdownloads'] = 0;
 
             // Set created date to now, not the time the transaction was created.
             $fileData['filecreateddate'] = date($config['db_dateformat'], time());
@@ -683,12 +684,12 @@ class Functions
             'fileexpirydate, fileto, filesubject, fileactivitydate, filevoucheruid, filemessage, filefrom, ' .
             'filesize, fileoriginalname, filestatus, fileip4address,fileip6address, filesendersname, ' .
             'filereceiversname, filevouchertype, fileuid, fileauthuseruid, fileauthuseremail, filecreateddate, ' .
-            'filegroupid, filetrackingcode, filedownloadconfirmations, fileenabledownloadreceipts, filedailysummary ' .
+            'filegroupid, filetrackingcode, filedownloadconfirmations, fileenabledownloadreceipts, filedailysummary, filenumdownloads ' .
             ') VALUES ( ' .
             ':fileexpirydate, :fileto, :filesubject, :fileactivitydate, :filevoucheruid, :filemessage, :filefrom, ' .
             ':filesize, :fileoriginalname, :filestatus, :fileip4address, :fileip6address, :filesendersname, ' .
             ':filereceiversname, :filevouchertype, :fileuid, :fileauthuseruid, :fileauthuseremail, :filecreateddate, ' .
-            ':filegroupid, :filetrackingcode, :filedownloadconfirmations, :fileenabledownloadreceipts, :filedailysummary ' .
+            ':filegroupid, :filetrackingcode, :filedownloadconfirmations, :fileenabledownloadreceipts, :filedailysummary, :filenumdownloads ' .
             ')'
         );
 
@@ -716,6 +717,7 @@ class Functions
         $statement->bindParam(':filedownloadconfirmations', $dataItem['filedownloadconfirmations']);
         $statement->bindParam(':fileenabledownloadreceipts', $dataItem['fileenabledownloadreceipts']);
         $statement->bindParam(':filedailysummary', $dataItem['filedailysummary']);
+        $statement->bindParam(':filenumdownloads', $dataItem['filenumdownloads']);
 
         $this->db->execute($statement);
 
@@ -1184,7 +1186,8 @@ class Functions
             filetrackingcode = :filetrackingcode,
             filedownloadconfirmations = :filedownloadconfirmations,
             fileenabledownloadreceipts = :fileenabledownloadreceipts,
-            filedailysummary = :filedailysummary
+            filedailysummary = :filedailysummary,
+            filenumdownloads = :filenumdownloads
             WHERE filevoucheruid = :filevoucheruid'
         );
 
@@ -1212,6 +1215,7 @@ class Functions
         $statement->bindParam(':filedownloadconfirmations', $dataItem['filedownloadconfirmations']);
         $statement->bindParam(':fileenabledownloadreceipts', $dataItem['fileenabledownloadreceipts']);
         $statement->bindParam(':filedailysummary', $dataItem['filedailysummary']);
+        $statement->bindParam(':filenumdownloads', $dataItem['filenumdownloads']);
 
         $this->db->execute($statement);
     }

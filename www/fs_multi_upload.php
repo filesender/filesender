@@ -106,6 +106,7 @@ if (!isAuthenticated()) {
             $data['filedownloadconfirmations'] = isset($emailSettings['email-inform-download']) && $emailSettings['email-inform-download'] ? 'true' : 'false';
             $data['fileenabledownloadreceipts'] = isset($emailSettings['email-enable-confirmation']) && $emailSettings['email-enable-confirmation'] ? 'true' : 'false';
             $data['filedailysummary'] = isset($emailSettings['email-inform-daily']) && $emailSettings['email-inform-daily'] ? 'true' : 'false';
+            $data['filenumdownloads'] = 0;
 
             ensureFileSizesMatch($data, $uploadFolder, $tempFilename);
             renameTempFile($tempFilePath, $uploadFolder . $fileUid);

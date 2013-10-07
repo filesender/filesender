@@ -31,7 +31,8 @@ CREATE TABLE files (
     filetrackingcode TEXT,
     filedownloadconfirmations TEXT,
     fileenabledownloadreceipts TEXT,
-    filedailysummary TEXT
+    filedailysummary TEXT,
+    filenumdownloads INTEGER DEFAULT 0
 );
 
 CREATE TABLE logs (

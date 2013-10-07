@@ -26,6 +26,7 @@ CREATE TABLE files
   filedownloadconfirmations character varying(5),
   fileenabledownloadreceipts character varying(5),
   filedailysummary character varying(5),
+  filenumdownloads integer default 0,
   CONSTRAINT files_pkey PRIMARY KEY (fileid)
 );
 
