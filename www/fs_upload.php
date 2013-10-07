@@ -153,6 +153,7 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
             $data["fileuid"] = $fileuid;
             $data["filestatus"]  = "Available";
             $data["fileexpirydate"] = date($config["db_dateformat"],strtotime($data["fileexpirydate"]));
+            $data["filenumdownloads"] = 0;
 
             // loop though multiple emails
             // TO DO: must error check here if emails do not send or fails with data insertion

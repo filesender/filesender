@@ -37,6 +37,7 @@ CREATE TABLE `files` (
   `filedownloadconfirmations` varchar(5) DEFAULT NULL,
   `fileenabledownloadreceipts` varchar(5) DEFAULT NULL,
   `filedailysummary` varchar(5) DEFAULT NULL,
+  `filenumdownloads` int NOT NULL DEFAULT 0,
   PRIMARY KEY (`fileid`),
   UNIQUE KEY `fileid` (`fileid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
