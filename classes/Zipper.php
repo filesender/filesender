@@ -116,6 +116,7 @@ class Zipper
             $voucherIds = array();
 
             foreach ($this->files as $file) {
+                $functions->incrementDownloadCount($file['filevoucheruid']); // Update DB download count.
                 $log->saveLog($file, 'Download', '');
                 $voucherIds[] = $file['filevoucheruid'];
             }
