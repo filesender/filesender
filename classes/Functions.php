@@ -887,6 +887,20 @@ class Functions
         return false;
     }
 
+    public function incrementDownloadCount($voucherUid)
+    {
+        if (ensureSaneFileUid($voucherUid)) {
+            $statement = $this->db->prepare(
+                "UPDATE files " .
+                "SET filenumdownloads = filenumdownloads + 1 " .
+                "WHERE filevoucheruid = :filevoucheruid"
+            );
+
+            $statement->bindParam(':filevoucheruid', $voucherUid);
+            $this->db->execute($statement);
+        }
+    }
+
     // --------------------------------
     // Adds a table record for a created voucher and sends email(s).
     // --------------------------------
