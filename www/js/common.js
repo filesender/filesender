@@ -61,6 +61,8 @@ function readablizebytes(bytes)
 
 function validate_recipients() {
     var isValid = true;
+
+    if ($('#recipients_box').html() == "") isValid = false;
     $('#recipients_box').children().each(function() {
         if(!validate_fileto($(this).children().attr('title'))) {
             isValid = false;
@@ -68,7 +70,18 @@ function validate_recipients() {
             $(this).children().addClass('errorglow_label');
         }
     });
-    return isValid;
+
+    if (isValid) {
+        $("#fileto_msg").hide();
+        $('#fileto').removeClass('errorglow');
+        $('#fileto_label').removeClass('errorglow_label');
+        return true;
+    } else {
+        $("#fileto_msg").show();
+        $('#fileto').addClass('errorglow');
+        $('#fileto_label').addClass('errorglow_label');
+        return false;
+    }
 }
 
 // Validate FILETO - upload, voucher and files
@@ -106,16 +119,7 @@ function validate_fileto(email)
         isValid = false;
     }
 
-    // This should be removed once all pages use new email styling.
-    if (isValid) {
-        $('#fileto').removeClass('errorglow');
-        $('#fileto_label').removeClass('errorglow_label');
-        return true;
-    } else {
-        $('#fileto').addClass('errorglow');
-        $('#fileto_label').addClass('errorglow_label');
-        return false;
-    }
+    return isValid;
 }
 	
 // Validate EXPIRY - upload, voucher and files
