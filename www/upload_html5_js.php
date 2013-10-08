@@ -73,9 +73,11 @@
         if (!validate_expiry()) {
             isValid = false;
         }
+        <?php if ($config['AuP']) { ?>
         if (!validate_aup()) {
             isValid = false;
         }
+        <?php } ?>
 
         if (!isValid) {
             statusMessage('There are validation errors on this page', 'red');
