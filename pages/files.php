@@ -394,6 +394,22 @@ if(sizeof($json_o) > 0)
 
 
         $itemContents = $functions->getTransactionDetails($item['filetrackingcode'], $item['fileauthuseruid']);
+        $contentsTableData = array();
+
+        foreach ($itemContents as $fileRow) {
+            $fileName = $fileRow['fileoriginalname'];
+
+            if (isset($contentsTableData[$fileName])) {
+                $contentsTableData[$fileName]['filenumdownloads'] += $fileRow['filenumdownloads'];
+            } else {
+                $contentsTableData[$fileName] = array(
+                    'filesize' => $fileRow['filesize'],
+                    'filenumdownloads' => $fileRow['filenumdownloads']
+                );
+            }
+        }
+
+
 
         // skips closed entries
         if (empty($itemContents)) {
@@ -510,40 +526,39 @@ if(sizeof($json_o) > 0)
             /* INDIVIDUAL FILES TABLE */
 
             echo '<table style="width: 100%; padding: 0; border-collapse: collapse; border: 0;">
-                                <tr>
-                                    <td colspan="3" class="dr9 headerrow">' . lang("_CONTENTS") . '</td>
-                                </tr>
-                                <tr>
-                                    <td class="dr4 HardBreak" style="width: 66%; text-align: left"><strong>' . lang("_FILE_NAME") . '</strong></td>
-                                    <td class="HardBreak" style="width: 17%; text-align: center"><strong>' . lang("_FILE_SIZE") . '</strong></td>
-                                    <td class="dr6 HardBreak" style="width: 17%; text-align: center"><strong>' . lang("_DOWNLOADS") . '</strong></td>
-                                </tr>';
+                    <tr>
+                      <td colspan="3" class="dr9 headerrow">' . lang("_CONTENTS") . '</td>
+                    </tr>
+                    <tr>
+                      <td class="dr4 HardBreak" style="width: 66%; text-align: left"><strong>' . lang("_FILE_NAME") . '</strong></td>
+                      <td class="HardBreak" style="width: 17%; text-align: center"><strong>' . lang("_FILE_SIZE") . '</strong></td>
+                      <td class="dr6 HardBreak" style="width: 17%; text-align: center"><strong>' . lang("_DOWNLOADS") . '</strong></td>
+                    </tr>';
 
-            for($file = 0; $file < sizeof($itemContents); $file++) {
-                $row = $file % 2 == 0 ? '<tr class="rowdivider">' : '<tr>';
+            $rowCount = 0;
 
-                if (!isset($downloadTotals[$file]) || $downloadTotals[$file]['logfilename'] != $itemContents[$file]['fileoriginalname']) {
-                    array_splice($downloadTotals, $file, 0, array(array('count' => 0, 'logfilename' => $itemContents[$file]['fileoriginalname'])));
-                }
+            foreach ($contentsTableData as $fileName => $fileData) {
+                $fileName = utf8ToHtml($fileName, true);
+                $fileSize = formatBytes($fileData['filesize']);
 
-                $numDownloaded = $downloadTotals[$file]['count'];
+                echo ($rowCount % 2 == 0) ? '<tr class="rowdivider">' : '<tr>';
 
-                if ($file == sizeof($itemContents)-1){
-                    echo $row .
-                        '<td class="dr11">' . utf8ToHtml($itemContents[$file]['fileoriginalname'],true) . '</td>
-                                            <td class="dr12 HardBreak" style="text-align: center">' . formatBytes($itemContents[$file]['filesize']) . '</td>
-                                            <td class="dr13 HardBreak" style="text-align: center">' . $downloadTotals[$file]['count'] . '</td>
-                                        </tr>';
+                if ($rowCount == sizeof($contentsTableData) - 1) {
+                    // Last table row requires different classes (for borders).
+                    echo '<td class="dr11">' . $fileName . '</td>
+                         <td class="dr12 HardBreak" style="text-align: center">' . $fileSize . '</td>
+                         <td class="dr13 HardBreak" style="text-align: center">' . $fileData['filenumdownloads'] . '</td>';
                 } else {
-                    echo $row .
-                        '<td class="dr4">' . utf8ToHtml($itemContents[$file]['fileoriginalname'], true) . '</td>
-                                            <td class="HardBreak" style="text-align: center">' . formatBytes($itemContents[$file]['filesize']) . '</td>
-                                            <td class="dr6 HardBreak" style="text-align: center">' . $downloadTotals[$file]['count'] . '</td>
-                                        </tr>';
+                    echo '<td class="dr4">' . $fileName . '</td>
+                         <td class="HardBreak" style="text-align: center">' . $fileSize . '</td>
+                         <td class="dr6 HardBreak" style="text-align: center">' . $fileData['filenumdownloads'] . '</td>';
                 }
+
+                echo '</tr>';
+                $rowCount++;
             }
-            echo '</table>
-                            <br />';
+
+            echo '</table><br />';
 
             /* RECIPIENTS TABLE */
 
