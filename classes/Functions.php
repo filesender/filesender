@@ -567,19 +567,21 @@ class Functions
     function getTransactionDetails($trackingCode, $authUserUid)
     {
         $statement = $this->db->prepare(
-            'SELECT * ' .
-            'FROM files ' .
-            'WHERE filetrackingcode = :filetrackingcode ' .
-            'AND fileauthuseruid = :fileauthuseruid ' .
-            'ORDER BY fileoriginalname ASC'
+            "SELECT * " .
+            "FROM files " .
+            "WHERE filetrackingcode = :filetrackingcode " .
+            "AND fileauthuseruid = :fileauthuseruid " .
+            "AND filestatus = 'Available' " .
+            "ORDER BY fileoriginalname ASC"
         );
 
         $statement->bindParam(':filetrackingcode', $trackingCode);
         $statement->bindParam(':fileauthuseruid', $authUserUid);
         $statement = $this->db->execute($statement);
         $result = $statement->fetchAll();
+        return $result;
 
-        $returnArray = array();
+        /*$returnArray = array();
         $previousRow = null;
 
         foreach ($result as $row) {
@@ -597,7 +599,7 @@ class Functions
             $previousRow = $row;
         }
 
-        return $returnArray;
+        return $returnArray*/;
     }
 
     // --------------------------------
