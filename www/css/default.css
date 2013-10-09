@@ -188,6 +188,11 @@ input,textarea
     z-index: 10;
 }
 
+.ghost_file
+{
+    opacity: 0.5;
+}
+
 .delbtn
 {
 	background-color: #ddd;
@@ -597,15 +602,11 @@ input {
 }
 
 #downloadbutton  a {
-	display: block;
-	margin-left: auto;
-	margin-right: auto;
-	width:80%;
-	padding-top: 20px;
-	padding-bottom: 20px;
-	margin-top: 0px;
-	margin-bottom: 0px;
-	font-size: 18px;
+	width:25%;
+	padding-top: 5px;
+	padding-bottom: 5px;
+    margin-top: 0px;
+    margin-bottom: 0px;
 	font-weight: bold;
 }
 
