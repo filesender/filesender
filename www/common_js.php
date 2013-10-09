@@ -104,11 +104,6 @@
             var currentContents = recipientsBox.html();
 
             if (currentContents.indexOf(email) == -1) {
-                if (numRecipients > maxEmailRecipients) {
-                    $("#maxemails_msg").show();
-                    return;
-                }
-
                 var boxString = '<span id="email_' + recipientID + '" class="email_box" >' +
                     '<span class="emailEntry" title="'+email+'">' + firstPartOfEmail + '</span>' +
                     '<span id="email_delete_'+recipientID+'" class="removeEmail" title="Click here to delete this recipient" onclick="removeEmailIDFromBox('+recipientID+')">&nbsp;</span>' +
@@ -140,6 +135,7 @@
         }
         emailBox.remove();
         numRecipients--;
+        validate_recipients();
     }
 
     function removeEmailNameFromBox(email) {
