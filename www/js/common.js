@@ -61,9 +61,19 @@ function readablizebytes(bytes)
 
 function validate_recipients() {
     var isValid = true;
+    var recipientsBox = $('#recipients_box');
 
-    if ($('#recipients_box').html() == "") isValid = false;
-    $('#recipients_box').children().each(function() {
+    if (recipientsBox.children().length == 0) {
+        isValid = false;
+        $("#fileto_msg").show();
+    } else if (recipientsBox.children().length > maxEmailRecipients) {
+        isValid = false;
+        $('#maxemails_msg').show();
+        $('#fileto_label').addClass('errorglow_label');
+        return false;
+    }
+
+    recipientsBox.children().each(function() {
         if(!validate_fileto($(this).children().attr('title'))) {
             isValid = false;
             $(this).addClass('errorglow');
@@ -73,12 +83,11 @@ function validate_recipients() {
 
     if (isValid) {
         $("#fileto_msg").hide();
+        $('#maxemails_msg').hide();
         $('#fileto').removeClass('errorglow');
         $('#fileto_label').removeClass('errorglow_label');
         return true;
     } else {
-        $("#fileto_msg").show();
-        $('#fileto').addClass('errorglow');
         $('#fileto_label').addClass('errorglow_label');
         return false;
     }

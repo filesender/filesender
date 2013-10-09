@@ -181,10 +181,10 @@ $(function () {
 
                         <div id="fileto_msg" style="display: none" class="validation_msg field">
                             <?php echo lang('_INVALID_MISSING_EMAIL'); ?>
-                            <div id="maxemails_msg" style="display: none"
-                                 class="validation_msg"><?php echo lang('_MAXEMAILS')
-                                    . $config['max_email_recipients']; ?>
-                            </div>
+                        </div>
+                        <div id="maxemails_msg" style="display: none"
+                             class="validation_msg"><?php echo lang('_MAXEMAILS')
+                                . $config['max_email_recipients']; ?>
                         </div>
 
                     </div>
