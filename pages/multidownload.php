@@ -162,7 +162,7 @@ if (isset($_REQUEST['gid']) && ensureSaneOpenSSLKey($_REQUEST['gid'])) {
             <p><?php echo lang('_MAC_ZIP_MESSAGE'); ?><a href="<?php echo $config['mac_unzip_link']; ?>"><?php echo $config['mac_unzip_name']; ?></a>.</p>
         </div>
         
-        <div class="menu" id="downloadbutton" >
+        <div class="menu" id="downloadbutton" style="text-align: center;">
             <p>
                 <a id="download" href="" onclick="startDownload(); return false;">
                     <?php echo lang('_DOWNLOAD_SELECTED'); ?>
