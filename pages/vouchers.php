@@ -273,8 +273,10 @@ function postVoucher()
                            value="<?php echo (isset($_SESSION["s-token"])) ?  $_SESSION["s-token"] : "";?>"
                         />
 		        </td>
-                <td>
-                    <div class="menu" id="voucherbutton" onclick="validateVoucherForm()">
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <div class="menu mainButton" id="voucherbutton" onclick="validateVoucherForm()">
                         <a href="#" id="btn_sendvoucher" ><?php echo lang("_SEND_VOUCHER"); ?></a>
                     </div>
                     <div id="_noauth" class="validation_msg" style="display:none"><?php echo lang("_AUTH_ERROR"); ?></div>

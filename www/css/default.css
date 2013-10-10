@@ -592,27 +592,22 @@ input {
 	padding-top: 4px;
 }
 
-#uploadbutton  a {
+.mainButton {
+    text-align: center;
+}
+
+.mainButton a {
     width: 20%;
     padding-top: 5px;
     padding-bottom: 5px;
     margin-top: 0px;
     margin-bottom: 0px;
     font-weight: bold;
+    display: inline-block;
 }
 
-#downloadbutton  a {
-	width:25%;
-	padding-top: 5px;
-	padding-bottom: 5px;
-    margin-top: 0px;
-    margin-bottom: 0px;
-	font-weight: bold;
-}
-
-#voucherbutton  a {
-	width:100%;
-	font-weight: bold;
+#multidownloadbutton a {
+    width: 25%;
 }
 
 
