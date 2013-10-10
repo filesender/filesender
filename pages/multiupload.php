@@ -362,7 +362,7 @@ $(function () {
             </div>
         <?php } ?>
         <div>
-            <div class="menu" id="uploadbutton" style="padding-top: 10px; display:;text-align: center;">
+            <div class="menu mainButton" id="uploadbutton" style="padding-top: 10px;">
                 <a href="#" onclick="validate()"><?php echo lang('_SEND'); ?></a>
             </div>
     </div>

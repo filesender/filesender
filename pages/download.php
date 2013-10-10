@@ -80,7 +80,7 @@ if (isset($_REQUEST['vid'])) {
         ?>
     </div>
 
-    <div class="menu" id="downloadbutton" style="text-align: center;">
+    <div class="menu mainButton" id="downloadbutton" >
         <p>
             <a id="download"href="download.php?vid=<?php echo urlencode($fileData["filevoucheruid"]); ?>"
                 onclick="startDownload()"><?php echo lang("_START_DOWNLOAD"); ?>
