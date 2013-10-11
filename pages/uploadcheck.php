@@ -43,7 +43,7 @@ if (isset($_REQUEST['html5'])) {
         require_once('upload.php');
     }
 
-    exit; // Needed to avoid infinite redirect loop.
+    return; // Needed to avoid infinite redirect loop.
 }
 ?>
 
