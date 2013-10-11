@@ -212,7 +212,7 @@ Best regards,
             </tr>
             </tbody>
         </table>
-        {filemessage_start}<p>Personal message from {filefrom}: {filemessage}</p>{filemessage_end}
+        {filemessage_start}<p>Personal message from {filefrom}: {htmlfilemessage}</p>{filemessage_end}
         <p>Best regards,<br />
         {siteName}</p>
     </body>
