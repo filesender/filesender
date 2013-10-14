@@ -41,21 +41,18 @@
 
 // Get list of user files and display page
 if (isset($_REQUEST['s'])) {
-    $filedata = '';
+    $transactions = '';
 
     if ($_REQUEST['s'] == 'vouchers') {
-        $filedata = $functions->getUsedVoucherTransactions();
+        $transactions = $functions->getUsedVoucherTransactions();
         $heading = '<div class="heading">' . lang('_VOUCHER_UPLOADS') . '</div>';
     } elseif ($_REQUEST['s'] == 'files') {
-        $filedata = $functions->getUserTrackingCodes();
+        $transactions = $functions->getUserTrackingCodes();
         $heading = '<div id="pageheading">' . lang('_MY_FILES') . '</div>';
     }
-
-    $json_o = json_decode($filedata, true);
 } else {
     exit;
 }
-
 
 // Check for delete/resent/added actions and report back.
 if (isset($_REQUEST['tc']) && isset($_REQUEST['fileauth'])) {
@@ -338,7 +335,7 @@ function toggleDisplayRow(i) {
 <div id="tablediv">
 <table id="myfiles" style="table-layout:fixed; width: 100%; padding: 4px; border-spacing: 0; border: 0">
 <tr class="headerrow">
-    <td class="tblmcw1" onclick="expandTopMenu(<?php echo sizeof($json_o); ?>)" title="<?php echo lang("_SHOW_ALL"); ?>" style="vertical-align: middle; cursor:pointer"><img class="expct" id="showicon_top" src="images/openboth.png" alt=""/></td>
+    <td class="tblmcw1" onclick="expandTopMenu(<?php echo sizeof($transactions); ?>)" title="<?php echo lang("_SHOW_ALL"); ?>" style="vertical-align: middle; cursor:pointer"><img class="expct" id="showicon_top" src="images/openboth.png" alt=""/></td>
     <td class="HardBreak" colspan="4" style="width: 35%; vertical-align: middle; text-align: center" id="myfiles_header_to"><strong><?php echo lang("_TO"); ?></strong></td>
     <td class="HardBreak tblmcw3" style="vertical-align: middle; text-align: center" id="myfiles_header_size"><strong><?php echo lang("_TOTAL_SIZE") ?></strong></td>
     <td class="HardBreak tblmcw3" id="myfiles_header_downloaded" style="vertical-align: middle; text-align: center"><strong><?php echo lang("_DOWNLOADS"); ?></strong></td>
@@ -349,174 +346,150 @@ function toggleDisplayRow(i) {
 <?php
 $i = 0;
 
-function createFilesTableHeader() {
-
-}
-
-function createFilesTableRow($item) {
-
-}
-
-function createKeyFileDetails($item) {
-
-}
-
-function createFilesDetailsTable($item) {
-
-}
-
-function createFilesContentsTable($item) {
-
-}
-
-function createFilesRecipientsTable($item) {
-
-}
-
-function createRecipientDownloadStatsTable($item) {
-
-}
-
-if(sizeof($json_o) > 0)
+if(sizeof($transactions) > 0)
 {
-    foreach($json_o as $item) {
-        $i += 1; // counter for file id's
-        // alternating rows
-        $rowClass = ($i % 2 != 0)? "class='altcolor'":"";
+    foreach($transactions as $item) {
+        $i += 1; // Counter for file IDs.
 
-
-        $itemContents = $functions->getTransactionDetails($item['filetrackingcode'], $item['fileauthuseruid']);
+        $transactionContents = $functions->getTransactionDetails($item['filetrackingcode'], $item['fileauthuseruid']);
         $contentsTableData = array();
+        $recipients = array();
+        $totalNumDownloads = 0;
+        $totalSize = 0;
 
-        foreach ($itemContents as $fileRow) {
+        foreach ($transactionContents as $fileRow) {
             $fileName = $fileRow['fileoriginalname'];
+            $fileDownloads = $fileRow['filenumdownloads'];
+            $totalNumDownloads += $fileDownloads;
 
             if (isset($contentsTableData[$fileName])) {
-                $contentsTableData[$fileName]['filenumdownloads'] += $fileRow['filenumdownloads'];
+                $contentsTableData[$fileName]['filenumdownloads'] += $fileDownloads;
             } else {
                 $contentsTableData[$fileName] = array(
                     'filesize' => $fileRow['filesize'],
-                    'filenumdownloads' => $fileRow['filenumdownloads']
+                    'filenumdownloads' => $fileDownloads
+                );
+
+                $totalSize += $fileRow['filesize'];
+            }
+
+            $rec = $fileRow['fileto'];
+
+            if (isset($recipients[$rec])) {
+                $recipients[$rec]['files'][$fileName] = $fileDownloads;
+                $recipients[$rec]['downloads'] += $fileDownloads;
+            } else {
+                $recipients[$rec] = array(
+                    'downloads' => $fileDownloads,
+                    'gid' => $fileRow['filegroupid'],
+                    'files' => array($fileName => $fileDownloads)
                 );
             }
         }
 
+        $recipientEmails = array_keys($recipients);
+        $recipientsString = implode(', ', $recipientEmails);
+        $numRecipients = sizeof($recipientEmails);
+        $fileToString = $recipientEmails[0];
 
-
-        // skips closed entries
-        if (empty($itemContents)) {
-            continue;
-        }
-        $onClick = "'" . $itemContents[0]['filevoucheruid'] . "'";
-        $recipientsArray = $functions->getTransactionRecipients($item['filetrackingcode'], $item['fileauthuseruid']);
-        $numExtraRecipients = sizeof($recipientsArray)-1;
-        $fileToString = $numExtraRecipients == 0 ? $itemContents[0]['fileto']  : $itemContents[0]['fileto'] . ' ... (' . $numExtraRecipients . ')';
-        $recipientsString = '';
-
-        for ($temp = 0; $temp < sizeOf($recipientsArray); $temp++){
-            $recipientsString .= $recipientsArray[$temp]['fileto'];
-            if ($temp != sizeOf($recipientsArray)-1) $recipientsString .= ', ';
+        if ($numRecipients > 1) {
+            $fileToString .= ' ... (' . ($numRecipients - 1) . ')';
         }
 
-        $maxDownloaded = 0;
-        $totalDownloaded = 0;
-        $totalSize = 0;
+        $rowClass = ($i % 2 != 0)? 'class="altcolor"' : ''; // Alternating rows.
 
-        $downloadTotals = $functions->getFileDownloadTotals($item['filetrackingcode'], $item['fileauthuseruid']);
+        if (isset($transactionContents[0])) {
+            // Print the top level of the expandable row for the transaction.
+            echo '<tr>
+                    <td class="dr7" colspan="10">
+                  </tr>
 
-        for ($download = 0; $download < sizeof($downloadTotals); $download++) {
-            $totalDownloaded += $downloadTotals[$download]['count'];
-        }
+                  <tr ' . $rowClass . '>
+                    <td  class="dr1 expct" onclick="toggleDisplayRow(' . $i . ')">
+                      <img class="expct" id="showicon_'.$i.'"  style="cursor:pointer"
+                            title="'. lang("_SHOW_ALL").'" src="images/openboth.png" alt=""/>
+                    </td>
 
+                    <td colspan="4" class="dr2 HardBreak" title="' . $recipientsString . '">' . $fileToString . '</td>
+                    <td class="dr2 HardBreak" style="text-align: center">' . formatBytes($totalSize) . '</td>
+                    <td class="dr2 HardBreak" style="text-align: center">' . $totalNumDownloads . '</td>
+                    <td class="dr2" style="text-align: center">
+                        ' .date(lang('datedisplayformat'),strtotime($transactionContents[0]['fileexpirydate'])) . '
+                    </td>
+                    <td class="dr2" style="text-align: center">' . utf8ToHtml($transactionContents[0]['filetrackingcode'], true) . '</td>
+                    <td class="dr8">
+                        <img src="images/shape_square_delete.png" alt="" title="'. lang("_DELETE_TRANSACTION") . '"
+                            style="cursor:pointer;"  onclick="confirmDeleteTransaction(&quot;'.$transactionContents[0]['filetrackingcode'].'&quot;,&quot;'.$item['fileauthuseruid'].'&quot;)"
+                        />
+                    </td>
+                  </tr>
+                  <tr class="hidden" style="display:none" id="show_'.$i.'">
+                    <td class="dr4"></td>
+                    <td colspan="8">';
 
-        for($temp = 0; $temp < sizeOf($itemContents); $temp++){
-            if($itemContents[$temp]['downloads'] > $maxDownloaded){
-                $maxDownloaded = $itemContents[$temp]['downloads'];
-            }
-            $totalSize += $itemContents[$temp]['filesize'];
-        }
-
-        if (isset($itemContents[0]) && $itemContents[0]['filestatus'] == 'Available') {
-            echo '<tr><td class="dr7" colspan="10"></tr>
-                        <tr  '.$rowClass.'>
-                            <td  class="dr1 expct" onclick="toggleDisplayRow('.$i.')">
-                                <img class="expct" id="showicon_'.$i.'"  style="cursor:pointer"
-                                    title="'. lang("_SHOW_ALL").'" src="images/openboth.png" alt=""/>
-                            </td>
-
-                            <td colspan="4" class="dr2 HardBreak" title="'. $recipientsString . '">' . $fileToString . '</td>
-                            <td class="dr2 HardBreak" style="text-align: center">' .formatBytes($totalSize). '</td>
-                            <td class="dr2 HardBreak" style="text-align: center">' . $totalDownloaded . '</td>
-                            <td class="dr2" style="text-align: center">
-                                ' .date(lang('datedisplayformat'),strtotime($itemContents[0]['fileexpirydate'])) . '
-                            </td>
-                            <td class="dr2" style="text-align: center">' . utf8ToHtml($itemContents[0]['filetrackingcode'],TRUE) . '</td>
-                            <td class="dr8">
-                                <img src="images/shape_square_delete.png" alt="" title="'. lang("_DELETE_TRANSACTION") . '"
-                                    style="cursor:pointer;"  onclick="confirmDeleteTransaction(&quot;'.$itemContents[0]['filetrackingcode'].'&quot;,&quot;'.$item['fileauthuseruid'].'&quot;)"
-                                />
-                            </td>
-                        </tr>
-                        <tr class="hidden" style="display:none" id="show_'.$i.'">
-                            <td class="dr4"></td>
-                            <td colspan="8">';
-
-            /* SUMMARY TABLE */
-
-            $hasMessage = $itemContents[0]['filemessage'] != "";
-            $hasSubject = $itemContents[0]['filesubject'] != "";
+            // --------------------------------
+            // SUMMARY TABLE
+            // --------------------------------
+            $hasMessage = $transactionContents[0]['filemessage'] != "";
+            $hasSubject = $transactionContents[0]['filesubject'] != "";
 
             echo '<table style="width: 100%; padding: 0; border-collapse: collapse; border: 0;" class="rowdetails">
-                                <tr>
-                                    <td colspan="2" class="dr9 headerrow">' .lang('_DETAILS'). '</td>
-                                </tr>
-                                <tr class="rowdivider">
-                                    <td class="dr4 sdheading tblmcw3 "><strong>' .lang("_CREATED"). '</strong></td>
-                                    <td class="dr6 HardBreak">' .date(lang('datedisplayformat'),strtotime($itemContents[0]['filecreateddate'])). '</td>
-                                </tr>
-                                <tr>
-                                    <td class="dr4 sdheading"><strong>'.lang("_FROM").'</strong></td>
-                                    <td class="dr6 HardBreak">' .$itemContents[0]['filefrom'] . '</td>
-                                </tr>
-                                <tr class="rowdivider">';
+                    <tr>
+                        <td colspan="2" class="dr9 headerrow">' .lang('_DETAILS'). '</td>
+                    </tr>
+                    <tr class="rowdivider">
+                        <td class="dr4 sdheading tblmcw3 "><strong>' .lang("_CREATED"). '</strong></td>
+                        <td class="dr6 HardBreak">' .date(lang('datedisplayformat'),strtotime($transactionContents[0]['filecreateddate'])). '</td>
+                    </tr>
+                    <tr>
+                        <td class="dr4 sdheading"><strong>'.lang("_FROM").'</strong></td>
+                        <td class="dr6 HardBreak">' .$transactionContents[0]['filefrom'] . '</td>
+                    </tr>
+                    <tr class="rowdivider">';
+
+            // Print comma-separated list of recipients. Check if this is the last row in table (different borders).
             if ($hasMessage || $hasSubject) {
-                echo '<td class="dr4 sdheading tblmcw3"><strong>'.lang("_TO").'</strong></td>
-                                        <td class="dr6 HardBreak">'.$recipientsString.'</td></tr>';
+                echo '<td class="dr4 sdheading tblmcw3"><strong>' . lang('_TO') . '</strong></td>
+                      <td class="dr6 HardBreak">' . $recipientsString . '</td>
+                    </tr>';
             } else {
-                echo '<td class="dr11 sdheading tblmcw3"><strong>'.lang("_TO").'</strong></td>
-                                        <td class="dr13">' . $recipientsString . '</td></tr>';
+                echo '<td class="dr11 sdheading tblmcw3"><strong>' . lang('_TO') . '</strong></td>
+                      <td class="dr13">' . $recipientsString . '</td>
+                    </tr>';
             }
 
-
-            if ($itemContents[0]['filesubject'] != "") {
+            // Print the file subject if it exists.
+            if ($transactionContents[0]['filesubject'] != '') {
                 if ($hasMessage) {
                     echo '<tr>
-                                            <td class="dr4 sdheading tblmcw3"><strong>'.lang("_SUBJECT").'</strong></td>
-                                            <td class="dr6 HardBreak">'.utf8ToHtml($itemContents[0]['filesubject'],TRUE). '</td>
-                                        </tr>';
+                            <td class="dr4 sdheading tblmcw3"><strong>' . lang('_SUBJECT') . '</strong></td>
+                            <td class="dr6 HardBreak">' . utf8ToHtml($transactionContents[0]['filesubject'], true) . '</td>
+                          </tr>';
                 } else {
                     echo '<tr>
-                                            <td class="dr11 sdheading tblmcw3"><strong>'.lang("_SUBJECT").'</strong></td>
-                                            <td class="dr13 HardBreak">'.utf8ToHtml($itemContents[0]['filesubject'],TRUE). '</td>
-                                        </tr>';
+                            <td class="dr11 sdheading tblmcw3"><strong>' . lang('_SUBJECT') . '</strong></td>
+                            <td class="dr13 HardBreak">' . utf8ToHtml($transactionContents[0]['filesubject'], true) . '</td>
+                          </tr>';
                 }
             }
 
-            if ($itemContents[0]['filemessage'] != "") {
-                $itemContents[0]['filesubject'] != "" ? $messageClass = "rowdivider" : $messageClass = "";
+            // Print the file message if it exists.
+            if ($transactionContents[0]['filemessage'] != '') {
+                $messageClass = $transactionContents[0]['filesubject'] != '' ? 'rowdivider' : '';
+
                 echo '<tr class="' . $messageClass . '">
-                                        <td class="dr11 sdheading"><strong>'.lang("_MESSAGE").'</strong></td>
-                                        <td class="dr13" >
-                                            <pre class="HardBreak">'.utf8ToHtml($itemContents[0]['filemessage'],TRUE).'</pre>
-                                        </td>
-                                    </tr>';
+                        <td class="dr11 sdheading"><strong>'.lang("_MESSAGE").'</strong></td>
+                        <td class="dr13" >
+                            <pre class="HardBreak">'.utf8ToHtml($transactionContents[0]['filemessage'],TRUE).'</pre>
+                        </td>
+                      </tr>';
             }
 
-            echo '</table>
-                            <br />';
+            echo '</table><br />'; // End of summary table.
 
-            /* INDIVIDUAL FILES TABLE */
-
+            // --------------------------------
+            // CONTENTS TABLE (INDIVIDUAL FILES)
+            // --------------------------------
             echo '<table style="width: 100%; padding: 0; border-collapse: collapse; border: 0;">
                     <tr>
                       <td colspan="3" class="dr9 headerrow">' . lang("_CONTENTS") . '</td>
@@ -529,203 +502,209 @@ if(sizeof($json_o) > 0)
 
             $rowCount = 0;
 
-            foreach ($contentsTableData as $fileName => $fileData) {
+            foreach ($contentsTableData as $fileName => $data) {
+                // Print file name, file size, number of downloads.
                 $fileName = utf8ToHtml($fileName, true);
-                $fileSize = formatBytes($fileData['filesize']);
+                $fileSize = formatBytes($data['filesize']);
 
                 echo ($rowCount % 2 == 0) ? '<tr class="rowdivider">' : '<tr>';
 
                 if ($rowCount == sizeof($contentsTableData) - 1) {
-                    // Last table row requires different classes (for borders).
+                    // Different border styling for the last row of the table.
                     echo '<td class="dr11">' . $fileName . '</td>
                          <td class="dr12 HardBreak" style="text-align: center">' . $fileSize . '</td>
-                         <td class="dr13 HardBreak" style="text-align: center">' . $fileData['filenumdownloads'] . '</td>';
+                         <td class="dr13 HardBreak" style="text-align: center">' . $data['filenumdownloads'] . '</td>';
                 } else {
                     echo '<td class="dr4">' . $fileName . '</td>
                          <td class="HardBreak" style="text-align: center">' . $fileSize . '</td>
-                         <td class="dr6 HardBreak" style="text-align: center">' . $fileData['filenumdownloads'] . '</td>';
+                         <td class="dr6 HardBreak" style="text-align: center">' . $data['filenumdownloads'] . '</td>';
                 }
 
                 echo '</tr>';
                 $rowCount++;
             }
 
-            echo '</table><br />';
+            echo '</table><br />'; // End of contents table.
 
-            /* RECIPIENTS TABLE */
-
+            // --------------------------------
+            // RECIPIENTS TABLE
+            // --------------------------------
             echo '<table style="width: 100%; border-spacing: 0; border: 0">
-                                <tr>
-                                    <td colspan="5" class="dr9 headerrow">' . lang("_RECIPIENTS") . '</td>
-                                </tr>
-                                <tr>
-                                    <td class="dr4 tblmcw1"
-                                        onclick="expandRecipients(&quot;'.$i.'&quot;,&quot;'.sizeOf($recipientsArray).'&quot;)"
-                                        style="cursor:pointer; width:5%;">
-                                            <img class="expct" id="showicon_'.$i.'_recipients" src="images/openboth.png" alt="" draggable="false" />
-                                    </td>
-                                    <td class="HardBreak" style="text-align: left; width:61%;" ><strong>Email</strong></td>
-                                    <td class="HardBreak tblmcw3" style="text-align: center; width:24%"><strong>'. lang("_DOWNLOADS").'</strong></td>
-                                    <td class="tbl1mcw1" style="cursor:pointer; width:5%;">&nbsp;</td>
-                                    <td class="tbl1mcw1 dr6" style="cursor:pointer; width:5%;">&nbsp;</td>
-                                </tr>';
+                    <tr>
+                        <td colspan="5" class="dr9 headerrow">' . lang("_RECIPIENTS") . '</td>
+                    </tr>
+                    <tr>
+                        <td class="dr4 tblmcw1" onclick="expandRecipients(&quot;' . $i . '&quot;,&quot;' . sizeOf($recipientEmails) . '&quot;)"
+                            style="cursor:pointer; width:5%;">
+                            <img class="expct" id="showicon_' . $i . '_recipients" src="images/openboth.png" alt="" draggable="false" />
+                        </td>
+                        <td class="HardBreak" style="text-align: left; width:61%;" ><strong>' . lang('_EMAIL') . '</strong></td>
+                        <td class="HardBreak tblmcw3" style="text-align: center; width:24%"><strong>' . lang('_DOWNLOADS') . '</strong></td>
+                        <td class="tbl1mcw1" style="cursor:pointer; width:5%;">&nbsp;</td>
+                        <td class="tbl1mcw1 dr6" style="cursor:pointer; width:5%;">&nbsp;</td>
+                    </tr>';
 
-            /* Individual recipients information */
+            $rowCount = 0;
+            foreach ($recipients as $rec => $rowData) {
+                // Display email address, number of downloads, buttons for expanding / re-sending / deleting.
+                echo ($rowCount % 2 == 0) ? '<tr class="rowdivider">' : '<tr>';
+                $id = $i . '_' . $rowCount . '_recipients';
 
-            for ($temp = 0; $temp < sizeOf($recipientsArray); $temp++) {
-                $row = $temp % 2 != 0 ? '<tr class="altcolor">' : '<tr>';
+                echo '<td  class="dr4 expct" style="width: 5%;" onclick="toggleDisplayRow(&quot;' . $id . '&quot;)">
+                        <img class="expct" id="showicon_'. $id . '" style="cursor:pointer" src="images/openboth.png" alt=""/>
+                      </td>
 
-                $files = $functions->getTransactionDownloadsForRecipient($recipientsArray[$temp]['fileto'], $item['filetrackingcode'], $item['fileauthuseruid']);
+                      <td class="HardBreak" style="text-align: left;">' . $rec . '</td>
+                      <td class="HardBreak" style="text-align: center;">' . $rowData['downloads'] . '</td>
 
-                $totalDownloadedIndividual = 0;
-                $fileNames = "";
-                for($file = 0; $file < sizeOf($files); $file++){
-                    $totalDownloadedIndividual += $files[$file]['downloads'];
-                    $fileNames .= $files[$file]['fileoriginalname'] . "<br />";
+                      <td class="tblmcw1" style="cursor:pointer; width:5%;">
+                        <img src="images/email_go.png" alt="" title="' . lang("_RE_SEND_EMAIL") . '"
+                                style="cursor:pointer;" onclick="confirmResend(&quot;' . $rowData['gid'] . '&quot;)" />
+                      </td>
+
+                      <td class="tblmcw1 dr6" style="cursor:pointer; width:5%;">
+                        <img src="images/shape_square_delete.png" alt="" title="'. lang("_DELETE_RECIPIENT"). '"
+                                style="cursor:pointer;" onclick="confirmDeleteRecipient(&quot;' . $rowData['gid'] . '&quot;)" />
+                      </td>
+                    </tr>';
+
+                // Print sub-table (download statistics for each recipient).
+                echo '<tr class="hidden" style="display:none" id="show_'. $id .'">
+                        <td class="dr4"></td>
+                        <td class="" colspan="3" style="">
+                          <table style="width: 100%; border-collapse: collapse; border: 0;padding: 10px;">
+                            <tr>
+                              <td class="dr9 headerrow" colspan="2">' . lang('_DOWNLOAD_STATISTICS') . '</td>
+                            </tr>';
+
+                $row = 0;
+
+                foreach ($rowData['files'] as $name => $downloads) {
+                    // Display file name and number of downloads for each file.
+                    echo ($row % 2 == 0) ? '<tr class="rowdivider">' : '<tr>';
+
+                    echo '<td class="HardBreak dr4" >' . utf8ToHtml($name, true) . '</td>
+                          <td class="HardBreak dr6" style="text-align: center">' . $downloads . '</td>
+                        </tr>';
+
+                    $row++;
                 }
 
-                echo $row .
-                    '<td  class="dr4 expct" style="width: 5%;" onclick="toggleDisplayRow(&quot;'.$i.'_'.$temp.'_recipients&quot;)">
-                                        <img class="expct" id="showicon_'.$i.'_'.$temp.'_recipients"
-                                            style="cursor:pointer" src="images/openboth.png"  alt=""/>
-                                    </td>
-                                    <td class="HardBreak" style="text-align: left;">' . $recipientsArray[$temp]['fileto'] . '</td>
-                                    <td class="HardBreak" style="text-align: center;">' . $totalDownloadedIndividual . '</td>
-                                    <td class="tblmcw1" style="cursor:pointer; width:5%;">
-                                        <img src="images/email_go.png" alt="" title="'.lang("_RE_SEND_EMAIL").'"
-                                            style="cursor:pointer;"  onclick="confirmResend(&quot;'.$recipientsArray[$temp]['filegroupid'].'&quot;)" />
-                                    </td>
-                                    <td class="tblmcw1 dr6" style="cursor:pointer; width:5%;">
-                                        <img src="images/shape_square_delete.png" alt="" title="'.lang("_DELETE_RECIPIENT").'"
-                                            style="cursor:pointer;"  onclick="confirmDeleteRecipient(&quot;'.$recipientsArray[$temp]['filegroupid'].'&quot;)" />
-                                    </td>
-                                </tr>
-                                <tr class="hidden" style="display:none" id="show_'.$i.'_'.$temp.'_recipients">
-                                    <td class="dr4"></td>
-                                    <td class="" colspan="3" style="">
-                                        <table style="width: 100%; border-collapse: collapse; border: 0;padding: 10px;">
-                                            <tr>
-                                                <td class="dr9 headerrow" colspan="2">Download Statistics</td>
-                                            </tr>'; // Needs a Lang[] for contents;
-
-                for($file = 0; $file < sizeof($files); $file++) {
-                    $row = $file % 2 == 0 ? '<tr class="rowdivider">' : '<tr>';
-                    echo $row . '
-                                                    <td class="HardBreak dr4" >' . utf8ToHtml($files[$file]['fileoriginalname'], true) . '</td>
-                                                    <td class="HardBreak dr6" style="text-align: center">' . $files[$file]['downloads'] . '</td>
-                                                </tr>';
-                }
                 echo '<tr>
-                                                <td class="dr7" colspan="2"></td>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                    <td class="dr6"></td>
-                                </tr>';
+                        <td class="dr7" colspan="2"></td>
+                      </tr>
+                    </table>
+                  </td>
+                  <td class="dr6"></td>
+                  </tr>'; // End of recipient row.
+
+                $rowCount++;
             }
 
             echo '<tr>
-                                    <td colspan="5" style="text-align: center; border: 1px solid #999;">
-                                        <a target="_blank" style="cursor:pointer;"
-                                            onclick="openAddRecipient('."'".$itemContents[0]['fileauthuseruid']."',
-                                            '". utf8ToHtml(addslashes($fileNames), true) ."',
-                                            '".$itemContents[0]['filesize'] ."','".rawurlencode($itemContents[0]['filefrom'])."',
-                                            '".rawurlencode($itemContents[0]['filesubject'])."',
-                                            '".rawurlencode($itemContents[0]['filemessage'])."',
-                                            '".$item['filetrackingcode']."'". ');">Click here to Add a new Recipient
-                                        </a>
-                                    </td>
-                                </tr>
-                            </table>
-                            <br />
-                            </td>
-                            <td class="dr6"></td>
-                        </tr>'; // End of hidden div
+                    <td colspan="5" style="text-align: center; border: 1px solid #999;">
+                        <a target="_blank" style="cursor:pointer;"
+                            onclick="openAddRecipient('."'".$transactionContents[0]['fileauthuseruid']."',
+                            '". utf8ToHtml(addslashes($fileNames), true) ."',
+                            '".$transactionContents[0]['filesize'] ."','".rawurlencode($transactionContents[0]['filefrom'])."',
+                            '".rawurlencode($transactionContents[0]['filesubject'])."',
+                            '".rawurlencode($transactionContents[0]['filemessage'])."',
+                            '".$item['filetrackingcode']."'". ');">Click here to Add a new Recipient
+                        </a>
+                    </td>
+                </tr>
+            </table>
+            <br />
+            </td>
+            <td class="dr6"></td>
+        </tr>'; // End of hidden div.
         }
     }
     echo '<tr>
-                    <td class="dr7" colspan="10">
-                </tr>';
+            <td class="dr7" colspan="10">
+          </tr>';
 }
 ?>
 </table>
+
 <?php
-if($i==0) {
+if($i == 0) {
+    // No transactions were found for user.
     echo lang("_NO_FILES");
 }
 ?>
 </div>
 </div>
 
-<div style="display: none;" id="dialog-delete-recipient" title="<?php echo lang("_DELETE_RECIPIENT"); ?>">
-    <p><?php echo lang("_CONFIRM_DELETE_RECIPIENT");?></p>
+<div style="display: none;" id="dialog-delete-recipient" title="<?php echo lang('_DELETE_RECIPIENT'); ?>">
+    <p><?php echo lang('_CONFIRM_DELETE_RECIPIENT'); ?></p>
     <form id="deleteRecipForm" name="deleteRecipForm" method="post" action="#">
-        <label for="informRecipient">Email recipient with confirmation of deletion</label>
+        <label for="informRecipient"><?php echo lang('_EMAIL_RECIPIENTS_DELETION'); ?></label>
         <input type="checkbox" name="informRecipient" id="informRecipient" style="float:left; width:20px;" />
     </form>
 </div>
 
-<div style="display: none;" id="dialog-delete-transaction" title="<?php echo lang("_DELETE_TRANSACTION"); ?>">
-    <p><?php echo lang("_CONFIRM_DELETE_TRANSACTION");?></p>
+<div style="display: none;" id="dialog-delete-transaction" title="<?php echo lang('_DELETE_TRANSACTION'); ?>">
+    <p><?php echo lang('_CONFIRM_DELETE_TRANSACTION');?></p>
     <form id="deleteTransForm" name="deleteTransForm" method="post" action="#">
-        <label for="informRecipients">Email recipients with confirmation of deletion</label>
+        <label for="informRecipients"><?php echo lang('_EMAIL_RECIPIENTS_DELETION'); ?></label>
         <input type="checkbox" name="informRecipients" id="informRecipients" style="float:left; width:20px;" />
     </form>
 </div>
 
-<div id="dialog-resend" title="<?php echo  lang("_RE_SEND_EMAIL"); ?>">
-    <p><?php echo lang("_CONFIRM_RESEND_EMAIL");?></p>
+<div id="dialog-resend" title="<?php echo  lang('_RE_SEND_EMAIL'); ?>">
+    <p><?php echo lang('_CONFIRM_RESEND_EMAIL');?></p>
 </div>
 
-<div id="dialog-addrecipient" style="display:none" title="<?php echo  lang("_NEW_RECIPIENT"); ?>">
+<div id="dialog-addrecipient" style="display:none" title="<?php echo  lang('_NEW_RECIPIENT'); ?>">
     <form id="form1" name="form1" enctype="multipart/form-data" method="post" action="#">
         <input type="hidden" name="a" value="add" />
         <input id="trackingCode" type="hidden" name="tc" value="" />
         <table  style="width: 600px; border: 0">
             <tr>
-                <td class="formfieldheading mandatory tblmcw3" id="files_to"><?php echo  lang("_TO"); ?>:</td>
+                <td class="formfieldheading mandatory tblmcw3" id="files_to"><?php echo lang('_TO'); ?>:</td>
                 <td style="text-align: center">
                     <div id="recipients_box" style="display: none"></div>
-                    <input name="fileto" title="<?php echo  lang("_EMAIL_SEPARATOR_MSG"); ?>" type="text" id="fileto" size="60" onblur="addEmailRecipientBox($('#fileto').val());" />
-                    <div id="fileto_msg" style="display: none" class="validation_msg"><?php echo lang("_INVALID_MISSING_EMAIL"); ?></div>
-                    <div id="maxemails_msg" style="display: none" class="validation_msg"><?php echo lang("_MAXEMAILS"); ?> <?php echo $config['max_email_recipients'] ?>.</div>
+                    <input name="fileto" title="<?php echo  lang('_EMAIL_SEPARATOR_MSG'); ?>" type="text" id="fileto" size="60" onblur="addEmailRecipientBox($('#fileto').val());" />
+                    <div id="fileto_msg" style="display: none" class="validation_msg"><?php echo lang('_INVALID_MISSING_EMAIL'); ?></div>
+                    <div id="maxemails_msg" style="display: none" class="validation_msg"><?php echo lang('_MAXEMAILS'); ?> <?php echo $config['max_email_recipients'] ?>.</div>
 
                 </td>
             </tr>
             <tr>
-                <td class="formfieldheading mandatory" id="files_from"><?php echo lang("_FROM"); ?>:</td>
+                <td class="formfieldheading mandatory" id="files_from"><?php echo lang('_FROM'); ?>:</td>
                 <td>
                     <div id="filefrom"></div>
                 </td>
             </tr>
             <tr>
-                <td class="formfieldheading" id="files_subject"><?php echo lang("_SUBJECT"); ?>: (<?php echo lang("_OPTIONAL"); ?>)</td>
+                <td class="formfieldheading" id="files_subject"><?php echo lang('_SUBJECT'); ?>: (<?php echo lang("_OPTIONAL"); ?>)</td>
                 <td><input name="filesubject" type="text" id="filesubject" size="60" /></td>
             </tr>
             <tr>
-                <td class="formfieldheading" id="files_message"><?php echo lang("_MESSAGE"); ?>: (<?php echo lang("_OPTIONAL"); ?>)</td>
+                <td class="formfieldheading" id="files_message"><?php echo lang('_MESSAGE'); ?>: (<?php echo lang("_OPTIONAL"); ?>)</td>
                 <td><textarea name="filemessage" cols="57" rows="4" id="filemessage"></textarea></td>
             </tr>
             <tr>
-                <td class="formfieldheading mandatory" id="files_expiry"><?php echo lang("_EXPIRY_DATE"); ?>:
+                <td class="formfieldheading mandatory" id="files_expiry"><?php echo lang('_EXPIRY_DATE'); ?>:
                     <input type="hidden" id="fileexpirydate"
                            name="fileexpirydate"
-                           value="<?php echo date(lang('datedisplayformat'),strtotime("+".$config['default_daysvalid']." day"));?>"
+                           value="<?php echo date(lang('datedisplayformat'), strtotime("+".$config['default_daysvalid']." day"));?>"
                         />
                 </td>
                 <td>
                     <input id="datepicker" name="datepicker"
                            onchange="validate_expiry()" title="<?php echo lang('_DP_dateFormat'); ?>"
                         />
-                    <div id="expiry_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_EXPIRY_DATE"); ?></div>
+                    <div id="expiry_msg" class="validation_msg" style="display: none"><?php echo lang('_INVALID_EXPIRY_DATE'); ?></div>
                 </td>
             </tr>
             <tr>
-                <td class="formfieldheading mandatory" id="files_to_be_resent"><?php echo lang("_FILE_TO_BE_RESENT"); ?>:</td>
+                <td class="formfieldheading mandatory" id="files_to_be_resent"><?php echo lang('_FILE_TO_BE_RESENT'); ?>:</td>
                 <td><div id="filename"></div></td>
             </tr>
             <tr>
-                <td class="formfieldheading mandatory" id="files_size"><?php echo lang("_SIZE"); ?>:</td>
+                <td class="formfieldheading mandatory" id="files_size"><?php echo lang('_SIZE'); ?>:</td>
                 <td>
                     <div id="filesize"></div>
                 </td>
@@ -733,8 +712,8 @@ if($i==0) {
             <tr>
                 <td class="formfieldheading mandatory"></td>
                 <td>
-                    <div id="file_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_FILE"); ?></div>
-                    <div id="extension_msg" class="validation_msg" style="display: none"><?php echo lang("_INVALID_FILE_EXT"); ?></div>
+                    <div id="file_msg" class="validation_msg" style="display: none"><?php echo lang('_INVALID_FILE'); ?></div>
+                    <div id="extension_msg" class="validation_msg" style="display: none"><?php echo lang('_INVALID_FILE_EXT'); ?></div>
                 </td>
             </tr>
         </table>
@@ -743,4 +722,4 @@ if($i==0) {
     </form>
 </div>
 
-<div id="dialog-autherror" title="<?php echo lang("_MESSAGE"); ?>" style="display:none"><?php echo lang("_AUTH_ERROR"); ?></div>
+<div id="dialog-autherror" title="<?php echo lang("_MESSAGE"); ?>" style="display:none"><?php echo lang('_AUTH_ERROR'); ?></div>

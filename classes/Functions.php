@@ -252,7 +252,7 @@ class Functions
 
         $statement = $this->db->execute($statement);
 
-        return json_encode($statement->fetchAll(PDO::FETCH_ASSOC));
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 
     private function getCommaSeparatedEmailParameters() {
@@ -315,7 +315,7 @@ class Functions
         }
 
         $statement = $this->db->execute($statement);
-        return json_encode($statement->fetchAll());
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 
     // --------------------------------
