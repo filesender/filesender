@@ -46,9 +46,6 @@
 require_once('../www/upload_common_js.php');
 require_once('../www/upload_html5_js.php');
 
-$statusMsg = '';
-$statusClass = '';
-
 function isChecked($checkbox) {
     if ($checkbox) {
         return 'checked';
@@ -64,15 +61,9 @@ if(isset($_REQUEST['a']) && $_REQUEST['a'] == "cancelled") {
 <script type='text/javascript' src='js/multiupload.js'></script>
 <script type='text/javascript'>
     var fileBoxSize = <?php echo $config['upload_box_default_size']; ?>;
-    var statusMsg = '<?php echo $statusMsg; ?>';
-    var statusClass = '<?php echo $statusClass; ?>';
 // start document ready
 $(function () {
     $('#dragfilestouploadcss').css('height', 14+(40* fileBoxSize));
-
-    if (statusMsg != '') {
-        statusMessage(statusMsg, statusClass);
-    }
 
     $('#clearallbtn').button('disable');
 
@@ -134,12 +125,14 @@ $(function () {
                                id="fileToUpload" onchange="fileSelected();" multiple/>
                     </div>
                     <div id="file_msg" class="validation_msg"
-                         style="display: none"><?php echo lang("_INVALID_FILE"); ?></div>
+                         style="display: none"><?php echo lang("_INVALID_FILE"); ?>
+                    </div>
             </div>
             <div id="dragfilestouploadcss" style="overflow:auto;" class="box">
                 <div id="filestoupload" style="display:table;width:100%; height:100%;">
                     <div id="draganddropmsg" style="text-align:center;display:table-cell; vertical-align:middle;"
-                         class="heading"><?php echo lang('_DRAG_AND_DROP'); ?></div>
+                         class="heading"><?php echo lang('_DRAG_AND_DROP'); ?>
+                    </div>
                 </div>
             </div>
             <div style="width:100%; display: table" class="menu">
@@ -174,10 +167,11 @@ $(function () {
 
                     <div class="fieldcontainer">
                         <label id="fileto_label" for="fileto" class="mandatory"><?php echo lang("_TO"); ?>:</label>
-                        <span id="recipients_box" style="display: none"></div>
+                        <span id="recipients_box" style="display: none"></span>
                         <input name="fileto" type="text" id="fileto"
                                title="<?php echo lang("_EMAIL_SEPARATOR_MSG"); ?>" onblur="addEmailRecipientBox($('#fileto').val());"
-                               value="" placeholder="<?php echo lang('_ENTER_TO_EMAIL'); ?>"/>
+                               value="" placeholder="<?php echo lang('_ENTER_TO_EMAIL'); ?>"
+                            />
 
                         <div id="fileto_msg" style="display: none" class="validation_msg field">
                             <?php echo lang('_INVALID_MISSING_EMAIL'); ?>
@@ -197,7 +191,8 @@ $(function () {
                     <div class="fieldcontainer">
                         <label for="filemessage"><?php echo lang('_MESSAGE') . ': (' . lang('_OPTIONAL'); ?>)</label>
                         <textarea name="filemessage" cols="57" rows="3" id="filemessage"
-                                  style="resize:vertical"></textarea>
+                                  style="resize:vertical">
+                            </textarea>
                     </div>
 
                     <div>
@@ -266,8 +261,6 @@ $(function () {
                                 <input id="add_me_to_recipients" type="checkbox" style="float:left; width:20px;" <?php echo isChecked($config['add_me_to_recipients_default']); ?>/>
                             </div>
                         <?php } ?>
-
-
                     </div>
 
                     <?php if ($config['terasender'] && $config['terasenderadvanced']) { ?>
@@ -361,13 +354,10 @@ $(function () {
                 <div id="tog" style="display:none"> <?php echo lang('_AUPTERMS'); ?> </div>
             </div>
         <?php } ?>
-        <div>
             <div class="menu mainButton" id="uploadbutton" style="padding-top: 10px;">
                 <a href="#" onclick="validate()"><?php echo lang('_SEND'); ?></a>
             </div>
     </div>
-    </div>
-    <div class="colmask threecol" id="dragfilestoupload"></div>
 </form>
 <div id="dialog-cancel" style="display:none"
      title="<?php echo lang('_CANCEL_UPLOAD'); ?>">
