@@ -686,6 +686,7 @@ function pauseUpload()
     $('#progress_string').html('Pausing...');
     vid = fileData[n].filevoucheruid;
     pausedUpload = true;
+    $('#pauseBTN').button('disable');
 
 }
 
@@ -701,4 +702,5 @@ function uploadPaused()
 {
     $('#progress_string').html('Paused');
     pauseTime = new Date().getTime();
+    $('#pauseBTN').button('enable');
 }
