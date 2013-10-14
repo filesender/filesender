@@ -296,7 +296,7 @@ function startUpload()
             }
 
             if (data == 'ErrorAuth') {
-                $('#dialog-autherror').dialog('open');
+                displayAuthError();
                 return;
             }
 
@@ -310,7 +310,7 @@ function startUpload()
                     }
                     // not authenticated
                     if (result == 'err_notauthenticated') {
-                        $('#dialog-autherror').dialog('open');
+                        displayAuthError();
                     }
                     // missing email data
                     if (result == 'err_tomissing') {
@@ -606,7 +606,7 @@ function uploadFile()
         if (xhr.readyState == 4) {
             if (xhr.status == 200) {
                 if (xhr.responseText == 'ErrorAuth') {
-                    $('#dialog-autherror').dialog('open');
+                    displayAuthError();
                     return;
                 }
                 fileData[n].bytesUploaded = parseFloat(xhr.responseText);
@@ -643,7 +643,6 @@ function clearFileBox()
 {
     if (n == -1) return;
     filesToRestore = fileData.slice();
-    var temp = fileData.length;
     for (var i = 0; i < fileData.length; i++) {
         if (fileData[i].fileSize != null){
             removeItem(i);
@@ -663,7 +662,6 @@ function undoClearFileBox()
     reAddFiles(filesToRestore);
     setButtonToClear();
 }
-
 
 // Functions which change the onclick event on the button based on the previous click event.
 function setButtonToClear()
