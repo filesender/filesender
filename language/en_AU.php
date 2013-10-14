@@ -92,7 +92,8 @@ $lang["_EMAIL_ME_ON_DOWNLOAD"] = "Email me every time a file is downloaded";
 $lang["_EMAIL_DAILY_STATS"] = "Email me daily statistics with user activity";
 $lang["_ENABLE_EMAIL_CONFIRMATION"] = "Enable download confirmation email for recipients";
 $lang["_ADD_ME_TO_RECIPIENTS"] = "Include me as a recipient";
-
+$lang["_EMAIL"] = "Email";
+$lang["_DOWNLOAD_STATISTICS"] = "Download statistics";
 
 $lang["_TERMS_OF_AGREEMENT"] = "Terms of Agreement";
 $lang["_SHOW_TERMS"] = "Show Terms";
@@ -202,6 +203,7 @@ $lang["_RECIPIENT_DELETED"] = "Selected recipient has been deleted";
 $lang["_TRANSACTION_DELETED"] = "Selected transaction has been deleted";
 $lang["_LOGGED_IN_AS"] = "Logged in as: ";
 $lang["_UPLOAD_CANCEL_SUCCESS"] = "Upload successfully cancelled";
+$lang["_EMAIL_RECIPIENTS_DELETION"] = "Email recipient(s) with confirmation of deletion";
 
 // steps
 $lang["_STEP1"] = "Enter delivery email address(es)";
