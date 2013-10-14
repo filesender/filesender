@@ -68,6 +68,9 @@ date_default_timezone_set($config['Default_TimeZone']);
 $useremail = "";
 $s = "";
 
+$statusMsg = '';
+$statusClass = '';
+
 $isAuth = $authsaml->isAuth();
 $isVoucher = $authvoucher->aVoucher();
 $isAdmin = $authsaml->authIsAdmin();
@@ -347,6 +350,17 @@ if($isAuth )
         }
         ?>
     </div>
+
+    <script type="text/javascript" >
+        var statusMsg = '<?php echo $statusMsg; ?>';
+        var statusClass = '<?php echo $statusClass; ?>';
+
+        $(function() {
+            if (statusMsg != '') {
+                statusMessage(statusMsg, statusClass);
+            }
+        });
+    </script>
 
     <div id="footer">
         <?php

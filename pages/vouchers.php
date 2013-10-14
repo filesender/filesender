@@ -38,9 +38,6 @@
 
 global $config;
 
-$statusMsg = '';
-$statusClass = '';
-
 if(isset($_REQUEST["a"]))
 {
     // add voucher
@@ -91,15 +88,8 @@ var datepickerDateFormat = '<?php echo lang('_DP_dateFormat'); ?>';
 var selectedVoucher = "";
 var nameLang = '<?php echo lang("_FILE_NAME"); ?>';
 var sizeLang = '<?php echo lang("_SIZE"); ?>';
-var statusBarMsg = '<?php echo $statusMsg; ?>';
-var statusBarClass = '<?php echo $statusClass; ?>';
 
 $(function() {
-
-    if (statusBarMsg != '') {
-        statusMessage(statusBarMsg, statusBarClass);
-    }
-
 	//$("#fileto_msg").hide();
 	$("#expiry_msg").hide();
 	

@@ -56,8 +56,6 @@ if (isset($_REQUEST['s'])) {
     exit;
 }
 
-$statusMsg = '';
-$statusClass = '';
 
 // Check for delete/resent/added actions and report back.
 if (isset($_REQUEST['tc']) && isset($_REQUEST['fileauth'])) {
@@ -157,15 +155,9 @@ var maxEmailRecipients = <?php echo $config['max_email_recipients'] ?>;
 var datepickerDateFormat = '<?php echo lang('_DP_dateFormat'); ?>';
 var showall = false; // flag for toggleDisplayRow all switch to toggleDisplayRow or hide download summaries
 var showAllRecipients = false; // flag for expanding all download summaries for individual recipients
-var statusMsg = '<?php echo $statusMsg ?>';
-var statusClass = '<?php echo $statusClass ?>';
 var selectedRecipient = "";
 
 $(function () {
-    if (statusMsg != '' && statusClass != '') {
-        statusMessage(statusMsg, statusClass);
-    }
-
     getDatePicker();
 
     // resend email modal dialog box
