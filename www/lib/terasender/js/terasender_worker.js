@@ -90,6 +90,9 @@ function uploadChunk(startByte, endByte)
             if (xhr.status == 200) {
                 if(xhr.responseText == "ErrorAuth")
                 {
+                    postMessage({
+                        'cmd': 'autherror'
+                    });
                     return;			
                 }
                 postMessage({
