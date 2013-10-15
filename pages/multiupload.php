@@ -191,8 +191,7 @@ $(function () {
                     <div class="fieldcontainer">
                         <label for="filemessage"><?php echo lang('_MESSAGE') . ': (' . lang('_OPTIONAL'); ?>)</label>
                         <textarea name="filemessage" cols="57" rows="3" id="filemessage"
-                                  style="resize:vertical">
-                            </textarea>
+                                  style="resize:vertical"></textarea>
                     </div>
 
                     <div>
