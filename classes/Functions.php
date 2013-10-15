@@ -1060,6 +1060,7 @@ class Functions
         $data["filevouchertype"] = isset($data['filevouchertype']) ? $data['filevouchertype'] : null;
         $data["filecreateddate"] = date($config['db_dateformat'], time());
         $data['fileuid'] = $data['fileuid'] == '' ? '' : getGUID();
+        $data['filenumdownloads'] = isset($data['filenumdownloads']) ? $data['filenumdownloads'] : 0;
 
         return $data;
     }
