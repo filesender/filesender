@@ -154,7 +154,7 @@ $lang["_RE_SEND_EMAIL"] = "Send epost på nytt";
 $lang["_FILE_TO_BE_RESENT"] = "Fil:";
 $lang["_MESSAGE_RESENT"] = "Epost med nedlastningslenken sendt på nytt"; 
 
-$lang["_NEW_RECIPIENT"] = "En mottaker til";
+$lang["_NEW_RECIPIENT"] = "Legg til mottaker(e)";
 
 // Myfiles: delete file: tooltips, dialogue box and on-screen message 
 $lang["_DELETE_FILE"] = "Slett fil";
