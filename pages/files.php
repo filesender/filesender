@@ -208,7 +208,7 @@ $(function () {
     });
 
     // add new recipient modal dialog box
-    $("#dialog-addrecipient").dialog({ autoOpen: false, height: 410, width: 650, modal: true,
+    $("#dialog-addrecipient").dialog({ autoOpen: false, height: 360, width: 650, modal: true,
         buttons: {
             'cancelBTN': function () {
                 // clear form
@@ -260,17 +260,17 @@ function confirmDeleteTransaction(trackingCode, fileauth) {
     $("#dialog-delete-transaction").dialog("open");
 }
 
-function openAddRecipient(fileauth, filename, filesize, from, subject, message, trackingCode) {// populate form and open add-recipient modal form
+function openAddRecipient(fileauth, from, subject, message, trackingCode) {
+    // Populate form and open add-recipient modal form.
     $("#form1").attr("action", "index.php?s=files&a=add&fileauth=" + fileauth + "&tc=" + trackingCode);
     $("#trackingCode").val(trackingCode);
     $("#filefrom").html(decodeURIComponent(from));
-    $("#filename").html(decodeURIComponent(filename));
     $("#filesubject").val(decodeURIComponent(subject));
     $("#filemessage").val(decodeURIComponent(message));
-    $("#filesize").html(readablizebytes(filesize));
     $("#fileto").val("");
     $("#datepicker").datepicker("setDate", new Date(maximumDate));
-    // clear error messages
+
+    // Clear error messages.
     $("#expiry_msg").hide();
     $("#file_msg").hide();
     $("#fileto_msg").hide();
@@ -605,8 +605,7 @@ if(sizeof($transactions) > 0)
                     <td colspan="5" style="text-align: center; border: 1px solid #999;">
                         <a target="_blank" style="cursor:pointer;"
                             onclick="openAddRecipient('."'".$transactionContents[0]['fileauthuseruid']."',
-                            '". utf8ToHtml(addslashes($fileNames), true) ."',
-                            '".$transactionContents[0]['filesize'] ."','".rawurlencode($transactionContents[0]['filefrom'])."',
+                            '".rawurlencode($transactionContents[0]['filefrom'])."',
                             '".rawurlencode($transactionContents[0]['filesubject'])."',
                             '".rawurlencode($transactionContents[0]['filemessage'])."',
                             '".$item['filetrackingcode']."'". ');">Click here to Add a new Recipient
@@ -656,7 +655,7 @@ if($i == 0) {
     <p><?php echo lang('_CONFIRM_RESEND_EMAIL');?></p>
 </div>
 
-<div id="dialog-addrecipient" style="display:none" title="<?php echo  lang('_NEW_RECIPIENT'); ?>">
+<div id="dialog-addrecipient" style="display:none" title="<?php echo lang('_NEW_RECIPIENT'); ?>">
     <form id="form1" name="form1" enctype="multipart/form-data" method="post" action="#">
         <input type="hidden" name="a" value="add" />
         <input id="trackingCode" type="hidden" name="tc" value="" />
@@ -697,16 +696,6 @@ if($i == 0) {
                            onchange="validate_expiry()" title="<?php echo lang('_DP_dateFormat'); ?>"
                         />
                     <div id="expiry_msg" class="validation_msg" style="display: none"><?php echo lang('_INVALID_EXPIRY_DATE'); ?></div>
-                </td>
-            </tr>
-            <tr>
-                <td class="formfieldheading mandatory" id="files_to_be_resent"><?php echo lang('_FILE_TO_BE_RESENT'); ?>:</td>
-                <td><div id="filename"></div></td>
-            </tr>
-            <tr>
-                <td class="formfieldheading mandatory" id="files_size"><?php echo lang('_SIZE'); ?>:</td>
-                <td>
-                    <div id="filesize"></div>
                 </td>
             </tr>
             <tr>
