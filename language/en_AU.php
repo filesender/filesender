@@ -219,7 +219,7 @@ $lang["_OPTIONAL"] = "optional";
 $lang["_CONFIRM_DELETE_FILE"] = "Are you sure you want to delete this File?";
 $lang["_CONFIRM_DELETE_VOUCHER"] = "Are you sure you want to delete this voucher?";
 $lang["_CONFIRM_RESEND_EMAIL"] = "Are you sure you want to re-send this email?";
-$lang["_CONFIRM_DELETE_RECIPIENT"] = "Are you sure you want to delete this recipient?";
+$lang["_CONFIRM_DELETE_RECIPIENT"] = "Are you sure you want to delete this recipient? The transaction will be removed if all its recipients are deleted.";
 $lang["_CONFIRM_DELETE_TRANSACTION"] = "Are you sure you want to delete this transaction?";
 
 // standard date display format
