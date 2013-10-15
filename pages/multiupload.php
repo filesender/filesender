@@ -137,10 +137,14 @@ $(function () {
             </div>
             <div style="width:100%; display: table" class="menu">
                 <div style="display: table-cell; width: 33%">
-                    <a id="clearallbtn" href="#" onclick="clearFileBox()" style="cursor:pointer;width:45%;" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false" draggable="false">Clear all</a>
+                    <a id="clearallbtn" href="#" onclick="clearFileBox()" style="cursor:pointer;width:45%;" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false" draggable="false">
+                        <?php echo lang('_CLEAR_ALL'); ?>
+                    </a>
                 </div>
                 <div style="display: table-cell; text-align:center; width: 34%">
-                    <a href="#" onclick="browse()" style="cursor:pointer;width:50%" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false" draggable="false">Select files</a>
+                    <a href="#" onclick="browse()" style="cursor:pointer;width:50%" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false" draggable="false">
+                        <?php echo lang('_SELECT_FILES'); ?>
+                    </a>
                 </div>
                 <span id="uploadBoxStats" style="text-align: right; width: 33%; display: table-cell; font-size: 0.8em; vertical-align: middle"></span>
             </div>
