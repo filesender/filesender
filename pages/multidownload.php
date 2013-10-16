@@ -98,6 +98,7 @@ if (isset($_REQUEST['gid']) && ensureSaneOpenSSLKey($_REQUEST['gid'])) {
         if ($('.checkboxes:checked').length > 0) {
             // At least one file is selected, start downloading.
             statusMessage('<?php echo lang('_STARTED_DOWNLOADING') ?>', 'green');
+            $('#sendDlComplete').val($('#dlcomplete').prop('checked'));
             $('#fileform').submit();
         } else {
             // No files selected, show error message.
@@ -152,6 +153,7 @@ if (isset($_REQUEST['gid']) && ensureSaneOpenSSLKey($_REQUEST['gid'])) {
                 ?>
             </table>
             <input type="hidden" name="isformrequest" value="true" />
+            <input type="hidden" id="sendDlComplete" name="dlcomplete" value="" />
         </form>
 
         <div id="zipmessage">
@@ -161,6 +163,8 @@ if (isset($_REQUEST['gid']) && ensureSaneOpenSSLKey($_REQUEST['gid'])) {
         <div id="macmessage">
             <p><?php echo lang('_MAC_ZIP_MESSAGE'); ?><a href="<?php echo $config['mac_unzip_link']; ?>"><?php echo $config['mac_unzip_name']; ?></a>.</p>
         </div>
+
+        <p><input type="checkbox" id="dlcomplete" style="width:20px; vertical-align: middle"/>Send me confirmation email on download complete</p>
         
         <div class="menu mainButton" id="multidownloadbutton">
             <p>

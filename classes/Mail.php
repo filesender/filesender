@@ -107,7 +107,7 @@ class Mail {
     // Send a "file has been downloaded" email to sender.
     // $voucherIds can be either an array of IDs (for multiple files) or a string (single file).
     // ---------------------------------------
-    public function sendDownloadNotification($voucherIds) {
+    public function sendDownloadNotification($voucherIds, $dlCompleteEmail = false) {
         $functions = Functions::getInstance();
 
         if (is_string($voucherIds)) {
@@ -148,9 +148,17 @@ class Mail {
             return false;
         }
 
+        if ($dlCompleteEmail) {
+            $files[0]['fileto'] = $files[0]['filefrom'];
+            $files[0]['filesubject'] = lang('_EMAIL_SUBJECT_DOWNLOAD_COMPLETE');
+            if (!$this->sendEmail($files[0], lang('_EMAIL_BODY_FILES_DOWNLOAD_COMPLETE'), 'full', $files)) {
+                // Sending failed, no need to log as sendEmail() does that.
+                return false;
+            }
+        }
+
         return true;
     }
-
     // ---------------------------------------
     // Send a notification that a transaction has been deleted.
     // $recipient should be an array from getMultiFileData().
