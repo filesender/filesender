@@ -34,6 +34,7 @@
 $lang['_EMAIL_SUBJECT_DEFAULT'] = '{siteName}: {filetrackingcode}';
 $lang['_EMAIL_SUBJECT_SUMMARY'] = '{siteName}: Daily summary for transaction {filetrackingcode}';
 $lang['_EMAIL_SUBJECT_FILES_DOWNLOADED'] = '{siteName}: Download receipt - {filetrackingcode}';
+$lang['_EMAIL_SUBJECT_DOWNLOAD_COMPLETE'] = '{siteName}: Download Complete - {filetrackingcode}';
 $lang['_EMAIL_SUBJECT_FILES_UPLOADED'] = '{siteName}: File(s) uploaded - {filetrackingcode}';
 $lang['_EMAIL_SUBJECT_DOWNLOAD_AVAILABLE'] = '{siteName}: File(s) available for download - {filetrackingcode}';
 $lang['_EMAIL_SUBJECT_RECIPIENT_DELETED'] = '{siteName}: Recipient deleted - {filetrackingcode}';
@@ -101,6 +102,47 @@ Best regards,
     <body bgcolor="#ffffff">
         <p>Dear Sir or Madam,</p>
         <p>One or more of your uploaded files have been downloaded from <a href="{serverURL}">{siteName}</a> by <a href="mailto:{filefrom}">{filefrom}</a>. You can access your files and view detailed download statistics on the <a href="{serverURL}?s=files">My Files</a> page.</p>
+        <table width="960" cellspacing="0" cellpadding="3" border="1" bordercolor="#bbbbbb" rules="rows">
+            <tbody>
+            <tr bgcolor="#cccccc">
+                <td colspan="2" height="30"><strong>Transaction details</strong></td>
+            </tr>
+            <tr bgcolor="#e5e5e5" valign="top">
+                <td width="100"><strong>Tracking code</strong></td>
+                <td>{filetrackingcode}</td>
+            </tr>
+            <tr valign="top">
+                <td width="100"><strong>Expiry date</strong></td>
+                <td>{fileexpirydate}</td>
+            </tr>
+            <tr bgcolor="#e5e5e5" valign="top">
+                <td width="100"><strong>Files</strong></td>
+                <td>{htmlfileinfo}</td>
+            </tr>
+            </tbody>
+        </table>
+        <p>Best regards,<br />
+        {siteName}</p>
+    </body>
+</html>{CRLF}{CRLF}--simple_mime_boundary--';
+
+$lang['_EMAIL_BODY_FILES_DOWNLOAD_COMPLETE'] = '{CRLF}--simple_mime_boundary{CRLF}Content-type:text/plain; charset={charset}{CRLF}{CRLF}Dear Sir or Madam,
+
+Your download consisting of the following file(s) has finished.
+Tracking code: {filetrackingcode}
+
+Files:
+{fileinfo}
+
+Best regards,
+{siteName}{CRLF}{CRLF}--simple_mime_boundary{CRLF}Content-type:text/html; charset={charset}{CRLF}{CRLF}
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html;charset={charset}">
+    </head>
+    <body bgcolor="#ffffff">
+        <p>Dear Sir or Madam,</p>
+        <p>Your download consisting of the following files has finished.</p>
         <table width="960" cellspacing="0" cellpadding="3" border="1" bordercolor="#bbbbbb" rules="rows">
             <tbody>
             <tr bgcolor="#cccccc">

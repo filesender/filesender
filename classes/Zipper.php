@@ -43,6 +43,7 @@ class Zipper
     private $files;
     private $centralDirectory;
     private $useZip64;
+    private $sendDownloadComplete = false;
 
     public function __construct()
     {
@@ -122,7 +123,8 @@ class Zipper
             }
 
             // Send notification email to uploader.
-            $sendMail->sendDownloadNotification($voucherIds);
+            logEntry("send download complete value: " . $this->sendDownloadComplete);
+            $sendMail->sendDownloadNotification($voucherIds, $this->sendDownloadComplete);
         }
     }
 
@@ -370,5 +372,12 @@ class Zipper
 
         echo $record;
         return strlen($record);
+    }
+
+    // --------------------------------
+    // Sets the variable that sends out download complete receipt emails on.
+    // --------------------------------
+    public function enableDownloadCompleteEmail() {
+        $this->sendDownloadComplete = true;
     }
 }

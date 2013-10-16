@@ -51,6 +51,10 @@ if (isset($_REQUEST["gid"])) {
         }
     }
 
+    if (isset($_REQUEST["dlcomplete"]) && $_REQUEST['dlcomplete'] == 'true') {
+        logEntry('dlcomplete value in multidownload.php: ' . $_REQUEST['dlcomplete']);
+        $zipper->enableDownloadCompleteEmail();
+    }
     $zipper->sendZip();
 }
 
