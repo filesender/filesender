@@ -51,6 +51,8 @@ if (isset($_REQUEST['vid'])) {
 
     function startDownload() {
         statusMessage('<?php echo lang("_STARTED_DOWNLOADING"); ?>', 'green');
+        $('#sendDlComplete').val($('#dlcomplete').prop('checked'));
+        $('#downloadform').submit();
     }
 
 </script>
@@ -79,12 +81,15 @@ if (isset($_REQUEST['vid'])) {
         }
         ?>
     </div>
-
-    <div class="menu mainButton" id="downloadbutton" >
-        <p>
-            <a id="download"href="download.php?vid=<?php echo urlencode($fileData["filevoucheruid"]); ?>"
-                onclick="startDownload()"><?php echo lang("_START_DOWNLOAD"); ?>
-            </a>
-        </p>
-    </div>
+    <form id="downloadform" method="post" action="download.php?vid=<?php echo urlencode($fileData["filevoucheruid"]); ?>"
+        <p><input type="checkbox" id="dlcomplete" style="width:20px; vertical-align: middle"/>Send me confirmation email on download complete</p>
+        <div class="menu mainButton" id="downloadbutton" >
+            <p>
+                <a id="download" href=""
+                    onclick="startDownload(); return false;"><?php echo lang("_START_DOWNLOAD"); ?>
+                </a>
+            </p>
+        </div>
+        <input type="hidden" id="sendDlComplete" name="dlcomplete" value="" />
+    </form>
 </div>

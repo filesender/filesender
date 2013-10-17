@@ -123,7 +123,6 @@ class Zipper
             }
 
             // Send notification email to uploader.
-            logEntry("send download complete value: " . $this->sendDownloadComplete);
             $sendMail->sendDownloadNotification($voucherIds, $this->sendDownloadComplete);
         }
     }

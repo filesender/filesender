@@ -135,9 +135,11 @@ if(file_exists($file) && is_file($file) && $filestatus == 'Available')
 		}
 	}
 	if ($downloadComplete) {
+        // Check if user has opted for a confirmation email
+        $sendDownloadComplete = $_REQUEST['dlcomplete'] == 'true' ? true : false;
 		// Send completed email
         $functions->incrementDownloadCount($fileArray[0]["filevoucheruid"]); // Update DB download count.
-        $sendmail->sendDownloadNotification($fileArray[0]["filevoucheruid"]);
+        $sendmail->sendDownloadNotification($fileArray[0]["filevoucheruid"], $sendDownloadComplete);
 		$saveLog->saveLog($fileArray[0],"Download","");
 		logEntry("Download complete: email sent - To: ".$fileArray[0]["fileto"]."  From: ".$fileArray[0]["filefrom"] . " [".$file."]","E_NOTICE");
 	}

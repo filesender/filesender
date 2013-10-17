@@ -142,7 +142,7 @@ Best regards,
     </head>
     <body bgcolor="#ffffff">
         <p>Dear Sir or Madam,</p>
-        <p>Your download consisting of the following files has finished.</p>
+        <p>Your download consisting of the following file(s) has finished.</p>
         <table width="960" cellspacing="0" cellpadding="3" border="1" bordercolor="#bbbbbb" rules="rows">
             <tbody>
             <tr bgcolor="#cccccc">
