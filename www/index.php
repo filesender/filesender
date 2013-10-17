@@ -132,7 +132,7 @@ if($isAuth )
     <script type="text/javascript" src="js/jquery-ui-1.10.2.custom.min.js"></script>
     <script type="text/javascript">
         //<![CDATA[
-        var userEmail = '<?php echo $useremail[0]; ?>';
+        var userEmail = '<?php echo addslashes($useremail[0]); ?>';
         var debug = <?php echo $config["debug"] ? 'true' : 'false'; ?> ;
         var html5 = false;
         var html5webworkers = false;
