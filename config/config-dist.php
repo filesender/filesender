@@ -93,6 +93,7 @@ public function loadConfig() {
 	$config['default_daysvalid'] = 20; // Maximum number of days before file/voucher is expired
 	$config['ban_extension'] = 'exe,bat'; // Possibly dangerous file extensions that are disallowed
 	$config["max_email_recipients"] = 100; // maximum email addresses allowed to send at once for voucher or file sending, a value of 0 allows unlimited emails.
+	$config['download_confirmation_to_downloader'] = true ; // send copy of download confirmation to downloader (true/false, default true)
 
 	$config['max_flash_upload_size'] = '2147483648'; // 2GB
 	$config['max_html5_upload_size'] = '107374182400'; // 100  GB
