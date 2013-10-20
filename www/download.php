@@ -140,7 +140,11 @@ if(file_exists($file) && is_file($file) && $filestatus == 'Available')
 		$fileArray[0]["fileto"] = $fileArray[0]["filefrom"];
 		$fileArray[0]["filefrom"] = $tempEmail;
 		$saveLog->saveLog($fileArray[0],"Download","");
-		$sendmail->sendEmail($fileArray[0],$config['filedownloadedemailbody']);
+		if (isset($config['download_confirmation_to_downloader']) && ! $config['download_confirmation_to_downloader']) {
+			$sendmail->sendEmail($fileArray[0],$config['filedownloadedemailbody'],"nocctodownloader");
+		} else {
+			$sendmail->sendEmail($fileArray[0],$config['filedownloadedemailbody']);
+		}
 		logEntry("Download complete: email sent - To: ".$fileArray[0]["fileto"]."  From: ".$fileArray[0]["filefrom"] . " [".$file."]","E_NOTICE");
 	}
 } else {
