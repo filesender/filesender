@@ -82,10 +82,16 @@ if($s == "invalidvoucher")
     {
         array_push($messageArray,  lang("_INVALID_VOUCHER"));	
 	}	
-// display invalid voucher after - usually redirected from download page
+// logout message after user selects logout
 if($s == "logout") 
     {
-    	 array_push($messageArray,  lang("_LOGOUT_COMPLETE"));	
+		// remove aup on logout
+		if(isset($_SESSION["aup"])) {$_SESSION["aup"] = NULL;}
+		// force all new session 
+		session_start();
+		session_unset();
+		session_destroy();
+    	array_push($messageArray,  lang("_LOGOUT_COMPLETE"));	
 	}    
 if(!$isVoucher && !$isAuth && $s != "complete" && $s != "completev")
 {
