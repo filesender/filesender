@@ -91,7 +91,7 @@ if($s == "logout")
 		session_start();
 		session_unset();
 		session_destroy();
-    	array_push($messageArray,  lang("_LOGOUT_COMPLETE"));	
+    	 array_push($messageArray,  lang("_LOGOUT_COMPLETE"));	
 	}    
 if(!$isVoucher && !$isAuth && $s != "complete" && $s != "completev")
 {
