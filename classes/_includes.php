@@ -32,17 +32,7 @@
 
 $filesenderBase = dirname(dirname(__FILE__));
 
-if (file_exists("$filesenderBase/config/config.php")) {
-    require_once("$filesenderBase/config/config.php");
-} else {
-    echo "Configuration file is missing - please contact your administrator.";
-    exit;
-}
-
-$CFG = config::getInstance();
-global $config;
-$config = $CFG->loadConfig(); // Use _global $config in all functions.
-
+require_once("$filesenderBase/includes/ConfigValidation.php");
 require_once("$filesenderBase/classes/unstrip.php");
 require_once("$filesenderBase/includes/ErrorHandler.php");
 require_once("$filesenderBase/includes/EnsureHTTPS.php");
