@@ -58,6 +58,7 @@ $requiredConfigFields = array(
     'datedisplayformat',
     'versionNumber',
     'site_showStats',
+    'upload_box_default_size',
 
     // Auto complete
     'autocomplete',
