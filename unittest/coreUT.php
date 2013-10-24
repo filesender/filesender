@@ -31,9 +31,8 @@ class testFileSender_coreUT extends UnitTestCase {
 	$testGUID = $obj["filevoucheruid"];
 	$testInsaneGUID = " xxx-xx";
 	$this->assertTrue(preg_match($config['voucherRegEx'], $testGUID) and strLen($testGUID) == $config['voucherUIDLength']);
-	$this->assertEqual(ensureSaneFileUid($testGUID),$testGUID );
-	// TODO: Remove trigger error in ensureSaneFileUid as it block false return
-	//$this->assertFalse(ensureSaneFileUid($testInsaneGUID));
+	$this->assertTrue(ensureSaneFileUid($testGUID));
+	$this->assertFalse(ensureSaneFileUid($testInsaneGUID));
 	// ----- ENSURE SANE FILE UID END -------- 
 	
 	
