@@ -95,26 +95,14 @@ function sanitizeFilename($fileName)
 // --------------------------------
 function ensureSaneFileUid($fileUid)
 {
-
     global $config;
-
-    if (preg_match($config['voucherRegEx'], $fileUid) and strLen($fileUid) == $config['voucherUIDLength']) {
-        return $fileUid;
-    } else {
-        trigger_error("invalid file uid $fileUid", E_USER_ERROR);
-        return false;
-    }
+    return preg_match($config['voucherRegEx'], $fileUid) && strLen($fileUid) == $config['voucherUIDLength'];
 }
 
 function ensureSaneOpenSSLKey($key)
 {
     global $config;
-    if (ctype_alnum($key) && strlen($key) == $config['openSSLKeyLength'] * 2) {
-        return $key;
-    } else {
-        trigger_error("invalid openssl key $key", E_USER_ERROR);
-        return false;
-    }
+    return ctype_alnum($key) && strlen($key) == $config['openSSLKeyLength'] * 2;
 }
 
 class Functions
@@ -984,7 +972,9 @@ class Functions
     // --------------------------------
     public function getVoucherData($vid)
     {
-        ensureSaneFileUid($vid);
+        if (!ensureSaneFileUid($vid)) {
+            trigger_error("Invalid voucher UID", E_USER_ERROR);
+        }
 
         $statement = $this->db->prepare(
             'SELECT * ' .
