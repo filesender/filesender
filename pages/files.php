@@ -443,19 +443,19 @@ foreach($json_o as $item) {
 	echo "<tr><td class='dr9 headerrow'>".$lang['_DETAILS']."</td><td class='dr12'></td></tr>"; 
 	// display summary if it exists
    foreach($item["downloadsummary"] as $summaryitem) {
-   echo "<tr><td class='dr11 sdheading'><strong>".lang("_DOWNLOADED").":</strong></td><td class='HardBreak dr13'>".date($lang['datedisplayformat'],strtotime($summaryitem['logdate'])). "</td></tr>";
+   echo "<tr><td class='dr11 sdheading'>".lang("_DOWNLOADED").":</td><td class='HardBreak dr13'>".date($lang['datedisplayformat'],strtotime($summaryitem['logdate'])). "</td></tr>";
    }
-   	echo "<tr class='rowdivider'><td class='dr4 sdheading tblmcw3 '><strong>".lang("_CREATED").":</strong></td><td class='dr6 HardBreak'>".date($lang['datedisplayformat'],strtotime($item['filecreateddate'])). "</td></tr>"; 
+   	echo "<tr class='rowdivider'><td class='dr4 sdheading tblmcw3 '>".lang("_CREATED").":</td><td class='dr6 HardBreak'>".date($lang['datedisplayformat'],strtotime($item['filecreateddate'])). "</td></tr>"; 
 
-	echo "<tr><td class='dr4 sdheading'><strong>".lang("_FROM").":</strong></td>";
+	echo "<tr><td class='dr4 sdheading'>".lang("_FROM").":</td>";
 
    	echo "<td class='dr6 HardBreak'>" .$item['filefrom'] . "</td>";
 
 	echo "</tr>";
-	echo "<tr class='rowdivider'><td class='dr4 sdheading tblmcw3'><strong>".lang("_SUBJECT").":</strong></td><td class='dr6 HardBreak'>".utf8tohtml($item['filesubject'],TRUE). "</td>";
+	echo "<tr class='rowdivider'><td class='dr4 sdheading tblmcw3'>".lang("_SUBJECT").":</td><td class='dr6 HardBreak'>".utf8tohtml($item['filesubject'],TRUE). "</td>";
 	
    	echo "</tr>";
-	echo "<tr><td class='dr11 sdheading'><strong>".lang("_MESSAGE").":</strong></td><td class='dr13' colspan='8'>";
+	echo "<tr><td class='dr11 sdheading'>".lang("_MESSAGE").":</td><td class='dr13' colspan='8'>";
    	if($item['filemessage'] != "")
    	{
    		echo "<pre class='HardBreak'>".utf8tohtml($item['filemessage'],TRUE)."</pre>";
