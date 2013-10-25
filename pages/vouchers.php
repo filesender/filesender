@@ -320,7 +320,7 @@ if ( count($useremail) > 1 ) {
      </div>
 </form>
   <div id="box_3" class="box">
-  <table id="vouchertable" width="100%" border="0" cellspacing="1">
+  <table id="vouchertable" width="100%" border="0" cellspacing="1" style="table-layout:fixed;">
     <tr class="headerrow">
    	<td></td>
     <td id="vouchers_header_from"><strong><?php echo lang("_FROM"); ?></strong></td>
@@ -336,7 +336,7 @@ if ( count($useremail) > 1 ) {
 		$i += 1; // counter for file id's
 		echo "<tr>";
 		echo "<td><div  style='cursor:pointer;'><img id='btn_deletevoucher_".$i."' src='images/shape_square_delete.png' alt='' title='".lang("_DELETE")."' onclick='confirmdelete(".'"' .$item['filevoucheruid'] . '"'. ")' border='0' /></div></td>";
-		echo "<td>" .$item['filefrom'] . "</td><td>" .$item['fileto'] . "</td><td class='HardBreak'>";
+		echo "<td style='word-wrap:break-word;'>" .$item['filefrom'] . "</td><td style='word-wrap:break-word;'>" .$item['fileto'] . "</td><td class='HardBreak'>";
 		if($item['filesubject'] != "")
 		{
 			echo "<img src='images/page_white_text_width.png' border='0' alt='' title='".utf8tohtml($item['filesubject'],TRUE). "' />";
