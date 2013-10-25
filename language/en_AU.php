@@ -158,6 +158,7 @@ be packed together into a compressed (zipped) folder which must be extracted bef
 If you do not wish to do this, you can also download each file individually by clicking on its filename above.";
 $lang["_MAC_ZIP_MESSAGE"] = "You appear to be using a Macintosh computer. Please note that you will need to use a
 third-party application to open this archive, as it is larger than 4 GiB. We suggest ";
+$lang["_DOWNLOADER_RECEIPT"] = "Send me an email receipt when the download finishes";
 
 // vouchers
 $lang["_SEND_NEW_VOUCHER"] = "A Voucher allows someone to send you a file.<br />

@@ -164,8 +164,10 @@ if (isset($_REQUEST['gid']) && ensureSaneOpenSSLKey($_REQUEST['gid'])) {
             <p><?php echo lang('_MAC_ZIP_MESSAGE'); ?><a href="<?php echo $config['mac_unzip_link']; ?>"><?php echo $config['mac_unzip_name']; ?></a>.</p>
         </div>
 
-        <p><input type="checkbox" id="dlcomplete" style="width:20px; vertical-align: middle"/>Send me confirmation email on download complete</p>
-        
+        <?php if ($fileData[0]['fileenabledownloadreceipts'] == 'true') { ?>
+        <p><input type="checkbox" id="dlcomplete" style="width:20px; vertical-align: middle"/><?php echo lang('_DOWNLOADER_RECEIPT'); ?></p>
+        <?php } ?>
+
         <div class="menu mainButton" id="multidownloadbutton">
             <p>
                 <a id="download" href="" onclick="startDownload(); return false;">
