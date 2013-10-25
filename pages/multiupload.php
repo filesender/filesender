@@ -266,71 +266,76 @@ $(function () {
                         <?php } ?>
                     </div>
 
-                    <?php if ($config['terasender'] && $config['terasenderadvanced']) { ?>
+                    <?php if ($functions->advancedSettingsEnabled()) { ?>
                         <div class="fieldcontainer">
-                            <a href="#" onclick="$('#workers-advanced-settings').slideToggle()">
-                                <?php echo lang('_TERA_ADVANCED_SETTINGS'); ?>
+                            <a href="#" onclick="$('#advanced-settings').slideToggle()">
+                                <?php echo lang('_ADVANCED_SETTINGS'); ?>
                             </a>
                         </div>
-                    <?php } ?>
 
-                    <div id="workers-advanced-settings" style="display: none;">
-                        <div class="fieldcontainer">
-                            <label for="chunksize"><?php echo lang('_TERA_CHUNKSIZE'); ?></label>
-                            <input id="chunksize" type="text" value="<?php echo $config['terasender_chunksize'] ?>"/>
-                            <br/>
-                        </div>
-                        <div class="fieldcontainer">
-                            <label for="workerCount"><?php echo lang('_TERA_WORKER_COUNT'); ?></label>
-                            <input id="workerCount" type="text"
-                                   value="<?php echo $config['terasender_workerCount'] ?>"/>
-                            <br/>
-                        </div>
-                        <div class="fieldcontainer">
-                            <label for="jobsPerWorker"><?php echo lang('_TERA_JOBS_PER_WORKER'); ?></label>
-                            <input id="jobsPerWorker" type="text"
-                                   value="<?php echo $config['terasender_jobsPerWorker'] ?>"/>
-                        </div>
-                    </div>
+                        <div id="advanced-settings" style="display: none;">
+                            <?php if ($config['email_me_copies_display'] == 'hidden') { ?>
+                                <div class="fieldcontainer" >
+                                    <label for="rtnemail"><?php echo lang("_SEND_COPY_EMAILS"); ?></label>
+                                    <input name="rtnemail" type="checkbox" id="rtnemail" style="float:left; width:20px;" <?php echo isChecked($config['email_me_copies_default']); ?>/>
+                                </div>
+                            <?php } ?>
 
-                    <div class="fieldcontainer">
-                        <a href="#" onclick="$('#email-flow-settings').slideToggle()">
-                            More settings
-                        </a>
-                    </div>
+                            <?php if ($config['upload_complete_email_display'] == 'hidden') { ?>
+                                <div class="fieldcontainer">
+                                    <label for="email-upload-complete"><?php echo lang("_EMAIL_ME_COMPLETE") ?></label>
+                                    <input type="checkbox" id="email-upload-complete" style="float:left; width:20px;" <?php echo isChecked($config['upload_complete_email_default']); ?>/>
+                                </div>
+                            <?php } ?>
 
-                    <div id="email-flow-settings" style="display:none;">
-                        <?php if ($config['upload_complete_email_display'] == 'hidden') { ?>
+                            <?php if ($config['inform_download_email_display'] == 'hidden') { ?>
+                                <div class="fieldcontainer">
+                                    <label for="email-inform-download"><?php echo lang("_EMAIL_ME_ON_DOWNLOAD") ?></label>
+                                    <input id="email-inform-download" type="checkbox" style="float:left; width:20px;" <?php echo isChecked($config['inform_download_email_default']); ?>/>
+                                </div>
+                            <?php } ?>
+
+                            <?php if ($config['email_me_daily_statistics_display'] == 'hidden') { ?>
+                                <div class="fieldcontainer">
+                                    <label for="email-inform-daily"><?php echo lang("_EMAIL_DAILY_STATS") ?></label>
+                                    <input id="email-inform-daily" type="checkbox" style="float:left; width:20px;" <?php echo isChecked($config['email_me_daily_statistics_default']); ?>/>
+                                </div>
+                            <?php } ?>
+
+                            <?php if ($config['download_confirmation_enabled_display'] == 'hidden') { ?>
+                                <div class="fieldcontainer">
+                                    <label for="email-enable-confirmation"><?php echo lang("_ENABLE_EMAIL_CONFIRMATION") ?></label>
+                                    <input id="email-enable-confirmation" type="checkbox" style="float:left; width:20px;" <?php echo isChecked($config['download_confirmation_enabled_default']); ?>/>
+                                </div>
+                            <?php } ?>
+
+                            <?php if ($config['add_me_to_recipients_display'] == 'hidden') { ?>
+                                <div class="fieldcontainer">
+                                    <label for="add_me_to_recipients"><?php echo lang("_ADD_ME_TO_RECIPIENTS") ?></label>
+                                    <input id="add_me_to_recipients" type="checkbox" style="float:left; width:20px;" <?php echo isChecked($config['add_me_to_recipients_default']); ?>/>
+                                </div>
+                            <?php } ?>
+
+                            <?php if ($config['terasender'] && $config['terasenderadvanced']) { ?>
                             <div class="fieldcontainer">
-                                <label for="email-upload-complete"><?php echo lang("_EMAIL_ME_COMPLETE") ?></label>
-                                <input type="checkbox" id="email-upload-complete" style="float:left; width:20px;" <?php echo isChecked($config['upload_complete_email_default']); ?>/>
+                                <label for="chunksize"><?php echo lang('_TERA_CHUNKSIZE'); ?></label>
+                                <input id="chunksize" type="text" value="<?php echo $config['terasender_chunksize'] ?>"/>
+                                <br/>
+                            </div>
+                            <div class="fieldcontainer">
+                                <label for="workerCount"><?php echo lang('_TERA_WORKER_COUNT'); ?></label>
+                                <input id="workerCount" type="text"
+                                       value="<?php echo $config['terasender_workerCount'] ?>"/>
+                                <br/>
+                            </div>
+                            <div class="fieldcontainer">
+                                <label for="jobsPerWorker"><?php echo lang('_TERA_JOBS_PER_WORKER'); ?></label>
+                                <input id="jobsPerWorker" type="text"
+                                       value="<?php echo $config['terasender_jobsPerWorker'] ?>"/>
                             </div>
                         <?php } ?>
-                        <?php if ($config['inform_download_email_display'] == 'hidden') { ?>
-                            <div class="fieldcontainer">
-                                <label for="email-inform-download"><?php echo lang("_EMAIL_ME_ON_DOWNLOAD") ?></label>
-                                <input id="email-inform-download" type="checkbox" style="float:left; width:20px;" <?php echo isChecked($config['inform_download_email_default']); ?>/>
-                            </div>
-                        <?php } ?>
-                        <?php if ($config['email_me_daily_statistics_display'] == 'hidden') { ?>
-                            <div class="fieldcontainer">
-                                <label for="email-inform-daily"><?php echo lang("_EMAIL_DAILY_STATS") ?></label>
-                                <input id="email-inform-daily" type="checkbox" style="float:left; width:20px;" <?php echo isChecked($config['email_me_daily_statistics_default']); ?>/>
-                            </div>
-                        <?php } ?>
-                        <?php if ($config['download_confirmation_enabled_display'] == 'hidden') { ?>
-                            <div class="fieldcontainer">
-                                <label for="email-enable-confirmation"><?php echo lang("_ENABLE_EMAIL_CONFIRMATION") ?></label>
-                                <input id="email-enable-confirmation" type="checkbox" style="float:left; width:20px;" <?php echo isChecked($config['download_confirmation_enabled_default']); ?>/>
-                            </div>
-                        <?php } ?>
-                        <?php if ($config['add_me_to_recipients_display'] == 'hidden') { ?>
-                            <div class="fieldcontainer">
-                                <label for="add_me_to_recipients"><?php echo lang("_ADD_ME_TO_RECIPIENTS") ?></label>
-                                <input id="add_me_to_recipients" type="checkbox" style="float:left; width:20px;" <?php echo isChecked($config['add_me_to_recipients_default']); ?>/>
-                            </div>
-                        <?php } ?>
-                    </div>
+                        </div>
+                    <?php } /* End of advanced settings div. */ ?>
                 </td>
             </tr>
         </table>
