@@ -1409,6 +1409,17 @@ class Functions
         return $value == $menuName ? 'active' : '';
     }
 
+    public function advancedSettingsEnabled() {
+        global $config;
+        return ($config['terasender'] && $config['terasenderadvanced'])
+            || $config['upload_complete_email_display'] == 'hidden'
+            || $config['inform_download_email_display'] == 'hidden'
+            || $config['email_me_daily_statistics_display'] == 'hidden'
+            || $config['download_confirmation_enabled_display'] == 'hidden'
+            || $config['add_me_to_recipients_display'] == 'hidden'
+            || $config['email_me_copies_display'] == 'hidden';
+    }
+
     // --------------------------------
     // Converts from UNIX to DOS style timestamp.
     // Defaults to current time if $timestamp parameter is missing or 0.

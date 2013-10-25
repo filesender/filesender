@@ -87,11 +87,6 @@ $lang["_MESSAGE"] = "Message";
 $lang["_TYPE"] = "Type";
 $lang["_SEND_COPY_EMAILS"] = "Send copy of emails to me";
 $lang["_ENTER_TO_EMAIL"] = "Enter recipient email(s)";
-$lang["_EMAIL_ME_COMPLETE"] = "Email me on upload complete";
-$lang["_EMAIL_ME_ON_DOWNLOAD"] = "Email me every time a file is downloaded";
-$lang["_EMAIL_DAILY_STATS"] = "Email me daily statistics with user activity";
-$lang["_ENABLE_EMAIL_CONFIRMATION"] = "Enable download confirmation email for recipients";
-$lang["_ADD_ME_TO_RECIPIENTS"] = "Include me as a recipient";
 $lang["_EMAIL"] = "Email";
 $lang["_DOWNLOAD_STATISTICS"] = "Download statistics";
 
@@ -242,11 +237,16 @@ $lang["_DP_isRTL"] = 'false';
 $lang["_DP_showMonthAfterYear"] = 'false';
 $lang["_DP_yearSuffix"] = '';
 
-// Terasender Advanced Settings
-$lang["_TERA_ADVANCED_SETTINGS"] = "Advanced Settings";
+// Upload advanced Settings
+$lang["_ADVANCED_SETTINGS"] = "Advanced Settings";
 $lang["_TERA_CHUNKSIZE"] = "Chunksize (MB)";
 $lang["_TERA_WORKER_COUNT"] = "Worker count";
 $lang["_TERA_JOBS_PER_WORKER"] = "Jobs per workers";
+$lang["_EMAIL_ME_COMPLETE"] = "Email me on upload complete";
+$lang["_EMAIL_ME_ON_DOWNLOAD"] = "Email me every time a file is downloaded";
+$lang["_EMAIL_DAILY_STATS"] = "Email me daily statistics with user activity";
+$lang["_ENABLE_EMAIL_CONFIRMATION"] = "Enable download confirmation email for recipients";
+$lang["_ADD_ME_TO_RECIPIENTS"] = "Include me as a recipient";
 
 // Login Splash text
 $lang["_SITE_SPLASHHEAD"] = "Welcome to ". htmlspecialchars($config['site_name']);
