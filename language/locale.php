@@ -46,6 +46,7 @@ $locales  =  array(
 	"en"=>  "en_AU.php",
 	"es"=>  "es_ES.php",
 	"es-es"=>  "es_ES.php",
+	"fi" => "fi_FI.php",
 	"fr" => "fr_FR.php",
 	"fr-fr" => "fr_FR.php",
 	"hr" => "hr_HR.php",
