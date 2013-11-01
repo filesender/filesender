@@ -82,7 +82,7 @@ if (isset($_REQUEST['vid'])) {
         ?>
     </div>
     <form id="downloadform" method="post" action="download.php?vid=<?php echo urlencode($fileData["filevoucheruid"]); ?>"
-        <p><input type="checkbox" id="dlcomplete" style="width:20px; vertical-align: middle"/>Send me confirmation email on download complete</p>
+        <p><input type="checkbox" id="dlcomplete" style="width:20px; vertical-align: middle"/><?php echo lang('_DOWNLOADER_RECEIPT'); ?></p>
         <div class="menu mainButton" id="downloadbutton" >
             <p>
                 <a id="download" href=""
