@@ -333,7 +333,11 @@ $(function () {
                                 <input id="jobsPerWorker" type="text"
                                        value="<?php echo $config['terasender_jobsPerWorker'] ?>"/>
                             </div>
-                        <?php } ?>
+                            <?php } else if ($config['terasender'] && !$config['terasenderadvanced']) { ?>
+                                <input id="chunksize" type="hidden" value="<?php echo $config['terasender_chunksize'] ?>" />
+                                <input id="workerCount" type="hidden" value="<?php echo $config['terasender_workerCount'] ?>" />
+                                <input id="jobsPerWorker" type="hidden" value="<?php echo $config['terasender_jobsPerWorker'] ?>" />
+                            <?php } ?>
                         </div>
                     <?php } /* End of advanced settings div. */ ?>
                 </td>
