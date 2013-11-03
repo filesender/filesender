@@ -322,20 +322,20 @@ if ( count($useremail) > 1 ) {
   <div id="box_3" class="box">
   <table id="vouchertable" width="100%" border="0" cellspacing="1" style="table-layout:fixed;">
     <tr class="headerrow">
-   	<td></td>
+   	<td class='tblmcw1'></td>
     <td id="vouchers_header_from"><strong><?php echo lang("_FROM"); ?></strong></td>
     <td id="vouchers_header_to"><strong><?php echo lang("_TO"); ?></strong></td>
-    <td id="vouchers_header_subject"><strong><?php echo lang("_SUBJECT"); ?></strong></td>
-    <td id="vouchers_header_message"><strong><?php echo lang("_MESSAGE"); ?></strong></td>
-    <td id="vouchers_header_created"><strong><?php echo lang("_CREATED"); ?></strong></td>
-    <td id="vouchers_header_expiry"><strong><?php echo lang("_EXPIRY"); ?></strong></td>
+    <td class='tblmcw3' id="vouchers_header_subject"><strong><?php echo lang("_SUBJECT"); ?></strong></td>
+    <td class='tblmcw3' id="vouchers_header_message"><strong><?php echo lang("_MESSAGE"); ?></strong></td>
+    <td class='tblmcw3' id="vouchers_header_created"><strong><?php echo lang("_CREATED"); ?></strong></td>
+    <td class='tblmcw3' id="vouchers_header_expiry"><strong><?php echo lang("_EXPIRY"); ?></strong></td>
     </tr>
     <?php
 	$i = 0; 
 	foreach($json_o as $item) {
 		$i += 1; // counter for file id's
 		echo "<tr>";
-		echo "<td><div  style='cursor:pointer;'><img id='btn_deletevoucher_".$i."' src='images/shape_square_delete.png' alt='' title='".lang("_DELETE")."' onclick='confirmdelete(".'"' .$item['filevoucheruid'] . '"'. ")' border='0' /></div></td>";
+		echo "<td class='tblmcw1'><div  style='cursor:pointer;'><img id='btn_deletevoucher_".$i."' src='images/shape_square_delete.png' alt='' title='".lang("_DELETE")."' onclick='confirmdelete(".'"' .$item['filevoucheruid'] . '"'. ")' border='0' /></div></td>";
 		echo "<td style='word-wrap:break-word;'>" .$item['filefrom'] . "</td><td style='word-wrap:break-word;'>" .$item['fileto'] . "</td><td class='HardBreak'>";
 		if($item['filesubject'] != "")
 		{
