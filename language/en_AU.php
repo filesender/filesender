@@ -144,6 +144,7 @@ $lang["_DISK_SPACE_ERROR"] = "There is not enough drive space on this service. P
 $lang["_ERROR_ATTRIBUTES"] = "Your Identity Provider is not providing the required attributes. Contact your Administrator";
 $lang["_PERMISSION_DENIED"] = "You do not have permission to do this.";
 $lang["_MAX_FILES_REACHED"] = "You have exceeded the file upload limit of: ";
+$lang["_REMOVE_GHOST_FILES"] = "You must remove all ghost files before starting your upload.";
 // Logout page
 $lang["_LOGOUT_COMPLETE"] = "Logout Complete";
 
@@ -151,6 +152,17 @@ $lang["_LOGOUT_COMPLETE"] = "Logout Complete";
 $lang["_TRACKING_CODE"] = "Tracking code";
 $lang["_UPLOADED_LIST"] = "The following files have been uploaded:";
 $lang["_REFER_TO_MY_FILES"] = 'You can access your files and view download statistics on the <a href="index.php?s=files">My Files</a> page.';
+$lang["_CLEAR_ALL"] = "Clear all";
+$lang["_UNDO_CLEAR"] = "Undo Clear";
+
+// Pause / Resume
+$lang["_UPLOAD_PAUSED"] = "Upload paused";
+$lang["_PAUSING"] = "Pausing";
+$lang["_PAUSE"] = "Pause";
+$lang["_RESUME"] = "Resume";
+$lang["_SUSPEND"] = "Suspend";
+$lang["_SUSPENDED_UPLOAD"] = "Suspended Upload";
+
 
 // Multi-download
 $lang["_ZIP_MESSAGE"] = "Please note: if you download multiple files using the below button, your file shipment will

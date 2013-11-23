@@ -107,11 +107,11 @@ global $config;
                 "id" : "pauseBTN",
                 click: function() {
                     if (html5) {
-                        if($('#pauseBTN').html() == "Pause") {
-                            $('#pauseBTN').html('Resume');
+                        if($('#pauseBTN').html() == '<?php echo lang("_PAUSE"); ?>') {
+                            $('#pauseBTN').html('<?php echo lang("_RESUME"); ?>');
                             pauseUpload();
                         }else {
-                            $('#pauseBTN').html('Pause');
+                            $('#pauseBTN').html('<?php echo lang("_PAUSE"); ?>');
                             resumeUpload();
                         }
                     } else {
@@ -157,6 +157,14 @@ global $config;
                             click: function () {
                                 $(this).dialog("close");
                             }
+                        },
+                        {
+                            "id": "suspendBTN",
+                            click: function() {
+                                suspendUpload();
+                                window.location.reload();
+                            }
+
                         }]
                     });
                     addButtonText();
@@ -265,11 +273,6 @@ global $config;
 </div>
 
 <div id="dialog-default" style="display:none" title=""> </div>
-
-<!-- Upload Cancel -->
-<div id="dialog-confirm" title="<?php echo lang("_ARE_YOU_SURE"); ?>" style="display: none">
-    <p>All files will be deleted</p> <!-- TODO: need a lang for this -->
-</div>
 
 <div id="dialog-autherror" title="<?php echo lang('_MESSAGE'); ?>" style="display: none">
     <?php echo lang('_AUTH_ERROR'); ?>

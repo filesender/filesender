@@ -279,7 +279,7 @@ function updateProgressBar(bytesloaded, totalbytes, amountUploaded)
         $('#progress_string').html(percentComplete + '%');
         $('#progress_bar').width(percentComplete / 100 * $('#progress_container').width());
         $('#totalUploaded').html('Total uploaded: ' + readablizebytes(totalBytesLoaded) + '/' + readablizebytes(totalFileLengths));
-        $('#averageUploadSpeed').html('Average upload Speed:' + uploadSpeed.toFixed(2) + 'MB/s');
+        $('#averageUploadSpeed').html('Average upload Speed: ' + uploadSpeed.toFixed(2) * 8 + 'MBit/s');
         $('#timeRemaining').html('Approx time remaining: ' + secondsToString(timeRemaining));
     } else {
         uploadSpeed = (bytesloaded/timeSinceStart) / 1024 / 1024;
