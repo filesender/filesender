@@ -116,7 +116,16 @@ $(function () {
     if(localStorage.getItem('uploadData')) {
         offerResumeUpload();
     }
+    $('#fileto').keydown(function(e) {
+        // enter is pressed
+        if(e.keyCode == 13) {
+            addEmailRecipientBox($('#fileto').val());
+        }
+    });
+
 });
+
+
 </script>
 
 <form id="form1" enctype="multipart/form-data" method="post" action="fs_uploadit.php">

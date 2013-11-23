@@ -676,25 +676,21 @@ function undoClearFileBox()
 
 function suspendUpload() {
     // Remove any other suspended uploads the user may have in order to replace it
-    localStorage.removeItem('uploadData');
+    localStorage.clear();
     var suspendedData = {};
 
     for (var i=0; i<fileData.length; i++) {
         var file = fileData[i];
         var jsonFile = {};
         for (var key in file) {
-
             // File objects cannot be stored so we skip it
             if (key == "file") continue;
             jsonFile[key] = file[key];
         }
-
         suspendedData[i] = jsonFile;
     }
 
-    console.log(suspendedData);
     localStorage.setItem('uploadData', JSON.stringify(suspendedData));
-
     localStorage.setItem('uploadRecipients', getRecipientsList());
     if ($('#filesubject').val()) {
         localStorage.setItem('uploadSubject', $('#filesubject').val());
@@ -716,7 +712,7 @@ function offerResumeUpload() {
                 $(this).dialog('close');
             },
             'deleteBTN': function() {
-                localStorage.removeItem('uploadData');
+                localStorage.clear();
                 $(this).dialog('close');
             }
         }
