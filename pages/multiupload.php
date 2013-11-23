@@ -112,6 +112,10 @@ $(function () {
             validate_fileto();
         }
     });
+
+    if(localStorage.getItem('uploadData')) {
+        offerResumeUpload();
+    }
 });
 </script>
 
@@ -374,4 +378,11 @@ $(function () {
 <div id="dialog-cancel" style="display:none"
      title="<?php echo lang('_CANCEL_UPLOAD'); ?>">
     <?php echo lang('_ARE_YOU_SURE'); ?>
+</div>
+
+<div id="suspended-upload" style="display:none;"
+     title="<?php echo lang("_SUSPENDED_UPLOAD"); ?>">
+    We detected you have an interrupted upload, would you like to resume?
+    <br /><br /><br /><br />
+    Note: In order to resume with this upload, you must reselect the files you wish to continue uploading from your computer
 </div>

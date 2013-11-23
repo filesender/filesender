@@ -56,6 +56,12 @@
             if(!validate_file(i)) return false;
         }
 
+        if ($('#filestoupload').html().indexOf('ghost_file') != -1) {
+            fileMsg('<?php echo lang('_REMOVE_GHOST_FILES') ?>');
+            $('#dragfilestouploadcss').addClass('errorglow');
+            return false;
+        }
+
         return validateNumFiles();
     }
 
@@ -117,6 +123,48 @@
     function reenableToField(){
         $('#fileto').val(emailCache);
         $('#fileto').removeAttr('disabled');
+    }
+
+    // Functions which change the onclick event on the button based on the previous click event.
+    function setButtonToClear()
+    {
+        var clearAll = $('#clearallbtn');
+        clearAll.find('.ui-button-text').html("Clear all");
+        clearAll.attr('onclick', 'clearFileBox()');
+    }
+
+    function setButtonToUndo()
+    {
+        var clearAll = $('#clearallbtn');
+        clearAll.button('enable');
+        clearAll.find('.ui-button-text').html('<?php echo lang("_CLEAR_ALL"); ?>');
+        clearAll.attr('onclick', 'undoClearFileBox()');
+    }
+
+    function pauseUpload()
+    {
+        terasender.pauseUpload();
+        $('.progress_bar').css('background-color', '#FF8800');
+        $('#progress_string').html('<?php echo lang("_PAUSING"); ?>');
+        vid = fileData[n].filevoucheruid;
+        pausedUpload = true;
+        $('#pauseBTN').button('disable');
+
+    }
+
+    function resumeUpload() {
+        $('#progress_string').html(percentComplete + '%');
+        startUpload();
+        $('.progress_bar').css('background-color', '#5c5');
+        resumeTime = new Date().getTime();
+        timeSpentPaused += resumeTime - pauseTime;
+    }
+
+    function uploadPaused()
+    {
+        $('#progress_string').html('<?php echo lang("_UPLOAD_PAUSED"); ?>');
+        pauseTime = new Date().getTime();
+        $('#pauseBTN').button('enable');
     }
 
 </script>

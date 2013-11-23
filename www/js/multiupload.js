@@ -109,14 +109,20 @@ function fileSelected()
 // Used in multiupload.php as well
 function addFiles(files)
 {
+    var ghostLocation = -1;
     for (var i = 0; i < files.length; i++) {
         var dupFound = false;
 
         // Loops through list of files already in the list and prevents any duplicates from being created
         for (var j = 0; j < fileData.length; j++) {
             if (fileData[j].filename == files.item(i).name) {
-                dupFound = true;
-                break;
+                if (fileData[j].status == 'ghost' && fileData[j].fileSize == files.item(i).size) {
+                    ghostLocation = j;
+                } else {
+                    dupFound = true;
+                    break;
+                }
+
             }
         }
 
@@ -149,6 +155,10 @@ function addFiles(files)
             // Give each file its own file box + info
             $('#filestoupload').append(generateFileBoxHtml());
             updateBoxStats();
+        }
+
+        if (ghostLocation != -1) {
+            removeItem(ghostLocation);
         }
     }
 
@@ -216,6 +226,7 @@ function generateFileBoxHtml()
 {
     var validfile = '';
     var errorclass ='';
+    var ghostFile = fileData[n].status == 'ghost' ? 'ghost_file' : '';
     if (validate_file(n)) {
         fileData[n].valid = true;
     } else {
@@ -229,7 +240,7 @@ function generateFileBoxHtml()
 
     var file_info =  fileData[n].filename + ' : ' + readablizebytes(fileData[n].fileSize);
 
-    return '<div id="file_' + n + '" class="fileBox valid' + fileData[n].valid + errorclass +'">' +
+    return '<div id="file_' + n + '" class="fileBox valid ' + fileData[n].valid + ' ' +  errorclass + ' ' + ghostFile + '">' +
         '<span class="filebox_string" title="' + file_info + '">' + validfile + ' ' + file_info + '</span>' +
         '<span class="delbtn" id="file_del_' + n + '" onclick="removeItem(' + n + ');">' +
         '<img src="images/delete.png" width="16" height="16" border="0" align="absmiddle" style="cursor:pointer"/>' +
@@ -663,44 +674,103 @@ function undoClearFileBox()
     setButtonToClear();
 }
 
-// Functions which change the onclick event on the button based on the previous click event.
-function setButtonToClear()
-{
-    var clearAll = $('#clearallbtn');
-    clearAll.find('.ui-button-text').html("Clear all");
-    clearAll.attr('onclick', 'clearFileBox()');
+function suspendUpload() {
+    // Remove any other suspended uploads the user may have in order to replace it
+    localStorage.removeItem('uploadData');
+    var suspendedData = {};
+
+    for (var i=0; i<fileData.length; i++) {
+        var file = fileData[i];
+        var jsonFile = {};
+        for (var key in file) {
+
+            // File objects cannot be stored so we skip it
+            if (key == "file") continue;
+            jsonFile[key] = file[key];
+        }
+
+        suspendedData[i] = jsonFile;
+    }
+
+    console.log(suspendedData);
+    localStorage.setItem('uploadData', JSON.stringify(suspendedData));
+
+    localStorage.setItem('uploadRecipients', getRecipientsList());
+    if ($('#filesubject').val()) {
+        localStorage.setItem('uploadSubject', $('#filesubject').val());
+    }
+    if ($('#filemessage').val()) {
+        localStorage.setItem('uploadMessage', $('#filemessage').val());
+    }
 }
 
-function setButtonToUndo()
-{
-    var clearAll = $('#clearallbtn');
-    clearAll.button('enable');
-    clearAll.find('.ui-button-text').html("Undo clear");
-    clearAll.attr('onclick', 'undoClearFileBox()');
+function offerResumeUpload() {
+    $('#suspended-upload').dialog({
+        height: 220, width:550,
+        buttons: {
+            'okBTN': function () {
+                $(this).dialog('close');
+                recreateUpload();
+            },
+            'cancelBTN': function() {
+                $(this).dialog('close');
+            },
+            'deleteBTN': function() {
+                localStorage.removeItem('uploadData');
+                $(this).dialog('close');
+            }
+        }
+    });
+    addButtonText();
+
+    $('#suspended-upload').dialog('open');
 }
 
-function pauseUpload()
-{
-    terasender.pauseUpload();
-    $('.progress_bar').css('background-color', '#FF8800');
-    $('#progress_string').html('Pausing...');
-    vid = fileData[n].filevoucheruid;
-    pausedUpload = true;
-    $('#pauseBTN').button('disable');
+function recreateUpload() {
+    addEmailRecipientBox(localStorage.getItem('uploadRecipients'));
+    if (localStorage.getItem('uploadMessage')) {
+        $('#filemessage').val(localStorage.getItem('uploadMessage'));
+    }
+    if (localStorage.getItem('uploadSubject')) {
+        $('#filesubject').val(localStorage.getItem('uploadSubject'));
+    }
 
+    createGhostFiles();
 }
 
-function resumeUpload() {
-    $('#progress_string').html(percentComplete + '%');
-    startUpload();
-    $('.progress_bar').css('background-color', '#5c5');
-    resumeTime = new Date().getTime();
-    timeSpentPaused += resumeTime - pauseTime;
-}
+function createGhostFiles() {
+    var jsonData = JSON.parse(localStorage.getItem('uploadData'));
 
-function uploadPaused()
-{
-    $('#progress_string').html('Paused');
-    pauseTime = new Date().getTime();
-    $('#pauseBTN').button('enable');
+    for (var file in jsonData) {
+        n = n + 1;
+        fileData[n] = new Array(n);
+        fileData[n].filegroupid = jsonData[file]['filegroupid'];
+        fileData[n].filetrackingcode = jsonData[file]['filetrackingcode'];
+        fileData[n].fileSize = jsonData[file]['fileSize'];
+        fileData[n].bytesTotal = jsonData[file]['bytesTotal'];
+        fileData[n].bytesUploaded = jsonData[file]['bytesUploaded'];
+        fileData[n].previousBytesLoaded = jsonData[file]['previousBytesLoaded'];
+        fileData[n].intervalTimer = jsonData[file]['intervalTimer'];
+        fileData[n].currentlocation = jsonData[file]['currentlocation'];
+        fileData[n].filename = jsonData[file]['filename'];
+        fileData[n].name = jsonData[file]['name'];
+        fileData[n].filetype = jsonData[file]['filetype'];
+        fileData[n].valid = jsonData[file]['valid'];
+        fileData[n].status = 'ghost';
+
+        // Update total file lengths to cater for the new file
+        totalFileLengths += fileData[n].fileSize;
+        // Give each file its own file box + info
+        $('#filestoupload').append(generateFileBoxHtml());
+        updateBoxStats();
+
+    }
+
+    if (n > -1) {
+        $('#fileInfoView').show();
+        $('#clearallbtn').button('enable');
+        $('#draganddropmsg').hide();
+        $('#uploadbutton').show();
+        validateNumFiles();
+    }
 }

@@ -80,6 +80,8 @@
         $('#sendBTN').html('<?php echo lang("_SEND") ?>');
         $('#canceluploadBTN').html('<?php echo lang("_CANCEL") ?>');
         $('#okBTN').html('<?php echo lang("_OK") ?>');
+        $('#suspendBTN').html('<?php echo lang("_SUSPEND") ?>');
+        $('#deleteBTN').html('<?php echo lang("_DELETE") ?>');
 
 
         $('.ui-dialog-buttonpane button:contains(cancelBTN)').html('<?php echo lang("_CANCEL") ?>');
@@ -88,6 +90,7 @@
         $('.ui-dialog-buttonpane button:contains(pauseBTN)').html('<?php echo lang("_PAUSE") ?>');
         $('.ui-dialog-buttonpane button:contains(canceluploadBTN)').html('<?php echo lang("_CANCEL") ?>');
         $('.ui-dialog-buttonpane button:contains(okBTN)').html('<?php echo lang("_OK") ?>');
+        $('.ui-dialog-buttonpane button:contains(deleteBTN)').html('<?php echo lang("_DELETE") ?>');
     }
 
     function addEmailRecipientBox(emails) {
