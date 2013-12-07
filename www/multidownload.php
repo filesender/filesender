@@ -59,10 +59,10 @@ if (isset($_REQUEST["gid"])) {
 }
 
 // If only one file was selected, redirect to the single-file download page. The $_REQUEST array contains the gid followed by
-// the file voucher IDs and an "isformrequest" flag. Fetch the second key from the array to get the vid of the single file.
+// the file voucher IDs, an "isformrequest" flag and the receipt checkbox value. Fetch the second key from the array to get the vid of the single file.
 function redirectIfSingleDownload()
 {
-    if (count($_REQUEST) == 3) {
+    if (count($_REQUEST) <= 4) {
         next($_REQUEST);
         header('Location: download.php?vid=' . key($_REQUEST));
         exit;
