@@ -145,14 +145,23 @@ $(function() {
 	$( "a", ".menu" ).button();
 	
 	$("#dialog-help").dialog({ autoOpen: false, height: 400,width: 660, modal: true,
+    open: function () 
+    { 
+      $(this).scrollTop(0);
+    },
 		buttons: {
 			'helpBTN': function() {
 				$( this ).dialog( "close" );
 				}
 			}
+            
 		});
 		// token error dialog
-		$("#dialog-tokenerror").dialog({ autoOpen: false, height: 240,width: 350, modal: true,title: "",		
+		$("#dialog-tokenerror").dialog({ autoOpen: false, height: 240,width: 350, modal: true,title: "",
+         open: function () 
+         { 
+            $(this).scrollTop(0);
+         },		
 		buttons: {
 			'<?php echo lang("_OK") ?>': function() {
 				location.reload(true);
