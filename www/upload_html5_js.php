@@ -129,7 +129,7 @@
     function setButtonToClear()
     {
         var clearAll = $('#clearallbtn');
-        clearAll.find('.ui-button-text').html("Clear all");
+        clearAll.find('.ui-button-text').html('<?php echo lang("_CLEAR_ALL"); ?>');
         clearAll.attr('onclick', 'clearFileBox()');
     }
 
@@ -137,7 +137,7 @@
     {
         var clearAll = $('#clearallbtn');
         clearAll.button('enable');
-        clearAll.find('.ui-button-text').html('<?php echo lang("_CLEAR_ALL"); ?>');
+        clearAll.find('.ui-button-text').html('<?php echo lang("_UNDO_CLEAR"); ?>');
         clearAll.attr('onclick', 'undoClearFileBox()');
     }
 
