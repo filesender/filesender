@@ -36,7 +36,7 @@
  * 
  */
 
-
+$vid = "";
 // get file data
 if (isset($_REQUEST['vid'])) {
 $vid = $_REQUEST['vid'];
@@ -45,26 +45,78 @@ $filedata = $functions->getVoucherData($vid);
 ?>
 <script type="text/javascript">
 $(document).ready(function() { 
+vid = 
 $("#message").hide();
+$("#errmessage").hide();
 });
 function startDownload()
 {
-	$("#message").show();
+    // hide messages
+    $("#message").hide();
+    $("#errmessage").hide();
+    // check file exists and is available
+    $.ajax({
+	  type: "POST",
+	  url: "fs_upload.php?type=validdownload&vid=<?php echo $vid; ?>"
+	,success:function( data ) {
+	
+	var data =  parseJSON(data);
+	// display error messages
+	if(data.errors)
+		{
+		$.each(data.errors, function(i,result){
+		if(result == "err_download") { $("#errmessage").show();} //
+        if(result == "err_filesizeincorrect") { window.location.href="index.php?s=filesizeincorrect";} //	
+		})
+		} else {
+            if(data.download && data.download == "available"){
+            window.location.href="download.php?vid=<?php echo urlencode($filedata["filevoucheruid"]);?>";
+	        $("#message").show();
+            } else {
+               $("#errormessage").show(); 
+            }
+         }
+        }
+    })
 }
 </script>
+
 <div id='message'><?php echo lang("_STARTED_DOWNLOADING") ?></div>
-<div id="box">
-<?php echo '<div id="pageheading">'.lang("_DOWNLOAD").'</div>'; ?> 
+<div id='errmessage'><?php echo lang("_INVALID_VOUCHER") ?></div>
+<div id="box"> <?php echo '<div id="pageheading">'.lang("_DOWNLOAD").'</div>'; ?>
   <div id="tablediv">
-  <table width="100%">
-  <tr><td id="download_to"><?php echo lang("_TO"); ?>:</td><td id="to"><?php echo htmlentities($filedata["fileto"]);?></td></tr>
-  <tr><td id="download_from"><?php echo lang("_FROM"); ?>:</td><td id="from"><?php echo htmlentities($filedata["filefrom"]);?></td></tr>
-  <tr><td id="download_subject"><?php echo lang("_SUBJECT"); ?>:</td><td id="subject"><?php echo utf8tohtml($filedata["filesubject"],TRUE);?></td></tr>
-  <tr><td id="download_message"><?php echo lang("_MESSAGE"); ?>:</td><td id="filemessage"><?php echo nl2br(utf8tohtml($filedata["filemessage"],TRUE));?></td></tr>
-  <tr><td id="download_filename"><?php echo lang("_FILE_NAME"); ?>:</td><td id="filename"><?php echo utf8tohtml($filedata["fileoriginalname"],TRUE);?></td></tr>
-  <tr><td id="download_filesize"><?php echo lang("_FILE_SIZE"); ?>:</td><td id="filesize"><?php echo formatBytes($filedata["filesize"]);?></td></tr>
-  <tr><td id="download_expiry"><?php echo lang("_EXPIRY_DATE"); ?>:</td><td id="expiry"><?php echo date($lang['datedisplayformat'],strtotime($filedata["fileexpirydate"]));?></td></tr>
-  </table>
+    <table width="100%">
+      <tr>
+        <td id="download_to"><?php echo lang("_TO"); ?>:</td>
+        <td id="to"><?php echo htmlentities($filedata["fileto"]);?></td>
+      </tr>
+      <tr>
+        <td id="download_from"><?php echo lang("_FROM"); ?>:</td>
+        <td id="from"><?php echo htmlentities($filedata["filefrom"]);?></td>
+      </tr>
+      <tr>
+        <td id="download_subject"><?php echo lang("_SUBJECT"); ?>:</td>
+        <td id="subject"><?php echo utf8tohtml($filedata["filesubject"],TRUE);?></td>
+      </tr>
+      <tr>
+        <td id="download_message"><?php echo lang("_MESSAGE"); ?>:</td>
+        <td id="filemessage"><?php echo nl2br(utf8tohtml($filedata["filemessage"],TRUE));?></td>
+      </tr>
+      <tr>
+        <td id="download_filename"><?php echo lang("_FILE_NAME"); ?>:</td>
+        <td id="filename"><?php echo utf8tohtml($filedata["fileoriginalname"],TRUE);?></td>
+      </tr>
+      <tr>
+        <td id="download_filesize"><?php echo lang("_FILE_SIZE"); ?>:</td>
+        <td id="filesize"><?php echo formatBytes($filedata["filesize"]);?></td>
+      </tr>
+      <tr>
+        <td id="download_expiry"><?php echo lang("_EXPIRY_DATE"); ?>:</td>
+        <td id="expiry"><?php echo date($lang['datedisplayformat'],strtotime($filedata["fileexpirydate"]));?></td>
+      </tr>
+    </table>
   </div>
-  <div class="menu" id="downloadbutton" ><p><a id="download" href="download.php?vid=<?php echo urlencode($filedata["filevoucheruid"]);?>" onclick="startDownload()"><?php echo lang("_START_DOWNLOAD"); ?></a></p></div>
+  <div class="menu" id="downloadbutton" >
+    <p><a id="download" onclick="startDownload()"><?php echo lang("_START_DOWNLOAD"); ?></a></p>
+  </div>
 </div>
