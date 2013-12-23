@@ -158,7 +158,29 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 
 	switch ($_REQUEST["type"]) {
 			
-	
+	// check download is vaild before starting download
+    // Valid download is: file exists file is open
+    
+    case "validdownload":
+
+    // load the voucher
+    $fileArray =  $authvoucher->getVoucher();
+    $fileuid = $fileArray[0]['fileuid'];
+    $file=$config['site_filestore'].$fileuid.".tmp";
+    $filestatus = $fileArray[0]['filestatus'];
+    $resultArray["download"] = "";
+    
+    // check if file physically exists and is marked 'Available' before downloading
+    if(file_exists($file) && is_file($file) && $filestatus == 'Available')
+    {
+     $resultArray["download"] = "available";
+    } else {
+         array_push($errorArray,  "err_download");
+    }
+    if(sizeof($errorArray) > 0 ) { $resultArray["errors"] =  $errorArray; }
+   
+	echo json_encode($resultArray);
+    break;
 
 	// Finish an upload (called after a validateupload and single/chunk sequence)
 	case 'uploadcomplete': 
