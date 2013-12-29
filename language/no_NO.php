@@ -160,6 +160,10 @@ $lang["_MESSAGE_RESENT"] = "Epost med nedlastningslenken sendt på nytt";
 
 $lang["_NEW_RECIPIENT"] = "En mottaker til";
 
+$lang["_SHOW_ALL"] = "Vis/Gjem Detaljer";
+$lang["_DETAILS"] = "Detaljer";
+$lang["_DOWNLOADED"] = "Nedlastet";
+
 // Myfiles: delete file: tooltips, dialogue box and on-screen message 
 $lang["_DELETE_FILE"] = "Slett fil";
 $lang["_FILE_DELETED"] = "Fil slettet";
