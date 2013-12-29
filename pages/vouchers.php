@@ -74,7 +74,7 @@ $(function() {
 	showMonthAfterYear: <?php echo lang("_DP_showMonthAfterYear"); ?>,
 	yearSuffix: '<?php echo lang("_DP_yearSuffix"); ?>'});
 	
-	$("#dialog-delete").dialog({ autoOpen: false, height: 160, modal: true,
+	$("#dialog-delete").dialog({ autoOpen: false, height: 180, modal: true,
 	
 	buttons: {
 			'cancelBTN': function() {
