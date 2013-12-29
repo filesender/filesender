@@ -39,6 +39,8 @@ class Tsunami {
         if($startByte == null){
             if(!isset($_SERVER['HTTP_X_START_BYTE'])){
                 $this->sendReply('error', 'X-Start-Byte header not set');
+            }else if (filter_var($_SERVER['HTTP_X_START_BYTE'], FILTER_VALIDATE_INT, array("options"=> array("min_range"=>0))) === false) {
+                $this->sendReply('error', 'X-Start-Byte header not valid');
             }else{
                 $startByte = $_SERVER['HTTP_X_START_BYTE'];
             }
