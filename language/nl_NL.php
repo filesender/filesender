@@ -120,6 +120,11 @@ $lang["_SEND_VOUCHER_TO"] = "Stuur uitnodiging naar";
 $lang["_SEND_VOUCHER"] = "Stuur uitnodiging";
 $lang["_VOUCHER_USED"] = "Deze uitnodiging is reeds gebruikt.";
 
+// My Files
+$lang["_SHOW_ALL"] = "Toon/Verberg Details";
+$lang["_DETAILS"] = "Details";
+$lang["_DOWNLOADED"] = "Gedownload";
+
 // Upload pagina: button menu
 $lang["_UPLOAD"] = "Upload";
 $lang["_BROWSE"] = "Blader";
