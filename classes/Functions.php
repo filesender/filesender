@@ -986,6 +986,9 @@ class Functions {
 	
 			if(count($fileArray) > 0) 
 			{
+				$voucheremailsubject = (isset($config['voucherissuedemailsubject'])) ?  $config['voucherissuedemailsubject'] : "Voucher";
+				// overide if optional subject was added by user
+				$fileArray[0]["filesubject"] = ($fileArray[0]["filesubject"] != "")?$fileArray[0]["filesubject"]:$voucheremailsubject;
 				$this->sendmail->sendEmail($fileArray[0],$config['defaultvouchercancelled']);	
 				$this->saveLog->saveLog($fileArray[0],"Voucher Cancelled","");
 				return true;
