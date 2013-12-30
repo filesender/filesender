@@ -46,7 +46,7 @@ filesender (1.6~beta1) unstable; urgency=medium
      - Fix declarations for fileexpirydate and logdate in mysql init script (#932)
      - Fixed use of single quote in filename with Flash uploads (#895)
 
- -- Filesender Development <filesender-dev@filesender.org>  Mon, 30 Dec 2013 20:24:49 +0100
+ -- Filesender Development <filesender-dev@filesender.org>  Mon, 30 Dec 2013 20:38:58 +0100
 
 filesender (1.5) stable; urgency=medium
    * Release 1.5
