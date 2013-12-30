@@ -8,7 +8,7 @@
 %define fsprerel -%{prerel}
 %endif
 Name:           filesender
-Version:        1.5
+Version:        1.6
 Release:        1%{?dist}
 Summary:        Sharing large files with a browser
 
