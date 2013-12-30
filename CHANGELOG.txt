@@ -1,14 +1,17 @@
-Last update: 07 July 2013
+Last update: 30 December 2013
 
-Version 1.6-development <???>
+Version 1.6-beta1 <31 December 2013>
 
    * Major changes since 1.5
-     - Add TeraSender code (#885, #899)
+     - Add TeraSender code (#885, #899, #1064)
        - Allows for faster HTML5 uploads
        - Upgrade note: new configuration options
+       - Default not enabled, enable in config.php
      - New layout of My Files page (#597)
        - add number of downloads
-     - Add optional personal message to guest vouchers (#637)
+       - expandable per file details view
+       - removed 'me' substition
+     - Add optional personal message and subject to guest vouchers (#637,#963)
        - Upgrade note: change in configuration mail template
      - Recipient address autocomplete based on previous recipients (#821)
        - Upgrade note: new configuration options
@@ -16,7 +19,8 @@ Version 1.6-development <???>
        Modified patch from Thijs Kinkhorst
 
    * Changes since 1.5
-     - Voucher Subject configurable (#774)
+     - Upgrade of JQuery and JQueryUI to 1.10.2 (#819)
+     - Default Voucher Subject configurable (#774)
        Patch contributed by Thijs Kinkhorst
      - Add a customisable footer through the language definitions (#871)
        Modified patch from Jean-Philippe Evrard, BELNET
@@ -28,8 +32,11 @@ Version 1.6-development <???>
        - redo logic for mail sending and logging
        - added partial download (HTTP range) functionality (not used yet)
        - some cleanup
+     - Add option to suppress carbon copy of download confirmation mail
+       to downloader (#985)
      - Add sqlite init-script and 'how to' (#898)
        Patch contributed by Dick Visser
+     - Minor layout changes (#965,#966)
 
    * Fixes since 1.5
      - Optimise PDO Query row count statements (#888)
@@ -40,6 +47,7 @@ Version 1.6-development <???>
        Bug noticed by Dick Visser
      - Replace $_REQUEST['PHPSESSID'] with session_id() (#897)
      - Fix declarations for fileexpirydate and logdate in mysql init script (#932)
+     - Fixed use of single quote in filename with Flash uploads (#895)
 
 Version 1.5 <3 March 2013>
 
