@@ -32,7 +32,7 @@
 
 class FileSender_Version
 {
-	const VERSION = '1.6-qtest';
+	const VERSION = '1.6-beta1';
 
 	//-------------------------------------------------------
 	// Compare the specified version with the current version.
