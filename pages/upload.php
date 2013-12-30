@@ -190,7 +190,7 @@
 		 closeOnEscape: false,
 		    open: function() {
           //Hide closing "X" for this dialog only.
-          $(this).parent().children().children("a.ui-dialog-titlebar-close").remove();
+          $(this).parent().children().children(".ui-dialog-titlebar-close").remove();
     	},
 		autoOpen: false, height: 180,width: 400, modal: true,title: "<?php echo lang("_UPLOAD_PROGRESS") ?>:",		
 		buttons: {
