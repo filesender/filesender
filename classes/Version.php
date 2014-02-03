@@ -32,7 +32,7 @@
 
 class FileSender_Version
 {
-    const VERSION = '1.6-multiupload-3';
+    const VERSION = '2.0-alpha';
 
     // --------------------------------
     // Compare the specified version with the current version.
