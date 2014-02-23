@@ -611,6 +611,7 @@ window.addEventListener('keydown', function(e) {(e.keyCode == 27 && e.preventDef
 } else if (window.attachEvent){
 window.attachEvent('onkeydown', function(e) {(e.keyCode == 27 && e.preventDefault())})
 } 
+//]]>
     </script>
 
 <div id="box"> <?php echo '<div id="pageheading">'.lang("_UPLOAD").'</div>'; ?>
