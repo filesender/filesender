@@ -125,6 +125,7 @@ if($isAuth )
     <link rel="icon" href="displayimage.php?type=favicon" type="image/x-icon" />
     <link rel="shortcut icon" href="displayimage.php?type=favicon" type="image/x-icon" />
     <link type="text/css" href="css/smoothness/jquery-ui-1.10.2.custom.min.css" rel="Stylesheet" />
+    <link href="css/font-awesome.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="css/default.css?<?php echo FileSender_Version::VERSION; ?>" />
     <script type="text/javascript" src="js/json2.js" ></script>
     <script type="text/javascript" src="js/common.js" ></script>
