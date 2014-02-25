@@ -105,6 +105,26 @@ function ensureSaneOpenSSLKey($key)
     return ctype_alnum($key) && strlen($key) == $config['openSSLKeyLength'] * 2;
 }
 
+ //--------------------------------------- 
+    //  Return custom css in /config if it exists
+    //  Returns String 
+    //  Ricoshae 07 May 2013
+	// ---------------------------------------
+  function customcss() 
+    {
+        global $config,$filesenderBase;
+   
+        $cssstring = "";
+        if(isset($config["customCSS"]) && !empty($config["customCSS"]) && file_exists($filesenderBase."/config/".$config["customCSS"]))
+        {
+            $css = file_get_contents($filesenderBase."/config/".$config["customCSS"]);
+            $cssstring .=  '<style type="text/css">';
+            $cssstring .= htmlspecialchars($css);
+            $cssstring .= '</style>';
+        }
+          return $cssstring;
+    }
+    
 class Functions
 {
     private static $instance = null;

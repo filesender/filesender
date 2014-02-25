@@ -59,6 +59,8 @@ public function loadConfig() {
 	$config['site_name'] = 'FileSender'; // Friendly name used for your FileSender instance
 	$config['noreply'] = 'noreply@filesender.org'; // default no-reply email address 
 
+    $config["customCSS"] = "";
+
 	// UI Settings
 	$config['datedisplayformat'] = "d-m-Y"; // Format for displaying date/time, use PHP date() format string syntax
 	$config["versionNumber"] = true; // Show version number (true/false)
