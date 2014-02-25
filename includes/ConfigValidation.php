@@ -53,6 +53,7 @@ $requiredConfigFields = array(
     'site_defaultlanguage',
     'site_name',
     'noreply',
+    'customCSS',
 
     // UI
     'datedisplayformat',
