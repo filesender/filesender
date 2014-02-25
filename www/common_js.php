@@ -109,7 +109,7 @@
             if (currentContents.indexOf(email) == -1) {
                 var boxString = '<span id="email_' + recipientID + '" class="email_box" >' +
                     '<span class="emailEntry" title="'+email+'">' + firstPartOfEmail + '</span>' +
-                    '<span id="email_delete_'+recipientID+'" class="removeEmail" title="Click here to delete this recipient" onclick="removeEmailIDFromBox('+recipientID+')">&nbsp;</span>' +
+                    '<i id="email_delete_'+recipientID+'" class="fa fa-minus-circle fa-lg fa-align-right" style="padding-left:4px;color:#ff0000;cursor:pointer;" title="Click here to delete this recipient" onclick="removeEmailIDFromBox('+recipientID+')">&nbsp;</i>' +
                 '</span>';
 
                 recipientsBox.append(boxString);

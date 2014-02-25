@@ -302,23 +302,24 @@ function postVoucher()
                 echo '<td class="dr2 HardBreak ' . $altColor . '" style="text-align: center; vertical-align: middle">';
 
                 if($item['filesubject'] != "") {
-                    echo '<img src="images/page_white_text_width.png" border="0" alt="" style="display:block; margin:auto" title="' . utf8ToHtml($item['filesubject'], TRUE). '" />';
+                    echo '<i class="fa fa-file-text-o fa-lg" border="0" alt="" style="cursor:pointer;display:block; margin:auto" title="' . utf8ToHtml($item['filesubject'], TRUE). '"></i>';
                 }
 
                 echo '</td><td class="dr2 HardBreak ' . $altColor . '" style="text-align: center; vertical-align: middle">';
 
                 if($item['filemessage'] != "") {
-                    echo "<img src='images/page_white_text_width.png' border='0' alt='' style='display:block; margin:auto' title='".utf8ToHtml($item['filemessage'],TRUE). "' /></td>";
+                    echo '<i class="fa fa-file-text-o fa-lg" border="0" alt="" style="cursor:pointer;display:block; margin:auto" title="' . utf8ToHtml($item['filemessage'], TRUE). '"></i>'; 
                 }
 
                 echo '<td class="dr2 HardBreak ' . $altColor . '" style="vertical-align: middle">' .date(lang('datedisplayformat'),strtotime($item['filecreateddate'])) . '</td>';
                 echo '<td class="dr2 HardBreak ' . $altColor . '" style="vertical-align: middle">' .date(lang('datedisplayformat'),strtotime($item['fileexpirydate'])) . '</td>';
                 echo "<td class='dr8 " . $altColor . "' style='text-align: center; vertical-align: middle'>
                         <div style='cursor:pointer;'>
-                            <img id='btn_deletevoucher_".$i."'
-                                src='images/shape_square_delete.png' alt='' title='".lang("_DELETE")."'
-                                onclick='confirmdelete(".'"' .$item['filevoucheruid'] . '"'. ")' style='border: 0;'
-                            />
+                            
+                            <i id='btn_deletevoucher_".$i."' class='fa fa-minus-circle fa-lg'
+                               alt='' title='".lang("_DELETE")."'
+                                onclick='confirmdelete(".'"' .$item['filevoucheruid'] . '"'. ")' style='color:#ff0000;cursor:pointer;border: 0;'
+                            ></i>
                         </div>
                     </td>
                 </tr>"; //etc

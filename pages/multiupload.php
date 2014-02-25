@@ -155,7 +155,7 @@ $(function () {
                     </a>
                 </div>
                 <div style="display: table-cell; text-align:center; width: 34%">
-                    <a href="#" onclick="browse()" style="cursor:pointer;width:50%" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false" draggable="false">
+                    <a href="#" onclick="browse()" style="cursor:pointer;width:50%" class="btn btn-default btn-sm"  aria-disabled="false" draggable="false">
                         <?php echo lang('_SELECT_FILES'); ?>
                     </a>
                 </div>
@@ -380,7 +380,7 @@ $(function () {
             </div>
         <?php } ?>
             <div class="menu mainButton" id="uploadbutton" style="padding-top: 10px;">
-                <a href="#" onclick="validate()"><?php echo lang('_SEND'); ?></a>
+             <a href="#" onclick="validate()" class="btn btn-default btn-sm">   <i class="fa fa-cloud-upload fa-lg"></i> <?php echo lang('_SEND'); ?></a>
             </div>
     </div>
 </form>

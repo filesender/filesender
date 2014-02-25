@@ -243,7 +243,7 @@ function generateFileBoxHtml()
     return '<div id="file_' + n + '" class="fileBox valid ' + fileData[n].valid + ' ' +  errorclass + ' ' + ghostFile + '">' +
         '<span class="filebox_string" title="' + file_info + '">' + validfile + ' ' + file_info + '</span>' +
         '<span class="delbtn" id="file_del_' + n + '" onclick="removeItem(' + n + ');">' +
-        '<img src="images/delete.png" width="16" height="16" border="0" align="absmiddle" style="cursor:pointer"/>' +
+        '<i class="fa fa-minus-circle fa-lg" style="cursor:pointer;color:#ff0000;"></i>' +
         '</span>' +
         '<div class="progress_bar" id="progress_bar-' + n + '"></div>' +
         '</div>';

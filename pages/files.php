@@ -288,7 +288,7 @@ function expandRecipients(i, j) {
                 toggleDisplayRow(i + "_" + num + "_recipients");
             }
         }
-        $('#showicon_' + i + '_recipients').attr({src: 'images/openboth2.png', alt: ''});
+        $('#showicon_' + i + '_recipients').attr({class: 'fa fa-minus-circle fa-lg', alt: ''});
         showAllRecipients = true;
     } else {
         for (num; num < j; num++) {
@@ -297,7 +297,7 @@ function expandRecipients(i, j) {
                 toggleDisplayRow(i + "_" + num + "_recipients");
             }
         }
-        $('#showicon_' + i + '_recipients').attr({src: 'images/openboth.png', alt: ''});
+        $('#showicon_' + i + '_recipients').attr({class: 'fa fa-plus-circle fa-lg', alt: ''});
         showAllRecipients = false;
     }
 }
@@ -311,8 +311,9 @@ function expandTopMenu(numRows) {
             toggleDisplayRow(row);
         }
 
-        var imageSrc = showall ? 'images/openboth2.png' : 'images/openboth.png';
-        $('#showicon_top').attr({src: imageSrc, alt: ''});
+        var imageSrc = showall ? 'fa fa-minus-circle fa-lg' : 'fa fa-plus-circle fa-lg';
+        
+        $('#showicon_top').attr({class: imageSrc, alt: ''});
     }
 }
 
@@ -322,9 +323,9 @@ function toggleDisplayRow(i) {
     var $icon = $("#showicon_" + i);
 
     if (show.is(':visible')) {
-        $icon.attr({src: "images/openboth2.png", alt: ""});
+        $icon.attr({class: "fa fa-minus-circle fa-lg", alt: ""});
     } else {
-        $icon.attr({src: "images/openboth.png", alt: ""});
+        $icon.attr({class: "fa fa-plus-circle fa-lg", alt: ""});
     }
 }
 //]]>
@@ -335,7 +336,7 @@ function toggleDisplayRow(i) {
 <div id="tablediv">
 <table id="myfiles" style="table-layout:fixed; width: 100%; padding: 4px; border-spacing: 0; border: 0">
 <tr class="headerrow">
-    <td class="tblmcw1" onclick="expandTopMenu(<?php echo sizeof($transactions); ?>)" title="<?php echo lang("_SHOW_ALL"); ?>" style="vertical-align: middle; cursor:pointer"><img class="expct" id="showicon_top" src="images/openboth.png" alt=""/></td>
+    <td class="tblmcw1" onclick="expandTopMenu(<?php echo sizeof($transactions); ?>)" title="<?php echo lang("_SHOW_ALL"); ?>" style="vertical-align: middle; cursor:pointer"> <i id="showicon_top" class="fa fa-plus-circle fa-lg"></i></td>
     <td class="HardBreak" colspan="4" style="width: 35%; vertical-align: middle; text-align: center" id="myfiles_header_to"><strong><?php echo lang("_TO"); ?></strong></td>
     <td class="HardBreak tblmcw3" style="vertical-align: middle; text-align: center" id="myfiles_header_size"><strong><?php echo lang("_TOTAL_SIZE") ?></strong></td>
     <td class="HardBreak tblmcw3" id="myfiles_header_downloaded" style="vertical-align: middle; text-align: center"><strong><?php echo lang("_DOWNLOADS"); ?></strong></td>
@@ -406,10 +407,8 @@ if(sizeof($transactions) > 0)
 
                   <tr ' . $rowClass . '>
                     <td  class="dr1 expct" onclick="toggleDisplayRow(' . $i . ')">
-                      <img class="expct" id="showicon_'.$i.'"  style="cursor:pointer"
-                            title="'. lang("_SHOW_ALL").'" src="images/openboth.png" alt=""/>
+                   <i id="showicon_'.$i.'" style="cursor:pointer;" class="fa fa-plus-circle fa-lg" title="'. lang("_SHOW_ALL").'"></i>
                     </td>
-
                     <td colspan="4" class="dr2 HardBreak" title="' . $recipientsString . '">' . $fileToString . '</td>
                     <td class="dr2 HardBreak" style="text-align: center">' . formatBytes($totalSize) . '</td>
                     <td class="dr2 HardBreak" style="text-align: center">' . $totalNumDownloads . '</td>
@@ -418,9 +417,7 @@ if(sizeof($transactions) > 0)
                     </td>
                     <td class="dr2" style="text-align: center">' . utf8ToHtml($transactionContents[0]['filetrackingcode'], true) . '</td>
                     <td class="dr8">
-                        <img src="images/shape_square_delete.png" alt="" title="'. lang("_DELETE_TRANSACTION") . '"
-                            style="cursor:pointer;"  onclick="confirmDeleteTransaction(&quot;'.$transactionContents[0]['filetrackingcode'].'&quot;,&quot;'.$item['fileauthuseruid'].'&quot;)"
-                        />
+                      <i style="cursor:pointer; color: #ff0000;" title="'. lang("_DELETE_TRANSACTION") . '" onclick="confirmDeleteTransaction(&quot;'.$transactionContents[0]['filetrackingcode'].'&quot;,&quot;'.$item['fileauthuseruid'].'&quot;)" style="cursor:pointer;" class="fa fa-minus-circle fa-lg" title="'. lang("_SHOW_ALL").'"></i>
                     </td>
                   </tr>
                   <tr class="hidden" style="display:none" id="show_'.$i.'">
@@ -536,7 +533,9 @@ if(sizeof($transactions) > 0)
                     <tr>
                         <td class="dr4 tblmcw1" onclick="expandRecipients(&quot;' . $i . '&quot;,&quot;' . sizeOf($recipientEmails) . '&quot;)"
                             style="cursor:pointer; width:5%;">
-                            <img class="expct" id="showicon_' . $i . '_recipients" src="images/openboth.png" alt="" draggable="false" />
+                             <i id="showicon_' . $i . '_recipients" style="cursor:pointer;" class="fa fa-plus-circle fa-lg"></i>
+                      
+                   
                         </td>
                         <td class="HardBreak" style="text-align: left; width:61%;" ><strong>' . lang('_EMAIL') . '</strong></td>
                         <td class="HardBreak tblmcw3" style="text-align: center; width:24%"><strong>' . lang('_DOWNLOADS') . '</strong></td>
@@ -551,20 +550,20 @@ if(sizeof($transactions) > 0)
                 $id = $i . '_' . $rowCount . '_recipients';
 
                 echo '<td  class="dr4 expct" style="width: 5%;" onclick="toggleDisplayRow(&quot;' . $id . '&quot;)">
-                        <img class="expct" id="showicon_'. $id . '" style="cursor:pointer" src="images/openboth.png" alt=""/>
+                         <i id="showicon_'. $id . '" style="cursor:pointer;" class="fa fa-plus-circle fa-lg"></i>
+                      
+                
                       </td>
 
                       <td class="HardBreak" style="text-align: left;">' . $rec . '</td>
                       <td class="HardBreak" style="text-align: center;">' . $rowData['downloads'] . '</td>
 
                       <td class="tblmcw1" style="cursor:pointer; width:5%;">
-                        <img src="images/email_go.png" alt="" title="' . lang("_RE_SEND_EMAIL") . '"
-                                style="cursor:pointer;" onclick="confirmResend(&quot;' . $rowData['gid'] . '&quot;)" />
+                      <i onclick="confirmResend(&quot;' . $rowData['gid'] . '&quot;)"  style="cursor:pointer;" class="fa fa-mail-forward fa-lg" alt="" title="' . lang("_RE_SEND_EMAIL") . '"></i>
                       </td>
 
                       <td class="tblmcw1 dr6" style="cursor:pointer; width:5%;">
-                        <img src="images/shape_square_delete.png" alt="" title="'. lang("_DELETE_RECIPIENT"). '"
-                                style="cursor:pointer;" onclick="confirmDeleteRecipient(&quot;' . $rowData['gid'] . '&quot;)" />
+                      <i style="cursor:pointer; color: #ff0000;" title="'. lang("_DELETE_TRANSACTION") . '" onclick="confirmDeleteRecipient(&quot;' . $rowData['gid'] . '&quot;)" style="cursor:pointer;" class="fa fa-minus-circle fa-lg" title="'. lang("_DELETE_RECIPIENT").'"></i>
                       </td>
                     </tr>';
 
