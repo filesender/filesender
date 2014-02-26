@@ -98,6 +98,7 @@ if(file_exists($file) && is_file($file) && $filestatus == 'Available')
 
 		header('HTTP/1.1 206 Partial Content');
 		header('Content-Range: bytes ' . $offset . '-' . ($offset + $length) . '/' . $filesize);
+		logEntry('Content-Range: bytes ' . $offset . '-' . ($offset + $length) . '/' . $filesize, "E_NOTICE");
 
 	} else {
 		$partialContent = false;
@@ -126,6 +127,7 @@ if(file_exists($file) && is_file($file) && $filestatus == 'Available')
 			$downloadComplete=true;
 		}
 	} else {
+	        logEntry("Full download requested for ".$filesize." bytes.","E_NOTICE");
 		header('Content-Length: '.$filesize);
 		$sentBytes=readfile_chunked($file);
 		logEntry('Full download sent '.$sentBytes.' bytes.',"E_NOTICE");
