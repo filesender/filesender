@@ -118,9 +118,9 @@ if(file_exists($file) && is_file($file) && $filestatus == 'Available')
 	logEntry("Download: Start Downloading - ".$file,"E_NOTICE");
 	if($partialContent) {
 		// use range reading
-		$sentBytes=readfile_range($file, $offset, $length);
 		logEntry('Partial download requested HTTP_RANGE: ' . $_SERVER['HTTP_RANGE'],"E_NOTICE");
 		logEntry('Partial download header Content-Range: bytes ' . $offset . '-' . ($offset + $length) . '/' . $filesize,"E_NOTICE");
+		$sentBytes=readfile_range($file, $offset, $length);
 		logEntry('Partial download sent '.$sentBytes.' bytes.',"E_NOTICE");
 		if ($offset + $sentBytes == $filesize){
 			// Last part downloaded so assume completed
