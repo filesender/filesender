@@ -160,8 +160,11 @@ if(file_exists($file) && is_file($file) && $filestatus == 'Available')
 } // End authenticated clause
 
 // function reads chunks for range download
+// To prevent memory exhaustion with large ranges the requested range
+// should be read and buffered in smaller chunks.
 function readfile_range($filename, $offset, $length, $retbytes=true) {
 	ob_start();
+	$chunksize = min($length+1,1*(1024*1024)); // how many bytes per chunk
 	$buffer = '';
 	$cnt =0;
 	$handle = fopen($filename, 'rb'); // open the file
@@ -171,14 +174,18 @@ function readfile_range($filename, $offset, $length, $retbytes=true) {
 
 	fseek($handle, $offset);
 
-	$buffer = fread($handle, $length+1);
-	if ($retbytes) {
-		$cnt = strlen($buffer);
-		header('Content-Length: '.$cnt);
+	header('Content-Length: '.$length+1);
+
+	while (!feof($handle) && $chunksize > 0 ) {
+		$buffer = fread($handle, $chunksize);
+		echo $buffer;
+		ob_flush();
+		flush();
+		$cnt += strlen($buffer);
+		if ($length + 1 - $cnt < $chunksize) {
+			$chunksize = $length + 1 - $cnt ;
+		}
 	}
-	echo $buffer;
-	ob_flush();
-	flush();
 
 	$status = fclose($handle);
 
