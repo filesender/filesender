@@ -93,8 +93,14 @@ if(file_exists($file) && is_file($file) && $filestatus == 'Available')
 		// multiple ranges, which can become pretty complex, so ignore it for now
 		preg_match('/bytes=(\d+)-(\d+)?/', $_SERVER['HTTP_RANGE'], $matches);
 
-		$offset = intval($matches[1]);
-		$length = intval($matches[2]) - $offset;
+		if(isset($matches[1])) {
+			$offset = intval($matches[1]);
+		}
+		if(isset($matches[2])) {
+			$length = intval($matches[2]) - $offset;
+		} else {
+			$length = $filesize - $offset - 1;
+		}
 
 		header('HTTP/1.1 206 Partial Content');
 		header('Content-Range: bytes ' . $offset . '-' . ($offset + $length) . '/' . $filesize);
