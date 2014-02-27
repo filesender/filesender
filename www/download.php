@@ -180,7 +180,7 @@ function readfile_range($filename, $offset, $length, $retbytes=true) {
 
 	fseek($handle, $offset);
 
-	header('Content-Length: '.$length+1);
+	header('Content-Length: '.($length+1));
 
 	while (!feof($handle) && $chunksize > 0 ) {
 		$buffer = fread($handle, $chunksize);
