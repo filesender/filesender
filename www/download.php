@@ -101,13 +101,11 @@ if(file_exists($file) && is_file($file) && $filestatus == 'Available')
 		} else {
 			$length = $filesize - $offset - 1;
 		}
-
-		header('HTTP/1.1 206 Partial Content');
-		header('Content-Range: bytes ' . $offset . '-' . ($offset + $length) . '/' . $filesize);
-		logEntry('Content-Range: bytes ' . $offset . '-' . ($offset + $length) . '/' . $filesize, "E_NOTICE");
+		logEntry('Partial download requested HTTP_RANGE: ' . $_SERVER['HTTP_RANGE'],"E_NOTICE");
 
 	} else {
 		$partialContent = false;
+	        logEntry("Full download requested for ".$filesize." bytes.","E_NOTICE");
 	}
 
 	// set download file headers
@@ -123,9 +121,13 @@ if(file_exists($file) && is_file($file) && $filestatus == 'Available')
 
 	logEntry("Download: Start Downloading - ".$file,"E_NOTICE");
 	if($partialContent) {
-		// use range reading
-		logEntry('Partial download requested HTTP_RANGE: ' . $_SERVER['HTTP_RANGE'],"E_NOTICE");
+		header('HTTP/1.1 206 Partial Content');
+		header('Content-Range: bytes ' . $offset . '-' . ($offset + $length) . '/' . $filesize);
 		logEntry('Partial download header Content-Range: bytes ' . $offset . '-' . ($offset + $length) . '/' . $filesize,"E_NOTICE");
+		header('Content-Length: '.($length+1));
+		logEntry('Partial download header Content-Length: ' . ($length+1),"E_NOTICE");
+
+		// use range reading
 		$sentBytes=readfile_range($file, $offset, $length);
 		logEntry('Partial download sent '.$sentBytes.' bytes.',"E_NOTICE");
 		if ($offset + $sentBytes == $filesize){
@@ -133,7 +135,6 @@ if(file_exists($file) && is_file($file) && $filestatus == 'Available')
 			$downloadComplete=true;
 		}
 	} else {
-	        logEntry("Full download requested for ".$filesize." bytes.","E_NOTICE");
 		header('Content-Length: '.$filesize);
 		$sentBytes=readfile_chunked($file);
 		logEntry('Full download sent '.$sentBytes.' bytes.',"E_NOTICE");
@@ -179,8 +180,6 @@ function readfile_range($filename, $offset, $length, $retbytes=true) {
 	}
 
 	fseek($handle, $offset);
-
-	header('Content-Length: '.($length+1));
 
 	while (!feof($handle) && $chunksize > 0 ) {
 		$buffer = fread($handle, $chunksize);
