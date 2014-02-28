@@ -93,14 +93,19 @@ if(file_exists($file) && is_file($file) && $filestatus == 'Available')
 		// multiple ranges, which can become pretty complex, so ignore it for now
 		preg_match('/bytes=(\d+)-(\d+)?/', $_SERVER['HTTP_RANGE'], $matches);
 
-		$offset = intval($matches[1]);
-		$length = intval($matches[2]) - $offset;
-
-		header('HTTP/1.1 206 Partial Content');
-		header('Content-Range: bytes ' . $offset . '-' . ($offset + $length) . '/' . $filesize);
+		if(isset($matches[1])) {
+			$offset = intval($matches[1]);
+		}
+		if(isset($matches[2])) {
+			$length = intval($matches[2]) - $offset;
+		} else {
+			$length = $filesize - $offset - 1;
+		}
+		logEntry('Partial download requested HTTP_RANGE: ' . $_SERVER['HTTP_RANGE'],"E_NOTICE");
 
 	} else {
 		$partialContent = false;
+	        logEntry("Full download requested for ".$filesize." bytes.","E_NOTICE");
 	}
 
 	// set download file headers
@@ -116,10 +121,14 @@ if(file_exists($file) && is_file($file) && $filestatus == 'Available')
 
 	logEntry("Download: Start Downloading - ".$file,"E_NOTICE");
 	if($partialContent) {
+		header('HTTP/1.1 206 Partial Content');
+		header('Content-Range: bytes ' . $offset . '-' . ($offset + $length) . '/' . $filesize);
+		logEntry('Partial download header Content-Range: bytes ' . $offset . '-' . ($offset + $length) . '/' . $filesize,"E_NOTICE");
+		header('Content-Length: '.($length+1));
+		logEntry('Partial download header Content-Length: ' . ($length+1),"E_NOTICE");
+
 		// use range reading
 		$sentBytes=readfile_range($file, $offset, $length);
-		logEntry('Partial download requested HTTP_RANGE: ' . $_SERVER['HTTP_RANGE'],"E_NOTICE");
-		logEntry('Partial download header Content-Range: bytes ' . $offset . '-' . ($offset + $length) . '/' . $filesize,"E_NOTICE");
 		logEntry('Partial download sent '.$sentBytes.' bytes.',"E_NOTICE");
 		if ($offset + $sentBytes == $filesize){
 			// Last part downloaded so assume completed
@@ -158,8 +167,11 @@ if(file_exists($file) && is_file($file) && $filestatus == 'Available')
 } // End authenticated clause
 
 // function reads chunks for range download
+// To prevent memory exhaustion with large ranges the requested range
+// should be read and buffered in smaller chunks.
 function readfile_range($filename, $offset, $length, $retbytes=true) {
 	ob_start();
+	$chunksize = min($length+1,1*(1024*1024)); // how many bytes per chunk
 	$buffer = '';
 	$cnt =0;
 	$handle = fopen($filename, 'rb'); // open the file
@@ -169,14 +181,16 @@ function readfile_range($filename, $offset, $length, $retbytes=true) {
 
 	fseek($handle, $offset);
 
-	$buffer = fread($handle, $length+1);
-	if ($retbytes) {
-		$cnt = strlen($buffer);
-		header('Content-Length: '.$cnt);
+	while (!feof($handle) && $chunksize > 0 ) {
+		$buffer = fread($handle, $chunksize);
+		echo $buffer;
+		ob_flush();
+		flush();
+		$cnt += strlen($buffer);
+		if ($length + 1 - $cnt < $chunksize) {
+			$chunksize = $length + 1 - $cnt ;
+		}
 	}
-	echo $buffer;
-	ob_flush();
-	flush();
 
 	$status = fclose($handle);
 
