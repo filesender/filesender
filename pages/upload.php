@@ -117,7 +117,7 @@
 	var nameLang = '<?php echo lang("_FILE_NAME"); ?>'
 	var sizeLang = '<?php echo lang("_SIZE"); ?>'
 	
-	var vid='<?php if(isset($_REQUEST["vid"])){echo htmlspecialchars($_REQUEST["vid"]);}; ?>';
+	var vid='<?php if(isset($_REQUEST["vid"])){echo htmlspecialchars($_REQUEST["vid"],ENT_QUOTES);}; ?>';
 
  	// start document ready 
 	$(function() { 

@@ -42,7 +42,7 @@
 session_cache_limiter('nocache'); 
 // use token if available for SIMPLESAML 1.7 or set session if earlier version of SIMPLESAML
 if (isset($_POST['token']) && $_POST['token'] != "") {
-	$_COOKIE['SimpleSAMLAuthToken'] = htmlspecialchars($_POST['token']);
+	$_COOKIE['SimpleSAMLAuthToken'] = htmlspecialchars($_POST['token'],ENT_QUOTES);
 }	
 
 	// flash upoload creates a new session id https so we need to make sure we are using the same session  

@@ -212,8 +212,8 @@ $lang["_TERA_WORKER_COUNT"] = "Worker count";
 $lang["_TERA_JOBS_PER_WORKER"] = "Jobs per workers";
 
 // Login Splash text
-$lang["_SITE_SPLASHHEAD"] = "Welcome to ". htmlspecialchars($config['site_name']);
-$lang["_SITE_SPLASHTEXT"] = htmlspecialchars($config['site_name']) ." is a secure way to share large files with anyone! Logon to upload your files or invite people to send you a file.";
+$lang["_SITE_SPLASHHEAD"] = "Welcome to ". htmlspecialchars($config['site_name'],ENT_QUOTES);
+$lang["_SITE_SPLASHTEXT"] = htmlspecialchars($config['site_name'],ENT_QUOTES) ." is a secure way to share large files with anyone! Logon to upload your files or invite people to send you a file.";
 
 // Footer to display
 $lang["_SITE_FOOTER"] = ""; 
@@ -232,7 +232,7 @@ $lang["_HELP_TEXT"] = '
         <li>You\'ll be able to use this method if this sign is displayed: <img src="images/html5_installed.png" alt="green HTML5 tick" class="textmiddle" style="display:inline" /></li>
 	<li>To get the <img src="images/html5_installed.png" alt="green HTML5 tick" class="textmiddle" style="display:inline" /> sign, simply use an up to date browser that supports HTML5, the latest version of the "language of the web".</li>
 	<li>Up to date versions of Firefox and Chrome on Windows, Mac OS X and Linux are known to work.</li>
-	<li>You can <b><i>resume</i></b> an interrupted or cancelled upload.  To resume an upload, simply send the exact same file again!  Make sure the file has the same name as before and <i>'. htmlspecialchars($config['site_name']) .'</i> will recognise it.  When your upload starts, you should notice the progress bar jump to where the upload was halted, and continue from there.<br /><br />
+	<li>You can <b><i>resume</i></b> an interrupted or cancelled upload.  To resume an upload, simply send the exact same file again!  Make sure the file has the same name as before and <i>'. htmlspecialchars($config['site_name'],ENT_QUOTES) .'</i> will recognise it.  When your upload starts, you should notice the progress bar jump to where the upload was halted, and continue from there.<br /><br />
 If you <b><i>modified the file</i></b> between the first and second attempt, please rename the file first.  This ensures a new, fresh upload is started and all your changes are properly transferred.</li>
 </ul>
 
@@ -245,7 +245,7 @@ If you <b><i>modified the file</i></b> between the first and second attempt, ple
 <ul>
 	<li>If you can watch YouTube videos this method should work for you</li>
 	<li>You need a modern browser with version 10 (or higher) of the <a target="_blank" href="http://www.adobe.com/software/flash/about/">Adobe Flash</a> plugin.</li>
-	<li>Using Adobe Flash you can upload file sizes of up to 2 Gigabytes (2GB).  <i>'. htmlspecialchars($config['site_name']) .'</i> will warn you should you try to upload a file that is too big for this method</li>
+	<li>Using Adobe Flash you can upload file sizes of up to 2 Gigabytes (2GB).  <i>'. htmlspecialchars($config['site_name'],ENT_QUOTES) .'</i> will warn you should you try to upload a file that is too big for this method</li>
 	<li>Resuming uploads is not supported with this method</li>
 </ul>
 
@@ -263,7 +263,7 @@ If you <b><i>modified the file</i></b> between the first and second attempt, ple
 
 <h4>Technical details</h4>
 <ul>
-	<li><i>'. htmlspecialchars($config['site_name']) .'</i> uses the <a href="http://www.filesender.org/" target="_blank">FileSender software</a>. FileSender indicates whether or not the HTML5 upload method is supported for a particular browser.  This depends mainly on the availability of advanced browser functionality, in particular the HTML5 FileAPI.  Please use the <a href="http://caniuse.com/fileapi" target="_blank">"When can I use..."</a> website to monitor implementation progress of the HTML5 FileAPI for all major browsers.  In particular support for <a href="http://caniuse.com/filereader" target="_blank">FileReader API</a> and <a href="http://caniuse.com/bloburls" target="_blank">Blob URLs</a> needs to be light green (=supported) for a browser to support uploads larger then 2GB.  Please note that although Opera 12 is listed to support the HTML5 FileAPI, it currently does not support all that is needed to support use of the HTML5 upload method in FileSender.</li>
+	<li><i>'. htmlspecialchars($config['site_name'],ENT_QUOTES) .'</i> uses the <a href="http://www.filesender.org/" target="_blank">FileSender software</a>. FileSender indicates whether or not the HTML5 upload method is supported for a particular browser.  This depends mainly on the availability of advanced browser functionality, in particular the HTML5 FileAPI.  Please use the <a href="http://caniuse.com/fileapi" target="_blank">"When can I use..."</a> website to monitor implementation progress of the HTML5 FileAPI for all major browsers.  In particular support for <a href="http://caniuse.com/filereader" target="_blank">FileReader API</a> and <a href="http://caniuse.com/bloburls" target="_blank">Blob URLs</a> needs to be light green (=supported) for a browser to support uploads larger then 2GB.  Please note that although Opera 12 is listed to support the HTML5 FileAPI, it currently does not support all that is needed to support use of the HTML5 upload method in FileSender.</li>
 </ul>
 
 <p>For more information please visit <a href="http://www.filesender.org/" target="_blank">www.filesender.org</a></p>
@@ -271,7 +271,7 @@ If you <b><i>modified the file</i></b> between the first and second attempt, ple
 </div>';
 
 // site about
-$lang["_ABOUT_TEXT"] = ' <div align="left" style="padding:5px">'. htmlspecialchars($config['site_name']) .' is an installation of FileSender (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>), which is developed to the requirements of the higher education and research community.</div>';
+$lang["_ABOUT_TEXT"] = ' <div align="left" style="padding:5px">'. htmlspecialchars($config['site_name'],ENT_QUOTES) .' is an installation of FileSender (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>), which is developed to the requirements of the higher education and research community.</div>';
 
 // site AUP terms
 $lang["_AUPTERMS"] = "AuP Terms and conditions...";
