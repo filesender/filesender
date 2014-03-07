@@ -46,6 +46,9 @@ if(session_id() == ""){
 
 require_once('../classes/_includes.php');
 
+// check if post and s-token is valid
+require_once('../includes/XSRF.php');
+    
 $flexerrors = "true";
 // load config
 $authsaml = AuthSaml::getInstance();
