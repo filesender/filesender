@@ -145,6 +145,8 @@ $lang["_ERROR_ATTRIBUTES"] = "Your Identity Provider is not providing the requir
 $lang["_PERMISSION_DENIED"] = "You do not have permission to do this.";
 $lang["_MAX_FILES_REACHED"] = "You have exceeded the file upload limit of: ";
 $lang["_REMOVE_GHOST_FILES"] = "You must remove all ghost files before starting your upload.";
+$lang["_ERROR_ACCESSING_SERVER"] = "Error accessing server";
+$lang["_FATAL_ERROR"] = "Fatal error";
 // Logout page
 $lang["_LOGOUT_COMPLETE"] = "Logout Complete";
 
@@ -154,6 +156,14 @@ $lang["_UPLOADED_LIST"] = "The following files have been uploaded:";
 $lang["_REFER_TO_MY_FILES"] = 'You can access your files and view download statistics on the <a href="index.php?s=files">My Files</a> page.';
 $lang["_CLEAR_ALL"] = "Clear all";
 $lang["_UNDO_CLEAR"] = "Undo Clear";
+$lang["_YOUR_UPLOAD_HAS_STARTED"] = "Your upload has started";
+$lang["_THERE_ARE_VALIDATION_ERRORS_ON_THIS_PAGE"] = "There are validation errors on this page";
+$lang["_AVERAGE_UPLOAD_SPEED"] = "Average upload speed";
+$lang["_UPLOAD_START_TIME"] = "Upload start time";
+$lang["_UPLOAD_END_TIME"] = "Upload end time";
+$lang["_TOTAL_TIME_SPENT_PAUSED"] = "Total time spent paused";
+$lang["_TOTAL_UPLOADED"] = "Total uploaded";
+$lang["_APPROXIMATE_TIME_REMAINING"] = "Approximate time remaining";
 
 // Pause / Resume
 $lang["_UPLOAD_PAUSED"] = "Upload paused";

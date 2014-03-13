@@ -181,6 +181,8 @@ class Functions
     // --------------------------------
     public function getStats()
     {
+        global $lang;
+        
         // Get upload statistics.
         $statement = $this->db->prepare(
             "SELECT COUNT(*), SUM(logfilesize) " .
@@ -193,7 +195,7 @@ class Functions
 
         $count = $result[0];
         $sumFileSize = $result[1];
-        $statString = 'UP: ' . $count . ' files (' . formatBytes($sumFileSize) . ') |';
+        $statString = lang("_UP").': ' . $count . ' ' . lang("_FILES").' (' . formatBytes($sumFileSize) . ') |';
 
         // Get download statistics.
         $statement = $this->db->prepare(
@@ -207,7 +209,7 @@ class Functions
 
         $count = $result[0];
         $sumFileSize = $result[1];
-        $statString .= ' DOWN: ' . $count . ' files (' . formatBytes($sumFileSize) . ')';
+        $statString .= lang("_DOWN") . $count . ' ' . lang("_FILES").' (' . formatBytes($sumFileSize) . ')';
 
         return $statString;
     }

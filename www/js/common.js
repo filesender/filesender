@@ -194,10 +194,10 @@ function parseJSON(json)
         var data = JSON.parse(json);
         return data;
     } catch (e) {
-        var msg = "Error accessing server. ";
+        var msg = lang("_ERROR_ACCESSING_SERVER");
 
         if(debug) {
-            msg += "Fatal error (" + e + ")";
+            msg += lang("_FATAL_ERROR") + " (" + e + ")";
         }
         statusMessage(msg, 'red');
     }
@@ -278,18 +278,18 @@ function updateProgressBar(bytesloaded, totalbytes, amountUploaded)
         timeRemaining = (uploadSpeed == 0 ? 0 : ((bytesRemaining / 1024 / 1024) / uploadSpeed));
         $('#progress_string').html(percentComplete + '%');
         $('#progress_bar').width(percentComplete / 100 * $('#progress_container').width());
-        $('#totalUploaded').html('Total uploaded: ' + readablizebytes(totalBytesLoaded) + '/' + readablizebytes(totalFileLengths));
-        $('#averageUploadSpeed').html('Average upload Speed: ' + uploadSpeed.toFixed(2) * 8 + 'MBit/s');
-        $('#timeRemaining').html('Approx time remaining: ' + secondsToString(timeRemaining));
+        $('#totalUploaded').html(lang('_TOTAL_UPLOADED')+': ' + readablizebytes(totalBytesLoaded) + '/' + readablizebytes(totalFileLengths));
+        $('#averageUploadSpeed').html(lang('_AVERAGE_UPLOAD_SPEED')+': ' + uploadSpeed.toFixed(2) * 8 + 'MBit/s');
+        $('#timeRemaining').html(lang('_APPROXIMATE_TIME_REMAINING')+': ' + secondsToString(timeRemaining));
     } else {
         uploadSpeed = (bytesloaded/timeSinceStart) / 1024 / 1024;
         bytesRemaining = totalbytes - bytesloaded;
         timeRemaining = (uploadSpeed == 0 ? 0 : ((bytesRemaining / 1024 / 1024) / uploadSpeed));
         $('#progress_string').html(percentComplete + '%');
         $('#progress_bar').width(percentComplete/100 * $('#progress_container').width());	//set width of progress bar based on the $status value (set at the top of this page)
-        $('#totalUploaded').html('Total uploaded: ' + readablizebytes(bytesloaded) + '/' + readablizebytes(totalbytes));
-        $('#averageUploadSpeed').html('Average upload Speed: ' + uploadSpeed.toFixed(2) * 8 + 'MBit/s');
-        $('#timeRemaining').html('Approx time remaining: ' + secondsToString(timeRemaining));
+        $('#totalUploaded').html(lang('_TOTAL_UPLOADED')+': ' + readablizebytes(bytesloaded) + '/' + readablizebytes(totalbytes));
+        $('#averageUploadSpeed').html(lang('_AVERAGE_UPLOAD_SPEED')+': ' + uploadSpeed.toFixed(2) * 8 + 'MBit/s');
+        $('#timeRemaining').html(lang('_APPROXIMATE_TIME_REMAINING')+': ' + secondsToString(timeRemaining));
     }
 
 }
@@ -302,3 +302,9 @@ function secondsToString(seconds) {
     return ((h > 0 ? h + ":" : "") + (m > 0 ? (h > 0 && m < 10 ? "0" : "") + m + ":" : "0:") + (s < 10 ? "0" : "") + s);
 }
 
+// return language term if it exists or return term name
+function lang(term)
+
+{
+    return ($.inArray(term, langObj)!=-1) ? langObj[term]: term;
+}
