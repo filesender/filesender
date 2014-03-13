@@ -86,9 +86,9 @@
         <?php } ?>
 
         if (!isValid) {
-            statusMessage('There are validation errors on this page', 'red');
+            statusMessage(lang('_THERE_ARE_VALIDATION_ERRORS_ON_THIS_PAGE'), 'red');
         } else {
-            statusMessage('Your upload has started', 'green');
+            statusMessage(lang('_YOUR_UPLOAD_HAS_STARTED'), 'green');
         }
 //        $('#filesubject').html(htmlentities($('#filesubject')));
 //        $('#filemessage').html(htmlentities($('#filemessage')));

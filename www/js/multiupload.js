@@ -491,7 +491,7 @@ function updateBoxStats()
 {
     var numFiles = n + 1;
     if (n >= 0) {
-        $('#uploadBoxStats').html('Number of Files: ' + numFiles + '/' + maxUploads + '<br /> Size: ' + readablizebytes(totalFileLengths) + '/' + readablizebytes(maxHTML5UploadSize));
+        $('#uploadBoxStats').html(lang('_number_of_files')+ ': ' + numFiles + '/' + maxUploads + '<br /> '+lang('_size') + ': ' + readablizebytes(totalFileLengths) + '/' + readablizebytes(maxHTML5UploadSize));
 
     } else {
         $('#uploadBoxStats').html('');

@@ -29,13 +29,13 @@ if ($s == "complete" || $s == "completev") {
                 $timePaused = 0;
             }
 
-            echo 'Upload start time: ' . date('H:i:s', $start) . '<br />';
-            echo 'Upload end time: ' . date('H:i:s', $end) . '<br />';
-            echo 'Total time spent paused: ' . date('i:s', $timePaused) . '<br /><br />';
+            echo lang('_UPLOAD_START_TIME') . ': ' . date('H:i:s', $start) . '<br />';
+            echo lang('_UPLOAD_END_TIME'). ': ' . date('H:i:s', $end) . '<br />';
+            echo lang('_TOTAL_TIME_SPENT_PAUSED'). ': ' . date('i:s', $timePaused) . '<br /><br />';
 
             $uploadSpeed = $totalSize / ($end - $start - $timePaused); // Bytes per second.
 
-            echo 'Average upload speed: ' . formatBytes($uploadSpeed) . '/s. <br /><br />';
+            echo lang("_AVERAGE_UPLOAD_SPEED").': ' . formatBytes($uploadSpeed) . '/s. <br /><br />';
         }
 
         echo lang("_UPLOADED_LIST");

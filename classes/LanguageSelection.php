@@ -136,3 +136,9 @@ function loadLanguageFile($folderPath, $fileName = '')
 
     return false;
 }
+
+function loadlanguagejs()
+{
+    global $lang;
+    return json_encode($lang);  
+}
