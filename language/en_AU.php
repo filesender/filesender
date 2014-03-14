@@ -147,6 +147,9 @@ $lang["_MAX_FILES_REACHED"] = "You have exceeded the file upload limit of: ";
 $lang["_REMOVE_GHOST_FILES"] = "You must remove all ghost files before starting your upload.";
 $lang["_ERROR_ACCESSING_SERVER"] = "Error accessing server";
 $lang["_FATAL_ERROR"] = "Fatal error";
+$lang["_FNS_FLASH"] = "Feature not currently supported by flash uploads...";
+$lang["_NUMBER_OF_FILES"] = "Number of files";
+
 // Logout page
 $lang["_LOGOUT_COMPLETE"] = "Logout Complete";
 
