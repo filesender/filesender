@@ -304,7 +304,6 @@ function secondsToString(seconds) {
 
 // return language term if it exists or return term name
 function lang(term)
-
 {
-    return ($.inArray(term, langObj)!=-1) ? langObj[term]: term;
+    return (langObj[term] != undefined) ? langObj[term]: term;
 }
