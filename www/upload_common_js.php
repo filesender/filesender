@@ -115,7 +115,7 @@ global $config;
                             resumeUpload();
                         }
                     } else {
-                        alert("Feature not currently supported by flash uploads");
+                        alert(lang("_FNS_FLASH"));
                     }
                 }
             },
