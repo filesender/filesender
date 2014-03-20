@@ -139,6 +139,7 @@ if($isAuth )
         var debug = <?php echo $config["debug"] ? 'true' : 'false'; ?> ;
         var html5 = false;
         var html5webworkers = false;
+        var uploaddisplayMBps =  <?php echo $config["upload_display_MBps"] ? 'true' : 'false'; ?> ;
         //check if webworkers are available
         <?php if(isset($config['terasender']) && $config['terasender']) { echo 'html5webworkers = typeof(Worker)!=="undefined";'; }?>
 
