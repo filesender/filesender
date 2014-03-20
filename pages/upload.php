@@ -46,10 +46,30 @@
 require_once('../www/upload_common_js.php');
 require_once('../www/upload_flash_js.php');
 
-$flashVARS = "vid=".$voucherUID."&sid=".session_id()."&buttonBrowse=".lang("_BROWSE")."&buttonUpload=".lang("_SEND")."&buttonCancel=".lang("_CANCEL")."&siteURL=".$config["site_url"]."&token=".$token;
+//$flashVARS = "vid=".$voucherUID."&sid=".session_id()."&buttonBrowse=".lang("_BROWSE")."&buttonUpload=".lang("_SEND")."&buttonCancel=".lang("_CANCEL")."&siteURL=".$config["site_url"]."&token=".$token;
 ?>
-<script type="text/javascript" src="lib/js/AC_OETags.js" language="javascript"></script>
+<script type="text/javascript" src="js/swfobject.js"></script>
 <script type="text/javascript" src="js/upload.js"></script>
+<script type="text/javascript">	
+var flashvars = {};
+    flashvars.vid = "<?php echo $voucherUID; ?>";
+    flashvars.sid = "<?php echo session_id(); ?>";
+    flashvars.buttonBrowse = "<?php echo lang("_BROWSE"); ?>";
+    flashvars.buttonUpload = "<?php echo lang("_SEND") ?>";
+    flashvars.buttonCancel = "<?php echo lang("_CANCEL") ?>";
+    flashvars.siteURL = "<?php echo $config["site_url"] ?>";
+    flashvars.token = "<?php echo $token; ?>";
+    
+var params = {};
+params.wmode = "transparent";
+params.allowScriptAccess = "sameDomain";
+
+var attributes = {};
+attributes.id = "filesenderup";
+attributes.name = "filesenderup";
+
+    swfobject.embedSWF("swf/filesenderup.swf","swfup","300","100", "6.0.65", "swf/expressInstall.swf", flashvars, params, attributes); 
+</script>
 <script type="text/javascript">
 //<![CDATA[
 // all default settings
@@ -138,63 +158,16 @@ $(function() {
             <tr>
                 <td class=" mandatory"><div id="selectfile"><?php echo lang("_SELECT_FILE"); ?>:</div></td>
                 <td colspan="2"><div id="uploadstandard" style="display:none">
-                        <script language="JavaScript" type="text/javascript">
-                            <!--
-                            // Version check for the Flash Player that has the ability to start Player Product Install (6.0r65)
-                            var hasProductInstall = DetectFlashVer(6, 0, 65);
+               <div id="swfup">
+                 <p>
+                 <div id="errmessage" align="center"><br />
+                 This application requires Flash for uploading files.<br /><br />
+                 To install Flash Player go to <a href="http://www.adobe.com" target="_blank">www.adobe.com<a>.<br /> <br />
+                 </div>
+                 </p>
+             </div>
 
-                            // Version check based upon the values defined in globals
-                            var hasRequestedVersion = DetectFlashVer(requiredMajorVersion, requiredMinorVersion, requiredRevision);
-                            if(!html5) {
-                                if ( hasProductInstall && !hasRequestedVersion ) {
-                                    // DO NOT MODIFY THE FOLLOWING FOUR LINES
-                                    // Location visited after installation is complete if installation is required
-                                    var MMPlayerType = (isIE == true) ? "ActiveX" : "PlugIn";
-                                    var MMredirectURL = window.location;
-                                    document.title = document.title.slice(0, 47) + " - Flash Player Installation";
-                                    var MMdoctitle = document.title;
-                                    AC_FL_RunContent(
-                                        "src", "lib/swf/playerProductInstall",
-                                        "FlashVars", "<?php echo $flashVARS ?>",
-                                        "width", "300",
-                                        "height", "30",
-                                        "align", "middle",
-                                        "id", "filesenderup",
-                                        "quality", "high",
-                                        "bgcolor", "#ffffff",
-                                        "name", "filesenderup",
-                                        "allowScriptAccess","sameDomain",
-                                        "type", "application/x-shockwave-flash",
-                                        "pluginspage", "http://www.adobe.com/go/getflashplayer"
-                                    );
-                                } else if (hasRequestedVersion) {
-                                    // if we've detected an acceptable version
-                                    // embed the Flash Content SWF when all tests are passed
-                                    AC_FL_RunContent(
-                                        "src", "swf/filesenderup",
-                                        "FlashVars", "<?php echo $flashVARS ?>",
-                                        "width", "300",
-                                        'wmode',"transparent",
-                                        "height", "30",
-                                        "align", "middle",
-                                        "id", "filesenderup",
-                                        "quality", "high",
-                                        "bgcolor", "#ffffff",
-                                        "name", "filesenderup",
-                                        "allowScriptAccess","sameDomain",
-                                        "type", "application/x-shockwave-flash",
-                                        "pluginspage", "http://www.adobe.com/go/getflashplayer"
-                                    );
-
-                                } else {  // flash is too old or we can't detect the plugin
-                                    var alternateContent = '<div id="errmessage" align="center"><br />This application requires Flash for uploading files.<br /><br />'
-                                        + 'To install Flash Player go to <a href="http://www.adobe.com" target="_blank">www.adobe.com<a>.<br /> <br /> '
-                                        + '</div>';
-                                    $("#content").html(alternateContent);
-                                }
-                            }
-                            // -->
-                        </script>
+            
                         <div id="uploadstandardspinner" style="padding-top:10px;display:none"><img src="images/ajax-loader-sm.gif" alt="" border="0" align="left" style="padding-right:6px" /><?php echo lang("_UPLOADING_WAIT"); ?></div>
                         <br />
                     </div>
