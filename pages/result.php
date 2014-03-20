@@ -33,9 +33,9 @@ if ($s == "complete" || $s == "completev") {
             echo lang('_UPLOAD_END_TIME'). ': ' . date('H:i:s', $end) . '<br />';
             echo lang('_TOTAL_TIME_SPENT_PAUSED'). ': ' . date('i:s', $timePaused) . '<br /><br />';
 
-            $uploadSpeed = $totalSize / ($end - $start - $timePaused); // Bytes per second.
+            $uploadSpeed = $totalSize / ($end - $start - $timePaused) / 1024 / 1024; // Bytes per second.
 
-            echo lang("_AVERAGE_UPLOAD_SPEED").': ' . formatBytes($uploadSpeed) . '/s. <br /><br />';
+            echo lang("_AVERAGE_UPLOAD_SPEED").': ' . (($config['upload_display_MBps'])? round($uploadSpeed , 2) . ' MB/s': round($uploadSpeed * 8, 2)  . ' Mb/s' ) . '. <br /><br />';
         }
 
         echo lang("_UPLOADED_LIST");

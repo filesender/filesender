@@ -279,7 +279,7 @@ function updateProgressBar(bytesloaded, totalbytes, amountUploaded)
         $('#progress_string').html(percentComplete + '%');
         $('#progress_bar').width(percentComplete / 100 * $('#progress_container').width());
         $('#totalUploaded').html(lang('_TOTAL_UPLOADED')+': ' + readablizebytes(totalBytesLoaded) + '/' + readablizebytes(totalFileLengths));
-        $('#averageUploadSpeed').html(lang('_AVERAGE_UPLOAD_SPEED')+': ' + uploadSpeed.toFixed(2) * 8 + 'MBit/s');
+        $('#averageUploadSpeed').html(lang('_AVERAGE_UPLOAD_SPEED')+': ' +  ((uploaddisplayMBps)? uploadSpeed.toFixed(2)  + 'MB/s': uploadSpeed.toFixed(2)* 8  + 'Mb/s' ));
         $('#timeRemaining').html(lang('_APPROXIMATE_TIME_REMAINING')+': ' + secondsToString(timeRemaining));
     } else {
         uploadSpeed = (bytesloaded/timeSinceStart) / 1024 / 1024;
@@ -288,7 +288,7 @@ function updateProgressBar(bytesloaded, totalbytes, amountUploaded)
         $('#progress_string').html(percentComplete + '%');
         $('#progress_bar').width(percentComplete/100 * $('#progress_container').width());	//set width of progress bar based on the $status value (set at the top of this page)
         $('#totalUploaded').html(lang('_TOTAL_UPLOADED')+': ' + readablizebytes(bytesloaded) + '/' + readablizebytes(totalbytes));
-        $('#averageUploadSpeed').html(lang('_AVERAGE_UPLOAD_SPEED')+': ' + uploadSpeed.toFixed(2) * 8 + 'MBit/s');
+        $('#averageUploadSpeed').html(lang('_AVERAGE_UPLOAD_SPEED')+': ' +  ((uploaddisplayMBps)? uploadSpeed.toFixed(2)  + 'MB/s': uploadSpeed.toFixed(2) * 8  + 'Mb/s' ));
         $('#timeRemaining').html(lang('_APPROXIMATE_TIME_REMAINING')+': ' + secondsToString(timeRemaining));
     }
 
