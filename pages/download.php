@@ -44,6 +44,7 @@ $filedata = $functions->getVoucherData($vid);
 }
 ?>
 <script type="text/javascript">
+//<![CDATA[
 $(document).ready(function() { 
 vid = 
 $("#message").hide();
@@ -57,7 +58,7 @@ function startDownload()
     // check file exists and is available
     $.ajax({
 	  type: "POST",
-	  url: "fs_upload.php?type=validdownload&vid=<?php echo $vid; ?>"
+	  url: "fs_upload.php?type=validdownload&vid=<?php echo htmlspecialchars($vid,ENT_QUOTES); ?>"
 	,success:function( data ) {
 	
 	var data =  parseJSON(data);
@@ -79,6 +80,7 @@ function startDownload()
         }
     })
 }
+//]]>
 </script>
 
 <div id='message'><?php echo lang("_STARTED_DOWNLOADING") ?></div>
