@@ -129,7 +129,7 @@ $lang["_INVALID_TOO_LARGE_1"] = "Filstørrelse kan ikke være mer enn";
 $lang["_AUTH_ERROR"] = "Du er ikke lenger pålogget.<br />Din sesjon kan ha gått ut eller det har blitt en feil på tjeneren. <br /><br />Logg på igjen og prøv igjen.";
 $lang["_SELECT_ANOTHER_FILE"] = "Velg en annen fil.";
 $lang["_INVALID_FILE_NAME"] = "Feilaktig filnavn, filen kan ikke lastes opp.  Gi filen et annet navn og prøv på nytt.";
-$lang["_INVALID_SIZE_USEHTML5"] = "For å sende filer større enn 2GB trenger du en nettleser som støtter HTML5, som f.eks. Chrome og nyerenyer FireFox.";
+$lang["_INVALID_SIZE_USEHTML5"] = "For å sende filer større enn 2GB trenger du en nettleser som støtter HTML5, som f.eks. Chrome, FireFox på Windows, Max OS X og Linux, Safari 6 på Mac OS X og IE 10 på Windows.";
 
 $lang["_ERROR_CONTACT_ADMIN"] = "Det oppsto en feil.  <br />  Ta kontakt med tjeneste-ansvarlig.";
 $lang["_ERROR_UPLOADING_FILE"] = "Feil under filopplasting";
@@ -237,7 +237,7 @@ $lang["_HELP_TEXT"] = '
 <ul>
 	<li>Du kan bruke denne metoden hvis dette symbolet vises: <img src="images/html5_installed.png" alt="green HTML5 tick" class="textmiddle" style="display:inline" /></li>
 	<li>For å få <img src="images/html5_installed.png" alt="green HTML5 tick" class="textmiddle" style="display:inline" /> symbolet, trenger du en modern nettleser som støtter HTML5, siste versjonen av webbens språk.</li>
-	<li>Nyere versjoner av Firefox og Chrome, på Windows, Mac OS X og Linux er kjent for å fungere</li>
+	<li>Nettlesere det gjelder er i allefall oppdaterte versjoner av Firefox og Chrome på Windows, Mac OS X og Linux, Safari 6 og oppover på Mac OS X og IE 10 og oppover på Windows. </li>
 	<li>Du kan <b><i>gjenoppta</i></b> en opplastning som er avbrutt ved å sende nøyaktig samme fil på nytt. Så lenge filen har akkurat samme navn som sist vil <i>'. htmlspecialchars($config['site_name'],ENT_QUOTES) .'</i> gjenoppta opplastningen.  Når opplastningen starter burde du se framdriftsindikatoren hoppe til hvor den var ved siste avbrudd, og fortsette derfra.<br /><br />
 	Har du <b><i>endret filen</i></b> mellom første og andre forsøk, bør du først gi filen et nytt navn.  Dermed forsikres det at det startes en ny, fersk opplastning og at alle dine endringer vil bli overført uten problemer.</li>
 </ul>
