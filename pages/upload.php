@@ -68,7 +68,7 @@ var attributes = {};
 attributes.id = "filesenderup";
 attributes.name = "filesenderup";
 
-    swfobject.embedSWF("swf/filesenderup.swf","swfup","300","100", "6.0.65", "swf/expressInstall.swf", flashvars, params, attributes); 
+    swfobject.embedSWF("swf/filesenderup.swf","swfup","300","40", "6.0.65", "swf/expressInstall.swf", flashvars, params, attributes); 
 </script>
 <script type="text/javascript">
 //<![CDATA[
