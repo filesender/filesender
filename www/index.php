@@ -61,6 +61,9 @@ $config = $CFG->loadConfig();
 $sendmail = Mail::getInstance();
 $log = Log::getInstance();
 
+// initialise language 
+initlanguage();
+
 $messageArray = array(); // messages to display to client
 $errorArray = array(); // messages to display to client
 date_default_timezone_set($config['Default_TimeZone']);
