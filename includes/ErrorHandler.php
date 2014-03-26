@@ -84,7 +84,7 @@ function customError($errNum, $errStr, $errFile, $errLine)
 function logEntry($message, $type = 'E_NOTICE')
 {
     global $config;
-    global $cron;
+    global $cron, $log;
 
     $message = $type . ': ' . $message;
 
@@ -130,6 +130,13 @@ function logEntry($message, $type = 'E_NOTICE')
             fwrite($fh, $stringData);
             fclose($fh);
             closelog();
+            
+             // write error log to database
+            if($type == 'E_ERROR')
+            {
+               $log->saveLog(NULL, "Error", $date . ":". $message);
+            }
+            
         }
     }
 }

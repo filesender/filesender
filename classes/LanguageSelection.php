@@ -33,6 +33,12 @@
 global $lang;
 global $locales;
 
+function initlanguage()
+{
+    global $lang;
+    global $locales;
+    global $config;
+
 $filesenderBase = dirname(dirname(__FILE__));
 
 // Read browser pref to language file mappings from locale.php. Prefer (exclusively) the one found in ./config (if any).
@@ -90,6 +96,7 @@ if (!empty($langFile)) {
     if (!$languageFileFound && !$configFileFound) {
         logEntry('Mapping for preferred language found but language file not found in language or config directory: ' . $langFile, 'E_ERROR');
     }
+}
 }
 
 function lang($item)

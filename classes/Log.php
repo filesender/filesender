@@ -67,7 +67,7 @@ class Log
             $authAttributes['saml_uid_attribute'] = '';
         }
 
-        if (isset($dataItem['fileuid'])) {
+        if (isset($dataItem) && isset($dataItem['fileuid'])) {
             $logFileUid = $dataItem['fileuid'];
             $logVoucherUid = $dataItem['filevoucheruid'];
             $logFrom = $dataItem['filefrom'];
@@ -86,7 +86,7 @@ class Log
             $logFrom = '';
             $logTo = '';
             $logDate = date($config['db_dateformat'], time());
-            $logFileSize = '';
+            $logFileSize = 0;
             $logFileName = '';
             $logMessage = $message;
             $logAuthUserUid = $authAttributes["saml_uid_attribute"];
