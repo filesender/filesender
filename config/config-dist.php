@@ -102,7 +102,7 @@ public function loadConfig() {
 	// Terasender (fast upload) settings
 	// - terasender (really fast uploads) uses html5 web workers to speed up file upload
 	// - effectively providing multi-threaded faster uploads
-	$config['terasender'] = true; // true/false
+	$config['terasender'] = false; // true/false
 	$config['terasenderadvanced'] = false; // true/false - terasender advanced - show advanced settings
 	$config['terasender_chunksize'] = 5;		// default (5) terasender chunk size in MB
 	$config['terasender_workerCount'] = 6;		// default (6) worker count
