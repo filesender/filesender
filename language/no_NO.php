@@ -129,7 +129,7 @@ $lang["_INVALID_TOO_LARGE_1"] = "Filstørrelse kan ikke være mer enn";
 $lang["_AUTH_ERROR"] = "Du er ikke lenger pålogget.<br />Din sesjon kan ha gått ut eller det har blitt en feil på tjeneren. <br /><br />Logg på igjen og prøv igjen.";
 $lang["_SELECT_ANOTHER_FILE"] = "Velg en annen fil.";
 $lang["_INVALID_FILE_NAME"] = "Feilaktig filnavn, filen kan ikke lastes opp.  Gi filen et annet navn og prøv på nytt.";
-$lang["_INVALID_SIZE_USEHTML5"] = "For å sende filer større enn 2GB trenger du en nettleser som støtter HTML5, som f.eks. Chrome, FireFox på Windows, Max OS X og Linux, Safari 6 på Mac OS X og IE 10 på Windows.";
+$lang["_INVALID_SIZE_USEHTML5"] = "For å sende filer større enn 2GB trenger du en nettleser som støtter HTML5, som f.eks. Chrome, FireFox på Windows, Mac OS X og Linux, Safari 6 på Mac OS X og IE 10 på Windows.";
 
 $lang["_ERROR_CONTACT_ADMIN"] = "Det oppsto en feil.  <br />  Ta kontakt med tjeneste-ansvarlig.";
 $lang["_ERROR_UPLOADING_FILE"] = "Feil under filopplasting";
