@@ -1,3 +1,26 @@
+filesender (1.6~rc1) unstable; urgency=medium
+   * Changes since 1.6-beta1
+     - Download pause/resume now possible with browsers supporting
+       partial download (most notably Firefox, IE11, curl and wget)
+       (#1076)
+     - 'terasender' default disabled in config-dist.php (#1077)
+     - Added IE10+ and Safari 6+ to supported browsers in HELP text
+       for en, no and nl languages (#1063)
+
+   * Fixes since 1.6-beta1
+     - Security: also escape single quotes for externally supplied
+       output (#1079)
+     - Security: encode MMredirectURL in Flash detection code (#1078)
+     - Security: strict type comparison in XSFR check (#1080)
+     - 'friendly name' extraction fixed (#1068)
+     - Various fixes and improvements in the partial download code (#1076)
+       - chunked reading and buffering to prevent server side memory
+         exhaustion with large range requests
+       - more robust range request detection to make actual pause/resume
+         possible
+
+ -- Filesender Development <filesender-dev@filesender.org>  Fri, 04 Apr 2014 17:00:00 +0200
+
 filesender (1.6~beta1) unstable; urgency=medium
    * Major changes since 1.5
      - Add TeraSender code (#885, #899, #1064)
