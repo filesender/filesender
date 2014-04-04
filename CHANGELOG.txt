@@ -1,4 +1,26 @@
-Last update: 30 December 2013
+Last update: 4 April 2014
+
+Version 1.6-rc1 <4 April 2014>
+
+   * Changes since 1.6-beta1
+     - Download pause/resume now possible with browsers supporting
+       partial download (most notably Firefox, IE11, curl and wget)
+       (#1076)
+     - 'terasender' default disabled in config-dist.php (#1077)
+     - Added IE10+ and Safari 6+ to supported browsers in HELP text
+       for en, no and nl languages (#1063)
+
+   * Fixes since 1.6-beta1
+     - Security: also escape single quotes for externally supplied
+       output (#1079)
+     - Security: encode MMredirectURL in Flash detection code (#1078)
+     - Security: strict type comparison in XSFR check (#1080)
+     - 'friendly name' extraction fixed (#1068)
+     - Various fixes and improvements in the partial download code (#1076)
+       - chunked reading and buffering to prevent server side memory
+         exhaustion with large range requests
+       - more robust range request detection to make actual pause/resume
+         possible
 
 Version 1.6-beta1 <31 December 2013>
 
