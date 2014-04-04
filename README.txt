@@ -1,4 +1,4 @@
-Updated: 4 March 2014
+Updated: 4 April 2014
 
 This is the README.txt for version 1.6 of the FileSender software.
 
