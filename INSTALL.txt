@@ -1,9 +1,9 @@
-Updated: 21 Feb 2013
+Updated: 4 Apr 2014
 
 Installation instructions
 =========================
 
-FileSender installation instructions for version 1.5 are available at:
+FileSender installation instructions for version 1.6 are available at:
    https://www.assembla.com/spaces/file_sender/wiki/Installation_-_Linux_Source
 
 FileSender depends on a number of common software packages.  Be sure to read
@@ -11,45 +11,10 @@ the installation guide sections regarding configuring PostgreSQL, PHP, Apache,
 SimpleSAMLphp and cron to get up and running.
 
 
-Upgrading from version 1.0.1, 1.1 or 1.1.1
-==========================================
+Upgrading from older versions
+=============================
 
-When upgrading from previous production releases to version 1.5 there are a
-number of important issues to pay attention to:
-
-   - You MUST update your database schema.
-
-   - You are encouraged to start with a fresh configuration file.  Use the
-     config-dist.php as a template.  Many configuration directives have been
-     added, removed and changed.  Remember to make a copy of your current
-     config.php!
-
-   - Version 1.5 supports multiple languages and most text customisations of
-     the web UI have been moved to language files.  Email templates are still
-     found in config.php and are offered only in English.
-
-   - The date format is configured in 3 places, 1 directive in the config.php
-     and 2 in the language file(s) in use on your site.
-
-   - The semantics for the "help" and "about" directives in config.php have
-     changed, and the actual texts are now in the language files.  Check the
-     online upgrade notes for details.
-
-It is recommended to make a backup of your current database, config.php and
-filesender installation before upgrading, especially if you have made local
-modifications to the installed version.
-
-Details about upgrade considerations are available at:
-   https://www.assembla.com/spaces/file_sender/wiki/Upgrade_notes/
-
-
-Upgrading from 1.5-beta versions
-================================
-
-Consult the detailed development notes if you're upgrading to 1.5-release from
-one of the 1.5 betas:
-
-https://www.assembla.com/spaces/file_sender/wiki/Installation_notes_for_1-5_development_code
+See https://www.assembla.com/spaces/file_sender/wiki/Upgrade_notes_to_1-6 .
 
 
 Configuration
