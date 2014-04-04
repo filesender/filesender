@@ -19,7 +19,7 @@ filesender (1.6~rc1) unstable; urgency=medium
        - more robust range request detection to make actual pause/resume
          possible
 
- -- Filesender Development <filesender-dev@filesender.org>  Fri, 04 Apr 2014 17:00:00 +0200
+ -- Filesender Development <filesender-dev@filesender.org>  Fri, 04 Apr 2014 19:44:18 +0200
 
 filesender (1.6~beta1) unstable; urgency=medium
    * Major changes since 1.5
