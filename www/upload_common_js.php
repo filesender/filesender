@@ -40,25 +40,25 @@ global $config;
 ?>
 
 <script type="text/javascript">
-    var uploadid = '<?php echo $id ?>';
+    var uploadid = "<?php echo $id ?>";
     var maximumDate = <?php echo (time()+($config['default_daysvalid']*86400))*1000 ?>;
     var minimumDate = <?php echo (time()+86400)*1000 ?>;
     var maxFLASHuploadsize = <?php echo $config['max_flash_upload_size']; ?>;
     var maxHTML5UploadSize = <?php echo $config['max_html5_upload_size']; ?>;
     var maxEmailRecipients = <?php echo $config['max_email_recipients']; ?>;
-    var datepickerDateFormat = '<?php echo lang('_DP_dateFormat'); ?>';
+    var datepickerDateFormat = "<?php echo lang('_DP_dateFormat'); ?>";
     var chunksize =  <?php echo $config['upload_chunk_size']; ?>;
-    var aup = '<?php echo $config['AuP'] ?>';
+    var aup = "<?php echo $config['AuP'] ?>";
     var bytesUploaded = 0;
     var bytesTotal = 0;
-    var ext = '<?php echo $config['ban_extension']?>';
+    var ext = "<?php echo $config['ban_extension']?>";
     var bannedExtensions = ext.split(",");
     var previousBytesLoaded = 0;
     var intervalTimer = 0;
     var errmsg_disk_space = "<?php echo lang("_DISK_SPACE_ERROR"); ?>";
-    var nameLang = '<?php echo lang("_FILE_NAME"); ?>';
-    var sizeLang = '<?php echo lang("_SIZE"); ?>';
-    var groupID = '<?php echo getOpenSSLKey(); ?>';
+    var nameLang = "<?php echo lang("_FILE_NAME"); ?>";
+    var sizeLang = "<?php echo lang("_SIZE"); ?>";
+    var groupID = "<?php echo getOpenSSLKey(); ?>";
     var maxUploads = <?php echo $config['html5_max_uploads']; ?>;
     var fileStatus = '<?php echo $filestatus; ?>';
 
@@ -85,7 +85,7 @@ global $config;
             width: 500,
             autoOpen: true,
             modal: true,
-            title: '<?php echo lang("_AUTH_ERROR_TITLE") ?>',
+            title: "<?php echo lang("_AUTH_ERROR_TITLE") ?>",
             buttons: {
                 'okBTN': function () {
                     location.reload();
@@ -107,11 +107,11 @@ global $config;
                 "id" : "pauseBTN",
                 click: function() {
                     if (html5) {
-                        if($('#pauseBTN').html() == '<?php echo lang("_PAUSE"); ?>') {
-                            $('#pauseBTN').html('<?php echo lang("_RESUME"); ?>');
+                        if($('#pauseBTN').html() == "<?php echo lang("_PAUSE"); ?>") {
+                            $('#pauseBTN').html("<?php echo lang("_RESUME"); ?>");
                             pauseUpload();
                         }else {
-                            $('#pauseBTN').html('<?php echo lang("_PAUSE"); ?>');
+                            $('#pauseBTN').html("<?php echo lang("_PAUSE"); ?>");
                             resumeUpload();
                         }
                     } else {
