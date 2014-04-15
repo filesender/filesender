@@ -611,7 +611,15 @@ function uploadFile()
     xhr.setRequestHeader('Content-Type', 'application/octet-stream');
     xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
     //Set up the body of the POST data includes the name & file data.
-    xhr.send(blob);
+    try
+        {
+             xhr.send(blob);
+        }
+        catch(err)
+        {
+            // error
+            openErrorDialog('Your source file is no longer available.\nYou will need to reload the page and re-select your file/s.');
+        }
 
     function processReqChange() {
         if (xhr.readyState == 4) {
