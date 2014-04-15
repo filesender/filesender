@@ -60,6 +60,7 @@ $requiredConfigFields = array(
     'versionNumber',
     'site_showStats',
     'upload_box_default_size',
+    'upload_display_MBps',
 
     // Auto complete
     'autocomplete',
