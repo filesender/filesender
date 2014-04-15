@@ -6,26 +6,26 @@
     function getDatePicker() {
         var datePicker = $('#datepicker');
         datePicker.datepicker({ minDate: new Date(minimumDate), maxDate: new Date(maximumDate), altField: '#fileexpirydate', altFormat: 'd-m-yy' });
-        datePicker.datepicker('option', 'dateFormat', '<?php echo lang('_DP_dateFormat'); ?>');
+        datePicker.datepicker('option', 'dateFormat', "<?php echo lang('_DP_dateFormat'); ?>");
         datePicker.datepicker('setDate', new Date(maximumDate));
         $('#ui-datepicker-div').css('display', 'none');
 
         $.datepicker.setDefaults({
-            closeText: '<?php echo lang('_DP_closeText'); ?>',
-            prevText: '<?php echo lang('_DP_prevText'); ?>',
-            nextText: '<?php echo lang('_DP_nextText'); ?>',
-            currentText: '<?php echo lang('_DP_currentText'); ?>',
+            closeText: "<?php echo lang('_DP_closeText'); ?>",
+            prevText: "<?php echo lang('_DP_prevText'); ?>",
+            nextText: "<?php echo lang('_DP_nextText'); ?>",
+            currentText: "<?php echo lang('_DP_currentText'); ?>",
             monthNames: <?php echo lang('_DP_monthNames'); ?>,
             monthNamesShort: <?php echo lang('_DP_monthNamesShort'); ?>,
             dayNames: <?php echo lang('_DP_dayNames'); ?>,
             dayNamesShort: <?php echo lang('_DP_dayNamesShort'); ?>,
             dayNamesMin: <?php echo lang('_DP_dayNamesMin'); ?>,
-            weekHeader: '<?php echo lang('_DP_weekHeader'); ?>',
-            dateFormat: '<?php echo lang('_DP_dateFormat'); ?>',
+            weekHeader: "<?php echo lang('_DP_weekHeader'); ?>",
+            dateFormat: "<?php echo lang('_DP_dateFormat'); ?>",
             firstDay: <?php echo lang('_DP_firstDay'); ?>,
             isRTL: <?php echo lang('_DP_isRTL'); ?>,
             showMonthAfterYear: <?php echo lang('_DP_showMonthAfterYear'); ?>,
-            yearSuffix: '<?php echo lang('_DP_yearSuffix'); ?>'
+            yearSuffix: "<?php echo lang('_DP_yearSuffix'); ?>"
         });
     }
 
@@ -74,23 +74,23 @@
     }
 
     function addButtonText(){
-        $('#pauseBTN').html('<?php echo lang("_PAUSE") ?>');
-        $('#cancelBTN').html('<?php echo lang("_CANCEL") ?>');
-        $('#confirmBTN').html('<?php echo lang("_YES") ?>');
-        $('#sendBTN').html('<?php echo lang("_SEND") ?>');
-        $('#canceluploadBTN').html('<?php echo lang("_CANCEL") ?>');
-        $('#okBTN').html('<?php echo lang("_OK") ?>');
-        $('#suspendBTN').html('<?php echo lang("_SUSPEND") ?>');
-        $('#deleteBTN').html('<?php echo lang("_DELETE") ?>');
+        $('#pauseBTN').html("<?php echo lang("_PAUSE") ?>");
+        $('#cancelBTN').html("<?php echo lang("_CANCEL") ?>");
+        $('#confirmBTN').html("<?php echo lang("_YES") ?>");
+        $('#sendBTN').html("<?php echo lang("_SEND") ?>");
+        $('#canceluploadBTN').html("<?php echo lang("_CANCEL") ?>");
+        $('#okBTN').html("<?php echo lang("_OK") ?>");
+        $('#suspendBTN').html("<?php echo lang("_SUSPEND") ?>");
+        $('#deleteBTN').html("<?php echo lang("_DELETE") ?>");
 
 
-        $('.ui-dialog-buttonpane button:contains(cancelBTN)').html('<?php echo lang("_CANCEL") ?>');
-        $('.ui-dialog-buttonpane button:contains(confirmBTN)').html('<?php echo lang("_YES") ?>');
-        $('.ui-dialog-buttonpane button:contains(sendBTN)').html('<?php echo lang("_SEND") ?>');
-        $('.ui-dialog-buttonpane button:contains(pauseBTN)').html('<?php echo lang("_PAUSE") ?>');
-        $('.ui-dialog-buttonpane button:contains(canceluploadBTN)').html('<?php echo lang("_CANCEL") ?>');
-        $('.ui-dialog-buttonpane button:contains(okBTN)').html('<?php echo lang("_OK") ?>');
-        $('.ui-dialog-buttonpane button:contains(deleteBTN)').html('<?php echo lang("_DELETE") ?>');
+        $('.ui-dialog-buttonpane button:contains(cancelBTN)').html("<?php echo lang("_CANCEL") ?>");
+        $('.ui-dialog-buttonpane button:contains(confirmBTN)').html("<?php echo lang("_YES") ?>");
+        $('.ui-dialog-buttonpane button:contains(sendBTN)').html("<?php echo lang("_SEND") ?>");
+        $('.ui-dialog-buttonpane button:contains(pauseBTN)').html("<?php echo lang("_PAUSE") ?>");
+        $('.ui-dialog-buttonpane button:contains(canceluploadBTN)').html("<?php echo lang("_CANCEL") ?>");
+        $('.ui-dialog-buttonpane button:contains(okBTN)').html("<?php echo lang("_OK") ?>");
+        $('.ui-dialog-buttonpane button:contains(deleteBTN)').html("<?php echo lang("_DELETE") ?>");
     }
 
     function addEmailRecipientBox(emails) {
