@@ -172,6 +172,9 @@ var TeraSender = function(opts) {
                 case 'autherror':
                     displayAuthError();
                     break;
+                case 'errormsg':
+                    openErrorDialog(data.message);
+                    break;
             }
         };
         

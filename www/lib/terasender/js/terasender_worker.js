@@ -75,7 +75,18 @@ function uploadChunk(startByte, endByte)
     xhr.setRequestHeader('X-Start-Byte', startByte);
     xhr.setRequestHeader('X-File-Size', file.size);
     //Set up the body of the POST data includes the name & file data.
-    xhr.send(blob);
+      try
+        {
+             xhr.send(blob);
+        }
+        catch(err)
+        {
+            // error
+             postMessage({
+                    'cmd':'errormsg',
+                    'message': 'Your source file is no longer available.\nYou will need to reload the page and re-select your file/s.'
+                });
+        }
 
     function updateProgress(e){
         postMessage({
