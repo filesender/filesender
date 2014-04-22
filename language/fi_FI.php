@@ -268,7 +268,7 @@ selaimessasi on riittävä HTML5-tuki suurten tiedostojen siirtoa varten. Jos me
 
 // site about
 $lang["_ABOUT_TEXT"] = '
-<div align="left" style="padding:5px">'. htmlspecialchars($config['site_name']) .' perustuu FileSender-web-sovellukseen (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>), joka on kehitetty erityisesti korkeakoulujen ja tutkimusyhteisöjen tarpeisiin.';
+<div align="left" style="padding:5px">'. htmlspecialchars($config['site_name']) .' perustuu FileSender-web-sovellukseen (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>), joka on kehitetty erityisesti korkeakoulujen ja tutkimusyhteisöjen tarpeisiin.</div>';
 
 // site AUP terms
 $lang["_AUPTERMS"] = "Käyttöehdot ...";
