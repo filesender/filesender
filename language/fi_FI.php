@@ -33,7 +33,7 @@
 /* ---------------------------------
  * fi_FI Language File
  * Finnish translation: Tomi.Salmi@csc.fi
- * 2013-10-01 for FileSender version 1.5
+ * 2014-04-22 for FileSender version 1.6
  * ---------------------------------
  * 
  */
@@ -52,6 +52,7 @@ $lang["_HELP"] = "Apua";
 $lang["_DELETE_VOUCHER"] = "Poista kutsu";
 $lang["_UPLOAD_COMPLETE"] = "Tiedosto on siirretty ja ilmoitusviesti lähetetty.";
 $lang["_UPLOAD_PROGRESS"] = "Siirto käynnissä";
+$lang["_DOWNLOADED"] = "Ladattu";
 $lang["_DOWNLOAD"] = "Lataa";
 $lang["_CANCEL_UPLOAD"] = "Peruuta siirto";
 
@@ -90,10 +91,12 @@ $lang["_EXPIRY"] = "Poistuu";
 $lang["_MESSAGE"] = "Viesti";
 $lang["_TYPE"] = "Tyyppi";
 
-$lang["_TERMS_OF_AGREEMENT"] = "Terms of Agreement";
-$lang["_SHOW_TERMS"] = "Show Terms";
+$lang["_TERMS_OF_AGREEMENT"] = "Käyttöehdot";
+$lang["_SHOW_TERMS"] = "Näytä ehdot";
 $lang["_SHOWHIDE"] = "Näytä/piilota";
 $lang["_UPLOADING_WAIT"] = "Siirretään tiedostoa...";
+$lang["_SHOW_ALL"] = "Näytä/piilota tiedot";
+$lang["_DETAILS"] = "Tiedot";
 
 // button labels
 $lang["_UPLOAD"] = "Lähetä tiedosto";
@@ -197,9 +200,18 @@ $lang["_DP_isRTL"] = 'false';
 $lang["_DP_showMonthAfterYear"] = 'false';
 $lang["_DP_yearSuffix"] = '';
 
+// Terasender Advanced Settings
+$lang["_TERA_ADVANCED_SETTINGS"] = "Lisäasetukset";
+$lang["_TERA_CHUNKSIZE"] = "Tiedostopalasten koko (Mt)"; // "Chunksize (MB)";
+$lang["_TERA_WORKER_COUNT"] = "Workerien lkm."; // "Worker count";
+$lang["_TERA_JOBS_PER_WORKER"] = "Tehtäviä per worker"; // "Jobs per workers";
+
 // Login Splash text
 $lang["_SITE_SPLASHHEAD"] = "Tervetuloa palveluun ". htmlspecialchars($config['site_name']);
 $lang["_SITE_SPLASHTEXT"] = htmlspecialchars($config['site_name']) ." on turvallinen tapaa jakaa suuriakin tiedostoja kenelle tahansa.";
+
+// Footer to display
+$lang["_SITE_FOOTER"] = ""; 
 
 // site help
 $lang["_HELP_TEXT"] = '
@@ -214,20 +226,20 @@ $lang["_HELP_TEXT"] = '
 <ul>
 	<li> Mikäli näet vihreän HTML5-tukea osoittavan merkin <img src="images/html5_installed.png" alt="green HTML5 tick" class="textmiddle" style="display:inline" />,
 selaimessasi on riittävä HTML5-tuki suurten tiedostojen siirtoa varten. Jos merkkiä ei näy, käyttämästäsi selaimesta puuttuu riittävä HTML5-tuki.</li>
-	<li> Riittävä HTML5-tuki on mm. seuraavissa verkkoselaimissa: Firefox versiosta 4 alkaen ja Chrome versiosta 13 alkaen Windows-, Linux- ja OS X -käyttöjärjestelmissä.</li>
-	<li> Tuetulla selaimella pystyt myös jatkamaan kesken jäänyttä latausta (upload). Jatkaakesi siirtoa varmista, että valitset täsmälleen saman tiedoston
-saman nimisenä, kuin jota aloit siirtää aiemmin. Kun siirto alkaa, huomaat etenemispalkin tilasta minkä verran tiedostoa on kokonaisuudessaan siirretty.<br /><br />
-<i>Mikäli muokkasit</i> tiedostoa ensimmäisen ja toisen latausyrityksen välissä, uudelleennimeä tiedostoa ennen toisen siirron aloittamsita. Näin varmistat, että siirrot eivät sekoitu, ja uuden tiedoston siirto onnistuu kokonaisuudessaan.</li>
+	<li> Riittävä HTML5-tuki on mm. seuraavissa verkkoselaimissa: Firefox ja Chrome (uudehkot versiot) Windows-, Linux- ja OS X -käyttöjärjestelmissä, Safari 6 tai uudempi Mac OS X 
+-käyttöjärjestelmässä ja IE 10 tai uudempi Windows-käyttöjärjestelmässä.</li>
+	<li> Tuetulla selaimella pystyt jatkamaan kesken jäänyttä jakoa (upload). Jatkaaksesi siirtoa varmista, että valitset koneeltasi täsmälleen saman tiedoston saman nimisenä, kuin jota aloit siirtää aiemmin. Kun siirto alkaa, huomaat etenemispalkin tilasta minkä verran tiedostoa on kokonaisuudessaan siirretty.<br /><br />
+<i>Mikäli muokkasit</i> tiedostoa ensimmäisen ja toisen siirron välissä, uudelleennimeä tiedosto ennen toisen siirron aloittamista. Näin varmistat, että siirrot eivät sekoitu, ja uuden tiedoston siirto alkaa alusta ja onnistuu kokonaisuudessaan.</li>
 </ul>
 
 <h4>Tiedostojen noutaminen</h4>
 <ul>
-	<li>Voit noutaa tiedostoja FileSenderista millä tahansa nykyaikaisella verkkoselaimella. Et tarvitse HTML5-tukea.</li>
+	<li>Voit noutaa tiedostoja FileSenderista millä tahansa nykyaikaisella verkkoselaimella. Tähän et tarvitse HTML5- tai Flash-tukea.</li>
 </ul>
 
 <h4>Alle kahden gigatavun (2 Gt) tiedostojen siirtäminen käyttäen Flash-tukea</h4>
 <ul>
-	<li>Jos HTML5-tukea ei ole, toinen vaihtoehto on hyödyntää Adobe Flashia</li>
+	<li>Jos HTML5-tukea ei ole, voit hyödyntää Adobe Flashia</li>
 	<li>Käytä <a target="_blank" href="http://www.adobe.com/software/flash/about/">Adobe Flash</a> -pluginin versiota 10 tai uudempaa</li>
 	<li>Adobe Flashia käytettäessä jaettavan tiedoston suurin mahdollinen koko on 2 gigatavua (2 Gt). FileSender varoittaa, mikäli yrität siirtää tätä suurempaa tiedostoa</li>
 	<li>Adobe Flash -siirto ei tue aiemmin keskeytyneen latauksen jatkamista</li>
@@ -256,7 +268,7 @@ saman nimisenä, kuin jota aloit siirtää aiemmin. Kun siirto alkaa, huomaat et
 
 // site about
 $lang["_ABOUT_TEXT"] = '
-<div align="left" style="padding:5px">'. htmlspecialchars($config['site_name']) .' perustuu FileSender-web-sovellukseen (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>), joka on kehitetty erityisesti korkeakoulujen ja tutkimusyhteisöjen tarpeisiin.</div>';
+<div align="left" style="padding:5px">'. htmlspecialchars($config['site_name']) .' perustuu FileSender-web-sovellukseen (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>), joka on kehitetty erityisesti korkeakoulujen ja tutkimusyhteisöjen tarpeisiin.';
 
 // site AUP terms
 $lang["_AUPTERMS"] = "Käyttöehdot ...";
