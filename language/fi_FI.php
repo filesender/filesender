@@ -198,8 +198,8 @@ $lang["_DP_showMonthAfterYear"] = 'false';
 $lang["_DP_yearSuffix"] = '';
 
 // Login Splash text
-$lang["_SITE_SPLASHHEAD"] = "Tervetuloa palveluun ". htmlspecialchars($config['site_name'],ENT_QUOTES);
-$lang["_SITE_SPLASHTEXT"] = htmlspecialchars($config['site_name'],ENT_QUOTES) ." on turvallinen tapaa jakaa suuriakin tiedostoja kenelle tahansa.";
+$lang["_SITE_SPLASHHEAD"] = "Tervetuloa palveluun ". htmlspecialchars($config['site_name']);
+$lang["_SITE_SPLASHTEXT"] = htmlspecialchars($config['site_name']) ." on turvallinen tapaa jakaa suuriakin tiedostoja kenelle tahansa.";
 
 // site help
 $lang["_HELP_TEXT"] = '
@@ -246,7 +246,7 @@ saman nimisenä, kuin jota aloit siirtää aiemmin. Kun siirto alkaa, huomaat et
 
 <h4>Teknisiä tietoja</h4>
 <ul>
-	<li><i>'. htmlspecialchars($config['site_name'],ENT_QUOTES) .'</i> perustuu avoimen lähdekoodin <a href="http://www.filesender.org/" target="_blank">FileSender-sovellukseen</a>. Sovellus kertoo, tukeeko käyttäjän selain HTML5-siirtoa. Yli 2 Gt kokoisten tiedostojen jakaminen edellyttä riittävää HTML5-tukea, erityisesti HTML5 <a href="http://caniuse.com/filereader" target="_blank">FileReader</a>- ja <a href="http://caniuse.com/bloburls" target="_blank">Blob URLs</a> -tukia. 
+	<li><i>'. htmlspecialchars($config['site_name']) .'</i> perustuu avoimen lähdekoodin <a href="http://www.filesender.org/" target="_blank">FileSender-sovellukseen</a>. Sovellus kertoo, tukeeko käyttäjän selain HTML5-siirtoa. Yli 2 Gt kokoisten tiedostojen jakaminen edellyttä riittävää HTML5-tukea, erityisesti HTML5 <a href="http://caniuse.com/filereader" target="_blank">FileReader</a>- ja <a href="http://caniuse.com/bloburls" target="_blank">Blob URLs</a> -tukia. 
 </li>
 </ul>
 
@@ -256,7 +256,7 @@ saman nimisenä, kuin jota aloit siirtää aiemmin. Kun siirto alkaa, huomaat et
 
 // site about
 $lang["_ABOUT_TEXT"] = '
-<div align="left" style="padding:5px">'. htmlspecialchars($config['site_name'],ENT_QUOTES) .' perustuu FileSender-web-sovellukseen (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>), joka on kehitetty erityisesti korkeakoulujen ja tutkimusyhteisöjen tarpeisiin.</div>';
+<div align="left" style="padding:5px">'. htmlspecialchars($config['site_name']) .' perustuu FileSender-web-sovellukseen (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>), joka on kehitetty erityisesti korkeakoulujen ja tutkimusyhteisöjen tarpeisiin.</div>';
 
 // site AUP terms
 $lang["_AUPTERMS"] = "Käyttöehdot ...";
