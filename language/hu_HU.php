@@ -200,14 +200,14 @@ $lang["_DP_showMonthAfterYear"] = 'false';
 $lang["_DP_yearSuffix"] = '';
 
 // Login Splash text
-$lang["_SITE_SPLASHHEAD"] = "Üdv a ". htmlspecialchars($config['site_name'],ENT_QUOTES);
-$lang["_SITE_SPLASHTEXT"] = "A " . htmlspecialchars($config['site_name'],ENT_QUOTES) ." biztonságos módon oszthatunk meg nagy fájlokat bárkivel. Lépjen be és küldjön fájlt vagy meghívót, hogy más küldhessen önnek.";
+$lang["_SITE_SPLASHHEAD"] = "Üdv a ". htmlspecialchars($config['site_name']);
+$lang["_SITE_SPLASHTEXT"] = "A " . htmlspecialchars($config['site_name']) ." biztonságos módon oszthatunk meg nagy fájlokat bárkivel. Lépjen be és küldjön fájlt vagy meghívót, hogy más küldhessen önnek.";
 
 // Footer to display
 $lang["_SITE_FOOTER"] = ""; 
 
 // site about
-$lang["_ABOUT_TEXT"] = ' <div align="left" style="padding:5px">'. htmlspecialchars($config['site_name'],ENT_QUOTES) .' a Filesender programot futattja (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>), ami a felsőoktatás és a kutatói közösség igényeihez készült.</div>';
+$lang["_ABOUT_TEXT"] = ' <div align="left" style="padding:5px">'. htmlspecialchars($config['site_name']) .' a Filesender programot futattja (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>), ami a felsőoktatás és a kutatói közösség igényeihez készült.</div>';
 
 // site help
 // site AUP terms

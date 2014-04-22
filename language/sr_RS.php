@@ -199,8 +199,8 @@ $lang["_DP_showMonthAfterYear"] = 'false';
 $lang["_DP_yearSuffix"] = '';
 
 // Login Splash text
-$lang["_SITE_SPLASHHEAD"] = "Dobrodošli na ". htmlspecialchars($config['site_name'],ENT_QUOTES);
-$lang["_SITE_SPLASHTEXT"] = htmlspecialchars($config['site_name'],ENT_QUOTES) ." je siguran način za deljenje velikih fajlova sa bilo kim! Prijavite se da prosledite vaše fajlove ili pozovete nekog drugog da vam pošalje fajl.";
+$lang["_SITE_SPLASHHEAD"] = "Dobrodošli na ". htmlspecialchars($config['site_name']);
+$lang["_SITE_SPLASHTEXT"] = htmlspecialchars($config['site_name']) ." je siguran način za deljenje velikih fajlova sa bilo kim! Prijavite se da prosledite vaše fajlove ili pozovete nekog drugog da vam pošalje fajl.";
 
 // Footer to display
 $lang["_SITE_FOOTER"] = ""; 
@@ -252,7 +252,7 @@ $lang["_HELP_TEXT"] = '
 </div>';
 
 // site about
-$lang["_ABOUT_TEXT"] = ' <div align="left" style="padding:5px">'. htmlspecialchars($config['site_name'],ENT_QUOTES) .' je instalacija FileSender-a (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>), koja je razvijena za potrebe zajednica višeg obrazovanja i istraživanja.</div>';
+$lang["_ABOUT_TEXT"] = ' <div align="left" style="padding:5px">'. htmlspecialchars($config['site_name']) .' je instalacija FileSender-a (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>), koja je razvijena za potrebe zajednica višeg obrazovanja i istraživanja.</div>';
 
 // AUP terms
 $lang["_AUPTERMS"] = "Uslovi korišćenja...";

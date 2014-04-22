@@ -200,8 +200,8 @@ $lang["_DP_showMonthAfterYear"] = 'false';
 $lang["_DP_yearSuffix"] = '';
 
 // Login Splash text
-$lang["_SITE_SPLASHHEAD"] = "Pozdravljeni na ". htmlspecialchars($config['site_name'],ENT_QUOTES);
-$lang["_SITE_SPLASHTEXT"] = htmlspecialchars($config['site_name'],ENT_QUOTES) ." je varen način delitve datotek med uporabniki. Priavite se in naložite datoteke ali povabite druge, da delijo datoteke z vami.";
+$lang["_SITE_SPLASHHEAD"] = "Pozdravljeni na ". htmlspecialchars($config['site_name']);
+$lang["_SITE_SPLASHTEXT"] = htmlspecialchars($config['site_name']) ." je varen način delitve datotek med uporabniki. Priavite se in naložite datoteke ali povabite druge, da delijo datoteke z vami.";
 
 // Footer to display
 $lang["_SITE_FOOTER"] = ""; 
@@ -250,7 +250,7 @@ $lang["_HELP_TEXT"] = '
 </div>';
 
 // site about
-$lang["_ABOUT_TEXT"] = ' <div align="left" style="padding:5px">'. htmlspecialchars($config['site_name'],ENT_QUOTES) .' je storitev, osnovana na programu FileSender (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>), ki so ga razvili za potrebe visokega šolstva in raziskovanja.</div>';
+$lang["_ABOUT_TEXT"] = ' <div align="left" style="padding:5px">'. htmlspecialchars($config['site_name']) .' je storitev, osnovana na programu FileSender (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>), ki so ga razvili za potrebe visokega šolstva in raziskovanja.</div>';
 
 // site AUP terms
 $lang["_AUPTERMS"] = "Splošni pogoji in pravila uporabe";
