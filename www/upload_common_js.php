@@ -259,12 +259,12 @@ global $config;
         <div id="bar">
             <div id="progress_container" class="fileBox">
                 <span class="filebox_string" id="progress_string" style="text-align: center"></span>
-
+                
                 <div class="progress_bar" id="progress_bar"></div>
             </div>
         </div>
     </div>
-
+    
     <div id="uploadProgressStats">
         <p id="totalUploaded"></p>
         <p id="averageUploadSpeed"></p>

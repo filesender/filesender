@@ -1,31 +1,31 @@
 <script type="text/javascript">
-if(window.File){
-$("#supportFile").html('<?php echo lang("_YES"); ?>');
-} else {
-$("#supportFile").html('<?php echo lang("_NO"); ?>');
-}
-
-if(window.FileReader){
-$("#supportFileReader").html('<?php echo lang("_YES"); ?>');
-} else {
-$("#supportFileReader").html('<?php echo lang("_NO"); ?>');
-}
-
-
-if(window.FileList){
-$("#supportFileList").html('<?php echo lang("_YES"); ?>');
-} else {
-$("#supportFileList").html('<?php echo lang("_NO"); ?>');
-}
-
-if(window.Blob){
-$("#supportBlob").html('<?php echo lang("_YES"); ?>');
-} else {
-$("#supportBlob").html('<?php echo lang("_NO"); ?>');
-}
- 
+    if(window.File) {
+        $('#supportFile').html('<?php echo lang('_YES'); ?>');
+    } else {
+        $('#supportFile').html('<?php echo lang('_NO'); ?>');
+    }
+    
+    if(window.FileReader) {
+        $('#supportFileReader').html('<?php echo lang('_YES'); ?>');
+    } else {
+        $('#supportFileReader').html('<?php echo lang('_NO'); ?>');
+    }
+    
+    if(window.FileList) {
+        $('#supportFileList').html('<?php echo lang('_YES'); ?>');
+    } else {
+        $('#supportFileList').html('<?php echo lang('_NO'); ?>');
+    }
+    
+    if(window.Blob) {
+        $('#supportBlob').html('<?php echo lang('_YES'); ?>');
+    } else {
+        $('#supportBlob').html('<?php echo lang('_NO'); ?>');
+    } 
 </script>
+
 <p>The following HTML5 API's must be supported in your browser to allow FileSender to upload your files using HTML5.</p>
+
 <table width="100%" style="border: 0">
   <tr class="altcolor">
     <td><strong>API</strong></td>
@@ -48,5 +48,7 @@ $("#supportBlob").html('<?php echo lang("_NO"); ?>');
     <td><div id="supportBlob"></div></td>
   </tr>
 </table>
+
 <p>If you would like to upload large files you require a browser that supports all of the above API's.</p>
+
 <p>See<a href="https://www.assembla.com/spaces/file_sender/wiki" target="_blank"> Filesender Project Site</a> for more details. </p>
