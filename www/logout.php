@@ -49,41 +49,46 @@ session_destroy();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title><?php echo htmlspecialchars($config['site_name']); ?></title>
-<link rel="shortcut icon" href="displayimage.php?type=favicon" type="image/x-icon" />
-<link type="text/css" href="css/smoothness/jquery-ui-1.10.2.custom.min.css" rel="Stylesheet" />
-<link rel="stylesheet" type="text/css" href="css/default.css?<?php echo FileSender_Version::VERSION; ?>" />
-<script type="text/javascript" src="js/common.js" ></script>
-<script type="text/javascript" src="js/jquery-1.9.1.min.js" ></script>
-<script type="text/javascript" src="js/jquery-ui-1.10.2.custom.min.js"></script>
-<script type="text/javascript">
-$(function() {
-$( "a", ".menu" ).button();
-})
-</script>
-
-</head>
-<body>
-
-<div id="wrap">
-	
-  <div id="header">
-    <div style="text-align: center">
-       <img src="displayimage.php?type=banner" width="800" height="60" style="border: 0" alt="banner" />
-    </div>
-  </div>
-  <div id="content">
-   <div id="box">
-    <div style="text-align: center">
-	<p><?php echo lang("_LOGOUT_COMPLETE") ?></p>
-	<div class="menu" style="text-align: center"><p><a id="btn_logon" href="<?php echo $authsaml->logonURL();?>" ><?php echo lang("_LOGON") ?></a></p></div>
-    </div>
-   </div>
-  </div><!-- #content -->
-
-</div><!-- #wrap -->
-
-</body>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        
+        <title><?php echo htmlspecialchars($config['site_name']); ?></title>
+        
+        <link rel="shortcut icon" href="displayimage.php?type=favicon" type="image/x-icon" />
+        <link type="text/css" href="css/smoothness/jquery-ui-1.10.2.custom.min.css" rel="Stylesheet" />
+        <link rel="stylesheet" type="text/css" href="css/default.css?<?php echo FileSender_Version::VERSION; ?>" />
+        
+        <script type="text/javascript" src="js/common.js" ></script>
+        <script type="text/javascript" src="js/jquery-1.9.1.min.js" ></script>
+        <script type="text/javascript" src="js/jquery-ui-1.10.2.custom.min.js"></script>
+        <script type="text/javascript">
+            $(function() {
+                $('a', '.menu').button();
+            });
+        </script>
+    </head>
+    
+    <body>
+        <div id="wrap">
+            <div id="header">
+                <div style="text-align: center">
+                    <img src="displayimage.php?type=banner" width="800" height="60" style="border: 0" alt="banner" />
+                </div>
+            </div>
+            
+            <div id="content">
+                <div id="box">
+                    <div style="text-align: center">
+                        <p><?php echo lang("_LOGOUT_COMPLETE") ?></p>
+                        
+                        <div class="menu" style="text-align: center">
+                            <p>
+                                <a id="btn_logon" href="<?php echo $authsaml->logonURL();?>" ><?php echo lang("_LOGON") ?></a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- #content -->
+        </div><!-- #wrap -->
+    </body>
 </html>

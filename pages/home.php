@@ -35,10 +35,9 @@
  * ---------------------------------
  * 
  */
- ?>
-<div id="box">
-<?php 
-echo '<div id="pageheading">'.lang("_HOME").'</div>'; 
-echo lang("_SITE_SPLASHTEXT");
 ?>
+<div id="box">
+  <div id="pageheading">'<?php echo lang('_HOME') ?></div>
+  
+  <?php echo lang('_SITE_SPLASHTEXT') ?>
 </div>

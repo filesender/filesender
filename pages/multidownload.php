@@ -31,69 +31,63 @@
 
 if (isset($_REQUEST['gid']) && ensureSaneOpenSSLKey($_REQUEST['gid'])) {
     $fileData = $functions->getMultiFileData($_REQUEST['gid']);
-
+    
     $totalFileSize = 0;
-
-    foreach ($fileData as $file) {
-        $totalFileSize += $file['filesize'];
-    }
+    
+    foreach ($fileData as $file) $totalFileSize += $file['filesize'];
 ?>
 
 <script type="text/javascript">
     // From http://stackoverflow.com/a/11752084.
     var isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
     var isZip64 = <?php echo $totalFileSize; ?> >= (4 * 1024 * 1024 * 1024);
-
+    
     $(document).ready(function () {
         $('#myfiles tr:odd').addClass('altcolor');
-
-        if (!isMac || !isZip64) {
-            $('#macmessage').hide();
-        }
-
+        
+        if (!isMac || !isZip64) $('#macmessage').hide();
+        
         $('.checkboxes').change(function() {
             // Show or hide the 'no files selected' message depending on current state.
             var numChecked = $('.checkboxes:checked').length;
-
+            
             showOrHideErrorMessage();
-
+            
             // Check or un-check the top checkbox depending on how many files are selected.
             if (numChecked == $('.checkboxes').length) {
                 $('#selectall').prop('checked', 'checked');
             } else {
                 $('#selectall').prop('checked', '');
             }
-
+            
             showOrHideZipMessages();
         });
     });
-
+    
     function showOrHideErrorMessage() {
         var numChecked = $('.checkboxes:checked').length;
-
+        
         if (numChecked == 0) {
             statusMessage('<?php echo lang('_NO_FILES_SELECTED') ?>', 'red');
         } else {
             clearStatusBar();
         }
     }
-
+    
     function showOrHideZipMessages() {
         // Show link to Mac alternative unzip utility if more than one file is checked.
         var numChecked = $('.checkboxes:checked').length;
-
+        
         if (numChecked > 1) {
-            if (isMac && isZip64) {
-                $('#macmessage').show();
-            }
-
+            if (isMac && isZip64) $('#macmessage').show();
+            
             $('#zipmessage').show();
         } else {
             $('#macmessage').hide();
             $('#zipmessage').hide();
         }
     }
-
+    
     function startDownload() {
         if ($('.checkboxes:checked').length > 0) {
             // At least one file is selected, start downloading.
@@ -109,73 +103,70 @@ if (isset($_REQUEST['gid']) && ensureSaneOpenSSLKey($_REQUEST['gid'])) {
 </script>
 
 <div id="box" style="background:#fff">
-    <?php echo '<div id="pageheading">' . lang('_DOWNLOAD') . '</div>' ?>
-    <div id="fileinfo">
-        <p id="tracking_code"><?php echo lang('_TRACKING_CODE') . ': ' . htmlentities($fileData[0]['filetrackingcode']); ?></p>
-
-        <p id="download_from"><?php echo lang('_FROM') . ': ' . htmlentities($fileData[0]['filefrom']); ?></p>
-
-        <p id="download_sent"><?php echo lang('_SENT_DATE') . ': ' . date(lang('datedisplayformat'), strtotime($fileData[0]['filecreateddate'])); ?></p>
-
-        <p id="download_expiry"><?php echo lang('_EXPIRY_DATE') . ': ' . date(lang('datedisplayformat'), strtotime($fileData[0]['fileexpirydate'])); ?></p>
-
+  <?php echo '<div id="pageheading">' . lang('_DOWNLOAD') . '</div>' ?>
+  <div id="fileinfo">
+    <p id="tracking_code"><?php echo lang('_TRACKING_CODE') . ': ' . htmlentities($fileData[0]['filetrackingcode']); ?></p>
+    
+    <p id="download_from"><?php echo lang('_FROM') . ': ' . htmlentities($fileData[0]['filefrom']); ?></p>
+    
+    <p id="download_sent"><?php echo lang('_SENT_DATE') . ': ' . date(lang('datedisplayformat'), strtotime($fileData[0]['filecreateddate'])); ?></p>
+    
+    <p id="download_expiry"><?php echo lang('_EXPIRY_DATE') . ': ' . date(lang('datedisplayformat'), strtotime($fileData[0]['fileexpirydate'])); ?></p>
+    
+    <?php
+    if (!empty($fileData[0]['filesubject'])) {
+        echo '<p id="download_subject">' . lang('_SUBJECT') . ': ' . utf8ToHtml($fileData[0]['filesubject'], true) . '</p>';
+    }
+    
+    if (!empty($fileData[0]['filemessage'])) {
+        echo '<p id="download_message">' . lang('_MESSAGE') . ': ' . nl2br(utf8ToHtml($fileData[0]['filemessage'], true)) . '</p>';
+    }
+    ?>
+    
+    <form id="fileform" method="post" action="multidownload.php?gid=<?php echo urlencode($_REQUEST['gid'])?>">
+      <table id="myfiles" style="table-layout: fixed; border: 0; width: 100%; border-spacing: 0;">
+        <tr class="headerrow" >
+          <td class="tblmcw2"><input type="checkbox" checked="checked" style="margin-left: 0; margin-right: 0" id="selectall" onclick="$('.checkboxes').prop('checked', $('#selectall').prop('checked')); showOrHideErrorMessage(); showOrHideZipMessages();"/></td>
+          <td class="HardBreak" id="myfiles_header_filename" style="vertical-align: middle"><strong><?php echo lang('_FILE_NAME'); ?></strong></td>
+          <td class="HardBreak tblmcw3" id="myfiles_header_size" style="vertical-align: middle"><strong><?php echo lang('_SIZE'); ?></strong></td>
+        </tr>
+        
         <?php
-        if (!empty($fileData[0]['filesubject'])) {
-            echo '<p id="download_subject">' . lang('_SUBJECT') . ': ' . utf8ToHtml($fileData[0]['filesubject'], true) . '</p>';
+        for ($i = 0; $i < sizeof($fileData); $i++) {
+            echo '<tr><td class="dr7"></td><td class="dr7"></td><td class="dr7"></td></tr>';
+            echo '<tr>' .
+                 '  <td style="text-align: center; vertical-align: middle" class="dr1"><input type="checkbox" checked="checked" class="checkboxes" name="' . $fileData[$i]['filevoucheruid'] . '" style="margin-left: 0; margin-right: 0; width: 11px; height: 11px;" /></td>' .
+                 '  <td class="dr2 HardBreak"><a id="link_downloadfile_' . $i .'" href="download.php?vid=' .$fileData[$i]['filevoucheruid'] . '">' . utf8ToHtml($fileData[$i]['fileoriginalname'], true) . '</a></td>' .
+                 '  <td class="dr8 HardBreak">' . formatBytes($fileData[$i]['filesize']) . '</td>' .
+                 '</tr>';
         }
-
-        if (!empty($fileData[0]['filemessage'])) {
-            echo '<p id="download_message">' . lang('_MESSAGE') . ': ' . nl2br(utf8ToHtml($fileData[0]['filemessage'], true)) . '</p>';
-        }
+        echo '<tr><td class="dr7"></td><td class="dr7"></td><td class="dr7"></td></tr>';
         ?>
-
-        <form id="fileform" method="post" action="multidownload.php?gid=<?php echo urlencode($_REQUEST['gid'])?>">
-            <table id="myfiles" style="table-layout: fixed; border: 0; width: 100%; border-spacing: 0;">
-                <tr class="headerrow" >
-                    <td class="tblmcw2"><input type="checkbox" checked="checked" style="margin-left: 0; margin-right: 0" id="selectall"
-                                          onclick="$('.checkboxes').prop('checked', $('#selectall').prop('checked')); showOrHideErrorMessage(); showOrHideZipMessages();"/></td>
-                    <td class="HardBreak" id="myfiles_header_filename" style="vertical-align: middle"><strong><?php echo lang('_FILE_NAME'); ?></strong></td>
-                    <td class="HardBreak tblmcw3" id="myfiles_header_size" style="vertical-align: middle"><strong><?php echo lang('_SIZE'); ?></strong></td>
-                </tr>
-                <?php
-                for ($i = 0; $i < sizeof($fileData); $i++) {
-                    echo '<tr><td class="dr7"></td><td class="dr7"></td><td class="dr7"></td></tr>';
-
-                    echo
-                        '<tr>' .
-                        '<td style="text-align: center; vertical-align: middle" class="dr1"><input type="checkbox" checked="checked" class="checkboxes" name="' . $fileData[$i]['filevoucheruid'] . '" style="margin-left: 0; margin-right: 0; width: 11px; height: 11px;" /></td>' .
-                        '<td class="dr2 HardBreak"><a id="link_downloadfile_' . $i .'" href="download.php?vid=' .$fileData[$i]['filevoucheruid'] . '">' . utf8ToHtml($fileData[$i]['fileoriginalname'], true) . '</a></td>' .
-                        '<td class="dr8 HardBreak">' . formatBytes($fileData[$i]['filesize']) . '</td>' .
-                        '</tr>';
-                }
-                echo '<tr><td class="dr7"></td><td class="dr7"></td><td class="dr7"></td></tr>';
-
-                ?>
-            </table>
-            <input type="hidden" name="isformrequest" value="true" />
-            <input type="hidden" id="sendDlComplete" name="dlcomplete" value="" />
-        </form>
-
-        <div id="zipmessage">
-            <p><?php echo lang('_ZIP_MESSAGE'); ?></p>
-        </div>
-
-        <div id="macmessage">
-            <p><?php echo lang('_MAC_ZIP_MESSAGE'); ?><a href="<?php echo $config['mac_unzip_link']; ?>"><?php echo $config['mac_unzip_name']; ?></a>.</p>
-        </div>
-
-        <?php if ($fileData[0]['fileenabledownloadreceipts'] == 'true') { ?>
-        <p><input type="checkbox" id="dlcomplete" style="width:20px; vertical-align: middle"/><?php echo lang('_DOWNLOADER_RECEIPT'); ?></p>
-        <?php } ?>
-
-        <div class="menu mainButton" id="multidownloadbutton">
-            <p>
-                <a id="download" href="" onclick="startDownload(); return false;">
-                    <?php echo lang('_DOWNLOAD_SELECTED'); ?>
-                </a>
-            </p>
-        </div>
+        
+      </table>
+      
+      <input type="hidden" name="isformrequest" value="true" />
+      <input type="hidden" id="sendDlComplete" name="dlcomplete" value="" />
+    </form>
+    
+    <div id="zipmessage">
+      <p><?php echo lang('_ZIP_MESSAGE'); ?></p>
     </div>
+    
+    <div id="macmessage">
+      <p><?php echo lang('_MAC_ZIP_MESSAGE'); ?><a href="<?php echo $config['mac_unzip_link']; ?>"><?php echo $config['mac_unzip_name']; ?></a>.</p>
+    </div>
+    
+    <?php if ($fileData[0]['fileenabledownloadreceipts'] == 'true') { ?>
+    <p><input type="checkbox" id="dlcomplete" style="width:20px; vertical-align: middle"/><?php echo lang('_DOWNLOADER_RECEIPT'); ?></p>
+    <?php } ?>
+    
+    <div class="menu mainButton" id="multidownloadbutton">
+      <p>
+        <a id="download" href="" onclick="startDownload(); return false;"><?php echo lang('_DOWNLOAD_SELECTED'); ?></a>
+      </p>
+    </div>
+  </div>
 </div>
 
 <?php } ?>

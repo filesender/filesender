@@ -40,22 +40,29 @@ require_once('../classes/_includes.php');
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title><?php echo htmlspecialchars($config['site_name']); ?></title>
-<link rel="stylesheet" type="text/css" href="css/default.css?<?php echo FileSender_Version::VERSION; ?>" />
-</head>
-<body scroll="no">
-<div id="wrap">
-  <div id="header">
-    <img src="displayimage.php?type=banner" width="800" height="60" style="border: 0;" alt="banner"/>
-  <div id="message"><?php echo lang($lang["_MESSAGE"]); ?></div>
- </div>
-  <div id="content">
-    <div style="text-align: center"><?php echo lang("_INVALID_VOUCHER"); ?>
-    </div>
-    <hr />
-  </div><!-- #content -->
-</div><!-- #wrap -->
-</body>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        
+        <title><?php echo htmlspecialchars($config['site_name']); ?></title>
+        
+        <link rel="stylesheet" type="text/css" href="css/default.css?<?php echo FileSender_Version::VERSION; ?>" />
+    </head>
+    
+    <body scroll="no">
+        <div id="wrap">
+            <div id="header">
+                <img src="displayimage.php?type=banner" width="800" height="60" style="border: 0;" alt="banner"/>
+                
+                <div id="message"><?php echo lang($lang["_MESSAGE"]); ?></div>
+            </div>
+            
+            <div id="content">
+                <div style="text-align: center">
+                    <?php echo lang("_INVALID_VOUCHER"); ?>
+                </div>
+                
+                <hr />
+            </div><!-- #content -->
+        </div><!-- #wrap -->
+    </body>
 </html>
