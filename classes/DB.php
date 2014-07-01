@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  * 
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2014, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -60,7 +60,8 @@ class DB
         return self::$instance;
     }
 
-    public function prepare($query) {
+    public function prepare($query)
+    {
         if (!is_string($query) || empty($query)) {
             logEntry('Invalid query ' . $query, 'E_ERROR');
             displayError(lang('_ERROR_CONTACT_ADMIN'), 'Invalid query: ' . $query);
@@ -73,7 +74,8 @@ class DB
         return $connection->prepare($query);
     }
 
-    public function execute(PDOStatement $statement) {
+    public function execute(PDOStatement $statement)
+    {
         try {
             $statement->execute();
         } catch (PDOException $e) {
@@ -136,8 +138,8 @@ class DB
         }
 
         // Sanity check.
-        if (!array_key_exists('db_host', $config) || !array_key_exists('db_database', $config) ||
-            !array_key_exists('db_username', $config) || !array_key_exists('db_password', $config)) {
+        if (!array_key_exists('db_host', $config) || ! array_key_exists('db_database', $config) 
+            || !array_key_exists('db_username', $config) || ! array_key_exists('db_password', $config)) {
             throw new DbException ('Incomplete parameter specification for database, please check your config.php');
         }
 
@@ -149,3 +151,4 @@ class DB
         return "$dbType:host=$dbHost;dbname=$dbName";
     }
 }
+

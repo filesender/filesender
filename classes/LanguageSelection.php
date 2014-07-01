@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  * 
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2014, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -39,64 +39,64 @@ function initlanguage()
     global $locales;
     global $config;
 
-$filesenderBase = dirname(dirname(__FILE__));
+    $filesenderBase = dirname(dirname(__FILE__));
 
-// Read browser pref to language file mappings from locale.php. Prefer (exclusively) the one found in ./config (if any).
-// This allows the site admin to both add new language mappings but also to exclude mappings defined in the distributed locale.php.
-if (file_exists("$filesenderBase/config/locale.php")) {
-    require_once("$filesenderBase/config/locale.php");
-} else {
-    require_once("$filesenderBase/language/locale.php");
-}
-
-// Get the language based on the browser accepted language(s) and the available locales.
-// Default to the site_defaultlanguage configurable if defined.
-if (isset($config['site_defaultlanguage'])) {
-    $languages = getClientLanguage(array_keys($locales), str_replace("_", "-", strtolower($config['site_defaultlanguage'])));
-} else {
-    $languages = getClientLanguage(array_keys($locales));
-}
-
-// Set the language file if found in the locale.php mappings.
-if (!empty($locales[$languages])) {
-    $langFile = $locales[$languages];
-    logEntry('Using ' . $languages . '/' . $langFile . ' as preferred language.');
-} else {
-    logEntry('No mapping for ' . $languages . ' found. Please check your language configuration.', 'E_ERROR');
-}
-
-// Try and include the various language files:
-// 1. Always read in the en_AU.php file first (this one should always be available and contains all definitions).
-// 2. Override with an existing $config['site_defaultlanguage'] file (either in ./language or ./config).
-// 3. Override with an existing language file found in the browser pref to language file mappings
-//    in locale.php (either in ./language or ./config).
-
-// For 2. and 3.: if a language file exists in both ./language and ./config both files are included but
-// for definitions specified in both files the one in /.config is used.
-
-// 1. By including en_AU first, we make sure ALL used keys actually exist!
-require("$filesenderBase/language/" . 'en_AU.php');
-require("$filesenderBase/language/" . 'en_AU_emails.php');
-
-// 2. Override definitions if a non-en_AU default language is configured.
-if (isset($config['site_defaultlanguage']) && $config['site_defaultlanguage'] != "en_AU") {
-    $languageFileFound = loadLanguageFile("$filesenderBase/language/");
-    $configFileFound = loadLanguageFile("$filesenderBase/config/");
-
-    if (!loadLanguageFile("$filesenderBase/language/") && !loadLanguageFile("$filesenderBase/config/")) {
-        logEntry('Default language file not available in language or config directory: ' . $config['site_defaultlanguage'], 'E_ERROR');
+    // Read browser pref to language file mappings from locale.php. Prefer (exclusively) the one found in ./config (if any).
+    // This allows the site admin to both add new language mappings but also to exclude mappings defined in the distributed locale.php.
+    if (file_exists("$filesenderBase/config/locale.php")) {
+        require_once("$filesenderBase/config/locale.php");
+    } else {
+        require_once("$filesenderBase/language/locale.php");
     }
-}
 
-// 3. Override definitions if a browser pref to language file mapping is found.
-if (!empty($langFile)) {
-    $languageFileFound = loadLanguageFile("$filesenderBase/language/", $langFile);
-    $configFileFound = loadLanguageFile("$filesenderBase/config/", $langFile);
-
-    if (!$languageFileFound && !$configFileFound) {
-        logEntry('Mapping for preferred language found but language file not found in language or config directory: ' . $langFile, 'E_ERROR');
+    // Get the language based on the browser accepted language(s) and the available locales.
+    // Default to the site_defaultlanguage configurable if defined.
+    if (isset($config['site_defaultlanguage'])) {
+        $languages = getClientLanguage(array_keys($locales), str_replace("_", "-", strtolower($config['site_defaultlanguage'])));
+    } else {
+        $languages = getClientLanguage(array_keys($locales));
     }
-}
+
+    // Set the language file if found in the locale.php mappings.
+    if (! empty($locales[$languages])) {
+        $langFile = $locales[$languages];
+        logEntry('Using ' . $languages . '/' . $langFile . ' as preferred language.');
+    } else {
+        logEntry('No mapping for ' . $languages . ' found. Please check your language configuration.', 'E_ERROR');
+    }
+
+    // Try and include the various language files:
+    // 1. Always read in the en_AU.php file first (this one should always be available and contains all definitions).
+    // 2. Override with an existing $config['site_defaultlanguage'] file (either in ./language or ./config).
+    // 3. Override with an existing language file found in the browser pref to language file mappings
+    //    in locale.php (either in ./language or ./config).
+
+    // For 2. and 3.: if a language file exists in both ./language and ./config both files are included but
+    // for definitions specified in both files the one in /.config is used.
+
+    // 1. By including en_AU first, we make sure ALL used keys actually exist!
+    require("$filesenderBase/language/" . 'en_AU.php');
+    require("$filesenderBase/language/" . 'en_AU_emails.php');
+
+    // 2. Override definitions if a non-en_AU default language is configured.
+    if (isset($config['site_defaultlanguage']) && $config['site_defaultlanguage'] != "en_AU") {
+        $languageFileFound = loadLanguageFile("$filesenderBase/language/");
+        $configFileFound = loadLanguageFile("$filesenderBase/config/");
+
+        if (! loadLanguageFile("$filesenderBase/language/") && ! loadLanguageFile("$filesenderBase/config/")) {
+            logEntry('Default language file not available in language or config directory: ' . $config['site_defaultlanguage'], 'E_ERROR');
+        }
+    }
+
+    // 3. Override definitions if a browser pref to language file mapping is found.
+    if (! empty($langFile)) {
+        $languageFileFound = loadLanguageFile("$filesenderBase/language/", $langFile);
+        $configFileFound = loadLanguageFile("$filesenderBase/config/", $langFile);
+
+        if (! $languageFileFound && ! $configFileFound) {
+            logEntry('Mapping for preferred language found but language file not found in language or config directory: ' . $langFile, 'E_ERROR');
+        }
+    }
 }
 
 function lang($item)

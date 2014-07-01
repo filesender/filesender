@@ -4,7 +4,8 @@
  * Created by Edwin Schaap and René Klomp
  */
 
-class TeraSender {
+class TeraSender
+{
     private $x,
             $filename,
             $fd,
@@ -13,7 +14,7 @@ class TeraSender {
             $chunkSize,
             $jsonReply=array('log'=>'');
 
-    function __construct($filename, $chunkSize, $config=array())
+    public function __construct($filename, $chunkSize, $config=array())
     {
         $this->filename = $filename;
         $this->chunkSize = $chunkSize;
@@ -212,5 +213,5 @@ class TeraSender {
         echo json_encode( $this->jsonReply);
         die();
     }
-
 }
+

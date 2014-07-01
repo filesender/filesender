@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  * 
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2014, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -81,7 +81,7 @@ function getOpenSSLKey()
 function sanitizeFilename($fileName)
 {
 
-    if (!empty($fileName)) {
+    if (! empty($fileName)) {
         $fileName = preg_replace("/^\./", "_", $fileName); //return preg_replace("/[^A-Za-z0-9_\-\. ]/", "_", $filename);
         return $fileName;
     } else {
@@ -105,25 +105,25 @@ function ensureSaneOpenSSLKey($key)
     return ctype_alnum($key) && strlen($key) == $config['openSSLKeyLength'] * 2;
 }
 
- //--------------------------------------- 
-    //  Return custom css in /config if it exists
-    //  Returns String 
-    //  Ricoshae 07 May 2013
-	// ---------------------------------------
-  function customcss() 
-    {
-        global $config,$filesenderBase;
+// ---------------------------------------- 
+//  Return custom css in /config if it exists
+//  Returns String 
+//  Ricoshae 07 May 2013
+// ---------------------------------------
+function customcss() 
+{
+    global $config,$filesenderBase;
    
-        $cssstring = "";
-        if(isset($config["customCSS"]) && !empty($config["customCSS"]) && file_exists($filesenderBase."/config/".$config["customCSS"]))
-        {
-            $css = file_get_contents($filesenderBase."/config/".$config["customCSS"]);
-            $cssstring .=  '<style type="text/css">';
-            $cssstring .= htmlspecialchars($css);
-            $cssstring .= '</style>';
-        }
-          return $cssstring;
+    $cssstring = "";
+    if(isset($config["customCSS"]) && !empty($config["customCSS"]) && file_exists($filesenderBase."/config/".$config["customCSS"]))
+    {
+        $css = file_get_contents($filesenderBase."/config/".$config["customCSS"]);
+        $cssstring .=  '<style type="text/css">';
+        $cssstring .= htmlspecialchars($css);
+        $cssstring .= '</style>';
     }
+        return $cssstring;
+}
     
 class Functions
 {
@@ -235,7 +235,8 @@ class Functions
         return json_encode($statement->fetchAll(PDO::FETCH_ASSOC));
     }
 
-    public function getUsedVoucherTransactions() {
+    public function getUsedVoucherTransactions()
+    {
         $authAttributes = $this->getAuthAttributes();
         $emailList = '';
 
@@ -265,7 +266,8 @@ class Functions
         return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    private function getCommaSeparatedEmailParameters() {
+    private function getCommaSeparatedEmailParameters()
+    {
         $authAttributes = $this->getAuthAttributes();
         $emailList = '';
 
@@ -527,7 +529,7 @@ class Functions
     // --------------------------------
     // Adds a list of email recipients to the transaction identified by $trackingCode and $authUserUid.
     // --------------------------------
-    function addRecipientsToTransaction($emailList, $trackingCode, $authUserUid, $subject, $message)
+    public function addRecipientsToTransaction($emailList, $trackingCode, $authUserUid, $subject, $message)
     {
         $transactionDetails = $this->getTransactionDetails($trackingCode, $authUserUid); // Transaction file list.
         $existingDetails = $this->getTransactionRecipients($trackingCode, $authUserUid); // Existing recipients list.
@@ -574,7 +576,7 @@ class Functions
     // --------------------------------
     // Gets information about a specific transaction.
     // --------------------------------
-    function getTransactionDetails($trackingCode, $authUserUid)
+    public function getTransactionDetails($trackingCode, $authUserUid)
     {
         $statement = $this->db->prepare(
             "SELECT * " .
@@ -635,7 +637,7 @@ class Functions
     // --------------------------------
     // Returns a list of recipients for a specific transaction.
     // --------------------------------
-    function getTransactionRecipients($trackingCode, $authUserUid)
+    public function getTransactionRecipients($trackingCode, $authUserUid)
     {
         $statement = $this->db->prepare(
             'SELECT * ' .
@@ -746,7 +748,7 @@ class Functions
     // --------------------------------
     // Returns the number of times a given recipient has downloaded each file from a given transaction.
     // --------------------------------
-    function getTransactionDownloadsForRecipient($recipientEmail, $trackingCode, $authUserUid)
+    public function getTransactionDownloadsForRecipient($recipientEmail, $trackingCode, $authUserUid)
     {
         $statement = $this->db->prepare(
             'SELECT fileoriginalname, filevoucheruid, filestatus ' .
@@ -781,7 +783,7 @@ class Functions
     // --------------------------------
     // Check if a group ID is valid and does not already exist.
     // --------------------------------
-    function isValidGroupId($groupId)
+    public function isValidGroupId($groupId)
     {
         if (ensureSaneOpenSSLKey($groupId)) {
             $files = $this->getMultiFileData($groupId);
@@ -796,7 +798,7 @@ class Functions
     // --------------------------------
     // Gets information about a transaction based on group ID.
     // --------------------------------
-    function getMultiFileData($groupId)
+    public function getMultiFileData($groupId)
     {
         $statement = $this->db->prepare(
             'SELECT * ' .
@@ -825,7 +827,7 @@ class Functions
     // --------------------------------
     // Returns total number of times each file in a transaction has been downloaded (total, not per-user).
     // --------------------------------
-    function getFileDownloadTotals($trackingCode, $authUserUid)
+    public function getFileDownloadTotals($trackingCode, $authUserUid)
     {
         $statement = $this->db->prepare(
             "SELECT COUNT(*), logfilename " .
@@ -847,7 +849,7 @@ class Functions
     // --------------------------------
     // Removes a recipient from a transaction and sends email(s).
     // --------------------------------
-    function deleteRecipient($groupId, $notifyRecipient)
+    public function deleteRecipient($groupId, $notifyRecipient)
     {
         $files = $this->getMultiFileData($groupId);
 
@@ -874,7 +876,7 @@ class Functions
     // --------------------------------
     // Deletes all files in a transaction.
     // --------------------------------
-    function deleteTransaction($trackingCode, $authUserUid, $notifyRecipients)
+    public function deleteTransaction($trackingCode, $authUserUid, $notifyRecipients)
     {
         $recipients = $this->getTransactionRecipients($trackingCode, $authUserUid);
 
@@ -1431,7 +1433,8 @@ class Functions
         return $value == $menuName ? 'active' : '';
     }
 
-    public function advancedSettingsEnabled() {
+    public function advancedSettingsEnabled()
+    {
         global $config;
         return ($config['terasender'] && $config['terasenderadvanced'])
             || $config['upload_complete_email_display'] == 'hidden'
@@ -1446,7 +1449,7 @@ class Functions
     // Converts from UNIX to DOS style timestamp.
     // Defaults to current time if $timestamp parameter is missing or 0.
     // --------------------------------
-    function unixToDosTime($timestamp = 0)
+    public function unixToDosTime($timestamp = 0)
     {
         $timeBit = ($timestamp == 0) ? getdate() : getdate($timestamp);
 
@@ -1461,3 +1464,4 @@ class Functions
             $timeBit['minutes'] << 5 | $timeBit['seconds'] >> 1);
     }
 }
+

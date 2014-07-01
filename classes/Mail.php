@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  * 
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2014, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -34,11 +34,12 @@
 //  --------------------------------
 // email class
 // ---------------------------------
-class Mail {
-
+class Mail
+{
     private static $instance = NULL;
 
-    public static function getInstance() {
+    public static function getInstance()
+    {
         // Check for both equality and type		
         if(self::$instance === NULL) {
             self::$instance = new self();
@@ -50,12 +51,17 @@ class Mail {
     // Send an upload confirmation email to the file sender ("filefrom" field).
     // $groupId can be any of the group IDs from the transaction.
     // ---------------------------------------
-    public function sendUploadConfirmation($groupId) {
+    public function sendUploadConfirmation($groupId)
+    {
         global $functions;
 
         $fileDetails = $functions->getMultiFileData($groupId);
         $fileDetails[0]['fileto'] = $fileDetails[0]['filefrom'];
+
+	logEntry('Before setting file subj...', 'E_NOTICE');
         $fileDetails[0]['filesubject'] = lang('_EMAIL_SUBJECT_FILES_UPLOADED');
+	logEntry('Setting file subj to: '.lang('_EMAIL_SUBJECT_FILES_UPLOADED'), 'E_NOTICE');
+
         return $this->sendEmail($fileDetails[0], lang('_EMAIL_BODY_FILES_UPLOADED'), 'full', $fileDetails);
     }
 
@@ -63,7 +69,8 @@ class Mail {
     // Send a "Download is available" email to recipient(s).
     // $groupIds can be either an array of IDs (for multiple recipients) or a string (single recipient).
     // ---------------------------------------
-    public function sendDownloadAvailable($groupIds) {
+    public function sendDownloadAvailable($groupIds)
+    {
         $functions = Functions::getInstance();
 
         if (is_string($groupIds)) {
@@ -107,7 +114,8 @@ class Mail {
     // Send a "file has been downloaded" email to sender.
     // $voucherIds can be either an array of IDs (for multiple files) or a string (single file).
     // ---------------------------------------
-    public function sendDownloadNotification($voucherIds, $dlCompleteEmail = false) {
+    public function sendDownloadNotification($voucherIds, $dlCompleteEmail = false)
+    {
         $functions = Functions::getInstance();
 
         if (is_string($voucherIds)) {
@@ -164,7 +172,8 @@ class Mail {
     // $recipient should be an array from getMultiFileData().
     // $notifyRecipient is a boolean indicating whether to notify the recipients (and not just the sender).
     // ---------------------------------------
-    public function sendRecipientDeleted($recipient, $notifyRecipient) {
+    public function sendRecipientDeleted($recipient, $notifyRecipient)
+    {
         $recipient[0]['recemail'] = $recipient[0]['fileto'];
         $recipient[0]['fileto'] = $recipient[0]['filefrom'];
         $recipient[0]['filesubject'] = lang('_EMAIL_SUBJECT_RECIPIENT_DELETED');
@@ -190,11 +199,13 @@ class Mail {
     // $recipients should be an array from getTransactionRecipients().
     // $notifyRecipients is a boolean indicating whether to notify the recipients (and not just the sender).
     // ---------------------------------------
-    public function sendTransactionDeleted($recipients, $notifyRecipients) {
+    public function sendTransactionDeleted($recipients, $notifyRecipients)
+    {
         $temp = $recipients[0]['fileto'];
         $recipients[0]['fileto'] = $recipients[0]['filefrom'];
-
+	logEntry('Set subj for a Transaction Deleted message...');
         $recipients[0]['filesubject'] = lang('_EMAIL_SUBJECT_TRANSACTION_DELETED');
+	logentry('TRANS_DEL subj set to:'.$recipients[0]['filesubject']);
 
         if (!$this->sendEmail($recipients[0], lang('_EMAIL_BODY_TRANSACTION_DELETED'))) {
             return false;
@@ -215,7 +226,8 @@ class Mail {
         return true;
     }
 
-    public function sendVoucherIssued($voucherId) {
+    public function sendVoucherIssued($voucherId)
+    {
         global $functions;
 
         $data = $functions->getVoucherData($voucherId);
@@ -241,7 +253,8 @@ class Mail {
         return true;
     }
 
-    public function sendVoucherCancelled($voucherId) {
+    public function sendVoucherCancelled($voucherId)
+    {
         global $functions;
 
         $data = $functions->getVoucherData($voucherId);
@@ -270,7 +283,8 @@ class Mail {
     // Send a daily transaction summary email. Uses information from the logs table, so does not use sendEmail().
     // $transactionDetails is an array of transactions (from logs) by a given user within the last 24 hours.
     // ---------------------------------------
-    public function sendSummary($transactionDetails) {
+    public function sendSummary($transactionDetails)
+    {
         global $config;
 
         if (!filter_var($transactionDetails[0]['logto'], FILTER_VALIDATE_EMAIL)) {
@@ -374,7 +388,8 @@ class Mail {
     //---------------------------------------
     // Send mail
     // 
-    public function sendEmail($mailObject, $template, $type = 'full', $multiFileDetails = null){
+    public function sendEmail($mailObject, $template, $type = 'full', $multiFileDetails = null)
+    {
         global $config;
 		global $errorArray;
 
@@ -415,7 +430,8 @@ class Mail {
         }
     }
 
-    private function replaceTemplateVariables($template, $mailObject, $type = 'full') {
+    private function replaceTemplateVariables($template, $mailObject, $type = 'full')
+    {
         global $config;
 
         $fileoriginalname = sanitizeFilename($mailObject['fileoriginalname']);
@@ -473,7 +489,8 @@ class Mail {
         return $template;
     }
 
-    private function replaceMultiFileTemplateVariables($template, $transactionDetails) {
+    private function replaceMultiFileTemplateVariables($template, $transactionDetails)
+    {
         global $config;
 
         $template = $this->replaceTemplateVariables($template, $transactionDetails[0]);
@@ -492,7 +509,8 @@ class Mail {
         return $template;
     }
 
-    private function createEmailHeaders($mailObject) {
+    private function createEmailHeaders($mailObject)
+    {
         global $config;
         $crlf = $config['crlf'];
 
@@ -508,7 +526,8 @@ class Mail {
         return $headers;
     }
 
-    private function createEmailSubject($mailObject, $type = 'full') {
+    private function createEmailSubject($mailObject, $type = 'full')
+    {
         global $config;
 
         if ($type == 'bounce') {
@@ -535,7 +554,8 @@ class Mail {
         return $subject;
     }
 
-    private function createEmailReturnPath($mailObject, $type = 'full') {
+    private function createEmailReturnPath($mailObject, $type = 'full')
+    {
         // RFC2821 (Envelope) originator of the message
         global $config;
         $crlf = $config['crlf'];
@@ -555,7 +575,8 @@ class Mail {
         return $returnPath;
     }
 
-    private function createEmailBody($template) {
+    private function createEmailBody($template)
+    {
         // Check and set the needed encoding for the body, convert if necessary.
         require_once("../includes/UTF8.php");
         $body_encoding = detectCharEncoding($template) ;
@@ -568,11 +589,11 @@ class Mail {
         return wordwrap($template, 70);
     }
 
-	//---------------------------------------
+    //---------------------------------------
     // Send summary 
     // 	
 	
-	 /*public function sendSummary($to,$message){
+	/*public function sendSummary($to,$message){
 
         // sends a summary 
 
@@ -602,8 +623,8 @@ class Mail {
     //---------------------------------------
     // Send admin mail messages
     // 	
-    public function sendEmailAdmin($message){
-
+    public function sendEmailAdmin($message)
+    {
         // send admin notifications via email
 
         global $config;
@@ -629,6 +650,5 @@ class Mail {
             return false;
         }
     }
-
 }
-?>
+
