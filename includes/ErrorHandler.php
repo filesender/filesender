@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  * 
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2014, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -132,11 +132,9 @@ function logEntry($message, $type = 'E_NOTICE')
             closelog();
             
              // write error log to database
-            if($type == 'E_ERROR')
-            {
+            if ($type == 'E_ERROR') {
                $log->saveLog(NULL, "Error", $date . ":". $message);
             }
-            
         }
     }
 }
@@ -151,3 +149,4 @@ function displayError($errorMessage, $detailedErrorMessage)
         echo '<br /><div id="errmessage">' . htmlspecialchars($detailedErrorMessage) . '</div>';
     }
 }
+

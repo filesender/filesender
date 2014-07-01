@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  * 
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2014, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -39,7 +39,7 @@ class AuthSaml
 
     public static function getInstance()
     {
-        // Check for both equality and type.
+        // Returns existing instance, initiates new one otherwise
         if (self::$instance === null) {
             self::$instance = new self();
         }
@@ -101,7 +101,10 @@ class AuthSaml
 
         // Check for empty or invalid email attribute
         if (empty($attributes["email"])) {
-            logEntry("No valid email attribute found in IDP (looking for '" . $config['saml_email_attribute'] . "')", "E_ERROR");
+            logEntry(
+                "No valid email attribute found in IDP (looking for '" . $config['saml_email_attribute'] . "')",
+                "E_ERROR"
+            );
             $missingAttributes = true;
         }
 
@@ -138,7 +141,8 @@ class AuthSaml
         $message = '';
 
         foreach ($attributes as $tk => $tv) {
-            $message .= (isset($return) ? $return . $outGlue : '') . $tk . $inGlue . (is_array($tv) ? implode($separator, $tv) : $tv) . $outGlue;
+            $message .= (isset($return) ? $return . $outGlue : '') . $tk . $inGlue . 
+                (is_array($tv) ? implode($separator, $tv) : $tv) . $outGlue;
         }
 
         $ip = $_SERVER['REMOTE_ADDR']; // Capture IP.
@@ -167,7 +171,8 @@ class AuthSaml
     {
         global $config;
 
-        $logonUrl = $config['site_simplesamlurl'] . 'module.php/core/as_login.php?AuthId=' . $config['site_authenticationSource'] . '&ReturnTo=' . $config['site_url'] . 'index.php?s=upload';
+        $logonUrl = $config['site_simplesamlurl'] . 'module.php/core/as_login.php?AuthId=' . 
+            $config['site_authenticationSource'] . '&ReturnTo=' . $config['site_url'] . 'index.php?s=upload';
         return htmlentities($logonUrl);
     }
 
@@ -177,7 +182,8 @@ class AuthSaml
         global $config;
         require_once($config['site_simplesamllocation'] . 'lib/_autoload.php');
 
-        $logoffUrl = $config['site_simplesamlurl'] . 'module.php/core/as_logout.php?AuthId=' . $config['site_authenticationSource'] . '&ReturnTo=' . $config['site_logouturl'] . '';
+        $logoffUrl = $config['site_simplesamlurl'] . 'module.php/core/as_logout.php?AuthId=' . 
+            $config['site_authenticationSource'] . '&ReturnTo=' . $config['site_logouturl'] . '';
         return htmlentities($logoffUrl);
     }
 
@@ -191,3 +197,4 @@ class AuthSaml
         return $as->isAuthenticated();
     }
 }
+

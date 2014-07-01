@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  * 
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2014, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -47,3 +47,4 @@ require_once("$filesenderBase/classes/Mail.php");
 require_once("$filesenderBase/classes/Log.php");
 require_once("$filesenderBase/classes/DB_Input_Checks.php");
 require_once("$filesenderBase/classes/Zipper.php");
+

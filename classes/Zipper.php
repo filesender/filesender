@@ -376,7 +376,9 @@ class Zipper
     // --------------------------------
     // Sets the variable that sends out download complete receipt emails on.
     // --------------------------------
-    public function enableDownloadCompleteEmail() {
+    public function enableDownloadCompleteEmail()
+    {
         $this->sendDownloadComplete = true;
     }
 }
+

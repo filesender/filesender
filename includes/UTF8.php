@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  * 
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2014, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -50,7 +50,7 @@ function detectLatin1($string)
 function detectUTF8($string)
 {
     return preg_match(
-        '%(?:
+            '%(?:
             [\xC2-\xDF][\x80-\xBF]        # non-overlong 2-byte
             |\xE0[\xA0-\xBF][\x80-\xBF]               # excluding overlongs
             |[\xE1-\xEC\xEE\xEF][\x80-\xBF]{2}      # straight 3-byte
@@ -136,3 +136,4 @@ function utf8ToHtml($utf8, $encodeTags)
     // return mb_convert_encoding($result, 'HTML-ENTITIES', "UTF-8");
     return $result;
 }
+

@@ -44,3 +44,4 @@ class FileSender_Version
         return version_compare($version, strtolower(self::VERSION));
     }
 }
+

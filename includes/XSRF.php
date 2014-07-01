@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  *
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2014, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,6 +32,7 @@
 
 // Prevent cross site request forgery and check if any data has been posted.
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    
     // All posted data is sent as myJSON.
     if (isset($_POST['myJson'])) {
         $data = json_decode($_POST['myJson'], true);
@@ -61,3 +62,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
 }
+
