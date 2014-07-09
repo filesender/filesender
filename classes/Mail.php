@@ -73,6 +73,14 @@ class Mail {
         $template = str_replace("{filesize}", formatBytes($mailobject["filesize"]), $template);
         $template = str_replace("{CRLF}", $crlf, $template);
 
+	if($mailobject["fileencryption"]) {
+		// Remove {fileencrypted_start} and {fileencrypted_end} tags, and keep what's in there
+		$template = preg_replace('/{fileencrypted_start}(.*?){fileencrypted_end}/sm', '$1', $template);
+	} else {
+		// File is not encrypted, remove {fileencrypted_start} and {fileencrypted_end} tags, as well as what's in there
+		$template = preg_replace('/{fileencrypted_start}(.*?){fileencrypted_end}/sm', '', $template);
+	}
+
 	if(strlen($mailobject["filemessage"]) > 0) {
 
 		// Remove {filemessage_start} and {filemessage_end} tags, and keep what's in there

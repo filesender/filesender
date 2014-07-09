@@ -58,6 +58,7 @@ require_once("$filesenderbase/classes/DB.php");
 require_once("$filesenderbase/classes/Mail.php");
 require_once("$filesenderbase/classes/DB_Input_Checks.php");
 require_once("$filesenderbase/classes/Log.php");
+require_once("$filesenderbase/classes/FileMetadata.php");
 
 // set cron variable to force
 $cron = true;
@@ -152,6 +153,7 @@ function cleanUp() {
 	}
 	// Phase 2: remove files on disk that do not have at least one Available file associated with it
 	// in the database (loop through directory and check if file has status Available)
+	// While looping through files on disk, also remove metadata-files that have no existing source file
 
 	// Open the folder
 	$dir_handle = @opendir($FilestoreDirectory) or die("Unable to open $FilestoreDirectory"); 
@@ -173,6 +175,21 @@ function cleanUp() {
 			continue;
 		}
 
+		if (FileMetadata::isMetadataFile($filename)) {
+			// Only proceed with deletion if there is no sourcefile and the metadata-file was not already deleted
+			if (! metadataSourceExists($filename)) {
+				if (file_exists($FilestoreDirectory.$filename)) {
+					deleteFile($filename);
+					logProcess("CRON", "Deleted (metadata) file because sourcefile does not exist: " . $FilestoreDirectory.$filename);
+				} else {
+					logProcess("CRON", "Metadata file already cleaned up as part of sourcefile: ". $FilestoreDirectory.$filename);
+				}
+			} else {
+				logProcess("CRON", "Ignoring (metadata) file with existing sourcefile: " . $FilestoreDirectory.$filename);
+			}
+			continue;	// do not continue further processing.
+		}
+		
 		//check in list of Available files
 		if(!in_array(substr($filename,0,36), $available_fileuids)) {
 		// no Files Available match this file so delete the file
@@ -182,19 +199,7 @@ function cleanUp() {
 					logProcess("CRON","File NOT removed (last modification less then 24 hours ago)".$FilestoreDirectory.$filename);
 				} else {
 					// setting to allow for file wiping
-					if ( empty($config['cron_shred']) ) {
-						// simply delete (unlink) the file
-						unlink($FilestoreDirectory.$filename);
-						logProcess("CRON","File Removed (Expired)".$FilestoreDirectory.$filename);    
-					} else {
-						// use gnu coreutils' shred to permanently remove the file from disk:
-						system ($config['cron_shred_command'] .' '. escapeshellarg($FilestoreDirectory.$filename), $retval);
-						if ( $retval === 0 ) {
-							logProcess("CRON","File Shredded (Expired)".$FilestoreDirectory.$filename);
-						} else {
-							logProcess("CRON","Error ($retval) while shredding".$FilestoreDirectory.$filename);
-						}
-					}
+					deleteFilesenderFile($filename);
 				}
 			}
 		}
@@ -306,6 +311,53 @@ function logProcess($client,$message) {
 		fwrite($fh, $stringData);
 		fclose($fh);
 		closelog();
+	}
+}
+
+// Use the configured context to perform a file deletion; 
+// The provided filename is relative to configured "site_filestore" location, and contains *NO* path info
+function deleteFile($filename) {
+	global $config;
+	$FilestoreDirectory = $config["site_filestore"];
+
+	if ( empty($config['cron_shred']) ) {
+		// simply delete (unlink) the file
+		unlink($FilestoreDirectory.$filename);
+		logProcess("CRON","File Removed (Expired)".$FilestoreDirectory.$filename);
+	} else {
+		// use gnu coreutils' shred to permanently remove the file from disk:
+		system ($config['cron_shred_command'] .' '. escapeshellarg($FilestoreDirectory.$filename), $retval);
+		if ( $retval === 0 ) {
+			logProcess("CRON","File Shredded (Expired)".$FilestoreDirectory.$filename);
+		} else {
+			logProcess("CRON","Error ($retval) while shredding".$FilestoreDirectory.$filename);
+		}
+	}
+}
+
+// Returns whether the source file of the metadata file exists, 
+// i.e. if the metadata file is "abcd.metadata", then return whether a file 
+// with name "abcd" exists
+// The provided filename is relative to configured "site_filestore" location, and contains *NO* path info
+function metadataSourceExists($metadataFilename) {
+	global $config;
+	$FilestoreDirectory = $config["site_filestore"];
+	
+	return file_exists(FileMetadata::sourceFilename($FilestoreDirectory.$metadataFilename));
+}
+
+// Delete a Filesender-file, also considering a possible metadata-file
+// The provided filename is relative to configured "site_filestore" location, and contains *NO* path info
+function deleteFilesenderFile($filename) {
+	global $config;
+	$FilestoreDirectory = $config["site_filestore"];
+	
+	deleteFile($filename);
+
+	// Also consider metadata file
+	$fileMetadata = new FileMetadata($FilestoreDirectory.$filename);
+	if (file_exists($fileMetadata->getAbsoluteFilename())) {
+		deleteFile($fileMetadata->getFilename());
 	}
 }
 ?>

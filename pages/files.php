@@ -391,9 +391,10 @@ $json_o=json_decode($filedata,true);
 	  <td class="tblmcw1" onclick="toggleDownloadSummary()" title="<?php echo lang("_SHOW_ALL"); ?>" style="cursor:pointer"><img class='expct' src="images/openboth.png" border="0" alt=""/></td>
         <td class="tblmcw2">&nbsp;</td>
         <td class="tblmcw2">&nbsp;</td>
-		<td class="tblmcw2">&nbsp;</td>
+        <td class="tblmcw2">&nbsp;</td>
        <td class="HardBreak" id="myfiles_header_to"><strong><?php echo lang("_TO"); ?></strong></td>
         <td class="HardBreak" id="myfiles_header_filename"><strong><?php echo lang("_FILE_NAME"); ?></strong></td>
+        <td class="tblmcw2">&nbsp;</td>
         <td class="HardBreak tblmcw3"  id="myfiles_header_size"><strong><?php echo lang("_SIZE"); ?></strong></td>
        <!-- <td class="HardBreak" id="myfiles_header_subject"><strong><?php //echo lang("_SUBJECT") ; ?></strong></td>-->
        <!-- <td class="HardBreak" id="myfiles_header_message"><strong><?php //echo lang("_MESSAGE") ; ?></strong></td>-->
@@ -410,7 +411,7 @@ foreach($json_o as $item) {
 	$onClick = "'" .$item['filevoucheruid'] ."'";
 	// alternating rows
 	$rowClass = ($i % 2 == 0)? "class='altcolor'":"";
-	echo "<tr><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td></tr>";
+	echo "<tr><td class='dr7'></td><td class='dr7'></td></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td></tr>";
 
 	echo '<tr  '.$rowClass.'>';
   // if(sizeof($item["downloadsummary"]) > 0)
@@ -424,7 +425,15 @@ foreach($json_o as $item) {
 
    echo "<td class='dr2 HardBreak'>" .$item['fileto'] . "</td>";
 
-   echo "<td class='dr2 HardBreak'><a id='link_downloadfile_".$i."' href='download.php?vid=". $item["filevoucheruid"]."' target='_blank'>" .utf8tohtml($item['fileoriginalname'],TRUE). "</a></td>";
+   echo "<td class='dr2 HardBreak'><a id='link_downloadfile_".$i."' href='?vid=". $item["filevoucheruid"]."' target='_blank'>" .utf8tohtml($item['fileoriginalname'],TRUE). "</a></td>";
+
+   if($item['fileencryption'])
+   {
+   echo "<td class='dr2' valign='top'><img id='icon_encrypted_".$i."' src='images/lock.png' alt='' title='".utf8tohtml(lang("_FILE_IS_ENCRYPTED"),true)."' /></td>";
+   } else {
+   echo "<td class='dr2' >&nbsp;</td>";
+   }
+
    echo "<td class='dr2 HardBreak'>" .formatBytes($item['filesize']). "</td>";
    
    echo "<td class='dr2 HardBreak' align='center'>" .$item['downloads']. "</td>";
@@ -434,7 +443,7 @@ foreach($json_o as $item) {
 	//if(sizeof($item["downloadsummary"]) > 0)
 	//{ 
 	echo "</tr>";
-	echo "<tr class='hidden' style='display:none' id='show_".$i."'><td class='dr4'></td><td class='dr6' colspan='8'>";
+	echo "<tr class='hidden' style='display:none' id='show_".$i."'><td class='dr4'></td><td class='dr6' colspan='9'>";
 
 	//echo '<td class="HardBreak" id="myfiles_header_from"><strong>'.<?php echo lang("_FROM");</strong></td>';
 	
@@ -469,7 +478,7 @@ foreach($json_o as $item) {
    echo "</table></td>";
    echo "</tr>";
    } 
-   echo "<tr><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td></tr>";
+   echo "<tr><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td><td class='dr7'></td></tr>";
    //}
 }
 ?>

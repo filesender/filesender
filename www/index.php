@@ -96,6 +96,7 @@ if(!$isVoucher && !$isAuth && $s != "complete" && $s != "completev")
 {
 	$s = "logon";
 }
+$enc = (isset($_REQUEST["enc"]) ? $_REQUEST["enc"] : "false");
 // check if authentication data and attributes exist
 if($isAuth ) 
 { 
@@ -385,7 +386,9 @@ function openabout()
 	} else if($s == "complete" || $s == "completev") 
 	{
 ?>
-		<div id="message"><?php echo lang("_UPLOAD_COMPLETE"); ?></div>
+		<div id="message"><?php echo lang("_UPLOAD_COMPLETE"); ?>
+		<?php if ($enc=="true") echo "<br/>" . lang("_UPLOAD_COMPLETE_ENCRYPTED"); ?>
+		</div>
 <?php
 	} else if ($s == "" && $isAuth){
 		require_once('../pages/upload.php');	

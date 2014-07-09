@@ -83,7 +83,12 @@
 	$flashVARS = "vid=".$voucherUID."&sid=".session_id()."&buttonBrowse=".lang("_BROWSE")."&buttonUpload=".lang("_SEND")."&buttonCancel=".lang("_CANCEL")."&siteURL=".$config["site_url"]."&token=".$token;
  ?>
 <script type="text/javascript" src="lib/js/AC_OETags.js" language="javascript"></script>
+<script type="text/javascript" src="js/crypter/shared.js"></script>
 <script type="text/javascript" src="js/upload.js"></script>
+<script type="text/javascript" src="js/uploader.filesender.js"></script>
+<script type="text/javascript" src="js/crypter/BlobSlicer.js"></script>
+<script type="text/javascript" src="js/crypter/BlobCrypter.js"></script>
+<script type="text/javascript" src="js/crypter/sjcl.js"></script>
 <script type="text/javascript">
 //<![CDATA[
 	// all default settings
@@ -109,8 +114,22 @@
 	
 	var vid='<?php if(isset($_REQUEST["vid"])){echo htmlspecialchars($_REQUEST["vid"],ENT_QUOTES);}; ?>';
 
+	var txtclose = "<?php echo lang("_CLOSE"); ?>";
+	var txtok = "<?php echo lang("_OK"); ?>";
+	
+	var encryptFile = false ; // Configurable default ??
+	var passwordprompt = "<?php echo lang("_ENCRYPT_PASSWDPROMPT"); ?>";
+	var passwordnote = "<?php echo lang("_ENCRYPT_PASSWORD_NOTE"); ?>";
+	var missingpassword = "<?php echo lang("_MISSING_PASSWORD"); ?>";
+	var randomnotready = "<?php echo lang("_RANDOM_NOT_READY"); ?>";
+
  	// start document ready 
 	$(function() { 
+
+		// Hide encryption row for non-capable browsers
+		if (!html5) {
+			$("#encryptionrow").hide(); 
+		}
 
 		// set date picker
 		$("#datepicker" ).datepicker({ minDate: new Date(minimumDate), maxDate: new Date(maximumDate),altField: "#fileexpirydate", altFormat: "d-m-yy" });
@@ -202,7 +221,10 @@
 			}
 		})
 		
-		
+		$("#dialog-password").dialog({
+			autoOpen:false, height: "auto", width: 500, modal: true
+		});
+
 		$('.ui-dialog-buttonpane button:contains(uploadcancelBTN)').attr("id","btn_uploadcancel");            
 		$('#btn_uploadcancel').html('<?php echo lang("_CANCEL") ?>') 
 		
@@ -218,7 +240,10 @@
 			// use standard upload functions
 			$("#uploadstandard").show();
 		}
-        
+
+		 //initialize cryptographic random generator
+		 sjcl.random.startCollectors();
+		
     // autocomplete
 	var availableTags = [<?php  echo (isset($config["autocomplete"]) && $config["autocomplete"])?  $functions->uniqueemailsforautocomplete():  ""; ?>];
 		
@@ -274,6 +299,15 @@
 	    $("#tog").show();
 	}
 	}
+
+	// Toggle encryption
+	function toggleENC() {
+		if (encryptFile == true) {
+			encryptFile = false;
+		} else {
+			encryptFile = true;
+		}
+	}
 	
 	function hidemessages()
 {
@@ -316,7 +350,7 @@
   		data: {myJson:  JSON.stringify(json)}
 		,success:function( data ) {
 		if(data == "") {
-		alert("No response from server");
+			errorDialog("No response from server");
 		return;	
 		}
 		if(data == "ErrorAuth")
@@ -357,8 +391,8 @@
 		getFlexApp("filesenderup").returnMsg(false)
 		}
 		},error:function(xhr,err){
-   		 alert("readyState: "+xhr.readyState+"\nstatus: "+xhr.status);
-    	alert("responseText: "+xhr.responseText);
+			errorDialog("An unknown error occurred. Console log will provide more info."); 
+			console.log("readyState: "+xhr.readyState+"\nstatus: "+xhr.status+"\nresponseText: "+xhr.responseText);
 		}
 	})
 	}
@@ -505,8 +539,9 @@ function uploadcomplete(name,size)
 		if(result == "err_filesizeincorrect") { window.location.href="index.php?s=filesizeincorrect";} //	
 		})
 		} else {
-		if(data.status && data.status == "complete"){window.location.href="index.php?s=complete";}
-		if(data.status && data.status == "completev"){window.location.href="index.php?s=completev";}
+		var enc=(data.encryption?"true":"false"); 
+		if(data.status && data.status == "complete"){window.location.href="index.php?s=complete&enc="+enc;}
+		if(data.status && data.status == "completev"){window.location.href="index.php?s=completev&enc="+enc;}
 		}
 		},error:function(xhr,err){
 			// error function to display error message e.g.404 page not found
@@ -566,7 +601,7 @@ function validate()
 
 		//Use this to allow uplods with faulty parameters (and comment out the previouslone) if(true)
 	{
-	startupload();
+		beforeupload();
 	}
 	} else {
 	getFlexApp("filesenderup").returnMsg("validatebeforeupload");
@@ -739,7 +774,13 @@ if ( hasProductInstall && !hasRequestedVersion ) {
         </td>
         <td colspan="2" align="center" valign="top">&nbsp;</td>
       </tr>
-       <?php if ($config["AuP"]) {?>
+      <tr id="encryptionrow">
+        <td class=""></td>
+        <td><input onclick="toggleENC()" name="fileencryption" style="width:20px;" type="checkbox" id="fileencryption" value="1" /></td>
+        <td><?php echo lang("_ENCRYPT_FILE"); ?></td>
+        <td colspan="2" align="center" valign="top">&nbsp;</td>
+      </tr>
+      <?php if ($config["AuP"]) {?>
       <tr>
         <td class=""></td>
         <td><input name="aup" type="checkbox" id="aup" onchange="validate_aup()" <?php echo ($config["AuP_default"] ) ? 'checked="checked"' : ""; ?> <?php echo (isset($_SESSION["aup"]) && !$authvoucher->aVoucher() ) ? 'checked="checked"' : ""; ?> value="true" />
@@ -784,6 +825,7 @@ if ( hasProductInstall && !hasRequestedVersion ) {
 <div id="dialog-default" style="display:none" title=""> </div>
 <div id="dialog-cancel" style="display:none" title="<?php echo lang("_CANCEL_UPLOAD"); ?>"><?php echo lang("_ARE_YOU_SURE"); ?></div>
 <div id="dialog-uploadprogress" title="" style="display:none">
+<div><?php echo lang("_UPLOAD_ENCRYPT_PROGRESS_MESSAGE");?></div>
 <img id="progress_image" name="progress_image" src="images/ajax-loader-sm.gif" width="16" height="16" alt="Uploading" align="left" /> 
 	<div id="progress_container">
    		<div id="progress_bar" style="display:none">
@@ -795,3 +837,10 @@ if ( hasProductInstall && !hasRequestedVersion ) {
 <?php require_once("$filesenderbase/pages/html5display.php"); ?>
 </div>
 <div id="dialog-autherror" title="<?php echo lang($lang["_MESSAGE"]); ?>" style="display:none"><?php echo lang($lang["_AUTH_ERROR"]); ?></div>
+<div id="dialog-password" title="<?php echo lang($lang["_ENCRYPTION"]); ?>" style="display:none">
+	<div><p><?php echo lang("_ENCRYPT_PASSWDPROMPT"); ?><input type="text" name="encpassword" id="encpassword" size="12" autofocus />
+		<span style="float:right;"/><a href="#" id="genpassword" onclick="generaterandom();"><?php echo lang("_GENERATE_RANDOM"); ?></a></span>
+	</p></div>
+	<div id="password-note"></div>
+	<div id="dialog-password-error" style="color:red"></div>
+</div>

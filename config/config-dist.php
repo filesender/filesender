@@ -69,7 +69,7 @@ public function loadConfig() {
 	$config["autocompleteHistoryMax"] = ""; // "" - unlimited or integer, number of results displayed in autocomplete
 
 	// debug settings
-	$config["debug"] = false; // Debug logging on/off (true/false)
+	$config["debug"] = true; // Debug logging on/off (true/false)
 	$config["displayerrors"] = false; // Display debug errors on screen (true/false)
 	$config['dnslookup'] = true; // log includes DNS lookup (true/false)
 	$config["client_specific_logging"] = false; // client logging (true/false)
@@ -228,6 +228,8 @@ Download link: {serverURL}?vid={filevoucheruid}
 
 The file is available until {fileexpirydate} after which it will be automatically deleted.
 
+{fileencrypted_start}This file was encrypted by the sender. Please contact the sender for details.
+{fileencrypted_end}
 {filemessage_start}Personal message from {filefrom}: {filemessage}{filemessage_end}
 
 Best regards,
@@ -273,6 +275,13 @@ Best regards,
 			<P ALIGN=CENTER>{fileexpirydate}</P>
 		</TD>
 	</TR>
+{fileencrypted_start}
+	<TR>
+		<TD WIDTH=100% COLSPAN="4" BGCOLOR="#e6e6e6">
+			<P ALIGN=CENTER><B>This file was encrypted by the sender. Please contact the sender for details.</B></P>
+		</TD>
+	</TR>
+{fileencrypted_end}
 </TABLE>
 <P></P>
 {filemessage_start}<TABLE WIDTH=100% BORDER=1 BORDERCOLOR="#000000" CELLPADDING=4 CELLSPACING=0>
