@@ -90,13 +90,75 @@ var startTime = 0;
 			$("#fileSize").html("");
 		};
 	}
+ 	
+ 	
+ 	function generaterandom() 
+ 	{
+ 		var numwords = 192/32;	// number of words
+ 		var paranoia = 5;		// level of paranoia: 5 => 192 bits
+ 		// Use SJCL random generator
+ 		if (!sjcl.random.isReady(paranoia)) {
+ 			var progress = 100 * sjcl.random.getProgress(paranoia);
+ 			alert(randomnotready.replace(":1", ""+progress));
+ 		} else {
+ 			var randbits = sjcl.random.randomWords(numwords, paranoia);
+ 			
+ 			$("#encpassword").val("");	// empty
+ 			for (var i = 0; i < numwords; i++) {
+ 				var hi = (randbits[i] >> 16) & 0x0000ffff;
+ 				var lo = randbits[i] & 0x0000ffff;
+ 				$("#encpassword").val( function(inx,v) {
+ 				    return v + hi.toString(16) + lo.toString(16);
+ 				});
+ 			}
+ 		}
+ 	}
+ 	
 
-	function startupload()
-	{
+ 	function beforeupload()
+ 	{
 		$("#uploadbutton a").attr("onclick", ""); // prevent double clicks to start extra uploads
 
+		var password = '';
+
+		if (encryptFile) {
+			var dialogbuttons = {};
+			dialogbuttons[txtok] = function() { 
+							if ($("#encpassword").val()) {
+								$( this ).dialog( "close" ); 
+								startupload($("#encpassword").val());
+							} else {
+								$("#dialog-password-error").html(missingpassword);
+								$("#dialog-password-error").show();
+								$("#encpassword").focus();
+							}};
+			dialogbuttons[txtclose] = function() {
+							$("#uploadbutton a").attr("onclick", "validate()"); // re-activate upload button
+							$( this ).dialog( "close" ); 
+						};
+			$("#dialog-password").dialog({
+					buttons: dialogbuttons,
+					open: function( event, ui ) {
+						$("#password-note").html(passwordnote.replace(":1", $("#fileto").val()));
+						$("#encpassword").focus(); }
+			
+			});
+			
+			$('.ui-dialog-buttonpane button:contains('+txtok+')').attr("id","btn_passwordok");            
+			$('.ui-dialog-buttonpane button:contains('+txtclose+')').attr("id","btn_passwordclose");            
+			$("#dialog-password").dialog("open");
+		}
+		else
+		{
+			startupload(password);
+		}
+ 	}
+ 	
+ 	
+	function startupload(password)
+	{
 		fdata[n].bytesUploaded = 0;
-		
+
 		// validate form data and return filesize or validation error
 		// load form into json array
 		var query = $("#form1").serializeArray(), json = {};
@@ -150,11 +212,11 @@ var startTime = 0;
 		fdata[n].bytesUploaded = parseFloat(data.filesize);
 		updatepb(fdata[n].bytesUploaded, fdata[n].fileSize);	
 		startTime = new Date().getTime();
-                if(html5webworkers){
-                    uploadFileWebworkers();
-                }else{
-                    uploadFile();
-                }
+		if(!encryptFile && html5webworkers){
+			uploadFileWebworkers();
+		}else{
+			uploadFile(password,vid,updatepb);
+		}
 		}
 		},error:function(xhr,err){
 			// error function to display error message e.g.404 page not found
@@ -356,16 +418,3 @@ function updatepb(bytesloaded,totalbytes)
 		$("#progress_completed").html(parseInt(percentComplete) + "%(" + bytesTransfered + ")" );	//display the % completed within the progress bar
 	  
 }
-
-function uploadProgress(evt) {
-	}
-
-function uploadFailed(evt) {
-	clearInterval(intervalTimer);
-	errorDialog("An error occurred while uploading the file.");  
-}  
-  
-function uploadCanceled(evt) {
-	clearInterval(intervalTimer);
-	erorDialog("The upload has been canceled by the user or the browser dropped the connection.");  
-	}  

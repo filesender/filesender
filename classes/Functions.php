@@ -106,7 +106,7 @@ class Functions {
     private $authvoucher;
 
     // the following fields are returned without fileUID to stop unauthorised users accessing the fileUID
-    public $returnFields = " fileid, fileexpirydate, fileto , filesubject, fileactivitydate, filemessage, filefrom, filesize, fileoriginalname, filestatus, fileip4address, fileip6address, filesendersname, filereceiversname, filevouchertype, fileauthuseruid, fileauthuseremail, filecreateddate, fileauthurl, fileuid, filevoucheruid ";	
+    public $returnFields = " fileid, fileexpirydate, fileto , filesubject, fileactivitydate, filemessage, filefrom, filesize, fileoriginalname, filestatus, fileip4address, fileip6address, filesendersname, filereceiversname, filevouchertype, fileauthuseruid, fileauthuseremail, filecreateddate, fileauthurl, fileuid, filevoucheruid, fileencryption ";	
 
     public function __construct() {
 
@@ -842,7 +842,8 @@ class Functions {
 			fileuid,
 			fileauthuseruid,
 			fileauthuseremail,
-			filecreateddate
+			filecreateddate,
+			fileencryption
             ) VALUES
             ( 	:fileexpirydate,
 			:fileto,
@@ -862,7 +863,8 @@ class Functions {
 			:fileuid,
 			:fileauthuseruid,
 			:fileauthuseremail,
-			:filecreateddate)');	
+			:filecreateddate,
+			:fileencryption)');
 				
 			$statement->bindParam(':fileexpirydate', $dataitem['fileexpirydate']);
 			$statement->bindParam(':fileto', $dataitem['fileto']);
@@ -884,6 +886,7 @@ class Functions {
 			$statement->bindParam(':fileauthuseruid', $dataitem['fileauthuseruid']);
 			$statement->bindParam(':fileauthuseremail', $dataitem['fileauthuseremail']);
 			$statement->bindParam(':filecreateddate', $dataitem['filecreateddate']);
+			$statement->bindParam(':fileencryption', $dataitem['fileencryption']);
 	
 			try { 
 				$statement->execute(); 

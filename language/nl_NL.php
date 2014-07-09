@@ -49,7 +49,8 @@ $lang["_HOME"] = "Home";
 $lang["_ABOUT"] = "Over";
 $lang["_HELP"] = "Help";
 $lang["_DELETE_VOUCHER"] = "Trek uitnodiging in";
-$lang["_UPLOAD_COMPLETE"] = "Uw bestand is geüpload en e-mail is verzonden.";
+$lang["_UPLOAD_COMPLETE"] = "De bestanden zijn succesvol geüpload en een download-uitnodiging is verzonden aan de ontvanger(s).".
+		"Zie <a href=\"index.php?s=files\">".$lang["_MY_FILES"]."</a> voor meer informatie.";
 $lang["_UPLOAD_PROGRESS"] = "Voortgang Upload";
 $lang["_DOWNLOAD"] = "Download";
 $lang["_CANCEL_UPLOAD"] = "Annuleer Upload";
@@ -268,5 +269,22 @@ de belangrijkste browsers te volgen. Met name ondersteuning voor de <a href="htt
 // site about
 $lang["_ABOUT_TEXT"] = ' <div align="left" style="padding:5px">'. htmlspecialchars($config['site_name']) .' is een instantie van FileSender (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>), ontwikkeld om te voldoen aan de eisen van de hoger onderwijs en onderzoeksgemeenschap.</div>';
 
+// Added for crypto
+$lang["_DOWNLOAD_PROGRESS"] = "Voortgang Download";
+$lang["_CANCEL_DOWNLOAD"] = "Annuleer Download";
+$lang["_ERROR_MESSAGE"] = "Kon niet doorgaan vanwege fouten";
+$lang["_ENCRYPTION"] = "Versleuteling";
+$lang["_ENCRYPT_FILE"] = "Versleutel dit bestand";
+$lang["_ENCRYPT_PASSWDPROMPT"] = "Voer het wachtwoord in";
+$lang["_DECRYPTION"] = "Ontsleuteling";
+$lang["_DECRYPT_FILE"] = "Ontsleutel dit bestand";
+$lang["_DECRYPT_PASSWDPROMPT"] = "Voer het wachtwoord in";
+$lang["_FILE_IS_ENCRYPTED"] = "Dit bestand is versleuteld";
+$lang["_ENCRYPT_DOWNLOAD_NOT_POSSIBLE"] = "Het downloaden van versleutelde bestanden is momenteel niet mogelijk met uw browser";
+$lang["_ENCRYPT_PASSWORD_NOTE"] = "Let op: zorg ervoor dat de ontvanger deze sleutel ontvangt om het bestand te kunnen ontcijferen. <b>Het wordt afgeraden om dit per mail te versturen aan de ontvanger (:1)!<b>!";
+$lang["_MISSING_PASSWORD"] = "Fout: er moet een wachtwoord worden ingevuld.";
+$lang["_UPLOAD_COMPLETE_ENCRYPTED"] = "Wanneer encryptie is gebruikt, vergeet dan niet om het wachtwoord aan de ontvanger te geven. Zonder het wachtwoord is de download onbruikbaar";
+$lang["_RANDOM_NOT_READY"] = "Random number is nog niet klaar; :1% voortgang. Probeer het over een paar seconden nogmaals.";
+$lang["_GENERATE_RANDOM"] = "Genereer";		
 
 ?>

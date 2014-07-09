@@ -1,0 +1,7 @@
+This svn branch contains the experimental end to end encryption code
+added to the 1.6-release codebase.
+
+For now the database needs one additional column in the files table:
+
+  alter table files add column fileencryption int ;
+

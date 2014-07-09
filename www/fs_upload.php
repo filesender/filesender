@@ -114,7 +114,8 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 		
 		// error if file size uploaded doesn't matches the file size intended to upload
 		// remove the offending file or it will assume resume evry re-attempt
-		if($data["filesize"] != checkFileSize($uploadfolder.$tempFilename))
+		// Disable filesize check for crypted uploads since the final size is not known in advance
+		if(!isset($data["fileencryption"]) && $data["filesize"] != checkFileSize($uploadfolder.$tempFilename))
 		{
 			logEntry("DEBUG fs_upload: File size incorrect after upload = Original:" .$data["filesize"] . " != Actual:". checkFileSize($uploadfolder.$tempFilename), "E_ERROR" );
 			if(file_exists($uploadfolder.$tempFilename))
@@ -137,6 +138,10 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
             		logEntry("Unable to move the file ".$uploadfolder.$tempFilename, "E_ERROR");
 			returnerrorandclose();
          	} else {
+         		// also rename metadata filename
+         		if (!FileMetadata::renameFileMetadataFile($uploadfolder.$tempFilename, $uploadfolder.$fileuid.".tmp")) {
+         			logEntry("Unable to move metadata file for ".$uploadfolder.$tempFilename."; resuming.", "E_ERROR");
+         		}
 				logEntry("Rename the file ".$uploadfolder.$fileuid.".tmp");
 		}
 		
@@ -147,6 +152,11 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 			$_SESSION['voucher'] = NULL;
 			$_SESSION["aup"] = NULL;
 			$complete = "completev";
+		}
+		
+		// Report that an encrypted file is uploaded
+		if (isset($data["fileencryption"])) {
+			$resultArray["encryption"] = true;
 		}
 		
 		$data["fileuid"] = $fileuid;
@@ -178,6 +188,12 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 		{ 
 		$dataitem["fileuid"] = getGUID();
 		}
+
+		// set encryption version if set
+		if(!isset($dataitem["fileencryption"])) {
+			$dataitem["fileencryption"] = NULL;
+		}
+
 		
 		if ($authvoucher->aVoucher()) {
 			$tempData = $functions->getVoucherData($_REQUEST["vid"]);
@@ -248,13 +264,25 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 		// open the temp file
 		$data = $functions->getVoucherData($_REQUEST["vid"]);
 		$tempFilename = generateTempFilename($data);
+		$fqTempFilename = $config["site_filestore"].sanitizeFilename($tempFilename);
+		$tempFilenameMetadata = new FileMetadata($fqTempFilename); 
+		$written = 0;
 		
 		$fd = fopen("php://input", "r");
 		// append the chunk to the temp file
-		while( $data = fread( $fd,  1000000  ) ) file_put_contents( $config["site_filestore"].sanitizeFilename($tempFilename), $data, FILE_APPEND ) or die("Error");
+		while( $data = fread( $fd,  1000000  ) ) {
+			file_put_contents( $fqTempFilename, $data, FILE_APPEND ) or die("Error");
+			$written += strlen($data);
+		}
 		// close the file 
 		fclose($fd);
-		logEntry("Uploaded ".$config["site_filestore"].sanitizeFilename($tempFilename));
+		// update metadata
+		if (!$tempFilenameMetadata->addChunkDataChunksize($written)) {
+			array_push($errorArray,  "err_invalidchunksize");
+			returnerrorandclose();
+		}
+		
+		logEntry("Uploaded ".$fqTempFilename);
 		// return file size
 		echo checkFileSize($uploadfolder.$tempFilename);
 		break;

@@ -79,6 +79,12 @@ if(file_exists($file) && is_file($file) && $filestatus == 'Available')
 		$fileoriginalname = iconv("UTF-8", "ISO-8859-1", $fileoriginalname);
 	}
 
+	// if request is only for the metadata, output it and be done
+	if (isset($_GET['metadata']) && $_GET['metadata'] == 'true') {
+		readfile_metadata($file);
+		return;
+	}
+	
 	$filesize = $functions->getFileSize($file);
 	$downloadComplete=false;
 	$offset = 0;
@@ -229,4 +235,14 @@ function readfile_chunked($filename,$retbytes=true) {
 	return $status;
 }
 
+function readfile_metadata($filename) {
+	$fileMetadata = new FileMetadata($filename);
+	
+	ob_start();
+	echo $fileMetadata->getJsonContents();
+	ob_flush();
+	flush();
+	
+	return true;
+}
 ?>

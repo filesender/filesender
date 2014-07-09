@@ -56,6 +56,7 @@ require_once("$filesenderbase/classes/AuthVoucher.php");
 require_once("$filesenderbase/classes/Mail.php");
 require_once("$filesenderbase/classes/Log.php");
 require_once("$filesenderbase/classes/DB_Input_Checks.php");
+require_once("$filesenderbase/classes/FileMetadata.php");
 
 
 
