@@ -49,10 +49,9 @@ $lang["_HOME"] = "Home";
 $lang["_ABOUT"] = "About";
 $lang["_HELP"] = "Help";
 $lang["_DELETE_VOUCHER"] = "Delete Voucher";
-$lang["_UPLOAD_COMPLETE"] = "The files are successfully uploaded and a download invitation has been sent. ".
+$lang["_UPLOAD_COMPLETE"] = "The file is successfully uploaded and a download invitation has been sent. ".
 		"See <a href=\"index.php?s=files\">".$lang["_MY_FILES"]."</a> for details.";
 $lang["_UPLOAD_PROGRESS"] = "Upload progress";
-$lang["_UPLOAD_ENCRYPT_PROGRESS_MESSAGE"] = "The encryption and upload of the file(s) might take a while.";
 $lang["_DOWNLOADED"] = "Downloaded";
 $lang["_DOWNLOAD"] = "Download";
 $lang["_CANCEL_UPLOAD"] = "Cancel Upload";
@@ -286,9 +285,10 @@ $lang["_DECRYPT_FILE"] = "Decrypt this file";
 $lang["_DECRYPT_PASSWDPROMPT"] = "Please enter the pass phrase for this file";
 $lang["_FILE_IS_ENCRYPTED"] = "This file is encrypted";
 $lang["_ENCRYPT_DOWNLOAD_NOT_POSSIBLE"] = "Downloading encrypted files is currently not possible with your browser";
-$lang["_ENCRYPT_PASSWORD_NOTE"] = "Please pass this key yourself to the recipient for decryption.<br/><b>Do not use &lt;:1&gt;</b>!";
+$lang["_ENCRYPT_PASSWORD_NOTE"] = "Please pass this key in a secure way to the recipient for decryption.<br/><b>Do not send the key in a mail to &lt;:1&gt;</b>!";
 $lang["_MISSING_PASSWORD"] = "Error: a pass phrase must be entered.";
-$lang["_UPLOAD_COMPLETE_ENCRYPTED"] = "When encryption was selected, don't forget to provide the recipient the encryption key. Without this information. The downloads are useless.";
+$lang["_UPLOAD_ENCRYPT_PROGRESS_MESSAGE"] = "The encryption and upload of the file might take a while.";
+$lang["_UPLOAD_COMPLETE_ENCRYPTED"] = "Encryption was selected. Don't forget to provide the recipient with the encryption key through a separate and safe channel. Without this download is not possible.";
 $lang["_RANDOM_NOT_READY"] = "Random number not yet ready; :1% complete. Please try again in a couple of seconds.";
 $lang["_GENERATE_RANDOM"] = "Generate";
 ?>
