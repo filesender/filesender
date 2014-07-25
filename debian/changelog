@@ -1,3 +1,38 @@
+filesender (1.6) testing; urgency=medium
+   * Release 1.6
+
+   * Major changes since 1.5
+     - New: high-speed upload module 'TeraSender' (#891)
+     - New: auto-complete in the To: field (#821)
+     - New: refactored MyFiles, file downloaded dates provide audit
+       trail when download Cc:s switched off
+     - New: support for configurable footer via language file (#871)
+     - New: support for optional Subject and Message in guest use voucher
+       (#637, #774) 
+     - New: support for multiple From: addresses from authentication
+       source (#184)
+     - New: configurable option 'download_confirmation_to_downloader' for
+       sending download email receipt to file recipients (default 'true')
+       (#985)
+     - New: download pause/resume now possible with browsers supporting
+       partial download (most notably Firefox, IE11, curl and wget) (#1076)
+     - New: support for SQLite (#898) 
+     - New language: Finnish (#981) 
+     - Change: logout.php is now called in the same way as all other pages,
+       practical for header/footer. Change your site_logouturl!(#904)
+     - Change: Upgrade JQuery and JQueryUI to 1.10.2, Upgrade Smoothness
+       to 1.10.2. (#819)
+
+   * Changes since 1.6-rc1
+     - Languages: Add Finnish translation contributed by Tomi Salmi
+       of CSC/Funet (#981)
+     - Debian packaging: Only define Apache <Directory> permissions
+       for the <filesenderbase>/www subtree (#1089)
+     - Supporting scripts: add shell script to check for missing or
+       unknown language tags (#1101)
+
+ -- Filesender Development <filesender-dev@filesender.org>  Fri, 25 Jul 2014 16:16:16 +0100
+
 filesender (1.6~rc1) unstable; urgency=medium
    * Changes since 1.6-beta1
      - Download pause/resume now possible with browsers supporting
