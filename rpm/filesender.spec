@@ -22,7 +22,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
 
 Requires: httpd
-Requires: php >= 5.2.0
+Requires: php >= 5.3.0
 Requires: php-xml
 Requires: simplesamlphp
 Requires: postgresql-server
