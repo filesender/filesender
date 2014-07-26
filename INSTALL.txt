@@ -1,4 +1,4 @@
-Updated: 4 April 2014
+Updated: 25 July 2014
 
 Installation instructions
 =========================
@@ -14,7 +14,7 @@ SimpleSAMLphp and cron to get up and running.
 Upgrading from older versions
 =============================
 
-See https://www.assembla.com/spaces/file_sender/wiki/Upgrade_notes_to_1-6 .
+See https://www.assembla.com/spaces/file_sender/wiki/Upgrade_notes .
 
 
 Configuration

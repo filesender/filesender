@@ -22,7 +22,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
 
 Requires: httpd
-Requires: php >= 5.2.0
+Requires: php >= 5.3.0
 Requires: php-xml
 Requires: simplesamlphp
 Requires: postgresql-server
@@ -102,6 +102,9 @@ rm -rf %{buildroot}
 %changelog
 * %(date '+%a %b %d %Y') FileSender Development <filesender-dev@filesender.org> %{version}-%{release}
 - Release %{version}%{?fsprerel}
+
+* Sat Jul 26 2014 FileSender Development <filesender-dev@filesender.org> 1.6-1
+- Release 1.6
 
 * Fri Apr 04 2014 FileSender Development <filesender-dev@filesender.org> 1.6-0.2.rc1
 - Release 1.6-rc1
