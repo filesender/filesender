@@ -1,4 +1,4 @@
-filesender (1.6) testing; urgency=medium
+filesender (1.6) stable; urgency=medium
    * Release 1.6
 
    * Major changes since 1.5
@@ -31,7 +31,7 @@ filesender (1.6) testing; urgency=medium
      - Supporting scripts: add shell script to check for missing or
        unknown language tags (#1101)
 
- -- Filesender Development <filesender-dev@filesender.org>  Fri, 25 Jul 2014 16:16:16 +0100
+ -- Filesender Development <filesender-dev@filesender.org>  Sat, 26 Jul 2014 19:53:09 +0200
 
 filesender (1.6~rc1) unstable; urgency=medium
    * Changes since 1.6-beta1
