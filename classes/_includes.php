@@ -33,7 +33,6 @@
 $filesenderBase = dirname(dirname(__FILE__));
 
 require_once("$filesenderBase/includes/ConfigValidation.php");
-require_once("$filesenderBase/classes/unstrip.php");
 require_once("$filesenderBase/includes/ErrorHandler.php");
 require_once("$filesenderBase/includes/EnsureHTTPS.php");
 require_once("$filesenderBase/includes/UTF8.php");
@@ -47,4 +46,4 @@ require_once("$filesenderBase/classes/Mail.php");
 require_once("$filesenderBase/classes/Log.php");
 require_once("$filesenderBase/classes/DB_Input_Checks.php");
 require_once("$filesenderBase/classes/Zipper.php");
-
+require_once("$filesenderBase/classes/unstrip.php");

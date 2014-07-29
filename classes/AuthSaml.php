@@ -33,7 +33,7 @@
 // --------------------------------
 // SAML authentication.
 // --------------------------------
-class AuthSaml
+class AuthSaml  // The original one, placed in classes/
 {
     private static $instance = null;
 
