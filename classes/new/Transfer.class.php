@@ -34,9 +34,12 @@
 if (!defined('FILESENDER_BASE')) 
     die('Missing environment');
 
-// Use base database stored object
-require_once FILESENDER_BASE.'/classes/DBObject.class.php';
-
+// Use database object superclass
+if (substr(dirname(__FILE__), -3 ) == "new")
+    require_once FILESENDER_BASE.'/classes/new/DBObject.class.php';
+else
+    require_once FILESENDER_BASE.'/classes/DBObject.class.php';
+    
 /**
  * Represents a transaction (files transfer) in database
  * 

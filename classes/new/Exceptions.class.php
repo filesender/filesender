@@ -34,6 +34,117 @@
 if (!defined('FILESENDER_BASE')) 
     die('Missing environment');
 
+
+////////////////////////////////////////////
+// Relevant exceptions declared here:
+// Some can also be turned into singleton classes
+////////////////////////////////////////////    
+
+
+/**
+ * Unknown property access exception
+ * 
+ * To be used in derived classes
+ */
+class PropertyAccessException extends LoggingException
+{
+    /**
+     * Constructor
+     * 
+     * @param mixed $object object or class name to report access about
+     * @param string $property name of the property that was wanted
+     */
+    public function __construct($object, $property)
+    {
+        $name = is_object($object) ? get_class($object) : (string)$object;
+        parent::__construct(
+            'no_such_property', // Message to give to the user
+            'class='.$name.', property='.$property // Real message to log
+        );
+    }
+}
+
+
+/**
+ * thrown when object of derived class not found in corresponding DB object table
+ */
+class DBObjectNotFoundException extends LoggingException
+{
+    /**
+     * Constructor
+     *
+     * @param string $dbo: name of the DBObject-derived class (File, Transfer,
+     * Recipient, etc)
+     * @param string $log: short statement containing column that identifies DBO
+     * record in corresponding DBO table
+     */
+    public function __construct($dbo, $log)
+    {
+        parent::__construct(
+            strtolower($dbo).'_not_found', // Message to user
+            $log    // Message to log
+        );
+    }
+}
+
+
+/**
+ * Misc connection exception
+ */
+class DBIConnectionException extends DetailedException
+{
+    /**
+     * Constructor
+     * 
+     * @param string $message error message
+     */
+    public function __construct($message)
+    {
+        parent::__construct(
+            'failed_to_connect_to_database', // Message to give to the user
+            $message // Details to log
+        );
+    }
+}
+
+
+/**
+ * Missing configuration parameter exception
+ */
+class DBIConnectionMissingParameterException extends DBIConnectionException
+{
+    /**
+     * Constructor
+     * 
+     * @param string $parameter name of the required parameter which is missing
+     */
+    public function __construct($parameter)
+    {
+        parent::__construct('Missing DBI config parameter : '.$parameter);
+    }
+}
+
+
+/**
+ * Usage exception
+ */
+class DBIUsageException extends DetailedException
+{
+    /**
+     * Constructor
+     * 
+     * @param string $message error message
+     */
+    public function __construct($message)
+    {
+        parent::__construct(
+            'failed_to_connect_to_database', // Message to give to the user
+            $message // Details to log
+        );
+    }
+}
+
+    
 /**
  * Logging exception
  */
@@ -117,3 +228,57 @@ class DetailedException extends LoggingException {
     }
 }
 
+
+/** 
+ *  Default exception class for authentication-related exceptions. Outputs info to log.
+ *
+ *  @param string $lMsg: message to write to log.
+ *  @param bool $error:  Type of log entry. E_ERROR if true, E_NOTICE if false.
+ */
+class AuthException extends DetailedException
+{
+    public function __construct($lMsg, $error)
+    {
+        if ($error) {
+            logEntry($lMsg, "E_ERROR");
+        } else {
+            logEntry($lMsg, "E_NOTICE");
+        }
+    }
+}
+
+
+/**
+ *  Thrown when the method requires a user to be authenticated and he isn't.
+ *  -- or when user authentication attributes were invalid / not found.
+ *  @params $log = parent::$lMsg, $error = parent::$error
+ *  @param string $uMsg: message to user.
+ */
+class UserAuthException extends AuthException
+{
+    public function __construct($uMsg, $log, $error)
+    {
+        parent::__construct($log, $error);
+        //TO_USER($uMsg);
+    }
+}
+
+
+/**
+ * Bad size format exception - used in Utilities class
+ */
+class BadSizeFormatException extends DetailedException
+{
+    /**
+     * Constructor
+     * 
+     * @param string $size the raw, badly formated size
+     */
+    public function __construct($size)
+    {
+        parent::__construct(
+            'bad_size_format', // Message to give to the user
+            'size : '.$size // Details to log
+        );
+    }
+}

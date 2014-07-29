@@ -34,10 +34,6 @@
 if (!defined('FILESENDER_BASE'))
     die('Missing environment');
 
-/* Not needed when the new Config class source is included*/
-//require_once 'Exceptions.class.php';
-//require_once 'Utilities.class.php';
-
 // Use config
 if (substr(dirname(__FILE__), -3) == "new")
     require_once FILESENDER_BASE.'/classes/new/Config.class.php';  //in development environment
@@ -49,12 +45,13 @@ else
  * 
  * Handles Connection setup, provides PDO instance methods shorthands and easing methods
  */
-class DBI 
+class DBI
 {
     /**
      * Connection instance (PDO)
      */
     private static $instance = null;
+    
     
     /**
      * Connect to database
@@ -129,6 +126,7 @@ class DBI
         }
     }
     
+    
     /**
      * Magic call handler
      * 
@@ -154,58 +152,3 @@ class DBI
         }
     }
 }
-
-/**
- * Misc connection exception
- */
-class DBIConnectionException extends DetailedException
-{
-    /**
-     * Constructor
-     * 
-     * @param string $message error message
-     */
-    public function __construct($message)
-    {
-        parent::__construct(
-            'failed_to_connect_to_database', // Message to give to the user
-            $message // Details to log
-        );
-    }
-}
-
-/**
- * Missing configuration parameter exception
- */
-class DBIConnectionMissingParameterException extends DBIConnectionException
-{
-    /**
-     * Constructor
-     * 
-     * @param string $parameter name of the required parameter which is missing
-     */
-    public function __construct($parameter)
-    {
-        parent::__construct('Missing DBI config parameter : '.$parameter);
-    }
-}
-
-/**
- * Usage exception
- */
-class DBIUsageException extends DetailedException
-{
-    /**
-     * Constructor
-     * 
-     * @param string $message error message
-     */
-    public function __construct($message)
-    {
-        parent::__construct(
-            'failed_to_connect_to_database', // Message to give to the user
-            $message // Details to log
-        );
-    }
-}
-

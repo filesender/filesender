@@ -48,37 +48,6 @@ class AuthSaml
     private static $admin = null;
     private static $dnslookup = false;
 
-
-    /**
-     *  returns current instance of AuthSaml, or instantiates a new object of that type
-     *
-     */
-    /*public static function getInstance()
-    {
-        // Returns existing instance, initiates new one otherwise
-        if (self::$instance == null) {
-            self::$instance = new self();
-        }
-        return self::$instance;
-    }*/
-
-    /**
-     *  The constructor method
-     *  sets the $authsimple property to a new /running instance of SimpleSAML_Auth_Simple
-     *  
-     */
-    /*private function __construct()
-    {
-	if (is_null(self::$authsimple)) {
-            self::$site      = Config::get('site_*');
-            self::$saml      = Config::get('saml_*');
-            self::$admin     = Config::get('admin');
-            self::$dnslookup = Config::get('dnslookup');
-
-            require_once(self::$site['simplesamllocation'] . 'lib/_autoload.php');
-            self::$authsimple = new SimpleSAML_Auth_Simple(self::$site['authenticationSource']);
-	}
-    }*/
     
     /**
      *  initialise(): will replace the constructor in the static class
@@ -97,12 +66,13 @@ class AuthSaml
             self::$dnslookup = Config::get('dnslookup');
         }
 
-	if (is_null(self::$authsimple)) {
+        if (is_null(self::$authsimple)) {
             require_once(self::$site['simplesamllocation'] . 'lib/_autoload.php');
             self::$authsimple = new SimpleSAML_Auth_Simple(self::$site['authenticationSource']);
         }
     }
 
+    
     /** 
      * Checks SAML for authenticated user
      * @return bool isAuthenticated()
@@ -157,6 +127,7 @@ class AuthSaml
 
         return false;
     }
+
 
     // Returns SAML authenticated user information as json array.
     public function sAuth()
@@ -240,6 +211,7 @@ class AuthSaml
         return $missingAttributes ? 'err_attributes' : $attributes;
     }
 
+    
     // Requests logon URL from SAML and returns string.
     public function logonURL()
     {
@@ -249,6 +221,7 @@ class AuthSaml
         return htmlentities($logonUrl);
     }
 
+    
     // Requests log OFF URL from SAML and returns string.
     public function logoffURL()
     {
@@ -256,49 +229,5 @@ class AuthSaml
         $logoffUrl = self::$site['simplesamlurl'] . 'module.php/core/as_logout.php?AuthId=' . 
             self::$site['authenticationSource'] . '&ReturnTo=' . self::$site['site_logout'];
         return htmlentities($logoffUrl);
-    }
-}
-
-/** 
- *  Default exception class for authentication-related exceptions. Outputs info to log.
- *
- *  @param string $lMsg: message to write to log.
- *  @param bool $error:  Type of log entry. E_ERROR if true, E_NOTICE if false.
- */
-class AuthException extends Exception
-{
-    public function __construct($lMsg, $error)
-    {
-        if ($error) {
-            logEntry($lMsg, "E_ERROR");
-        } else {
-            logEntry($lMsg, "E_NOTICE");
-        }
-    }
-}
-
-/**
- *  thrown when the method requires a user to be authenticated and he isn't.
- *  @params $log = parent::$lMsg, $error = parent::$error
- *  @param string $uMsg: message to user.
- */
-class UserNotAuthException extends AuthException
-{
-    public function __construct($uMsg, $log, $error)
-    {
-        parent::__construct($log, $error);
-        //TO_USER($uMsg);
-    }
-}
-
-/**
- * Exception that is caused by missing or invalid authentication attributes
- */
-class AuthAttrException extends AuthException
-{
-    public function __construct($uMsg, $log, $error)
-    {
-        parent::__construct($log, $error);
-        //TO_USER($uMsg);
     }
 }
