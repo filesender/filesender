@@ -98,21 +98,3 @@ class Utilities
     }
 }
 
-/**
- * Bad size format exception
- */
-class BadSizeFormatException extends DetailedException
-{
-    /**
-     * Constructor
-     * 
-     * @param string $size the raw, badly formated size
-     */
-    public function __construct($size)
-    {
-        parent::__construct(
-            'bad_size_format', // Message to give to the user
-            'size : '.$size // Details to log
-        );
-    }
-}
