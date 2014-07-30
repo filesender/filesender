@@ -262,24 +262,6 @@ class Config {
         self::load();
         return array_key_exists($key, self::$parameters);
     }
-    
-    /**
-     * Log old access style for removal
-     */
-    private static function logOldAccess($type = 'misc') {
-        if (!self::get('debug'))
-            return; // Log only in debug mode
-        
-        $file = FILESENDER_BASE.'/log/old_config_access.log';
-        if ($f = fopen($file, 'a')) {
-            $trace = debug_backtrace();
-            $trace = $trace[1];
-            
-            fwrite($f, 'Old config '.$type.' in '.$trace['file'].' at line '.$trace['line']."\n");
-            //fwrite($f, debug_backtrace
-            fclose($f);
-        }
-    }
 }
 
 /**
@@ -315,21 +297,6 @@ class ConfigBadParameterException extends DetailedException {
         );
     }
 }
-
-/**
- * Cannot set exception
- */
-class ConfigCannotSetException extends DetailedException {
-    /**
-     * Constructor
-     */
-    public function __construct() {
-        parent::__construct(
-            'config_cannot_set' // Message to give to the user
-        );
-    }
-}
-
 
 /**
  * Cannot set exception
