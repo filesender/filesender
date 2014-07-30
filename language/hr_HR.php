@@ -227,18 +227,18 @@ $lang["_HELP_TEXT"] = '
 <h4>Ograničenja FileSender instalacije</h4>
 <ul>
     <li><strong>
-      Maximalan broj primatelja: </strong>'. $config["max_email_recipients"].' primatelja (adrese odvojite točka-zarezom)</li>
+      Maximalan broj primatelja: </strong>'. Config::get('max_email_recipients').' primatelja (adrese odvojite točka-zarezom)</li>
     <li><strong>Maksimalan broj datoteka po prijenosu:</strong> jedna - za prijenos više datoteka odjednom, najprije ih zapakirajte u arhivu</li>
-    <li><strong>Maksimalna veličina datoteke po prijenosu, sa Adobe Flash-om samo: </strong>'. formatBytes($config["max_flash_upload_size"]).' </li>
-    <li><strong>Maksimalna veličina datoteke po prijenosu, sa HTML5: </strong>'. formatBytes($config["max_html5_upload_size"]).'</li>
-    <li><strong>Maksimalan broj dana nakon kojeg datoteke/kuponi istuču: </strong>'. $config["default_daysvalid"].' </li>
+    <li><strong>Maksimalna veličina datoteke po prijenosu, sa Adobe Flash-om samo: </strong>'. formatBytes(Config::get('max_flash_upload_size')).' </li>
+    <li><strong>Maksimalna veličina datoteke po prijenosu, sa HTML5: </strong>'. formatBytes(Config::get('max_html5_upload_size')).'</li>
+    <li><strong>Maksimalan broj dana nakon kojeg datoteke/kuponi istuču: </strong>'. Config::get('default_daysvalid').' </li>
 </ul>
 <p>Za više informacija molimo posjetite <a href="http://www.filesender.org/" target="_blank">www.filesender.org</a></p>
 </div>
 </div>';
 
 // site about
-$lang["_ABOUT_TEXT"] = ' <div style="padding: 5px; text-align: left;">'. htmlspecialchars($config['site_name']) .' je instalacija FileSender-a (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>), koja je razvijena za potrebe zajednica višeg obrazovanja i istraživanja.</div>';
+$lang["_ABOUT_TEXT"] = ' <div style="padding: 5px; text-align: left;">'. htmlspecialchars(Config::get('site_name')) .' je instalacija FileSender-a (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>), koja je razvijena za potrebe zajednica višeg obrazovanja i istraživanja.</div>';
 
 // AUP terms
 $lang["_AUPTERMS"] = "Uvjeti korištenja...";

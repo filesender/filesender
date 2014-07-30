@@ -196,8 +196,8 @@ $lang["_DP_showMonthAfterYear"] = 'false';
 $lang["_DP_yearSuffix"] = '';
 
 // Login Splash text
-$lang["_SITE_SPLASHHEAD"] = "Pozdravljeni na ". htmlspecialchars($config['site_name']);
-$lang["_SITE_SPLASHTEXT"] = htmlspecialchars($config['site_name']) ." je varen način delitve datotek med uporabniki. Priavite se in naložite datoteke ali povabite druge, da delijo datoteke z vami.";
+$lang["_SITE_SPLASHHEAD"] = "Pozdravljeni na ". htmlspecialchars(Config::get('site_name'));
+$lang["_SITE_SPLASHTEXT"] = htmlspecialchars(Config::get('site_name')) ." je varen način delitve datotek med uporabniki. Priavite se in naložite datoteke ali povabite druge, da delijo datoteke z vami.";
 
 // Footer to display
 $lang["_SITE_FOOTER"] = ""; 
@@ -235,18 +235,18 @@ $lang["_HELP_TEXT"] = '
 <h4>Omejitve tega strežnika</h4>
 <ul>
     <li><strong>
-      Največje dovoljeno število naslovnikov: </strong>'. $config["max_email_recipients"].' naslovnikov (elektronske naslove ločite z vejico ali podpičjem)</li>
+      Največje dovoljeno število naslovnikov: </strong>'. Config::get('max_email_recipients').' naslovnikov (elektronske naslove ločite z vejico ali podpičjem)</li>
     <li><strong>Največje število dokumentov, ki jih lahko pošljete:</strong> eden - za prenos več dokumentov hkrati, dokumente najprej arhivirajte (npr. zip)</li>
-    <li><strong>Največja velikost dokumenta, ki ga lahko naložite na strežnik z uporabo Adobe Flash: </strong>'. formatBytes($config["max_flash_upload_size"]).' </li>
-    <li><strong>Največja velikost dokumenta, ki ga lahko naložite na strežnik z uporabo HTML5: </strong>'. formatBytes($config["max_html5_upload_size"]).'</li>
-    <li>      <strong>Najdaljši čas veljavnosti dokumenta / vavčerja: </strong>'. $config["default_daysvalid"].' </li>
+    <li><strong>Največja velikost dokumenta, ki ga lahko naložite na strežnik z uporabo Adobe Flash: </strong>'. formatBytes(Config::get('max_flash_upload_size')).' </li>
+    <li><strong>Največja velikost dokumenta, ki ga lahko naložite na strežnik z uporabo HTML5: </strong>'. formatBytes(Config::get('max_html5_upload_size')).'</li>
+    <li>      <strong>Najdaljši čas veljavnosti dokumenta / vavčerja: </strong>'. Config::get('default_daysvalid').' </li>
 </ul>
 <p>Za več informacij obiščite spletno stran <a href="http://www.filesender.org/" target="_blank">www.filesender.org</a></p>
 </div>
 </div>';
 
 // site about
-$lang["_ABOUT_TEXT"] = ' <div style="padding: 5px; text-align: left;">'. htmlspecialchars($config['site_name']) .' je storitev, osnovana na programu FileSender (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>), ki so ga razvili za potrebe visokega šolstva in raziskovanja.</div>';
+$lang["_ABOUT_TEXT"] = ' <div style="padding: 5px; text-align: left;">'. htmlspecialchars(Config::get('site_name')) .' je storitev, osnovana na programu FileSender (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>), ki so ga razvili za potrebe visokega šolstva in raziskovanja.</div>';
 
 // site AUP terms
 $lang["_AUPTERMS"] = "Splošni pogoji in pravila uporabe";

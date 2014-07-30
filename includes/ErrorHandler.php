@@ -38,13 +38,13 @@
 
 global $config;
 
-if ($config['displayerrors']) {
+if (Config::get('displayerrors')) {
     ini_set('display_errors', 'On');
 } else {
     ini_set('display_errors', 'Off');
 }
 
-if ($config['debug'] == true || $config['debug'] == 1) {
+if (Config::get('debug') == true || Config::get('debug') == 1) {
     // If debug mode is on then set the custom error handler.
     ini_set('log_errors', 'On');
 
@@ -88,14 +88,14 @@ function logEntry($message, $type = 'E_NOTICE')
 
     $message = $type . ': ' . $message;
 
-    if ($config['debug'] && $type == 'E_NOTICE' || $type == 'E_ERROR') {
-        if (isset($config['log_location'])) {
-            date_default_timezone_set($config['Default_TimeZone']);
+    if (Config::get('debug') && $type == 'E_NOTICE' || $type == 'E_ERROR') {
+        if (Config::exists('log_location')) {
+            date_default_timezone_set(Config::get('Default_TimeZone'));
 
             if (isset($_SERVER['REMOTE_ADDR'])) {
                 $ip = $_SERVER['REMOTE_ADDR']; // Capture IP.
 
-                if ($config['dnslookup'] == true) {
+                if (Config::get('dnslookup') == true) {
                     $domain = GetHostByName($ip);
                 } else {
                     $domain = '';
@@ -115,7 +115,7 @@ function logEntry($message, $type = 'E_NOTICE')
             $message .= '[' . $ip . '(' . $domain . ')] ';
             $dateRef = date('Ymd');
             $date = date('Y/m/d H:i:s');
-            $myFile = $config['log_location'] . $dateRef . $logExt;
+            $myFile = Config::get('log_location') . $dateRef . $logExt;
             $fh = fopen($myFile, 'a') or die("can't open file");
 
             // Don't print errors on screen when there is no session.
@@ -145,7 +145,7 @@ function displayError($errorMessage, $detailedErrorMessage)
 
     echo '<br /><div id="errmessage">' . htmlspecialchars($errorMessage) . '</div>';
 
-    if ($config['displayerrors']) {
+    if (Config::get('displayerrors')) {
         echo '<br /><div id="errmessage">' . htmlspecialchars($detailedErrorMessage) . '</div>';
     }
 }

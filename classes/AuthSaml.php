@@ -52,25 +52,25 @@ class AuthSaml  // The original one, placed in classes/
     public function authIsAdmin()
     {
         global $config;
-        require_once($config['site_simplesamllocation'] . 'lib/_autoload.php');
+        require_once(Config::get('site_simplesamllocation') . 'lib/_autoload.php');
 
-        $as = new SimpleSAML_Auth_Simple($config['site_authenticationSource']);
+        $as = new SimpleSAML_Auth_Simple(Config::get('site_authenticationSource'));
         if ($as->isAuthenticated()) {
             $as->requireAuth();
             $attributes = $as->getAttributes();
 
             // Compare config admin to userUID.
-            if (isset($attributes[$config['saml_uid_attribute']][0])) {
-                $attributes['saml_uid_attribute'] = $attributes[$config['saml_uid_attribute']][0];
-            } elseif (isset($attributes[$config['saml_uid_attribute']])) {
-                $attributes['saml_uid_attribute'] = $attributes[$config['saml_uid_attribute']];
+            if (isset($attributes[Config::get('saml_uid_attribute')][0])) {
+                $attributes['saml_uid_attribute'] = $attributes[Config::get('saml_uid_attribute')][0];
+            } elseif (isset($attributes[Config::get('saml_uid_attribute')])) {
+                $attributes['saml_uid_attribute'] = $attributes[Config::get('saml_uid_attribute')];
             } else {
                 // Required attribute does not exist.
-                logEntry('UID attribute not found in IDP (' . $config['saml_uid_attribute'] . ')', 'E_ERROR');
+                logEntry('UID attribute not found in IDP (' . Config::get('saml_uid_attribute') . ')', 'E_ERROR');
                 return false;
             }
 
-            $knownAdmins = array_map('trim', explode(',', $config['admin']));
+            $knownAdmins = array_map('trim', explode(',', Config::get('admin')));
             return in_array($attributes['saml_uid_attribute'], $knownAdmins);
         }
 
@@ -82,27 +82,27 @@ class AuthSaml  // The original one, placed in classes/
     {
         global $config;
 
-        require_once($config['site_simplesamllocation'] . 'lib/_autoload.php');
+        require_once(Config::get('site_simplesamllocation') . 'lib/_autoload.php');
 
-        $as = new SimpleSAML_Auth_Simple($config['site_authenticationSource']);
+        $as = new SimpleSAML_Auth_Simple(Config::get('site_authenticationSource'));
         $as->requireAuth();
         $attributes = $as->getAttributes();
         $missingAttributes = false;
 
         // need to capture email from SAML attribute. may be single attribute or array 
         // ensure that it's always an array.
-        if (isset($attributes[$config['saml_email_attribute']])) {
-            if (is_array($attributes[$config['saml_email_attribute']])) {
-                $attributes['email'] = $attributes[$config['saml_email_attribute']];
+        if (isset($attributes[Config::get('saml_email_attribute')])) {
+            if (is_array($attributes[Config::get('saml_email_attribute')])) {
+                $attributes['email'] = $attributes[Config::get('saml_email_attribute')];
             } else {
-                $attributes['email'] = array($attributes[$config['saml_email_attribute']]);
+                $attributes['email'] = array($attributes[Config::get('saml_email_attribute')]);
             }
         }
 
         // Check for empty or invalid email attribute
         if (empty($attributes["email"])) {
             logEntry(
-                "No valid email attribute found in IDP (looking for '" . $config['saml_email_attribute'] . "')",
+                "No valid email attribute found in IDP (looking for '" . Config::get('saml_email_attribute') . "')",
                 "E_ERROR"
             );
             $missingAttributes = true;
@@ -115,21 +115,21 @@ class AuthSaml  // The original one, placed in classes/
             }
         }
 
-        if (isset($attributes[$config['saml_name_attribute']][0])) {
-            $attributes['cn'] = $attributes[$config['saml_name_attribute']][0];
+        if (isset($attributes[Config::get('saml_name_attribute')][0])) {
+            $attributes['cn'] = $attributes[Config::get('saml_name_attribute')][0];
         }
 
-        if (!isset($attributes[$config['saml_name_attribute']]) && isset($attributes['email'])) {
+        if (!isset($attributes[Config::get('saml_name_attribute')]) && isset($attributes['email'])) {
             $attributes['cn'] = substr($attributes['email'], 0, strpos($attributes['email'], '@'));
         }
 
-        if (isset($attributes[$config['saml_uid_attribute']][0])) {
-            $attributes['saml_uid_attribute'] = $attributes[$config['saml_uid_attribute']][0];
-        } elseif (isset($attributes[$config['saml_uid_attribute']])) {
-            $attributes['saml_uid_attribute'] = $attributes[$config['saml_uid_attribute']];
+        if (isset($attributes[Config::get('saml_uid_attribute')][0])) {
+            $attributes['saml_uid_attribute'] = $attributes[Config::get('saml_uid_attribute')][0];
+        } elseif (isset($attributes[Config::get('saml_uid_attribute')])) {
+            $attributes['saml_uid_attribute'] = $attributes[Config::get('saml_uid_attribute')];
         } else {
             // Required UID attribute missing.
-            logEntry("UID attribute not found in IDP (looking for '" . $config['saml_uid_attribute'] . "')", "E_ERROR");
+            logEntry("UID attribute not found in IDP (looking for '" . Config::get('saml_uid_attribute') . "')", "E_ERROR");
             $missingAttributes = true;
         }
 
@@ -147,7 +147,7 @@ class AuthSaml  // The original one, placed in classes/
 
         $ip = $_SERVER['REMOTE_ADDR']; // Capture IP.
 
-        if ($config['dnslookup'] == true) {
+        if (Config::get('dnslookup') == true) {
             $domain = gethostbyaddr($ip);
         } else {
             $domain = '';
@@ -171,8 +171,8 @@ class AuthSaml  // The original one, placed in classes/
     {
         global $config;
 
-        $logonUrl = $config['site_simplesamlurl'] . 'module.php/core/as_login.php?AuthId=' . 
-            $config['site_authenticationSource'] . '&ReturnTo=' . $config['site_url'] . 'index.php?s=upload';
+        $logonUrl = Config::get('site_simplesamlurl') . 'module.php/core/as_login.php?AuthId=' . 
+            Config::get('site_authenticationSource') . '&ReturnTo=' . Config::get('site_url') . 'index.php?s=upload';
         return htmlentities($logonUrl);
     }
 
@@ -180,10 +180,10 @@ class AuthSaml  // The original one, placed in classes/
     public function logoffURL()
     {
         global $config;
-        require_once($config['site_simplesamllocation'] . 'lib/_autoload.php');
+        require_once(Config::get('site_simplesamllocation') . 'lib/_autoload.php');
 
-        $logoffUrl = $config['site_simplesamlurl'] . 'module.php/core/as_logout.php?AuthId=' . 
-            $config['site_authenticationSource'] . '&ReturnTo=' . $config['site_logouturl'] . '';
+        $logoffUrl = Config::get('site_simplesamlurl') . 'module.php/core/as_logout.php?AuthId=' . 
+            Config::get('site_authenticationSource') . '&ReturnTo=' . Config::get('site_logouturl') . '';
         return htmlentities($logoffUrl);
     }
 
@@ -191,9 +191,9 @@ class AuthSaml  // The original one, placed in classes/
     public function isAuth()
     {
         global $config;
-        require_once($config['site_simplesamllocation'] . 'lib/_autoload.php');
+        require_once(Config::get('site_simplesamllocation') . 'lib/_autoload.php');
 
-        $as = new SimpleSAML_Auth_Simple($config['site_authenticationSource']);
+        $as = new SimpleSAML_Auth_Simple(Config::get('site_authenticationSource'));
         return $as->isAuthenticated();
     }
 }

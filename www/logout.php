@@ -52,7 +52,7 @@ session_destroy();
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         
-        <title><?php echo htmlspecialchars($config['site_name']); ?></title>
+        <title><?php echo htmlspecialchars(Config::get('site_name')); ?></title>
         
         <link rel="shortcut icon" href="displayimage.php?type=favicon" type="image/x-icon" />
         <link type="text/css" href="css/smoothness/jquery-ui-1.10.2.custom.min.css" rel="Stylesheet" />

@@ -36,7 +36,7 @@ global $config;
 
 $functions = Functions::getInstance();
 
-date_default_timezone_set($config['Default_TimeZone']);
+date_default_timezone_set(Config::get('Default_TimeZone'));
 
 if (isset($_REQUEST["gid"])) {
     $fileArray = $functions->getMultiFileData($_REQUEST["gid"]);

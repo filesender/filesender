@@ -46,7 +46,7 @@
 require_once('../www/upload_common_js.php');
 require_once('../www/upload_flash_js.php');
 
-//$flashVARS = "vid=".$voucherUID."&sid=".session_id()."&buttonBrowse=".lang("_BROWSE")."&buttonUpload=".lang("_SEND")."&buttonCancel=".lang("_CANCEL")."&siteURL=".$config["site_url"]."&token=".$token;
+//$flashVARS = "vid=".$voucherUID."&sid=".session_id()."&buttonBrowse=".lang("_BROWSE")."&buttonUpload=".lang("_SEND")."&buttonCancel=".lang("_CANCEL")."&siteURL=".Config::get('site_url')."&token=".$token;
 ?>
 <script type="text/javascript" src="js/swfobject.js"></script>
 <script type="text/javascript" src="js/upload.js"></script>
@@ -57,7 +57,7 @@ require_once('../www/upload_flash_js.php');
     flashvars.buttonBrowse = "<?php echo lang('_BROWSE'); ?>";
     flashvars.buttonUpload = "<?php echo lang('_SEND') ?>";
     flashvars.buttonCancel = "<?php echo lang('_CANCEL') ?>";
-    flashvars.siteURL = "<?php echo $config['site_url'] ?>";
+    flashvars.siteURL = "<?php echo Config::get('site_url') ?>";
     flashvars.token = "<?php echo $token; ?>";
     
     var params = {};
@@ -95,7 +95,7 @@ require_once('../www/upload_flash_js.php');
         <td width="130" class=" mandatory" id="upload_to"><?php echo lang('_TO') ; ?>:</td>
         <td colspan="2" valign="middle"><input name="fileto" title="<?php echo lang('_EMAIL_SEPARATOR_MSG') ; ?>" type="text" id="fileto" onblur="addEmailRecipientBox($('#fileto').val());"/>
           <div id="fileto_msg" style="display: none" class="validation_msg"><?php echo lang('_INVALID_MISSING_EMAIL'); ?></div>
-          <div id="maxemails_msg" style="display: none" class="validation_msg"><?php echo lang('_MAXEMAILS'); ?> <?php echo $config['max_email_recipients'] ?>.</div>
+          <div id="maxemails_msg" style="display: none" class="validation_msg"><?php echo lang('_MAXEMAILS'); ?> <?php echo Config::get('max_email_recipients') ?>.</div>
           <div id="recipients_box" style="display: none"></div>
         </td>
         
@@ -156,7 +156,7 @@ require_once('../www/upload_flash_js.php');
       
       <tr>
         <td class=" mandatory" id="upload_expirydate"><?php echo lang('_EXPIRY_DATE'); ?>:
-        <input type="hidden" id="fileexpirydate" name="fileexpirydate" value="<?php echo date(lang('datedisplayformat'),strtotime("+".$config['default_daysvalid']." day"));?>" /></td>
+        <input type="hidden" id="fileexpirydate" name="fileexpirydate" value="<?php echo date(lang('datedisplayformat'),strtotime("+".Config::get('default_daysvalid')." day"));?>" /></td>
         
         <td colspan="2">
           <input id="datepicker" name="datepicker" title="<?php echo lang('_DP_dateFormat'); ?>" onchange="validate_expiry()" />
@@ -202,10 +202,10 @@ require_once('../www/upload_flash_js.php');
         <td colspan="2" align="center" valign="top">&nbsp;</td>
       </tr>
       
-      <?php if ($config['AuP']) {?>
+      <?php if (Config::get('AuP')) {?>
       <tr>
         <td class=""></td>
-        <td><input name="aup" type="checkbox" id="aup" onchange="validate_aup()" <?php echo ($config['AuP_default'] ) ? 'checked="checked"' : ''; ?> <?php echo (isset($_SESSION['aup']) && !$authvoucher->aVoucher() ) ? 'checked="checked"' : ''; ?> value="true" /></td>
+        <td><input name="aup" type="checkbox" id="aup" onchange="validate_aup()" <?php echo (Config::get('AuP_default') ) ? 'checked="checked"' : ''; ?> <?php echo (isset($_SESSION['aup']) && !$authvoucher->aVoucher() ) ? 'checked="checked"' : ''; ?> value="true" /></td>
         
         <td>
           <div id="aup_label" onclick="$('#tog').slideToggle();return false;" style="cursor:pointer;"><?php echo lang('_ACCEPTTOC'); ?> [<font color="#666666"><?php echo lang('_SHOWHIDE'); ?></font>]</div>

@@ -30,7 +30,7 @@
     }
 
     function autoCompleteEmails() {
-        var availableTags = [<?php  echo (isset($config["autocomplete"]) && $config["autocomplete"])?  $functions->uniqueEmailsForAutoComplete():  ""; ?>];
+        var availableTags = [<?php  echo (Config::exists('autocomplete') && Config::get('autocomplete'))?  $functions->uniqueEmailsForAutoComplete():  ""; ?>];
 
         function split(val) {
             return val.split(/,\s*/);

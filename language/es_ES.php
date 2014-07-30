@@ -203,8 +203,8 @@ $lang["_DP_showMonthAfterYear"] = 'false';
 $lang["_DP_yearSuffix"] = '';
 
 // Login Splash text
-$lang["_SITE_SPLASHHEAD"] = "Bienvenido a ". htmlspecialchars($config['site_name']);
-$lang["_SITE_SPLASHTEXT"] = htmlspecialchars($config['site_name']) ." es un medio fiable para compartir archivos grandes. Suba y env&iacute;e archivos o \"Invitaciones de env&iacute;o\".";
+$lang["_SITE_SPLASHHEAD"] = "Bienvenido a ". htmlspecialchars(Config::get('site_name'));
+$lang["_SITE_SPLASHTEXT"] = htmlspecialchars(Config::get('site_name')) ." es un medio fiable para compartir archivos grandes. Suba y env&iacute;e archivos o \"Invitaciones de env&iacute;o\".";
 
 // Footer to display
 $lang["_SITE_FOOTER"] = ""; 
@@ -243,11 +243,11 @@ $lang["_HELP_TEXT"] = '
 
 <h4>L&iacute;mites de esta instalaci&oacute;n de FileSender</h4>
 <ul>
-    <li><strong>N&uacute;mero m&aacute;ximo de destinatarios por env&iacute;o: </strong>'. $config["max_email_recipients"].' direcciones de correo (separadas por comas o puntos y coma).</li>
+    <li><strong>N&uacute;mero m&aacute;ximo de destinatarios por env&iacute;o: </strong>'. Config::get('max_email_recipients').' direcciones de correo (separadas por comas o puntos y coma).</li>
     <li><strong>N&uacute;mero m&aacute;ximo de archivos por env&iacute;o: </strong>1, para envio de varios a la vez compr&iacute;malos en un &uacute;nico archivo.</li>
-    <li><strong>Tama&ntilde;o m&aacute;ximo del archivo por env&iacute;o (Adobe Flash): </strong>'. formatBytes($config["max_flash_upload_size"]).' </li>
-    <li><strong>Tama&ntilde;o m&aacute;ximo del archivo por env&iacute;o (HTML5): </strong>'. formatBytes($config["max_html5_upload_size"]).'</li>
-    <li><strong>D&iacute;as hasta la expiraci&oacute;n de un archivo/invitaci&oacute;n de env&iacute;o (m&aacute;ximo): </strong>'. $config["default_daysvalid"].' </li>
+    <li><strong>Tama&ntilde;o m&aacute;ximo del archivo por env&iacute;o (Adobe Flash): </strong>'. formatBytes(Config::get('max_flash_upload_size')).' </li>
+    <li><strong>Tama&ntilde;o m&aacute;ximo del archivo por env&iacute;o (HTML5): </strong>'. formatBytes(Config::get('max_html5_upload_size')).'</li>
+    <li><strong>D&iacute;as hasta la expiraci&oacute;n de un archivo/invitaci&oacute;n de env&iacute;o (m&aacute;ximo): </strong>'. Config::get('default_daysvalid').' </li>
 </ul>
 
 <p></p>
@@ -256,7 +256,7 @@ $lang["_HELP_TEXT"] = '
 </div>';
 
 // site about
-$lang["_ABOUT_TEXT"] = ' <div style="padding: 5px; text-align: left;">'. '"'. htmlspecialchars($config['site_name']) .'" es una instalaci&oacute;n de FileSender (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>), desarrollado atendiendo a los requerimientos de la Comunidad de Investigaci&oacute;n y Educaci&oacute;n Superior.</div>';
+$lang["_ABOUT_TEXT"] = ' <div style="padding: 5px; text-align: left;">'. '"'. htmlspecialchars(Config::get('site_name')) .'" es una instalaci&oacute;n de FileSender (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>), desarrollado atendiendo a los requerimientos de la Comunidad de Investigaci&oacute;n y Educaci&oacute;n Superior.</div>';
 
 // site AUP terms
 $lang["_AUPTERMS"] = "Pol&iacute;tica de Uso Aceptable - Condiciones de Servicio";

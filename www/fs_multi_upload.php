@@ -63,8 +63,8 @@ $functions = Functions::getInstance();
 $sendMail = Mail::getInstance();
 
 global $config;
-date_default_timezone_set($config['Default_TimeZone']);
-$uploadFolder = $config['site_filestore'];
+date_default_timezone_set(Config::get('Default_TimeZone'));
+$uploadFolder = Config::get('site_filestore');
 $resultArray = array();
 $errorArray = array();
 
@@ -225,12 +225,12 @@ if (!isAuthenticated()) {
 
             // Append the chunk to the temp file.
             while ($data = fread($fd, $_REQUEST['chunksize'])) {
-                file_put_contents($config['site_filestore'] . sanitizeFilename($tempFilename), $data, FILE_APPEND) or die('Error');
+                file_put_contents(Config::get('site_filestore') . sanitizeFilename($tempFilename), $data, FILE_APPEND) or die('Error');
             }
 
             fclose($fd);
 
-            logEntry('Uploaded ' . $config['site_filestore'] . sanitizeFilename($tempFilename));
+            logEntry('Uploaded ' . Config::get('site_filestore') . sanitizeFilename($tempFilename));
             echo checkFileSize($uploadFolder . $tempFilename);
             break;
 
@@ -240,7 +240,7 @@ if (!isAuthenticated()) {
 
             $data = $functions->getVoucherData($_REQUEST['vid']);
             $tempFilename = generateTempFilename($data, $_REQUEST['n']);
-            $fs = new TeraSender($config['site_filestore'] . sanitizeFilename($tempFilename), $_REQUEST['chunksize']);
+            $fs = new TeraSender(Config::get('site_filestore') . sanitizeFilename($tempFilename), $_REQUEST['chunksize']);
             $fs->processChunk();
             break;
 
@@ -278,10 +278,10 @@ if (!isAuthenticated()) {
             $dataItem = json_decode($_POST['myJson'], true);
 
             $fileData = $functions->getVoucherData($dataItem['filevoucheruid']);
-            $fileData['filecreateddate'] = date($config['db_dateformat'], time());
+            $fileData['filecreateddate'] = date(Config::get('db_dateformat'), time());
             $fileData['filemessage'] = $dataItem['filemessage'];
             $fileData['filesubject'] = $dataItem['filesubject'];
-            $fileData['fileexpirydate'] = date($config['db_dateformat'], strtotime($dataItem['fileexpirydate']));
+            $fileData['fileexpirydate'] = date(Config::get('db_dateformat'), strtotime($dataItem['fileexpirydate']));
 
             validateFields($dataItem);
 
@@ -441,7 +441,7 @@ function addDatabaseRecords($data, $fileuid)
 
     $data['fileuid'] = $fileuid;
     $data['filestatus'] = 'Available';
-    $data['fileexpirydate'] = date($config['db_dateformat'], strtotime($data['fileexpirydate']));
+    $data['fileexpirydate'] = date(Config::get('db_dateformat'), strtotime($data['fileexpirydate']));
 
     $emailTo = str_replace(',', ';', $data['fileto']);
     $emailArray = preg_split('/;/', $emailTo);
@@ -526,7 +526,7 @@ function insertPendingDbRecord($dataItem, $tempFilename)
 function isInvalidExpiryRange($dataItem)
 {
     global $config;
-    return strtotime($dataItem['fileexpirydate']) > strtotime('+' . $config['default_daysvalid'] . ' day') || strtotime($dataItem['fileexpirydate']) < strtotime('now');
+    return strtotime($dataItem['fileexpirydate']) > strtotime('+' . Config::get('default_daysvalid') . ' day') || strtotime($dataItem['fileexpirydate']) < strtotime('now');
 }
 
 function validateFields($dataItem)
@@ -560,7 +560,7 @@ function validateEmailAddresses($dataItem)
     $emailArray = preg_split('/;/', $emailTo);
 
     // Validate number of addresses.
-    if (count($emailArray) > $config['max_email_recipients']) {
+    if (count($emailArray) > Config::get('max_email_recipients')) {
         array_push($errorArray, 'err_toomanyemail');
     }
     // Validate individual addresses.

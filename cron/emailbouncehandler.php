@@ -70,16 +70,16 @@ $sendmail = Mail::getInstance();
 $functions = Functions::getInstance();
 
 // set time zone for this session
-date_default_timezone_set($config['Default_TimeZone']);
+date_default_timezone_set(Config::get('Default_TimeZone'));
 
-if (is_dir($config['emailbounce_location'])) {
-	if ($dh = opendir($config['emailbounce_location'])) {
+if (is_dir(Config::get('emailbounce_location'))) {
+	if ($dh = opendir(Config::get('emailbounce_location'))) {
 		while (($file = readdir($dh)) !== false) {
 			if (preg_match("/^[.]*$/", $file)) { continue; }
 
-			$fh = fopen($config['emailbounce_location'].'/'.$file, 'r');
+			$fh = fopen(Config::get('emailbounce_location').'/'.$file, 'r');
 			if (! $fh ) {
-				echo "Can't open " . $config['emailbounce_location'] . "/" . $file . " for reading: exiting\n";
+				echo "Can't open " . Config::get('emailbounce_location') . "/" . $file . " for reading: exiting\n";
 				continue;
 			}
 
@@ -95,17 +95,17 @@ if (is_dir($config['emailbounce_location'])) {
 
 					$dataitem["fileto"] = $voucherinfo[0]['filefrom'];
 					$dataitem["fileoriginalto"] = $voucherinfo[0]['fileto'];
-					$dataitem["filefrom"] = $config['return_path'];
+					$dataitem["filefrom"] = Config::get('return_path');
 					$dataitem["fileoriginalname"] = $voucherinfo[0]['fileoriginalname'];
 					$dataitem["filename"] = $dataitem["fileoriginalname"];
 					$dataitem["fileexpirydate"] = $voucherinfo[0]['fileexpirydate'];
 					$dataitem["filemessage"] = $voucherinfo[0]['filemessage'];
 					$dataitem["filesize"] = $voucherinfo[0]['filesize'];
 
-					$sendmail->sendEmail($dataitem,$config['bouncenotification'],'bounce');
+					$sendmail->sendEmail($dataitem,Config::get('bouncenotification'),'bounce');
 					fclose($fh);
-					rename($config['emailbounce_location'].'/'.$file, $config['emailbounce_location'].'/../done/'.$file);
-					// unlink($config['emailbounce_location'].'/'.$file);
+					rename(Config::get('emailbounce_location').'/'.$file, Config::get('emailbounce_location').'/../done/'.$file);
+					// unlink(Config::get('emailbounce_location').'/'.$file);
 					$validmessage = 1;
 					break;
 				} 
@@ -113,7 +113,7 @@ if (is_dir($config['emailbounce_location'])) {
 			
 			if ($validmessage == 0 ) {
 				fclose($fh);
-				rename($config['emailbounce_location'].'/'.$file, $config['emailbounce_location'].'/../failures/'.$file);
+				rename(Config::get('emailbounce_location').'/'.$file, Config::get('emailbounce_location').'/../failures/'.$file);
 			}
 		}
 	}

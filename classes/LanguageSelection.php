@@ -51,8 +51,8 @@ function initlanguage()
 
     // Get the language based on the browser accepted language(s) and the available locales.
     // Default to the site_defaultlanguage configurable if defined.
-    if (isset($config['site_defaultlanguage'])) {
-        $languages = getClientLanguage(array_keys($locales), str_replace("_", "-", strtolower($config['site_defaultlanguage'])));
+    if (Config::exists('site_defaultlanguage')) {
+        $languages = getClientLanguage(array_keys($locales), str_replace("_", "-", strtolower(Config::get('site_defaultlanguage'))));
     } else {
         $languages = getClientLanguage(array_keys($locales));
     }
@@ -67,7 +67,7 @@ function initlanguage()
 
     // Try and include the various language files:
     // 1. Always read in the en_AU.php file first (this one should always be available and contains all definitions).
-    // 2. Override with an existing $config['site_defaultlanguage'] file (either in ./language or ./config).
+    // 2. Override with an existing Config::get('site_defaultlanguage') file (either in ./language or ./config).
     // 3. Override with an existing language file found in the browser pref to language file mappings
     //    in locale.php (either in ./language or ./config).
 
@@ -79,12 +79,12 @@ function initlanguage()
     require("$filesenderBase/language/" . 'en_AU_emails.php');
 
     // 2. Override definitions if a non-en_AU default language is configured.
-    if (isset($config['site_defaultlanguage']) && $config['site_defaultlanguage'] != "en_AU") {
+    if (Config::exists('site_defaultlanguage') && Config::get('site_defaultlanguage') != "en_AU") {
         $languageFileFound = loadLanguageFile("$filesenderBase/language/");
         $configFileFound = loadLanguageFile("$filesenderBase/config/");
 
         if (! loadLanguageFile("$filesenderBase/language/") && ! loadLanguageFile("$filesenderBase/config/")) {
-            logEntry('Default language file not available in language or config directory: ' . $config['site_defaultlanguage'], 'E_ERROR');
+            logEntry('Default language file not available in language or config directory: ' . Config::get('site_defaultlanguage'), 'E_ERROR');
         }
     }
 
@@ -133,7 +133,7 @@ function loadLanguageFile($folderPath, $fileName = '')
     global $lang; // Declaration ensures that the included content won't go out of scope on return.
 
     if ($fileName == '') {
-        $fileName = $config['site_defaultlanguage'] . '.php';
+        $fileName = Config::get('site_defaultlanguage') . '.php';
     }
 
     if (file_exists($folderPath . $fileName)) {

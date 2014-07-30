@@ -62,7 +62,7 @@ class AuthVoucher
         if (isset($_REQUEST['vid'])) {
             $vid = $_REQUEST['vid'];
 
-            if (preg_match($config['voucherRegEx'], $vid) and strLen($vid) == $config['voucherUIDLength']) {
+            if (preg_match(Config::get('voucherRegEx'), $vid) and strLen($vid) == Config::get('voucherUIDLength')) {
                 $statement = $this->db->prepare('SELECT COUNT(*) FROM files WHERE filevoucheruid = :filevoucheruid');
                 $statement->bindParam(':filevoucheruid', $vid);
 
@@ -87,7 +87,7 @@ class AuthVoucher
         if (isset($_REQUEST['vid'])) {
             $vid = $_REQUEST['vid'];
 
-            if (preg_match($config['voucherRegEx'], $vid) and strLen($vid) == $config['voucherUIDLength']) {
+            if (preg_match(Config::get('voucherRegEx'), $vid) and strLen($vid) == Config::get('voucherUIDLength')) {
 
                 $statement = $this->db->prepare("SELECT * FROM files WHERE filevoucheruid = :filevoucheruid");
                 $statement->bindParam(':filevoucheruid', $vid);

@@ -41,17 +41,17 @@ global $config;
 
 <script type="text/javascript">
     var uploadid = "<?php echo $id ?>";
-    var maximumDate = <?php echo (time()+($config['default_daysvalid']*86400))*1000 ?>;
+    var maximumDate = <?php echo (time()+(Config::get('default_daysvalid')*86400))*1000 ?>;
     var minimumDate = <?php echo (time()+86400)*1000 ?>;
-    var maxFLASHuploadsize = <?php echo $config['max_flash_upload_size']; ?>;
-    var maxHTML5UploadSize = <?php echo $config['max_html5_upload_size']; ?>;
-    var maxEmailRecipients = <?php echo $config['max_email_recipients']; ?>;
+    var maxFLASHuploadsize = <?php echo Config::get('max_flash_upload_size'); ?>;
+    var maxHTML5UploadSize = <?php echo Config::get('max_html5_upload_size'); ?>;
+    var maxEmailRecipients = <?php echo Config::get('max_email_recipients'); ?>;
     var datepickerDateFormat = "<?php echo lang('_DP_dateFormat'); ?>";
-    var chunksize =  <?php echo $config['upload_chunk_size']; ?>;
-    var aup = "<?php echo $config['AuP'] ?>";
+    var chunksize =  <?php echo Config::get('upload_chunk_size'); ?>;
+    var aup = "<?php echo Config::get('AuP') ?>";
     var bytesUploaded = 0;
     var bytesTotal = 0;
-    var ext = "<?php echo $config['ban_extension']?>";
+    var ext = "<?php echo Config::get('ban_extension')?>";
     var bannedExtensions = ext.split(",");
     var previousBytesLoaded = 0;
     var intervalTimer = 0;
@@ -59,7 +59,7 @@ global $config;
     var nameLang = "<?php echo lang("_FILE_NAME"); ?>";
     var sizeLang = "<?php echo lang("_SIZE"); ?>";
     var groupID = "<?php echo getOpenSSLKey(); ?>";
-    var maxUploads = <?php echo $config['html5_max_uploads']; ?>;
+    var maxUploads = <?php echo Config::get('html5_max_uploads'); ?>;
     var fileStatus = '<?php echo $filestatus; ?>';
 
     <?php
