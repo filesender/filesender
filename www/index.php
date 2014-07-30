@@ -56,9 +56,6 @@ $flexerrors = "true";
 $authsaml = AuthSaml::getInstance();
 $authvoucher = AuthVoucher::getInstance();
 $functions = Functions::getInstance();
-$CFG = Config::getInstance();
-global $config;
-$config = $CFG->loadConfig();
 $sendmail = Mail::getInstance();
 $log = Log::getInstance();
 

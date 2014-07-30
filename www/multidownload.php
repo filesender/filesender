@@ -32,8 +32,6 @@
 
 require_once('../classes/_includes.php');
 
-global $config;
-
 $functions = Functions::getInstance();
 
 date_default_timezone_set(Config::get('Default_TimeZone'));

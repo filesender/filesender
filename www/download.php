@@ -37,8 +37,6 @@
  */
 require_once('../classes/_includes.php');
 
-global $config;
-
 $authsaml = AuthSaml::getInstance();
 $authvoucher = AuthVoucher::getInstance();
 $functions = Functions::getInstance();

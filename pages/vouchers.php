@@ -36,8 +36,6 @@
  * 
  */
 
-global $config;
-
 if (isset($_REQUEST['a'])) {
     // add voucher
     if ($_REQUEST['a'] == 'complete') {

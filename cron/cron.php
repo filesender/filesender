@@ -90,8 +90,6 @@ if (cleanUp() && sendSummaryEmails()) {
 	// Clean up missing files
 	// Remove out of date files and vouchers
 function cleanUp() {
-	
-	global $config;
 	$db = DB::getInstance();
 	
 	// check log_location exists	
@@ -266,7 +264,6 @@ function cleanUp() {
 
 // Send emails with summaries of all activity on a user's transactions within the last 24 hours.
 function sendSummaryEmails() {
-    global $config;
     $db = DB::getInstance();
     $sendMail = Mail::getInstance();
 
@@ -317,7 +314,6 @@ function sendSummaryEmails() {
 }
 
 function logProcess($client,$message) {
-	global $config;
 	
 	if(Config::get('debug'))
 	{

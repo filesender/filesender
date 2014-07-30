@@ -285,7 +285,6 @@ class Mail
     // ---------------------------------------
     public function sendSummary($transactionDetails)
     {
-        global $config;
 
         if (!filter_var($transactionDetails[0]['logto'], FILTER_VALIDATE_EMAIL)) {
             logEntry('Invalid email address ' . $transactionDetails[0]['logto']);
@@ -390,7 +389,6 @@ class Mail
     // 
     public function sendEmail($mailObject, $template, $type = 'full', $multiFileDetails = null)
     {
-        global $config;
 		global $errorArray;
 
         if (!filter_var($mailObject['filefrom'], FILTER_VALIDATE_EMAIL) || !filter_var($mailObject['fileto'], FILTER_VALIDATE_EMAIL)) {
@@ -432,7 +430,6 @@ class Mail
 
     private function replaceTemplateVariables($template, $mailObject, $type = 'full')
     {
-        global $config;
 
         $fileoriginalname = sanitizeFilename($mailObject['fileoriginalname']);
         $crlf = Config::get('crlf');
@@ -491,7 +488,6 @@ class Mail
 
     private function replaceMultiFileTemplateVariables($template, $transactionDetails)
     {
-        global $config;
 
         $template = $this->replaceTemplateVariables($template, $transactionDetails[0]);
         $fileInfo = '';
@@ -511,7 +507,6 @@ class Mail
 
     private function createEmailHeaders($mailObject)
     {
-        global $config;
         $crlf = Config::get('crlf');
 
         $headers = 'MIME-Version: 1.0' . $crlf;
@@ -528,7 +523,6 @@ class Mail
 
     private function createEmailSubject($mailObject, $type = 'full')
     {
-        global $config;
 
         if ($type == 'bounce') {
             $subject = lang('_EMAIL_SUBJECT_BOUNCE');
@@ -557,7 +551,6 @@ class Mail
     private function createEmailReturnPath($mailObject, $type = 'full')
     {
         // RFC2821 (Envelope) originator of the message
-        global $config;
         $crlf = Config::get('crlf');
 
         if ($type == 'bounce') {
@@ -597,8 +590,6 @@ class Mail
 
         // sends a summary 
 
-        global $config;
-
         $crlf = Config::get('crlf');
 
         $headers = "MIME-Version: 1.0".$crlf;
@@ -626,8 +617,6 @@ class Mail
     public function sendEmailAdmin($message)
     {
         // send admin notifications via email
-
-        global $config;
 
         $crlf = Config::get('crlf');
 

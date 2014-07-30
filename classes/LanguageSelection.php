@@ -37,7 +37,6 @@ function initlanguage()
 {
     global $lang;
     global $locales;
-    global $config;
 
     $filesenderBase = dirname(dirname(__FILE__));
 
@@ -129,7 +128,6 @@ function getClientLanguage($availableLanguages, $default = 'en-au')
 // Attempts to include a language file, returns boolean indicating success or failure.
 function loadLanguageFile($folderPath, $fileName = '')
 {
-    global $config;
     global $lang; // Declaration ensures that the included content won't go out of scope on return.
 
     if ($fileName == '') {
