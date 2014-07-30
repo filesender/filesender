@@ -195,8 +195,8 @@ $lang["_DP_showMonthAfterYear"] = 'false';
 $lang["_DP_yearSuffix"] = '';
 
 // Login Splash text
-$lang["_SITE_SPLASHHEAD"] = "Willkommen bei ". htmlspecialchars($config['site_name']);
-$lang["_SITE_SPLASHTEXT"] = htmlspecialchars($config['site_name']) ." ist eine sichere Methode grosse Dateien mit jedermann zu teilen! Verbinden Sie sich um Dateien zu verschicken oder um jemanden aufzufordern Ihnen eine Datei zu schicken.";
+$lang["_SITE_SPLASHHEAD"] = "Willkommen bei ". htmlspecialchars(Config::get('site_name'));
+$lang["_SITE_SPLASHTEXT"] = htmlspecialchars(Config::get('site_name')) ." ist eine sichere Methode grosse Dateien mit jedermann zu teilen! Verbinden Sie sich um Dateien zu verschicken oder um jemanden aufzufordern Ihnen eine Datei zu schicken.";
 
 // Footer to display
 $lang["_SITE_FOOTER"] = ""; 
@@ -237,18 +237,18 @@ $lang["_HELP_TEXT"] = '
 <h4>Einschränkungen dieser FileSender Installation</h4>
 <ul>
     <li><strong>
-      Maximale Anzahl der E-mail Empfänger: </strong>'. $config["max_email_recipients"].' verschiedene E-mail Adressen (getrennt durch Komma oder Strichpunkt)</li>
+      Maximale Anzahl der E-mail Empfänger: </strong>'. Config::get('max_email_recipients').' verschiedene E-mail Adressen (getrennt durch Komma oder Strichpunkt)</li>
     <li><strong>Maximale Anzahl der Dateien beim Hochladen:</strong> Eine - um mehrere Dateien gleichzeitig hochzuladen, verpacken Sie diese zuerst zu einem Zip-Archiv</li>
-    <li><strong>Maximale Dateigröße beim Hochladen, mit Adobe Flash: </strong>'. formatBytes($config["max_flash_upload_size"]).' </li>
-    <li><strong>Maximale Dateigröße beim Hochladen, mit HTML5: </strong>'. formatBytes($config["max_html5_upload_size"]).'</li>
-    <li><strong>Maximale Ablaufzeit für Dateien und Voucher: </strong>'. $config["default_daysvalid"].' Tage </li>
+    <li><strong>Maximale Dateigröße beim Hochladen, mit Adobe Flash: </strong>'. formatBytes(Config::get('max_flash_upload_size')).' </li>
+    <li><strong>Maximale Dateigröße beim Hochladen, mit HTML5: </strong>'. formatBytes(Config::get('max_html5_upload_size')).'</li>
+    <li><strong>Maximale Ablaufzeit für Dateien und Voucher: </strong>'. Config::get('default_daysvalid').' Tage </li>
 </ul>
 <p>Mehr Informationen über FileSender gibt es auf der folgenden Internetseite: <a href="http://www.filesender.org/" target="_blank">www.filesender.org</a></p>
 </div>
 </div>';
 
 // site about
-$lang["_ABOUT_TEXT"] = ' <div style="padding: 5px; text-align: left;">'. htmlspecialchars($config['site_name']) .' ist eine Installation von FileSender (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>), entwickelt für die Anforderungen der Hochschul- und Forschungsgemeinschaften.</div>';
+$lang["_ABOUT_TEXT"] = ' <div style="padding: 5px; text-align: left;">'. htmlspecialchars(Config::get('site_name')) .' ist eine Installation von FileSender (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>), entwickelt für die Anforderungen der Hochschul- und Forschungsgemeinschaften.</div>';
 
 // site AUP terms
 $lang["_AUPTERMS"] = "Nutzungsbedingungen...";

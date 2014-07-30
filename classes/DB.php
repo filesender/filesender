@@ -43,7 +43,7 @@ class DbConnectException extends DbException
 
 // --------------------------------
 // Functions for database connection. Uses PDO to allow multiple database types.
-// Uses config db_ settings or override using single line $config['dsn'].
+// Uses config db_ settings or override using single line Config::get('dsn').
 // --------------------------------
 class DB
 {
@@ -92,8 +92,6 @@ class DB
     // --------------------------------
     public function connect()
     {
-        global $config;
-
         if ($this->connection) {
             return $this->connection;
         }
@@ -101,7 +99,7 @@ class DB
         $dsn = $this->initDSN();
 
         try {
-            $this->connection = new PDO($dsn, $config['db_username'], $config['db_password']);
+            $this->connection = new PDO($dsn, Config::get('db_username'), Config::get('db_password'));
         } catch (PDOException $e) {
             logEntry($e->getMessage(), 'E_ERROR');
             displayError(lang('_ERROR_CONTACT_ADMIN'), $e->getMessage());
@@ -116,37 +114,29 @@ class DB
     // --------------------------------
     public function initDSN()
     {
-        global $config;
-
-        // Check if db_driver_options are available.
-        if (!array_key_exists('db_driver_options', $config)) {
-            $config['db_driver_options'] = ''; // Set default if options don't exist.
-        }
-
         // Use single line DSN if it exists.
-        if (array_key_exists('dsn', $config)) {
-            if (!array_key_exists('db_username', $config) || !array_key_exists('db_password', $config)) {
+        if (Config::exists('dsn')) {
+            if (!Config::exists('db_username') || !Config::exists('db_password')) {
                 throw new DbException ('Incomplete parameter specification for database, username and password are required');
             }
 
-            return $config['dsn'];
+            return Config::get('dsn');
         }
 
         // Default to postgresql if no db_type is specified in config.
-        if (!array_key_exists('db_type', $config)) {
-            $config['db_type'] = "pgsql";
-        }
+        $db_type = Config::get('db_type');
+        if (!$db_type) $db_type = 'pgsql';
 
         // Sanity check.
-        if (!array_key_exists('db_host', $config) || ! array_key_exists('db_database', $config) 
-            || !array_key_exists('db_username', $config) || ! array_key_exists('db_password', $config)) {
+        if (!Config::exists('db_host') || ! Config::exists('db_database') 
+            || !Config::exists('db_username') || ! Config::exists('db_password')) {
             throw new DbException ('Incomplete parameter specification for database, please check your config.php');
         }
 
         // Create data source name for PDO.
-        $dbType = $config['db_type'];
-        $dbHost = $config['db_host'];
-        $dbName = $config['db_database'];
+        $dbType = Config::get('db_type');
+        $dbHost = Config::get('db_host');
+        $dbName = Config::get('db_database');
 
         return "$dbType:host=$dbHost;dbname=$dbName";
     }

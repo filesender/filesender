@@ -60,7 +60,7 @@ if(isset($_REQUEST['a']) && $_REQUEST['a'] == 'cancelled') {
 
 <script type='text/javascript' src='js/multiupload.js'></script>
 <script type='text/javascript'>
-    var fileBoxSize = <?php echo $config['upload_box_default_size']; ?>;
+    var fileBoxSize = <?php echo Config::get('upload_box_default_size'); ?>;
 // start document ready
 $(function () {
     $('#dragfilestouploadcss').css('height', 14+(40* fileBoxSize));
@@ -178,7 +178,7 @@ $(function () {
             <div id="fileto_msg" style="display: none" class="validation_msg field">
               <?php echo lang('_INVALID_MISSING_EMAIL'); ?>
             </div>
-            <div id="maxemails_msg" style="display: none" class="validation_msg"><?php echo lang('_MAXEMAILS').$config['max_email_recipients']; ?></div>
+            <div id="maxemails_msg" style="display: none" class="validation_msg"><?php echo lang('_MAXEMAILS').Config::get('max_email_recipients'); ?></div>
           </div>
           
           <div class="fieldcontainer">
@@ -211,47 +211,47 @@ $(function () {
               <div id="expiry_msg" class="validation_msg" style="display: none"><?php echo lang('_INVALID_EXPIRY_DATE'); ?></div>
             </div>
             
-            <input type="hidden" id="fileexpirydate" name="fileexpirydate" value="<?php echo date(lang('datedisplayformat'), strtotime('+'.$config['default_daysvalid'].' day')); ?>"/>
+            <input type="hidden" id="fileexpirydate" name="fileexpirydate" value="<?php echo date(lang('datedisplayformat'), strtotime('+'.Config::get('default_daysvalid').' day')); ?>"/>
             
-            <?php if ($config['email_me_copies_display'] == 'always') { ?>
+            <?php if (Config::get('email_me_copies_display') == 'always') { ?>
             <div class="fieldcontainer">
               <label for="rtnemail"><?php echo lang('_SEND_COPY_EMAILS'); ?></label>
-              <input name="rtnemail" type="checkbox" id="rtnemail" style="float:left; width:20px;" <?php echo isChecked($config['email_me_copies_default']); ?> />
+              <input name="rtnemail" type="checkbox" id="rtnemail" style="float:left; width:20px;" <?php echo isChecked(Config::get('email_me_copies_default')); ?> />
             </div>
             <?php } ?>
             
-            <?php if ($config['upload_complete_email_display'] == 'always') { ?>
+            <?php if (Config::get('upload_complete_email_display') == 'always') { ?>
             <div class="fieldcontainer">
               <label for="email-upload-complete"><?php echo lang('_EMAIL_ME_COMPLETE') ?></label>
-              <input type="checkbox" id="email-upload-complete" style="float:left; width:20px;" <?php echo isChecked($config['upload_complete_email_default']); ?> />
+              <input type="checkbox" id="email-upload-complete" style="float:left; width:20px;" <?php echo isChecked(Config::get('upload_complete_email_default')); ?> />
             </div>
             <?php } ?>
             
-            <?php if ($config['inform_download_email_display'] == 'always') { ?>
+            <?php if (Config::get('inform_download_email_display') == 'always') { ?>
             <div class="fieldcontainer">
               <label for="email-inform-download"><?php echo lang('_EMAIL_ME_ON_DOWNLOAD') ?></label>
-              <input id="email-inform-download" type="checkbox" style="float:left; width:20px;" <?php echo isChecked($config['inform_download_email_default']); ?> />
+              <input id="email-inform-download" type="checkbox" style="float:left; width:20px;" <?php echo isChecked(Config::get('inform_download_email_default')); ?> />
             </div>
             <?php } ?>
             
-            <?php if ($config['email_me_daily_statistics_display'] == 'always') { ?>
+            <?php if (Config::get('email_me_daily_statistics_display') == 'always') { ?>
             <div class="fieldcontainer">
               <label for="email-inform-daily"><?php echo lang('_EMAIL_DAILY_STATS') ?></label>
-              <input id="email-inform-daily" type="checkbox" style="float:left; width:20px;" <?php echo isChecked($config['email_me_daily_statistics_default']); ?>/>
+              <input id="email-inform-daily" type="checkbox" style="float:left; width:20px;" <?php echo isChecked(Config::get('email_me_daily_statistics_default')); ?>/>
             </div>
             <?php } ?>
             
-            <?php if ($config['download_confirmation_enabled_display'] == 'always') { ?>
+            <?php if (Config::get('download_confirmation_enabled_display') == 'always') { ?>
             <div class="fieldcontainer">
               <label for="email-enable-confirmation"><?php echo lang('_ENABLE_EMAIL_CONFIRMATION') ?></label>
-              <input id="email-enable-confirmation" type="checkbox" style="float:left; width:20px;" <?php echo isChecked($config['download_confirmation_enabled_default']); ?>/>
+              <input id="email-enable-confirmation" type="checkbox" style="float:left; width:20px;" <?php echo isChecked(Config::get('download_confirmation_enabled_default')); ?>/>
             </div>
             <?php } ?>
             
-            <?php if ($config['add_me_to_recipients_display'] == 'always') { ?>
+            <?php if (Config::get('add_me_to_recipients_display') == 'always') { ?>
             <div class="fieldcontainer">
               <label for="add_me_to_recipients"><?php echo lang('_ADD_ME_TO_RECIPIENTS') ?></label>
-              <input id="add_me_to_recipients" type="checkbox" style="float:left; width:20px;" <?php echo isChecked($config['add_me_to_recipients_default']); ?>/>
+              <input id="add_me_to_recipients" type="checkbox" style="float:left; width:20px;" <?php echo isChecked(Config::get('add_me_to_recipients_default')); ?>/>
             </div>
             <?php } ?>
           </div>
@@ -262,70 +262,70 @@ $(function () {
           </div>
           
           <div id="advanced-settings" style="display: none;">
-            <?php if ($config['email_me_copies_display'] == 'hidden') { ?>
+            <?php if (Config::get('email_me_copies_display') == 'hidden') { ?>
             <div class="fieldcontainer" >
               <label for="rtnemail"><?php echo lang('_SEND_COPY_EMAILS'); ?></label>
-              <input name="rtnemail" type="checkbox" id="rtnemail" style="float:left; width:20px;" <?php echo isChecked($config['email_me_copies_default']); ?>/>
+              <input name="rtnemail" type="checkbox" id="rtnemail" style="float:left; width:20px;" <?php echo isChecked(Config::get('email_me_copies_default')); ?>/>
             </div>
             <?php } ?>
             
-            <?php if ($config['upload_complete_email_display'] == 'hidden') { ?>
+            <?php if (Config::get('upload_complete_email_display') == 'hidden') { ?>
             <div class="fieldcontainer">
               <label for="email-upload-complete"><?php echo lang('_EMAIL_ME_COMPLETE') ?></label>
-              <input type="checkbox" id="email-upload-complete" style="float:left; width:20px;" <?php echo isChecked($config['upload_complete_email_default']); ?>/>
+              <input type="checkbox" id="email-upload-complete" style="float:left; width:20px;" <?php echo isChecked(Config::get('upload_complete_email_default')); ?>/>
             </div>
             <?php } ?>
             
-            <?php if ($config['inform_download_email_display'] == 'hidden') { ?>
+            <?php if (Config::get('inform_download_email_display') == 'hidden') { ?>
             <div class="fieldcontainer">
               <label for="email-inform-download"><?php echo lang('_EMAIL_ME_ON_DOWNLOAD') ?></label>
-              <input id="email-inform-download" type="checkbox" style="float:left; width:20px;" <?php echo isChecked($config['inform_download_email_default']); ?>/>
+              <input id="email-inform-download" type="checkbox" style="float:left; width:20px;" <?php echo isChecked(Config::get('inform_download_email_default')); ?>/>
             </div>
             <?php } ?>
             
-            <?php if ($config['email_me_daily_statistics_display'] == 'hidden') { ?>
+            <?php if (Config::get('email_me_daily_statistics_display') == 'hidden') { ?>
             <div class="fieldcontainer">
               <label for="email-inform-daily"><?php echo lang('_EMAIL_DAILY_STATS') ?></label>
-              <input id="email-inform-daily" type="checkbox" style="float:left; width:20px;" <?php echo isChecked($config['email_me_daily_statistics_default']); ?>/>
+              <input id="email-inform-daily" type="checkbox" style="float:left; width:20px;" <?php echo isChecked(Config::get('email_me_daily_statistics_default')); ?>/>
             </div>
             <?php } ?>
             
-            <?php if ($config['download_confirmation_enabled_display'] == 'hidden') { ?>
+            <?php if (Config::get('download_confirmation_enabled_display') == 'hidden') { ?>
             <div class="fieldcontainer">
               <label for="email-enable-confirmation"><?php echo lang('_ENABLE_EMAIL_CONFIRMATION') ?></label>
-              <input id="email-enable-confirmation" type="checkbox" style="float:left; width:20px;" <?php echo isChecked($config['download_confirmation_enabled_default']); ?>/>
+              <input id="email-enable-confirmation" type="checkbox" style="float:left; width:20px;" <?php echo isChecked(Config::get('download_confirmation_enabled_default')); ?>/>
             </div>
             <?php } ?>
             
-            <?php if ($config['add_me_to_recipients_display'] == 'hidden') { ?>
+            <?php if (Config::get('add_me_to_recipients_display') == 'hidden') { ?>
             <div class="fieldcontainer">
               <label for="add_me_to_recipients"><?php echo lang('_ADD_ME_TO_RECIPIENTS') ?></label>
-              <input id="add_me_to_recipients" type="checkbox" style="float:left; width:20px;" <?php echo isChecked($config['add_me_to_recipients_default']); ?>/>
+              <input id="add_me_to_recipients" type="checkbox" style="float:left; width:20px;" <?php echo isChecked(Config::get('add_me_to_recipients_default')); ?>/>
             </div>
             <?php } ?>
             
-            <?php if ($config['terasender'] && $config['terasenderadvanced']) { ?>
+            <?php if (Config::get('terasender') && Config::get('terasenderadvanced')) { ?>
             <div class="fieldcontainer">
               <label for="chunksize"><?php echo lang('_TERA_CHUNKSIZE'); ?></label>
-              <input id="chunksize" type="text" value="<?php echo $config['terasender_chunksize'] ?>"/>
+              <input id="chunksize" type="text" value="<?php echo Config::get('terasender_chunksize') ?>"/>
               <br />
             </div>
             
             <div class="fieldcontainer">
               <label for="workerCount"><?php echo lang('_TERA_WORKER_COUNT'); ?></label>
-              <input id="workerCount" type="text" value="<?php echo $config['terasender_workerCount'] ?>"/>
+              <input id="workerCount" type="text" value="<?php echo Config::get('terasender_workerCount') ?>"/>
               <br />
             </div>
             
             <div class="fieldcontainer">
               <label for="jobsPerWorker"><?php echo lang('_TERA_JOBS_PER_WORKER'); ?></label>
-              <input id="jobsPerWorker" type="text" value="<?php echo $config['terasender_jobsPerWorker'] ?>"/>
+              <input id="jobsPerWorker" type="text" value="<?php echo Config::get('terasender_jobsPerWorker') ?>"/>
             </div>
             
-            <?php } else if ($config['terasender'] && !$config['terasenderadvanced']) { ?>
-            <input id="chunksize" type="hidden" value="<?php echo $config['terasender_chunksize'] ?>" />
-            <input id="workerCount" type="hidden" value="<?php echo $config['terasender_workerCount'] ?>" />
-            <input id="jobsPerWorker" type="hidden" value="<?php echo $config['terasender_jobsPerWorker'] ?>" />
+            <?php } else if (Config::get('terasender') && !Config::get('terasenderadvanced')) { ?>
+            <input id="chunksize" type="hidden" value="<?php echo Config::get('terasender_chunksize') ?>" />
+            <input id="workerCount" type="hidden" value="<?php echo Config::get('terasender_workerCount') ?>" />
+            <input id="jobsPerWorker" type="hidden" value="<?php echo Config::get('terasender_jobsPerWorker') ?>" />
             <?php } ?>
           </div>
           <?php } /* End of advanced settings div. */ ?>
@@ -335,7 +335,7 @@ $(function () {
     
     <div style="clear: both"></div>
     
-    <?php if ($config['AuP']) { ?>
+    <?php if (Config::get('AuP')) { ?>
     <div class="auppanel">
       <label id="aup_label" for="aup" style="cursor:pointer; margin-left: 10px" title="<?php echo lang('_SHOWHIDE'); ?>" onclick="$('#tog').slideToggle();return false;">
         <?php echo lang('_ACCEPTTOC'); ?> [<span style="color: #666666;"><?php echo lang("_SHOWHIDE"); ?></span>]
@@ -343,7 +343,7 @@ $(function () {
       
       <?php
       $aupChecked = '';
-      if ($config['AuP_default'] || (isset($_SESSION['aup']) && !$authvoucher->aVoucher())) $aupChecked = 'checked="checked"';
+      if (Config::get('AuP_default') || (isset($_SESSION['aup']) && !$authvoucher->aVoucher())) $aupChecked = 'checked="checked"';
       ?>
       <input style="float:left" name="aup" type="checkbox" id="aup" onchange="validate_aup();" <?php echo $aupChecked; ?> value="true"/>
       

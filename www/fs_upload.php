@@ -71,8 +71,8 @@ $log =  Log::getInstance();
 $functions = Functions::getInstance();
 $sendMail = Mail::getInstance();
 
-date_default_timezone_set($config['Default_TimeZone']);
-$uploadfolder =  $config["site_filestore"];
+date_default_timezone_set(Config::get('Default_TimeZone'));
+$uploadfolder =  Config::get('site_filestore');
 $resultArray = array();
 $errorArray = array();
 
@@ -152,7 +152,7 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 
             $data["fileuid"] = $fileuid;
             $data["filestatus"]  = "Available";
-            $data["fileexpirydate"] = date($config["db_dateformat"],strtotime($data["fileexpirydate"]));
+            $data["fileexpirydate"] = date(Config::get('db_dateformat'),strtotime($data["fileexpirydate"]));
             $data["filenumdownloads"] = 0;
 
             // loop though multiple emails
@@ -263,10 +263,10 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 
             $fd = fopen("php://input", "r");
             // append the chunk to the temp file
-            while( $data = fread( $fd,  1000000  ) ) file_put_contents( $config["site_filestore"].sanitizeFilename($tempFilename), $data, FILE_APPEND ) or die("Error");
+            while( $data = fread( $fd,  1000000  ) ) file_put_contents( Config::get('site_filestore').sanitizeFilename($tempFilename), $data, FILE_APPEND ) or die("Error");
             // close the file
             fclose($fd);
-            logEntry("Uploaded ".$config["site_filestore"].sanitizeFilename($tempFilename));
+            logEntry("Uploaded ".Config::get('site_filestore').sanitizeFilename($tempFilename));
             // return file size
             echo checkFileSize($uploadfolder.$tempFilename);
             break;
@@ -285,7 +285,7 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
                 if(!isset($dataitem["fileto"])){  array_push($errorArray,  "err_tomissing");}
                 // validate expiry range
                 // Don't generate a validation error but fix the expiry date to correct timezone/clock skew mishaps
-                if(strtotime($dataitem["fileexpirydate"]) > strtotime("+".$config['default_daysvalid']." day") ||  strtotime($dataitem["fileexpirydate"]) < strtotime("now")) {
+                if(strtotime($dataitem["fileexpirydate"]) > strtotime("+".Config::get('default_daysvalid')." day") ||  strtotime($dataitem["fileexpirydate"]) < strtotime("now")) {
                     $dataitem["fileexpirydate"] = $functions->ensureValidFileExpiryDate($dataitem["fileexpirydate"]);
                     /* echo "err_exoutofrange"; exit; */
                 }
@@ -293,7 +293,7 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
                 $emailto = str_replace(",",";",$dataitem["fileto"]);
                 $emailArray = preg_split("/;/", $emailto);
                 // validate number of emails
-                if(count($emailArray) > $config['max_email_recipients'] ) { array_push($errorArray,  "err_toomanyemail"); }
+                if(count($emailArray) > Config::get('max_email_recipients') ) { array_push($errorArray,  "err_toomanyemail"); }
                 // validate individual emails
                 foreach ($emailArray as $Email) {
                     if(!filter_var($Email,FILTER_VALIDATE_EMAIL)) { array_push($errorArray,  "err_invalidemail"); }
@@ -321,16 +321,16 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
             //array_push($errorArray, "err_invalidemail");
             $dataitem = json_decode($_POST['myJson'], true);
             $myfileData = $functions->getVoucherData($dataitem["filevoucheruid"]);
-            $myfileData["filecreateddate"] = date($config['db_dateformat'], time());
+            $myfileData["filecreateddate"] = date(Config::get('db_dateformat'), time());
             $myfileData["filemessage"] = $dataitem["filemessage"];
             $myfileData["filesubject"] = $dataitem["filesubject"];
-            $myfileData["fileexpirydate"] = date($config["db_dateformat"],strtotime($dataitem["fileexpirydate"]));
+            $myfileData["fileexpirydate"] = date(Config::get('db_dateformat'),strtotime($dataitem["fileexpirydate"]));
             // validate fileto and fileexpiry
             // expiry missing
             if(!isset($dataitem["fileexpirydate"])){ array_push($errorArray,  "err_expmissing"); }
             // expiry out of range
             // Don't generate a validation error but fix the expiry date to correct timezone/clock skew mishaps
-            if(strtotime($dataitem["fileexpirydate"]) > strtotime("+".$config['default_daysvalid']." day") ||  strtotime($dataitem["fileexpirydate"]) < strtotime("now"))
+            if(strtotime($dataitem["fileexpirydate"]) > strtotime("+".Config::get('default_daysvalid')." day") ||  strtotime($dataitem["fileexpirydate"]) < strtotime("now"))
             {
                 $myfileData["fileexpirydate"] = $functions->ensureValidFileExpiryDate($myfileData["fileexpirydate"]);
                 /* array_push($errorArray,"err_exoutofrange"); */
@@ -343,7 +343,7 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
                 $emailto = str_replace(",",";",$dataitem["fileto"]);
                 $emailArray = preg_split("/;/", $emailto);
                 // validate number of emails
-                if(count($emailArray) > $config['max_email_recipients'] ) {array_push($errorArray,  "err_toomanyemail");}
+                if(count($emailArray) > Config::get('max_email_recipients') ) {array_push($errorArray,  "err_toomanyemail");}
                 // validate individual emails
                 foreach ($emailArray as $Email) {
                     if(!filter_var($Email,FILTER_VALIDATE_EMAIL)) {array_push($errorArray, "err_invalidemail");}

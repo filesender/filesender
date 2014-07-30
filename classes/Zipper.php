@@ -83,7 +83,7 @@ class Zipper
             $localHeaderLength = $this->sendLocalFileHeader($name, $timestamp, $file['filesize']);
 
             // File may be too large to hash all at once, so create a hash context and update it as the file is read.
-            $path = $config['site_filestore'] . $file['fileuid'] . '.tmp';
+            $path = Config::get('site_filestore') . $file['fileuid'] . '.tmp';
             $hashContext = hash_init('crc32b');
 
             // Send the file contents.
@@ -159,7 +159,7 @@ class Zipper
         global $config;
 
         header('Content-Type: application/octet-stream');
-        header('Content-Disposition: attachment; filename="' . $config['site_name'] . '-' . $this->files[0]['filetrackingcode'] . '.zip"');
+        header('Content-Disposition: attachment; filename="' . Config::get('site_name') . '-' . $this->files[0]['filetrackingcode'] . '.zip"');
         header('Content-Transfer-Encoding: binary');
         header('Content-Length: ' . $this->calculateTotalFileSize());
     }
@@ -224,7 +224,7 @@ class Zipper
 
         $bytesSent = 0;
         $handle = fopen($path, 'rb');
-        $chunkSize = $config['download_chunk_size'];
+        $chunkSize = Config::get('download_chunk_size');
 
         // Read the file into memory in small chunks, send the chunks to the client and update the CRC-32 hash.
         while ($data = fread($handle, $chunkSize)) {

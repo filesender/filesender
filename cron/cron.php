@@ -65,7 +65,7 @@ $cron = true;
 $sendmail = Mail::getInstance();
 
 // set time zone for this session
-date_default_timezone_set($config['Default_TimeZone']);
+date_default_timezone_set(Config::get('Default_TimeZone'));
 
 // check if session already exists
 if(session_id() == ""){
@@ -95,20 +95,20 @@ function cleanUp() {
 	$db = DB::getInstance();
 	
 	// check log_location exists	
-	if (!file_exists($config["log_location"])) {
-	logProcess("CRON","Unable to find log_location location specified in config.php  :".$config["log_location"]);
+	if (!file_exists(Config::get('log_location'))) {
+	logProcess("CRON","Unable to find log_location location specified in config.php  :".Config::get('log_location'));
 	return false;
 	}
 	
 	// check site_filestore exists
-	if (!file_exists($config["site_filestore"])) {
-		logProcess("CRON","Unable to find site_filestore location specified in config.php  :".$config["site_filestore"]);
+	if (!file_exists(Config::get('site_filestore'))) {
+		logProcess("CRON","Unable to find site_filestore location specified in config.php  :".Config::get('site_filestore'));
 		return false;
 	}	
 	
 	// check site_temp_filestore exists
-	if (!file_exists($config["site_temp_filestore"])) {
-		logProcess("CRON","Unable to find site_temp_filestore location specified in config.php  :".$config["site_temp_filestore"]);
+	if (!file_exists(Config::get('site_temp_filestore'))) {
+		logProcess("CRON","Unable to find site_temp_filestore location specified in config.php  :".Config::get('site_temp_filestore'));
 		return false;
 	}	
 	
@@ -117,12 +117,12 @@ function cleanUp() {
     $statement = $db->prepare($sqlQuery);
     $db->execute($statement);
 	 
-	$FilestoreDirectory = $config["site_filestore"];
+	$FilestoreDirectory = Config::get('site_filestore');
 
 	//
 	// Phase 1: check for any expired files and vouchers in the database first and close status in database
 	//
-	$today = date($config['db_dateformat']); 
+	$today = date(Config::get('db_dateformat')); 
 
 	// expired voucher is closed
     $statement = $db->prepare("UPDATE files SET filestatus = 'Voucher Cancelled' WHERE fileexpirydate < :fileexpirydate AND (filestatus = 'Voucher')");
@@ -153,7 +153,7 @@ function cleanUp() {
 			continue;
 		}
 		
-		if(strpos($config['cron_exclude prefix'], substr($filename,0,1)) === 0) {
+		if(strpos(Config::get('cron_exclude prefix'), substr($filename,0,1)) === 0) {
 			logProcess("CRON","Ignored file: " . $FilestoreDirectory.$filename);
 			continue;
 		}
@@ -167,13 +167,13 @@ function cleanUp() {
 					logProcess("CRON","File NOT removed (last modification less then 24 hours ago)".$FilestoreDirectory.$filename);
 				} else {
 					// setting to allow for file wiping
-					if ( empty($config['cron_shred']) ) {
+					if (!Config::get('cron_shred')) {
 						// simply delete (unlink) the file
 						unlink($FilestoreDirectory.$filename);
 						logProcess("CRON","File Removed (Expired)".$FilestoreDirectory.$filename);    
 					} else {
 						// use gnu coreutils' shred to permanently remove the file from disk:
-						system ($config['cron_shred_command'] .' '. escapeshellarg($FilestoreDirectory.$filename), $retval);
+						system (Config::get('cron_shred_command') .' '. escapeshellarg($FilestoreDirectory.$filename), $retval);
 						if ( $retval === 0 ) {
 							logProcess("CRON","File Shredded (Expired)".$FilestoreDirectory.$filename);
 						} else {
@@ -214,9 +214,9 @@ function cleanUp() {
 	}
 	
 	
-	// Phase 4: remove files in temp folder older than days specified in $config["cleanuptempdays"]
+	// Phase 4: remove files in temp folder older than days specified in Config::get('cleanuptempdays')
 	
-	$tempFilestoreDirectory = $config["site_temp_filestore"];
+	$tempFilestoreDirectory = Config::get('site_temp_filestore');
 
 	// Open the folder
 	$dir_handle = @opendir($tempFilestoreDirectory) or die("Unable to open $tempFilestoreDirectory"); 
@@ -229,25 +229,25 @@ function cleanUp() {
 			continue;
 		}
 		
-		if(strpos($config['cron_exclude prefix'], substr($filename,0,1)) === 0) {
+		if(strpos(Config::get('cron_exclude prefix'), substr($filename,0,1)) === 0) {
 			logProcess("CRON","Ignored file: " . $tempFilestoreDirectory.$filename);
 			continue;
 		}
-			// number of seconds before cleanup of temp files from $config["cron_cleanuptempdays"] or default 7 days (604800 seconds)
-			$cron_cleanuptemptime =(isset($config["cron_cleanuptempdays"])) ? $config["cron_cleanuptempdays"]*60*60*24 : 604800;
+			// number of seconds before cleanup of temp files from Config::get('cron_cleanuptempdays') or default 7 days (604800 seconds)
+			$cron_cleanuptemptime =(Config::exists('cron_cleanuptempdays')) ? Config::get('cron_cleanuptempdays')*60*60*24 : 604800;
 			if (is_file($tempFilestoreDirectory.$filename)) {
 				// Don't remove the file if mtime is less then the configured cleanup time old
 				if (time() - filemtime($tempFilestoreDirectory.$filename) < $cron_cleanuptemptime) {
 					logProcess("CRON","Temp File NOT removed (last modification less then $cron_cleanuptemptime seconds ago)".$tempFilestoreDirectory.$filename);
 				} else {
 					// setting to allow for file wiping
-					if ( empty($config['cron_shred']) ) {
+					if (!Config::get('cron_shred')) {
 						// simply delete (unlink) the file
 						unlink($tempFilestoreDirectory.$filename);
 						logProcess("CRON","Temp File Removed (Expired)".$tempFilestoreDirectory.$filename);    
 					} else {
 						// use gnu coreutils' shred to permanently remove the file from disk:
-						system ($config['cron_shred_command'] .' '. escapeshellarg($tempFilestoreDirectory.$filename), $retval);
+						system (Config::get('cron_shred_command') .' '. escapeshellarg($tempFilestoreDirectory.$filename), $retval);
 						if ( $retval === 0 ) {
 							logProcess("CRON","Temp File Shredded (Expired)".$tempFilestoreDirectory.$filename);
 						} else {
@@ -270,7 +270,7 @@ function sendSummaryEmails() {
     $db = DB::getInstance();
     $sendMail = Mail::getInstance();
 
-    $last24h = date($config['db_dateformat'], time() - 60 * 60 * 24);
+    $last24h = date(Config::get('db_dateformat'), time() - 60 * 60 * 24);
 
     $statement = $db->prepare("SELECT logdate, logfilename, logfrom, logto, logfiletrackingcode, logtype FROM logs WHERE logdailysummary = 'true' AND logdate >= :logdate ORDER BY logdate DESC");
     $statement->bindParam(':logdate', $last24h);
@@ -319,11 +319,11 @@ function sendSummaryEmails() {
 function logProcess($client,$message) {
 	global $config;
 	
-	if($config["debug"])
+	if(Config::get('debug'))
 	{
 		$dateref = date("Ymd");
 		$data = date("Y/m/d H:i:s");
-		$myFile = $config['log_location'].$dateref."-".$client.".log.txt";
+		$myFile = Config::get('log_location').$dateref."-".$client.".log.txt";
 		$fh = fopen($myFile, 'a') or die("can't open file");
 		// don't print errors on screen when there is no session.
 		if(session_id()){

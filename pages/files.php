@@ -145,9 +145,9 @@ function checkResendEmail(&$statusMsg, &$statusClass)
 <script type="text/javascript">
     var selectedFile = ''; // file uid selected when deleteting
     // set default maximum date for date datepicker
-    var maximumDate = <?php echo (time() + ($config['default_daysvalid'] * 86400)) * 1000 ?>;
+    var maximumDate = <?php echo (time() + (Config::get('default_daysvalid') * 86400)) * 1000 ?>;
     var minimumDate = <?php echo (time() + 86400) * 1000 ?>;
-    var maxEmailRecipients = <?php echo $config['max_email_recipients'] ?>;
+    var maxEmailRecipients = <?php echo Config::get('max_email_recipients') ?>;
     var datepickerDateFormat = '<?php echo lang('_DP_dateFormat'); ?>';
     var showall = false; // flag for toggleDisplayRow all switch to toggleDisplayRow or hide download summaries
     var showAllRecipients = false; // flag for expanding all download summaries for individual recipients
@@ -659,7 +659,7 @@ if(sizeof($transactions) > 0) {
           <div id="recipients_box" style="display: none"></div>
           <input name="fileto" title="<?php echo  lang('_EMAIL_SEPARATOR_MSG'); ?>" type="text" id="fileto" size="60" onblur="addEmailRecipientBox($('#fileto').val());" />
           <div id="fileto_msg" style="display: none" class="validation_msg"><?php echo lang('_INVALID_MISSING_EMAIL'); ?></div>
-          <div id="maxemails_msg" style="display: none" class="validation_msg"><?php echo lang('_MAXEMAILS'); ?> <?php echo $config['max_email_recipients'] ?>.</div>
+          <div id="maxemails_msg" style="display: none" class="validation_msg"><?php echo lang('_MAXEMAILS'); ?> <?php echo Config::get('max_email_recipients') ?>.</div>
         </td>
       </tr>
       <tr>
@@ -678,7 +678,7 @@ if(sizeof($transactions) > 0) {
       </tr>
       <tr>
         <td class="formfieldheading mandatory" id="files_expiry">
-          <?php echo lang('_EXPIRY_DATE'); ?>: <input type="hidden" id="fileexpirydate" name="fileexpirydate" value="<?php echo date(lang('datedisplayformat'), strtotime("+".$config['default_daysvalid']." day"));?>" />
+          <?php echo lang('_EXPIRY_DATE'); ?>: <input type="hidden" id="fileexpirydate" name="fileexpirydate" value="<?php echo date(lang('datedisplayformat'), strtotime("+".Config::get('default_daysvalid')." day"));?>" />
         </td>
         <td>
           <input id="datepicker" name="datepicker" onchange="validate_expiry()" title="<?php echo lang('_DP_dateFormat'); ?>" />

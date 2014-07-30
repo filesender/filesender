@@ -45,7 +45,7 @@ $functions = Functions::getInstance();
 $saveLog = Log::getInstance();
 $sendmail = Mail::getInstance();
 
-date_default_timezone_set($config['Default_TimeZone']);
+date_default_timezone_set(Config::get('Default_TimeZone'));
 
 if(session_id() == ""){
 	// start new session and mark it as valid because the system is a trusted source
@@ -66,7 +66,7 @@ if (isset($_REQUEST["vid"])) {
 $fileArray =  $authvoucher->getVoucher();
 $fileoriginalname = $fileArray[0]['fileoriginalname'];
 $fileuid = $fileArray[0]['fileuid'];
-$file=$config['site_filestore'].$fileuid.".tmp";
+$file=Config::get('site_filestore').$fileuid.".tmp";
 $filestatus = $fileArray[0]['filestatus'];
 
 //$download_rate = 20000.5;

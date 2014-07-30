@@ -196,8 +196,8 @@ $lang["_DP_showMonthAfterYear"] = 'false';
 $lang["_DP_yearSuffix"] = '';
 
 // Login Splash text
-$lang["_SITE_SPLASHHEAD"] = "Vítejte na ". htmlspecialchars($config['site_name']);
-$lang["_SITE_SPLASHTEXT"] = htmlspecialchars($config['site_name']) ." je bezpečná cesta pro sdílení velkých souborů mezi všemi! Přihlaš se a nahraj své soubory nebo pozvi ostatní, ať soubory nahrají oni."; 
+$lang["_SITE_SPLASHHEAD"] = "Vítejte na ". htmlspecialchars(Config::get('site_name'));
+$lang["_SITE_SPLASHTEXT"] = htmlspecialchars(Config::get('site_name')) ." je bezpečná cesta pro sdílení velkých souborů mezi všemi! Přihlaš se a nahraj své soubory nebo pozvi ostatní, ať soubory nahrají oni."; 
 
 // Footer to display
 $lang["_SITE_FOOTER"] = ""; 
@@ -238,18 +238,18 @@ $lang["_HELP_TEXT"] = '
 <h4>Limity této instalace FileSenderu</h4>
 <ul>
     <li><strong>
-      Počet emilových adresátů na jedno odeslání: </strong>'. $config["max_email_recipients"].' více emailových adres (odděleny čárkou nebo středníkem)</li>
+      Počet emilových adresátů na jedno odeslání: </strong>'. Config::get('max_email_recipients').' více emailových adres (odděleny čárkou nebo středníkem)</li>
     <li><strong>Maximální počet souborů na jedno nahrání:</strong> jeden - pro nahrání více souborů najednou je nutné využití zabalení všech souborů do jednoho archivu (např. zip či rar)</li>
-    <li><strong>Maximální velikost souboru na jedno nahrání (pouze pro Adobe Flash): </strong>'. formatBytes($config["max_flash_upload_size"]).' </li>
-    <li><strong>Maximální velikost souboru na jedno nahrání (pouze pro HTML5): </strong>'. formatBytes($config["max_html5_upload_size"]).'</li>
-    <li>      <strong>Maximum počet dní platnosti souborů / pozvánek: </strong>'. $config["default_daysvalid"].' </li>
+    <li><strong>Maximální velikost souboru na jedno nahrání (pouze pro Adobe Flash): </strong>'. formatBytes(Config::get('max_flash_upload_size')).' </li>
+    <li><strong>Maximální velikost souboru na jedno nahrání (pouze pro HTML5): </strong>'. formatBytes(Config::get('max_html5_upload_size')).'</li>
+    <li>      <strong>Maximum počet dní platnosti souborů / pozvánek: </strong>'. Config::get('default_daysvalid').' </li>
 </ul>
 <p>Pro více informací prosím navštivte <a href="http://www.filesender.org/" target="_blank">www.filesender.org</a></p>
 </div>
 </div>';
 
 // site about
-$lang["_ABOUT_TEXT"] = ' <div style="padding: 5px; text-align: left;">'. htmlspecialchars($config['site_name']) .' je instalace FileSender (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>), který je vyvinut pro potřeby vzdělávací a výzkumné komunity.</div>';
+$lang["_ABOUT_TEXT"] = ' <div style="padding: 5px; text-align: left;">'. htmlspecialchars(Config::get('site_name')) .' je instalace FileSender (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>), který je vyvinut pro potřeby vzdělávací a výzkumné komunity.</div>';
 
 $lang["_AUPTERMS"] = "Kompletní znění podmínek užití této služby...";
 

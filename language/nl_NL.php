@@ -197,8 +197,8 @@ $lang["_DP_showMonthAfterYear"] = 'false';
 $lang["_DP_yearSuffix"] = '';
 
 // Login Splash text
-$lang["_SITE_SPLASHHEAD"] = "Welkom bij ". htmlspecialchars($config['site_name']);
-$lang["_SITE_SPLASHTEXT"] = htmlspecialchars($config['site_name']) ." is een veilige manier om bestanden te delen met iedereen! Meld u aan om een bestand te versturen of om iemand uit te nodigen om een bestand te sturen."; 
+$lang["_SITE_SPLASHHEAD"] = "Welkom bij ". htmlspecialchars(Config::get('site_name'));
+$lang["_SITE_SPLASHTEXT"] = htmlspecialchars(Config::get('site_name')) ." is een veilige manier om bestanden te delen met iedereen! Meld u aan om een bestand te versturen of om iemand uit te nodigen om een bestand te sturen."; 
 
 // Footer to display
 $lang["_SITE_FOOTER"] = ""; 
@@ -230,7 +230,7 @@ Als u tussentijds het bestand <b><i>gewijzigd</i></b> hebt, hernoem het dan eers
 <ul>
 	<li>Als u YouTube-video\'s kunt bekijken dan zou deze methode ook moeten werken.</li>
 	<li>U heeft een moderne browser nodig met minimaal versie 10 van <a target="_blank" href="http://www.adobe.com/software/flash/about/">Adobe Flash.</a></li>
-	<li><i>'. htmlspecialchars($config['site_name']) .'</i> waarschuwt u als u een bestand wilt uploaden dat te groot is voor deze methode.</li>
+	<li><i>'. htmlspecialchars(Config::get('site_name')) .'</i> waarschuwt u als u een bestand wilt uploaden dat te groot is voor deze methode.</li>
 	<li>Het hervatten van afgebroken uploads is met deze methode niet mogelijk.</li>
 </ul>
 
@@ -239,16 +239,16 @@ Als u tussentijds het bestand <b><i>gewijzigd</i></b> hebt, hernoem het dan eers
 <h4>Instellingen van deze dienst</h4>
 <ul>
     <li><strong>
-      Maximum aantal e-mail-ontvangers:</strong> Tot '. $config["max_email_recipients"].' e-mailadressen gescheiden door een komma of puntkomma</li>
+      Maximum aantal e-mail-ontvangers:</strong> Tot '. Config::get('max_email_recipients').' e-mailadressen gescheiden door een komma of puntkomma</li>
     <li><strong>Maximum aantal bestanden per upload:</strong> &eacute;&eacute;n - om meerdere bestanden ineens te versturen, kunt u ze eerst samenpakken in een archiefbestand zoals zip</li>
-    <li><strong>Maximum bestandsgrootte per upload, alleen gebruikmakend van Adobe Flash:</strong> '. formatBytes($config["max_flash_upload_size"]).'</li>
-    <li><strong>Maximum bestandsgrootte per upload, via HTML5:</strong> '. formatBytes($config["max_html5_upload_size"]).'</li>
-    <li><strong>Maximum geldigheidsduur van bestanden en uitnodigingen:</strong> '. $config["default_daysvalid"].' dagen</li>
+    <li><strong>Maximum bestandsgrootte per upload, alleen gebruikmakend van Adobe Flash:</strong> '. formatBytes(Config::get('max_flash_upload_size')).'</li>
+    <li><strong>Maximum bestandsgrootte per upload, via HTML5:</strong> '. formatBytes(Config::get('max_html5_upload_size')).'</li>
+    <li><strong>Maximum geldigheidsduur van bestanden en uitnodigingen:</strong> '. Config::get('default_daysvalid').' dagen</li>
 </ul>
 
 <h4>Technische details</h4>
 <ul>
-	<li><i>'. htmlspecialchars($config['site_name']) .'</i> maakt gebruik van de <a href="http://www.filesender.org/" target="_blank">FileSender software</a>. FileSender geeft aan of de HTML5 upload-methode ondersteund wordt voor de op dat moment gebruikte browser. Deze ondersteuning is voornamelijk afhankelijk van de beschiklbaarheid van geavanceerde browserfunctionaliteit, met name de HTML5 FileAPI. De website <a href="http://caniuse.com/fileapi" target="_blank">"When can I use..."</a> geeft bruikbare informatie om de voortgang van de implementatie van HTML5 FileAPI in 
+	<li><i>'. htmlspecialchars(Config::get('site_name')) .'</i> maakt gebruik van de <a href="http://www.filesender.org/" target="_blank">FileSender software</a>. FileSender geeft aan of de HTML5 upload-methode ondersteund wordt voor de op dat moment gebruikte browser. Deze ondersteuning is voornamelijk afhankelijk van de beschiklbaarheid van geavanceerde browserfunctionaliteit, met name de HTML5 FileAPI. De website <a href="http://caniuse.com/fileapi" target="_blank">"When can I use..."</a> geeft bruikbare informatie om de voortgang van de implementatie van HTML5 FileAPI in 
 de belangrijkste browsers te volgen. Met name ondersteuning voor de <a href="http://caniuse.com/filereader" target="_blank">FileReader API</a> en voor <a href="http://caniuse.com/bloburls" target="_blank">Blob URLs</a> moet groen licht (=ondersteund) krijgen, wil een browser uploads groter dan 2GB kunnen doen.  Belangrijk: alhoewel Opera 12 wordt weergegeven als zou het de HTML5 FileAPI volledig ondersteunen is gebleken dat Opera 12 desondanks niet voldoende elementen van de FileAPI ondersteunt om al gebruik te kunnen maken van de HTML5 upload-methode.</li>
 </ul>
 <p>Voor meer informatie, bezoek <a href="http://www.filesender.org/" target="_blank">www.filesender.org</a>.</p>
@@ -257,7 +257,7 @@ de belangrijkste browsers te volgen. Met name ondersteuning voor de <a href="htt
 
 
 // site about
-$lang["_ABOUT_TEXT"] = ' <div style="padding: 5px; text-align: left;">'. htmlspecialchars($config['site_name']) .' is een instantie van FileSender (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>), ontwikkeld om te voldoen aan de eisen van de hoger onderwijs en onderzoeksgemeenschap.</div>';
+$lang["_ABOUT_TEXT"] = ' <div style="padding: 5px; text-align: left;">'. htmlspecialchars(Config::get('site_name')) .' is een instantie van FileSender (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>), ontwikkeld om te voldoen aan de eisen van de hoger onderwijs en onderzoeksgemeenschap.</div>';
 
 
 ?>

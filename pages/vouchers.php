@@ -81,9 +81,9 @@ $json_o=json_decode($filedata,true);
 ?>
 
 <script type="text/javascript">
-    var maximumDate = <?php echo (time() + ($config['default_daysvalid'] * 86400)) * 1000 ?>;
+    var maximumDate = <?php echo (time() + (Config::get('default_daysvalid') * 86400)) * 1000 ?>;
     var minimumDate = <?php echo (time() + 86400) * 1000 ?>;
-    var maxEmailRecipients = <?php echo $config['max_email_recipients'] ?>;
+    var maxEmailRecipients = <?php echo Config::get('max_email_recipients') ?>;
     var datepickerDateFormat = '<?php echo lang('_DP_dateFormat'); ?>';
     var selectedVoucher = '';
     var nameLang = '<?php echo lang('_FILE_NAME'); ?>';
@@ -209,7 +209,7 @@ $json_o=json_decode($filedata,true);
           
           <div id="fileto_msg" class="validation_msg" style="display:none"><?php echo lang('_INVALID_MISSING_EMAIL') ?></div>
           
-          <div id="maxemails_msg" style="display: none" class="validation_msg"><?php echo lang('_MAXEMAILS').$config['max_email_recipients'] ?></div>
+          <div id="maxemails_msg" style="display: none" class="validation_msg"><?php echo lang('_MAXEMAILS').Config::get('max_email_recipients') ?></div>
         </td>
       </tr>
       
@@ -249,7 +249,7 @@ $json_o=json_decode($filedata,true);
       
       <tr>
         <td style="text-align: right; vertical-align: middle;">
-          <input type="hidden" id="fileexpirydate" name="fileexpirydate" value="<?php echo date(lang('datedisplayformat'), strtotime('+'.$config['default_daysvalid'].' day'));?>" />
+          <input type="hidden" id="fileexpirydate" name="fileexpirydate" value="<?php echo date(lang('datedisplayformat'), strtotime('+'.Config::get('default_daysvalid').' day'));?>" />
           <input type="hidden" name="s-token" id="s-token" value="<?php echo (isset($_SESSION['s-token'])) ? $_SESSION['s-token'] : '';?>" />
         </td>
       </tr>

@@ -79,7 +79,7 @@
         if (!validate_expiry()) {
             isValid = false;
         }
-        <?php if ($config['AuP']) { ?>
+        <?php if (Config::get('AuP')) { ?>
         if (!validate_aup()) {
             isValid = false;
         }
@@ -98,8 +98,8 @@
     function constrainNumWebWorkers() {
         <?php
         $limit = 'undefined';
-        if (isset($config['webWorkersLimit'])) {
-            $limit = $config['webWorkersLimit'];
+        if (Config::exists('webWorkersLimit')) {
+            $limit = Config::get('webWorkersLimit');
         }
         ?>
 

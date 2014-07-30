@@ -18,7 +18,7 @@
  * 	names of its contributors may be used to endorse or promote products
  * 	derived from this software without specific prior written permission.
  * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 'AS IS'
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
@@ -30,20 +30,22 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-$filesenderBase = dirname(dirname(__FILE__));
+define('FILESENDER_BASE', dirname(dirname(__FILE__)));
 
-require_once("$filesenderBase/includes/ConfigValidation.php");
-require_once("$filesenderBase/includes/ErrorHandler.php");
-require_once("$filesenderBase/includes/EnsureHTTPS.php");
-require_once("$filesenderBase/includes/UTF8.php");
-require_once("$filesenderBase/classes/Version.php");
-require_once("$filesenderBase/classes/Functions.php");
-require_once("$filesenderBase/classes/LanguageSelection.php");
-require_once("$filesenderBase/classes/DB.php");
-require_once("$filesenderBase/classes/AuthSaml.php");
-require_once("$filesenderBase/classes/AuthVoucher.php");
-require_once("$filesenderBase/classes/Mail.php");
-require_once("$filesenderBase/classes/Log.php");
-require_once("$filesenderBase/classes/DB_Input_Checks.php");
-require_once("$filesenderBase/classes/Zipper.php");
-require_once("$filesenderBase/classes/unstrip.php");
+require_once(FILESENDER_BASE.'/classes/Config.class.php');
+//require_once(FILESENDER_BASE.'/includes/ConfigValidation.php'); // Not compatible with new config
+
+require_once(FILESENDER_BASE.'/includes/ErrorHandler.php');
+require_once(FILESENDER_BASE.'/includes/EnsureHTTPS.php');
+require_once(FILESENDER_BASE.'/includes/UTF8.php');
+require_once(FILESENDER_BASE.'/classes/Version.php');
+require_once(FILESENDER_BASE.'/classes/Functions.php');
+require_once(FILESENDER_BASE.'/classes/LanguageSelection.php');
+require_once(FILESENDER_BASE.'/classes/DB.php');
+require_once(FILESENDER_BASE.'/classes/AuthSaml.php');
+require_once(FILESENDER_BASE.'/classes/AuthVoucher.php');
+require_once(FILESENDER_BASE.'/classes/Mail.php');
+require_once(FILESENDER_BASE.'/classes/Log.php');
+require_once(FILESENDER_BASE.'/classes/DB_Input_Checks.php');
+require_once(FILESENDER_BASE.'/classes/Zipper.php');
+require_once(FILESENDER_BASE.'/classes/unstrip.php');

@@ -154,7 +154,7 @@ if (isset($_REQUEST['gid']) && ensureSaneOpenSSLKey($_REQUEST['gid'])) {
     </div>
     
     <div id="macmessage">
-      <p><?php echo lang('_MAC_ZIP_MESSAGE'); ?><a href="<?php echo $config['mac_unzip_link']; ?>"><?php echo $config['mac_unzip_name']; ?></a>.</p>
+      <p><?php echo lang('_MAC_ZIP_MESSAGE'); ?><a href="<?php echo Config::get('mac_unzip_link'); ?>"><?php echo Config::get('mac_unzip_name'); ?></a>.</p>
     </div>
     
     <?php if ($fileData[0]['fileenabledownloadreceipts'] == 'true') { ?>

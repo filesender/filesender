@@ -295,18 +295,18 @@ class Mail
         // Replace template variables.
         $to = $transactionDetails[0]['logfrom'];
 
-        $headers = "MIME-Version: 1.0" . $config['crlf'];
-        $headers .= "Content-Type: multipart/alternative; boundary=simple_mime_boundary" . $config['crlf'];
-        $headers .= "From: " . $config['noreply'] . $config['crlf'];
+        $headers = "MIME-Version: 1.0" . Config::get('crlf');
+        $headers .= "Content-Type: multipart/alternative; boundary=simple_mime_boundary" . Config::get('crlf');
+        $headers .= "From: " . Config::get('noreply') . Config::get('crlf');
 
         $subject = lang('_EMAIL_SUBJECT_SUMMARY');
-        $subject = str_replace('{siteName}',  $config['site_name'], $subject);
+        $subject = str_replace('{siteName}',  Config::get('site_name'), $subject);
         $subject = str_replace('{filetrackingcode}', $transactionDetails[0]['logfiletrackingcode'], $subject);
 
         $message = lang('_EMAIL_BODY_SUMMARY');
-        $message = str_replace('{siteName}',  $config['site_name'], $message);
+        $message = str_replace('{siteName}',  Config::get('site_name'), $message);
         $message = str_replace('{filetrackingcode}', $transactionDetails[0]['logfiletrackingcode'], $message);
-        $message = str_replace('{CRLF}', $config['crlf'], $message);
+        $message = str_replace('{CRLF}', Config::get('crlf'), $message);
         $message = $this->createEmailBody($message);
 
         $activities = array();
@@ -362,7 +362,7 @@ class Mail
             if (isset($str)) {
                 // Add the timestamp, bullet points and line shifts.
                 $str = date("H:i", $activity['logdate']) . ': ' . $str;
-                $activityTemplate .= ' - ' . $str . $config['crlf'];
+                $activityTemplate .= ' - ' . $str . Config::get('crlf');
                 $htmlActivityTemplate .= '&nbsp;&bull;&nbsp;' . $str . '<br />';
             }
 
@@ -404,9 +404,9 @@ class Mail
             $template = $this->replaceMultiFileTemplateVariables($template, $multiFileDetails);
         }
 		
-		// Need to use $config['noreply'] so that sender does not get bombarded with emails
-		if (isset($mailObject['rtnemail']) && $mailObject['rtnemail'] == 'false' && isset($config['noreply'])) {
-		    $mailObject['filefrom'] = $config['noreply'];
+		// Need to use Config::get('noreply') so that sender does not get bombarded with emails
+		if (isset($mailObject['rtnemail']) && $mailObject['rtnemail'] == 'false' && Config::exists('noreply')) {
+		    $mailObject['filefrom'] = Config::get('noreply');
 		}
 
         $to = '<' . $mailObject['fileto'] . '>';
@@ -435,22 +435,22 @@ class Mail
         global $config;
 
         $fileoriginalname = sanitizeFilename($mailObject['fileoriginalname']);
-        $crlf = $config['crlf'];
+        $crlf = Config::get('crlf');
 
-        if (isset($config['site_url'])) {
-            $template = str_replace('{serverURL}', $config['site_url'], $template);
+        if (Config::exists('site_url')) {
+            $template = str_replace('{serverURL}', Config::get('site_url'), $template);
         }
 
         if (isset($mailObject['recemail'])) {
             $template = str_replace('{recemail}', $mailObject['recemail'], $template);
         }
 
-        $template = str_replace('{siteName}', $config['site_name'], $template);
+        $template = str_replace('{siteName}', Config::get('site_name'), $template);
         $template = str_replace('{fileto}', $mailObject['fileto'], $template);
         $template = str_replace('{filevoucheruid}', $mailObject['filevoucheruid'], $template);
         $template = str_replace('{filegroupid}', $mailObject['filegroupid'], $template);
         $template = str_replace('{filetrackingcode}', $mailObject['filetrackingcode'], $template);
-        $template = str_replace('{fileexpirydate}', date($config['datedisplayformat'], strtotime($mailObject['fileexpirydate'])), $template);
+        $template = str_replace('{fileexpirydate}', date(Config::get('datedisplayformat'), strtotime($mailObject['fileexpirydate'])), $template);
         $template = str_replace('{filefrom}', $mailObject['filefrom'], $template);
         $template = str_replace('{fileoriginalname}', $fileoriginalname, $template);
         $template = str_replace('{htmlfileoriginalname}', utf8ToHtml($fileoriginalname, TRUE), $template);
@@ -499,7 +499,7 @@ class Mail
 
         foreach ($transactionDetails as $file) {
             $fileString = $file['fileoriginalname'] . ' (' . formatBytes($file['filesize']) . ')';
-            $fileInfo .= ' - ' . $fileString . $config['crlf'];
+            $fileInfo .= ' - ' . $fileString . Config::get('crlf');
             $htmlFileInfo .= '&nbsp;&bull;&nbsp;' . $fileString . '<br />';
         }
 
@@ -512,7 +512,7 @@ class Mail
     private function createEmailHeaders($mailObject)
     {
         global $config;
-        $crlf = $config['crlf'];
+        $crlf = Config::get('crlf');
 
         $headers = 'MIME-Version: 1.0' . $crlf;
         $headers .= 'Content-Type: multipart/alternative; boundary=simple_mime_boundary' . $crlf;
@@ -539,7 +539,7 @@ class Mail
         }
 
         $fileOriginalName = sanitizeFilename($mailObject['fileoriginalname']);
-        $subject = str_replace('{siteName}', $config['site_name'], $subject);
+        $subject = str_replace('{siteName}', Config::get('site_name'), $subject);
         $subject = str_replace('{fileoriginalname}', $fileOriginalName, $subject);
         $subject = str_replace('{filename}', $fileOriginalName, $subject);
         $subject = str_replace('{filetrackingcode}', $mailObject['filetrackingcode'], $subject);
@@ -548,7 +548,7 @@ class Mail
         $encoding = detectCharEncoding($subject) ;
 
         if ($encoding != 'US-ASCII') {
-            $subject = mimeQpEncodeHeaderValue($subject, 'UTF-8', $encoding, $config['crlf']) ;
+            $subject = mimeQpEncodeHeaderValue($subject, 'UTF-8', $encoding, Config::get('crlf')) ;
         }
 
         return $subject;
@@ -558,16 +558,16 @@ class Mail
     {
         // RFC2821 (Envelope) originator of the message
         global $config;
-        $crlf = $config['crlf'];
+        $crlf = Config::get('crlf');
 
         if ($type == 'bounce') {
             $returnPath = '-r <>' . $crlf;
-        } else if (isset($config['return_path']) && !empty($config['return_path'])) {
-            if (!filter_var($config['return_path'], FILTER_VALIDATE_EMAIL)) {
+        } else if (Config::exists('return_path') && Config::get('return_path')) {
+            if (!filter_var(Config::get('return_path'), FILTER_VALIDATE_EMAIL)) {
                 return false;
             }
 
-            $returnPath = '-r <' . $config['return_path'] . '>' . $crlf;
+            $returnPath = '-r <' . Config::get('return_path') . '>' . $crlf;
         } else {
             $returnPath = '-r <' . $mailObject['filefrom'] . '>' . $crlf;
         }
@@ -599,7 +599,7 @@ class Mail
 
         global $config;
 
-        $crlf = $config["crlf"];
+        $crlf = Config::get('crlf');
 
         $headers = "MIME-Version: 1.0".$crlf;
         $headers .= "Content-Type: multipart/alternative; boundary=simple_mime_boundary".$crlf;
@@ -610,7 +610,7 @@ class Mail
 
         if(!filter_var($to,FILTER_VALIDATE_EMAIL)) {return false;}
 
-        $subject = $config['site_name']." - Summary for " .$to;
+        $subject = Config::get('site_name')." - Summary for " .$to;
         $body = wordwrap($crlf ."--simple_mime_boundary".$crlf ."Content-type:text/plain; charset=iso-8859-1".$crlf.$crlf .$message,70);
 		
         if (mail($to, $subject, $message, $headers)) {
@@ -629,7 +629,7 @@ class Mail
 
         global $config;
 
-        $crlf = $config["crlf"];
+        $crlf = Config::get('crlf');
 
         $headers = "MIME-Version: 1.0".$crlf;
         $headers .= "Content-Type: multipart/alternative; boundary=simple_mime_boundary".$crlf;
@@ -638,10 +638,10 @@ class Mail
         //$headers .= "Reply-To: ".$mailobject['filefrom'].$crlf;
         //$returnpath = "-r".$mailobject['filefrom'].$crlf;
 
-        $to = $config['adminEmail'];
+        $to = Config::get('adminEmail');
         if(!filter_var($to,FILTER_VALIDATE_EMAIL)) {return false;}
 
-        $subject =   $config['site_name']." - Admin Message";
+        $subject =   Config::get('site_name')." - Admin Message";
         $body = wordwrap($crlf ."--simple_mime_boundary".$crlf ."Content-type:text/plain; charset=iso-8859-1".$crlf.$crlf .$message,70);
 
         if (mail($to, $subject, $body, $headers)) {

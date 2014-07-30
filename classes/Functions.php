@@ -72,7 +72,7 @@ function getGUID()
 function getOpenSSLKey()
 {
     global $config;
-    return bin2hex(openssl_random_pseudo_bytes($config['openSSLKeyLength']));
+    return bin2hex(openssl_random_pseudo_bytes(Config::get('openSSLKeyLength')));
 }
 
 // --------------------------------
@@ -96,13 +96,13 @@ function sanitizeFilename($fileName)
 function ensureSaneFileUid($fileUid)
 {
     global $config;
-    return preg_match($config['voucherRegEx'], $fileUid) && strLen($fileUid) == $config['voucherUIDLength'];
+    return preg_match(Config::get('voucherRegEx'), $fileUid) && strLen($fileUid) == Config::get('voucherUIDLength');
 }
 
 function ensureSaneOpenSSLKey($key)
 {
     global $config;
-    return ctype_alnum($key) && strlen($key) == $config['openSSLKeyLength'] * 2;
+    return ctype_alnum($key) && strlen($key) == Config::get('openSSLKeyLength') * 2;
 }
 
 // ---------------------------------------- 
@@ -115,9 +115,9 @@ function customcss()
     global $config,$filesenderBase;
    
     $cssstring = "";
-    if(isset($config["customCSS"]) && !empty($config["customCSS"]) && file_exists($filesenderBase."/config/".$config["customCSS"]))
+    if(Config::exists('customCSS') && Config::get('customCSS') && file_exists($filesenderBase."/config/".Config::get('customCSS')))
     {
-        $css = file_get_contents($filesenderBase."/config/".$config["customCSS"]);
+        $css = file_get_contents($filesenderBase."/config/".Config::get('customCSS'));
         $cssstring .=  '<style type="text/css">';
         $cssstring .= htmlspecialchars($css);
         $cssstring .= '</style>';
@@ -338,8 +338,8 @@ class Functions
         global $config;
 
         // Limit results by config option.
-        $isLimited = isset($config['autocompleteHistoryMax']) && is_numeric($config['autocompleteHistoryMax']);
-        $limit = $isLimited ? 'LIMIT ' . $config['autocompleteHistoryMax'] : '';
+        $isLimited = Config::exists('autocompleteHistoryMax') && is_numeric(Config::get('autocompleteHistoryMax'));
+        $limit = $isLimited ? 'LIMIT ' . Config::get('autocompleteHistoryMax') : '';
 
         $statement = $this->db->prepare(
             "SELECT DISTINCT fileto " .
@@ -554,7 +554,7 @@ class Functions
             $fileData['filenumdownloads'] = 0;
 
             // Set created date to now, not the time the transaction was created.
-            $fileData['filecreateddate'] = date($config['db_dateformat'], time());
+            $fileData['filecreateddate'] = date(Config::get('db_dateformat'), time());
 
             // Add each individual file to the new recipient.
             foreach ($transactionDetails as $transaction) {
@@ -948,9 +948,9 @@ class Functions
             $statement->bindParam(':filesubject', $fileSubject);
 
             // Set expiry, activity and created dates.
-            $fileExpiryDate = date($config['db_dateformat'], strtotime($expiry));
+            $fileExpiryDate = date(Config::get('db_dateformat'), strtotime($expiry));
             $statement->bindParam(':fileexpirydate', $fileExpiryDate);
-            $fileActivityDate = date($config['db_dateformat'], time());
+            $fileActivityDate = date(Config::get('db_dateformat'), time());
             $statement->bindParam(':fileactivitydate', $fileActivityDate);
             $statement->bindParam(':filecreateddate', $fileActivityDate);
 
@@ -1026,7 +1026,7 @@ class Functions
 
         if (!isset($data["filesize"])) {
             array_push($errorArray, "err_missingfilesize");
-        } elseif (disk_free_space($config['site_filestore']) - $data["filesize"] < 1) {
+        } elseif (disk_free_space(Config::get('site_filestore')) - $data["filesize"] < 1) {
             array_push($errorArray, "err_nodiskspace");
         }
 
@@ -1061,7 +1061,7 @@ class Functions
 
         $data["fileexpirydate"] = $this->ensureValidFileExpiryDate($data["fileexpirydate"]);
         $data["filesubject"] = (isset($data["filesubject"])) ? $data["filesubject"] : "";
-        $data["fileactivitydate"] = date($config['db_dateformat'], time());
+        $data["fileactivitydate"] = date(Config::get('db_dateformat'), time());
         $data["filevoucheruid"] = (isset($data["filevoucheruid"])) ? $data["filevoucheruid"] : getGUID();
         $data["filemessage"] = (isset($data["filemessage"])) ? $data["filemessage"] : "";
         $data["fileoriginalname"] = sanitizeFilename($data['fileoriginalname']);
@@ -1072,7 +1072,7 @@ class Functions
         $data["filesendersname"] = isset($data['filesendersname']) ? $data['filesendersname'] : null;
         $data["filereceiversname"] = isset($data['filereceiversname']) ? $data['filereceiversname'] : null;
         $data["filevouchertype"] = isset($data['filevouchertype']) ? $data['filevouchertype'] : null;
-        $data["filecreateddate"] = date($config['db_dateformat'], time());
+        $data["filecreateddate"] = date(Config::get('db_dateformat'), time());
         $data['fileuid'] = $data['fileuid'] == '' ? '' : getGUID();
         $data['filenumdownloads'] = isset($data['filenumdownloads']) ? $data['filenumdownloads'] : 0;
 
@@ -1094,7 +1094,7 @@ class Functions
     private function isValidFileExtension($data)
     {
         global $config;
-        $ban_extension = explode(',', $config['ban_extension']);
+        $ban_extension = explode(',', Config::get('ban_extension'));
 
         if (!isset($data['fileoriginalname'])) {
             return false;
@@ -1124,7 +1124,7 @@ class Functions
         $emailTo = str_replace(",", ";", $data["fileto"]);
         $emailArray = preg_split("/;/", $emailTo);
 
-        if (count($emailArray) > $config['max_email_recipients']) {
+        if (count($emailArray) > Config::get('max_email_recipients')) {
             array_push($errorArray, "err_toomanyemail");
         }
 
@@ -1178,14 +1178,14 @@ class Functions
     public function ensureValidFileExpiryDate($data)
     {
         global $config;
-        $latestValidDate = strtotime('+' . $config['default_daysvalid'] . ' day');
+        $latestValidDate = strtotime('+' . Config::get('default_daysvalid') . ' day');
 
         if ((strtotime($data) >= $latestValidDate || strtotime($data) <= strtotime('now'))) {
             // Expiry date is invalid, reset it to max date from server config.
-            $data = date($config['db_dateformat'], $latestValidDate);
+            $data = date(Config::get('db_dateformat'), $latestValidDate);
         }
 
-        return date($config['db_dateformat'], strtotime($data));
+        return date(Config::get('db_dateformat'), strtotime($data));
     }
 
     // --------------------------------
@@ -1359,7 +1359,7 @@ class Functions
             $fileArray = $this->getVoucher($fileId);
 
             if (count($fileArray) > 0) {
-                $this->sendMail->sendEmail($fileArray[0], $config['defaultfilecancelled']);
+                $this->sendMail->sendEmail($fileArray[0], Config::get('defaultfilecancelled'));
                 $this->saveLog->saveLog($fileArray[0], 'File Cancelled', '');
                 return true;
             }
@@ -1416,10 +1416,10 @@ class Functions
         global $config;
 
         // Use absolute locations.
-        $result["site_filestore_total"] = disk_total_space($config['site_filestore']);
-        $result["site_temp_filestore_total"] = disk_total_space($config['site_temp_filestore']);
-        $result["site_filestore_free"] = disk_free_space($config['site_filestore']);
-        $result["site_temp_filestore_free"] = disk_free_space($config['site_temp_filestore']);
+        $result["site_filestore_total"] = disk_total_space(Config::get('site_filestore'));
+        $result["site_temp_filestore_total"] = disk_total_space(Config::get('site_temp_filestore'));
+        $result["site_filestore_free"] = disk_free_space(Config::get('site_filestore'));
+        $result["site_temp_filestore_free"] = disk_free_space(Config::get('site_temp_filestore'));
 
         return $result;
 
@@ -1436,13 +1436,13 @@ class Functions
     public function advancedSettingsEnabled()
     {
         global $config;
-        return ($config['terasender'] && $config['terasenderadvanced'])
-            || $config['upload_complete_email_display'] == 'hidden'
-            || $config['inform_download_email_display'] == 'hidden'
-            || $config['email_me_daily_statistics_display'] == 'hidden'
-            || $config['download_confirmation_enabled_display'] == 'hidden'
-            || $config['add_me_to_recipients_display'] == 'hidden'
-            || $config['email_me_copies_display'] == 'hidden';
+        return (Config::get('terasender') && Config::get('terasenderadvanced'))
+            || Config::get('upload_complete_email_display') == 'hidden'
+            || Config::get('inform_download_email_display') == 'hidden'
+            || Config::get('email_me_daily_statistics_display') == 'hidden'
+            || Config::get('download_confirmation_enabled_display') == 'hidden'
+            || Config::get('add_me_to_recipients_display') == 'hidden'
+            || Config::get('email_me_copies_display') == 'hidden';
     }
 
     // --------------------------------

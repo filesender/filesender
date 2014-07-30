@@ -56,7 +56,8 @@ $flexerrors = "true";
 $authsaml = AuthSaml::getInstance();
 $authvoucher = AuthVoucher::getInstance();
 $functions = Functions::getInstance();
-$CFG = config::getInstance();
+$CFG = Config::getInstance();
+global $config;
 $config = $CFG->loadConfig();
 $sendmail = Mail::getInstance();
 $log = Log::getInstance();
@@ -66,7 +67,7 @@ initlanguage();
 
 $messageArray = array(); // messages to display to client
 $errorArray = array(); // messages to display to client
-date_default_timezone_set($config['Default_TimeZone']);
+date_default_timezone_set(Config::get('Default_TimeZone'));
 
 $useremail = '';
 $s = '';
@@ -122,7 +123,7 @@ if ($isAuth) {
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         
-        <title><?php echo htmlspecialchars($config['site_name']); ?></title>
+        <title><?php echo htmlspecialchars(Config::get('site_name')); ?></title>
         
         <link rel="icon" href="displayimage.php?type=favicon" type="image/x-icon" />
         <link rel="shortcut icon" href="displayimage.php?type=favicon" type="image/x-icon" />
@@ -139,12 +140,12 @@ if ($isAuth) {
         <script type="text/javascript">
             //<![CDATA[
             var userEmail = '<?php echo addslashes($useremail[0]); ?>';
-            var debug = <?php echo $config['debug'] ? 'true' : 'false'; ?> ;
+            var debug = <?php echo Config::get('debug') ? 'true' : 'false'; ?> ;
             var html5 = false;
             var html5webworkers = false;
-            var uploaddisplayMBps = <?php echo $config['upload_display_MBps'] ? 'true' : 'false'; ?>;
+            var uploaddisplayMBps = <?php echo Config::get('upload_display_MBps') ? 'true' : 'false'; ?>;
             //check if webworkers are available
-            <?php if (isset($config['terasender']) && $config['terasender']) echo 'html5webworkers = typeof(Worker)!=="undefined";'; ?>
+            <?php if (Config::exists('terasender') && Config::get('terasender')) echo 'html5webworkers = typeof(Worker)!=="undefined";'; ?>
             
             // check if html5 functions are available
             html5 = (window.File && window.FileReader && window.FileList && window.Blob && window.FormData) ? true : false;
@@ -284,16 +285,16 @@ if ($isAuth) {
                 <div class="rightmenu">
                     <ul>
                     <?php
-                        if ($config['helpURL'] == '') {
+                        if (Config::get('helpURL') == '') {
                             echo '<li><a class="'.$functions->active($s, 'help').'" href="#" id="topmenu_help" onclick="openhelp()">'.lang('_HELP').'</a></li>';
                         } else {
-                            echo '<li><a class="'.$functions->active($s, 'help').'" href="'.$config['helpURL'].'" target="_blank" id="topmenu_help">'.lang('_HELP').'</a></li>';
+                            echo '<li><a class="'.$functions->active($s, 'help').'" href="'.Config::get('helpURL').'" target="_blank" id="topmenu_help">'.lang('_HELP').'</a></li>';
                         }
                         
-                        if ($config['aboutURL'] == '') {
+                        if (Config::get('aboutURL') == '') {
                             echo '<li><a class="'.$functions->active($s, 'about').'" href="#" id="topmenu_about" onclick="openabout()">'.lang('_ABOUT').'</a></li>';
                         } else {
-                            echo '<li><a class="'.$functions->active($s, 'about').'" href="'.$config['aboutURL'].'" target="_blank" id="topmenu_about">'.lang('_ABOUT').'</a></li>';
+                            echo '<li><a class="'.$functions->active($s, 'about').'" href="'.Config::get('aboutURL').'" target="_blank" id="topmenu_about">'.lang('_ABOUT').'</a></li>';
                         }
                         
                         if (!$isAuth && $s != 'logon') {
@@ -381,9 +382,9 @@ if ($isAuth) {
                 
                 $versionDisplay = '';
                 
-                if($config['site_showStats']) $versionDisplay .= $functions->getStats();
+                if(Config::get('site_showStats')) $versionDisplay .= $functions->getStats();
         
-                if($config['versionNumber']) $versionDisplay .= FileSender_Version::VERSION;
+                if(Config::get('versionNumber')) $versionDisplay .= FileSender_Version::VERSION;
         
                 echo '<div class="versionnumber">'.$versionDisplay.'</div>';
             ?>

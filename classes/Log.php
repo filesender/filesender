@@ -72,7 +72,7 @@ class Log
             $logVoucherUid = $dataItem['filevoucheruid'];
             $logFrom = $dataItem['filefrom'];
             $logTo = $dataItem['fileto'];
-            $logDate = date($config['db_dateformat'], time());
+            $logDate = date(Config::get('db_dateformat'), time());
             $logFileSize = $dataItem['filesize'];
             $logFileName = $dataItem['fileoriginalname'];
             $logMessage = $message;
@@ -85,14 +85,14 @@ class Log
             $logVoucherUid = '';
             $logFrom = '';
             $logTo = '';
-            $logDate = date($config['db_dateformat'], time());
+            $logDate = date(Config::get('db_dateformat'), time());
             $logFileSize = 0;
             $logFileName = '';
             $logMessage = $message;
             $logAuthUserUid = $authAttributes["saml_uid_attribute"];
             $logFileGroupId = '';
             $logFileTrackingCode = '';
-            $logDailySummary = $config['email_me_daily_statistics_default'] ? 'true' : 'false';
+            $logDailySummary = Config::get('email_me_daily_statistics_default') ? 'true' : 'false';
         }
 
         if ($logType == 'Download') {
@@ -162,10 +162,10 @@ class Log
         global $config;
         global $cron;
 
-        if ($config['debug'] or $config['client_specific_logging']) {
+        if (Config::get('debug') or Config::get('client_specific_logging')) {
             $ip = $_SERVER['REMOTE_ADDR']; // Capture IP.
 
-            if ($config['dnslookup'] == true) {
+            if (Config::get('dnslookup') == true) {
                 $domain = GetHostByName($ip);
             } else {
                 $domain = '';
@@ -181,7 +181,7 @@ class Log
             $message .= '[' . $ip . '(' . $domain . ')] ';
             $dateRef = date('Ymd');
             $date = date('Y/m/d H:i:s');
-            $myFile = $config['log_location'] . $dateRef . '-' . $client . $logExt;
+            $myFile = Config::get('log_location') . $dateRef . '-' . $client . $logExt;
             $fh = fopen($myFile, 'a') or die('cannot open file');
 
             // Don't print errors on screen when there is no session.
