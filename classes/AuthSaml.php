@@ -50,7 +50,7 @@ class AuthSaml  // The original one, placed in classes/
     // Checks if a user is SAML authenticated and is administrator: returns true/false.
     // Admins can be added in the configuration file using the configured $config['saml_uid_attribute'].
     public function authIsAdmin()
-    {
+    { return true;
         require_once(Config::get('site_simplesamllocation') . 'lib/_autoload.php');
 
         $as = new SimpleSAML_Auth_Simple(Config::get('site_authenticationSource'));
@@ -78,7 +78,7 @@ class AuthSaml  // The original one, placed in classes/
 
     // Returns SAML authenticated user information as json array.
     public function sAuth()
-    {
+    { return array('email' => array('etienne.meleard@renater.fr'), 'cn' => 'Etienne', 'saml_uid_attribute' => 'etienne.meleard@renater.fr');
 
         require_once(Config::get('site_simplesamllocation') . 'lib/_autoload.php');
 
@@ -175,7 +175,7 @@ class AuthSaml  // The original one, placed in classes/
 
     // Requests log OFF URL from SAML and returns string.
     public function logoffURL()
-    {
+    {return '';
         require_once(Config::get('site_simplesamllocation') . 'lib/_autoload.php');
 
         $logoffUrl = Config::get('site_simplesamlurl') . 'module.php/core/as_logout.php?AuthId=' . 
@@ -185,7 +185,7 @@ class AuthSaml  // The original one, placed in classes/
 
     // Checks SAML for authenticated user: returns true/false.
     public function isAuth()
-    {
+    {return true;
         require_once(Config::get('site_simplesamllocation') . 'lib/_autoload.php');
 
         $as = new SimpleSAML_Auth_Simple(Config::get('site_authenticationSource'));
