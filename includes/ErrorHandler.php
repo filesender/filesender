@@ -36,8 +36,6 @@
 // Log to syslog and to config log folder.
 // --------------------------------
 
-global $config;
-
 if (Config::get('displayerrors')) {
     ini_set('display_errors', 'On');
 } else {
@@ -83,7 +81,6 @@ function customError($errNum, $errStr, $errFile, $errLine)
 
 function logEntry($message, $type = 'E_NOTICE')
 {
-    global $config;
     global $cron, $log;
 
     $message = $type . ': ' . $message;
@@ -141,7 +138,6 @@ function logEntry($message, $type = 'E_NOTICE')
 
 function displayError($errorMessage, $detailedErrorMessage)
 {
-    global $config;
 
     echo '<br /><div id="errmessage">' . htmlspecialchars($errorMessage) . '</div>';
 

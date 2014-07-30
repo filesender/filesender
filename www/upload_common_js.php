@@ -35,8 +35,6 @@ if (isset($_COOKIE['SimpleSAMLAuthToken'])) {
 } else {
     $token = '';
 }
-
-global $config;
 ?>
 
 <script type="text/javascript">

@@ -57,7 +57,6 @@ class AuthVoucher
     // --------------------------------
     public function aVoucher()
     {
-        global $config;
 
         if (isset($_REQUEST['vid'])) {
             $vid = $_REQUEST['vid'];
@@ -82,7 +81,6 @@ class AuthVoucher
     // --------------------------------
     public function getVoucher()
     {
-        global $config;
 
         if (isset($_REQUEST['vid'])) {
             $vid = $_REQUEST['vid'];

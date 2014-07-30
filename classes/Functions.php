@@ -71,7 +71,6 @@ function getGUID()
 // --------------------------------
 function getOpenSSLKey()
 {
-    global $config;
     return bin2hex(openssl_random_pseudo_bytes(Config::get('openSSLKeyLength')));
 }
 
@@ -95,13 +94,11 @@ function sanitizeFilename($fileName)
 // --------------------------------
 function ensureSaneFileUid($fileUid)
 {
-    global $config;
     return preg_match(Config::get('voucherRegEx'), $fileUid) && strLen($fileUid) == Config::get('voucherUIDLength');
 }
 
 function ensureSaneOpenSSLKey($key)
 {
-    global $config;
     return ctype_alnum($key) && strlen($key) == Config::get('openSSLKeyLength') * 2;
 }
 
@@ -335,7 +332,6 @@ class Functions
     // --------------------------------
     public function uniqueEmailsForAutoComplete()
     {
-        global $config;
 
         // Limit results by config option.
         $isLimited = Config::exists('autocompleteHistoryMax') && is_numeric(Config::get('autocompleteHistoryMax'));
@@ -536,7 +532,6 @@ class Functions
         $groupIDs = array();
 
         foreach ($emailList as $email) {
-            global $config;
 
             // Skip any recipients that already have access to the transaction.
             if ($this->isDuplicateRecipient($email, $existingDetails)) {
@@ -921,8 +916,6 @@ class Functions
     public function insertVoucher($to, $from, $expiry, $message, $subject)
     {
         if ($this->authSaml->isAuth()) {
-
-            global $config;
             $dbCheck = DB_Input_Checks::getInstance();
             $authAttributes = $this->authSaml->sAuth();
 
@@ -1019,7 +1012,6 @@ class Functions
     // --------------------------------
     public function validateFileData($data)
     {
-        global $config;
         global $resultArray;
 
         $errorArray = array();
@@ -1093,7 +1085,6 @@ class Functions
     // --------------------------------
     private function isValidFileExtension($data)
     {
-        global $config;
         $ban_extension = explode(',', Config::get('ban_extension'));
 
         if (!isset($data['fileoriginalname'])) {
@@ -1114,7 +1105,6 @@ class Functions
     // --------------------------------
     private function validateRecipientEmail($data, $errorArray)
     {
-        global $config;
 
         if (!isset($data["fileto"])) {
             array_push($errorArray, "err_filetomissing");
@@ -1177,7 +1167,6 @@ class Functions
     // --------------------------------
     public function ensureValidFileExpiryDate($data)
     {
-        global $config;
         $latestValidDate = strtotime('+' . Config::get('default_daysvalid') . ' day');
 
         if ((strtotime($data) >= $latestValidDate || strtotime($data) <= strtotime('now'))) {
@@ -1344,7 +1333,6 @@ class Functions
     // --------------------------------
     public function deleteFile($fileId)
     {
-        global $config;
 
         if ($this->authSaml->isAuth()) {
             $statement = $this->db->prepare(
@@ -1413,7 +1401,6 @@ class Functions
     // --------------------------------
     public function driveSpace()
     {
-        global $config;
 
         // Use absolute locations.
         $result["site_filestore_total"] = disk_total_space(Config::get('site_filestore'));
@@ -1435,7 +1422,6 @@ class Functions
 
     public function advancedSettingsEnabled()
     {
-        global $config;
         return (Config::get('terasender') && Config::get('terasenderadvanced'))
             || Config::get('upload_complete_email_display') == 'hidden'
             || Config::get('inform_download_email_display') == 'hidden'

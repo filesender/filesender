@@ -61,8 +61,6 @@ $authVoucher = AuthVoucher::getInstance();
 $log = Log::getInstance();
 $functions = Functions::getInstance();
 $sendMail = Mail::getInstance();
-
-global $config;
 date_default_timezone_set(Config::get('Default_TimeZone'));
 $uploadFolder = Config::get('site_filestore');
 $resultArray = array();
@@ -525,7 +523,6 @@ function insertPendingDbRecord($dataItem, $tempFilename)
 
 function isInvalidExpiryRange($dataItem)
 {
-    global $config;
     return strtotime($dataItem['fileexpirydate']) > strtotime('+' . Config::get('default_daysvalid') . ' day') || strtotime($dataItem['fileexpirydate']) < strtotime('now');
 }
 

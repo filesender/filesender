@@ -28,7 +28,6 @@ class TeraSender
 
     private function defaultConfig()
     {
-        global $config;
         return array(
             'tmp_dir'=>Config::get('site_temp_filestore'),
             'reply_log'=>false

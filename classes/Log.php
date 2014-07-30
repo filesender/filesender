@@ -57,7 +57,6 @@ class Log
     // --------------------------------
     public function saveLog($dataItem, $logType, $message)
     {
-        global $config;
 
         $authSaml = AuthSaml::getInstance();
 
@@ -159,7 +158,6 @@ class Log
     // --------------------------------
     public function logProcess($client, $message)
     {
-        global $config;
         global $cron;
 
         if (Config::get('debug') or Config::get('client_specific_logging')) {

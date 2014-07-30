@@ -51,7 +51,6 @@ class AuthSaml  // The original one, placed in classes/
     // Admins can be added in the configuration file using the configured $config['saml_uid_attribute'].
     public function authIsAdmin()
     {
-        global $config;
         require_once(Config::get('site_simplesamllocation') . 'lib/_autoload.php');
 
         $as = new SimpleSAML_Auth_Simple(Config::get('site_authenticationSource'));
@@ -80,7 +79,6 @@ class AuthSaml  // The original one, placed in classes/
     // Returns SAML authenticated user information as json array.
     public function sAuth()
     {
-        global $config;
 
         require_once(Config::get('site_simplesamllocation') . 'lib/_autoload.php');
 
@@ -169,7 +167,6 @@ class AuthSaml  // The original one, placed in classes/
     // Requests logon URL from SAML and returns string.
     public function logonURL()
     {
-        global $config;
 
         $logonUrl = Config::get('site_simplesamlurl') . 'module.php/core/as_login.php?AuthId=' . 
             Config::get('site_authenticationSource') . '&ReturnTo=' . Config::get('site_url') . 'index.php?s=upload';
@@ -179,7 +176,6 @@ class AuthSaml  // The original one, placed in classes/
     // Requests log OFF URL from SAML and returns string.
     public function logoffURL()
     {
-        global $config;
         require_once(Config::get('site_simplesamllocation') . 'lib/_autoload.php');
 
         $logoffUrl = Config::get('site_simplesamlurl') . 'module.php/core/as_logout.php?AuthId=' . 
@@ -190,7 +186,6 @@ class AuthSaml  // The original one, placed in classes/
     // Checks SAML for authenticated user: returns true/false.
     public function isAuth()
     {
-        global $config;
         require_once(Config::get('site_simplesamllocation') . 'lib/_autoload.php');
 
         $as = new SimpleSAML_Auth_Simple(Config::get('site_authenticationSource'));

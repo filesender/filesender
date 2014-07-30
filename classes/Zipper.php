@@ -67,7 +67,6 @@ class Zipper
     public function sendZip()
     {
         global $functions;
-        global $config;
 
         // Note: Mac OS X has compatibility issues with ZIP64 files, so only enable the ZIP64 format if
         // we have to (i.e. if the total file size is 4 GiB or greater).
@@ -156,7 +155,6 @@ class Zipper
     // --------------------------------
     private function sendHttpHeaders()
     {
-        global $config;
 
         header('Content-Type: application/octet-stream');
         header('Content-Disposition: attachment; filename="' . Config::get('site_name') . '-' . $this->files[0]['filetrackingcode'] . '.zip"');
@@ -219,7 +217,6 @@ class Zipper
     // --------------------------------
     private function sendFileData($path, $hashContext)
     {
-        global $config;
         set_time_limit(0); // Needed to prevent the download from timing out.
 
         $bytesSent = 0;

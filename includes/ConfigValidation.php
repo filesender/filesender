@@ -41,7 +41,6 @@ if (file_exists("$filesenderBase/config/config.php")) {
 }
 
 $CFG = config::getInstance();
-global $config;
 $config = $CFG->loadConfig(); // Use _global $config in all functions.
 
 // The following list must be updated any time a config setting is added/removed.
