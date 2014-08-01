@@ -48,13 +48,6 @@ class Config {
     private static $defaults = null;
     
     /**
-     * Special parameter processing map
-     * 
-     * Null if not already loaded, array otherwise
-     */
-    private static $processors = null;
-    
-    /**
      * Actual parameters' values, raw from config file or evaluated
      * 
      * Null if not already loaded, array otherwise
@@ -89,17 +82,6 @@ class Config {
             if (file_exists($defaults_file))
                 include_once($defaults_file); //include: if file doesn't exists, execution will not stop, only gives a warning. if() not needed
             self::$defaults = $default;
-        }
-        
-        // Load processors map if needed
-        if (is_null(self::$processors)) {
-            self::$processors = array();
-            $processors_file = FILESENDER_BASE.'/includes/ConfigProcessors.php';
-            $processor = array();
-
-            if (file_exists($processors_file))
-                include_once($processors_file);     
-            self::$processors = $processor;
         }
         
         // Check if main config exists
@@ -173,10 +155,6 @@ class Config {
 
     /**
      * Evaluate runtime configuration parameters (main scope function names are not proccessed)
-     * 
-     * Apply any matching processors
-     * 
-     * @throws ConfigUnknownProcessorException
      */
     private static function evalParameter($key, $value, $args) {
         if (is_callable($value) && !is_string($value)) {
@@ -185,18 +163,6 @@ class Config {
         } elseif (is_string($value)) {
             if (preg_match('`^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*::[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$`', $value, $m)) { // Is it an allowed method name ?
                 if (is_callable($value)) $value = call_user_func_array($value, $args); // Does it exists ?
-            }
-        }
-        
-        if (array_key_exists($key, self::$processors)) {
-            $processors = is_array(self::$processors[$key]) ? self::$processors[$key] : array(self::$processors[$key]);
-            array_unshift($args, $value);
-            
-            foreach ($processors as $processor) {
-                $method = 'proccess'.ucfirst($processor);
-                if (!method_exists(get_class(), $method))
-                    throw new ConfigUnknownProcessorException($processor);
-                $value = call_user_func_array(get_class().'::'.$method, $args);
             }
         }
         
