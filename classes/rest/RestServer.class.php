@@ -164,7 +164,7 @@ class RestServer {
             
             // Forward to handler
             $class = 'RestEndpoint'.ucfirst($endpoint);
-            if(!file_exists(FILESENDER_BASE.'/classes/rest/endpoints/'.$class.'.class.php')) // Avoids FileNotFoundException from Autoloader
+            if(!file_exists(FILESENDER_BASE.'/classes/rest/endpoints/'.$class.'.class.php')) // Avoids CoreFileNotFoundException from Autoloader
                 throw new RestException('endpoint_not_implemented', 501);
                 
             $handler = new $class($request);
