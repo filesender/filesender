@@ -80,7 +80,7 @@ class Autoloader {
                 if(!$path || substr($path, -1) == '/') $file .= $class;
                 $file .= '.class.php';
                 
-                if(!file_exists($file)) throw new FileNotFoundException($file);
+                if(!file_exists($file)) throw new CoreFileNotFoundException($file);
                 
                 require_once $file;
                 
@@ -88,7 +88,7 @@ class Autoloader {
             }
         }
         
-        throw new ClassNotFoundException($class);
+        throw new CoreClassNotFoundException($class);
     }
     
     /**
