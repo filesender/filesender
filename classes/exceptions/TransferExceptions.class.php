@@ -34,17 +34,17 @@ if (!defined('FILESENDER_BASE'))        // Require environment (fatal)
     die('Missing environment');
 
 /**
- * Unknown transaction exception
+ * Unknown transfer exception
  */
-class TransactionNotFoundException extends LoggingException {
+class TransferNotFoundException extends LoggingException {
     /**
      * Constructor
      * 
-     * @param string $selector column used to select transaction
+     * @param string $selector column used to select transfer
      */
     public function __construct($selector) {
         parent::__construct(
-            'transaction_not_found', // Message to give to the user
+            'transfer_not_found', // Message to give to the user
             $selector // Real message to log
         );
     }
