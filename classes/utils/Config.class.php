@@ -177,7 +177,7 @@ class Config {
      * 
      * @return mixed the parameter value or null if parameter is unknown
      */
-    public function get() {
+    public static function get() {
         self::load();
         $args = func_get_args();
         $key = array_shift($args);
