@@ -133,11 +133,10 @@ class User extends DBObject {
             $user = self::fromId($attributes['uid']);
         } catch(UserNotFoundException $e) {
             $user = self::create($attributes['uid']);
-            $user->save();
         }
         
         if(array_key_exists('email', $attributes)) $user->email = $attributes['email'];
-        if(array_key_exists('name', $attributes)) $user->email = $attributes['name'];
+        if(array_key_exists('name', $attributes)) $user->name = $attributes['name'];
         
         return $user;
     }
