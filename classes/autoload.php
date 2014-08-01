@@ -43,11 +43,13 @@ class Autoloader {
         'Config' => 'utils/',
         'DBI' => 'utils/',
         'Utilities' => 'utils/',
+        'Database*' => 'utils/',
         
         '*Exception' => 'exceptions/@package(Exception)',
         
         'DBObject' => 'data/',
         'Transaction' => 'data/',
+        'File' => 'data/',
         'Guestvoucher' => 'data/',
         'User' => 'data/',
         
