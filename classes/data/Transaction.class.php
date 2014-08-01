@@ -60,7 +60,7 @@ class Transaction extends DBObject {
             'type' => 'string',
             'size' => 32
         ),
-        'from' => array(
+        'uid' => array(
             'type' => 'string',
             'size' => 250
         ),
