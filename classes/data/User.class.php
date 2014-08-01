@@ -43,7 +43,7 @@ class User extends DBObject {
     protected static $dataMap = array(
         'uid' => array(
             'type' => 'string',
-            'size' => 500,
+            'size' => 255,
             'primary' => true
         ),
         'organization' => array(
