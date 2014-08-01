@@ -47,7 +47,7 @@ class CoreFileNotFoundException extends DetailedException
     public function __construct($file)
     {
         parent::__construct(
-            'file_not_found', // Message to give to the user
+            'core_file_not_found', // Message to give to the user
             'file : '.$file // Details to log
         );
     }
@@ -67,7 +67,7 @@ class CoreClassNotFoundException extends DetailedException
     public function __construct($class)
     {
         parent::__construct(
-            'class_not_found', // Message to give to the user
+            'core_class_not_found', // Message to give to the user
             'class : '.$class // Details to log
         );
     }
