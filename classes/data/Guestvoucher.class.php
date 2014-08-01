@@ -49,7 +49,7 @@ class Guestvoucher extends DBObject {
         ),
         'uid' => array(
             'type' => 'string',
-            'size' => 500
+            'size' => 255
         ),
         'token' => array(
             'type' => 'string',
@@ -58,7 +58,7 @@ class Guestvoucher extends DBObject {
         ),
         'email' => array(
             'type' => 'string',
-            'size' => 500
+            'size' => 255
         ),
         'transfers' => array(
             'type' => 'uint',
@@ -66,7 +66,7 @@ class Guestvoucher extends DBObject {
         ),
         'subject' => array(
             'type' => 'string',
-            'size' => 250,
+            'size' => 255,
             'null' => true
         ),
         'message' => array(
