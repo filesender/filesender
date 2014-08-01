@@ -62,8 +62,8 @@ class File extends DBObject
             'size' => 500,
         ),
         'size' => array(
-            'type' => 'ulong',
-            'size' => 64,
+            'type' => 'uint',
+            'size' => 'big'
         ),
         'sha1' => array(
             'type' => 'string',
