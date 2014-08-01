@@ -83,20 +83,3 @@ class ConfigMissingParameterException extends DetailedException {
         );
     }
 }
-
-/**
- * Cannot set exception
- */
-class ConfigUnknownProcessorException extends DetailedException {
-    /**
-     * Constructor
-     * 
-     * @param string $processor name of the required processor which is missing
-     */
-    public function __construct($processor) {
-        parent::__construct(
-            'config_unknown_processor', // Message to give to the user
-            'processor : '.$processor // Details to log
-        );
-    }
-}
