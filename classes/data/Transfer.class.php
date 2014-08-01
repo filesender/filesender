@@ -34,12 +34,12 @@
 if(!defined('FILESENDER_BASE')) die('Missing environment');
 
 /**
- * Represents a transaction (files transfer) in database
+ * Represents a transfer in database
  * 
  * @property array $files related files
  * @property array $recipients related recipients
  */
-class Transaction extends DBObject {
+class Transfer extends DBObject {
     /**
      * Database map
      */
@@ -49,16 +49,6 @@ class Transaction extends DBObject {
             'size' => 'medium',
             'primary' => true,
             'autoinc' => true
-        ),
-        'voucher' => array(
-            'type' => 'string',
-            'size' => 60,
-            'unique' => true,
-            'null' => true
-        ),
-        'status' => array(
-            'type' => 'string',
-            'size' => 32
         ),
         'uid' => array(
             'type' => 'string',
@@ -78,6 +68,14 @@ class Transaction extends DBObject {
         ),
         'expires' => array(
             'type' => 'datetime'
+        ),
+        'status' => array(
+            'type' => 'string',
+            'size' => 32
+        ),
+        'options' => array(
+            'type' => 'text',
+            'transform' => 'json'
         )
     );
     
@@ -107,30 +105,30 @@ class Transaction extends DBObject {
     /**
      * Constructor
      * 
-     * @param integer $id identifier of transaction to load from database (null if loading not wanted)
-     * @param array $data data to create the transaction from (if already fetched from database)
+     * @param integer $id identifier of transfer to load from database (null if loading not wanted)
+     * @param array $data data to create the transfer from (if already fetched from database)
      * 
-     * @throws TransactionNotFoundException
+     * @throws TransferNotFoundException
      */
     protected function __construct($id = null, $data = null) {
         if(!is_null($id)) {
             $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE id = :id');
             $statement->execute(array(':id' => $id));
             $data = $statement->fetch();
-            if(!$data) throw new TransactionNotFoundException('id = '.$id);
+            if(!$data) throw new TransferNotFoundException('id = '.$id);
         }
         
         if($data) $this->fillFromDBData($data);
     }
     
     /***
-     * Loads transaction from voucher, handling cache
+     * Loads transfer from voucher, handling cache
      * 
      * @param string $voucher
      * 
-     * @throws TransactionNotFoundException
+     * @throws TransferNotFoundException
      * 
-     * @return object transaction
+     * @return object transfer
      */
     public static function fromVoucher($voucher) {
         if(array_key_exists($voucher, self::$by_voucher)) return self::$by_voucher[$voucher];
@@ -138,47 +136,47 @@ class Transaction extends DBObject {
         $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE voucher = :voucher');
         $statement->execute(array(':voucher' => $voucher));
         $data = $statement->fetch();
-        if(!$data) throw new TransactionNotFoundException('voucher = '.$voucher);
+        if(!$data) throw new TransferNotFoundException('voucher = '.$voucher);
         
-        $transaction = self::fromData($data['id'], $data);
-        self::$by_voucher[$voucher] = $transaction;
+        $transfer = self::fromData($data['id'], $data);
+        self::$by_voucher[$voucher] = $transfer;
         
-        return $transaction;
+        return $transfer;
     }
     
     /**
-     * Create a new transaction (ie begin upload)
+     * Create a new transfer (ie begin upload)
      * 
      * @param integer $expiry expiration date (timestamp), mandatory
      * 
-     * @return object transaction
+     * @return object transfer
      */
     public static function create($expires) {
-        $transaction = new self();
+        $transfer = new self();
         
-        $transaction->from = User::current()->uid;
-        $transaction->expires = $expires;
+        $transfer->from = User::current()->uid;
+        $transfer->expires = $expires;
         
-        $transaction->created = time();
-        $transaction->status = 'uploading';
-        $transaction->voucher = Utilities::generateUID();
+        $transfer->created = time();
+        $transfer->status = 'uploading';
+        $transfer->voucher = Utilities::generateUID();
         
-        return $transaction;
+        return $transfer;
     }
     
     /**
-     * Get expired transactions
+     * Get expired transfers
      * 
-     * @param integer $daysvalid transaction age limit (optionnal)
+     * @param integer $daysvalid transfer age limit (optionnal)
      * 
-     * @return array transaction list
+     * @return array transfer list
      */
     public static function getExpired($daysvalid = null) {
         $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE expires < NOW()');
         $s->execute();
-        $transactions = array();
-        foreach($s->fetchAll() as $data) $transactions[$data['id']] = self::fromData($data['id'], $data); // Don't query twice, use loaded data
-        return $transactions;
+        $transfers = array();
+        foreach($s->fetchAll() as $data) $transfers[$data['id']] = self::fromData($data['id'], $data); // Don't query twice, use loaded data
+        return $transfers;
     }
     
     /**
@@ -194,12 +192,12 @@ class Transaction extends DBObject {
         if(in_array($property, array('id', 'voucher', 'status', 'from', 'subject', 'message', 'created', 'expires'))) return $this->$property;
         
         if($property == 'files') {
-            if(is_null($this->files)) $this->files = File::fromTransaction($this);
+            if(is_null($this->files)) $this->files = File::fromTransfer($this);
             return $this->files;
         }
         
         if($property == 'recipients') {
-            if(is_null($this->recipients)) $this->recipients = Recipient::fromTransaction($this);
+            if(is_null($this->recipients)) $this->recipients = Recipient::fromTransfer($this);
             return $this->recipients;
         }
         

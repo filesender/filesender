@@ -48,7 +48,7 @@ class Autoloader {
         '*Exception' => 'exceptions/@package(Exception)',
         
         'DBObject' => 'data/',
-        'Transaction' => 'data/',
+        'Transfer' => 'data/',
         'File' => 'data/',
         'Guestvoucher' => 'data/',
         'User' => 'data/',
