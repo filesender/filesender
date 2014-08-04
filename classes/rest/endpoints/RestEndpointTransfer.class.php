@@ -174,8 +174,6 @@ class RestEndpointTransfer extends RestEndpoint {
             
             foreach($data->recipients as $email) $transfer->addRecipient($email);
             
-            // Send emails
-            
             return array(
                 'path' => '/transfer/'.$transfer->id,
                 'data' => self::cast($transfer)
@@ -211,6 +209,8 @@ class RestEndpointTransfer extends RestEndpoint {
         $recipients = $transfer->recipients; // Before closing so that we are sure data is available
         
         $transfer->close();
+        
+        if($transfer->status != 'available') return null; // Do not notify closure for transfers that are not available
         
         // Send emails
         foreach($recipients as $recipient) {
