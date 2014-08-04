@@ -82,7 +82,7 @@ class Recipient extends DBObject {
     protected $email = '';
     protected $token = '';
     protected $created = 0;
-    protected $last_activity = 0;
+    protected $last_activity = null;
     protected $options = null;
     
     /**
