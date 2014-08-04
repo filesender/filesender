@@ -47,7 +47,7 @@ class Guestvoucher extends DBObject {
             'primary' => true,
             'autoinc' => true
         ),
-        'uid' => array(
+        'user_id' => array(
             'type' => 'string',
             'size' => 255
         ),
@@ -89,7 +89,7 @@ class Guestvoucher extends DBObject {
      * Properties
      */
     protected $id = null;
-    protected $uid = null;
+    protected $user_id = null;
     protected $token = null;
     protected $email = null;
     protected $transfers = 0;
@@ -128,7 +128,7 @@ class Guestvoucher extends DBObject {
     public static function create($email) {
         $voucher = new self();
         
-        $voucher->uid = User::current()->uid;
+        $voucher->user_id = User::current()->id;
         $voucher->__set('email', $email); // Throws
         
         $voucher->created = time();
@@ -163,7 +163,7 @@ class Guestvoucher extends DBObject {
      */
     public function __get($property) {
         if(in_array($property, array(
-            'id', 'uid', 'token', 'email', 'transfers', 'subject',
+            'id', 'user_id', 'token', 'email', 'transfers', 'subject',
             'message', 'options', 'created', 'expires'
         ))) return $this->$property;
         

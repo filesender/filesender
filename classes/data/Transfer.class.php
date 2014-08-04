@@ -50,7 +50,7 @@ class Transfer extends DBObject {
             'primary' => true,
             'autoinc' => true
         ),
-        'uid' => array(
+        'user_id' => array(
             'type' => 'string',
             'size' => 250
         ),
@@ -84,7 +84,7 @@ class Transfer extends DBObject {
      */
     protected $id = null;
     protected $status = null;
-    protected $uid = null;
+    protected $user_id = null;
     protected $subject = null;
     protected $message = null;
     protected $created = 0;
@@ -133,16 +133,16 @@ class Transfer extends DBObject {
     }
     
     /***
-     * Get transfers from user or uid
+     * Get transfers from user
      * 
-     * @param string $uid
+     * @param mixed $user user object or user_id
      * 
      * @return array of Transfer
      */
     public static function fromUser($user) {
-        if($user instanceof User) $user = $user->uid;
+        if($user instanceof User) $user = $user->id;
         
-        $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE uid = :user AND status="available" ORDER BY created DESC');
+        $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE user_id = :user AND status="available" ORDER BY created DESC');
         $statement->execute(array(':user' => $user));
         
         $transfers = array();
@@ -162,7 +162,7 @@ class Transfer extends DBObject {
     public static function create($expires) {
         $transfer = new self();
         
-        $transfer->uid = Auth::user()->uid;
+        $transfer->user_id = Auth::user()->id;
         $transfer->__set('expires', $expires);
         
         $transfer->created = time();
@@ -232,7 +232,7 @@ class Transfer extends DBObject {
      * @return property value
      */
     public function __get($property) {
-        if(in_array($property, array('id', 'status', 'uid', 'subject', 'message', 'created', 'expires', 'options'))) return $this->$property;
+        if(in_array($property, array('id', 'status', 'user_id', 'subject', 'message', 'created', 'expires', 'options'))) return $this->$property;
         
         if($property == 'files') {
             if(is_null($this->files)) $this->files = File::fromTransfer($this);

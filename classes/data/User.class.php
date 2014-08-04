@@ -41,7 +41,7 @@ class User extends DBObject {
      * Database map
      */
     protected static $dataMap = array(
-        'uid' => array(
+        'id' => array(
             'type' => 'string',
             'size' => 255,
             'primary' => true
@@ -78,7 +78,7 @@ class User extends DBObject {
     /**
      * Properties
      */
-    protected $uid = null;
+    protected $id = null;
     protected $organization = null;
     protected $aup_ticked = false;
     protected $aup_last_ticked_date = 0;
@@ -101,17 +101,17 @@ class User extends DBObject {
     /**
      * Constructor
      * 
-     * @param integer $uid identifier of user to load from database (null if loading not wanted)
+     * @param integer $id identifier of user to load from database (null if loading not wanted)
      * @param array $data data to create the user from (if already fetched from database)
      * 
      * @throws UserNotFoundException
      */
-    protected function __construct($uid = null, $data = null) {
-        if(!is_null($uid)) {
-            $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE uid = :uid');
-            $statement->execute(array(':uid' => $uid));
+    protected function __construct($id = null, $data = null) {
+        if(!is_null($id)) {
+            $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE id = :id');
+            $statement->execute(array(':id' => $id));
             $data = $statement->fetch();
-            if(!$data) throw new UserNotFoundException('uid = '.$uid);
+            if(!$data) throw new UserNotFoundException('id = '.$id);
         }
         
         if($data) $this->fillFromDBData($data);
@@ -148,21 +148,21 @@ class User extends DBObject {
         if($this->isNew) {
             $this->insertRecord($this->toDBData());
         }else{
-            $this->updateRecord($this->toDBData(), 'uid');
+            $this->updateRecord($this->toDBData(), 'id');
         }
     }
     
     /**
      * Create a new user
      * 
-     * @param string $uid user id, mandatory
+     * @param string $id user id, mandatory
      * 
      * @return object user
      */
-    public static function create($uid) {
+    public static function create($id) {
         $user = new self();
         
-        $user->uid = $uid;
+        $user->id = $id;
         $user->created = time();
         $user->last_activity = time();
         $user->isNew = true;
@@ -189,7 +189,7 @@ class User extends DBObject {
      */
     public function __get($property) {
         if(in_array($property, array(
-            'uid', 'organization', 'aup_ticked', 'aup_last_ticked_date', 'upload_preferences',
+            'id', 'organization', 'aup_ticked', 'aup_last_ticked_date', 'upload_preferences',
             'voucher_preferences', 'created', 'last_activity', 'email', 'name'
         ))) return $this->$property;
         
