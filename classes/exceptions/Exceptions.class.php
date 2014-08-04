@@ -60,7 +60,7 @@ class LoggingException extends Exception {
     public function __construct($msg_code, $log = null) {
         $this->uid = uniqid();
         
-        if ($log && !preg_match('`[a-z]`', key($log)))
+        if ($log && (!is_array($log) || !preg_match('`[a-z]`', key($log))))
             $log = array('exception' => $log);
         
         if ($log) 
