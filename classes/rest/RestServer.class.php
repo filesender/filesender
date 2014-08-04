@@ -90,29 +90,25 @@ class RestServer {
             }
             
             //Check authentication
-            try {
-                Auth::isAuthenticated();
-                if(Auth::isRemoteApplication()) {
-                    $application = AuthRemoteRequest::application();
-                    if(array_key_exists($endpoint, $application['acl'])) {
-                        $acl = $application['acl'][$endpoint];
-                    }else if(array_key_exists('*', $application['acl'])) {
-                        $acl = $application['acl']['*'];
-                    }else throw new RestException('rest_access_forbidden', 403);
+            Auth::isAuthenticated();
+            if(Auth::isRemoteApplication()) {
+                $application = AuthRemoteRequest::application();
+                if(array_key_exists($endpoint, $application['acl'])) {
+                    $acl = $application['acl'][$endpoint];
+                }else if(array_key_exists('*', $application['acl'])) {
+                    $acl = $application['acl']['*'];
+                }else throw new RestException('rest_access_forbidden', 403);
+                
+                if(is_array($acl)) {
+                    $macl = false;
+                    if(array_key_exists($method, $acl)) {
+                        $macl = $acl[$method];
+                    }else if(array_key_exists('*', $acl)) {
+                        $macl = $acl['*'];
+                    }
                     
-                    if(is_array($acl)) {
-                        $macl = false;
-                        if(array_key_exists($method, $acl)) {
-                            $macl = $acl[$method];
-                        }else if(array_key_exists('*', $acl)) {
-                            $macl = $acl['*'];
-                        }
-                        
-                        if(!$macl) throw new RestException('rest_method_not_allowed', 403);
-                    }else if(!$acl) throw new RestException('rest_access_forbidden', 403);
-                }
-            } catch(Exception $e) {
-                throw new Exception($e->getMessage(), $e->getCode() ? $e->getCode() : 400);
+                    if(!$macl) throw new RestException('rest_method_not_allowed', 403);
+                }else if(!$acl) throw new RestException('rest_access_forbidden', 403);
             }
             
             // JSONP specifics
@@ -182,7 +178,8 @@ class RestServer {
             header('Content-Type: application/json');
             if(($method == 'post') && $data) {
                 RestUtilities::sendResponseCode(201);
-                header('Location: '.Config::get('site_url').'/rest.php/'.$endpoint.'/'.$data['path']);
+                if(substr($data['path'], 0, 1) != '/') $data['path'] = '/'.$data['path'];
+                header('Location: '.Config::get('site_url').'rest.php'.$data['path']);
                 $data = $data['data'];
             }
             echo json_encode($data);
@@ -192,7 +189,9 @@ class RestServer {
             if($code < 400 || $code >= 600) $code = 500;
             RestUtilities::sendResponseCode($code);
             header('Content-Type: text/plain');
-            echo $e->getMessage();
+            $out = $e->getMessage();
+            if(method_exists($e, 'getUid')) $out .= ' ('.$e->getUid().')';
+            echo $out;
         }
     }
 }
