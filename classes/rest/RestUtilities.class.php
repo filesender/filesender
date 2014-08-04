@@ -112,4 +112,18 @@ class RestUtilities {
         
         return $code;
     }
+    
+    /**
+     * Format a date to multiple types
+     * 
+     * @param int $date the date
+     * 
+     * @return array
+     */
+    public static function formatDate($date) {
+        return array(
+            'raw' => $date,
+            'formatted' => Utilities::formatDate($date)
+        );
+    }
 }
