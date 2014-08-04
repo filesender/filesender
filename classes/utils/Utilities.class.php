@@ -40,7 +40,7 @@ if (!defined('FILESENDER_BASE'))
 class Utilities 
 {
     /**
-     * Generate a unique ID to be used as voucher
+     * Generate a unique ID to be used as token
      */
     public static function generateUID()
     {
