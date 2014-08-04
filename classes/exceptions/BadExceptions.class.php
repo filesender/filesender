@@ -49,3 +49,20 @@ class BadEmailException extends DetailedException {
         );
     }
 }
+
+/**
+ * Bad expire exception
+ */
+class BadExpireException extends DetailedException {
+    /**
+     * Constructor
+     * 
+     * @param string $expire the bad expire
+     */
+    public function __construct($expire) {
+        parent::__construct(
+            'bad_expire', // Message to give to the user
+            $expire // Real message to log
+        );
+    }
+}
