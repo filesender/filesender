@@ -52,7 +52,7 @@ class Auth {
     /**
      * Admin status of the current user.
      */
-    private static $isUserAdmin = null;
+    private static $isAdmin = null;
     
     /**
      * Is the user given by an authenticated remote service ?
@@ -94,7 +94,7 @@ class Auth {
             }else if(Config::get('auth_remote_application_enabled')) { // Remote service
                 if(AuthRemoteApplication::isAuthenticated()) {
                     self::$attributes = AuthRemoteApplication::attributes();
-                    if(AuthRemoteApplication::isAdmin()) self::$isUserAdmin = true;
+                    if(AuthRemoteApplication::isAdmin()) self::$isAdmin = true;
                     self::$isRemoteApplication = true;
                 }
                 
@@ -136,19 +136,19 @@ class Auth {
      * 
      * @retrun bool
      */
-    public static function isUserAdmin() {
-        if(is_null(self::$isUserAdmin)) {
-            self::$isUserAdmin = false;
+    public static function isAdmin() {
+        if(is_null(self::$isAdmin)) {
+            self::$isAdmin = false;
             
             if(self::user()) {
                 $admin = Config::get('admin');
                 if(!is_array($admin)) $admin = array_filter(array_map('trim', preg_split('`,;\s`', (string)$admin)));
                 
-                self::$isUserAdmin = in_array(self::user()->uid, $admin);
+                self::$isAdmin = in_array(self::user()->uid, $admin);
             }
         }
         
-        return self::$isUserAdmin;
+        return self::$isAdmin;
     }
     
     /**
