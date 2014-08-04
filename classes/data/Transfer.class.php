@@ -80,21 +80,16 @@ class Transfer extends DBObject {
     );
     
     /**
-     * By voucher cache
-     */
-    private static $by_voucher = array();
-    
-    /**
      * Properties
      */
     protected $id = null;
-    protected $voucher = null;
     protected $status = null;
-    protected $from = null;
+    protected $uid = null;
     protected $subject = null;
     protected $message = null;
     protected $created = 0;
     protected $expires = 0;
+    protected $options = null;
     
     /**
      * Related objects cache
@@ -122,26 +117,39 @@ class Transfer extends DBObject {
     }
     
     /***
-     * Loads transfer from voucher, handling cache
+     * Get all available transfers
      * 
-     * @param string $voucher
-     * 
-     * @throws TransferNotFoundException
-     * 
-     * @return object transfer
+     * @return array of Transfer
      */
-    public static function fromVoucher($voucher) {
-        if(array_key_exists($voucher, self::$by_voucher)) return self::$by_voucher[$voucher];
+    public static function allAvailable() {
+        $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE status="available" ORDER BY created DESC');
+        $statement->execute();
         
-        $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE voucher = :voucher');
-        $statement->execute(array(':voucher' => $voucher));
-        $data = $statement->fetch();
-        if(!$data) throw new TransferNotFoundException('voucher = '.$voucher);
+        $transfers = array();
+        foreach($statement->fetchAll() as $data) $transfers[$data['id']] = self::fromData($data['id'], $data); // Don't query twice, use loaded data
+        return $transfers;
         
-        $transfer = self::fromData($data['id'], $data);
-        self::$by_voucher[$voucher] = $transfer;
+        return $transfers;
+    }
+    
+    /***
+     * Get transfers from user or uid
+     * 
+     * @param string $uid
+     * 
+     * @return array of Transfer
+     */
+    public static function fromUser($user) {
+        if($user instanceof User) $user = $user->uid;
         
-        return $transfer;
+        $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE uid = :user AND status="available" ORDER BY created DESC');
+        $statement->execute(array(':user' => $user));
+        
+        $transfers = array();
+        foreach($statement->fetchAll() as $data) $transfers[$data['id']] = self::fromData($data['id'], $data); // Don't query twice, use loaded data
+        return $transfers;
+        
+        return $transfers;
     }
     
     /**
@@ -154,14 +162,49 @@ class Transfer extends DBObject {
     public static function create($expires) {
         $transfer = new self();
         
-        $transfer->from = User::current()->uid;
-        $transfer->expires = $expires;
+        $transfer->uid = Auth::user()->uid;
+        $transfer->__set('expires', $expires);
         
         $transfer->created = time();
         $transfer->status = 'uploading';
-        $transfer->voucher = Utilities::generateUID();
         
         return $transfer;
+    }
+    
+    /**
+     * Save transfer in database
+     */
+    public function save() {
+        if($this->id) {
+            $this->updateRecord($this->toDBData(), 'id');
+        }else{
+            $this->insertRecord($this->toDBData());
+            $this->id = DBI::lastInsertId();
+        }
+    }
+    
+    /**
+     * Delete the transfer
+     */
+    public function delete() {
+        foreach($this->files as $file) $this->removeFile($file);
+        
+        foreach($this->recipients as $recipient) $this->removeRecipient($recipient);
+        
+        $s = DBI::prepare('DELETE FROM '.self::getDBTable().' WHERE id = :id');
+        $s->execute(array('id' => $this->id));
+    }
+    
+    /**
+     * Close the transfer
+     */
+    public function close() {
+        $s = DBI::prepare('UPDATE '.self::getDBTable().' SET status = "closed" WHERE id = :id');
+        $s->execute(array('id' => $this->id));
+        
+        if(!Config::get('audit_log_enabled')) {
+            $this->delete();
+        }
     }
     
     /**
@@ -172,10 +215,10 @@ class Transfer extends DBObject {
      * @return array transfer list
      */
     public static function getExpired($daysvalid = null) {
-        $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE expires < NOW()');
-        $s->execute();
+        $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE expires < NOW()');
+        $statement->execute();
         $transfers = array();
-        foreach($s->fetchAll() as $data) $transfers[$data['id']] = self::fromData($data['id'], $data); // Don't query twice, use loaded data
+        foreach($statement->fetchAll() as $data) $transfers[$data['id']] = self::fromData($data['id'], $data); // Don't query twice, use loaded data
         return $transfers;
     }
     
@@ -189,7 +232,7 @@ class Transfer extends DBObject {
      * @return property value
      */
     public function __get($property) {
-        if(in_array($property, array('id', 'voucher', 'status', 'from', 'subject', 'message', 'created', 'expires'))) return $this->$property;
+        if(in_array($property, array('id', 'status', 'uid', 'subject', 'message', 'created', 'expires', 'options'))) return $this->$property;
         
         if($property == 'files') {
             if(is_null($this->files)) $this->files = File::fromTransfer($this);
@@ -210,16 +253,13 @@ class Transfer extends DBObject {
      * @param string $property property to get
      * @param mixed $value value to set property to
      * 
-     * @throws BadVoucherException
+     * @throws BadTokenException
      * @throws BadStatusException
      * @throws BadExpireException
      * @throws PropertyAccessException
      */
     public function __set($property, $value) {
-        if($property == 'voucher') {
-            if(!preg_match($config->voucher_regexp, $value)) throw new BadVoucherException($value);
-            $this->voucher = (string)$value;
-        }else if($property == 'status') {
+        if($property == 'status') {
             if(!in_array($value, array('uploading', 'available'))) throw new BadStatusException($value);
             $this->status = (string)$value;
         }else if($property == 'subject') {
@@ -227,12 +267,56 @@ class Transfer extends DBObject {
         }else if($property == 'message') {
             $this->message = (string)$value;
         }else if($property == 'expires') {
+            if(preg_match('`^[0-9]{4}-[0-9]{2}-[0-9]{2}$`', $value)) {
+                $value = strtotime($value);
+            }
+            
+            if(!preg_match('`^[0-9]+$`', $value)) throw new BadExpireException($value);
+            
             $value = (int)$value;
             if($value <= time() || $value > strtotime('+ '.Config::get('default_daysvalid').' day')) {
                 throw new BadExpireException($value);
             }
             $this->expires = (string)$value;
+        }else if($property == 'options') {
+            $this->options = $value;
         }else throw new PropertyAccessException($this, $property);
+    }
+    
+    /**
+     * Adds a file
+     * 
+     * @param string $name the file name
+     * @param string $size the file size
+     * 
+     * @return object created file
+     */
+    public function addFile($name, $size) {
+        // Create and save new recipient
+        $file = File::create($this);
+        $file->name = $name;
+        $file->size = $size;
+        $file->save();
+        
+        // Update local cache
+        if(!is_null($this->files)) $this->files[$file->id] = $file;
+        
+        return $file;
+    }
+    
+    /**
+     * Removes a file
+     * 
+     * @param mixed $file file id or file object
+     */
+    public function removeFile($file) {
+        if(!is_object($file)) $file = File::fromId($file);
+        
+        // Delete
+        $file->delete();
+        
+        // Update local cache
+        if(!is_null($this->files) && array_key_exists($file->id, $this->files)) unset($this->files[$file->id]);
     }
     
     /**
