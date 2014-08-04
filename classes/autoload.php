@@ -45,11 +45,13 @@ class Autoloader {
         'Utilities' => 'utils/',
         'Database*' => 'utils/',
         
+        'PropertyAccessException' => 'exceptions/DBObjectExceptions',
         '*Exception' => 'exceptions/@package(Exception)',
         
         'DBObject' => 'data/',
         'Transfer' => 'data/',
         'File' => 'data/',
+        'Recipient' => 'data/',
         'Guestvoucher' => 'data/',
         'User' => 'data/',
         
