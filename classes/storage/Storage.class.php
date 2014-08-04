@@ -28,76 +28,138 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
- 
 if (!defined('FILESENDER_BASE')) die('Missing environment');
 
-require_once FILESENDER_BASE.'classes/FileSystem.class.php';
-require_once FILESENDER_BASE.'classes/File.class.php';      //Or should it be accessed from Transfer?
 
 /**
  *  Represents an abstraction layer between the filedata in the database and
- *  the actual file storage implementation. Methods to process file chunks that are uploaded and 
- *  downloaded by the javascript in (primarily) js/multiupload.js and js/multidownload.js
- *  Static methods and properties only
- *  @property FileSystem $file
+ *  the actual file storage implementation.  
+ *
+ *  @property StorageFileSystem $file
  *  @property array $filequeue: an array of DB file records w/ needed data
- *  @property string $uploadfolder: path to upload folder on server
- *  @property string $tempfolder:   path to temp folder on server
- *  @property int $chunksize
- *  @property string $storage_type: type of storage system (default is 'filesystem')
- *  @property boolean $calc_hash_chunks: sets whether to calculate and compare hashes per chunk
  */
- 
- /**  Description of how file upload works NOW:
-  *   index.php?s=upload, requires => uploadcheck.php, requires => multiupload.php
-  *   index.php?s=upload executes multiupload.js
-  *   multiupload.js requests fs_multi_upload.php that processes uploaded chunks on server
-  *   
-  */
-class FileStorage
+class Storage
 {
-    //File related config directives: site_filestore = upload dir, site_temp_filestore, upload_chunk_size
-    //Some new ones: site_storage_type (i.e. filesystem, various remote filestoring systems)
-
-    //Properties
     private static $file = null;
-    private static $filequeue = null;        //an array of files to be uploaded
-    private static $uploadfolder = null;
-    private static $tempfolder = null;
-    private static $chunksize = null;
-    private static $storage_type = null;
-    private static $calculate_hash_chunks = false;
+    //private static $filequeue = null;        //an array of files to be uploaded
     
 
-    ////////////
-    // Methods
-    //
-    ////////////
-    
     /**
      *  Gets the configs and sets other needed properties
+     *
+     *  @throws ConfigParamNotSet with (string) config key, (string) error level
+     *  @return false if a config directive is not set in config.php
+     *  @return true when everything is set properly and function exits successfully
      */
     private static function load()
     {   
-        if (!self::$uploadfolder)
-            self::$uploadfolder = Config::get('site_filestore');
-        if (!self::$tempfolder)
-            self::$tempfolder = Config::get('site_temp_filestore');
-        if (!self::$chucksize)
-            self::$chucksize = Config::get('upload_chunk_size');
-        if (!self::$storage_type)
-            self::$storage_type = Config::get('site_storage_type');
+        if (is_null(self::$file)) {
+
+            //Default upload folder should exist in config. If not:
+            if (is_null(Config::get('filestorage_filesystem_file_location'))) {
+                throw new ConfigParamNotSet(
+                    'filestorage_filesystem_file_location',
+                    'fatal'
+                );
+
+                return false;
+            }
+
+            //Default temp folder should exist in config. If not:
+            if (is_null(Config::get('filestorage_filesystem_temp_location'))) {
+                throw new ConfigParamNotSet(
+                    'filestorage_filesystem_temp_location', 
+                    'fatal'
+                );
+
+                return false;
+            }
+
+            // If no default chunk size in config:
+            if (is_null(Config::get('upload_chunk_size'))) {
+                throw new ConfigParamNotSet('upload_chunk_size', 'warn');
+
+                return false;
+            }
+
+            $storage = Config::get('filestorage_type');
+
+            switch ($storage) {
+                case 'filesystem': self::$file = new StorageFileSystem(); break;
+                // ... continue adding storage types here
+            
+                //Defaults to local file system, with all chunks on same disk
+                case null:  // no break; here
+                default: self::$file = new StorageFileSystem(); break;
+            }
+
+            return true;
+        }
+    }
+    
+    
+    /**
+     *  Writes a chunk at offset
+     *
+     *  @param File $dbfile: a File object
+     *  @param mixed $chunk: chunk data or null (if $data == null)
+     *  @param int $offset: the chunk offset in the file
+     *  @return boolean true (if written successfully); false otherwise
+     */
+    public static function writeChunk(File $dbfile, $chunk, $offset = null)
+    {
+        //loads prelims
+        if (self::load())
+            return self::$file::writeChunk($dbfile, $chunk, $offset);
 
     }
 
-    
+
     /**
+     *  Reads a chunk at offset
+     *
+     *  @param File $dbfile: a File object with info about the file
+     *  @param int $offset: the chunk offset in the file
+     *  @return mixed $chunk: chunk data or null if no more data available
+     */
+    public static function readChunk(File $dbfile, $offset = null)
+    {
+        if (self::load())
+            return self::$file::readChunk($dbfile, $offset);
+    }
+
+    /**
+     *  Deletes a file from storage
+     *
+     *  @param File $dbfile: a File object with info about file
+     *  @return true on success, otherwise false
+     */
+    public static function delete(File $dbfile)
+    {
+        if (self:load())
+            return self::$file::delete($dbfile);
+    }
+
+    /**
+     *  Calculates hash (sha1 algorithm) of given file and returns it
+     *
+     *  @param File $dbfile: The File object with file info
+     *  @return string of characters
+     */
+    public static function getHash(File $dbfile)
+    {
+        if (self::load())
+            return self::$file::getHash($dbfile);
+    }
+
+    /** NOT REALLY NEEDED HERE
+
      *  Sets the queue property to an array of files
      *  To be used by a Transfer instance or interface script?
      *  @param $files (what type? Just the names as strings?)
      *  @throws FileQueueException
      */
-    public static function setQueue($files)
+    /**public static function setQueue($files)
     {
         //Making sure that $files is not empty
         if (is_null($files))
@@ -109,15 +171,16 @@ class FileStorage
         else
             self::$filequeue = $files;
         
-    }
+    }*/
     
     
-    /**
+    /** NOT REALLY NEEDED HERE
+
      *  Adds the files in the argument to an existing queue
      *  Sets the queue if it's empty
      *  @param $files (array of File objects or their file names - strings)
      */
-    public static function addToQueue($files)
+    /*public static function addToQueue($files)
     {
         if (count(self::$filequeue) == 0) {
             setQueue($files);
@@ -138,59 +201,5 @@ class FileStorage
         // A more robust way would be to do 
         //for ($i = 0; $i < count($files); $i++) {
         //  foreach ($files as $file) { $file->getFilename() == $files[$i]->getFilename(); remove $file; }}
-    }
-    
-    
-    /**
-     *  Generates temp filename using filename / voucher id
-     *
-     */
-    public static function generateTempFilename()
-    {
-        
-    }
-    
-    
-    /** 
-     *  Renames a temporary file
-     *
-     */
-    public static function renameTempFile()
-    {
-    
-    }
-    
-    /**
-     *  Initiates upload of a file
-     *  @param string $filename
-     *
-     */
-    public static function uploadfile()
-    {
-    
-    }
-    
-    /**
-     *  Uploads a file(s)
-     *  Takes the chunks in the temp storage folder
-     *  Calculates their hash (sha1) (a static method in Utilities?),
-     *  compares the one calculated before upload (possible?) with the uploaded chunk's
-     *
-     *  TODO: implement/restructure the server processing of uploaded chunks in fs_multi_upload.php  
-     *  
-     */
-    public static function processUploadedFile()
-    {
-        
-    }
-    
-    /**
-     *  Downloads a file
-     *  TODO: Need to check how the download works in pre-alpha 2.0
-     *
-     */
-    public static function download()
-    {
-        
-    }
+    }*/
 }
