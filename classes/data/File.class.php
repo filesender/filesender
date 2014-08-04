@@ -154,8 +154,8 @@ class File extends DBObject
      * @param mixed $chunk the chunk data (binary)
      * @param int $offset the chunk offset in the file
      */
-    public function storeChunk($chunk, $offset) {
-        FileStorage::storeChunk($this, $chunk, $offset);
+    public function writeChunk($chunk, $offset) {
+        FileStorage::writeChunk($this, $chunk, $offset);
     }
     
     /**
