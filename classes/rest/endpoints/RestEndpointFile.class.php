@@ -78,8 +78,8 @@ class RestEndpointFile extends RestEndpoint {
         
         $file = File::fromId($id);
         
-        if($file->transfer->uid != $user->uid && !Auth::isAdmin())
-            throw new RestOwnershipRequiredException($user->uid, 'file = '.$file->id);
+        if($file->transfer->user_id != $user->id && !Auth::isAdmin())
+            throw new RestOwnershipRequiredException($user->id, 'file = '.$file->id);
         
         return self::cast($file);
     }
@@ -110,8 +110,8 @@ class RestEndpointFile extends RestEndpoint {
         
         $file = File::fromId($id);
         
-        if($file->transfer->uid != $user->uid && !Auth::isAdmin())
-            throw new RestOwnershipRequiredException($user->uid, 'transfer = '.$file->id);
+        if($file->transfer->user_id != $user->id && !Auth::isAdmin())
+            throw new RestOwnershipRequiredException($user->id, 'transfer = '.$file->id);
         
         $data = $this->request->input;
         
@@ -166,8 +166,8 @@ class RestEndpointFile extends RestEndpoint {
         
         $file = File::fromId($id);
         
-        if($file->transfer->uid != $user->uid && !Auth::isAdmin())
-            throw new RestOwnershipRequiredException($user->uid, 'transfer = '.$file->id);
+        if($file->transfer->user_id != $user->id && !Auth::isAdmin())
+            throw new RestOwnershipRequiredException($user->id, 'transfer = '.$file->id);
         
         $data = $this->request->input;
         
@@ -208,8 +208,8 @@ class RestEndpointFile extends RestEndpoint {
         $user = Auth::user();
         $file = File::fromId($id);
         
-        if($file->transfer->uid != $user->uid && !Auth::isAdmin())
-            throw new RestOwnershipRequiredException($user->uid, 'file = '.$file->id);
+        if($file->transfer->user_id != $user->id && !Auth::isAdmin())
+            throw new RestOwnershipRequiredException($user->id, 'file = '.$file->id);
         
         $transfer = $file->transfer; // Before deletion so that we are sure data is available
         
