@@ -34,18 +34,104 @@
 if (!defined('FILESENDER_BASE')) 
     die('Missing environment');
 
+/**
+ * Base REST exception
+ */
 class RestException extends DetailedException {
+    /**
+     * Holds context information
+     */
     private static $context = array();
-
+    
+    /**
+     * Set a context element
+     * 
+     * @param string $key context entry key
+     * @param mixed $value context entry
+     */
     public static function setContext($key, $value) {
         self::$context[$key] = $value;
     }
-
+    
+    /**
+     * Constructor
+     * 
+     * @param string $message message id to return to the interface
+     * @param int $code http error code
+     * @param mixed $details details about what happened (for logging)
+     */
     public function __construct($message, $code = 0, $details = '') {
         parent::__construct(
             $message,
             $details,
             self::$context
         );
+    }
+}
+
+/**
+ * REST authentication required
+ */
+class RestAuthenticationRequiredException extends RestException {
+    /**
+     * Constructor
+     */
+    public function __construct() {
+        parent::__construct('rest_authentication_required', 403);
+    }
+}
+
+/**
+ * REST admin required
+ */
+class RestAdminRequiredException extends RestException {
+    /**
+     * Constructor
+     */
+    public function __construct() {
+        parent::__construct('rest_admin_required', 403);
+    }
+}
+
+/**
+ * REST ownership required
+ */
+class RestOwnershipRequiredException extends RestException {
+    /**
+     * Constructor
+     * 
+     * @param string $uid user trying to get access
+     * @param mixed $resource the wanted resource selector
+     */
+    public function __construct($uid, $resource) {
+        parent::__construct('rest_ownership_required', 403);
+    }
+}
+
+/**
+ * REST missing parameter
+ */
+class RestMissingParameterException extends RestException {
+    /**
+     * Constructor
+     * 
+     * @param string $name name of the missing parameter
+     */
+    public function __construct($name) {
+        parent::__construct('rest_missing_parameter', 400, $name);
+    }
+}
+
+/**
+ * REST bad parameter
+ */
+class RestBadParameterException extends RestException {
+    /**
+     * Constructor
+     * 
+     * @param string $name name of the bad parameter
+     */
+    public function __construct($name) {
+        parent::__construct('rest_bad_parameter', 400, $name);
     }
 }
