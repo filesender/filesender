@@ -85,6 +85,108 @@ class RestEndpointFile extends RestEndpoint {
     }
     
     /**
+     * Add chunk to a file or upload whole file
+     * 
+     * Call examples :
+     *  /file/17/chunk : add chunk to the file with id 17
+     *  /file/17/whole : upload file as a whole
+     * 
+     * @param int $id transfer id to get info about
+     * @param string $mode upload mode ("chunk" or "whole")
+     * 
+     * @return mixed
+     * 
+     * @throws RestAuthenticationRequiredException
+     * @throws RestOwnershipRequiredException
+     */
+    public function post($id = null, $mode = null) {
+        if(!Auth::isAuthenticated()) throw new RestAuthenticationRequiredException();
+        
+        $user = Auth::user();
+        
+        if(!$id) throw new RestMissingParameterException('file_id');
+        if(!is_numeric($id)) throw new RestBadParameterException('transfer_id');
+        if(!in_array($mode, array('chunk', 'whole'))) throw new RestBadParameterException('mode');
+        
+        $file = File::fromId($id);
+        
+        if($file->transfer->uid != $user->uid && !Auth::isAdmin())
+            throw new RestOwnershipRequiredException($user->uid, 'transfer = '.$file->id);
+        
+        $data = $this->request->input;
+        
+        if($mode == 'chunk') {
+            
+            $file->writeChunk($data->chunk); // No offset => append at end of file
+            
+            if($data->done) { // Client tells it was the last chunk
+                // Check hash
+                
+                // Check if all files from transfer are done, send notifications if so
+                
+            }
+        }else if($mode == 'whole') {
+            // Process uploaded file, split into chunks and push to storage
+            
+            // Check hash
+            
+            // Check if all files from transfer are done, send notifications if so
+            
+        }
+        
+        return array(
+            'path' => '/file/'.$file->id,
+            'data' => RestEndpointFile::cast($file)
+        );
+    }
+    
+    /**
+     * Add chunk to a file at offset
+     * 
+     * Call examples :
+     *  /file/17/chunk/2587 : add chunk to the file with id 17 at offset 2587
+     * 
+     * @param int $id transfer id to get info about
+     * @param string $mode upload mode ("chunk")
+     * @param int $offset chunk offset
+     * 
+     * @return mixed
+     * 
+     * @throws RestAuthenticationRequiredException
+     * @throws RestOwnershipRequiredException
+     */
+    public function put($id = null, $mode = null, $offset = null) {
+        if(!Auth::isAuthenticated()) throw new RestAuthenticationRequiredException();
+        
+        $user = Auth::user();
+        
+        if(!$id) throw new RestMissingParameterException('file_id');
+        if(!is_numeric($id)) throw new RestBadParameterException('transfer_id');
+        if($mode != 'chunk') throw new RestBadParameterException('mode');
+        
+        $file = File::fromId($id);
+        
+        if($file->transfer->uid != $user->uid && !Auth::isAdmin())
+            throw new RestOwnershipRequiredException($user->uid, 'transfer = '.$file->id);
+        
+        $data = $this->request->input;
+        
+        $file->writeChunk($data->chunk, $offset);
+        
+        if($data->done) { // Client tells it was the last chunk
+            // Check hash
+            
+            // Check if all files from transfer are done, send notifications if so
+            
+        }
+        
+        return array(
+            'path' => '/file/'.$file->id,
+            'data' => RestEndpointFile::cast($file)
+        );
+    }
+    
+    /**
      * Delete a file
      * 
      * Call examples :
@@ -112,6 +214,8 @@ class RestEndpointFile extends RestEndpoint {
         $transfer = $file->transfer; // Before deletion so that we are sure data is available
         
         $file->delete();
+        
+        if($transfer->status != 'available') return null; // Do not notify closure for transfers that are not available
         
         // Send emails
         foreach($transfer->recipient as $recipient) {
