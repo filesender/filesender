@@ -38,11 +38,38 @@ if (!defined('FILESENDER_BASE'))
  * REST request
  */
 class RestRequest {
-    public $input = null;
+    private $input = null;
+    
     public $count = null;
     public $startIndex = null;
     public $format = null;
     public $filterOp = null;
     public $sortOrder = null;
     public $updatedSince = null;
+    
+    public function __get($key) {
+        if($key == 'input') {
+            return $this->input;
+        }else throw new PropertyAccessException($this, $key);
+    }
+    
+    public function __set($key, $value) {
+        if($key == 'input') {
+            $this->input = new RestInput($value);
+        }else throw new PropertyAccessException($this, $key);
+    }
+}
+
+class RestInput {
+    private $data = array();
+    
+    public function __construct($data) {
+        if(!is_array($data)) $data = (array)$data;
+        
+        $this->data = $data;
+    }
+    
+    public function __get($key) {
+        return array_key_exists($key, $this->data) ? $this->data[$key] : null;
+    }
 }
