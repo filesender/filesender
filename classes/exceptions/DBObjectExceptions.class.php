@@ -38,7 +38,7 @@ if (!defined('FILESENDER_BASE'))        // Require environment (fatal)
  * 
  * To be used in derived classes
  */
-class PropertyAccessException extends LoggingException {
+class PropertyAccessException extends DetailedException {
     /**
      * Constructor
      * 
