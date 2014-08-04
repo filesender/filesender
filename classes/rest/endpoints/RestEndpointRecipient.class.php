@@ -80,7 +80,7 @@ class RestEndpointRecipient extends RestEndpoint {
         if(is_numeric($id)) {
             $recipient = Recipient::fromId($id);
             
-            if($recipient->transfer->user_id != $user->id && !Auth::isAdmin())
+            if(!$recipient->transfer->isOwner($user) && !Auth::isAdmin())
                 throw new RestOwnershipRequiredException($user->id, 'recipient = '.$recipient->id);
             
             return self::cast($recipient);
@@ -119,7 +119,7 @@ class RestEndpointRecipient extends RestEndpoint {
         $user = Auth::user();
         $recipient = Recipient::fromId($id);
         
-        if($recipient->transfer->user_id != $user->id && !Auth::isAdmin())
+        if(!$recipient->transfer->isOwner($user) && !Auth::isAdmin())
             throw new RestOwnershipRequiredException($user->id, 'recipient = '.$recipient->id);
         
         $transfer = $file->transfer; // Before deletion so that we are sure data is available

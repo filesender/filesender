@@ -87,7 +87,7 @@ class RestEndpointTransfer extends RestEndpoint {
         if(is_numeric($id)) {
             $transfer = Transfer::fromId($id);
             
-            if($transfer->user_id != $user->id && !Auth::isAdmin())
+            if(!$transfer->isOwner($user) && !Auth::isAdmin())
                 throw new RestOwnershipRequiredException($user->id, 'transfer = '.$transfer->id);
             
             return self::cast($transfer);
@@ -140,7 +140,7 @@ class RestEndpointTransfer extends RestEndpoint {
         if(is_numeric($id)) {
             $transfer = Transfer::fromId($id);
             
-            if($transfer->user_id != $user->id && !Auth::isAdmin())
+            if(!$transfer->isOwner($user) && !Auth::isAdmin())
                 throw new RestOwnershipRequiredException($user->id, 'transfer = '.$transfer->id);
             
             // Add recipient
@@ -203,7 +203,7 @@ class RestEndpointTransfer extends RestEndpoint {
         $user = Auth::user();
         $transfer = Transfer::fromId($id);
         
-        if($transfer->user_id != $user->id && !Auth::isAdmin())
+        if(!$transfer->isOwner($user) && !Auth::isAdmin())
             throw new RestOwnershipRequiredException($user->id, 'transfer = '.$transfer->id);
         
         $recipients = $transfer->recipients; // Before closing so that we are sure data is available

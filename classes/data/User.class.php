@@ -179,6 +179,19 @@ class User extends DBObject {
     }
     
     /**
+     * User comparison
+     * 
+     * @param object $user other user or user_id to compare with
+     * 
+     * @return bool
+     */
+    public function is($user) {
+        $user_id = ($user instanceof User) ? $user->id : (string)$user;
+        
+        return $user_id == $this->id;
+    }
+    
+    /**
      * Getter
      * 
      * @param string $property property to get
