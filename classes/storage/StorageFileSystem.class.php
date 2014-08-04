@@ -33,22 +33,23 @@ if (!defined('FILESENDER_BASE')) die('Missing environment');
 
 /**
  *  Represents a file on the filesystem 
+ *
  *  @property string $localpath:    path to file on local file system
  *  @property string $filename:     name of file on local file system
  *  @property FileSystem $instance: holds a single instance of this class
  */
-class FileSystem.class.php
+class StorageFileSystem
 {
     ////////////
     //Properties
     ////////////
-    private static $localpath = null;
-    private static $filename = null;
-    //private static $uploadfolder = null;
-    //private static $tempfolder = null;
-    
+    private $uploadfolder = null;
+    private $tempfolder = null;
+    private static $chunksize  = null;
     private static $instance = null;
+    private static $calc_hash_chunks = false;
     
+
     /**
      *  Gets the FileSystem object
      *  Creates a new one, if none exists (need only one, hence singleton class declaration)
@@ -76,8 +77,16 @@ class FileSystem.class.php
      */
     private function __construct($name, $path)
     {
-        self::$filename = $name;
-        self::$localpath = $path;
+        $this->uploadfolder = Config::get('site_filestore');
+        $this->tempfolder = Config::get('site_temp_filestore');
+
+        // If chunk size not defined in config
+        if (is_null(Config::get('upload_chunk_size'))) {
+            $this->chunksize = 20*1024*1024;    // defaults to 20 mbytes
+        else    
+            $this->chunksize = Config::get('upload_chunk_size');
+
+
     }
     
     /**
@@ -104,5 +113,52 @@ class FileSystem.class.php
         if(in_array($pname, 'localpath', 'filename') && !is_null($value))
             self::$pname = $value;
         throw new PropertyAccessException();
+    }
+
+    /**
+     *  Reads chunk at offset
+     *
+     *  @param File $dbfile: The database file object with file info
+     *  @param uint $offset: offset as no. of bytes
+     *  @throws FileAccessException if file cannot be read
+     *  @throws FileNotFoundException if file cannot be found at location
+     *  @throws NoDataAtOffsetException
+     *  @return mixed chunk: chunk data
+     */
+    public static readChunk($dbfile, $offset)
+    {
+        //Locates file and opens it for reading - FileAccessException if cannot open
+        
+        //reads chunk of size Config::get('chunk_size'), closes file  and
+        //returns data
+        
+        return $chunk;
+    }
+
+    /**
+     *  Write a chunk of data to file (appends if not empty)
+     *
+     *  @param File $dbfile: object with file info
+     *  @param mixed $chunk: the chunk of binary data to write
+     *  @param uint $offset: offset as no. of bytes
+     *  @throws FileAccessException if file cannot be written to
+     *  @throws OutOfSpaceException if disk doesn't have space for chunk
+     */
+    public static storeChunk($dbfile, $chunk, $offset)
+    {
+        // if file doesn't exist: creates it
+        // opens file for writing
+        // writes data to file
+        // closes file
+
+        // Create file in tmp
+        try {
+            $file = fopen(self::$tempfolder.$dbfile->name, 'w');    //sets up a
+            //handle to file
+            $written = fwrite($file, $chunk);
+        } catch (FileAccessException $faexp) {
+        } catch (OutOfSpaceException $oosexp) {
+        }
+
     }
 }
