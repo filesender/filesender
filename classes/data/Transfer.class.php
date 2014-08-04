@@ -253,14 +253,13 @@ class Transfer extends DBObject {
      * @param string $property property to get
      * @param mixed $value value to set property to
      * 
-     * @throws BadTokenException
      * @throws BadStatusException
      * @throws BadExpireException
      * @throws PropertyAccessException
      */
     public function __set($property, $value) {
         if($property == 'status') {
-            if(!in_array($value, array('uploading', 'available'))) throw new BadStatusException($value);
+            if(!in_array($value, array('uploading', 'available', 'closed'))) throw new BadStatusException($value);
             $this->status = (string)$value;
         }else if($property == 'subject') {
             $this->subject = (string)$value;
