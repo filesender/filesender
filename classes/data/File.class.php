@@ -127,7 +127,7 @@ class File extends DBObject
      * Delete the file
      */
     public function delete() {
-        FileStorage::delete($this);
+        Storage::delete($this);
         
         $s = DBI::prepare('DELETE FROM '.self::getDBTable().' WHERE id = :id');
         $s->execute(array('id' => $this->id));
@@ -155,7 +155,7 @@ class File extends DBObject
      * @param int $offset the chunk offset in the file
      */
     public function writeChunk($chunk, $offset) {
-        FileStorage::writeChunk($this, $chunk, $offset);
+        Storage::writeChunk($this, $chunk, $offset);
     }
     
     /**
@@ -166,7 +166,7 @@ class File extends DBObject
      * @return mixed chunk data or null if no more data is available
      */
     public function readChunk($offset) {
-        return FileStorage::readChunk($this, $offset);
+        return Storage::readChunk($this, $offset);
     }
     
     /**
