@@ -92,7 +92,7 @@ class AuthVoucher {
             if(!self::authenticated()) throw new AuthSPAuthenticationNotFoundException();
             
             self::$attributes = array(
-                'uid' => self::$guest_voucher->uid,
+                'uid' => self::$guest_voucher->user_id,
                 'email' => null,
                 'name' => null,
                 'voucher' => self::$guest_voucher
