@@ -98,7 +98,7 @@ class DatabaseMysql {
      * @param string $definition column definition
      */
     public static function createTableColumn($table, $column, $definition) {
-        $query = 'ALTER TABLE '.$table.' ADD '.self::columnDefinition($definition);
+        $query = 'ALTER TABLE '.$table.' ADD '.$column.' '.self::columnDefinition($definition);
         DBI::exec($query);
     }
     
