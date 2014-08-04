@@ -192,9 +192,7 @@ class File extends DBObject
      * @param string $property property to get
      * @param mixed $value value to set property to
      * 
-     * @throws BadVoucherException
-     * @throws BadStatusException
-     * @throws BadExpireException
+     * @throws FileBadHashException
      * @throws PropertyAccessException
      */
     public function __set($property, $value) {
