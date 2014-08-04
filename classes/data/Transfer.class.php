@@ -208,6 +208,19 @@ class Transfer extends DBObject {
     }
     
     /**
+     * Check if user owns current transfer
+     * 
+     * @param object $user other user or user_id to compare with
+     * 
+     * @return bool
+     */
+    public function isOwner($user) {
+        $user_id = ($user instanceof User) ? $user->id : (string)$user;
+        
+        return $user_id == $this->user_id;
+    }
+    
+    /**
      * Get expired transfers
      * 
      * @param integer $daysvalid transfer age limit (optionnal)
@@ -233,6 +246,10 @@ class Transfer extends DBObject {
      */
     public function __get($property) {
         if(in_array($property, array('id', 'status', 'user_id', 'subject', 'message', 'created', 'expires', 'options'))) return $this->$property;
+        
+        if($property == 'user') {
+            return User::fromId($this->user_id);
+        }
         
         if($property == 'files') {
             if(is_null($this->files)) $this->files = File::fromTransfer($this);
