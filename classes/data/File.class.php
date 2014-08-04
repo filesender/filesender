@@ -53,6 +53,10 @@ class File extends DBObject
             'type' => 'uint',
             'size' => 'medium',
         ),
+        'uid' => array(
+            'type' => 'string',
+            'size' => 60
+        ),
         'name' => array(
             'type' => 'string',
             'size' => 255,
@@ -73,6 +77,7 @@ class File extends DBObject
      */
     protected $id = null;
     protected $transfer_id = null;
+    protected $uid = null;
     protected $name = null;
     protected $size = 0;
     protected $sha1 = null;
@@ -107,6 +112,7 @@ class File extends DBObject
         $file = new self();
         
         $file->transfer_id = $transfer->id;
+        $file->uid = Utilities::generateUID();
         
         return $file;
     }
@@ -180,7 +186,7 @@ class File extends DBObject
      */
     public function __get($property) {
         if(in_array($property, array(
-            'id', 'transfer_id', 'name', 'size', 'sha1'
+            'id', 'transfer_id', 'uid', 'name', 'size', 'sha1'
         ))) return $this->$property;
         
         throw new PropertyAccessException($this, $property);
