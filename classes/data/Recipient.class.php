@@ -1,4 +1,5 @@
 <?php
+
 /*
  * FileSender www.filesender.org
  * 
@@ -30,41 +31,46 @@
  */
 
 // Require environment (fatal)
-if (!defined('FILESENDER_BASE')) 
-    die('Missing environment');
+if(!defined('FILESENDER_BASE')) die('Missing environment');
 
 /**
- *  Represents file in the database
+ * Represents a recipient in database
+ * 
+ * @property array $transfer related transfer
  */
-class File extends DBObject
-{
+class Recipient extends DBObject {
     /**
      * Database map
      */
     protected static $dataMap = array(
-        //file id, as in the database
         'id' => array(
-            'type' => 'uint',   //data type of 'id'
-            'size' => 'medium', //size of the integer stored in 'id' (in bytes, or otherwise)
-            'primary' => true,  //indicates that 'id' is the primary key in the DB
-            'autoinc' => true,   //indicates that 'id' is auto-incremented
+            'type' => 'uint',
+            'size' => 'medium',
+            'primary' => true,
+            'autoinc' => true
         ),
         'transfer_id' => array(
             'type' => 'uint',
             'size' => 'medium',
         ),
-        'name' => array(
+        'email' => array(
             'type' => 'string',
-            'size' => 255,
+            'size' => 255
         ),
-        'size' => array(
-            'type' => 'uint',
-            'size' => 'big'
-        ),
-        'sha1' => array(
+        'token' => array(
             'type' => 'string',
-            'size' => 40,
+            'size' => 60
+        ),
+        'created' => array(
+            'type' => 'datetime'
+        ),
+        'last_activity' => array(
+            'type' => 'datetime',
             'null' => true
+        ),
+        'options' => array(
+            'type' => 'text',
+            'transform' => 'json'
         )
     );
     
@@ -73,46 +79,80 @@ class File extends DBObject
      */
     protected $id = null;
     protected $transfer_id = null;
-    protected $name = null;
-    protected $size = 0;
-    protected $sha1 = null;
-   
+    protected $email = '';
+    protected $token = '';
+    protected $created = 0;
+    protected $last_activity = 0;
+    protected $options = null;
+    
+    /**
+     * Related objects cache
+     */
+    private $transfer = null;
+    
     /**
      * Constructor
      * 
-     * @param integer $id identifier of file to load from database (null if loading not wanted)
-     * @param array $data data to create the file from (if already fetched from database)
+     * @param integer $id identifier of recipient to load from database (null if loading not wanted)
+     * @param array $data data to create the recipient from (if already fetched from database)
      * 
-     * @throws FileNotFoundException
+     * @throws RecipientNotFoundException
      */
-    public function __construct($id = null, $data = null) {
+    protected function __construct($id = null, $data = null) {
         if(!is_null($id)) {
             $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE id = :id');
             $statement->execute(array(':id' => $id));
             $data = $statement->fetch();
-            if(!$data) throw new FileNotFoundException('id = '.$id);
+            if(!$data) throw new RecipientNotFoundException('id = '.$id);
         }
         
         if($data) $this->fillFromDBData($data);
     }
     
-    /**
-     * Create a new file (for upload)
+    /***
+     * Loads recipient from token
      * 
-     * @param object $transfer the relater transfer
+     * @param string $token the token
      * 
-     * @return object file
+     * @throws RecipientNotFoundException
+     * 
+     * @return object recipient
      */
-    public static function create($transfer) {
-        $file = new self();
+    public static function fromToken($token) {
+        $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE token = :token');
+        $statement->execute(array(':token' => $token));
+        $data = $statement->fetch();
+        if(!$data) throw new RecipientNotFoundException('token = '.$token);
         
-        $file->transfer_id = $transfer->id;
+        $recipient = self::fromData($data['id'], $data);
         
-        return $file;
+        return $recipient;
     }
     
     /**
-     * Save file in database
+     * Create a new recipient bound to a transfer
+     * 
+     * @param object $transfer the relater transfer
+     * @param object $email the recipient email
+     * 
+     * @return object file
+     */
+    public static function create($transfer, $email) {
+        $recipient = new self();
+        
+        $recipient->transfer_id = $transfer->id;
+        
+        if(!filter_var($email, FILTER_VALIDATE_EMAIL)) throw new BadEmailException($email);
+        $recipient->email = $email;
+        
+        $recipient->created = time();
+        $recipient->token = Utilities::generateUID();
+        
+        return $recipient;
+    }
+    
+    /**
+     * Save recipient in database
      */
     public function save() {
         if($this->id) {
@@ -124,49 +164,34 @@ class File extends DBObject
     }
     
     /**
-     * Delete the file
+     * Delete the recipient
      */
     public function delete() {
-        FileStorage::delete($this);
-        
         $s = DBI::prepare('DELETE FROM '.self::getDBTable().' WHERE id = :id');
         $s->execute(array('id' => $this->id));
     }
     
     /**
-     * Get files from Transfer
+     * Get recipients from Transfer
      * 
      * @param object $transfer the relater transfer
      * 
-     * @return array file list
+     * @return array recipient list
      */
     public static function fromTransfer($transfer) {
         $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE transfer_id = :transfer_id');
         $s->execute(array('transfer_id' => $transfer->id));
-        $files = array();
-        foreach($s->fetchAll() as $data) $files[$data['id']] = self::fromData($data['id'], $data); // Don't query twice, use loaded data
-        return $files;
+        $recipients = array();
+        foreach($s->fetchAll() as $data) $recipients[$data['id']] = self::fromData($data['id'], $data); // Don't query twice, use loaded data
+        return $recipients;
     }
     
     /**
-     * Store a chunk at offset
-     * 
-     * @param mixed $chunk the chunk data (binary)
-     * @param int $offset the chunk offset in the file
+     * Report last activity
      */
-    public function storeChunk($chunk, $offset) {
-        FileStorage::storeChunk($this, $chunk, $offset);
-    }
-    
-    /**
-     * Read a chunk at offset
-     * 
-     * @param int $offset the chunk offset in the file
-     * 
-     * @return mixed chunk data or null if no more data is available
-     */
-    public function readChunk($offset) {
-        return FileStorage::readChunk($this, $offset);
+    public function reportActivity() {
+        $this->last_activity = time();
+        $this->save();
     }
     
     /**
@@ -179,9 +204,12 @@ class File extends DBObject
      * @return property value
      */
     public function __get($property) {
-        if(in_array($property, array(
-            'id', 'transfer_id', 'name', 'size', 'sha1'
-        ))) return $this->$property;
+        if(in_array($property, array('id', 'transfer_id', 'email', 'token', 'created', 'last_activity', 'options'))) return $this->$property;
+        
+        if($property == 'transfer') {
+            if(is_null($this->transfer)) $this->transfer = Transfer::fromId($this->transfer_id);
+            return $this->transfer;
+        }
         
         throw new PropertyAccessException($this, $property);
     }
@@ -192,19 +220,11 @@ class File extends DBObject
      * @param string $property property to get
      * @param mixed $value value to set property to
      * 
-     * @throws BadVoucherException
-     * @throws BadStatusException
-     * @throws BadExpireException
      * @throws PropertyAccessException
      */
     public function __set($property, $value) {
-        if($property == 'name') {
-            $this->name = (string)$value;
-        }else if($property == 'size') {
-            $this->size = (int)$value;
-        }else if($property == 'sha1') {
-            if(!preg_match('`^[0-9a-f]{40}$`', $value)) throw new FileBadHashException($value);
-            $this->sha1 = (string)$value;
+        if($property == 'options') {
+            $this->options = $value;
         }else throw new PropertyAccessException($this, $property);
     }
 }
