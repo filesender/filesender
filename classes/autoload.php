@@ -40,6 +40,8 @@ class Autoloader {
      * Class name to path mappers
      */
     private static $mappers = array(
+        'PHPUnit_*' => false, // Skip php unit stuff
+        
         'Config' => 'utils/',
         'DBI' => 'utils/',
         'Utilities' => 'utils/',
@@ -80,6 +82,8 @@ class Autoloader {
             $matcher = '`^'.$matcher.'$`';
             
             if(preg_match($matcher, $class)) {
+                if(is_bool($path) && !$path) return;
+                
                 if(preg_match('`^(.*)@package\((.+)\)$`', $path, $m))
                     $path = self::package($m[1], $class, $m[2]);
                 
@@ -136,6 +140,6 @@ class Autoloader {
 /**
  * Register autoload
  */
-function __autoload($class) {
+spl_autoload_register(function($class) {
     Autoloader::load($class);
-}
+});
