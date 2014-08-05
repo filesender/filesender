@@ -40,8 +40,6 @@ class Autoloader {
      * Class name to path mappers
      */
     private static $mappers = array(
-        'PHPUnit_*' => false, // Skip php unit stuff
-        
         'Config' => 'utils/',
         'DBI' => 'utils/',
         'Utilities' => 'utils/',
@@ -74,7 +72,6 @@ class Autoloader {
      */
     public static function load($class) {
         foreach(self::$mappers as $matcher => $path) {
-            
             $m = uniqid();
             $matcher = str_replace('*', $m, $matcher);
             $matcher = preg_quote($matcher);
@@ -82,8 +79,6 @@ class Autoloader {
             $matcher = '`^'.$matcher.'$`';
             
             if(preg_match($matcher, $class)) {
-                if(is_bool($path) && !$path) return;
-                
                 if(preg_match('`^(.*)@package\((.+)\)$`', $path, $m))
                     $path = self::package($m[1], $class, $m[2]);
                 
@@ -91,7 +86,7 @@ class Autoloader {
                 if(!$path || substr($path, -1) == '/') $file .= $class;
                 $file .= '.class.php';
                 
-                if(!file_exists($file)) throw new CoreFileNotFoundException($file);
+                if(!file_exists($file) && !Config::get('testing')) throw new CoreFileNotFoundException($file);
                 
                 require_once $file;
                 
@@ -99,7 +94,7 @@ class Autoloader {
             }
         }
         
-        throw new CoreClassNotFoundException($class);
+        if(!Config::get('testing')) throw new CoreClassNotFoundException($class);
     }
     
     /**
