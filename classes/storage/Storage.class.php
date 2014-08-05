@@ -42,7 +42,6 @@ class Storage
 {
     private static $file = null;
     //private static $filequeue = null;        //an array of files to be uploaded
-    
 
     /**
      *  Gets the configs and sets other needed properties
@@ -64,6 +63,7 @@ class Storage
 
                 return false;
             }
+            Config::get('filestorage_filesystem_file_location');
 
             //Default temp folder should exist in config. If not:
             if (is_null(Config::get('filestorage_filesystem_temp_location'))) {
@@ -74,7 +74,7 @@ class Storage
 
                 return false;
             }
-
+            Config::get('filestorage_filesystem_temp_location');
 
             // If no default chunk size in config:
             if (is_null(Config::get('upload_chunk_size'))) {
@@ -113,8 +113,9 @@ class Storage
     public static function writeChunk(File $dbfile, $chunk, $offset = null)
     {
         //loads prelims
-        if (self::load())
+        if (self::load()) {
             return self::$file->writeChunk($dbfile, $chunk, $offset);
+        }
     }
 
 
