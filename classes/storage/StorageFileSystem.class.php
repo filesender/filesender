@@ -38,7 +38,7 @@ if (!defined('FILESENDER_BASE')) die('Missing environment');
  *  @property string $uploaddir: path to local upload dir
  *  @property FileSystem $instance: holds a single instance of this class
  *  @property uint $chunksize
- *  @property string $calc_hash:    whether to calculate hash
+ *  @property bool $calc_hash:    whether to calculate hash
  */
 class StorageFileSystem
 {
@@ -55,10 +55,9 @@ class StorageFileSystem
     /**
      *  Gets the FileSystem object
      *  Creates a new one, if none exists (need only one, hence singleton class declaration)
-     *  @param string $name = null
      *  @throws MissingFileParamsException
      */
-    public static function getInstance($name = null)
+    public static function getInstance()
     {
         if(is_null($instance))
             self::$instance = new self();
@@ -70,7 +69,7 @@ class StorageFileSystem
      *  Constructor: creates a new instance and sets
      *  properties from config
      */
-    private function __construct($name, $path)
+    private function __construct()
     {
         $this->tempfolder = Config::get('filestorage_filesystem_file_location');
         $this->uploadfolder = Config::get('filestorage_filesystem_temp_location');
@@ -86,16 +85,17 @@ class StorageFileSystem
     
 
     /**
-     *  Default getter
+     *  Default getter - instance getter could also be added here
      *  @param string $pname: property name
      *  @returns property with name = $pname
      */
     public static __get($pname)
     {
-        if(in_array($pname, 'localpath', 'filename'))
-            return self::$pname;
+        if(in_array($pname, 'uploadfolder', 'tempfolder', 'chunksize',
+            'calc_hash_chunks' ))
+            return $this->pname;
         //If property $pname does not exist
-        throw new PropertyAccessException();
+        throw new PropertyAccessException($pname);
         
     }
     
@@ -107,9 +107,9 @@ class StorageFileSystem
      */
     public static __set($pname, $value)
     {
-        if(in_array($pname, 'localpath', 'filename') && !is_null($value))
+        if(in_array($pname, 'chunksize') && !is_null($value))
             self::$pname = $value;
-        throw new PropertyAccessException();
+        throw new PropertyAccessException($pname);
     }
 
 
@@ -138,14 +138,14 @@ class StorageFileSystem
         // to measure byte count with strlen in a class where we send headers
         $chunk = '';
         
-        $path = self::$uploadfolder.$dbfile->name;
+        $path = $this->uploadfolder.$dbfile->name;
 
         //Locates file, opens it for reading, reads, returns data
         try {
             if (!file_exists($path))
                 throw new FileNotFoundException();
 
-            if (($file = fopen(self::$uploadfolder.$dbfile->name, 'rb')) != true)
+            if (($file = fopen($this->uploadfolder.$dbfile->name, 'rb')) != true)
                 throw new FileAccessException();
 
             // Sets position of file pointer
@@ -173,27 +173,52 @@ class StorageFileSystem
      *  Write a chunk of data to file (appends if not empty)
      *
      *  @param File $dbfile: object with file info
-     *  @param mixed $chunk: the chunk of binary data to write
+     *  @param string $chunk: the chunk of data to write
      *  @param uint $offset: offset as no. of bytes
      *  @throws FileAccessException if file cannot be written to
      *  @throws OutOfSpaceException if disk doesn't have space for chunk
+     *  @throws CannotWriteToFileException if any other write error
+     *  @return true if written, false if error
      */
-    public static writeChunk(File $dbfile, $chunk, $offset = null)
+    public static writeChunk(File $dbfile, $chunk, $offset)
     {
         // if file doesn't exist: creates it
-        // opens file for writing
-        // writes data to file
-        // closes file
-
-        // Create file in tmp
+        $path = $this->uploadfolder.$dbfile->name;
         try {
-            $file = fopen(self::$tempfolder.$dbfile->name, 'w');    //sets up a
-            //handle to file
-            $written = fwrite($file, $chunk);
-        } catch (FileAccessException $faexp) {
-        } catch (OutOfSpaceException $oosexp) {
+            if (($file = fopen($path, 'w')) != false)
+                throw new FileAccessException();    //failed opening file
+            
+            // set file position pointer to $offset
+            // if postdata was accessed using php://input, fseek cannot be used,
+            // if using php://stdin - yes
+            // should use: $fdata = fopen('php://input', 'r'); while(
+            // fread($fdata, $chunk) { writeChunk() } in calling method
+            if ($offset)
+                fseek($file, $offset);
+
+            if (getFreeSpace() <= strlen($chunk)) {
+                throw new OutOfSpaceException($path);
+            }
+
+            $written = fwrite($file, $chunk); //$written = nr of bytes
+
+            fclose($file);
+
+            if ($written)
+                return $written;
+            else
+                throw new CannotWriteToFileException($path);
+
+        } catch (FileAccessException $eaccess) {
+
+        } catch (OutOfSpaceException $espace) {
+        
+        } catch (CannotWriteToFileException $ewrite) {
+
         }
 
+        //failed to write to file
+        return false;
     }
 
 
