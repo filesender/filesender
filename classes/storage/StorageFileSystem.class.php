@@ -79,7 +79,7 @@ class StorageFileSystem
         else
             $this->chunksize = Config::get('upload_chunk_size');
 
-        $this->calc_hash_chunks = Config::get('filestorage_filesystem_calc_hash');
+        $this->calculate_hash = Config::get('filestorage_filesystem_calc_hash');
     }
 
 
@@ -117,7 +117,7 @@ class StorageFileSystem
      *
      *  @param File $dbfile: The database file object with file info
      *  @param uint $offset: offset as no. of bytes
-     *  @throws FileAccessException if file cannot be read
+     *  @throws StorageAccessException if file cannot be read
      *  @throws FileNotFoundException if file cannot be found at location
      *  @throws NoDataAtOffsetException
      *  @return string chunk, chunk data enc as string, or false
@@ -140,10 +140,10 @@ class StorageFileSystem
         //Locates file, opens it for reading, reads, returns data
         try {
             if (!file_exists($path))
-                throw new FileNotFoundException();
+                throw new StorageFileSystemNotFoundException($path);
 
             if (($file = fopen($this->uploadfolder.$dbfile->name, 'rb')) != true)
-                throw new FileAccessException();
+                throw new StorageAccessException(get_class());
 
             // Sets position of file pointer
             if ( $offset != 0 ) {
@@ -157,8 +157,12 @@ class StorageFileSystem
             fclose($file);
             return $chunk;
 
-        } catch (FileAccessException $e) {
+        } catch (StorageAccessException $e) {
         
+        } catch (StorageFileSystemNotFoundException $e) {
+
+        } catch (NoDataAtOffsetException $e) {
+
         }
         
         //failed opening file
@@ -172,7 +176,7 @@ class StorageFileSystem
      *  @param File $dbfile: object with file info
      *  @param string $chunk: the chunk of data to write
      *  @param uint $offset: offset as no. of bytes
-     *  @throws FileAccessException if file cannot be written to
+     *  @throws StorageAccessException if file cannot be written to
      *  @throws OutOfSpaceException if disk doesn't have space for chunk
      *  @throws CannotWriteToFileException if any other write error
      *  @return true if written, false if error
@@ -181,9 +185,10 @@ class StorageFileSystem
     {
         // if file doesn't exist: creates it
         $path = $this->uploadfolder.$dbfile->name;
+
         try {
-            if (($file = fopen($path, 'w')) != false)
-                throw new FileAccessException();    //failed opening file
+            if (($file = fopen($path, 'w')) != true)
+                throw new StorageAccessException(get_class());    //failed opening file
             
             // set file position pointer to $offset
             // if postdata was accessed using php://input, fseek cannot be used,
@@ -193,7 +198,7 @@ class StorageFileSystem
             if ($offset)
                 fseek($file, $offset);
 
-            if (getFreeSpace() <= strlen($chunk)) {
+            if ($this->getFreeSpace() <= strlen($chunk)) {
                 throw new OutOfSpaceException($path);
             }
 
@@ -206,7 +211,7 @@ class StorageFileSystem
             else
                 throw new CannotWriteToFileException($path);
 
-        } catch (FileAccessException $eaccess) {
+        } catch (StorageAccessException $eaccess) {
 
         } catch (OutOfSpaceException $espace) {
         
@@ -266,7 +271,7 @@ class StorageFileSystem
      */
     public function getHash(File $dbfile)
     {
-        if (!$this->calc_hash_chunks)
+        if (!$this->calculate_hash)
             return false;
         
         $sha1 = sha1_file($this->uploadfolder.$dbfile->name);
