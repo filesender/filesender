@@ -44,6 +44,9 @@ class Autoloader {
         'DBI' => 'utils/',
         'Utilities' => 'utils/',
         'Database*' => 'utils/',
+
+        'Storage' => 'storage/',
+        'Storage*' => 'storage/',
         
         'PropertyAccessException' => 'exceptions/DBObjectExceptions',
         '*Exception' => 'exceptions/@package(Exception)',

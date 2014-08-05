@@ -75,6 +75,7 @@ class Storage
                 return false;
             }
 
+
             // If no default chunk size in config:
             if (is_null(Config::get('upload_chunk_size'))) {
                 throw new ConfigParamNotSet('upload_chunk_size', 'warn');
@@ -92,7 +93,8 @@ class Storage
             
                 //Defaults to local file system, with all chunks on same disk
                 case null:  // no break; here
-                default: self::$file = new StorageFileSystem(); break;
+                default: self::$file = StorageFileSystem::getInstance();
+                break;
             }
 
             return true;
@@ -112,8 +114,7 @@ class Storage
     {
         //loads prelims
         if (self::load())
-            return self::$file::writeChunk($dbfile, $chunk, $offset);
-
+            return self::$file->writeChunk($dbfile, $chunk, $offset);
     }
 
 
@@ -127,8 +128,9 @@ class Storage
     public static function readChunk(File $dbfile, $offset = null)
     {
         if (self::load())
-            return self::$file::readChunk($dbfile, $offset);
+            return self::$file->readChunk($dbfile, $offset);
     }
+
 
     /**
      *  Deletes a file from storage
@@ -138,9 +140,10 @@ class Storage
      */
     public static function delete(File $dbfile)
     {
-        if (self:load())
-            return self::$file::delete($dbfile);
+        if (self::load())
+            return self::$file->delete($dbfile);
     }
+
 
     /**
      *  Calculates hash (sha1 algorithm) of given file and returns it
@@ -151,57 +154,6 @@ class Storage
     public static function getHash(File $dbfile)
     {
         if (self::load())
-            return self::$file::getHash($dbfile);
+            return self::$file->getHash($dbfile);
     }
-
-    /** NOT REALLY NEEDED HERE
-
-     *  Sets the queue property to an array of files
-     *  To be used by a Transfer instance or interface script?
-     *  @param $files (what type? Just the names as strings?)
-     *  @throws FileQueueException
-     */
-    /**public static function setQueue($files)
-    {
-        //Making sure that $files is not empty
-        if (is_null($files))
-            throw new FileQueueException('Queue empty');    //just an example of usage of this exc type
-        //Make sure that files queue is not changed from being an array
-        elseif (count($files) == 1)
-            self::$filequeue = array($files);
-        //Otherwise, simply assign $files to queue property
-        else
-            self::$filequeue = $files;
-        
-    }*/
-    
-    
-    /** NOT REALLY NEEDED HERE
-
-     *  Adds the files in the argument to an existing queue
-     *  Sets the queue if it's empty
-     *  @param $files (array of File objects or their file names - strings)
-     */
-    /*public static function addToQueue($files)
-    {
-        if (count(self::$filequeue) == 0) {
-            setQueue($files);
-        }
-        
-        //Making sure that $files is not empty
-        if (is_null($files))
-            throw new FileQueueException('Queue empty');    //just an example of usage of this exc type
-        //Make sure that files queue is not changed from being an array
-        elseif (count($files) == 1)
-            self::$filequeue = array($files);
-        //Otherwise, simply assign $files to queue property
-        else
-            self::$filequeue = $files;
-        
-        //removes duplicate files from queue  - very naive way: assumes the array contains strings
-        self::$filequeue = array_unique(self::$filequeue);
-        // A more robust way would be to do 
-        //for ($i = 0; $i < count($files); $i++) {
-        //  foreach ($files as $file) { $file->getFilename() == $files[$i]->getFilename(); remove $file; }}
-    }*/
 }

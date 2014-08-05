@@ -38,7 +38,7 @@ if (!defined('FILESENDER_BASE')) die('Missing environment');
  *  @property string $uploaddir: path to local upload dir
  *  @property FileSystem $instance: holds a single instance of this class
  *  @property uint $chunksize
- *  @property bool $calc_hash:    whether to calculate hash
+ *  @property bool $calc_hash:    whether calculating hash for storage type is supported
  */
 class StorageFileSystem
 {
@@ -49,21 +49,20 @@ class StorageFileSystem
     private $tempfolder = null;
     private $chunksize  = null;
     private static $instance = null;
-    private $calc_hash_chunks = false;
-    
+    private $calculate_hash = false;
+
 
     /**
      *  Gets the FileSystem object
      *  Creates a new one, if none exists (need only one, hence singleton class declaration)
-     *  @throws MissingFileParamsException
      */
     public static function getInstance()
     {
-        if(is_null($instance))
+        if(is_null(self::$instance))
             self::$instance = new self();
         return self::$instance;
     }
-    
+
 
     /**
      *  Constructor: creates a new instance and sets
@@ -75,27 +74,27 @@ class StorageFileSystem
         $this->uploadfolder = Config::get('filestorage_filesystem_temp_location');
 
         // If chunk size not defined in config
-        if (is_null(Config::get('upload_chunk_size'))) {
-            $this->chunksize = 20*1024*1024;    // defaults to 20 mbytes
+        if (is_null(Config::get('upload_chunk_size')))
+            $this->chunksize = 2*1024*1024;    // defaults to 2 mbytes
         else
             $this->chunksize = Config::get('upload_chunk_size');
 
-        $this->calc_hash_chunks = Config::get('upload_calculate_hash');
+        $this->calc_hash_chunks = Config::get('filestorage_filesystem_calc_hash');
     }
-    
+
 
     /**
      *  Default getter - instance getter could also be added here
      *  @param string $pname: property name
      *  @returns property with name = $pname
      */
-    public static __get($pname)
+    public function __get($pname)
     {
-        if(in_array($pname, 'uploadfolder', 'tempfolder', 'chunksize',
-            'calc_hash_chunks' ))
+        if(in_array($pname, array('uploadfolder', 'tempfolder', 'chunksize',
+            'calculate_hash' )))
             return $this->pname;
         //If property $pname does not exist
-        throw new PropertyAccessException($pname);
+        throw new PropertyAccessException($this, $pname);
         
     }
     
@@ -105,11 +104,11 @@ class StorageFileSystem
      *  @param string @pname: property name
      *  @param string @value: value to set to
      */
-    public static __set($pname, $value)
+    public function __set($pname, $value)
     {
-        if(in_array($pname, 'chunksize') && !is_null($value))
-            self::$pname = $value;
-        throw new PropertyAccessException($pname);
+        if(in_array($pname, array('chunksize')) && !is_null($value))
+            $this->pname = $value;
+        throw new PropertyAccessException($this, $pname);
     }
 
 
@@ -123,19 +122,17 @@ class StorageFileSystem
      *  @throws NoDataAtOffsetException
      *  @return string chunk, chunk data enc as string, or false
      */
-    public static readChunk(File $dbfile, $offset)
+    public function readChunk(File $dbfile, $offset)
     {
         /* setting execution time limit, sending headers, etc. is delegated to
          * the webservice (in rest/)
          * set_time_limit(0); */
 
-        if ($offset))
+        if ($offset)
             $chunksize = $offset; //in bytes
         else
             $chunksize = 1 * 1024 * 1024;  // in bytes
 
-        // Borrowing trick from 2.0 alpha: Setting chunk datatype to string
-        // to measure byte count with strlen in a class where we send headers
         $chunk = '';
         
         $path = $this->uploadfolder.$dbfile->name;
@@ -180,7 +177,7 @@ class StorageFileSystem
      *  @throws CannotWriteToFileException if any other write error
      *  @return true if written, false if error
      */
-    public static writeChunk(File $dbfile, $chunk, $offset)
+    public function writeChunk(File $dbfile, $chunk, $offset)
     {
         // if file doesn't exist: creates it
         $path = $this->uploadfolder.$dbfile->name;
@@ -234,7 +231,7 @@ class StorageFileSystem
         $path = $this->uploadfolder.$dbfile->name;
         try {
             if(!file_exists($path))
-                throws new StorageFileSystemNotFoundException();
+                throw new StorageFileSystemNotFoundException();
             return unlink($path);
         } catch (StorageFileSystemNotFoundException $e) {
 
@@ -256,6 +253,25 @@ class StorageFileSystem
         $availablebytes = disk_free_space($udir);
 
         $availablembytes = $availablebytes / 1024 / 1024;
+
         return $availablembytes;
     }
+
+
+    /**
+     *  Get hash
+     *
+     *  @param File $dbfile with file info
+     *  @return string hash code; false if hash calculation not supported or error
+     */
+    public function getHash(File $dbfile)
+    {
+        if (!$this->calc_hash_chunks)
+            return false;
+        
+        $sha1 = sha1_file($this->uploadfolder.$dbfile->name);
+
+        return $sha1;
+    }
 }
+
