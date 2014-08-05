@@ -86,7 +86,10 @@ class Autoloader {
                 if(!$path || substr($path, -1) == '/') $file .= $class;
                 $file .= '.class.php';
                 
-                if(!file_exists($file) && !Config::get('testing')) throw new CoreFileNotFoundException($file);
+                if(!file_exists($file)) {
+                    if(Config::get('testing')) return;
+                    throw new CoreFileNotFoundException($file);
+                }
                 
                 require_once $file;
                 
