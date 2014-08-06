@@ -117,7 +117,7 @@ class DBI {
         try {
             return call_user_func_array(array(self::$instance, $name), $args);
         } catch(Exception $e) {
-            throw new DBIUsageException($e->getMessage());
+            throw new DBIUsageException($e->getMessage(), array('name' => $name, 'args' => $args));
         }
     }
 }
