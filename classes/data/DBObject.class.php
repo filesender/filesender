@@ -93,16 +93,20 @@ class DBObject {
      * 
      * @param string $class class name
      * @param mixed $id unique identifier
+     * 
+     * @return bool tells if instance/class was registered
      */
     public static function purgeCache($class = null, $id = null) {
         if($class) {
-            if(!array_key_exists($class, self::$objectCache)) return;
+            if(!array_key_exists($class, self::$objectCache)) return false;
             
             if($id) {
-                if(!array_key_exists($id, self::$objectCache[$class])) return;
+                if(!array_key_exists($id, self::$objectCache[$class])) return false;
                 unset(self::$objectCache[$class][$id]);
             }else self::$objectCache[$class] = array();
         }else self::$objectCache = array();
+        
+        return true;
     }
     
     /**
