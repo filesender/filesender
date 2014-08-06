@@ -75,30 +75,40 @@ class Logger {
             if(!array_key_exists('type', $facility))
                 throw new ConfigMissingParameterException('log_facilities['.$index.'][type]');
             
-            if($facility['type'] == 'file') {
-                if(!array_key_exists('path', $facility))
-                    throw new ConfigMissingParameterException('log_facilities['.$index.'][path]');
+            switch($facility['type']) {
+                case 'file' :
+                    if(!array_key_exists('path', $facility))
+                        throw new ConfigMissingParameterException('log_facilities['.$index.'][path]');
+                    
+                    if(array_key_exists('rotate', $facility) && !in_array($facility['rotate'], array('hourly', 'daily', 'weekly', 'monthly', 'yearly')))
+                        throw new ConfigBadParameterException('log_facilities['.$index.'][rotate]');
+                    break;
                 
-                if(array_key_exists('rotate', $facility) && !in_array($facility['rotate'], array('hourly', 'daily', 'weekly', 'monthly', 'yearly')))
-                    throw new ConfigBadParameterException('log_facilities['.$index.'][rotate]');
-            }
-            
-            if($facility['type'] == 'syslog') {
+                case 'syslog' :
+                    break;
                 
-            }
-            
-            if(is_callable($facility['type'])) {
-                $facility['callback'] = $facility['type'];
-                $facility['type'] = 'callable';
+                case 'error_log' :
+                    break;
+                
+                case 'callable' :
+                    if(!array_key_exists('callback', $facility))
+                        throw new ConfigMissingParameterException('log_facilities['.$index.'][callback]');
+                    
+                    if(!is_callable($facility['callback']))
+                        throw new ConfigBadParameterException('log_facilities['.$index.'][callback]');
+                    break;
+                
+                default :
+                    throw new ConfigBadParameterException('log_facilities['.$index.'][typr]');
             }
             
             self::$facilities[] = $facility;
         }
         
-        if(count(self::$facilities) < 2) // No other than failsafe
+        if(count($facilities) && count(self::$facilities) < 2) // No other than failsafe
             throw new ConfigBadParameterException('log_facilities');
         
-        array_shift(self::$facilities); // Remove failsafe
+        if(count(self::$facilities) >= 2) array_shift(self::$facilities); // Remove failsafe
     }
     
     /**
