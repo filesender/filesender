@@ -63,15 +63,15 @@ class Logger {
     private static function setup() {
         if(!is_null(self::$facilities)) return;
         
-        self::$facilities = array();
+        self::$facilities = array(array('type' => 'error_log')); // Failsafe
         
         $facilities = Config::get('log_facilities');
-        if(!$facilities) $facilities = array(array('type' => 'error_log'));
-        
+        if(!$facilities) $facilities = array();
         if(!is_array($facilities)) $facilities = array($facilities);
-        if(!is_array($facilities[0])) $facilities = array($facilities);
         
         foreach($facilities as $index => $facility) {
+            if(!is_array($facility)) $facility = array('type' => $facility);
+            
             if(!array_key_exists('type', $facility))
                 throw new ConfigMissingParameterException('log_facilities['.$index.'][type]');
             
@@ -87,13 +87,18 @@ class Logger {
                 
             }
             
+            if(is_callable($facility['type'])) {
+                $facility['callback'] = $facility['type'];
+                $facility['type'] = 'callable';
+            }
+            
             self::$facilities[] = $facility;
         }
         
-        if(!count(self::$facilities)) {
-            self::$facilities[] = array('type' => 'error_log');
+        if(count(self::$facilities) < 2) // No other than failsafe
             throw new ConfigBadParameterException('log_facilities');
-        }
+        
+        array_shift(self::$facilities); // Remove failsafe
     }
     
     /**
@@ -166,5 +171,14 @@ class Logger {
      */
     private static function log_syslog($facility, $message) {
         
+    }
+    
+    /**
+     * Log message to callback
+     * 
+     * @param string $message
+     */
+    private static function log_callable($facility, $message) {
+        $facility['callback']($message, self::$process);
     }
 }
