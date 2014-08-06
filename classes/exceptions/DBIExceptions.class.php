@@ -73,10 +73,11 @@ class DBIUsageException extends DetailedException {
      * 
      * @param string $message error message
      */
-    public function __construct($message) {
+    public function __construct($message, $details = null) {
         parent::__construct(
             'database_access_failure', // Message to give to the user
-            $message // Details to log
+            $message, // Message to log
+            $details // Details to log
         );
     }
 }
