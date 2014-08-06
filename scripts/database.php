@@ -35,13 +35,15 @@ define('FILESENDER_BASE', dirname(dirname(__FILE__)));
 require_once(FILESENDER_BASE.'/classes/autoload.php');
 require_once(FILESENDER_BASE.'/classes/_includes.php');
 
+Logger::setProcess('cli');
+
 /**
  * Create/upgrade Filesender's database
  */
 
 set_error_handler(function($no, $str, $file = '', $line = '') {
     if($no == '2048') return;
-    echo '['.$no.'] '.$str.' in '.$file.' at line '.$line."\n";
+    Logger::log('[error:'.$no.'] '.$str.' in '.$file.' at line '.$line);
 });
 
 // Get data classes
