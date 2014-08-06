@@ -73,6 +73,39 @@ class DBObject {
     }
     
     /**
+     * Check if object is cached
+     * 
+     * @param string $class class name
+     * @param mixed $id unique identifier
+     * 
+     * @return bool
+     */
+    public static function existsInCache($class, $id) {
+        return array_key_exists($class, self::$objectCache) && array_key_exists($id, self::$objectCache[$class]);
+    }
+    
+    /**
+     * Remove instance or whole class from cache or wipe cache out
+     * 
+     * If $class and $id are given only instance is removed
+     * If only $class is given all instances of the class are removed
+     * If none of $class and $id are given all instances of all classes are removed
+     * 
+     * @param string $class class name
+     * @param mixed $id unique identifier
+     */
+    public static function purgeCache($class = null, $id = null) {
+        if($class) {
+            if(!array_key_exists($class, self::$objectCache)) return;
+            
+            if($id) {
+                if(!array_key_exists($id, self::$objectCache[$class])) return;
+                unset(self::$objectCache[$class][$id]);
+            }else self::$objectCache[$class] = array();
+        }else self::$objectCache = array();
+    }
+    
+    /**
      * Cached getter relying on id
      * 
      * Only creates the object if it was not cached before, calls constructor with id otherwise
