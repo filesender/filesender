@@ -40,6 +40,7 @@ class Autoloader {
      * Class name to path mappers
      */
     private static $mappers = array(
+        'Logger' => 'utils/',
         'Config' => 'utils/',
         'DBI' => 'utils/',
         'Utilities' => 'utils/',

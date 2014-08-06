@@ -48,4 +48,6 @@ require_once('../classes/_includes.php');
 
 date_default_timezone_set(Config::get('Default_TimeZone'));
 
+Logger::setProcess('rest');
+
 RestServer::process();
