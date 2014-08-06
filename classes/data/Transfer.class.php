@@ -179,7 +179,7 @@ class Transfer extends DBObject {
             $this->updateRecord($this->toDBData(), 'id');
         }else{
             $this->insertRecord($this->toDBData());
-            $this->id = DBI::lastInsertId();
+            $this->id = (int)DBI::lastInsertId();
         }
     }
     
