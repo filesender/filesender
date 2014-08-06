@@ -181,6 +181,15 @@ class DBObject {
             
             // Basic types transformations/casting
             switch(static::$dataMap[$field_name]['type']) {
+                case 'int':
+                case 'uint':
+                    $value = (int)$value;
+                    break;
+                
+                case 'float':
+                    $value = (float)$value;
+                    break;
+                
                 case 'datetime':
                 case 'date':
                     $value = strtotime($value); // UNIX timestamp
@@ -340,7 +349,7 @@ class DBObject {
         foreach($key_names as $key_name) $where_parts[] = $key_name.' = :'.$key_name;
         if($where) $where_parts[] = $where;
         
-        $s = DBI::prepare('UPDATE '.$table.' SET '.implode(', ', $placeholders).(count($where_parts) ? ' ('.implode(') AND (', $where_parts).')' : ''));
+        $s = DBI::prepare('UPDATE '.$table.' SET '.implode(', ', $placeholders).(count($where_parts) ? ' WHERE ('.implode(') AND (', $where_parts).')' : ''));
         $s->execute($values);
     }
 }
