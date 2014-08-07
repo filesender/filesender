@@ -1,0 +1,10 @@
+<phpunit 
+    bootstrap="bootstrap.php">
+
+    <testsuites>
+        <testsuite name="FilesenderAll">
+            <directory>../classes/storage/t</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>
+    
