@@ -32,17 +32,19 @@ if (!defined('FILESENDER_BASE')) die('Missing environment');
 
 
 /**
- *  Represents an abstraction layer between the filedata in the database and
- *  the actual file storage implementation.  
- *
- *  @property StorageFileSystem $file
- *  @property array $filequeue: an array of DB file records w/ needed data
+ *  Represents an abstraction layer to access file data in configured storage 
  */
-class Storage
-{
-    private static $file = null;
-    //private static $filequeue = null;        //an array of files to be uploaded
-
+class Storage {
+    /**
+     * Cache if delegation class was loaded.
+     */
+    private static $class = null;
+    
+    /**
+     * Stream reading offsets
+     */
+    private static $reading_offsets = array();
+    
     /**
      *  Gets the configs and sets other needed properties
      *
@@ -50,111 +52,116 @@ class Storage
      *  @return false if a config directive is not set in config.php
      *  @return true when everything is set properly and function exits successfully
      */
-    private static function load()
-    {   
-        if (is_null(self::$file)) {
-
-            //Default upload folder should exist in config. If not:
-            if (is_null(Config::get('filestorage_filesystem_file_location'))) {
-                throw new ConfigParamNotSet(
-                    'filestorage_filesystem_file_location',
-                    'fatal'
-                );
-
-                return false;
-            }
-            Config::get('filestorage_filesystem_file_location');
-
-            //Default temp folder should exist in config. If not:
-            if (is_null(Config::get('filestorage_filesystem_temp_location'))) {
-                throw new ConfigParamNotSet(
-                    'filestorage_filesystem_temp_location', 
-                    'fatal'
-                );
-
-                return false;
-            }
-            Config::get('filestorage_filesystem_temp_location');
-
-            // If no default chunk size in config:
-            if (is_null(Config::get('upload_chunk_size'))) {
-                throw new ConfigParamNotSet('upload_chunk_size', 'warn');
-
-                return false;
-            }
-
-            $storage = Config::get('filestorage_type');
-
-            switch ($storage) {
-                case 'filesystem': self::$file = StorageFileSystem::getInstance(); 
-                break;
-
-                // ... continue adding storage types here
-            
-                //Defaults to local file system, with all chunks on same disk
-                case null:  // no break; here
-                default: self::$file = StorageFileSystem::getInstance();
-                break;
-            }
-
-            return true;
-        }
+    private static function setup() {   
+        if(!is_null(self::$class)) return;
+        
+        if(!Config::get('upload_chunk_size'))
+            throw new ConfigMissingParameterException('upload_chunk_size');
+        
+        if(!Config::get('download_chunk_size'))
+            throw new ConfigMissingParameterException('download_chunk_size');
+        
+        $type = Config::get('storage_type');
+        if(!$type)
+            throw new ConfigMissingParameterException('storage_type');
+        
+        $class = 'Storage'.ucfirst($type);
+        
+        if(!class_exists($class))
+            throw ConfigBadParameterException('storage_type');
+        
+        self::$class = $class;
     }
     
+    /**
+     * Delegates free space check
+     * 
+     * @param File $file
+     * 
+     * @return mixed int (bytes) or null if it doesn't make sense (virtually infinite space like cloud storage ?)
+     */
+    public static function getFreeSpace(File $file) {
+        self::setup();
+        
+        call_user_func(self::$class.'::getFreeSpace', $file);
+    }
     
     /**
-     *  Writes a chunk at offset
-     *
-     *  @param File $dbfile: a File object
-     *  @param mixed $chunk: chunk data or null (if $data == null)
-     *  @param int $offset: the chunk offset in the file
-     *  @return boolean true (if written successfully); false otherwise
+     *  Delegates chunk read
+     * 
+     * @param File $file
+     * @param uint $offset offset in bytes
+     * 
+     * @return mixed chunk data encoded as string or null if no chunk remaining
      */
-    public static function writeChunk(File $dbfile, $chunk, $offset = null)
-    {
-        //loads prelims
-        if (self::load()) {
-            return self::$file->writeChunk($dbfile, $chunk, $offset);
+    public static function readChunk(File $file, $offset = null) {
+        self::setup();
+        
+        if(is_null($offset)) { // Stream reading next chunk
+            if(array_key_exists($file->id, self::$reading_offsets)) { // Did we already start to read this file ?
+                $offset = self::$reading_offsets[$file->id];
+            }else $offset = 0;
         }
+        
+        $data = call_user_func(self::$class.'::readChunk', $file, $offset);
+        
+        self::$reading_offsets[$file->id] = $offset + (int)Config::get('download_chunk_size');
+        
+        return $data;
     }
-
-
+    
     /**
-     *  Reads a chunk at offset
-     *
-     *  @param File $dbfile: a File object with info about the file
-     *  @param int $offset: the chunk offset in the file
-     *  @return mixed $chunk: chunk data or null if no more data available
+     * Delegates chunk write
+     * 
+     * @param File $file
+     * @param string $data the chunk data
+     * @param uint $offset offset in bytes
+     * 
+     * @return array with offset and written amount of bytes
+     * 
+     * @throws StorageChunkTooLongException
      */
-    public static function readChunk(File $dbfile, $offset = null)
-    {
-        if (self::load())
-            return self::$file->readChunk($dbfile, $offset);
+    public static function writeChunk(File $file, $data, $offset = null) {
+        self::setup();
+        
+        if(strlen($data) > (int)Config::get('upload_chunk_size')) // We should not get more than upload_chunk_size bytes of data
+            throw new StorageChunkTooLargeException(strlen($data), (int)Config::get('upload_chunk_size'));
+        
+        return call_user_func(self::$class.'::writeChunk', $file, $data, $offset);
     }
-
-
+    
     /**
-     *  Deletes a file from storage
+     * Delegates file deletion
      *
-     *  @param File $dbfile: a File object with info about file
-     *  @return true on success, otherwise false
+     * @param File $file
      */
-    public static function delete(File $dbfile)
-    {
-        if (self::load())
-            return self::$file->delete($dbfile);
+    public static function delete(File $file) {
+        self::setup();
+        
+        call_user_func(self::$class.'::delete', $file);
     }
-
-
+    
     /**
-     *  Calculates hash (sha1 algorithm) of given file and returns it
-     *
-     *  @param File $dbfile: The File object with file info
-     *  @return string of characters
+     * Delegates digest support check
+     * 
+     * @return bool
      */
-    public static function getHash(File $dbfile)
-    {
-        if (self::load())
-            return self::$file->getHash($dbfile);
+    public static function supportsDigest() {
+        self::setup();
+        
+        call_user_func(self::$class.'::supportsDigest');
+    }
+    
+    /**
+     * Delegates digest computation
+     * 
+     * @param File $file
+     * 
+     * @return string hex digest
+     */
+    public static function getDigest(File $file) {
+        self::setup();
+        
+        call_user_func(self::$class.'::getDigest', $file);
     }
 }
