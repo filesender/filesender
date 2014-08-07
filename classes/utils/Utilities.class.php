@@ -41,9 +41,32 @@ class Utilities
 {
     /**
      * Generate a unique ID to be used as token
+     * 
+     * @param callable $unicity_checker callback used to check for uid unicity (takes uid as sole argument, returns bool telling if uid is unique), null if check not needed
+     * @param int $max_tries maximum number of tries before giving up and throwing
+     * 
+     * @return string uid
+     * 
+     * @throws UtilitiesUidGeneratorBadUnicityCheckerException
+     * @throws UtilitiesUidGeneratorTriedTooMuchException
      */
-    public static function generateUID()
-    {
+    public static function generateUID($unicity_checker = null, $max_tries = 1000) {
+        if($unicity_checker) {
+            if(!is_callable($unicity_checker))
+                throw new UtilitiesUidGeneratorBadUnicityCheckerException();
+            
+            $tries = 0;
+            do {
+                $uid = self::generateUID();
+                $tries++;
+            } while(!call_user_func($unicity_checker, $uid) && ($tries <= $max_tries));
+            
+            if($tries > $max_tries)
+                throw new UtilitiesUidGeneratorTriedTooMuchException($tries);
+            
+            return $uid;
+        }
+        
         return sprintf(
             '%08x-%04x-%04x-%02x%02x-%012x',
             mt_rand(),

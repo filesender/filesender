@@ -146,7 +146,14 @@ class Recipient extends DBObject {
         $recipient->email = $email;
         
         $recipient->created = time();
-        $recipient->token = Utilities::generateUID();
+        
+        // Generate token until it is indeed unique
+        $recipient->token = Utilities::generateUID(function($token) {
+            $statement = DBI::prepare('SELECT * FROM '.Recipient::getDBTable().' WHERE token = :token');
+            $statement->execute(array(':token' => $token));
+            $data = $statement->fetch();
+            return !$data;
+        });
         
         return $recipient;
     }
