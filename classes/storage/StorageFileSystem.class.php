@@ -70,14 +70,12 @@ class StorageFileSystem
      */
     private function __construct()
     {
-        $this->tempfolder = Config::get('filestorage_filesystem_file_location');
-        $this->uploadfolder = Config::get('filestorage_filesystem_temp_location');
+        $this->uploadfolder = Config::get('filestorage_filesystem_file_location');
+        $this->tempfolder = Config::get('filestorage_filesystem_temp_location');
 
-        // If chunk size not defined in config
-        if (is_null(Config::get('upload_chunk_size')))
-            $this->chunksize = 2*1024*1024;    // defaults to 2 mbytes
-        else
-            $this->chunksize = Config::get('upload_chunk_size');
+        // If chunk size not defined in config then default to 2mb
+        if (is_null($this->chunksize = Config::get('upload_chunk_size')))
+            $this->chunksize = 2*1024*1024;
 
         $this->calculate_hash = Config::get('filestorage_filesystem_calc_hash');
     }
@@ -92,7 +90,7 @@ class StorageFileSystem
     {
         if(in_array($pname, array('uploadfolder', 'tempfolder', 'chunksize',
             'calculate_hash' )))
-            return $this->pname;
+            return $this->$pname;
         //If property $pname does not exist
         throw new PropertyAccessException($this, $pname);
         
@@ -262,6 +260,14 @@ class StorageFileSystem
         return $availablembytes;
     }
 
+    /**
+     *  TODO a method to find how much space the file actually takes on disk
+     *  (as opposed to what the database record says)
+     */
+    public function getUsedSpace()
+    {
+
+    }
 
     /**
      *  Get hash
@@ -273,10 +279,9 @@ class StorageFileSystem
     {
         if (!$this->calculate_hash)
             return false;
-        
-        $sha1 = sha1_file($this->uploadfolder.$dbfile->name);
-
-        return $sha1;
+       
+        // Just a skeleton to try out approaches, so always return false
+        return false;
     }
 }
 
