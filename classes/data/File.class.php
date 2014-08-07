@@ -83,6 +83,11 @@ class File extends DBObject
     protected $sha1 = null;
    
     /**
+     * Related objects cache
+     */
+    private $transfer = null;
+    
+    /**
      * Constructor
      * 
      * @param integer $id identifier of file to load from database (null if loading not wanted)
@@ -158,20 +163,20 @@ class File extends DBObject
      * Store a chunk at offset
      * 
      * @param mixed $chunk the chunk data (binary)
-     * @param int $offset the chunk offset in the file
+     * @param int $offset the chunk offset in the file, if null appends at end of file
      */
-    public function writeChunk($chunk, $offset) {
-        Storage::writeChunk($this, $chunk, $offset);
+    public function writeChunk($chunk, $offset = null) {
+        return Storage::writeChunk($this, $chunk, $offset);
     }
     
     /**
      * Read a chunk at offset
      * 
-     * @param int $offset the chunk offset in the file
+     * @param int $offset the chunk offset in the file, if null reads next chunk (Storage keeps track of it)
      * 
      * @return mixed chunk data or null if no more data is available
      */
-    public function readChunk($offset) {
+    public function readChunk($offset = null) {
         return Storage::readChunk($this, $offset);
     }
     
@@ -188,6 +193,11 @@ class File extends DBObject
         if(in_array($property, array(
             'id', 'transfer_id', 'uid', 'name', 'size', 'sha1'
         ))) return $this->$property;
+        
+        if($property == 'transfer') {
+            if(is_null($this->transfer)) $this->transfer = Transfer::fromId($this->transfer_id);
+            return $this->transfer;
+        }
         
         throw new PropertyAccessException($this, $property);
     }
