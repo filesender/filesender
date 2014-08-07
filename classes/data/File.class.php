@@ -117,7 +117,14 @@ class File extends DBObject
         $file = new self();
         
         $file->transfer_id = $transfer->id;
-        $file->uid = Utilities::generateUID();
+        
+        // Generate uid until it is indeed unique
+        $file->uid = Utilities::generateUID(function($uid) {
+            $statement = DBI::prepare('SELECT * FROM '.File::getDBTable().' WHERE uid = :uid');
+            $statement->execute(array(':uid' => $uid));
+            $data = $statement->fetch();
+            return !$data;
+        });
         
         return $file;
     }

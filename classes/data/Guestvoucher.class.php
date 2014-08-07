@@ -132,7 +132,14 @@ class Guestvoucher extends DBObject {
         $voucher->__set('email', $email); // Throws
         
         $voucher->created = time();
-        $voucher->token = Utilities::generateUID();
+        
+        // Generate token until it is indeed unique
+        $voucher->token = Utilities::generateUID(function($token) {
+            $statement = DBI::prepare('SELECT * FROM '.Guestvoucher::getDBTable().' WHERE token = :token');
+            $statement->execute(array(':token' => $token));
+            $data = $statement->fetch();
+            return !$data;
+        });
         
         return $voucher;
     }
