@@ -40,17 +40,17 @@ class Autoloader {
      * Class name to path mappers
      */
     private static $mappers = array(
+        'PropertyAccessException' => 'exceptions/DBObjectExceptions',
+        '*Exception' => 'exceptions/@package(Exception)',
+        
         'Logger' => 'utils/',
         'Config' => 'utils/',
         'DBI' => 'utils/',
         'Utilities' => 'utils/',
         'Database*' => 'utils/',
-
+        
         'Storage' => 'storage/',
         'Storage*' => 'storage/',
-        
-        'PropertyAccessException' => 'exceptions/DBObjectExceptions',
-        '*Exception' => 'exceptions/@package(Exception)',
         
         'DBObject' => 'data/',
         'Transfer' => 'data/',
