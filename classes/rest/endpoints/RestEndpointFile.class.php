@@ -49,6 +49,7 @@ class RestEndpointFile extends RestEndpoint {
         return array(
             'id' => $file->id,
             'transfer_id' => $file->transfer_id,
+            'uid' => $file->uid,
             'name' => $file->name,
             'size' => $file->size,
             'sha1' => $file->sha1
@@ -117,14 +118,17 @@ class RestEndpointFile extends RestEndpoint {
         
         if($mode == 'chunk') {
             
-            $file->writeChunk($data->chunk); // No offset => append at end of file
+            $write_info = $file->writeChunk($data); // No offset => append at end of file
             
-            if($data->done) { // Client tells it was the last chunk
+            // If client tells it was the last chunk
                 // Check hash
                 
                 // Check if all files from transfer are done, send notifications if so
                 
-            }
+            return array(
+                'path' => '/file/'.$file->id.'/chunk/'.$write_info['offset'],
+                'data' => $write_info
+            );
         }else if($mode == 'whole') {
             // Process uploaded file, split into chunks and push to storage
             
@@ -171,19 +175,14 @@ class RestEndpointFile extends RestEndpoint {
         
         $data = $this->request->input;
         
-        $file->writeChunk($data->chunk, $offset);
+        $write_info = $file->writeChunk($data, $offset);
         
-        if($data->done) { // Client tells it was the last chunk
+        // Client tells it was the last chunk
             // Check hash
             
             // Check if all files from transfer are done, send notifications if so
-            
-        }
         
-        return array(
-            'path' => '/file/'.$file->id,
-            'data' => RestEndpointFile::cast($file)
-        );
+        return $write_info;
     }
     
     /**

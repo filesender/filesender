@@ -38,6 +38,8 @@ if (!defined('FILESENDER_BASE'))
  * REST request
  */
 class RestRequest {
+    public $properties = array();
+    
     private $input = null;
     
     public $count = null;
@@ -56,6 +58,8 @@ class RestRequest {
     public function __set($key, $value) {
         if($key == 'input') {
             $this->input = new RestInput($value);
+        }else if($key == 'rawinput') {
+            $this->input = $value;
         }else throw new PropertyAccessException($this, $key);
     }
 }
