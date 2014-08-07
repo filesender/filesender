@@ -192,11 +192,11 @@ class DBObject {
                 
                 case 'datetime':
                 case 'date':
-                    $value = strtotime($value); // UNIX timestamp
+                    $value = (int)strtotime($value); // UNIX timestamp
                     break;
                 
                 case 'time':
-                    $value = strtotime($value) % (24 * 3600); // Offset since 0h00
+                    $value = (int)(strtotime($value) % (24 * 3600)); // Offset since 0h00
                     break;
                 
                 case 'bool':
@@ -271,16 +271,16 @@ class DBObject {
                 
                 switch(static::$dataMap[$field_name]['type']) { // Basic types transformations/casting
                     case 'datetime':
-                        $value = date('Y-m-d H:i:s', $value); // UNIX timestamp
+                        if(!is_null($value)) $value = date('Y-m-d H:i:s', $value); // UNIX timestamp
                         break;
                     
                     case 'date':
-                        $value = date('Y-m-d', $value); // UNIX timestamp
+                        if(!is_null($value)) $value = date('Y-m-d', $value); // UNIX timestamp
                         //$value = new Date($value); // Turn into date object which has getters for formatted version
                         break;
                     
                     case 'time':
-                        $value = date('H:i:s', $value); // Offset since 0h00
+                        if(!is_null($value)) $value = date('H:i:s', $value); // Offset since 0h00
                         break;
                     
                     case 'bool':
