@@ -72,10 +72,21 @@ class RestServer {
             $type = array_key_exists('CONTENT_TYPE', $_SERVER) ? $_SERVER['CONTENT_TYPE'] : null;
             if(!$type && array_key_exists('HTTP_CONTENT_TYPE', $_SERVER)) $type = $_SERVER['HTTP_CONTENT_TYPE'];
             
+            $type_parts = array_map('trim', explode(';', $type));
+            $type = array_shift($type_parts);
+            $request->properties['type'] = $type;
+            
+            $type_properties = array();
+            foreach($type_parts as $part) {
+                $part = array_map('trim', explode('=', $part));
+                if(count($part) == 2) $request->properties[$part[0]] = $part[1];
+            }
+            
             // Parse body
             switch($type) {
                 case 'text/plain' :
-                    $request->input = $input;
+                case 'application/octet-stream' :
+                    $request->rawinput = $input;
                     break;
                 
                 case 'application/x-www-form-urlencoded' :

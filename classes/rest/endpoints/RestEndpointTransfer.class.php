@@ -169,7 +169,7 @@ class RestEndpointTransfer extends RestEndpoint {
             
             foreach($data->files as $filedata) {
                 $file = $transfer->addFile($filedata->name, $filedata->size);
-                if($filedata->sha1) $file->sha1 = $filedata->sha1;
+                //if($filedata->sha1) $file->sha1 = $filedata->sha1;
             }
             
             foreach($data->recipients as $email) $transfer->addRecipient($email);
