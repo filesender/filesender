@@ -80,6 +80,12 @@ class Transfer extends DBObject {
     );
     
     /**
+     * Set selectors
+     */
+    const AVAILABLE = 'status = "available"';
+    const EXPIRED = 'expires < DATE(NOW())';
+    
+    /**
      * Properties
      */
     protected $id = null;
@@ -114,22 +120,6 @@ class Transfer extends DBObject {
         }
         
         if($data) $this->fillFromDBData($data);
-    }
-    
-    /***
-     * Get all available transfers
-     * 
-     * @return array of Transfer
-     */
-    public static function allAvailable() {
-        $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE status="available" ORDER BY created DESC');
-        $statement->execute();
-        
-        $transfers = array();
-        foreach($statement->fetchAll() as $data) $transfers[$data['id']] = self::fromData($data['id'], $data); // Don't query twice, use loaded data
-        return $transfers;
-        
-        return $transfers;
     }
     
     /***
@@ -213,21 +203,6 @@ class Transfer extends DBObject {
      */
     public function isOwner($user) {
         return $this->owner->is($user);
-    }
-    
-    /**
-     * Get expired transfers
-     * 
-     * @param integer $daysvalid transfer age limit (optionnal)
-     * 
-     * @return array transfer list
-     */
-    public static function getExpired($daysvalid = null) {
-        $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE expires < NOW()');
-        $statement->execute();
-        $transfers = array();
-        foreach($statement->fetchAll() as $data) $transfers[$data['id']] = self::fromData($data['id'], $data); // Don't query twice, use loaded data
-        return $transfers;
     }
     
     /**
