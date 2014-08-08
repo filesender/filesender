@@ -112,7 +112,7 @@ class RestEndpointFile extends RestEndpoint {
         $file = File::fromId($id);
         
         if(!$file->transfer->isOwner($user) && !Auth::isAdmin())
-            throw new RestOwnershipRequiredException($user->id, 'transfer = '.$file->id);
+            throw new RestOwnershipRequiredException($user->id, 'file = '.$file->id);
         
         $data = $this->request->input;
         
@@ -167,11 +167,13 @@ class RestEndpointFile extends RestEndpoint {
         if(!$id) throw new RestMissingParameterException('file_id');
         if(!is_numeric($id)) throw new RestBadParameterException('transfer_id');
         if($mode != 'chunk') throw new RestBadParameterException('mode');
+        if($offset && !is_numeric($offset)) throw new RestBadParameterException('offset');
+        if(!$offset) $offset = 0;
         
         $file = File::fromId($id);
         
         if(!$file->transfer->isOwner($user) && !Auth::isAdmin())
-            throw new RestOwnershipRequiredException($user->id, 'transfer = '.$file->id);
+            throw new RestOwnershipRequiredException($user->id, 'file = '.$file->id);
         
         $data = $this->request->input;
         
