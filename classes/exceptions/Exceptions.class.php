@@ -70,7 +70,7 @@ class LoggingException extends Exception {
                     $lines = array($lines);
                 
                 foreach ($lines as $line) 
-                    Logger::log(
+                    Logger::error(
                         '['.get_class($this).' '.
                         $category.' uid:'.$this->uid.'] '.$line
                     ); //insert get_class($this) before $category (concatenate them)

@@ -38,6 +38,20 @@ if(!defined('FILESENDER_BASE')) die('Missing environment');
  */
 class Logger {
     /**
+     * Log levels
+     */
+    const ERROR = 'error';
+    const WARN  = 'warn';
+    const INFO  = 'info';
+    const DEBUG = 'debug';
+    private static $levels = array(
+        'error' => 0,
+        'warn' => 1,
+        'info' => 2,
+        'debug' => 3
+    );
+    
+    /**
      * Logging facilities
      */
     private static $facilities = null;
@@ -85,6 +99,18 @@ class Logger {
                     break;
                 
                 case 'syslog' :
+                    $i = false;
+                    if(array_key_exists('ident', $facility)) $i = $facility['ident'];
+                    
+                    $o = 0;
+                    if(array_key_exists('option', $facility)) $o = $facility['option'];
+                    
+                    $f = 0;
+                    if(array_key_exists('facility', $facility)) $f = $facility['facility'];
+                    
+                    if($i || $o || $f)
+                        if(!openlog($i, $o, $f))
+                            throw new ConfigBadParameterException('log_facilities['.$index.']');
                     break;
                 
                 case 'error_log' :
@@ -112,19 +138,97 @@ class Logger {
     }
     
     /**
+     * Log error
+     * 
+     * @param string $message
+     */
+    public static function error($message) {
+        self::log(self::ERROR, $message);
+    }
+    
+    /**
+     * Log warn
+     * 
+     * @param string $message
+     */
+    public static function warn($message) {
+        self::log(self::WARN, $message);
+    }
+    
+    /**
+     * Log info
+     * 
+     * @param string $message
+     */
+    public static function info($message) {
+        self::log(self::INFO, $message);
+    }
+    
+    /**
+     * Log debug
+     * 
+     * @param string $message
+     */
+    public static function debug($message) {
+        self::log(self::DEBUG, $message);
+    }
+    
+    /**
      * Log message
      * 
      * @param string $message
      */
-    public static function log($message) {
+    public static function log($level, $message) {
+        if(!is_scalar($message)) {
+            foreach(explode("\n", print_r($message, true)) as $line)
+                self::log($level, $line);
+            
+            return;
+        }
+        
         self::setup();
         
-        $message = '['.self::$process.'] '.$message;
+        if(!array_key_exists($level, self::$levels))
+            $level = 'error';
+        
+        $message = '['.self::$process.':'.$level.'] '.$message;
         
         foreach(self::$facilities as $facility) {
+            if(self::dontLog($level, $facility)) continue;
+            
             $method = get_called_class().'::log_'.$facility['type'];
-            call_user_func($method, $facility, $message);
+            call_user_func($method, $facility, $level, $message);
         }
+    }
+    
+    /**
+     * Check if level is high enough
+     * 
+     * @param string $level
+     * @param array $facility
+     */
+    private static function dontLog($level, $facility = null) {
+        $min_level = 10;
+        
+        if(!is_null($l = Config::get('log_level'))) {
+            if(is_numeric($l)) {
+                $min_level = $l;
+            }else if(array_key_exists($l, self::$levels)) {
+                $min_level = self::$levels[$l];
+            }
+        }
+        
+        if($facility && is_array($facility) && array_key_exists('level', $facility)) {
+            $l = $facility['level'];
+            
+            if(is_numeric($l)) {
+                $min_level = $l;
+            }else if(array_key_exists($l, self::$levels)) {
+                $min_level = self::$levels[$min_level];
+            }
+        }
+        
+        return $level <= $min_level;
     }
     
     /**
@@ -132,7 +236,7 @@ class Logger {
      * 
      * @param string $message
      */
-    private static function log_error_log($facility, $message) {
+    private static function log_error_log($facility, $level, $message) {
         error_log($message);
     }
     
@@ -141,7 +245,7 @@ class Logger {
      * 
      * @param string $message
      */
-    private static function log_file($facility, $message) {
+    private static function log_file($facility, $level, $message) {
         $file = $facility['path'];
         $ext = '';
         
@@ -179,8 +283,9 @@ class Logger {
      * 
      * @param string $message
      */
-    private static function log_syslog($facility, $message) {
-        
+    private static function log_syslog($facility, $level, $message) {
+        $priorities = array(LOG_ERR, LOG_WARNING, LOG_INFO, LOG_DEBUG);
+        syslog($priorities[self::$levels[$level]], $message);
     }
     
     /**
@@ -188,7 +293,7 @@ class Logger {
      * 
      * @param string $message
      */
-    private static function log_callable($facility, $message) {
+    private static function log_callable($facility, $level, $message) {
         $facility['callback']($message, self::$process);
     }
 }
