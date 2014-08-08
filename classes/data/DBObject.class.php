@@ -196,10 +196,11 @@ class DBObject {
      * 
      * @param string $criteria sql criteria
      * @param array $placeholders
+     * @param callable $run will be applied to all objects, return values will replace objects and result will be filtered to remove nulls
      * 
      * @return array of objects
      */
-    public static function all($criteria = null, $placeholders = array()){
+    public static function all($criteria = null, $placeholders = array(), $run = null){
         $query = 'SELECT * FROM '.static::getDBTable();
         
         if($criteria) {
@@ -232,6 +233,16 @@ class DBObject {
             $id = implode('-', $id);
             
             $objects[$id] = static::fromData($id, $r);
+        }
+        
+        if($run && is_callable($run)) {
+            $new_things = array();
+            foreach($objects as $id =< $o) {
+                $objects[$id] = $run($o);
+            }
+            $objects = array_filter($objects, function($o) {
+                return !is_null($o);
+            });
         }
         
         return $objects;
