@@ -101,34 +101,39 @@ class RestEndpointFile extends RestEndpoint {
      * @throws RestOwnershipRequiredException
      */
     public function post($id = null, $mode = null) {
-        if(!Auth::isAuthenticated()) throw new RestAuthenticationRequiredException();
-        
-        $user = Auth::user();
-        
         if(!$id) throw new RestMissingParameterException('file_id');
-        if(!is_numeric($id)) throw new RestBadParameterException('transfer_id');
+        if(!is_numeric($id)) throw new RestBadParameterException('file_id');
         if(!in_array($mode, array('chunk', 'whole'))) throw new RestBadParameterException('mode');
+        
+        $security = Config::get('chunk_upload_security');
+        if(Auth::isAuthenticated()) {
+            $security = 'auth';
+        }else if($security != 'key') {
+            throw new RestAuthenticationRequiredException();
+        }
         
         $file = File::fromId($id);
         
-        if(!$file->transfer->isOwner($user) && !Auth::isAdmin())
-            throw new RestOwnershipRequiredException($user->id, 'file = '.$file->id);
+        if($security == 'key') {
+            if(!array_key_exists('key', $_GET) || !$_GET['key'] || ($_GET['key'] != $file->uid))
+                throw new RestAuthenticationRequiredException();
+        }else{
+            $user = Auth::user();
+            
+            if(!$file->transfer->isOwner($user) && !Auth::isAdmin())
+                throw new RestOwnershipRequiredException($user->id, 'file = '.$file->id);
+        }
         
         $data = $this->request->input;
         
         if($mode == 'chunk') {
-            
             $write_info = $file->writeChunk($data); // No offset => append at end of file
             
-            // If client tells it was the last chunk
-                // Check hash
-                
-                // Check if all files from transfer are done, send notifications if so
-                
             return array(
                 'path' => '/file/'.$file->id.'/chunk/'.$write_info['offset'],
                 'data' => $write_info
             );
+            
         }else if($mode == 'whole') {
             // Process uploaded file, split into chunks and push to storage
             
@@ -160,31 +165,43 @@ class RestEndpointFile extends RestEndpoint {
      * @throws RestOwnershipRequiredException
      */
     public function put($id = null, $mode = null, $offset = null) {
-        if(!Auth::isAuthenticated()) throw new RestAuthenticationRequiredException();
-        
-        $user = Auth::user();
-        
         if(!$id) throw new RestMissingParameterException('file_id');
-        if(!is_numeric($id)) throw new RestBadParameterException('transfer_id');
-        if($mode != 'chunk') throw new RestBadParameterException('mode');
+        if(!is_numeric($id)) throw new RestBadParameterException('file_id');
+        if(!in_array($mode, array('chunk', 'complete'))) throw new RestBadParameterException('mode');
         if($offset && !is_numeric($offset)) throw new RestBadParameterException('offset');
         if(!$offset) $offset = 0;
         
+        $security = Config::get('chunk_upload_security');
+        if(Auth::isAuthenticated()) {
+            $security = 'auth';
+        }else if($security != 'key') {
+            throw new RestAuthenticationRequiredException();
+        }
+        
         $file = File::fromId($id);
         
-        if(!$file->transfer->isOwner($user) && !Auth::isAdmin())
-            throw new RestOwnershipRequiredException($user->id, 'file = '.$file->id);
-        
-        $data = $this->request->input;
-        
-        $write_info = $file->writeChunk($data, $offset);
-        
-        // Client tells it was the last chunk
-            // Check hash
+        if($security == 'key') {
+            if(!array_key_exists('key', $_GET) || !$_GET['key'] || ($_GET['key'] != $file->uid))
+                throw new RestAuthenticationRequiredException();
+        }else{
+            $user = Auth::user();
             
-            // Check if all files from transfer are done, send notifications if so
+            if(!$file->transfer->isOwner($user) && !Auth::isAdmin())
+                throw new RestOwnershipRequiredException($user->id, 'file = '.$file->id);
+        }
         
-        return $write_info;
+        if($mode == 'chunk') {
+            $data = $this->request->input;
+            
+            $write_info = $file->writeChunk($data, $offset);
+            
+            return $write_info;
+        
+        }else if($mode == 'complete') { // Client signals this was the last chunk
+            $data = $this->request->input;
+            
+            return true;
+        }
     }
     
     /**

@@ -5,7 +5,7 @@ if(!('filesender' in window)) window.filesender = {};
  */
 window.filesender.supports = {
     localStorage: false,
-    HTML5WebWorkers: false,
+    workers: false,
     digest: false,
 };
 
@@ -129,11 +129,13 @@ window.filesender.client = {
      * @param callable callback
      */
     postChunk: function(file, blob, callback) {
-        this.post('/file/' + file.id + '/chunk', blob, callback, {
-            args: {key: file.uid},
+        var opts = {
             contentType: 'application/octet-stream',
             rawdata: true
-        });
+        };
+        if(filesender.config.chunk_upload_security == 'key') opts.args = {key: file.uid};
+        
+        this.post('/file/' + file.id + '/chunk', blob, callback, opts);
     },
     
     /**
@@ -145,11 +147,41 @@ window.filesender.client = {
      * @param callable callback
      */
     putChunk: function(file, blob, offset, callback) {
-        this.put('/file/' + file.id + '/chunk/' + offset, blob, callback, {
-            args: {key: file.uid},
+        var opts = {
             contentType: 'application/octet-stream',
             rawdata: true
-        });
+        };
+        if(filesender.config.chunk_upload_security == 'key') opts.args = {key: file.uid};
+        
+        this.put('/file/' + file.id + '/chunk/' + offset, blob, callback, opts);
+    },
+    
+    /**
+     * Signal file completion (along with checking data)
+     * 
+     * @param object file
+     * @param object data check data
+     * @param callable callback
+     */
+    fileComplete: function(file, data, callback) {
+        var opts = {};
+        if(filesender.config.chunk_upload_security == 'key') opts.args = {key: file.uid};
+        
+        this.put('/file/' + file.id + '/chunk/complete', data, callback, opts);
+    },
+    
+    /**
+     * Signal transfer completion (along with checking data)
+     * 
+     * @param object transfer
+     * @param object data check data
+     * @param callable callback
+     */
+    transferComplete: function(transfer, data, callback) {
+        var opts = {};
+        if(filesender.config.chunk_upload_security == 'key') opts.args = {key: transfer.files[0].uid}; // TODO ?
+        
+        this.put('/transfer/' + transfer.id + '/complete', data, callback, opts);
     },
 };
 
@@ -312,7 +344,14 @@ window.filesender.transfer = function() {
             }
         }
         
-        if(this.onprogress) this.onprogress(file, complete);
+        if(complete) {
+            var transfer = this;
+            filesender.client.fileComplete(file, undefined, function(data) {
+                if(transfer.onprogress) transfer.onprogress(file, true);
+            });
+        }else if(this.onprogress) {
+            this.onprogress(file, complete);
+        }
     };
     
     /**
@@ -325,7 +364,10 @@ window.filesender.transfer = function() {
             console.log('Transfer ' + this.id + ' (' + this.size + ' bytes) complete, took ' + (time / 1000) + 's');
         }
         
-        if(this.oncomplete) this.oncomplete(time);
+        var transfer = this;
+        filesender.client.transferComplete(this, undefined, function(data) {
+            if(transfer.oncomplete) transfer.oncomplete(time);
+        });
     };
     
     /**
@@ -336,7 +378,11 @@ window.filesender.transfer = function() {
             console.log('Transfer ' + this.id + ' (' + this.size + ' bytes) failed');
         }
         
-        if(this.onerror) this.onerror(code, details);
+        if(this.onerror) {
+            this.onerror(code, details);
+        }else{
+            filesender.ui.error(code, details);
+        }
     };
     
     /**
@@ -381,15 +427,12 @@ window.filesender.transfer = function() {
             }
             
             // Start uploading chunks
-            if(filesender.config.terasender_enabled) {
+            if(filesender.config.terasender_enabled && filesender.supports.workers) {
                 filesender.terasender.start(transfer);
             }else{
                 // Chunk by chunk upload
                 transfer.uploadChunk();
             }
-            
-            //config.terasender_enabled
-            //supports.HTML5WebWorkers
         });
     };
     
@@ -409,7 +452,7 @@ window.filesender.transfer = function() {
         if(last) this.file_index++;
         
         var transfer = this;
-        filesender.client.postChunk(file, blob, function() {
+        filesender.client.postChunk(file, blob, last, function() {
             if(!last || transfer.file_index < transfer.files.length) {
                 if(last) { // File done
                     transfer.reportProgress(file, true);
@@ -449,6 +492,6 @@ window.filesender.checkPendingTransfer = function(callback) {
 
 window.filesender.supports.localStorage = typeof(localStorage) !== 'undefined';
 
-window.filesender.supports.HTML5WebWorkers = typeof(Worker) !== 'undefined';
+window.filesender.supports.workers = typeof(Worker) !== 'undefined';
 
 window.filesender.supports.digest = typeof(FileReader) !== 'undefined';

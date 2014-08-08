@@ -57,11 +57,14 @@ window.filesender.config = {
     
     default_daysvalid: <?php echo Config::get('default_daysvalid') ?>,
     
+    chunk_upload_security: '<?php echo Config::get('chunk_upload_security') ?>',
+    
     terasender_enabled: <?php echo Config::get('terasender_enabled') ? 'true' : 'false' ?>,
     terasender_advanced: <?php echo Config::get('terasender_advanced') ? 'true' : 'false' ?>,
     terasender_chunk_size: <?php echo Config::get('terasender_chunk_size') ?>,
     terasender_worker_count: <?php echo Config::get('terasender_worker_count') ?>,
+    terasender_start_mode: '<?php echo Config::get('terasender_start_mode') ?>',
     terasender_worker_file: 'js/terasender_worker.js', // Worker script file
-    terasender_upload_endpoint: '<?php echo Config::get('site_url') ?>rest.php/file/{file_id}/chunk/{offset}?key={key}',
+    terasender_upload_endpoint: '<?php echo Config::get('site_url') ?>rest.php/file/{file_id}/chunk/{offset}<?php (Config::get('chunk_upload_security') == 'key') ? '?key={key}' : '' ?>',
 
 };
