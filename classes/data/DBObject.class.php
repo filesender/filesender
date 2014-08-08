@@ -237,7 +237,7 @@ class DBObject {
         
         if($run && is_callable($run)) {
             $new_things = array();
-            foreach($objects as $id =< $o) {
+            foreach($objects as $id => $o) {
                 $objects[$id] = $run($o);
             }
             $objects = array_filter($objects, function($o) {
