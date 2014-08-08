@@ -82,8 +82,9 @@ class Transfer extends DBObject {
     /**
      * Set selectors
      */
-    const AVAILABLE = 'status = "available"';
-    const EXPIRED = 'expires < DATE(NOW())';
+    const AVAILABLE = 'status = "available" ORDER BY created DESC';
+    const EXPIRED = 'expires < DATE(NOW()) ORDER BY expires ASC';
+    const FROM_USER = 'user_id = :user_id AND status="available" ORDER BY created DESC';
     
     /**
      * Properties
@@ -132,14 +133,7 @@ class Transfer extends DBObject {
     public static function fromUser($user) {
         if($user instanceof User) $user = $user->id;
         
-        $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE user_id = :user AND status="available" ORDER BY created DESC');
-        $statement->execute(array(':user' => $user));
-        
-        $transfers = array();
-        foreach($statement->fetchAll() as $data) $transfers[$data['id']] = self::fromData($data['id'], $data); // Don't query twice, use loaded data
-        return $transfers;
-        
-        return $transfers;
+        return self::all(self::FROM_USER, array(':user_id' => $user));
     }
     
     /**
