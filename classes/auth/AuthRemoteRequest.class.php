@@ -52,7 +52,7 @@ class AuthRemoteRequest {
      * Get the body
      */
     public static function body() {
-        if(is_null(self::$body)) self::$body = trim(@file_get_contents('php://input'));
+        if(is_null(self::$body)) self::$body = @file_get_contents('php://input');
         
         return self::$body;
     }
