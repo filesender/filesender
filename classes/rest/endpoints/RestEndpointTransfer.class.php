@@ -182,6 +182,59 @@ class RestEndpointTransfer extends RestEndpoint {
     }
     
     /**
+     * Signal upload transfer complete
+     * 
+     * Call examples :
+     *  /transfer/17/complete : signal transfer with id 17 completion
+     * 
+     * @param int $id transfer id to get info about
+     * @param string $complete ("complete")
+     * 
+     * @return mixed
+     * 
+     * @throws RestAuthenticationRequiredException
+     * @throws RestOwnershipRequiredException
+     */
+    public function put($id = null, $complete = null) {
+        if(!$id) throw new RestMissingParameterException('transfer_id');
+        if(!is_numeric($id)) throw new RestBadParameterException('transfer_id');
+        if($complete != 'complete') throw new RestBadParameterException('complete');
+        
+        $security = Config::get('chunk_upload_security');
+        if(Auth::isAuthenticated()) {
+            $security = 'auth';
+        }else if($security != 'key') {
+            throw new RestAuthenticationRequiredException();
+        }
+        
+        $transfer = Transfer::fromId($id);
+        
+        if($security == 'key') {
+            try {
+                if(!array_key_exists('key', $_GET)) throw new Exception();
+                if(!$_GET['key']) throw new Exception();
+                if(!File::fromUid($_GET['key'])->transfer->is($transfer)) throw new Exception();
+            } catch(Exception $e) {
+                throw new RestAuthenticationRequiredException();
+            }
+        }else{
+            $user = Auth::user();
+            
+            if(!$transfer->isOwner($user) && !Auth::isAdmin())
+                throw new RestOwnershipRequiredException($user->id, 'transfer = '.$transfer->id);
+        }
+        
+        $data = $this->request->input;
+        
+        $transfer->status = 'available';
+        $transfer->save();
+        
+        // Send emails
+        
+        return true;
+    }
+    
+    /**
      * Delete (closes) a transfer
      * 
      * Call examples :

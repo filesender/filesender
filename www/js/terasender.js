@@ -57,8 +57,16 @@ window.filesender.terasender = {
         }
         
         if(!file) { // Look for file with remaining chunks
-            for(var i=0; i<files.length && !file; i++)
-                if(files[i].uploaded < files[i].size) file = files[i];
+            var mode = filesender.config.terasender_start_mode;
+            
+            if(mode == 'multiple') { // Look for file that is not started yet
+                for(var i=0; i<files.length && !file; i++)
+                    if(files[i].uploaded == 0) file = files[i];
+            }
+            
+            if(!file) // or mode is "single"
+                for(var i=0; i<files.length && !file; i++)
+                    if(files[i].uploaded < files[i].size) file = files[i];
         }
         
         if(!file) return null; // Nothing to do
@@ -108,14 +116,9 @@ window.filesender.terasender = {
             this.sendCommand(workerinterface, 'executeJob', job);
         }else{
             this.log('No jobs remaining, terminating');
-            this.sendCommand(workerinterface, 'done'); // Or workerinterface.terminate()
             
-            if(this.status != 'done') {
-                this.status = 'done';
-                this.files = [];
-                
-                this.transfer.reportComplete();
-            }
+            workerinterface.status = 'done';
+            this.sendCommand(workerinterface, 'done'); // Or workerinterface.terminate()
         }
         
         this.jobAllocationLocked = false;
@@ -156,6 +159,48 @@ window.filesender.terasender = {
     },
     
     /**
+     * Evaluate progress and report to transfer
+     * 
+     * @param worker_id worker that reported the progress
+     * @param object data progress data
+     */
+    evalProgress: function(worker_id, data) {
+        var file = null;
+        var chunks_pending = false;
+        for(var i=0; i<this.transfer.files.length; i++) {
+            if(this.transfer.files[i].id == data.file.id)
+                file = this.transfer.files[i];
+            
+            if(this.transfer.files[i].uploaded < this.transfer.files[i].size)
+                chunks_pending = true;
+        }
+        
+        if(!file) {
+            this.error('unknown_file', data.file.id);
+            this.stop();
+        }
+        
+        var workers_on_same_file = 0;
+        var workers_running = 0;
+        
+        for(var i=0; i<this.workers.length; i++) {
+            if(this.workers[i].status != 'running') continue;
+            if(this.workers[i].id == worker_id) continue;
+            
+            workers_running++;
+            if(this.workers[i].file_id == data.file.id)
+                workers_on_same_file++;
+        }
+        
+        if(chunks_pending || workers_running) { // Not all done
+            this.transfer.reportProgress(file, workers_on_same_file == 0);
+        }else{
+            this.transfer.reportComplete();
+            this.status = 'done';
+        }
+    },
+    
+    /**
      * Handle messages from workers
      * 
      * @param object message
@@ -171,17 +216,7 @@ window.filesender.terasender = {
         switch(command) {
             case 'jobExecuted' :
                 this.log('Worker executed job', 'worker:' + worker_id);
-                var file = null;
-                for(var i=0; i<this.transfer.files.length; i++)
-                    if(this.transfer.files[i].id == data.file.id)
-                        file = this.transfer.files[i];
-                
-                if(!file) {
-                    this.error('unknown_file', data.file.id);
-                    this.stop();
-                }
-                
-                this.transfer.reportProgress(file, file.uploaded >= file.size);
+                this.evalProgress(worker_id, data);
             
             case 'requestJob' :
                 this.giveJob(worker_id, workerinterface);
@@ -209,6 +244,7 @@ window.filesender.terasender = {
         var workerinterface = new Worker(filesender.config.terasender_worker_file);
         workerinterface.id = id;
         workerinterface.file_id = null;
+        workerinterface.status = 'running';
         
         var terasender = this;
         workerinterface.onmessage = function(e) {

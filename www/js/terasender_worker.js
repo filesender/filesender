@@ -54,9 +54,6 @@ var terasender_worker = {
         
         var blob = file.blob[slicer](job.chunk.start, job.chunk.end);
         
-        // Send blob through PUT to '/file/' + file.id + '/chunk/' + job.chunk.start + '?key=' + file.key
-        // Call this.requestJob() on completion
-        
         var xhr = this.createXhr();
         
         xhr.onreadystatechange = function() {
