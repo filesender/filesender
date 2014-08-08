@@ -124,7 +124,7 @@ class Storage {
     public static function writeChunk(File $file, $data, $offset = null) {
         self::setup();
         
-        if(strlen($data) > (int)Config::get('upload_chunk_size')) // We should not get more than upload_chunk_size bytes of data
+        if(strlen($data) > max((int)Config::get('upload_chunk_size'), (int)Config::get('terasender_chunk_size'))) // We should not get more than upload_chunk_size or terasender_chunk_size bytes of data
             throw new StorageChunkTooLargeException(strlen($data), (int)Config::get('upload_chunk_size'));
         
         return call_user_func(self::$class.'::writeChunk', $file, $data, $offset);
