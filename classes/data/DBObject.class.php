@@ -192,6 +192,52 @@ class DBObject {
     }
     
     /**
+     * Get a set objects
+     * 
+     * @param string $criteria sql criteria
+     * @param array $placeholders
+     * 
+     * @return array of objects
+     */
+    public static function all($criteria = null, $placeholders = array()){
+        $query = 'SELECT * FROM '.static::getDBTable();
+        
+        if($criteria) {
+            $where = null;
+            $order = null;
+            $group = null;
+            
+            if(is_array($criteria)) {
+                if(array_key_exists('where', $criteria)) $where = $criteria['where'];
+                if(array_key_exists('order', $criteria)) $order = $criteria['order'];
+                if(array_key_exists('group', $criteria)) $group = $criteria['group'];
+            }else $where = $criteria;
+                
+            if($where) $query .= ' WHERE '.$where;
+            if($group) $query .= ' GROUP BY '.$group;
+            if($order) $query .= ' ORDER BY '.$order;
+        }
+        
+        $pk = array();
+        foreach(static::getDataMap() as $k => $d)
+            if(array_key_exists('primary', $d) && $d['primary'])
+                $pk[] = $k;
+        
+        $statement = DBI::prepare($query);
+        $statement->execute($placeholders);
+        $objects = array();
+        foreach($statement->fetchAll() as $r) {
+            $id = array();
+            foreach($pk as $k) $id[] = $r[$k];
+            $id = implode('-', $id);
+            
+            $objects[$id] = static::fromData($id, $r);
+        }
+        
+        return $objects;
+    }
+    
+    /**
      * Save in database
      */
     public function save() {
