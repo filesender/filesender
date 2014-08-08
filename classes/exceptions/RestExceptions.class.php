@@ -104,7 +104,7 @@ class RestOwnershipRequiredException extends RestException {
      * @param mixed $resource the wanted resource selector
      */
     public function __construct($uid, $resource) {
-        parent::__construct('rest_ownership_required', 403);
+        parent::__construct('rest_ownership_required', 403, array($uid, $resource));
     }
 }
 
