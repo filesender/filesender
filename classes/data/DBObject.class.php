@@ -85,6 +85,20 @@ class DBObject {
     }
     
     /**
+     * Get object from cache
+     * 
+     * @param string $class class name
+     * @param mixed $id unique identifier
+     * 
+     * @return object
+     */
+    public static function getFromCache($class, $id) {
+        if(!self::existsInCache($class, $id)) return null;
+        
+        return self::$objectCache[$class][$id];
+    }
+    
+    /**
      * Remove instance or whole class from cache or wipe cache out
      * 
      * If $class and $id are given only instance is removed
@@ -120,8 +134,9 @@ class DBObject {
      */
     public static function fromId($id) {
         $class = get_called_class();
-        if(!array_key_exists($class, self::$objectCache)) self::$objectCache[$class] = array();
-        if(array_key_exists($id, self::$objectCache[$class])) return self::$objectCache[$class][$id];
+        
+        $object = self::getFromCache($class, $id);
+        if($object) return $object;
         
         $object = new static($id);
         self::$objectCache[$class][$id] = $object;
@@ -141,8 +156,9 @@ class DBObject {
      */
     public static function fromData($id, $data = null, $transforms = array()) {
         $class = get_called_class();
-        if(!array_key_exists($class, self::$objectCache)) self::$objectCache[$class] = array();
-        $object = array_key_exists($id, self::$objectCache[$class]) ? self::$objectCache[$class][$id] : new static(null, $data);
+        
+        $object = self::getFromCache($class, $id);
+        if(!$object) $object = new static(null, $data);
         
         $object->fillFromDBData($data, $transforms);
         
@@ -159,6 +175,53 @@ class DBObject {
      */
     public static function create() {
         return new static();
+    }
+    
+    /**
+     * Object comparison
+     * 
+     * @param object $other other object or id
+     * 
+     * @return bool
+     */
+    public function is($other) {
+        if(is_object($other))
+            return ($other instanceof static) && ($other->id == $this->id);
+        
+        return $this->id == $other;
+    }
+    
+    /**
+     * Save in database
+     */
+    public function save() {
+        if(method_exists($this, 'customSave')) {
+            $this->customSave();
+        }else{
+            if($this->id) {
+                $this->updateRecord($this->toDBData(), 'id');
+            }else{
+                $this->insertRecord($this->toDBData());
+                $this->id = (int)DBI::lastInsertId();
+            }
+        }
+        
+        self::$objectCache[get_called_class()][$this->id] = $this;
+    }
+    
+    /**
+     * Delete from database
+     */
+    public function delete() {
+        if(method_exists($this, 'beforeDelete'))
+            $this->beforeDelete();
+        
+        $s = DBI::prepare('DELETE FROM '.static::getDBTable().' WHERE id = :id');
+        $s->execute(array('id' => $this->id));
+        
+        self::purgeCache(get_called_class(), $this->id);
+        
+        self::$objectCache[get_called_class()][$this->id] = $this;
     }
     
     /**

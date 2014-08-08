@@ -144,7 +144,7 @@ class User extends DBObject {
     /**
      * Save user preferences in database
      */
-    public function save() {
+    public function customSave() {
         if($this->isNew) {
             $this->insertRecord($this->toDBData());
         }else{
@@ -176,19 +176,6 @@ class User extends DBObject {
     public function reportActivity() {
         $this->last_activity = time();
         $this->save();
-    }
-    
-    /**
-     * User comparison
-     * 
-     * @param object $user other user or user_id to compare with
-     * 
-     * @return bool
-     */
-    public function is($user) {
-        $user_id = ($user instanceof User) ? $user->id : (string)$user;
-        
-        return $user_id == $this->id;
     }
     
     /**

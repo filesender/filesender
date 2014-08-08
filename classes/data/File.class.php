@@ -144,11 +144,25 @@ class File extends DBObject
     /**
      * Delete the file
      */
-    public function delete() {
+    public function beforeDelete() {
         Storage::delete($this);
+    }
+    
+    /**
+     * Get file from uid
+     * 
+     * @param string $uid
+     * 
+     * @return File
+     */
+    public static function fromUid($uid) {
+        $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE uid = :uid');
+        $s->execute(array('uid' => $uid));
+        $data = $s->fetch();
         
-        $s = DBI::prepare('DELETE FROM '.self::getDBTable().' WHERE id = :id');
-        $s->execute(array('id' => $this->id));
+        if(!$data) throw FileNotFoundException('uid = '.$uid);
+        
+        return self::fromData($data['id'], $data); // Don't query twice, use loaded data
     }
     
     /**
