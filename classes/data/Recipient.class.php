@@ -171,14 +171,6 @@ class Recipient extends DBObject {
     }
     
     /**
-     * Delete the recipient
-     */
-    public function delete() {
-        $s = DBI::prepare('DELETE FROM '.self::getDBTable().' WHERE id = :id');
-        $s->execute(array('id' => $this->id));
-    }
-    
-    /**
      * Get recipients from Transfer
      * 
      * @param object $transfer the relater transfer

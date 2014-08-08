@@ -184,26 +184,23 @@ class Transfer extends DBObject {
     }
     
     /**
-     * Delete the transfer
+     * Delete the transfer related objects
      */
-    public function delete() {
+    public function beforeDelete() {
         foreach($this->files as $file) $this->removeFile($file);
         
         foreach($this->recipients as $recipient) $this->removeRecipient($recipient);
-        
-        $s = DBI::prepare('DELETE FROM '.self::getDBTable().' WHERE id = :id');
-        $s->execute(array('id' => $this->id));
     }
     
     /**
      * Close the transfer
      */
     public function close() {
-        $s = DBI::prepare('UPDATE '.self::getDBTable().' SET status = "closed" WHERE id = :id');
-        $s->execute(array('id' => $this->id));
-        
         if(!Config::get('audit_log_enabled')) {
             $this->delete();
+        }else{
+            $this->status = 'closed';
+            $this->save();
         }
     }
     
@@ -215,9 +212,7 @@ class Transfer extends DBObject {
      * @return bool
      */
     public function isOwner($user) {
-        $user_id = ($user instanceof User) ? $user->id : (string)$user;
-        
-        return $user_id == $this->user_id;
+        return $this->owner->is($user);
     }
     
     /**
@@ -247,7 +242,7 @@ class Transfer extends DBObject {
     public function __get($property) {
         if(in_array($property, array('id', 'status', 'user_id', 'subject', 'message', 'created', 'expires', 'options'))) return $this->$property;
         
-        if($property == 'user') {
+        if($property == 'user' || $property == 'owner') {
             return User::fromId($this->user_id);
         }
         
