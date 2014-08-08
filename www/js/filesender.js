@@ -135,6 +135,22 @@ window.filesender.client = {
             rawdata: true
         });
     },
+    
+    /**
+     * Put a file chunk
+     * 
+     * @param object file
+     * @param blob chunk
+     * @param int offset
+     * @param callable callback
+     */
+    putChunk: function(file, blob, offset, callback) {
+        this.put('/file/' + file.id + '/chunk/' + offset, blob, callback, {
+            args: {key: file.uid},
+            contentType: 'application/octet-stream',
+            rawdata: true
+        });
+    },
 };
 
 /**
@@ -149,7 +165,7 @@ window.filesender.ui = {
      */
     error: function(code, data) {
         var msg = 'ERROR : ' + code;
-        if(data.logid) {
+        if(data && data.logid) {
             msg += ' (' + data.logid + ')';
             delete data.logid;
         }
@@ -180,9 +196,11 @@ window.filesender.transfer = function() {
     this.expires = null;
     this.options = [];
     
+    this.time = 0;
     this.file_index = 0;
     this.onprogress = null;
     this.oncomplete = null;
+    this.onerror = null;
     
     this.saveTemp = function() {
         if(!filesender.supports.localStorage) return;
@@ -198,31 +216,45 @@ window.filesender.transfer = function() {
     };
     
     /**
-     * Add a file (html input or saved file) the the file list
+     * Add a file to the file list
      * 
-     * @param object htmlfile HTML file object
+     * @param object file HTML input / FileList / File
      * 
+     * @throws no_file_given
      * @throws max_html5_uploads_exceeded
      * @throws banned_extension
      * @throws max_html5_upload_size_exceeded
      */
     this.addFile = function(file) {
-        if('parentNode' in file) { // HTML file input
+        if(!file)
+            throw filesender.ui.error('no_file_given');
+        
+        if('parentNode' in file) // HTML file input
             file = file.files;
+        
+        if('length' in file) { // FileList
+            if(!file.length)
+                throw filesender.ui.error('no_file_given');
+            
+            for(var i=0; i<file.length; i++)
+                this.addFile(file[i]);
+            
+            return;
         }
         
-        if('length' in file && 'type' in file[0]) { // FileList (blob)
-            var blob = file[0];
-            var file = {
-                id: null,
-                key: null,
-                blob: blob,
-                size: blob.size,
-                uploaded: 0,
-                name: blob.name,
-                type: blob.type
-            };
-        }
+        if(!('type' in file))
+            throw filesender.ui.error('no_file_given');
+        
+        var blob = file;
+        var file = {
+            id: null,
+            key: null,
+            blob: blob,
+            size: blob.size,
+            uploaded: 0,
+            name: blob.name,
+            type: blob.type
+        };
         
         // Look for dup
         for(var i=0; i<this.files.length; i++) {
@@ -286,12 +318,25 @@ window.filesender.transfer = function() {
     /**
      * Report transfer complete
      */
-    this.reportComplete = function(file, complete) {
+    this.reportComplete = function() {
+        var time = (new Date()).getTime() - this.time; // ms
+        
         if(filesender.config.log) {
-            console.log('Transfer ' + this.id + ' (' + this.size + ' bytes) complete');
+            console.log('Transfer ' + this.id + ' (' + this.size + ' bytes) complete, took ' + (time / 1000) + 's');
         }
         
-        if(this.oncomplete) this.oncomplete();
+        if(this.oncomplete) this.oncomplete(time);
+    };
+    
+    /**
+     * Report transfer error
+     */
+    this.reportError = function(code, details) {
+        if(filesender.config.log) {
+            console.log('Transfer ' + this.id + ' (' + this.size + ' bytes) failed');
+        }
+        
+        if(this.onerror) this.onerror(code, details);
     };
     
     /**
@@ -315,6 +360,8 @@ window.filesender.transfer = function() {
             size: this.files[i].size
         });
         
+        this.time = (new Date()).getTime();
+        
         var transfer = this;
         filesender.client.postTransfer(files_dfn, this.recipients, this.subject, this.message, this.expires, this.options, function(path, data) {
             transfer.id = data.id;
@@ -335,7 +382,7 @@ window.filesender.transfer = function() {
             
             // Start uploading chunks
             if(filesender.config.terasender_enabled) {
-                
+                filesender.terasender.start(transfer);
             }else{
                 // Chunk by chunk upload
                 transfer.uploadChunk();
@@ -352,7 +399,9 @@ window.filesender.transfer = function() {
     this.uploadChunk = function() {
         var file = this.files[this.file_index];
         
-        var blob = file.blob.slice(file.uploaded, file.uploaded + filesender.config.upload_chunk_size);
+        var slicer = file.blob.slice ? 'slice' : (file.blob.mozSlice ? 'mozSlice' : (file.blob.webkitSlice ? 'webkitSlice' : 'slice'));
+        
+        var blob = file.blob[slicer](file.uploaded, file.uploaded + filesender.config.upload_chunk_size);
         
         file.uploaded += filesender.config.upload_chunk_size;
         
