@@ -99,7 +99,7 @@ class RestEndpointTransfer extends RestEndpoint {
         if($id == '@all') {
             if(!Auth::isAdmin()) throw new RestAdminRequiredException();
             
-            $transfers = Transfer::allAvailable();
+            $transfers = Transfer::all(Transfer::AVAILABLE);
             
         }else{ // $id == @me or empty
             $transfers = Transfer::fromUser($user);
