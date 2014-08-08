@@ -85,6 +85,9 @@ class RestServer {
             // Parse body
             switch($type) {
                 case 'text/plain' :
+                    $request->rawinput = trim($input);
+                    break;
+                
                 case 'application/octet-stream' :
                     $request->rawinput = $input;
                     break;
@@ -97,7 +100,7 @@ class RestServer {
                 
                 case 'application/json' :
                 default :
-                    $request->input = json_decode($input);
+                    $request->input = json_decode(trim($input));
             }
             
             //Check authentication
