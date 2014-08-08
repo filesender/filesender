@@ -43,7 +43,7 @@ Logger::setProcess('cli');
 
 set_error_handler(function($no, $str, $file = '', $line = '') {
     if($no == '2048') return;
-    Logger::log('[error:'.$no.'] '.$str.' in '.$file.' at line '.$line);
+    Logger::error('['.$no.'] '.$str.' in '.$file.' at line '.$line);
 });
 
 // Get data classes
