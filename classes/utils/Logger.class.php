@@ -228,7 +228,7 @@ class Logger {
             }
         }
         
-        return $level <= $min_level;
+        return self::$levels[$level] > $min_level;
     }
     
     /**
