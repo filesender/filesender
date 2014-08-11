@@ -131,28 +131,11 @@ class AuditLog extends DBObject {
         return $auditLog;
     }
     
-    
-    
-    
     /**
-     * Save user preferences in database
+     * Save in database
      */
-    public function save() {
+    private function save() {
         $this->insertRecord($this->toDBData());
-    }
-    
-    
-    /**
-     * Auditlog comparison
-     * 
-     * @param object $auditLog other auditLog or auditLog_id to compare with
-     * 
-     * @return bool
-     */
-    public function is($auditLog) {
-        $auditlog_id = ($auditLog instanceof AuditLog) ? $auditLog->id : (string)$auditLog;
-        
-        return $auditlog_id == $this->id;
     }
     
     /**
