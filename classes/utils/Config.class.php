@@ -104,7 +104,6 @@ class Config {
             $virtualhost = self::get('virtualhost');
             
         if ($virtualhost) {
-            // TODO add exceptions
             if (!is_string($virtualhost))
                 throw new ConfigBadParameterException('virtualhost');
             
