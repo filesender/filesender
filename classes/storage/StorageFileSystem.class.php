@@ -81,7 +81,7 @@ class StorageFilesystem {
     /**
      * Build file storage path (without file uid)
      * 
-     * @param object $file
+     * @param File $file
      * 
      * @return string path
      */

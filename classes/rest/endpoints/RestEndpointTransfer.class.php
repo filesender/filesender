@@ -41,11 +41,11 @@ class RestEndpointTransfer extends RestEndpoint {
     /**
      * Cast a Transfer to an array for response
      * 
-     * @param object $transfer the transfer
+     * @param Transfer $transfer
      * 
      * @return array
      */
-    public static function cast($transfer) {
+    public static function cast(Transfer $transfer) {
         return array(
             'id' => $transfer->id,
             'subject' => $transfer->subject,

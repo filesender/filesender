@@ -126,7 +126,7 @@ class Transfer extends DBObject {
     /***
      * Get transfers from user
      * 
-     * @param mixed $user user object or user_id
+     * @param mixed $user User or user id
      * 
      * @return array of Transfer
      */
@@ -141,7 +141,7 @@ class Transfer extends DBObject {
      * 
      * @param integer $expiry expiration date (timestamp), mandatory
      * 
-     * @return object transfer
+     * @return Transfer
      */
     public static function create($expires) {
         $transfer = new self();
@@ -153,18 +153,6 @@ class Transfer extends DBObject {
         $transfer->status = 'uploading';
         
         return $transfer;
-    }
-    
-    /**
-     * Save transfer in database
-     */
-    public function save() {
-        if($this->id) {
-            $this->updateRecord($this->toDBData(), 'id');
-        }else{
-            $this->insertRecord($this->toDBData());
-            $this->id = (int)DBI::lastInsertId();
-        }
     }
     
     /**
@@ -191,7 +179,7 @@ class Transfer extends DBObject {
     /**
      * Check if user owns current transfer
      * 
-     * @param object $user other user or user_id to compare with
+     * @param miwed $user User or user id to compare with
      * 
      * @return bool
      */
@@ -269,7 +257,7 @@ class Transfer extends DBObject {
      * @param string $name the file name
      * @param string $size the file size
      * 
-     * @return object created file
+     * @return File
      */
     public function addFile($name, $size) {
         // Create and save new recipient
@@ -287,7 +275,7 @@ class Transfer extends DBObject {
     /**
      * Removes a file
      * 
-     * @param mixed $file file id or file object
+     * @param mixed $file File or file id
      */
     public function removeFile($file) {
         if(!is_object($file)) $file = File::fromId($file);
@@ -304,7 +292,7 @@ class Transfer extends DBObject {
      * 
      * @param string $email email to add as recipient
      * 
-     * @return object created recipient
+     * @return Recipient
      */
     public function addRecipient($email) {
         // Create and save new recipient
@@ -320,7 +308,7 @@ class Transfer extends DBObject {
     /**
      * Removes a recipient
      * 
-     * @param mixed $recipient recipient id or recipient object
+     * @param mixed $recipient Recipient or recipient id
      */
     public function removeRecipient($recipient) {
         if(!is_object($recipient)) $recipient = Recipient::fromId($recipient);
