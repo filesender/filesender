@@ -60,7 +60,7 @@ class StatLog extends DBObject {
             'size' => 'medium',
         ),
         
-        'creation_date' => array(
+        'created' => array(
             'type' => 'datetime'
         )
     );
@@ -70,7 +70,7 @@ class StatLog extends DBObject {
      */
     protected $id = null;
     protected $event = null;
-    protected $creation_date = null;
+    protected $created = null;
     protected $target_type = null;
     protected $size = null;
     
@@ -113,7 +113,7 @@ class StatLog extends DBObject {
         $statLog = new self();
         
         $statLog->event = $event;
-        $statLog->creation_date = time();
+        $statLog->created = time();
         $statLog->target_type = get_class($target);
         
         switch ($statLog->target_type){
@@ -164,7 +164,7 @@ class StatLog extends DBObject {
         if(in_array($property, array(
             'id', 
             'event',
-            'creation_date',
+            'created',
             'target_type',
             'size',
         ))) return $this->$property;
