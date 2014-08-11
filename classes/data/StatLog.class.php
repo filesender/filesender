@@ -95,7 +95,7 @@ class StatLog extends DBObject {
     }
     
     /**
-     * Save user preferences in database
+     * Save in database
      */
     public function save() {
         $this->insertRecord($this->toDBData());
@@ -135,20 +135,6 @@ class StatLog extends DBObject {
         $statLog->save();
         
         return $statLog;
-    }
-    
-    
-    /**
-     * Statlog comparison
-     * 
-     * @param object $auditLog: other auditLog or auditLog_id to compare with
-     * 
-     * @return bool
-     */
-    public function is($auditLog) {
-        $statlog_id = ($auditLog instanceof StatLog) ? $auditLog->id : (string)$auditLog;
-        
-        return $statlog_id == $this->id;
     }
     
     /**
