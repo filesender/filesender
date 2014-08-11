@@ -38,6 +38,9 @@ if (!defined('FILESENDER_BASE'))
  * REST info endpoint
  */
 class RestEndpointInfo extends RestEndpoint {
+    /**
+     * Get info about the current Filesender instance
+     */
     public function get() {
         return array(
             'url' => Config::get('site_url'),

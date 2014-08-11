@@ -44,6 +44,10 @@ class Logger {
     const WARN  = 'warn';
     const INFO  = 'info';
     const DEBUG = 'debug';
+    
+    /**
+     * Log levels to log priorities conversion table
+     */
     private static $levels = array(
         'error' => 0,
         'warn' => 1,

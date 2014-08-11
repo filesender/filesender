@@ -114,9 +114,13 @@ class Utilities
         return $size;
     }
     
-    
+    /**
+     * Get remote client IP (v4 or v6)
+     * 
+     * @return string
+     */
     public static function getClientIP(){
-        return isset($_SERVER['REMOTE_ADDR'])?$_SERVER['REMOTE_ADDR']:Errors::NO_IP;
+        return isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : Errors::NO_IP;
     }
 }
 
