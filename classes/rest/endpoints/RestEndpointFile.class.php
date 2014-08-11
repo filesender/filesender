@@ -200,6 +200,8 @@ class RestEndpointFile extends RestEndpoint {
         }else if($mode == 'complete') { // Client signals this was the last chunk
             $data = $this->request->input;
             
+            $file->complete();
+            
             return true;
         }
     }

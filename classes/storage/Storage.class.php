@@ -131,14 +131,27 @@ class Storage {
     }
     
     /**
+     * Delegates file completion (delegation classes can implement it optionaly)
+     * 
+     * @param File $file
+     */
+    public static function completeFile(File $file) {
+        self::setup();
+        
+        if(!method_exists(self::$class, 'completeFile')) return;
+        
+        return call_user_func(self::$class.'::completeFile', $file);
+    }
+    
+    /**
      * Delegates file deletion
      *
      * @param File $file
      */
-    public static function delete(File $file) {
+    public static function deleteFile(File $file) {
         self::setup();
         
-        call_user_func(self::$class.'::delete', $file);
+        call_user_func(self::$class.'::deleteFile', $file);
     }
     
     /**
