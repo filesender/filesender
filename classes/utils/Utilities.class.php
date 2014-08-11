@@ -113,5 +113,10 @@ class Utilities
         }
         return $size;
     }
+    
+    
+    public static function getClientIP(){
+        return isset($_SERVER['REMOTE_ADDR'])?$_SERVER['REMOTE_ADDR']:Errors::NO_IP;
+    }
 }
 

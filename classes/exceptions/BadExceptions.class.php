@@ -50,6 +50,26 @@ class BadEmailException extends DetailedException {
     }
 }
 
+
+/**
+ * Bad email exception
+ */
+class BadIPFormatException extends DetailedException {
+    /**
+     * Constructor
+     * 
+     * @param string $ip the bad ip
+     * @param string $protocol the bad protocol
+     */
+    public function __construct($ip, $protocol = null) {
+        parent::__construct(
+            $protocol == null ? 'bad_ip_format' :'bad_ip_format_'.$protocol, // Message to give to the user
+            $ip // Real message to log
+        );
+    }
+}
+
+
 /**
  * Bad expire exception
  */
