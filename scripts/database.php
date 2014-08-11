@@ -37,6 +37,8 @@ require_once(FILESENDER_BASE.'/classes/_includes.php');
 
 Logger::setProcess('cli');
 
+date_default_timezone_set(Config::get('Default_TimeZone'));
+
 /**
  * Create/upgrade Filesender's database
  */
