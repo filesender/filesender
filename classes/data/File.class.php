@@ -191,6 +191,13 @@ class File extends DBObject
     }
     
     /**
+     * End file upload
+     */
+    public function complete() {
+        return Storage::completeFile($this);
+    }
+    
+    /**
      * Read a chunk at offset
      * 
      * @param int $offset the chunk offset in the file, if null reads next chunk (Storage keeps track of it)
