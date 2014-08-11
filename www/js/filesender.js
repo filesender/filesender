@@ -179,9 +179,27 @@ window.filesender.client = {
      */
     transferComplete: function(transfer, data, callback) {
         var opts = {};
-        if(filesender.config.chunk_upload_security == 'key') opts.args = {key: transfer.files[0].uid}; // TODO ?
+        if(filesender.config.chunk_upload_security == 'key') opts.args = {key: transfer.files[0].uid};
         
         this.put('/transfer/' + transfer.id + '/complete', data, callback, opts);
+    },
+    
+    /**
+     * Delete a transfer
+     * 
+     * @param object transfer
+     * @param callable callback
+     */
+    deleteTransfer: function(transfer, callback) {
+        var id = transfer;
+        var opts = {};
+        
+        if(typeof transfer == 'object') {
+            id = transfer.id;
+            if(filesender.config.chunk_upload_security == 'key') opts.args = {key: transfer.files[0].uid};
+        }
+        
+        this.delete('/transfer/' + id, callback, opts);
     },
 };
 
@@ -230,6 +248,7 @@ window.filesender.transfer = function() {
     
     this.time = 0;
     this.file_index = 0;
+    this.status = 'running';
     this.onprogress = null;
     this.oncomplete = null;
     this.onerror = null;
@@ -437,22 +456,70 @@ window.filesender.transfer = function() {
     };
     
     /**
+     * Pause upload
+     */
+    this.pause = function() {
+        if(this.status != 'running') return;
+        
+        this.status = 'paused';
+        
+        if(filesender.config.terasender_enabled && filesender.supports.workers)
+            filesender.terasender.pause();
+    };
+    
+    /**
+     * Restart upload
+     */
+    this.restart = function() {
+        if(this.status != 'paused') return;
+        
+        this.status = 'running';
+        
+        if(filesender.config.terasender_enabled && filesender.supports.workers)
+            filesender.terasender.restart();
+    };
+    
+    /**
+     * Stop upload
+     */
+    this.stop = function(callback) {
+        this.status = 'stopped';
+        
+        if(filesender.config.terasender_enabled && filesender.supports.workers)
+            filesender.terasender.stop();
+        
+        window.setTimeout(function() { // Small delay to let workers stop
+            filesender.client.deleteTransfer(this, callback);
+        }, 1000);
+    };
+    
+    /**
      * Chunk by chunk upload
      */
     this.uploadChunk = function() {
+        if(this.status == 'stopped') return;
+        
+        var transfer = this;
+        if(this.status == 'paused') {
+            window.setTimeout(function() {
+                transfer.uploadChunk();
+            }, 500);
+            return;
+        }
+        
         var file = this.files[this.file_index];
         
         var slicer = file.blob.slice ? 'slice' : (file.blob.mozSlice ? 'mozSlice' : (file.blob.webkitSlice ? 'webkitSlice' : 'slice'));
         
-        var blob = file.blob[slicer](file.uploaded, file.uploaded + filesender.config.upload_chunk_size);
+        var offset = file.uploaded;
+        var blob = file.blob[slicer](offset, offset + filesender.config.upload_chunk_size);
         
         file.uploaded += filesender.config.upload_chunk_size;
         
         var last = file.uploaded >= file.size;
         if(last) this.file_index++;
         
-        var transfer = this;
-        filesender.client.postChunk(file, blob, last, function() {
+        filesender.client.putChunk(file, blob, offset, function() {
             if(!last || transfer.file_index < transfer.files.length) {
                 if(last) { // File done
                     transfer.reportProgress(file, true);
@@ -462,6 +529,7 @@ window.filesender.transfer = function() {
                 
                 transfer.uploadChunk();
             }else{
+                transfer.status = 'done';
                 transfer.reportComplete();
             }
         });

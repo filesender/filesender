@@ -248,22 +248,41 @@ class RestEndpointTransfer extends RestEndpoint {
      * @throws RestOwnershipRequiredException
      */
     public function delete($id = null) {
-        if(!Auth::isAuthenticated()) throw new RestAuthenticationRequiredException();
-        
         if(!$id) throw new RestMissingParameterException('transfer_id');
         if(!is_numeric($id)) throw new RestBadParameterException('transfer_id');
         
-        $user = Auth::user();
+        $security = Config::get('chunk_upload_security');
+        if(Auth::isAuthenticated()) {
+            $security = 'auth';
+        }else if($security != 'key') {
+            throw new RestAuthenticationRequiredException();
+        }
+        
         $transfer = Transfer::fromId($id);
         
-        if(!$transfer->isOwner($user) && !Auth::isAdmin())
-            throw new RestOwnershipRequiredException($user->id, 'transfer = '.$transfer->id);
+        if($security == 'key') {
+            try {
+                if(!array_key_exists('key', $_GET)) throw new Exception();
+                if(!$_GET['key']) throw new Exception();
+                if(!File::fromUid($_GET['key'])->transfer->is($transfer)) throw new Exception();
+            } catch(Exception $e) {
+                throw new RestAuthenticationRequiredException();
+            }
+        }else{
+            $user = Auth::user();
+            
+            if(!$transfer->isOwner($user) && !Auth::isAdmin())
+                throw new RestOwnershipRequiredException($user->id, 'transfer = '.$transfer->id);
+        }
+        
+        if($transfer->status != 'available') { // Do not notify closure nor keep audit data for transfers that are not available
+            $transfer->delete();
+            return null;
+        }
         
         $recipients = $transfer->recipients; // Before closing so that we are sure data is available
         
         $transfer->close();
-        
-        if($transfer->status != 'available') return null; // Do not notify closure for transfers that are not available
         
         // Send emails
         foreach($recipients as $recipient) {
