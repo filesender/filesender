@@ -216,7 +216,7 @@ class StorageFilesystem {
      * 
      * @throws StorageFilesystemCannotDeleteException
      */
-    public function delete(File $file) {
+    public function deleteFile(File $file) {
         $file_path = self::buildPath($file).$file->uid;
         
         if(!file_exists($file_path)) return;
