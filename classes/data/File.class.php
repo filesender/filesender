@@ -109,11 +109,11 @@ class File extends DBObject
     /**
      * Create a new file (for upload)
      * 
-     * @param object $transfer the relater transfer
+     * @param Transfer $transfer the relater transfer
      * 
-     * @return object file
+     * @return File
      */
-    public static function create($transfer) {
+    public static function create(Transfer $transfer) {
         $file = new self();
         
         $file->transfer_id = $transfer->id;
@@ -127,18 +127,6 @@ class File extends DBObject
         });
         
         return $file;
-    }
-    
-    /**
-     * Save file in database
-     */
-    public function save() {
-        if($this->id) {
-            $this->updateRecord($this->toDBData(), 'id');
-        }else{
-            $this->insertRecord($this->toDBData());
-            $this->id = (int)DBI::lastInsertId();
-        }
     }
     
     /**
@@ -168,11 +156,11 @@ class File extends DBObject
     /**
      * Get files from Transfer
      * 
-     * @param object $transfer the relater transfer
+     * @param Transfer $transfer the relater transfer
      * 
-     * @return array file list
+     * @return array of File
      */
-    public static function fromTransfer($transfer) {
+    public static function fromTransfer(Transfer $transfer) {
         $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE transfer_id = :transfer_id');
         $s->execute(array('transfer_id' => $transfer->id));
         $files = array();

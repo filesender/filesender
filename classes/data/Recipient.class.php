@@ -116,7 +116,7 @@ class Recipient extends DBObject {
      * 
      * @throws RecipientNotFoundException
      * 
-     * @return object recipient
+     * @return Recipient
      */
     public static function fromToken($token) {
         $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE token = :token');
@@ -132,12 +132,12 @@ class Recipient extends DBObject {
     /**
      * Create a new recipient bound to a transfer
      * 
-     * @param object $transfer the relater transfer
-     * @param object $email the recipient email
+     * @param Transfer $transfer the relater transfer
+     * @param string $email the recipient email
      * 
-     * @return object file
+     * @return Recipient
      */
-    public static function create($transfer, $email) {
+    public static function create(Transfer $transfer, $email) {
         $recipient = new self();
         
         $recipient->transfer_id = $transfer->id;
@@ -159,25 +159,13 @@ class Recipient extends DBObject {
     }
     
     /**
-     * Save recipient in database
-     */
-    public function save() {
-        if($this->id) {
-            $this->updateRecord($this->toDBData(), 'id');
-        }else{
-            $this->insertRecord($this->toDBData());
-            $this->id = (int)DBI::lastInsertId();
-        }
-    }
-    
-    /**
      * Get recipients from Transfer
      * 
-     * @param object $transfer the relater transfer
+     * @param Transfer $transfer the relater transfer
      * 
-     * @return array recipient list
+     * @return array of Recipient
      */
-    public static function fromTransfer($transfer) {
+    public static function fromTransfer(Transfer $transfer) {
         $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE transfer_id = :transfer_id');
         $s->execute(array('transfer_id' => $transfer->id));
         $recipients = array();

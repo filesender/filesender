@@ -41,11 +41,11 @@ class RestEndpointFile extends RestEndpoint {
     /**
      * Cast a File to an array for response
      * 
-     * @param object $file the file
+     * @param File $file
      * 
      * @return array
      */
-    public static function cast($file) {
+    public static function cast(File $file) {
         return array(
             'id' => $file->id,
             'transfer_id' => $file->transfer_id,

@@ -41,11 +41,11 @@ class RestEndpointRecipient extends RestEndpoint {
     /**
      * Cast a Recipient to an array for response
      * 
-     * @param object $recipient the recipient
+     * @param Recipient $recipient
      * 
      * @return array
      */
-    public static function cast($recipient) {
+    public static function cast(Recipient $recipient) {
         return array(
             'id' => $recipient->id,
             'transfer_id' => $recipient->transfer_id,

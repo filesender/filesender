@@ -124,7 +124,7 @@ class User extends DBObject {
      * 
      * @param string $attributes
      * 
-     * @return object user
+     * @return User
      */
     public static function fromAttributes($attributes) {
         if(!is_array($attributes) || !array_key_exists('uid', $attributes) || !$attributes['uid']) throw new UserMissingUIDException();
@@ -157,7 +157,7 @@ class User extends DBObject {
      * 
      * @param string $id user id, mandatory
      * 
-     * @return object user
+     * @return User
      */
     public static function create($id) {
         $user = new self();

@@ -123,7 +123,7 @@ class Guestvoucher extends DBObject {
      * 
      * @param integer $email recipient email, mandatory
      * 
-     * @return object guest voucher
+     * @return Guestvoucher
      */
     public static function create($email) {
         $voucher = new self();
