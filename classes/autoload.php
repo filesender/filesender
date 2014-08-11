@@ -48,6 +48,8 @@ class Autoloader {
         'DBI' => 'utils/',
         'Utilities' => 'utils/',
         'Database*' => 'utils/',
+        '*Event' => 'utils/Constants',
+        '*Log' => 'data/',
         
         'Storage' => 'storage/',
         'Storage*' => 'storage/',
