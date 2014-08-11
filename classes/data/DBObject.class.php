@@ -472,4 +472,13 @@ class DBObject {
         $s = DBI::prepare('UPDATE '.$table.' SET '.implode(', ', $placeholders).(count($where_parts) ? ' WHERE ('.implode(') AND (', $where_parts).')' : ''));
         $s->execute($values);
     }
+    
+    /**
+     * Allows to get the class name
+     * 
+     * @return type String: the class name
+     */
+    public static function getClassName(){
+        return get_called_class();
+    }
 }
