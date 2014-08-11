@@ -73,7 +73,7 @@ class StorageFilesystem {
     public static function getFreeSpace(File $file) {
         $location = self::buildPath($file);
         
-        $free = disk_free_space($location); // TODO move to utilities ? to self ?
+        $free = disk_free_space($location);
         
         return $free;
     }
