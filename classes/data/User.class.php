@@ -119,7 +119,7 @@ class User extends DBObject {
         $this->isNew = false;
     }
     
-    /***
+    /**
      * Loads user from Auth attributes, handling cache
      * 
      * @param string $attributes

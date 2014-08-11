@@ -123,7 +123,7 @@ class Transfer extends DBObject {
         if($data) $this->fillFromDBData($data);
     }
     
-    /***
+    /**
      * Get transfers from user
      * 
      * @param mixed $user User or user id

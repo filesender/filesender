@@ -109,7 +109,7 @@ class Recipient extends DBObject {
         if($data) $this->fillFromDBData($data);
     }
     
-    /***
+    /**
      * Loads recipient from token
      * 
      * @param string $token the token

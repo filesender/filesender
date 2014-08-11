@@ -35,11 +35,6 @@ if (!defined('FILESENDER_BASE'))
     die('Missing environment');
 
 
-////////////////////////////////////////////
-// Relevant exceptions declared here:
-// Some can also be turned into singleton classes
-////////////////////////////////////////////    
-
 /**
  * Logging exception
  */
@@ -123,60 +118,5 @@ class DetailedException extends LoggingException {
             }
         }
         parent::__construct($msg_code, $log);
-    }
-}
-
-
-/** 
- *  Default exception class for authentication-related exceptions. Outputs info to log.
- *
- *  @param string $lMsg: message to write to log.
- *  @param bool $error:  Type of log entry. E_ERROR if true, E_NOTICE if false.
- */
-class AuthException extends DetailedException
-{
-    public function __construct($lMsg, $error)
-    {
-        if ($error) {
-            logEntry($lMsg, "E_ERROR");
-        } else {
-            logEntry($lMsg, "E_NOTICE");
-        }
-    }
-}
-
-
-/**
- *  Thrown when the method requires a user to be authenticated and he isn't.
- *  -- or when user authentication attributes were invalid / not found.
- *  @params $log = parent::$lMsg, $error = parent::$error
- *  @param string $uMsg: message to user.
- */
-class UserAuthException extends AuthException
-{
-    public function __construct($uMsg, $log, $error)
-    {
-        parent::__construct($log, $error);
-        //TO_USER($uMsg);
-    }
-}
-
-
-/**
- * Bad size format exception - used in Utilities class
- */
-class BadSizeFormatException extends DetailedException
-{
-    /**
-     * Constructor
-     * 
-     * @param string $size the raw, badly formated size
-     */
-    public function __construct($size)
-    {
-        parent::__construct(
-            'bad_size_format', // Message to give to the user
-            'size : '.$size // Details to log
-        );
     }
 }

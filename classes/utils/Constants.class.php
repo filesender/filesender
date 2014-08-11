@@ -63,7 +63,9 @@ class Protocols {
     const IPV6 = "ipv6";
 }
 
-
+/**
+ * Class containing error codes
+ */
 class Errors{
     const NO_IP = "none";
 }

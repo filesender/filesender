@@ -38,8 +38,14 @@ if (!defined('FILESENDER_BASE'))
  * REST request
  */
 class RestEndpoint {
+    /**
+     * Holds the current request
+     */
     protected $request = null;
     
+    /**
+     * Constructor, fills request
+     */
     public function __construct($request) {
         $this->request = $request;
     }
