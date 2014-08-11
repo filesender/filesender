@@ -133,7 +133,7 @@ class File extends DBObject
      * Delete the file
      */
     public function beforeDelete() {
-        Storage::delete($this);
+        Storage::deleteFile($this);
     }
     
     /**

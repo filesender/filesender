@@ -59,11 +59,15 @@ class AuditLog extends DBObject {
             'type' => 'string',
             'size' => 255
         ),
+        'user_id' => array(
+            'type' => 'string',
+            'size' => 255
+        ),
         'ip' => array(
             'type' => 'string',
-            'size' => '39',
+            'size' => 39,
         ),
-        'creation_date' => array(
+        'created' => array(
             'type' => 'datetime'
         )
     );
@@ -75,7 +79,7 @@ class AuditLog extends DBObject {
     protected $event = null;
     protected $target_id = null;
     protected $target_type = null;
-    protected $creation_date = null;
+    protected $created = null;
     protected $ip = null;
     
     
@@ -111,10 +115,15 @@ class AuditLog extends DBObject {
         $auditLog = new self();
         
         $auditLog->event = $event;
-        $auditLog->creation_date = time();
+        $auditLog->created = time();
         $auditLog->ip = Utilities::getClientIP();
         $auditLog->target_id = $target->id;
         $auditLog->target_type = get_class($target);
+        
+        if (Auth::isAuthenticated()){
+            $auditLog->user_id = Auth::user()->id;;
+            
+        }
 
         
         $auditLog->save();
@@ -161,7 +170,7 @@ class AuditLog extends DBObject {
             'event',
             'target_id',
             'target_type',
-            'creation_date',
+            'created',
             'ip', 
         ))) return $this->$property;
         
