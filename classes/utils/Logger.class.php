@@ -93,13 +93,15 @@ class Logger {
             if(!array_key_exists('type', $facility))
                 throw new ConfigMissingParameterException('log_facilities['.$index.'][type]');
             
-            switch($facility['type']) {
+            switch(strtolower($facility['type'])) {
                 case 'file' :
                     if(!array_key_exists('path', $facility))
                         throw new ConfigMissingParameterException('log_facilities['.$index.'][path]');
                     
                     if(array_key_exists('rotate', $facility) && !in_array($facility['rotate'], array('hourly', 'daily', 'weekly', 'monthly', 'yearly')))
                         throw new ConfigBadParameterException('log_facilities['.$index.'][rotate]');
+                    
+                    $facility['method'] = 'logFile';
                     break;
                 
                 case 'syslog' :
@@ -115,9 +117,12 @@ class Logger {
                     if($i || $o || $f)
                         if(!openlog($i, $o, $f))
                             throw new ConfigBadParameterException('log_facilities['.$index.']');
+                    
+                    $facility['method'] = 'logSyslog';
                     break;
                 
                 case 'error_log' :
+                    $facility['method'] = 'logErrorLog';
                     break;
                 
                 case 'callable' :
@@ -126,10 +131,12 @@ class Logger {
                     
                     if(!is_callable($facility['callback']))
                         throw new ConfigBadParameterException('log_facilities['.$index.'][callback]');
+                    
+                    $facility['method'] = 'logCallable';
                     break;
                 
                 default :
-                    throw new ConfigBadParameterException('log_facilities['.$index.'][typr]');
+                    throw new ConfigBadParameterException('log_facilities['.$index.'][type]');
             }
             
             self::$facilities[] = $facility;
@@ -198,9 +205,15 @@ class Logger {
         $message = '['.self::$process.':'.$level.'] '.$message;
         
         foreach(self::$facilities as $facility) {
+            if(array_key_exists('process', $facility)) {
+                $accepted = array_filter(array_map('trim', preg_split('`[\s,|]`', $facility['process'])));
+                if(!in_array('*', $accepted) && !in_array(self::$process, $accepted))
+                    continue;
+            }
+            
             if(self::dontLog($level, $facility)) continue;
             
-            $method = get_called_class().'::log_'.$facility['type'];
+            $method = get_called_class().'::'.$facility['method'];
             call_user_func($method, $facility, $level, $message);
         }
     }
@@ -240,7 +253,7 @@ class Logger {
      * 
      * @param string $message
      */
-    private static function log_error_log($facility, $level, $message) {
+    private static function logErrorLog($facility, $level, $message) {
         error_log($message);
     }
     
@@ -249,7 +262,7 @@ class Logger {
      * 
      * @param string $message
      */
-    private static function log_file($facility, $level, $message) {
+    private static function logFile($facility, $level, $message) {
         $file = $facility['path'];
         $ext = '';
         
@@ -261,7 +274,7 @@ class Logger {
             $ext = 'log';
         }
         
-        if(array_key_exists('by_process', $facility)) $file .= '_'.self::$process;
+        if(array_key_exists('separate_processes', $facility)) $file .= '_'.self::$process;
         
         if(array_key_exists('rotate', $facility)) switch($facility['rotate']) {
             case 'hourly' :  $file .= '_'.date('Y-m-d').'_'.date('H').'h'; break;
@@ -287,7 +300,7 @@ class Logger {
      * 
      * @param string $message
      */
-    private static function log_syslog($facility, $level, $message) {
+    private static function logSyslog($facility, $level, $message) {
         $priorities = array(LOG_ERR, LOG_WARNING, LOG_INFO, LOG_DEBUG);
         syslog($priorities[self::$levels[$level]], $message);
     }
@@ -297,7 +310,7 @@ class Logger {
      * 
      * @param string $message
      */
-    private static function log_callable($facility, $level, $message) {
+    private static function logCallable($facility, $level, $message) {
         $facility['callback']($message, self::$process);
     }
 }
