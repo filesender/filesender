@@ -49,6 +49,7 @@ class Autoloader {
         'Utilities' => 'utils/',
         'Database*' => 'utils/',
         '*Event' => 'utils/Constants',
+        '*Type' => 'utils/Constants',
         '*Log' => 'data/',
         
         'Storage' => 'storage/',

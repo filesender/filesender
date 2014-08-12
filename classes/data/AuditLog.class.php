@@ -98,7 +98,7 @@ class AuditLog extends DBObject {
             $data = $statement->fetch();
             if(!$data) throw new AuditLogNotFoundException('id = '.$id);
         }
-        
+
         if($data) $this->fillFromDBData($data);
         
     }
@@ -112,29 +112,38 @@ class AuditLog extends DBObject {
      * @return AuditLog auditlog
      */
     public static function create($event, DBObject $target) {
-        $auditLog = new self();
         
-        $auditLog->event = $event;
-        $auditLog->created = time();
-        $auditLog->ip = Utilities::getClientIP();
-        $auditLog->target_id = $target->id;
-        $auditLog->target_type = get_class($target);
+        switch ($event){
+            case LogEvent::FILE_EXPIRED:
+                return null;
+            default:
+                $configs = Config::get('auditlog_*');
         
-        if (Auth::isAuthenticated()){
-            $auditLog->user_id = Auth::user()->id;;
-            
-        }
+                if (isset($configs['enable']) && $configs['enable']){
+                    $auditLog = new self();
+        
+                    $auditLog->event = $event;
+                    $auditLog->created = time();
+                    $auditLog->ip = Utilities::getClientIP();
+                    $auditLog->target_id = $target->id;
+                    $auditLog->target_type = get_class($target);
+                    
+                    if (Auth::isAuthenticated()){
+                        $auditLog->user_id = Auth::user()->id;;
+                    }
 
-        
-        $auditLog->save();
-        
-        return $auditLog;
+                    $auditLog->save();
+                    
+                    return $auditLog;
+                }
+            break;
+        }
     }
     
     /**
      * Save in database
      */
-    private function save() {
+    public function save() {
         $this->insertRecord($this->toDBData());
     }
     

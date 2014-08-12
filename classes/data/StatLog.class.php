@@ -90,7 +90,7 @@ class StatLog extends DBObject {
             $data = $statement->fetch();
             if(!$data) throw new StatLogNotFoundException('id = '.$id);
         }
-        
+
         if($data) $this->fillFromDBData($data);
     }
     
@@ -110,31 +110,35 @@ class StatLog extends DBObject {
      * @return StatLog auditlog
      */
     public static function create($event, DBObject $target) {
-        $statLog = new self();
+        $configs = Config::get('statlog_*');
         
-        $statLog->event = $event;
-        $statLog->created = time();
-        $statLog->target_type = get_class($target);
-        
-        switch ($statLog->target_type){
-            case File::getClassName():
-                $statLog->size = $target->size;
-            break;
-            case Transfer::getClassName():
-                $tmpSize= 0;
-                foreach ($target->files as $file){
-                    $tmpSize += $file->size;
-                }
-                $statLog->size = $tmpSize;
-            break;
-            default:
-                $statLog->size = 0;
+        if (isset($configs['enable']) && $configs['enable']){
+            $statLog = new self();
+
+            $statLog->event = $event;
+            $statLog->created = time();
+            $statLog->target_type = get_class($target);
+
+            switch ($statLog->target_type){
+                case File::getClassName():
+                    $statLog->size = $target->size;
                 break;
+                case Transfer::getClassName():
+                    $tmpSize= 0;
+                    foreach ($target->files as $file){
+                        $tmpSize += $file->size;
+                    }
+                    $statLog->size = $tmpSize;
+                break;
+                default:
+                    $statLog->size = 0;
+                    break;
+            }
+
+            $statLog->save();
+            
+            return $statLog;
         }
-        
-        $statLog->save();
-        
-        return $statLog;
     }
     
     /**

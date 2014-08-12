@@ -9,9 +9,9 @@
 
 
 /**
- * Unknown AuditLog exception
+ * Unknown StatLog exception
  */
-class AuditLogNotFoundException extends DetailedException {
+class StatLogNotFoundException extends DetailedException {
     /**
      * Constructor
      * 
@@ -19,7 +19,7 @@ class AuditLogNotFoundException extends DetailedException {
      */
     public function __construct($selector) {
         parent::__construct(
-            'auditlog_not_found', // Message to give to the user
+            'statlog_not_found', // Message to give to the user
             $selector // Real message to log
         );
     }
