@@ -36,8 +36,8 @@ if(!defined('FILESENDER_BASE')) die('Missing environment');
 /**
  * Represents a transfer in database
  * 
- * @property array $files related files
- * @property array $recipients related recipients
+ * @property array $filesCache related filesCache
+ * @property array $recipientsCache related recipientsCache
  */
 class Transfer extends DBObject {
     /**
@@ -101,8 +101,8 @@ class Transfer extends DBObject {
     /**
      * Related objects cache
      */
-    private $files = null;
-    private $recipients = null;
+    private $filesCache = null;
+    private $recipientsCache = null;
     
     /**
      * Constructor
@@ -168,12 +168,22 @@ class Transfer extends DBObject {
      * Close the transfer
      */
     public function close() {
-        if(!Config::get('audit_log_enabled')) {
-            $this->delete();
-        }else{
-            $this->status = 'closed';
-            $this->save();
-        }
+        // Closing the transfer
+        $this->status = 'closed';
+        $this->save();
+        
+        // Logging the enclosure of transfer
+        Logger::logActivity(LogEvent::TRANSFER_CLOSED, $this);
+        
+        // Sending notification to all recipients 
+        // TODO
+        
+        // Generating the repport for the transfer owner
+        // TODO
+        
+        // Clean auditlog
+        AuditLog::clean($this);
+        
     }
     
     /**
@@ -204,13 +214,13 @@ class Transfer extends DBObject {
         }
         
         if($property == 'files') {
-            if(is_null($this->files)) $this->files = File::fromTransfer($this);
-            return $this->files;
+            if(is_null($this->filesCache)) $this->filesCache = File::fromTransfer($this);
+            return $this->filesCache;
         }
         
         if($property == 'recipients') {
-            if(is_null($this->recipients)) $this->recipients = Recipient::fromTransfer($this);
-            return $this->recipients;
+            if(is_null($this->recipientsCache)) $this->recipientsCache = Recipient::fromTransfer($this);
+            return $this->recipientsCache;
         }
         
         throw new PropertyAccessException($this, $property);
@@ -267,7 +277,7 @@ class Transfer extends DBObject {
         $file->save();
         
         // Update local cache
-        if(!is_null($this->files)) $this->files[$file->id] = $file;
+        if(!is_null($this->filesCache)) $this->filesCache[$file->id] = $file;
         
         return $file;
     }
@@ -284,7 +294,7 @@ class Transfer extends DBObject {
         $file->delete();
         
         // Update local cache
-        if(!is_null($this->files) && array_key_exists($file->id, $this->files)) unset($this->files[$file->id]);
+        if(!is_null($this->filesCache) && array_key_exists($file->id, $this->filesCache)) unset($this->filesCache[$file->id]);
     }
     
     /**
@@ -300,7 +310,7 @@ class Transfer extends DBObject {
         $recipient->save();
         
         // Update local cache
-        if(!is_null($this->recipients)) $this->recipients[$recipient->id] = $recipient;
+        if(!is_null($this->recipientsCache)) $this->recipientsCache[$recipient->id] = $recipient;
         
         return $recipient;
     }
@@ -317,6 +327,6 @@ class Transfer extends DBObject {
         $recipient->delete();
         
         // Update local cache
-        if(!is_null($this->recipients) && array_key_exists($recipient->id, $this->recipients)) unset($this->recipients[$recipient->id]);
+        if(!is_null($this->recipientsCache) && array_key_exists($recipient->id, $this->recipientsCache)) unset($this->recipientsCache[$recipient->id]);
     }
 }

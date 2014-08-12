@@ -114,8 +114,6 @@ class AuditLog extends DBObject {
     public static function create($event, DBObject $target) {
         
         switch ($event){
-            case LogEvent::FILE_EXPIRED:
-                return null;
             default:
                 $configs = Config::get('auditlog_*');
         
@@ -167,6 +165,42 @@ class AuditLog extends DBObject {
         ))) return $this->$property;
         
         throw new PropertyAccessException($this, $property);
+    }
+    
+    
+    
+    public static function clean(Transfer $transfer){
+        
+        if ($transfer->id > 0){
+            $configs = Config::get('auditlog_*');
+            if (isset($configs['enable']) && $configs['enable']){
+                // Getting all audit logs
+                $auditLogs = self::all(array('where' => 'target_type = :targettype AND target_id = :targetid'),array('targettype'=>$transfer->getClassName(), 'targetid' => $transfer->id));
+                if (sizeof($transfer) > 0 ){
+                    foreach($auditLogs as $log){
+                        $log->delete();
+                    }
+                }else{
+                    // No auditlogs found
+                }
+            }
+        }else{
+            throw new TransferNotFoundException($transfer->id);
+        }
+        // Check all files status
+        // Check lifetime
+    }
+    
+    
+    public static function fromTarget(DBObject $target){
+        $auditLogs = self::all(array('where' => 'target_type = :targettype AND target_id = :targetid'),array('targettype'=>$target->getClassName(), 'targetid' => $target->id));
+        if (sizeof($auditLogs) != 1){
+            return null;
+        }else{
+            reset($auditLogs);
+            return current($auditLogs);
+        }
+            
     }
     
 }
