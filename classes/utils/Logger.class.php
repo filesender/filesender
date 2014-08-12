@@ -287,7 +287,7 @@ class Logger {
         if($ext) $file .= '.'.$ext;
         
         if($fh = fopen($file, 'a')) {
-            fwrite($fh, trim($message)."\n");
+            fwrite($fh, trim('['.date('Y-m-d H:i:s').'] '.$message)."\n");
             fclose($fh);
         }else{
             self::log_error_log('[Filesender logging error] Could not log to '.$file);
