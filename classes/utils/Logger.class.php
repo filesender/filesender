@@ -55,6 +55,7 @@ class Logger {
         'debug' => 3
     );
     
+    
     /**
      * Logging facilities
      */
@@ -312,5 +313,17 @@ class Logger {
      */
     private static function logCallable($facility, $level, $message) {
         $facility['callback']($message, self::$process);
+    }
+    
+    
+    /**
+     * Log an activity message on datebase
+     * 
+     * @param type $logEvent
+     * @param type $target
+     */
+    public static function logActivity($logEvent, $target){
+        AuditLog::create($logEvent, $target);
+        StatLog::create($logEvent, $target);
     }
 }

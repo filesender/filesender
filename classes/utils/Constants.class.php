@@ -69,4 +69,3 @@ class Protocols {
 class Errors{
     const NO_IP = "none";
 }
-
