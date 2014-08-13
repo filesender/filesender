@@ -41,3 +41,22 @@ class AuditLogNotEnabledException extends DetailedException {
         );
     }
 }
+
+
+
+/**
+ * Bad AuditLog event type exception
+ */
+class BadAuditLogEventTypeException extends DetailedException {
+    /**
+     * Constructor
+     * 
+     * @param string $selector column used to select user
+     */
+    public function __construct($selector) {
+        parent::__construct(
+            'bad_auditlog_event_type', // Message to give to the user
+            $selector // Real message to log
+        );
+    }
+}

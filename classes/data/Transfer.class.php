@@ -167,13 +167,20 @@ class Transfer extends DBObject {
     /**
      * Close the transfer
      */
-    public function close() {
-        // Closing the transfer
-        $this->status = 'closed';
-        $this->save();
+    public function close($manualy = true) {
         
-        // Logging the enclosure of transfer
-        Logger::logActivity(LogEvent::TRANSFER_CLOSED, $this);
+        // Closing the transfer
+            $this->status = TransferStatuses::CLOSED;
+            $this->save();
+            
+        
+        if ($manualy){
+            // Logging the enclosure of transfer
+            Logger::logActivity(LogEventTypes::TRANSFER_CLOSED, $this);
+        }else{
+            // Logging the enclosure of transfer
+            Logger::logActivity(LogEventTypes::TRANSFER_EXPIRED, $this);
+        }
         
         // Sending notification to all recipients 
         // TODO
@@ -238,7 +245,7 @@ class Transfer extends DBObject {
      */
     public function __set($property, $value) {
         if($property == 'status') {
-            if(!in_array($value, array('uploading', 'available', 'closed'))) throw new BadStatusException($value);
+            if(!TransferStatuses::isValidValue($value)) throw new BadStatusException($value);
             $this->status = (string)$value;
         }else if($property == 'subject') {
             $this->subject = (string)$value;

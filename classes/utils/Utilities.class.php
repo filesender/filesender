@@ -120,7 +120,7 @@ class Utilities
      * @return string
      */
     public static function getClientIP(){
-        return isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : Errors::NO_IP;
+        return isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : ErrorTypes::NO_IP;
     }
 }
 

@@ -24,3 +24,23 @@ class StatLogNotFoundException extends DetailedException {
         );
     }
 }
+
+
+
+
+/**
+ * Bad StatLog event type exception
+ */
+class BadStatLogEventTypeException extends DetailedException {
+    /**
+     * Constructor
+     * 
+     * @param string $selector column used to select user
+     */
+    public function __construct($selector) {
+        parent::__construct(
+            'bad_statlog_event_type', // Message to give to the user
+            $selector // Real message to log
+        );
+    }
+}
