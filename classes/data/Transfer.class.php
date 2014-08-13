@@ -156,6 +156,15 @@ class Transfer extends DBObject {
     }
     
     /**
+     * Get max expire date
+     * 
+     * @return int timestamp
+     */
+    public static function getMaxExpire() {
+        return strtotime('+'.Config::get('default_daysvalid').' day');
+    }
+    
+    /**
      * Delete the transfer related objects
      */
     public function beforeDelete() {
@@ -259,7 +268,7 @@ class Transfer extends DBObject {
             if(!preg_match('`^[0-9]+$`', $value)) throw new BadExpireException($value);
             
             $value = (int)$value;
-            if($value <= time() || $value > strtotime('+ '.Config::get('default_daysvalid').' day')) {
+            if($value <= time() || $value > self::getMaxExpire()) {
                 throw new BadExpireException($value);
             }
             $this->expires = (string)$value;
