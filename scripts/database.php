@@ -35,7 +35,7 @@ define('FILESENDER_BASE', dirname(dirname(__FILE__)));
 require_once(FILESENDER_BASE.'/classes/autoload.php');
 require_once(FILESENDER_BASE.'/classes/_includes.php');
 
-Logger::setProcess('cli');
+Logger::setProcess(ProcessTypes::CLI);
 
 date_default_timezone_set(Config::get('Default_TimeZone'));
 

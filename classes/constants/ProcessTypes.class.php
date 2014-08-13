@@ -3,7 +3,7 @@
 /*
  * FileSender www.filesender.org
  * 
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * Copyright (c) 2009-2014, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -18,7 +18,7 @@
  * 	names of its contributors may be used to endorse or promote products
  * 	derived from this software without specific prior written permission.
  * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 'AS IS'
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
@@ -30,24 +30,20 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*
- * loads javascript
- * js/upload.js   manages all html5 related functions and uploading
+
+/**
+ * Class containing process types
  */
-
-// set cache to default - nocache
-session_cache_limiter('nocache');
-
-if (PHP_INT_SIZE !== 8) {
-    echo 'FileSender requires a 64-bit PHP installation to work. Please contact your administrator.';
-    exit;
+class ProcessTypes extends Enum{
+    /**
+     * Log levels
+     */
+    const MISC      = 'misc';
+    const GUI       = 'gui';
+    const REST      = 'rest';
+    const CRON      = 'cron';
+    const BOUNCE    = 'bounce';
+    const CLI       = 'cli';
+    
+    
 }
-
-require_once('../classes/autoload.php');
-require_once('../classes/_includes.php');
-
-date_default_timezone_set(Config::get('Default_TimeZone'));
-
-Logger::setProcess(ProcessTypes::REST);
-
-RestServer::process();
