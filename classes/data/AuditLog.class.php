@@ -106,33 +106,38 @@ class AuditLog extends DBObject {
     /**
      * Create a new audit log
      * 
-     * @param LogEvent $event: the event to be logged
+     * @param LogEventTypes $event: the event to be logged
      * @param DBObject: the target to be logged
      * 
      * @return AuditLog auditlog
      */
     public static function create($event, DBObject $target) {
         
+        
         switch ($event){
             default:
                 $configs = Config::get('auditlog_*');
         
                 if (isset($configs['enable']) && $configs['enable']){
-                    $auditLog = new self();
+                    if (LogEventTypes::isValidValue($event)){
+                        $auditLog = new self();
         
-                    $auditLog->event = $event;
-                    $auditLog->created = time();
-                    $auditLog->ip = Utilities::getClientIP();
-                    $auditLog->target_id = $target->id;
-                    $auditLog->target_type = get_class($target);
-                    
-                    if (Auth::isAuthenticated()){
-                        $auditLog->user_id = Auth::user()->id;;
-                    }
+                        $auditLog->event = $event;
+                        $auditLog->created = time();
+                        $auditLog->ip = Utilities::getClientIP();
+                        $auditLog->target_id = $target->id;
+                        $auditLog->target_type = get_class($target);
 
-                    $auditLog->save();
-                    
-                    return $auditLog;
+                        if (Auth::isAuthenticated()){
+                            $auditLog->user_id = Auth::user()->id;;
+                        }
+
+                        $auditLog->save();
+
+                        return $auditLog;
+                    }else{
+                        throw new BadAuditLogEventTypeException($event);
+                    }
                 }
             break;
         }

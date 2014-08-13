@@ -113,31 +113,35 @@ class StatLog extends DBObject {
         $configs = Config::get('statlog_*');
         
         if (isset($configs['enable']) && $configs['enable']){
-            $statLog = new self();
+            if (LogEventTypes::isValidValue($event)){
+                $statLog = new self();
 
-            $statLog->event = $event;
-            $statLog->created = time();
-            $statLog->target_type = get_class($target);
+                $statLog->event = $event;
+                $statLog->created = time();
+                $statLog->target_type = get_class($target);
 
-            switch ($statLog->target_type){
-                case File::getClassName():
-                    $statLog->size = $target->size;
-                break;
-                case Transfer::getClassName():
-                    $tmpSize= 0;
-                    foreach ($target->files as $file){
-                        $tmpSize += $file->size;
-                    }
-                    $statLog->size = $tmpSize;
-                break;
-                default:
-                    $statLog->size = 0;
+                switch ($statLog->target_type){
+                    case File::getClassName():
+                        $statLog->size = $target->size;
                     break;
-            }
+                    case Transfer::getClassName():
+                        $tmpSize= 0;
+                        foreach ($target->files as $file){
+                            $tmpSize += $file->size;
+                        }
+                        $statLog->size = $tmpSize;
+                    break;
+                    default:
+                        $statLog->size = 0;
+                        break;
+                }
 
-            $statLog->save();
-            
-            return $statLog;
+                $statLog->save();
+
+                return $statLog;
+            }else{
+                throw new BadStatLogEventTypeException($event);
+            }
         }
     }
     
