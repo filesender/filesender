@@ -200,6 +200,9 @@ class Transfer extends DBObject {
         // Clean auditlog
         AuditLog::clean($this);
         
+        // Delete transfer
+        $this->delete();
+        
     }
     
     /**

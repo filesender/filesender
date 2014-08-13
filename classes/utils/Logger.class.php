@@ -37,22 +37,16 @@ if(!defined('FILESENDER_BASE')) die('Missing environment');
  * Log utility
  */
 class Logger {
-    /**
-     * Log levels
-     */
-    const ERROR = 'error';
-    const WARN  = 'warn';
-    const INFO  = 'info';
-    const DEBUG = 'debug';
+    
     
     /**
      * Log levels to log priorities conversion table
      */
     private static $levels = array(
-        'error' => 0,
-        'warn' => 1,
-        'info' => 2,
-        'debug' => 3
+        LogLevels::ERROR    => 0,
+        LogLevels::WARN     => 1,
+        LogLevels::INFO     => 2,
+        LogLevels::DEBUG    => 3
     );
     
     
@@ -64,7 +58,7 @@ class Logger {
     /**
      * Current process
      */
-    private static $process = 'misc';
+    private static $process = ProcessTypes::MISC;
     
     /**
      * Set current process
@@ -72,7 +66,7 @@ class Logger {
      * @param string $process process name
      */
     public static function setProcess($process) {
-        if(!in_array($process, array('misc', 'gui', 'rest', 'cron', 'bounce', 'cli'))) $process = 'misc';
+        if (!ProcessTypes::isValidValue($process)) $process = ProcessTypes::MISC; 
         self::$process = $process;
     }
     
@@ -81,7 +75,7 @@ class Logger {
      */
     private static function setup() {
         if(!is_null(self::$facilities)) return;
-        
+
         self::$facilities = array(array('type' => 'error_log')); // Failsafe
         
         $facilities = Config::get('log_facilities');
@@ -89,11 +83,16 @@ class Logger {
         if(!is_array($facilities)) $facilities = array($facilities);
         
         foreach($facilities as $index => $facility) {
+            
             if(!is_array($facility)) $facility = array('type' => $facility);
             
             if(!array_key_exists('type', $facility))
                 throw new ConfigMissingParameterException('log_facilities['.$index.'][type]');
-            
+
+            if (!isset($facility['level']) || !LogLevels::isValidValue($facility['level'])){
+                $facility['level'] = LogLevels::INFO;
+            }
+                
             switch(strtolower($facility['type'])) {
                 case 'file' :
                     if(!array_key_exists('path', $facility))
@@ -155,7 +154,7 @@ class Logger {
      * @param string $message
      */
     public static function error($message) {
-        self::log(self::ERROR, $message);
+        self::log(LogLevels::ERROR, $message);
     }
     
     /**
@@ -164,7 +163,7 @@ class Logger {
      * @param string $message
      */
     public static function warn($message) {
-        self::log(self::WARN, $message);
+        self::log(LogLevels::WARN, $message);
     }
     
     /**
@@ -173,7 +172,7 @@ class Logger {
      * @param string $message
      */
     public static function info($message) {
-        self::log(self::INFO, $message);
+        self::log(LogLevels::INFO, $message);
     }
     
     /**
@@ -182,7 +181,7 @@ class Logger {
      * @param string $message
      */
     public static function debug($message) {
-        self::log(self::DEBUG, $message);
+        self::log(LogLevels::DEBUG, $message);
     }
     
     /**
@@ -200,8 +199,9 @@ class Logger {
         
         self::setup();
         
-        if(!array_key_exists($level, self::$levels))
-            $level = 'error';
+        //TODO: test level
+        if(LogLevels::isValidValue($level) && !array_key_exists($level, self::$levels))
+            $level = LogLevels::ERROR;
         
         $message = '['.self::$process.':'.$level.'] '.$message;
         
@@ -212,41 +212,9 @@ class Logger {
                     continue;
             }
             
-            if(self::dontLog($level, $facility)) continue;
-            
             $method = get_called_class().'::'.$facility['method'];
             call_user_func($method, $facility, $level, $message);
         }
-    }
-    
-    /**
-     * Check if level is high enough
-     * 
-     * @param string $level
-     * @param array $facility
-     */
-    private static function dontLog($level, $facility = null) {
-        $min_level = 10;
-        
-        if(!is_null($l = Config::get('log_level'))) {
-            if(is_numeric($l)) {
-                $min_level = $l;
-            }else if(array_key_exists($l, self::$levels)) {
-                $min_level = self::$levels[$l];
-            }
-        }
-        
-        if($facility && is_array($facility) && array_key_exists('level', $facility)) {
-            $l = $facility['level'];
-            
-            if(is_numeric($l)) {
-                $min_level = $l;
-            }else if(array_key_exists($l, self::$levels)) {
-                $min_level = self::$levels[$min_level];
-            }
-        }
-        
-        return self::$levels[$level] > $min_level;
     }
     
     /**
