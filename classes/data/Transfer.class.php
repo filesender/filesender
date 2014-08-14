@@ -177,11 +177,9 @@ class Transfer extends DBObject {
      * Close the transfer
      */
     public function close($manualy = true) {
-        
         // Closing the transfer
-            $this->status = TransferStatuses::CLOSED;
-            $this->save();
-            
+        $this->status = TransferStatuses::CLOSED;
+        $this->save();
         
         if ($manualy){
             // Logging the enclosure of transfer
@@ -192,8 +190,41 @@ class Transfer extends DBObject {
         }
         
         // Sending notification to all recipients 
-        // TODO
-        
+        $recipients = $this->recipients;
+        if (sizeof($recipients) > 0){
+
+            if (($noReply = Config::get('noreply')) == null){
+                $noReply = "no_reply@renater.fr";
+            }
+            if (($noReplyName = Config::get('noreply_name')) == null){
+                $noReplyName = "NO_REPLY";
+            }
+            
+            // TEMPORARY
+            //TODO: manage languages
+            if ($manualy){
+                $subject = "Deletion of your transfer";
+            }else{
+                $subject = "[CRON] automaticaly deleted expired transfer";
+            }
+            $message = "Transfer close:";
+            $message .= "\r\n";
+            $message .= "\t"."ID:".$this->id."\r\n";
+            $message .= "\t"."name:".$this->subject."\r\n";
+            $message .= "\t"."message:".$this->message."\r\n";
+            $message .= "\r\n";
+            
+            $mail = new Mail($subject, $noReply,$noReplyName, false);
+
+            foreach ($recipients as $key => $recipient){
+                $mail->to($recipient->email);
+            }
+            
+            $mail->write($message);
+            
+            $mail->send();
+            
+        }
         // Generating the repport for the transfer owner
         // TODO
         
