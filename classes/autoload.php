@@ -48,10 +48,12 @@ class Autoloader {
         'DBI' => 'utils/',
         'Utilities' => 'utils/',
         'Database*' => 'utils/',
+        'Mail' => 'utils/',
         'Enum' => 'utils/Enum',
         
         // CONSTANTS
         '*Types' => 'constants/',
+        '*Constants' => 'constants/',
         'TransferStatuses' => 'constants/TransferStatuses',
         'LogLevels' => 'constants/LogLevels',
         

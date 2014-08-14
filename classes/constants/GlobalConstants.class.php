@@ -30,22 +30,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-if (!defined('FILESENDER_BASE')) define('FILESENDER_BASE', dirname(dirname(__FILE__)));
 
-//require_once(FILESENDER_BASE.'/classes/Config.class.php');
-//require_once(FILESENDER_BASE.'/includes/ConfigValidation.php'); // Not compatible with new config
-
-require_once(FILESENDER_BASE.'/includes/ErrorHandler.php');
-require_once(FILESENDER_BASE.'/includes/EnsureHTTPS.php');
-require_once(FILESENDER_BASE.'/includes/UTF8.php');
-require_once(FILESENDER_BASE.'/classes/Version.php');
-require_once(FILESENDER_BASE.'/classes/Functions.php');
-require_once(FILESENDER_BASE.'/classes/LanguageSelection.php');
-require_once(FILESENDER_BASE.'/classes/DB.php');
-//require_once(FILESENDER_BASE.'/classes/AuthSaml.php');
-//require_once(FILESENDER_BASE.'/classes/AuthVoucher.php');
-//require_once(FILESENDER_BASE.'/classes/Mail.php');
-require_once(FILESENDER_BASE.'/classes/Log.php');
-require_once(FILESENDER_BASE.'/classes/DB_Input_Checks.php');
-require_once(FILESENDER_BASE.'/classes/Zipper.php');
-require_once(FILESENDER_BASE.'/classes/unstrip.php');
+class GlobalConstants {
+    const NEW_LINE = "\r\n";
+}
