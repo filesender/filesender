@@ -34,89 +34,18 @@ if (!defined('FILESENDER_BASE'))        // Require environment (fatal)
     die('Missing environment');
 
 /**
- * Bad email exception
+ * Unknown template exception
  */
-class BadEmailException extends DetailedException {
+class TemplateNotFoundException extends LoggingException {
     /**
      * Constructor
      * 
-     * @param string $email the bad email
+     * @param string $id template id
      */
-    public function __construct($email) {
+    public function __construct($id) {
         parent::__construct(
-            'bad_email', // Message to give to the user
-            $email // Real message to log
-        );
-    }
-}
-
-
-/**
- * Bad email exception
- */
-class BadIPFormatException extends DetailedException {
-    /**
-     * Constructor
-     * 
-     * @param string $ip the bad ip
-     * @param string $protocol the bad protocol
-     */
-    public function __construct($ip, $protocol = null) {
-        parent::__construct(
-            $protocol == null ? 'bad_ip_format' :'bad_ip_format_'.$protocol, // Message to give to the user
-            $ip // Real message to log
-        );
-    }
-}
-
-
-/**
- * Bad expire exception
- */
-class BadExpireException extends DetailedException {
-    /**
-     * Constructor
-     * 
-     * @param string $expire the bad expire
-     */
-    public function __construct($expire) {
-        parent::__construct(
-            'bad_expire', // Message to give to the user
-            $expire // Real message to log
-        );
-    }
-}
-
-/**
- * Bad size format exception - used in Utilities class
- */
-class BadSizeFormatException extends DetailedException {
-    /**
-     * Constructor
-     * 
-     * @param string $size the raw, badly formated size
-     */
-    public function __construct($size) {
-        parent::__construct(
-            'bad_size_format', // Message to give to the user
-            'size : '.$size // Details to log
-        );
-    }
-}
-
-/**
- * Bad lang exception
- */
-class BadLangCodeException extends DetailedException {
-    /**
-     * Constructor
-     * 
-     * @param string $code the bad lang code
-     */
-    public function __construct($code) {
-        parent::__construct(
-            'bad_lang_code', // Message to give to the user
-            'code : '.$code // Details to log
+            'template_not_found', // Message to give to the user
+            'id = '.$id // Real message to log
         );
     }
 }
