@@ -51,6 +51,10 @@ class User extends DBObject {
             'size' => 80,
             'null' => true
         ),
+        'lang' => array(
+            'type' => 'string',
+            'size' => 8
+        ),
         'aup_ticked' => array(
             'type' => 'bool'
         ),
@@ -80,6 +84,7 @@ class User extends DBObject {
      */
     protected $id = null;
     protected $organization = null;
+    protected $lang = null;
     protected $aup_ticked = false;
     protected $aup_last_ticked_date = 0;
     protected $upload_preferences = null;
@@ -90,7 +95,7 @@ class User extends DBObject {
     /**
      * From Auth if it makes sense
      */
-    private $email = null;
+    private $email = array();
     private $name = null;
     
     /**
@@ -189,8 +194,9 @@ class User extends DBObject {
      */
     public function __get($property) {
         if(in_array($property, array(
-            'id', 'organization', 'aup_ticked', 'aup_last_ticked_date', 'upload_preferences',
-            'voucher_preferences', 'created', 'last_activity', 'email', 'name'
+            'id', 'organization', 'lang', 'aup_ticked', 'aup_last_ticked_date',
+            'upload_preferences', 'voucher_preferences', 'created', 'last_activity',
+            'email', 'name'
         ))) return $this->$property;
         
         throw new PropertyAccessException($this, $property);
@@ -210,6 +216,10 @@ class User extends DBObject {
     public function __set($property, $value) {
         if($property == 'organization') {
             $this->organization = (string)$value;
+        }else if($property == 'lang') {
+            if(!array_key_exists($value, Lang::getAvailableLanguages()))
+                throw new BadLangCodeException($value);
+            $this->lang = (string)$value;
         }else if($property == 'aup_ticked') {
             $this->aup_ticked = (bool)$value;
         }else if($property == 'upload_preferences') {
@@ -217,8 +227,11 @@ class User extends DBObject {
         }else if($property == 'voucher_preferences') {
             $this->voucher_preferences = $value;
         }else if($property == 'email') {
-            if(!filter_var($value, FILTER_VALIDATE_EMAIL)) throw new BadEmailException($value);
-            $this->email = (string)$value;
+            if(!is_array($value)) $value = array($value);
+            foreach($value as $email)
+                if(!filter_var($email, FILTER_VALIDATE_EMAIL))
+                    throw new BadEmailException($value);
+            $this->email = $value;
         }else if($property == 'name') {
             $this->name = (string)$value;
         }else throw new PropertyAccessException($this, $property);

@@ -87,7 +87,11 @@ class AuthSPFake {
             
             if(!$attributes['email']) throw new AuthSPMissingAttributeException('email');
             
-            if(!filter_var($attributes['email'], FILTER_VALIDATE_EMAIL)) throw new AuthSPBadAttributeException('email');
+            if(!is_array($attributes['email'])) $attributes['email'] = array($attributes['email']);
+            
+            foreach($attributes['email'] as $email) {
+                if(!filter_var($email, FILTER_VALIDATE_EMAIL)) throw new AuthSPBadAttributeException('email');
+            }
             
             if(!$attributes['name']) $attributes['name'] = substr($attributes['email'], 0, strpos($attributes['email'], '@'));
             
