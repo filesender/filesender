@@ -115,6 +115,28 @@ class Utilities
     }
     
     /**
+     * Format size
+     * 
+     * @param int $bytes
+     * 
+     * @return string
+     */
+    public static function formatBytes($bytes, $precision = 2) {
+        if($bytes > 0) {
+            $units = array(' Bytes', ' kB', ' MB', ' GB', ' TB');
+            
+            $bytes = max($bytes, 0);
+            $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
+            $pow = min($pow, count($units) - 1);
+            
+            $bytes /= pow(1024, $pow);
+            
+            return round($bytes, $precision).''.$units[$pow];
+        }
+        return 0;
+    }
+    
+    /**
      * Get remote client IP (v4 or v6)
      * 
      * @return string
