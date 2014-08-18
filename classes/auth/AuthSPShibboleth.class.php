@@ -92,16 +92,21 @@ class AuthSPShibboleth {
                 }
                 $values = array_filter(array_map('trim', $values)); // Remove empty values
                 
-                $attributes[$attr] = count($values) ? $values[0] : null;
+                $attributes[$attr] = count($values) ? $values : null;
             }
+            
+            if(is_array($attributes['uid'])) $attributes['uid'] = array_shift($attributes['uid']);
+            if(is_array($attributes['name'])) $attributes['name'] = array_shift($attributes['name']);
             
             if(!$attributes['uid']) throw new AuthSPMissingAttributeException('uid');
             
             if(!$attributes['email']) throw new AuthSPMissingAttributeException('email');
             
-            if(!filter_var($attributes['email'], FILTER_VALIDATE_EMAIL)) throw new AuthSPBadAttributeException('email');
+            foreach($attributes['email'] as $email) {
+                if(!filter_var($email, FILTER_VALIDATE_EMAIL)) throw new AuthSPBadAttributeException('email');
+            }
             
-            if(!$attributes['name']) $attributes['name'] = substr($attributes['email'], 0, strpos($attributes['email'], '@'));
+            if(!$attributes['name']) $attributes['name'] = substr($attributes['email'][0], 0, strpos($attributes['email'][0], '@'));
             
             self::$attributes = $attributes;
         }

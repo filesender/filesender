@@ -89,6 +89,17 @@ class AuthSP {
     }
     
     /**
+     * Trigger authentication
+     */
+    public static function trigger() {
+        $url = self::logonURL();
+        if(!$url) return;
+        
+        header('Location: '.$url);
+        exit;
+    }
+    
+    /**
      * Load selected service provider delegation class and return its class name.
      * 
      * @return string delegation class name
