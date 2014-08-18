@@ -325,6 +325,11 @@ class Lang {
             self::$translations[$src][$id]['text'] = $s; // Update cache
         }
         
+        // Config syntax
+        $tr['text'] = preg_replace_callback('`\{(cfg|conf|config):([^}]+)\}`', function($m) {
+            return Config::get($m[2]);
+        }, $tr['text']);
+        
         return new self($tr['text']);
     }
     
@@ -372,7 +377,14 @@ class Lang {
                 
                 ob_start();
                 include $file;
-                $parts = preg_split('`\n\s*\n`', ob_get_clean(), 2);
+                $translation = trim(ob_get_clean());
+                
+                // Config syntax
+                $translation = preg_replace_callback('`\{(cfg|conf|config):([^}]+)\}`', function($m) {
+                    return Config::get($m[2]);
+                }, $translation);
+                
+                $parts = preg_split('`\n\s*\n`', $translation, 2);
                 
                 $mail = new StdClass;
                 $mail->subject = null;
@@ -427,6 +439,11 @@ class Lang {
                         }
                     }
                 }
+                
+                // Convert to Lang instances
+                $mail->subject = new self($mail->subject);
+                $mail->plain = new self($mail->plain);
+                $mail->html = new self($mail->html);
                 
                 return $mail;
             }
