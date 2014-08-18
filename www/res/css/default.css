@@ -1,0 +1,342 @@
+/*
+ * FileSender www.filesender.org
+ * 
+ * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ * All rights reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ * 
+ * *   Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 
+ * *   Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 
+ * *   Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
+ *     names of its contributors may be used to endorse or promote products
+ *     derived from this software without specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+/* Global rules */
+
+body {
+    background: #1c1c1c;
+    color: #333;
+    font-family: Verdana, Geneva, sans-serif;
+    text-align: left;
+    font-size: 12px;
+}
+
+img {
+    display: block;
+}
+
+a {
+    color: #333333;
+}
+
+td {
+    vertical-align: top;
+    padding: 0.25em;
+}
+
+
+/* Main layout rules */
+
+#wrap {
+    background: #fff;
+    width: 800px;
+    padding-bottom: 2em;
+    margin: 0 auto;
+    height: 100%;
+}
+
+#header {
+    background: #666 url(../images/banner.png) no-repeat top left;
+    height: 60px;
+    margin-bottom: 1em;
+}
+
+#menu {
+    height: 34px;
+    background: url(../images/jq-global-nav.png) repeat-x scroll 0 bottom #1B1B1B;
+    border-radius: 0.5em 0.5em 0 0;
+    -moz-border-radius: 0.5em 0.5em 0 0;
+    margin: 0 2em;
+    overflow: hidden;
+}
+
+#menu li {
+    position: relative;
+    display: inline-block;
+    float: left;
+    border-left: 1px solid rgba(255, 255, 255, 0.098);
+    border-right: 1px solid rgba(0, 0, 0, 0.35);
+    cursor: pointer;
+    font: bold 13px/17px "Helvetica Neue",Helvetica,Arial,Geneva,sans-serif;
+    text-shadow: 0 0 0.2em #000;
+    transition: all 0.2s ease 0s;
+}
+
+#menu ul .spacer {
+    width: 100%;
+}
+
+#menu .leftmenu {
+    float: left;
+}
+
+#menu .rightmenu {
+    float: right;
+}
+
+#menu ul {
+    /* [disabled]border-left: 1px solid rgba(0, 0, 0, 0.35); */
+    /* [disabled]border-right: 1px solid rgba(255, 255, 255, 0.098); */
+    display: inline;
+    float: left;
+    list-style: none outside none;
+}
+
+#menu ul li a {
+    color: #E6E6E6;
+    display: block;
+    font-style: normal;
+    font-weight: normal;
+    padding: 0.6em 1em;
+    text-decoration: none;
+}
+
+#menu a:hover, .current, #menu a:active {
+    background-color: rgb(51,51,51);
+}
+
+#content {
+    padding-top: 0.5em 2em 1em 2em;
+}
+
+#footer {
+    text-align: center;
+    font-size: 1em;
+    color: #666;
+}
+
+
+/* Page elements */
+
+#page h1 {
+    width: 100%;
+    font-size: 1.3em;
+    font-weight: bold;
+    padding-bottom: 1em;
+    padding-top: 4px;
+}
+
+.message, .exception {
+    background-position: 0.8em 50%;
+    background-repeat: no-repeat;
+    border: 1px solid;
+    border-radius: 0.5em;
+    -moz-border-radius: 0.5em;
+    padding: 0.4em 0.4em 0.4em 32px;
+    margin: 2em 5em;
+}
+
+.error.message, .exception {
+    background-color: #fcc;
+    background-image: url(../images/error.png);
+    border-color: #ebb;
+}
+
+.info.message {
+    background-color: #ccf;
+    background-image: url(../images/info.png);
+    border-color: #bbe;
+}
+
+.success.message {
+    background-color: #cfc;
+    background-image: url(../images/success.png);
+    border-color: #beb;
+}
+
+.box {
+    padding: 0.5em;
+    border: 1px solid #aaa;
+    border-radius:0.5em;
+    -moz-border-radius: 0.5em;
+    margin: 0 0.25em 0.5em 0.25em;
+}
+
+.two_columns {
+    border-collapse: separate;
+    border-spacing: 0.5em;
+    margin: 0 -0.25em 0.5em -0.25em;
+}
+
+.two_columns td {
+    width: 50%;
+}
+
+.fieldcontainer {
+    padding: 0.5em;
+}
+
+
+/* JQuery UI overides */
+
+.ui-widget {
+    font-family: Verdana,Arial,sans-serif;
+    font-size: 1em;
+}
+
+.ui-dialog .ui-dialog-buttonpane button {
+    cursor: pointer;
+    margin: 0.5em 0.4em 0.5em 0;
+    padding: 0.5em;
+    padding-left:1em;
+    padding-right:1em;
+}
+
+
+/* Upload page */
+
+#upload_form input[type="checkbox"] {
+    float: left;
+    width: 1.2em;
+    margin: 0 1em 0 0;
+}
+
+#upload_form .files {
+    display: none;
+}
+
+#upload_form .files_dragdrop {
+    border: 1px dashed #666;
+    border-radius: 0.5em;
+    -moz-border-radius: 0.5em;
+    padding-top: 0.5em 0;
+    background-color: #FFF;
+    font-weight: bold;
+}
+
+#upload_form .files_dragdrop .instructions {
+    font-size: 1.2em;
+    color: #666;
+    font-weight: bold;
+    padding: 0.3em;
+    padding-bottom: 0.4em;
+    line-height: 5em;
+    text-align: center;
+}
+
+#upload_form .files_dragdrop .files {
+    display: table;
+    width: 100%;
+    height: 100%;
+}
+
+#upload_form .files_actions {
+    display: table;
+    width: 100%;
+    margin: 0.25em 1em 0 0;
+}
+
+#upload_form .files_actions div, #upload_form .actions span {
+    display: table-cell;
+    width: 33%;
+}
+
+#upload_form .files_actions div a {
+    cursor: pointer;
+    width: 45%;
+}
+
+#upload_form .files_actions div+div {
+    text-align: center;
+}
+
+#upload_form .files_actions .stats {
+    text-align: right;
+    font-size: 0.8em;
+    vertical-align: middle;
+}
+
+#upload_form input[name="from"] {
+    width: 98%;
+    font-size: 1em;
+    font-family: Verdana, Geneva, sans-serif;
+}
+
+#upload_form .recipients_box {
+    display: none;
+    padding: 0.5em 0;
+}
+
+#upload_form .recipients_box div i {
+    padding-left: 4px;
+    color: #f00;
+    cursor: pointer;
+}
+
+#upload_form .recipients_box div i:hover {
+    border-color: #000;
+}
+
+#upload_form textarea[name="message"] {
+    resize: vertical;
+}
+
+#upload_form .advanced_options {
+    display: none;
+}
+
+#upload_form .aup {
+    padding: 1em;
+}
+
+#upload_form .aup label {
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#upload_form .aup label span {
+    color: #666;
+}
+
+#upload_form .aup .terms {
+    display: none;
+    margin-top: 0.5em;
+    padding: 0.5em;
+}
+
+#upload_form .upload_button {
+    margin: 1em 0;
+    text-align: center;
+}
+
+#upload_form .upload_button a {
+    margin: 0 1em 0 0;
+    font-size: 1.2em;
+    width: 20%;
+    padding: 1em;
+    font-weight: bold;
+    display: inline-block;
+}
+
+#upload_form .upload_button a span {
+    font-size: 2em;
+}
