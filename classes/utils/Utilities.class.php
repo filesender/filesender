@@ -122,18 +122,24 @@ class Utilities
      * @return string
      */
     public static function formatBytes($bytes, $precision = 2) {
-        if($bytes > 0) {
-            $units = array(' Bytes', ' kB', ' MB', ' GB', ' TB');
-            
-            $bytes = max($bytes, 0);
-            $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
-            $pow = min($pow, count($units) - 1);
-            
-            $bytes /= pow(1024, $pow);
-            
-            return round($bytes, $precision).''.$units[$pow];
-        }
-        return 0;
+        if(!$precision || !is_numeric($precision))
+            $precision = 2;
+        
+        $nomult = Lang::tr('bytes_no_multiplier')->out();
+        if($nomult == '{bytes_no_multiplier}') $nomult = 'Bytes';
+        
+        $wmult = Lang::tr('bytes_with_multiplier')->out();
+        if($wmult == '{bytes_with_multiplier}') $wmult = 'B';
+        
+        $multipliers = array('', 'k', 'M', 'G', 'T');
+        
+        $bytes = max($bytes, 0);
+        $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
+        $pow = min($pow, count($multipliers) - 1);
+        
+        $bytes /= pow(1024, $pow);
+        
+        return round($bytes, $precision).' '.$multipliers[$pow].($pow ? $wmult : $nomult);
     }
     
     /**
