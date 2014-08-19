@@ -49,3 +49,20 @@ class TransferNotFoundException extends LoggingException {
         );
     }
 }
+
+/**
+ * Bad status exception
+ */
+class TransferBadStatusException extends DetailedException {
+    /**
+     * Constructor
+     * 
+     * @param string $status the bad lang status
+     */
+    public function __construct($status) {
+        parent::__construct(
+            'bad_transfer_status', // Message to give to the user
+            'status : '.$status // Details to log
+        );
+    }
+}
