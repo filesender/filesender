@@ -78,12 +78,25 @@ window.filesender.lang = {
             return this.translation;
         };
         
+        this.values = function(separator) {
+            var values = this.translation.split(separator ? separator : ',');
+            for(var i=0; i<values.length; i++)
+                values[i] = values[i].replace(/^\s+/g, '').replace(/\s+$/g, '');
+            return values;
+        };
+        
         this.toString = function() {
+            return this.out();
+        };
+        
+        this.valueOf = function() {
             return this.out();
         };
     },
     
     translate: function(id) {
+        id = id.replace(/^_+/g, '').replace(/_+$/g, '').toLowerCase();
+        
         if(typeof this.translations[id] == 'undefined')
             return new this.translatedString('{' + id + '}');
         

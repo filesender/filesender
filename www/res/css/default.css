@@ -145,7 +145,7 @@ td {
     padding-top: 4px;
 }
 
-.message, .exception {
+div.message, div.exception {
     background-position: 0.8em 50%;
     background-repeat: no-repeat;
     border: 1px solid;
@@ -155,19 +155,19 @@ td {
     margin: 2em 5em;
 }
 
-.error.message, .exception {
+div.error.message, div.exception {
     background-color: #fcc;
     background-image: url(../images/error.png);
     border-color: #ebb;
 }
 
-.info.message {
+div.info.message {
     background-color: #ccf;
     background-image: url(../images/info.png);
     border-color: #bbe;
 }
 
-.success.message {
+div.success.message {
     background-color: #cfc;
     background-image: url(../images/success.png);
     border-color: #beb;
@@ -195,6 +195,30 @@ td {
     padding: 0.5em;
 }
 
+.remove {
+    margin-left: 0.5em;
+    cursor: pointer;
+}
+
+.remove:hover {
+    color: #900;
+}
+
+div.invalid {
+    -webkit-box-shadow:0 0 4px red;
+    -moz-box-shadow: 0 0 4px red;
+    box-shadow:0 0 4px red;
+}
+
+span.invalid {
+    color: #f00;
+    margin-right: 0.5em;
+}
+
+input.invalid, textarea.invalid {
+    border: 1px solid #f00;
+}
+
 
 /* JQuery UI overides */
 
@@ -220,8 +244,59 @@ td {
     margin: 0 1em 0 0;
 }
 
-#upload_form .files {
+#upload_form .file_selector {
     display: none;
+    margin-bottom: 0.5em;
+}
+
+#upload_form .files {
+    width: 100%;
+    margin-bottom: 0.5em;
+}
+
+#upload_form .files .file {
+    position: relative;
+    margin: 0.2em;
+    padding: 0.5em;
+    border: 1px solid #ccc;
+    border-radius: 0.5em;
+    -moz-border-radius: 0.5em;
+    background-color: #dedede;
+    line-height: 1.8em;
+    height: 1.8em;
+}
+
+#upload_form .files .file .info {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    font-weight: bold;
+}
+
+#upload_form .files .file .remove {
+    float: right;
+    line-height: 1.3333em;
+}
+
+#upload_form .files .file .progressbar {
+    position: relative;
+    float: right;
+    margin: 0.2333em 1em;
+    width: 10em;
+}
+
+#upload_form .files .file .progressbar div {
+    display: none;
+    height: 1.3333em;
+    width: 0;
+    padding: 0.25em 0.5em;
+    font-weight: normal;
+    font-size: 0.8em;
+    line-height: 1.3333em;
+    border-radius: 0.5em;
+    -moz-border-radius: 0.5em;
+    background-color: #5c5;
+    overflow-x: visible;
 }
 
 #upload_form .files_dragdrop {
@@ -243,19 +318,13 @@ td {
     text-align: center;
 }
 
-#upload_form .files_dragdrop .files {
-    display: table;
-    width: 100%;
-    height: 100%;
-}
-
 #upload_form .files_actions {
     display: table;
     width: 100%;
     margin: 0.25em 1em 0 0;
 }
 
-#upload_form .files_actions div, #upload_form .actions span {
+#upload_form .files_actions div, #upload_form .files_actions span {
     display: table-cell;
     width: 33%;
 }
@@ -275,25 +344,22 @@ td {
     vertical-align: middle;
 }
 
-#upload_form input[name="from"] {
-    width: 98%;
-    font-size: 1em;
-    font-family: Verdana, Geneva, sans-serif;
-}
-
-#upload_form .recipients_box {
+#upload_form .recipients {
     display: none;
     padding: 0.5em 0;
 }
 
-#upload_form .recipients_box div i {
-    padding-left: 4px;
-    color: #f00;
-    cursor: pointer;
+#upload_form .recipients .recipient {
+    margin: 0.2em;
+    padding: 0.5em;
+    border: 1px solid #ccc;
+    border-radius: 0.5em;
+    -moz-border-radius: 0.5em;
+    background-color: #dedede;
 }
 
-#upload_form .recipients_box div i:hover {
-    border-color: #000;
+#upload_form .recipients .recipient .remove {
+    float: right;
 }
 
 #upload_form textarea[name="message"] {
@@ -329,12 +395,8 @@ td {
 }
 
 #upload_form .upload_button a {
-    margin: 0 1em 0 0;
-    font-size: 1.2em;
-    width: 20%;
     padding: 1em;
     font-weight: bold;
-    display: inline-block;
 }
 
 #upload_form .upload_button a span {
