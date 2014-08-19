@@ -183,11 +183,13 @@ class Transfer extends DBObject {
         
         if ($manualy){
             // Logging the enclosure of transfer
-            Logger::logActivity(LogEventTypes::TRANSFER_CLOSED, $this);
+            $lEvent = LogEventTypes::TRANSFER_CLOSED;
         }else{
             // Logging the enclosure of transfer
-            Logger::logActivity(LogEventTypes::TRANSFER_EXPIRED, $this);
+            $lEvent = LogEventTypes::TRANSFER_EXPIRED;            
         }
+        Logger::logActivity($lEvent, $this);
+        AuditLog::create($lEvent, $this);
         
         // Sending notification to all recipients 
         $recipients = $this->recipients;
@@ -200,33 +202,44 @@ class Transfer extends DBObject {
                 $noReplyName = "NO_REPLY";
             }
             
-            // TEMPORARY
-            //TODO: manage languages
-            if ($manualy){
-                $subject = "Deletion of your transfer";
-            }else{
-                $subject = "[CRON] automaticaly deleted expired transfer";
-            }
-            $message = "Transfer close:";
-            $message .= "\r\n";
-            $message .= "\t"."ID:".$this->id."\r\n";
-            $message .= "\t"."name:".$this->subject."\r\n";
-            $message .= "\t"."message:".$this->message."\r\n";
-            $message .= "\r\n";
+            $c = Lang::translateEmail('expiredfiles');
             
-            $mail = new Mail($subject, $noReply,$noReplyName, false);
+            if ($manualy){
+                $c->subject = str_ireplace("{TITLE}", Lang::tr('_TRANSFER_DELETION_TITLE'), $c->subject);
+            }else{
+                $c->subject = str_ireplace("{TITLE}", Lang::tr('_TRANSFER_DELETION_TITLE_CRON'), $c->subject);
+            }
+            
+            $useHtml = Config::get('use_html_mail');
+            
+            if ($useHtml){
+                $mailContent = $c->html;
+            }else{
+                $mailContent = $c->plain;
+            }
+            
+            $search = array("{transferid}","{transfername}","{transfermessage}");
+            $placeholders = array($this->id,$this->subject,$this->message);
+            
+            $mailContent = str_ireplace($search, $placeholders, $mailContent);
+            
+            $mail = new Mail($c->subject, $noReply,$noReplyName, true);
 
             foreach ($recipients as $key => $recipient){
                 $mail->to($recipient->email);
             }
             
-            $mail->write($message);
+            $mail->write($mailContent);
             
             $mail->send();
             
         }
         // Generating the repport for the transfer owner
-        // TODO
+        $confReport = Config::get('REPORT_ON_TRANSFER_CLOSING');
+        if (ReportTypes::isValidName($confReport)){
+            $report = new Report($this);
+            $report->generateReport($confReport);
+        }
         
         // Clean auditlog
         AuditLog::clean($this);

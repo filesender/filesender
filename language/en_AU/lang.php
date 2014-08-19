@@ -280,3 +280,6 @@ $lang["_SITE_SPLASHTEXT"] = htmlspecialchars(Config::get('site_name')) ." is a s
 
 // Footer to display
 $lang["_SITE_FOOTER"] = ""; 
+
+$lang["_TRANSFER_DELETION_TITLE"]        = "Deletion of your transfer";
+$lang["_TRANSFER_DELETION_TITLE_CRON"]   = "[CRON] Automaticaly deleted expired transfer";

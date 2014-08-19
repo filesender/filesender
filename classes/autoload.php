@@ -41,9 +41,11 @@ class Autoloader {
      */
     private static $mappers = array(
         'PropertyAccessException' => 'exceptions/DBObjectExceptions',
+        'NoReportFoundException' => 'exceptions/ReportExceptions',
         '*Exception' => 'exceptions/@package(Exception)',
         
         'Logger' => 'utils/',
+        'Report' => 'utils/',
         'Config' => 'utils/',
         'DBI' => 'utils/',
         'Utilities' => 'utils/',
