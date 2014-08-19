@@ -110,7 +110,10 @@ window.filesender.client = {
      * @param array options array of selected option identifiers
      * @param callable callback function to call with transfer path and transfer info once done
      */
-    postTransfer: function(files, recipients, subject, message, expires, options, callback) {
+    postTransfer: function(files, recipients, subject, message, expires, options, callback, onerror) {
+        var opts = {};
+        if(onerror) opts.error = onerror;
+        
         this.post('/transfer', {
             files: files,
             recipients: recipients,
@@ -118,7 +121,7 @@ window.filesender.client = {
             message: message,
             expires: expires,
             options: options
-        }, callback);
+        }, callback, opts);
     },
     
     /**
@@ -128,12 +131,14 @@ window.filesender.client = {
      * @param blob chunk
      * @param callable callback
      */
-    postChunk: function(file, blob, callback) {
+    postChunk: function(file, blob, callback, onerror) {
         var opts = {
             contentType: 'application/octet-stream',
             rawdata: true
         };
         if(filesender.config.chunk_upload_security == 'key') opts.args = {key: file.uid};
+        
+        if(onerror) opts.error = onerror;
         
         this.post('/file/' + file.id + '/chunk', blob, callback, opts);
     },
@@ -146,12 +151,14 @@ window.filesender.client = {
      * @param int offset
      * @param callable callback
      */
-    putChunk: function(file, blob, offset, callback) {
+    putChunk: function(file, blob, offset, callback, onerror) {
         var opts = {
             contentType: 'application/octet-stream',
             rawdata: true
         };
         if(filesender.config.chunk_upload_security == 'key') opts.args = {key: file.uid};
+        
+        if(onerror) opts.error = onerror;
         
         this.put('/file/' + file.id + '/chunk/' + offset, blob, callback, opts);
     },
@@ -163,9 +170,11 @@ window.filesender.client = {
      * @param object data check data
      * @param callable callback
      */
-    fileComplete: function(file, data, callback) {
+    fileComplete: function(file, data, callback, onerror) {
         var opts = {};
         if(filesender.config.chunk_upload_security == 'key') opts.args = {key: file.uid};
+        
+        if(onerror) opts.error = onerror;
         
         this.put('/file/' + file.id + '/complete', data, callback, opts);
     },
@@ -177,9 +186,11 @@ window.filesender.client = {
      * @param object data check data
      * @param callable callback
      */
-    transferComplete: function(transfer, data, callback) {
+    transferComplete: function(transfer, data, callback, onerror) {
         var opts = {};
         if(filesender.config.chunk_upload_security == 'key') opts.args = {key: transfer.files[0].uid};
+        
+        if(onerror) opts.error = onerror;
         
         this.put('/transfer/' + transfer.id + '/complete', data, callback, opts);
     },
@@ -190,7 +201,7 @@ window.filesender.client = {
      * @param object transfer
      * @param callable callback
      */
-    deleteTransfer: function(transfer, callback) {
+    deleteTransfer: function(transfer, callback, onerror) {
         var id = transfer;
         var opts = {};
         
@@ -198,6 +209,8 @@ window.filesender.client = {
             id = transfer.id;
             if(filesender.config.chunk_upload_security == 'key') opts.args = {key: transfer.files[0].uid};
         }
+        
+        if(onerror) opts.error = onerror;
         
         this.delete('/transfer/' + id, callback, opts);
     },
@@ -329,7 +342,7 @@ window.filesender.ui = {
      * @param object data values for translation placeholders
      */
     error: function(code, data) {
-        var msg = 'ERROR : ' + code;
+        var msg = 'Error : ' + code;
         if(data && data.logid) {
             msg += ' (' + data.logid + ')';
             delete data.logid;
@@ -343,7 +356,7 @@ window.filesender.ui = {
     },
     
     rawError: function(text) {
-        alert('RAW ERROR : ' + text);
+        alert('Error : ' + text);
     },
     
     /**
@@ -648,6 +661,8 @@ window.filesender.transfer = function() {
                 // Chunk by chunk upload
                 transfer.uploadChunk();
             }
+        }, function(code, details) {
+            transfer.reportError(code, details);
         });
     };
     
@@ -711,6 +726,7 @@ window.filesender.transfer = function() {
         var blob = file.blob[slicer](offset, offset + filesender.config.upload_chunk_size);
         
         file.uploaded += filesender.config.upload_chunk_size;
+        if(file.uploaded > file.size) file.uploaded = file.size;
         
         var last = file.uploaded >= file.size;
         if(last) this.file_index++;
@@ -728,6 +744,8 @@ window.filesender.transfer = function() {
                 transfer.status = 'done';
                 transfer.reportComplete();
             }
+        }, function(code, details) {
+            transfer.reportError(code, details);
         });
     };
 };
