@@ -455,14 +455,18 @@ class Lang {
     /**
      * Whole dictionary getter
      * 
+     * Do not get file-translated strings
+     * 
      * @return array
      */
     public static function getTranslations() {
         self::loadDictionaries();
         
         return array_filter(array_map(function($t) {
-            return $t['text'] ? $t['text'] : null;
-        }, array_merge(self::$translations['fallback'], self::$translations['main'])));
+            return $t['text'];
+        }, array_merge(self::$translations['fallback'], self::$translations['main'])), function($t) {
+            return !is_null($t);
+        });
     }
     
     /**
