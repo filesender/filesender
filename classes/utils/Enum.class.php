@@ -8,9 +8,10 @@
 
 abstract class Enum {
     private static $constCache = NULL;
+    private static $calledClass = NULL;
 
     private static function getConstants() {
-        if (self::$constCache === NULL) {
+        if (self::$calledClass != get_called_class() || self::$constCache === NULL) {
             $reflect = new ReflectionClass(get_called_class());
             self::$constCache = $reflect->getConstants();
         }
