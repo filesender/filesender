@@ -226,7 +226,7 @@ class RestEndpointTransfer extends RestEndpoint {
         
         $data = $this->request->input;
         
-        $transfer->status = 'available';
+        $transfer->status = TransferStatuses::AVAILABLE;
         $transfer->save();
         
         // Send emails

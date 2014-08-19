@@ -288,7 +288,8 @@ class Transfer extends DBObject {
      */
     public function __set($property, $value) {
         if($property == 'status') {
-            if(!TransferStatuses::isValidValue($value)) throw new BadStatusException($value);
+            $value = strtolower($value);
+            if(!TransferStatuses::isValidValue($value)) throw new TransferBadStatusException($value);
             $this->status = (string)$value;
         }else if($property == 'subject') {
             $this->subject = (string)$value;
