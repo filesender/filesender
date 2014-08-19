@@ -129,14 +129,14 @@ class AuditLog extends DBObject {
                         $auditLog->target_type = get_class($target);
 
                         if (Auth::isAuthenticated()){
-                            $auditLog->user_id = Auth::user()->id;;
+                            $auditLog->user_id = Auth::user()->id;
                         }
 
                         $auditLog->save();
 
                         return $auditLog;
                     }else{
-                        throw new BadAuditLogEventTypeException($event);
+                        throw new AuditLogBadEventTypeException($event);
                     }
                 }
             break;

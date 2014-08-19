@@ -30,36 +30,20 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*
- * Unknown AuditLog exception
- */
-class AuditLogNotFoundException extends DetailedException {
-    /**
-     * Constructor
-     * 
-     * @param string $selector column used to select user
-     */
-    public function __construct($selector) {
-        parent::__construct(
-            'auditlog_not_found', // Message to give to the user
-            $selector // Real message to log
-        );
-    }
-}
+
 
 /**
- * Unknown AuditLog exception
+ * Invalid recipeint exception
  */
-class AuditLogNotEnabledException extends DetailedException {
+class ReportNotFoundException extends DetailedException {
     /**
      * Constructor
      * 
      * @param string $selector column used to select user
      */
-    public function __construct($selector) {
+    public function __construct() {
         parent::__construct(
-            'auditlog_not_enabled', // Message to give to the user
-            $selector // Real message to log
+            'report_not_found' // Message to give to the user
         );
     }
 }
@@ -67,18 +51,19 @@ class AuditLogNotEnabledException extends DetailedException {
 
 
 /**
- * Bad AuditLog event type exception
+ * Invalid recipeint exception
  */
-class AuditLogBadEventTypeException extends DetailedException {
+class NoReportFoundException extends DetailedException {
     /**
      * Constructor
      * 
      * @param string $selector column used to select user
      */
-    public function __construct($selector) {
+    public function __construct() {
         parent::__construct(
-            'bad_auditlog_event_type', // Message to give to the user
-            $selector // Real message to log
+            'no_report_found' // Message to give to the user
         );
     }
 }
+
+

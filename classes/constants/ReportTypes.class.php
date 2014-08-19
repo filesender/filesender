@@ -30,49 +30,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+
 /**
- * Class containing all tags (constants) for audit logs
+ * Class containing error codes
  */
-class LogEventTypes extends Enum {
-    /* GENERAL */
-   const UPLOAD                 = 'upload';
-   const FAILED                 = 'failed';
-   const DOWNLOAD               = 'download';
-   const UPLOADED               = 'uploaded';
-   const LOG_CREATED            = 'log_created';
-   
-   /* USER */
-   const USER_ACTIVATED         = 'user_activated';
-   const USER_INACTIVE          = 'user_inactive';
-   const USER_PURGED            = 'user_purged';
-   
-   /* FILE */
-   const FILE_UPDATED           = 'file_updated';
-   const FILE_EXPIRED           = 'file_expired';
-   const FILE_MOVED             = 'file_moved';
-   const FILE_DELETED           = 'file_deleted';
-   
-   /* GUESTVOUCHER */
-   const GUESTVOUCHER_CREATED   = 'guestvoucher_created';
-   const GUESTVOUCHER_SENT      = 'guestvoucher_sent';
-   const GUESTVOUCHER_USED      = 'guestvoucher_used';
-   const GUESTVOUCHER_EXPIRED   = 'guestvoucher_expired';
-   const GUESTVOUCHER_CANCEL    = 'guestvoucher_cancel';
-   const GUESTVOUCHER_CLOSED    = 'guestvoucher_closed';
-   
-   /* TRANSFER */
-   const TRANSFER_START         = 'transfer_start';
-   const TRANSFER_EXPIRED       = 'transfer_expired';
-   const TRANSFER_CLOSED        = 'transfer_closed';
-   const TRANSFER_DELETED       = 'transfer_deleted';
-   
-   /* UPLOAD */
-   const UPLOAD_START           = 'upload_start';
-   const UPLOAD_END             = 'upload_end';
-   
-   /* DOWNLOAD */
-   const DOWNLOAD_START         = 'download_start';
-   const DOWNLOAD_END           = 'download_end';
-   const DOWNLOAD_RESUME        = 'download_resume';
-   
+class ReportTypes extends Enum{
+    const STANDARD  = "standard";
+    const HTML      = "html";
+    const PDF       = "pdf";
 }
