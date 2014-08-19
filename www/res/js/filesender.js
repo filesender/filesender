@@ -167,7 +167,7 @@ window.filesender.client = {
         var opts = {};
         if(filesender.config.chunk_upload_security == 'key') opts.args = {key: file.uid};
         
-        this.put('/file/' + file.id + '/chunk/complete', data, callback, opts);
+        this.put('/file/' + file.id + '/complete', data, callback, opts);
     },
     
     /**
@@ -310,15 +310,16 @@ window.filesender.ui = {
         if(type == 'form') { // Whole form validation
             var ok = true;
             $(what).find(':input').each(function() {
-                var i = $(this);
-                var v = i.data('validator');
-                if(!v) continue;
-                
+                ok &= filesender.ui.validate(this);
             });
             return ok;
         }
         
         // Element
+        var input = $(what);
+        var validator = input.data('validator');
+        if(!validator) return true;
+        return validator.run();
     },
     
     /**
@@ -344,6 +345,35 @@ window.filesender.ui = {
     rawError: function(text) {
         alert('RAW ERROR : ' + text);
     },
+    
+    /**
+     * Format size in bytes
+     * 
+     * @param int size in bytes
+     * 
+     * @return string
+     */
+    formatBytes: function formatBytes(bytes, precision) {
+        if(!precision || isNaN(precision))
+            precision = 2;
+        
+        var nomult = lang.tr('bytes_no_multiplier').out();
+        if(nomult == '{bytes_no_multiplier}') nomult = 'Bytes';
+        
+        var wmult = lang.tr('bytes_with_multiplier').out();
+        if(wmult == '{bytes_with_multiplier}') wmult = 'B';
+        
+        var multipliers = ['', 'k', 'M', 'G', 'T'];
+        
+        var bytes = Math.max(bytes, 0);
+        var pow = Math.floor((bytes ? Math.log(bytes) : 0) / Math.log(1024));
+        pow = Math.min(pow, multipliers.length - 1);
+        
+        bytes /= Math.pow(1024, pow);
+        
+        return bytes.toFixed(precision).replace(/\.0+$/g, '') + ' ' + multipliers[pow] + (pow ? wmult : nomult);
+    }
+
 };
 
 /**
@@ -385,10 +415,7 @@ window.filesender.transfer = function() {
      * 
      * @param object file HTML input / FileList / File
      * 
-     * @throws no_file_given
-     * @throws max_html5_uploads_exceeded
-     * @throws banned_extension
-     * @throws max_html5_upload_size_exceeded
+     * @return mixed int file index or false if it was a duplicate or that there was an error
      */
     this.addFile = function(file, errorhandler) {
         if(!errorhandler) errorhandler = filesender.ui.error;
@@ -400,8 +427,10 @@ window.filesender.transfer = function() {
             file = file.files;
         
         if('length' in file) { // FileList
-            if(!file.length)
-                return errorhandler('no_file_given');
+            if(!file.length) {
+                errorhandler('no_file_given');
+                return false;
+            }
             
             for(var i=0; i<file.length; i++)
                 this.addFile(file[i]);
@@ -409,8 +438,10 @@ window.filesender.transfer = function() {
             return;
         }
         
-        if(!('type' in file))
-            return errorhandler('no_file_given');
+        if(!('type' in file)) {
+            errorhandler('no_file_given');
+            return false;
+        }
         
         var blob = file;
         var file = {
@@ -426,31 +457,47 @@ window.filesender.transfer = function() {
         // Look for dup
         for(var i=0; i<this.files.length; i++) {
             if(this.files[i].name == file.name && this.files[i].size == file.size) {
-                return errorhandler('duplicate_file', {name: file.name, size: file.size});
+                errorhandler('duplicate_file', {name: file.name, size: file.size});
+                return false;
             }
         }
         
         if(this.files.length >= filesender.config.max_html5_uploads) {
-            return errorhandler('max_html5_uploads_exceeded', {max: filesender.config.max_html5_uploads});
+            errorhandler('max_html5_uploads_exceeded', {max: filesender.config.max_html5_uploads});
+            return false;
         }
         
         if(!/^[^\\\/:;\*\?\"<>|]+(\.[^\\\/:;\*\?\"<>|]+)*$/.test(file.name)) {
-            return errorhandler('invalid_file_name', {max: filesender.config.max_html5_uploads});
+            errorhandler('invalid_file_name', {max: filesender.config.max_html5_uploads});
+            return false;
         }
         
         var extension = file.name.split('.').pop();
         var banned = new RegExp('^(' + filesender.config.ban_extension.replace(',', '|') + ')$', 'g');
         if(extension.match(banned)) {
-            return errorhandler('banned_extension', {extension: extension, banned: filesender.config.ban_extension});
+            errorhandler('banned_extension', {extension: extension, banned: filesender.config.ban_extension});
+            return false;
         }
         
         if(this.size + file.size > filesender.config.max_html5_upload_size) {
-            return errorhandler('max_html5_upload_size_exceeded', {size: file.size, max: filesender.config.max_html5_upload_size});
+            errorhandler('max_html5_upload_size_exceeded', {size: file.size, max: filesender.config.max_html5_upload_size});
+            return false;
         }
         
         this.size += file.size;
         
         this.files.push(file);
+        
+        return this.files.length - 1;
+    };
+    
+    /**
+     * Remove a file from list
+     * 
+     * @param int file index
+     */
+    this.removeFile = function(index) {
+        this.files.splice(index, 1);
     };
     
     /**
@@ -458,16 +505,41 @@ window.filesender.transfer = function() {
      * 
      * @param string email address
      * 
-     * @throws 
+     * @return bool indicates if the email was added (false means it was a duplicate or that there was an error)
      */
     this.addRecipient = function(email, errorhandler) {
         if(!errorhandler) errorhandler = filesender.ui.error;
         
+        if(!email.match(filesender.ui.validators.email)) {
+            errorhandler('invalid_recipient', {email: email});
+            return false;
+        }
+        
+        for(var i=0; i<this.recipients.length; i++)
+            if(this.recipients[i] == email) {
+                errorhandler('duplicate_recipient', {email: email});
+                return false;
+            }
+        
         if(this.recipients.length >= filesender.config.max_email_recipients) {
-            return errorhandler('max_email_recipients_exceeded', {max: filesender.config.max_email_recipients});
+            errorhandler('max_email_recipients_exceeded', {max: filesender.config.max_email_recipients});
+            return false;
         }
         
         this.recipients.push(email);
+    };
+    
+    /**
+     * Remove a recipient from list
+     * 
+     * @param string email address
+     */
+    this.removeRecipient = function(email) {
+        for(var i=0; i<this.recipients.length; i++)
+            if(this.recipients[i] == email) {
+                this.recipients.splice(i, 1);
+                return;
+            }
     };
     
     /**
@@ -488,10 +560,10 @@ window.filesender.transfer = function() {
         if(complete) {
             var transfer = this;
             filesender.client.fileComplete(file, undefined, function(data) {
-                if(transfer.onprogress) transfer.onprogress(file, true);
+                if(transfer.onprogress) transfer.onprogress.call(transfer, file, true);
             });
         }else if(this.onprogress) {
-            this.onprogress(file, complete);
+            this.onprogress.call(this, file, complete);
         }
     };
     
@@ -507,7 +579,7 @@ window.filesender.transfer = function() {
         
         var transfer = this;
         filesender.client.transferComplete(this, undefined, function(data) {
-            if(transfer.oncomplete) transfer.oncomplete(time);
+            if(transfer.oncomplete) transfer.oncomplete.call(transfer, time);
         });
     };
     
@@ -520,7 +592,7 @@ window.filesender.transfer = function() {
         }
         
         if(this.onerror) {
-            this.onerror(code, details);
+            this.onerror.call(this, code, details);
         }else{
             filesender.ui.error(code, details);
         }

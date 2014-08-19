@@ -32,85 +32,163 @@
 
 // Manage files
 filesender.ui.files = {
-    list: [],
-    
-    // Test if file is duplicate
-    isDuplicate: function(file) {
-        for(var i=0; i<this.list.length; i++)
-            if(
-                (this.list[i].blob.name == file.name) &&
-                (this.list[i].blob.size == file.size)
-            ) return true;
-        
-        return false;
-    },
-    
     // File selection (browse / drop) handler
     add: function(files) {
         for(var i=0; i<files.length; i++) {
-            if(this.isDuplicate(files[i])) continue;
+            var info = files[i].name + ' : ' + filesender.ui.formatBytes(files[i].size);
             
-            // TODO Sanity checks
+            var node = $('<div class="file" file="' + files[i].name + ':' + files[i].size + '" />').appendTo(filesender.ui.nodes.files.list);
             
-            var node = $('<div />').text(files[i].name + ' (' + files[i].size + ')').appendTo($('#upload_form .files_dragdrop .files'));
+            $('<span class="info" />').text(info).attr({title: info}).appendTo(node);
             
-            this.list.push({
-                blob: files[i],
-                node: node
+            $('<span class="remove fa fa-minus-square fa-lg" />').attr({
+                title: lang.tr('click_to_delete_file')
+            }).on('click', function() {
+                var index = $(this).parent().attr('index');
+                if(typeof index != 'undefined' && index.match(/^[0-9]+$/))
+                    filesender.ui.transfer.removeFile(index);
+                
+                $(this).parent().remove();
+                
+                if(!filesender.ui.nodes.files.list.find('div').length)
+                    filesender.ui.nodes.files.clear.button('disable');
+            }).appendTo(node);
+            
+            $('<div class="progressbar" />').append('<div />').appendTo(node);
+            
+            var added = filesender.ui.transfer.addFile(files[i], function(error, data) {
+                node.addClass('invalid');
+                node.addClass(error);
+                $('<span class="invalid fa fa-exclamation-circle fa-lg" />').prependTo(node.find('.info'))
+                node.attr({
+                    title: lang.tr('invalid_file').replace({reason: lang.tr(error)})
+                });
+                node.find('.info').removeAttr('title');
             });
+            
+            filesender.ui.nodes.files.clear.button('enable');
+            filesender.ui.evalUploadEnabled();
+            
+            if(added === false) continue;
+            
+            var size = 0;
+            for(var j=0; j<filesender.ui.transfer.files.length; j++)
+                size += filesender.ui.transfer.files[j].size;
+            
+            filesender.ui.nodes.stats.html(
+                lang.tr('number_of_files') + ': ' + filesender.ui.transfer.files.length + '/' + filesender.config.max_html5_uploads + '<br />' +
+                lang.tr('size') + ': ' + filesender.ui.formatBytes(size) + '/' + filesender.ui.formatBytes(filesender.config.max_html5_upload_size)
+            );
+            
+            node.attr('index', added);
+        }
+    },
+    
+    // Update progress bar, run in transfer context
+    progress: function(file, complete) {
+        var size = 0;
+        var uploaded = 0;
+        for(var i=0; i<this.files.length; i++) {
+            size += this.files[i].size;
+            uploaded += this.files[i].uploaded;
         }
         
-        filesender.ui.nodes.files_clear.button('enable');
+        var time = (new Date()).getTime() - this.time;
+        var speed = uploaded / (time / 1000);
+        
+        filesender.ui.nodes.stats.html(
+            lang.tr('uploaded') + ': ' + filesender.ui.formatBytes(uploaded) + '/' + filesender.ui.formatBytes(size) + '<br />' +
+            lang.tr('average_speed') + ': ' + filesender.ui.formatBytes(speed) + '/s'
+        );
+        
+        var id = file.name + ':' + file.size;
+        var bar = filesender.ui.nodes.files.list.find('[file="' + id + '"] .progressbar div');
+        if(!bar.length) return;
+        
+        var pct = complete ? 100 : (100 * file.uploaded / file.size).toFixed(2);
+        pct = Math.min(pct, 100);
+        
+        bar.show();
+        bar.text(pct + '%').css('width', pct + '%');
     },
     
     // Clear the file box
     clear: function() {
-        for(var i=0; i<this.list.length; i++)
-            this.list[i].node.remove();
+        filesender.ui.transfer.files = [];
         
-        this.list = [];
+        filesender.ui.nodes.files.input.val('');
         
-        filesender.ui.nodes.files_clear.button('disable');
+        filesender.ui.nodes.files.list.find('div').remove();
+        
+        filesender.ui.nodes.files.clear.button('disable');
+        
+        filesender.ui.evalUploadEnabled();
     },
 };
 
 // Manage recipients
 filesender.ui.recipients = {
-    list: [],
-    
-    // Test if recipient is duplicate
-    exists: function(email) {
-        for(var i=0; i<this.list.length; i++)
-            if(this.list[i] == email) return true;
-        
-        return false;
-    },
-    
     // Add recipient to list
     add: function(email) {
         if(email.match(/[,;\s]/)) { // Multiple values
             email = email.split(/[,;\s]/);
+            var invalid = [];
             for(var i=0; i<email.length; i++) {
                 var s = email[i].replace(/^\s+/g, '').replace(/\s+$/g, '');
-                if(s) this.add(s);
+                if(!s) cintinue;
+                if(!this.add(s))
+                    invalid.push(s);
             }
-            return;
+            return invalid.join(', ');
         }
         
-        if(this.exists(email)) return;
+        var added = true;
+        filesender.ui.transfer.addRecipient(email, function(error, data) {
+            added = false;
+        });
+        if(!added) return email;
         
-        // TODO Sanity checks
-        
-        var div = $('<div />').attr('email', email).apendTo(filesender.ui.nodes.recipients.box);
-        $('<span />').attr('title', email).appendTo(div);
-        $('<i class="fa fa-minus-circle fa-lg fa-align-right" />').attr({
+        var node = $('<div class="recipient" />').attr('email', email).appendTo(filesender.ui.nodes.recipients.list);
+        $('<span />').attr('title', email).text(email).appendTo(node);
+        $('<span class="remove fa fa-minus-square" />').attr({
             title: lang.tr('click_to_delete_recipient')
         }).on('click', function() {
-            filesender.ui.recipients.remove($(this).closest('div').attr('email'));
-        }).appendTo(div);
+            var email = $(this).parent().attr('email');
+            if(email)
+                filesender.ui.transfer.removeRecipient(email);
+            
+            $(this).parent().remove();
+        }).appendTo(node);
         
-        if(this.list.length)
-            filesender.ui.nodes.recipients.box.show();
+        filesender.ui.nodes.recipients.list.show();
+        
+        filesender.ui.evalUploadEnabled();
+        
+        return '';
+    },
+    
+    // Add recipients from input
+    addFromInput: function(input) {
+        input = $(input);
+        
+        var marker = input.data('error_marker');
+        
+        var invalid = this.add(input.val());
+        
+        if(invalid) {
+            input.val(invalid);
+            input.addClass('invalid');
+            if(!marker) {
+                marker = $('<span class="invalid fa fa-exclamation-circle fa-lg" />').attr({
+                    title: lang.tr('invalid_recipient')
+                }).insertBefore(input);
+                input.data('error_marker', marker);
+            }
+        }else{
+            input.val('');
+            input.removeClass('invalid');
+            if(marker) marker.remove();
+        }
     },
     
     // Remove email from list
@@ -124,43 +202,95 @@ filesender.ui.recipients = {
             return;
         }
         
-        if(!this.exists(email)) return;
+        filesender.ui.transfer.removeRecipient(email);
         
-        filesender.ui.nodes.recipients.box.find('[email="' + email + '"]').remove();
+        filesender.ui.nodes.recipients.list.find('[email="' + email + '"]').remove();
         
-        for(var i=0; i<this.list.length; i++)
-            if(this.list[i] == email) this.list.splice(i, 1);
+        if(!filesender.ui.nodes.recipients.list.find('[email]').length)
+            filesender.ui.nodes.recipients.list.hide();
         
-        if(this.list.length == 0)
-            filesender.ui.nodes.recipients.box.hide();
-    }
+        filesender.ui.evalUploadEnabled();
+    },
+    
+    // Clear the recipients list
+    clear: function() {
+        filesender.ui.transfer.recipients = [];
+        
+        filesender.ui.nodes.recipients.input.val('');
+        
+        filesender.ui.nodes.recipients.list.find('div').remove();
+        
+        filesender.ui.evalUploadEnabled();
+    },
+};
+
+filesender.ui.evalUploadEnabled = function() {
+    var ok = true;
+    
+    if(!filesender.ui.transfer.files.length) ok = false;
+    if(!filesender.ui.transfer.recipients.length) ok = false;
+    
+    if(filesender.ui.nodes.aup.length)
+        if(!filesender.ui.nodes.aup.is(':checked')) ok = false;
+    
+    filesender.ui.nodes.uploadbtn.button(ok ? 'enable' : 'disable');
+    return ok;
 };
 
 filesender.ui.startUpload = function() {
+    this.transfer.expires = filesender.ui.nodes.expires.datepicker('getDate').getTime() / 1000;
     
+    this.transfer.subject = filesender.ui.nodes.subject.val();
+    this.transfer.message = filesender.ui.nodes.message.val();
+    
+    for(var o in filesender.ui.nodes.options)
+        if(filesender.ui.nodes.options[o].is(':checked'))
+            this.transfer.options.push(o);
+    
+    
+    this.transfer.onprogress = filesender.ui.files.progress;
+    
+    this.transfer.oncomplete = function(time) {
+        filesender.ui.files.clear();
+        filesender.ui.recipients.clear();
+        filesender.ui.nodes.subject.val('');
+        filesender.ui.nodes.message.val('');
+        filesender.ui.nodes.expires.datepicker('setDate', (new Date()).getTime() + 24*3600*1000 * filesender.config.default_daysvalid);
+    };
+    
+    this.transfer.onerror = function(code, details) {
+        alert('error : ' + code);
+    };
+    
+    this.transfer.start();
 };
 
 $(function() {
     var form = $('#upload_form');
     if(!form.length) return;
     
+    // Transfer
+    filesender.ui.transfer = new filesender.transfer();
+    
     // Register frequently used nodes
     filesender.ui.nodes = {
         files: {
             input: form.find(':file'),
-            list: form.find('.files_dragdrop .files'),
+            list: form.find('.files'),
             select: form.find('.files_actions .select_files'),
             clear: form.find('.files_actions .clear_all'),
         },
         recipients: {
             input: form.find('input[name="to"]'),
-            box: form.find('.recipients_box'),
+            list: form.find('.recipients'),
         },
         subject: form.find('input[name="subject"]'),
-        message: form.find('input[name="message"]'),
+        message: form.find('textarea[name="message"]'),
         aup: form.find('input[name="aup"]'),
         expires: form.find('input[name="expires"]'),
-        options: {}
+        options: {},
+        uploadbtn: form.find('.upload_button a'),
+        stats: form.find('.files_actions .stats')
     };
     form.find('.basic_options input, .advanced_options input').each(function() {
         var i = $(this);
@@ -205,17 +335,12 @@ $(function() {
         e.preventDefault();
         e.stopPropagation();
         
-        var i = $(this);
-        filesender.ui.recipients.add(i.val());
-        i.val('');
+        filesender.ui.recipients.addFromInput($(this));
     }).on('blur', function(e) {
         e.preventDefault();
         e.stopPropagation();
         
-        var i = $(this);
-        if(!i.val()) return;
-        filesender.ui.recipients.add(i.val());
-        i.val('');
+        filesender.ui.recipients.addFromInput($(this));
     });
     
     // Bind file list select button
@@ -228,12 +353,43 @@ $(function() {
 
         if(typeof this.files == 'undefined') return;
         
-        filesender.upload_ui.files.add(this.files);
+        filesender.ui.files.add(this.files);
     });
     
     // Handle "back" browser action
     var files = filesender.ui.nodes.files.input[0].files;
-    if(files && files.length) filesender.upload_ui.files.add(files);
+    if(files && files.length) filesender.ui.files.add(files);
+    
+    // Setup date picker
+    $.datepicker.setDefaults({
+        closeText: lang.tr('DP_closeText').out(),
+        prevText: lang.tr('DP_prevText').out(),
+        nextText: lang.tr('DP_nextText').out(),
+        currentText: lang.tr('DP_currentText').out(),
+        
+        monthNames: lang.tr('DP_monthNames').values(),
+        monthNamesShort: lang.tr('DP_monthNamesShort').values(),
+        dayNames: lang.tr('DP_dayNames').values(),
+        dayNamesShort: lang.tr('DP_dayNamesShort').values(),
+        dayNamesMin: lang.tr('DP_dayNamesMin').values(),
+        
+        weekHeader: lang.tr('DP_weekHeader').out(),
+        dateFormat: lang.tr('DP_dateFormat').out(),
+        
+        firstDay: parseInt(lang.tr('DP_firstDay').out()),
+        isRTL: lang.tr('DP_isRTL').out().match(/true/),
+        showMonthAfterYear: lang.tr('DP_showMonthAfterYear').out().match(/true/),
+        
+        yearSuffix: lang.tr('DP_yearSuffix').out()
+    });
+    
+    // Bind picker
+    var maxdate = new Date((new Date()).getTime() + 24*3600*1000 * filesender.config.default_daysvalid);
+    filesender.ui.nodes.expires.datepicker({
+        minDate: new Date(),
+        maxDate: maxdate,
+    });
+    filesender.ui.nodes.expires.datepicker('setDate', maxdate);
     
     // Make options label toggle checkboxes
     form.find('.basic_options label, .advanced_options label').on('click', function() {
@@ -254,8 +410,13 @@ $(function() {
     });
     
     // Bind aup display toggle
-    form.find('.upload_button a').on('click', function() {
-        filesender.ui.startupload();
+    filesender.ui.nodes.uploadbtn.on('click', function() {
+        filesender.ui.startUpload();
         return false;
+    }).button().button('disable');
+    
+    // special fix for esc key on firefox stopping xhr
+    window.addEventListener('keydown', function(e) {
+        (e.keyCode == 27 && e.preventDefault())
     });
 });
