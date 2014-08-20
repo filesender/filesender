@@ -19,7 +19,7 @@ window.filesender.client = {
     // Send a request to the webservice
     call: function(method, resource, data, callback, options) {
         if(!this.base_path) {
-            var path = window.location.pathname;
+            var path = window.location.href;
             path = path.split('/');
             path.pop();
             path = path.join('/');
