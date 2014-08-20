@@ -37,6 +37,6 @@
 
 class TransferStatuses extends Enum {
     const UPLOADING  = 'uploading';
-    const AVAILIABLE = 'available';
+    const AVAILABLE  = 'available';
     const CLOSED     = 'closed';
 }

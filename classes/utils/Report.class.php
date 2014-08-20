@@ -35,67 +35,144 @@ if (!defined('FILESENDER_BASE'))
     die('Missing environment');
 
 /**
- * Utility functions holder
+ * Report class
  * 
  */
 class Report {
 
-    private $objects;
-    private $currentReportType;
+    private $objects;           // Current list of DBObjects
+    private $currentReportType; // User wanted report type
 
-    public function __construct(DBObject $object = null) {
-        if (Auth::isAuthenticated()) {
-            if (null != $object) {
-                $this->objects = AuditLog::all(
-                                array('where' => 'target_type = :targettype AND target_id = :targetid AND user_id = :userid'), array(
-                            'targettype' => $object->getClassName(),
-                            'targetid' => $object->id,
-                            'userid' => Auth::user()->id
-                                )
-                );
+    /**
+     * Constructor
+     * 
+     * @param ReportType $type: type of report to be generated
+     * @param DBObject $object: object in relation
+     * 
+     * @throws AuthAuthenticationNotFoundException
+     * @throws ReportTypeNotFoundException
+     */
+    public function __construct($type, DBObject $object = null) {
+        if (ReportTypes::isValidName($type)){
+            if (Auth::isAuthenticated()) {
+                $this->currentReportType = $type;
+
+                if (null != $object) {
+                    $this->objects[$this->currentReportType] = AuditLog::all(
+                        array(  'where' => 'target_type = :targettype AND target_id = :targetid AND user_id = :userid'), array(
+                                'targettype' => $object->getClassName(),
+                                'targetid' => $object->id,
+                                'userid' => Auth::user()->id
+                        )
+                    );
+                } else {
+                    $this->objects[$this->currentReportType] = AuditLog::all(
+                        array('where' => 'user_id = :userid'), array('userid' => Auth::user()->id)
+                    );
+                }
+
             } else {
-                $this->objects = AuditLog::all(
-                                array('where' => 'user_id = :userid'), array('userid' => Auth::user()->id)
-                );
+                throw new AuthAuthenticationNotFoundException();
             }
-            $this->currentReportType = ReportTypes::STANDARD;
-        } else {
-            throw new AuthAuthenticationNotFoundException();
+        }else{
+            throw new ReportTypeNotFoundException($type);
         }
     }
 
 
     /**
-     * Alows to generate a report
+     * Allows to generate a report
      * 
-     * @param $type: type of report 
      * @param $sendmail: if mail has to be sent 
      * @return boolean: true if success, false otherwise
      * @throws NoReportFoundException
      */
-    public function generateReport($type = ReportTypes::STANDARD, $sendmail = true) {
+    public function generateReport( $sendmail = true) {
         if (sizeof($this->objects) == 0) {
             throw new NoReportFoundException();
         } else {
-            $this->currentReportType = $type;
-            if ($sendmail) {
-                // Send mail
-                return $this->sendReportByMail();
+            $formatedReports = $this->getFormatedReports();
+            if ($sendmail){
+                return array(
+                    'reports' => $formatedReports[$this->currentReportType],
+                    'mailsent' => $this->sendReportByMail($formatedReports,$sendmail)
+                );
             }else{
-                return true;
+                return array(
+                    'reports' => $formatedReports[$this->currentReportType],
+                    'mailsent' => false
+                );
             }
+        }
+    }
+    
+    /**
+     * Allows to get formated reports
+     * 
+     * @param array $reports: the row reports
+     * @return array:  the formated reports
+     * @throws NoReportFoundException
+     */
+    private function getFormatedReports($reports = null){
+        if (is_null($reports)) {
+            $reports = $this->objects;
+        }
+
+        if (sizeof($reports) == 0) {
+            throw new NoReportFoundException();
+        } else {
+            $formatedReports = array();
+            
+            foreach ($reports[$this->currentReportType] as $tmpReport) {
+                
+                $c = Lang::translateEmail('report');
+
+                $targettype = $tmpReport->target_type;
+                $target = $targettype::fromId($tmpReport->target_id);
+
+                switch ($this->currentReportType) {
+                    case ReportTypes::HTML:
+                        
+                        $report = Template::process('!report_html', array('target' => $target));
+                        if(preg_match('`\{reportContent\}`', $c->html)) {
+                            $c->html = str_ireplace("{reportContent}", $report, $c->html);
+                        }
+                        $formatedReports[] = $c;
+                        
+                        break;
+
+                    case ReportTypes::PDF:
+                        //TODO: get PDF reports
+                        // -> Store PDF object in the returned array
+                        break;
+
+                    case ReportTypes::STANDARD:
+                    default:
+                        $report = Template::process('!report_standard', array('target' => $target));
+                        if(preg_match('`\{reportContent\}`', $c->plain)) {
+                            $c->plain = str_ireplace("{reportContent}", $report, $c->plain);
+                        }
+                        $formatedReports[] = $c;
+                        break;
+                }
+            }
+            
+            return array(
+                $this->currentReportType => $formatedReports,
+            );
+            
         }
     }
 
     
     /**
-     * Alows to send a report by mail
+     * Allows to send a report by mail
      * 
      * @param $reports: reports to be sent
      * @return boolean: true if mail sent, false otherwise
      * @throws NoReportFoundException
      */
-    public function sendReportByMail($reports = null) {
+    public function sendReportByMail($reports = null){
         if (is_null($reports)) {
             $reports = $this->objects;
         }
@@ -104,59 +181,48 @@ class Report {
             throw new NoReportFoundException();
         } else {
             // Getting repliers from config
-            if (($noReply = Config::get('noreply')) == null) {
-                $noReply = "no_reply@renater.fr";
-            }
-            if (($noReplyName = Config::get('noreply_name')) == null) {
-                $noReplyName = "NO_REPLY";
-            }
-
-            $message = "";
-            $html = false;
-            
-            $c = Lang::translateEmail('report_html');
-            
-            foreach ($reports as $report) {
-
-                $targettype = $report->target_type;
-                $target = $targettype::fromId($report->target_id);
-
-                switch ($this->currentReportType) {
-                    case ReportTypes::HTML:
-                        $html = true;
-                        $message .= Template::process('!report_html', array('target' => $target));
-                        if(preg_match('`\{reportContent\}`', $c->html)) {
-                            $c->html = str_ireplace("{reportContent}", $message, $c->html);
-                        }
-                        $message = $c->html;
-                        break;
-                    
-                    case ReportTypes::PDF:
-                        break;
-                    
-                    case ReportTypes::STANDARD:
-                    default:
-                        $html = false;
-                        $message .= Template::process('!report_standard', array('target' => $target));
-                        if(preg_match('`\{reportContent\}`', $c->plain)) {
-                            $c->plain = str_ireplace("{reportContent}", $message, $c->plain);
-                        }
-                        $message = $c->plain;
-                        break;
-                        
+            if (($noReply = Config::get('noreply')) != null){
+                if (($noReplyName = Config::get('noreply_name')) == null){
+                    $noReplyName = $noReply;
                 }
-            }
-            
-            $mail = new Mail($c->subject, $noReply, $noReplyName, $html);
 
-            foreach (Auth::user()->email as $key => $recipient) {
-                $mail->to($recipient);
-            }
+                foreach ($reports[$this->currentReportType] as $tmpReport) {
+                    switch ($this->currentReportType) {
+                        case ReportTypes::HTML:
+                            $mail = new Mail($tmpReport->subject, $noReply, $noReplyName, true);
+                            $message = $tmpReport->html;
+                            break;
 
-            $mail->write($message);
-            
-            return $mail->send();
+                        case ReportTypes::PDF:
+                            //TODO:
+                            // Get HTML translation for the mail content
+                            // Generate PDF file
+                            // Attach to the mail
+                            break;
+
+                        case ReportTypes::STANDARD:
+                        default:
+                            $mail = new Mail($tmpReport->subject, $noReply, $noReplyName, false);
+                            $message = $tmpReport->plain;
+                            break;
+                    }
+                    
+                    foreach (Auth::user()->email as $key => $recipient) {
+                        $mail->to($recipient);
+                    }
+                    
+                    $mail->write($message);
+
+                    $mailsent = $mail->send();
+                }
+
+                return array(
+                    'mailsend' => $mailsent
+                );
+                
+            }else{
+                return false;
+            }
         }
     }
-
 }

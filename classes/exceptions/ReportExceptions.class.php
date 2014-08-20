@@ -48,6 +48,25 @@ class ReportNotFoundException extends DetailedException {
     }
 }
 
+/**
+ * Report type not found
+ */
+class ReportTypeNotFoundException extends DetailedException {
+    /**
+     * Constructor
+     * 
+     * @param string $selector column used to select user
+     */
+    public function __construct($selector) {
+        parent::__construct(
+            'report_type_not_found', // Message to give to the user
+             $selector // Real message to log
+        );
+    }
+}
+
+
+
 
 
 /**
