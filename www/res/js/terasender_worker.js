@@ -103,6 +103,9 @@ var terasender_worker = {
         
         if(xhr.status == 200) { // All went well
             this.reportDone();
+        }else if(xhr.status == 0) { // Request cancelled (browser refresh or such)
+            this.log('broken, exiting');
+            close();
         }else{ // We have an error
             var msg = xhr.responseText.replace(/^\s+/, '').replace(/\s+$/, '');
             this.error(msg, this.job);
