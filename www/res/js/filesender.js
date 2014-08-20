@@ -405,7 +405,7 @@ window.filesender.transfer = function() {
     
     this.time = 0;
     this.file_index = 0;
-    this.status = 'running';
+    this.status = 'new';
     this.onprogress = null;
     this.oncomplete = null;
     this.onerror = null;
@@ -584,6 +584,8 @@ window.filesender.transfer = function() {
      * Report transfer complete
      */
     this.reportComplete = function() {
+        this.status = 'done';
+        
         var time = (new Date()).getTime() - this.time; // ms
         
         if(filesender.config.log) {
@@ -616,6 +618,8 @@ window.filesender.transfer = function() {
      */
     this.start = function(errorhandler) {
         if(!errorhandler) errorhandler = filesender.ui.error;
+        
+        this.status = 'running';
         
         // Redo sanity checks
         
@@ -741,7 +745,6 @@ window.filesender.transfer = function() {
                 
                 transfer.uploadChunk();
             }else{
-                transfer.status = 'done';
                 transfer.reportComplete();
             }
         }, function(code, details) {
