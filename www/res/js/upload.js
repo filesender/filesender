@@ -256,10 +256,14 @@ filesender.ui.startUpload = function() {
         filesender.ui.nodes.subject.val('');
         filesender.ui.nodes.message.val('');
         filesender.ui.nodes.expires.datepicker('setDate', (new Date()).getTime() + 24*3600*1000 * filesender.config.default_daysvalid);
+        
+        alert('Done !');
+        
+        // TODO popup (view uploaded / upload other)
     };
     
     this.transfer.onerror = function(code, details) {
-        alert('error : ' + code);
+        alert('There was an error during upload : ' + code);
     };
     
     this.transfer.start();
@@ -414,6 +418,10 @@ $(function() {
         filesender.ui.startUpload();
         return false;
     }).button().button('disable');
+    
+    filesender.ui.nodes.aup.on('change', function() {
+        filesender.ui.evalUploadEnabled();
+    });
     
     // special fix for esc key on firefox stopping xhr
     window.addEventListener('keydown', function(e) {
