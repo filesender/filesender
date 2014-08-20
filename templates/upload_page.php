@@ -3,16 +3,16 @@
     
     <form id="upload_form" enctype="multipart/form-data" method="post" action="{path:basic_upload.php}">
         <div class="box">
-            <div class="files">
+            <div class="file_selector">
                 <label for="files" class="mandatory">{tr:select_file} :</label>
                 
                 <input name="files" type="file" multiple />
             </div>
             
+            <div class="files"></div>
+            
             <div class="files_dragdrop">
                 <div class="instructions">{tr:drag_and_drop}</div>
-                
-                <div class="files"></div>
             </div>
             
             <div class="files_actions">
@@ -54,7 +54,7 @@
                     <div class="fieldcontainer">
                         <label for="to" class="mandatory">{tr:to} :</label>
                         
-                        <div class="recipients_box"></div>
+                        <div class="recipients"></div>
                         
                         <input name="to" type="text" title="{tr:email_separator_msg}" value="" placeholder="{tr:enter_to_email}" />
                     </div>
