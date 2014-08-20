@@ -427,4 +427,10 @@ $(function() {
     window.addEventListener('keydown', function(e) {
         (e.keyCode == 27 && e.preventDefault())
     });
+    
+    // Set message to display if the user changes pages / close tab / close browser
+    window.onbeforeunload = function() {
+        if(!filesender.ui.transfer.status.match(/^(new|done|stopped)$/))
+            return true; // Ask for leaving confirmation
+    };
 });
