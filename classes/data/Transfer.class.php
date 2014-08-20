@@ -194,51 +194,49 @@ class Transfer extends DBObject {
         // Sending notification to all recipients 
         $recipients = $this->recipients;
         if (sizeof($recipients) > 0){
+            if (($noReply = Config::get('noreply')) != null){
+                if (($noReplyName = Config::get('noreply_name')) == null){
+                    $noReplyName = $noReply;
+                }
 
-            if (($noReply = Config::get('noreply')) == null){
-                $noReply = "no_reply@renater.fr";
-            }
-            if (($noReplyName = Config::get('noreply_name')) == null){
-                $noReplyName = "NO_REPLY";
-            }
-            
-            $c = Lang::translateEmail('expiredfiles');
-            
-            if ($manualy){
-                $c->subject = str_ireplace("{TITLE}", Lang::tr('_TRANSFER_DELETION_TITLE'), $c->subject);
-            }else{
-                $c->subject = str_ireplace("{TITLE}", Lang::tr('_TRANSFER_DELETION_TITLE_CRON'), $c->subject);
-            }
-            
-            $useHtml = Config::get('use_html_mail');
-            
-            if ($useHtml){
-                $mailContent = $c->html;
-            }else{
-                $mailContent = $c->plain;
-            }
-            
-            $search = array("{transferid}","{transfername}","{transfermessage}");
-            $placeholders = array($this->id,$this->subject,$this->message);
-            
-            $mailContent = str_ireplace($search, $placeholders, $mailContent);
-            
-            $mail = new Mail($c->subject, $noReply,$noReplyName, true);
+                $c = Lang::translateEmail('expiredfiles');
 
-            foreach ($recipients as $key => $recipient){
-                $mail->to($recipient->email);
+                if ($manualy){
+                    $c->subject = str_ireplace("{TITLE}", Lang::tr('_TRANSFER_DELETION_TITLE'), $c->subject);
+                }else{
+                    $c->subject = str_ireplace("{TITLE}", Lang::tr('_TRANSFER_DELETION_TITLE_CRON'), $c->subject);
+                }
+
+                $useHtml = Config::get('use_html_mail');
+
+                if ($useHtml){
+                    $mailContent = $c->html;
+                }else{
+                    $mailContent = $c->plain;
+                }
+
+                $search = array("{transferid}","{transfername}","{transfermessage}");
+                $placeholders = array($this->id,$this->subject,$this->message);
+
+                $mailContent = str_ireplace($search, $placeholders, $mailContent);
+
+                $mail = new Mail($c->subject, $noReply,$noReplyName, true);
+
+                foreach ($recipients as $key => $recipient){
+                    $mail->to($recipient->email);
+                }
+
+                $mail->write($mailContent);
+
+                $mail->send();
+
             }
-            
-            $mail->write($mailContent);
-            
-            $mail->send();
-            
         }
         // Generating the repport for the transfer owner
         $confReport = Config::get('REPORT_ON_TRANSFER_CLOSING');
         if (ReportTypes::isValidName($confReport)){
             $report = new Report($this);
-            $report->generateReport($confReport);
+            $results = $report->generateReport($confReport);
         }
         
         // Clean auditlog
