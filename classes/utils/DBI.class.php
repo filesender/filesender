@@ -84,6 +84,8 @@ class DBI {
         try {
             self::$instance = new PDO($config['dsn'], $config['username'], $config['password'], $config['driver_options']);
             self::$instance->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            self::$instance->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, false);
+//            self::$instance->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
             self::$instance->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
             self::$instance->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, false);
             
