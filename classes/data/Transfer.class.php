@@ -235,7 +235,7 @@ class Transfer extends DBObject {
         // Generating the repport for the transfer owner
         $confReport = Config::get('REPORT_ON_TRANSFER_CLOSING');
         if (ReportTypes::isValidName($confReport)){
-            $report = new Report($this);
+            $report = new Report(ReportTypes::STANDARD, $this);
             $results = $report->generateReport($confReport);
         }
         
