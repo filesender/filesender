@@ -54,8 +54,6 @@ filesender.ui.files = {
                     filesender.ui.nodes.files.clear.button('disable');
             }).appendTo(node);
             
-            $('<div class="progressbar" />').append('<div />').appendTo(node);
-            
             var added = filesender.ui.transfer.addFile(files[i], function(error, data) {
                 node.addClass('invalid');
                 node.addClass(error);
@@ -70,6 +68,18 @@ filesender.ui.files = {
             filesender.ui.evalUploadEnabled();
             
             if(added === false) continue;
+            
+            var bar = $('<div class="progressbar" />').append('<div class="progress-label" />').appendTo(node)
+            bar.progressbar({
+                value: false,
+                max: 1000,
+                change: function() {
+                    bar.find('.progress-label').text((bar.progressbar('value') / 10).toFixed(1) + '%');
+                },
+                complete: function() {
+                    bar.find('.progress-label').text(lang.tr('done'));
+                }
+            });
             
             var size = 0;
             for(var j=0; j<filesender.ui.transfer.files.length; j++)
@@ -101,15 +111,11 @@ filesender.ui.files = {
             lang.tr('average_speed') + ': ' + filesender.ui.formatBytes(speed) + '/s'
         );
         
+        // TODO Change to jquery progress bar ?
+        
         var id = file.name + ':' + file.size;
-        var bar = filesender.ui.nodes.files.list.find('[file="' + id + '"] .progressbar div');
-        if(!bar.length) return;
-        
-        var pct = complete ? 100 : (100 * file.uploaded / file.size).toFixed(2);
-        pct = Math.min(pct, 100);
-        
-        bar.show();
-        bar.text(pct + '%').css('width', pct + '%');
+        var bar = filesender.ui.nodes.files.list.find('[file="' + id + '"] .progressbar');
+        bar.progressbar('value', Math.round(1000 * file.uploaded / file.size));
     },
     
     // Clear the file box
@@ -240,6 +246,9 @@ filesender.ui.evalUploadEnabled = function() {
 filesender.ui.startUpload = function() {
     this.transfer.expires = filesender.ui.nodes.expires.datepicker('getDate').getTime() / 1000;
     
+    if(filesender.ui.nodes.from.length)
+        this.transfer.from = filesender.ui.nodes.from.val();
+    
     this.transfer.subject = filesender.ui.nodes.subject.val();
     this.transfer.message = filesender.ui.nodes.message.val();
     
@@ -257,14 +266,21 @@ filesender.ui.startUpload = function() {
         filesender.ui.nodes.message.val('');
         filesender.ui.nodes.expires.datepicker('setDate', (new Date()).getTime() + 24*3600*1000 * filesender.config.default_daysvalid);
         
-        alert('Done !');
+        filesender.ui.alert('success', 'Done !', function() {
+            filesender.ui.goToPage('transfers');
+        });
         
         // TODO popup (view uploaded / upload other)
     };
     
     this.transfer.onerror = function(code, details) {
         alert('There was an error during upload : ' + code);
+        filesender.ui.alert('error', 'There was an error during upload : ' + code);
     };
+    
+    filesender.ui.nodes.files.list.find('.progressbar').show();
+    
+    // TODO lock fields
     
     this.transfer.start();
 };
@@ -288,6 +304,7 @@ $(function() {
             input: form.find('input[name="to"]'),
             list: form.find('.recipients'),
         },
+        from: form.find('select[name="from"]'),
         subject: form.find('input[name="subject"]'),
         message: form.find('textarea[name="message"]'),
         aup: form.find('input[name="aup"]'),
@@ -408,7 +425,7 @@ $(function() {
     });
     
     // Bind aup display toggle
-    form.find('label[for="aup"]').on('click', function() {
+    form.find('label[for="aup"]').addClass('clickable').on('click', function() {
         $(this).closest('.fieldcontainer').find('.terms').slideToggle();
         return false;
     });
