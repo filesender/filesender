@@ -145,13 +145,21 @@ class Transfer extends DBObject {
      * Create a new transfer (ie begin upload)
      * 
      * @param integer $expiry expiration date (timestamp), mandatory
+     * @param string $user_email sender's email (multiple user emails handling)
      * 
      * @return Transfer
      */
-    public static function create($expires) {
+    public static function create($expires, $user_email = null) {
         $transfer = new self();
         
         $transfer->user_id = Auth::user()->id;
+        
+        if(!$user_email) $user_email = Auth::user()->email[0];
+        if(!in_array($user_email, Auth::user()->email))
+            throw new BadEmailException($user_email);
+        
+        $transfer->__set('user_email', $user_email);
+        
         $transfer->__set('expires', $expires);
         
         $transfer->created = time();

@@ -48,6 +48,8 @@ class RestEndpointTransfer extends RestEndpoint {
     public static function cast(Transfer $transfer) {
         return array(
             'id' => $transfer->id,
+            'user_id' => $transfer->user_id,
+            'user_email' => $transfer->user_email,
             'subject' => $transfer->subject,
             'message' => $transfer->message,
             'created' => RestUtilities::formatDate($transfer->created),
@@ -158,7 +160,7 @@ class RestEndpointTransfer extends RestEndpoint {
             // New transfer
             $data = $this->request->input;
             
-            $transfer = Transfer::create($data->expires);
+            $transfer = Transfer::create($data->expires, $data->from);
             
             if($data->subject) $transfer->subject = $data->subject;
             if($data->message) $transfer->message = $data->message;
