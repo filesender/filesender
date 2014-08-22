@@ -277,18 +277,6 @@ class RestEndpointTransfer extends RestEndpoint {
                 throw new RestOwnershipRequiredException($user->id, 'transfer = '.$transfer->id);
         }
         
-        if($transfer->status != 'available') { // Do not notify closure nor keep audit data for transfers that are not available
-            $transfer->delete();
-            return null;
-        }
-        
-        $recipients = $transfer->recipients; // Before closing so that we are sure data is available
-        
         $transfer->close();
-        
-        // Send emails
-        foreach($recipients as $recipient) {
-            // Notify closure
-        }
     }
 }
