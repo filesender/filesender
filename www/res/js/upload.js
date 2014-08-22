@@ -88,10 +88,8 @@ filesender.ui.files = {
             for(var j=0; j<filesender.ui.transfer.files.length; j++)
                 size += filesender.ui.transfer.files[j].size;
             
-            filesender.ui.nodes.stats.html(
-                lang.tr('number_of_files') + ': ' + filesender.ui.transfer.files.length + '/' + filesender.config.max_html5_uploads + '<br />' +
-                lang.tr('size') + ': ' + filesender.ui.formatBytes(size) + '/' + filesender.ui.formatBytes(filesender.config.max_html5_upload_size)
-            );
+            filesender.ui.nodes.stats.number_of_files.show().find('.value').text(filesender.ui.transfer.files.length + '/' + filesender.config.max_html5_uploads);
+            filesender.ui.nodes.stats.size.show().find('.value').text(filesender.ui.formatBytes(size) + '/' + filesender.ui.formatBytes(filesender.config.max_html5_upload_size));
             
             node.attr('index', added);
         }
@@ -109,12 +107,9 @@ filesender.ui.files = {
         var time = (new Date()).getTime() - this.time;
         var speed = uploaded / (time / 1000);
         
-        filesender.ui.nodes.stats.html(
-            lang.tr('uploaded') + ': ' + filesender.ui.formatBytes(uploaded) + '/' + filesender.ui.formatBytes(size) + '<br />' +
-            lang.tr('average_speed') + ': ' + filesender.ui.formatBytes(speed) + '/s'
-        );
-        
-        // TODO Change to jquery progress bar ?
+        filesender.ui.nodes.stats.uploaded.find('.value').text(filesender.ui.formatBytes(uploaded) + '/' + filesender.ui.formatBytes(size));
+        if(this.status != 'paused')
+            filesender.ui.nodes.stats.average_speed.find('.value').text(filesender.ui.formatBytes(speed) + lang.tr('per_second'));
         
         var id = file.name + ':' + file.size;
         var bar = filesender.ui.nodes.files.list.find('[file="' + id + '"] .progressbar');
@@ -242,7 +237,7 @@ filesender.ui.evalUploadEnabled = function() {
     if(filesender.ui.nodes.aup.length)
         if(!filesender.ui.nodes.aup.is(':checked')) ok = false;
     
-    filesender.ui.nodes.uploadbtn.button(ok ? 'enable' : 'disable');
+    filesender.ui.nodes.buttons.start.button(ok ? 'enable' : 'disable');
     return ok;
 };
 
@@ -283,6 +278,11 @@ filesender.ui.startUpload = function() {
     
     filesender.ui.nodes.files.list.find('.progressbar').show();
     
+    filesender.ui.nodes.stats.number_of_files.hide();
+    filesender.ui.nodes.stats.size.hide();
+    filesender.ui.nodes.stats.uploaded.show();
+    filesender.ui.nodes.stats.average_speed.show();
+    
     // TODO lock fields
     
     this.transfer.start();
@@ -313,8 +313,18 @@ $(function() {
         aup: form.find('input[name="aup"]'),
         expires: form.find('input[name="expires"]'),
         options: {},
-        uploadbtn: form.find('.upload_button a'),
-        stats: form.find('.files_actions .stats')
+        buttons: {
+            start: form.find('.upload_buttons .start'),
+            pause: form.find('.upload_buttons .pause'),
+            restart: form.find('.upload_buttons .restart'),
+            stop: form.find('.upload_buttons .stop')
+        },
+        stats: {
+            number_of_files: form.find('.files_actions .stats .number_of_files'),
+            size: form.find('.files_actions .stats .size'),
+            uploaded: form.find('.files_actions .stats .uploaded'),
+            average_speed: form.find('.files_actions .stats .average_speed')
+        }
     };
     form.find('.basic_options input, .advanced_options input').each(function() {
         var i = $(this);
@@ -427,21 +437,50 @@ $(function() {
         return false;
     });
     
-    // Bind aup display toggle
+    // Bind aup
     form.find('label[for="aup"]').addClass('clickable').on('click', function() {
         $(this).closest('.fieldcontainer').find('.terms').slideToggle();
         return false;
     });
     
-    // Bind aup display toggle
-    filesender.ui.nodes.uploadbtn.on('click', function() {
-        filesender.ui.startUpload();
-        return false;
-    }).button().button('disable');
-    
     filesender.ui.nodes.aup.on('change', function() {
         filesender.ui.evalUploadEnabled();
     });
+    
+    // Bind buttons
+    filesender.ui.nodes.buttons.start.on('click', function() {
+        if(filesender.ui.transfer.status == 'new') {
+            filesender.ui.startUpload();
+            filesender.ui.nodes.buttons.start.addClass('not_displayed');
+            filesender.ui.nodes.buttons.pause.removeClass('not_displayed');
+            filesender.ui.nodes.buttons.stop.removeClass('not_displayed');
+        }
+        return false;
+    }).button().button('disable');
+    
+    filesender.ui.nodes.buttons.pause.on('click', function() {
+        filesender.ui.transfer.pause();
+        filesender.ui.nodes.buttons.pause.addClass('not_displayed');
+        filesender.ui.nodes.buttons.restart.removeClass('not_displayed');
+        filesender.ui.nodes.stats.average_speed.find('.value').text(lang.tr('paused'));
+        return false;
+    }).button();
+    
+    filesender.ui.nodes.buttons.restart.on('click', function() {
+        filesender.ui.transfer.restart();
+        filesender.ui.nodes.buttons.pause.removeClass('not_displayed');
+        filesender.ui.nodes.buttons.restart.addClass('not_displayed');
+        return false;
+    }).button();
+    
+    filesender.ui.nodes.buttons.stop.on('click', function() {
+        filesender.ui.confirm(lang.tr('confirm_stop_upload'), function() {
+            filesender.ui.transfer.stop(function() {
+                filesender.ui.goToPage('upload');
+            });
+        });
+        return false;
+    }).button();
     
     // special fix for esc key on firefox stopping xhr
     window.addEventListener('keydown', function(e) {

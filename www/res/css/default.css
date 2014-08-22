@@ -331,7 +331,7 @@ input.invalid, textarea.invalid {
     margin: 0.25em 1em 0 0;
 }
 
-#upload_form .files_actions div, #upload_form .files_actions span {
+#upload_form .files_actions div {
     display: table-cell;
     width: 33%;
 }
@@ -344,11 +344,20 @@ input.invalid, textarea.invalid {
     text-align: center;
 }
 
-#upload_form .files_actions .stats {
+#upload_form .files_actions .stats div {
     text-align: right;
     font-size: 0.8em;
     vertical-align: middle;
+    width: 100%;
 }
+
+#upload_form .files_actions .stats .number_of_files,
+#upload_form .files_actions .stats .size,
+#upload_form .files_actions .stats .uploaded,
+#upload_form .files_actions .stats .average_speed {
+    display: none;
+}
+
 
 #upload_form .recipients {
     display: none;
@@ -394,17 +403,26 @@ input.invalid, textarea.invalid {
     padding: 0.5em;
 }
 
-#upload_form .upload_button {
-    margin: 1em 0;
+#upload_form .upload_buttons {
+    display: table;
+    border-collapse: separate;
+    border-spacing: 0.5em;
+    margin: 1em auto;
     text-align: center;
 }
 
-#upload_form .upload_button a {
+#upload_form .upload_buttons a {
+    display: table-cell;
     padding: 1em;
     font-weight: bold;
+    font-size: 1.5em;
 }
 
-#upload_form .upload_button a span {
+#upload_form .upload_buttons a.not_displayed {
+    display: none;
+}
+
+#upload_form .upload_buttons a span.fa {
     font-size: 2em;
 }
 
