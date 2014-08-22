@@ -130,6 +130,7 @@ window.filesender.client = {
     /**
      * Start a transfer
      * 
+     * @param string from sender email
      * @param array files array of file objects with name, size and sha1 properties
      * @param array recipients array of recipients addresses
      * @param string subject optionnal subject
