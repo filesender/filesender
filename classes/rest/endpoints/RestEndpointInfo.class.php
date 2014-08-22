@@ -48,11 +48,23 @@ class RestEndpointInfo extends RestEndpoint {
         
         $disclose = Config::get('disclose');
         if($disclose) {
-            if(!is_array($disclose))
-                $disclose = array_unique(array_filter(array_map('trim', preg_split('/[,;|]/', $disclose))));
+            if(!is_array($disclose)) {
+                if(is_string($disclose)) {
+                    $disclose = array_unique(array_filter(array_map('trim', preg_split('/[,;|]/', $disclose))));
+                } else if(is_callable($disclose)) {
+                    $disclose = array($disclose);
+                }
+            }
             
-            foreach($disclose as $k)
-                $info[$k] = Config::get($k);
+            foreach($disclose as $k) {
+                if(is_string($k)) {
+                    $info[$k] = Config::get($k);
+                } else if(is_callable($k)) {
+                    $data = $k();
+                    foreach($data as $k => $v)
+                        $info[$k] = $v;
+                }
+            }
         }
         
         return $info;
