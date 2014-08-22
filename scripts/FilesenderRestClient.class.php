@@ -50,6 +50,11 @@ class FilesenderRestClient {
     private $secret = null;
     
     /**
+     * Upload chunk size
+     */
+    public $chunk_size = null;
+    
+    /**
      * Response headers holder
      */
     private static $headers = array();
@@ -116,7 +121,7 @@ class FilesenderRestClient {
      * 
      * @throws Exception
      */
-    private function call($method, $path, $args = array(), $content = null) {
+    private function call($method, $path, $args = array(), $content = null, $options = array()) {
         if(!in_array($method, array('get', 'post', 'put', 'delete'))) throw new Exception('Method is not allowed', 405);
         
         if(substr($path, 0, 1) != '/') $path = '/'.$path;
@@ -130,8 +135,12 @@ class FilesenderRestClient {
         
         $signed .= '?'.implode('&', $this->flatten($args));
         
+        $content_type = 'application/json';
+        if(array_key_exists('Content-Type', $options))
+            $content_type = $options['Content-Type'];
+        
         if($content) {
-            $input = json_encode($content);
+            $input = ($content_type == 'application/json') ? json_encode($content) : $content;
             $signed .= '&'.$input;
         }
         
@@ -141,15 +150,14 @@ class FilesenderRestClient {
         
         $h = curl_init();
         curl_setopt($h, CURLOPT_URL, $url);
+        if($content) curl_setopt($h, CURLOPT_POSTFIELDS, $input);
         curl_setopt($h, CURLOPT_HTTPHEADER, array(
             'Accept: application/json',
-            'Content-Type: application/json'
+            'Content-Type: '.$content_type
         ));
         curl_setopt($h, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($h, CURLOPT_SSL_VERIFYHOST, false);
         curl_setopt($h, CURLOPT_SSL_VERIFYPEER, false);
-        
-        if($content) curl_setopt($h, CURLOPT_POSTFIELDS, $input);
         
         switch($method) {
             case 'get' : break;
@@ -216,8 +224,8 @@ class FilesenderRestClient {
      * 
      * @return mixed the response
      */
-    public function get($path, $args = array()) {
-        return $this->call('get', $path, $args);
+    public function get($path, $args = array(), $options = array()) {
+        return $this->call('get', $path, $args, $options);
     }
     
     /**
@@ -229,8 +237,8 @@ class FilesenderRestClient {
      * 
      * @return mixed the response
      */
-    public function post($path, $args = array(), $content = null) {
-        return $this->call('post', $path, $args, $content);
+    public function post($path, $args = array(), $content = null, $options = array()) {
+        return $this->call('post', $path, $args, $content, $options);
     }
     
     /**
@@ -242,8 +250,8 @@ class FilesenderRestClient {
      * 
      * @return mixed the response
      */
-    public function put($path, $args = array(), $content = null) {
-        return $this->call('put', $path, $args, $content);
+    public function put($path, $args = array(), $content = null, $options = array()) {
+        return $this->call('put', $path, $args, $content, $options);
     }
     
     /**
@@ -254,8 +262,8 @@ class FilesenderRestClient {
      * 
      * @return mixed the response
      */
-    public function delete($path, $args = array()) {
-        return $this->call('delete', $path, $args);
+    public function delete($path, $args = array(), $options = array()) {
+        return $this->call('delete', $path, $args, $options);
     }
     
     /**
@@ -266,136 +274,192 @@ class FilesenderRestClient {
     }
     
     /**
-     * Get quota information
+     * Start a transfer
+     * 
+     * @param string $user_id
+     * @param string $from sender email
+     * @param array $files array of file arrays with name and size entries
+     * @param array $recipients array of recipients addresses
+     * @param string $subject optionnal subject
+     * @param string $message optionnal message
+     * @param string $expires expiry date (yyyy-mm-dd or unix timestamp)
+     * @param array $options array of selected option identifiers
      */
-    public function getQuota() {
-        return $this->get('/quota');
+    public function postTransfer($user_id, $from, $files, $recipients, $subject = null, $message = null, $expires = null, $options = array()) {
+        if(!$expires) {
+            $info = $this->getInfo();
+            if(!property_exists($info, 'default_days_valid'))
+                throw new Exception('Expires missing and not default value in info to build it from');
+            $expires = time() + $info->default_days_valid * 24*3600;
+        }
+        
+        return $this->post('/transfer', array('remote_user' => $user_id), array(
+            'from' => $from,
+            'files' => $files,
+            'recipients' => $recipients,
+            'subject' => $subject,
+            'message' => $message,
+            'expires' => $expires,
+            'options' => $options
+        ));
     }
     
     /**
-     * Get user quota information
+     * Post a file chunk
+     * 
+     * @param object file
+     * @param string binary chunk
      */
-    public function userGetQuota($uid) {
-        return $this->get('/quota', array('remote_user' => $uid));
+    public function postChunk($file, $chunk) {
+        return $this->post(
+            '/file/'.$file->id.'/chunk',
+            array('key' => $file->uid),
+            $chunk,
+            array('Content-Type' => 'application/octet-stream')
+        );
     }
     
-    public function userGetFrequentRecipients($uid, $filter = '') {
-        $args = array('remote_user' => $uid);
-        if($filter) $args['filterOp'] = array('contains' => $filter);
-        return $this->get('/recipients', $args);
+    /**
+     * Put a file chunk
+     * 
+     * @param object file
+     * @param blob chunk
+     * @param int offset
+     */
+    public function putChunk($file, $chunk, $offset) {
+        return $this->put(
+            '/file/'.$file->id.'/chunk/'.$offset,
+            array('key' => $file->uid),
+            $chunk,
+            array('Content-Type' => 'application/octet-stream')
+        );
     }
     
-    public function getTopUploaders($count = 10, $since = null) {
-        $args = array('count' => $count);
-        
-        if($since) {
-            $this->validateUpdatedSince($since);
-            $args['updatedSince'] = $since;
-        }
-        
-        return $this->get('/top/uploaders', $args);
+    /**
+     * Signal file completion (along with checking data)
+     * 
+     * @param object file
+     * @param object data check data
+     */
+    public function fileComplete($file, $data = null) {
+        return $this->put(
+            '/file/'.$file->id.'/complete',
+            array('key' => $file->uid),
+            $data
+        );
     }
     
-    public function getTopDownloads($count = 10, $since = null) {
-        $args = array('count' => $count);
-        
-        if($since) {
-            $this->validateUpdatedSince($since);
-            $args['updatedSince'] = $since;
-        }
-        
-        return $this->get('/top/downloads', $args);
+    /**
+     * Signal transfer completion (along with checking data)
+     * 
+     * @param object transfer
+     * @param object data check data
+     */
+    public function transferComplete($transfer, $data = null) {
+        return $this->put(
+            '/transfer/'.$transfer->id.'/complete',
+            array('key' => $transfer->files[0]->uid),
+            $data
+        );
     }
     
-    public function userGetsCount($since = null) {
+    /**
+     * Delete a transfer
+     * 
+     * @param mixed transfer object or transfer id
+     */
+    public function deleteTransfer($transfer) {
+        $id = is_object($transfer) ? $transfer->id : (int)$transfer;
+        
         $args = array();
+        if(is_object($transfer))
+            $args['key'] = $transfer->files[0]->uid;
         
-        if($since) {
-            $this->validateUpdatedSince($since);
-            $args['updatedSince'] = $since;
+        return $this->delete('/transfer/'.$id, $args);
+    }
+    
+    /**
+     * Upload files to recipients
+     * 
+     * @param string $user_id
+     * @param string $from sender email
+     * @param mixed $files file path or array of files path
+     * @param array $recipients array of recipients addresses
+     * @param string $subject optionnal subject
+     * @param string $message optionnal message
+     * @param string $expires expiry date (yyyy-mm-dd or unix timestamp)
+     * @param array $options array of selected option identifiers
+     */
+    public function sendFiles($user_id, $from, $filespath, $recipients, $subject = null, $message = null, $expires = null, $options = array()) {
+        $info = $this->getInfo();
+        if(!$this->chunk_size || !$expires) {
+            
+            if(!$expires) {
+                if(!property_exists($info, 'default_days_valid'))
+                    throw new Exception('Expires missing and not default value in info to build it from');
+                $expires = time() + $info->default_days_valid * 24*3600;
+            }
+            
+            if(!$this->chunk_size) {
+                if(!property_exists($info, 'upload_chunk_size'))
+                    throw new Exception('Chunk size missing and not value in info to build it from');
+                $this->chunk_size = $info->upload_chunk_size;
+            }
+        }
+            
+        if(property_exists($info, 'upload_chunk_size'))
+            $this->chunk_size = $info->upload_chunk_size;
+        
+        $files = array();
+        
+        if(!is_array($filespath)) $filespath = array($filespath);
+        foreach($filespath as $path) {
+            if(!is_string($path)) throw new Exception('Not a file path : '.print_r($path, true));
+            
+            if(!file_exists($path)) throw new Exception('File not found : '.$path);
+            
+            $name = basename($path);
+            $size = filesize($path);
+            $files[$name.':'.$size] = array(
+                'name' => $name,
+                'size' => $size,
+                'path' => $path
+            );
         }
         
-        return $this->get('/stats/users', $args);
-    }
-    
-    public function getQuotaStats($since = null) {
-        $args = array();
+        if(!is_array($recipients)) $recipients = array($recipients);
         
-        if($since) {
-            $this->validateUpdatedSince($since);
-            $args['updatedSince'] = $since;
+        $transfer = $this->postTransfer($user_id, $from, array_values(array_map(function($file) {
+            return array(
+                'name' => $file['name'],
+                'size' => $file['size']
+            );
+        }, $files)), $recipients, $subject, $message, $expires, $options)->created;
+        
+        try {
+            foreach($transfer->files as $file) {
+                $path = $files[$file->name.':'.$file->size]['path'];
+                $size = $files[$file->name.':'.$file->size]['size'];
+                
+                $fh = fopen($path, 'rb');
+                if(!$fh) throw new Exception('Cannot read file '.$path);
+                
+                for($offset=0; $offset<=$size; $offset+=$this->chunk_size) {
+                    $data = fread($fh, $this->chunk_size);
+                    
+                    $this->putChunk($file, $data, $offset);
+                }
+                
+                fclose($fh);
+                
+                $this->fileComplete($file);
+            }
+            
+            $this->transferComplete($transfer);
+        } catch(Exception $e) {
+            $this->deleteTransfer($transfer);
+            
+            throw $e;
         }
-        
-        return $this->get('/stats/quota', $args);
-    }
-    
-    public function getFilesStats($since = null) {
-        $args = array();
-        
-        if($since) {
-            $this->validateUpdatedSince($since);
-            $args['updatedSince'] = $since;
-        }
-        
-        return $this->get('/stats/files', $args);
-    }
-    
-    public function userGetFiles($uid) {
-        return $this->get('/files', array('remote_user' => $uid));
-    }
-    
-    public function userGetReceivedFiles($uid) {
-        return $this->get('/files/@recipient', array('remote_user' => $uid));
-    }
-    
-    public function userGetFile($uid, $fileuid) {
-        return $this->get('/files/'.$fileuid, array('remote_user' => $uid));
-    }
-    
-    public function userDeleteFile($uid, $fileuid) {
-        return $this->delete('/files/'.$fileuid, array('remote_user' => $uid));
-    }
-    
-    public function userGetFileRecipients($uid, $fileuid) {
-        return $this->get('/files/'.$fileuid.'/recipients', array('remote_user' => $uid));
-    }
-    
-    public function userGetFileRecipient($uid, $fileuid, $vid) {
-        return $this->get('/files/'.$fileuid.'/recipients/'.$vid, array('remote_user' => $uid));
-    }
-    
-    public function userAddFileRecipient($uid, $fileuid, $email, $expirydate = null, $subject = null, $message = null) {
-        $data = array('email' => $email);
-        if($expirydate) $data['expirydate'] = $expirydate;
-        if($subject) $data['subject'] = $subject;
-        if($message) $data['message'] = $message;
-        return $this->post('/files/'.$fileuid.'/recipients', array('remote_user' => $uid), $data);
-    }
-    
-    public function userDeleteFileRecipient($uid, $fileuid, $vid) {
-        return $this->delete('/files/'.$fileuid.'/recipients/'.$vid, array('remote_user' => $uid));
-    }
-    
-    public function userGetVouchers($uid) {
-        return $this->get('/vouchers', array('remote_user' => $uid));
-    }
-    
-    public function userGetReceivedVouchers($uid) {
-        return $this->get('/vouchers/@recipient', array('remote_user' => $uid));
-    }
-    
-    public function userGetVoucher($uid, $vid) {
-        return $this->get('/vouchers/'.$vid, array('remote_user' => $uid));
-    }
-    
-    public function userDeleteVoucher($uid, $vid) {
-        return $this->delete('/vouchers/'.$vid, array('remote_user' => $uid));
-    }
-    
-    public function userAddVoucher($uid, $email, $expirydate = null, array $options = null) {
-        $data = array('email' => $email);
-        if($expirydate) $data['expirydate'] = $expirydate;
-        if($options) $data['options'] = $options;
-        return $this->post('/vouchers', array('remote_user' => $uid), $data);
     }
 }
