@@ -427,63 +427,101 @@ input.invalid, textarea.invalid {
 }
 
 
-/* transfers page */
+/* transfers table */
 
-.transfers_page .transfers {
+table.transfers {
     table-layout: fixed;
     width: 100%;
 }
 
-.transfers_page .transfers tr:first-child {
+table.transfers tr:first-child {
     background-color: #ccc;
     font-weight: bold;
 }
 
-.transfers_page .transfers .expand {
+table.transfers .expand {
     width: 2em;
 }
 
-.transfers_page .transfers .downloads,
-.transfers_page .transfers .expires {
+table.transfers .downloads,
+table.transfers .expires {
     width: 9em;
     text-align: center;
 }
 
-.transfers_page .transfers .size {
+table.transfers .size {
     width: 6em;
     text-align: right;
 }
 
-.transfers_page .transfers th.size {
+table.transfers th.size {
     text-align: center;
 }
 
-.transfers_page .transfers td.downloads {
+table.transfers td.downloads {
     text-align: left;
 }
 
-.transfers_page .transfers .actions {
+table.transfers .actions {
     width: 6em;
     text-align: center;
 }
 
-.transfers_page .transfers .actions span{
+table.transfers .actions span{
     margin: 0 0.1em;
 }
 
-.transfers_page .transfers .transfer td {
+table.transfers .transfer td {
     border-top: 1px solid #ccc;
 }
 
-.transfers_page .transfers .transfer_details {
+table.transfers .transfer_details {
     display: none;
 }
 
-.transfers_page .transfers .transfer_details div {
+table.transfers .transfer_details div {
     margin: 0.5em;
 }
 
-.transfers_page .transfers .transfer_details h2 {
+table.transfers .transfer_details h2 {
     font-size: 1.3em;
     margin-bottom: 0.3em;
+}
+
+
+/* Admin page */
+
+.admin_page .menu {
+    border-bottom: 1px solid #ccc;
+    overflow: hidden;
+    margin-bottom: 1em;
+}
+
+.admin_page .menu ul {
+    display: inline;
+    float: left;
+    list-style: none outside none;
+    margin-bottom: -1px;
+}
+
+.admin_page .menu li {
+    position: relative;
+    display: inline-block;
+    float: left;
+    margin: 0 0.3em;
+    border: 1px solid #ccc;
+    border-radius: 0.5em 0.5em 0 0;
+    -moz-border-radius: 0.5em 0.5em 0 0;
+    cursor: pointer;
+    background-color: #ccc;
+}
+
+.admin_page .menu li a {
+    display: block;
+    padding: 0.1em 0.5em;
+    text-decoration: none;
+}
+
+.admin_page .menu li.current {
+    background-color: #fff;
 }
