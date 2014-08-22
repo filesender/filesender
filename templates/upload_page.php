@@ -28,7 +28,12 @@
                     </a>
                 </div>
                 
-                <span class="stats"></span>
+                <div class="stats">
+                    <div class="number_of_files">{tr:number_of_files} : <span class="value"></span></div>
+                    <div class="size">{tr:size} : <span class="value"></span></div>
+                    <div class="uploaded">{tr:uploaded} : <span class="value"></span></div>
+                    <div class="average_speed">{tr:average_speed} : <span class="value"></span></div>
+                </div>
             </div>
         </div>
         
@@ -169,12 +174,21 @@
         </div>
         <?php } ?>
         
-        <div class="upload_button">
-            <a href="#" class="ui-button ui-state-default ui-corner-all">
+        <div class="upload_buttons">
+            <a href="#" class="start">
                 <span class="fa fa-cloud-upload fa-lg"></span> {tr:send}
+            </a>
+            <a href="#" class="pause not_displayed">
+                <span class="fa fa-pause fa-lg"></span> {tr:pause}
+            </a>
+            <a href="#" class="restart not_displayed">
+                <span class="fa fa-play fa-lg"></span> {tr:restart}
+            </a>
+            <a href="#" class="stop not_displayed">
+                <span class="fa fa-stop fa-lg"></span> {tr:stop}
             </a>
         </div>
     </form>
     
-    <script type="text/javascript" src="{path:res/js/upload.js}"></script>
+    <script type="text/javascript" src="{path:res/js/upload_page.js}"></script>
 </div>
