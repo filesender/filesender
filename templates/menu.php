@@ -18,7 +18,7 @@ $pagemenuitem = function($page) use($current_page, $allowed_pages) {
                 
                 $pagemenuitem('vouchers');
                 
-                $pagemenuitem('files');
+                $pagemenuitem('transfers');
                 
                 $pagemenuitem('admin');
             }
