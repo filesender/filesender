@@ -336,6 +336,102 @@ window.filesender.ui = {
     },
     
     /**
+     * Display a nice alert like dialog
+     * 
+     * @param string type "info", "success" or "error"
+     * @param string message
+     * @param callable onclose
+     */
+    alert: function(type, message, onclose) {
+        if(typeof message != 'string') {
+            if(message.out) {
+                message = message.out();
+            }else message = message.toString();
+        }
+        
+        var d = $('<div class="' + type + '" />').appendTo('body').attr({title: lang.tr(type + '_dialog').out()}).html(message);
+        
+        d.dialog({
+            resizable: false,
+            width:550,
+            modal: true,
+            buttons: {
+                close: {
+                    text: lang.tr('close'),
+                    click: function () {
+                        d.dialog('close');
+                        d.remove();
+                        if(onclose) onclose();
+                    }
+                }
+            }
+        });
+    },
+    
+    /**
+     * Display a confirm box
+     * 
+     * @param string message
+     * @param callable onok
+     * @param callable oncancel
+     */
+    confirm: function(message, onok, oncancel) {
+        if(typeof message != 'string') {
+            if(message.out) {
+                message = message.out();
+            }else message = message.toString();
+        }
+        
+        var d = $('<div />').appendTo('body').attr({title: lang.tr('confirm_dialog').out()}).html(message);
+        
+        d.dialog({
+            resizable: false,
+            width:550,
+            modal: true,
+            buttons: {
+                ok: {
+                    text: lang.tr('ok'),
+                    click: function () {
+                        d.dialog('close');
+                        d.remove();
+                        if(onok) onok();
+                    }
+                },
+                cancel: {
+                    text: lang.tr('cancel'),
+                    click: function () {
+                        d.dialog('close');
+                        d.remove();
+                        if(oncancel) oncancel();
+                    }
+                }
+            }
+        });
+    },
+    
+    /**
+     * Redirect user to other page
+     * 
+     * @param string page
+     * @param object args
+     */
+    goToPage: function(page, args) {
+        var a = ['s=' + page];
+        if(args) for(var k in args) a.push(k + '=' + args[k]);
+        
+        this.redirect(filesender.config.base_path + '?' + a.join('&'));
+    },
+    
+    /**
+     * Redirect user to url
+     * 
+     * @param string url
+     */
+    redirect: function(url) {
+        window.location.href = url;
+    },
+    
+    /**
      * Nicely displays an error
      * 
      * @param string code error code (to be translated)
@@ -368,7 +464,7 @@ window.filesender.ui = {
      */
     formatBytes: function formatBytes(bytes, precision) {
         if(!precision || isNaN(precision))
-            precision = 2;
+            precision = 1;
         
         var nomult = lang.tr('bytes_no_multiplier').out();
         if(nomult == '{bytes_no_multiplier}') nomult = 'Bytes';
