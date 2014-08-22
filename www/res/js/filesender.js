@@ -110,11 +110,12 @@ window.filesender.client = {
      * @param array options array of selected option identifiers
      * @param callable callback function to call with transfer path and transfer info once done
      */
-    postTransfer: function(files, recipients, subject, message, expires, options, callback, onerror) {
+    postTransfer: function(from, files, recipients, subject, message, expires, options, callback, onerror) {
         var opts = {};
         if(onerror) opts.error = onerror;
         
         this.post('/transfer', {
+            from: from,
             files: files,
             recipients: recipients,
             subject: subject,
@@ -494,6 +495,7 @@ window.filesender.transfer = function() {
     this.size = 0;
     this.files = [];
     this.recipients = [];
+    this.from = null;
     this.subject = null;
     this.message = null;
     this.expires = null;
@@ -737,7 +739,7 @@ window.filesender.transfer = function() {
         this.time = (new Date()).getTime();
         
         var transfer = this;
-        filesender.client.postTransfer(files_dfn, this.recipients, this.subject, this.message, this.expires, this.options, function(path, data) {
+        filesender.client.postTransfer(this.from, files_dfn, this.recipients, this.subject, this.message, this.expires, this.options, function(path, data) {
             transfer.id = data.id;
             
             for(var i=0; i<transfer.files.length; i++) {
