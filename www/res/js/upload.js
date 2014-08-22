@@ -37,16 +37,19 @@ filesender.ui.files = {
         for(var i=0; i<files.length; i++) {
             var info = files[i].name + ' : ' + filesender.ui.formatBytes(files[i].size);
             
-            var node = $('<div class="file" file="' + files[i].name + ':' + files[i].size + '" />').appendTo(filesender.ui.nodes.files.list);
+            var node = $('<div class="file" data-name="' + files[i].name + '" data-size="' + files[i].size + '" />').appendTo(filesender.ui.nodes.files.list);
             
             $('<span class="info" />').text(info).attr({title: info}).appendTo(node);
             
             $('<span class="remove fa fa-minus-square fa-lg" />').attr({
                 title: lang.tr('click_to_delete_file')
             }).on('click', function() {
-                var index = $(this).parent().attr('index');
-                if(typeof index != 'undefined' && index.match(/^[0-9]+$/))
-                    filesender.ui.transfer.removeFile(index);
+                var el = $(this).parent();
+                var name = el.attr('data-name');
+                var size = el.attr('data-size');
+                
+                if(name && size)
+                    filesender.ui.transfer.removeFile(name, size);
                 
                 $(this).parent().remove();
                 

@@ -607,8 +607,13 @@ window.filesender.transfer = function() {
      * 
      * @param int file index
      */
-    this.removeFile = function(index) {
-        this.files.splice(index, 1);
+    this.removeFile = function(name, size) {
+        for(var i=0; i<this.files.length; i++)
+            if(this.files[i].name == name && this.files[i].size == size)
+                break;
+        
+        if(i < this.files.length)
+            this.files.splice(i, 1);
     };
     
     /**
