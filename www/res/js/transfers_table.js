@@ -46,9 +46,6 @@ $(function() {
         details[expanded ? 'show' : 'hide']('fast');
         
         el.filter('.fa').toggleClass('fa-plus-circle', !expanded).toggleClass('fa-minus-circle', expanded);
-        
-        if(el.is('span.expand'))
-            $('body').scrollTo($('tr.transfer_details .' + el.closest('td').className).position().top);
     });
     
     // Expand / retract all
