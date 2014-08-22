@@ -39,12 +39,12 @@ try {
     Template::display('!header');
     
     try { // At that point we can render exceptions using nice html
-        $known_pages = array('home', 'upload', 'files', 'vouchers', 'admin', 'logon');
+        $known_pages = array('home', 'upload', 'transfers', 'vouchers', 'admin', 'logon');
         
         $allowed_pages = array('home');
         
         if(Auth::isAuthenticated()) {
-            $allowed_pages = array('upload', 'files', 'vouchers');
+            $allowed_pages = array('upload', 'transfers', 'vouchers');
             
             if(Auth::isAdmin()) $allowed_pages[] = 'admin';
         }
