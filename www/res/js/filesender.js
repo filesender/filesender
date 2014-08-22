@@ -806,8 +806,9 @@ window.filesender.transfer = function() {
         if(filesender.config.terasender_enabled && filesender.supports.workers)
             filesender.terasender.stop();
         
+        var transfer = this;
         window.setTimeout(function() { // Small delay to let workers stop
-            filesender.client.deleteTransfer(this, callback);
+            filesender.client.deleteTransfer(transfer, callback);
         }, 1000);
     };
     
