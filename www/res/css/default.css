@@ -292,23 +292,18 @@ input.invalid, textarea.invalid {
 
 #upload_form .files .file .progressbar {
     position: relative;
+    display: none;
     float: right;
     margin: 0.2333em 1em;
     width: 10em;
+    height: 1.3333em;
 }
 
-#upload_form .files .file .progressbar div {
-    display: none;
-    height: 1.3333em;
-    width: 0;
-    padding: 0.25em 0.5em;
-    font-weight: normal;
-    font-size: 0.8em;
-    line-height: 1.3333em;
-    border-radius: 0.5em;
-    -moz-border-radius: 0.5em;
-    background-color: #5c5;
-    overflow-x: visible;
+#upload_form .files .file .progressbar .progress-label {
+    position: absolute;
+    left: 35%;
+    top: -0.2em;
+    font-size: 0.9em;
 }
 
 #upload_form .files_dragdrop {
