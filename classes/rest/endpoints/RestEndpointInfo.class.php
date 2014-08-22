@@ -42,8 +42,19 @@ class RestEndpointInfo extends RestEndpoint {
      * Get info about the current Filesender instance
      */
     public function get() {
-        return array(
+        $info = array(
             'url' => Config::get('site_url'),
         );
+        
+        $disclose = Config::get('disclose');
+        if($disclose) {
+            if(!is_array($disclose))
+                $disclose = array_unique(array_filter(array_map('trim', preg_split('/[,;|]/', $disclose))));
+            
+            foreach($disclose as $k)
+                $info[$k] = Config::get($k);
+        }
+        
+        return $info;
     }
 }
