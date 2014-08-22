@@ -290,7 +290,7 @@ class FilesenderRestClient {
             $info = $this->getInfo();
             if(!property_exists($info, 'default_daysvalid'))
                 throw new Exception('Expires missing and not default value in info to build it from');
-            $expires = time() + $info->default_daysvalid * 24*3600;
+            $expires = time() + (int)$info->default_daysvalid * 24*3600;
         }
         
         return $this->post('/transfer', array('remote_user' => $user_id), array(
@@ -397,18 +397,18 @@ class FilesenderRestClient {
             if(!$expires) {
                 if(!property_exists($info, 'default_daysvalid'))
                     throw new Exception('Expires missing and not default value in info to build it from');
-                $expires = time() + $info->default_daysvalid * 24*3600;
+                $expires = time() + (int)$info->default_daysvalid * 24*3600;
             }
             
             if(!$this->chunk_size) {
                 if(!property_exists($info, 'upload_chunk_size'))
                     throw new Exception('Chunk size missing and not value in info to build it from');
-                $this->chunk_size = $info->upload_chunk_size;
+                $this->chunk_size = (int)$info->upload_chunk_size;
             }
         }
             
         if(property_exists($info, 'upload_chunk_size'))
-            $this->chunk_size = $info->upload_chunk_size;
+            $this->chunk_size = (int)$info->upload_chunk_size;
         
         $files = array();
         
