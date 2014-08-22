@@ -92,7 +92,10 @@ class GUI {
             'res/js/jquery-1.9.1.min.js',
             'res/js/jquery-ui-1.10.2.custom.min.js',
             'res/js/filesender.js',
-            'res/js/lang.js'
+            'res/js/lang.js',
+            'res/js/client.js',
+            'res/js/transfer.js',
+            'res/js/ui.js',
         );
         
         if(Config::get('terasender_enabled')) $sources[] = 'res/js/terasender.js';
