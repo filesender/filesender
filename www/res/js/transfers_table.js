@@ -31,9 +31,8 @@
  */
 
 $(function() {
-    if(!$('.transfers_page').length) return;
-    
     var transfers = $('table.transfers');
+    if(!transfers.length) return;
     
     // Expand / retract each transfer's details
     transfers.find('tr.transfer td.expand span, tr.transfer span.expand').on('click', function() {
