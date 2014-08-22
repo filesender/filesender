@@ -121,7 +121,7 @@ class Utilities
      * 
      * @return string
      */
-    public static function formatBytes($bytes, $precision = 2) {
+    public static function formatBytes($bytes, $precision = 1) {
         if(!$precision || !is_numeric($precision))
             $precision = 2;
         
