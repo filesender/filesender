@@ -48,7 +48,7 @@ a {
     color: #333333;
 }
 
-td {
+th, td {
     vertical-align: top;
     padding: 0.25em;
 }
@@ -125,7 +125,7 @@ td {
 }
 
 #content {
-    padding-top: 0.5em 2em 1em 2em;
+    padding: 0.5em 2em 1em 2em;
 }
 
 #footer {
@@ -179,6 +179,18 @@ div.success.message {
     border-radius:0.5em;
     -moz-border-radius: 0.5em;
     margin: 0 0.25em 0.5em 0.25em;
+}
+
+.clickable {
+    cursor: pointer;
+}
+
+span.clickable {
+    text-decoration: underline;
+}
+
+span.clickable.fa {
+    text-decoration: none;
 }
 
 .two_columns {
@@ -303,7 +315,7 @@ input.invalid, textarea.invalid {
     border: 1px dashed #666;
     border-radius: 0.5em;
     -moz-border-radius: 0.5em;
-    padding-top: 0.5em 0;
+    padding: 0.5em 0;
     background-color: #FFF;
     font-weight: bold;
 }
@@ -330,7 +342,6 @@ input.invalid, textarea.invalid {
 }
 
 #upload_form .files_actions div a {
-    cursor: pointer;
     width: 45%;
 }
 
@@ -376,7 +387,6 @@ input.invalid, textarea.invalid {
 
 #upload_form .aup label {
     font-weight: bold;
-    cursor: pointer;
 }
 
 #upload_form .aup label span {
@@ -401,4 +411,66 @@ input.invalid, textarea.invalid {
 
 #upload_form .upload_button a span {
     font-size: 2em;
+}
+
+
+/* transfers page */
+
+.transfers_page .transfers {
+    table-layout: fixed;
+    width: 100%;
+}
+
+.transfers_page .transfers tr:first-child {
+    background-color: #ccc;
+    font-weight: bold;
+}
+
+.transfers_page .transfers .expand {
+    width: 2em;
+}
+
+.transfers_page .transfers .downloads,
+.transfers_page .transfers .expires {
+    width: 9em;
+    text-align: center;
+}
+
+.transfers_page .transfers .size {
+    width: 6em;
+    text-align: right;
+}
+
+.transfers_page .transfers th.size {
+    text-align: center;
+}
+
+.transfers_page .transfers td.downloads {
+    text-align: left;
+}
+
+.transfers_page .transfers .actions {
+    width: 6em;
+    text-align: center;
+}
+
+.transfers_page .transfers .actions span{
+    margin: 0 0.1em;
+}
+
+.transfers_page .transfers .transfer td {
+    border-top: 1px solid #ccc;
+}
+
+.transfers_page .transfers .transfer_details {
+    display: none;
+}
+
+.transfers_page .transfers .transfer_details div {
+    margin: 0.5em;
+}
+
+.transfers_page .transfers .transfer_details h2 {
+    font-size: 1.3em;
+    margin-bottom: 0.3em;
 }
