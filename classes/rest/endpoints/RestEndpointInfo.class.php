@@ -49,11 +49,10 @@ class RestEndpointInfo extends RestEndpoint {
         $disclose = Config::get('disclose');
         if($disclose) {
             if(!is_array($disclose)) {
-                if(is_string($disclose)) {
-                    $disclose = array_unique(array_filter(array_map('trim', preg_split('/[,;|]/', $disclose))));
-                } else if(is_callable($disclose)) {
-                    $disclose = array($disclose);
-                }
+                if(!is_string($disclose)) 
+                    throw new ConfigBadParameterException('disclose');
+                    
+                $disclose = array_unique(array_filter(array_map('trim', preg_split('/[,;|]/', $disclose))));
             }
             
             foreach($disclose as $k) {
