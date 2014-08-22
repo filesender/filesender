@@ -54,6 +54,10 @@ class Transfer extends DBObject {
             'type' => 'string',
             'size' => 250
         ),
+        'user_email' => array(
+            'type' => 'string',
+            'size' => 250
+        ),
         'subject' => array(
             'type' => 'string',
             'size' => 250,
@@ -92,6 +96,7 @@ class Transfer extends DBObject {
     protected $id = null;
     protected $status = null;
     protected $user_id = null;
+    protected $user_email = null;
     protected $subject = null;
     protected $message = null;
     protected $created = 0;
@@ -268,7 +273,7 @@ class Transfer extends DBObject {
      * @return property value
      */
     public function __get($property) {
-        if(in_array($property, array('id', 'status', 'user_id', 'subject', 'message', 'created', 'expires', 'options'))) return $this->$property;
+        if(in_array($property, array('id', 'status', 'user_id', 'user_email', 'subject', 'message', 'created', 'expires', 'options'))) return $this->$property;
         
         if($property == 'user' || $property == 'owner') {
             return User::fromId($this->user_id);
@@ -277,6 +282,12 @@ class Transfer extends DBObject {
         if($property == 'files') {
             if(is_null($this->filesCache)) $this->filesCache = File::fromTransfer($this);
             return $this->filesCache;
+        }
+        
+        if($property == 'size') {
+            return array_sum(array_map(function($file) {
+                return $file->size;
+            }, $this->files));
         }
         
         if($property == 'recipients') {
@@ -302,6 +313,9 @@ class Transfer extends DBObject {
             $value = strtolower($value);
             if(!TransferStatuses::isValidValue($value)) throw new TransferBadStatusException($value);
             $this->status = (string)$value;
+        }else if($property == 'user_email') {
+            if(!filter_var($value, FILTER_VALIDATE_EMAIL)) throw new BadEmailException($value);
+            $this->user_email = (string)$value;
         }else if($property == 'subject') {
             $this->subject = (string)$value;
         }else if($property == 'message') {
