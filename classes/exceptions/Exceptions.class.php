@@ -89,15 +89,31 @@ class LoggingException extends Exception {
  */
 class DetailedException extends LoggingException {
     /**
+     * Public exception info
+     */
+    private $info = null;
+    
+    /**
      * Constructor
      * 
      * Logs all info to server log
      * 
      * @param string $msg_code message code to be used to present error
-     * @param mixed $details details to log
+     * @param mixed $internal_details details to log
+     * @param mixed $public_details details to give to the user (logged as well)
      */
-    public function __construct($msg_code /*, details*/) {
+    public function __construct($msg_code, $internal_details, $public_details = null) {
         $this->uid = uniqid();
+        
+        $this->info = $public_details;
+        
+        if(!$internal_details) $internal_details = array();
+        if(!is_array($internal_details)) $internal_details = array($internal_details);
+        
+        if($public_details) {
+            if(!is_array($public_details)) $public_details = array($public_details);
+            $internal_details = array_merge($public_details, $internal_details);
+        }
         
         $log = array(
             'exception' => $msg_code,
@@ -105,10 +121,7 @@ class DetailedException extends LoggingException {
             'details' => array(),
         );
         
-        $details = func_get_args();
-        array_shift($details); // shift msg_code
-        
-        foreach ($details as $detail) {
+        foreach ($internal_details as $detail) {
             if (is_scalar($detail)) {
                 $log['details'][] = $detail;
             } else {
@@ -118,5 +131,14 @@ class DetailedException extends LoggingException {
             }
         }
         parent::__construct($msg_code, $log);
+    }
+    
+    /**
+     * Info getter
+     * 
+     * @return mixed the exception info
+     */
+    public function getInfo() {
+        return $this->info;
     }
 }
