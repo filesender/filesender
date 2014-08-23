@@ -1,1 +1,1 @@
-<h2>{tr:statistics}</h2>
+<h2>{tr:admin_statistics_section}</h2>

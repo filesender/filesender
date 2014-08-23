@@ -1,1 +1,1 @@
-<h2>{tr:vouchers}</h2>
+<h2>{tr:admin_vouchers_section}</h2>

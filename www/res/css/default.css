@@ -239,6 +239,22 @@ input.invalid, textarea.invalid {
     font-size: 1em;
 }
 
+
+.ui-dialog .ui-dialog-content.error {
+    background: transparent url(../images/error.png) no-repeat 0.8em 0.5em;
+    padding-left: 3em;
+}
+
+.ui-dialog .ui-dialog-content.info {
+    background: transparent url(../images/info.png) no-repeat 0.8em 0.5em;
+    padding-left: 3em;
+}
+
+.ui-dialog .ui-dialog-content.success {
+    background: transparent url(../images/success.png) no-repeat 0.8em 0.5em;
+    padding-left: 3em;
+}
+
 .ui-dialog .ui-dialog-buttonpane button {
     cursor: pointer;
     margin: 0.5em 0.4em 0.5em 0;
@@ -527,7 +543,17 @@ table.transfers .transfer_details h2 {
 }
 
 
-/* Admin config page */
+/* Admin sections */
+
+.admin_page .section h2 {
+    width: 100%;
+    font-size: 1.2em;
+    font-weight: bold;
+    padding-bottom: 1em;
+    padding-top: 4px;
+}
+
+/* Admin config section */
 
 .admin_page .config_section .parameter {
     margin: 0.5em 0;
