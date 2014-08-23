@@ -525,3 +525,44 @@ table.transfers .transfer_details h2 {
 .admin_page .menu li.current {
     background-color: #fff;
 }
+
+
+/* Admin config page */
+
+.admin_page .config_section .parameter {
+    margin: 0.5em 0;
+}
+
+.admin_page .config_section .parameter .is_default {
+    display: none;
+    font-style: italic;
+    color: #ccc;
+}
+
+.admin_page .config_section .parameter[data-is-default="1"] .is_default {
+    display: inline;
+}
+
+.admin_page .config_section .parameter .make_default {
+    display: inline;
+}
+
+.admin_page .config_section .parameter[data-is-default="1"] .make_default {
+    display: none;
+}
+
+.admin_page .config_section .parameter[data-is-default="1"] input,
+.admin_page .config_section .parameter[data-is-default="1"] textarea,
+.admin_page .config_section .parameter[data-is-default="1"] select {
+    color: #777;
+}
+
+.admin_page .config_section .parameter[data-is-default="1"] input:focus,
+.admin_page .config_section .parameter[data-is-default="1"] textarea:focus,
+.admin_page .config_section .parameter[data-is-default="1"] select:focus {
+    color: #000;
+}
+
+.admin_page .config_section .box+.box {
+    text-align: center;
+}

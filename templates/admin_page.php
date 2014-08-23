@@ -3,7 +3,12 @@
     
     <?php
     
-    $sections = array('statsistics', 'transfers', 'vouchers', 'config');
+    $sections = array('statsistics', 'transfers', 'vouchers');
+    
+    try {
+        if(count(Config::overrides()))
+            $sections[] = 'config';
+    } catch(ConfigOverrideDisabledException $e) {}
     
     $section = 'statsistics';
     if(array_key_exists('as', $_REQUEST))
@@ -25,5 +30,7 @@
         </ul>
     </div>
     
-    <?php Template::display('admin_'.$section.'_section') ?>
+    <div class="<?php echo $section ?>_section">
+        <?php Template::display('admin_'.$section.'_section') ?>
+    </div>
 </div>

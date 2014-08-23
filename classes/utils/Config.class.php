@@ -55,6 +55,11 @@ class Config {
     private static $parameters = null;
     
     /**
+     * Parameters override stack
+     */
+    private static $override = null;
+    
+    /**
      * List of already evaluated parameters' keys (special loaders, lambda functions)
      */
     private static $cached_parameters = array();
@@ -107,7 +112,7 @@ class Config {
             if (!is_string($virtualhost))
                 throw new ConfigBadParameterException('virtualhost');
             
-            $config_file = FILESENDER_BASE.'/config/'.$virtualhost.'.conf.php';
+            $config_file = FILESENDER_BASE.'/config/'.$virtualhost.'/config.php';
             if (!file_exists($config_file))
                 throw new ConfigFileMissingException($config_file); // Should exist even if empty
             
@@ -115,6 +120,28 @@ class Config {
             include_once $config_file;
             foreach ($config as $key => $value)
                 self::$parameters[$key] = $value; // Merge
+        }
+        
+        $overrides_cfg = self::get('config_overrides');
+        if ($overrides_cfg) {
+            $overrides_file = FILESENDER_BASE.'/config/'.($virtualhost ? $virtualhost.'/' : '').'config_overrides.json';
+            
+            $overrides = file_exists($overrides_file) ? json_decode(trim(file_get_contents($overrides_file))) : new StdClass();
+            
+            self::$override = array('file' => $overrides_file, 'parameters' => array());
+            foreach($overrides_cfg as $key => $dfn) {
+                // Casting
+                if(is_string($dfn)) {
+                    $dfn = array('type' => $dfn);
+                } else if(is_array($dfn) && !array_key_exists('type', $dfn)) {
+                    $dfn = array('type' => 'enum', 'values' => $dfn);
+                } else if(!is_array($dfn))
+                    throw new ConfigBadParameterException('config_overrides');
+                
+                $dfn['value'] = property_exists($overrides, $key) ? $overrides->$key : null;
+                
+                self::$override['parameters'][$key] = $dfn;
+            }
         }
     }
     
@@ -204,8 +231,37 @@ class Config {
         
         $value = self::evalParameter($key, $value, $args);
         
+        if(
+            is_array(self::$override) &&
+            array_key_exists($key, self::$override['parameters']) &&
+            !is_null(self::$override['parameters'][$key]['value'])
+        ) {
+            self::$override['parameters'][$key]['base'] = $value;
+            $value = self::$override['parameters'][$key]['value'];
+        }
+        
         self::$parameters[$key] = $value;
         self::$cached_parameters[] = $key;
+        
+        return $value;
+    }
+    
+    /**
+     * Get default value (without override)
+     * 
+     * @param string $key parameter name
+     * @param mixed $* arguments to forward to callable if defined
+     * 
+     * @return mixed the parameter value or null if parameter is unknown
+     */
+    public static function getBaseValue($key) {
+        $value = call_user_func_array(get_class().'::get', func_get_args());
+        
+        if(
+            is_array(self::$override) &&
+            array_key_exists($key, self::$override['parameters']) &&
+            array_key_exists('base', self::$override['parameters'][$key])
+        ) return self::$override['parameters'][$key]['base'];
         
         return $value;
     }
@@ -220,5 +276,69 @@ class Config {
     public function exists($key) {
         self::load();
         return array_key_exists($key, self::$parameters);
+    }
+    
+    /**
+     * Get overrides data
+     * 
+     * @return array
+     */
+    public static function overrides() {
+        self::load();
+        if(!self::$override)
+            throw new ConfigOverrideDisabledException();
+        
+        return self::$override['parameters'];
+    }
+    
+    /**
+     * Set override
+     * 
+     * Null values means go back to default value from config
+     * 
+     * @param mixed $set key or array of key-values
+     * @param mixed $value (optionnal)
+     * @param bool $save (optionnal)
+     */
+    public static function override(/* $set [, $value] [, $save = true] */) {
+        self::load();
+        if(!self::$override)
+            throw new ConfigOverrideDisabledException();
+        
+        $args = func_get_args();
+        
+        $set = array_shift($args);
+        if($set) {
+            if(!is_array($set)) $set = array($set => array_shift($args));
+            
+            foreach($set as $k => $v) {
+                if(!array_key_exists($k, self::$override['parameters']))
+                    throw new ConfigOverrideNotAllowedException($k);
+                
+                self::$override['parameters'][$k]['value'] = $v;
+            }
+        }
+        
+        $save = count($args) ? array_shift($args) : true;
+        if($save) {
+            $overrides = array();
+            
+            foreach(self::$override['parameters'] as $k => $dfn) {
+                if(!is_null($dfn['value']))
+                    $overrides[$k] = $dfn['value'];
+            }
+            
+            $file = self::$override['file'];
+            
+            if(count($overrides)) {
+                if($fh = fopen($file, 'w')) {
+                    fwrite($fh, json_encode($overrides));
+                    fclose($fh);
+                } else throw new ConfigOverrideCannotSaveException($file);
+            } else {
+                if(file_exists($file) && !unlink($file))
+                    throw new ConfigOverrideCannotSaveException($file);
+            }
+        }
     }
 }
