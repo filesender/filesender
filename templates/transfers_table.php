@@ -42,7 +42,7 @@
             }, array_slice($transfer->recipients, 0, 3)));
             
             if(count($transfer->recipients) > 3)
-                echo '<br />(<span class="clickable expand">'.Lang::tr('more', array('n' => count($transfer->recipients) - 3)).'</span>)';
+                echo '<br />(<span class="clickable expand">'.Lang::tr('n_more', array('n' => count($transfer->recipients) - 3)).'</span>)';
             ?>
         </td>
         
@@ -57,7 +57,7 @@
             }, array_slice($transfer->files, 0, 3)));
             
             if(count($transfer->files) > 3)
-                echo '<br />(<span class="clickable expand">'.Lang::tr('more', array('n' => count($transfer->recipients) - 3)).'</span>)';
+                echo '<br />(<span class="clickable expand">'.Lang::tr('n_more', array('n' => count($transfer->recipients) - 3)).'</span>)';
             ?>
         </td>
         
