@@ -30,7 +30,7 @@
         </ul>
     </div>
     
-    <div class="<?php echo $section ?>_section">
+    <div class="<?php echo $section ?>_section section">
         <?php Template::display('admin_'.$section.'_section') ?>
     </div>
 </div>

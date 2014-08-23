@@ -1,4 +1,4 @@
-<h2>{tr:config}</h2>
+<h2>{tr:admin_config_section}</h2>
 
 <?php try { ?>
 
