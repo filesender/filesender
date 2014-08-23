@@ -326,3 +326,19 @@ window.filesender.ui = {
         });
     }
 };
+
+$(function() {
+    $('#topmenu_help').on('click', function() {
+        $('#dialog-help').dialog({
+            width: 700
+        });
+        return false;
+    });
+    
+    $('#topmenu_about').on('click', function() {
+        $('#dialog-about').dialog({
+            width: 400
+        });
+        return false;
+    });
+});
