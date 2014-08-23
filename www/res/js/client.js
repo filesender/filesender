@@ -88,18 +88,12 @@ window.filesender.client = {
     error: function(xhr, status, error) {
         var msg = xhr.responseText.replace(/^\s+/, '').replace(/\s+$/, '');
         
-        var m = msg.match(/^([a-z0-9_-]+)\s+\(([a-z0-9]+)\)$/i);
-        if(m) {
-            filesender.ui.error(m[1], {logid: m[2]});
-            return;
+        try {
+            var error = JSON.parse(msg);
+            filesender.ui.error(error);
+        } catch(e) {
+            filesender.ui.rawError(msg);
         }
-        
-        if(msg.match(/^([a-z0-9_-]+)$/i)) {
-            filesender.ui.error(msg);
-            return;
-        }
-        
-        filesender.ui.rawError(msg);
     },
     
     get: function(resource, callback, options) {

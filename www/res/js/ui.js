@@ -167,7 +167,9 @@ window.filesender.ui = {
         if(typeof message != 'string') {
             if(message.out) {
                 message = message.out();
-            }else message = message.toString();
+            }else if(!message.jquery) {
+                message = message.toString();
+            }
         }
         
         var d = $('<div class="' + type + '" />').appendTo('body').attr({title: lang.tr(type + '_dialog').out()}).html(message);
@@ -187,6 +189,8 @@ window.filesender.ui = {
                 }
             }
         });
+        
+        return d;
     },
     
     /**
@@ -228,6 +232,8 @@ window.filesender.ui = {
                 }
             }
         });
+        
+        return d;
     },
     
     /**
@@ -258,22 +264,30 @@ window.filesender.ui = {
      * @param string code error code (to be translated)
      * @param object data values for translation placeholders
      */
-    error: function(code, data) {
-        var msg = 'Error : ' + code;
-        if(data && data.logid) {
-            msg += ' (' + data.logid + ')';
-            delete data.logid;
+    error: function(error) {
+        var d = this.alert('error', lang.tr(error.message));
+        
+        if(error.info) {
+            var i = $('<div class="details" />').appendTo(d);
+            $.each(error.info, function(k, v) {
+                if(isNaN(k)) v = k + ': ' + v;
+                $('<div class="detail" />').text(v).appendTo(i);
+            });
         }
         
-        console.log(data);
+        if(error.uid) {
+            var r = $('<div class="report" />').appendTo(d);
+            r.append(lang.tr('you_can_report_exception') + ' : ');
+            $('<a />').attr({
+                href: 'href="mailto:' + filesender.config.support_email + '?subject=Exception ' + error.uid
+            }).text(lang.tr('report_exception')).appendTo(r);
+        }
         
-        alert(msg + ', see console for details');
-        
-        return code;
+        return error.message;
     },
     
     rawError: function(text) {
-        alert('Error : ' + text);
+        alert('Error : ' + (text.match(/^[a-z][a-z0-9_]+$/i) ? lang.tr(text) : text));
     },
     
     /**

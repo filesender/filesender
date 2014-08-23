@@ -202,10 +202,12 @@ class RestServer {
             $code = $e->getCode();
             if($code < 400 || $code >= 600) $code = 500;
             RestUtilities::sendResponseCode($code);
-            header('Content-Type: text/plain');
-            $out = $e->getMessage();
-            if(method_exists($e, 'getUid')) $out .= ' ('.$e->getUid().')';
-            echo $out;
+            header('Content-Type: application/json');
+            echo json_encode(array(
+                'message' => $e->getMessage(),
+                'uid' => method_exists($e, 'getUid') ? $e->getUid() : null,
+                'info' => method_exists($e, 'getInfo') ? $e->getInfo() : null
+            ));
         }
     }
 }
