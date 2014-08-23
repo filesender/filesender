@@ -83,3 +83,51 @@ class ConfigMissingParameterException extends DetailedException {
         );
     }
 }
+
+/**
+ * Override disabled exception
+ */
+class ConfigOverrideDisabledException extends DetailedException {
+    /**
+     * Constructor
+     */
+    public function __construct() {
+        parent::__construct(
+            'config_override_disabled'
+        );
+    }
+}
+
+/**
+ * Override of parameter not allowed exception
+ */
+class ConfigOverrideNotAllowedException extends DetailedException {
+    /**
+     * Constructor
+     * 
+     * @param string $key name of the parameter
+     */
+    public function __construct($key) {
+        parent::__construct(
+            'config_override_not_allowed', // Message to give to the user
+            'parameter : '.$key // Details to log
+        );
+    }
+}
+
+/**
+ * Cannot save overrides exception
+ */
+class ConfigOverrideCannotSaveException extends DetailedException {
+    /**
+     * Constructor
+     * 
+     * @param string $file path of the file
+     */
+    public function __construct($file) {
+        parent::__construct(
+            'config_override_cannot_save', // Message to give to the user
+            'file : '.$file // Details to log
+        );
+    }
+}

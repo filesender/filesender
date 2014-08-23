@@ -244,4 +244,14 @@ window.filesender.client = {
         
         this.delete('/transfer/' + id, callback, opts);
     },
+    
+    /**
+     * Override part of the config (if allowed)
+     * 
+     * @param object overrides
+     * @param callable callback
+     */
+    overrideConfig: function(overrides, callback) {
+        this.put('/config', overrides, callback);
+    },
 };

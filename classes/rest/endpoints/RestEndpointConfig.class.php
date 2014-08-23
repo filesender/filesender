@@ -35,74 +35,19 @@ if (!defined('FILESENDER_BASE'))
     die('Missing environment');
 
 /**
- * REST request
+ * REST config endpoint
  */
-class RestRequest {
+class RestEndpointConfig extends RestEndpoint {
     /**
-     * Properties of the request (content type, charset ...)
+     * Overrides config if allowed
+     * 
+     * @throws RestAuthenticationRequiredException
+     * @throws RestOwnershipRequiredException
      */
-    public $properties = array();
-    
-    /**
-     * Request body
-     */
-    private $input = null;
-    
-    /**
-     * Output properties the client asked for
-     */
-    public $count = null;
-    public $startIndex = null;
-    public $format = null;
-    public $filterOp = null;
-    public $sortOrder = null;
-    public $updatedSince = null;
-    
-    /**
-     * Getter
-     */
-    public function __get($key) {
-        if($key == 'input') {
-            return $this->input;
-        }else throw new PropertyAccessException($this, $key);
-    }
-    
-    /**
-     * Setter
-     */
-    public function __set($key, $value) {
-        if($key == 'input') {
-            $this->input = new RestInput($value);
-        }else if($key == 'rawinput') {
-            $this->input = $value;
-        }else throw new PropertyAccessException($this, $key);
-    }
-}
-
-/**
- * Request body converter
- */
-class RestInput {
-    /**
-     * Body data holder
-     */
-    private $data = array();
-    
-    /**
-     * Fill from data
-     */
-    public function __construct($data) {
-        if(!is_array($data)) $data = (array)$data;
+    public function put() {
+        if(!Auth::isAdmin())
+            throw new RestAdminRequiredException();
         
-        $this->data = $data;
-    }
-    
-    /**
-     * Getter
-     */
-    public function __get($key) {
-        if($key == 'data') return $this->data;
-        
-        return array_key_exists($key, $this->data) ? $this->data[$key] : null;
+        Config::override($this->request->input->data);
     }
 }
