@@ -54,7 +54,8 @@ class Autoloader {
         'GUI' => 'utils/',
         'Database*' => 'utils/',
         'Mail' => 'utils/',
-        'Enum' => 'utils/Enum',
+        'Enum' => 'utils/',
+        'Disclosed' => 'utils/',
         
         // CONSTANTS
         '*Types' => 'constants/',

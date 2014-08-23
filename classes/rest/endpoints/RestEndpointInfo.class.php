@@ -46,25 +46,7 @@ class RestEndpointInfo extends RestEndpoint {
             'url' => Config::get('site_url'),
         );
         
-        $disclose = Config::get('disclose');
-        if($disclose) {
-            if(!is_array($disclose)) {
-                if(!is_string($disclose)) 
-                    throw new ConfigBadParameterException('disclose');
-                    
-                $disclose = array_unique(array_filter(array_map('trim', preg_split('/[,;|]/', $disclose))));
-            }
-            
-            foreach($disclose as $k) {
-                if(is_string($k)) {
-                    $info[$k] = Config::get($k);
-                } else if(is_callable($k)) {
-                    $data = $k();
-                    foreach($data as $k => $v)
-                        $info[$k] = $v;
-                }
-            }
-        }
+        $info = array_merge($info, Disclosed::all());
         
         return $info;
     }
