@@ -315,6 +315,16 @@ class Config {
                 if(!array_key_exists($k, self::$override['parameters']))
                     throw new ConfigOverrideNotAllowedException($k);
                 
+                if(array_key_exists('validator', self::$override['parameters'][$k])) {
+                    $validators = self::$override['parameters'][$k]['validator'];
+                    if(!is_array($validators)) $validators = array($validators);
+                    
+                    if(!is_null($v))
+                        foreach($validators as $n => $validator)
+                            if(is_callable($validator) && !$validator($v))
+                                throw new ConfigOverrideValidationFailedException($k, is_string($validator) ? $validator : 'custom:'.$n);
+                }
+                
                 self::$override['parameters'][$k]['value'] = $v;
             }
         }
