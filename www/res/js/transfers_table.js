@@ -40,12 +40,13 @@ $(function() {
         var tr = el.closest('tr');
         var details = tr.next('tr.transfer_details[data-id="' + tr.attr('data-id') + '"]');
         
-        var expanded = el.toggleClass('expanded').hasClass('expanded');
+        var expanded = !el.hasClass('expanded');
         
         tr.find('td:not(.expand, .actions)').css('visibility', expanded ? 'hidden' : 'visible');
         details[expanded ? 'show' : 'hide']('fast');
         
-        el.filter('.fa').toggleClass('fa-plus-circle', !expanded).toggleClass('fa-minus-circle', expanded);
+        tr.find('td.expand span, span.expand').toggleClass('expanded', expanded);
+        tr.find('td.expand .fa').toggleClass('fa-plus-circle', !expanded).toggleClass('fa-minus-circle', expanded);
     });
     
     // Expand / retract all
@@ -56,12 +57,12 @@ $(function() {
         var expands = table.find('tr.transfer td.expand span');
         expands.push(this);
         
-        var expanded = el.toggleClass('expanded').hasClass('expanded');
+        var expanded = !el.hasClass('expanded');
         
         table.find('.transfer td:not(.expand, .actions)').css('visibility', expanded ? 'hidden' : 'visible');
         details[expanded ? 'show' : 'hide']('fast');
         
-        expands.toggleClass('fa-plus-circle', !expanded).toggleClass('fa-minus-circle', expanded);
+        expands.toggleClass('expanded', expanded).toggleClass('fa-plus-circle', !expanded).toggleClass('fa-minus-circle', expanded);
     });
     
     // Setup action buttons
