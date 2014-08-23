@@ -99,6 +99,25 @@ class ConfigOverrideDisabledException extends DetailedException {
 }
 
 /**
+ * Validation of parameter override failed exception
+ */
+class ConfigOverrideValidationFailedException extends DetailedException {
+    /**
+     * Constructor
+     * 
+     * @param string $key name of the parameter
+     * @param string $validator name of the validator
+     */
+    public function __construct($key, $validator) {
+        parent::__construct(
+            'config_override_validation_failed', // Message to give to the user
+            null,
+            array('parameter' => $key, 'validator' => $validator) // Public info
+        );
+    }
+}
+
+/**
  * Override of parameter not allowed exception
  */
 class ConfigOverrideNotAllowedException extends DetailedException {
