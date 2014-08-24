@@ -111,8 +111,7 @@ filesender.ui.files = {
         if(this.status != 'paused')
             filesender.ui.nodes.stats.average_speed.find('.value').text(filesender.ui.formatBytes(speed) + lang.tr('per_second'));
         
-        var id = file.name + ':' + file.size;
-        var bar = filesender.ui.nodes.files.list.find('[file="' + id + '"] .progressbar');
+        var bar = filesender.ui.nodes.files.list.find('[data-name="' + file.name + '"][data-size="' + file.size + '"] .progressbar');
         bar.progressbar('value', Math.round(1000 * file.uploaded / file.size));
     },
     
@@ -271,9 +270,9 @@ filesender.ui.startUpload = function() {
         // TODO popup (view uploaded / upload other)
     };
     
-    this.transfer.onerror = function(code, details) {
-        alert('There was an error during upload : ' + code);
-        filesender.ui.alert('error', 'There was an error during upload : ' + code);
+    this.transfer.onerror = function(error) {
+        error = {message: 'upload_failed', details: error};
+        filesender.ui.error(error);
     };
     
     filesender.ui.nodes.files.list.find('.progressbar').show();
