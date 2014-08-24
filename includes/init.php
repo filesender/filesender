@@ -54,3 +54,9 @@ date_default_timezone_set(Config::get('Default_TimeZone'));
 
 // Ensure HTTPS if needed
 require_once(FILESENDER_BASE.'/includes/EnsureHTTPS.php');
+
+// Output is all UTF8
+header('Content-Type: text/html; charset=UTF-8');
+
+// We expect UTF8 data from the client
+//header('Accept: ');
