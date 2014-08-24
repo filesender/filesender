@@ -170,7 +170,7 @@ class RestEndpointTransfer extends RestEndpoint {
             $transfer->save(); // Mandatory to add recipients and files
             
             foreach($data->files as $filedata) {
-                $file = $transfer->addFile($filedata->name, $filedata->size);
+                $file = $transfer->addFile($filedata->name, $filedata->size, $filedata->mime_type);
                 //if($filedata->sha1) $file->sha1 = $filedata->sha1;
             }
             
