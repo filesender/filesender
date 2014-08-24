@@ -79,6 +79,17 @@ class Utilities
     }
     
     /**
+     * Validates unique ID format
+     * 
+     * @param string $uid
+     * 
+     * @return bool
+     */
+    public static function isValidUID($uid) {
+        return preg_match('/^[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}$/', $uid);
+    }
+    
+    /**
      * Format a date according to configuration
      * 
      * @param integer $timestamp php timestamp to format to date or null to use current date
