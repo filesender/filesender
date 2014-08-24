@@ -56,6 +56,7 @@ class Autoloader {
         'Mail' => 'utils/',
         'Enum' => 'utils/',
         'Disclosed' => 'utils/',
+        'Version' => 'utils/',
         
         // CONSTANTS
         '*Types' => 'constants/',
