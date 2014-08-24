@@ -38,7 +38,7 @@
         <td class="recipients">
             <?php
             echo implode('<br />', array_map(function($recipient) {
-                return $recipient->email;
+                return htmlentities($recipient->email);
             }, array_slice($transfer->recipients, 0, 3)));
             
             if(count($transfer->recipients) > 3)
@@ -53,7 +53,7 @@
         <td class="files">
             <?php
             echo implode('<br />', array_map(function($file) {
-                return $file->name;
+                return htmlentities($file->name);
             }, array_slice($transfer->files, 0, 3)));
             
             if(count($transfer->files) > 3)
@@ -78,7 +78,7 @@
                 {tr:created} : <?php echo Utilities::formatDate($transfer->created) ?><br />
                 {tr:expires} : <?php echo Utilities::formatDate($transfer->expires) ?><br />
                 {tr:size} : <?php echo Utilities::formatBytes($transfer->size) ?><br />
-                {tr:with_identity} : <?php echo $transfer->user_email ?><br />
+                {tr:with_identity} : <?php echo htmlentities($transfer->user_email) ?><br />
                 {tr:options} : <?php echo implode(', ', array_map(function($o) {
                     return Lang::tr($o);
                 }, $transfer->options)) ?>
@@ -89,7 +89,7 @@
                 
                 <?php foreach($transfer->recipients as $recipient) { ?>
                     <div class="recipient" data-id="<?php echo $recipient->id ?>">
-                        <?php echo $recipient->email ?> : <!--count($transfer->auditLogs('download', $recipient)--> 0 {tr:downloads}
+                        <?php echo htmlentities($recipient->email) ?> : <!--count($transfer->auditLogs('download', $recipient)--> 0 {tr:downloads}
                     </div>
                 <?php } ?>
             </div>
@@ -99,7 +99,7 @@
                 
                 <?php foreach($transfer->files as $file) { ?>
                     <div class="file" data-id="<?php echo $file->id ?>">
-                        <?php echo $file->name ?> (<?php echo Utilities::formatBytes($file->size) ?>) : <!--count($transfer->auditLogs('download', $file)--> 0 {tr:downloads}
+                        <?php echo htmlentities($file->name) ?> (<?php echo Utilities::formatBytes($file->size) ?>) : <!--count($transfer->auditLogs('download', $file)--> 0 {tr:downloads}
                     </div>
                 <?php } ?>
             </div>
