@@ -42,7 +42,7 @@ var terasender_worker = {
         this.job.chunk = job.chunk;
         
         if(!this.job.file) {
-            this.error('file_missing');
+            this.error({message: 'file_missing'});
             return;
         }
         
@@ -72,7 +72,7 @@ var terasender_worker = {
         try {
             xhr.send(blob);
         } catch(err) {
-            this.error('source_file_not_available', this.job);
+            this.error({message: 'source_file_not_available', details: {job: this.job}});
         }
     },
     
@@ -108,7 +108,15 @@ var terasender_worker = {
             close();
         }else{ // We have an error
             var msg = xhr.responseText.replace(/^\s+/, '').replace(/\s+$/, '');
-            this.error(msg, this.job);
+            
+            try {
+                var error = JSON.parse(msg);
+                if(!error.details) error.details = {};
+                error.details.job = this.job;
+                this.error(error);
+            } catch(e) {
+                this.error({message: msg, details: {job: this.job}});
+            }
         }
     },
     
@@ -127,11 +135,8 @@ var terasender_worker = {
      * @param string code error code
      * @param string details
      */
-    error: function(code, details) {
-        this.sendCommand('error', {
-            code: code,
-            details: details
-        });
+    error: function(error) {
+        this.sendCommand('error', error);
     },
     
     /**

@@ -200,7 +200,7 @@ window.filesender.ui = {
      * @param callable onok
      * @param callable oncancel
      */
-    confirm: function(message, onok, oncancel) {
+    confirm: function(message, onok, oncancel, yesno) {
         if(typeof message != 'string') {
             if(message.out) {
                 message = message.out();
@@ -215,7 +215,7 @@ window.filesender.ui = {
             modal: true,
             buttons: {
                 ok: {
-                    text: lang.tr('ok'),
+                    text: lang.tr(yesno ? 'yes' : 'ok'),
                     click: function () {
                         d.dialog('close');
                         d.remove();
@@ -223,7 +223,7 @@ window.filesender.ui = {
                     }
                 },
                 cancel: {
-                    text: lang.tr('cancel'),
+                    text: lang.tr(yesno ? 'no' : 'cancel'),
                     click: function () {
                         d.dialog('close');
                         d.remove();

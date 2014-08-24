@@ -83,14 +83,14 @@ window.filesender.transfer = function() {
         if(!errorhandler) errorhandler = filesender.ui.error;
         
         if(!file)
-            return errorhandler('no_file_given');
+            return errorhandler({message: 'no_file_given'});
         
         if('parentNode' in file) // HTML file input
             file = file.files;
         
         if('length' in file) { // FileList
             if(!file.length) {
-                errorhandler('no_file_given');
+                errorhandler({message: 'no_file_given'});
                 return false;
             }
             
@@ -101,7 +101,7 @@ window.filesender.transfer = function() {
         }
         
         if(!('type' in file)) {
-            errorhandler('no_file_given');
+            errorhandler({message: 'no_file_given'});
             return false;
         }
         
@@ -113,36 +113,36 @@ window.filesender.transfer = function() {
             size: blob.size,
             uploaded: 0,
             name: blob.name,
-            type: blob.type
+            mime_type: blob.type
         };
         
         // Look for dup
         for(var i=0; i<this.files.length; i++) {
             if(this.files[i].name == file.name && this.files[i].size == file.size) {
-                errorhandler('duplicate_file', {name: file.name, size: file.size});
+                errorhandler({message: 'duplicate_file', details: {name: file.name, size: file.size}});
                 return false;
             }
         }
         
         if(this.files.length >= filesender.config.max_html5_uploads) {
-            errorhandler('max_html5_uploads_exceeded', {max: filesender.config.max_html5_uploads});
+            errorhandler({message: 'max_html5_uploads_exceeded', details: {max: filesender.config.max_html5_uploads}});
             return false;
         }
         
         if(!/^[^\\\/:;\*\?\"<>|]+(\.[^\\\/:;\*\?\"<>|]+)*$/.test(file.name)) {
-            errorhandler('invalid_file_name', {max: filesender.config.max_html5_uploads});
+            errorhandler({message: 'invalid_file_name', details: {max: filesender.config.max_html5_uploads}});
             return false;
         }
         
         var extension = file.name.split('.').pop();
         var banned = new RegExp('^(' + filesender.config.ban_extension.replace(',', '|') + ')$', 'g');
         if(extension.match(banned)) {
-            errorhandler('banned_extension', {extension: extension, banned: filesender.config.ban_extension});
+            errorhandler({message: 'banned_extension', details: {extension: extension, banned: filesender.config.ban_extension}});
             return false;
         }
         
         if(this.size + file.size > filesender.config.max_html5_upload_size) {
-            errorhandler('max_html5_upload_size_exceeded', {size: file.size, max: filesender.config.max_html5_upload_size});
+            errorhandler({message: 'max_html5_upload_size_exceeded', details: {size: file.size, max: filesender.config.max_html5_upload_size}});
             return false;
         }
         
@@ -178,18 +178,18 @@ window.filesender.transfer = function() {
         if(!errorhandler) errorhandler = filesender.ui.error;
         
         if(!email.match(filesender.ui.validators.email)) {
-            errorhandler('invalid_recipient', {email: email});
+            errorhandler({message: 'invalid_recipient', details: {email: email}});
             return false;
         }
         
         for(var i=0; i<this.recipients.length; i++)
             if(this.recipients[i] == email) {
-                errorhandler('duplicate_recipient', {email: email});
+                errorhandler({message: 'duplicate_recipient', details: {email: email}});
                 return false;
             }
         
         if(this.recipients.length >= filesender.config.max_email_recipients) {
-            errorhandler('max_email_recipients_exceeded', {max: filesender.config.max_email_recipients});
+            errorhandler({message: 'max_email_recipients_exceeded', details: {max: filesender.config.max_email_recipients}});
             return false;
         }
         
@@ -255,15 +255,15 @@ window.filesender.transfer = function() {
     /**
      * Report transfer error
      */
-    this.reportError = function(code, details) {
+    this.reportError = function(error) {
         if(filesender.config.log) {
             console.log('Transfer ' + this.id + ' (' + this.size + ' bytes) failed');
         }
         
         if(this.onerror) {
-            this.onerror.call(this, code, details);
+            this.onerror.call(this, error);
         }else{
-            filesender.ui.error(code, details);
+            filesender.ui.error(error);
         }
     };
     
@@ -278,18 +278,19 @@ window.filesender.transfer = function() {
         // Redo sanity checks
         
         if(this.files.length >= filesender.config.max_html5_uploads) {
-            return errorhandler('max_html5_uploads_exceeded', {max: filesender.config.max_html5_uploads});
+            return errorhandler({message: 'max_html5_uploads_exceeded', details: {max: filesender.config.max_html5_uploads}});
         }
         
         if(this.size > filesender.config.max_html5_upload_size) {
-            return errorhandler('max_html5_upload_size_exceeded', {size: file.size, max: filesender.config.max_html5_upload_size});
+            return errorhandler({message: 'max_html5_upload_size_exceeded', details: {size: file.size, max: filesender.config.max_html5_upload_size}});
         }
         
         // Prepare files
         var files_dfn = [];
         for(var i=0; i<this.files.length; i++) files_dfn.push({
             name: this.files[i].name,
-            size: this.files[i].size
+            size: this.files[i].size,
+            mime_type: this.files[i].mime_type
         });
         
         this.time = (new Date()).getTime();
@@ -309,7 +310,7 @@ window.filesender.transfer = function() {
                     }
                 }
                 
-                if(!transfer.files[i].id) return errorhandler('file_not_in_response', {file: transfer.files[i]});
+                if(!transfer.files[i].id) return errorhandler({message: 'file_not_in_response', details: {file: transfer.files[i]}});
             }
             
             // Start uploading chunks
@@ -319,8 +320,8 @@ window.filesender.transfer = function() {
                 // Chunk by chunk upload
                 transfer.uploadChunk();
             }
-        }, function(code, details) {
-            transfer.reportError(code, details);
+        }, function(error) {
+            transfer.reportError(error);
         });
     };
     
@@ -402,8 +403,8 @@ window.filesender.transfer = function() {
             }else{
                 transfer.reportComplete();
             }
-        }, function(code, details) {
-            transfer.reportError(code, details);
+        }, function(error) {
+            transfer.reportError(error);
         });
     };
 };

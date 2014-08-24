@@ -61,6 +61,10 @@ class File extends DBObject
             'type' => 'string',
             'size' => 255,
         ),
+        'mime_type' => array(
+            'type' => 'string',
+            'size' => 255
+        ),
         'size' => array(
             'type' => 'uint',
             'size' => 'big'
@@ -79,6 +83,7 @@ class File extends DBObject
     protected $transfer_id = null;
     protected $uid = null;
     protected $name = null;
+    protected $mime_type = null;
     protected $size = 0;
     protected $sha1 = null;
    
@@ -207,7 +212,7 @@ class File extends DBObject
      */
     public function __get($property) {
         if(in_array($property, array(
-            'id', 'transfer_id', 'uid', 'name', 'size', 'sha1'
+            'id', 'transfer_id', 'uid', 'name', 'mime_type', 'size', 'sha1'
         ))) return $this->$property;
         
         if($property == 'transfer') {
@@ -230,6 +235,8 @@ class File extends DBObject
     public function __set($property, $value) {
         if($property == 'name') {
             $this->name = (string)$value;
+        }else if($property == 'mime_type') {
+            $this->mime_type = (string)$value;
         }else if($property == 'size') {
             $this->size = (int)$value;
         }else if($property == 'sha1') {

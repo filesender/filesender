@@ -142,20 +142,19 @@ window.filesender.terasender = {
      * @param mixed details
      * @param string origin "driver" (default) or "worker"
      */
-    error: function(code, details, origin) {
+    error: function(error, origin) {
         if(filesender.config.log) {
-            console.log('[terasender ' + (origin ? origin : 'driver') + ' error] ' + code + (details ? ', details follow :' : ''));
-            console.log(details); // Whatever type it is ...
+            console.log('[terasender ' + (origin ? origin : 'driver') + ' error] ' + error.message + (error.details ? ', details follow :' : ''));
+            if(error.details) console.log(error.details); // Whatever type it is ...
         }
         
-        code = 'terasender_' + code;
-        if(details && typeof details != 'string') details = JSON.stringify(details);
+        error.message = 'terasender_' + error.message;
         
         // Trigger global error
         if(this.transfer) {
-            this.transfer.reportError(code, details);
+            this.transfer.reportError(error);
         }else{
-            filesender.ui.error(code, details);
+            filesender.ui.error(error);
         }
     },
     
@@ -177,7 +176,7 @@ window.filesender.terasender = {
         }
         
         if(!file) {
-            this.error('unknown_file', data.file.id);
+            this.error({message: 'unknown_file', details: {id: data.file.id}});
             this.stop();
         }
         
@@ -228,7 +227,7 @@ window.filesender.terasender = {
                 break;
             
             case 'error' :
-                this.error(data.code, data.details, 'worker:' + worker_id);
+                this.error(data, 'worker:' + worker_id);
                 
                 // Worker can't continue, upload is broken, stop everyone
                 this.stop();
@@ -269,7 +268,7 @@ window.filesender.terasender = {
         if(this.status != '' && this.status != 'done') return false;
         
         if(!transfer) {
-            this.error('no_transfer');
+            this.error({message: 'no_transfer'});
             return;
         }
         
