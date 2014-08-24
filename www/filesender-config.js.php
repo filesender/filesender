@@ -68,4 +68,5 @@ window.filesender.config = {
     terasender_upload_endpoint: '<?php echo Config::get('site_url') ?>rest.php/file/{file_id}/chunk/{offset}<?php (Config::get('chunk_upload_security') == 'key') ? '?key={key}' : '' ?>',
     
     base_path: '<?php echo GUI::path() ?>',
+    support_email: '<?php echo Config::get('support_email') ?>',
 };
