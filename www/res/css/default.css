@@ -543,6 +543,77 @@ table.transfers .transfer_details h2 {
 }
 
 
+/* Download page */
+
+.download_page .disclamer {
+    margin: 1em;
+}
+
+.download_page .general div {
+    margin-bottom: 0.8em;
+    font-size: 1.2em;
+}
+
+.download_page .files .select_all {
+    margin-left: 1.2em;
+}
+
+.download_page .files .select_all span:first-child {
+    vertical-align: bottom;
+}
+
+.download_page .files .select_all .select {
+    text-decoration: none;
+}
+
+.download_page .files .select_all .select span {
+    vertical-align: middle;
+}
+
+.download_page .files .file {
+    height: 2.5em;
+    margin: 0.25em;
+    border: 1px solid #ccc;
+    border-radius: 0.5em;
+    -moz-border-radius: 0.5em;
+    padding: 1.2em 0.5em 0.5em 0.5em;
+}
+
+.download_page .files .file .select,
+.download_page .files .file .name,
+.download_page .files .file .size {
+}
+
+.download_page .files .file .name {
+    font-size: 1.7em;
+}
+
+.download_page .files .file .size {
+    color: #777;
+}
+
+.download_page .files .file .download {
+    float: right;
+    margin-top: -0.5em;
+}
+
+.download_page .archive {
+    margin-top: 1em;
+    text-align: center;
+}
+
+.download_page .archive .archive_message,
+.download_page .archive .mac_archive_message,
+.download_page .archive .archive_download {
+    margin-top: 1em;
+}
+
+.download_page .files[data-count="1"] .select_all,
+.download_page .files[data-count="1"] .file .select,
+.download_page .files[data-count="1"] .archive {
+    display: none;
+}
+
 /* Admin sections */
 
 .admin_page .section h2 {
