@@ -353,11 +353,12 @@ class Transfer extends DBObject {
      * 
      * @return File
      */
-    public function addFile($name, $size) {
+    public function addFile($name, $size, $mime_type = null) {
         // Create and save new recipient
         $file = File::create($this);
         $file->name = $name;
         $file->size = $size;
+        $file->mime_type = $mime_type ? $mime_type : 'application/binary';
         $file->save();
         
         // Update local cache
