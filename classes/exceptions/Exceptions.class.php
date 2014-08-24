@@ -89,9 +89,9 @@ class LoggingException extends Exception {
  */
 class DetailedException extends LoggingException {
     /**
-     * Public exception info
+     * Public exception details
      */
-    private $info = null;
+    private $details = null;
     
     /**
      * Constructor
@@ -105,7 +105,7 @@ class DetailedException extends LoggingException {
     public function __construct($msg_code, $internal_details, $public_details = null) {
         $this->uid = uniqid();
         
-        $this->info = $public_details;
+        $this->details = $public_details;
         
         if(!$internal_details) $internal_details = array();
         if(!is_array($internal_details)) $internal_details = array($internal_details);
@@ -138,7 +138,7 @@ class DetailedException extends LoggingException {
      * 
      * @return mixed the exception info
      */
-    public function getInfo() {
-        return $this->info;
+    public function getDetails() {
+        return $this->details;
     }
 }
