@@ -206,7 +206,7 @@ class RestServer {
             echo json_encode(array(
                 'message' => $e->getMessage(),
                 'uid' => method_exists($e, 'getUid') ? $e->getUid() : null,
-                'info' => method_exists($e, 'getInfo') ? $e->getInfo() : null
+                'details' => method_exists($e, 'getDetails') ? $e->getDetails() : null
             ));
         }
     }
