@@ -35,9 +35,6 @@ if (!defined('FILESENDER_BASE')) define('FILESENDER_BASE', dirname(dirname(__FIL
 require_once(FILESENDER_BASE.'/includes/ErrorHandler.php');
 require_once(FILESENDER_BASE.'/includes/EnsureHTTPS.php');
 require_once(FILESENDER_BASE.'/includes/UTF8.php');
-require_once(FILESENDER_BASE.'/classes/Version.php');
 require_once(FILESENDER_BASE.'/classes/Functions.php');
 //require_once(FILESENDER_BASE.'/classes/Mail.php');
-require_once(FILESENDER_BASE.'/classes/Log.php');
 require_once(FILESENDER_BASE.'/classes/Zipper.php');
-require_once(FILESENDER_BASE.'/classes/unstrip.php');
