@@ -91,6 +91,8 @@ class Disclosed {
      * @return bool
      */
     public static function isDisclosed($key) {
+        self::load();
+        
         return array_key_exists($key, self::$informations);
     }
     
