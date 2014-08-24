@@ -55,6 +55,12 @@ date_default_timezone_set(Config::get('Default_TimeZone'));
 // Ensure HTTPS if needed
 require_once(FILESENDER_BASE.'/includes/EnsureHTTPS.php');
 
+// Handle magic quoting (maybe deprecated now ?)
+if(get_magic_quotes_gpc()) {
+    $_POST = array_map('stripslashes', $_POST);
+    $_GET = array_map('stripslashes', $_GET);
+};
+
 // Output is all UTF8
 header('Content-Type: text/html; charset=UTF-8');
 
