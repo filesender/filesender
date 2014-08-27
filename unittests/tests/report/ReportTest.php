@@ -61,7 +61,8 @@ class ReportTest extends CommonUnitTestCase {
      */
     public function testCreate() {
         // Creating transfert object
-        $transfer = Transfer::create("2014-08-22");
+        $currentDate = date('Y-m-d H:i:s');
+        $transfer = Transfer::create(date('Y-m-d',  strtotime("+5 days")));
         $transfer->subject = $this->transferSubject;
         $transfer->message = $this->transferMessage;
         $transfer->save();
