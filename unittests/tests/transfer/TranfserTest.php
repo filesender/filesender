@@ -66,7 +66,7 @@ class TransferTest extends CommonUnitTestCase {
      * @return Transfer: the transfer created in database
      */
     private function create() {
-        $transfer = Transfer::create("2014-08-22");
+        $transfer = Transfer::create(date('Y-m-d',  strtotime("+5 days")));
         $transfer->subject = $this->transferSubject;
         $transfer->message = $this->transferMessage;
         $transfer->save();

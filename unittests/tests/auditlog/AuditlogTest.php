@@ -73,8 +73,8 @@ class AuditlogTest extends CommonUnitTestCase {
      */
     public function testCreate() {
         // Creating transfert object
-
-        $transfer = Transfer::create("2014-08-22");
+        $currentDate = date('Y-m-d H:i:s');
+        $transfer = Transfer::create(date('Y-m-d',  strtotime("+5 days")));
         $transfer->subject = $this->transfertSubject;
         $transfer->message = $this->transfertMessage;
         $transfer->save();
@@ -82,10 +82,11 @@ class AuditlogTest extends CommonUnitTestCase {
         Logger::logActivity(LogEventTypes::TRANSFER_START, $transfer);
 
 
-        $res = AuditLog::all('created <= :created', array('created' => '2014-08-11 12:00:00'));
+        $res = AuditLog::all('created <= :created', array('created' => date('Y-m-d H:0:0',  strtotime($currentDate))));
         $this->assertTrue(sizeof($res) > 0);
 
-        $res = StatLog::all('created <= :created', array('created' => '2014-08-11 13:00:00'));
+        $timestamp = strtotime($currentDate) + 60*60;
+        $res = StatLog::all('created <= :created', array('created' => date('Y-m-d H:0:0',  strtotime("+10 days"))));
         $this->assertTrue(sizeof($res) > 0);
 
         $this->assertNotNull($transfer->id);

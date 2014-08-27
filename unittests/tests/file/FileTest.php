@@ -67,7 +67,7 @@ class FileTest extends CommonDatabaseTestCase {
      */
     public function testCreate() {
         // Creating transfer object
-        $transfer = Transfer::create("2014-08-22");
+        $transfer = Transfer::create(date('Y-m-d',  strtotime("+5 days")));
         $transfer->subject = $this->transferSubject;
         $transfer->message = $this->transferMessage;
         $transfer->save();
@@ -75,6 +75,7 @@ class FileTest extends CommonDatabaseTestCase {
         $file = File::create($transfer);
         $file->name = $this->fileName;
         $file->size = $this->fileSize;
+        $file->mime_type='application/binary';
 
         $file->save();
 
