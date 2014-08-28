@@ -489,6 +489,6 @@ $(function() {
     // Set message to display if the user changes pages / close tab / close browser
     window.onbeforeunload = function() {
         if(!filesender.ui.transfer.status.match(/^(new|done|stopped)$/))
-            return true; // Ask for leaving confirmation
+            return lang.tr('confirm_leave_upload_page'); // Ask for leaving confirmation
     };
 });
