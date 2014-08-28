@@ -448,7 +448,7 @@ $(function() {
     
     // Bind buttons
     filesender.ui.nodes.buttons.start.on('click', function() {
-        if(filesender.ui.transfer.status == 'new') {
+        if(filesender.ui.transfer.status == 'new' && $(this).is('[aria-disabled="false"]')) {
             filesender.ui.startUpload();
             filesender.ui.nodes.buttons.start.addClass('not_displayed');
             filesender.ui.nodes.buttons.pause.removeClass('not_displayed');
