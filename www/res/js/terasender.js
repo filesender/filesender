@@ -192,9 +192,9 @@ window.filesender.terasender = {
                 workers_on_same_file++;
         }
         
-        if(chunks_pending || workers_running) { // Not all done
-            this.transfer.reportProgress(file, workers_on_same_file == 0);
-        }else{
+        this.transfer.reportProgress(file, workers_on_same_file == 0);
+        
+        if(!chunks_pending && !workers_running) { // Not all done
             this.transfer.reportComplete();
             this.status = 'done';
         }
