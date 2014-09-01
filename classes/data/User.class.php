@@ -70,6 +70,10 @@ class User extends DBObject {
             'type' => 'text',
             'transform' => 'json'
         ),
+        'frequent_recipients' => array(
+            'type' => 'text',
+            'transform' => 'json'
+        ),
         'created' => array(
             'type' => 'datetime'
         ),
@@ -89,6 +93,7 @@ class User extends DBObject {
     protected $aup_last_ticked_date = 0;
     protected $upload_preferences = null;
     protected $voucher_preferences = null;
+    protected $frequent_recipients = null;
     protected $created = 0;
     protected $last_activity = 0;
     
@@ -183,6 +188,99 @@ class User extends DBObject {
         $this->save();
     }
     
+    
+    /**
+     * This function allows to get the frequent recipients of the current user.
+     * If $criteria is set, get all recipients matching the criteria
+     * 
+     * @param String $criteria: criteria to search on
+     * @return array: list of frequent recipients
+     */
+    public function getFrequentRecipients($criteria=''){
+        if ($criteria == ''){
+            $listMails = array();
+            foreach ( $this->frequent_recipients as $key => $recipient){
+                $listMails[] = $recipient[0];
+            }
+            return $listMails;
+        }else{
+           // Search by criteria
+           $frequentRecipients = array();
+            
+           foreach ( $this->frequent_recipients as $key => $recipient){
+               if (strpos($recipient [0], $criteria) !== false){
+                   $frequentRecipients[] = $recipient[0];
+               }
+           }
+           return $frequentRecipients;
+        }
+        
+    }
+    
+    /**
+     * This function allows to save frequent recipients
+     * 
+     * @param array $mails: mails to save
+     * @return boolean true if saved successfuly, false otherwise
+     */
+    public function saveFrequentRecipients($mails = array()){
+
+        if (sizeof($mails) > 0){
+            $currentDate = date('Y-m-d');
+            $maxAllowed = Config::get('autocompleteHistoryMaxStored')>0 ?
+                Config::get('autocompleteHistoryMaxStored'):0;
+            
+            // Get current mails from bdd
+            if (is_null($this->frequent_recipients)){
+                $currentMails = array();
+            }else{
+                $currentMails = $this->frequent_recipients;
+            }
+            
+            foreach ($mails as $k => $acfcontent){
+                $key = $this->getAutocompleteMailKey($acfcontent->email, $currentMails);
+                if (!is_null($key)){
+                    unset ($currentMails[$key]);
+                }
+                array_unshift($currentMails, array($acfcontent->email,$currentDate));
+            }
+            
+            if (sizeof($currentMails) > $maxAllowed){
+                $currentMails = array_slice($currentMails, 0,$maxAllowed);
+            }
+            
+            if ($currentMails !== $this->frequent_recipients){
+                $this->frequent_recipients = $currentMails;
+                $this->save();
+                return true;
+            } else{
+                return false;
+            }
+        }else{
+            return false;
+        }
+        
+    }
+    
+    
+    /**
+     * This function allows to search in autocomplete mails array, and return 
+     * the associated key if found.
+     * 
+     * @param String $mail: needle
+     * @param array $array: haystack
+     * 
+     * @return mail associated if found, null otherwise
+     */
+    function getAutocompleteMailKey($mail, $array) {
+        foreach ($array as $key => $val) {
+            if ($val[0] === $mail) {
+                return $key;
+            }
+        }
+        return null;
+    }
+    
     /**
      * Getter
      * 
@@ -195,7 +293,7 @@ class User extends DBObject {
     public function __get($property) {
         if(in_array($property, array(
             'id', 'organization', 'lang', 'aup_ticked', 'aup_last_ticked_date',
-            'upload_preferences', 'voucher_preferences', 'created', 'last_activity',
+            'upload_preferences', 'voucher_preferences', 'frequent_recipients', 'created', 'last_activity',
             'email', 'name'
         ))) return $this->$property;
         
@@ -226,6 +324,8 @@ class User extends DBObject {
             $this->upload_preferences = $value;
         }else if($property == 'voucher_preferences') {
             $this->voucher_preferences = $value;
+        }else if($property == 'frequent_recipients'){
+            $this->frequent_recipients = $value;
         }else if($property == 'email') {
             if(!is_array($value)) $value = array($value);
             foreach($value as $email)

@@ -248,4 +248,9 @@ window.filesender.client = {
     overrideConfig: function(overrides, callback) {
         this.put('/config', overrides, callback);
     },
+    
+    
+    getFrequentRecipients: function(needle, callback){
+        this.get('/user/@me/frequent_recipients',callback,needle?{args: {"filterOp[contains]":needle}}:undefined);
+    }
 };

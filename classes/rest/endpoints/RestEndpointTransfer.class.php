@@ -149,7 +149,7 @@ class RestEndpointTransfer extends RestEndpoint {
             $data = $this->request->input;
             
             $recipient = $transfer->addRecipient($data->recipient);
-            
+
             // Send email
             
             return array(
@@ -228,8 +228,7 @@ class RestEndpointTransfer extends RestEndpoint {
         
         $data = $this->request->input;
         
-        $transfer->status = TransferStatuses::AVAILABLE;
-        $transfer->save();
+        $transfer->makeAvailable();
         
         // Send emails
         
