@@ -152,12 +152,10 @@ class RestServer {
                 
                 case 'updatedSince' :
                     // updatedSince takes ISO date, relative N days|weeks|months|years format and epoch timestamp (UTC)
-                    date_default_timezone_set($config->Default_TimeZone);
                     $updatedSince = null;
                     if(preg_match('`^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(Z|[+-][0-9]{2}:[0-9]{2})$`', $v)) {
                         // ISO date
-                        $config = Config::getInstance();
-                        $localetz = new DateTimeZone($config->Default_TimeZone);
+                        $localetz = new DateTimeZone(Config::get('Default_TimeZone'));
                         $offset = $localetz->getOffset(new DateTime($v));
                         $updatedSince = strtotime($v) + $offset;
                     }else if(preg_match('`^([0-9]+)\s*(hour|day|week|month|year)s?$`', $v, $m)) {
