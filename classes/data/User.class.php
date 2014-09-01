@@ -197,19 +197,28 @@ class User extends DBObject {
      * @return array: list of frequent recipients
      */
     public function getFrequentRecipients($criteria=''){
+        
+        $maxAllowed = Config::get('autocompleteHistoryMax')>0 ?
+                Config::get('autocompleteHistoryMax'):5;
+            
         if ($criteria == ''){
             $listMails = array();
+            $cpt = 0;
             foreach ( $this->frequent_recipients as $key => $recipient){
                 $listMails[] = $recipient[0];
+                $cpt++;
+                if ($cpt>=$maxAllowed) break;
             }
             return $listMails;
         }else{
            // Search by criteria
            $frequentRecipients = array();
-            
+            $cpt=0;
            foreach ( $this->frequent_recipients as $key => $recipient){
                if (strpos($recipient [0], $criteria) !== false){
                    $frequentRecipients[] = $recipient[0];
+                   $cpt++;
+                   if ($cpt>=$maxAllowed) break;
                }
            }
            return $frequentRecipients;
