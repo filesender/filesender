@@ -414,4 +414,48 @@ class Transfer extends DBObject {
         // Update local cache
         if(!is_null($this->recipientsCache) && array_key_exists($recipient->id, $this->recipientsCache)) unset($this->recipientsCache[$recipient->id]);
     }
+    
+    /**
+     * This function does stuffs when a transfer become available
+     */
+    public function makeAvailable(){
+        $this->status = TransferStatuses::AVAILABLE;
+        $this->save();
+        
+        $recipients = $this->recipients;
+        if (sizeof($recipients) > 0){
+            Auth::user()->saveFrequentRecipients($recipients);
+        }
+        // Sends mails
+        if (($noReply = Config::get('noreply')) != null){
+            if (($noReplyName = Config::get('noreply_name')) == null){
+                $noReplyName = $noReply;
+            }
+
+            $c = Lang::translateEmail('transfer_available');
+            $fileinfo = Template::process('!file_uploaded_html', array('data' => $this));
+            if(preg_match('`\{fileinfo\}`', $c->html)) {
+                $c->html = str_ireplace("{fileinfo}", $fileinfo, $c->html);
+            }
+            
+            if(preg_match('`\{fileinfo\}`', $c->html)) {
+                $c->html = str_ireplace("{fileinfo}", $fileinfo, $c->html);
+            }
+            
+            if ($this->subject != ''){
+                $c->subject = $this->subject;
+            }
+            
+            $mail = new Mail($c->subject, $noReply, $noReplyName, true);
+            $message = $c->html;
+
+            foreach ($recipients as $key => $recipient) {
+                $mail->to($recipient->email);
+            }
+
+            $mail->write($message);
+
+            $mail->send();
+        }
+    }
 }

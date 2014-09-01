@@ -225,6 +225,40 @@ filesender.ui.recipients = {
         
         filesender.ui.evalUploadEnabled();
     },
+    
+    // Enable autocomplete for frequent recipients on a field
+    autocomplete: function(){
+        $(filesender.ui.nodes.recipients.input).autocomplete({
+            source: function (request, response) {
+                filesender.client.getFrequentRecipients(request.term,
+                    function (data) {
+                        response($.map(data, function (item) { 
+                            if (filesender.ui.nodes.recipients.list.find('[email="'+item+'"]').length == 0){
+                                return { 
+                                    label: item,
+                                    value: item
+                                };
+                            }else{
+                                return undefined;
+                            }
+                        })) 
+                    }
+                );
+            },
+            select: function (event, ui) {
+                filesender.ui.recipients.add(ui.item.value);
+                
+                var marker = $(this).data('error_marker');
+        
+                $(this).val('');
+                $(this).removeClass('invalid');
+                if(marker) marker.remove();
+                
+                return false;
+            },
+            minLength: filesender.config.minimum_characters_for_autocomplete
+        });
+    }
 };
 
 filesender.ui.evalUploadEnabled = function() {
@@ -389,6 +423,8 @@ $(function() {
         filesender.ui.files.add(this.files);
     });
     
+    filesender.ui.recipients.autocomplete();
+    
     // Handle "back" browser action
     var files = filesender.ui.nodes.files.input[0].files;
     if(files && files.length) filesender.ui.files.add(files);
@@ -480,6 +516,7 @@ $(function() {
         });
         return false;
     }).button();
+    
     
     // special fix for esc key on firefox stopping xhr
     window.addEventListener('keydown', function(e) {

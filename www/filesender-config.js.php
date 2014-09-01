@@ -69,4 +69,5 @@ window.filesender.config = {
     
     base_path: '<?php echo GUI::path() ?>',
     support_email: '<?php echo Config::get('support_email') ?>',
+    minimum_characters_for_autocomplete: '<?php echo Config::get('minimum_characters_for_autocomplete')>0?Config::get('minimum_characters_for_autocomplete'):3 ?>',
 };
