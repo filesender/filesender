@@ -145,6 +145,18 @@ class GuestVoucher extends DBObject {
     }
     
     /**
+     * Get max expire date
+     * 
+     * @return int timestamp
+     */
+    public static function getMaxExpire() {
+        $days = Config::get('voucher_default_daysvalid');
+        if(!$days) $days = Config::get('default_daysvalid');
+        
+        return strtotime('+'.$days.' day');
+    }
+    
+    /**
      * Get expired guest vouchers
      * 
      * @param integer $daysvalid guest voucher age limit (optionnal)
