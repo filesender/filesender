@@ -40,7 +40,7 @@ class User extends DBObject {
     /**
      * Database table
      */
-    protected static $dataTable = 'Userpreferences';
+    protected static $dataTable = 'UserPreferences';
     
     /**
      * Database map
