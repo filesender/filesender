@@ -38,6 +38,11 @@ if(!defined('FILESENDER_BASE')) die('Missing environment');
  */
 class User extends DBObject {
     /**
+     * Database table
+     */
+    protected static $dataTable = 'Userpreferences';
+    
+    /**
      * Database map
      */
     protected static $dataMap = array(
