@@ -511,21 +511,35 @@ class Lang {
         
         $translation = $this->translation;
         
+        $placeholder_resolver = function($path) use($placeholders) {
+            $path = array_filter(array_map('trim', explode('.', $path)));
+            $name = array_shift($path);
+            
+            if(!array_key_exists($name, $placeholders))
+                return null;
+            
+            $value = $placeholders[$name];
+            
+            while($entry = array_shift($path)) {
+                if(is_object($value)) {
+                    $value = $value->$entry;
+                } else if(is_array($value)) {
+                    if(is_numeric($entry) && !is_float($entry))
+                        $entry = (int)$entry;
+                    $value = array_key_exists($entry, $value) ? $value[$entry] : null;
+                }
+            }
+            
+            return $value;
+        };
+        
         foreach($placeholders as $k => $v) {
-            if(is_object($v)) {
-                $translation = preg_replace_callback('`\{'.$k.'.([a-z0-9_])\}`i', function($m) use($v) {
-                    $p = $m[1];
-                    return $v->$p;
-                }, $translation);
-            } else if(is_array($v)) {
-                $translation = preg_replace_callback('`\{'.$k.'.([a-z0-9_])\}`i', function($m) use($v) {
-                    $k = $m[1];
-                    return array_key_exists($k, $v) ? $v[$k] : '';
-                }, $translation);
-            } else $translation = str_replace('{'.$k.'}', $v, $translation);
+            $translation = preg_replace_callback('`\{('.$k.'(?:\.[a-z0-9_])*)\}`i', function($m) use($placeholder_resolver) {
+                return $placeholder_resolver($m[1]);
+            }, $translation);
         }
         
-        $translation = preg_replace_callback('`\{if:([^\}]+)\}(.+)\{endif\}`msiU', function($m) use($placeholders) {
+        $translation = preg_replace_callback('`\{if:([^\}]+)\}(.+)\{endif\}`msiU', function($m) use($placeholder_resolver) {
             $condition = $m[1];
             $content = $m[2];
             
@@ -548,31 +562,15 @@ class Lang {
                         $andpart = trim(substr($andpart, 1));
                     }
                     
-                    $var = explode('.', $andpart);
-                    $name = array_shift($var);
+                    $value = $placeholder_resolver($andpart);
                     
-                    if(!array_key_exists($name, $placeholders)) {
+                    if(is_null($value)) {
                         $smatch = false;
                         break;
                     }
                     
-                    $value = $placeholders[$name];
-                    
-                    if(is_object($value)) {
-                        $p = array_shift($var);
-                        if($p) {
-                            $value = $value->$p; // Let the getters decide
-                        } else {
-                            $value = true; // If no property requested then object existing means true
-                        }
-                    } else if(is_array($value)) {
-                        $key = array_shift($var);
-                        if(!is_null($key)) {
-                            $value = $value[$key];
-                        } else {
-                            $value = count($value);
-                        }
-                    }
+                    if(is_object($value)) $value = true;
+                    if(is_array($value)) $value = count($value);
                     
                     if($ov == 'true') {
                         $ov = true;
