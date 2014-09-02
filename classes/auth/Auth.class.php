@@ -104,11 +104,11 @@ class Auth {
                     self::$isRemoteUser = true;
                 }
             }*/
+            
+            if(!self::$attributes || !array_key_exists('uid', self::$attributes)) return null;
+
+            self::$user = User::fromAttributes(self::$attributes);
         }
-        
-        if(!self::$attributes || !array_key_exists('uid', self::$attributes)) return null;
-        
-        self::$user = User::fromAttributes(self::$attributes);
         
         return self::$user;
     }

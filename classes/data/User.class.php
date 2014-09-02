@@ -53,7 +53,8 @@ class User extends DBObject {
         ),
         'lang' => array(
             'type' => 'string',
-            'size' => 8
+            'size' => 8,
+            'null' => true
         ),
         'aup_ticked' => array(
             'type' => 'bool'
@@ -106,7 +107,7 @@ class User extends DBObject {
     /**
      * Misc
      */
-    private $isNew = true;
+    private $hasPreferences = false;
     
     /**
      * Constructor
@@ -121,12 +122,15 @@ class User extends DBObject {
             $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE id = :id');
             $statement->execute(array(':id' => $id));
             $data = $statement->fetch();
-            if(!$data) throw new UserNotFoundException('id = '.$id);
         }
         
-        if($data) $this->fillFromDBData($data);
-        
-        $this->isNew = false;
+        if($data) {
+            $this->fillFromDBData($data);
+            $this->hasPreferences = true;
+        }else{
+            $this->id = $id;
+            $this->created = time();
+        }
     }
     
     /**
@@ -138,12 +142,7 @@ class User extends DBObject {
      */
     public static function fromAttributes($attributes) {
         if(!is_array($attributes) || !array_key_exists('uid', $attributes) || !$attributes['uid']) throw new UserMissingUIDException();
-        
-        try {
-            $user = self::fromId($attributes['uid']);
-        } catch(UserNotFoundException $e) {
-            $user = self::create($attributes['uid']);
-        }
+        $user = self::fromId($attributes['uid']);
         
         if(array_key_exists('email', $attributes)) $user->email = $attributes['email'];
         if(array_key_exists('name', $attributes)) $user->name = $attributes['name'];
@@ -155,10 +154,10 @@ class User extends DBObject {
      * Save user preferences in database
      */
     public function customSave() {
-        if($this->isNew) {
-            $this->insertRecord($this->toDBData());
-        }else{
+        if($this->hasPreferences) {
             $this->updateRecord($this->toDBData(), 'id');
+        }else{
+            $this->insertRecord($this->toDBData());
         }
     }
     
@@ -170,14 +169,7 @@ class User extends DBObject {
      * @return User
      */
     public static function create($id) {
-        $user = new self();
-        
-        $user->id = $id;
-        $user->created = time();
-        $user->last_activity = time();
-        $user->isNew = true;
-        
-        return $user;
+        return self::fromId($id);
     }
     
     /**
