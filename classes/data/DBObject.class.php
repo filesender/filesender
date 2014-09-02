@@ -423,7 +423,8 @@ class DBObject {
      * @return string table name
      */
     public static function getDBTable() {
-        $name = get_called_class().'s';
+        $class = get_called_class();
+        $name = property_exists($class, 'dataTable') ? static::$dataTable : $class.'s';
         
         if(Config::exists('db_table_prefix')) $name = Config::get('db_table_prefix').$name;
         
