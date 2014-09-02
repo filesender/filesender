@@ -485,16 +485,129 @@ class Lang {
      * @param mixed $placeholder placeholder id as string or array of placholders and values
      * @param mixed $value value if 1st param is a placeholder id
      * 
+     * OR
+     * 
+     * @param mixed $* arrays of placeholders and values or data objects
+     * 
      * @return Lang
      */
-    public function replace($placeholder, $value = null) {
+    public function replace() {
         if(!$this->allow_replace) return $this;
         
-        if(is_string($placeholder)) $placeholder = array($placeholder => $value);
+        $args = func_get_args();
+        
+        $placeholders = array();
+        while($arg = array_shift($args)) {
+            if(is_string($arg)) {
+                $placeholders[$arg] = array_shift($args);
+            } else if(is_array($arg)) {
+                foreach($arg as $k => $v)
+                    if(!is_numeric($k))
+                        $placeholders[$k] = $v;
+            } else if(is_object($arg)) {
+                $placeholders[strtolower(get_class($arg))] = $arg;
+            }
+        }
         
         $translation = $this->translation;
-        foreach($placeholder as $k => $v)
-            $translation = str_replace('{'.$k.'}', $v, $translation);
+        
+        foreach($placeholders as $k => $v) {
+            if(is_object($v)) {
+                $translation = preg_replace_callback('`\{'.$k.'.([a-z0-9_])\}`i', function($m) use($v) {
+                    $p = $m[1];
+                    return $v->$p;
+                }, $translation);
+            } else if(is_array($v)) {
+                $translation = preg_replace_callback('`\{'.$k.'.([a-z0-9_])\}`i', function($m) use($v) {
+                    $k = $m[1];
+                    return array_key_exists($k, $v) ? $v[$k] : '';
+                }, $translation);
+            } else $translation = str_replace('{'.$k.'}', $v, $translation);
+        }
+        
+        $translation = preg_replace_callback('`\{if:([^\}]+)\}(.+)\{endif\}`msiU', function($m) use($placeholders) {
+            $condition = $m[1];
+            $content = $m[2];
+            
+            $match = false;
+            foreach(array_map('trim', array_filter(explode('|', $condition))) as $orpart) {
+                $smatch = true;
+                foreach(array_map('trim', array_filter(explode('&', $orpart))) as $andpart) {
+                    $op = 'bool';
+                    $ov = true;
+                    $neg = false;
+                    if(preg_match('`^(.+)(==|!=|<|<=|>|>=)(.+)$`', $andpart, $m)) {
+                        $andpart = trim($m[1]);
+                        $op = $m[2];
+                        $ov = trim($m[3]);
+                    }
+                    
+                    $andpart = trim($andpart);
+                    if(substr($andpart, 0, 1) == '!') {
+                        $neg = true;
+                        $andpart = trim(substr($andpart, 1));
+                    }
+                    
+                    $var = explode('.', $andpart);
+                    $name = array_shift($var);
+                    
+                    if(!array_key_exists($name, $placeholders)) {
+                        $smatch = false;
+                        break;
+                    }
+                    
+                    $value = $placeholders[$name];
+                    
+                    if(is_object($value)) {
+                        $p = array_shift($var);
+                        if($p) {
+                            $value = $value->$p; // Let the getters decide
+                        } else {
+                            $value = true; // If no property requested then object existing means true
+                        }
+                    } else if(is_array($value)) {
+                        $key = array_shift($var);
+                        if(!is_null($key)) {
+                            $value = $value[$key];
+                        } else {
+                            $value = count($value);
+                        }
+                    }
+                    
+                    if($ov == 'true') {
+                        $ov = true;
+                    } else if($ov == 'false') {
+                        $ov = false;
+                    } else if(is_float($ov)) {
+                        $ov = (float)$ov;
+                    } else if(is_numeric($ov)) {
+                        $ov = (int)$ov;
+                    } else if(is_string($ov)) {
+                        if(preg_match('`^(["\'])(.+)\1$`', $ov, $m))
+                            $ov = $m[2];
+                    }
+                    
+                    switch($op) {
+                        case '==' : $smatch &= ($value == $ov); break;
+                        case '!=' : $smatch &= ($value != $ov); break;
+                        case '<' : $smatch &= ($value < $ov); break;
+                        case '<=' : $smatch &= ($value <= $ov); break;
+                        case '>' : $smatch &= ($value > $ov); break;
+                        case '>=' : $smatch &= ($value >= $ov); break;
+                        
+                        case 'bool' :
+                        default :
+                            $smatch &= (bool)$value;
+                    }
+                }
+                if($smatch) {
+                    $match = true;
+                    break;
+                }
+            }
+            
+            return $match ? $content : '';
+        }, $translation);
         
         return new self($translation);
     }
