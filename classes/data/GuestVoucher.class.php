@@ -36,7 +36,7 @@ if(!defined('FILESENDER_BASE')) die('Missing environment');
 /**
  * Represents an user in database
  */
-class Guestvoucher extends DBObject {
+class GuestVoucher extends DBObject {
     /**
      * Database map
      */
@@ -105,14 +105,14 @@ class Guestvoucher extends DBObject {
      * @param integer $id identifier of guset voucher to load from database (null if loading not wanted)
      * @param array $data data to create the guset voucher from (if already fetched from database)
      * 
-     * @throws GuestvoucherNotFoundException
+     * @throws GuestVoucherNotFoundException
      */
     protected function __construct($id = null, $data = null) {
         if(!is_null($id)) {
             $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE id = :id');
             $statement->execute(array(':id' => $id));
             $data = $statement->fetch();
-            if(!$data) throw new GuestvoucherNotFoundException('id = '.$id);
+            if(!$data) throw new GuestVoucherNotFoundException('id = '.$id);
         }
         
         if($data) $this->fillFromDBData($data);
@@ -123,7 +123,7 @@ class Guestvoucher extends DBObject {
      * 
      * @param integer $email recipient email, mandatory
      * 
-     * @return Guestvoucher
+     * @return GuestVoucher
      */
     public static function create($email) {
         $voucher = new self();
@@ -135,7 +135,7 @@ class Guestvoucher extends DBObject {
         
         // Generate token until it is indeed unique
         $voucher->token = Utilities::generateUID(function($token) {
-            $statement = DBI::prepare('SELECT * FROM '.Guestvoucher::getDBTable().' WHERE token = :token');
+            $statement = DBI::prepare('SELECT * FROM '.GuestVoucher::getDBTable().' WHERE token = :token');
             $statement->execute(array(':token' => $token));
             $data = $statement->fetch();
             return !$data;

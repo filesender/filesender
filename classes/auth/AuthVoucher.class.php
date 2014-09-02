@@ -72,9 +72,9 @@ class AuthVoucher {
                     && strlen($vid) == Config::get('voucherUIDLength')
                 ) {
                     try {
-                        self::$guest_voucher = Guestvoucher::fromToken($vid);
+                        self::$guest_voucher = GuestVoucher::fromToken($vid);
                         self::$isAuthenticated = true;
-                    } catch(GuestvoucherNotFoundException $e) {}
+                    } catch(GuestVoucherNotFoundException $e) {}
                 }
             }
         }
@@ -105,7 +105,7 @@ class AuthVoucher {
     /**
      * Retreive guest voucher
      * 
-     * @return Guestvoucher object
+     * @return GuestVoucher object
      */
     public static function getVoucher() {
         return self::isAuthenticated() ? self::$guest_voucher : null;
