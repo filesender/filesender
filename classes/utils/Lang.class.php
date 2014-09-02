@@ -539,9 +539,10 @@ class Lang {
             }, $translation);
         }
         
-        $translation = preg_replace_callback('`\{if:([^\}]+)\}(.+)\{endif\}`msiU', function($m) use($placeholder_resolver) {
+        $translation = preg_replace_callback('`\{if:([^\}]+)\}(.+)(?:\{else\}(.+))?\{endif\}`msiU', function($m) use($placeholder_resolver) {
             $condition = $m[1];
-            $content = $m[2];
+            $ifcontent = $m[2];
+            $elsecontent = (count($m) > 3) ? $m[3] : '';
             
             $match = false;
             foreach(array_map('trim', array_filter(explode('|', $condition))) as $orpart) {
@@ -604,7 +605,7 @@ class Lang {
                 }
             }
             
-            return $match ? $content : '';
+            return $match ? $ifcontent : $elsecontent;
         }, $translation);
         
         return new self($translation);
