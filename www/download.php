@@ -64,7 +64,12 @@ try {
         throw new DownloadBadFilesIDsException(array_diff($files_ids, $good_files_ids));
     
     if(count($files_ids) > 1) { // Archive download
-        
+        set_time_limit(0); // Needed to prevent the download from timing out.
+        $zipper = new Zipper();
+        foreach ($files_ids as $fileId){
+            $zipper->addFile(File::fromId($fileId));
+        }
+        $zipper->sendZip();
         exit;
     }
     
