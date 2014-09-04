@@ -64,6 +64,9 @@ $locales  =  array(
 	"nb-no" => "no_NO.php",
 	"sl" => "sl_SI.php",
 	"sl-si" => "sl_SI.php",
-	"sr" => "sr_RS.php"
+	"sr" => "sr_RS.php",
+	"sv" => "sv_SE.php",
+	"sv-se" => "sv_SE.php",
+	"sv-fi" => "sv_SE.php"
 );
 ?>
