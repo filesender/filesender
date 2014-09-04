@@ -81,7 +81,7 @@ window.filesender.terasender = {
         };
         
         file.uploaded += filesender.config.terasender_chunk_size;
-        if(file.uploaded > file.size) file.uploaded = file.size;
+        if(file.uploaded > file.size) file.uploaded = file.size ? file.size : 1; // Protect against empty files creating loops
         
         if(file.id != worker.file_id) job.file = file;
         
