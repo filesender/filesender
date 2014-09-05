@@ -159,6 +159,7 @@ class AuthSPSaml {
             
             foreach(array(
                 'simplesamlphp_location',
+                'simplesamlphp_url',
                 'authentication_source',
                 'uid_attribute',
                 'name_attribute',
