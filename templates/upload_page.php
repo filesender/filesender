@@ -73,16 +73,10 @@
                     <div class="fieldcontainer">
                         <label for="message">{tr:message} ({tr:optional}) : </label>
                         
-                        <textarea name="message" cols="44" rows="4"></textarea>
+                        <textarea name="message" rows="4"></textarea>
                     </div>
                     
                     <div>
-                        <input type="hidden" id="filevoucheruid" name="filevoucheruid" value="<?php echo $voucherUID; ?>"/>
-                        <input type="hidden" name="vid" id="vid" value="<?php echo $voucherUID; ?>"/>
-                        <input type="hidden" name="total" id="total" value=""/>
-                        <input type="hidden" name="n" id="n" value=""/>
-                        <input type="hidden" id="filestatus" name="filestatus" value="<?php echo $filestatus; ?>"/>
-                        <input type="hidden" name="loadtype" id="loadtype" value="standard"/>
                         <input type="hidden" name="s-token" id="s-token" value="<?php echo (isset($_SESSION['s-token'])) ? $_SESSION['s-token'] : ''; ?>"/>
                     </div>
                 </td>
@@ -174,7 +168,7 @@
         </div>
         <?php } ?>
         
-        <div class="upload_buttons">
+        <div class="buttons">
             <a href="#" class="start">
                 <span class="fa fa-cloud-upload fa-lg"></span> {tr:send}
             </a>
