@@ -35,18 +35,7 @@
  * js/upload.js   manages all html5 related functions and uploading
  */
 
-// set cache to default - nocache
-session_cache_limiter('nocache');
-
-if (PHP_INT_SIZE !== 8) {
-    echo 'FileSender requires a 64-bit PHP installation to work. Please contact your administrator.';
-    exit;
-}
-
-require_once('../classes/autoload.php');
-require_once('../classes/_includes.php');
-
-date_default_timezone_set(Config::get('Default_TimeZone'));
+require_once('../includes/init.php');
 
 Logger::setProcess(ProcessTypes::REST);
 
