@@ -134,7 +134,7 @@ window.filesender.transfer = function() {
             return false;
         }
         
-        if(file.size) {
+        if(!file.size) {
             errorhandler({message: 'empty_file'});
             return false;
         }
