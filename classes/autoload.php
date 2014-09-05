@@ -63,8 +63,9 @@ class Autoloader {
         '*Types' => 'constants/',
         '*Options' => 'constants/',
         '*Constants' => 'constants/',
-        'TransferStatuses' => 'constants/TransferStatuses',
-        'LogLevels' => 'constants/LogLevels',
+        'TransferStatuses' => 'constants/',
+        'GuestVoucherStatuses' => 'constants/',
+        'LogLevels' => 'constants/',
         
         '*Status' => 'utils/Constants',
         
