@@ -347,10 +347,10 @@ $(function() {
         expires: form.find('input[name="expires"]'),
         options: {},
         buttons: {
-            start: form.find('.upload_buttons .start'),
-            pause: form.find('.upload_buttons .pause'),
-            restart: form.find('.upload_buttons .restart'),
-            stop: form.find('.upload_buttons .stop')
+            start: form.find('.buttons .start'),
+            pause: form.find('.buttons .pause'),
+            restart: form.find('.buttons .restart'),
+            stop: form.find('.buttons .stop')
         },
         stats: {
             number_of_files: form.find('.files_actions .stats .number_of_files'),
@@ -395,6 +395,7 @@ $(function() {
         filesender.ui.files.add(e.originalEvent.dataTransfer.files);
     });
     
+    // Bind recipients events
     filesender.ui.nodes.recipients.input.on('keydown', function(e) {
         if(e.keyCode != 13) return;
         
