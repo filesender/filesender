@@ -58,6 +58,11 @@ class Transfer extends DBObject {
             'type' => 'string',
             'size' => 250
         ),
+        'guestvoucher_id' => array(
+            'type' => 'uint',
+            'size' => 'medium',
+            'null' => true
+        ),
         'subject' => array(
             'type' => 'string',
             'size' => 250,
@@ -97,6 +102,7 @@ class Transfer extends DBObject {
     protected $status = null;
     protected $user_id = null;
     protected $user_email = null;
+    protected $guestvoucher_id = null;
     protected $subject = null;
     protected $message = null;
     protected $created = 0;
@@ -153,6 +159,9 @@ class Transfer extends DBObject {
         $transfer = new self();
         
         $transfer->user_id = Auth::user()->id;
+        
+        if(Auth::isVoucher())
+            $transfer->guestvoucher = AuthVoucher::getVoucher();
         
         if(!$user_email) $user_email = Auth::user()->email[0];
         if(!in_array($user_email, Auth::user()->email))
@@ -281,10 +290,17 @@ class Transfer extends DBObject {
      * @return property value
      */
     public function __get($property) {
-        if(in_array($property, array('id', 'status', 'user_id', 'user_email', 'subject', 'message', 'created', 'expires', 'options'))) return $this->$property;
+        if(in_array($property, array(
+            'id', 'status', 'user_id', 'user_email', 'guestvoucher_id',
+            'subject', 'message', 'created', 'expires', 'options'
+        ))) return $this->$property;
         
         if($property == 'user' || $property == 'owner') {
             return User::fromId($this->user_id);
+        }
+        
+        if($property == 'guestvoucher') {
+            return $this->guestvoucher_id ? Guestvoucher::fromId($this->guestvoucher_id) : null;
         }
         
         if($property == 'files') {
@@ -324,6 +340,9 @@ class Transfer extends DBObject {
         }else if($property == 'user_email') {
             if(!filter_var($value, FILTER_VALIDATE_EMAIL)) throw new BadEmailException($value);
             $this->user_email = (string)$value;
+        }else if($property == 'guestvoucher') {
+            $gv = ($value instanceof Guestvoucher) ? $value : Guestvoucher::fromId($value);
+            $this->guestvoucher_id = $gv->id;
         }else if($property == 'subject') {
             $this->subject = (string)$value;
         }else if($property == 'message') {
