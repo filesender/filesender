@@ -91,11 +91,18 @@ class Storage {
      * 
      * @param File $file
      * @param uint $offset offset in bytes
+     * @param uint $length length in bytes
      * 
      * @return mixed chunk data encoded as string or null if no chunk remaining
      */
-    public static function readChunk(File $file, $offset = null) {
+    public static function readChunk(File $file, $offset = null, $length = null) {
         self::setup();
+        
+        $length = (int)$length;
+        if(!$length) {
+            $length = (int)Config::get('download_chunk_size');
+            if(!$length) $length = 1024 * 1024;
+        }
         
         if(is_null($offset)) { // Stream reading next chunk
             if(array_key_exists($file->id, self::$reading_offsets)) { // Did we already start to read this file ?
@@ -103,9 +110,9 @@ class Storage {
             }else $offset = 0;
         }
         
-        $data = call_user_func(self::$class.'::readChunk', $file, $offset);
+        $data = call_user_func(self::$class.'::readChunk', $file, $offset, $length);
         
-        self::$reading_offsets[$file->id] = $offset + (int)Config::get('download_chunk_size');
+        self::$reading_offsets[$file->id] = $offset + $length;
         
         return $data;
     }

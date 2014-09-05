@@ -129,13 +129,14 @@ class StorageFilesystem {
      *
      * @param File $file
      * @param uint $offset offset in bytes
+     * @param uint $length length in bytes
      * 
      * @return mixed chunk data encoded as string or null if no chunk remaining
      * 
      * @throws StorageFilesystemFileNotFoundException
      * @throws StorageFilesystemCannotReadException
      */
-    public function readChunk(File $file, $offset = 0) {
+    public function readChunk(File $file, $offset, $length) {
         $chunk_size = (int)Config::get('download_chunk_size');
         
         $file_path = self::buildPath($file).$file->uid;
@@ -149,7 +150,7 @@ class StorageFilesystem {
             if($offset) fseek($fh, $offset);
             
             // Try to read chunk
-            $chunk_data = fread($fh, $chunk_size);
+            $chunk_data = fread($fh, $length);
             
             // Close reader
             fclose($fh);
