@@ -78,7 +78,7 @@ if(false && sizeof($transactions) > 0) {
           <i id="showicon_'.$i.'" style="cursor:pointer;" class="fa fa-plus-circle fa-lg" title="<?php echo Lang::tr('_SHOW_ALL') ?>"></i>
         </td>
         <td colspan="4" class="dr2 HardBreak" title="<?php echo $recipientsString ?>"><?php echo $fileToString ?></td>
-        <td class="dr2 HardBreak" style="text-align: center"><?php echo formatBytes($totalSize) ?></td>
+        <td class="dr2 HardBreak" style="text-align: center"><?php echo Utilities::formatBytes($totalSize) ?></td>
         <td class="dr2 HardBreak" style="text-align: center"><?php echo $totalNumDownloads ?></td>
         <td class="dr2" style="text-align: center">
           <?php echo date(Lang::tr('datedisplayformat'),strtotime($transactionContents[0]['fileexpirydate'])) ?>
@@ -156,7 +156,7 @@ if(false && sizeof($transactions) > 0) {
             foreach ($contentsTableData as $fileName => $data) {
                 // Print file name, file size, number of downloads.
                 $fileName = utf8ToHtml($fileName, true);
-                $fileSize = formatBytes($data['filesize']);
+                $fileSize = Utilities::formatBytes($data['filesize']);
                 echo ($rowCount % 2 == 0) ? '<tr class="rowdivider">' : '<tr>';
                 
                 if ($rowCount == sizeof($contentsTableData) - 1) {

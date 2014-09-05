@@ -40,7 +40,7 @@
         <ul>
             <li><strong>Maximum recipient  addresses per email:</strong> Up to <?php echo Config::get('max_email_recipients') ?> email addresses separated by  a comma or semi-colon</li>
             <li><strong>Maximum number of files per  upload:</strong> one - to upload several files in one transaction, compress them into a  single archive first</li>
-            <li><strong>Maximum file size per upload, with Adobe Flash only: </strong><?php echo Utilities::formatBytes(Config::get('max_flash_upload_size')) ?></li>
+            <li><strong>Maximum file size per upload, with Adobe Flash only: </strong><?php echo Utilities::formatBytes(Config::get('max_legacy_upload_size')) ?></li>
             <li><strong>Maximum file size per upload, with HTML5: </strong><?php echo Utilities::formatBytes(Config::get('max_html5_upload_size')) ?></li>
             <li><strong>Maximum file / voucher expiry days: </strong><?php echo Config::get('default_daysvalid') ?></li>
         </ul>

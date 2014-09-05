@@ -30,36 +30,29 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-// ---------------------------------
-// Force HTTPS - redirects HTTP to HTTPS.
-// ---------------------------------
-if (
-    // Unless forceSSL is false or 0 ...
-    Config::get('forceSSL') !== false && Config::get('forceSSL') !== 0
-    // ... or we're on https ...
-    && !(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on')
-) {
-    if (session_id() != '') {
-        // Destroy current session to prevent stealing session, because someone may have sniffed it during our HTTP (not HTTPS) request.
-        unset($_SESSION);
 
-        if (ini_get('session.use_cookies')) {
-            // Unset the PHPSESSID cookie, so that the user will get a new session ID on their next request.
-            $params = session_get_cookie_params();
+/**
+ * Class containing transfer statuses
+ */
 
-            setcookie(
-                session_name(), '', time() - 42000,
-                $params['path'], $params['domain'],
-                $params['secure'], $params['httponly']
-            );
-        }
-
-        session_destroy();
-    }
-
-    // ... Redirect the user to HTTPS.
-    $redirect = sprintf('Location: https://%s%s', $_SERVER['HTTP_HOST'], $_SERVER['REQUEST_URI']);
-    header($redirect);
-    exit;
+class UploadOptions extends Enum {
+    const EMAIL_ME_COPIES_AVAILABLE             = 'email_me_copies_available';
+    const EMAIL_ME_COPIES_DEFAULT               = 'email_me_copies_default';
+    const EMAIL_ME_COPIES_ADVANCED              = 'email_me_copies_advanced';
+    
+    const UPLOAD_COMPLETE_EMAIL_DISPLAY         = 'upload_complete_email_display';
+    const UPLOAD_COMPLETE_EMAIL_DEFAULT         = 'upload_complete_email_default';
+    
+    const INFORM_DOWNLOAD_EMAIL_DISPLAY         = 'inform_download_email_display';
+    const INFORM_DOWNLOAD_EMAIL_DEFAULT         = 'inform_download_email_default';
+    
+    const EMAIL_ME_DAILY_STATISTICS_DISPLAY     = 'email_me_daily_statistics_display';
+    const EMAIL_ME_DAILY_STATISTICS_DEFAULT     = 'email_me_daily_statistics_default';
+    
+    const DOWNLOAD_CONFIRMATION_ENABLED_DISPLAY = 'download_confirmation_enabled_display';
+    const DOWNLOAD_CONFIRMATION_ENABLED_DEFAULT = 'download_confirmation_enabled_default';
+    
+    const ADD_ME_TO_RECIPIENTS_DISPLAY          = 'add_me_to_recipients_display';
+    const ADD_ME_TO_RECIPIENTS_DEFAULT          = 'add_me_to_recipients_default';
 }
 

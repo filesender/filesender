@@ -245,7 +245,7 @@ $lang["_HELP_TEXT"] = '
 <ul>
     <li><strong>N&uacute;mero m&aacute;ximo de destinatarios por env&iacute;o: </strong>'. Config::get('max_email_recipients').' direcciones de correo (separadas por comas o puntos y coma).</li>
     <li><strong>N&uacute;mero m&aacute;ximo de archivos por env&iacute;o: </strong>1, para envio de varios a la vez compr&iacute;malos en un &uacute;nico archivo.</li>
-    <li><strong>Tama&ntilde;o m&aacute;ximo del archivo por env&iacute;o (Adobe Flash): </strong>'. Utilities::formatBytes(Config::get('max_flash_upload_size')).' </li>
+    <li><strong>Tama&ntilde;o m&aacute;ximo del archivo por env&iacute;o (Adobe Flash): </strong>'. Utilities::formatBytes(Config::get('max_legacy_upload_size')).' </li>
     <li><strong>Tama&ntilde;o m&aacute;ximo del archivo por env&iacute;o (HTML5): </strong>'. Utilities::formatBytes(Config::get('max_html5_upload_size')).'</li>
     <li><strong>D&iacute;as hasta la expiraci&oacute;n de un archivo/invitaci&oacute;n de env&iacute;o (m&aacute;ximo): </strong>'. Config::get('default_daysvalid').' </li>
 </ul>

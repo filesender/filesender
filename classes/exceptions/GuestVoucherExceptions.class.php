@@ -36,7 +36,7 @@ if (!defined('FILESENDER_BASE'))        // Require environment (fatal)
 /**
  * Unknown guset voucher exception
  */
-class GuestVoucherNotFoundException extends LoggingException {
+class GuestvoucherNotFoundException extends LoggingException {
     /**
      * Constructor
      * 

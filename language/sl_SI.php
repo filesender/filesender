@@ -237,8 +237,8 @@ $lang["_HELP_TEXT"] = '
     <li><strong>
       Največje dovoljeno število naslovnikov: </strong>'. Config::get('max_email_recipients').' naslovnikov (elektronske naslove ločite z vejico ali podpičjem)</li>
     <li><strong>Največje število dokumentov, ki jih lahko pošljete:</strong> eden - za prenos več dokumentov hkrati, dokumente najprej arhivirajte (npr. zip)</li>
-    <li><strong>Največja velikost dokumenta, ki ga lahko naložite na strežnik z uporabo Adobe Flash: </strong>'. formatBytes(Config::get('max_flash_upload_size')).' </li>
-    <li><strong>Največja velikost dokumenta, ki ga lahko naložite na strežnik z uporabo HTML5: </strong>'. formatBytes(Config::get('max_html5_upload_size')).'</li>
+    <li><strong>Največja velikost dokumenta, ki ga lahko naložite na strežnik z uporabo Adobe Flash: </strong>'. Utilities::formatBytes(Config::get('max_legacy_upload_size')).' </li>
+    <li><strong>Največja velikost dokumenta, ki ga lahko naložite na strežnik z uporabo HTML5: </strong>'. Utilities::formatBytes(Config::get('max_html5_upload_size')).'</li>
     <li>      <strong>Najdaljši čas veljavnosti dokumenta / vavčerja: </strong>'. Config::get('default_daysvalid').' </li>
 </ul>
 <p>Za več informacij obiščite spletno stran <a href="http://www.filesender.org/" target="_blank">www.filesender.org</a></p>

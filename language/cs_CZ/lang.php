@@ -240,7 +240,7 @@ $lang["_HELP_TEXT"] = '
     <li><strong>
       Počet emilových adresátů na jedno odeslání: </strong>'. Config::get('max_email_recipients').' více emailových adres (odděleny čárkou nebo středníkem)</li>
     <li><strong>Maximální počet souborů na jedno nahrání:</strong> jeden - pro nahrání více souborů najednou je nutné využití zabalení všech souborů do jednoho archivu (např. zip či rar)</li>
-    <li><strong>Maximální velikost souboru na jedno nahrání (pouze pro Adobe Flash): </strong>'. Utilities::formatBytes(Config::get('max_flash_upload_size')).' </li>
+    <li><strong>Maximální velikost souboru na jedno nahrání (pouze pro Adobe Flash): </strong>'. Utilities::formatBytes(Config::get('max_legacy_upload_size')).' </li>
     <li><strong>Maximální velikost souboru na jedno nahrání (pouze pro HTML5): </strong>'. Utilities::formatBytes(Config::get('max_html5_upload_size')).'</li>
     <li>      <strong>Maximum počet dní platnosti souborů / pozvánek: </strong>'. Config::get('default_daysvalid').' </li>
 </ul>

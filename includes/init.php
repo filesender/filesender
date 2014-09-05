@@ -50,10 +50,11 @@ if(!session_id()) {
 require_once(FILESENDER_BASE.'/classes/autoload.php');
 
 // Set default timezone
-date_default_timezone_set(Config::get('Default_TimeZone'));
+date_default_timezone_set(Config::get('default_timezone'));
 
 // Ensure HTTPS if needed
-require_once(FILESENDER_BASE.'/includes/EnsureHTTPS.php');
+Utilities::forceHTTPS();
+//require_once(FILESENDER_BASE.'/includes/EnsureHTTPS.php');
 
 // Handle magic quoting (maybe deprecated now ?)
 if(get_magic_quotes_gpc()) {

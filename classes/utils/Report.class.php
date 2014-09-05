@@ -181,8 +181,8 @@ class Report {
             throw new NoReportFoundException();
         } else {
             // Getting repliers from config
-            if (($noReply = Config::get('noreply')) != null){
-                if (($noReplyName = Config::get('noreply_name')) == null){
+            if (($noReply = Config::get('email_reply_to')) != null){
+                if (($noReplyName = Config::get('email_reply_to_name')) == null){
                     $noReplyName = $noReply;
                 }
 

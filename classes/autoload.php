@@ -57,9 +57,11 @@ class Autoloader {
         'Enum' => 'utils/',
         'Disclosed' => 'utils/',
         'Version' => 'utils/',
+        'Zipper' => 'utils/',
         
         // CONSTANTS
         '*Types' => 'constants/',
+        '*Options' => 'constants/',
         '*Constants' => 'constants/',
         'TransferStatuses' => 'constants/TransferStatuses',
         'LogLevels' => 'constants/LogLevels',
@@ -75,7 +77,7 @@ class Autoloader {
         'Transfer' => 'data/',
         'File' => 'data/',
         'Recipient' => 'data/',
-        'Guestvoucher' => 'data/',
+        'GuestVoucher' => 'data/',
         'User' => 'data/',
         
         'Auth*' => 'auth/',

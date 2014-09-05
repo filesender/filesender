@@ -155,7 +155,7 @@ class RestServer {
                     $updatedSince = null;
                     if(preg_match('`^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(Z|[+-][0-9]{2}:[0-9]{2})$`', $v)) {
                         // ISO date
-                        $localetz = new DateTimeZone(Config::get('Default_TimeZone'));
+                        $localetz = new DateTimeZone(Config::get('default_timezone'));
                         $offset = $localetz->getOffset(new DateTime($v));
                         $updatedSince = strtotime($v) + $offset;
                     }else if(preg_match('`^([0-9]+)\s*(hour|day|week|month|year)s?$`', $v, $m)) {

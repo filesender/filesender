@@ -195,8 +195,8 @@ class User extends DBObject {
      */
     public function getFrequentRecipients($criteria=''){
         
-        $maxAllowed = Config::get('autocompleteHistoryMax')>0 ?
-                Config::get('autocompleteHistoryMax'):5;
+        $maxAllowed = Config::get('atutocomplete_max_shown')>0 ?
+                Config::get('atutocomplete_max_shown'):5;
             
         if ($criteria == ''){
             $listMails = array();
@@ -233,8 +233,8 @@ class User extends DBObject {
 
         if (sizeof($mails) > 0){
             $currentDate = date('Y-m-d');
-            $maxAllowed = Config::get('autocompleteHistoryMaxStored')>0 ?
-                Config::get('autocompleteHistoryMaxStored'):0;
+            $maxAllowed = Config::get('max_stored_frequent_recipient')>0 ?
+                Config::get('max_stored_frequent_recipient'):0;
             
             // Get current mails from bdd
             if (is_null($this->frequent_recipients)){

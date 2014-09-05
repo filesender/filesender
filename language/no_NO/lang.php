@@ -252,7 +252,7 @@ $lang["_HELP_TEXT"] = '
 <ul>
 <li><b>Maks. antall mottakere per sending: </b>'. Config::get('max_email_recipients').' To eller flere epost-adresser skilles med komma eller semikolon (f.eks. ole@norge.no, per@uninettt.no).</li>
       <li><b>Maks. antall filer per sending: </b> 1 - for å sende flere filer samtidig kan du pakke dem i f.eks. en zip-fil først.</li>
-      <li>Største mulige filstørrelse per sending <b>uten</b> HTML 5: '. Utilities::formatBytes(Config::get('max_flash_upload_size')) .'</li>
+      <li>Største mulige filstørrelse per sending <b>uten</b> HTML 5: '. Utilities::formatBytes(Config::get('max_legacy_upload_size')) .'</li>
       <li>Største mulige filstørrelse per sending <b>med</b> HTML 5: ' .Utilities::formatBytes(Config::get('max_html5_upload_size')).'</li>
       <li>Maksimum antall dager før utløp av sending: '. Config::get('default_daysvalid').'</li>
 </ul>

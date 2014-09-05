@@ -16,5 +16,5 @@ Best regards,
 <p>Here you have your report:</p>
 <div>{reportContent}</div>
 <br/>
-<p>Best regards,<br />
+<p>Best regards,<br/>
 {cfg:site_name}</p>

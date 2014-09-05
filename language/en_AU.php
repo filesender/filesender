@@ -319,8 +319,8 @@ If you <b><i>modified the file</i></b> between the first and second attempt, ple
     <li><strong>
       Maximum recipient  addresses per email:</strong> Up to '. Config::get('max_email_recipients').' email addresses separated by  a comma or semi-colon</li>
     <li><strong>Maximum number of files per  upload:</strong> one - to upload several files in one transaction, compress them into a  single archive first</li>
-    <li><strong>Maximum file size per upload, with Adobe Flash only: </strong>'. formatBytes(Config::get('max_flash_upload_size')).' </li>
-    <li><strong>Maximum file size per upload, with HTML5: </strong>'. formatBytes(Config::get('max_html5_upload_size')).'</li>
+    <li><strong>Maximum file size per upload, with Adobe Flash only: </strong>'. Utilities::formatBytes(Config::get('max_legacy_upload_size')).' </li>
+    <li><strong>Maximum file size per upload, with HTML5: </strong>'. Utilities::formatBytes(Config::get('max_html5_upload_size')).'</li>
     <li><strong>Maximum file / voucher expiry days: </strong>'. Config::get('default_daysvalid').' </li>
 </ul>
 

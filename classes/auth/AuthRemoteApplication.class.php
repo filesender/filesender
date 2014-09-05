@@ -73,7 +73,7 @@ class AuthRemoteApplication {
                 $received_signature = $_GET['signature'];
                 $timestamp = (int)$_GET['timestamp'];
                 
-                $applications = Config::get('remote_applications');
+                $applications = Config::get('auth_remote_applications');
                 
                 if(!is_array($applications) || !array_key_exists($application, $applications))
                     throw new AuthRemoteApplicationUknownApplicationException($application);
