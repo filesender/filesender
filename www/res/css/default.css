@@ -194,9 +194,10 @@ span.clickable.fa {
 }
 
 .two_columns {
+    width: 100%;
     border-collapse: separate;
     border-spacing: 0.5em;
-    margin: 0 -0.25em 0.5em -0.25em;
+    margin-bottom: 0.5em;
 }
 
 .two_columns td {
@@ -230,6 +231,30 @@ span.invalid {
 input.invalid, textarea.invalid {
     border: 1px solid #f00;
 }
+
+.buttons {
+    display: table;
+    border-collapse: separate;
+    border-spacing: 0.5em;
+    margin: 0.5em auto;
+    text-align: center;
+}
+
+.buttons a {
+    display: table-cell;
+    padding: 0.7em;
+    font-weight: bold;
+    font-size: 1em;
+}
+
+.buttons a.not_displayed {
+    display: none;
+}
+
+.buttons a span.fa {
+    font-size: 1.5em;
+}
+
 
 
 /* JQuery UI overides */
@@ -374,6 +399,10 @@ input.invalid, textarea.invalid {
     display: none;
 }
 
+#upload_form .two_columns {
+    width: 100.7%;
+    margin: 0 -0.75em 0.5em -0.25em;
+}
 
 #upload_form .recipients {
     display: none;
@@ -394,6 +423,7 @@ input.invalid, textarea.invalid {
 }
 
 #upload_form textarea[name="message"] {
+    width: 100%;
     resize: vertical;
 }
 
@@ -419,26 +449,16 @@ input.invalid, textarea.invalid {
     padding: 0.5em;
 }
 
-#upload_form .upload_buttons {
-    display: table;
-    border-collapse: separate;
-    border-spacing: 0.5em;
+#upload_form .buttons {
     margin: 1em auto;
-    text-align: center;
 }
 
-#upload_form .upload_buttons a {
-    display: table-cell;
+#upload_form .buttons a {
     padding: 1em;
-    font-weight: bold;
     font-size: 1.5em;
 }
 
-#upload_form .upload_buttons a.not_displayed {
-    display: none;
-}
-
-#upload_form .upload_buttons a span.fa {
+#upload_form .buttons a span.fa {
     font-size: 2em;
 }
 
@@ -502,6 +522,39 @@ table.transfers .transfer_details div {
 table.transfers .transfer_details h2 {
     font-size: 1.3em;
     margin-bottom: 0.3em;
+}
+
+
+/* Upload page */
+
+.send_voucher .recipients {
+    display: none;
+    padding: 0.5em 0;
+}
+
+.send_voucher .recipients .recipient {
+    margin: 0.2em;
+    padding: 0.5em;
+    border: 1px solid #ccc;
+    border-radius: 0.5em;
+    -moz-border-radius: 0.5em;
+    background-color: #dedede;
+}
+
+.send_voucher .recipients .recipient .remove {
+    float: right;
+}
+
+.send_voucher textarea[name="message"] {
+    display: block;
+    width: 100%;
+    resize: vertical;
+}
+
+.send_voucher input[type="checkbox"] {
+    float: left;
+    width: 1.2em;
+    margin: 0 1em 0 0;
 }
 
 
