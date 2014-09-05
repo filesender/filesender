@@ -51,6 +51,10 @@ class GuestVoucher extends DBObject {
             'type' => 'string',
             'size' => 255
         ),
+        'user_email' => array(
+            'type' => 'string',
+            'size' => 250
+        ),
         'token' => array(
             'type' => 'string',
             'size' => 60,
@@ -77,6 +81,10 @@ class GuestVoucher extends DBObject {
             'type' => 'text',
             'transform' => 'json'
         ),
+        'status' => array(
+            'type' => 'string',
+            'size' => 32
+        ),
         'created' => array(
             'type' => 'datetime'
         ),
@@ -86,10 +94,18 @@ class GuestVoucher extends DBObject {
     );
     
     /**
+     * Set selectors
+     */
+    const AVAILABLE = 'status = "available" ORDER BY created DESC';
+    const EXPIRED = 'expires < DATE(NOW()) ORDER BY expires ASC';
+    const FROM_USER = 'user_id = :user_id AND status = "available" ORDER BY created DESC';
+    
+    /**
      * Properties
      */
     protected $id = null;
     protected $user_id = null;
+    protected $user_email = null;
     protected $token = null;
     protected $email = null;
     protected $transfers = 0;
@@ -128,9 +144,10 @@ class GuestVoucher extends DBObject {
     public static function create($email) {
         $voucher = new self();
         
-        $voucher->user_id = User::current()->id;
+        $voucher->user_id = Auth::user()->id;
         $voucher->__set('email', $email); // Throws
         
+        $voucher->status = GuestVoucherStatuses::AVAILABLE;
         $voucher->created = time();
         
         // Generate token until it is indeed unique
@@ -164,11 +181,85 @@ class GuestVoucher extends DBObject {
      * @return array guest voucher list
      */
     public static function getExpired($daysvalid = null) {
-        $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE expires < NOW()');
-        $s->execute();
-        $vouchers = array();
-        foreach($s->fetchAll() as $data) $vouchers[$data['id']] = self::fromData($data['id'], $data); // Don't query twice, use loaded data
-        return $vouchers;
+        return self::all(self::EXPIRED);
+    }
+    
+    /**
+     * Get guest vouchers from user
+     * 
+     * @param mixed $user User or user id
+     * 
+     * @return array of GuestVouchers
+     */
+    public static function fromUser($user) {
+        if($user instanceof User) $user = $user->id;
+        
+        return self::all(self::FROM_USER, array(':user_id' => $user));
+    }
+    
+    /**
+     * Loads guest voucher from token
+     * 
+     * @param string $token the token
+     * 
+     * @throws RecipientNotFoundException
+     * 
+     * @return GuestVoucher
+     */
+    public static function fromToken($token) {
+        $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE token = :token');
+        $statement->execute(array(':token' => $token));
+        $data = $statement->fetch();
+        if(!$data) throw new GuestVoucherNotFoundException('token = '.$token);
+        
+        $guestvoucher = self::fromData($data['id'], $data);
+        
+        return $guestvoucher;
+    }
+    
+    /**
+     * Check if user owns current transfer
+     * 
+     * @param miwed $user User or user id to compare with
+     * 
+     * @return bool
+     */
+    public function isOwner($user) {
+        return $this->owner->is($user);
+    }
+    
+    /**
+     * Close the voucher
+     * 
+     * @param bool $manually wether the voucher was closed on request (if not it means it expired)
+     */
+    public function close($manualy = true) {
+        // Closing the voucher
+        $this->status = GuestVoucherStatuses::CLOSED;
+        $this->save();
+        
+        Logger::logActivity(
+            $manualy ? LogEventTypes::GUESTVOUCHER_CLOSED : LogEventTypes::GUESTVOUCHER_EXPIRED,
+            $this
+        );
+        
+        // Sending notification to recipient
+        if($replyto = Config::get('email_reply_to')) {
+            $replyto_name = Config::get('email_reply_to_name');
+            
+            $c = Lang::translateEmail($manualy ? 'voucher_cancelled' : 'voucher_expired')->replace($this);
+            
+            $use_html = Config::get('email_use_html');
+            
+            $mail = new Mail($c->subject, $replyto, $replyto_name, $use_html);
+            $mail->to($this->email);
+            
+            $mail->writePlain($c->plain);
+            
+            if($use_html) $mail->writeHTML($c->html);
+            
+            $mail->send();
+        }
     }
     
     /**
@@ -182,9 +273,13 @@ class GuestVoucher extends DBObject {
      */
     public function __get($property) {
         if(in_array($property, array(
-            'id', 'user_id', 'token', 'email', 'transfers', 'subject',
-            'message', 'options', 'created', 'expires'
+            'id', 'user_id', 'user_email', 'token', 'email', 'transfers',
+            'subject', 'message', 'options', 'status', 'created', 'expires'
         ))) return $this->$property;
+        
+        if($property == 'user' || $property == 'owner') {
+            return User::fromId($this->user_id);
+        }
         
         throw new PropertyAccessException($this, $property);
     }
@@ -201,15 +296,41 @@ class GuestVoucher extends DBObject {
      * @throws PropertyAccessException
      */
     public function __set($property, $value) {
-        if($property == 'subject') {
+        if($property == 'status') {
+            $value = strtolower($value);
+            if(!GuestVoucherStatuses::isValidValue($value)) throw new GuestVoucherBadStatusException($value);
+            $this->status = (string)$value;
+            
+        }else if($property == 'user_email') {
+            if(!filter_var($value, FILTER_VALIDATE_EMAIL)) throw new BadEmailException($value);
+            $this->user_email = (string)$value;
+            
+        }else if($property == 'subject') {
             $this->subject = (string)$value;
+            
         }else if($property == 'message') {
             $this->message = (string)$value;
+            
         }else if($property == 'options') {
             $this->options = $value;
+            
         }else if($property == 'email') {
             if(!filter_var($value, FILTER_VALIDATE_EMAIL)) throw new BadEmailException($value);
             $this->email = (string)$value;
+            
+        }else if($property == 'expires') {
+            if(preg_match('`^[0-9]{4}-[0-9]{2}-[0-9]{2}$`', $value)) {
+                $value = strtotime($value);
+            }
+            
+            if(!preg_match('`^[0-9]+$`', $value)) throw new BadExpireException($value);
+            
+            $value = (int)$value;
+            if($value <= time() || $value > self::getMaxExpire()) {
+                throw new BadExpireException($value);
+            }
+            $this->expires = (string)$value;
+            
         }else throw new PropertyAccessException($this, $property);
     }
 }

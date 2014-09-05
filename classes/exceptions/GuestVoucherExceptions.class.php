@@ -49,3 +49,20 @@ class GuestvoucherNotFoundException extends LoggingException {
         );
     }
 }
+
+/**
+ * Bad status exception
+ */
+class GuestVoucherBadStatusException extends DetailedException {
+    /**
+     * Constructor
+     * 
+     * @param string $status the bad status
+     */
+    public function __construct($status) {
+        parent::__construct(
+            'bad_guest_voucher_status', // Message to give to the user
+            'status : '.$status // Details to log
+        );
+    }
+}

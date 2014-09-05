@@ -240,6 +240,42 @@ window.filesender.client = {
     },
     
     /**
+     * Create a guest voucher
+     * 
+     * @param string from sender email
+     * @param string subject optionnal subject
+     * @param string message optionnal message
+     * @param string expires expiry date (yyyy-mm-dd or unix timestamp)
+     * @param array options array of selected option identifiers
+     * @param callable callback function to call with guest voucher path and guest voucher info once done
+     */
+    postGuestVoucher: function(from, recipient, subject, message, expires, options, callback) {
+        this.post('/guest', {
+            from: from,
+            recipient: recipient,
+            subject: subject,
+            message: message,
+            expires: expires,
+            options: options
+        }, callback);
+    },
+    
+    /**
+     * Delete a guest voucher
+     * 
+     * @param mixed guest voucher object or id
+     * @param callable callback
+     */
+    deleteGuestVoucher: function(voucher, callback) {
+        var id = voucher;
+        
+        if(typeof voucher == 'object')
+            id = voucher.id;
+        
+        this.delete('/guest/' + id, callback);
+    },
+    
+    /**
      * Override part of the config (if allowed)
      * 
      * @param object overrides
