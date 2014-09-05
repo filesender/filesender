@@ -58,12 +58,6 @@ class Zipper {
     private $useZip64;
     
     /**
-     * If send mail when downlaod is complete
-     */
-    private $sendDownloadComplete = false;
-
-    
-    /**
      * Constuctor of Zipper class
      */
     public function __construct(){
@@ -92,7 +86,6 @@ class Zipper {
      * <b>The files in the archive are not compressed.</b>
      */
     public function sendZip($withHeaders = true){
-
         // Note: Mac OS X has compatibility issues with ZIP64 files, so only enable the ZIP64 format if
         // we have to (i.e. if the total file size is 4 GiB or greater).
         $this->useZip64 = $this->calculateTotalFileSize() >= 4 * 1024 * 1024 * 1024;
@@ -104,7 +97,7 @@ class Zipper {
         $offset = 0;
 
         foreach ($this->files as $k => $data) {
-            AuditLog::create(LogEventTypes::DOWNLOAD_START, $file);
+            Logger::logActivity(LogEventTypes::DOWNLOAD_START, $file);
             
             $file = $data['data'];
             $transfer = $file->transfer;
@@ -145,12 +138,11 @@ class Zipper {
             // Download was completed, save a log entry for each of the downloaded files.
             foreach ($this->files as $data) {
                 $file = $data['data'];
-                AuditLog::create(LogEventTypes::DOWNLOAD_END, $file);
+                Logger::logActivity(LogEventTypes::DOWNLOAD_END, $file);
             }
-
-            // Send notification email to uploader.
-            //TODO: a kicker
-//            $sendMail->sendDownloadNotification($voucherIds, $this->sendDownloadComplete);
+            return true;
+        }else{
+            return false;
         }
     }
 
@@ -418,13 +410,6 @@ class Zipper {
         }
 
         return $fileSize;
-    }
-
-    /**
-     * Sets the variable that sends out download complete receipt emails on.
-     */
-    public function enableDownloadCompleteEmail(){
-        $this->sendDownloadComplete = true;
     }
     
     /**

@@ -116,28 +116,24 @@ class AuditLog extends DBObject {
         
         switch ($event){
             default:
-                $configs = Config::get('auditlog_*');
-        
-                if (isset($configs['enable']) && $configs['enable']){
-                    if (LogEventTypes::isValidValue($event)){
-                        $auditLog = new self();
-        
-                        $auditLog->event = $event;
-                        $auditLog->created = time();
-                        $auditLog->ip = Utilities::getClientIP();
-                        $auditLog->target_id = $target->id;
-                        $auditLog->target_type = get_class($target);
+                if (LogEventTypes::isValidValue($event)){
+                    $auditLog = new self();
 
-                        if (Auth::isAuthenticated()){
-                            $auditLog->user_id = Auth::user()->id;
-                        }
+                    $auditLog->event = $event;
+                    $auditLog->created = time();
+                    $auditLog->ip = Utilities::getClientIP();
+                    $auditLog->target_id = $target->id;
+                    $auditLog->target_type = get_class($target);
 
-                        $auditLog->save();
-
-                        return $auditLog;
-                    }else{
-                        throw new AuditLogBadEventTypeException($event);
+                    if (Auth::isAuthenticated()){
+                        $auditLog->user_id = Auth::user()->id;
                     }
+
+                    $auditLog->save();
+
+                    return $auditLog;
+                }else{
+                    throw new AuditLogBadEventTypeException($event);
                 }
             break;
         }
@@ -177,17 +173,14 @@ class AuditLog extends DBObject {
     public static function clean(Transfer $transfer){
         
         if ($transfer->id > 0){
-            $configs = Config::get('auditlog_*');
-            if (isset($configs['enable']) && $configs['enable']){
-                // Getting all audit logs
-                $auditLogs = self::all(array('where' => 'target_type = :targettype AND target_id = :targetid'),array('targettype'=>$transfer->getClassName(), 'targetid' => $transfer->id));
-                if (sizeof($transfer) > 0 ){
-                    foreach($auditLogs as $log){
-                        $log->delete();
-                    }
-                }else{
-                    // No auditlogs found
+            // Getting all audit logs
+            $auditLogs = self::all(array('where' => 'target_type = :targettype AND target_id = :targetid'),array('targettype'=>$transfer->getClassName(), 'targetid' => $transfer->id));
+            if (sizeof($transfer) > 0 ){
+                foreach($auditLogs as $log){
+                    $log->delete();
                 }
+            }else{
+                // No auditlogs found
             }
         }else{
             throw new TransferNotFoundException($transfer->id);

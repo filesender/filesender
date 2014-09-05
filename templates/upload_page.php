@@ -1,3 +1,4 @@
+
 <div class="box">
     <h1>{tr:upload_page}</h1>
     
@@ -61,7 +62,7 @@
                         
                         <div class="recipients"></div>
                         
-                        <input name="to" type="text" title="{tr:email_separator_msg}" value="" placeholder="{tr:enter_to_email}" />
+                        <input name="to" id="to" type="text" title="{tr:email_separator_msg}" value="" placeholder="{tr:enter_to_email}" />
                     </div>
                     
                     <div class="fieldcontainer">
@@ -104,12 +105,12 @@
                             <input name="expires" type="text" title="{tr:dp_dateformat}" value="<?php echo Utilities::formatDate(Transfer::getMaxExpire()) ?>"/>
                         </div>
                         
-                        <?php $displayoption('email_me_copies', 'always') ?>
-                        <?php $displayoption('upload_complete_email', 'always') ?>
-                        <?php $displayoption('inform_download_email', 'always') ?>
-                        <?php $displayoption('email_me_daily_statistics', 'always') ?>
-                        <?php $displayoption('download_confirmation_enabled', 'always') ?>
-                        <?php $displayoption('add_me_to_recipients', 'always') ?>
+                        <?php $displayoption(UploadOptions::EMAIL_ME_COPIES_AVAILABLE, 'always') ?>
+                        <?php $displayoption(UploadOptions::UPLOAD_COMPLETE_EMAIL_DISPLAY,'always') ?>
+                        <?php $displayoption(UploadOptions::INFORM_DOWNLOAD_EMAIL_DISPLAY, 'always') ?>
+                        <?php $displayoption(UploadOptions::EMAIL_ME_DAILY_STATISTICS_DISPLAY,'always') ?>
+                        <?php $displayoption(UploadOptions::DOWNLOAD_CONFIRMATION_ENABLED_DISPLAY, 'always') ?>
+                        <?php $displayoption(UploadOptions::ADD_ME_TO_RECIPIENTS_DISPLAY,'always') ?>
                     </div>
                     
                     <?php if (true /* TODO $functions->advancedSettingsEnabled() */) { ?>
@@ -118,25 +119,25 @@
                     </div>
                     
                     <div class="advanced_options">
-                        <?php $displayoption('email_me_copies', 'hidden') ?>
-                        <?php $displayoption('upload_complete_email', 'hidden') ?>
-                        <?php $displayoption('inform_download_email', 'hidden') ?>
-                        <?php $displayoption('email_me_daily_statistics', 'hidden') ?>
-                        <?php $displayoption('download_confirmation_enabled', 'hidden') ?>
-                        <?php $displayoption('add_me_to_recipients', 'hidden') ?>
+                        <?php $displayoption(UploadOptions::EMAIL_ME_COPIES_AVAILABLE, 'hidden') ?>
+                        <?php $displayoption(UploadOptions::UPLOAD_COMPLETE_EMAIL_DISPLAY, 'hidden') ?>
+                        <?php $displayoption(UploadOptions::INFORM_DOWNLOAD_EMAIL_DISPLAY, 'hidden') ?>
+                        <?php $displayoption(UploadOptions::EMAIL_ME_DAILY_STATISTICS_DISPLAY,'hidden') ?>
+                        <?php $displayoption(UploadOptions::DOWNLOAD_CONFIRMATION_ENABLED_DISPLAY, 'hidden') ?>
+                        <?php $displayoption(UploadOptions::ADD_ME_TO_RECIPIENTS_DISPLAY, 'hidden') ?>
                         
-                        <?php if (Config::get('terasender') && Config::get('terasenderadvanced')) { ?>
+                        <?php if (Config::get('terasender_enabled') && Config::get('terasender_advanced')) { ?>
                         <div class="fieldcontainer">
                             <label for="chunksize">{tr:tera_chunksize}</label>
                             
-                            <input id="chunksize" type="text" value="<?php echo Config::get('terasender_chunksize') ?>"/>
+                            <input id="chunksize" type="text" value="<?php echo Config::get('terasender_chunk_size') ?>"/>
                             <br />
                         </div>
                         
                         <div class="fieldcontainer">
                             <label for="workerCount">{tr:tera_worker_count}</label>
                             
-                            <input id="workerCount" type="text" value="<?php echo Config::get('terasender_workerCount') ?>"/>
+                            <input id="workerCount" type="text" value="<?php echo Config::get('terasender_worker_count') ?>"/>
                             <br />
                         </div>
                         
@@ -160,7 +161,7 @@
             
             <?php
             $aupChecked = '';
-            if (Config::get('AuP_default') || (isset($_SESSION['aup']) /*&& !$authvoucher->aVoucher()*/)) $aupChecked = 'checked="checked"';
+            if (Config::get('aup_default') || (isset($_SESSION['aup']) /*&& !$authvoucher->aVoucher()*/)) $aupChecked = 'checked="checked"';
             ?>
             <input name="aup" type="checkbox" <?php echo $aupChecked; ?> value="true"/>
             

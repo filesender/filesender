@@ -229,8 +229,8 @@ $lang["_HELP_TEXT"] = '
     <li><strong>
       Maximalan broj primatelja: </strong>'. Config::get('max_email_recipients').' primatelja (adrese odvojite točka-zarezom)</li>
     <li><strong>Maksimalan broj datoteka po prijenosu:</strong> jedna - za prijenos više datoteka odjednom, najprije ih zapakirajte u arhivu</li>
-    <li><strong>Maksimalna veličina datoteke po prijenosu, sa Adobe Flash-om samo: </strong>'. formatBytes(Config::get('max_flash_upload_size')).' </li>
-    <li><strong>Maksimalna veličina datoteke po prijenosu, sa HTML5: </strong>'. formatBytes(Config::get('max_html5_upload_size')).'</li>
+    <li><strong>Maksimalna veličina datoteke po prijenosu, sa Adobe Flash-om samo: </strong>'. Utilities::formatBytes(Config::get('max_legacy_upload_size')).' </li>
+    <li><strong>Maksimalna veličina datoteke po prijenosu, sa HTML5: </strong>'. Utilities::formatBytes(Config::get('max_html5_upload_size')).'</li>
     <li><strong>Maksimalan broj dana nakon kojeg datoteke/kuponi istuču: </strong>'. Config::get('default_daysvalid').' </li>
 </ul>
 <p>Za više informacija molimo posjetite <a href="http://www.filesender.org/" target="_blank">www.filesender.org</a></p>

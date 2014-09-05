@@ -76,6 +76,8 @@ class Config {
     {
         if (!is_null(self::$parameters) && !$virtualhost) 
             return; // Do not load twice, except if switching virtualhost
+        
+        // Load default configuration
         self::$parameters = array();
         
         // Load defaults if needed
@@ -273,7 +275,7 @@ class Config {
      * 
      * @return bool
      */
-    public function exists($key) {
+    public static function exists($key) {
         self::load();
         return array_key_exists($key, self::$parameters);
     }

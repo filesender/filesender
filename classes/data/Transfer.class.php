@@ -204,20 +204,20 @@ class Transfer extends DBObject {
         $this->save();
         
         if ($manualy){
-            // Logging the enclosure of transfer
+            // Logging transfer closure
             $lEvent = LogEventTypes::TRANSFER_CLOSED;
         }else{
-            // Logging the enclosure of transfer
-            $lEvent = LogEventTypes::TRANSFER_EXPIRED;            
+            // Logging transder expiration
+            $lEvent = LogEventTypes::TRANSFER_EXPIRED;
         }
         Logger::logActivity($lEvent, $this);
-        AuditLog::create($lEvent, $this);
+
         
         // Sending notification to all recipients 
         $recipients = $this->recipients;
         if (sizeof($recipients) > 0){
-            if (($noReply = Config::get('noreply')) != null){
-                if (($noReplyName = Config::get('noreply_name')) == null){
+            if (($noReply = Config::get('email_reply_to')) != null){
+                if (($noReplyName = Config::get('email_reply_to_name')) == null){
                     $noReplyName = $noReply;
                 }
 
@@ -446,8 +446,8 @@ class Transfer extends DBObject {
             Auth::user()->saveFrequentRecipients($recipients);
         }
         // Sends mails
-        if (($noReply = Config::get('noreply')) != null){
-            if (($noReplyName = Config::get('noreply_name')) == null){
+        if (($noReply = Config::get('email_reply_to')) != null){
+            if (($noReplyName = Config::get('email_reply_to_name')) == null){
                 $noReplyName = $noReply;
             }
 
@@ -477,4 +477,13 @@ class Transfer extends DBObject {
             $mail->send();
         }
     }
+    
+    /*
+     * Save transfer then log
+     */
+    public function save() {
+        parent::save();
+        Logger::logActivity(LogEventTypes::TRANSFER_START, $this);
+     }
+     
 }

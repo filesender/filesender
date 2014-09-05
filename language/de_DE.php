@@ -239,8 +239,8 @@ $lang["_HELP_TEXT"] = '
     <li><strong>
       Maximale Anzahl der E-mail Empfänger: </strong>'. Config::get('max_email_recipients').' verschiedene E-mail Adressen (getrennt durch Komma oder Strichpunkt)</li>
     <li><strong>Maximale Anzahl der Dateien beim Hochladen:</strong> Eine - um mehrere Dateien gleichzeitig hochzuladen, verpacken Sie diese zuerst zu einem Zip-Archiv</li>
-    <li><strong>Maximale Dateigröße beim Hochladen, mit Adobe Flash: </strong>'. formatBytes(Config::get('max_flash_upload_size')).' </li>
-    <li><strong>Maximale Dateigröße beim Hochladen, mit HTML5: </strong>'. formatBytes(Config::get('max_html5_upload_size')).'</li>
+    <li><strong>Maximale Dateigröße beim Hochladen, mit Adobe Flash: </strong>'. Utilities::formatBytes(Config::get('max_legacy_upload_size')).' </li>
+    <li><strong>Maximale Dateigröße beim Hochladen, mit HTML5: </strong>'. Utilities::formatBytes(Config::get('max_html5_upload_size')).'</li>
     <li><strong>Maximale Ablaufzeit für Dateien und Voucher: </strong>'. Config::get('default_daysvalid').' Tage </li>
 </ul>
 <p>Mehr Informationen über FileSender gibt es auf der folgenden Internetseite: <a href="http://www.filesender.org/" target="_blank">www.filesender.org</a></p>

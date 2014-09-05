@@ -65,11 +65,30 @@ try {
     
     if(count($files_ids) > 1) { // Archive download
         set_time_limit(0); // Needed to prevent the download from timing out.
+        
+        // Creating the zipper
         $zipper = new Zipper();
+        // Adding all files 
         foreach ($files_ids as $fileId){
             $zipper->addFile(File::fromId($fileId));
         }
-        $zipper->sendZip();
+        // Sending the ZIP
+        $result = $zipper->sendZip();
+        if ($result){
+            // Manage send mails (if needed)
+            if ($_REQUEST['notify_upon_completion']){
+                //TODO: send mail to downloader
+            }
+            
+            $tmpFile = File::fromId($files_ids[0]);
+            $transfer = $tmpFile->transfer;
+            if (in_array(UploadOptions::DOWNLOAD_CONFIRMATION_ENABLED_DISPLAY, $transfer->options)){
+                //TODO: send mail to sender
+            }
+        }else{
+            // TODO: error to manage
+        }
+            
         exit;
     }
     
