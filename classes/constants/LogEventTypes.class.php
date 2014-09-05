@@ -35,44 +35,40 @@
  */
 class LogEventTypes extends Enum {
     /* GENERAL */
-   const UPLOAD                 = 'upload';
-   const FAILED                 = 'failed';
-   const DOWNLOAD               = 'download';
-   const UPLOADED               = 'uploaded';
-   const LOG_CREATED            = 'log_created';
+   const LOG_CREATED            = 'log_created';    // Log created
    
    /* USER */
-   const USER_ACTIVATED         = 'user_activated';
-   const USER_INACTIVE          = 'user_inactive';
-   const USER_PURGED            = 'user_purged';
+   const USER_ACTIVATED         = 'user_activated'; // User become active
+   const USER_INACTIVE          = 'user_inactive';  // User become inactive
+   const USER_PURGED            = 'user_purged';    // User purged
    
    /* FILE */
-   const FILE_UPDATED           = 'file_updated';
-   const FILE_EXPIRED           = 'file_expired';
-   const FILE_MOVED             = 'file_moved';
-   const FILE_DELETED           = 'file_deleted';
+   const FILE_UPDATED           = 'file_updated';   // File has been updated
+   const FILE_MOVED             = 'file_moved';     // File has been moved
+   const FILE_DELETED           = 'file_deleted';   // File has been deleted
    
    /* GUESTVOUCHER */
-   const GUESTVOUCHER_CREATED   = 'guestvoucher_created';
-   const GUESTVOUCHER_SENT      = 'guestvoucher_sent';
-   const GUESTVOUCHER_USED      = 'guestvoucher_used';
-   const GUESTVOUCHER_EXPIRED   = 'guestvoucher_expired';
-   const GUESTVOUCHER_CANCEL    = 'guestvoucher_cancel';
-   const GUESTVOUCHER_CLOSED    = 'guestvoucher_closed';
+   const GUESTVOUCHER_CREATED   = 'guestvoucher_created';   // GuestVoucher created
+   const GUESTVOUCHER_SENT      = 'guestvoucher_sent';      // GuestVoucher send to recipients
+   const GUESTVOUCHER_USED      = 'guestvoucher_used';      // GuestVoucher has been used
+   const GUESTVOUCHER_EXPIRED   = 'guestvoucher_expired';   // GuestVoucher expired
+   const GUESTVOUCHER_CLOSED    = 'guestvoucher_closed';    // GuestVoucher closed
+   const GUESTVOUCHER_DELETED   = 'guestvoucher_deleted';   // GuestVoucher canceled
    
    /* TRANSFER */
-   const TRANSFER_START         = 'transfer_start';
-   const TRANSFER_EXPIRED       = 'transfer_expired';
-   const TRANSFER_CLOSED        = 'transfer_closed';
-   const TRANSFER_DELETED       = 'transfer_deleted';
+   const TRANSFER_AVAILABLE     = 'transfer_available';     // Transfer started
+   const TRANSFER_START         = 'transfer_start';         // Transfer started
+   const TRANSFER_EXPIRED       = 'transfer_expired';       // Transfer expired
+   const TRANSFER_CLOSED        = 'transfer_closed';        // Transfer closed
+   const TRANSFER_DELETED       = 'transfer_deleted';       // Transfer deleted
    
    /* UPLOAD */
-   const UPLOAD_START           = 'upload_start';
-   const UPLOAD_END             = 'upload_end';
+   const UPLOAD_START           = 'upload_start';   // Upload stated
+   const UPLOAD_RESUME          = 'upload_resume';  // Upload resumed
+   const UPLOAD_END             = 'upload_end';     // Upload ended
    
    /* DOWNLOAD */
-   const DOWNLOAD_START         = 'download_start';
-   const DOWNLOAD_END           = 'download_end';
-   const DOWNLOAD_RESUME        = 'download_resume';
-   
+   const DOWNLOAD_START         = 'download_start';     // Download started
+   const DOWNLOAD_RESUME        = 'download_resume';    // Download resumed
+   const DOWNLOAD_END           = 'download_end';       // Download ended
 }
