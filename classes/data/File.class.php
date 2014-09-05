@@ -194,11 +194,12 @@ class File extends DBObject
      * Read a chunk at offset
      * 
      * @param int $offset the chunk offset in the file, if null reads next chunk (Storage keeps track of it)
+     * @param int $length the chunk length, if null will use download_chunk_size from config
      * 
      * @return mixed chunk data or null if no more data is available
      */
-    public function readChunk($offset = null) {
-        return Storage::readChunk($this, $offset);
+    public function readChunk($offset = null, $length = null) {
+        return Storage::readChunk($this, $offset, $length);
     }
     
     /**
