@@ -40,6 +40,8 @@ date_default_timezone_set(Config::get('Default_TimeZone'));
 
 header('Content-Type: text/javascript');
 
+$banned = Config::get('ban_extension');
+
 ?>
 if(!('filesender' in window)) window.filesender = {};
 
@@ -51,7 +53,7 @@ window.filesender.config = {
     max_html5_upload_size: <?php echo Config::get('max_html5_upload_size') ?>,
     max_html5_uploads: <?php echo Config::get('html5_max_uploads') ?>,
     
-    ban_extension: '<?php echo Config::get('ban_extension') ?>',
+    ban_extension: <?php echo is_string($banned) ? "'".$banned."'" : 'null' ?>,
     
     max_email_recipients: <?php echo Config::get('max_email_recipients') ?>,
     
