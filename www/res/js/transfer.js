@@ -134,11 +134,19 @@ window.filesender.transfer = function() {
             return false;
         }
         
-        var extension = file.name.split('.').pop();
-        var banned = new RegExp('^(' + filesender.config.ban_extension.replace(',', '|') + ')$', 'g');
-        if(extension.match(banned)) {
-            errorhandler({message: 'banned_extension', details: {extension: extension, banned: filesender.config.ban_extension}});
+        if(file.size) {
+            errorhandler({message: 'empty_file'});
             return false;
+        }
+        
+        if(typeof filesender.config.ban_extension == 'string') {
+            var banned = filesender.config.ban_extension.replace(/\s+/g, '');
+            banned = new RegExp('^(' + banned.replace(',', '|') + ')$', 'g');
+            var extension = file.name.split('.').pop();
+            if(extension.match(banned)) {
+                errorhandler({message: 'banned_extension', details: {extension: extension, banned: filesender.config.ban_extension}});
+                return false;
+            }
         }
         
         if(this.size + file.size > filesender.config.max_html5_upload_size) {
