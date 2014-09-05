@@ -1,14 +1,11 @@
             <div id="footer">
                 {tr:site_footer}
                 
+                <?php if(Disclosed::isDisclosed('version')) { ?>
+                <div class="version"><?php echo Version::get() ?></div>
+                <?php } ?>
             <?php
-                $versionDisplay = '';
-                
                 //if(Config::get('site_showStats')) $versionDisplay .= $functions->getStats(); // TODO
-        
-                //if(Config::get('versionNumber')) $versionDisplay .= FileSender_Version::VERSION; // TODO
-        
-                echo '<div class="versionnumber">'.$versionDisplay.'</div>';
             ?>
             </div>
         </div>
