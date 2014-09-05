@@ -78,7 +78,7 @@ try {
         return $f->id == $id;
     });
     
-    //if(!count($file))
+    if(!count($file))
         throw new FileNotFoundException(array('transfer_id : '.$transfer->id, 'file_id : '.$id));
     
     $file = array_shift($file);
@@ -125,10 +125,19 @@ try {
     
     // Remove execution time limit as this may take a while
     set_time_limit(0);
+    ob_implicit_flush();
     
-    $read_range = function($range = null) use($file) {
-        if(connection_aborted())
-            exit; // Stop pointless reading if user stopped downloading
+    $abort_handler = function() {
+        if(!connection_aborted() && (connection_status() == CONNECTION_NORMAL)) return;
+        
+        Logger::info('Seems that the user stopped downloading (not that reliable though ...)');
+        
+        die; // Stop pointless reading if user stopped downloading
+    };
+    register_shutdown_function($abort_handler);
+    
+    $read_range = function($range = null) use($file, $abort_handler) {
+        $abort_handler();
         
         $offset = $range ? $range['start'] : 0;
         
@@ -136,12 +145,16 @@ try {
         if(!$chunk_size) $chunk_size = 1024 * 1024;
         
         if($offset < $file->size) { // There is data to read
-            for(; $offset < $file->size; $offset += $chunk_size) {
-                if(connection_aborted())
-                    exit; // Stop pointless reading if user stopped downloading
+            for(; $offset < $range ? $range['end'] : $file->size; $offset += $chunk_size) {
+                $length = min($chunk_size, ($range ? $range['end'] : $file->size) - $offset + 1);
                 
-                echo $file->readChunk($offset);
-                // TODO Log download progress ? 
+                Logger::info('Send chunk at offset '.$offset.' with length '.$length);
+                
+                echo $file->readChunk($offset, $length);
+                
+                // TODO Log download progress ?
+                
+                $abort_handler();
             }
         }
         
@@ -152,8 +165,20 @@ try {
     // TODO Log download start
     
     $done = false;
+    
+    if($ranges)
+        header('HTTP/1.1 206 Partial Content'); // Must send HTTP header before anything else
+    
+    header('Content-Transfer-Encoding: binary');
+    header('Last-Modified: '.gmdate('D, d M Y H:i:s', $transfer->created));
+    header('ETag: t'.$transfer->id.'_f'.$file->id.'_s'.$file->size);
+    header('Connection: close');
+    header('Cache-control: private');
+    header('Pragma: private');
+    header('Expires: 0');
+    
     if($ranges) {
-        header('HTTP/1.1 206 Partial Content');
+        Logger::info('User restarted download of file:'.$file->id.' from offset '.$ranges[0]['start']);
         
         if(count($ranges) == 1) { // Single range
             $range = array_shift($ranges);
