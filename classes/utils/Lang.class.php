@@ -386,17 +386,13 @@ class Lang {
                 
                 $parts = preg_split('`\n\s*\n`', $translation, 2);
                 
-                $mail = new StdClass;
-                $mail->subject = null;
-                $mail->plain = null;
-                $mail->html = null;
-                
                 // Do we have headings
+                $subject = '{cfg:site_name}';
                 if(count($parts) > 1) {
                     foreach(explode('\n', $parts[0]) as $line) {
                         if(preg_match('`^\s*subject\s*:\s*(.*)$`i', $line, $m)) {
                             array_shift($parts);
-                            $mail->subject = $m[1];
+                            $subject = $m[1];
                         }
                     }
                 }
@@ -423,29 +419,29 @@ class Lang {
                 }
                 
                 $misc = trim(implode("\n", $misc));
-                $mail->plain = trim(implode("\n", $plain));
-                $mail->html = trim(implode("\n", $html));
+                $plain = trim(implode("\n", $plain));
+                $html = trim(implode("\n", $html));
                 
                 // Handle defaults
                 if($misc) {
-                    if($mail->html && !$mail->plain) $mail->plain = $misc;
-                    if($mail->plain && !$mail->html) $mail->html = $misc;
+                    if($html && !$plain) $plain = $misc;
+                    if($plain && !$html) $html = $misc;
                     
-                    if(!$mail->html && !$mail->plain) {
+                    if(!$html && !$plain) {
                         if(preg_match('`(</(a|p|table|td|tr)>|<br\s*/?>)`', $misc)) {
-                            $mail->html = $misc;
+                            $html = $misc;
                         }else{
-                            $mail->plain = $misc;
+                            $plain = $misc;
                         }
                     }
                 }
                 
                 // Convert to Lang instances
-                $mail->subject = new self($mail->subject);
-                $mail->plain = new self($mail->plain);
-                $mail->html = new self($mail->html);
-                
-                return $mail;
+                return new self(array(
+                    'subject' => $subject,
+                    'plain' => $plain,
+                    'html' => $html
+                ));
             }
         }
         
@@ -475,7 +471,15 @@ class Lang {
      * @param string $translation
      */
     private function __construct($translation, $allow_replace = true) {
-        $this->translation = $translation;
+        if(is_string($translation)) {
+            $this->translation = $translation;
+        } else {
+            $this->translation = array();
+            foreach((array)$translation as $k => $v) {
+                $this->translation[$k] = is_string($v) ? new self($v, $allow_replace) : $v;
+            }
+        }
+        
         $this->allow_replace = $allow_replace;
     }
     
@@ -495,6 +499,14 @@ class Lang {
         if(!$this->allow_replace) return $this;
         
         $args = func_get_args();
+        
+        if(!is_string($this->translation)) {
+            $t = array();
+            foreach($this->translation as $k => $v)
+                $t[$k] = call_user_func_array(array($v, 'replace'), $args);
+            
+            return new self($t);
+        }
         
         $placeholders = array();
         while($arg = array_shift($args)) {
@@ -624,10 +636,18 @@ class Lang {
     }
     
     /**
+     * Getter
+     */
+    public function __get($entry) {
+        $exists = is_array($this->translation) && array_key_exists($entry, $this->translation);
+        return $exists ? $this->translation[$entry] : new self('', false);
+    }
+    
+    /**
      * Convert to string
      */
     public function out() {
-        return $this->translation;
+        return is_string($this->translation) ? $this->translation : '';
     }
     
     /**
