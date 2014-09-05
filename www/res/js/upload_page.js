@@ -57,12 +57,12 @@ filesender.ui.files = {
                     filesender.ui.nodes.files.clear.button('disable');
             }).appendTo(node);
             
-            var added = filesender.ui.transfer.addFile(files[i], function(error, data) {
+            var added = filesender.ui.transfer.addFile(files[i], function(error) {
                 node.addClass('invalid');
-                node.addClass(error);
+                node.addClass(error.message);
                 $('<span class="invalid fa fa-exclamation-circle fa-lg" />').prependTo(node.find('.info'))
                 node.attr({
-                    title: lang.tr('invalid_file').replace({reason: lang.tr(error)})
+                    title: lang.tr('invalid_file').replace({reason: lang.tr(error.message)})
                 });
                 node.find('.info').removeAttr('title');
             });
