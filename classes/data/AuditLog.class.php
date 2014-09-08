@@ -73,6 +73,11 @@ class AuditLog extends DBObject {
     );
     
     /**
+     * Set selectors
+     */
+    const FROM_TARGET = 'target_type = :type AND target_id = :id ORDER BY created ASC';
+    
+    /**
      * Properties
      */
     protected $id = null;
@@ -168,37 +173,55 @@ class AuditLog extends DBObject {
         throw new PropertyAccessException($this, $property);
     }
     
+    /**
+     * Get logs related to a target
+     * 
+     * @param Transfer $transfer
+     * 
+     * @return array of AuditLog
+     */
+    public static function fromTarget(DBObject $target) {
+        return self::all(self::FROM_TARGET, array('type' => $target->getClassName(), 'id' => $target->id));
+    }
     
-    
-    public static function clean(Transfer $transfer){
+    /**
+     * Get logs related to a transfer
+     * 
+     * @param Transfer $transfer
+     * 
+     * @return array of AuditLog
+     */
+    public static function fromTransfer(Transfer $transfer) {
+        if(
+            !is_object($transfer)
+            || !$transfer->id
+        ) throw new TransferNotFoundException($transfer->id);
         
-        if ($transfer->id > 0){
-            // Getting all audit logs
-            $auditLogs = self::all(array('where' => 'target_type = :targettype AND target_id = :targetid'),array('targettype'=>$transfer->getClassName(), 'targetid' => $transfer->id));
-            if (sizeof($transfer) > 0 ){
-                foreach($auditLogs as $log){
-                    $log->delete();
-                }
-            }else{
-                // No auditlogs found
-            }
-        }else{
-            throw new TransferNotFoundException($transfer->id);
-        }
-        // Check all files status
-        // Check lifetime
+        // Get and delete all audit logs related to the transfer
+        $logs = array_values(self::all(self::FROM_TARGET, array('type' => $transfer->getClassName(), 'id' => $transfer->id)));
+        
+        foreach($transfer->files as $file)
+            foreach(self::all(self::FROM_TARGET, array('type' => $file->getClassName(), 'id' => $file->id)) as $log)
+                $logs[] = $log;
+        
+        foreach($transfer->recipients as $recipient)
+            foreach(self::all(self::FROM_TARGET, array('type' => $recipient->getClassName(), 'id' => $recipient->id)) as $log)
+                $logs[] = $log;
+        
+        usort($logs, function($a, $b) {
+            return $a->created - $b->created;
+        });
+        
+        return $logs;
     }
     
-    
-    public static function fromTarget(DBObject $target){
-        $auditLogs = self::all(array('where' => 'target_type = :targettype AND target_id = :targetid'),array('targettype'=>$target->getClassName(), 'targetid' => $target->id));
-        if (sizeof($auditLogs) != 1){
-            return null;
-        }else{
-            reset($auditLogs);
-            return current($auditLogs);
-        }
-            
+    /**
+     * Remove entries related to a transfer
+     * 
+     * @param Transfer $transfer
+     */
+    public static function clean(Transfer $transfer) {
+        foreach(self::fromTransfer($transfer) as $log)
+            $log->delete();
     }
-    
 }
