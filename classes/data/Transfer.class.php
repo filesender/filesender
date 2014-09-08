@@ -190,6 +190,8 @@ class Transfer extends DBObject {
      * Delete the transfer related objects
      */
     public function beforeDelete() {
+        AuditLog::clean($this);
+        
         foreach($this->files as $file) $this->removeFile($file);
         
         foreach($this->recipients as $recipient) $this->removeRecipient($recipient);
@@ -199,74 +201,43 @@ class Transfer extends DBObject {
      * Close the transfer
      */
     public function close($manualy = true) {
-        // Closing the transfer
+        if($this->status != TransferStatuses::AVAILABLE) { // Simple deletion if the transfer was not available yet (failed, cancelled ...)
+            $this->delete();
+            return;
+        }
+        
+        // Close the transfer
         $this->status = TransferStatuses::CLOSED;
         $this->save();
         
-        if ($manualy){
-            // Logging transfer closure
-            $lEvent = LogEventTypes::TRANSFER_CLOSED;
-        }else{
-            // Logging transder expiration
-            $lEvent = LogEventTypes::TRANSFER_EXPIRED;
-        }
-        Logger::logActivity($lEvent, $this);
+        // Log action
+        Logger::logActivity($manualy ? LogEventTypes::TRANSFER_CLOSED : LogEventTypes::TRANSFER_EXPIRED, $this);
 
+        // Send notification to all recipients 
+        $ctn = Lang::translateEmail($manualy ? 'transfer_deleted' : 'transfer_expired')->r($this);
         
-        // Sending notification to all recipients 
-        $recipients = $this->recipients;
-        if (sizeof($recipients) > 0){
-            if (($noReply = Config::get('email_reply_to')) != null){
-                if (($noReplyName = Config::get('email_reply_to_name')) == null){
-                    $noReplyName = $noReply;
-                }
-
-                $c = Lang::translateEmail('expiredfiles');
-
-                if ($manualy){
-                    $c->subject = str_ireplace("{TITLE}", Lang::tr('_TRANSFER_DELETION_TITLE'), $c->subject);
-                }else{
-                    $c->subject = str_ireplace("{TITLE}", Lang::tr('_TRANSFER_DELETION_TITLE_CRON'), $c->subject);
-                }
-
-                $useHtml = Config::get('use_html_mail');
-
-                if ($useHtml){
-                    $mailContent = $c->html;
-                }else{
-                    $mailContent = $c->plain;
-                }
-
-                $search = array("{transferid}","{transfername}","{transfermessage}");
-                $placeholders = array($this->id,$this->subject,$this->message);
-
-                $mailContent = str_ireplace($search, $placeholders, $mailContent);
-
-                $mail = new Mail($c->subject, $noReply,$noReplyName, true);
-
-                foreach ($recipients as $key => $recipient){
-                    $mail->to($recipient->email);
-                }
-
-                $mail->write($mailContent);
-
-                $mail->send();
-
+        foreach($this->recipients as $recipient) {
+            $mail = new ApplicationMail($ctn->r($recipient));
+            $mail->send();
+        }
+        
+        // Send notification to owner
+        $ctn = Lang::translateEmail($manualy ? 'transfer_deleted_receipt' : 'transfer_expired_receipt')->r($this);
+        $mail = new ApplicationMail($ctn);
+        $mail->send();
+        
+        // Generating the repport for the transfer owner if requested
+        if($this->hasOption(TransferOptions::EMAIL_REPORT_ON_CLOSING)) {
+            $format = Config::get('report_format');
+            if(ReportTypes::isValidName($type)) {
+                $report = new Report($type, $this);
+                $report->generateReport(true); // Send by email
             }
         }
-        // Generating the repport for the transfer owner
-        $confReport = Config::get('REPORT_ON_TRANSFER_CLOSING');
-        if (ReportTypes::isValidName($confReport)){
-            $report = new Report(ReportTypes::STANDARD, $this);
-            $results = $report->generateReport($confReport);
-        }
         
-        // Clean auditlog
-        AuditLog::clean($this);
-        
-        // Delete transfer
-        $this->delete();
-        
+        // Delete transfer if needed
+        if(!Config::get('auditlog_lifetime'))
+            $this->delete();
     }
     
     /**
@@ -278,6 +249,63 @@ class Transfer extends DBObject {
      */
     public function isOwner($user) {
         return $this->owner->is($user);
+    }
+    
+    /**
+     * Get all options
+     * 
+     * @return array
+     */
+    public static function allOptions() {
+        $cfg = Config::get('transfer_options');
+        if(!is_array($cfg)) $cfg = array();
+        
+        $options = array();
+        foreach(TransferOptions::all() as $d => $name) {
+            $option = array(
+                'available' => false,
+                'advanced' => false,
+                'default' => false
+            );
+            
+            if(array_key_exists($name, $cfg))
+                foreach(array('available', 'advanced', 'default') as $p)
+                    if(array_key_exists($p, $cfg[$name]))
+                        $option[$p] = $cfg[$name][$p];
+            
+            $options[$name] = $option;
+        }
+        
+        return $options;
+    }
+    
+    /**
+     * Get user available options
+     * 
+     * @param bool $advanced if not null filter by advanced status as well
+     * 
+     * @return array
+     */
+    public static function availableOptions($advanced = null) {
+        return array_filter(self::allOptions(), function($o) use($advanced) {
+            if(!$o['available']) return false;
+            
+            if(!is_null($advanced))
+                return $o['advanced'] == $advanced;
+            
+            return true;
+        });
+    }
+    
+    /**
+     * Check if transfer has option
+     * 
+     * @param string $option
+     * 
+     * @return bool
+     */
+    public function hasOption($option) {
+        return is_array($this->options) && in_array($option, $this->options);
     }
     
     /**
@@ -438,42 +466,29 @@ class Transfer extends DBObject {
      * This function does stuffs when a transfer become available
      */
     public function makeAvailable(){
+        if(!count($this->files))
+            throw new TransferNoFilesException();
+        
+        if(!count($this->recipients))
+            throw new TransferNoRecipientsException();
+        
         $this->status = TransferStatuses::AVAILABLE;
         $this->save();
         
-        $recipients = $this->recipients;
-        if (sizeof($recipients) > 0){
-            Auth::user()->saveFrequentRecipients($recipients);
+        Auth::user()->saveFrequentRecipients($this->recipients);
+        
+        $files = array();
+        foreach($this->files as $file) {
+            $files[] = $file->name.' ('.Utilities::formatBytes($file->size).')';
         }
-        // Sends mails
-        if (($noReply = Config::get('email_reply_to')) != null){
-            if (($noReplyName = Config::get('email_reply_to_name')) == null){
-                $noReplyName = $noReply;
-            }
-
-            $c = Lang::translateEmail('transfer_available');
-            $fileinfo = Template::process('!file_uploaded_html', array('data' => $this));
-            if(preg_match('`\{fileinfo\}`', $c->html)) {
-                $c->html = str_ireplace("{fileinfo}", $fileinfo, $c->html);
-            }
-            
-            if(preg_match('`\{fileinfo\}`', $c->html)) {
-                $c->html = str_ireplace("{fileinfo}", $fileinfo, $c->html);
-            }
-            
-            if ($this->subject != ''){
-                $c->subject = $this->subject;
-            }
-            
-            $mail = new Mail($c->subject, $noReply, $noReplyName, true);
-            $message = $c->html;
-
-            foreach ($recipients as $key => $recipient) {
-                $mail->to($recipient->email);
-            }
-
-            $mail->write($message);
-
+        
+        $ctn = Lang::translateEmail('transfer_available')->r($this, array(
+            'text_file_list' => (count($files) > 1) ? '  - '.implode("\n  - ", $files) : $files[0],
+            'html_file_list' => (count($files) > 1) ? '<ul><li>'.implode('</li><li>', $files).'</li></ul>' : $files[0],
+        ));
+        
+        foreach($this->recipients as $recipient) {
+            $mail = new ApplicationMail($ctn->r($recipient));
             $mail->send();
         }
     }

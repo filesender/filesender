@@ -84,12 +84,8 @@
                 
                 <td class="box">
                     <?php
-                        $displayoption = function($name, $mode) {
-                            $disp = Config::get($name.'_display');
-                            if($disp != $mode) return;
-                            
-                            $checked = '';
-                            if(Config::get($name.'_default')) $checked = 'checked="checked"';
+                        $displayoption = function($name, $cfg) {
+                            $checked = $cfg['default'] ? 'checked="checked"' : '';
                             
                             echo '<div class="fieldcontainer">';
                             echo '  <label for="'.$name.'">'.Lang::tr($name).'</label>';
@@ -105,26 +101,16 @@
                             <input name="expires" type="text" title="{tr:dp_dateformat}" value="<?php echo Utilities::formatDate(Transfer::getMaxExpire()) ?>"/>
                         </div>
                         
-                        <?php $displayoption(UploadOptions::EMAIL_ME_COPIES_AVAILABLE, 'always') ?>
-                        <?php $displayoption(UploadOptions::UPLOAD_COMPLETE_EMAIL_DISPLAY,'always') ?>
-                        <?php $displayoption(UploadOptions::INFORM_DOWNLOAD_EMAIL_DISPLAY, 'always') ?>
-                        <?php $displayoption(UploadOptions::EMAIL_ME_DAILY_STATISTICS_DISPLAY,'always') ?>
-                        <?php $displayoption(UploadOptions::DOWNLOAD_CONFIRMATION_ENABLED_DISPLAY, 'always') ?>
-                        <?php $displayoption(UploadOptions::ADD_ME_TO_RECIPIENTS_DISPLAY,'always') ?>
+                        <?php foreach(Transfer::availableOptions(false) as $name => $cfg) $displayoption($name, $cfg) ?>
                     </div>
                     
-                    <?php if (true /* TODO $functions->advancedSettingsEnabled() */) { ?>
+                    <?php if(count(Transfer::availableOptions(true)) || (Config::get('terasender_enabled') && Config::get('terasender_advanced'))) { ?>
                     <div class="fieldcontainer">
                         <a class="toggle_advanced_options" href="#">{tr:advanced_settings}</a>
                     </div>
                     
                     <div class="advanced_options">
-                        <?php $displayoption(UploadOptions::EMAIL_ME_COPIES_AVAILABLE, 'hidden') ?>
-                        <?php $displayoption(UploadOptions::UPLOAD_COMPLETE_EMAIL_DISPLAY, 'hidden') ?>
-                        <?php $displayoption(UploadOptions::INFORM_DOWNLOAD_EMAIL_DISPLAY, 'hidden') ?>
-                        <?php $displayoption(UploadOptions::EMAIL_ME_DAILY_STATISTICS_DISPLAY,'hidden') ?>
-                        <?php $displayoption(UploadOptions::DOWNLOAD_CONFIRMATION_ENABLED_DISPLAY, 'hidden') ?>
-                        <?php $displayoption(UploadOptions::ADD_ME_TO_RECIPIENTS_DISPLAY, 'hidden') ?>
+                        <?php foreach(Transfer::availableOptions(true) as $name => $cfg) $displayoption($name, $cfg) ?>
                         
                         <?php if (Config::get('terasender_enabled') && Config::get('terasender_advanced')) { ?>
                         <div class="fieldcontainer">

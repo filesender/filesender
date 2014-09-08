@@ -160,6 +160,12 @@ class RestEndpointTransfer extends RestEndpoint {
             // New transfer
             $data = $this->request->input;
             
+            if(!count($data->files))
+                throw new TransferNoFilesException();
+            
+            if(!count($data->recipients))
+                throw new TransferNoFilesException();
+            
             $transfer = Transfer::create($data->expires, $data->from);
             
             if($data->subject) $transfer->subject = $data->subject;

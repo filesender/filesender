@@ -35,11 +35,12 @@
  * Class containing upload options
  */
 
-class UploadOptions extends Enum {
+class TransferOptions extends Enum {
     const EMAIL_ME_COPIES                           = 'email_me_copies';
     const EMAIL_UPLOAD_COMPLETE                     = 'email_upload_complete';
     const EMAIL_DOWNLOAD_COMPLETE                   = 'email_download_complete';
     const EMAIL_DAILY_STATISTICS                    = 'email_daily_statistics';
+    const EMAIL_REPORT_ON_CLOSING                   = 'email_report_on_closing';
     const ENABLE_RECIPIENT_EMAIL_DOWNLOAD_COMPLETE  = 'enable_recipient_email_download_complete';
     const ADD_ME_TO_RECIPIENTS                      = 'add_me_to_recipients';
 }
