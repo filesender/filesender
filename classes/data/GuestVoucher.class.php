@@ -229,6 +229,38 @@ class GuestVoucher extends DBObject {
     }
     
     /**
+     * Save newly created voucher
+     */
+    public function makeAvailable() {
+        $this->save();
+        
+        Logger::logActivity(LogEventTypes::GUESTVOUCHER_CREATED, $this);
+        
+        $this->notify(true);
+    }
+    
+    /**
+     * Notify creation to the recipient
+     * 
+     * @param bool $just_created wether the notification is a reminder or the first one after creation
+     */
+    public function notify($just_created = false) {
+        // Sending notification to recipient
+        $c = Lang::translateEmail($just_created ? 'voucher_issued' : 'voucher_reminder')->replace($this);
+        $mail = new ApplicationMail($c);
+        $mail->to($this->email);
+        $mail->send();
+        
+        if($just_created) {
+            // Sending receipt to owner
+            $c = Lang::translateEmail('voucher_issued_receipt')->replace($this);
+            $mail = new ApplicationMail($c);
+            $mail->to($this->user_email);
+            $mail->send();
+        }
+    }
+    
+    /**
      * Close the voucher
      * 
      * @param bool $manually wether the voucher was closed on request (if not it means it expired)
@@ -244,22 +276,10 @@ class GuestVoucher extends DBObject {
         );
         
         // Sending notification to recipient
-        if($replyto = Config::get('email_reply_to')) {
-            $replyto_name = Config::get('email_reply_to_name');
-            
-            $c = Lang::translateEmail($manualy ? 'voucher_cancelled' : 'voucher_expired')->replace($this);
-            
-            $use_html = Config::get('email_use_html');
-            
-            $mail = new Mail($c->subject, $replyto, $replyto_name, $use_html);
-            $mail->to($this->email);
-            
-            $mail->writePlain($c->plain);
-            
-            if($use_html) $mail->writeHTML($c->html);
-            
-            $mail->send();
-        }
+        $c = Lang::translateEmail($manualy ? 'voucher_cancelled' : 'voucher_expired')->replace($this);
+        $mail = new ApplicationMail($c);
+        $mail->to($this->email);
+        $mail->send();
     }
     
     /**
