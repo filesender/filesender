@@ -1,44 +1,60 @@
-subject: {siteName}: Voucher received
+subject: {cfg:site_name}: Voucher received
 
 {alternative:plain}
 
 Dear Sir or Madam,
 
-Please find below a voucher which grants access to {siteName}. You can use this voucher to upload one set of files and make it available for download to a group of people.
+Please find below a voucher which grants access to {cfg:site_name}. You can use this voucher to upload one set of files and make it available for download to a group of people.
 
-Issuer: {filefrom}
-Voucher link: {serverURL}?vid={filevoucheruid}
+Issuer: {guestvoucher.user_email}
+Voucher link: {cfg:site_url}?vid={guestvoucher.token}
 
-The voucher is available until {fileexpirydate} after which time it will be automatically deleted.
-{filemessage_start}
-Personal message from {filefrom}: {filemessage}
-{filemessage_end}
+The voucher is available until {date:guestvoucher.expires} after which time it will be automatically deleted.
+
+{if:guestvoucher.message}Personal message from {guestvoucher.user_email}: {guestvoucher.message}{endif}
+
 Best regards,
-{siteName}
+{cfg:site_name}
 
 {alternative:html}
 
-<p>Dear Sir or Madam,</p>
-<p>Please find below a voucher which grants access to <a href="{serverURL}">{siteName}</a>. You can use this voucher to upload one set of files and make it available for download to a group of people.</p>
-<table width="960" cellspacing="0" cellpadding="3" border="1" bordercolor="#bbbbbb" rules="rows">
+<p>
+    Dear Sir or Madam,
+</p>
+
+<p>
+    Please find below a voucher which grants access to <a href="{cfg:site_url}">{cfg:site_name}</a>. You can use this voucher to upload one set of files and make it available for download to a group of people.
+</p>
+
+<table rules="rows">
+    <thead>
+        <tr>
+            <th colspan="2">Voucher details</th>
+        </tr>
+    </thead>
     <tbody>
-    <tr bgcolor="#cccccc">
-        <td colspan="2" height="30"><strong>Voucher details</strong></td>
-    </tr>
-    <tr bgcolor="#e5e5e5" valign="top">
-        <td width="100"><strong>Issuer</strong></td>
-        <td><a href="mailto:{filefrom}">{filefrom}</a></td>
-    </tr>
-    <tr valign="top">
-        <td width="100"><strong>Voucher link</strong></td>
-        <td><a href="{serverURL}?vid={filevoucheruid}">{serverURL}?vid={filevoucheruid}</a></td>
-    </tr>
-    <tr bgcolor="#e5e5e5" valign="top">
-        <td width="100"><strong>Valid until</strong></td>
-        <td>{fileexpirydate}</td>
-    </tr>
+        <tr class="odd">
+            <td>Issuer</td>
+            <td><a href="mailto:{guestvoucher.user_email}">{guestvoucher.user_email}</a></td>
+        </tr>
+        <tr>
+            <td>Voucher link</td>
+            <td><a href="{cfg:site_url}?vid={guestvoucher.token}">{cfg:site_url}?vid={guestvoucher.token}</a></td>
+        </tr>
+        <tr class="odd">
+            <td>Valid until</td>
+            <td>{date:guestvoucher.expires}</td>
+        </tr>
     </tbody>
 </table>
-{filemessage_start}<p>Personal message from {filefrom}: {filemessage}</p>{filemessage_end}
-<p>Best regards,<br />
-{siteName}</p>
+
+{if:guestvoucher.message}
+<p>
+    Personal message from {guestvoucher.user_email}: {guestvoucher.message}
+</p>
+{endif}
+
+<p>
+    Best regards,<br />
+    {cfg:site_name}
+</p>
