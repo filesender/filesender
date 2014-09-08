@@ -97,9 +97,10 @@ class Zipper {
         $offset = 0;
 
         foreach ($this->files as $k => $data) {
+            $file = $data['data'];
+            
             Logger::logActivity(LogEventTypes::DOWNLOAD_START, $file);
             
-            $file = $data['data'];
             $transfer = $file->transfer;
 
             // Set up metadata and send the local header.
