@@ -32,7 +32,7 @@
 
 
 /**
- * Class containing transfer statuses
+ * Class containing upload options
  */
 
 class UploadOptions extends Enum {
