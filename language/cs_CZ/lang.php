@@ -176,7 +176,7 @@ $lang["_CONFIRM_DELETE_VOUCHER"] = "Jste si jist, že chcete smazat tuto pozván
 $lang["_CONFIRM_RESEND_EMAIL"] = "Jste si jisti, že chcete znovu odeslat tento email?";
 
 // standard date display format - vouchers, sent files
-$lang['datedisplayformat'] = "d. m. Y"; // Format for displaying date/time, use PHP date() format string syntax 
+$lang['date_format'] = "d. m. Y"; // Format for displaying date/time, use PHP date() format string syntax 
 
 // datepicker localization
 $lang["_DP_closeText"] = 'Hotovo'; // Done

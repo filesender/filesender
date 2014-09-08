@@ -176,7 +176,7 @@ $lang["_CONFIRM_DELETE_VOUCHER"] = "Ste prepričani, da želite izbrisati ta vav
 $lang["_CONFIRM_RESEND_EMAIL"] = "Ali ste prepričani, da želite ponovno poslati ta email?";
 
 // standard date display format
-$lang['datedisplayformat'] = "d/m/Y"; // Format for displaying date/time, use PHP date() format string syntax 
+$lang['date_format'] = "d/m/Y"; // Format for displaying date/time, use PHP date() format string syntax 
 
 // datepicker localization
 $lang["_DP_closeText"] = 'Dokončano'; // Done

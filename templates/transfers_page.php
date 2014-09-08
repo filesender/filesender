@@ -81,7 +81,7 @@ if(false && sizeof($transactions) > 0) {
         <td class="dr2 HardBreak" style="text-align: center"><?php echo Utilities::formatBytes($totalSize) ?></td>
         <td class="dr2 HardBreak" style="text-align: center"><?php echo $totalNumDownloads ?></td>
         <td class="dr2" style="text-align: center">
-          <?php echo date(Lang::tr('datedisplayformat'),strtotime($transactionContents[0]['fileexpirydate'])) ?>
+          <?php echo date(Lang::tr('date_format'),strtotime($transactionContents[0]['fileexpirydate'])) ?>
         </td>
         <td class="dr2" style="text-align: center"><?php echo utf8ToHtml($transactionContents[0]['filetrackingcode'], true) ?></td>
         <td class="dr8">
@@ -99,7 +99,7 @@ if(false && sizeof($transactions) > 0) {
             
             <tr class="rowdivider">
               <td class="dr4 sdheading tblmcw3 "><strong><?php echo Lang::tr('_CREATED') ?></strong></td>
-              <td class="dr6 HardBreak"><?php echo date(Lang::tr('datedisplayformat'), strtotime($transactionContents[0]['filecreateddate'])) ?></td>
+              <td class="dr6 HardBreak"><?php echo date(Lang::tr('date_format'), strtotime($transactionContents[0]['filecreateddate'])) ?></td>
             </tr>
             
             <tr>
@@ -303,7 +303,7 @@ if(false && sizeof($transactions) > 0) {
       </tr>
       <tr>
         <td class="formfieldheading mandatory" id="files_expiry">
-          <?php echo Lang::tr('_EXPIRY_DATE'); ?>: <input type="hidden" id="fileexpirydate" name="fileexpirydate" value="<?php echo date(Lang::tr('datedisplayformat'), strtotime("+".Config::get('default_daysvalid')." day"));?>" />
+          <?php echo Lang::tr('_EXPIRY_DATE'); ?>: <input type="hidden" id="fileexpirydate" name="fileexpirydate" value="<?php echo date(Lang::tr('date_format'), strtotime("+".Config::get('default_daysvalid')." day"));?>" />
         </td>
         <td>
           <input id="datepicker" name="datepicker" onchange="validate_expiry()" title="<?php echo Lang::tr('_DP_dateFormat'); ?>" />

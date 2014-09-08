@@ -98,7 +98,10 @@ class Utilities
      */
     public static function formatDate($timestamp = null)
     {
-        return date(Config::get('datedisplayformat'), is_null($timestamp) ? time() : $timestamp);
+        $dateFormat = Lang::tr('date_format');
+        if ($dateFormat == '{date_format}')
+            $dateFormat = 'Y-m-d';
+        return date($dateFormat, is_null($timestamp) ? time() : $timestamp);
     }
     
     /**

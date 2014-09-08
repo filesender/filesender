@@ -176,7 +176,7 @@ $lang["_CONFIRM_DELETE_VOUCHER"] = "Biztosan törölni akarja a meghívót?";
 $lang["_CONFIRM_RESEND_EMAIL"] = "Biztosan újraküldjük az emailt?";
 
 // standard date display format
-$lang['datedisplayformat'] = "Y-m-d"; // Format for displaying date/time, use PHP date() format string syntax 
+$lang['date_format'] = "Y-m-d"; // Format for displaying date/time, use PHP date() format string syntax 
 
 // datepicker localization
 $lang["_DP_closeText"] = 'Kész'; // Done

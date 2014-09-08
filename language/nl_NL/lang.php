@@ -177,7 +177,7 @@ $lang["_CONFIRM_DELETE_VOUCHER"] = "Wilt u deze uitnodiging echt intrekken?";
 $lang["_CONFIRM_RESEND_EMAIL"] = "Wilt u deze e-mail echt opnieuw versturen?";
 
 // standard date display format
-$lang['datedisplayformat'] = "d-m-Y"; // Format for displaying date/time, use PHP date() format string syntax 
+$lang['date_format'] = "d-m-Y"; // Format for displaying date/time, use PHP date() format string syntax 
 
 // datepicker localization
 $lang["_DP_closeText"] = 'Sluiten'; // Done

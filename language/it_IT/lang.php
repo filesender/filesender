@@ -176,7 +176,7 @@ $lang["_CONFIRM_DELETE_VOUCHER"] = "Sei sicura/o di voler eliminare questo vouch
 $lang["_CONFIRM_RESEND_EMAIL"] = "Sei sicuro di voler reinviare questa email?";
 
 // standard date display format
-$lang['datedisplayformat'] = "d/m/Y"; // Format for displaying date/time, use PHP date() format string syntax 
+$lang['date_format'] = "d/m/Y"; // Format for displaying date/time, use PHP date() format string syntax 
 
 // datepicker localization
 $lang["_DP_closeText"] = 'Fatto'; // Done

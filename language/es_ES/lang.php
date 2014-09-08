@@ -183,7 +183,7 @@ $lang["_CONFIRM_DELETE_VOUCHER"] = "&iquest;Est&aacute; seguro de que quiere eli
 $lang["_CONFIRM_RESEND_EMAIL"] = "&iquest;Est&aacute; seguro de que quiere volver a enviar este correo?";
 
 // standard date display format
-$lang['datedisplayformat'] = "d/m/Y"; // Format for displaying date/time, use PHP date() format string syntax 
+$lang['date_format'] = "d/m/Y"; // Format for displaying date/time, use PHP date() format string syntax 
 
 // datepicker localization
 $lang["_DP_closeText"] = 'Hecho'; // Done
