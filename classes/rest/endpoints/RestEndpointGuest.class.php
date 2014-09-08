@@ -142,7 +142,7 @@ class RestEndpointGuest extends RestEndpoint {
             //}
         //}
         
-        $voucher->save(); // Mandatory to add recipients and files
+        $voucher->makeAvailable(); // Saves
         
         return array(
             'path' => '/guest/'.$voucher->id,
