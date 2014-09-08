@@ -169,7 +169,7 @@ $lang["_CONFIRM_DELETE_FILE"] = "Jeste li sigurni da želite obrisati ovu datote
 $lang["_CONFIRM_DELETE_VOUCHER"] = "Jeste li sigurni da želite obrisati ovaj kupon?";
 
 // standard date display format
-$lang['datedisplayformat'] = "d.m.Y"; // Format for displaying date/time, use PHP date() format string syntax
+$lang['date_format'] = "d.m.Y"; // Format for displaying date/time, use PHP date() format string syntax
 
 // datepicker localization
 $lang["_DP_closeText"] = 'U redu'; // Done

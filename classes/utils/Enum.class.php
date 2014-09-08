@@ -34,4 +34,8 @@ abstract class Enum {
         $values = array_values(self::getConstants());
         return in_array($value, $values, $strict = true);
     }
+    
+    public static function all(){
+        return self::getConstants();
+    }
 }

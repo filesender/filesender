@@ -244,7 +244,7 @@ $lang["_CONFIRM_DELETE_RECIPIENT"] = "Are you sure you want to delete this recip
 $lang["_CONFIRM_DELETE_TRANSACTION"] = "Are you sure you want to delete this transaction?";
 
 // standard date display format
-$lang['datedisplayformat'] = "d/m/Y"; // Format for displaying date/time, use PHP date() format string syntax 
+$lang['date_format'] = "d/m/Y"; // Format for displaying date/time, use PHP date() format string syntax 
 
 // datepicker localization
 $lang['_DP_closeText'] = 'Done'; // Done

@@ -68,8 +68,7 @@ class AuthVoucher {
                 $vid = $_REQUEST['vid'];
                 
                 if(
-                    preg_match(Config::get('voucherRegEx'), $vid)
-                    && strlen($vid) == Config::get('voucherUIDLength')
+                        Utilities::isValidUID($vid)
                 ) {
                     try {
                         self::$guest_voucher = GuestVoucher::fromToken($vid);

@@ -175,7 +175,7 @@ $lang["_CONFIRM_DELETE_VOUCHER"] = "Sind Sie sicher, dass Sie diesen Voucher lö
 $lang["_CONFIRM_RESEND_EMAIL"] = "Sind Sie sicher, dass Sie diese E-mail nochmals senden wollen?";
 
 // standard date display format
-$lang['datedisplayformat'] = "d.m.Y"; // Format for displaying date/time, use PHP date() format string syntax
+$lang['date_format'] = "d.m.Y"; // Format for displaying date/time, use PHP date() format string syntax
 
 // datepicker localization
 $lang["_DP_closeText"] = 'OK'; // Done

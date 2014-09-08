@@ -174,7 +174,7 @@ $lang["_CONFIRM_DELETE_VOUCHER"] = "Etes-vous sûr de vouloir supprimer ce ticke
 $lang["_CONFIRM_RESEND_EMAIL"] = "Etes-vous sûr de vouloir ré-envoyer ce courrier ?";
 
 // standard date display format
-$lang['datedisplayformat'] = "d/m/Y"; // Format for displaying date/time, use PHP date() format string syntax 
+$lang['date_format'] = "d/m/Y"; // Format for displaying date/time, use PHP date() format string syntax 
 
 // datepicker localization
 $lang["_DP_closeText"] = 'OK'; // Done
