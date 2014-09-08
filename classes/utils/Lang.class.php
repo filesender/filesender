@@ -524,6 +524,10 @@ class Lang {
         $translation = $this->translation;
         
         $placeholder_resolver = function($path) use($placeholders) {
+            $path = explode(':', $path);
+            $cast = (count($path) > 1) ? array_shift($path) : null;
+            $path = array_shift($path);
+            
             $path = array_filter(array_map('trim', explode('.', $path)));
             $name = array_shift($path);
             
@@ -542,11 +546,16 @@ class Lang {
                 }
             }
             
+            if($cast) switch($cast) {
+                case 'date' : $value = Utilities::formatDate($value); break;
+                case 'size' : $value = Utilities::formatBytes($value); break;
+            }
+            
             return $value;
         };
         
         foreach($placeholders as $k => $v) {
-            $translation = preg_replace_callback('`\{('.$k.'(?:\.[a-z0-9_])*)\}`i', function($m) use($placeholder_resolver) {
+            $translation = preg_replace_callback('`\{(([^:]+:)?'.$k.'(\.[a-z0-9_]+)*)\}`i', function($m) use($placeholder_resolver) {
                 return $placeholder_resolver($m[1]);
             }, $translation);
         }
@@ -557,8 +566,10 @@ class Lang {
             $elsecontent = (count($m) > 3) ? $m[3] : '';
             
             $match = false;
+            $leftor = array();
             foreach(array_map('trim', array_filter(explode('|', $condition))) as $orpart) {
                 $smatch = true;
+                $leftand = array();
                 foreach(array_map('trim', array_filter(explode('&', $orpart))) as $andpart) {
                     $op = 'bool';
                     $ov = true;
@@ -577,7 +588,8 @@ class Lang {
                     
                     $value = $placeholder_resolver($andpart);
                     
-                    if(is_null($value)) {
+                    if(is_null($value)) { // Placeholder not available
+                        $leftand[] = ($neg ? '!' : '').$andpart.($op != 'bool' ? $op.$ov : '');
                         $smatch = false;
                         break;
                     }
@@ -611,11 +623,17 @@ class Lang {
                             $smatch &= (bool)$value;
                     }
                 }
-                if($smatch) {
+                
+                if(count($leftand)) {
+                    $leftor[] = implode('&', $leftand);
+                } else if($smatch) {
                     $match = true;
                     break;
                 }
             }
+            
+            if(!$match && count($leftor)) // Conditions remains, set it for next replace
+                return '{if:'.implode('|', $leftor).'}'.$ifcontent.($elsecontent ? '{else}'.$elsecontent : '').'{endif}';
             
             return $match ? $ifcontent : $elsecontent;
         }, $translation);
@@ -647,7 +665,13 @@ class Lang {
      * Convert to string
      */
     public function out() {
-        return is_string($this->translation) ? $this->translation : '';
+        if(!is_string($this->translation))
+            return '';
+        
+        // Get rid of unresolved ifs
+        $this->translation = preg_replace('`\{if:([^\}]+)\}(.+)\{endif\}`msiU', '', $this->translation);
+
+        return $this->translation;
     }
     
     /**
