@@ -82,7 +82,7 @@ try {
             
             $tmpFile = File::fromId($files_ids[0]);
             $transfer = $tmpFile->transfer;
-            if (in_array(UploadOptions::DOWNLOAD_CONFIRMATION_ENABLED_DISPLAY, $transfer->options)){
+            if($transfer->hasOption(TransferOptions::EMAIL_DOWNLOAD_COMPLETE)) {
                 //TODO: send mail to sender
             }
         }else{

@@ -66,3 +66,27 @@ class TransferBadStatusException extends DetailedException {
         );
     }
 }
+
+/**
+ * Missing recipients exception
+ */
+class TransferNoRecipientsException extends DetailedException {
+    /**
+     * Constructor
+     */
+    public function __construct() {
+        parent::__construct('transfer_no_recipients');
+    }
+}
+
+/**
+ * Missing files exception
+ */
+class TransferNoFilesException extends DetailedException {
+    /**
+     * Constructor
+     */
+    public function __construct() {
+        parent::__construct('transfer_no_files');
+    }
+}
