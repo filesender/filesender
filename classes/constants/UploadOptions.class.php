@@ -36,23 +36,11 @@
  */
 
 class UploadOptions extends Enum {
-    const EMAIL_ME_COPIES_AVAILABLE             = 'email_me_copies_available';
-    const EMAIL_ME_COPIES_DEFAULT               = 'email_me_copies_default';
-    const EMAIL_ME_COPIES_ADVANCED              = 'email_me_copies_advanced';
-    
-    const UPLOAD_COMPLETE_EMAIL_DISPLAY         = 'upload_complete_email_display';
-    const UPLOAD_COMPLETE_EMAIL_DEFAULT         = 'upload_complete_email_default';
-    
-    const INFORM_DOWNLOAD_EMAIL_DISPLAY         = 'inform_download_email_display';
-    const INFORM_DOWNLOAD_EMAIL_DEFAULT         = 'inform_download_email_default';
-    
-    const EMAIL_ME_DAILY_STATISTICS_DISPLAY     = 'email_me_daily_statistics_display';
-    const EMAIL_ME_DAILY_STATISTICS_DEFAULT     = 'email_me_daily_statistics_default';
-    
-    const DOWNLOAD_CONFIRMATION_ENABLED_DISPLAY = 'download_confirmation_enabled_display';
-    const DOWNLOAD_CONFIRMATION_ENABLED_DEFAULT = 'download_confirmation_enabled_default';
-    
-    const ADD_ME_TO_RECIPIENTS_DISPLAY          = 'add_me_to_recipients_display';
-    const ADD_ME_TO_RECIPIENTS_DEFAULT          = 'add_me_to_recipients_default';
+    const EMAIL_ME_COPIES                           = 'email_me_copies';
+    const EMAIL_UPLOAD_COMPLETE                     = 'email_upload_complete';
+    const EMAIL_DOWNLOAD_COMPLETE                   = 'email_download_complete';
+    const EMAIL_DAILY_STATISTICS                    = 'email_daily_statistics';
+    const ENABLE_RECIPIENT_EMAIL_DOWNLOAD_COMPLETE  = 'enable_recipient_email_download_complete';
+    const ADD_ME_TO_RECIPIENTS                      = 'add_me_to_recipients';
 }
 
