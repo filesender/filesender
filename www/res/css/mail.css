@@ -1,0 +1,27 @@
+table {
+    width: 960px;
+    border: 1px solid #bbb;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 3px;
+    vertical-align: top;
+}
+
+th:first-child, td:first-child {
+    width: 100px;
+}
+
+th {
+    background-color: #ccc;
+    height: 30px;
+}
+
+tr.odd td {
+    background-color: #e5e5e5;
+}
+
+td:first-child {
+    font-weight: bold;
+}
