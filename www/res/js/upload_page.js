@@ -104,12 +104,23 @@ filesender.ui.files = {
             uploaded += this.files[i].uploaded;
         }
         
-        var time = (new Date()).getTime() - this.time;
+        var currentTime = (new Date()).getTime();
+        if (this.pause_length > 0){
+            var time = currentTime - this.pause_length - this.time;
+        }else{
+            var time = currentTime - this.time;            
+        }
+        
         var speed = uploaded / (time / 1000);
         
+        if (filesender.config.upload_display_bits_per_sec){
+            speed *= 8;
+        }
+        
         filesender.ui.nodes.stats.uploaded.find('.value').text(filesender.ui.formatBytes(uploaded) + '/' + filesender.ui.formatBytes(size));
-        if(this.status != 'paused')
-            filesender.ui.nodes.stats.average_speed.find('.value').text(filesender.ui.formatBytes(speed) + lang.tr('per_second'));
+        if(this.status != 'paused'){
+            filesender.ui.nodes.stats.average_speed.find('.value').text(filesender.ui.formatSpeed(speed) + lang.tr('per_second'));
+        }
         
         var bar = filesender.ui.nodes.files.list.find('[data-name="' + file.name + '"][data-size="' + file.size + '"] .progressbar');
         bar.progressbar('value', Math.round(1000 * file.uploaded / file.size));
