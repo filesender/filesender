@@ -358,7 +358,7 @@ class Guest extends DBObject {
             if(!preg_match('`^[0-9]+$`', $value)) throw new BadExpireException($value);
             
             $value = (int)$value;
-            if($value <= time() || $value > self::getMaxExpire()) {
+            if($value < floor(time() / (24 * 3600)) || $value > self::getMaxExpire()) {
                 throw new BadExpireException($value);
             }
             $this->expires = (string)$value;
