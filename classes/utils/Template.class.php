@@ -83,8 +83,13 @@ class Template {
             include $path;
         };
         
+        $exception = null;
         ob_start();
-        $renderer($path, $vars);
+        try {
+            $renderer($path, $vars);
+        } catch(Exception $e) {
+            $exception = $e;
+        }
         $content = ob_get_clean();
         
         // Translation syntax
@@ -108,6 +113,8 @@ class Template {
         }, $content);
         
         if($addctx) $content = "\n".'<!-- template:'.$id.' start -->'."\n".$content."\n".'<!-- template:'.$id.' end -->'."\n";
+        
+        if($exception) throw $exception;
         
         return $content;
     }

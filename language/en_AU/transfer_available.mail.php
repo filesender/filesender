@@ -52,7 +52,7 @@ Best regards,
         </tr>
         <tr>
             <td>Download link</td>
-            <td><a href="{cfg:site_url}?s=download&token={recipient.token}">{cfg:site_url}?s=download&token={recipient.token}</a></td>
+            <td><a href="{cfg:site_url}?s=download&token={recipient.token}">{cfg:site_url}?s=download&amp;token={recipient.token}</a></td>
         </tr>
     </tbody>
 </table>
