@@ -283,3 +283,69 @@ $lang["_SITE_FOOTER"] = "";
 
 $lang["_TRANSFER_DELETION_TITLE"]        = "Deletion of your transfer";
 $lang["_TRANSFER_DELETION_TITLE_CRON"]   = "[CRON] Automaticaly deleted expired transfer";
+
+
+
+
+
+
+$lang['admin_page'] = 'Admin';
+$lang['archive_download'] = 'Download as archive';
+$lang['average_speed'] = 'Average speed';
+$lang['bytes_no_multiplier'] = 'b';
+$lang['bytes_with_multiplier'] = 'b';
+$lang['download_disclamer'] = 'Here are your files, you can download them one by one or, if there are more than one file, download them as a single archive in one go.';
+$lang['download_file'] = 'Download file';
+$lang['download_page'] = 'Download';
+$lang['email_daily_statistics'] = 'Send me daily statistics';
+$lang['email_download_complete'] = 'Notify me upon downloads';
+$lang['email_me_copies'] = 'Send me copies of all notifications';
+$lang['email_report_on_closing'] = 'Send me a report when expired';
+$lang['email_upload_complete'] = 'Notify me when upload is done';
+$lang['enable_recipient_email_download_complete'] = 'Allow recipients to receive download complete emails';
+$lang['expand_all'] = 'Expand all';
+$lang['expires'] = 'Expires';
+$lang['guests'] = 'Guests';
+$lang['guests_page'] = 'Guests';
+$lang['guests_transfers'] = 'Guests transfers';
+$lang['logoff'] = 'Log-off';
+$lang['mac_archive_message'] = 'If you are running OSX you\'ll find a fitting un-archiving software by following the link below.';
+$lang['no_transfers'] = 'No transfers';
+$lang['noscript'] = 'This application heavily relies on Javascript, you must enable it to be able to start.';
+$lang['options'] = 'Options';
+$lang['restart'] = 'Restart';
+$lang['see_all'] = 'See all';
+$lang['select_all_for_archive_download'] = 'Select all files to download them as an archive';
+$lang['select_for_archive_download'] = 'Select for archive download';
+$lang['show_details'] = 'Show details';
+$lang['stop'] = 'Stop';
+$lang['transfers_page'] = 'Transfers';
+$lang['unknown_page'] = 'Unknown page';
+$lang['upload_page'] = 'Upload';
+$lang['uploaded'] = 'Uploaded';
+$lang['with_identity'] = 'Sender email';
+
+$lang['encountered_exception'] = 'The application encountered an exception while processing your request';
+$lang['you_can_report_exception'] = 'You can report this exception';
+$lang['report_exception'] = 'click here';
+
+$lang['site_splashead'] = 'Filesender 2.0 demo';
+$lang['site_splastext'] = 'Keep in mind that this is a very limitted server, few cpus, few ram, little hdd ...';
+
+$lang['admin_page'] = 'Admin area';
+$lang['admin_statistics_section'] = 'Statistics';
+$lang['admin_transfers_section'] = 'Transfers';
+$lang['admin_guests_section'] = 'Guests';
+$lang['admin_config_section'] = 'Config';
+
+$lang['is_default'] = 'This is the default value';
+$lang['make_default'] = 'Go back to default value';
+$lang['save'] = 'Save';
+
+$lang['config_site_name_in_header'] = 'Put site name in application header';
+$lang['config_site_name'] = 'Site name';
+$lang['config_terasender_start_mode'] = 'Terasender start mode';
+
+$lang['archive_message'] = 'You can download selected files as an archive.';
+$lang['auditlog'] = 'Transfer audit';
+$lang['actions'] = 'Actions';
