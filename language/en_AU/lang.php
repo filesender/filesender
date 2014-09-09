@@ -350,3 +350,4 @@ $lang['config_terasender_start_mode'] = 'Terasender start mode';
 $lang['archive_message'] = 'You can download selected files as an archive.';
 $lang['auditlog'] = 'Transfer audit';
 $lang['actions'] = 'Actions';
+$lang['send_reminder'] = 'Send reminder';
