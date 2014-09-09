@@ -361,3 +361,7 @@ $lang['rest_bad_parameter'] = 'Bad parameter';
 $lang['speed_unit'] = 'o';
 $lang['size_unit'] = 'o';
 $lang['per_second'] = '/s';
+$lang['done'] = 'Done';
+$lang['error_dialog'] = 'Error';
+$lang['info_dialog'] = 'Information';
+$lang['success_dialog'] = 'Success';
