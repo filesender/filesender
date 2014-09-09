@@ -34,17 +34,17 @@ if (!defined('FILESENDER_BASE'))        // Require environment (fatal)
     die('Missing environment');
 
 /**
- * Unknown guset voucher exception
+ * Unknown guest exception
  */
-class GuestvoucherNotFoundException extends LoggingException {
+class GuestNotFoundException extends LoggingException {
     /**
      * Constructor
      * 
-     * @param string $selector column used to select guest voucher
+     * @param string $selector column used to select guest
      */
     public function __construct($selector) {
         parent::__construct(
-            'guestvoucher_not_found', // Message to give to the user
+            'guest_not_found', // Message to give to the user
             $selector // Real message to log
         );
     }
@@ -53,7 +53,7 @@ class GuestvoucherNotFoundException extends LoggingException {
 /**
  * Bad status exception
  */
-class GuestVoucherBadStatusException extends DetailedException {
+class GuestBadStatusException extends DetailedException {
     /**
      * Constructor
      * 
@@ -61,7 +61,7 @@ class GuestVoucherBadStatusException extends DetailedException {
      */
     public function __construct($status) {
         parent::__construct(
-            'bad_guest_voucher_status', // Message to give to the user
+            'bad_guest_status', // Message to give to the user
             'status : '.$status // Details to log
         );
     }

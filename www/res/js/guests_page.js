@@ -168,7 +168,7 @@ filesender.ui.send = function() {
     var emails = filesender.ui.recipients.list;
     var sent = 0;
     for(var i=0; i<emails.length; i++) {
-        filesender.client.postGuestVoucher(from, emails[i], subject, message, expires, options, function() {
+        filesender.client.postGuest(from, emails[i], subject, message, expires, options, function() {
             sent++;
             if(sent < emails.length) return;
             
@@ -189,15 +189,15 @@ $(function() {
     // Register frequently used nodes
     filesender.ui.nodes = {
         recipients: {
-            input: page.find('.send_voucher input[name="to"]'),
-            list: page.find('.send_voucher .recipients'),
+            input: page.find('.invite_guest input[name="to"]'),
+            list: page.find('.invite_guest .recipients'),
         },
-        from: page.find('.send_voucher select[name="from"]'),
-        subject: page.find('.send_voucher input[name="subject"]'),
-        message: page.find('.send_voucher textarea[name="message"]'),
-        expires: page.find('.send_voucher input[name="expires"]'),
+        from: page.find('.invite_guest select[name="from"]'),
+        subject: page.find('.invite_guest input[name="subject"]'),
+        message: page.find('.invite_guest textarea[name="message"]'),
+        expires: page.find('.invite_guest input[name="expires"]'),
         options: {},
-        sendbutton: page.find('.send_voucher .send'),
+        sendbutton: page.find('.invite_guest .send'),
     };
     page.find('.options input').each(function() {
         var i = $(this);

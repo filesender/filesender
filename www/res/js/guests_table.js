@@ -55,7 +55,7 @@ $(function() {
             if(!id || isNaN(id)) return;
             
             filesender.ui.confirm(lang.tr('confirm_delete_guest'), function() {
-                filesender.client.deleteGuestVoucher(id, function() {
+                filesender.client.deleteGuest(id, function() {
                     filesender.ui.alert('success', lang.tr('guest_deleted'), function() {
                         guests.find('[data-id="' + id + '"]').remove();
                     });
@@ -125,12 +125,12 @@ $(function() {
                 
                 if(invalid) return false;
                 
-                filesender.client.getGuestVoucher(id, function(gv) {
+                filesender.client.getGuest(id, function(gv) {
                     var forwarded = {from: gv.user_email, subject: gv.subject, message: gv.message, expires: gv.expires.raw, options: gv.options};
                     
                     var sent = 0;
                     for(var i=0; i<emails.length; i++) {
-                        filesender.client.postGuestVoucher(gv.user_email, emails[i], gv.subject, gv.message, gv.expires.raw, gv.options, function() {
+                        filesender.client.postGuest(gv.user_email, emails[i], gv.subject, gv.message, gv.expires.raw, gv.options, function() {
                             sent++;
                             if(sent < emails.length) return;
                             

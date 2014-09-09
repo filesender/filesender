@@ -39,37 +39,37 @@ if (!defined('FILESENDER_BASE'))
  */
 class RestEndpointGuest extends RestEndpoint {
     /**
-     * Cast a GuestVoucher to an array for response
+     * Cast a Guest to an array for response
      * 
-     * @param Transfer $transfer
+     * @param Guest $guest
      * 
      * @return array
      */
-    public static function cast(GuestVoucher $voucher) {
+    public static function cast(Guest $guest) {
         return array(
-            'id' => $voucher->id,
-            'user_id' => $voucher->user_id,
-            'user_email' => $voucher->user_email,
-            'email' => $voucher->email,
-            'token' => $voucher->token,
-            'transfer_count' => $voucher->transfer_count,
-            'subject' => $voucher->subject,
-            'message' => $voucher->message,
-            'options' => $voucher->options,
-            'created' => RestUtilities::formatDate($voucher->created),
-            'expires' => RestUtilities::formatDate($voucher->expires),
+            'id' => $guest->id,
+            'user_id' => $guest->user_id,
+            'user_email' => $guest->user_email,
+            'email' => $guest->email,
+            'token' => $guest->token,
+            'transfer_count' => $guest->transfer_count,
+            'subject' => $guest->subject,
+            'message' => $guest->message,
+            'options' => $guest->options,
+            'created' => RestUtilities::formatDate($guest->created),
+            'expires' => RestUtilities::formatDate($guest->expires),
         );
     }
     
     /**
-     * Get info about a guest voucher
+     * Get info about a guest
      * 
      * Call examples :
      *  /guest : list of user guests (same as /guest/@me)
      *  /guest/@all : list of all available guests (admin only)
      *  /guest/17 : info about guest with id 17
      * 
-     * @param int $id guest voucher id to get info about
+     * @param int $id guest id to get info about
      * 
      * @return mixed
      * 
@@ -82,36 +82,36 @@ class RestEndpointGuest extends RestEndpoint {
         $user = Auth::user();
         
         if(is_numeric($id)) {
-            $voucher = GuestVoucher::fromId($id);
+            $guest = Guest::fromId($id);
             
-            if(!$voucher->isOwner($user) && !Auth::isAdmin())
-                throw new RestOwnershipRequiredException($user->id, 'voucher = '.$voucher->id);
+            if(!$guest->isOwner($user) && !Auth::isAdmin())
+                throw new RestOwnershipRequiredException($user->id, 'guest = '.$guest->id);
             
-            return self::cast($voucher);
+            return self::cast($guest);
         }
         
-        if(!in_array($id, array('', '@me', '@all'))) throw new RestBadParameterException('voucher_id');
+        if(!in_array($id, array('', '@me', '@all'))) throw new RestBadParameterException('guest_id');
         
         if($id == '@all') {
             if(!Auth::isAdmin()) throw new RestAdminRequiredException();
             
-            $vouchers = GuestVoucher::all(GuestVoucher::AVAILABLE);
+            $guests = Guest::all(Guest::AVAILABLE);
             
         }else{ // $id == @me or empty
-            $vouchers = GuestVoucher::fromUser($user);
+            $guests = Guest::fromUser($user);
         }
         
         $out = array();
-        foreach($vouchers as $voucher) $out[] = self::cast($voucher);
+        foreach($guests as $guest) $out[] = self::cast($guest);
         
         return $out;
     }
     
     /**
-     * Create new guest voucher
+     * Create new guest
      * 
      * Call examples :
-     *  /guest : create new guest voucher from request
+     *  /guest : create new guest from request
      * 
      * @return mixed
      * 
@@ -123,39 +123,38 @@ class RestEndpointGuest extends RestEndpoint {
         
         $user = Auth::user();
         
-        // New guest voucher
         $data = $this->request->input;
         
-        $voucher = GuestVoucher::create($data->recipient, $data->from);
+        $guest = Guest::create($data->recipient, $data->from);
         
-        if($data->subject) $voucher->subject = $data->subject;
-        if($data->message) $voucher->message = $data->message;
+        if($data->subject) $guest->subject = $data->subject;
+        if($data->message) $guest->message = $data->message;
         
-        $voucher->options = $data->options;
+        $guest->options = $data->options;
         
-        //if($voucher->options) {
-            //if(in_array('no_expiry', $voucher->options) && option is available) {
+        //if($guest->options) {
+            //if(in_array('no_expiry', $guest->options) && option is available) {
             //    ...
             //} else {
-                $voucher->expires = $data->expires;
+                $guest->expires = $data->expires;
             //}
         //}
         
-        $voucher->makeAvailable(); // Saves
+        $guest->makeAvailable(); // Saves
         
         return array(
-            'path' => '/guest/'.$voucher->id,
-            'data' => self::cast($voucher)
+            'path' => '/guest/'.$guest->id,
+            'data' => self::cast($guest)
         );
     }
     
     /**
-     * Delete (closes) a guest voucher
+     * Delete (closes) a guest
      * 
      * Call examples :
-     *  /guest/17 : close guest voucher with id 17
+     *  /guest/17 : close guest with id 17
      * 
-     * @param int $id guest voucher id to close
+     * @param int $id guest id to close
      * 
      * @return mixed
      * 
@@ -167,14 +166,14 @@ class RestEndpointGuest extends RestEndpoint {
         
         $user = Auth::user();
         
-        if(!$id) throw new RestMissingParameterException('voucher_id');
-        if(!is_numeric($id)) throw new RestBadParameterException('voucher_id');
+        if(!$id) throw new RestMissingParameterException('guest_id');
+        if(!is_numeric($id)) throw new RestBadParameterException('guest_id');
         
-        $voucher = GuestVoucher::fromId($id);
+        $guest = Guest::fromId($id);
         
-        if(!$voucher->isOwner($user) && !Auth::isAdmin())
-            throw new RestOwnershipRequiredException($user->id, 'voucher = '.$voucher->id);
+        if(!$guest->isOwner($user) && !Auth::isAdmin())
+            throw new RestOwnershipRequiredException($user->id, 'guest = '.$guest->id);
         
-        $voucher->close();
+        $guest->close();
     }
 }

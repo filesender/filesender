@@ -48,12 +48,12 @@ class LogEventTypes extends Enum {
    const FILE_DELETED           = 'file_deleted';   // File has been deleted
    
    /* GUESTVOUCHER */
-   const GUESTVOUCHER_CREATED   = 'guestvoucher_created';   // GuestVoucher created
-   const GUESTVOUCHER_SENT      = 'guestvoucher_sent';      // GuestVoucher send to recipients
-   const GUESTVOUCHER_USED      = 'guestvoucher_used';      // GuestVoucher has been used
-   const GUESTVOUCHER_EXPIRED   = 'guestvoucher_expired';   // GuestVoucher expired
-   const GUESTVOUCHER_CLOSED    = 'guestvoucher_closed';    // GuestVoucher closed
-   const GUESTVOUCHER_DELETED   = 'guestvoucher_deleted';   // GuestVoucher canceled
+   const GUEST_CREATED          = 'guest_created';   // Guest created
+   const GUEST_SENT             = 'guest_sent';      // Guest send to recipients
+   const GUEST_USED             = 'guest_used';      // Guest has been used
+   const GUEST_EXPIRED          = 'guest_expired';   // Guest expired
+   const GUEST_CLOSED           = 'guest_closed';    // Guest closed
+   const GUEST_DELETED          = 'guest_deleted';   // Guest canceled
    
    /* TRANSFER */
    const TRANSFER_AVAILABLE     = 'transfer_available';     // Transfer started
