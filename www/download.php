@@ -163,18 +163,20 @@ try {
         $chunk_size = (int)Config::get('download_chunk_size');
         if(!$chunk_size) $chunk_size = 1024 * 1024;
         
-        if($offset < $file->size) { // There is data to read
-            for(; $offset < $range ? $range['end'] : $file->size; $offset += $chunk_size) {
-                $length = min($chunk_size, ($range ? $range['end'] : $file->size) - $offset + 1);
-                
-                Logger::info('Send chunk at offset '.$offset.' with length '.$length);
-                
-                echo $file->readChunk($offset, $length);
-                
-                // TODO Log download progress ?
-                
-                $abort_handler();
-            }
+        $end = $file->size;
+        if ($range) $end = $range['end'];
+        
+        for(; $offset < $end ; $offset += $chunk_size) {
+            $remaining = $end - $offset +1;
+            $length = min($chunk_size, $remaining);
+
+            Logger::info('Send chunk at offset '.$offset.' with length '.$length);
+
+            echo $file->readChunk($offset, $length);
+
+            // TODO Log download progress ?
+
+            $abort_handler();
         }
         
         return ($offset >= $file->size);
