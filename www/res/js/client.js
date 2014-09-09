@@ -66,6 +66,12 @@ window.filesender.client = {
             if(!raw) data = JSON.stringify(data);
         }else data = undefined;
         
+        var errorhandler = filesender.ui.error;
+        if(options.error) {
+            errorhandler = options.error;
+            delete options.error;
+        }
+        
         var settings = {
             cache: false,
             contentType: 'application/json;charset=utf-8',
@@ -73,7 +79,16 @@ window.filesender.client = {
             data: data,
             processData: false,
             dataType: 'json',
-            error: this.error,
+            error: function(xhr, status, error) {
+                var msg = xhr.responseText.replace(/^\s+/, '').replace(/\s+$/, '');
+                
+                try {
+                    var error = JSON.parse(msg);
+                    errorhandler(error);
+                } catch(e) {
+                    filesender.ui.rawError(msg);
+                }
+            },
             success: callback,
             type: method.toUpperCase(),
             url: this.base_path + resource + '?' + urlargs.join('&')
@@ -82,18 +97,6 @@ window.filesender.client = {
         for(var k in options) settings[k] = options[k];
         
         jQuery.ajax(settings);
-    },
-    
-    // Error handler
-    error: function(xhr, status, error) {
-        var msg = xhr.responseText.replace(/^\s+/, '').replace(/\s+$/, '');
-        
-        try {
-            var error = JSON.parse(msg);
-            filesender.ui.error(error);
-        } catch(e) {
-            filesender.ui.rawError(msg);
-        }
     },
     
     get: function(resource, callback, options) {
