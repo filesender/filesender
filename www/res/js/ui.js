@@ -239,6 +239,51 @@ window.filesender.ui = {
     },
     
     /**
+     * Display a prompt box
+     * 
+     * @param callable onok
+     * @param callable oncancel
+     */
+    prompt: function(title, onok, oncancel) {
+        if(typeof title != 'string') {
+            if(title.out) {
+                title = title.out();
+            }else title = title.toString();
+        }
+        
+        var d = $('<div />').appendTo('body').attr({title: title});
+        
+        d.dialog({
+            resizable: false,
+            width:550,
+            modal: true,
+            buttons: {
+                ok: {
+                    text: lang.tr('ok'),
+                    click: function () {
+                        var close = onok ? onok() : true;
+                        
+                        if(!close) return;
+                        
+                        d.dialog('close');
+                        d.remove();
+                    }
+                },
+                cancel: {
+                    text: lang.tr('cancel'),
+                    click: function () {
+                        d.dialog('close');
+                        if(oncancel) oncancel();
+                        d.remove();
+                    }
+                }
+            }
+        });
+        
+        return d;
+    },
+    
+    /**
      * Redirect user to other page
      * 
      * @param string page
@@ -258,6 +303,15 @@ window.filesender.ui = {
      */
     redirect: function(url) {
         window.location.href = url;
+    },
+    
+    /**
+     * Reload page
+     * 
+     * @param string url
+     */
+    reload: function() {
+        window.location.reload();
     },
     
     /**

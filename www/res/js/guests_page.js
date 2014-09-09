@@ -41,7 +41,7 @@ filesender.ui.recipients = {
             var invalid = [];
             for(var i=0; i<email.length; i++) {
                 var s = email[i].replace(/^\s+/g, '').replace(/\s+$/g, '');
-                if(!s) cintinue;
+                if(!s) continue;
                 if(!this.add(s))
                     invalid.push(s);
             }
@@ -93,9 +93,10 @@ filesender.ui.recipients = {
             if(!marker) {
                 marker = $('<span class="invalid fa fa-exclamation-circle fa-lg" />').attr({
                     title: lang.tr('invalid_recipient')
-                }).insertBefore(input);
+                });
                 input.data('error_marker', marker);
             }
+            marker.insertBefore(input);
         }else{
             input.val('');
             input.removeClass('invalid');
@@ -149,26 +150,37 @@ filesender.ui.evalSendEnabled = function() {
 };
 
 filesender.ui.send = function() {
-    var voucher = {options: []};
+    var options = [];
     
-    voucher.expires = filesender.ui.nodes.expires.datepicker('getDate').getTime() / 1000;
+    var expires = filesender.ui.nodes.expires.datepicker('getDate').getTime() / 1000;
     
+    var from = null;
     if(filesender.ui.nodes.from.length)
-        voucher.from = filesender.ui.nodes.from.val();
+        from = filesender.ui.nodes.from.val();
     
-    voucher.subject = filesender.ui.nodes.subject.val();
-    voucher.message = filesender.ui.nodes.message.val();
+    var subject = filesender.ui.nodes.subject.val();
+    var message = filesender.ui.nodes.message.val();
     
     for(var o in filesender.ui.nodes.options)
         if(filesender.ui.nodes.options[o].is(':checked'))
-            voucher.options.push(o);
+            options.push(o);
     
-    
-    // TODO client post
+    var emails = filesender.ui.recipients.list;
+    var sent = 0;
+    for(var i=0; i<emails.length; i++) {
+        filesender.client.postGuestVoucher(from, emails[i], subject, message, expires, options, function() {
+            sent++;
+            if(sent < emails.length) return;
+            
+            filesender.ui.alert('success', lang.tr('guest_vouchers_sent').r({sent: sent}), function() {
+                filesender.ui.reload();
+            });
+        });
+    }
 };
 
 $(function() {
-    var page = $('.vouchers_page');
+    var page = $('.guests_page');
     if(!page.length) return;
     
     // Transfer

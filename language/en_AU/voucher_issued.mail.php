@@ -33,7 +33,7 @@ Best regards,
         </tr>
     </thead>
     <tbody>
-        <tr class="odd">
+        <tr>
             <td>Issuer</td>
             <td><a href="mailto:{guestvoucher.user_email}">{guestvoucher.user_email}</a></td>
         </tr>
@@ -41,7 +41,7 @@ Best regards,
             <td>Voucher link</td>
             <td><a href="{cfg:site_url}?vid={guestvoucher.token}">{cfg:site_url}?vid={guestvoucher.token}</a></td>
         </tr>
-        <tr class="odd">
+        <tr>
             <td>Valid until</td>
             <td>{date:guestvoucher.expires}</td>
         </tr>

@@ -36,7 +36,7 @@ Best regards,
         </tr>
     </thead>
     <tbody>
-        <tr class="odd">
+        <tr>
             <td>File{if:transfer.files>1}s{endif}</td>
             <td>
                 {html_file_list}
@@ -46,7 +46,7 @@ Best regards,
             <td>Size</td>
             <td>{size:transfer.size}</td>
         </tr>
-        <tr class="odd">
+        <tr>
             <td>Expiry date</td>
             <td>{date:transfer.expiry}</td>
         </tr>

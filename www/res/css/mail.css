@@ -18,7 +18,7 @@ th {
     height: 30px;
 }
 
-tr.odd td {
+tbody tr:nth-child(even) td {
     background-color: #e5e5e5;
 }
 

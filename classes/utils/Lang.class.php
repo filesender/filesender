@@ -554,12 +554,6 @@ class Lang {
             return $value;
         };
         
-        foreach($placeholders as $k => $v) {
-            $translation = preg_replace_callback('`\{(([^:]+:)?'.$k.'(\.[a-z0-9_]+)*)\}`i', function($m) use($placeholder_resolver) {
-                return $placeholder_resolver($m[1]);
-            }, $translation);
-        }
-        
         $translation = preg_replace_callback('`\{if:([^\}]+)\}(.+)(?:\{else\}(.+))?\{endif\}`msiU', function($m) use($placeholder_resolver) {
             $condition = $m[1];
             $ifcontent = $m[2];
@@ -638,6 +632,14 @@ class Lang {
             return $match ? $ifcontent : $elsecontent;
         }, $translation);
         
+        foreach($placeholders as $k => $v) {
+            $translation = preg_replace_callback('`\{(([^:]+:)?'.$k.'(\.[a-z0-9_]+)*)\}`iU', function($m) use($placeholder_resolver) {
+                if(substr($m[0], 0, 4) == '{if:') return $m[0]; // Remaining ifs
+                
+                return $placeholder_resolver($m[1]);
+            }, $translation);
+        }
+        
         return new self($translation);
     }
     
@@ -669,9 +671,7 @@ class Lang {
             return '';
         
         // Get rid of unresolved ifs
-        $this->translation = preg_replace('`\{if:([^\}]+)\}(.+)\{endif\}`msiU', '', $this->translation);
-
-        return $this->translation;
+        return preg_replace('`\{if:([^\}]+)\}(.+)\{endif\}`msiU', '', $this->translation);
     }
     
     /**

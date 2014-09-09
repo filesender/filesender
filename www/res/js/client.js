@@ -240,6 +240,21 @@ window.filesender.client = {
     },
     
     /**
+     * Get a guest voucher
+     * 
+     * @param mixed guest voucher object or id
+     * @param callable callback
+     */
+    getGuestVoucher: function(voucher, callback) {
+        var id = voucher;
+        
+        if(typeof voucher == 'object')
+            id = voucher.id;
+        
+        this.get('/guest/' + id, callback);
+    },
+    
+    /**
      * Create a guest voucher
      * 
      * @param string from sender email
