@@ -54,8 +54,8 @@ try {
         }
         
         // Always accessible pages
-        $known_pages = array_merge($known_pages, array('home', 'exception'));
-        $allowed_pages = array_merge($allowed_pages, array('home', 'exception'));
+        $known_pages = array_merge(array('home', 'exception'), $known_pages);
+        $allowed_pages = array_merge(array('home', 'exception'), $allowed_pages);
         
         $page = null;
         $vars = array();
@@ -78,7 +78,7 @@ try {
             }
         }
         
-        if(Auth::isAuthenticated() && !Auth::isGuest() && ($page != 'download'))
+        if($page != 'download')
             Template::display('menu', array('allowed_pages' => $allowed_pages, 'current_page' => $page));
         
         Template::display('page', array('page' => $page, 'vars' => $vars));
