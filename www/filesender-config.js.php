@@ -49,6 +49,8 @@ window.filesender.config = {
     log: true,
     upload_chunk_size: <?php echo Config::get('upload_chunk_size') ?>,
     
+    upload_display_bits_per_sec: <?php echo Config::get('upload_display_bits_per_sec') ? 'true' : 'false' ?>,
+    
     max_flash_upload_size: <?php echo Config::get('max_legacy_upload_size') ?>,
     
     max_html5_upload_size: <?php echo Config::get('max_html5_upload_size') ?>,

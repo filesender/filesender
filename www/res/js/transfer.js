@@ -53,6 +53,8 @@ window.filesender.transfer = function() {
     this.options = [];
     
     this.time = 0;
+    this.pause_time = 0;
+    this.pause_length = 0;
     this.file_index = 0;
     this.status = 'new';
     this.onprogress = null;
@@ -339,6 +341,8 @@ window.filesender.transfer = function() {
     this.pause = function() {
         if(this.status != 'running') return;
         
+        this.pause_time = (new Date()).getTime();
+        
         this.status = 'paused';
         
         if(filesender.config.terasender_enabled && filesender.supports.workers)
@@ -350,6 +354,8 @@ window.filesender.transfer = function() {
      */
     this.restart = function() {
         if(this.status != 'paused') return;
+        
+        this.pause_length += (new Date()).getTime() - this.pause_time;
         
         this.status = 'running';
         

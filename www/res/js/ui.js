@@ -41,10 +41,12 @@ if(!('filesender' in window)) window.filesender = {};
  * UI methods
  */
 window.filesender.ui = {
+    
     /**
      * Holder for named nodes
      */
     nodes: {},
+    
     
     /**
      * Validators for form fields
@@ -290,22 +292,47 @@ window.filesender.ui = {
         alert('Error : ' + (text.match(/^[a-z][a-z0-9_]+$/i) ? lang.tr(text) : text));
     },
     
+    
+    
+    
+    
     /**
      * Format size in bytes
      * 
-     * @param int size in bytes
+     * @param int size 
+     * @param int precision
      * 
      * @return string
      */
-    formatBytes: function formatBytes(bytes, precision) {
+    formatBytes: function (bytes, precision) {
+        return filesender.ui.formatBinarySize(bytes,precision)+lang.tr('SIZE_UNIT');
+    },
+    
+    
+    /**
+     * Format speed 
+     * 
+     * @param int size 
+     * @param int precision
+     * 
+     * @return string
+     */
+    formatSpeed : function (bytes,precision) {
+        return filesender.ui.formatBinarySize(bytes,precision)+lang.tr('SPEED_UNIT');
+    },
+    
+    
+     /**
+     * Format binary size 
+     * 
+     * @param int size 
+     * @param int precision
+     * 
+     * @return string
+     */
+    formatBinarySize : function (bytes, precision) {
         if(!precision || isNaN(precision))
             precision = 1;
-        
-        var nomult = lang.tr('bytes_no_multiplier').out();
-        if(nomult == '{bytes_no_multiplier}') nomult = 'Bytes';
-        
-        var wmult = lang.tr('bytes_with_multiplier').out();
-        if(wmult == '{bytes_with_multiplier}') wmult = 'B';
         
         var multipliers = ['', 'k', 'M', 'G', 'T'];
         
@@ -315,7 +342,7 @@ window.filesender.ui = {
         
         bytes /= Math.pow(1024, pow);
         
-        return bytes.toFixed(precision).replace(/\.0+$/g, '') + ' ' + multipliers[pow] + (pow ? wmult : nomult);
+        return bytes.toFixed(precision).replace(/\.0+$/g, '') + ' ' + multipliers[pow];
     },
     
     /**
