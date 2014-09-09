@@ -320,14 +320,19 @@ filesender.ui.startUpload = function() {
         filesender.ui.alert('success', 'Done !', function() {
             filesender.ui.goToPage('transfers');
         });
-        
         // TODO popup (view uploaded / upload other)
     };
     
-    this.transfer.onerror = function(error) {
+    var errorHandler = function(error) {
         error = {message: 'upload_failed', details: error};
-        filesender.ui.error(error);
+        filesender.ui.error(error,function(){
+            //todo le code du reload
+            filesender.ui.transfer.status = 'stopped';
+            filesender.ui.reload();
+        });
     };
+    
+    this.transfer.onerror = errorHandler;
     
     filesender.ui.nodes.files.list.find('.progressbar').show();
     
@@ -337,7 +342,7 @@ filesender.ui.startUpload = function() {
     filesender.ui.nodes.stats.average_speed.show();
     
     // TODO lock fields
-    this.transfer.start();
+    this.transfer.start(errorHandler);
 };
 
 $(function() {

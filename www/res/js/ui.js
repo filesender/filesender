@@ -320,12 +320,12 @@ window.filesender.ui = {
      * @param string code error code (to be translated)
      * @param object data values for translation placeholders
      */
-    error: function(error) {
-        var d = this.alert('error', lang.tr(error.message));
+    error: function(error,callback) {
+        var d = this.alert('error', lang.tr(error.message),callback);
         
-        if(error.info) {
+        if(error.details) {
             var i = $('<div class="details" />').appendTo(d);
-            $.each(error.info, function(k, v) {
+            $.each(error.details, function(k, v) {
                 if(isNaN(k)) v = k + ': ' + v;
                 $('<div class="detail" />').text(v).appendTo(i);
             });
