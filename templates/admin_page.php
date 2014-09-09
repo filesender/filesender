@@ -3,14 +3,14 @@
     
     <?php
     
-    $sections = array('statsistics', 'transfers', 'vouchers');
+    $sections = array('statistics', 'transfers', 'guests');
     
     try {
         if(count(Config::overrides()))
             $sections[] = 'config';
     } catch(ConfigOverrideDisabledException $e) {}
     
-    $section = 'statsistics';
+    $section = 'statistics';
     if(array_key_exists('as', $_REQUEST))
         $section = $_REQUEST['as'];
     
