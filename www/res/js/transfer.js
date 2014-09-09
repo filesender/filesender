@@ -293,17 +293,26 @@ window.filesender.transfer = function() {
     this.start = function(errorhandler) {
         if (!errorhandler)
             errorhandler = filesender.ui.error;
-
+        
         this.status = 'running';
-
+        
         // Redo sanity checks
-
+        
         if (this.files.length >= filesender.config.max_html5_uploads) {
             return errorhandler({message: 'max_html5_uploads_exceeded', details: {max: filesender.config.max_html5_uploads}});
         }
-
+        
         if (this.size > filesender.config.max_html5_upload_size) {
             return errorhandler({message: 'max_html5_upload_size_exceeded', details: {size: file.size, max: filesender.config.max_html5_upload_size}});
+        }
+        
+        var today = Math.floor((new Date()).getTime() / (24 * 3600 * 1000));
+        var minexpires = today - 1;
+        var maxexpires = today + filesender.config.default_daysvalid + 1;
+        var exp = this.expires / (24 * 3600);
+        
+        if (exp < minexpires || exp > maxexpires) {
+            return errorhandler({message: 'bad_expire'});
         }
 
         // Prepare files

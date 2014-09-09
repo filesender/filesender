@@ -478,12 +478,21 @@ $(function() {
     });
     
     // Bind picker
+    var mindate = new Date();
     var maxdate = new Date((new Date()).getTime() + 24*3600*1000 * filesender.config.default_daysvalid);
     filesender.ui.nodes.expires.datepicker({
-        minDate: new Date(),
+        minDate: mindate,
         maxDate: maxdate,
     });
     filesender.ui.nodes.expires.datepicker('setDate', maxdate);
+    filesender.ui.nodes.expires.on('change', function() {
+        filesender.ui.nodes.expires.datepicker('setDate', $(this).val());
+        var d = filesender.ui.nodes.expires.datepicker('getDate').getTime() / 1000;
+        
+        var min = mindate.getTime() / 1000;
+        min -= min % (24 * 3600);
+        if(d < min) filesender.ui.nodes.expires.datepicker('setDate', mindate);
+    });
     
     // Make options label toggle checkboxes
     form.find('.basic_options label, .advanced_options label').on('click', function() {
