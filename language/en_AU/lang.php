@@ -351,3 +351,13 @@ $lang['archive_message'] = 'You can download selected files as an archive.';
 $lang['auditlog'] = 'Transfer audit';
 $lang['actions'] = 'Actions';
 $lang['send_reminder'] = 'Send reminder';
+
+$lang['confirm_dialog'] = 'Warning';
+$lang['confirm_dialog_notify'] = 'Do you want to be notified by mail when download is complete ?';
+$lang['invalid_recipient'] = 'Invalid recipient';
+$lang['error_dialog'] = 'Error';
+$lang['upload_failed'] = 'Upload failed';
+$lang['rest_bad_parameter'] = 'Bad parameter';
+$lang['speed_unit'] = 'o';
+$lang['size_unit'] = 'o';
+$lang['per_second'] = '/s';
