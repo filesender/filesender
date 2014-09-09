@@ -51,7 +51,6 @@ window.filesender.transfer = function() {
     this.message = null;
     this.expires = null;
     this.options = [];
-    
     this.time = 0;
     this.pause_time = 0;
     this.pause_length = 0;
@@ -60,9 +59,10 @@ window.filesender.transfer = function() {
     this.onprogress = null;
     this.oncomplete = null;
     this.onerror = null;
-    
+
     this.saveTemp = function() {
-        if(!filesender.supports.localStorage) return;
+        if (!filesender.supports.localStorage)
+            return;
         localStorage.setItem('transfer_' + this.id, JSON.stringify({
             size: this.size,
             files: this.files,
@@ -73,7 +73,7 @@ window.filesender.transfer = function() {
             options: this.options,
         }));
     };
-    
+
     /**
      * Add a file to the file list
      * 
@@ -82,31 +82,32 @@ window.filesender.transfer = function() {
      * @return mixed int file index or false if it was a duplicate or that there was an error
      */
     this.addFile = function(file, errorhandler) {
-        if(!errorhandler) errorhandler = filesender.ui.error;
-        
-        if(!file)
+        if (!errorhandler)
+            errorhandler = filesender.ui.error;
+
+        if (!file)
             return errorhandler({message: 'no_file_given'});
-        
-        if('parentNode' in file) // HTML file input
+
+        if ('parentNode' in file) // HTML file input
             file = file.files;
-        
-        if('length' in file) { // FileList
-            if(!file.length) {
+
+        if ('length' in file) { // FileList
+            if (!file.length) {
                 errorhandler({message: 'no_file_given'});
                 return false;
             }
-            
-            for(var i=0; i<file.length; i++)
+
+            for (var i = 0; i < file.length; i++)
                 this.addFile(file[i]);
-            
+
             return;
         }
-        
-        if(!('type' in file)) {
+
+        if (!('type' in file)) {
             errorhandler({message: 'no_file_given'});
             return false;
         }
-        
+
         var blob = file;
         var file = {
             id: null,
@@ -117,66 +118,72 @@ window.filesender.transfer = function() {
             name: blob.name,
             mime_type: blob.type
         };
-        
+
         // Look for dup
-        for(var i=0; i<this.files.length; i++) {
-            if(this.files[i].name == file.name && this.files[i].size == file.size) {
+        for (var i = 0; i < this.files.length; i++) {
+            if (this.files[i].name == file.name && this.files[i].size == file.size) {
                 errorhandler({message: 'duplicate_file', details: {name: file.name, size: file.size}});
                 return false;
             }
         }
-        
-        if(this.files.length >= filesender.config.max_html5_uploads) {
+
+        if (this.files.length >= filesender.config.max_html5_uploads) {
             errorhandler({message: 'max_html5_uploads_exceeded', details: {max: filesender.config.max_html5_uploads}});
             return false;
         }
-        
-        if(!/^[^\\\/:;\*\?\"<>|]+(\.[^\\\/:;\*\?\"<>|]+)*$/.test(file.name)) {
+
+        if (!/^[^\\\/:;\*\?\"<>|]+(\.[^\\\/:;\*\?\"<>|]+)*$/.test(file.name)) {
             errorhandler({message: 'invalid_file_name', details: {max: filesender.config.max_html5_uploads}});
             return false;
         }
-        
-        if(!file.size) {
+
+        if (!file.size) {
             errorhandler({message: 'empty_file'});
             return false;
         }
-        
-        if(typeof filesender.config.ban_extension == 'string') {
+
+        if (typeof filesender.config.ban_extension == 'string') {
             var banned = filesender.config.ban_extension.replace(/\s+/g, '');
             banned = new RegExp('^(' + banned.replace(',', '|') + ')$', 'g');
             var extension = file.name.split('.').pop();
-            if(extension.match(banned)) {
-                errorhandler({message: 'banned_extension', details: {extension: extension, banned: filesender.config.ban_extension}});
+            if (extension.match(banned)) {
+                errorhandler({message: 'banned_extension', details: {extension: extension, filename: file.name, banned: filesender.config.ban_extension}});
+
                 return false;
             }
         }
-        
-        if(this.size + file.size > filesender.config.max_html5_upload_size) {
+
+        if (this.size + file.size > filesender.config.max_html5_upload_size) {
             errorhandler({message: 'max_html5_upload_size_exceeded', details: {size: file.size, max: filesender.config.max_html5_upload_size}});
             return false;
         }
-        
+
         this.size += file.size;
-        
+
         this.files.push(file);
-        
+
         return this.files.length - 1;
     };
-    
+
     /**
      * Remove a file from list
      * 
      * @param int file index
      */
     this.removeFile = function(name, size) {
-        for(var i=0; i<this.files.length; i++) {
-            if(this.files[i].name == name && this.files[i].size == size) {
+        for (var i = 0; i < this.files.length; i++) {
+            if (this.files[i].name == name && this.files[i].size == size) {
                 this.files.splice(i, 1);
                 return;
             }
+            var index = filesender.ui.files.invalidFiles.indexOf(name);
+            if (index !== -1) {
+                filesender.ui.files.invalidFiles.splice(index, 1);
+                filesender.ui.evalUploadEnabled();
+            }
         }
     };
-    
+
     /**
      * Add a recipient
      * 
@@ -185,40 +192,41 @@ window.filesender.transfer = function() {
      * @return bool indicates if the email was added (false means it was a duplicate or that there was an error)
      */
     this.addRecipient = function(email, errorhandler) {
-        if(!errorhandler) errorhandler = filesender.ui.error;
-        
-        if(!email.match(filesender.ui.validators.email)) {
+        if (!errorhandler)
+            errorhandler = filesender.ui.error;
+
+        if (!email.match(filesender.ui.validators.email)) {
             errorhandler({message: 'invalid_recipient', details: {email: email}});
             return false;
         }
-        
-        for(var i=0; i<this.recipients.length; i++)
-            if(this.recipients[i] == email) {
+
+        for (var i = 0; i < this.recipients.length; i++)
+            if (this.recipients[i] == email) {
                 errorhandler({message: 'duplicate_recipient', details: {email: email}});
                 return false;
             }
-        
-        if(this.recipients.length >= filesender.config.max_email_recipients) {
+
+        if (this.recipients.length >= filesender.config.max_email_recipients) {
             errorhandler({message: 'max_email_recipients_exceeded', details: {max: filesender.config.max_email_recipients}});
             return false;
         }
-        
+
         this.recipients.push(email);
     };
-    
+
     /**
      * Remove a recipient from list
      * 
      * @param string email address
      */
     this.removeRecipient = function(email) {
-        for(var i=0; i<this.recipients.length; i++)
-            if(this.recipients[i] == email) {
+        for (var i = 0; i < this.recipients.length; i++)
+            if (this.recipients[i] == email) {
                 this.recipients.splice(i, 1);
                 return;
             }
     };
-    
+
     /**
      * Report progress
      * 
@@ -226,107 +234,112 @@ window.filesender.transfer = function() {
      * @param bool complete is file done
      */
     this.reportProgress = function(file, complete) {
-        if(filesender.config.log) {
-            if(complete) {
+        if (filesender.config.log) {
+            if (complete) {
                 console.log('File ' + file.name + ' (' + file.size + ' bytes) uploaded');
-            }else{
+            } else {
                 console.log('Uploading ' + file.name + ' (' + file.size + ' bytes) : ' + (100 * file.uploaded / file.size).toFixed(2) + '%');
             }
         }
-        
-        if(complete) {
+
+        if (complete) {
             var transfer = this;
             filesender.client.fileComplete(file, undefined, function(data) {
-                if(transfer.onprogress) transfer.onprogress.call(transfer, file, true);
+                if (transfer.onprogress)
+                    transfer.onprogress.call(transfer, file, true);
             });
-        }else if(this.onprogress) {
+        } else if (this.onprogress) {
             this.onprogress.call(this, file, complete);
         }
     };
-    
+
     /**
      * Report transfer complete
      */
     this.reportComplete = function() {
         this.status = 'done';
-        
+
         var time = (new Date()).getTime() - this.time; // ms
-        
-        if(filesender.config.log) {
+
+        if (filesender.config.log) {
             console.log('Transfer ' + this.id + ' (' + this.size + ' bytes) complete, took ' + (time / 1000) + 's');
         }
-        
+
         var transfer = this;
         filesender.client.transferComplete(this, undefined, function(data) {
-            if(transfer.oncomplete) transfer.oncomplete.call(transfer, time);
+            if (transfer.oncomplete)
+                transfer.oncomplete.call(transfer, time);
         });
     };
-    
+
     /**
      * Report transfer error
      */
     this.reportError = function(error) {
-        if(filesender.config.log) {
+        if (filesender.config.log) {
             console.log('Transfer ' + this.id + ' (' + this.size + ' bytes) failed');
         }
-        
-        if(this.onerror) {
+
+        if (this.onerror) {
             this.onerror.call(this, error);
-        }else{
+        } else {
             filesender.ui.error(error);
         }
     };
-    
+
     /**
      * Start upload
      */
     this.start = function(errorhandler) {
-        if(!errorhandler) errorhandler = filesender.ui.error;
-        
+        if (!errorhandler)
+            errorhandler = filesender.ui.error;
+
         this.status = 'running';
-        
+
         // Redo sanity checks
-        
-        if(this.files.length >= filesender.config.max_html5_uploads) {
+
+        if (this.files.length >= filesender.config.max_html5_uploads) {
             return errorhandler({message: 'max_html5_uploads_exceeded', details: {max: filesender.config.max_html5_uploads}});
         }
-        
-        if(this.size > filesender.config.max_html5_upload_size) {
+
+        if (this.size > filesender.config.max_html5_upload_size) {
             return errorhandler({message: 'max_html5_upload_size_exceeded', details: {size: file.size, max: filesender.config.max_html5_upload_size}});
         }
-        
+
         // Prepare files
         var files_dfn = [];
-        for(var i=0; i<this.files.length; i++) files_dfn.push({
-            name: this.files[i].name,
-            size: this.files[i].size,
-            mime_type: this.files[i].mime_type
-        });
-        
+        for (var i = 0; i < this.files.length; i++)
+            files_dfn.push({
+                name: this.files[i].name,
+                size: this.files[i].size,
+                mime_type: this.files[i].mime_type
+            });
+
         this.time = (new Date()).getTime();
-        
+
         var transfer = this;
         filesender.client.postTransfer(this.from, files_dfn, this.recipients, this.subject, this.message, this.expires, this.options, function(path, data) {
             transfer.id = data.id;
-            
-            for(var i=0; i<transfer.files.length; i++) {
-                for(var j=0; j<data.files.length; j++) {
-                    if(
-                        (data.files[j].name == transfer.files[i].name) &&
-                        (data.files[j].size == transfer.files[i].size)
-                    ) {
+
+            for (var i = 0; i < transfer.files.length; i++) {
+                for (var j = 0; j < data.files.length; j++) {
+                    if (
+                            (data.files[j].name == transfer.files[i].name) &&
+                            (data.files[j].size == transfer.files[i].size)
+                            ) {
                         transfer.files[i].id = data.files[j].id;
                         transfer.files[i].uid = data.files[j].uid;
                     }
                 }
-                
-                if(!transfer.files[i].id) return errorhandler({message: 'file_not_in_response', details: {file: transfer.files[i]}});
+
+                if (!transfer.files[i].id)
+                    return errorhandler({message: 'file_not_in_response', details: {file: transfer.files[i]}});
             }
-            
+
             // Start uploading chunks
-            if(filesender.config.terasender_enabled && filesender.supports.workers) {
+            if (filesender.config.terasender_enabled && filesender.supports.workers) {
                 filesender.terasender.start(transfer);
-            }else{
+            } else {
                 // Chunk by chunk upload
                 transfer.uploadChunk();
             }
@@ -334,87 +347,92 @@ window.filesender.transfer = function() {
             transfer.reportError(error);
         });
     };
-    
+
     /**
      * Pause upload
      */
     this.pause = function() {
-        if(this.status != 'running') return;
-        
+        if (this.status != 'running')
+            return;
+
         this.pause_time = (new Date()).getTime();
-        
+
         this.status = 'paused';
-        
-        if(filesender.config.terasender_enabled && filesender.supports.workers)
+
+        if (filesender.config.terasender_enabled && filesender.supports.workers)
             filesender.terasender.pause();
     };
-    
+
     /**
      * Restart upload
      */
     this.restart = function() {
-        if(this.status != 'paused') return;
-        
+        if (this.status != 'paused')
+            return;
+
         this.pause_length += (new Date()).getTime() - this.pause_time;
-        
+
         this.status = 'running';
-        
-        if(filesender.config.terasender_enabled && filesender.supports.workers)
+
+        if (filesender.config.terasender_enabled && filesender.supports.workers)
             filesender.terasender.restart();
     };
-    
+
     /**
      * Stop upload
      */
     this.stop = function(callback) {
         this.status = 'stopped';
-        
-        if(filesender.config.terasender_enabled && filesender.supports.workers)
+
+        if (filesender.config.terasender_enabled && filesender.supports.workers)
             filesender.terasender.stop();
-        
+
         var transfer = this;
         window.setTimeout(function() { // Small delay to let workers stop
             filesender.client.deleteTransfer(transfer, callback);
         }, 1000);
     };
-    
+
     /**
      * Chunk by chunk upload
      */
     this.uploadChunk = function() {
-        if(this.status == 'stopped') return;
-        
+        if (this.status == 'stopped')
+            return;
+
         var transfer = this;
-        if(this.status == 'paused') {
+        if (this.status == 'paused') {
             window.setTimeout(function() {
                 transfer.uploadChunk();
             }, 500);
             return;
         }
-        
+
         var file = this.files[this.file_index];
-        
+
         var slicer = file.blob.slice ? 'slice' : (file.blob.mozSlice ? 'mozSlice' : (file.blob.webkitSlice ? 'webkitSlice' : 'slice'));
-        
+
         var offset = file.uploaded;
         var blob = file.blob[slicer](offset, offset + filesender.config.upload_chunk_size);
-        
+
         file.uploaded += filesender.config.upload_chunk_size;
-        if(file.uploaded > file.size) file.uploaded = file.size;
-        
+        if (file.uploaded > file.size)
+            file.uploaded = file.size;
+
         var last = file.uploaded >= file.size;
-        if(last) this.file_index++;
-        
+        if (last)
+            this.file_index++;
+
         filesender.client.putChunk(file, blob, offset, function() {
-            if(!last || transfer.file_index < transfer.files.length) {
-                if(last) { // File done
+            if (!last || transfer.file_index < transfer.files.length) {
+                if (last) { // File done
                     transfer.reportProgress(file, true);
-                }else{
+                } else {
                     transfer.reportProgress(file);
                 }
-                
+
                 transfer.uploadChunk();
-            }else{
+            } else {
                 transfer.reportComplete();
             }
         }, function(error) {

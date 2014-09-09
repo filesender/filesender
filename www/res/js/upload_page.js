@@ -32,6 +32,8 @@
 
 // Manage files
 filesender.ui.files = {
+    invalidFiles: [],
+    
     // File selection (browse / drop) handler
     add: function(files) {
         for(var i=0; i<files.length; i++) {
@@ -58,6 +60,8 @@ filesender.ui.files = {
             }).appendTo(node);
             
             var added = filesender.ui.transfer.addFile(files[i], function(error) {
+                var tt = 1;
+                filesender.ui.files.invalidFiles.push(error.details.filename);
                 node.addClass('invalid');
                 node.addClass(error.message);
                 $('<span class="invalid fa fa-exclamation-circle fa-lg" />').prependTo(node.find('.info'))
@@ -66,6 +70,11 @@ filesender.ui.files = {
                 });
                 node.find('.info').removeAttr('title');
             });
+            
+            var index = filesender.ui.files.invalidFiles.indexOf(files[i].name);
+            if (added && index !== -1){
+                filesender.ui.files.invalidFiles.splice(index, 1);
+            }
             
             filesender.ui.nodes.files.clear.button('enable');
             filesender.ui.evalUploadEnabled();
@@ -276,6 +285,9 @@ filesender.ui.recipients = {
 filesender.ui.evalUploadEnabled = function() {
     var ok = true;
     
+    // Check if there is no files with banned extension
+    if (filesender.ui.files.invalidFiles.length > 0)ok  = false;
+    
     if(!filesender.ui.transfer.files.length) ok = false;
     if(!filesender.ui.transfer.recipients.length) ok = false;
     
@@ -283,6 +295,7 @@ filesender.ui.evalUploadEnabled = function() {
         if(!filesender.ui.nodes.aup.is(':checked')) ok = false;
     
     filesender.ui.nodes.buttons.start.button(ok ? 'enable' : 'disable');
+    
     return ok;
 };
 
@@ -329,7 +342,6 @@ filesender.ui.startUpload = function() {
     filesender.ui.nodes.stats.average_speed.show();
     
     // TODO lock fields
-    
     this.transfer.start();
 };
 
