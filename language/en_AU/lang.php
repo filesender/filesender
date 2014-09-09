@@ -311,6 +311,7 @@ $lang['guests_transfers'] = 'Guests transfers';
 $lang['logoff'] = 'Log-off';
 $lang['mac_archive_message'] = 'If you are running OSX you\'ll find a fitting un-archiving software by following the link below.';
 $lang['no_transfers'] = 'No transfers';
+$lang['no_guests'] = 'No guests';
 $lang['noscript'] = 'This application heavily relies on Javascript, you must enable it to be able to start.';
 $lang['options'] = 'Options';
 $lang['restart'] = 'Restart';
