@@ -178,6 +178,10 @@ div.success.message {
     border-color: #beb;
 }
 
+div.exception .details {
+    margin: 1em;
+}
+
 .box {
     padding: 0.5em;
     border: 1px solid #aaa;
