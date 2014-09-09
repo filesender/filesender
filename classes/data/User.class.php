@@ -193,34 +193,18 @@ class User extends DBObject {
      * @param String $criteria: criteria to search on
      * @return array: list of frequent recipients
      */
-    public function getFrequentRecipients($criteria=''){
+    public function getFrequentRecipients($criteria = null) {
+        $maxAllowed = Config::get('autocomplete_max_shown');
+        if(!$maxAllowed) $maxAllowed = 5;
         
-        $maxAllowed = Config::get('atutocomplete_max_shown')>0 ?
-                Config::get('atutocomplete_max_shown'):5;
-            
-        if ($criteria == ''){
-            $listMails = array();
-            $cpt = 0;
-            foreach ( $this->frequent_recipients as $key => $recipient){
-                $listMails[] = $recipient[0];
-                $cpt++;
-                if ($cpt>=$maxAllowed) break;
-            }
-            return $listMails;
-        }else{
-           // Search by criteria
-           $frequentRecipients = array();
-            $cpt=0;
-           foreach ( $this->frequent_recipients as $key => $recipient){
-               if (strpos($recipient [0], $criteria) !== false){
-                   $frequentRecipients[] = $recipient[0];
-                   $cpt++;
-                   if ($cpt>=$maxAllowed) break;
-               }
-           }
-           return $frequentRecipients;
-        }
+        $recipients = $this->frequent_recipients;
+        if(!$recipients) $recipients = array();
         
+        if($criteria) $recipients = array_filter($recipients, function($recipient) use($criteria) {
+            return strpos($recipient, $criteria) !== false;
+        });
+        
+        return array_slice($recipients, 0, $maxAllowed);
     }
     
     /**
@@ -230,61 +214,27 @@ class User extends DBObject {
      * @return boolean true if saved successfuly, false otherwise
      */
     public function saveFrequentRecipients($mails = array()){
-
-        if (sizeof($mails) > 0){
-            $currentDate = date('Y-m-d');
-            $maxAllowed = Config::get('max_stored_frequent_recipient')>0 ?
-                Config::get('max_stored_frequent_recipient'):0;
+        $recipients = $this->frequent_recipients;
+        if(!$recipients) $recipients = array();
+        
+        foreach($mails as $mail) {
+            if($mail instanceof Recipient) $mail = $mail->email;
             
-            // Get current mails from bdd
-            if (is_null($this->frequent_recipients)){
-                $currentMails = array();
-            }else{
-                $currentMails = $this->frequent_recipients;
-            }
+            $recipients = array_filter($recipients, function($recipient) use($mail) {
+                return $recipient != $mail;
+            });
             
-            foreach ($mails as $k => $acfcontent){
-                $key = $this->getAutocompleteMailKey($acfcontent->email, $currentMails);
-                if (!is_null($key)){
-                    unset ($currentMails[$key]);
-                }
-                array_unshift($currentMails, array($acfcontent->email,$currentDate));
-            }
-            
-            if (sizeof($currentMails) > $maxAllowed){
-                $currentMails = array_slice($currentMails, 0,$maxAllowed);
-            }
-            
-            if ($currentMails !== $this->frequent_recipients){
-                $this->frequent_recipients = $currentMails;
-                $this->save();
-                return true;
-            } else{
-                return false;
-            }
-        }else{
-            return false;
+            array_unshift($recipients, $mail);
         }
         
-    }
-    
-    
-    /**
-     * This function allows to search in autocomplete mails array, and return 
-     * the associated key if found.
-     * 
-     * @param String $mail: needle
-     * @param array $array: haystack
-     * 
-     * @return mail associated if found, null otherwise
-     */
-    function getAutocompleteMailKey($mail, $array) {
-        foreach ($array as $key => $val) {
-            if ($val[0] === $mail) {
-                return $key;
-            }
+        $maxStored = Config::get('max_stored_frequent_recipients');
+        if(!$maxStored) $maxStored = 0;
+        $recipients = array_slice($recipients, 0, $maxStored);
+        
+        if($recipients !== $this->frequent_recipients) {
+            $this->frequent_recipients = $recipients;
+            $this->save();
         }
-        return null;
     }
     
     /**
