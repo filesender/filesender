@@ -149,7 +149,7 @@ filesender.ui.recipients = {
             var invalid = [];
             for(var i=0; i<email.length; i++) {
                 var s = email[i].replace(/^\s+/g, '').replace(/\s+$/g, '');
-                if(!s) cintinue;
+                if(!s) continue;
                 if(!this.add(s))
                     invalid.push(s);
             }
@@ -195,9 +195,10 @@ filesender.ui.recipients = {
             if(!marker) {
                 marker = $('<span class="invalid fa fa-exclamation-circle fa-lg" />').attr({
                     title: lang.tr('invalid_recipient')
-                }).insertBefore(input);
+                });
                 input.data('error_marker', marker);
             }
+            marker.insertBefore(input);
         }else{
             input.val('');
             input.removeClass('invalid');

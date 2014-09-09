@@ -64,7 +64,7 @@ class GuestVoucher extends DBObject {
             'type' => 'string',
             'size' => 255
         ),
-        'transfers' => array(
+        'transfer_count' => array(
             'type' => 'uint',
             'size' => 'medium'
         ),
@@ -108,12 +108,17 @@ class GuestVoucher extends DBObject {
     protected $user_email = null;
     protected $token = null;
     protected $email = null;
-    protected $transfers = 0;
+    protected $transfer_count = 0;
     protected $subject = null;
     protected $message = null;
     protected $options = null;
     protected $created = 0;
     protected $expires = 0;
+    
+    /**
+     * Cache
+     */
+    private $transfersCache = null;
     
     /**
      * Constructor
@@ -135,17 +140,19 @@ class GuestVoucher extends DBObject {
     }
     
     /**
-     * Create a new guset voucher
+     * Create a new guest voucher
      * 
-     * @param integer $email recipient email, mandatory
+     * @param integer $recipient recipient email, mandatory
+     * @param integer $from sender email
      * 
      * @return GuestVoucher
      */
-    public static function create($email) {
+    public static function create($recipient, $from = null) {
         $voucher = new self();
         
         $voucher->user_id = Auth::user()->id;
-        $voucher->__set('email', $email); // Throws
+        $voucher->__set('user_email', $from ? $from : Auth::user()->email[0]);
+        $voucher->__set('email', $recipient); // Throws
         
         $voucher->status = GuestVoucherStatuses::AVAILABLE;
         $voucher->created = time();
@@ -293,12 +300,17 @@ class GuestVoucher extends DBObject {
      */
     public function __get($property) {
         if(in_array($property, array(
-            'id', 'user_id', 'user_email', 'token', 'email', 'transfers',
+            'id', 'user_id', 'user_email', 'token', 'email', 'transfer_count',
             'subject', 'message', 'options', 'status', 'created', 'expires'
         ))) return $this->$property;
         
         if($property == 'user' || $property == 'owner') {
             return User::fromId($this->user_id);
+        }
+        
+        if($property == 'transfers') {
+            if(is_null($this->transfersCache)) $this->transfersCache = Transfer::fromGuestVoucher($this);
+            return $this->transfersCache;
         }
         
         throw new PropertyAccessException($this, $property);

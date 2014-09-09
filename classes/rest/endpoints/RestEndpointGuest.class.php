@@ -49,9 +49,10 @@ class RestEndpointGuest extends RestEndpoint {
         return array(
             'id' => $voucher->id,
             'user_id' => $voucher->user_id,
+            'user_email' => $voucher->user_email,
             'email' => $voucher->email,
             'token' => $voucher->token,
-            'transfers' => $voucher->transfers,
+            'transfer_count' => $voucher->transfer_count,
             'subject' => $voucher->subject,
             'message' => $voucher->message,
             'options' => $voucher->options,
@@ -125,9 +126,7 @@ class RestEndpointGuest extends RestEndpoint {
         // New guest voucher
         $data = $this->request->input;
         
-        $voucher = GuestVoucher::create($data->recipient);
-        
-        $voucher->user_email = $data->from;
+        $voucher = GuestVoucher::create($data->recipient, $data->from);
         
         if($data->subject) $voucher->subject = $data->subject;
         if($data->message) $voucher->message = $data->message;

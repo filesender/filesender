@@ -94,6 +94,7 @@ class Transfer extends DBObject {
     const AVAILABLE = 'status = "available" ORDER BY created DESC';
     const EXPIRED = 'expires < DATE(NOW()) ORDER BY expires ASC';
     const FROM_USER = 'user_id = :user_id AND status="available" ORDER BY created DESC';
+    const FROM_GUEST = 'guestvoucher_id = :guestvoucher_id AND status="available" ORDER BY created DESC';
     
     /**
      * Properties
@@ -145,6 +146,41 @@ class Transfer extends DBObject {
         if($user instanceof User) $user = $user->id;
         
         return self::all(self::FROM_USER, array(':user_id' => $user));
+    }
+    
+    /**
+     * Get transfers from guest
+     * 
+     * @param mixed $guest GuestVoucher or GuestVoucher id
+     * 
+     * @return array of Transfer
+     */
+    public static function fromGuestVoucher($guest) {
+        if($guest instanceof GuestVoucher) $guest = $guest->id;
+        
+        return self::all(self::FROM_GUEST, array(':guestvoucher_id' => $guest));
+    }
+    
+    /**
+     * Get transfers from guests of user
+     * 
+     * @param mixed $user User or user id
+     * 
+     * @return array of Transfer
+     */
+    public static function fromGuestsOf($user) {
+        if($user instanceof User) $user = $user->id;
+        
+        $transfers = array();
+        foreach(GuestVoucher::fromUser($user) as $gv) {
+            $transfers = array_merge($transfers, $gv->transfers);
+        }
+        
+        uasort($transfers, function($a, $b) {
+            return $a->created - $b->created;
+        });
+        
+        return $transfers;
     }
     
     /**

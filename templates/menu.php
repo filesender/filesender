@@ -16,7 +16,7 @@ $pagemenuitem = function($page) use($current_page, $allowed_pages) {
             if(!Auth::isVoucher()) {
                 $pagemenuitem('upload');
                 
-                $pagemenuitem('vouchers');
+                $pagemenuitem('guests');
                 
                 $pagemenuitem('transfers');
                 

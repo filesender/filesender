@@ -53,6 +53,11 @@ th, td {
     padding: 0.25em;
 }
 
+abbr {
+    border-bottom: 1px dashed #aaa;
+    cursor: help;
+}
+
 
 /* Main layout rules */
 
@@ -255,6 +260,32 @@ input.invalid, textarea.invalid {
     font-size: 1.5em;
 }
 
+table.list {
+    table-layout: fixed;
+    width: 100%;
+}
+
+table.list thead tr {
+    background-color: #ccc;
+    font-weight: bold;
+}
+
+table.list th {
+    text-align: center;
+}
+
+table.list tbody tr:nth-child(even) {
+    background-color: #eee;
+}
+
+table.list .actions {
+    width: 6em;
+    text-align: center;
+}
+
+table.list .actions span{
+    margin: 0 0.1em;
+}
 
 
 /* JQuery UI overides */
@@ -288,6 +319,9 @@ input.invalid, textarea.invalid {
     padding-right:1em;
 }
 
+.ui-dialog .ui-dialog-content label {
+    margin-right: 1em;
+}
 
 /* Upload page */
 
@@ -465,18 +499,9 @@ input.invalid, textarea.invalid {
 
 /* transfers table */
 
-table.transfers {
-    table-layout: fixed;
-    width: 100%;
-}
-
-table.transfers tr:first-child {
-    background-color: #ccc;
-    font-weight: bold;
-}
-
 table.transfers .expand {
     width: 2em;
+    text-align: center;
 }
 
 table.transfers .downloads,
@@ -498,21 +523,9 @@ table.transfers td.downloads {
     text-align: left;
 }
 
-table.transfers .actions {
-    width: 6em;
-    text-align: center;
-}
-
-table.transfers .actions span{
-    margin: 0 0.1em;
-}
-
-table.transfers .transfer td {
-    border-top: 1px solid #ccc;
-}
-
-table.transfers .transfer_details {
+table.transfers tbody tr.transfer_details {
     display: none;
+    background-color: transparent;
 }
 
 table.transfers .transfer_details div {
@@ -525,7 +538,7 @@ table.transfers .transfer_details h2 {
 }
 
 
-/* Upload page */
+/* Guests page */
 
 .send_voucher .recipients {
     display: none;
@@ -555,6 +568,26 @@ table.transfers .transfer_details h2 {
     float: left;
     width: 1.2em;
     margin: 0 1em 0 0;
+}
+
+
+/* Guests table */
+
+table.guests .from,
+table.guests .to,
+table.guests .subject {
+    width: 10em;
+    overflow: hidden;
+}
+
+table.guests .full {
+    display: none;
+}
+
+table.guests .created,
+table.guests .expires {
+    width: 7em;
+    text-align: center;
 }
 
 
