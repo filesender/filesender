@@ -14,39 +14,39 @@
     <tbody>
     
     </tbody>
-        <?php foreach($guests as $gv) { ?>
-        <tr class="guest" data-id="<?php echo $gv->id ?>">
+        <?php foreach($guests as $guest) { ?>
+        <tr class="guest" data-id="<?php echo $guest->id ?>">
             <td class="from">
-                <abbr title="<?php echo htmlentities($gv->user_email) ?>">
-                    <?php echo htmlentities(substr($gv->user_email, 0, strpos($gv->user_email, '@'))) ?>
+                <abbr title="<?php echo htmlentities($guest->user_email) ?>">
+                    <?php echo htmlentities(substr($guest->user_email, 0, strpos($guest->user_email, '@'))) ?>
                 </abbr>
             </td>
             
             <td class="to">
-                <abbr title="<?php echo htmlentities($gv->email) ?>">
-                    <?php echo htmlentities(substr($gv->email, 0, strpos($gv->email, '@'))) ?>
+                <abbr title="<?php echo htmlentities($guest->email) ?>">
+                    <?php echo htmlentities(substr($guest->email, 0, strpos($guest->email, '@'))) ?>
                 </abbr>
             </td>
             
             <td class="subject">
-                <?php if(strlen($gv->subject) > 15) { ?>
-                <span class="short"><?php echo htmlentities(substr($gv->subject, 0, 15)) ?></span>
+                <?php if(strlen($guest->subject) > 15) { ?>
+                <span class="short"><?php echo htmlentities(substr($guest->subject, 0, 15)) ?></span>
                 <span class="clickable expand">[...]</span>
-                <div class="full"><?php echo htmlentities($gv->subject) ?></div>
-                <?php } else echo htmlentities($gv->subject) ?>
+                <div class="full"><?php echo htmlentities($guest->subject) ?></div>
+                <?php } else echo htmlentities($guest->subject) ?>
             </td>
             
             <td class="message">
-                <?php if(strlen($gv->message) > 15) { ?>
-                <span class="short"><?php echo htmlentities(substr($gv->message, 0, 15)) ?></span>
+                <?php if(strlen($guest->message) > 15) { ?>
+                <span class="short"><?php echo htmlentities(substr($guest->message, 0, 15)) ?></span>
                 <span class="clickable expand">[...]</span>
-                <div class="full"><?php echo htmlentities($gv->message) ?></div>
-                <?php } else echo htmlentities($gv->message) ?>
+                <div class="full"><?php echo htmlentities($guest->message) ?></div>
+                <?php } else echo htmlentities($guest->message) ?>
             </td>
             
-            <td class="created"><?php echo Utilities::formatDate($gv->created) ?></td>
+            <td class="created"><?php echo Utilities::formatDate($guest->created) ?></td>
             
-            <td class="expires"><?php echo Utilities::formatDate($gv->expires) ?></td>
+            <td class="expires"><?php echo Utilities::formatDate($guest->expires) ?></td>
             
             <td class="actions"></td>
         </tr>

@@ -36,7 +36,7 @@ if(!defined('FILESENDER_BASE')) die('Missing environment');
 /**
  * Represents an user in database
  */
-class GuestVoucher extends DBObject {
+class Guest extends DBObject {
     /**
      * Database map
      */
@@ -126,14 +126,14 @@ class GuestVoucher extends DBObject {
      * @param integer $id identifier of guset voucher to load from database (null if loading not wanted)
      * @param array $data data to create the guset voucher from (if already fetched from database)
      * 
-     * @throws GuestVoucherNotFoundException
+     * @throws GuestNotFoundException
      */
     protected function __construct($id = null, $data = null) {
         if(!is_null($id)) {
             $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE id = :id');
             $statement->execute(array(':id' => $id));
             $data = $statement->fetch();
-            if(!$data) throw new GuestVoucherNotFoundException('id = '.$id);
+            if(!$data) throw new GuestNotFoundException('id = '.$id);
         }
         
         if($data) $this->fillFromDBData($data);
@@ -145,7 +145,7 @@ class GuestVoucher extends DBObject {
      * @param integer $recipient recipient email, mandatory
      * @param integer $from sender email
      * 
-     * @return GuestVoucher
+     * @return Guest
      */
     public static function create($recipient, $from = null) {
         $voucher = new self();
@@ -154,12 +154,12 @@ class GuestVoucher extends DBObject {
         $voucher->__set('user_email', $from ? $from : Auth::user()->email[0]);
         $voucher->__set('email', $recipient); // Throws
         
-        $voucher->status = GuestVoucherStatuses::AVAILABLE;
+        $voucher->status = GuestStatuses::AVAILABLE;
         $voucher->created = time();
         
         // Generate token until it is indeed unique
         $voucher->token = Utilities::generateUID(function($token) {
-            $statement = DBI::prepare('SELECT * FROM '.GuestVoucher::getDBTable().' WHERE token = :token');
+            $statement = DBI::prepare('SELECT * FROM '.Guest::getDBTable().' WHERE token = :token');
             $statement->execute(array(':token' => $token));
             $data = $statement->fetch();
             return !$data;
@@ -196,7 +196,7 @@ class GuestVoucher extends DBObject {
      * 
      * @param mixed $user User or user id
      * 
-     * @return array of GuestVouchers
+     * @return array of Guests
      */
     public static function fromUser($user) {
         if($user instanceof User) $user = $user->id;
@@ -211,13 +211,13 @@ class GuestVoucher extends DBObject {
      * 
      * @throws RecipientNotFoundException
      * 
-     * @return GuestVoucher
+     * @return Guest
      */
     public static function fromToken($token) {
         $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE token = :token');
         $statement->execute(array(':token' => $token));
         $data = $statement->fetch();
-        if(!$data) throw new GuestVoucherNotFoundException('token = '.$token);
+        if(!$data) throw new GuestNotFoundException('token = '.$token);
         
         $guestvoucher = self::fromData($data['id'], $data);
         
@@ -274,7 +274,7 @@ class GuestVoucher extends DBObject {
      */
     public function close($manualy = true) {
         // Closing the voucher
-        $this->status = GuestVoucherStatuses::CLOSED;
+        $this->status = GuestStatuses::CLOSED;
         $this->save();
         
         Logger::logActivity(
@@ -309,7 +309,7 @@ class GuestVoucher extends DBObject {
         }
         
         if($property == 'transfers') {
-            if(is_null($this->transfersCache)) $this->transfersCache = Transfer::fromGuestVoucher($this);
+            if(is_null($this->transfersCache)) $this->transfersCache = Transfer::fromGuest($this);
             return $this->transfersCache;
         }
         
@@ -322,15 +322,15 @@ class GuestVoucher extends DBObject {
      * @param string $property property to get
      * @param mixed $value value to set property to
      * 
-     * @throws BadVoucherException
-     * @throws BadStatusException
+     * @throws GuestBadStatusException
      * @throws BadExpireException
+     * @throws BadEmailException
      * @throws PropertyAccessException
      */
     public function __set($property, $value) {
         if($property == 'status') {
             $value = strtolower($value);
-            if(!GuestVoucherStatuses::isValidValue($value)) throw new GuestVoucherBadStatusException($value);
+            if(!GuestStatuses::isValidValue($value)) throw new GuestBadStatusException($value);
             $this->status = (string)$value;
             
         }else if($property == 'user_email') {

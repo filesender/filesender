@@ -245,7 +245,7 @@ window.filesender.client = {
      * @param mixed guest voucher object or id
      * @param callable callback
      */
-    getGuestVoucher: function(voucher, callback) {
+    getGuest: function(voucher, callback) {
         var id = voucher;
         
         if(typeof voucher == 'object')
@@ -264,7 +264,7 @@ window.filesender.client = {
      * @param array options array of selected option identifiers
      * @param callable callback function to call with guest voucher path and guest voucher info once done
      */
-    postGuestVoucher: function(from, recipient, subject, message, expires, options, callback) {
+    postGuest: function(from, recipient, subject, message, expires, options, callback) {
         this.post('/guest', {
             from: from,
             recipient: recipient,
@@ -281,7 +281,7 @@ window.filesender.client = {
      * @param mixed guest voucher object or id
      * @param callable callback
      */
-    deleteGuestVoucher: function(voucher, callback) {
+    deleteGuest: function(voucher, callback) {
         var id = voucher;
         
         if(typeof voucher == 'object')

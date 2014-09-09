@@ -1,7 +1,7 @@
 <div class="box">
     <h1>{tr:guests_page}</h1>
     
-    <div class="send_voucher box">
+    <div class="invite_guest box">
         <div class="disclamer">
             {tr:send_new_voucher}
         </div>
@@ -50,7 +50,7 @@
                     <div class="fieldcontainer">
                         <label for="datepicker" id="datepicker_label" class="mandatory">{tr:expiry_date}:</label>
                         
-                        <input name="expires" type="text" title="{tr:dp_dateformat}" value="<?php echo Utilities::formatDate(GuestVoucher::getMaxExpire()) ?>"/>
+                        <input name="expires" type="text" title="{tr:dp_dateformat}" value="<?php echo Utilities::formatDate(Guest::getMaxExpire()) ?>"/>
                     </div>
                     
                 </td>
@@ -68,7 +68,7 @@
 <div class="box">
     <h1>{tr:guests}</h1>
     
-    <?php Template::display('guests_table', array('guests' => GuestVoucher::fromUser(Auth::user()))) ?>
+    <?php Template::display('guests_table', array('guests' => Guest::fromUser(Auth::user()))) ?>
 </div>
 
 <div class="box">

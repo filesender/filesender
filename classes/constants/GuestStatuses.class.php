@@ -35,7 +35,7 @@
  * Class containing transfer statuses
  */
 
-class GuestVoucherStatuses extends Enum {
+class GuestStatuses extends Enum {
     const AVAILABLE  = 'available';
     const CLOSED     = 'closed';
 }

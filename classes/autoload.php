@@ -67,7 +67,7 @@ class Autoloader {
         '*Options' => 'constants/',
         '*Constants' => 'constants/',
         'TransferStatuses' => 'constants/',
-        'GuestVoucherStatuses' => 'constants/',
+        'GuestStatuses' => 'constants/',
         'LogLevels' => 'constants/',
         
         '*Status' => 'utils/Constants',
@@ -81,7 +81,7 @@ class Autoloader {
         'Transfer' => 'data/',
         'File' => 'data/',
         'Recipient' => 'data/',
-        'GuestVoucher' => 'data/',
+        'Guest' => 'data/',
         'User' => 'data/',
         
         'Auth*' => 'auth/',

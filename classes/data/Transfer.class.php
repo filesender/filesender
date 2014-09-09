@@ -151,12 +151,12 @@ class Transfer extends DBObject {
     /**
      * Get transfers from guest
      * 
-     * @param mixed $guest GuestVoucher or GuestVoucher id
+     * @param mixed $guest Guest or Guest id
      * 
      * @return array of Transfer
      */
-    public static function fromGuestVoucher($guest) {
-        if($guest instanceof GuestVoucher) $guest = $guest->id;
+    public static function fromGuest($guest) {
+        if($guest instanceof Guest) $guest = $guest->id;
         
         return self::all(self::FROM_GUEST, array(':guestvoucher_id' => $guest));
     }
@@ -172,7 +172,7 @@ class Transfer extends DBObject {
         if($user instanceof User) $user = $user->id;
         
         $transfers = array();
-        foreach(GuestVoucher::fromUser($user) as $gv) {
+        foreach(Guest::fromUser($user) as $gv) {
             $transfers = array_merge($transfers, $gv->transfers);
         }
         
