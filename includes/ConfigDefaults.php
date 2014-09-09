@@ -64,7 +64,7 @@ $default = array(
     'max_files_per_transfer' => 30,
     
     'terasender_enabled' => true,
-    'terasender_start_mode' => 'multipler',
+    'terasender_start_mode' => 'multiple',
     
     'storage_type' => 'filesystem',
     'storage_filesystem_path' => FILESENDER_BASE.'/files',

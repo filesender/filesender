@@ -51,6 +51,24 @@ class FileNotFoundException extends LoggingException {
 }
 
 /**
+ * Unknown file extension exception
+ */
+class FileExtensionNotAllowedException extends LoggingException {
+    /**
+     * Constructor
+     * 
+     * @param string $selector column used to select file
+     */
+    public function __construct($selector) {
+        parent::__construct(
+            'file_extension_not_allowed', // Message to give to the user
+            $selector // Real message to log
+        );
+    }
+}
+
+
+/**
  * Unknown file exception
  */
 class FileBadHashException extends LoggingException {

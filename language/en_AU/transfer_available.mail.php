@@ -48,7 +48,7 @@ Best regards,
         </tr>
         <tr>
             <td>Expiry date</td>
-            <td>{date:transfer.expiry}</td>
+            <td>{date:transfer.expires}</td>
         </tr>
         <tr>
             <td>Download link</td>
