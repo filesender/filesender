@@ -30,13 +30,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-define('FILESENDER_BASE', dirname(dirname(__FILE__)));
-
-require_once(FILESENDER_BASE.'/classes/autoload.php');
+include '../includes/init_cli.php';
 
 Logger::setProcess(ProcessTypes::CLI);
-
-date_default_timezone_set(Config::get('default_timezone'));
 
 /**
  * Create/upgrade Filesender's database

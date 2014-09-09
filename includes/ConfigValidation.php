@@ -30,144 +30,90 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-$filesenderBase = dirname(dirname(__FILE__));
-$errorMsg = '';
+include '../includes/init_cli.php';
 
-if (file_exists("$filesenderBase/config/config.php")) {
-    require_once("$filesenderBase/config/config.php");
-} else {
+Logger::setProcess(ProcessTypes::CLI);
+
+
+if (!file_exists(FILESENDER_BASE . "/config/config.php")) {
     $errorMsg .= '<li>Configuration file is missing.</li>';
-    printErrorAndExit($errorMsg);
-}
+    Logger::error('Configuration file is missing.');
+} else {
 
-$CFG = config::getInstance();
-$config = $CFG->loadConfig(); // Use _global $config in all functions.
+    // The following list must be updated any time a config setting is added/removed.
+    $requiredConfigFields = array(
+        array('admin', array('string', 'array')),
+        array('admin_email', 'string'),
+        array('email_reply_to', 'string'),
+        
+        array('db_type', 'string'),
+        array('db_host', 'string'),
+        array('db_database', 'string'),
+        array('db_username', 'string'),
+        array('db_password', 'string'),
+        array('db_password', 'string'),
+    );
 
-// The following list must be updated any time a config setting is added/removed.
-$requiredConfigFields = array(
-    // General
-    'admin',
-    'adminEmail',
-    'Default_TimeZone',
-    'site_defaultlanguage',
-    'site_name',
-    'noreply',
-    'customCSS',
+    $errors = array();
 
-    // UI
-    'datedisplayformat',
-    'versionNumber',
-    'site_showStats',
-    'upload_box_default_size',
-    'upload_display_MBps',
+    foreach ($requiredConfigFields as $datas) {
+        $field = $datas[0];
+        $type = $datas[1];
 
-    // Auto complete
-    'autocomplete',
-    'autocompleteHistoryMax',
-
-    // Debug
-    'debug',
-    'displayerrors',
-    'dnslookup',
-    'client_specific_logging',
-    'client_specific_logging_uids',
-
-    // SAML
-    'saml_email_attribute',
-    'saml_name_attribute',
-    'saml_uid_attribute',
-
-    // AuP
-    'AuP_default',
-    'AuP',
-
-    // Zip
-    'mac_unzip_name',
-    'mac_unzip_link',
-
-    // Server
-    'default_daysvalid',
-    'ban_extension',
-    'max_email_recipients',
-    'max_flash_upload_size',
-    'max_html5_upload_size',
-    'upload_chunk_size',
-    'download_chunk_size',
-    'html5_max_uploads',
-    'max_flash_upload_size',
-    'server_drivespace_warning',
-
-    // Terasender
-    'terasender',
-    'terasenderadvanced',
-    'terasender_chunksize',
-    'terasender_workerCount',
-    'terasender_jobsPerWorker',
-
-    // Email flow
-    'email_me_copies_display',
-    'email_me_copies_default',
-    'upload_complete_email_display',
-    'upload_complete_email_default',
-    'inform_download_email_display',
-    'inform_download_email_default',
-    'email_me_daily_statistics_display',
-    'email_me_daily_statistics_default',
-    'download_confirmation_enabled_display',
-    'download_confirmation_enabled_default',
-    'add_me_to_recipients_display',
-    'add_me_to_recipients_default',
-
-    // Advanced server settings
-    'db_dateformat',
-    'crlf',
-    'voucherRegEx',
-    'voucherUIDLength',
-    'openSSLKeyLength',
-    'emailRegEx',
-    'webWorkersLimit',
-
-    // Site URL
-    'forceSSL',
-
-    // Support links
-    'aboutURL',
-    'helpURL',
-
-    // File locations
-    'site_filestore',
-    'site_temp_filestore',
-    'site_simplesamllocation',
-    'log_location',
-
-    // Database
-    'db_type',
-    'db_host',
-    'db_database',
-    'db_port',
-    'db_username',
-    'db_password',
-
-    // Cron
-    'cron_exclude prefix',
-    'cron_shred',
-    'cron_shred_command',
-    'cron_cleanuptempdays'
-);
-
-foreach ($requiredConfigFields as $field) {
-    if (!isset($config[$field])) {
-        $errorMsg .= '<li>Missing field: ' . $field . '.</li>';
+        $conf = Config::get($field);
+        if ($conf === null) {
+            $errors['missing_conf'][] = $field;
+        } else {
+            if (is_array($type)) {
+                $err = array();
+                foreach ($type as $tmp){
+                    $ret[] = checkConf($field, $tmp);
+                }
+                if (array_search(false,$ret,true)){
+                    $errors = array_merge($errors,$ret);
+                }
+                
+            } else{
+                $ret = checkConf($field,$type);
+                if (is_array($ret)){
+                    $errors = array_merge($errors,$ret);
+                }
+            }
+        }
     }
-}
-
-printErrorAndExit($errorMsg);
-
-function printErrorAndExit($errorMsg)
-{
-    if ($errorMsg != '') {
-        echo 'Found the following error(s) in the configuration file - please contact your administrator:<br /><ul>' . $errorMsg . '</ul>';
-        exit;
+    echo '@'.date('Y-m-d H:i:s')." - ";
+    if (count($errors) > 0){
+        echo "Configuration [KO] - See logs";
+        Logger::error($errors);
+    } else{
+        echo 'Configuration [OK]';
+        Logger::info('Configuration [OK]');
     }
+    echo PHP_EOL;
 }
 
+function checkConf($field,$type){
+    $errors = false; 
+    
+    switch ($type){
+        case 'string':
+            if (!is_string($field)){
+                $errors['bad_type'][] = array($field,$type);
+            }
+            break;
+        case 'array':
+            if (!is_array($field)){
+                $errors['bad_type'][] = array($field,$type);
+            }
+            break;
+        case 'int':
+            if (!is_numeric($field)){
+                $errors['bad_type'][] = array($field,$type);
+            }
+            break;
+        default:
+            break;
+        }
+        
+        return $errors ;
+}
