@@ -176,6 +176,8 @@ class RestEndpointTransfer extends RestEndpoint {
             $transfer->save(); // Mandatory to add recipients and files
             
             $banExtensions = Config::get('ban_extension');
+            if(!is_null($banExtensions) && !is_array($banExtensions)) $banExtensions = array_map('trim', explode(',', $banExtensions));
+            
             $cptFiles = 0;
             foreach($data->files as $filedata) {
                 $ext = pathinfo($filedata->name, PATHINFO_EXTENSION);
