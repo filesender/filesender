@@ -35,7 +35,7 @@
 $default = array(
     'testing'   => false,   // TODO
     'debug'   => false,   // TODO
-    'default_timezone' => 'Europe/London', // Default timezoen to use
+    'default_timezone' => 'Europe/London', // Default timezone to use
     'default_language' => 'en', // Default language to user
     'site_name' => 'Filesender', // Default site name to user
     'email_use_html' => true,   // By default, use HTML on mails
@@ -72,4 +72,13 @@ $default = array(
     'auditlog_lifetime' => 0,
     
     'report_format' => ReportTypes::HTML,
+
+    // Logging
+    'log_facilities' => array(
+        array(
+            'type' => 'file',
+            'path' => FILESENDER_BASE.'/logs',
+            'rotate' => 'hourly'
+        )
+    )
 );
