@@ -68,11 +68,11 @@ class User extends DBObject {
             'type' => 'date',
             'null' => true
         ),
-        'upload_preferences' => array(
+        'transfer_preferences' => array(
             'type' => 'text',
             'transform' => 'json'
         ),
-        'voucher_preferences' => array(
+        'guest_preferences' => array(
             'type' => 'text',
             'transform' => 'json'
         ),
@@ -97,8 +97,8 @@ class User extends DBObject {
     protected $lang = null;
     protected $aup_ticked = false;
     protected $aup_last_ticked_date = 0;
-    protected $upload_preferences = null;
-    protected $voucher_preferences = null;
+    protected $transfer_preferences = null;
+    protected $guest_preferences = null;
     protected $frequent_recipients = null;
     protected $created = 0;
     protected $last_activity = 0;
@@ -299,7 +299,7 @@ class User extends DBObject {
     public function __get($property) {
         if(in_array($property, array(
             'id', 'organization', 'lang', 'aup_ticked', 'aup_last_ticked_date',
-            'upload_preferences', 'voucher_preferences', 'frequent_recipients', 'created', 'last_activity',
+            'transfer_preferences', 'guest_preferences', 'frequent_recipients', 'created', 'last_activity',
             'email', 'name'
         ))) return $this->$property;
         
@@ -326,10 +326,10 @@ class User extends DBObject {
             $this->lang = (string)$value;
         }else if($property == 'aup_ticked') {
             $this->aup_ticked = (bool)$value;
-        }else if($property == 'upload_preferences') {
-            $this->upload_preferences = $value;
-        }else if($property == 'voucher_preferences') {
-            $this->voucher_preferences = $value;
+        }else if($property == 'transfer_preferences') {
+            $this->transfer_preferences = $value;
+        }else if($property == 'guest_preferences') {
+            $this->guest_preferences = $value;
         }else if($property == 'frequent_recipients'){
             $this->frequent_recipients = $value;
         }else if($property == 'email') {

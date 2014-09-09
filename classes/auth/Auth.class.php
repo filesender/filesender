@@ -70,9 +70,9 @@ class Auth {
     private static $isSP = false;
     
     /**
-     * Is the user authenticated through a voucher ?
+     * Is the user authenticated as guest ?
      */
-    private static $isVoucher = false;
+    private static $isGuest = false;
     
     /**
      * Return current user if it exists.
@@ -83,9 +83,9 @@ class Auth {
         if(is_null(self::$user)) { // Not already cached
             // Authentication logic
             
-            if(AuthVoucher::isAuthenticated()) { // Voucher
-                self::$attributes = AuthVoucher::attributes();
-                self::$isVoucher = true;
+            if(AuthGuest::isAuthenticated()) { // Guest
+                self::$attributes = AuthGuest::attributes();
+                self::$isGuest = true;
                 
             }else if(AuthSP::isAuthenticated()) { // SP
                 self::$attributes = AuthSP::attributes();
@@ -148,7 +148,7 @@ class Auth {
             }
         }
         
-        return self::$isAdmin;
+        return self::$isAdmin && !self::$isGuest;
     }
     
     /**
@@ -188,11 +188,11 @@ class Auth {
     }
     
     /**
-     * Tells if the user authenticated through a voucher.
+     * Tells if the user authenticated as guest.
      * 
      * @return bool
      */
-    public static function isVoucher() {
-        return self::$isVoucher;
+    public static function isGuest() {
+        return self::$isGuest;
     }
 }

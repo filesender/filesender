@@ -4,7 +4,7 @@ subject: {cfg:site_name} : Guest voucher expired
 
 Dear Sir or Madam,
 
-A guest voucher from {guestvoucher.user_email} has expired.
+A guest voucher from {guest.user_email} has expired.
 
 Best regards,
 {cfg:site_name}
@@ -16,7 +16,7 @@ Best regards,
 </p>
 
 <p>
-    A guest voucher from <a href="mailto:{guestvoucher.user_email}">{guestvoucher.user_email}</a> has expired.
+    A guest voucher from <a href="mailto:{guest.user_email}">{guest.user_email}</a> has expired.
 </p>
 
 <p>

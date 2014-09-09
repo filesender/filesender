@@ -39,19 +39,23 @@ try {
     Template::display('!header');
     
     try { // At that point we can render exceptions using nice html
-        $known_pages = array('home', 'upload', 'transfers', 'vouchers', 'admin', 'logon', 'download', 'exception');
+        $known_pages = array('upload', 'transfers', 'guests', 'admin', 'logon', 'download');
         
-        $allowed_pages = array('home', 'download', 'exception');
+        $allowed_pages = array('download');
         
         if(Auth::isAuthenticated()) {
-            if(Auth::isVoucher()) {
-                $allowed_pages = array('home', 'upload', 'exception');
+            if(Auth::isGuest()) {
+                $allowed_pages = array('upload');
             } else {
-                $allowed_pages = array('home', 'upload', 'transfers', 'vouchers', 'download', 'exception');
+                $allowed_pages = array('upload', 'transfers', 'guests', 'download');
                 
                 if(Auth::isAdmin()) $allowed_pages[] = 'admin';
             }
         }
+        
+        // Always accessible pages
+        $known_pages = array_merge($known_pages, array('home', 'exception'));
+        $allowed_pages = array_merge($allowed_pages, array('home', 'exception'));
         
         $page = null;
         $vars = array();
@@ -74,7 +78,7 @@ try {
             }
         }
         
-        if(Auth::isAuthenticated() && !Auth::isVoucher() && ($page != 'download'))
+        if(Auth::isAuthenticated() && !Auth::isGuest() && ($page != 'download'))
             Template::display('menu', array('allowed_pages' => $allowed_pages, 'current_page' => $page));
         
         Template::display('page', array('page' => $page, 'vars' => $vars));

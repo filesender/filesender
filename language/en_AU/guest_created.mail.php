@@ -1,4 +1,4 @@
-subject: {cfg:site_name}: Voucher received
+subject: {cfg:site_name}: Guest voucher received
 
 {alternative:plain}
 
@@ -6,12 +6,12 @@ Dear Sir or Madam,
 
 Please find below a voucher which grants access to {cfg:site_name}. You can use this voucher to upload one set of files and make it available for download to a group of people.
 
-Issuer: {guestvoucher.user_email}
-Voucher link: {cfg:site_url}?vid={guestvoucher.token}
+Issuer: {guest.user_email}
+Voucher link: {cfg:site_url}?vid={guest.token}
 
-The voucher is available until {date:guestvoucher.expires} after which time it will be automatically deleted.
+The voucher is available until {date:guest.expires} after which time it will be automatically deleted.
 
-{if:guestvoucher.message}Personal message from {guestvoucher.user_email}: {guestvoucher.message}{endif}
+{if:guest.message}Personal message from {guest.user_email}: {guest.message}{endif}
 
 Best regards,
 {cfg:site_name}
@@ -35,22 +35,22 @@ Best regards,
     <tbody>
         <tr>
             <td>Issuer</td>
-            <td><a href="mailto:{guestvoucher.user_email}">{guestvoucher.user_email}</a></td>
+            <td><a href="mailto:{guest.user_email}">{guest.user_email}</a></td>
         </tr>
         <tr>
             <td>Voucher link</td>
-            <td><a href="{cfg:site_url}?vid={guestvoucher.token}">{cfg:site_url}?vid={guestvoucher.token}</a></td>
+            <td><a href="{cfg:site_url}?vid={guest.token}">{cfg:site_url}?vid={guest.token}</a></td>
         </tr>
         <tr>
             <td>Valid until</td>
-            <td>{date:guestvoucher.expires}</td>
+            <td>{date:guest.expires}</td>
         </tr>
     </tbody>
 </table>
 
-{if:guestvoucher.message}
+{if:guest.message}
 <p>
-    Personal message from {guestvoucher.user_email}: {guestvoucher.message}
+    Personal message from {guest.user_email}: {guest.message}
 </p>
 {endif}
 

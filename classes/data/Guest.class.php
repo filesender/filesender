@@ -123,8 +123,8 @@ class Guest extends DBObject {
     /**
      * Constructor
      * 
-     * @param integer $id identifier of guset voucher to load from database (null if loading not wanted)
-     * @param array $data data to create the guset voucher from (if already fetched from database)
+     * @param integer $id identifier of guest to load from database (null if loading not wanted)
+     * @param array $data data to create the guest from (if already fetched from database)
      * 
      * @throws GuestNotFoundException
      */
@@ -140,7 +140,7 @@ class Guest extends DBObject {
     }
     
     /**
-     * Create a new guest voucher
+     * Create a new guest
      * 
      * @param integer $recipient recipient email, mandatory
      * @param integer $from sender email
@@ -148,24 +148,24 @@ class Guest extends DBObject {
      * @return Guest
      */
     public static function create($recipient, $from = null) {
-        $voucher = new self();
+        $guest = new self();
         
-        $voucher->user_id = Auth::user()->id;
-        $voucher->__set('user_email', $from ? $from : Auth::user()->email[0]);
-        $voucher->__set('email', $recipient); // Throws
+        $guest->user_id = Auth::user()->id;
+        $guest->__set('user_email', $from ? $from : Auth::user()->email[0]);
+        $guest->__set('email', $recipient); // Throws
         
-        $voucher->status = GuestStatuses::AVAILABLE;
-        $voucher->created = time();
+        $guest->status = GuestStatuses::AVAILABLE;
+        $guest->created = time();
         
         // Generate token until it is indeed unique
-        $voucher->token = Utilities::generateUID(function($token) {
+        $guest->token = Utilities::generateUID(function($token) {
             $statement = DBI::prepare('SELECT * FROM '.Guest::getDBTable().' WHERE token = :token');
             $statement->execute(array(':token' => $token));
             $data = $statement->fetch();
             return !$data;
         });
         
-        return $voucher;
+        return $guest;
     }
     
     /**
@@ -174,25 +174,25 @@ class Guest extends DBObject {
      * @return int timestamp
      */
     public static function getMaxExpire() {
-        $days = Config::get('voucher_default_daysvalid');
+        $days = Config::get('guest_default_daysvalid');
         if(!$days) $days = Config::get('default_daysvalid');
         
         return strtotime('+'.$days.' day');
     }
     
     /**
-     * Get expired guest vouchers
+     * Get expired guests
      * 
-     * @param integer $daysvalid guest voucher age limit (optionnal)
+     * @param integer $daysvalid guest age limit (optionnal)
      * 
-     * @return array guest voucher list
+     * @return array Guest list
      */
     public static function getExpired($daysvalid = null) {
         return self::all(self::EXPIRED);
     }
     
     /**
-     * Get guest vouchers from user
+     * Get guests from user
      * 
      * @param mixed $user User or user id
      * 
@@ -205,7 +205,7 @@ class Guest extends DBObject {
     }
     
     /**
-     * Loads guest voucher from token
+     * Loads guest from token
      * 
      * @param string $token the token
      * 
@@ -219,9 +219,9 @@ class Guest extends DBObject {
         $data = $statement->fetch();
         if(!$data) throw new GuestNotFoundException('token = '.$token);
         
-        $guestvoucher = self::fromData($data['id'], $data);
+        $guest = self::fromData($data['id'], $data);
         
-        return $guestvoucher;
+        return $guest;
     }
     
     /**
@@ -236,12 +236,12 @@ class Guest extends DBObject {
     }
     
     /**
-     * Save newly created voucher
+     * Set guest as available, sends notifications
      */
     public function makeAvailable() {
         $this->save();
         
-        Logger::logActivity(LogEventTypes::GUESTVOUCHER_CREATED, $this);
+        Logger::logActivity(LogEventTypes::GUEST_CREATED, $this);
         
         $this->notify(true);
     }
@@ -253,14 +253,14 @@ class Guest extends DBObject {
      */
     public function notify($just_created = false) {
         // Sending notification to recipient
-        $c = Lang::translateEmail($just_created ? 'voucher_issued' : 'voucher_reminder')->replace($this);
+        $c = Lang::translateEmail($just_created ? 'guest_created' : 'guest_reminder')->replace($this);
         $mail = new ApplicationMail($c);
         $mail->to($this->email);
         $mail->send();
         
         if($just_created) {
             // Sending receipt to owner
-            $c = Lang::translateEmail('voucher_issued_receipt')->replace($this);
+            $c = Lang::translateEmail('guest_created_receipt')->replace($this);
             $mail = new ApplicationMail($c);
             $mail->to($this->user_email);
             $mail->send();
@@ -268,22 +268,22 @@ class Guest extends DBObject {
     }
     
     /**
-     * Close the voucher
+     * Close the guest
      * 
-     * @param bool $manually wether the voucher was closed on request (if not it means it expired)
+     * @param bool $manually wether the guest was closed on request (if not it means it expired)
      */
     public function close($manualy = true) {
-        // Closing the voucher
+        // Closing the guest
         $this->status = GuestStatuses::CLOSED;
         $this->save();
         
         Logger::logActivity(
-            $manualy ? LogEventTypes::GUESTVOUCHER_CLOSED : LogEventTypes::GUESTVOUCHER_EXPIRED,
+            $manualy ? LogEventTypes::GUEST_CLOSED : LogEventTypes::GUEST_EXPIRED,
             $this
         );
         
         // Sending notification to recipient
-        $c = Lang::translateEmail($manualy ? 'voucher_cancelled' : 'voucher_expired')->replace($this);
+        $c = Lang::translateEmail($manualy ? 'guest_cancelled' : 'guest_expired')->replace($this);
         $mail = new ApplicationMail($c);
         $mail->to($this->email);
         $mail->send();
