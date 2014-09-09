@@ -436,4 +436,6 @@ $(function() {
         });
         return false;
     });
+    
+    $('#btn_logon').button();
 });

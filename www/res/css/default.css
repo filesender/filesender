@@ -133,6 +133,11 @@ abbr {
     padding: 0.5em 2em 1em 2em;
 }
 
+#page .logon {
+    margin: 1em;
+    text-align: center;
+}
+
 #footer {
     text-align: center;
     font-size: 1em;
