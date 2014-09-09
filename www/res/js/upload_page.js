@@ -71,11 +71,6 @@ filesender.ui.files = {
                 node.find('.info').removeAttr('title');
             });
             
-            var index = filesender.ui.files.invalidFiles.indexOf(files[i].name);
-            if (added && index !== -1){
-                filesender.ui.files.invalidFiles.splice(index, 1);
-            }
-            
             filesender.ui.nodes.files.clear.button('enable');
             filesender.ui.evalUploadEnabled();
             
