@@ -152,7 +152,9 @@ class AuthSPShibboleth {
             foreach(array(
                 'uid_attribute',
                 'name_attribute',
-                'email_attribute'
+                'email_attribute',
+                'login_url',
+                'logout_url'
             ) as $key) if(!array_key_exists($key, self::$config))
                 throw new ConfigMissingParameterException('auth_sp_shibboleth_'.$key);
         }
