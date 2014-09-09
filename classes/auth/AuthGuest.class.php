@@ -35,20 +35,20 @@ if (!defined('FILESENDER_BASE'))
     die('Missing environment');
 
 /**
- * Guest voucher authentication class
+ * Guest authentication class
  * 
- * Handles guest voucher authentication.
+ * Handles guest authentication.
  */
-class AuthVoucher {
+class AuthGuest {
     /**
      * Cache authentication status
      */
     private static $isAuthenticated = null;
     
     /**
-     * Cache guest voucher
+     * Cache guest
      */
-    private static $guest_voucher = null;
+    private static $guest = null;
     
     /**
      * Cache attributes
@@ -68,12 +68,12 @@ class AuthVoucher {
                 $vid = $_REQUEST['vid'];
                 
                 if(
-                        Utilities::isValidUID($vid)
+                    Utilities::isValidUID($vid)
                 ) {
                     try {
-                        self::$guest_voucher = GuestVoucher::fromToken($vid);
+                        self::$guest = Guest::fromToken($vid);
                         self::$isAuthenticated = true;
-                    } catch(GuestVoucherNotFoundException $e) {}
+                    } catch(GuestNotFoundException $e) {}
                 }
             }
         }
@@ -88,13 +88,13 @@ class AuthVoucher {
      */
     public static function attributes() {
         if(is_null(self::$attributes)) {
-            if(!self::authenticated()) throw new AuthAuthenticationNotFoundException();
+            if(!self::isAuthenticated()) throw new AuthAuthenticationNotFoundException();
             
             self::$attributes = array(
-                'uid' => self::$guest_voucher->user_id,
-                'email' => null,
+                'uid' => self::$guest->user_id,
+                'email' => self::$guest->user_email,
                 'name' => null,
-                'voucher' => self::$guest_voucher
+                'guest' => self::$guest
             );
         }
         
@@ -102,11 +102,11 @@ class AuthVoucher {
     }
     
     /**
-     * Retreive guest voucher
+     * Retreive guest
      * 
-     * @return GuestVoucher object
+     * @return Guest object
      */
-    public static function getVoucher() {
-        return self::isAuthenticated() ? self::$guest_voucher : null;
+    public static function getGuest() {
+        return self::isAuthenticated() ? self::$guest : null;
     }
 }

@@ -47,7 +47,7 @@ class LogEventTypes extends Enum {
    const FILE_MOVED             = 'file_moved';     // File has been moved
    const FILE_DELETED           = 'file_deleted';   // File has been deleted
    
-   /* GUESTVOUCHER */
+   /* GUEST */
    const GUEST_CREATED          = 'guest_created';   // Guest created
    const GUEST_SENT             = 'guest_sent';      // Guest send to recipients
    const GUEST_USED             = 'guest_used';      // Guest has been used

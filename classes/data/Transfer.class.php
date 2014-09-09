@@ -58,7 +58,7 @@ class Transfer extends DBObject {
             'type' => 'string',
             'size' => 250
         ),
-        'guestvoucher_id' => array(
+        'guest_id' => array(
             'type' => 'uint',
             'size' => 'medium',
             'null' => true
@@ -94,7 +94,7 @@ class Transfer extends DBObject {
     const AVAILABLE = 'status = "available" ORDER BY created DESC';
     const EXPIRED = 'expires < DATE(NOW()) ORDER BY expires ASC';
     const FROM_USER = 'user_id = :user_id AND status="available" ORDER BY created DESC';
-    const FROM_GUEST = 'guestvoucher_id = :guestvoucher_id AND status="available" ORDER BY created DESC';
+    const FROM_GUEST = 'guest_id = :guest_id AND status="available" ORDER BY created DESC';
     
     /**
      * Properties
@@ -103,7 +103,7 @@ class Transfer extends DBObject {
     protected $status = null;
     protected $user_id = null;
     protected $user_email = null;
-    protected $guestvoucher_id = null;
+    protected $guest_id = null;
     protected $subject = null;
     protected $message = null;
     protected $created = 0;
@@ -158,7 +158,7 @@ class Transfer extends DBObject {
     public static function fromGuest($guest) {
         if($guest instanceof Guest) $guest = $guest->id;
         
-        return self::all(self::FROM_GUEST, array(':guestvoucher_id' => $guest));
+        return self::all(self::FROM_GUEST, array(':guest_id' => $guest));
     }
     
     /**
@@ -196,8 +196,8 @@ class Transfer extends DBObject {
         
         $transfer->user_id = Auth::user()->id;
         
-        if(Auth::isVoucher())
-            $transfer->guestvoucher = AuthVoucher::getVoucher();
+        if(Auth::isGuest())
+            $transfer->guest = AuthGuest::getGuest();
         
         if(!$user_email) $user_email = Auth::user()->email[0];
         if(!in_array($user_email, Auth::user()->email))
@@ -355,7 +355,7 @@ class Transfer extends DBObject {
      */
     public function __get($property) {
         if(in_array($property, array(
-            'id', 'status', 'user_id', 'user_email', 'guestvoucher_id',
+            'id', 'status', 'user_id', 'user_email', 'guest_id',
             'subject', 'message', 'created', 'expires', 'options'
         ))) return $this->$property;
         
@@ -363,8 +363,8 @@ class Transfer extends DBObject {
             return User::fromId($this->user_id);
         }
         
-        if($property == 'guestvoucher') {
-            return $this->guestvoucher_id ? Guestvoucher::fromId($this->guestvoucher_id) : null;
+        if($property == 'guest') {
+            return $this->guest_id ? Guest::fromId($this->guest_id) : null;
         }
         
         if($property == 'files') {
@@ -404,9 +404,9 @@ class Transfer extends DBObject {
         }else if($property == 'user_email') {
             if(!filter_var($value, FILTER_VALIDATE_EMAIL)) throw new BadEmailException($value);
             $this->user_email = (string)$value;
-        }else if($property == 'guestvoucher') {
-            $gv = ($value instanceof Guestvoucher) ? $value : Guestvoucher::fromId($value);
-            $this->guestvoucher_id = $gv->id;
+        }else if($property == 'guest') {
+            $gv = ($value instanceof Guest) ? $value : Guest::fromId($value);
+            $this->guest_id = $gv->id;
         }else if($property == 'subject') {
             $this->subject = (string)$value;
         }else if($property == 'message') {

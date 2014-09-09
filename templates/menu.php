@@ -13,7 +13,7 @@ $pagemenuitem = function($page) use($current_page, $allowed_pages) {
         <ul>
             <?php
             
-            if(!Auth::isVoucher()) {
+            if(!Auth::isGuest()) {
                 $pagemenuitem('upload');
                 
                 $pagemenuitem('guests');
