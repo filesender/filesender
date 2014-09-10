@@ -201,10 +201,12 @@ class User extends DBObject {
         if(!$recipients) $recipients = array();
         
         if($criteria) $recipients = array_filter($recipients, function($recipient) use($criteria) {
-            return strpos($recipient, $criteria) !== false;
+            return strpos($recipient->email, $criteria) !== false;
         });
         
-        return array_slice($recipients, 0, $maxAllowed);
+        return array_map(function($recipient) {
+            return $recipient->email;
+        }, array_slice($recipients, 0, $maxAllowed));
     }
     
     /**
@@ -221,10 +223,10 @@ class User extends DBObject {
             if($mail instanceof Recipient) $mail = $mail->email;
             
             $recipients = array_filter($recipients, function($recipient) use($mail) {
-                return $recipient != $mail;
+                return $recipient->email != $mail;
             });
             
-            array_unshift($recipients, $mail);
+            array_unshift($recipients, (object)array('email' => $mail, 'date' => time()));
         }
         
         $maxStored = Config::get('max_stored_frequent_recipients');
