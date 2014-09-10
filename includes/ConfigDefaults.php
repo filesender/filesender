@@ -33,6 +33,8 @@
 
   // Load default configuration
 $default = array(
+    'site_url' => Utilities::getDefaultSiteURL(),
+    
     'testing'   => false,   // TODO
     'debug'   => false,   // TODO
     'default_timezone' => 'Europe/London', // Default timezone to use
@@ -77,8 +79,10 @@ $default = array(
     'log_facilities' => array(
         array(
             'type' => 'file',
-            'path' => FILESENDER_BASE.'/logs',
+            'path' => FILESENDER_BASE.'/logs/',
             'rotate' => 'hourly'
         )
-    )
+    ),
+    
+    'default_days_valid' => 20,
 );

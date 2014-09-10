@@ -242,7 +242,7 @@ $lang["_HELP_TEXT"] = '
     <li><strong>Maksimalan broj fajlova po prenosu:</strong> jedna - za prenos više fajlova odjednom, prethodno ih zapakujte u arhivu</li>
     <li><strong>Maksimalna veličina fajla po prenosu, sa Adobe Flash-om samo: </strong>'. Utilities::formatBytes(Config::get('max_legacy_upload_size')).' </li>
     <li><strong>Maksimalna veličina fajla po prenosu, sa HTML5: </strong>'. Utilities::formatBytes(Config::get('max_html5_upload_size')).'</li>
-    <li><strong>Maksimalan broj dana nakon kog fajlovi/vaučeri ističu: </strong>'. Config::get('default_daysvalid').' </li>
+    <li><strong>Maksimalan broj dana nakon kog fajlovi/vaučeri ističu: </strong>'. Config::get('default_days_valid').' </li>
 </ul>
 <p>Za više informacija molimo posetite <a href="http://www.filesender.org/" target="_blank">www.filesender.org</a></p>
 </div>

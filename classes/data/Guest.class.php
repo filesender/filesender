@@ -174,8 +174,8 @@ class Guest extends DBObject {
      * @return int timestamp
      */
     public static function getMaxExpire() {
-        $days = Config::get('guest_default_daysvalid');
-        if(!$days) $days = Config::get('default_daysvalid');
+        $days = Config::get('guest_default_days_valid');
+        if(!$days) $days = Config::get('default_days_valid');
         
         return strtotime('+'.$days.' day');
     }

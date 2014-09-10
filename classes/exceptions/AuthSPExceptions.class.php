@@ -75,7 +75,8 @@ class AuthSPMissingAttributeException extends DetailedException {
      */
     public function __construct($name) {
         parent::__construct(
-            'auth_sp_missing_'.$name.'_attribute_' // Message to give to the user
+            'auth_sp_missing_attribute', // Message to give to the user
+            'Attribute : '.$name // real message to log    
         );
     }
 }
@@ -91,7 +92,8 @@ class AuthSPBadAttributeException extends DetailedException {
      */
     public function __construct($name) {
         parent::__construct(
-            'auth_sp_bad_'.$name.'_attribute' // Message to give to the user
+            'auth_sp_bad_attribute', // Message to give to the user
+            'Attribute : '.$name // real message to log    
         );
     }
 }

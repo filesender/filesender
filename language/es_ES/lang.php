@@ -247,7 +247,7 @@ $lang["_HELP_TEXT"] = '
     <li><strong>N&uacute;mero m&aacute;ximo de archivos por env&iacute;o: </strong>1, para envio de varios a la vez compr&iacute;malos en un &uacute;nico archivo.</li>
     <li><strong>Tama&ntilde;o m&aacute;ximo del archivo por env&iacute;o (Adobe Flash): </strong>'. Utilities::formatBytes(Config::get('max_legacy_upload_size')).' </li>
     <li><strong>Tama&ntilde;o m&aacute;ximo del archivo por env&iacute;o (HTML5): </strong>'. Utilities::formatBytes(Config::get('max_html5_upload_size')).'</li>
-    <li><strong>D&iacute;as hasta la expiraci&oacute;n de un archivo/invitaci&oacute;n de env&iacute;o (m&aacute;ximo): </strong>'. Config::get('default_daysvalid').' </li>
+    <li><strong>D&iacute;as hasta la expiraci&oacute;n de un archivo/invitaci&oacute;n de env&iacute;o (m&aacute;ximo): </strong>'. Config::get('default_days_valid').' </li>
 </ul>
 
 <p></p>

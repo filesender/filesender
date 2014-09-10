@@ -223,5 +223,31 @@ class Utilities
             exit;
         }
     }
+    
+    /**
+     * Allows to get the default site url
+     * 
+     * @return String: the site URL
+     */
+    public static function getDefaultSiteURL(){
+        $reqURI = array_shift(explode('?', $_SERVER['REQUEST_URI']));
+        if (substr($reqURI, -1) != '/') {
+            $reqURI = dirname($reqURI).'/';
+        }
+
+        $port='';
+        $protocol='';
+        if (isset($_SERVER['HTTPS'])){
+            $protocol = 'https://';
+            if (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] != 80)
+                $port = ':'.$_SERVER['SERVER_PORT'];
+        }else{
+            $protocol = 'http://';
+            if (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] != 443)
+                $port .= ':'.$_SERVER['SERVER_PORT'];
+        }
+
+        return $protocol.$_SERVER['SERVER_NAME'].$port.$reqURI;
+    }
 }
 

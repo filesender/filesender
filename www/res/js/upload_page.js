@@ -315,7 +315,7 @@ filesender.ui.startUpload = function() {
         filesender.ui.recipients.clear();
         filesender.ui.nodes.subject.val('');
         filesender.ui.nodes.message.val('');
-        filesender.ui.nodes.expires.datepicker('setDate', (new Date()).getTime() + 24*3600*1000 * filesender.config.default_daysvalid);
+        filesender.ui.nodes.expires.datepicker('setDate', (new Date()).getTime() + 24*3600*1000 * filesender.config.default_days_valid);
         
         filesender.ui.alert('success', 'Done !', function() {
             filesender.ui.goToPage('transfers');
@@ -479,7 +479,7 @@ $(function() {
     
     // Bind picker
     var mindate = new Date();
-    var maxdate = new Date((new Date()).getTime() + 24*3600*1000 * filesender.config.default_daysvalid);
+    var maxdate = new Date((new Date()).getTime() + 24*3600*1000 * filesender.config.default_days_valid);
     filesender.ui.nodes.expires.datepicker({
         minDate: mindate,
         maxDate: maxdate,

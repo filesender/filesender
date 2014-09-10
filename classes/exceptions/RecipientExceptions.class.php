@@ -49,3 +49,23 @@ class RecipientNotFoundException extends LoggingException {
         );
     }
 }
+
+
+
+
+/**
+ * Invalid recipeint exception
+ */
+class InvalidRecipientException extends DetailedException {
+    /**
+     * Constructor
+     * 
+     * @param string $selector column used to select user
+     */
+    public function __construct($selector) {
+        parent::__construct(
+            'invalid_recipient', // Message to give to the user
+            $selector // Real message to log
+        );
+    }
+}

@@ -240,7 +240,7 @@ $lang["_HELP_TEXT"] = '
     <li><strong>Nombre maximal de fichiers par téléchargement :</strong> un fichier - pour télécharger plusieurs fichiers en même temps, \'zippez\' les d\'abord dans une seule archive </li>
     <li><strong>Taille maximale de fichier, pour Adobe Flash : </strong>'. Utilities::formatBytes(Config::get('max_legacy_upload_size')).' </li>
     <li><strong>Taille maximale de fichier, pour HTML5 : </strong>'. Utilities::formatBytes(Config::get('max_html5_upload_size')).'</li>
-    <li><strong>Nombre maximal de jours pour l\'expiration de fichiers / tickets : </strong>'. Config::get('default_daysvalid').' </li>
+    <li><strong>Nombre maximal de jours pour l\'expiration de fichiers / tickets : </strong>'. Config::get('default_days_valid').' </li>
 </ul>
 <p>Pour plus d\'informations, veuillez visiter <a href="http://www.filesender.org/" target="_blank">www.filesender.org</a></p>
 </div>

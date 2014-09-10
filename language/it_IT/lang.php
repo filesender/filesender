@@ -242,7 +242,7 @@ $lang["_HELP_TEXT"] = '
     <li><strong>Massimo numero di file per upload:</strong> uno - per caricare più file contemporaeamente, prima compirimili in un unico archivio</li>
     <li><strong>Massima dimensione del file per upload, con Adobe Flash: </strong>'. Utilities::formatBytes(Config::get('max_legacy_upload_size')).' </li>
     <li><strong>Massima dimensione del file per upload, con HTML5: </strong>'. Utilities::formatBytes(Config::get('max_html5_upload_size')).'</li>
-    <li><strong>Massimo numero di giorni per la scadenza del file / voucher: </strong>'. Config::get('default_daysvalid').' </li>
+    <li><strong>Massimo numero di giorni per la scadenza del file / voucher: </strong>'. Config::get('default_days_valid').' </li>
 </ul>
 <p>Per maggiori informazioni visita <a href="http://www.filesender.org/" target="_blank">www.filesender.org</a></p>
 </div>

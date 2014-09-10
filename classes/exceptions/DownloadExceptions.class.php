@@ -57,7 +57,9 @@ class DownloadBadTokenFormatException extends DetailedException {
      * @param string $token
      */
     public function __construct($token) {
-        parent::__construct('download_bad_token_format', 'token : '.$token);
+        parent::__construct(
+            'download_bad_token_format', 
+            'token : '.$token);
     }
 }
 
@@ -83,7 +85,9 @@ class DownloadBadFilesIDsException extends DetailedException {
      * @param array $bad bad files ids
      */
     public function __construct($bad) {
-        parent::__construct('download_bad_files_ids', $bad);
+        parent::__construct(
+            'download_bad_files_ids', 
+            $bad);
     }
 }
 
@@ -97,6 +101,9 @@ class DownloadInvalidRangeException extends DetailedException {
      * @param string $range the bad range
      */
     public function __construct($range) {
-        parent::__construct('download_invalid_range', $range);
+        parent::__construct(
+            'download_invalid_range', 
+            $range
+        );
     }
 }
