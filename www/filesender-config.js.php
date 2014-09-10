@@ -60,14 +60,14 @@ window.filesender.config = {
     
     max_email_recipients: <?php echo Config::get('max_email_recipients') ?>,
     
-    default_daysvalid: <?php echo Config::get('default_daysvalid') ?>,
+    default_days_valid: <?php echo Config::get('default_days_valid') ?>,
     
     chunk_upload_security: '<?php echo Config::get('chunk_upload_security') ?>',
     
     terasender_enabled: <?php echo Config::get('terasender_enabled') ? 'true' : 'false' ?>,
     terasender_advanced: <?php echo Config::get('terasender_advanced') ? 'true' : 'false' ?>,
-    terasender_chunk_size: <?php echo Config::get('terasender_chunk_size') ?>,
-    terasender_worker_count: <?php echo Config::get('terasender_worker_count') ?>,
+    terasender_chunk_size: <?php echo Config::get('terasender_chunk_size')!=null ?  Config::get('terasender_chunk_size'):  Config::get('upload_chunk_size'); ?>,
+    terasender_worker_count: <?php echo Config::get('terasender_worker_count') != null ? Config::get('terasender_worker_count') : 1 ?>,
     terasender_start_mode: '<?php echo Config::get('terasender_start_mode') ?>',
     terasender_worker_file: 'res/js/terasender_worker.js', // Worker script file
     terasender_upload_endpoint: '<?php echo Config::get('site_url') ?>rest.php/file/{file_id}/chunk/{offset}<?php (Config::get('chunk_upload_security') == 'key') ? '?key={key}' : '' ?>',

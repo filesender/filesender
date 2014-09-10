@@ -254,7 +254,7 @@ $lang["_HELP_TEXT"] = '
       <li><b>Maks. antall filer per sending: </b> 1 - for å sende flere filer samtidig kan du pakke dem i f.eks. en zip-fil først.</li>
       <li>Største mulige filstørrelse per sending <b>uten</b> HTML 5: '. Utilities::formatBytes(Config::get('max_legacy_upload_size')) .'</li>
       <li>Største mulige filstørrelse per sending <b>med</b> HTML 5: ' .Utilities::formatBytes(Config::get('max_html5_upload_size')).'</li>
-      <li>Maksimum antall dager før utløp av sending: '. Config::get('default_daysvalid').'</li>
+      <li>Maksimum antall dager før utløp av sending: '. Config::get('default_days_valid').'</li>
 </ul>
 
 <h4>Tekniske detaljer</h4>

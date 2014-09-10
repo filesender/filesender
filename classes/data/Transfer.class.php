@@ -219,7 +219,11 @@ class Transfer extends DBObject {
      * @return int timestamp
      */
     public static function getMaxExpire() {
-        return strtotime('+'.Config::get('default_daysvalid').' day');
+        
+        $days = Config::get('transfer_default_days_valid');
+        if(!$days) $days = Config::get('default_days_valid');
+        
+        return strtotime('+'.$days.' day');
     }
     
     /**

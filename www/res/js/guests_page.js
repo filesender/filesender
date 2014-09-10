@@ -244,7 +244,7 @@ $(function() {
     });
     
     // Bind picker
-    var maxdate = new Date((new Date()).getTime() + 24*3600*1000 * filesender.config.default_daysvalid);
+    var maxdate = new Date((new Date()).getTime() + 24*3600*1000 * filesender.config.default_days_valid);
     filesender.ui.nodes.expires.datepicker({
         minDate: new Date(),
         maxDate: maxdate,

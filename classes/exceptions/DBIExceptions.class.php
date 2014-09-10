@@ -60,7 +60,10 @@ class DBIConnexionMissingParameterException extends DBIConnexionException {
      * @param string $parameter name of the required parameter which is missing
      */
     public function __construct($parameter) {
-        parent::__construct('Missing DBI config parameter : '.$parameter);
+        parent::__construct(
+            'dbi_missing_parameter',
+            'Parameter: '.$parameter
+        );
     }
 }
 

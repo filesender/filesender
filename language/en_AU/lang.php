@@ -365,3 +365,130 @@ $lang['done'] = 'Done';
 $lang['error_dialog'] = 'Error';
 $lang['info_dialog'] = 'Information';
 $lang['success_dialog'] = 'Success';
+
+
+// --------------------------------------------------
+// Exceptions translation
+// --------------------------------------------------
+
+// AuditLogException
+$lang['auditlog_not_found'] = 'Audit log not found';
+$lang['bad_auditlog_event_type'] = 'Audit log bad event type';
+
+// AuthException
+$lang['auth_authentication_not_found'] = 'Authentification system not found';
+
+// AuthRemoteException
+$lang['auth_remote_application_unknown_application'] = 'Unknow remote application';
+$lang['auth_remote_application_too_late'] = 'Authentification too late';
+$lang['auth_remote_application_signature_check_failed'] = 'Remote authentification signature check failed';
+
+// AuthSPExceptions
+$lang['auth_sp_missing_delegation_class'] = 'SP authentification delegation class not found';
+$lang['auth_sp_authentication_not_found'] = 'SP authentification class not found';
+$lang['auth_sp_missing_attribute'] = 'SP authentification attribute not found';
+$lang['auth_sp_bad_attribute'] = 'SP authentification bad attribute';
+
+// BadExcpetions
+$lang['bad_email'] = 'Invalid email format';
+$lang['bad_ip_format_ipv4'] = 'Invalid IPv4 format';
+$lang['bad_ip_format_ipv6'] = 'Invalid IPv6 format';
+$lang['bad_ip_format'] = 'Invalid IP format';
+$lang['bad_expire'] = 'Invalid expiration date';
+$lang['bad_size_format'] = 'Invalid size format';
+$lang['bad_lang_code'] = 'Invalid lang code';
+
+// COnfigException
+$lang['config_file_missing'] = 'Configuration file not found';
+$lang['config_bad_parameter'] = 'Invalid configuration parameter';
+$lang['config_missing_parameter'] = 'Configuration parameter not found';
+$lang['config_override_disabled'] = 'Overriding configuration is disabled';
+$lang['config_override_validation_failed'] = 'Overriding configuration validation failed';
+$lang['config_override_not_allowed'] = 'Overriding configuration is not allowed';
+$lang['config_override_cannot_save'] = 'Cannot save the new configuration';
+
+// CoreExceptions
+$lang['core_file_not_found'] = 'Core file not found';
+$lang['core_class_not_found'] = 'Core class not found';
+
+// DBIExceptions
+$lang['failed_to_connect_to_database'] = 'Fail to connect database';
+$lang['dbi_missing_parameter'] = 'Missing DBI configuration parameter';
+$lang['database_access_failure'] = 'Fail to access database';
+
+// DBOExceptions
+$lang['no_such_property'] = 'Property not found';
+
+// DownloadExceptions
+$lang['download_missing_token'] = 'Download token not found';
+$lang['download_bad_token_format'] = 'Invalid token format';
+$lang['download_missing_files_ids'] = 'Download file IDs not found';
+$lang['download_bad_files_ids'] = 'Invalid download file IDs';
+$lang['download_invalid_range'] = 'Invalid download range';
+
+// FileExceptions
+$lang['file_not_found'] = 'File not found';
+$lang['file_extension_not_allowed'] = 'File extension not allowed';
+$lang['file_bad_hash'] = 'Invalid file hash';
+
+// GUIExceptions
+$lang['gui_unknown_admin_section'] = 'Unknown admin section';
+$lang[''] = '';
+
+// GuestExceptions
+$lang['guest_not_found'] = 'Guest not found';
+$lang['bad_guest_status'] = 'Invalid guest status';
+
+// MailExceptions
+$lang['invalid_address_format'] = 'Invalid mail address format';
+$lang['no_addresses_found'] = 'No mail addresses founds';
+
+// RecipientExceptions
+$lang['recipient_not_found'] = 'Recipient not found';
+$lang['invalid_recipient'] = 'Invalid recipient';
+
+// ReportExceptions
+$lang['report_not_found'] = 'Report not found';
+$lang['report_type_not_found'] = 'Report type not found';
+$lang['no_report_found'] = 'No report found';
+
+// RestExceptions
+$lang['rest_authentication_required'] = 'REST authentification required';
+$lang['rest_admin_required'] = 'Admin rights required';
+$lang['rest_ownership_required'] = 'Ownership rights required';
+$lang['rest_missing_parameter'] = 'Missing REST parameter';
+$lang['rest_bad_parameter'] = 'Invalid REST parameter';
+$lang[''] = '';
+
+// StatLogExceptions
+$lang['statlog_not_found'] = 'Stat log not found';
+$lang['bad_statlog_event_type'] = 'Invalid stat log event';
+
+// StorageExceptions
+$lang['storage_chunk_too_large'] = 'Storage chunk too large';
+$lang[''] = '';
+
+// StorageFilesystemExceptions
+$lang['storage_filesystem_cannot_create_path'] = 'Cannot create path on filesystem';
+$lang['storage_filesystem_file_not_found'] = 'Storage filesystem not found';
+$lang['storage_filesystem_cannot_read'] = 'Cannot read on filesystem';
+$lang['storage_filesystem_cannot_delete'] = 'Cannot delete on filesystem';
+$lang['storage_filesystem_cannot_write'] = 'Cannot write on filesystem';
+$lang['storage_filesystem_out_of_space'] = 'Storage file system out of space';
+
+// TemplateExceptions
+$lang['template_not_found'] = 'Template not found';
+
+// TransferExceptions
+$lang['transfer_not_found'] = 'Transfer not found';
+$lang['bad_transfer_status'] = 'Invalid transfer status';
+$lang['transfer_no_recipients'] = 'Transfer has no recipients';
+$lang['transfer_no_files'] = 'Transfer has no files';
+
+// UserExceptions
+$lang['user_not_found'] = 'User not found';
+$lang['user_missing_uid'] = 'User UID not found';
+
+// UtilitiesExceptions
+$lang['utilities_uid_generator_bad_unicity_checker'] = 'Invalid unicity check for UID generator';
+$lang['utilities_uid_generator_tried_too_much'] = 'Too much use of UID generator';
