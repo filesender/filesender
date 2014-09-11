@@ -31,9 +31,11 @@
  */
 
 // Start filesender
-require_once('../includes/init.php');
+
 
 try {
+    require_once('../includes/init.php');
+    
     ob_start();
     
     Template::display('!header');

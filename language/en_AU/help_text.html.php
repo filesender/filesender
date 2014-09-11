@@ -42,7 +42,7 @@
             <li><strong>Maximum number of files per  upload:</strong> one - to upload several files in one transaction, compress them into a  single archive first</li>
             <li><strong>Maximum file size per upload, with Adobe Flash only: </strong><?php echo Utilities::formatBytes(Config::get('max_legacy_upload_size')) ?></li>
             <li><strong>Maximum file size per upload, with HTML5: </strong><?php echo Utilities::formatBytes(Config::get('max_html5_upload_size')) ?></li>
-            <li><strong>Maximum file / voucher expiry days: </strong><?php echo Config::get('default_daysvalid') ?></li>
+            <li><strong>Maximum file / voucher expiry days: </strong><?php echo Config::get('default_days_valid') ?></li>
         </ul>
         
         <h4>Technical details</h4>

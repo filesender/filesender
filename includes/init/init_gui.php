@@ -30,24 +30,28 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-if(PHP_INT_SIZE !== 8) {
-    die('FileSender requires a 64-bit PHP installation to work. Please contact your administrator.');
-}
+// Disable session cache
+session_cache_limiter('nocache');
 
-define('FILESENDER_BASE', dirname(dirname(__FILE__)));
+
+// Start session if necessary
+if(!session_id()) {
+    // start new session and mark it as valid because the system is a trusted source
+    session_start();
+    $_SESSION['valid'] = true;
+}
 
 // Include classes autoloader
-require_once(FILESENDER_BASE.'/classes/autoload.php');
+require_once(FILESENDER_BASE.'/includes/ConfigValidation.php');
 
-// Set default timezone
-date_default_timezone_set(Config::get('default_timezone'));
+// Ensure HTTPS if needed
+Utilities::forceHTTPS();
 
-if (php_sapi_name() === 'cli'){
-    // Command Line Interface
-    include dirname(dirname(__FILE__)).'/includes/init/init_cli.php';
-    Logger::setProcess(ProcessTypes::CLI);
-}else{
-    // Default, GUI
-    include dirname(dirname(__FILE__)).'/includes/init/init_gui.php';
-    Logger::setProcess(ProcessTypes::GUI);
-}
+// Handle magic quoting (maybe deprecated now ?)
+if(get_magic_quotes_gpc()) {
+    $_POST = array_map('stripslashes', $_POST);
+    $_GET = array_map('stripslashes', $_GET);
+};
+
+// Output is all UTF8
+header('Content-Type: text/html; charset=UTF-8');

@@ -79,7 +79,7 @@ class ConfigMissingParameterException extends DetailedException {
     public function __construct($key) {
         parent::__construct(
             'config_missing_parameter', // Message to give to the user
-            'parameter : '.$key // Details to log
+            $key // Details to log
         );
     }
 }
