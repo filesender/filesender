@@ -29,18 +29,5 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-if(PHP_INT_SIZE !== 8) {
-    die('FileSender requires a 64-bit PHP installation to work. Please contact your administrator.');
-}
-
-define('FILESENDER_BASE', dirname(dirname(__FILE__)));
-
-// Include classes autoloader
-require_once(FILESENDER_BASE.'/classes/autoload.php');
-
-// Set default timezone
-date_default_timezone_set(Config::get('default_timezone'));
-
 // Output is all UTF8
 header('Content-Type: text/plain; charset=UTF-8');

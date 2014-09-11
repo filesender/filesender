@@ -105,6 +105,10 @@ class DetailedException extends LoggingException {
     public function __construct($msg_code, $internal_details, $public_details = null) {
         $this->uid = uniqid();
         
+        $msg_code_translated = Lang::tr($msg_code);
+        if (!is_null($internal_details) && is_string($internal_details))
+                $msg_code_translated .= ': '.$internal_details;
+        
         $this->details = $public_details;
         
         if(!$internal_details) $internal_details = array();
@@ -130,7 +134,7 @@ class DetailedException extends LoggingException {
                 }
             }
         }
-        parent::__construct($msg_code, $log);
+        parent::__construct($msg_code_translated, $log);
     }
     
     /**

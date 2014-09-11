@@ -42,6 +42,7 @@ $default = array(
     'site_name' => 'Filesender', // Default site name to user
     'email_use_html' => true,   // By default, use HTML on mails
     'upload_display_bits_per_sec' => false, // By default, do not show bits per seconds 
+    'force_ssl' => false,
     
     'auth_sp_type' => 'saml',  // Authentification type
     'auth_sp_saml_email_attribute' => 'mail', // Get email attribute from authentification service

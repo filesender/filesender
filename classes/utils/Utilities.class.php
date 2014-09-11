@@ -230,7 +230,7 @@ class Utilities
      * @return String: the site URL
      */
     public static function getDefaultSiteURL(){
-        $reqURI = array_shift(explode('?', $_SERVER['REQUEST_URI']));
+        $reqURI = array_shift(explode('?', isset($_SERVER['REQUEST_URI'])?$_SERVER['REQUEST_URI']:''));
         if (substr($reqURI, -1) != '/') {
             $reqURI = dirname($reqURI).'/';
         }
@@ -247,7 +247,7 @@ class Utilities
                 $port .= ':'.$_SERVER['SERVER_PORT'];
         }
 
-        return $protocol.$_SERVER['SERVER_NAME'].$port.$reqURI;
+        return $protocol.(isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME']:'').$port.$reqURI;
     }
 }
 

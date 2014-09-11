@@ -30,10 +30,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-include '../includes/init_cli.php';
 
-Logger::setProcess(ProcessTypes::CLI);
-
+include dirname(dirname(__FILE__)).'/includes/init.php';
 
 if (!file_exists(FILESENDER_BASE . "/config/config.php")) {
     $errorMsg .= '<li>Configuration file is missing.</li>';
@@ -51,7 +49,6 @@ if (!file_exists(FILESENDER_BASE . "/config/config.php")) {
         array('db_database', 'string'),
         array('db_username', 'string'),
         array('db_password', 'string'),
-        array('db_password', 'string'),
     );
 
     $errors = array();
@@ -62,7 +59,7 @@ if (!file_exists(FILESENDER_BASE . "/config/config.php")) {
 
         $conf = Config::get($field);
         if ($conf === null) {
-            $errors['missing_conf'][] = $field;
+            throw new ConfigMissingParameterException($field);
         } else {
             if (is_array($type)) {
                 $err = array();
@@ -70,26 +67,13 @@ if (!file_exists(FILESENDER_BASE . "/config/config.php")) {
                     $ret[] = checkConf($field, $tmp);
                 }
                 if (array_search(false,$ret,true)){
-                    $errors = array_merge($errors,$ret);
+                    throw new ConfigBadParameterException($field);
                 }
-                
             } else{
-                $ret = checkConf($field,$type);
-                if (is_array($ret)){
-                    $errors = array_merge($errors,$ret);
-                }
+                checkConf($field,$type);
             }
         }
     }
-    echo '@'.date('Y-m-d H:i:s')." - ";
-    if (count($errors) > 0){
-        echo "Configuration [KO] - See logs";
-        Logger::error($errors);
-    } else{
-        echo 'Configuration [OK]';
-        Logger::info('Configuration [OK]');
-    }
-    echo PHP_EOL;
 }
 
 function checkConf($field,$type){
@@ -114,6 +98,5 @@ function checkConf($field,$type){
         default:
             break;
         }
-        
         return $errors ;
 }
