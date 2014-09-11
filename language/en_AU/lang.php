@@ -308,6 +308,7 @@ $lang['expires'] = 'Expires';
 $lang['guests'] = 'Guests';
 $lang['guests_page'] = 'Guests';
 $lang['guests_transfers'] = 'Guests transfers';
+$lang['guest_vouchers_sent'] = 'Guest vouchers sent';
 $lang['logoff'] = 'Log-off';
 $lang['mac_archive_message'] = 'If you are running OSX you\'ll find a fitting un-archiving software by following the link below.';
 $lang['no_transfers'] = 'No transfers';
