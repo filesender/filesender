@@ -41,8 +41,6 @@ if(!session_id()) {
     $_SESSION['valid'] = true;
 }
 
-// Include classes autoloader
-require_once(FILESENDER_BASE.'/includes/ConfigValidation.php');
 
 // Ensure HTTPS if needed
 Utilities::forceHTTPS();
