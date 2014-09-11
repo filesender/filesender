@@ -1,0 +1,13 @@
+------------------------------------------------------------------------
+Howto: Installation of Filesender 2.0
+------------------------------------------------------------------------
+
+1. Checkout the repository
+2. Copy the file "config/config_sample.php" into "config/config.php"
+3. Edit the file "config/confg.php", and follow the instructions present on it
+4. run the php script using: 
+    php scripts/database.php
+
+Note: ensure you have created the database user, password and the database name.
+
+5. Try the web application
