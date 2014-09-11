@@ -34,12 +34,12 @@
 //             README / 2014-09-11
 // ---------------------------------------------
 // 
-// Configuration file for Filesender
+// This is a sample of configuration file for Filesender
 // --
 // The configuration list is available at [todo: wiki URL]
 //
-// To make filesender work, you need at least to fill the following configuration
-// parameters:
+// To make filesender work, you need first to create a file 'config/config.php',
+// and at least to fill the following configuration parameters:
 
 
 // ---------------------------------------------
