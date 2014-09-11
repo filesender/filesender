@@ -38,6 +38,7 @@ define('FILESENDER_BASE', dirname(dirname(__FILE__)));
 
 // Include classes autoloader
 require_once(FILESENDER_BASE.'/classes/autoload.php');
+require_once(FILESENDER_BASE.'/includes/ConfigValidation.php');
 
 // Set default timezone
 date_default_timezone_set(Config::get('default_timezone'));

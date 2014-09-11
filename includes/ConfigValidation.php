@@ -40,6 +40,8 @@ if (!file_exists(FILESENDER_BASE . "/config/config.php")) {
 
     // The following list must be updated any time a config setting is added/removed.
     $requiredConfigFields = array(
+        array('site_url','string'),
+        
         array('admin', array('string', 'array')),
         array('admin_email', 'string'),
         array('email_reply_to', 'string'),

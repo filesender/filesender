@@ -46,6 +46,8 @@
 //              General settings
 // ---------------------------------------------
 // 
+//$config['site_url'] = '';                // String, URL of the application
+// 
 //$config['admin'] = '';            // String, UID's (from  $config['saml_uid_attribute']) 
                                     // that have Administrator permissions
 

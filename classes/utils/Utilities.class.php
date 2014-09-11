@@ -226,6 +226,7 @@ class Utilities
     
     /**
      * Allows to get the default site url
+     * NOT USED ANYMORE
      * 
      * @return String: the site URL
      */
