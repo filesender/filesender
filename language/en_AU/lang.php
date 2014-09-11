@@ -353,7 +353,7 @@ $lang['actions'] = 'Actions';
 $lang['send_reminder'] = 'Send reminder';
 
 $lang['confirm_dialog'] = 'Warning';
-$lang['confirm_dialog_notify'] = 'Do you want to be notified by mail when download is complete ?';
+$lang['confirm_download_notify'] = 'Do you want to be notified by mail when download is complete ?';
 $lang['invalid_recipient'] = 'Invalid recipient';
 $lang['error_dialog'] = 'Error';
 $lang['upload_failed'] = 'Upload failed';
