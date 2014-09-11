@@ -30,9 +30,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-include '../includes/init_cli.php';
-
-Logger::setProcess(ProcessTypes::CLI);
+include dirname(dirname(__FILE__)).'/includes/init.php';
 
 /**
  * Create/upgrade Filesender's database
