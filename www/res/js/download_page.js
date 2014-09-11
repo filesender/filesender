@@ -75,7 +75,7 @@ $(function() {
             };
         };
         
-        filesender.ui.confirm('confirm_download_notify', dlcb(true), dlcb(false), true);
+        filesender.ui.confirm(lang.tr('confirm_download_notify'), dlcb(true), dlcb(false), true);
     };
     
     // Bind download buttons

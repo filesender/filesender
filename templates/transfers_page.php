@@ -34,7 +34,7 @@
       </tr>
       <tr>
         <td class="formfieldheading mandatory" id="files_expiry">
-          <?php echo Lang::tr('_EXPIRY_DATE'); ?>: <input type="hidden" id="fileexpirydate" name="fileexpirydate" value="<?php echo date(Lang::tr('date_format'), strtotime("+".Config::get('default_daysvalid')." day"));?>" />
+          <?php echo Lang::tr('_EXPIRY_DATE'); ?>: <input type="hidden" id="fileexpirydate" name="fileexpirydate" value="<?php echo date(Lang::tr('date_format'), strtotime("+".Config::get('default_days_valid')." day"));?>" />
         </td>
         <td>
           <input id="datepicker" name="datepicker" onchange="validate_expiry()" title="<?php echo Lang::tr('_DP_dateFormat'); ?>" />
