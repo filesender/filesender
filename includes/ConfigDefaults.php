@@ -33,8 +33,6 @@
 
   // Load default configuration
 $default = array(
-    'site_url' => Utilities::getDefaultSiteURL(),
-    
     'testing'   => false,   // TODO
     'debug'   => false,   // TODO
     'default_timezone' => 'Europe/London', // Default timezone to use
