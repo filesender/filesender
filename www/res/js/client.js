@@ -67,7 +67,7 @@ window.filesender.client = {
         }else data = undefined;
         
         var errorhandler = filesender.ui.error;
-        if(options.error) {
+        if(options && options.error) {
             errorhandler = options.error;
             delete options.error;
         }
