@@ -107,7 +107,12 @@ $(function() {
             });
         }
         
-        dl(ids);
+        
+        var transferid = $('.transfer').attr('data-id');
+        
+        filesender.client.getTransferOptions(transferid,function(data){
+            dl(ids,data.indexOf('enable_recipient_email_download_complete') !== -1);
+        });
         
         return false;
     });
