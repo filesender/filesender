@@ -19,7 +19,7 @@
         {tr:download_disclamer}
     </div>
     
-    <div class="general box">
+    <div class="general box" >
         <div class="from">{tr:from} : <?php echo htmlentities($transfer->user_email) ?></div>
         
         <div class="created">{tr:created} : <?php echo htmlentities(Utilities::formatDate($transfer->created)) ?></div>
@@ -51,7 +51,7 @@
             </span>
         </div>
     <?php foreach($transfer->files as $file) { ?>
-        <div class="file" data-id="<?php echo $file->id ?>">
+        <div class="file" data-id="<?php echo $file->id ?>" >
             <span class="select clickable fa fa-2x fa-square-o" title="{tr:select_for_archive_download}"></span>
             <span class="name"><?php echo htmlentities($file->name) ?></span>
             <span class="size"><?php echo Utilities::formatBytes($file->size) ?></span>
@@ -73,7 +73,12 @@
                 {tr:archive_download}
             </a>
         </div>
+        
+        <div class='transfer' data-id="<?php echo $transfer->id ?>"></div>
+        
     </div>
+    
+    
         
         
     <?php if (false && $fileData[0]['fileenabledownloadreceipts'] == 'true') { ?>
