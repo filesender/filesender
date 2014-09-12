@@ -54,6 +54,7 @@ class RestEndpointTransfer extends RestEndpoint {
             'message' => $transfer->message,
             'created' => RestUtilities::formatDate($transfer->created),
             'expires' => RestUtilities::formatDate($transfer->expires),
+            'options' => $transfer->options,
             
             'files' => array_map('RestEndpointFile::cast', array_values($transfer->files)),
             'recipients' => array_map('RestEndpointRecipient::cast', array_values($transfer->recipients)),
@@ -92,8 +93,11 @@ class RestEndpointTransfer extends RestEndpoint {
             if(!$transfer->isOwner($user) && !Auth::isAdmin())
                 throw new RestOwnershipRequiredException($user->id, 'transfer = '.$transfer->id);
             
-            return self::cast($transfer);
-            
+            if ($property){
+                return $transfer->$property;
+            }else{
+                return self::cast($transfer);
+            }
         }
         
         if(!in_array($id, array('', '@me', '@all'))) throw new RestBadParameterException('transfer_id');

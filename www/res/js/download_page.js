@@ -65,7 +65,7 @@ $(function() {
     var m = window.location.search.match(/token=([0-9a-f-]+)/);
     var token = m[1];
     
-    var dl = function(ids) {
+    var dl = function(ids,confirm) {
         if(typeof ids == 'string') ids = [ids];
         
         var dlcb = function(notify) {
@@ -75,14 +75,21 @@ $(function() {
             };
         };
         
-        filesender.ui.confirm(lang.tr('confirm_download_notify'), dlcb(true), dlcb(false), true);
+        if (confirm){
+            filesender.ui.confirm(lang.tr('confirm_download_notify'), dlcb(true), dlcb(false), true);
+        }else{
+            filesender.ui.redirect(filesender.config.base_path + 'download.php?token=' + token + '&files_ids=' + ids.join(','));
+        }
     };
     
     // Bind download buttons
     page.find('.file .download').button().on('click', function() {
         var id = $(this).closest('.file').attr('data-id');
+        var transferid = $('.transfer').attr('data-id');
         
-        dl(id);
+        filesender.client.getTransferOptions(transferid,function(data){
+            dl(id,data.indexOf('enable_recipient_email_download_complete') !== -1);
+        });
         
         return false;
     });

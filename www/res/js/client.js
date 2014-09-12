@@ -306,5 +306,10 @@ window.filesender.client = {
     
     getFrequentRecipients: function(needle, callback){
         this.get('/user/@me/frequent_recipients',callback,needle?{args: {"filterOp[contains]":needle}}:undefined);
+    },
+    
+    getTransferOptions: function(id, callback){
+        this.get('/transfer/'+id+'/options',callback);
     }
+    
 };
