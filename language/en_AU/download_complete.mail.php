@@ -1,40 +1,52 @@
-subject: {siteName}: Download Complete - {filetrackingcode}
+subject: {cfg:site_name}: Download Complete
 
 {alternative:plain}
 
 Dear Sir or Madam,
 
-Your download consisting of the following file(s) has finished.
-Tracking code: {filetrackingcode}
+Your download consisting of the following file has finished.
 
 Files:
 {fileinfo}
 
 Best regards,
-{siteName}
+{cfg:site_name}
 
 {alternative:html}
 
-<p>Dear Sir or Madam,</p>
-<p>Your download consisting of the following file(s) has finished.</p>
-<table width="960" cellspacing="0" cellpadding="3" border="1" bordercolor="#bbbbbb" rules="rows">
+<p>
+    Dear Sir or Madam,
+</p>
+
+<p>
+    Your download consisting of the following file has finished.
+</p>
+
+<table rules="rows">
+    <thead>
+        <tr>
+            <th colspan="2">File details</th>
+        </tr>
+    </thead>
     <tbody>
-    <tr bgcolor="#cccccc">
-        <td colspan="2" height="30"><strong>Transaction details</strong></td>
-    </tr>
-    <tr bgcolor="#e5e5e5" valign="top">
-        <td width="100"><strong>Tracking code</strong></td>
-        <td>{filetrackingcode}</td>
-    </tr>
-    <tr valign="top">
-        <td width="100"><strong>Expiry date</strong></td>
-        <td>{fileexpirydate}</td>
-    </tr>
-    <tr bgcolor="#e5e5e5" valign="top">
-        <td width="100"><strong>Files</strong></td>
-        <td>{htmlfileinfo}</td>
-    </tr>
+        <tr>
+            <td>File</td>
+            <td>
+                {filename}
+            </td>
+        </tr>
+        <tr>
+            <td>Size</td>
+            <td>{filesize}</td>
+        </tr>
+        <tr>
+            <td>Download link</td>
+            <td><a href="{cfg:site_url}?s=download&token={recipient.token}">{cfg:site_url}?s=download&amp;token={recipient.token}</a></td>
+        </tr>
     </tbody>
 </table>
-<p>Best regards,<br />
-{siteName}</p>
+
+<p>
+    Best regards,<br />
+    {cfg:site_name}
+</p>

@@ -130,6 +130,8 @@ class Zipper {
 
             // Add the size of this file entry to the offset (needed for the TOC, Table Of Content).
             $offset += $localHeaderLength + $fileDataLength + $descriptorLength;
+            
+            Logger::logActivity(LogEventTypes::DOWNLOAD_END, $file);
         }
 
         // Write the TOC at the end of the ZIP archive.
@@ -393,7 +395,7 @@ class Zipper {
      * 
      * @return int: the total filesize of the archive
      */
-    private function calculateTotalFileSize(){
+    public function calculateTotalFileSize(){
         $fileSize = 22; // Size of the end-of-file TOC record.
 
         foreach ($this->files as $data) {

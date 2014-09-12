@@ -50,6 +50,10 @@ filesender.ui.files = {
                 var name = el.attr('data-name');
                 var size = el.attr('data-size');
                 
+                var total_size = 0;
+                for(var j=0; j<filesender.ui.transfer.files.length; j++)
+                    total_size += filesender.ui.transfer.files[j].size;
+                
                 if(name && size)
                     filesender.ui.transfer.removeFile(name, size);
                 
@@ -57,6 +61,12 @@ filesender.ui.files = {
                 
                 if(!filesender.ui.nodes.files.list.find('div').length)
                     filesender.ui.nodes.files.clear.button('disable');
+                
+                if (filesender.ui.files.invalidFiles.indexOf(name) === -1){
+                    total_size -= parseInt(size);
+                    filesender.ui.nodes.stats.number_of_files.show().find('.value').text(filesender.ui.transfer.files.length + '/' + filesender.config.max_html5_uploads);
+                    filesender.ui.nodes.stats.size.show().find('.value').text(filesender.ui.formatBytes(total_size) + '/' + filesender.ui.formatBytes(filesender.config.max_html5_upload_size));
+                }
             }).appendTo(node);
             
             var added = filesender.ui.transfer.addFile(files[i], function(error) {

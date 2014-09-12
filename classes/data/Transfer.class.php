@@ -527,9 +527,46 @@ class Transfer extends DBObject {
             'html_file_list' => (count($files) > 1) ? '<ul><li>'.implode('</li><li>', $files).'</li></ul>' : $files[0],
         ));
         
+        $this->manageTransferOptions($ctn);
+        
         foreach($this->recipients as $recipient) {
             $mail = new ApplicationMail($ctn->r($recipient));
             $mail->to($recipient->email);
+            $mail->send();
+        }
+    }
+    
+    
+    /**
+     * This function check the current transfer options and do work required
+     * for all present options
+     * 
+     * @param Lang $ctn: translation 
+     * @param type $opt: options
+     */
+    private function manageTransferOptions($ctn, $opt = false){
+        // Managing transfer options
+        if ($opt){
+            $options = $opt;
+        }else{
+            $options = $this->options;
+        }
+        
+        // Add current user to the recipient list
+        if ($this->hasOption(TransferOptions::ADD_ME_TO_RECIPIENTS) || 
+            $this->hasOption(TransferOptions::EMAIL_ME_COPIES, $options)){
+            
+            $this->addRecipient(Auth::user()->email[0]);
+        }
+        
+        if ($this->hasOption(TransferOptions::EMAIL_UPLOAD_COMPLETE, $options)){
+            $ctn = Lang::translateEmail('upload_complete')->r($this, array(
+                'text_file_list' => (count($files) > 1) ? '  - '.implode("\n  - ", $files) : $files[0],
+                'html_file_list' => (count($files) > 1) ? '<ul><li>'.implode('</li><li>', $files).'</li></ul>' : $files[0],
+            ));
+
+            $mail = new ApplicationMail($ctn->r(Auth::user()->email[0]));
+            $mail->to(Auth::user()->email[0]);
             $mail->send();
         }
     }
