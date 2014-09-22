@@ -68,7 +68,7 @@ class Storage {
         $class = 'Storage'.ucfirst($type);
         
         if(!class_exists($class))
-            throw ConfigBadParameterException('storage_type');
+            throw new ConfigBadParameterException('storage_type');
         
         self::$class = $class;
     }
