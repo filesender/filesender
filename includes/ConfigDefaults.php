@@ -78,7 +78,7 @@ $default = array(
     'log_facilities' => array(
         array(
             'type' => 'file',
-            'path' => FILESENDER_BASE.'/logs/',
+            'path' => FILESENDER_BASE.'/log/',
             'rotate' => 'hourly'
         )
     ),
