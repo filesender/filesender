@@ -259,8 +259,8 @@ class Logger {
             fwrite($fh, '['.date('Y-m-d H:i:s').'] '.trim($message)."\n");
             fclose($fh);
         }else{
-            self::log_error_log('[Filesender logging error] Could not log to '.$file);
-            self::log_error_log($message);
+            self::logErrorLog('[Filesender logging error] Could not log to '.$file);
+            self::logErrorLog($message);
         }
     }
     
