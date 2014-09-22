@@ -68,7 +68,8 @@
 // ---------------------------------------------
 //              SAML configuration
 // ---------------------------------------------
-//$config['auth_sp_saml_simplesamlphp_url'] ='';    // Url of saml simplephp location
+//$config['auth_sp_saml_simplesamlphp_url'] ='';        // Url of simplesamlphp
+//$config['auth_sp_saml_simplesamlphp_location'] ='';   // Location of simplesamlphp libraries
 
 //      ----------------------------
 //      -------- [optional] --------
