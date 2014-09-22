@@ -31,7 +31,8 @@
  */
 
 
-include dirname(dirname(__FILE__)).'/includes/init.php';
+if(!defined('FILESENDER_BASE'))
+    include dirname(dirname(__FILE__)).'/includes/init.php';
 
 if (!file_exists(FILESENDER_BASE . "/config/config.php")) {
     $errorMsg .= '<li>Configuration file is missing.</li>';
