@@ -53,3 +53,5 @@ if(get_magic_quotes_gpc()) {
 
 // Output is all UTF8
 header('Content-Type: text/html; charset=UTF-8');
+
+require_once(FILESENDER_BASE.'/includes/ConfigValidation.php');
