@@ -349,6 +349,16 @@ class Transfer extends DBObject {
     }
     
     /**
+     * Tells wether the transfer is expired
+     * 
+     * @return bool
+     */
+    public function isExpired() {
+        $today = (24 * 3600) * floor(time() / (24 * 3600));
+        return $this->expires < $today;
+    }
+    
+    /**
      * Getter
      * 
      * @param string $property property to get
@@ -386,6 +396,8 @@ class Transfer extends DBObject {
             if(is_null($this->recipientsCache)) $this->recipientsCache = Recipient::fromTransfer($this);
             return $this->recipientsCache;
         }
+        
+        if($property == 'is_expired') return $this->isExpired();
         
         throw new PropertyAccessException($this, $property);
     }
