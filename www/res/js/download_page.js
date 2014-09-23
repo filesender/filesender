@@ -65,7 +65,7 @@ $(function() {
     var m = window.location.search.match(/token=([0-9a-f-]+)/);
     var token = m[1];
     
-    var dl = function(ids,confirm) {
+    var dl = function(ids, confirm) {
         if(typeof ids == 'string') ids = [ids];
         
         var dlcb = function(notify) {
@@ -87,8 +87,8 @@ $(function() {
         var id = $(this).closest('.file').attr('data-id');
         var transferid = $('.transfer').attr('data-id');
         
-        filesender.client.getTransferOptions(transferid,function(data){
-            dl(id,data.indexOf('enable_recipient_email_download_complete') !== -1);
+        filesender.client.getTransferOption(transferid, 'enable_recipient_email_download_complete', token, function(dl_complete_enabled){
+            dl(id, dl_complete_enabled);
         });
         
         return false;
@@ -110,8 +110,8 @@ $(function() {
         
         var transferid = $('.transfer').attr('data-id');
         
-        filesender.client.getTransferOptions(transferid,function(data){
-            dl(ids,data.indexOf('enable_recipient_email_download_complete') !== -1);
+        filesender.client.getTransferOption(transferid, 'enable_recipient_email_download_complete', token, function(dl_complete_enabled){
+            dl(ids, dl_complete_enabled);
         });
         
         return false;

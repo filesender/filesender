@@ -83,6 +83,21 @@ class RestEndpointTransfer extends RestEndpoint {
      * @throws RestOwnershipRequiredException
      */
     public function get($id = null, $property = null, $property_id = null) {
+        if($property == 'options' && in_array($property_id, array('enable_recipient_email_download_complete'))) {
+            if(!array_key_exists('token', $_GET)) throw new RestBadParameterException('token');
+            $token = $_GET['token'];
+            if(!Utilities::isValidUID($token)) throw new RestBadParameterException('token');
+            
+            if(!is_numeric($id)) throw new RestBadParameterException('transfer_id');
+            
+            $transfer = Transfer::fromId($id);
+            $recipient = Recipient::fromToken($token);
+            
+            if(!$recipient->transfer->is($transfer)) throw new RestAuthenticationRequiredException();
+            
+            return in_array($property_id, $transfer->options);
+        }
+        
         if(!Auth::isAuthenticated()) throw new RestAuthenticationRequiredException();
         
         $user = Auth::user();
@@ -93,11 +108,12 @@ class RestEndpointTransfer extends RestEndpoint {
             if(!$transfer->isOwner($user) && !Auth::isAdmin())
                 throw new RestOwnershipRequiredException($user->id, 'transfer = '.$transfer->id);
             
-            if ($property){
+            if($property == 'options') {
+                
                 return $transfer->$property;
-            }else{
-                return self::cast($transfer);
             }
+            
+            return self::cast($transfer);
         }
         
         if(!in_array($id, array('', '@me', '@all'))) throw new RestBadParameterException('transfer_id');

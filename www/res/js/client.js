@@ -304,12 +304,12 @@ window.filesender.client = {
     },
     
     
-    getFrequentRecipients: function(needle, callback){
-        this.get('/user/@me/frequent_recipients',callback,needle?{args: {"filterOp[contains]":needle}}:undefined);
+    getFrequentRecipients: function(needle, callback) {
+        this.get('/user/@me/frequent_recipients', callback, needle ? {args: {'filterOp[contains]': needle}} : undefined);
     },
     
-    getTransferOptions: function(id, callback){
-        this.get('/transfer/'+id+'/options',callback);
-    }
+    getTransferOption: function(id, option, token, callback) {
+        this.get('/transfer/' + id + '/options/' + option, callback, token ? {args: {token: token}} : undefined);
+    },
     
 };
