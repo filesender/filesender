@@ -90,3 +90,27 @@ class TransferNoFilesException extends DetailedException {
         parent::__construct('transfer_no_files');
     }
 }
+
+/**
+ * Expired
+ */
+class TransferExpiredException extends DetailedException {
+    /**
+     * Constructor
+     */
+    public function __construct() {
+        parent::__construct('transfer_expired');
+    }
+}
+
+/**
+ * Not available
+ */
+class TransferNotAvailableException extends DetailedException {
+    /**
+     * Constructor
+     */
+    public function __construct() {
+        parent::__construct('transfer_not_availabe');
+    }
+}

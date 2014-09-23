@@ -13,6 +13,10 @@
     $recipient = Recipient::fromToken($token); // Throws
     $transfer = $recipient->transfer;
     
+    if($transfer->isExpired()) throw new TransferExpiredException();
+    
+    if($transfer->status != TransferStatuses::AVAILABLE) throw new TransferNotAvailableException();
+    
     ?>
     
     <div class="disclamer">
