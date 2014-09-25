@@ -132,14 +132,14 @@ class FileMetadata {
 	 * @return NULL|string
 	 */
 	private function _chunkToJson($chunk) {
-		$a = split ( ",", $chunk );
+		$a = explode( ",", $chunk );
 		
 		if (count ( $a ) < 4) return null; // corrupt metadata
 		return sprintf ( '{"c":%d,"s":%d,"e":%d,"cs":%d}', $a[1], $a[2], $a[3], $a[3]-$a[2] );
 	}
 	
 	private function _chunkToArray($chunk) {
-		$a = split ( ",", $chunk );
+		$a = explode( ",", $chunk );
 		
 		if (count ( $a ) < 4) return null; // corrupt metadata
 		return array('nr' => $a[1], 'start' => $a[2], 'end' => $a[3]);
