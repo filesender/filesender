@@ -136,9 +136,12 @@ function startDownload() {
 			buttons: {
 				'<?php echo lang("_OK"); ?>': function() { 
 					$( this ).dialog( "close" ); 
-					startDownloadWithPassword($("#decpassword").val());
+					var p = $("#decpassword").val();
+					$("#decpassword").val('');
+					startDownloadWithPassword(p);
 				},
 				'<?php echo lang("_CLOSE"); ?>' : function() {
+					$("#decpassword").val('');
 					$( this ).dialog( "close" ); 
 				}
 			},
