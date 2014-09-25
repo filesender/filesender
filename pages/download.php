@@ -120,8 +120,10 @@ $(document).ready(function() {
 
 function errorDialog(msg)
 {
+    var formattedError = "<div id=\"default-msg\">"+msg+"</div>";
+	
 	$("#dialog-default").dialog("option", "title", "Error");
-    $("#default-msg").html(msg);
+    $("#dialog-default").html(formattedError);
     $("#dialog-default").dialog("open")
 }
 
@@ -161,7 +163,7 @@ function startDownloadWithPassword(password) {
             var downloader = new Downloader(chunksize, {
                 progress: function(number) {
                     $("#progress_bar").width(number / 100 * $('#progress_container').width());
-		    //set width of progress bar based on the $status value (set a
+		    //set width of progress bar based on the $status value (set a...)
                     $("#progress_bar").html(number + "% ");
                     $("#progress_completed").html(parseInt(number) + "%");
 		    //display the % completed within the progress bar
