@@ -493,3 +493,23 @@ $lang['user_missing_uid'] = 'User UID not found';
 // UtilitiesExceptions
 $lang['utilities_uid_generator_bad_unicity_checker'] = 'Invalid unicity check for UID generator';
 $lang['utilities_uid_generator_tried_too_much'] = 'Too much use of UID generator';
+
+$lang['report_event_transfer_started'] = 'Transfer was created';
+$lang['report_event_transfer_available'] = 'Transfer became available';
+$lang['report_event_transfer_expired'] = 'Transfer expired';
+$lang['report_event_transfer_closed'] = 'Transfer was closed on request';
+$lang['report_event_transfer_deleted'] = 'Transfer data was deleted';
+$lang['report_event_upload_started'] = 'Upload started';
+$lang['report_event_upload_resumed'] = 'Upload was resumed';
+$lang['report_event_upload_ended'] = 'Upload finished';
+$lang['report_event_download_started'] = 'Recipient {author.email} started downloading {file.name} ({size:file.size})';
+$lang['report_event_download_resumed'] = 'Recipient {author.email} resumed download of {file.name} ({size:file.size})';
+$lang['report_event_download_ended'] = 'Recipient {author.email} finished downloading {file.name} ({size:file.size})';
+$lang['report_event_archive_download_started'] = 'Recipient {author.email} started downloading archive of transfer';
+$lang['report_event_archive_download_ended'] = 'Recipient {author.email} finished downloading archive of transfer';
+
+$lang['report_recipient_event_download_started'] = 'Recipient started downloading {file.name} ({size:file.size})';
+$lang['report_recipient_event_download_resumed'] = 'Recipient resumed download of {file.name} ({size:file.size})';
+$lang['report_recipient_event_download_ended'] = 'Recipient finished downloading {file.name} ({size:file.size})';
+$lang['report_recipient_event_archive_download_started'] = 'Recipient started downloading archive of transfer';
+$lang['report_recipient_event_archive_download_ended'] = 'Recipient finished downloading archive of transfer';
