@@ -92,7 +92,7 @@
                     
                     <?php foreach($transfer->recipients as $recipient) { ?>
                         <div class="recipient" data-id="<?php echo $recipient->id ?>">
-                            <?php echo htmlentities($recipient->email) ?> : <!--count($transfer->auditLogs('download', $recipient)--> 0 {tr:downloads}
+                            <?php echo htmlentities($recipient->email) ?> : <?php echo count($recipient->downloads) ?> {tr:downloads}
                         </div>
                     <?php } ?>
                 </div>
@@ -102,14 +102,22 @@
                     
                     <?php foreach($transfer->files as $file) { ?>
                         <div class="file" data-id="<?php echo $file->id ?>">
-                            <?php echo htmlentities($file->name) ?> (<?php echo Utilities::formatBytes($file->size) ?>) : <!--count($transfer->auditLogs('download', $file)--> 0 {tr:downloads}
+                            <?php echo htmlentities($file->name) ?> (<?php echo Utilities::formatBytes($file->size) ?>) : <?php echo count($file->downloads) ?> {tr:downloads}
                         </div>
                     <?php } ?>
                 </div>
                 
                 <div class="auditlog">
                     <h2>{tr:auditlog}</h2>
-                    TODO
+                    <table>
+                        <thead>
+                            <th>{tr:date}</th>
+                            <th>{tr:event}</th>
+                        </thead>
+                        <tbody>
+                            <?php Template::display('report_html', array('report' => new Report($transfer))) ?>
+                        </tbody>
+                    </table>
                 </div>
             </td>
         </tr>
