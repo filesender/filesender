@@ -41,7 +41,6 @@ class Autoloader {
      */
     private static $mappers = array(
         'PropertyAccessException' => 'exceptions/DBObjectExceptions',
-        'NoReportFoundException' => 'exceptions/ReportExceptions',
         '*Exception' => 'exceptions/@package(Exception)',
         
         'Logger' => 'utils/',
@@ -69,6 +68,7 @@ class Autoloader {
         'TransferStatuses' => 'constants/',
         'GuestStatuses' => 'constants/',
         'LogLevels' => 'constants/',
+        'ReportFormats' => 'constants/',
         
         '*Status' => 'utils/Constants',
         
