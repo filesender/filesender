@@ -35,44 +35,45 @@
  */
 class LogEventTypes extends Enum {
     /* GENERAL */
-   const LOG_CREATED            = 'log_created';    // Log created
+   const LOG_CREATED              = 'log_created';    // Log created
    
    /* USER */
-   const USER_ACTIVATED         = 'user_activated'; // User become active
-   const USER_INACTIVE          = 'user_inactive';  // User become inactive
-   const USER_PURGED            = 'user_purged';    // User purged
+   const USER_ACTED               = 'user_acted'; // User become active
+   const USER_INACTIVED           = 'user_inactived';  // User become inactive
+   const USER_PURGED              = 'user_purged';    // User purged
    
    /* FILE */
-   const FILE_UPDATED           = 'file_updated';   // File has been updated
-   const FILE_MOVED             = 'file_moved';     // File has been moved
-   const FILE_DELETED           = 'file_deleted';   // File has been deleted
+   const FILE_CREATED             = 'file_created';   // File has been updated
+   const FILE_UPDATED             = 'file_updated';   // File has been updated
+   const FILE_MOVED               = 'file_moved';     // File has been moved
+   const FILE_DELETED             = 'file_deleted';   // File has been deleted
    
    /* GUEST */
-   const GUEST_CREATED          = 'guest_created';   // Guest created
-   const GUEST_SENT             = 'guest_sent';      // Guest send to recipients
-   const GUEST_USED             = 'guest_used';      // Guest has been used
-   const GUEST_EXPIRED          = 'guest_expired';   // Guest expired
-   const GUEST_CLOSED           = 'guest_closed';    // Guest closed
-   const GUEST_DELETED          = 'guest_deleted';   // Guest canceled
+   const GUEST_CREATED            = 'guest_created';   // Guest created
+   const GUEST_SENT               = 'guest_sent';      // Guest send to recipients
+   const GUEST_USED               = 'guest_used';      // Guest has been used
+   const GUEST_EXPIRED            = 'guest_expired';   // Guest expired
+   const GUEST_CLOSED             = 'guest_closed';    // Guest closed
+   const GUEST_DELETED            = 'guest_deleted';   // Guest canceled
    
    /* TRANSFER */
-   const TRANSFER_AVAILABLE     = 'transfer_available';     // Transfer started
-   const TRANSFER_START         = 'transfer_start';         // Transfer started
-   const TRANSFER_EXPIRED       = 'transfer_expired';       // Transfer expired
-   const TRANSFER_CLOSED        = 'transfer_closed';        // Transfer closed
-   const TRANSFER_DELETED       = 'transfer_deleted';       // Transfer deleted
+   const TRANSFER_AVAILABLE       = 'transfer_available';     // Transfer started
+   const TRANSFER_STARTED         = 'transfer_started';         // Transfer started
+   const TRANSFER_EXPIRED         = 'transfer_expired';       // Transfer expired
+   const TRANSFER_CLOSED          = 'transfer_closed';        // Transfer closed
+   const TRANSFER_DELETED         = 'transfer_deleted';       // Transfer deleted
    
    /* UPLOAD */
-   const UPLOAD_START           = 'upload_start';   // Upload stated
-   const UPLOAD_RESUME          = 'upload_resume';  // Upload resumed
-   const UPLOAD_END             = 'upload_end';     // Upload ended
+   const UPLOAD_STARTED           = 'upload_started';   // Upload stated
+   const UPLOAD_RESUMED           = 'upload_resumed';  // Upload resumed
+   const UPLOAD_ENDED             = 'upload_ended';     // Upload ended
    
    /* DOWNLOAD */
-   const DOWNLOAD_START         = 'download_start';     // Download started
-   const DOWNLOAD_RESUME        = 'download_resume';    // Download resumed
-   const DOWNLOAD_END           = 'download_end';       // Download ended
+   const DOWNLOAD_STARTED         = 'download_started';     // Download started
+   const DOWNLOAD_RESUMED         = 'download_resumed';    // Download resumed
+   const DOWNLOAD_ENDED           = 'download_ended';       // Download ended
    
    /* ARCHIVE DOWNLOAD */
-   const ARCHIVE_DOWNLOAD_START = 'archive_download_start';     // Download started
-   const ARCHIVE_DOWNLOAD_END   = 'archive_download_end';       // Download ended
+   const ARCHIVE_DOWNLOAD_STARTED = 'archive_download_started';     // Download started
+   const ARCHIVE_DOWNLOAD_ENDED   = 'archive_download_ended';       // Download ended
 }
