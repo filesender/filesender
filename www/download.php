@@ -54,19 +54,18 @@ try {
     
     if (count($files_ids) > 1) { 
         // Archive download
-        $ret = downloadArchive($transfer,$files_ids);
+        $ret = downloadArchive($transfer, $recipient, $files_ids);
     } else {
         // Single file download
-        $ret = downloadSingleFile($transfer,$recipient,$files_ids);
+        $ret = downloadSingleFile($transfer, $recipient, $files_ids);
     }
     
     if ($ret['result']){
         manageOptions($ret,$transfer,$recipient);
     }
 } catch (Exception $e) {
-    $path = GUI::path() . '?s=exception&message=' . base64_encode(Lang::tr($e->getMessage()));
-    if (method_exists($e, 'getUid'))
-        $path .= '&logid=' . $e->getUid();
+    $storable = new StorableException($e);
+    $path = GUI::path() . '?s=exception&exception=' . $storable->serialize();
     header('Location: ' . $path);
 }
 
@@ -83,7 +82,7 @@ try {
  * @throws DownloadMissingFilesIDsException
  * @throws DownloadBadFilesIDsException
  */
-function checkRequest($token,$files_ids) {
+function checkRequest($token, $files_ids) {
     // checkInput
     if (!array_key_exists('token', $_REQUEST))
         throw new DownloadMissingTokenException();
@@ -112,11 +111,12 @@ function checkRequest($token,$files_ids) {
  * Allows to set an archive to be downloaded
  * 
  * @param Transfer $transfer: the transfer containing the files
+ * @param Recipient $recipient
  * @param Array $files_ids: list of files ids
  * 
  * @return boolean: true if succes, false otherwise
  */
-function downloadArchive($transfer,$files_ids) {
+function downloadArchive($transfer, $recipient, $files_ids) {
     // Creating the zipper
     $zipper = new Zipper();
     // Adding all files 
@@ -124,7 +124,9 @@ function downloadArchive($transfer,$files_ids) {
         $zipper->addFile(File::fromId($fileId));
     }
     // Sending the ZIP
+    Logger::logActivity(LogEventTypes::ARCHIVE_DOWNLOAD_START, $transfer, $recipient);
     $result = $zipper->sendZip();
+    Logger::logActivity(LogEventTypes::ARCHIVE_DOWNLOAD_END, $transfer, $recipient);
     
     return array('result' => $result, 'data' => array(
         'filename' => Config::get('site_name') . '-files.zip',
@@ -142,7 +144,7 @@ function downloadArchive($transfer,$files_ids) {
  * 
  * @return boolean: true if succes, false otherwise
  */
-function downloadSingleFile($transfer,$recipient,$files_ids) {
+function downloadSingleFile($transfer, $recipient, $files_ids) {
 
     $id = (int) array_shift($files_ids);
     $file = array_filter($transfer->files, function($f) use($id) {
@@ -209,7 +211,7 @@ function downloadSingleFile($transfer,$recipient,$files_ids) {
     };
     register_shutdown_function($abort_handler);
 
-    $read_range = function($range = null) use($file, $abort_handler) {
+    $read_range = function($range = null) use($file, $recipient, $abort_handler) {
         $abort_handler();
 
         $offset = $range ? $range['start'] : 0;
@@ -222,7 +224,7 @@ function downloadSingleFile($transfer,$recipient,$files_ids) {
         if ($range)
             $end = $range['end'];
 
-        Logger::logActivity(LogEventTypes::DOWNLOAD_START, $file);
+        Logger::logActivity(LogEventTypes::DOWNLOAD_START, $file, $recipient);
         for (; $offset < $end; $offset += $chunk_size) {
             $remaining = $end - $offset + 1;
             $length = min($chunk_size, $remaining);
@@ -235,7 +237,7 @@ function downloadSingleFile($transfer,$recipient,$files_ids) {
 
             $abort_handler();
         }
-        Logger::logActivity(LogEventTypes::DOWNLOAD_END, $file);
+        Logger::logActivity(LogEventTypes::DOWNLOAD_END, $file, $recipient);
 
         return ($offset >= $file->size);
     };

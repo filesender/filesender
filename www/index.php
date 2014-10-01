@@ -87,10 +87,8 @@ try {
         
         Template::display('!footer');
         
-    } catch(LoggingException $e) {
-        Template::display('exception', array('message' => $e->getMessage(), 'logid' => $e->getUid()));
     } catch(Exception $e) {
-        Template::display('exception', array('message' => $e->getMessage()));
+        Template::display('exception', array('exception' => $e));
     }
     
     ob_end_flush();
