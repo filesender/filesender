@@ -115,6 +115,7 @@ class Transfer extends DBObject {
      */
     private $filesCache = null;
     private $recipientsCache = null;
+    private $logsCache = null;
     
     /**
      * Constructor
@@ -397,6 +398,14 @@ class Transfer extends DBObject {
             return $this->recipientsCache;
         }
         
+        if($property == 'downloads') {
+            if(is_null($this->logsCache)) $this->logsCache = AuditLog::fromTransfer($this);
+            
+            return array_filter($this->logsCache, function($log) {
+                return $log->event == LogEventTypes::DOWNLOAD_ENDED;
+            });
+        }
+        
         if($property == 'is_expired') return $this->isExpired();
         
         throw new PropertyAccessException($this, $property);
@@ -588,7 +597,7 @@ class Transfer extends DBObject {
      */
     public function save() {
         parent::save();
-        Logger::logActivity(LogEventTypes::TRANSFER_START, $this);
+        Logger::logActivity(LogEventTypes::TRANSFER_STARTED, $this);
      }
      
 }
