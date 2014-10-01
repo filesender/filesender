@@ -10,7 +10,7 @@
             <tr>
                 <td class="box">
                     <div class="fieldcontainer">
-                        <?php $emails = Auth::user()->email ?>
+                        <?php $emails = Auth::user()->email_addresses ?>
                         
                         <label for="from" class="mandatory">{tr:from} :</label>
                         
