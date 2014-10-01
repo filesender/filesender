@@ -81,7 +81,7 @@ class AuditLog extends DBObject {
     /**
      * Set selectors
      */
-    const FROM_TARGET = 'target_type = :type AND target_id = :id ORDER BY created ASC';
+    const FROM_TARGET = 'target_type = :type AND target_id = :id ORDER BY created ASC, id ASC';
     
     /**
      * Properties
@@ -177,6 +177,10 @@ class AuditLog extends DBObject {
             'ip', 
         ))) return $this->$property;
         
+        if($property == 'target') return call_user_func($this->target_type.'::fromId', $this->target_id);
+        
+        if($property == 'author') return ($this->author_type && $this->author_id) ? call_user_func($this->author_type.'::fromId', $this->author_id) : null;
+        
         throw new PropertyAccessException($this, $property);
     }
     
@@ -187,8 +191,16 @@ class AuditLog extends DBObject {
      * 
      * @return array of AuditLog
      */
-    public static function fromTarget(DBObject $target) {
-        return self::all(self::FROM_TARGET, array('type' => $target->getClassName(), 'id' => $target->id));
+    public static function fromTarget(DBObject $target, $event = null) {
+        $logs = self::all(self::FROM_TARGET, array('type' => $target->getClassName(), 'id' => $target->id));
+        
+        if($event && LogEventTypes::isValidValue($event)) {
+            $logs = array_filter($logs, function($log) use($event) {
+                return $log->event == $event;
+            });
+        }
+        
+        return $logs;
     }
     
     /**
@@ -198,7 +210,7 @@ class AuditLog extends DBObject {
      * 
      * @return array of AuditLog
      */
-    public static function fromTransfer(Transfer $transfer) {
+    public static function fromTransfer(Transfer $transfer, $event = null) {
         if(
             !is_object($transfer)
             || !$transfer->id
@@ -207,17 +219,25 @@ class AuditLog extends DBObject {
         // Get and delete all audit logs related to the transfer
         $logs = array_values(self::all(self::FROM_TARGET, array('type' => $transfer->getClassName(), 'id' => $transfer->id)));
         
-        foreach($transfer->files as $file)
-            foreach(self::all(self::FROM_TARGET, array('type' => $file->getClassName(), 'id' => $file->id)) as $log)
-                $logs[] = $log;
+        foreach(self::all('target_type="File" AND target_id IN('.implode(',', array_map(function($file) {
+            return $file->id;
+        }, $transfer->files)).')') as $log) $logs[] = $log;
         
-        foreach($transfer->recipients as $recipient)
-            foreach(self::all(self::FROM_TARGET, array('type' => $recipient->getClassName(), 'id' => $recipient->id)) as $log)
-                $logs[] = $log;
+        foreach(self::all('target_type="Recipient" AND target_id IN('.implode(',', array_map(function($recipient) {
+            return $recipient->id;
+        }, $transfer->recipients)).')') as $log) $logs[] = $log;
         
         usort($logs, function($a, $b) {
-            return $a->created - $b->created;
+            $d = $a->created - $b->created;
+            if($d != 0) return $d;
+            return $a->id - $b->id;
         });
+        
+        if($event && LogEventTypes::isValidValue($event)) {
+            $logs = array_filter($logs, function($log) use($event) {
+                return $log->event == $event;
+            });
+        }
         
         return $logs;
     }
