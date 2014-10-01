@@ -116,9 +116,52 @@ class DBI {
         self::connect();
         if(!method_exists(self::$instance, $name)) throw new DBIUsageException('Calling unknown DBI method '.$name);
         try {
-            return call_user_func_array(array(self::$instance, $name), $args);
+            $r = call_user_func_array(array(self::$instance, $name), $args);
+            
+            if(is_object($r) && ($r instanceof PDOStatement))
+                return new DBIStatement($r);
+                
+            return $r;
         } catch(Exception $e) {
             throw new DBIUsageException($e->getMessage(), array('name' => $name, 'args' => $args));
+        }
+    }
+}
+
+/**
+ * Wrapper around PDOStatement for better exception handling
+ */
+class DBIStatement {
+    /**
+     * Real statement
+     */
+    private $statement = null;
+    
+    /**
+     * Creates statement
+     * 
+     * @param PDOStatement $statement
+     */
+    public function __construct(PDOStatement $statement) {
+        $this->statement = $statement;
+    }
+    
+    /**
+     * Call forwarder
+     * 
+     * @param string $method
+     * @param array $args
+     * 
+     * @return mixed
+     * 
+     * @throws DBIUsageException
+     */
+    public function __call($method, $args) {
+        if(!method_exists($this->statement, $method)) throw new DBIUsageException('Calling unknown DBIStatement method '.$method);
+        try {
+            return call_user_func_array(array($this->statement, $method), $args);
+        } catch(Exception $e) {
+            throw new DBIUsageException($e->getMessage(), array('method' => $method, 'args' => $args));
         }
     }
 }

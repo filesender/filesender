@@ -51,17 +51,23 @@ class AuditLog extends DBObject {
             'type' => 'string',
             'size' => 20
         ),
-        'target_id' => array(
-            'type' => 'uint',
-            'size' => 'medium'
-        ),
         'target_type' => array(
             'type' => 'string',
             'size' => 255
         ),
-        'user_id' => array(
+        'target_id' => array(
+            'type' => 'uint',
+            'size' => 'medium'
+        ),
+        'author_type' => array(
             'type' => 'string',
-            'size' => 255
+            'size' => 255,
+            'null' => true
+        ),
+        'author_id' => array(
+            'type' => 'string',
+            'size' => 255,
+            'null' => true
         ),
         'ip' => array(
             'type' => 'string',
@@ -82,9 +88,10 @@ class AuditLog extends DBObject {
      */
     protected $id = null;
     protected $event = null;
-    protected $target_id = null;
     protected $target_type = null;
-    protected $user_id = null;
+    protected $target_id = null;
+    protected $author_type = null;
+    protected $author_id = null;
     protected $created = null;
     protected $ip = null;
     
@@ -112,37 +119,34 @@ class AuditLog extends DBObject {
     /**
      * Create a new audit log
      * 
-     * @param LogEventTypes $event: the event to be logged
-     * @param DBObject: the target to be logged
+     * @param LogEventTypes $event the event to be logged
+     * @param DBObject the target to be logged
+     * @param DBObject the author of the action
      * 
      * @return AuditLog auditlog
      */
-    public static function create($event, DBObject $target) {
+    public static function create($event, DBObject $target, $author = null) {
+        if(!LogEventTypes::isValidValue($event))
+            throw new AuditLogBadEventTypeException($event);
         
+        $auditLog = new self();
         
-        switch ($event){
-            default:
-                if (LogEventTypes::isValidValue($event)){
-                    $auditLog = new self();
-
-                    $auditLog->event = $event;
-                    $auditLog->created = time();
-                    $auditLog->ip = Utilities::getClientIP();
-                    $auditLog->target_id = $target->id;
-                    $auditLog->target_type = get_class($target);
-
-                    if (Auth::isAuthenticated()){
-                        $auditLog->user_id = Auth::user()->id;
-                    }
-
-                    $auditLog->save();
-
-                    return $auditLog;
-                }else{
-                    throw new AuditLogBadEventTypeException($event);
-                }
-            break;
+        $auditLog->event = $event;
+        $auditLog->created = time();
+        $auditLog->ip = Utilities::getClientIP();
+        $auditLog->target_id = $target->id;
+        $auditLog->target_type = get_class($target);
+        
+        if(!$author) $author = Auth::user();
+        
+        if(is_object($author)) {
+            $auditLog->author_type = get_class($author);
+            $auditLog->author_id = $author->id;
         }
+        
+        $auditLog->save();
+        
+        return $auditLog;
     }
     
     /**
@@ -165,9 +169,10 @@ class AuditLog extends DBObject {
         if(in_array($property, array(
             'id', 
             'event',
-            'target_id',
             'target_type',
-            'user_id',
+            'target_id',
+            'author_type',
+            'author_id',
             'created',
             'ip', 
         ))) return $this->$property;

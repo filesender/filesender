@@ -287,11 +287,12 @@ class Logger {
     /**
      * Log an activity message on datebase
      * 
-     * @param type $logEvent
-     * @param type $target
+     * @param string $logEvent
+     * @param object $target
+     * @param object $author
      */
-    public static function logActivity($logEvent, $target){
-        AuditLog::create($logEvent, $target);
+    public static function logActivity($logEvent, $target, $author = null){
+        AuditLog::create($logEvent, $target, $author);
         StatLog::create($logEvent, $target);
     }
 }

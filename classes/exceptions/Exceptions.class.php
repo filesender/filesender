@@ -105,10 +105,6 @@ class DetailedException extends LoggingException {
     public function __construct($msg_code, $internal_details, $public_details = null) {
         $this->uid = uniqid();
         
-        $msg_code_translated = Lang::tr($msg_code);
-        if (!is_null($internal_details) && is_string($internal_details))
-                $msg_code_translated .= ': '.$internal_details;
-        
         $this->details = $public_details;
         
         if(!$internal_details) $internal_details = array();
@@ -134,7 +130,7 @@ class DetailedException extends LoggingException {
                 }
             }
         }
-        parent::__construct($msg_code_translated, $log);
+        parent::__construct($msg_code, $log);
     }
     
     /**
@@ -144,5 +140,107 @@ class DetailedException extends LoggingException {
      */
     public function getDetails() {
         return $this->details;
+    }
+}
+
+/**
+ * Storable exception
+ */
+class StorableException {
+    /**
+     * Holds exception unique id
+     */
+    private $uid = null;
+    
+    /**
+     * Public exception details
+     */
+    private $details = null;
+    
+    /**
+     * Message
+     */
+    private $message = null;
+    
+    /**
+     * Constructor
+     * 
+     * @param Exception $exception
+     */
+    public function __construct($exception) {
+        if(is_array($exception)) {
+            foreach(array('message', 'uid', 'details') as $p)
+                if(array_key_exists($p, $exception))
+                    $this->$p = $exception[$p];
+            
+            return;
+        }
+        
+        $this->message = $exception->getMessage();
+        
+        if($exception instanceof LoggingException)
+            $this->uid = $exception->getUid();
+        
+        if($exception instanceof DetailedException)
+            $this->details = $exception->getDetails();
+        
+    }
+    
+    /**
+     * Message getter
+     * 
+     * @return string the exception message
+     */
+    public function getMessage() {
+        return $this->message;
+    }
+    
+    /**
+     * Uid getter
+     * 
+     * @return string the exception uid
+     */
+    public function getUid() {
+        return $this->uid;
+    }
+    
+    /**
+     * Info getter
+     * 
+     * @return mixed the exception info
+     */
+    public function getDetails() {
+        return $this->details;
+    }
+    
+    /**
+     * Serialize exception for path transmission
+     * 
+     * @return string
+     */
+    public function serialize() {
+        return base64_encode(serialize(array(
+            'message' => $this->message,
+            'uid' => $this->uid,
+            'details' => $this->details,
+        )));
+    }
+    
+    /**
+     * Unerialize exception from path transmission
+     * 
+     * @param string $serialized
+     * 
+     * @return StorableException
+     * 
+     * @throws DetailedException
+     */
+    public static function unserialize($serialized) {
+        $exception = unserialize(base64_decode($serialized));
+        
+        if(!is_array($exception) || !array_key_exists('message', $exception))
+            throw new DetailedException('not_an_exception', $exception);
+        
+        return new self($exception);
     }
 }

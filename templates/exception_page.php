@@ -1,8 +1,8 @@
 <?php
 
-$vars = array('message' => array_key_exists('message', $_REQUEST) ? base64_decode($_REQUEST['message']) : Lang::tr('missing_data'));
+if(!array_key_exists('exception', $_REQUEST))
+    throw new DetailedException('exception_not_found', '');
 
-if(array_key_exists('logid', $_REQUEST))
-    $vars['logid'] = $_REQUEST['logid'];
+$exception = StorableException::unserialize($_REQUEST['exception']);
 
-Template::display('exception', $vars);
+Template::display('exception', array('exception' => $exception));

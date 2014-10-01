@@ -297,23 +297,23 @@ class Transfer extends DBObject {
      * @return array
      */
     public static function allOptions() {
-        $cfg = Config::get('transfer_options');
-        if(!is_array($cfg)) $cfg = array();
+        $options = Config::get('transfer_options');
+        if(!is_array($options)) $options = array();
         
-        $options = array();
         foreach(TransferOptions::all() as $d => $name) {
-            $option = array(
-                'available' => false,
-                'advanced' => false,
-                'default' => false
-            );
+            if(!array_key_exists($name, $options))
+                $options[$name] = array(
+                    'available' => false,
+                    'advanced' => false,
+                    'default' => false
+                );
             
-            if(array_key_exists($name, $cfg))
-                foreach(array('available', 'advanced', 'default') as $p)
-                    if(array_key_exists($p, $cfg[$name]))
-                        $option[$p] = $cfg[$name][$p];
-            
-            $options[$name] = $option;
+            foreach(array('available', 'advanced', 'default') as $p) {
+                if(!array_key_exists($p, $options[$name]))
+                    $options[$name][$p] = false;
+                
+                $options[$name][$p] = (bool)$options[$name][$p];
+            }
         }
         
         return $options;
