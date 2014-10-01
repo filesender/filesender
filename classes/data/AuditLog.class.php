@@ -84,6 +84,7 @@ class AuditLog extends DBObject {
     protected $event = null;
     protected $target_id = null;
     protected $target_type = null;
+    protected $user_id = null;
     protected $created = null;
     protected $ip = null;
     
@@ -166,6 +167,7 @@ class AuditLog extends DBObject {
             'event',
             'target_id',
             'target_type',
+            'user_id',
             'created',
             'ip', 
         ))) return $this->$property;
