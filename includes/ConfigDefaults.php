@@ -72,7 +72,7 @@ $default = array(
     'statlog_lifetime' => 31,
     'auditlog_lifetime' => 0,
     
-    'report_format' => ReportTypes::HTML,
+    'report_format' => ReportFormats::HTML,
 
     // Logging
     'log_facilities' => array(
