@@ -34,8 +34,8 @@
 /**
  * Class containing error codes
  */
-class ReportTypes extends Enum{
-    const STANDARD  = "standard";
-    const HTML      = "html";
-    const PDF       = "pdf";
+class ReportFormats extends Enum {
+    const PLAIN     = 'plain';
+    const HTML      = 'html';
+    const PDF       = 'pdf';
 }
