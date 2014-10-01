@@ -85,7 +85,7 @@ class Zipper {
      * Creates a ZIP archive on-the-fly and streams it to the client. 
      * <b>The files in the archive are not compressed.</b>
      */
-    public function sendZip($withHeaders = true){
+    public function sendZip($recipient = null, $withHeaders = true){
         // Note: Mac OS X has compatibility issues with ZIP64 files, so only enable the ZIP64 format if
         // we have to (i.e. if the total file size is 4 GiB or greater).
         $this->useZip64 = $this->calculateTotalFileSize() >= 4 * 1024 * 1024 * 1024;
@@ -99,7 +99,7 @@ class Zipper {
         foreach ($this->files as $k => $data) {
             $file = $data['data'];
             
-            Logger::logActivity(LogEventTypes::DOWNLOAD_START, $file);
+            Logger::logActivity(LogEventTypes::DOWNLOAD_STARTED, $file, $recipient);
             
             $transfer = $file->transfer;
 
@@ -130,8 +130,6 @@ class Zipper {
 
             // Add the size of this file entry to the offset (needed for the TOC, Table Of Content).
             $offset += $localHeaderLength + $fileDataLength + $descriptorLength;
-            
-            Logger::logActivity(LogEventTypes::DOWNLOAD_END, $file);
         }
 
         // Write the TOC at the end of the ZIP archive.
@@ -141,7 +139,7 @@ class Zipper {
             // Download was completed, save a log entry for each of the downloaded files.
             foreach ($this->files as $data) {
                 $file = $data['data'];
-                Logger::logActivity(LogEventTypes::DOWNLOAD_END, $file);
+                Logger::logActivity(LogEventTypes::DOWNLOAD_ENDED, $file, $recipient);
             }
             return true;
         }else{
