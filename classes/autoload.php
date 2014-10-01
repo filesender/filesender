@@ -113,8 +113,8 @@ class Autoloader {
                 $file .= '.class.php';
                 
                 if(!file_exists($file)) {
-                    if(Config::get('testing')) return;
-                    throw new CoreFileNotFoundException($file);
+                    Logger::warn('Looking for class '.$class.', expecting it at '.$file.' but nothing found, may (or may not) be a problem ...');
+                    return;
                 }
                 
                 require_once $file;
@@ -123,7 +123,7 @@ class Autoloader {
             }
         }
         
-        if(!Config::get('testing')) throw new CoreClassNotFoundException($class);
+        Logger::warn('Could not find class '.$class.', may (or may not) be a problem ...');
     }
     
     /**
