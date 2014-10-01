@@ -100,5 +100,6 @@ try {
         echo 'Done for table '.$table."\n";
     }
 } catch(Exception $e) {
-    die('Encountered exception : '.$e->getMessage().', see logs for details ...');
+    $uid = ($e instanceof LoggingException) ? $e->getUid() : 'no available uid';
+    die('Encountered exception : '.$e->getMessage().', see logs for details (uid: '.$uid.') ...');
 }
