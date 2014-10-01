@@ -124,9 +124,9 @@ function downloadArchive($transfer, $recipient, $files_ids) {
         $zipper->addFile(File::fromId($fileId));
     }
     // Sending the ZIP
-    Logger::logActivity(LogEventTypes::ARCHIVE_DOWNLOAD_START, $transfer, $recipient);
-    $result = $zipper->sendZip();
-    Logger::logActivity(LogEventTypes::ARCHIVE_DOWNLOAD_END, $transfer, $recipient);
+    Logger::logActivity(LogEventTypes::ARCHIVE_DOWNLOAD_STARTED, $transfer, $recipient);
+    $result = $zipper->sendZip($recipient);
+    Logger::logActivity(LogEventTypes::ARCHIVE_DOWNLOAD_ENDED, $transfer, $recipient);
     
     return array('result' => $result, 'data' => array(
         'filename' => Config::get('site_name') . '-files.zip',
@@ -224,7 +224,7 @@ function downloadSingleFile($transfer, $recipient, $files_ids) {
         if ($range)
             $end = $range['end'];
 
-        Logger::logActivity(LogEventTypes::DOWNLOAD_START, $file, $recipient);
+        Logger::logActivity(LogEventTypes::DOWNLOAD_STARTED, $file, $recipient);
         for (; $offset < $end; $offset += $chunk_size) {
             $remaining = $end - $offset + 1;
             $length = min($chunk_size, $remaining);
@@ -237,7 +237,7 @@ function downloadSingleFile($transfer, $recipient, $files_ids) {
 
             $abort_handler();
         }
-        Logger::logActivity(LogEventTypes::DOWNLOAD_END, $file, $recipient);
+        Logger::logActivity(LogEventTypes::DOWNLOAD_ENDED, $file, $recipient);
 
         return ($offset >= $file->size);
     };
