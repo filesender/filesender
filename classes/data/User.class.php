@@ -106,7 +106,7 @@ class User extends DBObject {
     /**
      * From Auth if it makes sense
      */
-    private $email = array();
+    private $email_addresses = array();
     private $name = null;
     
     /**
@@ -149,7 +149,7 @@ class User extends DBObject {
         if(!is_array($attributes) || !array_key_exists('uid', $attributes) || !$attributes['uid']) throw new UserMissingUIDException();
         $user = self::fromId($attributes['uid']);
         
-        if(array_key_exists('email', $attributes)) $user->email = $attributes['email'];
+        if(array_key_exists('email', $attributes)) $user->email_addresses = $attributes['email'];
         if(array_key_exists('name', $attributes)) $user->name = $attributes['name'];
         
         return $user;
@@ -252,8 +252,10 @@ class User extends DBObject {
         if(in_array($property, array(
             'id', 'organization', 'lang', 'aup_ticked', 'aup_last_ticked_date',
             'transfer_preferences', 'guest_preferences', 'frequent_recipients', 'created', 'last_activity',
-            'email', 'name'
+            'email_addresses', 'name'
         ))) return $this->$property;
+        
+        if($property == 'email') return count($this->email_addresses) ? $this->email_addresses[0] : null;
         
         throw new PropertyAccessException($this, $property);
     }
@@ -284,12 +286,12 @@ class User extends DBObject {
             $this->guest_preferences = $value;
         }else if($property == 'frequent_recipients'){
             $this->frequent_recipients = $value;
-        }else if($property == 'email') {
+        }else if($property == 'email_addresses') {
             if(!is_array($value)) $value = array($value);
             foreach($value as $email)
                 if(!filter_var($email, FILTER_VALIDATE_EMAIL))
                     throw new BadEmailException($value);
-            $this->email = $value;
+            $this->email_addresses = $value;
         }else if($property == 'name') {
             $this->name = (string)$value;
         }else throw new PropertyAccessException($this, $property);

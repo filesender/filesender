@@ -90,7 +90,7 @@ class File extends DBObject
     /**
      * Related objects cache
      */
-    private $transfer = null;
+    private $transferCache = null;
     
     /**
      * Constructor
@@ -217,8 +217,15 @@ class File extends DBObject
         ))) return $this->$property;
         
         if($property == 'transfer') {
-            if(is_null($this->transfer)) $this->transfer = Transfer::fromId($this->transfer_id);
-            return $this->transfer;
+            if(is_null($this->transferCache)) $this->transferCache = Transfer::fromId($this->transfer_id);
+            return $this->transferCache;
+        }
+        
+        if($property == 'downloads') {
+            $id = $this->id;
+            return array_filter($this->transfer->downloads, function($log) use($id) {
+                return ($log->target_type == 'File') && ($log->target_id == $id);
+            });
         }
         
         throw new PropertyAccessException($this, $property);

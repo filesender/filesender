@@ -88,7 +88,7 @@ class Recipient extends DBObject {
     /**
      * Related objects cache
      */
-    private $transfer = null;
+    private $transferCache = null;
     
     /**
      * Constructor
@@ -194,8 +194,15 @@ class Recipient extends DBObject {
         if(in_array($property, array('id', 'transfer_id', 'email', 'token', 'created', 'last_activity', 'options'))) return $this->$property;
         
         if($property == 'transfer') {
-            if(is_null($this->transfer)) $this->transfer = Transfer::fromId($this->transfer_id);
-            return $this->transfer;
+            if(is_null($this->transferCache)) $this->transferCache = Transfer::fromId($this->transfer_id);
+            return $this->transferCache;
+        }
+        
+        if($property == 'downloads') {
+            $id = $this->id;
+            return array_filter($this->transfer->downloads, function($log) use($id) {
+                return ($log->author_type == 'Recipient') && ($log->author_id == $id);
+            });
         }
         
         throw new PropertyAccessException($this, $property);
