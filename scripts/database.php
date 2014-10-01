@@ -49,53 +49,56 @@ foreach(scandir(FILESENDER_BASE.'/classes/data') as $i) {
     if($class == 'DBObject') continue;
     $classes[] = $class;
 }
-
-foreach($classes as $class) {
-    echo 'Checking class '.$class."\n";
-    
-    $datamap = call_user_func($class.'::getDataMap');
-    $table = call_user_func($class.'::getDBTable');
-    
-    // Check if table exists
-    echo 'Look for table '.$table."\n";
-    if(Database::tableExists($table)) {
-        echo 'Table found, check columns'."\n";
+try {
+    foreach($classes as $class) {
+        echo 'Checking class '.$class."\n";
         
-        $existing_columns = Database::getTableColumns($table);
-        echo 'Found '.count($existing_columns).' columns in existing table : '.implode(', ', $existing_columns)."\n";
+        $datamap = call_user_func($class.'::getDataMap');
+        $table = call_user_func($class.'::getDBTable');
         
-        $required_columns = array_keys($datamap);
-        echo 'Found '.count($required_columns).' columns in required table : '.implode(', ', $required_columns)."\n";
-        
-        $missing = array();
-        foreach($required_columns as $c) if(!in_array($c, $existing_columns)) $missing[] = $c;
-        if(count($missing)) {
-            echo 'Found '.count($missing).' missing columns in existing table : '.implode(', ', $missing)."\n";
-             foreach($missing as $column) Database::createTableColumn($table, $column, $datamap[$column]);
-        }
-        
-        $useless = array();
-        foreach($existing_columns as $c) if(!in_array($c, $required_columns)) $useless[] = $c;
-        if(count($useless)) {
-            echo 'Found '.count($useless).' useless columns in existing table : '.implode(', ', $useless)."\n";
-            foreach($useless as $column) Database::removeTableColumn($table, $column);
-        }
-        
-        echo 'Check column format'."\n";
-        foreach($required_columns as $column) {
-            if(in_array($column, $missing)) continue; // Already created with the right format
+        // Check if table exists
+        echo 'Look for table '.$table."\n";
+        if(Database::tableExists($table)) {
+            echo 'Table found, check columns'."\n";
             
-            if(!Database::checkTableColumnFormat($table, $column, $datamap[$column], function($message) {
-                echo "\t".$message."\n";
-            })) {
-                echo 'Column '.$column.' has bad format, updating it'."\n";
-                Database::updateTableColumnFormat($table, $column, $datamap[$column]);
+            $existing_columns = Database::getTableColumns($table);
+            echo 'Found '.count($existing_columns).' columns in existing table : '.implode(', ', $existing_columns)."\n";
+            
+            $required_columns = array_keys($datamap);
+            echo 'Found '.count($required_columns).' columns in required table : '.implode(', ', $required_columns)."\n";
+            
+            $missing = array();
+            foreach($required_columns as $c) if(!in_array($c, $existing_columns)) $missing[] = $c;
+            if(count($missing)) {
+                echo 'Found '.count($missing).' missing columns in existing table : '.implode(', ', $missing)."\n";
+                 foreach($missing as $column) Database::createTableColumn($table, $column, $datamap[$column]);
             }
+            
+            $useless = array();
+            foreach($existing_columns as $c) if(!in_array($c, $required_columns)) $useless[] = $c;
+            if(count($useless)) {
+                echo 'Found '.count($useless).' useless columns in existing table : '.implode(', ', $useless)."\n";
+                foreach($useless as $column) Database::removeTableColumn($table, $column);
+            }
+            
+            echo 'Check column format'."\n";
+            foreach($required_columns as $column) {
+                if(in_array($column, $missing)) continue; // Already created with the right format
+                
+                if(!Database::checkTableColumnFormat($table, $column, $datamap[$column], function($message) {
+                    echo "\t".$message."\n";
+                })) {
+                    echo 'Column '.$column.' has bad format, updating it'."\n";
+                    Database::updateTableColumnFormat($table, $column, $datamap[$column]);
+                }
+            }
+        }else{
+            echo 'Table is missing, create it'."\n";
+            Database::createTable($table, $datamap);
         }
-    }else{
-        echo 'Table is missing, create it'."\n";
-        Database::createTable($table, $datamap);
+        
+        echo 'Done for table '.$table."\n";
     }
-    
-    echo 'Done for table '.$table."\n";
+} catch(Exception $e) {
+    die('Encountered exception : '.$e->getMessage().', see logs for details ...');
 }
