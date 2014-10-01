@@ -30,49 +30,61 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
-
 /**
- * Invalid recipeint exception
+ * Unknown target type
  */
-class ReportNotFoundException extends DetailedException {
+class ReportUnknownTargetTypeException extends DetailedException {
     /**
      * Constructor
      * 
-     * @param string $selector column used to select user
+     * @param string $type
      */
-    public function __construct() {
+    public function __construct($type) {
         parent::__construct(
-            'report_not_found' // Message to give to the user
+            'report_unknown_target_type', // Message to give to the user
+             $type // Real message to log
         );
     }
 }
 
 /**
- * Report type not found
+ * Unknown format
  */
-class ReportTypeNotFoundException extends DetailedException {
+class ReportOwnershipRequiredException extends DetailedException {
     /**
      * Constructor
      * 
-     * @param string $selector column used to select user
+     * @param string $selector
      */
     public function __construct($selector) {
         parent::__construct(
-            'report_type_not_found', // Message to give to the user
+            'report_ownership_required', // Message to give to the user
              $selector // Real message to log
         );
     }
 }
 
-
-
-
+/**
+ * Unknown format
+ */
+class ReportUnknownFormatException extends DetailedException {
+    /**
+     * Constructor
+     * 
+     * @param string $format
+     */
+    public function __construct($format) {
+        parent::__construct(
+            'report_unknown_format', // Message to give to the user
+             $format // Real message to log
+        );
+    }
+}
 
 /**
- * Invalid recipeint exception
+ * No report data matching target
  */
-class NoReportFoundException extends DetailedException {
+class ReportNothingFoundException extends DetailedException {
     /**
      * Constructor
      * 
@@ -80,7 +92,7 @@ class NoReportFoundException extends DetailedException {
      */
     public function __construct() {
         parent::__construct(
-            'no_report_found' // Message to give to the user
+            'report_nothing_found' // Message to give to the user
         );
     }
 }

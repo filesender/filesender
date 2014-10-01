@@ -36,50 +36,128 @@ if (!defined('FILESENDER_BASE'))
 
 /**
  * Report class
- * 
  */
 class Report {
-
-    private $objects;           // Current list of DBObjects
-    private $currentReportType; // User wanted report type
-
+    /**
+     * Related audit log entries
+     */
+    private $logs = array();
+    
+    /**
+     * Target type
+     */
+    private $target = null;
+    
     /**
      * Constructor
      * 
-     * @param ReportType $type: type of report to be generated
-     * @param DBObject $object: object in relation
+     * @param DBObject $target target to get report about
      * 
      * @throws AuthAuthenticationNotFoundException
-     * @throws ReportTypeNotFoundException
+     * @throws ReportFormatNotFoundException
      */
-    public function __construct($type, DBObject $object = null) {
-        if (ReportTypes::isValidName($type)){
-            if (Auth::isAuthenticated()) {
-                $this->currentReportType = $type;
-
-                if (null != $object) {
-                    $this->objects[$this->currentReportType] = AuditLog::all(
-                        array(  'where' => 'target_type = :targettype AND target_id = :targetid AND user_id = :userid'), array(
-                                'targettype' => $object->getClassName(),
-                                'targetid' => $object->id,
-                                'userid' => Auth::user()->id
-                        )
-                    );
-                } else {
-                    $this->objects[$this->currentReportType] = AuditLog::all(
-                        array('where' => 'user_id = :userid'), array('userid' => Auth::user()->id)
-                    );
-                }
-
-            } else {
-                throw new AuthAuthenticationNotFoundException();
-            }
-        }else{
-            throw new ReportTypeNotFoundException($type);
+    public function __construct(DBObject $target) {
+        if(!Auth::isAuthenticated())
+            throw new AuthAuthenticationNotFoundException();
+        
+        $this->logs = array();
+        switch(get_class($target)) {
+            case 'Transfer': // Get all log about transfer or its related files and recipients
+                if(!$target->isOwner(Auth::user()) && !Auth::user()->isAdmin())
+                    throw new ReportOwnershipRequiredException('Transfer = '.$target->id);
+                
+                $this->logs = AuditLog::fromTransfer($target);
+                break;
+            
+            case 'File': // Get log about file life
+            case 'Recipient': // Get log about recipient activity
+                if(!$target->transfer->isOwner(Auth::user()) && !Auth::user()->isAdmin())
+                    throw new ReportOwnershipRequiredException(get_class($target).' = '.$target->id.', Transfer = '.$target->transfer->id);
+                
+                $this->logs = AuditLog::fromTarget($target);
+                break;
+            
+            default: // Object type not handled
+                throw new ReportUnknownTargetTypeException(get_class($target));
         }
+        
+        $this->target = $target;
     }
-
-
+    
+    /**
+     * Getter
+     * 
+     * @param string $property property to get
+     * 
+     * @throws PropertyAccessException
+     * 
+     * @return property value
+     */
+    public function __get($property) {
+        if(in_array($property, array(
+            'logs', 
+            'target',
+        ))) return $this->$property;
+        
+        if($property == 'target_type') return get_class($this->target);
+        
+        throw new PropertyAccessException($this, $property);
+    }
+    
+    /**
+     * Sends report by email
+     * 
+     * @param mixed $recipient User, email address
+     */
+    public function sendTo($recipient) {
+        if(is_object($recipient) && ($recipient instanceof User))
+            $recipient = $recipient->email;
+        
+        if(!is_string($recipient) || !filter_var($recipient, FILTER_VALIDATE_EMAIL))
+            throw new BadEmailException($recipient);
+        
+        $format = Config::get('report_format');
+        if(!$format) $format = ReportFormats::HTML;
+        
+        if(!ReportFormats::isValidName($format))
+            throw new ReportUnknownFormatException($format);
+        
+        if(($format == ReportFormats::HTML) && !Config::get('email_use_html'))
+            $format = ReportFormats::PLAIN;
+        
+        $content = array('plain' => '', 'html' => '');
+        $file = null;
+        if($format == ReportFormats::PDF) {
+            $content['plain'] = Lang::tr('report_pdf_attached');
+            $content['html'] = $content['plain'];
+            
+            //$file = ''; // TMP pdf file ...
+        } else {
+            $content['plain'] = Template::process('!report_plain', array('report' => $this));
+            
+            if($format == ReportFormats::HTML)
+                $content['html'] = Template::process('!report_html', array('report' => $this));
+        }
+        
+        $mail = new ApplicationMail(Lang::translateEmail('report')->r(
+            array(
+                'target' => array(
+                    'type' => $this->target_type,
+                    'id' => $this->target->id
+                ),
+                'content' => $content,
+            ),
+            $this->target
+        ));
+        
+        if($file)
+            $mail->attach($file, 'attachment', 'report_'.strtolower($this->target_type).'_'.$this->target->id);
+        
+        $mail->to($recipient);
+        
+        $mail->send();
+    }
+    
     /**
      * Allows to generate a report
      * 
