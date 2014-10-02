@@ -270,7 +270,7 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 		$data = $functions->getVoucherData($_REQUEST["vid"]);
 		$tempFilename = generateTempFilename($data);
 		$fqTempFilename = $config["site_filestore"].sanitizeFilename($tempFilename);
-		$tempFilenameMetadata = new FileMetadata($fqTempFilename); 
+		
 		$written = 0;
 		
 		$fd = fopen("php://input", "r");
@@ -281,10 +281,16 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 		}
 		// close the file 
 		fclose($fd);
-		// update metadata
-		if (!$tempFilenameMetadata->addChunkDataChunksize($written)) {
-			array_push($errorArray,  "err_invalidchunksize");
-			returnerrorandclose();
+		
+		// Establish whether the file should be accompanied by a metadata file
+		$useFileMetadata = ( isset($data["fileencryption"]) );
+		if ($useFileMetadata) {
+			// update metadata
+			$tempFilenameMetadata = new FileMetadata($fqTempFilename);
+			if (!$tempFilenameMetadata->addChunkDataChunksize($written)) {
+				array_push($errorArray,  "err_invalidchunksize");
+				returnerrorandclose();
+			}
 		}
 		
 		logEntry("Uploaded ".$fqTempFilename);
