@@ -109,6 +109,7 @@ $lang["_SEND"] = "Send";
 $lang["_DELETE"] = "Delete";
 $lang["_YES"] = "Yes";
 $lang["_NO"] = "No";
+$lang["_CLICK_TO_SAVE_FILE"] = "Click here to save your file";
 
 $lang["_ERROR_CONTACT_ADMIN"] = "There has been an error - please contact your administrator.";	
 $lang["_INVALID_MISSING_EMAIL"] = "Invalid or missing email";	

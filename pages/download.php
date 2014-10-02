@@ -185,7 +185,7 @@ function startDownloadWithPassword(password) {
 		$('#download').attr('onclick', null );
 		$('#download').attr('href', fileStorage.getURL());
 		$('#download').attr('download', filename);
-		$('#download').html('Click here to save your file');
+		$('#download').html('<?php echo addslashes(lang("_CLICK_TO_SAVE_FILE")); ?>');
 
                 },
                 onError: function(error) {
