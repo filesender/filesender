@@ -117,13 +117,14 @@ class RestUtilities {
      * Format a date to multiple types
      * 
      * @param int $date the date
+     * @param bool $with_time
      * 
      * @return array
      */
-    public static function formatDate($date) {
+    public static function formatDate($date, $with_time = false) {
         return array(
             'raw' => $date,
-            'formatted' => Utilities::formatDate($date)
+            'formatted' => Utilities::formatDate($date, $with_time)
         );
     }
 }

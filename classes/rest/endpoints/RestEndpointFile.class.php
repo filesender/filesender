@@ -128,6 +128,7 @@ class RestEndpointFile extends RestEndpoint {
         
         if($mode == 'chunk') {
             $write_info = $file->writeChunk($data); // No offset => append at end of file
+            $file->transfer->isUploading();
             
             return array(
                 'path' => '/file/'.$file->id.'/chunk/'.$write_info['offset'],
@@ -194,6 +195,7 @@ class RestEndpointFile extends RestEndpoint {
             $data = $this->request->input;
             
             $write_info = $file->writeChunk($data, $offset);
+            $file->transfer->isUploading();
             
             return $write_info;
         

@@ -91,6 +91,7 @@ class File extends DBObject
      * Related objects cache
      */
     private $transferCache = null;
+    private $logsCache = null;
     
     /**
      * Constructor
@@ -187,7 +188,9 @@ class File extends DBObject
      * End file upload
      */
     public function complete() {
-        return Storage::completeFile($this);
+        $r = Storage::completeFile($this);
+        Logger::logActivity(LogEventTypes::FILE_CREATED, $this);
+        return $r;
     }
     
     /**
@@ -221,10 +224,14 @@ class File extends DBObject
             return $this->transferCache;
         }
         
+        if($property == 'auditlogs') {
+            if(is_null($this->logsCache)) $this->logsCache = AuditLog::fromTarget($this);
+            return $this->logsCache;
+        }
+        
         if($property == 'downloads') {
-            $id = $this->id;
-            return array_filter($this->transfer->downloads, function($log) use($id) {
-                return ($log->target_type == 'File') && ($log->target_id == $id);
+            return array_filter($this->auditlogs, function($log) {
+                return $log->event == LogEventTypes::DOWNLOAD_ENDED;
             });
         }
         

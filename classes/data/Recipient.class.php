@@ -89,6 +89,7 @@ class Recipient extends DBObject {
      * Related objects cache
      */
     private $transferCache = null;
+    private $logsCache = null;
     
     /**
      * Constructor
@@ -198,10 +199,14 @@ class Recipient extends DBObject {
             return $this->transferCache;
         }
         
+        if($property == 'auditlogs') {
+            if(is_null($this->logsCache)) $this->logsCache = AuditLog::fromAuthor($this);
+            return $this->logsCache;
+        }
+        
         if($property == 'downloads') {
-            $id = $this->id;
-            return array_filter($this->transfer->downloads, function($log) use($id) {
-                return ($log->author_type == 'Recipient') && ($log->author_id == $id);
+            return array_filter($this->auditlogs, function($log) {
+                return $log->event == LogEventTypes::DOWNLOAD_ENDED;
             });
         }
         

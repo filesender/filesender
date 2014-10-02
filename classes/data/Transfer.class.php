@@ -200,8 +200,8 @@ class Transfer extends DBObject {
         if(Auth::isGuest())
             $transfer->guest = AuthGuest::getGuest();
         
-        if(!$user_email) $user_email = Auth::user()->email[0];
-        if(!in_array($user_email, Auth::user()->email))
+        if(!$user_email) $user_email = Auth::user()->email;
+        if(!in_array($user_email, Auth::user()->email_addresses))
             throw new BadEmailException($user_email);
         
         $transfer->__set('user_email', $user_email);
@@ -209,7 +209,7 @@ class Transfer extends DBObject {
         $transfer->__set('expires', $expires);
         
         $transfer->created = time();
-        $transfer->status = 'uploading';
+        $transfer->status = TransferStatuses::CREATED;
         
         return $transfer;
     }
@@ -398,10 +398,13 @@ class Transfer extends DBObject {
             return $this->recipientsCache;
         }
         
-        if($property == 'downloads') {
+        if($property == 'auditlogs') {
             if(is_null($this->logsCache)) $this->logsCache = AuditLog::fromTransfer($this);
-            
-            return array_filter($this->logsCache, function($log) {
+            return $this->logsCache;
+        }
+        
+        if($property == 'downloads') {
+            return array_filter($this->auditlogs, function($log) {
                 return $log->event == LogEventTypes::DOWNLOAD_ENDED;
             });
         }
@@ -526,7 +529,9 @@ class Transfer extends DBObject {
     /**
      * This function does stuffs when a transfer become available
      */
-    public function makeAvailable(){
+    public function makeAvailable() {
+        Logger::logActivity(LogEventTypes::UPLOAD_ENDED, $this);
+        
         if(!count($this->files))
             throw new TransferNoFilesException();
         
@@ -535,6 +540,7 @@ class Transfer extends DBObject {
         
         $this->status = TransferStatuses::AVAILABLE;
         $this->save();
+        Logger::logActivity(LogEventTypes::TRANSFER_AVAILABLE, $this);
         
         Auth::user()->saveFrequentRecipients($this->recipients);
         
@@ -555,6 +561,8 @@ class Transfer extends DBObject {
             $mail->to($recipient->email);
             $mail->send();
         }
+        
+        Logger::logActivity(LogEventTypes::TRANSFER_SENT, $this);
     }
     
     
@@ -593,11 +601,22 @@ class Transfer extends DBObject {
     }
     
     /*
-     * Save transfer then log
+     * Start transfer and log
      */
-    public function save() {
-        parent::save();
+    public function start() {
+        $this->status = TransferStatuses::STARTED;
+        $this->save();
         Logger::logActivity(LogEventTypes::TRANSFER_STARTED, $this);
-     }
-     
+    }
+    
+    /**
+     * Set uploading and log
+     */
+    public function isUploading() {
+        if($this->status != TransferStatuses::STARTED) return;
+        
+        $this->status = TransferStatuses::UPLOADING;
+        $this->save();
+        Logger::logActivity(LogEventTypes::UPLOAD_STARTED, $this);
+    }
 }

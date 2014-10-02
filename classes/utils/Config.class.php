@@ -234,11 +234,9 @@ class Config {
         $value = self::evalParameter($key, $value, $args);
         
         // Managing '/' on site_url
-        if ($key == 'site_url'){
-            if (substr($value, 0,-1) != '/'){
+        if($key == 'site_url')
+            if (substr($value, -1) != '/')
                 $value .= '/';
-            }
-        }
         
         if(
             is_array(self::$override) &&

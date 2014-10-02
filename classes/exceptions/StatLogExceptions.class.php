@@ -25,13 +25,10 @@ class StatLogNotFoundException extends DetailedException {
     }
 }
 
-
-
-
 /**
- * Bad StatLog event type exception
+ * Unknown event exception
  */
-class BadStatLogEventTypeException extends DetailedException {
+class StatLogUnknownEventException extends DetailedException {
     /**
      * Constructor
      * 
@@ -39,7 +36,7 @@ class BadStatLogEventTypeException extends DetailedException {
      */
     public function __construct($selector) {
         parent::__construct(
-            'bad_statlog_event_type', // Message to give to the user
+            'statlog_unknown_event', // Message to give to the user
             $selector // Real message to log
         );
     }

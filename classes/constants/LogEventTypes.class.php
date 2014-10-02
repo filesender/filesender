@@ -38,7 +38,7 @@ class LogEventTypes extends Enum {
    const LOG_CREATED              = 'log_created';    // Log created
    
    /* USER */
-   const USER_ACTED               = 'user_acted'; // User become active
+   const USER_CREATED             = 'user_created'; // User become active
    const USER_INACTIVED           = 'user_inactived';  // User become inactive
    const USER_PURGED              = 'user_purged';    // User purged
    
@@ -57,8 +57,9 @@ class LogEventTypes extends Enum {
    const GUEST_DELETED            = 'guest_deleted';   // Guest canceled
    
    /* TRANSFER */
-   const TRANSFER_AVAILABLE       = 'transfer_available';     // Transfer started
    const TRANSFER_STARTED         = 'transfer_started';         // Transfer started
+   const TRANSFER_AVAILABLE       = 'transfer_available';     // Transfer started
+   const TRANSFER_SENT            = 'transfer_sent';     // Transfer started
    const TRANSFER_EXPIRED         = 'transfer_expired';       // Transfer expired
    const TRANSFER_CLOSED          = 'transfer_closed';        // Transfer closed
    const TRANSFER_DELETED         = 'transfer_deleted';       // Transfer deleted

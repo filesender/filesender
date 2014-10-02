@@ -163,6 +163,7 @@ class User extends DBObject {
             $this->updateRecord($this->toDBData(), 'id');
         }else{
             $this->insertRecord($this->toDBData());
+            Logger::logActivity(LogEventTypes::USER_CREATED, $this);
         }
     }
     
