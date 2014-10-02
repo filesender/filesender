@@ -284,6 +284,35 @@ window.filesender.ui = {
     },
     
     /**
+     * Display a wide info popup
+     * 
+     * @param string title lang id
+     * @param callable onclose
+     */
+    wideInfoPopup: function(title, onclose) {
+        var d = $('<div class="wide_info" />').appendTo('body').attr({title: lang.tr(title).out()});
+        
+        d.dialog({
+            resizable: false,
+            width: $('#wrap').width(),
+            height: 0.8 * $(window).height(),
+            modal: true,
+            buttons: {
+                close: {
+                    text: lang.tr('close'),
+                    click: function () {
+                        d.dialog('close');
+                        d.remove();
+                        if(onclose) onclose();
+                    }
+                }
+            }
+        });
+        
+        return d;
+    },
+    
+    /**
      * Redirect user to other page
      * 
      * @param string page

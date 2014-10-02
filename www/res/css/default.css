@@ -283,8 +283,8 @@ table.list th {
     text-align: center;
 }
 
-table.list tbody tr:nth-child(even) {
-    background-color: #eee;
+table.list tbody td {
+    border-bottom: 1px solid #ccc;
 }
 
 table.list .actions {
@@ -294,6 +294,10 @@ table.list .actions {
 
 table.list .actions span{
     margin: 0 0.1em;
+}
+
+table.list .date {
+    width: 15em;
 }
 
 
@@ -332,6 +336,28 @@ table.list .actions span{
     margin-right: 1em;
 }
 
+.ui-dialog-content.wide_info {
+    overflow-y: scroll;
+}
+
+.ui-button .fa {
+    margin-right: 0.25em;
+}
+
+.ui-dialog-content.wide_info .filtered {
+    margin: 0.5em;
+    padding: 0.25em;
+    border: 1px solid #ccc;
+    border-radius: 0.5em;
+    -moz-border-radius: 0.5em;
+    background-color: #dedede;
+}
+
+.ui-dialog-content.wide_info .filtered a {
+    margin-left: 0.25em;
+}
+
+
 /* Upload page */
 
 #upload_form input[type="checkbox"] {
@@ -348,6 +374,8 @@ table.list .actions span{
 #upload_form .files {
     width: 100%;
     margin-bottom: 0.5em;
+    max-height: 20em;
+    overflow-y: scroll;
 }
 
 #upload_form .files .file {
@@ -508,7 +536,8 @@ table.list .actions span{
 
 /* transfers table */
 
-table.transfers .expand {
+table.transfers .expand,
+table.transfers .collapse {
     width: 2em;
     text-align: center;
 }
@@ -534,16 +563,29 @@ table.transfers td.downloads {
 
 table.transfers tbody tr.transfer_details {
     display: none;
-    background-color: transparent;
 }
 
 table.transfers .transfer_details div {
     margin: 0.5em;
 }
 
+table.transfers .transfer_details .collapse,
+table.transfers .transfer_details .actions {
+    margin: 0.5em 0;
+}
+
+table.transfers .transfer_details .actions {
+    float: right;
+}
+
 table.transfers .transfer_details h2 {
     font-size: 1.3em;
     margin-bottom: 0.3em;
+}
+
+table.transfers .transfer_details .recipients .recipient .fa.clickable,
+table.transfers .transfer_details .files .file .fa.clickable {
+    margin: 0 0.15em;
 }
 
 
