@@ -139,7 +139,13 @@ var startTime = 0;
 					buttons: dialogbuttons,
 					open: function( event, ui ) {
 						$("#password-note").html(passwordnote.replace(":1", $("#fileto").val()));
-						$("#encpassword").focus(); },
+						$("#encpassword").focus(); 
+						$("#dialog-password").keypress(function(e) {
+						      if (e.keyCode == $.ui.keyCode.ENTER) {
+						        $(this).parent().find('button:contains("'+txtok+'")').trigger("click");
+						      }
+						    });	
+					},
 					close: function( event, ui ) {
 						$("#uploadbutton a").attr("onclick", "validate()"); // re-activate upload button
 					}
