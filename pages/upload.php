@@ -117,7 +117,7 @@
 	var txtclose = "<?php echo lang("_CLOSE"); ?>";
 	var txtok = "<?php echo lang("_OK"); ?>";
 	
-	var encryptFile = false ; // Configurable default ??
+	var encryptFile = <?php echo booleanString($config['crypto_default_enabled'])?>; // Configurable default ??
 	var passwordprompt = "<?php echo lang("_ENCRYPT_PASSWDPROMPT"); ?>";
 	var passwordnote = "<?php echo lang("_ENCRYPT_PASSWORD_NOTE"); ?>";
 	var missingpassword = "<?php echo lang("_MISSING_PASSWORD"); ?>";
@@ -776,7 +776,7 @@ if ( hasProductInstall && !hasRequestedVersion ) {
       </tr>
       <tr id="encryptionrow">
         <td class=""></td>
-        <td><input onclick="toggleENC()" name="fileencryption" style="width:20px;" type="checkbox" id="fileencryption" value="1" /></td>
+        <td><input onclick="toggleENC()" name="fileencryption" style="width:20px;" type="checkbox" id="fileencryption" value="1" <?php echo ($config["crypto_default_enabled"] ) ? 'checked="checked"' : ""; ?> /></td>
         <td><?php echo lang("_ENCRYPT_FILE"); ?></td>
         <td colspan="2" align="center" valign="top">&nbsp;</td>
       </tr>
