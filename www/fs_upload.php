@@ -194,8 +194,8 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 			$dataitem["fileencryption"] = NULL;
 		}
 
-		
-		if ($authvoucher->aVoucher()) {
+		$isUploadedWithVoucher = $authvoucher->aVoucher();
+		if ($isUploadedWithVoucher) {
 			$tempData = $functions->getVoucherData($_REQUEST["vid"]);
 			$dataitem["fileauthuseruid"] = $tempData["fileauthuseruid"];
 			$dataitem["fileauthuseremail"] = $tempData["filefrom"];
@@ -214,7 +214,7 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 		}
 
 		// voucher has been used so add a SESSION variable
-		if ($authvoucher->aVoucher()) {
+		if ($isUploadedWithVoucher) {
 			$_SESSION['voucher'] = $_REQUEST['vid'];
 		}
 
