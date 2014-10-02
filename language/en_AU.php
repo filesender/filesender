@@ -49,8 +49,9 @@ $lang["_HOME"] = "Home";
 $lang["_ABOUT"] = "About";
 $lang["_HELP"] = "Help";
 $lang["_DELETE_VOUCHER"] = "Delete Voucher";
-$lang["_UPLOAD_COMPLETE"] = "The file is successfully uploaded and a download invitation has been sent. ".
-		"See <a href=\"index.php?s=files\">".$lang["_MY_FILES"]."</a> for details.";
+$lang["_UPLOAD_COMPLETE"] = "The file is successfully uploaded and a download invitation has been sent. ";
+$lang["_UPLOAD_COMPLETE_ACCOUNT_REFERENCE"] = "See <a href=\"index.php?s=files\">".$lang["_MY_FILES"]."</a> for details.";
+		
 $lang["_UPLOAD_PROGRESS"] = "Upload progress";
 $lang["_DOWNLOADED"] = "Downloaded";
 $lang["_DOWNLOAD"] = "Download";

@@ -388,6 +388,7 @@ function openabout()
 ?>
 		<div id="message"><?php echo lang("_UPLOAD_COMPLETE"); ?>
 		<?php if ($enc=="true") echo "<br/>" . lang("_UPLOAD_COMPLETE_ENCRYPTED"); ?>
+		<?php if ($isAuth) echo lang("_UPLOAD_COMPLETE_ACCOUNT_REFERENCE"); ?>
 		</div>
 <?php
 	} else if ($s == "" && $isAuth){

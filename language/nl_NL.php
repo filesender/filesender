@@ -49,8 +49,8 @@ $lang["_HOME"] = "Home";
 $lang["_ABOUT"] = "Over";
 $lang["_HELP"] = "Help";
 $lang["_DELETE_VOUCHER"] = "Trek uitnodiging in";
-$lang["_UPLOAD_COMPLETE"] = "Het bestand is succesvol geüpload en een download-uitnodiging is verzonden aan de ontvanger(s).".
-		"Zie <a href=\"index.php?s=files\">".$lang["_MY_FILES"]."</a> voor meer informatie.";
+$lang["_UPLOAD_COMPLETE"] = "Het bestand is succesvol geüpload en een download-uitnodiging is verzonden aan de ontvanger(s).";
+$lang["_UPLOAD_COMPLETE_ACCOUNT_REFERENCE"] = "Zie <a href=\"index.php?s=files\">".$lang["_MY_FILES"]."</a> voor meer informatie.";
 $lang["_UPLOAD_PROGRESS"] = "Voortgang Upload";
 $lang["_DOWNLOAD"] = "Download";
 $lang["_CANCEL_UPLOAD"] = "Annuleer Upload";
