@@ -133,14 +133,16 @@ var startTime = 0;
 								$("#encpassword").focus();
 							}};
 			dialogbuttons[txtclose] = function() {
-							$("#uploadbutton a").attr("onclick", "validate()"); // re-activate upload button
 							$( this ).dialog( "close" ); 
 						};
 			$("#dialog-password").dialog({
 					buttons: dialogbuttons,
 					open: function( event, ui ) {
 						$("#password-note").html(passwordnote.replace(":1", $("#fileto").val()));
-						$("#encpassword").focus(); }
+						$("#encpassword").focus(); },
+					close: function( event, ui ) {
+						$("#uploadbutton a").attr("onclick", "validate()"); // re-activate upload button
+					}
 			
 			});
 			
