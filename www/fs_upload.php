@@ -112,6 +112,9 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 		// close pending file
 		$functions->closeVoucher($data["fileid"]);
 		
+		// Establish whether the file should be accompanied by a metadata file
+		$useFileMetadata = ( isset($data["fileencryption"]) );
+		
 		// error if file size uploaded doesn't matches the file size intended to upload
 		// remove the offending file or it will assume resume evry re-attempt
 		// Disable filesize check for crypted uploads since the final size is not known in advance
@@ -139,8 +142,10 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 			returnerrorandclose();
          	} else {
          		// also rename metadata filename
-         		if (!FileMetadata::renameFileMetadataFile($uploadfolder.$tempFilename, $uploadfolder.$fileuid.".tmp")) {
-         			logEntry("Unable to move metadata file for ".$uploadfolder.$tempFilename."; resuming.", "E_ERROR");
+         		if ($useFileMetadata) {
+         			if (!FileMetadata::renameFileMetadataFile($uploadfolder.$tempFilename, $uploadfolder.$fileuid.".tmp")) {
+         				logEntry("Unable to move metadata file for ".$uploadfolder.$tempFilename."; resuming.", "E_ERROR");
+         			}
          		}
 				logEntry("Rename the file ".$uploadfolder.$fileuid.".tmp");
 		}
