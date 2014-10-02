@@ -87,15 +87,18 @@ filesender.ui.files = {
             if(added === false) continue;
             
             var bar = $('<div class="progressbar" />').appendTo(node);
-            var label = $('<div class="progress-label" />').appendTo(bar);
+            $('<div class="progress-label" />').appendTo(bar);
             bar.progressbar({
                 value: false,
                 max: 1000,
                 change: function() {
-                    label.text((bar.progressbar('value') / 10).toFixed(1) + '%');
+                    var bar = $(this);
+                    var v = bar.progressbar('value');
+                    bar.find('.progress-label').text((v / 10).toFixed(1) + '%');
                 },
                 complete: function() {
-                    label.text(lang.tr('done'));
+                    var bar = $(this);
+                    bar.find('.progress-label').text(lang.tr('done'));
                 }
             });
             

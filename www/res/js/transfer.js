@@ -244,11 +244,6 @@ window.filesender.transfer = function() {
         }
 
         if (complete) {
-            if(file.complete) return; // Avoid multiple reports from terasender parallel workers
-            
-            for(var i=0; i<this.files.length; i++) if(this.files[i].id == file.id) this.files[i].complete = true;
-            file.complete = true;
-            
             var transfer = this;
             filesender.client.fileComplete(file, undefined, function(data) {
                 if (transfer.onprogress)

@@ -83,9 +83,10 @@ window.filesender.terasender = {
         file.uploaded += filesender.config.terasender_chunk_size;
         if(file.uploaded > file.size) file.uploaded = file.size ? file.size : 1; // Protect against empty files creating loops
         
-        if(file.id != worker.file_id) job.file = file;
-        
-        if(worker.file_id === null || worker.file_id != file.id) worker.file_id = file.id;
+        if(file.id != worker.file_id) {
+            job.file = file;
+            worker.file_id = file.id;
+        }
         
         return job;
     },
@@ -192,9 +193,9 @@ window.filesender.terasender = {
                 workers_on_same_file++;
         }
         
-        this.transfer.reportProgress(file, workers_on_same_file == 0);
+        this.transfer.reportProgress(file, (file.uploaded >= file.size) && (workers_on_same_file == 0));
         
-        if(!chunks_pending && !workers_running) { // Not all done
+        if(!chunks_pending && !workers_running) { // Notify all done
             this.transfer.reportComplete();
             this.status = 'done';
         }
