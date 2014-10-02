@@ -96,6 +96,13 @@ function ensureSaneFileUid($fileuid){
     }
 }
 
+/**
+ * Return the provided boolean as a 'true' or 'false' string
+ */
+function booleanString($bool) {
+	return ($bool ? "true" : "false");
+}
+
 class Functions {
 
     private static $instance = NULL;
