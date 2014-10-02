@@ -210,6 +210,7 @@
 		    open: function() {
           //Hide closing "X" for this dialog only.
           $(this).parent().children().children(".ui-dialog-titlebar-close").remove();
+          if (encryptFile) $("#progress_message_encryption").show(); else $("#progress_message_encryption").hide(); 
     	},
 		autoOpen: false, height: 180,width: 400, modal: true,title: "<?php echo lang("_UPLOAD_PROGRESS") ?>:",		
 		buttons: {
@@ -825,7 +826,7 @@ if ( hasProductInstall && !hasRequestedVersion ) {
 <div id="dialog-default" style="display:none" title=""> </div>
 <div id="dialog-cancel" style="display:none" title="<?php echo lang("_CANCEL_UPLOAD"); ?>"><?php echo lang("_ARE_YOU_SURE"); ?></div>
 <div id="dialog-uploadprogress" title="" style="display:none">
-<div><?php echo lang("_UPLOAD_ENCRYPT_PROGRESS_MESSAGE");?></div>
+<div id="progress_message_encryption"><?php echo lang("_UPLOAD_ENCRYPT_PROGRESS_MESSAGE");?></div>
 <img id="progress_image" name="progress_image" src="images/ajax-loader-sm.gif" width="16" height="16" alt="Uploading" align="left" /> 
 	<div id="progress_container">
    		<div id="progress_bar" style="display:none">
