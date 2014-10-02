@@ -108,7 +108,8 @@ class Tsunami {
         //get alls files starting with hash($this->filename).'#' from $this->config['tmp_dir'];
         foreach(glob($this->config['tmp_dir'].'/'.md5($this->filename).'#*') as $tempFile){
             $newTempFile['name'] = $tempFile;
-            $newTempFile['startByte'] = end(explode('#', $tempFile));
+            // Note: when PHP strict is enabled, "end(explode('#', $tempFile));" reports an error
+            $newTempFile['startByte'] = current(array_slice(explode('#', $tempFile), -1, 1, TRUE)); 
             $tempFiles[] = $newTempFile;
         }
 
