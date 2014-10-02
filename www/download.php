@@ -205,7 +205,7 @@ function downloadSingleFile($transfer, $recipient, $files_ids) {
         if (!connection_aborted() && (connection_status() == CONNECTION_NORMAL))
             return;
 
-        Logger::info('Seems that the user stopped downloading (not that reliable though ...)');
+        Logger::debug('Seems that the user stopped downloading (not that reliable though ...)');
 
         die; // Stop pointless reading if user stopped downloading
     };
@@ -223,33 +223,30 @@ function downloadSingleFile($transfer, $recipient, $files_ids) {
         $end = $file->size;
         if ($range)
             $end = $range['end'];
-
-        Logger::logActivity(LogEventTypes::DOWNLOAD_STARTED, $file, $recipient);
+        
         for (; $offset < $end; $offset += $chunk_size) {
             $remaining = $end - $offset + 1;
             $length = min($chunk_size, $remaining);
-
-            Logger::info('Send chunk at offset ' . $offset . ' with length ' . $length);
-
+            
+            Logger::debug('Send chunk at offset ' . $offset . ' with length ' . $length);
+            
             echo $file->readChunk($offset, $length);
-
+            
             // TODO Log download progress ?
-
+            
             $abort_handler();
         }
-        Logger::logActivity(LogEventTypes::DOWNLOAD_ENDED, $file, $recipient);
-
+        
         return ($offset >= $file->size);
     };
 
     $recipient->reportActivity();
-    // TODO Log download start
-
+    
     $done = false;
-
+    
     if ($ranges)
         header('HTTP/1.1 206 Partial Content'); // Must send HTTP header before anything else
-
+    
     header('Content-Transfer-Encoding: binary');
     header('Last-Modified: ' . gmdate('D, d M Y H:i:s', $transfer->created));
     header('ETag: t' . $transfer->id . '_f' . $file->id . '_s' . $file->size);
@@ -257,10 +254,11 @@ function downloadSingleFile($transfer, $recipient, $files_ids) {
     header('Cache-control: private');
     header('Pragma: private');
     header('Expires: 0');
-
+    
     if ($ranges) {
         Logger::info('User restarted download of file:' . $file->id . ' from offset ' . $ranges[0]['start']);
-
+        Logger::logActivity(LogEventTypes::DOWNLOAD_RESUMED);
+        
         if (count($ranges) == 1) { // Single range
             $range = array_shift($ranges);
 
@@ -300,9 +298,15 @@ function downloadSingleFile($transfer, $recipient, $files_ids) {
         header('Accept-Ranges: bytes');
 
         // Read data (no range means all file)
+        Logger::info('User started to download file:' . $file->id);
+        Logger::logActivity(LogEventTypes::DOWNLOAD_STARTED, $file, $recipient);
         $read_range();
         $done = true;
     }
+    
+    if($done)
+        Logger::logActivity(LogEventTypes::DOWNLOAD_ENDED, $file, $recipient);
+    
     return array('result' => $done, 'data' => array(
          'filename' => $file->name,
          'filesize' => $file->size
