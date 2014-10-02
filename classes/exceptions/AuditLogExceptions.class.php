@@ -64,12 +64,10 @@ class AuditLogNotEnabledException extends DetailedException {
     }
 }
 
-
-
 /**
- * Bad AuditLog event type exception
+ * Unknown event exception
  */
-class AuditLogBadEventTypeException extends DetailedException {
+class AuditLogUnknownEventException extends DetailedException {
     /**
      * Constructor
      * 
@@ -77,7 +75,7 @@ class AuditLogBadEventTypeException extends DetailedException {
      */
     public function __construct($selector) {
         parent::__construct(
-            'bad_auditlog_event_type', // Message to give to the user
+            'auditlog_unknown_event', // Message to give to the user
             $selector // Real message to log
         );
     }

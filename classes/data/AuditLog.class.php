@@ -49,7 +49,7 @@ class AuditLog extends DBObject {
         ),
         'event' => array(
             'type' => 'string',
-            'size' => 20
+            'size' => 32
         ),
         'target_type' => array(
             'type' => 'string',
@@ -82,6 +82,7 @@ class AuditLog extends DBObject {
      * Set selectors
      */
     const FROM_TARGET = 'target_type = :type AND target_id = :id ORDER BY created ASC, id ASC';
+    const FROM_AUTHOR = 'author_type = :type AND author_id = :id ORDER BY created ASC, id ASC';
     
     /**
      * Properties
@@ -127,7 +128,7 @@ class AuditLog extends DBObject {
      */
     public static function create($event, DBObject $target, $author = null) {
         if(!LogEventTypes::isValidValue($event))
-            throw new AuditLogBadEventTypeException($event);
+            throw new AuditLogUnknownEventException($event);
         
         $auditLog = new self();
         
@@ -187,12 +188,31 @@ class AuditLog extends DBObject {
     /**
      * Get logs related to a target
      * 
-     * @param Transfer $transfer
+     * @param DBObject $transfer
      * 
      * @return array of AuditLog
      */
     public static function fromTarget(DBObject $target, $event = null) {
         $logs = self::all(self::FROM_TARGET, array('type' => $target->getClassName(), 'id' => $target->id));
+        
+        if($event && LogEventTypes::isValidValue($event)) {
+            $logs = array_filter($logs, function($log) use($event) {
+                return $log->event == $event;
+            });
+        }
+        
+        return $logs;
+    }
+    
+    /**
+     * Get logs related to an author
+     * 
+     * @param DBObject $author
+     * 
+     * @return array of AuditLog
+     */
+    public static function fromAuthor(DBObject $author, $event = null) {
+        $logs = self::all(self::FROM_AUTHOR, array('type' => $author->getClassName(), 'id' => $author->id));
         
         if($event && LogEventTypes::isValidValue($event)) {
             $logs = array_filter($logs, function($log) use($event) {

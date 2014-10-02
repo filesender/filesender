@@ -36,6 +36,8 @@
  */
 
 class TransferStatuses extends Enum {
+    const CREATED    = 'created';
+    const STARTED    = 'started';
     const UPLOADING  = 'uploading';
     const AVAILABLE  = 'available';
     const CLOSED     = 'closed';

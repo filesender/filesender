@@ -108,9 +108,42 @@ class RestEndpointTransfer extends RestEndpoint {
             if(!$transfer->isOwner($user) && !Auth::isAdmin())
                 throw new RestOwnershipRequiredException($user->id, 'transfer = '.$transfer->id);
             
-            if($property == 'options') {
-                
-                return $transfer->$property;
+            if($property == 'options')
+                return $transfer->options;
+            
+            if($property == 'auditlog') {
+                return array_values(array_map(function($log) {
+                    $author_data = array(
+                        'type' => $log->author_type,
+                        'id' => $log->author_id,
+                        'ip' => $log->ip
+                    );
+                    if($log->author_type == 'Recipient')
+                        $author_data['email'] = $log->author->email;
+                    
+                    $target = $log->target;
+                    $target_data = array(
+                        'type' => $log->target_type,
+                        'id' => $log->target_id
+                    );
+                    switch($log->target_type) {
+                        case 'Transfer': break;
+                        case 'File':
+                            $target_data['name'] = $target->name;
+                            $target_data['size'] = $target->size;
+                            break;
+                        case 'Recipient':
+                            $target_data['email'] = $target->email;
+                            break;
+                    }
+                    
+                    return array(
+                        'date' => RestUtilities::formatDate($log->created, true),
+                        'event' => $log->event,
+                        'author' => $author_data,
+                        'target' => $target_data
+                    );
+                }, $transfer->auditlogs));
             }
             
             return self::cast($transfer);
@@ -211,6 +244,8 @@ class RestEndpointTransfer extends RestEndpoint {
             }
             
             foreach($data->recipients as $email) $transfer->addRecipient($email);
+            
+            $transfer->start();
             
             return array(
                 'path' => '/transfer/'.$transfer->id,

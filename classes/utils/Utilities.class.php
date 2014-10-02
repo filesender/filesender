@@ -93,14 +93,18 @@ class Utilities
      * Format a date according to configuration
      * 
      * @param integer $timestamp php timestamp to format to date or null to use current date
+     * @param bool $with_time
      * 
      * @return string formatted date
      */
-    public static function formatDate($timestamp = null)
-    {
-        $dateFormat = Lang::tr('date_format');
+    public static function formatDate($timestamp = null, $with_time = false) {
+        $lid = $with_time ? 'datetime_format' : 'date_format';
+        $dateFormat = Lang::tr($lid);
         if ($dateFormat == '{date_format}')
             $dateFormat = 'Y-m-d';
+        if ($dateFormat == '{datetime_format}')
+            $dateFormat = 'Y-m-d H:i:s';
+        
         return date($dateFormat, is_null($timestamp) ? time() : $timestamp);
     }
     

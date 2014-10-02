@@ -49,7 +49,7 @@ class StatLog extends DBObject {
         ),
         'event' => array(
             'type' => 'string',
-            'size' => 20,
+            'size' => 32,
         ),
         'target_type' => array(
             'type' => 'string',
@@ -57,7 +57,7 @@ class StatLog extends DBObject {
         ),
         'size' => array(
             'type' => 'int',
-            'size' => 'medium',
+            'size' => 'big',
         ),
         
         'created' => array(
@@ -110,39 +110,34 @@ class StatLog extends DBObject {
      * @return StatLog auditlog
      */
     public static function create($event, DBObject $target) {
-        $configs = Config::get('statlog_*');
+        $lt = Config::get('statlog_lifetime');
+        if(is_null($lt) || (is_bool($lt) && !$lt)) return; // statlog disabled
         
-        if (isset($configs['enable']) && $configs['enable']){
-            if (LogEventTypes::isValidValue($event)){
-                $statLog = new self();
-
-                $statLog->event = $event;
-                $statLog->created = time();
-                $statLog->target_type = get_class($target);
-
-                switch ($statLog->target_type){
-                    case File::getClassName():
-                        $statLog->size = $target->size;
-                    break;
-                    case Transfer::getClassName():
-                        $tmpSize= 0;
-                        foreach ($target->files as $file){
-                            $tmpSize += $file->size;
-                        }
-                        $statLog->size = $tmpSize;
-                    break;
-                    default:
-                        $statLog->size = 0;
-                        break;
-                }
-
-                $statLog->save();
-
-                return $statLog;
-            }else{
-                throw new BadStatLogEventTypeException($event);
-            }
+        if(!LogEventTypes::isValidValue($event))
+            throw new StatLogUnknownEventException($event);
+        
+        $log = new self();
+        $log->event = $event;
+        $log->created = time();
+        $log->target_type = get_class($target);
+        
+        switch ($log->target_type){
+            case File::getClassName():
+                $log->size = $target->size;
+                break;
+            
+            case Transfer::getClassName():
+                $log->size = $target->size;
+                break;
+            
+            default:
+                $log->size = 0;
+                break;
         }
+        
+        $log->save();
+        
+        return $log;
     }
     
     /**
@@ -164,5 +159,31 @@ class StatLog extends DBObject {
         ))) return $this->$property;
         
         throw new PropertyAccessException($this, $property);
+    }
+    
+    /**
+     * Clean logs
+     */
+    public static function clean() {
+        Logger::info('Cleaning statlogs');
+        $lt = Config::get('statlog_lifetime');
+        if(!is_null($lt) && !is_bool($lt) && !is_numeric($lt))
+            throw new ConfigBadParameterException('statlog_lifetime');
+        
+        if(is_null($lt) || (is_bool($lt) && !$lt)) {
+            // statlog disabled, clean all in case something remains (parameter just changed)
+            Logger::info('Statlog disabled, wipe everything out');
+            DBI::exec('DELETE FROM '.self::getDBTable());
+            return;
+        }
+        
+        if((is_bool($lt) && $lt) || (is_numeric($lt) && !(int)$lt)) { // true or 0 => infinite stats keeping
+            Logger::info('Statlog keeping set to infinite, nothing to clean');
+            return;
+        }
+        
+        Logger::info('Removing statlogs older than '.(int)$lt.' days');
+        $s = DBI::prepare('DELETE FROM '.self::getDBTable().' WHERE created < DATE_SUB(NOW(), INTERVAL :days DAY)');
+        $s->execute(array(':days' => (int)$lt));
     }
 }
