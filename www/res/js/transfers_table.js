@@ -34,43 +34,45 @@ $(function() {
     var transfers = $('table.transfers');
     if(!transfers.length) return;
     
-    // Expand / retract each transfer's details
-    transfers.find('tr.transfer td.expand span, tr.transfer span.expand').on('click', function() {
+    // Expand each transfer's details
+    transfers.find('.transfer .expand span, .transfer span.expand').on('click', function() {
         var el = $(this);
         var tr = el.closest('tr');
-        var details = tr.next('tr.transfer_details[data-id="' + tr.attr('data-id') + '"]');
+        var details = transfers.find('.transfer_details[data-id="' + tr.attr('data-id') + '"]');
         
-        var expanded = !el.hasClass('expanded');
+        tr.hide('fast');
+        details.show('fast');
+    });
+    
+    // Collapse each transfer's details
+    transfers.find('.transfer_details .collapse span').on('click', function() {
+        var el = $(this);
+        var details = el.closest('tr');
+        var tr = transfers.find('.transfer[data-id="' + details.attr('data-id') + '"]');
         
-        tr.find('td:not(.expand, .actions)').css('visibility', expanded ? 'hidden' : 'visible');
-        details[expanded ? 'show' : 'hide']('fast');
-        
-        tr.find('td.expand span, span.expand').toggleClass('expanded', expanded);
-        tr.find('td.expand .fa').toggleClass('fa-plus-circle', !expanded).toggleClass('fa-minus-circle', expanded);
+        details.hide('fast');
+        tr.show('fast');
     });
     
     // Expand / retract all
-    transfers.find('tr th.expand span').on('click', function() {
+    transfers.find('thead .expand span').on('click', function() {
         var el = $(this);
         var table = el.closest('table');
-        var details = table.find('.transfer_details');
-        var expands = table.find('tr.transfer td.expand span');
-        expands.push(this);
         
         var expanded = !el.hasClass('expanded');
         
-        table.find('.transfer td:not(.expand, .actions)').css('visibility', expanded ? 'hidden' : 'visible');
-        details[expanded ? 'show' : 'hide']('fast');
+        table.find('.transfer_details')[expanded ? 'show' : 'hide']('fast');
+        table.find('.transfer')[expanded ? 'hide' : 'show']('fast');
         
-        expands.toggleClass('expanded', expanded).toggleClass('fa-plus-circle', !expanded).toggleClass('fa-minus-circle', expanded);
+        el.toggleClass('expanded', expanded).toggleClass('fa-plus-circle', !expanded).toggleClass('fa-minus-circle', expanded);
     });
     
     // Setup action buttons
-    transfers.find('td.actions').each(function() {
-        var td = $(this);
+    transfers.find('tbody .actions').each(function() {
+        var container = $(this);
         
         // Delete button
-        $('<span class="delete clickable fa fa-lg fa-trash-o" />').appendTo(td).attr({
+        $('<span class="delete clickable fa fa-lg fa-trash-o" />').appendTo(container).attr({
             title: lang.tr('delete')
         }).on('click', function() {
             var id = $(this).closest('tr').attr('data-id');
@@ -86,7 +88,7 @@ $(function() {
         });
         
         // Send reminder button
-        $('<span class="remind clickable fa fa-lg fa-repeat" />').appendTo(td).attr({
+        $('<span class="remind clickable fa fa-lg fa-repeat" />').appendTo(container).attr({
             title: lang.tr('send_reminder')
         }).on('click', function() {
             var id = $(this).closest('tr').attr('data-id');
@@ -124,4 +126,93 @@ $(function() {
             });
         });
     });
+    
+    
+    // Add auditlogs triggers
+    var auditlogs = function(transfer_id, filter) {
+        filesender.client.getTransferAuditlog(transfer_id, function(log) {
+            var popup = filesender.ui.wideInfoPopup('auditlog');
+            
+            if(!log || !log.length) {
+                $('<p />').text(lang.tr('no_auditlog')).appendTo(popup);
+                return;
+            }
+            
+            var tbl = $('<table class="list" />').appendTo(popup);
+            var th = $('<tr />').appendTo($('<thead />').appendTo(tbl));
+            $('<th class="date" />').text(lang.tr('date')).appendTo(th);
+            $('<th />').text(lang.tr('action')).appendTo(th);
+            
+            if(filter) {
+                filter = filter.split('/');
+                if(filter.length != 3) filter = null;
+            }
+            
+            if(filter) {
+                var flt = $('<div class="filtered" />').text(lang.tr('filtered_transfer_log')).prependTo(popup);
+                $('<a href="#" />').text(lang.tr('view_full_log')).appendTo(flt).on('click', function(e) {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    $(this).closest('.wide_info').find('table tr').show('fast');
+                    $(this).closest('.filtered').hide('fast');
+                    return false;
+                });
+            }
+            
+            var tb = $('<tbody />').appendTo(tbl);
+            for(var i=0; i<log.length; i++) {
+                var tr = $('<tr />').appendTo(tb);
+                
+                var filtered = false;
+                if(filter) {
+                    var v = log[i][filter[0]];
+                    if(v && v.type) {
+                        if(v.type.toLowerCase() == filter[1]) {
+                            if(v.id != filter[2]) filtered = true;
+                        } else filtered = true;
+                    }
+                }
+                if(filtered) tr.hide();
+                
+                $('<td class="date" />').text(log[i].date.formatted).appendTo(tr);
+                
+                var lid = 'report_event_' + log[i].event;
+                
+                var rpl = {author: log[i].author};
+                rpl[log[i].target.type.toLowerCase()] = log[i].target;
+                
+                $('<td />').html(lang.tr(lid).r(rpl).out()).appendTo(tr);
+                
+            }
+        });
+    };
+    
+    if(filesender.config.auditlog_lifetime !== null) {
+        transfers.find('.transfer_details td').each(function() {
+            var ld = $('<div class="auditlog" />').appendTo(this);
+            $('<h2 />').text(lang.tr('auditlog')).appendTo(ld);
+            $('<a href="#" />').text(lang.tr('open_auditlog')).appendTo(ld).on('click', function(e) {
+                e.stopPropagation();
+                e.preventDefault();
+                auditlogs($(this).closest('tr').attr('data-id'));
+                return false;
+            }).prepend('<span class="fa fa-lg fa-history" />').button();
+        });
+        
+        transfers.find('.transfer_details .recipients .recipient').each(function() {
+            $('<span class="clickable fa fa-lg fa-history" />').attr({
+                title: lang.tr('open_recipient_auditlog').out()
+            }).appendTo(this).on('click', function() {
+                auditlogs($(this).closest('tr').attr('data-id'), 'author/recipient/' + $(this).closest('.recipient').attr('data-id'));
+            });
+        });
+        
+        transfers.find('.transfer_details .files .file').each(function() {
+            $('<span class="clickable fa fa-lg fa-history" />').attr({
+                title: lang.tr('open_file_auditlog').out()
+            }).appendTo(this).on('click', function() {
+                auditlogs($(this).closest('tr').attr('data-id'), 'target/file/' + $(this).closest('.file').attr('data-id'));
+            });
+        });
+    }
 });

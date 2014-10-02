@@ -65,7 +65,25 @@ window.filesender.lang = {
             
             var translation = this.translation;
             for(var k in placeholder)
-                translation = translation.replace('{' + k + '}', placeholder[k]);
+                translation = translation.replace(new RegExp('{((date|size):)?' + k + '((\.[a-z0-9_]+)*)}', 'g'), function(d0, d1, fct, path) {
+                    var v = placeholder[k];
+                    
+                    if(path) {
+                        path = path.substr(1).split('.');
+                        while(v && path.length)
+                            v = v[path.shift()];
+                    }
+                    
+                    if(typeof v == 'function') v = v();
+                    if((typeof v == 'object') && (typeof v.length != 'undefined')) v = v.length; // Array
+                    
+                    switch(fct) {
+                        case 'size': v = filesender.ui.formatBytes(v); break;
+                        case 'date': if(typeof v.formatted != 'undefined') v = v.formatted; break;
+                    }
+                    
+                    return v;
+                });
             
             return new filesender.lang.translatedString(translation, true);
         };

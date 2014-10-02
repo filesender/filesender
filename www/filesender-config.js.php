@@ -46,7 +46,7 @@ $banned = Config::get('ban_extension');
 if(!('filesender' in window)) window.filesender = {};
 
 window.filesender.config = {
-    log: true,
+    log: false,
     upload_chunk_size: <?php echo Config::get('upload_chunk_size') ?>,
     
     upload_display_bits_per_sec: <?php echo Config::get('upload_display_bits_per_sec') ? 'true' : 'false' ?>,
@@ -75,4 +75,6 @@ window.filesender.config = {
     base_path: '<?php echo GUI::path() ?>',
     support_email: '<?php echo Config::get('support_email') ?>',
     minimum_characters_for_autocomplete: '<?php echo Config::get('minimum_characters_for_autocomplete')>0?Config::get('minimum_characters_for_autocomplete'):3 ?>',
+    
+    auditlog_lifetime: <?php $lt = Config::get('auditlog_lifetime'); echo is_null($lt) ? 'null' : $lt ?>,
 };

@@ -34,8 +34,8 @@
     <tbody>
         <?php foreach($transfers as $transfer) { ?>
         <tr class="transfer" data-id="<?php echo $transfer->id ?>">
-            <td class="expand" title="{tr:show_details}">
-                <span class="clickable fa fa-plus-circle fa-lg"></span>
+            <td class="expand">
+                <span class="clickable fa fa-plus-circle fa-lg" title="{tr:show_details}"></span>
             </td>
             
             <td class="recipients">
@@ -45,7 +45,7 @@
                 }, array_slice($transfer->recipients, 0, 3)));
                 
                 if(count($transfer->recipients) > 3)
-                    echo '<br />(<span class="clickable expand">'.Lang::tr('n_more', array('n' => count($transfer->recipients) - 3)).'</span>)';
+                    echo '<br />(<span class="clickable expand">'.Lang::tr('n_more')->r(array('n' => count($transfer->recipients) - 3)).'</span>)';
                 ?>
             </td>
             
@@ -60,12 +60,12 @@
                 }, array_slice($transfer->files, 0, 3)));
                 
                 if(count($transfer->files) > 3)
-                    echo '<br />(<span class="clickable expand">'.Lang::tr('n_more', array('n' => count($transfer->recipients) - 3)).'</span>)';
+                    echo '<br />(<span class="clickable expand">'.Lang::tr('n_more')->r(array('n' => count($transfer->files) - 3)).'</span>)';
                 ?>
             </td>
             
             <td class="downloads">
-                TODO (<span class="clickable expand">{tr:see_all}</span>)
+                <?php $dc = count($transfer->downloads); echo $dc; if($dc) { ?> (<span class="clickable expand">{tr:see_all}</span>)<?php } ?>
             </td>
             
             <td class="expires">
@@ -77,6 +77,12 @@
         
         <tr class="transfer_details" data-id="<?php echo $transfer->id ?>">
             <td colspan="7">
+                <div class="actions"></div>
+                
+                <div class="collapse">
+                    <span class="clickable fa fa-minus-circle fa-lg" title="{tr:hide_details}"></span>
+                </div>
+                
                 <div class="general">
                     {tr:created} : <?php echo Utilities::formatDate($transfer->created) ?><br />
                     {tr:expires} : <?php echo Utilities::formatDate($transfer->expires) ?><br />
@@ -105,19 +111,6 @@
                             <?php echo htmlentities($file->name) ?> (<?php echo Utilities::formatBytes($file->size) ?>) : <?php echo count($file->downloads) ?> {tr:downloads}
                         </div>
                     <?php } ?>
-                </div>
-                
-                <div class="auditlog">
-                    <h2>{tr:auditlog}</h2>
-                    <table>
-                        <thead>
-                            <th>{tr:date}</th>
-                            <th>{tr:event}</th>
-                        </thead>
-                        <tbody>
-                            <?php Template::display('report_html', array('report' => new Report($transfer))) ?>
-                        </tbody>
-                    </table>
                 </div>
             </td>
         </tr>

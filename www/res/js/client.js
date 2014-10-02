@@ -312,4 +312,7 @@ window.filesender.client = {
         this.get('/transfer/' + id + '/options/' + option, callback, token ? {args: {token: token}} : undefined);
     },
     
+    getTransferAuditlog: function(id, callback) {
+        this.get('/transfer/' + id + '/auditlog', callback);
+    },
 };
