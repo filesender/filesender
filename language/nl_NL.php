@@ -137,6 +137,7 @@ $lang["_SEND"] = "Verzend";
 $lang["_DELETE"] = "Verwijder";
 $lang["_YES"] = "Ja";
 $lang["_NO"] = "Nee";
+$lang["_CLICK_TO_SAVE_FILE"] = "Klik hier voor opslaan bestand";
 
 // steps
 $lang["_STEP1"] = "Voer één of meer e-mailadressen in";
