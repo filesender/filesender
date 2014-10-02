@@ -160,7 +160,8 @@ function startDownload() {
 
 function startDownloadWithPassword(password) {
 	var source = 'download.php?vid=<?php echo urlencode($filedata["filevoucheruid"]);?>';
-    var filename = '<?php echo utf8tohtml($filedata["fileoriginalname"],TRUE);?>';
+	<?php // json_encode will quote the result, as it is of type string ?>
+    var filename = <?php echo json_encode($filedata["fileoriginalname"]);?>;
     var filesize = '<?php echo $filedata["filesize"];?>';
 
             var downloader = new Downloader(chunksize, {
