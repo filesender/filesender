@@ -532,6 +532,8 @@ $(function() {
     
     // Bind buttons
     filesender.ui.nodes.buttons.start.on('click', function() {
+        $(this).focus(); // Get out of email field / datepicker so inputs are updated
+        $(this).blur();
         if(filesender.ui.transfer.status == 'new' && $(this).is('[aria-disabled="false"]')) {
             filesender.ui.startUpload();
             filesender.ui.nodes.buttons.start.addClass('not_displayed');

@@ -259,6 +259,8 @@ $(function() {
     
     // Bind buttons
     filesender.ui.nodes.sendbutton.on('click', function() {
+        $(this).focus(); // Get out of email field / datepicker so inputs are updated
+        $(this).blur();
         if($(this).is('[aria-disabled="false"]')) {
             filesender.ui.send();
             filesender.ui.nodes.sendbutton.button('disable');
