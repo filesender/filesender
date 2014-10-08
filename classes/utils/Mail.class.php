@@ -323,12 +323,12 @@ class Mail {
         if (preg_match('`<body[^>]*>`', $html)) // Strip existing body
             $html = preg_replace('`^.*<body[^>]*>(.+)</body>.*$`ims', '$1', $html);
         
-        $styles = array('www/res/skin/mail.css', 'www/res/css/mail.css');
-        $css = null;
-        while(!$css && $file = array_shift($styles)) {
+        $styles = array('www/res/css/mail.css', 'www/res/skin/mail.css');
+        $css = '';
+        foreach($styles as $file)
             if(file_exists(FILESENDER_BASE.'/'.$file))
-                $css = file_get_contents(FILESENDER_BASE.'/'.$file);
-        }
+                $css .= "\n\n".file_get_contents(FILESENDER_BASE.'/'.$file);
+        $css = trim($css);
         
         $html = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">' . "\n"
                 . '<html>' . "\n"
