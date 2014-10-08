@@ -34,6 +34,9 @@
 if (!defined('FILESENDER_BASE'))
     die('Missing environment');
 
+
+require_once(FILESENDER_BASE.'/lib/dompdf/dompdf_config.inc.php');
+
 /**
  * Report class
  */
@@ -101,6 +104,12 @@ class Report {
         
         if($property == 'target_type') return get_class($this->target);
         
+        if($property == 'transfer') switch($this->target_type) {
+            case 'Transfer': return $this->target;
+            case 'Recipient':
+            case 'File': return $this->target->transfer;
+        }
+        
         throw new PropertyAccessException($this, $property);
     }
     
@@ -117,29 +126,54 @@ class Report {
             throw new BadEmailException($recipient);
         
         $format = Config::get('report_format');
-        if(!$format) $format = ReportFormats::HTML;
+        if(!$format) $format = ReportFormats::INLINE;
         
         if(!ReportFormats::isValidName($format))
             throw new ReportUnknownFormatException($format);
         
-        if(($format == ReportFormats::HTML) && !Config::get('email_use_html'))
-            $format = ReportFormats::PLAIN;
+        if(($format == ReportFormats::PDF) && !extension_loaded('iconv'))
+            throw new ReportFormatNotAvailableException('iconv not found');
         
         $content = array('plain' => '', 'html' => '');
         $file = null;
         if($format == ReportFormats::PDF) {
-            $content['plain'] = Lang::tr('report_pdf_attached');
-            $content['html'] = $content['plain'];
+            $file = array(
+                'tmp_path' => FILESENDER_BASE.'/report_'.strtolower($this->target_type).'_'.$this->target->id.'_'.uniqid().'.pdf',
+                'name' => 'report_'.strtolower($this->target_type).'_'.$this->target->id.'.pdf'
+            );
             
-            //$file = ''; // TMP pdf file ...
-        } else {
+            $html = Template::process('!report_pdf', array('report' => $this));
+            
+            $styles = array(
+                'www/res/css/mail.css',
+                'www/res/skin/mail.css',
+                'www/res/css/pdf.css',
+                'www/res/skin/pdf.css'
+            );
+            $css = '';
+            foreach($styles as $cssfile)
+                if(file_exists(FILESENDER_BASE.'/'.$cssfile))
+                    $css .= "\n\n".file_get_contents(FILESENDER_BASE.'/'.$cssfile);
+            $css = trim($css);
+            
+            if($css) $html = '<style type="text/css">'.$css.'</style>'.$html;
+            
+            $pdf = new DOMPDF();
+            $pdf->load_html($html);
+            $pdf->render();
+            $content = $pdf->output();
+            
+            if($fh = fopen($file['tmp_path'], 'w')) {
+                fwrite($fh, $content);
+                fclose($fh);
+            } else throw new ReportCannotWriteFileException($file['tmp_path']);
+        } else { // INLINE
             $content['plain'] = Template::process('!report_plain', array('report' => $this));
-            
-            if($format == ReportFormats::HTML)
-                $content['html'] = Template::process('!report_html', array('report' => $this));
+            $content['html'] = Template::process('!report_html', array('report' => $this));
         }
         
-        $mail = new ApplicationMail(Lang::translateEmail('report')->r(
+        $lid = ($format == ReportFormats::INLINE) ? 'inline' : 'attached';
+        $mail = new ApplicationMail(Lang::translateEmail('report_'.$lid)->r(
             array(
                 'target' => array(
                     'type' => $this->target_type,
@@ -150,12 +184,13 @@ class Report {
             $this->target
         ));
         
-        if($file)
-            $mail->attach($file, 'attachment', 'report_'.strtolower($this->target_type).'_'.$this->target->id);
+        if($file) $mail->attach($file['tmp_path'], 'attachment', $file['name']);
         
         $mail->to($recipient);
         
         $mail->send();
+        
+        if($file) unlink($file['tmp_path']);
     }
     
     /**
