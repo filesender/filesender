@@ -184,6 +184,21 @@ $(function() {
                 $('<td />').html(lang.tr(lid).r(rpl).out()).appendTo(tr);
                 
             }
+            
+            var actions = $('<div class="actions" />').appendTo(popup);
+            
+            var send_by_email = $('<a href="#" />').text(lang.tr('send_to_my_email')).appendTo(actions);
+            $('<span class="fa fa-lg fa-envelope-o" />').prependTo(send_by_email);
+            send_by_email.on('click', function(e) {
+                e.stopPropagation();
+                e.preventDefault();
+                
+                filesender.client.getTransferAuditlogByEmail(transfer_id, function() {
+                    filesender.ui.alert('success', lang.tr('email_sent'));
+                });
+                
+                return false;
+            }).button();
         });
     };
     
