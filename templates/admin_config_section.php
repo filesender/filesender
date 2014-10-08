@@ -39,4 +39,4 @@
     </div>
 <?php } catch(ConfigOverrideDisabledException $e) {} ?>
 
-<script type="text/javascript" src="{path:res/js/admin_config.js}"></script>
+<script type="text/javascript" src="{path:js/admin_config.js}"></script>

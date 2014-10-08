@@ -214,7 +214,7 @@ $lang["_HELP_TEXT"] = '
 
 <h4>Uploads van <i>willekeurig welke grootte</i> met de HTML5-methode</h4>
 <ul>
-        <li>Als het <img src="res/images/html5_installed.png" alt="green HTML5 tick" class="textmiddle" style="display:inline" /> symbooltje vertoond wordt dan kunt u de HTML5-methode gebruiken.</li>
+        <li>Als het <img src="images/html5_installed.png" alt="green HTML5 tick" class="textmiddle" style="display:inline" /> symbooltje vertoond wordt dan kunt u de HTML5-methode gebruiken.</li>
 	<li>Hiervoor is een recente browserversie nodig die HTML5 ondersteunt, de nieuwste editie van de "taal van het web".</li>
 	<li>Momenteel geldt dit in ieder geval voor Firefox 4 (en hoger) en Chrome op Windows, Mac OS X en Linux.</li>
 	<li>Een ongewenst onderbroken upload kan <b><i>hervat</i></b> worden. Om een upload te hervatten vertuurt u eenvoudigweg exact hetzelfde bestand opnieuw. De voortgangs-indicator moet dan verspringen naar het percentage waar de upload eerder was gestopt, en dan de upload voortzetten. <br /><br />

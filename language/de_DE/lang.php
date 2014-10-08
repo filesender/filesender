@@ -222,7 +222,7 @@ $lang["_HELP_TEXT"] = '
 
 <h4>Hochladen von Dateien <i>beliebiger Größe</i> mit HTML5</h4>
 <ul>
-        <li>Wenn Sie <img src="res/images/html5_installed.png" alt="green HTML5 tick" class="textmiddle" style="display:inline" /> in der rechten oberen Ecke sehen, funktioniert dies Methode für Sie</li>
+        <li>Wenn Sie <img src="images/html5_installed.png" alt="green HTML5 tick" class="textmiddle" style="display:inline" /> in der rechten oberen Ecke sehen, funktioniert dies Methode für Sie</li>
 	<li>Sie brauchen einen sehr neuen Browser der HTML5 unterstützt, die neueste Version der "Sprache des Web"</li>
 	<li>Momentan trifft das auf Firefox 4 (oder höher) und Chrome in Windows, Mac OSX und Linux zu</li>
 	<li>Bitte benutzen Sie die <a href="http://caniuse.com/fileapi" target="_blank">"When can I use..."</a> Webseite um den Fortschritt der HTML5 FileAPI in allen größeren Browsern zu verfolgen.  Speziell die Unterstützung für die <a href="http://caniuse.com/filereader" target="_blank">FileReader API</a> und die <a href="http://caniuse.com/bloburls" target="_blank">Blob URLs</a> müssen hellgrün sein (=unterstützt) damit ein Browser Dateien die grösser als 2GB sind hochladen kann </li>

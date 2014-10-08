@@ -171,5 +171,5 @@
         </div>
     </form>
     
-    <script type="text/javascript" src="{path:res/js/upload_page.js}"></script>
+    <script type="text/javascript" src="{path:js/upload_page.js}"></script>
 </div>

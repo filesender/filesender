@@ -227,8 +227,8 @@ $lang["_HELP_TEXT"] = '
 
 <h4>Opplastninger av <i>enhver størrelse</i> med HTML5</h4>
 <ul>
-	<li>Du kan bruke denne metoden hvis dette symbolet vises: <img src="res/images/html5_installed.png" alt="green HTML5 tick" class="textmiddle" style="display:inline" /></li>
-	<li>For å få <img src="res/images/html5_installed.png" alt="green HTML5 tick" class="textmiddle" style="display:inline" /> symbolet, trenger du en modern nettleser som støtter HTML5, siste versjonen av webbens språk.</li>
+	<li>Du kan bruke denne metoden hvis dette symbolet vises: <img src="images/html5_installed.png" alt="green HTML5 tick" class="textmiddle" style="display:inline" /></li>
+	<li>For å få <img src="images/html5_installed.png" alt="green HTML5 tick" class="textmiddle" style="display:inline" /> symbolet, trenger du en modern nettleser som støtter HTML5, siste versjonen av webbens språk.</li>
 	<li>Nyere versjoner av Firefox og Chrome, på Windows, Mac OS X og Linux er kjent for å fungere</li>
 	<li>Du kan <b><i>gjenoppta</i></b> en opplastning som er avbrutt ved å sende nøyaktig samme fil på nytt. Så lenge filen har akkurat samme navn som sist vil <i>'. htmlspecialchars(Config::get('site_name')) .'</i> gjenoppta opplastningen.  Når opplastningen starter burde du se framdriftsindikatoren hoppe til hvor den var ved siste avbrudd, og fortsette derfra.<br /><br />
 	Har du <b><i>endret filen</i></b> mellom første og andre forsøk, bør du først gi filen et nytt navn.  Dermed forsikres det at det startes en ny, fersk opplastning og at alle dine endringer vil bli overført uten problemer.</li>

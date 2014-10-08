@@ -7,8 +7,8 @@
         
         <h4>Uploads of <i>any size</i> with HTML5</h4>
         <ul>
-            <li>You\'ll be able to use this method if this sign is displayed: <img src="res/images/html5_installed.png" alt="green HTML5 tick" class="textmiddle" style="display:inline" /></li>
-            <li>To get the <img src="res/images/html5_installed.png" alt="green HTML5 tick" class="textmiddle" style="display:inline" /> sign, simply use an up to date browser that supports HTML5, the latest version of the "language of the web".</li>
+            <li>You\'ll be able to use this method if this sign is displayed: <img src="images/html5_installed.png" alt="green HTML5 tick" class="textmiddle" style="display:inline" /></li>
+            <li>To get the <img src="images/html5_installed.png" alt="green HTML5 tick" class="textmiddle" style="display:inline" /> sign, simply use an up to date browser that supports HTML5, the latest version of the "language of the web".</li>
             <li>Up to date versions of Firefox and Chrome on Windows, Mac OS X and Linux are known to work.</li>
             <li>
                 You can <b><i>resume</i></b> an interrupted or cancelled upload.

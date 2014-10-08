@@ -90,4 +90,4 @@
     <?php } ?>
 </div>
 
-<script type="text/javascript" src="{path:res/js/download_page.js}"></script>
+<script type="text/javascript" src="{path:js/download_page.js}"></script>

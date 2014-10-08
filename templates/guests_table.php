@@ -60,4 +60,4 @@
     </tbody>
 </table>
 
-<script type="text/javascript" src="{path:res/js/guests_table.js}"></script>
+<script type="text/javascript" src="{path:js/guests_table.js}"></script>

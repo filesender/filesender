@@ -223,7 +223,7 @@ $lang["_HELP_TEXT"] = '
 
 <h4>Subir archivos de <i>cualquier tama&ntilde;o</i> con HTML5</h4>
 <ul>
-        <li>Si le aparecece el icono <img src="res/images/html5_installed.png" alt="HTML5 OK" class="textmiddle" style="display:inline" /> esta es su opci&oacute;n. </li>
+        <li>Si le aparecece el icono <img src="images/html5_installed.png" alt="HTML5 OK" class="textmiddle" style="display:inline" /> esta es su opci&oacute;n. </li>
 	<li>Precisa de un navegador que soporte HTML5, la &uacute;ltima versi&oacute;n del "lenguaje de la Web".</li>
 	<li>Firefox4 (y superiores) y Chrome, tanto en Windows, en Mac OS X, como en Linux, "hablan" HTML5</li>
 	<li>Puede <b><i>continuar</i></b> la subida interrumpida o cancelada de un archivo.<br />Vuelva a seleccionar el mismo archivo (¡no puede haber sido modificado desde el &uacute;ltimo intento!), introduzca los destinatarios y pulse en "Enviar".<br />Ver&aacute; c&oacute;mo la barra de progreso avanza, hasta el punto en el que el proceso se detuvo anteriormente, y contin&uacute;a a partir de ah&iacute;.<br />Para evitar problemas con la subida, si ha modificado el archivo, tenga la precauci&oacute;n de renombralo previamente.</li>
