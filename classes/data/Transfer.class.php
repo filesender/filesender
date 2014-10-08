@@ -276,9 +276,20 @@ class Transfer extends DBObject {
             }
         }
         
-        // Delete transfer if needed
-        if(!Config::get('auditlog_lifetime'))
+        // Send report if needed
+        if($this->hasOption(TransferOptions::EMAIL_REPORT_ON_CLOSING)) {
+            $report = new Report($this);
+            $report->sendTo($this->owner);
+        }
+        
+        if(!Config::get('auditlog_lifetime')) {
+            // Delete all transfer data if auditlogs are not kept after transfer closing
             $this->delete();
+        } else {
+            // In case we keep audit data for some time only delete actual file data in storage
+            foreach($this->files as $file)
+                Storage::deleteFile($file);
+        }
     }
     
     /**
@@ -465,6 +476,15 @@ class Transfer extends DBObject {
      * @return File
      */
     public function addFile($name, $size, $mime_type = null) {
+        // Check if already exists
+        if(!is_null($this->filesCache)) {
+            $matches = array_filter($this->filesCache, function($file) use($name, $size) {
+                return ($file->name == $name) && ($file->size == $size);
+            });
+            
+            if(count($matches)) return array_shift($matches);
+        }
+        
         // Create and save new recipient
         $file = File::create($this);
         $file->name = $name;
@@ -501,6 +521,15 @@ class Transfer extends DBObject {
      * @return Recipient
      */
     public function addRecipient($email) {
+        // Check if already exists
+        if(!is_null($this->recipientsCache)) {
+            $matches = array_filter($this->recipientsCache, function($recipient) use($email) {
+                return $recipient->email == $email;
+            });
+            
+            if(count($matches)) return array_shift($matches);
+        }
+        
         // Create and save new recipient
         $recipient = Recipient::create($this, $email);
         $recipient->save();
@@ -585,7 +614,7 @@ class Transfer extends DBObject {
         if ($this->hasOption(TransferOptions::ADD_ME_TO_RECIPIENTS) || 
             $this->hasOption(TransferOptions::EMAIL_ME_COPIES, $options)){
             
-            $this->addRecipient(Auth::user()->email[0]);
+            $this->addRecipient(Auth::user()->email);
         }
         
         if ($this->hasOption(TransferOptions::EMAIL_UPLOAD_COMPLETE, $options)){
