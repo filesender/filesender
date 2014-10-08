@@ -528,3 +528,6 @@ $lang['open_file_auditlog'] = 'See what happened to this file';
 
 $lang['filtered_transfer_log'] = 'This is a filtered view of the transfer logs.';
 $lang['view_full_log'] = 'View the full log';
+
+$lang['send_to_my_email'] = 'Send to my email';
+$lang['report_pdf_disclamer'] = '';

@@ -112,6 +112,12 @@ class RestEndpointTransfer extends RestEndpoint {
                 return $transfer->options;
             
             if($property == 'auditlog') {
+                if($property_id == 'mail') {
+                    $report = new Report($transfer);
+                    $report->sendTo(Auth::user());
+                    return true;
+                }
+                
                 return array_values(array_map(function($log) {
                     $author_data = array(
                         'type' => $log->author_type,

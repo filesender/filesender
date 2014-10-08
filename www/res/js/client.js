@@ -315,4 +315,8 @@ window.filesender.client = {
     getTransferAuditlog: function(id, callback) {
         this.get('/transfer/' + id + '/auditlog', callback);
     },
+    
+    getTransferAuditlogByEmail: function(id, callback) {
+        this.get('/transfer/' + id + '/auditlog/mail', callback);
+    },
 };

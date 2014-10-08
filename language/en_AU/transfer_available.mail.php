@@ -14,7 +14,11 @@ Files:
 {fileinfo}
 The transaction is available until {date:transfer.expires} after which time it will be automatically deleted.
 
-{if:transfer.message}Personal message from {transfer.user_email}: {transfer.message}{endif}
+{if:transfer.message || transfer.subject}
+Personal message from {transfer.user_email}: {transfer.subject}
+
+{transfer.message}
+{endif}
 
 Best regards,
 {cfg:site_name}
@@ -57,9 +61,11 @@ Best regards,
     </tbody>
 </table>
 
-{if:transfer.message}
+{if:transfer.message || transfer.subject}
 <p>
-    Personal message from {transfer.user_email}: {transfer.message}
+    Personal message from {transfer.user_email}: {transfer.subject}
+    <br /><br />
+    {transfer.message}
 </p>
 {endif}
 
