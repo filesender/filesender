@@ -323,7 +323,7 @@ class Mail {
         if (preg_match('`<body[^>]*>`', $html)) // Strip existing body
             $html = preg_replace('`^.*<body[^>]*>(.+)</body>.*$`ims', '$1', $html);
         
-        $styles = array('www/res/css/mail.css', 'www/res/skin/mail.css');
+        $styles = array('www/css/mail.css', 'www/skin/mail.css');
         $css = '';
         foreach($styles as $file)
             if(file_exists(FILESENDER_BASE.'/'.$file))

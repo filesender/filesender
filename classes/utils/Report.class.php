@@ -145,10 +145,10 @@ class Report {
             $html = Template::process('!report_pdf', array('report' => $this));
             
             $styles = array(
-                'www/res/css/mail.css',
-                'www/res/skin/mail.css',
-                'www/res/css/pdf.css',
-                'www/res/skin/pdf.css'
+                'www/css/mail.css',
+                'www/skin/mail.css',
+                'www/css/pdf.css',
+                'www/skin/pdf.css'
             );
             $css = '';
             foreach($styles as $cssfile)

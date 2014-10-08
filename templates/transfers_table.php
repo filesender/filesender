@@ -124,4 +124,4 @@
     </tbody>
 </table>
 
-<script type="text/javascript" src="{path:res/js/transfers_table.js}"></script>
+<script type="text/javascript" src="{path:js/transfers_table.js}"></script>

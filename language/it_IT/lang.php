@@ -213,7 +213,7 @@ $lang["_HELP_TEXT"] = '
 
 <h4>Uploads di <i>qualsiasi dimensione</i> con HTML5</h4>
 <ul>
-        <li>Se visualizzi <img src="res/images/html5_installed.png" alt="green HTML5 tick" class="textmiddle" style="display:inline" /> questa modalità funziona per te</li>
+        <li>Se visualizzi <img src="images/html5_installed.png" alt="green HTML5 tick" class="textmiddle" style="display:inline" /> questa modalità funziona per te</li>
         
         <li>Devi utilizzare un browser molto recente per usufruire di HTML5, l\'ultima versione de "il linguaggio della rete".</li>
         <li>Attualmente Firefox 4 (o versioni superiori) e Chrome per Windows, Mac OS X e Linux funzionano correttamente</li>

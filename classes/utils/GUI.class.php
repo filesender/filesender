@@ -49,11 +49,11 @@ class GUI {
      */
     public static function stylesheets() {
         $sources = self::filterSources(array(
-            'res/css/reset.css',
-            'res/css/smoothness/jquery-ui-1.10.2.custom.min.css',
-            'res/css/font-awesome.min.css',
-            'res/css/default.css',
-            'res/skin/styles.css'
+            'lib/reset/reset.css',
+            'lib/jquery/smoothness/jquery-ui-1.10.2.custom.min.css',
+            'lib/font-awesome/css/font-awesome.min.css',
+            'css/default.css',
+            'skin/styles.css'
         ));
         
         if(!Config::get('cache_scripts_and_styles')) return $sources;
@@ -89,18 +89,18 @@ class GUI {
      */
     public static function scripts() {
         $sources = array(
-            'res/js/jquery-1.9.1.min.js',
-            'res/js/jquery-ui-1.10.2.custom.min.js',
-            'res/js/filesender.js',
-            'res/js/lang.js',
-            'res/js/client.js',
-            'res/js/transfer.js',
-            'res/js/ui.js',
+            'lib/jquery/jquery-1.9.1.min.js',
+            'lib/jquery/jquery-ui-1.10.2.custom.min.js',
+            'js/filesender.js',
+            'js/lang.js',
+            'js/client.js',
+            'js/transfer.js',
+            'js/ui.js',
         );
         
-        if(Config::get('terasender_enabled')) $sources[] = 'res/js/terasender.js';
+        if(Config::get('terasender_enabled')) $sources[] = 'lib/terasender/terasender.js';
         
-        $sources[] = 'res/skin/script.js';
+        $sources[] = 'skin/script.js';
         
         $sources = self::filterSources($sources);
         
@@ -137,8 +137,8 @@ class GUI {
      */
     public static function favicon() {
         $locations = self::filterSources(array(
-            'res/images/favicon.ico',
-            'res/skin/favicon.ico'
+            'images/favicon.ico',
+            'skin/favicon.ico'
         ));
         
         return array_pop($locations);
@@ -161,8 +161,8 @@ class GUI {
      */
     public static function logo() {
         $locations = self::filterSources(array(
-            'res/images/logo.png',
-            'res/skin/logo.png'
+            'images/logo.png',
+            'skin/logo.png'
         ));
         
         return array_pop($locations);
@@ -233,7 +233,7 @@ class GUI {
      * @return mixed http file path if cached, null if cache not available
      */
     private static function getCachedItem($file, $sources = array()) {
-        $cache = FILESENDER_BASE.'/www/res/cache';
+        $cache = FILESENDER_BASE.'/www/cache';
         
         if(!file_exists($cache.'/'.$file)) return null;
         
@@ -250,7 +250,7 @@ class GUI {
             if($orig_sources != implode(',', $sources)) return null;
         }
         
-        return 'res/cache/'.$file;
+        return 'cache/'.$file;
     }
     
     /**
@@ -262,7 +262,7 @@ class GUI {
      * @return string http file path
      */
     private static function cacheItem($file, $content, $sources = array()) {
-        $cache = FILESENDER_BASE.'/www/res/cache/'.$file;
+        $cache = FILESENDER_BASE.'/www/cache/'.$file;
         
         if($fh = fopen($cache, 'w')) {
             fwrite($fh, $content);
@@ -274,6 +274,6 @@ class GUI {
             fclose($fh);
         }
         
-        return 'res/cache/'.$file;
+        return 'cache/'.$file;
     }
 }

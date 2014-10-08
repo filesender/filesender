@@ -77,4 +77,4 @@
     <?php Template::display('transfers_table', array('transfers' => Transfer::fromGuestsOf(Auth::user()))) ?>
 </div>
     
-<script type="text/javascript" src="{path:res/js/guests_page.js}"></script>
+<script type="text/javascript" src="{path:js/guests_page.js}"></script>

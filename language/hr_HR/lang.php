@@ -212,7 +212,7 @@ $lang["_HELP_TEXT"] = '
 
 <h4>Prijenos datoteka <i>bilo koje veličine</i> uz HTML5</h4>
 <ul>
-        <li>Ako vidite <img src="res/images/html5_installed.png" alt="green HTML5 tick" class="textmiddle" style="display:inline" /> u FileSender-ovom gornjem desnom uglu ova metoda će vam funkcionirati</li>
+        <li>Ako vidite <img src="images/html5_installed.png" alt="green HTML5 tick" class="textmiddle" style="display:inline" /> u FileSender-ovom gornjem desnom uglu ova metoda će vam funkcionirati</li>
         <li>Trebate novije verzije preglednika koji podržavaju HTML5, zadnju verziju "jezika web-a".</li>
         <li>Trenutno Firefox4 (i više verzije) i Chrome na Windows-ima, Mac OSX i Linux-ima rade.</li>
         <li>Molimo vas da koristite <a href="http://caniuse.com/fileapi" target="_blank">"Kada mogu koristiti..."</a> web stranicu za praćenje implementacije HTML5 FileAPI za sve vodeće preglednike.  Posebno podršku za <a href="http://caniuse.com/filereader" target="_blank">FileReader API</a> i <a href="http://caniuse.com/bloburls" target="_blank">Blob URLs</a> moraju biti označeni zeleno (=podržano) za preglednike koji podržavaju prijenos datoteka većih od 2 GB </li>
