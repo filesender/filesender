@@ -551,6 +551,9 @@ class Lang {
                 case 'size' : $value = Utilities::formatBytes($value); break;
             }
             
+            if(is_array($value)) $value = count($value);
+            if(is_object($value)) $value = true;
+            
             return $value;
         };
         
