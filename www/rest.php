@@ -30,11 +30,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*
- * loads javascript
- * js/upload.js   manages all html5 related functions and uploading
- */
-
 require_once('../includes/init.php');
 
 Logger::setProcess(ProcessTypes::REST);

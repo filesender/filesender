@@ -30,9 +30,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-// Start filesender
-
-
 try {
     require_once('../includes/init.php');
     
