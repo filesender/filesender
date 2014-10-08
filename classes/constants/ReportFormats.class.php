@@ -35,7 +35,6 @@
  * Class containing error codes
  */
 class ReportFormats extends Enum {
-    const PLAIN     = 'plain';
-    const HTML      = 'html';
+    const INLINE    = 'inline';
     const PDF       = 'pdf';
 }

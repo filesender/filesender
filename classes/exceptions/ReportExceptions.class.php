@@ -87,8 +87,6 @@ class ReportUnknownFormatException extends DetailedException {
 class ReportNothingFoundException extends DetailedException {
     /**
      * Constructor
-     * 
-     * @param string $selector column used to select user
      */
     public function __construct() {
         parent::__construct(
@@ -97,4 +95,36 @@ class ReportNothingFoundException extends DetailedException {
     }
 }
 
+/**
+ * Format not available due to requirement not met
+ */
+class ReportFormatNotAvailableException extends DetailedException {
+    /**
+     * Constructor
+     * 
+     * @param string $reason
+     */
+    public function __construct($reason) {
+        parent::__construct(
+            'report_format_not_available', // Message to give to the user
+            'reason = '.$reason
+        );
+    }
+}
 
+/**
+ * Cannot write tmp file
+ */
+class ReportCannotWriteFileException extends DetailedException {
+    /**
+     * Constructor
+     * 
+     * @param string $file
+     */
+    public function __construct($file) {
+        parent::__construct(
+            'report_cannot_write_file', // Message to give to the user
+            $file
+        );
+    }
+}
