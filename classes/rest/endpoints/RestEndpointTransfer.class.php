@@ -42,10 +42,11 @@ class RestEndpointTransfer extends RestEndpoint {
      * Cast a Transfer to an array for response
      * 
      * @param Transfer $transfer
+     * @param array $files_cids files client given id for strict matching
      * 
      * @return array
      */
-    public static function cast(Transfer $transfer) {
+    public static function cast(Transfer $transfer, $files_cids = null) {
         return array(
             'id' => $transfer->id,
             'user_id' => $transfer->user_id,
@@ -56,7 +57,12 @@ class RestEndpointTransfer extends RestEndpoint {
             'expires' => RestUtilities::formatDate($transfer->expires),
             'options' => $transfer->options,
             
-            'files' => array_map('RestEndpointFile::cast', array_values($transfer->files)),
+            'files' => array_map(function($file) use($files_cids) {
+                $file = RestEndpointFile::cast($file);
+                if($files_cids && array_key_exists($file['id'], $files_cids))
+                    $file['cid'] = $files_cids[$file['id']];
+                return $file;
+            }, array_values($transfer->files)),
             'recipients' => array_map('RestEndpointRecipient::cast', array_values($transfer->recipients)),
         );
     }
@@ -238,11 +244,16 @@ class RestEndpointTransfer extends RestEndpoint {
             if(!is_null($banExtensions) && !is_array($banExtensions)) $banExtensions = array_map('trim', explode(',', $banExtensions));
             
             $cptFiles = 0;
+            // TODO limit file count
+            // TODO limit size
+            // TODO check size against available space
+            $files_cids = array();
             foreach($data->files as $filedata) {
                 $ext = pathinfo($filedata->name, PATHINFO_EXTENSION);
                 if ($banExtensions !== null){
                     if (!in_array($ext,$banExtensions) ){
                         $file = $transfer->addFile($filedata->name, $filedata->size, $filedata->mime_type);
+                        $files_cids[$file->id] = $filedata->cid;
                     }else{
                         throw new FileExtensionNotAllowedException($ext);
                     }
@@ -255,7 +266,7 @@ class RestEndpointTransfer extends RestEndpoint {
             
             return array(
                 'path' => '/transfer/'.$transfer->id,
-                'data' => self::cast($transfer)
+                'data' => self::cast($transfer, $files_cids)
             );
         }
     }
