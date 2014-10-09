@@ -85,22 +85,23 @@ class RestServer {
             // Parse body
             switch($type) {
                 case 'text/plain' :
-                    $request->rawinput = trim($input);
+                    $request->rawinput = trim(Utilities::sanitizeInput($input));
                     break;
                 
                 case 'application/octet-stream' :
+                    // Don't sanitize binary input !
                     $request->rawinput = $input;
                     break;
                 
                 case 'application/x-www-form-urlencoded' :
                     $data = array();
                     parse_str($input, $data);
-                    $request->input = (object)$data;
+                    $request->input = (object)Utilities::sanitizeInput($data);
                     break;
                 
                 case 'application/json' :
                 default :
-                    $request->input = json_decode(trim($input));
+                    $request->input = json_decode(trim(Utilities::sanitizeInput($input)));
             }
             
             //Check authentication
