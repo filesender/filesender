@@ -24,23 +24,23 @@
     </div>
     
     <div class="general box" >
-        <div class="from">{tr:from} : <?php echo htmlentities($transfer->user_email) ?></div>
+        <div class="from">{tr:from} : <?php echo Utilities::sanitizeOutput($transfer->user_email) ?></div>
         
-        <div class="created">{tr:created} : <?php echo htmlentities(Utilities::formatDate($transfer->created)) ?></div>
+        <div class="created">{tr:created} : <?php echo Utilities::sanitizeOutput(Utilities::formatDate($transfer->created)) ?></div>
         
-        <div class="expires">{tr:expires} : <?php echo htmlentities(Utilities::formatDate($transfer->expires)) ?></div>
+        <div class="expires">{tr:expires} : <?php echo Utilities::sanitizeOutput(Utilities::formatDate($transfer->expires)) ?></div>
         
-        <div class="expires">{tr:size} : <?php echo htmlentities(Utilities::formatBytes($transfer->size)) ?></div>
+        <div class="expires">{tr:size} : <?php echo Utilities::sanitizeOutput(Utilities::formatBytes($transfer->size)) ?></div>
         
         <?php if($transfer->subject) { ?>
-        <div class="subject">{tr:subject} : <?php echo htmlentities($transfer->subject) ?></div>
+        <div class="subject">{tr:subject} : <?php echo Utilities::sanitizeOutput($transfer->subject) ?></div>
         <?php } ?>
         
         <?php if($transfer->message) { ?>
         <div class="message">
             {tr:message} :
             <p>
-                <?php echo htmlentities($transfer->message) ?>
+                <?php echo Utilities::sanitizeOutput($transfer->message) ?>
             </p>
         </div>
         <?php } ?>
@@ -57,7 +57,7 @@
     <?php foreach($transfer->files as $file) { ?>
         <div class="file" data-id="<?php echo $file->id ?>" >
             <span class="select clickable fa fa-2x fa-square-o" title="{tr:select_for_archive_download}"></span>
-            <span class="name"><?php echo htmlentities($file->name) ?></span>
+            <span class="name"><?php echo Utilities::sanitizeOutput($file->name) ?></span>
             <span class="size"><?php echo Utilities::formatBytes($file->size) ?></span>
             <a href="#" class="download" title="{tr:download_file}">
                 <span class="fa fa-2x fa-download"></span>

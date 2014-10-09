@@ -217,5 +217,16 @@ class Utilities
         // Still here ? Should not ...
         return null;
     }
+    
+    /**
+     * Sanitize output
+     * 
+     * @param string $output
+     * 
+     * @return string
+     */
+    public static function sanitizeOutput($output) {
+        return htmlentities($output, ENT_QUOTES, 'UTF-8');
+    }
 }
 

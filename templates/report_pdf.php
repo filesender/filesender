@@ -4,7 +4,7 @@
     {tr:created} : <?php echo Utilities::formatDate($report->transfer->created) ?><br />
     {tr:expires} : <?php echo Utilities::formatDate($report->transfer->expires) ?><br />
     {tr:size} : <?php echo Utilities::formatBytes($report->transfer->size) ?><br />
-    {tr:with_identity} : <?php echo htmlentities($report->transfer->user_email) ?><br />
+    {tr:with_identity} : <?php echo Utilities::sanitizeOutput($report->transfer->user_email) ?><br />
     {tr:options} : <?php echo implode(', ', array_map(function($o) {
         return Lang::tr($o);
     }, $report->transfer->options)) ?>
@@ -15,7 +15,7 @@
     
     <?php foreach($report->transfer->recipients as $recipient) { ?>
         <div class="recipient" data-id="<?php echo $recipient->id ?>">
-            <?php echo htmlentities($recipient->email) ?> : <?php echo count($recipient->downloads) ?> {tr:downloads}
+            <?php echo Utilities::sanitizeOutput($recipient->email) ?> : <?php echo count($recipient->downloads) ?> {tr:downloads}
         </div>
     <?php } ?>
 </div>
@@ -25,7 +25,7 @@
     
     <?php foreach($report->transfer->files as $file) { ?>
         <div class="file" data-id="<?php echo $file->id ?>">
-            <?php echo htmlentities($file->name) ?> (<?php echo Utilities::formatBytes($file->size) ?>) : <?php echo count($file->downloads) ?> {tr:downloads}
+            <?php echo Utilities::sanitizeOutput($file->name) ?> (<?php echo Utilities::formatBytes($file->size) ?>) : <?php echo count($file->downloads) ?> {tr:downloads}
         </div>
     <?php } ?>
 </div>

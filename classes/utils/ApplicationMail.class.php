@@ -45,11 +45,11 @@ class ApplicationMail extends Mail {
         $replyto_name = Config::get('email_reply_to_name');
         $use_html = Config::get('email_use_html');
         
-        $subject = ($content instanceof Lang) ? (string)$content->subject : $content;
+        $subject = ($content instanceof Translation) ? (string)$content->subject : $content;
         
         parent::__construct($subject, $replyto, $replyto_name, $use_html);
         
-        if($content instanceof Lang) {
+        if($content instanceof Translation) {
             $this->writePlain($content->plain);
             
             if($use_html)
