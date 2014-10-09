@@ -17,31 +17,31 @@
         <?php foreach($guests as $guest) { ?>
         <tr class="guest" data-id="<?php echo $guest->id ?>">
             <td class="from">
-                <abbr title="<?php echo htmlentities($guest->user_email) ?>">
-                    <?php echo htmlentities(substr($guest->user_email, 0, strpos($guest->user_email, '@'))) ?>
+                <abbr title="<?php echo Utilities::sanitizeOutput($guest->user_email) ?>">
+                    <?php echo Utilities::sanitizeOutput(substr($guest->user_email, 0, strpos($guest->user_email, '@'))) ?>
                 </abbr>
             </td>
             
             <td class="to">
-                <abbr title="<?php echo htmlentities($guest->email) ?>">
-                    <?php echo htmlentities(substr($guest->email, 0, strpos($guest->email, '@'))) ?>
+                <abbr title="<?php echo Utilities::sanitizeOutput($guest->email) ?>">
+                    <?php echo Utilities::sanitizeOutput(substr($guest->email, 0, strpos($guest->email, '@'))) ?>
                 </abbr>
             </td>
             
             <td class="subject">
                 <?php if(strlen($guest->subject) > 15) { ?>
-                <span class="short"><?php echo htmlentities(substr($guest->subject, 0, 15)) ?></span>
+                <span class="short"><?php echo Utilities::sanitizeOutput(substr($guest->subject, 0, 15)) ?></span>
                 <span class="clickable expand">[...]</span>
-                <div class="full"><?php echo htmlentities($guest->subject) ?></div>
-                <?php } else echo htmlentities($guest->subject) ?>
+                <div class="full"><?php echo Utilities::sanitizeOutput($guest->subject) ?></div>
+                <?php } else echo Utilities::sanitizeOutput($guest->subject) ?>
             </td>
             
             <td class="message">
                 <?php if(strlen($guest->message) > 15) { ?>
-                <span class="short"><?php echo htmlentities(substr($guest->message, 0, 15)) ?></span>
+                <span class="short"><?php echo Utilities::sanitizeOutput(substr($guest->message, 0, 15)) ?></span>
                 <span class="clickable expand">[...]</span>
-                <div class="full"><?php echo htmlentities($guest->message) ?></div>
-                <?php } else echo htmlentities($guest->message) ?>
+                <div class="full"><?php echo Utilities::sanitizeOutput($guest->message) ?></div>
+                <?php } else echo Utilities::sanitizeOutput($guest->message) ?>
             </td>
             
             <td class="created"><?php echo Utilities::formatDate($guest->created) ?></td>

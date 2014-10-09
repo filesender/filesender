@@ -312,7 +312,7 @@ class Lang {
                 $tr = self::$translations['fallback'][$id];
                 $src = 'fallback';
             }else{
-                return new self('{'.$id.'}', false);
+                return new Translation('{'.$id.'}', false);
             }
         }
         
@@ -330,7 +330,7 @@ class Lang {
             return Config::get($m[2]);
         }, $tr['text']);
         
-        return new self($tr['text']);
+        return new Translation($tr['text']);
     }
     
     /**
@@ -437,9 +437,9 @@ class Lang {
                 }
                 
                 // Convert to Lang instances
-                return new self(array(
+                return new Translation(array(
                     'subject' => $subject,
-                    'plain' => html_entity_decode($plain, ENT_QUOTES, 'UTF-8'), // Reverse placeholder resolver's htmlentities for plain parts
+                    'plain' => html_entity_decode($plain, ENT_QUOTES, 'UTF-8'), // Reverse placeholder resolver's Utilities::sanitizeOutput for plain parts
                     'html' => $html
                 ));
             }
@@ -464,13 +464,18 @@ class Lang {
             return !is_null($t);
         });
     }
-    
+}
+
+/**
+ * Translated content
+ */
+class Translation {
     /**
      * Constructor
      * 
      * @param string $translation
      */
-    private function __construct($translation, $allow_replace = true) {
+    public function __construct($translation, $allow_replace = true) {
         if(is_string($translation)) {
             $this->translation = $translation;
         } else {
@@ -523,7 +528,7 @@ class Lang {
         
         $translation = $this->translation;
         
-        $placeholder_resolver = function($path) use($placeholders) {
+        $placeholder_resolver = function($path, $raw = false) use($placeholders) {
             $path = explode(':', $path);
             $cast = (count($path) > 1) ? array_shift($path) : null;
             $path = array_shift($path);
@@ -551,11 +556,38 @@ class Lang {
                 case 'size' : $value = Utilities::formatBytes($value); break;
             }
             
-            if(is_array($value)) $value = count($value);
-            if(is_object($value)) $value = true;
+            if(!$raw) {
+                if(is_array($value)) $value = count($value);
+                if(is_object($value)) $value = true;
+            }
             
             return $value;
         };
+        
+        $translation = preg_replace_callback('`\{each:([^\}]+)\}(.+)\{endeach\}`msiU', function($m) use($placeholders, $placeholder_resolver) {
+            $src = $m[1];
+            $content = new Translation($m[2]);
+            $raw = $m[0];
+            
+            $itemname = 'item';
+            if(preg_match('`^(.+)\s+as\s+([a-z0-9_]+)$`i', $src, $m)) {
+                $itemname = $m[2];
+                $src = $m[1];
+            }
+            
+            $src = $placeholder_resolver($src, true);
+            
+            if(is_null($src)) // Placeholder not yet defined
+                return $raw;
+            
+            if(!is_array($src)) return '';
+            
+            $out = array();
+            foreach($src as $item)
+                $out[] = $content->replace(array_merge($placeholders, array($itemname => $item)))->out();
+            
+            return implode('', $out);
+        }, $translation);
         
         $translation = preg_replace_callback('`\{if:([^\}]+)\}(.+)(?:\{else\}(.+))?\{endif\}`msiU', function($m) use($placeholder_resolver) {
             $condition = $m[1];
@@ -639,7 +671,7 @@ class Lang {
             $translation = preg_replace_callback('`\{(([^:\}]+:)?'.$k.'(\.[a-z0-9_]+)*)\}`iU', function($m) use($placeholder_resolver) {
                 if(substr($m[0], 0, 4) == '{if:') return $m[0]; // Remaining ifs
                 
-                return htmlentities($placeholder_resolver($m[1])); // Ensure sanity
+                return Utilities::sanitizeOutput($placeholder_resolver($m[1])); // Ensure sanity
             }, $translation);
         }
         
@@ -673,8 +705,15 @@ class Lang {
         if(!is_string($this->translation))
             return '';
         
+        $out = $this->translation;
+        
         // Get rid of unresolved ifs
-        return preg_replace('`\{if:([^\}]+)\}(.+)\{endif\}`msiU', '', $this->translation);
+        $out = preg_replace('`\{if:([^\}]+)\}(.+)\{endif\}`msiU', '', $out);
+        
+        // Get rid of unresolved eachs
+        $out = preg_replace('`\{each:([^\}]+)\}(.+)\{endeach\}`msiU', '', $out);
+        
+        return $out;
     }
     
     /**

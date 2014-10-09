@@ -42,6 +42,9 @@ require_once(FILESENDER_BASE.'/classes/autoload.php');
 // Set default timezone
 date_default_timezone_set(Config::get('default_timezone'));
 
+// Set encoding
+mb_internal_encoding('UTF-8');
+
 if (php_sapi_name() === 'cli'){
     // Command Line Interface
     include dirname(dirname(__FILE__)).'/includes/init/init_cli.php';

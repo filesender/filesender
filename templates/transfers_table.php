@@ -41,7 +41,7 @@
             <td class="recipients">
                 <?php
                 echo implode('<br />', array_map(function($recipient) {
-                    return htmlentities($recipient->email);
+                    return Utilities::sanitizeOutput($recipient->email);
                 }, array_slice($transfer->recipients, 0, 3)));
                 
                 if(count($transfer->recipients) > 3)
@@ -56,7 +56,7 @@
             <td class="files">
                 <?php
                 echo implode('<br />', array_map(function($file) {
-                    return htmlentities($file->name);
+                    return Utilities::sanitizeOutput($file->name);
                 }, array_slice($transfer->files, 0, 3)));
                 
                 if(count($transfer->files) > 3)
@@ -87,7 +87,7 @@
                     {tr:created} : <?php echo Utilities::formatDate($transfer->created) ?><br />
                     {tr:expires} : <?php echo Utilities::formatDate($transfer->expires) ?><br />
                     {tr:size} : <?php echo Utilities::formatBytes($transfer->size) ?><br />
-                    {tr:with_identity} : <?php echo htmlentities($transfer->user_email) ?><br />
+                    {tr:with_identity} : <?php echo Utilities::sanitizeOutput($transfer->user_email) ?><br />
                     {tr:options} : <?php echo implode(', ', array_map(function($o) {
                         return Lang::tr($o);
                     }, $transfer->options)) ?>
@@ -98,7 +98,7 @@
                     
                     <?php foreach($transfer->recipients as $recipient) { ?>
                         <div class="recipient" data-id="<?php echo $recipient->id ?>">
-                            <?php echo htmlentities($recipient->email) ?> : <?php echo count($recipient->downloads) ?> {tr:downloads}
+                            <?php echo Utilities::sanitizeOutput($recipient->email) ?> : <?php echo count($recipient->downloads) ?> {tr:downloads}
                         </div>
                     <?php } ?>
                 </div>
@@ -108,7 +108,7 @@
                     
                     <?php foreach($transfer->files as $file) { ?>
                         <div class="file" data-id="<?php echo $file->id ?>">
-                            <?php echo htmlentities($file->name) ?> (<?php echo Utilities::formatBytes($file->size) ?>) : <?php echo count($file->downloads) ?> {tr:downloads}
+                            <?php echo Utilities::sanitizeOutput($file->name) ?> (<?php echo Utilities::formatBytes($file->size) ?>) : <?php echo count($file->downloads) ?> {tr:downloads}
                         </div>
                     <?php } ?>
                 </div>

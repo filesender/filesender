@@ -6,7 +6,11 @@ Dear Sir or Madam,
 
 The following {if:transfer.files>1}files have{else}file has{endif} been uploaded to {cfg:site_name} by {transfer.user_email} and you have been granted permission to download {if:transfer.files>1}their{else}its{endif} contents :
 
-{text_file_list}
+{if:transfer.files>1}{each:transfer.files as file}
+  - {file.name} ({size:file.size})
+{endeach}{else}
+{file.name} ({size:file.size})
+{endif}
 
 Download link: {cfg:site_url}?s=download&token={recipient.token}
 
@@ -43,7 +47,15 @@ Best regards,
         <tr>
             <td>File{if:transfer.files>1}s{endif}</td>
             <td>
-                {html_file_list}
+                {if:transfer.files>1}
+                <ul>
+                    {each:transfer.files as file}
+                        <li>{file.name} ({size:file.size})</li>
+                    {endeach}
+                </ul>
+                {else}
+                {transfer.files.0.name} ({size:transfer.files.0.size})
+                {endif}
             </td>
         </tr>
         <tr>
