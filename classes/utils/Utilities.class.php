@@ -191,41 +191,5 @@ class Utilities
             return "";
         }
     }
-    
-    
-    /**
-     * Force HTTPS - redirects HTTP to HTTPS.
-     */
-    public static function forceHTTPS(){
-        if (
-            // Unless force_ssl is false or 0 ...
-            Config::get('force_ssl') !== false && Config::get('force_ssl') !== 0
-            // ... or we're on https ...
-            && !(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on')
-        ) {
-            if (session_id() != '') {
-                // Destroy current session to prevent stealing session, because someone may have sniffed it during our HTTP (not HTTPS) request.
-                unset($_SESSION);
-
-                if (ini_get('session.use_cookies')) {
-                    // Unset the PHPSESSID cookie, so that the user will get a new session ID on their next request.
-                    $params = session_get_cookie_params();
-
-                    setcookie(
-                        session_name(), '', time() - 42000,
-                        $params['path'], $params['domain'],
-                        $params['secure'], $params['httponly']
-                    );
-                }
-
-                session_destroy();
-            }
-
-            // ... Redirect the user to HTTPS.
-            $redirect = sprintf('Location: https://%s%s', $_SERVER['HTTP_HOST'], $_SERVER['REQUEST_URI']);
-            header($redirect);
-            exit;
-        }
-    }
 }
 
