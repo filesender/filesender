@@ -182,7 +182,7 @@ class Utilities
      * @param type $fileName
      * @return string
      */
-    public static function sanitizeFilename($fileName){
+    public static function sanitizeFilename($fileName) {
         if (! empty($fileName)) {
             $fileName = preg_replace("/^\./", "_", $fileName); //return preg_replace("/[^A-Za-z0-9_\-\. ]/", "_", $filename);
             return $fileName;
@@ -226,33 +226,6 @@ class Utilities
             header($redirect);
             exit;
         }
-    }
-    
-    /**
-     * Allows to get the default site url
-     * NOT USED ANYMORE
-     * 
-     * @return String: the site URL
-     */
-    public static function getDefaultSiteURL(){
-        $reqURI = array_shift(explode('?', isset($_SERVER['REQUEST_URI'])?$_SERVER['REQUEST_URI']:''));
-        if (substr($reqURI, -1) != '/') {
-            $reqURI = dirname($reqURI).'/';
-        }
-
-        $port='';
-        $protocol='';
-        if (isset($_SERVER['HTTPS'])){
-            $protocol = 'https://';
-            if (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] != 80)
-                $port = ':'.$_SERVER['SERVER_PORT'];
-        }else{
-            $protocol = 'http://';
-            if (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] != 443)
-                $port .= ':'.$_SERVER['SERVER_PORT'];
-        }
-
-        return $protocol.(isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME']:'').$port.$reqURI;
     }
 }
 
