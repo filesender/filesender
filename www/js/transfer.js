@@ -318,12 +318,26 @@ window.filesender.transfer = function() {
 
         // Prepare files
         var files_dfn = [];
-        for (var i = 0; i < this.files.length; i++)
+        var files_cids = {};
+        for (var i = 0; i < this.files.length; i++) {
+            var cid = 'file_' + (new Date()).getTime() + '_' + this.files[i].name.length + '_' + this.files[i].size + '_';
+            var rnd = null;
+            do {
+                rnd = Math.round(Math.random() * 999999);
+            } while(files_cids[cid + rnd]);
+            cid += rnd;
+            
+            this.files[i].cid = cid;
+            
             files_dfn.push({
                 name: this.files[i].name,
                 size: this.files[i].size,
-                mime_type: this.files[i].mime_type
+                mime_type: this.files[i].mime_type,
+                cid: cid
             });
+            
+            files_cids[cid] = true;
+        }
 
         this.time = (new Date()).getTime();
 
@@ -333,10 +347,16 @@ window.filesender.transfer = function() {
 
             for (var i = 0; i < transfer.files.length; i++) {
                 for (var j = 0; j < data.files.length; j++) {
-                    if (
+                    if(
+                        (
+                            data.files[j].cid
+                            && transfer.files[i].cid
+                            && (data.files[j].cid == transfer.files[i].cid)
+                        ) || (
                             (data.files[j].name == transfer.files[i].name) &&
                             (data.files[j].size == transfer.files[i].size)
-                            ) {
+                        )
+                    ) {
                         transfer.files[i].id = data.files[j].id;
                         transfer.files[i].uid = data.files[j].uid;
                     }
