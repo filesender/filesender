@@ -439,7 +439,7 @@ class Lang {
                 // Convert to Lang instances
                 return new self(array(
                     'subject' => $subject,
-                    'plain' => $plain,
+                    'plain' => html_entity_decode($plain, ENT_QUOTES, 'UTF-8'), // Reverse placeholder resolver's htmlentities for plain parts
                     'html' => $html
                 ));
             }
@@ -639,7 +639,7 @@ class Lang {
             $translation = preg_replace_callback('`\{(([^:\}]+:)?'.$k.'(\.[a-z0-9_]+)*)\}`iU', function($m) use($placeholder_resolver) {
                 if(substr($m[0], 0, 4) == '{if:') return $m[0]; // Remaining ifs
                 
-                return $placeholder_resolver($m[1]);
+                return htmlentities($placeholder_resolver($m[1])); // Ensure sanity
             }, $translation);
         }
         
