@@ -47,6 +47,11 @@ window.filesender.ui = {
      */
     nodes: {},
     
+    /**
+     * Max popup width
+     */
+    popup_width: 550,
+    
     
     /**
      * Validators for form fields
@@ -178,7 +183,7 @@ window.filesender.ui = {
         
         d.dialog({
             resizable: false,
-            width:550,
+            width: Math.min(this.popup_width, $('#wrap').width()),
             modal: true,
             buttons: {
                 close: {
@@ -213,7 +218,7 @@ window.filesender.ui = {
         
         d.dialog({
             resizable: false,
-            width:550,
+            width: Math.min(this.popup_width, $('#wrap').width()),
             modal: true,
             buttons: {
                 ok: {
@@ -255,7 +260,7 @@ window.filesender.ui = {
         
         d.dialog({
             resizable: false,
-            width:550,
+            width: Math.min(this.popup_width, $('#wrap').width()),
             modal: true,
             buttons: {
                 ok: {
