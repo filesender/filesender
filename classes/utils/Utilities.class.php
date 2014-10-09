@@ -169,27 +169,16 @@ class Utilities
         return isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : ErrorTypes::NO_IP;
     }
     
-    
-    // --------------------------------
-    // Imported from Functions.php
-    // --------------------------------
-    
-    
     /**
-     * Replace illegal chars with _ character in supplied file names.
-     * TODO: check where it is more efficient to check the filename 
+     * Replace illegal chars with _ character in supplied file names
      * 
-     * @param type $fileName
+     * @param string $filename
+     * 
      * @return string
      */
-    public static function sanitizeFilename($fileName) {
-        if (! empty($fileName)) {
-            $fileName = preg_replace("/^\./", "_", $fileName); //return preg_replace("/[^A-Za-z0-9_\-\. ]/", "_", $filename);
-            return $fileName;
-        } else {
-            //trigger_error("invalid empty filename", E_USER_ERROR);
-            return "";
-        }
+    public static function sanitizeFilename($filename) {
+        //return preg_replace('`[^a-z0-9_\-\. ]`i', '_', $filename);
+        return preg_replace('`^\.`', '_', (string)$filename);
     }
 }
 
