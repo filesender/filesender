@@ -43,7 +43,7 @@ if(!session_id()) {
 
 
 // Ensure HTTPS if needed
-Utilities::forceHTTPS();
+GUI::forceHTTPS();
 
 // Handle magic quoting (maybe deprecated now ?)
 if(get_magic_quotes_gpc()) {
