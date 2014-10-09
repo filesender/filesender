@@ -51,6 +51,11 @@ if(get_magic_quotes_gpc()) {
     $_GET = array_map('stripslashes', $_GET);
 };
 
+// Sanitize request
+$_GET = Utilities::sanitizeInput($_GET);
+$_POST = Utilities::sanitizeInput($_POST);
+$_COOKIE = Utilities::sanitizeInput($_COOKIE);
+
 // Output is all UTF8
 header('Content-Type: text/html; charset=UTF-8');
 

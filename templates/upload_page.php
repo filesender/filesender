@@ -2,7 +2,7 @@
 <div class="box">
     <h1>{tr:upload_page}</h1>
     
-    <form id="upload_form" enctype="multipart/form-data" method="post" action="{path:basic_upload.php}">
+    <form id="upload_form" enctype="multipart/form-data" accept-charset="utf-8" method="post" action="{path:basic_upload.php}">
         <div class="box">
             <div class="file_selector">
                 <label for="files" class="mandatory">{tr:select_file} :</label>

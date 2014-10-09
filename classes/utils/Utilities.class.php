@@ -180,5 +180,42 @@ class Utilities
         //return preg_replace('`[^a-z0-9_\-\. ]`i', '_', $filename);
         return preg_replace('`^\.`', '_', (string)$filename);
     }
+    
+    /**
+     * Sanitize input against encoding variations and (a bit) against html injection
+     * 
+     * @param mixed $input
+     * 
+     * @return mixed
+     */
+    public static function sanitizeInput($input) {
+        if(is_array($input)) {
+            foreach($input as $k => $v)
+                $input[self::sanitizeInput($k)] = self::sanitizeInput($v);
+            return $input;
+        }
+        
+        if(
+            is_numeric($input)
+            || is_bool($input)
+            || is_null($input)
+            || is_object($input) // How can that be ?
+        )
+            return $input;
+        
+        if(is_string($input)) {
+            // Convert to UTF-8
+            $input = iconv(mb_detect_encoding($input, mb_detect_order(), true), 'UTF-8', $input);
+            
+            // Render potential tags useless by putting a space immediatelly after < which does not already have one
+            $input = html_entity_decode($input, ENT_QUOTES, 'UTF-8');
+            $input = preg_replace('`<([^\s])`', '< $1', $input);
+            
+            return $input;
+        }
+        
+        // Still here ? Should not ...
+        return null;
+    }
 }
 
