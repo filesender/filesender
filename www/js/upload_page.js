@@ -67,6 +67,8 @@ filesender.ui.files = {
                     filesender.ui.nodes.stats.number_of_files.show().find('.value').text(filesender.ui.transfer.files.length + '/' + filesender.config.max_html5_uploads);
                     filesender.ui.nodes.stats.size.show().find('.value').text(filesender.ui.formatBytes(total_size) + '/' + filesender.ui.formatBytes(filesender.config.max_html5_upload_size));
                 }
+                
+                filesender.ui.evalUploadEnabled();
             }).appendTo(node);
             
             var added = filesender.ui.transfer.addFile(files[i], function(error) {
@@ -190,6 +192,8 @@ filesender.ui.recipients = {
                 filesender.ui.transfer.removeRecipient(email);
             
             $(this).parent().remove();
+            
+            filesender.ui.evalUploadEnabled();
         }).appendTo(node);
         
         filesender.ui.nodes.recipients.list.show();
