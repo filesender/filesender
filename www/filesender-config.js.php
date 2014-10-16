@@ -34,11 +34,9 @@
  * Propagates part of the config to javascript
  */
 
-require_once('../classes/autoload.php');
+require_once('../includes/init.php');
 
-//date_default_timezone_set(Config::get('default_timezone'));
-
-header('Content-Type: text/javascript');
+header('Content-Type: text/javascript; charset=UTF-8');
 
 $banned = Config::get('ban_extension');
 
