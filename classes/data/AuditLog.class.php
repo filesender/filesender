@@ -127,6 +127,9 @@ class AuditLog extends DBObject {
      * @return AuditLog auditlog
      */
     public static function create($event, DBObject $target, $author = null) {
+        if(is_null(Config::get('auditlog_lifetime'))) // Auditlog disabled
+            return;
+        
         if(!LogEventTypes::isValidValue($event))
             throw new AuditLogUnknownEventException($event);
         
