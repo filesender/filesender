@@ -164,6 +164,58 @@ window.filesender.ui = {
     },
     
     /**
+     * Open a popup
+     * 
+     * @param mixed title
+     * @param object buttons lang id to action
+     * 
+     * @return Dialog
+     */
+    popup: function(title, buttons, options) {
+        if(typeof title != 'string') {
+            if(title.out) {
+                title = title.out();
+            }else if(!title.jquery) {
+                title = title.toString();
+            }
+        }
+        
+        var d = $('<div />').appendTo('body').attr({title: title});
+        
+        var handle = function(lid) {
+            return function() {
+                var close = buttons[lid] ? buttons[lid].call(d) : true;
+                if(typeof close != 'undefined' && !close) return;
+                d.dialog('close');
+                d.remove();
+            };
+        };
+        var btndef = [];
+        for(var lid in buttons) {
+            btndef.push({
+                text: lang.tr(lid).out(),
+                click: handle(lid)
+            });
+        }
+        
+        if(!options) options = {};
+        var baseopts = {
+            resizable: false,
+            width: Math.min(this.popup_width, $('#wrap').width()),
+            modal: true
+        };
+        for(var k in baseopts)
+            if(typeof options[k] == 'undefined')
+                options[k] = baseopts[k];
+        
+        options.buttons = btndef;
+        
+        d.dialog(options);
+        
+        return d;
+    },
+    
+    /**
      * Display a nice alert like dialog
      * 
      * @param string type "info", "success" or "error"
@@ -179,24 +231,8 @@ window.filesender.ui = {
             }
         }
         
-        var d = $('<div class="' + type + '" />').appendTo('body').attr({title: lang.tr(type + '_dialog').out()}).html(message);
-        
-        d.dialog({
-            resizable: false,
-            width: Math.min(this.popup_width, $('#wrap').width()),
-            modal: true,
-            buttons: {
-                close: {
-                    text: lang.tr('close'),
-                    click: function () {
-                        d.dialog('close');
-                        d.remove();
-                        if(onclose) onclose();
-                    }
-                }
-            }
-        });
-        
+        var d = this.popup(lang.tr(type + '_dialog'), {close: onclose});
+        d.addClass(type).html(message);
         return d;
     },
     
@@ -214,32 +250,8 @@ window.filesender.ui = {
             }else message = message.toString();
         }
         
-        var d = $('<div />').appendTo('body').attr({title: lang.tr('confirm_dialog').out()}).html(message);
-        
-        d.dialog({
-            resizable: false,
-            width: Math.min(this.popup_width, $('#wrap').width()),
-            modal: true,
-            buttons: {
-                ok: {
-                    text: lang.tr(yesno ? 'yes' : 'ok'),
-                    click: function () {
-                        d.dialog('close');
-                        d.remove();
-                        if(onok) onok();
-                    }
-                },
-                cancel: {
-                    text: lang.tr(yesno ? 'no' : 'cancel'),
-                    click: function () {
-                        d.dialog('close');
-                        d.remove();
-                        if(oncancel) oncancel();
-                    }
-                }
-            }
-        });
-        
+        var d = this.popup(lang.tr('confirm_dialog'), yesno ? {yes: onok, no: oncancel} : {ok: onok, cancel: oncancel});
+        d.html(message);
         return d;
     },
     
@@ -250,40 +262,37 @@ window.filesender.ui = {
      * @param callable oncancel
      */
     prompt: function(title, onok, oncancel) {
-        if(typeof title != 'string') {
-            if(title.out) {
-                title = title.out();
-            }else title = title.toString();
-        }
-        
-        var d = $('<div />').appendTo('body').attr({title: title});
-        
-        d.dialog({
-            resizable: false,
-            width: Math.min(this.popup_width, $('#wrap').width()),
-            modal: true,
-            buttons: {
-                ok: {
-                    text: lang.tr('ok'),
-                    click: function () {
-                        var close = onok ? onok() : true;
-                        
-                        if(!close) return;
-                        
-                        d.dialog('close');
-                        d.remove();
-                    }
-                },
-                cancel: {
-                    text: lang.tr('cancel'),
-                    click: function () {
-                        d.dialog('close');
-                        if(oncancel) oncancel();
-                        d.remove();
-                    }
-                }
-            }
+        return this.popup(title, {ok: onok, cancel: oncancel});
+    },
+    
+    /**
+     * Display an action selection box
+     * 
+     * @param array actions (lang ids)
+     * @param callable onaction
+     * @param callable oncancel
+     * 
+     * @return node
+     */
+    chooseAction: function(actions, onaction, oncancel) {
+        var d = this.popup(lang.tr('what_to_do'), {
+            ok: function() {
+                return onaction($(this).find('.actions input[name="action"]:checked').val());
+            },
+            cancel: oncancel
         });
+        
+        var list = $('<div class="actions" />').appendTo(d);
+        for(var i=0; i<actions.length; i++) {
+            var action = $('<div class="action" />').appendTo(list);
+            var input = $('<input type="radio" name="action" />').attr({value: actions[i]}).appendTo(action);
+            $('<label for="action" />').text(lang.tr(actions[i]).out()).appendTo(action);
+            action.on('click', function() {
+                var input = $(this).find('input[name="action"]');
+                input.val([input.attr('value')]);
+            });
+        }
+        list.find('input[name="action"]').val([actions[0]]);
         
         return d;
     },
@@ -295,26 +304,11 @@ window.filesender.ui = {
      * @param callable onclose
      */
     wideInfoPopup: function(title, onclose) {
-        var d = $('<div class="wide_info" />').appendTo('body').attr({title: lang.tr(title).out()});
-        
-        d.dialog({
-            resizable: false,
-            width: $('#wrap').width(),
-            height: 0.8 * $(window).height(),
-            modal: true,
-            buttons: {
-                close: {
-                    text: lang.tr('close'),
-                    click: function () {
-                        d.dialog('close');
-                        d.remove();
-                        if(onclose) onclose();
-                    }
-                }
-            }
-        });
-        
-        return d;
+        return this.popup(
+            title,
+            {close: onclose},
+            {width: $('#wrap').width(), height: 0.8 * $(window).height()}
+        ).addClass('wide_info');
     },
     
     /**
