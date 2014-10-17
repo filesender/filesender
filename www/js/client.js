@@ -201,9 +201,12 @@ window.filesender.client = {
         var opts = {};
         if(filesender.config.chunk_upload_security == 'key') opts.args = {key: file.uid};
         
+        if(!data) data = {};
+        data.complete = true;
+        
         if(onerror) opts.error = onerror;
         
-        this.put('/file/' + file.id + '/complete', data, callback, opts);
+        this.put('/file/' + file.id, data, callback, opts);
     },
     
     /**
@@ -217,29 +220,86 @@ window.filesender.client = {
         var opts = {};
         if(filesender.config.chunk_upload_security == 'key') opts.args = {key: transfer.files[0].uid};
         
+        if(!data) data = {};
+        data.complete = true;
+        
         if(onerror) opts.error = onerror;
         
-        this.put('/transfer/' + transfer.id + '/complete', data, callback, opts);
+        this.put('/transfer/' + transfer.id, data, callback, opts);
     },
     
     /**
-     * Delete a transfer
+     * Close a transfer
      * 
      * @param object transfer
      * @param callable callback
      */
-    deleteTransfer: function(transfer, callback, onerror) {
-        var id = transfer;
+    closeTransfer: function(transfer, callback, onerror) {
+        var id = (typeof transfer == 'object') ? transfer.id : transfer;
+        
         var opts = {};
+        if(onerror) opts.error = onerror;
+        
+        this.put('/transfer/' + id, {closed: true}, callback, opts);
+    },
+    
+    /**
+     * Delete a transfer (admin / owner if in early statuses)
+     * 
+     * @param object transfer
+     * @param bool nice should we notify owner/recipients about the deletion (close then delete or just delete)
+     * @param callable callback
+     */
+    deleteTransfer: function(transfer, nice, callback, onerror) {
+        var id = transfer;
+        var opts = {args: {}};
         
         if(typeof transfer == 'object') {
             id = transfer.id;
-            if(filesender.config.chunk_upload_security == 'key') opts.args = {key: transfer.files[0].uid};
+            if(filesender.config.chunk_upload_security == 'key') opts.args.key = transfer.files[0].uid;
         }
+        
+        if(nice) opts.args.nice = 1;
         
         if(onerror) opts.error = onerror;
         
         this.delete('/transfer/' + id, callback, opts);
+    },
+    
+    /**
+     * Delete a file
+     * 
+     * @param object file
+     * @param callable callback
+     */
+    deleteFile: function(file, callback, onerror) {
+        var id = file;
+        var opts = {};
+        
+        if(typeof file == 'object')
+            id = file.id;
+        
+        if(onerror) opts.error = onerror;
+        
+        this.delete('/file/' + id, callback, opts);
+    },
+    
+    /**
+     * Delete a recipient
+     * 
+     * @param object recipient
+     * @param callable callback
+     */
+    deleteRecipient: function(recipient, callback, onerror) {
+        var id = recipient;
+        var opts = {};
+        
+        if(typeof recipient == 'object')
+            id = recipient.id;
+        
+        if(onerror) opts.error = onerror;
+        
+        this.delete('/recipient/' + id, callback, opts);
     },
     
     /**

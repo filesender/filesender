@@ -122,12 +122,17 @@ class RestEndpointRecipient extends RestEndpoint {
         if(!$recipient->transfer->isOwner($user) && !Auth::isAdmin())
             throw new RestOwnershipRequiredException($user->id, 'recipient = '.$recipient->id);
         
-        $transfer = $file->transfer; // Before deletion so that we are sure data is available
-        
-        $recipient->delete();
-        
-        if($transfer->status != 'available') return null; // Do not notify closure for transfers that are not available
-        
-        // Send email
+        if(count($recipient->transfer->recipients) > 1) {
+            $recipient->transfer->removeRecipient($recipient);
+            
+            if($recipient->transfer->status == 'available') { // Notify deletion for transfers that are available
+                $ctn = Lang::translateEmail('recipient_deleted')->r($recipient, $recipient->transfer);
+                $mail = new ApplicationMail($ctn);
+                $mail->to($recipient->email);
+                $mail->send();
+            }
+        } else { // Last/only recipient deletion => close transfer
+            $recipient->transfer->close();
+        }
     }
 }

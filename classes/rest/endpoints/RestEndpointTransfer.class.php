@@ -285,40 +285,26 @@ class RestEndpointTransfer extends RestEndpoint {
      * @throws RestAuthenticationRequiredException
      * @throws RestOwnershipRequiredException
      */
-    public function put($id = null, $complete = null) {
+    public function put($id = null) {
         if(!$id) throw new RestMissingParameterException('transfer_id');
         if(!is_numeric($id)) throw new RestBadParameterException('transfer_id');
-        if($complete != 'complete') throw new RestBadParameterException('complete');
         
-        $security = Config::get('chunk_upload_security');
-        if(Auth::isAuthenticated()) {
-            $security = 'auth';
-        }else if($security != 'key') {
-            throw new RestAuthenticationRequiredException();
-        }
+        if(!Auth::isAuthenticated()) throw new RestAuthenticationRequiredException();
         
         $transfer = Transfer::fromId($id);
         
-        if($security == 'key') {
-            try {
-                if(!array_key_exists('key', $_GET)) throw new Exception();
-                if(!$_GET['key']) throw new Exception();
-                if(!File::fromUid($_GET['key'])->transfer->is($transfer)) throw new Exception();
-            } catch(Exception $e) {
-                throw new RestAuthenticationRequiredException();
-            }
-        }else{
-            $user = Auth::user();
-            
-            if(!$transfer->isOwner($user) && !Auth::isAdmin())
-                throw new RestOwnershipRequiredException($user->id, 'transfer = '.$transfer->id);
-        }
+        $user = Auth::user();
+        
+        if(!$transfer->isOwner($user) && !Auth::isAdmin())
+            throw new RestOwnershipRequiredException($user->id, 'transfer = '.$transfer->id);
         
         $data = $this->request->input;
         
-        $transfer->makeAvailable();
+        if($data->complete)
+            $transfer->makeAvailable();
         
-        // Send emails
+        if($data->closed)
+            $transfer->close(true);
         
         return true;
     }
@@ -364,6 +350,10 @@ class RestEndpointTransfer extends RestEndpoint {
                 throw new RestOwnershipRequiredException($user->id, 'transfer = '.$transfer->id);
         }
         
-        $transfer->close();
+        $nice = array_key_exists('nice', $_GET) && (bool)$_GET['nice'];
+        
+        if($nice) $transfer->close(true);
+        
+        $transfer->delete();
     }
 }
