@@ -168,7 +168,7 @@ class RestEndpointFile extends RestEndpoint {
     public function put($id = null, $mode = null, $offset = null) {
         if(!$id) throw new RestMissingParameterException('file_id');
         if(!is_numeric($id)) throw new RestBadParameterException('file_id');
-        if(!in_array($mode, array('chunk', 'complete'))) throw new RestBadParameterException('mode');
+        if(!in_array($mode, array(null, 'chunk'))) throw new RestBadParameterException('mode');
         if($offset && !is_numeric($offset)) throw new RestBadParameterException('offset');
         if(!$offset) $offset = 0;
         
@@ -191,17 +191,14 @@ class RestEndpointFile extends RestEndpoint {
                 throw new RestOwnershipRequiredException($user->id, 'file = '.$file->id);
         }
         
+        $data = $this->request->input;
         if($mode == 'chunk') {
-            $data = $this->request->input;
-            
             $write_info = $file->writeChunk($data, $offset);
             $file->transfer->isUploading();
             
             return $write_info;
         
-        }else if($mode == 'complete') { // Client signals this was the last chunk
-            $data = $this->request->input;
-            
+        }else if(is_null($mode) && $data->complete) { // Client signals this was the last chunk
             $file->complete();
             
             return true;
@@ -233,15 +230,19 @@ class RestEndpointFile extends RestEndpoint {
         if(!$file->transfer->isOwner($user) && !Auth::isAdmin())
             throw new RestOwnershipRequiredException($user->id, 'file = '.$file->id);
         
-        $transfer = $file->transfer; // Before deletion so that we are sure data is available
-        
-        $file->delete();
-        
-        if($transfer->status != 'available') return null; // Do not notify closure for transfers that are not available
-        
-        // Send emails
-        foreach($transfer->recipient as $recipient) {
-            // Notify $file deletion
+        if(count($file->transfer->files) > 1) {
+            $file->transfer->removeFile($file);
+            
+            if($file->transfer->status == 'available') { // Notify deletion for transfers that are available
+                $ctn = Lang::translateEmail('file_deleted')->r($file, $file->transfer);
+                foreach($file->transfer->recipients as $recipient) {
+                    $mail = new ApplicationMail($ctn->r($recipient));
+                    $mail->to($recipient->email);
+                    $mail->send();
+                }
+            }
+        } else { // Last/only file deletion => close transfer
+            $file->transfer->close();
         }
     }
 }
