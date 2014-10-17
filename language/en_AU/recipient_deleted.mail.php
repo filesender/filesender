@@ -1,17 +1,25 @@
-subject: {siteName}: Recipient deleted - {filetrackingcode}
+subject: {cfg:site_name}: Download permission removed
 
 {alternative:plain}
 
 Dear Sir or Madam,
 
-Recipient {recemail} has been removed from your file shipment on {siteName} with tracking code {filetrackingcode}. You can access your files and view detailed download statistics on the My Files page at {serverURL}?s=files.
+Your permission to download files from transfer n°{transfer.id} has been removed.
 
 Best regards,
-{siteName}
+{cfg:site_name}
 
 {alternative:html}
 
-<p>Dear Sir or Madam,</p>
-<p>Recipient <a href="mailto:{recemail}">{recemail}</a> has been removed from your file shipment on <a href="{serverURL}">{siteName}</a> with tracking code {filetrackingcode}. You can access your files and view detailed download statistics on the <a href="{serverURL}?s=files">My Files</a> page.</p>
-<p>Best regards,<br />
-{siteName}</p>
+<p>
+    Dear Sir or Madam,
+</p>
+
+<p>
+    Your permission to download files from transfer n°{transfer.id} has been removed.
+</p>
+
+<p>
+    Best regards,<br />
+    {cfg:site_name}
+</p>
