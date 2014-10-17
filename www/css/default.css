@@ -155,6 +155,22 @@ abbr {
     padding-top: 4px;
 }
 
+#page h2 {
+    width: 100%;
+    font-size: 1.15em;
+    font-weight: bold;
+    padding-bottom: 0.8em;
+    padding-top: 1.5em;
+}
+
+#page h3 {
+    width: 100%;
+    font-size: 1.05em;
+    font-weight: bold;
+    padding-bottom: 0.7em;
+    padding-top: 1.2em;
+}
+
 div.message, div.exception {
     background-position: 0.8em 50%;
     background-repeat: no-repeat;
