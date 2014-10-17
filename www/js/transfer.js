@@ -159,11 +159,23 @@ window.filesender.transfer = function() {
             return false;
         }
 
+        var files_cids = {};
+        for(var i=0; i<this.files.length; i++) files_cids[this.files[i].cid] = true;
+        
+        var cid = 'file_' + (new Date()).getTime() + '_' + file.name.length + '_' + file.size + '_';
+        var rnd = null;
+        do {
+            rnd = Math.round(Math.random() * 999999);
+        } while(files_cids[cid + rnd]);
+        cid += rnd;
+        
+        file.cid = cid;
+        
         this.size += file.size;
 
         this.files.push(file);
 
-        return this.files.length - 1;
+        return cid;
     };
 
     /**
@@ -250,7 +262,7 @@ window.filesender.transfer = function() {
                     transfer.onprogress.call(transfer, file, true);
             });
         } else if (this.onprogress) {
-            this.onprogress.call(this, file, complete);
+            this.onprogress.call(this, file, false);
         }
     };
 
@@ -318,25 +330,13 @@ window.filesender.transfer = function() {
 
         // Prepare files
         var files_dfn = [];
-        var files_cids = {};
         for (var i = 0; i < this.files.length; i++) {
-            var cid = 'file_' + (new Date()).getTime() + '_' + this.files[i].name.length + '_' + this.files[i].size + '_';
-            var rnd = null;
-            do {
-                rnd = Math.round(Math.random() * 999999);
-            } while(files_cids[cid + rnd]);
-            cid += rnd;
-            
-            this.files[i].cid = cid;
-            
             files_dfn.push({
                 name: this.files[i].name,
                 size: this.files[i].size,
                 mime_type: this.files[i].mime_type,
-                cid: cid
+                cid: this.files[i].cid
             });
-            
-            files_cids[cid] = true;
         }
 
         this.time = (new Date()).getTime();

@@ -71,7 +71,7 @@ filesender.ui.files = {
                 filesender.ui.evalUploadEnabled();
             }).appendTo(node);
             
-            var added = filesender.ui.transfer.addFile(files[i], function(error) {
+            var added_cid = filesender.ui.transfer.addFile(files[i], function(error) {
                 var tt = 1;
                 filesender.ui.files.invalidFiles.push(error.details.filename);
                 node.addClass('invalid');
@@ -86,7 +86,9 @@ filesender.ui.files = {
             filesender.ui.nodes.files.clear.button('enable');
             filesender.ui.evalUploadEnabled();
             
-            if(added === false) continue;
+            if(added_cid === false) continue;
+            
+            node.attr('data-cid', added_cid);
             
             var bar = $('<div class="progressbar" />').appendTo(node);
             $('<div class="progress-label" />').appendTo(bar);
@@ -111,7 +113,7 @@ filesender.ui.files = {
             filesender.ui.nodes.stats.number_of_files.show().find('.value').text(filesender.ui.transfer.files.length + '/' + filesender.config.max_html5_uploads);
             filesender.ui.nodes.stats.size.show().find('.value').text(filesender.ui.formatBytes(size) + '/' + filesender.ui.formatBytes(filesender.config.max_html5_upload_size));
             
-            node.attr('index', added);
+            node.attr('index', filesender.ui.transfer.files.length - 1);
         }
     },
     
@@ -133,16 +135,15 @@ filesender.ui.files = {
         
         var speed = uploaded / (time / 1000);
         
-        if (filesender.config.upload_display_bits_per_sec){
+        if (filesender.config.upload_display_bits_per_sec)
             speed *= 8;
-        }
         
         filesender.ui.nodes.stats.uploaded.find('.value').text(filesender.ui.formatBytes(uploaded) + '/' + filesender.ui.formatBytes(size));
-        if(this.status != 'paused'){
-            filesender.ui.nodes.stats.average_speed.find('.value').text(filesender.ui.formatSpeed(speed) + lang.tr('per_second'));
-        }
         
-        var bar = filesender.ui.nodes.files.list.find('[data-name="' + file.name + '"][data-size="' + file.size + '"] .progressbar');
+        if(this.status != 'paused')
+            filesender.ui.nodes.stats.average_speed.find('.value').text(filesender.ui.formatSpeed(speed) + lang.tr('per_second'));
+        
+        var bar = filesender.ui.nodes.files.list.find('[data-cid="' + file.cid + '"] .progressbar');
         bar.progressbar('value', Math.round(1000 * file.uploaded / file.size));
     },
     
