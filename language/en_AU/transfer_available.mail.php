@@ -9,7 +9,7 @@ The following {if:transfer.files>1}files have{else}file has{endif} been uploaded
 {if:transfer.files>1}{each:transfer.files as file}
   - {file.name} ({size:file.size})
 {endeach}{else}
-{file.name} ({size:file.size})
+{transfer.files.first().name} ({size:transfer.files.first().size})
 {endif}
 
 Download link: {cfg:site_url}?s=download&token={recipient.token}
@@ -54,14 +54,16 @@ Best regards,
                     {endeach}
                 </ul>
                 {else}
-                {transfer.files.0.name} ({size:transfer.files.0.size})
+                {transfer.files.first().name} ({size:transfer.files.first().size})
                 {endif}
             </td>
         </tr>
+        {if:transfer.files>1}
         <tr>
-            <td>Size</td>
+            <td>Transfer size</td>
             <td>{size:transfer.size}</td>
         </tr>
+        {endif}
         <tr>
             <td>Expiry date</td>
             <td>{date:transfer.expires}</td>

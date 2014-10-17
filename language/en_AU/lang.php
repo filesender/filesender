@@ -354,7 +354,7 @@ $lang['auditlog'] = 'Transfer audit';
 $lang['actions'] = 'Actions';
 $lang['send_reminder'] = 'Send reminder';
 
-$lang['confirm_dialog'] = 'Warning';
+$lang['confirm_dialog'] = 'Confirmation';
 $lang['confirm_download_notify'] = 'Do you want to be notified by mail when download is complete ?';
 $lang['invalid_recipient'] = 'Invalid recipient';
 $lang['error_dialog'] = 'Error';
@@ -367,6 +367,11 @@ $lang['done'] = 'Done';
 $lang['error_dialog'] = 'Error';
 $lang['info_dialog'] = 'Information';
 $lang['success_dialog'] = 'Success';
+$lang['confirm_close_transfer'] = 'Do you really want to close this transfer ? Files cannot be downloaded after transfer is closed. You cannot open a closed transfer again.';
+$lang['confirm_delete_file'] = 'Are you sure you want to delete this file ? The transfer will be closed if all its files are deleted.';
+$lang['confirm_delete_recipient'] = 'Are you sure you want to delete this recipient ? The transfer will be closed if all its recipients are deleted.';
+$lang['recipient_deleted'] = 'The recipient has been deleted.';
+$lang['file_deleted'] = 'The file has been deleted.';
 
 
 // --------------------------------------------------
