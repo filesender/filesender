@@ -1,4 +1,9 @@
-<table class="transfers list">
+<?php
+    if(!isset($status)) $status = 'available';
+    if(!isset($mode)) $mode = 'user';
+    if(!isset($transfers) || !is_array($transfers)) $transfers = array();
+?>
+<table class="transfers list" data-status="<?php echo $status ?>" data-mode="<?php echo $mode ?>">
     <thead>
         <tr>
             <th class="expand" title="{tr:expand_all}">
@@ -21,6 +26,7 @@
                 {tr:downloads}
             </th>
             
+            <?php if($status == 'available') { ?>
             <th class="expires">
                 {tr:expires}
             </th>
@@ -28,6 +34,7 @@
             <th class="actions">
                 {tr:actions}
             </th>
+            <?php } ?>
         </tr>
     </thead>
     
@@ -68,15 +75,17 @@
                 <?php $dc = count($transfer->downloads); echo $dc; if($dc) { ?> (<span class="clickable expand">{tr:see_all}</span>)<?php } ?>
             </td>
             
+            <?php if($status == 'available') { ?>
             <td class="expires">
                 <?php echo Utilities::formatDate($transfer->expires) ?>
             </td>
             
             <td class="actions"></td>
+            <?php } ?>
         </tr>
         
         <tr class="transfer_details" data-id="<?php echo $transfer->id ?>">
-            <td colspan="7">
+            <td colspan="<?php echo ($status == 'available') ? 7 : 5 ?>">
                 <div class="actions"></div>
                 
                 <div class="collapse">
@@ -118,7 +127,7 @@
         
         <?php if(!count($transfers)) { ?>
         <tr>
-            <td colspan="7">{tr:no_transfers}</td>
+            <td colspan="<?php echo ($status == 'available') ? 7 : 5 ?>">{tr:no_transfers}</td>
         </tr>
         <?php } ?>
     </tbody>
