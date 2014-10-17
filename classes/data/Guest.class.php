@@ -97,7 +97,7 @@ class Guest extends DBObject {
      * Set selectors
      */
     const AVAILABLE = 'status = "available" ORDER BY created DESC';
-    const EXPIRED = 'expires < DATE(NOW()) ORDER BY expires ASC';
+    const EXPIRED = 'expires < :date ORDER BY expires ASC';
     const FROM_USER = 'user_id = :user_id AND status = "available" ORDER BY created DESC';
     
     /**
@@ -183,12 +183,10 @@ class Guest extends DBObject {
     /**
      * Get expired guests
      * 
-     * @param integer $daysvalid guest age limit (optionnal)
-     * 
-     * @return array Guest list
+     * @return array of Guest
      */
-    public static function getExpired($daysvalid = null) {
-        return self::all(self::EXPIRED);
+    public static function allExpired() {
+        return self::all(self::EXPIRED, array(':date' => date('Y-m-d')));
     }
     
     /**
