@@ -92,8 +92,11 @@ class Transfer extends DBObject {
      * Set selectors
      */
     const AVAILABLE = 'status = "available" ORDER BY created DESC';
-    const EXPIRED = 'expires < DATE(NOW()) ORDER BY expires ASC';
+    const CLOSED = 'status = "closed" ORDER BY created DESC';
+    const EXPIRED = 'expires < :date ORDER BY expires ASC';
+    const AUDITLOG_EXPIRED = 'expires < :date ORDER BY expires ASC';
     const FROM_USER = 'user_id = :user_id AND status="available" ORDER BY created DESC';
+    const FROM_USER_CLOSED = 'user_id = :user_id AND status="closed" ORDER BY created DESC';
     const FROM_GUEST = 'guest_id = :guest_id AND status="available" ORDER BY created DESC';
     
     /**
@@ -140,13 +143,14 @@ class Transfer extends DBObject {
      * Get transfers from user
      * 
      * @param mixed $user User or user id
+     * @param bool $closed
      * 
      * @return array of Transfer
      */
-    public static function fromUser($user) {
+    public static function fromUser($user, $closed = false) {
         if($user instanceof User) $user = $user->id;
         
-        return self::all(self::FROM_USER, array(':user_id' => $user));
+        return self::all($closed ? self::FROM_USER_CLOSED : self::FROM_USER, array(':user_id' => $user));
     }
     
     /**
@@ -228,6 +232,26 @@ class Transfer extends DBObject {
     }
     
     /**
+     * Get expired transfers
+     * 
+     * @return array of Transfer
+     */
+    public static function allExpired() {
+        return self::all(self::EXPIRED, array(':date' => date('Y-m-d')));
+    }
+    
+    /**
+     * Get expired transfers whose auditlogs expired
+     * 
+     * @return array of Transfer
+     */
+    public static function allExpiredAuditlogs() {
+        $days = Config::get('auditlog_lifetime');
+        if(is_null($days)) $days = 0;
+        return self::all(self::EXPIRED, array(':date' => date('Y-m-d', time() - ($days * 24 * 3600))));
+    }
+    
+    /**
      * Delete the transfer related objects
      */
     public function beforeDelete() {
@@ -236,19 +260,34 @@ class Transfer extends DBObject {
         foreach($this->files as $file) $this->removeFile($file);
         
         foreach($this->recipients as $recipient) $this->removeRecipient($recipient);
+        
+        Logger::info('Transfer#'.$this->id.' deleted');
     }
     
     /**
      * Close the transfer
      */
     public function close($manualy = true) {
-        if($this->status != TransferStatuses::AVAILABLE) { // Simple deletion if the transfer was not available yet (failed, cancelled ...)
-            $this->delete();
-            return;
+        switch($this->status) {
+            case TransferStatuses::CREATED :
+            case TransferStatuses::STARTED :
+            case TransferStatuses::UPLOADING :
+                // Transfer still not available, delete it
+                $this->delete();
+                return;
+            
+            case TransferStatuses::AVAILABLE :
+                // Transfer available, proceed
+                break;
+            
+            case TransferStatuses::CLOSED :
+                // Transfer already closed, do nothing
+                return;
         }
         
         // Close the transfer
         $this->status = TransferStatuses::CLOSED;
+        if($manualy) $this->expires = time(); // Set expiration date so that auditlogs are cleaned the right way
         $this->save();
         
         // Log action
@@ -259,27 +298,20 @@ class Transfer extends DBObject {
         
         foreach($this->recipients as $recipient) {
             $mail = new ApplicationMail($ctn->r($recipient));
+            $mail->to($recipient->email);
             $mail->send();
         }
         
         // Send notification to owner
         $ctn = Lang::translateEmail($manualy ? 'transfer_deleted_receipt' : 'transfer_expired_receipt')->r($this);
         $mail = new ApplicationMail($ctn);
+        $mail->to($this->user_email);
         $mail->send();
         
-        // Generating the repport for the transfer owner if requested
-        if($this->hasOption(TransferOptions::EMAIL_REPORT_ON_CLOSING)) {
-            $format = Config::get('report_format');
-            if(ReportTypes::isValidName($type)) {
-                $report = new Report($type, $this);
-                $report->generateReport(true); // Send by email
-            }
-        }
-        
         // Send report if needed
-        if($this->hasOption(TransferOptions::EMAIL_REPORT_ON_CLOSING)) {
+        if(!is_null(Config::get('auditlog_lifetime')) && $this->hasOption(TransferOptions::EMAIL_REPORT_ON_CLOSING)) {
             $report = new Report($this);
-            $report->sendTo($this->owner);
+            $report->sendTo($this->user_email);
         }
         
         if(!Config::get('auditlog_lifetime')) {
@@ -290,6 +322,8 @@ class Transfer extends DBObject {
             foreach($this->files as $file)
                 Storage::deleteFile($file);
         }
+        
+        Logger::info('Transfer#'.$this->id.' '.($manualy ? 'closed manually' : ' expired'));
     }
     
     /**
@@ -511,6 +545,8 @@ class Transfer extends DBObject {
         
         // Update local cache
         if(!is_null($this->filesCache) && array_key_exists($file->id, $this->filesCache)) unset($this->filesCache[$file->id]);
+        
+        Logger::info('File#'.$file->id.' from Transfer#'.$this->id.' removed');
     }
     
     /**
@@ -553,6 +589,8 @@ class Transfer extends DBObject {
         
         // Update local cache
         if(!is_null($this->recipientsCache) && array_key_exists($recipient->id, $this->recipientsCache)) unset($this->recipientsCache[$recipient->id]);
+        
+        Logger::info('Recipient#'.$recipient->id.' from Transfer#'.$this->id.' removed');
     }
     
     /**
@@ -592,6 +630,7 @@ class Transfer extends DBObject {
         }
         
         Logger::logActivity(LogEventTypes::TRANSFER_SENT, $this);
+        Logger::info('Transfer#'.$this->id.' made available');
     }
     
     
@@ -636,6 +675,7 @@ class Transfer extends DBObject {
         $this->status = TransferStatuses::STARTED;
         $this->save();
         Logger::logActivity(LogEventTypes::TRANSFER_STARTED, $this);
+        Logger::info('Transfer#'.$this->id.' started');
     }
     
     /**
@@ -647,5 +687,6 @@ class Transfer extends DBObject {
         $this->status = TransferStatuses::UPLOADING;
         $this->save();
         Logger::logActivity(LogEventTypes::UPLOAD_STARTED, $this);
+        Logger::info('Transfer#'.$this->id.' upload started');
     }
 }
