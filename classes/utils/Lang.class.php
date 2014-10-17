@@ -541,13 +541,27 @@ class Translation {
             
             $value = $placeholders[$name];
             
-            while($entry = array_shift($path)) {
+            while(!is_null($entry = array_shift($path))) {
                 if(is_object($value)) {
                     $value = $value->$entry;
                 } else if(is_array($value)) {
                     if(is_numeric($entry) && !is_float($entry))
                         $entry = (int)$entry;
-                    $value = array_key_exists($entry, $value) ? $value[$entry] : null;
+                    
+                    if(preg_match('`^(first|nth|last)\(([0-9]*\))`', $entry, $m)) {
+                        $keys = array_keys($value);
+                        switch($m[1]) {
+                            case 'first': $entry = reset($keys); break;
+                            case 'last': $entry = end($keys); break;
+                            case 'nth':
+                                $i = $m[2] ? (int)$m[2] : 0;
+                                $entry = array_slice($keys, $i, 1);
+                                $entry = array_shift($entry);
+                                break;
+                        }
+                    }
+                    
+                    $value = (!is_null($entry) && array_key_exists($entry, $value)) ? $value[$entry] : null;
                 }
             }
             
@@ -668,7 +682,7 @@ class Translation {
         }, $translation);
         
         foreach($placeholders as $k => $v) {
-            $translation = preg_replace_callback('`\{(([^:\}]+:)?'.$k.'(\.[a-z0-9_]+)*)\}`iU', function($m) use($placeholder_resolver) {
+            $translation = preg_replace_callback('`\{(([^:\}]+:)?'.$k.'(\.[a-z0-9_\(\)]+)*)\}`iU', function($m) use($placeholder_resolver) {
                 if(substr($m[0], 0, 4) == '{if:') return $m[0]; // Remaining ifs
                 
                 return Utilities::sanitizeOutput($placeholder_resolver($m[1])); // Ensure sanity
@@ -702,8 +716,9 @@ class Translation {
      * Convert to string
      */
     public function out() {
-        if(!is_string($this->translation))
-            return '';
+        if(!is_string($this->translation)) return array_map(function($tr) {
+            return $tr->out();
+        }, $this->translation);
         
         $out = $this->translation;
         
