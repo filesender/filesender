@@ -560,7 +560,7 @@ table.transfers .collapse {
 
 table.transfers .downloads,
 table.transfers .expires {
-    width: 9em;
+    width: 7em;
     text-align: center;
 }
 
@@ -574,7 +574,7 @@ table.transfers th.size {
 }
 
 table.transfers td.downloads {
-    text-align: left;
+    text-align: center;
 }
 
 table.transfers tbody tr.transfer_details {

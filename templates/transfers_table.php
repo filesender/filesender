@@ -47,12 +47,17 @@
             
             <td class="recipients">
                 <?php
-                echo implode('<br />', array_map(function($recipient) {
-                    return Utilities::sanitizeOutput($recipient->email);
-                }, array_slice($transfer->recipients, 0, 3)));
+                $items = array();
+                foreach(array_slice($transfer->recipients, 0, 3) as $recipient) {
+                    $email = $recipient->email;
+                    if(strlen($email) > 28) $email = substr($email, 0, 25).'...';
+                    $items[] = '<span title="'.Utilities::sanitizeOutput($recipient->email).'">'.Utilities::sanitizeOutput($email).'</span>';
+                }
                 
                 if(count($transfer->recipients) > 3)
-                    echo '<br />(<span class="clickable expand">'.Lang::tr('n_more')->r(array('n' => count($transfer->recipients) - 3)).'</span>)';
+                    $items[] = '(<span class="clickable expand">'.Lang::tr('n_more')->r(array('n' => count($transfer->recipients) - 3)).'</span>)';
+                
+                echo implode('<br />', $items);
                 ?>
             </td>
             
@@ -62,12 +67,17 @@
             
             <td class="files">
                 <?php
-                echo implode('<br />', array_map(function($file) {
-                    return Utilities::sanitizeOutput($file->name);
-                }, array_slice($transfer->files, 0, 3)));
+                $items = array();
+                foreach(array_slice($transfer->files, 0, 3) as $file) {
+                    $name = $file->name;
+                    if(strlen($name) > 28) $name = substr($name, 0, 25).'...';
+                    $items[] = '<span title="'.Utilities::sanitizeOutput($file->name).'">'.Utilities::sanitizeOutput($name).'</span>';
+                }
                 
                 if(count($transfer->files) > 3)
-                    echo '<br />(<span class="clickable expand">'.Lang::tr('n_more')->r(array('n' => count($transfer->files) - 3)).'</span>)';
+                    $items[] = '(<span class="clickable expand">'.Lang::tr('n_more')->r(array('n' => count($transfer->files) - 3)).'</span>)';
+                
+                echo implode('<br />', $items);
                 ?>
             </td>
             
