@@ -186,6 +186,7 @@ window.filesender.ui = {
             return function() {
                 var close = buttons[lid] ? buttons[lid].call(d) : true;
                 if(typeof close != 'undefined' && !close) return;
+                d.data('closed_by_button_click', true);
                 d.dialog('close');
                 d.remove();
             };
@@ -210,7 +211,15 @@ window.filesender.ui = {
         
         options.buttons = btndef;
         
+        var onclose = options.onclose ? options.onclose : null;
+        if(onclose) delete options.onclose;
+        
         d.dialog(options);
+        
+        if(onclose) d.on('dialogclose', function() {
+            if(!$(this).data('closed_by_button_click')) onclose.call(this);
+            $(this).data('closed_by_button_click', false);
+        });
         
         return d;
     },
@@ -231,7 +240,7 @@ window.filesender.ui = {
             }
         }
         
-        var d = this.popup(lang.tr(type + '_dialog'), {close: onclose});
+        var d = this.popup(lang.tr(type + '_dialog'), {close: onclose}, {onclose: onclose});
         d.addClass(type).html(message);
         return d;
     },
@@ -250,7 +259,7 @@ window.filesender.ui = {
             }else message = message.toString();
         }
         
-        var d = this.popup(lang.tr('confirm_dialog'), yesno ? {yes: onok, no: oncancel} : {ok: onok, cancel: oncancel});
+        var d = this.popup(lang.tr('confirm_dialog'), yesno ? {yes: onok, no: oncancel} : {ok: onok, cancel: oncancel}, {onclose: oncancel});
         d.html(message);
         return d;
     },
@@ -262,7 +271,7 @@ window.filesender.ui = {
      * @param callable oncancel
      */
     prompt: function(title, onok, oncancel) {
-        return this.popup(title, {ok: onok, cancel: oncancel});
+        return this.popup(title, {ok: onok, cancel: oncancel}, {onclose: oncancel});
     },
     
     /**
@@ -280,7 +289,7 @@ window.filesender.ui = {
                 return onaction($(this).find('.actions input[name="action"]:checked').val());
             },
             cancel: oncancel
-        });
+        }, {onclose: oncancel});
         
         var list = $('<div class="actions" />').appendTo(d);
         for(var i=0; i<actions.length; i++) {
@@ -307,7 +316,7 @@ window.filesender.ui = {
         return this.popup(
             title,
             {close: onclose},
-            {width: $('#wrap').width(), height: 0.8 * $(window).height()}
+            {width: $('#wrap').width(), height: 0.8 * $(window).height(), onclose: onclose}
         ).addClass('wide_info');
     },
     
