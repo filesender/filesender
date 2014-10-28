@@ -180,6 +180,7 @@ filesender.ui.send = function() {
 };
 
 $(function() {
+    var form = $('#creation_form');
     var page = $('.guests_page');
     if(!page.length) return;
     
@@ -199,11 +200,7 @@ $(function() {
         options: {},
         sendbutton: page.find('.invite_guest .send'),
     };
-    page.find('.options input').each(function() {
-        var i = $(this);
-        filesender.ui.nodes.options[i.attr('name')] = i;
-    });
-
+    
     // Setup date picker
     $.datepicker.setDefaults({
         closeText: lang.tr('DP_closeText').out(),
@@ -251,11 +248,23 @@ $(function() {
     });
     filesender.ui.nodes.expires.datepicker('setDate', maxdate);
     
+    form.find('.basic_options input, .advanced_options input').each(function() {
+        var i = $(this);
+        filesender.ui.nodes.options[i.attr('name')] = i;
+    });
+
+
     // Make options label toggle checkboxes
-    page.find('.options label').on('click', function() {
+    form.find('.basic_options label, .advanced_options label').on('click', function() {
         var checkbox = $(this).closest('.fieldcontainer').find(':checkbox');
         checkbox.prop('checked', !checkbox.prop('checked'));
     }).css('cursor', 'pointer');
+    
+    // Bind advanced options display toggle
+    form.find('.toggle_advanced_options').on('click', function() {
+        $('.advanced_options').slideToggle();
+        return false;
+    });
     
     // Bind buttons
     filesender.ui.nodes.sendbutton.on('click', function() {

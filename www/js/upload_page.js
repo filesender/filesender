@@ -365,7 +365,7 @@ filesender.ui.startUpload = function() {
 };
 
 $(function() {
-    var form = $('#upload_form');
+    var form = $('#creation_form');
     if(!form.length) return;
     
     // Transfer
