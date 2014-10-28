@@ -376,25 +376,25 @@ table.list .date {
 
 /* Upload page */
 
-#upload_form input[type="checkbox"] {
+#creation_form input[type="checkbox"] {
     float: left;
     width: 1.2em;
     margin: 0 1em 0 0;
 }
 
-#upload_form .file_selector {
+#creation_form .file_selector {
     display: none;
     margin-bottom: 0.5em;
 }
 
-#upload_form .files {
+#creation_form .files {
     width: 100%;
     margin-bottom: 0.5em;
     max-height: 20em;
     overflow-y: scroll;
 }
 
-#upload_form .files .file {
+#creation_form .files .file {
     position: relative;
     margin: 0.2em;
     padding: 0.5em;
@@ -406,19 +406,19 @@ table.list .date {
     height: 1.8em;
 }
 
-#upload_form .files .file .info {
+#creation_form .files .file .info {
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
     font-weight: bold;
 }
 
-#upload_form .files .file .remove {
+#creation_form .files .file .remove {
     float: right;
     line-height: 1.3333em;
 }
 
-#upload_form .files .file .progressbar {
+#creation_form .files .file .progressbar {
     position: relative;
     display: none;
     float: right;
@@ -427,14 +427,14 @@ table.list .date {
     height: 1.3333em;
 }
 
-#upload_form .files .file .progressbar .progress-label {
+#creation_form .files .file .progressbar .progress-label {
     position: absolute;
     left: 35%;
     top: -0.2em;
     font-size: 0.9em;
 }
 
-#upload_form .files_dragdrop {
+#creation_form .files_dragdrop {
     border: 1px dashed #666;
     border-radius: 0.5em;
     -moz-border-radius: 0.5em;
@@ -443,7 +443,7 @@ table.list .date {
     font-weight: bold;
 }
 
-#upload_form .files_dragdrop .instructions {
+#creation_form .files_dragdrop .instructions {
     font-size: 1.2em;
     color: #666;
     font-weight: bold;
@@ -453,50 +453,50 @@ table.list .date {
     text-align: center;
 }
 
-#upload_form .files_actions {
+#creation_form .files_actions {
     display: table;
     width: 100%;
     margin: 0.25em 1em 0 0;
 }
 
-#upload_form .files_actions div {
+#creation_form .files_actions div {
     display: table-cell;
     width: 33%;
 }
 
-#upload_form .files_actions div a {
+#creation_form .files_actions div a {
     width: 45%;
 }
 
-#upload_form .files_actions div+div {
+#creation_form .files_actions div+div {
     text-align: center;
 }
 
-#upload_form .files_actions .stats div {
+#creation_form .files_actions .stats div {
     text-align: right;
     font-size: 0.8em;
     vertical-align: middle;
     width: 100%;
 }
 
-#upload_form .files_actions .stats .number_of_files,
-#upload_form .files_actions .stats .size,
-#upload_form .files_actions .stats .uploaded,
-#upload_form .files_actions .stats .average_speed {
+#creation_form .files_actions .stats .number_of_files,
+#creation_form .files_actions .stats .size,
+#creation_form .files_actions .stats .uploaded,
+#creation_form .files_actions .stats .average_speed {
     display: none;
 }
 
-#upload_form .two_columns {
+#creation_form .two_columns {
     width: 100.7%;
     margin: 0 -0.75em 0.5em -0.25em;
 }
 
-#upload_form .recipients {
+#creation_form .recipients {
     display: none;
     padding: 0.5em 0;
 }
 
-#upload_form .recipients .recipient {
+#creation_form .recipients .recipient {
     margin: 0.2em;
     padding: 0.5em;
     border: 1px solid #ccc;
@@ -505,47 +505,47 @@ table.list .date {
     background-color: #dedede;
 }
 
-#upload_form .recipients .recipient .remove {
+#creation_form .recipients .recipient .remove {
     float: right;
 }
 
-#upload_form textarea[name="message"] {
+#creation_form textarea[name="message"] {
     width: 100%;
     resize: vertical;
 }
 
-#upload_form .advanced_options {
+#creation_form .advanced_options {
     display: none;
 }
 
-#upload_form .aup {
+#creation_form .aup {
     padding: 1em;
 }
 
-#upload_form .aup label {
+#creation_form .aup label {
     font-weight: bold;
 }
 
-#upload_form .aup label span {
+#creation_form .aup label span {
     color: #666;
 }
 
-#upload_form .aup .terms {
+#creation_form .aup .terms {
     display: none;
     margin-top: 0.5em;
     padding: 0.5em;
 }
 
-#upload_form .buttons {
+#creation_form .buttons {
     margin: 1em auto;
 }
 
-#upload_form .buttons a {
+#creation_form .buttons a {
     padding: 1em;
     font-size: 1.5em;
 }
 
-#upload_form .buttons a span.fa {
+#creation_form .buttons a span.fa {
     font-size: 2em;
 }
 

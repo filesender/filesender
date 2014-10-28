@@ -151,7 +151,7 @@ class Guest extends DBObject {
         $guest = new self();
         
         $guest->user_id = Auth::user()->id;
-        $guest->__set('user_email', $from ? $from : Auth::user()->email[0]);
+        $guest->__set('user_email', $from ? $from : Auth::user()->email);
         $guest->__set('email', $recipient); // Throws
         
         $guest->status = GuestStatuses::AVAILABLE;
@@ -223,7 +223,7 @@ class Guest extends DBObject {
     }
     
     /**
-     * Check if user owns current transfer
+     * Check if user owns current gueest
      * 
      * @param miwed $user User or user id to compare with
      * 
@@ -286,6 +286,65 @@ class Guest extends DBObject {
         $mail->to($this->email);
         $mail->send();
     }
+    
+    
+    /**
+     * Get all options
+     * 
+     * @return array
+     */
+    public static function allOptions() {
+        $options = Config::get('guest_options');
+        if(!is_array($options)) $options = array();
+        
+        foreach(TransferOptions::all() as $d => $name) {
+            if(!array_key_exists($name, $options))
+                $options[$name] = array(
+                    'available' => false,
+                    'advanced' => false,
+                    'default' => false
+                );
+            
+            foreach(array('available', 'advanced', 'default') as $p) {
+                if(!array_key_exists($p, $options[$name]))
+                    $options[$name][$p] = false;
+                
+                $options[$name][$p] = (bool)$options[$name][$p];
+            }
+        }
+        
+        return $options;
+    }
+    
+    /**
+     * Get user available options
+     * 
+     * @param bool $advanced if not null filter by advanced status as well
+     * 
+     * @return array
+     */
+    public static function availableOptions($advanced = null) {
+        return array_filter(self::allOptions(), function($o) use($advanced) {
+            if(!$o['available']) return false;
+            
+            if(!is_null($advanced))
+                return $o['advanced'] == $advanced;
+            
+            return true;
+        });
+    }
+    
+    /**
+     * Check if gueest has option
+     * 
+     * @param string $option
+     * 
+     * @return bool
+     */
+    public function hasOption($option) {
+        return is_array($this->options) && in_array($option, $this->options);
+    }
+    
     
     /**
      * Getter
