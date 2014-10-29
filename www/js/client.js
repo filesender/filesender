@@ -139,10 +139,9 @@ window.filesender.client = {
     postTransfer: function(from, files, recipients, subject, message, expires, options, guest_token, callback, onerror) {
         var opts = {};
         if(onerror) opts.error = onerror;
-        
+        if (guest_token) opts.args={vid:guest_token};
         this.post('/transfer', {
             from: from,
-            guest_token: guest_token,
             files: files,
             recipients: recipients,
             subject: subject,
@@ -217,7 +216,7 @@ window.filesender.client = {
      * @param object data check data
      * @param callable callback
      */
-    transferComplete: function(transfer, data, callback, onerror) {
+    transferComplete: function(transfer, data, guest_token, callback, onerror) {
         var opts = {};
         if(filesender.config.chunk_upload_security == 'key') opts.args = {key: transfer.files[0].uid};
         
@@ -225,6 +224,7 @@ window.filesender.client = {
         data.complete = true;
         
         if(onerror) opts.error = onerror;
+        if (guest_token) opts.args={vid:guest_token};
         
         this.put('/transfer/' + transfer.id, data, callback, opts);
     },

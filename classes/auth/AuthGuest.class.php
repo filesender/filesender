@@ -69,13 +69,13 @@ class AuthGuest {
                 if(
                     Utilities::isValidUID($vid)
                 ) {
-                    try {
-                        self::$guest = Guest::fromToken($vid);
-                        self::$isAuthenticated = true;
-                        // Updating last activity
-                        self::$guest->last_activity = time();
-                        self::$guest->save();
-                    } catch(GuestNotFoundException $e) {}
+                    self::$guest = Guest::fromToken($vid);
+                    self::$isAuthenticated = true;
+                    // Updating last activity
+                    self::$guest->last_activity = time();
+                    self::$guest->save();
+                }else{
+                    throw new GuestNotFoundException("Mal formed token: ".$vid);
                 }
             }
         }

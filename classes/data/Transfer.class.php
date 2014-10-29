@@ -609,10 +609,11 @@ class Transfer extends DBObject {
         $this->save();
         Logger::logActivity(LogEventTypes::TRANSFER_AVAILABLE, $this);
         
-        if ($guestToken !== false){
-            // Sending mail to the guest voucher creator
+        
+        if (Auth::isGuest()){
+            // Check from voucher id which options are setted
             try{
-                $guest = Guest::fromToken($guestToken);
+                $guest = AuthGuest::getGuest();
                 if ($guest->hasOption(GuestOptions::EMAIL_UPLOAD_FROM_GUEST_COMPLETE)){
                     // Send mail to guest the owner of the voucher
                     $c = Lang::translateEmail('guest_upload_complete')->replace($guest);
@@ -645,8 +646,8 @@ class Transfer extends DBObject {
             $mail->send();
         }
         
-        Logger::logActivity(LogEventTypes::TRANSFER_SENT, $this);
-        Logger::info('Transfer#'.$this->id.' made available');
+        Logger::logActivity(LogEventTypes::TRANSFER_SENT, $this,Auth::isGuest()?AuthGuest::getGuest():null);
+        Logger::info('Transfer#'.$this->id.' made available'.Auth::isGuest()?' by guest: '.AuthGuest::getGuest()->email:'');
     }
     
     
@@ -687,13 +688,13 @@ class Transfer extends DBObject {
     /*
      * Start transfer and log
      */
-    public function start($guestToken = false) {
+    public function start() {
         $this->status = TransferStatuses::STARTED;
         $this->save();
-        if (fromVoucher !== false){
+        if (Auth::isGuest()){
             // Check from voucher id which options are setted
             try{
-                $guest = Guest::fromToken($guestToken);
+                $guest = AuthGuest::getGuest();
                 if ($guest->hasOption(GuestOptions::EMAIL_UPLOAD_FROM_GUEST_START)){
                     // Send mail to guest the owner of the voucher
                     $c = Lang::translateEmail('guest_upload_start')->replace($guest);
@@ -705,8 +706,8 @@ class Transfer extends DBObject {
                 Logger::log(LogLevels::INFO, $e);
             }
         }
-        Logger::logActivity(LogEventTypes::TRANSFER_STARTED, $this);
-        Logger::info('Transfer#'.$this->id.' started');
+        Logger::logActivity(LogEventTypes::TRANSFER_STARTED, $this,Auth::isGuest()?AuthGuest::getGuest():null);
+        Logger::info('Transfer#'.$this->id.' started'.Auth::isGuest()?' by guest: '.AuthGuest::getGuest()->email:'');
     }
     
     /**
