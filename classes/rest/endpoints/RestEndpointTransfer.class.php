@@ -262,7 +262,7 @@ class RestEndpointTransfer extends RestEndpoint {
             
             foreach($data->recipients as $email) $transfer->addRecipient($email);
             
-            $transfer->start($data->guest_token);
+            $transfer->start();
             
             return array(
                 'path' => '/transfer/'.$transfer->id,

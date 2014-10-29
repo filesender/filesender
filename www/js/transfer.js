@@ -280,10 +280,8 @@ window.filesender.transfer = function() {
         }
 
         var transfer = this;
-        var data = {
-            guest_token: this.guest_token
-        };
-        filesender.client.transferComplete(this, data, function(data) {
+        
+        filesender.client.transferComplete(this, undefined, this.guest_token, function(data) {
             if (transfer.oncomplete)
                 transfer.oncomplete.call(transfer, time);
         });

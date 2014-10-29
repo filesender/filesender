@@ -149,7 +149,7 @@ class User extends DBObject {
         if(!is_array($attributes) || !array_key_exists('uid', $attributes) || !$attributes['uid']) throw new UserMissingUIDException();
         $user = self::fromId($attributes['uid']);
         
-        if(array_key_exists('email', $attributes)) $user->email_addresses = $attributes['email'];
+        if(array_key_exists('email', $attributes)) $user->email_addresses = is_array($attributes['email']) ? $attributes['email'] : array($attributes['email']);
         if(array_key_exists('name', $attributes)) $user->name = $attributes['name'];
         
         return $user;
