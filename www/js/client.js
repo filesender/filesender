@@ -136,12 +136,13 @@ window.filesender.client = {
      * @param array options array of selected option identifiers
      * @param callable callback function to call with transfer path and transfer info once done
      */
-    postTransfer: function(from, files, recipients, subject, message, expires, options, callback, onerror) {
+    postTransfer: function(from, files, recipients, subject, message, expires, options, guest_token, callback, onerror) {
         var opts = {};
         if(onerror) opts.error = onerror;
         
         this.post('/transfer', {
             from: from,
+            guest_token: guest_token,
             files: files,
             recipients: recipients,
             subject: subject,

@@ -66,13 +66,15 @@ class AuthGuest {
             
             if(array_key_exists('vid', $_REQUEST))  {
                 $vid = $_REQUEST['vid'];
-                
                 if(
                     Utilities::isValidUID($vid)
                 ) {
                     try {
                         self::$guest = Guest::fromToken($vid);
                         self::$isAuthenticated = true;
+                        // Updating last activity
+                        self::$guest->last_activity = time();
+                        self::$guest->save();
                     } catch(GuestNotFoundException $e) {}
                 }
             }

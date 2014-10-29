@@ -321,6 +321,7 @@ filesender.ui.startUpload = function() {
     
     this.transfer.subject = filesender.ui.nodes.subject.val();
     this.transfer.message = filesender.ui.nodes.message.val();
+    this.transfer.guest_token = filesender.ui.nodes.guest_token.val();
     
     for(var o in filesender.ui.nodes.options)
         if(filesender.ui.nodes.options[o].is(':checked'))
@@ -386,6 +387,7 @@ $(function() {
         from: form.find('select[name="from"]'),
         subject: form.find('input[name="subject"]'),
         message: form.find('textarea[name="message"]'),
+        guest_token: form.find('input[type="hidden"][name="guest_token"]'),
         aup: form.find('input[name="aup"]'),
         expires: form.find('input[name="expires"]'),
         options: {},

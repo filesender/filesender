@@ -90,6 +90,9 @@ class Guest extends DBObject {
         ),
         'expires' => array(
             'type' => 'datetime'
+        ),
+        'last_activity' => array(
+            'type' => 'datetime'
         )
     );
     
@@ -114,6 +117,7 @@ class Guest extends DBObject {
     protected $options = null;
     protected $created = 0;
     protected $expires = 0;
+    protected $last_activity = 0;
     
     /**
      * Cache
@@ -149,13 +153,14 @@ class Guest extends DBObject {
      */
     public static function create($recipient, $from = null) {
         $guest = new self();
+        $time = time();
         
         $guest->user_id = Auth::user()->id;
         $guest->__set('user_email', $from ? $from : Auth::user()->email);
         $guest->__set('email', $recipient); // Throws
         
         $guest->status = GuestStatuses::AVAILABLE;
-        $guest->created = time();
+        $guest->created = $time;
         
         // Generate token until it is indeed unique
         $guest->token = Utilities::generateUID(function($token) {
@@ -335,7 +340,7 @@ class Guest extends DBObject {
     }
     
     /**
-     * Check if gueest has option
+     * Check if guest has option
      * 
      * @param string $option
      * 
@@ -358,7 +363,7 @@ class Guest extends DBObject {
     public function __get($property) {
         if(in_array($property, array(
             'id', 'user_id', 'user_email', 'token', 'email', 'transfer_count',
-            'subject', 'message', 'options', 'status', 'created', 'expires'
+            'subject', 'message', 'options', 'status', 'created', 'expires', 'last_activity'
         ))) return $this->$property;
         
         if($property == 'user' || $property == 'owner') {
@@ -407,7 +412,7 @@ class Guest extends DBObject {
             if(!filter_var($value, FILTER_VALIDATE_EMAIL)) throw new BadEmailException($value);
             $this->email = (string)$value;
             
-        }else if($property == 'expires') {
+        }else if($property == 'expires' || $property == 'last_activity') {
             if(preg_match('`^[0-9]{4}-[0-9]{2}-[0-9]{2}$`', $value)) {
                 $value = strtotime($value);
             }
@@ -418,7 +423,7 @@ class Guest extends DBObject {
             if($value < floor(time() / (24 * 3600)) || $value > self::getMaxExpire()) {
                 throw new BadExpireException($value);
             }
-            $this->expires = (string)$value;
+            $this->$property = (string)$value;
             
         }else throw new PropertyAccessException($this, $property);
     }

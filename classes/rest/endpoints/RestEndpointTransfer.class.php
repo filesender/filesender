@@ -262,7 +262,7 @@ class RestEndpointTransfer extends RestEndpoint {
             
             foreach($data->recipients as $email) $transfer->addRecipient($email);
             
-            $transfer->start();
+            $transfer->start($data->guest_token);
             
             return array(
                 'path' => '/transfer/'.$transfer->id,
@@ -299,9 +299,10 @@ class RestEndpointTransfer extends RestEndpoint {
             throw new RestOwnershipRequiredException($user->id, 'transfer = '.$transfer->id);
         
         $data = $this->request->input;
+        $guestToken = $data->guest_token;
         
         if($data->complete)
-            $transfer->makeAvailable();
+            $transfer->makeAvailable($guestToken);
         
         if($data->closed)
             $transfer->close(true);

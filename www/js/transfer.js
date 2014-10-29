@@ -59,6 +59,7 @@ window.filesender.transfer = function() {
     this.onprogress = null;
     this.oncomplete = null;
     this.onerror = null;
+    this.guest_token = null;
 
     this.saveTemp = function() {
         if (!filesender.supports.localStorage)
@@ -279,7 +280,10 @@ window.filesender.transfer = function() {
         }
 
         var transfer = this;
-        filesender.client.transferComplete(this, undefined, function(data) {
+        var data = {
+            guest_token: this.guest_token
+        };
+        filesender.client.transferComplete(this, data, function(data) {
             if (transfer.oncomplete)
                 transfer.oncomplete.call(transfer, time);
         });
@@ -342,7 +346,7 @@ window.filesender.transfer = function() {
         this.time = (new Date()).getTime();
 
         var transfer = this;
-        filesender.client.postTransfer(this.from, files_dfn, this.recipients, this.subject, this.message, this.expires, this.options, function(path, data) {
+        filesender.client.postTransfer(this.from, files_dfn, this.recipients, this.subject, this.message, this.expires, this.options,this.guest_token, function(path, data) {
             transfer.id = data.id;
 
             for (var i = 0; i < transfer.files.length; i++) {

@@ -596,7 +596,7 @@ class Transfer extends DBObject {
     /**
      * This function does stuffs when a transfer become available
      */
-    public function makeAvailable() {
+    public function makeAvailable($guestToken = false) {
         Logger::logActivity(LogEventTypes::UPLOAD_ENDED, $this);
         
         if(!count($this->files))
@@ -608,6 +608,22 @@ class Transfer extends DBObject {
         $this->status = TransferStatuses::AVAILABLE;
         $this->save();
         Logger::logActivity(LogEventTypes::TRANSFER_AVAILABLE, $this);
+        
+        if ($guestToken !== false){
+            // Sending mail to the guest voucher creator
+            try{
+                $guest = Guest::fromToken($guestToken);
+                if ($guest->hasOption(GuestOptions::EMAIL_UPLOAD_FROM_GUEST_COMPLETE)){
+                    // Send mail to guest the owner of the voucher
+                    $c = Lang::translateEmail('guest_upload_complete')->replace($guest);
+                    $mail = new ApplicationMail($c);
+                    $mail->to($guest->user_email);
+                    $mail->send();
+                }
+            }catch (GuestNotFoundException $e){
+                Logger::log(LogLevels::INFO, $e);
+            }
+        }
         
         Auth::user()->saveFrequentRecipients($this->recipients);
         
@@ -671,9 +687,24 @@ class Transfer extends DBObject {
     /*
      * Start transfer and log
      */
-    public function start() {
+    public function start($guestToken = false) {
         $this->status = TransferStatuses::STARTED;
         $this->save();
+        if (fromVoucher !== false){
+            // Check from voucher id which options are setted
+            try{
+                $guest = Guest::fromToken($guestToken);
+                if ($guest->hasOption(GuestOptions::EMAIL_UPLOAD_FROM_GUEST_START)){
+                    // Send mail to guest the owner of the voucher
+                    $c = Lang::translateEmail('guest_upload_start')->replace($guest);
+                    $mail = new ApplicationMail($c);
+                    $mail->to($guest->user_email);
+                    $mail->send();
+                }
+            }catch (GuestNotFoundException $e){
+                Logger::log(LogLevels::INFO, $e);
+            }
+        }
         Logger::logActivity(LogEventTypes::TRANSFER_STARTED, $this);
         Logger::info('Transfer#'.$this->id.' started');
     }

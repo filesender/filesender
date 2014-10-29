@@ -54,7 +54,7 @@
                             <?php } ?>
                         </select>
                         
-                        <?php } else echo $emails[0] ?>
+                        <?php } else echo $emails ?>
                     </div>
                     
                     <div class="fieldcontainer">
@@ -79,6 +79,7 @@
                     
                     <div>
                         <input type="hidden" name="s-token" id="s-token" value="<?php echo (isset($_SESSION['s-token'])) ? $_SESSION['s-token'] : ''; ?>"/>
+                        <input type="hidden" name="guest_token" id="s-token" value="<?php echo (isset($_REQUEST['vid'])) ? $_REQUEST['vid'] : ''; ?>"/>
                     </div>
                 </td>
                 
