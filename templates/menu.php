@@ -40,7 +40,7 @@ $pagemenuitem = function($page) use($current_page, $allowed_pages) {
                 $url = AuthSP::logoffURL();
                 if($url)
                     echo '<li><a href="'.$url.'" id="topmenu_logoff">'.Lang::tr('logoff').'</a></li>';
-            }else{
+            }else if (!Auth::isGuest()){
                 if(Config::get('auth_sp_embedded')) {
                     $menupage('logon');
                 }else{

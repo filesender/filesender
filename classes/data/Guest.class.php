@@ -115,6 +115,7 @@ class Guest extends DBObject {
     protected $subject = null;
     protected $message = null;
     protected $options = null;
+    protected $status = null;
     protected $created = 0;
     protected $expires = 0;
     protected $last_activity = 0;
@@ -242,6 +243,7 @@ class Guest extends DBObject {
      * Set guest as available, sends notifications
      */
     public function makeAvailable() {
+        $this->status = GuestStatuses::AVAILABLE;
         $this->save();
         
         Logger::logActivity(LogEventTypes::GUEST_CREATED, $this);
