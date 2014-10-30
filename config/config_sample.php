@@ -78,17 +78,17 @@
 // If you want to overide the SAML simplephp configuration defaults parameter,
 // uncoment and edit the following lines
 // 
-// // Authentification type ('saml')
+// // Authentification type ('saml' or 'shibboleth')
 // $config['auth_sp_type'] = 'saml';
 // 
-// // Get email attribute from authentification service
+// // Get email attribute from authentication service
 // $config['auth_sp_saml_email_attribute'] = 'mail';
 // 
-// // Get name attribute from authentification service
+// // Get name attribute from authentication service
 // $config['auth_sp_saml_name_attribute'] = 'cn';
 // 
-// // Get uid attribute from authentification service
-// $config['auth_sp_saml_uid_attribute'] = 'eduPersonTargetId';
+// // Get uid attribute from authentication service.  Usually eduPersonTargetedId or eduPersonPrincipalName
+// $config['auth_sp_saml_uid_attribute'] = 'eduPersonTargetedId';
 // 
-// // Get path  attribute from authentification service
-// $config['auth_sp_saml_authentification_source'] = 'default-sp';
+// // Get path  attribute from authentication service
+// $config['auth_sp_saml_authentication_source'] = 'default-sp';
