@@ -442,7 +442,7 @@ class DBObject {
         // Remove autoinc keys
         foreach(static::$dataMap as $field_name => $dfn)
             if(array_key_exists('autoinc', $dfn) && $dfn['autoinc'])
-                if(array_key_exists($field_name, $data) unset($data[$field_name]);
+                if(array_key_exists($field_name, $data)) unset($data[$field_name]);
         
         $values = array();
         foreach($data as $field_name => $value) $values[':'.$field_name] = $value;
