@@ -196,7 +196,7 @@ class AuditLog extends DBObject {
      * @return array of AuditLog
      */
     public static function fromTarget(DBObject $target, $event = null) {
-        $logs = self::all(self::FROM_TARGET, array('type' => $target->getClassName(), 'id' => $target->id));
+        $logs = self::all(self::FROM_TARGET, array('type' => $target->getClassName(), 'id' => (string)$target->id));
         
         if($event && LogEventTypes::isValidValue($event)) {
             $logs = array_filter($logs, function($log) use($event) {
@@ -215,7 +215,7 @@ class AuditLog extends DBObject {
      * @return array of AuditLog
      */
     public static function fromAuthor(DBObject $author, $event = null) {
-        $logs = self::all(self::FROM_AUTHOR, array('type' => $author->getClassName(), 'id' => $author->id));
+        $logs = self::all(self::FROM_AUTHOR, array('type' => $author->getClassName(), 'id' => (string)$author->id));
         
         if($event && LogEventTypes::isValidValue($event)) {
             $logs = array_filter($logs, function($log) use($event) {
@@ -240,14 +240,14 @@ class AuditLog extends DBObject {
         ) throw new TransferNotFoundException($transfer->id);
         
         // Get and delete all audit logs related to the transfer
-        $logs = array_values(self::all(self::FROM_TARGET, array('type' => $transfer->getClassName(), 'id' => $transfer->id)));
+        $logs = array_values(self::all(self::FROM_TARGET, array('type' => $transfer->getClassName(), 'id' => (string)$transfer->id)));
         
         foreach(self::all("target_type='File' AND target_id IN(".implode(',', array_map(function($file) {
-            return $file->id;
+            return "'".$file->id."'";
         }, $transfer->files)).')') as $log) $logs[] = $log;
         
         foreach(self::all("target_type='Recipient' AND target_id IN(".implode(',', array_map(function($recipient) {
-            return $recipient->id;
+            return "'".$recipient->id."'";
         }, $transfer->recipients)).')') as $log) $logs[] = $log;
         
         usort($logs, function($a, $b) {
