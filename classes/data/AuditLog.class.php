@@ -242,11 +242,11 @@ class AuditLog extends DBObject {
         // Get and delete all audit logs related to the transfer
         $logs = array_values(self::all(self::FROM_TARGET, array('type' => $transfer->getClassName(), 'id' => $transfer->id)));
         
-        foreach(self::all('target_type="File" AND target_id IN('.implode(',', array_map(function($file) {
+        foreach(self::all("target_type='File' AND target_id IN(".implode(',', array_map(function($file) {
             return $file->id;
         }, $transfer->files)).')') as $log) $logs[] = $log;
         
-        foreach(self::all('target_type="Recipient" AND target_id IN('.implode(',', array_map(function($recipient) {
+        foreach(self::all("target_type='Recipient' AND target_id IN(".implode(',', array_map(function($recipient) {
             return $recipient->id;
         }, $transfer->recipients)).')') as $log) $logs[] = $log;
         
