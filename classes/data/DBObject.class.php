@@ -258,8 +258,8 @@ class DBObject {
             if($this->id) {
                 $this->updateRecord($this->toDBData(), 'id');
             }else{
-                $this->insertRecord($this->toDBData());
-                $this->id = (int)DBI::lastInsertId();
+                $pks = $this->insertRecord($this->toDBData());
+                if(array_key_exists('id', $pks)) $this->id = (int)$pks['id'];
             }
         }
         
@@ -439,10 +439,22 @@ class DBObject {
     public static function insertRecord($data) {
         $table = static::getDBTable();
         
+        // Remove autoinc keys
+        foreach(static::$dataMap as $field_name => $dfn)
+            if(array_key_exists('autoinc', $dfn) && $dfn['autoinc'])
+                if(array_key_exists($field_name, $data) unset($data[$field_name]);
+        
         $values = array();
         foreach($data as $field_name => $value) $values[':'.$field_name] = $value;
         $s = DBI::prepare('INSERT INTO '.$table.'('.implode(', ', array_keys($data)).') VALUES(:'.implode(', :', array_keys($data)).')');
         $s->execute($values);
+        
+        $pks = array();
+        foreach(static::$dataMap as $field_name => $dfn)
+            if(array_key_exists('autoinc', $dfn) && $dfn['autoinc'])
+                $pks[$field_name] = DBI::lastInsertId($table.'_'.$field_name.'_seq');
+        
+        return $pks;
     }
     
     /**
