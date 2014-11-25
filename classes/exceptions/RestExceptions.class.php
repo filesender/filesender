@@ -66,6 +66,7 @@ class RestException extends DetailedException {
             $details,
             self::$context
         );
+        $this->code = $code;
     }
 }
 
