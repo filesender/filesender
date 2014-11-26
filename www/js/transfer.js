@@ -56,6 +56,7 @@ window.filesender.transfer = function() {
     this.pause_length = 0;
     this.file_index = 0;
     this.status = 'new';
+    this.legacy = {};
     this.onprogress = null;
     this.oncomplete = null;
     this.onerror = null;
@@ -82,7 +83,7 @@ window.filesender.transfer = function() {
      * 
      * @return mixed int file index or false if it was a duplicate or that there was an error
      */
-    this.addFile = function(file, errorhandler) {
+    this.addFile = function(file, errorhandler, source_node) {
         if (!errorhandler)
             errorhandler = filesender.ui.error;
 
@@ -118,7 +119,8 @@ window.filesender.transfer = function() {
             uploaded: 0,
             complete: false,
             name: blob.name,
-            mime_type: blob.type
+            mime_type: blob.type,
+            node: source_node
         };
 
         // Look for dup
@@ -129,13 +131,13 @@ window.filesender.transfer = function() {
             }
         }
 
-        if (this.files.length >= filesender.config.max_html5_uploads) {
-            errorhandler({message: 'max_html5_uploads_exceeded', details: {max: filesender.config.max_html5_uploads}});
+        if (this.files.length >= filesender.config.max_transfer_files) {
+            errorhandler({message: 'max_transfer_files_exceeded', details: {max: filesender.config.max_transfer_files}});
             return false;
         }
 
         if (!/^[^\\\/:;\*\?\"<>|]+(\.[^\\\/:;\*\?\"<>|]+)*$/.test(file.name)) {
-            errorhandler({message: 'invalid_file_name', details: {max: filesender.config.max_html5_uploads}});
+            errorhandler({message: 'invalid_file_name'});
             return false;
         }
 
@@ -155,8 +157,8 @@ window.filesender.transfer = function() {
             }
         }
 
-        if (this.size + file.size > filesender.config.max_html5_upload_size) {
-            errorhandler({message: 'max_html5_upload_size_exceeded', details: {size: file.size, max: filesender.config.max_html5_upload_size}});
+        if (this.size + file.size > filesender.config.max_transfer_size) {
+            errorhandler({message: 'max_transfer_size_exceeded', details: {size: file.size, max: filesender.config.max_transfer_size}});
             return false;
         }
 
@@ -184,16 +186,11 @@ window.filesender.transfer = function() {
      * 
      * @param int file index
      */
-    this.removeFile = function(name, size) {
+    this.removeFile = function(cid) {
         for (var i = 0; i < this.files.length; i++) {
-            if (this.files[i].name == name && this.files[i].size == size) {
+            if (this.files[i].cid == cid) {
                 this.files.splice(i, 1);
                 return;
-            }
-            var index = filesender.ui.files.invalidFiles.indexOf(name);
-            if (index !== -1) {
-                filesender.ui.files.invalidFiles.splice(index, 1);
-                filesender.ui.evalUploadEnabled();
             }
         }
     };
@@ -220,8 +217,8 @@ window.filesender.transfer = function() {
                 return false;
             }
 
-        if (this.recipients.length >= filesender.config.max_email_recipients) {
-            errorhandler({message: 'max_email_recipients_exceeded', details: {max: filesender.config.max_email_recipients}});
+        if (this.recipients.length >= filesender.config.max_transfer_recipients) {
+            errorhandler({message: 'max_transfer_recipients_exceeded', details: {max: filesender.config.max_transfer_recipients}});
             return false;
         }
 
@@ -313,12 +310,12 @@ window.filesender.transfer = function() {
         
         // Redo sanity checks
         
-        if (this.files.length >= filesender.config.max_html5_uploads) {
-            return errorhandler({message: 'max_html5_uploads_exceeded', details: {max: filesender.config.max_html5_uploads}});
+        if (this.files.length >= filesender.config.max_transfer_files) {
+            return errorhandler({message: 'max_transfer_files_exceeded', details: {max: filesender.config.max_transfer_files}});
         }
         
-        if (this.size > filesender.config.max_html5_upload_size) {
-            return errorhandler({message: 'max_html5_upload_size_exceeded', details: {size: file.size, max: filesender.config.max_html5_upload_size}});
+        if (this.size > filesender.config.max_transfer_size) {
+            return errorhandler({message: 'max_transfer_size_exceeded', details: {size: file.size, max: filesender.config.max_transfer_size}});
         }
         
         var today = Math.floor((new Date()).getTime() / (24 * 3600 * 1000));
@@ -367,13 +364,18 @@ window.filesender.transfer = function() {
                 if (!transfer.files[i].id)
                     return errorhandler({message: 'file_not_in_response', details: {file: transfer.files[i]}});
             }
-
-            // Start uploading chunks
-            if (filesender.config.terasender_enabled && filesender.supports.workers) {
-                filesender.terasender.start(transfer);
+            
+            if(filesender.supports.reader) {
+                // Start uploading chunks
+                if (filesender.config.terasender_enabled && filesender.supports.workers) {
+                    filesender.terasender.start(transfer);
+                } else {
+                    // Chunk by chunk upload
+                    transfer.uploadChunk();
+                }
             } else {
-                // Chunk by chunk upload
-                transfer.uploadChunk();
+                // Legacy upload
+                transfer.uploadWhole();
             }
         }, function(error) {
             transfer.reportError(error);
@@ -396,9 +398,9 @@ window.filesender.transfer = function() {
     };
 
     /**
-     * Restart upload
+     * Resume upload
      */
-    this.restart = function() {
+    this.resume = function() {
         if (this.status != 'paused')
             return;
 
@@ -415,10 +417,10 @@ window.filesender.transfer = function() {
      */
     this.stop = function(callback) {
         this.status = 'stopped';
-
+        
         if (filesender.config.terasender_enabled && filesender.supports.workers)
             filesender.terasender.stop();
-
+        
         var transfer = this;
         window.setTimeout(function() { // Small delay to let workers stop
             filesender.client.deleteTransfer(transfer, callback);
@@ -470,5 +472,86 @@ window.filesender.transfer = function() {
         }, function(error) {
             transfer.reportError(error);
         });
+    };
+
+    /**
+     * Legacy whole file upload
+     */
+    this.uploadWhole = function() {
+        if (this.status == 'stopped')
+            return;
+
+        if(this.file_index >= this.files.length) { // Done
+            this.reportComplete();
+            return;
+        }
+        
+        var file = this.files[this.file_index];
+        this.file_index++;
+        
+        var transfer = this;
+        
+        if(typeof this.tracking == 'undefined') {
+            var keyfield = $(':input[data-role="legacy_upload_tracking_key"]');
+            if(keyfield.length) {
+                transfer.tracking = {key: keyfield.val(), field: keyfield, file: null, timer: null};
+                
+                transfer.tracking.timer = window.setInterval(function() {
+                    if(!transfer.tracking.file) return;
+                    if(transfer.tracking.file.uploaded >= transfer.tracking.file.size) return;
+                    
+                    filesender.client.getLegacyUploadProgress(
+                        transfer.tracking.key,
+                        function(data) {
+                            console.log('Got progress info : ' + JSON.stringify(data));
+                            if(!data) { // Tracking does not work or upload ended for file
+                                console.log('No upload progress info');
+                                return;
+                            }
+                            
+                            transfer.tracking.file.uploaded = data.bytes_processed;
+                            transfer.reportProgress(transfer.tracking.file, transfer.tracking.file.uploaded >= transfer.tracking.file.size);
+                        },
+                        function() { // Error, tracking does not work
+                            console.log('Upload progress fetching failed', arguments);
+                        });
+                }, filesender.config.legacy_upload_progress_refresh_period * 1000);
+            } else transfer.tracking = null;
+        }
+        
+        if(transfer.tracking) transfer.tracking.file = file;
+        
+        if(!this.legacy.iframe) {
+            this.legacy.uid = 'transfer_' + transfer.id + '_' + (new Date()).getTime();
+            this.legacy.iframe = $('<iframe name="' + this.legacy.uid + '"/>').appendTo($('<div id="legacy_uploader" />').appendTo('body'));
+            window.legacyUploadResultHandler = function(data) {
+                console.log('Upload frame done : ' + JSON.stringify(data));
+                if(data.message && data.uid) { // Seems to be an error
+                    filesender.ui.error(data);
+                    return;
+                }
+                
+                transfer.tracking.file.uploaded = transfer.tracking.file.size;
+                transfer.reportProgress(transfer.tracking.file, true);
+                transfer.uploadWhole();
+            };
+        }
+        
+        if(this.legacy.form) this.legacy.form.remove();
+        
+        var url = filesender.config.legacy_upload_endpoint.replace(/\{file_id\}/g, file.id);
+        if(filesender.config.chunk_upload_security == 'key') url = url.replace(/\{key\}/g, file.uid);
+        
+        url += (url.match(/\?/) ? '&' : '?') + 'iframe_callback=legacyUploadResultHandler';
+        
+        this.legacy.form = $('<form method="post" enctype="multipart/form-data" />').attr({
+            action: url,
+            target: this.legacy.uid
+        }).appendTo(this.legacy.iframe.parent());
+        
+        if(transfer.tracking) transfer.tracking.field.clone().appendTo(this.legacy.form); // MUST be before file element
+        $(file.node).clone().attr({name: 'file'}).appendTo(this.legacy.form);
+        
+        this.legacy.form.submit();
     };
 };
