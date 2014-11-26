@@ -476,7 +476,7 @@ $(function() {
 
         if(typeof this.files == 'undefined') return;
         
-        filesender.ui.files.add(this.files, this);
+        filesender.ui.files.add(this.files);
     });
     
     filesender.ui.recipients.autocomplete();
