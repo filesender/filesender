@@ -103,7 +103,7 @@ class RestEndpointFile extends RestEndpoint {
     public function post($id = null, $mode = null) {
         if(!$id) throw new RestMissingParameterException('file_id');
         if(!is_numeric($id)) throw new RestBadParameterException('file_id');
-        if(!in_array($mode, array('chunk', 'whole'))) throw new RestBadParameterException('mode');
+        if(!in_array($mode, array('whole'))) throw new RestBadParameterException('mode');
         
         $security = Config::get('chunk_upload_security');
         if(Auth::isAuthenticated()) {
@@ -126,22 +126,28 @@ class RestEndpointFile extends RestEndpoint {
         
         $data = $this->request->input;
         
-        if($mode == 'chunk') {
-            $write_info = $file->writeChunk($data); // No offset => append at end of file
-            $file->transfer->isUploading();
-            
-            return array(
-                'path' => '/file/'.$file->id.'/chunk/'.$write_info['offset'],
-                'data' => $write_info
-            );
-            
-        }else if($mode == 'whole') {
+        if($mode == 'whole') {
             // Process uploaded file, split into chunks and push to storage
+            if(!array_key_exists('file', $_FILES)) throw new RestBadParameterException('file');
             
-            // Check hash
+            $input = $_FILES['file'];
+            
+            // Check size
+            if((int)$input['size'] != $file->size)
+                throw new RestException('file_size_does_not_match', 400);
             
             // Check if all files from transfer are done, send notifications if so
+            $chunk_size = Config::get('upload_chunk_size');
+            if($fh = fopen($input['tmp_name'], 'rb')) {
+                for($offset=0; $offset<=$file->size; $offset+=$chunk_size) {
+                    $data = fread($fh, $chunk_size);
+                    $file->writeChunk($data, $offset);
+                }
+                
+                fclose($fh);
+            } else throw new RestException('cannot_open_input_file', 500);
             
+            unlink($input['tmp_name']);
         }
         
         return array(
@@ -191,8 +197,13 @@ class RestEndpointFile extends RestEndpoint {
                 throw new RestOwnershipRequiredException($user->id, 'file = '.$file->id);
         }
         
+        // TODO get X-Chunk-Length header and check against actual received length
+        
         $data = $this->request->input;
         if($mode == 'chunk') {
+            if($offset + strlen($data) > $file->size)
+                throw new FileChunkOutOfBoundsException($offset, strlen($data), $file->size);
+            
             $write_info = $file->writeChunk($data, $offset);
             $file->transfer->isUploading();
             
