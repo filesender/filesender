@@ -188,6 +188,12 @@ class RestServer {
                 exit;
             }
             
+            if(array_key_exists('iframe_callback', $_GET)) {
+                header('Content-Type: text/html');
+                echo '<html><body><script type="text/javascript">window.parent.'.$_GET['iframe_callback'].'('.json_encode($data).');</script></body></html>';
+                exit;
+            }
+            
             header('Content-Type: application/json');
             if(($method == 'post') && $data) {
                 RestUtilities::sendResponseCode(201);
