@@ -68,6 +68,21 @@ class TransferBadStatusException extends DetailedException {
 }
 
 /**
+ * Missing too many recipients exception
+ */
+class TransferTooManyRecipientsException extends DetailedException {
+    /**
+     * Constructor
+     * 
+     * @param int $wanted
+     * @param int $max
+     */
+    public function __construct($wanted, $max) {
+        parent::__construct('transfer_too_many_recipients', 'wanted='.$wanted.' max='.$max);
+    }
+}
+
+/**
  * Missing recipients exception
  */
 class TransferNoRecipientsException extends DetailedException {
@@ -80,6 +95,21 @@ class TransferNoRecipientsException extends DetailedException {
 }
 
 /**
+ * Missing too many files exception
+ */
+class TransferTooManyFilesException extends DetailedException {
+    /**
+     * Constructor
+     * 
+     * @param int $wanted
+     * @param int $max
+     */
+    public function __construct($wanted, $max) {
+        parent::__construct('transfer_too_many_files', 'wanted='.$wanted.' max='.$max);
+    }
+}
+
+/**
  * Missing files exception
  */
 class TransferNoFilesException extends DetailedException {
@@ -88,6 +118,21 @@ class TransferNoFilesException extends DetailedException {
      */
     public function __construct() {
         parent::__construct('transfer_no_files');
+    }
+}
+
+/**
+ * Maximum size exeeded exception
+ */
+class TransferMaximumSizeExceededException extends DetailedException {
+    /**
+     * Constructor
+     * 
+     * @param int $size
+     * @param int $max
+     */
+    public function __construct($size, $max) {
+        parent::__construct('transfer_maximum_size_exceeded', 'size='.$wanted.' max='.$max);
     }
 }
 
