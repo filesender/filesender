@@ -369,7 +369,9 @@ class Guest extends DBObject {
         ))) return $this->$property;
         
         if($property == 'user' || $property == 'owner') {
-            return User::fromId($this->user_id);
+            $user = User::fromId($this->user_id);
+            $user->email_addresses = $this->user_email;
+            return $user;
         }
         
         if($property == 'transfers') {

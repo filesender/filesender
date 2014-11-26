@@ -420,7 +420,9 @@ class Transfer extends DBObject {
         ))) return $this->$property;
         
         if($property == 'user' || $property == 'owner') {
-            return User::fromId($this->user_id);
+            $user = User::fromId($this->user_id);
+            $user->email_addresses = $this->user_email;
+            return $user;
         }
         
         if($property == 'guest') {
@@ -647,7 +649,7 @@ class Transfer extends DBObject {
         }
         
         Logger::logActivity(LogEventTypes::TRANSFER_SENT, $this,Auth::isGuest()?AuthGuest::getGuest():null);
-        Logger::info('Transfer#'.$this->id.' made available'.Auth::isGuest()?' by guest: '.AuthGuest::getGuest()->email:'');
+        Logger::info('Transfer#'.$this->id.' made available'.(Auth::isGuest() ? ' by guest: '.AuthGuest::getGuest()->email : ''));
     }
     
     
@@ -707,7 +709,7 @@ class Transfer extends DBObject {
             }
         }
         Logger::logActivity(LogEventTypes::TRANSFER_STARTED, $this,Auth::isGuest()?AuthGuest::getGuest():null);
-        Logger::info('Transfer#'.$this->id.' started'.Auth::isGuest()?' by guest: '.AuthGuest::getGuest()->email:'');
+        Logger::info('Transfer#'.$this->id.' started'.(Auth::isGuest() ? ' by guest: '.AuthGuest::getGuest()->email : ''));
     }
     
     /**
