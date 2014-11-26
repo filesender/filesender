@@ -380,4 +380,8 @@ window.filesender.client = {
     getTransferAuditlogByEmail: function(id, callback) {
         this.get('/transfer/' + id + '/auditlog/mail', callback);
     },
+    
+    getLegacyUploadProgress: function(key, callback, error) {
+        this.get('/legacyuploadprogress/' + key, callback, {error: error});
+    },
 };
