@@ -58,11 +58,13 @@ $default = array(
     'ban_extension' => 'exe,bat',
     'max_email_recipients' => 50,
     
+    'max_transfer_size' => 107374182400,
+    'max_transfer_recipients' => 50,
+    'max_transfer_files' => 30,
     'max_legacy_upload_size' => 2147483648,
-    'max_html5_upload_size' => 107374182400,
+    'legacy_upload_progress_refresh_period' => 5,
     'upload_chunk_size' => 2000000,
     'download_chunk_size' => 5242880,
-    'max_files_per_transfer' => 30,
     
     'terasender_enabled' => true,
     'terasender_start_mode' => 'multiple',
