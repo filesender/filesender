@@ -115,6 +115,71 @@ $(function() {
                 });
                 
                 if(table.is('[data-mode="user"]')) {
+                    // Add recipient(s)
+                    $('<span class="add_recipient clickable fa fa-lg fa-envelope-o" />').appendTo(container).attr({
+                        title: lang.tr('add_recipient')
+                    }).on('click', function() {
+                        var id = $(this).closest('tr').attr('data-id');
+                        if(!id || isNaN(id)) return;
+                        
+                        var recipients = [];
+                        table.find('.transfer_details[data-id="' + id + '"] .recipients .recipient').each(function() {
+                            recipients.push($(this).attr('data-email'));
+                        });
+                        
+                        var prompt = filesender.ui.prompt(lang.tr('enter_to_email'), function() {
+                            var input = $(this).find('input');
+                            $('p.error', this).remove();
+                            
+                            var raw_emails = input.val().split(/[,;]/);
+                            
+                            var emails = [];
+                            var errors = [];
+                            
+                            for(var i=0; i<raw_emails.length; i++) {
+                                var email = raw_emails[i].replace(/^\s+/, '').replace(/\s+$/, '');
+                                if(!email) continue;
+                                
+                                if(!email.match(filesender.ui.validators.email)) {
+                                    errors.push(lang.tr('invalid_recipient').r({email: email}));
+                                    continue;
+                                }
+                                
+                                for(var j=0; j<recipients.length; j++) {
+                                    if(recipients[j] == email) {
+                                        errors.push(lang.tr('duplicate_recipient').r({email: email}));
+                                        continue;
+                                    }
+                                }
+                                
+                                for(var j=0; j<emails.length; j++) {
+                                    if(emails[j] == email) {
+                                        errors.push(lang.tr('duplicate_recipient').r({email: email}));
+                                        continue;
+                                    }
+                                }
+
+                                emails.push(email);
+                            }
+                            
+                            if(recipients.length + emails.length >= filesender.config.max_email_recipients)
+                                errors.push(lang.tr('max_email_recipients_exceeded').r({max: filesender.config.max_email_recipients}));
+                            
+                            if(errors.length) {
+                                for(var i=0; i<errors.length; i++)
+                                    $('<p class="error message" />').text(errors[i].out()).appendTo(this);
+                                return false;
+                            }
+                            
+                            alert(emails.join(', '));
+                            
+                            return true;
+                        })
+                        
+                        prompt.append('<p>' + lang.tr('email_separator_msg') + '</p>');
+                        prompt.append($('<input type="text" />'));
+                    });
+                    
                     // Send reminder button
                     $('<span class="remind clickable fa fa-lg fa-repeat" />').appendTo(container).attr({
                         title: lang.tr('send_reminder')
