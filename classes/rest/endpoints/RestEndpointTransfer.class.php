@@ -228,8 +228,26 @@ class RestEndpointTransfer extends RestEndpoint {
             if(!count($data->files))
                 throw new TransferNoFilesException();
             
+            $maxfiles = Config::get('max_transfer_files');
+            if($maxfiles && count($data->files) > $maxfiles)
+                throw new TransferTooManyFilesException(count($data->files), $maxfiles);
+            
             if(!count($data->recipients))
                 throw new TransferNoFilesException();
+            
+            $maxrecipients = Config::get('max_transfer_recipients');
+            if($maxrecipients && count($data->recipients) > $maxrecipients)
+                throw new TransferTooManyRecipientsException(count($data->recipients), $maxrecipients);
+            
+            $size = array_sum(array_map(function($f) {
+                return (int)$f->size;
+            }, $data->files));
+            
+            $maxsize = Config::get('max_transfer_size');
+            if($maxsize && $size > $maxsize)
+                throw new TransferMaximumSizeExceededException($size, $maxsize);
+            
+            // TODO check size against available space
             
             $transfer = Transfer::create($data->expires, $data->from);
             
@@ -243,10 +261,6 @@ class RestEndpointTransfer extends RestEndpoint {
             $banExtensions = Config::get('ban_extension');
             if(!is_null($banExtensions) && !is_array($banExtensions)) $banExtensions = array_map('trim', explode(',', $banExtensions));
             
-            $cptFiles = 0;
-            // TODO limit file count
-            // TODO limit size
-            // TODO check size against available space
             $files_cids = array();
             foreach($data->files as $filedata) {
                 $ext = pathinfo($filedata->name, PATHINFO_EXTENSION);
