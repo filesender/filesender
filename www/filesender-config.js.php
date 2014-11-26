@@ -49,14 +49,13 @@ window.filesender.config = {
     
     upload_display_bits_per_sec: <?php echo Config::get('upload_display_bits_per_sec') ? 'true' : 'false' ?>,
     
-    max_flash_upload_size: <?php echo Config::get('max_legacy_upload_size') ?>,
-    
-    max_html5_upload_size: <?php echo Config::get('max_html5_upload_size') ?>,
-    max_html5_uploads: <?php echo Config::get('max_files_per_transfer') ?>,
+    max_transfer_size: <?php echo Config::get('max_transfer_size') ?>,
+    max_transfer_files: <?php echo Config::get('max_transfer_files') ?>,
     
     ban_extension: <?php echo is_string($banned) ? "'".$banned."'" : 'null' ?>,
     
-    max_email_recipients: <?php echo Config::get('max_email_recipients') ?>,
+    max_transfer_recipients: <?php echo Config::get('max_transfer_recipients') ?>,
+    max_email_recipients: <?php echo Config::get('max_email_recipients') ?>, // TODO get rid of that
     
     default_days_valid: <?php echo Config::get('default_days_valid') ?>,
     
@@ -68,7 +67,11 @@ window.filesender.config = {
     terasender_worker_count: <?php echo Config::get('terasender_worker_count') != null ? Config::get('terasender_worker_count') : 1 ?>,
     terasender_start_mode: '<?php echo Config::get('terasender_start_mode') ?>',
     terasender_worker_file: 'lib/terasender/terasender_worker.js', // Worker script file
-    terasender_upload_endpoint: '<?php echo Config::get('site_url') ?>rest.php/file/{file_id}/chunk/{offset}<?php (Config::get('chunk_upload_security') == 'key') ? '?key={key}' : '' ?>',
+    terasender_upload_endpoint: '<?php echo Config::get('site_url') ?>rest.php/file/{file_id}/chunk/{offset}<?php echo (Config::get('chunk_upload_security') == 'key') ? '?key={key}' : '' ?>',
+    
+    max_legacy_upload_size: <?php echo Config::get('max_legacy_upload_size') ?>,
+    legacy_upload_endpoint: '<?php echo Config::get('site_url') ?>rest.php/file/{file_id}/whole<?php echo (Config::get('chunk_upload_security') == 'key') ? '?key={key}' : '' ?>',
+    legacy_upload_progress_refresh_period: <?php echo Config::get('legacy_upload_progress_refresh_period') ?>,
     
     base_path: '<?php echo GUI::path() ?>',
     support_email: '<?php echo Config::get('support_email') ?>',
