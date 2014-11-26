@@ -43,24 +43,6 @@ class Autoloader {
         'PropertyAccessException' => 'exceptions/DBObjectExceptions',
         '*Exception' => 'exceptions/@package(Exception)',
         
-        'Logger' => 'utils/',
-        'Report' => 'utils/',
-        'Config' => 'utils/',
-        'DBI' => 'utils/',
-        'Utilities' => 'utils/',
-        'Lang' => 'utils/',
-        'Template' => 'utils/',
-        'GUI' => 'utils/',
-        'Database*' => 'utils/',
-        'ApplicationMail' => 'utils/',
-        'SystemMail' => 'utils/',
-        'Mime' => 'utils/',
-        'Mail' => 'utils/',
-        'Enum' => 'utils/',
-        'Disclosed' => 'utils/',
-        'Version' => 'utils/',
-        'Zipper' => 'utils/',
-        
         // CONSTANTS
         '*Types' => 'constants/',
         '*Options' => 'constants/',
@@ -90,7 +72,7 @@ class Autoloader {
         'RestEndpoint*' => 'rest/endpoints/',
         'Rest*' => 'rest/',
         
-        '*' => ''
+        '*' => 'utils/'
     );
     
     /**
