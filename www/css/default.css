@@ -376,25 +376,25 @@ table.list .date {
 
 /* Upload page */
 
-#creation_form input[type="checkbox"] {
+#upload_form input[type="checkbox"] {
     float: left;
     width: 1.2em;
     margin: 0 1em 0 0;
 }
 
-#creation_form .file_selector {
+#upload_form .file_selector {
     display: none;
     margin-bottom: 0.5em;
 }
 
-#creation_form .files {
+#upload_form .files {
     width: 100%;
     margin-bottom: 0.5em;
     max-height: 20em;
     overflow-y: scroll;
 }
 
-#creation_form .files .file {
+#upload_form .files .file {
     position: relative;
     margin: 0.2em;
     padding: 0.5em;
@@ -406,19 +406,19 @@ table.list .date {
     height: 1.8em;
 }
 
-#creation_form .files .file .info {
+#upload_form .files .file .info {
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
     font-weight: bold;
 }
 
-#creation_form .files .file .remove {
+#upload_form .files .file .remove {
     float: right;
     line-height: 1.3333em;
 }
 
-#creation_form .files .file .progressbar {
+#upload_form .files .file .progressbar {
     position: relative;
     display: none;
     float: right;
@@ -427,14 +427,18 @@ table.list .date {
     height: 1.3333em;
 }
 
-#creation_form .files .file .progressbar .progress-label {
+#upload_form .files .file .progressbar .progress-label {
     position: absolute;
     left: 35%;
     top: -0.2em;
     font-size: 0.9em;
 }
 
-#creation_form .files_dragdrop {
+#upload_form .files .file input {
+    display: none;
+}
+
+#upload_form .files_dragdrop {
     border: 1px dashed #666;
     border-radius: 0.5em;
     -moz-border-radius: 0.5em;
@@ -443,7 +447,7 @@ table.list .date {
     font-weight: bold;
 }
 
-#creation_form .files_dragdrop .instructions {
+#upload_form .files_dragdrop .instructions {
     font-size: 1.2em;
     color: #666;
     font-weight: bold;
@@ -453,50 +457,50 @@ table.list .date {
     text-align: center;
 }
 
-#creation_form .files_actions {
+#upload_form .files_actions {
     display: table;
     width: 100%;
     margin: 0.25em 1em 0 0;
 }
 
-#creation_form .files_actions div {
+#upload_form .files_actions div {
     display: table-cell;
     width: 33%;
 }
 
-#creation_form .files_actions div a {
+#upload_form .files_actions div a {
     width: 45%;
 }
 
-#creation_form .files_actions div+div {
+#upload_form .files_actions div+div {
     text-align: center;
 }
 
-#creation_form .files_actions .stats div {
+#upload_form .files_actions .stats div {
     text-align: right;
     font-size: 0.8em;
     vertical-align: middle;
     width: 100%;
 }
 
-#creation_form .files_actions .stats .number_of_files,
-#creation_form .files_actions .stats .size,
-#creation_form .files_actions .stats .uploaded,
-#creation_form .files_actions .stats .average_speed {
+#upload_form .files_actions .stats .number_of_files,
+#upload_form .files_actions .stats .size,
+#upload_form .files_actions .stats .uploaded,
+#upload_form .files_actions .stats .average_speed {
     display: none;
 }
 
-#creation_form .two_columns {
+#upload_form .two_columns {
     width: 100.7%;
     margin: 0 -0.75em 0.5em -0.25em;
 }
 
-#creation_form .recipients {
+#upload_form .recipients {
     display: none;
     padding: 0.5em 0;
 }
 
-#creation_form .recipients .recipient {
+#upload_form .recipients .recipient {
     margin: 0.2em;
     padding: 0.5em;
     border: 1px solid #ccc;
@@ -505,48 +509,52 @@ table.list .date {
     background-color: #dedede;
 }
 
-#creation_form .recipients .recipient .remove {
+#upload_form .recipients .recipient .remove {
     float: right;
 }
 
-#creation_form textarea[name="message"] {
+#upload_form textarea[name="message"] {
     width: 100%;
     resize: vertical;
 }
 
-#creation_form .advanced_options {
+#upload_form .advanced_options {
     display: none;
 }
 
-#creation_form .aup {
+#upload_form .aup {
     padding: 1em;
 }
 
-#creation_form .aup label {
+#upload_form .aup label {
     font-weight: bold;
 }
 
-#creation_form .aup label span {
+#upload_form .aup label span {
     color: #666;
 }
 
-#creation_form .aup .terms {
+#upload_form .aup .terms {
     display: none;
     margin-top: 0.5em;
     padding: 0.5em;
 }
 
-#creation_form .buttons {
+#upload_form .buttons {
     margin: 1em auto;
 }
 
-#creation_form .buttons a {
+#upload_form .buttons a {
     padding: 1em;
     font-size: 1.5em;
 }
 
-#creation_form .buttons a span.fa {
+#upload_form .buttons a span.fa {
     font-size: 2em;
+}
+
+#legacy_uploader {
+    display: none;
 }
 
 
@@ -604,6 +612,11 @@ table.transfers .transfer_details .files .file .fa.clickable {
     margin: 0 0.15em;
 }
 
+
+/* Transfer page */
+#transfer_addrecipient {
+    display: none;
+}
 
 /* Guests page */
 
