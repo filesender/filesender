@@ -13,4 +13,4 @@ window.filesender.supports.localStorage = typeof(localStorage) !== 'undefined';
 
 window.filesender.supports.workers = typeof(Worker) !== 'undefined';
 
-window.filesender.supports.digest = typeof(FileReader) !== 'undefined';
+window.filesender.supports.reader = typeof(FileReader) !== 'undefined';
