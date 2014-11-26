@@ -116,7 +116,7 @@
                     <h2>{tr:recipients}</h2>
                     
                     <?php foreach($transfer->recipients as $recipient) { ?>
-                        <div class="recipient" data-id="<?php echo $recipient->id ?>">
+                        <div class="recipient" data-id="<?php echo $recipient->id ?>" data-email="<?php echo Utilities::sanitizeOutput($recipient->email) ?>">
                             <?php echo Utilities::sanitizeOutput($recipient->email) ?> : <?php echo count($recipient->downloads) ?> {tr:downloads}
                         </div>
                     <?php } ?>
