@@ -67,7 +67,6 @@ class FileExtensionNotAllowedException extends LoggingException {
     }
 }
 
-
 /**
  * Unknown file exception
  */
@@ -81,6 +80,25 @@ class FileBadHashException extends LoggingException {
         parent::__construct(
             'file_bad_hash', // Message to give to the user
             $hash // Real message to log
+        );
+    }
+}
+
+/**
+ * Chunk out of bounds exception
+ */
+class FileChunkOutOfBoundsException extends LoggingException {
+    /**
+     * Constructor
+     * 
+     * @param int $offset
+     * @param int $length
+     * @param int $max
+     */
+    public function __construct($offset, $length, $max) {
+        parent::__construct(
+            'file_chunk_out_of_bounds',
+            'offset='.$offset.' length='.$length.' max='.$max
         );
     }
 }
