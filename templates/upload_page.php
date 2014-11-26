@@ -1,16 +1,17 @@
-
 <div class="box">
     <h1>{tr:upload_page}</h1>
     
-    <form id="creation_form" enctype="multipart/form-data" accept-charset="utf-8" method="post" action="{path:basic_upload.php}">
+    <form id="upload_form" enctype="multipart/form-data" accept-charset="utf-8" method="post">
         <div class="box">
+            <div class="files"></div>
+            
             <div class="file_selector">
                 <label for="files" class="mandatory">{tr:select_file} :</label>
                 
                 <input name="files" type="file" multiple />
+                
+                <?php echo LegacyUploadProgress::getTrackingInput() ?>
             </div>
-            
-            <div class="files"></div>
             
             <div class="files_dragdrop">
                 <div class="instructions">{tr:drag_and_drop}</div>
@@ -167,8 +168,8 @@
             <a href="#" class="pause not_displayed">
                 <span class="fa fa-pause fa-lg"></span> {tr:pause}
             </a>
-            <a href="#" class="restart not_displayed">
-                <span class="fa fa-play fa-lg"></span> {tr:restart}
+            <a href="#" class="resume not_displayed">
+                <span class="fa fa-play fa-lg"></span> {tr:resume}
             </a>
             <a href="#" class="stop not_displayed">
                 <span class="fa fa-stop fa-lg"></span> {tr:stop}
