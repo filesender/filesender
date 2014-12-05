@@ -204,6 +204,7 @@ var startTime = 0;
 		if(result == "err_invalidfilename") { $("#file_msg").show();} // invalid filename
 		if(result == "err_invalidextension") { $("#extension_msg").show();} //  invalid extension
 		if(result == "err_nodiskspace") { errorDialog(errmsg_disk_space);} // not enough disk space on server
+		if(result == "err_cryptonotsupported") { errorDialog(errmsg_crypto_not_supported);}
 		})
 		$("#uploadbutton a").attr("onclick", "validate()"); // re-activate upload button
 		}

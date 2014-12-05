@@ -52,6 +52,7 @@ $filedata = $functions->getVoucherData($vid);
 <script type="text/javascript">
 //<![CDATA[
 // Variables needed for crypto
+var encryptSupported = <?php echo booleanString($config['crypto_enabled'])?>;
 var chunksize =  2000000;
 var passwordprompt = "<?php echo lang("_ENCRYPT_PASSWDPROMPT"); ?>";
 var encrypted = <?php echo $filedata["fileencryption"]?'true':'false';?>;
@@ -61,7 +62,15 @@ var isSafari = Object.prototype.toString.call(window.HTMLElement).indexOf('Const
 $(document).ready(function() { 
 	$("#message").hide();
 
-	if ((!html5 || isSafari) && encrypted) {
+	if (!encryptSupported && encrypted) {
+		document.getElementById('download').onclick = null;
+		document.getElementById('download').removeAttribute('href');
+		$("#download").off('click');
+		$('#download').button("disable");
+		$("#fileencryption").attr("class", "validation_msg");
+		$("#fileencryption").css({"font-size": "12px"});
+		$("#fileencryption").text('<?php echo lang("_YES")." (".lang("_ENCRYPT_DOWNLOAD_NOT_SUPPORTED").")" ?>');
+	} else if ((!html5 || isSafari) && encrypted) {
 		$("#download a").attr("onclick", "");
 		$('#download').button("disable");
 		$("#fileencryption").attr("class", "validation_msg");

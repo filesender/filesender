@@ -108,6 +108,7 @@
 	var previousBytesLoaded = 0;
 	var intervalTimer = 0;
 	var errmsg_disk_space = "<?php echo lang($lang["_DISK_SPACE_ERROR"]); ?>";
+	var errmsg_crypto_not_supported = "<?php echo lang($lang["_CRYPTO_NOT_SUPPORTED_ERROR"]); ?>";
 	var filedata=new Array(); 
 	var nameLang = '<?php echo lang("_FILE_NAME"); ?>'
 	var sizeLang = '<?php echo lang("_SIZE"); ?>'
@@ -116,8 +117,9 @@
 
 	var txtclose = "<?php echo lang("_CLOSE"); ?>";
 	var txtok = "<?php echo lang("_OK"); ?>";
-	
-	var encryptFile = <?php echo booleanString($config['crypto_default_enabled'])?>; // Configurable default ??
+
+	var encryptSupported = <?php echo booleanString($config['crypto_enabled'])?>;
+	var encryptFile = encryptSupported && <?php echo booleanString($config['crypto_default_enabled'])?>;
 	var passwordprompt = "<?php echo lang("_ENCRYPT_PASSWDPROMPT"); ?>";
 	var passwordnote = "<?php echo lang("_ENCRYPT_PASSWORD_NOTE"); ?>";
 	var missingpassword = "<?php echo lang("_MISSING_PASSWORD"); ?>";
@@ -127,9 +129,11 @@
 	$(function() { 
 
 		// Hide encryption row for non-capable browsers
-		if (!html5) {
+		if ((!html5) || (!encryptSupported)) {
 			$("#encryptionrow").hide(); 
 		}
+		// Intialize crypto checkbox default value
+		$("#fileencryption").prop("checked", encryptFile);
 
 		// set date picker
 		$("#datepicker" ).datepicker({ minDate: new Date(minimumDate), maxDate: new Date(maximumDate),altField: "#fileexpirydate", altFormat: "d-m-yy" });
@@ -371,6 +375,7 @@
 		if(result == "err_invalidfilename") { $("#file_msg").show();} //  invalid filename
 		if(result == "err_invalidextension") { $("#extension_msg").show();} //  invalid extension
 		if(result == "err_nodiskspace") { errorDialog(errmsg_disk_space);}
+		if(result == "err_cryptonotsupported") { errorDialog(errmsg_crypto_not_supported);}
 		})
 		$("#uploadbutton a").attr("onclick", "validate()"); // re-activate upload button
 		}
@@ -414,10 +419,20 @@
 	if(aup == '1' && !validate_aup() ){validate = false;};		// check AUP is selected
 	//}
 	if(!validate_expiry() ){validate = false;};		// check date
-	
+	if(!validate_crypto()) {
+		console.log("validate_crypto() failed."); 
+		validate = false;
+	}
 	return validate;
 	}
 
+	// Validate whether crypto is supported when it is enabled
+	function validate_crypto() {
+		if (encryptSupported) return true;
+		if ($('#fileencryption').prop('checked')) return false;	// can not be true when not supported
+		return true;
+	}
+	
 
 //Validate AUP
 function validate_aup()
@@ -777,7 +792,7 @@ if ( hasProductInstall && !hasRequestedVersion ) {
       </tr>
       <tr id="encryptionrow">
         <td class=""></td>
-        <td><input onclick="toggleENC()" name="fileencryption" style="width:20px;" type="checkbox" id="fileencryption" value="1" <?php echo ($config["crypto_default_enabled"] ) ? 'checked="checked"' : ""; ?> /></td>
+        <td><input onclick="toggleENC()" name="fileencryption" style="width:20px;" type="checkbox" id="fileencryption" value="1" <?php echo ($config['crypto_enabled'] && $config['crypto_default_enabled']?' checked="checked"':''); ?>/></td>
         <td><?php echo lang("_ENCRYPT_FILE"); ?></td>
         <td colspan="2" align="center" valign="top">&nbsp;</td>
       </tr>

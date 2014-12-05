@@ -110,6 +110,7 @@ $lang["_ERROR_INCORRECT_FILE_SIZE"] = "Er is een probleem opgetreden bij het upl
 $lang["_MAXEMAILS"] = "Het maximum aantal toegestane e-mailadressen is ";
 $lang["_INVALID_DATE_FORMAT"] = "De datum is in een ongeldig formaat.";
 $lang["_DISK_SPACE_ERROR"] = "Er is niet genoeg vrije ruimte op deze service. Neemt u s.v.p. contact op met de beheerder of upload een kleiner bestand.";
+$lang["_CRYPTO_NOT_SUPPORTED_ERROR"] = "Encryptie wordt niet ondersteund.";
 $lang["_ERROR_ATTRIBUTES"] = "Uw Identity Provider levert niet de benodigde attributen. Neemt u s.v.p. contact op met uw lokale IT-afdeling";
 $lang["_PERMISSION_DENIED"] = "U heeft geen rechten om dit te doen.";
 
@@ -282,6 +283,7 @@ $lang["_DECRYPT_FILE"] = "Ontsleutel dit bestand";
 $lang["_DECRYPT_PASSWDPROMPT"] = "Voer het wachtwoord in";
 $lang["_FILE_IS_ENCRYPTED"] = "Dit bestand is versleuteld";
 $lang["_ENCRYPT_DOWNLOAD_NOT_POSSIBLE"] = "Het downloaden van versleutelde bestanden is niet mogelijk met uw browser";
+$lang["_ENCRYPT_DOWNLOAD_NOT_SUPPORTED"] = "Het downloaden van versleutelde bestanden wordt niet ondersteund.";
 $lang["_ENCRYPT_PASSWORD_NOTE"] = "Let op: zorg ervoor dat de ontvanger deze sleutel ontvangt om het bestand te kunnen ontcijferen. <b>Het wordt afgeraden om dit per mail te versturen aan de ontvanger (:1)!<b>!";
 $lang["_MISSING_PASSWORD"] = "Fout: er moet een wachtwoord worden ingevuld.";
 $lang["_UPLOAD_ENCRYPT_PROGRESS_MESSAGE"] = "Het versleutelen en uploaden van het bestand kan even duren.";
