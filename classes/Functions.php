@@ -727,6 +727,8 @@ class Functions {
 		// test 
 		//array_push($errorArray, "err_nodiskspace");
 		//array_push($errorArray, "err_tomissing");
+		
+		if (isset($data["fileencryption"]) && (! $config["crypto_enabled"])) { array_push($errorArray, "err_cryptonotsupported"); }
 		// filesize missing
 		if(!isset($data["filesize"])){ array_push($errorArray, "err_missingfilesize"); }
 		// check space is available on disk before uploading

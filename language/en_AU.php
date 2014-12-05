@@ -135,6 +135,7 @@ $lang["_ERROR_INCORRECT_FILE_SIZE"] = "There has been a problem uploading your f
 $lang["_MAXEMAILS"] = "The maximum number of email addresses allowed is ";
 $lang["_INVALID_DATE_FORMAT"] = "The date format is invalid.";
 $lang["_DISK_SPACE_ERROR"] = "There is not enough drive space on this service. Please contact the service administration or upload a smaller file.";
+$lang["_CRYPTO_NOT_SUPPORTED_ERROR"] = "Encryption is not supported.";
 $lang["_ERROR_ATTRIBUTES"] = "Your Identity Provider is not providing the required attributes. Contact your Administrator";
 $lang["_PERMISSION_DENIED"] = "You do not have permission to do this.";
 // Logout page
@@ -287,6 +288,7 @@ $lang["_DECRYPT_FILE"] = "Decrypt this file";
 $lang["_DECRYPT_PASSWDPROMPT"] = "Please enter the pass phrase for this file";
 $lang["_FILE_IS_ENCRYPTED"] = "This file is encrypted";
 $lang["_ENCRYPT_DOWNLOAD_NOT_POSSIBLE"] = "Downloading encrypted files is not possible with your browser";
+$lang["_ENCRYPT_DOWNLOAD_NOT_SUPPORTED"] = "Downloading encrypted files is not supported.";
 $lang["_ENCRYPT_PASSWORD_NOTE"] = "Please pass this key in a secure way to the recipient for decryption.<br/><b>Do not send the key in a mail to &lt;:1&gt;</b>!";
 $lang["_MISSING_PASSWORD"] = "Error: a pass phrase must be entered.";
 $lang["_UPLOAD_ENCRYPT_PROGRESS_MESSAGE"] = "The encryption and upload of the file might take a while.";
