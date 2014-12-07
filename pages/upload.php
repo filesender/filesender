@@ -120,10 +120,12 @@
 
 	var encryptSupported = <?php echo booleanString($config['crypto_enabled'])?>;
 	var encryptFile = encryptSupported && <?php echo booleanString($config['crypto_default_enabled'])?>;
+	var maxCryptedSize = <?php echo (isset($config['max_crypted_size']) ? $config['max_crypted_size'] : '0'); ?>;
 	var passwordprompt = "<?php echo lang("_ENCRYPT_PASSWDPROMPT"); ?>";
 	var passwordnote = "<?php echo lang("_ENCRYPT_PASSWORD_NOTE"); ?>";
 	var missingpassword = "<?php echo lang("_MISSING_PASSWORD"); ?>";
 	var randomnotready = "<?php echo lang("_RANDOM_NOT_READY"); ?>";
+	var encsizemsg = "<?php echo lang("_ENCSIZE_WARNING"); ?>";
 
  	// start document ready 
 	$(function() { 
@@ -321,6 +323,7 @@
 		$("#maxemails_msg").hide();	
 		$("#file_msg").hide();
 		$("#aup_msg").hide();
+		$("#encsize_msg").hide();
 }
 	// --------------------------
 	// Validation functions
@@ -793,7 +796,8 @@ if ( hasProductInstall && !hasRequestedVersion ) {
       <tr id="encryptionrow">
         <td class=""></td>
         <td><input onclick="toggleENC()" name="fileencryption" style="width:20px;" type="checkbox" id="fileencryption" value="1" <?php echo ($config['crypto_enabled'] && $config['crypto_default_enabled']?' checked="checked"':''); ?>/></td>
-        <td><?php echo lang("_ENCRYPT_FILE"); ?></td>
+        <td><?php echo lang("_ENCRYPT_FILE"); ?>
+        <div id="encsize_msg" class="validation_warning_msg" style="display: none"></div></td>
         <td colspan="2" align="center" valign="top">&nbsp;</td>
       </tr>
       <?php if ($config["AuP"]) {?>

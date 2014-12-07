@@ -295,4 +295,5 @@ $lang["_UPLOAD_ENCRYPT_PROGRESS_MESSAGE"] = "The encryption and upload of the fi
 $lang["_UPLOAD_COMPLETE_ENCRYPTED"] = "Encryption was selected. Don't forget to provide the recipient with the encryption key through a separate and safe channel. Without this download is not possible.";
 $lang["_RANDOM_NOT_READY"] = "Random number not yet ready; :1% complete. Please try again in a couple of seconds.";
 $lang["_GENERATE_RANDOM"] = "Generate";
+$lang["_ENCSIZE_WARNING"] = "The file ':1' is too large for encryption.";
 ?>

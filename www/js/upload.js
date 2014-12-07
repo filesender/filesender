@@ -78,7 +78,10 @@ var startTime = 0;
 		fdata[n].filetype = file.type;
 		//fdata[n].filesize = 0;
 		
-	  	if(validate_file()) { 
+		var is_valid = true;
+ 		if (encryptSupported) is_valid = cryptoFileSelected(file);  
+        
+	  	if(is_valid && validate_file()) { 
 			$("#uploadbutton").show(); 
 			$("#fileInfoView").show();
 			$("#fileName").html(nameLang + ': ' + fdata[n].filename);
@@ -90,6 +93,47 @@ var startTime = 0;
 			$("#fileSize").html("");
 		};
 	}
+ 	
+ 	
+ 	function cryptoFileSelected(file) {
+		if (maxCryptedSize > 0 && (file.size > maxCryptedSize)) {
+			if ($('#fileencryption').prop('checked')) {
+ 				deselectFile();
+ 				showError(file);
+ 				return false;
+ 			} else {
+ 				deactivateEncryptBox();
+ 				showWarningMessage(file);
+ 				return true;
+ 	 		}
+ 		} else {
+ 			hideWarningMessage();
+ 			enableEncryptBox();
+ 			return true;
+ 		}
+ 	}
+ 	
+ 	function deselectFile() {
+ 		var oldFI = document.getElementById("fileToUpload");
+ 		var newFI = document.createElement("input");
+
+ 		newFI.type = "file";
+ 		newFI.id = oldFI.id;
+ 		newFI.name = oldFI.name;
+ 		newFI.onchange = oldFI.onchange;
+ 		oldFI.parentNode.replaceChild(newFI, oldFI);
+ 		
+ 		$("#fileInfoView").hide();
+ 	}
+ 	
+
+ 	function deactivateEncryptBox() { $("#fileencryption").attr("disabled", "disabled"); }
+ 	function enableEncryptBox() { $("#fileencryption").removeAttr("disabled"); }
+ 	
+ 	function showWarningMessage(file) { $("#encsize_msg").html(encsizemsg.replace(":1",file.name)).show(); }
+ 	function hideWarningMessage() { $("#encsize_msg").hide(); }
+ 	
+ 	function showError(file) { fileMsg(encsizemsg.replace(":1",file.name)); }
  	
  	
  	function generaterandom() 

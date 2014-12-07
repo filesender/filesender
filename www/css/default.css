@@ -125,6 +125,10 @@ input,textarea
 	font-size: 10px;
 	color: #d00;
 }
+.validation_warning_msg {
+	font-size: 10px;
+	color: #F7BE81;
+}
 .scratch_msg {
 	font-size: 10px;
 	color: #d00;
