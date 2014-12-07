@@ -289,5 +289,6 @@ $lang["_MISSING_PASSWORD"] = "Fout: er moet een wachtwoord worden ingevuld.";
 $lang["_UPLOAD_ENCRYPT_PROGRESS_MESSAGE"] = "Het versleutelen en uploaden van het bestand kan even duren.";
 $lang["_UPLOAD_COMPLETE_ENCRYPTED"] = "Het bestand is versleuteld. Vergeet niet om het wachtwoord op een veilige manier aan de ontvanger te geven. Zonder het wachtwoord is de download niet mogelijk";
 $lang["_RANDOM_NOT_READY"] = "Random number is nog niet klaar; :1% voortgang. Probeer het over een paar seconden nogmaals.";
-$lang["_GENERATE_RANDOM"] = "Genereer";		
+$lang["_GENERATE_RANDOM"] = "Genereer";
+$lang["_ENCSIZE_WARNING"] = "Het bestand ':1' is te groot om als versleuteld bestand verwerkt te kunnen worden.";		
 ?>
