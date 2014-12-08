@@ -275,9 +275,9 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 		
 		$fd = fopen("php://input", "r");
 		// append the chunk to the temp file
-		while( $data = fread( $fd,  1000000  ) ) {
-			file_put_contents( $fqTempFilename, $data, FILE_APPEND ) or die("Error");
-			$written += strlen($data);
+		while( $fdata = fread( $fd,  1000000  ) ) {
+			file_put_contents( $fqTempFilename, $fdata, FILE_APPEND ) or die("Error");
+			$written += strlen($fdata);
 		}
 		// close the file 
 		fclose($fd);
