@@ -267,8 +267,10 @@ var startTime = 0;
 		startTime = new Date().getTime();
 		if(!encryptFile && html5webworkers){
 			uploadFileWebworkers();
+		}else if(encryptFile){
+			uploadFileSingle(password,vid,updatepb);
 		}else{
-			uploadFile(password,vid,updatepb);
+			uploadFile();
 		}
 		}
 		},error:function(xhr,err){
@@ -471,3 +473,16 @@ function updatepb(bytesloaded,totalbytes)
 		$("#progress_completed").html(parseInt(percentComplete) + "%(" + bytesTransfered + ")" );	//display the % completed within the progress bar
 	  
 }
+
+function uploadProgress(evt) {
+	}
+
+function uploadFailed(evt) {
+	clearInterval(intervalTimer);
+	errorDialog("An error occurred while uploading the file.");  
+}  
+  
+function uploadCanceled(evt) {
+	clearInterval(intervalTimer);
+	erorDialog("The upload has been canceled by the user or the browser dropped the connection.");  
+	}  
