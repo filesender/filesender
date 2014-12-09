@@ -1,9 +1,9 @@
 /**
  * Handle main logic for (encrypted) file uploads.
  * All functions are wrapped in a scope block to prevent leaking globals.
- * uploadFile is exposed ad the public interface.
+ * uploadFileSingle is exposed at the public interface.
  */
-var uploadFile = (function($){
+var uploadFileSingle = (function($){
     var ChunkedXHR = (function() {
         return function(uri, progressHandler) {
             var boundary = "fileboundary";
@@ -87,7 +87,7 @@ var uploadFile = (function($){
         return constructor;
     })();
 
-    function uploadFile(password, vid, progressCallback ) {
+    function uploadFileSingle(password, vid, progressCallback ) {
         var file = document.getElementById("fileToUpload").files[0];
         var txferSize = chunksize;
 
@@ -177,6 +177,6 @@ var uploadFile = (function($){
 
     }
 
-    return uploadFile;
+    return uploadFileSingle;
 })(jQuery);
 
