@@ -219,14 +219,27 @@ class Transfer extends DBObject {
     }
     
     /**
+     * Get default expire date
+     * 
+     * @return int timestamp
+     */
+    public static function getDefaultExpire() {
+        
+        $days = Config::get('default_transfer_days_valid');
+        
+        return strtotime('+'.$days.' day');
+    }
+    
+    /**
      * Get max expire date
      * 
      * @return int timestamp
      */
     public static function getMaxExpire() {
         
-        $days = Config::get('transfer_default_days_valid');
-        if(!$days) $days = Config::get('default_days_valid');
+        $days = Config::get('max_transfer_days_valid');
+        
+        if(!$days) $days = Config::get('default_daysvalid'); // @deprecated legacy
         
         return strtotime('+'.$days.' day');
     }

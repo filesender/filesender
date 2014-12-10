@@ -57,7 +57,10 @@ window.filesender.config = {
     max_transfer_recipients: <?php echo Config::get('max_transfer_recipients') ?>,
     max_email_recipients: <?php echo Config::get('max_email_recipients') ?>, // TODO get rid of that
     
-    default_days_valid: <?php echo Config::get('default_days_valid') ?>,
+    max_transfer_days_valid: <?php echo Config::get('max_transfer_days_valid') ?>,
+    default_transfer_days_valid: <?php echo Config::get('default_transfer_days_valid') ?>,
+    max_guest_days_valid: <?php echo Config::get('max_guest_days_valid') ?>,
+    default_guest_days_valid: <?php echo Config::get('default_guest_days_valid') ?>,
     
     chunk_upload_security: '<?php echo Config::get('chunk_upload_security') ?>',
     

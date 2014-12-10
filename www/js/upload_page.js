@@ -342,7 +342,7 @@ filesender.ui.startUpload = function() {
         filesender.ui.recipients.clear();
         filesender.ui.nodes.subject.val('');
         filesender.ui.nodes.message.val('');
-        filesender.ui.nodes.expires.datepicker('setDate', (new Date()).getTime() + 24*3600*1000 * filesender.config.default_days_valid);
+        filesender.ui.nodes.expires.datepicker('setDate', (new Date()).getTime() + 24*3600*1000 * filesender.config.default_transfer_days_valid);
         
         filesender.ui.alert('success', lang.tr('done_uploading'), function() {
             filesender.ui.goToPage('transfers');
@@ -509,20 +509,12 @@ $(function() {
     });
     
     // Bind picker
-    var mindate = new Date();
-    var maxdate = new Date((new Date()).getTime() + 24*3600*1000 * filesender.config.default_days_valid);
     filesender.ui.nodes.expires.datepicker({
-        minDate: mindate,
-        maxDate: maxdate,
+        minDate: new Date(),
+        maxDate: new Date((new Date()).getTime() + 24*3600*1000 * filesender.config.max_transfer_days_valid)
     });
-    filesender.ui.nodes.expires.datepicker('setDate', maxdate);
     filesender.ui.nodes.expires.on('change', function() {
         filesender.ui.nodes.expires.datepicker('setDate', $(this).val());
-        var d = filesender.ui.nodes.expires.datepicker('getDate').getTime() / 1000;
-        
-        var min = mindate.getTime() / 1000;
-        min -= min % (24 * 3600);
-        if(d < min) filesender.ui.nodes.expires.datepicker('setDate', mindate);
     });
     
     // Make options label toggle checkboxes

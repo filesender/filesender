@@ -241,12 +241,13 @@ $(function() {
     });
     
     // Bind picker
-    var maxdate = new Date((new Date()).getTime() + 24*3600*1000 * filesender.config.default_days_valid);
     filesender.ui.nodes.expires.datepicker({
         minDate: new Date(),
-        maxDate: maxdate,
+        maxDate: new Date((new Date()).getTime() + 24*3600*1000 * filesender.config.max_guest_days_valid)
     });
-    filesender.ui.nodes.expires.datepicker('setDate', maxdate);
+    filesender.ui.nodes.expires.on('change', function() {
+        filesender.ui.nodes.expires.datepicker('setDate', $(this).val());
+    });
     
     form.find('.basic_options input, .advanced_options input').each(function() {
         var i = $(this);
