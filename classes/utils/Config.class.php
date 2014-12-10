@@ -145,6 +145,34 @@ class Config {
                 self::$override['parameters'][$key] = $dfn;
             }
         }
+        
+        // Special parameter checks and sets
+        
+        // update max_flash_upload_size if php.ini post_max_size and upload_max_filesize is set lower
+        $max_system_upload_size = min(
+            Utilities::sizeToBytes(ini_get('post_max_size')) - 2048,
+            Utilities::sizeToBytes(ini_get('upload_max_filesize'))
+        );
+        
+        self::$parameters['max_legacy_upload_size'] = min(
+            self::$parameters['max_legacy_upload_size'],
+            $max_system_upload_size
+        );
+        
+        if(array_key_exists('max_legacy_upload_size', self::$override['parameters']))
+            self::$override['parameters']['max_legacy_upload_size']['value'] = min(
+                self::$override['parameters']['max_legacy_upload_size']['value'],
+                $max_system_upload_size
+            );
+        
+        if(!self::get('default_transfer_days_valid'))
+            self::$parameters['default_transfer_days_valid'] = self::get('max_transfer_days_valid');
+        
+        if(!self::get('max_guest_days_valid'))
+            self::$parameters['max_guest_days_valid'] = self::get('max_transfer_days_valid');
+        
+        if(!self::get('default_guest_days_valid'))
+            self::$parameters['default_guest_days_valid'] = self::get('max_guest_days_valid');
     }
     
     /**
