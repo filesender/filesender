@@ -469,9 +469,14 @@ function generateTempFilename($data)
 	$tempFilename .=  $data['filesize'];
 	logEntry("DEBUG fs_upload: tempfilename 3 : ".$tempFilename);
 	}
+	// when encryption requested, add to tempFilename
+	if(isset($data["fileencryption"])){
+	$tempFilename .= "/enc:"+$data["fileencryption"];
+	logEntry("DEBUG fs_upload: tempfilename 4 : ".tempFilename);
+	}
 	// md5 $tempFilename
 	$tempFilename = md5($tempFilename).'.tmp';
-	logEntry("DEBUG fs_upload: tempfilename 4 : ".$tempFilename);	
+	logEntry("DEBUG fs_upload: tempfilename 5 : ".$tempFilename);	
 	
 	return $tempFilename;
 }
