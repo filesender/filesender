@@ -118,8 +118,8 @@
 	var txtclose = "<?php echo lang("_CLOSE"); ?>";
 	var txtok = "<?php echo lang("_OK"); ?>";
 
-	var encryptSupported = <?php echo booleanString($config['crypto_enabled'])?>;
-	var encryptFile = encryptSupported && <?php echo booleanString($config['crypto_default_enabled'])?>;
+	var encryptSupported = <?php echo booleanString( (isset($config['crypto_enabled']) ? $config['crypto_enabled'] : false) ) ?>;
+	var encryptFile = encryptSupported && <?php echo booleanString( (isset($config['crypto_default_enabled']) ? $config['crypto_default_enabled'] : false) ) ?>;
 	var maxCryptedSize = <?php echo (isset($config['max_crypted_size']) ? $config['max_crypted_size'] : '0'); ?>;
 	var passwordprompt = "<?php echo lang("_ENCRYPT_PASSWDPROMPT"); ?>";
 	var passwordnote = "<?php echo lang("_ENCRYPT_PASSWORD_NOTE"); ?>";
