@@ -154,7 +154,14 @@ function startDownload() {
 					$( this ).dialog( "close" ); 
 				}
 			},
-			open: function( event, ui ) { $("#decpassword").focus(); }
+			open: function( event, ui ) { 
+				$("#decpassword").focus();
+				$("#dialog-password").keypress(function(e) {
+				      if (e.keyCode == $.ui.keyCode.ENTER) {
+				        $(this).parent().find('button:contains("<?php echo lang("_OK"); ?>")').trigger("click");
+				      }
+				    });	
+			}
 		});
 	
 		$("#dialog-password").dialog("open");
