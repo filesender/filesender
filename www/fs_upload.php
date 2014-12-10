@@ -238,7 +238,14 @@ if(($authvoucher->aVoucher()  || $authsaml->isAuth()) && isset($_REQUEST["type"]
 			$functions->insertFile($dataitem);
 		}
 		
-		$resultArray["filesize"] = checkFileSize($uploadfolder.$tempFilename);
+		$theFilesize = checkFileSize($uploadfolder.$tempFilename);
+		if (($dataitem["fileencryption"] != NULL) && ($theFilesize > 0)) {
+			// Cannot resume, so start over:
+			unlink($uploadfolder.$tempFilename);
+			logEntry("DEBUG fs_upload: Unfinished encrypted file  ".$tempFilename." was removed to prevent resume", "E_ERROR");
+			$theFilesize = 0;
+		}
+		$resultArray["filesize"] = $theFilesize; 
 		$resultArray["vid"] = $dataitem["filevoucheruid"];
 		$resultArray["status"] = "complete";
 		echo json_encode($resultArray);		
@@ -471,7 +478,7 @@ function generateTempFilename($data)
 	}
 	// when encryption requested, add to tempFilename
 	if(isset($data["fileencryption"])){
-	$tempFilename .= "/enc:"+$data["fileencryption"];
+	$tempFilename .= "/enc:".$data["fileencryption"];
 	logEntry("DEBUG fs_upload: tempfilename 4 : ".$tempFilename);
 	}
 	// md5 $tempFilename
