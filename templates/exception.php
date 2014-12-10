@@ -10,6 +10,10 @@
     <?php } ?>
     
     <div class="report">
-        {tr:you_can_report_exception} : <a href="mailto:<?php echo Config::get('support_email') ?>?subject=Exception <?php echo method_exists($exception, 'getUid') ? Utilities::sanitizeOutput($exception->getUid()) : '' ?>">{tr:report_exception}</a>
+    <?php if(Config::get('support_email')) { ?>
+        {tr:you_can_report_exception_by_email} : <a href="mailto:<?php echo Config::get('support_email') ?>?subject=Exception <?php echo method_exists($exception, 'getUid') ? Utilities::sanitizeOutput($exception->getUid()) : '' ?>">{tr:report_exception}</a>
+    <?php } else if(method_exists($exception, 'getUid')) { ?>
+        {tr:you_can_report_exception} : "<?php echo Utilities::sanitizeOutput($exception->getUid()) ?>"
+    <?php } ?>
     </div>
 </div>
