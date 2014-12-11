@@ -161,7 +161,7 @@ class DBIStatement {
         try {
             return call_user_func_array(array($this->statement, $method), $args);
         } catch(Exception $e) {
-            throw new DBIUsageException($e->getMessage(), array('method' => $method, 'args' => $args));
+            throw new DBIUsageException($e->getMessage(), array('method' => $method, 'args' => $args, 'query' => $this->statement->queryString));
         }
     }
 }
