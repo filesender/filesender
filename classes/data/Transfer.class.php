@@ -91,6 +91,7 @@ class Transfer extends DBObject {
     /**
      * Set selectors
      */
+    const UPLOADING = "status = 'uploading' ORDER BY created DESC";
     const AVAILABLE = "status = 'available' ORDER BY created DESC";
     const CLOSED = "status = 'closed' ORDER BY created DESC";
     const EXPIRED = "expires < :date ORDER BY expires ASC";
@@ -242,6 +243,15 @@ class Transfer extends DBObject {
         if(!$days) $days = Config::get('default_daysvalid'); // @deprecated legacy
         
         return strtotime('+'.$days.' day');
+    }
+    
+    /**
+     * Get uploading transfers
+     * 
+     * @return array of Transfer
+     */
+    public static function allUploading() {
+        return self::all(self::UPLOADING);
     }
     
     /**
