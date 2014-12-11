@@ -61,6 +61,13 @@ $default = array(
     'max_transfer_size' => 107374182400,
     'max_transfer_recipients' => 50,
     'max_transfer_files' => 30,
+    'max_transfer_days_valid' => 20,
+    'default_transfer_days_valid' => 10,
+    
+    'max_guest_recipients' => 50,
+    'max_guest_days_valid' => 20,
+    'default_guest_days_valid' => 10,
+    
     'max_legacy_upload_size' => 2147483648,
     'legacy_upload_progress_refresh_period' => 5,
     'upload_chunk_size' => 2000000,
@@ -85,5 +92,5 @@ $default = array(
         )
     ),
     
-    'default_days_valid' => 20,
+    'df_command' => 'df {path}'
 );

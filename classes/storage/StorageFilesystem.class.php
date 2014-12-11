@@ -57,6 +57,7 @@ class StorageFilesystem {
         if(!is_dir($path) || !is_writable($path))
             throw new StorageFilesystemCannotWriteException($path);
         
+        if(substr($path, -1) != '/') $path .= '/';
         self::$path = $path;
         
         $hashing = Config::get('storage_filesystem_hashing');
@@ -64,18 +65,117 @@ class StorageFilesystem {
     }
     
     /**
-     * Checks for free space on the disk where file will be stored
+     * Get a file's or a path's filesystem
      * 
-     * @param File $file
-     *
-     * @return float $availablembytes: free space in mbytes
+     * @param mixed $what File or path
+     * 
+     * @return string
      */
-    public static function getFreeSpace(File $file) {
-        $location = self::buildPath($file);
+    private static function getFilesystem($what) {
+        if($what instanceof File) $what = self::buildPath($what);
         
-        $free = disk_free_space($location);
+        if(!is_string($what) || (!is_dir($what) && !is_file($what)))
+            throw new StorageFilesystemBadResolverTargetException($what);
         
-        return $free;
+        $cmd = str_replace('{path}', escapeshellarg($what), Config::get('df_command'));
+        exec($cmd, $out, $ret);
+        
+        $out = array_filter(array_map('trim', $out));
+        if($ret || count($out) <= 1)
+            throw new StorageFilesystemCannotResolveException($cmd, $ret, $out);
+        
+        // Output should be similar to standard "du" output, that is with results on last line and filesystem name in first column
+        $line = array_pop($out);
+        if(!preg_match('`^(/[^\s]+)`', $line, $match))
+            throw new StorageFilesystemBadResolverOutputException($cmd, $line);
+        
+        return $match[1];
+    }
+    
+    /**
+     * Checks if there is enough space to store a given transfer
+     * 
+     * @param Transfer $transfer
+     *
+     * @return bool
+     */
+    public static function canStore(Transfer $transfer) {
+        $filesystems = array();
+        
+        foreach($transfer->files as $file) {
+            $path = self::buildPath($file);
+            $filesystem = self::getFilesystem($path);
+            
+            if(!array_key_exists($filesystem, $filesystems)) $filesystems[$filesystem] = array(
+                'free_space' => disk_free_space($path),
+                'files' => array()
+            );
+            
+            $filesystems[$filesystem]['files'][] = $file;
+        }
+        
+        foreach($filesystems as $filesystem => $info) {
+            $required_space = array_sum(array_map(function($file) {
+                return $file->size;
+            }, $info['files']));
+            
+            if($required_space > $info['free_space']) return false;
+        }
+        
+        return true;
+    }
+    
+    /**
+     * Build possible hashed paths
+     * 
+     * @return array
+     */
+    private static function getHashedPaths($level, $top = false) {
+        $paths = array();
+        
+        for($i=0; $i<=15; $i++) {
+            $p = dechex($i);
+            if($level > 1) {
+                foreach(self::getHashedPaths($level - 1) as $sp)
+                    $paths[] = $p.'/'.$sp;
+            } else {
+                $paths[] = $p;
+            }
+        }
+        
+        return $paths;
+    }
+    
+    /**
+     * Get space usage info
+     * 
+     * @return array of usage data for individual sub-storages
+     */
+    public static function getUsage() {
+        $paths = array('');
+        
+        if(is_numeric(self::$hashing)) {
+            $paths = self::getHashedPaths(self::$hashing);
+        } else if(is_callable(self::$hashing)) {
+            $paths = self::$hashing(); // No file call => get paths
+        }
+        
+        $filesystems = array();
+        foreach($paths as $path) {
+            $filesystem = self::getFilesystem($path);
+            
+            if(!array_key_exists($filesystem, $filesystems)) $filesystems[$filesystem] = array(
+                'total_space' => disk_total_space(self::$path.$path),
+                'free_space' => disk_free_space(self::$path.$path),
+                'paths' => array()
+            );
+            
+            $filesystems[$filesystem]['paths'][] = $path;
+        }
+        
+        ksort($filesystems);
+        
+        return $filesystems;
     }
     
     /**
@@ -89,7 +189,6 @@ class StorageFilesystem {
         self::setup();
         
         $path = self::$path;
-        if(substr($path, -1) != '/') $path .= '/';
         
         // Is storage path hashing enabled
         if(self::$hashing) {
@@ -97,8 +196,8 @@ class StorageFilesystem {
             
             if(is_numeric(self::$hashing)) {
                 // Prepend self::$hashing letters from $file->uid as subfolders of $path
-                for($i=0; $i<self::$hashing; $i++)
-                    $subpath .= substr($file->uid, $i, 1).'/';
+                for($i=1; $i<=self::$hashing; $i++)
+                    $subpath .= substr($file->uid, 0, $i).'/';
                 
             }else if(is_callable(self::$hashing)) {
                 // Call self::$hashing with $file to get sub-path
@@ -179,8 +278,8 @@ class StorageFilesystem {
         
         $file_path = self::buildPath($file).$file->uid;
         
-        $free_space = self::getFreeSpace($file);
-        if($free_space <= $chunk_size) {
+        $space = self::getSpaceInfo($file);
+        if($space['free'] <= $chunk_size) {
             throw new OutOfSpaceException($path);
         }
         

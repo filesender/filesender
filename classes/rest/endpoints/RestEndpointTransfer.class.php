@@ -247,8 +247,6 @@ class RestEndpointTransfer extends RestEndpoint {
             if($maxsize && $size > $maxsize)
                 throw new TransferMaximumSizeExceededException($size, $maxsize);
             
-            // TODO check size against available space
-            
             $transfer = Transfer::create($data->expires, $data->from);
             
             if($data->subject) $transfer->subject = $data->subject;
@@ -275,6 +273,12 @@ class RestEndpointTransfer extends RestEndpoint {
             }
             
             foreach($data->recipients as $email) $transfer->addRecipient($email);
+            
+            // Here we have everything (uids ...) to check if the transfer fits in storage
+            if(!Storage::canStore($transfer)) {
+                $transfer->delete();
+                throw new StorageNotEnoughSpaceLeftException($transfer->size);
+            }
             
             $transfer->start();
             

@@ -50,3 +50,20 @@ class StorageChunkTooLargeException extends DetailedException {
         );
     }
 }
+
+/**
+ * Not enough space left exception
+ */
+class StorageNotEnoughSpaceLeftException extends DetailedException {
+    /**
+     * Constructor
+     * 
+     * @param int $required_space
+     */
+    public function __construct($required_space) {
+        parent::__construct(
+            'storage_not_enough_space_left', // Message to give to the user
+            'required_space = '.$required_space
+        );
+    }
+}
