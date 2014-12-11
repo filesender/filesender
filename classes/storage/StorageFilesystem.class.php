@@ -114,6 +114,21 @@ class StorageFilesystem {
             $filesystems[$filesystem]['files'][] = $file;
         }
         
+        // Substract space reserved by uploading transfers (except what is already done) from free space
+        foreach(Transfer::allUploading() as $transfer) {
+            foreach($transfer->files as $file) {
+                $path = self::buildPath($file);
+                $filesystem = self::getFilesystem($path);
+                
+                if(!array_key_exists($filesystem, $filesystems)) continue; // Not in a filesystem related to new transfer
+                
+                $remaining_to_upload = $file->size;
+                if(file_exists($path.$file->uid)) $remaining_to_upload -= filesize($path.$file->uid);
+                
+                $filesystems[$filesystem]['free_space'] -= $remaining_to_upload;
+            }
+        }
+        
         foreach($filesystems as $filesystem => $info) {
             $required_space = array_sum(array_map(function($file) {
                 return $file->size;
