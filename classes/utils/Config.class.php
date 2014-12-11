@@ -159,7 +159,7 @@ class Config {
             $max_system_upload_size
         );
         
-        if(array_key_exists('max_legacy_upload_size', self::$override['parameters']))
+        if(self::$override && array_key_exists('max_legacy_upload_size', self::$override['parameters']))
             self::$override['parameters']['max_legacy_upload_size']['value'] = min(
                 self::$override['parameters']['max_legacy_upload_size']['value'],
                 $max_system_upload_size
