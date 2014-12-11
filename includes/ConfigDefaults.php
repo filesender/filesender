@@ -78,8 +78,8 @@ $default = array(
     
     'storage_type' => 'filesystem',
     'storage_filesystem_path' => FILESENDER_BASE.'/files',
-    'statlog_lifetime' => 31,
-    'auditlog_lifetime' => 0,
+    'statlog_lifetime' => 0,
+    'auditlog_lifetime' => 31,
     
     'report_format' => ReportFormats::INLINE,
 
