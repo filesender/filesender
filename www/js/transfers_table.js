@@ -99,8 +99,10 @@ $(function() {
                             
                             switch(choosen) {
                                 case 'close' : filesender.client.closeTransfer(id, done); break;
-                                case 'delete_nicely' : filesender.client.deleteTransfer(id, true, done); break;
-                                case 'delete' : filesender.client.deleteTransfer(id, false, done); break;
+                                case 'delete_nicely' : filesender.client.closeTransfer(id, function() {
+                                    filesender.client.deleteTransfer(id, done);
+                                }); break;
+                                case 'delete' : filesender.client.deleteTransfer(id, done); break;
                             }
                         });
                     } else {

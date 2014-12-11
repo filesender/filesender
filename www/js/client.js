@@ -251,7 +251,7 @@ window.filesender.client = {
      * @param bool nice should we notify owner/recipients about the deletion (close then delete or just delete)
      * @param callable callback
      */
-    deleteTransfer: function(transfer, nice, callback, onerror) {
+    deleteTransfer: function(transfer, callback, onerror) {
         var id = transfer;
         var opts = {args: {}};
         
@@ -259,8 +259,6 @@ window.filesender.client = {
             id = transfer.id;
             if(filesender.config.chunk_upload_security == 'key') opts.args.key = transfer.files[0].uid;
         }
-        
-        if(nice) opts.args.nice = 1;
         
         if(onerror) opts.error = onerror;
         
