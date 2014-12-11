@@ -141,6 +141,34 @@ class StatLog extends DBObject {
     }
     
     /**
+     * Count events of a given type over a period of time
+     * 
+     * @param string $event
+     * @param int $start timestamp
+     * @param int $end timestamp
+     * 
+     * @return array of info
+     */
+    public static function getEventCount($event, $start = null, $end = null) {
+        $lt = Config::get('statlog_lifetime');
+        if(is_null($lt) || (is_bool($lt) && !$lt)) return null; // Disabled
+        
+        $query = 'SELECT COUNT(*) AS cnt, MIN(created) AS start, MAX(created) AS end FROM '.self::getDBTable().' WHERE event = :event';
+        if(!is_null($start)) $query .= ' AND created >= "'.date('Y-m-d H:i:s', $start).'"';
+        if(!is_null($end)) $query .= ' AND created <= "'.date('Y-m-d H:i:s', $end).'"';
+        
+        $statement = DBI::prepare($query);
+        $statement->execute(array(':event' => $event));
+        $data = $statement->fetch();
+        
+        return array(
+            'count' => $data['cnt'],
+            'start' => strtotime($data['start']),
+            'end' => strtotime($data['end'])
+        );
+    }
+    
+    /**
      * Getter
      * 
      * @param string $property property to get
