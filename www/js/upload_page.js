@@ -106,8 +106,11 @@ filesender.ui.files = {
                 complete: function() {
                     var bar = $(this);
                     bar.find('.progress-label').text(lang.tr('done'));
+                    bar.closest('.file').removeClass('uploading').addClass('done');
                 }
             });
+            
+            $('<span class="fa fa-lg fa-check done_icon" />').appendTo(node);
             
             var size = 0;
             for(var j=0; j<filesender.ui.transfer.files.length; j++)
@@ -338,22 +341,13 @@ filesender.ui.startUpload = function() {
     this.transfer.onprogress = filesender.ui.files.progress;
     
     this.transfer.oncomplete = function(time) {
-        filesender.ui.files.clear();
-        filesender.ui.recipients.clear();
-        filesender.ui.nodes.subject.val('');
-        filesender.ui.nodes.message.val('');
-        filesender.ui.nodes.expires.datepicker('setDate', (new Date()).getTime() + 24*3600*1000 * filesender.config.default_transfer_days_valid);
-        
         filesender.ui.alert('success', lang.tr('done_uploading'), function() {
             filesender.ui.goToPage('transfers');
         });
-        // TODO popup (view uploaded / upload other)
     };
     
     var errorHandler = function(error) {
-        //error = {message: 'upload_failed', details: error};
         filesender.ui.error(error,function(){
-            //todo le code du reload
             filesender.ui.transfer.status = 'stopped';
             filesender.ui.reload();
         });
@@ -361,16 +355,17 @@ filesender.ui.startUpload = function() {
     
     this.transfer.onerror = errorHandler;
     
-    filesender.ui.nodes.files.list.find('.progressbar').show();
-    
-    filesender.ui.nodes.files.list.find('.file .remove').remove();
+    filesender.ui.nodes.files.list.find('.file').addClass('uploading');
+    filesender.ui.nodes.files.list.find('.file .remove').hide();
+    filesender.ui.nodes.files.list.find('.file .progressbar').show();
     
     filesender.ui.nodes.stats.number_of_files.hide();
     filesender.ui.nodes.stats.size.hide();
     filesender.ui.nodes.stats.uploaded.show();
     filesender.ui.nodes.stats.average_speed.show();
     
-    // TODO lock fields
+    filesender.ui.nodes.form.find(':input').prop('disabled', true);
+    
     this.transfer.start(errorHandler);
 };
 
@@ -383,6 +378,7 @@ $(function() {
     
     // Register frequently used nodes
     filesender.ui.nodes = {
+        form: form,
         files: {
             input: form.find(':file'),
             list: form.find('.files'),
