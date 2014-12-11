@@ -368,12 +368,14 @@ window.filesender.ui = {
             });
         }
         
-        if(error.uid) {
-            var r = $('<div class="report" />').appendTo(d);
-            r.append(lang.tr('you_can_report_exception') + ' : ');
+        var r = $('<div class="report" />').appendTo(d);
+        if(filesender.config.support_email) {
+            r.append(lang.tr('you_can_report_exception_by_email') + ' : ');
             $('<a />').attr({
-                href: 'href="mailto:' + filesender.config.support_email + '?subject=Exception ' + error.uid
+                href: 'href="mailto:' + filesender.config.support_email + '?subject=Exception ' + (error.uid ? error.uid : '')
             }).text(lang.tr('report_exception')).appendTo(r);
+        } else if(error.uid) {
+            r.append(lang.tr('you_can_report_exception') + ' : "' + error.uid + '"');
         }
         
         return error.message;

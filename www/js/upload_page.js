@@ -351,7 +351,7 @@ filesender.ui.startUpload = function() {
     };
     
     var errorHandler = function(error) {
-        error = {message: 'upload_failed', details: error};
+        //error = {message: 'upload_failed', details: error};
         filesender.ui.error(error,function(){
             //todo le code du reload
             filesender.ui.transfer.status = 'stopped';

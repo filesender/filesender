@@ -332,13 +332,13 @@ $lang['uploaded'] = 'Uploaded';
 $lang['with_identity'] = 'Sender email';
 $lang['n_more'] = '{n} more';
 
-$lang['encountered_exception'] = 'The application encountered an exception while processing your request';
-$lang['you_can_report_exception'] = 'When reporting this exception please give the following code to help the support finding out details';
-$lang['you_can_report_exception_by_email'] = 'You can report this exception by email';
-$lang['report_exception'] = 'report exception';
+$lang['encountered_exception'] = 'The application encountered an error while processing your request';
+$lang['you_can_report_exception'] = 'When reporting this error please give the following code to help the support finding out details';
+$lang['you_can_report_exception_by_email'] = 'You can report this error by email';
+$lang['report_exception'] = 'report error';
 
-$lang['site_splashead'] = 'Filesender 2.0 demo';
-$lang['site_splastext'] = 'Keep in mind that this is a very limitted server, few cpus, few ram, little hdd ...';
+$lang['site_splashead'] = 'Filesender';
+$lang['site_splastext'] = '';
 
 $lang['admin_page'] = 'Admin area';
 $lang['admin_statistics_section'] = 'Statistics';
