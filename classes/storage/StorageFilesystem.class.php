@@ -343,8 +343,19 @@ class StorageFilesystem {
         
         if(!file_exists($file_path)) return;
         
-        if(!unlink($file_path))
-            throw new StorageFilesystemCannotDeleteException($file_path);
+        $rm_command = Config::get('rm_command');
+        
+        if($rm_command) {
+            $cmd = str_replace('{path}', escapeshellarg($file_path), $rm_command);
+            exec($cmd, $out, $ret);
+            
+            if($ret)
+                throw new StorageFilesystemCannotDeleteException($file_path);
+            
+        } else {
+            if(!unlink($file_path))
+                throw new StorageFilesystemCannotDeleteException($file_path);
+        }
     }
     
     /**

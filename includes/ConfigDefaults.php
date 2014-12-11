@@ -92,5 +92,6 @@ $default = array(
         )
     ),
     
-    'df_command' => 'df {path}'
+    'df_command' => 'df {path}',
+    'rm_command' => null, // Can be /usr/bin/shred -f -u -n 1 -z {path}
 );
