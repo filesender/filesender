@@ -134,3 +134,57 @@ class StorageFilesystemOutOfSpaceException extends DetailedException {
         );
     }
 }
+
+/**
+ * Bad filesystem name resolver target exception
+ */
+class StorageFilesystemBadResolverTargetException extends DetailedException {
+    /**
+     * Constructor
+     * 
+     * @param string $what
+     */
+    public function __construct($what) {
+        parent::__construct(
+            'storage_filesystem_bad_resolver_target', // Message to give to the user
+            'what = '.str_replace(array("\n", "\t"), ' ', print_r($what, true))
+        );
+    }
+}
+
+/**
+ * Cannot resolve filesystem
+ */
+class StorageFilesystemCannotResolveException extends DetailedException {
+    /**
+     * Constructor
+     * 
+     * @param string $cmd
+     * @param string $ret
+     * @param array $out
+     */
+    public function __construct($cmd, $ret, $out) {
+        parent::__construct(
+            'storage_filesystem_cannot_get_usage', // Message to give to the user
+            'cmd = '.$cmd.', ret = '.$ret.', out = '.implode('<nl>', $out) // Details to log
+        );
+    }
+}
+
+/**
+ * Bad disk usage output exception
+ */
+class StorageFilesystemBadResolverOutputException extends DetailedException {
+    /**
+     * Constructor
+     * 
+     * @param string $cmd
+     * @param string $line
+     */
+    public function __construct($cmd, $line) {
+        parent::__construct(
+            'storage_filesystem_bad_usage_output', // Message to give to the user
+            'cmd = '.$cmd.', line = '.$line
+        );
+    }
+}

@@ -74,16 +74,27 @@ class Storage {
     }
     
     /**
-     * Delegates free space check
+     * Delegates transfer storable check
      * 
-     * @param File $file
+     * @param Transfer $transfer
      * 
-     * @return mixed int (bytes) or null if it doesn't make sense (virtually infinite space like cloud storage ?)
+     * @return bool
      */
-    public static function getFreeSpace(File $file) {
+    public static function canStore(Transfer $transfer) {
         self::setup();
         
-        call_user_func(self::$class.'::getFreeSpace', $file);
+        return call_user_func(self::$class.'::canStore', $transfer);
+    }
+    
+    /**
+     * Delegates space usage check
+     * 
+     * @return array of usage data for individual sub-storages
+     */
+    public static function getUsage(File $file) {
+        self::setup();
+        
+        return call_user_func(self::$class.'::getUsage', $file);
     }
     
     /**
