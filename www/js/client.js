@@ -72,6 +72,9 @@ window.filesender.client = {
             delete options.error;
         }
         
+        var headers = [];
+        if(options.headers) headers = options.headers;
+        
         var settings = {
             cache: false,
             contentType: 'application/json;charset=utf-8',
@@ -79,6 +82,9 @@ window.filesender.client = {
             data: data,
             processData: false,
             dataType: 'json',
+            beforeSend: function(xhr) {
+                for(var k in headers) xhr.setRequestHeader(k, headers[k]);
+            },
             error: function(xhr, status, error) {
                 var msg = xhr.responseText.replace(/^\s+/, '').replace(/\s+$/, '');
                 
@@ -165,6 +171,12 @@ window.filesender.client = {
         };
         if(filesender.config.chunk_upload_security == 'key') opts.args = {key: file.uid};
         
+        opts.headers = {
+            'X-Filesender-File-Size': file.size,
+            'X-Filesender-Chunk-Offset': -1,
+            'X-Filesender-Chunk-Size': blob.size
+        };
+        
         if(onerror) opts.error = onerror;
         
         this.post('/file/' + file.id + '/chunk', blob, callback, opts);
@@ -184,6 +196,12 @@ window.filesender.client = {
             rawdata: true
         };
         if(filesender.config.chunk_upload_security == 'key') opts.args = {key: file.uid};
+        
+        opts.headers = {
+            'X-Filesender-File-Size': file.size,
+            'X-Filesender-Chunk-Offset': offset,
+            'X-Filesender-Chunk-Size': blob.size
+        };
         
         if(onerror) opts.error = onerror;
         

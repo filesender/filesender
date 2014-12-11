@@ -66,8 +66,9 @@ var terasender_worker = {
         xhr.setRequestHeader('Content-Disposition', 'attachment; name="chunk"'); 
         xhr.setRequestHeader('Content-Type', 'application/octet-stream');
         xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-        xhr.setRequestHeader('X-Start-Byte', job.chunk.start); // Legacy
-        xhr.setRequestHeader('X-File-Size', file.size); // Legacy
+        xhr.setRequestHeader('X-Filesender-File-Size', file.size);
+        xhr.setRequestHeader('X-Filesender-Chunk-Offset', job.chunk.start);
+        xhr.setRequestHeader('X-Filesender-Chunk-Size', blob.size);
         
         try {
             xhr.send(blob);

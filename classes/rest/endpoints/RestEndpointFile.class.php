@@ -89,8 +89,7 @@ class RestEndpointFile extends RestEndpoint {
      * Add chunk to a file or upload whole file
      * 
      * Call examples :
-     *  /file/17/chunk : add chunk to the file with id 17
-     *  /file/17/whole : upload file as a whole
+     *  /file/17/whole : upload file as a whole (legacy mode)
      * 
      * @param int $id transfer id to get info about
      * @param string $mode upload mode ("chunk" or "whole")
@@ -197,10 +196,29 @@ class RestEndpointFile extends RestEndpoint {
                 throw new RestOwnershipRequiredException($user->id, 'file = '.$file->id);
         }
         
-        // TODO get X-Chunk-Length header and check against actual received length
-        
         $data = $this->request->input;
         if($mode == 'chunk') {
+            $client = array();
+            foreach(array('X-Filesender-File-Size', 'X-Filesender-Chunk-Offset', 'X-Filesender-Chunk-Size') as $h) {
+                $k = 'HTTP_'.strtoupper(str_replace('-', '_', $h));
+                $client[$h] = array_key_exists($k, $_SERVER) ? (int)$_SERVER[$k] : null;
+            }
+            
+            if(!is_null($client['X-Filesender-File-Size']))
+                if($file->size != $client['X-Filesender-File-Size'])
+                    throw new RestSanityCheckFailedException('file_size', $file->size, $client['X-Filesender-File-Size']);
+            
+            if(!is_null($client['X-Filesender-Chunk-Offset']))
+                if($offset != $client['X-Filesender-Chunk-Offset'])
+                    throw new RestSanityCheckFailedException('chunk_offset', $offset, $client['X-Filesender-Chunk-Offset']);
+            
+            if(!is_null($client['X-Filesender-Chunk-Size']))
+                if(strlen($data) != $client['X-Filesender-Chunk-Size'])
+                    throw new RestSanityCheckFailedException('chunk_size', strlen($data), $client['X-Filesender-Chunk-Size']);
+            
+            if(strlen($data) > Config::get('upload_chunk_size'))
+                throw new RestSanityCheckFailedException('chunk_size', strlen($data), 'max '.Config::get('upload_chunk_size'));
+            
             if($offset + strlen($data) > $file->size)
                 throw new FileChunkOutOfBoundsException($offset, strlen($data), $file->size);
             
