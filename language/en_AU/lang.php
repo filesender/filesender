@@ -318,7 +318,7 @@ $lang['no_transfers'] = 'No transfers';
 $lang['no_guests'] = 'No guests';
 $lang['noscript'] = 'This application heavily relies on Javascript, you must enable it to be able to start.';
 $lang['options'] = 'Options';
-$lang['restart'] = 'Restart';
+$lang['resume'] = 'Resume';
 $lang['see_all'] = 'See all';
 $lang['select_all_for_archive_download'] = 'Select all files to download them as an archive';
 $lang['select_for_archive_download'] = 'Select for archive download';
@@ -333,8 +333,9 @@ $lang['with_identity'] = 'Sender email';
 $lang['n_more'] = '{n} more';
 
 $lang['encountered_exception'] = 'The application encountered an exception while processing your request';
-$lang['you_can_report_exception'] = 'You can report this exception';
-$lang['report_exception'] = 'click here';
+$lang['you_can_report_exception'] = 'When reporting this exception please give the following code to help the support finding out details';
+$lang['you_can_report_exception_by_email'] = 'You can report this exception by email';
+$lang['report_exception'] = 'report exception';
 
 $lang['site_splashead'] = 'Filesender 2.0 demo';
 $lang['site_splastext'] = 'Keep in mind that this is a very limitted server, few cpus, few ram, little hdd ...';
@@ -344,6 +345,20 @@ $lang['admin_statistics_section'] = 'Statistics';
 $lang['admin_transfers_section'] = 'Transfers';
 $lang['admin_guests_section'] = 'Guests';
 $lang['admin_config_section'] = 'Config';
+
+$lang['global_statistics'] = 'Global statistics';
+$lang['available_transfers'] = 'Currently available transfers';
+$lang['uploading_transfers'] = 'Currently uploading transfers';
+$lang['created_transfers'] = 'Created transfers';
+$lang['count_from_date_to_date'] = '{count} from {date:start} to {date:end}';
+
+$lang['storage_usage'] = 'Storage usage';
+$lang['storage_block'] = 'Block';
+$lang['storage_paths'] = 'Related paths';
+$lang['storage_total'] = 'Total space';
+$lang['storage_used'] = 'Used space';
+$lang['storage_available'] = 'Available space';
+$lang['storage_main'] = 'All';
 
 $lang['is_default'] = 'This is the default value';
 $lang['make_default'] = 'Go back to default value';
