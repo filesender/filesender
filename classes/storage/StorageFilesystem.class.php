@@ -72,6 +72,8 @@ class StorageFilesystem {
      * @return string
      */
     private static function getFilesystem($what) {
+        self::setup();
+        
         if($what instanceof File) $what = self::buildPath($what);
         
         if(!is_string($what) || (!is_dir($what) && !is_file($what)))
@@ -100,6 +102,8 @@ class StorageFilesystem {
      * @return bool
      */
     public static function canStore(Transfer $transfer) {
+        self::setup();
+        
         $filesystems = array();
         
         foreach($transfer->files as $file) {
@@ -167,6 +171,8 @@ class StorageFilesystem {
      * @return array of usage data for individual sub-storages
      */
     public static function getUsage() {
+        self::setup();
+        
         $paths = array('');
         
         if(is_numeric(self::$hashing)) {
@@ -177,7 +183,7 @@ class StorageFilesystem {
         
         $filesystems = array();
         foreach($paths as $path) {
-            $filesystem = self::getFilesystem($path);
+            $filesystem = self::getFilesystem(self::$path.$path);
             
             if(!array_key_exists($filesystem, $filesystems)) $filesystems[$filesystem] = array(
                 'total_space' => disk_total_space(self::$path.$path),
