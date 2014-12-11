@@ -91,10 +91,12 @@ class Storage {
      * 
      * @return array of usage data for individual sub-storages
      */
-    public static function getUsage(File $file) {
+    public static function getUsage() {
         self::setup();
         
-        return call_user_func(self::$class.'::getUsage', $file);
+        if(!method_exists(self::$class, 'getUsage')) return null;
+        
+        return call_user_func(self::$class.'::getUsage');
     }
     
     /**
