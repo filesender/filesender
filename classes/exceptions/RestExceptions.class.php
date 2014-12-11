@@ -136,3 +136,19 @@ class RestBadParameterException extends RestException {
         parent::__construct('rest_bad_parameter', 400, $name);
     }
 }
+
+/**
+ * REST sanity check failed
+ */
+class RestSanityCheckFailedException extends RestException {
+    /**
+     * Constructor
+     * 
+     * @param string $check name of the check
+     * @param mixed $value value of the bad data
+     * @param mixed $expected expected value
+     */
+    public function __construct($check, $value, $expected) {
+        parent::__construct('rest_sanity_check_failed', 400, 'check "'.$check.'", "'.$expected.'" value was expected but got "'.$value.'" instead');
+    }
+}
