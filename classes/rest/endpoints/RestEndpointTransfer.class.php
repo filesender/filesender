@@ -369,10 +369,6 @@ class RestEndpointTransfer extends RestEndpoint {
                 throw new RestOwnershipRequiredException($user->id, 'transfer = '.$transfer->id);
         }
         
-        $nice = array_key_exists('nice', $_GET) && (bool)$_GET['nice'];
-        
-        if($nice) $transfer->close(true);
-        
         $transfer->delete();
     }
 }
