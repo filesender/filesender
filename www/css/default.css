@@ -829,3 +829,10 @@ table.guests .expires {
 .admin_page .config_section .box+.box {
     text-align: center;
 }
+
+
+/* Admin statistics */
+
+.admin_page .statistics_section .storage_usage_blocks {
+    margin-top: 1em;
+}
