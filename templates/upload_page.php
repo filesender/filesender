@@ -104,7 +104,7 @@
                         <div class="fieldcontainer">
                             <label for="datepicker" id="datepicker_label" class="mandatory">{tr:expiry_date}:</label>
                             
-                            <input name="expires" type="text" title="{tr:dp_dateformat}" value="<?php echo Utilities::formatDate(Transfer::getMaxExpire()) ?>"/>
+                            <input name="expires" type="text" autocomplete="off" title="{tr:dp_dateformat}" value="<?php echo Utilities::formatDate(Transfer::getDefaultExpire()) ?>"/>
                         </div>
                         
                         <?php foreach(Transfer::availableOptions(false) as $name => $cfg) $displayoption($name, $cfg) ?>
