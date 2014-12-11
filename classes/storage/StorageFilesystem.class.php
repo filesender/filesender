@@ -297,11 +297,13 @@ class StorageFilesystem {
     public function writeChunk(File $file, $data, $offset = null) {
         $chunk_size = strlen($data);
         
-        $file_path = self::buildPath($file).$file->uid;
+        $path = self::buildPath($file);
         
-        $free_space = disk_free_space($file_path);
+        $free_space = disk_free_space($path);
         if($free_space <= $chunk_size)
             throw new StorageNotEnoughSpaceLeftException($chunk_size);
+        
+        $file_path = $path.$file->uid;
         
         // Open file for writing
         $mode = file_exists($file_path) ? 'rb+' : 'wb+'; // Create file if it does not exist
