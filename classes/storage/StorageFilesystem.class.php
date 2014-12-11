@@ -301,7 +301,7 @@ class StorageFilesystem {
         
         $free_space = disk_free_space($file_path);
         if($free_space <= $chunk_size)
-            throw new OutOfSpaceException($path);
+            throw new StorageNotEnoughSpaceLeftException($chunk_size);
         
         // Open file for writing
         $mode = file_exists($file_path) ? 'rb+' : 'wb+'; // Create file if it does not exist
