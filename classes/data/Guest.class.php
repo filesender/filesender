@@ -274,7 +274,7 @@ class Guest extends DBObject {
         // Sending notification to recipient
         $c = Lang::translateEmail($just_created ? 'guest_created' : 'guest_reminder')->replace($this);
         $mail = new ApplicationMail($c);
-        $mail->to($this->email);
+        $mail->to($this);
         $mail->send();
         
         if($just_created) {
@@ -304,7 +304,7 @@ class Guest extends DBObject {
         // Sending notification to recipient
         $c = Lang::translateEmail($manualy ? 'guest_cancelled' : 'guest_expired')->replace($this);
         $mail = new ApplicationMail($c);
-        $mail->to($this->email);
+        $mail->to($this);
         $mail->send();
     }
     

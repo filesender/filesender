@@ -35,32 +35,51 @@ if (!defined('FILESENDER_BASE'))
     die('Missing environment');
 
 class Mail {
-    public $id = '';
-    public $return_path = '';
+    private $msg_id = null;
+    private $return_path = null;
     private $html = false;
-    private $sender = 'unknown@somewhere';
     private $subject = '?';
     private $contents = array('html' => '', 'plain' => '');
-    private $rcpt = array('to' => array(), 'cc' => array(), 'bcc' => array());
+    private $rcpt = array('To' => array(), 'Cc' => array(), 'Bcc' => array());
     private $attachments = array();
     
-    private $otherheaders = array();
+    private $headers = array();
     
     /**
      * Constructor
-     * */
-    public function __construct($subject = 'No subject', $sender = 'unknown@somewhere', $sendername = '', $html = false, $idprefix = '') {
+     * 
+     * @param string $to (optionnal)
+     * @param string $subject (optionnal)
+     * @param bool $html (optionnal)
+     */
+    public function __construct($to = null, $subject = '', $html = false) {
         mb_internal_encoding('UTF-8');
         
-        $d = explode('@', $sender);
-        $this->id = ($idprefix ? $idprefix.'-' : '').'y'.md5(uniqid().rand(1000, 25000)).'@'.end($d);
-        
-        $this->sender = ($sendername != '') ? mb_encode_mimeheader($sendername).' <'.$sender.'>' : $sender;
-        
-        $subject = trim(str_replace(array("\n", "\r"), ' ', $subject));
-        $this->subject = mb_encode_mimeheader($subject, mb_internal_encoding(), 'Q');
-        
-        $this->html = (bool) $html;
+        if($to) $this->to($to);
+        $this->subject = $subject;
+        $this->html = (bool)$html;
+    }
+    
+    /**
+     * Setter
+     * 
+     * @param string $property property to get
+     * @param mixed $value value to set property to
+     * 
+     * @throws BadEmailException
+     * @throws PropertyAccessException
+     */
+    public function __set($property, $value) {
+        if($property == 'subject') {
+            $this->subject = mb_encode_mimeheader(trim(str_replace(array("\n", "\r"), ' ', $value)), mb_internal_encoding(), 'Q');
+        }else if($property == 'return_path') {
+            if(!filter_var($value, FILTER_VALIDATE_EMAIL)) throw new BadEmailException($value);
+            $this->return_path = (string)$value;
+        }else if($property == 'html') {
+            $this->html = (bool)$value;
+        }else if($property == 'msg_id') {
+            $this->msg_id = (string)$value;
+        }else throw new PropertyAccessException($this, $property);
     }
     
     /**
@@ -71,52 +90,50 @@ class Mail {
      * @param $name optionnal name
      */
     public function addRcpt($mode, $email, $name = '') {
-        $this->rcpt[$mode][] = ($name != '') ? mb_encode_mimeheader($name).' <'.$email.'>' : $email;
+        $this->rcpt[ucfirst($mode)][] = $name ? mb_encode_mimeheader($name).' <'.$email.'>' : $email;
     }
     
     /**
      * Adds to
      * 
-     * @param $email email address
-     * @param $name optionnal name
+     * @param string $email email address
+     * @param string $name optionnal name
      */
     public function to($email, $name = '') {
-        $this->addRcpt('to', $email, $name);
+        $this->addRcpt('To', $email, $name);
     }
     
     /**
      * Adds cc
      * 
-     * @param $email email address
-     * @param $name optionnal name
+     * @param string $email email address
+     * @param string $name optionnal name
      */
     public function cc($email, $name = '') {
-        $this->addRcpt('cc', $email, $name);
+        $this->addRcpt('Cc', $email, $name);
     }
     
     /**
      * Adds bcc
      * 
-     * @param $email email address
-     * @param $name optionnal name
+     * @param string $email email address
+     * @param string $name optionnal name
      */
     public function bcc($email, $name = '') {
-        $this->addRcpt('bcc', $email, $name);
+        $this->addRcpt('Bcc', $email, $name);
     }
     
     /**
-     * Adds other headers
+     * Adds header(s)
      * 
-     * @param array $headers (assoc or not)
+     * @param mixed $header name or array of name=>value
+     * @param string $value (optionnal)
      */
-    public function addHeaders($headers = array()) {
-        foreach($headers as $k => $v) {
-            if(is_numeric($k)) {
-                $this->otherheaders[] = $v;
-            } else {
-                $this->otherheaders[] = $k.': '.$v;
-            }
-        }
+    public function addHeader($header, $value = null) {
+        if(!is_array($header)) $header = array($header => $value);
+        
+        foreach($header as $name => $value)
+            $this->headers[$name] = $value;
     }
     
     /**
@@ -208,37 +225,6 @@ class Mail {
     }
     
     /**
-     * Generates rcpt lines
-     * 
-     * @param string &$fst reference to a string to hold the first rcpt to be passed to mail()
-     * @param bool $raw set to true if all "to" emails must be kept into mail source code (aka if not using php mail)
-     * 
-     * @return string
-     */
-    private function buildRcpt(&$fst, $raw) {
-        if (!count($this->rcpt['to']))
-            die('Mailer needs at least one rcpt');
-        
-        $fst = $this->rcpt['to'][0];
-        
-        if (!$raw)
-            array_shift($this->rcpt['to']);
-        
-        $s = '';
-        
-        if (count($this->rcpt['to']))
-            $s .= 'To: ' . implode(', ', $this->rcpt['to']) . GlobalConstants::NEW_LINE;
-        
-        if (count($this->rcpt['cc']))
-            $s .= 'Cc: ' . implode(', ', $this->rcpt['cc']) . GlobalConstants::NEW_LINE;
-        
-        if (count($this->rcpt['bcc']))
-            $s .= 'Bcc: ' . implode(', ', $this->rcpt['bcc']) . GlobalConstants::NEW_LINE;
-        
-        return $s;
-    }
-    
-    /**
      * Generate code for attachments
      * 
      * @param string $bnd mime boundary
@@ -246,8 +232,9 @@ class Mail {
      * @return string
      */
     private function buildAttachments($bnd, $mprelated = null) {
-        $s = '';
+        $nl = GlobalConstants::NEW_LINE;
         
+        $s = '';
         foreach ($this->attachments as $a) {
             if (!is_null($mprelated) && !$mprelated && $a['cid'])
                 continue;
@@ -259,14 +246,14 @@ class Mail {
             
             $type = Mime::getFromFile($name);
             
-            $s .= GlobalConstants::NEW_LINE . '--' . $bnd . GlobalConstants::NEW_LINE;
-            $s .= 'Content-Type: ' . $type . '; name="' . $name . '"' . GlobalConstants::NEW_LINE;
-            $s .= 'Content-Transfer-Encoding: base64' . GlobalConstants::NEW_LINE;
-            $s .= 'Content-Disposition: ' . $a['mode'] . '; filename="' . $name . '"' . GlobalConstants::NEW_LINE;
+            $s .= $nl . '--' . $bnd . $nl;
+            $s .= 'Content-Type: ' . $type . '; name="' . $name . '"' . $nl;
+            $s .= 'Content-Transfer-Encoding: base64' . $nl;
+            $s .= 'Content-Disposition: ' . $a['mode'] . '; filename="' . $name . '"' . $nl;
             if ($a['cid'])
-                $s .= 'Content-ID: ' . $a['cid'] . GlobalConstants::NEW_LINE;
+                $s .= 'Content-ID: ' . $a['cid'] . $nl;
             
-            $s .= GlobalConstants::NEW_LINE . chunk_split(base64_encode(@file_get_contents($a['path']))) . GlobalConstants::NEW_LINE;
+            $s .= $nl . chunk_split(base64_encode(@file_get_contents($a['path']))) . $nl;
         }
         return $s;
     }
@@ -274,26 +261,30 @@ class Mail {
     /**
      * Build all the mail source
      * 
-     * @param bool $raw false if returns mail function compatible array, string returned otherwise
+     * @param bool $raw if false returns mail function compatible array, string returned otherwise
+     * 
+     * @return mixed
      */
     public function build($raw = false) {
-        $mh = 'From: ' . $this->sender . GlobalConstants::NEW_LINE;
+        $nl = GlobalConstants::NEW_LINE;
         
-        $to = '';
-        $mh .= $this->buildRcpt($to, $raw);
+        $headers = $this->headers;
         
-        if ($this->id)
-            $mh .= 'Message-Id: <' . $this->id . '>' . GlobalConstants::NEW_LINE;
+        if(!$this->msg_id) $this->msg_id = 'filesender-'.uniqid();
+        
+        $to = $raw ? null : array_shift($this->rcpt['To']);
+        
+        foreach($this->rcpt as $mode => $rcpt)
+            if(count($rcpt))
+                $headers[$mode] = implode(', ', $rcpt);
+        
+        $headers['Message-Id'] = $this->msg_id;
         
         if ($this->return_path)
-            $mh .= 'Return-Path: ' . $this->return_path . GlobalConstants::NEW_LINE;
+            $headers['Return-Path'] = $this->return_path;
         
-        $mh .= 'X-Mailer: YMail PHP/' . phpversion() . GlobalConstants::NEW_LINE;
-        $mh .= 'Reply-To: ' . $this->sender . GlobalConstants::NEW_LINE;
-        $mh .= 'MIME-Version: 1.0' . GlobalConstants::NEW_LINE;
-        
-        foreach($this->otherheaders as $h)
-            $mh .= trim($h).GlobalConstants::NEW_LINE;
+        $headers['X-Mailer'] = 'YMail PHP/' . phpversion();
+        $headers['MIME-Version'] = '1.0';
         
         // Boundaries generation
         $bndid = time() . rand(999, 9999) . uniqid();
@@ -309,13 +300,12 @@ class Mail {
             return !(bool) $a['cid'];
         }));
         
-        // Subject
-        $ms = 'Subject: ' . $this->subject . GlobalConstants::NEW_LINE;
+        if($raw) $headers['Subject'] = $this->subject;
         
-        $mc = '';
+        $content = '';
         
         if ($mixed || $related || $this->html)
-            $mc .= 'This is a multi-part message in MIME format.' . GlobalConstants::NEW_LINE . GlobalConstants::NEW_LINE;
+            $content .= 'This is a multi-part message in MIME format.' . $nl.$nl;
         
         $plain = $this->contents['plain'];
         $html = $this->contents['html'];
@@ -345,102 +335,108 @@ class Mail {
         $html = quoted_printable_encode($html);
         
         if ($mixed && $this->html && $related) {
-            $mh .= 'Content-type: multipart/mixed; boundary="' . $mime_bnd_mixed . '"';
+            $headers['Content-type'] = 'multipart/mixed; boundary="' . $mime_bnd_mixed . '"';
             
-            $mc .= '--' . $mime_bnd_mixed . GlobalConstants::NEW_LINE;
-            $mc .= 'Content-type: multipart/alternative; boundary="' . $mime_bnd_alt . '"' . GlobalConstants::NEW_LINE . GlobalConstants::NEW_LINE;
+            $content .= '--' . $mime_bnd_mixed . $nl;
+            $content .= 'Content-type: multipart/alternative; boundary="' . $mime_bnd_alt . '"' . $nl.$nl;
             
-            $mc .= '--' . $mime_bnd_alt . GlobalConstants::NEW_LINE;
-            $mc .= 'Content-Type:text/plain; charset="utf-8"' . GlobalConstants::NEW_LINE;
-            $mc .= 'Content-Transfer-Encoding: quoted-printable' . GlobalConstants::NEW_LINE . GlobalConstants::NEW_LINE;
-            $mc .= $plain . GlobalConstants::NEW_LINE . GlobalConstants::NEW_LINE;
+            $content .= '--' . $mime_bnd_alt . $nl;
+            $content .= 'Content-Type:text/plain; charset="utf-8"' . $nl;
+            $content .= 'Content-Transfer-Encoding: quoted-printable' . $nl.$nl;
+            $content .= $plain . $nl.$nl;
             
-            $mc .= '--' . $mime_bnd_alt . GlobalConstants::NEW_LINE;
-            $mc .= 'Content-type: multipart/related; boundary="' . $mime_bnd_rel . '"' . GlobalConstants::NEW_LINE . GlobalConstants::NEW_LINE;
+            $content .= '--' . $mime_bnd_alt . $nl;
+            $content .= 'Content-type: multipart/related; boundary="' . $mime_bnd_rel . '"' . $nl.$nl;
             
-            $mc .= '--' . $mime_bnd_rel . GlobalConstants::NEW_LINE;
-            $mc .= 'Content-Type:text/html; charset="utf-8"' . GlobalConstants::NEW_LINE;
-            $mc .= 'Content-Transfer-Encoding: quoted-printable' . GlobalConstants::NEW_LINE . GlobalConstants::NEW_LINE;
-            $mc .= $html . GlobalConstants::NEW_LINE . GlobalConstants::NEW_LINE;
+            $content .= '--' . $mime_bnd_rel . $nl;
+            $content .= 'Content-Type:text/html; charset="utf-8"' . $nl;
+            $content .= 'Content-Transfer-Encoding: quoted-printable' . $nl.$nl;
+            $content .= $html . $nl.$nl;
             
-            $mc .= $this->buildAttachments($mime_bnd_rel, true); // related
-            $mc .= '--' . $mime_bnd_rel . '--' . GlobalConstants::NEW_LINE;
-            $mc .= '--' . $mime_bnd_alt . '--' . GlobalConstants::NEW_LINE;
+            $content .= $this->buildAttachments($mime_bnd_rel, true); // related
+            $content .= '--' . $mime_bnd_rel . '--' . $nl;
+            $content .= '--' . $mime_bnd_alt . '--' . $nl;
             
-            $mc .= $this->buildAttachments($mime_bnd_mixed, false); // mixed
-            $mc .= '--' . $mime_bnd_mixed . '--' . GlobalConstants::NEW_LINE;
+            $content .= $this->buildAttachments($mime_bnd_mixed, false); // mixed
+            $content .= '--' . $mime_bnd_mixed . '--' . $nl;
         } elseif ($mixed && $this->html) {
-            $mh .= 'Content-type: multipart/mixed; boundary="' . $mime_bnd_mixed . '"';
+            $headers['Content-type'] = 'multipart/mixed; boundary="' . $mime_bnd_mixed . '"';
             
-            $mc .= '--' . $mime_bnd_mixed . GlobalConstants::NEW_LINE;
-            $mc .= 'Content-type: multipart/alternative; boundary="' . $mime_bnd_alt . '"' . GlobalConstants::NEW_LINE . GlobalConstants::NEW_LINE;
+            $content .= '--' . $mime_bnd_mixed . $nl;
+            $content .= 'Content-type: multipart/alternative; boundary="' . $mime_bnd_alt . '"' . $nl.$nl;
             
-            $mc .= '--' . $mime_bnd_alt . GlobalConstants::NEW_LINE;
-            $mc .= 'Content-Type:text/plain; charset="utf-8"; format=flowed' . GlobalConstants::NEW_LINE;
-            $mc .= 'Content-Transfer-Encoding: quoted-printable' . GlobalConstants::NEW_LINE . GlobalConstants::NEW_LINE;
-            $mc .= $plain . GlobalConstants::NEW_LINE . GlobalConstants::NEW_LINE;
+            $content .= '--' . $mime_bnd_alt . $nl;
+            $content .= 'Content-Type:text/plain; charset="utf-8"; format=flowed' . $nl;
+            $content .= 'Content-Transfer-Encoding: quoted-printable' . $nl.$nl;
+            $content .= $plain . $nl.$nl;
             
-            $mc .= '--' . $mime_bnd_alt . GlobalConstants::NEW_LINE;
-            $mc .= 'Content-Type:text/html; charset="utf-8"' . GlobalConstants::NEW_LINE;
-            $mc .= 'Content-Transfer-Encoding: quoted-printable' . GlobalConstants::NEW_LINE . GlobalConstants::NEW_LINE;
-            $mc .= $html . GlobalConstants::NEW_LINE . GlobalConstants::NEW_LINE;
+            $content .= '--' . $mime_bnd_alt . $nl;
+            $content .= 'Content-Type:text/html; charset="utf-8"' . $nl;
+            $content .= 'Content-Transfer-Encoding: quoted-printable' . $nl.$nl;
+            $content .= $html . $nl.$nl;
             
-            $mc .= '--' . $mime_bnd_alt . '--' . GlobalConstants::NEW_LINE;
+            $content .= '--' . $mime_bnd_alt . '--' . $nl;
             
-            $mc .= $this->buildAttachments($mime_bnd_mixed, false); // mixed
-            $mc .= '--' . $mime_bnd_mixed . '--' . GlobalConstants::NEW_LINE;
+            $content .= $this->buildAttachments($mime_bnd_mixed, false); // mixed
+            $content .= '--' . $mime_bnd_mixed . '--' . $nl;
         } elseif (!$this->html && ($mixed || $related)) {
-            $mh .= 'Content-type: multipart/mixed; boundary="' . $mime_bnd_mixed . '"';
+            $headers['Content-type'] = 'multipart/mixed; boundary="' . $mime_bnd_mixed . '"';
             
-            $mc .= '--' . $mime_bnd_mixed . GlobalConstants::NEW_LINE;
-            $mc .= 'Content-Type:text/plain; charset="utf-8"' . GlobalConstants::NEW_LINE;
-            $mc .= 'Content-Transfer-Encoding: quoted-printable' . GlobalConstants::NEW_LINE . GlobalConstants::NEW_LINE;
-            $mc .= $plain . GlobalConstants::NEW_LINE . GlobalConstants::NEW_LINE;
+            $content .= '--' . $mime_bnd_mixed . $nl;
+            $content .= 'Content-Type:text/plain; charset="utf-8"' . $nl;
+            $content .= 'Content-Transfer-Encoding: quoted-printable' . $nl.$nl;
+            $content .= $plain . $nl.$nl;
             
-            $mc .= $this->buildAttachments($mime_bnd_mixed, true); // related for some reason
-            $mc .= $this->buildAttachments($mime_bnd_mixed, false); // mixed
-            $mc .= '--' . $mime_bnd_mixed . '--' . GlobalConstants::NEW_LINE;
+            $content .= $this->buildAttachments($mime_bnd_mixed, true); // related for some reason
+            $content .= $this->buildAttachments($mime_bnd_mixed, false); // mixed
+            $content .= '--' . $mime_bnd_mixed . '--' . $nl;
         } elseif ($this->html && $related) {
-            $mh .= 'Content-type: multipart/alternative; boundary="' . $mime_bnd_alt . '"';
+            $headers['Content-type'] = 'multipart/alternative; boundary="' . $mime_bnd_alt . '"';
             
-            $mc .= '--' . $mime_bnd_alt . GlobalConstants::NEW_LINE;
-            $mc .= 'Content-Type:text/plain; charset="utf-8"' . GlobalConstants::NEW_LINE;
-            $mc .= 'Content-Transfer-Encoding: quoted-printable' . GlobalConstants::NEW_LINE . GlobalConstants::NEW_LINE;
-            $mc .= $plain . GlobalConstants::NEW_LINE . GlobalConstants::NEW_LINE;
+            $content .= '--' . $mime_bnd_alt . $nl;
+            $content .= 'Content-Type:text/plain; charset="utf-8"' . $nl;
+            $content .= 'Content-Transfer-Encoding: quoted-printable' . $nl.$nl;
+            $content .= $plain . $nl.$nl;
             
-            $mc .= '--' . $mime_bnd_alt . GlobalConstants::NEW_LINE;
-            $mc .= 'Content-type: multipart/related; boundary="' . $mime_bnd_rel . '"' . GlobalConstants::NEW_LINE . GlobalConstants::NEW_LINE;
+            $content .= '--' . $mime_bnd_alt . $nl;
+            $content .= 'Content-type: multipart/related; boundary="' . $mime_bnd_rel . '"' . $nl.$nl;
             
-            $mc .= '--' . $mime_bnd_rel . GlobalConstants::NEW_LINE;
-            $mc .= 'Content-Type:text/html; charset="utf-8"' . GlobalConstants::NEW_LINE;
-            $mc .= 'Content-Transfer-Encoding: quoted-printable' . GlobalConstants::NEW_LINE . GlobalConstants::NEW_LINE;
-            $mc .= $html . GlobalConstants::NEW_LINE . GlobalConstants::NEW_LINE;
+            $content .= '--' . $mime_bnd_rel . $nl;
+            $content .= 'Content-Type:text/html; charset="utf-8"' . $nl;
+            $content .= 'Content-Transfer-Encoding: quoted-printable' . $nl.$nl;
+            $content .= $html . $nl.$nl;
             
-            $mc .= $this->buildAttachments($mime_bnd_rel, true); // related
-            $mc .= '--' . $mime_bnd_rel . '--' . GlobalConstants::NEW_LINE;
-            $mc .= '--' . $mime_bnd_alt . '--' . GlobalConstants::NEW_LINE;
+            $content .= $this->buildAttachments($mime_bnd_rel, true); // related
+            $content .= '--' . $mime_bnd_rel . '--' . $nl;
+            $content .= '--' . $mime_bnd_alt . '--' . $nl;
         } elseif ($this->html) {
-            $mh .= 'Content-type: multipart/alternative; boundary="' . $mime_bnd_alt . '"';
+            $headers['Content-type'] = 'multipart/alternative; boundary="' . $mime_bnd_alt . '"';
             
-            $mc .= '--' . $mime_bnd_alt . GlobalConstants::NEW_LINE;
-            $mc .= 'Content-Type:text/plain; charset="utf-8"; format=flowed' . GlobalConstants::NEW_LINE;
-            $mc .= 'Content-Transfer-Encoding: quoted-printable' . GlobalConstants::NEW_LINE . GlobalConstants::NEW_LINE;
-            $mc .= $plain . GlobalConstants::NEW_LINE . GlobalConstants::NEW_LINE;
+            $content .= '--' . $mime_bnd_alt . $nl;
+            $content .= 'Content-Type:text/plain; charset="utf-8"; format=flowed' . $nl;
+            $content .= 'Content-Transfer-Encoding: quoted-printable' . $nl.$nl;
+            $content .= $plain . $nl.$nl;
             
-            $mc .= '--' . $mime_bnd_alt . GlobalConstants::NEW_LINE;
-            $mc .= 'Content-Type:text/html; charset="utf-8"' . GlobalConstants::NEW_LINE;
-            $mc .= 'Content-Transfer-Encoding: quoted-printable' . GlobalConstants::NEW_LINE . GlobalConstants::NEW_LINE;
-            $mc .= $html . GlobalConstants::NEW_LINE . GlobalConstants::NEW_LINE;
+            $content .= '--' . $mime_bnd_alt . $nl;
+            $content .= 'Content-Type:text/html; charset="utf-8"' . $nl;
+            $content .= 'Content-Transfer-Encoding: quoted-printable' . $nl.$nl;
+            $content .= $html . $nl.$nl;
             
-            $mc .= '--' . $mime_bnd_alt . '--' . GlobalConstants::NEW_LINE;
+            $content .= '--' . $mime_bnd_alt . '--' . $nl;
         } else {
-            $mh .= 'Content-Type:text/plain; charset="utf-8"' . GlobalConstants::NEW_LINE;
-            $mh .= 'Content-Transfer-Encoding: quoted-printable';
+            $headers['Content-Type'] = 'text/plain; charset="utf-8"' . $nl;
+            $headers['Content-Transfer-Encoding'] = 'quoted-printable';
             
-            $mc .= $plain . GlobalConstants::NEW_LINE . GlobalConstants::NEW_LINE;
+            $content .= $plain . $nl.$nl;
         }
         
-        return $raw ? $mh . GlobalConstants::NEW_LINE . 'Subject: ' . $this->subject . GlobalConstants::NEW_LINE . GlobalConstants::NEW_LINE . $mc : array('to' => $to, 'subject' => $this->subject, 'body' => $mc, 'headers' => $mh);
+        $headers = implode($nl, array_map(function($name, $value) {
+            return $name.': '.$value;
+        }, array_keys($headers), array_values($headers)));
+        
+        if($raw) return $headers . $nl.$nl . $content;
+        
+        return array('to' => $to, 'subject' => $this->subject, 'body' => $content, 'headers' => $headers);
     }
     
     /**
@@ -457,6 +453,7 @@ class Mail {
         if (!$safemode && $this->return_path) {
             return mail($source['to'], $this->subject, $source['body'], $source['headers'], '-f' . $this->return_path);
         } else {
+            Logger::warn('Safe mode is on, cannot set the return_path for sent email');
             return mail($source['to'], $this->subject, $source['body'], $source['headers']);
         }
     }
