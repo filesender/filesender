@@ -321,7 +321,7 @@ class Transfer extends DBObject {
         
         foreach($this->recipients as $recipient) {
             $mail = new ApplicationMail($ctn->r($recipient));
-            $mail->to($recipient->email);
+            $mail->to($recipient);
             $mail->send();
         }
         
@@ -667,7 +667,7 @@ class Transfer extends DBObject {
         
         foreach($this->recipients as $recipient) {
             $mail = new ApplicationMail($ctn->r($recipient));
-            $mail->to($recipient->email);
+            $mail->to($recipient);
             $mail->send();
         }
         

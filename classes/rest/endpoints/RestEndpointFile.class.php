@@ -269,7 +269,7 @@ class RestEndpointFile extends RestEndpoint {
                 $ctn = Lang::translateEmail('file_deleted')->r($file, $file->transfer);
                 foreach($file->transfer->recipients as $recipient) {
                     $mail = new ApplicationMail($ctn->r($recipient));
-                    $mail->to($recipient->email);
+                    $mail->to($recipient);
                     $mail->send();
                 }
             }
