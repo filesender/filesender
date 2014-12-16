@@ -82,6 +82,9 @@ $default = array(
     'storage_filesystem_df_command' => 'df {path}',
     'storage_filesystem_rm_command' => null, // Can be /usr/bin/shred -f -u -n 1 -z {path}
     
+    'email_from' => 'sender',
+    'email_return_path' => 'sender',
+    
     'statlog_lifetime' => 0,
     'auditlog_lifetime' => 31,
     
