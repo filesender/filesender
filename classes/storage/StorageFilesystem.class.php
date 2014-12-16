@@ -79,7 +79,7 @@ class StorageFilesystem {
         if(!is_string($what) || (!is_dir($what) && !is_file($what)))
             throw new StorageFilesystemBadResolverTargetException($what);
         
-        $cmd = str_replace('{path}', escapeshellarg($what), Config::get('df_command'));
+        $cmd = str_replace('{path}', escapeshellarg($what), Config::get('storage_filesystem_df_command'));
         exec($cmd, $out, $ret);
         
         $out = array_filter(array_map('trim', $out));
@@ -343,7 +343,7 @@ class StorageFilesystem {
         
         if(!file_exists($file_path)) return;
         
-        $rm_command = Config::get('rm_command');
+        $rm_command = Config::get('storage_filesystem_rm_command');
         
         if($rm_command) {
             $cmd = str_replace('{path}', escapeshellarg($file_path), $rm_command);

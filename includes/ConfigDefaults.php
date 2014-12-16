@@ -77,7 +77,11 @@ $default = array(
     'terasender_start_mode' => 'multiple',
     
     'storage_type' => 'filesystem',
+    
     'storage_filesystem_path' => FILESENDER_BASE.'/files',
+    'storage_filesystem_df_command' => 'df {path}',
+    'storage_filesystem_rm_command' => null, // Can be /usr/bin/shred -f -u -n 1 -z {path}
+    
     'statlog_lifetime' => 0,
     'auditlog_lifetime' => 31,
     
@@ -91,7 +95,4 @@ $default = array(
             'rotate' => 'hourly'
         )
     ),
-    
-    'df_command' => 'df {path}',
-    'rm_command' => null, // Can be /usr/bin/shred -f -u -n 1 -z {path}
 );
