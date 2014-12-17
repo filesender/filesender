@@ -173,13 +173,50 @@ $(function() {
                                 return false;
                             }
                             
-                            alert(emails.join(', '));
+                            var done = 0;
+                            for(var i=0; i<emails.length; i++) {
+                                filesender.client.addRecipient(id, emails[i], function() {
+                                    done++;
+                                    
+                                    if(done < emails.length) return;
+                                    
+                                    filesender.ui.alert('success', lang.tr('recipient_added'), function() {
+                                        filesender.ui.reload();
+                                    });
+                                });
+                            }
                             
                             return true;
                         })
                         
                         prompt.append('<p>' + lang.tr('email_separator_msg') + '</p>');
-                        prompt.append($('<input type="text" />'));
+                        var input = $('<input type="text" class="wide" />').appendTo(prompt);
+                        
+                        // Autocomplete is buggy
+                        /*input.autocomplete({
+                            source: function (request, response) {
+                                filesender.client.getFrequentRecipients(request.term,
+                                    function (data) {
+                                        response($.map(data, function (item) {
+                                            if ($('.transfers .transfer_details[data-id="' + id + '"] .recipient[data-email="' + item + '"]').length == 0){
+                                                return { 
+                                                    label: item,
+                                                    value: item
+                                                };
+                                            }else{
+                                                return undefined;
+                                            }
+                                        })) 
+                                    }
+                                );
+                            },
+                            select: function (event, ui) {
+                                input.val(input.val() + ', ' + ui.item.value);
+                                
+                                return false;
+                            },
+                            minLength: filesender.config.minimum_characters_for_autocomplete
+                        });*/
                     });
                     
                     // Send reminder button
