@@ -261,6 +261,8 @@ class Guest extends DBObject {
         $this->status = GuestStatuses::AVAILABLE;
         $this->save();
         
+        Auth::user()->saveFrequentRecipients(array($this->email));
+        
         Logger::logActivity(LogEventTypes::GUEST_CREATED, $this);
         
         $this->notify(true);
