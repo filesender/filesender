@@ -451,7 +451,7 @@ class Mail {
         $safemode = ($safemode && !preg_match('`^off$`i', $safemode));
         
         if (!$safemode && $this->return_path) {
-            return mail($source['to'], $this->subject, $source['body'], $source['headers'], '-f' . $this->return_path);
+            return mail($source['to'], $this->subject, $source['body'], $source['headers'], '-r' . $this->return_path);
         } else {
             Logger::warn('Safe mode is on, cannot set the return_path for sent email');
             return mail($source['to'], $this->subject, $source['body'], $source['headers']);
