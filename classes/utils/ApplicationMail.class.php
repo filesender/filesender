@@ -94,7 +94,7 @@ class ApplicationMail extends Mail {
             }
         }
         
-        $context = $this->to['object'] ? strtolower(get_class($this->to['object'])).'-'.$this->to['object']->id : null;
+        $context = $this->to['object'] ? strtolower(get_class($this->to['object'])).'-'.$this->to['object']->id : 'no_context';
         
         $from = Config::get('email_from');
         if($from) {
@@ -132,17 +132,17 @@ class ApplicationMail extends Mail {
         
         $return_path = Config::get('email_return_path');
         if($return_path) {
-            if($return_path != 'sender' && !filter_var($return_path, FILTER_VALIDATE_EMAIL))
+            if($return_path != 'sender' && !filter_var(str_replace('<verp>', 'verp', $return_path), FILTER_VALIDATE_EMAIL))
                 throw new ConfigBadParameterException('email_return_path');
             
             if($return_path == 'sender') $return_path = $sender;
             
             if($return_path) {
-                if(!filter_var($return_path, FILTER_VALIDATE_EMAIL))
-                    throw new BadEmailException($return_path);
-                
                 if(preg_match('`^(.+)<verp>(.+)$`i', $return_path, $match))
                     $return_path = $match[1].$context.$match[2];
+                
+                if(!filter_var($return_path, FILTER_VALIDATE_EMAIL))
+                    throw new BadEmailException($return_path);
                 
                 $this->return_path = $return_path;
             }
