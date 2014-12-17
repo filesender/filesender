@@ -65,6 +65,7 @@ class Autoloader {
         'Recipient' => 'data/',
         'Guest' => 'data/',
         'User' => 'data/',
+        'TrackingEvent' => 'data/',
         
         'Auth*' => 'auth/',
         
