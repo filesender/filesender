@@ -664,10 +664,7 @@ class Transfer extends DBObject {
             $files[] = $file->name.' ('.Utilities::formatBytes($file->size).')';
         }
         
-        $ctn = Lang::translateEmail('transfer_available')->r($this, array(
-            'text_file_list' => (count($files) > 1) ? '  - '.implode("\n  - ", $files) : $files[0],
-            'html_file_list' => (count($files) > 1) ? '<ul><li>'.implode('</li><li>', $files).'</li></ul>' : $files[0],
-        ));
+        $ctn = Lang::translateEmail('transfer_available')->r($this);
         
         $this->manageTransferOptions($ctn);
         
