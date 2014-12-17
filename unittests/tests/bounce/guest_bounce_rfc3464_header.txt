@@ -8,7 +8,7 @@ Received: by zmtaout06.partage.renater.fr (Postfix)
 Date: Tue, 16 Dec 2014 17:26:42 +0100 (CET)
 From: MAILER-DAEMON@zmtaout06.partage.renater.fr (Mail Delivery System)
 Subject: Undelivered Mail Returned to Sender
-To: feedback+recipient-1@mac-em.renater.fr
+To: foobar@renater.fr
 Auto-Submitted: auto-replied
 MIME-Version: 1.0
 Content-Type: multipart/report; report-type=delivery-status;
@@ -25,7 +25,7 @@ Content-Type: text/plain; charset=us-ascii
 This is the mail system at host zmtaout06.partage.renater.fr.
 
 I'm sorry to have to inform you that your message could not
-be delivered to one or more recipients. It's attached below.
+be delivered to one or more guests. It's attached below.
 
 For further assistance, please send mail to postmaster.
 
@@ -56,7 +56,7 @@ Content-Description: Undelivered Message
 Content-Type: message/rfc822
 Content-Transfer-Encoding: 7bit
 
-Return-Path: <feedback+recipient-1-bounce@filesender.mac-em.cru.fr>
+Return-Path: <feedback+guest-1-bounce@filesender.mac-em.cru.fr>
 Received: from localhost (localhost [127.0.0.1])
 	by zmtaout06.partage.renater.fr (Postfix) with ESMTP id 0B055100323
 	for <barfoo@renater.fr>; Tue, 16 Dec 2014 17:26:42 +0100 (CET)
@@ -82,6 +82,7 @@ From: Etienne MELEARD <foobar@renater.fr>
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:31.0) Gecko/20100101 Thunderbird/31.3.0
 MIME-Version: 1.0
 To: barfoo@renater.fr
+X-Filesender-Context: guest-1
 Subject: test bounce
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit

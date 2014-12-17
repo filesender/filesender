@@ -1,0 +1,91 @@
+
+Received: from zmtaout06.partage.renater.fr (LHLO
+ zmtaout06.partage.renater.fr) (194.254.251.186) by
+ zstore01.partage.renater.fr with LMTP; Tue, 16 Dec 2014 17:26:42 +0100
+ (CET)
+Received: by zmtaout06.partage.renater.fr (Postfix)
+	id 12B3E100342; Tue, 16 Dec 2014 17:26:42 +0100 (CET)
+Date: Tue, 16 Dec 2014 17:26:42 +0100 (CET)
+From: MAILER-DAEMON@zmtaout06.partage.renater.fr (Mail Delivery System)
+Subject: Undelivered Mail Returned to Sender
+To: feedback+recipient-1@mac-em.renater.fr
+Auto-Submitted: auto-replied
+MIME-Version: 1.0
+Content-Type: multipart/report; report-type=delivery-status;
+	boundary="0B055100323.1418747202/zmtaout06.partage.renater.fr"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20141216162642.12B3E100342@zmtaout06.partage.renater.fr>
+
+This is a MIME-encapsulated message.
+
+--0B055100323.1418747202/zmtaout06.partage.renater.fr
+Content-Description: Notification
+Content-Type: text/plain; charset=us-ascii
+
+This is the mail system at host zmtaout06.partage.renater.fr.
+
+I'm sorry to have to inform you that your message could not
+be delivered to one or more recipients. It's attached below.
+
+For further assistance, please send mail to postmaster.
+
+If you do so, please include this problem report. You can
+delete your own text from the attached returned message.
+
+                   The mail system
+
+<barfoo@renater.fr>: renater.fr
+
+--0B055100323.1418747202/zmtaout06.partage.renater.fr
+Content-Description: Delivery report
+Content-Type: message/delivery-status
+
+Reporting-MTA: dns; zmtaout06.partage.renater.fr
+X-Postfix-Queue-ID: 0B055100323
+X-Postfix-Sender: rfc822; foobar@renater.fr
+Arrival-Date: Tue, 16 Dec 2014 17:26:42 +0100 (CET)
+
+Final-Recipient: rfc822; barfoo@renater.fr
+Original-Recipient: rfc822;barfoo@renater.fr
+Action: failed
+Status: 5.0.0
+Diagnostic-Code: X-Postfix; renater.fr
+
+--0B055100323.1418747202/zmtaout06.partage.renater.fr
+Content-Description: Undelivered Message
+Content-Type: message/rfc822
+Content-Transfer-Encoding: 7bit
+
+Return-Path: <feedback+recipient-1@filesender.mac-em.cru.fr>
+Received: from localhost (localhost [127.0.0.1])
+	by zmtaout06.partage.renater.fr (Postfix) with ESMTP id 0B055100323
+	for <barfoo@renater.fr>; Tue, 16 Dec 2014 17:26:42 +0100 (CET)
+X-Virus-Scanned: amavisd-new at zmtaout06.partage.renater.fr
+Received: from zmtaout06.partage.renater.fr ([127.0.0.1])
+	by localhost (zmtaout06.partage.renater.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id Vvgs9uqf0ylU for <barfoo@renater.fr>;
+	Tue, 16 Dec 2014 17:26:41 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by zmtaout06.partage.renater.fr (Postfix) with ESMTP id D8EF510033C
+	for <barfoo@renater.fr>; Tue, 16 Dec 2014 17:26:41 +0100 (CET)
+X-Virus-Scanned: amavisd-new at zmtaout06.partage.renater.fr
+Received: from zmtaout06.partage.renater.fr ([127.0.0.1])
+	by localhost (zmtaout06.partage.renater.fr [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id 5NGDYwFwAV4m for <barfoo@renater.fr>;
+	Tue, 16 Dec 2014 17:26:41 +0100 (CET)
+Received: from mac-em.cru.fr (unknown [10.0.2.212])
+	by zmtaout06.partage.renater.fr (Postfix) with ESMTPA id BB9B8100323
+	for <barfoo@renater.fr>; Tue, 16 Dec 2014 17:26:41 +0100 (CET)
+Message-ID: <54905D49.8040506@renater.fr>
+Date: Tue, 16 Dec 2014 17:26:49 +0100
+From: Etienne MELEARD <foobar@renater.fr>
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:31.0) Gecko/20100101 Thunderbird/31.3.0
+MIME-Version: 1.0
+To: barfoo@renater.fr
+Subject: test bounce
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+
+bla bla bla
+
+--0B055100323.1418747202/zmtaout06.partage.renater.fr--
