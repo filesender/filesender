@@ -85,6 +85,9 @@ $default = array(
     'email_from' => 'sender',
     'email_return_path' => 'sender',
     
+    'report_bounces' => 'asap',
+    'report_bounces_asap_then_daily_range' => 15 * 60,
+    
     'statlog_lifetime' => 0,
     'auditlog_lifetime' => 31,
     
