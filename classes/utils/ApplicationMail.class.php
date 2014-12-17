@@ -149,7 +149,7 @@ class ApplicationMail extends Mail {
         }
         
         if($context) {
-            $this->msg_id = $context.'-'.uniqid();
+            $this->msg_id = '<'.$context.'-'.uniqid().'@filesender>';
             $this->addHeader('X-Filesender-Context', $context);
         }
         
