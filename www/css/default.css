@@ -352,6 +352,10 @@ table.list .date {
     margin-right: 1em;
 }
 
+.ui-dialog .ui-dialog-content input.wide {
+    width: 90%;
+}
+
 .ui-dialog-content.wide_info {
     overflow-y: scroll;
 }
