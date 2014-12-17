@@ -198,7 +198,7 @@ while($inputs) {
                 $target = $move_after_processing;
                 if(substr($target, 0, 1) != '/') $target = dirname($input).'/'.$target;
                 
-                if(!is_dir($target) && !mkdir($target, 0777, true)) {
+                if(!is_dir($target) && !mkdir($target, 0777, true))
                     throw new Exception('target directory "'.$target.'" does not exist and cannot be created');
                 
                 copy($input, $target.'/'.basename($input));
