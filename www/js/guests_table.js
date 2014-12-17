@@ -76,7 +76,7 @@ $(function() {
         });
         
         // Send forward button
-        $('<span class="remind clickable fa fa-lg fa-mail-forward" />').appendTo(td).attr({
+        $('<span class="forward clickable fa fa-lg fa-mail-forward" />').appendTo(td).attr({
             title: lang.tr('forward')
         }).on('click', function() {
             var id = $(this).closest('tr').attr('data-id');
