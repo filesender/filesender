@@ -244,7 +244,8 @@ $lang["_CONFIRM_DELETE_RECIPIENT"] = "Are you sure you want to delete this recip
 $lang["_CONFIRM_DELETE_TRANSACTION"] = "Are you sure you want to delete this transaction?";
 
 // standard date display format
-$lang['date_format'] = "d/m/Y"; // Format for displaying date/time, use PHP date() format string syntax 
+$lang['date_format'] = "d/m/Y"; // Format for displaying date, use PHP date() format string syntax 
+$lang['datetime_format'] = "d/m/Y H:i:s"; // Format for displaying datetime, use PHP date() format string syntax 
 
 // datepicker localization
 $lang['_DP_closeText'] = 'Done'; // Done
@@ -349,6 +350,7 @@ $lang['admin_config_section'] = 'Config';
 $lang['global_statistics'] = 'Global statistics';
 $lang['available_transfers'] = 'Currently available transfers';
 $lang['uploading_transfers'] = 'Currently uploading transfers';
+$lang['closed_transfers'] = 'Closed transfers';
 $lang['created_transfers'] = 'Created transfers';
 $lang['count_from_date_to_date'] = '{count} from {date:start} to {date:end}';
 
@@ -392,6 +394,11 @@ $lang['confirm_delete_recipient'] = 'Are you sure you want to delete this recipi
 $lang['recipient_deleted'] = 'The recipient has been deleted.';
 $lang['file_deleted'] = 'The file has been deleted.';
 
+$lang['recipient_errors'] = 'Recipient errors';
+$lang['error_type'] = 'Error type';
+$lang['error_date'] = 'Error date';
+$lang['error_details'] = 'Error technical details';
+$lang['recipient_error_bounce'] = 'email delivery failed';
 
 // --------------------------------------------------
 // Exceptions translation

@@ -40,7 +40,7 @@
     
     <tbody>
         <?php foreach($transfers as $transfer) { ?>
-        <tr class="transfer" data-id="<?php echo $transfer->id ?>">
+        <tr class="transfer" data-id="<?php echo $transfer->id ?>" data-errors="<?php echo count($transfer->recipients_with_error) ? '1' : '' ?>">
             <td class="expand">
                 <span class="clickable fa fa-plus-circle fa-lg" title="{tr:show_details}"></span>
             </td>
@@ -116,8 +116,14 @@
                     <h2>{tr:recipients}</h2>
                     
                     <?php foreach($transfer->recipients as $recipient) { ?>
-                        <div class="recipient" data-id="<?php echo $recipient->id ?>" data-email="<?php echo Utilities::sanitizeOutput($recipient->email) ?>">
-                            <?php echo Utilities::sanitizeOutput($recipient->email) ?> : <?php echo count($recipient->downloads) ?> {tr:downloads}
+                        <div class="recipient" data-id="<?php echo $recipient->id ?>" data-email="<?php echo Utilities::sanitizeOutput($recipient->email) ?>" data-errors="<?php echo count($recipient->errors) ? '1' : '' ?>">
+                            <?php echo Utilities::sanitizeOutput($recipient->email) ?>
+                            <?php if($recipient->errors) echo '<span class="errors">'.implode(', ', array_map(function($type) {
+                                return Lang::tr('recipient_error_'.$type);
+                            }, array_unique(array_map(function($error) {
+                                return $error->type;
+                            }, $recipient->errors)))).'</span>' ?>
+                            : <?php echo count($recipient->downloads) ?> {tr:downloads}
                         </div>
                     <?php } ?>
                 </div>

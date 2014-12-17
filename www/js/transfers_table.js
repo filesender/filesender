@@ -220,6 +220,38 @@ $(function() {
                 });
             });
             
+            table.find('.transfer_details .recipient .errors').each(function() {
+                $('<span class="details clickable fa fa-lg fa-info-circle" />').appendTo($(this)).attr({
+                    title: lang.tr('details')
+                }).on('click', function() {
+                    var rcpt = $(this).closest('.recipient');
+                    var id = rcpt.attr('data-id');
+                    if(!id || isNaN(id)) return;
+                    
+                    filesender.client.getRecipient(id, function(recipient) {
+                        var popup = filesender.ui.wideInfoPopup(lang.tr('recipient_errors'));
+                        
+                        for(var i=0; i<recipient.errors.length; i++) {
+                            var error = recipient.errors[i];
+                            
+                            var node = $('<div class="error" />').appendTo(popup);
+                            
+                            var type = $('<div class="type" />').appendTo(node);
+                            $('<span class="name" />').appendTo(type).text(lang.tr('error_type') + ' : ');
+                            $('<span class="value" />').appendTo(type).text(lang.tr('recipient_error_' + error.type));
+                            
+                            var date = $('<div class="date" />').appendTo(node);
+                            $('<span class="name" />').appendTo(date).text(lang.tr('error_date') + ' : ');
+                            $('<span class="value" />').appendTo(date).text(error.date.formatted);
+                            
+                            var details = $('<div class="details" />').appendTo(node);
+                            $('<span class="name" />').appendTo(details).text(lang.tr('error_details') + ' : ');
+                            $('<pre class="value" />').appendTo(details).text(error.details);
+                        }
+                    });
+                });
+            });
+            
             table.find('.transfer_details .file').each(function() {
                 $('<span class="delete clickable fa fa-lg fa-trash-o" />').appendTo($(this)).attr({
                     title: lang.tr('delete')
@@ -247,7 +279,7 @@ $(function() {
         // Add auditlogs triggers
         var auditlogs = function(transfer_id, filter) {
             filesender.client.getTransferAuditlog(transfer_id, function(log) {
-                var popup = filesender.ui.wideInfoPopup('auditlog');
+                var popup = filesender.ui.wideInfoPopup(lang.tr('auditlog'));
                 
                 if(!log || !log.length) {
                     $('<p />').text(lang.tr('no_auditlog')).appendTo(popup);
