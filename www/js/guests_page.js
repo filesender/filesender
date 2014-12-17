@@ -137,6 +137,40 @@ filesender.ui.recipients = {
         
         filesender.ui.evalSendEnabled();
     },
+    
+    // Enable autocomplete for frequent recipients on a field
+    autocomplete: function(){
+        $(filesender.ui.nodes.recipients.input).autocomplete({
+            source: function (request, response) {
+                filesender.client.getFrequentRecipients(request.term,
+                    function (data) {
+                        response($.map(data, function (item) { 
+                            if (filesender.ui.nodes.recipients.list.find('[email="'+item+'"]').length == 0){
+                                return { 
+                                    label: item,
+                                    value: item
+                                };
+                            }else{
+                                return undefined;
+                            }
+                        })) 
+                    }
+                );
+            },
+            select: function (event, ui) {
+                filesender.ui.recipients.add(ui.item.value);
+                
+                var marker = $(this).data('error_marker');
+        
+                $(this).val('');
+                $(this).removeClass('invalid');
+                if(marker) marker.remove();
+                
+                return false;
+            },
+            minLength: filesender.config.minimum_characters_for_autocomplete
+        });
+    }
 };
 
 filesender.ui.evalSendEnabled = function() {
@@ -184,9 +218,6 @@ $(function() {
     var page = $('.guests_page');
     if(!page.length) return;
     
-    // Transfer
-    filesender.ui.transfer = new filesender.transfer();
-    
     // Register frequently used nodes
     filesender.ui.nodes = {
         recipients: {
@@ -200,6 +231,8 @@ $(function() {
         options: {},
         sendbutton: page.find('.invite_guest .send'),
     };
+    
+    filesender.ui.recipients.autocomplete();
     
     // Setup date picker
     $.datepicker.setDefaults({

@@ -157,4 +157,37 @@ $(function() {
             input.focus();
         });
     });
+    
+    // Errors details
+    guests.find('.guest[data-errors="1"] .to .errors').each(function() {
+        $('<span class="details clickable fa fa-lg fa-info-circle" />').appendTo($(this)).attr({
+            title: lang.tr('details')
+        }).on('click', function() {
+            var rcpt = $(this).closest('.guest');
+            var id = rcpt.attr('data-id');
+            if(!id || isNaN(id)) return;
+            
+            filesender.client.getGuest(id, function(guest) {
+                var popup = filesender.ui.wideInfoPopup(lang.tr('recipient_errors'));
+                
+                for(var i=0; i<guest.errors.length; i++) {
+                    var error = guest.errors[i];
+                    
+                    var node = $('<div class="error" />').appendTo(popup);
+                    
+                    var type = $('<div class="type" />').appendTo(node);
+                    $('<span class="name" />').appendTo(type).text(lang.tr('error_type') + ' : ');
+                    $('<span class="value" />').appendTo(type).text(lang.tr('recipient_error_' + error.type));
+                    
+                    var date = $('<div class="date" />').appendTo(node);
+                    $('<span class="name" />').appendTo(date).text(lang.tr('error_date') + ' : ');
+                    $('<span class="value" />').appendTo(date).text(error.date.formatted);
+                    
+                    var details = $('<div class="details" />').appendTo(node);
+                    $('<span class="name" />').appendTo(details).text(lang.tr('error_details') + ' : ');
+                    $('<pre class="value" />').appendTo(details).text(error.details);
+                }
+            });
+        });
+    });
 });

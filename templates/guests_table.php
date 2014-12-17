@@ -15,7 +15,7 @@
     
     </tbody>
         <?php foreach($guests as $guest) { ?>
-        <tr class="guest" data-id="<?php echo $guest->id ?>">
+        <tr class="guest" data-id="<?php echo $guest->id ?>" data-errors="<?php echo count($guest->errors) ? '1' : '' ?>">
             <td class="from">
                 <abbr title="<?php echo Utilities::sanitizeOutput($guest->user_email) ?>">
                     <?php echo Utilities::sanitizeOutput(substr($guest->user_email, 0, strpos($guest->user_email, '@'))) ?>
@@ -26,6 +26,11 @@
                 <abbr title="<?php echo Utilities::sanitizeOutput($guest->email) ?>">
                     <?php echo Utilities::sanitizeOutput(substr($guest->email, 0, strpos($guest->email, '@'))) ?>
                 </abbr>
+                <?php if($guest->errors) echo '<br /><span class="errors">'.implode(', ', array_map(function($type) {
+                    return Lang::tr('recipient_error_'.$type);
+                }, array_unique(array_map(function($error) {
+                    return $error->type;
+                }, $guest->errors)))).'</span>' ?>
             </td>
             
             <td class="subject">

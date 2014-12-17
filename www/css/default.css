@@ -373,6 +373,27 @@ table.list .date {
     margin-left: 0.25em;
 }
 
+.ui-dialog-content.wide_info .error {
+    margin-bottom: 0.5em;
+    padding-bottom: 0.5em;
+    border-bottom: 1px solid silver;
+}
+
+.ui-dialog-content.wide_info .error div {
+    margin-bottom: 0.25em;
+}
+
+.ui-dialog-content.wide_info .error div .name {
+    font-weight: bold;
+}
+
+.ui-dialog-content.wide_info .error .details pre {
+    font-family: monospace;
+    margin: 0.25em 1em;
+    border: 1px dashed silver;
+    padding: 0.25em;
+}
+
 
 /* Upload page */
 
@@ -642,41 +663,19 @@ table.transfers .transfer_details .recipients .recipient .errors {
     padding: 0.1em;
 }
 
-.ui-dialog-content.wide_info .error {
-    margin-bottom: 0.5em;
-    padding-bottom: 0.5em;
-    border-bottom: 1px solid silver;
+table.transfers .transfer_details .recipients .recipient .errors .details {
+    margin-left: 0.25em;
 }
 
-.ui-dialog-content.wide_info .error div {
-    margin-bottom: 0.25em;
-}
-
-.ui-dialog-content.wide_info .error div .name {
-    font-weight: bold;
-}
-
-.ui-dialog-content.wide_info .error .details pre {
-    font-family: monospace;
-    margin: 0.25em 1em;
-    border: 1px dashed silver;
-    padding: 0.25em;
-}
-
-
-/* Transfer page */
-#transfer_addrecipient {
-    display: none;
-}
 
 /* Guests page */
 
-.send_voucher .recipients {
+#send_voucher .recipients {
     display: none;
     padding: 0.5em 0;
 }
 
-.send_voucher .recipients .recipient {
+#send_voucher .recipients .recipient {
     margin: 0.2em;
     padding: 0.5em;
     border: 1px solid #ccc;
@@ -685,17 +684,17 @@ table.transfers .transfer_details .recipients .recipient .errors {
     background-color: #dedede;
 }
 
-.send_voucher .recipients .recipient .remove {
+#send_voucher .recipients .recipient .remove {
     float: right;
 }
 
-.send_voucher textarea[name="message"] {
+#send_voucher textarea[name="message"] {
     display: block;
     width: 100%;
     resize: vertical;
 }
 
-.send_voucher input[type="checkbox"] {
+#send_voucher input[type="checkbox"] {
     float: left;
     width: 1.2em;
     margin: 0 1em 0 0;
@@ -719,6 +718,14 @@ table.guests .created,
 table.guests .expires {
     width: 7em;
     text-align: center;
+}
+
+table.guests tbody .guest[data-errors="1"] td {
+    background-color: #faa;
+}
+
+table.guests .guest .to .errors .details {
+    margin-left: 0.25em;
 }
 
 
