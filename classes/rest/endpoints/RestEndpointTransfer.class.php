@@ -210,12 +210,20 @@ class RestEndpointTransfer extends RestEndpoint {
             if(!$transfer->isOwner($user) && !Auth::isAdmin())
                 throw new RestOwnershipRequiredException($user->id, 'transfer = '.$transfer->id);
             
+            if($transfer->status == TransferStatuses::CLOSED)
+                throw new RestException('cannot_alter_closed_transfer' ,403);
+            
             // Add recipient
             $data = $this->request->input;
             
             $recipient = $transfer->addRecipient($data->recipient);
-
-            // Send email
+            
+            // Send email if transfer is live already
+            if($transfer->status == TransferStatuses::AVAILABLE) {
+                $mail = new ApplicationMail(Lang::translateEmail('transfer_available')->r($transfer, $recipient));
+                $mail->to($recipient);
+                $mail->send();
+            }
             
             return array(
                 'path' => '/recipient/'.$recipient->id,
