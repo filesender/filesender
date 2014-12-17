@@ -133,7 +133,7 @@ var startTime = 0;
  	function showWarningMessage(file) { $("#encsize_msg").html(encsizemsg.replace(":1",file.name)).show(); }
  	function hideWarningMessage() { $("#encsize_msg").hide(); }
  	
- 	function showError(file) { fileMsg(encsizemsg.replace(":1",file.name)); }
+ 	function showError(file) { fileMsg(encsizemsg.replace(":1",file.name).replace(":2",readablizebytes(maxCryptedSize))); }
  	
  	
  	function generaterandom() 
