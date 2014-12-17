@@ -49,3 +49,13 @@ foreach(Transfer::allExpiredAuditlogs() as $transfer) {
 }
 
 Logger::info('Cron cleanup complete');
+
+$report = Config::get('report_bounces');
+if(in_array($report, array('daily', 'asap_then_daily'))) {
+    Logger::info('Bounces reporting started');
+    
+    foreach(TrackingEvent::getNonReported(TrackingEventTypes::BOUNCE) as $set)
+        TrackingEvent::reportSet($set);
+    
+    Logger::info('Bounces reporting complete');
+}
