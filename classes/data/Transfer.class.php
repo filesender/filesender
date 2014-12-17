@@ -468,6 +468,12 @@ class Transfer extends DBObject {
             return $this->recipientsCache;
         }
         
+        if($property == 'recipients_with_error') {
+            return array_filter($this->recipients, function($recipient) {
+                return count($recipient->errors);
+            });
+        }
+        
         if($property == 'auditlogs') {
             if(is_null($this->logsCache)) $this->logsCache = AuditLog::fromTransfer($this);
             return $this->logsCache;

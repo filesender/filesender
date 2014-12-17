@@ -124,6 +124,7 @@ class Guest extends DBObject {
      * Cache
      */
     private $transfersCache = null;
+    private $trackingEventsCache = null;
     
     /**
      * Constructor
@@ -366,6 +367,12 @@ class Guest extends DBObject {
         return is_array($this->options) && in_array($option, $this->options);
     }
     
+    /**
+     * Delete the guest related objects
+     */
+    public function beforeDelete() {
+        foreach(TrackingEvent::fromGuest($this) as $tracking_event) $tracking_event->delete();
+    }
     
     /**
      * Getter
@@ -391,6 +398,17 @@ class Guest extends DBObject {
         if($property == 'transfers') {
             if(is_null($this->transfersCache)) $this->transfersCache = Transfer::fromGuest($this);
             return $this->transfersCache;
+        }
+        
+        if($property == 'tracking_events') {
+            if(is_null($this->trackingEventsCache)) $this->trackingEventsCache = TrackingEvent::fromGuest($this);
+            return $this->trackingEventsCache;
+        }
+        
+        if($property == 'errors') {
+            return array_filter($this->tracking_events, function($tracking_event) {
+                return in_array($tracking_event->type, array(TrackingEventTypes::BOUNCE));
+            });
         }
         
         throw new PropertyAccessException($this, $property);

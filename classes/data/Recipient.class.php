@@ -90,6 +90,7 @@ class Recipient extends DBObject {
      */
     private $transferCache = null;
     private $logsCache = null;
+    private $trackingEventsCache = null;
     
     /**
      * Constructor
@@ -183,6 +184,13 @@ class Recipient extends DBObject {
     }
     
     /**
+     * Delete the recipient related objects
+     */
+    public function beforeDelete() {
+        foreach(TrackingEvent::fromRecipient($this) as $tracking_event) $tracking_event->delete();
+    }
+    
+    /**
      * Getter
      * 
      * @param string $property property to get
@@ -211,6 +219,17 @@ class Recipient extends DBObject {
         if($property == 'downloads') {
             return array_filter($this->auditlogs, function($log) {
                 return $log->event == LogEventTypes::DOWNLOAD_ENDED;
+            });
+        }
+        
+        if($property == 'tracking_events') {
+            if(is_null($this->trackingEventsCache)) $this->trackingEventsCache = TrackingEvent::fromRecipient($this);
+            return $this->trackingEventsCache;
+        }
+        
+        if($property == 'errors') {
+            return array_filter($this->tracking_events, function($tracking_event) {
+                return in_array($tracking_event->type, array(TrackingEventTypes::BOUNCE));
             });
         }
         
