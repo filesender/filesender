@@ -58,6 +58,13 @@ class RestEndpointGuest extends RestEndpoint {
             'options' => $guest->options,
             'created' => RestUtilities::formatDate($guest->created),
             'expires' => RestUtilities::formatDate($guest->expires),
+            'errors' => array_values(array_map(function($error) {
+                return array(
+                    'type' => $error->type,
+                    'date' => RestUtilities::formatDate($error->created, true),
+                    'details' => $error->details
+                );
+            }, $guest->errors))
         );
     }
     
