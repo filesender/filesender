@@ -142,7 +142,7 @@ class ApplicationMail extends Mail {
                     throw new BadEmailException($return_path);
                 
                 if(preg_match('`^(.+)<verp>(.+)$`i', $return_path, $match))
-                    $return_path = $match[1].$context.$match[2];
+                    $return_path = $match[1].$context.'-bounce'.$match[2];
                 
                 $this->return_path = $return_path;
             }
