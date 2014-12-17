@@ -54,8 +54,10 @@ window.filesender.client = {
             this.base_path = path + '/rest.php';
         }
         
+        if(!options) options = {};
+        
         var args = {};
-        if(options && options.args) for(var k in options.args) args[k] = options.args[k];
+        if(options.args) for(var k in options.args) args[k] = options.args[k];
         args._ = (new Date()).getTime(); // Defeat cache
         var urlargs = [];
         for(var k in args) urlargs.push(k + '=' + args[k]);
@@ -67,7 +69,7 @@ window.filesender.client = {
         }else data = undefined;
         
         var errorhandler = filesender.ui.error;
-        if(options && options.error) {
+        if(options.error) {
             errorhandler = options.error;
             delete options.error;
         }
@@ -299,6 +301,16 @@ window.filesender.client = {
         if(onerror) opts.error = onerror;
         
         this.delete('/file/' + id, callback, opts);
+    },
+    
+    /**
+     * Get recipient data
+     * 
+     * @param int recipient id
+     * @param callable callback
+     */
+    getRecipient: function(id, callback) {
+        this.get('/recipient/' + id, callback);
     },
     
     /**
