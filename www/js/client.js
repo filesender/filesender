@@ -68,7 +68,9 @@ window.filesender.client = {
             if(!raw) data = JSON.stringify(data);
         }else data = undefined;
         
-        var errorhandler = filesender.ui.error;
+        var errorhandler = function(error) {
+            filesender.ui.error(error);
+        };
         if(options.error) {
             errorhandler = options.error;
             delete options.error;
@@ -311,6 +313,17 @@ window.filesender.client = {
      */
     getRecipient: function(id, callback) {
         this.get('/recipient/' + id, callback);
+    },
+    
+    /**
+     * Add recipient to transfer
+     * 
+     * @param int transfer id
+     * @param string email
+     * @param callable callback
+     */
+    addRecipient: function(transfer_id, email, callback) {
+        this.post('/transfer/' + transfer_id + '/recipient', {recipient: email}, callback);
     },
     
     /**
