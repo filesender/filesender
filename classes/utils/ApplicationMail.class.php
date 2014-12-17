@@ -85,14 +85,12 @@ class ApplicationMail extends Mail {
         
         $sender = '';
         if($this->to['object']) {
-            try { // Transfer related objects
-                $sender = $this->to['object']->transfer->user->email;
-            } catch(PropertyAccessException $e) {
-                try { // Directly owned objects
-                    $sender = $this->to['object']->user->email;
-                } catch(PropertyAccessException $e) {}
+            switch(get_class($this->to['object'])) {
+                case 'Recipient' : $sender = $this->to['object']->transfer->user->email; break;
+                case 'Guest' : $sender = $this->to['object']->user->email; break;
             }
         }
+        if(!$sender) $sender = $this->to['email']; // Own action
         
         $context = $this->to['object'] ? strtolower(get_class($this->to['object'])).'-'.$this->to['object']->id : 'no_context';
         
