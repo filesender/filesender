@@ -1,6 +1,6 @@
 <div class="box">
     <h1>{tr:guests_page}</h1>
-    <div id='creation_form'>
+    <div id="send_voucher">
         <div class="invite_guest box">
             <div class="disclamer">
                 {tr:send_new_voucher}
