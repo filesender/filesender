@@ -50,6 +50,23 @@ foreach(Transfer::allExpiredAuditlogs() as $transfer) {
 
 Logger::info('Cron cleanup complete');
 
+
+
+Logger::info('Guest accesses reporting started');
+
+foreach(Guest::allAvailable() as $guest) {
+    if(!$guest->hasOption(GuestOptions::EMAIL_GUEST_ACCESS_UPLOAD_PAGE)) continue;
+    
+    if(!$guest->last_activity || $guest->last_activity < strtotime('yesterday')) continue;
+    
+    // Send mail to guest the owner of the voucher
+    ApplicationMail::quickSend('guest_access_upload_page', $guest->user_email, $guest);
+}
+
+Logger::info('Guest accesses reporting complete');
+
+
+
 $report = Config::get('report_bounces');
 if(in_array($report, array('daily', 'asap_then_daily'))) {
     Logger::info('Bounces reporting started');
