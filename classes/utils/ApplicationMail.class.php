@@ -58,6 +58,25 @@ class ApplicationMail extends Mail {
     }
     
     /**
+     * Quick translated sending
+     * 
+     * @param string $translation_id
+     * @param mixed $to recipient / guest / email
+     * @param mixed ... additionnal translation variables
+     */
+    public static function quickSend($translation_id, $to /*, ... */) {
+        $vars = array_slice(func_get_args(), 2);
+        if(is_object($to)) array_unshift($vars, $to);
+        
+        $tr = Lang::translateEmail($translation_id);
+        if($vars) $tr = call_user_func_array(array($tr, 'replace'), $vars);
+        
+        $mail = new self($tr);
+        $mail->to($to);
+        $mail->send();
+    }
+    
+    /**
      * Adds to
      * 
      * @param mixed $who DBObject or email address
