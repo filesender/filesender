@@ -40,7 +40,7 @@
     
     <tbody>
         <?php foreach($transfers as $transfer) { ?>
-        <tr class="transfer" data-id="<?php echo $transfer->id ?>" data-errors="<?php echo count($transfer->recipients_with_error) ? '1' : '' ?>">
+        <tr class="transfer" id="transfer_<?php echo $transfer->id ?>" data-id="<?php echo $transfer->id ?>" data-errors="<?php echo count($transfer->recipients_with_error) ? '1' : '' ?>">
             <td class="expand">
                 <span class="clickable fa fa-plus-circle fa-lg" title="{tr:show_details}"></span>
             </td>

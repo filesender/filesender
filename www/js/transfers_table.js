@@ -191,6 +191,7 @@ $(function() {
                         
                         prompt.append('<p>' + lang.tr('email_separator_msg') + '</p>');
                         var input = $('<input type="text" class="wide" />').appendTo(prompt);
+                        input.focus();
                         
                         // Autocomplete is buggy
                         /*input.autocomplete({
@@ -227,7 +228,9 @@ $(function() {
                         if(!id || isNaN(id)) return;
                         
                         filesender.ui.confirm(lang.tr('confirm_remind_transfer'), function() {
-                            // TODO
+                            filesender.client.remindTransfer(id, function() {
+                                filesender.ui.alert('success', lang.tr('transfer_reminded'));
+                            });
                         });
                     });
                 }
@@ -416,4 +419,9 @@ $(function() {
             });
         }
     });
+    
+    // Do we have a quick open hash ?
+    var anchor = window.location.hash.substr(1);
+    var match = anchor.match(/^transfer_([0-9]+)$/);
+    if(match) $('table.transfers .transfer[data-id="' + match[1] + '"] td.expand span.clickable').click();
 });

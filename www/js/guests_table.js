@@ -71,7 +71,9 @@ $(function() {
             if(!id || isNaN(id)) return;
             
             filesender.ui.confirm(lang.tr('confirm_remind_guest'), function() {
-                // TODO
+                filesender.client.remindGuest(id, function() {
+                    filesender.ui.alert('success', lang.tr('guest_reminded'));
+                });
             });
         });
         

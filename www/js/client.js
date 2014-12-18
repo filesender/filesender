@@ -252,6 +252,16 @@ window.filesender.client = {
     },
     
     /**
+     * Remind a transfer
+     * 
+     * @param mixed transfer id
+     * @param callable callback
+     */
+    remindTransfer: function(id, callback) {
+        this.put('/transfer/' + id, {remind: true}, callback);
+    },
+    
+    /**
      * Close a transfer
      * 
      * @param object transfer
@@ -378,6 +388,16 @@ window.filesender.client = {
             expires: expires,
             options: options
         }, callback);
+    },
+    
+    /**
+     * Remind a guest
+     * 
+     * @param mixed guest id
+     * @param callable callback
+     */
+    remindGuest: function(id, callback) {
+        this.put('/guest/' + id, {remind: true}, callback);
     },
     
     /**
