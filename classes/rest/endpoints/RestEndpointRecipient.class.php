@@ -132,12 +132,9 @@ class RestEndpointRecipient extends RestEndpoint {
         if(count($recipient->transfer->recipients) > 1) {
             $recipient->transfer->removeRecipient($recipient);
             
-            if($recipient->transfer->status == 'available') { // Notify deletion for transfers that are available
-                $ctn = Lang::translateEmail('recipient_deleted')->r($recipient, $recipient->transfer);
-                $mail = new ApplicationMail($ctn);
-                $mail->to($recipient);
-                $mail->send();
-            }
+            if($recipient->transfer->status == 'available') // Notify deletion for transfers that are available
+                $recipient->transfer->sendToRecipient('recipient_deleted', $recipient);
+            
         } else { // Last/only recipient deletion => close transfer
             $recipient->transfer->close();
         }
