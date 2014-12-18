@@ -219,11 +219,8 @@ class RestEndpointTransfer extends RestEndpoint {
             $recipient = $transfer->addRecipient($data->recipient);
             
             // Send email if transfer is live already
-            if($transfer->status == TransferStatuses::AVAILABLE) {
-                $mail = new ApplicationMail(Lang::translateEmail('transfer_available')->r($transfer, $recipient));
-                $mail->to($recipient);
-                $mail->send();
-            }
+            if($transfer->status == TransferStatuses::AVAILABLE)
+                ApplicationMail::quickSend('transfer_available', $recipient, $transfer);
             
             return array(
                 'path' => '/recipient/'.$recipient->id,
@@ -298,13 +295,14 @@ class RestEndpointTransfer extends RestEndpoint {
     }
     
     /**
-     * Signal upload transfer complete
+     * Update a transfer's status
      * 
      * Call examples :
-     *  /transfer/17/complete : signal transfer with id 17 completion
+     *  /transfer/17, payload: {complete: true} : signal transfer with id 17 completion
+     *  /transfer/17, payload: {closed: true} : close a transfer
+     *  /transfer/17, payload: {remind: true} : remind a transfer to recipients
      * 
      * @param int $id transfer id to get info about
-     * @param string $complete ("complete")
      * 
      * @return mixed
      * 
@@ -325,13 +323,15 @@ class RestEndpointTransfer extends RestEndpoint {
             throw new RestOwnershipRequiredException($user->id, 'transfer = '.$transfer->id);
         
         $data = $this->request->input;
-        $guestToken = $data->guest_token;
         
         if($data->complete)
-            $transfer->makeAvailable($guestToken);
+            $transfer->makeAvailable();
         
         if($data->closed)
             $transfer->close(true);
+        
+        if($data->remind)
+            $transfer->remind();
         
         return true;
     }

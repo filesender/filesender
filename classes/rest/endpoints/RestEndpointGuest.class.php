@@ -156,6 +156,40 @@ class RestEndpointGuest extends RestEndpoint {
     }
     
     /**
+     * Update a guest's status
+     * 
+     * Call examples :
+     *  /guest/17, payload: {remind: true} : remind a guest to recipient
+     * 
+     * @param int $id transfer id to get info about
+     * 
+     * @return mixed
+     * 
+     * @throws RestAuthenticationRequiredException
+     * @throws RestOwnershipRequiredException
+     */
+    public function put($id = null) {
+        if(!$id) throw new RestMissingParameterException('guest_id');
+        if(!is_numeric($id)) throw new RestBadParameterException('guest_id');
+        
+        if(!Auth::isAuthenticated()) throw new RestAuthenticationRequiredException();
+        
+        $guest = Guest::fromId($id);
+        
+        $user = Auth::user();
+        
+        if(!$guest->isOwner($user) && !Auth::isAdmin())
+            throw new RestOwnershipRequiredException($user->id, 'guest = '.$guest->id);
+        
+        $data = $this->request->input;
+        
+        if($data->remind)
+            $guest->remind();
+        
+        return true;
+    }
+    
+    /**
      * Delete (closes) a guest
      * 
      * Call examples :
