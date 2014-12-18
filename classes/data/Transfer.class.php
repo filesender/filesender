@@ -726,6 +726,7 @@ class Transfer extends DBObject {
     public function sendToRecipient($content, $recipient) {
         $vars = array_slice(func_get_args(), 2);
         array_unshift($vars, $recipient);
+        array_unshift($vars, $this);
         
         if(is_string($content)) $content = Lang::translateEmail($content);
         
