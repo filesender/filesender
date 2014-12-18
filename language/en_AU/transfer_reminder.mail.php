@@ -1,10 +1,10 @@
-subject: {cfg:site_name}: File{if:transfer.files>1}s{endif} available for download
+subject: {cfg:site_name}: Reminder, file{if:transfer.files>1}s{endif} available for download
 
 {alternative:plain}
 
 Dear Sir or Madam,
 
-The following {if:transfer.files>1}files have{else}file has{endif} been uploaded to {cfg:site_name} by {transfer.user_email} and you have been granted permission to download {if:transfer.files>1}their{else}its{endif} contents :
+This is a reminder, the following {if:transfer.files>1}files have{else}file has{endif} been uploaded to {cfg:site_name} by {transfer.user_email} and you have been granted permission to download {if:transfer.files>1}their{else}its{endif} contents :
 
 {if:transfer.files>1}{each:transfer.files as file}
   - {file.name} ({size:file.size})
@@ -32,7 +32,7 @@ Best regards,
 </p>
 
 <p>
-    The following {if:transfer.files>1}files have{else}file has{endif} been uploaded to <a href="{cfg:site_url}">{cfg:site_name}</a> by <a href="mailto:{transfer.user_email}">{transfer.user_email}</a> and you have been granted permission to download {if:transfer.files>1}their{else}its{endif} contents.
+    This is a reminder, the following {if:transfer.files>1}files have{else}file has{endif} been uploaded to <a href="{cfg:site_url}">{cfg:site_name}</a> by <a href="mailto:{transfer.user_email}">{transfer.user_email}</a> and you have been granted permission to download {if:transfer.files>1}their{else}its{endif} contents.
 </p>
 
 <table rules="rows">
