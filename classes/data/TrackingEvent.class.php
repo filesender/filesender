@@ -149,9 +149,7 @@ class TrackingEvent extends DBObject
         }
         
         foreach($by_type as $type => $set) {
-            $mail = new ApplicationMail(Lang::translateEmail($type.'_report')->r(array($type.'s' => $set)));
-            $mail->to($set[0]->target->owner->email);
-            $mail->send();
+            ApplicationMail::quickSend($type.'_report', $set[0]->target->owner->email, array($type.'s' => $set));
             
             foreach($set as $tracking_event) {
                 $tracking_event->reported = time();
