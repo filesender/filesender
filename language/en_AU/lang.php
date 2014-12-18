@@ -332,6 +332,7 @@ $lang['upload_page'] = 'Upload';
 $lang['uploaded'] = 'Uploaded';
 $lang['with_identity'] = 'Sender email';
 $lang['n_more'] = '{n} more';
+$lang['transfer_id'] = 'Transfer ID';
 
 $lang['encountered_exception'] = 'The application encountered an error while processing your request';
 $lang['you_can_report_exception'] = 'When reporting this error please give the following code to help the support finding out details';
