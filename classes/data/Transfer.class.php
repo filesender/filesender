@@ -319,17 +319,11 @@ class Transfer extends DBObject {
         // Send notification to all recipients 
         $ctn = Lang::translateEmail($manualy ? 'transfer_deleted' : 'transfer_expired')->r($this);
         
-        foreach($this->recipients as $recipient) {
-            $mail = new ApplicationMail($ctn->r($recipient));
-            $mail->to($recipient);
-            $mail->send();
-        }
+        foreach($this->recipients as $recipient)
+            $this->sendToRecipient($ctn, $recipient);
         
         // Send notification to owner
-        $ctn = Lang::translateEmail($manualy ? 'transfer_deleted_receipt' : 'transfer_expired_receipt')->r($this);
-        $mail = new ApplicationMail($ctn);
-        $mail->to($this->user_email);
-        $mail->send();
+        ApplicationMail::quickSend($manualy ? 'transfer_deleted_receipt' : 'transfer_expired_receipt', $this->user_email, $this);
         
         // Send report if needed
         if(!is_null(Config::get('auditlog_lifetime')) && $this->hasOption(TransferOptions::EMAIL_REPORT_ON_CLOSING)) {
@@ -608,6 +602,21 @@ class Transfer extends DBObject {
     }
     
     /**
+     * Test if some email address is in the recipient list
+     * 
+     * @param string $email
+     * 
+     * @return bool
+     */
+    public function isRecipient($email) {
+        foreach($this->recipients as $recipient)
+            if($recipient->email == $email)
+                return true;
+        
+        return false;
+    }
+    
+    /**
      * Removes a recipient
      * 
      * @param mixed $recipient Recipient or recipient id
@@ -627,7 +636,7 @@ class Transfer extends DBObject {
     /**
      * This function does stuffs when a transfer become available
      */
-    public function makeAvailable($guestToken = false) {
+    public function makeAvailable() {
         Logger::logActivity(LogEventTypes::UPLOAD_ENDED, $this);
         
         if(!count($this->files))
@@ -636,37 +645,26 @@ class Transfer extends DBObject {
         if(!count($this->recipients))
             throw new TransferNoRecipientsException();
         
+        if($this->hasOption(TransferOptions::ADD_ME_TO_RECIPIENTS) && !$this->isRecipient($this->user_email))
+            $this->addRecipient($this->user_email);
+        
         $this->status = TransferStatuses::AVAILABLE;
         $this->save();
         Logger::logActivity(LogEventTypes::TRANSFER_AVAILABLE, $this);
         
-        
-        if (Auth::isGuest()){
-            // Check from voucher id which options are setted
-            try{
-                $guest = AuthGuest::getGuest();
-                if ($guest->hasOption(GuestOptions::EMAIL_UPLOAD_FROM_GUEST_COMPLETE)){
-                    // Send mail to guest the owner of the voucher
-                    $c = Lang::translateEmail('guest_upload_complete')->replace($guest);
-                    $mail = new ApplicationMail($c);
-                    $mail->to($guest->user_email);
-                    $mail->send();
-                }
-            }catch (GuestNotFoundException $e){
-                Logger::log(LogLevels::INFO, $e);
-            }
+        if(Auth::isGuest()) {
+            $guest = AuthGuest::getGuest();
+            
+            if($guest->hasOption(GuestOptions::EMAIL_UPLOAD_FROM_GUEST_COMPLETE))
+                ApplicationMail::quickSend('guest_upload_complete', $guest->user_email, $guest);
+        } else {
+            if($this->hasOption(TransferOptions::EMAIL_UPLOAD_COMPLETE, $options))
+                ApplicationMail::quickSend('upload_complete', Auth::user()->email, $this);
         }
         
         Auth::user()->saveFrequentRecipients($this->recipients);
         
-        $files = array();
-        foreach($this->files as $file) {
-            $files[] = $file->name.' ('.Utilities::formatBytes($file->size).')';
-        }
-        
         $ctn = Lang::translateEmail('transfer_available')->r($this);
-        
-        $this->manageTransferOptions($ctn);
         
         foreach($this->recipients as $recipient) {
             $mail = new ApplicationMail($ctn->r($recipient));
@@ -674,43 +672,18 @@ class Transfer extends DBObject {
             $mail->send();
         }
         
-        Logger::logActivity(LogEventTypes::TRANSFER_SENT, $this,Auth::isGuest()?AuthGuest::getGuest():null);
+        Logger::logActivity(LogEventTypes::TRANSFER_SENT, $this, Auth::isGuest() ? AuthGuest::getGuest() : null);
         Logger::info('Transfer#'.$this->id.' made available'.(Auth::isGuest() ? ' by guest: '.AuthGuest::getGuest()->email : ''));
     }
     
-    
     /**
-     * This function check the current transfer options and do work required
-     * for all present options
-     * 
-     * @param Lang $ctn: translation 
-     * @param type $opt: options
+     * Send reminder to recipients
      */
-    private function manageTransferOptions($ctn, $opt = false){
-        // Managing transfer options
-        if ($opt){
-            $options = $opt;
-        }else{
-            $options = $this->options;
-        }
+    public function remind() {
+        $ctn = Lang::translateEmail('transfer_reminder')->r($this);
         
-        // Add current user to the recipient list
-        if ($this->hasOption(TransferOptions::ADD_ME_TO_RECIPIENTS) || 
-            $this->hasOption(TransferOptions::EMAIL_ME_COPIES, $options)){
-            
-            $this->addRecipient(Auth::user()->email);
-        }
-        
-        if ($this->hasOption(TransferOptions::EMAIL_UPLOAD_COMPLETE, $options)){
-            $ctn = Lang::translateEmail('upload_complete')->r($this, array(
-                'text_file_list' => (count($files) > 1) ? '  - '.implode("\n  - ", $files) : $files[0],
-                'html_file_list' => (count($files) > 1) ? '<ul><li>'.implode('</li><li>', $files).'</li></ul>' : $files[0],
-            ));
-
-            $mail = new ApplicationMail($ctn->r(Auth::user()->email[0]));
-            $mail->to(Auth::user()->email[0]);
-            $mail->send();
-        }
+        foreach($this->recipients as $recipient)
+            $this->sendToRecipient($ctn, $recipient);
     }
     
     /*
@@ -719,21 +692,14 @@ class Transfer extends DBObject {
     public function start() {
         $this->status = TransferStatuses::STARTED;
         $this->save();
+        
         if (Auth::isGuest()){
-            // Check from voucher id which options are setted
-            try{
-                $guest = AuthGuest::getGuest();
-                if ($guest->hasOption(GuestOptions::EMAIL_UPLOAD_FROM_GUEST_START)){
-                    // Send mail to guest the owner of the voucher
-                    $c = Lang::translateEmail('guest_upload_start')->replace($guest);
-                    $mail = new ApplicationMail($c);
-                    $mail->to($guest->user_email);
-                    $mail->send();
-                }
-            }catch (GuestNotFoundException $e){
-                Logger::log(LogLevels::INFO, $e);
-            }
+            $guest = AuthGuest::getGuest();
+            
+            if($guest->hasOption(GuestOptions::EMAIL_UPLOAD_FROM_GUEST_START))
+                ApplicationMail::quickSend('guest_upload_start', $guest->user_email, $guest);
         }
+        
         Logger::logActivity(LogEventTypes::TRANSFER_STARTED, $this,Auth::isGuest()?AuthGuest::getGuest():null);
         Logger::info('Transfer#'.$this->id.' started'.(Auth::isGuest() ? ' by guest: '.AuthGuest::getGuest()->email : ''));
     }
@@ -748,5 +714,30 @@ class Transfer extends DBObject {
         $this->save();
         Logger::logActivity(LogEventTypes::UPLOAD_STARTED, $this);
         Logger::info('Transfer#'.$this->id.' upload started');
+    }
+    
+    /**
+     * Send message to recipient, handling options
+     * 
+     * @param mixed $content lang string id or Lang instance
+     * @param Recipient $recipient
+     * @param mixed ... translation variables
+     */
+    public function sendToRecipient($content, $recipient) {
+        $vars = array_slice(func_get_args(), 2);
+        array_unshift($vars, $recipient);
+        
+        if(is_string($content)) $content = Lang::translateEmail($content);
+        
+        $content = call_user_func_array(array($content, 'replace'), $vars);
+        
+        $mail = new ApplicationMail($content);
+        
+        $mail->to($recipient);
+        
+        if($this->hasOption(TransferOptions::EMAIL_ME_COPIES))
+            $mail->bcc($this->user_email);
+        
+        $mail->send();
     }
 }
