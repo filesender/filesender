@@ -652,6 +652,15 @@ table.transfers .transfer_details .actions {
     float: right;
 }
 
+table.transfers .transfer_details .general .options ul {
+    list-style-type: disc;
+    margin-left: 2em;
+}
+
+table.transfers .transfer_details .general .transfer_id {
+    color: silver;
+}
+
 table.transfers .transfer_details h2 {
     font-size: 1.3em;
     margin-bottom: 0.3em;

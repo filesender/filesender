@@ -103,13 +103,31 @@
                 </div>
                 
                 <div class="general">
-                    {tr:created} : <?php echo Utilities::formatDate($transfer->created) ?><br />
-                    {tr:expires} : <?php echo Utilities::formatDate($transfer->expires) ?><br />
-                    {tr:size} : <?php echo Utilities::formatBytes($transfer->size) ?><br />
-                    {tr:with_identity} : <?php echo Utilities::sanitizeOutput($transfer->user_email) ?><br />
-                    {tr:options} : <?php echo implode(', ', array_map(function($o) {
-                        return Lang::tr($o);
-                    }, $transfer->options)) ?>
+                    <div>
+                        {tr:created} : <?php echo Utilities::formatDate($transfer->created) ?>
+                    </div>
+                    <div>
+                        {tr:expires} : <?php echo Utilities::formatDate($transfer->expires) ?>
+                    </div>
+                    <div>
+                        {tr:size} : <?php echo Utilities::formatBytes($transfer->size) ?>
+                    </div>
+                    <div>
+                        {tr:with_identity} : <?php echo Utilities::sanitizeOutput($transfer->user_email) ?>
+                    </div>
+                    <div class="options">
+                        {tr:options} :
+                        <ul class="options">
+                            <li>
+                            <?php echo implode('</li><li>', array_map(function($o) {
+                                return Lang::tr($o);
+                            }, $transfer->options)) ?>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="transfer_id">
+                        {tr:transfer_id} : <?php echo $transfer->id ?>
+                    </div>
                 </div>
                 
                 <div class="recipients">
