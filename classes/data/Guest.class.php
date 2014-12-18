@@ -202,6 +202,15 @@ class Guest extends DBObject {
     }
     
     /**
+     * Get available guests
+     * 
+     * @return array of Guest
+     */
+    public static function allAvailable() {
+        return self::all(self::AVAILABLE);
+    }
+    
+    /**
      * Get expired guests
      * 
      * @return array of Guest
@@ -265,28 +274,18 @@ class Guest extends DBObject {
         
         Logger::logActivity(LogEventTypes::GUEST_CREATED, $this);
         
-        $this->notify(true);
+        // Send notification to recipient
+        ApplicationMail::quickSend('guest_created', $this);
+        
+        // Send receipt to owner
+        ApplicationMail::quickSend('guest_created_receipt', $this->user_email, $this);
     }
     
     /**
-     * Notify creation to the recipient
-     * 
-     * @param bool $just_created wether the notification is a reminder or the first one after creation
+     * Send reminder to recipients
      */
-    public function notify($just_created = false) {
-        // Sending notification to recipient
-        $c = Lang::translateEmail($just_created ? 'guest_created' : 'guest_reminder')->replace($this);
-        $mail = new ApplicationMail($c);
-        $mail->to($this);
-        $mail->send();
-        
-        if($just_created) {
-            // Sending receipt to owner
-            $c = Lang::translateEmail('guest_created_receipt')->replace($this);
-            $mail = new ApplicationMail($c);
-            $mail->to($this->user_email);
-            $mail->send();
-        }
+    public function remind() {
+        ApplicationMail::quickSend('guest_reminder', $this);
     }
     
     /**
@@ -305,10 +304,7 @@ class Guest extends DBObject {
         );
         
         // Sending notification to recipient
-        $c = Lang::translateEmail($manualy ? 'guest_cancelled' : 'guest_expired')->replace($this);
-        $mail = new ApplicationMail($c);
-        $mail->to($this);
-        $mail->send();
+        ApplicationMail::quickSend($manualy ? 'guest_cancelled' : 'guest_expired', $this);
     }
     
     
