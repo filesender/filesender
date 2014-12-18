@@ -57,7 +57,7 @@ try {
         $ret = downloadArchive($transfer, $recipient, $files_ids);
     } else {
         // Single file download
-        $ret = downloadSingleFile($transfer, $recipient, $files_ids);
+        $ret = downloadSingleFile($transfer, $recipient, $files_ids[0]);
     }
     
     if ($ret['result']){
@@ -119,19 +119,21 @@ function checkRequest($token, $files_ids) {
 function downloadArchive($transfer, $recipient, $files_ids) {
     // Creating the zipper
     $zipper = new Zipper();
-    // Adding all files 
+    
+    // Adding all files
+    $files = array();
     foreach ($files_ids as $fileId) {
-        $zipper->addFile(File::fromId($fileId));
+        $file = File::fromId($fileId);
+        $files[] = $file;
+        $zipper->addFile($file);
     }
-    // Sending the ZIP
+    
+    // Send the ZIP
     Logger::logActivity(LogEventTypes::ARCHIVE_DOWNLOAD_STARTED, $transfer, $recipient);
     $result = $zipper->sendZip($recipient);
     Logger::logActivity(LogEventTypes::ARCHIVE_DOWNLOAD_ENDED, $transfer, $recipient);
     
-    return array('result' => $result, 'data' => array(
-        'filename' => Config::get('site_name') . '-files.zip',
-        'filesize' => $zipper->calculateTotalFileSize()
-    ));
+    return array('result' => $result, 'files' => $files);
 }
 
 
@@ -144,17 +146,12 @@ function downloadArchive($transfer, $recipient, $files_ids) {
  * 
  * @return boolean: true if succes, false otherwise
  */
-function downloadSingleFile($transfer, $recipient, $files_ids) {
-
-    $id = (int) array_shift($files_ids);
-    $file = array_filter($transfer->files, function($f) use($id) {
-        return $f->id == $id;
-    });
-
-    if (!count($file))
-        throw new FileNotFoundException(array('transfer_id : ' . $transfer->id, 'file_id : ' . $id));
-
-    $file = array_shift($file);
+function downloadSingleFile($transfer, $recipient, $file_id) {
+    
+    $file = File::fromId($file_id);
+    
+    if(!$file->transfer->is($transfer))
+        throw new FileNotFoundException(array('transfer_id : ' . $transfer->id, 'file_id : ' . $file_id));
 
     $ranges = null;
     if (array_key_exists('HTTP_RANGE', $_SERVER) && $_SERVER['HTTP_RANGE']) {
@@ -307,39 +304,19 @@ function downloadSingleFile($transfer, $recipient, $files_ids) {
     if($done)
         Logger::logActivity(LogEventTypes::DOWNLOAD_ENDED, $file, $recipient);
     
-    return array('result' => $done, 'data' => array(
-         'filename' => $file->name,
-         'filesize' => $file->size
-    ));
+    return array('result' => $done, 'files' => array($file));
 }
 
 
-function manageOptions($ret,$transfer,$recipient){
-    if ($transfer->hasOption(TransferOptions::ENABLE_RECIPIENT_EMAIL_DOWNLOAD_COMPLETE)){
+function manageOptions($ret, $transfer, $recipient) {
+    if ($transfer->hasOption(TransferOptions::ENABLE_RECIPIENT_EMAIL_DOWNLOAD_COMPLETE)) {
         if (array_key_exists('notify_upon_completion', $_REQUEST) && (bool) $_REQUEST['notify_upon_completion']) {
-            //Notify file download
-            $ctn = Lang::translateEmail('download_complete')->r(array(
-                'filename' => $ret['data']['filename'],
-                'filesize' => Utilities::formatBytes($ret['data']['filesize']),
-            ));
-
-            $mail = new ApplicationMail($ctn->r($recipient));
-            $mail->to($recipient->email);
-            $mail->send();
-
+            // Notify file download
+            ApplicationMail::quickSend('download_complete', $recipient->email, $ret);
         }
     }
-    if ($transfer->hasOption(TransferOptions::EMAIL_DOWNLOAD_COMPLETE)){
-         $ctn = Lang::translateEmail('files_downloaded')->r(array(
-            'filename' => $ret['data']['filename'],
-            'filesize' => Utilities::formatBytes($ret['data']['filesize']),
-            'downloadedfrom' => Auth::user()->email[0]
-        ));
-
-        $owner = User::fromId($transfer->user_id);
-        
-        $mail = new ApplicationMail($ctn->r($owner->email[0]));
-        $mail->to($owner->email[0]);
-        $mail->send();
+    
+    if ($transfer->hasOption(TransferOptions::EMAIL_DOWNLOAD_COMPLETE)) {
+        ApplicationMail::quickSend('files_downloaded', $transfer->owner->email, $ret, Auth::user());
     }
 }
