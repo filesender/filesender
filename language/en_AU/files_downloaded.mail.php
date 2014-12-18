@@ -4,12 +4,15 @@ subject: {cfg:site_name}: Download receipt
 
 Dear Sir or Madam,
 
-One or more of your uploaded files have been downloaded from {cfg:site_name} by {downloadedfrom}. 
-You can access your files and view detailed download statistics on the My Files page at {cfg:site_url}?s=files.
+{if:files>1}Several files{else}A file{endif} you uploaded has been downloaded from {cfg:site_name} by {user.email} :
 
+{if:files>1}{each:files as file}
+  - {file.name} ({size:file.size})
+{endeach}{else}
+{files.first().name} ({size:files.first().size})
+{endif}
 
-Files:
-{fileinfo}
+You can access your files and view detailed download statistics on the transfers page at {cfg:site_url}?s=transfers.
 
 Best regards,
 {cfg:site_name}
@@ -21,29 +24,24 @@ Best regards,
 </p>
 
 <p>
-    One or more of your uploaded files have been downloaded from {cfg:site_name} by {downloadedfrom}. <br/>
-    You can access your files and view detailed download statistics on the My Files page at {cfg:site_url}?s=transfers.
+    {if:files>1}Several files{else}A file{endif} you uploaded has been downloaded from {cfg:site_name} by {user.email}.
 </p>
 
-<table rules="rows">
-    <thead>
-        <tr>
-            <th colspan="2">File details</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>File</td>
-            <td>
-                {filename}
-            </td>
-        </tr>
-        <tr>
-            <td>Size</td>
-            <td>{filesize}</td>
-        </tr>
-    </tbody>
-</table>
+<p>
+    {if:files>1}
+    <ul>
+        {each:files as file}
+            <li>{file.name} ({size:file.size})</li>
+        {endeach}
+    </ul>
+    {else}
+    {files.first().name} ({size:files.first().size})
+    {endif}
+</p>
+
+<p>
+    You can access your files and view detailed download statistics on the transfers page at {cfg:site_url}?s=transfers.
+</p>
 
 <p>
     Best regards,<br />

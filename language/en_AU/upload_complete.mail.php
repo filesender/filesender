@@ -6,7 +6,11 @@ Dear Sir or Madam,
 
 The following {if:transfer.files>1}files have{else}file has{endif} been successfully uploaded to {cfg:site_name}.
 
-{text_file_list}
+{if:transfer.files>1}{each:transfer.files as file}
+  - {file.name} ({size:file.size})
+{endeach}{else}
+{transfer.files.first().name} ({size:transfer.files.first().size})
+{endif}
 
 Your transfers list: {cfg:site_url}?s=transfers
 
@@ -36,7 +40,15 @@ Best regards,
         <tr>
             <td>File{if:transfer.files>1}s{endif}</td>
             <td>
-                {html_file_list}
+                {if:transfer.files>1}
+                <ul>
+                    {each:transfer.files as file}
+                        <li>{file.name} ({size:file.size})</li>
+                    {endeach}
+                </ul>
+                {else}
+                {transfer.files.first().name} ({size:transfer.files.first().size})
+                {endif}
             </td>
         </tr>
         <tr>

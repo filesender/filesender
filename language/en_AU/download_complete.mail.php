@@ -4,10 +4,13 @@ subject: {cfg:site_name}: Download Complete
 
 Dear Sir or Madam,
 
-Your download consisting of the following file has finished.
+Your download of the {if:files>1}files{else}file{endif} bellow has ended :
 
-Files:
-{fileinfo}
+{if:files>1}{each:files as file}
+  - {file.name} ({size:file.size})
+{endeach}{else}
+{files.first().name} ({size:files.first().size})
+{endif}
 
 Best regards,
 {cfg:site_name}
@@ -19,32 +22,20 @@ Best regards,
 </p>
 
 <p>
-    Your download consisting of the following file has finished.
+    Your download of the {if:files>1}files{else}file{endif} bellow has ended :
 </p>
 
-<table rules="rows">
-    <thead>
-        <tr>
-            <th colspan="2">File details</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>File</td>
-            <td>
-                {filename}
-            </td>
-        </tr>
-        <tr>
-            <td>Size</td>
-            <td>{filesize}</td>
-        </tr>
-        <tr>
-            <td>Download link</td>
-            <td><a href="{cfg:site_url}?s=download&token={recipient.token}">{cfg:site_url}?s=download&amp;token={recipient.token}</a></td>
-        </tr>
-    </tbody>
-</table>
+<p>
+    {if:files>1}
+    <ul>
+        {each:files as file}
+            <li>{file.name} ({size:file.size})</li>
+        {endeach}
+    </ul>
+    {else}
+    {files.first().name} ({size:files.first().size})
+    {endif}
+</p>
 
 <p>
     Best regards,<br />
