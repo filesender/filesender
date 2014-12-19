@@ -162,6 +162,20 @@ window.filesender.client = {
     },
     
     /**
+     * Get transfer info
+     * 
+     * @param int id
+     * @param callable callback
+     * @param callable onerror
+     */
+    getTransfer: function(id, callback, onerror) {
+        var opts = {};
+        if(onerror) opts.error = onerror;
+        
+        this.get('/transfer/' + id, callback, opts);
+    },
+    
+    /**
      * Post a file chunk
      * 
      * @param object file
