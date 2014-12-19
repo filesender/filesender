@@ -419,7 +419,8 @@ table.list .date {
     overflow-y: scroll;
 }
 
-#upload_form .files .file {
+#upload_form .files .file,
+#upload_form .required_files .file {
     position: relative;
     margin: 0.2em;
     padding: 0.5em;
@@ -431,7 +432,12 @@ table.list .date {
     height: 1.8em;
 }
 
-#upload_form .files .file .info {
+#upload_form .required_files .file {
+    background-color: #faa;
+}
+
+#upload_form .files .file .info,
+#upload_form .required_files .file .info {
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
@@ -601,6 +607,19 @@ table.list .date {
 
 #legacy_uploader {
     display: none;
+}
+
+.ui-dialog .ui-dialog-content .failed_transfer {
+    margin-top: 1em;
+}
+
+.ui-dialog .ui-dialog-content .failed_transfer div {
+    margin: 0.5em;
+}
+
+.ui-dialog .ui-dialog-content .failed_transfer ul {
+    list-style-type: disc;
+    margin-left: 2em;
 }
 
 

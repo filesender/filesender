@@ -165,6 +165,9 @@
             <a href="#" class="start">
                 <span class="fa fa-cloud-upload fa-lg"></span> {tr:send}
             </a>
+            <a href="#" class="restart not_displayed">
+                <span class="fa fa-cloud-upload fa-lg"></span> {tr:restart}
+            </a>
             <a href="#" class="pause not_displayed">
                 <span class="fa fa-pause fa-lg"></span> {tr:pause}
             </a>

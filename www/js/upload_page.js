@@ -40,57 +40,82 @@ filesender.ui.files = {
         for(var i=0; i<files.length; i++) {
             var info = files[i].name + ' : ' + filesender.ui.formatBytes(files[i].size);
             
-            node = $('<div class="file" data-name="' + files[i].name + '" data-size="' + files[i].size + '" />').appendTo(filesender.ui.nodes.files.list);
+            node = $('<div class="file" />').attr({
+                'data-name': files[i].name,
+                'data-size': files[i].size
+            }).appendTo(filesender.ui.nodes.files.list);
             
             $('<span class="info" />').text(info).attr({title: info}).appendTo(node);
             
-            $('<span class="remove fa fa-minus-square fa-lg" />').attr({
-                title: lang.tr('click_to_delete_file')
-            }).on('click', function() {
-                var el = $(this).parent();
-                var cid = el.attr('data-cid');
-                var name = el.attr('data-name');
+            if(filesender.ui.nodes.required_files) {
+                // Upload restart mode
+                var req = filesender.ui.nodes.required_files.find('.file[data-name="' + files[i].name + '"][data-size="' + files[i].size + '"]');
                 
-                var total_size = 0;
-                for(var j=0; j<filesender.ui.transfer.files.length; j++)
-                    total_size += filesender.ui.transfer.files[j].size;
-                
-                if(cid) filesender.ui.transfer.removeFile(cid);
-                
-                $(this).parent().remove();
-                
-                if(!filesender.ui.nodes.files.list.find('div').length)
-                    filesender.ui.nodes.files.clear.button('disable');
-                
-                var iidx = filesender.ui.files.invalidFiles.indexOf(name);
-                if (iidx === -1){
-                    total_size -= parseInt(size);
-                    filesender.ui.nodes.stats.number_of_files.show().find('.value').text(filesender.ui.transfer.files.length + '/' + filesender.config.max_transfer_files);
-                    filesender.ui.nodes.stats.size.show().find('.value').text(filesender.ui.formatBytes(total_size) + '/' + filesender.ui.formatBytes(filesender.config.max_transfer_size));
-                } else {
-                    filesender.ui.files.invalidFiles.splice(iidx, 1);
+                if(!req.length) {
+                    filesender.ui.alert('error', lang.tr('unexpected_file'));
+                    node.remove();
+                    return null;
                 }
                 
-                filesender.ui.evalUploadEnabled();
-            }).appendTo(node);
-            
-            var added_cid = filesender.ui.transfer.addFile(files[i], function(error) {
-                var tt = 1;
-                filesender.ui.files.invalidFiles.push(error.details.filename);
-                node.addClass('invalid');
-                node.addClass(error.message);
-                $('<span class="invalid fa fa-exclamation-circle fa-lg" />').prependTo(node.find('.info'))
-                node.attr({
-                    title: lang.tr('invalid_file').replace({reason: lang.tr(error.message)})
-                });
-                node.find('.info').removeAttr('title');
-            }, source_node);
-            
-            filesender.ui.nodes.files.clear.button('enable');
+                var file = req.data('file');
+                var added_cid = req.attr('data-cid');
+                file.cid = added_cid;
+                file.blob = files[i];
+                
+                filesender.ui.transfer.files.push(file);
+                
+                req.remove();
+                
+            } else {
+                // Normal upload mode
+                $('<span class="remove fa fa-minus-square fa-lg" />').attr({
+                    title: lang.tr('click_to_delete_file')
+                }).on('click', function() {
+                    var el = $(this).parent();
+                    var cid = el.attr('data-cid');
+                    var name = el.attr('data-name');
+                    
+                    var total_size = 0;
+                    for(var j=0; j<filesender.ui.transfer.files.length; j++)
+                        total_size += filesender.ui.transfer.files[j].size;
+                    
+                    if(cid) filesender.ui.transfer.removeFile(cid);
+                    
+                    $(this).parent().remove();
+                    
+                    if(!filesender.ui.nodes.files.list.find('div').length)
+                        filesender.ui.nodes.files.clear.button('disable');
+                    
+                    var iidx = filesender.ui.files.invalidFiles.indexOf(name);
+                    if (iidx === -1){
+                        total_size -= parseInt(size);
+                        filesender.ui.nodes.stats.number_of_files.show().find('.value').text(filesender.ui.transfer.files.length + '/' + filesender.config.max_transfer_files);
+                        filesender.ui.nodes.stats.size.show().find('.value').text(filesender.ui.formatBytes(total_size) + '/' + filesender.ui.formatBytes(filesender.config.max_transfer_size));
+                    } else {
+                        filesender.ui.files.invalidFiles.splice(iidx, 1);
+                    }
+                    
+                    filesender.ui.evalUploadEnabled();
+                }).appendTo(node);
+                
+                var added_cid = filesender.ui.transfer.addFile(files[i], function(error) {
+                    var tt = 1;
+                    filesender.ui.files.invalidFiles.push(error.details.filename);
+                    node.addClass('invalid');
+                    node.addClass(error.message);
+                    $('<span class="invalid fa fa-exclamation-circle fa-lg" />').prependTo(node.find('.info'))
+                    node.attr({
+                        title: lang.tr('invalid_file').replace({reason: lang.tr(error.message)})
+                    });
+                    node.find('.info').removeAttr('title');
+                }, source_node);
+                
+                filesender.ui.nodes.files.clear.button('enable');
+                
+                if(added_cid === false) continue;
+            }
+                
             filesender.ui.evalUploadEnabled();
-            
-            if(added_cid === false) continue;
-            
             node.attr('data-cid', added_cid);
             
             var bar = $('<div class="progressbar" />').appendTo(node);
@@ -112,12 +137,19 @@ filesender.ui.files = {
             
             $('<span class="fa fa-lg fa-check done_icon" />').appendTo(node);
             
-            var size = 0;
-            for(var j=0; j<filesender.ui.transfer.files.length; j++)
-                size += filesender.ui.transfer.files[j].size;
-            
-            filesender.ui.nodes.stats.number_of_files.show().find('.value').text(filesender.ui.transfer.files.length + '/' + filesender.config.max_transfer_files);
-            filesender.ui.nodes.stats.size.show().find('.value').text(filesender.ui.formatBytes(size) + '/' + filesender.ui.formatBytes(filesender.config.max_transfer_size));
+            if(filesender.ui.nodes.required_files) {
+                if(file) {
+                    bar.show().progressbar('value', Math.round(1000 * file.uploaded / file.size));
+                }
+                
+            } else {
+                var size = 0;
+                for(var j=0; j<filesender.ui.transfer.files.length; j++)
+                    size += filesender.ui.transfer.files[j].size;
+                
+                filesender.ui.nodes.stats.number_of_files.show().find('.value').text(filesender.ui.transfer.files.length + '/' + filesender.config.max_transfer_files);
+                filesender.ui.nodes.stats.size.show().find('.value').text(filesender.ui.formatBytes(size) + '/' + filesender.ui.formatBytes(filesender.config.max_transfer_size));
+            }
             
             node.attr('index', filesender.ui.transfer.files.length - 1);
         }
@@ -307,36 +339,47 @@ filesender.ui.recipients = {
 filesender.ui.evalUploadEnabled = function() {
     var ok = true;
     
-    // Check if there is no files with banned extension
-    if (filesender.ui.files.invalidFiles.length > 0)ok  = false;
+    if(filesender.ui.nodes.required_files) {
+        if(filesender.ui.nodes.required_files.find('.file').length) ok = false;
+        
+    } else {
+        // Check if there is no files with banned extension
+        if (filesender.ui.files.invalidFiles.length > 0) ok  = false;
+        
+        if(!filesender.ui.transfer.files.length) ok = false;
     
-    if(!filesender.ui.transfer.files.length) ok = false;
-    if(!filesender.ui.transfer.recipients.length) ok = false;
+        if(!filesender.ui.transfer.recipients.length) ok = false;
+    }
     
     if(filesender.ui.nodes.aup.length)
         if(!filesender.ui.nodes.aup.is(':checked')) ok = false;
     
-    filesender.ui.nodes.buttons.start.button(ok ? 'enable' : 'disable');
+    if(filesender.ui.nodes.required_files) {
+        filesender.ui.nodes.buttons.restart.button(ok ? 'enable' : 'disable');
+    } else {
+        filesender.ui.nodes.buttons.start.button(ok ? 'enable' : 'disable');
+    }
     
     return ok;
 };
 
 filesender.ui.startUpload = function() {
-    this.transfer.expires = filesender.ui.nodes.expires.datepicker('getDate').getTime() / 1000;
-    
-    if(filesender.ui.nodes.from.length)
-        this.transfer.from = filesender.ui.nodes.from.val();
-    
-    this.transfer.subject = filesender.ui.nodes.subject.val();
-    this.transfer.message = filesender.ui.nodes.message.val();
-    if (filesender.ui.nodes.guest_token){
-        this.transfer.guest_token = filesender.ui.nodes.guest_token.val();
+    if(!filesender.ui.nodes.required_files) {
+        this.transfer.expires = filesender.ui.nodes.expires.datepicker('getDate').getTime() / 1000;
+        
+        if(filesender.ui.nodes.from.length)
+            this.transfer.from = filesender.ui.nodes.from.val();
+        
+        this.transfer.subject = filesender.ui.nodes.subject.val();
+        this.transfer.message = filesender.ui.nodes.message.val();
+        if (filesender.ui.nodes.guest_token){
+            this.transfer.guest_token = filesender.ui.nodes.guest_token.val();
+        }
+        
+        for(var o in filesender.ui.nodes.options)
+            if(filesender.ui.nodes.options[o].is(':checked'))
+                this.transfer.options.push(o);
     }
-    
-    for(var o in filesender.ui.nodes.options)
-        if(filesender.ui.nodes.options[o].is(':checked'))
-            this.transfer.options.push(o);
-    
     
     this.transfer.onprogress = filesender.ui.files.progress;
     
@@ -357,6 +400,7 @@ filesender.ui.startUpload = function() {
     
     filesender.ui.nodes.files.list.find('.file').addClass('uploading');
     filesender.ui.nodes.files.list.find('.file .remove').hide();
+    filesender.ui.nodes.recipients.list.find('.recipient .remove').hide();
     filesender.ui.nodes.files.list.find('.file .progressbar').show();
     
     filesender.ui.nodes.stats.number_of_files.hide();
@@ -366,7 +410,7 @@ filesender.ui.startUpload = function() {
     
     filesender.ui.nodes.form.find(':input').prop('disabled', true);
     
-    this.transfer.start(errorHandler);
+    return this.transfer.start(errorHandler);
 };
 
 $(function() {
@@ -399,6 +443,7 @@ $(function() {
         options: {},
         buttons: {
             start: form.find('.buttons .start'),
+            restart: form.find('.buttons .restart'),
             pause: form.find('.buttons .pause'),
             resume: form.find('.buttons .resume'),
             stop: form.find('.buttons .stop')
@@ -565,6 +610,17 @@ $(function() {
         }).button();
     }
     
+    if(filesender.ui.transfer.isRestartSupported()) {
+        filesender.ui.nodes.buttons.restart.on('click', function() {
+            if(filesender.ui.startUpload()) {
+                filesender.ui.nodes.buttons.restart.addClass('not_displayed');
+                if(filesender.supports.reader) filesender.ui.nodes.buttons.pause.removeClass('not_displayed');
+                filesender.ui.nodes.buttons.stop.removeClass('not_displayed');
+            }
+            return false;
+        }).button().button('disable');
+    }
+    
     filesender.ui.nodes.buttons.stop.on('click', function() {
         filesender.ui.confirm(lang.tr('confirm_stop_upload'), function() {
             filesender.ui.transfer.stop(function() {
@@ -586,32 +642,120 @@ $(function() {
             return lang.tr('confirm_leave_upload_page'); // Ask for leaving confirmation
     };
     
-    // Legacy uploader
-    if(filesender.supports.reader) return;
-    var selector = form.find('.file_selector').show();
-    
-    // Put notice
-    form.addClass('legacy');
-    
-    $('<div class="info message" />').text(lang.tr('reader_not_supported')).insertBefore(filesender.ui.nodes.files.list);
-    
-    // Remove unavailable features
-    filesender.ui.nodes.files.select.remove();
-    filesender.ui.nodes.files.dragdrop.remove();
-    filesender.ui.nodes.buttons.pause.remove();
-    
-    // Adapt file selection
-    filesender.ui.nodes.files.input.remove();
-    $('<input name="file" type="file" />').appendTo(selector).on('change', function() {
-        var sel = $(this)
-        var file = sel.clone();
+    if(!filesender.supports.reader) {
+        // Legacy uploader
+        var selector = form.find('.file_selector').show();
         
-        // TODO check file size, reject if over filesender.config.max_legacy_upload_size
+        // Put notice
+        form.addClass('legacy');
         
-        var node = filesender.ui.files.add(this.files, file.get(0));
-        if(!node) return;
+        $('<div class="info message" />').text(lang.tr('reader_not_supported')).insertBefore(filesender.ui.nodes.files.list);
         
-        file.appendTo(node);
-        sel.val('');
+        // Remove unavailable features
+        filesender.ui.nodes.files.select.remove();
+        filesender.ui.nodes.files.dragdrop.remove();
+        filesender.ui.nodes.buttons.pause.remove();
+        
+        // Adapt file selection
+        filesender.ui.nodes.files.input.remove();
+        $('<input name="file" type="file" />').appendTo(selector).on('change', function() {
+            var sel = $(this)
+            var file = sel.clone();
+            
+            // TODO check file size, reject if over filesender.config.max_legacy_upload_size
+            
+            var node = filesender.ui.files.add(this.files, file.get(0));
+            if(!node) return;
+            
+            file.appendTo(node);
+            sel.val('');
+        });
+    }
+    
+    // Check if there is a failed transfer in tracker and if it still exists
+    var failed = filesender.ui.transfer.isThereFailedInRestartTracker();
+    if(failed) filesender.client.getTransfer(failed.id, function() {
+        // Transfer still exists on server, lets ask the user what to do with it
+        
+        var load = function() {
+            var required_files = filesender.ui.transfer.loadFailedFromRestartTracker(failed.id);
+            
+            // Prefill files list
+            filesender.ui.nodes.required_files = $('<div class="required_files" />').insertBefore(filesender.ui.nodes.files.list);
+            $('<div class="info message" />').text(lang.tr('need_to_readd_files')).appendTo(filesender.ui.nodes.required_files);
+            
+            for(var i=0; i<required_files.length; i++) {
+                var info = required_files[i].name + ' : ' + filesender.ui.formatBytes(required_files[i].size);
+                var node = $('<div class="file required" />').attr({
+                    'data-name': required_files[i].name,
+                    'data-size': required_files[i].size,
+                    'data-cid': required_files[i].cid
+                }).appendTo(filesender.ui.nodes.required_files);
+                $('<span class="info" />').text(info).attr({title: info}).appendTo(node);
+                node.data('file', required_files[i]);
+            }
+            
+            // Following field settings are just cosmetic
+            filesender.ui.nodes.recipients.list.show();
+            for(var i=0; i<failed.recipients.length; i++) {
+                var node = $('<div class="recipient" />').attr('email', failed.recipients[i]).appendTo(filesender.ui.nodes.recipients.list);
+                $('<span />').attr('title', failed.recipients[i]).text(failed.recipients[i]).appendTo(node);
+            }
+            
+            filesender.ui.nodes.from.val(failed.from);
+            
+            filesender.ui.nodes.subject.val(failed.subject);
+            filesender.ui.nodes.message.val(failed.message);
+            
+            filesender.ui.nodes.aup.prop('checked', true);
+            
+            filesender.ui.nodes.expires.datepicker('setDate', new Date(failed.expires * 1000));
+            
+            for(var i=0; i<failed.options.length; i++)
+                filesender.ui.nodes.options[failed.options[i]].prop('checked', true);
+            
+            filesender.ui.nodes.form.find(':input').prop('disabled', true);
+            filesender.ui.nodes.files.input.prop('disabled', false);
+            
+            // Setup restart button
+            filesender.ui.nodes.buttons.start.addClass('not_displayed');
+            filesender.ui.nodes.buttons.restart.removeClass('not_displayed');
+        };
+        
+        var forget = function() {
+            filesender.ui.transfer.removeFromRestartTracker(failed.id);
+        };
+        
+        var later = function() {};
+        
+        var prompt = filesender.ui.popup(lang.tr('restart_failed_transfer'), {'load': load, 'forget': forget, 'later': later}, {onclose: later});
+        $('<p />').text(lang.tr('failed_transfer_found')).appendTo(prompt);
+        var tctn = $('<div class="failed_transfer" />').appendTo(prompt);
+        
+        $('<div class="size" />').text(lang.tr('size') + ' : ' + filesender.ui.formatBytes(failed.size)).appendTo(tctn);
+        
+        var fctn = $('<ul />').appendTo($('<div class="files" />').appendTo(tctn));
+        for(var i=0; i<failed.files.length; i++) {
+            var finfo = failed.files[i].name + ' (' + filesender.ui.formatBytes(failed.files[i].size) + ')';
+            finfo += ', ' + (100 * failed.files[i].uploaded / failed.files[i].size).toFixed(0) + '% ' + lang.tr('done');
+            $('<li />').text(finfo).appendTo(fctn);
+        }
+        
+        $('<div class="recipients" />').text(lang.tr('recipients') + ' : ' + failed.recipients.join(', ')).appendTo(tctn);
+        
+        if(failed.subject)
+            $('<div class="subject" />').text(lang.tr('subject') + ' : ' + failed.subject).appendTo(tctn);
+        
+        if(failed.message)
+            $('<div class="message" />').text(lang.tr('message') + ' : ' + failed.message).appendTo(tctn);
+        
+    }, function(error) {
+        if(error.message == 'transfer_not_found') {
+            // Transfer does not exist anymore on server side, remove from tracker
+            filesender.ui.transfer.removeFromRestartTracker(failed.id);
+            
+        } else {
+            filesender.ui.error(error);
+        }
     });
 });
