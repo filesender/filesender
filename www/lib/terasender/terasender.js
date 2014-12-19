@@ -59,9 +59,33 @@ window.filesender.terasender = {
         if(!file) { // Look for file with remaining chunks
             var mode = filesender.config.terasender_start_mode;
             
-            if(mode == 'multiple') { // Look for file that is not started yet
-                for(var i=0; i<files.length && !file; i++)
-                    if(files[i].uploaded == 0) file = files[i];
+            if(mode == 'multiple') { // Look for file with the least worker count
+                var files_workers = {};
+                for(var i=0; i<this.workers.length; i++) {
+                    if(!this.workers[i].file_id) continue;
+                    
+                    if(!files_workers['file_' + this.workers[i].file_id])
+                        files_workers['file_' + this.workers[i].file_id] = 0;
+                    
+                    files_workers['file_' + this.workers[i].file_id]++;
+                }
+                
+                var candidates = [];
+                for(var i=0; i<files.length; i++) {
+                    if(files[i].uploaded >= files[i].size) continue;
+                    
+                    var wcnt = files_workers['file_' + files[i].id];
+                    if(!wcnt) wcnt = 0;
+                    
+                    candidates.push({file: files[i], wcnt: wcnt});
+                }
+                
+                candidates.sort(function(a, b) {
+                    return a.wcnt - b.wcnt;
+                });
+                
+                var winner = candidates.shift();
+                if(winner) file = winner.file;
             }
             
             if(!file) // or mode is "single"
