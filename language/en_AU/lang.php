@@ -467,7 +467,6 @@ $lang['file_bad_hash'] = 'Invalid file hash';
 
 // GUIExceptions
 $lang['gui_unknown_admin_section'] = 'Unknown admin section';
-$lang[''] = '';
 
 // GuestExceptions
 $lang['guest_not_found'] = 'Guest not found';
@@ -492,7 +491,6 @@ $lang['rest_admin_required'] = 'Admin rights required';
 $lang['rest_ownership_required'] = 'Ownership rights required';
 $lang['rest_missing_parameter'] = 'Missing REST parameter';
 $lang['rest_bad_parameter'] = 'Invalid REST parameter';
-$lang[''] = '';
 
 // StatLogExceptions
 $lang['statlog_not_found'] = 'Stat log not found';
@@ -500,7 +498,6 @@ $lang['bad_statlog_event_type'] = 'Invalid stat log event';
 
 // StorageExceptions
 $lang['storage_chunk_too_large'] = 'Storage chunk too large';
-$lang[''] = '';
 
 // StorageFilesystemExceptions
 $lang['storage_filesystem_cannot_create_path'] = 'Cannot create path on filesystem';
@@ -563,3 +560,21 @@ $lang['view_full_log'] = 'View the full log';
 
 $lang['send_to_my_email'] = 'Send to my email';
 $lang['report_pdf_disclamer'] = '';
+
+// Transfer restart
+$lang['restart'] = 'Restart';
+$lang['restart_failed_transfer'] = 'Restart failed transfer ?';
+$lang['failed_transfer_found'] = 'It seems that one of your previous transfers failed to upload, do you want to restart from where it stopped (you will need to add the file again) ?';
+$lang['load'] = 'Load failed transfer';
+$lang['forget'] = 'Forget about it';
+$lang['later'] = 'Ask me again later';
+$lang['need_to_readd_files'] = 'You need to add the files bellow again so you can restart your upload';
+$lang['unexpected_file'] = 'This file is not part of the restarting transfer';
+$lang['missing_files_for_restart'] = 'Missing file(s), cannot restart without them';
+
+
+$lang['confirm_stop_upload'] = 'Do you really want to stop the upload and remove already uploaded data ?';
+$lang['click_to_delete_file'] = 'Remove file';
+$lang['click_to_delete_recipient'] = 'Remove recipient';
+
+$lang['done_uploading'] = 'Done uploading';
