@@ -658,7 +658,7 @@ class Transfer extends DBObject {
             if($guest->hasOption(GuestOptions::EMAIL_UPLOAD_FROM_GUEST_COMPLETE))
                 ApplicationMail::quickSend('guest_upload_complete', $guest->user_email, $guest);
         } else {
-            if($this->hasOption(TransferOptions::EMAIL_UPLOAD_COMPLETE, $options))
+            if($this->hasOption(TransferOptions::EMAIL_UPLOAD_COMPLETE))
                 ApplicationMail::quickSend('upload_complete', Auth::user()->email, $this);
         }
         
