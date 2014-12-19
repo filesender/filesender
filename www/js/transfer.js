@@ -61,20 +61,7 @@ window.filesender.transfer = function() {
     this.oncomplete = null;
     this.onerror = null;
     this.guest_token = null;
-
-    this.saveTemp = function() {
-        if (!filesender.supports.localStorage)
-            return;
-        localStorage.setItem('transfer_' + this.id, JSON.stringify({
-            size: this.size,
-            files: this.files,
-            recipients: this.recipients,
-            subject: this.subject,
-            message: this.message,
-            expires: this.expires,
-            options: this.options,
-        }));
-    };
+    this.failed_transfer_restart = false;
 
     /**
      * Add a file to the file list
@@ -237,6 +224,219 @@ window.filesender.transfer = function() {
                 return;
             }
     };
+    
+    /**
+     * Check if restart is supported (local storage is available and html5 upload as well)
+     */
+    this.isRestartSupported = function() {
+        return ('localStorage' in window) && (window['localStorage'] !== null) && filesender.supports.reader;
+    };
+    
+    /**
+     * Get stored tracker
+     * 
+     * @param int optionnal transfer id
+     * 
+     * @return object
+     */
+    this.getRestartTracker = function(id) {
+        if(!this.isRestartSupported()) return;
+        
+        var tracker = localStorage.getItem('restart_tracker');
+        if(!tracker) tracker = '{}';
+        
+        tracker = JSON.parse(tracker);
+        
+        if(!id) return tracker;
+        
+        if(!tracker['transfer_' + id]) return null;
+        
+        return tracker['transfer_' + id];
+    };
+    
+    /**
+     * Store tracker
+     * 
+     * @param object tracker whole tracker or just transfer
+     */
+    this.storeRestartTracker = function(tracker) {
+        if(!this.isRestartSupported()) return;
+        
+        if(tracker.id) { // Transfer
+            var trk = this.getRestartTracker();
+            trk['transfer_' + tracker.id] = tracker;
+            this.storeRestartTracker(trk);
+            return;
+        }
+        
+        localStorage.setItem('restart_tracker', JSON.stringify(tracker));
+    };
+    
+    /**
+     * Remove tracker
+     * 
+     * @param int transfer id
+     */
+    this.removeRestartTracker = function(id) {
+        if(!this.isRestartSupported()) return;
+        
+        var tracker = this.getRestartTracker();
+        
+        if(!tracker['transfer_' + id]) return;
+        
+        delete tracker['transfer_' + id];
+        
+        this.storeRestartTracker(tracker);
+    };
+    
+    /**
+     * Create local storage
+     */
+    this.createRestartTracker = function() {
+        if(!this.isRestartSupported() || !this.id) return;
+        
+        var stored = {
+            id: this.id,
+            size: this.size,
+            from: this.from,
+            subject: this.subject,
+            message: this.message,
+            expires: this.expires,
+            status: this.status,
+            recipients: this.recipients,
+            options: this.options,
+            files: [],
+            file_index: 0,
+            guest_token: null
+        };
+        
+        for(var i=0; i<this.files.length; i++) {
+            stored.files.push({
+                id: this.files[i].id,
+                uid: this.files[i].uid,
+                cid: this.files[i].cid,
+                size: this.files[i].size,
+                uploaded: 0,
+                complete: false,
+                name: this.files[i].name,
+                mime_type: this.files[i].mime_type
+            });
+        }
+        
+        this.storeRestartTracker(stored);
+    };
+    
+    /**
+     * Update file in storage
+     * 
+     * @param object file
+     */
+    this.updateFileInRestartTracker = function(file) {
+        if(!this.isRestartSupported() || !this.id) return;
+        
+        var tracker = this.getRestartTracker(this.id);
+        if(!tracker) return;
+        
+        for(var i=0; i<tracker.files.length; i++) if(tracker.files[i].id == file.id) {
+            tracker.files[i].uploaded = file.uploaded;
+            tracker.files[i].complete = file.complete;
+        }
+        
+        this.storeRestartTracker(tracker);
+    };
+    
+    /**
+     * Remove transfer from local storage (complete / user request)
+     * 
+     * @param int id
+     */
+    this.removeFromRestartTracker = function(id) {
+        if(!this.isRestartSupported()) return;
+        
+        if(!id) id = this.id;
+        if(!id) return;
+        
+        this.removeRestartTracker(id);
+    };
+    
+    /**
+     * Check if there is a failed transfer in storage
+     */
+    this.isThereFailedInRestartTracker = function() {
+        if(!this.isRestartSupported()) return null;
+        
+        var tracker = this.getRestartTracker();
+        
+        for(var key in tracker) return tracker[key]; // TODO multi fail support, now only takes 1st one
+        
+        return null;
+    };
+    
+    /**
+     * Load failed transfer from storage
+     * 
+     * @param int id
+     */
+    this.loadFailedFromRestartTracker = function(id) {
+        if(!this.isRestartSupported()) return;
+        
+        var tracker = this.getRestartTracker(id);
+        if(!tracker) return;
+        
+        for(var prop in tracker) switch(prop) {
+            case 'files': break;
+            default: this[prop] = tracker[prop];
+        }
+        
+        this.failed_transfer_restart = true;
+        
+        return tracker.files;
+    };
+    
+    /**
+     * Restart failed transfer
+     */
+    this.restartFailedTransfer = function() {
+        if(!this.isRestartSupported() || !this.id) return;
+        
+        var tracker = this.getRestartTracker(this.id);
+        if(!tracker) return;
+        
+        // Check files
+        for(var i=0; i<tracker.files.length; i++) {
+            for(var j=0; j<this.files.length; j++) {
+                if(
+                    (this.files[j].name == tracker.files[i].name) &&
+                    (this.files[j].size == tracker.files[i].size)
+                ) {
+                    for(var prop in tracker.files[i])
+                        this.files[j][prop] = tracker.files[i][prop];
+                }
+            }
+        }
+        
+        for(var i=0; i<tracker.files.length; i++) {
+            if(!tracker.files[i].id) {
+                // We are missing a file
+                filesender.ui.alert('error', lang.tr('missing_files_for_restart'));
+                return false;
+            }
+        }
+        
+        // From here we should have everything we need to restart
+        
+        this.time = (new Date()).getTime();
+        
+        // Start uploading chunks
+        if (filesender.config.terasender_enabled && filesender.supports.workers) {
+            filesender.terasender.start(this);
+        } else {
+            // Chunk by chunk upload
+            this.uploadChunk();
+        }
+        
+        return true;
+    };
 
     /**
      * Report progress
@@ -256,10 +456,13 @@ window.filesender.transfer = function() {
         if (complete) {
             var transfer = this;
             filesender.client.fileComplete(file, undefined, function(data) {
+                transfer.updateFileInRestartTracker(file);
+                
                 if (transfer.onprogress)
                     transfer.onprogress.call(transfer, file, true);
             });
         } else if (this.onprogress) {
+            this.updateFileInRestartTracker(file);
             this.onprogress.call(this, file, false);
         }
     };
@@ -279,6 +482,8 @@ window.filesender.transfer = function() {
         var transfer = this;
         
         filesender.client.transferComplete(this, undefined, this.guest_token, function(data) {
+            transfer.removeFromRestartTracker();
+            
             if (transfer.oncomplete)
                 transfer.oncomplete.call(transfer, time);
         });
@@ -307,6 +512,10 @@ window.filesender.transfer = function() {
             errorhandler = filesender.ui.error;
         
         this.status = 'running';
+        
+        if(this.failed_transfer_restart) {
+            return this.restartFailedTransfer(errorhandler);
+        }
         
         // Redo sanity checks
         
@@ -365,6 +574,8 @@ window.filesender.transfer = function() {
                     return errorhandler({message: 'file_not_in_response', details: {file: transfer.files[i]}});
             }
             
+            transfer.createRestartTracker();
+            
             if(filesender.supports.reader) {
                 // Start uploading chunks
                 if (filesender.config.terasender_enabled && filesender.supports.workers) {
@@ -421,6 +632,8 @@ window.filesender.transfer = function() {
         if (filesender.config.terasender_enabled && filesender.supports.workers)
             filesender.terasender.stop();
         
+        this.removeFromRestartTracker();
+        
         var transfer = this;
         window.setTimeout(function() { // Small delay to let workers stop
             filesender.client.deleteTransfer(transfer, callback);
@@ -458,13 +671,13 @@ window.filesender.transfer = function() {
             this.file_index++;
 
         filesender.client.putChunk(file, blob, offset, function() {
-            if (!last || transfer.file_index < transfer.files.length) {
-                if (last) { // File done
-                    transfer.reportProgress(file, true);
-                } else {
-                    transfer.reportProgress(file);
-                }
-
+            if (last) { // File done
+                transfer.reportProgress(file, true);
+            } else {
+                transfer.reportProgress(file);
+            }
+            
+            if(! last || transfer.file_index < transfer.files.length) {
                 transfer.uploadChunk();
             } else {
                 transfer.reportComplete();
