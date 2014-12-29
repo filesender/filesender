@@ -68,6 +68,11 @@ public function loadConfig() {
 	$config["autocomplete"] = true;
 	$config["autocompleteHistoryMax"] = ""; // "" - unlimited or integer, number of results displayed in autocomplete
 
+	// crypto settings
+	$config["crypto_enabled"] = false; // Set to true to enable end2end encryption module
+	$config["crypto_default_enabled"] = false; // Set to true to encrypt files by default
+	$config['crypto_max_filesize'] = 250*1024*1024 ; // Max filesize for encryption, 0 will allow any size.
+
 	// debug settings
 	$config["debug"] = true; // Debug logging on/off (true/false)
 	$config["displayerrors"] = false; // Display debug errors on screen (true/false)
