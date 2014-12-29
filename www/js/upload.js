@@ -130,7 +130,7 @@ var startTime = 0;
  	function deactivateEncryptBox() { $("#fileencryption").attr("disabled", "disabled"); }
  	function enableEncryptBox() { $("#fileencryption").removeAttr("disabled"); }
  	
- 	function showWarningMessage(file) { $("#encsize_msg").html(encsizemsg.replace(":1",file.name)).show(); }
+ 	function showWarningMessage(file) { $("#encsize_msg").html(encsizemsg.replace(":1",file.name).replace(":2",readablizebytes(maxCryptedSize))).show(); }
  	function hideWarningMessage() { $("#encsize_msg").hide(); }
  	
  	function showError(file) { fileMsg(encsizemsg.replace(":1",file.name).replace(":2",readablizebytes(maxCryptedSize))); }
