@@ -71,6 +71,11 @@ var sjcl = {
 if(typeof module !== 'undefined' && module.exports){
   module.exports = sjcl;
 }
+if (typeof define === "function") {
+    define([], function () {
+        return sjcl;
+    });
+}
 /** @fileOverview Low-level AES implementation.
  *
  * This file contains a low-level implementation of AES, optimized for
@@ -355,7 +360,7 @@ sjcl.bitArray = {
       return a1.concat(a2);
     }
     
-    var out, i, last = a1[a1.length-1], shift = sjcl.bitArray.getPartial(last);
+    var last = a1[a1.length-1], shift = sjcl.bitArray.getPartial(last);
     if (shift === 32) {
       return a1.concat(a2);
     } else {
@@ -464,6 +469,20 @@ sjcl.bitArray = {
    */
   _xor4: function(x,y) {
     return [x[0]^y[0],x[1]^y[1],x[2]^y[2],x[3]^y[3]];
+  },
+
+  /** byteswap a word array inplace.
+   * (does not handle partial words)
+   * @param {sjcl.bitArray} a word array
+   * @return {sjcl.bitArray} byteswapped array
+   */
+  byteswapM: function(a) {
+    var i, v, m = 0xff00;
+    for (i = 0; i < a.length; ++i) {
+      v = a[i];
+      a[i] = (v >>> 24) | ((v >>> 8) & m) | ((v & m) << 8) | (v << 24);
+    }
+    return a;
   }
 };
 /** @fileOverview Bit array codec implementations.
@@ -516,7 +535,7 @@ sjcl.codec.utf8String = {
 sjcl.codec.hex = {
   /** Convert from a bitArray to a hex string. */
   fromBits: function (arr) {
-    var out = "", i, x;
+    var out = "", i;
     for (i=0; i<arr.length; i++) {
       out += ((arr[i]|0)+0xF00000000000).toString(16).substr(4);
     }
@@ -601,43 +620,6 @@ sjcl.codec.base64 = {
 sjcl.codec.base64url = {
   fromBits: function (arr) { return sjcl.codec.base64.fromBits(arr,1,1); },
   toBits: function (str) { return sjcl.codec.base64.toBits(str,1); }
-};
-/** @fileOverview Bit array codec implementations.
- *
- * @author Emily Stark
- * @author Mike Hamburg
- * @author Dan Boneh
- */
-
-/** @namespace Arrays of bytes */
-sjcl.codec.bytes = {
-  /** Convert from a bitArray to an array of bytes. */
-  fromBits: function (arr) {
-    var out = [], bl = sjcl.bitArray.bitLength(arr), i, tmp;
-    for (i=0; i<bl/8; i++) {
-      if ((i&3) === 0) {
-        tmp = arr[i/4];
-      }
-      out.push(tmp >>> 24);
-      tmp <<= 8;
-    }
-    return out;
-  },
-  /** Convert from an array of bytes to a bitArray. */
-  toBits: function (bytes) {
-    var out = [], i, tmp=0;
-    for (i=0; i<bytes.length; i++) {
-      tmp = tmp << 8 | bytes[i];
-      if ((i&3) === 3) {
-        out.push(tmp);
-        tmp = 0;
-      }
-    }
-    if (i&3) {
-      out.push(sjcl.bitArray.partial(8*(i&3), tmp));
-    }
-    return out;
-  }
 };
 /** @fileOverview Javascript SHA-256 implementation.
  *
@@ -855,354 +837,6 @@ sjcl.hash.sha256.prototype = {
 };
 
 
-/** @fileOverview Javascript SHA-512 implementation.
- *
- * This implementation was written for CryptoJS by Jeff Mott and adapted for
- * SJCL by Stefan Thomas.
- *
- * CryptoJS (c) 2009–2012 by Jeff Mott. All rights reserved.
- * Released with New BSD License
- *
- * @author Emily Stark
- * @author Mike Hamburg
- * @author Dan Boneh
- * @author Jeff Mott
- * @author Stefan Thomas
- */
-
-/**
- * Context for a SHA-512 operation in progress.
- * @constructor
- * @class Secure Hash Algorithm, 512 bits.
- */
-sjcl.hash.sha512 = function (hash) {
-  if (!this._key[0]) { this._precompute(); }
-  if (hash) {
-    this._h = hash._h.slice(0);
-    this._buffer = hash._buffer.slice(0);
-    this._length = hash._length;
-  } else {
-    this.reset();
-  }
-};
-
-/**
- * Hash a string or an array of words.
- * @static
- * @param {bitArray|String} data the data to hash.
- * @return {bitArray} The hash value, an array of 16 big-endian words.
- */
-sjcl.hash.sha512.hash = function (data) {
-  return (new sjcl.hash.sha512()).update(data).finalize();
-};
-
-sjcl.hash.sha512.prototype = {
-  /**
-   * The hash's block size, in bits.
-   * @constant
-   */
-  blockSize: 1024,
-   
-  /**
-   * Reset the hash state.
-   * @return this
-   */
-  reset:function () {
-    this._h = this._init.slice(0);
-    this._buffer = [];
-    this._length = 0;
-    return this;
-  },
-  
-  /**
-   * Input several words to the hash.
-   * @param {bitArray|String} data the data to hash.
-   * @return this
-   */
-  update: function (data) {
-    if (typeof data === "string") {
-      data = sjcl.codec.utf8String.toBits(data);
-    }
-    var i, b = this._buffer = sjcl.bitArray.concat(this._buffer, data),
-        ol = this._length,
-        nl = this._length = ol + sjcl.bitArray.bitLength(data);
-    for (i = 1024+ol & -1024; i <= nl; i+= 1024) {
-      this._block(b.splice(0,32));
-    }
-    return this;
-  },
-  
-  /**
-   * Complete hashing and output the hash value.
-   * @return {bitArray} The hash value, an array of 16 big-endian words.
-   */
-  finalize:function () {
-    var i, b = this._buffer, h = this._h;
-
-    // Round out and push the buffer
-    b = sjcl.bitArray.concat(b, [sjcl.bitArray.partial(1,1)]);
-
-    // Round out the buffer to a multiple of 32 words, less the 4 length words.
-    for (i = b.length + 4; i & 31; i++) {
-      b.push(0);
-    }
-
-    // append the length
-    b.push(0);
-    b.push(0);
-    b.push(Math.floor(this._length / 0x100000000));
-    b.push(this._length | 0);
-
-    while (b.length) {
-      this._block(b.splice(0,32));
-    }
-
-    this.reset();
-    return h;
-  },
-
-  /**
-   * The SHA-512 initialization vector, to be precomputed.
-   * @private
-   */
-  _init:[],
-
-  /**
-   * Least significant 24 bits of SHA512 initialization values.
-   *
-   * Javascript only has 53 bits of precision, so we compute the 40 most
-   * significant bits and add the remaining 24 bits as constants.
-   *
-   * @private
-   */
-  _initr: [ 0xbcc908, 0xcaa73b, 0x94f82b, 0x1d36f1, 0xe682d1, 0x3e6c1f, 0x41bd6b, 0x7e2179 ],
-
-  /*
-  _init:
-  [0x6a09e667, 0xf3bcc908, 0xbb67ae85, 0x84caa73b, 0x3c6ef372, 0xfe94f82b, 0xa54ff53a, 0x5f1d36f1,
-   0x510e527f, 0xade682d1, 0x9b05688c, 0x2b3e6c1f, 0x1f83d9ab, 0xfb41bd6b, 0x5be0cd19, 0x137e2179],
-  */
-
-  /**
-   * The SHA-512 hash key, to be precomputed.
-   * @private
-   */
-  _key:[],
-
-  /**
-   * Least significant 24 bits of SHA512 key values.
-   * @private
-   */
-  _keyr:
-  [0x28ae22, 0xef65cd, 0x4d3b2f, 0x89dbbc, 0x48b538, 0x05d019, 0x194f9b, 0x6d8118,
-   0x030242, 0x706fbe, 0xe4b28c, 0xffb4e2, 0x7b896f, 0x1696b1, 0xc71235, 0x692694,
-   0xf14ad2, 0x4f25e3, 0x8cd5b5, 0xac9c65, 0x2b0275, 0xa6e483, 0x41fbd4, 0x1153b5,
-   0x66dfab, 0xb43210, 0xfb213f, 0xef0ee4, 0xa88fc2, 0x0aa725, 0x03826f, 0x0e6e70,
-   0xd22ffc, 0x26c926, 0xc42aed, 0x95b3df, 0xaf63de, 0x77b2a8, 0xedaee6, 0x82353b,
-   0xf10364, 0x423001, 0xf89791, 0x54be30, 0xef5218, 0x65a910, 0x71202a, 0xbbd1b8,
-   0xd2d0c8, 0x41ab53, 0x8eeb99, 0x9b48a8, 0xc95a63, 0x418acb, 0x63e373, 0xb2b8a3,
-   0xefb2fc, 0x172f60, 0xf0ab72, 0x6439ec, 0x631e28, 0x82bde9, 0xc67915, 0x72532b,
-   0x26619c, 0xc0c207, 0xe0eb1e, 0x6ed178, 0x176fba, 0xc898a6, 0xf90dae, 0x1c471b,
-   0x047d84, 0xc72493, 0xc9bebc, 0x100d4c, 0x3e42b6, 0x657e2a, 0xd6faec, 0x475817],
-
-  /*
-  _key:
-  [0x428a2f98, 0xd728ae22, 0x71374491, 0x23ef65cd, 0xb5c0fbcf, 0xec4d3b2f, 0xe9b5dba5, 0x8189dbbc,
-   0x3956c25b, 0xf348b538, 0x59f111f1, 0xb605d019, 0x923f82a4, 0xaf194f9b, 0xab1c5ed5, 0xda6d8118,
-   0xd807aa98, 0xa3030242, 0x12835b01, 0x45706fbe, 0x243185be, 0x4ee4b28c, 0x550c7dc3, 0xd5ffb4e2,
-   0x72be5d74, 0xf27b896f, 0x80deb1fe, 0x3b1696b1, 0x9bdc06a7, 0x25c71235, 0xc19bf174, 0xcf692694,
-   0xe49b69c1, 0x9ef14ad2, 0xefbe4786, 0x384f25e3, 0x0fc19dc6, 0x8b8cd5b5, 0x240ca1cc, 0x77ac9c65,
-   0x2de92c6f, 0x592b0275, 0x4a7484aa, 0x6ea6e483, 0x5cb0a9dc, 0xbd41fbd4, 0x76f988da, 0x831153b5,
-   0x983e5152, 0xee66dfab, 0xa831c66d, 0x2db43210, 0xb00327c8, 0x98fb213f, 0xbf597fc7, 0xbeef0ee4,
-   0xc6e00bf3, 0x3da88fc2, 0xd5a79147, 0x930aa725, 0x06ca6351, 0xe003826f, 0x14292967, 0x0a0e6e70,
-   0x27b70a85, 0x46d22ffc, 0x2e1b2138, 0x5c26c926, 0x4d2c6dfc, 0x5ac42aed, 0x53380d13, 0x9d95b3df,
-   0x650a7354, 0x8baf63de, 0x766a0abb, 0x3c77b2a8, 0x81c2c92e, 0x47edaee6, 0x92722c85, 0x1482353b,
-   0xa2bfe8a1, 0x4cf10364, 0xa81a664b, 0xbc423001, 0xc24b8b70, 0xd0f89791, 0xc76c51a3, 0x0654be30,
-   0xd192e819, 0xd6ef5218, 0xd6990624, 0x5565a910, 0xf40e3585, 0x5771202a, 0x106aa070, 0x32bbd1b8,
-   0x19a4c116, 0xb8d2d0c8, 0x1e376c08, 0x5141ab53, 0x2748774c, 0xdf8eeb99, 0x34b0bcb5, 0xe19b48a8,
-   0x391c0cb3, 0xc5c95a63, 0x4ed8aa4a, 0xe3418acb, 0x5b9cca4f, 0x7763e373, 0x682e6ff3, 0xd6b2b8a3,
-   0x748f82ee, 0x5defb2fc, 0x78a5636f, 0x43172f60, 0x84c87814, 0xa1f0ab72, 0x8cc70208, 0x1a6439ec,
-   0x90befffa, 0x23631e28, 0xa4506ceb, 0xde82bde9, 0xbef9a3f7, 0xb2c67915, 0xc67178f2, 0xe372532b,
-   0xca273ece, 0xea26619c, 0xd186b8c7, 0x21c0c207, 0xeada7dd6, 0xcde0eb1e, 0xf57d4f7f, 0xee6ed178,
-   0x06f067aa, 0x72176fba, 0x0a637dc5, 0xa2c898a6, 0x113f9804, 0xbef90dae, 0x1b710b35, 0x131c471b,
-   0x28db77f5, 0x23047d84, 0x32caab7b, 0x40c72493, 0x3c9ebe0a, 0x15c9bebc, 0x431d67c4, 0x9c100d4c,
-   0x4cc5d4be, 0xcb3e42b6, 0x597f299c, 0xfc657e2a, 0x5fcb6fab, 0x3ad6faec, 0x6c44198c, 0x4a475817],
-  */
-
-  /**
-   * Function to precompute _init and _key.
-   * @private
-   */
-  _precompute: function () {
-    // XXX: This code is for precomputing the SHA256 constants, change for
-    //      SHA512 and re-enable.
-    var i = 0, prime = 2, factor;
-
-    function frac(x)  { return (x-Math.floor(x)) * 0x100000000 | 0; }
-    function frac2(x) { return (x-Math.floor(x)) * 0x10000000000 & 0xff; }
-
-    outer: for (; i<80; prime++) {
-      for (factor=2; factor*factor <= prime; factor++) {
-        if (prime % factor === 0) {
-          // not a prime
-          continue outer;
-        }
-      }
-
-      if (i<8) {
-        this._init[i*2] = frac(Math.pow(prime, 1/2));
-        this._init[i*2+1] = (frac2(Math.pow(prime, 1/2)) << 24) | this._initr[i];
-      }
-      this._key[i*2] = frac(Math.pow(prime, 1/3));
-      this._key[i*2+1] = (frac2(Math.pow(prime, 1/3)) << 24) | this._keyr[i];
-      i++;
-    }
-  },
-
-  /**
-   * Perform one cycle of SHA-512.
-   * @param {bitArray} words one block of words.
-   * @private
-   */
-  _block:function (words) {
-    var i, wrh, wrl,
-        w = words.slice(0),
-        h = this._h,
-        k = this._key,
-        h0h = h[ 0], h0l = h[ 1], h1h = h[ 2], h1l = h[ 3],
-        h2h = h[ 4], h2l = h[ 5], h3h = h[ 6], h3l = h[ 7],
-        h4h = h[ 8], h4l = h[ 9], h5h = h[10], h5l = h[11],
-        h6h = h[12], h6l = h[13], h7h = h[14], h7l = h[15];
-
-    // Working variables
-    var ah = h0h, al = h0l, bh = h1h, bl = h1l,
-        ch = h2h, cl = h2l, dh = h3h, dl = h3l,
-        eh = h4h, el = h4l, fh = h5h, fl = h5l,
-        gh = h6h, gl = h6l, hh = h7h, hl = h7l;
-
-    for (i=0; i<80; i++) {
-      // load up the input word for this round
-      if (i<16) {
-        wrh = w[i * 2];
-        wrl = w[i * 2 + 1];
-      } else {
-        // Gamma0
-        var gamma0xh = w[(i-15) * 2];
-        var gamma0xl = w[(i-15) * 2 + 1];
-        var gamma0h =
-          ((gamma0xl << 31) | (gamma0xh >>> 1)) ^
-          ((gamma0xl << 24) | (gamma0xh >>> 8)) ^
-           (gamma0xh >>> 7);
-        var gamma0l =
-          ((gamma0xh << 31) | (gamma0xl >>> 1)) ^
-          ((gamma0xh << 24) | (gamma0xl >>> 8)) ^
-          ((gamma0xh << 25) | (gamma0xl >>> 7));
-
-        // Gamma1
-        var gamma1xh = w[(i-2) * 2];
-        var gamma1xl = w[(i-2) * 2 + 1];
-        var gamma1h =
-          ((gamma1xl << 13) | (gamma1xh >>> 19)) ^
-          ((gamma1xh << 3)  | (gamma1xl >>> 29)) ^
-           (gamma1xh >>> 6);
-        var gamma1l =
-          ((gamma1xh << 13) | (gamma1xl >>> 19)) ^
-          ((gamma1xl << 3)  | (gamma1xh >>> 29)) ^
-          ((gamma1xh << 26) | (gamma1xl >>> 6));
-
-        // Shortcuts
-        var wr7h = w[(i-7) * 2];
-        var wr7l = w[(i-7) * 2 + 1];
-
-        var wr16h = w[(i-16) * 2];
-        var wr16l = w[(i-16) * 2 + 1];
-
-        // W(round) = gamma0 + W(round - 7) + gamma1 + W(round - 16)
-        wrl = gamma0l + wr7l;
-        wrh = gamma0h + wr7h + ((wrl >>> 0) < (gamma0l >>> 0) ? 1 : 0);
-        wrl += gamma1l;
-        wrh += gamma1h + ((wrl >>> 0) < (gamma1l >>> 0) ? 1 : 0);
-        wrl += wr16l;
-        wrh += wr16h + ((wrl >>> 0) < (wr16l >>> 0) ? 1 : 0);
-      }
-
-      w[i*2]     = wrh |= 0;
-      w[i*2 + 1] = wrl |= 0;
-
-      // Ch
-      var chh = (eh & fh) ^ (~eh & gh);
-      var chl = (el & fl) ^ (~el & gl);
-
-      // Maj
-      var majh = (ah & bh) ^ (ah & ch) ^ (bh & ch);
-      var majl = (al & bl) ^ (al & cl) ^ (bl & cl);
-
-      // Sigma0
-      var sigma0h = ((al << 4) | (ah >>> 28)) ^ ((ah << 30) | (al >>> 2)) ^ ((ah << 25) | (al >>> 7));
-      var sigma0l = ((ah << 4) | (al >>> 28)) ^ ((al << 30) | (ah >>> 2)) ^ ((al << 25) | (ah >>> 7));
-
-      // Sigma1
-      var sigma1h = ((el << 18) | (eh >>> 14)) ^ ((el << 14) | (eh >>> 18)) ^ ((eh << 23) | (el >>> 9));
-      var sigma1l = ((eh << 18) | (el >>> 14)) ^ ((eh << 14) | (el >>> 18)) ^ ((el << 23) | (eh >>> 9));
-
-      // K(round)
-      var krh = k[i*2];
-      var krl = k[i*2+1];
-
-      // t1 = h + sigma1 + ch + K(round) + W(round)
-      var t1l = hl + sigma1l;
-      var t1h = hh + sigma1h + ((t1l >>> 0) < (hl >>> 0) ? 1 : 0);
-      t1l += chl;
-      t1h += chh + ((t1l >>> 0) < (chl >>> 0) ? 1 : 0);
-      t1l += krl;
-      t1h += krh + ((t1l >>> 0) < (krl >>> 0) ? 1 : 0);
-      t1l += wrl;
-      t1h += wrh + ((t1l >>> 0) < (wrl >>> 0) ? 1 : 0);
-
-      // t2 = sigma0 + maj
-      var t2l = sigma0l + majl;
-      var t2h = sigma0h + majh + ((t2l >>> 0) < (sigma0l >>> 0) ? 1 : 0);
-
-      // Update working variables
-      hh = gh;
-      hl = gl;
-      gh = fh;
-      gl = fl;
-      fh = eh;
-      fl = el;
-      el = (dl + t1l) | 0;
-      eh = (dh + t1h + ((el >>> 0) < (dl >>> 0) ? 1 : 0)) | 0;
-      dh = ch;
-      dl = cl;
-      ch = bh;
-      cl = bl;
-      bh = ah;
-      bl = al;
-      al = (t1l + t2l) | 0;
-      ah = (t1h + t2h + ((al >>> 0) < (t1l >>> 0) ? 1 : 0)) | 0;
-    }
-
-    // Intermediate hash
-    h0l = h[1] = (h0l + al) | 0;
-    h[0] = (h0h + ah + ((h0l >>> 0) < (al >>> 0) ? 1 : 0)) | 0;
-    h1l = h[3] = (h1l + bl) | 0;
-    h[2] = (h1h + bh + ((h1l >>> 0) < (bl >>> 0) ? 1 : 0)) | 0;
-    h2l = h[5] = (h2l + cl) | 0;
-    h[4] = (h2h + ch + ((h2l >>> 0) < (cl >>> 0) ? 1 : 0)) | 0;
-    h3l = h[7] = (h3l + dl) | 0;
-    h[6] = (h3h + dh + ((h3l >>> 0) < (dl >>> 0) ? 1 : 0)) | 0;
-    h4l = h[9] = (h4l + el) | 0;
-    h[8] = (h4h + eh + ((h4l >>> 0) < (el >>> 0) ? 1 : 0)) | 0;
-    h5l = h[11] = (h5l + fl) | 0;
-    h[10] = (h5h + fh + ((h5l >>> 0) < (fl >>> 0) ? 1 : 0)) | 0;
-    h6l = h[13] = (h6l + gl) | 0;
-    h[12] = (h6h + gh + ((h6l >>> 0) < (gl >>> 0) ? 1 : 0)) | 0;
-    h7l = h[15] = (h7l + hl) | 0;
-    h[14] = (h7h + hh + ((h7l >>> 0) < (hl >>> 0) ? 1 : 0)) | 0;
-  }
-};
-
-
 /** @fileOverview Javascript SHA-1 implementation.
  *
  * Based on the implementation in RFC 3174, method 1, and on the SJCL
@@ -1343,8 +977,7 @@ sjcl.hash.sha1.prototype = {
   _block:function (words) {  
     var t, tmp, a, b, c, d, e,
     w = words.slice(0),
-    h = this._h,
-    k = this._key;
+    h = this._h;
    
     a = h[0]; b = h[1]; c = h[2]; d = h[3]; e = h[4]; 
 
@@ -1395,7 +1028,7 @@ sjcl.mode.ccm = {
    * @return {bitArray} The encrypted data, an array of bytes.
    */
   encrypt: function(prf, plaintext, iv, adata, tlen) {
-    var L, i, out = plaintext.slice(0), tag, w=sjcl.bitArray, ivl = w.bitLength(iv) / 8, ol = w.bitLength(out) / 8;
+    var L, out = plaintext.slice(0), tag, w=sjcl.bitArray, ivl = w.bitLength(iv) / 8, ol = w.bitLength(out) / 8;
     tlen = tlen || 64;
     adata = adata || [];
     
@@ -1429,7 +1062,7 @@ sjcl.mode.ccm = {
   decrypt: function(prf, ciphertext, iv, adata, tlen) {
     tlen = tlen || 64;
     adata = adata || [];
-    var L, i, 
+    var L,
         w=sjcl.bitArray,
         ivl = w.bitLength(iv) / 8,
         ol = w.bitLength(ciphertext), 
@@ -1471,7 +1104,7 @@ sjcl.mode.ccm = {
    */
   _computeTag: function(prf, plaintext, iv, adata, tlen, L) {
     // compute B[0]
-    var q, mac, field = 0, offset = 24, tmp, i, macData = [], w=sjcl.bitArray, xor = w._xor4;
+    var mac, tmp, i, macData = [], w=sjcl.bitArray, xor = w._xor4;
 
     tlen /= 8;
   
@@ -1531,7 +1164,7 @@ sjcl.mode.ccm = {
    * @private
    */
   _ctrMode: function(prf, data, iv, tag, tlen, L) {
-    var enc, i, w=sjcl.bitArray, xor = w._xor4, ctr, b, l = data.length, bl=w.bitLength(data);
+    var enc, i, w=sjcl.bitArray, xor = w._xor4, ctr, l = data.length, bl=w.bitLength(data);
 
     // start the ctr
     ctr = w.concat([w.partial(8,L-1)],iv).concat([0,0,0]).slice(0,4);
@@ -1552,121 +1185,6 @@ sjcl.mode.ccm = {
     }
     return { tag:tag, data:w.clamp(data,bl) };
   }
-};
-/** @fileOverview CBC mode implementation
- *
- * @author Emily Stark
- * @author Mike Hamburg
- * @author Dan Boneh
- */
-
-if (sjcl.beware === undefined) {
-  sjcl.beware = {};
-}
-sjcl.beware["CBC mode is dangerous because it doesn't protect message integrity."
-] = function() {
-  /** @namespace
-   * Dangerous: CBC mode with PKCS#5 padding.
-   *
-   * @author Emily Stark
-   * @author Mike Hamburg
-   * @author Dan Boneh
-   */
-  sjcl.mode.cbc = {
-    /** The name of the mode.
-     * @constant
-     */
-    name: "cbc",
-    
-    /** Encrypt in CBC mode with PKCS#5 padding.
-     * @param {Object} prp The block cipher.  It must have a block size of 16 bytes.
-     * @param {bitArray} plaintext The plaintext data.
-     * @param {bitArray} iv The initialization value.
-     * @param {bitArray} [adata=[]] The authenticated data.  Must be empty.
-     * @return The encrypted data, an array of bytes.
-     * @throws {sjcl.exception.invalid} if the IV isn't exactly 128 bits, or if any adata is specified.
-     */
-    encrypt: function(prp, plaintext, iv, adata) {
-      if (adata && adata.length) {
-        throw new sjcl.exception.invalid("cbc can't authenticate data");
-      }
-      if (sjcl.bitArray.bitLength(iv) !== 128) {
-        throw new sjcl.exception.invalid("cbc iv must be 128 bits");
-      }
-      var i,
-          w = sjcl.bitArray,
-          xor = w._xor4,
-          bl = w.bitLength(plaintext),
-          bp = 0,
-          output = [];
-
-      if (bl&7) {
-        throw new sjcl.exception.invalid("pkcs#5 padding only works for multiples of a byte");
-      }
-    
-      for (i=0; bp+128 <= bl; i+=4, bp+=128) {
-        /* Encrypt a non-final block */
-        iv = prp.encrypt(xor(iv, plaintext.slice(i,i+4)));
-        output.splice(i,0,iv[0],iv[1],iv[2],iv[3]);
-      }
-      
-      /* Construct the pad. */
-      bl = (16 - ((bl >> 3) & 15)) * 0x1010101;
-
-      /* Pad and encrypt. */
-      iv = prp.encrypt(xor(iv,w.concat(plaintext,[bl,bl,bl,bl]).slice(i,i+4)));
-      output.splice(i,0,iv[0],iv[1],iv[2],iv[3]);
-      return output;
-    },
-    
-    /** Decrypt in CBC mode.
-     * @param {Object} prp The block cipher.  It must have a block size of 16 bytes.
-     * @param {bitArray} ciphertext The ciphertext data.
-     * @param {bitArray} iv The initialization value.
-     * @param {bitArray} [adata=[]] The authenticated data.  It must be empty.
-     * @return The decrypted data, an array of bytes.
-     * @throws {sjcl.exception.invalid} if the IV isn't exactly 128 bits, or if any adata is specified.
-     * @throws {sjcl.exception.corrupt} if if the message is corrupt.
-     */
-    decrypt: function(prp, ciphertext, iv, adata) {
-      if (adata && adata.length) {
-        throw new sjcl.exception.invalid("cbc can't authenticate data");
-      }
-      if (sjcl.bitArray.bitLength(iv) !== 128) {
-        throw new sjcl.exception.invalid("cbc iv must be 128 bits");
-      }
-      if ((sjcl.bitArray.bitLength(ciphertext) & 127) || !ciphertext.length) {
-        throw new sjcl.exception.corrupt("cbc ciphertext must be a positive multiple of the block size");
-      }
-      var i,
-          w = sjcl.bitArray,
-          xor = w._xor4,
-          bi, bo,
-          output = [];
-          
-      adata = adata || [];
-    
-      for (i=0; i<ciphertext.length; i+=4) {
-        bi = ciphertext.slice(i,i+4);
-        bo = xor(iv,prp.decrypt(bi));
-        output.splice(i,0,bo[0],bo[1],bo[2],bo[3]);
-        iv = bi;
-      }
-
-      /* check and remove the pad */
-      bi = output[i-1] & 255;
-      if (bi === 0 || bi > 16) {
-        throw new sjcl.exception.corrupt("pkcs#5 padding corrupt");
-      }
-      bo = bi * 0x1010101;
-      if (!w.equal(w.bitSlice([bo,bo,bo,bo], 0, bi*8),
-                   w.bitSlice(output, output.length*32 - bi*8, output.length*32))) {
-        throw new sjcl.exception.corrupt("pkcs#5 padding corrupt");
-      }
-
-      return w.bitSlice(output, 0, output.length*32 - bi*8);
-    }
-  };
 };
 /** @fileOverview OCB 2.0 implementation
  *
@@ -1961,7 +1479,7 @@ sjcl.mode.gcm = {
    * @param {Number} tlen The length of the tag, in bits.
    */
   _ctrMode: function(encrypt, prf, data, adata, iv, tlen) {
-    var H, J0, S0, enc, i, ctr, tag, last, l, bl, abl, ivbl, w=sjcl.bitArray, xor=w._xor4;
+    var H, J0, S0, enc, i, ctr, tag, last, l, bl, abl, ivbl, w=sjcl.bitArray;
 
     // Calculate data lengths
     l = data.length;
@@ -2386,14 +1904,16 @@ sjcl.prng.prototype = {
       loadTimeCollector: this._bind(this._loadTimeCollector),
       mouseCollector: this._bind(this._mouseCollector),
       keyboardCollector: this._bind(this._keyboardCollector),
-      accelerometerCollector: this._bind(this._accelerometerCollector)
-    }
+      accelerometerCollector: this._bind(this._accelerometerCollector),
+      touchCollector: this._bind(this._touchCollector)
+    };
 
     if (window.addEventListener) {
       window.addEventListener("load", this._eventListener.loadTimeCollector, false);
       window.addEventListener("mousemove", this._eventListener.mouseCollector, false);
       window.addEventListener("keypress", this._eventListener.keyboardCollector, false);
       window.addEventListener("devicemotion", this._eventListener.accelerometerCollector, false);
+      window.addEventListener("touchmove", this._eventListener.touchCollector, false);
     } else if (document.attachEvent) {
       document.attachEvent("onload", this._eventListener.loadTimeCollector);
       document.attachEvent("onmousemove", this._eventListener.mouseCollector);
@@ -2414,6 +1934,7 @@ sjcl.prng.prototype = {
       window.removeEventListener("mousemove", this._eventListener.mouseCollector, false);
       window.removeEventListener("keypress", this._eventListener.keyboardCollector, false);
       window.removeEventListener("devicemotion", this._eventListener.accelerometerCollector, false);
+      window.removeEventListener("touchmove", this._eventListener.touchCollector, false);
     } else if (document.detachEvent) {
       document.detachEvent("onload", this._eventListener.loadTimeCollector);
       document.detachEvent("onmousemove", this._eventListener.mouseCollector);
@@ -2536,8 +2057,31 @@ sjcl.prng.prototype = {
   },
   
   _mouseCollector: function (ev) {
-    var x = ev.x || ev.clientX || ev.offsetX || 0, y = ev.y || ev.clientY || ev.offsetY || 0;
-    sjcl.random.addEntropy([x,y], 2, "mouse");
+    var x, y;
+
+    try {
+      x = ev.x || ev.clientX || ev.offsetX || 0;
+      y = ev.y || ev.clientY || ev.offsetY || 0;
+    } catch (err) {
+      // Event originated from a secure element. No mouse position available.
+      x = 0;
+      y = 0;
+    }
+
+    if (x != 0 && y!= 0) {
+      sjcl.random.addEntropy([x,y], 2, "mouse");
+    }
+
+    this._addCurrentTimeToEntropy(0);
+  },
+
+  _touchCollector: function(ev) {
+    var touch = ev.touches[0] || ev.changedTouches[0];
+    var x = touch.pageX || touch.clientX,
+        y = touch.pageY || touch.clientY;
+
+    sjcl.random.addEntropy([x,y],1,"touch");
+
     this._addCurrentTimeToEntropy(0);
   },
   
@@ -2546,7 +2090,7 @@ sjcl.prng.prototype = {
   },
 
   _addCurrentTimeToEntropy: function (estimatedEntropy) {
-    if (window && window.performance && typeof window.performance.now === "function") {
+    if (typeof window !== 'undefined' && window.performance && typeof window.performance.now === "function") {
       //how much entropy do we want to add here?
       sjcl.random.addEntropy(window.performance.now(), estimatedEntropy, "loadtime");
     } else {
@@ -2593,15 +2137,26 @@ sjcl.prng.prototype = {
 sjcl.random = new sjcl.prng(6);
 
 (function(){
+  // function for getting nodejs crypto module. catches and ignores errors.
+  function getCryptoModule() {
+    try {
+      return require('crypto');
+    }
+    catch (e) {
+      return null;
+    }
+  }
+
   try {
-    var buf, crypt, getRandomValues, ab;
+    var buf, crypt, ab;
+
     // get cryptographically strong entropy depending on runtime environment
-    if (typeof module !== 'undefined' && module.exports && (crypt = require('crypto')) && crypt.randomBytes) {
+    if (typeof module !== 'undefined' && module.exports && (crypt = getCryptoModule()) && crypt.randomBytes) {
       buf = crypt.randomBytes(1024/8);
       buf = new Uint32Array(new Uint8Array(buf).buffer);
       sjcl.random.addEntropy(buf, 1024, "crypto.randomBytes");
 
-    } else if (window && Uint32Array) {
+    } else if (typeof window !== 'undefined' && typeof Uint32Array !== 'undefined') {
       ab = new Uint32Array(32);
       if (window.crypto && window.crypto.getRandomValues) {
         window.crypto.getRandomValues(ab);
@@ -2760,7 +2315,11 @@ sjcl.random = new sjcl.prng(6);
     j._add(rp, p);
     rp.key = password;
 
-    return sjcl.codec.utf8String.fromBits(ct);
+    if (params.raw === 1) {
+      return ct;
+    } else {
+      return sjcl.codec.utf8String.fromBits(ct);
+    }
   },
 
   /** Simple decryption function.
@@ -2828,13 +2387,15 @@ sjcl.random = new sjcl.prng(6);
     }
     var a = str.replace(/^\{|\}$/g, '').split(/,/), out={}, i, m;
     for (i=0; i<a.length; i++) {
-      if (!(m=a[i].match(/^(?:(["']?)([a-z][a-z0-9]*)\1):(?:(\d+)|"([a-z0-9+\/%*_.@=\-]*)")$/i))) {
+      if (!(m=a[i].match(/^\s*(?:(["']?)([a-z][a-z0-9]*)\1)\s*:\s*(?:(-?\d+)|"([a-z0-9+\/%*_.@=\-]*)"|(true|false))$/i))) {
         throw new sjcl.exception.invalid("json decode: this isn't json!");
       }
       if (m[3]) {
         out[m[2]] = parseInt(m[3],10);
-      } else {
+      } else if (m[4]) {
         out[m[2]] = m[2].match(/^(ct|salt|iv)$/) ? sjcl.codec.base64.toBits(m[4]) : unescape(m[4]);
+      } else if (m[5]) {
+        out[m[2]] = m[5] === 'true';
       }
     }
     return out;
@@ -2936,1211 +2497,4 @@ sjcl.misc.cachedPbkdf2 = function (password, obj) {
   return { key: c[salt].slice(0), salt:salt.slice(0) };
 };
 
-
-/**
- * @constructor
- * Constructs a new bignum from another bignum, a number or a hex string.
- */
-sjcl.bn = function(it) {
-  this.initWith(it);
-};
-
-sjcl.bn.prototype = {
-  radix: 24,
-  maxMul: 8,
-  _class: sjcl.bn,
-  
-  copy: function() {
-    return new this._class(this);
-  },
-
-  /**
-   * Initializes this with it, either as a bn, a number, or a hex string.
-   */
-  initWith: function(it) {
-    var i=0, k, n, l;
-    switch(typeof it) {
-    case "object":
-      this.limbs = it.limbs.slice(0);
-      break;
-      
-    case "number":
-      this.limbs = [it];
-      this.normalize();
-      break;
-      
-    case "string":
-      it = it.replace(/^0x/, '');
-      this.limbs = [];
-      // hack
-      k = this.radix / 4;
-      for (i=0; i < it.length; i+=k) {
-        this.limbs.push(parseInt(it.substring(Math.max(it.length - i - k, 0), it.length - i),16));
-      }
-      break;
-
-    default:
-      this.limbs = [0];
-    }
-    return this;
-  },
-
-  /**
-   * Returns true if "this" and "that" are equal.  Calls fullReduce().
-   * Equality test is in constant time.
-   */
-  equals: function(that) {
-    if (typeof that === "number") { that = new this._class(that); }
-    var difference = 0, i;
-    this.fullReduce();
-    that.fullReduce();
-    for (i = 0; i < this.limbs.length || i < that.limbs.length; i++) {
-      difference |= this.getLimb(i) ^ that.getLimb(i);
-    }
-    return (difference === 0);
-  },
-  
-  /**
-   * Get the i'th limb of this, zero if i is too large.
-   */
-  getLimb: function(i) {
-    return (i >= this.limbs.length) ? 0 : this.limbs[i];
-  },
-  
-  /**
-   * Constant time comparison function.
-   * Returns 1 if this >= that, or zero otherwise.
-   */
-  greaterEquals: function(that) {
-    if (typeof that === "number") { that = new this._class(that); }
-    var less = 0, greater = 0, i, a, b;
-    i = Math.max(this.limbs.length, that.limbs.length) - 1;
-    for (; i>= 0; i--) {
-      a = this.getLimb(i);
-      b = that.getLimb(i);
-      greater |= (b - a) & ~less;
-      less |= (a - b) & ~greater;
-    }
-    return (greater | ~less) >>> 31;
-  },
-  
-  /**
-   * Convert to a hex string.
-   */
-  toString: function() {
-    this.fullReduce();
-    var out="", i, s, l = this.limbs;
-    for (i=0; i < this.limbs.length; i++) {
-      s = l[i].toString(16);
-      while (i < this.limbs.length - 1 && s.length < 6) {
-        s = "0" + s;
-      }
-      out = s + out;
-    }
-    return "0x"+out;
-  },
-  
-  /** this += that.  Does not normalize. */
-  addM: function(that) {
-    if (typeof(that) !== "object") { that = new this._class(that); }
-    var i, l=this.limbs, ll=that.limbs;
-    for (i=l.length; i<ll.length; i++) {
-      l[i] = 0;
-    }
-    for (i=0; i<ll.length; i++) {
-      l[i] += ll[i];
-    }
-    return this;
-  },
-  
-  /** this *= 2.  Requires normalized; ends up normalized. */
-  doubleM: function() {
-    var i, carry=0, tmp, r=this.radix, m=this.radixMask, l=this.limbs;
-    for (i=0; i<l.length; i++) {
-      tmp = l[i];
-      tmp = tmp+tmp+carry;
-      l[i] = tmp & m;
-      carry = tmp >> r;
-    }
-    if (carry) {
-      l.push(carry);
-    }
-    return this;
-  },
-  
-  /** this /= 2, rounded down.  Requires normalized; ends up normalized. */
-  halveM: function() {
-    var i, carry=0, tmp, r=this.radix, l=this.limbs;
-    for (i=l.length-1; i>=0; i--) {
-      tmp = l[i];
-      l[i] = (tmp+carry)>>1;
-      carry = (tmp&1) << r;
-    }
-    if (!l[l.length-1]) {
-      l.pop();
-    }
-    return this;
-  },
-
-  /** this -= that.  Does not normalize. */
-  subM: function(that) {
-    if (typeof(that) !== "object") { that = new this._class(that); }
-    var i, l=this.limbs, ll=that.limbs;
-    for (i=l.length; i<ll.length; i++) {
-      l[i] = 0;
-    }
-    for (i=0; i<ll.length; i++) {
-      l[i] -= ll[i];
-    }
-    return this;
-  },
-  
-  mod: function(that) {
-    var neg = !this.greaterEquals(new sjcl.bn(0));
-    
-    that = new sjcl.bn(that).normalize(); // copy before we begin
-    var out = new sjcl.bn(this).normalize(), ci=0;
-    
-    if (neg) out = (new sjcl.bn(0)).subM(out).normalize();
-    
-    for (; out.greaterEquals(that); ci++) {
-      that.doubleM();
-    }
-    
-    if (neg) out = that.sub(out).normalize();
-    
-    for (; ci > 0; ci--) {
-      that.halveM();
-      if (out.greaterEquals(that)) {
-        out.subM(that).normalize();
-      }
-    }
-    return out.trim();
-  },
-  
-  /** return inverse mod prime p.  p must be odd. Binary extended Euclidean algorithm mod p. */
-  inverseMod: function(p) {
-    var a = new sjcl.bn(1), b = new sjcl.bn(0), x = new sjcl.bn(this), y = new sjcl.bn(p), tmp, i, nz=1;
-    
-    if (!(p.limbs[0] & 1)) {
-      throw (new sjcl.exception.invalid("inverseMod: p must be odd"));
-    }
-    
-    // invariant: y is odd
-    do {
-      if (x.limbs[0] & 1) {
-        if (!x.greaterEquals(y)) {
-          // x < y; swap everything
-          tmp = x; x = y; y = tmp;
-          tmp = a; a = b; b = tmp;
-        }
-        x.subM(y);
-        x.normalize();
-        
-        if (!a.greaterEquals(b)) {
-          a.addM(p);
-        }
-        a.subM(b);
-      }
-      
-      // cut everything in half
-      x.halveM();
-      if (a.limbs[0] & 1) {
-        a.addM(p);
-      }
-      a.normalize();
-      a.halveM();
-      
-      // check for termination: x ?= 0
-      for (i=nz=0; i<x.limbs.length; i++) {
-        nz |= x.limbs[i];
-      }
-    } while(nz);
-    
-    if (!y.equals(1)) {
-      throw (new sjcl.exception.invalid("inverseMod: p and x must be relatively prime"));
-    }
-    
-    return b;
-  },
-  
-  /** this + that.  Does not normalize. */
-  add: function(that) {
-    return this.copy().addM(that);
-  },
-
-  /** this - that.  Does not normalize. */
-  sub: function(that) {
-    return this.copy().subM(that);
-  },
-  
-  /** this * that.  Normalizes and reduces. */
-  mul: function(that) {
-    if (typeof(that) === "number") { that = new this._class(that); }
-    var i, j, a = this.limbs, b = that.limbs, al = a.length, bl = b.length, out = new this._class(), c = out.limbs, ai, ii=this.maxMul;
-
-    for (i=0; i < this.limbs.length + that.limbs.length + 1; i++) {
-      c[i] = 0;
-    }
-    for (i=0; i<al; i++) {
-      ai = a[i];
-      for (j=0; j<bl; j++) {
-        c[i+j] += ai * b[j];
-      }
-     
-      if (!--ii) {
-        ii = this.maxMul;
-        out.cnormalize();
-      }
-    }
-    return out.cnormalize().reduce();
-  },
-
-  /** this ^ 2.  Normalizes and reduces. */
-  square: function() {
-    return this.mul(this);
-  },
-
-  /** this ^ n.  Uses square-and-multiply.  Normalizes and reduces. */
-  power: function(l) {
-    if (typeof(l) === "number") {
-      l = [l];
-    } else if (l.limbs !== undefined) {
-      l = l.normalize().limbs;
-    }
-    var i, j, out = new this._class(1), pow = this;
-
-    for (i=0; i<l.length; i++) {
-      for (j=0; j<this.radix; j++) {
-        if (l[i] & (1<<j)) {
-          out = out.mul(pow);
-        }
-        pow = pow.square();
-      }
-    }
-    
-    return out;
-  },
-
-  /** this * that mod N */
-  mulmod: function(that, N) {
-    return this.mod(N).mul(that.mod(N)).mod(N);
-  },
-
-  /** this ^ x mod N */
-  powermod: function(x, N) {
-    var result = new sjcl.bn(1), a = new sjcl.bn(this), k = new sjcl.bn(x);
-    while (true) {
-      if (k.limbs[0] & 1) { result = result.mulmod(a, N); }
-      k.halveM();
-      if (k.equals(0)) { break; }
-      a = a.mulmod(a, N);
-    }
-    return result.normalize().reduce();
-  },
-
-  trim: function() {
-    var l = this.limbs, p;
-    do {
-      p = l.pop();
-    } while (l.length && p === 0);
-    l.push(p);
-    return this;
-  },
-  
-  /** Reduce mod a modulus.  Stubbed for subclassing. */
-  reduce: function() {
-    return this;
-  },
-
-  /** Reduce and normalize. */
-  fullReduce: function() {
-    return this.normalize();
-  },
-  
-  /** Propagate carries. */
-  normalize: function() {
-    var carry=0, i, pv = this.placeVal, ipv = this.ipv, l, m, limbs = this.limbs, ll = limbs.length, mask = this.radixMask;
-    for (i=0; i < ll || (carry !== 0 && carry !== -1); i++) {
-      l = (limbs[i]||0) + carry;
-      m = limbs[i] = l & mask;
-      carry = (l-m)*ipv;
-    }
-    if (carry === -1) {
-      limbs[i-1] -= this.placeVal;
-    }
-    return this;
-  },
-
-  /** Constant-time normalize. Does not allocate additional space. */
-  cnormalize: function() {
-    var carry=0, i, ipv = this.ipv, l, m, limbs = this.limbs, ll = limbs.length, mask = this.radixMask;
-    for (i=0; i < ll-1; i++) {
-      l = limbs[i] + carry;
-      m = limbs[i] = l & mask;
-      carry = (l-m)*ipv;
-    }
-    limbs[i] += carry;
-    return this;
-  },
-  
-  /** Serialize to a bit array */
-  toBits: function(len) {
-    this.fullReduce();
-    len = len || this.exponent || this.bitLength();
-    var i = Math.floor((len-1)/24), w=sjcl.bitArray, e = (len + 7 & -8) % this.radix || this.radix,
-        out = [w.partial(e, this.getLimb(i))];
-    for (i--; i >= 0; i--) {
-      out = w.concat(out, [w.partial(Math.min(this.radix,len), this.getLimb(i))]);
-      len -= this.radix;
-    }
-    return out;
-  },
-  
-  /** Return the length in bits, rounded up to the nearest byte. */
-  bitLength: function() {
-    this.fullReduce();
-    var out = this.radix * (this.limbs.length - 1),
-        b = this.limbs[this.limbs.length - 1];
-    for (; b; b >>>= 1) {
-      out ++;
-    }
-    return out+7 & -8;
-  }
-};
-
-/** @memberOf sjcl.bn
-* @this { sjcl.bn }
-*/
-sjcl.bn.fromBits = function(bits) {
-  var Class = this, out = new Class(), words=[], w=sjcl.bitArray, t = this.prototype,
-      l = Math.min(this.bitLength || 0x100000000, w.bitLength(bits)), e = l % t.radix || t.radix;
-  
-  words[0] = w.extract(bits, 0, e);
-  for (; e < l; e += t.radix) {
-    words.unshift(w.extract(bits, e, t.radix));
-  }
-
-  out.limbs = words;
-  return out;
-};
-
-
-
-sjcl.bn.prototype.ipv = 1 / (sjcl.bn.prototype.placeVal = Math.pow(2,sjcl.bn.prototype.radix));
-sjcl.bn.prototype.radixMask = (1 << sjcl.bn.prototype.radix) - 1;
-
-/**
- * Creates a new subclass of bn, based on reduction modulo a pseudo-Mersenne prime,
- * i.e. a prime of the form 2^e + sum(a * 2^b),where the sum is negative and sparse.
- */
-sjcl.bn.pseudoMersennePrime = function(exponent, coeff) {
-  /** @constructor 
-  * @private
-  */
-  function p(it) {
-    this.initWith(it);
-    /*if (this.limbs[this.modOffset]) {
-      this.reduce();
-    }*/
-  }
-
-  var ppr = p.prototype = new sjcl.bn(), i, tmp, mo;
-  mo = ppr.modOffset = Math.ceil(tmp = exponent / ppr.radix);
-  ppr.exponent = exponent;
-  ppr.offset = [];
-  ppr.factor = [];
-  ppr.minOffset = mo;
-  ppr.fullMask = 0;
-  ppr.fullOffset = [];
-  ppr.fullFactor = [];
-  ppr.modulus = p.modulus = new sjcl.bn(Math.pow(2,exponent));
-  
-  ppr.fullMask = 0|-Math.pow(2, exponent % ppr.radix);
-
-  for (i=0; i<coeff.length; i++) {
-    ppr.offset[i] = Math.floor(coeff[i][0] / ppr.radix - tmp);
-    ppr.fullOffset[i] = Math.ceil(coeff[i][0] / ppr.radix - tmp);
-    ppr.factor[i] = coeff[i][1] * Math.pow(1/2, exponent - coeff[i][0] + ppr.offset[i] * ppr.radix);
-    ppr.fullFactor[i] = coeff[i][1] * Math.pow(1/2, exponent - coeff[i][0] + ppr.fullOffset[i] * ppr.radix);
-    ppr.modulus.addM(new sjcl.bn(Math.pow(2,coeff[i][0])*coeff[i][1]));
-    ppr.minOffset = Math.min(ppr.minOffset, -ppr.offset[i]); // conservative
-  }
-  ppr._class = p;
-  ppr.modulus.cnormalize();
-
-  /** Approximate reduction mod p.  May leave a number which is negative or slightly larger than p.
-   * @memberof sjcl.bn
-   * @this { sjcl.bn }
-   */
-  ppr.reduce = function() {
-    var i, k, l, mo = this.modOffset, limbs = this.limbs, aff, off = this.offset, ol = this.offset.length, fac = this.factor, ll;
-
-    i = this.minOffset;
-    while (limbs.length > mo) {
-      l = limbs.pop();
-      ll = limbs.length;
-      for (k=0; k<ol; k++) {
-        limbs[ll+off[k]] -= fac[k] * l;
-      }
-      
-      i--;
-      if (!i) {
-        limbs.push(0);
-        this.cnormalize();
-        i = this.minOffset;
-      }
-    }
-    this.cnormalize();
-
-    return this;
-  };
-  
-  /** @memberof sjcl.bn
-  * @this { sjcl.bn }
-  */
-  ppr._strongReduce = (ppr.fullMask === -1) ? ppr.reduce : function() {
-    var limbs = this.limbs, i = limbs.length - 1, k, l;
-    this.reduce();
-    if (i === this.modOffset - 1) {
-      l = limbs[i] & this.fullMask;
-      limbs[i] -= l;
-      for (k=0; k<this.fullOffset.length; k++) {
-        limbs[i+this.fullOffset[k]] -= this.fullFactor[k] * l;
-      }
-      this.normalize();
-    }
-  };
-
-  /** mostly constant-time, very expensive full reduction.
-   * @memberof sjcl.bn
-   * @this { sjcl.bn }
-   */
-  ppr.fullReduce = function() {
-    var greater, i;
-    // massively above the modulus, may be negative
-    
-    this._strongReduce();
-    // less than twice the modulus, may be negative
-
-    this.addM(this.modulus);
-    this.addM(this.modulus);
-    this.normalize();
-    // probably 2-3x the modulus
-    
-    this._strongReduce();
-    // less than the power of 2.  still may be more than
-    // the modulus
-
-    // HACK: pad out to this length
-    for (i=this.limbs.length; i<this.modOffset; i++) {
-      this.limbs[i] = 0;
-    }
-    
-    // constant-time subtract modulus
-    greater = this.greaterEquals(this.modulus);
-    for (i=0; i<this.limbs.length; i++) {
-      this.limbs[i] -= this.modulus.limbs[i] * greater;
-    }
-    this.cnormalize();
-
-    return this;
-  };
-
-
-  /** @memberof sjcl.bn
-  * @this { sjcl.bn }
-  */
-  ppr.inverse = function() {
-    return (this.power(this.modulus.sub(2)));
-  };
-
-  p.fromBits = sjcl.bn.fromBits;
-
-  return p;
-};
-
-// a small Mersenne prime
-var sbp = sjcl.bn.pseudoMersennePrime;
-sjcl.bn.prime = {
-  p127: sbp(127, [[0,-1]]),
-
-  // Bernstein's prime for Curve25519
-  p25519: sbp(255, [[0,-19]]),
-
-  // Koblitz primes
-  p192k: sbp(192, [[32,-1],[12,-1],[8,-1],[7,-1],[6,-1],[3,-1],[0,-1]]),
-  p224k: sbp(224, [[32,-1],[12,-1],[11,-1],[9,-1],[7,-1],[4,-1],[1,-1],[0,-1]]),
-  p256k: sbp(256, [[32,-1],[9,-1],[8,-1],[7,-1],[6,-1],[4,-1],[0,-1]]),
-
-  // NIST primes
-  p192: sbp(192, [[0,-1],[64,-1]]),
-  p224: sbp(224, [[0,1],[96,-1]]),
-  p256: sbp(256, [[0,-1],[96,1],[192,1],[224,-1]]),
-  p384: sbp(384, [[0,-1],[32,1],[96,-1],[128,-1]]),
-  p521: sbp(521, [[0,-1]])
-};
-
-sjcl.bn.random = function(modulus, paranoia) {
-  if (typeof modulus !== "object") { modulus = new sjcl.bn(modulus); }
-  var words, i, l = modulus.limbs.length, m = modulus.limbs[l-1]+1, out = new sjcl.bn();
-  while (true) {
-    // get a sequence whose first digits make sense
-    do {
-      words = sjcl.random.randomWords(l, paranoia);
-      if (words[l-1] < 0) { words[l-1] += 0x100000000; }
-    } while (Math.floor(words[l-1] / m) === Math.floor(0x100000000 / m));
-    words[l-1] %= m;
-
-    // mask off all the limbs
-    for (i=0; i<l-1; i++) {
-      words[i] &= modulus.radixMask;
-    }
-
-    // check the rest of the digitssj
-    out.limbs = words;
-    if (!out.greaterEquals(modulus)) {
-      return out;
-    }
-  }
-};
-
-/**
- * base class for all ecc operations.
- */
-sjcl.ecc = {};
-
-/**
- * Represents a point on a curve in affine coordinates.
- * @constructor
- * @param {sjcl.ecc.curve} curve The curve that this point lies on.
- * @param {bigInt} x The x coordinate.
- * @param {bigInt} y The y coordinate.
- */
-sjcl.ecc.point = function(curve,x,y) {
-  if (x === undefined) {
-    this.isIdentity = true;
-  } else {
-    this.x = x;
-    this.y = y;
-    this.isIdentity = false;
-  }
-  this.curve = curve;
-};
-
-
-
-sjcl.ecc.point.prototype = {
-  toJac: function() {
-    return new sjcl.ecc.pointJac(this.curve, this.x, this.y, new this.curve.field(1));
-  },
-
-  mult: function(k) {
-    return this.toJac().mult(k, this).toAffine();
-  },
-  
-  /**
-   * Multiply this point by k, added to affine2*k2, and return the answer in Jacobian coordinates.
-   * @param {bigInt} k The coefficient to multiply this by.
-   * @param {bigInt} k2 The coefficient to multiply affine2 this by.
-   * @param {sjcl.ecc.point} affine The other point in affine coordinates.
-   * @return {sjcl.ecc.pointJac} The result of the multiplication and addition, in Jacobian coordinates.
-   */
-  mult2: function(k, k2, affine2) {
-    return this.toJac().mult2(k, this, k2, affine2).toAffine();
-  },
-  
-  multiples: function() {
-    var m, i, j;
-    if (this._multiples === undefined) {
-      j = this.toJac().doubl();
-      m = this._multiples = [new sjcl.ecc.point(this.curve), this, j.toAffine()];
-      for (i=3; i<16; i++) {
-        j = j.add(this);
-        m.push(j.toAffine());
-      }
-    }
-    return this._multiples;
-  },
-
-  isValid: function() {
-    return this.y.square().equals(this.curve.b.add(this.x.mul(this.curve.a.add(this.x.square()))));
-  },
-
-  toBits: function() {
-    return sjcl.bitArray.concat(this.x.toBits(), this.y.toBits());
-  }
-};
-
-/**
- * Represents a point on a curve in Jacobian coordinates. Coordinates can be specified as bigInts or strings (which
- * will be converted to bigInts).
- *
- * @constructor
- * @param {bigInt/string} x The x coordinate.
- * @param {bigInt/string} y The y coordinate.
- * @param {bigInt/string} z The z coordinate.
- * @param {sjcl.ecc.curve} curve The curve that this point lies on.
- */
-sjcl.ecc.pointJac = function(curve, x, y, z) {
-  if (x === undefined) {
-    this.isIdentity = true;
-  } else {
-    this.x = x;
-    this.y = y;
-    this.z = z;
-    this.isIdentity = false;
-  }
-  this.curve = curve;
-};
-
-sjcl.ecc.pointJac.prototype = {
-  /**
-   * Adds S and T and returns the result in Jacobian coordinates. Note that S must be in Jacobian coordinates and T must be in affine coordinates.
-   * @param {sjcl.ecc.pointJac} S One of the points to add, in Jacobian coordinates.
-   * @param {sjcl.ecc.point} T The other point to add, in affine coordinates.
-   * @return {sjcl.ecc.pointJac} The sum of the two points, in Jacobian coordinates. 
-   */
-  add: function(T) {
-    var S = this, sz2, c, d, c2, x1, x2, x, y1, y2, y, z;
-    if (S.curve !== T.curve) {
-      throw("sjcl.ecc.add(): Points must be on the same curve to add them!");
-    }
-
-    if (S.isIdentity) {
-      return T.toJac();
-    } else if (T.isIdentity) {
-      return S;
-    }
-
-    sz2 = S.z.square();
-    c = T.x.mul(sz2).subM(S.x);
-
-    if (c.equals(0)) {
-      if (S.y.equals(T.y.mul(sz2.mul(S.z)))) {
-        // same point
-        return S.doubl();
-      } else {
-        // inverses
-        return new sjcl.ecc.pointJac(S.curve);
-      }
-    }
-    
-    d = T.y.mul(sz2.mul(S.z)).subM(S.y);
-    c2 = c.square();
-
-    x1 = d.square();
-    x2 = c.square().mul(c).addM( S.x.add(S.x).mul(c2) );
-    x  = x1.subM(x2);
-
-    y1 = S.x.mul(c2).subM(x).mul(d);
-    y2 = S.y.mul(c.square().mul(c));
-    y  = y1.subM(y2);
-
-    z  = S.z.mul(c);
-
-    return new sjcl.ecc.pointJac(this.curve,x,y,z);
-  },
-  
-  /**
-   * doubles this point.
-   * @return {sjcl.ecc.pointJac} The doubled point.
-   */
-  doubl: function() {
-    if (this.isIdentity) { return this; }
-
-    var
-      y2 = this.y.square(),
-      a  = y2.mul(this.x.mul(4)),
-      b  = y2.square().mul(8),
-      z2 = this.z.square(),
-      c  = this.curve.a.toString() == (new sjcl.bn(-3)).toString() ?
-                this.x.sub(z2).mul(3).mul(this.x.add(z2)) :
-                this.x.square().mul(3).add(z2.square().mul(this.curve.a)),
-      x  = c.square().subM(a).subM(a),
-      y  = a.sub(x).mul(c).subM(b),
-      z  = this.y.add(this.y).mul(this.z);
-    return new sjcl.ecc.pointJac(this.curve, x, y, z);
-  },
-
-  /**
-   * Returns a copy of this point converted to affine coordinates.
-   * @return {sjcl.ecc.point} The converted point.
-   */
-  toAffine: function() {
-    if (this.isIdentity || this.z.equals(0)) {
-      return new sjcl.ecc.point(this.curve);
-    }
-    var zi = this.z.inverse(), zi2 = zi.square();
-    return new sjcl.ecc.point(this.curve, this.x.mul(zi2).fullReduce(), this.y.mul(zi2.mul(zi)).fullReduce());
-  },
-  
-  /**
-   * Multiply this point by k and return the answer in Jacobian coordinates.
-   * @param {bigInt} k The coefficient to multiply by.
-   * @param {sjcl.ecc.point} affine This point in affine coordinates.
-   * @return {sjcl.ecc.pointJac} The result of the multiplication, in Jacobian coordinates.
-   */
-  mult: function(k, affine) {
-    if (typeof(k) === "number") {
-      k = [k];
-    } else if (k.limbs !== undefined) {
-      k = k.normalize().limbs;
-    }
-    
-    var i, j, out = new sjcl.ecc.point(this.curve).toJac(), multiples = affine.multiples();
-
-    for (i=k.length-1; i>=0; i--) {
-      for (j=sjcl.bn.prototype.radix-4; j>=0; j-=4) {
-        out = out.doubl().doubl().doubl().doubl().add(multiples[k[i]>>j & 0xF]);
-      }
-    }
-    
-    return out;
-  },
-  
-  /**
-   * Multiply this point by k, added to affine2*k2, and return the answer in Jacobian coordinates.
-   * @param {bigInt} k The coefficient to multiply this by.
-   * @param {sjcl.ecc.point} affine This point in affine coordinates.
-   * @param {bigInt} k2 The coefficient to multiply affine2 this by.
-   * @param {sjcl.ecc.point} affine The other point in affine coordinates.
-   * @return {sjcl.ecc.pointJac} The result of the multiplication and addition, in Jacobian coordinates.
-   */
-  mult2: function(k1, affine, k2, affine2) {
-    if (typeof(k1) === "number") {
-      k1 = [k1];
-    } else if (k1.limbs !== undefined) {
-      k1 = k1.normalize().limbs;
-    }
-    
-    if (typeof(k2) === "number") {
-      k2 = [k2];
-    } else if (k2.limbs !== undefined) {
-      k2 = k2.normalize().limbs;
-    }
-    
-    var i, j, out = new sjcl.ecc.point(this.curve).toJac(), m1 = affine.multiples(),
-        m2 = affine2.multiples(), l1, l2;
-
-    for (i=Math.max(k1.length,k2.length)-1; i>=0; i--) {
-      l1 = k1[i] | 0;
-      l2 = k2[i] | 0;
-      for (j=sjcl.bn.prototype.radix-4; j>=0; j-=4) {
-        out = out.doubl().doubl().doubl().doubl().add(m1[l1>>j & 0xF]).add(m2[l2>>j & 0xF]);
-      }
-    }
-    
-    return out;
-  },
-
-  isValid: function() {
-    var z2 = this.z.square(), z4 = z2.square(), z6 = z4.mul(z2);
-    return this.y.square().equals(
-             this.curve.b.mul(z6).add(this.x.mul(
-               this.curve.a.mul(z4).add(this.x.square()))));
-  }
-};
-
-/**
- * Construct an elliptic curve. Most users will not use this and instead start with one of the NIST curves defined below.
- *
- * @constructor
- * @param {bigInt} p The prime modulus.
- * @param {bigInt} r The prime order of the curve.
- * @param {bigInt} a The constant a in the equation of the curve y^2 = x^3 + ax + b (for NIST curves, a is always -3).
- * @param {bigInt} x The x coordinate of a base point of the curve.
- * @param {bigInt} y The y coordinate of a base point of the curve.
- */
-sjcl.ecc.curve = function(Field, r, a, b, x, y) {
-  this.field = Field;
-  this.r = new sjcl.bn(r);
-  this.a = new Field(a);
-  this.b = new Field(b);
-  this.G = new sjcl.ecc.point(this, new Field(x), new Field(y));
-};
-
-sjcl.ecc.curve.prototype.fromBits = function (bits) {
-  var w = sjcl.bitArray, l = this.field.prototype.exponent + 7 & -8,
-      p = new sjcl.ecc.point(this, this.field.fromBits(w.bitSlice(bits, 0, l)),
-                             this.field.fromBits(w.bitSlice(bits, l, 2*l)));
-  if (!p.isValid()) {
-    throw new sjcl.exception.corrupt("not on the curve!");
-  }
-  return p;
-};
-
-sjcl.ecc.curves = {
-  c192: new sjcl.ecc.curve(
-    sjcl.bn.prime.p192,
-    "0xffffffffffffffffffffffff99def836146bc9b1b4d22831",
-    -3,
-    "0x64210519e59c80e70fa7e9ab72243049feb8deecc146b9b1",
-    "0x188da80eb03090f67cbf20eb43a18800f4ff0afd82ff1012",
-    "0x07192b95ffc8da78631011ed6b24cdd573f977a11e794811"),
-
-  c224: new sjcl.ecc.curve(
-    sjcl.bn.prime.p224,
-    "0xffffffffffffffffffffffffffff16a2e0b8f03e13dd29455c5c2a3d",
-    -3,
-    "0xb4050a850c04b3abf54132565044b0b7d7bfd8ba270b39432355ffb4",
-    "0xb70e0cbd6bb4bf7f321390b94a03c1d356c21122343280d6115c1d21",
-    "0xbd376388b5f723fb4c22dfe6cd4375a05a07476444d5819985007e34"),
-
-  c256: new sjcl.ecc.curve(
-    sjcl.bn.prime.p256,
-    "0xffffffff00000000ffffffffffffffffbce6faada7179e84f3b9cac2fc632551",
-    -3,
-    "0x5ac635d8aa3a93e7b3ebbd55769886bc651d06b0cc53b0f63bce3c3e27d2604b",
-    "0x6b17d1f2e12c4247f8bce6e563a440f277037d812deb33a0f4a13945d898c296",
-    "0x4fe342e2fe1a7f9b8ee7eb4a7c0f9e162bce33576b315ececbb6406837bf51f5"),
-
-  c384: new sjcl.ecc.curve(
-    sjcl.bn.prime.p384,
-    "0xffffffffffffffffffffffffffffffffffffffffffffffffc7634d81f4372ddf581a0db248b0a77aecec196accc52973",
-    -3,
-    "0xb3312fa7e23ee7e4988e056be3f82d19181d9c6efe8141120314088f5013875ac656398d8a2ed19d2a85c8edd3ec2aef",
-    "0xaa87ca22be8b05378eb1c71ef320ad746e1d3b628ba79b9859f741e082542a385502f25dbf55296c3a545e3872760ab7",
-    "0x3617de4a96262c6f5d9e98bf9292dc29f8f41dbd289a147ce9da3113b5f0b8c00a60b1ce1d7e819d7a431d7c90ea0e5f"),
-
-  k192: new sjcl.ecc.curve(
-    sjcl.bn.prime.p192k,
-    "0xfffffffffffffffffffffffe26f2fc170f69466a74defd8d",
-    0,
-    3,
-    "0xdb4ff10ec057e9ae26b07d0280b7f4341da5d1b1eae06c7d",
-    "0x9b2f2f6d9c5628a7844163d015be86344082aa88d95e2f9d"),
-
-  k224: new sjcl.ecc.curve(
-    sjcl.bn.prime.p224k,
-    "0x010000000000000000000000000001dce8d2ec6184caf0a971769fb1f7",
-    0,
-    5,
-    "0xa1455b334df099df30fc28a169a467e9e47075a90f7e650eb6b7a45c",
-    "0x7e089fed7fba344282cafbd6f7e319f7c0b0bd59e2ca4bdb556d61a5"),
-
-  k256: new sjcl.ecc.curve(
-    sjcl.bn.prime.p256k,
-    "0xfffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141",
-    0,
-    7,
-    "0x79be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
-    "0x483ada7726a3c4655da4fbfc0e1108a8fd17b448a68554199c47d08ffb10d4b8")
-
-};
-
-/** our basicKey classes
-*/
-sjcl.ecc.basicKey = {
-  /** ecc publicKey. 
-  * @constructor
-  * @param {curve} curve the elliptic curve
-  * @param {point} point the point on the curve
-  */
-  publicKey: function(curve, point) {
-    this._curve = curve;
-    this._curveBitLength = curve.r.bitLength();
-    if (point instanceof Array) {
-      this._point = curve.fromBits(point);
-    } else {
-      this._point = point;
-    }
-
-    /** get this keys point data
-    * @return x and y as bitArrays
-    */
-    this.get = function() {
-      var pointbits = this._point.toBits();
-      var len = sjcl.bitArray.bitLength(pointbits);
-      var x = sjcl.bitArray.bitSlice(pointbits, 0, len/2);
-      var y = sjcl.bitArray.bitSlice(pointbits, len/2);
-      return { x: x, y: y };
-    };
-  },
-
-  /** ecc secretKey
-  * @constructor
-  * @param {curve} curve the elliptic curve
-  * @param exponent
-  */
-  secretKey: function(curve, exponent) {
-    this._curve = curve;
-    this._curveBitLength = curve.r.bitLength();
-    this._exponent = exponent;
-
-    /** get this keys exponent data
-    * @return {bitArray} exponent
-    */
-    this.get = function () {
-      return this._exponent.toBits();
-    };
-  }
-};
-
-/** @private */
-sjcl.ecc.basicKey.generateKeys = function(cn) {
-  return function generateKeys(curve, paranoia, sec) {
-    curve = curve || 256;
-    paranoia = paranoia || 0;
-
-    if (typeof curve === "number") {
-      curve = sjcl.ecc.curves['c'+curve];
-      if (curve === undefined) {
-        throw new sjcl.exception.invalid("no such curve");
-      }
-    }
-    sec = sec || sjcl.bn.random(curve.r, paranoia);
-
-    var pub = curve.G.mult(sec);
-    return { pub: new sjcl.ecc[cn].publicKey(curve, pub),
-             sec: new sjcl.ecc[cn].secretKey(curve, sec) };
-  };
-};
-
-/** elGamal keys */
-sjcl.ecc.elGamal = {
-  /** generate keys
-  * @function
-  * @param curve
-  * @param {int} paranoia Paranoia for generation (default 6)
-  * @param {secretKey} sec secret Key to use. used to get the publicKey for ones secretKey
-  */
-  generateKeys: sjcl.ecc.basicKey.generateKeys("elGamal"),
-  /** elGamal publicKey. 
-  * @constructor
-  * @augments sjcl.ecc.basicKey.publicKey
-  */
-  publicKey: function (curve, point) {
-    sjcl.ecc.basicKey.publicKey.apply(this, arguments);
-  },
-  /** elGamal secretKey
-  * @constructor
-  * @augments sjcl.ecc.basicKey.secretKey
-  */
-  secretKey: function (curve, exponent) {
-    sjcl.ecc.basicKey.secretKey.apply(this, arguments);
-  }
-};
-
-sjcl.ecc.elGamal.publicKey.prototype = {
-  /** Kem function of elGamal Public Key
-  * @param paranoia paranoia to use for randomization.
-  * @return {object} key and tag. unkem(tag) with the corresponding secret key results in the key returned.
-  */
-  kem: function(paranoia) {
-    var sec = sjcl.bn.random(this._curve.r, paranoia),
-        tag = this._curve.G.mult(sec).toBits(),
-        key = sjcl.hash.sha256.hash(this._point.mult(sec).toBits());
-    return { key: key, tag: tag };
-  }
-};
-
-sjcl.ecc.elGamal.secretKey.prototype = {
-  /** UnKem function of elGamal Secret Key
-  * @param {bitArray} tag The Tag to decrypt.
-  * @return {bitArray} decrypted key.
-  */
-  unkem: function(tag) {
-    return sjcl.hash.sha256.hash(this._curve.fromBits(tag).mult(this._exponent).toBits());
-  },
-
-  /** Diffie-Hellmann function
-  * @param {elGamal.publicKey} pk The Public Key to do Diffie-Hellmann with
-  * @return {bitArray} diffie-hellmann result for this key combination.
-  */
-  dh: function(pk) {
-    return sjcl.hash.sha256.hash(pk._point.mult(this._exponent).toBits());
-  }
-};
-
-/** ecdsa keys */
-sjcl.ecc.ecdsa = {
-  /** generate keys
-  * @function
-  * @param curve
-  * @param {int} paranoia Paranoia for generation (default 6)
-  * @param {secretKey} sec secret Key to use. used to get the publicKey for ones secretKey
-  */
-  generateKeys: sjcl.ecc.basicKey.generateKeys("ecdsa")
-};
-
-/** ecdsa publicKey. 
-* @constructor
-* @augments sjcl.ecc.basicKey.publicKey
-*/
-sjcl.ecc.ecdsa.publicKey = function (curve, point) {
-  sjcl.ecc.basicKey.publicKey.apply(this, arguments);
-};
-
-/** specific functions for ecdsa publicKey. */
-sjcl.ecc.ecdsa.publicKey.prototype = {
-  /** Diffie-Hellmann function
-  * @param {bitArray} hash hash to verify. 
-  * @param {bitArray} rs signature bitArray.
-  * @param {boolean}  fakeLegacyVersion use old legacy version
-  */
-  verify: function(hash, rs, fakeLegacyVersion) {
-    if (sjcl.bitArray.bitLength(hash) > this._curveBitLength) {
-      hash = sjcl.bitArray.clamp(hash, this._curveBitLength);
-    }
-    var w = sjcl.bitArray,
-        R = this._curve.r,
-        l = this._curveBitLength,
-        r = sjcl.bn.fromBits(w.bitSlice(rs,0,l)),
-        ss = sjcl.bn.fromBits(w.bitSlice(rs,l,2*l)),
-        s = fakeLegacyVersion ? ss : ss.inverseMod(R),
-        hG = sjcl.bn.fromBits(hash).mul(s).mod(R),
-        hA = r.mul(s).mod(R),
-        r2 = this._curve.G.mult2(hG, hA, this._point).x;
-    if (r.equals(0) || ss.equals(0) || r.greaterEquals(R) || ss.greaterEquals(R) || !r2.equals(r)) {
-      if (fakeLegacyVersion === undefined) {
-        return this.verify(hash, rs, true);
-      } else {
-        throw (new sjcl.exception.corrupt("signature didn't check out"));
-      }
-    }
-    return true;
-  }
-};
-
-/** ecdsa secretKey
-* @constructor
-* @augments sjcl.ecc.basicKey.publicKey
-*/
-sjcl.ecc.ecdsa.secretKey = function (curve, exponent) {
-  sjcl.ecc.basicKey.secretKey.apply(this, arguments);
-};
-
-/** specific functions for ecdsa secretKey. */
-sjcl.ecc.ecdsa.secretKey.prototype = {
-  /** Diffie-Hellmann function
-  * @param {bitArray} hash hash to sign. 
-  * @param {int} paranoia paranoia for random number generation
-  * @param {boolean} fakeLegacyVersion use old legacy version
-  */
-  sign: function(hash, paranoia, fakeLegacyVersion, fixedKForTesting) {
-    if (sjcl.bitArray.bitLength(hash) > this._curveBitLength) {
-      hash = sjcl.bitArray.clamp(hash, this._curveBitLength);
-    }
-    var R  = this._curve.r,
-        l  = R.bitLength(),
-        k  = fixedKForTesting || sjcl.bn.random(R.sub(1), paranoia).add(1),
-        r  = this._curve.G.mult(k).x.mod(R),
-        ss = sjcl.bn.fromBits(hash).add(r.mul(this._exponent)),
-        s  = fakeLegacyVersion ? ss.inverseMod(R).mul(k).mod(R)
-             : ss.mul(k.inverseMod(R)).mod(R);
-    return sjcl.bitArray.concat(r.toBits(l), s.toBits(l));
-  }
-};/** @fileOverview Javascript SRP implementation.
- *
- * This file contains a partial implementation of the SRP (Secure Remote
- * Password) password-authenticated key exchange protocol. Given a user
- * identity, salt, and SRP group, it generates the SRP verifier that may
- * be sent to a remote server to establish and SRP account.
- *
- * For more information, see http://srp.stanford.edu/.
- *
- * @author Quinn Slack
- */
-
-/**
- * Compute the SRP verifier from the username, password, salt, and group.
- * @class SRP
- */
-sjcl.keyexchange.srp = {
-  /**
-   * Calculates SRP v, the verifier. 
-   *   v = g^x mod N [RFC 5054]
-   * @param {String} I The username.
-   * @param {String} P The password.
-   * @param {Object} s A bitArray of the salt.
-   * @param {Object} group The SRP group. Use sjcl.keyexchange.srp.knownGroup
-                           to obtain this object.
-   * @return {Object} A bitArray of SRP v.
-   */
-  makeVerifier: function(I, P, s, group) {
-    var x;
-    x = sjcl.keyexchange.srp.makeX(I, P, s);
-    x = sjcl.bn.fromBits(x);
-    return group.g.powermod(x, group.N);
-  },
-
-  /**
-   * Calculates SRP x.
-   *   x = SHA1(<salt> | SHA(<username> | ":" | <raw password>)) [RFC 2945]
-   * @param {String} I The username.
-   * @param {String} P The password.
-   * @param {Object} s A bitArray of the salt.
-   * @return {Object} A bitArray of SRP x.
-   */
-  makeX: function(I, P, s) {
-    var inner = sjcl.hash.sha1.hash(I + ':' + P);
-    return sjcl.hash.sha1.hash(sjcl.bitArray.concat(s, inner));
-  },
-
-  /**
-   * Returns the known SRP group with the given size (in bits).
-   * @param {String} i The size of the known SRP group.
-   * @return {Object} An object with "N" and "g" properties.
-   */
-  knownGroup:function(i) {
-    if (typeof i !== "string") { i = i.toString(); }
-    if (!sjcl.keyexchange.srp._didInitKnownGroups) { sjcl.keyexchange.srp._initKnownGroups(); }
-    return sjcl.keyexchange.srp._knownGroups[i];
-  },
-
-  /**
-   * Initializes bignum objects for known group parameters.
-   * @private
-   */
-  _didInitKnownGroups: false,
-  _initKnownGroups:function() {
-    var i, size, group;
-    for (i=0; i < sjcl.keyexchange.srp._knownGroupSizes.length; i++) {
-      size = sjcl.keyexchange.srp._knownGroupSizes[i].toString();
-      group = sjcl.keyexchange.srp._knownGroups[size];
-      group.N = new sjcl.bn(group.N);
-      group.g = new sjcl.bn(group.g);
-    }
-    sjcl.keyexchange.srp._didInitKnownGroups = true;
-  },
-
-  _knownGroupSizes: [1024, 1536, 2048],
-  _knownGroups: {
-    1024: {
-      N: "EEAF0AB9ADB38DD69C33F80AFA8FC5E86072618775FF3C0B9EA2314C" +
-         "9C256576D674DF7496EA81D3383B4813D692C6E0E0D5D8E250B98BE4" +
-         "8E495C1D6089DAD15DC7D7B46154D6B6CE8EF4AD69B15D4982559B29" +
-         "7BCF1885C529F566660E57EC68EDBC3C05726CC02FD4CBF4976EAA9A" +
-         "FD5138FE8376435B9FC61D2FC0EB06E3",
-      g:2
-    },
-
-    1536: {
-      N: "9DEF3CAFB939277AB1F12A8617A47BBBDBA51DF499AC4C80BEEEA961" +
-         "4B19CC4D5F4F5F556E27CBDE51C6A94BE4607A291558903BA0D0F843" +
-         "80B655BB9A22E8DCDF028A7CEC67F0D08134B1C8B97989149B609E0B" +
-         "E3BAB63D47548381DBC5B1FC764E3F4B53DD9DA1158BFD3E2B9C8CF5" +
-         "6EDF019539349627DB2FD53D24B7C48665772E437D6C7F8CE442734A" +
-         "F7CCB7AE837C264AE3A9BEB87F8A2FE9B8B5292E5A021FFF5E91479E" +
-         "8CE7A28C2442C6F315180F93499A234DCF76E3FED135F9BB",
-      g: 2
-    },
-
-    2048: {
-      N: "AC6BDB41324A9A9BF166DE5E1389582FAF72B6651987EE07FC319294" +
-         "3DB56050A37329CBB4A099ED8193E0757767A13DD52312AB4B03310D" +
-         "CD7F48A9DA04FD50E8083969EDB767B0CF6095179A163AB3661A05FB" +
-         "D5FAAAE82918A9962F0B93B855F97993EC975EEAA80D740ADBF4FF74" +
-         "7359D041D5C33EA71D281E446B14773BCA97B43A23FB801676BD207A" +
-         "436C6481F1D2B9078717461A5B9D32E688F87748544523B524B0D57D" +
-         "5EA77A2775D2ECFA032CFBDBF52FB3786160279004E57AE6AF874E73" +
-         "03CE53299CCC041C7BC308D82A5698F3A8D0C38271AE35F8E9DBFBB6" +
-         "94B5C803D89F7AE435DE236D525F54759B65E372FCD68EF20FA7111F" +
-         "9E4AFF73",
-      g: 2
-    }
-  }
-
-};
 
