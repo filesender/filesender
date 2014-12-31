@@ -858,7 +858,7 @@ if ( hasProductInstall && !hasRequestedVersion ) {
 </div>
 <div id="dialog-autherror" title="<?php echo lang($lang["_MESSAGE"]); ?>" style="display:none"><?php echo lang($lang["_AUTH_ERROR"]); ?></div>
 <div id="dialog-password" title="<?php echo lang($lang["_ENCRYPTION"]); ?>" style="display:none">
-	<div><p><?php echo lang("_ENCRYPT_PASSWDPROMPT"); ?><input type="text" name="encpassword" id="encpassword" size="12" autofocus />
+	<div><p><?php echo lang("_ENCRYPT_PASSWDPROMPT"); ?><input type="text" name="encpassword" id="encpassword" size="12" autofocus="autofocus" />
 		<span style="float:right;"><a href="#" id="genpassword" onclick="generaterandom();"><?php echo lang("_GENERATE_RANDOM"); ?></a></span>
 	</p></div>
 	<div id="password-note"></div>

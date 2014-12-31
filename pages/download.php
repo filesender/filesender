@@ -254,6 +254,6 @@ function startDownloadWithPassword(password) {
 </div>
 
 <div id="dialog-password" title="<?php echo lang($lang["_DECRYPTION"]); ?>" style="display: none">
-	<div><p><?php echo lang($lang["_DECRYPT_PASSWDPROMPT"]); ?><input type="text" name="decpassword" id="decpassword" size="24" autofocus />
+	<div><p><?php echo lang($lang["_DECRYPT_PASSWDPROMPT"]); ?><input type="text" name="decpassword" id="decpassword" size="24" autofocus="autofocus" />
 	</p></div>
 </div>
