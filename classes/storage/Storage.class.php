@@ -197,4 +197,31 @@ class Storage {
         
         call_user_func(self::$class.'::getDigest', $file);
     }
+    
+    /**
+     * Delegates whole file support check
+     * 
+     * @return bool
+     */
+    public static function supportsWholeFile() {
+        self::setup();
+        
+        call_user_func(self::$class.'::supportsWholeFile');
+    }
+    
+    /**
+     * Delegates whole file supporing
+     * 
+     * @param File $file
+     * @param string $source_path path to file data
+     * 
+     * @return bool
+     * 
+     * @throws StorageFilesystemOutOfSpaceException
+     */
+    public static function storeWholeFile(File $file, $source_path) {
+        self::setup();
+        
+        call_user_func(self::$class.'::storeWholeFile', $file, $source_path);
+    }
 }

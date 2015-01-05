@@ -379,5 +379,37 @@ class StorageFilesystem {
         
         return sha1_file($file_path);
     }
+    
+    /**
+     * Tells wether storage support whole file
+     * 
+     * @return bool
+     */
+    public static function supportsWholeFile() {
+        return true;
+    }
+    
+    /**
+     * Store a whole file
+     * 
+     * @param File $file
+     * @param string $source_path path to file data
+     * 
+     * @return bool
+     * 
+     * @throws StorageFilesystemOutOfSpaceException
+     */
+    public static function storeWholeFile(File $file, $source_path) {
+        $path = self::buildPath($file);
+        
+        $free_space = disk_free_space($path);
+        if($free_space <= filesize($source_path))
+            throw new StorageNotEnoughSpaceLeftException(filesize($source_path));
+        
+        $file_path = $path.$file->uid;
+        
+        if(!copy($source_path, $file_path))
+            throw new StorageFilesystemCannotWriteException($file_path);
+    }
 }
 

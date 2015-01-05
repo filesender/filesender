@@ -135,16 +135,20 @@ class RestEndpointFile extends RestEndpoint {
             if((int)$input['size'] != $file->size)
                 throw new RestException('file_size_does_not_match', 400);
             
-            // Check if all files from transfer are done, send notifications if so
-            $chunk_size = Config::get('upload_chunk_size');
-            if($fh = fopen($input['tmp_name'], 'rb')) {
-                for($offset=0; $offset<=$file->size; $offset+=$chunk_size) {
-                    $data = fread($fh, $chunk_size);
-                    $file->writeChunk($data, $offset);
-                }
+            if(Storage::supportsWholeFile()) {
+                Storage::storeWholeFile($file, $input['tmp_name']);
                 
-                fclose($fh);
-            } else throw new RestException('cannot_open_input_file', 500);
+            } else {
+                $chunk_size = Config::get('upload_chunk_size');
+                if($fh = fopen($input['tmp_name'], 'rb')) {
+                    for($offset=0; $offset<=$file->size; $offset+=$chunk_size) {
+                        $data = fread($fh, $chunk_size);
+                        $file->writeChunk($data, $offset);
+                    }
+                    
+                    fclose($fh);
+                } else throw new RestException('cannot_open_input_file', 500);
+            }
             
             unlink($input['tmp_name']);
         }
