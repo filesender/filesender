@@ -1,1 +1,0 @@
-phpunit -c phpunit.xml --testsuite FilesenderAll
