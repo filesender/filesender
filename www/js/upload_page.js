@@ -427,12 +427,18 @@ filesender.ui.startUpload = function() {
                 });
             };
             
+            var later = function() {
+                filesender.ui.goToPage('upload');
+                filesender.ui.reporting_stall = false;
+            };
+            
             var ignore = function() {
                 transfer.resetWatchdog(); // Forget watchdog data
                 filesender.ui.reporting_stall = false;
             };
             
             var buttons = {'retry': retry, 'stop': stop, 'ignore': ignore};
+            if(transfer.isRestartSupported()) buttons['retry_later'] = later;
             
             var prompt = filesender.ui.popup(lang.tr('stalled_transfer'), buttons, {onclose: ignore});
             $('<p />').text(lang.tr('transfer_seems_to_be_stalled')).appendTo(prompt);
