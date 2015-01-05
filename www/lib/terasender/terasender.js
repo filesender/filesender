@@ -111,6 +111,7 @@ window.filesender.terasender = {
             job.file = file;
             worker.file_id = file.id;
         }
+        worker.offset = file.uploaded;
         
         return job;
     },
@@ -125,7 +126,7 @@ window.filesender.terasender = {
         if(this.jobAllocationLocked || (this.status == 'paused')) {
             this.log('Asking worker:' + worker_id + ' to come back later');
             this.sendCommand(workerinterface, 'comeBackLater');
-            return;
+            return false;
         }
         
         this.log('Giving job to worker:' + worker_id);
@@ -148,6 +149,8 @@ window.filesender.terasender = {
         }
         
         this.jobAllocationLocked = false;
+        
+        return job;
     },
     
     /**
@@ -207,15 +210,22 @@ window.filesender.terasender = {
         
         var workers_on_same_file = 0;
         var workers_running = 0;
+        var min_offset = file.uploaded;
         
         for(var i=0; i<this.workers.length; i++) {
             if(this.workers[i].status != 'running') continue;
+            
+            if(this.workers[i].file_id == data.file.id)
+                min_offset = Math.min(min_offset, this.workers[i].offset);
+                
             if(this.workers[i].id == worker_id) continue;
             
             workers_running++;
             if(this.workers[i].file_id == data.file.id)
                 workers_on_same_file++;
         }
+        
+        file.min_uploaded_offset = Math.max(0, min_offset - filesender.config.terasender_chunk_size);
         
         this.transfer.reportProgress(file, (file.uploaded >= file.size) && (workers_on_same_file == 0));
         
@@ -241,10 +251,13 @@ window.filesender.terasender = {
         switch(command) {
             case 'jobExecuted' :
                 this.log('Worker executed job', 'worker:' + worker_id);
+                this.transfer.recordUploadedInWatchdog('worker:' + worker_id);
                 this.evalProgress(worker_id, data);
-            
+                // No break here as we give new job asap
+                
             case 'requestJob' :
-                this.giveJob(worker_id, workerinterface);
+                var gave = this.giveJob(worker_id, workerinterface);
+                if(gave) this.transfer.recordUploadStartedInWatchdog('worker:' + worker_id);
                 break;
             
             case 'log' :
@@ -269,6 +282,7 @@ window.filesender.terasender = {
         var workerinterface = new Worker(filesender.config.terasender_worker_file);
         workerinterface.id = id;
         workerinterface.file_id = null;
+        workerinterface.offset = 0;
         workerinterface.status = 'running';
         
         var terasender = this;
@@ -308,6 +322,22 @@ window.filesender.terasender = {
             this.createWorker();
         
         return true;
+    },
+    
+    /**
+     * Retry upload
+     */
+    retry: function() {
+        for(var i=0; i<this.workers.length; i++)
+            this.workers[i].terminate();
+        
+        for(var i=0; i<this.transfer.files.length; i++)
+            this.transfer.files[i].uploaded = this.transfer.files[i].min_uploaded_offset;
+        
+        this.workers = [];
+        
+        for(i=0; i<filesender.config.terasender_worker_count; i++)
+            this.createWorker();
     },
     
     /**

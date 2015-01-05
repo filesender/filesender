@@ -578,3 +578,8 @@ $lang['click_to_delete_file'] = 'Remove file';
 $lang['click_to_delete_recipient'] = 'Remove recipient';
 
 $lang['done_uploading'] = 'Done uploading';
+
+$lang['stalled_transfer'] = 'Stalled upload';
+$lang['retry'] = 'Try again';
+$lang['ignore'] = 'Ignore';
+$lang['transfer_seems_to_be_stalled'] = 'Upload seems to be stalled (way slower than expected), do you want to try restarting it or stop it ?';

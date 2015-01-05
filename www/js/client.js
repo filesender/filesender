@@ -106,32 +106,32 @@ window.filesender.client = {
         
         for(var k in options) settings[k] = options[k];
         
-        jQuery.ajax(settings);
+        return jQuery.ajax(settings);
     },
     
     get: function(resource, callback, options) {
-        this.call('get', resource, undefined, callback, options);
+        return this.call('get', resource, undefined, callback, options);
     },
     
     post: function(resource, data, callback, options) {
-        this.call('post', resource, data, function(data, status, xhr) {
+        return this.call('post', resource, data, function(data, status, xhr) {
             callback.call(this, xhr.getResponseHeader('Location'), data);
         }, options);
     },
     
     put: function(resource, data, callback, options) {
-        this.call('put', resource, data, callback, options);
+        return this.call('put', resource, data, callback, options);
     },
     
     delete: function(resource, callback, options) {
-        this.call('delete', resource, undefined, callback, options);
+        return this.call('delete', resource, undefined, callback, options);
     },
     
     /**
      * Get public info about the Filesender instance
      */
     getInfo: function(callback) {
-        this.get('/info', callback);
+        return this.get('/info', callback);
     },
     
     /**
@@ -150,7 +150,7 @@ window.filesender.client = {
         var opts = {};
         if(onerror) opts.error = onerror;
         if (guest_token) opts.args={vid:guest_token};
-        this.post('/transfer', {
+        return this.post('/transfer', {
             from: from,
             files: files,
             recipients: recipients,
@@ -172,7 +172,7 @@ window.filesender.client = {
         var opts = {};
         if(onerror) opts.error = onerror;
         
-        this.get('/transfer/' + id, callback, opts);
+        return this.get('/transfer/' + id, callback, opts);
     },
     
     /**
@@ -197,7 +197,7 @@ window.filesender.client = {
         
         if(onerror) opts.error = onerror;
         
-        this.post('/file/' + file.id + '/chunk', blob, callback, opts);
+        return this.post('/file/' + file.id + '/chunk', blob, callback, opts);
     },
     
     /**
@@ -223,7 +223,7 @@ window.filesender.client = {
         
         if(onerror) opts.error = onerror;
         
-        this.put('/file/' + file.id + '/chunk/' + offset, blob, callback, opts);
+        return this.put('/file/' + file.id + '/chunk/' + offset, blob, callback, opts);
     },
     
     /**
@@ -242,7 +242,7 @@ window.filesender.client = {
         
         if(onerror) opts.error = onerror;
         
-        this.put('/file/' + file.id, data, callback, opts);
+        return this.put('/file/' + file.id, data, callback, opts);
     },
     
     /**
@@ -262,7 +262,7 @@ window.filesender.client = {
         if(onerror) opts.error = onerror;
         if (guest_token) opts.args={vid:guest_token};
         
-        this.put('/transfer/' + transfer.id, data, callback, opts);
+        return this.put('/transfer/' + transfer.id, data, callback, opts);
     },
     
     /**
@@ -272,7 +272,7 @@ window.filesender.client = {
      * @param callable callback
      */
     remindTransfer: function(id, callback) {
-        this.put('/transfer/' + id, {remind: true}, callback);
+        return this.put('/transfer/' + id, {remind: true}, callback);
     },
     
     /**
@@ -287,7 +287,7 @@ window.filesender.client = {
         var opts = {};
         if(onerror) opts.error = onerror;
         
-        this.put('/transfer/' + id, {closed: true}, callback, opts);
+        return this.put('/transfer/' + id, {closed: true}, callback, opts);
     },
     
     /**
@@ -308,7 +308,7 @@ window.filesender.client = {
         
         if(onerror) opts.error = onerror;
         
-        this.delete('/transfer/' + id, callback, opts);
+        return this.delete('/transfer/' + id, callback, opts);
     },
     
     /**
@@ -326,7 +326,7 @@ window.filesender.client = {
         
         if(onerror) opts.error = onerror;
         
-        this.delete('/file/' + id, callback, opts);
+        return this.delete('/file/' + id, callback, opts);
     },
     
     /**
@@ -336,7 +336,7 @@ window.filesender.client = {
      * @param callable callback
      */
     getRecipient: function(id, callback) {
-        this.get('/recipient/' + id, callback);
+        return this.get('/recipient/' + id, callback);
     },
     
     /**
@@ -347,7 +347,7 @@ window.filesender.client = {
      * @param callable callback
      */
     addRecipient: function(transfer_id, email, callback) {
-        this.post('/transfer/' + transfer_id + '/recipient', {recipient: email}, callback);
+        return this.post('/transfer/' + transfer_id + '/recipient', {recipient: email}, callback);
     },
     
     /**
@@ -365,7 +365,7 @@ window.filesender.client = {
         
         if(onerror) opts.error = onerror;
         
-        this.delete('/recipient/' + id, callback, opts);
+        return this.delete('/recipient/' + id, callback, opts);
     },
     
     /**
@@ -380,7 +380,7 @@ window.filesender.client = {
         if(typeof voucher == 'object')
             id = voucher.id;
         
-        this.get('/guest/' + id, callback);
+        return this.get('/guest/' + id, callback);
     },
     
     /**
@@ -394,7 +394,7 @@ window.filesender.client = {
      * @param callable callback function to call with guest voucher path and guest voucher info once done
      */
     postGuest: function(from, recipient, subject, message, expires, options, callback) {
-        this.post('/guest', {
+        return this.post('/guest', {
             from: from,
             recipient: recipient,
             subject: subject,
@@ -411,7 +411,7 @@ window.filesender.client = {
      * @param callable callback
      */
     remindGuest: function(id, callback) {
-        this.put('/guest/' + id, {remind: true}, callback);
+        return this.put('/guest/' + id, {remind: true}, callback);
     },
     
     /**
@@ -426,7 +426,7 @@ window.filesender.client = {
         if(typeof voucher == 'object')
             id = voucher.id;
         
-        this.delete('/guest/' + id, callback);
+        return this.delete('/guest/' + id, callback);
     },
     
     /**
@@ -436,27 +436,27 @@ window.filesender.client = {
      * @param callable callback
      */
     overrideConfig: function(overrides, callback) {
-        this.put('/config', overrides, callback);
+        return this.put('/config', overrides, callback);
     },
     
     
     getFrequentRecipients: function(needle, callback) {
-        this.get('/user/@me/frequent_recipients', callback, needle ? {args: {'filterOp[contains]': needle}} : undefined);
+        return this.get('/user/@me/frequent_recipients', callback, needle ? {args: {'filterOp[contains]': needle}} : undefined);
     },
     
     getTransferOption: function(id, option, token, callback) {
-        this.get('/transfer/' + id + '/options/' + option, callback, token ? {args: {token: token}} : undefined);
+        return this.get('/transfer/' + id + '/options/' + option, callback, token ? {args: {token: token}} : undefined);
     },
     
     getTransferAuditlog: function(id, callback) {
-        this.get('/transfer/' + id + '/auditlog', callback);
+        return this.get('/transfer/' + id + '/auditlog', callback);
     },
     
     getTransferAuditlogByEmail: function(id, callback) {
-        this.get('/transfer/' + id + '/auditlog/mail', callback);
+        return this.get('/transfer/' + id + '/auditlog/mail', callback);
     },
     
     getLegacyUploadProgress: function(key, callback, error) {
-        this.get('/legacyuploadprogress/' + key, callback, {error: error});
+        return this.get('/legacyuploadprogress/' + key, callback, {error: error});
     },
 };
