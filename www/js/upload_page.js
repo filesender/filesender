@@ -398,6 +398,47 @@ filesender.ui.startUpload = function() {
     
     this.transfer.onerror = errorHandler;
     
+    // Setup watchdog to look for stalled clients (only in html5 and terasender modes)
+    if(filesender.supports.reader) {
+        var transfer = this.transfer;
+        transfer.resetWatchdog();
+        window.setInterval(function() { // Check for stalled every minute
+            var stalled = transfer.getStalledProcesses();
+            if(!stalled || filesender.ui.reporting_stall) return;
+            
+            if(transfer.retry()) {// Automatic retry
+                console.log('upload seems stalled, automatic retry');
+                return;
+            }
+            
+            filesender.ui.reporting_stall = true;
+            console.log('upload seems stalled and max number of automatic retries exceeded, asking user about what to do');
+            
+            var retry = function() {
+                transfer.resetWatchdog();
+                filesender.ui.reporting_stall = false;
+                transfer.retry(true); // Manual retry
+            };
+            
+            var stop = function() {
+                transfer.stop(function() {
+                    filesender.ui.goToPage('upload');
+                    filesender.ui.reporting_stall = false;
+                });
+            };
+            
+            var ignore = function() {
+                transfer.resetWatchdog(); // Forget watchdog data
+                filesender.ui.reporting_stall = false;
+            };
+            
+            var buttons = {'retry': retry, 'stop': stop, 'ignore': ignore};
+            
+            var prompt = filesender.ui.popup(lang.tr('stalled_transfer'), buttons, {onclose: ignore});
+            $('<p />').text(lang.tr('transfer_seems_to_be_stalled')).appendTo(prompt);
+        }, 60 * 1000);
+    }
+    
     filesender.ui.nodes.files.list.find('.file').addClass('uploading');
     filesender.ui.nodes.files.list.find('.file .remove').hide();
     filesender.ui.nodes.recipients.list.find('.recipient .remove').hide();

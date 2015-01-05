@@ -62,7 +62,25 @@ window.filesender.transfer = function() {
     this.onerror = null;
     this.guest_token = null;
     this.failed_transfer_restart = false;
+    this.uploader = null;
 
+    /**
+     * Max count divergence (the maximum chunk count a process can be late over the global average)
+     */
+    this.watchdog_max_count_divergence = 7;
+    
+    /**
+     * Max duration divergence (the maximum ratio between a process's current upload time and the global average)
+     */
+    this.watchdog_max_duration_divergence = 5;
+    
+    /**
+     * Max automatic retries
+     */
+    this.max_automatic_retries = 3;
+    
+    this.watchdog_processes = {};
+    
     /**
      * Add a file to the file list
      * 
@@ -338,7 +356,7 @@ window.filesender.transfer = function() {
         if(!tracker) return;
         
         for(var i=0; i<tracker.files.length; i++) if(tracker.files[i].id == file.id) {
-            tracker.files[i].uploaded = file.uploaded;
+            tracker.files[i].uploaded = file.min_uploaded_offset ? file.min_uploaded_offset : file.uploaded;
             tracker.files[i].complete = file.complete;
         }
         
@@ -438,6 +456,98 @@ window.filesender.transfer = function() {
         return true;
     };
 
+    /**
+     * Register an uploading process
+     * 
+     * @param string id process identifier
+     */
+    this.registerProcessInWatchdog = function(id) {
+        this.watchdog_processes[id] = {
+            count: 0,
+            durations: [],
+            started: null
+        };
+    };
+    
+    /**
+     * Record chunk upload started from process
+     * 
+     * @param string id process identifier
+     */
+    this.recordUploadStartedInWatchdog = function(id) {
+        if(!(id in this.watchdog_processes)) this.registerProcessInWatchdog(id);
+        
+        this.watchdog_processes[id].started = (new Date()).getTime();
+    };
+    
+    /**
+     * Record chunk upload from process
+     * 
+     * @param string id process identifier
+     */
+    this.recordUploadedInWatchdog = function(id) {
+        if(!(id in this.watchdog_processes)) this.registerProcessInWatchdog(id);
+        
+        if(this.watchdog_processes[id].started == null) return;
+        
+        this.watchdog_processes[id].count++;
+        this.watchdog_processes[id].durations.push((new Date()).getTime() - this.watchdog_processes[id].started);
+        while(this.watchdog_processes[id].durations.length > 5) this.watchdog_processes[id].durations.shift();
+        
+        this.watchdog_processes[id].started = null;
+    };
+    
+    /**
+     * Look for stalled processes
+     */
+    this.getStalledProcesses = function() {
+        var stalled = [];
+        
+        // Compute average upload time and progress
+        var avg_count = 0;
+        var pcnt = 0;
+        var avg_duration = 0;
+        var dcnt = 0;
+        for(var id in this.watchdog_processes) {
+            pcnt++;
+            avg_count += this.watchdog_processes[id].count;
+            for(var i=0; i<this.watchdog_processes[id].durations.length; i++) {
+                avg_duration += this.watchdog_processes[id].durations[i];
+                dcnt++;
+            }
+        }
+        avg_count /= pcnt;
+        avg_duration /= dcnt;
+        
+        // Look for processes that seems "late"
+        for(var id in this.watchdog_processes) {
+            if(this.watchdog_processes[id].count < avg_count - this.watchdog_max_count_divergence) {
+                // Process is too late in terms of number of uploaded chunks
+                stalled.push(id);
+                continue;
+            }
+            
+            if(this.watchdog_processes[id].started == null) continue;
+            
+            var duration = (new Date()).getTime() - this.watchdog_processes[id].started;
+            
+            if(duration > avg_duration * this.watchdog_max_duration_divergence) {
+                // Process is too late in terms of number of upload duration
+                stalled.push(id);
+                continue;
+            }
+        }
+        
+        return stalled.length ? stalled : null;
+    };
+    
+    /**
+     * Reset watchdog
+     */
+    this.resetWatchdog = function() {
+        this.watchdog_processes = {};
+    };
+    
     /**
      * Report progress
      * 
@@ -582,6 +692,7 @@ window.filesender.transfer = function() {
                     filesender.terasender.start(transfer);
                 } else {
                     // Chunk by chunk upload
+                    transfer.registerProcessInWatchdog('main');
                     transfer.uploadChunk();
                 }
             } else {
@@ -641,12 +752,32 @@ window.filesender.transfer = function() {
     };
 
     /**
+     * Retry upload
+     */
+    this.retries = 0;
+    this.retry = function(manual) {
+        if(manual) this.retries = 0;
+        if(this.retries >= this.max_automatic_retries) return false;
+        this.retries++;
+        
+        if (filesender.config.terasender_enabled && filesender.supports.workers) {
+            filesender.terasender.retry();
+        } else {
+            this.uploader.abort();
+            this.files[this.file_index].uploaded -= filesender.config.upload_chunk_size;
+            this.uploadChunk();
+        }
+        
+        return true;
+    };
+
+    /**
      * Chunk by chunk upload
      */
     this.uploadChunk = function() {
         if (this.status == 'stopped')
             return;
-
+        
         var transfer = this;
         if (this.status == 'paused') {
             window.setTimeout(function() {
@@ -654,23 +785,27 @@ window.filesender.transfer = function() {
             }, 500);
             return;
         }
-
+        
         var file = this.files[this.file_index];
-
+        
         var slicer = file.blob.slice ? 'slice' : (file.blob.mozSlice ? 'mozSlice' : (file.blob.webkitSlice ? 'webkitSlice' : 'slice'));
-
+        
         var offset = file.uploaded;
         var blob = file.blob[slicer](offset, offset + filesender.config.upload_chunk_size);
-
+        
         file.uploaded += filesender.config.upload_chunk_size;
         if (file.uploaded > file.size)
             file.uploaded = file.size;
-
+        
         var last = file.uploaded >= file.size;
         if (last)
             this.file_index++;
-
-        filesender.client.putChunk(file, blob, offset, function() {
+        
+        this.recordUploadStartedInWatchdog('main');
+        
+        this.uploader = filesender.client.putChunk(file, blob, offset, function() {
+            transfer.recordUploadedInWatchdog('main');
+            
             if (last) { // File done
                 transfer.reportProgress(file, true);
             } else {
