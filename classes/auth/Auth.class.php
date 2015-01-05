@@ -70,6 +70,11 @@ class Auth {
     private static $isSP = false;
     
     /**
+     * Is the user authenticated through a local service ?
+     */
+    private static $isLocal = false;
+    
+    /**
      * Is the user authenticated as guest ?
      */
     private static $isGuest = false;
@@ -90,6 +95,10 @@ class Auth {
             }else if(AuthSP::isAuthenticated()) { // SP
                 self::$attributes = AuthSP::attributes();
                 self::$isSP = true;
+                
+            }else if(AuthLocal::isAuthenticated()) { // SP
+                self::$attributes = AuthLocal::attributes();
+                self::$isLocal = true;
                 
             }else if(Config::get('auth_remote_application_enabled')) { // Remote service
                 if(AuthRemoteApplication::isAuthenticated()) {
@@ -185,6 +194,15 @@ class Auth {
      */
     public static function isSP() {
         return self::$isSP;
+    }
+    
+    /**
+     * Tells if the user authenticated through a local service.
+     * 
+     * @return bool
+     */
+    public static function isLocal() {
+        return self::$isLocal;
     }
     
     /**
