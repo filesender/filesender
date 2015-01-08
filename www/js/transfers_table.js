@@ -85,9 +85,8 @@ $(function() {
                     if(!id || isNaN(id)) return;
                     
                     if(table.is('[data-mode="admin"]')) {
-                        var d = filesender.ui.chooseAction(['close_transfer', 'delete_transfer_nicely', 'delete_transfer_roughly'], function(choosen) {
+                        var d = filesender.ui.chooseAction(['delete_transfer_nicely', 'delete_transfer_roughly'], function(choosen) {
                             var messages = {
-                                close: 'transfer_closed',
                                 delete_nicely: 'transfer_deleted',
                                 delete: 'transfer_deleted'
                             };
@@ -98,7 +97,6 @@ $(function() {
                             };
                             
                             switch(choosen) {
-                                case 'close' : filesender.client.closeTransfer(id, done); break;
                                 case 'delete_nicely' : filesender.client.closeTransfer(id, function() {
                                     filesender.client.deleteTransfer(id, done);
                                 }); break;
