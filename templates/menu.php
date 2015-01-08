@@ -30,6 +30,17 @@ $pagemenuitem = function($page) use($current_page, $allowed_pages) {
     <div class="rightmenu">
         <ul>
         <?php
+            if(Config::get('lang_selector_enabled')) {
+                $opts = array();
+                $code = Lang::getCode();
+                foreach(Lang::getAvailableLanguages() as $id => $dfn) {
+                    $selected = ($id == $code) ? 'selected="selected"' : '';
+                    $opts[] = '<option value="'.$id.'" '.$selected.'>'.Utilities::sanitizeOutput($dfn['name']).'</option>';
+                }
+                
+                echo '<li><select id="language_selector">'.implode('', $opts).'</select></li>';
+            }
+            
             $helpurl = Config::get('helpURL');
             echo '<li><a href="'.($helpurl ? $helpurl : '#').'" id="topmenu_help">'.Lang::tr('help').'</a></li>';
             
