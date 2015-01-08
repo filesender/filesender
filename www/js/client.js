@@ -44,6 +44,9 @@ window.filesender.client = {
     // REST service base path
     base_path: null,
     
+    // Security token
+    security_token: null,
+    
     // Send a request to the webservice
     call: function(method, resource, data, callback, options) {
         if(!this.base_path) {
@@ -53,6 +56,9 @@ window.filesender.client = {
             path = path.join('/');
             this.base_path = path + '/rest.php';
         }
+        
+        if(this.security_token === null)
+            this.security_token = $('meta[name="security_token"]').attr('content');
         
         if(!options) options = {};
         
@@ -76,8 +82,10 @@ window.filesender.client = {
             delete options.error;
         }
         
-        var headers = [];
+        var headers = {};
         if(options.headers) headers = options.headers;
+        
+        if(this.security_token) headers['X-Filesender-Security-Token'] = this.security_token;
         
         var settings = {
             cache: false,

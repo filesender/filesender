@@ -109,6 +109,7 @@ window.filesender.terasender = {
         
         if(file.id != worker.file_id) {
             job.file = file;
+            job.security_token = filesender.client.security_token;
             worker.file_id = file.id;
         }
         worker.offset = file.uploaded;

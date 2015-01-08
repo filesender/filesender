@@ -39,6 +39,9 @@ if(!session_id()) {
     // start new session and mark it as valid because the system is a trusted source
     session_start();
     $_SESSION['valid'] = true;
+    
+    if(!array_key_exists('security_token', $_SESSION))
+        $_SESSION['security_token'] = uniqid().'_'.microtime(true);
 }
 
 

@@ -124,6 +124,15 @@ class RestServer {
                     
                     if(!$macl) throw new RestException('rest_method_not_allowed', 403);
                 }else if(!$acl) throw new RestException('rest_access_forbidden', 403);
+                
+            //} else if(Auth::isRemoteUser()) {
+                
+            } else if(in_array($method, array('post', 'put', 'delete'))) { // SP or Guest, lets do XSRF check
+                $stok = isset($_SESSION) ? $_SESSION['security_token'] : null;
+                $rtok = array_key_exists('HTTP_X_FILESENDER_SECURITY_TOKEN', $_SERVER) ? $_SERVER['HTTP_X_FILESENDER_SECURITY_TOKEN'] : null;
+                
+                if(is_null($stok) || is_null($rtok) || ($rtok != $stok))
+                    throw new RestException('rest_xsrf_token_did_not_match', 400, 'stok = '.$stok.' and rtok = '.$rtok);
             }
             
             // JSONP specifics
@@ -174,10 +183,10 @@ class RestServer {
             // Forward to handler
             $class = 'RestEndpoint'.ucfirst($endpoint);
             if(!file_exists(FILESENDER_BASE.'/classes/rest/endpoints/'.$class.'.class.php')) // Avoids CoreFileNotFoundException from Autoloader
-                throw new RestException('endpoint_not_implemented', 501);
+                throw new RestException('rest_endpoint_not_implemented', 501);
                 
             $handler = new $class($request);
-            if(!method_exists($handler, $method)) throw new RestException('method_not_implemented', 501);
+            if(!method_exists($handler, $method)) throw new RestException('rest_method_not_implemented', 501);
             
             $data = call_user_func_array(array($handler, $method), $path);
             

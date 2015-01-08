@@ -15,6 +15,11 @@ var terasender_worker = {
     },
     
     /**
+     * Security token (XSRF protection)
+     */
+    security_token: null,
+    
+    /**
      * Start the worker
      */
     start: function() {
@@ -37,6 +42,10 @@ var terasender_worker = {
     executeJob: function(job) {
         if('file' in job) { // Switch files
             this.job.file = job.file;
+        }
+        
+        if('security_token' in job) {
+            this.security_token = job.security_token;
         }
         
         this.job.chunk = job.chunk;
@@ -69,6 +78,7 @@ var terasender_worker = {
         xhr.setRequestHeader('X-Filesender-File-Size', file.size);
         xhr.setRequestHeader('X-Filesender-Chunk-Offset', job.chunk.start);
         xhr.setRequestHeader('X-Filesender-Chunk-Size', blob.size);
+        xhr.setRequestHeader('X-Filesender-Security-Token', this.security_token);
         
         try {
             xhr.send(blob);
