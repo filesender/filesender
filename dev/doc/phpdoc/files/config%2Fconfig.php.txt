@@ -1,0 +1,191 @@
+<?php
+
+// General settings
+$config['admin'] = 'etienne.meleard@renater.fr'; // UID's (from $config['saml_uid_attribute']) that have Administrator permissions
+$config['admin_email'] = 'etienne.meleard@renater.fr'; // Email address(es, separated by ,) to receive administrative messages (low disk space warning)
+$config['default_timezone'] = 'Europe/Paris';
+$config['default_language'] = 'en_AU'; // for available languages see the ./language directory
+$config['lang_userpref_enabled'] = true; // Take lang from user profile
+$config['lang_url_enabled'] = true; // Take lang from URL lang parameter (?lang=en for example)
+$config['lang_selector_enabled'] = true;
+$config['lang_save_url_switch_in_userpref'] = true;
+$config['site_name'] = 'FileSender'; // Friendly name used for your FileSender instance
+$config['site_name_in_header'] = false; // Should the site name be displayed in header
+$config['site_baseline'] = 'v2.0 in progress ...'; // Header baseline
+
+$config['email_from'] = 'sender'; // default no-reply email address 
+$config['email_reply_to'] = 'noreply@filesender.org'; // default no-reply email address 
+$config['email_return_path'] = 'feedback+<verp>@mac-em.renater.fr'; // default no-reply email address 
+
+// UI Settings
+$config['date_format'] = "d-m-Y"; // Format for displaying date/time, use PHP date() format string syntax
+$config['upload_box_default_size'] = 3; // Default number of files that fit in the upload box before a scroll-bar appears
+$config['upload_display_bits_per_sec'] = false;  // display upload as MBps or default to Mbps if false
+
+// auto complete - provides auto complete in input field for emails
+$config["autocomplete"] = true;
+$config["autocomplete_max_shown"] = 5; // "" - unlimited or integer, number of results displayed in autocomplete
+$config["max_stored_frequent_recipients"] = 30; // "" - unlimited or integer, number of results displayed in autocomplete
+
+// debug settings
+$config["debug"] = false; // Debug logging on/off (true/false)
+
+// saml settings
+$config['auth_sp_saml_email_attribute'] = 'mail'; // Attribute used for email address
+$config['auth_sp_saml_name_attribute'] = 'cn'; // Attribute used to get the user's name
+$config['auth_sp_saml_uid_attribute'] = 'eduPersonTargetedID'; // Attribute to uniquely identify the user
+$config['auth_sp_saml_authentication_source'] ='default-sp';
+$config['auth_sp_saml_simplesamlphp_location'] = '/Volumes/perso/dev/simplesamlphp/';
+
+// fake sp settings
+$config['auth_sp_type'] = 'fake';
+$config['auth_sp_fake_authenticated'] = true;
+$config['auth_sp_fake_uid'] = 'etienne.meleard@renater.fr';
+$config['auth_sp_fake_email'] = 'etienne.meleard@renater.fr';
+$config['auth_sp_fake_name'] = 'Etienne';
+
+// Terasender (fast upload) settings
+// - terasender (really fast uploads) uses html5 web workers to speed up file upload
+// - effectively providing multi-threaded faster uploads
+$config['terasender_enabled'] = true; // true/false
+$config['terasender_advanced'] = true; // true/false - terasender advanced - show advanced settings
+$config['terasender_chunk_size'] = 5 * 1024 * 1024;		// default (5) terasender chunk size
+$config['terasender_worker_count'] = 6;		// default (6) worker count
+$config['terasender_start_mode'] = 'multiple'; // "single" to start all workers on the first file, "multiple" to dispatch them on all files
+
+$config['site_url'] = 'http://localhost/filesender/'; // URL to Filesender
+$config['auth_sp_saml_simplesamlphp_url'] =  'http://localhost/simplesaml/';
+$config['site_logouturl'] = $config['site_url'] . '?s=logout';
+
+$config['force_ssl'] = false; // Always use SSL (true/false)
+
+// Support links
+$config['aboutURL'] = "";
+$config['helpURL'] = "";
+
+$config["db_type"] = "mysql";// pgsql or mysql
+$config['db_host'] = 'localhost';
+$config['db_database'] = 'filesender';
+$config['db_port'] = '3306';
+$config['db_charset'] = 'utf8';
+// database username and password
+$config['db_username'] = 'filesender';
+$config['db_password'] = 'yoursecretpassword';
+$config['db_table_prefix'] = 'new_';
+
+
+
+
+
+$config['auth_remote_application_enabled'] = true;
+$config['remote_applications'] = array(
+    'foo' => array(
+        'secret' => 'bar',
+        'isAdmin' => false,
+        'acl' => array(
+            '*' => true
+        )
+    )
+);
+
+$config['log_facilities'] = array(
+    array('type' => 'error_log'),
+    //array('type' => 'file', 'path' => '/tmp/', 'rotate' => 'daily', 'by_process' => true)
+    /*array('type' => 'callable', 'callback' => function($m) {
+        error_log('FOOO '.$m);
+    })*/
+    array('type' => 'file', 'path' => FILESENDER_BASE.'/log/')
+);
+
+$config['storage_type'] = 'filesystem';
+$config['storage_filesystem_path'] = '/Volumes/perso/dev/filesender/files/';
+$config['storage_usage_warning'] = 20; // as a percentage 20 = 20% space left on the storage drive
+
+$config['chunk_upload_security'] = 'key'; // "key" or "auth"
+
+$config['cache_scripts_and_styles'] = false;
+
+$config['disclose'] = array('version', 'upload_chunk_size', 'default_daysvalid', function() {
+    return array('foo' => 'bar');
+});
+
+$config['config_overrides'] = array(
+    'site_name_in_header' => 'bool',
+    'site_name' => array('type' => 'string', 'validator' => 'is_string'),
+    'terasender_start_mode' => array('single', 'multiple'),
+);
+
+$config['transfer_options'] = array(
+    'email_download_complete' => array(
+        'available' => true,
+        'advanced' => false,
+        'default' => true
+    ),
+    'email_upload_complete' => array(
+        'available' => true,
+        'advanced' => false,
+        'default' => false
+    ),
+    'enable_recipient_email_download_complete' => array(
+        'available' => true,
+        'advanced' => true,
+        'default' => true
+    ),
+    'email_daily_statistics' => array(
+        'available' => true,
+        'advanced' => true,
+        'default' => false
+    ),
+    'email_me_copies' => array(
+        'available' => true,
+        'advanced' => true,
+        'default' => false
+    ),
+    'email_report_on_closing' => array(
+        'available' => true,
+        'advanced' => false,
+        'default' => true
+    ),
+    'add_me_to_recipients' => array(
+        'available' => true,
+        'advanced' => false,
+        'default' => false
+    )
+);
+
+$config['guest_options'] = array(
+    'email_upload_started' => array(
+        'available' => true,
+        'advanced' => false,
+        'default' => false
+    ),
+    'email_upload_page_access' => array(
+        'available' => true,
+        'advanced' => false,
+        'default' => false
+    ),
+    'valid_only_one_time' => array(
+        'available' => true,
+        'advanced' => true,
+        'default' => false
+    ),
+    'does_not_expire' => array(
+        'available' => true,
+        'advanced' => true,
+        'default' => false
+    ),
+    'add_me_to_recipients' => array(
+        'available' => true,
+        'advanced' => true,
+        'default' => false
+    ),
+    'can_only_send_to_me' => array(
+        'available' => true,
+        'advanced' => false,
+        'default' => false
+    )
+);
+
+$config['report_format'] = ReportFormats::PDF;
+$config['auditlog_lifetime'] = 5;
+
