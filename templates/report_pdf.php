@@ -48,7 +48,10 @@ foreach($report->logs as $entry) {
     $lid = 'report_';
     if($report->target_type == 'Recipient')
         $lid .= 'recipient_';
-        
+    
+    if($entry->author_type == 'Guest')
+        $lid .= 'guest_';
+    
     $lid .= 'event_'.$entry->event;
     
     $action = Lang::tr($lid)->r(

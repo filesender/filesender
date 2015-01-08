@@ -1,7 +1,5 @@
 <div class="box">
-    <h1>{tr:site_splashead}</h1>
-    
-    {tr:site_splastext}
+    {tr:site_splash}
     
     <div class="logon">
         <?php

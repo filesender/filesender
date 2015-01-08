@@ -49,9 +49,9 @@
                 <?php
                 $items = array();
                 foreach(array_slice($transfer->recipients, 0, 3) as $recipient) {
-                    $email = $recipient->email;
-                    if(strlen($email) > 28) $email = substr($email, 0, 25).'...';
-                    $items[] = '<span title="'.Utilities::sanitizeOutput($recipient->email).'">'.Utilities::sanitizeOutput($email).'</span>';
+                    $who = in_array($recipient->email, Auth::user()->email_addresses) ? Lang::tr('me') : $recipient->email;
+                    $who = explode('@', $who)[0];
+                    $items[] = '<abbr title="'.Utilities::sanitizeOutput($recipient->email).'">'.Utilities::sanitizeOutput($who).'</abbr>';
                 }
                 
                 if(count($transfer->recipients) > 3)
@@ -117,6 +117,7 @@
                     </div>
                     <div class="options">
                         {tr:options} :
+                        <?php if(count($transfer->options)) { ?>
                         <ul class="options">
                             <li>
                             <?php echo implode('</li><li>', array_map(function($o) {
@@ -124,6 +125,7 @@
                             }, $transfer->options)) ?>
                             </li>
                         </ul>
+                        <?php } else echo Lang::tr('none') ?>
                     </div>
                     <div class="transfer_id">
                         {tr:transfer_id} : <?php echo $transfer->id ?>
@@ -135,12 +137,22 @@
                     
                     <?php foreach($transfer->recipients as $recipient) { ?>
                         <div class="recipient" data-id="<?php echo $recipient->id ?>" data-email="<?php echo Utilities::sanitizeOutput($recipient->email) ?>" data-errors="<?php echo count($recipient->errors) ? '1' : '' ?>">
-                            <?php echo Utilities::sanitizeOutput($recipient->email) ?>
-                            <?php if($recipient->errors) echo '<span class="errors">'.implode(', ', array_map(function($type) {
-                                return Lang::tr('recipient_error_'.$type);
-                            }, array_unique(array_map(function($error) {
-                                return $error->type;
-                            }, $recipient->errors)))).'</span>' ?>
+                            <abbr title="<?php echo Utilities::sanitizeOutput($recipient->email) ?>">
+                            <?php
+                                $who = in_array($recipient->email, Auth::user()->email_addresses) ? Lang::tr('me') : $recipient->email;
+                                $who = explode('@', $who)[0];
+                                echo Utilities::sanitizeOutput($who);
+                            ?>
+                            </abbr>
+                            
+                            <?php
+                                if($recipient->errors) echo '<span class="errors">'.implode(', ', array_map(function($type) {
+                                    return Lang::tr('recipient_error_'.$type);
+                                }, array_unique(array_map(function($error) {
+                                    return $error->type;
+                                }, $recipient->errors)))).'</span>'
+                            ?>
+                            
                             : <?php echo count($recipient->downloads) ?> {tr:downloads}
                         </div>
                     <?php } ?>

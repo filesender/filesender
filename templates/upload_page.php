@@ -61,9 +61,13 @@
                     <div class="fieldcontainer">
                         <label for="to" class="mandatory">{tr:to} :</label>
                         
+                        <?php if(Auth::isGuest() && AuthGuest::getGuest()->hasOption(GuestOptions::CAN_ONLY_SEND_TO_ME)) { ?>
+                        <?php echo AuthGuest::getGuest()->user_email ?>
+                        <?php } else { ?>
                         <div class="recipients"></div>
                         
                         <input name="to" id="to" type="text" title="{tr:email_separator_msg}" value="" placeholder="{tr:enter_to_email}" />
+                        <?php } ?>
                     </div>
                     
                     <div class="fieldcontainer">
@@ -94,8 +98,8 @@
                             $checked = $cfg['default'] ? 'checked="checked"' : '';
                             
                             echo '<div class="fieldcontainer">';
-                            echo '  <label for="'.$name.'">'.Lang::tr($name).'</label>';
                             echo '  <input name="'.$name.'" type="checkbox" '.$checked.' />';
+                            echo '  <label for="'.$name.'">'.Lang::tr($name).'</label>';
                             echo '</div>';
                         };
                     ?>
@@ -107,36 +111,23 @@
                             <input name="expires" type="text" autocomplete="off" title="{tr:dp_dateformat}" value="<?php echo Utilities::formatDate(Transfer::getDefaultExpire()) ?>"/>
                         </div>
                         
-                        <?php foreach(Transfer::availableOptions(false) as $name => $cfg) $displayoption($name, $cfg) ?>
+                        <?php if(!Auth::isGuest()) foreach(Transfer::availableOptions(false) as $name => $cfg) $displayoption($name, $cfg) ?>
                     </div>
                     
-                    <?php if(count(Transfer::availableOptions(true)) || (Config::get('terasender_enabled') && Config::get('terasender_advanced'))) { ?>
+                    <?php if((!Auth::isGuest() && count(Transfer::availableOptions(true))) || (Config::get('terasender_enabled') && Config::get('terasender_advanced'))) { ?>
                     <div class="fieldcontainer">
                         <a class="toggle_advanced_options" href="#">{tr:advanced_settings}</a>
                     </div>
                     
                     <div class="advanced_options">
-                        <?php foreach(Transfer::availableOptions(true) as $name => $cfg) $displayoption($name, $cfg) ?>
+                        <?php if(!Auth::isGuest()) foreach(Transfer::availableOptions(true) as $name => $cfg) $displayoption($name, $cfg) ?>
                         
                         <?php if (Config::get('terasender_enabled') && Config::get('terasender_advanced')) { ?>
                         <div class="fieldcontainer">
-                            <label for="chunksize">{tr:tera_chunksize}</label>
+                            <label for="workerCount">{tr:terasender_worker_count}</label>
                             
-                            <input id="chunksize" type="text" value="<?php echo Config::get('terasender_chunk_size') ?>"/>
+                            <input id="terasender_worker_count" type="text" value="<?php echo Config::get('terasender_worker_count') ?>"/>
                             <br />
-                        </div>
-                        
-                        <div class="fieldcontainer">
-                            <label for="workerCount">{tr:tera_worker_count}</label>
-                            
-                            <input id="workerCount" type="text" value="<?php echo Config::get('terasender_worker_count') ?>"/>
-                            <br />
-                        </div>
-                        
-                        <div class="fieldcontainer">
-                            <label for="jobsPerWorker">{tr:tera_jobs_per_workers}</label>
-                            
-                            <input id="jobsPerWorker" type="text" value="<?php echo Config::get('terasender_jobsPerWorker') ?>"/>
                         </div>
                         <?php } ?>
                     </div>
@@ -147,7 +138,7 @@
         
         <?php if (Config::get('AuP')) { ?>
         <div class="aup fieldcontainer box">
-            <label for="aup" title="{tr:_SHOWHIDE}">
+            <label for="aup" title="{tr:showhide}">
                 {tr:accepttoc} [<span>{tr:showhide}</span>]
             </label>
             
