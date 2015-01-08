@@ -30,7 +30,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-include dirname(dirname(__FILE__)).'/includes/init.php';
+include dirname(__FILE__).'/../../includes/init.php';
 
 /**
  * Create/upgrade Filesender's database
