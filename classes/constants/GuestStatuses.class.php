@@ -36,6 +36,7 @@
  */
 
 class GuestStatuses extends Enum {
+    const CREATED    = 'created';
     const AVAILABLE  = 'available';
     const CLOSED     = 'closed';
 }
