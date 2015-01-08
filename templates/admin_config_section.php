@@ -9,7 +9,7 @@
         <?php $isdefault = is_null($dfn['value']) ? '1' : '' ?>
         <?php $value = $isdefault ? $default : $dfn['value'] ?>
         <div class="parameter" data-key="<?php echo $key ?>" data-default="<?php echo is_bool($default) ? ($default ? '1' : '') : $default ?>" data-is-default="<?php echo $isdefault ?>">
-            <label for="<?php echo $key ?>"><?php echo Lang::tr('config_'.$key) ?></label>
+            <label for="<?php echo $key ?>"><?php echo $key ?></label>
             
             <?php if($dfn['type'] == 'string') { ?>
             <input type="text" name="<?php echo $key ?>" value="<?php echo $value ?>" />
