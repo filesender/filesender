@@ -184,7 +184,7 @@ filesender.ui.evalSendEnabled = function() {
 };
 
 filesender.ui.send = function() {
-    var options = [];
+    var options = {guest: [], transfer: []};
     
     var expires = filesender.ui.nodes.expires.datepicker('getDate').getTime() / 1000;
     
@@ -195,9 +195,10 @@ filesender.ui.send = function() {
     var subject = filesender.ui.nodes.subject.val();
     var message = filesender.ui.nodes.message.val();
     
-    for(var o in filesender.ui.nodes.options)
-        if(filesender.ui.nodes.options[o].is(':checked'))
-            options.push(o);
+    for(var c in filesender.ui.nodes.options)
+        for(var o in filesender.ui.nodes.options[c])
+        if(filesender.ui.nodes.options[c][o].is(':checked'))
+            options[c].push(o);
     
     var emails = filesender.ui.recipients.list;
     var sent = 0;
@@ -214,7 +215,7 @@ filesender.ui.send = function() {
 };
 
 $(function() {
-    var form = $('#creation_form');
+    var form = $('#send_voucher');
     var page = $('.guests_page');
     if(!page.length) return;
     
@@ -228,33 +229,41 @@ $(function() {
         subject: page.find('.invite_guest input[name="subject"]'),
         message: page.find('.invite_guest textarea[name="message"]'),
         expires: page.find('.invite_guest input[name="expires"]'),
-        options: {},
+        options: {guest: {}, transfer: {}},
         sendbutton: page.find('.invite_guest .send'),
     };
+    form.find('.guest_options input').each(function() {
+        var i = $(this);
+        filesender.ui.nodes.options.guest[i.attr('name')] = i;
+    });
+    form.find('.transfer_options input').each(function() {
+        var i = $(this);
+        filesender.ui.nodes.options.transfer[i.attr('name')] = i;
+    });
     
     filesender.ui.recipients.autocomplete();
     
     // Setup date picker
     $.datepicker.setDefaults({
-        closeText: lang.tr('DP_closeText').out(),
-        prevText: lang.tr('DP_prevText').out(),
-        nextText: lang.tr('DP_nextText').out(),
-        currentText: lang.tr('DP_currentText').out(),
+        closeText: lang.tr('dp_close_text').out(),
+        prevText: lang.tr('dp_prev_text').out(),
+        nextText: lang.tr('dp_next_text').out(),
+        currentText: lang.tr('dp_current_text').out(),
         
-        monthNames: lang.tr('DP_monthNames').values(),
-        monthNamesShort: lang.tr('DP_monthNamesShort').values(),
-        dayNames: lang.tr('DP_dayNames').values(),
-        dayNamesShort: lang.tr('DP_dayNamesShort').values(),
-        dayNamesMin: lang.tr('DP_dayNamesMin').values(),
+        monthNames: lang.tr('dp_month_names').values(),
+        monthNamesShort: lang.tr('dp_month_names_short').values(),
+        dayNames: lang.tr('dp_day_names').values(),
+        dayNamesShort: lang.tr('dp_day_names_short').values(),
+        dayNamesMin: lang.tr('dp_day_names_min').values(),
         
-        weekHeader: lang.tr('DP_weekHeader').out(),
-        dateFormat: lang.tr('DP_dateFormat').out(),
+        weekHeader: lang.tr('dp_week_header').out(),
+        dateFormat: lang.tr('dp_date_format').out(),
         
-        firstDay: parseInt(lang.tr('DP_firstDay').out()),
-        isRTL: lang.tr('DP_isRTL').out().match(/true/),
-        showMonthAfterYear: lang.tr('DP_showMonthAfterYear').out().match(/true/),
+        firstDay: parseInt(lang.tr('dp_first_day').out()),
+        isRTL: lang.tr('dp_is_rtl').out().match(/true/),
+        showMonthAfterYear: lang.tr('dp_show_month_after_year').out().match(/true/),
         
-        yearSuffix: lang.tr('DP_yearSuffix').out()
+        yearSuffix: lang.tr('dp_year_suffix').out()
     });
     
     // Bind recipients events
@@ -282,12 +291,6 @@ $(function() {
         filesender.ui.nodes.expires.datepicker('setDate', $(this).val());
     });
     
-    form.find('.basic_options input, .advanced_options input').each(function() {
-        var i = $(this);
-        filesender.ui.nodes.options[i.attr('name')] = i;
-    });
-
-
     // Make options label toggle checkboxes
     form.find('.basic_options label, .advanced_options label').on('click', function() {
         var checkbox = $(this).closest('.fieldcontainer').find(':checkbox');
@@ -296,7 +299,7 @@ $(function() {
     
     // Bind advanced options display toggle
     form.find('.toggle_advanced_options').on('click', function() {
-        $('.advanced_options').slideToggle();
+        $(this).closest('.options_box').find('.advanced_options').slideToggle();
         return false;
     });
     
