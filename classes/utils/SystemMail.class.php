@@ -41,12 +41,28 @@ class SystemMail extends ApplicationMail {
      * @param mixed $content Lang instance or subject as string
      */
     public function __construct($content = 'No subject') {
-        parent::_construct($content);
+        parent::__construct($content);
         
         $admins = Config::get('admin_email');
         if(!is_array($admins))
             $admins = array_filter(array_map('trim', explode(',', $admins)));
         
         foreach($admins as $email) $this->to($email);
+    }
+    
+    /**
+     * Quick translated sending
+     * 
+     * @param string $translation_id
+     * @param mixed ... additionnal translation variables
+     */
+    public static function quickSend($translation_id /*, ... */) {
+        $vars = array_slice(func_get_args(), 1);
+        
+        $tr = Lang::translateEmail($translation_id);
+        if($vars) $tr = call_user_func_array(array($tr, 'replace'), $vars);
+        
+        $mail = new self($tr);
+        $mail->send();
     }
 }
