@@ -43,6 +43,11 @@ class Lang {
     private static $translations = null;
     
     /**
+     * Loader lock
+     */
+    private static $loading = false;
+    
+    /**
      * Availabe languages
      */
     private static $available_languages = null;
@@ -136,12 +141,18 @@ class Lang {
             
             // URL/session given language
             if(Config::get('lang_url_enabled')) {
-                if(array_key_exists('lang', $_GET) && preg_match('`^[a-z]+(_.+)?$`', $_GET['lang'])) {
+                if(array_key_exists('lang', $_GET) && preg_match('`^[a-z]+(-.+)?$`', $_GET['lang'])) {
                     $code = self::realCode($_GET['lang']);
-                    if($code) $_SESSION['lang'] = $code;
+                    if($code) {
+                        if(isset($_SESSION)) $_SESSION['lang'] = $code;
+                        if(Config::get('lang_save_url_switch_in_userpref') && Auth::isAuthenticated()) {
+                            Auth::user()->lang = $code;
+                            Auth::user()->save();
+                        }
+                    }
                 }
                 
-                if(array_key_exists('lang', $_SESSION)) {
+                if(isset($_SESSION) && array_key_exists('lang', $_SESSION)) {
                     if(!in_array($_SESSION['lang'], $stack))
                         $stack[] = $_SESSION['lang'];
                 }
@@ -268,7 +279,9 @@ class Lang {
      * Load dictionaries
      */
     private static function loadDictionaries() {
-        if(!is_null(self::$translations)) return;
+        if(!is_null(self::$translations) || self::$loading) return;
+        
+        self::$loading = true;
         
         $stack = self::getCodeStack();
         
@@ -285,6 +298,8 @@ class Lang {
             'main' => self::loadDictionary($stack['main']),
             'fallback' => $fallback
         );
+        
+        self::$loading = false;
     }
     
     /**
@@ -297,6 +312,8 @@ class Lang {
     public static function translate($id) {
         self::loadDictionaries();
         $id = self::cleanId($id);
+        
+        if(self::$loading) return new Translation('{'.$id.'}', false);
         
         $src = '';
         if(array_key_exists($id, self::$translations['main'])) {
