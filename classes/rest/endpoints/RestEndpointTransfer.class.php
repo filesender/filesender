@@ -252,12 +252,30 @@ class RestEndpointTransfer extends RestEndpoint {
             if($maxsize && $size > $maxsize)
                 throw new TransferMaximumSizeExceededException($size, $maxsize);
             
-            $transfer = Transfer::create($data->expires, $data->from);
+            $guest = null;
+            if(Auth::isGuest()) $guest = AuthGuest::getGuest();
+            
+            $transfer = Transfer::create($data->expires, $guest ? $guest->email : $data->from);
             
             if($data->subject) $transfer->subject = $data->subject;
             if($data->message) $transfer->message = $data->message;
             
-            $transfer->options = $data->options;
+            // Guest owner decides about guest options
+            if($guest) {
+                $transfer->options = $guest->transfer_options;
+            
+            } else {
+                $options = array();
+                foreach(Transfer::allOptions() as $name => $dfn)  {
+                    $value = $dfn['default'];
+                    
+                    if($dfn['available'])
+                        $value = in_array($name, $data->options);
+                    
+                    if($value) $options[] = $name;
+                }
+                $transfer->options = $options;
+            }
             
             $transfer->save(); // Mandatory to add recipients and files
             
@@ -277,7 +295,12 @@ class RestEndpointTransfer extends RestEndpoint {
                 }
             }
             
-            foreach($data->recipients as $email) $transfer->addRecipient($email);
+            if($guest && $guest->hasOption(GuestOptions::CAN_ONLY_SEND_TO_ME)) {
+                $transfer->addRecipient($guest->user_email);
+            } else {
+                foreach($data->recipients as $email)
+                    $transfer->addRecipient($email);
+            }
             
             // Here we have everything (uids ...) to check if the transfer fits in storage
             if(!Storage::canStore($transfer)) {
