@@ -32,15 +32,21 @@
 
 require_once(dirname(dirname(__FILE__)).'/includes/init.php');
 
-Logger::info('Cron cleanup task started');
+Logger::info('Cron started');
+
+
+Logger::info('Cleanup task started');
 
 // Close expired transfers
 foreach(Transfer::allExpired() as $transfer)
     $transfer->close();
 
 // Close expired guests
-foreach(Guest::allExpired() as $guest)
+foreach(Guest::allExpired() as $guest) {
+    if($guest->hasOption(GuestOptions::DOES_NOT_EXPIRE)) continue;
+    
     $guest->close();
+}
 
 // Delete expired audit logs and related data
 foreach(Transfer::allExpiredAuditlogs() as $transfer) {
@@ -48,14 +54,14 @@ foreach(Transfer::allExpiredAuditlogs() as $transfer) {
     $transfer->delete();
 }
 
-Logger::info('Cron cleanup complete');
+Logger::info('Cleanup complete');
 
 
 
 Logger::info('Guest accesses reporting started');
 
 foreach(Guest::allAvailable() as $guest) {
-    if(!$guest->hasOption(GuestOptions::EMAIL_GUEST_ACCESS_UPLOAD_PAGE)) continue;
+    if(!$guest->hasOption(GuestOptions::EMAIL_UPLOAD_PAGE_ACCESS)) continue;
     
     if(!$guest->last_activity || $guest->last_activity < strtotime('yesterday')) continue;
     
@@ -75,4 +81,26 @@ if(in_array($report, array('daily', 'asap_then_daily'))) {
         TrackingEvent::reportSet($set);
     
     Logger::info('Bounces reporting complete');
+}
+
+
+
+$level = Config::get('storage_usage_warning');
+if((int)$level) {
+    Logger::info('Usage warning started');
+    
+    $usage = Storage::getUsage();
+    
+    $block_warnings = array();
+    if($usage) foreach($usage as $fs => $u) {
+        if($u['free_space'] > $level * $u['total_space'] / 100) continue;
+        $u['free_space_pct'] = floor(100 * $u['free_space'] / $u['total_space']);
+        $u['filesystem'] = $fs;
+        $block_warnings[] = $u;
+    }
+    
+    if(count($block_warnings))
+        SystemMail::quickSend('storage_usage_warning', array('warnings' => $block_warnings));
+    
+    Logger::info('Usage warning complete');
 }
