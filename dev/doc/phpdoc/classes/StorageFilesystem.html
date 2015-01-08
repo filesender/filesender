@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <meta charset="utf-8"/>
+    <title>API Documentation</title>
+    <meta name="author" content=""/>
+    <meta name="description" content=""/>
+
+    <link href="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+    <link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/prism.css" rel="stylesheet" media="all"/>
+    <link href="../css/template.css" rel="stylesheet" media="all"/>
+    
+    <!--[if lt IE 9]>
+    <script src="https://html5shim.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>
+    <![endif]-->
+    <script src="https://code.jquery.com/jquery-1.11.0.min.js" type="text/javascript"></script>
+    <script src="https://code.jquery.com/ui/1.10.4/jquery-ui.min.js" type="text/javascript"></script>
+    <script src="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+    <script src="../js/jquery.smooth-scroll.js"></script>
+    <script src="../js/prism.min.js"></script>
+    <!-- TODO: Add http://jscrollpane.kelvinluck.com/ to style the scrollbars for browsers not using webkit-->
+    <script type="text/javascript">
+    function loadExternalCodeSnippets() {
+        Array.prototype.slice.call(document.querySelectorAll('pre[data-src]')).forEach(function (pre) {
+            var src = pre.getAttribute('data-src');
+            var extension = (src.match(/\.(\w+)$/) || [, ''])[1];
+            var language = 'php';
+
+            var code = document.createElement('code');
+            code.className = 'language-' + language;
+
+            pre.textContent = '';
+
+            code.textContent = 'Loading…';
+
+            pre.appendChild(code);
+
+            var xhr = new XMLHttpRequest();
+
+            xhr.open('GET', src, true);
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4) {
+
+                    if (xhr.status < 400 && xhr.responseText) {
+                        code.textContent = xhr.responseText;
+
+                        Prism.highlightElement(code);
+                    }
+                    else if (xhr.status >= 400) {
+                        code.textContent = '✖ Error ' + xhr.status + ' while fetching file: ' + xhr.statusText;
+                    }
+                    else {
+                        code.textContent = '✖ Error: File does not exist or is empty';
+                    }
+                }
+            };
+
+            xhr.send(null);
+        });
+    }
+
+    $(document).ready(function(){
+        loadExternalCodeSnippets();
+    });
+    $('#source-view').on('shown', function () {
+        loadExternalCodeSnippets();
+    })
+</script>
+
+    <link rel="shortcut icon" href="../images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="../images/apple-touch-icon.png"/>
+    <link rel="apple-touch-icon" sizes="72x72" href="../images/apple-touch-icon-72x72.png"/>
+    <link rel="apple-touch-icon" sizes="114x114" href="../images/apple-touch-icon-114x114.png"/>
+</head>
+<body>
+
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <i class="icon-ellipsis-vertical"></i>
+            </a>
+            <a class="brand" href="../index.html">API Documentation</a>
+
+            <div class="nav-collapse">
+                <ul class="nav pull-right">
+                                        <li class="dropdown" id="charts-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Charts <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../graphs/class.html">
+                                    <i class="icon-list-alt"></i>&#160;Class hierarchy diagram
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown" id="reports-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Reports <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../reports/errors.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">309</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/markers.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">7</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/deprecated.html">
+                                                                                                            <i class="icon-list-alt"></i>&#160;Deprecated <span class="label label-info pull-right">0</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--<div class="go_to_top">-->
+    <!--<a href="#___" style="color: inherit">Back to top&#160;&#160;<i class="icon-upload icon-white"></i></a>-->
+    <!--</div>-->
+</div>
+
+<div id="___" class="container-fluid">
+        <section class="row-fluid">
+        <div class="span2 sidebar">
+                                <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-1278039715"></a>
+                                <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
+            </div>
+            <div id="namespace-1278039715" class="accordion-body collapse in">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/ApplicationMail.html">ApplicationMail</a></li>
+                                                    <li class="class"><a href="../classes/AuditLog.html">AuditLog</a></li>
+                                                    <li class="class"><a href="../classes/AuditLogNotEnabledException.html">AuditLogNotEnabledException</a></li>
+                                                    <li class="class"><a href="../classes/AuditLogNotFoundException.html">AuditLogNotFoundException</a></li>
+                                                    <li class="class"><a href="../classes/AuditlogTest.html">AuditlogTest</a></li>
+                                                    <li class="class"><a href="../classes/AuditLogUnknownEventException.html">AuditLogUnknownEventException</a></li>
+                                                    <li class="class"><a href="../classes/Auth.html">Auth</a></li>
+                                                    <li class="class"><a href="../classes/AuthAuthenticationNotFoundException.html">AuthAuthenticationNotFoundException</a></li>
+                                                    <li class="class"><a href="../classes/AuthGuest.html">AuthGuest</a></li>
+                                                    <li class="class"><a href="../classes/AuthLocal.html">AuthLocal</a></li>
+                                                    <li class="class"><a href="../classes/AuthRemoteApplication.html">AuthRemoteApplication</a></li>
+                                                    <li class="class"><a href="../classes/AuthRemoteApplicationSignatureCheckFailedException.html">AuthRemoteApplicationSignatureCheckFailedException</a></li>
+                                                    <li class="class"><a href="../classes/AuthRemoteApplicationTooLateException.html">AuthRemoteApplicationTooLateException</a></li>
+                                                    <li class="class"><a href="../classes/AuthRemoteApplicationUknownApplicationException.html">AuthRemoteApplicationUknownApplicationException</a></li>
+                                                    <li class="class"><a href="../classes/AuthRemoteRequest.html">AuthRemoteRequest</a></li>
+                                                    <li class="class"><a href="../classes/AuthSP.html">AuthSP</a></li>
+                                                    <li class="class"><a href="../classes/AuthSPAuthenticationNotFoundException.html">AuthSPAuthenticationNotFoundException</a></li>
+                                                    <li class="class"><a href="../classes/AuthSPBadAttributeException.html">AuthSPBadAttributeException</a></li>
+                                                    <li class="class"><a href="../classes/AuthSPFake.html">AuthSPFake</a></li>
+                                                    <li class="class"><a href="../classes/AuthSPMissingAttributeException.html">AuthSPMissingAttributeException</a></li>
+                                                    <li class="class"><a href="../classes/AuthSPMissingDelegationClassException.html">AuthSPMissingDelegationClassException</a></li>
+                                                    <li class="class"><a href="../classes/AuthSPSaml.html">AuthSPSaml</a></li>
+                                                    <li class="class"><a href="../classes/AuthSPShibboleth.html">AuthSPShibboleth</a></li>
+                                                    <li class="class"><a href="../classes/Autoloader.html">Autoloader</a></li>
+                                                    <li class="class"><a href="../classes/BadEmailException.html">BadEmailException</a></li>
+                                                    <li class="class"><a href="../classes/BadExpireException.html">BadExpireException</a></li>
+                                                    <li class="class"><a href="../classes/BadIPFormatException.html">BadIPFormatException</a></li>
+                                                    <li class="class"><a href="../classes/BadLangCodeException.html">BadLangCodeException</a></li>
+                                                    <li class="class"><a href="../classes/BadSizeFormatException.html">BadSizeFormatException</a></li>
+                                                    <li class="class"><a href="../classes/CommonDatabaseTestCase.html">CommonDatabaseTestCase</a></li>
+                                                    <li class="class"><a href="../classes/CommonUnitTestCase.html">CommonUnitTestCase</a></li>
+                                                    <li class="class"><a href="../classes/Config.html">Config</a></li>
+                                                    <li class="class"><a href="../classes/Config.html">Config</a></li>
+                                                    <li class="class"><a href="../classes/ConfigBadParameterException.html">ConfigBadParameterException</a></li>
+                                                    <li class="class"><a href="../classes/ConfigFileMissingException.html">ConfigFileMissingException</a></li>
+                                                    <li class="class"><a href="../classes/ConfigMissingParameterException.html">ConfigMissingParameterException</a></li>
+                                                    <li class="class"><a href="../classes/ConfigOverrideCannotSaveException.html">ConfigOverrideCannotSaveException</a></li>
+                                                    <li class="class"><a href="../classes/ConfigOverrideDisabledException.html">ConfigOverrideDisabledException</a></li>
+                                                    <li class="class"><a href="../classes/ConfigOverrideNotAllowedException.html">ConfigOverrideNotAllowedException</a></li>
+                                                    <li class="class"><a href="../classes/ConfigOverrideValidationFailedException.html">ConfigOverrideValidationFailedException</a></li>
+                                                    <li class="class"><a href="../classes/CoreClassNotFoundException.html">CoreClassNotFoundException</a></li>
+                                                    <li class="class"><a href="../classes/CoreFileNotFoundException.html">CoreFileNotFoundException</a></li>
+                                                    <li class="class"><a href="../classes/Database.html">Database</a></li>
+                                                    <li class="class"><a href="../classes/DatabaseMysql.html">DatabaseMysql</a></li>
+                                                    <li class="class"><a href="../classes/DatabasePgsql.html">DatabasePgsql</a></li>
+                                                    <li class="class"><a href="../classes/DBErrors.html">DBErrors</a></li>
+                                                    <li class="class"><a href="../classes/DBI.html">DBI</a></li>
+                                                    <li class="class"><a href="../classes/DBIConnexionException.html">DBIConnexionException</a></li>
+                                                    <li class="class"><a href="../classes/DBIConnexionMissingParameterException.html">DBIConnexionMissingParameterException</a></li>
+                                                    <li class="class"><a href="../classes/DBIStatement.html">DBIStatement</a></li>
+                                                    <li class="class"><a href="../classes/DBIUsageException.html">DBIUsageException</a></li>
+                                                    <li class="class"><a href="../classes/DBObject.html">DBObject</a></li>
+                                                    <li class="class"><a href="../classes/DBObjectTest.html">DBObjectTest</a></li>
+                                                    <li class="class"><a href="../classes/DBOperations.html">DBOperations</a></li>
+                                                    <li class="class"><a href="../classes/DBsTest.html">DBsTest</a></li>
+                                                    <li class="class"><a href="../classes/DetailedException.html">DetailedException</a></li>
+                                                    <li class="class"><a href="../classes/Disclosed.html">Disclosed</a></li>
+                                                    <li class="class"><a href="../classes/DownloadBadFilesIDsException.html">DownloadBadFilesIDsException</a></li>
+                                                    <li class="class"><a href="../classes/DownloadBadTokenFormatException.html">DownloadBadTokenFormatException</a></li>
+                                                    <li class="class"><a href="../classes/DownloadInvalidRangeException.html">DownloadInvalidRangeException</a></li>
+                                                    <li class="class"><a href="../classes/DownloadMissingFilesIDsException.html">DownloadMissingFilesIDsException</a></li>
+                                                    <li class="class"><a href="../classes/DownloadMissingTokenException.html">DownloadMissingTokenException</a></li>
+                                                    <li class="class"><a href="../classes/Enum.html">Enum</a></li>
+                                                    <li class="class"><a href="../classes/ErrorTypes.html">ErrorTypes</a></li>
+                                                    <li class="class"><a href="../classes/FeedbackMail.html">FeedbackMail</a></li>
+                                                    <li class="class"><a href="../classes/FeedbackMailHeaders.html">FeedbackMailHeaders</a></li>
+                                                    <li class="class"><a href="../classes/FeedbackMailPart.html">FeedbackMailPart</a></li>
+                                                    <li class="class"><a href="../classes/File.html">File</a></li>
+                                                    <li class="class"><a href="../classes/FileBadHashException.html">FileBadHashException</a></li>
+                                                    <li class="class"><a href="../classes/FileChunkOutOfBoundsException.html">FileChunkOutOfBoundsException</a></li>
+                                                    <li class="class"><a href="../classes/FileExtensionNotAllowedException.html">FileExtensionNotAllowedException</a></li>
+                                                    <li class="class"><a href="../classes/FileNotFoundException.html">FileNotFoundException</a></li>
+                                                    <li class="class"><a href="../classes/FilesenderRestClient.html">FilesenderRestClient</a></li>
+                                                    <li class="class"><a href="../classes/FileTest.html">FileTest</a></li>
+                                                    <li class="class"><a href="../classes/GlobalConstants.html">GlobalConstants</a></li>
+                                                    <li class="class"><a href="../classes/Guest.html">Guest</a></li>
+                                                    <li class="class"><a href="../classes/GuestBadStatusException.html">GuestBadStatusException</a></li>
+                                                    <li class="class"><a href="../classes/GuestNotFoundException.html">GuestNotFoundException</a></li>
+                                                    <li class="class"><a href="../classes/GuestOptions.html">GuestOptions</a></li>
+                                                    <li class="class"><a href="../classes/GuestStatuses.html">GuestStatuses</a></li>
+                                                    <li class="class"><a href="../classes/GUI.html">GUI</a></li>
+                                                    <li class="class"><a href="../classes/GUIUnknownAdminSectionException.html">GUIUnknownAdminSectionException</a></li>
+                                                    <li class="class"><a href="../classes/InvalidAddressFormatException.html">InvalidAddressFormatException</a></li>
+                                                    <li class="class"><a href="../classes/InvalidRecipientException.html">InvalidRecipientException</a></li>
+                                                    <li class="class"><a href="../classes/Lang.html">Lang</a></li>
+                                                    <li class="class"><a href="../classes/LegacyUploadProgress.html">LegacyUploadProgress</a></li>
+                                                    <li class="class"><a href="../classes/LogEventTypes.html">LogEventTypes</a></li>
+                                                    <li class="class"><a href="../classes/Logger.html">Logger</a></li>
+                                                    <li class="class"><a href="../classes/LoggingException.html">LoggingException</a></li>
+                                                    <li class="class"><a href="../classes/LogLevels.html">LogLevels</a></li>
+                                                    <li class="class"><a href="../classes/Mail.html">Mail</a></li>
+                                                    <li class="class"><a href="../classes/MailAddressesTypes.html">MailAddressesTypes</a></li>
+                                                    <li class="class"><a href="../classes/Mailtest.html">Mailtest</a></li>
+                                                    <li class="class"><a href="../classes/Mime.html">Mime</a></li>
+                                                    <li class="class"><a href="../classes/NoAddressesFoundException.html">NoAddressesFoundException</a></li>
+                                                    <li class="class"><a href="../classes/ProcessTypes.html">ProcessTypes</a></li>
+                                                    <li class="class"><a href="../classes/PropertyAccessException.html">PropertyAccessException</a></li>
+                                                    <li class="class"><a href="../classes/ProtocolTypes.html">ProtocolTypes</a></li>
+                                                    <li class="class"><a href="../classes/Recipient.html">Recipient</a></li>
+                                                    <li class="class"><a href="../classes/RecipientNotFoundException.html">RecipientNotFoundException</a></li>
+                                                    <li class="class"><a href="../classes/Report.html">Report</a></li>
+                                                    <li class="class"><a href="../classes/ReportCannotWriteFileException.html">ReportCannotWriteFileException</a></li>
+                                                    <li class="class"><a href="../classes/ReportFormatNotAvailableException.html">ReportFormatNotAvailableException</a></li>
+                                                    <li class="class"><a href="../classes/ReportFormats.html">ReportFormats</a></li>
+                                                    <li class="class"><a href="../classes/ReportNothingFoundException.html">ReportNothingFoundException</a></li>
+                                                    <li class="class"><a href="../classes/ReportOwnershipRequiredException.html">ReportOwnershipRequiredException</a></li>
+                                                    <li class="class"><a href="../classes/ReportTest.html">ReportTest</a></li>
+                                                    <li class="class"><a href="../classes/ReportUnknownFormatException.html">ReportUnknownFormatException</a></li>
+                                                    <li class="class"><a href="../classes/ReportUnknownTargetTypeException.html">ReportUnknownTargetTypeException</a></li>
+                                                    <li class="class"><a href="../classes/RestAdminRequiredException.html">RestAdminRequiredException</a></li>
+                                                    <li class="class"><a href="../classes/RestAuthenticationRequiredException.html">RestAuthenticationRequiredException</a></li>
+                                                    <li class="class"><a href="../classes/RestBadParameterException.html">RestBadParameterException</a></li>
+                                                    <li class="class"><a href="../classes/RestEndpoint.html">RestEndpoint</a></li>
+                                                    <li class="class"><a href="../classes/RestEndpointConfig.html">RestEndpointConfig</a></li>
+                                                    <li class="class"><a href="../classes/RestEndpointEcho.html">RestEndpointEcho</a></li>
+                                                    <li class="class"><a href="../classes/RestEndpointFile.html">RestEndpointFile</a></li>
+                                                    <li class="class"><a href="../classes/RestEndpointGuest.html">RestEndpointGuest</a></li>
+                                                    <li class="class"><a href="../classes/RestEndpointInfo.html">RestEndpointInfo</a></li>
+                                                    <li class="class"><a href="../classes/RestEndpointLang.html">RestEndpointLang</a></li>
+                                                    <li class="class"><a href="../classes/RestEndpointLegacyuploadprogress.html">RestEndpointLegacyuploadprogress</a></li>
+                                                    <li class="class"><a href="../classes/RestEndpointRecipient.html">RestEndpointRecipient</a></li>
+                                                    <li class="class"><a href="../classes/RestEndpointTransfer.html">RestEndpointTransfer</a></li>
+                                                    <li class="class"><a href="../classes/RestEndpointUser.html">RestEndpointUser</a></li>
+                                                    <li class="class"><a href="../classes/RestException.html">RestException</a></li>
+                                                    <li class="class"><a href="../classes/RestInput.html">RestInput</a></li>
+                                                    <li class="class"><a href="../classes/RestMissingParameterException.html">RestMissingParameterException</a></li>
+                                                    <li class="class"><a href="../classes/RestOwnershipRequiredException.html">RestOwnershipRequiredException</a></li>
+                                                    <li class="class"><a href="../classes/RestRequest.html">RestRequest</a></li>
+                                                    <li class="class"><a href="../classes/RestSanityCheckFailedException.html">RestSanityCheckFailedException</a></li>
+                                                    <li class="class"><a href="../classes/RestServer.html">RestServer</a></li>
+                                                    <li class="class"><a href="../classes/RestUtilities.html">RestUtilities</a></li>
+                                                    <li class="class"><a href="../classes/StatLog.html">StatLog</a></li>
+                                                    <li class="class"><a href="../classes/StatLogNotFoundException.html">StatLogNotFoundException</a></li>
+                                                    <li class="class"><a href="../classes/StatLogUnknownEventException.html">StatLogUnknownEventException</a></li>
+                                                    <li class="class"><a href="../classes/StorableException.html">StorableException</a></li>
+                                                    <li class="class"><a href="../classes/Storage.html">Storage</a></li>
+                                                    <li class="class"><a href="../classes/StorageChunkTooLargeException.html">StorageChunkTooLargeException</a></li>
+                                                    <li class="class"><a href="../classes/StorageFilesystem.html">StorageFilesystem</a></li>
+                                                    <li class="class"><a href="../classes/StorageFilesystemBadResolverOutputException.html">StorageFilesystemBadResolverOutputException</a></li>
+                                                    <li class="class"><a href="../classes/StorageFilesystemBadResolverTargetException.html">StorageFilesystemBadResolverTargetException</a></li>
+                                                    <li class="class"><a href="../classes/StorageFilesystemCannotCreatePathException.html">StorageFilesystemCannotCreatePathException</a></li>
+                                                    <li class="class"><a href="../classes/StorageFilesystemCannotDeleteException.html">StorageFilesystemCannotDeleteException</a></li>
+                                                    <li class="class"><a href="../classes/StorageFilesystemCannotReadException.html">StorageFilesystemCannotReadException</a></li>
+                                                    <li class="class"><a href="../classes/StorageFilesystemCannotResolveException.html">StorageFilesystemCannotResolveException</a></li>
+                                                    <li class="class"><a href="../classes/StorageFilesystemCannotWriteException.html">StorageFilesystemCannotWriteException</a></li>
+                                                    <li class="class"><a href="../classes/StorageFilesystemFileNotFoundException.html">StorageFilesystemFileNotFoundException</a></li>
+                                                    <li class="class"><a href="../classes/StorageFilesystemOutOfSpaceException.html">StorageFilesystemOutOfSpaceException</a></li>
+                                                    <li class="class"><a href="../classes/StorageNotEnoughSpaceLeftException.html">StorageNotEnoughSpaceLeftException</a></li>
+                                                    <li class="class"><a href="../classes/SystemMail.html">SystemMail</a></li>
+                                                    <li class="class"><a href="../classes/Template.html">Template</a></li>
+                                                    <li class="class"><a href="../classes/TemplateNotFoundException.html">TemplateNotFoundException</a></li>
+                                                    <li class="class"><a href="../classes/TrackingEvent.html">TrackingEvent</a></li>
+                                                    <li class="class"><a href="../classes/TrackingEventNotFoundException.html">TrackingEventNotFoundException</a></li>
+                                                    <li class="class"><a href="../classes/TrackingEventTypes.html">TrackingEventTypes</a></li>
+                                                    <li class="class"><a href="../classes/TrackingUnknownEventException.html">TrackingUnknownEventException</a></li>
+                                                    <li class="class"><a href="../classes/Transfer.html">Transfer</a></li>
+                                                    <li class="class"><a href="../classes/TransferBadStatusException.html">TransferBadStatusException</a></li>
+                                                    <li class="class"><a href="../classes/TransferExpiredException.html">TransferExpiredException</a></li>
+                                                    <li class="class"><a href="../classes/TransferMaximumSizeExceededException.html">TransferMaximumSizeExceededException</a></li>
+                                                    <li class="class"><a href="../classes/TransferNoFilesException.html">TransferNoFilesException</a></li>
+                                                    <li class="class"><a href="../classes/TransferNoRecipientsException.html">TransferNoRecipientsException</a></li>
+                                                    <li class="class"><a href="../classes/TransferNotAvailableException.html">TransferNotAvailableException</a></li>
+                                                    <li class="class"><a href="../classes/TransferNotFoundException.html">TransferNotFoundException</a></li>
+                                                    <li class="class"><a href="../classes/TransferOptions.html">TransferOptions</a></li>
+                                                    <li class="class"><a href="../classes/TransferStatuses.html">TransferStatuses</a></li>
+                                                    <li class="class"><a href="../classes/TransferTest.html">TransferTest</a></li>
+                                                    <li class="class"><a href="../classes/TransferTooManyFilesException.html">TransferTooManyFilesException</a></li>
+                                                    <li class="class"><a href="../classes/TransferTooManyRecipientsException.html">TransferTooManyRecipientsException</a></li>
+                                                    <li class="class"><a href="../classes/Translation.html">Translation</a></li>
+                                                    <li class="class"><a href="../classes/Upgrader.html">Upgrader</a></li>
+                                                    <li class="class"><a href="../classes/User.html">User</a></li>
+                                                    <li class="class"><a href="../classes/UserMissingUIDException.html">UserMissingUIDException</a></li>
+                                                    <li class="class"><a href="../classes/UserNotFoundException.html">UserNotFoundException</a></li>
+                                                    <li class="class"><a href="../classes/Utilities.html">Utilities</a></li>
+                                                    <li class="class"><a href="../classes/UtilitiesTest.html">UtilitiesTest</a></li>
+                                                    <li class="class"><a href="../classes/UtilitiesUidGeneratorBadUnicityCheckerException.html">UtilitiesUidGeneratorBadUnicityCheckerException</a></li>
+                                                    <li class="class"><a href="../classes/UtilitiesUidGeneratorTriedTooMuchException.html">UtilitiesUidGeneratorTriedTooMuchException</a></li>
+                                                    <li class="class"><a href="../classes/Version.html">Version</a></li>
+                                                    <li class="class"><a href="../classes/Zipper.html">Zipper</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        </div>
+    </section>
+    <section class="row-fluid">
+        <div class="span10 offset2">
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <nav>
+                                                <a href="../namespaces/default.html">\</a> <i class="icon-level-up"></i>
+                                            </nav>
+                    <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal"><i class="icon-code"></i></a>
+
+                    <h1><small>\</small>StorageFilesystem</h1>
+                    <p><em>Gives access to a file on the filesystem</em></p>
+                    
+
+                    <section id="summary">
+                        <h2>Summary</h2>
+                        <section class="row-fluid heading">
+                            <section class="span4">
+                                <a href="#methods">Methods</a>
+                            </section>
+                            <section class="span4">
+                                <a href="#properties">Properties</a>
+                            </section>
+                            <section class="span4">
+                                <a href="#constants">Constants</a>
+                            </section>
+                        </section>
+                        <section class="row-fluid public">
+                            <section class="span4">
+                                                                    <a href="../classes/StorageFilesystem.html#method_canStore" class="">canStore()</a><br />
+                                                                    <a href="../classes/StorageFilesystem.html#method_getUsage" class="">getUsage()</a><br />
+                                                                    <a href="../classes/StorageFilesystem.html#method_readChunk" class="">readChunk()</a><br />
+                                                                    <a href="../classes/StorageFilesystem.html#method_writeChunk" class="">writeChunk()</a><br />
+                                                                    <a href="../classes/StorageFilesystem.html#method_deleteFile" class="">deleteFile()</a><br />
+                                                                    <a href="../classes/StorageFilesystem.html#method_supportsDigest" class="">supportsDigest()</a><br />
+                                                                    <a href="../classes/StorageFilesystem.html#method_getDigest" class="">getDigest()</a><br />
+                                                                    <a href="../classes/StorageFilesystem.html#method_supportsWholeFile" class="">supportsWholeFile()</a><br />
+                                                                    <a href="../classes/StorageFilesystem.html#method_storeWholeFile" class="">storeWholeFile()</a><br />
+                                                            </section>
+                            <section class="span4">
+                                                                    <em>No public properties found</em>
+                                                            </section>
+                            <section class="span4">
+                                                                    <em>No constants found</em>
+                                                            </section>
+                        </section>
+                        <section class="row-fluid protected">
+                            <section class="span4">
+                                                                    <em>No protected methods found</em>
+                                                            </section>
+                            <section class="span4">
+                                                                    <em>No protected properties found</em>
+                                                            </section>
+                            <section class="span4">
+                                <em>N/A</em>
+                            </section>
+                        </section>
+                        <section class="row-fluid private">
+                            <section class="span4">
+                                                                    <a href="../classes/StorageFilesystem.html#method_setup" class="">setup()</a><br />
+                                                                    <a href="../classes/StorageFilesystem.html#method_getFilesystem" class="">getFilesystem()</a><br />
+                                                                    <a href="../classes/StorageFilesystem.html#method_getHashedPaths" class="">getHashedPaths()</a><br />
+                                                                    <a href="../classes/StorageFilesystem.html#method_buildPath" class="">buildPath()</a><br />
+                                                            </section>
+                            <section class="span4">
+                                                                    <a href="../classes/StorageFilesystem.html#property_path" class="">$path</a><br />
+                                                                    <a href="../classes/StorageFilesystem.html#property_hashing" class="">$hashing</a><br />
+                                                            </section>
+                            <section class="span4">
+                                <em>N/A</em>
+                            </section>
+                        </section>
+                    </section>
+                </div>
+                <aside class="span4 detailsbar">
+                                        
+                    
+                    <dl>
+                        <dt>File</dt>
+                            <dd><a href="../files/classes.storage.StorageFilesystem.class.html"><div class="path-wrapper">classes/storage/StorageFilesystem.class.php</div></a></dd>
+                                                <dt>Package</dt>
+                            <dd><div class="namespace-wrapper">\Default</div></dd>
+                                                <dt>Class hierarchy</dt>
+                            <dd class="hierarchy">
+                                                                                                                                                                    <div class="namespace-wrapper">\StorageFilesystem</div>
+                            </dd>
+
+                        
+                        
+                        
+                        
+                                                                        </dl>
+                    <h2>Tags</h2>
+                    <table class="table table-condensed">
+                                            <tr><td colspan="2"><em>None found</em></td></tr>
+                                        </table>
+                </aside>
+            </div>
+
+                        
+                                    <a id="properties" name="properties"></a>
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <h2>Properties</h2>
+                </div>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_path" name="property_path" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$path</h3>
+                <pre class="signature">$path : </pre>
+                <p><em>Storage path</em></p>
+                
+
+                                <h4>Type</h4>
+                
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_hashing" name="property_hashing" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$hashing</h3>
+                <pre class="signature">$hashing : </pre>
+                <p><em>Folder hashing</em></p>
+                
+
+                                <h4>Type</h4>
+                
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                            
+                                    <a id="methods" name="methods"></a>
+            <div class="row-fluid">
+                <div class="span8 content class"><h2>Methods</h2></div>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_canStore" name="method_canStore" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">canStore()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">canStore(\Transfer <span class="argument">$transfer</span>) : boolean</pre>
+                <p><em>Checks if there is enough space to store a given transfer</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td><a href="../classes/Transfer.html">\Transfer</a></td>
+                                <td>$transfer </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    boolean
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getUsage" name="method_getUsage" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getUsage()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getUsage() : array</pre>
+                <p><em>Get space usage info</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>of usage data for individual sub-storages</p>
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_readChunk" name="method_readChunk" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">readChunk()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">readChunk(\File <span class="argument">$file</span>, \uint <span class="argument">$offset</span>, \uint <span class="argument">$length</span>) : mixed</pre>
+                <p><em>Reads chunk at offset</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td><a href="../classes/File.html">\File</a></td>
+                                <td>$file </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>\uint</td>
+                                <td>$offset </td>
+                                <td><p>offset in bytes</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>\uint</td>
+                                <td>$length </td>
+                                <td><p>length in bytes</p></td>
+                            </tr>
+                                            </table>
+                
+                                    <h4>Throws</h4>
+                    <dl>
+                                                    <dt>\StorageFilesystemFileNotFoundException</dt>
+                            <dd></dd>
+                                                    <dt>\StorageFilesystemCannotReadException</dt>
+                            <dd></dd>
+                                                                    </dl>
+                
+                                    <h4>Returns</h4>
+                    mixed
+                                            &mdash; <p>chunk data encoded as string or null if no chunk remaining</p>
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_writeChunk" name="method_writeChunk" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">writeChunk()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">writeChunk(\File <span class="argument">$file</span>, string <span class="argument">$data</span>, \uint <span class="argument">$offset</span>) : array</pre>
+                <p><em>Write a chunk of data to file at offset</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td><a href="../classes/File.html">\File</a></td>
+                                <td>$file </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$data </td>
+                                <td><p>the chunk data</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>\uint</td>
+                                <td>$offset </td>
+                                <td><p>offset in bytes</p></td>
+                            </tr>
+                                            </table>
+                
+                                    <h4>Throws</h4>
+                    <dl>
+                                                    <dt>\StorageFilesystemOutOfSpaceException</dt>
+                            <dd></dd>
+                                                    <dt>\StorageFilesystemCannotWriteException</dt>
+                            <dd></dd>
+                                                                    </dl>
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>with offset and written amount of bytes</p>
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_deleteFile" name="method_deleteFile" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">deleteFile()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">deleteFile(\File <span class="argument">$file</span>)</pre>
+                <p><em>Deletes a file</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td><a href="../classes/File.html">\File</a></td>
+                                <td>$file </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                                    <h4>Throws</h4>
+                    <dl>
+                                                    <dt>\StorageFilesystemCannotDeleteException</dt>
+                            <dd></dd>
+                                                                    </dl>
+                
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_supportsDigest" name="method_supportsDigest" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">supportsDigest()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">supportsDigest() : boolean</pre>
+                <p><em>Tells wether storage support file digests</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    boolean
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getDigest" name="method_getDigest" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getDigest()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getDigest(\File <span class="argument">$file</span>) : string</pre>
+                <p><em>Computes the digest of a file</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td><a href="../classes/File.html">\File</a></td>
+                                <td>$file </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>hex digest</p>
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_supportsWholeFile" name="method_supportsWholeFile" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">supportsWholeFile()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">supportsWholeFile() : boolean</pre>
+                <p><em>Tells wether storage support whole file</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    boolean
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_storeWholeFile" name="method_storeWholeFile" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">storeWholeFile()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">storeWholeFile(\File <span class="argument">$file</span>, string <span class="argument">$source_path</span>) : boolean</pre>
+                <p><em>Store a whole file</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td><a href="../classes/File.html">\File</a></td>
+                                <td>$file </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$source_path </td>
+                                <td><p>path to file data</p></td>
+                            </tr>
+                                            </table>
+                
+                                    <h4>Throws</h4>
+                    <dl>
+                                                    <dt>\StorageFilesystemOutOfSpaceException</dt>
+                            <dd></dd>
+                                                                    </dl>
+                
+                                    <h4>Returns</h4>
+                    boolean
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_setup" name="method_setup" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">setup()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">setup()</pre>
+                <p><em>Storage setup, loads options from config</em></p>
+                
+
+                
+                
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getFilesystem" name="method_getFilesystem" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">getFilesystem()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getFilesystem(mixed <span class="argument">$what</span>) : string</pre>
+                <p><em>Get a file&#039;s or a path&#039;s filesystem</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>mixed</td>
+                                <td>$what </td>
+                                <td><p>File or path</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getHashedPaths" name="method_getHashedPaths" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">getHashedPaths()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getHashedPaths( <span class="argument">$level</span>,  <span class="argument">$top</span>) : array</pre>
+                <p><em>Build possible hashed paths</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$level </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$top </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_buildPath" name="method_buildPath" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">buildPath()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">buildPath(\File <span class="argument">$file</span>) : string</pre>
+                <p><em>Build file storage path (without file uid)</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td><a href="../classes/File.html">\File</a></td>
+                                <td>$file </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>path</p>
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    </div>
+    </section>
+
+    <div id="source-view" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="source-view-label" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="source-view-label">StorageFilesystem.class.php</h3>
+        </div>
+        <div class="modal-body">
+            <pre data-src="../files/classes/storage/StorageFilesystem.class.php.txt" class="language-php line-numbers"></pre>
+        </div>
+    </div>
+
+    <footer class="row-fluid">
+        <section class="span10 offset2">
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <section class="row-fluid footer-sections">
+                        <section class="span4">
+                                                        <h1><i class="icon-code"></i></h1>
+                            <div>
+                                <ul>
+                                                                    </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-bar-chart"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../graphs/class.html">Class Hierarchy Diagram</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-pushpin"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../reports/errors.html">Errors</a></li>
+                                    <li><a href="../reports/markers.html">Markers</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                    </section>
+                </section>
+            </section>
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <hr />
+                    Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
+                    on 
+Warning: date_default_timezone_get(): It is not safe to rely on the system's timezone settings. You are *required* to use the date.timezone setting or the date_default_timezone_set() function. In case you used any of those methods and you are still getting this warning, you most likely misspelled the timezone identifier. We selected the timezone 'UTC' for now, but please set date.timezone to select your timezone. in /Volumes/perso/dev/phpDocumentor-2.6.1/phpDocumentor-2.6.1/vendor/twig/twig/lib/Twig/Extension/Core.php on line 89
+January 8th, 2015 at 17:04.
+                </section>
+            </section>
+        </section>
+    </footer>
+</div>
+
+</body>
+</html>
