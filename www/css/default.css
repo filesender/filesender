@@ -50,7 +50,7 @@ a {
 
 th, td {
     vertical-align: top;
-    padding: 0.25em;
+    padding: 0.5em;
 }
 
 abbr {
@@ -108,6 +108,11 @@ abbr {
     float: right;
 }
 
+#menu .rightmenu li {
+    border-left: 1px solid rgba(0, 0, 0, 0.35);
+    border-right: 1px solid rgba(255, 255, 255, 0.098);
+}
+
 #menu ul {
     /* [disabled]border-left: 1px solid rgba(0, 0, 0, 0.35); */
     /* [disabled]border-right: 1px solid rgba(255, 255, 255, 0.098); */
@@ -127,6 +132,13 @@ abbr {
 
 #menu a:hover, .current, #menu a:active {
     background-color: rgb(51,51,51);
+}
+
+#menu ul li select {
+    display: block;
+    font-style: normal;
+    font-weight: normal;
+    margin: 0.6em 1em;
 }
 
 #content {
@@ -328,6 +340,15 @@ table.list .date {
 .ui-dialog .ui-dialog-content.error {
     background: transparent url(../images/error.png) no-repeat 0.8em 0.5em;
     padding-left: 3em;
+}
+
+.ui-dialog .ui-dialog-content.error .details {
+    margin: 0.5em;
+    border: 1px dashed silver;
+}
+
+.ui-dialog .ui-dialog-content.error .details .detail {
+    margin: 0.25em;
 }
 
 .ui-dialog .ui-dialog-content.info {
@@ -732,6 +753,10 @@ table.transfers .transfer_details .recipients .recipient .errors .details {
     margin: 0 1em 0 0;
 }
 
+#send_voucher .advanced_options {
+    display: none;
+}
+
 
 /* Guests table */
 
@@ -925,4 +950,9 @@ table.guests .guest .to .errors .details {
 
 .admin_page .statistics_section .storage_usage_blocks {
     margin-top: 1em;
+}
+
+.admin_page .statistics_section .storage_usage.warning tr[data-metric="available"],
+.admin_page .statistics_section .storage_usage_blocks tr.warning {
+    background-color: #fcc;
 }
