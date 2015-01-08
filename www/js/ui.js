@@ -54,116 +54,6 @@ window.filesender.ui = {
     
     
     /**
-     * Validators for form fields
-     */
-    validators: {
-        email: /^[a-z0-9!#$%&'*+\/=?^_\`\{|\}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_\`\{|\}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+(?:[a-zA-Z]{2}|com|org|net|gov|mil|biz|info|mobi|name|aero|jobs|museum)$/i,
-        filled: function() { return (this.replace(/(^\s+|\s+$)/, '') != ''); },
-        int: /^[0-9]*$/,
-        float: /^[0-9]*(\.[0-9]+)?$/,
-        notzero: function() { return this && parseFloat(this) },
-    },
-    
-    /**
-     * Attach validator to form field
-     */
-    addValidator: function(what /*, tests ... */) {
-        var input = $(this);
-        if(!input.is(':input')) return;
-        
-        var validator = input.data('validator');
-        
-        if(!validator) validator = {
-            input: input,
-            tests: [],
-            
-            run: function() {
-                var value = this.input.val();
-                var errorselector = '.errorhint[for="' + this.input.attr('name') + '"]';
-                
-                for(var i=0; i<this.tests.length; i++) {
-                    var test = this.tests[i];
-                    var ok = true;
-                    var err = null;
-                    
-                    if(typeof test == 'string') {
-                        err = 'error_not_' + test;
-                        test = filesender.ui.validators[test];
-                    }
-                    
-                    if(test.test) { // Regexp
-                        ok = test.test(value);
-                    }else if(test.call) { // Function that throws or return error code
-                        try {
-                            err = test.call(this, value);
-                            if(!err) ok = true;
-                        } catch(e) {
-                            err = e;
-                            ok = false;
-                        }
-                    }
-                    
-                    if(!ok) {
-                        this.input.addClass('error');
-                        
-                        if(err) {
-                            if(typeof err == 'function') {
-                                err.call(this);
-                            }else if(!this.input.parent().find(errorselector + '[code="' + err + '"]').length) {
-                                var msg = err.match(/\s/) ? err : lang.tr(err);
-                                $('<span class="errorhint" />').attr({
-                                    for: this.input.attr('name'),
-                                    code: err
-                                }).html(msg).insertAfter(this.input);
-                            }
-                        }
-                        
-                        return false;
-                    }
-                }
-                
-                this.input.removeClass('error');
-                this.input.parent().find(errorselector).remove();
-                
-                return true;
-            }
-        };
-        
-        for(var i=1; i<arguments.length; i++) {
-            var a = arguments[i];
-            
-            if(a.splice) { // Array
-                for(var j=0; j<a.length; j++)
-                    validator.tests.push(a[j]);
-            }else validator.tests.push(a);
-        }
-        
-        input.data('validator', validator);
-    },
-    
-    /**
-     * Validate whole form / single field
-     */
-    validate: function(what) {
-        var type = what.tagName.toLowerCase();
-        if(!type.match(/^(input|textarea|select|form)$/)) return true;
-        
-        if(type == 'form') { // Whole form validation
-            var ok = true;
-            $(what).find(':input').each(function() {
-                ok &= filesender.ui.validate(this);
-            });
-            return ok;
-        }
-        
-        // Element
-        var input = $(what);
-        var validator = input.data('validator');
-        if(!validator) return true;
-        return validator.run();
-    },
-    
-    /**
      * Open a popup
      * 
      * @param mixed title
@@ -327,6 +217,13 @@ window.filesender.ui = {
      * @param object args
      */
     goToPage: function(page, args) {
+        if(typeof page != 'string') {
+            var q = window.location.search.substr(1).split('&');
+            for(var i=0; i<q.length; i++)
+                if(q[i].substr(0, 2) == 's=')
+                    page = q[i].substr(2);
+        }
+        
         var a = ['s=' + page];
         if(args) for(var k in args) a.push(k + '=' + args[k]);
         
@@ -398,7 +295,7 @@ window.filesender.ui = {
      * @return string
      */
     formatBytes: function (bytes, precision) {
-        return filesender.ui.formatBinarySize(bytes,precision)+lang.tr('SIZE_UNIT');
+        return filesender.ui.formatBinarySize(bytes,precision)+lang.tr('size_unit');
     },
     
     
@@ -411,7 +308,7 @@ window.filesender.ui = {
      * @return string
      */
     formatSpeed : function (bytes,precision) {
-        return filesender.ui.formatBinarySize(bytes,precision)+lang.tr('SPEED_UNIT');
+        return filesender.ui.formatBinarySize(bytes,precision)+lang.tr('speed_unit');
     },
     
     
@@ -458,6 +355,17 @@ window.filesender.ui = {
                 localStorage.removeItem('transfer');
             }
         });
+    },
+    
+    /**
+     * Validators for form fields
+     */
+    validators: {
+        email: /^[a-z0-9!#$%&'*+\/=?^_\`\{|\}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_\`\{|\}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+(?:[a-zA-Z]{2}|com|org|net|gov|mil|biz|info|mobi|name|aero|jobs|museum)$/i,
+        filled: function() { return (this.replace(/(^\s+|\s+$)/, '') != ''); },
+        int: /^[0-9]*$/,
+        float: /^[0-9]*(\.[0-9]+)?$/,
+        notzero: function() { return this && parseFloat(this) },
     }
 };
 
@@ -477,4 +385,8 @@ $(function() {
     });
     
     $('#btn_logon').button();
+    
+    $('#language_selector').on('change', function() {
+        filesender.ui.goToPage(true, {lang: $(this).val()})
+    });
 });
