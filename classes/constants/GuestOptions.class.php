@@ -36,8 +36,10 @@
  */
 
 class GuestOptions extends Enum {
-    const EMAIL_UPLOAD_FROM_GUEST_START     = 'email_upload_from_guest_start';
-    const EMAIL_UPLOAD_FROM_GUEST_COMPLETE  = 'email_upload_from_guest_complete';
-    const EMAIL_GUEST_ACCESS_UPLOAD_PAGE    = 'email_guest_access_upload_page';
+    const EMAIL_UPLOAD_STARTED     = 'email_upload_started';
+    const EMAIL_UPLOAD_PAGE_ACCESS    = 'email_upload_page_access';
+    const VALID_ONLY_ONE_TIME = 'valid_only_one_time';
+    const DOES_NOT_EXPIRE = 'does_not_expire';
+    const CAN_ONLY_SEND_TO_ME = 'can_only_send_to_me';
 }
 
