@@ -94,7 +94,7 @@ class AuthGuest {
             
             self::$attributes = array(
                 'uid' => self::$guest->user_id,
-                'email' => self::$guest->user_email,
+                'email' => self::$guest->owner->email,
                 'name' => null,
                 'guest' => self::$guest
             );
