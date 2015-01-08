@@ -112,7 +112,7 @@ class Transfer extends DBObject {
     protected $message = null;
     protected $created = 0;
     protected $expires = 0;
-    protected $options = null;
+    protected $options = array();
     
     /**
      * Related objects cache
@@ -655,14 +655,21 @@ class Transfer extends DBObject {
         if(Auth::isGuest()) {
             $guest = AuthGuest::getGuest();
             
-            if($guest->hasOption(GuestOptions::EMAIL_UPLOAD_FROM_GUEST_COMPLETE))
+            $guest->transfer_count++;
+            
+            if($this->hasOption(TransferOptions::EMAIL_UPLOAD_COMPLETE))
                 ApplicationMail::quickSend('guest_upload_complete', $guest->user_email, $guest);
+            
+            if($guest->hasOption(GuestOptions::VALID_ONLY_ONE_TIME))
+                $guest->status = GuestStatuses::CLOSED;
+            
+            $guest->save();
         } else {
             if($this->hasOption(TransferOptions::EMAIL_UPLOAD_COMPLETE))
                 ApplicationMail::quickSend('upload_complete', Auth::user()->email, $this);
+            
+            Auth::user()->saveFrequentRecipients($this->recipients);
         }
-        
-        Auth::user()->saveFrequentRecipients($this->recipients);
         
         $ctn = Lang::translateEmail('transfer_available')->r($this);
         
@@ -696,7 +703,7 @@ class Transfer extends DBObject {
         if (Auth::isGuest()){
             $guest = AuthGuest::getGuest();
             
-            if($guest->hasOption(GuestOptions::EMAIL_UPLOAD_FROM_GUEST_START))
+            if($guest->hasOption(GuestOptions::EMAIL_UPLOAD_STARTED))
                 ApplicationMail::quickSend('guest_upload_start', $guest->user_email, $guest);
         }
         
