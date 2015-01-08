@@ -445,6 +445,13 @@ filesender.ui.startUpload = function() {
         }, 60 * 1000);
     }
     
+    var twc = $('#terasender_worker_count');
+    if(twc.length) {
+        twc = parseInt(twc.val());
+        if(!isNaN(twc) && twc > 0 && twc <= 128)
+            filesender.config.terasender_worker_count = twc;
+    }
+    
     filesender.ui.nodes.files.list.find('.file').addClass('uploading');
     filesender.ui.nodes.files.list.find('.file .remove').hide();
     filesender.ui.nodes.recipients.list.find('.recipient .remove').hide();
@@ -575,25 +582,25 @@ $(function() {
     
     // Setup date picker
     $.datepicker.setDefaults({
-        closeText: lang.tr('DP_closeText').out(),
-        prevText: lang.tr('DP_prevText').out(),
-        nextText: lang.tr('DP_nextText').out(),
-        currentText: lang.tr('DP_currentText').out(),
+        closeText: lang.tr('dp_close_text').out(),
+        prevText: lang.tr('dp_prev_text').out(),
+        nextText: lang.tr('dp_next_text').out(),
+        currentText: lang.tr('dp_current_text').out(),
         
-        monthNames: lang.tr('DP_monthNames').values(),
-        monthNamesShort: lang.tr('DP_monthNamesShort').values(),
-        dayNames: lang.tr('DP_dayNames').values(),
-        dayNamesShort: lang.tr('DP_dayNamesShort').values(),
-        dayNamesMin: lang.tr('DP_dayNamesMin').values(),
+        monthNames: lang.tr('dp_month_names').values(),
+        monthNamesShort: lang.tr('dp_month_names_short').values(),
+        dayNames: lang.tr('dp_day_names').values(),
+        dayNamesShort: lang.tr('dp_day_names_short').values(),
+        dayNamesMin: lang.tr('dp_day_names_min').values(),
         
-        weekHeader: lang.tr('DP_weekHeader').out(),
-        dateFormat: lang.tr('DP_dateFormat').out(),
+        weekHeader: lang.tr('dp_week_header').out(),
+        dateFormat: lang.tr('dp_date_format').out(),
         
-        firstDay: parseInt(lang.tr('DP_firstDay').out()),
-        isRTL: lang.tr('DP_isRTL').out().match(/true/),
-        showMonthAfterYear: lang.tr('DP_showMonthAfterYear').out().match(/true/),
+        firstDay: parseInt(lang.tr('dp_first_day').out()),
+        isRTL: lang.tr('dp_is_rtl').out().match(/true/),
+        showMonthAfterYear: lang.tr('dp_show_month_after_year').out().match(/true/),
         
-        yearSuffix: lang.tr('DP_yearSuffix').out()
+        yearSuffix: lang.tr('dp_year_suffix').out()
     });
     
     // Bind picker
@@ -696,7 +703,7 @@ $(function() {
         // Put notice
         form.addClass('legacy');
         
-        $('<div class="info message" />').text(lang.tr('reader_not_supported')).insertBefore(filesender.ui.nodes.files.list);
+        $('<div class="info message" />').text(lang.tr('reader_not_supported').r({size: filesender.ui.formatBytes(filesender.config.max_legacy_upload_size)})).insertBefore(filesender.ui.nodes.files.list);
         
         // Remove unavailable features
         filesender.ui.nodes.files.select.remove();
@@ -762,6 +769,7 @@ $(function() {
                 filesender.ui.nodes.options[failed.options[i]].prop('checked', true);
             
             filesender.ui.nodes.form.find(':input').prop('disabled', true);
+            $('#terasender_worker_count').prop('disabled', false);
             filesender.ui.nodes.files.input.prop('disabled', false);
             
             // Setup restart button
