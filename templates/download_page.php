@@ -86,7 +86,7 @@
         
         
     <?php if (false && $fileData[0]['fileenabledownloadreceipts'] == 'true') { ?>
-        <p><input type="checkbox" id="dlcomplete" style="width:20px; vertical-align: middle"/>{tr:_DOWNLOADER_RECEIPT}</p>
+        <p><input type="checkbox" id="dlcomplete" style="width:20px; vertical-align: middle"/>{tr:downloader_receipt}</p>
     <?php } ?>
 </div>
 

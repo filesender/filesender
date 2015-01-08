@@ -47,34 +47,58 @@
                     </td>
 
                     <td class="box">
+                        <div class="fieldcontainer">
+                            <label for="datepicker" id="datepicker_label" class="mandatory">{tr:expiry_date}:</label>
+                            
+                            <input name="expires" type="text" autocomplete="off" title="{tr:dp_dateformat}" value="<?php echo Utilities::formatDate(Guest::getDefaultExpire()) ?>"/>
+                        </div>
+                        
                         <?php
                             $displayoption = function($name, $cfg) {
                                 $checked = $cfg['default'] ? 'checked="checked"' : '';
-
+                                
                                 echo '<div class="fieldcontainer">';
-                                echo '  <label for="'.$name.'">'.Lang::tr($name).'</label>';
                                 echo '  <input name="'.$name.'" type="checkbox" '.$checked.' />';
+                                echo '  <label for="'.$name.'">'.Lang::tr($name).'</label>';
                                 echo '</div>';
                             };
                         ?>
-
-                        <div class="basic_options">
-                            <div class="fieldcontainer">
-                                <label for="datepicker" id="datepicker_label" class="mandatory">{tr:expiry_date}:</label>
-
-                                <input name="expires" type="text" autocomplete="off" title="{tr:dp_dateformat}" value="<?php echo Utilities::formatDate(Guest::getDefaultExpire()) ?>"/>
+                        
+                        <div class="guest_options options_box">
+                            <h3>{tr:guest_options}</h3>
+                            
+                            <div class="basic_options">
+                                <?php foreach(Guest::availableOptions(false) as $name => $cfg) $displayoption($name, $cfg) ?>
                             </div>
-                            <?php foreach(Guest::availableOptions(false) as $name => $cfg) $displayoption($name, $cfg) ?>
+                            
+                            <?php if(count(Guest::availableOptions(true))) { ?>
+                            <div class="fieldcontainer">
+                                <a class="toggle_advanced_options" href="#">{tr:advanced_settings}</a>
+                            </div>
+                            
+                             <div class="advanced_options">
+                                <?php foreach(Guest::availableOptions(true) as $name => $cfg) $displayoption($name, $cfg) ?>
+                             </div>     
+                            <?php } ?>
                         </div>
-
-                        <?php if(count(Guest::availableOptions(true))) { ?>
-                        <div class="fieldcontainer">
-                            <a class="toggle_advanced_options" href="#">{tr:advanced_settings}</a>
+                        
+                        <div class="transfer_options options_box">
+                            <h3>{tr:guest_transfer_options}</h3>
+                            
+                            <div class="basic_options">
+                                <?php foreach(Transfer::availableOptions(false) as $name => $cfg) $displayoption($name, $cfg) ?>
+                            </div>
+                            
+                            <?php if(count(Transfer::availableOptions(true))) { ?>
+                            <div class="fieldcontainer">
+                                <a class="toggle_advanced_options" href="#">{tr:advanced_settings}</a>
+                            </div>
+                            
+                             <div class="advanced_options">
+                                <?php foreach(Transfer::availableOptions(true) as $name => $cfg) $displayoption($name, $cfg) ?>
+                             </div>     
+                            <?php } ?>
                         </div>
-                         <div class="advanced_options">
-                            <?php foreach(Guest::availableOptions(true) as $name => $cfg) $displayoption($name, $cfg) ?>
-                         </div>     
-                        <?php } ?>
                     </td>
                 </tr>
             </table>

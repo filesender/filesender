@@ -1,4 +1,9 @@
-<table class="guests list">
+<?php
+    if(!isset($status)) $status = 'available';
+    if(!isset($mode)) $mode = 'user';
+    if(!isset($transfers) || !is_array($transfers)) $transfers = array();
+?>
+<table class="guests list" data-status="<?php echo $status ?>" data-mode="<?php echo $mode ?>">
     <thead>
         <tr>
             <td class="from">{tr:from}</td>
@@ -18,14 +23,23 @@
         <tr class="guest" data-id="<?php echo $guest->id ?>" data-errors="<?php echo count($guest->errors) ? '1' : '' ?>">
             <td class="from">
                 <abbr title="<?php echo Utilities::sanitizeOutput($guest->user_email) ?>">
-                    <?php echo Utilities::sanitizeOutput(substr($guest->user_email, 0, strpos($guest->user_email, '@'))) ?>
+                <?php
+                    $who = in_array($guest->user_email, Auth::user()->email_addresses) ? Lang::tr('me') : $guest->user_email;
+                    $who = explode('@', $who)[0];
+                    echo Utilities::sanitizeOutput($who);
+                ?>
                 </abbr>
             </td>
             
             <td class="to">
                 <abbr title="<?php echo Utilities::sanitizeOutput($guest->email) ?>">
-                    <?php echo Utilities::sanitizeOutput(substr($guest->email, 0, strpos($guest->email, '@'))) ?>
+                <?php
+                    $who = in_array($guest->email, Auth::user()->email_addresses) ? Lang::tr('me') : $guest->email;
+                    $who = explode('@', $who)[0];
+                    echo Utilities::sanitizeOutput($who);
+                ?>
                 </abbr>
+                
                 <?php if($guest->errors) echo '<br /><span class="errors">'.implode(', ', array_map(function($type) {
                     return Lang::tr('recipient_error_'.$type);
                 }, array_unique(array_map(function($error) {
@@ -51,7 +65,7 @@
             
             <td class="created"><?php echo Utilities::formatDate($guest->created) ?></td>
             
-            <td class="expires"><?php echo Utilities::formatDate($guest->expires) ?></td>
+            <td class="expires"><?php echo $guest->hasOption(GuestOptions::DOES_NOT_EXPIRE) ? Lang::tr('never') : Utilities::formatDate($guest->expires) ?></td>
             
             <td class="actions"></td>
         </tr>
