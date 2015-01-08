@@ -177,6 +177,7 @@ class FileMetadata {
 	}
 	
 	function getLastChunkRaw() {
+		if (! file_exists($this->_filename)) return null;
 		$filedata = file_get_contents($this->_filename);	// just get it as a whole
 		$lastchunkpost = strrpos($filedata, 'chunk');
 		$lastchunk = substr($filedata, $lastchunkpost);
