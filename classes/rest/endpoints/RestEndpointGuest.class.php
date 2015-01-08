@@ -137,15 +137,29 @@ class RestEndpointGuest extends RestEndpoint {
         if($data->subject) $guest->subject = $data->subject;
         if($data->message) $guest->message = $data->message;
         
-        $guest->options = $data->options;
+        $options = array();
+        foreach(Guest::allOptions() as $name => $dfn)  {
+            $value = $dfn['default'];
+            
+            if($dfn['available'])
+                $value = in_array($name, $data->options->guest);
+            
+            if($value) $options[] = $name;
+        }
+        $guest->options = $options;
         
-        //if($guest->options) {
-            //if(in_array('no_expiry', $guest->options) && option is available) {
-            //    ...
-            //} else {
-                $guest->expires = $data->expires;
-            //}
-        //}
+        $transfer_options = array();
+        foreach(Transfer::allOptions() as $name => $dfn)  {
+            $value = $dfn['default'];
+            
+            if($dfn['available'])
+                $value = in_array($name, $data->options->transfer);
+            
+            if($value) $transfer_options[] = $name;
+        }
+        $guest->transfer_options = $transfer_options;
+        
+        $guest->expires = $data->expires;
         
         $guest->makeAvailable(); // Saves
         
