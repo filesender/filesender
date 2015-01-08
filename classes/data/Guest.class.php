@@ -81,6 +81,10 @@ class Guest extends DBObject {
             'type' => 'text',
             'transform' => 'json'
         ),
+        'transfer_options' => array(
+            'type' => 'text',
+            'transform' => 'json'
+        ),
         'status' => array(
             'type' => 'string',
             'size' => 32
@@ -115,6 +119,7 @@ class Guest extends DBObject {
     protected $subject = null;
     protected $message = null;
     protected $options = null;
+    protected $transfer_options = null;
     protected $status = null;
     protected $created = 0;
     protected $expires = 0;
@@ -161,7 +166,7 @@ class Guest extends DBObject {
         $guest->__set('user_email', $from ? $from : Auth::user()->email);
         $guest->__set('email', $recipient); // Throws
         
-        $guest->status = GuestStatuses::AVAILABLE;
+        $guest->status = GuestStatuses::CREATED;
         $guest->created = $time;
         
         // Generate token until it is indeed unique
@@ -384,7 +389,7 @@ class Guest extends DBObject {
     public function __get($property) {
         if(in_array($property, array(
             'id', 'user_id', 'user_email', 'token', 'email', 'transfer_count',
-            'subject', 'message', 'options', 'status', 'created', 'expires', 'last_activity'
+            'subject', 'message', 'options', 'transfer_options', 'status', 'created', 'expires', 'last_activity'
         ))) return $this->$property;
         
         if($property == 'user' || $property == 'owner') {
@@ -441,6 +446,9 @@ class Guest extends DBObject {
             
         }else if($property == 'options') {
             $this->options = $value;
+            
+        }else if($property == 'transfer_options') {
+            $this->transfer_options = $value;
             
         }else if($property == 'email') {
             if(!filter_var($value, FILTER_VALIDATE_EMAIL)) throw new BadEmailException($value);
