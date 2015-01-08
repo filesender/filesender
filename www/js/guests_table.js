@@ -31,7 +31,7 @@
  */
 
 $(function() {
-    var guests = $('table.guests');
+    var table = guests = $('table.guests');
     if(!guests.length) return;
     
     // Expand / retract each transfer's details
@@ -43,122 +43,126 @@ $(function() {
         tr.find('.full').show('fast');
     });
     
-    // Setup action buttons
-    guests.find('td.actions').each(function() {
-        var td = $(this);
-        
-        // Delete button
-        $('<span class="delete clickable fa fa-lg fa-trash-o" />').appendTo(td).attr({
-            title: lang.tr('delete')
-        }).on('click', function() {
-            var id = $(this).closest('tr').attr('data-id');
-            if(!id || isNaN(id)) return;
+    if(!table.is('[data-status="closed"]')) {
+        // Setup action buttons
+        guests.find('td.actions').each(function() {
+            var td = $(this);
             
-            filesender.ui.confirm(lang.tr('confirm_delete_guest'), function() {
-                filesender.client.deleteGuest(id, function() {
-                    filesender.ui.alert('success', lang.tr('guest_deleted'), function() {
-                        guests.find('[data-id="' + id + '"]').remove();
+            // Delete button
+            $('<span class="delete clickable fa fa-lg fa-trash-o" />').appendTo(td).attr({
+                title: lang.tr('delete')
+            }).on('click', function() {
+                var id = $(this).closest('tr').attr('data-id');
+                if(!id || isNaN(id)) return;
+                
+                filesender.ui.confirm(lang.tr('confirm_delete_guest'), function() {
+                    filesender.client.deleteGuest(id, function() {
+                        filesender.ui.alert('success', lang.tr('guest_deleted'), function() {
+                            guests.find('[data-id="' + id + '"]').remove();
+                        });
                     });
                 });
             });
-        });
-        
-        // Send reminder button
-        $('<span class="remind clickable fa fa-lg fa-repeat" />').appendTo(td).attr({
-            title: lang.tr('send_reminder')
-        }).on('click', function() {
-            var id = $(this).closest('tr').attr('data-id');
-            if(!id || isNaN(id)) return;
             
-            filesender.ui.confirm(lang.tr('confirm_remind_guest'), function() {
-                filesender.client.remindGuest(id, function() {
-                    filesender.ui.alert('success', lang.tr('guest_reminded'));
-                });
-            });
-        });
-        
-        // Send forward button
-        $('<span class="forward clickable fa fa-lg fa-mail-forward" />').appendTo(td).attr({
-            title: lang.tr('forward')
-        }).on('click', function() {
-            var id = $(this).closest('tr').attr('data-id');
-            if(!id || isNaN(id)) return;
-            
-            var input = $('<input name="recipients" />').attr({
-                 placeholder: lang.tr('enter_to_email')
-            });
-            
-            var dialog = filesender.ui.prompt(lang.tr('forward_guest_voucher'), function() {
-                var value = input.val();
-                var emails = value.match(/[,;\s]/) ? value.split(/[,;\s]/) : [value];
-                
-                var h = {};
-                var invalid = false;
-                for(var i=0; i<emails.length; i++) {
-                    if(typeof h[emails[i]] != 'undefined') continue; // Duplicate
+            if(table.is('[data-mode="user"]')) {
+                // Send reminder button
+                $('<span class="remind clickable fa fa-lg fa-repeat" />').appendTo(td).attr({
+                    title: lang.tr('send_reminder')
+                }).on('click', function() {
+                    var id = $(this).closest('tr').attr('data-id');
+                    if(!id || isNaN(id)) return;
                     
-                    h[emails[i]] = true;
-                    
-                    if(!emails[i].match(filesender.ui.validators.email))
-                        invalid = true;
-                }
-                
-                emails = [];
-                for(var e in h) emails.push(e);
-                if(!emails.length) invalid = true;
-                
-                input.val(emails.join(', '));
-                
-                var marker = input.data('error_marker');
-                
-                if(invalid) {
-                    input.addClass('invalid');
-                    if(!marker) {
-                        marker = $('<span class="invalid fa fa-exclamation-circle fa-lg" />').attr({
-                            title: lang.tr('invalid_recipient')
+                    filesender.ui.confirm(lang.tr('confirm_remind_guest'), function() {
+                        filesender.client.remindGuest(id, function() {
+                            filesender.ui.alert('success', lang.tr('guest_reminded'));
                         });
-                        input.data('error_marker', marker);
-                    }
-                    marker.insertBefore(input);
-                }else{
-                    input.removeClass('invalid');
-                    if(marker) marker.remove();
-                }
+                    });
+                });
                 
-                if(invalid) return false;
-                
-                filesender.client.getGuest(id, function(gv) {
-                    var forwarded = {from: gv.user_email, subject: gv.subject, message: gv.message, expires: gv.expires.raw, options: gv.options};
+                // Send forward button
+                $('<span class="forward clickable fa fa-lg fa-mail-forward" />').appendTo(td).attr({
+                    title: lang.tr('forward')
+                }).on('click', function() {
+                    var id = $(this).closest('tr').attr('data-id');
+                    if(!id || isNaN(id)) return;
                     
-                    var sent = 0;
-                    for(var i=0; i<emails.length; i++) {
-                        filesender.client.postGuest(gv.user_email, emails[i], gv.subject, gv.message, gv.expires.raw, gv.options, function() {
-                            sent++;
-                            if(sent < emails.length) return;
+                    var input = $('<input name="recipients" />').attr({
+                         placeholder: lang.tr('enter_to_email')
+                    });
+                    
+                    var dialog = filesender.ui.prompt(lang.tr('forward_guest_voucher'), function() {
+                        var value = input.val();
+                        var emails = value.match(/[,;\s]/) ? value.split(/[,;\s]/) : [value];
+                        
+                        var h = {};
+                        var invalid = false;
+                        for(var i=0; i<emails.length; i++) {
+                            if(typeof h[emails[i]] != 'undefined') continue; // Duplicate
                             
-                            filesender.ui.alert('success', lang.tr('guest_vouchers_sent').r({sent: sent}), function() {
-                                filesender.ui.reload();
-                            });
+                            h[emails[i]] = true;
+                            
+                            if(!emails[i].match(filesender.ui.validators.email))
+                                invalid = true;
+                        }
+                        
+                        emails = [];
+                        for(var e in h) emails.push(e);
+                        if(!emails.length) invalid = true;
+                        
+                        input.val(emails.join(', '));
+                        
+                        var marker = input.data('error_marker');
+                        
+                        if(invalid) {
+                            input.addClass('invalid');
+                            if(!marker) {
+                                marker = $('<span class="invalid fa fa-exclamation-circle fa-lg" />').attr({
+                                    title: lang.tr('invalid_recipient')
+                                });
+                                input.data('error_marker', marker);
+                            }
+                            marker.insertBefore(input);
+                        }else{
+                            input.removeClass('invalid');
+                            if(marker) marker.remove();
+                        }
+                        
+                        if(invalid) return false;
+                        
+                        filesender.client.getGuest(id, function(gv) {
+                            var forwarded = {from: gv.user_email, subject: gv.subject, message: gv.message, expires: gv.expires.raw, options: gv.options};
+                            
+                            var sent = 0;
+                            for(var i=0; i<emails.length; i++) {
+                                filesender.client.postGuest(gv.user_email, emails[i], gv.subject, gv.message, gv.expires.raw, gv.options, function() {
+                                    sent++;
+                                    if(sent < emails.length) return;
+                                    
+                                    filesender.ui.alert('success', lang.tr('guest_vouchers_sent').r({sent: sent}), function() {
+                                        filesender.ui.reload();
+                                    });
+                                });
+                            }
                         });
-                    }
+                        
+                        return true;
+                    }).append('<label for="recipients">' + lang.tr('recipients') + '</label>').append(input);
+                    
+                    input.on('keydown', function(e) {
+                        if(e.keyCode != 13) return;
+                        
+                        // enter is pressed
+                        e.preventDefault();
+                        e.stopPropagation();
+                        
+                        dialog.dialog('option', 'buttons').ok.click();
+                    });
+                    
+                    input.focus();
                 });
-                
-                return true;
-            }).append('<label for="recipients">' + lang.tr('recipients') + '</label>').append(input);
-            
-            input.on('keydown', function(e) {
-                if(e.keyCode != 13) return;
-                
-                // enter is pressed
-                e.preventDefault();
-                e.stopPropagation();
-                
-                dialog.dialog('option', 'buttons').ok.click();
-            });
-            
-            input.focus();
+            }
         });
-    });
+    }
     
     // Errors details
     guests.find('.guest[data-errors="1"] .to .errors').each(function() {
