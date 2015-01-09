@@ -1,0 +1,1 @@
+<div style="padding: 5px; text-align: left;">{cfg:site_name} er en FileSender (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>) installasjon.  FileSender programvaren er optimalisert for bruk i høgere utdanning og forskning.</div>

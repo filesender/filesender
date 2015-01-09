@@ -190,7 +190,6 @@ $lang['stalled_transfer'] = 'Stalled upload';
 $lang['retry_later'] = 'Save progress and try again later';
 $lang['transfer_seems_to_be_stalled'] = 'Upload seems to be stalled (way slower than expected), do you want to try restarting it or stop it ?';
 $lang['advanced_settings'] = 'Advanced settings';
-$lang['terasender_chunk_size'] = 'Chunk size (MB)';
 $lang['terasender_worker_count'] = 'Worker count';
 $lang['drag_and_drop'] = 'drag &amp; drop your files here';
 $lang['invalid_file'] = 'Invalid File';
@@ -275,8 +274,6 @@ $lang['report_recipient_event_archive_download_ended'] = 'Recipient finished dow
 $lang['report_guest_event_transfer_started'] = 'Transfer was created by guest {author.email}';
 $lang['report_guest_event_transfer_sent'] = 'Download link sent to recipient(s)';
 
-$lang['report_pdf_disclamer'] = '';
-
 
 /**
  * Download page specific
@@ -289,7 +286,6 @@ $lang['select_all_for_archive_download'] = 'Select all files to download them as
 $lang['select_for_archive_download'] = 'Select for archive download';
 $lang['archive_message'] = 'You can download selected files as an archive.';
 $lang['confirm_download_notify'] = 'Do you want to be notified by mail when download is complete ?';
-$lang['downloader_receipt'] = 'Send me an email receipt when the download finishes';
 
 
 /**

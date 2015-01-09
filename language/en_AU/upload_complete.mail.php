@@ -14,9 +14,6 @@ The following {if:transfer.files>1}files have{else}file has{endif} been successf
 
 Your transfers list: {cfg:site_url}?s=transfers
 
-Files:
-{fileinfo}
-
 Best regards,
 {cfg:site_name}
 
