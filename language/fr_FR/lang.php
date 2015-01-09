@@ -32,224 +32,447 @@
 
 /* ---------------------------------
  * fr_FR Language File
- * Contributed by Claude Tompers (RESTENA)
+ * Contributed by Claude Tompers (RESTENA) and Etienne Meleard (RENATER)
  * ---------------------------------
  */
-// main menu items
-$lang["_ADMIN"] = "Administration";
-$lang["_NEW_UPLOAD"] = "Envoyer fichier";
-$lang["_VOUCHERS"] = "Inviter une personne";
-$lang["_LOGON"] = "Connexion";
-$lang["_LOG_OFF"] = "Déconnexion";
-$lang["_MY_FILES"] = "Mes fichiers";
 
-// page titles
-$lang["_HOME"] = "Accueil";
-$lang["_ABOUT"] = "A propos";
-$lang["_HELP"] = "Aide";
-$lang["_DELETE_VOUCHER"] = "Supprimer le ticket";
-$lang["_UPLOAD_COMPLETE"] = "Votre fichier a été téléchargé et un message a été envoyé.";
-$lang["_UPLOAD_PROGRESS"] = "Progrès du téléchargement";
-$lang["_DOWNLOAD"] = "Téléchargement";
-$lang["_CANCEL_UPLOAD"] = "Annuler le téléchargement";
+/**
+ * Page names / main links
+ */
+$lang['upload_page'] = 'Envoyer';
+$lang['transfers_page'] = 'Dépôts';
+$lang['guests_page'] = 'Invités';
+$lang['admin_page'] = 'Admin';
+$lang['download_page'] = 'Télécharger';
+$lang['unknown_page'] = 'Page inconnue';
+$lang['about'] = 'A propos';
+$lang['help'] = 'Aide';
+$lang['logoff'] = 'Déconnexion';
 
-// admin
-$lang["_PAGE"] = "Page";
-$lang["_UP"] = "Haut";
-$lang["_DOWN"] = "Bas";
-$lang["_FILES"] = "Fichiers";
-$lang["_DRIVE"] = "Disque";
-$lang["_TOTAL"] = "Total";
-$lang["_USED"] = "Utilisé";
-$lang["_AVAILABLE"] = "Disponible";
-$lang["_TEMP"] = "Temp"; // as in Temporary files
 
-// admin tab names
-$lang["_GENERAL"] = "Général";
-$lang["_UPLOADS"] = "Téléchargements vers le serveur";
-$lang["_DOWNLOADS"] = "Téléchargements depuis le serveur";
-$lang["_ERRORS"] = "Erreurs";
-$lang["_FILES_AVAILABLE"] = "Fichiers disponibles";
-$lang["_ACTIVE_VOUCHERS"] = "Tickets actifs";
-$lang["_COMPLETE_LOG"] = "Logs complets";
-
-// Form Fields
-$lang["_TO"] = "A";
-$lang["_FROM"] = "De";
-$lang["_SIZE"] = "Taille";
-$lang["_CREATED"] = "Créé";
-$lang["_FILE_NAME"] = "Nom de fichier";
-$lang["_SUBJECT"] = "Sujet";
-$lang["_EXPIRY"] = "Expiration";
-$lang["_MESSAGE"] = "Message";
-$lang["_TYPE"] = "Type";
-			
-$lang["_TERMS_OF_AGREEMENT"] = "Conditions générales d'utilisation";
-$lang["_SHOW_TERMS"] = "Afficher les conditions";
-$lang["_SHOWHIDE"] = "Afficher/Cacher";
-$lang["_UPLOADING_WAIT"] = "Téléchargement en cours - veuillez attendre...";
-			
-// Flash button menu
-$lang["_UPLOAD"] = "Envoyer un fichier";
-$lang["_BROWSE"] = "Naviguer";
-$lang["_CANCEL"] = "Annuler";
-$lang["_OPEN"] = "Ouvrir";
-$lang["_CLOSE"] = "Fermer";
-$lang["_OK"] = "OK";
-$lang["_SEND"] = "Envoyer";
-$lang["_DELETE"] = "Supprimer";
-$lang["_YES"] = "Oui";
-$lang["_NO"] = "Non";
-			
-$lang["_ERROR_CONTACT_ADMIN"] = "Une erreur s'est produite - veuillez contacter votre administrateur.";
-$lang["_INVALID_MISSING_EMAIL"] = "Adresse mail non valide ou absente";	
-$lang["_INVALID_EXPIRY_DATE"] = "Date d'expiration non valide";	
-$lang["_INVALID_FILE"] = "Fichier non valide";	
-$lang["_INVALID_FILEVOUCHERID"] = "Fichier ou ID de ticket non valide";	
-$lang["_INVALID_FILESIZE_ZERO"] = "La taille de fichier ne peut pas être 0. Veuillez choisir un autre fichier.";
-$lang["_INVALID_FILE_EXT"] = "Extension de fichier non valide.";
-$lang["_INVALID_TOO_LARGE_1"] = "La taille de fichier ne peut pas être plus grande que";
-$lang["_AUTH_ERROR"] = "Vous n'êtes plus authentifié. <br />Votre session est peut-être expirée ou il y a eu une erreur sur le serveur. <br /><br />Veuillez vous authentifier à nouveau et réessayer.";	
-$lang["_SELECT_ANOTHER_FILE"] = "Veuillez choisir un autre fichier.";
-$lang["_INVALID_VOUCHER"] = "Ce ticket n'est plus valide. <br />Veuillez contacter la personne qui vous a envoyé le ticket.";
-$lang["_SELECT_FILE"] = "Choisissez votre fichier.";
-$lang["_INVALID_FILE_NAME"] = "Le nom du fichier que vous téléchargez n'est pas valide. Veuillez renommer le fichier et réessayer.";
-$lang["_INVALID_SIZE_USEHTML5"] = "Veuillez choisir un autre fichier ou utiliser un navigateur compatible HTML5 pour télécharger des fichiers plus grands.";
-$lang["_ACCEPTTOC"] = "J'accepte les conditions générales de ce service.";	
-$lang["_AGREETOC"] = "Vous DEVEZ accepter les conditions générales.";
-$lang["_FILE_TO_BE_RESENT"] = "Fichier à réenvoyer";
-$lang["_ERROR_UPLOADING_FILE"] = "Erreur de téléchargement du fichier";
-$lang["_ERROR_SENDING_EMAIL"] = "Une erreur s'est produite lors de l'envoi de votre message, veuillez contacter votre administrateur.";
-$lang["_ERROR_INCORRECT_FILE_SIZE"] = "Un problème s'est produit lors du téléchargement de votre fichier. <br />La taille du fichier sur le serveur est différente de celle du fichier original. <br /><br />Veuillez contacter votre administrateur.";
-$lang["_MAXEMAILS"] = "Le nombre maximal d'adresses email acceptées est ";
-$lang["_INVALID_DATE_FORMAT"] = "Format de date non valide.";
-$lang["_DISK_SPACE_ERROR"] = "Il n'y a plus assez d'espace disque. Veuillez contacter l'administrateur du service ou télécharger un fichier plus petit.";
-$lang["_ERROR_ATTRIBUTES"] = "Votre founisseur d'identité ne fournit pas les attributs nécessaires. Contactez votre administrateur";
-$lang["_PERMISSION_DENIED"] = "Vous n'avez pas la permission de faire ceci.";
-// Logout page
-$lang["_LOGOUT_COMPLETE"] = "Déconnexion réussie";
-			
-// vouchers
-$lang["_SEND_NEW_VOUCHER"] = "Un ticket permet à une personne quelconque de vous envoyer un fichier.<br />
-Pour créer un ticket, entrez une adresse email et cliquez Envoyer ticket.<br />
-Une email sera envoyée à la personne avec un lien sur le ticket.";
-$lang["_EMAIL_SEPARATOR_MSG"] = "Multiples adresses email séparées par , ou ;";
-			
-$lang["_NO_FILES"] = "Il n'y a pas de fichiers disponibles pour l'instant.";
-$lang["_NO_VOUCHERS"] = "Il n'y a pas de tickets disponibles pour l'instant.";
-$lang["_ARE_YOU_SURE"] = "Etes-vous certain ?";
-$lang["_DELETE_FILE"] = "Supprimer fichier";
-$lang["_EMAIL_SENT"] = "Message envoyé";
-$lang["_EXPIRY_DATE"] = "Date d'expiration";
-$lang["_FILE_SIZE"] = "Taille de fichier";
-$lang["_FILE_RESENT"] = "Fichier réenvoyé";	
-$lang["_MESSAGE_RESENT"] = "Message réenvoyé";			
-$lang["_ME"] = "Moi";
-$lang["_SEND_VOUCHER"] = "Envoyer ticket";
-$lang["_RE_SEND_EMAIL"] = "Ré-envoyer email";
-$lang["_NEW_RECIPIENT"] = "Ajouter un nouveau destinataire";
-$lang["_SEND_VOUCHER_TO"] = "Envoyer ticket à";
-$lang["_START_DOWNLOAD"] = "Démarrer téléchargement";
-$lang["_VOUCHER_SENT"] = "Ticket envoyé";
-$lang["_VOUCHER_DELETED"] = "Ticket supprimé";
-$lang["_VOUCHER_CANCELLED"] = "Ce ticket a été annulé.";
-$lang["_VOUCHER_USED"] = "Ce ticket a déjà été utilisé.";
-$lang["_STARTED_DOWNLOADING"] = "Votre fichier devrait commencer à être téléchargé.";
-
-// files
-$lang["_FILE_DELETED"] = "Fichier supprimé";
-// steps
-$lang["_STEP1"] = "Entrez les adresses email des destinataires";
-$lang["_STEP2"] = "Séléctionnez la date d'expiration";
-$lang["_STEP3"] = "Choisissez un fichier";
-$lang["_STEP4"] = "Cliquez Envoyer";
-$lang["_HTML5Supported"] = "Téléchargements de plus de 2GO supportés";
-$lang["_HTML5NotSupported"] = "Téléchargements de plus de 2GO non supportés !";			
-	
-$lang["_OPTIONAL"] = "Optionnel";
-			
-// confirmation
-$lang["_CONFIRM_DELETE_FILE"] = "Etes-vous sûr de vouloir supprimer ce fichier ?";
-$lang["_CONFIRM_DELETE_VOUCHER"] = "Etes-vous sûr de vouloir supprimer ce ticket ?";
-$lang["_CONFIRM_RESEND_EMAIL"] = "Etes-vous sûr de vouloir ré-envoyer ce courrier ?";
+/**
+ * Locale settings (units, formats ...)
+ */
 
 // standard date display format
-$lang['date_format'] = "d/m/Y"; // Format for displaying date/time, use PHP date() format string syntax 
+$lang['date_format'] = 'd/m/Y'; // Format for displaying date, use PHP date() format string syntax 
+$lang['datetime_format'] = 'd/m/Y H:i:s'; // Format for displaying datetime, use PHP date() format string syntax 
 
 // datepicker localization
-$lang["_DP_closeText"] = 'OK'; // Done
-$lang["_DP_prevText"] = 'Préc'; //Prev
-$lang["_DP_nextText"] = 'Suiv'; // Next
-$lang["_DP_currentText"] = 'Aujourd\'hui'; // Today
-$lang["_DP_monthNames"] = "['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre']";
-$lang["_DP_monthNamesShort"] = "['Jan', 'Fev', 'Mar', 'Avr', 'Mai', 'Jun','Jul', 'Aou', 'Sep', 'Oct', 'Nov', 'Dec']";
-$lang["_DP_dayNames"] = "['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi']";
-$lang["_DP_dayNamesShort"] = "['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam']";
-$lang["_DP_dayNamesMin"] = "['Di','Lu','Ma','Me','Je','Ve','Sa']";
-$lang["_DP_weekHeader"] = 'Sem';
-$lang["_DP_dateFormat"] = 'dd/mm/yy';
-$lang["_DP_firstDay"] = '1';
-$lang["_DP_isRTL"] = 'false';
-$lang["_DP_showMonthAfterYear"] = 'false';
-$lang["_DP_yearSuffix"] = '';
+$lang['dp_close_text'] = 'OK';
+$lang['dp_prev_text'] = 'Préc';
+$lang['dp_next_text'] = 'Suiv';
+$lang['dp_current_text'] = 'Aujourd\'hui';
+$lang['dp_month_names'] = 'Janvier,Février,Mars,Avril,Mai,Juin,Juillet,Août,Septembre,Octobre,Novembre,Décembre';
+$lang['dp_month_names_short'] = 'Jan,Fev,Mar,Avr,Mai,Jun,Jul,Aou,Sep,Oct,Nov,Dec';
+$lang['dp_day_names'] = 'Dimanche,Lundi,Mardi,Mercredi,Jeudi,Vendredi,Samedi';
+$lang['dp_day_names_short'] = 'Dim,Lun,Mar,Mer,Jeu,Ven,Sam';
+$lang['dp_day_names_min'] = 'Di,Lu,Ma,Me,Je,Ve,Sa';
+$lang['dp_week_header'] = 'Sem';
+$lang['dp_date_format'] = 'dd/mm/yy';
+$lang['dp_first_day'] = '1';
+$lang['dp_is_rtl'] = 'false';
+$lang['dp_show_month_after_year'] = 'false';
+$lang['dp_year_suffix'] = '';
 
-// Login Splash text
-$lang["_SITE_SPLASHHEAD"] = "Bienvenu sur ". htmlspecialchars(Config::get('site_name'));
-$lang["_SITE_SPLASHTEXT"] = htmlspecialchars(Config::get('site_name')) ." propose un moyen sécurisé pour partager des gros fichiers avec tout le monde! Connectez-vous pour envoyer vos fichiers ou pour inviter vos interlocuteurs à vous en envoyer.";
-
-// Footer to display
-$lang["_SITE_FOOTER"] = ""; 
-
-// site help
-$lang["_HELP_TEXT"] = '
-
-<div>
-
-<div style="padding: 5px; text-align: left;">
-
-<h4>Connexion</h4> 
-<ul>
-    <li>Si vous ne voyez pas votre institution dans la liste des fournisseurs d\'Identité (IdPs), ou si la connexion avec votre nom d\'utilisateur au sein de votre institution échoue, veuillez contacter votre service informatique local</li>
-</ul>
-
-<h4>Téléchargements vers FileSender jusqu\'à 2 Gigaoctets (2GO) avec Adobe Flash</h4>
-<ul>
-	<li>Si vous êtes capable de regarder des vidéos YouTube, cette méthode devrait fonctionner pour vous</li>
-	<li>Vous avez besoin d\'un navigateur moderne qui tourne avec la version 10 (ou supérieure) de <a target="_blank" href="http://www.adobe.com/software/flash/about/">Adobe Flash</a></li>
-	<li>FileSender va vous avertir si vous essayez de télécharger un fichier trop gros pour cette méthode</li>
-</ul>
-
-<h4>Téléchargements vers FileSender <i>de toutes tailles</i> avec HTML5</h4>
-<ul>
-    <li>Si vous voyez <img src="images/html5_installed.png" alt="green HTML5 tick" class="textmiddle" style="display:inline" /> dans le coin en haut à droite, cette méthode fonctionne pour vous</li>
-	<li>Vous avez besoin d\'un navigateur web très récent qui supporte HTML5, la version la plus récente du "language du web".</li>
-	<li>Pour l\'instant Firefox4 (ou supérieur) et Chrome sous Windows, Mac OSX et Linux devraient fonctionner.</li>
-	<li>Veuillez utiliser le site web <a href="http://caniuse.com/fileapi" target="_blank">"When can I use..."</a> pour observer le progrès d\'implémentation de la "HTML5 FileAPI" pour tous les navigateurs web majeurs.  En particulier, <a href="http://caniuse.com/filereader" target="_blank">"FileReader API"</a> et <a href="http://caniuse.com/bloburls" target="_blank">"Blob URLs"</a> doivent être marqués en vert clair (=supportés) pour qu\'un navigateur web supporte des fichiers plus gros que 2GO </li>
-</ul>
-
-<h4>Téléchargements de FileSender de toutes tailles</h4>
-<ul>
-    <li>Vous avez besoin d\'un navigateur web récent, vous n\'avez besoin <b>ni</b> d\'Adobe Flash <b>ni</b> de HTML5 pour recevoir des fichiers de FileSender</li>
-</ul>
+// Sizes and speeds
+$lang['bytes_no_multiplier'] = 'o';
+$lang['bytes_with_multiplier'] = 'o';
+$lang['speed_unit'] = 'o';
+$lang['size_unit'] = 'o';
+$lang['per_second'] = '/s';
 
 
-<h4>Limites de cette installation FileSender</h4>
-<ul>
-    <li><strong>
-      Nombre maximal de destinataires email: </strong>'. Config::get('max_email_recipients').' adresses email (separées par virgule ou point-virgule)</li>
-    <li><strong>Nombre maximal de fichiers par téléchargement :</strong> un fichier - pour télécharger plusieurs fichiers en même temps, \'zippez\' les d\'abord dans une seule archive </li>
-    <li><strong>Taille maximale de fichier, pour Adobe Flash : </strong>'. Utilities::formatBytes(Config::get('max_legacy_upload_size')).' </li>
-    <li><strong>Taille maximale de fichier, pour HTML5 : </strong>'. Utilities::formatBytes(Config::get('max_html5_upload_size')).'</li>
-    <li><strong>Nombre maximal de jours pour l\'expiration de fichiers / tickets : </strong>'. Config::get('default_days_valid').' </li>
-</ul>
-<p>Pour plus d\'informations, veuillez visiter <a href="http://www.filesender.org/" target="_blank">www.filesender.org</a></p>
-</div>
-</div>';
+/**
+ * General terms (used in several places)
+ */
+$lang['expand_all'] = 'Développer tout';
+$lang['expires'] = 'Expire';
+$lang['guests'] = 'Invités';
+$lang['options'] = 'Options';
+$lang['resume'] = 'Re-démarrer';
+$lang['see_all'] = 'Voir tout';
+$lang['show_details'] = 'Afficher les details';
+$lang['hide_details'] = 'Masquer les details';
+$lang['stop'] = 'Stop';
+$lang['uploaded'] = 'Déposé';
+$lang['n_more'] = '{n} autres';
+$lang['save'] = 'Sauvegarder';
+$lang['actions'] = 'Actions';
+$lang['done'] = 'Fait';
+$lang['retry'] = 'Ré-essayer';
+$lang['ignore'] = 'Ignorer';
+$lang['never'] = 'jamais';
+$lang['none'] = 'aucun';
+$lang['cancel'] = 'Annuler';
+$lang['close'] = 'Fermer';
+$lang['ok'] = 'OK';
+$lang['send'] = 'Envoyer';
+$lang['delete'] = 'Supprimer';
+$lang['yes'] = 'Oui';
+$lang['no'] = 'Non';
+$lang['clear_all'] = 'Supprimer tout';
+$lang['pause'] = 'Pause';
+$lang['to'] = 'A';
+$lang['from'] = 'De';
+$lang['size'] = 'Taille';
+$lang['created'] = 'Créé';
+$lang['subject'] = 'Sujet';
+$lang['message'] = 'Message';
+$lang['details'] = 'Details';
+$lang['showhide'] = 'Afficher/Cacher';
+$lang['downloads'] = 'Téléchargements';
+$lang['download'] = 'Téléchargement';
+$lang['logon'] = 'Connexion';
+$lang['files'] = 'Fichiers';
+$lang['optional'] = 'optionnel';
+$lang['select_file'] = 'Selectionnez votre fichier';
+$lang['select_files'] = 'Selectionnez des fichiers';
+$lang['send_voucher'] = 'Envoyer l\'invitation';
+$lang['me'] = 'Moi';
+$lang['noscript'] = 'Cette application utiliser Javascript massivement, vous devez l\'activer afin de pouvoir commencer.';
+$lang['send_reminder'] = 'Envoyer un rappel';
+$lang['confirm_dialog'] = 'Confirmation';
+$lang['invalid_recipient'] = 'Destinataire erroné';
+$lang['error_dialog'] = 'Erreur';
+$lang['info_dialog'] = 'Information';
+$lang['success_dialog'] = 'Succès';
+$lang['recipient_errors'] = 'Erreurs du destinataire';
+$lang['error_type'] = 'Type d\'erreur';
+$lang['error_date'] = 'Date';
+$lang['error_details'] = 'Détails techniques';
+$lang['recipient_error_bounce'] = 'l\'acheminement du message à échoué';
+$lang['forward'] = 'Faire suivre';
+$lang['enter_to_email'] = 'Saisir les adresses des destinataires';
+$lang['expiry_date'] = 'Date d\'expiration';
+$lang['email_sent'] = 'Message envoyé';
+$lang['email_separator_msg'] = 'Adresses multiples séparées par , ou ;';
+$lang['what_to_do'] = 'Quelle action entreprendre ?';
 
-// site about
-$lang["_ABOUT_TEXT"] = ' <div style="padding: 5px; text-align: left;">'. htmlspecialchars(Config::get('site_name')) .' est une installation de FileSender (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>), dévelopé pour les besoins de la communauté de l\'éducation supérieure et de la recherche.</div>';
 
-// site AUP terms
-$lang["_AUPTERMS"] = "Conditions générales d\'utilisation ...";
+/**
+ * Transfer specific
+ */
+$lang['recipients'] = 'Destinataires';
+$lang['number_of_files'] = 'Nombre de fichiers';
+$lang['email_daily_statistics'] = 'M\'envoyer des statistiques quotidiennement';
+$lang['email_download_complete'] = 'Me notifier à chaque téléchargement';
+$lang['email_me_copies'] = 'Me mettre en copie de toutes les notifications';
+$lang['email_report_on_closing'] = 'M\'envoyer un rapport à l\'expiration du dépôt';
+$lang['email_upload_complete'] = 'Me notifier de la fin du téléversement';
+$lang['enable_recipient_email_download_complete'] = 'Autoriser les destinataires à recevoir des notification de fin de leurs téléchargements';
+$lang['add_me_to_recipients'] = 'M\'ajouter aux destinataires';
+$lang['transfer_closed'] = 'Dépôt fermé';
+$lang['transfer_deleted'] = 'Dépôt supprimé';
+$lang['transfer_expired'] = 'Dépôt expiré';
 
-?>
+
+/**
+ * Upload page specific
+ */
+$lang['average_speed'] = 'Vitesse moyenne';
+$lang['paused'] = 'En pause';
+$lang['restart'] = 'Re-démarrer';
+$lang['restart_failed_transfer'] = 'Re-démarrer le dépôt ?';
+$lang['failed_transfer_found'] = 'Il semble qu\'un de vos dépôt précédent a été stoppé brutalement, voulez-vous re-démarrer à la dernière progression connue (vous devrez selectionner vos fichiers à nouveau) ?';
+$lang['load'] = 'Re-démarrer';
+$lang['forget'] = 'Oublier ce dépôt';
+$lang['later'] = 'Me re-demander plus tard';
+$lang['need_to_readd_files'] = 'Vous devez selectionner les fichiers ci-dessous à nouveau afin de pouvoir re-démarrer votre dépôt';
+$lang['unexpected_file'] = 'Ce fichier ne fait pas parti du dépôt en cours de re-démarrage';
+$lang['missing_files_for_restart'] = 'Certains fichiers sont manquants, impossible de re-démarrer';
+$lang['confirm_stop_upload'] = 'Souhaitez-vous vraiement arrêter le téléversement et supprimer les données déjà stockées ?';
+$lang['click_to_delete_file'] = 'Supprimer le fichier';
+$lang['click_to_delete_recipient'] = 'Supprimer le destinataire';
+$lang['done_uploading'] = 'Téléversement effectué';
+$lang['stalled_transfer'] = 'Téléversement bloqué';
+$lang['retry_later'] = 'Enregistrer la progression pour re-démarrer plus tard';
+$lang['transfer_seems_to_be_stalled'] = 'Le téléversement semble bloqué (beaucoup plus lent que prévu), voulez-vous ré-essayer où l\'arrêter ?';
+$lang['advanced_settings'] = 'Paramêtres avancés';
+$lang['terasender_worker_count'] = 'Nombre de workers';
+$lang['drag_and_drop'] = 'glissez-déposez vos fichiers ici';
+$lang['invalid_file'] = 'Fichier non-valide';
+$lang['add_recipient'] = 'Ajouter un destinataire';
+$lang['confirm_leave_upload_page'] = 'Voulez-vous vraiement quitter cette page et perdre la progression en cours ?';
+
+
+/**
+ * Guest page spacific
+ */
+$lang['guest_options'] = 'Options d\'invité';
+$lang['email_upload_page_access'] = 'Me notifier lorsque l\'invité accède à la page de dépôt';
+$lang['email_upload_started'] = 'Me notifier lorsque le téléversement démarre';
+$lang['can_only_send_to_me'] = 'Être seul et unique destinataire';
+$lang['valid_only_one_time'] = 'Valable pour un seul dépôt';
+$lang['does_not_expire'] = 'N\'expire pas dans le temps';
+$lang['guest_transfer_options'] = 'Options du dépôt créé';
+$lang['guests_transfers'] = 'Dépôts des invités';
+$lang['guest_vouchers_sent'] = 'Invitation envoyée';
+$lang['no_guests'] = 'Aucun invité';
+$lang['forward_guest_voucher'] = 'Faire suivre l\'invitation';
+$lang['guest_deleted'] = 'Invité supprimé';
+$lang['guest_reminded'] = 'Rappel envoyé à l\'invité';
+$lang['confirm_delete_guest'] = 'Souhaitez-vous vraiement supprimer cet invité (il ne pourra plus déposer de fichiers) ?';
+$lang['confirm_remind_guest'] = 'Envoyer un rappel à cet invité ?';
+
+
+/**
+ * Transfer page specific
+ */
+$lang['no_transfers'] = 'Aucun dépôt';
+$lang['with_identity'] = 'Adresse d\'expéditeur';
+$lang['transfer_id'] = 'Identifiant';
+$lang['auditlog'] = 'Audit du dépôt';
+$lang['confirm_close_transfer'] = 'Souhaitez-vous vraiement fermer ce dépôt ? Les fichiers d\'un dépôt ne peuvent plus être téléchargés après la fermeture.';
+$lang['confirm_delete_file'] = 'Souhaitez-vous vraiement supprimer ce fichier ? Le dépôt sera fermé si il ne comporte plus de fichiers.';
+$lang['confirm_delete_recipient'] = 'Souhaitez-vous vraiement supprimer ce destinataire ? Le dépôt sera fermé si il ne comporte plus de destinataires.';
+$lang['recipient_deleted'] = 'Le destinataire a été supprimé.';
+$lang['file_deleted'] = 'Le fichier a été supprimé.';
+$lang['no_auditlog'] = 'Aucune information d\'audit n\'a été trouvée';
+$lang['recipient_added'] = 'Destinataire ajouté';
+$lang['transfer_reminded'] = 'Rappel envoyé aux destinataires';
+$lang['open_auditlog'] = 'Consulter l\'audit';
+$lang['open_recipient_auditlog'] = 'Voir l\'activité de ce destinataire';
+$lang['open_file_auditlog'] = 'Voir l\'activité de ce fichier';
+$lang['filtered_transfer_log'] = 'Ceci est une vue filtrée de l\'audit.';
+$lang['view_full_log'] = 'Voir l\'audit dans son ensemble';
+$lang['send_to_my_email'] = 'M\'envoyer ces information par email';
+$lang['confirm_remind_transfer'] = 'Envoyer le rappel aux destinataires ?';
+
+
+/**
+ * Reports
+ */
+
+// Reports
+$lang['date'] = 'Date';
+$lang['action'] = 'Action';
+
+$lang['report_event_transfer_started'] = 'Le dépôt a été créé';
+$lang['report_event_transfer_available'] = 'Le dépôt est devenu disponible pour les destinataires';
+$lang['report_event_transfer_sent'] = 'Les liens de téléchargement ont été envoyés aux destinataires';
+$lang['report_event_transfer_expired'] = 'Le dépôt a expiré';
+$lang['report_event_transfer_closed'] = 'Le dépôt a été fermé sur demande';
+$lang['report_event_transfer_deleted'] = 'Le dépôt a été supprimé';
+$lang['report_event_upload_started'] = 'Le téléversement a démarré';
+$lang['report_event_upload_resumed'] = 'Le téléversement a repris';
+$lang['report_event_upload_ended'] = 'Le téléversement a été terminé';
+$lang['report_event_file_created'] = 'Le fichier {file.name} ({size:file.size}) a été téléversé';
+$lang['report_event_download_started'] = 'Le destinataire {author.email} a commencé à télécharger le fichier {file.name} ({size:file.size})';
+$lang['report_event_download_resumed'] = 'Le destinataire {author.email} a repris le téléchargement du fichier {file.name} ({size:file.size})';
+$lang['report_event_download_ended'] = 'Le destinataire {author.email} a fini de télécharger le fichier {file.name} ({size:file.size})';
+$lang['report_event_archive_download_started'] = 'Le destinataire {author.email} a commencé à télécharger un ensemble de fichiers sous forme d\'archive';
+$lang['report_event_archive_download_ended'] = 'Le destinataire {author.email} a fini de télécharger un ensemble de fichiers sous forme d\'archive';
+
+$lang['report_recipient_event_download_started'] = 'Le destinataire a commencé à télécharger le fichier {file.name} ({size:file.size})';
+$lang['report_recipient_event_download_resumed'] = 'Le destinataire a repris le téléchargement du fichier {file.name} ({size:file.size})';
+$lang['report_recipient_event_download_ended'] = 'Le destinataire a fini de télécharger le fichier {file.name} ({size:file.size})';
+$lang['report_recipient_event_archive_download_started'] = 'Le destinataire a commencé à télécharger un ensemble de fichiers sous forme d\'archive';
+$lang['report_recipient_event_archive_download_ended'] = 'Le destinataire a fini de télécharger un ensemble de fichiers sous forme d\'archive';
+
+$lang['report_guest_event_transfer_started'] = 'Le dépôt a été créé par l\'invité {author.email}';
+$lang['report_guest_event_transfer_sent'] = 'Les liens de téléchargement ont été envoyés aux destinataires';
+
+
+/**
+ * Download page specific
+ */
+$lang['archive_download'] = 'Télécharger l\'archive';
+$lang['download_disclamer'] = 'Voici vos fichiers. Vous pouvez les télécharger indépendament les uns des autres ou par plusieurs sous forme d\'archive ZIP.';
+$lang['download_file'] = 'Télécharger';
+$lang['mac_archive_message'] = 'Si vous utilisez OSX vous pourrez trouver un utilitaire permettant d\'ouvrir l\'archive en suivant le lien suivant';
+$lang['select_all_for_archive_download'] = 'Selectionner tous les fichiers';
+$lang['select_for_archive_download'] = 'Selectionner pour le téléchargement groupé';
+$lang['archive_message'] = 'Téléchargement en tant qu\'archive ZIP.';
+$lang['confirm_download_notify'] = 'Souhaitez-vous recevoir un email de notification lorsque le téléchargement est terminé ?';
+
+
+/**
+ * Admin page specific
+ */
+$lang['admin_statistics_section'] = 'Statistiques';
+$lang['admin_transfers_section'] = 'Dépôts';
+$lang['admin_guests_section'] = 'Invités';
+$lang['admin_config_section'] = 'Configuration';
+$lang['global_statistics'] = 'Statistiques générales';
+$lang['available_transfers'] = 'Dépôts disponibles';
+$lang['uploading_transfers'] = 'Dépôts en cours de téléversement';
+$lang['closed_transfers'] = 'Dépôts fermés';
+$lang['created_transfers'] = 'Dépôts créés';
+$lang['count_from_date_to_date'] = '{count} entre {date:start} et {date:end}';
+
+$lang['storage_usage'] = 'Utilisation du stockage';
+$lang['storage_block'] = 'Bloc';
+$lang['storage_paths'] = 'Chemins associés';
+$lang['storage_total'] = 'Volume total';
+$lang['storage_used'] = 'Volume utilisé';
+$lang['storage_available'] = 'Volume disponible';
+$lang['storage_main'] = 'Principal';
+
+$lang['delete_transfer_nicely'] = 'Supprimer le dépôt et notifier les destinataires';
+$lang['delete_transfer_roughly'] = 'Supprimer le dépôt sans notifications';
+
+$lang['is_default'] = 'Valeur par défaut';
+$lang['make_default'] = 'Revenir à la valeur par défaut';
+$lang['config_overriden'] = 'Configuration sauvegardée';
+
+
+/**
+ * Exceptions and errors
+ */
+$lang['access_forbidden'] = 'Vous ne disposez pas des droits nécéssaires pour accéder à cette page';
+
+$lang['encountered_exception'] = 'L\'application a rencontré une erreur en lors du traitement de votre requête';
+$lang['you_can_report_exception'] = 'En rapportant cette erreur merci de mentionner le code suivant afin de faciliter la recherche du problème';
+$lang['you_can_report_exception_by_email'] = 'Vous pouvez rapporter cette erreur par email';
+$lang['report_exception'] = 'envoyer un rapport';
+
+// AuditLog related exceptions
+$lang['auditlog_not_found'] = 'Information d\'audit introuvable';
+$lang['auditlog_not_enabled'] = 'Audit désactivé';
+$lang['auditlog_unknown_event'] = 'Evenement inconnu';
+
+// Auth related exceptions
+$lang['auth_authentication_not_found'] = 'Méthode d\'autentification introuvable';
+
+// AuthRemoteApplication related exceptions
+$lang['auth_remote_application_unknown_application'] = 'Application distante inconnue';
+$lang['auth_remote_application_too_late'] = 'La requête est arrivée trop tard';
+$lang['auth_remote_application_signature_check_failed'] = 'Signature fournie incorrecte';
+
+// AuthSP related exceptions
+$lang['auth_sp_missing_delegation_class'] = 'Classe de délégation d\'autentification de type "Fournisseur de Service" manquante';
+$lang['auth_sp_authentication_not_found'] = 'Classe de délégation d\'autentification de type "Fournisseur de Service" introuvable';
+$lang['auth_sp_missing_attribute'] = 'Attribut manquant pour l\'autentification de type "Fournisseur de Service"';
+$lang['auth_sp_bad_attribute'] = 'Attribut erroné pour l\'autentification de type "Fournisseur de Service"';
+
+// Bad exceptions
+$lang['bad_email'] = 'Format d\'adresse email erroné';
+$lang['bad_ip_format_ipv4'] = 'Format d\'adresse IPv4 erroné';
+$lang['bad_ip_format_ipv6'] = 'Format d\'adresse IPv6 erroné';
+$lang['bad_ip_format'] = 'Format d\'adresse IP erroné';
+$lang['bad_expire'] = 'Date d\'expiration incorrecte';
+$lang['bad_size_format'] = 'Taille incorrecte';
+$lang['bad_lang_code'] = 'Code de language incerrect';
+
+// Config related exceptions
+$lang['config_file_missing'] = 'Fichier de configuration introuvable';
+$lang['config_bad_parameter'] = 'Paramêtre de configuration incorrect';
+$lang['config_missing_parameter'] = 'Paramêtre de configuration introuvable';
+$lang['config_override_disabled'] = 'Surcharge de la configuration désactivée';
+$lang['config_override_validation_failed'] = 'La validation de la configuration a échouée';
+$lang['config_override_not_allowed'] = 'Surcharge de la configuration non-autorisée';
+$lang['config_override_cannot_save'] = 'Impossible de sauvegarder la configuration';
+
+// Core related exceptions
+$lang['core_file_not_found'] = 'Fichier système introuvable';
+$lang['core_class_not_found'] = 'Classe système introuvable';
+
+// DBI related exceptions
+$lang['failed_to_connect_to_database'] = 'Impossible de se connecter à la base de données';
+$lang['dbi_missing_parameter'] = 'Paramêtre de connexion à la base de données manquant';
+$lang['database_access_failure'] = 'Erreur lors de l\'accès à la base de données';
+
+// DBO related exceptions
+$lang['no_such_property'] = 'Propriété inexistante';
+
+// Download related exceptions
+$lang['download_missing_token'] = 'Code de téléchargmeent manquant';
+$lang['download_bad_token_format'] = 'Format du code de téléchargement erroné';
+$lang['download_missing_files_ids'] = 'Identifiants des fichiers à télécharger manquants';
+$lang['download_bad_files_ids'] = 'Identifiants des fichiers à télécharger erronés';
+$lang['download_invalid_range'] = 'Plage de téléchargement erronée';
+
+// File related exceptions
+$lang['file_not_found'] = 'Fichier introuvable';
+$lang['file_extension_not_allowed'] = 'Extension de fichier non-acceptée';
+$lang['file_bad_hash'] = 'Condensat de fichier erroné';
+$lang['file_chunk_out_of_bounds'] = 'Portion de fichier au delà des limites';
+$lang['file_size_does_not_match'] = 'La taille du fichier ne correspond pas';
+$lang['cannot_open_input_file'] = 'Impossible d\'ouvrir le fichier en entrée';
+
+// GUI related exceptions
+$lang['gui_unknown_admin_section'] = 'Section de l\'administration inconnue';
+$lang['reader_not_supported'] = 'Votre navigateur de supporte pas le dépôt de fichiers plus gros que {size}';
+
+// Guest related exceptions
+$lang['guest_not_found'] = 'Invité introuvable';
+$lang['bad_guest_status'] = 'Statut d\'invité erroné';
+
+// Mail related exceptions
+$lang['invalid_address_format'] = 'Format d\'adresse email erroné';
+$lang['no_addresses_found'] = 'Aucune adresse trouvée';
+
+// Recipient related exceptions
+$lang['recipient_not_found'] = 'Destinataire introuvable';
+
+// Report related exceptions
+$lang['report_cannot_write_file'] = 'Impossible de stocker le rapport';
+$lang['report_format_not_available'] = 'Format de rapport non-disponible';
+$lang['report_nothing_found'] = 'Rien à rapporter';
+$lang['report_ownership_required'] = 'Vous devez être propriétaire du sujet du rapport';
+$lang['report_unknown_format'] = 'Format de rapport inconnu';
+$lang['report_unknown_target_type'] = 'Type de sujet de rapport inconnu';
+
+// Rest related exceptions
+$lang['rest_authentication_required'] = 'Autentification REST requise';
+$lang['rest_admin_required'] = 'Droits administrateur requis';
+$lang['rest_ownership_required'] = 'possession de la ressource REST requise';
+$lang['rest_missing_parameter'] = 'Paramêtre REST manquant';
+$lang['rest_bad_parameter'] = 'Paramêtre REST erroné';
+$lang['rest_method_not_allowed'] = 'Le serveur REST n\'accepte pas cette méthode';
+$lang['rest_endpoint_missing'] = 'Le serveur REST n\'a pas pû déduire le point d\'entrée de l\'URL';
+$lang['rest_access_forbidden'] = 'Le serveur REST a refusé l\'accès';
+$lang['rest_jsonp_get_only'] = 'Le serveur REST n\'accepte que la méthode GET pour les requètes de type JSONP';
+$lang['rest_updatedsince_bad_format'] = 'Le paramêtre REST updatedSince est erroné';
+$lang['rest_endpoint_not_implemented'] = 'Point d\'entré REST introuvable';
+$lang['rest_method_not_implemented'] = 'Méthode REST introuvable dans le point d\'entrée';
+$lang['rest_sanity_check_failed'] = 'La vérification des données REST a échouée';
+$lang['rest_xsrf_token_did_not_match'] = 'Le code de sécurité ne correspond pas';
+
+// StatLog related exceptions
+$lang['statlog_not_found'] = 'Entrée de statistique introuvable';
+$lang['statlog_unknown_event'] = 'Evenement inconnu';
+
+// Storage related exceptions
+$lang['storage_chunk_too_large'] = 'Morceau de fichier trop gros';
+$lang['storage_not_enough_space_left'] = 'Pas assez d\'espace restant';
+
+// StorageFilesystem related exceptions
+$lang['storage_filesystem_cannot_create_path'] = 'Impossible de créer le chemin dans le stockage';
+$lang['storage_filesystem_file_not_found'] = 'Fichier introuvable dans le stockage';
+$lang['storage_filesystem_cannot_read'] = 'Impossible de lire le fichier dans le stockage';
+$lang['storage_filesystem_cannot_delete'] = 'Impossible de supprimer le fichier du le stockage';
+$lang['storage_filesystem_cannot_write'] = 'Impossible d\'écrire le fichier dans le stockage';
+$lang['storage_filesystem_out_of_space'] = 'Espace manquant dans le stockage';
+$lang['storage_filesystem_bad_resolver_target'] = 'Mauvaise cible pour la cartographie du stockage';
+$lang['storage_filesystem_bad_usage_output'] = 'Informations sur l\'utilisation du stockage erronées';
+$lang['storage_filesystem_cannot_get_usage'] = 'Impossible d\'obtenir les informations sur l\'utilisation du stockage';
+
+// Template related exceptions
+$lang['template_not_found'] = 'Modèle introuvable';
+
+// Tracking related exceptions
+$lang['tracking_event_not_found'] = 'Evenement de suivi introuvable';
+$lang['tracking_unknown_event'] = 'Type d\'évenement de suivi inconnu';
+
+// Transfer related exceptions
+$lang['transfer_not_found'] = 'Dépôt introuvable';
+$lang['bad_transfer_status'] = 'Statut de dépôt erroné';
+$lang['transfer_no_recipients'] = 'Le dépôt n\'a pas de destinataires';
+$lang['transfer_no_files'] = 'Le dépôt n\'a pas de fichiers';
+$lang['duplicate_recipient'] = 'Un des destinataires existe déjà';
+$lang['max_email_recipients_exceeded'] = 'Nombre maximum de destinataires dépassé';
+$lang['transfer_maximum_size_exceeded'] = 'Taille maximale de dépôt dépassée';
+$lang['transfer_not_availabe'] = 'Dépôt non disponible';
+$lang['transfer_too_many_files'] = 'Nombre maximum de fichiers dépassé';
+$lang['transfer_too_many_recipients'] = 'Nombre maximum de destinataires dépassé';
+$lang['cannot_alter_closed_transfer'] = 'Impossible de modifier un dépôt fermé';
+
+// User related exceptions
+$lang['user_not_found'] = 'Utilisateur introuvable';
+$lang['user_missing_uid'] = 'Identifiant unique d\'utilisateur manquant';
+
+// Utilities related exceptions
+$lang['utilities_uid_generator_bad_unicity_checker'] = 'Vérificateur d\'unicité du générateur d\'identifiant uniques erroné';
+$lang['utilities_uid_generator_tried_too_much'] = 'Nombre maximal d\'essais pour le générateur d\'identifiant uniques dépassé';
