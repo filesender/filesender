@@ -79,15 +79,7 @@
         </div>
         
         <div class='transfer' data-id="<?php echo $transfer->id ?>"></div>
-        
     </div>
-    
-    
-        
-        
-    <?php if (false && $fileData[0]['fileenabledownloadreceipts'] == 'true') { ?>
-        <p><input type="checkbox" id="dlcomplete" style="width:20px; vertical-align: middle"/>{tr:downloader_receipt}</p>
-    <?php } ?>
 </div>
 
 <script type="text/javascript" src="{path:js/download_page.js}"></script>
