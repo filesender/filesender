@@ -343,8 +343,12 @@ class Lang {
         }
         
         // Config syntax
-        $tr['text'] = preg_replace_callback('`\{(cfg|conf|config):([^}]+)\}`', function($m) {
-            return Config::get($m[2]);
+        $tr['text'] = preg_replace_callback('`\{(|size:)(cfg|conf|config):([^}]+)\}`', function($m) {
+            $value = Config::get($m[3]);
+            switch(substr($m[1], 0, -1)) {
+                case 'size' : $value = Utilities::formatBytes($value); break;
+            }
+            return $value;
         }, $tr['text']);
         
         return new Translation($tr['text']);
@@ -397,8 +401,12 @@ class Lang {
                 $translation = trim(ob_get_clean());
                 
                 // Config syntax
-                $translation = preg_replace_callback('`\{(cfg|conf|config):([^}]+)\}`', function($m) {
-                    return Config::get($m[2]);
+                $translation = preg_replace_callback('`\{(|size:)(cfg|conf|config):([^}]+)\}`', function($m) {
+                    $value = Config::get($m[3]);
+                    switch($m[1]) {
+                        case 'size' : $value = Utilities::formatBytes($value); break;
+                    }
+                    return $value;
                 }, $translation);
                 
                 $parts = preg_split('`\n\s*\n`', $translation, 2);
