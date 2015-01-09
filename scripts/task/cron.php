@@ -30,7 +30,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-require_once(dirname(dirname(__FILE__)).'/includes/init.php');
+require_once(dirname(__FILE__).'/../../includes/init.php');
 
 Logger::info('Cron started');
 
@@ -55,6 +55,34 @@ foreach(Transfer::allExpiredAuditlogs() as $transfer) {
 }
 
 Logger::info('Cleanup complete');
+
+
+
+Logger::info('Daily summary generation started');
+
+foreach(Transfer::all(Transfer::AVAILABLE) as $transfer) {
+    if(!$transfer->hasOption(TransferOptions::EMAIL_DAILY_STATISTICS)) continue;
+    
+    $start_time = time() - 24 * 3600;
+    $events = array();
+    
+    foreach($transfer->auditlogs as $log) {
+        if($log->created < $start_time) continue;
+        if($log->author_type != 'Recipient') continue;
+        if(!in_array($log->event, array(LogEventTypes::DOWNLOAD_ENDED, LogEventTypes::ARCHIVE_DOWNLOAD_ENDED))) continue;
+        
+        $events[] = array(
+            'who' => $log->author->email,
+            'what' => ($log->event == LogEventTypes::ARCHIVE_DOWNLOAD_ENDED) ? 'archive' : 'file',
+            'what_name' => ($log->event == LogEventTypes::ARCHIVE_DOWNLOAD_ENDED) ? '' : $log->target->name,
+            'when' => $log->created
+        );
+    }
+    
+    ApplicationMail::quickSend('daily_summary', $transfer->owner->email, $transfer, array('events' => $events));
+}
+
+Logger::info('Daily summary generation complete');
 
 
 
