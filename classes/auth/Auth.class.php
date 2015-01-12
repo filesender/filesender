@@ -107,12 +107,12 @@ class Auth {
                     self::$isRemoteApplication = true;
                 }
                 
-            }/*else if(Config::get('auth_remote_user_enabled')) { // Remote user
+            }else if(Config::get('auth_remote_user_enabled')) { // Remote user
                 if(AuthRemoteUser::isAuthenticated()) {
                     self::$attributes = AuthRemoteUser::attributes();
                     self::$isRemoteUser = true;
                 }
-            }*/
+            }
             
             if(!self::$attributes || !array_key_exists('uid', self::$attributes)) return null;
 

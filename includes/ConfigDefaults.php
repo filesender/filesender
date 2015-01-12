@@ -57,6 +57,8 @@ $default = array(
     'auth_sp_shibboleth_name_attribute' => 'cn', // Get name attribute from authentification service
     'auth_sp_shibboleth_uid_attribute' => 'eduPersonTargetId', // Get uid attribute from authentification service
     
+    'auth_remote_user_autogenerate_secret' => false,
+    
     'aup_default' => false,
     'aup_enabled' => false,
     'mac_unzip_name' => 'The Unarchiver',
@@ -95,6 +97,7 @@ $default = array(
     'report_bounces_asap_then_daily_range' => 15 * 60,
     
     'statlog_lifetime' => 0,
+    'statlog_log_user_organization' => false,
     'auditlog_lifetime' => 31,
     
     'report_format' => ReportFormats::INLINE,
