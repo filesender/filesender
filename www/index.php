@@ -38,7 +38,7 @@ try {
     Template::display('!header');
     
     try { // At that point we can render exceptions using nice html
-        $known_pages = array('upload', 'transfers', 'guests', 'admin', 'logon', 'download');
+        $known_pages = array('upload', 'transfers', 'guests', 'admin', 'logon', 'download', 'user');
         
         $allowed_pages = array('download');
         
@@ -49,6 +49,8 @@ try {
                 $allowed_pages = array('upload', 'transfers', 'guests', 'download');
                 
                 if(Auth::isAdmin()) $allowed_pages[] = 'admin';
+                
+                if(Config::get('user_page')) $allowed_pages[] = 'user';
             }
         }
         

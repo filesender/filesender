@@ -20,6 +20,9 @@ $pagemenuitem = function($page) use($current_page, $allowed_pages) {
                 
                 $pagemenuitem('transfers');
                 
+                if(Config::get('user_page'))
+                    $pagemenuitem('user');
+                
                 $pagemenuitem('admin');
             }
             

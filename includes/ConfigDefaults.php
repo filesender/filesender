@@ -101,6 +101,13 @@ $default = array(
     'auditlog_lifetime' => 31,
     
     'report_format' => ReportFormats::INLINE,
+    
+    'user_page' => false,
+    //'user_page' => array(
+    //    'lang' => 'write',
+    //    'auth_secret' => 'read',
+    //    'created' => 'read'
+    //),
 
     // Logging
     'log_facilities' => array(

@@ -149,6 +149,7 @@ $lang['expiry_date'] = 'Expiry date';
 $lang['email_sent'] = 'Message Sent';
 $lang['email_separator_msg'] = 'Multiple email addresses separated by , or ;';
 $lang['what_to_do'] = 'What to do ?';
+$lang['copy_text'] = 'Copy the text bellow';
 
 
 /**
@@ -289,6 +290,20 @@ $lang['confirm_download_notify'] = 'Do you want to be notified by mail when down
 
 
 /**
+ * User profile specifics
+ */
+$lang['user_page'] = 'My profile';
+$lang['user_preferences'] = 'Preferences';
+$lang['user_lang'] = 'Prefered language';
+$lang['user_remote_authentication'] = 'Remote authentication';
+$lang['user_auth_secret'] = 'Secret';
+$lang['user_additionnal'] = 'Additionnal information';
+$lang['user_created'] = 'First login';
+$lang['get_full_user_remote_config'] = 'Get full remote configuration';
+$lang['preferences_updated'] = 'User preferences updated';
+
+
+/**
  * Admin page specific
  */
 $lang['admin_statistics_section'] = 'Statistics';
@@ -340,6 +355,9 @@ $lang['auth_authentication_not_found'] = 'Authentification system not found';
 $lang['auth_remote_application_unknown_application'] = 'Unknow remote application';
 $lang['auth_remote_application_too_late'] = 'Authentification too late';
 $lang['auth_remote_application_signature_check_failed'] = 'Remote authentification signature check failed';
+
+// AuthRemoteUser related exceptions
+$lang['auth_remote_user_rejected'] = 'User does not accept remote authentication';
 
 // AuthSP related exceptions
 $lang['auth_sp_missing_delegation_class'] = 'SP authentification delegation class not found';
