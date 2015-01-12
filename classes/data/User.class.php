@@ -86,7 +86,12 @@ class User extends DBObject {
         'last_activity' => array(
             'type' => 'datetime',
             'null' => true
-        )
+        ),
+        'auth_secret' => array(
+            'type' => 'string',
+            'size' => 64,
+            'null' => true
+        ),
     );
     
     /**
@@ -102,6 +107,7 @@ class User extends DBObject {
     protected $frequent_recipients = null;
     protected $created = 0;
     protected $last_activity = 0;
+    protected $auth_secret = null;
     
     /**
      * From Auth if it makes sense
@@ -136,6 +142,9 @@ class User extends DBObject {
             $this->id = $id;
             $this->created = time();
         }
+        
+        if(Config::get('auth_remote_user_autogenerate_secret') && !$this->auth_secret)
+            $this->auth_secret = hash('sha256', $this->id.'|'.time().'|'.Utilities::generateUID());
     }
     
     /**
@@ -251,7 +260,7 @@ class User extends DBObject {
      */
     public function __get($property) {
         if(in_array($property, array(
-            'id', 'organization', 'lang', 'aup_ticked', 'aup_last_ticked_date',
+            'id', 'organization', 'lang', 'aup_ticked', 'aup_last_ticked_date', 'auth_secret',
             'transfer_preferences', 'guest_preferences', 'frequent_recipients', 'created', 'last_activity',
             'email_addresses', 'name'
         ))) return $this->$property;

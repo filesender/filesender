@@ -40,9 +40,14 @@ class FilesenderRestClient {
     private $base_url = null;
     
     /**
-     * Application name
+     * Authentication mode
      */
-    private $application = null;
+    private $mode = null;
+    
+    /**
+     * Application name or user uid
+     */
+    private $application_or_uid = null;
     
     /**
      * Signing secret
@@ -63,14 +68,16 @@ class FilesenderRestClient {
      * Constructor
      * 
      * @param string $base_url base url to Filesender's rest service
-     * @param string $application the application name
+     * @param string $mode authentication mode, "application" or "user"
+     * @param string $application_or_uid the application name or user uid
      * @param string $secret signing secret
      */
-    public function __construct($base_url, $application, $secret) {
-        if(!$base_url || !$application) throw new Exception('Missing application id');
+    public function __construct($base_url, $mode, $application_or_uid, $secret) {
+        if(!$base_url || !$mode || !in_array($mode, array('application', 'user')) || !$application_or_uid) throw new Exception('Missing application id');
         
         $this->base_url = $base_url;
-        $this->application = $application;
+        $this->mode = $mode;
+        $this->application_or_uid = $application_or_uid;
         $this->secret = $secret;
     }
     
@@ -127,7 +134,12 @@ class FilesenderRestClient {
         if(substr($path, 0, 1) != '/') $path = '/'.$path;
         if($path == '/') throw new Exception('Endpoint is missing', 400);
         
-        $args['remote_application'] = $this->application;
+        if($this->mode == 'application') {
+            $args['remote_application'] = $this->application_or_uid;
+        } else if($this->mode == 'user') {
+            $args['remote_user'] = $this->application_or_uid;
+        }
+        
         $args['timestamp'] = time();
         ksort($args);
         
@@ -276,7 +288,7 @@ class FilesenderRestClient {
     /**
      * Start a transfer
      * 
-     * @param string $user_id
+     * @param string $user_id (will be ignored if remote user authentication in use)
      * @param string $from sender email
      * @param array $files array of file arrays with name and size entries
      * @param array $recipients array of recipients addresses
@@ -381,7 +393,7 @@ class FilesenderRestClient {
     /**
      * Upload files to recipients
      * 
-     * @param string $user_id
+     * @param string $user_id (will be ignored if remote user authentication in use)
      * @param string $from sender email
      * @param mixed $files file path or array of files path
      * @param array $recipients array of recipients addresses

@@ -30,20 +30,23 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+if (!defined('FILESENDER_BASE'))        // Require environment (fatal)
+    die('Missing environment');
+
 /**
- * Filesender REST client usage example
+ * User does not accept remote authentication
  */
-
-require_once 'FilesenderRestClient.class.php';
-
-try {
-    $c = new FilesenderRestClient('http://localhost/filesender/rest.php', 'application', 'foo', 'bar');
-    
-    // OR
-    
-    $c = new FilesenderRestClient('http://localhost/filesender/rest.php', 'user', 'foo@domain.tld', 'foo_user_secret');
-    
-    print_r($c->getInfo());
-} catch(Exception $e) {
-    echo 'EXCEPTION ['.$e->getCode().'] '.$e->getMessage();
+class AuthRemoteUserRejectedException extends DetailedException {
+    /**
+     * Constructor
+     * 
+     * @param string $uid user id
+     * @param string $reason
+     */
+    public function __construct($uid, $reason) {
+        parent::__construct(
+            'auth_remote_user_rejected', // Message to give to the user
+            'uid : '.$uid.', reason : '.$reason // Details to log
+        );
+    }
 }
