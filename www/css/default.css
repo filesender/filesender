@@ -652,7 +652,11 @@ table.transfers .collapse {
     text-align: center;
 }
 
-table.transfers .downloads,
+table.transfers .downloads{
+    width: 10em;
+    text-align: center;
+}
+
 table.transfers .expires {
     width: 8em;
     text-align: center;
