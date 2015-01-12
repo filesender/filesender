@@ -956,3 +956,28 @@ table.guests .guest .to .errors .details {
 .admin_page .statistics_section .storage_usage_blocks tr.warning {
     background-color: #fcc;
 }
+
+
+/* Popups */
+#dialog-help h4 {
+    font-size: 1.2em;
+    margin: 0.5em 1em;
+}
+
+#dialog-help ul {
+    margin-bottom: 2em;
+}
+
+#dialog-help ul li {
+    margin-bottom: 0.3em;
+    line-height: 1.1em;
+}
+
+#dialog-help img {
+    display: inline;
+    vertical-align: middle;
+}
+
+#dialog-help strong {
+    font-weight: bold;
+}
