@@ -48,6 +48,7 @@ $default = array(
     'force_ssl' => false,
     
     'auth_sp_type' => 'saml',  // Authentification type
+    'auth_sp_set_idp_as_user_organization' => false,
     'auth_sp_saml_email_attribute' => 'mail', // Get email attribute from authentification service
     'auth_sp_saml_name_attribute' => 'cn', // Get name attribute from authentification service
     'auth_sp_saml_uid_attribute' => 'eduPersonTargetId', // Get uid attribute from authentification service

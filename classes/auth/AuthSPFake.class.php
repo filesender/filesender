@@ -102,6 +102,15 @@ class AuthSPFake {
     }
     
     /**
+     * Retreive user Identity Provider from delegated class.
+     * 
+     * @retrun string
+     */
+    public static function idp() {
+        return 'fake_idp';
+    }
+    
+    /**
      * Generate the logon URL.
      * 
      * @retrun string

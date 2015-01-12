@@ -121,6 +121,19 @@ class AuthSPSaml {
     }
     
     /**
+     * Retreive user Identity Provider from delegated class.
+     * 
+     * @retrun string
+     */
+    public static function idp() {
+        if(!self::isAuthenticated()) throw new AuthSPAuthenticationNotFoundException();
+        
+        $auth = self::loadSimpleSAML();
+        
+        return method_exists($auth, 'getAuthData') ? $auth->getAuthData('saml:sp:IdP') : '';
+    }
+    
+    /**
      * Generate the logon URL.
      * 
      * @retrun string
