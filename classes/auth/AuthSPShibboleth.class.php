@@ -115,6 +115,19 @@ class AuthSPShibboleth {
     }
     
     /**
+     * Retreive user Identity Provider from delegated class.
+     * 
+     * @retrun string
+     */
+    public static function idp() {
+        if(!self::isAuthenticated()) throw new AuthSPAuthenticationNotFoundException();
+        
+        $attributes = self::attributes();
+        
+        return $attributes['idp'];
+    }
+    
+    /**
      * Generate the logon URL.
      * 
      * @retrun string

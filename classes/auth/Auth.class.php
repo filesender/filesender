@@ -117,6 +117,14 @@ class Auth {
             if(!self::$attributes || !array_key_exists('uid', self::$attributes)) return null;
 
             self::$user = User::fromAttributes(self::$attributes);
+            
+            if(self::isSP() && Config::get('auth_sp_set_idp_as_user_organization')) {
+                $organization = AuthSP::idp();
+                if(self::$user->organization != $organization) {
+                    self::$user->organization = $organization;
+                    self::$user->save();
+                }
+            }
         }
         
         return self::$user;
