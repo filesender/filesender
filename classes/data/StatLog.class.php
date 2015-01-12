@@ -59,7 +59,11 @@ class StatLog extends DBObject {
             'type' => 'int',
             'size' => 'big',
         ),
-        
+        'organization' => array(
+            'type' => 'string',
+            'size' => 80,
+            'null' => true
+        ),
         'created' => array(
             'type' => 'datetime'
         )
@@ -135,6 +139,16 @@ class StatLog extends DBObject {
                 break;
         }
         
+        if(Config::get('statlog_log_user_organization') && Auth::isAuthenticated()) {
+            $organization = null;
+            
+            if(Auth::isSP()) $organization = Auth::user()->organization;
+            
+            if(Auth::isGuest()) $organization = AuthGuest::getGuest()->owner->organization;
+            
+            if($organization) $log->organization = $organization;
+        }
+        
         $log->save();
         
         return $log;
@@ -184,6 +198,7 @@ class StatLog extends DBObject {
             'created',
             'target_type',
             'size',
+            'organization',
         ))) return $this->$property;
         
         throw new PropertyAccessException($this, $property);
