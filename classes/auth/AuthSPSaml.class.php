@@ -130,7 +130,7 @@ class AuthSPSaml {
         
         $auth = self::loadSimpleSAML();
         
-        return method_exists($auth, 'getAuthData') ? $auth->getAuthData('saml:sp:IdP') : '';
+        return method_exists($auth, 'getAuthData') ? $auth->getAuthData('saml:sp:IdP') : null;
     }
     
     /**
