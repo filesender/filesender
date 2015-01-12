@@ -126,4 +126,48 @@ class RestEndpointUser extends RestEndpoint {
         }
     }
     
+    /**
+     * Set user preference
+     * 
+     * Call examples :
+     *  /user/foo@bar.tld : set preferences of user with uid foo@bar.tld
+     * 
+     * @param string $id user id
+     * 
+     * @return mixed
+     * 
+     * @throws RestAuthenticationRequiredException
+     * @throws RestOwnershipRequiredException
+     */
+    public function put($id = null) {
+        if(!Auth::isAuthenticated()) throw new RestAuthenticationRequiredException();
+        
+        if($id) {
+            $user = User::fromId($id);
+            
+            if(!Auth::user()->is($user) && !Auth::isAdmin())
+                throw new RestOwnershipRequiredException(Auth::user()->id, 'user = '.$user->id);
+        } else {
+            $user = Auth::user();
+        }
+        
+        $data = $this->request->input;
+        
+        if($data->lang) {
+            if(!Config::get('lang_userpref_enabled'))
+                throw new RestBadParameterException('user_lang');
+            
+            $availables = Lang::getAvailableLanguages();
+            if(!array_key_exists($data->lang, $availables))
+                throw new RestBadParameterException('user_lang');
+            
+            $user->lang = $data->lang;
+            $user->save();
+            
+            if(array_key_exists('lang', $_SESSION))
+                unset($_SESSION['lang']);
+        }
+        
+        return true;
+    }
 }

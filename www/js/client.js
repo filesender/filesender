@@ -467,4 +467,8 @@ window.filesender.client = {
     getLegacyUploadProgress: function(key, callback, error) {
         return this.get('/legacyuploadprogress/' + key, callback, {error: error});
     },
+    
+    updateUserPreferences: function(preferences, callback) {
+        return this.put('/user', preferences, callback);
+    }
 };

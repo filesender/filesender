@@ -148,6 +148,7 @@ $lang['expiry_date'] = 'Date d\'expiration';
 $lang['email_sent'] = 'Message envoyé';
 $lang['email_separator_msg'] = 'Adresses multiples séparées par , ou ;';
 $lang['what_to_do'] = 'Quelle action entreprendre ?';
+$lang['copy_text'] = 'Copiez le texte ci-dessous';
 
 
 /**
@@ -288,6 +289,20 @@ $lang['confirm_download_notify'] = 'Souhaitez-vous recevoir un email de notifica
 
 
 /**
+ * User profile specifics
+ */
+$lang['user_page'] = 'Mon profil';
+$lang['user_preferences'] = 'Préférences';
+$lang['user_lang'] = 'Langue préférée';
+$lang['user_remote_authentication'] = 'Autentification distante';
+$lang['user_auth_secret'] = 'Secret';
+$lang['user_additionnal'] = 'Informations additionnelles';
+$lang['user_created'] = 'Première connexion';
+$lang['get_full_user_remote_config'] = 'Obtenir la configuration complète pour l\'autentification distante';
+$lang['preferences_updated'] = 'Préférences utilisateur sauvegardées';
+
+
+/**
  * Admin page specific
  */
 $lang['admin_statistics_section'] = 'Statistiques';
@@ -339,6 +354,9 @@ $lang['auth_authentication_not_found'] = 'Méthode d\'autentification introuvabl
 $lang['auth_remote_application_unknown_application'] = 'Application distante inconnue';
 $lang['auth_remote_application_too_late'] = 'La requête est arrivée trop tard';
 $lang['auth_remote_application_signature_check_failed'] = 'Signature fournie incorrecte';
+
+// AuthRemoteUser related exceptions
+$lang['auth_remote_user_rejected'] = 'Cet utilisateur n\'accèpte pas d\'authentification distante';
 
 // AuthSP related exceptions
 $lang['auth_sp_missing_delegation_class'] = 'Classe de délégation d\'autentification de type "Fournisseur de Service" manquante';

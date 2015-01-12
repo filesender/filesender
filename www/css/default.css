@@ -373,7 +373,9 @@ table.list .date {
     margin-right: 1em;
 }
 
-.ui-dialog .ui-dialog-content input.wide {
+.ui-dialog .ui-dialog-content input.wide,
+.ui-dialog .ui-dialog-content select.wide,
+.ui-dialog .ui-dialog-content textarea.wide {
     width: 90%;
 }
 
@@ -947,6 +949,24 @@ table.guests .guest .to .errors .details {
 
 .admin_page .config_section .box+.box {
     text-align: center;
+}
+
+
+/* User profile */
+
+.user_page .info {
+    margin: 1em 0;
+}
+
+.user_page .info .readonly {
+    border: 1px solid silver;
+    padding: 0.25em;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+.user_page span[data-info="remote_config"] {
+    display: none;
 }
 
 
