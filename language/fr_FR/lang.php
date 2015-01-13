@@ -149,6 +149,7 @@ $lang['email_sent'] = 'Message envoyé';
 $lang['email_separator_msg'] = 'Adresses multiples séparées par , ou ;';
 $lang['what_to_do'] = 'Quelle action entreprendre ?';
 $lang['copy_text'] = 'Copiez le texte ci-dessous';
+$lang['reason'] = 'Raison';
 
 
 /**
@@ -486,6 +487,7 @@ $lang['transfer_not_availabe'] = 'Dépôt non disponible';
 $lang['transfer_too_many_files'] = 'Nombre maximum de fichiers dépassé';
 $lang['transfer_too_many_recipients'] = 'Nombre maximum de destinataires dépassé';
 $lang['cannot_alter_closed_transfer'] = 'Impossible de modifier un dépôt fermé';
+$lang['transfer_rejected'] = 'Dépôt rejeté';
 
 // User related exceptions
 $lang['user_not_found'] = 'Utilisateur introuvable';

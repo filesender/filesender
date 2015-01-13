@@ -260,7 +260,7 @@ window.filesender.ui = {
         if(error.details) {
             var i = $('<div class="details" />').appendTo(d);
             $.each(error.details, function(k, v) {
-                if(isNaN(k)) v = k + ': ' + v;
+                if(isNaN(k)) v = lang.tr(k) + ': ' + v;
                 $('<div class="detail" />').text(v).appendTo(i);
             });
         }

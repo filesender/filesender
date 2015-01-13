@@ -137,6 +137,20 @@ class TransferMaximumSizeExceededException extends DetailedException {
 }
 
 /**
+ * Validation failed exception
+ */
+class TransferRejectedException extends DetailedException {
+    /**
+     * Constructor
+     * 
+     * @param string $reason
+     */
+    public function __construct($reason) {
+        parent::__construct('transfer_rejected', null, $reason ? array('reason' => $reason) : null);
+    }
+}
+
+/**
  * Expired
  */
 class TransferExpiredException extends DetailedException {

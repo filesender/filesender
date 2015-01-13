@@ -308,6 +308,19 @@ class RestEndpointTransfer extends RestEndpoint {
                 throw new StorageNotEnoughSpaceLeftException($transfer->size);
             }
             
+            $validators = Config::get('transfer_validators');
+            if(is_array($validators)) foreach($validators as $validator) {
+                if(!is_callable($validator)) continue;
+                
+                try {
+                    $ok = call_user_func($validator, $transfer);
+                    if(is_bool($ok) && !$ok) throw new Exception();
+                } catch(Exception $e) { // Catch any, delete and re-throw as typed exception
+                    $transfer->delete();
+                    throw new TransferRejectedException($e->getMessage());
+                }
+            }
+            
             $transfer->start();
             
             return array(
