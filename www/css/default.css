@@ -645,6 +645,14 @@ table.list .date {
     margin-left: 2em;
 }
 
+.ui-dialog .ui-dialog-content .download_link {
+    margin-top: 1em;
+}
+
+.ui-dialog .ui-dialog-content .download_link textarea {
+    margin-top: 0.5em;
+}
+
 
 /* transfers table */
 

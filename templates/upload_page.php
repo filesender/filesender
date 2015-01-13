@@ -58,7 +58,7 @@
                         <?php } else echo $emails[0] ?>
                     </div>
                     
-                    <div class="fieldcontainer">
+                    <div class="fieldcontainer" data-related-to="message">
                         <label for="to" class="mandatory">{tr:to} :</label>
                         
                         <?php if(Auth::isGuest() && AuthGuest::getGuest()->hasOption(GuestOptions::CAN_ONLY_SEND_TO_ME)) { ?>
@@ -70,23 +70,27 @@
                         <?php } ?>
                     </div>
                     
-                    <div class="fieldcontainer">
+                    <div class="fieldcontainer" data-related-to="message">
                         <label for="subject">{tr:subject} ({tr:optional}) :</label>
                         
                         <input name="subject" type="text"/>
                     </div>
                     
-                    <div class="fieldcontainer">
+                    <div class="fieldcontainer" data-related-to="message">
                         <label for="message">{tr:message} ({tr:optional}) : </label>
                         
                         <textarea name="message" rows="4"></textarea>
                     </div>
                     
+                    <?php if(array_key_exists('get_a_link', Transfer::availableOptions())) { ?>
+                    <div class="fieldcontainer" data-related-to="get_a_link">
+                        <input name="get_a_link" type="checkbox" /> <label for="get_a_link">{tr:get_a_link}</label>
+                    </div>
+                    <?php } ?>
+                    
                     <div>
-                        <input type="hidden" name="s-token" value="<?php echo (isset($_SESSION['s-token'])) ? $_SESSION['s-token'] : ''; ?>"/>
-                        <?php
-                        if (isset($_REQUEST['vid'])){?>
-                            <input type="hidden" name="guest_token" value="<?php echo $_REQUEST['vid']; ?>"/>
+                        <?php if(Auth::isGuest()) { ?>
+                        <input type="hidden" name="guest_token" value="<?php echo AuthGuest::getGuest()->token ?>" />
                         <?php } ?>
                         
                     </div>
@@ -95,9 +99,11 @@
                 <td class="box">
                     <?php
                         $displayoption = function($name, $cfg) {
+                            if($name == 'get_a_link') return;
+                            
                             $checked = $cfg['default'] ? 'checked="checked"' : '';
                             
-                            echo '<div class="fieldcontainer">';
+                            echo '<div class="fieldcontainer" data-option="'.$name.'">';
                             echo '  <input name="'.$name.'" type="checkbox" '.$checked.' />';
                             echo '  <label for="'.$name.'">'.Lang::tr($name).'</label>';
                             echo '</div>';
