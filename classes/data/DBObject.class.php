@@ -300,28 +300,30 @@ class DBObject {
             if(!array_key_exists($field_name, static::$dataMap)) continue; // Ignore non-mapped data
             
             // Basic types transformations/casting
-            switch(static::$dataMap[$field_name]['type']) {
-                case 'int':
-                case 'uint':
-                    $value = (int)$value;
-                    break;
-                
-                case 'float':
-                    $value = (float)$value;
-                    break;
-                
-                case 'datetime':
-                case 'date':
-                    $value = (int)strtotime($value); // UNIX timestamp
-                    break;
-                
-                case 'time':
-                    $value = (int)(strtotime($value) % (24 * 3600)); // Offset since 0h00
-                    break;
-                
-                case 'bool':
-                    $value = (bool)$value;
-                    break;
+            if(!is_null($value) || !array_key_exists('null', static::$dataMap[$field_name]) || !static::$dataMap[$field_name]['null']) {
+                switch(static::$dataMap[$field_name]['type']) {
+                    case 'int':
+                    case 'uint':
+                        $value = (int)$value;
+                        break;
+                    
+                    case 'float':
+                        $value = (float)$value;
+                        break;
+                    
+                    case 'datetime':
+                    case 'date':
+                        $value = (int)strtotime($value); // UNIX timestamp
+                        break;
+                    
+                    case 'time':
+                        $value = (int)(strtotime($value) % (24 * 3600)); // Offset since 0h00
+                        break;
+                    
+                    case 'bool':
+                        $value = (bool)$value;
+                        break;
+                }
             }
             
             if(array_key_exists('transform', static::$dataMap[$field_name])) switch(static::$dataMap[$field_name]['transform']) {
