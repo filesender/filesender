@@ -38,6 +38,7 @@
             },
         ),
         'additionnal' => array(
+            'id' => $readonly,
             'created' => function($info) use($readonly) {
                 $info['value'] = Utilities::formatDate($info['value']);
                 $readonly($info);

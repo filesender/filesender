@@ -315,12 +315,14 @@ class Transfer extends DBObject {
         
         // Log action
         Logger::logActivity($manualy ? LogEventTypes::TRANSFER_CLOSED : LogEventTypes::TRANSFER_EXPIRED, $this);
-
-        // Send notification to all recipients 
-        $ctn = Lang::translateEmail($manualy ? 'transfer_deleted' : 'transfer_expired')->r($this);
         
-        foreach($this->recipients as $recipient)
-            $this->sendToRecipient($ctn, $recipient);
+        if(!$this->hasOption(TransferOptions::GET_A_LINK)) {
+            // Send notification to all recipients 
+            $ctn = Lang::translateEmail($manualy ? 'transfer_deleted' : 'transfer_expired')->r($this);
+            
+            foreach($this->recipients as $recipient)
+                $this->sendToRecipient($ctn, $recipient);
+        }
         
         // Send notification to owner
         ApplicationMail::quickSend($manualy ? 'transfer_deleted_receipt' : 'transfer_expired_receipt', $this->user_email, $this);
@@ -645,9 +647,6 @@ class Transfer extends DBObject {
         if(!count($this->recipients))
             throw new TransferNoRecipientsException();
         
-        if($this->hasOption(TransferOptions::ADD_ME_TO_RECIPIENTS) && !$this->isRecipient($this->user_email))
-            $this->addRecipient($this->user_email);
-        
         $this->status = TransferStatuses::AVAILABLE;
         $this->save();
         Logger::logActivity(LogEventTypes::TRANSFER_AVAILABLE, $this);
@@ -671,15 +670,22 @@ class Transfer extends DBObject {
             Auth::user()->saveFrequentRecipients($this->recipients);
         }
         
-        $ctn = Lang::translateEmail('transfer_available')->r($this);
         
-        foreach($this->recipients as $recipient) {
-            $mail = new ApplicationMail($ctn->r($recipient));
-            $mail->to($recipient);
-            $mail->send();
+        if(!$this->hasOption(TransferOptions::GET_A_LINK)) {
+            if($this->hasOption(TransferOptions::ADD_ME_TO_RECIPIENTS) && !$this->isRecipient($this->user_email))
+                $this->addRecipient($this->user_email);
+            
+            $ctn = Lang::translateEmail('transfer_available')->r($this);
+            
+            foreach($this->recipients as $recipient) {
+                $mail = new ApplicationMail($ctn->r($recipient));
+                $mail->to($recipient);
+                $mail->send();
+            }
+            
+            Logger::logActivity(LogEventTypes::TRANSFER_SENT, $this, Auth::isGuest() ? AuthGuest::getGuest() : null);
         }
         
-        Logger::logActivity(LogEventTypes::TRANSFER_SENT, $this, Auth::isGuest() ? AuthGuest::getGuest() : null);
         Logger::info('Transfer#'.$this->id.' made available'.(Auth::isGuest() ? ' by guest: '.AuthGuest::getGuest()->email : ''));
     }
     
@@ -687,6 +693,8 @@ class Transfer extends DBObject {
      * Send reminder to recipients
      */
     public function remind() {
+        if($this->hasOption(TransferOptions::GET_A_LINK)) return;
+        
         $ctn = Lang::translateEmail('transfer_reminder')->r($this);
         
         foreach($this->recipients as $recipient)

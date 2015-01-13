@@ -684,6 +684,9 @@ window.filesender.transfer = function() {
                     return errorhandler({message: 'file_not_in_response', details: {file: transfer.files[i]}});
             }
             
+            if((',' + transfer.options.join(',') + ',').match(/,get_a_link,/))
+                transfer.download_link = data.recipients[0].download_url;
+            
             transfer.createRestartTracker();
             
             if(filesender.supports.reader) {

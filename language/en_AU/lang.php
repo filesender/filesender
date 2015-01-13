@@ -151,6 +151,8 @@ $lang['email_separator_msg'] = 'Multiple email addresses separated by , or ;';
 $lang['what_to_do'] = 'What to do ?';
 $lang['copy_text'] = 'Copy the text bellow';
 $lang['reason'] = 'Reason';
+$lang['anonymous'] = 'Anonymous';
+$lang['anonymous_details'] = 'Direct link provided';
 
 
 /**
@@ -168,6 +170,7 @@ $lang['add_me_to_recipients'] = 'Include me as a recipient';
 $lang['transfer_closed'] = 'Transfer closed';
 $lang['transfer_deleted'] = 'Transfer deleted';
 $lang['transfer_expired'] = 'Transfer expired';
+$lang['get_a_link'] = 'Get a link instead of sending to recipients';
 
 
 /**
@@ -241,6 +244,7 @@ $lang['filtered_transfer_log'] = 'This is a filtered view of the transfer logs.'
 $lang['view_full_log'] = 'View the full log';
 $lang['send_to_my_email'] = 'Send to my email';
 $lang['confirm_remind_transfer'] = 'Do you really want to send a reminder to this transfer\'s recipients ?';
+$lang['download_link'] = 'Here is your download link';
 
 
 /**
@@ -299,6 +303,7 @@ $lang['user_lang'] = 'Prefered language';
 $lang['user_remote_authentication'] = 'Remote authentication';
 $lang['user_auth_secret'] = 'Secret';
 $lang['user_additionnal'] = 'Additionnal information';
+$lang['user_id'] = 'Identifiant';
 $lang['user_created'] = 'First login';
 $lang['get_full_user_remote_config'] = 'Get full remote configuration';
 $lang['preferences_updated'] = 'User preferences updated';

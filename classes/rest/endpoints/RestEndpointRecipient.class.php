@@ -54,7 +54,7 @@ class RestEndpointRecipient extends RestEndpoint {
             'created' => RestUtilities::formatDate($recipient->created),
             'last_activity' => $recipient->last_activity ? RestUtilities::formatDate($recipient->last_activity) : null,
             'options' => $recipient->options,
-            'download_url' => Config::get('site_url').'?vid='.$recipient->token,
+            'download_url' => Config::get('site_url').'?s=download&token='.$recipient->token,
             'errors' => array_values(array_map(function($error) {
                 return array(
                     'type' => $error->type,

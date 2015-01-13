@@ -347,8 +347,9 @@ filesender.ui.evalUploadEnabled = function() {
         if (filesender.ui.files.invalidFiles.length > 0) ok  = false;
         
         if(!filesender.ui.transfer.files.length) ok = false;
-    
-        if(!filesender.ui.transfer.recipients.length) ok = false;
+        
+        var gal = ('get_a_link' in filesender.ui.nodes.options) ? filesender.ui.nodes.options.get_a_link.is(':checked') : false;
+        if(!gal && !filesender.ui.transfer.recipients.length) ok = false;
     }
     
     if(filesender.ui.nodes.aup.length)
@@ -384,9 +385,15 @@ filesender.ui.startUpload = function() {
     this.transfer.onprogress = filesender.ui.files.progress;
     
     this.transfer.oncomplete = function(time) {
-        filesender.ui.alert('success', lang.tr('done_uploading'), function() {
+        var p = filesender.ui.alert('success', lang.tr('done_uploading'), function() {
             filesender.ui.goToPage('transfers');
         });
+        
+        if(filesender.ui.transfer.download_link) {
+            var dl = $('<div class="download_link" />').text(lang.tr('download_link') + ' :').appendTo(p);
+            var t = $('<textarea class="wide" readonly="readonly" />').appendTo(dl);
+            t.val(filesender.ui.transfer.download_link).focus().select();
+        }
     };
     
     var errorHandler = function(error) {
@@ -509,7 +516,7 @@ $(function() {
             average_speed: form.find('.files_actions .stats .average_speed')
         }
     };
-    form.find('.basic_options input, .advanced_options input').each(function() {
+    form.find('.basic_options input, .advanced_options input, input[name="get_a_link"]').each(function() {
         var i = $(this);
         filesender.ui.nodes.options[i.attr('name')] = i;
     });
@@ -613,15 +620,26 @@ $(function() {
     });
     
     // Make options label toggle checkboxes
-    form.find('.basic_options label, .advanced_options label').on('click', function() {
+    form.find('.basic_options label, .advanced_options label, .fieldcontainer[data-related-to="get_a_link"] label').on('click', function() {
         var checkbox = $(this).closest('.fieldcontainer').find(':checkbox');
         checkbox.prop('checked', !checkbox.prop('checked'));
+        checkbox.change();
     }).css('cursor', 'pointer');
     
     // Bind advanced options display toggle
     form.find('.toggle_advanced_options').on('click', function() {
         $('.advanced_options').slideToggle();
         return false;
+    });
+    
+    form.find('input[name="get_a_link"]').on('change', function() {
+        var choice = $(this).is(':checked');
+        form.find(
+            '.fieldcontainer[data-related-to="message"],' +
+            ' .fieldcontainer[data-option="add_me_to_recipients"],' +
+            ' .fieldcontainer[data-option="enable_recipient_email_download_complete"]'
+        ).toggle(!choice);
+        filesender.ui.evalUploadEnabled();
     });
     
     // Bind aup

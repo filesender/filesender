@@ -150,6 +150,8 @@ $lang['email_separator_msg'] = 'Adresses multiples séparées par , ou ;';
 $lang['what_to_do'] = 'Quelle action entreprendre ?';
 $lang['copy_text'] = 'Copiez le texte ci-dessous';
 $lang['reason'] = 'Raison';
+$lang['anonymous'] = 'Anonyme';
+$lang['anonymous_details'] = 'Lien fourni directement';
 
 
 /**
@@ -167,6 +169,7 @@ $lang['add_me_to_recipients'] = 'M\'ajouter aux destinataires';
 $lang['transfer_closed'] = 'Dépôt fermé';
 $lang['transfer_deleted'] = 'Dépôt supprimé';
 $lang['transfer_expired'] = 'Dépôt expiré';
+$lang['get_a_link'] = 'Obtenir un lien au lieu d\'envoyer à des destinataires';
 
 
 /**
@@ -196,6 +199,7 @@ $lang['drag_and_drop'] = 'glissez-déposez vos fichiers ici';
 $lang['invalid_file'] = 'Fichier non-valide';
 $lang['add_recipient'] = 'Ajouter un destinataire';
 $lang['confirm_leave_upload_page'] = 'Voulez-vous vraiement quitter cette page et perdre la progression en cours ?';
+$lang['download_link'] = 'Voici votre lien de téléchargement';
 
 
 /**
@@ -298,6 +302,7 @@ $lang['user_lang'] = 'Langue préférée';
 $lang['user_remote_authentication'] = 'Autentification distante';
 $lang['user_auth_secret'] = 'Secret';
 $lang['user_additionnal'] = 'Informations additionnelles';
+$lang['user_id'] = 'Identifier';
 $lang['user_created'] = 'Première connexion';
 $lang['get_full_user_remote_config'] = 'Obtenir la configuration complète pour l\'autentification distante';
 $lang['preferences_updated'] = 'Préférences utilisateur sauvegardées';
