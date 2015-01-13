@@ -407,9 +407,9 @@ class FilesenderRestClient {
         if(!$this->chunk_size || !$expires) {
             
             if(!$expires) {
-                if(!property_exists($info, 'default_days_valid'))
+                if(!property_exists($info, 'default_transfer_days_valid'))
                     throw new Exception('Expires missing and not default value in info to build it from');
-                $expires = time() + (int)$info->default_days_valid * 24*3600;
+                $expires = time() + (int)$info->default_transfer_days_valid * 24*3600;
             }
             
             if(!$this->chunk_size) {
