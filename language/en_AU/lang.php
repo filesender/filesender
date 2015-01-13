@@ -150,6 +150,7 @@ $lang['email_sent'] = 'Message Sent';
 $lang['email_separator_msg'] = 'Multiple email addresses separated by , or ;';
 $lang['what_to_do'] = 'What to do ?';
 $lang['copy_text'] = 'Copy the text bellow';
+$lang['reason'] = 'Reason';
 
 
 /**
@@ -487,6 +488,7 @@ $lang['transfer_not_availabe'] = 'Transfer not available';
 $lang['transfer_too_many_files'] = 'Maximum number of files exceeded';
 $lang['transfer_too_many_recipients'] = 'Maximum number of recipients exceeded';
 $lang['cannot_alter_closed_transfer'] = 'Cannot alter closed transfer';
+$lang['transfer_rejected'] = 'Transfer creation rejected';
 
 // User related exceptions
 $lang['user_not_found'] = 'User not found';
