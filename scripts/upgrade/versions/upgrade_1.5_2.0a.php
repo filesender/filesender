@@ -37,7 +37,7 @@ if (!defined('FILESENDER_BASE'))
 // UID for backups
 $uid = uniqid();
 
-// Actions BEFORE database structure upgrade
+// Backup old data BEFORE database structure upgrade
 Upgrader::register('pre', function() use($uid) {
     // Move old data to backup tables
     echo 'Backuping table files'."\n";
@@ -54,7 +54,7 @@ Upgrader::register('pre', function() use($uid) {
     DBI::prepare('DROP TABLE logs')->execute();
 });
 
-// Actions AFTER database structure upgrade
+// Convert data AFTER database structure upgrade
 Upgrader::register('post', function() use($uid) {
     // Convert data
     $guest_vouchers = array();
@@ -175,4 +175,135 @@ Upgrader::register('post', function() use($uid) {
     
     echo 'Droping logs backup table'."\n";
     DBI::prepare('DROP TABLE logs_'.$uid)->execute();
+});
+
+// Move and rename lang strings in custom config files
+Upgrader::register('post', function() use($uid) {
+    $renamed = array(
+        '_DP_closeText' => 'dp_close_text',
+        '_DP_currentText' => 'dp_current_text',
+        '_DP_dayNames' => 'dp_day_names',
+        '_DP_dayNamesMin' => 'dp_day_names_min',
+        '_DP_dayNamesShort' => 'dp_day_names_short',
+        '_DP_firstDay' => 'dp_first_day',
+        '_DP_isRTL' => 'dp_is_rtl',
+        '_DP_monthNames' => 'dp_month_names',
+        '_DP_monthNamesShort' => 'dp_month_names_short',
+        '_DP_nextText' => 'dp_next_text',
+        '_DP_prevText' => 'dp_prev_text',
+        '_DP_showMonthAfterYear' => 'dp_show_month_after_year',
+        '_DP_weekHeader' => 'dp_week_header',
+        '_DP_yearSuffix' => 'dp_year_suffix',
+        '_DP_dateFormat' => 'dp_date_format',
+        
+        '_ABOUT' => 'about',
+        '_ADD_ME_TO_RECIPIENTS' => 'add_me_to_recipients',
+        '_ADVANCED_SETTINGS' => 'advanced_settings',
+        '_CANCEL' => 'cancel',
+        '_CLEAR_ALL' => 'clear_all',
+        '_CLOSE' => 'close',
+        '_CREATED' => 'created',
+        '_DELETE' => 'delete',
+        '_DETAILS' => 'details',
+        '_DOWNLOAD' => 'download',
+        '_DOWNLOADS' => 'downloads',
+        '_DRAG_AND_DROP' => 'drag_and_drop',
+        '_EMAIL_SENT' => 'email_sent',
+        '_EMAIL_SEPARATOR_MSG' => 'email_separator_msg',
+        '_ENTER_TO_EMAIL' => 'enter_to_email',
+        '_EXPIRY_DATE' => 'expiry_date',
+        '_FILES' => 'files',
+        '_FROM' => 'from',
+        '_HELP' => 'help',
+        '_INVALID_FILE' => 'invalid_file',
+        '_LOGON' => 'logon',
+        '_MESSAGE' => 'message',
+        '_NO' => 'no',
+        '_NUMBER_OF_FILES' => 'number_of_files',
+        '_OK' => 'ok',
+        '_OPTIONAL' => 'optional',
+        '_PAUSE' => 'pause',
+        '_RECIPIENTS' => 'recipients',
+        '_SELECT_FILE' => 'select_file',
+        '_SELECT_FILES' => 'select_files',
+        '_SEND' => 'send',
+        '_SEND_NEW_VOUCHER' => 'send_new_voucher.html.php',
+        '_SEND_VOUCHER' => 'send_voucher',
+        '_SHOWHIDE' => 'showhide',
+        '_SITE_FOOTER' => 'site_footer.html.php',
+        '_SIZE' => 'size',
+        '_SUBJECT' => 'subject',
+        '_TERA_CHUNKSIZE' => 'terasender_chunk_size',
+        '_TERA_WORKER_COUNT' => 'terasender_worker_count',
+        '_TO' => 'to',
+        '_YES' => 'yes',
+        
+        '_SITE_SPLASHHEAD' => 'site_splash.html.php@1',
+        '_SITE_SPLASHTEXT' => 'site_splash.html.php@2',
+        
+        '_HELP_TEXT' => 'help_text.html.php',
+        '_ABOUT_TEXT' => 'about_text.html.php',
+        '_AUPTERMS' => 'aupterms.html.php',
+    );
+    
+    $files = array();
+    foreach(Lang::getAvailableLanguages() as $dfn) {
+        $file = FILESENDER_BASE.'/config/'.$dfn['path'].'.php';
+        if(!file_exists($file)) continue;
+        $files[$dfn['path']] = $file;
+    }
+    
+    if(!count($files)) return;
+    
+    $dir = FILESENDER_BASE.'/config/language/';
+    if(!is_dir($dir) && !mkdir($dir))
+        throw new Exception('Could not create '.$dir);
+    
+    foreach($files as $code => $original_file) {
+        $path = $dir.$code.'/';
+        if(!is_dir($path) && !mkdir($path))
+            throw new Exception('Could not create '.$path);
+        
+        $lang = array();
+        include $original_file;
+        
+        $create = array();
+        
+        $lang_file = $path.'lang.php';
+        if($fh = fopen($lang_file, 'w')) {
+            fwrite($fh, '<?php'."\n\n");
+            
+            foreach($lang as $id => $string) {
+                if(array_key_exists($id, $renamed)) {
+                    if(preg_match('`\.(?:html|text)\.php(?:@([0-9]+))?$`', $renamed[$id], $m)) {
+                        if(!array_key_exists($renamed[$id], $create))
+                            $create[$renamed[$id]] = array();
+                        
+                        $p = (count($m) > 1) ? (int)$m[1] : 0;
+                        $create[$renamed[$id]]['o'.sprintf('%03d', $p)] = $string;
+                        continue;
+                        
+                    } else $id = $renamed[$id];
+                }
+                
+                fwrite($fh, '$lang[\''.$id.'\'] = \''.str_replace('\'', '\\\'', $string).'\''."\n");
+            }
+            
+            fclose($fh);
+        } else throw new Exception('Could not write to '.$path.'lang.php');
+        
+        foreach($create as $file => $strings) {
+            ksort($strings);
+            
+            if($fh = fopen($path.$file, 'w')) {
+                fwrite($fh, implode("\n", $strings));
+                fclose($fh);
+            } else throw new Exception('Could not write to '.$path.$file);
+        }
+    }
+});
+
+// Rename config parameters
+Upgrader::register('post', function() use($uid) {
+    
 });
