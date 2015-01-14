@@ -202,12 +202,16 @@ class Transfer extends DBObject {
         
         $transfer->user_id = Auth::user()->id;
         
-        if(Auth::isGuest())
-            $transfer->guest = AuthGuest::getGuest();
-        
         if(!$user_email) $user_email = Auth::user()->email;
-        if(!in_array($user_email, Auth::user()->email_addresses))
-            throw new BadEmailException($user_email);
+        
+        if(Auth::isGuest()) {
+            $transfer->guest = AuthGuest::getGuest();
+            $user_email = $transfer->guest->email;
+            
+        } else {
+            if(!in_array($user_email, Auth::user()->email_addresses))
+                throw new BadEmailException($user_email);
+        }
         
         $transfer->__set('user_email', $user_email);
         
