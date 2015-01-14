@@ -109,13 +109,16 @@ class DatabaseMysql {
      * @param string $column column name
      * @param string $definition column definition
      * 
-     * @return bool
+     * @return array of non respected options or false if no problems
      */
     public static function checkTableColumnFormat($table, $column, $definition, $logger = null) {
+        if(!$logger || !is_callable($logger)) $logger = function() {};
+        
         $s = DBI::prepare('SHOW COLUMNS FROM '.$table.' LIKE :column');
         $s->execute(array(':column' => $column));
-        $column = $s->fetch();
+        $column_dfn = $s->fetch();
         
+        $non_respected = array();
         $typematcher = '';
         
         switch($definition['type']) {
@@ -156,55 +159,67 @@ class DatabaseMysql {
                 break;
         }
         
-        if(!preg_match('`'.$typematcher.'`i', $column['Type'])) {
-            if($logger && is_callable($logger)) $logger($column['Field'].' type does not match '.$typematcher);
-            return false;
-        }
-        
-        $null = 'NO';
-        if(array_key_exists('null', $definition) && $definition['null']) $null = 'YES';
-        if($column['Null'] != $null) {
-            if($logger && is_callable($logger)) $logger($column['Field'].' null is not '.$null);
-            return false;
+        if(!preg_match('`'.$typematcher.'`i', $column_dfn['Type'])) {
+            $logger($column.' type does not match '.$typematcher);
+            $non_respected[] = 'type';
         }
         
         if(array_key_exists('default', $definition)) {
             if(is_null($definition['default'])) {
-                if(!is_null($column['Default'])) {
-                    if($logger && is_callable($logger)) $logger($column['Field'].' default is not null');
-                    return false;
+                if(!is_null($column_dfn['Default'])) {
+                    $logger($column.' default is not null');
+                    $non_respected[] = 'default';
                 }
             }else if(is_bool($definition['default'])) {
-                if((bool)$column['Default'] != $definition['default']) {
-                    if($logger && is_callable($logger)) $logger($column['Field'].' default is not '.($definition['default'] ? '1' : '0'));
-                    return false;
+                if((bool)$column_dfn['Default'] != $definition['default']) {
+                    $logger($column.' default is not '.($definition['default'] ? '1' : '0'));
+                    $non_respected[] = 'default';
                 }
-            }else if($column['Default'] != $definition['default']) {
-                if($logger && is_callable($logger)) $logger($column['Field'].' default is not "'.$definition['default'].'"');
-                return false;
+            }else if($column_dfn['Default'] != $definition['default']) {
+                $logger($column.' default is not "'.$definition['default'].'"');
+                $non_respected[] = 'default';
             }
         }
         
-        if(array_key_exists('primary', $definition) && $definition['primary']) {
-            if($column['Key'] != 'PRI') {
-                if($logger && is_callable($logger)) $logger($column['Field'].' key is not PRI');
-                return false;
-            }
-        }else if(array_key_exists('unique', $definition) && $definition['unique']) {
-            if($column['Key'] != 'UNI') {
-                if($logger && is_callable($logger)) $logger($column['Field'].' key is not UNI');
-                return false;
-            }
+        foreach(array('null', 'primary', 'unique', 'autoinc') as $k) if(!array_key_exists($k, $definition)) $definition[$k] = false;
+        
+        $is_null = ($column_dfn['Null'] == 'YES');
+        if($definition['null'] && !$is_null) {
+            $logger($column.' is not nullable');
+            $non_respected[] = 'null';
+        } else if(!$definition['null'] && $is_null) {
+            $logger($column.' should not be nullable');
+            $non_respected[] = 'null';
         }
         
-        if(array_key_exists('autoinc', $definition) && $definition['autoinc']) {
-            if(!preg_match('`auto_increment`', $column['Extra'])) {
-                if($logger && is_callable($logger)) $logger($column['Field'].' extra does not contain auto_increment');
-                return false;
-            }
+        $is_primary = ($column_dfn['Key'] == 'PRI');
+        if($definition['primary'] && !$is_primary) {
+            $logger($column.' is not primary');
+            $non_respected[] = 'primary';
+        } else if(!$definition['primary'] && $is_primary) {
+            $logger($column.' should not be primary');
+            $non_respected[] = 'primary';
         }
         
-        return true;
+        $is_unique = ($column_dfn['Key'] == 'UNI');
+        if($definition['unique'] && !$is_unique) {
+            $logger($column.' is not unique');
+            $non_respected[] = 'unique';
+        } else if(!$definition['unique'] && $is_unique) {
+            $logger($column.' should not be unique');
+            $non_respected[] = 'unique';
+        }
+        
+        $is_autoinc = preg_match('`auto_increment`', $column_dfn['Extra']);
+        if($definition['autoinc'] && !$is_autoinc) {
+            $logger($column.' is not autoinc');
+            $non_respected[] = 'autoinc';
+        } else if(!$definition['autoinc'] && $is_autoinc) {
+            $logger($column.' should not be autoinc');
+            $non_respected[] = 'autoinc';
+        }
+        
+        return count($non_respected) ? $non_respected : false;
     }
     
     /**
@@ -212,9 +227,10 @@ class DatabaseMysql {
      * 
      * @param string $table table name
      * @param string $column column name
-     * @param string $definition column definition
+     * @param array $definition column definition
+     * @param array $problems problematic options
      */
-    public static function updateTableColumnFormat($table, $column, $definition) {
+    public static function updateTableColumnFormat($table, $column, $definition, $problems) {
         $query = 'ALTER TABLE '.$table.' MODIFY '.$column.' '.self::columnDefinition($definition);
         DBI::exec($query);
     }
