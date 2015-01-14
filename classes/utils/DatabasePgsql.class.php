@@ -73,7 +73,7 @@ class DatabasePgsql {
      * @return array of column names
      */
     public static function getTableColumns($table) {
-        $s = DBI::query('SELECT column_name FROM information_schema.columns WHERE table_name="'.strtolower($table).'"');
+        $s = DBI::query('SELECT column_name FROM information_schema.columns WHERE table_name=\''.strtolower($table).'\'');
         $columns = array();
         foreach($s->fetchAll() as $r) $columns[] = $r['column_name'];
         return $columns;
@@ -184,14 +184,14 @@ class DatabasePgsql {
         }
         
         if(array_key_exists('primary', $definition) && $definition['primary']) {
-            $s = DBI::prepare('SELECT pg_attribute.attname FROM pg_attribute JOIN pg_class ON pg_class.oid = pg_attribute.attrelid LEFT JOIN pg_constraint ON pg_constraint.conrelid = pg_class.oid AND pg_attribute.attnum = ANY (pg_constraint.conkey) WHERE pg_class.relkind = "r"::char AND pg_class.relname = :table AND pg_attribute.attname = :column AND pg_constraint.contype = "p"');
+            $s = DBI::prepare('SELECT pg_attribute.attname FROM pg_attribute JOIN pg_class ON pg_class.oid = pg_attribute.attrelid LEFT JOIN pg_constraint ON pg_constraint.conrelid = pg_class.oid AND pg_attribute.attnum = ANY (pg_constraint.conkey) WHERE pg_class.relkind = "r"::char AND pg_class.relname = :table AND pg_attribute.attname = :column AND pg_constraint.contype = \'p\'');
             $s->execute(array(':table' => strtolower($table), ':column' => strtolower($column)));
             if(!$s->fetch()) {
                 if($logger && is_callable($logger)) $logger($column['column_name'].' key is not PRI');
                 return false;
             }
         }else if(array_key_exists('unique', $definition) && $definition['unique']) {
-            $s = DBI::prepare('SELECT pg_attribute.attname FROM pg_attribute JOIN pg_class ON pg_class.oid = pg_attribute.attrelid LEFT JOIN pg_constraint ON pg_constraint.conrelid = pg_class.oid AND pg_attribute.attnum = ANY (pg_constraint.conkey) WHERE pg_class.relkind = "r"::char AND pg_class.relname = :table AND pg_attribute.attname = :column AND pg_constraint.contype = "u"');
+            $s = DBI::prepare('SELECT pg_attribute.attname FROM pg_attribute JOIN pg_class ON pg_class.oid = pg_attribute.attrelid LEFT JOIN pg_constraint ON pg_constraint.conrelid = pg_class.oid AND pg_attribute.attnum = ANY (pg_constraint.conkey) WHERE pg_class.relkind = "r"::char AND pg_class.relname = :table AND pg_attribute.attname = :column AND pg_constraint.contype = \'u\'');
             $s->execute(array(':table' => strtolower($table), ':column' => strtolower($column)));
             if(!$s->fetch()) {
                 if($logger && is_callable($logger)) $logger($column['column_name'].' key is not UNI');
