@@ -1,4 +1,4 @@
-subject: {cfg:site_name} : Un invité a accédé à la page de dépôt
+subject: Un invité a accédé à la page de dépôt
 
 {alternative:plain}
 

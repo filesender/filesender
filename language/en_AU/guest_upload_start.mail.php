@@ -1,4 +1,4 @@
-subject: {cfg:site_name}: Guest start to upload files
+subject: Guest start to upload files
 
 {alternative:plain}
 

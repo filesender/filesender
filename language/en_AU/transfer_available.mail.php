@@ -1,4 +1,4 @@
-subject: {cfg:site_name}: File{if:transfer.files>1}s{endif} available for download
+subject: File{if:transfer.files>1}s{endif} available for download
 
 {alternative:plain}
 

@@ -1,4 +1,4 @@
-subject: {cfg:site_name}: Un invité a fini de déposer des fichiers
+subject: Un invité a fini de déposer des fichiers
 
 {alternative:plain}
 

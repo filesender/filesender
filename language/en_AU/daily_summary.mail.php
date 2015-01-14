@@ -1,4 +1,4 @@
-subject: {cfg:site_name}: Transfer daily summary
+subject: Transfer daily summary
 
 {alternative:plain}
 

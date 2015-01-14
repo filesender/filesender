@@ -1,4 +1,4 @@
-subject: {cfg:site_name}: Alerte du stockage
+subject: Alerte du stockage
 
 {alternative:plain}
 

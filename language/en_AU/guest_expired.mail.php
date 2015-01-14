@@ -1,4 +1,4 @@
-subject: {cfg:site_name} : Guest voucher expired
+subject: Guest voucher expired
 
 {alternative:plain}
 

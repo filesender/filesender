@@ -1,4 +1,4 @@
-subject: {cfg:site_name}: Fichiers expirés
+subject: Fichiers expirés
 
 {alternative:plain}
 

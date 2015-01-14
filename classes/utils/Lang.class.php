@@ -400,15 +400,6 @@ class Lang {
                 include $file;
                 $translation = trim(ob_get_clean());
                 
-                // Config syntax
-                $translation = preg_replace_callback('`\{(|size:)(cfg|conf|config):([^}]+)\}`', function($m) {
-                    $value = Config::get($m[3]);
-                    switch($m[1]) {
-                        case 'size' : $value = Utilities::formatBytes($value); break;
-                    }
-                    return $value;
-                }, $translation);
-                
                 $parts = preg_split('`\n\s*\n`', $translation, 2);
                 
                 // Do we have headings
@@ -417,7 +408,7 @@ class Lang {
                     foreach(explode('\n', $parts[0]) as $line) {
                         if(preg_match('`^\s*subject\s*:\s*(.*)$`i', $line, $m)) {
                             array_shift($parts);
-                            $subject = $m[1];
+                            $subject = trim(Config::get('email_subject_prefix').' '.$m[1]);
                         }
                     }
                 }
@@ -460,6 +451,15 @@ class Lang {
                         }
                     }
                 }
+                
+                // Config syntax
+                list($subject, $plain, $html) = preg_replace_callback('`\{(|size:)(cfg|conf|config):([^}]+)\}`', function($m) {
+                    $value = Config::get($m[3]);
+                    switch($m[1]) {
+                        case 'size' : $value = Utilities::formatBytes($value); break;
+                    }
+                    return $value;
+                }, array($subject, $plain, $html));
                 
                 // Convert to Lang instances
                 return new Translation(array(

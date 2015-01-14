@@ -1,4 +1,4 @@
-subject: {cfg:site_name}: Permission de télécharger révoquée
+subject: Permission de télécharger révoquée
 
 {alternative:plain}
 

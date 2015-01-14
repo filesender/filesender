@@ -1,4 +1,4 @@
-subject: {cfg:site_name}: Téléchargement terminé
+subject: Téléchargement terminé
 
 {alternative:plain}
 

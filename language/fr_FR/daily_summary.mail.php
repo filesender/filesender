@@ -1,4 +1,4 @@
-subject: {cfg:site_name}: Résumé quotidien de l'activité du dépôt
+subject: Résumé quotidien de l'activité du dépôt
 
 {alternative:plain}
 

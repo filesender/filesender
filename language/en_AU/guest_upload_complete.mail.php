@@ -1,4 +1,4 @@
-subject: {cfg:site_name}: Guest ended to upload files
+subject: Guest ended to upload files
 
 {alternative:plain}
 

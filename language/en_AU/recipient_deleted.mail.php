@@ -1,4 +1,4 @@
-subject: {cfg:site_name}: Download permission removed
+subject: Download permission removed
 
 {alternative:plain}
 

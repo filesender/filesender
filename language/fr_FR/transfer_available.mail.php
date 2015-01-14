@@ -1,4 +1,4 @@
-subject: {cfg:site_name}: Fichier{if:transfer.files>1}s{endif} disponible{if:transfer.files>1}s{endif} au téléchargement
+subject: Fichier{if:transfer.files>1}s{endif} disponible{if:transfer.files>1}s{endif} au téléchargement
 
 {alternative:plain}
 

@@ -1,4 +1,4 @@
-subject: {cfg:site_name}: Fichier{if:transfer.files>1}s{endif} téléversé avec succès
+subject: Fichier{if:transfer.files>1}s{endif} téléversé avec succès
 
 {alternative:plain}
 

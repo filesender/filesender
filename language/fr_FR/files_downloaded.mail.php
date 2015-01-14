@@ -1,4 +1,4 @@
-subject: {cfg:site_name}: Notification de téléchargement
+subject: Notification de téléchargement
 
 {alternative:plain}
 

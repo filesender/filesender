@@ -1,4 +1,4 @@
-subject: {cfg:site_name} (rappel) Invitation reçue
+subject: (rappel) Invitation reçue
 
 {alternative:plain}
 

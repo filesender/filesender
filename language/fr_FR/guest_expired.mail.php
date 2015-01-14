@@ -1,4 +1,4 @@
-subject: {cfg:site_name} : Une invitation a expirée
+subject: Une invitation a expirée
 
 {alternative:plain}
 
