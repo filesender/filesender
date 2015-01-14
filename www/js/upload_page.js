@@ -349,7 +349,8 @@ filesender.ui.evalUploadEnabled = function() {
         if(!filesender.ui.transfer.files.length) ok = false;
         
         var gal = ('get_a_link' in filesender.ui.nodes.options) ? filesender.ui.nodes.options.get_a_link.is(':checked') : false;
-        if(!gal && !filesender.ui.transfer.recipients.length) ok = false;
+        var addme = ('add_me_to_recipients' in filesender.ui.nodes.options) ? filesender.ui.nodes.options.add_me_to_recipients.is(':checked') : false;
+        if(!gal && !addme && !filesender.ui.transfer.recipients.length) ok = false;
     }
     
     if(filesender.ui.nodes.aup.length)
@@ -639,6 +640,10 @@ $(function() {
             ' .fieldcontainer[data-option="add_me_to_recipients"],' +
             ' .fieldcontainer[data-option="enable_recipient_email_download_complete"]'
         ).toggle(!choice);
+        filesender.ui.evalUploadEnabled();
+    });
+    
+    form.find('input[name="add_me_to_recipients"]').on('change', function() {
         filesender.ui.evalUploadEnabled();
     });
     

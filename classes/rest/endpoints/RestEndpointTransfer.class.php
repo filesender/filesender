@@ -237,7 +237,11 @@ class RestEndpointTransfer extends RestEndpoint {
             if($maxfiles && count($data->files) > $maxfiles)
                 throw new TransferTooManyFilesException(count($data->files), $maxfiles);
             
-            if(!count($data->recipients) && !in_array(TransferOptions::GET_A_LINK, $data->options))
+            if(
+                !count($data->recipients) &&
+                !in_array(TransferOptions::GET_A_LINK, $data->options) &&
+                !in_array(TransferOptions::ADD_ME_TO_RECIPIENTS, $data->options)
+            )
                 throw new TransferNoRecipientsException();
             
             $maxrecipients = Config::get('max_transfer_recipients');
@@ -301,6 +305,10 @@ class RestEndpointTransfer extends RestEndpoint {
                 $transfer->addRecipient($guest->user_email);
             } else {
                 foreach($data->recipients as $email)
+                    $transfer->addRecipient($email);
+                
+                $email = $guest ? $guest->user_email : ($data->from ? $data->from : Auth::user()->email);
+                if($transfer->hasOption(TransferOptions::ADD_ME_TO_RECIPIENTS) && !$transfer->isRecipient($email))
                     $transfer->addRecipient($email);
             }
             
