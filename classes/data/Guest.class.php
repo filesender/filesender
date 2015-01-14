@@ -450,6 +450,9 @@ class Guest extends DBObject {
         }else if($property == 'transfer_options') {
             $this->transfer_options = $value;
             
+        }else if($property == 'transfer_count') {
+            $this->transfer_count = (int)$value;
+            
         }else if($property == 'email') {
             if(!filter_var($value, FILTER_VALIDATE_EMAIL)) throw new BadEmailException($value);
             $this->email = (string)$value;
