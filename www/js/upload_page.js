@@ -350,7 +350,7 @@ filesender.ui.evalUploadEnabled = function() {
         
         var gal = ('get_a_link' in filesender.ui.nodes.options) ? filesender.ui.nodes.options.get_a_link.is(':checked') : false;
         var addme = ('add_me_to_recipients' in filesender.ui.nodes.options) ? filesender.ui.nodes.options.add_me_to_recipients.is(':checked') : false;
-        if(!gal && !addme && !filesender.ui.transfer.recipients.length) ok = false;
+        if(!gal && !addme && filesender.ui.nodes.recipients.list.length && !filesender.ui.transfer.recipients.length) ok = false;
     }
     
     if(filesender.ui.nodes.aup.length)
@@ -387,13 +387,17 @@ filesender.ui.startUpload = function() {
     
     this.transfer.oncomplete = function(time) {
         var p = filesender.ui.alert('success', lang.tr('done_uploading'), function() {
-            filesender.ui.goToPage('transfers');
+            filesender.ui.goToPage(filesender.ui.transfer.guest_token ? 'home' : 'transfers');
         });
         
         if(filesender.ui.transfer.download_link) {
             var dl = $('<div class="download_link" />').text(lang.tr('download_link') + ' :').appendTo(p);
             var t = $('<textarea class="wide" readonly="readonly" />').appendTo(dl);
             t.val(filesender.ui.transfer.download_link).focus().select();
+        }
+        
+        if(filesender.ui.transfer.guest_token) {
+            $('<p />').appendTo(p).html(lang.tr('done_uploading_guest').out());
         }
     };
     

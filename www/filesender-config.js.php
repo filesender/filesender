@@ -45,6 +45,9 @@ if(!('filesender' in window)) window.filesender = {};
 
 window.filesender.config = {
     log: false,
+    
+    site_name: '<?php echo Config::get('site_name') ?>',
+    
     upload_chunk_size: <?php echo Config::get('upload_chunk_size') ?>,
     
     upload_display_bits_per_sec: <?php echo Config::get('upload_display_bits_per_sec') ? 'true' : 'false' ?>,

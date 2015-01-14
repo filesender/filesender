@@ -1,3 +1,21 @@
+<?php
+
+if(Auth::isGuest()) {
+    $guest = AuthGuest::getGuest();
+    
+    if($guest->hasOption(GuestOptions::EMAIL_UPLOAD_PAGE_ACCESS)) {
+        if(!$guest->last_activity || $guest->last_activity < strtotime('-1 hour')) {
+            // Send mail to guest the owner of the voucher
+            ApplicationMail::quickSend('guest_access_upload_page', $guest->user_email, $guest);
+            
+            $guest->last_activity = time();
+            $guest->save();
+        }
+    }
+}
+
+?>
+
 <div class="box">
     <h1>{tr:upload_page}</h1>
     
@@ -43,7 +61,7 @@
             <tr>
                 <td class="box">
                     <div class="fieldcontainer">
-                        <?php $emails = Auth::user()->email_addresses ?>
+                        <?php $emails = Auth::isGuest() ? array(AuthGuest::getGuest()->email) : Auth::user()->email_addresses ?>
                         
                         <label for="from" class="mandatory">{tr:from} :</label>
                         
@@ -82,7 +100,7 @@
                         <textarea name="message" rows="4"></textarea>
                     </div>
                     
-                    <?php if(array_key_exists('get_a_link', Transfer::availableOptions())) { ?>
+                    <?php if(!Auth::isGuest() && array_key_exists('get_a_link', Transfer::availableOptions())) { ?>
                     <div class="fieldcontainer" data-related-to="get_a_link">
                         <input name="get_a_link" type="checkbox" /> <label for="get_a_link">{tr:get_a_link}</label>
                     </div>
@@ -114,7 +132,7 @@
                         <div class="fieldcontainer">
                             <label for="datepicker" id="datepicker_label" class="mandatory">{tr:expiry_date}:</label>
                             
-                            <input name="expires" type="text" autocomplete="off" title="{tr:dp_dateformat}" value="<?php echo Utilities::formatDate(Transfer::getDefaultExpire()) ?>"/>
+                            <input name="expires" type="text" autocomplete="off" title="{tr:dp_date_format}" value="<?php echo Utilities::formatDate(Transfer::getDefaultExpire()) ?>"/>
                         </div>
                         
                         <?php if(!Auth::isGuest()) foreach(Transfer::availableOptions(false) as $name => $cfg) $displayoption($name, $cfg) ?>
