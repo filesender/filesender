@@ -269,7 +269,9 @@ class DatabasePgsql {
                 break;
         }
         
-        if(!array_key_exists('null', $definition) || !$definition['null']) $sql .= ' NOT NULL';
+        if(!array_key_exists('null', $definition) || !$definition['null']) {
+            if(!array_key_exists('primary', $definition) || !$definition['primary']) $sql .= ' NOT NULL';
+        }
         
         if(array_key_exists('default', $definition)) {
             $sql .= ' DEFAULT ';
