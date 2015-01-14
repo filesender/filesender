@@ -230,6 +230,9 @@ class RestEndpointTransfer extends RestEndpoint {
             // New transfer
             $data = $this->request->input;
             
+            $guest = null;
+            if(Auth::isGuest()) $guest = AuthGuest::getGuest();
+            
             if(!count($data->files))
                 throw new TransferNoFilesException();
             
@@ -240,7 +243,14 @@ class RestEndpointTransfer extends RestEndpoint {
             if(
                 !count($data->recipients) &&
                 !in_array(TransferOptions::GET_A_LINK, $data->options) &&
-                !in_array(TransferOptions::ADD_ME_TO_RECIPIENTS, $data->options)
+                !in_array(TransferOptions::ADD_ME_TO_RECIPIENTS, $data->options) &&
+                (
+                    !$guest ||
+                    (
+                        !in_array(TransferOptions::ADD_ME_TO_RECIPIENTS, $guest->transfer_options) &&
+                        !in_array(GuestOptions::CAN_ONLY_SEND_TO_ME, $guest->options)
+                    )
+                )
             )
                 throw new TransferNoRecipientsException();
             
@@ -255,9 +265,6 @@ class RestEndpointTransfer extends RestEndpoint {
             $maxsize = Config::get('max_transfer_size');
             if($maxsize && $size > $maxsize)
                 throw new TransferMaximumSizeExceededException($size, $maxsize);
-            
-            $guest = null;
-            if(Auth::isGuest()) $guest = AuthGuest::getGuest();
             
             $transfer = Transfer::create($data->expires, $guest ? $guest->email : $data->from);
             
