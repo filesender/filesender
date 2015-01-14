@@ -90,7 +90,7 @@ class TransferNoRecipientsException extends DetailedException {
      * Constructor
      */
     public function __construct() {
-        parent::__construct('transfer_no_recipients');
+        parent::__construct('transfer_no_recipients', '');
     }
 }
 
