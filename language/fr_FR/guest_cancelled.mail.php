@@ -1,4 +1,4 @@
-subject: {cfg:site_name} : Invitation revoquée
+subject: Invitation revoquée
 
 {alternative:plain}
 

@@ -1,4 +1,4 @@
-subject: {cfg:site_name}: Reminder, file{if:transfer.files>1}s{endif} available for download
+subject: Reminder, file{if:transfer.files>1}s{endif} available for download
 
 {alternative:plain}
 

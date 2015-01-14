@@ -1,4 +1,4 @@
-subject: {cfg:site_name} : Guest access upload page
+subject: Guest access upload page
 
 {alternative:plain}
 

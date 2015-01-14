@@ -1,4 +1,4 @@
-subject: {cfg:site_name} : Rapport sur le {if:target.type=="Transfer"}dépôt{endif}{if:target.type=="File"}fichier{endif}{if:target.type=="Recipient"}destinataire{endif} n°{target.id}
+subject: Rapport sur le {if:target.type=="Transfer"}dépôt{endif}{if:target.type=="File"}fichier{endif}{if:target.type=="Recipient"}destinataire{endif} n°{target.id}
 
 {alternative:plain}
 

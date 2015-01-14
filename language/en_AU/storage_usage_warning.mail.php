@@ -1,4 +1,4 @@
-subject: {cfg:site_name}: Storage usage warning
+subject: Storage usage warning
 
 {alternative:plain}
 

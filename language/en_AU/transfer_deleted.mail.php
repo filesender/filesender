@@ -1,4 +1,4 @@
-subject: {cfg:site_name}: File(s) no longer available for download
+subject: File(s) no longer available for download
 
 {alternative:plain}
 

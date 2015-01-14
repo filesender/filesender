@@ -1,4 +1,4 @@
-subject: {cfg:site_name} : Report about {target.type} #{target.id}
+subject: Report about {target.type} #{target.id}
 
 {alternative:plain}
 

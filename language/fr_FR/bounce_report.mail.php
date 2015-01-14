@@ -1,4 +1,4 @@
-subject: {cfg:site_name}: Erreur lors de la délivrance du message
+subject: Erreur lors de la délivrance du message
 
 {alternative:plain}
 

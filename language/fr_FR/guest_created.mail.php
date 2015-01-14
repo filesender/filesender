@@ -1,4 +1,4 @@
-subject: {cfg:site_name}: Invitation
+subject: Invitation
 
 {alternative:plain}
 

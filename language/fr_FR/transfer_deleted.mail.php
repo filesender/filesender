@@ -1,4 +1,4 @@
-subject: {cfg:site_name}: Fichiers supprimés
+subject: Fichiers supprimés
 
 {alternative:plain}
 

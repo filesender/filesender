@@ -1,4 +1,4 @@
-subject: {cfg:site_name}: Reminder, guest voucher received
+subject: Reminder, guest voucher received
 
 {alternative:plain}
 
