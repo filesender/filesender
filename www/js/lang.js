@@ -118,7 +118,19 @@ window.filesender.lang = {
         if(typeof this.translations[id] == 'undefined')
             return new this.translatedString('{' + id + '}');
         
-        return new this.translatedString(this.translations[id], true);
+        var s = this.translations[id];
+        s = s.replace(/\{(size:)?cfg:([a-z0-9_-]+)\}/ig, function(whole, processor, key) {
+            processor = processor ? processor.substr(0, -1) : '';
+            
+            if(key in filesender.config) {
+                switch(processor) {
+                    case 'size': return filesender.ui.formatBytes(filesender.config[key]);
+                    default: return filesender.config[key];
+                }
+            } else return '(?)';
+        });
+        
+        return new this.translatedString(s, true);
     },
     
     tr: function(id) {

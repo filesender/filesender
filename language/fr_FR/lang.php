@@ -190,6 +190,7 @@ $lang['confirm_stop_upload'] = 'Souhaitez-vous vraiement arrêter le téléverse
 $lang['click_to_delete_file'] = 'Supprimer le fichier';
 $lang['click_to_delete_recipient'] = 'Supprimer le destinataire';
 $lang['done_uploading'] = 'Téléversement effectué';
+$lang['done_uploading_guest'] = 'Merci d\'avoir utilisé {cfg:site_name}. Si votre invitation est valable pour plusieurs dépôts vous pouvez réutiliser votre lien afin d\'envoyer d\'autres fichiers.';
 $lang['stalled_transfer'] = 'Téléversement bloqué';
 $lang['retry_later'] = 'Enregistrer la progression pour re-démarrer plus tard';
 $lang['transfer_seems_to_be_stalled'] = 'Le téléversement semble bloqué (beaucoup plus lent que prévu), voulez-vous ré-essayer où l\'arrêter ?';
