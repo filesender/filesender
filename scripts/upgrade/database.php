@@ -85,11 +85,13 @@ try {
             foreach($required_columns as $column) {
                 if(in_array($column, $missing)) continue; // Already created with the right format
                 
-                if(!Database::checkTableColumnFormat($table, $column, $datamap[$column], function($message) {
+                $problems = Database::checkTableColumnFormat($table, $column, $datamap[$column], function($message) {
                     echo "\t".$message."\n";
-                })) {
+                });
+                
+                if($problems) {
                     echo 'Column '.$column.' has bad format, updating it'."\n";
-                    Database::updateTableColumnFormat($table, $column, $datamap[$column]);
+                    Database::updateTableColumnFormat($table, $column, $datamap[$column], $problems);
                 }
             }
         }else{
@@ -99,6 +101,9 @@ try {
         
         echo 'Done for table '.$table."\n";
     }
+    
+    echo 'Everything went well'."\n";
+    echo 'Database structure is up to date'."\n";
 } catch(Exception $e) {
     $uid = ($e instanceof LoggingException) ? $e->getUid() : 'no available uid';
     die('Encountered exception : '.$e->getMessage().', see logs for details (uid: '.$uid.') ...');

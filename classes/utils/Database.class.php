@@ -114,12 +114,13 @@ class Database {
      * 
      * @param string $table table name
      * @param string $column column name
-     * @param string $definition column definition
+     * @param array $definition column definition
+     * @param array $problems problematic options
      */
-    public static function updateTableColumnFormat($table, $column, $definition) {
+    public static function updateTableColumnFormat($table, $column, $definition, $problems) {
         $class = self::getDelegationClass();
         
-        return call_user_func($class.'::updateTableColumnFormat', $table, $column, $definition);
+        return call_user_func($class.'::updateTableColumnFormat', $table, $column, $definition, $problems);
     }
     
     /**
