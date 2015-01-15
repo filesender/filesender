@@ -27,7 +27,6 @@ $renamed = array(
     '_DELETE' => 'delete',
     '_DETAILS' => 'details',
     '_DOWNLOAD' => 'download',
-    '_DOWNLOADER_RECEIPT' => 'downloader_receipt',
     '_DOWNLOADS' => 'downloads',
     '_DRAG_AND_DROP' => 'drag_and_drop',
     '_EMAIL_SENT' => 'email_sent',
@@ -62,4 +61,9 @@ $renamed = array(
     
     '_SITE_SPLASHHEAD' => 'site_splash.html.php',
     '_SITE_SPLASHTEXT' => 'site_splash.html.php',
+    
+    '_HELP_TEXT' => 'help_text.html.php',
+    '_ABOUT_TEXT' => 'about_text.html.php',
+    
+    '_AUPTERMS' => 'aupterms.html.php',
 );

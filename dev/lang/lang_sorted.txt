@@ -1,3 +1,5 @@
+anonymous
+anonymous_details
 about
 about_text
 access_forbidden
@@ -22,6 +24,7 @@ auth_authentication_not_found
 auth_remote_application_signature_check_failed
 auth_remote_application_too_late
 auth_remote_application_unknown_application
+auth_remote_user_rejected
 auth_sp_authentication_not_found
 auth_sp_bad_attribute
 auth_sp_missing_attribute
@@ -66,6 +69,7 @@ confirm_leave_upload_page
 confirm_remind_guest
 confirm_remind_transfer
 confirm_stop_upload
+copy_text
 core_class_not_found
 core_file_not_found
 count_from_date_to_date
@@ -98,16 +102,17 @@ details
 does_not_expire
 done
 done_uploading
+done_uploading_guest
 download
 download_bad_files_ids
 download_bad_token_format
 download_disclamer
 download_file
 download_invalid_range
+download_link
 download_missing_files_ids
 download_missing_token
 download_page
-downloader_receipt
 downloads
 drag_and_drop
 duplicate_recipient
@@ -144,6 +149,8 @@ forget
 forward
 forward_guest_voucher
 from
+get_a_link
+get_full_user_remote_config
 global_statistics
 guest_deleted
 guest_not_found
@@ -195,7 +202,9 @@ options
 pause
 paused
 per_second
+preferences_updated
 reader_not_supported
+reason
 recipient_added
 recipient_deleted
 recipient_error_bounce
@@ -245,6 +254,7 @@ rest_missing_parameter
 rest_ownership_required
 rest_sanity_check_failed
 rest_updatedsince_bad_format
+rest_xsrf_token_did_not_match
 restart
 restart_failed_transfer
 resume
@@ -264,8 +274,7 @@ send_voucher
 show_details
 showhide
 site_footer
-site_splashead
-site_splastext
+site_splash
 size
 size_unit
 speed_unit
@@ -294,7 +303,6 @@ storage_used
 subject
 success_dialog
 template_not_found
-terasender_chunk_size
 terasender_worker_count
 to
 tracking_event_not_found
@@ -308,6 +316,7 @@ transfer_no_files
 transfer_no_recipients
 transfer_not_availabe
 transfer_not_found
+transfer_rejected
 transfer_reminded
 transfer_seems_to_be_stalled
 transfer_too_many_files
@@ -318,8 +327,16 @@ unknown_page
 upload_page
 uploaded
 uploading_transfers
+user_additionnal
+user_auth_secret
+user_created
+user_id
+user_lang
 user_missing_uid
 user_not_found
+user_page
+user_preferences
+user_remote_authentication
 utilities_uid_generator_bad_unicity_checker
 utilities_uid_generator_tried_too_much
 valid_only_one_time
