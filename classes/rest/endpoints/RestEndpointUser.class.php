@@ -110,6 +110,9 @@ class RestEndpointUser extends RestEndpoint {
         
         if(is_numeric($id)) {
             $user = User::fromId($id);
+            
+            if(!$user->is(Auth::user()) && !Auth::isAdmin())
+                throw new RestOwnershipRequiredException(Auth::user()->id, 'user = '.$user->id);
         }
         
         if(!in_array($id, array('', '@me'))) throw new RestBadParameterException('user_id');
