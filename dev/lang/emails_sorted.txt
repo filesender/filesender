@@ -1,4 +1,5 @@
 bounce_report
+daily_summary
 download_complete
 file_deleted
 files_downloaded
