@@ -92,7 +92,7 @@ class RestEndpointFile extends RestEndpoint {
      *  /file/17/whole : upload file as a whole (legacy mode)
      * 
      * @param int $id transfer id to get info about
-     * @param string $mode upload mode ("chunk" or "whole")
+     * @param string $mode upload mode ("whole")
      * 
      * @return mixed
      * 
