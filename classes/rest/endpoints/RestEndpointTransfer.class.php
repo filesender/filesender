@@ -366,7 +366,25 @@ class RestEndpointTransfer extends RestEndpoint {
         if(!$id) throw new RestMissingParameterException('transfer_id');
         if(!is_numeric($id)) throw new RestBadParameterException('transfer_id');
         
-        if(!Auth::isAuthenticated()) throw new RestAuthenticationRequiredException();
+        $security = Config::get('chunk_upload_security');
+        if(Auth::isAuthenticated()) {
+            $security = 'auth';
+        }else if($security != 'key') {
+            throw new RestAuthenticationRequiredException();
+        }
+        
+        if($security == 'key') {
+            try {
+                if(!array_key_exists('key', $_GET)) throw new Exception();
+                if(!$_GET['key']) throw new Exception();
+                if(!File::fromUid($_GET['key'])->transfer->is($transfer)) throw new Exception();
+            } catch(Exception $e) {
+                throw new RestAuthenticationRequiredException();
+            }
+            
+            if($data->complete)
+                $transfer->makeAvailable();
+        }
         
         $transfer = Transfer::fromId($id);
         
@@ -420,6 +438,7 @@ class RestEndpointTransfer extends RestEndpoint {
                 if(!array_key_exists('key', $_GET)) throw new Exception();
                 if(!$_GET['key']) throw new Exception();
                 if(!File::fromUid($_GET['key'])->transfer->is($transfer)) throw new Exception();
+                if(!in_array($transfer->status, array(TransferStatuses::CREATED, TransferStatuses::STARTED, TransferStatuses::UPLOADING))) throw new Exception();
             } catch(Exception $e) {
                 throw new RestAuthenticationRequiredException();
             }
