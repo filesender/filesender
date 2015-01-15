@@ -224,7 +224,8 @@ window.filesender.ui = {
                     page = q[i].substr(2);
         }
         
-        var a = ['s=' + page];
+        var a = [];
+        if(typeof page == 'string') a.push('s=' + page);
         if(args) for(var k in args) a.push(k + '=' + args[k]);
         
         this.redirect(filesender.config.base_path + '?' + a.join('&'));
