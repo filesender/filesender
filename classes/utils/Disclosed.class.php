@@ -77,8 +77,14 @@ class Disclosed {
                 
             } else if(is_callable($v)) {
                 self::$informations[$key] = array('callable' => $v);
-            } else {
+                
+            } else if(Config::exists($key)) {
                 self::$informations[$key] = array('config' => $v);
+                
+            } else { // Specials
+                self::$informations[$v] = array('callable' => function() use($v) {
+                    if($v == 'version') return Version::get();
+                });
             }
         }
     }
@@ -114,7 +120,7 @@ class Disclosed {
                 self::$informations[$key]['value'] = Config::get($key);
                 
             } else if(array_key_exists('callable', self::$informations[$key])) {
-                self::$informations[$key]['value'] = self::$informations[$key]['callable']();
+                self::$informations[$key]['value'] = call_user_func(self::$informations[$key]['callable']);
                 
             }
         }
