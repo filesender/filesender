@@ -208,7 +208,7 @@ class Transfer extends DBObject {
             $transfer->guest = AuthGuest::getGuest();
             $user_email = $transfer->guest->email;
             
-        } else {
+        } else if(!Auth::isRemote()) {
             if(!in_array($user_email, Auth::user()->email_addresses))
                 throw new BadEmailException($user_email);
         }

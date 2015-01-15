@@ -162,8 +162,15 @@ class Guest extends DBObject {
         $guest = new self();
         $time = time();
         
+        if(!$from) $from = Auth::user()->email;
+        
+        if(!Auth::isRemote()) {
+            if(!in_array($from, Auth::user()->email_addresses))
+                throw new BadEmailException($from);
+        }
+        
         $guest->user_id = Auth::user()->id;
-        $guest->__set('user_email', $from ? $from : Auth::user()->email);
+        $guest->__set('user_email', $from);
         $guest->__set('email', $recipient); // Throws
         
         $guest->status = GuestStatuses::CREATED;
