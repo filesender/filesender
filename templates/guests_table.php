@@ -25,8 +25,8 @@
                 <abbr title="<?php echo Utilities::sanitizeOutput($guest->user_email) ?>">
                 <?php
                     $who = in_array($guest->user_email, Auth::user()->email_addresses) ? Lang::tr('me') : $guest->user_email;
-                    $who = explode('@', $who)[0];
-                    echo Utilities::sanitizeOutput($who);
+                    $who = explode('@', $who);
+                    echo Utilities::sanitizeOutput($who[0]);
                 ?>
                 </abbr>
             </td>
@@ -35,8 +35,8 @@
                 <abbr title="<?php echo Utilities::sanitizeOutput($guest->email) ?>">
                 <?php
                     $who = in_array($guest->email, Auth::user()->email_addresses) ? Lang::tr('me') : $guest->email;
-                    $who = explode('@', $who)[0];
-                    echo Utilities::sanitizeOutput($who);
+                    $who = explode('@', $who);
+                    echo Utilities::sanitizeOutput($who[0]);
                 ?>
                 </abbr>
                 
