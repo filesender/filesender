@@ -51,8 +51,8 @@
                 foreach(array_slice($transfer->recipients, 0, 3) as $recipient) {
                     $who = in_array($recipient->email, Auth::user()->email_addresses) ? Lang::tr('me') : $recipient->email;
                     if(!$who) $who = Lang::tr('anonymous');
-                    $who = explode('@', $who)[0];
-                    $items[] = '<abbr title="'.($recipient->email ? Utilities::sanitizeOutput($recipient->email) : Lang::tr('anonymous_details')).'">'.Utilities::sanitizeOutput($who).'</abbr>';
+                    $who = explode('@', $who);
+                    $items[] = '<abbr title="'.($recipient->email ? Utilities::sanitizeOutput($recipient->email) : Lang::tr('anonymous_details')).'">'.Utilities::sanitizeOutput($who[0]).'</abbr>';
                 }
                 
                 if(count($transfer->recipients) > 3)
@@ -142,8 +142,8 @@
                             <?php
                                 $who = in_array($recipient->email, Auth::user()->email_addresses) ? Lang::tr('me') : $recipient->email;
                                 if(!$who) $who = Lang::tr('anonymous');
-                                $who = explode('@', $who)[0];
-                                echo Utilities::sanitizeOutput($who);
+                                $who = explode('@', $who);
+                                echo Utilities::sanitizeOutput($who[0]);
                             ?>
                             </abbr>
                             
