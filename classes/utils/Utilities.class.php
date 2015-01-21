@@ -122,7 +122,7 @@ class Utilities
         
         $size = (int)$parts[1];
         
-        if(count($parts) > 1) switch(strtoupper($parts[2])) {
+        if(count($parts) > 2) switch(strtoupper($parts[2])) {
             case 'P': $size *= 1024;
             case 'T': $size *= 1024;
             case 'G': $size *= 1024;
