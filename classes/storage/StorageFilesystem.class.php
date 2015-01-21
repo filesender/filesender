@@ -173,6 +173,12 @@ class StorageFilesystem {
     public static function getUsage() {
         self::setup();
         
+        if(!self::$hashing) return array('main' => array(
+            'total_space' => disk_total_space(self::$path),
+            'free_space' => disk_free_space(self::$path),
+            'paths' => array()
+        ));
+        
         $paths = array('');
         
         if(is_numeric(self::$hashing)) {
@@ -343,7 +349,7 @@ class StorageFilesystem {
         
         if(!file_exists($file_path)) return;
         
-        $rm_command = Config::get('storage_filesystem_rm_command');
+        $rm_command = Config::get('storage_filesystem_file_deletion_command');
         
         if($rm_command) {
             $cmd = str_replace('{path}', escapeshellarg($file_path), $rm_command);
