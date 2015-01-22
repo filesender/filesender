@@ -249,23 +249,23 @@ filesender.ui.recipients = {
         input = $(input);
         
         var marker = input.data('error_marker');
+        if(!marker) {
+            marker = $('<span class="invalid fa fa-exclamation-circle fa-lg" />').attr({
+                title: lang.tr('invalid_recipient')
+            }).hide().insertBefore(input);
+            input.data('error_marker', marker);
+        }
         
-        var invalid = this.add(input.val());
+        var invalid = input.val() ? this.add(input.val()) : null;
         
         if(invalid) {
             input.val(invalid);
             input.addClass('invalid');
-            if(!marker) {
-                marker = $('<span class="invalid fa fa-exclamation-circle fa-lg" />').attr({
-                    title: lang.tr('invalid_recipient')
-                });
-                input.data('error_marker', marker);
-            }
-            marker.insertBefore(input);
+            marker.show();
         }else{
             input.val('');
             input.removeClass('invalid');
-            if(marker) marker.remove();
+            marker.hide();
         }
     },
     
