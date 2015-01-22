@@ -146,7 +146,7 @@ Request body fields :
   * `files` : (`array of object`) files to be uploaded
     * `name` : (`string`) the file name
     * `size` : (`integer`) the file size in bytes
-    * `mime_type` : (`string`) the file MIME type (optionnal), will be used to set the `Content-Type` header for downloaders so that their browsers handle the file better
+    * `mime_type` : (`string`) the file MIME type (optionnal), will be used to set the `Content-Type` header for downloaders so that their browsers handle the file better, can be left empty or null
     * `cid` : (`string`) an optionnal client side identifier which will be returned in the response as a property of the corresponding created [File](#file), it may help the client to match back without having to use name and size
   * `recipients` : (`array of string`) recipients email addresses
   * `options` : (`array of string`) options (values defined in `classes/constants/TransferOptions.class.php`), under [Guest](#guest) authentication it will be ignored and the [Guest](#guest) `transfer_options` will be used
