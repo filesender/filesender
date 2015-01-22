@@ -55,8 +55,10 @@ try {
         }
         
         // Always accessible pages
-        $known_pages = array_merge(array('home', 'exception'), $known_pages);
-        $allowed_pages = array_merge(array('home', 'exception'), $allowed_pages);
+        foreach(array('home', 'logout', 'exception') as $p) {
+            $known_pages[] = $p;
+            $allowed_pages[] = $p;
+        }
         
         $page = null;
         $vars = array();
