@@ -153,6 +153,7 @@ $lang['copy_text'] = 'Copy the text bellow';
 $lang['reason'] = 'Reason';
 $lang['anonymous'] = 'Anonymous';
 $lang['anonymous_details'] = 'Direct link provided';
+$lang['guest'] = 'Guest';
 
 
 /**

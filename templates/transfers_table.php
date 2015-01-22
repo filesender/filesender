@@ -2,6 +2,7 @@
     if(!isset($status)) $status = 'available';
     if(!isset($mode)) $mode = 'user';
     if(!isset($transfers) || !is_array($transfers)) $transfers = array();
+    $show_guest = isset($show_guest) ? (bool)$show_guest : false;
 ?>
 <table class="transfers list" data-status="<?php echo $status ?>" data-mode="<?php echo $mode ?>">
     <thead>
@@ -9,6 +10,12 @@
             <th class="expand" title="{tr:expand_all}">
                 <span class="clickable fa fa-plus-circle fa-lg"></span>
             </th>
+            
+            <?php if($show_guest) { ?>
+            <th class="guest">
+                {tr:guest}
+            </th>
+            <?php } ?>
             
             <th class="recipients">
                 {tr:recipients}
@@ -44,6 +51,15 @@
             <td class="expand">
                 <span class="clickable fa fa-plus-circle fa-lg" title="{tr:show_details}"></span>
             </td>
+            
+            <?php if($show_guest) { ?>
+            <td class="guest">
+                <?php if($transfer->guest) {
+                    $who = explode('@', $transfer->guest->email);
+                    echo '<abbr title="'.Utilities::sanitizeOutput($transfer->guest->email).'">'.Utilities::sanitizeOutput($who[0]).'</abbr>';
+                } ?>
+            </td>
+            <?php } ?>
             
             <td class="recipients">
                 <?php
