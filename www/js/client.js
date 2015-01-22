@@ -154,7 +154,7 @@ window.filesender.client = {
      * @param array options array of selected option identifiers
      * @param callable callback function to call with transfer path and transfer info once done
      */
-    postTransfer: function(from, files, recipients, subject, message, expires, options, guest_token, callback, onerror) {
+    postTransfer: function(from, files, recipients, subject, message, lang, expires, options, guest_token, callback, onerror) {
         var opts = {};
         if(onerror) opts.error = onerror;
         if (guest_token) opts.args={vid:guest_token};
@@ -164,6 +164,7 @@ window.filesender.client = {
             recipients: recipients,
             subject: subject,
             message: message,
+            lang: lang,
             expires: expires,
             options: options
         }, callback, opts);

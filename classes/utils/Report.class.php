@@ -119,8 +119,11 @@ class Report {
      * @param mixed $recipient User, email address
      */
     public function sendTo($recipient) {
-        if(is_object($recipient) && ($recipient instanceof User))
+        $lang = null;
+        if(is_object($recipient) && ($recipient instanceof User)) {
+            $lang = $recipient->lang;
             $recipient = $recipient->email;
+        }
         
         if(!is_string($recipient) || !filter_var($recipient, FILTER_VALIDATE_EMAIL))
             throw new BadEmailException($recipient);
@@ -173,7 +176,7 @@ class Report {
         }
         
         $lid = ($format == ReportFormats::INLINE) ? 'inline' : 'attached';
-        $mail = new ApplicationMail(Lang::translateEmail('report_'.$lid)->r(
+        $mail = new ApplicationMail(Lang::translateEmail('report_'.$lid, $lang)->r(
             array(
                 'target' => array(
                     'type' => $this->target_type,

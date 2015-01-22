@@ -234,7 +234,7 @@ class RestEndpointFile extends RestEndpoint {
             
             return $write_info;
         
-        }else if(is_null($mode) && $data->complete) { // Client signals this was the last chunk
+        }else if(is_null($mode) && $data && $data->complete) { // Client signals this was the last chunk
             $file->complete();
             
             return true;
@@ -270,7 +270,7 @@ class RestEndpointFile extends RestEndpoint {
             $file->transfer->removeFile($file);
             
             if($file->transfer->status == 'available') { // Notify deletion for transfers that are available
-                $ctn = Lang::translateEmail('file_deleted')->r($file, $file->transfer);
+                $ctn = Lang::translateEmail('file_deleted', $file->transfer->lang)->r($file, $file->transfer);
                 foreach($file->transfer->recipients as $recipient) {
                     $mail = new ApplicationMail($ctn->r($recipient));
                     $mail->to($recipient);

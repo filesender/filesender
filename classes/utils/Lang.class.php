@@ -114,6 +114,7 @@ class Lang {
      * @return mixed real code or null if not found
      */
     private static function realCode($raw_code) {
+        $raw_code = str_replace('_', '-', strtolower($raw_code));
         $available = self::getAvailableLanguages();
         
         if(array_key_exists($raw_code, $available))
@@ -206,6 +207,26 @@ class Lang {
         }
         
         return self::$code_stack;
+    }
+    
+    /**
+     * Get base code, without any user related getters
+     * 
+     * @return string
+     */
+    public static function getBaseCode() {
+        // Config default language
+        $code = Config::get('default_language');
+        if($code) {
+            $code = self::realCode($code);
+            if($code) return $code;
+        }
+        
+        // Absolute default if not already present
+        $code = self::realCode('en');
+        if($code) return $code;
+        
+        return key(self::getAvailableLanguages()); // Should not go there ...
     }
     
     /**
@@ -372,10 +393,11 @@ class Lang {
      * 
      * @return array of Lang
      */
-    public static function translateEmail($id) {
+    public static function translateEmail($id, $lang = null) {
         $stack = self::getCodeStack();
         $codes = $stack['fallback'];
         array_unshift($codes, $stack['main']);
+        if($lang) array_unshift($codes, $lang);
         
         $locations = array(
             'config/language',

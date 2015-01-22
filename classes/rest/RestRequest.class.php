@@ -72,7 +72,7 @@ class RestRequest {
      */
     public function __set($key, $value) {
         if($key == 'input') {
-            $this->input = new RestInput($value);
+            $this->input = RestInput::convert($value);
         }else if($key == 'rawinput') {
             $this->input = $value;
         }else throw new PropertyAccessException($this, $key);
@@ -89,10 +89,33 @@ class RestInput {
     private $data = array();
     
     /**
+     * Recursive crawler
+     */
+    public static function convert($data) {
+        if(is_object($data)) return new self($data);
+        
+        if(!is_array($data)) return $data;
+        
+        $assoc = (bool)count(array_filter(array_keys($data), function($k) {
+            return !is_numeric($k);
+        }));
+        
+        if($assoc) return new self($data);
+        
+        foreach($data as $k => $v)
+            $data[$k] = self::convert($v);
+        
+        return $data;
+    }
+    
+    /**
      * Fill from data
      */
     public function __construct($data) {
         if(!is_array($data)) $data = (array)$data;
+        
+        foreach($data as $k => $v)
+            $data[$k] = self::convert($v);
         
         $this->data = $data;
     }
