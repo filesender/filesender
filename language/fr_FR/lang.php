@@ -152,6 +152,7 @@ $lang['copy_text'] = 'Copiez le texte ci-dessous';
 $lang['reason'] = 'Raison';
 $lang['anonymous'] = 'Anonyme';
 $lang['anonymous_details'] = 'Lien fourni directement';
+$lang['guest'] = 'Invité';
 
 
 /**

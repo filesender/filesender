@@ -121,7 +121,7 @@
 <div class="box">
     <h1>{tr:guests_transfers}</h1>
     
-    <?php Template::display('transfers_table', array('transfers' => Transfer::fromGuestsOf(Auth::user()))) ?>
+    <?php Template::display('transfers_table', array('transfers' => Transfer::fromGuestsOf(Auth::user()), 'show_guest' => true)) ?>
 </div>
     
 <script type="text/javascript" src="{path:js/guests_page.js}"></script>
