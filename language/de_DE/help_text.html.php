@@ -33,7 +33,7 @@
     <li><strong>
       Maximale Anzahl der E-mail Empfänger: </strong>{cfg:max_email_recipients} verschiedene E-mail Adressen (getrennt durch Komma oder Strichpunkt)</li>
     <li><strong>Maximale Anzahl der Dateien beim Hochladen:</strong> Eine - um mehrere Dateien gleichzeitig hochzuladen, verpacken Sie diese zuerst zu einem Zip-Archiv</li>
-    <li><strong>Maximale Dateigröße beim Hochladen, mit Adobe Flash: </strong>{size:cfg:max_legacy_upload_size} </li>
+    <li><strong>Maximale Dateigröße beim Hochladen, mit Adobe Flash: </strong>{size:cfg:max_legacy_file_size} </li>
     <li><strong>Maximale Dateigröße beim Hochladen, mit HTML5: </strong>{size:cfg:max_html5_upload_size}</li>
     <li><strong>Maximale Ablaufzeit für Dateien und Voucher: </strong>{cfg:default_days_valid} Tage </li>
 </ul>

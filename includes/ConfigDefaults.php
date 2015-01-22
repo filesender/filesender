@@ -42,10 +42,10 @@ $default = array(
     'lang_url_enabled' => false, // Allow URL language switching (?lang=en for example)
     'lang_selector_enabled' => false, // Display language selector (requires lang_url_enabled = true)
     'lang_save_url_switch_in_userpref' => false, // Save lang switching in user preferences (requires lang_url_enabled = true and lang_userpref_enabled = true)
-    'site_name' => 'Filesender', // Default site name to user
+    'site_name' => 'FileSender', // Default site name to user
     'email_use_html' => true,   // By default, use HTML on mails
     'upload_display_bits_per_sec' => false, // By default, do not show bits per seconds 
-    'force_ssl' => false,
+    'force_ssl' => true,
     
     'auth_sp_type' => 'saml',  // Authentification type
     'auth_sp_set_idp_as_user_organization' => false,
@@ -71,24 +71,24 @@ $default = array(
     'max_transfer_files' => 30,
     'max_transfer_days_valid' => 20,
     'default_transfer_days_valid' => 10,
+    'failed_transfer_cleanup_days' => 7,
+    'transfer_recipients_lang_selector_enabled' => false,
     
     'max_guest_recipients' => 50,
-    'max_guest_days_valid' => 20,
-    'default_guest_days_valid' => 10,
     
-    'max_legacy_upload_size' => 2147483648,
+    'max_legacy_file_size' => 2147483648,
     'legacy_upload_progress_refresh_period' => 5,
-    'upload_chunk_size' => 2000000,
-    'download_chunk_size' => 5242880,
+    'upload_chunk_size' => 5 * 1024 * 1024,
+    'download_chunk_size' => 5 * 1024 * 1024,
     
     'terasender_enabled' => true,
     'terasender_start_mode' => 'multiple',
+    'terasender_worker_count' => 6,
     
     'storage_type' => 'filesystem',
     
     'storage_filesystem_path' => FILESENDER_BASE.'/files',
     'storage_filesystem_df_command' => 'df {path}',
-    'storage_filesystem_rm_command' => null, // Can be /usr/bin/shred -f -u -n 1 -z {path}
     
     'email_from' => 'sender',
     'email_return_path' => 'sender',
@@ -100,6 +100,8 @@ $default = array(
     'statlog_lifetime' => 0,
     'statlog_log_user_organization' => false,
     'auditlog_lifetime' => 31,
+    
+    'storage_usage_warning' => 20,
     
     'report_format' => ReportFormats::INLINE,
     
@@ -118,4 +120,8 @@ $default = array(
             'rotate' => 'hourly'
         )
     ),
+    
+    'site_logouturl' => function() {
+        return Config::get('site_url').'?s=logout';
+    },
 );

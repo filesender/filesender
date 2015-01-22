@@ -75,7 +75,7 @@ window.filesender.config = {
     terasender_worker_file: 'lib/terasender/terasender_worker.js?_=' + (new Date()).getTime(), // Worker script file
     terasender_upload_endpoint: '<?php echo Config::get('site_url') ?>rest.php/file/{file_id}/chunk/{offset}<?php echo (Config::get('chunk_upload_security') == 'key') ? '?key={key}' : '' ?>',
     
-    max_legacy_upload_size: <?php echo Config::get('max_legacy_upload_size') ?>,
+    max_legacy_file_size: <?php echo Config::get('max_legacy_file_size') ?>,
     legacy_upload_endpoint: '<?php echo Config::get('site_url') ?>rest.php/file/{file_id}/whole<?php echo (Config::get('chunk_upload_security') == 'key') ? '?key={key}' : '' ?>',
     legacy_upload_progress_refresh_period: <?php echo Config::get('legacy_upload_progress_refresh_period') ?>,
     
