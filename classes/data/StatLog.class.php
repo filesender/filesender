@@ -77,6 +77,7 @@ class StatLog extends DBObject {
     protected $created = null;
     protected $target_type = null;
     protected $size = null;
+    protected $organization = null;
     
     
     /**
