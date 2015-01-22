@@ -44,11 +44,11 @@ $pagemenuitem = function($page) use($current_page, $allowed_pages) {
                 echo '<li><select id="language_selector">'.implode('', $opts).'</select></li>';
             }
             
-            $helpurl = Config::get('helpURL');
-            echo '<li><a href="'.($helpurl ? $helpurl : '#').'" id="topmenu_help">'.Lang::tr('help').'</a></li>';
+            $helpurl = Config::get('help_url');
+            echo '<li><a href="'.($helpurl ? $helpurl : '#').'" target="_blank" id="topmenu_help">'.Lang::tr('help').'</a></li>';
             
-            $abouturl = Config::get('aboutURL');
-            echo '<li><a href="'.($abouturl ? $abouturl : '#').'" id="topmenu_about">'.Lang::tr('about').'</a></li>';
+            $abouturl = Config::get('about_url');
+            echo '<li><a href="'.($abouturl ? $abouturl : '#').'" target="_blank" id="topmenu_about">'.Lang::tr('about').'</a></li>';
             
             if (Auth::isAuthenticated() && Auth::isSP()) {
                 $url = AuthSP::logoffURL();
