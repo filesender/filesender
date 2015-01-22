@@ -36,6 +36,11 @@ filesender.ui.recipients = {
     
     // Add recipient to list
     add: function(email) {
+        if(filesender.config.max_guest_recipients && this.list.length >= filesender.config.max_guest_recipients) {
+            filesender.ui.error({message: 'guest_too_many_recipients', details: {max: filesender.config.max_guest_recipients}});
+            return email;
+        }
+        
         if(email.match(/[,;\s]/)) { // Multiple values
             email = email.split(/[,;\s]/);
             var invalid = [];
@@ -67,6 +72,7 @@ filesender.ui.recipients = {
         $('<span class="remove fa fa-minus-square" />').attr({
             title: lang.tr('click_to_delete_recipient')
         }).on('click', function() {
+            filesender.ui.recipients.remove($(this).closest('.recipient').attr('email'));
             $(this).parent().remove();
         }).appendTo(node);
         
@@ -84,23 +90,23 @@ filesender.ui.recipients = {
         input = $(input);
         
         var marker = input.data('error_marker');
+        if(!marker) {
+            marker = $('<span class="invalid fa fa-exclamation-circle fa-lg" />').attr({
+                title: lang.tr('invalid_recipient')
+            }).hide().insertBefore(input);
+            input.data('error_marker', marker);
+        }
         
-        var invalid = this.add(input.val());
+        var invalid = input.val() ? this.add(input.val()) : null;
         
         if(invalid) {
             input.val(invalid);
             input.addClass('invalid');
-            if(!marker) {
-                marker = $('<span class="invalid fa fa-exclamation-circle fa-lg" />').attr({
-                    title: lang.tr('invalid_recipient')
-                });
-                input.data('error_marker', marker);
-            }
-            marker.insertBefore(input);
+            marker.show();
         }else{
             input.val('');
             input.removeClass('invalid');
-            if(marker) marker.remove();
+            marker.hide();
         }
     },
     

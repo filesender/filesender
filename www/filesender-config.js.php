@@ -58,7 +58,7 @@ window.filesender.config = {
     ban_extension: <?php echo is_string($banned) ? "'".$banned."'" : 'null' ?>,
     
     max_transfer_recipients: <?php echo Config::get('max_transfer_recipients') ?>,
-    max_email_recipients: <?php echo Config::get('max_email_recipients') ?>, // TODO get rid of that
+    max_guest_recipients: <?php echo Config::get('max_guest_recipients') ?>,
     
     max_transfer_days_valid: <?php echo Config::get('max_transfer_days_valid') ?>,
     default_transfer_days_valid: <?php echo Config::get('default_transfer_days_valid') ?>,
