@@ -92,26 +92,22 @@ class Auth {
                 self::$attributes = AuthGuest::attributes();
                 self::$isGuest = true;
                 
-            }else if(AuthSP::isAuthenticated()) { // SP
-                self::$attributes = AuthSP::attributes();
-                self::$isSP = true;
-                
             }else if(AuthLocal::isAuthenticated()) { // SP
                 self::$attributes = AuthLocal::attributes();
                 self::$isLocal = true;
                 
-            }else if(Config::get('auth_remote_application_enabled')) { // Remote service
-                if(AuthRemoteApplication::isAuthenticated()) {
-                    self::$attributes = AuthRemoteApplication::attributes();
-                    if(AuthRemoteApplication::isAdmin()) self::$isAdmin = true;
-                    self::$isRemoteApplication = true;
-                }
+            }else if(Config::get('auth_remote_application_enabled') && AuthRemoteApplication::isAuthenticated()) { // Remote application
+                self::$attributes = AuthRemoteApplication::attributes();
+                if(AuthRemoteApplication::isAdmin()) self::$isAdmin = true;
+                self::$isRemoteApplication = true;
                 
-            }else if(Config::get('auth_remote_user_enabled')) { // Remote user
-                if(AuthRemoteUser::isAuthenticated()) {
-                    self::$attributes = AuthRemoteUser::attributes();
-                    self::$isRemoteUser = true;
-                }
+            }else if(Config::get('auth_remote_user_enabled') && AuthRemoteUser::isAuthenticated()) { // Remote user
+                self::$attributes = AuthRemoteUser::attributes();
+                self::$isRemoteUser = true;
+                
+            }else if(AuthSP::isAuthenticated()) { // SP
+                self::$attributes = AuthSP::attributes();
+                self::$isSP = true;
             }
             
             if(!self::$attributes || !array_key_exists('uid', self::$attributes)) return null;
