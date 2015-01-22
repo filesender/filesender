@@ -371,7 +371,7 @@ window.filesender.ui = {
 };
 
 $(function() {
-    $('#topmenu_help').on('click', function() {
+    $('#topmenu_help[href="#"]').on('click', function() {
         $('#dialog-help').dialog({
             width: 700
         });
@@ -381,7 +381,7 @@ $(function() {
     $('#dialog-help li[data-feature="html5"]').toggle(filesender.supports.reader);
     $('#dialog-help li[data-feature="nohtml5"]').toggle(!filesender.supports.reader);
     
-    $('#topmenu_about').on('click', function() {
+    $('#topmenu_about[href="#"]').on('click', function() {
         $('#dialog-about').dialog({
             width: 400
         });
