@@ -47,6 +47,8 @@ class RestServer {
         try {
             @session_start();
             
+            if(Config::get('maintenance')) throw new RestException('undergoing_maintenance', 503);
+            
             // Get request data
             
             $path = array();
@@ -125,7 +127,8 @@ class RestServer {
                     if(!$macl) throw new RestException('rest_method_not_allowed', 403);
                 }else if(!$acl) throw new RestException('rest_access_forbidden', 403);
                 
-            //} else if(Auth::isRemoteUser()) {
+            } else if(Auth::isRemoteUser()) {
+                // Nothing peculiar to do
                 
             } else if(in_array($method, array('post', 'put', 'delete'))) { // SP or Guest, lets do XSRF check
                 $stok = isset($_SESSION) ? $_SESSION['security_token'] : null;

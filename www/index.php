@@ -81,7 +81,9 @@ try {
             }
         }
         
-        if($page != 'download')
+        if(Config::get('maintenance')) $page = 'maintenance';
+        
+        if(!in_array($page, array('download', 'maintenance')))
             Template::display('menu', array('allowed_pages' => $allowed_pages, 'current_page' => $page));
         
         Template::display('page', array('page' => $page, 'vars' => $vars));
