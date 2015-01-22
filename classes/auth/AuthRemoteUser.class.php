@@ -98,7 +98,7 @@ class AuthRemoteUser {
                 
                 $signature = hash_hmac('sha1', $signed, $user->auth_secret);
                 if($received_signature != $signature)
-                    throw new AuthRemoteApplicationSignatureCheckFailedException($signed, $application['secret'], $received_signature, $signature);
+                    throw new AuthRemoteApplicationSignatureCheckFailedException($signed, $user->auth_secret, $received_signature, $signature);
                 
                 self::$isAuthenticated = true;
             }
@@ -116,12 +116,5 @@ class AuthRemoteUser {
         if(!self::isAuthenticated()) throw new AuthSPAuthenticationNotFoundException();
         
         return self::$attributes;
-    }
-    
-    /**
-     * Get admin state
-     */
-    public static function isAdmin() {
-        return self::$isAdmin;
     }
 }
