@@ -201,6 +201,7 @@ $lang['invalid_file'] = 'Fichier non-valide';
 $lang['add_recipient'] = 'Ajouter un destinataire';
 $lang['confirm_leave_upload_page'] = 'Voulez-vous vraiement quitter cette page et perdre la progression en cours ?';
 $lang['download_link'] = 'Voici votre lien de téléchargement';
+$lang['recipients_notifications_language'] = 'Langue des destinataires';
 
 
 /**
@@ -423,6 +424,7 @@ $lang['reader_not_supported'] = 'Votre navigateur de supporte pas le dépôt de 
 // Guest related exceptions
 $lang['guest_not_found'] = 'Invité introuvable';
 $lang['bad_guest_status'] = 'Statut d\'invité erroné';
+$lang['guest_too_many_recipients'] = 'Nombre maximum de destinataires dépassé';
 
 // Mail related exceptions
 $lang['invalid_address_format'] = 'Format d\'adresse email erroné';

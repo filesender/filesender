@@ -35,33 +35,37 @@ require_once(dirname(__FILE__).'/../../includes/init.php');
 Logger::info('Cron started');
 
 
-Logger::info('Cleanup task started');
-
 // Close expired transfers
-foreach(Transfer::allExpired() as $transfer)
+foreach(Transfer::allExpired() as $transfer) {
+    Logger::inf('Transfer#'.$transfer->id.' expired, closing it');
     $transfer->close();
+}
+
+// Delete failed transfers
+foreach(Transfer::allFailed() as $transfer) {
+    Logger::inf('Transfer#'.$transfer->id.' failed, deleting it');
+    $transfer->delete();
+}
 
 // Close expired guests
 foreach(Guest::allExpired() as $guest) {
     if($guest->hasOption(GuestOptions::DOES_NOT_EXPIRE)) continue;
-    
+    Logger::inf('Guest#'.$guest->id.' expired, closing it');
     $guest->close();
 }
 
 // Delete expired audit logs and related data
 foreach(Transfer::allExpiredAuditlogs() as $transfer) {
+    Logger::inf('Transfer#'.$transfer->id.' auditlogs expired, deleting them and deleting transfer data');
     AuditLog::clean($transfer);
     $transfer->delete();
 }
 
-Logger::info('Cleanup complete');
-
-
-
-Logger::info('Daily summary generation started');
-
+// Send daily summaries
 foreach(Transfer::all(Transfer::AVAILABLE) as $transfer) {
     if(!$transfer->hasOption(TransferOptions::EMAIL_DAILY_STATISTICS)) continue;
+    
+    Logger::inf('Sending daily report for Transfer#'.$transfer->id);
     
     $start_time = time() - 24 * 3600;
     $events = array();
@@ -79,29 +83,21 @@ foreach(Transfer::all(Transfer::AVAILABLE) as $transfer) {
         );
     }
     
-    ApplicationMail::quickSend('daily_summary', $transfer->owner->email, $transfer, array('events' => $events));
+    ApplicationMail::quickSend('daily_summary', $transfer->owner, $transfer, array('events' => $events));
 }
 
-Logger::info('Daily summary generation complete');
-
-
-
+// Report bounces ?
 $report = Config::get('report_bounces');
 if(in_array($report, array('daily', 'asap_then_daily'))) {
-    Logger::info('Bounces reporting started');
+    Logger::info('Bounces reporting in effect, gathering bounces and reporting them');
     
     foreach(TrackingEvent::getNonReported(TrackingEventTypes::BOUNCE) as $set)
         TrackingEvent::reportSet($set);
-    
-    Logger::info('Bounces reporting complete');
 }
 
-
-
+// Storage warning ?
 $level = Config::get('storage_usage_warning');
 if((int)$level) {
-    Logger::info('Usage warning started');
-    
     $usage = Storage::getUsage();
     
     $block_warnings = array();
@@ -112,8 +108,8 @@ if((int)$level) {
         $block_warnings[] = $u;
     }
     
-    if(count($block_warnings))
+    if(count($block_warnings)) {
+        Logger::info('Storage is warning, reporting');
         SystemMail::quickSend('storage_usage_warning', array('warnings' => $block_warnings));
-    
-    Logger::info('Usage warning complete');
+    }
 }

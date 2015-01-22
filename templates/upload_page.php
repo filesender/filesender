@@ -6,7 +6,7 @@ if(Auth::isGuest()) {
     if($guest->hasOption(GuestOptions::EMAIL_UPLOAD_PAGE_ACCESS)) {
         if(!$guest->last_activity || $guest->last_activity < strtotime('-1 hour')) {
             // Send mail to guest the owner of the voucher
-            ApplicationMail::quickSend('guest_access_upload_page', $guest->user_email, $guest);
+            ApplicationMail::quickSend('guest_access_upload_page', $guest->owner, $guest);
             
             $guest->last_activity = time();
             $guest->save();
@@ -134,6 +134,22 @@ if(Auth::isGuest()) {
                             
                             <input name="expires" type="text" autocomplete="off" title="{tr:dp_date_format}" value="<?php echo Utilities::formatDate(Transfer::getDefaultExpire()) ?>"/>
                         </div>
+                        
+                        <?php
+                            if(Config::get('transfer_recipients_lang_selector_enabled')) {
+                                $opts = array();
+                                $code = Lang::getBaseCode();
+                                foreach(Lang::getAvailableLanguages() as $id => $dfn) {
+                                    $selected = ($id == $code) ? 'selected="selected"' : '';
+                                    $opts[] = '<option value="'.$id.'" '.$selected.'>'.Utilities::sanitizeOutput($dfn['name']).'</option>';
+                                }
+                                
+                                echo '<div class="fieldcontainer">';
+                                echo '  <label for="lang">{tr:recipients_notifications_language}:</label>';
+                                echo '  <select name="lang">'.implode('', $opts).'</select>';
+                                echo '</div>';
+                            }
+                        ?>
                         
                         <?php if(!Auth::isGuest()) foreach(Transfer::availableOptions(false) as $name => $cfg) $displayoption($name, $cfg) ?>
                     </div>

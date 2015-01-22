@@ -49,6 +49,7 @@ window.filesender.transfer = function() {
     this.from = null;
     this.subject = null;
     this.message = null;
+    this.lang = null;
     this.expires = null;
     this.options = [];
     this.time = 0;
@@ -660,7 +661,7 @@ window.filesender.transfer = function() {
         this.time = (new Date()).getTime();
 
         var transfer = this;
-        filesender.client.postTransfer(this.from, files_dfn, this.recipients, this.subject, this.message, this.expires, this.options,this.guest_token, function(path, data) {
+        filesender.client.postTransfer(this.from, files_dfn, this.recipients, this.subject, this.message, this.lang, this.expires, this.options,this.guest_token, function(path, data) {
             transfer.id = data.id;
 
             for (var i = 0; i < transfer.files.length; i++) {

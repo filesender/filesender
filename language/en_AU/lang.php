@@ -201,7 +201,7 @@ $lang['drag_and_drop'] = 'drag &amp; drop your files here';
 $lang['invalid_file'] = 'Invalid File';
 $lang['add_recipient'] = 'Add a recipient';
 $lang['confirm_leave_upload_page'] = 'Do you really want to leave this page ?';
-
+$lang['recipients_notifications_language'] = 'Recipients\' language';
 
 /**
  * Guest page spacific
@@ -424,6 +424,7 @@ $lang['reader_not_supported'] = 'Your browser does not support uploading files o
 // Guest related exceptions
 $lang['guest_not_found'] = 'Guest not found';
 $lang['bad_guest_status'] = 'Invalid guest status';
+$lang['guest_too_many_recipients'] = 'Maximum number of recipients exceeded';
 
 // Mail related exceptions
 $lang['invalid_address_format'] = 'Invalid mail address format';

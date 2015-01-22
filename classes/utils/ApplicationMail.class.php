@@ -66,9 +66,17 @@ class ApplicationMail extends Mail {
      */
     public static function quickSend($translation_id, $to /*, ... */) {
         $vars = array_slice(func_get_args(), 2);
-        if(is_object($to)) array_unshift($vars, $to);
+        $lang = null;
+        if(is_object($to)) {
+            array_unshift($vars, $to);
+            if($to instanceof User) {
+                $lang = $to->lang;
+                $to = $to->email;
+            }
+            if($to instanceof Recipient) $lang = $to->transfer->lang;
+        }
         
-        $tr = Lang::translateEmail($translation_id);
+        $tr = Lang::translateEmail($translation_id, $lang);
         if($vars) $tr = call_user_func_array(array($tr, 'replace'), $vars);
         
         $mail = new self($tr);
