@@ -34,7 +34,7 @@
     <li><strong>
       Massimo numero di destinatari per email:</strong> Fino a {cfg:max_email_recipients} destinatari email separati da virgola o punto e virgola</li>
     <li><strong>Massimo numero di file per upload:</strong> uno - per caricare più file contemporaeamente, prima compirimili in un unico archivio</li>
-    <li><strong>Massima dimensione del file per upload, con Adobe Flash: </strong>{size:cfg:max_legacy_upload_size} </li>
+    <li><strong>Massima dimensione del file per upload, con Adobe Flash: </strong>{size:cfg:max_legacy_file_size} </li>
     <li><strong>Massima dimensione del file per upload, con HTML5: </strong>{size:cfg:max_html5_upload_size}</li>
     <li><strong>Massimo numero di giorni per la scadenza del file / voucher: </strong>{cfg:default_days_valid} </li>
 </ul>

@@ -33,7 +33,7 @@
     <li><strong>
       Maksimalan broj primalaca: </strong>{cfg:max_email_recipients} primalaca (adrese odvojite tačka-zarezom)</li>
     <li><strong>Maksimalan broj fajlova po prenosu:</strong> jedna - za prenos više fajlova odjednom, prethodno ih zapakujte u arhivu</li>
-    <li><strong>Maksimalna veličina fajla po prenosu, sa Adobe Flash-om samo: </strong>{size:cfg:max_legacy_upload_size} </li>
+    <li><strong>Maksimalna veličina fajla po prenosu, sa Adobe Flash-om samo: </strong>{size:cfg:max_legacy_file_size} </li>
     <li><strong>Maksimalna veličina fajla po prenosu, sa HTML5: </strong>{size:cfg:max_html5_upload_size}</li>
     <li><strong>Maksimalan broj dana nakon kog fajlovi/vaučeri ističu: </strong>{cfg:default_days_valid} </li>
 </ul>

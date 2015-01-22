@@ -378,6 +378,9 @@ filesender.ui.startUpload = function() {
             this.transfer.guest_token = filesender.ui.nodes.guest_token.val();
         }
         
+        if(filesender.ui.nodes.lang.length)
+            this.transfer.lang = filesender.ui.nodes.lang.val();
+        
         for(var o in filesender.ui.nodes.options)
             if(filesender.ui.nodes.options[o].is(':checked'))
                 this.transfer.options.push(o);
@@ -504,6 +507,7 @@ $(function() {
         subject: form.find('input[name="subject"]'),
         message: form.find('textarea[name="message"]'),
         guest_token: form.find('input[type="hidden"][name="guest_token"]'),
+        lang: form.find('input[name="lang"]'),
         aup: form.find('input[name="aup"]'),
         expires: form.find('input[name="expires"]'),
         options: {},
@@ -730,7 +734,7 @@ $(function() {
         // Put notice
         form.addClass('legacy');
         
-        $('<div class="info message" />').text(lang.tr('reader_not_supported').r({size: filesender.ui.formatBytes(filesender.config.max_legacy_upload_size)})).insertBefore(filesender.ui.nodes.files.list);
+        $('<div class="info message" />').text(lang.tr('reader_not_supported').r({size: filesender.ui.formatBytes(filesender.config.max_legacy_file_size)})).insertBefore(filesender.ui.nodes.files.list);
         
         // Remove unavailable features
         filesender.ui.nodes.files.select.remove();
@@ -743,7 +747,7 @@ $(function() {
             var sel = $(this)
             var file = sel.clone();
             
-            // TODO check file size, reject if over filesender.config.max_legacy_upload_size
+            // TODO check file size, reject if over filesender.config.max_legacy_file_size
             
             var node = filesender.ui.files.add(this.files, file.get(0));
             if(!node) return;

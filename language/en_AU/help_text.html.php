@@ -8,7 +8,7 @@
         <h4>Your browser's features</h4>
         <ul>
             <li data-feature="html5"><img src="images/html5_installed.png" alt="HTML5 upload enabled" /> You can upload files of any size up to {size:cfg:max_transfer_size} per transfer.</li>
-            <li data-feature="nohtml5"><img src="images/html5_none.png" alt="HTML5 upload disabled" /> You can upload files of at most {size:cfg:max_legacy_upload_size} each and up to {size:cfg:max_transfer_size} per transfer.</li>
+            <li data-feature="nohtml5"><img src="images/html5_none.png" alt="HTML5 upload disabled" /> You can upload files of at most {size:cfg:max_legacy_file_size} each and up to {size:cfg:max_transfer_size} per transfer.</li>
         </ul>
         
         <h4>Uploads of <i>any size</i> with HTML5</h4>
@@ -23,7 +23,7 @@
             </li>
         </ul>
         
-        <h4>Uploads up to {size:cfg:max_legacy_upload_size} per file without HTML5</h4>
+        <h4>Uploads up to {size:cfg:max_legacy_file_size} per file without HTML5</h4>
         <ul>
             <li>FileSender will warn you should you try to upload a file that is too big for this method.</li>
             <li>Resuming uploads is not supported with this method.</li>
@@ -39,7 +39,7 @@
             <li><strong>Maximum number of recipients : </strong>{cfg:max_transfer_recipients} email addresses separated by a comma or semi-colon</li>
             <li><strong>Maximum number of files per transfer : </strong>{cfg:max_transfer_files}</li>
             <li><strong>Maximum size per transfer : </strong>{size:cfg:max_transfer_size}</li>
-            <li><strong>Maximum file size per file for non-HTML5 browsers : </strong>{size:cfg:max_legacy_upload_size}</li>
+            <li><strong>Maximum file size per file for non-HTML5 browsers : </strong>{size:cfg:max_legacy_file_size}</li>
             <li><strong>Transfer expiry days : </strong>{cfg:default_transfer_days_valid} (max. {cfg:max_transfer_days_valid})</li>
             <li><strong>Guest expiry days : </strong>{cfg:default_guest_days_valid} (max. {cfg:max_guest_days_valid})</li>
         </ul>
@@ -51,7 +51,7 @@
                 FileSender indicates whether or not the HTML5 upload method is supported for a particular browser.
                 This depends mainly on the availability of advanced browser functionality, in particular the HTML5 FileAPI.
                 Please use the <a href="http://caniuse.com/fileapi" target="_blank">"When can I use..."</a> website to monitor implementation progress of the HTML5 FileAPI for all major browsers.
-                In particular support for <a href="http://caniuse.com/filereader" target="_blank">FileReader API</a> and <a href="http://caniuse.com/bloburls" target="_blank">Blob URLs</a> needs to be light green (=supported) for a browser to support uploads larger than {size:cfg:max_legacy_upload_size}.
+                In particular support for <a href="http://caniuse.com/filereader" target="_blank">FileReader API</a> and <a href="http://caniuse.com/bloburls" target="_blank">Blob URLs</a> needs to be light green (=supported) for a browser to support uploads larger than {size:cfg:max_legacy_file_size}.
                 Please note that although Opera 12 is listed to support the HTML5 FileAPI, it currently does not support all that is needed to support use of the HTML5 upload method in FileSender.
             </li>
         </ul>

@@ -33,7 +33,7 @@
     <li><strong>
       Maximalan broj primatelja: </strong>{cfg:max_email_recipients} primatelja (adrese odvojite točka-zarezom)</li>
     <li><strong>Maksimalan broj datoteka po prijenosu:</strong> jedna - za prijenos više datoteka odjednom, najprije ih zapakirajte u arhivu</li>
-    <li><strong>Maksimalna veličina datoteke po prijenosu, sa Adobe Flash-om samo: </strong>{size:cfg:max_legacy_upload_size} </li>
+    <li><strong>Maksimalna veličina datoteke po prijenosu, sa Adobe Flash-om samo: </strong>{size:cfg:max_legacy_file_size} </li>
     <li><strong>Maksimalna veličina datoteke po prijenosu, sa HTML5: </strong>{size:cfg:max_html5_upload_size}</li>
     <li><strong>Maksimalan broj dana nakon kojeg datoteke/kuponi istuču: </strong>{cfg:default_days_valid} </li>
 </ul>
