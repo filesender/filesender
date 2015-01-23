@@ -6,8 +6,7 @@
 <table class="guests list" data-status="<?php echo $status ?>" data-mode="<?php echo $mode ?>">
     <thead>
         <tr>
-            <td class="from">{tr:from}</td>
-            <td class="to">{tr:to}</td>
+            <td class="to">{tr:guest}</td>
             <td class="subject">{tr:subject}</td>
             <td class="message">{tr:message}</td>
             <td class="created">{tr:created}</td>
@@ -21,24 +20,8 @@
     </tbody>
         <?php foreach($guests as $guest) { ?>
         <tr class="guest" data-id="<?php echo $guest->id ?>" data-errors="<?php echo count($guest->errors) ? '1' : '' ?>">
-            <td class="from">
-                <abbr title="<?php echo Utilities::sanitizeOutput($guest->user_email) ?>">
-                <?php
-                    $who = in_array($guest->user_email, Auth::user()->email_addresses) ? Lang::tr('me') : $guest->user_email;
-                    $who = explode('@', $who);
-                    echo Utilities::sanitizeOutput($who[0]);
-                ?>
-                </abbr>
-            </td>
-            
             <td class="to">
-                <abbr title="<?php echo Utilities::sanitizeOutput($guest->email) ?>">
-                <?php
-                    $who = in_array($guest->email, Auth::user()->email_addresses) ? Lang::tr('me') : $guest->email;
-                    $who = explode('@', $who);
-                    echo Utilities::sanitizeOutput($who[0]);
-                ?>
-                </abbr>
+                <abbr title="<?php echo Utilities::sanitizeOutput($guest->email) ?>"><?php echo Utilities::sanitizeOutput($guest->name) ?></abbr>
                 
                 <?php if($guest->errors) echo '<br /><span class="errors">'.implode(', ', array_map(function($type) {
                     return Lang::tr('recipient_error_'.$type);

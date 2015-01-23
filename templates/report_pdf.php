@@ -5,6 +5,9 @@
     {tr:expires} : <?php echo Utilities::formatDate($report->transfer->expires) ?><br />
     {tr:size} : <?php echo Utilities::formatBytes($report->transfer->size) ?><br />
     {tr:with_identity} : <?php echo Utilities::sanitizeOutput($report->transfer->user_email) ?><br />
+    <?php if($report->transfer->guest) { ?>
+    {tr:guest} : <?php echo Utilities::sanitizeOutput($report->transfer->guest->email) ?><br />
+    <?php } ?>
     {tr:options} : <?php echo implode(', ', array_map(function($o) {
         return Lang::tr($o);
     }, $report->transfer->options)) ?>
@@ -15,7 +18,7 @@
     
     <?php foreach($report->transfer->recipients as $recipient) { ?>
         <div class="recipient" data-id="<?php echo $recipient->id ?>">
-            <?php echo Utilities::sanitizeOutput($recipient->email) ?> : <?php echo count($recipient->downloads) ?> {tr:downloads}
+            <?php echo Utilities::sanitizeOutput($recipient->identity) ?> : <?php echo count($recipient->downloads) ?> {tr:downloads}
         </div>
     <?php } ?>
 </div>

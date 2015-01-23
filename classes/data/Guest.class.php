@@ -421,6 +421,15 @@ class Guest extends DBObject {
             });
         }
         
+        if($property == 'identity') {
+            return $this->email;
+        }
+        
+        if($property == 'name') {
+            $identity = explode('@', $this->email);
+            return $identity[0];
+        }
+        
         throw new PropertyAccessException($this, $property);
     }
     

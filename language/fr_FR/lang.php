@@ -267,11 +267,11 @@ $lang['report_event_upload_started'] = 'Le téléversement a démarré';
 $lang['report_event_upload_resumed'] = 'Le téléversement a repris';
 $lang['report_event_upload_ended'] = 'Le téléversement a été terminé';
 $lang['report_event_file_created'] = 'Le fichier {file.name} ({size:file.size}) a été téléversé';
-$lang['report_event_download_started'] = 'Le destinataire {author.email} a commencé à télécharger le fichier {file.name} ({size:file.size})';
-$lang['report_event_download_resumed'] = 'Le destinataire {author.email} a repris le téléchargement du fichier {file.name} ({size:file.size})';
-$lang['report_event_download_ended'] = 'Le destinataire {author.email} a fini de télécharger le fichier {file.name} ({size:file.size})';
-$lang['report_event_archive_download_started'] = 'Le destinataire {author.email} a commencé à télécharger un ensemble de fichiers sous forme d\'archive';
-$lang['report_event_archive_download_ended'] = 'Le destinataire {author.email} a fini de télécharger un ensemble de fichiers sous forme d\'archive';
+$lang['report_event_download_started'] = 'Le destinataire {author.identity} a commencé à télécharger le fichier {file.name} ({size:file.size})';
+$lang['report_event_download_resumed'] = 'Le destinataire {author.identity} a repris le téléchargement du fichier {file.name} ({size:file.size})';
+$lang['report_event_download_ended'] = 'Le destinataire {author.identity} a fini de télécharger le fichier {file.name} ({size:file.size})';
+$lang['report_event_archive_download_started'] = 'Le destinataire {author.identity} a commencé à télécharger un ensemble de fichiers sous forme d\'archive';
+$lang['report_event_archive_download_ended'] = 'Le destinataire {author.identity} a fini de télécharger un ensemble de fichiers sous forme d\'archive';
 
 $lang['report_recipient_event_download_started'] = 'Le destinataire a commencé à télécharger le fichier {file.name} ({size:file.size})';
 $lang['report_recipient_event_download_resumed'] = 'Le destinataire a repris le téléchargement du fichier {file.name} ({size:file.size})';
@@ -279,7 +279,7 @@ $lang['report_recipient_event_download_ended'] = 'Le destinataire a fini de tél
 $lang['report_recipient_event_archive_download_started'] = 'Le destinataire a commencé à télécharger un ensemble de fichiers sous forme d\'archive';
 $lang['report_recipient_event_archive_download_ended'] = 'Le destinataire a fini de télécharger un ensemble de fichiers sous forme d\'archive';
 
-$lang['report_guest_event_transfer_started'] = 'Le dépôt a été créé par l\'invité {author.email}';
+$lang['report_guest_event_transfer_started'] = 'Le dépôt a été créé par l\'invité {author.identity}';
 $lang['report_guest_event_transfer_sent'] = 'Les liens de téléchargement ont été envoyés aux destinataires';
 
 
