@@ -233,6 +233,15 @@ class Recipient extends DBObject {
             });
         }
         
+        if($property == 'identity') {
+            return $this->email ? $this->email : Lang::tr('anonymous');
+        }
+        
+        if($property == 'name') {
+            $identity = $this->email ? explode('@', $this->email) : array(Lang::tr('anonymous'));
+            return $identity[0];
+        }
+        
         throw new PropertyAccessException($this, $property);
     }
     

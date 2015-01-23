@@ -267,11 +267,11 @@ $lang['report_event_upload_started'] = 'Upload started';
 $lang['report_event_upload_resumed'] = 'Upload was resumed';
 $lang['report_event_upload_ended'] = 'Upload ended';
 $lang['report_event_file_created'] = 'File {file.name} ({size:file.size}) uploaded';
-$lang['report_event_download_started'] = 'Recipient {author.email} started downloading {file.name} ({size:file.size})';
-$lang['report_event_download_resumed'] = 'Recipient {author.email} resumed download of {file.name} ({size:file.size})';
-$lang['report_event_download_ended'] = 'Recipient {author.email} finished downloading {file.name} ({size:file.size})';
-$lang['report_event_archive_download_started'] = 'Recipient {author.email} started downloading archive of transfer';
-$lang['report_event_archive_download_ended'] = 'Recipient {author.email} finished downloading archive of transfer';
+$lang['report_event_download_started'] = 'Recipient {author.identity} started downloading {file.name} ({size:file.size})';
+$lang['report_event_download_resumed'] = 'Recipient {author.identity} resumed download of {file.name} ({size:file.size})';
+$lang['report_event_download_ended'] = 'Recipient {author.identity} finished downloading {file.name} ({size:file.size})';
+$lang['report_event_archive_download_started'] = 'Recipient {author.identity} started downloading archive of transfer';
+$lang['report_event_archive_download_ended'] = 'Recipient {author.identity} finished downloading archive of transfer';
 
 $lang['report_recipient_event_download_started'] = 'Recipient started downloading {file.name} ({size:file.size})';
 $lang['report_recipient_event_download_resumed'] = 'Recipient resumed download of {file.name} ({size:file.size})';
@@ -279,7 +279,7 @@ $lang['report_recipient_event_download_ended'] = 'Recipient finished downloading
 $lang['report_recipient_event_archive_download_started'] = 'Recipient started downloading archive of transfer';
 $lang['report_recipient_event_archive_download_ended'] = 'Recipient finished downloading archive of transfer';
 
-$lang['report_guest_event_transfer_started'] = 'Transfer was created by guest {author.email}';
+$lang['report_guest_event_transfer_started'] = 'Transfer was created by guest {author.identity}';
 $lang['report_guest_event_transfer_sent'] = 'Download link sent to recipient(s)';
 
 

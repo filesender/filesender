@@ -54,10 +54,7 @@
             
             <?php if($show_guest) { ?>
             <td class="guest">
-                <?php if($transfer->guest) {
-                    $who = explode('@', $transfer->guest->email);
-                    echo '<abbr title="'.Utilities::sanitizeOutput($transfer->guest->email).'">'.Utilities::sanitizeOutput($who[0]).'</abbr>';
-                } ?>
+                <?php if($transfer->guest) echo '<abbr title="'.Utilities::sanitizeOutput($transfer->guest->identity).'">'.Utilities::sanitizeOutput($transfer->guest->name).'</abbr>' ?>
             </td>
             <?php } ?>
             
@@ -65,10 +62,9 @@
                 <?php
                 $items = array();
                 foreach(array_slice($transfer->recipients, 0, 3) as $recipient) {
-                    $who = in_array($recipient->email, Auth::user()->email_addresses) ? Lang::tr('me') : $recipient->email;
-                    if(!$who) $who = Lang::tr('anonymous');
-                    $who = explode('@', $who);
-                    $items[] = '<abbr title="'.($recipient->email ? Utilities::sanitizeOutput($recipient->email) : Lang::tr('anonymous_details')).'">'.Utilities::sanitizeOutput($who[0]).'</abbr>';
+                    $name = in_array($recipient->email, Auth::user()->email_addresses) ? Lang::tr('me') : $recipient->name;
+                    $full = $recipient->email ? $recipient->email : Lang::tr('anonymous_details');
+                    $items[] = '<abbr title="'.Utilities::sanitizeOutput($full).'">'.Utilities::sanitizeOutput($name).'</abbr>';
                 }
                 
                 if(count($transfer->recipients) > 3)
@@ -132,6 +128,11 @@
                     <div>
                         {tr:with_identity} : <?php echo Utilities::sanitizeOutput($transfer->user_email) ?>
                     </div>
+                    <?php if($show_guest) { ?>
+                    <div>
+                        {tr:guest} : <?php if($transfer->guest) echo Utilities::sanitizeOutput($transfer->guest->email) ?>
+                    </div>
+                    <?php } ?>
                     <div class="options">
                         {tr:options} :
                         <?php if(count($transfer->options)) { ?>
@@ -152,16 +153,13 @@
                 <div class="recipients">
                     <h2>{tr:recipients}</h2>
                     
-                    <?php foreach($transfer->recipients as $recipient) { ?>
+                    <?php
+                    foreach($transfer->recipients as $recipient) {
+                        $name = in_array($recipient->email, Auth::user()->email_addresses) ? Lang::tr('me') : $recipient->name;
+                        $full = $recipient->email ? $recipient->email : Lang::tr('anonymous_details');
+                    ?>
                         <div class="recipient" data-id="<?php echo $recipient->id ?>" data-email="<?php echo Utilities::sanitizeOutput($recipient->email) ?>" data-errors="<?php echo count($recipient->errors) ? '1' : '' ?>">
-                            <abbr title="<?php echo $recipient->email ? Utilities::sanitizeOutput($recipient->email) : Lang::tr('anonymous_details') ?>">
-                            <?php
-                                $who = in_array($recipient->email, Auth::user()->email_addresses) ? Lang::tr('me') : $recipient->email;
-                                if(!$who) $who = Lang::tr('anonymous');
-                                $who = explode('@', $who);
-                                echo Utilities::sanitizeOutput($who[0]);
-                            ?>
-                            </abbr>
+                            <abbr title="<?php echo Utilities::sanitizeOutput($full) ?>"><?php echo Utilities::sanitizeOutput($name) ?></abbr>
                             
                             <?php
                                 if($recipient->errors) echo '<span class="errors">'.implode(', ', array_map(function($type) {
