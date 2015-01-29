@@ -166,6 +166,7 @@ $lang['email_me_copies'] = 'Me mettre en copie de toutes les notifications';
 $lang['email_report_on_closing'] = 'M\'envoyer un rapport à l\'expiration du dépôt';
 $lang['email_upload_complete'] = 'Me notifier de la fin du téléversement';
 $lang['enable_recipient_email_download_complete'] = 'Autoriser les destinataires à recevoir des notification de fin de leurs téléchargements';
+$lang['enable_recipient_email_download_complete_warning'] = 'N\'utilisez pas cette option si vous envoyez vos fichier à une liste de diffusion sinon chaque téléchargement risquera d\'envoyer un mail à l\'ensemble de la liste de diffusion.';
 $lang['add_me_to_recipients'] = 'M\'ajouter aux destinataires';
 $lang['transfer_closed'] = 'Dépôt fermé';
 $lang['transfer_deleted'] = 'Dépôt supprimé';

@@ -124,6 +124,10 @@ if(Auth::isGuest()) {
                             echo '<div class="fieldcontainer" data-option="'.$name.'">';
                             echo '  <input name="'.$name.'" type="checkbox" '.$checked.' />';
                             echo '  <label for="'.$name.'">'.Lang::tr($name).'</label>';
+                            
+                            if($name == TransferOptions::ENABLE_RECIPIENT_EMAIL_DOWNLOAD_COMPLETE)
+                                echo '<div class="info message">'.Lang::tr('enable_recipient_email_download_complete_warning').'</div>';
+                            
                             echo '</div>';
                         };
                     ?>
