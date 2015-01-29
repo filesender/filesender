@@ -48,30 +48,13 @@ class GUI {
      * @return array of http file path
      */
     public static function stylesheets() {
-        $sources = self::filterSources(array(
+        return self::filterSources(array(
             'lib/reset/reset.css',
             'lib/jquery/smoothness/jquery-ui-1.10.2.custom.min.css',
             'lib/font-awesome/css/font-awesome.min.css',
             'css/default.css',
             'skin/styles.css'
         ));
-        
-        if(!Config::get('cache_scripts_and_styles')) return $sources;
-        
-        $cached = self::getCachedItem('styles.css', $sources);
-        if($cached) return array($cached);
-        
-        $content = '';
-        foreach($sources as $source) {
-            $file = FILESENDER_BASE.'/www/'.$source;
-            if(!file_exists($file)) continue;
-            $content .= "\n".'/* '.$source.' */'."\n".file_get_contents($file)."\n";
-        }
-        
-        $cached = self::cacheItem('styles.css', $content, $sources);
-        if($cached) return array($cached);
-        
-        return $sources;
     }
     
     /**
@@ -102,24 +85,7 @@ class GUI {
         
         $sources[] = 'skin/script.js';
         
-        $sources = self::filterSources($sources);
-        
-        if(!Config::get('cache_scripts_and_styles')) return $sources;
-        
-        $cached = self::getCachedItem('script.js', $sources);
-        if($cached) return array($cached);
-        
-        $content = '';
-        foreach($sources as $source) {
-            $file = FILESENDER_BASE.'/www/'.$source;
-            if(!file_exists($file)) continue;
-            $content .= "\n".'/* '.$source.' */'."\n".file_get_contents($file)."\n";
-        }
-        
-        $cached = self::cacheItem('script.js', $content, $sources);
-        if($cached) return array($cached);
-        
-        return $sources;
+        return self::filterSources($sources);
     }
     
     /**
@@ -209,72 +175,6 @@ class GUI {
         return array_filter($sources, function($source) {
             return file_exists(FILESENDER_BASE.'/www/'.$source);
         });
-    }
-    
-    /**
-     * Get sources last update
-     * 
-     * @param array $sources files paths
-     * 
-     * @return int
-     */
-    private static function getLastUpdate($sources) {
-        return max(array_map(function($source) {
-            return filemtime(FILESENDER_BASE.'/www/'.$source);
-        }, $sources));
-    }
-    
-    /**
-     * Get cached item
-     * 
-     * @param string $file
-     * @param array $sources source file to check against
-     * 
-     * @return mixed http file path if cached, null if cache not available
-     */
-    private static function getCachedItem($file, $sources = array()) {
-        $cache = FILESENDER_BASE.'/www/cache';
-        
-        if(!file_exists($cache.'/'.$file)) return null;
-        
-        if($sources) {
-            $cfile = $cache.'/'.$file.'.cached';
-            if(!file_exists($cfile)) return null;
-            
-            $min_age = self::getLastUpdate($sources);
-            
-            list($age, $orig_sources) = explode('|', trim(file_get_contents($cfile)));
-            
-            if((int)$age < $min_age) return null;
-            
-            if($orig_sources != implode(',', $sources)) return null;
-        }
-        
-        return 'cache/'.$file;
-    }
-    
-    /**
-     * Cache item
-     * 
-     * @param string $file
-     * @param string $content
-     * 
-     * @return string http file path
-     */
-    private static function cacheItem($file, $content, $sources = array()) {
-        $cache = FILESENDER_BASE.'/www/cache/'.$file;
-        
-        if($fh = fopen($cache, 'w')) {
-            fwrite($fh, $content);
-            fclose($fh);
-        }else return null;
-        
-        if($fh = fopen($cache.'.cached', 'w')) {
-            fwrite($fh, time().'|'.implode(',', $sources));
-            fclose($fh);
-        }
-        
-        return 'cache/'.$file;
     }
     
     /**
