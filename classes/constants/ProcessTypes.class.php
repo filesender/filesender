@@ -40,7 +40,7 @@ class ProcessTypes extends Enum{
      */
     const MISC      = 'misc';
     
-    const WEB       = 'web',
+    const WEB       = 'web';
     const CLI       = 'cli';
     
     const GUI       = 'gui';
