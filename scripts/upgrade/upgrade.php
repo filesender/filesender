@@ -30,7 +30,64 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+// We need to take care of < 2.0a config before init, otherwise we'll get a classname conflict ...
+
+$config_file = dirname(__FILE__).'/../../config/config.php';
+$config = file_exists($config_file) ? file_get_contents($config_file) : null;
+
+if($config && preg_match('`class\s+config\s+\{`i', $config)) {
+    echo 'It seems you have an old config file, lets try to convert it automatically'."\n";
+    
+    $config = explode("\n", $config);
+    
+    // Eat up until loadConfig method
+    while($config && !preg_match('`function\s+loadConfig\s*\(`', trim($config[0]))) array_shift($config);
+    
+    // Get lines until return statment
+    $lines = array();
+    while($config) {
+        $line = array_shift($config);
+        
+        // Ignore array creation
+        if(preg_match('`\$config\s*=\s*array\(\);`', trim($line))) continue;
+        
+        // Stop if return statment
+        if(preg_match('`return\s*\$config\s*;`', trim($line))) break;
+        
+        $lines[] = $line;
+    }
+    
+    // Got no lines ?
+    if(!$lines) die('Couldn\'t fetch config from old file, please refer to the manual for how to migrate it by hand');
+    
+    // Remove empty lines at start/end
+    while(!trim($lines[0])) array_shift($lines);
+    while(!trim($lines[count($lines)-1])) array_pop($lines);
+    
+    // Final config
+    $config = implode("\n", $lines);
+    
+    // Backup old file
+    if(!copy($config_file, str_replace('config.php', 'config.'.date('YmdHis').'.php', $config_file)))
+        die('Couldn\'t backup old config file, please refer to the manual for how to migrate it by hand');
+    
+    // Save to file
+    if($fh = fopen($config_file, 'w')) {
+        fwrite($fh, $config);
+        fclose($fh);
+        
+    } else die('Couldn\'t save migrated config, please refer to the manual for how to migrate it by hand');
+}
+
+
+// Init once old config has been taken care of
+
 include dirname(__FILE__).'/../../includes/init.php';
+
+Logger::setProcess(ProcessTypes::UPGRADE);
+
+
+// Start data upgrade
 
 try {
     Upgrader::run();
