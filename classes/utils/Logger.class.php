@@ -280,7 +280,7 @@ class Logger {
      * @param string $message
      */
     private static function logCallable($facility, $level, $message) {
-        $facility['callback']($message, self::$process);
+        $facility['callback']($message, $level, self::$process);
     }
     
     
