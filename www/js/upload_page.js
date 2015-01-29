@@ -303,6 +303,8 @@ filesender.ui.recipients = {
     
     // Enable autocomplete for frequent recipients on a field
     autocomplete: function(){
+        if(filesender.ui.transfer.guest_token.length) return;
+        
         $(filesender.ui.nodes.recipients.input).autocomplete({
             source: function (request, response) {
                 filesender.client.getFrequentRecipients(request.term,
@@ -374,7 +376,7 @@ filesender.ui.startUpload = function() {
         
         this.transfer.subject = filesender.ui.nodes.subject.val();
         this.transfer.message = filesender.ui.nodes.message.val();
-        if (filesender.ui.nodes.guest_token){
+        if (filesender.ui.nodes.guest_token.length){
             this.transfer.guest_token = filesender.ui.nodes.guest_token.val();
         }
         
@@ -390,7 +392,7 @@ filesender.ui.startUpload = function() {
     
     this.transfer.oncomplete = function(time) {
         var p = filesender.ui.alert('success', lang.tr('done_uploading'), function() {
-            filesender.ui.goToPage(filesender.ui.transfer.guest_token ? 'home' : 'transfers');
+            filesender.ui.goToPage(filesender.ui.transfer.guest_token.length ? 'home' : 'transfers');
         });
         
         if(filesender.ui.transfer.download_link) {
@@ -399,7 +401,7 @@ filesender.ui.startUpload = function() {
             t.val(filesender.ui.transfer.download_link).focus().select();
         }
         
-        if(filesender.ui.transfer.guest_token) {
+        if(filesender.ui.transfer.guest_token.length) {
             $('<p />').appendTo(p).html(lang.tr('done_uploading_guest').out());
         }
     };
