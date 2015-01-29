@@ -147,6 +147,10 @@ class StatLog extends DBObject {
             
             if(Auth::isGuest()) $organization = AuthGuest::getGuest()->owner->organization;
             
+            if($log->target_type == 'File') $organization = $target->transfer->owner->organization;
+            
+            if($log->target_type == 'Transfer') $organization = $target->owner->organization;
+            
             if($organization) $log->organization = $organization;
         }
         
