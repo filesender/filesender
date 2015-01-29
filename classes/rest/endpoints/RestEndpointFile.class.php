@@ -202,6 +202,11 @@ class RestEndpointFile extends RestEndpoint {
         
         $data = $this->request->input;
         if($mode == 'chunk') {
+            if(
+                $file->transfer->status != TransferStatuses::STARTED &&
+                $file->transfer->status != TransferStatuses::UPLOADING
+            ) throw new RestCannotAddDataToCompleteTransferException('File', $file->id);
+                
             $client = array();
             foreach(array('X-Filesender-File-Size', 'X-Filesender-Chunk-Offset', 'X-Filesender-Chunk-Size') as $h) {
                 $k = 'HTTP_'.strtoupper(str_replace('-', '_', $h));

@@ -152,3 +152,18 @@ class RestSanityCheckFailedException extends RestException {
         parent::__construct('rest_sanity_check_failed', 400, 'check "'.$check.'", "'.$expected.'" value was expected but got "'.$value.'" instead');
     }
 }
+
+/**
+ * Cannot add data to complete transfer exception
+ */
+class RestCannotAddDataToCompleteTransferException extends RestException {
+    /**
+     * Constructor
+     * 
+     * @param int $target_type
+     * @param int $target_id
+     */
+    public function __construct($target_type, $target_id) {
+        parent::__construct('cannot_add_data_to_complete_transfer', 400, 'target_type='.$target_type.' target_id='.$target_id);
+    }
+}
