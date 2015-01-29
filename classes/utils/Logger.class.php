@@ -212,6 +212,11 @@ class Logger {
                     continue;
             }
             
+            if(array_key_exists('level', $facility)) {
+                $max = self::$levels[$facility['level']];
+                if(self::$levels[$level] > $max) continue;
+            }
+            
             $method = get_called_class().'::'.$facility['method'];
             call_user_func($method, $facility, $level, $message);
         }
@@ -280,7 +285,7 @@ class Logger {
      * @param string $message
      */
     private static function logCallable($facility, $level, $message) {
-        $facility['callback']($message, $level, self::$process);
+        $facility['callback'](self::$process, $level, $message);
     }
     
     
