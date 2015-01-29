@@ -303,7 +303,7 @@ filesender.ui.recipients = {
     
     // Enable autocomplete for frequent recipients on a field
     autocomplete: function(){
-        if(filesender.ui.transfer.guest_token.length) return;
+        if(filesender.ui.nodes.guest_token.length) return;
         
         $(filesender.ui.nodes.recipients.input).autocomplete({
             source: function (request, response) {
