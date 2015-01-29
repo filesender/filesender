@@ -628,6 +628,10 @@ table.list .date {
     font-size: 2em;
 }
 
+#upload_form .fieldcontainer .info.message {
+    margin: 0.5em 1em;
+}
+
 #legacy_uploader {
     display: none;
 }

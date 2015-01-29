@@ -167,6 +167,7 @@ $lang['email_me_copies'] = 'Send me copies of all notifications';
 $lang['email_report_on_closing'] = 'Send me a report when expired';
 $lang['email_upload_complete'] = 'Notify me when upload is done';
 $lang['enable_recipient_email_download_complete'] = 'Allow recipients to receive download complete emails';
+$lang['enable_recipient_email_download_complete_warning'] = 'Do not use this option when sending to a mailing list otherwise each download may result to an email being sent to the list.';
 $lang['add_me_to_recipients'] = 'Include me as a recipient';
 $lang['transfer_closed'] = 'Transfer closed';
 $lang['transfer_deleted'] = 'Transfer deleted';
