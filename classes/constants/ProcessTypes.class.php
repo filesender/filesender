@@ -39,11 +39,16 @@ class ProcessTypes extends Enum{
      * Log levels
      */
     const MISC      = 'misc';
+    
+    const WEB       = 'web',
+    const CLI       = 'cli';
+    
     const GUI       = 'gui';
     const REST      = 'rest';
+    
     const CRON      = 'cron';
-    const BOUNCE    = 'bounce';
-    const CLI       = 'cli';
+    const UPGRADE   = 'upgrade';
+    const FEEDBACK  = 'feedback';
     
     
 }

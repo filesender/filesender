@@ -32,6 +32,8 @@
 
 require_once(dirname(dirname(__FILE__)).'/includes/init.php');
 
+Logger::setProcess(ProcessTypes::FEEDBACK);
+
 Logger::info('Email feedback handler started');
 
 // TODO daemon mode ?

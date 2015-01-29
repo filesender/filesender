@@ -33,6 +33,8 @@
 try {
     require_once('../includes/init.php');
     
+    Logger::setProcess(ProcessTypes::GUI);
+    
     ob_start();
     
     Template::display('!header');

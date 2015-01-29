@@ -32,6 +32,8 @@
 
 require_once(dirname(__FILE__).'/../../includes/init.php');
 
+Logger::setProcess(ProcessTypes::CRON);
+
 Logger::info('Cron started');
 
 
