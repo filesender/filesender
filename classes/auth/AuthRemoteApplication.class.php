@@ -100,7 +100,7 @@ class AuthRemoteApplication {
                 if($input) $signed .= '&'.$input;
                 
                 $signature = hash_hmac('sha1', $signed, $application['secret']);
-                if($received_signature != $signature)
+                if($received_signature !== $signature)
                     throw new AuthRemoteApplicationSignatureCheckFailedException($signed, $application['secret'], $received_signature, $signature);
                 
                 if(array_key_exists('remote_user', $_GET)) self::$attributes['uid'] = $_GET['remote_user'];
