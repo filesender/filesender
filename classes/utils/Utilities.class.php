@@ -67,15 +67,12 @@ class Utilities
             return $uid;
         }
         
-        return sprintf(
-            '%08x-%04x-%04x-%02x%02x-%012x',
-            mt_rand(),
-            mt_rand(0, 65535),
-            bindec(substr_replace(sprintf('%016b', mt_rand(0, 65535)), '0100', 11, 4)),
-            bindec(substr_replace(sprintf('%08b', mt_rand(0, 255)), '01', 5, 2)),
-            mt_rand(0, 255),
-            mt_rand()
-        );
+        $len = mt_rand(16, 32);
+        $rnd = '';
+        for($i=0; $i<$len; $i++) $rnd .= sprintf('%04d', mt_rand(0, 9999));
+        $rnd = hash('sha1', $rnd);
+        
+        return substr($rnd, 0, 8).'-'.substr($rnd, 8, 4).'-'.substr($rnd, 12, 4).'-'.substr($rnd, 16, 4).'-'.substr($rnd, 20, 12);
     }
     
     /**
@@ -86,7 +83,7 @@ class Utilities
      * @return bool
      */
     public static function isValidUID($uid) {
-        return preg_match('/^[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}$/', $uid);
+        return preg_match('/^[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}$/i', $uid);
     }
     
     /**
