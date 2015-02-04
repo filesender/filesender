@@ -196,13 +196,15 @@ class RestServer {
             // Output data
             if(array_key_exists('callback', $_GET)) {
                 header('Content-Type: text/javascript');
-                echo $_GET['callback'].'('.json_encode($data).');';
+                $callback = preg_replace('`[^a-z0-9_\.-]`i', '', $_GET['callback']);
+                echo $callback.'('.json_encode($data).');';
                 exit;
             }
             
             if(array_key_exists('iframe_callback', $_GET)) {
                 header('Content-Type: text/html');
-                echo '<html><body><script type="text/javascript">window.parent.'.$_GET['iframe_callback'].'('.json_encode($data).');</script></body></html>';
+                $callback = preg_replace('`[^a-z0-9_\.-]`i', '', $_GET['iframe_callback']);
+                echo '<html><body><script type="text/javascript">window.parent.'.$callback.'('.json_encode($data).');</script></body></html>';
                 exit;
             }
             
