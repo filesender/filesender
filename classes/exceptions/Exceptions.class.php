@@ -219,7 +219,7 @@ class StorableException {
      * @return string
      */
     public function serialize() {
-        return base64_encode(serialize(array(
+        return base64_encode(json_encode(array(
             'message' => $this->message,
             'uid' => $this->uid,
             'details' => $this->details,
@@ -236,9 +236,9 @@ class StorableException {
      * @throws DetailedException
      */
     public static function unserialize($serialized) {
-        $exception = unserialize(base64_decode($serialized));
+        $exception = (array)json_decode(base64_decode($serialized));
         
-        if(!is_array($exception) || !array_key_exists('message', $exception))
+        if(!array_key_exists('message', $exception))
             throw new DetailedException('not_an_exception', $exception);
         
         return new self($exception);
