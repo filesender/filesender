@@ -38,11 +38,6 @@ if(!defined('FILESENDER_BASE')) die('Missing environment');
  */
 class Template {
     /**
-     * Path cache
-     */
-    private static $templates = null;
-    
-    /**
      * Resolve template id to path
      * 
      * @param string $id template id
@@ -117,6 +112,18 @@ class Template {
         if($exception) throw $exception;
         
         return $content;
+    }
+    
+    /**
+     * Sanitize data to avoid tag replacement
+     * 
+     * @param mixed data
+     * 
+     * @return string
+     * 
+     */
+    public static function sanitizeOutput($data) {
+        return str_replace(array('{', '}'), array('&#123;', '&#125;'), Utilities::sanitizeOutput($data));
     }
     
     /**
