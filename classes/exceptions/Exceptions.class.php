@@ -102,7 +102,7 @@ class DetailedException extends LoggingException {
      * @param mixed $internal_details details to log
      * @param mixed $public_details details to give to the user (logged as well)
      */
-    public function __construct($msg_code, $internal_details, $public_details = null) {
+    public function __construct($msg_code, $internal_details = null, $public_details = null) {
         $this->uid = uniqid();
         
         $this->details = $public_details;
