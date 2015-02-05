@@ -40,9 +40,9 @@ try {
     Template::display('!header');
     
     try { // At that point we can render exceptions using nice html
-        $known_pages = array('upload', 'transfers', 'guests', 'admin', 'logon', 'download', 'user');
+        $known_pages = array('upload', 'transfers', 'guests', 'admin', 'logon', 'user');
         
-        $allowed_pages = array('download');
+        $allowed_pages = array();
         
         if(Auth::isAuthenticated()) {
             if(Auth::isGuest()) {
@@ -57,7 +57,7 @@ try {
         }
         
         // Always accessible pages
-        foreach(array('home', 'logout', 'exception') as $p) {
+        foreach(array('home', 'download', 'logout', 'exception') as $p) {
             $known_pages[] = $p;
             $allowed_pages[] = $p;
         }
@@ -65,7 +65,7 @@ try {
         $page = null;
         $vars = array();
         if(array_key_exists('s', $_REQUEST)) $page = $_REQUEST['s'];
-        if(!$page) $page = $allowed_pages[0];
+        if(!$page) $page = (Auth::isAuthenticated() && !Auth::isGuest()) ? 'upload' : 'home';
         
         if(!in_array($page, $known_pages)) {
             $page = 'error';
