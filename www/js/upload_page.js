@@ -392,7 +392,7 @@ filesender.ui.startUpload = function() {
     
     this.transfer.oncomplete = function(time) {
         var p = filesender.ui.alert('success', lang.tr('done_uploading'), function() {
-            filesender.ui.goToPage(filesender.ui.transfer.guest_token.length ? 'home' : 'transfers');
+            filesender.ui.goToPage(filesender.ui.transfer.guest_token ? 'home' : 'transfers');
         });
         
         if(filesender.ui.transfer.download_link) {
@@ -401,7 +401,7 @@ filesender.ui.startUpload = function() {
             t.val(filesender.ui.transfer.download_link).focus().select();
         }
         
-        if(filesender.ui.transfer.guest_token.length) {
+        if(filesender.ui.transfer.guest_token) {
             $('<p />').appendTo(p).html(lang.tr('done_uploading_guest').out());
         }
     };
