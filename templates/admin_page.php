@@ -5,10 +5,8 @@
     
     $sections = array('statistics', 'transfers', 'guests');
     
-    try {
-        if(count(Config::overrides()))
-            $sections[] = 'config';
-    } catch(ConfigOverrideDisabledException $e) {}
+    if(Config::get('config_overrides'))
+        $sections[] = 'config';
     
     $section = 'statistics';
     if(array_key_exists('as', $_REQUEST))
