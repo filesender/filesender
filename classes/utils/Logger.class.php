@@ -80,7 +80,8 @@ class Logger {
         
         $facilities = Config::get('log_facilities');
         if(!$facilities) $facilities = array();
-        if(!is_array($facilities)) $facilities = array($facilities);
+        if(!is_array($facilities)) $facilities = array('type' => $facilities);
+        if(!is_numeric(key($facilities))) $facilities = array($facilities);
         
         foreach($facilities as $index => $facility) {
             
