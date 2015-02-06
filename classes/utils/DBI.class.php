@@ -114,6 +114,9 @@ class DBI {
      */
     public static function __callStatic($name, $args) {
         self::connect();
+        
+        if(in_array($name, array('prepare', 'query', 'exec'))) Logger::debug('DBI call');
+        
         if(!method_exists(self::$instance, $name)) throw new DBIUsageException('Calling unknown DBI method '.$name);
         try {
             $r = call_user_func_array(array(self::$instance, $name), $args);
@@ -157,6 +160,8 @@ class DBIStatement {
      * @throws DBIUsageException
      */
     public function __call($method, $args) {
+        if($method == 'execute') Logger::debug('DBI call');
+        
         if(!method_exists($this->statement, $method)) throw new DBIUsageException('Calling unknown DBIStatement method '.$method);
         try {
             return call_user_func_array(array($this->statement, $method), $args);

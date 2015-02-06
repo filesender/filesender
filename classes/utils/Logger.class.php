@@ -200,9 +200,49 @@ class Logger {
         
         self::setup();
         
-        //TODO: test level
         if(LogLevels::isValidValue($level) && !array_key_exists($level, self::$levels))
             $level = LogLevels::ERROR;
+        
+        if($level == LogLevels::DEBUG) {
+            $stack = debug_backtrace();
+            while($stack && array_key_exists('class', $stack[0]) && ($stack[0]['class'] == 'Logger'))
+                array_shift($stack);
+            
+            if($stack && array_key_exists('function', $stack[0]) && $stack[0]['function']) {
+                $caller = $stack[0];
+                $s = $caller['file'].':'.$caller['line'].' ';
+                if(array_key_exists('class', $caller)) {
+                    if(!array_key_exists('type', $caller)) $caller['type'] = ' ';
+                    if($caller['type'] == '::') {
+                        $s .= $caller['class'].'::';
+                    } else $s .= '('.$caller['class'].')'.$caller['type'];
+                }
+                
+                if(in_array($caller['function'], array('__call', '__callStatic'))) {
+                    $caller['function'] = $caller['args'][0];
+                    $caller['args'] = $caller['args'][1];
+                }
+                
+                $args = array();
+                foreach($caller['args'] as $arg) {
+                    $a = '';
+                    if(is_bool($arg)) {
+                        $a = $arg ? '(true)' : '(false)';
+                    } else if(is_scalar($arg)) {
+                        $a = '('.$arg.')';
+                    } else if(is_array($arg)) {
+                        $a = array();
+                        foreach($arg as $k => $v) $a[] = (is_numeric($k) ? '' : $k.' => ').gettype($v).(is_scalar($v) ? (is_bool($v) ? ($v ? '(true)' : '(false)') : '('.$v.')') : '');
+                        $a = '('.implode(', ', $a).')';
+                    }
+                    $args[] = gettype($arg).$a;
+                }
+                
+                $s .= $caller['function'].'('.implode(', ', $args).')';
+                
+                $message = $s.' '.$message;
+            }
+        }
         
         $message = '['.self::$process.':'.$level.'] '.$message;
         

@@ -84,6 +84,8 @@ class RestServer {
                 if(count($part) == 2) $request->properties[$part[0]] = $part[1];
             }
             
+            Logger::debug('Got "'.$method.'" request for endpoint "'.$endpoint.'/'.implode('/', $path).'" with '.strlen($input).' bytes payload');
+            
             // Parse body
             switch($type) {
                 case 'text/plain' :
@@ -191,7 +193,11 @@ class RestServer {
             $handler = new $class($request);
             if(!method_exists($handler, $method)) throw new RestException('rest_method_not_implemented', 501);
             
+            Logger::debug('Forwarding call to '.$class.'::'.$method.'() handler');
+            
             $data = call_user_func_array(array($handler, $method), $path);
+            
+            Logger::debug('Got data to send back');
             
             // Output data
             if(array_key_exists('callback', $_GET)) {
