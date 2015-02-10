@@ -67,10 +67,7 @@ class Utilities
             return $uid;
         }
         
-        $len = mt_rand(16, 32);
-        $rnd = '';
-        for($i=0; $i<$len; $i++) $rnd .= sprintf('%04d', mt_rand(0, 9999));
-        $rnd = hash('sha1', $rnd);
+        $rnd = self::generateRandomHexString();
         
         return substr($rnd, 0, 8).'-'.substr($rnd, 8, 4).'-'.substr($rnd, 12, 4).'-'.substr($rnd, 16, 4).'-'.substr($rnd, 20, 12);
     }
@@ -84,6 +81,39 @@ class Utilities
      */
     public static function isValidUID($uid) {
         return preg_match('/^[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}$/i', $uid);
+    }
+    
+    /**
+     * Generate (pseudo) random hex string
+     * 
+     * @return string
+     */
+    public static function generateRandomHexString($nearly = false) {
+        $len = mt_rand(16, 32);
+        
+        $rnd = '';
+        for($i=0; $i<$len; $i++) $rnd .= sprintf('%04d', mt_rand(0, 9999));
+        
+        if($nearly) return hash('sha1', $rnd);
+        
+        $sfile = FILESENDER_BASE.'/config/instance.secret';
+        if(file_exists($sfile)) {
+            $ctn = array_filter(array_map('trim', explode("\n", file_get_contents($sfile))), function($line) {
+                return substr($line, 0, 1) != '#';
+            });
+            
+            $secret = $ctn[0];
+        } else {
+            $secret = self::generateRandomHexString(true);
+            
+            if($fh = fopen($sfile, 'w')) {
+                fwrite($fh, '# Automatically generated'."\n");
+                fwrite($fh, $secret);
+                fclose($fh);
+            } else throw new UtilitiesRandomGeneratorCouldNotWriteException();
+        }
+        
+        return hash_hmac('sha1', $rnd, $secret);
     }
     
     /**
