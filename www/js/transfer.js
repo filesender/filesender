@@ -126,7 +126,8 @@ window.filesender.transfer = function() {
             complete: false,
             name: blob.name,
             mime_type: blob.type,
-            node: source_node
+            node: source_node,
+            transfer: this
         };
 
         // Look for dup
@@ -430,6 +431,8 @@ window.filesender.transfer = function() {
                 ) {
                     for(var prop in tracker.files[i])
                         this.files[j][prop] = tracker.files[i][prop];
+                    
+                    this.files[j].transfer = this;
                 }
             }
         }
@@ -550,6 +553,34 @@ window.filesender.transfer = function() {
     };
     
     /**
+     * Get path with authentication args if needed
+     * 
+     * @param string resource
+     * @param object file if file context
+     * 
+     * @return string
+     */
+    this.authenticatedEndpoint = function(resource, file) {
+        var args = {};
+        if(filesender.config.chunk_upload_security == 'key' && (file || (this.files.length && this.files[0].uid))) {
+            if(file) {
+                args.key = file.uid;
+            } else if(this.files.length && this.files[0].uid) {
+                args.key = this.files[0].uid;
+            }
+        } else if(this.guest_token) {
+            args.vid = this.guest_token;
+        }
+        
+        var q = [];
+        for(var k in args) q.push(k + '=' + args[k]);
+        
+        if(q.length) resource += (resource.match(/\?/) ? '&' : '?') + q.join('&');
+        
+        return resource;
+    };
+    
+    /**
      * Report progress
      * 
      * @param object file
@@ -646,22 +677,11 @@ window.filesender.transfer = function() {
         if (exp < minexpires || exp > maxexpires) {
             return errorhandler({message: 'bad_expire'});
         }
-
-        // Prepare files
-        var files_dfn = [];
-        for (var i = 0; i < this.files.length; i++) {
-            files_dfn.push({
-                name: this.files[i].name,
-                size: this.files[i].size,
-                mime_type: this.files[i].mime_type,
-                cid: this.files[i].cid
-            });
-        }
-
+        
         this.time = (new Date()).getTime();
-
+        
         var transfer = this;
-        filesender.client.postTransfer(this.from, files_dfn, this.recipients, this.subject, this.message, this.lang, this.expires, this.options,this.guest_token, function(path, data) {
+        filesender.client.postTransfer(this, function(path, data) {
             transfer.id = data.id;
 
             for (var i = 0; i < transfer.files.length; i++) {
@@ -891,9 +911,7 @@ window.filesender.transfer = function() {
         
         if(this.legacy.form) this.legacy.form.remove();
         
-        var url = filesender.config.legacy_upload_endpoint.replace(/\{file_id\}/g, file.id);
-        if(filesender.config.chunk_upload_security == 'key') url = url.replace(/\{key\}/g, file.uid);
-        
+        var url = this.authenticatedEndpoint(filesender.config.legacy_upload_endpoint.replace(/\{file_id\}/g, file.id), file);
         url += (url.match(/\?/) ? '&' : '?') + 'iframe_callback=legacyUploadResultHandler';
         
         this.legacy.form = $('<form method="post" enctype="multipart/form-data" />').attr({

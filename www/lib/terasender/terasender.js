@@ -95,7 +95,7 @@ window.filesender.terasender = {
         
         if(!file) return null; // Nothing to do
         
-        if(!file.endpoint) file.endpoint = filesender.config.terasender_upload_endpoint.replace('{file_id}', file.id).replace('{key}', file.uid);
+        if(!file.endpoint) file.endpoint = this.transfer.authenticatedEndpoint(filesender.config.terasender_upload_endpoint.replace('{file_id}', file.id), file);
         
         var job = {
             chunk: {
@@ -108,7 +108,13 @@ window.filesender.terasender = {
         if(file.uploaded > file.size) file.uploaded = file.size ? file.size : 1; // Protect against empty files creating loops
         
         if(file.id != worker.file_id) {
-            job.file = file;
+            job.file = {
+                id: file.id,
+                name: file.name,
+                size: file.size,
+                blob: file.blob,
+                endpoint: file.endpoint
+            };
             job.security_token = filesender.client.security_token;
             worker.file_id = file.id;
         }

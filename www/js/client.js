@@ -68,6 +68,8 @@ window.filesender.client = {
         var urlargs = [];
         for(var k in args) urlargs.push(k + '=' + args[k]);
         
+        if(urlargs.length) resource += (resource.match(/\?/) ? '&' : '?') + urlargs.join('&');
+        
         if(data) {
             var raw = options && ('rawdata' in options) && options.rawdata;
             
@@ -109,7 +111,7 @@ window.filesender.client = {
             },
             success: callback,
             type: method.toUpperCase(),
-            url: this.base_path + resource + '?' + urlargs.join('&')
+            url: this.base_path + resource
         };
         
         for(var k in options) settings[k] = options[k];
@@ -154,19 +156,29 @@ window.filesender.client = {
      * @param array options array of selected option identifiers
      * @param callable callback function to call with transfer path and transfer info once done
      */
-    postTransfer: function(from, files, recipients, subject, message, lang, expires, options, guest_token, callback, onerror) {
+    postTransfer: function(transfer, callback, onerror) {
         var opts = {};
         if(onerror) opts.error = onerror;
-        if (guest_token) opts.args={vid:guest_token};
-        return this.post('/transfer', {
-            from: from,
+        
+        var files = [];
+        for (var i = 0; i < transfer.files.length; i++) {
+            files.push({
+                name: transfer.files[i].name,
+                size: transfer.files[i].size,
+                mime_type: transfer.files[i].mime_type,
+                cid: transfer.files[i].cid
+            });
+        }
+
+        return this.post(transfer.authenticatedEndpoint('/transfer'), {
+            from: transfer.from,
             files: files,
-            recipients: recipients,
-            subject: subject,
-            message: message,
-            lang: lang,
-            expires: expires,
-            options: options
+            recipients: transfer.recipients,
+            subject: transfer.subject,
+            message: transfer.message,
+            lang: transfer.lang,
+            expires: transfer.expires,
+            options: transfer.options
         }, callback, opts);
     },
     
@@ -194,19 +206,17 @@ window.filesender.client = {
     postChunk: function(file, blob, callback, onerror) {
         var opts = {
             contentType: 'application/octet-stream',
-            rawdata: true
-        };
-        if(filesender.config.chunk_upload_security == 'key') opts.args = {key: file.uid};
-        
-        opts.headers = {
-            'X-Filesender-File-Size': file.size,
-            'X-Filesender-Chunk-Offset': -1,
-            'X-Filesender-Chunk-Size': blob.size
+            rawdata: true,
+            headers: {
+                'X-Filesender-File-Size': file.size,
+                'X-Filesender-Chunk-Offset': -1,
+                'X-Filesender-Chunk-Size': blob.size
+            }
         };
         
         if(onerror) opts.error = onerror;
         
-        return this.post('/file/' + file.id + '/chunk', blob, callback, opts);
+        return this.post(file.transfer.authenticatedEndpoint('/file/' + file.id + '/chunk', file), blob, callback, opts);
     },
     
     /**
@@ -220,19 +230,17 @@ window.filesender.client = {
     putChunk: function(file, blob, offset, callback, onerror) {
         var opts = {
             contentType: 'application/octet-stream',
-            rawdata: true
-        };
-        if(filesender.config.chunk_upload_security == 'key') opts.args = {key: file.uid};
-        
-        opts.headers = {
-            'X-Filesender-File-Size': file.size,
-            'X-Filesender-Chunk-Offset': offset,
-            'X-Filesender-Chunk-Size': blob.size
+            rawdata: true,
+            headers: {
+                'X-Filesender-File-Size': file.size,
+                'X-Filesender-Chunk-Offset': offset,
+                'X-Filesender-Chunk-Size': blob.size
+            }
         };
         
         if(onerror) opts.error = onerror;
         
-        return this.put('/file/' + file.id + '/chunk/' + offset, blob, callback, opts);
+        return this.put(file.transfer.authenticatedEndpoint('/file/' + file.id + '/chunk/' + offset, file), blob, callback, opts);
     },
     
     /**
@@ -244,14 +252,12 @@ window.filesender.client = {
      */
     fileComplete: function(file, data, callback, onerror) {
         var opts = {};
-        if(filesender.config.chunk_upload_security == 'key') opts.args = {key: file.uid};
+        if(onerror) opts.error = onerror;
         
         if(!data) data = {};
         data.complete = true;
         
-        if(onerror) opts.error = onerror;
-        
-        return this.put('/file/' + file.id, data, callback, opts);
+        return this.put(file.transfer.authenticatedEndpoint('/file/' + file.id, file), {complete: true}, callback, opts);
     },
     
     /**
@@ -263,15 +269,12 @@ window.filesender.client = {
      */
     transferComplete: function(transfer, data, guest_token, callback, onerror) {
         var opts = {};
-        if(filesender.config.chunk_upload_security == 'key') opts.args = {key: transfer.files[0].uid};
+        if(onerror) opts.error = onerror;
         
         if(!data) data = {};
         data.complete = true;
         
-        if(onerror) opts.error = onerror;
-        if (guest_token) opts.args={vid:guest_token};
-        
-        return this.put('/transfer/' + transfer.id, data, callback, opts);
+        return this.put(transfer.authenticatedEndpoint('/transfer/' + transfer.id), data, callback, opts);
     },
     
     /**
@@ -308,16 +311,13 @@ window.filesender.client = {
      */
     deleteTransfer: function(transfer, callback, onerror) {
         var id = transfer;
-        var opts = {args: {}};
-        
-        if(typeof transfer == 'object') {
-            id = transfer.id;
-            if(filesender.config.chunk_upload_security == 'key') opts.args.key = transfer.files[0].uid;
-        }
-        
+        var opts = {};
         if(onerror) opts.error = onerror;
         
-        return this.delete('/transfer/' + id, callback, opts);
+        if(typeof transfer == 'object')
+            id = transfer.id;
+        
+        return this.delete(transfer.authenticatedEndpoint('/transfer/' + id), callback, opts);
     },
     
     /**
