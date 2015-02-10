@@ -64,3 +64,15 @@ class UtilitiesUidGeneratorTriedTooMuchException extends DetailedException {
     }
 }
 
+/**
+ * Random generator could not write exception
+ */
+class UtilitiesRandomGeneratorCouldNotWriteException extends DetailedException {
+    /**
+     * Constructor
+     */
+    public function __construct() {
+        parent::__construct('utilities_random_generator_could_not_write');
+    }
+}
+

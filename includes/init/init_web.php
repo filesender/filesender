@@ -41,7 +41,7 @@ if(!session_id()) {
     $_SESSION['valid'] = true;
     
     if(!array_key_exists('security_token', $_SESSION))
-        $_SESSION['security_token'] = uniqid().'_'.microtime(true);
+        $_SESSION['security_token'] = Utilities::generateUID();
 }
 
 
