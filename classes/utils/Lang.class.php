@@ -174,12 +174,18 @@ class Lang {
                     $weight = 1;
                     if(strpos($part, ';') !== false) {
                         $part = array_map('trim', explode(';', $part));
-                        $code = $part[0];
-                        if(is_numeric($part[1])) $weight = (float)$part[1];
+                        $code = array_shift($part);
+                        foreach($part as $p)
+                            if(preg_match('`^q=([0-9]+\.[0-9]+)$`', $p, $m))
+                                $weight = (float)$m[1];
                     }
                     $codes[$code] = $weight;
                 }
-                asort($codes);
+                
+                uasort($codes, function($a, $b) {
+                    return ($b > $a) ? 1 : (($b < $a) ? -1 : 0);
+                });
+                
                 foreach($codes as $code => $weight) {
                     $code = self::realCode($code);
                     if($code && !in_array($code, $stack))
