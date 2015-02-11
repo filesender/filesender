@@ -60,23 +60,14 @@ class Report {
      * @throws ReportFormatNotFoundException
      */
     public function __construct(DBObject $target) {
-        if(!Auth::isAuthenticated())
-            throw new AuthAuthenticationNotFoundException();
-        
         $this->logs = array();
         switch(get_class($target)) {
             case 'Transfer': // Get all log about transfer or its related files and recipients
-                if(!$target->isOwner(Auth::user()) && !Auth::user()->isAdmin())
-                    throw new ReportOwnershipRequiredException('Transfer = '.$target->id);
-                
                 $this->logs = AuditLog::fromTransfer($target);
                 break;
             
             case 'File': // Get log about file life
             case 'Recipient': // Get log about recipient activity
-                if(!$target->transfer->isOwner(Auth::user()) && !Auth::user()->isAdmin())
-                    throw new ReportOwnershipRequiredException(get_class($target).' = '.$target->id.', Transfer = '.$target->transfer->id);
-                
                 $this->logs = AuditLog::fromTarget($target);
                 break;
             
@@ -141,7 +132,7 @@ class Report {
         $file = null;
         if($format == ReportFormats::PDF) {
             $file = array(
-                'tmp_path' => FILESENDER_BASE.'/report_'.strtolower($this->target_type).'_'.$this->target->id.'_'.uniqid().'.pdf',
+                'tmp_path' => FILESENDER_BASE.'/tmp/dompdf/report_'.strtolower($this->target_type).'_'.$this->target->id.'_'.uniqid().'.pdf',
                 'name' => 'report_'.strtolower($this->target_type).'_'.$this->target->id.'.pdf'
             );
             
