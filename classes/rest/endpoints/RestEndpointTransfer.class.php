@@ -266,6 +266,26 @@ class RestEndpointTransfer extends RestEndpoint {
             if($maxsize && $size > $maxsize)
                 throw new TransferMaximumSizeExceededException($size, $maxsize);
             
+            $host_quota = Config::get('host_quota');
+            if($host_quota) { // TODO is it not too heavy ?
+                $remaining = $host_quota - array_sum(array_map(function($t) {
+                    return $t->size;
+                }, Transfer::all(Transfer::AVAILABLE)));
+                
+                if($size > $remaining)
+                    throw new TransferHostQuotaExceededException();
+            }
+            
+            $user_quota = Config::get('user_quota');
+            if($user_quota) {
+                $remaining = $user_quota - array_sum(array_map(function($t) {
+                    return $t->size;
+                }, Transfer::fromUser(Auth::user())));
+                
+                if($size > $remaining)
+                    throw new TransferUserQuotaExceededException();
+            }
+            
             $transfer = Transfer::create($data->expires, $guest ? $guest->email : $data->from);
             
             if($data->subject) $transfer->subject = $data->subject;

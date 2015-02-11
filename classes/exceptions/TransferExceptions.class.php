@@ -173,3 +173,27 @@ class TransferNotAvailableException extends DetailedException {
         parent::__construct('transfer_not_availabe');
     }
 }
+
+/**
+ * Host quota exceeded
+ */
+class TransferHostQuotaExceededException extends DetailedException {
+    /**
+     * Constructor
+     */
+    public function __construct() {
+        parent::__construct('transfer_host_quota_exceeded');
+    }
+}
+
+/**
+ * User quota exceeded
+ */
+class TransferUserQuotaExceededException extends DetailedException {
+    /**
+     * Constructor
+     */
+    public function __construct() {
+        parent::__construct('transfer_user_quota_exceeded');
+    }
+}
