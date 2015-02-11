@@ -549,7 +549,7 @@ $(function() {
     }).button();
     
     // Bind file drag drop events
-    if(filesender.supports.reader) $('body').on('dragover', function (e) {
+    if(filesender.supports.reader) $('html').on('dragover', function (e) {
         e.preventDefault();
         e.stopPropagation();
     }).on('dragenter', function (e) {
