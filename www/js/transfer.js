@@ -92,30 +92,30 @@ window.filesender.transfer = function() {
     this.addFile = function(file, errorhandler, source_node) {
         if (!errorhandler)
             errorhandler = filesender.ui.error;
-
+        
         if (!file)
             return errorhandler({message: 'no_file_given'});
-
+        
         if ('parentNode' in file) // HTML file input
             file = file.files;
-
+        
         if ('length' in file) { // FileList
             if (!file.length) {
                 errorhandler({message: 'no_file_given'});
                 return false;
             }
-
+            
             for (var i = 0; i < file.length; i++)
                 this.addFile(file[i]);
 
             return;
         }
-
+        
         if (!('type' in file)) {
             errorhandler({message: 'no_file_given'});
             return false;
         }
-
+        
         var blob = file;
         var file = {
             id: null,
@@ -129,7 +129,7 @@ window.filesender.transfer = function() {
             node: source_node,
             transfer: this
         };
-
+        
         // Look for dup
         for (var i = 0; i < this.files.length; i++) {
             if (this.files[i].name == file.name && this.files[i].size == file.size) {
@@ -137,38 +137,38 @@ window.filesender.transfer = function() {
                 return false;
             }
         }
-
+        
         if (this.files.length >= filesender.config.max_transfer_files) {
             errorhandler({message: 'max_transfer_files_exceeded', details: {max: filesender.config.max_transfer_files}});
             return false;
         }
-
+        
         if (!/^[^\\\/:;\*\?\"<>|]+(\.[^\\\/:;\*\?\"<>|]+)*$/.test(file.name)) {
             errorhandler({message: 'invalid_file_name'});
             return false;
         }
-
+        
         if (!file.size) {
             errorhandler({message: 'empty_file'});
             return false;
         }
-
+        
         if (typeof filesender.config.ban_extension == 'string') {
             var banned = filesender.config.ban_extension.replace(/\s+/g, '');
             banned = new RegExp('^(' + banned.replace(',', '|') + ')$', 'g');
             var extension = file.name.split('.').pop();
             if (extension.match(banned)) {
                 errorhandler({message: 'banned_extension', details: {extension: extension, filename: file.name, banned: filesender.config.ban_extension}});
-
+                
                 return false;
             }
         }
-
+        
         if (this.size + file.size > filesender.config.max_transfer_size) {
             errorhandler({message: 'max_transfer_size_exceeded', details: {size: file.size, max: filesender.config.max_transfer_size}});
             return false;
         }
-
+        
         var files_cids = {};
         for(var i=0; i<this.files.length; i++) files_cids[this.files[i].cid] = true;
         
@@ -182,9 +182,11 @@ window.filesender.transfer = function() {
         file.cid = cid;
         
         this.size += file.size;
-
+        
         this.files.push(file);
-
+        
+        filesender.ui.log('Registered file ' + file.name + ' with size ' + file.size);
+        
         return cid;
     };
 
@@ -212,23 +214,25 @@ window.filesender.transfer = function() {
     this.addRecipient = function(email, errorhandler) {
         if (!errorhandler)
             errorhandler = filesender.ui.error;
-
+        
         if (!email.match(filesender.ui.validators.email)) {
             errorhandler({message: 'invalid_recipient', details: {email: email}});
             return false;
         }
-
+        
         for (var i = 0; i < this.recipients.length; i++)
             if (this.recipients[i] == email) {
                 errorhandler({message: 'duplicate_recipient', details: {email: email}});
                 return false;
             }
-
+        
         if (this.recipients.length >= filesender.config.max_transfer_recipients) {
             errorhandler({message: 'max_transfer_recipients_exceeded', details: {max: filesender.config.max_transfer_recipients}});
             return false;
         }
-
+        
+        filesender.ui.log('Registered recipient with email ' + email);
+        
         this.recipients.push(email);
     };
 
@@ -410,6 +414,8 @@ window.filesender.transfer = function() {
         
         this.failed_transfer_restart = true;
         
+        filesender.ui.log('Loaded failed transfer from tracker');
+        
         return tracker.files;
     };
     
@@ -446,6 +452,7 @@ window.filesender.transfer = function() {
         }
         
         // From here we should have everything we need to restart
+        filesender.ui.log('Restarting failed transfer #' + this.id);
         
         this.time = (new Date()).getTime();
         
@@ -505,6 +512,8 @@ window.filesender.transfer = function() {
      * Look for stalled processes
      */
     this.getStalledProcesses = function() {
+        if(this.status != 'running') return null;
+        
         var stalled = [];
         
         // Compute average upload time and progress
@@ -541,6 +550,8 @@ window.filesender.transfer = function() {
                 continue;
             }
         }
+        
+        if(stalled.length) filesender.ui.log('Stalled processes detected = ' + stalled.length);
         
         return stalled.length ? stalled : null;
     };
@@ -587,14 +598,12 @@ window.filesender.transfer = function() {
      * @param bool complete is file done
      */
     this.reportProgress = function(file, complete) {
-        if (filesender.config.log) {
-            if (complete) {
-                console.log('File ' + file.name + ' (' + file.size + ' bytes) uploaded');
-            } else {
-                console.log('Uploading ' + file.name + ' (' + file.size + ' bytes) : ' + (100 * file.uploaded / file.size).toFixed(2) + '%');
-            }
+        if (complete) {
+            filesender.ui.log('File ' + file.name + ' (' + file.size + ' bytes) uploaded');
+        } else {
+            filesender.ui.log('Uploading ' + file.name + ' (' + file.size + ' bytes) : ' + (100 * file.uploaded / file.size).toFixed(2) + '%');
         }
-
+        
         if (complete) {
             var transfer = this;
             filesender.client.fileComplete(file, undefined, function(data) {
@@ -608,19 +617,17 @@ window.filesender.transfer = function() {
             this.onprogress.call(this, file, false);
         }
     };
-
+    
     /**
      * Report transfer complete
      */
     this.reportComplete = function() {
         this.status = 'done';
-
+        
         var time = (new Date()).getTime() - this.time; // ms
-
-        if (filesender.config.log) {
-            console.log('Transfer ' + this.id + ' (' + this.size + ' bytes) complete, took ' + (time / 1000) + 's');
-        }
-
+        
+        filesender.ui.log('Transfer ' + this.id + ' (' + this.size + ' bytes) complete, took ' + (time / 1000) + 's');
+        
         var transfer = this;
         
         filesender.client.transferComplete(this, undefined, this.guest_token, function(data) {
@@ -630,22 +637,20 @@ window.filesender.transfer = function() {
                 transfer.oncomplete.call(transfer, time);
         });
     };
-
+    
     /**
      * Report transfer error
      */
     this.reportError = function(error) {
-        if (filesender.config.log) {
-            console.log('Transfer ' + this.id + ' (' + this.size + ' bytes) failed');
-        }
-
+        filesender.ui.log('Transfer ' + this.id + ' (' + this.size + ' bytes) failed');
+        
         if (this.onerror) {
             this.onerror.call(this, error);
         } else {
             filesender.ui.error(error);
         }
     };
-
+    
     /**
      * Start upload
      */
@@ -678,12 +683,14 @@ window.filesender.transfer = function() {
             return errorhandler({message: 'bad_expire'});
         }
         
+        filesender.ui.log('Creating transfer');
+        
         this.time = (new Date()).getTime();
         
         var transfer = this;
         filesender.client.postTransfer(this, function(path, data) {
             transfer.id = data.id;
-
+            
             for (var i = 0; i < transfer.files.length; i++) {
                 for (var j = 0; j < data.files.length; j++) {
                     if(
@@ -700,7 +707,7 @@ window.filesender.transfer = function() {
                         transfer.files[i].uid = data.files[j].uid;
                     }
                 }
-
+                
                 if (!transfer.files[i].id)
                     return errorhandler({message: 'file_not_in_response', details: {file: transfer.files[i]}});
             }
@@ -709,6 +716,8 @@ window.filesender.transfer = function() {
                 transfer.download_link = data.recipients[0].download_url;
             
             transfer.createRestartTracker();
+            
+            filesender.ui.log('Transfer created, staring upload');
             
             if(filesender.supports.reader) {
                 // Start uploading chunks
@@ -727,18 +736,18 @@ window.filesender.transfer = function() {
             transfer.reportError(error);
         });
     };
-
+    
     /**
      * Pause upload
      */
     this.pause = function() {
         if (this.status != 'running')
             return;
-
+        
         this.pause_time = (new Date()).getTime();
-
+        
         this.status = 'paused';
-
+        
         if (filesender.config.terasender_enabled && filesender.supports.workers)
             filesender.terasender.pause();
     };
@@ -749,11 +758,11 @@ window.filesender.transfer = function() {
     this.resume = function() {
         if (this.status != 'paused')
             return;
-
+        
         this.pause_length += (new Date()).getTime() - this.pause_time;
-
+        
         this.status = 'running';
-
+        
         if (filesender.config.terasender_enabled && filesender.supports.workers)
             filesender.terasender.restart();
     };
@@ -769,6 +778,8 @@ window.filesender.transfer = function() {
         
         this.removeFromRestartTracker();
         
+        filesender.ui.log('Transfer stopped, deleting created data');
+        
         var transfer = this;
         window.setTimeout(function() { // Small delay to let workers stop
             filesender.client.deleteTransfer(transfer, callback);
@@ -783,6 +794,8 @@ window.filesender.transfer = function() {
         if(manual) this.retries = 0;
         if(this.retries >= this.max_automatic_retries) return false;
         this.retries++;
+        
+        filesender.ui.log('Data sending failed, retrying from last known offsets');
         
         if (filesender.config.terasender_enabled && filesender.supports.workers) {
             filesender.terasender.retry();
@@ -811,6 +824,8 @@ window.filesender.transfer = function() {
         }
         
         var file = this.files[this.file_index];
+        
+        filesender.ui.log('Uploading chunk [' + offset + ' .. ' + offset + filesender.config.upload_chunk_size + '] from file ' + file.name);
         
         var slicer = file.blob.slice ? 'slice' : (file.blob.mozSlice ? 'mozSlice' : (file.blob.webkitSlice ? 'webkitSlice' : 'slice'));
         
@@ -861,6 +876,8 @@ window.filesender.transfer = function() {
         var file = this.files[this.file_index];
         this.file_index++;
         
+        filesender.ui.log('Uploading whole file ' + file.name + ' with size ' + file.size + ' using legacy mode');
+        
         var transfer = this;
         
         if(typeof this.tracking == 'undefined') {
@@ -875,9 +892,9 @@ window.filesender.transfer = function() {
                     filesender.client.getLegacyUploadProgress(
                         transfer.tracking.key,
                         function(data) {
-                            console.log('Got progress info : ' + JSON.stringify(data));
+                            filesender.ui.log('Got progress info : ' + JSON.stringify(data));
                             if(!data) { // Tracking does not work or upload ended for file
-                                console.log('No upload progress info');
+                                filesender.ui.log('No upload progress info');
                                 return;
                             }
                             
@@ -885,7 +902,7 @@ window.filesender.transfer = function() {
                             transfer.reportProgress(transfer.tracking.file, transfer.tracking.file.uploaded >= transfer.tracking.file.size);
                         },
                         function() { // Error, tracking does not work
-                            console.log('Upload progress fetching failed', arguments);
+                            filesender.ui.log('Upload progress fetching failed', arguments);
                         });
                 }, filesender.config.legacy_upload_progress_refresh_period * 1000);
             } else transfer.tracking = null;
@@ -897,7 +914,7 @@ window.filesender.transfer = function() {
             this.legacy.uid = 'transfer_' + transfer.id + '_' + (new Date()).getTime();
             this.legacy.iframe = $('<iframe name="' + this.legacy.uid + '"/>').appendTo($('<div id="legacy_uploader" />').appendTo('body'));
             window.legacyUploadResultHandler = function(data) {
-                console.log('Upload frame done : ' + JSON.stringify(data));
+                filesender.ui.log('Upload frame done : ' + JSON.stringify(data));
                 if(data.message && data.uid) { // Seems to be an error
                     filesender.ui.error(data);
                     return;
