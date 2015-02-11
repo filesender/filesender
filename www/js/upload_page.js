@@ -424,12 +424,12 @@ filesender.ui.startUpload = function() {
             if(!stalled || filesender.ui.reporting_stall) return;
             
             if(transfer.retry()) {// Automatic retry
-                console.log('upload seems stalled, automatic retry');
+                filesender.ui.log('upload seems stalled, automatic retry');
                 return;
             }
             
             filesender.ui.reporting_stall = true;
-            console.log('upload seems stalled and max number of automatic retries exceeded, asking user about what to do');
+            filesender.ui.log('upload seems stalled and max number of automatic retries exceeded, asking user about what to do');
             
             var retry = function() {
                 transfer.resetWatchdog();
