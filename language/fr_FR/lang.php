@@ -153,6 +153,7 @@ $lang['reason'] = 'Raison';
 $lang['anonymous'] = 'Anonyme';
 $lang['anonymous_details'] = 'Lien fourni directement';
 $lang['guest'] = 'Invité';
+$lang['user_quota'] = 'Quota : {size:used} sur {size:total} utilisés, {size:available} restants';
 
 
 /**
@@ -498,6 +499,8 @@ $lang['transfer_too_many_files'] = 'Nombre maximum de fichiers dépassé';
 $lang['transfer_too_many_recipients'] = 'Nombre maximum de destinataires dépassé';
 $lang['cannot_alter_closed_transfer'] = 'Impossible de modifier un dépôt fermé';
 $lang['transfer_rejected'] = 'Dépôt rejeté';
+$lang['transfer_host_quota_exceeded'] = 'Quota du service dépassé';
+$lang['transfer_user_quota_exceeded'] = 'Quota utilisateur dépassé';
 
 // User related exceptions
 $lang['user_not_found'] = 'Utilisateur introuvable';

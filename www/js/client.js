@@ -471,5 +471,9 @@ window.filesender.client = {
     
     updateUserPreferences: function(preferences, callback) {
         return this.put('/user', preferences, callback);
+    },
+    
+    getUserQuota: function(callback) {
+        this.get('/user/@me/quota', callback);
     }
 };
