@@ -64,7 +64,6 @@ $default = array(
     'mac_unzip_name' => 'The Unarchiver',
     'mac_unzip_link' => 'http://unarchiver.c3.cx/unarchiver',
     'ban_extension' => 'exe,bat',
-    'max_email_recipients' => 50,
     
     'max_transfer_size' => 107374182400,
     'max_transfer_recipients' => 50,
