@@ -223,6 +223,8 @@ filesender.ui.recipients = {
         });
         if(!added) return email;
         
+        if(filesender.ui.nodes.recipients.list.find('.recipient[email="' + email + '"]').length) return ''; // Ignore duplicates
+        
         var node = $('<div class="recipient" />').attr('email', email).appendTo(filesender.ui.nodes.recipients.list);
         $('<span />').attr('title', email).text(email).appendTo(node);
         $('<span class="remove fa fa-minus-square" />').attr({
