@@ -102,7 +102,7 @@ class Utilities
                 return substr($line, 0, 1) != '#';
             });
             
-            $secret = $ctn[0];
+            $secret = array_shift($ctn);
         } else {
             $secret = self::generateRandomHexString(true);
             
