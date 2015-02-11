@@ -204,23 +204,48 @@ filesender.ui.files = {
 // Manage recipients
 filesender.ui.recipients = {
     // Add recipient to list
-    add: function(email) {
+    add: function(email, errorhandler) {
+        if(!errorhandler) errorhandler = function(error) {
+            filesender.ui.error(error);
+        };
+        
+        var too_much = null;
         if(email.match(/[,;\s]/)) { // Multiple values
             email = email.split(/[,;\s]/);
             var invalid = [];
             for(var i=0; i<email.length; i++) {
+                if(too_much) continue;
+                
                 var s = email[i].replace(/^\s+/g, '').replace(/\s+$/g, '');
                 if(!s) continue;
-                if(!this.add(s))
+                
+                if(!this.add(s, function(error) {
+                    if(error.message == 'transfer_too_many_recipients')
+                        too_much = error;
+                }))
                     invalid.push(s);
             }
+            
+            if(too_much) {
+                filesender.ui.error(too_much);
+                return '';
+            }
+            
             return invalid.join(', ');
         }
         
         var added = true;
-        filesender.ui.transfer.addRecipient(email, function(error, data) {
+        filesender.ui.transfer.addRecipient(email, function(error) {
+            if(error.message == 'transfer_too_many_recipients')
+                too_much = error;
             added = false;
         });
+        
+        if(too_much) {
+            errorhandler(too_much);
+            return '';
+        }
+        
         if(!added) return email;
         
         if(filesender.ui.nodes.recipients.list.find('.recipient[email="' + email + '"]').length) return ''; // Ignore duplicates
@@ -331,7 +356,7 @@ filesender.ui.recipients = {
         
                 $(this).val('');
                 $(this).removeClass('invalid');
-                if(marker) marker.remove();
+                if(marker) marker.hide();
                 
                 return false;
             },

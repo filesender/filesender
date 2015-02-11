@@ -35,37 +35,50 @@ filesender.ui.recipients = {
     list: [],
     
     // Add recipient to list
-    add: function(email) {
-        if(filesender.config.max_guest_recipients && this.list.length >= filesender.config.max_guest_recipients) {
-            filesender.ui.error({message: 'guest_too_many_recipients', details: {max: filesender.config.max_guest_recipients}});
-            return email;
-        }
+    add: function(email, errorhandler) {
+        if(!errorhandler) errorhandler = function(error) {
+            filesender.ui.error(error);
+        };
         
         if(email.match(/[,;\s]/)) { // Multiple values
             email = email.split(/[,;\s]/);
             var invalid = [];
+            var too_much = null;
             for(var i=0; i<email.length; i++) {
+                if(too_much) continue;
+                
                 var s = email[i].replace(/^\s+/g, '').replace(/\s+$/g, '');
                 if(!s) continue;
-                if(!this.add(s))
+                
+                if(!this.add(s, function(error) {
+                    if(error.message == 'guest_too_many_recipients')
+                        too_much = error;
+                }))
                     invalid.push(s);
             }
+            
+            if(too_much) {
+                filesender.ui.error(too_much);
+                return '';
+            }
+            
             return invalid.join(', ');
         }
         
         if(!email.match(filesender.ui.validators.email))
             return email;
         
-        for(var i=0; i<this.list.length; i++)
+        for(var i=0; i<this.list.length; i++) {
             if(this.list[i] == email) {
                 //filesender.ui.error({message: 'duplicate_recipient', details: {email: email}});
                 //return email;
                 return '';
             }
+        }
         
-        if(this.list.length >= filesender.config.max_email_recipients) {
-            filesender.ui.error({message: 'max_email_recipients_exceeded', details: {max: filesender.config.max_email_recipients}});
-            return email;
+        if(filesender.config.max_guest_recipients && this.list.length >= filesender.config.max_guest_recipients) {
+            errorhandler({message: 'guest_too_many_recipients', details: {max: filesender.config.max_guest_recipients}});
+            return '';
         }
         
         var node = $('<div class="recipient" />').attr('email', email).appendTo(filesender.ui.nodes.recipients.list);
@@ -171,7 +184,7 @@ filesender.ui.recipients = {
         
                 $(this).val('');
                 $(this).removeClass('invalid');
-                if(marker) marker.remove();
+                if(marker) marker.hide();
                 
                 return false;
             },
