@@ -108,25 +108,38 @@ class RestEndpointUser extends RestEndpoint {
         
         $user = Auth::user();
         
-        if(is_numeric($id)) {
+        if($id && $id != '@me') {
             $user = User::fromId($id);
             
             if(!$user->is(Auth::user()) && !Auth::isAdmin())
                 throw new RestOwnershipRequiredException(Auth::user()->id, 'user = '.$user->id);
         }
         
-        if(!in_array($id, array('', '@me'))) throw new RestBadParameterException('user_id');
-        
-        if ($property == "frequent_recipients"){
-            if (property_exists($this->request, 'filterOp')){
-                return $this->getFrequentRecipients($this->request->filterOp->contains);
-            }else{
-                return '';
-            }
-        }else{
-            // For now, can get only frequent_recipients from user
-            return '';
+        if($property == 'frequent_recipients') {
+            $rcpt = array();
+            
+            if(property_exists($this->request, 'filterOp'))
+                $rcpt = $this->getFrequentRecipients($this->request->filterOp->contains);
+            
+            return $rcpt;
         }
+        
+        if($property == 'quota') {
+            $user_quota = Config::get('user_quota');
+            if(!$user_quota) return null;
+            
+            $used = array_sum(array_map(function($t) {
+                return $t->size;
+            }, Transfer::fromUser(Auth::user())));
+            
+            return array(
+                'total' => $user_quota,
+                'used' => $used,
+                'available' => max(0, $user_quota - $used)
+            );
+        }
+        
+        return null;
     }
     
     /**
