@@ -154,6 +154,7 @@ $lang['reason'] = 'Reason';
 $lang['anonymous'] = 'Anonymous';
 $lang['anonymous_details'] = 'Direct link provided';
 $lang['guest'] = 'Guest';
+$lang['user_quota'] = 'Quota : {size:used} out of {size:total} used, {size:available} remaining';
 
 
 /**
@@ -491,13 +492,14 @@ $lang['bad_transfer_status'] = 'Invalid transfer status';
 $lang['transfer_no_recipients'] = 'Transfer has no recipients';
 $lang['transfer_no_files'] = 'Transfer has no files';
 $lang['duplicate_recipient'] = 'A recipient already exists';
-$lang['max_email_recipients_exceeded'] = 'Maximum number of recipients exceeded';
 $lang['transfer_maximum_size_exceeded'] = 'Maximum transfer size exceeded';
 $lang['transfer_not_availabe'] = 'Transfer not available';
 $lang['transfer_too_many_files'] = 'Maximum number of files exceeded';
 $lang['transfer_too_many_recipients'] = 'Maximum number of recipients exceeded';
 $lang['cannot_alter_closed_transfer'] = 'Cannot alter closed transfer';
 $lang['transfer_rejected'] = 'Transfer creation rejected';
+$lang['transfer_host_quota_exceeded'] = 'Host quota exceeded';
+$lang['transfer_user_quota_exceeded'] = 'User quota exceeded';
 
 // User related exceptions
 $lang['user_not_found'] = 'User not found';

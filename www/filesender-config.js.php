@@ -44,7 +44,7 @@ $banned = Config::get('ban_extension');
 if(!('filesender' in window)) window.filesender = {};
 
 window.filesender.config = {
-    log: false,
+    log: true,
     
     site_name: '<?php echo Config::get('site_name') ?>',
     

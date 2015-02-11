@@ -328,6 +328,22 @@ table.list .date {
     width: 15em;
 }
 
+.progressbar {
+    position: relative;
+    margin: 0.4em 0.25em;
+    width: 20%;
+    height: 1.3333em;
+    float: right;
+}
+
+.progressbar .progress-label {
+    position: absolute;
+    left: 50%;
+    margin-left: -2em;
+    top: 0.2em;
+    font-size: 0.9em;
+}
+
 
 /* JQuery UI overides */
 

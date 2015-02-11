@@ -403,4 +403,38 @@ $(function() {
     $('#language_selector').on('change', function() {
         filesender.ui.goToPage(true, {lang: $(this).val()})
     });
+    
+    filesender.client.getUserQuota(function(quota) {
+        if(!quota) return;
+        
+        var bar = $('<div class="progressbar" />').prependTo('#page .box:eq(0)');
+        $('<div class="progress-label" />').appendTo(bar);
+        bar.progressbar({
+            value: false,
+            max: 1000,
+            change: function() {
+                var bar = $(this);
+                var v = bar.progressbar('value');
+                
+                var color = '#0f0';
+                if(v > 980) {
+                    color = '#f00';
+                } else if(v > 900) {
+                    color = '#f80';
+                } else if(v > 750) {
+                    color = '#ff0';
+                }
+                
+                bar.find('.progress-label').text((v / 10).toFixed(1) + '%');
+                bar.find('.ui-progressbar-value').css({background: color});
+            },
+            complete: function() {
+                var bar = $(this);
+                bar.find('.progress-label').text(lang.tr('full'));
+            }
+        });
+        
+        bar.progressbar('value', Math.round(1000 * quota.used / quota.total));
+        bar.attr({title: lang.tr('user_quota').r({total: quota.total, used: quota.used, available: quota.available})});
+    });
 });
