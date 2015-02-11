@@ -58,8 +58,9 @@ filesender.ui.recipients = {
         
         for(var i=0; i<this.list.length; i++)
             if(this.list[i] == email) {
-                filesender.ui.error({message: 'duplicate_recipient', details: {email: email}});
-                return email;
+                //filesender.ui.error({message: 'duplicate_recipient', details: {email: email}});
+                //return email;
+                return '';
             }
         
         if(this.list.length >= filesender.config.max_email_recipients) {

@@ -222,8 +222,9 @@ window.filesender.transfer = function() {
         
         for (var i = 0; i < this.recipients.length; i++)
             if (this.recipients[i] == email) {
-                errorhandler({message: 'duplicate_recipient', details: {email: email}});
-                return false;
+                //errorhandler({message: 'duplicate_recipient', details: {email: email}});
+                //return false;
+                return true;
             }
         
         if (this.recipients.length >= filesender.config.max_transfer_recipients) {
