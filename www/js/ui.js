@@ -41,6 +41,14 @@ if(!('filesender' in window)) window.filesender = {};
  * UI methods
  */
 window.filesender.ui = {
+    /**
+     * Log to console if enabled
+     * 
+     * @param mixed message
+     */
+    log: function(message) {
+        if(filesender.config.log) console.log(message);
+    },
     
     /**
      * Holder for named nodes

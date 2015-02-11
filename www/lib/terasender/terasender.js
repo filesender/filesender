@@ -161,13 +161,13 @@ window.filesender.terasender = {
     },
     
     /**
-     * Log to console if enabled
+     * Log to ui
      * 
      * @param string message
      * @param string origin "driver" (default) or "worker"
      */
     log: function(message, origin) {
-        if(filesender.config.log) console.log('[terasender ' + (origin ? origin : 'driver') + '] ' + message);
+        filesender.ui.log('[terasender ' + (origin ? origin : 'driver') + '] ' + message);
     },
     
     /**
