@@ -96,7 +96,7 @@ class Utilities
         
         if($nearly) return hash('sha1', $rnd);
         
-        $sfile = FILESENDER_BASE.'/config/instance.secret';
+        $sfile = FILESENDER_BASE.'/tmp/instance.secret';
         if(file_exists($sfile)) {
             $ctn = array_filter(array_map('trim', explode("\n", file_get_contents($sfile))), function($line) {
                 return substr($line, 0, 1) != '#';
