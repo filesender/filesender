@@ -228,7 +228,7 @@ window.filesender.transfer = function() {
             }
         
         if (this.recipients.length >= filesender.config.max_transfer_recipients) {
-            errorhandler({message: 'max_transfer_recipients_exceeded', details: {max: filesender.config.max_transfer_recipients}});
+            errorhandler({message: 'transfer_too_many_recipients', details: {max: filesender.config.max_transfer_recipients}});
             return false;
         }
         

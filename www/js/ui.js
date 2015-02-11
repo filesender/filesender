@@ -264,6 +264,8 @@ window.filesender.ui = {
      * @param object data values for translation placeholders
      */
     error: function(error,callback) {
+        this.log('[error] ' + error.message);
+        
         var d = this.alert('error', lang.tr(error.message),callback);
         
         if(error.details) {
