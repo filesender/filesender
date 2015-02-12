@@ -199,7 +199,7 @@ class TrackingEvent extends DBObject
         
         if(!count($ids)) return array();
         
-        return self::all('target_type=\'Recipient\' AND target_id IN ('.implode(', ', $ids).') ORDER BY created');
+        return self::all('target_type=\'Recipient\' AND target_id IN :ids ORDER BY created', array(':ids' => $ids));
     }
     
     /**

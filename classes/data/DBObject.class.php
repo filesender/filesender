@@ -224,8 +224,14 @@ class DBObject {
             if(array_key_exists('primary', $d) && $d['primary'])
                 $pk[] = $k;
         
-        $statement = DBI::prepare($query);
+        if(preg_match('`\s+[^\s]+\s+IN\s+:[^\s]+\s+`i', $query)) {
+            $statement = DBI::prepareInQuery($query, array_filter($placeholders, 'is_array'));
+        } else {
+            $statement = DBI::prepare($query);
+        }
+        
         $statement->execute($placeholders);
+        
         $objects = array();
         foreach($statement->fetchAll() as $r) {
             $id = array();

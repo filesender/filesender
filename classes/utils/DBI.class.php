@@ -129,6 +129,31 @@ class DBI {
             throw new DBIUsageException($e->getMessage(), array('name' => $name, 'args' => $args));
         }
     }
+    
+    /**
+     * Prepare IN query
+     * 
+     * @param string $query
+     * @param array $sets pairs of identifiers and values sets or values sets counts
+     * 
+     * @return string
+     */
+    public static function prepareInQuery($query, $sets) {
+        foreach($sets as $key => $values) {
+            if(is_array($values)) $values = count($values);
+            if(!is_int($values)) continue;
+            
+            $query = preg_replace_callback('`\s+([^\s]+)\s+IN\s+'.$key.'\s+`i', function($m) use($values) {
+                $cdn = array();
+                for($i=0; $i<$values; $i++)
+                    $cdn[] = $m[1].' = '.$key.'___'.$i;
+                
+                return ' ('.implode(' OR ', $cdn).') ';
+            }, $query);
+        }
+        Logger::info($query);
+        return self::prepare($query);
+    }
 }
 
 /**
@@ -161,6 +186,17 @@ class DBIStatement {
      */
     public function __call($method, $args) {
         if($method == 'execute') Logger::debug('DBI call');
+        
+        if($method == 'execute') {
+            foreach($args[0] as $key => $value) {
+                if(is_array($value)) {
+                    foreach($value as $idx => $subvalue)
+                        $args[$key.'___'.$idx] = $subvalue;
+                    
+                    unset($args[0][$key]);
+                }
+            }
+        }
         
         if(!method_exists($this->statement, $method)) throw new DBIUsageException('Calling unknown DBIStatement method '.$method);
         try {
