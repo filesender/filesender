@@ -739,7 +739,9 @@ class Translation {
             $translation = preg_replace_callback('`\{(([^:\}]+:)?'.$k.'(\.[a-z0-9_\(\)]+)*)\}`iU', function($m) use($placeholder_resolver) {
                 if(substr($m[0], 0, 4) == '{if:') return $m[0]; // Remaining ifs
                 
-                return Utilities::sanitizeOutput($placeholder_resolver($m[1])); // Ensure sanity
+                $v = $placeholder_resolver($m[1]);
+                
+                return (substr($m[0], 0, 5) == '{raw:') ? $v : Utilities::sanitizeOutput($v); // Ensure sanity
             }, $translation);
         }
         
