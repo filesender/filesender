@@ -22,7 +22,7 @@ Ce destinataire a pour adresse email {recipient.email} et est/était autorisé �
 
 Voici tous les évènements survenus durant la durée de vie du {if:target.type=="Transfer"}dépôt{endif}{if:target.type=="File"}fichier{endif}{if:target.type=="Recipient"}destinataire{endif} :
 
-{content.plain}
+{raw:content.plain}
 
 Cordialement,
 {cfg:siteName}
@@ -59,7 +59,7 @@ Cordialement,
             <th>Evènement</th>
         </thead>
         <tbody>
-            {content.html}
+            {raw:content.html}
         </tbody>
     </table>
 </p>

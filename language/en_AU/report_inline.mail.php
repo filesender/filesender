@@ -24,7 +24,7 @@ This recipient has email address {recipient.email} and is/was valid until {date:
 
 Here is the full log of what happened to the transfer :
 
-{content.plain}
+{raw:content.plain}
 
 Best regards,
 {cfg:siteName}
@@ -63,7 +63,7 @@ Best regards,
             <th>Event</th>
         </thead>
         <tbody>
-            {content.html}
+            {raw:content.html}
         </tbody>
     </table>
 </p>
