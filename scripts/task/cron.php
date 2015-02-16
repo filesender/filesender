@@ -39,6 +39,7 @@ Logger::info('Cron started');
 
 // Close expired transfers
 foreach(Transfer::allExpired() as $transfer) {
+    if($transfer->status == TransferStatuses::CLOSED) continue;
     Logger::info('Transfer#'.$transfer->id.' expired, closing it');
     $transfer->close();
 }
@@ -51,6 +52,7 @@ foreach(Transfer::allFailed() as $transfer) {
 
 // Close expired guests
 foreach(Guest::allExpired() as $guest) {
+    if($guest->status == GuestStatuses::CLOSED) continue;
     if($guest->hasOption(GuestOptions::DOES_NOT_EXPIRE)) continue;
     Logger::info('Guest#'.$guest->id.' expired, closing it');
     $guest->close();
