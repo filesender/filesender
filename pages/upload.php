@@ -84,7 +84,7 @@
  ?>
 <script type="text/javascript" src="lib/js/AC_OETags.js" language="javascript"></script>
 <script type="text/javascript" src="js/crypter/shared.js"></script>
-<script type="text/javascript" src="js/upload.js"></script>
+<script type="text/javascript" src="js/upload.js?<?php echo FileSender_Version::VERSION; ?>"></script>
 <script type="text/javascript" src="js/uploader.filesender.js"></script>
 <script type="text/javascript" src="js/crypter/BlobSlicer.js"></script>
 <script type="text/javascript" src="js/crypter/BlobCrypter.js"></script>
