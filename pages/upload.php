@@ -795,7 +795,7 @@ if ( hasProductInstall && !hasRequestedVersion ) {
       </tr>
       <tr id="encryptionrow">
         <td class=""></td>
-        <td><input onclick="toggleENC()" name="fileencryption" style="width:20px;" type="checkbox" id="fileencryption" value="1" <?php echo ($config['crypto_enabled'] && $config['crypto_default_enabled']?' checked="checked"':''); ?>/></td>
+        <td><input onclick="toggleENC()" name="fileencryption" style="width:20px;" type="checkbox" id="fileencryption" value="1" <?php echo (isset($config['crypto_enabled']) && $config['crypto_enabled'] && isset($config['crypto_default_enabled']) && $config['crypto_default_enabled']?' checked="checked"':''); ?>/></td>
         <td><?php echo lang("_ENCRYPT_FILE"); ?>
         <div id="encsize_msg" class="validation_warning_msg" style="display: none"></div></td>
         <td colspan="2" align="center" valign="top">&nbsp;</td>
