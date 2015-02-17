@@ -296,4 +296,19 @@ $lang["_UPLOAD_COMPLETE_ENCRYPTED"] = "Encryption was selected. Don't forget to 
 $lang["_RANDOM_NOT_READY"] = "Random number not yet ready; :1% complete. Please try again in a couple of seconds.";
 $lang["_GENERATE_RANDOM"] = "Generate";
 $lang["_ENCSIZE_WARNING"] = "The file ':1' is too large for encryption. The maximum allowed filesize is :2.";
+if (isset($config['crypto_enabled']) ? $config['crypto_enabled'] : false) {
+$lang["_HELP_TEXT"] = '
+<div align="left" style="padding:5px">
+<h4>File encryption</h4> 
+<ul>
+    <li>Encryption and decryption is done in the browser using a password to be chosen before uploading. A random password is suggested but this can be changed to a password or pass phrase of your own choice.</li>
+    <li><strong>At no time</strong> the chosen password is sent to the server or the recipient by the FileSender service, it is only known to the uploader. The uploader needs to transfer this password to the recipient through a separate and safe channel, for example encrypted mail or by phone/text message.</li>
+    <li>At this moment Chrome, FireFox and IE 10 or higher are supported for both encrypted uploads and decrypted downloads.</li>
+    <li>It is <strong>not</strong> possible to resume a canceled upload when using encryption.</li>
+    <li>Maximum file size per upload <strong>when using encryption</strong>: '. formatBytes(empty($config['crypto_max_filesize']) ? $config["max_html5_upload_size"] : $config['crypto_max_filesize']).'</li>
+</ul>
+Please note that the remainder of this help text describes the general functionality not specifically targeted at the use of encryption. The requirements and restrictions mentioned above have precedence over what is mentioned below when using encryption. 
+
+</div>' . $lang["_HELP_TEXT"];
+}
 ?>
