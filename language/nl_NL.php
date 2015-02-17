@@ -291,4 +291,18 @@ $lang["_UPLOAD_COMPLETE_ENCRYPTED"] = "Het bestand is versleuteld. Vergeet niet 
 $lang["_RANDOM_NOT_READY"] = "Random number is nog niet klaar; :1% voortgang. Probeer het over een paar seconden nogmaals.";
 $lang["_GENERATE_RANDOM"] = "Genereer";
 $lang["_ENCSIZE_WARNING"] = "Het bestand ':1' is te groot om als versleuteld bestand verwerkt te kunnen worden. De maximaal toegestane bestandsgrootte is :2.";
+if (isset($config['crypto_enabled']) ? $config['crypto_enabled'] : false) {
+$lang["_HELP_TEXT"] = '
+<div align="left" style="padding:5px">
+<h4>Bestandsversleuteling</h4> 
+<ul>
+    <li>Het ver- en ontsleutelen van bestanden wordt door de browser tijdens het up- en downloaden gedaan. Daarbij wordt een wachtwoord/sleutel gebruikt die voor het uploaden ingevoerd moet worden. Er wordt een random gegenereerd wachtwoord voorgesteld maar dat kan naar wens veranderd worden.</li>
+    <li>Op <strong>geen enkel moment</strong> wordt het gekozen wachtwoord door FileSender naar de server of de ontvanger gestuurd, alleen de uploader kent het wachtwoord. De uploader dient dit wachtwoord via een apart en veilig kanaal aan de ontvanger te geven, bijvoorbeeld via versleutelde mail of telefoon/SMS.</li>
+    <li>Op dit moment worden Chrome, FireFox en IE 10 of hoger ondersteund voor zowel versleutelde up- als downloads.</li>
+    <li>Het hervatten van een onderbroken upload is <strong>niet</strong> mogelijk als bestandversleuteling gebruikt wordt.</li>
+    <li>Maximale bestandsgrootte <strong>met versleuteling</strong>: '. formatBytes(empty($config['crypto_max_filesize']) ? $config["max_html5_upload_size"] : $config['crypto_max_filesize']).'</li>
+</ul>
+In de rest van deze help-tekst wordt de algemene functionaliteit beschreven. Daar waar versleuteling gebruikt wordt gelden de hierboven genoemde beperkingen boven eventuele beperkingen in de rest van deze tekst.
+</div>' . $lang["_HELP_TEXT"];
+}
 ?>
