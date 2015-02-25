@@ -818,7 +818,7 @@ table.transfers .transfer_details .recipients .recipient .errors .details {
     display: none;
 }
 
-.guests_page .progressbar.quota {
+.guests_page .progressbar.user_quota {
     display: none;
 }
 
@@ -888,7 +888,7 @@ table.guests .guest .to .errors .details {
     background-color: #fff;
 }
 
-.admin_page .progressbar.quota {
+.admin_page .progressbar.user_quota {
     display: none;
 }
 

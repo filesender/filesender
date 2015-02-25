@@ -409,7 +409,7 @@ $(function() {
         
         filesender.config.quota = quota; // Propagate info
         
-        var bar = $('<div class="progressbar quota" />').prependTo('#page .box:eq(0)');
+        var bar = $('<div class="progressbar quota user_quota" />').prependTo('#page .box:eq(0)');
         $('<div class="progress-label" />').appendTo(bar);
         bar.progressbar({
             value: false,
@@ -437,6 +437,6 @@ $(function() {
         });
         
         bar.progressbar('value', Math.round(1000 * quota.used / quota.total));
-        bar.attr({title: lang.tr('user_quota').r({total: quota.total, used: quota.used, available: quota.available})});
+        bar.attr({title: lang.tr('user_quota') + ' : ' + lang.tr('quota_usage').r({total: quota.total, used: quota.used, available: quota.available})});
     });
 });
