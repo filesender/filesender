@@ -1,6 +1,4 @@
 <div class="box">
-    <h1>{tr:user_page}</h1>
-    
     <?php
     
     $readonly = function($info) {

@@ -17,8 +17,6 @@ if(Auth::isGuest()) {
 ?>
 
 <div class="box">
-    <h1>{tr:upload_page}</h1>
-    
     <form id="upload_form" enctype="multipart/form-data" accept-charset="utf-8" method="post">
         <div class="box">
             <div class="files"></div>

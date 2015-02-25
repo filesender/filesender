@@ -1,5 +1,4 @@
 <div class="box">
-    <h1>{tr:guests_page}</h1>
     <div id="send_voucher">
         <div class="invite_guest box">
             <div class="disclamer">

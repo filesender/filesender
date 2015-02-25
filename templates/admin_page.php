@@ -1,6 +1,4 @@
 <div class="box">
-    <h1>{tr:admin_page}</h1>
-    
     <?php
     
     $sections = array('statistics', 'transfers', 'guests');
