@@ -509,6 +509,11 @@ class Transfer extends DBObject {
             return $this->recipientsCache;
         }
         
+        if($property == 'first_recipient') {
+            $recipients = array_values($this->recipients);
+            return $recipients[0];
+        }
+        
         if($property == 'recipients_with_error') {
             return array_filter($this->recipients, function($recipient) {
                 return count($recipient->errors);
