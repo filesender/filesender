@@ -123,4 +123,6 @@ $default = array(
     'site_logouturl' => function() {
         return Config::get('site_url').'?s=logout';
     },
+    
+    'show_storage_statistics_in_admin' => true,
 );
