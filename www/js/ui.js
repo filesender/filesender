@@ -224,7 +224,7 @@ window.filesender.ui = {
      * @param string page
      * @param object args
      */
-    goToPage: function(page, args) {
+    goToPage: function(page, args, anchor) {
         if(typeof page != 'string') {
             var q = window.location.search.substr(1).split('&');
             for(var i=0; i<q.length; i++)
@@ -236,7 +236,7 @@ window.filesender.ui = {
         if(typeof page == 'string') a.push('s=' + page);
         if(args) for(var k in args) a.push(k + '=' + args[k]);
         
-        this.redirect(filesender.config.base_path + '?' + a.join('&'));
+        this.redirect(filesender.config.base_path + '?' + a.join('&') + (anchor ? '#' + anchor : ''));
     },
     
     /**
