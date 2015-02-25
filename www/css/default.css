@@ -781,6 +781,12 @@ table.transfers .transfer_details .recipients .recipient .errors .details {
     margin-left: 0.25em;
 }
 
+table.transfers .transfer_details .download_link input {
+    display: block;
+    width: 80%;
+    margin: 0.4em auto;
+}
+
 
 /* Guests page */
 

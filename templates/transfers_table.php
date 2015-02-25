@@ -145,6 +145,14 @@
                         </ul>
                         <?php } else echo Lang::tr('none') ?>
                     </div>
+                    <?php
+                    if($transfer->hasOption(TransferOptions::GET_A_LINK)) {
+                        $recipients = array_values($transfer->recipients)
+                    ?>
+                    <div class="download_link">
+                        {tr:download_link} : <input readonly="readonly" type="text" value="<?php echo $transfer->first_recipient->download_link ?>" />
+                    </div>
+                    <?php } ?>
                     <div class="transfer_id">
                         {tr:transfer_id} : <?php echo $transfer->id ?>
                     </div>
