@@ -486,7 +486,7 @@ table.list .date {
     -moz-border-radius: 0.5em;
     background-color: #dedede;
     line-height: 1.8em;
-    height: 1.8em;
+    /*height: 1.8em;*/
 }
 
 #upload_form .required_files .file {
@@ -504,6 +504,11 @@ table.list .date {
 #upload_form .files .file .remove {
     float: right;
     line-height: 1.3333em;
+}
+
+#upload_form .files .file .invalid_reason {
+    color: #f00;
+    font-style: italic;
 }
 
 #upload_form .files .file .progressbar {

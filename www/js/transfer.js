@@ -139,7 +139,7 @@ window.filesender.transfer = function() {
         }
         
         if (this.files.length >= filesender.config.max_transfer_files) {
-            errorhandler({message: 'max_transfer_files_exceeded', details: {max: filesender.config.max_transfer_files}});
+            errorhandler({message: 'transfer_too_many_files', details: {max: filesender.config.max_transfer_files}});
             return false;
         }
         
@@ -165,8 +165,15 @@ window.filesender.transfer = function() {
         }
         
         if (this.size + file.size > filesender.config.max_transfer_size) {
-            errorhandler({message: 'max_transfer_size_exceeded', details: {size: file.size, max: filesender.config.max_transfer_size}});
+            errorhandler({message: 'transfer_maximum_size_exceeded', details: {size: file.size, max: filesender.config.max_transfer_size}});
             return false;
+        }
+        
+        if(filesender.config.quota && filesender.config.quota.available) {
+            if (this.size + file.size > filesender.config.quota.available) {
+                errorhandler({message: 'transfer_user_quota_exceeded', details: {available: filesender.config.quota.available}});
+                return false;
+            }
         }
         
         var files_cids = {};
@@ -668,11 +675,11 @@ window.filesender.transfer = function() {
         // Redo sanity checks
         
         if (this.files.length >= filesender.config.max_transfer_files) {
-            return errorhandler({message: 'max_transfer_files_exceeded', details: {max: filesender.config.max_transfer_files}});
+            return errorhandler({message: 'transfer_too_many_files', details: {max: filesender.config.max_transfer_files}});
         }
         
         if (this.size > filesender.config.max_transfer_size) {
-            return errorhandler({message: 'max_transfer_size_exceeded', details: {size: file.size, max: filesender.config.max_transfer_size}});
+            return errorhandler({message: 'transfer_maximum_size_exceeded', details: {size: file.size, max: filesender.config.max_transfer_size}});
         }
         
         var today = Math.floor((new Date()).getTime() / (24 * 3600 * 1000));
