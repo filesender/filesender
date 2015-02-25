@@ -104,10 +104,7 @@ filesender.ui.files = {
                     node.addClass('invalid');
                     node.addClass(error.message);
                     $('<span class="invalid fa fa-exclamation-circle fa-lg" />').prependTo(node.find('.info'))
-                    node.attr({
-                        title: lang.tr('invalid_file').replace({reason: lang.tr(error.message)})
-                    });
-                    node.find('.info').removeAttr('title');
+                    $('<div class="invalid_reason" />').text(lang.tr(error.message)).appendTo(node);
                 }, source_node);
                 
                 filesender.ui.nodes.files.clear.button('enable');
@@ -153,6 +150,8 @@ filesender.ui.files = {
             
             node.attr('index', filesender.ui.transfer.files.length - 1);
         }
+        
+        filesender.ui.nodes.files.list.scrollTop(filesender.ui.nodes.files.list.prop('scrollHeight'));
         
         return node;
     },
