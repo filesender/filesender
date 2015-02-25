@@ -153,7 +153,9 @@ $lang['reason'] = 'Raison';
 $lang['anonymous'] = 'Anonyme';
 $lang['anonymous_details'] = 'Lien fourni directement';
 $lang['guest'] = 'Invité';
-$lang['user_quota'] = 'Quota : {size:used} sur {size:total} utilisés, {size:available} restants';
+$lang['quota_usage'] = '{size:used} sur {size:total} utilisés, {size:available} restants';
+$lang['host_quota'] = 'Quota du service';
+$lang['user_quota'] = 'Quota utilisateur';
 
 
 /**
@@ -317,6 +319,7 @@ $lang['preferences_updated'] = 'Préférences utilisateur sauvegardées';
  * Admin page specific
  */
 $lang['admin_statistics_section'] = 'Statistiques';
+$lang['host_quota_usage'] = 'Utilisation du quota du service';
 $lang['admin_transfers_section'] = 'Dépôts';
 $lang['admin_guests_section'] = 'Invités';
 $lang['admin_config_section'] = 'Configuration';
