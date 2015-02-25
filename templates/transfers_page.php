@@ -1,6 +1,4 @@
 <div class="box">
-    <h1>{tr:transfers_page}</h1>
-    
     <?php if(Config::get('auditlog_lifetime') > 0) { ?><h2>{tr:available_transfers}</h2><?php } ?>
     <?php Template::display('transfers_table', array(
         'status' => 'available',
