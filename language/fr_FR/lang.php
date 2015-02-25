@@ -205,7 +205,7 @@ $lang['drag_and_drop'] = 'glissez-déposez vos fichiers ici';
 $lang['invalid_file'] = 'Fichier non-valide';
 $lang['add_recipient'] = 'Ajouter un destinataire';
 $lang['confirm_leave_upload_page'] = 'Voulez-vous vraiement quitter cette page et perdre la progression en cours ?';
-$lang['download_link'] = 'Voici votre lien de téléchargement';
+$lang['download_link'] = 'Lien de téléchargement';
 $lang['recipients_notifications_language'] = 'Langue des destinataires';
 
 

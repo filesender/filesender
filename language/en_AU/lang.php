@@ -250,7 +250,7 @@ $lang['filtered_transfer_log'] = 'This is a filtered view of the transfer logs.'
 $lang['view_full_log'] = 'View the full log';
 $lang['send_to_my_email'] = 'Send to my email';
 $lang['confirm_remind_transfer'] = 'Do you really want to send a reminder to this transfer\'s recipients ?';
-$lang['download_link'] = 'Here is your download link';
+$lang['download_link'] = 'Download link';
 
 
 /**
