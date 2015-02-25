@@ -14,7 +14,7 @@ Ceci est un rappel.
 {transfer.files.first().name} ({size:transfer.files.first().size})
 {endif}
 
-Lien de téléchargement: {cfg:site_url}?s=download&token={recipient.token}
+Lien de téléchargement: {recipient.download_link}
 
 Le dépôt est valable jusqu'au {date:transfer.expires} après quoi il sera supprimé automatiquement.
 
@@ -74,7 +74,7 @@ Cordialement,
         </tr>
         <tr>
             <td>Lien de téléchargement</td>
-            <td><a href="{cfg:site_url}?s=download&token={recipient.token}">{cfg:site_url}?s=download&amp;token={recipient.token}</a></td>
+            <td><a href="{recipient.download_link}">{recipient.download_link}</a></td>
         </tr>
     </tbody>
 </table>

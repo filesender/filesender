@@ -12,7 +12,7 @@ This is a reminder, the following {if:transfer.files>1}files have{else}file has{
 {transfer.files.first().name} ({size:transfer.files.first().size})
 {endif}
 
-Download link: {cfg:site_url}?s=download&token={recipient.token}
+Download link: {recipient.download_link}
 
 The transaction is available until {date:transfer.expires} after which time it will be automatically deleted.
 
@@ -68,7 +68,7 @@ Best regards,
         </tr>
         <tr>
             <td>Download link</td>
-            <td><a href="{cfg:site_url}?s=download&token={recipient.token}">{cfg:site_url}?s=download&amp;token={recipient.token}</a></td>
+            <td><a href="{recipient.download_link}">{recipient.download_link}</a></td>
         </tr>
     </tbody>
 </table>
