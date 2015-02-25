@@ -344,6 +344,24 @@ table.list .date {
     font-size: 0.9em;
 }
 
+.progressbar.quota .ui-progressbar-value {
+    background-image: none;
+    background-color: #0f0;
+}
+
+.progressbar.quota.quota_70.quota_plus_5 .ui-progressbar-value,
+.progressbar.quota.quota_80 .ui-progressbar-value {
+    background-color: #ff0;
+}
+
+.progressbar.quota.quota_90 .ui-progressbar-value {
+    background-color: #f80;
+}
+
+.progressbar.quota.quota_90.quota_plus_5 .ui-progressbar-value {
+    background-color: #f00;
+}
+
 
 /* JQuery UI overides */
 
