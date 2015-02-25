@@ -418,7 +418,11 @@ filesender.ui.startUpload = function() {
     
     this.transfer.oncomplete = function(time) {
         var p = filesender.ui.alert('success', lang.tr('done_uploading'), function() {
-            filesender.ui.goToPage(filesender.ui.transfer.guest_token ? 'home' : 'transfers');
+            filesender.ui.goToPage(
+                filesender.ui.transfer.guest_token ? 'home' : 'transfers',
+                null,
+                filesender.ui.transfer.guest_token ? null : 'transfer_' + filesender.ui.transfer.id
+            );
         });
         
         if(filesender.ui.transfer.download_link) {
