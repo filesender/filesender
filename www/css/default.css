@@ -700,6 +700,10 @@ table.list .date {
     margin-top: 0.5em;
 }
 
+.ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset .autoclose {
+    margin-right: 1em;
+}
+
 
 /* transfers table */
 

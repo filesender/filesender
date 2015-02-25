@@ -157,6 +157,7 @@ $lang['guest'] = 'Guest';
 $lang['quota_usage'] = '{size:used} out of {size:total} used, {size:available} remaining';
 $lang['host_quota'] = 'Host quota';
 $lang['user_quota'] = 'User quota';
+$lang['dialog_autoclose'] = 'Dialog will close in {seconds} seconds';
 
 
 /**
@@ -207,6 +208,7 @@ $lang['invalid_file'] = 'Invalid File';
 $lang['add_recipient'] = 'Add a recipient';
 $lang['confirm_leave_upload_page'] = 'Do you really want to leave this page ?';
 $lang['recipients_notifications_language'] = 'Recipients\' language';
+
 
 /**
  * Guest page spacific

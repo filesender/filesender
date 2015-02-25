@@ -156,6 +156,7 @@ $lang['guest'] = 'Invité';
 $lang['quota_usage'] = '{size:used} sur {size:total} utilisés, {size:available} restants';
 $lang['host_quota'] = 'Quota du service';
 $lang['user_quota'] = 'Quota utilisateur';
+$lang['dialog_autoclose'] = 'Ce message disparaitra dans {seconds} secondes';
 
 
 /**
