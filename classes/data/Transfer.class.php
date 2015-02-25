@@ -259,6 +259,26 @@ class Transfer extends DBObject {
     }
     
     /**
+     * Get used/available volume from available transfers (without fetching it from storage)
+     * 
+     * @return array
+     */
+    public static function getUsage() {
+        $quota = Config::get('host_quota');
+        
+        $used = 0;
+        $s = DBI::query('SELECT size FROM '.File::getDBTable().' INNER JOIN '.self::getDBTable().' ON ('.self::getDBTable().'.id = '.File::getDBTable().'.transfer_id) WHERE status=\'available\'');
+        foreach($s->fetchAll() as $r)
+            $used += $r['size'];
+        
+        return array(
+            'total' => $quota,
+            'used' => $used,
+            'available' => $quota ? max(0, $quota - $used) : null
+        );
+    }
+    
+    /**
      * Get uploading transfers
      * 
      * @return array of Transfer
