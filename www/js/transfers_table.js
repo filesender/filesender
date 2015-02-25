@@ -416,6 +416,11 @@ $(function() {
                 });
             });
         }
+        
+        // Downloadlinks auto-selection
+        table.find('.transfer_details .download_link input').on('focus', function() {
+            $(this).select();
+        });
     });
     
     // Do we have a quick open hash ?
