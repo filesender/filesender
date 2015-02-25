@@ -407,7 +407,9 @@ $(function() {
     filesender.client.getUserQuota(function(quota) {
         if(!quota) return;
         
-        var bar = $('<div class="progressbar" />').prependTo('#page .box:eq(0)');
+        filesender.config.quota = quota; // Propagate info
+        
+        var bar = $('<div class="progressbar quota" />').prependTo('#page .box:eq(0)');
         $('<div class="progress-label" />').appendTo(bar);
         bar.progressbar({
             value: false,
@@ -416,17 +418,17 @@ $(function() {
                 var bar = $(this);
                 var v = bar.progressbar('value');
                 
-                var color = '#0f0';
-                if(v > 980) {
-                    color = '#f00';
-                } else if(v > 900) {
-                    color = '#f80';
-                } else if(v > 750) {
-                    color = '#ff0';
-                }
+                var classes = [];
+                
+                var pct = parseInt(v / 10);
+                
+                var tens = parseInt(pct / 10);
+                if(tens) classes.push('quota_' + tens + '0');
+                
+                if(pct % 10 >= 5) classes.push('quota_plus_5');
                 
                 bar.find('.progress-label').text((v / 10).toFixed(1) + '%');
-                bar.find('.ui-progressbar-value').css({background: color});
+                bar.addClass(classes.join(' '));
             },
             complete: function() {
                 var bar = $(this);
