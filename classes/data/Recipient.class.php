@@ -216,6 +216,10 @@ class Recipient extends DBObject {
             return $this->logsCache;
         }
         
+        if($property == 'download_link') {
+            return Config::get('site_url').'?s=download&token='.$this->token;
+        }
+        
         if($property == 'downloads') {
             return array_filter($this->auditlogs, function($log) {
                 return $log->event == LogEventTypes::DOWNLOAD_ENDED;
