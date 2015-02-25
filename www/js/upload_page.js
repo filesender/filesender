@@ -417,23 +417,49 @@ filesender.ui.startUpload = function() {
     this.transfer.onprogress = filesender.ui.files.progress;
     
     this.transfer.oncomplete = function(time) {
-        var p = filesender.ui.alert('success', lang.tr('done_uploading'), function() {
+        var close = function() {
             filesender.ui.goToPage(
                 filesender.ui.transfer.guest_token ? 'home' : 'transfers',
                 null,
                 filesender.ui.transfer.guest_token ? null : 'transfer_' + filesender.ui.transfer.id
             );
-        });
+        };
         
+        var p = filesender.ui.alert('success', lang.tr('done_uploading'), close);
+        
+        var t = null;
         if(filesender.ui.transfer.download_link) {
             var dl = $('<div class="download_link" />').text(lang.tr('download_link') + ' :').appendTo(p);
-            var t = $('<textarea class="wide" readonly="readonly" />').appendTo(dl);
+            t = $('<textarea class="wide" readonly="readonly" />').appendTo(dl);
             t.val(filesender.ui.transfer.download_link).focus().select();
         }
         
         if(filesender.ui.transfer.guest_token) {
             $('<p />').appendTo(p).html(lang.tr('done_uploading_guest').out());
         }
+        
+        var autoclose = 15; // seconds
+        var btnpane = p.closest('.ui-dialog').find('.ui-dialog-buttonpane .ui-dialog-buttonset');
+        
+        var txt = lang.tr('dialog_autoclose').replace({seconds: '<span class="seconds">' + autoclose + '</span>'}).out();
+        var seconds = $('<span class="autoclose" />').prependTo(btnpane).html(txt).find('.seconds');
+        
+        var cltimer = window.setTimeout(close, autoclose * 1000);
+        var cntimer = window.setInterval(function() {
+            if(!autoclose) return;
+            
+            autoclose--;
+            seconds.text(autoclose);
+            
+            if(!autoclose) close();
+        }, 1000);
+        
+        if(t) t.on('click', function() {
+            window.clearTimeout(cltimer);
+            window.clearInterval(cntimer);
+            seconds.closest('.autoclose').remove();
+            $(this).focus().select();
+        });
     };
     
     var errorHandler = function(error) {
