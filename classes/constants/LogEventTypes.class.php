@@ -44,6 +44,7 @@ class LogEventTypes extends Enum {
    
    /* FILE */
    const FILE_CREATED             = 'file_created';   // File has been updated
+   const FILE_UPLOADED            = 'file_uploaded';  // File has been uploaded
    const FILE_UPDATED             = 'file_updated';   // File has been updated
    const FILE_MOVED               = 'file_moved';     // File has been moved
    const FILE_DELETED             = 'file_deleted';   // File has been deleted
