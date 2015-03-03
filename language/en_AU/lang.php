@@ -58,6 +58,7 @@ $lang['logoff'] = 'Log-off';
 // standard date display format
 $lang['date_format'] = 'd/m/Y'; // Format for displaying date, use PHP date() format string syntax 
 $lang['datetime_format'] = 'd/m/Y H:i:s'; // Format for displaying datetime, use PHP date() format string syntax 
+$lang['time_format'] = '{h:H\h} {i:i\m\i\n} {s:s\s}'; // Format for displaying time (elapsed), use PHP date()'s h, i and s components, surrounding parts with {component:...} allow to not display them if zero
 
 // datepicker localization
 $lang['dp_close_text'] = 'Done'; // Done
@@ -264,7 +265,7 @@ $lang['date'] = 'Date';
 $lang['action'] = 'Action that happened';
 
 $lang['report_event_transfer_started'] = 'Transfer was created';
-$lang['report_event_transfer_available'] = 'Transfer became available';
+$lang['report_event_transfer_available'] = 'Transfer became available (took {time:time_taken})';
 $lang['report_event_transfer_sent'] = 'Download link sent to recipient(s)';
 $lang['report_event_transfer_expired'] = 'Transfer expired';
 $lang['report_event_transfer_closed'] = 'Transfer was closed on request';
@@ -272,7 +273,7 @@ $lang['report_event_transfer_deleted'] = 'Transfer data was deleted';
 $lang['report_event_upload_started'] = 'Upload started';
 $lang['report_event_upload_resumed'] = 'Upload was resumed';
 $lang['report_event_upload_ended'] = 'Upload ended';
-$lang['report_event_file_created'] = 'File {file.name} ({size:file.size}) uploaded';
+$lang['report_event_file_uploaded'] = 'File {file.name} ({size:file.size}) uploaded (took {time:time_taken})';
 $lang['report_event_download_started'] = 'Recipient {author.identity} started downloading {file.name} ({size:file.size})';
 $lang['report_event_download_resumed'] = 'Recipient {author.identity} resumed download of {file.name} ({size:file.size})';
 $lang['report_event_download_ended'] = 'Recipient {author.identity} finished downloading {file.name} ({size:file.size})';

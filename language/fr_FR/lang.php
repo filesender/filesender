@@ -57,6 +57,7 @@ $lang['logoff'] = 'Déconnexion';
 // standard date display format
 $lang['date_format'] = 'd/m/Y'; // Format for displaying date, use PHP date() format string syntax 
 $lang['datetime_format'] = 'd/m/Y H:i:s'; // Format for displaying datetime, use PHP date() format string syntax 
+$lang['time_format'] = '{h:H\h} {i:i\m\i\n} {s:s\s}'; // Format for displaying time (elapsed), use PHP date()'s h, i and s components, surrounding parts with {component:...} allow to not display them if zero
 
 // datepicker localization
 $lang['dp_close_text'] = 'OK';
@@ -263,7 +264,7 @@ $lang['date'] = 'Date';
 $lang['action'] = 'Action';
 
 $lang['report_event_transfer_started'] = 'Le dépôt a été créé';
-$lang['report_event_transfer_available'] = 'Le dépôt est devenu disponible pour les destinataires';
+$lang['report_event_transfer_available'] = 'Le dépôt est devenu disponible pour les destinataires (temps total {time:time_taken})';
 $lang['report_event_transfer_sent'] = 'Les liens de téléchargement ont été envoyés aux destinataires';
 $lang['report_event_transfer_expired'] = 'Le dépôt a expiré';
 $lang['report_event_transfer_closed'] = 'Le dépôt a été fermé sur demande';
@@ -271,7 +272,7 @@ $lang['report_event_transfer_deleted'] = 'Le dépôt a été supprimé';
 $lang['report_event_upload_started'] = 'Le téléversement a démarré';
 $lang['report_event_upload_resumed'] = 'Le téléversement a repris';
 $lang['report_event_upload_ended'] = 'Le téléversement a été terminé';
-$lang['report_event_file_created'] = 'Le fichier {file.name} ({size:file.size}) a été téléversé';
+$lang['report_event_file_uploaded'] = 'Le fichier {file.name} ({size:file.size}) a été téléversé en {time:time_taken}';
 $lang['report_event_download_started'] = 'Le destinataire {author.identity} a commencé à télécharger le fichier {file.name} ({size:file.size})';
 $lang['report_event_download_resumed'] = 'Le destinataire {author.identity} a repris le téléchargement du fichier {file.name} ({size:file.size})';
 $lang['report_event_download_ended'] = 'Le destinataire {author.identity} a fini de télécharger le fichier {file.name} ({size:file.size})';
