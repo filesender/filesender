@@ -136,6 +136,46 @@ class Utilities
     }
     
     /**
+     * Format a time according to configuration
+     * 
+     * @param integer $time in seconds
+     * 
+     * @return string formatted time
+     */
+    public static function formatTime($time) {
+        $time_format = Lang::tr('time_format');
+        if ($time_format == '{time_format}')
+            $time_format = '{h:H\h} {i:i\m\i\n} {s:s\s}';
+        
+        $bits = array();
+        
+        $bits['h'] = floor($time / 3600);
+        $time %= 3600;
+        $bits['i'] = floor($time / 60);
+        $bits['s'] = $time % 60;
+        
+        foreach($bits as $k => $v) {
+            if($v) {
+                $time_format = preg_replace_callback('`\{'.$k.':([^}]+)\}`', function($m) use($k, $v) {
+                    return preg_replace_callback('`(?<!\\\\)'.$k.'`i', function($m) use($v) {
+                        return sprintf('%02d', $v);
+                    }, $m[1]);
+                }, $time_format);
+            } else { // Remove part if zero
+                $time_format = preg_replace('`\{'.$k.':[^}]+\}`', '', $time_format);
+            }
+        }
+        
+        // Remove backslashes
+        $time_format = str_replace('\\', '', $time_format);
+        
+        // Strip leading 0s
+        $time_format = preg_replace('`^[\s0]+`', '', $time_format);
+        
+        return trim($time_format);
+    }
+    
+    /**
      * Turn PHP defined size (ini files) to bytes
      * 
      * @param string $size the size to analyse
