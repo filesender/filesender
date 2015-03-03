@@ -80,6 +80,10 @@ class Transfer extends DBObject {
         'created' => array(
             'type' => 'datetime'
         ),
+        'made_available' => array(
+            'type' => 'datetime',
+            'null' => true
+        ),
         'expires' => array(
             'type' => 'datetime'
         ),
@@ -118,6 +122,7 @@ class Transfer extends DBObject {
     protected $subject = null;
     protected $message = null;
     protected $created = 0;
+    protected $made_available = 0;
     protected $expires = 0;
     protected $options = array();
     
@@ -479,8 +484,8 @@ class Transfer extends DBObject {
     public function __get($property) {
         if(in_array($property, array(
             'id', 'status', 'user_id', 'user_email', 'guest_id',
-            'subject', 'message', 'created', 'expires', 'options',
-            'lang'
+            'subject', 'message', 'created', 'made_available',
+            'expires', 'options', 'lang'
         ))) return $this->$property;
         
         if($property == 'user' || $property == 'owner') {
@@ -533,6 +538,18 @@ class Transfer extends DBObject {
         
         if($property == 'is_expired') return $this->isExpired();
         
+        if($property == 'made_available_time') return $this->made_available ? ($this->made_available - $this->created) : null;
+        
+        if($property == 'upload_start') return min(array_map(function($file) {
+            return $file->upload_start;
+        }, $this->files));
+        
+        if($property == 'upload_end') return max(array_map(function($file) {
+            return $file->upload_end;
+        }, $this->files));
+        
+        if($property == 'upload_time') return $this->upload_end - $this->upload_start;
+        
         throw new PropertyAccessException($this, $property);
     }
     
@@ -550,6 +567,7 @@ class Transfer extends DBObject {
         if($property == 'status') {
             $value = strtolower($value);
             if(!TransferStatuses::isValidValue($value)) throw new TransferBadStatusException($value);
+            if($value == TransferStatuses::AVAILABLE && !$this->made_available) $this->made_available = time();
             $this->status = (string)$value;
         }else if($property == 'user_email') {
             if(!filter_var($value, FILTER_VALIDATE_EMAIL)) throw new BadEmailException($value);
@@ -701,6 +719,7 @@ class Transfer extends DBObject {
             throw new TransferNoRecipientsException();
         
         $this->status = TransferStatuses::AVAILABLE;
+        $this->made_available = time();
         $this->save();
         Logger::logActivity(LogEventTypes::TRANSFER_AVAILABLE, $this);
         
@@ -739,7 +758,7 @@ class Transfer extends DBObject {
             Logger::logActivity(LogEventTypes::TRANSFER_SENT, $this, Auth::isGuest() ? AuthGuest::getGuest() : null);
         }
         
-        Logger::info('Transfer#'.$this->id.' made available'.(Auth::isGuest() ? ' by guest: '.AuthGuest::getGuest()->email : ''));
+        Logger::info('Transfer#'.$this->id.' made available'.(Auth::isGuest() ? ' by guest: '.AuthGuest::getGuest()->email : '').' took '.$this->made_available_time.'s');
     }
     
     /**
