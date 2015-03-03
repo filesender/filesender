@@ -621,6 +621,7 @@ class Translation {
             if($cast) switch($cast) {
                 case 'date' : $value = Utilities::formatDate($value); break;
                 case 'datetime' : $value = Utilities::formatDate($value, true); break;
+                case 'time' : $value = Utilities::formatTime($value); break;
                 case 'size' : $value = Utilities::formatBytes($value); break;
             }
             

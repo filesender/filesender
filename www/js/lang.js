@@ -65,7 +65,7 @@ window.filesender.lang = {
             
             var translation = this.translation;
             for(var k in placeholder)
-                translation = translation.replace(new RegExp('{((date|size):)?' + k + '((\.[a-z0-9_]+)*)}', 'g'), function(d0, d1, fct, path) {
+                translation = translation.replace(new RegExp('{((date|datetime|time|size):)?' + k + '((\.[a-z0-9_]+)*)}', 'g'), function(d0, d1, fct, path) {
                     var v = placeholder[k];
                     
                     if(path) {
@@ -79,7 +79,10 @@ window.filesender.lang = {
                     
                     switch(fct) {
                         case 'size': v = filesender.ui.formatBytes(v); break;
-                        case 'date': if(typeof v.formatted != 'undefined') v = v.formatted; break;
+                        
+                        case 'date':
+                        case 'datetime':
+                        case 'time': if(typeof v.formatted != 'undefined') v = v.formatted; break;
                     }
                     
                     return v;
