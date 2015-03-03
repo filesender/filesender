@@ -58,6 +58,12 @@ class StatLog extends DBObject {
         'size' => array(
             'type' => 'int',
             'size' => 'big',
+            'null' => true
+        ),
+        'time_taken' => array(
+            'type' => 'int',
+            'size' => 'big',
+            'null' => true
         ),
         'organization' => array(
             'type' => 'string',
@@ -77,6 +83,7 @@ class StatLog extends DBObject {
     protected $created = null;
     protected $target_type = null;
     protected $size = null;
+    protected $time_taken = 0;
     protected $organization = null;
     
     
@@ -129,10 +136,19 @@ class StatLog extends DBObject {
         switch ($log->target_type){
             case File::getClassName():
                 $log->size = $target->size;
+                
+                if($event == LogEventTypes::FILE_UPLOADED)
+                    $log->time_taken = $target->upload_time;
                 break;
             
             case Transfer::getClassName():
                 $log->size = $target->size;
+                
+                if($event == LogEventTypes::UPLOAD_ENDED)
+                    $log->time_taken = $target->upload_time;
+                
+                if($event == LogEventTypes::TRANSFER_AVAILABLE)
+                    $log->time_taken = $target->made_available_time;
                 break;
             
             default:
