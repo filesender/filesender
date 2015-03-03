@@ -30,7 +30,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-require_once(dirname(dirname(__FILE__)).'/includes/init.php');
+require_once(dirname(__FILE__).'/../../includes/init.php');
 
 Logger::setProcess(ProcessTypes::FEEDBACK);
 
