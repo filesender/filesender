@@ -209,6 +209,7 @@ class File extends DBObject
         $this->save();
         
         Logger::logActivity(LogEventTypes::FILE_UPLOADED, $this);
+        Logger::info('File#'.$this->id.' fully uploaded, took '.$this->upload_time.'s');
         
         return $r;
     }
