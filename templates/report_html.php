@@ -18,6 +18,9 @@ foreach($report->logs as $entry) {
     
     $action = Lang::tr($lid)->r(
         array(
+            'event' => $entry->event,
+            'date' => $entry->created,
+            'time_taken' => $entry->time_taken,
             'author' => $entry->author,
             'log' => $entry
         ),
