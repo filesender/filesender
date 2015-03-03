@@ -138,12 +138,25 @@ class RestEndpointTransfer extends RestEndpoint {
                         'type' => $log->target_type,
                         'id' => $log->target_id
                     );
+                    $time_taken = null;
+                    
                     switch($log->target_type) {
-                        case 'Transfer': break;
+                        case 'Transfer':
+                            if($log->event == LogEventTypes::TRANSFER_AVAILABLE)
+                                $time_taken = $target->made_available_time;
+                                
+                            if($log->event == LogEventTypes::UPLOAD_ENDED)
+                                $time_taken = $target->upload_time;
+                            break;
+                        
                         case 'File':
                             $target_data['name'] = $target->name;
                             $target_data['size'] = $target->size;
+                            
+                            if($log->event == LogEventTypes::FILE_UPLOADED)
+                                $time_taken = $target->upload_time;
                             break;
+                        
                         case 'Recipient':
                             $target_data['email'] = $target->email;
                             break;
@@ -153,7 +166,11 @@ class RestEndpointTransfer extends RestEndpoint {
                         'date' => RestUtilities::formatDate($log->created, true),
                         'event' => $log->event,
                         'author' => $author_data,
-                        'target' => $target_data
+                        'target' => $target_data,
+                        'time_taken' => array(
+                            'raw' => $time_taken,
+                            'formatted' => $time_taken ? Utilities::formatTime($time_taken) : '0'
+                        ),
                     );
                 }, $transfer->auditlogs));
             }
