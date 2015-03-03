@@ -473,7 +473,12 @@ window.filesender.client = {
         return this.put('/user', preferences, callback);
     },
     
-    getUserQuota: function(callback) {
-        this.get('/user/@me/quota', callback);
+    getUserQuota: function(callback, onerror) {
+        var opts = {error: function(error) {
+            if(error.message == 'rest_authentication_required') return;
+            filesender.ui.error(error);
+        }};
+        
+        this.get('/user/@me/quota', callback, opts);
     }
 };
