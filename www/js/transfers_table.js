@@ -364,7 +364,7 @@ $(function() {
                     
                     var lid = 'report_event_' + log[i].event;
                     
-                    var rpl = {author: log[i].author};
+                    var rpl = log[i];
                     rpl[log[i].target.type.toLowerCase()] = log[i].target;
                     
                     $('<td />').html(lang.tr(lid).r(rpl).out()).appendTo(tr);
