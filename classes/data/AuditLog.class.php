@@ -185,6 +185,19 @@ class AuditLog extends DBObject {
         
         if($property == 'author') return ($this->author_type && $this->author_id) ? call_user_func($this->author_type.'::fromId', $this->author_id) : null;
         
+        if($property == 'time_taken') {
+            if($this->target_type == 'Transfer') {
+                if($this->event == LogEventTypes::TRANSFER_AVAILABLE) return $this->target->made_available_time;
+                if($this->event == LogEventTypes::UPLOAD_ENDED) return $this->target->upload_time;
+            }
+            
+            if($this->target_type == 'File') {
+                if($this->event == LogEventTypes::FILE_UPLOADED) return $this->target->upload_time;
+            }
+            
+            return 0;
+        }
+        
         throw new PropertyAccessException($this, $property);
     }
     
