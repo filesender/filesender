@@ -244,6 +244,11 @@ class Logger {
             }
         }
         
+        try {
+            if($level != LogLevels::DEBUG && Auth::isAuthenticated())
+                $message = '[user '.Auth::user()->id.'] '.$message;
+        } catch(Exception $e) {}
+        
         $message = '['.self::$process.':'.$level.'] '.$message;
         
         foreach(self::$facilities as $facility) {
