@@ -133,7 +133,7 @@ window.filesender.transfer = function() {
         // Look for dup
         for (var i = 0; i < this.files.length; i++) {
             if (this.files[i].name == file.name && this.files[i].size == file.size) {
-                errorhandler({message: 'duplicate_file', details: {name: file.name, size: file.size}});
+                errorhandler({message: 'duplicate_file', details: {filename: file.name, size: file.size}});
                 return false;
             }
         }
@@ -144,7 +144,7 @@ window.filesender.transfer = function() {
         }
         
         if (!/^[^\\\/:;\*\?\"<>|]+(\.[^\\\/:;\*\?\"<>|]+)*$/.test(file.name)) {
-            errorhandler({message: 'invalid_file_name'});
+            errorhandler({message: 'invalid_file_name', details: {filename: file.name}});
             return false;
         }
         

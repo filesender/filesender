@@ -100,7 +100,7 @@ filesender.ui.files = {
                 
                 var added_cid = filesender.ui.transfer.addFile(files[i], function(error) {
                     var tt = 1;
-                    filesender.ui.files.invalidFiles.push(error.details.filename);
+                    if(error.details && error.details.filename) filesender.ui.files.invalidFiles.push(error.details.filename);
                     node.addClass('invalid');
                     node.addClass(error.message);
                     $('<span class="invalid fa fa-exclamation-circle fa-lg" />').prependTo(node.find('.info'))
@@ -646,6 +646,9 @@ $(function() {
         if(typeof this.files == 'undefined') return;
         
         filesender.ui.files.add(this.files);
+        
+        // Forget (cloned) selection for webkit
+        this.value = null;
     });
     
     filesender.ui.recipients.autocomplete();
