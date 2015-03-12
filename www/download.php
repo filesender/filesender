@@ -128,10 +128,17 @@ function downloadArchive($transfer, $recipient, $files_ids) {
         $zipper->addFile($file);
     }
     
+    $size = $zipper->calculateTotalFileSize();
+    $time = time();
+    
+    Logger::info('User started archive download ('.count($files).' files, '.$size.' bytes)');
+    
     // Send the ZIP
     Logger::logActivity(LogEventTypes::ARCHIVE_DOWNLOAD_STARTED, $transfer, $recipient);
     $result = $zipper->sendZip($recipient);
     Logger::logActivity(LogEventTypes::ARCHIVE_DOWNLOAD_ENDED, $transfer, $recipient);
+    
+    Logger::info('User download archive ('.count($files).' files, '.$size.' bytes, '.(time() - $time).' seconds)');
     
     return array('result' => $result, 'files' => $files);
 }
@@ -202,7 +209,7 @@ function downloadSingleFile($transfer, $recipient, $file_id) {
         if (!connection_aborted() && (connection_status() == CONNECTION_NORMAL))
             return;
 
-        Logger::debug('Seems that the user stopped downloading (not that reliable though ...)');
+        Logger::info('Seems that the user stopped downloading (not that reliable though ...)');
 
         die; // Stop pointless reading if user stopped downloading
     };
@@ -241,6 +248,9 @@ function downloadSingleFile($transfer, $recipient, $file_id) {
     
     $done = false;
     
+    $time = time();
+    $size = 0;
+    
     if ($ranges)
         header('HTTP/1.1 206 Partial Content'); // Must send HTTP header before anything else
     
@@ -253,39 +263,41 @@ function downloadSingleFile($transfer, $recipient, $file_id) {
     header('Expires: 0');
     
     if ($ranges) {
-        Logger::info('User restarted download of file:' . $file->id . ' from offset ' . $ranges[0]['start']);
+        Logger::info('User restarted download of File#' . $file->id . ' from offset ' . $ranges[0]['start']);
         Logger::logActivity(LogEventTypes::DOWNLOAD_RESUMED);
         
         if (count($ranges) == 1) { // Single range
             $range = array_shift($ranges);
-
+            
             header('Content-Type: ' . $file->mime_type);
             header('Content-Length: ' . ($range['end'] - $range['start'] + 1));
             header('Content-Range: bytes ' . $range['start'] . '-' . $range['end'] . '/' . $file->size);
-
+            
             // Read range data
             $done = $read_range($range);
+            $size += $range['end'] - $range['start'] + 1;
         } else { // Multiple ranges
             $length = 0;
             foreach ($ranges as $range)
                 $length += $range['end'] - $range['start'] + 1;
-
+            
             $boundary = 'range_boundary_t' . $transfer->id . '_f' . $file->id . '_s' . $file->size . '_' . uniqid();
             header('Content-Type: multipart/byteranges; boundary=' . $boundary);
             header('Content-Length: ' . $length);
-
+            
             foreach ($ranges as $range) {
                 echo '--' . $boundary . "\n";
                 echo 'Content-Type: ' . $file->mime_type . "\n";
                 echo 'Content-Range: bytes ' . $range['start'] . '-' . $range['end'] . '/' . $file->size . "\n";
                 echo "\n";
-
+                
                 // Read range data
                 $done = $read_range($range);
-
+                $size += $range['end'] - $range['start'] + 1;
+                
                 echo "\n";
             }
-
+            
             echo '--' . $boundary . '--';
         }
     } else {
@@ -295,14 +307,17 @@ function downloadSingleFile($transfer, $recipient, $file_id) {
         header('Accept-Ranges: bytes');
 
         // Read data (no range means all file)
-        Logger::info('User started to download file:' . $file->id);
+        Logger::info('User started to download file#' . $file->id);
         Logger::logActivity(LogEventTypes::DOWNLOAD_STARTED, $file, $recipient);
         $read_range();
         $done = true;
+        $size += $file->size;
     }
     
-    if($done)
+    if($done) {
+        Logger::info('User downloaded file or file ranges ('.$size.' bytes, '.(time() - $time).' seconds)');
         Logger::logActivity(LogEventTypes::DOWNLOAD_ENDED, $file, $recipient);
+    }
     
     return array('result' => $done, 'files' => array($file));
 }
