@@ -120,6 +120,12 @@ class Auth {
                     self::$user->save();
                 }
             }
+            
+            $user_quota = Config::get('user_quota');
+            if($user_quota && (self::$user->quota != $user_quota)) {
+                self::$user->quota = $user_quota;
+                self::$user->save();
+            }
         }
         
         return self::$user;
