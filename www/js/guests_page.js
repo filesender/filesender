@@ -235,28 +235,27 @@ filesender.ui.send = function() {
 };
 
 $(function() {
-    var form = $('#send_voucher');
-    var page = $('.guests_page');
-    if(!page.length) return;
+    var send_voucher = $('#send_voucher');
+    if(!send_voucher.length) return;
     
     // Register frequently used nodes
     filesender.ui.nodes = {
         recipients: {
-            input: page.find('.invite_guest input[name="to"]'),
-            list: page.find('.invite_guest .recipients'),
+            input: send_voucher.find('input[name="to"]'),
+            list: send_voucher.find('.recipients'),
         },
-        from: page.find('.invite_guest select[name="from"]'),
-        subject: page.find('.invite_guest input[name="subject"]'),
-        message: page.find('.invite_guest textarea[name="message"]'),
-        expires: page.find('.invite_guest input[name="expires"]'),
+        from: send_voucher.find('select[name="from"]'),
+        subject: send_voucher.find('input[name="subject"]'),
+        message: send_voucher.find('textarea[name="message"]'),
+        expires: send_voucher.find('input[name="expires"]'),
         options: {guest: {}, transfer: {}},
-        sendbutton: page.find('.invite_guest .send'),
+        sendbutton: send_voucher.find('.send'),
     };
-    form.find('.guest_options input').each(function() {
+    send_voucher.find('.guest_options input').each(function() {
         var i = $(this);
         filesender.ui.nodes.options.guest[i.attr('name')] = i;
     });
-    form.find('.transfer_options input').each(function() {
+    send_voucher.find('.transfer_options input').each(function() {
         var i = $(this);
         filesender.ui.nodes.options.transfer[i.attr('name')] = i;
     });
@@ -312,13 +311,13 @@ $(function() {
     });
     
     // Make options label toggle checkboxes
-    form.find('.basic_options label, .advanced_options label').on('click', function() {
+    send_voucher.find('.basic_options label, .advanced_options label').on('click', function() {
         var checkbox = $(this).closest('.fieldcontainer').find(':checkbox');
         checkbox.prop('checked', !checkbox.prop('checked'));
     }).css('cursor', 'pointer');
     
     // Bind advanced options display toggle
-    form.find('.toggle_advanced_options').on('click', function() {
+    send_voucher.find('.toggle_advanced_options').on('click', function() {
         $(this).closest('.options_box').find('.advanced_options').slideToggle();
         return false;
     });
