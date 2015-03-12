@@ -305,9 +305,11 @@ class DBObject {
         foreach($data as $field_name => $value) {
             if(!array_key_exists($field_name, static::$dataMap)) continue; // Ignore non-mapped data
             
+            $dfn = static::$dataMap[$field_name];
+            
             // Basic types transformations/casting
-            if(!is_null($value) || !array_key_exists('null', static::$dataMap[$field_name]) || !static::$dataMap[$field_name]['null']) {
-                switch(static::$dataMap[$field_name]['type']) {
+            if(!is_null($value) || !array_key_exists('null', $dfn) || !$dfn['null']) {
+                switch($dfn['type']) {
                     case 'int':
                     case 'uint':
                         $value = (int)$value;
@@ -319,7 +321,13 @@ class DBObject {
                     
                     case 'datetime':
                     case 'date':
-                        $value = (int)strtotime($value); // UNIX timestamp
+                        if(!$value && array_key_exists('null', $dfn) && $dfn['null']) {
+                            $value = null;
+                        } elseif(!$value) {
+                            $value = 0;
+                        } else {
+                            $value = (int)strtotime($value); // UNIX timestamp
+                        }
                         break;
                     
                     case 'time':
@@ -332,7 +340,7 @@ class DBObject {
                 }
             }
             
-            if(array_key_exists('transform', static::$dataMap[$field_name])) switch(static::$dataMap[$field_name]['transform']) {
+            if(array_key_exists('transform', $dfn)) switch($dfn['transform']) {
                 case 'json' :
                     $value = json_decode($value);
                     break;
@@ -385,26 +393,26 @@ class DBObject {
                 }
             }
             
+            $dfn = static::$dataMap[$field_name];
             $value = $this->$property_name;
             
             // Does the value need transformation ?
             if($value_transform) {
                 $value = $value_transform($value);
             }else{
-                if(array_key_exists('transform', static::$dataMap[$field_name])) switch(static::$dataMap[$field_name]['transform']) {
+                if(array_key_exists('transform', $dfn)) switch($dfn['transform']) {
                     case 'json' :
                         $value = json_encode($value);
                         break;
                 }
                 
-                switch(static::$dataMap[$field_name]['type']) { // Basic types transformations/casting
+                switch($dfn['type']) { // Basic types transformations/casting
                     case 'datetime':
                         if(!is_null($value)) $value = date('Y-m-d H:i:s', $value); // UNIX timestamp
                         break;
                     
                     case 'date':
                         if(!is_null($value)) $value = date('Y-m-d', $value); // UNIX timestamp
-                        //$value = new Date($value); // Turn into date object which has getters for formatted version
                         break;
                     
                     case 'time':
