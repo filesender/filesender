@@ -245,8 +245,13 @@ class Logger {
         }
         
         try {
-            if($level != LogLevels::DEBUG && Auth::isAuthenticated())
+            $dbiexception = count(array_filter(debug_backtrace(), function($t) {
+                return array_key_exists('class', $t) && preg_match('`^DBI.+Exception$`', $t['class']);
+            }));
+            
+            if($level != LogLevels::DEBUG && !$dbiexception && Auth::isAuthenticated())
                 $message = '[user '.Auth::user()->id.'] '.$message;
+            
         } catch(Exception $e) {}
         
         $message = '['.self::$process.':'.$level.'] '.$message;
