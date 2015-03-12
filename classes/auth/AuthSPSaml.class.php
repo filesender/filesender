@@ -114,23 +114,29 @@ class AuthSPSaml {
             
             if(!$attributes['name']) $attributes['name'] = substr($attributes['email'][0], 0, strpos($attributes['email'][0], '@'));
             
+            
+            $additional_attributes = Config::get('auth_sp_additional_attributes');
+            if($additional_attributes) {
+                $attributes['additional'] = array();
+                foreach($additional_attributes as $key => $from) {
+                    if(is_numeric($key) && is_callable($from)) continue;
+                    
+                    if(is_callable($from)) {
+                        $value = $from($raw_attributes, self::loadSimpleSAML());
+                    } elseif(array_key_exists($from, $raw_attributes)) {
+                        $value = $raw_attributes[$from];
+                    } else {
+                        $value = null;
+                    }
+                        
+                    $attributes['additional'][is_numeric($key) ? $from : $key] = $value;
+                }
+            }
+            
             self::$attributes = $attributes;
         }
         
         return self::$attributes;
-    }
-    
-    /**
-     * Retreive user Identity Provider from delegated class.
-     * 
-     * @retrun string
-     */
-    public static function idp() {
-        if(!self::isAuthenticated()) throw new AuthSPAuthenticationNotFoundException();
-        
-        $auth = self::loadSimpleSAML();
-        
-        return method_exists($auth, 'getAuthData') ? $auth->getAuthData('saml:sp:IdP') : null;
     }
     
     /**

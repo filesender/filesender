@@ -114,10 +114,9 @@ class Auth {
 
             self::$user = User::fromAttributes(self::$attributes);
             
-            if(self::isSP() && Config::get('auth_sp_set_idp_as_user_organization')) {
-                $organization = AuthSP::idp();
-                if(self::$user->organization != $organization) {
-                    self::$user->organization = $organization;
+            if(self::isSP() && Config::get('auth_sp_save_user_additional_attributes') && array_key_exists('additional', self::$attributes)) {
+                if((array)self::$user->additional_attributes != self::$attributes['additional']) {
+                    self::$user->additional_attributes = self::$attributes['additional'];
                     self::$user->save();
                 }
             }
