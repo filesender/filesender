@@ -12,7 +12,7 @@ Madame, Monsieur,
 {transfer.files.first().name} ({size:transfer.files.first().size})
 {endif}
 
-Lien de téléchargement: {recipient.download_link}
+Lien de téléchargement: {raw:recipient.download_link}
 
 Le dépôt est valable jusqu'au {date:transfer.expires} après quoi il sera supprimé automatiquement.
 
