@@ -77,6 +77,8 @@ $(function() {
             table.find('tbody .actions').each(function() {
                 var container = $(this);
                 
+                var recipients_enabled = (container.attr('data-recipients-enabled') == '1');
+                
                 // Delete button
                 $('<span class="delete clickable fa fa-lg fa-trash-o" />').appendTo(container).attr({
                     title: lang.tr('delete')
@@ -116,7 +118,7 @@ $(function() {
                 
                 if(table.is('[data-mode="user"]')) {
                     // Add recipient(s)
-                    $('<span class="add_recipient clickable fa fa-lg fa-envelope-o" />').appendTo(container).attr({
+                    if(recipients_enabled) $('<span class="add_recipient clickable fa fa-lg fa-envelope-o" />').appendTo(container).attr({
                         title: lang.tr('add_recipient')
                     }).on('click', function() {
                         var id = $(this).closest('tr').attr('data-id');
@@ -219,7 +221,7 @@ $(function() {
                     });
                     
                     // Send reminder button
-                    $('<span class="remind clickable fa fa-lg fa-repeat" />').appendTo(container).attr({
+                    if(recipients_enabled) $('<span class="remind clickable fa fa-lg fa-repeat" />').appendTo(container).attr({
                         title: lang.tr('send_reminder')
                     }).on('click', function() {
                         var id = $(this).closest('tr').attr('data-id');

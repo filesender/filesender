@@ -257,10 +257,30 @@ class RestEndpointTransfer extends RestEndpoint {
             if($maxfiles && count($data->files) > $maxfiles)
                 throw new TransferTooManyFilesException(count($data->files), $maxfiles);
             
+            $options = array();
+            foreach(Transfer::allOptions() as $name => $dfn)  {
+                $value = $dfn['default'];
+                
+                if($dfn['available'])
+                    $value = in_array($name, $data->options);
+                
+                if($value) $options[] = $name;
+            }
+            
+            if(in_array(TransferOptions::GET_A_LINK, $options)) {
+                $options = array_values(array_filter($options, function($o) {
+                    return !in_array($o, array(
+                        TransferOptions::EMAIL_ME_COPIES,
+                        TransferOptions::ENABLE_RECIPIENT_EMAIL_DOWNLOAD_COMPLETE,
+                        TransferOptions::ADD_ME_TO_RECIPIENTS
+                    ));
+                }));
+            }
+            
             if(
                 !count($data->recipients) &&
-                !in_array(TransferOptions::GET_A_LINK, $data->options) &&
-                !in_array(TransferOptions::ADD_ME_TO_RECIPIENTS, $data->options) &&
+                !in_array(TransferOptions::GET_A_LINK, $options) &&
+                !in_array(TransferOptions::ADD_ME_TO_RECIPIENTS, $options) &&
                 (
                     !$guest ||
                     (
@@ -310,17 +330,7 @@ class RestEndpointTransfer extends RestEndpoint {
             // Guest owner decides about guest options
             if($guest) {
                 $transfer->options = $guest->transfer_options;
-            
             } else {
-                $options = array();
-                foreach(Transfer::allOptions() as $name => $dfn)  {
-                    $value = $dfn['default'];
-                    
-                    if($dfn['available'])
-                        $value = in_array($name, $data->options);
-                    
-                    if($value) $options[] = $name;
-                }
                 $transfer->options = $options;
             }
             
