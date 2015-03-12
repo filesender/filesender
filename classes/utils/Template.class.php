@@ -74,7 +74,7 @@ class Template {
         $path = self::resolve($id);
         
         $renderer = function($path, $vars) {
-            foreach($vars as $k => $v) $$k = $v;
+            foreach($vars as $k => $v) if(substr($k, 0, 1) != '_') $$k = $v;
             include $path;
         };
         
