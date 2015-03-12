@@ -54,7 +54,7 @@
             
             <?php if($show_guest) { ?>
             <td class="guest">
-                <?php if($transfer->guest) echo '<abbr title="'.Utilities::sanitizeOutput($transfer->guest->identity).'">'.Utilities::sanitizeOutput($transfer->guest->name).'</abbr>' ?>
+                <?php if($transfer->guest) echo '<abbr title="'.Template::sanitizeOutput($transfer->guest->identity).'">'.Template::sanitizeOutput($transfer->guest->name).'</abbr>' ?>
             </td>
             <?php } ?>
             
@@ -64,7 +64,7 @@
                 foreach(array_slice($transfer->recipients, 0, 3) as $recipient) {
                     $name = in_array($recipient->email, Auth::user()->email_addresses) ? Lang::tr('me') : $recipient->name;
                     $full = $recipient->email ? $recipient->email : Lang::tr('anonymous_details');
-                    $items[] = '<abbr title="'.Utilities::sanitizeOutput($full).'">'.Utilities::sanitizeOutput($name).'</abbr>';
+                    $items[] = '<abbr title="'.Template::sanitizeOutput($full).'">'.Template::sanitizeOutput($name).'</abbr>';
                 }
                 
                 if(count($transfer->recipients) > 3)
@@ -84,7 +84,7 @@
                 foreach(array_slice($transfer->files, 0, 3) as $file) {
                     $name = $file->name;
                     if(strlen($name) > 28) $name = substr($name, 0, 25).'...';
-                    $items[] = '<span title="'.Utilities::sanitizeOutput($file->name).'">'.Utilities::sanitizeOutput($name).'</span>';
+                    $items[] = '<span title="'.Template::sanitizeOutput($file->name).'">'.Template::sanitizeOutput($name).'</span>';
                 }
                 
                 if(count($transfer->files) > 3)
@@ -126,11 +126,11 @@
                         {tr:size} : <?php echo Utilities::formatBytes($transfer->size) ?>
                     </div>
                     <div>
-                        {tr:with_identity} : <?php echo Utilities::sanitizeOutput($transfer->user_email) ?>
+                        {tr:with_identity} : <?php echo Template::sanitizeOutput($transfer->user_email) ?>
                     </div>
                     <?php if($show_guest) { ?>
                     <div>
-                        {tr:guest} : <?php if($transfer->guest) echo Utilities::sanitizeOutput($transfer->guest->email) ?>
+                        {tr:guest} : <?php if($transfer->guest) echo Template::sanitizeOutput($transfer->guest->email) ?>
                     </div>
                     <?php } ?>
                     <div class="options">
@@ -166,8 +166,8 @@
                         $name = in_array($recipient->email, Auth::user()->email_addresses) ? Lang::tr('me') : $recipient->name;
                         $full = $recipient->email ? $recipient->email : Lang::tr('anonymous_details');
                     ?>
-                        <div class="recipient" data-id="<?php echo $recipient->id ?>" data-email="<?php echo Utilities::sanitizeOutput($recipient->email) ?>" data-errors="<?php echo count($recipient->errors) ? '1' : '' ?>">
-                            <abbr title="<?php echo Utilities::sanitizeOutput($full) ?>"><?php echo Utilities::sanitizeOutput($name) ?></abbr>
+                        <div class="recipient" data-id="<?php echo $recipient->id ?>" data-email="<?php echo Template::sanitizeOutput($recipient->email) ?>" data-errors="<?php echo count($recipient->errors) ? '1' : '' ?>">
+                            <abbr title="<?php echo Template::sanitizeOutput($full) ?>"><?php echo Template::sanitizeOutput($name) ?></abbr>
                             
                             <?php
                                 if($recipient->errors) echo '<span class="errors">'.implode(', ', array_map(function($type) {
@@ -187,7 +187,7 @@
                     
                     <?php foreach($transfer->files as $file) { ?>
                         <div class="file" data-id="<?php echo $file->id ?>">
-                            <?php echo Utilities::sanitizeOutput($file->name) ?> (<?php echo Utilities::formatBytes($file->size) ?>) : <?php echo count($file->downloads) ?> {tr:downloads}
+                            <?php echo Template::sanitizeOutput($file->name) ?> (<?php echo Utilities::formatBytes($file->size) ?>) : <?php echo count($file->downloads) ?> {tr:downloads}
                         </div>
                     <?php } ?>
                 </div>
