@@ -12,7 +12,7 @@ The following {if:transfer.files>1}files have{else}file has{endif} been uploaded
 {transfer.files.first().name} ({size:transfer.files.first().size})
 {endif}
 
-Download link: {recipient.download_link}
+Download link: {raw:recipient.download_link}
 
 The transaction is available until {date:transfer.expires} after which time it will be automatically deleted.
 
