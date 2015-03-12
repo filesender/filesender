@@ -92,6 +92,10 @@ class User extends DBObject {
             'size' => 64,
             'null' => true
         ),
+        'quota' => array(
+            'type' => 'uint',
+            'size' => 'big',
+        ),
     );
     
     /**
@@ -108,6 +112,7 @@ class User extends DBObject {
     protected $created = 0;
     protected $last_activity = 0;
     protected $auth_secret = null;
+    protected $quota = 0;
     
     /**
      * From Auth if it makes sense
@@ -262,7 +267,7 @@ class User extends DBObject {
         if(in_array($property, array(
             'id', 'additional_attributes', 'lang', 'aup_ticked', 'aup_last_ticked_date', 'auth_secret',
             'transfer_preferences', 'guest_preferences', 'frequent_recipients', 'created', 'last_activity',
-            'email_addresses', 'name'
+            'email_addresses', 'name', 'quota'
         ))) return $this->$property;
         
         if($property == 'email') return count($this->email_addresses) ? $this->email_addresses[0] : null;
@@ -306,6 +311,8 @@ class User extends DBObject {
             $this->email_addresses = $value;
         }else if($property == 'name') {
             $this->name = (string)$value;
+        }else if($property == 'quota') {
+            $this->quota = (int)$value;
         }else throw new PropertyAccessException($this, $property);
     }
 }
