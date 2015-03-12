@@ -103,7 +103,7 @@
                 <?php echo Utilities::formatDate($transfer->expires) ?>
             </td>
             
-            <td class="actions"></td>
+            <td class="actions" data-recipients-enabled="<?php echo $transfer->hasOption(TransferOptions::GET_A_LINK) ? '' : '1' ?>"></td>
             <?php } ?>
         </tr>
         
@@ -158,6 +158,7 @@
                     </div>
                 </div>
                 
+                <?php if(!$transfer->hasOption(TransferOptions::GET_A_LINK)) { ?>
                 <div class="recipients">
                     <h2>{tr:recipients}</h2>
                     
@@ -181,6 +182,7 @@
                         </div>
                     <?php } ?>
                 </div>
+                <?php } ?>
                 
                 <div class="files">
                     <h2>{tr:files}</h2>
