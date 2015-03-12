@@ -67,17 +67,6 @@ class AuthSP {
     }
     
     /**
-     * Retreive user Identity Provider from delegated class.
-     * 
-     * @retrun string
-     */
-    public static function idp() {
-        $class = self::loadDelegationClass();
-        
-        return call_user_func($class.'::idp');
-    }
-    
-    /**
      * Get the logon URL from delegated class.
      * 
      * @retrun string

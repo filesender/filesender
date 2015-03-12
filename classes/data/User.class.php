@@ -51,9 +51,9 @@ class User extends DBObject {
             'size' => 255,
             'primary' => true
         ),
-        'organization' => array(
-            'type' => 'string',
-            'size' => 80,
+        'additional_attributes' => array(
+            'type' => 'text',
+            'transform' => 'json',
             'null' => true
         ),
         'lang' => array(
@@ -98,7 +98,7 @@ class User extends DBObject {
      * Properties
      */
     protected $id = null;
-    protected $organization = null;
+    protected $additional_attributes = null;
     protected $lang = null;
     protected $aup_ticked = false;
     protected $aup_last_ticked_date = 0;
@@ -260,7 +260,7 @@ class User extends DBObject {
      */
     public function __get($property) {
         if(in_array($property, array(
-            'id', 'organization', 'lang', 'aup_ticked', 'aup_last_ticked_date', 'auth_secret',
+            'id', 'additional_attributes', 'lang', 'aup_ticked', 'aup_last_ticked_date', 'auth_secret',
             'transfer_preferences', 'guest_preferences', 'frequent_recipients', 'created', 'last_activity',
             'email_addresses', 'name'
         ))) return $this->$property;
@@ -284,8 +284,8 @@ class User extends DBObject {
      * @throws PropertyAccessException
      */
     public function __set($property, $value) {
-        if($property == 'organization') {
-            $this->organization = (string)$value;
+        if($property == 'additional_attributes') {
+            $this->additional_attributes = (object)(array)$value;
         }else if($property == 'lang') {
             if(!array_key_exists($value, Lang::getAvailableLanguages()))
                 throw new BadLangCodeException($value);
