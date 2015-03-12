@@ -342,7 +342,7 @@ class DBObject {
             
             if(array_key_exists('transform', $dfn)) switch($dfn['transform']) {
                 case 'json' :
-                    $value = json_decode($value);
+                    $value = is_null($value) ? null : json_decode($value);
                     break;
             }
             
@@ -402,7 +402,8 @@ class DBObject {
             }else{
                 if(array_key_exists('transform', $dfn)) switch($dfn['transform']) {
                     case 'json' :
-                        $value = json_encode($value);
+                        if(!is_null($value) || !array_key_exists('null', $dfn) || !$dfn['null'])
+                            $value = json_encode($value);
                         break;
                 }
                 
