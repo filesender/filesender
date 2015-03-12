@@ -189,7 +189,7 @@
                     
                     <?php foreach($transfer->files as $file) { ?>
                         <div class="file" data-id="<?php echo $file->id ?>">
-                            <?php echo Template::sanitizeOutput($file->name) ?> (<?php echo Utilities::formatBytes($file->size) ?>) : <?php echo count($file->downloads) ?> {tr:downloads}
+                            <?php echo Template::sanitizeOutput($file->name) ?> (<?php echo Utilities::formatBytes($file->size) ?>) : <?php echo count($file->downloads) ?> {tr:downloads} <a class="fa fa-lg fa-download" title="{tr:download}" href="download.php?files_ids=<?php echo $file->id ?>"></a>
                         </div>
                     <?php } ?>
                 </div>
