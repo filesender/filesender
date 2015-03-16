@@ -43,6 +43,16 @@ class GUI {
     private static $path = null;
     
     /**
+     * Current application page
+     */
+    private static $current_page = null;
+    
+    /**
+     * Application pages allowed to the user
+     */
+    private static $allowed_pages = null;
+    
+    /**
      * Get stylesheet(s)
      * 
      * @return array of http file path
@@ -205,5 +215,82 @@ class GUI {
             header($redirect);
             exit;
         }
+    }
+    
+    /**
+     * Get current page
+     * 
+     * @return string
+     */
+    public function currentPage() {
+        if(is_null(self::$current_page)) {
+            
+            $page = null;
+            if(array_key_exists('s', $_REQUEST)) $page = $_REQUEST['s'];
+            
+            if(Config::get('maintenance')) $page = 'maintenance';
+            
+            if(!$page) {
+                if(Auth::isAuthenticated() && !Auth::isGuest()) {
+                    $landing_page = Config::get('landing_page');
+                    $page = ($landing_page && GUIPages::isValidValue($landing_page)) ? $landing_page : 'upload';
+                } else {
+                    $page = 'home';
+                }
+            }
+            
+            if(!GUIPages::isValidValue($page))
+                throw new GUIUnknownPageException($page);
+            
+            self::$current_page = $page;
+        }
+        
+        return self::$current_page;
+    }
+    
+    /**
+     * Get the pages the current user has access to
+     * 
+     * @return array
+     */
+    public static function allowedPages() {
+        if(is_null(self::$allowed_pages)) {
+            self::$allowed_pages = array();
+            
+            if(Auth::isAuthenticated()) {
+                if(Auth::isGuest()) {
+                    self::$allowed_pages = array('upload');
+                } else {
+                    self::$allowed_pages = array('upload', 'transfers', 'guests', 'download');
+                    
+                    if(Auth::isAdmin()) self::$allowed_pages[] = 'admin';
+                    
+                    if(Config::get('user_page')) self::$allowed_pages[] = 'user';
+                }
+            }
+            
+            // Always accessible pages
+            foreach(array('home', 'download', 'logout', 'exception') as $p)
+                self::$allowed_pages[] = $p;
+            
+        }
+        
+        return self::$allowed_pages;
+    }
+    
+    /**
+     * Check if current user can acces a page
+     * 
+     * @param string $page current page will be checked if none given
+     * 
+     * @return bool
+     */
+    public static function isUserAllowedToAccessPage($page = null) {
+        if(is_null($page)) $page = self::currentPage();
+        
+        if(!GUIPages::isValidValue($page))
+            throw new GUIUnknownPageException($page);
+        
+        return in_array($page, self::allowedPages());
     }
 }
