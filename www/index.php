@@ -40,55 +40,23 @@ try {
     Template::display('!header');
     
     try { // At that point we can render exceptions using nice html
-        $known_pages = array('upload', 'transfers', 'guests', 'admin', 'logon', 'user');
-        
-        $allowed_pages = array();
-        
-        if(Auth::isAuthenticated()) {
-            if(Auth::isGuest()) {
-                $allowed_pages = array('upload');
-            } else {
-                $allowed_pages = array('upload', 'transfers', 'guests', 'download');
-                
-                if(Auth::isAdmin()) $allowed_pages[] = 'admin';
-                
-                if(Config::get('user_page')) $allowed_pages[] = 'user';
-            }
-        }
-        
-        // Always accessible pages
-        foreach(array('home', 'download', 'logout', 'exception') as $p) {
-            $known_pages[] = $p;
-            $allowed_pages[] = $p;
-        }
-        
-        $page = null;
+        $page = GUI::currentPage();
         $vars = array();
-        if(array_key_exists('s', $_REQUEST)) $page = $_REQUEST['s'];
-        if(!$page) $page = (Auth::isAuthenticated() && !Auth::isGuest()) ? 'upload' : 'home';
         
-        if(!in_array($page, $known_pages)) {
-            $page = 'error';
-            $vars['error'] = Lang::tr('unknown_page');
+        if(!GUI::isUserAllowedToAccessPage($page)) {
+            if(Auth::isAuthenticated())
+                throw new GUIAccessForbiddenException($page);
+        
+            $page = 'logon';
+            $vars['access_forbidden'] = true;
             
-        }else if(!in_array($page, $allowed_pages)) {
-            if(!Auth::isAuthenticated()) {
-                $page = 'logon';
-                $vars['access_forbidden'] = true;
-                
-                if(Config::get('auth_sp_autotrigger')) AuthSP::trigger();
-            }else{
-                $page = 'error';
-                $vars['error'] = Lang::tr('access_forbidden');
-            }
+            if(Config::get('auth_sp_autotrigger')) AuthSP::trigger();
         }
-        
-        if(Config::get('maintenance')) $page = 'maintenance';
         
         if(!in_array($page, array('download', 'maintenance')))
-            Template::display('menu', array('allowed_pages' => $allowed_pages, 'current_page' => $page));
+            Template::display('menu');
         
-        Template::display('page', array('page' => $page, 'vars' => $vars));
+        Template::display('page', array('vars' => $vars));
         
         Template::display('!footer');
         

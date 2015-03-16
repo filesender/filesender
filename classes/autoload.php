@@ -47,8 +47,8 @@ class Autoloader {
         '*Types' => 'constants/',
         '*Options' => 'constants/',
         '*Constants' => 'constants/',
-        'TransferStatuses' => 'constants/',
-        'GuestStatuses' => 'constants/',
+        '*Statuses' => 'constants/',
+        'GUIPages' => 'constants/',
         'LogLevels' => 'constants/',
         'ReportFormats' => 'constants/',
         

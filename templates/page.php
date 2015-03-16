@@ -1,4 +1,4 @@
-<div id="page" class="<?php echo $page ?>_page">
+<div id="page" class="<?php echo GUI::currentPage() ?>_page">
     
     <noscript>
         <div class="error message">
@@ -6,5 +6,5 @@
         </div>
     </noscript>
     
-    <?php Template::display($page.'_page', $vars) ?>
+    <?php Template::display(GUI::currentPage().'_page', $vars) ?>
 </div>

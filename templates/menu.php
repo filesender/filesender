@@ -1,8 +1,8 @@
 <?php
 
-$pagemenuitem = function($page) use($current_page, $allowed_pages) {
-    if(!in_array($page, $allowed_pages)) return;
-    $class = ($page == $current_page) ? 'current' : '';
+$pagemenuitem = function($page) {
+    if(!GUI::isUserAllowedToAccessPage($page)) return;
+    $class = ($page == GUI::currentPage()) ? 'current' : '';
     echo '<li><a class="'.$class.'" id="topmenu_'.$page.'" href="?s='.$page.'">'.Lang::tr($page.'_page').'</a></li>';
 };
 
