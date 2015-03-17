@@ -84,4 +84,6 @@ window.filesender.config = {
     minimum_characters_for_autocomplete: '<?php echo Config::get('minimum_characters_for_autocomplete')>0?Config::get('minimum_characters_for_autocomplete'):3 ?>',
     
     auditlog_lifetime: <?php $lt = Config::get('auditlog_lifetime'); echo is_null($lt) ? 'null' : $lt ?>,
+    
+    logon_url: '<?php echo AuthSP::logonURL() ?>',
 };

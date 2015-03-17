@@ -53,6 +53,9 @@ $lang['logoff'] = 'Log-off';
 $lang['undergoing_maintenance'] = 'This application is under maintenance';
 $lang['maintenance_autoresume'] = 'Your operations will automatically resume when maintenance ends.';
 
+$lang['authentication_required'] = 'Authentication required';
+$lang['authentication_required_explanation'] = 'You need to be authentified to do that. Maybe your session expired ? Please click Ok and authenticate again.';
+
 
 /**
  * Locale settings (units, formats ...)

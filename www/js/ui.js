@@ -112,12 +112,18 @@ window.filesender.ui = {
         var onclose = options.onclose ? options.onclose : null;
         if(onclose) delete options.onclose;
         
+        if(options.noclose)
+            options.closeOnEscape = false;
+        
         d.dialog(options);
         
         if(onclose) d.on('dialogclose', function() {
             if(!$(this).data('closed_by_button_click')) onclose.call(this);
             $(this).data('closed_by_button_click', false);
         });
+        
+        if(options.noclose)
+            d.closest('.ui-dialog').find('.ui-dialog-titlebar-close').remove();
         
         return d;
     },
@@ -230,7 +236,7 @@ window.filesender.ui = {
         }
         
         if(state && !this.maintenance_popup) {
-            this.maintenance_popup = this.popup(lang.tr('undergoing_maintenance'), {}, {dialogClass: 'no-close'});
+            this.maintenance_popup = this.popup(lang.tr('undergoing_maintenance'), {}, {noclose: true});
             this.maintenance_popup.text(lang.tr('maintenance_autoresume'));
         }
     },
