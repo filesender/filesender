@@ -230,19 +230,21 @@ class RestEndpointTransfer extends RestEndpoint {
             if($transfer->status == TransferStatuses::CLOSED)
                 throw new RestException('cannot_alter_closed_transfer' ,403);
             
-            // Add recipient
             $data = $this->request->input;
             
-            $recipient = $transfer->addRecipient($data->recipient);
-            
-            // Send email if transfer is live already
-            if($transfer->status == TransferStatuses::AVAILABLE)
-                ApplicationMail::quickSend('transfer_available', $recipient, $transfer);
-            
-            return array(
-                'path' => '/recipient/'.$recipient->id,
-                'data' => RestEndpointRecipient::cast($recipient)
-            );
+            // Add recipient
+            if($data->recipient) {
+                $recipient = $transfer->addRecipient($data->recipient);
+                
+                // Send email if transfer is live already
+                if($transfer->status == TransferStatuses::AVAILABLE)
+                    ApplicationMail::quickSend('transfer_available', $recipient, $transfer);
+                
+                return array(
+                    'path' => '/recipient/'.$recipient->id,
+                    'data' => RestEndpointRecipient::cast($recipient)
+                );
+            }
         }else{
             // New transfer
             $data = $this->request->input;
