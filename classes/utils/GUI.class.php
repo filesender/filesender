@@ -72,7 +72,7 @@ class GUI {
      */
     public static function includeStylesheets() {
         foreach(self::path(self::stylesheets()) as $path)
-            echo '<link type="text/css" rel="stylesheet" href="'.$path.'" />'."\n";
+            echo '<link type="text/css" rel="stylesheet" href="'.$path.'?v='.Utilities::runningInstanceUID().'" />'."\n";
     }
     
     /**
@@ -103,7 +103,7 @@ class GUI {
      */
     public static function includeScripts() {
         foreach(self::path(self::scripts()) as $path)
-            echo '<script type="text/javascript" src="'.$path.'"></script>'."\n";
+            echo '<script type="text/javascript" src="'.$path.'?v='.Utilities::runningInstanceUID().'"></script>'."\n";
     }
     
     /**
@@ -273,7 +273,7 @@ class GUI {
             foreach(array('home', 'download', 'logout', 'exception') as $p)
                 self::$allowed_pages[] = $p;
             
-            if(Config::get('maintenance')) self::$allowed_pages = array('maintenance');
+                if(Config::get('maintenance')) self::$allowed_pages = array('maintenance');
         }
         
         return self::$allowed_pages;

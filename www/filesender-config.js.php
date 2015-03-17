@@ -72,7 +72,7 @@ window.filesender.config = {
     terasender_chunk_size: <?php echo Config::get('terasender_chunk_size')!=null ?  Config::get('terasender_chunk_size'):  Config::get('upload_chunk_size'); ?>,
     terasender_worker_count: <?php echo Config::get('terasender_worker_count') != null ? Config::get('terasender_worker_count') : 1 ?>,
     terasender_start_mode: '<?php echo Config::get('terasender_start_mode') ?>',
-    terasender_worker_file: 'lib/terasender/terasender_worker.js?_=' + (new Date()).getTime(), // Worker script file
+    terasender_worker_file: 'lib/terasender/terasender_worker.js?v=<?php echo Utilities::runningInstanceUID() ?>',
     terasender_upload_endpoint: '<?php echo Config::get('site_url') ?>rest.php/file/{file_id}/chunk/{offset}',
     
     max_legacy_file_size: <?php echo Config::get('max_legacy_file_size') ?>,
