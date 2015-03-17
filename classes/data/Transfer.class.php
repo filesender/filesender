@@ -627,6 +627,8 @@ class Transfer extends DBObject {
         // Update local cache
         if(!is_null($this->filesCache)) $this->filesCache[$file->id] = $file;
         
+        Logger::info('File#'.$file->id.' ('.$file->name.', '.$file->size.' bytes) added to Transfer#'.$this->id);
+        
         return $file;
     }
     
@@ -644,7 +646,7 @@ class Transfer extends DBObject {
         // Update local cache
         if(!is_null($this->filesCache) && array_key_exists($file->id, $this->filesCache)) unset($this->filesCache[$file->id]);
         
-        Logger::info('File#'.$file->id.' from Transfer#'.$this->id.' removed');
+        Logger::info('File#'.$file->id.' ('.$file->name.', '.$file->size.' bytes) removed from Transfer#'.$this->id);
     }
     
     /**
@@ -670,6 +672,8 @@ class Transfer extends DBObject {
         
         // Update local cache
         if(!is_null($this->recipientsCache)) $this->recipientsCache[$recipient->id] = $recipient;
+        
+        Logger::info('Recipient#'.$recipient->id.' ('.$recipient->email.') added to Transfer#'.$this->id);
         
         return $recipient;
     }
@@ -703,7 +707,7 @@ class Transfer extends DBObject {
         // Update local cache
         if(!is_null($this->recipientsCache) && array_key_exists($recipient->id, $this->recipientsCache)) unset($this->recipientsCache[$recipient->id]);
         
-        Logger::info('Recipient#'.$recipient->id.' from Transfer#'.$this->id.' removed');
+        Logger::info('Recipient#'.$recipient->id.' ('.$recipient->email.') removed from Transfer#'.$this->id);
     }
     
     /**
@@ -771,6 +775,8 @@ class Transfer extends DBObject {
         
         foreach($this->recipients as $recipient)
             $this->sendToRecipient($ctn, $recipient);
+        
+        Logger::info('Transfer#'.$this->id.' reminded to recipients');
     }
     
     /*

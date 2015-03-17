@@ -150,6 +150,8 @@ class File extends DBObject
      */
     public function beforeDelete() {
         Storage::deleteFile($this);
+        
+        Logger::info('File#'.$this->id.' deleted');
     }
     
     /**
