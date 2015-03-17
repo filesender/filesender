@@ -134,15 +134,17 @@ window.filesender.client = {
                 if(error.message == 'rest_authentication_required') {
                     filesender.client.authentication_required = filesender.ui.popup(
                         lang.tr('authentication_required'),
-                        $('#topmenu_logon').length ? {
-                            login: function() {
-                                $('#topmenu_logon').click();
+                        filesender.config.logon_url ? {
+                            logon: function() {
+                                filesender.ui.redirect(filesender.config.logon_url);
                             }
                         } : {
                             ok: function() {}
-                        }
+                        },
+                        {noclose: true}
                     );
                     filesender.client.authentication_required.text(lang.tr('authentication_required_explanation'));
+                    return;
                 }
                 
                 if(error.message == 'undergoing_maintenance') {
