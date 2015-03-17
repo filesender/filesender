@@ -139,8 +139,11 @@ class AuthSPShibboleth {
     public static function logonURL() {
         self::load();
         
+        $landing_page = Config::get('landing_page');
+        if(!$landing_page) $landing_page = 'upload';
+        
         $url = self::$config['login_url'];
-        $url = str_replace('{target}', Config::get('site_url').'index.php?s=upload', $url);
+        $url = str_replace('{target}', Config::get('site_url').'index.php?s='.$landing_page, $url);
         
         return $url;
     }

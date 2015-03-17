@@ -147,9 +147,12 @@ class AuthSPSaml {
     public static function logonURL() {
         self::loadSimpleSAML();
         
+        $landing_page = Config::get('landing_page');
+        if(!$landing_page) $landing_page = 'upload';
+        
         $url = self::$config['simplesamlphp_url'].'module.php/core/as_login.php?';
         $url .= 'AuthId='.self::$config['authentication_source'];
-        $url .= '&ReturnTo='.Config::get('site_url').'index.php?s=upload';
+        $url .= '&ReturnTo='.Config::get('site_url').'index.php?s='.$landing_page;
         
         return $url;
     }
