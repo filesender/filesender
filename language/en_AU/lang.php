@@ -50,6 +50,9 @@ $lang['about'] = 'About';
 $lang['help'] = 'Help';
 $lang['logoff'] = 'Log-off';
 
+$lang['undergoing_maintenance'] = 'This application is under maintenance';
+$lang['maintenance_autoresume'] = 'Your operations will automatically resume when maintenance ends.';
+
 
 /**
  * Locale settings (units, formats ...)

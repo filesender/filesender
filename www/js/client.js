@@ -47,6 +47,15 @@ window.filesender.client = {
     // Security token
     security_token: null,
     
+    // Webservice maintenance flag
+    maintenance: false,
+    
+    // Pending requests
+    pending_requests: [],
+    
+    // Handling authentication required
+    authentication_required: false,
+    
     // Send a request to the webservice
     call: function(method, resource, data, callback, options) {
         if(!this.base_path) {
@@ -99,22 +108,87 @@ window.filesender.client = {
             beforeSend: function(xhr) {
                 for(var k in headers) xhr.setRequestHeader(k, headers[k]);
             },
-            error: function(xhr, status, error) {
-                var msg = xhr.responseText.replace(/^\s+/, '').replace(/\s+$/, '');
-                
-                try {
-                    var error = JSON.parse(msg);
-                    errorhandler(error);
-                } catch(e) {
-                    filesender.ui.rawError(msg);
-                }
-            },
             success: callback,
             type: method.toUpperCase(),
             url: this.base_path + resource
         };
         
+        // Needs to be done after "var settings" because handler needs that settings variable exists
+        settings.error = function(xhr, status, error) {
+            var msg = xhr.responseText.replace(/^\s+/, '').replace(/\s+$/, '');
+            
+            if( // Ignore 40x, 50x and timeouts if undergoing maintenance
+                (xhr.status >= 400 || status == 'timeout') &&
+                filesender.client.maintenance
+            ) return;
+            
+            try {
+                var error = JSON.parse(msg);
+                
+                if(
+                    error.message == 'rest_authentication_required' &&
+                    (options.ignore_authentication_required || filesender.client.authentication_required)
+                )
+                    return;
+                
+                if(error.message == 'rest_authentication_required') {
+                    filesender.client.authentication_required = filesender.ui.popup(
+                        lang.tr('authentication_required'),
+                        $('#topmenu_logon').length ? {
+                            login: function() {
+                                $('#topmenu_logon').click();
+                            }
+                        } : {
+                            ok: function() {}
+                        }
+                    );
+                    filesender.client.authentication_required.text(lang.tr('authentication_required_explanation'));
+                }
+                
+                if(error.message == 'undergoing_maintenance') {
+                    if(filesender.client.maintenance) return;
+                    
+                    filesender.ui.log('Webservice entered maintenance mode, keeping requests to run them when maintenance ends');
+                    if(filesender.ui.transfer) filesender.ui.transfer.maintenance(true);
+                    
+                    filesender.client.maintenance = window.setInterval(function() {
+                        filesender.client.get('/info', function(info) {
+                            // Got data instead of "undergoing_maintenance" exception, maintenance is over, lets restart stacked requests
+                            window.clearInterval(filesender.client.maintenance);
+                            filesender.client.maintenance = false;
+                            
+                            filesender.ui.maintenance(false);
+                            
+                            filesender.ui.log('Webservice maintenance mode ended, running pending requests');
+                            
+                            if(filesender.ui.transfer) filesender.ui.transfer.maintenance(false);
+                            for(var i=0; i<filesender.client.pending_requests.length; i++)
+                                jQuery.ajax(filesender.client.pending_requests[i]);
+                            
+                            filesender.ui.log('Ran all pending requests from webservice maintenance period');
+                        }, {maintenanceCheck: true});
+                    }, 60 * 1000);
+                    
+                    filesender.client.pending_requests.push(settings);
+                    
+                    if(!$('#page.maintenance_page').length)
+                        filesender.ui.maintenance(true);
+                    
+                    return;
+                }
+                
+                errorhandler(error);
+            } catch(e) {
+                filesender.ui.rawError(msg);
+            }
+        };
+        
         for(var k in options) settings[k] = options[k];
+        
+        if(this.maintenance && !options.maintenanceCheck) {
+            this.pending_requests.push(settings);
+            return;
+        }
         
         return jQuery.ajax(settings);
     },
@@ -474,11 +548,6 @@ window.filesender.client = {
     },
     
     getUserQuota: function(callback, onerror) {
-        var opts = {error: function(error) {
-            if(error.message == 'rest_authentication_required') return;
-            filesender.ui.error(error);
-        }};
-        
-        this.get('/user/@me/quota', callback, opts);
+        this.get('/user/@me/quota', callback, {ignore_authentication_required: true});
     }
 };

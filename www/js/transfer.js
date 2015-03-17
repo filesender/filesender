@@ -816,6 +816,24 @@ window.filesender.transfer = function() {
         return true;
     };
 
+    
+    /**
+     * Enter/exit maintenance mode
+     * 
+     * @param bool state
+     */
+    this.maintenance = function(state) {
+        if(!state && this.maintenance_status) {
+            this.status = this.maintenance_status;
+            this.maintenance_status = null;
+        }
+        
+        if(state && !this.maintenance_status) {
+            this.maintenance_status = this.status;
+            this.status = 'maintenance';
+        }
+    };
+    
     /**
      * Chunk by chunk upload
      */

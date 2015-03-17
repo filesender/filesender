@@ -47,7 +47,7 @@ window.filesender.ui = {
      * @param mixed message
      */
     log: function(message) {
-        if(filesender.config.log) console.log(message);
+        if(filesender.config.log) console.log('[' + (new Date()).toLocaleTimeString() + '] ' + message);
     },
     
     /**
@@ -216,6 +216,23 @@ window.filesender.ui = {
             {close: onclose},
             {width: $('#wrap').width(), height: 0.8 * $(window).height(), onclose: onclose}
         ).addClass('wide_info');
+    },
+    
+    /**
+     * Display/remove maintenance popup
+     * 
+     * @param bool state
+     */
+    maintenance: function(state) {
+        if(!state && this.maintenance_popup) {
+            this.maintenance_popup.remove();
+            this.maintenance_popup = null;
+        }
+        
+        if(state && !this.maintenance_popup) {
+            this.maintenance_popup = this.popup(lang.tr('undergoing_maintenance'), {}, {dialogClass: 'no-close'});
+            this.maintenance_popup.text(lang.tr('maintenance_autoresume'));
+        }
     },
     
     /**

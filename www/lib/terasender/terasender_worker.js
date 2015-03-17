@@ -20,6 +20,11 @@ var terasender_worker = {
     security_token: null,
     
     /**
+     * Maintenance flag / timer
+     */
+    maintenance: null,
+    
+    /**
      * Start the worker
      */
     start: function() {
@@ -40,15 +45,17 @@ var terasender_worker = {
      * @param object job job to execute
      */
     executeJob: function(job) {
-        if('file' in job) { // Switch files
-            this.job.file = job.file;
+        if(job) {
+            if('file' in job) { // Switch files
+                this.job.file = job.file;
+            }
+            
+            if('security_token' in job) {
+                this.security_token = job.security_token;
+            }
+            
+            this.job.chunk = job.chunk;
         }
-        
-        if('security_token' in job) {
-            this.security_token = job.security_token;
-        }
-        
-        this.job.chunk = job.chunk;
         
         if(!this.job.file) {
             this.error({message: 'file_missing'});
@@ -57,26 +64,32 @@ var terasender_worker = {
         
         var file = this.job.file;
         
-        this.log('Starting job file:' + file.id + '[' + job.chunk.start + '...' + job.chunk.end + ']');
+        this.log('Starting job file:' + file.id + '[' + this.job.chunk.start + '...' + this.job.chunk.end + ']');
         
         var slicer = file.blob.slice ? 'slice' : (file.blob.mozSlice ? 'mozSlice' : (file.blob.webkitSlice ? 'webkitSlice' : 'slice'));
         
-        var blob = file.blob[slicer](job.chunk.start, job.chunk.end);
+        var blob = file.blob[slicer](this.job.chunk.start, this.job.chunk.end);
         
         var xhr = this.createXhr();
         
+        var worker = this;
+        
         xhr.onreadystatechange = function() {
-            terasender_worker.uploadRequestChange(xhr);
+            worker.uploadRequestChange(xhr);
         };
         
-        var url = file.endpoint.replace('{offset}', job.chunk.start);
+        xhr.ontimeout = function() {
+            worker.timeout();
+        };
+        
+        var url = file.endpoint.replace('{offset}', this.job.chunk.start);
         xhr.open('PUT', url, true); // Open a request to the upload endpoint
         
         xhr.setRequestHeader('Content-Disposition', 'attachment; name="chunk"'); 
         xhr.setRequestHeader('Content-Type', 'application/octet-stream');
         xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
         xhr.setRequestHeader('X-Filesender-File-Size', file.size);
-        xhr.setRequestHeader('X-Filesender-Chunk-Offset', job.chunk.start);
+        xhr.setRequestHeader('X-Filesender-Chunk-Offset', this.job.chunk.start);
         xhr.setRequestHeader('X-Filesender-Chunk-Size', blob.size);
         xhr.setRequestHeader('X-Filesender-Security-Token', this.security_token);
         
@@ -112,7 +125,23 @@ var terasender_worker = {
     uploadRequestChange: function(xhr){
         if(xhr.readyState != 4) return; // Not a progress update
         
+        // Ignore 40x and 50x if undergoing maintenance
+        if(xhr.status >= 400 && this.maintenance) {
+            var worker = this;
+            this.maintenance = setTimeout(function() {
+                worker.executeJob();
+            }, 60 * 1000);
+            return;
+        }
+        
         if(xhr.status == 200) { // All went well
+            if(this.maintenance) {
+                this.log('Webservice maintenance mode ended, pending chunk has been uploaded');
+                clearTimeout(this.maintenance);
+                this.maintenance = null;
+                this.sendCommand('maintenance', false);
+            }
+            
             this.reportDone();
         }else if(xhr.status == 0) { // Request cancelled (browser refresh or such)
             this.log('broken, exiting');
@@ -122,6 +151,21 @@ var terasender_worker = {
             
             try {
                 var error = JSON.parse(msg);
+                
+                if(error.message == 'undergoing_maintenance') {
+                    if(!this.maintenance) {
+                        this.log('Webservice entered maintenance mode, keeping chunk to upload it when maintenance ends');
+                        this.sendCommand('maintenance', true);
+                    }
+                    
+                    var worker = this;
+                    this.maintenance = setTimeout(function() {
+                        worker.executeJob();
+                    }, 60 * 1000);
+                    
+                    return;
+                }
+                
                 if(!error.details) error.details = {};
                 error.details.job = this.job;
                 this.error(error);
@@ -129,6 +173,20 @@ var terasender_worker = {
                 this.error({message: msg, details: {job: this.job}});
             }
         }
+    },
+    
+    /**
+     * Timeout callback
+     */
+    timeout: function() {
+        if(this.maintenance) { // If under maintenance retrigger job after a while
+            var worker = this;
+            this.maintenance = setTimeout(function() {
+                worker.executeJob();
+            }, 60 * 1000);
+        }
+        
+        this.error({message: 'chunk_upload_timeout', details: {job: this.job}});
     },
     
     /**
