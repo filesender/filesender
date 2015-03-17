@@ -385,6 +385,7 @@ filesender.ui.evalUploadEnabled = function() {
         if(!filesender.ui.nodes.aup.is(':checked')) ok = false;
     
     if(filesender.ui.nodes.required_files) {
+        if(ok) filesender.ui.nodes.required_files.hide();
         filesender.ui.nodes.buttons.restart.button(ok ? 'enable' : 'disable');
     } else {
         filesender.ui.nodes.buttons.start.button(ok ? 'enable' : 'disable');

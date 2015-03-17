@@ -271,6 +271,12 @@ window.filesender.terasender = {
                 this.log(data, 'worker:' + worker_id);
                 break;
             
+            case 'maintenance' :
+                this.log('Worker ' + (data ? 'entering' : 'leaving') + ' maintenance mode', 'worker:' + worker_id);
+                filesender.ui.maintenance(data);
+                this.transfer.maintenance(data);
+                break;
+            
             case 'error' :
                 this.error(data, 'worker:' + worker_id);
                 

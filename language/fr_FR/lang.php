@@ -49,6 +49,9 @@ $lang['about'] = 'A propos';
 $lang['help'] = 'Aide';
 $lang['logoff'] = 'Déconnexion';
 
+$lang['undergoing_maintenance'] = 'Cette application est en maintenance';
+$lang['maintenance_autoresume'] = 'Les opérations en cours redémarreront automatiquement après la fin de la maintenance.';
+
 
 /**
  * Locale settings (units, formats ...)

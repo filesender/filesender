@@ -273,6 +273,7 @@ class GUI {
             foreach(array('home', 'download', 'logout', 'exception') as $p)
                 self::$allowed_pages[] = $p;
             
+            if(Config::get('maintenance')) self::$allowed_pages = array('maintenance');
         }
         
         return self::$allowed_pages;

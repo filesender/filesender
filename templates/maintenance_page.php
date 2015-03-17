@@ -1,3 +1,3 @@
 <div class="box">
-    {tr:maintenance}
+    <h2>{tr:undergoing_maintenance}</h2>
 </div>
