@@ -291,6 +291,8 @@ class Guest extends DBObject {
         
         // Send receipt to owner
         ApplicationMail::quickSend('guest_created_receipt', $this->user_email, $this);
+        
+        Logger::info('Guest#'.$this->id.' ('.$this->email.') created');
     }
     
     /**
@@ -298,6 +300,8 @@ class Guest extends DBObject {
      */
     public function remind() {
         ApplicationMail::quickSend('guest_reminder', $this);
+        
+        Logger::info('Guest#'.$this->id.' ('.$this->email.') reminded');
     }
     
     /**
@@ -317,6 +321,8 @@ class Guest extends DBObject {
         
         // Sending notification to recipient
         ApplicationMail::quickSend($manualy ? 'guest_cancelled' : 'guest_expired', $this);
+        
+        Logger::info('Guest#'.$this->id.' ('.$this->email.') '.($manualy ? 'removed' : 'expired'));
     }
     
     
