@@ -61,8 +61,13 @@ class DatabasePgsql {
             $columns[] = $column.' '.self::columnDefinition($def);
         }
         $query = 'CREATE TABLE '.$table.' ('.implode(', ', $columns).')';
-        
         DBI::exec($query);
+        
+        foreach($definition as $column => $def) {
+            if(array_key_exists('autoinc', $def) && $def['autoinc']) {
+                self::createSequence($table, $column);
+            }
+        }
     }
     
     /**
@@ -88,10 +93,14 @@ class DatabasePgsql {
      * @return mixed created sequence name or false if already exists
      */
     private static function createSequence($table, $column) {
-        if(self::sequenceExists($table, $column)) return false;
+        $sequence = self::sequenceExists($table, $column, false);
+        if(!$sequence) {
+            $sequence = strtolower($table.'_'.$column.'_seq');
+            DBI::exec('CREATE SEQUENCE '.$sequence);
+        }
         
-        $sequence = strtolower($table.'_'.$column.'_seq');
-        DBI::exec('CREATE SEQUENCE '.$sequence);
+        DBI::exec('ALTER TABLE '.$table.' ALTER COLUMN '.$column.' SET DEFAULT nextval(\''.$sequence.'\')');
+        DBI::exec('ALTER SEQUENCE '.$sequence.' OWNED BY '.$table.'.'.$column);
         
         return $sequence;
     }
@@ -104,9 +113,15 @@ class DatabasePgsql {
      * 
      * @return mixed sequence name or false
      */
-    private static function sequenceExists($table, $column) {
-        $s = DBI::prepare('SELECT c.relname AS seq FROM pg_class c JOIN pg_depend d ON d.objid=c.oid AND d.classid=\'pg_class\'::regclass AND d.refclassid=\'pg_class\'::regclass JOIN pg_class t ON t.oid=d.refobjid JOIN pg_attribute a ON a.attrelid=t.oid AND a.attnum=d.refobjsubid WHERE c.relkind=\'S\' and d.deptype=\'a\' AND t.relname=:table AND a.attname=:column');
-        $s->execute(array(':table' => strtolower($table), ':column' => strtolower($column)));
+    private static function sequenceExists($table, $column, $test_ownership = true) {
+        if($test_ownership) {
+            $s = DBI::prepare('SELECT c.relname AS seq FROM pg_class c JOIN pg_depend d ON d.objid=c.oid AND d.classid=\'pg_class\'::regclass AND d.refclassid=\'pg_class\'::regclass JOIN pg_class t ON t.oid=d.refobjid JOIN pg_attribute a ON a.attrelid=t.oid AND a.attnum=d.refobjsubid WHERE c.relkind=\'S\' and d.deptype=\'a\' AND t.relname=:table AND a.attname=:column');
+            $s->execute(array(':table' => strtolower($table), ':column' => strtolower($column)));
+        } else {
+            $s = DBI::prepare('SELECT c.relname AS seq FROM pg_class c WHERE c.relkind = \'S\' AND c.relname = :sequence');
+            $s->execute(array(':sequence' => strtolower($table.'_'.$column.'_seq')));
+        }
+        
         $r = $s->fetch();
         
         return $r ? $r['seq'] : false;
@@ -133,6 +148,10 @@ class DatabasePgsql {
     public static function createTableColumn($table, $column, $definition) {
         $query = 'ALTER TABLE '.$table.' ADD '.$column.' '.self::columnDefinition($definition);
         DBI::exec($query);
+        
+        if(array_key_exists('autoinc', $definition) && $definition['autoinc']) {
+            self::createSequence($table, $column);
+        }
     }
     
     /**
@@ -154,6 +173,7 @@ class DatabasePgsql {
         $non_respected = array();
         
         $typematcher = '';
+        $length = null;
         
         switch($definition['type']) {
             case 'int':
@@ -165,7 +185,8 @@ class DatabasePgsql {
                 break;
             
             case 'string':
-                $typematcher = 'character varying\('.$definition['size'].'\)';
+                $typematcher = 'character varying';
+                $length = (int)$definition['size'];
                 break;
             
             case 'bool':
@@ -194,6 +215,11 @@ class DatabasePgsql {
             $non_respected[] = 'type';
         }
         
+        if(!is_null($length) && ((int)$column_dfn['character_maximum_length'] != $length)) {
+            $logger($column.' max length does not match '.$length);
+            $non_respected[] = 'type';
+        }
+        
         if(array_key_exists('default', $definition)) {
             if(is_null($definition['default'])) {
                 if(!is_null($column_dfn['column_default'])) {
@@ -213,7 +239,7 @@ class DatabasePgsql {
         
         foreach(array('null', 'primary', 'unique', 'autoinc') as $k) if(!array_key_exists($k, $definition)) $definition[$k] = false;
         
-        $is_null = ($column_dfn['is_nullable'] == 'yes');
+        $is_null = (strtolower($column_dfn['is_nullable']) == 'yes');
         if($definition['null'] && !$is_null) {
             $logger($column.' is not nullable');
             $non_respected[] = 'null';
@@ -247,7 +273,7 @@ class DatabasePgsql {
         }
         
         $is_autoinc = self::sequenceExists($table, $column);
-        if($definition['autoinc'] && !$is_autoinc) {
+        if($definition['autoinc'] && (!$is_autoinc || ($column_dfn['column_default'] != 'nextval(\''.$is_autoinc.'\'::regclass)'))) {
             $logger($column.' is not autoinc');
             $non_respected[] = 'autoinc';
         } else if(!$definition['autoinc'] && $is_autoinc) {
@@ -348,9 +374,7 @@ class DatabasePgsql {
         
         if(in_array('autoinc', $problems)) {
             if($definition['autoinc']) {
-                $sequence = self::createSequence($table, $column);
-                DBI::exec('ALTER TABLE '.$table.' ALTER COLUMN '.$column.' SET DEFAULT nextval(\''.$sequence.'\')');
-                DBI::exec('ALTER SEQUENCE '.$sequence.' OWNED BY '.$table.'.'.$column);
+                self::createSequence($table, $column);
             } else {
                 DBI::exec('ALTER TABLE '.$table.' ALTER COLUMN '.$column.' DROP DEFAULT'); // Should we drop the sequence as well ?
             }
