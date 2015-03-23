@@ -704,7 +704,7 @@ class Translation {
                     } else if(is_numeric($ov)) {
                         $ov = (int)$ov;
                     } else if(is_string($ov)) {
-                        if(preg_match('`^(["\'])(.+)\1$`', $ov, $m))
+                        if(preg_match('`^(["\'])(.*)\1$`', $ov, $m))
                             $ov = $m[2];
                     }
                     
