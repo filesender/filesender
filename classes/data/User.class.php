@@ -95,6 +95,7 @@ class User extends DBObject {
         'quota' => array(
             'type' => 'uint',
             'size' => 'big',
+            'null' => true
         ),
     );
     
