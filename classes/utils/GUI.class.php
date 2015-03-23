@@ -220,11 +220,14 @@ class GUI {
     /**
      * Get current page
      * 
+     * @param string $page if given replaces the current page
+     * 
      * @return string
      */
-    public function currentPage() {
-        if(is_null(self::$current_page)) {
-            
+    public function currentPage($page = null) {
+        if(!is_null($page)) self::$current_page = $page;
+        
+        if(!self::$current_page) {
             $page = null;
             if(array_key_exists('s', $_REQUEST)) $page = $_REQUEST['s'];
             
