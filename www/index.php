@@ -47,7 +47,7 @@ try {
             if(Auth::isAuthenticated())
                 throw new GUIAccessForbiddenException($page);
         
-            $page = 'logon';
+            GUI::currentPage('logon');
             $vars['access_forbidden'] = true;
             
             if(Config::get('auth_sp_autotrigger')) AuthSP::trigger();
