@@ -108,7 +108,7 @@ class StorageFilesystem {
         
         foreach($transfer->files as $file) {
             $path = self::buildPath($file);
-            $filesystem = self::getFilesystem($path);
+            $filesystem = self::$hashing ? self::getFilesystem($path) : 'main';
             
             if(!array_key_exists($filesystem, $filesystems)) $filesystems[$filesystem] = array(
                 'free_space' => disk_free_space($path),
