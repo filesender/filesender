@@ -100,11 +100,11 @@ window.filesender.terasender = {
         var job = {
             chunk: {
                 start: file.uploaded,
-                end: file.uploaded + filesender.config.terasender_chunk_size
+                end: file.uploaded + filesender.config.upload_chunk_size
             }
         };
         
-        file.uploaded += filesender.config.terasender_chunk_size;
+        file.uploaded += filesender.config.upload_chunk_size;
         if(file.uploaded > file.size) file.uploaded = file.size ? file.size : 1; // Protect against empty files creating loops
         
         if(file.id != worker.file_id) {
@@ -232,7 +232,7 @@ window.filesender.terasender = {
                 workers_on_same_file++;
         }
         
-        file.min_uploaded_offset = Math.max(0, min_offset - filesender.config.terasender_chunk_size);
+        file.min_uploaded_offset = Math.max(0, min_offset - filesender.config.upload_chunk_size);
         
         this.transfer.reportProgress(file, (file.uploaded >= file.size) && (workers_on_same_file == 0));
         

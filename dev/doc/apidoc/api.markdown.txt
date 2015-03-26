@@ -355,7 +355,7 @@ Several request headers SHOULD be provided so that the server can check validity
   * `X-Filesender-Chunk-Offset` (`integer`) should be equal to `offset`
   * `X-Filesender-Chunk-Size` (`integer`) the sent chunk size
 
-The sent chunk size MUST not be over the biggest of `upload_chunk_size` and `terasender_chunk_size`.
+The sent chunk size MUST not be over `upload_chunk_size`.
 
 Returns the [File](#file).
 

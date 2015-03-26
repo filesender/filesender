@@ -69,7 +69,6 @@ window.filesender.config = {
     
     terasender_enabled: <?php echo Config::get('terasender_enabled') ? 'true' : 'false' ?>,
     terasender_advanced: <?php echo Config::get('terasender_advanced') ? 'true' : 'false' ?>,
-    terasender_chunk_size: <?php echo Config::get('terasender_chunk_size')!=null ?  Config::get('terasender_chunk_size'):  Config::get('upload_chunk_size'); ?>,
     terasender_worker_count: <?php echo Config::get('terasender_worker_count') != null ? Config::get('terasender_worker_count') : 1 ?>,
     terasender_start_mode: '<?php echo Config::get('terasender_start_mode') ?>',
     terasender_worker_file: 'lib/terasender/terasender_worker.js?v=<?php echo Utilities::runningInstanceUID() ?>',
