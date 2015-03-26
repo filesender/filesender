@@ -226,9 +226,7 @@ class RestEndpointFile extends RestEndpoint {
                     throw new RestSanityCheckFailedException('chunk_size', strlen($data), $client['X-Filesender-Chunk-Size']);
             
             $upload_chunk_size = Config::get('upload_chunk_size');
-            $terasender_chunk_size = Config::get('terasender_chunk_size');
-            $max_chunk_size = $terasender_chunk_size ? max($upload_chunk_size, $terasender_chunk_size) : $upload_chunk_size;
-            if(strlen($data) > $max_chunk_size)
+            if(strlen($data) > $upload_chunk_size)
                 throw new RestSanityCheckFailedException('chunk_size', strlen($data), 'max '.Config::get('upload_chunk_size'));
             
             if($offset + strlen($data) > $file->size)
