@@ -154,14 +154,14 @@ class Config {
             Utilities::sizeToBytes(ini_get('upload_max_filesize'))
         );
         
-        self::$parameters['max_legacy_upload_size'] = min(
-            self::$parameters['max_legacy_upload_size'],
+        self::$parameters['max_legacy_file_size'] = min(
+            self::$parameters['max_legacy_file_size'],
             $max_system_upload_size
         );
         
-        if(self::$override && array_key_exists('max_legacy_upload_size', self::$override['parameters']))
-            self::$override['parameters']['max_legacy_upload_size']['value'] = min(
-                self::$override['parameters']['max_legacy_upload_size']['value'],
+        if(self::$override && array_key_exists('max_legacy_file_size', self::$override['parameters']))
+            self::$override['parameters']['max_legacy_file_size']['value'] = min(
+                self::$override['parameters']['max_legacy_file_size']['value'],
                 $max_system_upload_size
             );
         

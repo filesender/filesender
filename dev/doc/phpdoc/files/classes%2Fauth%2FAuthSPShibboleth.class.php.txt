@@ -108,6 +108,23 @@ class AuthSPShibboleth {
             
             if(!$attributes['name']) $attributes['name'] = substr($attributes['email'][0], 0, strpos($attributes['email'][0], '@'));
             
+            $additional_attributes = Config::get('auth_sp_additional_attributes');
+            if($additional_attributes) {
+                $attributes['additional'] = array();
+                foreach($additional_attributes as $key => $from) {
+                    if(is_numeric($key) && is_callable($from)) continue;
+                    
+                    if(is_callable($from)) {
+                        $value = $from($attributes);
+                    } else {
+                        $value = explode(';', getenv($from));
+                        if(count($value) == 1) $value = array_shift($value);
+                    }
+                    
+                    $attributes['additional'][is_numeric($key) ? $from : $key] = $value;
+                }
+            }
+            
             self::$attributes = $attributes;
         }
         
@@ -122,8 +139,11 @@ class AuthSPShibboleth {
     public static function logonURL() {
         self::load();
         
+        $landing_page = Config::get('landing_page');
+        if(!$landing_page) $landing_page = 'upload';
+        
         $url = self::$config['login_url'];
-        $url = str_replace('{target}', Config::get('site_url').'index.php?s=upload', $url);
+        $url = str_replace('{target}', Config::get('site_url').'index.php?s='.$landing_page, $url);
         
         return $url;
     }

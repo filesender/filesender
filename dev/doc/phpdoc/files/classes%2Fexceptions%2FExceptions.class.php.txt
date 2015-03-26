@@ -102,7 +102,7 @@ class DetailedException extends LoggingException {
      * @param mixed $internal_details details to log
      * @param mixed $public_details details to give to the user (logged as well)
      */
-    public function __construct($msg_code, $internal_details, $public_details = null) {
+    public function __construct($msg_code, $internal_details = null, $public_details = null) {
         $this->uid = uniqid();
         
         $this->details = $public_details;
@@ -219,7 +219,7 @@ class StorableException {
      * @return string
      */
     public function serialize() {
-        return base64_encode(serialize(array(
+        return base64_encode(json_encode(array(
             'message' => $this->message,
             'uid' => $this->uid,
             'details' => $this->details,
@@ -236,9 +236,9 @@ class StorableException {
      * @throws DetailedException
      */
     public static function unserialize($serialized) {
-        $exception = unserialize(base64_decode($serialized));
+        $exception = (array)json_decode(base64_decode($serialized));
         
-        if(!is_array($exception) || !array_key_exists('message', $exception))
+        if(!array_key_exists('message', $exception))
             throw new DetailedException('not_an_exception', $exception);
         
         return new self($exception);

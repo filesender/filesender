@@ -63,6 +63,11 @@ class Transfer extends DBObject {
             'size' => 'medium',
             'null' => true
         ),
+        'lang' => array(
+            'type' => 'string',
+            'size' => 8,
+            'null' => true
+        ),
         'subject' => array(
             'type' => 'string',
             'size' => 250,
@@ -74,6 +79,10 @@ class Transfer extends DBObject {
         ),
         'created' => array(
             'type' => 'datetime'
+        ),
+        'made_available' => array(
+            'type' => 'datetime',
+            'null' => true
         ),
         'expires' => array(
             'type' => 'datetime'
@@ -95,6 +104,7 @@ class Transfer extends DBObject {
     const AVAILABLE = "status = 'available' ORDER BY created DESC";
     const CLOSED = "status = 'closed' ORDER BY created DESC";
     const EXPIRED = "expires < :date ORDER BY expires ASC";
+    const FAILED = "created < :date AND (status = 'created' OR status = 'started' OR status = 'uploading') ORDER BY expires ASC";
     const AUDITLOG_EXPIRED = "expires < :date ORDER BY expires ASC";
     const FROM_USER = "user_id = :user_id AND status='available' ORDER BY created DESC";
     const FROM_USER_CLOSED = "user_id = :user_id AND status='closed' ORDER BY created DESC";
@@ -108,9 +118,11 @@ class Transfer extends DBObject {
     protected $user_id = null;
     protected $user_email = null;
     protected $guest_id = null;
+    protected $lang = null;
     protected $subject = null;
     protected $message = null;
     protected $created = 0;
+    protected $made_available = 0;
     protected $expires = 0;
     protected $options = array();
     
@@ -202,12 +214,16 @@ class Transfer extends DBObject {
         
         $transfer->user_id = Auth::user()->id;
         
-        if(Auth::isGuest())
-            $transfer->guest = AuthGuest::getGuest();
-        
         if(!$user_email) $user_email = Auth::user()->email;
-        if(!in_array($user_email, Auth::user()->email_addresses))
-            throw new BadEmailException($user_email);
+        
+        if(Auth::isGuest()) {
+            $transfer->guest = AuthGuest::getGuest();
+            $user_email = $transfer->guest->email;
+            
+        } else if(!Auth::isRemote()) {
+            if(!in_array($user_email, Auth::user()->email_addresses))
+                throw new BadEmailException($user_email);
+        }
         
         $transfer->__set('user_email', $user_email);
         
@@ -215,6 +231,8 @@ class Transfer extends DBObject {
         
         $transfer->created = time();
         $transfer->status = TransferStatuses::CREATED;
+        
+        $transfer->lang = Lang::getCode();
         
         return $transfer;
     }
@@ -246,6 +264,26 @@ class Transfer extends DBObject {
     }
     
     /**
+     * Get used/available volume from available transfers (without fetching it from storage)
+     * 
+     * @return array
+     */
+    public static function getUsage() {
+        $quota = Config::get('host_quota');
+        
+        $used = 0;
+        $s = DBI::query('SELECT size FROM '.File::getDBTable().' INNER JOIN '.self::getDBTable().' ON ('.self::getDBTable().'.id = '.File::getDBTable().'.transfer_id) WHERE status=\'available\'');
+        foreach($s->fetchAll() as $r)
+            $used += $r['size'];
+        
+        return array(
+            'total' => $quota,
+            'used' => $used,
+            'available' => $quota ? max(0, $quota - $used) : null
+        );
+    }
+    
+    /**
      * Get uploading transfers
      * 
      * @return array of Transfer
@@ -261,6 +299,17 @@ class Transfer extends DBObject {
      */
     public static function allExpired() {
         return self::all(self::EXPIRED, array(':date' => date('Y-m-d')));
+    }
+    
+    /**
+     * Get failed transfers
+     * 
+     * @return array of Transfer
+     */
+    public static function allFailed() {
+        $days = Config::get('failed_transfer_cleanup_days');
+        if(!$days) return array();
+        return self::all(self::FAILED, array(':date' => date('Y-m-d', time() - ($days * 24 * 3600))));
     }
     
     /**
@@ -315,20 +364,22 @@ class Transfer extends DBObject {
         
         // Log action
         Logger::logActivity($manualy ? LogEventTypes::TRANSFER_CLOSED : LogEventTypes::TRANSFER_EXPIRED, $this);
-
-        // Send notification to all recipients 
-        $ctn = Lang::translateEmail($manualy ? 'transfer_deleted' : 'transfer_expired')->r($this);
         
-        foreach($this->recipients as $recipient)
-            $this->sendToRecipient($ctn, $recipient);
+        if(!$this->hasOption(TransferOptions::GET_A_LINK)) {
+            // Send notification to all recipients 
+            $ctn = Lang::translateEmail($manualy ? 'transfer_deleted' : 'transfer_expired', $this->lang)->r($this);
+            
+            foreach($this->recipients as $recipient)
+                $this->sendToRecipient($ctn, $recipient);
+        }
         
         // Send notification to owner
-        ApplicationMail::quickSend($manualy ? 'transfer_deleted_receipt' : 'transfer_expired_receipt', $this->user_email, $this);
+        ApplicationMail::quickSend($manualy ? 'transfer_deleted_receipt' : 'transfer_expired_receipt', $this->owner, $this);
         
         // Send report if needed
         if(!is_null(Config::get('auditlog_lifetime')) && $this->hasOption(TransferOptions::EMAIL_REPORT_ON_CLOSING)) {
             $report = new Report($this);
-            $report->sendTo($this->user_email);
+            $report->sendTo($this->owner);
         }
         
         if(!Config::get('auditlog_lifetime')) {
@@ -433,7 +484,8 @@ class Transfer extends DBObject {
     public function __get($property) {
         if(in_array($property, array(
             'id', 'status', 'user_id', 'user_email', 'guest_id',
-            'subject', 'message', 'created', 'expires', 'options'
+            'subject', 'message', 'created', 'made_available',
+            'expires', 'options', 'lang'
         ))) return $this->$property;
         
         if($property == 'user' || $property == 'owner') {
@@ -462,6 +514,11 @@ class Transfer extends DBObject {
             return $this->recipientsCache;
         }
         
+        if($property == 'first_recipient') {
+            $recipients = array_values($this->recipients);
+            return $recipients[0];
+        }
+        
         if($property == 'recipients_with_error') {
             return array_filter($this->recipients, function($recipient) {
                 return count($recipient->errors);
@@ -481,6 +538,18 @@ class Transfer extends DBObject {
         
         if($property == 'is_expired') return $this->isExpired();
         
+        if($property == 'made_available_time') return $this->made_available ? ($this->made_available - $this->created) : null;
+        
+        if($property == 'upload_start') return min(array_map(function($file) {
+            return $file->upload_start;
+        }, $this->files));
+        
+        if($property == 'upload_end') return max(array_map(function($file) {
+            return $file->upload_end;
+        }, $this->files));
+        
+        if($property == 'upload_time') return $this->upload_end - $this->upload_start;
+        
         throw new PropertyAccessException($this, $property);
     }
     
@@ -498,6 +567,7 @@ class Transfer extends DBObject {
         if($property == 'status') {
             $value = strtolower($value);
             if(!TransferStatuses::isValidValue($value)) throw new TransferBadStatusException($value);
+            if($value == TransferStatuses::AVAILABLE && !$this->made_available) $this->made_available = time();
             $this->status = (string)$value;
         }else if($property == 'user_email') {
             if(!filter_var($value, FILTER_VALIDATE_EMAIL)) throw new BadEmailException($value);
@@ -505,6 +575,9 @@ class Transfer extends DBObject {
         }else if($property == 'guest') {
             $gv = ($value instanceof Guest) ? $value : Guest::fromId($value);
             $this->guest_id = $gv->id;
+        }else if($property == 'lang') {
+            if(!array_key_exists($value, Lang::getAvailableLanguages())) throw new BadLangCodeException($value);
+            $this->lang = (string)$value;
         }else if($property == 'subject') {
             $this->subject = (string)$value;
         }else if($property == 'message') {
@@ -554,6 +627,8 @@ class Transfer extends DBObject {
         // Update local cache
         if(!is_null($this->filesCache)) $this->filesCache[$file->id] = $file;
         
+        Logger::info('File#'.$file->id.' ('.$file->name.', '.$file->size.' bytes) added to Transfer#'.$this->id);
+        
         return $file;
     }
     
@@ -571,7 +646,7 @@ class Transfer extends DBObject {
         // Update local cache
         if(!is_null($this->filesCache) && array_key_exists($file->id, $this->filesCache)) unset($this->filesCache[$file->id]);
         
-        Logger::info('File#'.$file->id.' from Transfer#'.$this->id.' removed');
+        Logger::info('File#'.$file->id.' ('.$file->name.', '.$file->size.' bytes) removed from Transfer#'.$this->id);
     }
     
     /**
@@ -597,6 +672,8 @@ class Transfer extends DBObject {
         
         // Update local cache
         if(!is_null($this->recipientsCache)) $this->recipientsCache[$recipient->id] = $recipient;
+        
+        Logger::info('Recipient#'.$recipient->id.' ('.$recipient->email.') added to Transfer#'.$this->id);
         
         return $recipient;
     }
@@ -630,7 +707,7 @@ class Transfer extends DBObject {
         // Update local cache
         if(!is_null($this->recipientsCache) && array_key_exists($recipient->id, $this->recipientsCache)) unset($this->recipientsCache[$recipient->id]);
         
-        Logger::info('Recipient#'.$recipient->id.' from Transfer#'.$this->id.' removed');
+        Logger::info('Recipient#'.$recipient->id.' ('.$recipient->email.') removed from Transfer#'.$this->id);
     }
     
     /**
@@ -645,10 +722,8 @@ class Transfer extends DBObject {
         if(!count($this->recipients))
             throw new TransferNoRecipientsException();
         
-        if($this->hasOption(TransferOptions::ADD_ME_TO_RECIPIENTS) && !$this->isRecipient($this->user_email))
-            $this->addRecipient($this->user_email);
-        
         $this->status = TransferStatuses::AVAILABLE;
+        $this->made_available = time();
         $this->save();
         Logger::logActivity(LogEventTypes::TRANSFER_AVAILABLE, $this);
         
@@ -658,7 +733,7 @@ class Transfer extends DBObject {
             $guest->transfer_count++;
             
             if($this->hasOption(TransferOptions::EMAIL_UPLOAD_COMPLETE))
-                ApplicationMail::quickSend('guest_upload_complete', $guest->user_email, $guest);
+                ApplicationMail::quickSend('guest_upload_complete', $guest->owner, $guest);
             
             if($guest->hasOption(GuestOptions::VALID_ONLY_ONE_TIME))
                 $guest->status = GuestStatuses::CLOSED;
@@ -666,31 +741,42 @@ class Transfer extends DBObject {
             $guest->save();
         } else {
             if($this->hasOption(TransferOptions::EMAIL_UPLOAD_COMPLETE))
-                ApplicationMail::quickSend('upload_complete', Auth::user()->email, $this);
+                ApplicationMail::quickSend('upload_complete', $this->owner, $this);
             
             Auth::user()->saveFrequentRecipients($this->recipients);
         }
         
-        $ctn = Lang::translateEmail('transfer_available')->r($this);
         
-        foreach($this->recipients as $recipient) {
-            $mail = new ApplicationMail($ctn->r($recipient));
-            $mail->to($recipient);
-            $mail->send();
+        if(!$this->hasOption(TransferOptions::GET_A_LINK)) {
+            if($this->hasOption(TransferOptions::ADD_ME_TO_RECIPIENTS) && !$this->isRecipient($this->user_email))
+                $this->addRecipient($this->user_email);
+            
+            $ctn = Lang::translateEmail('transfer_available', $this->lang)->r($this);
+            
+            foreach($this->recipients as $recipient) {
+                $mail = new ApplicationMail($ctn->r($recipient));
+                $mail->to($recipient);
+                $mail->send();
+            }
+            
+            Logger::logActivity(LogEventTypes::TRANSFER_SENT, $this, Auth::isGuest() ? AuthGuest::getGuest() : null);
         }
         
-        Logger::logActivity(LogEventTypes::TRANSFER_SENT, $this, Auth::isGuest() ? AuthGuest::getGuest() : null);
-        Logger::info('Transfer#'.$this->id.' made available'.(Auth::isGuest() ? ' by guest: '.AuthGuest::getGuest()->email : ''));
+        Logger::info('Transfer#'.$this->id.' made available'.(Auth::isGuest() ? ' by guest: '.AuthGuest::getGuest()->email : '').', took '.$this->made_available_time.'s');
     }
     
     /**
      * Send reminder to recipients
      */
     public function remind() {
-        $ctn = Lang::translateEmail('transfer_reminder')->r($this);
+        if($this->hasOption(TransferOptions::GET_A_LINK)) return;
+        
+        $ctn = Lang::translateEmail('transfer_reminder', $this->lang)->r($this);
         
         foreach($this->recipients as $recipient)
             $this->sendToRecipient($ctn, $recipient);
+        
+        Logger::info('Transfer#'.$this->id.' reminded to recipients');
     }
     
     /*
@@ -704,7 +790,7 @@ class Transfer extends DBObject {
             $guest = AuthGuest::getGuest();
             
             if($guest->hasOption(GuestOptions::EMAIL_UPLOAD_STARTED))
-                ApplicationMail::quickSend('guest_upload_start', $guest->user_email, $guest);
+                ApplicationMail::quickSend('guest_upload_start', $guest->owner, $guest);
         }
         
         Logger::logActivity(LogEventTypes::TRANSFER_STARTED, $this,Auth::isGuest()?AuthGuest::getGuest():null);
@@ -735,7 +821,7 @@ class Transfer extends DBObject {
         array_unshift($vars, $recipient);
         array_unshift($vars, $this);
         
-        if(is_string($content)) $content = Lang::translateEmail($content);
+        if(is_string($content)) $content = Lang::translateEmail($content, $this->lang);
         
         $content = call_user_func_array(array($content, 'replace'), $vars);
         

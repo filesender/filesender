@@ -58,8 +58,18 @@ class StatLog extends DBObject {
         'size' => array(
             'type' => 'int',
             'size' => 'big',
+            'null' => true
         ),
-        
+        'time_taken' => array(
+            'type' => 'int',
+            'size' => 'big',
+            'null' => true
+        ),
+        'additional_attributes' => array(
+            'type' => 'text',
+            'transform' => 'json',
+            'null' => true
+        ),
         'created' => array(
             'type' => 'datetime'
         )
@@ -73,6 +83,8 @@ class StatLog extends DBObject {
     protected $created = null;
     protected $target_type = null;
     protected $size = null;
+    protected $time_taken = 0;
+    protected $additional_attributes = null;
     
     
     /**
@@ -124,15 +136,38 @@ class StatLog extends DBObject {
         switch ($log->target_type){
             case File::getClassName():
                 $log->size = $target->size;
+                
+                if($event == LogEventTypes::FILE_UPLOADED)
+                    $log->time_taken = $target->upload_time;
                 break;
             
             case Transfer::getClassName():
                 $log->size = $target->size;
+                
+                if($event == LogEventTypes::UPLOAD_ENDED)
+                    $log->time_taken = $target->upload_time;
+                
+                if($event == LogEventTypes::TRANSFER_AVAILABLE)
+                    $log->time_taken = $target->made_available_time;
                 break;
             
             default:
                 $log->size = 0;
                 break;
+        }
+        
+        if(Config::get('statlog_log_user_additional_attributes') && Auth::isAuthenticated()) {
+            $additional_attributes = null;
+            
+            if(Auth::isSP()) $additional_attributes = Auth::user()->additional_attributes;
+            
+            if(Auth::isGuest()) $additional_attributes = AuthGuest::getGuest()->owner->additional_attributes;
+            
+            if($log->target_type == 'File') $additional_attributes = $target->transfer->owner->additional_attributes;
+            
+            if($log->target_type == 'Transfer') $additional_attributes = $target->owner->additional_attributes;
+            
+            if($additional_attributes) $log->additional_attributes = $additional_attributes;
         }
         
         $log->save();
@@ -184,6 +219,7 @@ class StatLog extends DBObject {
             'created',
             'target_type',
             'size',
+            'additional_attributes',
         ))) return $this->$property;
         
         throw new PropertyAccessException($this, $property);

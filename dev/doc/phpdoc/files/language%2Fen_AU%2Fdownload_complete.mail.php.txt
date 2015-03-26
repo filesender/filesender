@@ -1,4 +1,4 @@
-subject: {cfg:site_name}: Download complete
+subject: Download complete
 
 {alternative:plain}
 

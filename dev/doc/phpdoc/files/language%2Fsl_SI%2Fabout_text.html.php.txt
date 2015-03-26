@@ -1,0 +1,1 @@
+<div style="padding: 5px; text-align: left;">{cfg:site_name} je storitev, osnovana na programu FileSender (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>), ki so ga razvili za potrebe visokega šolstva in raziskovanja.</div>

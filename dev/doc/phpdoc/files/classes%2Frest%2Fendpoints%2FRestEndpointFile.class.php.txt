@@ -92,7 +92,7 @@ class RestEndpointFile extends RestEndpoint {
      *  /file/17/whole : upload file as a whole (legacy mode)
      * 
      * @param int $id transfer id to get info about
-     * @param string $mode upload mode ("chunk" or "whole")
+     * @param string $mode upload mode ("whole")
      * 
      * @return mixed
      * 
@@ -202,6 +202,11 @@ class RestEndpointFile extends RestEndpoint {
         
         $data = $this->request->input;
         if($mode == 'chunk') {
+            if(
+                $file->transfer->status != TransferStatuses::STARTED &&
+                $file->transfer->status != TransferStatuses::UPLOADING
+            ) throw new RestCannotAddDataToCompleteTransferException('File', $file->id);
+                
             $client = array();
             foreach(array('X-Filesender-File-Size', 'X-Filesender-Chunk-Offset', 'X-Filesender-Chunk-Size') as $h) {
                 $k = 'HTTP_'.strtoupper(str_replace('-', '_', $h));
@@ -221,9 +226,7 @@ class RestEndpointFile extends RestEndpoint {
                     throw new RestSanityCheckFailedException('chunk_size', strlen($data), $client['X-Filesender-Chunk-Size']);
             
             $upload_chunk_size = Config::get('upload_chunk_size');
-            $terasender_chunk_size = Config::get('terasender_chunk_size');
-            $max_chunk_size = $terasender_chunk_size ? max($upload_chunk_size, $terasender_chunk_size) : $upload_chunk_size;
-            if(strlen($data) > $max_chunk_size)
+            if(strlen($data) > $upload_chunk_size)
                 throw new RestSanityCheckFailedException('chunk_size', strlen($data), 'max '.Config::get('upload_chunk_size'));
             
             if($offset + strlen($data) > $file->size)
@@ -234,7 +237,7 @@ class RestEndpointFile extends RestEndpoint {
             
             return $write_info;
         
-        }else if(is_null($mode) && $data->complete) { // Client signals this was the last chunk
+        }else if(is_null($mode) && $data && $data->complete) { // Client signals this was the last chunk
             $file->complete();
             
             return true;
@@ -270,7 +273,7 @@ class RestEndpointFile extends RestEndpoint {
             $file->transfer->removeFile($file);
             
             if($file->transfer->status == 'available') { // Notify deletion for transfers that are available
-                $ctn = Lang::translateEmail('file_deleted')->r($file, $file->transfer);
+                $ctn = Lang::translateEmail('file_deleted', $file->transfer->lang)->r($file, $file->transfer);
                 foreach($file->transfer->recipients as $recipient) {
                     $mail = new ApplicationMail($ctn->r($recipient));
                     $mail->to($recipient);

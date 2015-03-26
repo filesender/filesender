@@ -90,7 +90,7 @@ class TransferNoRecipientsException extends DetailedException {
      * Constructor
      */
     public function __construct() {
-        parent::__construct('transfer_no_recipients');
+        parent::__construct('transfer_no_recipients', '');
     }
 }
 
@@ -137,6 +137,20 @@ class TransferMaximumSizeExceededException extends DetailedException {
 }
 
 /**
+ * Validation failed exception
+ */
+class TransferRejectedException extends DetailedException {
+    /**
+     * Constructor
+     * 
+     * @param string $reason
+     */
+    public function __construct($reason) {
+        parent::__construct('transfer_rejected', null, $reason ? array('reason' => $reason) : null);
+    }
+}
+
+/**
  * Expired
  */
 class TransferExpiredException extends DetailedException {
@@ -157,6 +171,30 @@ class TransferNotAvailableException extends DetailedException {
      */
     public function __construct() {
         parent::__construct('transfer_not_availabe');
+    }
+}
+
+/**
+ * Host quota exceeded
+ */
+class TransferHostQuotaExceededException extends DetailedException {
+    /**
+     * Constructor
+     */
+    public function __construct() {
+        parent::__construct('transfer_host_quota_exceeded');
+    }
+}
+
+/**
+ * User quota exceeded
+ */
+class TransferUserQuotaExceededException extends DetailedException {
+    /**
+     * Constructor
+     */
+    public function __construct() {
+        parent::__construct('transfer_user_quota_exceeded');
     }
 }
 

@@ -1,4 +1,4 @@
-subject: {cfg:site_name} : Guest voucher cancelled
+subject: Guest voucher cancelled
 
 {alternative:plain}
 

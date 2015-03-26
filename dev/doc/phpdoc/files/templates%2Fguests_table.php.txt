@@ -6,8 +6,7 @@
 <table class="guests list" data-status="<?php echo $status ?>" data-mode="<?php echo $mode ?>">
     <thead>
         <tr>
-            <td class="from">{tr:from}</td>
-            <td class="to">{tr:to}</td>
+            <td class="to">{tr:guest}</td>
             <td class="subject">{tr:subject}</td>
             <td class="message">{tr:message}</td>
             <td class="created">{tr:created}</td>
@@ -21,24 +20,8 @@
     </tbody>
         <?php foreach($guests as $guest) { ?>
         <tr class="guest" data-id="<?php echo $guest->id ?>" data-errors="<?php echo count($guest->errors) ? '1' : '' ?>">
-            <td class="from">
-                <abbr title="<?php echo Utilities::sanitizeOutput($guest->user_email) ?>">
-                <?php
-                    $who = in_array($guest->user_email, Auth::user()->email_addresses) ? Lang::tr('me') : $guest->user_email;
-                    $who = explode('@', $who)[0];
-                    echo Utilities::sanitizeOutput($who);
-                ?>
-                </abbr>
-            </td>
-            
             <td class="to">
-                <abbr title="<?php echo Utilities::sanitizeOutput($guest->email) ?>">
-                <?php
-                    $who = in_array($guest->email, Auth::user()->email_addresses) ? Lang::tr('me') : $guest->email;
-                    $who = explode('@', $who)[0];
-                    echo Utilities::sanitizeOutput($who);
-                ?>
-                </abbr>
+                <abbr title="<?php echo Template::sanitizeOutput($guest->email) ?>"><?php echo Template::sanitizeOutput($guest->name) ?></abbr>
                 
                 <?php if($guest->errors) echo '<br /><span class="errors">'.implode(', ', array_map(function($type) {
                     return Lang::tr('recipient_error_'.$type);
@@ -49,18 +32,18 @@
             
             <td class="subject">
                 <?php if(strlen($guest->subject) > 15) { ?>
-                <span class="short"><?php echo Utilities::sanitizeOutput(substr($guest->subject, 0, 15)) ?></span>
+                <span class="short"><?php echo Template::sanitizeOutput(substr($guest->subject, 0, 15)) ?></span>
                 <span class="clickable expand">[...]</span>
-                <div class="full"><?php echo Utilities::sanitizeOutput($guest->subject) ?></div>
-                <?php } else echo Utilities::sanitizeOutput($guest->subject) ?>
+                <div class="full"><?php echo Template::sanitizeOutput($guest->subject) ?></div>
+                <?php } else echo Template::sanitizeOutput($guest->subject) ?>
             </td>
             
             <td class="message">
                 <?php if(strlen($guest->message) > 15) { ?>
-                <span class="short"><?php echo Utilities::sanitizeOutput(substr($guest->message, 0, 15)) ?></span>
+                <span class="short"><?php echo Template::sanitizeOutput(substr($guest->message, 0, 15)) ?></span>
                 <span class="clickable expand">[...]</span>
-                <div class="full"><?php echo Utilities::sanitizeOutput($guest->message) ?></div>
-                <?php } else echo Utilities::sanitizeOutput($guest->message) ?>
+                <div class="full"><?php echo Template::sanitizeOutput($guest->message) ?></div>
+                <?php } else echo Template::sanitizeOutput($guest->message) ?>
             </td>
             
             <td class="created"><?php echo Utilities::formatDate($guest->created) ?></td>

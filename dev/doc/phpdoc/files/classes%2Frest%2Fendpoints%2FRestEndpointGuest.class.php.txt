@@ -56,6 +56,7 @@ class RestEndpointGuest extends RestEndpoint {
             'subject' => $guest->subject,
             'message' => $guest->message,
             'options' => $guest->options,
+            'transfer_options' => $guest->transfer_options,
             'created' => RestUtilities::formatDate($guest->created),
             'expires' => RestUtilities::formatDate($guest->expires),
             'errors' => array_values(array_map(function($error) {

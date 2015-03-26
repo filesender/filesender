@@ -36,178 +36,55 @@
  * -----------------------------------------------
  * 
  */
-// main menu items
-$lang["_ADMIN"] = "Adminisztráció";
-$lang["_NEW_UPLOAD"] = "Fájl küldés";
-$lang["_VOUCHERS"] = "Vendég meghívása";
-$lang["_LOGON"] = "Bejelentkezés";
-$lang["_LOG_OFF"] = "Kijelentkezés";
-$lang["_MY_FILES"] = "Feltöltött fájlok";
+$lang['logon'] = 'Bejelentkezés';
 
-// page titles
-$lang["_HOME"] = "Kezdőlap";
-$lang["_ABOUT"] = "Névjegy";
-$lang["_HELP"] = "Súgó";
-$lang["_DELETE_VOUCHER"] = "Meghívó törlése";
-$lang["_UPLOAD_COMPLETE"] = "A fájlt feltöltöttük, az email is elment.";
-$lang["_UPLOAD_PROGRESS"] = "A feltöltés folyamatban";
-$lang["_DOWNLOAD"] = "Letöltés";
-$lang["_CANCEL_UPLOAD"] = "Feltöltés megszakítása";
+$lang['about'] = 'Névjegy';
+$lang['help'] = 'Súgó';
+$lang['download'] = 'Letöltés';
 
-// admin
-//$lang["_PAGE"] = "Page";
-//$lang["_UP"] = "Up";
-//$lang["_DOWN"] = "Down";
-//$lang["_FILES"] = "Files";
-//$lang["_DRIVE"] = "Drive";
-//$lang["_TOTAL"] = "Total";
-//$lang["_USED"] = "Used";
-//$lang["_AVAILABLE"] = "Available";
-//$lang["_TEMP"] = "Temp"; // as in Temporary files
 
-// admin tab names
-//$lang["_GENERAL"] = "General";
-//$lang["_UPLOADS"] = "Uploads";
-//$lang["_DOWNLOADS"] = "Downloads";
-//$lang["_ERRORS"] = "Errors";
-//$lang["_FILES_AVAILABLE"] = "Files Available";
-//$lang["_ACTIVE_VOUCHERS"] = "Active Vouchers";
-//$lang["_COMPLETE_LOG"] = "Complete Log";
 
-// Form Fields
-$lang["_TO"] = "Címzett";
-$lang["_FROM"] = "Feladó";
-$lang["_SIZE"] = "Méret";
-$lang["_CREATED"] = "Létrehozva";
-$lang["_FILE_NAME"] = "Fájl neve";
-$lang["_SUBJECT"] = "Tárgy";
-$lang["_EXPIRY"] = "Lejárat ideje";
-$lang["_MESSAGE"] = "Üzenet";
-$lang["_TYPE"] = "Típus";
+$lang['to'] = 'Címzett';
+$lang['from'] = 'Feladó';
+$lang['size'] = 'Méret';
+$lang['created'] = 'Létrehozva';
+$lang['subject'] = 'Tárgy';
+$lang['message'] = 'Üzenet';
 
-$lang["_TERMS_OF_AGREEMENT"] = "Terms of Agreement";
-$lang["_SHOW_TERMS"] = "Lássuk a feltételeket!";
-$lang["_SHOWHIDE"] = "Megjelenítés/Elrejtés";
-$lang["_UPLOADING_WAIT"] = "Fájl feltöltése - kis türelmet...";
+$lang['showhide'] = 'Megjelenítés/Elrejtés';
 
-// button labels
-$lang["_UPLOAD"] = "Fájl küldés";
-$lang["_BROWSE"] = "Tallózás";
-$lang["_CANCEL"] = "Mégsem";
-$lang["_OPEN"] = "Megnyit";
-$lang["_CLOSE"] = "Bezár";
-$lang["_OK"] = "OK";
-$lang["_SEND"] = "Küldés";
-$lang["_DELETE"] = "Törlés";
-$lang["_YES"] = "Igen";
-$lang["_NO"] = "Nem";
+$lang['cancel'] = 'Mégsem';
+$lang['close'] = 'Bezár';
+$lang['ok'] = 'OK';
+$lang['send'] = 'Küldés';
+$lang['delete'] = 'Törlés';
+$lang['yes'] = 'Igen';
+$lang['no'] = 'Nem';
+$lang['invalid_file'] = 'Érvénytelen fájl';
+$lang['select_file'] = 'Fájl kiválasztása';
 
-$lang["_ERROR_CONTACT_ADMIN"] = "Hiba történt - kérd a rendszergazda segítségét!";
-$lang["_INVALID_MISSING_EMAIL"] = "Érvénytelen vagy hiányzó email cím";   
-$lang["_INVALID_EXPIRY_DATE"] = "Érvénytelen lejárati dátum";  
-$lang["_INVALID_FILE"] = "Érvénytelen fájl";        
-$lang["_INVALID_FILEVOUCHERID"] = "Érvénytelen fájl vagy meghívási azonosító"; 
-$lang["_INVALID_FILESIZE_ZERO"] = "A fájl méretnek 0-nál nagyobbnak kell lennie. Váasszon másik fájlt.";
-$lang["_INVALID_FILE_EXT"] = "Érvénytelen fájl kiterjesztés.";
-$lang["_INVALID_TOO_LARGE_1"] = "A fájl méret nem lehet nagyobb mint: ";
-$lang["_AUTH_ERROR"] = "Nincs bejelentkezve. <br />A munkamenet lejárt vagy a szerver nem válaszol. <br /><br />Jelentkezzen be újra!";    
-$lang["_SELECT_ANOTHER_FILE"] = "Válasszon másik fájlt.";
-$lang["_INVALID_VOUCHER"] = "Ez a meghívó érvénytelen. <br />Vegye fel a kapcsolatot a küldővel.";
-$lang["_SELECT_FILE"] = "Fájl kiválasztása";
-$lang["_INVALID_FILE_NAME"] = "A feltöltött fájl neve érvénytelen. Nevezze át a fájlt és próbálja meg újra!";
-$lang["_INVALID_SIZE_USEHTML5"] = "Válasszon másik fájlt vagy használjon HTML5 kompatibilis böngészőt a nagyobb fájlok feltöltéséhez.";
-$lang["_ACCEPTTOC"] = "Felhasználási feltételek elfogadása.";     
-$lang["_AGREETOC"] = "A felhasználási feltételeket el KELL fogadni!";
-$lang["_FILE_TO_BE_RESENT"] = "A fájl újraküldére került";
-$lang["_ERROR_UPLOADING_FILE"] = "Fájl feltöltési hiba";
-$lang["_ERROR_SENDING_EMAIL"] = "Nem sikerült a levélküldés, kérd a rendszergazda segítségét!";
-$lang["_ERROR_INCORRECT_FILE_SIZE"] = "Probléma a fájl feltöltése közben. <br />A szerveren tárolt fájl mérete nem egyezik meg az eredeti mérettel. <br /><br />Forduljon az adminisztrátorhoz.";
-$lang["_MAXEMAILS"] = "A maximális email címek száma: ";
-$lang["_INVALID_DATE_FORMAT"] = "Az dátum formátuma érvénytelen.";
-$lang["_DISK_SPACE_ERROR"] = "Nincs elegendő hely a szolgáltatáshoz. Forduljon az adminisztrátorhoz vagy töltsön fel kisebb fájlt.";
-$lang["_ERROR_ATTRIBUTES"] = "A azonosító szerverzeted nem adja ki szükséges adatokat (attribútumokat). Szólj a rendszergazdának!";
-$lang["_PERMISSION_DENIED"] = "Ehhez nincs jogosultságod.";
 
-// Logout page
-$lang["_LOGOUT_COMPLETE"] = "A kijelentkezés sikerült";
+$lang['email_separator_msg'] = 'Többszörös email cím hozzáadása ,-vel vagy ;-vel elválasztva lehetséges';
+$lang['email_sent'] = 'Üzenet elküldve';
+$lang['expiry_date'] = 'Lejárati dátum';
+$lang['send_voucher'] = 'Meghívó küldése';
 
-// vouchers
-$lang["_SEND_NEW_VOUCHER"] = "A meghívó lehetővé teszi, hogy valaki fájlt küldjön Önnek.<br />
-Meghívó készítéséhez írja be a meghívni kívánt személy email címét, majd válassza a meghívó küldését.<br />
-A meghívó emailben elküldésre kerül egy link amit a meghívott használhat.";
 
-// User interaction
-$lang["_EMAIL_SEPARATOR_MSG"] = "Többszörös email cím hozzáadása ,-vel vagy ;-vel elválasztva lehetséges";
-$lang["_NO_FILES"] = "Jelenleg nincs elérhető fájl";
-$lang["_NO_VOUCHERS"] = "Jelenleg nem érhető el meghívó!";
-$lang["_ARE_YOU_SURE"] = "Bizos benne?";
-$lang["_DELETE_FILE"] = "Fájl törlése";
-$lang["_EMAIL_SENT"] = "Üzenet elküldve";
-$lang["_EXPIRY_DATE"] = "Lejárati dátum";
-$lang["_FILE_SIZE"] = "Fájl méret";
-$lang["_FILE_RESENT"] = "Fájl újraküldve"; 
-$lang["_MESSAGE_RESENT"] = "Üzenet újraküldve";
-$lang["_ME"] = "Én";
-$lang["_SEND_VOUCHER"] = "Meghívó küldése";
-$lang["_RE_SEND_EMAIL"] = "Üzenet újraküldése";
-$lang["_NEW_RECIPIENT"] = "Címzett hozzáadása";
-$lang["_SEND_VOUCHER_TO"] = "Meghívó küldése";
-$lang["_START_DOWNLOAD"] = "Letöltés";
-$lang["_VOUCHER_SENT"] = "Meghívó elküldve";
-$lang["_VOUCHER_DELETED"] = "Meghívó törölve";
-$lang["_VOUCHER_CANCELLED"] = "Meghívót visszavonták.";
-$lang["_VOUCHER_USED"] = "Ezt a meghívót már felhasználták.";
-$lang["_STARTED_DOWNLOADING"] = "A letöltésnek el kellett indulnia.";
-$lang["_FILE_DELETED"] = "A fájl törölve.";
+$lang['optional'] = 'választható';
 
-// steps
-$lang["_STEP1"] = "Írja be a címzett(ek) emailcímét";
-$lang["_STEP2"] = "Állítsa be a lejárati dátumot";
-$lang["_STEP3"] = "Válassza ki a küldendő fájlt";
-$lang["_STEP4"] = "Kattintson a küldésre";
-$lang["_HTML5Supported"] = "2GB-nál nagyobb fájl feltöltése támogatott!";
-$lang["_HTML5NotSupported"] = "2GB-nál nagyobb fájl feltöltése nem támogatott!";                   
 
-$lang["_OPTIONAL"] = "választható";
-
-// confirmation
-$lang["_CONFIRM_DELETE_FILE"] = "Biztosan törölni akarja a fájlt?";
-$lang["_CONFIRM_DELETE_VOUCHER"] = "Biztosan törölni akarja a meghívót?";
-$lang["_CONFIRM_RESEND_EMAIL"] = "Biztosan újraküldjük az emailt?";
-
-// standard date display format
-$lang['date_format'] = "Y-m-d"; // Format for displaying date/time, use PHP date() format string syntax 
-
-// datepicker localization
-$lang["_DP_closeText"] = 'Kész'; // Done
-$lang["_DP_prevText"] = 'Előző'; //Prev
-$lang["_DP_nextText"] = 'Következő'; // Next
-$lang["_DP_currentText"] = 'Ma'; // Today
-$lang["_DP_monthNames"] = "['Január','Február','Március','Április','Május','Június','Július','Augusztus','Szeptember','Október','November','December']";
-$lang["_DP_monthNamesShort"] = "['Jan', 'Feb', 'Már', 'Ápr', 'Máy', 'Jún','Júl', 'Aug', 'Szep', 'Okt', 'Nov', 'Dec']";
-$lang["_DP_dayNames"] = "['Vasárnap', 'Hétfő', 'Kedd', 'Szerda', 'Csütörtök', 'Péntek', 'Szombat']";
-$lang["_DP_dayNamesShort"] = "['Vas', 'Hét', 'Kedd', 'Sze', 'Csü', 'Pén', 'Szo']";
-$lang["_DP_dayNamesMin"] = "['V','H','K','Sz','Cs','P','Sz']";
-$lang["_DP_weekHeader"] = 'Wk';
-$lang["_DP_dateFormat"] = 'yy-mm-dd';
-$lang["_DP_firstDay"] = '2';
-$lang["_DP_isRTL"] = 'false';
-$lang["_DP_showMonthAfterYear"] = 'false';
-$lang["_DP_yearSuffix"] = '';
-
-// Login Splash text
-$lang["_SITE_SPLASHHEAD"] = "Üdv a ". htmlspecialchars(Config::get('site_name'));
-$lang["_SITE_SPLASHTEXT"] = "A " . htmlspecialchars(Config::get('site_name')) ." biztonságos módon oszthatunk meg nagy fájlokat bárkivel. Lépjen be és küldjön fájlt vagy meghívót, hogy más küldhessen önnek.";
-
-// Footer to display
-$lang["_SITE_FOOTER"] = ""; 
-
-// site about
-$lang["_ABOUT_TEXT"] = ' <div style="padding: 5px; text-align: left;">'. htmlspecialchars(Config::get('site_name')) .' a Filesender programot futattja (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>), ami a felsőoktatás és a kutatói közösség igényeihez készült.</div>';
-
-// site help
-// site AUP terms
-$lang["_AUPTERMS"] = "Általános felhasználási feltételek...";
-
-?>
-
+$lang['dp_close_text'] = 'Kész';
+$lang['dp_prev_text'] = 'Előző';
+$lang['dp_next_text'] = 'Következő';
+$lang['dp_current_text'] = 'Ma';
+$lang['dp_month_names'] = 'Január,Február,Március,Április,Május,Június,Július,Augusztus,Szeptember,Október,November,December';
+$lang['dp_month_names_short'] = 'Jan,Feb,Már,Ápr,Máy,Jún,Júl,Aug,Szep,Okt,Nov,Dec';
+$lang['dp_day_names'] = 'Vasárnap,Hétfő,Kedd,Szerda,Csütörtök,Péntek,Szombat';
+$lang['dp_day_names_short'] = 'Vas,Hét,Kedd,Sze,Csü,Pén,Szo';
+$lang['dp_day_names_min'] = 'V,H,K,Sz,Cs,P,Sz';
+$lang['dp_week_header'] = 'Wk';
+$lang['dp_date_format'] = 'yy-mm-dd';
+$lang['dp_first_day'] = '2';
+$lang['dp_is_rtl'] = 'false';
+$lang['dp_show_month_after_year'] = 'false';
+$lang['dp_year_suffix'] = '';

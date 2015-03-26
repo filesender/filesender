@@ -199,7 +199,7 @@ class TrackingEvent extends DBObject
         
         if(!count($ids)) return array();
         
-        return self::all('target_type="Recipient" AND target_id IN ('.implode(', ', $ids).') ORDER BY created');
+        return self::all('target_type=\'Recipient\' AND target_id IN :ids ORDER BY created', array(':ids' => $ids));
     }
     
     /**
@@ -210,7 +210,7 @@ class TrackingEvent extends DBObject
      * @return array
      */
     public static function fromRecipient($recipient) {
-        return self::all('target_type="Recipient" AND target_id = :id ORDER BY created', array(':id' => $recipient->id));
+        return self::all('target_type=\'Recipient\' AND target_id = :id ORDER BY created', array(':id' => $recipient->id));
     }
     
     /**
@@ -221,7 +221,7 @@ class TrackingEvent extends DBObject
      * @return array
      */
     public static function fromGuest($guest) {
-        return self::all('target_type="Guest" AND target_id = :id ORDER BY created', array(':id' => $guest->id));
+        return self::all('target_type=\'Guest\' AND target_id = :id ORDER BY created', array(':id' => $guest->id));
     }
     
     /**

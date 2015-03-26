@@ -67,15 +67,9 @@ class Utilities
             return $uid;
         }
         
-        return sprintf(
-            '%08x-%04x-%04x-%02x%02x-%012x',
-            mt_rand(),
-            mt_rand(0, 65535),
-            bindec(substr_replace(sprintf('%016b', mt_rand(0, 65535)), '0100', 11, 4)),
-            bindec(substr_replace(sprintf('%08b', mt_rand(0, 255)), '01', 5, 2)),
-            mt_rand(0, 255),
-            mt_rand()
-        );
+        $rnd = self::generateRandomHexString();
+        
+        return substr($rnd, 0, 8).'-'.substr($rnd, 8, 4).'-'.substr($rnd, 12, 4).'-'.substr($rnd, 16, 4).'-'.substr($rnd, 20, 12);
     }
     
     /**
@@ -86,7 +80,75 @@ class Utilities
      * @return bool
      */
     public static function isValidUID($uid) {
-        return preg_match('/^[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}$/', $uid);
+        return preg_match('/^[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}$/i', $uid);
+    }
+    
+    /**
+     * Generate (pseudo) random hex string
+     * 
+     * @return string
+     */
+    public static function generateRandomHexString($nearly = false) {
+        $len = mt_rand(16, 32);
+        
+        $rnd = '';
+        for($i=0; $i<$len; $i++) $rnd .= sprintf('%04d', mt_rand(0, 9999));
+        
+        if($nearly) return hash('sha1', $rnd);
+        
+        $sfile = FILESENDER_BASE.'/tmp/instance.secret';
+        if(file_exists($sfile)) {
+            $ctn = array_filter(array_map('trim', explode("\n", file_get_contents($sfile))), function($line) {
+                return substr($line, 0, 1) != '#';
+            });
+            
+            $secret = array_shift($ctn);
+        } else {
+            $secret = self::generateRandomHexString(true);
+            
+            if($fh = fopen($sfile, 'w')) {
+                fwrite($fh, '# Automatically generated'."\n");
+                fwrite($fh, $secret);
+                fclose($fh);
+            } else throw new UtilitiesRandomGeneratorCouldNotWriteException();
+        }
+        
+        return hash_hmac('sha1', $rnd, $secret);
+    }
+    
+    /**
+     * Get instance uid
+     * 
+     * @return string
+     */
+    public static function instanceUID() {
+        $sfile = FILESENDER_BASE.'/tmp/instance.uid';
+        if(file_exists($sfile)) {
+            $ctn = array_filter(array_map('trim', explode("\n", file_get_contents($sfile))), function($line) {
+                return substr($line, 0, 1) != '#';
+            });
+            
+            $uid = array_shift($ctn);
+        } else {
+            $uid = self::generateRandomHexString(true);
+            
+            if($fh = fopen($sfile, 'w')) {
+                fwrite($fh, '# Automatically generated'."\n");
+                fwrite($fh, $uid);
+                fclose($fh);
+            } else throw new UtilitiesRandomGeneratorCouldNotWriteException();
+        }
+        
+        return $uid;
+    }
+    
+    /**
+     * Get running instance uid
+     * 
+     * @return string
+     */
+    public static function runningInstanceUID() {
+        return substr(self::instanceUID(), -8).'-'.filemtime(FILESENDER_BASE.'/config/config.php');
     }
     
     /**
@@ -109,6 +171,46 @@ class Utilities
     }
     
     /**
+     * Format a time according to configuration
+     * 
+     * @param integer $time in seconds
+     * 
+     * @return string formatted time
+     */
+    public static function formatTime($time) {
+        $time_format = Lang::tr('time_format');
+        if ($time_format == '{time_format}')
+            $time_format = '{h:H\h} {i:i\m\i\n} {s:s\s}';
+        
+        $bits = array();
+        
+        $bits['h'] = floor($time / 3600);
+        $time %= 3600;
+        $bits['i'] = floor($time / 60);
+        $bits['s'] = $time % 60;
+        
+        foreach($bits as $k => $v) {
+            if($v) {
+                $time_format = preg_replace_callback('`\{'.$k.':([^}]+)\}`', function($m) use($k, $v) {
+                    return preg_replace_callback('`(?<!\\\\)'.$k.'`i', function($m) use($v) {
+                        return sprintf('%02d', $v);
+                    }, $m[1]);
+                }, $time_format);
+            } else { // Remove part if zero
+                $time_format = preg_replace('`\{'.$k.':[^}]+\}`', '', $time_format);
+            }
+        }
+        
+        // Remove backslashes
+        $time_format = str_replace('\\', '', $time_format);
+        
+        // Strip leading 0s
+        $time_format = preg_replace('`^[\s0]+`', '', $time_format);
+        
+        return trim($time_format);
+    }
+    
+    /**
      * Turn PHP defined size (ini files) to bytes
      * 
      * @param string $size the size to analyse
@@ -122,7 +224,7 @@ class Utilities
         
         $size = (int)$parts[1];
         
-        if(count($parts) > 1) switch(strtoupper($parts[2])) {
+        if(count($parts) > 2) switch(strtoupper($parts[2])) {
             case 'P': $size *= 1024;
             case 'T': $size *= 1024;
             case 'G': $size *= 1024;

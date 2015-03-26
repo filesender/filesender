@@ -99,7 +99,8 @@ class Zipper {
         foreach ($this->files as $k => $data) {
             $file = $data['data'];
             
-            Logger::logActivity(LogEventTypes::DOWNLOAD_STARTED, $file, $recipient);
+            if($recipient)
+                Logger::logActivity(LogEventTypes::DOWNLOAD_STARTED, $file, $recipient);
             
             $transfer = $file->transfer;
 
@@ -137,7 +138,7 @@ class Zipper {
 
         if ($bytesSent == $this->calculateTotalFileSize()) {
             // Download was completed, save a log entry for each of the downloaded files.
-            foreach ($this->files as $data) {
+            if($recipient) foreach ($this->files as $data) {
                 $file = $data['data'];
                 Logger::logActivity(LogEventTypes::DOWNLOAD_ENDED, $file, $recipient);
             }

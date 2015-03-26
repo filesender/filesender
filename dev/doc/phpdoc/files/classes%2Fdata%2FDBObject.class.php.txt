@@ -224,8 +224,14 @@ class DBObject {
             if(array_key_exists('primary', $d) && $d['primary'])
                 $pk[] = $k;
         
-        $statement = DBI::prepare($query);
+        if(preg_match('`\s+[^\s]+\s+IN\s+:[^\s]+\s+`i', $query)) {
+            $statement = DBI::prepareInQuery($query, array_filter($placeholders, 'is_array'));
+        } else {
+            $statement = DBI::prepare($query);
+        }
+        
         $statement->execute($placeholders);
+        
         $objects = array();
         foreach($statement->fetchAll() as $r) {
             $id = array();
@@ -299,34 +305,44 @@ class DBObject {
         foreach($data as $field_name => $value) {
             if(!array_key_exists($field_name, static::$dataMap)) continue; // Ignore non-mapped data
             
+            $dfn = static::$dataMap[$field_name];
+            
             // Basic types transformations/casting
-            switch(static::$dataMap[$field_name]['type']) {
-                case 'int':
-                case 'uint':
-                    $value = (int)$value;
-                    break;
-                
-                case 'float':
-                    $value = (float)$value;
-                    break;
-                
-                case 'datetime':
-                case 'date':
-                    $value = (int)strtotime($value); // UNIX timestamp
-                    break;
-                
-                case 'time':
-                    $value = (int)(strtotime($value) % (24 * 3600)); // Offset since 0h00
-                    break;
-                
-                case 'bool':
-                    $value = (bool)$value;
-                    break;
+            if(!is_null($value) || !array_key_exists('null', $dfn) || !$dfn['null']) {
+                switch($dfn['type']) {
+                    case 'int':
+                    case 'uint':
+                        $value = (int)$value;
+                        break;
+                    
+                    case 'float':
+                        $value = (float)$value;
+                        break;
+                    
+                    case 'datetime':
+                    case 'date':
+                        if(!$value && array_key_exists('null', $dfn) && $dfn['null']) {
+                            $value = null;
+                        } elseif(!$value) {
+                            $value = 0;
+                        } else {
+                            $value = (int)strtotime($value); // UNIX timestamp
+                        }
+                        break;
+                    
+                    case 'time':
+                        $value = (int)(strtotime($value) % (24 * 3600)); // Offset since 0h00
+                        break;
+                    
+                    case 'bool':
+                        $value = (bool)$value;
+                        break;
+                }
             }
             
-            if(array_key_exists('transform', static::$dataMap[$field_name])) switch(static::$dataMap[$field_name]['transform']) {
+            if(array_key_exists('transform', $dfn)) switch($dfn['transform']) {
                 case 'json' :
-                    $value = json_decode($value);
+                    $value = is_null($value) ? null : json_decode($value);
                     break;
             }
             
@@ -377,26 +393,27 @@ class DBObject {
                 }
             }
             
+            $dfn = static::$dataMap[$field_name];
             $value = $this->$property_name;
             
             // Does the value need transformation ?
             if($value_transform) {
                 $value = $value_transform($value);
             }else{
-                if(array_key_exists('transform', static::$dataMap[$field_name])) switch(static::$dataMap[$field_name]['transform']) {
+                if(array_key_exists('transform', $dfn)) switch($dfn['transform']) {
                     case 'json' :
-                        $value = json_encode($value);
+                        if(!is_null($value) || !array_key_exists('null', $dfn) || !$dfn['null'])
+                            $value = json_encode($value);
                         break;
                 }
                 
-                switch(static::$dataMap[$field_name]['type']) { // Basic types transformations/casting
+                switch($dfn['type']) { // Basic types transformations/casting
                     case 'datetime':
                         if(!is_null($value)) $value = date('Y-m-d H:i:s', $value); // UNIX timestamp
                         break;
                     
                     case 'date':
                         if(!is_null($value)) $value = date('Y-m-d', $value); // UNIX timestamp
-                        //$value = new Date($value); // Turn into date object which has getters for formatted version
                         break;
                     
                     case 'time':

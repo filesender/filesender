@@ -1,4 +1,4 @@
-subject: {cfg:site_name}: File(s) deleted
+subject: File(s) deleted
 
 {alternative:plain}
 

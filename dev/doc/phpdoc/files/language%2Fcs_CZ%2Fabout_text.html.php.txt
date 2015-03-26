@@ -1,0 +1,1 @@
+<div style="padding: 5px; text-align: left;">{cfg:site_name} je instalace FileSender (<a rel="nofollow" href="http://www.filesender.org/" target="_blank">www.filesender.org</a>), který je vyvinut pro potřeby vzdělávací a výzkumné komunity.</div>

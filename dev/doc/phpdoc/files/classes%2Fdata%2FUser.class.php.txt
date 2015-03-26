@@ -51,9 +51,9 @@ class User extends DBObject {
             'size' => 255,
             'primary' => true
         ),
-        'organization' => array(
-            'type' => 'string',
-            'size' => 80,
+        'additional_attributes' => array(
+            'type' => 'text',
+            'transform' => 'json',
             'null' => true
         ),
         'lang' => array(
@@ -86,14 +86,24 @@ class User extends DBObject {
         'last_activity' => array(
             'type' => 'datetime',
             'null' => true
-        )
+        ),
+        'auth_secret' => array(
+            'type' => 'string',
+            'size' => 64,
+            'null' => true
+        ),
+        'quota' => array(
+            'type' => 'uint',
+            'size' => 'big',
+            'null' => true
+        ),
     );
     
     /**
      * Properties
      */
     protected $id = null;
-    protected $organization = null;
+    protected $additional_attributes = null;
     protected $lang = null;
     protected $aup_ticked = false;
     protected $aup_last_ticked_date = 0;
@@ -102,6 +112,8 @@ class User extends DBObject {
     protected $frequent_recipients = null;
     protected $created = 0;
     protected $last_activity = 0;
+    protected $auth_secret = null;
+    protected $quota = 0;
     
     /**
      * From Auth if it makes sense
@@ -136,6 +148,9 @@ class User extends DBObject {
             $this->id = $id;
             $this->created = time();
         }
+        
+        if(Config::get('auth_remote_user_autogenerate_secret') && !$this->auth_secret)
+            $this->auth_secret = hash('sha256', $this->id.'|'.time().'|'.Utilities::generateUID());
     }
     
     /**
@@ -251,12 +266,14 @@ class User extends DBObject {
      */
     public function __get($property) {
         if(in_array($property, array(
-            'id', 'organization', 'lang', 'aup_ticked', 'aup_last_ticked_date',
+            'id', 'additional_attributes', 'lang', 'aup_ticked', 'aup_last_ticked_date', 'auth_secret',
             'transfer_preferences', 'guest_preferences', 'frequent_recipients', 'created', 'last_activity',
-            'email_addresses', 'name'
+            'email_addresses', 'name', 'quota'
         ))) return $this->$property;
         
         if($property == 'email') return count($this->email_addresses) ? $this->email_addresses[0] : null;
+        
+        if($property == 'remote_config') return $this->auth_secret ? Config::get('site_url').'|'.$this->id.'|'.$this->auth_secret : '';
         
         throw new PropertyAccessException($this, $property);
     }
@@ -273,8 +290,8 @@ class User extends DBObject {
      * @throws PropertyAccessException
      */
     public function __set($property, $value) {
-        if($property == 'organization') {
-            $this->organization = (string)$value;
+        if($property == 'additional_attributes') {
+            $this->additional_attributes = (object)(array)$value;
         }else if($property == 'lang') {
             if(!array_key_exists($value, Lang::getAvailableLanguages()))
                 throw new BadLangCodeException($value);
@@ -295,6 +312,8 @@ class User extends DBObject {
             $this->email_addresses = $value;
         }else if($property == 'name') {
             $this->name = (string)$value;
+        }else if($property == 'quota') {
+            $this->quota = (int)$value;
         }else throw new PropertyAccessException($this, $property);
     }
 }

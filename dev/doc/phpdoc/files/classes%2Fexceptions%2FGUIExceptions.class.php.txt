@@ -34,6 +34,40 @@ if (!defined('FILESENDER_BASE'))        // Require environment (fatal)
     die('Missing environment');
 
 /**
+ * Unknown page
+ */
+class GUIUnknownPageException extends DetailedException {
+    /**
+     * Constructor
+     * 
+     * @param string $page
+     */
+    public function __construct($page) {
+        parent::__construct(
+            'unknown_page',
+            'page = '.$page
+        );
+    }
+}
+
+/**
+ * Access forbidden
+ */
+class GUIAccessForbiddenException extends DetailedException {
+    /**
+     * Constructor
+     * 
+     * @param string $page
+     */
+    public function __construct($page) {
+        parent::__construct(
+            'access_forbidden',
+            'page = '.$page
+        );
+    }
+}
+
+/**
  * Unknown admin section.
  */
 class GUIUnknownAdminSectionException extends DetailedException {
