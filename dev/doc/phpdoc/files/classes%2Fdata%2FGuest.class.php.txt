@@ -162,8 +162,15 @@ class Guest extends DBObject {
         $guest = new self();
         $time = time();
         
+        if(!$from) $from = Auth::user()->email;
+        
+        if(!Auth::isRemote()) {
+            if(!in_array($from, Auth::user()->email_addresses))
+                throw new BadEmailException($from);
+        }
+        
         $guest->user_id = Auth::user()->id;
-        $guest->__set('user_email', $from ? $from : Auth::user()->email);
+        $guest->__set('user_email', $from);
         $guest->__set('email', $recipient); // Throws
         
         $guest->status = GuestStatuses::CREATED;
@@ -284,6 +291,8 @@ class Guest extends DBObject {
         
         // Send receipt to owner
         ApplicationMail::quickSend('guest_created_receipt', $this->user_email, $this);
+        
+        Logger::info('Guest#'.$this->id.' ('.$this->email.') created');
     }
     
     /**
@@ -291,6 +300,8 @@ class Guest extends DBObject {
      */
     public function remind() {
         ApplicationMail::quickSend('guest_reminder', $this);
+        
+        Logger::info('Guest#'.$this->id.' ('.$this->email.') reminded');
     }
     
     /**
@@ -310,6 +321,8 @@ class Guest extends DBObject {
         
         // Sending notification to recipient
         ApplicationMail::quickSend($manualy ? 'guest_cancelled' : 'guest_expired', $this);
+        
+        Logger::info('Guest#'.$this->id.' ('.$this->email.') '.($manualy ? 'removed' : 'expired'));
     }
     
     
@@ -414,6 +427,15 @@ class Guest extends DBObject {
             });
         }
         
+        if($property == 'identity') {
+            return $this->email;
+        }
+        
+        if($property == 'name') {
+            $identity = explode('@', $this->email);
+            return $identity[0];
+        }
+        
         throw new PropertyAccessException($this, $property);
     }
     
@@ -449,6 +471,9 @@ class Guest extends DBObject {
             
         }else if($property == 'transfer_options') {
             $this->transfer_options = $value;
+            
+        }else if($property == 'transfer_count') {
+            $this->transfer_count = (int)$value;
             
         }else if($property == 'email') {
             if(!filter_var($value, FILTER_VALIDATE_EMAIL)) throw new BadEmailException($value);

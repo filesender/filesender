@@ -69,6 +69,14 @@ class File extends DBObject
             'type' => 'uint',
             'size' => 'big'
         ),
+        'upload_start' => array(
+            'type' => 'datetime',
+            'null' => true
+        ),
+        'upload_end' => array(
+            'type' => 'datetime',
+            'null' => true
+        ),
         'sha1' => array(
             'type' => 'string',
             'size' => 40,
@@ -85,6 +93,8 @@ class File extends DBObject
     protected $name = null;
     protected $mime_type = null;
     protected $size = 0;
+    protected $upload_start = 0;
+    protected $upload_end = 0;
     protected $sha1 = null;
    
     /**
@@ -140,6 +150,8 @@ class File extends DBObject
      */
     public function beforeDelete() {
         Storage::deleteFile($this);
+        
+        Logger::info('File#'.$this->id.' deleted');
     }
     
     /**
@@ -181,6 +193,11 @@ class File extends DBObject
      * @param int $offset the chunk offset in the file, if null appends at end of file
      */
     public function writeChunk($chunk, $offset = null) {
+        if(!$this->upload_start) {
+            $this->upload_start = time();
+            $this->save();
+        }
+        
         return Storage::writeChunk($this, $chunk, $offset);
     }
     
@@ -189,7 +206,13 @@ class File extends DBObject
      */
     public function complete() {
         $r = Storage::completeFile($this);
-        Logger::logActivity(LogEventTypes::FILE_CREATED, $this);
+        
+        $this->upload_end = time();
+        $this->save();
+        
+        Logger::logActivity(LogEventTypes::FILE_UPLOADED, $this);
+        Logger::info('File#'.$this->id.' fully uploaded, took '.$this->upload_time.'s');
+        
         return $r;
     }
     
@@ -216,7 +239,7 @@ class File extends DBObject
      */
     public function __get($property) {
         if(in_array($property, array(
-            'id', 'transfer_id', 'uid', 'name', 'mime_type', 'size', 'sha1'
+            'id', 'transfer_id', 'uid', 'name', 'mime_type', 'size', 'upload_start', 'upload_end', 'sha1'
         ))) return $this->$property;
         
         if($property == 'transfer') {
@@ -233,6 +256,13 @@ class File extends DBObject
             return array_filter($this->auditlogs, function($log) {
                 return $log->event == LogEventTypes::DOWNLOAD_ENDED;
             });
+        }
+        
+        if($property == 'upload_time') {
+            if(!$this->upload_start || !$this->upload_end)
+                return null;
+            
+            return $this->upload_end - $this->upload_start;
         }
         
         throw new PropertyAccessException($this, $property);

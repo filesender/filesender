@@ -95,6 +95,25 @@ class AuthSPFake {
             
             if(!$attributes['name']) $attributes['name'] = substr($attributes['email'], 0, strpos($attributes['email'], '@'));
             
+            $additional_attributes = Config::get('auth_sp_additional_attributes');
+            if($additional_attributes) {
+                $additional_attributes_values = (array)Config::get('auth_sp_fake_additional_attributes_values');
+                $attributes['additional'] = array();
+                foreach($additional_attributes as $key => $from) {
+                    if(is_numeric($key) && is_callable($from)) continue;
+                    
+                    if(is_callable($from)) {
+                        $value = $from();
+                    } elseif(array_key_exists($from, $additional_attributes_values)) {
+                        $value = $additional_attributes_values[$from];
+                    } else {
+                        $value = null;
+                    }
+                    
+                    $attributes['additional'][is_numeric($key) ? $from : $key] = $value;
+                }
+            }
+            
             self::$attributes = $attributes;
         }
         

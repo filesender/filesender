@@ -44,7 +44,10 @@ $banned = Config::get('ban_extension');
 if(!('filesender' in window)) window.filesender = {};
 
 window.filesender.config = {
-    log: false,
+    log: true,
+    
+    site_name: '<?php echo Config::get('site_name') ?>',
+    
     upload_chunk_size: <?php echo Config::get('upload_chunk_size') ?>,
     
     upload_display_bits_per_sec: <?php echo Config::get('upload_display_bits_per_sec') ? 'true' : 'false' ?>,
@@ -55,7 +58,7 @@ window.filesender.config = {
     ban_extension: <?php echo is_string($banned) ? "'".$banned."'" : 'null' ?>,
     
     max_transfer_recipients: <?php echo Config::get('max_transfer_recipients') ?>,
-    max_email_recipients: <?php echo Config::get('max_email_recipients') ?>, // TODO get rid of that
+    max_guest_recipients: <?php echo Config::get('max_guest_recipients') ?>,
     
     max_transfer_days_valid: <?php echo Config::get('max_transfer_days_valid') ?>,
     default_transfer_days_valid: <?php echo Config::get('default_transfer_days_valid') ?>,
@@ -66,14 +69,13 @@ window.filesender.config = {
     
     terasender_enabled: <?php echo Config::get('terasender_enabled') ? 'true' : 'false' ?>,
     terasender_advanced: <?php echo Config::get('terasender_advanced') ? 'true' : 'false' ?>,
-    terasender_chunk_size: <?php echo Config::get('terasender_chunk_size')!=null ?  Config::get('terasender_chunk_size'):  Config::get('upload_chunk_size'); ?>,
     terasender_worker_count: <?php echo Config::get('terasender_worker_count') != null ? Config::get('terasender_worker_count') : 1 ?>,
     terasender_start_mode: '<?php echo Config::get('terasender_start_mode') ?>',
-    terasender_worker_file: 'lib/terasender/terasender_worker.js?_=' + (new Date()).getTime(), // Worker script file
-    terasender_upload_endpoint: '<?php echo Config::get('site_url') ?>rest.php/file/{file_id}/chunk/{offset}<?php echo (Config::get('chunk_upload_security') == 'key') ? '?key={key}' : '' ?>',
+    terasender_worker_file: 'lib/terasender/terasender_worker.js?v=<?php echo Utilities::runningInstanceUID() ?>',
+    terasender_upload_endpoint: '<?php echo Config::get('site_url') ?>rest.php/file/{file_id}/chunk/{offset}',
     
-    max_legacy_upload_size: <?php echo Config::get('max_legacy_upload_size') ?>,
-    legacy_upload_endpoint: '<?php echo Config::get('site_url') ?>rest.php/file/{file_id}/whole<?php echo (Config::get('chunk_upload_security') == 'key') ? '?key={key}' : '' ?>',
+    max_legacy_file_size: <?php echo Config::get('max_legacy_file_size') ?>,
+    legacy_upload_endpoint: '<?php echo Config::get('site_url') ?>rest.php/file/{file_id}/whole',
     legacy_upload_progress_refresh_period: <?php echo Config::get('legacy_upload_progress_refresh_period') ?>,
     
     base_path: '<?php echo GUI::path() ?>',
@@ -81,5 +83,7 @@ window.filesender.config = {
     minimum_characters_for_autocomplete: '<?php echo Config::get('minimum_characters_for_autocomplete')>0?Config::get('minimum_characters_for_autocomplete'):3 ?>',
     
     auditlog_lifetime: <?php $lt = Config::get('auditlog_lifetime'); echo is_null($lt) ? 'null' : $lt ?>,
+    
+    logon_url: '<?php echo AuthSP::logonURL() ?>',
 };
 

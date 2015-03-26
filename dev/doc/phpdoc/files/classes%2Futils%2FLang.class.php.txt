@@ -114,6 +114,7 @@ class Lang {
      * @return mixed real code or null if not found
      */
     private static function realCode($raw_code) {
+        $raw_code = str_replace('_', '-', strtolower($raw_code));
         $available = self::getAvailableLanguages();
         
         if(array_key_exists($raw_code, $available))
@@ -173,12 +174,18 @@ class Lang {
                     $weight = 1;
                     if(strpos($part, ';') !== false) {
                         $part = array_map('trim', explode(';', $part));
-                        $code = $part[0];
-                        if(is_numeric($part[1])) $weight = (float)$part[1];
+                        $code = array_shift($part);
+                        foreach($part as $p)
+                            if(preg_match('`^q=([0-9]+\.[0-9]+)$`', $p, $m))
+                                $weight = (float)$m[1];
                     }
                     $codes[$code] = $weight;
                 }
-                asort($codes);
+                
+                uasort($codes, function($a, $b) {
+                    return ($b > $a) ? 1 : (($b < $a) ? -1 : 0);
+                });
+                
                 foreach($codes as $code => $weight) {
                     $code = self::realCode($code);
                     if($code && !in_array($code, $stack))
@@ -206,6 +213,26 @@ class Lang {
         }
         
         return self::$code_stack;
+    }
+    
+    /**
+     * Get base code, without any user related getters
+     * 
+     * @return string
+     */
+    public static function getBaseCode() {
+        // Config default language
+        $code = Config::get('default_language');
+        if($code) {
+            $code = self::realCode($code);
+            if($code) return $code;
+        }
+        
+        // Absolute default if not already present
+        $code = self::realCode('en');
+        if($code) return $code;
+        
+        return key(self::getAvailableLanguages()); // Should not go there ...
     }
     
     /**
@@ -343,8 +370,12 @@ class Lang {
         }
         
         // Config syntax
-        $tr['text'] = preg_replace_callback('`\{(cfg|conf|config):([^}]+)\}`', function($m) {
-            return Config::get($m[2]);
+        $tr['text'] = preg_replace_callback('`\{(|size:)(cfg|conf|config):([^}]+)\}`', function($m) {
+            $value = Config::get($m[3]);
+            switch(substr($m[1], 0, -1)) {
+                case 'size' : $value = Utilities::formatBytes($value); break;
+            }
+            return $value;
         }, $tr['text']);
         
         return new Translation($tr['text']);
@@ -368,10 +399,11 @@ class Lang {
      * 
      * @return array of Lang
      */
-    public static function translateEmail($id) {
+    public static function translateEmail($id, $lang = null) {
         $stack = self::getCodeStack();
         $codes = $stack['fallback'];
         array_unshift($codes, $stack['main']);
+        if($lang) array_unshift($codes, $lang);
         
         $locations = array(
             'config/language',
@@ -396,11 +428,6 @@ class Lang {
                 include $file;
                 $translation = trim(ob_get_clean());
                 
-                // Config syntax
-                $translation = preg_replace_callback('`\{(cfg|conf|config):([^}]+)\}`', function($m) {
-                    return Config::get($m[2]);
-                }, $translation);
-                
                 $parts = preg_split('`\n\s*\n`', $translation, 2);
                 
                 // Do we have headings
@@ -409,7 +436,7 @@ class Lang {
                     foreach(explode('\n', $parts[0]) as $line) {
                         if(preg_match('`^\s*subject\s*:\s*(.*)$`i', $line, $m)) {
                             array_shift($parts);
-                            $subject = $m[1];
+                            $subject = trim(Config::get('email_subject_prefix').' '.$m[1]);
                         }
                     }
                 }
@@ -452,6 +479,15 @@ class Lang {
                         }
                     }
                 }
+                
+                // Config syntax
+                list($subject, $plain, $html) = preg_replace_callback('`\{(|size:)(cfg|conf|config):([^}]+)\}`', function($m) {
+                    $value = Config::get($m[3]);
+                    switch($m[1]) {
+                        case 'size' : $value = Utilities::formatBytes($value); break;
+                    }
+                    return $value;
+                }, array($subject, $plain, $html));
                 
                 // Convert to Lang instances
                 return new Translation(array(
@@ -585,6 +621,7 @@ class Translation {
             if($cast) switch($cast) {
                 case 'date' : $value = Utilities::formatDate($value); break;
                 case 'datetime' : $value = Utilities::formatDate($value, true); break;
+                case 'time' : $value = Utilities::formatTime($value); break;
                 case 'size' : $value = Utilities::formatBytes($value); break;
             }
             
@@ -667,7 +704,7 @@ class Translation {
                     } else if(is_numeric($ov)) {
                         $ov = (int)$ov;
                     } else if(is_string($ov)) {
-                        if(preg_match('`^(["\'])(.+)\1$`', $ov, $m))
+                        if(preg_match('`^(["\'])(.*)\1$`', $ov, $m))
                             $ov = $m[2];
                     }
                     
@@ -703,7 +740,9 @@ class Translation {
             $translation = preg_replace_callback('`\{(([^:\}]+:)?'.$k.'(\.[a-z0-9_\(\)]+)*)\}`iU', function($m) use($placeholder_resolver) {
                 if(substr($m[0], 0, 4) == '{if:') return $m[0]; // Remaining ifs
                 
-                return Utilities::sanitizeOutput($placeholder_resolver($m[1])); // Ensure sanity
+                $v = $placeholder_resolver($m[1]);
+                
+                return (substr($m[0], 0, 5) == '{raw:') ? $v : Utilities::sanitizeOutput($v); // Ensure sanity
             }, $translation);
         }
         

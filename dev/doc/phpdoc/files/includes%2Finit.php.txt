@@ -50,8 +50,8 @@ if (php_sapi_name() === 'cli'){
     include dirname(dirname(__FILE__)).'/includes/init/init_cli.php';
     Logger::setProcess(ProcessTypes::CLI);
 }else{
-    // Default, GUI
-    include dirname(dirname(__FILE__)).'/includes/init/init_gui.php';
-    Logger::setProcess(ProcessTypes::GUI);
+    // Default, web server
+    include dirname(dirname(__FILE__)).'/includes/init/init_web.php';
+    Logger::setProcess(ProcessTypes::WEB);
 }
 

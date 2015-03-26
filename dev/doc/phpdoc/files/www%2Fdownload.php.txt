@@ -38,21 +38,64 @@ require_once('../includes/init.php');
 
 try {
     // List of files to be downloaded
-    $files_ids = array_filter(array_map('trim', explode(',', $_REQUEST['files_ids'])));
-    // Token on get request
-    $token = $_REQUEST['token'];
-    // Getting recipient from the token
-    $recipient = Recipient::fromToken($token); // Throws
-    // Getting associated transfer 
-    $transfer = $recipient->transfer;
+    if(!array_key_exists('files_ids', $_REQUEST))
+        throw new DownloadMissingFilesIDsException();
     
-    // Checking the request element before downloading
-    checkRequest($token,$files_ids);
-
+    $files_ids = array_filter(array_map('trim', explode(',', $_REQUEST['files_ids'])));
+    
+    if(!count($files_ids))
+        throw new DownloadMissingFilesIDsException();
+    
+    $good_files_ids = array_filter($files_ids, function($id) {
+        return preg_match('/^[0-9]+$/', $id) && ((int) $id > 0);
+    });
+    
+    if(count($files_ids) != count($good_files_ids))
+        throw new DownloadBadFilesIDsException(array_diff($files_ids, $good_files_ids));
+    
+    if(array_key_exists('token', $_REQUEST)) {
+        // Token on get request
+        $token = $_REQUEST['token'];
+        if(!Utilities::isValidUID($token))
+            throw new DownloadBadTokenFormatException($token);
+        
+        // Getting recipient from the token
+        $recipient = Recipient::fromToken($token); // Throws
+        
+        // Getting associated transfer 
+        $transfer = $recipient->transfer;
+        
+    } elseif(Auth::isAuthenticated()) {
+        // Direct owner/admin download
+        if(!Auth::isAdmin()) {
+            $not_owned_files = array();
+            foreach($files_ids as $fid)
+                if(!Auth::user()->is(File::fromId((int)$fid)->transfer->owner))
+                    $not_owned_files[] = $fid;
+            
+            if(count($not_owned_files))
+                throw new DownloadBadFilesIDsException($not_owned_files);
+        }
+        
+        $transfer = File::fromId((int)$files_ids[0])->transfer;
+        $recipient = null;
+                
+    } else
+        throw new DownloadMissingTokenException();
+    
+    // Are all files from the transfer ?
+    $not_from_transfer = array();
+    foreach($files_ids as $fid)
+        if(!File::fromId((int)$fid)->transfer->is($transfer))
+            $not_from_transfer[] = $fid;
+    
+    if(count($not_from_transfer))
+        throw new DownloadBadFilesIDsException($not_from_transfer);
+    
     // Needed to prevent the download from timing out.
     set_time_limit(0); 
     
-    if (count($files_ids) > 1) { 
+    if(count($files_ids) > 1) { 
         // Archive download
         $ret = downloadArchive($transfer, $recipient, $files_ids);
     } else {
@@ -60,52 +103,15 @@ try {
         $ret = downloadSingleFile($transfer, $recipient, $files_ids[0]);
     }
     
-    if ($ret['result']){
-        manageOptions($ret,$transfer,$recipient);
-    }
+    if($ret['result'] && $recipient)
+        manageOptions($ret, $transfer, $recipient);
+    
 } catch (Exception $e) {
     $storable = new StorableException($e);
     $path = GUI::path() . '?s=exception&exception=' . $storable->serialize();
     header('Location: ' . $path);
 }
 
-
-/**
- * Allows to check all the request content to ensure download can be started
- * 
- * 
- * @param String $token: client token
- * @param Array $files_ids: list of files ids
- * 
- * @throws DownloadMissingTokenException
- * @throws DownloadBadTokenFormatException
- * @throws DownloadMissingFilesIDsException
- * @throws DownloadBadFilesIDsException
- */
-function checkRequest($token, $files_ids) {
-    // checkInput
-    if (!array_key_exists('token', $_REQUEST))
-        throw new DownloadMissingTokenException();
-
-    if (!Utilities::isValidUID($token))
-        throw new DownloadBadTokenFormatException($token);
-
-
-    if (!array_key_exists('files_ids', $_REQUEST))
-        throw new DownloadMissingFilesIDsException();
-
-    $files_ids = array_filter(array_map('trim', explode(',', $_REQUEST['files_ids'])));
-
-    if (!count($files_ids))
-        throw new DownloadMissingFilesIDsException();
-
-    $good_files_ids = array_filter($files_ids, function($id) {
-        return preg_match('/^[0-9]+$/', $id) && ((int) $id > 0);
-    });
-
-    if (count($files_ids) != count($good_files_ids))
-        throw new DownloadBadFilesIDsException(array_diff($files_ids, $good_files_ids));
-}
 
 /**
  * Allows to set an archive to be downloaded
@@ -128,10 +134,21 @@ function downloadArchive($transfer, $recipient, $files_ids) {
         $zipper->addFile($file);
     }
     
+    $size = $zipper->calculateTotalFileSize();
+    $time = time();
+    
+    Logger::info('User started archive download ('.count($files).' files, '.$size.' bytes)');
+    
     // Send the ZIP
-    Logger::logActivity(LogEventTypes::ARCHIVE_DOWNLOAD_STARTED, $transfer, $recipient);
+    if($recipient)
+        Logger::logActivity(LogEventTypes::ARCHIVE_DOWNLOAD_STARTED, $transfer, $recipient);
+    
     $result = $zipper->sendZip($recipient);
-    Logger::logActivity(LogEventTypes::ARCHIVE_DOWNLOAD_ENDED, $transfer, $recipient);
+    
+    if($recipient)
+        Logger::logActivity(LogEventTypes::ARCHIVE_DOWNLOAD_ENDED, $transfer, $recipient);
+    
+    Logger::info('User download archive ('.count($files).' files, '.$size.' bytes, '.(time() - $time).' seconds)');
     
     return array('result' => $result, 'files' => $files);
 }
@@ -202,7 +219,7 @@ function downloadSingleFile($transfer, $recipient, $file_id) {
         if (!connection_aborted() && (connection_status() == CONNECTION_NORMAL))
             return;
 
-        Logger::debug('Seems that the user stopped downloading (not that reliable though ...)');
+        Logger::info('Seems that the user stopped downloading (not that reliable though ...)');
 
         die; // Stop pointless reading if user stopped downloading
     };
@@ -237,9 +254,12 @@ function downloadSingleFile($transfer, $recipient, $file_id) {
         return ($offset >= $file->size);
     };
 
-    $recipient->reportActivity();
+    if($recipient) $recipient->reportActivity();
     
     $done = false;
+    
+    $time = time();
+    $size = 0;
     
     if ($ranges)
         header('HTTP/1.1 206 Partial Content'); // Must send HTTP header before anything else
@@ -253,39 +273,43 @@ function downloadSingleFile($transfer, $recipient, $file_id) {
     header('Expires: 0');
     
     if ($ranges) {
-        Logger::info('User restarted download of file:' . $file->id . ' from offset ' . $ranges[0]['start']);
-        Logger::logActivity(LogEventTypes::DOWNLOAD_RESUMED);
+        Logger::info('User restarted download of File#' . $file->id . ' from offset ' . $ranges[0]['start']);
+        
+        if($recipient)
+            Logger::logActivity(LogEventTypes::DOWNLOAD_RESUMED);
         
         if (count($ranges) == 1) { // Single range
             $range = array_shift($ranges);
-
+            
             header('Content-Type: ' . $file->mime_type);
             header('Content-Length: ' . ($range['end'] - $range['start'] + 1));
             header('Content-Range: bytes ' . $range['start'] . '-' . $range['end'] . '/' . $file->size);
-
+            
             // Read range data
             $done = $read_range($range);
+            $size += $range['end'] - $range['start'] + 1;
         } else { // Multiple ranges
             $length = 0;
             foreach ($ranges as $range)
                 $length += $range['end'] - $range['start'] + 1;
-
+            
             $boundary = 'range_boundary_t' . $transfer->id . '_f' . $file->id . '_s' . $file->size . '_' . uniqid();
             header('Content-Type: multipart/byteranges; boundary=' . $boundary);
             header('Content-Length: ' . $length);
-
+            
             foreach ($ranges as $range) {
                 echo '--' . $boundary . "\n";
                 echo 'Content-Type: ' . $file->mime_type . "\n";
                 echo 'Content-Range: bytes ' . $range['start'] . '-' . $range['end'] . '/' . $file->size . "\n";
                 echo "\n";
-
+                
                 // Read range data
                 $done = $read_range($range);
-
+                $size += $range['end'] - $range['start'] + 1;
+                
                 echo "\n";
             }
-
+            
             echo '--' . $boundary . '--';
         }
     } else {
@@ -295,14 +319,22 @@ function downloadSingleFile($transfer, $recipient, $file_id) {
         header('Accept-Ranges: bytes');
 
         // Read data (no range means all file)
-        Logger::info('User started to download file:' . $file->id);
-        Logger::logActivity(LogEventTypes::DOWNLOAD_STARTED, $file, $recipient);
+        Logger::info('User started to download file#' . $file->id);
+        
+        if($recipient)
+            Logger::logActivity(LogEventTypes::DOWNLOAD_STARTED, $file, $recipient);
+        
         $read_range();
         $done = true;
+        $size += $file->size;
     }
     
-    if($done)
-        Logger::logActivity(LogEventTypes::DOWNLOAD_ENDED, $file, $recipient);
+    if($done) {
+        Logger::info('User downloaded file or file ranges ('.$size.' bytes, '.(time() - $time).' seconds)');
+        
+        if($recipient)
+            Logger::logActivity(LogEventTypes::DOWNLOAD_ENDED, $file, $recipient);
+    }
     
     return array('result' => $done, 'files' => array($file));
 }
@@ -312,12 +344,12 @@ function manageOptions($ret, $transfer, $recipient) {
     if ($transfer->hasOption(TransferOptions::ENABLE_RECIPIENT_EMAIL_DOWNLOAD_COMPLETE)) {
         if (array_key_exists('notify_upon_completion', $_REQUEST) && (bool) $_REQUEST['notify_upon_completion']) {
             // Notify file download
-            ApplicationMail::quickSend('download_complete', $recipient->email, $ret);
+            ApplicationMail::quickSend('download_complete', $recipient, $ret);
         }
     }
     
     if ($transfer->hasOption(TransferOptions::EMAIL_DOWNLOAD_COMPLETE)) {
-        ApplicationMail::quickSend('files_downloaded', $transfer->owner->email, $ret, Auth::user());
+        ApplicationMail::quickSend('files_downloaded', $transfer->owner, $ret, Auth::user());
     }
 }
 

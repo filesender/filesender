@@ -12,26 +12,38 @@
 </table>
 
 <?php
-$storage_usage = Storage::getUsage();
-if(!is_null($storage_usage)) {
-$total_space = 0;
-$free_space = 0;
-foreach($storage_usage as $info) {
-    $total_space += $info['total_space'];
-    $free_space += $info['free_space'];
-}
+if(Config::get('host_quota')) {
+    $usage = Transfer::getUsage();
+?>
+<h3>{tr:host_quota_usage}</h3>
 
-$level = Config::get('storage_usage_warning');
-$block_warnings = array();
-$global_warning = false;
-if($level) {
-    if($free_space <= $level * $total_space / 100) $global_warning = true;
-    
-    foreach($storage_usage as $block => $info) {
-        if($info['free_space'] > $level * $info['total_space'] / 100) continue;
-        $block_warnings[] = $block;
+<span class="host_quota" data-total="<?php echo $usage['total'] ?>" data-used="<?php echo $usage['used'] ?>" data-available="<?php echo $usage['available'] ?>">
+    <?php echo Lang::tr('quota_usage')->r($usage) ?>
+</span>
+<?php } ?>
+
+<?php
+if(Config::get('show_storage_statistics_in_admin')) {
+    $storage_usage = Storage::getUsage();
+    if(!is_null($storage_usage)) {
+    $total_space = 0;
+    $free_space = 0;
+    foreach($storage_usage as $info) {
+        $total_space += $info['total_space'];
+        $free_space += $info['free_space'];
     }
-}
+
+    $level = Config::get('storage_usage_warning');
+    $block_warnings = array();
+    $global_warning = false;
+    if($level) {
+        if($free_space <= $level * $total_space / 100) $global_warning = true;
+        
+        foreach($storage_usage as $block => $info) {
+            if($info['free_space'] > $level * $info['total_space'] / 100) continue;
+            $block_warnings[] = $block;
+        }
+    }
 ?>
 <h3>{tr:storage_usage}</h3>
 
@@ -64,5 +76,10 @@ if($level) {
     <?php } ?>
     </tbody>
 </table>
-<?php } ?>
+<?php
+    }
+}
+?>
+
+<script type="text/javascript" src="{path:js/admin_statistics.js}"></script>
 

@@ -37,7 +37,11 @@
 require_once 'FilesenderRestClient.class.php';
 
 try {
-    $c = new FilesenderRestClient('http://localhost/filesender/rest.php', 'foo', 'bar');
+    $c = new FilesenderRestClient('http://localhost/filesender/rest.php', 'application', 'foo', 'bar');
+    
+    // OR
+    
+    $c = new FilesenderRestClient('http://localhost/filesender/rest.php', 'user', 'foo@domain.tld', 'foo_user_secret');
     
     print_r($c->getInfo());
 } catch(Exception $e) {

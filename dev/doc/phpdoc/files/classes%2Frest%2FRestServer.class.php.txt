@@ -47,6 +47,8 @@ class RestServer {
         try {
             @session_start();
             
+            if(Config::get('maintenance')) throw new RestException('undergoing_maintenance', 503);
+            
             // Get request data
             
             $path = array();
@@ -81,6 +83,8 @@ class RestServer {
                 $part = array_map('trim', explode('=', $part));
                 if(count($part) == 2) $request->properties[$part[0]] = $part[1];
             }
+            
+            Logger::debug('Got "'.$method.'" request for endpoint "'.$endpoint.'/'.implode('/', $path).'" with '.strlen($input).' bytes payload');
             
             // Parse body
             switch($type) {
@@ -125,7 +129,8 @@ class RestServer {
                     if(!$macl) throw new RestException('rest_method_not_allowed', 403);
                 }else if(!$acl) throw new RestException('rest_access_forbidden', 403);
                 
-            //} else if(Auth::isRemoteUser()) {
+            } else if(Auth::isRemoteUser()) {
+                // Nothing peculiar to do
                 
             } else if(in_array($method, array('post', 'put', 'delete'))) { // SP or Guest, lets do XSRF check
                 $stok = isset($_SESSION) ? $_SESSION['security_token'] : null;
@@ -188,18 +193,24 @@ class RestServer {
             $handler = new $class($request);
             if(!method_exists($handler, $method)) throw new RestException('rest_method_not_implemented', 501);
             
+            Logger::debug('Forwarding call to '.$class.'::'.$method.'() handler');
+            
             $data = call_user_func_array(array($handler, $method), $path);
+            
+            Logger::debug('Got data to send back');
             
             // Output data
             if(array_key_exists('callback', $_GET)) {
                 header('Content-Type: text/javascript');
-                echo $_GET['callback'].'('.json_encode($data).');';
+                $callback = preg_replace('`[^a-z0-9_\.-]`i', '', $_GET['callback']);
+                echo $callback.'('.json_encode($data).');';
                 exit;
             }
             
             if(array_key_exists('iframe_callback', $_GET)) {
                 header('Content-Type: text/html');
-                echo '<html><body><script type="text/javascript">window.parent.'.$_GET['iframe_callback'].'('.json_encode($data).');</script></body></html>';
+                $callback = preg_replace('`[^a-z0-9_\.-]`i', '', $_GET['iframe_callback']);
+                echo '<html><body><script type="text/javascript">window.parent.'.$callback.'('.json_encode($data).');</script></body></html>';
                 exit;
             }
             

@@ -1,8 +1,8 @@
 <?php
 
-$pagemenuitem = function($page) use($current_page, $allowed_pages) {
-    if(!in_array($page, $allowed_pages)) return;
-    $class = ($page == $current_page) ? 'current' : '';
+$pagemenuitem = function($page) {
+    if(!GUI::isUserAllowedToAccessPage($page)) return;
+    $class = ($page == GUI::currentPage()) ? 'current' : '';
     echo '<li><a class="'.$class.'" id="topmenu_'.$page.'" href="?s='.$page.'">'.Lang::tr($page.'_page').'</a></li>';
 };
 
@@ -19,6 +19,9 @@ $pagemenuitem = function($page) use($current_page, $allowed_pages) {
                 $pagemenuitem('guests');
                 
                 $pagemenuitem('transfers');
+                
+                if(Config::get('user_page'))
+                    $pagemenuitem('user');
                 
                 $pagemenuitem('admin');
             }
@@ -41,11 +44,11 @@ $pagemenuitem = function($page) use($current_page, $allowed_pages) {
                 echo '<li><select id="language_selector">'.implode('', $opts).'</select></li>';
             }
             
-            $helpurl = Config::get('helpURL');
-            echo '<li><a href="'.($helpurl ? $helpurl : '#').'" id="topmenu_help">'.Lang::tr('help').'</a></li>';
+            $helpurl = Config::get('help_url');
+            echo '<li><a href="'.($helpurl ? $helpurl : '#').'" target="_blank" id="topmenu_help">'.Lang::tr('help').'</a></li>';
             
-            $abouturl = Config::get('aboutURL');
-            echo '<li><a href="'.($abouturl ? $abouturl : '#').'" id="topmenu_about">'.Lang::tr('about').'</a></li>';
+            $abouturl = Config::get('about_url');
+            echo '<li><a href="'.($abouturl ? $abouturl : '#').'" target="_blank" id="topmenu_about">'.Lang::tr('about').'</a></li>';
             
             if (Auth::isAuthenticated() && Auth::isSP()) {
                 $url = AuthSP::logoffURL();

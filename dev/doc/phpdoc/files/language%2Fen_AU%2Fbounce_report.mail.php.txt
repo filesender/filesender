@@ -1,4 +1,4 @@
-subject: {cfg:site_name}: Message delivery failure
+subject: Message delivery failure
 
 {alternative:plain}
 

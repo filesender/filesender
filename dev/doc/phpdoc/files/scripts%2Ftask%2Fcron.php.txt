@@ -30,65 +30,78 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-require_once(dirname(dirname(__FILE__)).'/includes/init.php');
+require_once(dirname(__FILE__).'/../../includes/init.php');
+
+Logger::setProcess(ProcessTypes::CRON);
 
 Logger::info('Cron started');
 
 
-Logger::info('Cleanup task started');
-
 // Close expired transfers
-foreach(Transfer::allExpired() as $transfer)
+foreach(Transfer::allExpired() as $transfer) {
+    if($transfer->status == TransferStatuses::CLOSED) continue;
+    Logger::info('Transfer#'.$transfer->id.' expired, closing it');
     $transfer->close();
+}
+
+// Delete failed transfers
+foreach(Transfer::allFailed() as $transfer) {
+    Logger::info('Transfer#'.$transfer->id.' failed, deleting it');
+    $transfer->delete();
+}
 
 // Close expired guests
 foreach(Guest::allExpired() as $guest) {
+    if($guest->status == GuestStatuses::CLOSED) continue;
     if($guest->hasOption(GuestOptions::DOES_NOT_EXPIRE)) continue;
-    
+    Logger::info('Guest#'.$guest->id.' expired, closing it');
     $guest->close();
 }
 
 // Delete expired audit logs and related data
 foreach(Transfer::allExpiredAuditlogs() as $transfer) {
+    Logger::info('Transfer#'.$transfer->id.' auditlogs expired, deleting them and deleting transfer data');
     AuditLog::clean($transfer);
     $transfer->delete();
 }
 
-Logger::info('Cleanup complete');
-
-
-
-Logger::info('Guest accesses reporting started');
-
-foreach(Guest::allAvailable() as $guest) {
-    if(!$guest->hasOption(GuestOptions::EMAIL_UPLOAD_PAGE_ACCESS)) continue;
+// Send daily summaries
+foreach(Transfer::all(Transfer::AVAILABLE) as $transfer) {
+    if(!$transfer->hasOption(TransferOptions::EMAIL_DAILY_STATISTICS)) continue;
     
-    if(!$guest->last_activity || $guest->last_activity < strtotime('yesterday')) continue;
+    Logger::info('Sending daily report for Transfer#'.$transfer->id);
     
-    // Send mail to guest the owner of the voucher
-    ApplicationMail::quickSend('guest_access_upload_page', $guest->user_email, $guest);
+    $start_time = time() - 24 * 3600;
+    $events = array();
+    
+    foreach($transfer->auditlogs as $log) {
+        if($log->created < $start_time) continue;
+        if($log->author_type != 'Recipient') continue;
+        if(!in_array($log->event, array(LogEventTypes::DOWNLOAD_ENDED, LogEventTypes::ARCHIVE_DOWNLOAD_ENDED))) continue;
+        
+        $events[] = array(
+            'who' => $log->author->email,
+            'what' => ($log->event == LogEventTypes::ARCHIVE_DOWNLOAD_ENDED) ? 'archive' : 'file',
+            'what_name' => ($log->event == LogEventTypes::ARCHIVE_DOWNLOAD_ENDED) ? '' : $log->target->name,
+            'when' => $log->created
+        );
+    }
+    
+    ApplicationMail::quickSend('daily_summary', $transfer->owner, $transfer, array('events' => $events));
 }
 
-Logger::info('Guest accesses reporting complete');
-
-
-
+// Report bounces ?
 $report = Config::get('report_bounces');
 if(in_array($report, array('daily', 'asap_then_daily'))) {
-    Logger::info('Bounces reporting started');
+    Logger::info('Bounces reporting in effect, gathering bounces and reporting them');
     
     foreach(TrackingEvent::getNonReported(TrackingEventTypes::BOUNCE) as $set)
         TrackingEvent::reportSet($set);
-    
-    Logger::info('Bounces reporting complete');
 }
 
-
-
+// Storage warning ?
 $level = Config::get('storage_usage_warning');
 if((int)$level) {
-    Logger::info('Usage warning started');
-    
     $usage = Storage::getUsage();
     
     $block_warnings = array();
@@ -99,9 +112,9 @@ if((int)$level) {
         $block_warnings[] = $u;
     }
     
-    if(count($block_warnings))
+    if(count($block_warnings)) {
+        Logger::info('Storage is warning, reporting');
         SystemMail::quickSend('storage_usage_warning', array('warnings' => $block_warnings));
-    
-    Logger::info('Usage warning complete');
+    }
 }
 

@@ -1,4 +1,4 @@
-subject: {cfg:site_name}: File{if:transfer.files>1}s{endif} successfully uploaded
+subject: File{if:transfer.files>1}s{endif} successfully uploaded
 
 {alternative:plain}
 
@@ -13,9 +13,6 @@ The following {if:transfer.files>1}files have{else}file has{endif} been successf
 {endif}
 
 Your transfers list: {cfg:site_url}?s=transfers
-
-Files:
-{fileinfo}
 
 Best regards,
 {cfg:site_name}

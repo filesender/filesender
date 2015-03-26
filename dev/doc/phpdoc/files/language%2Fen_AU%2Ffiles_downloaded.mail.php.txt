@@ -1,4 +1,4 @@
-subject: {cfg:site_name}: Download receipt
+subject: Download receipt
 
 {alternative:plain}
 

@@ -1,4 +1,4 @@
-subject: {cfg:site_name}: Guest voucher sent
+subject: Guest voucher sent
 
 {alternative:plain}
 

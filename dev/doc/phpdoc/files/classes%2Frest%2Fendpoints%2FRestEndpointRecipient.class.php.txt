@@ -54,7 +54,7 @@ class RestEndpointRecipient extends RestEndpoint {
             'created' => RestUtilities::formatDate($recipient->created),
             'last_activity' => $recipient->last_activity ? RestUtilities::formatDate($recipient->last_activity) : null,
             'options' => $recipient->options,
-            'download_url' => Config::get('site_url').'?vid='.$recipient->token,
+            'download_url' => $recipient->download_link,
             'errors' => array_values(array_map(function($error) {
                 return array(
                     'type' => $error->type,
@@ -69,7 +69,6 @@ class RestEndpointRecipient extends RestEndpoint {
      * Get info about a recipient
      * 
      * Call examples :
-     *  /recipient : list of user frequent recipients (same as /recipient/@me)
      *  /recipient/17 : info about recipient with id 17
      * 
      * @param int $id recipient id to get info about
@@ -82,26 +81,17 @@ class RestEndpointRecipient extends RestEndpoint {
     public function get($id = null) {
         if(!Auth::isAuthenticated()) throw new RestAuthenticationRequiredException();
         
+        if(!$id) throw new RestMissingParameterException('recipient_id');
+        if(!is_numeric($id)) throw new RestBadParameterException('recipient_id');
+        
         $user = Auth::user();
         
-        if(is_numeric($id)) {
-            $recipient = Recipient::fromId($id);
-            
-            if(!$recipient->transfer->isOwner($user) && !Auth::isAdmin())
-                throw new RestOwnershipRequiredException($user->id, 'recipient = '.$recipient->id);
-            
-            return self::cast($recipient);
-            
-        }
+        $recipient = Recipient::fromId($id);
         
-        if(!in_array($id, array('', '@me'))) throw new RestBadParameterException('recipient_id');
+        if(!$recipient->transfer->isOwner($user) && !Auth::isAdmin())
+            throw new RestOwnershipRequiredException($user->id, 'recipient = '.$recipient->id);
         
-        $recipients = Recipient::frequentFromUser($user);
-        
-        $out = array();
-        foreach($recipients as $recipient) $out[] = self::cast($recipient);
-        
-        return $out;
+        return self::cast($recipient);
     }
     
     /**

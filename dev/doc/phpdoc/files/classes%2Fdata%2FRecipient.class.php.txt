@@ -144,7 +144,7 @@ class Recipient extends DBObject {
         
         $recipient->transfer_id = $transfer->id;
         
-        if(!filter_var($email, FILTER_VALIDATE_EMAIL)) throw new BadEmailException($email);
+        if($email && !filter_var($email, FILTER_VALIDATE_EMAIL)) throw new BadEmailException($email);
         $recipient->email = $email;
         
         $recipient->created = time();
@@ -216,6 +216,10 @@ class Recipient extends DBObject {
             return $this->logsCache;
         }
         
+        if($property == 'download_link') {
+            return Config::get('site_url').'?s=download&token='.$this->token;
+        }
+        
         if($property == 'downloads') {
             return array_filter($this->auditlogs, function($log) {
                 return $log->event == LogEventTypes::DOWNLOAD_ENDED;
@@ -231,6 +235,15 @@ class Recipient extends DBObject {
             return array_filter($this->tracking_events, function($tracking_event) {
                 return in_array($tracking_event->type, array(TrackingEventTypes::BOUNCE));
             });
+        }
+        
+        if($property == 'identity') {
+            return $this->email ? $this->email : Lang::tr('anonymous');
+        }
+        
+        if($property == 'name') {
+            $identity = $this->email ? explode('@', $this->email) : array(Lang::tr('anonymous'));
+            return $identity[0];
         }
         
         throw new PropertyAccessException($this, $property);
