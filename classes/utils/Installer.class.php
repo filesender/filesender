@@ -30,25 +30,31 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+// Require environment (fatal)
+if (!defined('FILESENDER_BASE'))
+    die('Missing environment');
 
-/**
- * Class containing process types
- */
-class ProcessTypes extends Enum{
+class Installer {
     /**
-     * Log levels
+     * Run the install
      */
-    const MISC      = 'misc';
-    
-    const WEB       = 'web';
-    const CLI       = 'cli';
-    
-    const GUI       = 'gui';
-    const REST      = 'rest';
-    
-    const CRON      = 'cron';
-    const FEEDBACK  = 'feedback';
-    
-    const INSTALL   = 'install';
-    const UPGRADE   = 'upgrade';
+    public static function run() {
+        echo 'Starting install'."\n";
+        
+        $running = Upgrader::runningVersion();
+        if($running > 1)
+            throw new Exception('Already installed (maybe you wanted to run the upgrader ?), exiting');
+        
+        echo 'Installing '.Version::code()."\n";
+        
+        // TODO check config parameters
+        
+        // Create database structure
+        echo 'Creating database structure'."\n";
+        include FILESENDER_BASE.'/scripts/upgrade/database.php';
+        
+        Version::update();
+        
+        echo 'Done installing'."\n";
+    }
 }

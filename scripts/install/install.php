@@ -30,25 +30,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+include dirname(__FILE__).'/../../includes/init.php';
 
-/**
- * Class containing process types
- */
-class ProcessTypes extends Enum{
-    /**
-     * Log levels
-     */
-    const MISC      = 'misc';
-    
-    const WEB       = 'web';
-    const CLI       = 'cli';
-    
-    const GUI       = 'gui';
-    const REST      = 'rest';
-    
-    const CRON      = 'cron';
-    const FEEDBACK  = 'feedback';
-    
-    const INSTALL   = 'install';
-    const UPGRADE   = 'upgrade';
+Logger::setProcess(ProcessTypes::INSTALL);
+
+// Start install
+
+try {
+    Installer::run();
+} catch(Exception $e) {
+    die($e->getMessage()."\n".$e->getTraceAsString());
 }
