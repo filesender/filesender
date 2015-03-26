@@ -54,7 +54,6 @@ $renamed = array(
     '_SITE_FOOTER' => 'site_footer.html.php',
     '_SIZE' => 'size',
     '_SUBJECT' => 'subject',
-    '_TERA_CHUNKSIZE' => 'terasender_chunk_size',
     '_TERA_WORKER_COUNT' => 'terasender_worker_count',
     '_TO' => 'to',
     '_YES' => 'yes',
