@@ -275,6 +275,8 @@ class User extends DBObject {
         
         if($property == 'remote_config') return $this->auth_secret ? Config::get('site_url').'|'.$this->id.'|'.$this->auth_secret : '';
         
+        if($property == 'identity') return $this->email;
+        
         throw new PropertyAccessException($this, $property);
     }
     
