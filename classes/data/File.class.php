@@ -247,6 +247,10 @@ class File extends DBObject
             return $this->transferCache;
         }
         
+        if($property == 'owner') {
+            return $this->transfer->owner;
+        }
+        
         if($property == 'auditlogs') {
             if(is_null($this->logsCache)) $this->logsCache = AuditLog::fromTarget($this);
             return $this->logsCache;
