@@ -37,8 +37,12 @@ if (!defined('FILESENDER_BASE'))
 /**
  * Utility functions holder
  */
-class Utilities 
-{
+class Utilities {
+    /**
+     * CSRF token
+     */
+    private static $security_token = null;
+    
     /**
      * Generate a unique ID to be used as token
      * 
@@ -342,6 +346,66 @@ class Utilities
      */
     public static function httpsInUse() {
         return isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on';
+    }
+    
+    /**
+     * Get the security token, refreshing it in the process if needed
+     * 
+     * @return string
+     */
+    public static function getSecurityToken() {
+        if(!is_null(self::$security_token))
+            return self::$security_token['value'];
+        
+        // Fetch existing token
+        $token = array_key_exists('security_token', $_SESSION) ? $_SESSION['security_token'] : null;
+        
+        // Old token style, cancel it
+        if(!is_array($token)) $token = null;
+        
+        if(!$token) { // First access
+            $token = array(
+                'value' => Utilities::generateUID(),
+                'valid_until' => time() + 3600,
+                'old_value' => null
+            );
+        
+        } else if($token['valid_until'] < time()) { // Must renew
+            $token['old_value'] = $token['value'];
+            $token['value'] = Utilities::generateUID();
+            $token['valid_until'] = time() + 3600;
+        
+        } else { // Still valid, scrape old value from any previous changes
+            $token['old_value'] = null;
+        }
+        
+        // Store in session
+        $_SESSION['security_token'] = $token;
+        
+        // Cache in class
+        self::$security_token = $token;
+        
+        return $token['value'];
+    }
+    
+    /**
+     * Check given security token against stored one
+     * 
+     * @param string $token_to_check
+     * 
+     * @return bool
+     */
+    public static function checkSecurityToken($token_to_check) {
+        $token = self::getSecurityToken();
+        
+        // Direct match
+        if($token_to_check === $token) return true;
+        
+        // If no direct match and no previous token value, no match
+        if(!self::$security_token['old_value']) return false;
+        
+        // Previous value matches
+        return $token_to_check === self::$security_token['old_value'];
     }
 }
 

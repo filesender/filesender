@@ -50,10 +50,6 @@ if(!session_id()) {
         
     session_start();            // Start the session
     $_SESSION['valid'] = true;  // Set session as valid TODO do we we still need this ?
-    
-    // Generate security token if needed TODO need renewal
-    if(!array_key_exists('security_token', $_SESSION))
-        $_SESSION['security_token'] = Utilities::generateUID();
 }
 
 
