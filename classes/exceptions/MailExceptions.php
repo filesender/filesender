@@ -33,6 +33,7 @@
 
 /**
  * Invalid address format exception
+ * @todo rename
  */
 class InvalidAddressFormatException extends DetailedException {
     /**
@@ -51,6 +52,7 @@ class InvalidAddressFormatException extends DetailedException {
 
 /**
  * Invalid address format exception
+ * @todo rename
  */
 class NoAddressesFoundException extends DetailedException {
     /**
@@ -65,10 +67,53 @@ class NoAddressesFoundException extends DetailedException {
     }
 }
 
+/**
+ * Bad attachment disposition
+ */
+class MailAttachmentBadDispositionException extends DetailedException {
+    /**
+     * Constructor
+     * 
+     * @param string $disposition
+     */
+    public function __construct($disposition) {
+        parent::__construct(
+            'mail_attachment_bad_disposition', // Message to give to the user
+            'disposition = '.$disposition // Real message to log
+        );
+    }
+}
 
+/**
+ * Bad attachment transfer encoding
+ */
+class MailAttachmentBadTransferEncodingException extends DetailedException {
+    /**
+     * Constructor
+     * 
+     * @param string $transfer_encoding
+     */
+    public function __construct($transfer_encoding) {
+        parent::__construct(
+            'mail_attachment_bad_transfer_encoding', // Message to give to the user
+            'transfer_encoding = '.$transfer_encoding // Real message to log
+        );
+    }
+}
 
-
-
-
-
-
+/**
+ * No attachment content
+ */
+class MailAttachmentNoContentException extends DetailedException {
+    /**
+     * Constructor
+     * 
+     * @param string $path
+     */
+    public function __construct($path) {
+        parent::__construct(
+            'mail_attachment_no_content', // Message to give to the user
+            'path = '.$path // Real message to log
+        );
+    }
+}
