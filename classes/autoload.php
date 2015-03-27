@@ -52,10 +52,6 @@ class Autoloader {
         'LogLevels' => 'constants/',
         'ReportFormats' => 'constants/',
         
-        '*Status' => 'utils/Constants',
-        
-        '*Log' => 'data/',
-        
         'Storage' => 'storage/',
         'Storage*' => 'storage/',
         
@@ -66,6 +62,7 @@ class Autoloader {
         'Guest' => 'data/',
         'User' => 'data/',
         'TrackingEvent' => 'data/',
+        '*Log' => 'data/',
         
         'Auth*' => 'auth/',
         
@@ -73,6 +70,7 @@ class Autoloader {
         'RestEndpoint*' => 'rest/endpoints/',
         'Rest*' => 'rest/',
         
+        'Mail*' => 'utils/',
         '*' => 'utils/'
     );
     

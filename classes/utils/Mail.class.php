@@ -203,25 +203,11 @@ class Mail {
     /**
      * Attach a file
      * 
-     * @param string $filepath file path (local relative, local absolute or web url if supported)
-     * @param string $mode attached / inline
-     * @param string $filename filename (if omitted, the original filename is kept)
-     * 
-     * @return bool false if file not found, true or a content-id if inline mode otherwise, it can be used to put images/links in the content
+     * @param MailAttachment $attachment
+     * @param bool $related related to content
      */
-    public function attach($path, $mode = 'attachment', $name = '', $cid = null, $mime = null) {
-        if(!@file_exists($path))
-            return false;
-        
-        if(!$name)
-            $name = basename($path);
-        
-        if(!in_array($mode, array('attachment', 'inline')))
-            $mode = 'attachment';
-        
-        $this->attachments[] = array('path' => $path, 'mode' => $mode, 'name' => $name, 'cid' => $cid, 'mime' => $mime);
-        
-        return true;
+    public function attach(MailAttachment $attachment) {
+        $this->attachments[] = $attachment;
     }
     
     /**
@@ -231,30 +217,17 @@ class Mail {
      * 
      * @return string
      */
-    private function buildAttachments($bnd, $mprelated = null) {
+    private function buildAttachments($bnd, $related = false) {
         $nl = GlobalConstants::NEW_LINE;
         
         $s = '';
-        foreach ($this->attachments as $a) {
-            if (!is_null($mprelated) && !$mprelated && $a['cid'])
-                continue;
-            
-            if (!is_null($mprelated) && $mprelated && !$a['cid'])
-                continue;
-            
-            $name = $a['name'] ? $a['name'] : basename($a['path']);
-            
-            $type = $a['mime'] ? $a['mime'] : Mime::getFromFile($name);
+        foreach($this->attachments as $attachment) {
+            if((bool)$attachment->cid != $related) continue;
             
             $s .= $nl . '--' . $bnd . $nl;
-            $s .= 'Content-Type: ' . $type . '; name="' . $name . '"' . $nl;
-            $s .= 'Content-Transfer-Encoding: base64' . $nl;
-            $s .= 'Content-Disposition: ' . $a['mode'] . '; filename="' . $name . '"' . $nl;
-            if ($a['cid'])
-                $s .= 'Content-ID: ' . $a['cid'] . $nl;
-            
-            $s .= $nl . chunk_split(base64_encode(@file_get_contents($a['path']))) . $nl;
+            $s .= $attachment->build();
         }
+        
         return $s;
     }
     
@@ -292,12 +265,12 @@ class Mail {
         $mime_bnd_alt = 'mbnd--alt--' . $bndid;
         $mime_bnd_rel = 'mbnd--rel--' . $bndid;
         
-        $related = (bool) count(array_filter($this->attachments, function($a) {
-            return (bool) $a['cid'];
+        $related = count(array_filter($this->attachments, function($a) {
+            return $a->cid;
         }));
         
-        $mixed = (bool) count(array_filter($this->attachments, function($a) {
-            return !(bool) $a['cid'];
+        $mixed = count(array_filter($this->attachments, function($a) {
+            return !$a->cid;
         }));
         
         if($raw) $headers['Subject'] = $this->subject;
@@ -494,6 +467,151 @@ class Mail {
             echo $source;
         } elseif ($mode == '-' || $mode == 'stdout') {
             print_r(nl2br(htmlspecialchars($source)));
+        }
+    }
+}
+
+/**
+ * Handle mail attachment
+ */
+class MailAttachment {
+    /**
+     * Attachment path
+     */
+    private $path = null;
+    
+    /**
+     * Attachment name
+     */
+    private $name = null;
+    
+    /**
+     * Attachment contents
+     */
+    private $content = null;
+    
+    /**
+     * Attachment mime type
+     */
+    private $mime_type = null;
+    
+    /**
+     * Attachment disposition
+     */
+    private $disposition = 'attachment';
+    
+    /**
+     * Attachment transfer encoding
+     */
+    private $transfer_encoding = 'base64';
+    
+    /**
+     * Attachment cid
+     */
+    private $cid = null;
+    
+    /**
+     * Create new empty attachment
+     * 
+     * @param string $name
+     * @param string $cid if inline displayed
+     */
+    public function __construct($name = null) {
+        $this->name = $name;
+    }
+    
+    /**
+     * Build attachment for sending
+     * 
+     * @return string
+     */
+    public function build() {
+        $nl = GlobalConstants::NEW_LINE;
+        
+        if(is_null($this->content) && is_null($this->path))
+            throw new MailAttachmentNoContentException($this->path);
+        
+        if(!$this->name && $this->path) $this->name = basename($this->path);
+        
+        if(!$this->mime_type && $this->name) $this->mime_type = Mime::getFromFile($this->name);
+        
+        $source = 'Content-Type: '.$this->mime_type.($this->name ? '; name="'.$this->name.'"' : '').$nl;
+        
+        if($this->transfer_encoding)
+            $source .= 'Content-Transfer-Encoding: '.$this->transfer_encoding.$nl;
+        
+        $source .= 'Content-Disposition: '.$this->disposition.($this->name ? '; filename="'.$this->name.'"' : '').$nl;
+        
+        if($this->cid)
+            $source .= 'Content-ID: '.$this->cid.$nl;
+        
+        $content = $this->content ? $this->content : file_get_contents($this->path);
+        
+        switch($this->transfer_encoding) {
+            case 'base64' : $content = chunk_split(base64_encode($content)); break;
+        }
+        
+        $source .= $nl.$content.$nl;
+        
+        return $source;
+    }
+    
+    /**
+     * Getter
+     * 
+     * @param string $property property to get
+     * 
+     * @return property value
+     */
+    public function __get($property) {
+        if(in_array($property, array(
+            'path', 'name', 'content', 'mime_type', 'disposition', 'transfer_encoding', 'cid'
+        ))) return $this->$property;
+        
+        if($property == 'source') return $this->build();
+        
+        return null;
+    }
+    
+    /**
+     * Setter
+     * 
+     * @param string $property property to get
+     * @param mixed $value value to set property to
+     */
+    public function __set($property, $value) {
+        if($property == 'path') {
+            if(!file_exists($value))
+                throw new CoreCannotReadFileException($value);
+            
+            $this->path = $value;
+            $this->name = basename($value);
+            $this->content = null;
+            
+        }else if($property == 'content') {
+            $this->path = null;
+            $this->content = $value;
+            
+        }else if($property == 'mime_type') {
+            $this->mime_type = $value;
+            
+        }else if($property == 'name') {
+            $this->name = $value;
+            
+        }else if($property == 'disposition') {
+            if(!in_array($value, array('inline', 'attachment')))
+                throw new MailAttachmentBadDispositionException($value);
+            
+            $this->disposition = $value;
+            
+        }else if($property == 'transfer_encoding') {
+            if($value && !in_array($value, array('raw', 'base64')))
+                throw new MailAttachmentBadTransferEncodingException($value);
+            
+            $this->transfer_encoding = $value;
+            
+        }else if($property == 'cid'){
+            $this->cid = $value;
         }
     }
 }
