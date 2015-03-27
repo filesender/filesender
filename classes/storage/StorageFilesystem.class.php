@@ -285,7 +285,7 @@ class StorageFilesystem {
             
             return $chunk_data;
             
-        }else throw new StorageFilesystemCannotReadException($file_path);
+        }else throw new CoreCannotReadFileException($file_path);
     }
     
     /**
@@ -331,7 +331,7 @@ class StorageFilesystem {
                 fflush($fh); // Flush file buffer before releasing lock
                 
                 flock($fh, LOCK_UN); // Unlock file
-            } else throw new StorageFilesystemCannotWriteException($file_path.' (lock)');
+            } else throw new CoreCannotWriteFileException($file_path.' (lock)');
             
             // Close writer
             fclose($fh);
@@ -340,7 +340,7 @@ class StorageFilesystem {
                 'offset' => $offset,
                 'written' => $written
             );
-        }else throw new StorageFilesystemCannotWriteException($file_path);
+        }else throw new CoreCannotWriteFileException($file_path);
     }
     
     /**
@@ -362,11 +362,11 @@ class StorageFilesystem {
             exec($cmd, $out, $ret);
             
             if($ret)
-                throw new StorageFilesystemCannotDeleteException($file_path);
+                throw new CoreCannotDeleteFileException($file_path);
             
         } else {
             if(!unlink($file_path))
-                throw new StorageFilesystemCannotDeleteException($file_path);
+                throw new CoreCannotDeleteFileException($file_path);
         }
     }
     

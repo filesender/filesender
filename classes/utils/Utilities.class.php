@@ -110,7 +110,7 @@ class Utilities
                 fwrite($fh, '# Automatically generated'."\n");
                 fwrite($fh, $secret);
                 fclose($fh);
-            } else throw new UtilitiesRandomGeneratorCouldNotWriteException();
+            } else throw new CoreCannotWriteFileException($sfile);
         }
         
         return hash_hmac('sha1', $rnd, $secret);
@@ -136,7 +136,7 @@ class Utilities
                 fwrite($fh, '# Automatically generated'."\n");
                 fwrite($fh, $uid);
                 fclose($fh);
-            } else throw new UtilitiesRandomGeneratorCouldNotWriteException();
+            } else throw new CoreCannotWriteFileException($sfile);
         }
         
         return $uid;

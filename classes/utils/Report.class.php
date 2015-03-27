@@ -160,7 +160,7 @@ class Report {
             if($fh = fopen($file['tmp_path'], 'w')) {
                 fwrite($fh, $content);
                 fclose($fh);
-            } else throw new ReportCannotWriteFileException($file['tmp_path']);
+            } else throw new CoreCannotWriteFileException($file['tmp_path']);
         } else { // INLINE
             $content['plain'] = Template::process('!report_plain', array('report' => $this));
             $content['html'] = Template::process('!report_html', array('report' => $this));

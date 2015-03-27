@@ -169,7 +169,7 @@ try {
                 }
                 
                 fclose($fh);
-            } else throw new Exception('Cannot open file for reading : '.$path);
+            } else throw new CoreCannotReadFileException($path);
         }
     }
     finfo_close($info);

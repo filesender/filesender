@@ -233,7 +233,6 @@ Upgrader::register('post', function() use($uid) {
         '_SITE_FOOTER' => 'site_footer.html.php',
         '_SIZE' => 'size',
         '_SUBJECT' => 'subject',
-        '_TERA_CHUNKSIZE' => 'terasender_chunk_size',
         '_TERA_WORKER_COUNT' => 'terasender_worker_count',
         '_TO' => 'to',
         '_YES' => 'yes',
@@ -290,7 +289,7 @@ Upgrader::register('post', function() use($uid) {
             }
             
             fclose($fh);
-        } else throw new Exception('Could not write to '.$path.'lang.php');
+        } else throw new CoreCannotWriteFileException($path.'lang.php');
         
         foreach($create as $file => $strings) {
             ksort($strings);
@@ -298,12 +297,29 @@ Upgrader::register('post', function() use($uid) {
             if($fh = fopen($path.$file, 'w')) {
                 fwrite($fh, implode("\n", $strings));
                 fclose($fh);
-            } else throw new Exception('Could not write to '.$path.$file);
+            } else throw new CoreCannotWriteFileException($path.$file);
         }
     }
 });
 
 // Rename config parameters
 Upgrader::register('post', function() use($uid) {
+    $renamed = array();
     
+    $config_file = FILESENDER_BASE.'/config/config.php';
+    $config = file_get_contents($config_file);
+    
+    foreach($renamed as $old_name => $new_name)
+        $config = preg_replace('`\$config\[[\'"]'.$old_name.'[\'"]\]`', '$config[\''.$new_name.'\']', $config);
+    
+    // Backup old file
+    if(!copy($config_file, str_replace('config.php', 'config.'.date('YmdHis').'.before_rename.php', $config_file)))
+        throw new Exception('Couldn\'t backup config file');
+    
+    // Save to file
+    if($fh = fopen($config_file, 'w')) {
+        fwrite($fh, $config);
+        fclose($fh);
+        
+    } else throw new CoreCannotWriteFileException($config_file);
 });

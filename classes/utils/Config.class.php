@@ -380,10 +380,10 @@ class Config {
                 if($fh = fopen($file, 'w')) {
                     fwrite($fh, json_encode($overrides));
                     fclose($fh);
-                } else throw new ConfigOverrideCannotSaveException($file);
+                } else throw new CoreCannotWriteFileException($file);
             } else {
                 if(file_exists($file) && !unlink($file))
-                    throw new ConfigOverrideCannotSaveException($file);
+                    throw new CoreCannotDeleteFileException($file);
             }
         }
     }
