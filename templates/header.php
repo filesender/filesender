@@ -3,7 +3,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         
-        <meta name="security_token" content="<?php echo $_SESSION['security_token'] ?>" />
+        <meta name="security_token" content="<?php echo Utilities::getSecurityToken() ?>" />
         
         <title><?php echo htmlspecialchars(Config::get('site_name')); ?></title>
         
