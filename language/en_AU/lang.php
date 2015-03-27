@@ -292,6 +292,12 @@ $lang['report_recipient_event_download_ended'] = 'Recipient finished downloading
 $lang['report_recipient_event_archive_download_started'] = 'Recipient started downloading archive of transfer';
 $lang['report_recipient_event_archive_download_ended'] = 'Recipient finished downloading archive of transfer';
 
+$lang['report_owner_event_download_started'] = 'Owner started downloading {file.name} ({size:file.size})';
+$lang['report_owner_event_download_resumed'] = 'Owner resumed download of {file.name} ({size:file.size})';
+$lang['report_owner_event_download_ended'] = 'Owner finished downloading {file.name} ({size:file.size})';
+$lang['report_owner_event_archive_download_started'] = 'Owner started downloading archive of transfer';
+$lang['report_owner_event_archive_download_ended'] = 'Owner finished downloading archive of transfer';
+
 $lang['report_guest_event_transfer_started'] = 'Transfer was created by guest {author.identity}';
 $lang['report_guest_event_transfer_sent'] = 'Download link sent to recipient(s)';
 

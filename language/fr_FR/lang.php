@@ -291,6 +291,12 @@ $lang['report_recipient_event_download_ended'] = 'Le destinataire a fini de tél
 $lang['report_recipient_event_archive_download_started'] = 'Le destinataire a commencé à télécharger un ensemble de fichiers sous forme d\'archive';
 $lang['report_recipient_event_archive_download_ended'] = 'Le destinataire a fini de télécharger un ensemble de fichiers sous forme d\'archive';
 
+$lang['report_owner_event_download_started'] = 'Le propiétaire a commencé à télécharger le fichier {file.name} ({size:file.size})';
+$lang['report_owner_event_download_resumed'] = 'Le propiétaire a repris le téléchargement du fichier {file.name} ({size:file.size})';
+$lang['report_owner_event_download_ended'] = 'Le propiétaire a fini de télécharger le fichier {file.name} ({size:file.size})';
+$lang['report_owner_event_archive_download_started'] = 'Le propiétaire a commencé à télécharger un ensemble de fichiers sous forme d\'archive';
+$lang['report_owner_event_archive_download_ended'] = 'Le propiétaire a fini de télécharger un ensemble de fichiers sous forme d\'archive';
+
 $lang['report_guest_event_transfer_started'] = 'Le dépôt a été créé par l\'invité {author.identity}';
 $lang['report_guest_event_transfer_sent'] = 'Les liens de téléchargement ont été envoyés aux destinataires';
 
