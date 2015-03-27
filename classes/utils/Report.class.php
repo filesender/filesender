@@ -129,13 +129,8 @@ class Report {
             throw new ReportFormatNotAvailableException('iconv not found');
         
         $content = array('plain' => '', 'html' => '');
-        $file = null;
+        $attachment = null;
         if($format == ReportFormats::PDF) {
-            $file = array(
-                'tmp_path' => FILESENDER_BASE.'/tmp/dompdf/report_'.strtolower($this->target_type).'_'.$this->target->id.'_'.uniqid().'.pdf',
-                'name' => 'report_'.strtolower($this->target_type).'_'.$this->target->id.'.pdf'
-            );
-            
             $html = Template::process('!report_pdf', array('report' => $this));
             
             $styles = array(
@@ -155,12 +150,9 @@ class Report {
             $pdf = new DOMPDF();
             $pdf->load_html($html);
             $pdf->render();
-            $content = $pdf->output();
             
-            if($fh = fopen($file['tmp_path'], 'w')) {
-                fwrite($fh, $content);
-                fclose($fh);
-            } else throw new CoreCannotWriteFileException($file['tmp_path']);
+            $attachment = new MailAttachment('report_'.strtolower($this->target_type).'_'.$this->target->id.'.pdf');
+            $attachment->content = $pdf->output();
         } else { // INLINE
             $content['plain'] = Template::process('!report_plain', array('report' => $this));
             $content['html'] = Template::process('!report_html', array('report' => $this));
@@ -178,12 +170,10 @@ class Report {
             $this->target
         ));
         
-        if($file) $mail->attach($file['tmp_path'], 'attachment', $file['name']);
+        if($attachment) $mail->attach($attachment);
         
         $mail->to($recipient);
         
         $mail->send();
-        
-        if($file) unlink($file['tmp_path']);
     }
 }
