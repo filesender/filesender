@@ -183,7 +183,11 @@ class AuditLog extends DBObject {
         
         if($property == 'target') return call_user_func($this->target_type.'::fromId', $this->target_id);
         
-        if($property == 'author') return ($this->author_type && $this->author_id) ? call_user_func($this->author_type.'::fromId', $this->author_id) : null;
+        if($property == 'author') {
+            if(!$this->author_type || !$this->author_id) return null;
+            
+            return call_user_func($this->author_type.'::fromId', $this->author_id);
+        }
         
         if($property == 'time_taken') {
             if($this->target_type == 'Transfer') {
