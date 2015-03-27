@@ -209,7 +209,7 @@ class Mail {
      * 
      * @return bool false if file not found, true or a content-id if inline mode otherwise, it can be used to put images/links in the content
      */
-    public function attach($path, $mode = 'attachment', $name = '', $cid = null) {
+    public function attach($path, $mode = 'attachment', $name = '', $cid = null, $mime = null) {
         if(!@file_exists($path))
             return false;
         
@@ -219,7 +219,7 @@ class Mail {
         if(!in_array($mode, array('attachment', 'inline')))
             $mode = 'attachment';
         
-        $this->attachments[] = array('path' => $path, 'mode' => $mode, 'name' => $name, 'cid' => $cid);
+        $this->attachments[] = array('path' => $path, 'mode' => $mode, 'name' => $name, 'cid' => $cid, 'mime' => $mime);
         
         return true;
     }
@@ -244,7 +244,7 @@ class Mail {
             
             $name = $a['name'] ? $a['name'] : basename($a['path']);
             
-            $type = Mime::getFromFile($name);
+            $type = $a['mime'] ? $a['mime'] : Mime::getFromFile($name);
             
             $s .= $nl . '--' . $bnd . $nl;
             $s .= 'Content-Type: ' . $type . '; name="' . $name . '"' . $nl;
@@ -473,7 +473,7 @@ class Mail {
                 return false;
         $file = preg_replace('`^(.*)/?$`', '$1/' . $this->id, $dir);
         if (!($fp = fopen($file, 'w')))
-            return false;
+            throw new CoreCannotWriteFileException($file);
         fwrite($fp, $this->build(true));
         fclose($fp);
         return true;

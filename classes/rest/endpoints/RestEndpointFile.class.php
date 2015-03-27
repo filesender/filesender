@@ -147,7 +147,7 @@ class RestEndpointFile extends RestEndpoint {
                     }
                     
                     fclose($fh);
-                } else throw new RestException('cannot_open_input_file', 500);
+                } else throw new CoreCannotReadFileException($input['tmp_name']);
             }
             
             unlink($input['tmp_name']);

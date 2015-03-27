@@ -133,20 +133,3 @@ class ConfigOverrideNotAllowedException extends DetailedException {
         );
     }
 }
-
-/**
- * Cannot save overrides exception
- */
-class ConfigOverrideCannotSaveException extends DetailedException {
-    /**
-     * Constructor
-     * 
-     * @param string $file path of the file
-     */
-    public function __construct($file) {
-        parent::__construct(
-            'config_override_cannot_save', // Message to give to the user
-            'file : '.$file // Details to log
-        );
-    }
-}
