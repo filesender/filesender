@@ -59,6 +59,7 @@ $default = array(
     'auth_sp_shibboleth_uid_attribute' => 'eduPersonTargetId', // Get uid attribute from authentification service
     
     'auth_remote_user_autogenerate_secret' => false,
+    'auth_remote_signature_algorithm' => 'sha1',
     
     'aup_default' => false,
     'aup_enabled' => false,

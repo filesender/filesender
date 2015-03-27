@@ -99,7 +99,9 @@ class AuthRemoteApplication {
                 $input = AuthRemoteRequest::body();
                 if($input) $signed .= '&'.$input;
                 
-                $signature = hash_hmac('sha1', $signed, $application['secret']);
+                $algorithm = Config::get('auth_remote_signature_algorithm');
+                if(!$algorithm) $algorithm = 'sha1';
+                $signature = hash_hmac($algorithm, $signed, $application['secret']);
                 if($received_signature !== $signature)
                     throw new AuthRemoteApplicationSignatureCheckFailedException($signed, $application['secret'], $received_signature, $signature);
                 
