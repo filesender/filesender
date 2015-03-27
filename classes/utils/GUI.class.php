@@ -191,7 +191,7 @@ class GUI {
      * Force HTTPS - redirects HTTP to HTTPS
      */
     public static function forceHTTPS() {
-        if(Config::get('force_ssl') && !(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on')) {
+        if(Config::get('force_ssl') && !Utilities::httpsInUse()) {
             if(session_id() != '') {
                 // Destroy current session to prevent stealing session, because someone may have sniffed it during our HTTP (not HTTPS) request.
                 unset($_SESSION);
