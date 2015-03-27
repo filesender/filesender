@@ -2,7 +2,7 @@
                 {tr:site_footer}
                 
                 <?php if(Disclosed::isDisclosed('version')) { ?>
-                <div class="version"><?php echo Version::get() ?></div>
+                <div class="version"><?php echo Version::code() ?></div>
                 <?php } ?>
             <?php
                 //if(Config::get('site_showStats')) $versionDisplay .= $functions->getStats(); // TODO
