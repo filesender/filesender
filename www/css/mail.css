@@ -1,5 +1,5 @@
 table {
-    width: 960px;
+    width: 100%;
     border: 1px solid #bbb;
     border-collapse: collapse;
 }
@@ -10,7 +10,7 @@ th, td {
 }
 
 th:first-child, td:first-child {
-    width: 100px;
+    width: 5em;
 }
 
 th {
