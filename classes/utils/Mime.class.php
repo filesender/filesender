@@ -137,6 +137,7 @@ class Mime {
         'ecert' => 'application/x-x509-email-cert',
         'email' => 'application/x-x509-email-cert',
         'emf' => 'image/x-emf',
+        'eml' => 'message/rfc822',
         'eot' => 'application/vnd.ms-fontobject',
         'eps' => 'application/postscript',
         'erf' => 'application/x-hsp-erf',
