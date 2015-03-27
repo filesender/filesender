@@ -334,5 +334,14 @@ class Utilities
     public static function sanitizeOutput($output) {
         return htmlentities($output, ENT_QUOTES, 'UTF-8');
     }
+    
+    /**
+     * Check if HTTPS is in use
+     * 
+     * @return bool
+     */
+    public static function httpsInUse() {
+        return isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on';
+    }
 }
 
