@@ -70,7 +70,8 @@ class Autoloader {
         'RestEndpoint*' => 'rest/endpoints/',
         'Rest*' => 'rest/',
         
-        'Mail*' => 'utils/',
+        'Mail*' => 'utils/Mail',
+        
         '*' => 'utils/'
     );
     
