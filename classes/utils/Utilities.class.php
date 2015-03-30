@@ -379,6 +379,9 @@ class Utilities {
             $token['old_value'] = null;
         }
         
+        if($token['old_value']) // Send new value as header if changed
+            header('X-Filesender-Security-Token: '.$token['value']);
+        
         // Store in session
         $_SESSION['security_token'] = $token;
         
