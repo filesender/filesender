@@ -96,7 +96,7 @@ window.filesender.client = {
         var headers = {};
         if(options.headers) headers = options.headers;
         
-        if(this.security_token) headers['X-Filesender-Security-Token'] = this.security_token;
+        if(this.security_token /*&& (method != 'get')**/) headers['X-Filesender-Security-Token'] = this.security_token;
         
         var settings = {
             cache: false,
@@ -109,6 +109,11 @@ window.filesender.client = {
                 for(var k in headers) xhr.setRequestHeader(k, headers[k]);
             },
             success: callback,
+            complete: function(xhr, status) { // Update security token if it was changed
+                var new_security_token = xhr.getResponseHeader('X-Filesender-Security-Token');
+                if(new_security_token) filesender.client.security_token = new_security_token;
+                
+            },
             type: method.toUpperCase(),
             url: this.base_path + resource
         };
