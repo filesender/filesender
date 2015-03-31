@@ -82,7 +82,7 @@ class AuthRemoteApplication {
                 
                 $late = time() - $timestamp - 15;
                 if($late > 0)
-                    throw new AuthRemoteApplicationTooLateException($late);
+                    throw new AuthRemoteTooLateException($late);
                 
                 $method = null;
                 foreach(array('X_HTTP_METHOD_OVERRIDE', 'REQUEST_METHOD') as $k) {
@@ -103,7 +103,7 @@ class AuthRemoteApplication {
                 if(!$algorithm) $algorithm = 'sha1';
                 $signature = hash_hmac($algorithm, $signed, $application['secret']);
                 if($received_signature !== $signature)
-                    throw new AuthRemoteApplicationSignatureCheckFailedException($signed, $application['secret'], $received_signature, $signature);
+                    throw new AuthRemoteSignatureCheckFailedException($signed, $application['secret'], $received_signature, $signature);
                 
                 if(array_key_exists('remote_user', $_GET)) self::$attributes['uid'] = $_GET['remote_user'];
                 
@@ -124,7 +124,7 @@ class AuthRemoteApplication {
      * @retrun array
      */
     public static function attributes() {
-        if(!self::isAuthenticated()) throw new AuthSPAuthenticationNotFoundException();
+        if(!self::isAuthenticated()) throw new AuthAuthenticationNotFoundException();
         
         return self::$attributes;
     }
