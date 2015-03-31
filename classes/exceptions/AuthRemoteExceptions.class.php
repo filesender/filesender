@@ -34,19 +34,38 @@ if (!defined('FILESENDER_BASE'))        // Require environment (fatal)
     die('Missing environment');
 
 /**
- * Unknown remote application
+ * Request came in too late
  */
-class AuthRemoteApplicationUknownApplicationException extends DetailedException {
+class AuthRemoteTooLateException extends DetailedException {
     /**
      * Constructor
      * 
-     * @param string $name name of the remote application
+     * @param int $by too late by
      */
-    public function __construct($name) {
+    public function __construct($by) {
         parent::__construct(
-            'auth_remote_application_unknown_application', // Message to give to the user
-            'application : '.$name // Details to log
+            'auth_remote_too_late', // Message to give to the user
+            'by : '.$by.' seconds' // Details to log
         );
     }
 }
 
+/**
+ * Signature check failed
+ */
+class AuthRemoteSignatureCheckFailedException extends DetailedException {
+    /**
+     * Constructor
+     * 
+     * @param string $signed body that was signed
+     * @param string $secret secret used while signing
+     * @param string $received_signature received signature
+     * @param string $signature expected signature
+     */
+    public function __construct($signed, $secret, $received_signature, $signature) {
+        parent::__construct(
+            'auth_remote_signature_check_failed', // Message to give to the user
+            'signed = '.$signed.', secret = '.$secret.', received_signature = '.$received_signature.', signature = '.$signature
+        );
+    }
+}

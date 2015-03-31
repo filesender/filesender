@@ -411,4 +411,3 @@ class Utilities {
         return $token_to_check === self::$security_token['old_value'];
     }
 }
-

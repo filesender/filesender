@@ -35,9 +35,9 @@ if (!defined('FILESENDER_BASE'))
     die('Missing environment');
 
 /**
- * Remote application authentication class
+ * Remote user authentication class
  * 
- * Handles remote application authentication.
+ * Handles remote user authentication.
  */
 class AuthRemoteUser {
     /**
@@ -64,7 +64,7 @@ class AuthRemoteUser {
         if(is_null(self::$isAuthenticated)) {
             self::$isAuthenticated = false;
             
-            if(array_key_exists('remote_user', $_GET) && array_key_exists('signature', $_GET)) {
+            if(array_key_exists('remote_user', $_GET) && array_key_exists('signature', $_GET) && !array_key_exists('remote_application', $_GET)) {
                 self::$attributes = array();
                 
                 $uid = Utilities::sanitizeInput($_GET['remote_user']);
@@ -73,13 +73,18 @@ class AuthRemoteUser {
                 $received_signature = $_GET['signature'];
                 $timestamp = (int)$_GET['timestamp'];
                 
-                $user = User::fromId($uid);
+                try {
+                    $user = User::fromId($uid);
+                } catch(UserNotFoundException $e) {
+                    throw new AuthRemoteUserRejectedException($uid, 'user not found');
+                }
+                
                 if(!$user->auth_secret)
                     throw new AuthRemoteUserRejectedException($user->id, 'no secret set');
                 
                 $late = time() - $timestamp - 15;
                 if($late > 0)
-                    throw new AuthRemoteApplicationTooLateException($late);
+                    throw new AuthRemoteTooLateException($late);
                 
                 $method = null;
                 foreach(array('X_HTTP_METHOD_OVERRIDE', 'REQUEST_METHOD') as $k) {
@@ -100,7 +105,7 @@ class AuthRemoteUser {
                 if(!$algorithm) $algorithm = 'sha1';
                 $signature = hash_hmac($algorithm, $signed, $user->auth_secret);
                 if($received_signature !== $signature)
-                    throw new AuthRemoteApplicationSignatureCheckFailedException($signed, $user->auth_secret, $received_signature, $signature);
+                    throw new AuthRemoteSignatureCheckFailedException($signed, $user->auth_secret, $received_signature, $signature);
                 
                 self::$isAuthenticated = true;
             }
@@ -115,7 +120,7 @@ class AuthRemoteUser {
      * @retrun array
      */
     public static function attributes() {
-        if(!self::isAuthenticated()) throw new AuthSPAuthenticationNotFoundException();
+        if(!self::isAuthenticated()) throw new AuthAuthenticationNotFoundException();
         
         return self::$attributes;
     }
