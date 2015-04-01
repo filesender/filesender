@@ -54,7 +54,7 @@ class RestRequest {
     public $count = null;
     public $startIndex = null;
     public $format = null;
-    public $filterOp = null;
+    public $filterOp = array();
     public $sortOrder = null;
     public $updatedSince = null;
     
