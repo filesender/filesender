@@ -62,6 +62,7 @@ class Autoloader {
         'Guest' => 'data/',
         'User' => 'data/',
         'TrackingEvent' => 'data/',
+        'TranslatableEmail' => 'data/',
         '*Log' => 'data/',
         
         'Auth*' => 'auth/',
