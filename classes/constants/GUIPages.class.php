@@ -36,15 +36,16 @@
  */
 
 class GUIPages extends Enum {
-    const UPLOAD      = 'upload';
-    const TRANSFERS   = 'transfers';
-    const GUESTS      = 'guests';
-    const ADMIN       = 'admin';
-    const LOGON       = 'logon';
-    const USER        = 'user';
-    const HOME        = 'home';
-    const DOWNLOAD    = 'download';
-    const LOGOUT      = 'logout';
-    const EXCEPTION   = 'exception';
-    const MAINTENANCE = 'maintenance';
+    const UPLOAD          = 'upload';
+    const TRANSFERS       = 'transfers';
+    const GUESTS          = 'guests';
+    const ADMIN           = 'admin';
+    const LOGON           = 'logon';
+    const USER            = 'user';
+    const HOME            = 'home';
+    const DOWNLOAD        = 'download';
+    const TRANSLATE_EMAIL = 'translate_email';
+    const LOGOUT          = 'logout';
+    const EXCEPTION       = 'exception';
+    const MAINTENANCE     = 'maintenance';
 }
