@@ -75,7 +75,7 @@ class AuthGuest {
                     self::$guest->last_activity = time();
                     self::$guest->save();
                 }else{
-                    throw new GuestNotFoundException("Mal formed token: ".$vid);
+                    throw new TokenHasBadFormatException($vid);
                 }
             }
         }
