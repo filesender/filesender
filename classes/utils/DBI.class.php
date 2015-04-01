@@ -141,17 +141,20 @@ class DBI {
     public static function prepareInQuery($query, $sets) {
         foreach($sets as $key => $values) {
             if(is_array($values)) $values = count($values);
-            if(!is_int($values)) continue;
             
-            $query = preg_replace_callback('`\s+([^\s]+)\s+IN\s+'.$key.'\s+`i', function($m) use($values) {
-                $cdn = array();
-                for($i=0; $i<$values; $i++)
-                    $cdn[] = $m[1].' = '.$key.'___'.$i;
-                
-                return ' ('.implode(' OR ', $cdn).') ';
-            }, $query);
+            if(is_int($values) && $values) {
+                $query = preg_replace_callback('`\s+([^\s]+)\s+IN\s+'.$key.'(\s+|$)`i', function($m) use($values) {
+                    $cdn = array();
+                    for($i=0; $i<$values; $i++)
+                        $cdn[] = $m[1].' = '.$key.'___'.$i;
+                    
+                    return ' ('.implode(' OR ', $cdn).') ';
+                }, $query);
+            } else {
+                $query = preg_replace('`\s+([^\s]+)\s+IN\s+'.$key.'(\s+|$)`i', ' 1=0', $query);
+            }
         }
-        Logger::info($query);
+        
         return self::prepare($query);
     }
 }
