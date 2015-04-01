@@ -1043,6 +1043,70 @@ table.guests .guest .to .errors .details {
 }
 
 
+/* Translate email page */
+
+.translate_email_page dl [data-property="subject"] {
+    margin: 0.5em;
+}
+
+.translate_email_page dl dt {
+    font-weight: bold;
+}
+
+.translate_email_page dl dt[data-property="subject"] {
+    float: left;
+    margin-top: 0;
+}
+
+.translate_email_page dl dt[data-property="message"] {
+    display: none;
+}
+
+.translate_email_page dl dd[data-property="message"] {
+    margin: 2em 0.5em;
+}
+
+.translate_email_page dl dd[data-property="message"] p {
+    margin: 1em 0;
+}
+
+/* Copy of mail.css */
+.translate_email_page dl dd[data-property="message"] table {
+    width: 100%;
+    border: 1px solid #bbb;
+    border-collapse: collapse;
+}
+
+.translate_email_page dl dd[data-property="message"] th,
+.translate_email_page dl dd[data-property="message"] td {
+    padding: 3px;
+    vertical-align: top;
+}
+
+.translate_email_page dl dd[data-property="message"] th:first-child,
+.translate_email_page dl dd[data-property="message"] td:first-child {
+    width: 5em;
+}
+
+.translate_email_page dl dd[data-property="message"] th {
+    background-color: #ccc;
+    height: 30px;
+}
+
+.translate_email_page dl dd[data-property="message"] tbody tr:nth-child(even) td {
+    background-color: #e5e5e5;
+}
+
+.translate_email_page dl dd[data-property="message"] td:first-child {
+    font-weight: bold;
+}
+/* End copy of mail.css */
+
+.translate_email_page .progressbar.user_quota {
+    display: none;
+}
+
+
 /* Admin statistics */
 
 .admin_page .statistics_section .storage_usage_blocks {
