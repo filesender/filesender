@@ -273,7 +273,7 @@ class GUI {
             }
             
             // Always accessible pages
-            foreach(array('home', 'download', 'logout', 'exception') as $p)
+            foreach(array('home', 'download', 'translate_email', 'logout', 'exception') as $p)
                 self::$allowed_pages[] = $p;
             
                 if(Config::get('maintenance')) self::$allowed_pages = array('maintenance');
