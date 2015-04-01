@@ -224,7 +224,7 @@ class DBObject {
             if(array_key_exists('primary', $d) && $d['primary'])
                 $pk[] = $k;
         
-        if(preg_match('`\s+[^\s]+\s+IN\s+:[^\s]+\s+`i', $query)) {
+        if(preg_match('`\s+[^\s]+\s+IN\s+:[^\s]+(\s+|$)`i', $query)) {
             $statement = DBI::prepareInQuery($query, array_filter($placeholders, 'is_array'));
         } else {
             $statement = DBI::prepare($query);
