@@ -205,10 +205,16 @@ class TranslatableEmail extends DBObject {
                 $context = $to;
                 break;
             
-            case 'User' : // If recipient is user try to find Transfer or Guest in variables
+            case 'User' : // If recipient is user try to find Transfer, File or Guest in variables
                 foreach($vars as $v) {
+                    if(!is_object($v)) continue;
+                    
                     if(in_array(get_class($v), array('Transfer', 'Guest'))) {
                         $context = $v;
+                    }
+                    
+                    if(in_array(get_class($v), array('File'))) {
+                        $context = $v->transfer;
                     }
                 }
                 if($context) break;
