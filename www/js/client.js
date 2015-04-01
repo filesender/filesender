@@ -531,7 +531,7 @@ window.filesender.client = {
     
     
     getFrequentRecipients: function(needle, callback) {
-        return this.get('/user/@me/frequent_recipients', callback, needle ? {args: {'filterOp[contains]': needle}} : undefined);
+        return this.get('/user/@me/frequent_recipients', callback, needle ? {args: {'filterOp[email][contains]': needle}} : undefined);
     },
     
     getTransferOption: function(id, option, token, callback) {

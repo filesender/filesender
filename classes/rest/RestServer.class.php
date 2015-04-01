@@ -155,9 +155,12 @@ class RestServer {
                 
                 case 'filterOp' :
                     if(is_array($v)) {
-                        $request->filterOp = new stdClass();
-                        foreach(array('equals', 'startWith', 'contains', 'present') as $k)
-                            if(array_key_exists($k, $v)) $request->filterOp->$k = $v[$k];
+                        foreach($v as $p => $f) {
+                            $request->filterOp[$p] = array();
+                            foreach(array('equals', 'startWith', 'contains', 'present') as $k) {
+                                if(array_key_exists($k, $f)) $request->filterOp[$p][$k] = $f[$k];
+                            }
+                        }
                     }
                     break;
                 

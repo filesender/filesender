@@ -118,8 +118,11 @@ class RestEndpointUser extends RestEndpoint {
         if($property == 'frequent_recipients') {
             $rcpt = array();
             
-            if(property_exists($this->request, 'filterOp'))
-                $rcpt = $this->getFrequentRecipients($this->request->filterOp->contains);
+            if(
+                array_key_exists('email', $this->request->filterOp)
+                && array_key_exists('contains', $this->request->filterOp['email'])
+            )
+                $rcpt = $this->getFrequentRecipients($this->request->filterOp['email']['contains']);
             
             return $rcpt;
         }
