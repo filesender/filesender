@@ -297,7 +297,7 @@ class Utilities {
     public static function sanitizeInput($input) {
         if(is_array($input)) {
             foreach($input as $k => $v) {
-                $nk = preg_replace('`[^a-z0-9\._-]`', '', $k);
+                $nk = preg_replace('`[^a-z0-9\._-]`i', '', $k);
                 if($k !== $nk) unset($input[$k]);
                 $input[$nk] = self::sanitizeInput($v);
             }
