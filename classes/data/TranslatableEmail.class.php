@@ -136,7 +136,7 @@ class TranslatableEmail extends DBObject {
         $statement->execute(array(':type' => get_class($context), ':id' => $context->id));
         
         $emails = array();
-        foreach($s->fetchAll() as $data) $emails[$data['id']] = self::fromData($data['id'], $data); // Don't query twice, use loaded data
+        foreach($statement->fetchAll() as $data) $emails[$data['id']] = self::fromData($data['id'], $data); // Don't query twice, use loaded data
         
         return $emails;
     }
