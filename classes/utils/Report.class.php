@@ -113,11 +113,7 @@ class Report {
         $lang = null;
         if(is_object($recipient) && ($recipient instanceof User)) {
             $lang = $recipient->lang;
-            $recipient = $recipient->email;
         }
-        
-        if(!is_string($recipient) || !filter_var($recipient, FILTER_VALIDATE_EMAIL))
-            throw new BadEmailException($recipient);
         
         $format = Config::get('report_format');
         if(!$format) $format = ReportFormats::INLINE;
@@ -159,20 +155,15 @@ class Report {
         }
         
         $lid = ($format == ReportFormats::INLINE) ? 'inline' : 'attached';
-        $mail = new ApplicationMail(Lang::translateEmail('report_'.$lid, $lang)->r(
-            array(
-                'target' => array(
-                    'type' => $this->target_type,
-                    'id' => $this->target->id
-                ),
-                'content' => $content,
+        $mail = TranslatableEmail::prepare('report_'.$lid, $recipient, $this->target, array(
+            'target' => array(
+                'type' => $this->target_type,
+                'id' => $this->target->id
             ),
-            $this->target
+            'content' => $content,
         ));
         
         if($attachment) $mail->attach($attachment);
-        
-        $mail->to($recipient);
         
         $mail->send();
     }
