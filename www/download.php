@@ -55,9 +55,13 @@ try {
     
     if(array_key_exists('token', $_REQUEST)) {
         // Token on get request
+        if(!array_key_exists('token', $_REQUEST))
+            throw new TokenIsMissingException();
+        
         $token = $_REQUEST['token'];
+        
         if(!Utilities::isValidUID($token))
-            throw new DownloadBadTokenFormatException($token);
+            throw new TokenHasBadFormatException($token);
         
         // Getting recipient from the token
         $recipient = Recipient::fromToken($token); // Throws

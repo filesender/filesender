@@ -30,51 +30,34 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-// Require environment (fatal)
-if (!defined('FILESENDER_BASE')) 
+if (!defined('FILESENDER_BASE'))        // Require environment (fatal)
     die('Missing environment');
 
 /**
- * Missing files ids exception
+ * Missing token
  */
-class DownloadMissingFilesIDsException extends DetailedException {
+class TokenIsMissingException extends DetailedException {
     /**
      * Constructor
      */
     public function __construct() {
-        parent::__construct('download_missing_files_ids');
+        parent::__construct('token_is_missing');
     }
 }
 
 /**
- * Bad files ids exception
+ * Bad token exception
  */
-class DownloadBadFilesIDsException extends DetailedException {
+class TokenHasBadFormatException extends DetailedException {
     /**
      * Constructor
      * 
-     * @param array $bad bad files ids
+     * @param string $token the bad token
      */
-    public function __construct($bad) {
+    public function __construct($token) {
         parent::__construct(
-            'download_bad_files_ids', 
-            $bad);
-    }
-}
-
-/**
- * Invalid range exception
- */
-class DownloadInvalidRangeException extends DetailedException {
-    /**
-     * Constructor
-     * 
-     * @param string $range the bad range
-     */
-    public function __construct($range) {
-        parent::__construct(
-            'download_invalid_range', 
-            $range
+            'token_has_bad_format', // Message to give to the user
+            'token : '.$token // Details to log
         );
     }
 }
