@@ -247,19 +247,26 @@ window.filesender.ui = {
      * @param string page
      * @param object args
      */
-    goToPage: function(page, args, anchor) {
-        if(typeof page != 'string') {
-            var q = window.location.search.substr(1).split('&');
-            for(var i=0; i<q.length; i++)
-                if(q[i].substr(0, 2) == 's=')
-                    page = q[i].substr(2);
+    goToPage: function(page, args, anchor, keep_args) {
+        var current_args = {};
+        var q = window.location.search.substr(1).split('&');
+        for(var i=0; i<q.length; i++) {
+            var a = q[i].split('=');
+            current_args[a[0]] = a.slice(1).join('=');
         }
         
-        var a = [];
-        if(typeof page == 'string') a.push('s=' + page);
-        if(args) for(var k in args) a.push(k + '=' + args[k]);
+        if(typeof page == 'string')
+            current_args.s = page;
         
-        this.redirect(filesender.config.base_path + '?' + a.join('&') + (anchor ? '#' + anchor : ''));
+        if(!keep_args) // Only keep page
+            current_args = {s: current_args.s};
+        
+        if(args) for(var k in args) current_args[k] = args[k];
+        
+        args = [];
+        for(var k in current_args) args.push(k + '=' + current_args[k]);
+        
+        this.redirect(filesender.config.base_path + '?' + args.join('&') + (anchor ? '#' + anchor : ''));
     },
     
     /**
@@ -424,7 +431,7 @@ $(function() {
     $('#btn_logon').button();
     
     $('#language_selector').on('change', function() {
-        filesender.ui.goToPage(true, {lang: $(this).val()})
+        filesender.ui.goToPage(true, {lang: $(this).val()}, null, true);
     });
     
     filesender.client.getUserQuota(function(quota) {
