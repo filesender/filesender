@@ -524,6 +524,11 @@ class Lang {
  */
 class Translation {
     /**
+     * Actual translation holder
+     */
+    private $translation = '';
+    
+    /**
      * Constructor
      * 
      * @param string $translation
