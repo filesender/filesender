@@ -287,10 +287,10 @@ class Guest extends DBObject {
         Logger::logActivity(LogEventTypes::GUEST_CREATED, $this);
         
         // Send notification to recipient
-        ApplicationMail::quickSend('guest_created', $this);
+        TranslatableEmail::quickSend('guest_created', $this);
         
         // Send receipt to owner
-        ApplicationMail::quickSend('guest_created_receipt', $this->user_email, $this);
+        TranslatableEmail::quickSend('guest_created_receipt', $this->owner, $this);
         
         Logger::info('Guest#'.$this->id.' ('.$this->email.') created');
     }
@@ -299,7 +299,7 @@ class Guest extends DBObject {
      * Send reminder to recipients
      */
     public function remind() {
-        ApplicationMail::quickSend('guest_reminder', $this);
+        TranslatableEmail::quickSend('guest_reminder', $this);
         
         Logger::info('Guest#'.$this->id.' ('.$this->email.') reminded');
     }
@@ -320,7 +320,7 @@ class Guest extends DBObject {
         );
         
         // Sending notification to recipient
-        ApplicationMail::quickSend($manualy ? 'guest_cancelled' : 'guest_expired', $this);
+        TranslatableEmail::quickSend($manualy ? 'guest_cancelled' : 'guest_expired', $this);
         
         Logger::info('Guest#'.$this->id.' ('.$this->email.') '.($manualy ? 'removed' : 'expired'));
     }
@@ -388,6 +388,8 @@ class Guest extends DBObject {
      */
     public function beforeDelete() {
         foreach(TrackingEvent::fromGuest($this) as $tracking_event) $tracking_event->delete();
+        
+        foreach(TranslatableEmail::fromContext($this) as $translatable_email) $translatable_email->delete();
     }
     
     /**

@@ -273,11 +273,9 @@ class RestEndpointFile extends RestEndpoint {
             $file->transfer->removeFile($file);
             
             if($file->transfer->status == 'available') { // Notify deletion for transfers that are available
-                $ctn = Lang::translateEmail('file_deleted', $file->transfer->lang)->r($file, $file->transfer);
+                
                 foreach($file->transfer->recipients as $recipient) {
-                    $mail = new ApplicationMail($ctn->r($recipient));
-                    $mail->to($recipient);
-                    $mail->send();
+                    $file->transfer->sendToRecipient('file_deleted', $recipient, $file);
                 }
             }
         } else { // Last/only file deletion => close transfer
