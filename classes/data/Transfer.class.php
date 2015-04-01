@@ -333,6 +333,8 @@ class Transfer extends DBObject {
         
         foreach($this->recipients as $recipient) $this->removeRecipient($recipient);
         
+        foreach(TranslatableEmail::fromContext($this) as $translatable_email) $translatable_email->delete();
+        
         Logger::info('Transfer#'.$this->id.' deleted');
     }
     
