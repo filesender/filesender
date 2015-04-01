@@ -122,8 +122,20 @@ class Template {
      * @return string
      * 
      */
+    public static function sanitize($data) {
+        return str_replace(array('{', '}'), array('&#123;', '&#125;'), $data);
+    }
+    
+    /**
+     * Sanitize data to avoid tag replacement
+     * 
+     * @param mixed data
+     * 
+     * @return string
+     * 
+     */
     public static function sanitizeOutput($data) {
-        return str_replace(array('{', '}'), array('&#123;', '&#125;'), Utilities::sanitizeOutput($data));
+        return self::sanitize(Utilities::sanitizeOutput($data));
     }
     
     /**
