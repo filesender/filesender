@@ -122,7 +122,7 @@ class StorageFilesystem {
         foreach(Transfer::allUploading() as $transfer) {
             foreach($transfer->files as $file) {
                 $path = self::buildPath($file);
-                $filesystem = self::getFilesystem($path);
+                $filesystem = self::$hashing ? self::getFilesystem($path) : 'main';
                 
                 if(!array_key_exists($filesystem, $filesystems)) continue; // Not in a filesystem related to new transfer
                 
