@@ -132,6 +132,7 @@ class Transfer extends DBObject {
     private $filesCache = null;
     private $recipientsCache = null;
     private $logsCache = null;
+    private static $optionsCache = null;
     
     /**
      * Constructor
@@ -411,26 +412,30 @@ class Transfer extends DBObject {
      * @return array
      */
     public static function allOptions() {
-        $options = Config::get('transfer_options');
-        if(!is_array($options)) $options = array();
-        
-        foreach(TransferOptions::all() as $d => $name) {
-            if(!array_key_exists($name, $options))
-                $options[$name] = array(
-                    'available' => false,
-                    'advanced' => false,
-                    'default' => false
-                );
+        if(is_null(self::$optionsCache)) {
+            $options = Config::get('transfer_options');
+            if(!is_array($options)) $options = array();
             
-            foreach(array('available', 'advanced', 'default') as $p) {
-                if(!array_key_exists($p, $options[$name]))
-                    $options[$name][$p] = false;
+            foreach(TransferOptions::all() as $d => $name) {
+                if(!array_key_exists($name, $options))
+                    $options[$name] = array(
+                        'available' => false,
+                        'advanced' => false,
+                        'default' => false
+                    );
                 
-                $options[$name][$p] = (bool)$options[$name][$p];
+                foreach(array('available', 'advanced', 'default') as $p) {
+                    if(!array_key_exists($p, $options[$name]))
+                        $options[$name][$p] = false;
+                    
+                    $options[$name][$p] = (bool)$options[$name][$p];
+                }
             }
+            
+            self::$optionsCache = $options;
         }
         
-        return $options;
+        return self::$optionsCache;
     }
     
     /**
@@ -449,6 +454,19 @@ class Transfer extends DBObject {
             
             return true;
         });
+    }
+    
+    /**
+     * Get specific available option
+     * 
+     * @param string $name option name
+     * 
+     * @return mixed
+     */
+    public static function availableOption($name) {
+        $options = self::allOptions();
+        
+        return array_key_exists($name, $options) ? $options[$name] : null;
     }
     
     /**

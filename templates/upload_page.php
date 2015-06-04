@@ -98,9 +98,9 @@ if(Auth::isGuest()) {
                         <textarea name="message" rows="4"></textarea>
                     </div>
                     
-                    <?php if(!Auth::isGuest() && array_key_exists('get_a_link', Transfer::availableOptions())) { ?>
+                    <?php if(!Auth::isGuest() && $option = Transfer::availableOption('get_a_link')) { ?>
                     <div class="fieldcontainer" data-related-to="get_a_link">
-                        <input name="get_a_link" type="checkbox" /> <label for="get_a_link">{tr:get_a_link}</label>
+                        <input name="get_a_link" type="checkbox" <?php if($option['default']) echo 'checked="checked"' ?> /> <label for="get_a_link">{tr:get_a_link}</label>
                     </div>
                     <?php } ?>
                     
