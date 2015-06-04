@@ -595,7 +595,7 @@ $(function() {
         
         filesender.ui.files.clear();
         return false;
-    }).button().button('disable');
+    }).button({disabled: true});
     
     // Bind file list select button
     filesender.ui.nodes.files.select.on('click', function() {
@@ -714,9 +714,6 @@ $(function() {
         filesender.ui.evalUploadEnabled();
     });
     
-    if(form.find('input[name="get_a_link"]').is(':checked'))
-        form.find('input[name="get_a_link"]').trigger('change');
-    
     form.find('input[name="add_me_to_recipients"]').on('change', function() {
         filesender.ui.evalUploadEnabled();
     });
@@ -742,7 +739,7 @@ $(function() {
             filesender.ui.nodes.buttons.stop.removeClass('not_displayed');
         }
         return false;
-    }).button().button('disable');
+    }).button({disabled: true});
     
     if(filesender.supports.reader) {
         filesender.ui.nodes.buttons.pause.on('click', function() {
@@ -769,7 +766,7 @@ $(function() {
                 filesender.ui.nodes.buttons.stop.removeClass('not_displayed');
             }
             return false;
-        }).button().button('disable');
+        }).button({disabled: true});
     }
     
     filesender.ui.nodes.buttons.stop.on('click', function() {
@@ -781,6 +778,10 @@ $(function() {
         return false;
     }).button();
     
+    // MUST BE AFTER BUTTONS SETUP otherwise event propagation ends up
+    // trying to change button state but button is still not initialized ...
+    if(form.find('input[name="get_a_link"]').is(':checked'))
+        form.find('input[name="get_a_link"]').trigger('change');
     
     // special fix for esc key on firefox stopping xhr
     window.addEventListener('keydown', function(e) {

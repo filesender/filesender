@@ -331,7 +331,7 @@ $(function() {
             filesender.ui.nodes.sendbutton.button('disable');
         }
         return false;
-    }).button().button('disable');
+    }).button({disabled: true});
     
     // special fix for esc key on firefox stopping xhr
     window.addEventListener('keydown', function(e) {
