@@ -434,7 +434,7 @@ $(function() {
         filesender.ui.goToPage(true, {lang: $(this).val()}, null, true);
     });
     
-    filesender.client.getUserQuota(function(quota) {
+    if(!window.location.search.match(/vid=/)) filesender.client.getUserQuota(function(quota) {
         if(!quota) return;
         
         filesender.config.quota = quota; // Propagate info
