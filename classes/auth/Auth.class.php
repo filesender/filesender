@@ -110,21 +110,24 @@ class Auth {
                 self::$isSP = true;
             }
             
-            if(!self::$attributes || !array_key_exists('uid', self::$attributes)) return null;
-
-            self::$user = User::fromAttributes(self::$attributes);
-            
-            if(self::isSP() && Config::get('auth_sp_save_user_additional_attributes') && array_key_exists('additional', self::$attributes)) {
-                if((array)self::$user->additional_attributes != self::$attributes['additional']) {
-                    self::$user->additional_attributes = self::$attributes['additional'];
+            if(!self::$attributes || !array_key_exists('uid', self::$attributes)) {
+                self::$user = false;
+                
+            } else {
+                self::$user = User::fromAttributes(self::$attributes);
+                
+                if(self::isSP() && Config::get('auth_sp_save_user_additional_attributes') && array_key_exists('additional', self::$attributes)) {
+                    if((array)self::$user->additional_attributes != self::$attributes['additional']) {
+                        self::$user->additional_attributes = self::$attributes['additional'];
+                        self::$user->save();
+                    }
+                }
+                
+                $user_quota = Config::get('user_quota');
+                if($user_quota && (self::$user->quota != $user_quota)) {
+                    self::$user->quota = $user_quota;
                     self::$user->save();
                 }
-            }
-            
-            $user_quota = Config::get('user_quota');
-            if($user_quota && (self::$user->quota != $user_quota)) {
-                self::$user->quota = $user_quota;
-                self::$user->save();
             }
         }
         
