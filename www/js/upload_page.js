@@ -714,6 +714,9 @@ $(function() {
         filesender.ui.evalUploadEnabled();
     });
     
+    if(form.find('input[name="get_a_link"]').is(':checked'))
+        form.find('input[name="get_a_link"]').trigger('change');
+    
     form.find('input[name="add_me_to_recipients"]').on('change', function() {
         filesender.ui.evalUploadEnabled();
     });
