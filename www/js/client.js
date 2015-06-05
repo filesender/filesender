@@ -67,7 +67,7 @@ window.filesender.client = {
         }
         
         if(this.security_token === null)
-            this.security_token = $('meta[name="security_token"]').attr('content');
+            this.security_token = $('body').attr('data-security-token');
         
         if(!options) options = {};
         
