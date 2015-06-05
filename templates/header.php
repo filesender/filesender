@@ -20,7 +20,7 @@
         <meta name="auth" content="noindex, nofollow" />
     </head>
     
-    <body data-security-token="<?php echo Utilities::getSecurityToken() ?>">
+    <body data-security-token="<?php echo Utilities::getSecurityToken() ?>" data-auth-type="<?php echo Auth::type() ?>">
         <div id="wrap">
             <div id="header">
                 <a href="<?php echo GUI::path() ?>">

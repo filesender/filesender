@@ -434,7 +434,8 @@ $(function() {
         filesender.ui.goToPage(true, {lang: $(this).val()}, null, true);
     });
     
-    if(!window.location.search.match(/vid=/)) filesender.client.getUserQuota(function(quota) {
+    var auth = $('body').attr('data-auth-type');
+    if(auth && auth != 'guest') filesender.client.getUserQuota(function(quota) {
         if(!quota) return;
         
         filesender.config.quota = quota; // Propagate info
