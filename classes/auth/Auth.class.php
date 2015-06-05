@@ -55,29 +55,9 @@ class Auth {
     private static $isAdmin = null;
     
     /**
-     * Is the user given by an authenticated remote service ?
+     * Auth provider if any auth found
      */
-    private static $isRemoteApplication = false;
-    
-    /**
-     * Is the user authenticated in a remote fashion ?
-     */
-    private static $isRemoteUser = false;
-    
-    /**
-     * Is the user authenticated through a service provider ?
-     */
-    private static $isSP = false;
-    
-    /**
-     * Is the user authenticated through a local service ?
-     */
-    private static $isLocal = false;
-    
-    /**
-     * Is the user authenticated as guest ?
-     */
-    private static $isGuest = false;
+    private static $type = null;
     
     /**
      * Return current user if it exists.
@@ -90,24 +70,24 @@ class Auth {
             
             if(AuthGuest::isAuthenticated()) { // Guest
                 self::$attributes = AuthGuest::attributes();
-                self::$isGuest = true;
+                self::$type = 'guest';
                 
             }else if(AuthLocal::isAuthenticated()) { // SP
                 self::$attributes = AuthLocal::attributes();
-                self::$isLocal = true;
+                self::$type = 'local';
                 
             }else if(Config::get('auth_remote_application_enabled') && AuthRemoteApplication::isAuthenticated()) { // Remote application
                 self::$attributes = AuthRemoteApplication::attributes();
                 if(AuthRemoteApplication::isAdmin()) self::$isAdmin = true;
-                self::$isRemoteApplication = true;
+                self::$type = 'remote_application';
                 
             }else if(Config::get('auth_remote_user_enabled') && AuthRemoteUser::isAuthenticated()) { // Remote user
                 self::$attributes = AuthRemoteUser::attributes();
-                self::$isRemoteUser = true;
+                self::$type = 'remote_user';
                 
             }else if(AuthSP::isAuthenticated()) { // SP
                 self::$attributes = AuthSP::attributes();
-                self::$isSP = true;
+                self::$type = 'sp';
             }
             
             if(!self::$attributes || !array_key_exists('uid', self::$attributes)) {
@@ -169,7 +149,16 @@ class Auth {
             }
         }
         
-        return self::$isAdmin && !self::$isGuest;
+        return self::$isAdmin && !self::isGuest();
+    }
+    
+    /**
+     * Get auth type
+     * 
+     * @return mixed
+     */
+    public static function type() {
+        return self::$type;
     }
     
     /**
@@ -178,7 +167,7 @@ class Auth {
      * @return bool
      */
     public static function isRemoteApplication() {
-        return self::$isRemoteApplication;
+        return self::$type == 'remote_application';
     }
     
     /**
@@ -187,7 +176,7 @@ class Auth {
      * @return bool
      */
     public static function isRemoteUser() {
-        return self::$isRemoteUser;
+        return self::$type == 'remote_user';
     }
     
     /**
@@ -205,7 +194,7 @@ class Auth {
      * @return bool
      */
     public static function isSP() {
-        return self::$isSP;
+        return self::$type == 'sp';
     }
     
     /**
@@ -214,7 +203,7 @@ class Auth {
      * @return bool
      */
     public static function isLocal() {
-        return self::$isLocal;
+        return self::$type == 'local';
     }
     
     /**
@@ -223,6 +212,6 @@ class Auth {
      * @return bool
      */
     public static function isGuest() {
-        return self::$isGuest;
+        return self::$type == 'guest';
     }
 }
