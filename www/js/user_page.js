@@ -44,9 +44,7 @@ $(function() {
         p[name] = i.val();
         
         filesender.client.updateUserPreferences(p, function() {
-            filesender.ui.alert('success', lang.tr('preferences_updated'), function() {
-                filesender.ui.reload();
-            });
+            filesender.ui.notify('success', lang.tr('preferences_updated'));
         });
     });
     

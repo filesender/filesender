@@ -57,7 +57,7 @@ $(function() {
                 
                 filesender.ui.confirm(lang.tr('confirm_delete_guest'), function() {
                     filesender.client.deleteGuest(id, function() {
-                        filesender.ui.alert('success', lang.tr('guest_deleted'), function() {
+                        filesender.ui.notify('success', lang.tr('guest_deleted'), function() {
                             guests.find('[data-id="' + id + '"]').remove();
                         });
                     });
@@ -74,7 +74,7 @@ $(function() {
                     
                     filesender.ui.confirm(lang.tr('confirm_remind_guest'), function() {
                         filesender.client.remindGuest(id, function() {
-                            filesender.ui.alert('success', lang.tr('guest_reminded'));
+                            filesender.ui.notify('success', lang.tr('guest_reminded'));
                         });
                     });
                 });
@@ -138,7 +138,7 @@ $(function() {
                                     sent++;
                                     if(sent < emails.length) return;
                                     
-                                    filesender.ui.alert('success', lang.tr('guest_vouchers_sent').r({sent: sent}), function() {
+                                    filesender.ui.notify('success', lang.tr('guest_vouchers_sent').r({sent: sent}), function() {
                                         filesender.ui.reload();
                                     });
                                 });

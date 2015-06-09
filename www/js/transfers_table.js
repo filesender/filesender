@@ -93,7 +93,7 @@ $(function() {
                                 delete: 'transfer_deleted'
                             };
                             var done = function() {
-                                filesender.ui.alert('success', lang.tr(messages[choosen]), function() {
+                                filesender.ui.notify('success', lang.tr(messages[choosen]), function() {
                                     table.find('[data-id="' + id + '"]').remove();
                                 });
                             };
@@ -108,7 +108,7 @@ $(function() {
                     } else {
                         filesender.ui.confirm(lang.tr('confirm_close_transfer'), function() {
                             filesender.client.closeTransfer(id, function() {
-                                filesender.ui.alert('success', lang.tr('transfer_closed'), function() {
+                                filesender.ui.notify('success', lang.tr('transfer_closed'), function() {
                                     table.find('[data-id="' + id + '"]').remove();
                                 });
                             });
@@ -180,7 +180,7 @@ $(function() {
                                     
                                     if(done < emails.length) return;
                                     
-                                    filesender.ui.alert('success', lang.tr('recipient_added'), function() {
+                                    filesender.ui.notify('success', lang.tr('recipient_added'), function() {
                                         filesender.ui.reload();
                                     });
                                 });
@@ -229,7 +229,7 @@ $(function() {
                         
                         filesender.ui.confirm(lang.tr('confirm_remind_transfer'), function() {
                             filesender.client.remindTransfer(id, function() {
-                                filesender.ui.alert('success', lang.tr('transfer_reminded'));
+                                filesender.ui.notify('success', lang.tr('transfer_reminded'));
                             });
                         });
                     });
@@ -248,7 +248,7 @@ $(function() {
                     
                     filesender.ui.confirm(lang.tr('confirm_delete_recipient'), function() {
                         filesender.client.deleteRecipient(id, function() {
-                            filesender.ui.alert('success', lang.tr('recipient_deleted'), function() {
+                            filesender.ui.notify('success', lang.tr('recipient_deleted'), function() {
                                 rcpt.remove();
                                 if(!transfer_details.find('.recipients .recipient').length) {
                                     transfer_details.prev('.transfer').remove();
@@ -303,7 +303,7 @@ $(function() {
                     
                     filesender.ui.confirm(lang.tr('confirm_delete_file'), function() {
                         filesender.client.deleteFile(id, function() {
-                            filesender.ui.alert('success', lang.tr('file_deleted'), function() {
+                            filesender.ui.notify('success', lang.tr('file_deleted'), function() {
                                 file.remove();
                                 if(!transfer_details.find('.files .file').length) {
                                     transfer_details.prev('.transfer').remove();
@@ -382,7 +382,7 @@ $(function() {
                     e.preventDefault();
                     
                     filesender.client.getTransferAuditlogByEmail(transfer_id, function() {
-                        filesender.ui.alert('success', lang.tr('email_sent'));
+                        filesender.ui.notify('success', lang.tr('email_sent'));
                     });
                     
                     return false;

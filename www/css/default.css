@@ -75,6 +75,13 @@ abbr {
     margin-bottom: 1em;
 }
 
+#notifications {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 30%;
+}
+
 #menu {
     height: 34px;
     background: url(../images/jq-global-nav.png) repeat-x scroll 0 bottom #1B1B1B;
@@ -183,7 +190,7 @@ abbr {
     padding-top: 1.2em;
 }
 
-div.message, div.exception {
+div.message, div.notification, div.exception {
     background-position: 0.8em 50%;
     background-repeat: no-repeat;
     border: 1px solid;
@@ -193,19 +200,23 @@ div.message, div.exception {
     margin: 2em 5em;
 }
 
-div.error.message, div.exception {
+div.notification {
+    margin: 1em;
+}
+
+div.error.message, div.notification.error, div.exception {
     background-color: #fcc;
     background-image: url(../images/error.png);
     border-color: #ebb;
 }
 
-div.info.message {
+div.info.message, div.notification.info {
     background-color: #ccf;
     background-image: url(../images/info.png);
     border-color: #bbe;
 }
 
-div.success.message {
+div.success.message, div.notification.success {
     background-color: #cfc;
     background-image: url(../images/success.png);
     border-color: #beb;

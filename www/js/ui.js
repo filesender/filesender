@@ -225,6 +225,34 @@ window.filesender.ui = {
     },
     
     /**
+     * Display a notification
+     * 
+     * @param string type "info", "success" or "error"
+     * @param string message
+     * @param callable ondisapear
+     */
+    notify: function(type, message, ondisapear) {
+        if(typeof message != 'string') {
+            if(message.out) {
+                message = message.out();
+            }else if(!message.jquery) {
+                message = message.toString();
+            }
+        }
+        
+        var ctn = $('#notifications');
+        if(!ctn.length) ctn = $('<div id="notifications" />').appendTo('body');
+        
+        var n = $('<div class="notification ' + type + '" />').html(message).appendTo(ctn);
+        
+        window.setTimeout(function() {
+            n.fadeOut(1500, 'linear', ondisapear);
+        }, 3000);
+        
+        return n;
+    },
+    
+    /**
      * Display/remove maintenance popup
      * 
      * @param bool state
