@@ -76,7 +76,7 @@ $(function() {
         });
         
         filesender.client.overrideConfig(overrides, function() {
-            filesender.ui.alert('success', lang.tr('config_overriden'));
+            filesender.ui.notify('success', lang.tr('config_overriden'));
         });
         
         return false;
