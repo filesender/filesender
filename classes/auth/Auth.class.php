@@ -66,6 +66,8 @@ class Auth {
      */
     public static function user() {
         if(is_null(self::$user)) { // Not already cached
+            self::$user = false;
+            
             // Authentication logic
             
             if(AuthGuest::isAuthenticated()) { // Guest
@@ -90,10 +92,7 @@ class Auth {
                 self::$type = 'sp';
             }
             
-            if(!self::$attributes || !array_key_exists('uid', self::$attributes)) {
-                self::$user = false;
-                
-            } else {
+            if(self::$attributes && array_key_exists('uid', self::$attributes)) {
                 self::$user = User::fromAttributes(self::$attributes);
                 
                 if(self::isSP() && Config::get('auth_sp_save_user_additional_attributes') && array_key_exists('additional', self::$attributes)) {
