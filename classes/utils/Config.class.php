@@ -124,6 +124,7 @@ class Config {
                 self::$parameters[$key] = $value; // Merge
         }
         
+        // Load config overrides if any
         $overrides_cfg = self::get('config_overrides');
         if ($overrides_cfg) {
             $overrides_file = FILESENDER_BASE.'/config/'.($virtualhost ? $virtualhost.'/' : '').'config_overrides.json';
@@ -153,6 +154,8 @@ class Config {
             Utilities::sizeToBytes(ini_get('post_max_size')) - 2048,
             Utilities::sizeToBytes(ini_get('upload_max_filesize'))
         );
+        
+        // Some defaults for undefined values
         
         self::$parameters['max_legacy_file_size'] = min(
             self::$parameters['max_legacy_file_size'],
@@ -234,11 +237,14 @@ class Config {
      * @return mixed the parameter value or null if parameter is unknown
      */
     public static function get() {
+        // Load config if not already done
         self::load();
+        
         $args = func_get_args();
         $key = array_shift($args);
         
-        if (substr($key, -1) == '*') { // Do we require a family ?
+        // Do we require a family ?
+        if (substr($key, -1) == '*') {
             $search = substr($key, 0, -1);
             $set = array();
             array_unshift($args, null); // Prepare place for key for sub-calls
@@ -251,14 +257,17 @@ class Config {
             return $set;
         }
         
+        // Undef returns null
         if (!array_key_exists($key, self::$parameters))
             return null;
         
         $value = self::$parameters[$key];
         
+        // If final value already cached return it
         if (in_array($key, self::$cached_parameters))
             return $value;
         
+        // Evaluate otherwise
         $value = self::evalParameter($key, $value, $args);
         
         // Managing '/' on site_url
@@ -266,6 +275,7 @@ class Config {
             if (substr($value, -1) != '/')
                 $value .= '/';
         
+        // Apply override if any
         if(
             is_array(self::$override) &&
             array_key_exists($key, self::$override['parameters']) &&
@@ -275,9 +285,9 @@ class Config {
             $value = self::$override['parameters'][$key]['value'];
         }
         
+        // Cache and return
         self::$parameters[$key] = $value;
         self::$cached_parameters[] = $key;
-        
         
         return $value;
     }
@@ -337,20 +347,26 @@ class Config {
      * @param bool $save (optionnal)
      */
     public static function override(/* $set [, $value] [, $save = true] */) {
+        // Load if not already done
         self::load();
+        
+        // If override allowed ?
         if(!self::$override)
             throw new ConfigOverrideDisabledException();
         
         $args = func_get_args();
-        
         $set = array_shift($args);
+        
+        // Apply any changes
         if($set) {
             if(!is_array($set)) $set = array($set => array_shift($args));
             
             foreach($set as $k => $v) {
+                // Is override of this parameter allowed ?
                 if(!array_key_exists($k, self::$override['parameters']))
                     throw new ConfigOverrideNotAllowedException($k);
                 
+                // Apply any defined validators, throw if failure
                 if(array_key_exists('validator', self::$override['parameters'][$k])) {
                     $validators = self::$override['parameters'][$k]['validator'];
                     if(!is_array($validators)) $validators = array($validators);
@@ -361,14 +377,16 @@ class Config {
                                 throw new ConfigOverrideValidationFailedException($k, is_string($validator) ? $validator : 'custom:'.$n);
                 }
                 
+                // Cache new value
                 self::$override['parameters'][$k]['value'] = $v;
             }
         }
         
+        // Do we need to save something ?
         $save = count($args) ? array_shift($args) : true;
         if($save) {
+            // Gather values without ones that got back to default
             $overrides = array();
-            
             foreach(self::$override['parameters'] as $k => $dfn) {
                 if(!is_null($dfn['value']))
                     $overrides[$k] = $dfn['value'];
@@ -376,6 +394,7 @@ class Config {
             
             $file = self::$override['file'];
             
+            // Save if any overrides, remove overrides file otherwise
             if(count($overrides)) {
                 if($fh = fopen($file, 'w')) {
                     fwrite($fh, json_encode($overrides));

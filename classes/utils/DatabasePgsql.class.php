@@ -166,6 +166,7 @@ class DatabasePgsql {
     public static function checkTableColumnFormat($table, $column, $definition, $logger = null) {
         if(!$logger || !is_callable($logger)) $logger = function() {};
         
+        // Get current definition
         $s = DBI::prepare('SELECT * FROM information_schema.columns WHERE table_name=:table AND column_name=:column');
         $s->execute(array(':table' => strtolower($table), ':column' => strtolower($column)));
         $column_dfn = $s->fetch();
@@ -175,6 +176,7 @@ class DatabasePgsql {
         $typematcher = '';
         $length = null;
         
+        // Build type matcher
         switch($definition['type']) {
             case 'int':
             case 'uint':
@@ -210,16 +212,19 @@ class DatabasePgsql {
                 break;
         }
         
+        // Check type
         if(!preg_match('`'.$typematcher.'`i', $column_dfn['data_type'])) {
             $logger($column.' type does not match '.$typematcher);
             $non_respected[] = 'type';
         }
         
+        // Check length if any
         if(!is_null($length) && ((int)$column_dfn['character_maximum_length'] != $length)) {
             $logger($column.' max length does not match '.$length);
             $non_respected[] = 'type';
         }
         
+        // Check default
         if(array_key_exists('default', $definition)) {
             if(is_null($definition['default'])) {
                 if(!is_null($column_dfn['column_default'])) {
@@ -237,8 +242,10 @@ class DatabasePgsql {
             }
         }
         
+        // Options defaults
         foreach(array('null', 'primary', 'unique', 'autoinc') as $k) if(!array_key_exists($k, $definition)) $definition[$k] = false;
         
+        // Check nullable
         $is_null = (strtolower($column_dfn['is_nullable']) == 'yes');
         if($definition['null'] && !$is_null) {
             $logger($column.' is not nullable');
@@ -248,6 +255,7 @@ class DatabasePgsql {
             $non_respected[] = 'null';
         }
         
+        // Check primary
         $is_primary = false;
         $s = DBI::prepare('SELECT pg_attribute.attname FROM pg_attribute JOIN pg_class ON pg_class.oid = pg_attribute.attrelid LEFT JOIN pg_constraint ON pg_constraint.conrelid = pg_class.oid AND pg_attribute.attnum = ANY (pg_constraint.conkey) WHERE pg_class.relkind = \'r\' AND pg_class.relname = :table AND pg_attribute.attname = :column AND pg_constraint.contype = \'p\'');
         $s->execute(array(':table' => strtolower($table), ':column' => strtolower($column)));
@@ -260,6 +268,7 @@ class DatabasePgsql {
             $non_respected[] = 'primary';
         }
         
+        // Check unique
         $is_unique = false;
         $s = DBI::prepare('SELECT pg_attribute.attname FROM pg_attribute JOIN pg_class ON pg_class.oid = pg_attribute.attrelid LEFT JOIN pg_constraint ON pg_constraint.conrelid = pg_class.oid AND pg_attribute.attnum = ANY (pg_constraint.conkey) WHERE pg_class.relkind = \'r\' AND pg_class.relname = :table AND pg_attribute.attname = :column AND pg_constraint.contype = \'u\'');
         $s->execute(array(':table' => strtolower($table), ':column' => strtolower($column)));
@@ -272,6 +281,7 @@ class DatabasePgsql {
             $non_respected[] = 'unique';
         }
         
+        // Check autoinc
         $is_autoinc = self::sequenceExists($table, $column);
         if($definition['autoinc'] && (!$is_autoinc || ($column_dfn['column_default'] != 'nextval(\''.$is_autoinc.'\'::regclass)'))) {
             $logger($column.' is not autoinc');
@@ -281,6 +291,7 @@ class DatabasePgsql {
             $non_respected[] = 'autoinc';
         }
         
+        // Return any error
         return count($non_respected) ? $non_respected : false;
     }
     
@@ -294,6 +305,7 @@ class DatabasePgsql {
      */
     public static function updateTableColumnFormat($table, $column, $definition, $problems) {
         if(in_array('type', $problems)) {
+            // Cahnge data type
             $type = '';
             switch($definition['type']) {
                 case 'int':
@@ -332,8 +344,10 @@ class DatabasePgsql {
             if($type) DBI::exec('ALTER TABLE '.$table.' ALTER COLUMN '.$column.' TYPE '.$type);
         }
         
+        // Options defaults
         foreach(array('null', 'primary', 'unique', 'autoinc') as $k) if(!array_key_exists($k, $definition)) $definition[$k] = false;
         
+        // Change nullable
         if(in_array('null', $problems)) {
             if($definition['null']) {
                 DBI::exec('ALTER TABLE '.$table.' ALTER COLUMN '.$column.' DROP NOT NULL');
@@ -342,6 +356,7 @@ class DatabasePgsql {
             }
         }
         
+        // Change default
         if(in_array('default', $problems)) {
             if(array_key_exists('default', $definition)) {
                 if(is_null($definition['default'])) {
@@ -356,6 +371,7 @@ class DatabasePgsql {
             }
         }
         
+        // Change primary
         if(in_array('primary', $problems)) {
             if($definition['primary']) {
                 DBI::exec('ALTER TABLE '.$table.' ADD CONSTRAINT primary_'.$column.' PRIMARY KEY ('.$column.')');
@@ -364,6 +380,7 @@ class DatabasePgsql {
             }
         }
         
+        // Change unique
         if(in_array('unique', $problems)) {
             if($definition['unique']) {
                 DBI::exec('ALTER TABLE '.$table.' ADD CONSTRAINT unique_'.$column.' UNIQUE ('.$column.')');
@@ -372,6 +389,7 @@ class DatabasePgsql {
             }
         }
         
+        // Change autoinc
         if(in_array('autoinc', $problems)) {
             if($definition['autoinc']) {
                 self::createSequence($table, $column);
@@ -391,6 +409,7 @@ class DatabasePgsql {
     private static function columnDefinition($definition) {
         $sql = '';
         
+        // Build type part
         switch($definition['type']) {
             case 'int':
             case 'uint':
@@ -425,8 +444,10 @@ class DatabasePgsql {
                 break;
         }
         
+        // Add nullable
         if(!array_key_exists('null', $definition) || !$definition['null']) $sql .= ' NOT NULL';
         
+        // Add default
         if(array_key_exists('default', $definition)) {
             $sql .= ' DEFAULT ';
             $default = $definition['default'];
@@ -440,9 +461,11 @@ class DatabasePgsql {
             }else $sql .= '"'.str_replace('"', '\\"', $default).'"';
         }
         
+        // Add options
         if(array_key_exists('unique', $definition) && $definition['unique']) $sql .= ' UNIQUE';
         if(array_key_exists('primary', $definition) && $definition['primary']) $sql .= ' PRIMARY KEY';
         
+        // Return statment
         return $sql;
     }
 }

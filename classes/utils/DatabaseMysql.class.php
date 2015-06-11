@@ -114,6 +114,7 @@ class DatabaseMysql {
     public static function checkTableColumnFormat($table, $column, $definition, $logger = null) {
         if(!$logger || !is_callable($logger)) $logger = function() {};
         
+        // Get current definition
         $s = DBI::prepare('SHOW COLUMNS FROM '.$table.' LIKE :column');
         $s->execute(array(':column' => $column));
         $column_dfn = $s->fetch();
@@ -121,6 +122,7 @@ class DatabaseMysql {
         $non_respected = array();
         $typematcher = '';
         
+        // Build type matcher
         switch($definition['type']) {
             case 'int':
             case 'uint':
@@ -159,11 +161,13 @@ class DatabaseMysql {
                 break;
         }
         
+        // Check type
         if(!preg_match('`'.$typematcher.'`i', $column_dfn['Type'])) {
             $logger($column.' type does not match '.$typematcher);
             $non_respected[] = 'type';
         }
         
+        // Check default
         if(array_key_exists('default', $definition)) {
             if(is_null($definition['default'])) {
                 if(!is_null($column_dfn['Default'])) {
@@ -181,8 +185,10 @@ class DatabaseMysql {
             }
         }
         
+        // Options defaults
         foreach(array('null', 'primary', 'unique', 'autoinc') as $k) if(!array_key_exists($k, $definition)) $definition[$k] = false;
         
+        // Check nullable
         $is_null = ($column_dfn['Null'] == 'YES');
         if($definition['null'] && !$is_null) {
             $logger($column.' is not nullable');
@@ -192,6 +198,7 @@ class DatabaseMysql {
             $non_respected[] = 'null';
         }
         
+        // Check primary
         $is_primary = ($column_dfn['Key'] == 'PRI');
         if($definition['primary'] && !$is_primary) {
             $logger($column.' is not primary');
@@ -201,6 +208,7 @@ class DatabaseMysql {
             $non_respected[] = 'primary';
         }
         
+        // Check unique
         $is_unique = ($column_dfn['Key'] == 'UNI');
         if($definition['unique'] && !$is_unique) {
             $logger($column.' is not unique');
@@ -210,6 +218,7 @@ class DatabaseMysql {
             $non_respected[] = 'unique';
         }
         
+        // Check autoinc
         $is_autoinc = preg_match('`auto_increment`', $column_dfn['Extra']);
         if($definition['autoinc'] && !$is_autoinc) {
             $logger($column.' is not autoinc');
@@ -219,6 +228,7 @@ class DatabaseMysql {
             $non_respected[] = 'autoinc';
         }
         
+        // Return any errors
         return count($non_respected) ? $non_respected : false;
     }
     
@@ -245,6 +255,7 @@ class DatabaseMysql {
     private static function columnDefinition($definition) {
         $mysql = '';
         
+        // Build type part
         switch($definition['type']) {
             case 'int':
             case 'uint':
@@ -284,10 +295,12 @@ class DatabaseMysql {
                 break;
         }
         
+        // Add nullable
         $null = 'NOT NULL';
         if(array_key_exists('null', $definition) && $definition['null']) $null = 'NULL';
         $mysql .= ' '.$null;
         
+        // Add default
         if(array_key_exists('default', $definition)) {
             $mysql .= ' DEFAULT ';
             $default = $definition['default'];
@@ -301,10 +314,12 @@ class DatabaseMysql {
             }else $mysql .= '"'.str_replace('"', '\\"', $default).'"';
         }
         
+        // Add options
         if(array_key_exists('autoinc', $definition) && $definition['autoinc']) $mysql .= ' AUTO_INCREMENT';
         if(array_key_exists('unique', $definition) && $definition['unique']) $mysql .= ' UNIQUE KEY';
         if(array_key_exists('primary', $definition) && $definition['primary']) $mysql .= ' PRIMARY KEY';
         
+        // Return statment
         return $mysql;
     }
 }

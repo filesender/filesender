@@ -55,21 +55,27 @@ class Utilities {
      * @throws UtilitiesUidGeneratorTriedTooMuchException
      */
     public static function generateUID($unicity_checker = null, $max_tries = 1000) {
+        // Do we need to generate a unicity-checked random UID ?
         if($unicity_checker) {
+            // Fail if checker is not a callable
             if(!is_callable($unicity_checker))
                 throw new UtilitiesUidGeneratorBadUnicityCheckerException();
             
+            // Try to generate until uniquely-checked or max tries reached
             $tries = 0;
             do {
                 $uid = self::generateUID();
                 $tries++;
             } while(!call_user_func($unicity_checker, $uid) && ($tries <= $max_tries));
             
+            // Fail if max tries reached
             if($tries > $max_tries)
                 throw new UtilitiesUidGeneratorTriedTooMuchException($tries);
             
             return $uid;
         }
+        
+        // Generate a simple random UID
         
         $rnd = self::generateRandomHexString();
         
@@ -88,18 +94,24 @@ class Utilities {
     }
     
     /**
-     * Generate (pseudo) random hex string
+     * Generate (pseudo) (super-)random hex string
      * 
      * @return string
      */
     public static function generateRandomHexString($nearly = false) {
+        // Random length
         $len = mt_rand(16, 32);
         
+        // Random data
         $rnd = '';
         for($i=0; $i<$len; $i++) $rnd .= sprintf('%04d', mt_rand(0, 9999));
         
+        // No need for an super-random, just hash
         if($nearly) return hash('sha1', $rnd);
         
+        // Need for an super-random
+        
+        // Get secret, generate it if not found
         $sfile = FILESENDER_BASE.'/tmp/instance.secret';
         if(file_exists($sfile)) {
             $ctn = array_filter(array_map('trim', explode("\n", file_get_contents($sfile))), function($line) {
@@ -117,6 +129,7 @@ class Utilities {
             } else throw new CoreCannotWriteFileException($sfile);
         }
         
+        // return hmac signature of random data with secret => super-random !
         return hash_hmac('sha1', $rnd, $secret);
     }
     
@@ -126,6 +139,7 @@ class Utilities {
      * @return string
      */
     public static function instanceUID() {
+        // Get uid from file, generate it if not found
         $sfile = FILESENDER_BASE.'/tmp/instance.uid';
         if(file_exists($sfile)) {
             $ctn = array_filter(array_map('trim', explode("\n", file_get_contents($sfile))), function($line) {
@@ -182,17 +196,19 @@ class Utilities {
      * @return string formatted time
      */
     public static function formatTime($time) {
+        // Get time format
         $time_format = Lang::tr('time_format');
-        if ($time_format == '{time_format}')
+        if($time_format == '{time_format}')
             $time_format = '{h:H\h} {i:i\m\i\n} {s:s\s}';
         
+        // convert time to time parts
         $bits = array();
-        
         $bits['h'] = floor($time / 3600);
         $time %= 3600;
         $bits['i'] = floor($time / 60);
         $bits['s'] = $time % 60;
         
+        // Process and replace bits in format string
         foreach($bits as $k => $v) {
             if($v) {
                 $time_format = preg_replace_callback('`\{'.$k.':([^}]+)\}`', function($m) use($k, $v) {
@@ -221,9 +237,9 @@ class Utilities {
      * 
      * @return integer the size in bytes
      */
-    public static function sizeToBytes($size)
-    {
-        if (!preg_match('`^([0-9]+)([ptgmk])?$`i', trim($size), $parts))
+    public static function sizeToBytes($size) {
+        // Check format
+        if(!preg_match('`^([0-9]+)([ptgmk])?$`i', trim($size), $parts))
             throw new BadSizeFormatException($size);
         
         $size = (int)$parts[1];
@@ -246,9 +262,11 @@ class Utilities {
      * @return string
      */
     public static function formatBytes($bytes, $precision = 1) {
+        // Default
         if(!$precision || !is_numeric($precision))
             $precision = 2;
         
+        // Variants
         $nomult = Lang::tr('bytes_no_multiplier')->out();
         if($nomult == '{bytes_no_multiplier}') $nomult = 'Bytes';
         
@@ -257,6 +275,7 @@ class Utilities {
         
         $multipliers = array('', 'k', 'M', 'G', 'T');
         
+        // Compute multiplier
         $bytes = max($bytes, 0);
         $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
         $pow = min($pow, count($multipliers) - 1);

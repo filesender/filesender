@@ -76,15 +76,18 @@ class Logger {
     private static function setup() {
         if(!is_null(self::$facilities)) return;
 
-        self::$facilities = array(array('type' => 'error_log')); // Failsafe
+        self::$facilities = array(array('type' => 'error_log')); // Failsafe facility so we have at least one if no valid ones defined in config
         
+        // Get facilities from config, cast to single type
         $facilities = Config::get('log_facilities');
         if(!$facilities) $facilities = array();
         if(!is_array($facilities)) $facilities = array('type' => $facilities);
         if(!is_numeric(key($facilities))) $facilities = array($facilities);
         
+        // Lookup valid facilities
         foreach($facilities as $index => $facility) {
             
+            // Casting and facility defaults
             if(!is_array($facility)) $facility = array('type' => $facility);
             
             if(!array_key_exists('type', $facility))
@@ -93,12 +96,15 @@ class Logger {
             if (!isset($facility['level']) || !LogLevels::isValidValue($facility['level'])){
                 $facility['level'] = LogLevels::INFO;
             }
-                
+            
+            // Facility type based parameter checks
             switch(strtolower($facility['type'])) {
                 case 'file' :
+                    // Log to file needs at least a path
                     if(!array_key_exists('path', $facility))
                         throw new ConfigMissingParameterException('log_facilities['.$index.'][path]');
                     
+                    // If defined rotation rate must be valid
                     if(array_key_exists('rotate', $facility) && !in_array($facility['rotate'], array('hourly', 'daily', 'weekly', 'monthly', 'yearly')))
                         throw new ConfigBadParameterException('log_facilities['.$index.'][rotate]');
                     
@@ -106,6 +112,7 @@ class Logger {
                     break;
                 
                 case 'syslog' :
+                    // PHP syslog arguments may be given
                     $i = false;
                     if(array_key_exists('ident', $facility)) $i = $facility['ident'];
                     
@@ -115,6 +122,7 @@ class Logger {
                     $f = 0;
                     if(array_key_exists('facility', $facility)) $f = $facility['facility'];
                     
+                    // Open syslog backend with given options, report failure if any
                     if($i || $o || $f)
                         if(!openlog($i, $o, $f))
                             throw new ConfigBadParameterException('log_facilities['.$index.']');
@@ -123,13 +131,16 @@ class Logger {
                     break;
                 
                 case 'error_log' :
+                    // PHP error_log needs no argument
                     $facility['method'] = 'logErrorLog';
                     break;
                 
                 case 'callable' :
+                    // Callback based facilities need at least a callback ...
                     if(!array_key_exists('callback', $facility))
                         throw new ConfigMissingParameterException('log_facilities['.$index.'][callback]');
                     
+                    // ... which must be callable
                     if(!is_callable($facility['callback']))
                         throw new ConfigBadParameterException('log_facilities['.$index.'][callback]');
                     
@@ -137,16 +148,19 @@ class Logger {
                     break;
                 
                 default :
+                    // Unknown facilities are reported
                     throw new ConfigBadParameterException('log_facilities['.$index.'][type]');
             }
             
             self::$facilities[] = $facility;
         }
         
-        if(count($facilities) && count(self::$facilities) < 2) // No other than failsafe
+        // Report if no valid facility found (using failsafe)
+        if(count($facilities) && count(self::$facilities) < 2)
             throw new ConfigBadParameterException('log_facilities');
         
-        if(count(self::$facilities) >= 2) array_shift(self::$facilities); // Remove failsafe
+        // Remove failsafe facility if everything went well
+        if(count(self::$facilities) >= 2) array_shift(self::$facilities);
     }
     
     /**
@@ -191,6 +205,7 @@ class Logger {
      * @param string $message
      */
     public static function log($level, $message) {
+        // If message is other than scalar (object, array) then print_r it and log individual lines
         if(!is_scalar($message)) {
             foreach(explode("\n", print_r($message, true)) as $line)
                 self::log($level, $line);
@@ -198,18 +213,27 @@ class Logger {
             return;
         }
         
+        // Setup facilities if not already done
         self::setup();
         
+        // Default log level is error so that log calls without level will always be processed
         if(LogLevels::isValidValue($level) && !array_key_exists($level, self::$levels))
             $level = LogLevels::ERROR;
         
+        // Add call context data if level is debug
         if($level == LogLevels::DEBUG) {
+            // Fecth call stack
             $stack = debug_backtrace();
+            
+            // Remove Logger internals
             while($stack && array_key_exists('class', $stack[0]) && ($stack[0]['class'] == 'Logger'))
                 array_shift($stack);
             
+            // If call context is known
             if($stack && array_key_exists('function', $stack[0]) && $stack[0]['function']) {
                 $caller = $stack[0];
+                
+                // Gather code location data
                 $s = $caller['file'].':'.$caller['line'].' ';
                 if(array_key_exists('class', $caller)) {
                     if(!array_key_exists('type', $caller)) $caller['type'] = ' ';
@@ -218,11 +242,13 @@ class Logger {
                     } else $s .= '('.$caller['class'].')'.$caller['type'];
                 }
                 
+                // Resolve magics so that log is easier to read
                 if(in_array($caller['function'], array('__call', '__callStatic'))) {
                     $caller['function'] = $caller['args'][0];
                     $caller['args'] = $caller['args'][1];
                 }
                 
+                // Add arguments (objects are mentionned as just "object" without details)
                 $args = array();
                 foreach($caller['args'] as $arg) {
                     $a = '';
@@ -244,30 +270,39 @@ class Logger {
             }
         }
         
+        // Add authenticated user id if any, except in debug mode as line is already long
         try {
-            $dbiexception = count(array_filter(debug_backtrace(), function($t) {
+            // No user id in log if we are recording a low level exception
+            // as it may end up in throwing another one while getting
+            // user / user id and create a loop ...
+            $risky_exception = count(array_filter(debug_backtrace(), function($t) {
                 return array_key_exists('class', $t) && preg_match('`^(Core|Config|DBI).+Exception$`', $t['class']);
             }));
             
-            if($level != LogLevels::DEBUG && !$dbiexception && Auth::user())
+            if($level != LogLevels::DEBUG && !$risky_exception && Auth::user())
                 $message = '[user '.Auth::user()->id.'] '.$message;
             
         } catch(Exception $e) {}
         
+        // Build final message ...
         $message = '['.self::$process.':'.$level.'] '.$message;
         
+        // ... and give it to defined facilities
         foreach(self::$facilities as $facility) {
+            // Filter based on process if facility requires it
             if(array_key_exists('process', $facility)) {
                 $accepted = array_filter(array_map('trim', preg_split('`[\s,|]`', $facility['process'])));
                 if(!in_array('*', $accepted) && !in_array(self::$process, $accepted))
                     continue;
             }
             
+            // Filter based on level if facility requires it
             if(array_key_exists('level', $facility)) {
                 $max = self::$levels[$facility['level']];
                 if(self::$levels[$level] > $max) continue;
             }
             
+            // Forward to facility related method with config
             $method = get_called_class().'::'.$facility['method'];
             call_user_func($method, $facility, $level, $message);
         }
@@ -288,9 +323,9 @@ class Logger {
      * @param string $message
      */
     private static function logFile($facility, $level, $message) {
+        // Build file path
         $file = $facility['path'];
         $ext = '';
-        
         if(preg_match('`^(.*/)?([^/]+)\.([a-z0-9]+)$`i', $file, $m)) {
             $file = $m[1].$m[2];
             $ext = $m[3];
@@ -299,8 +334,10 @@ class Logger {
             $ext = 'log';
         }
         
+        // Extend name if process separated files enabled
         if(array_key_exists('separate_processes', $facility)) $file .= '_'.self::$process;
         
+        // Extend name if rotation is enabled
         if(array_key_exists('rotate', $facility)) switch($facility['rotate']) {
             case 'hourly' :  $file .= '_'.date('Y-m-d').'_'.date('H').'h'; break;
             case 'daily' :   $file .= '_'.date('Y-m-d'); break;
@@ -309,8 +346,10 @@ class Logger {
             case 'yearly' :  $file .= '_'.date('Y'); break;
         }
         
+        // Add file extension
         if($ext) $file .= '.'.$ext;
         
+        // Write to file, log with PHP internal logger if any problem to avoid loops
         if($fh = fopen($file, 'a')) {
             fwrite($fh, '['.date('Y-m-d H:i:s').'] '.trim($message)."\n");
             fclose($fh);

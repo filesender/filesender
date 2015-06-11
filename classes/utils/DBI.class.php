@@ -60,6 +60,7 @@ class DBI {
             if(!array_key_exists($p, $config)) $config[$p] = null;
         }
         
+        // Build dsn from individual components if not defined
         if(!$config['dsn']) {
             if(!$config['type']) $config['type'] = 'pgsql';
             
@@ -76,13 +77,18 @@ class DBI {
             $config['dsn'] = $config['type'].':'.implode(';', $params);
         }
         
+        // Check that required parameters are not empty
         if(!$config['username']) throw new DBIConnexionMissingParameterException('username');
         if(!$config['password']) throw new DBIConnexionMissingParameterException('password');
         
         if(!$config['driver_options']) $config['driver_options'] = array();
         
+        // Try to connect, cast any thrown exception
         try {
+            // Connect
             self::$instance = new PDO($config['dsn'], $config['username'], $config['password'], $config['driver_options']);
+            
+            // Set options : throw if error, do not cast returned values to string, fetch as associative array by default
             self::$instance->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             self::$instance->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, false);
             self::$instance->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
@@ -113,14 +119,20 @@ class DBI {
      * @return mixed value returned by PDO call
      */
     public static function __callStatic($name, $args) {
+        // Connect if not already done
         self::connect();
         
+        // Log usual queries
         if(in_array($name, array('prepare', 'query', 'exec'))) Logger::debug('DBI call');
         
+        // Does the called method exist ?
         if(!method_exists(self::$instance, $name)) throw new DBIUsageException('Calling unknown DBI method '.$name);
+        
+        // Try to call, cast any thrown exception
         try {
             $r = call_user_func_array(array(self::$instance, $name), $args);
             
+            // Cast any returned PDOStatment to a DBIStatment so that fetches and such may be logged
             if(is_object($r) && ($r instanceof PDOStatement))
                 return new DBIStatement($r);
                 
@@ -142,6 +154,7 @@ class DBI {
         foreach($sets as $key => $values) {
             if(is_array($values)) $values = count($values);
             
+            // If there is values replace by fitting amount of OR clauses, set falsy clause otherwise
             if(is_int($values) && $values) {
                 $query = preg_replace_callback('`\s+([^\s]+)\s+IN\s+'.$key.'(\s+|$)`i', function($m) use($values) {
                     $cdn = array();
@@ -155,6 +168,7 @@ class DBI {
             }
         }
         
+        // Prepare transformed query
         return self::prepare($query);
     }
 }
@@ -188,8 +202,10 @@ class DBIStatement {
      * @throws DBIUsageException
      */
     public function __call($method, $args) {
+        // Log execute calls
         if($method == 'execute') Logger::debug('DBI call');
         
+        // Transform any IN subset into serialized OR values
         if($method == 'execute') {
             foreach($args[0] as $key => $value) {
                 if(is_array($value)) {
@@ -201,7 +217,10 @@ class DBIStatement {
             }
         }
         
+        // Is the required method valid ?
         if(!method_exists($this->statement, $method)) throw new DBIUsageException('Calling unknown DBIStatement method '.$method);
+        
+        // Tries to propagate the call, cast any thrown exception
         try {
             return call_user_func_array(array($this->statement, $method), $args);
         } catch(Exception $e) {
