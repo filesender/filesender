@@ -110,22 +110,28 @@ class Report {
      * @param mixed $recipient User, email address
      */
     public function sendTo($recipient) {
+        // try to get recipient's lang
         $lang = null;
         if(is_object($recipient) && ($recipient instanceof User)) {
             $lang = $recipient->lang;
         }
         
+        // Get format, default if not defined
         $format = Config::get('report_format');
         if(!$format) $format = ReportFormats::INLINE;
         
+        // Check format
         if(!ReportFormats::isValidName($format))
             throw new ReportUnknownFormatException($format);
         
+        // Need iconv utility for pdf rendering (dompdf dependency)
         if(($format == ReportFormats::PDF) && !extension_loaded('iconv'))
             throw new ReportFormatNotAvailableException('iconv not found');
         
         $content = array('plain' => '', 'html' => '');
         $attachment = null;
+        
+        // Build mail body depending on format
         if($format == ReportFormats::PDF) {
             $html = Template::process('!report_pdf', array('report' => $this));
             
@@ -154,6 +160,7 @@ class Report {
             $content['html'] = Template::process('!report_html', array('report' => $this));
         }
         
+        // Build translated email
         $lid = ($format == ReportFormats::INLINE) ? 'inline' : 'attached';
         $mail = TranslatableEmail::prepare('report_'.$lid, $recipient, $this->target, array(
             'target' => array(
@@ -163,8 +170,10 @@ class Report {
             'content' => $content,
         ));
         
+        // Attach report file if any
         if($attachment) $mail->attach($attachment);
         
+        // Send the report
         $mail->send();
     }
 }

@@ -73,9 +73,11 @@ class Lang {
      * @return array
      */
     public static function getAvailableLanguages() {
+        // Already cached ?
         if(is_null(self::$available_languages)) {
             self::$available_languages = array();
             
+            // Include first found locale list
             $sources = array('config/language/locale.php', 'language/locale.php');
             
             $locales = array();
@@ -86,6 +88,7 @@ class Lang {
                 }
             }
             
+            // Normalize locales
             foreach($locales as $id => $dfn) {
                 $name = $id;
                 $path = $dfn;
@@ -117,9 +120,11 @@ class Lang {
         $raw_code = str_replace('_', '-', strtolower($raw_code));
         $available = self::getAvailableLanguages();
         
+        // Exists as is ?
         if(array_key_exists($raw_code, $available))
             return $raw_code;
         
+        // Lookup main code
         $parts = explode('-', $raw_code);
         $main = array_shift($parts);
         
@@ -270,16 +275,19 @@ class Lang {
         
         $dictionary = array();
         
+        // Translations locations
         $locations = array(
             'language',
             'config/language'
         );
         
+        // Lookup locations for translation files
         foreach($locations as $location) {
             $path = FILESENDER_BASE.'/'.$location.'/'.$available[$code]['path'];
             
             if(!is_dir($path)) continue;
             
+            // Main translation file
             if(file_exists($path.'/lang.php')) {
                 $lang = array();
                 include $path.'/lang.php';
@@ -287,6 +295,7 @@ class Lang {
                     $dictionary[self::cleanId($id)] = array('text' => $s);
             }
             
+            // Extended file name based translations
             foreach(scandir($path) as $i) {
                 if(!is_file($path.'/'.$i)) continue;
                 
@@ -310,8 +319,10 @@ class Lang {
         
         self::$loading = true;
         
+        // Get lang codes stack
         $stack = self::getCodeStack();
         
+        // Build fallback dictionaries
         $fallback = array();
         foreach($stack['fallback'] as $code) {
             $dictionary = self::loadDictionary($code);
@@ -321,6 +332,7 @@ class Lang {
                     $fallback[$id] = $d;
         }
         
+        // Set dictionaries cache
         self::$translations = array(
             'main' => self::loadDictionary($stack['main']),
             'fallback' => $fallback
@@ -337,11 +349,17 @@ class Lang {
      * @return Lang
      */
     public static function translate($id) {
+        // Load dictionaries if not already done
         self::loadDictionaries();
+        
+        // Clean given id from unwanted characters
         $id = self::cleanId($id);
         
+        // Need a translation while loading dictionaries, probably
+        // encoutering an exception, do not translate to avoid loops
         if(self::$loading) return new Translation('{'.$id.'}', false);
         
+        // Lookup for translation in the main language, warn and look in the fallbacks if not found
         $src = '';
         if(array_key_exists($id, self::$translations['main'])) {
             $tr = self::$translations['main'][$id];
@@ -360,6 +378,7 @@ class Lang {
             }
         }
         
+        // File based ? Then loads it up and cache contents
         if(is_null($tr['text']) && array_key_exists('file', $tr)) {
             ob_start(); // Allows for php inside translations
             include $tr['file'];
@@ -369,7 +388,7 @@ class Lang {
             self::$translations[$src][$id]['text'] = $s; // Update cache
         }
         
-        // Config syntax
+        // Config syntax replacments
         $tr['text'] = preg_replace_callback('`\{(|size:)(cfg|conf|config):([^}]+)\}`', function($m) {
             $value = Config::get($m[3]);
             switch(substr($m[1], 0, -1)) {
@@ -378,6 +397,7 @@ class Lang {
             return $value;
         }, $tr['text']);
         
+        // Cast to translation object
         return new Translation($tr['text']);
     }
     
@@ -400,40 +420,55 @@ class Lang {
      * @return array of Lang
      */
     public static function translateEmail($id, $lang = null) {
+        // Load (user) lang codes stack
         $stack = self::getCodeStack();
+        
+        // Merge main and fallbacks into a single stack
         $codes = $stack['fallback'];
         array_unshift($codes, $stack['main']);
+        
+        // Add given lang if any
         if($lang) array_unshift($codes, $lang);
         
+        // Translations locations
         $locations = array(
             'config/language',
             'language'
         );
         
+        // List available languages
         $available = self::getAvailableLanguages();
         
+        // Look for translation in code stack ...
         foreach($codes as $code) {
+            // ... and for each possible location
             foreach($locations as $location) {
+                // Translations path
                 $path = FILESENDER_BASE.'/'.$location.'/'.$available[$code]['path'];
                 
                 if(!is_dir($path)) continue;
                 
+                // Mail translation file
                 $file = $path.'/'.$id.'.mail';
                 
                 if(file_exists($file.'.php')) $file .= '.php';
                 
+                // No matching file ? Then go to next location / code
                 if(!file_exists($file)) continue;
                 
+                // Load file contents and eval
                 ob_start();
                 include $file;
                 $translation = trim(ob_get_clean());
                 
+                // Separate headers from body
                 $parts = preg_split('`\n\s*\n`', $translation, 2);
                 
                 // Do we have headings
                 $subject = '{cfg:site_name}';
                 if(count($parts) > 1) {
                     foreach(explode('\n', $parts[0]) as $line) {
+                        // Get subject
                         if(preg_match('`^\s*subject\s*:\s*(.*)$`i', $line, $m)) {
                             array_shift($parts);
                             $subject = trim(Config::get('email_subject_prefix').' '.$m[1]);
@@ -441,7 +476,7 @@ class Lang {
                     }
                 }
                 
-                // Try to split body
+                // Try to split body based on alternatives tags
                 $misc = array();
                 $plain = array();
                 $html = array();
@@ -462,6 +497,7 @@ class Lang {
                     }else $misc[] = $line;
                 }
                 
+                // Trim contents
                 $misc = trim(implode("\n", $misc));
                 $plain = trim(implode("\n", $plain));
                 $html = trim(implode("\n", $html));
@@ -480,7 +516,7 @@ class Lang {
                     }
                 }
                 
-                // Config syntax
+                // Config syntax replacements
                 list($subject, $plain, $html) = preg_replace_callback('`\{(|size:)(cfg|conf|config):([^}]+)\}`', function($m) {
                     $value = Config::get($m[3]);
                     switch($m[1]) {
@@ -489,7 +525,7 @@ class Lang {
                     return $value;
                 }, array($subject, $plain, $html));
                 
-                // Convert to Lang instances
+                // Convert to Translation instance with sub-Translations
                 return new Translation(array(
                     'subject' => $subject,
                     'plain' => html_entity_decode($plain, ENT_QUOTES, 'UTF-8'), // Reverse placeholder resolver's Utilities::sanitizeOutput for plain parts
@@ -498,6 +534,7 @@ class Lang {
             }
         }
         
+        // No translation founs
         throw new DetailedException('mail_translation_not_found', 'id = '.$id);
     }
     
@@ -534,6 +571,7 @@ class Translation {
      * @param string $translation
      */
     public function __construct($translation, $allow_replace = true) {
+        // Set text if single translation, set sub-Translations otherwise
         if(is_string($translation)) {
             $this->translation = $translation;
         } else {
@@ -559,10 +597,12 @@ class Translation {
      * @return Lang
      */
     public function replace() {
+        // Do not replace anything unless allowed
         if(!$this->allow_replace) return $this;
         
         $args = func_get_args();
         
+        // Forward call to any sub-Translations
         if(!is_string($this->translation)) {
             $t = array();
             foreach($this->translation as $k => $v)
@@ -571,6 +611,7 @@ class Translation {
             return new self($t);
         }
         
+        // Transform function arguments into placeholders values array
         $placeholders = array();
         while($arg = array_shift($args)) {
             if(is_string($arg)) {
@@ -584,21 +625,27 @@ class Translation {
             }
         }
         
+        // base translation
         $translation = $this->translation;
         
+        // Placeholder value getter
         $placeholder_resolver = function($path, $raw = false) use($placeholders) {
+            // Need value casting ?
             $path = explode(':', $path);
             $cast = (count($path) > 1) ? array_shift($path) : null;
             $path = array_shift($path);
             
+            // Path parts
             $path = array_filter(array_map('trim', explode('.', $path)));
             $name = array_shift($path);
             
+            // Return empty if placeholder does not exist
             if(!array_key_exists($name, $placeholders))
                 return null;
             
             $value = $placeholders[$name];
             
+            // Follow path if any
             while(!is_null($entry = array_shift($path))) {
                 if(is_object($value)) {
                     $value = $value->$entry;
@@ -623,6 +670,7 @@ class Translation {
                 }
             }
             
+            // Cast if needed
             if($cast) switch($cast) {
                 case 'date' : $value = Utilities::formatDate($value); break;
                 case 'datetime' : $value = Utilities::formatDate($value, true); break;
@@ -630,6 +678,7 @@ class Translation {
                 case 'size' : $value = Utilities::formatBytes($value); break;
             }
             
+            // Convert non-scalar to scalar unless raw required
             if(!$raw) {
                 if(is_array($value)) $value = count($value);
                 if(is_object($value)) $value = true;
@@ -638,36 +687,55 @@ class Translation {
             return $value;
         };
         
+        // Replace each loops
         $translation = preg_replace_callback('`\{each:([^\}]+)\}(.+)\{endeach\}`msiU', function($m) use($placeholders, $placeholder_resolver) {
+            // Source variable
             $src = $m[1];
+            
+            // Inner body
             $content = new Translation($m[2]);
+            
+            // Whole each statment
             $raw = $m[0];
             
+            // Inner loop variable name
             $itemname = 'item';
             if(preg_match('`^(.+)\s+as\s+([a-z0-9_]+)$`i', $src, $m)) {
                 $itemname = $m[2];
                 $src = $m[1];
             }
             
+            // Resolve source variable and get raw value
             $src = $placeholder_resolver($src, true);
             
-            if(is_null($src)) // Placeholder not yet defined
+            // Placeholder not (yet) defined, do not replace
+            if(is_null($src))
                 return $raw;
             
+            // Source variable is notan array, cannot replace
             if(!is_array($src)) return '';
             
+            // Loop and replace inner variables
             $out = array();
             foreach($src as $item)
                 $out[] = $content->replace(array_merge($placeholders, array($itemname => $item)))->out();
             
+            // Return serialized content
             return implode('', $out);
         }, $translation);
         
+        // Replace if statments
         $translation = preg_replace_callback('`\{if:([^\}]+)\}(.+)(?:\{else\}(.+))?\{endif\}`msiU', function($m) use($placeholder_resolver) {
+            // Get test
             $condition = $m[1];
+            
+            // Get "if true" content
             $ifcontent = $m[2];
+            
+            // Get "if false" content
             $elsecontent = (count($m) > 3) ? $m[3] : '';
             
+            // Evaluate test (and before or fashion)
             $match = false;
             $leftor = array();
             foreach(array_map('trim', array_filter(explode('|', $condition))) as $orpart) {
@@ -677,29 +745,36 @@ class Translation {
                     $op = 'bool';
                     $ov = true;
                     $neg = false;
+                    
+                    // Is there a comparison operator
                     if(preg_match('`^(.+)(==|!=|<|<=|>|>=)(.+)$`', $andpart, $m)) {
                         $andpart = trim($m[1]);
                         $op = $m[2];
                         $ov = trim($m[3]);
                     }
                     
+                    // Is there any negation ?
                     $andpart = trim($andpart);
                     if(substr($andpart, 0, 1) == '!') {
                         $neg = true;
                         $andpart = trim(substr($andpart, 1));
                     }
                     
+                    // Resolve compared value
                     $value = $placeholder_resolver($andpart);
                     
-                    if(is_null($value)) { // Placeholder not available
+                    // Placeholder not (yet) available, cannot choose, leave part as is
+                    if(is_null($value)) {
                         $leftand[] = ($neg ? '!' : '').$andpart.($op != 'bool' ? $op.$ov : '');
                         $smatch = false;
                         break;
                     }
                     
+                    // Cast value to scalar
                     if(is_object($value)) $value = true;
                     if(is_array($value)) $value = count($value);
                     
+                    // Cast value to compare to
                     if($ov == 'true') {
                         $ov = true;
                     } else if($ov == 'false') {
@@ -713,6 +788,7 @@ class Translation {
                             $ov = $m[2];
                     }
                     
+                    // Run the test
                     switch($op) {
                         case '==' : $smatch &= ($value == $ov); break;
                         case '!=' : $smatch &= ($value != $ov); break;
@@ -727,6 +803,7 @@ class Translation {
                     }
                 }
                 
+                // Any test that we couldn't run ? Then leave what's not resolved for later, reduce value otherwise
                 if(count($leftand)) {
                     $leftor[] = implode('&', $leftand);
                 } else if($smatch) {
@@ -735,12 +812,15 @@ class Translation {
                 }
             }
             
-            if(!$match && count($leftor)) // Conditions remains, set it for next replace
+            // Part of the test remains, set it for next replace
+            if(!$match && count($leftor))
                 return '{if:'.implode('|', $leftor).'}'.$ifcontent.($elsecontent ? '{else}'.$elsecontent : '').'{endif}';
             
+            // Return fitting content
             return $match ? $ifcontent : $elsecontent;
         }, $translation);
         
+        // Basic placeholder replacement
         foreach($placeholders as $k => $v) {
             $translation = preg_replace_callback('`\{(([^:\}]+:)?'.$k.'(\.[a-z0-9_\(\)]+)*)\}`iU', function($m) use($placeholder_resolver) {
                 if(substr($m[0], 0, 4) == '{if:') return $m[0]; // Remaining ifs
@@ -751,6 +831,7 @@ class Translation {
             }, $translation);
         }
         
+        // Return new translation object for further replacements
         return new self($translation);
     }
     
@@ -784,10 +865,10 @@ class Translation {
         
         $out = $this->translation;
         
-        // Get rid of unresolved ifs
+        // Get rid of unresolved if statments
         $out = preg_replace('`\{if:([^\}]+)\}(.+)\{endif\}`msiU', '', $out);
         
-        // Get rid of unresolved eachs
+        // Get rid of unresolved each loops
         $out = preg_replace('`\{each:([^\}]+)\}(.+)\{endeach\}`msiU', '', $out);
         
         return $out;

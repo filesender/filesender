@@ -227,12 +227,16 @@ class GUI {
     public function currentPage($page = null) {
         if(!is_null($page)) self::$current_page = $page;
         
+        // Already cached ?
         if(!self::$current_page) {
+            // Get from request
             $page = null;
             if(array_key_exists('s', $_REQUEST)) $page = $_REQUEST['s'];
             
+            // Maintenance override
             if(Config::get('maintenance')) $page = 'maintenance';
             
+            // Landing page if no value found
             if(!$page) {
                 if(Auth::isAuthenticated() && !Auth::isGuest()) {
                     $landing_page = Config::get('landing_page');
@@ -242,6 +246,7 @@ class GUI {
                 }
             }
             
+            // Fail if unknown
             if(!GUIPages::isValidValue($page))
                 throw new GUIUnknownPageException($page);
             
@@ -257,17 +262,21 @@ class GUI {
      * @return array
      */
     public static function allowedPages() {
+        // Already cached ?
         if(is_null(self::$allowed_pages)) {
             self::$allowed_pages = array();
             
+            // Authenticated users have access to lots ...
             if(Auth::isAuthenticated()) {
                 if(Auth::isGuest()) {
                     self::$allowed_pages = array('upload');
                 } else {
                     self::$allowed_pages = array('upload', 'transfers', 'guests', 'download');
                     
+                    // ... and admin to even more !
                     if(Auth::isAdmin()) self::$allowed_pages[] = 'admin';
                     
+                    // Is user page enabled ?
                     if(Config::get('user_page')) self::$allowed_pages[] = 'user';
                 }
             }
@@ -292,6 +301,7 @@ class GUI {
     public static function isUserAllowedToAccessPage($page = null) {
         if(is_null($page)) $page = self::currentPage();
         
+        // Fail if unknown
         if(!GUIPages::isValidValue($page))
             throw new GUIUnknownPageException($page);
         

@@ -56,13 +56,15 @@ class FeedbackMail {
     public static function parse($message) {
         $o = new self();
         
+        // Separate headers and body
         $message = preg_split('/\n\s*\n/', $message, 2);
         
+        // Parse headers
         $o->headers = FeedbackMailHeaders::parse(array_shift($message));
         
         $message = array_shift($message);
         
-        // Roughly parse body
+        // Roughly parse body parts if any
         if($o->headers->content_type_boundary) {
             $parts = explode('--'.$o->headers->content_type_boundary, $message);
             array_shift($parts);
@@ -110,6 +112,7 @@ class FeedbackMailHeaders {
     public static function parse($raw_headers) {
         $o = new self();
         
+        // Separate headers
         $entries = array();
         foreach(explode("\n", trim($raw_headers)) as $line) {
             if(preg_match('/^\s+/', $line)) {
@@ -117,10 +120,14 @@ class FeedbackMailHeaders {
             } else $entries[] = trim($line);
         }
         
+        // Parse individual headers
         foreach($entries as $entry) {
+            // Skip if bad format
             if(preg_match('/^([^\s]+):(.+)$/', $entry, $m)) {
                 $key = str_replace('-', '_', strtolower($m[1]));
                 $value = trim(mb_decode_mimeheader($m[2]));
+                
+                // Handle Content-Type options
                 if($key == 'content_type') {
                     $sparts = array_map('trim', explode(';', $value));
                     $value = array_shift($sparts);
@@ -174,23 +181,29 @@ class FeedbackMailPart {
     public static function parse($part) {
         $o = new self();
         
+        // Separate part headers and body
         $part = preg_split('/\n\s*\n/', trim($part), 2);
         
+        // Parse part headers
         $o->headers = FeedbackMailHeaders::parse(array_shift($part));
         
+        // Do not parse body (less memory consuption) if not required part type
         if(self::$parse_only && $o->headers->content_type) {
             if(!preg_match('`^('.implode('|', array_map(function($m) {
                 return str_replace('*', '.*', $m);
             }, self::$parse_only)).')$`', $o->headers->content_type)) return $o;
         }
         
+        // Fetch content
         $o->content = trim((string)array_shift($part));
         
+        // Reverse transfer encoding
         switch($o->headers->content_transfer_encoding) {
             case 'quoted-printable': $o->content = quoted_printable_decode($o->content); break;
             case 'base64': $o->content = base64_decode($o->content);
         }
         
+        // Convert charset if different than utf8
         if($o->headers->content_type_charset)
             $o->content = iconv($o->headers->content_type_charset, 'UTF-8', $o->content);
         

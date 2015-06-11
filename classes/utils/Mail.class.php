@@ -35,14 +35,44 @@ if (!defined('FILESENDER_BASE'))
     die('Missing environment');
 
 class Mail {
+    /**
+     * Message-Id header value
+     */
     private $msg_id = null;
+    
+    /**
+     * Return path value
+     */
     private $return_path = null;
+    
+    /**
+     * HTML body
+     */
     private $html = false;
+    
+    /**
+     * Subject header
+     */
     private $subject = '?';
+    
+    /**
+     * text body parts
+     */
     private $contents = array('html' => '', 'plain' => '');
+    
+    /**
+     * Recipients
+     */
     private $rcpt = array('To' => array(), 'Cc' => array(), 'Bcc' => array());
+    
+    /**
+     * Attached files
+     */
     private $attachments = array();
     
+    /**
+     * Additionnal headers
+     */
     private $headers = array();
     
     /**
@@ -72,13 +102,17 @@ class Mail {
     public function __set($property, $value) {
         if($property == 'subject') {
             $this->subject = mb_encode_mimeheader(trim(str_replace(array("\n", "\r"), ' ', $value)), mb_internal_encoding(), 'Q');
+            
         }else if($property == 'return_path') {
             if(!filter_var($value, FILTER_VALIDATE_EMAIL)) throw new BadEmailException($value);
             $this->return_path = (string)$value;
+            
         }else if($property == 'html') {
             $this->html = (bool)$value;
+            
         }else if($property == 'msg_id') {
             $this->msg_id = (string)$value;
+            
         }else throw new PropertyAccessException($this, $property);
     }
     
@@ -143,7 +177,8 @@ class Mail {
      * @param bool $asis wether to chunksplit given content
      */
     public function write($contents, $asis = false) {
-        if ($this->html) {
+        // Process body if HTML
+        if($this->html) {
             $ctns = preg_replace('`<a[^>]+href=["\']?(mailto:)?([^"\']+)["\']?[^>]*>([^<]+)</a>`i', '$2', $contents);
             if ($asis) {
                 $this->contents['html'] .= $contents;
@@ -186,6 +221,7 @@ class Mail {
     public function writeHTML($ctn) {
         if (!$ctn || !$this->html)
             return;
+        
         $this->contents['html'] .= $ctn;
     }
     
@@ -197,6 +233,7 @@ class Mail {
     public function writePlain($ctn) {
         if (!$ctn)
             return;
+        
         $this->contents['plain'] .= $ctn;
     }
     
@@ -241,21 +278,28 @@ class Mail {
     public function build($raw = false) {
         $nl = GlobalConstants::NEW_LINE;
         
+        // Additionnal headers
         $headers = $this->headers;
         
+        // Generate Message-Id if none
         if(!$this->msg_id) $this->msg_id = 'filesender-'.uniqid();
         
+        // Extract "main" recipient
         $to = $raw ? null : array_shift($this->rcpt['To']);
         
+        // Add recipients for each reception mode
         foreach($this->rcpt as $mode => $rcpt)
             if(count($rcpt))
                 $headers[$mode] = implode(', ', $rcpt);
         
+        // Add Message-Id
         $headers['Message-Id'] = $this->msg_id;
         
-        if ($this->return_path)
+        // Add Return-Path if any
+        if($this->return_path)
             $headers['Return-Path'] = $this->return_path;
         
+        // Mailer identification and basic headers
         $headers['X-Mailer'] = 'YMail PHP/' . phpversion();
         $headers['MIME-Version'] = '1.0';
         
@@ -265,6 +309,7 @@ class Mail {
         $mime_bnd_alt = 'mbnd--alt--' . $bndid;
         $mime_bnd_rel = 'mbnd--rel--' . $bndid;
         
+        // Get number of each attachment types
         $related = count(array_filter($this->attachments, function($a) {
             return $a->cid;
         }));
@@ -273,19 +318,23 @@ class Mail {
             return !$a->cid;
         }));
         
+        // Add Subject header if raw mail (given to PHP's mail function separately otherwise)
         if($raw) $headers['Subject'] = $this->subject;
         
         $content = '';
         
+        // Required by rfc822
         if ($mixed || $related || $this->html)
             $content .= 'This is a multi-part message in MIME format.' . $nl.$nl;
         
         $plain = $this->contents['plain'];
         $html = $this->contents['html'];
         
+        // Only keep HTML body content
         if (preg_match('`<body[^>]*>`', $html)) // Strip existing body
             $html = preg_replace('`^.*<body[^>]*>(.+)</body>.*$`ims', '$1', $html);
         
+        // Get HTML mail styles
         $styles = array('www/css/mail.css', 'www/skin/mail.css');
         $css = '';
         foreach($styles as $file)
@@ -293,6 +342,7 @@ class Mail {
                 $css .= "\n\n".file_get_contents(FILESENDER_BASE.'/'.$file);
         $css = trim($css);
         
+        // Build HTML
         $html = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">' . "\n"
                 . '<html>' . "\n"
                 . "\t" . '<head>' . "\n"
@@ -304,10 +354,13 @@ class Mail {
                 . "\t" . '</body>'
                 . "\n" . '</html>';
         
+        // Encode contents
         $plain = quoted_printable_encode($plain);
         $html = quoted_printable_encode($html);
         
         if ($mixed && $this->html && $related) {
+            // Mail with attachments, embedded attachments and HTML part
+            
             $headers['Content-type'] = 'multipart/mixed; boundary="' . $mime_bnd_mixed . '"';
             
             $content .= '--' . $mime_bnd_mixed . $nl;
@@ -332,7 +385,10 @@ class Mail {
             
             $content .= $this->buildAttachments($mime_bnd_mixed, false); // mixed
             $content .= '--' . $mime_bnd_mixed . '--' . $nl;
+            
         } elseif ($mixed && $this->html) {
+            // Mail with attachments and HTML part
+            
             $headers['Content-type'] = 'multipart/mixed; boundary="' . $mime_bnd_mixed . '"';
             
             $content .= '--' . $mime_bnd_mixed . $nl;
@@ -352,7 +408,10 @@ class Mail {
             
             $content .= $this->buildAttachments($mime_bnd_mixed, false); // mixed
             $content .= '--' . $mime_bnd_mixed . '--' . $nl;
+            
         } elseif (!$this->html && ($mixed || $related)) {
+            // Plain mail with attachments of any type
+            
             $headers['Content-type'] = 'multipart/mixed; boundary="' . $mime_bnd_mixed . '"';
             
             $content .= '--' . $mime_bnd_mixed . $nl;
@@ -363,7 +422,10 @@ class Mail {
             $content .= $this->buildAttachments($mime_bnd_mixed, true); // related for some reason
             $content .= $this->buildAttachments($mime_bnd_mixed, false); // mixed
             $content .= '--' . $mime_bnd_mixed . '--' . $nl;
+            
         } elseif ($this->html && $related) {
+            // HTML mail with embedded attachments
+            
             $headers['Content-type'] = 'multipart/alternative; boundary="' . $mime_bnd_alt . '"';
             
             $content .= '--' . $mime_bnd_alt . $nl;
@@ -382,7 +444,10 @@ class Mail {
             $content .= $this->buildAttachments($mime_bnd_rel, true); // related
             $content .= '--' . $mime_bnd_rel . '--' . $nl;
             $content .= '--' . $mime_bnd_alt . '--' . $nl;
+            
         } elseif ($this->html) {
+            // HTML mail
+            
             $headers['Content-type'] = 'multipart/alternative; boundary="' . $mime_bnd_alt . '"';
             
             $content .= '--' . $mime_bnd_alt . $nl;
@@ -396,17 +461,22 @@ class Mail {
             $content .= $html . $nl.$nl;
             
             $content .= '--' . $mime_bnd_alt . '--' . $nl;
+            
         } else {
+            // Plain mail
+            
             $headers['Content-Type'] = 'text/plain; charset="utf-8"' . $nl;
             $headers['Content-Transfer-Encoding'] = 'quoted-printable';
             
             $content .= $plain . $nl.$nl;
         }
         
+        // Build headers
         $headers = implode($nl, array_map(function($name, $value) {
             return $name.': '.$value;
         }, array_keys($headers), array_values($headers)));
         
+        // Return raw if needed
         if($raw) return $headers . $nl.$nl . $content;
         
         return array('to' => $to, 'subject' => $this->subject, 'body' => $content, 'headers' => $headers);
@@ -528,25 +598,34 @@ class MailAttachment {
     public function build() {
         $nl = GlobalConstants::NEW_LINE;
         
+        // Fail if missing data
         if(is_null($this->content) && is_null($this->path))
             throw new MailAttachmentNoContentException($this->path);
         
+        // Extract name from path
         if(!$this->name && $this->path) $this->name = basename($this->path);
         
+        // Extract mime type from path
         if(!$this->mime_type && $this->name) $this->mime_type = Mime::getFromFile($this->name);
         
+        // Set Content-Type part header
         $source = 'Content-Type: '.$this->mime_type.($this->name ? '; name="'.$this->name.'"' : '').$nl;
         
+        // Set Content-Transfer-Encoding part header
         if($this->transfer_encoding)
             $source .= 'Content-Transfer-Encoding: '.$this->transfer_encoding.$nl;
         
+        // Set Content-Disposition part header
         $source .= 'Content-Disposition: '.$this->disposition.($this->name ? '; filename="'.$this->name.'"' : '').$nl;
         
+        // Set Content-ID part header (for embedded attachments)
         if($this->cid)
             $source .= 'Content-ID: '.$this->cid.$nl;
         
+        // Get file data
         $content = $this->content ? $this->content : file_get_contents($this->path);
         
+        // Encode file data if needed
         switch($this->transfer_encoding) {
             case 'base64' : $content = chunk_split(base64_encode($content)); break;
         }

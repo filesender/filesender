@@ -54,9 +54,11 @@ class Disclosed {
         
         self::$informations = array();
         
+        // Do we have disclosable ?
         $disclose = Config::get('disclose');
         if(!$disclose) return;
         
+        // Cast disclosable definition
         if(!is_array($disclose)) {
             if(!is_string($disclose)) 
                 throw new ConfigBadParameterException('disclose');
@@ -67,6 +69,7 @@ class Disclosed {
             foreach($d as $k) $disclose[$k] = $k;
         }
         
+        // Gather disclosable values
         foreach($disclose as $k => $v) {
             $key = !is_numeric($k) ? $k : (is_string($v) ? $v : null);
             
@@ -97,6 +100,7 @@ class Disclosed {
      * @return bool
      */
     public static function isDisclosed($key) {
+        // Load disclosables if not already done
         self::load();
         
         return array_key_exists($key, self::$informations);
@@ -110,11 +114,14 @@ class Disclosed {
      * @return mixed
      */
     public static function get($key) {
+        // Load disclosables if not already done
         self::load();
         
+        // Is data disclosable ?
         if(!self::isDisclosed($key))
             return null;
         
+        // Evaluate value
         if(!array_key_exists('value', self::$informations[$key])) {
             if(array_key_exists('config', self::$informations[$key])) {
                 self::$informations[$key]['value'] = Config::get($key);
@@ -134,6 +141,7 @@ class Disclosed {
      * @return array
      */
     public static function all() {
+        // Load disclosables if not already done
         self::load();
         
         $info = array();
