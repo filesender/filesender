@@ -93,12 +93,14 @@ class TrackingEvent extends DBObject
      */
     public function __construct($id = null, $data = null) {
         if(!is_null($id)) {
+            // Load from database if id given
             $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE id = :id');
             $statement->execute(array(':id' => $id));
             $data = $statement->fetch();
             if(!$data) throw new TrackingEventNotFoundException('id = '.$id);
         }
         
+        // Fill properties from provided data
         if($data) $this->fillFromDBData($data);
     }
     
@@ -113,6 +115,7 @@ class TrackingEvent extends DBObject
      * @return self
      */
     public static function create($type, DBObject $target, $date, $details) {
+        // Check given type
         if(!TrackingEventTypes::isValidValue($type))
             throw new TrackingEventUnknownEventException($type);
         
@@ -142,12 +145,14 @@ class TrackingEvent extends DBObject
      * @param array $tracking_events
      */
     public static function reportSet($tracking_events) {
+        // Group events by type (bounce ...)
         $by_type = array();
         foreach($tracking_events as $tracking_event) {
             if(!array_key_exists($tracking_event->type, $by_type)) $by_type[$tracking_event->type] = array();
             $by_type[$tracking_event->type][] = $tracking_event;
         }
         
+        // Send separate notification for each type
         foreach($by_type as $type => $set) {
             ApplicationMail::quickSend($type.'_report', $set[0]->target->owner->email, array($type.'s' => $set));
             
@@ -166,11 +171,13 @@ class TrackingEvent extends DBObject
      * @return array
      */
     public static function getNonReported($type) {
+        // Check type
         if(!TrackingEventTypes::isValidValue($type))
             throw new TrackingEventUnknownEventException($type);
         
         $tracking_events = array();
         
+        // Gather and group by target
         foreach(self::all('reported IS NULL AND type = :type ORDER BY created', array(':type' => $type)) as $tracking_event) {
             if($tracking_event->target_type == 'Recipient') {
                 $tid = 'Transfer#'.$tracking_event->target->transfer->id;
@@ -193,10 +200,12 @@ class TrackingEvent extends DBObject
      * @return array
      */
     public static function fromTransfer($transfer) {
+        // Gather transfer's recipients ids
         $ids = array_map(function($recipient) {
             return $recipient->id;
         }, $transfer->recipients);
         
+        // Recipientless transfer cannot have tracking events
         if(!count($ids)) return array();
         
         return self::all('target_type=\'Recipient\' AND target_id IN :ids ORDER BY created', array(':ids' => $ids));

@@ -144,12 +144,14 @@ class Transfer extends DBObject {
      */
     protected function __construct($id = null, $data = null) {
         if(!is_null($id)) {
+            // Load from database if id given
             $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE id = :id');
             $statement->execute(array(':id' => $id));
             $data = $statement->fetch();
             if(!$data) throw new TransferNotFoundException('id = '.$id);
         }
         
+        // Fill properties from provided data
         if($data) $this->fillFromDBData($data);
     }
     
@@ -190,11 +192,13 @@ class Transfer extends DBObject {
     public static function fromGuestsOf($user) {
         if($user instanceof User) $user = $user->id;
         
+        // Gather user's guests transfers
         $transfers = array();
         foreach(Guest::fromUser($user) as $gv) {
             $transfers = array_merge($transfers, $gv->transfers);
         }
         
+        // Sort by date
         uasort($transfers, function($a, $b) {
             return $a->created - $b->created;
         });
@@ -218,10 +222,12 @@ class Transfer extends DBObject {
         if(!$user_email) $user_email = Auth::user()->email;
         
         if(Auth::isGuest()) {
+            // If guest keep guest's owner identity
             $transfer->guest = AuthGuest::getGuest();
             $user_email = $transfer->guest->email;
             
         } else if(!Auth::isRemote()) {
+            // Check that sender address is in the user's addresses unless remote
             if(!in_array($user_email, Auth::user()->email_addresses))
                 throw new BadEmailException($user_email);
         }
@@ -587,19 +593,25 @@ class Transfer extends DBObject {
             if(!TransferStatuses::isValidValue($value)) throw new TransferBadStatusException($value);
             if($value == TransferStatuses::AVAILABLE && !$this->made_available) $this->made_available = time();
             $this->status = (string)$value;
+            
         }else if($property == 'user_email') {
             if(!filter_var($value, FILTER_VALIDATE_EMAIL)) throw new BadEmailException($value);
             $this->user_email = (string)$value;
+            
         }else if($property == 'guest') {
             $gv = ($value instanceof Guest) ? $value : Guest::fromId($value);
             $this->guest_id = $gv->id;
+            
         }else if($property == 'lang') {
             if(!array_key_exists($value, Lang::getAvailableLanguages())) throw new BadLangCodeException($value);
             $this->lang = (string)$value;
+            
         }else if($property == 'subject') {
             $this->subject = (string)$value;
+            
         }else if($property == 'message') {
             $this->message = (string)$value;
+            
         }else if($property == 'expires') {
             if(preg_match('`^[0-9]{4}-[0-9]{2}-[0-9]{2}$`', $value)) {
                 $value = strtotime($value);
@@ -612,8 +624,10 @@ class Transfer extends DBObject {
                 throw new BadExpireException($value);
             }
             $this->expires = (string)$value;
+            
         }else if($property == 'options') {
             $this->options = $value;
+            
         }else throw new PropertyAccessException($this, $property);
     }
     
@@ -732,47 +746,60 @@ class Transfer extends DBObject {
      * This function does stuffs when a transfer become available
      */
     public function makeAvailable() {
+        // Log to audit/stats that upload ended
         Logger::logActivity(LogEventTypes::UPLOAD_ENDED, $this);
         
+        // Fail if no files
         if(!count($this->files))
             throw new TransferNoFilesException();
         
+        // Fail if no recipients
         if(!count($this->recipients))
             throw new TransferNoRecipientsException();
         
+        // Update status and log to audit/stat
         $this->status = TransferStatuses::AVAILABLE;
         $this->made_available = time();
         $this->save();
         Logger::logActivity(LogEventTypes::TRANSFER_AVAILABLE, $this);
         
         if(Auth::isGuest()) {
+            // If guest increase guest transfers counter
             $guest = AuthGuest::getGuest();
             
             $guest->transfer_count++;
             
+            // Send notification if required
             if($this->hasOption(TransferOptions::EMAIL_UPLOAD_COMPLETE))
                 TranslatableEmail::quickSend('guest_upload_complete', $guest->owner, $guest);
             
+            // Remove guest rights if valid for one upload only
             if($guest->hasOption(GuestOptions::VALID_ONLY_ONE_TIME))
                 $guest->status = GuestStatuses::CLOSED;
             
             $guest->save();
+            
         } else {
+            // If not guest send upload complete notification if required
             if($this->hasOption(TransferOptions::EMAIL_UPLOAD_COMPLETE))
                 TranslatableEmail::quickSend('upload_complete', $this->owner, $this);
             
+            // Save transfer's recipient in the user's frequent recipients
             Auth::user()->saveFrequentRecipients($this->recipients);
         }
         
-        
         if(!$this->hasOption(TransferOptions::GET_A_LINK)) {
+            // Unless get_a_link mode process options
+            
             if($this->hasOption(TransferOptions::ADD_ME_TO_RECIPIENTS) && !$this->isRecipient($this->user_email))
                 $this->addRecipient($this->user_email);
             
+            // Send notification of availability to recipients
             foreach($this->recipients as $recipient) {
                 $this->sendToRecipient('transfer_available', $recipient);
             }
             
+            // Log to audit/stat
             Logger::logActivity(LogEventTypes::TRANSFER_SENT, $this, Auth::isGuest() ? AuthGuest::getGuest() : null);
         }
         
@@ -798,7 +825,8 @@ class Transfer extends DBObject {
         $this->status = TransferStatuses::STARTED;
         $this->save();
         
-        if (Auth::isGuest()){
+        if (Auth::isGuest()) {
+            // Send upload started notification if guest and guest owner required it
             $guest = AuthGuest::getGuest();
             
             if($guest->hasOption(GuestOptions::EMAIL_UPLOAD_STARTED))

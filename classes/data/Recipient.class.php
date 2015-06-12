@@ -102,12 +102,14 @@ class Recipient extends DBObject {
      */
     protected function __construct($id = null, $data = null) {
         if(!is_null($id)) {
+            // Load from database if id given
             $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE id = :id');
             $statement->execute(array(':id' => $id));
             $data = $statement->fetch();
             if(!$data) throw new RecipientNotFoundException('id = '.$id);
         }
         
+        // Fill properties from provided data
         if($data) $this->fillFromDBData($data);
     }
     

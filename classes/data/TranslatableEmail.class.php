@@ -95,12 +95,14 @@ class TranslatableEmail extends DBObject {
      */
     protected function __construct($id = null, $data = null) {
         if(!is_null($id)) {
+            // Load from database if id given
             $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE id = :id');
             $statement->execute(array(':id' => $id));
             $data = $statement->fetch();
             if(!$data) throw new TranslatableEmailNotFoundException('id = '.$id);
         }
         
+        // Fill properties from provided data
         if($data) $this->fillFromDBData($data);
     }
     
@@ -153,13 +155,16 @@ class TranslatableEmail extends DBObject {
     public static function create(DBObject $context, $translation_id, $variables) {
         $email = new self();
         
+        // Get context (caller)
         $email->context_type = get_class($context);
         $email->context_id = $context->id;
         
+        // Get translation data and variables
         $email->translation_id = $translation_id;
         
         $email->variables = array();
         if($variables) foreach($variables as $k => $v) {
+            // Convert DBObject types to type/id pairs for saving
             if($v instanceof DBObject) $v = array(
                 'dbobject_type' => get_class($v),
                 'dbobject_id' => $v->id
@@ -167,6 +172,7 @@ class TranslatableEmail extends DBObject {
             $email->variables[$k] = $v;
         }
         
+        // Add meta
         $email->created = time();
         
         // Generate token until it is indeed unique
@@ -195,6 +201,7 @@ class TranslatableEmail extends DBObject {
         $vars = array_slice(func_get_args(), 2);
         array_unshift($vars, $to);
         
+        // Extract context info from arguments
         $context = null;
         switch(get_class($to)) {
             case 'Recipient': // Recipient context is it's transfer
@@ -223,8 +230,10 @@ class TranslatableEmail extends DBObject {
                 throw new TranslatableEmailUnknownContextException(get_class($to));
         }
         
+        // Create object
         $translatable = self::create($context, $translation_id, $vars);
         
+        // compute lang from arguments
         $lang = null;
         if($to instanceof User) {
             $lang = $to->lang;
@@ -232,16 +241,20 @@ class TranslatableEmail extends DBObject {
         }
         if($to instanceof Recipient) $lang = $to->transfer->lang;
         
+        // Translate mail parts
         $email_translation = call_user_func_array(array(Lang::translateEmail($translation_id, $lang), 'replace'), $vars);
         
+        // Translate specific footer
         $footer_translation = Lang::translateEmail('translate_email_footer', $lang)->r($translatable);
         
+        // Build mail with body and footer
         $mail = new ApplicationMail(new Translation(array(
             'subject' => (string)$email_translation->subject->out(),
             'plain' => $email_translation->plain."\n\n".$footer_translation->plain,
             'html' => $email_translation->html."\n\n".$footer_translation->html,
         )));
         
+        // Add recipient
         $mail->to($to);
         
         return $mail;
@@ -268,18 +281,22 @@ class TranslatableEmail extends DBObject {
      * @return Translation
      */
     public function translate($lang = null) {
+        // Recreate translation variables
         $variables = array();
         if($this->variables) foreach($this->variables as $k => $v) {
             if(is_object($v)) $v = (array)$v;
             
+            // Reverse DBObject conversion
             if(array_key_exists('dbobject_type', $v) && array_key_exists('dbobject_id', $v))
                 $v = call_user_func($v['dbobject_type'].'::fromId', $v['dbobject_id']);
             
             $variables[$k] = $v;
         }
         
+        // Translate mail
         $translation = Lang::translateEmail($this->translation_id, $lang);
         
+        // Replace variables
         return call_user_func_array(array($translation, 'replace'), $variables);
     }
     

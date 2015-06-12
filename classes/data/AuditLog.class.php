@@ -107,12 +107,14 @@ class AuditLog extends DBObject {
      */
     protected function __construct($id = null, $data = null) {
         if(!is_null($id)) {
+            // Load from database if id given
             $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE id = :id');
             $statement->execute(array(':id' => $id));
             $data = $statement->fetch();
             if(!$data) throw new AuditLogNotFoundException('id = '.$id);
         }
 
+        // Fill properties from provided data
         if($data) $this->fillFromDBData($data);
         
     }
@@ -130,6 +132,7 @@ class AuditLog extends DBObject {
         if(is_null(Config::get('auditlog_lifetime'))) // Auditlog disabled
             return;
         
+        // Check event type
         if(!LogEventTypes::isValidValue($event))
             throw new AuditLogUnknownEventException($event);
         
@@ -259,20 +262,24 @@ class AuditLog extends DBObject {
         // Get and delete all audit logs related to the transfer
         $logs = array_values(self::all(self::FROM_TARGET, array('type' => $transfer->getClassName(), 'id' => (string)$transfer->id)));
         
+        // Add events related to the transfer's files
         foreach(self::all('target_type=\'File\' AND target_id IN :ids', array(':ids' => array_map(function($file) {
             return $file->id;
         }, $transfer->files))) as $log) $logs[] = $log;
         
+        // Add events related to the transfer's recipients
         foreach(self::all('target_type=\'Recipient\' AND target_id IN :ids', array(':ids' => array_map(function($file) {
             return $file->id;
         }, $transfer->recipients))) as $log) $logs[] = $log;
         
+        // Sort by event date
         usort($logs, function($a, $b) {
             $d = $a->created - $b->created;
             if($d != 0) return $d;
             return $a->id - $b->id;
         });
         
+        // filter by type if required
         if($event && LogEventTypes::isValidValue($event)) {
             $logs = array_filter($logs, function($log) use($event) {
                 return $log->event == $event;

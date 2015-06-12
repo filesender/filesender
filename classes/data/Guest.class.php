@@ -141,12 +141,14 @@ class Guest extends DBObject {
      */
     protected function __construct($id = null, $data = null) {
         if(!is_null($id)) {
+            // Load from database if id given
             $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE id = :id');
             $statement->execute(array(':id' => $id));
             $data = $statement->fetch();
             if(!$data) throw new GuestNotFoundException('id = '.$id);
         }
         
+        // Fill properties from provided data
         if($data) $this->fillFromDBData($data);
     }
     
@@ -164,6 +166,7 @@ class Guest extends DBObject {
         
         if(!$from) $from = Auth::user()->email;
         
+        // If not remote user from address must be one of the user addresses
         if(!Auth::isRemote()) {
             if(!in_array($from, Auth::user()->email_addresses))
                 throw new BadEmailException($from);
@@ -282,8 +285,10 @@ class Guest extends DBObject {
         $this->status = GuestStatuses::AVAILABLE;
         $this->save();
         
+        // Update sender's frequent recipient list
         Auth::user()->saveFrequentRecipients(array($this->email));
         
+        // Log to audit/stat
         Logger::logActivity(LogEventTypes::GUEST_CREATED, $this);
         
         // Send notification to recipient
@@ -310,10 +315,11 @@ class Guest extends DBObject {
      * @param bool $manually wether the guest was closed on request (if not it means it expired)
      */
     public function close($manualy = true) {
-        // Closing the guest
+        // Close the guest
         $this->status = GuestStatuses::CLOSED;
         $this->save();
         
+        // Log to audit/stat
         Logger::logActivity(
             $manualy ? LogEventTypes::GUEST_CLOSED : LogEventTypes::GUEST_EXPIRED,
             $this
@@ -332,9 +338,11 @@ class Guest extends DBObject {
      * @return array
      */
     public static function allOptions() {
+        // Get defaults
         $options = Config::get('guest_options');
         if(!is_array($options)) $options = array();
         
+        // Add to-be-created transfers options
         foreach(TransferOptions::all() as $d => $name) {
             if(!array_key_exists($name, $options))
                 $options[$name] = array(

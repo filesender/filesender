@@ -203,6 +203,7 @@ class DBObject {
     public static function all($criteria = null, $placeholders = array(), $run = null){
         $query = 'SELECT * FROM '.static::getDBTable();
         
+        // Build filters if required
         if($criteria) {
             $where = null;
             $order = null;
@@ -219,19 +220,23 @@ class DBObject {
             if($order) $query .= ' ORDER BY '.$order;
         }
         
+        // Look for primary key(s) name(s)
         $pk = array();
         foreach(static::getDataMap() as $k => $d)
             if(array_key_exists('primary', $d) && $d['primary'])
                 $pk[] = $k;
         
+        // Prepare query depending on contents
         if(preg_match('`\s+[^\s]+\s+IN\s+:[^\s]+(\s+|$)`i', $query)) {
             $statement = DBI::prepareInQuery($query, array_filter($placeholders, 'is_array'));
         } else {
             $statement = DBI::prepare($query);
         }
         
+        // run it
         $statement->execute($placeholders);
         
+        // Fetch records, register them with id build from primary key(s) value(s)
         $objects = array();
         foreach($statement->fetchAll() as $r) {
             $id = array();
@@ -241,6 +246,7 @@ class DBObject {
             $objects[$id] = static::fromData($id, $r);
         }
         
+        // Apply callback if provided
         if($run && is_callable($run)) {
             $new_things = array();
             foreach($objects as $id => $o) {
@@ -259,16 +265,24 @@ class DBObject {
      */
     public function save() {
         if(method_exists($this, 'customSave')) {
+            // Child class has custom saver, run it
             $this->customSave();
+            
         }else{
+            // Normal save
+            
             if($this->id) {
+                // Update record if object was loaded from existing one
                 $this->updateRecord($this->toDBData(), 'id');
+                
             }else{
+                // Create it otherwise and get primary key back
                 $pks = $this->insertRecord($this->toDBData());
                 if(array_key_exists('id', $pks)) $this->id = (int)$pks['id'];
             }
         }
         
+        // Cache object
         self::$objectCache[get_called_class()][$this->id] = $this;
     }
     
@@ -276,15 +290,16 @@ class DBObject {
      * Delete from database
      */
     public function delete() {
+        // If child class has things to do before instance is deleted run that
         if(method_exists($this, 'beforeDelete'))
             $this->beforeDelete();
         
+        // Remove from database
         $s = DBI::prepare('DELETE FROM '.static::getDBTable().' WHERE id = :id');
         $s->execute(array('id' => $this->id));
         
+        // Remove from object cache
         self::purgeCache(get_called_class(), $this->id);
-        
-        self::$objectCache[get_called_class()][$this->id] = $this;
     }
     
     /**
@@ -340,6 +355,7 @@ class DBObject {
                 }
             }
             
+            // On-the-fly transforms
             if(array_key_exists('transform', $dfn)) switch($dfn['transform']) {
                 case 'json' :
                     $value = is_null($value) ? null : json_decode($value);
@@ -351,9 +367,11 @@ class DBObject {
                 if(is_string($transforms[$field_name]) || is_callable($transforms[$field_name])) {
                     $transforms[$field_name] = array($transforms[$field_name]);
                 }
+                
                 if(is_array($transforms[$field_name])) foreach($transforms[$field_name] as $transform) {
                     if(is_string($transform)) $field_name = $transform; // Key change
                     if(is_callable($transform))  $value = $transform($value); // Value transformation
+                    
                 }else if(!$transform[$field_name]) continue; // Null/false transform skips entry
             }
             if(property_exists($this, $field_name)) $this->$field_name = $value;
@@ -387,6 +405,7 @@ class DBObject {
                 if(is_string($transforms[$field_name]) || is_callable($transforms[$field_name])) {
                     $transforms[$field_name] = array($transforms[$field_name]);
                 }
+                
                 if(is_array($transforms[$field_name])) foreach($transforms[$field_name] as $transform) {
                     if(is_string($transform)) $property_name = $transform; // Key change
                     if(is_callable($transform))  $value_transform = $transform; // Value transformation
@@ -461,11 +480,13 @@ class DBObject {
             if(array_key_exists('autoinc', $dfn) && $dfn['autoinc'])
                 if(array_key_exists($field_name, $data)) unset($data[$field_name]);
         
+        // Insert data
         $values = array();
         foreach($data as $field_name => $value) $values[':'.$field_name] = $value;
         $s = DBI::prepare('INSERT INTO '.$table.'('.implode(', ', array_keys($data)).') VALUES(:'.implode(', :', array_keys($data)).')');
         $s->execute($values);
         
+        // Get primary key(s) back
         $pks = array();
         foreach(static::$dataMap as $field_name => $dfn)
             if(array_key_exists('autoinc', $dfn) && $dfn['autoinc'])
@@ -487,18 +508,22 @@ class DBObject {
         $placeholders = array();
         $values = array();
         
+        // Filter
         $key_names = is_array($key_name) ? $key_name : array($key_name);
         $key_names = array_filter($key_names);
         
+        // Build update pairs
         foreach($data as $field_name => $value) {
             if(!in_array($field_name, $key_names)) $placeholders[] = $field_name.' = :'.$field_name;
             $values[':'.$field_name] = $value;
         }
         
+        // Build filter
         $where_parts = array();
         foreach($key_names as $key_name) $where_parts[] = $key_name.' = :'.$key_name;
         if($where) $where_parts[] = $where;
         
+        // Run the query
         $s = DBI::prepare('UPDATE '.$table.' SET '.implode(', ', $placeholders).(count($where_parts) ? ' WHERE ('.implode(') AND (', $where_parts).')' : ''));
         $s->execute($values);
     }
