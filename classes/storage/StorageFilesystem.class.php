@@ -51,15 +51,19 @@ class StorageFilesystem {
     private static function setup() {
         if(!is_null(self::$path)) return;
         
+        // Check required config parameters
         $path = Config::get('storage_filesystem_path');
         if(!$path) throw new ConfigMissingParameterException('storage_filesystem_path');
         
+        // Check if storage path exists and is writable
         if(!is_dir($path) || !is_writable($path))
             throw new StorageFilesystemCannotWriteException($path);
         
+        // Build final path and cache
         if(substr($path, -1) != '/') $path .= '/';
         self::$path = $path;
         
+        // Is storage hashing enabled ?
         $hashing = Config::get('storage_filesystem_hashing');
         if($hashing) self::$hashing = $hashing;
     }
@@ -74,14 +78,18 @@ class StorageFilesystem {
     private static function getFilesystem($what) {
         self::setup();
         
+        // Get File path in case we got a File object
         if($what instanceof File) $what = self::buildPath($what);
         
+        // Check argument
         if(!is_string($what) || (!is_dir($what) && !is_file($what)))
             throw new StorageFilesystemBadResolverTargetException($what);
         
+        // Build and run disk status command
         $cmd = str_replace('{path}', escapeshellarg($what), Config::get('storage_filesystem_df_command'));
         exec($cmd, $out, $ret);
         
+        // Get command output, fail if none
         $out = array_filter(array_map('trim', $out));
         if($ret || count($out) <= 1)
             throw new StorageFilesystemCannotResolveException($cmd, $ret, $out);
@@ -106,6 +114,7 @@ class StorageFilesystem {
         
         $filesystems = array();
         
+        // Organize files by their storage path, get free space for each path
         foreach($transfer->files as $file) {
             $path = self::buildPath($file);
             $filesystem = self::$hashing ? self::getFilesystem($path) : 'main';
@@ -133,6 +142,7 @@ class StorageFilesystem {
             }
         }
         
+        // Check if there is enough remaining space
         foreach($filesystems as $filesystem => $info) {
             $required_space = array_sum(array_map(function($file) {
                 return $file->size;
@@ -147,15 +157,18 @@ class StorageFilesystem {
     /**
      * Build possible hashed paths
      * 
+     * @param int $level depth of hashing
+     * @param string $prefix
+     * 
      * @return array
      */
-    private static function getHashedPaths($level, $top = false) {
+    private static function getHashedPaths($level, $prefix = '') {
         $paths = array();
         
         for($i=0; $i<=15; $i++) {
-            $p = dechex($i);
+            $p = $prefix.dechex($i);
             if($level > 1) {
-                foreach(self::getHashedPaths($level - 1) as $sp)
+                foreach(self::getHashedPaths($level - 1, $p) as $sp)
                     $paths[] = $p.'/'.$sp;
             } else {
                 $paths[] = $p;
@@ -173,20 +186,22 @@ class StorageFilesystem {
     public static function getUsage() {
         self::setup();
         
+        // Simple analysis if hashing disabled
         if(!self::$hashing) return array('main' => array(
             'total_space' => disk_total_space(self::$path),
             'free_space' => disk_free_space(self::$path),
             'paths' => array()
         ));
         
+        // Get all possible storage paths based on hashing
         $paths = array('');
-        
         if(is_numeric(self::$hashing)) {
             $paths = self::getHashedPaths(self::$hashing);
         } else if(is_callable(self::$hashing)) {
             $paths = self::$hashing(); // No file call => get paths
         }
         
+        // Get space usage for each possible path
         $filesystems = array();
         foreach($paths as $path) {
             $filesystem = self::getFilesystem(self::$path.$path);
@@ -200,6 +215,7 @@ class StorageFilesystem {
             $filesystems[$filesystem]['paths'][] = $path;
         }
         
+        // Sort by filesystem name
         ksort($filesystems);
         
         return $filesystems;
@@ -414,14 +430,16 @@ class StorageFilesystem {
     public static function storeWholeFile(File $file, $source_path) {
         $path = self::buildPath($file);
         
+        // Do we have enough space ?
         $free_space = disk_free_space($path);
         if($free_space <= filesize($source_path))
             throw new StorageNotEnoughSpaceLeftException(filesize($source_path));
         
+        // Build path ...
         $file_path = $path.$file->uid;
         
+        // ... and copy file (removal up to caller), fail if couldn't copy
         if(!copy($source_path, $file_path))
             throw new StorageFilesystemCannotWriteException($file_path);
     }
 }
-

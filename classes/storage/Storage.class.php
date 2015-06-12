@@ -55,6 +55,7 @@ class Storage {
     private static function setup() {   
         if(!is_null(self::$class)) return;
         
+        // Check required config parameters
         if(!Config::get('upload_chunk_size'))
             throw new ConfigMissingParameterException('upload_chunk_size');
         
@@ -65,11 +66,13 @@ class Storage {
         if(!$type)
             throw new ConfigMissingParameterException('storage_type');
         
+        // Build storage underlying class name and check if it exists
         $class = 'Storage'.ucfirst($type);
         
         if(!class_exists($class))
             throw new ConfigBadParameterException('storage_type');
         
+        // Cache name
         self::$class = $class;
     }
     
@@ -111,20 +114,24 @@ class Storage {
     public static function readChunk(File $file, $offset = null, $length = null) {
         self::setup();
         
+        // If no length provided use download_chunk_size config parameter value
         $length = (int)$length;
         if(!$length) {
             $length = (int)Config::get('download_chunk_size');
             if(!$length) $length = 1024 * 1024;
         }
         
+        // If no offset provided check if we already started to read this file
         if(is_null($offset)) { // Stream reading next chunk
-            if(array_key_exists($file->id, self::$reading_offsets)) { // Did we already start to read this file ?
+            if(array_key_exists($file->id, self::$reading_offsets)) {
                 $offset = self::$reading_offsets[$file->id];
             }else $offset = 0;
         }
         
+        // Ask underlying class to read data
         $data = call_user_func(self::$class.'::readChunk', $file, $offset, $length);
         
+        // Update read offset
         self::$reading_offsets[$file->id] = $offset + $length;
         
         return $data;
@@ -144,9 +151,11 @@ class Storage {
     public static function writeChunk(File $file, $data, $offset = null) {
         self::setup();
         
-        if(strlen($data) > (int)Config::get('upload_chunk_size')) // We should not get more than upload_chunk_size bytes of data
+        // Forbid to write chunks whose size is over upload_chunk_size config parameter's value
+        if(strlen($data) > (int)Config::get('upload_chunk_size'))
             throw new StorageChunkTooLargeException(strlen($data), (int)Config::get('upload_chunk_size'));
         
+        // Ask underlying class to write data
         return call_user_func(self::$class.'::writeChunk', $file, $data, $offset);
     }
     
