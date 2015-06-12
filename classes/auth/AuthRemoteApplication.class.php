@@ -64,15 +64,18 @@ class AuthRemoteApplication {
         if(is_null(self::$isAuthenticated)) {
             self::$isAuthenticated = false;
             
+            // Do we have remote application authentication data in the request ?
             if(array_key_exists('remote_application', $_GET) && array_key_exists('signature', $_GET)) {
                 self::$attributes = array();
                 
+                // Get data
                 $application = $_GET['remote_application'];
                 self::$attributes['remote_application'] = $application;
                 
                 $received_signature = $_GET['signature'];
                 $timestamp = (int)$_GET['timestamp'];
                 
+                // Check that application is known
                 $applications = Config::get('auth_remote_applications');
                 
                 if(!is_array($applications) || !array_key_exists($application, $applications))
@@ -80,16 +83,19 @@ class AuthRemoteApplication {
                 
                 $application = $applications[$application];
                 
+                // Check request time to avoid replays
                 $late = time() - $timestamp - 15;
                 if($late > 0)
                     throw new AuthRemoteTooLateException($late);
                 
+                // Get method from headers
                 $method = null;
                 foreach(array('X_HTTP_METHOD_OVERRIDE', 'REQUEST_METHOD') as $k) {
                     if(!array_key_exists($k, $_SERVER)) continue;
                     $method = strtolower($_SERVER[$k]);
                 }
                 
+                // Build signed data
                 $signed = $method.'&'.$_SERVER['SERVER_NAME'].$_SERVER['SCRIPT_NAME'].(array_key_exists('PATH_INFO', $_SERVER) ? $_SERVER['PATH_INFO'] : '');
                 
                 $args = $_GET;
@@ -99,14 +105,17 @@ class AuthRemoteApplication {
                 $input = AuthRemoteRequest::body();
                 if($input) $signed .= '&'.$input;
                 
+                // Check signature
                 $algorithm = Config::get('auth_remote_signature_algorithm');
                 if(!$algorithm) $algorithm = 'sha1';
                 $signature = hash_hmac($algorithm, $signed, $application['secret']);
                 if($received_signature !== $signature)
                     throw new AuthRemoteSignatureCheckFailedException($signed, $application['secret'], $received_signature, $signature);
                 
+                // Register user id if given
                 if(array_key_exists('remote_user', $_GET)) self::$attributes['uid'] = $_GET['remote_user'];
                 
+                // Register admin level if asked for and enabled
                 if(array_key_exists('isAdmin', $application) && $application['isAdmin']) self::$isAdmin = true;
                 
                 AuthRemoteRequest::application($application);

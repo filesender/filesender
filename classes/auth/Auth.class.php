@@ -74,7 +74,7 @@ class Auth {
                 self::$attributes = AuthGuest::attributes();
                 self::$type = 'guest';
                 
-            }else if(AuthLocal::isAuthenticated()) { // SP
+            }else if(AuthLocal::isAuthenticated()) { // Local (script)
                 self::$attributes = AuthLocal::attributes();
                 self::$type = 'local';
                 
@@ -93,8 +93,10 @@ class Auth {
             }
             
             if(self::$attributes && array_key_exists('uid', self::$attributes)) {
+                // Set user if got uid attribute
                 self::$user = User::fromAttributes(self::$attributes);
                 
+                // Save user additionnal attributes if enabled
                 if(self::isSP() && Config::get('auth_sp_save_user_additional_attributes') && array_key_exists('additional', self::$attributes)) {
                     if((array)self::$user->additional_attributes != self::$attributes['additional']) {
                         self::$user->additional_attributes = self::$attributes['additional'];
@@ -102,6 +104,7 @@ class Auth {
                     }
                 }
                 
+                // Save user quota for guest uploads
                 $user_quota = Config::get('user_quota');
                 if($user_quota && (self::$user->quota != $user_quota)) {
                     self::$user->quota = $user_quota;
