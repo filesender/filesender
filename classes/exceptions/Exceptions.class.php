@@ -55,10 +55,12 @@ class LoggingException extends Exception {
     public function __construct($msg_code, $log = null) {
         $this->uid = uniqid();
         
+        // normalize arguments
         if(!$log) $log = $msg_code;
         if ($log && (!is_array($log) || !preg_match('`[a-z]`', key($log))))
             $log = array('exception' => $log);
         
+        // Log info
         if ($log) 
             foreach ($log as $category => $lines) {
                 if (!is_array($lines)) 
@@ -105,6 +107,7 @@ class DetailedException extends LoggingException {
     public function __construct($msg_code, $internal_details = null, $public_details = null) {
         $this->uid = uniqid();
         
+        // Build data
         $this->details = $public_details;
         
         if(!$internal_details) $internal_details = array();
@@ -121,6 +124,7 @@ class DetailedException extends LoggingException {
             'details' => array(),
         );
         
+        // Cast to string(s)
         foreach ($internal_details as $detail) {
             if (is_scalar($detail)) {
                 $log['details'][] = $detail;
@@ -169,12 +173,15 @@ class StorableException {
      */
     public function __construct($exception) {
         if(is_array($exception)) {
+            // Got array, extract data from specific keys
             foreach(array('message', 'uid', 'details') as $p)
                 if(array_key_exists($p, $exception))
                     $this->$p = $exception[$p];
             
             return;
         }
+        
+        // Got Exception (child), get data from it
         
         $this->message = $exception->getMessage();
         
