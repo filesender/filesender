@@ -47,33 +47,40 @@ class RestServer {
         try {
             @session_start();
             
+            // If undergoing maintenance report it as an error
             if(Config::get('maintenance')) throw new RestException('undergoing_maintenance', 503);
             
-            // Get request data
-            
+            // Split request path to get tokens
             $path = array();
             if(array_key_exists('PATH_INFO', $_SERVER)) $path = array_filter(explode('/', $_SERVER['PATH_INFO']));
             
+            // Get method from possible headers
             $method = null;
             foreach(array('X_HTTP_METHOD_OVERRIDE', 'REQUEST_METHOD') as $k) {
                 if(!array_key_exists($k, $_SERVER)) continue;
                 $method = strtolower($_SERVER[$k]);
             }
             
+            // Record called method (for log), fail if unknown
             RestException::setContext('method', $method);
             if(!in_array($method, array('get', 'post', 'put', 'delete'))) throw new RestException('rest_method_not_allowed', 405);
             
+            // Get endpoint (first token), fail if none
             $endpoint = array_shift($path);
             if(!$endpoint) throw new RestException('rest_endpoint_missing', 400);
             RestException::setContext('endpoint', $endpoint);
             
+            // Request data accessor
             $request = new RestRequest();
             
-            $input = AuthRemoteRequest::body(); // Because php://input can only be read once for PUT requests we rely on a central getter in AuthRemoteRequest
+            // Because php://input can only be read once for PUT requests we rely on a central getter in AuthRemoteRequest
+            $input = AuthRemoteRequest::body();
             
+            // Get request content type from possible headers
             $type = array_key_exists('CONTENT_TYPE', $_SERVER) ? $_SERVER['CONTENT_TYPE'] : null;
             if(!$type && array_key_exists('HTTP_CONTENT_TYPE', $_SERVER)) $type = $_SERVER['HTTP_CONTENT_TYPE'];
             
+            // Parse content type
             $type_parts = array_map('trim', explode(';', $type));
             $type = array_shift($type_parts);
             $request->properties['type'] = $type;
@@ -108,9 +115,11 @@ class RestServer {
                     $request->input = json_decode(trim(Utilities::sanitizeInput($input)));
             }
             
-            //Check authentication
+            // Get authentication state (fills auth data in relevant classes)
             Auth::isAuthenticated();
+            
             if(Auth::isRemoteApplication()) {
+                // Remote applications must honor ACLs
                 $application = AuthRemoteRequest::application();
                 if(array_key_exists($endpoint, $application['acl'])) {
                     $acl = $application['acl'][$endpoint];
@@ -132,7 +141,8 @@ class RestServer {
             } else if(Auth::isRemoteUser()) {
                 // Nothing peculiar to do
                 
-            } else if(in_array($method, array('post', 'put', 'delete'))) { // SP or Guest, lets do XSRF check
+            } else if(in_array($method, array('post', 'put', 'delete'))) {
+                // SP or Guest, lets do XSRF check
                 if(
                     !array_key_exists('HTTP_X_FILESENDER_SECURITY_TOKEN', $_SERVER)
                     || !Utilities::checkSecurityToken($_SERVER['HTTP_X_FILESENDER_SECURITY_TOKEN'])
@@ -188,7 +198,7 @@ class RestServer {
                     break;
             }
             
-            // Forward to handler
+            // Forward to handler, fail if unknown or method not implemented
             $class = 'RestEndpoint'.ucfirst($endpoint);
             if(!file_exists(FILESENDER_BASE.'/classes/rest/endpoints/'.$class.'.class.php')) // Avoids CoreFileNotFoundException from Autoloader
                 throw new RestException('rest_endpoint_not_implemented', 501);
@@ -203,6 +213,7 @@ class RestServer {
             Logger::debug('Got data to send back');
             
             // Output data
+            
             if(array_key_exists('callback', $_GET)) {
                 header('Content-Type: text/javascript');
                 $callback = preg_replace('`[^a-z0-9_\.-]`i', '', $_GET['callback']);
