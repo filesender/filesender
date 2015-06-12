@@ -136,19 +136,24 @@ class User extends DBObject {
      */
     protected function __construct($id = null, $data = null) {
         if(!is_null($id)) {
+            // Load from database if id given
             $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE id = :id');
             $statement->execute(array(':id' => $id));
             $data = $statement->fetch();
         }
         
         if($data) {
+            // Fill properties from provided data
             $this->fillFromDBData($data);
             $this->hasPreferences = true;
+            
         }else{
+            // New user, set base data
             $this->id = $id;
             $this->created = time();
         }
         
+        // Generate user remote auth secret 
         if(Config::get('auth_remote_user_autogenerate_secret') && !$this->auth_secret)
             $this->auth_secret = hash('sha256', $this->id.'|'.time().'|'.Utilities::generateUID());
     }
@@ -161,9 +166,13 @@ class User extends DBObject {
      * @return User
      */
     public static function fromAttributes($attributes) {
+        // Check if uid attribute exists
         if(!is_array($attributes) || !array_key_exists('uid', $attributes) || !$attributes['uid']) throw new UserMissingUIDException();
+        
+        // Get matching user
         $user = self::fromId($attributes['uid']);
         
+        // Add metadata from attributes
         if(array_key_exists('email', $attributes)) $user->email_addresses = is_array($attributes['email']) ? $attributes['email'] : array($attributes['email']);
         if(array_key_exists('name', $attributes)) $user->name = $attributes['name'];
         
@@ -175,8 +184,11 @@ class User extends DBObject {
      */
     public function customSave() {
         if($this->hasPreferences) {
+            // Was loaded from existing record, update it
             $this->updateRecord($this->toDBData(), 'id');
+            
         }else{
+            // Has no existing record in database, create it
             $this->insertRecord($this->toDBData());
             Logger::logActivity(LogEventTypes::USER_CREATED, $this);
         }
@@ -210,16 +222,20 @@ class User extends DBObject {
      * @return array: list of frequent recipients
      */
     public function getFrequentRecipients($criteria = null) {
+        // Get max number of returned recipients from config
         $maxAllowed = Config::get('autocomplete_max_shown');
         if(!$maxAllowed) $maxAllowed = 5;
         
+        // Get recipients from preferences
         $recipients = $this->frequent_recipients;
         if(!$recipients) $recipients = array();
         
+        // Filter if requested
         if($criteria) $recipients = array_filter($recipients, function($recipient) use($criteria) {
             return strpos($recipient->email, $criteria) !== false;
         });
         
+        // Return the right amount
         return array_map(function($recipient) {
             return $recipient->email;
         }, array_slice($recipients, 0, $maxAllowed));
@@ -231,24 +247,31 @@ class User extends DBObject {
      * @param array $mails: mails to save
      * @return boolean true if saved successfuly, false otherwise
      */
-    public function saveFrequentRecipients($mails = array()){
+    public function saveFrequentRecipients($mails = array()) {
+        // Get already set recipients
         $recipients = $this->frequent_recipients;
         if(!$recipients) $recipients = array();
         
+        // Process given recipients
         foreach($mails as $mail) {
+            // Cast if needed
             if($mail instanceof Recipient) $mail = $mail->email;
             
+            // Remove if already in list
             $recipients = array_filter($recipients, function($recipient) use($mail) {
                 return $recipient->email != $mail;
             });
             
+            // Add in front of the list
             array_unshift($recipients, (object)array('email' => $mail, 'date' => time()));
         }
         
+        // Limit number of stored recipients depending on config
         $maxStored = Config::get('max_stored_frequent_recipients');
         if(!$maxStored) $maxStored = 0;
         $recipients = array_slice($recipients, 0, $maxStored);
         
+        // Save if something changed
         if($recipients !== $this->frequent_recipients) {
             $this->frequent_recipients = $recipients;
             $this->save();
@@ -294,28 +317,37 @@ class User extends DBObject {
     public function __set($property, $value) {
         if($property == 'additional_attributes') {
             $this->additional_attributes = (object)(array)$value;
+            
         }else if($property == 'lang') {
             if(!array_key_exists($value, Lang::getAvailableLanguages()))
                 throw new BadLangCodeException($value);
             $this->lang = (string)$value;
+            
         }else if($property == 'aup_ticked') {
             $this->aup_ticked = (bool)$value;
+            
         }else if($property == 'transfer_preferences') {
             $this->transfer_preferences = $value;
+            
         }else if($property == 'guest_preferences') {
             $this->guest_preferences = $value;
+            
         }else if($property == 'frequent_recipients'){
             $this->frequent_recipients = $value;
+            
         }else if($property == 'email_addresses') {
             if(!is_array($value)) $value = array($value);
             foreach($value as $email)
                 if(!filter_var($email, FILTER_VALIDATE_EMAIL))
                     throw new BadEmailException($value);
             $this->email_addresses = $value;
+            
         }else if($property == 'name') {
             $this->name = (string)$value;
+            
         }else if($property == 'quota') {
             $this->quota = (int)$value;
+            
         }else throw new PropertyAccessException($this, $property);
     }
 }
