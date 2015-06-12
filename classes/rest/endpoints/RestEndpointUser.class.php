@@ -76,13 +76,15 @@ class RestEndpointUser extends RestEndpoint {
     private function getFrequentRecipients($needle = '') {
         $user = Auth::user();
         
-        $minCaracters = Config::get('minimum_characters_for_autocomplete') != null ? 
-                Config::get('minimum_characters_for_autocomplete') : 3;
-        $mails = '';
+        // Get minimum number of characters needed for search
+        $minchars = Config::get('minimum_characters_for_autocomplete');
+        if(is_null($minchars)) $minchars = 3;
         
-        if($needle == '' || strlen($needle) >= $minCaracters) {
+        $mails = array();
+        
+        // Get matching if no search or search long enough
+        if($needle == '' || strlen($needle) >= $minchars)
             $mails = $user->getFrequentRecipients($needle);
-        }
         
         return $mails;
     }
@@ -104,12 +106,15 @@ class RestEndpointUser extends RestEndpoint {
      * @throws RestBadParameterException
      */
     public function get($id = null, $property = null) {
+        // Need to be authenticated ...
         if(!Auth::isAuthenticated()) throw new RestAuthenticationRequiredException();
         
+        // ... and not guest
         if(Auth::isGuest()) throw new RestOwnershipRequiredException('guest#'.AuthGuest::getGuest()->id, 'user_info');
         
         $user = Auth::user();
         
+        // Check ownership
         if($id && $id != '@me') {
             $user = User::fromId($id);
             
@@ -118,6 +123,7 @@ class RestEndpointUser extends RestEndpoint {
         }
         
         if($property == 'frequent_recipients') {
+            // Get frequent recipients with optionnal filter
             $rcpt = array();
             
             if(
@@ -130,9 +136,12 @@ class RestEndpointUser extends RestEndpoint {
         }
         
         if($property == 'quota') {
+            // Get user quota info (if enabled)
+            
             $user_quota = Config::get('user_quota');
             if(!$user_quota) return null;
             
+            // Compute size used by user's transfers
             $used = array_sum(array_map(function($t) {
                 return $t->size;
             }, Transfer::fromUser(Auth::user())));
@@ -161,8 +170,10 @@ class RestEndpointUser extends RestEndpoint {
      * @throws RestOwnershipRequiredException
      */
     public function put($id = null) {
+        // Need to be authenticated
         if(!Auth::isAuthenticated()) throw new RestAuthenticationRequiredException();
         
+        // Check ownership if specific user id given
         if($id) {
             $user = User::fromId($id);
             
@@ -172,19 +183,25 @@ class RestEndpointUser extends RestEndpoint {
             $user = Auth::user();
         }
         
+        // Update data
         $data = $this->request->input;
         
         if($data->lang) {
+            // Lang property update, fail if not allowed
+            
             if(!Config::get('lang_userpref_enabled'))
                 throw new RestBadParameterException('user_lang');
             
+            // check that requested lang is known
             $availables = Lang::getAvailableLanguages();
             if(!array_key_exists($data->lang, $availables))
                 throw new RestBadParameterException('user_lang');
             
+            // Update user object and save to database
             $user->lang = $data->lang;
             $user->save();
             
+            // Remove lang from session if there was one, we don't need it anymore as it was saved in user profile
             if(array_key_exists('lang', $_SESSION))
                 unset($_SESSION['lang']);
         }

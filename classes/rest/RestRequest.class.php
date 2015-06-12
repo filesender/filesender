@@ -89,7 +89,10 @@ class RestInput {
     private $data = array();
     
     /**
-     * Recursive crawler
+     * Recursive crawler that converts raw data into browsable data
+     * 
+     * Scalars are kept as is, numerically indexed arrays' values are converted,
+     * associative arrays and objects are converted recursively
      */
     public static function convert($data) {
         if(is_object($data)) return new self($data);

@@ -35,7 +35,7 @@ if (!defined('FILESENDER_BASE'))
     die('Missing environment');
 
 /**
- * REST info endpoint
+ * REST echo endpoint for testing purposes
  */
 class RestEndpointEcho extends RestEndpoint {
     public function get() {

@@ -85,10 +85,12 @@ class RestEndpointGuest extends RestEndpoint {
      * @throws RestOwnershipRequiredException
      */
     public function get($id = null) {
+        // Need to be authenticated
         if(!Auth::isAuthenticated()) throw new RestAuthenticationRequiredException();
         
         $user = Auth::user();
         
+        // check ownership if info about a specific guest is requested
         if(is_numeric($id)) {
             $guest = Guest::fromId($id);
             
@@ -98,17 +100,21 @@ class RestEndpointGuest extends RestEndpoint {
             return self::cast($guest);
         }
         
+        // Check parameters
         if(!in_array($id, array('', '@me', '@all'))) throw new RestBadParameterException('guest_id');
         
         if($id == '@all') {
+            // Getting all guests requires user to be admin
             if(!Auth::isAdmin()) throw new RestAdminRequiredException();
             
             $guests = Guest::all(Guest::AVAILABLE);
             
-        }else{ // $id == @me or empty
+        }else{
+            // $id == @me or empty
             $guests = Guest::fromUser($user);
         }
         
+        // Cast and return
         $out = array();
         foreach($guests as $guest) $out[] = self::cast($guest);
         
@@ -127,17 +133,23 @@ class RestEndpointGuest extends RestEndpoint {
      * @throws RestOwnershipRequiredException
      */
     public function post() {
+        // Need to be authenticated
         if(!Auth::isAuthenticated()) throw new RestAuthenticationRequiredException();
         
+        // User who is creating the new guest
         $user = Auth::user();
         
+        // Raw guest data
         $data = $this->request->input;
         
+        // Create new guest object
         $guest = Guest::create($data->recipient, $data->from);
         
+        // Set provided metadata
         if($data->subject) $guest->subject = $data->subject;
         if($data->message) $guest->message = $data->message;
         
+        // Set options based on provided ones and defaults
         $options = array();
         foreach(Guest::allOptions() as $name => $dfn)  {
             $value = $dfn['default'];
@@ -149,6 +161,7 @@ class RestEndpointGuest extends RestEndpoint {
         }
         $guest->options = $options;
         
+        // Set to-be-created transfers options based on provided ones and defaults
         $transfer_options = array();
         foreach(Transfer::allOptions() as $name => $dfn)  {
             $value = $dfn['default'];
@@ -160,9 +173,11 @@ class RestEndpointGuest extends RestEndpoint {
         }
         $guest->transfer_options = $transfer_options;
         
+        // Set expiry date
         $guest->expires = $data->expires;
         
-        $guest->makeAvailable(); // Saves
+        // Make guest available, this saves the object and send email to the guest
+        $guest->makeAvailable();
         
         return array(
             'path' => '/guest/'.$guest->id,
@@ -184,20 +199,25 @@ class RestEndpointGuest extends RestEndpoint {
      * @throws RestOwnershipRequiredException
      */
     public function put($id = null) {
+        // Check parameters
         if(!$id) throw new RestMissingParameterException('guest_id');
         if(!is_numeric($id)) throw new RestBadParameterException('guest_id');
         
+        // Need to be authenticated
         if(!Auth::isAuthenticated()) throw new RestAuthenticationRequiredException();
         
+        // Get user and guest to update
         $guest = Guest::fromId($id);
-        
         $user = Auth::user();
         
+        // Check ownership
         if(!$guest->isOwner($user) && !Auth::isAdmin())
             throw new RestOwnershipRequiredException($user->id, 'guest = '.$guest->id);
         
+        // Raw update data
         $data = $this->request->input;
         
+        // Reminder sending
         if($data->remind)
             $guest->remind();
         
@@ -218,18 +238,23 @@ class RestEndpointGuest extends RestEndpoint {
      * @throws RestOwnershipRequiredException
      */
     public function delete($id = null) {
+        // Need to be authenticated
         if(!Auth::isAuthenticated()) throw new RestAuthenticationRequiredException();
         
         $user = Auth::user();
         
+        // Check parameters
         if(!$id) throw new RestMissingParameterException('guest_id');
         if(!is_numeric($id)) throw new RestBadParameterException('guest_id');
         
+        // Get guest to be removed
         $guest = Guest::fromId($id);
         
+        // Check ownership
         if(!$guest->isOwner($user) && !Auth::isAdmin())
             throw new RestOwnershipRequiredException($user->id, 'guest = '.$guest->id);
         
+        // Remove guest access rights
         $guest->close();
     }
 }
