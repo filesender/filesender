@@ -101,6 +101,7 @@ class AuthSPSaml {
                 $attributes[$attr] = count($values) ? $values : null;
             }
             
+            // Proccess received attributes
             if(is_array($attributes['uid'])) $attributes['uid'] = array_shift($attributes['uid']);
             if(is_array($attributes['name'])) $attributes['name'] = array_shift($attributes['name']);
             
@@ -114,7 +115,7 @@ class AuthSPSaml {
             
             if(!$attributes['name']) $attributes['name'] = substr($attributes['email'][0], 0, strpos($attributes['email'][0], '@'));
             
-            
+            // Gather additionnal attributes if required
             $additional_attributes = Config::get('auth_sp_additional_attributes');
             if($additional_attributes) {
                 $attributes['additional'] = array();

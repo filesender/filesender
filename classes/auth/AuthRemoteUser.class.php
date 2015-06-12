@@ -64,15 +64,18 @@ class AuthRemoteUser {
         if(is_null(self::$isAuthenticated)) {
             self::$isAuthenticated = false;
             
+            // Do we have remote user authentication data in the request ?
             if(array_key_exists('remote_user', $_GET) && array_key_exists('signature', $_GET) && !array_key_exists('remote_application', $_GET)) {
                 self::$attributes = array();
                 
+                // Get data
                 $uid = Utilities::sanitizeInput($_GET['remote_user']);
                 self::$attributes['uid'] = $uid;
                 
                 $received_signature = $_GET['signature'];
                 $timestamp = (int)$_GET['timestamp'];
                 
+                // Get user, fail if unknown or no user secret
                 try {
                     $user = User::fromId($uid);
                 } catch(UserNotFoundException $e) {
@@ -82,16 +85,19 @@ class AuthRemoteUser {
                 if(!$user->auth_secret)
                     throw new AuthRemoteUserRejectedException($user->id, 'no secret set');
                 
+                // Check request time to avoid replays
                 $late = time() - $timestamp - 15;
                 if($late > 0)
                     throw new AuthRemoteTooLateException($late);
                 
+                // Get method from headers
                 $method = null;
                 foreach(array('X_HTTP_METHOD_OVERRIDE', 'REQUEST_METHOD') as $k) {
                     if(!array_key_exists($k, $_SERVER)) continue;
                     $method = strtolower($_SERVER[$k]);
                 }
                 
+                // Build signed data
                 $signed = $method.'&'.$_SERVER['SERVER_NAME'].$_SERVER['SCRIPT_NAME'].(array_key_exists('PATH_INFO', $_SERVER) ? $_SERVER['PATH_INFO'] : '');
                 
                 $args = $_GET;
@@ -101,6 +107,7 @@ class AuthRemoteUser {
                 $input = AuthRemoteRequest::body();
                 if($input) $signed .= '&'.$input;
                 
+                // Check signature
                 $algorithm = Config::get('auth_remote_signature_algorithm');
                 if(!$algorithm) $algorithm = 'sha1';
                 $signature = hash_hmac($algorithm, $signed, $user->auth_secret);

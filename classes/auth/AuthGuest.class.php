@@ -64,6 +64,7 @@ class AuthGuest {
         if(is_null(self::$isAuthenticated)) {
             self::$isAuthenticated = false;
             
+            // Do we have a valid guest token in the query ?
             if(array_key_exists('vid', $_REQUEST))  {
                 $vid = $_REQUEST['vid'];
                 if(
@@ -71,7 +72,8 @@ class AuthGuest {
                 ) {
                     self::$guest = Guest::fromToken($vid);
                     self::$isAuthenticated = true;
-                    // Updating last activity
+                    
+                    // Update last guest activity
                     self::$guest->last_activity = time();
                     self::$guest->save();
                 }else{
