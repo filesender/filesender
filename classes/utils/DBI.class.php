@@ -156,7 +156,7 @@ class DBI {
             
             // If there is values replace by fitting amount of OR clauses, set falsy clause otherwise
             if(is_int($values) && $values) {
-                $query = preg_replace_callback('`\s+([^\s]+)\s+IN\s+'.$key.'(\s+|$)`i', function($m) use($values) {
+                $query = preg_replace_callback('`\s+([^\s]+)\s+IN\s+'.$key.'(\s+|$)`i', function($m) use($key, $values) {
                     $cdn = array();
                     for($i=0; $i<$values; $i++)
                         $cdn[] = $m[1].' = '.$key.'___'.$i;
@@ -209,8 +209,9 @@ class DBIStatement {
         if($method == 'execute') {
             foreach($args[0] as $key => $value) {
                 if(is_array($value)) {
-                    foreach($value as $idx => $subvalue)
-                        $args[$key.'___'.$idx] = $subvalue;
+                    $values = array_values($value);
+                    for($i=0; $i<count($values); $i++)
+                        $args[0][$key.'___'.$i] = $values[$i];
                     
                     unset($args[0][$key]);
                 }
