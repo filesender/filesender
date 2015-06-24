@@ -131,12 +131,12 @@ window.filesender.client = {
                 var error = JSON.parse(msg);
                 
                 if(
-                    error.message == 'rest_authentication_required' &&
+                    (error.message == 'rest_authentication_required' || error.message == 'rest_xsrf_token_did_not_match') &&
                     (options.ignore_authentication_required || filesender.client.authentication_required)
                 )
                     return;
                 
-                if(error.message == 'rest_authentication_required') {
+                if(error.message == 'rest_authentication_required' || error.message == 'rest_xsrf_token_did_not_match') {
                     filesender.client.authentication_required = filesender.ui.popup(
                         lang.tr('authentication_required'),
                         filesender.config.logon_url ? {
