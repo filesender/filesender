@@ -388,21 +388,19 @@ class RestEndpointTransfer extends RestEndpoint {
             $transfer->save(); // Mandatory to add recipients and files
             
             // Get banned extensions
-            $banExtensions = Config::get('ban_extension');
-            if(!is_null($banExtensions) && !is_array($banExtensions)) $banExtensions = array_map('trim', explode(',', $banExtensions));
+            $banned_exts = Config::get('ban_extension');
+            if(is_string($banned_exts)) $banned_exts = array_map('trim', explode(',', $banned_exts));
             
             // Add files after checking that they do not have a banned extension, fail otherwise
             $files_cids = array();
             foreach($data->files as $filedata) {
                 $ext = pathinfo($filedata->name, PATHINFO_EXTENSION);
-                if ($banExtensions !== null){
-                    if (!in_array($ext,$banExtensions) ){
-                        $file = $transfer->addFile($filedata->name, $filedata->size, $filedata->mime_type);
-                        $files_cids[$file->id] = $filedata->cid;
-                    }else{
-                        throw new FileExtensionNotAllowedException($ext);
-                    }
-                }
+                
+                if(!is_null($banned_exts) && in_array($ext, $banned_exts))
+                    throw new FileExtensionNotAllowedException($ext);
+                
+                $file = $transfer->addFile($filedata->name, $filedata->size, $filedata->mime_type);
+                $files_cids[$file->id] = $filedata->cid;
             }
             
             // Add recipient(s) depending on options
