@@ -190,6 +190,7 @@ class User extends DBObject {
         }else{
             // Has no existing record in database, create it
             $this->insertRecord($this->toDBData());
+            $this->hasPreferences = true;
             Logger::logActivity(LogEventTypes::USER_CREATED, $this);
         }
     }
