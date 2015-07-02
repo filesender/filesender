@@ -1,0 +1,8 @@
+<zimletConfig name=org_filesender_zimlink version=”1.0”>
+        <global>
+            <!-- List of filesender servers url separated by comma -->
+            <property name="serversUrlList"></property>
+            <!-- List of allowed domains for the proxy -->
+            <property name="allowedDomains"></property>
+        </global>
+</zimletConfig>
