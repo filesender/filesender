@@ -46,6 +46,7 @@ class RestEndpointInfo extends RestEndpoint {
             'url' => Config::get('site_url'),
             'name' => Config::get('site_name'),
             'logon_url' => AuthSP::logonURL('__target__'),
+            'upload_chunk_size' => Config::get('upload_chunk_size'),
         );
         
         $info = array_merge($info, Disclosed::all());
