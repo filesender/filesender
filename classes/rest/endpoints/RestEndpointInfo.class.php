@@ -44,6 +44,7 @@ class RestEndpointInfo extends RestEndpoint {
     public function get() {
         $info = array(
             'url' => Config::get('site_url'),
+            'logon_url' => AuthSP::logonURL(),
         );
         
         $info = array_merge($info, Disclosed::all());
