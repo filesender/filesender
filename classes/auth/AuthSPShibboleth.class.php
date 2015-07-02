@@ -136,32 +136,36 @@ class AuthSPShibboleth {
     /**
      * Generate the logon URL.
      * 
+     * @param $target
+     * 
      * @retrun string
      */
-    public static function logonURL() {
+    public static function logonURL($target = null) {
         self::load();
         
-        $landing_page = Config::get('landing_page');
-        if(!$landing_page) $landing_page = 'upload';
+        if(!$target) {
+            $landing_page = Config::get('landing_page');
+            if(!$landing_page) $landing_page = 'upload';
+            $target = Config::get('site_url').'index.php?s='.$landing_page;
+        }
         
-        $url = self::$config['login_url'];
-        $url = str_replace('{target}', Config::get('site_url').'index.php?s='.$landing_page, $url);
-        
-        return $url;
+        return str_replace('{target}', urlencode($target), self::$config['login_url']);
     }
     
     /**
      * Generate the logoff URL.
      * 
+     * @param $target
+     * 
      * @retrun string
      */
-    public static function logoffURL() {
+    public static function logoffURL($target = null) {
         self::load();
         
-        $url = self::$config['logout_url'];
-        $url = str_replace('{target}', Config::get('site_logouturl'), $url);
+        if(!$target)
+            $target = Config::get('site_logouturl');
         
-        return $url;
+        return str_replace('{target}', urlencode($target), self::$config['logout_url']);
     }
     
     /**
