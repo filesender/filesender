@@ -1,0 +1,9 @@
+<zimlet name="org_filesender_zimlink" version="0.1" description="${msg.description}">
+    <include>org_filesender_zimlink.js</include>
+    <handlerObject>org_filesender_zimlink</handlerObject>
+    
+    <userProperties>
+        <property type="string" name="user_secret" label="${msg.user_secret}" />
+    </userProperties>
+</zimlet>
+
