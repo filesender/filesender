@@ -44,6 +44,7 @@ class RestEndpointInfo extends RestEndpoint {
     public function get() {
         $info = array(
             'url' => Config::get('site_url'),
+            'name' => Config::get('site_name'),
             'logon_url' => AuthSP::logonURL('__target__'),
         );
         
