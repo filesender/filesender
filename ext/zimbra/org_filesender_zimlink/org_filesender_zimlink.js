@@ -37,5 +37,47 @@ org_filesender_zimlink.prototype.constructor = org_filesender_zimlink;
 
 // Initialization stage
 org_filesender_zimlink.prototype.init = function() {
+    // URL / id of filesender server to use
+    this.store_in_filesender = null;
+};
+
+// Detect mail compose view display
+org_filesender_zimlink.prototype.onShowView = function(view) {
+    // Nothing to do if no HTML5 support
+    if(!AjxEnv.supportsHTML5File) return;
     
+    // Nothing to do except for mail compose view
+    if(view.indexOf(ZmId.VIEW_COMPOSE) < 0) return;
+    
+    // Handle several compose views
+    appCtxt.getCurrentView().org_filesender_zimlink_files = [];
+    
+    // Replace original attachment handler with our own, keep the old one to call it when file is small enough
+    var original_submit_attachments = appCtxt.getCurrentView()._submitMyComputerAttachments;
+    appCtxt.getCurrentView()._submitMyComputerAttachments = function(files, node, isInline) {
+        
+        if(!files) files = node.files;
+        
+        // Accumulate files for size computation and potential sending
+        for(var i=0; i<files.length; i++) this.org_filesender_zimlink_files.push(files[i]);
+        
+        // Compute size of all attached files
+        var size = 0;
+        for(i=0; this.org_filesender_zimlink_files; i++) {
+            var file = this.org_filesender_zimlink_files[i];
+            size += file.size || file.fileSize /*Safari*/ || 0;
+        }
+        
+        // Check if max exceeded
+        var max_size = appCtxt.get(ZmSetting.MESSAGE_SIZE_LIMIT);
+        if(
+            (max_size != -1 /* means unlimited */) &&
+            (size > max_size)
+        ) {
+            
+        } else {
+            // Max not exceeded, run zimbra attachment handler
+            original_submit_attachments.apply(appCtxt.getCurrentView(), arguments);
+        }
+    };
 };
