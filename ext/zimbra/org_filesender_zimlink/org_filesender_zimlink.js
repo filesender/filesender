@@ -63,7 +63,7 @@ org_filesender_zimlink.prototype.onShowView = function(view) {
         
         // Compute size of all attached files
         var size = 0;
-        for(i=0; this.org_filesender_zimlink_files; i++) {
+        for(i=0; i<this.org_filesender_zimlink_files.length; i++) {
             var file = this.org_filesender_zimlink_files[i];
             size += file.size || file.fileSize /*Safari*/ || 0;
         }
