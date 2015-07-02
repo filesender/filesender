@@ -81,3 +81,55 @@ org_filesender_zimlink.prototype.onShowView = function(view) {
         }
     };
 };
+
+/*
+ * Generic function to create a dialog box
+ * Params :
+ * title : String containing the title of the dialog box
+ * size : Array with the params width and height to set the size of the dialog box
+ * content : String containing the html inserted in the dialog box
+ * listenerYes : Listener object for the Yes button 
+ * listenerNo : Listener object for the No button 
+ * standardButtons : Array with the list of standardButtons (possible value is DwtDialog.OK_BUTTON, DwtDialog.CANCEL_BUTTON or both).
+ * 
+ * call example : filesenderZimlet.makeDlg("title", {width:300,height:300}, "content", [DwtDialog.OK_BUTTON, DwtDialog.CANCEL_BUTTON])
+ */
+org_filesender_zimlink.prototype.makeDlg = function(title, size, content, standardButtons) {
+	//Create the frame
+	var view = new DwtComposite(this.getShell());
+	view.setSize(size.width, size.height);
+	view.getHtmlElement().style.overflow = "auto";
+	//Add html content in the frame
+	view.getHtmlElement().innerHTML = content;
+
+	//pass the title, view and buttons information and create dialog box
+	var dialog = this._createDialog({title:title, view:view, standardButtons: standardButtons});
+	
+	return dialog;
+};
+
+/*
+ * Customize a ZmDialog button
+ * Params :
+ * dialog : ZmDialog object
+ * buttonId : String containing the id of the button (ex: DwtDialog.OK_BUTTON)
+ * text : String containing the displayed text of the button
+ * listener : AjxListener object to add to the button
+ */
+org_filesender_zimlink.prototype.setDialogButton = function(dialog, buttonId, text, listener) {
+	var button = dialog.getButton(buttonId);
+	button.setText(text);
+	dialog.setButtonListener(buttonId, listener);
+}
+
+/*
+ * Generic function to show an error message
+ * Params:
+ * msg : String containing the msg in html format to display
+ */
+org_filesender_zimlink.prototype.showError = function(msg) {
+	var msgDlg = appCtxt.getMsgDialog();
+	var errorMsg = message;
+	msgDlg.setMessage(errorMsg, DwtMessageDialog.CRITICAL_STYLE);
+	msgDlg.popup();
+};
