@@ -3,7 +3,7 @@
     <handlerObject>org_filesender_zimlink</handlerObject>
     
     <userProperties>
-        <property type="string" name="user_secret" label="${msg.user_secret}" />
+        <property type="string" name="authentication_data" value="{}" />
     </userProperties>
 </zimlet>
 

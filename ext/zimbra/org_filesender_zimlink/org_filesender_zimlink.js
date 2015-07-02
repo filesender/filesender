@@ -35,10 +35,11 @@ function org_filesender_zimlink() {}
 org_filesender_zimlink.prototype = new ZmZimletBase();
 org_filesender_zimlink.prototype.constructor = org_filesender_zimlink;
 
+var org_filesender_zimlink_instance;
+
 // Initialization stage
 org_filesender_zimlink.prototype.init = function() {
-    // URL / id of filesender server to use
-    this.store_in_filesender = null;
+    org_filesender_zimlink_instance = this;
 };
 
 // Detect mail compose view display
@@ -50,21 +51,22 @@ org_filesender_zimlink.prototype.onShowView = function(view) {
     if(view.indexOf(ZmId.VIEW_COMPOSE) < 0) return;
     
     // Handle several compose views
-    appCtxt.getCurrentView().org_filesender_zimlink_files = [];
+    appCtxt.getCurrentView().org_filesender_zimlink = {files: [], use_filesender: null};
     
     // Replace original attachment handler with our own, keep the old one to call it when file is small enough
+    var zimlet = this;
     var original_submit_attachments = appCtxt.getCurrentView()._submitMyComputerAttachments;
     appCtxt.getCurrentView()._submitMyComputerAttachments = function(files, node, isInline) {
         
         if(!files) files = node.files;
         
         // Accumulate files for size computation and potential sending
-        for(var i=0; i<files.length; i++) this.org_filesender_zimlink_files.push(files[i]);
+        for(var i=0; i<files.length; i++) this.org_filesender_zimlink.files.push(files[i]);
         
         // Compute size of all attached files
         var size = 0;
-        for(i=0; i<this.org_filesender_zimlink_files.length; i++) {
-            var file = this.org_filesender_zimlink_files[i];
+        for(i=0; i<this.org_filesender_zimlink.files.length; i++) {
+            var file = this.org_filesender_zimlink.files[i];
             size += file.size || file.fileSize /*Safari*/ || 0;
         }
         
@@ -74,12 +76,134 @@ org_filesender_zimlink.prototype.onShowView = function(view) {
             (max_size != -1 /* means unlimited */) &&
             (size > max_size)
         ) {
+            zimlet.popUseFileSenderDlg();
             
         } else {
             // Max not exceeded, run zimbra attachment handler
             original_submit_attachments.apply(appCtxt.getCurrentView(), arguments);
         }
     };
+};
+
+// Ask user wether to use filesender
+org_filesender_zimlink.prototype.popUseFileSenderDlg = function() {
+    var dialog = this.makeDlg(
+        this.getMessage('use_filesender_dlg_title'),
+        {width: 300, height: 300},
+        '',
+        [DwtDialog.OK_BUTTON, DwtDialog.CANCEL_BUTTON]
+    );
+    
+    this.setDialogButton(
+        dialog,
+        DwtDialog.OK_BUTTON,
+        'Oui',
+        new AjxListener(this, function() {
+            dialog.popdown();
+            dialog.dispose();
+            
+            appCtxt.getCurrentView().org_filesender_zimlink.use_filesender = 'https://filesender-premium.renater.fr/';
+            //appCtxt.getCurrentView().org_filesender_zimlink.use_filesender = this.getConfigProperty('serversUrlList');
+            
+            this.checkFileSenderAuthentication();
+        }, dialog)
+    );
+    
+    this.setDialogButton(
+        dialog,
+        DwtDialog.CANCEL_BUTTON,
+        'Non',
+        new AjxListener(this, function() {
+            dialog.popdown();
+            dialog.dispose();
+            
+            org_filesender_zimlink.showSizeExceededError();
+        })
+    );
+    
+    dialog.popup();
+};
+
+// Autentication data handler for user profile iframe response (FileSender iframe callback)
+org_filesender_zimlink.filesender_user_profile_handler = function(profile) {
+    if(!profile.remote_config) {
+        org_filesender_zimlink_instance.showError('FileSender does not support remote user access');
+        return;
+    }
+    
+    var cfg = profile.remote_config.split('|');
+    
+    var zdata = appCtxt.getCurrentView().org_filesender_zimlink;
+    zdata.remote_config = {url: cfg[0], uid: cfg[1], secret: cfg[2]};
+    
+    var authentication_data = JSON.parse(this.getUserProperty('authentication_data'));
+    
+    authentication_data[zdata.use_filesender].remote_config = zdata.remote_config;
+    
+    this.setUserProperty('authentication_data', JSON.stringify(authentication_data), true);
+    
+    org_filesender_zimlink_instance.iframe_dialog.popdown();
+    org_filesender_zimlink_instance.iframe_dialog.dispose();
+};
+
+// Check if we have authentication data for selected FileSender, get it if not
+org_filesender_zimlink.prototype.checkFileSenderAuthentication = function() {
+    var zdata = appCtxt.getCurrentView().org_filesender_zimlink;
+    
+    var authentication_data = JSON.parse(this.getUserProperty('authentication_data'));
+    
+    if(authentication_data[zdata.use_filesender]) {
+        // Auth data already known, attach and exit
+        appCtxt.getCurrentView().org_filesender_zimlink.remote_config = authentication_data[zdata.use_filesender];
+        return;
+    }
+    
+    // No auth data, popup iframe
+    
+    // Get info about FileSender instance
+    var fs_url = zdata.use_filesender;
+    if(fs_url.substr(-1) != '/') url += '/';
+    var info_url = fs_url + 'rest.php/info';
+    
+    var proxyUrl = [ZmZimletBase.PROXY, AjxStringUtil.urlComponentEncode(info_url)].join('');
+    
+    var res = AjxRpc.invoke(null, proxyUrl, null, null, true);
+    
+    if(!res.success) {
+        this.showError('Info getter error');
+        return;
+    }
+    
+    var info = JSON.parse(res.text);
+    
+    var user_url = fs_url + 'rest.php/user?iframe_callback=org_filesender_zimlink.filesender_user_profile_handler';
+    
+    var domain = fs_url.match(/^(https?:\/\/[^/]+)/)[1];
+    
+    var logon_url = info.logon_url.match(/^\//) ? domain + info.logon_url : info.logon_url;
+    
+    var dialog = this.makeDlg(
+        this.getMessage('get_filesender_authentication_dlg_title'),
+        {width: 800, height: 600},
+        '<iframe src="' + logo_url.replace(/__target__/, AjxStringUtil.urlComponentEncode(user_url)) + '" name=""></iframe>',
+        [DwtDialog.CANCEL_BUTTON]
+    );
+    
+    this.setDialogButton(
+        dialog,
+        DwtDialog.CANCEL_BUTTON,
+        'Annuler',
+        new AjxListener(this, function() {
+            dialog.popdown();
+            dialog.dispose();
+            
+            org_filesender_zimlink.showSizeExceededError();
+        })
+    );
+    
+    dialog.popup();
+    
+    org_filesender_zimlink_instance.iframe_dialog = dialog;
 };
 
 /*
@@ -129,7 +253,14 @@ org_filesender_zimlink.prototype.setDialogButton = function(dialog, buttonId, te
  */
 org_filesender_zimlink.prototype.showError = function(msg) {
 	var msgDlg = appCtxt.getMsgDialog();
-	var errorMsg = message;
-	msgDlg.setMessage(errorMsg, DwtMessageDialog.CRITICAL_STYLE);
+	msgDlg.setMessage(msg, DwtMessageDialog.CRITICAL_STYLE);
 	msgDlg.popup();
+};
+
+// Popup size exceeded error
+org_filesender_zimlink.showSizeExceededError = function() {
+    var msgDlg = appCtxt.getMsgDialog();
+    var errorMsg = AjxMessageFormat.format(ZmMsg.attachmentSizeError, AjxUtil.formatSize(appCtxt.get(ZmSetting.MESSAGE_SIZE_LIMIT)));
+    msgDlg.setMessage(errorMsg, DwtMessageDialog.WARNING_STYLE);
+    msgDlg.popup();
 };
