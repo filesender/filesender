@@ -1,4 +1,4 @@
-<zimlet name="org_filesender_zimlink" version="0.1" description="${msg.description}">
+<zimlet name="org_filesender_zimlink" version="0.1" label="${msg.zimlet_name}" description="${msg.zimlet_description}">
     <include>org_filesender_zimlink.js</include>
     <handlerObject>org_filesender_zimlink</handlerObject>
     
