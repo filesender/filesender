@@ -49,7 +49,7 @@ class RestEndpointUser extends RestEndpoint {
     public static function cast(User $user) {
         return array(
             'id' => $user->id,
-            'organization' => $user->organization,
+            'additional_attributes' => $user->additional_attributes,
             'aup_ticked' => $user->aup_ticked,
             'transfer_preferences' => $user->transfer_preferences,
             'guest_preferences' => $user->guest_preferences,
@@ -57,6 +57,7 @@ class RestEndpointUser extends RestEndpoint {
             'last_activity' => RestUtilities::formatDate($user->last_activity),
             'lang' => $user->lang,
             'frequent_recipients' => $user->frequent_recipients,
+            'remote_config' => Config::get('auth_remote_user_enabled') ? $user->remote_config : null
         );
     }
     
@@ -152,6 +153,8 @@ class RestEndpointUser extends RestEndpoint {
                 'available' => max(0, $user_quota - $used)
             );
         }
+        
+        if(!$property) return self::cast($user);
         
         return null;
     }
