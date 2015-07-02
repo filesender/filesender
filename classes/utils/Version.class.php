@@ -97,7 +97,7 @@ class Version {
      * @return string
      */
     public static function get() {
-        return self::codeVersion();
+        return self::code();
     }
     
     /**
