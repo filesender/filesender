@@ -143,17 +143,22 @@ class AuthSPSaml {
     /**
      * Generate the logon URL.
      * 
+     * @param $target
+     * 
      * @retrun string
      */
-    public static function logonURL() {
+    public static function logonURL($target = null) {
         self::loadSimpleSAML();
         
-        $landing_page = Config::get('landing_page');
-        if(!$landing_page) $landing_page = 'upload';
+        if(!$target) {
+            $landing_page = Config::get('landing_page');
+            if(!$landing_page) $landing_page = 'upload';
+            $target = Config::get('site_url').'index.php?s='.$landing_page;
+        }
         
         $url = self::$config['simplesamlphp_url'].'module.php/core/as_login.php?';
         $url .= 'AuthId='.self::$config['authentication_source'];
-        $url .= '&ReturnTo='.Config::get('site_url').'index.php?s='.$landing_page;
+        $url .= '&ReturnTo='.urlencode($target);
         
         return $url;
     }
@@ -161,14 +166,19 @@ class AuthSPSaml {
     /**
      * Generate the logoff URL.
      * 
+     * @param $target
+     * 
      * @retrun string
      */
-    public static function logoffURL() {
+    public static function logoffURL($target = null) {
         self::loadSimpleSAML();
+        
+        if(!$target)
+            $target = Config::get('site_logouturl');
         
         $url = self::$config['simplesamlphp_url'].'module.php/core/as_logout.php?';
         $url .= 'AuthId='.self::$config['authentication_source'];
-        $url .= '&ReturnTo='.Config::get('site_logouturl');
+        $url .= '&ReturnTo='.urlencode($target);
         
         return $url;
     }

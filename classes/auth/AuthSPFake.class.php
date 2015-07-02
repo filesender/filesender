@@ -125,18 +125,31 @@ class AuthSPFake {
     /**
      * Generate the logon URL.
      * 
+     * @param $target
+     * 
      * @retrun string
      */
-    public static function logonURL() {
-        return '#logon';
+    public static function logonURL($target = null) {
+        if(!$target) {
+            $landing_page = Config::get('landing_page');
+            if(!$landing_page) $landing_page = 'upload';
+            $target = Config::get('site_url').'index.php?s='.$landing_page;
+        }
+        
+        return '#logon-'.urlencode($target);
     }
     
     /**
      * Generate the logoff URL.
      * 
+     * @param $target
+     * 
      * @retrun string
      */
-    public static function logoffURL() {
-        return '#logoff';
+    public static function logoffURL($target = null) {
+        if(!$target)
+            $target = Config::get('site_logouturl');
+        
+        return '#logoff-'.urlencode($target);
     }
 }
