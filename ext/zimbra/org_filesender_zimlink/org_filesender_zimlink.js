@@ -207,6 +207,32 @@ org_filesender_zimlink.prototype.checkFileSenderAuthentication = function() {
 };
 
 /*
+ * In the Compose view, add the text in parameter at the end of the body, before the signature
+ * Params:
+ * downloadlink : String containing the filesender download link
+ */
+org_filesender_zimlink.prototype.addDownloadLink = function(downloadlink) {
+	var controller = appCtxt.getCurrentController();
+	var view = appCtxt.getCurrentView();
+	var i = 0;
+	//Original mail body
+	var html = [view.getUserText()];
+	//Add the download link at the end of the body
+	html[i++] = "<br>";
+	html[i++] = this.getMessage("downloadlink_label") + downloadlink;
+	
+	//Add params with keepAttachments to false to clean attachments
+	var params = {
+			keepAttachments: false,
+			action:			controller._action,
+			msg:			controller._msg,
+			extraBodyText:	html.join("")
+	};
+	//Reset the body content
+	view.resetBody(params);
+};
+
+/*
  * Generic function to create a dialog box
  * Params :
  * title : String containing the title of the dialog box
