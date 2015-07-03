@@ -73,8 +73,8 @@ class RestServer {
             // Request data accessor
             $request = new RestRequest();
             
-            // Because php://input can only be read once for PUT requests we rely on a central getter in AuthRemoteRequest
-            $input = AuthRemoteRequest::body();
+            // Because php://input can only be read once for PUT requests we rely on a shared getter
+            $input = Request::body();
             
             // Get request content type from possible headers
             $type = array_key_exists('CONTENT_TYPE', $_SERVER) ? $_SERVER['CONTENT_TYPE'] : null;
@@ -120,7 +120,7 @@ class RestServer {
             
             if(Auth::isRemoteApplication()) {
                 // Remote applications must honor ACLs
-                $application = AuthRemoteRequest::application();
+                $application = AuthRemote::application();
                 if(array_key_exists($endpoint, $application['acl'])) {
                     $acl = $application['acl'][$endpoint];
                 }else if(array_key_exists('*', $application['acl'])) {

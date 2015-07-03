@@ -370,8 +370,9 @@ class RestEndpointTransfer extends RestEndpoint {
                     throw new TransferUserQuotaExceededException();
             }
             
-            // Evry check went well, create the transfer
-            $transfer = Transfer::create($data->expires, $guest ? $guest->email : $data->from);
+            // Every check went well, create the transfer
+            $expire = $data->expires ? $data->expires : Transfer::getDefaultExpire();
+            $transfer = Transfer::create($expires, $guest ? $guest->email : $data->from);
             
             // Set additionnal data
             if($data->subject) $transfer->subject = $data->subject;
