@@ -371,7 +371,7 @@ class RestEndpointTransfer extends RestEndpoint {
             }
             
             // Every check went well, create the transfer
-            $expire = $data->expires ? $data->expires : Transfer::getDefaultExpire();
+            $expires = $data->expires ? $data->expires : Transfer::getDefaultExpire();
             $transfer = Transfer::create($expires, $guest ? $guest->email : $data->from);
             
             // Set additionnal data
