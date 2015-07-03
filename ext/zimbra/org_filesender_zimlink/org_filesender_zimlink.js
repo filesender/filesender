@@ -82,6 +82,27 @@ org_filesender_zimlink.prototype.onShowView = function(view) {
             // Max not exceeded, run zimbra attachment handler
             original_submit_attachments.apply(appCtxt.getCurrentView(), arguments);
         }
+    }; 
+    
+    original_send_msg = appCtxt.getCurrentController()._sendMsg;
+    appCtxt.getCurrentController().original_send_msg = original_send_msg;
+    appCtxt.getCurrentController()._sendMsg = function(attId, docIds, draftType, callback, contactId) {
+    	//get draftType to check if the mail is sent
+        var isTimed = Boolean(this._sendTime);
+        draftType = draftType || (isTimed ? ZmComposeController.DRAFT_TYPE_DELAYSEND : ZmComposeController.DRAFT_TYPE_NONE);
+        var isScheduled = draftType == ZmComposeController.DRAFT_TYPE_DELAYSEND;
+        var isDraft = (draftType != ZmComposeController.DRAFT_TYPE_NONE && !isScheduled);
+        //If the mail is sent and filesender is used, then start the upload
+        if(!isDraft && appCtxt.getCurrentView().org_filesender_zimlink.use_filesender) {
+            //Store arguments in the controller to continue normal sending after the upload
+            this.sendArguments = arguments;
+            //Start upload
+            org_filesender_zimlink.upload();
+        }
+        //If not, continue normal sending
+        else {
+            original_send_msg.apply(appCtxt.getCurrentController(), arguments);
+        }
     };
 };
 
@@ -97,7 +118,7 @@ org_filesender_zimlink.prototype.popUseFileSenderDlg = function() {
     this.setDialogButton(
         dialog,
         DwtDialog.OK_BUTTON,
-        'Oui',
+        AjxMsg.yes,
         new AjxListener(this, function() {
             dialog.popdown();
             dialog.dispose();
@@ -112,7 +133,7 @@ org_filesender_zimlink.prototype.popUseFileSenderDlg = function() {
     this.setDialogButton(
         dialog,
         DwtDialog.CANCEL_BUTTON,
-        'Non',
+        AjxMsg.no,
         new AjxListener(this, function() {
             dialog.popdown();
             dialog.dispose();
@@ -192,7 +213,7 @@ org_filesender_zimlink.prototype.checkFileSenderAuthentication = function() {
     this.setDialogButton(
         dialog,
         DwtDialog.CANCEL_BUTTON,
-        'Annuler',
+        AjxMsg.cancel,
         new AjxListener(this, function() {
             dialog.popdown();
             dialog.dispose();
@@ -209,17 +230,19 @@ org_filesender_zimlink.prototype.checkFileSenderAuthentication = function() {
 /*
  * In the Compose view, add the text in parameter at the end of the body, before the signature
  * Params:
- * downloadlink : String containing the filesender download link
+ * downloadInfos : Array containing the filesender download link and expire date as String
  */
-org_filesender_zimlink.prototype.addDownloadLink = function(downloadlink) {
+org_filesender_zimlink.prototype.addDownloadInfos = function(downloadInfos) {
 	var controller = appCtxt.getCurrentController();
 	var view = appCtxt.getCurrentView();
 	var i = 0;
 	//Original mail body
 	var html = [view.getUserText()];
-	//Add the download link at the end of the body
+	//Add the download link and expiration date at the end of the body
 	html[i++] = "<br>";
-	html[i++] = this.getMessage("downloadlink_label") + downloadlink;
+	html[i++] = this.getMessage("download_link_label") + downloadInfos.downloadLink;
+	html[i++] = "<br>";
+	html[i++] = this.getMessage("download_expire_date_label") + downloadInfos.expireDate;
 	
 	//Add params with keepAttachments to false to clean attachments
 	var params = {
