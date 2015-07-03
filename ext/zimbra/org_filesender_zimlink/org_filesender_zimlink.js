@@ -256,6 +256,76 @@ org_filesender_zimlink.prototype.addDownloadInfos = function(downloadInfos) {
 };
 
 /*
+ * Build an url for a request to org_filesender_zimlink.jsp
+ * Params:
+ * command : String containing the command to execute in org_filesender_zimlink.jsp
+ * file_id : String containing the file id
+ * transfert_id : String containing the transfert_id
+ * offset : String containing the offset
+ */
+org_filesender_zimlink.prototype.getJspUrl = function(command, file_id, transfert_id, offset) {
+    //retrieve the server config
+    var remote_config = appCtxt.getCurrentView().org_filesender_zimlink.remote_config;
+    var args = ["command=" + command, "url=" + remote_config.url, "uid=" + uid, "secret" + secret].join("&"); 
+    //add function parameters
+    if(file_id) {
+        var args = [args, "file_id=" + file_id, "transfert_id=" + transfert_id, "offset=" + offset].join("&"); 
+    }
+    return this.getResource("org_filesender_zimlink.jsp") + "?" + AjxStringUtil.urlComponentEncode(args);
+}
+
+/*
+ * Send a request in json format to org_filesender_zimlink.jsp
+ * Params:
+ * url : String containing the url and the parameters
+ * data : Object javascript containing the data to send
+ */
+org_filesender_zimlink.prototype.sendActionToJsp = function(url, data) {
+    //Convert the javascript object into a String
+    jsonData = JSON.stringify(data);
+    
+    //Create POST headers array
+    var hdrs = new Array();
+    hdrs["Content-type"] = "application/json";
+    hdrs["Content-length"] = jsonData.length;
+    
+    //Send a synchronous request
+    var resp = AjxRpc.invoke(jsonData, url, hdrs, false);
+    
+    return resp;
+}
+
+/*
+ * Send a blob to org_filesender_zimlink.jsp
+ * Params:
+ * url : String containing the url and the parameters
+ * file : File Object containing the data to send
+ * offset : Integer containing the Offset of the blob
+ * blocSize : Integer containing the block size from the filesender server
+ * callBack : AjxCallBack function executed after the jsp response 
+ */
+org_filesender_zimlink.prototype.popUseFileSenderDlg = function(url, blob, offset, blockSize, callBack) {
+    //Create the request
+    var req = new XMLHttpRequest();
+    req.open("POST", url , true);
+    req.setRequestHeader("Cache-Control", "no-cache");
+    req.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+    req.setRequestHeader("Content-Type", blob.type);
+    req.setRequestHeader("Content-Disposition", 'attachment; filename="' + blob.name + '"');
+    
+    //Send the result to the callBack function
+    req.onreadystatechange = function() {
+        if (req.readyState === 4) {
+            callback.run(req.responseText);
+        }
+    };
+    
+    //Send the blob
+    req.send(blob.slice(offset, blockSize));
+}
+
+
+/*
  * Generic function to create a dialog box
  * Params :
  * title : String containing the title of the dialog box
@@ -268,17 +338,17 @@ org_filesender_zimlink.prototype.addDownloadInfos = function(downloadInfos) {
  * call example : filesenderZimlet.makeDlg("title", {width:300,height:300}, "content", [DwtDialog.OK_BUTTON, DwtDialog.CANCEL_BUTTON])
  */
 org_filesender_zimlink.prototype.makeDlg = function(title, size, content, standardButtons) {
-	//Create the frame
-	var view = new DwtComposite(this.getShell());
-	view.setSize(size.width, size.height);
-	view.getHtmlElement().style.overflow = "auto";
-	//Add html content in the frame
-	view.getHtmlElement().innerHTML = content;
+    //Create the frame
+    var view = new DwtComposite(this.getShell());
+    view.setSize(size.width, size.height);
+    view.getHtmlElement().style.overflow = "auto";
+    //Add html content in the frame
+    view.getHtmlElement().innerHTML = content;
 
-	//pass the title, view and buttons information and create dialog box
-	var dialog = this._createDialog({title:title, view:view, standardButtons: standardButtons});
-	
-	return dialog;
+    //pass the title, view and buttons information and create dialog box
+    var dialog = this._createDialog({title:title, view:view, standardButtons: standardButtons});
+    
+    return dialog;
 };
 
 /*
@@ -290,9 +360,9 @@ org_filesender_zimlink.prototype.makeDlg = function(title, size, content, standa
  * listener : AjxListener object to add to the button
  */
 org_filesender_zimlink.prototype.setDialogButton = function(dialog, buttonId, text, listener) {
-	var button = dialog.getButton(buttonId);
-	button.setText(text);
-	dialog.setButtonListener(buttonId, listener);
+    var button = dialog.getButton(buttonId);
+    button.setText(text);
+    dialog.setButtonListener(buttonId, listener);
 }
 
 /*
@@ -301,9 +371,9 @@ org_filesender_zimlink.prototype.setDialogButton = function(dialog, buttonId, te
  * msg : String containing the msg in html format to display
  */
 org_filesender_zimlink.prototype.showError = function(msg) {
-	var msgDlg = appCtxt.getMsgDialog();
-	msgDlg.setMessage(msg, DwtMessageDialog.CRITICAL_STYLE);
-	msgDlg.popup();
+    var msgDlg = appCtxt.getMsgDialog();
+    msgDlg.setMessage(msg, DwtMessageDialog.CRITICAL_STYLE);
+    msgDlg.popup();
 };
 
 // Popup size exceeded error
