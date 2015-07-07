@@ -378,6 +378,7 @@ $lang['auditlog_unknown_event'] = 'Unknown audit logging event';
 
 // Auth related exceptions
 $lang['auth_authentication_not_found'] = 'Authentification system not found';
+$lang['auth_user_not_allowed'] = 'You are not allowed to use this application';
 
 // AuthRemote related exceptions
 $lang['auth_remote_unknown_application'] = 'Unknow remote application';

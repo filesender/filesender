@@ -46,3 +46,17 @@ class AuthAuthenticationNotFoundException extends DetailedException {
         );
     }
 }
+
+/**
+ * User not allowed
+ */
+class AuthUserNotAllowedException extends DetailedException {
+    /**
+     * Constructor
+     */
+    public function __construct() {
+        parent::__construct(
+            'auth_user_not_allowed'
+        );
+    }
+}

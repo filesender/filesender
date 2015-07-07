@@ -377,6 +377,7 @@ $lang['auditlog_unknown_event'] = 'Evenement inconnu';
 
 // Auth related exceptions
 $lang['auth_authentication_not_found'] = 'Méthode d\'autentification introuvable';
+$lang['auth_user_not_allowed'] = 'Vous n\'êtes pas autorisé à utiliser cette application';
 
 // AuthRemote related exceptions
 $lang['auth_remote_unknown_application'] = 'Application distante inconnue';
