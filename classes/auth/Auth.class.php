@@ -78,14 +78,15 @@ class Auth {
                 self::$attributes = AuthLocal::attributes();
                 self::$type = 'local';
                 
-            }else if(Config::get('auth_remote_application_enabled') && AuthRemoteApplication::isAuthenticated()) { // Remote application
-                self::$attributes = AuthRemoteApplication::attributes();
-                if(AuthRemoteApplication::isAdmin()) self::$isAdmin = true;
-                self::$type = 'remote_application';
-                
-            }else if(Config::get('auth_remote_user_enabled') && AuthRemoteUser::isAuthenticated()) { // Remote user
-                self::$attributes = AuthRemoteUser::attributes();
-                self::$type = 'remote_user';
+            }else if((Config::get('auth_remote_application_enabled') || Config::get('auth_remote_user_enabled')) && AuthRemote::isAuthenticated()) { // Remote application/user
+                if(
+                    (AuthRemote::application() && Config::get('auth_remote_application_enabled')) ||
+                    (!AuthRemote::application() && Config::get('auth_remote_user_enabled'))
+                ) {
+                    self::$attributes = AuthRemote::attributes();
+                    if(AuthRemote::application() && AuthRemote::isAdmin()) self::$isAdmin = true;
+                    self::$type = 'remote';
+                }
                 
             }else if(AuthSP::isAuthenticated()) { // SP
                 self::$attributes = AuthSP::attributes();
@@ -169,7 +170,7 @@ class Auth {
      * @return bool
      */
     public static function isRemoteApplication() {
-        return self::$type == 'remote_application';
+        return self::isRemote() && AuthRemote::application();
     }
     
     /**
@@ -178,7 +179,7 @@ class Auth {
      * @return bool
      */
     public static function isRemoteUser() {
-        return self::$type == 'remote_user';
+        return self::isRemote() && !AuthRemote::application();
     }
     
     /**
@@ -187,7 +188,7 @@ class Auth {
      * @return bool
      */
     public static function isRemote() {
-        return self::isRemoteApplication() || self::isRemoteUser();
+        return self::$type == 'remote';
     }
     
     /**

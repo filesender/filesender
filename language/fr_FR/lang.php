@@ -378,12 +378,10 @@ $lang['auditlog_unknown_event'] = 'Evenement inconnu';
 // Auth related exceptions
 $lang['auth_authentication_not_found'] = 'Méthode d\'autentification introuvable';
 
-// AuthRemoteApplication related exceptions
-$lang['auth_remote_application_unknown_application'] = 'Application distante inconnue';
-$lang['auth_remote_application_too_late'] = 'La requête est arrivée trop tard';
-$lang['auth_remote_application_signature_check_failed'] = 'Signature fournie incorrecte';
-
-// AuthRemoteUser related exceptions
+// AuthRemote related exceptions
+$lang['auth_remote_unknown_application'] = 'Application distante inconnue';
+$lang['auth_remote_too_late'] = 'La requête est arrivée trop tard';
+$lang['auth_remote_signature_check_failed'] = 'Signature fournie incorrecte';
 $lang['auth_remote_user_rejected'] = 'Cet utilisateur n\'accèpte pas d\'authentification distante';
 
 // AuthSP related exceptions

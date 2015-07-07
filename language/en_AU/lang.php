@@ -379,12 +379,10 @@ $lang['auditlog_unknown_event'] = 'Unknown audit logging event';
 // Auth related exceptions
 $lang['auth_authentication_not_found'] = 'Authentification system not found';
 
-// AuthRemoteApplication related exceptions
-$lang['auth_remote_application_unknown_application'] = 'Unknow remote application';
-$lang['auth_remote_application_too_late'] = 'Authentification too late';
-$lang['auth_remote_application_signature_check_failed'] = 'Remote authentification signature check failed';
-
-// AuthRemoteUser related exceptions
+// AuthRemote related exceptions
+$lang['auth_remote_unknown_application'] = 'Unknow remote application';
+$lang['auth_remote_too_late'] = 'Authentification too late';
+$lang['auth_remote_signature_check_failed'] = 'Remote signature check failed';
 $lang['auth_remote_user_rejected'] = 'User does not accept remote authentication';
 
 // AuthSP related exceptions
