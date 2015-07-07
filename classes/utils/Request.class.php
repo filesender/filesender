@@ -30,23 +30,27 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-if (!defined('FILESENDER_BASE'))        // Require environment (fatal)
+// Require environment (fatal)
+if (!defined('FILESENDER_BASE')) 
     die('Missing environment');
 
 /**
- * Unknown remote application
+ * Request body handler
+ * 
+ * Needed since php://input can only be read once
  */
-class AuthRemoteApplicationUknownApplicationException extends DetailedException {
+class Request {
     /**
-     * Constructor
-     * 
-     * @param string $name name of the remote application
+     * Holds the body
      */
-    public function __construct($name) {
-        parent::__construct(
-            'auth_remote_application_unknown_application', // Message to give to the user
-            'application : '.$name // Details to log
-        );
+    private static $body = null;
+    
+    /**
+     * Get the body
+     */
+    public static function body() {
+        if(is_null(self::$body)) self::$body = @file_get_contents('php://input');
+        
+        return self::$body;
     }
 }
-

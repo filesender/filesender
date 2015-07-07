@@ -69,3 +69,38 @@ class AuthRemoteSignatureCheckFailedException extends DetailedException {
         );
     }
 }
+
+/**
+ * Unknown remote application
+ */
+class AuthRemoteUknownApplicationException extends DetailedException {
+    /**
+     * Constructor
+     * 
+     * @param string $name name of the remote application
+     */
+    public function __construct($name) {
+        parent::__construct(
+            'auth_remote_unknown_application', // Message to give to the user
+            'application : '.$name // Details to log
+        );
+    }
+}
+
+/**
+ * User does not accept remote authentication
+ */
+class AuthRemoteUserRejectedException extends DetailedException {
+    /**
+     * Constructor
+     * 
+     * @param string $uid user id
+     * @param string $reason
+     */
+    public function __construct($uid, $reason) {
+        parent::__construct(
+            'auth_remote_user_rejected', // Message to give to the user
+            'uid : '.$uid.', reason : '.$reason // Details to log
+        );
+    }
+}
