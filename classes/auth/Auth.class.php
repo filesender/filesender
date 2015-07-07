@@ -45,6 +45,11 @@ class Auth {
     private static $user = null;
     
     /**
+     * Current user allowed state
+     */
+    private static $allowed = true;
+    
+    /**
      * Attributes cache.
      */
     private static $attributes = null;
@@ -94,6 +99,24 @@ class Auth {
             }
             
             if(self::$attributes && array_key_exists('uid', self::$attributes)) {
+                $user_filter = Config::get('auth_user_filter');
+                if($user_filter) {
+                    self::$allowed = false;
+                    
+                    if(is_string($user_filter)) {
+                        if(preg_match('`^([^:]+):(.+)$`', $user_filter, $p))
+                            self::$allowed = array_key_exists($p[1], self::$attributes) && preg_match('`'.$p[2].'`', self::$attributes[$p[1]]);
+                        
+                    } else {
+                        self::$allowed = !(bool)$user_filter;
+                    }
+                    
+                    if(!self::$allowed) {
+                        self::$type = null;
+                        return;
+                    }
+                }
+                
                 // Set user if got uid attribute
                 self::$user = User::fromAttributes(self::$attributes);
                 
@@ -123,6 +146,8 @@ class Auth {
      * @retrun bool
      */
     public static function isAuthenticated() {
+        if(!self::$allowed) throw new AuthUserNotAllowedException();
+        
         return (bool)self::user();
     }
     
