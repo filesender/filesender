@@ -145,31 +145,34 @@ class Lang {
             
             // Fill stack by order of preference and without duplicates
             
-            // URL/session given language
-            if(Config::get('lang_url_enabled')) {
-                if(array_key_exists('lang', $_GET) && preg_match('`^[a-z]+(-.+)?$`', $_GET['lang'])) {
-                    $code = self::realCode($_GET['lang']);
-                    if($code) {
-                        if(isset($_SESSION)) $_SESSION['lang'] = $code;
-                        if(Config::get('lang_save_url_switch_in_userpref') && Auth::isAuthenticated()) {
-                            Auth::user()->lang = $code;
-                            Auth::user()->save();
+            // Auth exception should not stop processing of lang code
+            try {
+                // URL/session given language
+                if(Config::get('lang_url_enabled')) {
+                    if(array_key_exists('lang', $_GET) && preg_match('`^[a-z]+(-.+)?$`', $_GET['lang'])) {
+                        $code = self::realCode($_GET['lang']);
+                        if($code) {
+                            if(isset($_SESSION)) $_SESSION['lang'] = $code;
+                            if(Config::get('lang_save_url_switch_in_userpref') && Auth::isAuthenticated()) {
+                                Auth::user()->lang = $code;
+                                Auth::user()->save();
+                            }
                         }
+                    }
+                    
+                    if(isset($_SESSION) && array_key_exists('lang', $_SESSION)) {
+                        if(!in_array($_SESSION['lang'], $stack))
+                            $stack[] = $_SESSION['lang'];
                     }
                 }
                 
-                if(isset($_SESSION) && array_key_exists('lang', $_SESSION)) {
-                    if(!in_array($_SESSION['lang'], $stack))
-                        $stack[] = $_SESSION['lang'];
+                // User preference stored language
+                if(Config::get('lang_userpref_enabled') && Auth::isAuthenticated()) {
+                    $code = Auth::user()->lang;
+                    if($code && !in_array($code, $stack))
+                        $stack[] = $code;
                 }
-            }
-            
-            // User preference stored language
-            if(Config::get('lang_userpref_enabled') && Auth::isAuthenticated()) {
-                $code = Auth::user()->lang;
-                if($code && !in_array($code, $stack))
-                    $stack[] = $code;
-            }
+            } catch(Exception $e) {}
             
             // Browser language
             if(Config::get('lang_browser_enabled') && array_key_exists('HTTP_ACCEPT_LANGUAGE', $_SERVER)) {
