@@ -130,6 +130,9 @@ window.filesender.client = {
             try {
                 var error = JSON.parse(msg);
                 
+                if(error.message == 'auth_user_not_allowed') // Should have been already reported by html ui
+                    return;
+                
                 if(
                     (error.message == 'rest_authentication_required' || error.message == 'rest_xsrf_token_did_not_match') &&
                     (options.ignore_authentication_required || filesender.client.authentication_required)
