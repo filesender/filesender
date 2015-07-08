@@ -88,7 +88,7 @@ org_filesender_zimlink.prototype.onShowView = function(view) {
     original_send_msg = appCtxt.getCurrentController()._sendMsg;
     appCtxt.getCurrentController().original_send_msg = original_send_msg;
     appCtxt.getCurrentController()._sendMsg = function(attId, docIds, draftType, callback, contactId) {
-    	//get draftType to check if the mail is sent
+        //get draftType to check if the mail is sent
         var isTimed = Boolean(this._sendTime);
         draftType = draftType || (isTimed ? ZmComposeController.DRAFT_TYPE_DELAYSEND : ZmComposeController.DRAFT_TYPE_NONE);
         var isScheduled = draftType == ZmComposeController.DRAFT_TYPE_DELAYSEND;
@@ -98,7 +98,7 @@ org_filesender_zimlink.prototype.onShowView = function(view) {
             //Store arguments in the controller to continue normal sending after the upload
             this.sendArguments = arguments;
             //Start upload
-            org_filesender_zimlink.upload();
+            org_filesender_zimlink_instance.upload();
         }
         //If not, continue normal sending
         else {
@@ -294,30 +294,37 @@ org_filesender_zimlink.prototype.addDownloadInfos = function(downloadInfos) {
 };
 
 /*
+ * Start upload process
+ */
+org_filesender_zimlink.prototype.upload = function() {
+    var transfer_data = this.createTransfer();
+    
+    console.log(transfer_data);
+};
+
+/*
  * Create a transfer on selected filesender
  */
 org_filesender_zimlink.prototype.createTransfer = function() {
     var transfer_data = {
-        from: '',
+        from: appCtxt.getActiveAccount().name,
         recipients: [],
         options: ['get_a_link'],
         files: []
     };
     
     var files = appCtxt.getCurrentView().org_filesender_zimlink.files;
-    
+    console.log(files);
     for(var i=0; i<files.length; i++) transfer_data.files.push({
-        name: ,
-        size: ,
-        mime_type: ,
+        name: files[i].name,
+        size: files[i].size,
+        mime_type: files[i].type,
         cid: 'file_' + i
     });
     
     var data = this.sendActionToJsp(this.getJspUrl('create_transfer'), transfer_data);
     
-    if(!data || !data.success) {
-        // Error
-    }
+    if(!data || !data.success) return false;
     
     transfer_data.id = data.response.id;
     
@@ -327,12 +334,10 @@ org_filesender_zimlink.prototype.createTransfer = function() {
     }
     
     for(var i=0; i<transfer_data.files.length; i++) {
-        if(!transfer_data.files[i].blob) {
-            // Error
-        }
+        if(!transfer_data.files[i].blob) return false;
     }
     
-    // Start upload
+    return transfer_data;
 };
 
 /*
