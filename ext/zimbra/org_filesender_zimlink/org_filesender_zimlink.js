@@ -76,7 +76,8 @@ org_filesender_zimlink.prototype.onShowView = function(view) {
             (max_size != -1 /* means unlimited */) &&
             (size > max_size)
         ) {
-            zimlet.popUseFileSenderDlg();
+            if(!this.org_filesender_zimlink.use_filesender)
+                zimlet.popUseFileSenderDlg();
             
         } else {
             // Max not exceeded, run zimbra attachment handler
@@ -111,7 +112,7 @@ org_filesender_zimlink.prototype.popUseFileSenderDlg = function() {
     var dialog = this.makeDlg(
         this.getMessage('use_filesender_dlg_title'),
         {width: 300, height: 300},
-        '',
+        'Use FileSender ?',
         [DwtDialog.OK_BUTTON, DwtDialog.CANCEL_BUTTON]
     );
     
@@ -145,10 +146,10 @@ org_filesender_zimlink.prototype.popUseFileSenderDlg = function() {
     dialog.popup();
 };
 
-// Autentication data handler for user profile iframe response (FileSender iframe callback)
-org_filesender_zimlink.filesender_user_profile_handler = function(profile) {
+// Data handler for user profile response (FileSender JSONP callback)
+org_filesender_zimlink.prototype.filesender_user_profile_handler = function(profile) {
     if(!profile.remote_config) {
-        org_filesender_zimlink_instance.showError('FileSender does not support remote user access');
+        this.showError('FileSender does not support remote user access');
         return;
     }
     
@@ -157,25 +158,31 @@ org_filesender_zimlink.filesender_user_profile_handler = function(profile) {
     var zdata = appCtxt.getCurrentView().org_filesender_zimlink;
     zdata.remote_config = {url: cfg[0], uid: cfg[1], secret: cfg[2]};
     
-    var authentication_data = JSON.parse(this.getUserProperty('authentication_data'));
+    var auth_data = JSON.parse(this.getUserProperty('authentication_data'));
     
-    authentication_data[zdata.use_filesender].remote_config = zdata.remote_config;
+    if(!auth_data[zdata.use_filesender]) auth_data[zdata.use_filesender] = {};
+    auth_data[zdata.use_filesender].remote_config = zdata.remote_config;
     
-    this.setUserProperty('authentication_data', JSON.stringify(authentication_data), true);
+    this.setUserProperty('authentication_data', JSON.stringify(auth_data), true);
     
-    org_filesender_zimlink_instance.iframe_dialog.popdown();
-    org_filesender_zimlink_instance.iframe_dialog.dispose();
+    this.fs_auth_dialog.popdown();
+    this.fs_auth_dialog.dispose();
+};
+
+// Data handler for user quota response (FileSender JSONP callback)
+org_filesender_zimlink.prototype.filesender_user_quota_handler = function(quota) {
+    this.user_quota = quota;
 };
 
 // Check if we have authentication data for selected FileSender, get it if not
 org_filesender_zimlink.prototype.checkFileSenderAuthentication = function() {
     var zdata = appCtxt.getCurrentView().org_filesender_zimlink;
     
-    var authentication_data = JSON.parse(this.getUserProperty('authentication_data'));
+    var auth_data = JSON.parse(this.getUserProperty('authentication_data'));
     
-    if(authentication_data[zdata.use_filesender]) {
+    if(auth_data[zdata.use_filesender]) {
         // Auth data already known, attach and exit
-        appCtxt.getCurrentView().org_filesender_zimlink.remote_config = authentication_data[zdata.use_filesender];
+        appCtxt.getCurrentView().org_filesender_zimlink.remote_config = auth_data[zdata.use_filesender];
         return;
     }
     
@@ -197,16 +204,30 @@ org_filesender_zimlink.prototype.checkFileSenderAuthentication = function() {
     
     var info = JSON.parse(res.text);
     
-    var user_url = fs_url + 'rest.php/user?iframe_callback=org_filesender_zimlink.filesender_user_profile_handler';
+    var landing_url = fs_url + 'index.php#zimbra_binding';
+    
+    var user_url = fs_url + 'rest.php/user?callback=org_filesender_zimlink_instance.filesender_user_profile_handler';
+    
+    var quota_url = fs_url + 'rest.php/quota?callback=org_filesender_zimlink_instance.filesender_user_quota_handler';
     
     var domain = fs_url.match(/^(https?:\/\/[^/]+)/)[1];
     
     var logon_url = info.logon_url.match(/^\//) ? domain + info.logon_url : info.logon_url;
     
+    var popup_url = logon_url.replace(/__target__/, AjxStringUtil.urlComponentEncode(landing_url));
+    
     var dialog = this.makeDlg(
         this.getMessage('get_filesender_authentication_dlg_title'),
-        {width: 800, height: 600},
-        '<iframe src="' + logo_url.replace(/__target__/, AjxStringUtil.urlComponentEncode(user_url)) + '" name=""></iframe>',
+        {width: 400, height: 400},
+        [
+            '<p>You need to get your custom authentication from the choosen Filsender server :</p>',
+            '<h1>Step 1</h1>',
+            '<p>Authenticate on Filesender server by clicking on the following button.</p>',
+            '<button id="org_filesender_zimlink_filesender_authentication_popup_btn">Authenticate on FileSender</button>',
+            '<h1>Step 2</h1>',
+            '<p>After authentication click on the following button so that Zimbra can get the authentication data.</p>',
+            '<button id="org_filesender_zimlink_filesender_authentication_check_btn">Get authentication data</button>'
+        ].join(''),
         [DwtDialog.CANCEL_BUTTON]
     );
     
@@ -224,7 +245,24 @@ org_filesender_zimlink.prototype.checkFileSenderAuthentication = function() {
     
     dialog.popup();
     
-    org_filesender_zimlink_instance.iframe_dialog = dialog;
+    this.fs_auth_dialog = dialog;
+    
+    document.getElementById('org_filesender_zimlink_filesender_authentication_popup_btn').onclick = function() {
+        org_filesender_zimlink_instance.authentication_popup = window.open(popup_url);
+        return false;
+    };
+    
+    document.getElementById('org_filesender_zimlink_filesender_authentication_check_btn').onclick = function() {
+        var profile_script = document.createElement('script');
+        this.parentNode.appendChild(profile_script);
+        profile_script.src = user_url + '&_=' + (new Date()).getTime();
+        
+        var quota_script = document.createElement('script');
+        this.parentNode.appendChild(quota_script);
+        quota_script.src = quota_url + '&_=' + (new Date()).getTime();
+        
+        return false;
+    };
 };
 
 /*
@@ -239,20 +277,32 @@ org_filesender_zimlink.prototype.addDownloadInfos = function(downloadInfos) {
 	//Original mail body
 	var html = [view.getUserText()];
 	//Add the download link and expiration date at the end of the body
-	html[i++] = "<br>";
-	html[i++] = this.getMessage("download_link_label") + downloadInfos.downloadLink;
-	html[i++] = "<br>";
-	html[i++] = this.getMessage("download_expire_date_label") + downloadInfos.expireDate;
+	html[i++] = '<br>';
+	html[i++] = this.getMessage('download_link_label') + downloadInfos.downloadLink;
+	html[i++] = '<br>';
+	html[i++] = this.getMessage('download_expire_date_label') + downloadInfos.expireDate;
 	
 	//Add params with keepAttachments to false to clean attachments
 	var params = {
 			keepAttachments: false,
 			action:			controller._action,
 			msg:			controller._msg,
-			extraBodyText:	html.join("")
+			extraBodyText:	html.join('')
 	};
 	//Reset the body content
 	view.resetBody(params);
+};
+
+/*
+ * Create a transfer on selected filesender
+ */
+org_filesender_zimlink.prototype.createTransfer = function() {
+    var transfer_data = {
+        from: '',
+        recipients: [],
+        options: ['get_a_link'],
+        files: []
+    };
 };
 
 /*
@@ -263,15 +313,33 @@ org_filesender_zimlink.prototype.addDownloadInfos = function(downloadInfos) {
  * transfert_id : String containing the transfert_id
  * offset : String containing the offset
  */
-org_filesender_zimlink.prototype.getJspUrl = function(command, file_id, transfert_id, offset) {
-    //retrieve the server config
-    var remote_config = appCtxt.getCurrentView().org_filesender_zimlink.remote_config;
-    var args = ["command=" + command, "url=" + remote_config.url, "uid=" + uid, "secret" + secret].join("&"); 
-    //add function parameters
-    if(file_id) {
-        var args = [args, "file_id=" + file_id, "transfert_id=" + transfert_id, "offset=" + offset].join("&"); 
-    }
-    return this.getResource("org_filesender_zimlink.jsp") + "?" + AjxStringUtil.urlComponentEncode(args);
+org_filesender_zimlink.prototype.getJspUrl = function(command, target_id, offset) {
+    // retrieve the server config
+    var zdata = appCtxt.getCurrentView().org_filesender_zimlink;
+    var auth_data = JSON.parse(this.getUserProperty('authentication_data'));
+    if(!auth_data[zdata.use_filesender]) return null;
+    
+    var remote_config = auth_data[zdata.use_filesender].remote_config;
+    
+    var enc = AjxStringUtil.urlComponentEncode;
+    var args = [
+        'command=' + command,
+        'filesender_url=' + enc(remote_config.url),
+        'uid=' + enc(remote_config.uid),
+        'secret=' + enc(remote_config.secret)
+    ].join('&');
+    
+    // add function parameters
+    if(command == 'upload_chunk')
+        args = [args, 'file_id=' + enc(target_id), 'offset=' + enc(offset)].join('&'); 
+    
+    if(command == 'complete_file')
+        args = [args, 'file_id=' + enc(target_id)].join('&'); 
+    
+    if(command == 'complete_transfer')
+        args = [args, 'transfer_id=' + enc(target_id)].join('&'); 
+    
+    return this.getResource('org_filesender_zimlink.jsp') + '?' + args;
 }
 
 /*
@@ -286,8 +354,8 @@ org_filesender_zimlink.prototype.sendActionToJsp = function(url, data) {
     
     //Create POST headers array
     var hdrs = new Array();
-    hdrs["Content-type"] = "application/json";
-    hdrs["Content-length"] = jsonData.length;
+    hdrs['Content-type'] = 'application/json';
+    hdrs['Content-length'] = jsonData.length;
     
     //Send a synchronous request
     var resp = AjxRpc.invoke(jsonData, url, hdrs, false);
@@ -304,14 +372,14 @@ org_filesender_zimlink.prototype.sendActionToJsp = function(url, data) {
  * blocSize : Integer containing the block size from the filesender server
  * callBack : AjxCallBack function executed after the jsp response 
  */
-org_filesender_zimlink.prototype.popUseFileSenderDlg = function(url, blob, offset, blockSize, callBack) {
+org_filesender_zimlink.prototype.sendBlob = function(url, blob, offset, blockSize, callBack) {
     //Create the request
     var req = new XMLHttpRequest();
-    req.open("POST", url , true);
-    req.setRequestHeader("Cache-Control", "no-cache");
-    req.setRequestHeader("X-Requested-With", "XMLHttpRequest");
-    req.setRequestHeader("Content-Type", blob.type);
-    req.setRequestHeader("Content-Disposition", 'attachment; filename="' + blob.name + '"');
+    req.open('POST', url , true);
+    req.setRequestHeader('Cache-Control', 'no-cache');
+    req.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+    req.setRequestHeader('Content-Type', blob.type);
+    req.setRequestHeader('Content-Disposition', 'attachment; filename="' + blob.name + '"');
     
     //Send the result to the callBack function
     req.onreadystatechange = function() {
@@ -335,13 +403,13 @@ org_filesender_zimlink.prototype.popUseFileSenderDlg = function(url, blob, offse
  * listenerNo : Listener object for the No button 
  * standardButtons : Array with the list of standardButtons (possible value is DwtDialog.OK_BUTTON, DwtDialog.CANCEL_BUTTON or both).
  * 
- * call example : filesenderZimlet.makeDlg("title", {width:300,height:300}, "content", [DwtDialog.OK_BUTTON, DwtDialog.CANCEL_BUTTON])
+ * call example : filesenderZimlet.makeDlg('title', {width:300,height:300}, 'content', [DwtDialog.OK_BUTTON, DwtDialog.CANCEL_BUTTON])
  */
 org_filesender_zimlink.prototype.makeDlg = function(title, size, content, standardButtons) {
     //Create the frame
     var view = new DwtComposite(this.getShell());
     view.setSize(size.width, size.height);
-    view.getHtmlElement().style.overflow = "auto";
+    view.getHtmlElement().style.overflow = 'auto';
     //Add html content in the frame
     view.getHtmlElement().innerHTML = content;
 
