@@ -143,11 +143,10 @@ class RestServer {
                 
             } else if(in_array($method, array('post', 'put', 'delete'))) {
                 // SP or Guest, lets do XSRF check
-                if(
-                    !array_key_exists('HTTP_X_FILESENDER_SECURITY_TOKEN', $_SERVER)
-                    || !Utilities::checkSecurityToken($_SERVER['HTTP_X_FILESENDER_SECURITY_TOKEN'])
-                )
-                    throw new RestException('rest_xsrf_token_did_not_match', 400, 'session token = '.Utilities::getSecurityToken().' and token = '.$_SERVER['HTTP_X_FILESENDER_SECURITY_TOKEN']);
+                $token_name = 'HTTP_X_FILESENDER_SECURITY_TOKEN';
+                $token = array_key_exists($token_name, $_SERVER) ? $_SERVER[$token_name] : '';
+                if(!$token || !Utilities::checkSecurityToken($token))
+                    throw new RestException('rest_xsrf_token_did_not_match', 400, 'session token = '.Utilities::getSecurityToken().' and token = '.$token);
             }
             
             // JSONP specifics
