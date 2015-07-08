@@ -167,30 +167,18 @@ org_filesender_zimlink.prototype.filesender_user_profile_handler = function(prof
     
     this.setUserProperty('authentication_data', JSON.stringify(auth_data), true);
     
+    this.getFileSenderQuota();
+    
     this.fs_auth_dialog.popdown();
     this.fs_auth_dialog.dispose();
 };
 
-// Data handler for user quota response (FileSender JSONP callback)
-org_filesender_zimlink.prototype.filesender_user_quota_handler = function(quota) {
-    this.user_quota = quota;
-};
-
-// Check if we have authentication data for selected FileSender, get it if not
-org_filesender_zimlink.prototype.checkFileSenderAuthentication = function() {
+/*
+ * Get info about filesender instance
+ */
+org_filesender_zimlink.prototype.getFileSenderInfo = function() {
     var zdata = appCtxt.getCurrentView().org_filesender_zimlink;
     
-    var auth_data = JSON.parse(this.getUserProperty('authentication_data'));
-    
-    if(auth_data[zdata.use_filesender]) {
-        // Auth data already known, attach and exit
-        appCtxt.getCurrentView().org_filesender_zimlink.remote_config = auth_data[zdata.use_filesender];
-        return;
-    }
-    
-    // No auth data, popup iframe
-    
-    // Get info about FileSender instance
     var fs_url = zdata.use_filesender;
     if(fs_url.substr(-1) != '/') url += '/';
     var info_url = fs_url + 'rest.php/info';
@@ -207,13 +195,45 @@ org_filesender_zimlink.prototype.checkFileSenderAuthentication = function() {
     var info = JSON.parse(res.text);
     
     var cs = info.upload_chunk_size ? info.upload_chunk_size : (5 * 1024 * 1024);
-    appCtxt.getCurrentView().org_filesender_zimlink.upload_chunk_size = cs;
+    info.upload_chunk_size = cs;
+    
+    zdata.info = info;
+    
+    return info;
+};
+
+/*
+ * Get user quota
+ */
+org_filesender_zimlink.prototype.getFileSenderQuota = function() {
+    var data = this.sendActionToJsp(this.getJspUrl('get_quota'));
+    
+    if(!data || !data.success) {
+        // Error
+    }
+    
+    appCtxt.getCurrentView().org_filesender_zimlink.user_quota = data.response;
+    
+    return data.response;
+};
+
+// Check if we have authentication data for selected FileSender, get it if not
+org_filesender_zimlink.prototype.checkFileSenderAuthentication = function() {
+    var info = this.getFileSenderInfo();
+    
+    var zdata = appCtxt.getCurrentView().org_filesender_zimlink;
+    var auth_data = JSON.parse(this.getUserProperty('authentication_data'));
+    
+    if(auth_data[zdata.use_filesender]) {
+        // Auth data already known, attach and exit
+        appCtxt.getCurrentView().org_filesender_zimlink.remote_config = auth_data[zdata.use_filesender];
+        this.getFileSenderQuota();
+        return;
+    }
     
     var landing_url = fs_url + 'index.php#zimbra_binding';
     
     var user_url = fs_url + 'rest.php/user?callback=org_filesender_zimlink_instance.filesender_user_profile_handler';
-    
-    var quota_url = fs_url + 'rest.php/user/quota?callback=org_filesender_zimlink_instance.filesender_user_quota_handler';
     
     var domain = fs_url.match(/^(https?:\/\/[^/]+)/)[1];
     
@@ -261,10 +281,6 @@ org_filesender_zimlink.prototype.checkFileSenderAuthentication = function() {
         var profile_script = document.createElement('script');
         this.parentNode.appendChild(profile_script);
         profile_script.src = user_url + '&_=' + (new Date()).getTime();
-        
-        var quota_script = document.createElement('script');
-        this.parentNode.appendChild(quota_script);
-        quota_script.src = quota_url + '&_=' + (new Date()).getTime();
         
         return false;
     };
@@ -318,30 +334,63 @@ org_filesender_zimlink.prototype.upload = function() {
  * Upload next chunk
  */
 org_filesender_zimlink.prototype.uploadNext = function() {
-    var chunk_size = appCtxt.getCurrentView().org_filesender_zimlink.upload_chunk_size;
     var tdata = appCtxt.getCurrentView().org_filesender_zimlink.transfer_data;
-    
     var file = tdata.files[tdata.file_idx];
-    var slicer = file.blob.slice ? 'slice' : (file.blob.mozSlice ? 'mozSlice' : (file.blob.webkitSlice ? 'webkitSlice' : 'slice'));
     
-    var blob = file.blob[slicer](tdata.file_offset, tdata.file_offset + chunk_size);
-    
-    
-    tdata.file_offset += chunk_size;
-    if(tdata.file_offset >= file.size) {
-        // File complete
-        
-        tdata.file_offset = 0;
-        tdata.file_idx++;
-        
-        if(tdata.file_idx >= tdata.files.length) {
-            // Transfer complete
-            
+    this.uploadChunk(file.id, tdata.file_offset, file.blob, new AjxCallback(this, function(error) {
+        if(error) {
+            // TODO
             return;
         }
-    }
+        
+        tdata.file_offset += chunk_size;
+        if(tdata.file_offset >= file.size) {
+            // File complete
+            var complete = this.sendActionToJsp(this.getJspUrl('complete_file', tdata.files[tdata.file_idx].id), {complete: true});
+            if(!complete || !complete.success) {
+                // TODO
+                return;
+            }
+            
+            tdata.file_offset = 0;
+            tdata.file_idx++;
+            
+            if(tdata.file_idx >= tdata.files.length) {
+                // Transfer complete
+                var complete = this.sendActionToJsp(this.getJspUrl('complete_transfer', tdata.id), {complete: true});
+                if(!complete || !complete.success) {
+                    // TODO
+                    return;
+                }
+                
+                this.addDownloadInfos({
+                    downloadLink: tdata.recipients[0].download_url,
+                    expireDate: tdata.expires.formatted
+                });
+                
+                // TODO call orig msg send
+                
+                return;
+            }
+        }
+        
+        this.uploadNext();
+    }));
+};
+
+/*
+ * Upload a chunk
+ */
+org_filesender_zimlink.prototype.uploadChunk = function(file_id, offset, blob, callback) {
+    var chunk_size = appCtxt.getCurrentView().org_filesender_zimlink.info.upload_chunk_size;
     
-    this.uploadNext();
+    var slicer = blob.slice ? 'slice' : (blob.mozSlice ? 'mozSlice' : (blob.webkitSlice ? 'webkitSlice' : 'slice'));
+    
+    var blob = blob[slicer](offset, offset + chunk_size);
+    
+    var url = this.getJspUrl('upload_chunk', file_id, offset);
+    
+    this.sendBlob(url, blob, offset, chunk_size, callback);
 };
 
 /*
@@ -427,7 +476,7 @@ org_filesender_zimlink.prototype.getJspUrl = function(command, target_id, offset
  */
 org_filesender_zimlink.prototype.sendActionToJsp = function(url, data) {
     //Convert the javascript object into a String
-    jsonData = JSON.stringify(data);
+    jsonData = data ? JSON.stringify(data) : null;
     
     //Create POST headers array
     var hdrs = {
@@ -452,24 +501,39 @@ org_filesender_zimlink.prototype.sendActionToJsp = function(url, data) {
  * blocSize : Integer containing the block size from the filesender server
  * callBack : AjxCallBack function executed after the jsp response 
  */
-org_filesender_zimlink.prototype.sendBlob = function(url, blob, offset, blockSize, callBack) {
+org_filesender_zimlink.prototype.sendBlob = function(url, blob, callBack) {
     //Create the request
     var req = new XMLHttpRequest();
     req.open('POST', url , true);
     req.setRequestHeader('Cache-Control', 'no-cache');
     req.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-    req.setRequestHeader('Content-Type', blob.type);
-    req.setRequestHeader('Content-Disposition', 'attachment; filename="' + blob.name + '"');
+    req.setRequestHeader('Content-Type', 'application/octet-stream');
     
     //Send the result to the callBack function
     req.onreadystatechange = function() {
-        if (req.readyState === 4) {
-            callback.run(req.responseText);
+        if(req.readyState != 4) return; // Not a progress update
+        
+        if(req.status == 200) { // All went well
+            callback.run();
+            
+        }else if(xhr.status == 0) { // Request cancelled (browser refresh or such)
+            // TODO
+            
+        }else{
+            // We have an error
+            var msg = req.responseText.replace(/^\s+/, '').replace(/\s+$/, '');
+            var error = {message: msg};
+            
+            try {
+                error = JSON.parse(msg);
+            } catch(e) {}
+            
+            callback(error);
         }
     };
     
     //Send the blob
-    req.send(blob.slice(offset, blockSize));
+    req.send(blob);
 }
 
 

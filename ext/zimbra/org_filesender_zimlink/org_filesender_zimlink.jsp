@@ -26,7 +26,14 @@
     
     try {
         if(!command.equals("") && !filesender_url.equals("") && !uid.equals("") && !secret.equals("")) {
-            if(command.equals("create_transfer")) {
+            if(command.equals("get_quota")) {
+                url = ws_url + "/user/@me/quota";
+                
+                signed_url = getSignedJsonRequestUrl("get", url, uid, secret, json);
+                
+                resp = getJson(signed_url);
+                
+            } else if(command.equals("create_transfer")) {
                 String json = getJsonRequestBody(request);
                 
                 url = ws_url + "/transfer";
@@ -166,6 +173,13 @@
     String signed = method + "&" + url.replace("http://", "").replace("https://", "") + "&";
     
     return url + "&signature=" + hmacSha1(signed, binary, secret);
+}
+%>
+
+<%!public String getJson(String url) throws Exception { // Make HTTP GET request to an url with a binary payload
+    GetMethod method = new GetMethod(url);
+    
+    return makeRequest(method);
 }
 %>
 
