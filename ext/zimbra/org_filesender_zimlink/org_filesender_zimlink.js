@@ -208,7 +208,7 @@ org_filesender_zimlink.prototype.checkFileSenderAuthentication = function() {
     
     var user_url = fs_url + 'rest.php/user?callback=org_filesender_zimlink_instance.filesender_user_profile_handler';
     
-    var quota_url = fs_url + 'rest.php/quota?callback=org_filesender_zimlink_instance.filesender_user_quota_handler';
+    var quota_url = fs_url + 'rest.php/user/quota?callback=org_filesender_zimlink_instance.filesender_user_quota_handler';
     
     var domain = fs_url.match(/^(https?:\/\/[^/]+)/)[1];
     
