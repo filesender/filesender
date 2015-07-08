@@ -211,7 +211,8 @@ class GUI {
             }
             
             // ... Redirect the user to HTTPS.
-            $redirect = sprintf('Location: https://%s%s', $_SERVER['HTTP_HOST'], $_SERVER['REQUEST_URI']);
+            $host = array_key_exists('HTTP_HOST', $_SERVER) ? $_SERVER['HTTP_HOST'] : $_SERVER['SERVER_NAME'];
+            $redirect = sprintf('Location: https://%s%s', $host, $_SERVER['REQUEST_URI']);
             header($redirect);
             exit;
         }
