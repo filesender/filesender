@@ -206,6 +206,9 @@ org_filesender_zimlink.prototype.checkFileSenderAuthentication = function() {
     
     var info = JSON.parse(res.text);
     
+    var cs = info.upload_chunk_size ? info.upload_chunk_size : (5 * 1024 * 1024);
+    appCtxt.getCurrentView().org_filesender_zimlink.upload_chunk_size = cs;
+    
     var landing_url = fs_url + 'index.php#zimbra_binding';
     
     var user_url = fs_url + 'rest.php/user?callback=org_filesender_zimlink_instance.filesender_user_profile_handler';
@@ -302,6 +305,43 @@ org_filesender_zimlink.prototype.upload = function() {
     var transfer_data = this.createTransfer();
     
     console.log(transfer_data);
+    
+    transfer_data.file_idx = 0;
+    transfer_data.file_offset = 0;
+    
+    appCtxt.getCurrentView().org_filesender_zimlink.transfer_data = transfer_data;
+    
+    this.uploadNext();
+};
+
+/*
+ * Upload next chunk
+ */
+org_filesender_zimlink.prototype.uploadNext = function() {
+    var chunk_size = appCtxt.getCurrentView().org_filesender_zimlink.upload_chunk_size;
+    var tdata = appCtxt.getCurrentView().org_filesender_zimlink.transfer_data;
+    
+    var file = tdata.files[tdata.file_idx];
+    var slicer = file.blob.slice ? 'slice' : (file.blob.mozSlice ? 'mozSlice' : (file.blob.webkitSlice ? 'webkitSlice' : 'slice'));
+    
+    var blob = file.blob[slicer](tdata.file_offset, tdata.file_offset + chunk_size);
+    
+    
+    tdata.file_offset += chunk_size;
+    if(tdata.file_offset >= file.size) {
+        // File complete
+        
+        tdata.file_offset = 0;
+        tdata.file_idx++;
+        
+        if(tdata.file_idx >= tdata.files.length) {
+            // Transfer complete
+            
+            return;
+        }
+    }
+    
+    this.uploadNext();
 };
 
 /*
@@ -398,7 +438,9 @@ org_filesender_zimlink.prototype.sendActionToJsp = function(url, data) {
     //Send a synchronous request
     var resp = AjxRpc.invoke(jsonData, url, hdrs, null, false);
     
-    return JSON.parse(resp);
+    if(!resp || !resp.success) return null;
+    
+    return JSON.parse(resp.text);
 }
 
 /*
