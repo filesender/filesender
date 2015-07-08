@@ -85,26 +85,28 @@ org_filesender_zimlink.prototype.onShowView = function(view) {
         }
     }; 
     
-    original_send_msg = appCtxt.getCurrentController()._sendMsg;
-    appCtxt.getCurrentController().original_send_msg = original_send_msg;
-    appCtxt.getCurrentController()._sendMsg = function(attId, docIds, draftType, callback, contactId) {
-        //get draftType to check if the mail is sent
-        var isTimed = Boolean(this._sendTime);
-        draftType = draftType || (isTimed ? ZmComposeController.DRAFT_TYPE_DELAYSEND : ZmComposeController.DRAFT_TYPE_NONE);
-        var isScheduled = draftType == ZmComposeController.DRAFT_TYPE_DELAYSEND;
-        var isDraft = (draftType != ZmComposeController.DRAFT_TYPE_NONE && !isScheduled);
-        //If the mail is sent and filesender is used, then start the upload
-        if(!isDraft && appCtxt.getCurrentView().org_filesender_zimlink.use_filesender) {
-            //Store arguments in the controller to continue normal sending after the upload
-            this.sendArguments = arguments;
-            //Start upload
-            org_filesender_zimlink_instance.upload();
-        }
-        //If not, continue normal sending
-        else {
-            original_send_msg.apply(appCtxt.getCurrentController(), arguments);
-        }
-    };
+    if(!appCtxt.getCurrentController().original_send_msg) {
+        var original_send_msg = appCtxt.getCurrentController()._sendMsg;
+        appCtxt.getCurrentController().original_send_msg = original_send_msg;
+        appCtxt.getCurrentController()._sendMsg = function(attId, docIds, draftType, callback, contactId) {
+            //get draftType to check if the mail is sent
+            var isTimed = Boolean(this._sendTime);
+            draftType = draftType || (isTimed ? ZmComposeController.DRAFT_TYPE_DELAYSEND : ZmComposeController.DRAFT_TYPE_NONE);
+            var isScheduled = draftType == ZmComposeController.DRAFT_TYPE_DELAYSEND;
+            var isDraft = (draftType != ZmComposeController.DRAFT_TYPE_NONE && !isScheduled);
+            //If the mail is sent and filesender is used, then start the upload
+            if(!isDraft && appCtxt.getCurrentView().org_filesender_zimlink.use_filesender) {
+                //Store arguments in the controller to continue normal sending after the upload
+                this.sendArguments = arguments;
+                //Start upload
+                org_filesender_zimlink_instance.upload();
+            }
+            //If not, continue normal sending
+            else {
+                original_send_msg.apply(appCtxt.getCurrentController(), arguments);
+            }
+        };
+    }
 };
 
 // Ask user wether to use filesender
@@ -388,12 +390,13 @@ org_filesender_zimlink.prototype.sendActionToJsp = function(url, data) {
     jsonData = JSON.stringify(data);
     
     //Create POST headers array
-    var hdrs = new Array();
-    hdrs['Content-type'] = 'application/json';
-    hdrs['Content-length'] = jsonData.length;
+    var hdrs = {
+        'Content-type': 'application/json',
+        'Content-length': jsonData.length
+    };
     
     //Send a synchronous request
-    var resp = AjxRpc.invoke(jsonData, url, hdrs, false);
+    var resp = AjxRpc.invoke(jsonData, url, hdrs, null, false);
     
     return JSON.parse(resp);
 }

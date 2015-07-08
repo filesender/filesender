@@ -120,31 +120,7 @@
 }
 %>
 
-<%!public String hmacSha1(String value, String key) throws RuntimeException, IOException { // Compute SHA-1 HMAC signature
-    try {
-        // Get an hmac_sha1 key from the raw key bytes
-        byte[] keyBytes = key.getBytes();           
-        SecretKeySpec signingKey = new SecretKeySpec(keyBytes, "HmacSHA1");
-
-        // Get an hmac_sha1 Mac instance and initialize with the signing key
-        Mac mac = Mac.getInstance("HmacSHA1");
-        mac.init(signingKey);
-
-        // Compute the hmac on input data bytes
-        byte[] rawHmac = mac.doFinal(value.getBytes());
-
-        // Convert raw bytes to Hex
-        byte[] hexBytes = new Hex().encode(rawHmac);
-
-        //  Covert array of Hex bytes to a String
-        return new String(hexBytes, "UTF-8");
-    } catch (Exception e) {
-        throw new RuntimeException(e);
-    }
-}
-%>
-
-<%!public String hmacSha1Binary(String value, byte[] binary, String key) throws RuntimeException, IOException { // Compute SHA-1 HMAC signature with binary data
+<%!public String hmacSha1(String value, byte[] binary, String key) throws RuntimeException, IOException { // Compute SHA-1 HMAC signature with binary data
     try {
         // Get an hmac_sha1 key from the raw key bytes
         byte[] keyBytes = key.getBytes();           
@@ -156,7 +132,11 @@
 
         // Compute the hmac on input data bytes
         mac.update(value.getBytes());
-        byte[] rawHmac = mac.doFinal(binary);
+        
+        if(binary != null)
+            mac.update(binary);
+        
+        byte[] rawHmac = mac.doFinal();
 
         // Convert raw bytes to Hex
         byte[] hexBytes = new Hex().encode(rawHmac);
@@ -174,7 +154,9 @@
     
     String signed = method + "&" + url.replace("http://", "").replace("https://", "") + "&" + json;
     
-    return url + "&signature=" + hmacSha1(signed, secret);
+    System.out.println(url);
+    
+    return url + "&signature=" + hmacSha1(signed, null, secret);
 }
 %>
 
@@ -183,7 +165,7 @@
     
     String signed = method + "&" + url.replace("http://", "").replace("https://", "") + "&";
     
-    return url + "&signature=" + hmacSha1Binary(signed, binary, secret);
+    return url + "&signature=" + hmacSha1(signed, binary, secret);
 }
 %>
 
@@ -228,18 +210,18 @@
         success = "true";
     }
     
-    String ct = "text/plain";
-    HeaderElement[] he = method.getResponseHeader("Content-type").getElements();
-    if(he.length > 0) {
-        ct = he[0].getValue();
-    }
-    
     out = method.getResponseBodyAsString();
     
     String isJson = "true";
-    if(!ct.equals("application/json")) {
+    Header ct = method.getResponseHeader("Content-type");
+    if(ct == null || !ct.getValue().equals("application/json")) {
         out = "\"" + URLEncoder.encode(out, "UTF-8") + "\"";
         isJson = "false";
+    }
+    
+    Header l = method.getResponseHeader("Location");
+    if(l != null) {
+        System.out.println(l.toString());
     }
     
     return "{\"success\":" + success + ",\"code\":" + code + ",\"isJson\":" + isJson + ",\"response\":" + out + "}";
