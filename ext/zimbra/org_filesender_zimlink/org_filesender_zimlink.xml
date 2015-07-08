@@ -5,5 +5,9 @@
     <userProperties>
         <property type="string" name="authentication_data" value="{}" />
     </userProperties>
+    
+    <zimletPanelItem label="ZimLink">
+        <toolTipText>Config</toolTipText>
+    </zimletPanelItem>
 </zimlet>
 
