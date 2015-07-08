@@ -426,17 +426,19 @@ class DBObject {
                         break;
                 }
                 
-                switch($dfn['type']) { // Basic types transformations/casting
+                if(is_null($value) && array_key_exists('null', $dfn) && $dfn['null']) {
+                    $value = null;
+                } else switch($dfn['type']) { // Basic types transformations/casting
                     case 'datetime':
-                        if(!is_null($value)) $value = date('Y-m-d H:i:s', $value); // UNIX timestamp
+                        $value = date('Y-m-d H:i:s', $value); // UNIX timestamp
                         break;
                     
                     case 'date':
-                        if(!is_null($value)) $value = date('Y-m-d', $value); // UNIX timestamp
+                        $value = date('Y-m-d', $value); // UNIX timestamp
                         break;
                     
                     case 'time':
-                        if(!is_null($value)) $value = date('H:i:s', $value); // Offset since 0h00
+                        $value = date('H:i:s', $value); // Offset since 0h00
                         break;
                     
                     case 'bool':
