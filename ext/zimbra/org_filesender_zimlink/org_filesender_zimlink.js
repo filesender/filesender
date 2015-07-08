@@ -114,7 +114,7 @@ org_filesender_zimlink.prototype.popUseFileSenderDlg = function() {
     var dialog = this.makeDlg(
         this.getMessage('use_filesender_dlg_title'),
         {width: 300, height: 300},
-        'Use FileSender ?',
+        this.getMessage('use_filesender_dlg_label'),
         [DwtDialog.OK_BUTTON, DwtDialog.CANCEL_BUTTON]
     );
     
@@ -245,13 +245,14 @@ org_filesender_zimlink.prototype.checkFileSenderAuthentication = function() {
         this.getMessage('get_filesender_authentication_dlg_title'),
         {width: 400, height: 400},
         [
-            '<p>You need to get your custom authentication from the choosen Filsender server :</p>',
-            '<h1>Step 1</h1>',
-            '<p>Authenticate on Filesender server by clicking on the following button.</p>',
-            '<button id="org_filesender_zimlink_filesender_authentication_popup_btn">Authenticate on FileSender</button>',
-            '<h1>Step 2</h1>',
-            '<p>After authentication click on the following button so that Zimbra can get the authentication data.</p>',
-            '<button id="org_filesender_zimlink_filesender_authentication_check_btn">Get authentication data</button>'
+            this.getMessage('get_filesender_authentication_popup_label'),
+            '<button id="org_filesender_zimlink_filesender_authentication_popup_btn">',
+            this.getMessage('get_filesender_authentication_popup_button'),
+            '</button>',
+            this.getMessage('get_filesender_authentication_check_label'),
+            '<button id="org_filesender_zimlink_filesender_authentication_check_btn">',
+            this.getMessage('get_filesender_authentication_check_button),
+            '</button>'
         ].join(''),
         [DwtDialog.CANCEL_BUTTON]
     );
@@ -595,3 +596,15 @@ org_filesender_zimlink.showSizeExceededError = function() {
     msgDlg.setMessage(errorMsg, DwtMessageDialog.WARNING_STYLE);
     msgDlg.popup();
 };
+
+/*
+ * Generic function to show an error message for the files upload, and unlock the composeView
+ * Params:
+ * msg : String containing the msg in html format to display
+ */
+org_filesender_zimlink.prototype.showEndUploadError = function(msg) {
+    this.showError(msg);
+    appCtxt.getCurrentController()._toolbar.enableAll(true);
+};
+
+
