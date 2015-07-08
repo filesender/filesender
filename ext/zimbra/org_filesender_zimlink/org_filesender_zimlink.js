@@ -338,13 +338,13 @@ org_filesender_zimlink.prototype.uploadNext = function() {
     var tdata = appCtxt.getCurrentView().org_filesender_zimlink.transfer_data;
     var file = tdata.files[tdata.file_idx];
     
-    this.uploadChunk(file.id, tdata.file_offset, file.blob, new AjxCallback(this, function(error) {
+    this.uploadChunk(file, tdata.file_offset, new AjxCallback(this, function(error) {
         if(error) {
             // TODO
             return;
         }
         
-        tdata.file_offset += chunk_size;
+        tdata.file_offset += appCtxt.getCurrentView().org_filesender_zimlink.info.upload_chunk_size;
         if(tdata.file_offset >= file.size) {
             // File complete
             var complete = this.sendActionToJsp(this.getJspUrl('complete_file', tdata.files[tdata.file_idx].id), {complete: true});
@@ -382,23 +382,23 @@ org_filesender_zimlink.prototype.uploadNext = function() {
 /*
  * Upload a chunk
  */
-org_filesender_zimlink.prototype.uploadChunk = function(file_id, offset, blob, callback) {
+org_filesender_zimlink.prototype.uploadChunk = function(file, offset, callback) {
     var chunk_size = appCtxt.getCurrentView().org_filesender_zimlink.info.upload_chunk_size;
     
-    var slicer = blob.slice ? 'slice' : (blob.mozSlice ? 'mozSlice' : (blob.webkitSlice ? 'webkitSlice' : 'slice'));
+    var slicer = file.blob.slice ? 'slice' : (file.blob.mozSlice ? 'mozSlice' : (file.blob.webkitSlice ? 'webkitSlice' : 'slice'));
     
-    var blob = blob[slicer](offset, offset + chunk_size);
+    var blob = file.blob[slicer](offset, offset + chunk_size);
     
-    var url = this.getJspUrl('upload_chunk', file_id, offset);
+    var url = this.getJspUrl('upload_chunk', file.id, file.size, offset);
     
-    this.sendBlob(url, blob, offset, chunk_size, callback);
+    this.sendBlob(url, blob, callback);
 };
 
 /*
  * Create a transfer on selected filesender
  */
 org_filesender_zimlink.prototype.createTransfer = function() {
-    var transfer_data = {
+    var creation_data = {
         from: appCtxt.getActiveAccount().name,
         recipients: [],
         options: ['get_a_link'],
@@ -406,23 +406,22 @@ org_filesender_zimlink.prototype.createTransfer = function() {
     };
     
     var files = appCtxt.getCurrentView().org_filesender_zimlink.files;
-    console.log(files);
-    for(var i=0; i<files.length; i++) transfer_data.files.push({
+    for(var i=0; i<files.length; i++) creation_data.files.push({
         name: files[i].name,
         size: files[i].size,
         mime_type: files[i].type,
         cid: 'file_' + i
     });
     
-    var data = this.sendActionToJsp(this.getJspUrl('create_transfer'), transfer_data);
+    var data = this.sendActionToJsp(this.getJspUrl('create_transfer'), creation_data);
     
     if(!data || !data.success) return false;
     
-    transfer_data.id = data.response.id;
+    transfer_data = data.response;
     
-    for(var i=0; i<data.response.files.length; i++) {
-        var idx = parseInt(data.response.files[i].cid.substr(5));
-        transfer_data.files[idx].blob = files[idx];
+    for(var i=0; i<transfer_data.files.length; i++) {
+        var idx = parseInt(transfer_data.files[i].cid.substr(5));
+        transfer_data.files[i].blob = files[idx];
     }
     
     for(var i=0; i<transfer_data.files.length; i++) {
@@ -440,7 +439,7 @@ org_filesender_zimlink.prototype.createTransfer = function() {
  * transfert_id : String containing the transfert_id
  * offset : String containing the offset
  */
-org_filesender_zimlink.prototype.getJspUrl = function(command, target_id, offset) {
+org_filesender_zimlink.prototype.getJspUrl = function(command, target_id, size, offset) {
     // retrieve the server config
     var zdata = appCtxt.getCurrentView().org_filesender_zimlink;
     var auth_data = JSON.parse(this.getUserProperty('authentication_data'));
@@ -458,7 +457,7 @@ org_filesender_zimlink.prototype.getJspUrl = function(command, target_id, offset
     
     // add function parameters
     if(command == 'upload_chunk')
-        args = [args, 'file_id=' + enc(target_id), 'offset=' + enc(offset)].join('&'); 
+        args = [args, 'file_id=' + enc(target_id), 'file_size=' + enc(size), 'offset=' + enc(''+offset)].join('&'); 
     
     if(command == 'complete_file')
         args = [args, 'file_id=' + enc(target_id)].join('&'); 
@@ -479,14 +478,8 @@ org_filesender_zimlink.prototype.sendActionToJsp = function(url, data) {
     //Convert the javascript object into a String
     jsonData = data ? JSON.stringify(data) : null;
     
-    //Create POST headers array
-    var hdrs = {
-        'Content-type': 'application/json',
-        'Content-length': jsonData.length
-    };
-    
     //Send a synchronous request
-    var resp = AjxRpc.invoke(jsonData, url, hdrs, null, false);
+    var resp = AjxRpc.invoke(jsonData, url, {'Content-type': 'application/json'}, null, false);
     
     if(!resp || !resp.success) return null;
     
@@ -515,7 +508,7 @@ org_filesender_zimlink.prototype.sendBlob = function(url, blob, callBack) {
         if(req.readyState != 4) return; // Not a progress update
         
         if(req.status == 200) { // All went well
-            callback.run();
+            callBack.run();
             
         }else if(xhr.status == 0) { // Request cancelled (browser refresh or such)
             // TODO
@@ -529,7 +522,7 @@ org_filesender_zimlink.prototype.sendBlob = function(url, blob, callBack) {
                 error = JSON.parse(msg);
             } catch(e) {}
             
-            callback(error);
+            callBack.run(error);
         }
     };
     

@@ -29,7 +29,7 @@
             if(command.equals("get_quota")) {
                 url = ws_url + "/user/@me/quota";
                 
-                signed_url = getSignedJsonRequestUrl("get", url, uid, secret, json);
+                signed_url = getSignedJsonRequestUrl("get", url, uid, secret, null);
                 
                 resp = getJson(signed_url);
                 
@@ -45,15 +45,16 @@
             } else if(command.equals("upload_chunk")) {
                 String file_id = request.getParameter("file_id");
                 String offset = request.getParameter("offset");
+                String file_size = request.getParameter("file_size");
                 
-                if(!file_id.equals("") && !offset.equals("")) {
+                if(!file_id.equals("") && !offset.equals("") && !file_size.equals("")) {
                     byte[] binary = getBinaryRequestBody(request);
                     
-                    url = ws_url + "/file/" + file_id + "/offset/" + offset;
+                    url = ws_url + "/file/" + file_id + "/chunk/" + offset;
                     
                     signed_url = getSignedBinaryRequestUrl("put", url, uid, secret, binary);
                     
-                    resp = putBinary(signed_url, binary);
+                    resp = putBinary(signed_url, binary, file_size, offset);
                 }
                 
                 
@@ -159,9 +160,11 @@
 <%!public String getSignedJsonRequestUrl(String method, String url, String uid, String secret, String json) throws IOException { // Sign a json request (method must be lowercase)
     url += "?remote_user=" + uid + "&timestamp=" + (System.currentTimeMillis() / 1000);
     
-    String signed = method + "&" + url.replace("http://", "").replace("https://", "") + "&" + json;
+    String signed = method + "&" + url.replace("http://", "").replace("https://", "");
     
-    System.out.println(url);
+    if(json != null) {
+        signed += "&" + json;
+    }
     
     return url + "&signature=" + hmacSha1(signed, null, secret);
 }
@@ -205,9 +208,11 @@
 }
 %>
 
-<%!public String putBinary(String url, byte[] binary) throws Exception { // Make HTTP PUT request to an url with a binary payload
+<%!public String putBinary(String url, byte[] binary, String fileSize, String offset) throws Exception { // Make HTTP PUT request to an url with a binary payload
     PutMethod method = new PutMethod(url);
-    //method.setRequestHeader("Content-type", "application/octet-stream");
+    method.setRequestHeader("X-Filesender-File-Size", fileSize);
+    method.setRequestHeader("X-Filesender-Chunk-Offset", offset);
+    method.setRequestHeader("X-Filesender-Chunk-Size", String.valueOf(binary.length));
     method.setRequestEntity(new ByteArrayRequestEntity(binary, "application/octet-stream"));
     
     return makeRequest(method);
@@ -231,11 +236,6 @@
     if(ct == null || !ct.getValue().equals("application/json")) {
         out = "\"" + URLEncoder.encode(out, "UTF-8") + "\"";
         isJson = "false";
-    }
-    
-    Header l = method.getResponseHeader("Location");
-    if(l != null) {
-        System.out.println(l.toString());
     }
     
     return "{\"success\":" + success + ",\"code\":" + code + ",\"isJson\":" + isJson + ",\"response\":" + out + "}";
