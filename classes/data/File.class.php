@@ -200,7 +200,11 @@ class File extends DBObject
             $this->save();
         }
         
-        return Storage::writeChunk($this, $chunk, $offset);
+        $res = Storage::writeChunk($this, $chunk, $offset);
+        
+        Logger::info('File#'.$this->id.' chunk['.((int)$offset).'..'.((int)$offset + strlen($chunk)).'] written'.(Auth::isGuest() ? ' by guest: '.AuthGuest::getGuest()->email : ''));
+        
+        return $res;
     }
     
     /**
