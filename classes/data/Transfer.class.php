@@ -122,7 +122,7 @@ class Transfer extends DBObject {
     protected $subject = null;
     protected $message = null;
     protected $created = 0;
-    protected $made_available = 0;
+    protected $made_available = null;
     protected $expires = 0;
     protected $options = array();
     
