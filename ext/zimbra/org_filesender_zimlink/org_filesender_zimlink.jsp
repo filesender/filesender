@@ -1,8 +1,14 @@
 <%@ page language="java" import="org.apache.commons.httpclient.HttpClient"%>
+<%@ page language="java" import="org.apache.commons.httpclient.HttpRequest"%>
 <%@ page language="java" import="org.apache.commons.httpclient.Header"%>
 <%@ page language="java" import="org.apache.commons.httpclient.methods.PostMethod"%>
 <%@ page language="java" import="org.apache.commons.httpclient.methods.PutMethod"%>
 <%@ page language="java" import="java.net.URLEncoder"%>
+<%@ page language="java" import="java.io.BufferedReader"%>
+<%@ page language="java" import="java.io.InputStream"%>
+<%@ page language="java" import="java.io.InputStreamReader"%>
+<%@ page language="java" import="java.io.IOUtils"%>
+<%@ page language="java" import="java.io.IOException"%>
 
 <%
     String command = request.getParameter('command');
@@ -15,72 +21,61 @@
     String signed_url = '';
     String response = '{"code":400,"isJson":false,"response":"Bad+request"}';
     
-    if(!command.equals('') && !filesender_url.equals('') && !uid.equals('') && !secret.equals('')) {
-        if(command.equals('create_transfer')) {
-            String json = getJsonRequestBody(request);
-            
-            url = ws_url + '/transfer';
-            
-            signed_url = getSignedJsonRequestUrl('post', url, uid, secret, json);
-            
-            response = postJson(signed_url, json);
-            
-        } else if(command.equals('upload_chunk')) {
-            String file_id = request.getParameter('file_id');
-            String offset = request.getParameter('offset');
-            
-            if(!file_id.equals('') && !offset.equals('')) {
-                byte[] binary = getBinaryRequestBody(request);
-                
-                url = ws_url + '/file/' + file_id + '/offset/' + offset;
-                
-                signed_url = getSignedBinaryRequestUrl('put', url, uid, secret, binary);
-                
-                response = putBinary(signed_url, binary);
-            }
-            
-            
-        } else if(command.equals('complete_file')) {
-            String file_id = request.getParameter('file_id');
-            
-            if(!file_id.equals('')) {
-                String json = '{"complete":true}';
-                
-                url = ws_url + '/file/' + file_id;
-                
-                signed_url = getSignedJsonRequestUrl('put', url, uid, secret, json);
-                
-                response = putJson(signed_url, json);
-            }
-            
-        } else if(command.equals('complete_transfer')) {
-            String transfer_id = request.getParameter('transfer_id');
-            
-            if(!transfer_id.equals('')) {
-                String json = '{"complete":true}';
-                
-                url = ws_url + '/transfer/' + transfer_id;
-                
-                signed_url = getSignedJsonRequestUrl('put', url, uid, secret, json);
-                
-                response = putJson(signed_url, json);
-            }
-        }
-    }
-    
     try {
-        String url = 'http://search.twitter.com/search.json?q=' + query;
-        
-        if(action.contains('GET')) {
-            response = makeHttpGET(url);
-            
-        } else if(action.contains('POST')) {
-            response = makeHttpPOST("https://api.facebook.com/restserver.php");
-            
+        if(!command.equals('') && !filesender_url.equals('') && !uid.equals('') && !secret.equals('')) {
+            if(command.equals('create_transfer')) {
+                String json = getJsonRequestBody(request);
+                
+                url = ws_url + '/transfer';
+                
+                signed_url = getSignedJsonRequestUrl('post', url, uid, secret, json);
+                
+                response = postJson(signed_url, json);
+                
+            } else if(command.equals('upload_chunk')) {
+                String file_id = request.getParameter('file_id');
+                String offset = request.getParameter('offset');
+                
+                if(!file_id.equals('') && !offset.equals('')) {
+                    byte[] binary = getBinaryRequestBody(request);
+                    
+                    url = ws_url + '/file/' + file_id + '/offset/' + offset;
+                    
+                    signed_url = getSignedBinaryRequestUrl('put', url, uid, secret, binary);
+                    
+                    response = putBinary(signed_url, binary);
+                }
+                
+                
+            } else if(command.equals('complete_file')) {
+                String file_id = request.getParameter('file_id');
+                
+                if(!file_id.equals('')) {
+                    String json = '{"complete":true}';
+                    
+                    url = ws_url + '/file/' + file_id;
+                    
+                    signed_url = getSignedJsonRequestUrl('put', url, uid, secret, json);
+                    
+                    response = putJson(signed_url, json);
+                }
+                
+            } else if(command.equals('complete_transfer')) {
+                String transfer_id = request.getParameter('transfer_id');
+                
+                if(!transfer_id.equals('')) {
+                    String json = '{"complete":true}';
+                    
+                    url = ws_url + '/transfer/' + transfer_id;
+                    
+                    signed_url = getSignedJsonRequestUrl('put', url, uid, secret, json);
+                    
+                    response = putJson(signed_url, json);
+                }
+            }
         }
-        
     } catch (Exception e) {
-        response = e.toString();
+        response = '{"code":400,"isJson":false,"response":"' + URLEncoder.encode(e.toString(), 'UTF-8') + '"}';
     }
 %>
 
@@ -117,11 +112,13 @@
     
     body = stringBuilder.toString();
     return body;
-}%>
+}
+%>
 
 <%!public byte[] getBinaryRequestBody(HttpRequest request) { // Get json body from received request
     return IOUtils.toByteArray(request.getInputStream());
-}%>
+}
+%>
 
 <%!public String hmacSha1(String value, String key) { // Compute SHA-1 HMAC signature
     try {
@@ -144,7 +141,8 @@
     } catch (Exception e) {
         throw new RuntimeException(e);
     }
-}%>
+}
+%>
 
 <%!public String hmacSha1Binary(String value, byte[] binary, String key) { // Compute SHA-1 HMAC signature with binary data
     try {
@@ -168,7 +166,8 @@
     } catch (Exception e) {
         throw new RuntimeException(e);
     }
-}%>
+}
+%>
 
 <%!public String getSignedJsonRequestUrl(String method, String url, String uid, String secret, String json) { // Sign a json request (method must be lowercase)
     url += '?remote_user=' + uid + '&timestamp=' + (System.currentTimeMillis() / 1000);
@@ -176,7 +175,8 @@
     String signed = method + '&' + url.replace('http://', '').replace('https://', '') + '&' + json;
     
     return url + '&signature=' + hmacSha1(signed, secret);
-}%>
+}
+%>
 
 <%!public String getSignedBinaryRequestUrl(String method, String url, String uid, String secret, byte[] binary) { // Sign a json request (method must be lowercase)
     url += '?remote_user=' + uid + '&timestamp=' + (System.currentTimeMillis() / 1000);
@@ -184,7 +184,8 @@
     String signed = method + '&' + url.replace('http://', '').replace('https://', '') + '&';
     
     return url + '&signature=' + hmacSha1Binary(signed, binary, secret);
-}%>
+}
+%>
 
 <%!public String postJson(String url, String json) { // Make HTTP POST request to an url with a binary payload
     StringRequestEntity request = new StringRequestEntity(json, 'application/json', 'UTF-8');
@@ -194,7 +195,8 @@
     method.setRequestEntity(request);
     
     return makeRequest(method);
-}%>
+}
+%>
 
 <%!public String putJson(String url, String json) { // Make HTTP PUT request to an url with a json payload
     StringRequestEntity request = new StringRequestEntity(json, 'application/json', 'UTF-8');
@@ -204,7 +206,8 @@
     method.setRequestEntity(request);
     
     return makeRequest(method);
-}%>
+}
+%>
 
 <%!public String putBinary(String url, byte[] binary) { // Make HTTP PUT request to an url with a binary payload
     PutMethod method = new PutMethod(url);
@@ -212,7 +215,8 @@
     method.setRequestEntity(new ByteArrayEntity(binary));
     
     return makeRequest(method);
-}%>
+}
+%>
 
 <%!public String makeRequest(HttpMethod method) { // Make HTTP request of given type and handle response
     String response = '';
@@ -246,4 +250,5 @@
     }
     
     return response;
-}%>
+}
+%>
