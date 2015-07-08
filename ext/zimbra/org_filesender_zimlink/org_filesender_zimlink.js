@@ -303,6 +303,36 @@ org_filesender_zimlink.prototype.createTransfer = function() {
         options: ['get_a_link'],
         files: []
     };
+    
+    var files = appCtxt.getCurrentView().org_filesender_zimlink.files;
+    
+    for(var i=0; i<files.length; i++) transfer_data.files.push({
+        name: ,
+        size: ,
+        mime_type: ,
+        cid: 'file_' + i
+    });
+    
+    var data = this.sendActionToJsp(this.getJspUrl('create_transfer'), transfer_data);
+    
+    if(!data || !data.success) {
+        // Error
+    }
+    
+    transfer_data.id = data.response.id;
+    
+    for(var i=0; i<data.response.files.length; i++) {
+        var idx = parseInt(data.response.files[i].cid.substr(5));
+        transfer_data.files[idx].blob = files[idx];
+    }
+    
+    for(var i=0; i<transfer_data.files.length; i++) {
+        if(!transfer_data.files[i].blob) {
+            // Error
+        }
+    }
+    
+    // Start upload
 };
 
 /*
@@ -360,7 +390,7 @@ org_filesender_zimlink.prototype.sendActionToJsp = function(url, data) {
     //Send a synchronous request
     var resp = AjxRpc.invoke(jsonData, url, hdrs, false);
     
-    return resp;
+    return JSON.parse(resp);
 }
 
 /*
