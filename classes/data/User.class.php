@@ -154,8 +154,10 @@ class User extends DBObject {
         }
         
         // Generate user remote auth secret 
-        if(Config::get('auth_remote_user_autogenerate_secret') && !$this->auth_secret)
+        if(Config::get('auth_remote_user_autogenerate_secret') && !$this->auth_secret) {
             $this->auth_secret = hash('sha256', $this->id.'|'.time().'|'.Utilities::generateUID());
+            $this->save();
+        }
     }
     
     /**
