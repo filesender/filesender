@@ -659,4 +659,59 @@ org_filesender_zimlink.prototype.showEndUploadError = function(reason) {
     appCtxt.getCurrentController()._toolbar.enableAll(true);
 };
 
+/*
+ * Add a file bubble to the file list
+ */
+org_filesender_zimlink.prototype.addAttachmentBubble = function(fileName) {
+    var view = appCtxt.getCurrentView();
+    fileName = view._clipFile(fileName, true);
+    
+    //Check if the list is empty
+    var firstBubble = view._attcDiv.getElementsByTagName("span")[0];
+    if (firstBubble) {
+        var tempBubbleWrapper = document.createElement("span");
+        tempBubbleWrapper.innerHTML = this.getAttachmentBubbleHtml(fileName);
+        var newBubble = tempBubbleWrapper.firstChild;
+        firstBubble.parentNode.insertBefore(newBubble, firstBubble); //insert new bubble before first bubble.
+    }
+    else {
+        //first one is enclosed in a wrapper (the template already expands the mail.Message#MailAttachmentBubble template inside the wrapper)
+        view._attcDiv.innerHTML = this.getFirstAttachmentBubbleHtml(fileName);
+    }
+};
 
+/*
+ * Generate html for a file bubble
+ */
+org_filesender_zimlink.prototype.getAttachmentBubbleHtml = function(fileName) {
+    var buffer = [];
+    var _i = 0;
+    var id = Dwt.getNextId();
+
+    buffer[_i++] = "<span id=\"";
+    buffer[_i++] = id;
+    buffer[_i++] = "\" class=\"AttachmentLoading attachmentBubble AttachmentSpan\" name=\"mailAttUploadingSpan\" style=\"max-width:235px; position:static; overflow:visible;padding:0 2px 4px\">"
+    //buffer[_i++] = "<span class=\"AttProgressSpan1\">";
+    //buffer[_i++] = fileName;
+    //buffer[_i++] = "</span>";
+    buffer[_i++] = "<span class=\"AttProgressSpan2\">";
+    buffer[_i++] = fileName;
+    buffer[_i++] = this.getMessage("filename_bubble_suffix");
+    buffer[_i++] = "</span><span onclick=\"window.appCtxt.getCurrentView()._removeAttachedFile('" + id + "')\" class=\"ImgBubbleDelete AttachmentClose\"></span></span>";
+
+    return buffer.join("");
+};
+
+/*
+ * Generate html code for a file bubble when the file tab is empty
+ */
+org_filesender_zimlink.prototype.getFirstAttachmentBubbleHtml = function(fileName) {
+    var buffer = [];
+    var _i = 0;
+
+    buffer[_i++] = "<table role=\"presentation\" width=100%><tr style=\"display:table-row;\"><td width=\"96%\" colspan=\"2\"><div class=\"attBubbleContainer\"><div class=\"attBubbleHolder\">";
+    buffer[_i++] = this.getAttachmentBubbleHtml(fileName);
+    buffer[_i++] = "</div></div></td></tr></table>";
+
+    return buffer.join("");
+};
