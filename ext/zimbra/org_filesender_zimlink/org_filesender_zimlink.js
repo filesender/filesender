@@ -98,6 +98,7 @@ org_filesender_zimlink.prototype.onShowView = function(view) {
             if(!isDraft && appCtxt.getCurrentView().org_filesender_zimlink.use_filesender) {
                 //Store arguments in the controller to continue normal sending after the upload
                 this.sendArguments = arguments;
+                
                 //Start upload
                 org_filesender_zimlink_instance.upload();
             }
@@ -188,7 +189,7 @@ org_filesender_zimlink.prototype.getFileSenderInfo = function() {
     var res = AjxRpc.invoke(null, proxyUrl, null, null, true);
     
     if(!res.success) {
-        this.showError('Info getter error');
+        this.showError('Info getter error', res.text);
         return;
     }
     
@@ -209,7 +210,8 @@ org_filesender_zimlink.prototype.getFileSenderQuota = function() {
     var data = this.sendActionToJsp(this.getJspUrl('get_quota'));
     
     if(!data || !data.success) {
-        // Error
+        this.showError('Quota getter error', data);
+        return null;
     }
     
     appCtxt.getCurrentView().org_filesender_zimlink.user_quota = data.response;
@@ -364,10 +366,7 @@ org_filesender_zimlink.prototype.addDownloadInfos = function(downloadInfos) {
  */
 org_filesender_zimlink.prototype.upload = function() {
     var transfer_data = this.createTransfer();
-    
-    if(!transfer_data) {
-        // Error
-    }
+    if(!transfer_data) return;
     
     transfer_data.file_idx = 0;
     transfer_data.file_offset = 0;
@@ -386,16 +385,16 @@ org_filesender_zimlink.prototype.uploadNext = function() {
     
     this.uploadChunk(file, tdata.file_offset, new AjxCallback(this, function(error) {
         if(error) {
-            // TODO
+            this.showEndUploadError(error);
             return;
         }
         
         tdata.file_offset += appCtxt.getCurrentView().org_filesender_zimlink.info.upload_chunk_size;
         if(tdata.file_offset >= file.size) {
             // File complete
-            var complete = this.sendActionToJsp(this.getJspUrl('complete_file', tdata.files[tdata.file_idx].id), {complete: true});
-            if(!complete || !complete.success) {
-                // TODO
+            var resp = this.sendActionToJsp(this.getJspUrl('complete_file', tdata.files[tdata.file_idx].id), {complete: true});
+            if(!resp || !resp.success) {
+                this.showEndUploadError(resp);
                 return;
             }
             
@@ -404,9 +403,9 @@ org_filesender_zimlink.prototype.uploadNext = function() {
             
             if(tdata.file_idx >= tdata.files.length) {
                 // Transfer complete
-                var complete = this.sendActionToJsp(this.getJspUrl('complete_transfer', tdata.id), {complete: true});
-                if(!complete || !complete.success) {
-                    // TODO
+                var resp = this.sendActionToJsp(this.getJspUrl('complete_transfer', tdata.id), {complete: true});
+                if(!resp || !resp.success) {
+                    this.showEndUploadError(resp);
                     return;
                 }
                 
@@ -415,7 +414,9 @@ org_filesender_zimlink.prototype.uploadNext = function() {
                     expireDate: tdata.expires.formatted
                 });
                 
-                // TODO call orig msg send
+                // Call original message sending code
+                var ctrl = appCtxt.getCurrentController();
+                ctrl.original_send_msg.apply(ctrl, ctrl.sendArguments);
                 
                 return;
             }
@@ -461,7 +462,10 @@ org_filesender_zimlink.prototype.createTransfer = function() {
     
     var data = this.sendActionToJsp(this.getJspUrl('create_transfer'), creation_data);
     
-    if(!data || !data.success) return false;
+    if(!data || !data.success) {
+        this.showEndUploadError(data);
+        return false;
+    }
     
     transfer_data = data.response;
     
@@ -471,7 +475,10 @@ org_filesender_zimlink.prototype.createTransfer = function() {
     }
     
     for(var i=0; i<transfer_data.files.length; i++) {
-        if(!transfer_data.files[i].blob) return false;
+        if(!transfer_data.files[i].blob) {
+            this.showEndUploadError('file_mismatch');
+            return false;
+        }
     }
     
     return transfer_data;
@@ -557,7 +564,7 @@ org_filesender_zimlink.prototype.sendBlob = function(url, blob, callBack) {
             callBack.run();
             
         }else if(xhr.status == 0) { // Request cancelled (browser refresh or such)
-            // TODO
+            org_filesender_zimlink_instance.showEndUploadError('request_cancelled');
             
         }else{
             // We have an error
@@ -622,7 +629,13 @@ org_filesender_zimlink.prototype.setDialogButton = function(dialog, buttonId, te
  * Params:
  * msg : String containing the msg in html format to display
  */
-org_filesender_zimlink.prototype.showError = function(msg) {
+org_filesender_zimlink.prototype.showError = function(msg, details) {
+    if(details) {
+        if(details.response) details = details.response;
+        if(details.message) details = details.message;
+        if(!details) details = 'unknown_error';
+        msg += '<pre>' + details + '</pre>';
+    }
     var msgDlg = appCtxt.getMsgDialog();
     msgDlg.setMessage(msg, DwtMessageDialog.CRITICAL_STYLE);
     msgDlg.popup();
@@ -641,8 +654,8 @@ org_filesender_zimlink.showSizeExceededError = function() {
  * Params:
  * msg : String containing the msg in html format to display
  */
-org_filesender_zimlink.prototype.showEndUploadError = function(msg) {
-    this.showError(msg);
+org_filesender_zimlink.prototype.showEndUploadError = function(reason) {
+    this.showError(this.getMessage('upload_error'), reason);
     appCtxt.getCurrentController()._toolbar.enableAll(true);
 };
 
