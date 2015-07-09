@@ -108,6 +108,14 @@ org_filesender_zimlink.prototype.onShowView = function(view) {
             }
         };
     }
+    
+    // Catch draft save fileds refresh so we can add filesender files again
+    var original_show_forward_field = appCtxt.getCurrentView()._showForwardField;
+    appCtxt.getCurrentView()._showForwardField = function(msg, action, incOptions, includeInlineImages, includeInlineAtts) {
+        original_show_forward_field.apply(appCtxt.getCurrentView(), arguments);
+        
+        // Re-add own html
+    };
 };
 
 // Ask user wether to use filesender
