@@ -251,7 +251,7 @@ org_filesender_zimlink.prototype.checkFileSenderAuthentication = function() {
             '</button>',
             this.getMessage('get_filesender_authentication_check_label'),
             '<button id="org_filesender_zimlink_filesender_authentication_check_btn">',
-            this.getMessage('get_filesender_authentication_check_button),
+            this.getMessage('get_filesender_authentication_check_button'),
             '</button>'
         ].join(''),
         [DwtDialog.CANCEL_BUTTON]
@@ -288,31 +288,75 @@ org_filesender_zimlink.prototype.checkFileSenderAuthentication = function() {
 };
 
 /*
+ * Nicely format a file size
+ */
+org_filesender_zimlink.prototype.formatFileSize = function(size) {
+    var mult = [AjxMsg.sizeBytes, AjxMsg.sizeKiloBytes, AjxMsg.sizeMegaBytes, AjxMsg.sizeGigaBytes];
+    
+    while((size > 1024) && (mult.length > 1)) {
+        size /= 1024;
+        mult.shift();
+    }
+    
+    return size.toFixed(Math.max(0, 2 - Math.floor(Math.log10(size)))) + mult.shift();
+};
+
+/*
  * In the Compose view, add the text in parameter at the end of the body, before the signature
  * Params:
  * downloadInfos : Array containing the filesender download link and expire date as String
  */
 org_filesender_zimlink.prototype.addDownloadInfos = function(downloadInfos) {
-	var controller = appCtxt.getCurrentController();
-	var view = appCtxt.getCurrentView();
-	var i = 0;
-	//Original mail body
-	var html = [view.getUserText()];
-	//Add the download link and expiration date at the end of the body
-	html[i++] = '<br>';
-	html[i++] = this.getMessage('download_link_label') + downloadInfos.downloadLink;
-	html[i++] = '<br>';
-	html[i++] = this.getMessage('download_expire_date_label') + downloadInfos.expireDate;
-	
-	//Add params with keepAttachments to false to clean attachments
-	var params = {
-			keepAttachments: false,
-			action:			controller._action,
-			msg:			controller._msg,
-			extraBodyText:	html.join('')
-	};
-	//Reset the body content
-	view.resetBody(params);
+    var controller = appCtxt.getCurrentController();
+    var view = appCtxt.getCurrentView();
+    
+    // Gather infos
+    var url = downloadInfos.downloadLink;
+    var expiry = downloadInfos.expireDate;
+    
+    var files = [];
+    for(var i=0; i<view.org_filesender_zimlink.files.length; i++) {
+        var file = view.org_filesender_zimlink.files[i];
+        files.push(file.name + ' (' + this.formatFileSize(file.size) + ')');
+    }
+    
+    //Original mail body
+    var content = [view.getUserText()];
+    var i = 0;
+    
+    //Add the download link and expiration date at the end of the body
+    if(view._composeMode == Dwt.HTML) {
+        content[i++] = '<br />';
+        content[i++] = this.getMessage('files_are_attached_using_filesender');
+        content[i++] = '<br />';
+        content[i++] = '<ul>';
+        content[i++] = '<li>' + files.join('</li><li>') + '</li>';
+        content[i++] = '</ul>';
+        content[i++] = '<br />';
+        content[i++] = this.getMessage('download_link_label') + '<a href="' + url + '">' + url + '</a>';
+        content[i++] = '<br />';
+        content[i++] = this.getMessage('download_expire_date_label') + expiry;
+    } else {
+        content[i++] = "\n";
+        content[i++] = this.getMessage('files_are_attached_using_filesender');
+        content[i++] = "\n";
+        content[i++] = "\n    * " + files.join("\n    * ") + "\n";
+        content[i++] = "\n";
+        content[i++] = this.getMessage('download_link_label') + url;
+        content[i++] = "\n";
+        content[i++] = this.getMessage('download_expire_date_label') + expiry;
+    }
+    
+    //Add params with keepAttachments to false to clean attachments
+    var params = {
+        keepAttachments:    false,
+        action:             controller._action,
+        msg:                controller._msg,
+        extraBodyText:      content.join('')
+    };
+    
+    //Reset the body content
+    view.resetBody(params);
 };
 
 /*
@@ -321,7 +365,9 @@ org_filesender_zimlink.prototype.addDownloadInfos = function(downloadInfos) {
 org_filesender_zimlink.prototype.upload = function() {
     var transfer_data = this.createTransfer();
     
-    console.log(transfer_data);
+    if(!transfer_data) {
+        // Error
+    }
     
     transfer_data.file_idx = 0;
     transfer_data.file_offset = 0;
