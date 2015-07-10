@@ -1,5 +1,6 @@
 <zimlet name="org_filesender_zimlink" version="0.1" label="${msg.zimlet_name}" description="${msg.zimlet_description}">
     <include>org_filesender_zimlink.js</include>
+    <includeCSS>org_filesender_zimlink.css</includeCSS>
     <handlerObject>org_filesender_zimlink</handlerObject>
     
     <userProperties>
@@ -10,4 +11,3 @@
         <toolTipText>Config</toolTipText>
     </zimletPanelItem>
 </zimlet>
-

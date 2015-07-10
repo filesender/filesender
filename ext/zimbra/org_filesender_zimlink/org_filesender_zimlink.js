@@ -123,6 +123,7 @@ org_filesender_zimlink.prototype.onShowView = function(view) {
                 this.sendArguments = arguments;
                 
                 //Start upload
+                appCtxt.getCurrentView()._attButton.setEnabled(false);
                 org_filesender_zimlink_instance.upload();
                 
                 return;
@@ -217,14 +218,16 @@ org_filesender_zimlink.prototype.useFileSender = function() {
 
 // Clean native attachments except attached mails / vcards
 org_filesender_zimlink.prototype.cleanNativeAttachments = function() {
-    var att_info = appCtxt.getCurrentView()._msg._attInfo;
-    if(!att_info) return;
+    var view = appCtxt.getCurrentView();
+    if(!view._msg || !view._msg._attInfo) return;
+    var att_info = view._msg._attInfo;
     
     for(var i=0; i<att_info.length; i++) {
         var att = att_info[i];
         
         if(att.ct == 'message/rfc822') continue;
         if(att.ct == 'text/x-vcard') continue;
+        if(att.links.briefcase) continue;
         
         var m = att.link.match(/\sid=['"]([^'"]+)['"]/);
         if(!m) continue;
@@ -239,10 +242,18 @@ org_filesender_zimlink.prototype.cleanNativeAttachments = function() {
 
 // Add own full set attachment html
 org_filesender_zimlink.prototype.addOwnAttachmentsHtml = function() {
-    var files = appCtxt.getCurrentView().org_filesender_zimlink.files;
+    var zdata = appCtxt.getCurrentView().org_filesender_zimlink;
     
-    for(var id in files)
-        this.addAttachmentBubble(files[id].name, id);
+    for(var id in zdata.files) {
+        var done = false;
+        if(zdata.transfer_data) {
+            for(var i=0; i<zdata.transfer_data.files.length; i++)
+                if(zdata.transfer_data.files[i].idx == id)
+                    done = zdata.transfer_data.files[i].done;
+        }
+        
+        this.addAttachmentBubble(zdata.files[id].name, id, done);
+    }
 };
 
 // Called after upload
@@ -370,11 +381,11 @@ org_filesender_zimlink.prototype.checkFileSenderAuthentication = function() {
         return;
     }
     
-    var landing_url = fs_url + 'index.php#zimbra_binding';
+    var landing_url = info.url + 'index.php#zimbra_binding';
     
-    var user_url = fs_url + 'rest.php/user?callback=org_filesender_zimlink_instance.filesender_user_profile_handler';
+    var user_url = info.url + 'rest.php/user?callback=org_filesender_zimlink_instance.filesender_user_profile_handler';
     
-    var domain = fs_url.match(/^(https?:\/\/[^/]+)/)[1];
+    var domain = info.url.match(/^(https?:\/\/[^/]+)/)[1];
     
     var logon_url = info.logon_url.match(/^\//) ? domain + info.logon_url : info.logon_url;
     
@@ -528,6 +539,8 @@ org_filesender_zimlink.prototype.uploadNext = function() {
             return;
         }
         
+        this.updateFileUploadProgress();
+        
         tdata.file_offset += appCtxt.getCurrentView().org_filesender_zimlink.info.upload_chunk_size;
         if(tdata.file_offset >= file.size) {
             // File complete
@@ -536,6 +549,9 @@ org_filesender_zimlink.prototype.uploadNext = function() {
                 this.showEndUploadError(resp);
                 return;
             }
+            
+            this.updateFileUploadProgress(true);
+            file.done = true;
             
             tdata.file_offset = 0;
             tdata.file_idx++;
@@ -608,6 +624,7 @@ org_filesender_zimlink.prototype.createTransfer = function() {
     
     for(var i=0; i<transfer_data.files.length; i++) {
         var idx = transfer_data.files[i].cid.substr(5);
+        transfer_data.files[i].idx = idx;
         transfer_data.files[i].blob = files[idx];
     }
     
@@ -799,7 +816,7 @@ org_filesender_zimlink.prototype.showEndUploadError = function(reason) {
 /*
  * Add a file bubble to the file list
  */
-org_filesender_zimlink.prototype.addAttachmentBubble = function(fileName, id) {
+org_filesender_zimlink.prototype.addAttachmentBubble = function(fileName, id, done) {
     var view = appCtxt.getCurrentView();
     fileName = view._clipFile(fileName, true);
     
@@ -807,47 +824,101 @@ org_filesender_zimlink.prototype.addAttachmentBubble = function(fileName, id) {
     var firstBubble = view._attcDiv.getElementsByTagName("span")[0];
     if (firstBubble) {
         var tempBubbleWrapper = document.createElement("span");
-        tempBubbleWrapper.innerHTML = this.getAttachmentBubbleHtml(fileName, id);
+        tempBubbleWrapper.innerHTML = this.getAttachmentBubbleHtml(fileName, id, done);
         var newBubble = tempBubbleWrapper.firstChild;
         firstBubble.parentNode.insertBefore(newBubble, firstBubble); //insert new bubble before first bubble.
     }
     else {
         //first one is enclosed in a wrapper (the template already expands the mail.Message#MailAttachmentBubble template inside the wrapper)
-        view._attcDiv.innerHTML = this.getFirstAttachmentBubbleHtml(fileName, id);
+        view._attcDiv.innerHTML = this.getFirstAttachmentBubbleHtml(fileName, id, done);
     }
 };
 
 /*
  * Generate html for a file bubble
  */
-org_filesender_zimlink.prototype.getAttachmentBubbleHtml = function(fileName, id) {
+org_filesender_zimlink.prototype.getAttachmentBubbleHtml = function(fileName, id, done) {
     var buffer = [];
     var _i = 0;
-
-    buffer[_i++] = "<span id=\"";
-    buffer[_i++] = id;
-    buffer[_i++] = "\" class=\"AttachmentLoading attachmentBubble AttachmentSpan\" name=\"mailAttUploadingSpan\" style=\"max-width:235px; position:static; overflow:visible;padding:0 2px 4px\">"
-    //buffer[_i++] = "<span class=\"AttProgressSpan1\">";
-    //buffer[_i++] = fileName;
-    //buffer[_i++] = "</span>";
-    buffer[_i++] = "<span class=\"AttProgressSpan2\">";
-    buffer[_i++] = fileName;
-    buffer[_i++] = this.getMessage("filename_bubble_suffix");
-    buffer[_i++] = "</span><span onclick=\"org_filesender_zimlink_instance.removeFile('" + id + "')\" class=\"ImgBubbleDelete AttachmentClose\"></span></span>";
-
-    return buffer.join("");
+    
+    var classes = 'AttachmentLoading attachmentBubble AttachmentSpan org_filesender_zimlink_bubble';
+    if(done) classes += ' org_filesender_zimlink_bubble_done';
+    
+    buffer[_i++] = '<span id="' + id + '" class="' + classes + '" title="' + this.getMessage('filename_bubble_tip') + '" name="mailAttUploadingSpan">'
+    buffer[_i++] = '    <span class="AttProgressSpan1">' + fileName + '</span>';
+    buffer[_i++] = '    <span class="AttProgressSpan2">' + fileName + '</span>';
+    if(!done)
+        buffer[_i++] = '    <span onclick="org_filesender_zimlink_instance.removeFile(\'' + id + '\')" class="ImgBubbleDelete AttachmentClose"></span>';
+    buffer[_i++] = '</span>';
+    
+    return buffer.join('');
 };
 
 /*
  * Generate html code for a file bubble when the file tab is empty
  */
-org_filesender_zimlink.prototype.getFirstAttachmentBubbleHtml = function(fileName, id) {
+org_filesender_zimlink.prototype.getFirstAttachmentBubbleHtml = function(fileName, id, done) {
     var buffer = [];
     var _i = 0;
 
-    buffer[_i++] = "<table role=\"presentation\" width=100%><tr style=\"display:table-row;\"><td width=\"96%\" colspan=\"2\"><div class=\"attBubbleContainer\"><div class=\"attBubbleHolder\">";
-    buffer[_i++] = this.getAttachmentBubbleHtml(fileName, id);
-    buffer[_i++] = "</div></div></td></tr></table>";
+    buffer[_i++] = '<table role="presentation" width="100%">';
+    buffer[_i++] = '    <tr style="display:table-row">';
+    buffer[_i++] = '        <td width="96%" colspan="2">';
+    buffer[_i++] = '            <div class="attBubbleContainer">';
+    buffer[_i++] = '                <div class="attBubbleHolder">';
+    buffer[_i++] = '                    ' + this.getAttachmentBubbleHtml(fileName, id, done);
+    buffer[_i++] = '                </div>';
+    buffer[_i++] = '            </div>';
+    buffer[_i++] = '        </td>';
+    buffer[_i++] = '    </tr>';
+    buffer[_i++] = '</table>';
 
-    return buffer.join("");
+    return buffer.join('');
+};
+
+// Update file upload progress
+org_filesender_zimlink.prototype.updateFileUploadProgress = function(done) {
+    var tdata = appCtxt.getCurrentView().org_filesender_zimlink.transfer_data;
+    var file = tdata.files[tdata.file_idx];
+    
+    var progress = tdata.file_offset / file.size;
+    
+    var span = document.getElementById(file.idx);
+    
+    var progress_span = span.getElementsByTagName('span')[0];
+    var name_span = span.getElementsByTagName('span')[1];
+    var remove_span = span.getElementsByTagName('span')[2];
+    
+    if(remove_span) {
+        span.removeChild(remove_span);
+        
+        var loader = document.createElement('div');
+        loader.className = 'ImgUpload';
+        span.insertBefore(loader, span.childNodes[0]);
+        
+        var anim = {cnt: 0, tg: loader, ti: null};
+        anim.ti = window.setInterval(function() {
+            if(!anim.tg.parentNode) {
+                window.clearInterval(anim.ti);
+                return;
+            }
+            
+            anim.tg.className = 'ImgUpload ImgUpload' + anim.cnt;
+            
+            anim.cnt++;
+            if(anim.cnt > 12) anim.cnt = 0;
+        }, 700);
+    }
+    
+    
+    if(progress >= 1 || done) {
+        var loader = span.getElementsByTagName('div')[0];
+        span.removeChild(loader);
+        span.removeChild(progress_span);
+        span.className += ' org_filesender_zimlink_bubble_done';
+        return;
+    }
+    
+    progress_span.style.display = 'inline';
+    progress_span.style.width = (name_span.offsetWidth * progress) + 'px';
 };
