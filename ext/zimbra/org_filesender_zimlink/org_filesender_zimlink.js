@@ -51,7 +51,7 @@ org_filesender_zimlink.prototype.onShowView = function(view) {
     if(view.indexOf(ZmId.VIEW_COMPOSE) < 0) return;
     
     // Handle several compose views
-    appCtxt.getCurrentView().org_filesender_zimlink = {files: [], use_filesender: null, uploading: false, done_uploading: false};
+    appCtxt.getCurrentView().org_filesender_zimlink = {files: {}, use_filesender: null, uploading: false, done_uploading: false};
     
     // Replace original attachment handler with our own, keep the old one to call it when file is small enough
     var zimlet = this;
@@ -65,12 +65,17 @@ org_filesender_zimlink.prototype.onShowView = function(view) {
         if(!files) files = node.files;
         
         // Accumulate files for size computation and potential sending
-        for(var i=0; i<files.length; i++) this.org_filesender_zimlink.files.push(files[i]);
+        var just_added = [];
+        for(var i=0; i<files.length; i++) {
+            var id = Dwt.getNextId();
+            this.org_filesender_zimlink.files[id] = files[i];
+            just_added.push(id);
+        }
         
         // Compute size of all attached files
         var size = 0;
-        for(i=0; i<this.org_filesender_zimlink.files.length; i++) {
-            var file = this.org_filesender_zimlink.files[i];
+        for(var id in this.org_filesender_zimlink.files) {
+            var file = this.org_filesender_zimlink.files[id];
             size += file.size || file.fileSize /*Safari*/ || 0;
         }
         
@@ -80,8 +85,14 @@ org_filesender_zimlink.prototype.onShowView = function(view) {
             (max_size != -1 /* means unlimited */) &&
             (size > max_size)
         ) {
-            if(!this.org_filesender_zimlink.use_filesender)
+            if(this.org_filesender_zimlink.use_filesender) {
+                for(var i=0; i<just_added.length; i++) {
+                    var id = just_added[i];
+                    zimlet.addAttachmentBubble(this.org_filesender_zimlink.files[id].name, id);
+                }
+            } else {
                 zimlet.popUseFileSenderDlg();
+            }
             
         } else {
             // Max not exceeded, run zimbra attachment handler
@@ -127,8 +138,27 @@ org_filesender_zimlink.prototype.onShowView = function(view) {
     appCtxt.getCurrentView()._showForwardField = function(msg, action, incOptions, includeInlineImages, includeInlineAtts) {
         original_show_forward_field.apply(appCtxt.getCurrentView(), arguments);
         
+        // If upload done re-disable attachment button
+        if(this.org_filesender_zimlink.uploading || this.org_filesender_zimlink.done_uploading)
+            appCtxt.getCurrentView()._attButton.setEnabled(false);
+        
         // Re-add own html
+        if(this.org_filesender_zimlink.use_filesender) {
+            zimlet.cleanNativeAttachments();
+            zimlet.addOwnAttachmentsHtml();
+        }
     };
+};
+
+// Remove file from files to upload
+org_filesender_zimlink.prototype.removeFile = function(id) {
+    var node = document.getElementById(id)
+    var parent = node && node.parentNode;
+    
+    if(parent)
+        parent.removeChild(node);
+    
+    delete appCtxt.getCurrentView().org_filesender_zimlink.files[id];
 };
 
 // Ask user wether to use filesender
@@ -177,20 +207,61 @@ org_filesender_zimlink.prototype.useFileSender = function() {
     var zdata = appCtxt.getCurrentView().org_filesender_zimlink;
     zdata.send_btn_text = btn.getText();
     btn.setText(this.getMessage('upload_to_filesender'));
+    
+    // Remove already selected native attachments
+    this.cleanNativeAttachments();
+    
+    // Add own attachments html
+    this.addOwnAttachmentsHtml();
+};
+
+// Clean native attachments except attached mails / vcards
+org_filesender_zimlink.prototype.cleanNativeAttachments = function() {
+    var att_info = appCtxt.getCurrentView()._msg._attInfo;
+    if(!att_info) return;
+    
+    for(var i=0; i<att_info.length; i++) {
+        var att = att_info[i];
+        
+        if(att.ct == 'message/rfc822') continue;
+        if(att.ct == 'text/x-vcard') continue;
+        
+        var m = att.link.match(/\sid=['"]([^'"]+)['"]/);
+        if(!m) continue;
+        
+        var id = m[1];
+        
+        var span = document.getElementById(id).parentNode;
+        
+        span.parentNode.removeChild(span);
+    }
+};
+
+// Add own full set attachment html
+org_filesender_zimlink.prototype.addOwnAttachmentsHtml = function() {
+    var files = appCtxt.getCurrentView().org_filesender_zimlink.files;
+    
+    for(var id in files)
+        this.addAttachmentBubble(files[id].name, id);
 };
 
 // Called after upload
 org_filesender_zimlink.prototype.doneUploading = function() {
-    appCtxt.getCurrentView().org_filesender_zimlink.uploading = false;
-    appCtxt.getCurrentView().org_filesender_zimlink.done_uploading = true;
+    var zdata = appCtxt.getCurrentView().org_filesender_zimlink;
+    
+    // Flag upload done
+    zdata.uploading = false;
+    zdata.done_uploading = true;
     
     // Modify "Send" button text back
     var btn = appCtxt.getCurrentController()._toolbar.getButton('SEND');
-    var zdata = appCtxt.getCurrentView().org_filesender_zimlink;
     btn.setText(zdata.send_btn_text);
     
     // Re-enable toolbar buttons
     appCtxt.getCurrentController()._toolbar.enableAll(true);
+    
+    // Disable attachment button
+    appCtxt.getCurrentView()._attButton.setEnabled(false);
     
     this.makeDlg(
         this.getMessage('done_uploading_to_filesender_title'),
@@ -383,14 +454,14 @@ org_filesender_zimlink.prototype.addDownloadInfos = function(downloadInfos) {
     var expiry = downloadInfos.expireDate;
     
     var files = [];
-    for(var i=0; i<view.org_filesender_zimlink.files.length; i++) {
-        var file = view.org_filesender_zimlink.files[i];
+    for(var id in view.org_filesender_zimlink.files) {
+        var file = view.org_filesender_zimlink.files[id];
         files.push(file.name + ' (' + this.formatFileSize(file.size) + ')');
     }
     
     //Original mail body
     var content = [view.getUserText()];
-    var i = 0;
+    var i = 1;
     
     //Add the download link and expiration date at the end of the body
     if(view._composeMode == Dwt.HTML) {
@@ -519,11 +590,11 @@ org_filesender_zimlink.prototype.createTransfer = function() {
     };
     
     var files = appCtxt.getCurrentView().org_filesender_zimlink.files;
-    for(var i=0; i<files.length; i++) creation_data.files.push({
-        name: files[i].name,
-        size: files[i].size,
-        mime_type: files[i].type,
-        cid: 'file_' + i
+    for(var id in files) creation_data.files.push({
+        name: files[id].name,
+        size: files[id].size,
+        mime_type: files[id].type,
+        cid: 'file_' + id
     });
     
     var data = this.sendActionToJsp(this.getJspUrl('create_transfer'), creation_data);
@@ -536,7 +607,7 @@ org_filesender_zimlink.prototype.createTransfer = function() {
     transfer_data = data.response;
     
     for(var i=0; i<transfer_data.files.length; i++) {
-        var idx = parseInt(transfer_data.files[i].cid.substr(5));
+        var idx = transfer_data.files[i].cid.substr(5);
         transfer_data.files[i].blob = files[idx];
     }
     
@@ -728,7 +799,7 @@ org_filesender_zimlink.prototype.showEndUploadError = function(reason) {
 /*
  * Add a file bubble to the file list
  */
-org_filesender_zimlink.prototype.addAttachmentBubble = function(fileName) {
+org_filesender_zimlink.prototype.addAttachmentBubble = function(fileName, id) {
     var view = appCtxt.getCurrentView();
     fileName = view._clipFile(fileName, true);
     
@@ -736,23 +807,22 @@ org_filesender_zimlink.prototype.addAttachmentBubble = function(fileName) {
     var firstBubble = view._attcDiv.getElementsByTagName("span")[0];
     if (firstBubble) {
         var tempBubbleWrapper = document.createElement("span");
-        tempBubbleWrapper.innerHTML = this.getAttachmentBubbleHtml(fileName);
+        tempBubbleWrapper.innerHTML = this.getAttachmentBubbleHtml(fileName, id);
         var newBubble = tempBubbleWrapper.firstChild;
         firstBubble.parentNode.insertBefore(newBubble, firstBubble); //insert new bubble before first bubble.
     }
     else {
         //first one is enclosed in a wrapper (the template already expands the mail.Message#MailAttachmentBubble template inside the wrapper)
-        view._attcDiv.innerHTML = this.getFirstAttachmentBubbleHtml(fileName);
+        view._attcDiv.innerHTML = this.getFirstAttachmentBubbleHtml(fileName, id);
     }
 };
 
 /*
  * Generate html for a file bubble
  */
-org_filesender_zimlink.prototype.getAttachmentBubbleHtml = function(fileName) {
+org_filesender_zimlink.prototype.getAttachmentBubbleHtml = function(fileName, id) {
     var buffer = [];
     var _i = 0;
-    var id = Dwt.getNextId();
 
     buffer[_i++] = "<span id=\"";
     buffer[_i++] = id;
@@ -763,7 +833,7 @@ org_filesender_zimlink.prototype.getAttachmentBubbleHtml = function(fileName) {
     buffer[_i++] = "<span class=\"AttProgressSpan2\">";
     buffer[_i++] = fileName;
     buffer[_i++] = this.getMessage("filename_bubble_suffix");
-    buffer[_i++] = "</span><span onclick=\"window.appCtxt.getCurrentView()._removeAttachedFile('" + id + "')\" class=\"ImgBubbleDelete AttachmentClose\"></span></span>";
+    buffer[_i++] = "</span><span onclick=\"org_filesender_zimlink_instance.removeFile('" + id + "')\" class=\"ImgBubbleDelete AttachmentClose\"></span></span>";
 
     return buffer.join("");
 };
@@ -771,12 +841,12 @@ org_filesender_zimlink.prototype.getAttachmentBubbleHtml = function(fileName) {
 /*
  * Generate html code for a file bubble when the file tab is empty
  */
-org_filesender_zimlink.prototype.getFirstAttachmentBubbleHtml = function(fileName) {
+org_filesender_zimlink.prototype.getFirstAttachmentBubbleHtml = function(fileName, id) {
     var buffer = [];
     var _i = 0;
 
     buffer[_i++] = "<table role=\"presentation\" width=100%><tr style=\"display:table-row;\"><td width=\"96%\" colspan=\"2\"><div class=\"attBubbleContainer\"><div class=\"attBubbleHolder\">";
-    buffer[_i++] = this.getAttachmentBubbleHtml(fileName);
+    buffer[_i++] = this.getAttachmentBubbleHtml(fileName, id);
     buffer[_i++] = "</div></div></td></tr></table>";
 
     return buffer.join("");
