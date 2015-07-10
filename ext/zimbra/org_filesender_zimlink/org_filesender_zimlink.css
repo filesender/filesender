@@ -1,0 +1,22 @@
+.org_filesender_zimlink_bubble {
+    max-width: 260px;
+    position: static;
+    overflow: visible;
+    padding: 0 2px 4px 26px;
+    background-image: url(filesender.png);
+    background-repeat: no-repeat;
+    background-position: center left;
+}
+
+.org_filesender_zimlink_bubble .AttProgressSpan1 {
+    display: none;
+    left: 21px;
+}
+
+.org_filesender_zimlink_bubble .ImgUpload {
+    float: right;
+}
+
+.org_filesender_zimlink_bubble_done {
+    background-color: #cfc;
+}

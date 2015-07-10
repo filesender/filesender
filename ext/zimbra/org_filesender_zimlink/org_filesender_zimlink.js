@@ -907,7 +907,7 @@ org_filesender_zimlink.prototype.updateFileUploadProgress = function(done) {
             
             anim.cnt++;
             if(anim.cnt > 12) anim.cnt = 0;
-        }, 700);
+        }, 400);
     }
     
     
