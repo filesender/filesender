@@ -51,12 +51,16 @@ org_filesender_zimlink.prototype.onShowView = function(view) {
     if(view.indexOf(ZmId.VIEW_COMPOSE) < 0) return;
     
     // Handle several compose views
-    appCtxt.getCurrentView().org_filesender_zimlink = {files: [], use_filesender: null};
+    appCtxt.getCurrentView().org_filesender_zimlink = {files: [], use_filesender: null, uploading: false, done_uploading: false};
     
     // Replace original attachment handler with our own, keep the old one to call it when file is small enough
     var zimlet = this;
     var original_submit_attachments = appCtxt.getCurrentView()._submitMyComputerAttachments;
     appCtxt.getCurrentView()._submitMyComputerAttachments = function(files, node, isInline) {
+        if(this.org_filesender_zimlink.uploading || this.org_filesender_zimlink.done_uploading) {
+            this.showError(this.getMessage('cannot_add_attachment_anymore'));
+            return;
+        }
         
         if(!files) files = node.files;
         
@@ -89,11 +93,19 @@ org_filesender_zimlink.prototype.onShowView = function(view) {
         var original_send_msg = appCtxt.getCurrentController()._sendMsg;
         appCtxt.getCurrentController().original_send_msg = original_send_msg;
         appCtxt.getCurrentController()._sendMsg = function(attId, docIds, draftType, callback, contactId) {
+            
+            // If done uploading to filesender trigger normal sending
+            if(appCtxt.getCurrentView().org_filesender_zimlink.done_uploading) {
+                original_send_msg.apply(appCtxt.getCurrentController(), arguments);
+                return;
+            }
+            
             //get draftType to check if the mail is sent
             var isTimed = Boolean(this._sendTime);
             draftType = draftType || (isTimed ? ZmComposeController.DRAFT_TYPE_DELAYSEND : ZmComposeController.DRAFT_TYPE_NONE);
             var isScheduled = draftType == ZmComposeController.DRAFT_TYPE_DELAYSEND;
             var isDraft = (draftType != ZmComposeController.DRAFT_TYPE_NONE && !isScheduled);
+            
             //If the mail is sent and filesender is used, then start the upload
             if(!isDraft && appCtxt.getCurrentView().org_filesender_zimlink.use_filesender) {
                 //Store arguments in the controller to continue normal sending after the upload
@@ -101,11 +113,12 @@ org_filesender_zimlink.prototype.onShowView = function(view) {
                 
                 //Start upload
                 org_filesender_zimlink_instance.upload();
+                
+                return;
             }
-            //If not, continue normal sending
-            else {
-                original_send_msg.apply(appCtxt.getCurrentController(), arguments);
-            }
+            
+            // Continue normal sending otherwise
+            original_send_msg.apply(appCtxt.getCurrentController(), arguments);
         };
     }
     
@@ -157,6 +170,31 @@ org_filesender_zimlink.prototype.popUseFileSenderDlg = function() {
     dialog.popup();
 };
 
+// Called after choice and checks
+org_filesender_zimlink.prototype.useFileSender = function() {
+    // Modify "Send" button text
+    
+    // TODO
+};
+
+// Called after upload
+org_filesender_zimlink.prototype.doneUploading = function() {
+    appCtxt.getCurrentView().org_filesender_zimlink.uploading = false;
+    appCtxt.getCurrentView().org_filesender_zimlink.done_uploading = true;
+    
+    // Modify "Send" button text back
+    
+    // Re-enable toolbar buttons
+    appCtxt.getCurrentController()._toolbar.enableAll(true);
+    
+    this.makeDlg(
+        this.getMessage('done_uploading_to_filesender_title'),
+        {width: 300, height: 300},
+        this.getMessage('done_uploading_to_filesender_text'),
+        [DwtDialog.OK_BUTTON]
+    ).popup();
+};
+
 // Data handler for user profile response (FileSender JSONP callback)
 org_filesender_zimlink.prototype.filesender_user_profile_handler = function(profile) {
     if(!profile.remote_config) {
@@ -176,7 +214,8 @@ org_filesender_zimlink.prototype.filesender_user_profile_handler = function(prof
     
     this.setUserProperty('authentication_data', JSON.stringify(auth_data), true);
     
-    this.getFileSenderQuota();
+    if(this.getFileSenderQuota())
+        this.useFileSender();
     
     this.fs_auth_dialog.popdown();
     this.fs_auth_dialog.dispose();
@@ -237,7 +276,10 @@ org_filesender_zimlink.prototype.checkFileSenderAuthentication = function() {
     if(auth_data[zdata.use_filesender]) {
         // Auth data already known, attach and exit
         appCtxt.getCurrentView().org_filesender_zimlink.remote_config = auth_data[zdata.use_filesender];
-        this.getFileSenderQuota();
+        
+        if(this.getFileSenderQuota())
+            this.useFileSender();
+        
         return;
     }
     
@@ -373,6 +415,8 @@ org_filesender_zimlink.prototype.addDownloadInfos = function(downloadInfos) {
  * Start upload process
  */
 org_filesender_zimlink.prototype.upload = function() {
+    appCtxt.getCurrentView().org_filesender_zimlink.uploading = true;
+    
     var transfer_data = this.createTransfer();
     if(!transfer_data) return;
     
@@ -422,9 +466,7 @@ org_filesender_zimlink.prototype.uploadNext = function() {
                     expireDate: tdata.expires.formatted
                 });
                 
-                // Call original message sending code
-                var ctrl = appCtxt.getCurrentController();
-                ctrl.original_send_msg.apply(ctrl, ctrl.sendArguments);
+                this.doneUploading();
                 
                 return;
             }
