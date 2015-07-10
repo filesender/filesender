@@ -173,8 +173,10 @@ org_filesender_zimlink.prototype.popUseFileSenderDlg = function() {
 // Called after choice and checks
 org_filesender_zimlink.prototype.useFileSender = function() {
     // Modify "Send" button text
-    
-    // TODO
+    var btn = appCtxt.getCurrentController()._toolbar.getButton('SEND');
+    var zdata = appCtxt.getCurrentView().org_filesender_zimlink;
+    zdata.send_btn_text = btn.getText();
+    btn.setText(this.getMessage('upload_to_filesender'));
 };
 
 // Called after upload
@@ -183,6 +185,9 @@ org_filesender_zimlink.prototype.doneUploading = function() {
     appCtxt.getCurrentView().org_filesender_zimlink.done_uploading = true;
     
     // Modify "Send" button text back
+    var btn = appCtxt.getCurrentController()._toolbar.getButton('SEND');
+    var zdata = appCtxt.getCurrentView().org_filesender_zimlink;
+    btn.setText(zdata.send_btn_text);
     
     // Re-enable toolbar buttons
     appCtxt.getCurrentController()._toolbar.enableAll(true);
