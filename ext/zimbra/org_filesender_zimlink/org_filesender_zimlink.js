@@ -58,7 +58,7 @@ org_filesender_zimlink.prototype.onShowView = function(view) {
     var original_submit_attachments = appCtxt.getCurrentView()._submitMyComputerAttachments;
     appCtxt.getCurrentView()._submitMyComputerAttachments = function(files, node, isInline) {
         if(this.org_filesender_zimlink.uploading || this.org_filesender_zimlink.done_uploading) {
-            this.showError(this.getMessage('cannot_add_attachment_anymore'));
+            this.showError(zimlet.getMessage('cannot_add_attachment_anymore'));
             return;
         }
         
@@ -135,7 +135,7 @@ org_filesender_zimlink.prototype.onShowView = function(view) {
 org_filesender_zimlink.prototype.popUseFileSenderDlg = function() {
     var dialog = this.makeDlg(
         this.getMessage('use_filesender_dlg_title'),
-        {width: 300, height: 300},
+        {width: 300, height: 150},
         this.getMessage('use_filesender_dlg_label'),
         [DwtDialog.OK_BUTTON, DwtDialog.CANCEL_BUTTON]
     );
@@ -189,10 +189,21 @@ org_filesender_zimlink.prototype.doneUploading = function() {
     
     this.makeDlg(
         this.getMessage('done_uploading_to_filesender_title'),
-        {width: 300, height: 300},
+        {width: 300, height: 100},
         this.getMessage('done_uploading_to_filesender_text'),
         [DwtDialog.OK_BUTTON]
     ).popup();
+};
+
+// Auth data getter
+org_filesender_zimlink.prototype.getAuthenticationData = function() {
+    var data = this.getUserProperty('authentication_data');
+    return data ? JSON.parse(data) : {};
+};
+
+// Auth data setter
+org_filesender_zimlink.prototype.setAuthenticationData = function(data) {
+    this.setUserProperty('authentication_data', JSON.stringify(data), true);
 };
 
 // Data handler for user profile response (FileSender JSONP callback)
@@ -207,12 +218,12 @@ org_filesender_zimlink.prototype.filesender_user_profile_handler = function(prof
     var zdata = appCtxt.getCurrentView().org_filesender_zimlink;
     zdata.remote_config = {url: cfg[0], uid: cfg[1], secret: cfg[2]};
     
-    var auth_data = JSON.parse(this.getUserProperty('authentication_data'));
+    var auth_data = this.getAuthenticationData();
     
     if(!auth_data[zdata.use_filesender]) auth_data[zdata.use_filesender] = {};
     auth_data[zdata.use_filesender].remote_config = zdata.remote_config;
     
-    this.setUserProperty('authentication_data', JSON.stringify(auth_data), true);
+    this.setAuthenticationData(auth_data);
     
     if(this.getFileSenderQuota())
         this.useFileSender();
@@ -271,7 +282,7 @@ org_filesender_zimlink.prototype.checkFileSenderAuthentication = function() {
     var info = this.getFileSenderInfo();
     
     var zdata = appCtxt.getCurrentView().org_filesender_zimlink;
-    var auth_data = JSON.parse(this.getUserProperty('authentication_data'));
+    var auth_data = this.getAuthenticationData();
     
     if(auth_data[zdata.use_filesender]) {
         // Auth data already known, attach and exit
@@ -545,7 +556,7 @@ org_filesender_zimlink.prototype.createTransfer = function() {
 org_filesender_zimlink.prototype.getJspUrl = function(command, target_id, size, offset) {
     // retrieve the server config
     var zdata = appCtxt.getCurrentView().org_filesender_zimlink;
-    var auth_data = JSON.parse(this.getUserProperty('authentication_data'));
+    var auth_data = this.getAuthenticationData();
     if(!auth_data[zdata.use_filesender]) return null;
     
     var remote_config = auth_data[zdata.use_filesender].remote_config;
