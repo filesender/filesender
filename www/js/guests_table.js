@@ -57,9 +57,8 @@ $(function() {
                 
                 filesender.ui.confirm(lang.tr('confirm_delete_guest'), function() {
                     filesender.client.deleteGuest(id, function() {
-                        filesender.ui.notify('success', lang.tr('guest_deleted'), function() {
-                            guests.find('[data-id="' + id + '"]').remove();
-                        });
+                        guests.find('[data-id="' + id + '"]').remove();
+                        filesender.ui.notify('success', lang.tr('guest_deleted'));
                     });
                 });
             });

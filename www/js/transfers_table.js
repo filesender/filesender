@@ -93,9 +93,8 @@ $(function() {
                                 delete: 'transfer_deleted'
                             };
                             var done = function() {
-                                filesender.ui.notify('success', lang.tr(messages[choosen]), function() {
-                                    table.find('[data-id="' + id + '"]').remove();
-                                });
+                                table.find('[data-id="' + id + '"]').remove();
+                                filesender.ui.notify('success', lang.tr(messages[choosen]));
                             };
                             
                             switch(choosen) {
@@ -108,9 +107,8 @@ $(function() {
                     } else {
                         filesender.ui.confirm(lang.tr('confirm_close_transfer'), function() {
                             filesender.client.closeTransfer(id, function() {
-                                filesender.ui.notify('success', lang.tr('transfer_closed'), function() {
-                                    table.find('[data-id="' + id + '"]').remove();
-                                });
+                                table.find('[data-id="' + id + '"]').remove();
+                                filesender.ui.notify('success', lang.tr('transfer_closed'));
                             });
                         });
                     }
@@ -248,13 +246,12 @@ $(function() {
                     
                     filesender.ui.confirm(lang.tr('confirm_delete_recipient'), function() {
                         filesender.client.deleteRecipient(id, function() {
-                            filesender.ui.notify('success', lang.tr('recipient_deleted'), function() {
-                                rcpt.remove();
-                                if(!transfer_details.find('.recipients .recipient').length) {
-                                    transfer_details.prev('.transfer').remove();
-                                    transfer_details.remove();
-                                }
-                            });
+                            rcpt.remove();
+                            if(!transfer_details.find('.recipients .recipient').length) {
+                                transfer_details.prev('.transfer').remove();
+                                transfer_details.remove();
+                            }
+                            filesender.ui.notify('success', lang.tr('recipient_deleted'));
                         });
                     });
                 });
@@ -303,13 +300,12 @@ $(function() {
                     
                     filesender.ui.confirm(lang.tr('confirm_delete_file'), function() {
                         filesender.client.deleteFile(id, function() {
-                            filesender.ui.notify('success', lang.tr('file_deleted'), function() {
-                                file.remove();
-                                if(!transfer_details.find('.files .file').length) {
-                                    transfer_details.prev('.transfer').remove();
-                                    transfer_details.remove();
-                                }
-                            });
+                            file.remove();
+                            if(!transfer_details.find('.files .file').length) {
+                                transfer_details.prev('.transfer').remove();
+                                transfer_details.remove();
+                            }
+                            filesender.ui.notify('success', lang.tr('file_deleted'));
                         });
                     });
                 });
