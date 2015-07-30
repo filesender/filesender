@@ -110,7 +110,7 @@ class Template {
         }, $content);
         
         // Path syntax
-        $content = preg_replace_callback('`\{(path):([^}]+)\}`', function($m) {
+        $content = preg_replace_callback('`\{(path):([^}]*)\}`', function($m) {
             return GUI::path($m[2]);
         }, $content);
         
