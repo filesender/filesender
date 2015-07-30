@@ -39,6 +39,13 @@ var org_filesender_zimlink_instance;
 
 // Initialization stage
 org_filesender_zimlink.prototype.init = function() {
+    this.servers = [];
+    var list = ('' + this.getConfig('serversUrlList')).split(',');
+    for(var i=0; i<list.length; i++) {
+        var s = list[i].replace(/\s/, '');
+        if(s) this.servers.push(s);
+    }
+    
     org_filesender_zimlink_instance = this;
 };
 
@@ -47,18 +54,21 @@ org_filesender_zimlink.prototype.onShowView = function(view) {
     // Nothing to do if no HTML5 support
     if(!AjxEnv.supportsHTML5File) return;
     
+    // Nothing to do if no servers
+    if(!this.servers.length) return;
+    
     // Nothing to do except for mail compose view
     if(view.indexOf(ZmId.VIEW_COMPOSE) < 0) return;
     
     // Handle several compose views
-    appCtxt.getCurrentView().org_filesender_zimlink = {files: {}, use_filesender: null, uploading: false, done_uploading: false};
+    appCtxt.getCurrentView().org_filesender_zimlink = {files: {}, use_filesender: false, filesender_server: null, uploading: false, done_uploading: false};
     
     // Replace original attachment handler with our own, keep the old one to call it when file is small enough
     var zimlet = this;
     var original_submit_attachments = appCtxt.getCurrentView()._submitMyComputerAttachments;
     appCtxt.getCurrentView()._submitMyComputerAttachments = function(files, node, isInline) {
         if(this.org_filesender_zimlink.uploading || this.org_filesender_zimlink.done_uploading) {
-            this.showError(zimlet.getMessage('cannot_add_attachment_anymore'));
+            this.showError(zimlet.translate('cannot_add_attachment_anymore'));
             return;
         }
         
@@ -120,7 +130,7 @@ org_filesender_zimlink.prototype.onShowView = function(view) {
             //If the mail is sent and filesender is used, then start the upload
             if(!isDraft && appCtxt.getCurrentView().org_filesender_zimlink.use_filesender) {
                 //Store arguments in the controller to continue normal sending after the upload
-                this.sendArguments = arguments;
+                appCtxt.getCurrentController().original_send_msg_arguments = arguments;
                 
                 //Start upload
                 appCtxt.getCurrentView()._attButton.setEnabled(false);
@@ -162,14 +172,47 @@ org_filesender_zimlink.prototype.removeFile = function(id) {
     delete appCtxt.getCurrentView().org_filesender_zimlink.files[id];
 };
 
+// Translation utility
+org_filesender_zimlink.prototype.translate = function(msgid) {
+    var translation = this.getMessage(msgid);
+    
+    return translation ? translation : '{' + msgid + '}';
+};
+
 // Ask user wether to use filesender
 org_filesender_zimlink.prototype.popUseFileSenderDlg = function() {
+    var ctn = [this.translate('use_filesender_dlg_label')];
+    
+    var srv_sel = null;
+    if(this.servers.length > 1) {
+        ctn.push(this.translate('use_filesender_dlg_choose_server'));
+        srv_sel = Dwt.getNextId();
+        ctn.push('<div id="' + srv_sel + '"></div>');
+    }
+    
     var dialog = this.makeDlg(
-        this.getMessage('use_filesender_dlg_title'),
+        this.translate('use_filesender_dlg_title'),
         {width: 300, height: 150},
-        this.getMessage('use_filesender_dlg_label'),
+        ctn.join(''),
         [DwtDialog.OK_BUTTON, DwtDialog.CANCEL_BUTTON]
     );
+    
+    if(srv_sel) {
+        var select = new DwtButton({parent: this.getShell()});
+        select.setText(this.servers[0]);
+        select.setImage('OrgFilesenderZimlinkIcon');
+        var menu = new ZmPopupMenu(select);
+        select.setMenu(menu);
+        
+        for(var i=0; i<this.servers.length; i++) {
+            var item = menu.createMenuItem(Dwt.getNextId(), {image: 'OrgFilesenderZimlinkIcon', text: this.servers[i]});
+            item.addSelectionListener(new AjxListener(this, function(server) {
+                appCtxt.getCurrentView().org_filesender_zimlink.filesender_server = server;
+            }, this.servers[i]));
+        }
+        
+        document.getElementById(srv_sel).appendChild(select.getHtmlElement());
+    }
     
     this.setDialogButton(
         dialog,
@@ -179,8 +222,12 @@ org_filesender_zimlink.prototype.popUseFileSenderDlg = function() {
             dialog.popdown();
             dialog.dispose();
             
-            appCtxt.getCurrentView().org_filesender_zimlink.use_filesender = 'https://filesender-premium.renater.fr/';
-            //appCtxt.getCurrentView().org_filesender_zimlink.use_filesender = this.getConfigProperty('serversUrlList');
+            var zdata = appCtxt.getCurrentView().org_filesender_zimlink;
+            
+            zdata.use_filesender = true;
+            
+            if(!zdata.filesender_server) // Default server not changed or single server
+                zdata.filesender_server = this.servers[0];
             
             this.checkFileSenderAuthentication();
         }, dialog)
@@ -207,7 +254,7 @@ org_filesender_zimlink.prototype.useFileSender = function() {
     var btn = appCtxt.getCurrentController()._toolbar.getButton('SEND');
     var zdata = appCtxt.getCurrentView().org_filesender_zimlink;
     zdata.send_btn_text = btn.getText();
-    btn.setText(this.getMessage('upload_to_filesender'));
+    btn.setText(this.translate('upload_to_filesender'));
     
     // Remove already selected native attachments
     this.cleanNativeAttachments();
@@ -248,7 +295,7 @@ org_filesender_zimlink.prototype.addOwnAttachmentsHtml = function() {
         var done = false;
         if(zdata.transfer_data) {
             for(var i=0; i<zdata.transfer_data.files.length; i++)
-                if(zdata.transfer_data.files[i].idx == id)
+                if(zdata.transfer_data.files[i].cid == id)
                     done = zdata.transfer_data.files[i].done;
         }
         
@@ -274,12 +321,45 @@ org_filesender_zimlink.prototype.doneUploading = function() {
     // Disable attachment button
     appCtxt.getCurrentView()._attButton.setEnabled(false);
     
-    this.makeDlg(
-        this.getMessage('done_uploading_to_filesender_title'),
-        {width: 300, height: 100},
-        this.getMessage('done_uploading_to_filesender_text'),
-        [DwtDialog.OK_BUTTON]
-    ).popup();
+    zdata.uploading_popup.popdown();
+    zdata.uploading_popup.dispose();
+    delete zdata.uploading_popup;
+    
+    if(zdata.autosend) {
+        var ctrl = appCtxt.getCurrentController();
+        ctrl.original_send_msg.apply(ctrl, ctrl.original_send_msg_arguments);
+        
+        return;
+    }
+    
+    var dialog = this.makeDlg(
+        this.translate('done_uploading_to_filesender_title'),
+        {width: 300, height: 200},
+        this.translate('done_uploading_to_filesender_text'),
+        [DwtDialog.OK_BUTTON, DwtDialog.CANCEL_BUTTON]
+    );
+    
+    this.setDialogButton(
+        dialog,
+        DwtDialog.OK_BUTTON,
+        AjxMsg.yes,
+        new AjxListener(this, function() {
+            dialog.popdown();
+            dialog.dispose();
+            
+            var ctrl = appCtxt.getCurrentController();
+            ctrl.original_send_msg.apply(ctrl, ctrl.original_send_msg_arguments);
+            
+        }, dialog)
+    );
+    
+    this.setDialogButton(
+        dialog,
+        DwtDialog.CANCEL_BUTTON,
+        AjxMsg.no
+    );
+    
+    dialog.popup();
 };
 
 // Auth data getter
@@ -307,8 +387,8 @@ org_filesender_zimlink.prototype.filesender_user_profile_handler = function(prof
     
     var auth_data = this.getAuthenticationData();
     
-    if(!auth_data[zdata.use_filesender]) auth_data[zdata.use_filesender] = {};
-    auth_data[zdata.use_filesender].remote_config = zdata.remote_config;
+    if(!auth_data[zdata.filesender_server]) auth_data[zdata.filesender_server] = {};
+    auth_data[zdata.filesender_server].remote_config = zdata.remote_config;
     
     this.setAuthenticationData(auth_data);
     
@@ -325,7 +405,7 @@ org_filesender_zimlink.prototype.filesender_user_profile_handler = function(prof
 org_filesender_zimlink.prototype.getFileSenderInfo = function() {
     var zdata = appCtxt.getCurrentView().org_filesender_zimlink;
     
-    var fs_url = zdata.use_filesender;
+    var fs_url = zdata.filesender_server;
     if(fs_url.substr(-1) != '/') url += '/';
     var info_url = fs_url + 'rest.php/info';
     
@@ -371,9 +451,9 @@ org_filesender_zimlink.prototype.checkFileSenderAuthentication = function() {
     var zdata = appCtxt.getCurrentView().org_filesender_zimlink;
     var auth_data = this.getAuthenticationData();
     
-    if(auth_data[zdata.use_filesender]) {
+    if(auth_data[zdata.filesender_server]) {
         // Auth data already known, attach and exit
-        appCtxt.getCurrentView().org_filesender_zimlink.remote_config = auth_data[zdata.use_filesender];
+        appCtxt.getCurrentView().org_filesender_zimlink.remote_config = auth_data[zdata.filesender_server];
         
         if(this.getFileSenderQuota())
             this.useFileSender();
@@ -391,21 +471,39 @@ org_filesender_zimlink.prototype.checkFileSenderAuthentication = function() {
     
     var popup_url = logon_url.replace(/__target__/, AjxStringUtil.urlComponentEncode(landing_url));
     
+    var auth_trigger_btn = new DwtButton({parent: this.getShell()});
+    auth_trigger_btn.setText(this.translate('get_filesender_authentication_popup_button'));
+    auth_trigger_btn.setImage('Padlock');
+    auth_trigger_btn.addSelectionListener(new AjxListener(this, function() {
+        org_filesender_zimlink_instance.authentication_popup = window.open(popup_url);
+    }));
+    var auth_trigger_id = Dwt.getNextId();
+    
+    var auth_sync_btn = new DwtButton({parent: this.getShell()});
+    auth_sync_btn.setText(this.translate('get_filesender_authentication_check_button'));
+    auth_sync_btn.setImage('SendReceive');
+    auth_sync_btn.addSelectionListener(new AjxListener(this, function() {
+        var profile_script = document.createElement('script');
+        document.getElementsByTagName('head')[0].appendChild(profile_script);
+        profile_script.src = user_url + '&_=' + (new Date()).getTime();
+    }));
+    var auth_sync_id = Dwt.getNextId();
+    
     var dialog = this.makeDlg(
-        this.getMessage('get_filesender_authentication_dlg_title'),
-        {width: 400, height: 400},
+        this.translate('get_filesender_authentication_dlg_title'),
+        {width: 400, height: 350},
         [
-            this.getMessage('get_filesender_authentication_popup_label'),
-            '<button id="org_filesender_zimlink_filesender_authentication_popup_btn">',
-            this.getMessage('get_filesender_authentication_popup_button'),
-            '</button>',
-            this.getMessage('get_filesender_authentication_check_label'),
-            '<button id="org_filesender_zimlink_filesender_authentication_check_btn">',
-            this.getMessage('get_filesender_authentication_check_button'),
-            '</button>'
+            this.translate('get_filesender_authentication_popup_label'),
+            '<div id="' + auth_trigger_id + '"></div>',
+            this.translate('get_filesender_authentication_check_label'),
+            '<div id="' + auth_sync_id + '"></div>'
         ].join(''),
         [DwtDialog.CANCEL_BUTTON]
     );
+    
+    document.getElementById(auth_trigger_id).appendChild(auth_trigger_btn.getHtmlElement());
+    
+    document.getElementById(auth_sync_id).appendChild(auth_sync_btn.getHtmlElement());
     
     this.setDialogButton(
         dialog,
@@ -415,6 +513,11 @@ org_filesender_zimlink.prototype.checkFileSenderAuthentication = function() {
             dialog.popdown();
             dialog.dispose();
             
+            var zdata = appCtxt.getCurrentView().org_filesender_zimlink;
+            
+            zdata.use_filesender = false;
+            zdata.filesender_server = null;
+            
             org_filesender_zimlink.showSizeExceededError();
         })
     );
@@ -422,19 +525,6 @@ org_filesender_zimlink.prototype.checkFileSenderAuthentication = function() {
     dialog.popup();
     
     this.fs_auth_dialog = dialog;
-    
-    document.getElementById('org_filesender_zimlink_filesender_authentication_popup_btn').onclick = function() {
-        org_filesender_zimlink_instance.authentication_popup = window.open(popup_url);
-        return false;
-    };
-    
-    document.getElementById('org_filesender_zimlink_filesender_authentication_check_btn').onclick = function() {
-        var profile_script = document.createElement('script');
-        this.parentNode.appendChild(profile_script);
-        profile_script.src = user_url + '&_=' + (new Date()).getTime();
-        
-        return false;
-    };
 };
 
 /*
@@ -477,24 +567,24 @@ org_filesender_zimlink.prototype.addDownloadInfos = function(downloadInfos) {
     //Add the download link and expiration date at the end of the body
     if(view._composeMode == Dwt.HTML) {
         content[i++] = '<br />';
-        content[i++] = this.getMessage('files_are_attached_using_filesender');
+        content[i++] = this.translate('files_are_attached_using_filesender');
         content[i++] = '<br />';
         content[i++] = '<ul>';
         content[i++] = '<li>' + files.join('</li><li>') + '</li>';
         content[i++] = '</ul>';
         content[i++] = '<br />';
-        content[i++] = this.getMessage('download_link_label') + '<a href="' + url + '">' + url + '</a>';
+        content[i++] = this.translate('download_link_label') + '<a href="' + url + '">' + url + '</a>';
         content[i++] = '<br />';
-        content[i++] = this.getMessage('download_expire_date_label') + expiry;
+        content[i++] = this.translate('download_expire_date_label') + expiry;
     } else {
         content[i++] = "\n";
-        content[i++] = this.getMessage('files_are_attached_using_filesender');
+        content[i++] = this.translate('files_are_attached_using_filesender');
         content[i++] = "\n";
         content[i++] = "\n    * " + files.join("\n    * ") + "\n";
         content[i++] = "\n";
-        content[i++] = this.getMessage('download_link_label') + url;
+        content[i++] = this.translate('download_link_label') + url;
         content[i++] = "\n";
-        content[i++] = this.getMessage('download_expire_date_label') + expiry;
+        content[i++] = this.translate('download_expire_date_label') + expiry;
     }
     
     //Add params with keepAttachments to false to clean attachments
@@ -513,7 +603,9 @@ org_filesender_zimlink.prototype.addDownloadInfos = function(downloadInfos) {
  * Start upload process
  */
 org_filesender_zimlink.prototype.upload = function() {
-    appCtxt.getCurrentView().org_filesender_zimlink.uploading = true;
+    var zdata = appCtxt.getCurrentView().org_filesender_zimlink;
+    
+    zdata.uploading = true;
     
     var transfer_data = this.createTransfer();
     if(!transfer_data) return;
@@ -521,9 +613,62 @@ org_filesender_zimlink.prototype.upload = function() {
     transfer_data.file_idx = 0;
     transfer_data.file_offset = 0;
     
-    appCtxt.getCurrentView().org_filesender_zimlink.transfer_data = transfer_data;
+    zdata.transfer_data = transfer_data;
+    
+    var ctnid = Dwt.getNextId();
+    
+    zdata.uploading_popup = this.makeDlg(
+        this.translate('uploading_dlg_title'),
+        {width: 400, height: 400},
+        [
+            this.translate('uploading_dlg_text'),
+            '<div id="' + ctnid + '" class="org_filesender_zimlink_detailed_progress"></div>',
+            '<span id="' + ctnid + '_autosend"></span>'
+        ].join(''),
+        [DwtDialog.OK_BUTTON]
+    );
+    
+    this.setDialogButton(
+        zdata.uploading_popup,
+        DwtDialog.OK_BUTTON,
+        AjxMsg._close
+    );
+    
+    var chk = new DwtCheckbox({parent: this.getShell()});
+    chk.setTextPosition('right');
+    chk.setText(this.translate('auto_send'));
+    chk.addSelectionListener(new AjxListener(this, function() {
+        zdata.autosend = chk.isSelected();
+    }));
+    document.getElementById(ctnid + '_autosend').appendChild(chk.getHtmlElement());
+    
+    zdata.uploading_popup.popup();
+    
+    var ctn = document.getElementById(ctnid);
+    for(var i=0; i<transfer_data.files.length; i++)
+        this.addDetailedUploadProgressbar(ctn, transfer_data.files[i]);
     
     this.uploadNext();
+};
+
+// Prepare detailed upload progressbars
+org_filesender_zimlink.prototype.addDetailedUploadProgressbar = function(ctn, file) {
+    var view = appCtxt.getCurrentView();
+    var name = view._clipFile(file.name, true);
+    
+    var html = [
+        '<div class="org_filesender_zimlink_detailed_progressbar">',
+        '   <span id="' + file.cid + '_progressbar">0%</span>',
+        '</div>',
+        '<span title="' + file.name + '">' + name + '</span>'
+    ].join('');
+    
+    var f = document.createElement('DIV');
+    f.className = 'org_filesender_zimlink_detailed_progress_file';
+    f.id = file.cid + '_detailed_progress';
+    f.innerHTML = html;
+    
+    ctn.appendChild(f);
 };
 
 /*
@@ -610,7 +755,7 @@ org_filesender_zimlink.prototype.createTransfer = function() {
         name: files[id].name,
         size: files[id].size,
         mime_type: files[id].type,
-        cid: 'file_' + id
+        cid: id
     });
     
     var data = this.sendActionToJsp(this.getJspUrl('create_transfer'), creation_data);
@@ -623,9 +768,7 @@ org_filesender_zimlink.prototype.createTransfer = function() {
     transfer_data = data.response;
     
     for(var i=0; i<transfer_data.files.length; i++) {
-        var idx = transfer_data.files[i].cid.substr(5);
-        transfer_data.files[i].idx = idx;
-        transfer_data.files[i].blob = files[idx];
+        transfer_data.files[i].blob = files[transfer_data.files[i].cid];
     }
     
     for(var i=0; i<transfer_data.files.length; i++) {
@@ -650,9 +793,9 @@ org_filesender_zimlink.prototype.getJspUrl = function(command, target_id, size, 
     // retrieve the server config
     var zdata = appCtxt.getCurrentView().org_filesender_zimlink;
     var auth_data = this.getAuthenticationData();
-    if(!auth_data[zdata.use_filesender]) return null;
+    if(!auth_data[zdata.filesender_server]) return null;
     
-    var remote_config = auth_data[zdata.use_filesender].remote_config;
+    var remote_config = auth_data[zdata.filesender_server].remote_config;
     
     var enc = AjxStringUtil.urlComponentEncode;
     var args = [
@@ -775,7 +918,7 @@ org_filesender_zimlink.prototype.makeDlg = function(title, size, content, standa
 org_filesender_zimlink.prototype.setDialogButton = function(dialog, buttonId, text, listener) {
     var button = dialog.getButton(buttonId);
     button.setText(text);
-    dialog.setButtonListener(buttonId, listener);
+    if(listener) dialog.setButtonListener(buttonId, listener);
 }
 
 /*
@@ -809,7 +952,11 @@ org_filesender_zimlink.showSizeExceededError = function() {
  * msg : String containing the msg in html format to display
  */
 org_filesender_zimlink.prototype.showEndUploadError = function(reason) {
-    this.showError(this.getMessage('upload_error'), reason);
+    this.showError(this.translate('upload_error'), reason);
+    
+    appCtxt.getCurrentView().org_filesender_zimlink.uploading = false;
+    delete appCtxt.getCurrentView().org_filesender_zimlink.transfer_data;
+    
     appCtxt.getCurrentController()._toolbar.enableAll(true);
 };
 
@@ -821,9 +968,9 @@ org_filesender_zimlink.prototype.addAttachmentBubble = function(fileName, id, do
     fileName = view._clipFile(fileName, true);
     
     //Check if the list is empty
-    var firstBubble = view._attcDiv.getElementsByTagName("span")[0];
+    var firstBubble = view._attcDiv.getElementsByTagName('span')[0];
     if (firstBubble) {
-        var tempBubbleWrapper = document.createElement("span");
+        var tempBubbleWrapper = document.createElement('span');
         tempBubbleWrapper.innerHTML = this.getAttachmentBubbleHtml(fileName, id, done);
         var newBubble = tempBubbleWrapper.firstChild;
         firstBubble.parentNode.insertBefore(newBubble, firstBubble); //insert new bubble before first bubble.
@@ -844,7 +991,7 @@ org_filesender_zimlink.prototype.getAttachmentBubbleHtml = function(fileName, id
     var classes = 'AttachmentLoading attachmentBubble AttachmentSpan org_filesender_zimlink_bubble';
     if(done) classes += ' org_filesender_zimlink_bubble_done';
     
-    buffer[_i++] = '<span id="' + id + '" class="' + classes + '" title="' + this.getMessage('filename_bubble_tip') + '" name="mailAttUploadingSpan">'
+    buffer[_i++] = '<span id="' + id + '" class="' + classes + '" title="' + this.translate('filename_bubble_tip') + '" name="mailAttUploadingSpan">'
     buffer[_i++] = '    <span class="AttProgressSpan1">' + fileName + '</span>';
     buffer[_i++] = '    <span class="AttProgressSpan2">' + fileName + '</span>';
     if(!done)
@@ -876,25 +1023,20 @@ org_filesender_zimlink.prototype.getFirstAttachmentBubbleHtml = function(fileNam
     return buffer.join('');
 };
 
-// Update file upload progress
-org_filesender_zimlink.prototype.updateFileUploadProgress = function(done) {
-    var tdata = appCtxt.getCurrentView().org_filesender_zimlink.transfer_data;
-    var file = tdata.files[tdata.file_idx];
+// Set / get loader
+org_filesender_zimlink.prototype.loader = function(rel) {
+    var ctn = rel.parentNode;
     
-    var progress = tdata.file_offset / file.size;
+    var loader = null;
+    var divs = ctn.getElementsByTagName('div');
+    for(var i=0; i<divs.length; i++)
+        if(divs[i].className.match(/\bImgUpload\b/))
+            loader = divs[i];
     
-    var span = document.getElementById(file.idx);
-    
-    var progress_span = span.getElementsByTagName('span')[0];
-    var name_span = span.getElementsByTagName('span')[1];
-    var remove_span = span.getElementsByTagName('span')[2];
-    
-    if(remove_span) {
-        span.removeChild(remove_span);
-        
-        var loader = document.createElement('div');
+    if(!loader) {
+        loader = document.createElement('div');
         loader.className = 'ImgUpload';
-        span.insertBefore(loader, span.childNodes[0]);
+        ctn.insertBefore(loader, rel);
         
         var anim = {cnt: 0, tg: loader, ti: null};
         anim.ti = window.setInterval(function() {
@@ -910,15 +1052,49 @@ org_filesender_zimlink.prototype.updateFileUploadProgress = function(done) {
         }, 400);
     }
     
+    return loader;
+};
+
+// Update file upload progress
+org_filesender_zimlink.prototype.updateFileUploadProgress = function(done) {
+    var tdata = appCtxt.getCurrentView().org_filesender_zimlink.transfer_data;
+    var file = tdata.files[tdata.file_idx];
+    
+    var progress = tdata.file_offset / file.size;
+    
+    var span = document.getElementById(file.cid);
+    
+    var progress_span = span.getElementsByTagName('span')[0];
+    var name_span = span.getElementsByTagName('span')[1];
+    var remove_span = span.getElementsByTagName('span')[2];
+    
+    var detailed = document.getElementById(file.cid + '_detailed_progress');
+    var detailed_bar = document.getElementById(file.cid + '_progressbar');
+    
+    if(remove_span) span.removeChild(remove_span);
+    
+    var loader = this.loader(span.childNodes[0]);
+    var d_loader = this.loader(detailed.childNodes[0]);
     
     if(progress >= 1 || done) {
-        var loader = span.getElementsByTagName('div')[0];
         span.removeChild(loader);
         span.removeChild(progress_span);
         span.className += ' org_filesender_zimlink_bubble_done';
+        
+        detailed.removeChild(detailed_bar.parentNode);
+        detailed.removeChild(d_loader);
+        detailed.className += ' org_filesender_zimlink_bubble_done';
+        var name = detailed.getElementsByTagName('span')[0];
+        name.innerHTML = name.title;
+        
+        detailed.parentNode.scrollTop = detailed.offsetTop + 'px';
+        
         return;
     }
     
     progress_span.style.display = 'inline';
     progress_span.style.width = (name_span.offsetWidth * progress) + 'px';
+    
+    detailed_bar.innerHTML = (100 * progress).toFixed(1) + '%';
+    detailed_bar.style.width = (100 * progress).toFixed(1) + '%';
 };

@@ -8,6 +8,15 @@
     background-position: center left;
 }
 
+.ImgOrgFilesenderZimlinkIcon {
+    width: 16px;
+    height: 16px;
+    overflow: hidden;
+    background-image: url(filesender.png);
+    background-repeat: no-repeat;
+    background-position: top left;
+}
+
 .org_filesender_zimlink_bubble .AttProgressSpan1 {
     display: none;
     left: 21px;
@@ -19,4 +28,43 @@
 
 .org_filesender_zimlink_bubble_done {
     background-color: #cfc;
+}
+
+.org_filesender_zimlink_detailed_progress {
+    margin-top: 1em;
+    height: 320px;
+    overflow-y: scroll;
+}
+
+.org_filesender_zimlink_detailed_progress_file {
+    border: 1px solid silver;
+    margin: 0.1em;
+    padding: 0.2em;
+    line-height: 1.5em;
+}
+
+.org_filesender_zimlink_detailed_progress_file span {
+    display: block;
+    margin-right: 130px;
+}
+
+.org_filesender_zimlink_detailed_progress_file .ImgUpload {
+    float: left;
+}
+
+.org_filesender_zimlink_detailed_progressbar {
+    border: 1px solid silver;
+    float: right;
+    width: 120px;
+    padding: 0.1em;
+}
+
+.org_filesender_zimlink_detailed_progressbar span {
+    display: block;
+    background-color: silver;
+    width: 0;
+    padding: 0.1em;
+    line-height: 1em;
+    font-size: 0.9em;
+    overflow: visible;
 }
