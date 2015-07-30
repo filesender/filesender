@@ -1,1 +1,0 @@
-&copy; <?php echo date("Y"); ?> RENATER - Tous droits réservés.
