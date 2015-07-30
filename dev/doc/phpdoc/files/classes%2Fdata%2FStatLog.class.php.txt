@@ -97,12 +97,14 @@ class StatLog extends DBObject {
      */
     protected function __construct($id = null, $data = null) {
         if(!is_null($id)) {
+            // Load from database if id given
             $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE id = :id');
             $statement->execute(array(':id' => $id));
             $data = $statement->fetch();
             if(!$data) throw new StatLogNotFoundException('id = '.$id);
         }
 
+        // Fill properties from provided data
         if($data) $this->fillFromDBData($data);
     }
     
@@ -122,17 +124,21 @@ class StatLog extends DBObject {
      * @return StatLog auditlog
      */
     public static function create($event, DBObject $target) {
+        // Check if statlog is enabled
         $lt = Config::get('statlog_lifetime');
         if(is_null($lt) || (is_bool($lt) && !$lt)) return; // statlog disabled
         
+        // Check type
         if(!LogEventTypes::isValidValue($event))
             throw new StatLogUnknownEventException($event);
         
+        // Create entry
         $log = new self();
         $log->event = $event;
         $log->created = time();
         $log->target_type = get_class($target);
         
+        // Add metadata depending on target
         switch ($log->target_type){
             case File::getClassName():
                 $log->size = $target->size;
@@ -156,6 +162,7 @@ class StatLog extends DBObject {
                 break;
         }
         
+        // Add user aditionnal attributes if enabled
         if(Config::get('statlog_log_user_additional_attributes') && Auth::isAuthenticated()) {
             $additional_attributes = null;
             
@@ -185,13 +192,16 @@ class StatLog extends DBObject {
      * @return array of info
      */
     public static function getEventCount($event, $start = null, $end = null) {
+        // Check if statlog is enabled
         $lt = Config::get('statlog_lifetime');
         if(is_null($lt) || (is_bool($lt) && !$lt)) return null; // Disabled
         
+        // Build query depending on time range
         $query = 'SELECT COUNT(*) AS cnt, MIN(created) AS start, MAX(created) AS end FROM '.self::getDBTable().' WHERE event = :event';
         if(!is_null($start)) $query .= ' AND created >= "'.date('Y-m-d H:i:s', $start).'"';
         if(!is_null($end)) $query .= ' AND created <= "'.date('Y-m-d H:i:s', $end).'"';
         
+        // Run the search
         $statement = DBI::prepare($query);
         $statement->execute(array(':event' => $event));
         $data = $statement->fetch();
@@ -229,10 +239,12 @@ class StatLog extends DBObject {
      * Clean logs
      */
     public static function clean() {
-        Logger::info('Cleaning statlogs');
+        // Check if statlog is enabled
         $lt = Config::get('statlog_lifetime');
         if(!is_null($lt) && !is_bool($lt) && !is_numeric($lt))
             throw new ConfigBadParameterException('statlog_lifetime');
+        
+        Logger::info('Cleaning statlogs');
         
         if(is_null($lt) || (is_bool($lt) && !$lt)) {
             // statlog disabled, clean all in case something remains (parameter just changed)

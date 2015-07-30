@@ -79,15 +79,18 @@ class RestEndpointRecipient extends RestEndpoint {
      * @throws RestOwnershipRequiredException
      */
     public function get($id = null) {
+        // Need to be authenticated
         if(!Auth::isAuthenticated()) throw new RestAuthenticationRequiredException();
         
+        // Check parameters
         if(!$id) throw new RestMissingParameterException('recipient_id');
         if(!is_numeric($id)) throw new RestBadParameterException('recipient_id');
         
+        // Get current user and recipient to get info about
         $user = Auth::user();
-        
         $recipient = Recipient::fromId($id);
         
+        // Check ownership
         if(!$recipient->transfer->isOwner($user) && !Auth::isAdmin())
             throw new RestOwnershipRequiredException($user->id, 'recipient = '.$recipient->id);
         
@@ -108,24 +111,30 @@ class RestEndpointRecipient extends RestEndpoint {
      * @throws RestOwnershipRequiredException
      */
     public function delete($id = null) {
+        // Need to be authenticated
         if(!Auth::isAuthenticated()) throw new RestAuthenticationRequiredException();
         
+        // Check parameters
         if(!$id) throw new RestMissingParameterException('recipient_id');
         if(!is_numeric($id)) throw new RestBadParameterException('recipient_id');
         
+        // Get current user and recipient to delete
         $user = Auth::user();
         $recipient = Recipient::fromId($id);
         
+        // Check ownership
         if(!$recipient->transfer->isOwner($user) && !Auth::isAdmin())
             throw new RestOwnershipRequiredException($user->id, 'recipient = '.$recipient->id);
         
         if(count($recipient->transfer->recipients) > 1) {
+            // If transfer has several recipients remove the requested one
             $recipient->transfer->removeRecipient($recipient);
             
             if($recipient->transfer->status == 'available') // Notify deletion for transfers that are available
                 $recipient->transfer->sendToRecipient('recipient_deleted', $recipient);
             
-        } else { // Last/only recipient deletion => close transfer
+        } else {
+            // Last/only recipient deletion => close transfer
             $recipient->transfer->close();
         }
     }

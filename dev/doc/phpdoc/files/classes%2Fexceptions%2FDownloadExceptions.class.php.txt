@@ -34,35 +34,6 @@
 if (!defined('FILESENDER_BASE')) 
     die('Missing environment');
 
-
-/**
- * Missing token exception
- */
-class DownloadMissingTokenException extends DetailedException {
-    /**
-     * Constructor
-     */
-    public function __construct() {
-        parent::__construct('download_missing_token');
-    }
-}
-
-/**
- * Bad token format exception
- */
-class DownloadBadTokenFormatException extends DetailedException {
-    /**
-     * Constructor
-     * 
-     * @param string $token
-     */
-    public function __construct($token) {
-        parent::__construct(
-            'download_bad_token_format', 
-            'token : '.$token);
-    }
-}
-
 /**
  * Missing files ids exception
  */

@@ -191,7 +191,7 @@ class GUI {
      * Force HTTPS - redirects HTTP to HTTPS
      */
     public static function forceHTTPS() {
-        if(Config::get('force_ssl') && !(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on')) {
+        if(Config::get('force_ssl') && !Utilities::httpsInUse()) {
             if(session_id() != '') {
                 // Destroy current session to prevent stealing session, because someone may have sniffed it during our HTTP (not HTTPS) request.
                 unset($_SESSION);
@@ -211,7 +211,8 @@ class GUI {
             }
             
             // ... Redirect the user to HTTPS.
-            $redirect = sprintf('Location: https://%s%s', $_SERVER['HTTP_HOST'], $_SERVER['REQUEST_URI']);
+            $host = array_key_exists('HTTP_HOST', $_SERVER) ? $_SERVER['HTTP_HOST'] : $_SERVER['SERVER_NAME'];
+            $redirect = sprintf('Location: https://%s%s', $host, $_SERVER['REQUEST_URI']);
             header($redirect);
             exit;
         }
@@ -227,12 +228,16 @@ class GUI {
     public function currentPage($page = null) {
         if(!is_null($page)) self::$current_page = $page;
         
+        // Already cached ?
         if(!self::$current_page) {
+            // Get from request
             $page = null;
             if(array_key_exists('s', $_REQUEST)) $page = $_REQUEST['s'];
             
+            // Maintenance override
             if(Config::get('maintenance')) $page = 'maintenance';
             
+            // Landing page if no value found
             if(!$page) {
                 if(Auth::isAuthenticated() && !Auth::isGuest()) {
                     $landing_page = Config::get('landing_page');
@@ -242,6 +247,7 @@ class GUI {
                 }
             }
             
+            // Fail if unknown
             if(!GUIPages::isValidValue($page))
                 throw new GUIUnknownPageException($page);
             
@@ -257,23 +263,27 @@ class GUI {
      * @return array
      */
     public static function allowedPages() {
+        // Already cached ?
         if(is_null(self::$allowed_pages)) {
             self::$allowed_pages = array();
             
+            // Authenticated users have access to lots ...
             if(Auth::isAuthenticated()) {
                 if(Auth::isGuest()) {
                     self::$allowed_pages = array('upload');
                 } else {
                     self::$allowed_pages = array('upload', 'transfers', 'guests', 'download');
                     
+                    // ... and admin to even more !
                     if(Auth::isAdmin()) self::$allowed_pages[] = 'admin';
                     
+                    // Is user page enabled ?
                     if(Config::get('user_page')) self::$allowed_pages[] = 'user';
                 }
             }
             
             // Always accessible pages
-            foreach(array('home', 'download', 'logout', 'exception') as $p)
+            foreach(array('home', 'download', 'translate_email', 'logout', 'exception') as $p)
                 self::$allowed_pages[] = $p;
             
                 if(Config::get('maintenance')) self::$allowed_pages = array('maintenance');
@@ -292,6 +302,7 @@ class GUI {
     public static function isUserAllowedToAccessPage($page = null) {
         if(is_null($page)) $page = self::currentPage();
         
+        // Fail if unknown
         if(!GUIPages::isValidValue($page))
             throw new GUIUnknownPageException($page);
         

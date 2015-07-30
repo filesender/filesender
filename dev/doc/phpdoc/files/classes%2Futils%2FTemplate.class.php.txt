@@ -45,14 +45,17 @@ class Template {
      * @return string the path
      */
     private static function resolve($id) {
+        // Look in possible locations
         foreach(array('config/templates', 'templates') as $location) {
             $location = FILESENDER_BASE.'/'.$location;
             if(!is_dir($location)) continue;
             
+            // Return if found
             if(file_exists($location.'/'.$id.'.php'))
                 return $location.'/'.$id.'.php';
         }
         
+        // Fail if not found
         throw new TemplateNotFoundException($id);
     }
     
@@ -65,19 +68,23 @@ class Template {
      * @return string parsed template content
      */
     public static function process($id, $vars = array()) {
+        // Are we asked to not output context related html comments ?
         $addctx = true;
         if(substr($id, 0, 1) == '!') {
             $addctx = false;
             $id = substr($id, 1);
         }
         
+        // Resolve template file path
         $path = self::resolve($id);
         
+        // Lambda renderer to isolate context
         $renderer = function($path, $vars) {
             foreach($vars as $k => $v) if((substr($k, 0, 1) != '_') && ($k != 'path')) $$k = $v;
             include $path;
         };
         
+        // Render 
         $exception = null;
         ob_start();
         try {
@@ -103,12 +110,14 @@ class Template {
         }, $content);
         
         // Path syntax
-        $content = preg_replace_callback('`\{(path):([^}]+)\}`', function($m) {
+        $content = preg_replace_callback('`\{(path):([^}]*)\}`', function($m) {
             return GUI::path($m[2]);
         }, $content);
         
+        // Add context as a html comment if required
         if($addctx) $content = "\n".'<!-- template:'.$id.' start -->'."\n".$content."\n".'<!-- template:'.$id.' end -->'."\n";
         
+        // If rendering threw rethrow
         if($exception) throw $exception;
         
         return $content;
@@ -122,8 +131,20 @@ class Template {
      * @return string
      * 
      */
+    public static function sanitize($data) {
+        return str_replace(array('{', '}'), array('&#123;', '&#125;'), $data);
+    }
+    
+    /**
+     * Sanitize data to avoid tag replacement
+     * 
+     * @param mixed data
+     * 
+     * @return string
+     * 
+     */
     public static function sanitizeOutput($data) {
-        return str_replace(array('{', '}'), array('&#123;', '&#125;'), Utilities::sanitizeOutput($data));
+        return self::sanitize(Utilities::sanitizeOutput($data));
     }
     
     /**

@@ -45,6 +45,11 @@ class Auth {
     private static $user = null;
     
     /**
+     * Current user allowed state
+     */
+    private static $allowed = true;
+    
+    /**
      * Attributes cache.
      */
     private static $attributes = null;
@@ -55,29 +60,9 @@ class Auth {
     private static $isAdmin = null;
     
     /**
-     * Is the user given by an authenticated remote service ?
+     * Auth provider if any auth found
      */
-    private static $isRemoteApplication = false;
-    
-    /**
-     * Is the user authenticated in a remote fashion ?
-     */
-    private static $isRemoteUser = false;
-    
-    /**
-     * Is the user authenticated through a service provider ?
-     */
-    private static $isSP = false;
-    
-    /**
-     * Is the user authenticated through a local service ?
-     */
-    private static $isLocal = false;
-    
-    /**
-     * Is the user authenticated as guest ?
-     */
-    private static $isGuest = false;
+    private static $type = null;
     
     /**
      * Return current user if it exists.
@@ -86,45 +71,69 @@ class Auth {
      */
     public static function user() {
         if(is_null(self::$user)) { // Not already cached
+            self::$user = false;
+            
             // Authentication logic
             
             if(AuthGuest::isAuthenticated()) { // Guest
                 self::$attributes = AuthGuest::attributes();
-                self::$isGuest = true;
+                self::$type = 'guest';
                 
-            }else if(AuthLocal::isAuthenticated()) { // SP
+            }else if(AuthLocal::isAuthenticated()) { // Local (script)
                 self::$attributes = AuthLocal::attributes();
-                self::$isLocal = true;
+                self::$type = 'local';
                 
-            }else if(Config::get('auth_remote_application_enabled') && AuthRemoteApplication::isAuthenticated()) { // Remote application
-                self::$attributes = AuthRemoteApplication::attributes();
-                if(AuthRemoteApplication::isAdmin()) self::$isAdmin = true;
-                self::$isRemoteApplication = true;
-                
-            }else if(Config::get('auth_remote_user_enabled') && AuthRemoteUser::isAuthenticated()) { // Remote user
-                self::$attributes = AuthRemoteUser::attributes();
-                self::$isRemoteUser = true;
+            }else if((Config::get('auth_remote_application_enabled') || Config::get('auth_remote_user_enabled')) && AuthRemote::isAuthenticated()) { // Remote application/user
+                if(
+                    (AuthRemote::application() && Config::get('auth_remote_application_enabled')) ||
+                    (!AuthRemote::application() && Config::get('auth_remote_user_enabled'))
+                ) {
+                    self::$attributes = AuthRemote::attributes();
+                    if(AuthRemote::application() && AuthRemote::isAdmin()) self::$isAdmin = true;
+                    self::$type = 'remote';
+                }
                 
             }else if(AuthSP::isAuthenticated()) { // SP
                 self::$attributes = AuthSP::attributes();
-                self::$isSP = true;
+                self::$type = 'sp';
             }
             
-            if(!self::$attributes || !array_key_exists('uid', self::$attributes)) return null;
-
-            self::$user = User::fromAttributes(self::$attributes);
-            
-            if(self::isSP() && Config::get('auth_sp_save_user_additional_attributes') && array_key_exists('additional', self::$attributes)) {
-                if((array)self::$user->additional_attributes != self::$attributes['additional']) {
-                    self::$user->additional_attributes = self::$attributes['additional'];
+            if(self::$attributes && array_key_exists('uid', self::$attributes)) {
+                $user_filter = Config::get('auth_user_filter');
+                if($user_filter) {
+                    self::$allowed = false;
+                    
+                    if(is_string($user_filter)) {
+                        if(preg_match('`^([^:]+):(.+)$`', $user_filter, $p))
+                            self::$allowed = array_key_exists($p[1], self::$attributes) && preg_match('`'.$p[2].'`', self::$attributes[$p[1]]);
+                        
+                    } else {
+                        self::$allowed = !(bool)$user_filter;
+                    }
+                    
+                    if(!self::$allowed) {
+                        self::$type = null;
+                        return;
+                    }
+                }
+                
+                // Set user if got uid attribute
+                self::$user = User::fromAttributes(self::$attributes);
+                
+                // Save user additionnal attributes if enabled
+                if(self::isSP() && Config::get('auth_sp_save_user_additional_attributes') && array_key_exists('additional', self::$attributes)) {
+                    if((array)self::$user->additional_attributes != self::$attributes['additional']) {
+                        self::$user->additional_attributes = self::$attributes['additional'];
+                        self::$user->save();
+                    }
+                }
+                
+                // Save user quota for guest uploads
+                $user_quota = Config::get('user_quota');
+                if($user_quota && (self::$user->quota != $user_quota)) {
+                    self::$user->quota = $user_quota;
                     self::$user->save();
                 }
-            }
-            
-            $user_quota = Config::get('user_quota');
-            if($user_quota && (self::$user->quota != $user_quota)) {
-                self::$user->quota = $user_quota;
-                self::$user->save();
             }
         }
         
@@ -137,6 +146,8 @@ class Auth {
      * @retrun bool
      */
     public static function isAuthenticated() {
+        if(!self::$allowed) throw new AuthUserNotAllowedException();
+        
         return (bool)self::user();
     }
     
@@ -166,7 +177,16 @@ class Auth {
             }
         }
         
-        return self::$isAdmin && !self::$isGuest;
+        return self::$isAdmin && !self::isGuest();
+    }
+    
+    /**
+     * Get auth type
+     * 
+     * @return mixed
+     */
+    public static function type() {
+        return self::$type;
     }
     
     /**
@@ -175,7 +195,7 @@ class Auth {
      * @return bool
      */
     public static function isRemoteApplication() {
-        return self::$isRemoteApplication;
+        return self::isRemote() && AuthRemote::application();
     }
     
     /**
@@ -184,7 +204,7 @@ class Auth {
      * @return bool
      */
     public static function isRemoteUser() {
-        return self::$isRemoteUser;
+        return self::isRemote() && !AuthRemote::application();
     }
     
     /**
@@ -193,7 +213,7 @@ class Auth {
      * @return bool
      */
     public static function isRemote() {
-        return self::isRemoteApplication() || self::isRemoteUser();
+        return self::$type == 'remote';
     }
     
     /**
@@ -202,7 +222,7 @@ class Auth {
      * @return bool
      */
     public static function isSP() {
-        return self::$isSP;
+        return self::$type == 'sp';
     }
     
     /**
@@ -211,7 +231,7 @@ class Auth {
      * @return bool
      */
     public static function isLocal() {
-        return self::$isLocal;
+        return self::$type == 'local';
     }
     
     /**
@@ -220,7 +240,7 @@ class Auth {
      * @return bool
      */
     public static function isGuest() {
-        return self::$isGuest;
+        return self::$type == 'guest';
     }
 }
 

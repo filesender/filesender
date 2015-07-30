@@ -289,7 +289,7 @@ Upgrader::register('post', function() use($uid) {
             }
             
             fclose($fh);
-        } else throw new Exception('Could not write to '.$path.'lang.php');
+        } else throw new CoreCannotWriteFileException($path.'lang.php');
         
         foreach($create as $file => $strings) {
             ksort($strings);
@@ -297,7 +297,7 @@ Upgrader::register('post', function() use($uid) {
             if($fh = fopen($path.$file, 'w')) {
                 fwrite($fh, implode("\n", $strings));
                 fclose($fh);
-            } else throw new Exception('Could not write to '.$path.$file);
+            } else throw new CoreCannotWriteFileException($path.$file);
         }
     }
 });
@@ -321,6 +321,6 @@ Upgrader::register('post', function() use($uid) {
         fwrite($fh, $config);
         fclose($fh);
         
-    } else throw new Exception('Couldn\'t save renamed config');
+    } else throw new CoreCannotWriteFileException($config_file);
 });
 

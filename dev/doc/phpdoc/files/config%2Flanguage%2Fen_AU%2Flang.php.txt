@@ -1,0 +1,21 @@
+<?php
+
+$lang['home'] = 'Home';
+
+$lang['change_language'] = 'Select language';
+
+$lang['drag_and_drop_hint'] = 'You can drag and drop your file here to add it automatically';
+$lang['clear_all_hint'] = 'When button is active, click to clear all selected files';
+$lang['select_files_hint'] = 'Click here to select your file';
+$lang['from_hint'] = 'Select the sender address you want to use';
+$lang['subject_hint'] = 'You can add a subject here to customize your mail';
+$lang['message_hint'] = 'You can add a message here to customize your mail';
+$lang['get_a_link_hint'] = 'Click here to get a direct link instead of sending an email to recipients';
+$lang['rcpt_lang_hint'] = 'Click to select the lang of your recipients';
+$lang['advanced_settings_hint'] = 'Click to see/hide advanced settings';
+$lang['start_hint'] = 'When button is active, cick to start your transfer';
+$lang['restart_hint'] = 'Click to restart your transfer';
+$lang['pause_hint'] = 'Click to pause your transfer';
+$lang['resume_hint'] = 'Click to restart your transfer';
+$lang['stop_hint'] = 'Click to stop your transfer';
+

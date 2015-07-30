@@ -69,23 +69,27 @@ class AuthSP {
     /**
      * Get the logon URL from delegated class.
      * 
+     * @param $target
+     * 
      * @retrun string
      */
-    public static function logonURL() {
+    public static function logonURL($target = null) {
         $class = self::loadDelegationClass();
         
-        return call_user_func($class.'::logonURL');
+        return call_user_func($class.'::logonURL', $target);
     }
     
     /**
      * Get the logoff URL from delegated class.
      * 
+     * @param $target
+     * 
      * @retrun string
      */
-    public static function logoffURL() {
+    public static function logoffURL($target = null) {
         $class = self::loadDelegationClass();
         
-        return call_user_func($class.'::logoffURL');
+        return call_user_func($class.'::logoffURL', $target);
     }
     
     /**

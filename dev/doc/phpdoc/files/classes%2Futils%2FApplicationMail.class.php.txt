@@ -45,10 +45,13 @@ class ApplicationMail extends Mail {
     public function __construct($content = 'No subject') {
         $use_html = Config::get('email_use_html');
         
+        // Cast content to string if translation object
         $subject = ($content instanceof Translation) ? (string)$content->subject : $content;
         
+        // Trigger basic mail build
         parent::__construct(null, $subject, $use_html);
         
+        // Write content if a translation object was given
         if($content instanceof Translation) {
             $this->writePlain($content->plain);
             
@@ -65,7 +68,10 @@ class ApplicationMail extends Mail {
      * @param mixed ... additionnal translation variables
      */
     public static function quickSend($translation_id, $to /*, ... */) {
+        // Get additionnal arguments
         $vars = array_slice(func_get_args(), 2);
+        
+        // Manage recipient if object given, get language if possible
         $lang = null;
         if(is_object($to)) {
             array_unshift($vars, $to);
@@ -76,9 +82,11 @@ class ApplicationMail extends Mail {
             if($to instanceof Recipient) $lang = $to->transfer->lang;
         }
         
+        // Translate email and replace variables
         $tr = Lang::translateEmail($translation_id, $lang);
         if($vars) $tr = call_user_func_array(array($tr, 'replace'), $vars);
         
+        // Create email and send it right away
         $mail = new self($tr);
         $mail->to($to);
         $mail->send();
@@ -108,8 +116,10 @@ class ApplicationMail extends Mail {
      * @return bool success
      */
     public function send() {
+        // Add registered recipient
         parent::to($this->to['email'], $this->to['name']);
         
+        // Get sender from recipient data
         $sender = '';
         if($this->to['object']) {
             switch(get_class($this->to['object'])) {
@@ -119,8 +129,10 @@ class ApplicationMail extends Mail {
         }
         if(!$sender) $sender = $this->to['email']; // Own action
         
+        // Context identifier
         $context = $this->to['object'] ? strtolower(get_class($this->to['object'])).'-'.$this->to['object']->id : 'no_context';
         
+        // Build from field depending on config
         $from = Config::get('email_from');
         if($from) {
             if($from != 'sender' && !filter_var($from, FILTER_VALIDATE_EMAIL))
@@ -128,6 +140,7 @@ class ApplicationMail extends Mail {
             
             if($from == 'sender') $from = $sender;
             
+            // Got one, validate and set header
             if($from) {
                 if(!filter_var($from, FILTER_VALIDATE_EMAIL))
                     throw new BadEmailException($from);
@@ -138,6 +151,7 @@ class ApplicationMail extends Mail {
             }
         }
         
+        // Build reply-to field depending on config
         $reply_to = Config::get('email_reply_to');
         if($reply_to) {
             if($reply_to != 'sender' && !filter_var($reply_to, FILTER_VALIDATE_EMAIL))
@@ -145,6 +159,7 @@ class ApplicationMail extends Mail {
             
             if($reply_to == 'sender') $reply_to = $sender;
             
+            // Got one, validate and set header
             if($reply_to) {
                 if(!filter_var($reply_to, FILTER_VALIDATE_EMAIL))
                     throw new BadEmailException($reply_to);
@@ -155,6 +170,7 @@ class ApplicationMail extends Mail {
             }
         }
         
+        // Build return path field depending on config
         $return_path = Config::get('email_return_path');
         if($return_path) {
             if($return_path != 'sender' && !filter_var(str_replace('<verp>', 'verp', $return_path), FILTER_VALIDATE_EMAIL))
@@ -162,7 +178,9 @@ class ApplicationMail extends Mail {
             
             if($return_path == 'sender') $return_path = $sender;
             
+            // Got one, validate and set property to be passed to PHP's mail internal
             if($return_path) {
+                // If verp pattern insert context so that return path alone tells which object the bounce is related to
                 if(preg_match('`^(.+)<verp>(.+)$`i', $return_path, $match))
                     $return_path = $match[1].$context.$match[2];
                 
@@ -173,11 +191,13 @@ class ApplicationMail extends Mail {
             }
         }
         
+        // Set context in headers so that it is returned along with bounces
         if($context) {
             $this->msg_id = '<'.$context.'-'.uniqid().'@filesender>';
             $this->addHeader('X-Filesender-Context', $context);
         }
         
+        // Send email
         return parent::send();
     }
 }

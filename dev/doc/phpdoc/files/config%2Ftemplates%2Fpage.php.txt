@@ -1,0 +1,19 @@
+<div id="page" class="<?php echo GUI::currentPage() ?>_page">
+    <noscript>
+    <div class="error message">
+        {tr:noscript}
+    </div>
+    </noscript>
+
+    <?php
+    //Template::display('home_page');
+    if (!in_array(GUI::currentPage(), array('home'))) {
+        Template::display(GUI::currentPage() . '_page', $vars);
+    } else {
+        Template::display('home_page');
+    }
+    ?>
+
+
+</div>
+

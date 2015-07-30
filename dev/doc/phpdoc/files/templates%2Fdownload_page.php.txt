@@ -4,11 +4,11 @@
     <?php
     
     if(!array_key_exists('token', $_REQUEST))
-        throw new DownloadMissingTokenException();
+        throw new TokenIsMissingException();
     
     $token = $_REQUEST['token'];
     if(!Utilities::isValidUID($token))
-        throw new DownloadBadTokenFormatException($token);
+        throw new TokenHasBadFormatException($token);
     
     $recipient = Recipient::fromToken($token); // Throws
     $transfer = $recipient->transfer;

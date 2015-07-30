@@ -11,6 +11,9 @@ foreach($report->logs as $entry) {
     if($entry->author_type == 'Guest')
         $lid .= 'guest_';
     
+    if($entry->author_type == 'Guest' && $entry->author->is($entry->target->owner))
+    $lid .= 'owner_';
+    
     $lid .= 'event_'.$entry->event;
     
     $action = Lang::tr($lid)->r(
