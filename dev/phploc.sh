@@ -1,1 +1,1 @@
-phploc . --exclude="lib" --exclude="doc" --log-csv="dev/doc/phploc/phploc.csv" > dev/doc/phploc/phploc.txt
+phploc . --exclude="lib" --exclude="doc" --exclude="config/config.php" --exclude="config/language" --exclude="config/template" --exclude="www/skin" --log-csv="dev/doc/phploc/phploc.csv" > dev/doc/phploc/phploc.txt
