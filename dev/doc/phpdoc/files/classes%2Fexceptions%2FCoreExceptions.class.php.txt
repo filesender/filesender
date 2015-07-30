@@ -53,22 +53,59 @@ class CoreFileNotFoundException extends DetailedException
     }
 }
 
-
 /**
- * Class not found exception
+ * File not readable
  */
-class CoreClassNotFoundException extends DetailedException
+class CoreCannotReadFileException extends DetailedException
 {
     /**
      * Constructor
      * 
-     * @param string $class the class name
+     * @param string $file the file path
      */
-    public function __construct($class)
+    public function __construct($file)
     {
         parent::__construct(
-            'core_class_not_found', // Message to give to the user
-            'class : '.$class // Details to log
+            'core_cannot_read_file', // Message to give to the user
+            'file : '.$file // Details to log
+        );
+    }
+}
+
+/**
+ * File not writable
+ */
+class CoreCannotWriteFileException extends DetailedException
+{
+    /**
+     * Constructor
+     * 
+     * @param string $file the file path
+     */
+    public function __construct($file)
+    {
+        parent::__construct(
+            'core_cannot_write_file', // Message to give to the user
+            'file : '.$file // Details to log
+        );
+    }
+}
+
+/**
+ * File not deletable
+ */
+class CoreCannotDeleteFileException extends DetailedException
+{
+    /**
+     * Constructor
+     * 
+     * @param string $file the file path
+     */
+    public function __construct($file)
+    {
+        parent::__construct(
+            'core_cannot_delete_file', // Message to give to the user
+            'file : '.$file // Details to log
         );
     }
 }

@@ -1,0 +1,23 @@
+<!--<h2 id="transfers" class="row">{tr:transfers_page}</h2>-->
+<section class="box row">
+    <?php if (Config::get('auditlog_lifetime') > 0) { ?><h1>{tr:available_transfers}</h1><?php } ?>
+    <?php
+    Template::display('transfers_table', array(
+        'status' => 'available',
+        'mode' => 'user',
+        'transfers' => Transfer::fromUser(Auth::user())
+    ))
+    ?>
+</section>
+<section class="box row">
+    <?php if (Config::get('auditlog_lifetime') > 0) { ?>
+        <h1>{tr:closed_transfers}</h1>
+        <?php
+        Template::display('transfers_table', array(
+            'status' => 'closed',
+            'mode' => 'user',
+            'transfers' => Transfer::fromUser(Auth::user(), true)
+        ))
+        ?>
+    <?php } ?>
+</section>

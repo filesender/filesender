@@ -1,0 +1,27 @@
+<?php
+$pagemenuitem = function($page) {
+    if (!GUI::isUserAllowedToAccessPage($page))
+        return;
+    $class = ($page == GUI::currentPage()) ? 'current' : '';
+    //echo '<li class="small-12 medium-4 columns"><a href="?s=' . $page . '#' . $page . '"><span></span>' . Lang::tr($page . '_page') . '</a></li>';
+    echo '<li class="small-12 medium-4 columns"><a href="?s=' . $page . '" data-options="disable_for_touch:true" class="radius tip-top"><span></span>' . Lang::tr($page . '_page') . '</a></li>';
+};
+?>
+<?php if (!Auth::isAuthenticated()) { 
+    echo '<section class="disconnected">';
+}else {
+    echo '<section>';
+} ?>
+    <ul class="row">
+        <?php
+        if (!Auth::isGuest()) {
+            $pagemenuitem('upload');
+
+            $pagemenuitem('guests');
+
+            $pagemenuitem('transfers');
+        }
+        ?>
+    </ul>
+</section>
+

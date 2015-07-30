@@ -89,42 +89,58 @@ class RestEndpointTransfer extends RestEndpoint {
      * @throws RestOwnershipRequiredException
      */
     public function get($id = null, $property = null, $property_id = null) {
+        // Special case when checking if enable_recipient_email_download_complete option is enabled for a specific transfer 
         if($property == 'options' && in_array($property_id, array('enable_recipient_email_download_complete'))) {
+            
+            // Check that we have a valid token in the url
             if(!array_key_exists('token', $_GET)) throw new RestBadParameterException('token');
             $token = $_GET['token'];
             if(!Utilities::isValidUID($token)) throw new RestBadParameterException('token');
             
+            // Check that we have a valid transfer id
             if(!is_numeric($id)) throw new RestBadParameterException('transfer_id');
             
+            // Get transfer and recipient from above data
             $transfer = Transfer::fromId($id);
             $recipient = Recipient::fromToken($token);
             
+            // Check relationship between the two
             if(!$recipient->transfer->is($transfer)) throw new RestAuthenticationRequiredException();
             
             return in_array($property_id, $transfer->options);
         }
         
+        // Need to be authenticated
         if(!Auth::isAuthenticated()) throw new RestAuthenticationRequiredException();
         
+        // Get current user
         $user = Auth::user();
         
         if(is_numeric($id)) {
+            // Getting data about a specific transfer
             $transfer = Transfer::fromId($id);
             
+            // Check ownership
             if(!$transfer->isOwner($user) && !Auth::isAdmin())
                 throw new RestOwnershipRequiredException($user->id, 'transfer = '.$transfer->id);
             
+            // Only want transfer options
             if($property == 'options')
                 return $transfer->options;
             
+            // Want auditlog data ...
             if($property == 'auditlog') {
                 if($property_id == 'mail') {
+                    // ... to be sent by email
                     $report = new Report($transfer);
                     $report->sendTo(Auth::user());
                     return true;
                 }
                 
+                // ... to be returned, aggregate it
                 return array_values(array_map(function($log) {
+                    
+                    // Build action author data
                     $author_data = array(
                         'type' => $log->author_type,
                         'id' => $log->author_id,
@@ -133,6 +149,7 @@ class RestEndpointTransfer extends RestEndpoint {
                     if($log->author_type == 'Recipient')
                         $author_data['email'] = $log->author->email;
                     
+                    // Build action target data
                     $target = $log->target;
                     $target_data = array(
                         'type' => $log->target_type,
@@ -140,8 +157,9 @@ class RestEndpointTransfer extends RestEndpoint {
                     );
                     $time_taken = null;
                     
+                    // Add additionnal data depending on target type
                     switch($log->target_type) {
-                        case 'Transfer':
+                        case 'Transfer': // Actions on transfer gets time taken added (like time between start and end of upload)
                             if($log->event == LogEventTypes::TRANSFER_AVAILABLE)
                                 $time_taken = $target->made_available_time;
                                 
@@ -149,7 +167,7 @@ class RestEndpointTransfer extends RestEndpoint {
                                 $time_taken = $target->upload_time;
                             break;
                         
-                        case 'File':
+                        case 'File': // Actions on file gets file name, file size and upload time added
                             $target_data['name'] = $target->name;
                             $target_data['size'] = $target->size;
                             
@@ -157,7 +175,7 @@ class RestEndpointTransfer extends RestEndpoint {
                                 $time_taken = $target->upload_time;
                             break;
                         
-                        case 'Recipient':
+                        case 'Recipient': // Actions on recipient gets recipient email added
                             $target_data['email'] = $target->email;
                             break;
                     }
@@ -175,12 +193,17 @@ class RestEndpointTransfer extends RestEndpoint {
                 }, $transfer->auditlogs));
             }
             
+            // No specific info to get, return the whole transfer
             return self::cast($transfer);
         }
         
+        // All transfers request
+        
+        // Check parameters
         if(!in_array($id, array('', '@me', '@all'))) throw new RestBadParameterException('transfer_id');
         
         if($id == '@all') {
+            // Need to be admin to get info about all transfers from all users
             if(!Auth::isAdmin()) throw new RestAdminRequiredException();
             
             $transfers = Transfer::all(Transfer::AVAILABLE);
@@ -212,53 +235,66 @@ class RestEndpointTransfer extends RestEndpoint {
      * @throws RestOwnershipRequiredException
      */
     public function post($id = null, $add = null) {
+        // Need to be authenticated
         if(!Auth::isAuthenticated()) throw new RestAuthenticationRequiredException();
         
         $user = Auth::user();
         
+        // Check parameters
         if($id) {
             if(!is_numeric($id)) throw new RestBadParameterException('transfer_id');
             if($add != 'recipient') throw new RestBadParameterException('add');
         }
         
         if(is_numeric($id)) {
+            // Add data to a specific transfer
             $transfer = Transfer::fromId($id);
             
+            // Check ownership
             if(!$transfer->isOwner($user) && !Auth::isAdmin())
                 throw new RestOwnershipRequiredException($user->id, 'transfer = '.$transfer->id);
             
+            // Cannot update a closed transfer
             if($transfer->status == TransferStatuses::CLOSED)
                 throw new RestException('cannot_alter_closed_transfer' ,403);
             
+            // Raw data
             $data = $this->request->input;
             
-            // Add recipient
             if($data->recipient) {
+                // Add recipient
                 $recipient = $transfer->addRecipient($data->recipient);
                 
                 // Send email if transfer is live already
                 if($transfer->status == TransferStatuses::AVAILABLE)
-                    ApplicationMail::quickSend('transfer_available', $recipient, $transfer);
+                    TranslatableEmail::quickSend('transfer_available', $recipient, $transfer);
                 
                 return array(
                     'path' => '/recipient/'.$recipient->id,
                     'data' => RestEndpointRecipient::cast($recipient)
                 );
             }
+            
         }else{
-            // New transfer
+            // Create new transfer
+            
+            // Raw data
             $data = $this->request->input;
             
+            // Is it created by a guest ?
             $guest = null;
             if(Auth::isGuest()) $guest = AuthGuest::getGuest();
             
+            // Must have files ...
             if(!count($data->files))
                 throw new TransferNoFilesException();
             
+            // ... but not too much
             $maxfiles = Config::get('max_transfer_files');
             if($maxfiles && count($data->files) > $maxfiles)
                 throw new TransferTooManyFilesException(count($data->files), $maxfiles);
             
+            // Build options from provided data and defaults
             $options = array();
             foreach(Transfer::allOptions() as $name => $dfn)  {
                 $value = $dfn['default'];
@@ -269,6 +305,7 @@ class RestEndpointTransfer extends RestEndpoint {
                 if($value) $options[] = $name;
             }
             
+            // Get_a_link transfers have no recipients so mail related options make no sense, remove them if set
             if(in_array(TransferOptions::GET_A_LINK, $options)) {
                 $options = array_values(array_filter($options, function($o) {
                     return !in_array($o, array(
@@ -279,6 +316,7 @@ class RestEndpointTransfer extends RestEndpoint {
                 }));
             }
             
+            // No recipients, not get_a_link and no way to get a recipient from options ? Fail if so
             if(
                 !count($data->recipients) &&
                 !in_array(TransferOptions::GET_A_LINK, $options) &&
@@ -293,18 +331,22 @@ class RestEndpointTransfer extends RestEndpoint {
             )
                 throw new TransferNoRecipientsException();
             
+            // Check if not too much recipients
             $maxrecipients = Config::get('max_transfer_recipients');
             if($maxrecipients && count($data->recipients) > $maxrecipients)
                 throw new TransferTooManyRecipientsException(count($data->recipients), $maxrecipients);
             
+            // Compute total size ...
             $size = array_sum(array_map(function($f) {
                 return (int)$f->size;
             }, $data->files));
             
+            // ... check it against max size ...
             $maxsize = Config::get('max_transfer_size');
             if($maxsize && $size > $maxsize)
                 throw new TransferMaximumSizeExceededException($size, $maxsize);
             
+            // ... check if it exceeds host quota (if enabled) ...
             $host_quota = Config::get('host_quota');
             if($host_quota) {
                 $usage = Transfer::getUsage();
@@ -313,6 +355,7 @@ class RestEndpointTransfer extends RestEndpoint {
                     throw new TransferHostQuotaExceededException();
             }
             
+            // ... check if it exceeds user quota (if enabled)
             $user_quota = Config::get('user_quota');
             if($user_quota || ($user_quota === 0)) {
                 // If guest use saved owner quota
@@ -327,8 +370,11 @@ class RestEndpointTransfer extends RestEndpoint {
                     throw new TransferUserQuotaExceededException();
             }
             
-            $transfer = Transfer::create($data->expires, $guest ? $guest->email : $data->from);
+            // Every check went well, create the transfer
+            $expires = $data->expires ? $data->expires : Transfer::getDefaultExpire();
+            $transfer = Transfer::create($expires, $guest ? $guest->email : $data->from);
             
+            // Set additionnal data
             if($data->subject) $transfer->subject = $data->subject;
             if($data->message) $transfer->message = $data->message;
             if(Config::get('transfer_recipients_lang_selector_enabled') && $data->lang) $transfer->lang = $data->lang;
@@ -342,26 +388,29 @@ class RestEndpointTransfer extends RestEndpoint {
             
             $transfer->save(); // Mandatory to add recipients and files
             
-            $banExtensions = Config::get('ban_extension');
-            if(!is_null($banExtensions) && !is_array($banExtensions)) $banExtensions = array_map('trim', explode(',', $banExtensions));
+            // Get banned extensions
+            $banned_exts = Config::get('ban_extension');
+            if(is_string($banned_exts)) $banned_exts = array_map('trim', explode(',', $banned_exts));
             
+            // Add files after checking that they do not have a banned extension, fail otherwise
             $files_cids = array();
             foreach($data->files as $filedata) {
                 $ext = pathinfo($filedata->name, PATHINFO_EXTENSION);
-                if ($banExtensions !== null){
-                    if (!in_array($ext,$banExtensions) ){
-                        $file = $transfer->addFile($filedata->name, $filedata->size, $filedata->mime_type);
-                        $files_cids[$file->id] = $filedata->cid;
-                    }else{
-                        throw new FileExtensionNotAllowedException($ext);
-                    }
-                }
+                
+                if(!is_null($banned_exts) && in_array($ext, $banned_exts))
+                    throw new FileExtensionNotAllowedException($ext);
+                
+                $file = $transfer->addFile($filedata->name, $filedata->size, $filedata->mime_type);
+                $files_cids[$file->id] = $filedata->cid;
             }
             
+            // Add recipient(s) depending on options
             if($transfer->hasOption(TransferOptions::GET_A_LINK)) {
                 $transfer->addRecipient(''); // Anonymous recipient = without email
+                
             } else if($guest && $guest->hasOption(GuestOptions::CAN_ONLY_SEND_TO_ME)) {
                 $transfer->addRecipient($guest->user_email);
+                
             } else {
                 foreach($data->recipients as $email)
                     $transfer->addRecipient($email);
@@ -377,6 +426,7 @@ class RestEndpointTransfer extends RestEndpoint {
                 throw new StorageNotEnoughSpaceLeftException($transfer->size);
             }
             
+            // Run transfer creation validators if defined in config, delete newly created transfers if any fails
             $validators = Config::get('transfer_validators');
             if(is_array($validators)) foreach($validators as $validator) {
                 if(!is_callable($validator)) continue;
@@ -390,6 +440,7 @@ class RestEndpointTransfer extends RestEndpoint {
                 }
             }
             
+            // Tag the transfer as started, that is, ready for file upload
             $transfer->start();
             
             return array(
@@ -415,9 +466,11 @@ class RestEndpointTransfer extends RestEndpoint {
      * @throws RestOwnershipRequiredException
      */
     public function put($id = null) {
+        // Check parameters
         if(!$id) throw new RestMissingParameterException('transfer_id');
         if(!is_numeric($id)) throw new RestBadParameterException('transfer_id');
         
+        // Evaluate security type depending on config and auth
         $security = Config::get('chunk_upload_security');
         if(Auth::isAuthenticated()) {
             $security = 'auth';
@@ -425,6 +478,7 @@ class RestEndpointTransfer extends RestEndpoint {
             throw new RestAuthenticationRequiredException();
         }
         
+        // Check access rights depending on config
         if($security == 'key') {
             try {
                 if(!array_key_exists('key', $_GET)) throw new Exception();
@@ -438,21 +492,26 @@ class RestEndpointTransfer extends RestEndpoint {
                 $transfer->makeAvailable();
         }
         
+        // Get transfer to update and current user
         $transfer = Transfer::fromId($id);
-        
         $user = Auth::user();
         
+        // check ownership
         if(!$transfer->isOwner($user) && !Auth::isAdmin())
             throw new RestOwnershipRequiredException($user->id, 'transfer = '.$transfer->id);
         
+        // Raw update data
         $data = $this->request->input;
         
+        // Need to make the transfer available (sends email to recipients) ?
         if($data->complete)
             $transfer->makeAvailable();
         
+        // Need to close the transfer upon user request ?
         if($data->closed)
             $transfer->close(true);
         
+        // Need to remind the transfer's availability to its recipients ?
         if($data->remind)
             $transfer->remind();
         
@@ -473,9 +532,11 @@ class RestEndpointTransfer extends RestEndpoint {
      * @throws RestOwnershipRequiredException
      */
     public function delete($id = null) {
+        // Check parameters
         if(!$id) throw new RestMissingParameterException('transfer_id');
         if(!is_numeric($id)) throw new RestBadParameterException('transfer_id');
         
+        // Evaluate security type depending on config and auth
         $security = Config::get('chunk_upload_security');
         if(Auth::isAuthenticated()) {
             $security = 'auth';
@@ -485,6 +546,7 @@ class RestEndpointTransfer extends RestEndpoint {
         
         $transfer = Transfer::fromId($id);
         
+        // Check access rights depending on config
         if($security == 'key') {
             try {
                 if(!array_key_exists('key', $_GET)) throw new Exception();
@@ -501,6 +563,7 @@ class RestEndpointTransfer extends RestEndpoint {
                 throw new RestOwnershipRequiredException($user->id, 'transfer = '.$transfer->id);
         }
         
+        // Delete the transfer (not recoverable)
         $transfer->delete();
     }
 }

@@ -82,7 +82,7 @@ $config['db_table_prefix'] = 'new_';
 
 
 $config['auth_remote_application_enabled'] = true;
-$config['remote_applications'] = array(
+$config['auth_remote_applications'] = array(
     'foo' => array(
         'secret' => 'bar',
         'isAdmin' => false,
@@ -112,7 +112,7 @@ $config['chunk_upload_security'] = 'key'; // "key" or "auth"
 
 $config['cache_scripts_and_styles'] = false;
 
-$config['disclose'] = array('version', 'upload_chunk_size', 'default_transfer_days_valid', 'max_transfer_size', 'max_transfer_files');
+$config['disclose'] = array('version', 'default_transfer_days_valid', 'max_transfer_size', 'max_transfer_files');
 
 $config['config_overrides'] = array(
     'site_name_in_header' => 'bool',
@@ -157,7 +157,8 @@ $config['transfer_options'] = array(
         'default' => false
     ),
     'get_a_link' => array(
-        'available' => true
+        'available' => true,
+        'default' => true
     )
 );
 
@@ -194,7 +195,7 @@ $config['guest_options'] = array(
     )
 );
 
-$config['report_format'] = ReportFormats::INLINE;
+$config['report_format'] = ReportFormats::PDF;
 $config['auditlog_lifetime'] = 5;
 
 
@@ -228,4 +229,10 @@ $config['host_quota'] = 100 * 1024 * 1024 * 1024;
 //$config['show_storage_statistics_in_admin'] = false;
 
 //$config['landing_page'] = 'home';
+
+$config['relay_unknown_feedbacks'] = 'sender';
+
+$config['auth_user_filter'] = function() {
+    return !preg_match('`@renater\.fr$`', Auth::attributes()['uid']);
+};
 

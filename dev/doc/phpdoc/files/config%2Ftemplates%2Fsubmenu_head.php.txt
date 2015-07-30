@@ -1,0 +1,25 @@
+<?php
+$pagemenuitem = function($page) {
+    if (!GUI::isUserAllowedToAccessPage($page))
+        return;
+    $class = ($page == GUI::currentPage()) ? 'current' : '';
+    echo '<li class="small-4 columns" ><a href="?s=' . $page . '" class="radius ' . $class . '"  data-options="disable_for_touch:true"><span></span>' . Lang::tr($page . '_page') . '</a></li>';
+};
+?>
+<nav>
+        <?php
+        if (!Auth::isGuest()) {
+            echo '<ul class = "row">';
+            $pagemenuitem('upload');
+
+            $pagemenuitem('guests');
+
+            $pagemenuitem('transfers');
+            echo '</ul>';
+            
+        }else {
+            echo '{tr:site_title}';
+        }
+        ?>
+</nav>
+

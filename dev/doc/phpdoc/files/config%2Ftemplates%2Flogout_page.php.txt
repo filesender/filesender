@@ -1,0 +1,4 @@
+<main class="box">
+    {tr:logout}
+</main>
+

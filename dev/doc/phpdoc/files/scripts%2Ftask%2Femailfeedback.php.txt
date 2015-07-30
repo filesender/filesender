@@ -153,9 +153,6 @@ while($inputs) {
         if(!$target_id)
             throw new Exception('is missing target_id or anything allowing to discover it');
         
-        if(!$feedback_type)
-            throw new Exception('is missing feedback_type or anything allowing to discover it');
-        
         $details = implode("\n\n", $details);
         
         $target = null;
@@ -190,7 +187,50 @@ while($inputs) {
             )
                 $bounce->report();
             
-        } else throw new Exception('gives feedback about unknown event : '.$feedback_type);
+        } else { // Unknown feedback type
+            $relay_to = Config::get('relay_unknown_feedbacks'); // Do we need to relay it to somebody ?
+            
+            $args = array('target' => $target, 'target_type' => $target_type, 'target_id' => $target_id);
+            if($relay_to) {
+                // Get recipient(s)
+                switch($relay_to) {
+                    case 'sender':
+                        $mail = new ApplicationMail(Lang::translateEmail('recipient_feedback')->r($args));
+                        $mail->to($target->owner->email);
+                        break;
+                        
+                    case 'admin':
+                        $mail = new SystemMail(Lang::translateEmail('email_feedback')->r($args));
+                        break;
+                        
+                    case 'support':
+                        $support = Config::get('help_url');
+                        if(substr($support, 0, 7) == 'mailto:') {
+                            $support = substr($support, 7);
+                            if(!filter_var($support, FILTER_VALIDATE_EMAIL)) throw new BadEmailException($support);
+                            
+                            $mail = new ApplicationMail(Lang::translateEmail('email_feedback')->r($args));
+                            $mail->to($support);
+                        } else throw new ConfigBadParameterException('help_url');
+                        
+                    default:
+                        if(filter_var($relay_to, FILTER_VALIDATE_EMAIL)) {
+                            $mail = new ApplicationMail(Lang::translateEmail('email_feedback')->r($args));
+                            $mail->to($relay_to);
+                        } else throw new ConfigBadParameterException('relay_unknown_feedbacks');
+                }
+                
+                // Attach report
+                $attachment = new MailAttachment('feedback_'.$target_type.'_'.$target_id.'.eml');
+                $attachment->transfer_encoding = 'raw';
+                $attachment->disposition = 'inline';
+                $attachment->content = $message;
+                $mail->attach($attachment);
+                
+                // Send
+                $mail->send();
+            }
+        }
         
         if($input != '-') {
             if($remove_after_processing) {

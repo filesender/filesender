@@ -112,20 +112,4 @@ class ReportFormatNotAvailableException extends DetailedException {
     }
 }
 
-/**
- * Cannot write tmp file
- */
-class ReportCannotWriteFileException extends DetailedException {
-    /**
-     * Constructor
-     * 
-     * @param string $file
-     */
-    public function __construct($file) {
-        parent::__construct(
-            'report_cannot_write_file', // Message to give to the user
-            $file
-        );
-    }
-}
 
