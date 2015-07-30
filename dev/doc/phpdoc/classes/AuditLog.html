@@ -1,0 +1,1744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <meta charset="utf-8"/>
+    <title>API Documentation</title>
+    <meta name="author" content=""/>
+    <meta name="description" content=""/>
+
+    <link href="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+    <link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/prism.css" rel="stylesheet" media="all"/>
+    <link href="../css/template.css" rel="stylesheet" media="all"/>
+    
+    <!--[if lt IE 9]>
+    <script src="https://html5shim.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>
+    <![endif]-->
+    <script src="https://code.jquery.com/jquery-1.11.0.min.js" type="text/javascript"></script>
+    <script src="https://code.jquery.com/ui/1.10.4/jquery-ui.min.js" type="text/javascript"></script>
+    <script src="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+    <script src="../js/jquery.smooth-scroll.js"></script>
+    <script src="../js/prism.min.js"></script>
+    <!-- TODO: Add http://jscrollpane.kelvinluck.com/ to style the scrollbars for browsers not using webkit-->
+    <script type="text/javascript">
+    function loadExternalCodeSnippets() {
+        Array.prototype.slice.call(document.querySelectorAll('pre[data-src]')).forEach(function (pre) {
+            var src = pre.getAttribute('data-src');
+            var extension = (src.match(/\.(\w+)$/) || [, ''])[1];
+            var language = 'php';
+
+            var code = document.createElement('code');
+            code.className = 'language-' + language;
+
+            pre.textContent = '';
+
+            code.textContent = 'Loading…';
+
+            pre.appendChild(code);
+
+            var xhr = new XMLHttpRequest();
+
+            xhr.open('GET', src, true);
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4) {
+
+                    if (xhr.status < 400 && xhr.responseText) {
+                        code.textContent = xhr.responseText;
+
+                        Prism.highlightElement(code);
+                    }
+                    else if (xhr.status >= 400) {
+                        code.textContent = '✖ Error ' + xhr.status + ' while fetching file: ' + xhr.statusText;
+                    }
+                    else {
+                        code.textContent = '✖ Error: File does not exist or is empty';
+                    }
+                }
+            };
+
+            xhr.send(null);
+        });
+    }
+
+    $(document).ready(function(){
+        loadExternalCodeSnippets();
+    });
+    $('#source-view').on('shown', function () {
+        loadExternalCodeSnippets();
+    })
+</script>
+
+    <link rel="shortcut icon" href="../images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="../images/apple-touch-icon.png"/>
+    <link rel="apple-touch-icon" sizes="72x72" href="../images/apple-touch-icon-72x72.png"/>
+    <link rel="apple-touch-icon" sizes="114x114" href="../images/apple-touch-icon-114x114.png"/>
+</head>
+<body>
+
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <i class="icon-ellipsis-vertical"></i>
+            </a>
+            <a class="brand" href="../index.html">API Documentation</a>
+
+            <div class="nav-collapse">
+                <ul class="nav pull-right">
+                                        <li class="dropdown" id="charts-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Charts <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../graphs/class.html">
+                                    <i class="icon-list-alt"></i>&#160;Class hierarchy diagram
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown" id="reports-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Reports <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../reports/errors.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">398</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/markers.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">12</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/deprecated.html">
+                                                                                                            <i class="icon-list-alt"></i>&#160;Deprecated <span class="label label-info pull-right">0</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--<div class="go_to_top">-->
+    <!--<a href="#___" style="color: inherit">Back to top&#160;&#160;<i class="icon-upload icon-white"></i></a>-->
+    <!--</div>-->
+</div>
+
+<div id="___" class="container-fluid">
+        <section class="row-fluid">
+        <div class="span2 sidebar">
+                                <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-1644220728"></a>
+                                <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
+            </div>
+            <div id="namespace-1644220728" class="accordion-body collapse in">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/ApplicationMail.html">ApplicationMail</a></li>
+                                                    <li class="class"><a href="../classes/AuditLog.html">AuditLog</a></li>
+                                                    <li class="class"><a href="../classes/AuditLogNotEnabledException.html">AuditLogNotEnabledException</a></li>
+                                                    <li class="class"><a href="../classes/AuditLogNotFoundException.html">AuditLogNotFoundException</a></li>
+                                                    <li class="class"><a href="../classes/AuditLogUnknownEventException.html">AuditLogUnknownEventException</a></li>
+                                                    <li class="class"><a href="../classes/Auth.html">Auth</a></li>
+                                                    <li class="class"><a href="../classes/AuthAuthenticationNotFoundException.html">AuthAuthenticationNotFoundException</a></li>
+                                                    <li class="class"><a href="../classes/AuthGuest.html">AuthGuest</a></li>
+                                                    <li class="class"><a href="../classes/AuthLocal.html">AuthLocal</a></li>
+                                                    <li class="class"><a href="../classes/AuthRemote.html">AuthRemote</a></li>
+                                                    <li class="class"><a href="../classes/AuthRemoteSignatureCheckFailedException.html">AuthRemoteSignatureCheckFailedException</a></li>
+                                                    <li class="class"><a href="../classes/AuthRemoteTooLateException.html">AuthRemoteTooLateException</a></li>
+                                                    <li class="class"><a href="../classes/AuthRemoteUknownApplicationException.html">AuthRemoteUknownApplicationException</a></li>
+                                                    <li class="class"><a href="../classes/AuthRemoteUserRejectedException.html">AuthRemoteUserRejectedException</a></li>
+                                                    <li class="class"><a href="../classes/AuthSP.html">AuthSP</a></li>
+                                                    <li class="class"><a href="../classes/AuthSPAuthenticationNotFoundException.html">AuthSPAuthenticationNotFoundException</a></li>
+                                                    <li class="class"><a href="../classes/AuthSPBadAttributeException.html">AuthSPBadAttributeException</a></li>
+                                                    <li class="class"><a href="../classes/AuthSPFake.html">AuthSPFake</a></li>
+                                                    <li class="class"><a href="../classes/AuthSPMissingAttributeException.html">AuthSPMissingAttributeException</a></li>
+                                                    <li class="class"><a href="../classes/AuthSPMissingDelegationClassException.html">AuthSPMissingDelegationClassException</a></li>
+                                                    <li class="class"><a href="../classes/AuthSPSaml.html">AuthSPSaml</a></li>
+                                                    <li class="class"><a href="../classes/AuthSPShibboleth.html">AuthSPShibboleth</a></li>
+                                                    <li class="class"><a href="../classes/AuthUserNotAllowedException.html">AuthUserNotAllowedException</a></li>
+                                                    <li class="class"><a href="../classes/Autoloader.html">Autoloader</a></li>
+                                                    <li class="class"><a href="../classes/BadEmailException.html">BadEmailException</a></li>
+                                                    <li class="class"><a href="../classes/BadExpireException.html">BadExpireException</a></li>
+                                                    <li class="class"><a href="../classes/BadIPFormatException.html">BadIPFormatException</a></li>
+                                                    <li class="class"><a href="../classes/BadLangCodeException.html">BadLangCodeException</a></li>
+                                                    <li class="class"><a href="../classes/BadSizeFormatException.html">BadSizeFormatException</a></li>
+                                                    <li class="class"><a href="../classes/Config.html">Config</a></li>
+                                                    <li class="class"><a href="../classes/ConfigBadParameterException.html">ConfigBadParameterException</a></li>
+                                                    <li class="class"><a href="../classes/ConfigFileMissingException.html">ConfigFileMissingException</a></li>
+                                                    <li class="class"><a href="../classes/ConfigMissingParameterException.html">ConfigMissingParameterException</a></li>
+                                                    <li class="class"><a href="../classes/ConfigOverrideDisabledException.html">ConfigOverrideDisabledException</a></li>
+                                                    <li class="class"><a href="../classes/ConfigOverrideNotAllowedException.html">ConfigOverrideNotAllowedException</a></li>
+                                                    <li class="class"><a href="../classes/ConfigOverrideValidationFailedException.html">ConfigOverrideValidationFailedException</a></li>
+                                                    <li class="class"><a href="../classes/CoreCannotDeleteFileException.html">CoreCannotDeleteFileException</a></li>
+                                                    <li class="class"><a href="../classes/CoreCannotReadFileException.html">CoreCannotReadFileException</a></li>
+                                                    <li class="class"><a href="../classes/CoreCannotWriteFileException.html">CoreCannotWriteFileException</a></li>
+                                                    <li class="class"><a href="../classes/CoreFileNotFoundException.html">CoreFileNotFoundException</a></li>
+                                                    <li class="class"><a href="../classes/Database.html">Database</a></li>
+                                                    <li class="class"><a href="../classes/DatabaseMysql.html">DatabaseMysql</a></li>
+                                                    <li class="class"><a href="../classes/DatabasePgsql.html">DatabasePgsql</a></li>
+                                                    <li class="class"><a href="../classes/DBI.html">DBI</a></li>
+                                                    <li class="class"><a href="../classes/DBIConnexionException.html">DBIConnexionException</a></li>
+                                                    <li class="class"><a href="../classes/DBIConnexionMissingParameterException.html">DBIConnexionMissingParameterException</a></li>
+                                                    <li class="class"><a href="../classes/DBIStatement.html">DBIStatement</a></li>
+                                                    <li class="class"><a href="../classes/DBIUsageException.html">DBIUsageException</a></li>
+                                                    <li class="class"><a href="../classes/DBObject.html">DBObject</a></li>
+                                                    <li class="class"><a href="../classes/DetailedException.html">DetailedException</a></li>
+                                                    <li class="class"><a href="../classes/Disclosed.html">Disclosed</a></li>
+                                                    <li class="class"><a href="../classes/DownloadBadFilesIDsException.html">DownloadBadFilesIDsException</a></li>
+                                                    <li class="class"><a href="../classes/DownloadInvalidRangeException.html">DownloadInvalidRangeException</a></li>
+                                                    <li class="class"><a href="../classes/DownloadMissingFilesIDsException.html">DownloadMissingFilesIDsException</a></li>
+                                                    <li class="class"><a href="../classes/Enum.html">Enum</a></li>
+                                                    <li class="class"><a href="../classes/ErrorTypes.html">ErrorTypes</a></li>
+                                                    <li class="class"><a href="../classes/FeedbackMail.html">FeedbackMail</a></li>
+                                                    <li class="class"><a href="../classes/FeedbackMailHeaders.html">FeedbackMailHeaders</a></li>
+                                                    <li class="class"><a href="../classes/FeedbackMailPart.html">FeedbackMailPart</a></li>
+                                                    <li class="class"><a href="../classes/File.html">File</a></li>
+                                                    <li class="class"><a href="../classes/FileBadHashException.html">FileBadHashException</a></li>
+                                                    <li class="class"><a href="../classes/FileChunkOutOfBoundsException.html">FileChunkOutOfBoundsException</a></li>
+                                                    <li class="class"><a href="../classes/FileExtensionNotAllowedException.html">FileExtensionNotAllowedException</a></li>
+                                                    <li class="class"><a href="../classes/FileNotFoundException.html">FileNotFoundException</a></li>
+                                                    <li class="class"><a href="../classes/FilesenderRestClient.html">FilesenderRestClient</a></li>
+                                                    <li class="class"><a href="../classes/GlobalConstants.html">GlobalConstants</a></li>
+                                                    <li class="class"><a href="../classes/Guest.html">Guest</a></li>
+                                                    <li class="class"><a href="../classes/GuestBadStatusException.html">GuestBadStatusException</a></li>
+                                                    <li class="class"><a href="../classes/GuestNotFoundException.html">GuestNotFoundException</a></li>
+                                                    <li class="class"><a href="../classes/GuestOptions.html">GuestOptions</a></li>
+                                                    <li class="class"><a href="../classes/GuestStatuses.html">GuestStatuses</a></li>
+                                                    <li class="class"><a href="../classes/GUI.html">GUI</a></li>
+                                                    <li class="class"><a href="../classes/GUIAccessForbiddenException.html">GUIAccessForbiddenException</a></li>
+                                                    <li class="class"><a href="../classes/GUIPages.html">GUIPages</a></li>
+                                                    <li class="class"><a href="../classes/GUIUnknownAdminSectionException.html">GUIUnknownAdminSectionException</a></li>
+                                                    <li class="class"><a href="../classes/GUIUnknownPageException.html">GUIUnknownPageException</a></li>
+                                                    <li class="class"><a href="../classes/Installer.html">Installer</a></li>
+                                                    <li class="class"><a href="../classes/InvalidAddressFormatException.html">InvalidAddressFormatException</a></li>
+                                                    <li class="class"><a href="../classes/InvalidRecipientException.html">InvalidRecipientException</a></li>
+                                                    <li class="class"><a href="../classes/Lang.html">Lang</a></li>
+                                                    <li class="class"><a href="../classes/LegacyUploadProgress.html">LegacyUploadProgress</a></li>
+                                                    <li class="class"><a href="../classes/LogEventTypes.html">LogEventTypes</a></li>
+                                                    <li class="class"><a href="../classes/Logger.html">Logger</a></li>
+                                                    <li class="class"><a href="../classes/LoggingException.html">LoggingException</a></li>
+                                                    <li class="class"><a href="../classes/LogLevels.html">LogLevels</a></li>
+                                                    <li class="class"><a href="../classes/Mail.html">Mail</a></li>
+                                                    <li class="class"><a href="../classes/MailAddressesTypes.html">MailAddressesTypes</a></li>
+                                                    <li class="class"><a href="../classes/MailAttachment.html">MailAttachment</a></li>
+                                                    <li class="class"><a href="../classes/MailAttachmentBadDispositionException.html">MailAttachmentBadDispositionException</a></li>
+                                                    <li class="class"><a href="../classes/MailAttachmentBadTransferEncodingException.html">MailAttachmentBadTransferEncodingException</a></li>
+                                                    <li class="class"><a href="../classes/MailAttachmentNoContentException.html">MailAttachmentNoContentException</a></li>
+                                                    <li class="class"><a href="../classes/Mime.html">Mime</a></li>
+                                                    <li class="class"><a href="../classes/NoAddressesFoundException.html">NoAddressesFoundException</a></li>
+                                                    <li class="class"><a href="../classes/ProcessTypes.html">ProcessTypes</a></li>
+                                                    <li class="class"><a href="../classes/PropertyAccessException.html">PropertyAccessException</a></li>
+                                                    <li class="class"><a href="../classes/ProtocolTypes.html">ProtocolTypes</a></li>
+                                                    <li class="class"><a href="../classes/Recipient.html">Recipient</a></li>
+                                                    <li class="class"><a href="../classes/RecipientNotFoundException.html">RecipientNotFoundException</a></li>
+                                                    <li class="class"><a href="../classes/Report.html">Report</a></li>
+                                                    <li class="class"><a href="../classes/ReportFormatNotAvailableException.html">ReportFormatNotAvailableException</a></li>
+                                                    <li class="class"><a href="../classes/ReportFormats.html">ReportFormats</a></li>
+                                                    <li class="class"><a href="../classes/ReportNothingFoundException.html">ReportNothingFoundException</a></li>
+                                                    <li class="class"><a href="../classes/ReportOwnershipRequiredException.html">ReportOwnershipRequiredException</a></li>
+                                                    <li class="class"><a href="../classes/ReportUnknownFormatException.html">ReportUnknownFormatException</a></li>
+                                                    <li class="class"><a href="../classes/ReportUnknownTargetTypeException.html">ReportUnknownTargetTypeException</a></li>
+                                                    <li class="class"><a href="../classes/Request.html">Request</a></li>
+                                                    <li class="class"><a href="../classes/RestAdminRequiredException.html">RestAdminRequiredException</a></li>
+                                                    <li class="class"><a href="../classes/RestAuthenticationRequiredException.html">RestAuthenticationRequiredException</a></li>
+                                                    <li class="class"><a href="../classes/RestBadParameterException.html">RestBadParameterException</a></li>
+                                                    <li class="class"><a href="../classes/RestCannotAddDataToCompleteTransferException.html">RestCannotAddDataToCompleteTransferException</a></li>
+                                                    <li class="class"><a href="../classes/RestEndpoint.html">RestEndpoint</a></li>
+                                                    <li class="class"><a href="../classes/RestEndpointConfig.html">RestEndpointConfig</a></li>
+                                                    <li class="class"><a href="../classes/RestEndpointEcho.html">RestEndpointEcho</a></li>
+                                                    <li class="class"><a href="../classes/RestEndpointFile.html">RestEndpointFile</a></li>
+                                                    <li class="class"><a href="../classes/RestEndpointGuest.html">RestEndpointGuest</a></li>
+                                                    <li class="class"><a href="../classes/RestEndpointInfo.html">RestEndpointInfo</a></li>
+                                                    <li class="class"><a href="../classes/RestEndpointLang.html">RestEndpointLang</a></li>
+                                                    <li class="class"><a href="../classes/RestEndpointLegacyuploadprogress.html">RestEndpointLegacyuploadprogress</a></li>
+                                                    <li class="class"><a href="../classes/RestEndpointRecipient.html">RestEndpointRecipient</a></li>
+                                                    <li class="class"><a href="../classes/RestEndpointTransfer.html">RestEndpointTransfer</a></li>
+                                                    <li class="class"><a href="../classes/RestEndpointUser.html">RestEndpointUser</a></li>
+                                                    <li class="class"><a href="../classes/RestException.html">RestException</a></li>
+                                                    <li class="class"><a href="../classes/RestInput.html">RestInput</a></li>
+                                                    <li class="class"><a href="../classes/RestMissingParameterException.html">RestMissingParameterException</a></li>
+                                                    <li class="class"><a href="../classes/RestOwnershipRequiredException.html">RestOwnershipRequiredException</a></li>
+                                                    <li class="class"><a href="../classes/RestRequest.html">RestRequest</a></li>
+                                                    <li class="class"><a href="../classes/RestSanityCheckFailedException.html">RestSanityCheckFailedException</a></li>
+                                                    <li class="class"><a href="../classes/RestServer.html">RestServer</a></li>
+                                                    <li class="class"><a href="../classes/RestUtilities.html">RestUtilities</a></li>
+                                                    <li class="class"><a href="../classes/Statistics.html">Statistics</a></li>
+                                                    <li class="class"><a href="../classes/StatLog.html">StatLog</a></li>
+                                                    <li class="class"><a href="../classes/StatLogNotFoundException.html">StatLogNotFoundException</a></li>
+                                                    <li class="class"><a href="../classes/StatLogUnknownEventException.html">StatLogUnknownEventException</a></li>
+                                                    <li class="class"><a href="../classes/StorableException.html">StorableException</a></li>
+                                                    <li class="class"><a href="../classes/Storage.html">Storage</a></li>
+                                                    <li class="class"><a href="../classes/StorageChunkTooLargeException.html">StorageChunkTooLargeException</a></li>
+                                                    <li class="class"><a href="../classes/StorageFilesystem.html">StorageFilesystem</a></li>
+                                                    <li class="class"><a href="../classes/StorageFilesystemBadResolverOutputException.html">StorageFilesystemBadResolverOutputException</a></li>
+                                                    <li class="class"><a href="../classes/StorageFilesystemBadResolverTargetException.html">StorageFilesystemBadResolverTargetException</a></li>
+                                                    <li class="class"><a href="../classes/StorageFilesystemCannotCreatePathException.html">StorageFilesystemCannotCreatePathException</a></li>
+                                                    <li class="class"><a href="../classes/StorageFilesystemCannotDeleteException.html">StorageFilesystemCannotDeleteException</a></li>
+                                                    <li class="class"><a href="../classes/StorageFilesystemCannotReadException.html">StorageFilesystemCannotReadException</a></li>
+                                                    <li class="class"><a href="../classes/StorageFilesystemCannotResolveException.html">StorageFilesystemCannotResolveException</a></li>
+                                                    <li class="class"><a href="../classes/StorageFilesystemCannotWriteException.html">StorageFilesystemCannotWriteException</a></li>
+                                                    <li class="class"><a href="../classes/StorageFilesystemFileNotFoundException.html">StorageFilesystemFileNotFoundException</a></li>
+                                                    <li class="class"><a href="../classes/StorageFilesystemOutOfSpaceException.html">StorageFilesystemOutOfSpaceException</a></li>
+                                                    <li class="class"><a href="../classes/StorageNotEnoughSpaceLeftException.html">StorageNotEnoughSpaceLeftException</a></li>
+                                                    <li class="class"><a href="../classes/SystemMail.html">SystemMail</a></li>
+                                                    <li class="class"><a href="../classes/Template.html">Template</a></li>
+                                                    <li class="class"><a href="../classes/TemplateNotFoundException.html">TemplateNotFoundException</a></li>
+                                                    <li class="class"><a href="../classes/TokenHasBadFormatException.html">TokenHasBadFormatException</a></li>
+                                                    <li class="class"><a href="../classes/TokenIsMissingException.html">TokenIsMissingException</a></li>
+                                                    <li class="class"><a href="../classes/TrackingEvent.html">TrackingEvent</a></li>
+                                                    <li class="class"><a href="../classes/TrackingEventNotFoundException.html">TrackingEventNotFoundException</a></li>
+                                                    <li class="class"><a href="../classes/TrackingEventTypes.html">TrackingEventTypes</a></li>
+                                                    <li class="class"><a href="../classes/TrackingUnknownEventException.html">TrackingUnknownEventException</a></li>
+                                                    <li class="class"><a href="../classes/Transfer.html">Transfer</a></li>
+                                                    <li class="class"><a href="../classes/TransferBadStatusException.html">TransferBadStatusException</a></li>
+                                                    <li class="class"><a href="../classes/TransferExpiredException.html">TransferExpiredException</a></li>
+                                                    <li class="class"><a href="../classes/TransferHostQuotaExceededException.html">TransferHostQuotaExceededException</a></li>
+                                                    <li class="class"><a href="../classes/TransferMaximumSizeExceededException.html">TransferMaximumSizeExceededException</a></li>
+                                                    <li class="class"><a href="../classes/TransferNoFilesException.html">TransferNoFilesException</a></li>
+                                                    <li class="class"><a href="../classes/TransferNoRecipientsException.html">TransferNoRecipientsException</a></li>
+                                                    <li class="class"><a href="../classes/TransferNotAvailableException.html">TransferNotAvailableException</a></li>
+                                                    <li class="class"><a href="../classes/TransferNotFoundException.html">TransferNotFoundException</a></li>
+                                                    <li class="class"><a href="../classes/TransferOptions.html">TransferOptions</a></li>
+                                                    <li class="class"><a href="../classes/TransferRejectedException.html">TransferRejectedException</a></li>
+                                                    <li class="class"><a href="../classes/TransferStatuses.html">TransferStatuses</a></li>
+                                                    <li class="class"><a href="../classes/TransferTooManyFilesException.html">TransferTooManyFilesException</a></li>
+                                                    <li class="class"><a href="../classes/TransferTooManyRecipientsException.html">TransferTooManyRecipientsException</a></li>
+                                                    <li class="class"><a href="../classes/TransferUserQuotaExceededException.html">TransferUserQuotaExceededException</a></li>
+                                                    <li class="class"><a href="../classes/TranslatableEmail.html">TranslatableEmail</a></li>
+                                                    <li class="class"><a href="../classes/TranslatableEmailNotFoundException.html">TranslatableEmailNotFoundException</a></li>
+                                                    <li class="class"><a href="../classes/TranslatableEmailUnknownContextException.html">TranslatableEmailUnknownContextException</a></li>
+                                                    <li class="class"><a href="../classes/Translation.html">Translation</a></li>
+                                                    <li class="class"><a href="../classes/Upgrader.html">Upgrader</a></li>
+                                                    <li class="class"><a href="../classes/User.html">User</a></li>
+                                                    <li class="class"><a href="../classes/UserMissingUIDException.html">UserMissingUIDException</a></li>
+                                                    <li class="class"><a href="../classes/UserNotFoundException.html">UserNotFoundException</a></li>
+                                                    <li class="class"><a href="../classes/Utilities.html">Utilities</a></li>
+                                                    <li class="class"><a href="../classes/UtilitiesUidGeneratorBadUnicityCheckerException.html">UtilitiesUidGeneratorBadUnicityCheckerException</a></li>
+                                                    <li class="class"><a href="../classes/UtilitiesUidGeneratorTriedTooMuchException.html">UtilitiesUidGeneratorTriedTooMuchException</a></li>
+                                                    <li class="class"><a href="../classes/Version.html">Version</a></li>
+                                                    <li class="class"><a href="../classes/Zipper.html">Zipper</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        </div>
+    </section>
+    <section class="row-fluid">
+        <div class="span10 offset2">
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <nav>
+                                                <a href="../namespaces/default.html">\</a> <i class="icon-level-up"></i>
+                                            </nav>
+                    <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal"><i class="icon-code"></i></a>
+
+                    <h1><small>\</small>AuditLog</h1>
+                    <p><em>Represents an user in database</em></p>
+                    
+
+                    <section id="summary">
+                        <h2>Summary</h2>
+                        <section class="row-fluid heading">
+                            <section class="span4">
+                                <a href="#methods">Methods</a>
+                            </section>
+                            <section class="span4">
+                                <a href="#properties">Properties</a>
+                            </section>
+                            <section class="span4">
+                                <a href="#constants">Constants</a>
+                            </section>
+                        </section>
+                        <section class="row-fluid public">
+                            <section class="span4">
+                                                                    <a href="../classes/DBObject.html#method_getDataMap" class="">getDataMap()</a><br />
+                                                                    <a href="../classes/DBObject.html#method_existsInCache" class="">existsInCache()</a><br />
+                                                                    <a href="../classes/DBObject.html#method_getFromCache" class="">getFromCache()</a><br />
+                                                                    <a href="../classes/DBObject.html#method_purgeCache" class="">purgeCache()</a><br />
+                                                                    <a href="../classes/DBObject.html#method_fromId" class="">fromId()</a><br />
+                                                                    <a href="../classes/DBObject.html#method_fromData" class="">fromData()</a><br />
+                                                                    <a href="../classes/AuditLog.html#method_create" class="">create()</a><br />
+                                                                    <a href="../classes/DBObject.html#method_is" class="">is()</a><br />
+                                                                    <a href="../classes/DBObject.html#method_all" class="">all()</a><br />
+                                                                    <a href="../classes/AuditLog.html#method_save" class="">save()</a><br />
+                                                                    <a href="../classes/DBObject.html#method_delete" class="">delete()</a><br />
+                                                                    <a href="../classes/DBObject.html#method_toDBData" class="">toDBData()</a><br />
+                                                                    <a href="../classes/DBObject.html#method_getDBTable" class="">getDBTable()</a><br />
+                                                                    <a href="../classes/DBObject.html#method_insertRecord" class="">insertRecord()</a><br />
+                                                                    <a href="../classes/DBObject.html#method_updateRecord" class="">updateRecord()</a><br />
+                                                                    <a href="../classes/DBObject.html#method_getClassName" class="">getClassName()</a><br />
+                                                                    <a href="../classes/AuditLog.html#method___get" class="">__get()</a><br />
+                                                                    <a href="../classes/AuditLog.html#method_fromTarget" class="">fromTarget()</a><br />
+                                                                    <a href="../classes/AuditLog.html#method_fromAuthor" class="">fromAuthor()</a><br />
+                                                                    <a href="../classes/AuditLog.html#method_fromTransfer" class="">fromTransfer()</a><br />
+                                                                    <a href="../classes/AuditLog.html#method_clean" class="">clean()</a><br />
+                                                            </section>
+                            <section class="span4">
+                                                                    <em>No public properties found</em>
+                                                            </section>
+                            <section class="span4">
+                                                                    <a href="../classes/AuditLog.html#constant_FROM_TARGET" class="">FROM_TARGET</a><br />
+                                                                    <a href="../classes/AuditLog.html#constant_FROM_AUTHOR" class="">FROM_AUTHOR</a><br />
+                                                            </section>
+                        </section>
+                        <section class="row-fluid protected">
+                            <section class="span4">
+                                                                    <a href="../classes/DBObject.html#method_fillFromDBData" class="">fillFromDBData()</a><br />
+                                                                    <a href="../classes/AuditLog.html#method___construct" class="">__construct()</a><br />
+                                                            </section>
+                            <section class="span4">
+                                                                    <a href="../classes/DBObject.html#property_objectCache" class="">$objectCache</a><br />
+                                                                    <a href="../classes/AuditLog.html#property_dataMap" class="">$dataMap</a><br />
+                                                                    <a href="../classes/AuditLog.html#property_id" class="">$id</a><br />
+                                                                    <a href="../classes/AuditLog.html#property_event" class="">$event</a><br />
+                                                                    <a href="../classes/AuditLog.html#property_target_type" class="">$target_type</a><br />
+                                                                    <a href="../classes/AuditLog.html#property_target_id" class="">$target_id</a><br />
+                                                                    <a href="../classes/AuditLog.html#property_author_type" class="">$author_type</a><br />
+                                                                    <a href="../classes/AuditLog.html#property_author_id" class="">$author_id</a><br />
+                                                                    <a href="../classes/AuditLog.html#property_created" class="">$created</a><br />
+                                                                    <a href="../classes/AuditLog.html#property_ip" class="">$ip</a><br />
+                                                            </section>
+                            <section class="span4">
+                                <em>N/A</em>
+                            </section>
+                        </section>
+                        <section class="row-fluid private">
+                            <section class="span4">
+                                                                    <em>No private methods found</em>
+                                                            </section>
+                            <section class="span4">
+                                                                    <em>No private properties found</em>
+                                                            </section>
+                            <section class="span4">
+                                <em>N/A</em>
+                            </section>
+                        </section>
+                    </section>
+                </div>
+                <aside class="span4 detailsbar">
+                                        
+                    
+                    <dl>
+                        <dt>File</dt>
+                            <dd><a href="../files/classes.data.AuditLog.class.html"><div class="path-wrapper">classes/data/AuditLog.class.php</div></a></dd>
+                                                <dt>Package</dt>
+                            <dd><div class="namespace-wrapper">\Default</div></dd>
+                                                <dt>Class hierarchy</dt>
+                            <dd class="hierarchy">
+                                                                                                                                                                                                                                                                                                
+                                        <div class="namespace-wrapper"><a href="../classes/DBObject.html">\DBObject</a></div>
+                                                                                                    <div class="namespace-wrapper">\AuditLog</div>
+                            </dd>
+
+                        
+                        
+                        
+                        
+                                                                        </dl>
+                    <h2>Tags</h2>
+                    <table class="table table-condensed">
+                                            <tr><td colspan="2"><em>None found</em></td></tr>
+                                        </table>
+                </aside>
+            </div>
+
+                                    <a id="constants" name="constants"></a>
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <h2>Constants</h2>
+                </div>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_FROM_TARGET" name="constant_FROM_TARGET" class="anchor"></a>
+            <article id="constant_FROM_TARGET" class="constant">
+                <h3 class="">FROM_TARGET</h3>
+                <pre class="signature">FROM_TARGET</pre>
+                <p><em>Set selectors</em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_FROM_AUTHOR" name="constant_FROM_AUTHOR" class="anchor"></a>
+            <article id="constant_FROM_AUTHOR" class="constant">
+                <h3 class="">FROM_AUTHOR</h3>
+                <pre class="signature">FROM_AUTHOR</pre>
+                <p><em></em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                            
+                                    <a id="properties" name="properties"></a>
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <h2>Properties</h2>
+                </div>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_objectCache" name="property_objectCache" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$objectCache</h3>
+                <pre class="signature">$objectCache : </pre>
+                <p><em>Instances cache</em></p>
+                
+
+                                <h4>Type</h4>
+                
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/DBObject.html"><div class="path-wrapper">\DBObject</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_dataMap" name="property_dataMap" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$dataMap</h3>
+                <pre class="signature">$dataMap : </pre>
+                <p><em>Database map</em></p>
+                <p>Used by fromDBData / toDBData methods
+Can be used to generate database creation queries</p>
+<p>Associative array of <field> => <field_def></p>
+<field_def> associative array of field definition entries in :
+  - type : int, uint, string, bool, enum, text, date, datetime, time
+  - size (for int types) : tiny, medium, big (defaults to medium)
+  - size (for string types) : string length
+  - values (for enum types) : array of possible values
+  - null : bool indicating if field can be null
+  - primary : bool indicating if field is primary key
+  - autoinc : bool indicating if field is auto-incremented
+  - unique : bool indicating if field is unique or string pointing unicity column set
+  - default : default value for this field
+
+                                <h4>Type</h4>
+                
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_id" name="property_id" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$id</h3>
+                <pre class="signature">$id : </pre>
+                <p><em>Properties</em></p>
+                
+
+                                <h4>Type</h4>
+                
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_event" name="property_event" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$event</h3>
+                <pre class="signature">$event : </pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_target_type" name="property_target_type" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$target_type</h3>
+                <pre class="signature">$target_type : </pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_target_id" name="property_target_id" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$target_id</h3>
+                <pre class="signature">$target_id : </pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_author_type" name="property_author_type" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$author_type</h3>
+                <pre class="signature">$author_type : </pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_author_id" name="property_author_id" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$author_id</h3>
+                <pre class="signature">$author_id : </pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_created" name="property_created" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$created</h3>
+                <pre class="signature">$created : </pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_ip" name="property_ip" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$ip</h3>
+                <pre class="signature">$ip : </pre>
+                <p><em></em></p>
+                
+
+                                <h4>Type</h4>
+                
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                            
+                                    <a id="methods" name="methods"></a>
+            <div class="row-fluid">
+                <div class="span8 content class"><h2>Methods</h2></div>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getDataMap" name="method_getDataMap" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getDataMap()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getDataMap() : array</pre>
+                <p><em>DataMap getter</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>the class dataMap</p>
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/DBObject.html"><div class="path-wrapper">\DBObject</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_existsInCache" name="method_existsInCache" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">existsInCache()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">existsInCache(string <span class="argument">$class</span>, mixed <span class="argument">$id</span>) : boolean</pre>
+                <p><em>Check if object is cached</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$class </td>
+                                <td><p>class name</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>mixed</td>
+                                <td>$id </td>
+                                <td><p>unique identifier</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    boolean
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/DBObject.html"><div class="path-wrapper">\DBObject</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getFromCache" name="method_getFromCache" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getFromCache()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getFromCache(string <span class="argument">$class</span>, mixed <span class="argument">$id</span>) : object</pre>
+                <p><em>Get object from cache</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$class </td>
+                                <td><p>class name</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>mixed</td>
+                                <td>$id </td>
+                                <td><p>unique identifier</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    object
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/DBObject.html"><div class="path-wrapper">\DBObject</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_purgeCache" name="method_purgeCache" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">purgeCache()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">purgeCache(string <span class="argument">$class</span>, mixed <span class="argument">$id</span>) : boolean</pre>
+                <p><em>Remove instance or whole class from cache or wipe cache out</em></p>
+                <p>If $class and $id are given only instance is removed
+If only $class is given all instances of the class are removed
+If none of $class and $id are given all instances of all classes are removed</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$class </td>
+                                <td><p>class name</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>mixed</td>
+                                <td>$id </td>
+                                <td><p>unique identifier</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    boolean
+                                            &mdash; <p>tells if instance/class was registered</p>
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/DBObject.html"><div class="path-wrapper">\DBObject</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_fromId" name="method_fromId" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">fromId()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">fromId(mixed <span class="argument">$id</span>) : object</pre>
+                <p><em>Cached getter relying on id</em></p>
+                <p>Only creates the object if it was not cached before, calls constructor with id otherwise</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>mixed</td>
+                                <td>$id </td>
+                                <td><p>primary key of the object</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    object
+                                            &mdash; <p>instance</p>
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/DBObject.html"><div class="path-wrapper">\DBObject</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_fromData" name="method_fromData" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">fromData()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">fromData(mixed <span class="argument">$id</span>, array <span class="argument">$data</span>,  <span class="argument">$transforms</span>) : object</pre>
+                <p><em>Cached getter relying on data</em></p>
+                <p>Only creates the object if it was not cached before, calls constructor with data otherwise
+then updates object properties</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>mixed</td>
+                                <td>$id </td>
+                                <td><p>primary key of the object</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>array</td>
+                                <td>$data </td>
+                                <td><p>data to create the object from instead of loading it (used by "get all" queries)</p></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$transforms </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    object
+                                            &mdash; <p>instance</p>
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/DBObject.html"><div class="path-wrapper">\DBObject</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_create" name="method_create" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">create()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">create(\LogEventTypes <span class="argument">$event</span>, \DBObject <span class="argument">$target</span>,  <span class="argument">$author</span>) : \AuditLog</pre>
+                <p><em>Create a new audit log</em></p>
+                <p>Creates empty object</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td><a href="../classes/LogEventTypes.html">\LogEventTypes</a></td>
+                                <td>$event </td>
+                                <td><p>the event to be logged</p></td>
+                            </tr>
+                                                    <tr>
+                                <td><a href="../classes/DBObject.html">\DBObject</a></td>
+                                <td>$target </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$author </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    <a href="../classes/AuditLog.html">\AuditLog</a>
+                                            &mdash; <p>auditlog</p>
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_is" name="method_is" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">is()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">is(object <span class="argument">$other</span>) : boolean</pre>
+                <p><em>Object comparison</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>object</td>
+                                <td>$other </td>
+                                <td><p>other object or id</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    boolean
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/DBObject.html"><div class="path-wrapper">\DBObject</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_all" name="method_all" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">all()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">all(string <span class="argument">$criteria</span>, array <span class="argument">$placeholders</span>, callable <span class="argument">$run</span>) : array</pre>
+                <p><em>Get a set objects</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$criteria </td>
+                                <td><p>sql criteria</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>array</td>
+                                <td>$placeholders </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>callable</td>
+                                <td>$run </td>
+                                <td><p>will be applied to all objects, return values will replace objects and result will be filtered to remove nulls</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>of objects</p>
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/DBObject.html"><div class="path-wrapper">\DBObject</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_save" name="method_save" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">save()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">save()</pre>
+                <p><em>Save in database</em></p>
+                
+
+                
+                
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_delete" name="method_delete" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">delete()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">delete()</pre>
+                <p><em>Delete from database</em></p>
+                
+
+                
+                
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/DBObject.html"><div class="path-wrapper">\DBObject</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_toDBData" name="method_toDBData" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">toDBData()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">toDBData(array <span class="argument">$transforms</span>) : array</pre>
+                <p><em>Turns object into a database compliant data set using dataMap</em></p>
+                <p>Fill out object properties from database data, converting types on the fly, optionnaly running further transforms.</p>
+<p>Transforms (<transform>) can be a string to change field_name or a callable to be called with value as first argument
+and returning transformed value, or an array of both, or falsy (false, 0, null) to skip field despite dataMap.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>array</td>
+                                <td>$transforms </td>
+                                <td><p>set of <field_name> => <transform> (optionnal)</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>database ready data</p>
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/DBObject.html"><div class="path-wrapper">\DBObject</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getDBTable" name="method_getDBTable" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getDBTable()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getDBTable() : string</pre>
+                <p><em>Get database table name</em></p>
+                <p>Database table has the same name as the class, except it plural (class User => table Users).</p>
+
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>table name</p>
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/DBObject.html"><div class="path-wrapper">\DBObject</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_insertRecord" name="method_insertRecord" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">insertRecord()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">insertRecord(array <span class="argument">$data</span>)</pre>
+                <p><em>Insert object as new record</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>array</td>
+                                <td>$data </td>
+                                <td><p>database compliant data such as returned by toDBData</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/DBObject.html"><div class="path-wrapper">\DBObject</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_updateRecord" name="method_updateRecord" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">updateRecord()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">updateRecord(array <span class="argument">$data</span>, string <span class="argument">$key_name</span>, string <span class="argument">$where</span>)</pre>
+                <p><em>Update object record</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>array</td>
+                                <td>$data </td>
+                                <td><p>database compliant data such as returned by toDBData</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$key_name </td>
+                                <td><p>field_name to use as primary key (string or array of strings)</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$where </td>
+                                <td><p>where clause extension (optionnal)</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/DBObject.html"><div class="path-wrapper">\DBObject</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getClassName" name="method_getClassName" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getClassName()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getClassName() : \type</pre>
+                <p><em>Allows to get the class name</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    \type
+                                            &mdash; <p>String: the class name</p>
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/DBObject.html"><div class="path-wrapper">\DBObject</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method___get" name="method___get" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">__get()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">__get(string <span class="argument">$property</span>) : \property</pre>
+                <p><em>Getter</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$property </td>
+                                <td><p>property to get</p></td>
+                            </tr>
+                                            </table>
+                
+                                    <h4>Throws</h4>
+                    <dl>
+                                                    <dt>\PropertyAccessException</dt>
+                            <dd></dd>
+                                                                    </dl>
+                
+                                    <h4>Returns</h4>
+                    \property
+                                            &mdash; <p>value</p>
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_fromTarget" name="method_fromTarget" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">fromTarget()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">fromTarget(\DBObject <span class="argument">$target</span>,  <span class="argument">$event</span>) : array</pre>
+                <p><em>Get logs related to a target</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td><a href="../classes/DBObject.html">\DBObject</a></td>
+                                <td>$target </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$event </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>of AuditLog</p>
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_fromAuthor" name="method_fromAuthor" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">fromAuthor()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">fromAuthor(\DBObject <span class="argument">$author</span>,  <span class="argument">$event</span>) : array</pre>
+                <p><em>Get logs related to an author</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td><a href="../classes/DBObject.html">\DBObject</a></td>
+                                <td>$author </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$event </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>of AuditLog</p>
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_fromTransfer" name="method_fromTransfer" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">fromTransfer()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">fromTransfer(\Transfer <span class="argument">$transfer</span>,  <span class="argument">$event</span>) : array</pre>
+                <p><em>Get logs related to a transfer</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td><a href="../classes/Transfer.html">\Transfer</a></td>
+                                <td>$transfer </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$event </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>of AuditLog</p>
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_clean" name="method_clean" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">clean()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">clean(\Transfer <span class="argument">$transfer</span>)</pre>
+                <p><em>Remove entries related to a transfer</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td><a href="../classes/Transfer.html">\Transfer</a></td>
+                                <td>$transfer </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_fillFromDBData" name="method_fillFromDBData" class="anchor"></a>
+            <article class="method">
+                <h3 class="protected ">fillFromDBData()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">fillFromDBData(mixed <span class="argument">$data</span>, array <span class="argument">$transforms</span>)</pre>
+                <p><em>Hydrant</em></p>
+                <p>Fill out object properties from database data, converting types on the fly, optionnaly running further transforms.</p>
+<p>Transforms (<transform>) can be a string to change field_name or a callable to be called with value as first argument
+and returning transformed value, or an array of both, or falsy (false, 0, null) to skip field despite dataMap.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>mixed</td>
+                                <td>$data </td>
+                                <td><p>associative array or stdClass instance of data from the database</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>array</td>
+                                <td>$transforms </td>
+                                <td><p>associative array of <field_name> => <transform> (optionnal)</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/DBObject.html"><div class="path-wrapper">\DBObject</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method___construct" name="method___construct" class="anchor"></a>
+            <article class="method">
+                <h3 class="protected ">__construct()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">__construct(integer <span class="argument">$id</span>, array <span class="argument">$data</span>)</pre>
+                <p><em>Constructor</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>integer</td>
+                                <td>$id </td>
+                                <td><p>identifier of user to load from database (null if loading not wanted)</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>array</td>
+                                <td>$data </td>
+                                <td><p>data to create the auditlog from (if already fetched from database)</p></td>
+                            </tr>
+                                            </table>
+                
+                                    <h4>Throws</h4>
+                    <dl>
+                                                    <dt>\AuditLogNotFoundException</dt>
+                            <dd></dd>
+                                                                    </dl>
+                
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                                    </div>
+    </section>
+
+    <div id="source-view" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="source-view-label" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="source-view-label">AuditLog.class.php</h3>
+        </div>
+        <div class="modal-body">
+            <pre data-src="../files/classes/data/AuditLog.class.php.txt" class="language-php line-numbers"></pre>
+        </div>
+    </div>
+
+    <footer class="row-fluid">
+        <section class="span10 offset2">
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <section class="row-fluid footer-sections">
+                        <section class="span4">
+                                                        <h1><i class="icon-code"></i></h1>
+                            <div>
+                                <ul>
+                                                                    </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-bar-chart"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../graphs/class.html">Class Hierarchy Diagram</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-pushpin"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../reports/errors.html">Errors</a></li>
+                                    <li><a href="../reports/markers.html">Markers</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                    </section>
+                </section>
+            </section>
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <hr />
+                    Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
+                    on 
+Warning: date_default_timezone_get(): It is not safe to rely on the system's timezone settings. You are *required* to use the date.timezone setting or the date_default_timezone_set() function. In case you used any of those methods and you are still getting this warning, you most likely misspelled the timezone identifier. We selected the timezone 'UTC' for now, but please set date.timezone to select your timezone. in /Volumes/perso/dev/phpDocumentor-2.6.1/phpDocumentor-2.6.1/vendor/twig/twig/lib/Twig/Extension/Core.php on line 89
+July 30th, 2015 at 13:22.
+                </section>
+            </section>
+        </section>
+    </footer>
+</div>
+
+</body>
+</html>
