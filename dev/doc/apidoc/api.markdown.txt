@@ -557,7 +557,7 @@ Returns `true`.
 
 Request example :
 
-    PUT /transfer/42
+    PUT /guest/42
     
     {
         "remind": true
@@ -584,6 +584,78 @@ Returns `true`.
 
 
 ## User
+
+### GET /user
+
+Same as `GET /user/@me`
+
+Get preferences of the current user.
+
+Accessible to : [users](#user).
+
+Returns an `object`.
+
+Response example :
+
+    {
+        "id": "foo@bar.org",
+        "additional_attributes": { // Depends on configured additional attributes
+            "idp": "https://idp.domain.tld/",
+            "other_attribute": "value"
+        },
+        "aup_ticked": true,
+        "transfer_preferences": ["email_download_complete", "email_report_on_closing"],
+        "guest_preferences": ["valid_only_one_time"],
+        "created": {
+            "raw": 1421328866,
+            "formatted": "15/01/2015"
+        },
+        "last_activity": {
+            "raw": 1422365666,
+            "formatted": "27/01/2015"
+        },
+        "lang": "en",
+        "frequent_recipients": [],
+        "remote_config": "https://filesender.domain.tld/|foo@bar.org|df6g17cs6g87df6g3cs7d3gvdf7cf0ds3v" // Set if remote user enabled, null otherwise
+    }
+
+
+### GET /user/{id}
+
+Get preferences of a specific user.
+
+Accessible to : [admin](#admin).
+
+Returns an `object`.
+
+Request example :
+
+    GET /user/foo@bar.org
+
+Response example :
+
+    {
+        "id": "foo@bar.org",
+        "additional_attributes": { // Depends on configured additional attributes
+            "idp": "https://idp.domain.tld/",
+            "other_attribute": "value"
+        },
+        "aup_ticked": true,
+        "transfer_preferences": ["email_download_complete", "email_report_on_closing"],
+        "guest_preferences": ["valid_only_one_time"],
+        "created": {
+            "raw": 1421328866,
+            "formatted": "15/01/2015"
+        },
+        "last_activity": {
+            "raw": 1422365666,
+            "formatted": "27/01/2015"
+        },
+        "lang": "en",
+        "frequent_recipients": [],
+        "remote_config": "https://filesender.domain.tld/|foo@bar.org|df6g17cs6g87df6g3cs7d3gvdf7cf0ds3v" // Set if remote user enabled, null otherwise
+    }
+
 
 ### GET /user/@me/frequent_recipients
 

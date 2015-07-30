@@ -1,0 +1,280 @@
+{
+    "name": "FileSender",
+    "version" : "1.0",
+    "formats": [
+        "json"
+    ],
+    "methods" : {
+        "get_user_transfers" : {
+            "method" : "GET"
+            "path" : "/transfer",
+            "authentication" : true,
+            "description" : "List of user available transfers (same as GET /transfer/@me, restricted to owner)."
+        },
+        "get_all_transfers" : {
+            "method" : "GET"
+            "path" : "/transfer/@all",
+            "authentication" : true,
+            "description" : "List of all available transfers (restricted to admin)."
+        },
+        "get_transfer" : {
+            "method" : "GET"
+            "path" : "/transfer/:id",
+            "authentication" : true,
+            "required" : [
+                "id"
+            ],
+            "description" : "Get info about a specific transfer (restricted to owner or admin)."
+        },
+        "get_transfer_options" : {
+            "method" : "GET"
+            "path" : "/transfer/:id/options",
+            "authentication" : true,
+            "required" : [
+                "id"
+            ],
+            "description" : "Get the options of a specific transfer (restricted to owner or admin)."
+        },
+        "get_transfer_auditlog" : {
+            "method" : "GET"
+            "path" : "/transfer/:id/auditlog",
+            "authentication" : true,
+            "required" : [
+                "id"
+            ],
+            "description" : "Get the audit log of a specific transfer (restricted to owner or admin)."
+        },
+        "get_transfer_auditlog_by_email" : {
+            "method" : "GET"
+            "path" : "/transfer/:id/auditlog/mail",
+            "authentication" : true,
+            "required" : [
+                "id"
+            ],
+            "description" : "Send the audit log of a specific transfer to the current user by email (restricted to owner or admin)."
+        },
+        "create_transfer" : {
+            "method" : "POST"
+            "path" : "/transfer",
+            "authentication" : true,
+            "description" : "Create a new transfer based on request body data."
+        },
+        "add_recipient" : {
+            "method" : "POST"
+            "path" : "/transfer/:id/recipient",
+            "authentication" : true,
+            "required" : [
+                "id"
+            ],
+            "description" : "Add a recipientto a transfer based on request body data (restricted to owner or admin)."
+        },
+        "update_transfer" : {
+            "method" : "PUT"
+            "path" : "/transfer/:id",
+            "authentication" : true,
+            "required" : [
+                "id"
+            ],
+            "description" : "Update a transfer status (complete, closed, remind) depending on request body data (restricted to owner or admin)."
+        },
+        "delete_transfer" : {
+            "method" : "DELETE"
+            "path" : "/transfer/:id",
+            "authentication" : true,
+            "required" : [
+                "id"
+            ],
+            "description" : "Close a transfer (restricted to owner or admin)."
+        },
+        "get_file" : {
+            "method" : "GET"
+            "path" : "/file/:id",
+            "authentication" : true,
+            "required" : [
+                "id"
+            ],
+            "description" : "Get info about a specific file (restricted to owner or admin)."
+        },
+        "upload_whole_file" : {
+            "method" : "POST"
+            "path" : "/file/:id/whole",
+            "authentication" : true,
+            "description" : "Upload a whole file at once using binary request body (restricted to owner or admin)."
+        },
+        "upload_file_chunk" : {
+            "method" : "PUT"
+            "path" : "/file/:id/chunk/:offset",
+            "authentication" : true,
+            "required" : [
+                "id",
+                "offset"
+            ],
+            "description" : "Upload a file chunk using binary request body (restricted to owner or admin)."
+        },
+        "update_file" : {
+            "method" : "PUT"
+            "path" : "/file/:id",
+            "authentication" : true,
+            "required" : [
+                "id"
+            ],
+            "description" : "Update a file status (complete) depending on request body data (restricted to owner or admin)."
+        },
+        "delete_file" : {
+            "method" : "DELETE"
+            "path" : "/file/:id",
+            "authentication" : true,
+            "required" : [
+                "id"
+            ],
+            "description" : "Delete a file (restricted to owner or admin, will close the related transfer if no files remaining)."
+        },
+        "get_recipient" : {
+            "method" : "GET"
+            "path" : "/recipient/:id",
+            "authentication" : true,
+            "required" : [
+                "id"
+            ],
+            "description" : "Get info about a specific recipient (restricted to owner or admin)."
+        },
+        "delete_recipient" : {
+            "method" : "DELETE"
+            "path" : "/recipient/:id",
+            "authentication" : true,
+            "required" : [
+                "id"
+            ],
+            "description" : "Delete a recipient (restricted to owner or admin, will close the related transfer if no recipients remaining)."
+        },
+        "get_guests" : {
+            "method" : "GET"
+            "path" : "/guest",
+            "authentication" : true,
+            "description" : "List of user available guests (same as GET /guest/@me, restricted to owner)."
+        },
+        "get_all_guests" : {
+            "method" : "GET"
+            "path" : "/guest/@all",
+            "authentication" : true,
+            "description" : "List of all available guests (restricted to admin)."
+        },
+        "get_guest" : {
+            "method" : "GET"
+            "path" : "/guest/:id",
+            "authentication" : true,
+            "required" : [
+                "id"
+            ],
+            "description" : "Get info about a specific guest (restricted to owner or admin)."
+        },
+        "create_guest" : {
+            "method" : "POST"
+            "path" : "/guest",
+            "authentication" : true,
+            "description" : "Create a new guest based on request body data."
+        },
+        "update_guest" : {
+            "method" : "PUT"
+            "path" : "/guest/:id",
+            "authentication" : true,
+            "required" : [
+                "id"
+            ],
+            "description" : "Update a guest (remind) depending on request body data (restricted to owner or admin)."
+        },
+        "delete_guest" : {
+            "method" : "DELETE"
+            "path" : "/guest/:id",
+            "authentication" : true,
+            "required" : [
+                "id"
+            ],
+            "description" : "Delete a guest (restricted to owner or admin)."
+        },
+        "get_current_user_preferences" : {
+            "method" : "GET"
+            "path" : "/user/@me",
+            "authentication" : true,
+            "description" : "Get preferences of the current user."
+        },
+        "get_user_preferences" : {
+            "method" : "GET"
+            "path" : "/user/:id",
+            "authentication" : true,
+            "required" : [
+                "id"
+            ],
+            "description" : "Get preferences of a specific user."
+        },
+        "get_current_user_frequent_recipients" : {
+            "method" : "GET"
+            "path" : "/user/@me/frequent_recipients",
+            "authentication" : true,
+            "optional_params" : [
+                "filterOp"
+            ],
+            "description" : "Get a list of frequent recipients of the current user, accept filter."
+        },
+        "get_user_frequent_recipients" : {
+            "method" : "GET"
+            "path" : "/user/:id/frequent_recipients",
+            "authentication" : true,
+            "required" : [
+                "id"
+            ],
+            "optional_params" : [
+                "filterOp"
+            ],
+            "description" : "Get a list of frequent recipients of a specific user, accept filter."
+        },
+        "update_current_user" : {
+            "method" : "PUT"
+            "path" : "/user",
+            "authentication" : true,
+            "description" : "Set preferences of the current user."
+        },
+        "update_user" : {
+            "method" : "PUT"
+            "path" : "/user/:id",
+            "authentication" : true,
+            "required" : [
+                "id"
+            ],
+            "description" : "Set preferences of a specific user (restricted to admin)."
+        },
+        "get_info" : {
+            "method" : "GET"
+            "path" : "/info",
+            "authentication" : false,
+            "description" : "Get informations about the instance."
+        },
+        "update_config" : {
+            "method" : "PUT"
+            "path" : "/config",
+            "authentication" : true,
+            "description" : "Set configuration overrides (restricted to admin)."
+        },
+        "get_legacy_upload_progress" : {
+            "method" : "GET"
+            "path" : "/legacyuploadprogress/:key",
+            "required" : [
+                "key"
+            ],
+            "authentication" : false,
+            "description" : "Get information about a legacy (whole file) upload progress."
+        },
+        "get_translations" : {
+            "method" : "GET"
+            "path" : "/lang",
+            "authentication" : false,
+            "description" : "Get translations (merged between default language, configured language and maybe user preference or browser language)."
+        },
+        "echo" : {
+            "method" : "GET"
+            "path" : "/echo",
+            "authentication" : false,
+            "description" : "Echoes back info about your request, useful for testing."
+        },
+    }
+}
