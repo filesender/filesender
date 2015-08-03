@@ -496,7 +496,12 @@ $(function() {
         });
         
         bar.progressbar('value', Math.round(1000 * quota.used / quota.total));
-        bar.attr({title: lang.tr('user_quota') + ' : ' + lang.tr('quota_usage').r({total: quota.total, used: quota.used, available: quota.available})});
+        
+        var info = lang.tr('quota_usage').r(quota);
+        
+        bar.find('.progress-label').text(info);
+        
+        bar.attr({title: lang.tr('user_quota')});
         
         $(document).trigger({type: 'filesender.quotabar.setup', quota: quota, bar: bar});
     });
