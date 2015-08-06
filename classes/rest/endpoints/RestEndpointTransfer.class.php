@@ -478,6 +478,10 @@ class RestEndpointTransfer extends RestEndpoint {
             throw new RestAuthenticationRequiredException();
         }
         
+        // Get transfer to update and current user
+        $transfer = Transfer::fromId($id);
+        $user = Auth::user();
+        
         // Check access rights depending on config
         if($security == 'key') {
             try {
@@ -491,10 +495,6 @@ class RestEndpointTransfer extends RestEndpoint {
             if($data->complete)
                 $transfer->makeAvailable();
         }
-        
-        // Get transfer to update and current user
-        $transfer = Transfer::fromId($id);
-        $user = Auth::user();
         
         // check ownership
         if(!$transfer->isOwner($user) && !Auth::isAdmin())
