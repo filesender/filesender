@@ -984,6 +984,11 @@ table.guests .guest .to .errors .details {
     display: none;
 }
 
+.download_page .progressbar.user_quota {
+    display: none;
+}
+
+
 /* Admin sections */
 
 .admin_page .section h2 {
