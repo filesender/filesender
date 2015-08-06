@@ -110,8 +110,23 @@ class RestEndpointTransfer extends RestEndpoint {
             return in_array($property_id, $transfer->options);
         }
         
-        // Need to be authenticated
-        if(!Auth::isAuthenticated()) throw new RestAuthenticationRequiredException();
+        // If key was provided we validate it and return the transfer (guest restart)
+        if(is_numeric($id) && array_key_exists('key', $_GET) && $_GET['key']) {
+            $transfer = Transfer::fromId($id);
+            try {
+                if(!File::fromUid($_GET['key'])->transfer->is($transfer)) throw new Exception();
+                if(!in_array($transfer->status, array(TransferStatuses::CREATED, TransferStatuses::STARTED, TransferStatuses::UPLOADING))) throw new Exception();
+            } catch(Exception $e) {
+                throw new RestAuthenticationRequiredException();
+            }
+            
+            return self::cast($transfer);
+            
+        } else {
+            
+            // Need to be authenticated
+            if(!Auth::isAuthenticated()) throw new RestAuthenticationRequiredException();
+         }
         
         // Get current user
         $user = Auth::user();
