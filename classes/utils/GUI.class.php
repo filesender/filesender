@@ -114,7 +114,11 @@ class GUI {
     public static function favicon() {
         $locations = self::filterSources(array(
             'images/favicon.ico',
-            'skin/favicon.ico'
+            'images/favicon.gif',
+            'images/favicon.png',
+            'skin/favicon.ico',
+            'skin/favicon.gif',
+            'skin/favicon.png'
         ));
         
         return array_pop($locations);
