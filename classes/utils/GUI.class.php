@@ -127,7 +127,7 @@ class GUI {
         $location = self::favicon();
         if(!$location) return;
         
-        echo '<link type="image/x-icon" rel="icon" href="'.self::path($location).'" />'."\n";
+        echo '<link type="'.Mime::getFromFile($location).'" rel="icon" href="'.self::path($location).'" />'."\n";
     }
     
     /**
