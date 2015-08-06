@@ -339,7 +339,8 @@ window.filesender.transfer = function() {
             options: this.options,
             files: [],
             file_index: 0,
-            guest_token: null
+            guest_token: null,
+            download_link: null
         };
         
         for(var i=0; i<this.files.length; i++) {
