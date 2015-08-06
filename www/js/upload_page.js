@@ -826,89 +826,101 @@ $(function() {
     
     // Check if there is a failed transfer in tracker and if it still exists
     var failed = filesender.ui.transfer.isThereFailedInRestartTracker();
-    if(failed) filesender.client.getTransfer(failed.id, function() {
-        // Transfer still exists on server, lets ask the user what to do with it
-        
-        var load = function() {
-            var required_files = filesender.ui.transfer.loadFailedFromRestartTracker(failed.id);
+    var auth = $('body').attr('data-auth-type');
+    
+    if(failed) {
+        var id = failed.id;
+        if(filesender.config.chunk_upload_security == 'key') {
+            id += '?key=' + failed.files[0].uid;
             
-            // Prefill files list
-            filesender.ui.nodes.required_files = $('<div class="required_files" />').insertBefore(filesender.ui.nodes.files.list);
-            $('<div class="info message" />').text(lang.tr('need_to_readd_files')).appendTo(filesender.ui.nodes.required_files);
-            
-            for(var i=0; i<required_files.length; i++) {
-                var info = required_files[i].name + ' : ' + filesender.ui.formatBytes(required_files[i].size);
-                var node = $('<div class="file required" />').attr({
-                    'data-name': required_files[i].name,
-                    'data-size': required_files[i].size,
-                    'data-cid': required_files[i].cid
-                }).appendTo(filesender.ui.nodes.required_files);
-                $('<span class="info" />').text(info).attr({title: info}).appendTo(node);
-                node.data('file', required_files[i]);
-            }
-            
-            // Following field settings are just cosmetic
-            filesender.ui.nodes.recipients.list.show();
-            for(var i=0; i<failed.recipients.length; i++) {
-                var node = $('<div class="recipient" />').attr('email', failed.recipients[i]).appendTo(filesender.ui.nodes.recipients.list);
-                $('<span />').attr('title', failed.recipients[i]).text(failed.recipients[i]).appendTo(node);
-            }
-            
-            filesender.ui.nodes.from.val(failed.from);
-            
-            filesender.ui.nodes.subject.val(failed.subject);
-            filesender.ui.nodes.message.val(failed.message);
-            
-            filesender.ui.nodes.aup.prop('checked', true);
-            
-            filesender.ui.nodes.expires.datepicker('setDate', new Date(failed.expires * 1000));
-            
-            for(var i=0; i<failed.options.length; i++)
-                filesender.ui.nodes.options[failed.options[i]].prop('checked', true);
-            
-            filesender.ui.nodes.form.find(':input').prop('disabled', true);
-            $('#terasender_worker_count').prop('disabled', false);
-            filesender.ui.nodes.files.input.prop('disabled', false);
-            
-            // Setup restart button
-            filesender.ui.nodes.buttons.start.addClass('not_displayed');
-            filesender.ui.nodes.buttons.restart.removeClass('not_displayed');
-        };
-        
-        var forget = function() {
-            filesender.ui.transfer.removeFromRestartTracker(failed.id);
-        };
-        
-        var later = function() {};
-        
-        var prompt = filesender.ui.popup(lang.tr('restart_failed_transfer'), {'load': load, 'forget': forget, 'later': later}, {onclose: later});
-        $('<p />').text(lang.tr('failed_transfer_found')).appendTo(prompt);
-        var tctn = $('<div class="failed_transfer" />').appendTo(prompt);
-        
-        $('<div class="size" />').text(lang.tr('size') + ' : ' + filesender.ui.formatBytes(failed.size)).appendTo(tctn);
-        
-        var fctn = $('<ul />').appendTo($('<div class="files" />').appendTo(tctn));
-        for(var i=0; i<failed.files.length; i++) {
-            var finfo = failed.files[i].name + ' (' + filesender.ui.formatBytes(failed.files[i].size) + ')';
-            finfo += ', ' + (100 * failed.files[i].uploaded / failed.files[i].size).toFixed(0) + '% ' + lang.tr('done');
-            $('<li />').text(finfo).appendTo(fctn);
+        } else if(!auth || auth == 'guest') {
+            id = null; // Cancel
         }
         
-        $('<div class="recipients" />').text(lang.tr('recipients') + ' : ' + failed.recipients.join(', ')).appendTo(tctn);
-        
-        if(failed.subject)
-            $('<div class="subject" />').text(lang.tr('subject') + ' : ' + failed.subject).appendTo(tctn);
-        
-        if(failed.message)
-            $('<div class="message" />').text(lang.tr('message') + ' : ' + failed.message).appendTo(tctn);
-        
-    }, function(error) {
-        if(error.message == 'transfer_not_found') {
-            // Transfer does not exist anymore on server side, remove from tracker
-            filesender.ui.transfer.removeFromRestartTracker(failed.id);
+        if(id) filesender.client.getTransfer(id, function() {
+            // Transfer still exists on server, lets ask the user what to do with it
             
-        } else {
-            filesender.ui.error(error);
-        }
-    });
+            var load = function() {
+                var required_files = filesender.ui.transfer.loadFailedFromRestartTracker(failed.id);
+                
+                // Prefill files list
+                filesender.ui.nodes.required_files = $('<div class="required_files" />').insertBefore(filesender.ui.nodes.files.list);
+                $('<div class="info message" />').text(lang.tr('need_to_readd_files')).appendTo(filesender.ui.nodes.required_files);
+                
+                for(var i=0; i<required_files.length; i++) {
+                    var info = required_files[i].name + ' : ' + filesender.ui.formatBytes(required_files[i].size);
+                    var node = $('<div class="file required" />').attr({
+                        'data-name': required_files[i].name,
+                        'data-size': required_files[i].size,
+                        'data-cid': required_files[i].cid
+                    }).appendTo(filesender.ui.nodes.required_files);
+                    $('<span class="info" />').text(info).attr({title: info}).appendTo(node);
+                    node.data('file', required_files[i]);
+                }
+                
+                // Following field settings are just cosmetic
+                filesender.ui.nodes.recipients.list.show();
+                for(var i=0; i<failed.recipients.length; i++) {
+                    var node = $('<div class="recipient" />').attr('email', failed.recipients[i]).appendTo(filesender.ui.nodes.recipients.list);
+                    $('<span />').attr('title', failed.recipients[i]).text(failed.recipients[i]).appendTo(node);
+                }
+                
+                filesender.ui.nodes.from.val(failed.from);
+                
+                filesender.ui.nodes.subject.val(failed.subject);
+                filesender.ui.nodes.message.val(failed.message);
+                
+                filesender.ui.nodes.aup.prop('checked', true);
+                
+                filesender.ui.nodes.expires.datepicker('setDate', new Date(failed.expires * 1000));
+                
+                for(var i=0; i<failed.options.length; i++)
+                    filesender.ui.nodes.options[failed.options[i]].prop('checked', true);
+                
+                filesender.ui.nodes.form.find(':input').prop('disabled', true);
+                $('#terasender_worker_count').prop('disabled', false);
+                filesender.ui.nodes.files.input.prop('disabled', false);
+                
+                // Setup restart button
+                filesender.ui.nodes.buttons.start.addClass('not_displayed');
+                filesender.ui.nodes.buttons.restart.removeClass('not_displayed');
+            };
+            
+            var forget = function() {
+                filesender.ui.transfer.removeFromRestartTracker(failed.id);
+            };
+            
+            var later = function() {};
+            
+            var prompt = filesender.ui.popup(lang.tr('restart_failed_transfer'), {'load': load, 'forget': forget, 'later': later}, {onclose: later});
+            $('<p />').text(lang.tr('failed_transfer_found')).appendTo(prompt);
+            var tctn = $('<div class="failed_transfer" />').appendTo(prompt);
+            
+            $('<div class="size" />').text(lang.tr('size') + ' : ' + filesender.ui.formatBytes(failed.size)).appendTo(tctn);
+            
+            var fctn = $('<ul />').appendTo($('<div class="files" />').appendTo(tctn));
+            for(var i=0; i<failed.files.length; i++) {
+                var finfo = failed.files[i].name + ' (' + filesender.ui.formatBytes(failed.files[i].size) + ')';
+                finfo += ', ' + (100 * failed.files[i].uploaded / failed.files[i].size).toFixed(0) + '% ' + lang.tr('done');
+                $('<li />').text(finfo).appendTo(fctn);
+            }
+            
+            $('<div class="recipients" />').text(lang.tr('recipients') + ' : ' + failed.recipients.join(', ')).appendTo(tctn);
+            
+            if(failed.subject)
+                $('<div class="subject" />').text(lang.tr('subject') + ' : ' + failed.subject).appendTo(tctn);
+            
+            if(failed.message)
+                $('<div class="message" />').text(lang.tr('message') + ' : ' + failed.message).appendTo(tctn);
+            
+        }, function(error) {
+            if(error.message == 'transfer_not_found') {
+                // Transfer does not exist anymore on server side, remove from tracker
+                filesender.ui.transfer.removeFromRestartTracker(failed.id);
+                
+            } else {
+                filesender.ui.error(error);
+            }
+        });
+    }
 });
