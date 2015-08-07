@@ -78,6 +78,7 @@ $lang['dp_day_names_short'] = 'Sun,Mon,Tue,Wed,Thu,Fri,Sat'; // Comma separated,
 $lang['dp_day_names_min'] = 'Su,Mo,Tu,We,Th,Fr,Sa'; // Comma separated, w/o whitespaces
 $lang['dp_week_header'] = 'Wk';
 $lang['dp_date_format'] = 'dd/mm/yy';
+$lang['dp_date_format_hint'] = 'Format dd/mm/yy, max. {max} days';
 $lang['dp_first_day'] = '1';
 $lang['dp_is_rtl'] = 'false'; // "true" or "false"
 $lang['dp_show_month_after_year'] = 'false'; // "true" or "false"

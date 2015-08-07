@@ -48,7 +48,7 @@
                     <div class="fieldcontainer">
                         <label for="datepicker" id="datepicker_label" class="mandatory">{tr:expiry_date}:</label>
                         
-                        <input name="expires" type="text" autocomplete="off" title="{tr:dp_date_format}" value="<?php echo Utilities::formatDate(Guest::getDefaultExpire()) ?>"/>
+                        <input name="expires" type="text" autocomplete="off" title="<?php echo Lang::tr('dp_date_format_hint')->r(array('max' => Config::get('max_guest_days_valid'))) ?>" value="<?php echo Utilities::formatDate(Guest::getDefaultExpire()) ?>"/>
                     </div>
                     
                     <?php
