@@ -220,8 +220,20 @@ window.filesender.ui = {
         return this.popup(
             title,
             {close: onclose},
-            {width: $('#wrap').width(), height: 0.8 * $(window).height(), onclose: onclose}
+            {width: $('#wrap').width(), minHeight: 'auto', onclose: onclose}
         ).addClass('wide_info');
+    },
+    
+    /**
+     * Relocate a dialog
+     */
+    relocatePopup: function(popup) {
+        popup.dialog({
+            position: {
+                my: 'center',
+                at: 'center'
+            }
+        });
     },
     
     /**

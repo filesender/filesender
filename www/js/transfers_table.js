@@ -285,6 +285,9 @@ $(function() {
                             $('<span class="name" />').appendTo(details).text(lang.tr('error_details') + ' : ');
                             $('<pre class="value" />').appendTo(details).text(error.details);
                         }
+                        
+                        // Reset popup position as we may have added lengthy content
+                        filesender.ui.relocatePopup(popup);
                     });
                 });
             });
@@ -383,6 +386,9 @@ $(function() {
                     
                     return false;
                 }).button();
+                
+                // Reset popup position as we may have added lengthy content
+                filesender.ui.relocatePopup(popup);
             });
         };
         
