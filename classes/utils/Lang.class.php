@@ -830,7 +830,15 @@ class Translation {
                 
                 $v = $placeholder_resolver($m[1]);
                 
-                return (substr($m[0], 0, 5) == '{raw:') ? $v : Utilities::sanitizeOutput($v); // Ensure sanity
+                if(substr($m[0], 0, 5) != '{raw:') // Ensure sanity unless specified
+                    $v = Utilities::sanitizeOutput($v);
+                
+                if(substr($m[0], 0, 10) == '{htmltext:') { // Format 
+                    $v = preg_replace('`\n\s*\n`', "\n\n", $v);
+                    $v = str_replace("\n", "<br />\n", $v);
+                }
+                
+                return $v;
             }, $translation);
         }
         
