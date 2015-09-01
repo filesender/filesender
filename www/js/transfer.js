@@ -588,9 +588,10 @@ window.filesender.transfer = function() {
             } else if(this.files.length && this.files[0].uid) {
                 args.key = this.files[0].uid;
             }
-        } else if(this.guest_token) {
-            args.vid = this.guest_token;
         }
+        
+        if(this.guest_token)
+            args.vid = this.guest_token;
         
         var q = [];
         for(var k in args) q.push(k + '=' + args[k]);
@@ -639,7 +640,7 @@ window.filesender.transfer = function() {
         
         var transfer = this;
         
-        filesender.client.transferComplete(this, undefined, this.guest_token, function(data) {
+        filesender.client.transferComplete(this, undefined, function(data) {
             transfer.removeFromRestartTracker();
             
             if (transfer.oncomplete)

@@ -351,7 +351,7 @@ window.filesender.client = {
      * @param object data check data
      * @param callable callback
      */
-    transferComplete: function(transfer, data, guest_token, callback, onerror) {
+    transferComplete: function(transfer, data, callback, onerror) {
         var opts = {};
         if(onerror) opts.error = onerror;
         
