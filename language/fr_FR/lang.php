@@ -258,7 +258,7 @@ $lang['open_recipient_auditlog'] = 'Voir l\'activité de ce destinataire';
 $lang['open_file_auditlog'] = 'Voir l\'activité de ce fichier';
 $lang['filtered_transfer_log'] = 'Ceci est une vue filtrée de l\'audit.';
 $lang['view_full_log'] = 'Voir l\'audit dans son ensemble';
-$lang['send_to_my_email'] = 'M\'envoyer ces information par email';
+$lang['send_to_my_email'] = 'M\'envoyer ces informations par email';
 $lang['confirm_remind_transfer'] = 'Envoyer le rappel aux destinataires ?';
 
 
@@ -306,7 +306,7 @@ $lang['report_guest_event_transfer_sent'] = 'Les liens de téléchargement ont �
  * Download page specific
  */
 $lang['archive_download'] = 'Télécharger l\'archive';
-$lang['download_disclamer'] = 'Voici vos fichiers. Vous pouvez les télécharger indépendamment les uns des autres ou par rassemblés sous forme d\'archive ZIP.';
+$lang['download_disclamer'] = 'Voici vos fichiers. Vous pouvez les télécharger indépendamment les uns des autres ou rassemblés sous forme d\'archive ZIP.';
 $lang['download_file'] = 'Télécharger';
 $lang['mac_archive_message'] = 'Si vous utilisez OSX vous pourrez trouver un utilitaire permettant d\'ouvrir l\'archive en suivant le lien suivant';
 $lang['select_all_for_archive_download'] = 'Sélectionner tous les fichiers';
