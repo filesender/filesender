@@ -348,6 +348,6 @@ function manageOptions($ret, $transfer, $recipient) {
     }
     
     if ($transfer->hasOption(TransferOptions::EMAIL_DOWNLOAD_COMPLETE)) {
-        ApplicationMail::quickSend('files_downloaded', $transfer->owner, $ret, Auth::user());
+        ApplicationMail::quickSend('files_downloaded', $transfer->owner, $ret, array('recipient' => $recipient));
     }
 }

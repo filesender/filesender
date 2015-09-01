@@ -4,7 +4,7 @@ subject: Notification de téléchargement
 
 Madame, Monsieur,
 
-{if:files>1}Plusieurs fichiers{else}Un fichier{endif} que vous avez déposé {if:files>1}ont{else}a{endif} été téléchargé{if:files>1}s{endif} depuis {cfg:site_name} par {user.email} :
+{if:files>1}Plusieurs fichiers{else}Un fichier{endif} que vous avez déposé {if:files>1}ont{else}a{endif} été téléchargé{if:files>1}s{endif} depuis {cfg:site_name} par {recipient.identity} :
 
 {if:files>1}{each:files as file}
   - {file.name} ({size:file.size})
@@ -24,7 +24,7 @@ Cordialement,
 </p>
 
 <p>
-    {if:files>1}Plusieurs fichiers{else}Un fichier{endif} que vous avez déposé {if:files>1}ont{else}a{endif} été téléchargé{if:files>1}s{endif} depuis {cfg:site_name} par {user.email} :
+    {if:files>1}Plusieurs fichiers{else}Un fichier{endif} que vous avez déposé {if:files>1}ont{else}a{endif} été téléchargé{if:files>1}s{endif} depuis {cfg:site_name} par {recipient.identity} :
 </p>
 
 <p>
