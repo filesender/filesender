@@ -44,7 +44,10 @@ Cordialement,
 
 {if:guest.message}
 <p>
-    Message de {guest.user_email}: {guest.message}
+    Message de {guest.user_email}:
+</p>
+<p class="message">
+    {htmltext:guest.message}
 </p>
 {endif}
 

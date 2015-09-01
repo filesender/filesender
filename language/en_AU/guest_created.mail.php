@@ -50,7 +50,10 @@ Best regards,
 
 {if:guest.message}
 <p>
-    Personal message from {guest.user_email}: {guest.message}
+    Personal message from {guest.user_email}:
+</p>
+<p class="message">
+    {htmltext:guest.message}
 </p>
 {endif}
 

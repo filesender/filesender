@@ -75,9 +75,11 @@ Cordialement,
 
 {if:transfer.message || transfer.subject}
 <p>
-    Message de {transfer.user_email}: {transfer.subject}
-    <br /><br />
-    {transfer.message}
+    Message de {transfer.user_email}:
+</p>
+<p class="message">
+    <span class="subject">{transfer.subject}</span>
+    {htmltext:transfer.message}
 </p>
 {endif}
 

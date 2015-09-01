@@ -25,3 +25,13 @@ tbody tr:nth-child(even) td {
 td:first-child {
     font-weight: bold;
 }
+
+p.message {
+    border: 1px solid #bbb;
+    padding: 3px;
+}
+
+p.message .subject {
+    display: block;
+    font-weight: bold;
+}
