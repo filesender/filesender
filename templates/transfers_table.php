@@ -47,7 +47,7 @@
     
     <tbody>
         <?php foreach($transfers as $transfer) { ?>
-        <tr class="transfer" id="transfer_<?php echo $transfer->id ?>" data-id="<?php echo $transfer->id ?>" data-errors="<?php echo count($transfer->recipients_with_error) ? '1' : '' ?>">
+        <tr class="transfer" id="transfer_<?php echo $transfer->id ?>" data-id="<?php echo $transfer->id ?>"  data-recipients-enabled="<?php echo $transfer->hasOption(TransferOptions::GET_A_LINK) ? '' : '1' ?>" data-errors="<?php echo count($transfer->recipients_with_error) ? '1' : '' ?>">
             <td class="expand">
                 <span class="clickable fa fa-plus-circle fa-lg" title="{tr:show_details}"></span>
             </td>
@@ -103,7 +103,7 @@
                 <?php echo Utilities::formatDate($transfer->expires) ?>
             </td>
             
-            <td class="actions" data-recipients-enabled="<?php echo $transfer->hasOption(TransferOptions::GET_A_LINK) ? '' : '1' ?>"></td>
+            <td class="actions"></td>
             <?php } ?>
         </tr>
         
