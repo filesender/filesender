@@ -77,7 +77,9 @@ $(function() {
             table.find('tbody .actions').each(function() {
                 var container = $(this);
                 
-                var recipients_enabled = (container.attr('data-recipients-enabled') == '1');
+                var id = container.attr('data-id');
+                
+                var recipients_enabled = $('.transfer[data-id="' + id + '"]').attr('data-recipients-enabled') == '1');
                 
                 // Delete button
                 $('<span class="delete clickable fa fa-lg fa-trash-o" />').appendTo(container).attr({
