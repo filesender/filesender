@@ -77,7 +77,7 @@ $(function() {
             table.find('tbody .actions').each(function() {
                 var container = $(this);
                 
-                var id = container.attr('data-id');
+                var id = container.closest('[data-id]').attr('data-id');
                 
                 var recipients_enabled = ($('.transfer[data-id="' + id + '"]').attr('data-recipients-enabled') == '1');
                 
