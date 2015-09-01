@@ -497,6 +497,9 @@ class RestEndpointTransfer extends RestEndpoint {
         $transfer = Transfer::fromId($id);
         $user = Auth::user();
         
+        // Raw update data
+        $data = $this->request->input;
+        
         // Check access rights depending on config
         if($security == 'key') {
             try {
@@ -507,28 +510,25 @@ class RestEndpointTransfer extends RestEndpoint {
                 throw new RestAuthenticationRequiredException();
             }
             
-            if($data->complete)
-                $transfer->makeAvailable();
+        } else {
+            // check ownership
+            if(!$transfer->isOwner($user) && !Auth::isAdmin())
+                throw new RestOwnershipRequiredException($user->id, 'transfer = '.$transfer->id);
+            
+            // Close and remind action need to stay here as only complete action is allowed with either session or key
+            
+            // Need to close the transfer upon user request ?
+            if($data->closed)
+                $transfer->close(true);
+            
+            // Need to remind the transfer's availability to its recipients ?
+            if($data->remind)
+                $transfer->remind();
         }
-        
-        // check ownership
-        if(!$transfer->isOwner($user) && !Auth::isAdmin())
-            throw new RestOwnershipRequiredException($user->id, 'transfer = '.$transfer->id);
-        
-        // Raw update data
-        $data = $this->request->input;
         
         // Need to make the transfer available (sends email to recipients) ?
         if($data->complete)
             $transfer->makeAvailable();
-        
-        // Need to close the transfer upon user request ?
-        if($data->closed)
-            $transfer->close(true);
-        
-        // Need to remind the transfer's availability to its recipients ?
-        if($data->remind)
-            $transfer->remind();
         
         return true;
     }
