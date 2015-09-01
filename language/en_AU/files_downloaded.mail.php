@@ -4,7 +4,7 @@ subject: Download receipt
 
 Dear Sir or Madam,
 
-{if:files>1}Several files{else}A file{endif} you uploaded {if:files>1}have{else}has{endif} been downloaded from {cfg:site_name} by {user.email} :
+{if:files>1}Several files{else}A file{endif} you uploaded {if:files>1}have{else}has{endif} been downloaded from {cfg:site_name} by {recipient.email} :
 
 {if:files>1}{each:files as file}
   - {file.name} ({size:file.size})
@@ -24,7 +24,7 @@ Best regards,
 </p>
 
 <p>
-    {if:files>1}Several files{else}A file{endif} you uploaded {if:files>1}have{else}has{endif} been downloaded from {cfg:site_name} by {user.email}.
+    {if:files>1}Several files{else}A file{endif} you uploaded {if:files>1}have{else}has{endif} been downloaded from {cfg:site_name} by {recipient.email}.
 </p>
 
 <p>
