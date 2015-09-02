@@ -116,7 +116,7 @@ class AuthSPShibboleth {
                 foreach($additional_attributes as $key => $from) {
                     if(is_numeric($key) && is_callable($from)) continue;
                     
-                    if(is_callable($from)) {
+                    if(is_callable($from) && !is_string($from)) {
                         $value = $from($attributes);
                     } else {
                         $value = explode(';', getenv($from));
