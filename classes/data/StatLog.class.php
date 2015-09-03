@@ -229,6 +229,7 @@ class StatLog extends DBObject {
             'created',
             'target_type',
             'size',
+            'time_taken',
             'additional_attributes',
         ))) return $this->$property;
         
