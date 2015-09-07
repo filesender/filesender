@@ -125,12 +125,14 @@ class DetailedException extends LoggingException {
         );
         
         // Cast to string(s)
-        foreach ($internal_details as $detail) {
+        foreach ($internal_details as $key => $detail) {
+            $key = is_int($key) ? '' : $key.' = ';
+            
             if (is_scalar($detail)) {
-                $log['details'][] = $detail;
+                $log['details'][] = $key.$detail;
             } else {
                 foreach (explode("\n", print_r($detail, true)) as $line) {
-                    $log['details'][] = $line;
+                    $log['details'][] = $key.$line;
                 }
             }
         }
