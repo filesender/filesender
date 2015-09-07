@@ -40,9 +40,14 @@ if(!session_id()) {
     
     // Set session cookie options
     $site_url_parts = parse_url(Config::get('site_url'));
+    
+    // Use configured path for cookie if set
+    $session_cookie_path = Config::get('session_cookie_path');
+    if(!$session_cookie_path) $session_cookie_path = $site_url_parts['path'];
+    
     session_set_cookie_params(
         0,                                                      // Cookie lives as long as browser isn't closed
-        $site_url_parts['path'],                                // It is only valid for the filesender app
+        $session_cookie_path,                                   // It is only valid for the filesender app
         $site_url_parts['host'],                                // and only for the precise domain
         Config::get('force_ssl') || Utilities::httpsInUse(),    // It uses secure mode if ssl forced or in use
         true                                                    // and is httpOnly (not reachable through javascript)
