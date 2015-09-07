@@ -159,7 +159,7 @@ class RestEndpointTransfer extends RestEndpoint {
                     $author_data = array(
                         'type' => $log->author_type,
                         'id' => $log->author_id,
-                        'identity' => $log->author->identity,
+                        'identity' => (string)$log->author->identity,
                         'ip' => $log->ip
                     );
                     if($log->author_type == 'Recipient')
