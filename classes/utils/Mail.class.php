@@ -94,7 +94,7 @@ class Mail {
         $this->subject = $subject;
         $this->html = (bool)$html;
         
-        $nl = Config::get('email_new_line');
+        $nl = Config::get('email_newline');
         if($nl) $this->nl = $nl;
     }
     
