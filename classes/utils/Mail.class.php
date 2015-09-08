@@ -76,6 +76,11 @@ class Mail {
     private $headers = array();
     
     /**
+     * New line style
+     */
+    private $nl = "\r\n";
+    
+    /**
      * Constructor
      * 
      * @param string $to (optionnal)
@@ -88,6 +93,9 @@ class Mail {
         if($to) $this->to($to);
         $this->subject = $subject;
         $this->html = (bool)$html;
+        
+        $nl = Config::get('email_new_line');
+        if($nl) $this->nl = $nl;
     }
     
     /**
@@ -248,6 +256,15 @@ class Mail {
     }
     
     /**
+     * Get new line style from config
+     * 
+     * @return string
+     */
+    private function newLine() {
+        
+    }
+    
+    /**
      * Generate code for attachments
      * 
      * @param string $bnd mime boundary
@@ -255,13 +272,11 @@ class Mail {
      * @return string
      */
     private function buildAttachments($bnd, $related = false) {
-        $nl = GlobalConstants::NEW_LINE;
-        
         $s = '';
         foreach($this->attachments as $attachment) {
             if((bool)$attachment->cid != $related) continue;
             
-            $s .= $nl . '--' . $bnd . $nl;
+            $s .= $this->nl . '--' . $bnd . $this->nl;
             $s .= $attachment->build();
         }
         
@@ -276,8 +291,6 @@ class Mail {
      * @return mixed
      */
     public function build($raw = false) {
-        $nl = GlobalConstants::NEW_LINE;
-        
         // Additionnal headers
         $headers = $this->headers;
         
@@ -325,7 +338,7 @@ class Mail {
         
         // Required by rfc822
         if ($mixed || $related || $this->html)
-            $content .= 'This is a multi-part message in MIME format.' . $nl.$nl;
+            $content .= 'This is a multi-part message in MIME format.' . $this->nl.$this->nl;
         
         $plain = $this->contents['plain'];
         $html = $this->contents['html'];
@@ -363,121 +376,121 @@ class Mail {
             
             $headers['Content-type'] = 'multipart/mixed; boundary="' . $mime_bnd_mixed . '"';
             
-            $content .= '--' . $mime_bnd_mixed . $nl;
-            $content .= 'Content-type: multipart/alternative; boundary="' . $mime_bnd_alt . '"' . $nl.$nl;
+            $content .= '--' . $mime_bnd_mixed . $this->nl;
+            $content .= 'Content-type: multipart/alternative; boundary="' . $mime_bnd_alt . '"' . $this->nl.$this->nl;
             
-            $content .= '--' . $mime_bnd_alt . $nl;
-            $content .= 'Content-Type:text/plain; charset="utf-8"' . $nl;
-            $content .= 'Content-Transfer-Encoding: quoted-printable' . $nl.$nl;
-            $content .= $plain . $nl.$nl;
+            $content .= '--' . $mime_bnd_alt . $this->nl;
+            $content .= 'Content-Type:text/plain; charset="utf-8"' . $this->nl;
+            $content .= 'Content-Transfer-Encoding: quoted-printable' . $this->nl.$this->nl;
+            $content .= $plain . $this->nl.$this->nl;
             
-            $content .= '--' . $mime_bnd_alt . $nl;
-            $content .= 'Content-type: multipart/related; boundary="' . $mime_bnd_rel . '"' . $nl.$nl;
+            $content .= '--' . $mime_bnd_alt . $this->nl;
+            $content .= 'Content-type: multipart/related; boundary="' . $mime_bnd_rel . '"' . $this->nl.$this->nl;
             
-            $content .= '--' . $mime_bnd_rel . $nl;
-            $content .= 'Content-Type:text/html; charset="utf-8"' . $nl;
-            $content .= 'Content-Transfer-Encoding: quoted-printable' . $nl.$nl;
-            $content .= $html . $nl.$nl;
+            $content .= '--' . $mime_bnd_rel . $this->nl;
+            $content .= 'Content-Type:text/html; charset="utf-8"' . $this->nl;
+            $content .= 'Content-Transfer-Encoding: quoted-printable' . $this->nl.$this->nl;
+            $content .= $html . $this->nl.$this->nl;
             
             $content .= $this->buildAttachments($mime_bnd_rel, true); // related
-            $content .= '--' . $mime_bnd_rel . '--' . $nl;
-            $content .= '--' . $mime_bnd_alt . '--' . $nl;
+            $content .= '--' . $mime_bnd_rel . '--' . $this->nl;
+            $content .= '--' . $mime_bnd_alt . '--' . $this->nl;
             
             $content .= $this->buildAttachments($mime_bnd_mixed, false); // mixed
-            $content .= '--' . $mime_bnd_mixed . '--' . $nl;
+            $content .= '--' . $mime_bnd_mixed . '--' . $this->nl;
             
         } elseif ($mixed && $this->html) {
             // Mail with attachments and HTML part
             
             $headers['Content-type'] = 'multipart/mixed; boundary="' . $mime_bnd_mixed . '"';
             
-            $content .= '--' . $mime_bnd_mixed . $nl;
-            $content .= 'Content-type: multipart/alternative; boundary="' . $mime_bnd_alt . '"' . $nl.$nl;
+            $content .= '--' . $mime_bnd_mixed . $this->nl;
+            $content .= 'Content-type: multipart/alternative; boundary="' . $mime_bnd_alt . '"' . $this->nl.$this->nl;
             
-            $content .= '--' . $mime_bnd_alt . $nl;
-            $content .= 'Content-Type:text/plain; charset="utf-8"; format=flowed' . $nl;
-            $content .= 'Content-Transfer-Encoding: quoted-printable' . $nl.$nl;
-            $content .= $plain . $nl.$nl;
+            $content .= '--' . $mime_bnd_alt . $this->nl;
+            $content .= 'Content-Type:text/plain; charset="utf-8"; format=flowed' . $this->nl;
+            $content .= 'Content-Transfer-Encoding: quoted-printable' . $this->nl.$this->nl;
+            $content .= $plain . $this->nl.$this->nl;
             
-            $content .= '--' . $mime_bnd_alt . $nl;
-            $content .= 'Content-Type:text/html; charset="utf-8"' . $nl;
-            $content .= 'Content-Transfer-Encoding: quoted-printable' . $nl.$nl;
-            $content .= $html . $nl.$nl;
+            $content .= '--' . $mime_bnd_alt . $this->nl;
+            $content .= 'Content-Type:text/html; charset="utf-8"' . $this->nl;
+            $content .= 'Content-Transfer-Encoding: quoted-printable' . $this->nl.$this->nl;
+            $content .= $html . $this->nl.$this->nl;
             
-            $content .= '--' . $mime_bnd_alt . '--' . $nl;
+            $content .= '--' . $mime_bnd_alt . '--' . $this->nl;
             
             $content .= $this->buildAttachments($mime_bnd_mixed, false); // mixed
-            $content .= '--' . $mime_bnd_mixed . '--' . $nl;
+            $content .= '--' . $mime_bnd_mixed . '--' . $this->nl;
             
         } elseif (!$this->html && ($mixed || $related)) {
             // Plain mail with attachments of any type
             
             $headers['Content-type'] = 'multipart/mixed; boundary="' . $mime_bnd_mixed . '"';
             
-            $content .= '--' . $mime_bnd_mixed . $nl;
-            $content .= 'Content-Type:text/plain; charset="utf-8"' . $nl;
-            $content .= 'Content-Transfer-Encoding: quoted-printable' . $nl.$nl;
-            $content .= $plain . $nl.$nl;
+            $content .= '--' . $mime_bnd_mixed . $this->nl;
+            $content .= 'Content-Type:text/plain; charset="utf-8"' . $this->nl;
+            $content .= 'Content-Transfer-Encoding: quoted-printable' . $this->nl.$this->nl;
+            $content .= $plain . $this->nl.$this->nl;
             
             $content .= $this->buildAttachments($mime_bnd_mixed, true); // related for some reason
             $content .= $this->buildAttachments($mime_bnd_mixed, false); // mixed
-            $content .= '--' . $mime_bnd_mixed . '--' . $nl;
+            $content .= '--' . $mime_bnd_mixed . '--' . $this->nl;
             
         } elseif ($this->html && $related) {
             // HTML mail with embedded attachments
             
             $headers['Content-type'] = 'multipart/alternative; boundary="' . $mime_bnd_alt . '"';
             
-            $content .= '--' . $mime_bnd_alt . $nl;
-            $content .= 'Content-Type:text/plain; charset="utf-8"' . $nl;
-            $content .= 'Content-Transfer-Encoding: quoted-printable' . $nl.$nl;
-            $content .= $plain . $nl.$nl;
+            $content .= '--' . $mime_bnd_alt . $this->nl;
+            $content .= 'Content-Type:text/plain; charset="utf-8"' . $this->nl;
+            $content .= 'Content-Transfer-Encoding: quoted-printable' . $this->nl.$this->nl;
+            $content .= $plain . $this->nl.$this->nl;
             
-            $content .= '--' . $mime_bnd_alt . $nl;
-            $content .= 'Content-type: multipart/related; boundary="' . $mime_bnd_rel . '"' . $nl.$nl;
+            $content .= '--' . $mime_bnd_alt . $this->nl;
+            $content .= 'Content-type: multipart/related; boundary="' . $mime_bnd_rel . '"' . $this->nl.$this->nl;
             
-            $content .= '--' . $mime_bnd_rel . $nl;
-            $content .= 'Content-Type:text/html; charset="utf-8"' . $nl;
-            $content .= 'Content-Transfer-Encoding: quoted-printable' . $nl.$nl;
-            $content .= $html . $nl.$nl;
+            $content .= '--' . $mime_bnd_rel . $this->nl;
+            $content .= 'Content-Type:text/html; charset="utf-8"' . $this->nl;
+            $content .= 'Content-Transfer-Encoding: quoted-printable' . $this->nl.$this->nl;
+            $content .= $html . $this->nl.$this->nl;
             
             $content .= $this->buildAttachments($mime_bnd_rel, true); // related
-            $content .= '--' . $mime_bnd_rel . '--' . $nl;
-            $content .= '--' . $mime_bnd_alt . '--' . $nl;
+            $content .= '--' . $mime_bnd_rel . '--' . $this->nl;
+            $content .= '--' . $mime_bnd_alt . '--' . $this->nl;
             
         } elseif ($this->html) {
             // HTML mail
             
             $headers['Content-type'] = 'multipart/alternative; boundary="' . $mime_bnd_alt . '"';
             
-            $content .= '--' . $mime_bnd_alt . $nl;
-            $content .= 'Content-Type:text/plain; charset="utf-8"; format=flowed' . $nl;
-            $content .= 'Content-Transfer-Encoding: quoted-printable' . $nl.$nl;
-            $content .= $plain . $nl.$nl;
+            $content .= '--' . $mime_bnd_alt . $this->nl;
+            $content .= 'Content-Type:text/plain; charset="utf-8"; format=flowed' . $this->nl;
+            $content .= 'Content-Transfer-Encoding: quoted-printable' . $this->nl.$this->nl;
+            $content .= $plain . $this->nl.$this->nl;
             
-            $content .= '--' . $mime_bnd_alt . $nl;
-            $content .= 'Content-Type:text/html; charset="utf-8"' . $nl;
-            $content .= 'Content-Transfer-Encoding: quoted-printable' . $nl.$nl;
-            $content .= $html . $nl.$nl;
+            $content .= '--' . $mime_bnd_alt . $this->nl;
+            $content .= 'Content-Type:text/html; charset="utf-8"' . $this->nl;
+            $content .= 'Content-Transfer-Encoding: quoted-printable' . $this->nl.$this->nl;
+            $content .= $html . $this->nl.$this->nl;
             
-            $content .= '--' . $mime_bnd_alt . '--' . $nl;
+            $content .= '--' . $mime_bnd_alt . '--' . $this->nl;
             
         } else {
             // Plain mail
             
-            $headers['Content-Type'] = 'text/plain; charset="utf-8"' . $nl;
+            $headers['Content-Type'] = 'text/plain; charset="utf-8"' . $this->nl;
             $headers['Content-Transfer-Encoding'] = 'quoted-printable';
             
-            $content .= $plain . $nl.$nl;
+            $content .= $plain . $this->nl.$this->nl;
         }
         
         // Build headers
-        $headers = implode($nl, array_map(function($name, $value) {
+        $headers = implode($this->nl, array_map(function($name, $value) {
             return $name.': '.$value;
         }, array_keys($headers), array_values($headers)));
         
         // Return raw if needed
-        if($raw) return $headers . $nl.$nl . $content;
+        if($raw) return $headers . $this->nl.$this->nl . $content;
         
         return array('to' => $to, 'subject' => $this->subject, 'body' => $content, 'headers' => $headers);
     }
@@ -596,8 +609,6 @@ class MailAttachment {
      * @return string
      */
     public function build() {
-        $nl = GlobalConstants::NEW_LINE;
-        
         // Fail if missing data
         if(is_null($this->content) && is_null($this->path))
             throw new MailAttachmentNoContentException($this->path);
@@ -609,18 +620,18 @@ class MailAttachment {
         if(!$this->mime_type && $this->name) $this->mime_type = Mime::getFromFile($this->name);
         
         // Set Content-Type part header
-        $source = 'Content-Type: '.$this->mime_type.($this->name ? '; name="'.$this->name.'"' : '').$nl;
+        $source = 'Content-Type: '.$this->mime_type.($this->name ? '; name="'.$this->name.'"' : '').$this->nl;
         
         // Set Content-Transfer-Encoding part header
         if($this->transfer_encoding)
-            $source .= 'Content-Transfer-Encoding: '.$this->transfer_encoding.$nl;
+            $source .= 'Content-Transfer-Encoding: '.$this->transfer_encoding.$this->nl;
         
         // Set Content-Disposition part header
-        $source .= 'Content-Disposition: '.$this->disposition.($this->name ? '; filename="'.$this->name.'"' : '').$nl;
+        $source .= 'Content-Disposition: '.$this->disposition.($this->name ? '; filename="'.$this->name.'"' : '').$this->nl;
         
         // Set Content-ID part header (for embedded attachments)
         if($this->cid)
-            $source .= 'Content-ID: '.$this->cid.$nl;
+            $source .= 'Content-ID: '.$this->cid.$this->nl;
         
         // Get file data
         $content = $this->content ? $this->content : file_get_contents($this->path);
@@ -630,7 +641,7 @@ class MailAttachment {
             case 'base64' : $content = chunk_split(base64_encode($content)); break;
         }
         
-        $source .= $nl.$content.$nl;
+        $source .= $this->nl.$content.$this->nl;
         
         return $source;
     }
