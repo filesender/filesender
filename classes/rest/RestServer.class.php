@@ -145,6 +145,10 @@ class RestServer {
                 // SP or Guest, lets do XSRF check
                 $token_name = 'HTTP_X_FILESENDER_SECURITY_TOKEN';
                 $token = array_key_exists($token_name, $_SERVER) ? $_SERVER[$token_name] : '';
+                
+                if($method == 'post' && array_key_exists('security-token', $_POST))
+                    $token = $_POST['security-token'];
+                
                 if(!$token || !Utilities::checkSecurityToken($token))
                     throw new RestException('rest_xsrf_token_did_not_match', 400, 'session token = '.Utilities::getSecurityToken().' and token = '.$token);
             }

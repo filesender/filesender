@@ -948,6 +948,8 @@ window.filesender.transfer = function() {
                     return;
                 }
                 
+                if(data.security_token) filesender.client.security_token = data.security_token;
+                
                 transfer.tracking.file.uploaded = transfer.tracking.file.size;
                 transfer.reportProgress(transfer.tracking.file, true);
                 transfer.uploadWhole();
@@ -964,8 +966,17 @@ window.filesender.transfer = function() {
             target: this.legacy.uid
         }).appendTo(this.legacy.iframe.parent());
         
-        if(transfer.tracking) transfer.tracking.field.clone().appendTo(this.legacy.form); // MUST be before file element
-        $(file.node).clone().attr({name: 'file'}).appendTo(this.legacy.form);
+        $('<input type="hidden" />').attr({
+            name: 'security-token',
+            value: filesender.client.security_token
+        }).appendTo(this.legacy.form);
+        
+        if(transfer.tracking) $('<input type="hidden" />').attr({
+            name: transfer.tracking.field.attr('name'),
+            value: transfer.tracking.field.val()
+        }).appendTo(this.legacy.form);
+        
+        this.legacy.form.append(file.node);
         
         this.legacy.form.submit();
     };

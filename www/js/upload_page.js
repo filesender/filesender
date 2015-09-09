@@ -538,7 +538,7 @@ filesender.ui.startUpload = function() {
     filesender.ui.nodes.stats.uploaded.show();
     filesender.ui.nodes.stats.average_speed.show();
     
-    filesender.ui.nodes.form.find(':input').prop('disabled', true);
+    filesender.ui.nodes.form.find(':input:not(.file input[type="file"])').prop('disabled', true);
     
     return this.transfer.start(errorHandler);
 };
@@ -654,11 +654,15 @@ $(function() {
         this.value = null;
     });
     
+    if(!filesender.supports.reader) filesender.ui.nodes.files.input.removeAttr('multiple');
+    
     filesender.ui.recipients.autocomplete();
     
     // Handle "back" browser action
-    var files = filesender.ui.nodes.files.input[0].files;
-    if(files && files.length) filesender.ui.files.add(files);
+    if(filesender.supports.reader) {
+        var files = filesender.ui.nodes.files.input[0].files;
+        if(files && files.length) filesender.ui.files.add(files);
+    }
     
     // Setup date picker
     $.datepicker.setDefaults({
