@@ -21,7 +21,7 @@
         <?php foreach($guests as $guest) { ?>
         <tr class="guest" data-id="<?php echo $guest->id ?>" data-errors="<?php echo count($guest->errors) ? '1' : '' ?>">
             <td class="to">
-                <abbr title="<?php echo Template::sanitizeOutput($guest->email) ?>"><?php echo Template::sanitizeOutput($guest->name) ?></abbr>
+                <a href="mailto:<?php echo Template::sanitizeOutput($guest->email) ?>"><?php echo Template::sanitizeOutput($guest->email) ?></a>
                 
                 <?php if($guest->errors) echo '<br /><span class="errors">'.implode(', ', array_map(function($type) {
                     return Lang::tr('recipient_error_'.$type);
