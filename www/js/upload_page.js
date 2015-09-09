@@ -329,6 +329,8 @@ filesender.ui.recipients = {
     
     // Enable autocomplete for frequent recipients on a field
     autocomplete: function(){
+        if(!filesender.config.autocomplete.enabled) return;
+        
         if(filesender.ui.nodes.guest_token.length) return;
         
         $(filesender.ui.nodes.recipients.input).autocomplete({
@@ -359,7 +361,7 @@ filesender.ui.recipients = {
                 
                 return false;
             },
-            minLength: filesender.config.minimum_characters_for_autocomplete
+            minLength: filesender.config.autocomplete.min_characters
         });
     }
 };

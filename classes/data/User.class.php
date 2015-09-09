@@ -226,8 +226,8 @@ class User extends DBObject {
      */
     public function getFrequentRecipients($criteria = null) {
         // Get max number of returned recipients from config
-        $maxAllowed = Config::get('autocomplete_max_shown');
-        if(!$maxAllowed) $maxAllowed = 5;
+        $size = Config::get('autocomplete');
+        if(!$size || !is_int($size) || $size <= 0) return array();
         
         // Get recipients from preferences
         $recipients = $this->frequent_recipients;
@@ -241,7 +241,7 @@ class User extends DBObject {
         // Return the right amount
         return array_map(function($recipient) {
             return $recipient->email;
-        }, array_slice($recipients, 0, $maxAllowed));
+        }, array_slice($recipients, 0, $size));
     }
     
     /**
@@ -270,9 +270,19 @@ class User extends DBObject {
         }
         
         // Limit number of stored recipients depending on config
-        $maxStored = Config::get('max_stored_frequent_recipients');
-        if(!$maxStored) $maxStored = 0;
-        $recipients = array_slice($recipients, 0, $maxStored);
+        $size = 0;
+        $cnt = Config::get('autocomplete');
+        $pool = Config::get('autocomplete_max_pool');
+        
+        if(is_int($cnt) && $cnt > 0) {
+            if(is_int($pool) && $pool > 0) {
+                $size = $pool;
+            } else {
+                $size = 5 * $cnt;
+            }
+        }
+        
+        $recipients = $size ? array_slice($recipients, 0, $size) : array();
         
         // Save if something changed
         if($recipients !== $this->frequent_recipients) {
