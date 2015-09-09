@@ -91,3 +91,15 @@ window.filesender.config = {
     
     logon_url: '<?php echo AuthSP::logonURL() ?>',
 };
+
+<?php if(Config::get('force_legacy_mode')) { ?>
+
+$(function() {
+    filesender.supports = {
+        localStorage: false,
+        workers: false,
+        digest: false
+    };
+});
+
+<?php } ?>
