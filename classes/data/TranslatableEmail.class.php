@@ -248,8 +248,10 @@ class TranslatableEmail extends DBObject {
         $footer_translation = Lang::translateEmail('translate_email_footer', $lang)->r($translatable);
         
         // Build mail with body and footer
+        $subject = array_filter($email_translation->subject->out());
+        
         $mail = new ApplicationMail(new Translation(array(
-            'subject' => (string)$email_translation->subject->out(),
+            'subject' => array_pop($subject),
             'plain' => $email_translation->plain."\n\n".$footer_translation->plain,
             'html' => $email_translation->html."\n\n".$footer_translation->html,
         )));
