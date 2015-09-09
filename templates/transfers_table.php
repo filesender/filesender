@@ -62,9 +62,13 @@
                 <?php
                 $items = array();
                 foreach(array_slice($transfer->recipients, 0, 3) as $recipient) {
-                    $name = in_array($recipient->email, Auth::user()->email_addresses) ? Lang::tr('me') : $recipient->name;
-                    $full = $recipient->email ? $recipient->email : Lang::tr('anonymous_details');
-                    $items[] = '<abbr title="'.Template::sanitizeOutput($full).'">'.Template::sanitizeOutput($name).'</abbr>';
+                    if(in_array($recipient->email, Auth::user()->email_addresses)) {
+                        $items[] = '<abbr title="'.Template::sanitizeOutput($recipient->email).'">'.Lang::tr('me').'</abbr>';
+                    } else if($recipient->email) {
+                        $items[] = '<a href="mailto:'.Template::sanitizeOutput($recipient->email).'">'.Template::sanitizeOutput($recipient->identity).'</a>';
+                    } else {
+                        $items[] = '<abbr title="'.Lang::tr('anonymous_details').'">'.Lang::tr('anonymous').'</abbr>';
+                    }
                 }
                 
                 if(count($transfer->recipients) > 3)
@@ -162,24 +166,24 @@
                 <div class="recipients">
                     <h2>{tr:recipients}</h2>
                     
-                    <?php
-                    foreach($transfer->recipients as $recipient) {
-                        $name = in_array($recipient->email, Auth::user()->email_addresses) ? Lang::tr('me') : $recipient->name;
-                        $full = $recipient->email ? $recipient->email : Lang::tr('anonymous_details');
-                    ?>
-                        <div class="recipient" data-id="<?php echo $recipient->id ?>" data-email="<?php echo Template::sanitizeOutput($recipient->email) ?>" data-errors="<?php echo count($recipient->errors) ? '1' : '' ?>">
-                            <abbr title="<?php echo Template::sanitizeOutput($full) ?>"><?php echo Template::sanitizeOutput($name) ?></abbr>
-                            
-                            <?php
-                                if($recipient->errors) echo '<span class="errors">'.implode(', ', array_map(function($type) {
-                                    return Lang::tr('recipient_error_'.$type);
-                                }, array_unique(array_map(function($error) {
-                                    return $error->type;
-                                }, $recipient->errors)))).'</span>'
-                            ?>
-                            
-                            : <?php echo count($recipient->downloads) ?> {tr:downloads}
-                        </div>
+                    <?php foreach($transfer->recipients as $recipient) { ?>
+                    <div class="recipient" data-id="<?php echo $recipient->id ?>" data-email="<?php echo Template::sanitizeOutput($recipient->email) ?>" data-errors="<?php echo count($recipient->errors) ? '1' : '' ?>">
+                        <?php
+                        if(in_array($recipient->email, Auth::user()->email_addresses)) {
+                            echo '<abbr title="'.Template::sanitizeOutput($recipient->email).'">'.Lang::tr('me').'</abbr>';
+                        } else {
+                            echo '<a href="mailto:'.$recipient->email.'">'.Template::sanitizeOutput($recipient->identity).'</a>';
+                        }
+                        
+                        if ($recipient->errors) echo '<span class="errors">' . implode(', ', array_map(function($type) {
+                            return Lang::tr('recipient_error_' . $type);
+                        }, array_unique(array_map(function($error) {
+                            return $error->type;
+                        }, $recipient->errors)))) . '</span>';
+                        
+                        echo ' : '.count($recipient->downloads).' '.Lang::tr('downloads');
+                        ?>
+                    </div>
                     <?php } ?>
                 </div>
                 <?php } ?>
