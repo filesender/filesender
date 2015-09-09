@@ -78,7 +78,7 @@ class RestEndpointUser extends RestEndpoint {
         $user = Auth::user();
         
         // Get minimum number of characters needed for search
-        $minchars = Config::get('minimum_characters_for_autocomplete');
+        $minchars = Config::get('autocomplete_min_characters');
         if(is_null($minchars)) $minchars = 3;
         
         $mails = array();

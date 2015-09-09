@@ -192,32 +192,6 @@ $(function() {
                         prompt.append('<p>' + lang.tr('email_separator_msg') + '</p>');
                         var input = $('<input type="text" class="wide" />').appendTo(prompt);
                         input.focus();
-                        
-                        // Autocomplete is buggy
-                        /*input.autocomplete({
-                            source: function (request, response) {
-                                filesender.client.getFrequentRecipients(request.term,
-                                    function (data) {
-                                        response($.map(data, function (item) {
-                                            if ($('.transfers .transfer_details[data-id="' + id + '"] .recipient[data-email="' + item + '"]').length == 0){
-                                                return { 
-                                                    label: item,
-                                                    value: item
-                                                };
-                                            }else{
-                                                return undefined;
-                                            }
-                                        })) 
-                                    }
-                                );
-                            },
-                            select: function (event, ui) {
-                                input.val(input.val() + ', ' + ui.item.value);
-                                
-                                return false;
-                            },
-                            minLength: filesender.config.minimum_characters_for_autocomplete
-                        });*/
                     });
                     
                     // Send reminder button

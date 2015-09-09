@@ -40,6 +40,8 @@ header('Content-Type: text/javascript; charset=UTF-8');
 
 $banned = Config::get('ban_extension');
 
+$amc = Config::get('autocomplete_min_characters');
+
 ?>
 if(!('filesender' in window)) window.filesender = {};
 
@@ -80,7 +82,10 @@ window.filesender.config = {
     
     base_path: '<?php echo GUI::path() ?>',
     support_email: '<?php echo Config::get('support_email') ?>',
-    minimum_characters_for_autocomplete: '<?php echo Config::get('minimum_characters_for_autocomplete')>0?Config::get('minimum_characters_for_autocomplete'):3 ?>',
+    autocomplete: {
+        enabled: <?php echo Config::get('autocomplete') ? 'true' : 'false' ?>,
+        min_characters: <?php echo (is_int($amc) && $amc) ? $amc : 3 ?>
+    },
     
     auditlog_lifetime: <?php $lt = Config::get('auditlog_lifetime'); echo is_null($lt) ? 'null' : $lt ?>,
     
