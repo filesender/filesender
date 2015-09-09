@@ -392,16 +392,27 @@ class Lang {
         }
         
         // Config syntax replacments
-        $tr['text'] = preg_replace_callback('`\{(|size:)(cfg|conf|config):([^}]+)\}`', function($m) {
+        $tr['text'] = self::replaceConfigValues($tr['text']);
+        
+        // Cast to translation object
+        return new Translation($tr['text']);
+    }
+    
+    /**
+     * Replace config values (not doing that in Translation::replace avoids config extraction by syntax injection)
+     * 
+     * @param string $text
+     * 
+     * @return string
+     */
+    private static function replaceConfigValues($text) {
+        return preg_replace_callback('`\{(|size:)(cfg|conf|config):([^}]+)\}`', function($m) {
             $value = Config::get($m[3]);
             switch(substr($m[1], 0, -1)) {
                 case 'size' : $value = Utilities::formatBytes($value); break;
             }
             return $value;
-        }, $tr['text']);
-        
-        // Cast to translation object
-        return new Translation($tr['text']);
+        }, $text);
     }
     
     /**
@@ -468,14 +479,13 @@ class Lang {
                 $parts = preg_split('`\n\s*\n`', $translation, 2);
                 
                 // Do we have headings
-                $subject = '{cfg:site_name}';
+                $subject = array('{cfg:site_name}');
                 if(count($parts) > 1) {
-                    foreach(explode('\n', $parts[0]) as $line) {
+                    $headers = explode("\n", array_shift($parts));
+                    foreach($headers as $line) {
                         // Get subject
-                        if(preg_match('`^\s*subject\s*:\s*(.*)$`i', $line, $m)) {
-                            array_shift($parts);
-                            $subject = trim(Config::get('email_subject_prefix').' '.$m[1]);
-                        }
+                        if(preg_match('`^\s*subject\s*:\s*(.+)$`i', $line, $m))
+                            $subject[] = trim(Config::get('email_subject_prefix').' '.$m[1]);
                     }
                 }
                 
@@ -484,7 +494,7 @@ class Lang {
                 $plain = array();
                 $html = array();
                 $mode = null;
-                foreach(explode("\n", $parts[0]) as $line) {
+                foreach(explode("\n", array_shift($parts)) as $line) {
                     if(trim($line) == '{alternative:plain}') {
                         $mode = 'plain';
                     }else if(trim($line) == '{alternative:html}') {
@@ -520,17 +530,12 @@ class Lang {
                 }
                 
                 // Config syntax replacements
-                list($subject, $plain, $html) = preg_replace_callback('`\{(|size:)(cfg|conf|config):([^}]+)\}`', function($m) {
-                    $value = Config::get($m[3]);
-                    switch($m[1]) {
-                        case 'size' : $value = Utilities::formatBytes($value); break;
-                    }
-                    return $value;
-                }, array($subject, $plain, $html));
+                $subject = self::replaceConfigValues($subject);
+                list($plain, $html) = self::replaceConfigValues(array($plain, $html));
                 
                 // Convert to Translation instance with sub-Translations
                 return new Translation(array(
-                    'subject' => $subject,
+                    'subject' => new Translation($subject),
                     'plain' => html_entity_decode($plain, ENT_QUOTES, 'UTF-8'), // Reverse placeholder resolver's Utilities::sanitizeOutput for plain parts
                     'html' => $html
                 ));

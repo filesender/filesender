@@ -46,7 +46,12 @@ class ApplicationMail extends Mail {
         $use_html = Config::get('email_use_html');
         
         // Cast content to string if translation object
-        $subject = ($content instanceof Translation) ? (string)$content->subject : $content;
+        $subject = ($content instanceof Translation) ? $content->subject : $content;
+        
+        if(is_array($subject)) {
+            $subject = array_filter($subject);
+            $subject = array_pop($subject);
+        }
         
         // Trigger basic mail build
         parent::__construct(null, $subject, $use_html);
