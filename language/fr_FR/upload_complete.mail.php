@@ -20,7 +20,7 @@ Cordialement,
 {alternative:html}
 
 <p>
-    Dear Sir or Madam,
+    Madame, Monsieur,
 </p>
 
 <p>
