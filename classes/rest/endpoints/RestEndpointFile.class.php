@@ -164,9 +164,14 @@ class RestEndpointFile extends RestEndpoint {
             unlink($input['tmp_name']);
         }
         
+        $data = RestEndpointFile::cast($file);
+        
+        if(array_key_exists('callback', $_REQUEST) && array_key_exists('iframe_callback', $_REQUEST))
+            $data['security_token'] = Utilities::getSecurityToken();
+        
         return array(
             'path' => '/file/'.$file->id,
-            'data' => RestEndpointFile::cast($file)
+            'data' => $data
         );
     }
     
