@@ -1,4 +1,5 @@
 subject: File{if:transfer.files>1}s{endif} available for download
+subject: {transfer.subject}
 
 {alternative:plain}
 
@@ -78,7 +79,6 @@ Best regards,
     Personal message from {transfer.user_email}:
 </p>
 <p class="message">
-    <span class="subject">{transfer.subject}</span>
     {htmltext:transfer.message}
 </p>
 {endif}
