@@ -180,7 +180,7 @@ filesender.ui.files = {
         filesender.ui.nodes.stats.uploaded.find('.value').text(filesender.ui.formatBytes(uploaded) + '/' + filesender.ui.formatBytes(size));
         
         if(this.status != 'paused')
-            filesender.ui.nodes.stats.average_speed.find('.value').text(filesender.ui.formatSpeed(speed) + lang.tr('per_second'));
+            filesender.ui.nodes.stats.average_speed.find('.value').text(filesender.ui.formatSpeed(speed));
         
         var bar = filesender.ui.nodes.files.list.find('[data-cid="' + file.cid + '"] .progressbar');
         bar.progressbar('value', Math.round(1000 * file.uploaded / file.size));

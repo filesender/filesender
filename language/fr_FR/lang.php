@@ -84,12 +84,8 @@ $lang['dp_show_month_after_year'] = 'false';
 $lang['dp_year_suffix'] = '';
 
 // Sizes and speeds
-$lang['bytes_no_multiplier'] = 'o';
-$lang['bytes_with_multiplier'] = 'o';
-$lang['speed_unit'] = 'o';
 $lang['size_unit'] = 'o';
-$lang['per_second'] = '/s';
-
+$lang['speed_unit'] = 'o/s';
 
 /**
  * General terms (used in several places)
