@@ -462,7 +462,10 @@ class ConfigValidator {
             
             foreach($checks as $ored) {
                 $pass = false;
+                $error = '';
                 if(is_array($ored)) {
+                    $error = '"'.implode('|', $ored).'"';
+                    
                     foreach($ored as $check) {
                         if(substr($check, 0, 3) == 'is_')
                             $check = substr($check, 3);
@@ -483,11 +486,11 @@ class ConfigValidator {
                     }
                     
                 } elseif(is_callable($ored)) {
-                    $pass = $check($value);
+                    $pass = $ored($value, $error);
                 }
                 
                 if(!$pass) {
-                    error_log('ConfigValidator "'.$parameter.'" does not validate check "'.(is_array($ored) ? implode('|', $ored) : 'custom').'"');
+                    error_log('ConfigValidator "'.$parameter.'" does not validate check : '.$error);
                     $all_pass = false;
                     break;
                 }
