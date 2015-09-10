@@ -267,11 +267,8 @@ class Utilities {
             $precision = 2;
         
         // Variants
-        $nomult = Lang::tr('bytes_no_multiplier')->out();
-        if($nomult == '{bytes_no_multiplier}') $nomult = 'Bytes';
-        
-        $wmult = Lang::tr('bytes_with_multiplier')->out();
-        if($wmult == '{bytes_with_multiplier}') $wmult = 'B';
+        $unit = Lang::tr('size_unit')->out();
+        if($unit == '{size_unit}') $unit = 'b';
         
         $multipliers = array('', 'k', 'M', 'G', 'T');
         
@@ -282,7 +279,7 @@ class Utilities {
         
         $bytes /= pow(1024, $pow);
         
-        return round($bytes, $precision).' '.$multipliers[$pow].($pow ? $wmult : $nomult);
+        return round($bytes, $precision).' '.$multipliers[$pow].$unit;
     }
     
     /**
