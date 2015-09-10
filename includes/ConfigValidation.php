@@ -30,76 +30,22 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+// Require environment (fatal)
+if(!defined('FILESENDER_BASE')) die('Missing environment');
 
-if(!defined('FILESENDER_BASE'))
-    include dirname(dirname(__FILE__)).'/includes/init.php';
+if(!file_exists(FILESENDER_BASE.'/config/config.php'))
+    die('Configuration file not found');
 
-if (!file_exists(FILESENDER_BASE . "/config/config.php")) {
-    $errorMsg .= '<li>Configuration file is missing.</li>';
-    Logger::error('Configuration file is missing.');
-} else {
+ConfigValidator::addCheck('site_url', 'string');
 
-    // The following list must be updated any time a config setting is added/removed.
-    $requiredConfigFields = array(
-        array('site_url','string'),
-        
-        array('admin', array('string', 'array')),
-        array('admin_email', 'string'),
-        array('email_reply_to', 'string'),
-        
-        array('db_type', 'string'),
-        array('db_host', 'string'),
-        array('db_database', 'string'),
-        array('db_username', 'string'),
-        array('db_password', 'string'),
-    );
+ConfigValidator::addCheck('admin', 'string|array');
+ConfigValidator::addCheck('admin_email', 'string');
+ConfigValidator::addCheck('email_reply_to', 'string');
 
-    $errors = array();
+ConfigValidator::addCheck('db_type', 'string');
+ConfigValidator::addCheck('db_host', 'string');
+ConfigValidator::addCheck('db_database', 'string');
+ConfigValidator::addCheck('db_username', 'string');
+ConfigValidator::addCheck('db_password', 'string');
 
-    foreach ($requiredConfigFields as $datas) {
-        $field = $datas[0];
-        $type = $datas[1];
-
-        $conf = Config::get($field);
-        if ($conf === null) {
-            throw new ConfigMissingParameterException($field);
-        } else {
-            if (is_array($type)) {
-                $err = array();
-                foreach ($type as $tmp){
-                    $ret[] = checkConf($field, $tmp);
-                }
-                if (array_search(false,$ret,true)){
-                    throw new ConfigBadParameterException($field);
-                }
-            } else{
-                checkConf($field,$type);
-            }
-        }
-    }
-}
-
-function checkConf($field,$type){
-    $errors = false; 
-    
-    switch ($type){
-        case 'string':
-            if (!is_string($field)){
-                $errors['bad_type'][] = array($field,$type);
-            }
-            break;
-        case 'array':
-            if (!is_array($field)){
-                $errors['bad_type'][] = array($field,$type);
-            }
-            break;
-        case 'int':
-            if (!is_numeric($field)){
-                $errors['bad_type'][] = array($field,$type);
-            }
-            break;
-        default:
-            break;
-        }
-        return $errors ;
-}
+ConfigValidator::run();
