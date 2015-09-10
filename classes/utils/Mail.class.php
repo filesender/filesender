@@ -594,6 +594,11 @@ class MailAttachment {
     private $cid = null;
     
     /**
+     * New line style
+     */
+    private $nl = "\r\n";
+    
+    /**
      * Create new empty attachment
      * 
      * @param string $name
@@ -601,6 +606,9 @@ class MailAttachment {
      */
     public function __construct($name = null) {
         $this->name = $name;
+        
+        $nl = Config::get('email_newline');
+        if($nl) $this->nl = $nl;
     }
     
     /**
