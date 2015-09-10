@@ -256,7 +256,7 @@ function downloadSingleFile($transfer, $recipient, $file_id) {
         return ($offset >= $file->size);
     };
 
-    if($recipient) $recipient->reportActivity();
+    if($recipient) $recipient->recordActivity();
     
     $done = false;
     
