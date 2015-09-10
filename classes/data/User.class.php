@@ -209,9 +209,9 @@ class User extends DBObject {
     }
     
     /**
-     * Report last activity
+     * Record activity
      */
-    public function reportActivity() {
+    public function recordActivity() {
         $this->last_activity = time();
         $this->save();
     }

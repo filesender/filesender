@@ -121,19 +121,18 @@ class Auth {
                 self::$user = User::fromAttributes(self::$attributes);
                 
                 // Save user additionnal attributes if enabled
-                if(self::isSP() && Config::get('auth_sp_save_user_additional_attributes') && array_key_exists('additional', self::$attributes)) {
-                    if((array)self::$user->additional_attributes != self::$attributes['additional']) {
-                        self::$user->additional_attributes = self::$attributes['additional'];
-                        self::$user->save();
-                    }
-                }
+                if(
+                    self::isSP()
+                    && Config::get('auth_sp_save_user_additional_attributes')
+                    && array_key_exists('additional', self::$attributes)
+                )
+                    self::$user->additional_attributes = self::$attributes['additional'];
                 
                 // Save user quota for guest uploads
                 $user_quota = Config::get('user_quota');
-                if($user_quota && (self::$user->quota != $user_quota)) {
-                    self::$user->quota = $user_quota;
-                    self::$user->save();
-                }
+                if($user_quota) self::$user->quota = $user_quota;
+                
+                self::$user->recordActivity(); // Saves preferences and all above changes
             }
         }
         
