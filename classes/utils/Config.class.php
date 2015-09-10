@@ -407,3 +407,94 @@ class Config {
         }
     }
 }
+
+/**
+ * Config validator helper
+ * 
+ * Every error leads to php error logging as Logger may not have what it needs to work already
+ */
+class ConfigValidator {
+    /**
+     * Checks
+     */
+    private static $checks = array();
+    
+    /**
+     * Add new check(s)
+     * 
+     * @param string $parameter_name
+     * @param mixed * test(s)
+     */
+    public static function addCheck($parameter_name) {
+        if(!$parameter_name) error_log('ConfigValidator check needs parameter_name');
+        
+        if(!array_key_exists($parameter_name, self::$checks))
+            self::$checks[$parameter_name] = array();
+        
+        foreach(array_slice(func_get_args(), 1) as $arg) {
+            if(is_string($arg)) {
+                $ored = array();
+                foreach(array_map('trim', explode('|', $arg)) as $p) {
+                    if(preg_match('`^(is_)?(set|not_empty|null|bool|string|int|float|array|callable)$`', $p)) {
+                        $ored[] = $p;
+                        
+                    } else {
+                        error_log('ConfigValidator bad check for "'.$parameter_name.'" : '.print_r($p, true));
+                    }
+                }
+                
+                self::$checks[$parameter_name][] = $ored;
+                
+            } elseif(is_callable($arg)) {
+                self::$checks[$parameter_name][] = $arg;
+            }
+        }
+    }
+    
+    /**
+     * Run checks
+     */
+    public static function run() {
+        $all_pass = true;
+        
+        foreach(self::$checks as $parameter => $checks) {
+            $value = Config::get($parameter);
+            
+            foreach($checks as $ored) {
+                $pass = false;
+                if(is_array($ored)) {
+                    foreach($ored as $check) {
+                        if(substr($check, 0, 3) == 'is_')
+                            $check = substr($check, 3);
+                        
+                        switch($check) {
+                            case 'set':         $pass |= Config::exists($parameter);    break;
+                            case 'not_empty':   $pass |= !empty($value);                break;
+                            case 'null':        $pass |= ($value === null);             break;
+                            case 'bool':        $pass |= is_bool($value);               break;
+                            case 'string':      $pass |= is_string($value);             break;
+                            case 'int':         $pass |= is_int($value);                break;
+                            case 'float':       $pass |= is_float($value);              break;
+                            case 'array':       $pass |= is_array($value);              break;
+                            case 'callable':    $pass |= is_callable($value);           break;
+                        }
+                            
+                        if($pass) break; // Stop on first true or component
+                    }
+                    
+                } elseif(is_callable($ored)) {
+                    $pass = $check($value);
+                }
+                
+                if(!$pass) {
+                    error_log('ConfigValidator "'.$parameter.'" does not validate check "'.(is_array($ored) ? implode('|', $ored) : 'custom').'"');
+                    $all_pass = false;
+                    break;
+                }
+            }
+        }
+        
+        if(!$all_pass)
+            die('Configuration error(s), please check the server logs or ask an admin to do so.');
+    }
+}
