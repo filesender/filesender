@@ -216,6 +216,35 @@ class User extends DBObject {
         $this->save();
     }
     
+    /**
+     * Get active users
+     * 
+     * @return array of User
+     */
+    public static function getActive() {
+        $days = Config::get('user_active_days');
+        
+        if(!$days || !is_int($days) || $days <= 0) {
+            $days = Config::get('user_inactive_days');
+            
+            if(!$days || !is_int($days) || $days <= 0)
+                $days = 30;
+        }
+        
+        return User::all('last_activity >= :date', array(':date' => date('Y-m-d', time() - $days * 24 * 3600)));
+    }
+    
+    /**
+     * Remove inactive users preferences
+     */
+    public static function removeInactive() {
+        $days = Config::get('user_inactive_days');
+        if(!$days || !is_int($days) || $days <= 0)
+            return;
+        
+        foreach(User::all('last_activity < :date', array(':date' => date('Y-m-d', time() - $days * 24 * 3600))) as $user)
+            $user->delete(); // No need to remove transfers and guests as only saved preferences are deleted (not user account which is managed by identity federation)
+    }
     
     /**
      * This function allows to get the frequent recipients of the current user.

@@ -117,3 +117,6 @@ if((int)$level) {
         SystemMail::quickSend('storage_usage_warning', array('warnings' => $block_warnings));
     }
 }
+
+// Remove inactive users preferences
+User::removeInactive();
