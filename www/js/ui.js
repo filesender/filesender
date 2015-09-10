@@ -457,10 +457,12 @@ window.filesender.ui = {
         
         if(!auth || auth == 'guest') return;
         
+        if(!filesender.config.quota && filesender.config.quota !== undefined) return;
+        
         filesender.client.getUserQuota(function(quota) {
-            if(!quota) return;
-            
             filesender.config.quota = quota; // Propagate info
+            
+            if(!quota) return;
             
             var bar = $('.user_quota');
             if(!bar.length) {
