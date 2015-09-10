@@ -273,9 +273,10 @@ window.filesender.client = {
      * @param callable callback
      * @param callable onerror
      */
-    getTransfer: function(id, callback, onerror) {
+    getTransfer: function(id, callback, onerror, ignore_authentication_required) {
         var opts = {};
         if(onerror) opts.error = onerror;
+        if(ignore_authentication_required) opts.ignore_authentication_required = true;
         
         return this.get('/transfer/' + id, callback, opts);
     },
