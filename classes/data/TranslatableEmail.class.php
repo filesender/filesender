@@ -230,9 +230,6 @@ class TranslatableEmail extends DBObject {
                 throw new TranslatableEmailUnknownContextException(get_class($to));
         }
         
-        // Create object
-        $translatable = self::create($context, $translation_id, $vars);
-        
         // compute lang from arguments
         $lang = null;
         if($to instanceof User) {
@@ -244,16 +241,26 @@ class TranslatableEmail extends DBObject {
         // Translate mail parts
         $email_translation = call_user_func_array(array(Lang::translateEmail($translation_id, $lang), 'replace'), $vars);
         
-        // Translate specific footer
-        $footer_translation = Lang::translateEmail('translate_email_footer', $lang)->r($translatable);
-        
         // Build mail with body and footer
-        $subject = array_filter($email_translation->subject->out());
+        $plain = $email_translation->plain->out();
+        $html = $email_translation->html->out();
+        
+        // No need for translatable emails if only one language available ...
+        if(count(Lang::getAvailableLanguages()) > 1) {
+            // Create object
+            $translatable = self::create($context, $translation_id, $vars);
+            
+            // Translate specific footer
+            $footer_translation = Lang::translateEmail('translate_email_footer', $lang)->r($translatable);
+            
+            $plain .= "\n\n".$footer_translation->plain->out();
+            $html .= "\n\n".$footer_translation->html->out();
+        }
         
         $mail = new ApplicationMail(new Translation(array(
-            'subject' => array_pop($subject),
-            'plain' => $email_translation->plain."\n\n".$footer_translation->plain,
-            'html' => $email_translation->html."\n\n".$footer_translation->html,
+            'subject' => $email_translation->subject->out(),
+            'plain' => $plain,
+            'html' => $html,
         )));
         
         // Add recipient

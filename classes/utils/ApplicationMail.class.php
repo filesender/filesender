@@ -49,8 +49,8 @@ class ApplicationMail extends Mail {
         $subject = ($content instanceof Translation) ? $content->subject : $content;
         
         if(is_array($subject)) {
-            $subject = array_filter($subject);
-            $subject = array_pop($subject);
+            $subject = array_filter($subject);Logger::info($subject);
+            $subject = $subject['prefix'].' '.array_pop($subject);
         }
         
         // Trigger basic mail build

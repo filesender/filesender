@@ -479,13 +479,13 @@ class Lang {
                 $parts = preg_split('`\n\s*\n`', $translation, 2);
                 
                 // Do we have headings
-                $subject = array('{cfg:site_name}');
+                $subject = array('prefix' => trim((string)Config::get('email_subject_prefix')), '{cfg:site_name}');
                 if(count($parts) > 1) {
                     $headers = explode("\n", array_shift($parts));
                     foreach($headers as $line) {
                         // Get subject
                         if(preg_match('`^\s*subject\s*:\s*(.+)$`i', $line, $m))
-                            $subject[] = trim(Config::get('email_subject_prefix').' '.$m[1]);
+                            $subject[] = trim($m[1]);
                     }
                 }
                 
