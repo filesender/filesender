@@ -927,6 +927,6 @@ $(function() {
             } else {
                 filesender.ui.error(error);
             }
-        });
+        }, true); // ignore_authentication_required
     }
 });
