@@ -23,14 +23,14 @@
         {tr:download_disclamer}
     </div>
     
-    <div class="general box" >
+    <div class="general box" data-transfer-size="<?php echo $transfer->size ?>">
         <div class="from">{tr:from} : <?php echo Utilities::sanitizeOutput($transfer->user_email) ?></div>
         
         <div class="created">{tr:created} : <?php echo Utilities::sanitizeOutput(Utilities::formatDate($transfer->created)) ?></div>
         
         <div class="expires">{tr:expires} : <?php echo Utilities::sanitizeOutput(Utilities::formatDate($transfer->expires)) ?></div>
         
-        <div class="expires">{tr:size} : <?php echo Utilities::sanitizeOutput(Utilities::formatBytes($transfer->size)) ?></div>
+        <div class="size">{tr:size} : <?php echo Utilities::sanitizeOutput(Utilities::formatBytes($transfer->size)) ?></div>
         
         <?php if($transfer->subject) { ?>
         <div class="subject">{tr:subject} : <?php echo Utilities::sanitizeOutput($transfer->subject) ?></div>

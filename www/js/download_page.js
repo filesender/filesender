@@ -116,4 +116,7 @@ $(function() {
         
         return false;
     });
+    
+    if(parseInt($('[data-tranfer-size]').attr('data-tranfer-size')) < 4 * 1024 * 1024 * 1024)
+        $('.mac_archive_message').hide();
 });
