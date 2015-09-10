@@ -30,8 +30,3 @@ p.message {
     border: 1px solid #bbb;
     padding: 3px;
 }
-
-p.message .subject {
-    display: block;
-    font-weight: bold;
-}
