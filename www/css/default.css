@@ -77,9 +77,10 @@ abbr {
 
 #notifications {
     position: fixed;
-    top: 0;
-    left: 0;
+    left: 50%;
+    top: 50%;
     width: 30%;
+    transform: translate(-50%, -50%);
 }
 
 #menu {
