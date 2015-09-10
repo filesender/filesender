@@ -447,7 +447,62 @@ window.filesender.ui = {
         int: /^[0-9]*$/,
         float: /^[0-9]*(\.[0-9]+)?$/,
         notzero: function() { return this && parseFloat(this) },
-    }
+    },
+    
+    /**
+     * Update user quota bar
+     */
+    updateUserQuotaBar: function() {
+        var auth = $('body').attr('data-auth-type');
+        
+        if(!auth || auth == 'guest') return;
+        
+        filesender.client.getUserQuota(function(quota) {
+            if(!quota) return;
+            
+            filesender.config.quota = quota; // Propagate info
+            
+            var bar = $('.user_quota');
+            if(!bar.length) {
+                bar = $('<div class="progressbar quota user_quota" />').prependTo('#page .box:eq(0)');
+                $('<div class="progress-label" />').appendTo(bar);
+                bar.progressbar({
+                    value: false,
+                    max: 1000,
+                    change: function() {
+                        var bar = $(this);
+                        var v = bar.progressbar('value');
+                        
+                        var classes = [];
+                        
+                        var pct = parseInt(v / 10);
+                        
+                        var tens = parseInt(pct / 10);
+                        if(tens) classes.push('quota_' + tens + '0');
+                        
+                        if(pct % 10 >= 5) classes.push('quota_plus_5');
+                        
+                        bar.find('.progress-label').text((v / 10).toFixed(1) + '%');
+                        bar.addClass(classes.join(' '));
+                    },
+                    complete: function() {
+                        var bar = $(this);
+                        bar.find('.progress-label').text(lang.tr('full'));
+                    }
+                });
+                
+                $(document).trigger({type: 'filesender.quotabar.setup', quota: quota, bar: bar});
+            }
+            
+            bar.progressbar('value', Math.round(1000 * quota.used / quota.total));
+            
+            var info = lang.tr('quota_usage').r(quota);
+            
+            bar.find('.progress-label').text(info);
+            
+            bar.attr({title: lang.tr('user_quota')});
+        });
+    },
 };
 
 $(function() {
@@ -474,47 +529,5 @@ $(function() {
         filesender.ui.goToPage(true, {lang: $(this).val()}, null, true);
     });
     
-    var auth = $('body').attr('data-auth-type');
-    if(auth && auth != 'guest') filesender.client.getUserQuota(function(quota) {
-        if(!quota) return;
-        
-        filesender.config.quota = quota; // Propagate info
-        
-        var bar = $('<div class="progressbar quota user_quota" />').prependTo('#page .box:eq(0)');
-        $('<div class="progress-label" />').appendTo(bar);
-        bar.progressbar({
-            value: false,
-            max: 1000,
-            change: function() {
-                var bar = $(this);
-                var v = bar.progressbar('value');
-                
-                var classes = [];
-                
-                var pct = parseInt(v / 10);
-                
-                var tens = parseInt(pct / 10);
-                if(tens) classes.push('quota_' + tens + '0');
-                
-                if(pct % 10 >= 5) classes.push('quota_plus_5');
-                
-                bar.find('.progress-label').text((v / 10).toFixed(1) + '%');
-                bar.addClass(classes.join(' '));
-            },
-            complete: function() {
-                var bar = $(this);
-                bar.find('.progress-label').text(lang.tr('full'));
-            }
-        });
-        
-        bar.progressbar('value', Math.round(1000 * quota.used / quota.total));
-        
-        var info = lang.tr('quota_usage').r(quota);
-        
-        bar.find('.progress-label').text(info);
-        
-        bar.attr({title: lang.tr('user_quota')});
-        
-        $(document).trigger({type: 'filesender.quotabar.setup', quota: quota, bar: bar});
-    });
+    filesender.ui.updateUserQuotaBar();
 });

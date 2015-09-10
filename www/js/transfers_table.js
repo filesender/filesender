@@ -111,6 +111,7 @@ $(function() {
                             filesender.client.closeTransfer(id, function() {
                                 table.find('[data-id="' + id + '"]').remove();
                                 filesender.ui.notify('success', lang.tr('transfer_closed'));
+                                filesender.ui.updateUserQuotaBar();
                             });
                         });
                     }
@@ -285,6 +286,7 @@ $(function() {
                                 transfer_details.remove();
                             }
                             filesender.ui.notify('success', lang.tr('file_deleted'));
+                            filesender.ui.updateUserQuotaBar();
                         });
                     });
                 });
