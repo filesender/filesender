@@ -48,4 +48,12 @@ ConfigValidator::addCheck('db_database', 'string');
 ConfigValidator::addCheck('db_username', 'string');
 ConfigValidator::addCheck('db_password', 'string');
 
+ConfigValidator::addCheck('lang_selector_enabled', function($value, &$error) {
+    if(!$value) return true;
+    if(Config::get('lang_url_enabled')) return true;
+    
+    $error = 'lang_url_enabled must be set to true if lang_selector_enabled is, otherwise the language selector won\'t work';
+    return false;
+});
+
 ConfigValidator::run();
