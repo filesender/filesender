@@ -33,7 +33,7 @@ $pagemenuitem = function($page) {
     <div class="rightmenu">
         <ul>
         <?php
-            if(Config::get('lang_selector_enabled')) {
+            if(Config::get('lang_selector_enabled') && (count(Lang::getAvailableLanguages()) > 1)) {
                 $opts = array();
                 $code = Lang::getCode();
                 foreach(Lang::getAvailableLanguages() as $id => $dfn) {
