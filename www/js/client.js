@@ -139,7 +139,10 @@ window.filesender.client = {
                 )
                     return;
                 
-                if(error.message == 'rest_authentication_required' || error.message == 'rest_xsrf_token_did_not_match') {
+                if(
+                    (error.message == 'rest_authentication_required' || error.message == 'rest_xsrf_token_did_not_match') &&
+                    (options.auth_prompt === undefined || options.auth_prompt)
+                ) {
                     filesender.client.authentication_required = filesender.ui.popup(
                         lang.tr('authentication_required'),
                         filesender.config.logon_url ? {
@@ -273,10 +276,9 @@ window.filesender.client = {
      * @param callable callback
      * @param callable onerror
      */
-    getTransfer: function(id, callback, onerror, ignore_authentication_required) {
-        var opts = {};
+    getTransfer: function(id, callback, onerror, opts) {
+        if(!opts) opts = {};
         if(onerror) opts.error = onerror;
-        if(ignore_authentication_required) opts.ignore_authentication_required = true;
         
         return this.get('/transfer/' + id, callback, opts);
     },
