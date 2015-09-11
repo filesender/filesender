@@ -924,9 +924,13 @@ $(function() {
                 // Transfer does not exist anymore on server side, remove from tracker
                 filesender.ui.transfer.removeFromRestartTracker(failed.id);
                 
+            } else if(error.message == 'rest_authentication_required' && auth) {
+                // Transfer ended up being in a weird state, remove from tracker
+                filesender.ui.transfer.removeFromRestartTracker(failed.id);
+                
             } else {
                 filesender.ui.error(error);
             }
-        }, true); // ignore_authentication_required
+        }, {auth_prompt: false});
     }
 });
