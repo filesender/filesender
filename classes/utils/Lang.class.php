@@ -116,7 +116,7 @@ class Lang {
      * 
      * @return mixed real code or null if not found
      */
-    private static function realCode($raw_code) {
+    public static function realCode($raw_code) {
         $raw_code = str_replace('_', '-', strtolower($raw_code));
         $available = self::getAvailableLanguages();
         
@@ -143,61 +143,65 @@ class Lang {
         if(is_null(self::$code_stack)) {
             $stack = array();
             
+            $available = self::getAvailableLanguages();
+            
             // Fill stack by order of preference and without duplicates
             
-            // Auth exception should not stop processing of lang code
-            try {
-                // URL/session given language
-                if(Config::get('lang_url_enabled')) {
-                    if(array_key_exists('lang', $_GET) && preg_match('`^[a-z]+(-.+)?$`', $_GET['lang'])) {
-                        $code = self::realCode($_GET['lang']);
-                        if($code) {
-                            if(isset($_SESSION)) $_SESSION['lang'] = $code;
-                            if(Config::get('lang_save_url_switch_in_userpref') && Auth::isAuthenticated()) {
-                                Auth::user()->lang = $code;
-                                Auth::user()->save();
+            if(count($available) > 1) {
+                // Auth exception should not stop processing of lang code
+                try {
+                    // URL/session given language
+                    if(Config::get('lang_url_enabled')) {
+                        if(array_key_exists('lang', $_GET) && preg_match('`^[a-z]+(-.+)?$`', $_GET['lang'])) {
+                            $code = self::realCode($_GET['lang']);
+                            if($code) {
+                                if(isset($_SESSION)) $_SESSION['lang'] = $code;
+                                if(Config::get('lang_save_url_switch_in_userpref') && Auth::isAuthenticated()) {
+                                    Auth::user()->lang = $code;
+                                    Auth::user()->save();
+                                }
                             }
+                        }
+                        
+                        if(isset($_SESSION) && array_key_exists('lang', $_SESSION)) {
+                            if(!in_array($_SESSION['lang'], $stack))
+                                $stack[] = $_SESSION['lang'];
                         }
                     }
                     
-                    if(isset($_SESSION) && array_key_exists('lang', $_SESSION)) {
-                        if(!in_array($_SESSION['lang'], $stack))
-                            $stack[] = $_SESSION['lang'];
+                    // User preference stored language
+                    if(Config::get('lang_userpref_enabled') && Auth::isAuthenticated()) {
+                        $code = Auth::user()->lang;
+                        if($code && !in_array($code, $stack))
+                            $stack[] = $code;
                     }
-                }
+                } catch(Exception $e) {}
                 
-                // User preference stored language
-                if(Config::get('lang_userpref_enabled') && Auth::isAuthenticated()) {
-                    $code = Auth::user()->lang;
-                    if($code && !in_array($code, $stack))
-                        $stack[] = $code;
-                }
-            } catch(Exception $e) {}
-            
-            // Browser language
-            if(Config::get('lang_browser_enabled') && array_key_exists('HTTP_ACCEPT_LANGUAGE', $_SERVER)) {
-                $codes = array();
-                foreach(array_map('trim', explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE'])) as $part) {
-                    $code = $part;
-                    $weight = 1;
-                    if(strpos($part, ';') !== false) {
-                        $part = array_map('trim', explode(';', $part));
-                        $code = array_shift($part);
-                        foreach($part as $p)
-                            if(preg_match('`^q=([0-9]+\.[0-9]+)$`', $p, $m))
-                                $weight = (float)$m[1];
+                // Browser language
+                if(Config::get('lang_browser_enabled') && array_key_exists('HTTP_ACCEPT_LANGUAGE', $_SERVER)) {
+                    $codes = array();
+                    foreach(array_map('trim', explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE'])) as $part) {
+                        $code = $part;
+                        $weight = 1;
+                        if(strpos($part, ';') !== false) {
+                            $part = array_map('trim', explode(';', $part));
+                            $code = array_shift($part);
+                            foreach($part as $p)
+                                if(preg_match('`^q=([0-9]+\.[0-9]+)$`', $p, $m))
+                                    $weight = (float)$m[1];
+                        }
+                        $codes[$code] = $weight;
                     }
-                    $codes[$code] = $weight;
-                }
-                
-                uasort($codes, function($a, $b) {
-                    return ($b > $a) ? 1 : (($b < $a) ? -1 : 0);
-                });
-                
-                foreach($codes as $code => $weight) {
-                    $code = self::realCode($code);
-                    if($code && !in_array($code, $stack))
-                        $stack[] = $code;
+                    
+                    uasort($codes, function($a, $b) {
+                        return ($b > $a) ? 1 : (($b < $a) ? -1 : 0);
+                    });
+                    
+                    foreach($codes as $code => $weight) {
+                        $code = self::realCode($code);
+                        if($code && !in_array($code, $stack))
+                            $stack[] = $code;
+                    }
                 }
             }
             
@@ -213,7 +217,12 @@ class Lang {
             $code = self::realCode('en');
             if($code) {
                 if(!in_array($code, $stack)) $stack[] = $code;
-            }else $stack[] = key(self::getAvailableLanguages()); // Should not go there ...
+            }else $stack[] = key($available); // Should not go there ...
+            
+            // Filter provided values
+            $stack = array_filter($stack, function($code) use($available) {
+                return array_key_exists($code, $available);
+            });
             
             // Add to cached stack (most significant first)
             $main = array_shift($stack);
