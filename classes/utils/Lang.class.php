@@ -455,6 +455,8 @@ class Lang {
         
         // Look for translation in code stack ...
         foreach($codes as $code) {
+            if(!array_key_exists($code, $available)) continue;
+            
             // ... and for each possible location
             foreach($locations as $location) {
                 // Translations path
