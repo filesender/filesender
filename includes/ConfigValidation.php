@@ -56,4 +56,16 @@ ConfigValidator::addCheck('lang_selector_enabled', function($value, &$error) {
     return false;
 });
 
+ConfigValidator::addCheck('default_language', function($lang, &$error) {
+    if(!$lang) return true;
+    
+    $lang = Lang::realCode($lang);
+    $available = Lang::getAvailableLanguages();
+    
+    if(array_key_exists($lang, $available)) return true;
+    
+    $error = 'default_language must be one of the available languages defined in locale.php ('.implode(', ', array_keys($available)).')';
+    return false;
+});
+
 ConfigValidator::run();
