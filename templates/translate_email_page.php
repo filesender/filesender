@@ -1,16 +1,5 @@
 <div class="box">
 <?php
-    if(!Config::get('lang_selector_enabled')) {
-        $opts = array();
-        $code = Lang::getCode();
-        foreach(Lang::getAvailableLanguages() as $id => $dfn) {
-            $selected = ($id == $code) ? 'selected="selected"' : '';
-            $opts[] = '<option value="'.$id.'" '.$selected.'>'.Utilities::sanitizeOutput($dfn['name']).'</option>';
-        }
-        
-        echo '<div class="buttons"><select id="language_selector">'.implode('', $opts).'</select></div>';
-    }
-    
     if(!array_key_exists('token', $_REQUEST))
         throw new TokenIsMissingException();
     
@@ -18,9 +7,32 @@
     if(!Utilities::isValidUID($token))
         throw new TokenHasBadFormatException($token);
     
+    $lang = array_key_exists('lang', $_REQUEST) ? $_REQUEST['lang'] : null;
+    
+    $available = Lang::getAvailableLanguages();
+    
+    if(!array_key_exists($lang, $available))
+        $lang = Lang::getCode();
+    
+    $url = '?s=translate_email&amp;token='.$token.'&amp;lang=';
+    
+    if(count($available) > 1) {
+        echo '<div class="buttons">';
+        
+        foreach($available as $id => $dfn) {
+            if($id == $lang) {
+                echo '<span class="selected">'.Utilities::sanitizeOutput($dfn['name']).'</span>';
+            } else {
+                echo '<a href="'.$url.$id.'">'.Utilities::sanitizeOutput($dfn['name']).'</a>';
+            }
+        }
+        
+        echo '</div>';
+    }
+    
     $translatable = TranslatableEmail::fromToken($token);
     
-    $translation = $translatable->translate();
+    $translation = $translatable->translate($lang);
     
     /*
      * Do not call Template::sanitizeOutput on email contents after that because
@@ -39,4 +51,6 @@
         <dt data-property="message">{tr:message}</dt>
         <dd data-property="message"><?php echo Template::sanitize($translation->html) ?></dd>
     </dl>
+    
+    <script type="text/javascript" src="{path:js/translate_email_page.js}"></script>
 </div>
