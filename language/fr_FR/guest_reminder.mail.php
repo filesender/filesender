@@ -1,4 +1,5 @@
 subject: (rappel) Invitation reçue
+subject: (rappel) {guest.subject}
 
 {alternative:plain}
 

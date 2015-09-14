@@ -1,4 +1,5 @@
 subject: Guest voucher received
+subject: {guest.subject}
 
 {alternative:plain}
 
