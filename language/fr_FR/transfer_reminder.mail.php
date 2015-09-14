@@ -1,4 +1,5 @@
 subject: (rappel) Fichier{if:transfer.files>1}s{endif} disponible{if:transfer.files>1}s{endif} au téléchargement
+subject: (rappel) {transfer.subject}
 
 {alternative:plain}
 

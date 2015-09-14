@@ -1,4 +1,5 @@
-subject: Reminder, file{if:transfer.files>1}s{endif} available for download
+subject: (reminder) File{if:transfer.files>1}s{endif} available for download
+subject: (reminder) {transfer.subject}
 
 {alternative:plain}
 

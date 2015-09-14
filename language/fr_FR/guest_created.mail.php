@@ -1,4 +1,5 @@
 subject: Invitation
+subject: {guest.subject}
 
 {alternative:plain}
 

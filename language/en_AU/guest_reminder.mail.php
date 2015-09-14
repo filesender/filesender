@@ -1,4 +1,5 @@
-subject: Reminder, guest voucher received
+subject: (reminder) guest voucher received
+subject: (reminder) {guest.subject}
 
 {alternative:plain}
 
