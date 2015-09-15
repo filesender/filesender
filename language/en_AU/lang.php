@@ -162,6 +162,8 @@ $lang['quota_usage'] = '{size:used} out of {size:total} used, {size:available} r
 $lang['host_quota'] = 'Host quota';
 $lang['user_quota'] = 'User quota';
 $lang['dialog_autoclose'] = 'Dialog will close in {seconds} seconds';
+$lang['extend'] = 'Extend';
+$lang['extend_and_remind'] = 'Extend and send reminder';
 
 
 /**
@@ -257,7 +259,10 @@ $lang['view_full_log'] = 'View the full log';
 $lang['send_to_my_email'] = 'Send to my email';
 $lang['confirm_remind_transfer'] = 'Do you really want to send a reminder to this transfer\'s recipients ?';
 $lang['download_link'] = 'Download link';
-
+$lang['extend_expiry_date'] = 'Extend expiry date by {days} days';
+$lang['confirm_extend_expiry'] = 'Do you really want to extend the expiry date by {days} days ?';
+$lang['transfer_extended'] = 'Expiry date extended until {expires}';
+$lang['transfer_extended_reminded'] = 'Expiry date extended until {expires}, a reminder was sent to recipients';
 
 /**
  * Reports
@@ -514,6 +519,8 @@ $lang['cannot_alter_closed_transfer'] = 'Cannot alter closed transfer';
 $lang['transfer_rejected'] = 'Transfer creation rejected';
 $lang['transfer_host_quota_exceeded'] = 'Host quota exceeded';
 $lang['transfer_user_quota_exceeded'] = 'User quota exceeded';
+$lang['transfer_expiry_extension_not_allowed'] = 'Transfer expiry date extension is not allowed';
+$lang['transfer_expiry_extension_count_exceeded'] = 'Transfer expiry date extension maximum reached';
 
 // User related exceptions
 $lang['user_not_found'] = 'User not found';

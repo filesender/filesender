@@ -197,3 +197,29 @@ class TransferUserQuotaExceededException extends DetailedException {
         parent::__construct('transfer_user_quota_exceeded');
     }
 }
+
+/**
+ * Expiry extension not allowed
+ */
+class TransferExpiryExtensionNotAllowedException extends DetailedException {
+    /**
+     * Constructor
+     */
+    public function __construct() {
+        parent::__construct('transfer_expiry_extension_not_allowed');
+    }
+}
+
+/**
+ * Expiry extension count exceeded
+ */
+class TransferExpiryExtensionCountExceededException extends DetailedException {
+    /**
+     * Constructor
+     * 
+     * @param Transfer $transfer
+     */
+    public function __construct($transfer) {
+        parent::__construct('transfer_expiry_extension_count_exceeded', 'transfer = '.$transfer->id);
+    }
+}

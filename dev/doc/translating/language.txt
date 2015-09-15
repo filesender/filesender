@@ -566,6 +566,7 @@ Sent to a transfer owner when it's transfer is made available.
   * `created` : epoch creation date (int)
   * `made_available` : epoch date when the transfer became available (int)
   * `expires` : epoch date when the transfer will expire (int)
+  * `expiry_date_extension` : number of days the transfer expiry date can be extended by (int)
   * `options` : transfer options (array of strings)
   * `lang` : lang set by the owner for the recipients (string)
   * `user` : alias of `owner` (object)

@@ -87,6 +87,10 @@ class Transfer extends DBObject {
         'expires' => array(
             'type' => 'datetime'
         ),
+        'expiry_extensions' => array(
+            'type' => 'uint',
+            'size' => 'tiny'
+        ),
         'status' => array(
             'type' => 'string',
             'size' => 32
@@ -124,6 +128,7 @@ class Transfer extends DBObject {
     protected $created = 0;
     protected $made_available = null;
     protected $expires = 0;
+    protected $expiry_extensions = 0;
     protected $options = array();
     
     /**
@@ -509,7 +514,7 @@ class Transfer extends DBObject {
         if(in_array($property, array(
             'id', 'status', 'user_id', 'user_email', 'guest_id',
             'subject', 'message', 'created', 'made_available',
-            'expires', 'options', 'lang'
+            'expires', 'expiry_extensions', 'options', 'lang'
         ))) return $this->$property;
         
         if($property == 'user' || $property == 'owner') {
@@ -561,6 +566,8 @@ class Transfer extends DBObject {
         }
         
         if($property == 'is_expired') return $this->isExpired();
+        
+        if($property == 'expiry_date_extension') return $this->expiryDateExtension(false); // No throw
         
         if($property == 'made_available_time') return $this->made_available ? ($this->made_available - $this->created) : null;
         
@@ -847,6 +854,68 @@ class Transfer extends DBObject {
         $this->save();
         Logger::logActivity(LogEventTypes::UPLOAD_STARTED, $this);
         Logger::info('Transfer#'.$this->id.' upload started');
+    }
+    
+    /**
+     * Check if transfer expiry date can be extended
+     * 
+     * @param bool $throw throw on error
+     * 
+     * @return int number of days the transfer expiry date can be extended by
+     * 
+     * @throws TransferExpiryExtensionNotAllowedException
+     * @throws TransferExpiryExtensionCountExceededException
+     */
+    public function expiryDateExtension($throw = true) {
+        $pattern = Config::get('allow_transfer_expiry_date_extension');
+        
+        if(!$pattern) {
+            if($throw) throw new TransferExpiryExtensionNotAllowedException();
+            return 0;
+        }
+        
+        if(!is_array($pattern)) $pattern = array($pattern);
+        
+        // Get nth
+        $index = (int)$this->expiry_extensions;
+        
+        if($index < count($pattern)) {
+            $duration = (int)$pattern[$index];
+            
+        } else {
+            $last = array_pop($pattern);
+            
+            if(count($pattern) && is_bool($last) && $last) {
+                $duration = array_pop($pattern);
+                
+            } else {
+                if($throw) throw new TransferExpiryExtensionCountExceededException($this);
+                return 0;
+            }
+        }
+        
+        if((count($pattern) == 2) && is_bool($pattern[0]) && $pattern[0]) // Infinite
+            return (int)$pattern[1];
+            
+        return $duration;
+    }
+    
+    /**
+     * Extend transfer expiry date (if enabled)
+     * 
+     * @throws TransferExpiryExtensionNotAllowedException
+     */
+    public function extendExpiryDate() {
+        $duration = $this->expiryDateExtension(); // throws
+        
+        if(!$duration) // Should not happend unless config is garbled
+            throw new TransferExpiryExtensionNotAllowedException();
+        
+        $this->expires += $duration * 24 * 3600;
+        
+        $this->expiry_extensions++;
+        
+        $this->save();
     }
     
     /**

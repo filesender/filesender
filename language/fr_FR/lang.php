@@ -161,6 +161,8 @@ $lang['quota_usage'] = '{size:used} sur {size:total} utilisés, {size:available}
 $lang['host_quota'] = 'Quota du service';
 $lang['user_quota'] = 'Quota utilisateur';
 $lang['dialog_autoclose'] = 'Ce message disparaitra dans {seconds} secondes';
+$lang['extend'] = 'Etendre';
+$lang['extend_and_remind'] = 'Etendre et envoyer un rappel';
 
 
 /**
@@ -256,6 +258,10 @@ $lang['filtered_transfer_log'] = 'Ceci est une vue filtrée de l\'audit.';
 $lang['view_full_log'] = 'Voir l\'audit dans son ensemble';
 $lang['send_to_my_email'] = 'M\'envoyer ces informations par email';
 $lang['confirm_remind_transfer'] = 'Envoyer le rappel aux destinataires ?';
+$lang['extend_expiry_date'] = 'Etendre la date d\'expiration de {days} jours';
+$lang['confirm_extend_expiry'] = 'Voulez-vous étendre la date d\'expiration de {days} jours ?';
+$lang['transfer_extended'] = 'Date d\'expiration étendue jusqu\'au {expires}';
+$lang['transfer_extended_reminded'] = 'Date d\'expiration étendue jusqu\'au {expires}, un rappel a été envoyé aux destinataires';
 
 
 /**
@@ -514,6 +520,8 @@ $lang['cannot_alter_closed_transfer'] = 'Impossible de modifier un dépôt ferm�
 $lang['transfer_rejected'] = 'Dépôt rejeté';
 $lang['transfer_host_quota_exceeded'] = 'Quota du service dépassé';
 $lang['transfer_user_quota_exceeded'] = 'Quota utilisateur dépassé';
+$lang['transfer_expiry_extension_not_allowed'] = 'Extension de la date d\'expiration non-autorisée';
+$lang['transfer_expiry_extension_count_exceeded'] = 'Nombre maximum d\'extension de la date d\'expiration atteint';
 
 // User related exceptions
 $lang['user_not_found'] = 'Utilisateur introuvable';
