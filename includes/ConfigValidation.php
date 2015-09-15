@@ -68,4 +68,36 @@ ConfigValidator::addCheck('default_language', function($lang, &$error) {
     return false;
 });
 
+ConfigValidator::addCheck('allow_transfer_expiry_date_extension', function($pattern, &$error) {
+    if(!$pattern) return true;
+    
+    if(!is_array($pattern)) $pattern = array($pattern);
+    
+    if(!is_int($pattern[0]) || $pattern[0] <= 0) {
+        $error = 'allow_transfer_expiry_date_extension expects at least one positive non-zero integer';
+        return false;
+    }
+    
+    while($ext = array_shift($pattern)) {
+        if(is_int($ext)) {
+            if($ext <= 0) {
+                $error = 'allow_transfer_expiry_date_extension integers must be positive and non-zero';
+                return false;
+            }
+            
+        } else if(is_bool($ext) && $ext) {
+            if(count($pattern)) {
+                $error = 'only last value in allow_transfer_expiry_date_extension can be true';
+                return false;
+            }
+            
+        } else {
+            $error = 'allow_transfer_expiry_date_extension must only contain positive non-zero integers or a true value at the end';
+            return false;
+        }
+    }
+    
+    return true;
+});
+
 ConfigValidator::run();
