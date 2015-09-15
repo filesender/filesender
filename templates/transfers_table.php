@@ -47,7 +47,12 @@
     
     <tbody>
         <?php foreach($transfers as $transfer) { ?>
-        <tr class="transfer" id="transfer_<?php echo $transfer->id ?>" data-id="<?php echo $transfer->id ?>"  data-recipients-enabled="<?php echo $transfer->hasOption(TransferOptions::GET_A_LINK) ? '' : '1' ?>" data-errors="<?php echo count($transfer->recipients_with_error) ? '1' : '' ?>">
+        <tr class="transfer" id="transfer_<?php echo $transfer->id ?>"
+            data-id="<?php echo $transfer->id ?>"
+            data-recipients-enabled="<?php echo $transfer->hasOption(TransferOptions::GET_A_LINK) ? '' : '1' ?>"
+            data-errors="<?php echo count($transfer->recipients_with_error) ? '1' : '' ?>"
+            data-expiry-extension="<?php echo $transfer->expiry_date_extension ?>"
+        >
             <td class="expand">
                 <span class="clickable fa fa-plus-circle fa-lg" title="{tr:show_details}"></span>
             </td>
@@ -103,7 +108,7 @@
             </td>
             
             <?php if($status == 'available') { ?>
-            <td class="expires">
+            <td class="expires" data-rel="expires">
                 <?php echo Utilities::formatDate($transfer->expires) ?>
             </td>
             
@@ -124,7 +129,7 @@
                         {tr:created} : <?php echo Utilities::formatDate($transfer->created) ?>
                     </div>
                     <div>
-                        {tr:expires} : <?php echo Utilities::formatDate($transfer->expires) ?>
+                        {tr:expires} : <span data-rel="expires"><?php echo Utilities::formatDate($transfer->expires) ?></span>
                     </div>
                     <div>
                         {tr:size} : <?php echo Utilities::formatBytes($transfer->size) ?>

@@ -375,6 +375,20 @@ window.filesender.client = {
     },
     
     /**
+     * Extend a transfer's expiry date
+     * 
+     * @param mixed transfer id
+     * @param bool remind
+     * @param callable callback
+     */
+    extendTransfer: function(id, remind, callback) {
+        var data = {extend_expiry_date: true};
+        if(remind) data.remind = true;
+        
+        return this.put('/transfer/' + id, data, callback);
+    },
+    
+    /**
      * Close a transfer
      * 
      * @param object transfer

@@ -55,6 +55,7 @@ class RestEndpointTransfer extends RestEndpoint {
             'message' => $transfer->message,
             'created' => RestUtilities::formatDate($transfer->created),
             'expires' => RestUtilities::formatDate($transfer->expires),
+            'expiry_date_extension' => $transfer->expiry_date_extension,
             'options' => $transfer->options,
             
             'files' => array_map(function($file) use($files_cids) {
@@ -522,6 +523,10 @@ class RestEndpointTransfer extends RestEndpoint {
             if($data->closed)
                 $transfer->close(true);
             
+            // Need to extend expiry date
+            if($data->extend_expiry_date)
+                $transfer->extendExpiryDate();
+            
             // Need to remind the transfer's availability to its recipients ?
             if($data->remind)
                 $transfer->remind();
@@ -531,7 +536,7 @@ class RestEndpointTransfer extends RestEndpoint {
         if($data->complete)
             $transfer->makeAvailable();
         
-        return true;
+        return self::cast($transfer);
     }
     
     /**

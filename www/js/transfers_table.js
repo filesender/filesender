@@ -79,7 +79,10 @@ $(function() {
                 
                 var id = container.closest('[data-id]').attr('data-id');
                 
-                var recipients_enabled = ($('.transfer[data-id="' + id + '"]').attr('data-recipients-enabled') == '1');
+                var transfer_row = $('.transfer[data-id="' + id + '"]');
+                
+                var recipients_enabled = (transfer_row.attr('data-recipients-enabled') == '1');
+                var expiry_extension_allowed = parseInt(transfer_row.attr('data-expiry-extension'));
                 
                 // Delete button
                 $('<span class="delete clickable fa fa-lg fa-trash-o" />').appendTo(container).attr({
@@ -193,6 +196,45 @@ $(function() {
                         prompt.append('<p>' + lang.tr('email_separator_msg') + '</p>');
                         var input = $('<input type="text" class="wide" />').appendTo(prompt);
                         input.focus();
+                    });
+                    
+                    // Extend expiry date button
+                    if(expiry_extension_allowed) $('<span class="extend clickable fa fa-lg fa-calendar-plus-o" />').appendTo(container).attr({
+                        title: lang.tr('extend_expiry_date').r({days: expiry_extension_allowed})
+                    }).on('click', function() {
+                        var id = $(this).closest('tr').attr('data-id');
+                        if(!id || isNaN(id)) return;
+                        
+                        var extend = function(remind) {
+                            filesender.client.extendTransfer(id, remind, function(t) {
+                                $('.transfer[data-id="' + id + '"] [data-rel="expires"]').text(t.expires.formatted);
+                                $('.transfer_details[data-id="' + id + '"] [data-rel="expires"]').text(t.expires.formatted);
+                                
+                                if(!t.expiry_date_extension) {
+                                    $('.transfer[data-id="' + id + '"] .actions .extend').remove();
+                                    $('.transfer_details[data-id="' + id + '"] .actions .extend').remove();
+                                }
+                                
+                                transfer_row.attr('data-expiry-extension', t.expiry_date_extension);
+                                expiry_extension_allowed = t.expiry_date_extension;
+                                
+                                filesender.ui.notify('success', lang.tr(remind ? 'transfer_extended_reminded' : 'transfer_extended').r({expires: t.expires.formatted}));
+                            });
+                        };
+                        
+                        var buttons = {};
+                        
+                        buttons.extend = function() {
+                            extend(false);
+                        };
+                        
+                        if(recipients_enabled) buttons.extend_and_remind = function() {
+                            extend(true);
+                        };
+                        
+                        buttons.cancel = false;
+                        
+                        filesender.ui.popup(lang.tr('confirm_dialog'), buttons).html(lang.tr('confirm_extend_expiry').r({days: expiry_extension_allowed}).out());
                     });
                     
                     // Send reminder button
