@@ -1,6 +1,6 @@
 # Translation logic
 
-Filesender includes a translation engine which allows for flexible user language detection and customisation.
+Filesender includes a translation engine which allows for flexible user language detection and customization.
 
 
 ## User language detection
@@ -50,52 +50,58 @@ Variables available in emails are described [a bit further](#email_variables)
 
 Printing out the content of a variable is pretty straightforward :
 
-`{variable_name}`
+    {variable_name}
 
 
 If the variable contains an object (such as a `transfer`, a `recipient` ...) properties can be accessed as :
 
-`{variable_name.property_name}` (one can chain as many properties as needed)
+    {variable_name.property_name} (one can chain as many properties as needed)
 
 
 If the variable is an array possible uses are :
 
-`{variable_name.2}` (get the item with index `2`)
+    {variable_name.2} (get the item with index 2)
 
-`{variable_name.foo}` (get the item with index `foo`)
+    {variable_name.foo} (get the item with index foo)
 
-`{variable_name.first()}` (get the first item)
+    {variable_name.first()} (get the first item)
 
-`{variable_name.last()}` (get the last item)
+    {variable_name.last()} (get the last item)
 
-`{variable_name.nth(3)}` (get the 4th item since arrays indexes are 0 based)
+    {variable_name.nth(3)} (get the 4th item since arrays indexes are 0 based)
 
 
 Variables can also be automatically converted to formatted version (depending on language) :
 
-`{date:variable_name}` (format as date)
+    {date:variable_name} (format as date)
 
-`{datetime:variable_name}` (format as date and time)
+    {datetime:variable_name} (format as date and time)
 
-`{time:variable_name}` (format as time)
+    {time:variable_name} (format as time)
 
-`{size:variable_name}` (format as a file size)
+    {size:variable_name} (format as a file size)
 
-`{raw:variable_name}` (no formatting and no output escaping, MUST BE USED CAREFULLY since it escape injection protection)
+    {raw:variable_name} (no formatting and no output escaping, MUST BE USED CAREFULLY since it escape injection protection)
 
-`{htmltext:variable_name}` (transforms line breaks into their html counterparts)
+    {htmltext:variable_name} (transforms line breaks into their html counterparts)
 
 
 In case the variable resolves to an array without further key based access the number of items in the array will be returned :
 
-If `variable_name = ["foo", "bar"]` then `{variable_name}` will print out `2`.
+If
+    variable_name = ["foo", "bar"]
+
+then
+    {variable_name}
+
+will print out "2".
 
 
 All above access methods and formatters can be combined to achieve complex data fetching :
 
-`{size:transfer.downloads.first().target.size}`
+    {size:transfer.downloads.first().target.size}
 
-`{transfer.files.last().downloads}`
+    {transfer.files.last().downloads}
 
 
 ## Conditionals
@@ -106,45 +112,109 @@ Nesting of conditionals is not supported. Variable printing and loops can be use
 
 Basic syntaxes are (new lines allowed) :
 
-`{if:condition}foo{endif}`
+    {if:condition}foo{endif}
 
-`{if:condition}foo{else}bar{endif}`
+    {if:condition}foo{else}bar{endif}
 
 `condition` should be a boolean test, it can use available variables against a number of test operators.
 
 
 Test operators are `==`, `!=`, `<`, `<=`, `>` and `>=` :
 
-`{if:transfer.files > 1}foo{else}bar{endif}`
+    {if:transfer.files > 1}foo{else}bar{endif}
 
 
 Logical operators can be used to build complex tests : AND (`&`) and OR (`|`) (AND operator takes precedence).
 
-`{if:transfer.files>1 & recipient.downloads}foo{else}bar{endif}`
+    {if:transfer.files>1 & recipient.downloads}foo{else}bar{endif}
 
-`{if:transfer.files>1 & recipient.downloads | transfer.size>1234567890}foo{else}bar{endif}` (here just having transfer.size over 1234567890 bytes leads to "foo" being printed)
+    {if:transfer.files>1 & recipient.downloads | transfer.size>1234567890}foo{else}bar{endif} (here just having transfer.size over 1234567890 bytes leads to "foo" being printed)
 
 
 Logical negation can also be used by putting `!` in front of the test sub-part.
 
-`{if:transfer.files>1 & !recipient.downloads}foo{else}bar{endif}`
+    {if:transfer.files>1 & !recipient.downloads}foo{else}bar{endif}
 
 
 ## Loops
 
 Loops can be used to sequentially print a list of items, syntax is :
 
-`{each:transfer.files}File {item.name} ({size:item.size}){endeach}`
+    {each:transfer.files}File {item.name} ({size:item.size}){endeach}
 
 Item name choosing for better readability (does not change result) :
 
-`{each:transfer.files as file}File {file.name} ({size:file.size}){endeach}`
+    {each:transfer.files as file}File {file.name} ({size:file.size}){endeach}
 
 Conditionals can be used inside loops :
 
-`{each:transfer.files as file}File {file.name} ({size:file.size}) {if:file.size>1234567890}big file !{endif}{endeach}`
+    {each:transfer.files as file}File {file.name} ({size:file.size}) {if:file.size>1234567890}big file !{endif}{endeach}
 
 Nesting of loops is not supported.
+
+
+## Magic
+
+### Config parameters
+
+It is possible to use config values anywhere in the translations using any of the following syntaxes :
+
+    {config:parameter_name}
+    {conf:parameter_name}
+    {cfg:parameter_name}
+
+It is possible to use automatic formatting as well :
+
+    {size:cfg:max_transfer_size}
+
+
+### Email parts
+
+When translating an email (file like `some_id.mail.php` or just `some_id.mail`, same effect) the translation file can contain several parts.
+
+
+#### Headers
+
+Anything before the first double line break is considered as headers. Headers a expressed like in a `key: value` format.
+
+As of now only `subject` header is supported, if several subject lines are provided the last non-empty (after variables replacement) subject is used.
+
+    subject: Foo
+    subject: {bar}
+    
+    < mail contents >
+
+In this exemple the sent mail subject will be "Foo" except if the `bar` variable contains something.
+
+Using other translation syntaxes in headers is supported (only rule : headers have to be on a single line).
+
+    subject: Foo
+    subject: {if:bar & foo.bar != bar}Alt subject : {bar}{endif}
+    
+    < mail contents >
+
+If no `subject` header is found the `site_name` config parameter will be used as subject, it is considered good practice to use a subject that tells what the email is about.
+
+Additionally the `email_subject_prefix` config parameter value will be prepended to the subject.
+
+#### Content parts
+
+Mail translation can include either or both `text/plain` and `text/html` alternatives (they will be used depending on the configuration).
+
+Start of `text/plain` part is signaled using `{alternative:plain}`
+
+Start of `text/html` part is signaled using `{alternative:html}`
+
+If the first part after the headers does not have a starting `alternative` tag its type will be set depending on what comes after in the mail :
+
+  * `plain` if an other part has a `{alternative:html}` starting tag
+  * `html` if an other part has a `{alternative:plain}` starting tag
+  * `html` if no other part is found but some html tags can be detected in the part
+  * `plain` if no other part is found and no html tags can be detected
+
+It is usually considered a good practice to create both `html` and `plain` parts when translating FileSender emails.
+
+When translating an email the newly created translation REPLACES the basic one, there is no parts overriding so even if one wants to only tweak the `html` part the `plain` part must be copied as well otherwise it will be missing when translating.
 
 
 # Email variables
