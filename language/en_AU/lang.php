@@ -307,10 +307,10 @@ $lang['report_guest_event_transfer_sent'] = 'Download link sent to recipient(s)'
 /**
  * Download page specific
  */
-$lang['archive_download'] = 'Download as archive';
-$lang['download_disclamer'] = 'Here are your files, you can download them one by one or, if there are more than one file, download them as a single archive in one go.';
+$lang['archive_download'] = 'Download as single (.zip) file';
+$lang['download_disclamer'] = 'You can download all files at once as a single compressed archive (.zip) file.  Click on the downloaded file to uncompress it and access individual files.';
 $lang['download_file'] = 'Download file';
-$lang['mac_archive_message'] = 'If you are running OSX you\'ll find a fitting un-archiving software by following the link below.';
+$lang['mac_archive_message'] = 'This compressed archive (.zip file) will be too big for the standard uncompress utility of Apple OS X.<br />  You\'ll find a alternative uncompress software here';
 $lang['select_all_for_archive_download'] = 'Select all files to download them as an archive';
 $lang['select_for_archive_download'] = 'Select for archive download';
 $lang['archive_message'] = 'You can download selected files as an archive.';
