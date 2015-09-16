@@ -421,6 +421,10 @@ class Guest extends DBObject {
             return $user;
         }
         
+        if($property == 'upload_link') {
+            return Config::get('site_url').'?s=upload&vid='.$this->token;
+        }
+        
         if($property == 'transfers') {
             if(is_null($this->transfersCache)) $this->transfersCache = Transfer::fromGuest($this);
             return $this->transfersCache;
