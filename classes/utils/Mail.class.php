@@ -91,7 +91,7 @@ class Mail {
         mb_internal_encoding('UTF-8');
         
         if($to) $this->to($to);
-        $this->subject = $subject;
+        $this->__set('subject', $subject);
         $this->html = (bool)$html;
         
         $nl = Config::get('email_newline');
@@ -109,7 +109,7 @@ class Mail {
      */
     public function __set($property, $value) {
         if($property == 'subject') {
-            $this->subject = mb_encode_mimeheader(trim(str_replace(array("\n", "\r"), ' ', $value)), mb_internal_encoding(), 'Q');
+            $this->subject = mb_encode_mimeheader(trim(str_replace(array("\n", "\r"), ' ', $value)), mb_internal_encoding(), 'Q', $this->nl);
             
         }else if($property == 'return_path') {
             if(!filter_var($value, FILTER_VALIDATE_EMAIL)) throw new BadEmailException($value);
