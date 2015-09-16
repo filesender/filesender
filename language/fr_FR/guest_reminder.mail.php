@@ -11,7 +11,7 @@ Ceci est un rappel.
 
 Veuillez trouver ci-dessous une invitation de {guest.user_email} pour déposer des fichiers sur {cfg:site_name}.
 
-Lien de dépôt: {cfg:site_url}?s=upload&vid={guest.token}
+Lien de dépôt: {guest.upload_link}
 
 Cette invitation est valable jusqu'au {date:guest.expires} après quoi elle sera automatiquement revoquée.
 
@@ -36,7 +36,7 @@ Cordialement,
 
 
 <p>
-    Lien de dépôt: <a href="{cfg:site_url}?s=upload&vid={guest.token}">{cfg:site_url}?s=upload&vid={guest.token}</a>
+    Lien de dépôt: <a href="{guest.upload_link}">{guest.upload_link}</a>
 </p>
 
 <p>

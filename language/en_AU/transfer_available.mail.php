@@ -13,7 +13,7 @@ The following {if:transfer.files>1}files have{else}file has{endif} been uploaded
 {transfer.files.first().name} ({size:transfer.files.first().size})
 {endif}
 
-Download link: {raw:recipient.download_link}
+Download link: {recipient.download_link}
 
 The transaction is available until {date:transfer.expires} after which time it will be automatically deleted.
 
@@ -74,7 +74,7 @@ Best regards,
     </tbody>
 </table>
 
-{if:transfer.message || transfer.subject}
+{if:transfer.message}
 <p>
     Personal message from {transfer.user_email}:
 </p>

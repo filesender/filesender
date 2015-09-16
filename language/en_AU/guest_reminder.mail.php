@@ -8,7 +8,7 @@ Dear Sir or Madam,
 This is a reminder, please find below a voucher which grants access to {cfg:site_name}. You can use this voucher to upload one set of files and make it available for download to a group of people.
 
 Issuer: {guest.user_email}
-Voucher link: {cfg:site_url}?s=upload&vid={guest.token}
+Voucher link: {guest.upload_link}
 
 The voucher is available until {date:guest.expires} after which time it will be automatically deleted.
 
@@ -40,7 +40,7 @@ Best regards,
         </tr>
         <tr>
             <td>Voucher link</td>
-            <td><a href="{cfg:site_url}?s=upload&vid={guest.token}">{cfg:site_url}?s=upload&vid={guest.token}</a></td>
+            <td><a href="{guest.upload_link}">{guest.upload_link}</a></td>
         </tr>
         <tr>
             <td>Valid until</td>
