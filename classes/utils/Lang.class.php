@@ -546,8 +546,8 @@ class Lang {
                 
                 // Convert to Translation instance with sub-Translations
                 return new Translation(array(
-                    'subject' => new Translation($subject),
-                    'plain' => html_entity_decode($plain, ENT_QUOTES, 'UTF-8'), // Reverse placeholder resolver's Utilities::sanitizeOutput for plain parts
+                    'subject' => new Translation($subject, true, true), // Raw outputting, will be encoded
+                    'plain' => new Translation($plain, true, true), // Raw outputting
                     'html' => $html
                 ));
             }
@@ -585,22 +585,28 @@ class Translation {
     private $translation = '';
     
     /**
+     * Raw mode
+     */
+    private $raw = false;
+    
+    /**
      * Constructor
      * 
      * @param string $translation
      */
-    public function __construct($translation, $allow_replace = true) {
+    public function __construct($translation, $allow_replace = true, $raw = false) {
         // Set text if single translation, set sub-Translations otherwise
         if(is_string($translation)) {
             $this->translation = $translation;
         } else {
             $this->translation = array();
             foreach((array)$translation as $k => $v) {
-                $this->translation[$k] = is_string($v) ? new self($v, $allow_replace) : $v;
+                $this->translation[$k] = is_string($v) ? new self($v, $allow_replace, $raw) : $v;
             }
         }
         
         $this->allow_replace = $allow_replace;
+        $this->raw = $raw;
     }
     
     /**
@@ -840,13 +846,14 @@ class Translation {
         }, $translation);
         
         // Basic placeholder replacement
+        $raw = $this->raw;
         foreach($placeholders as $k => $v) {
-            $translation = preg_replace_callback('`\{(([^:\}]+:)?'.$k.'(\.[a-z0-9_\(\)]+)*)\}`iU', function($m) use($placeholder_resolver) {
+            $translation = preg_replace_callback('`\{(([^:\}]+:)?'.$k.'(\.[a-z0-9_\(\)]+)*)\}`iU', function($m) use($placeholder_resolver, $raw) {
                 if(substr($m[0], 0, 4) == '{if:') return $m[0]; // Remaining ifs
                 
                 $v = $placeholder_resolver($m[1]);
                 
-                if(substr($m[0], 0, 5) != '{raw:') // Ensure sanity unless specified
+                if(!$raw && substr($m[0], 0, 5) != '{raw:') // Ensure sanity unless specified
                     $v = Utilities::sanitizeOutput($v);
                 
                 if(substr($m[0], 0, 10) == '{htmltext:') { // Format 
