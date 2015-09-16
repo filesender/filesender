@@ -89,7 +89,8 @@ class Transfer extends DBObject {
         ),
         'expiry_extensions' => array(
             'type' => 'uint',
-            'size' => 'small'
+            'size' => 'small',
+            'default' => 0
         ),
         'status' => array(
             'type' => 'string',
