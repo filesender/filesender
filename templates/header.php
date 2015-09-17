@@ -11,9 +11,9 @@
         
         <?php GUI::includeScripts() ?>
         
-        <script type="text/javascript" src="<?php echo GUI::path('filesender-config.js.php') ?>?v=<?php echo Utilities::runningInstanceUID() ?>"></script>
+        <script type="text/javascript" src="{path:filesender-config.js.php}"></script>
         
-        <script type="text/javascript" src="<?php echo GUI::path('rest.php/lang') ?>?callback=lang.setTranslations&amp;v=<?php echo Utilities::runningInstanceUID() ?>"></script>
+        <script type="text/javascript" src="{path:rest.php/lang?callback=lang.setTranslations}"></script>
         
         <meta name="robots" content="noindex, nofollow" />
         
