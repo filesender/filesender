@@ -831,6 +831,61 @@ class Transfer extends DBObject {
         Logger::info('Transfer#'.$this->id.' reminded to recipient(s)');
     }
     
+    /**
+     * Send automatic reminders
+     */
+    public static function sendAutomaticReminders() {
+        $rms = Config::get('transfer_automatic_reminder');
+        if(!$rms) return;
+        
+        if(!is_array($rms)) $rms = array($rms);
+        
+        $rms = array_filter($rms, function($r) {
+            return is_int($r) && ($r >= 1);
+        });
+        
+        if(!count($rms)) return;
+        
+        foreach(self::all(self::AVAILABLE) as $transfer) {
+            $recipients_downloaded_ids = array_map(function($l) {
+                return $l->target_id;
+            }, $transfer->downloads);
+            
+            // Get recipients that did not download
+            $recipients_no_download = array_filter(
+                $transfer->recipients,
+                function($recipient) use($recipients_downloaded_ids) {
+                    return !in_array($recipient->id, $recipients_downloaded_ids) && (bool)$recipient->email;
+                }
+            );
+            
+            if(!count($recipients_no_download)) continue; // Nothing to notify
+            
+            $today = floor(time() / 86400);
+            $created = floor($transfer->created / 86400);
+            $expires = floor($transfer->expires / 86400);
+            $lifetime = $expires - $created + 1;
+            
+            $days_remaining = $expires - $today + 1;
+            
+            if(!in_array($days_remaining, $rms)) continue; // No matching automatic reminders
+            
+            // Remind recipients
+            foreach($recipients_no_download as $recipient)
+                $recipient->remind();
+            
+            // Send receipt to owner
+            ApplicationMail::quickSend(
+                'transfer_autoreminder_receipt',
+                $transfer->owner,
+                $transfer,
+                array(
+                    'recipients' => $recipients_no_download
+                )
+            );
+        }
+    }
+    
     /*
      * Start transfer and log
      */

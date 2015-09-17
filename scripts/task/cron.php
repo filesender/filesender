@@ -90,6 +90,10 @@ foreach(Transfer::all(Transfer::AVAILABLE) as $transfer) {
     ApplicationMail::quickSend('daily_summary', $transfer->owner, $transfer, array('events' => $events));
 }
 
+// Send automatic reminders
+if(Config::get('transfer_automatic_reminder'))
+    Transfer::sendAutomaticReminders();
+
 // Report bounces ?
 $report = Config::get('report_bounces');
 if(in_array($report, array('daily', 'asap_then_daily'))) {

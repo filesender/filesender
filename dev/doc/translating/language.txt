@@ -387,6 +387,15 @@ Sent to a recipient when a transfer becomes available.
   * `transfer` : [Transfer](#transfer) (object)
 
 
+## transfer_autoreminder_receipt
+
+Sent to a transfer owner when recipients that did not download files were reminded.
+
+  * `recipients` : [Recipients](#recipient) reminders were sent to (array)
+  * `transfer` : [Transfer](#transfer) (object)
+  * `user` : owner as a [User](#user) (object)
+
+
 ## transfer_deleted
 
 Sent to a recipient when a transfer is closed by it's owner.
