@@ -48,8 +48,10 @@ class ApplicationMail extends Mail {
         // Cast content to string if translation object
         $subject = ($content instanceof Translation) ? $content->subject : $content;
         
+        if($subject instanceof Translation) $subject = $subject->out();
+        
         if(is_array($subject)) {
-            $subject = array_filter($subject);Logger::info($subject);
+            $subject = array_filter($subject);
             $subject = $subject['prefix'].' '.array_pop($subject);
         }
         
