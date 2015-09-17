@@ -186,6 +186,13 @@ class Recipient extends DBObject {
     }
     
     /**
+     * Send reminder
+     */
+    public function remind() {
+        $this->transfer->remind($this);
+    }
+    
+    /**
      * Delete the recipient related objects
      */
     public function beforeDelete() {
