@@ -815,15 +815,20 @@ class Transfer extends DBObject {
     }
     
     /**
-     * Send reminder to recipients
+     * Send reminder to recipient(s)
+     * 
+     * @param mixed $recipients single recipient or array of recipients (defaults to transfer recipients if not provided)
      */
-    public function remind() {
+    public function remind($recipients = null) {
         if($this->hasOption(TransferOptions::GET_A_LINK)) return;
         
-        foreach($this->recipients as $recipient)
+        if(!$recipients) $recipients = $this->recipients;
+        if(!is_array($recipients)) $recipients = array($recipients);
+        
+        foreach($recipients as $recipient)
             $this->sendToRecipient('transfer_reminder', $recipient);
         
-        Logger::info('Transfer#'.$this->id.' reminded to recipients');
+        Logger::info('Transfer#'.$this->id.' reminded to recipient(s)');
     }
     
     /*
@@ -936,5 +941,7 @@ class Transfer extends DBObject {
             $mail->bcc($this->user_email);
         
         $mail->send();
+        
+        Logger::info('Mail#'.$translation_id.' sent to Recipient#'.$recipient->id);
     }
 }

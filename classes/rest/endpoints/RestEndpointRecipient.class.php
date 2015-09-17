@@ -98,6 +98,42 @@ class RestEndpointRecipient extends RestEndpoint {
     }
     
     /**
+     * Update a recipient's status
+     * 
+     * Call examples :
+     *  /recipient/17, payload: {remind: true} : remind its transfer to the recipient
+     * 
+     * @param int $id recipient id to act upon
+     * 
+     * @return mixed
+     * 
+     * @throws RestAuthenticationRequiredException
+     * @throws RestOwnershipRequiredException
+     */
+    public function put($id = null) {
+        // Check parameters
+        if(!$id) throw new RestMissingParameterException('recipient_id');
+        if(!is_numeric($id)) throw new RestBadParameterException('recipient_id');
+        
+        // Get recipient to update and current user
+        $recipient = Recipient::fromId($id);
+        $user = Auth::user();
+        
+        // Raw update data
+        $data = $this->request->input;
+        
+        // check ownership
+        if(!$recipient->transfer->isOwner($user) && !Auth::isAdmin())
+            throw new RestOwnershipRequiredException($user->id, 'recipient = '.$recipient->id);
+        
+        // Need to remind the transfer's availability to its recipients ?
+        if($data->remind)
+            $recipient->remind();
+        
+        return self::cast($recipient);
+    }
+    
+    /**
      * Delete a recipient
      * 
      * Call examples :
