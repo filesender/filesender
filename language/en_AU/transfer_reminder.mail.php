@@ -80,7 +80,7 @@ Best regards,
 </p>
 <p class="message">
     <span class="subject">{transfer.subject}</span>
-    {htmltext:transfer.message}
+    {transfer.message}
 </p>
 {endif}
 
