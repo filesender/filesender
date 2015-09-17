@@ -79,7 +79,7 @@ Cordialement,
     Message de {transfer.user_email}:
 </p>
 <p class="message">
-    {htmltext:transfer.message}
+    {transfer.message}
 </p>
 {endif}
 

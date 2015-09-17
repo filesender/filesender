@@ -155,6 +155,9 @@ class Lang {
                         if(array_key_exists('lang', $_GET) && preg_match('`^[a-z]+(-.+)?$`', $_GET['lang'])) {
                             $code = self::realCode($_GET['lang']);
                             if($code) {
+                                if(!in_array($code, $stack))
+                                    $stack[] = $code;
+                                
                                 if(isset($_SESSION)) $_SESSION['lang'] = $code;
                                 if(Config::get('lang_save_url_switch_in_userpref') && Auth::isAuthenticated()) {
                                     Auth::user()->lang = $code;
@@ -205,6 +208,11 @@ class Lang {
                 }
             }
             
+            // Filter provided values
+            $stack = array_filter($stack, function($code) use($available) {
+                return array_key_exists($code, $available);
+            });
+            
             // Config default language
             $code = Config::get('default_language');
             if($code) {
@@ -213,20 +221,14 @@ class Lang {
                     $stack[] = $code;
             }
             
-            // Absolute default if not already present
-            $code = self::realCode('en');
-            if($code) {
-                if(!in_array($code, $stack)) $stack[] = $code;
-            }else $stack[] = key($available); // Should not go there ...
-            
-            // Filter provided values
-            $stack = array_filter($stack, function($code) use($available) {
-                return array_key_exists($code, $available);
-            });
+            // Absolute default
+            $stack[] = 'en';
             
             // Add to cached stack (most significant first)
             $main = array_shift($stack);
             self::$code_stack = array('main' => $main, 'fallback' => $stack);
+            
+            Logger::debug(self::$code_stack);
         }
         
         return self::$code_stack;
@@ -245,11 +247,7 @@ class Lang {
             if($code) return $code;
         }
         
-        // Absolute default if not already present
-        $code = self::realCode('en');
-        if($code) return $code;
-        
-        return key(self::getAvailableLanguages()); // Should not go there ...
+        return key(self::getAvailableLanguages()); // Defaults to first available language
     }
     
     /**
@@ -280,10 +278,10 @@ class Lang {
     /**
      * Load dictionary
      * 
-     * @param string $code lang code
+     * @param string $rel_path translations relative path
      */
-    private static function loadDictionary($code) {
-        $available = self::getAvailableLanguages();
+    private static function loadDictionary($rel_path) {
+        Logger::debug($rel_path);
         
         $dictionary = array();
         
@@ -295,7 +293,8 @@ class Lang {
         
         // Lookup locations for translation files
         foreach($locations as $location) {
-            $path = FILESENDER_BASE.'/'.$location.'/'.$available[$code]['path'];
+            $path = FILESENDER_BASE.'/'.$location.'/'.$rel_path;
+            Logger::debug($path);
             
             if(!is_dir($path)) continue;
             
@@ -334,10 +333,14 @@ class Lang {
         // Get lang codes stack
         $stack = self::getCodeStack();
         
+        // Get list of available languages
+        $available = self::getAvailableLanguages();
+        if(!array_key_exists('en', $available)) $available['en'] = array('path' => 'en_AU');
+        
         // Build fallback dictionaries
         $fallback = array();
         foreach($stack['fallback'] as $code) {
-            $dictionary = self::loadDictionary($code);
+            $dictionary = self::loadDictionary($available[$code]['path']);
             
             foreach($dictionary as $id => $d)
                 if(!array_key_exists($id, $fallback))
@@ -346,7 +349,7 @@ class Lang {
         
         // Set dictionaries cache
         self::$translations = array(
-            'main' => self::loadDictionary($stack['main']),
+            'main' => self::loadDictionary($available[$stack['main']]['path']),
             'fallback' => $fallback
         );
         
@@ -856,7 +859,7 @@ class Translation {
                 if(!$raw && substr($m[0], 0, 5) != '{raw:') // Ensure sanity unless specified
                     $v = Utilities::sanitizeOutput($v);
                 
-                if(substr($m[0], 0, 10) == '{htmltext:') { // Format 
+                if(!$raw) { // Format html linebreaks
                     $v = preg_replace('`\n\s*\n`', "\n\n", $v);
                     $v = str_replace("\n", "<br />\n", $v);
                 }

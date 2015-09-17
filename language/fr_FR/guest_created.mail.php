@@ -40,7 +40,7 @@ Cordialement,
     Message de {guest.user_email}:
 </p>
 <p class="message">
-    {htmltext:guest.message}
+    {guest.message}
 </p>
 {endif}
 
