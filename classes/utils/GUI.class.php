@@ -173,7 +173,7 @@ class GUI {
             return GUI::path($l);
         }, $location);
         
-        if(substr($location, -1) != '/' && substr($location, 0, 1) != '?')
+        if($location && substr($location, -1) != '/' && substr($location, 0, 1) != '?')
             $location .= (strpos($location, '?') ? '&' : '?').'v='.Utilities::runningInstanceUID();
         
         return self::$path.$location;
