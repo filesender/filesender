@@ -523,7 +523,7 @@ $lang['transfer_rejected'] = 'Dépôt rejeté';
 $lang['transfer_host_quota_exceeded'] = 'Quota du service dépassé';
 $lang['transfer_user_quota_exceeded'] = 'Quota utilisateur dépassé';
 $lang['transfer_expiry_extension_not_allowed'] = 'Extension de la date d\'expiration non-autorisée';
-$lang['transfer_expiry_extension_count_exceeded'] = 'Nombre maximum d\'extension de la date d\'expiration atteint';
+$lang['transfer_expiry_extension_count_exceeded'] = 'Nombre maximum d\'extensions de la date d\'expiration atteint';
 
 // User related exceptions
 $lang['user_not_found'] = 'Utilisateur introuvable';
