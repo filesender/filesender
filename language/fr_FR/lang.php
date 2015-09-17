@@ -443,7 +443,7 @@ $lang['cannot_open_input_file'] = 'Impossible d\'ouvrir le fichier en entrée';
 
 // GUI related exceptions
 $lang['gui_unknown_admin_section'] = 'Section de l\'administration inconnue';
-$lang['reader_not_supported'] = 'Votre navigateur de supporte pas le dépôt de fichiers plus gros que {size}';
+$lang['reader_not_supported'] = 'Vous utilisez un navigateur qui ne supporte pas HTML5.<br />Le glisser-déposer n\'est pas disponible.<br />Votre navigateur de supporte pas le dépôt de fichiers plus gros que {size}.';
 
 // Guest related exceptions
 $lang['guest_not_found'] = 'Invité introuvable';
