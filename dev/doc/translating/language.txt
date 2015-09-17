@@ -83,8 +83,6 @@ Variables can also be automatically converted to formatted version (depending on
 
     {raw:variable_name} (no formatting and no output escaping, MUST BE USED CAREFULLY since it escape injection protection)
 
-    {htmltext:variable_name} (transforms line breaks into their html counterparts)
-
 
 In case the variable resolves to an array without further key based access the number of items in the array will be returned :
 
