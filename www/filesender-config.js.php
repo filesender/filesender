@@ -100,6 +100,9 @@ $(function() {
         workers: false,
         digest: false
     };
+    
+    $('#dialog-help li[data-feature="html5"]').toggle(filesender.supports.reader);
+    $('#dialog-help li[data-feature="nohtml5"]').toggle(!filesender.supports.reader);
 });
 
 <?php } ?>
