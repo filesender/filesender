@@ -72,7 +72,7 @@ class GUI {
      */
     public static function includeStylesheets() {
         foreach(self::path(self::stylesheets()) as $path)
-            echo '<link type="text/css" rel="stylesheet" href="'.$path.'?v='.Utilities::runningInstanceUID().'" />'."\n";
+            echo '<link type="text/css" rel="stylesheet" href="'.$path.'" />'."\n";
     }
     
     /**
@@ -103,7 +103,7 @@ class GUI {
      */
     public static function includeScripts() {
         foreach(self::path(self::scripts()) as $path)
-            echo '<script type="text/javascript" src="'.$path.'?v='.Utilities::runningInstanceUID().'"></script>'."\n";
+            echo '<script type="text/javascript" src="'.$path.'"></script>'."\n";
     }
     
     /**
@@ -169,13 +169,14 @@ class GUI {
         if(is_null(self::$path))
             self::$path = preg_replace('`^(https?://)?([^/]+)/`', '/', Config::get('site_url'));
         
-        $path = self::$path;
-        
-        if(is_array($location)) return array_map(function($l) use($path) {
-            return $path.$l;
+        if(is_array($location)) return array_map(function($l) {
+            return GUI::path($l);
         }, $location);
         
-        return $path.$location;
+        if(substr($location, -1) != '/' && substr($location, 0, 1) != '?')
+            $location .= (strpos($location, '?') ? '&' : '?').'v='.Utilities::runningInstanceUID();
+        
+        return self::$path.$location;
     }
     
     /**
