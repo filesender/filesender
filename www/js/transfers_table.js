@@ -121,7 +121,7 @@ $(function() {
     // Extend buttons
     $('[data-expiry-extension="0"] [data-action="extend"]').addClass('disabled').attr({title: lang.tr('transfer_expiry_extension_count_exceeded')});
     
-    $('[data-expiry-extension!="0"] [data-action="extend"]').each(function() {
+    $('[data-expiry-extension][data-expiry-extension!="0"] [data-action="extend"]').each(function() {
         $(this).attr({
             title: lang.tr('extend_expiry_date').r({
                 days: $(this).closest('[data-transfer]').attr('data-expiry-extension')
