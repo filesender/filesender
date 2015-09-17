@@ -375,6 +375,16 @@ window.filesender.client = {
     },
     
     /**
+     * Remind a recipient
+     * 
+     * @param mixed recipient id
+     * @param callable callback
+     */
+    remindRecipient: function(id, callback) {
+        return this.put('/recipient/' + id, {remind: true}, callback);
+    },
+    
+    /**
      * Extend a transfer's expiry date
      * 
      * @param mixed transfer id
