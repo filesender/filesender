@@ -807,7 +807,7 @@ $(function() {
         // Put notice
         form.addClass('legacy');
         
-        $('<div class="info message" />').text(lang.tr('reader_not_supported').r({size: filesender.ui.formatBytes(filesender.config.max_legacy_file_size)})).insertBefore(filesender.ui.nodes.files.list);
+        $('<div class="info message" />').html(lang.tr('reader_not_supported').r({size: filesender.ui.formatBytes(filesender.config.max_legacy_file_size)}).out()).insertBefore(filesender.ui.nodes.files.list);
         
         // Remove unavailable features
         filesender.ui.nodes.files.select.remove();

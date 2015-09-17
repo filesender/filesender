@@ -443,7 +443,7 @@ $lang['cannot_open_input_file'] = 'Cannot open input file';
 
 // GUI related exceptions
 $lang['gui_unknown_admin_section'] = 'Unknown admin section';
-$lang['reader_not_supported'] = 'You are using an older browser without support for HTML5.  Drag&drop is not available. Your browser does not support uploading files over {size}';
+$lang['reader_not_supported'] = 'You are using an older browser without support for HTML5.<br />Drag&drop is not available.<br />Your browser does not support uploading files over {size}.';
 
 // Guest related exceptions
 $lang['guest_not_found'] = 'Guest not found';
