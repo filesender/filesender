@@ -235,8 +235,13 @@ div.exception .details {
     margin: 0 0.25em 0.5em 0.25em;
 }
 
-.clickable {
+.clickable, [data-action] {
     cursor: pointer;
+}
+
+.disabled[data-action] {
+    color: #ccc;
+    cursor: default;
 }
 
 span.clickable {
@@ -751,6 +756,14 @@ table.transfers tbody .transfer[data-errors="1"] td {
     background-color: #faa;
 }
 
+table.transfers[data-status="closed"] tbody tr .actions [data-action] {
+    display: none;
+}
+
+table.transfers[data-status="closed"][data-audit="1"] tbody tr .actions [data-action="auditlog"] {
+    display: inherit;
+}
+
 table.transfers tbody tr.transfer_details {
     display: none;
 }
@@ -782,8 +795,8 @@ table.transfers .transfer_details h2 {
     margin-bottom: 0.3em;
 }
 
-table.transfers .transfer_details .recipients .recipient .fa.clickable,
-table.transfers .transfer_details .files .file .fa.clickable {
+table.transfers .transfer_details .recipients .recipient [data-action],
+table.transfers .transfer_details .files .file [data-action] {
     margin: 0 0.15em;
 }
 
@@ -792,8 +805,13 @@ table.transfers .transfer_details .recipients .recipient .errors {
     padding: 0.1em;
 }
 
-table.transfers .transfer_details .recipients .recipient .errors .details {
+table.transfers .transfer_details .recipients .recipient .errors [data-action="details"] {
     margin-left: 0.25em;
+}
+
+table.transfers[data-status="closed"] .transfer_details .recipients .recipient [data-action="delete"],
+table.transfers[data-status="closed"] .transfer_details .files .file [data-action="delete"] {
+    display: none;
 }
 
 table.transfers .transfer_details .download_link input {

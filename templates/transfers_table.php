@@ -3,8 +3,10 @@
     if(!isset($mode)) $mode = 'user';
     if(!isset($transfers) || !is_array($transfers)) $transfers = array();
     $show_guest = isset($show_guest) ? (bool)$show_guest : false;
+    $extend = (bool)Config::get('allow_transfer_expiry_date_extension');
+    $audit = (($status == 'available') || (bool)Config::get('auditlog_lifetime')) ? '1' : '';
 ?>
-<table class="transfers list" data-status="<?php echo $status ?>" data-mode="<?php echo $mode ?>">
+<table class="transfers list" data-status="<?php echo $status ?>" data-mode="<?php echo $mode ?>" data-audit="<?php echo $audit ?>">
     <thead>
         <tr>
             <th class="expand" title="{tr:expand_all}">
@@ -112,13 +114,23 @@
                 <?php echo Utilities::formatDate($transfer->expires) ?>
             </td>
             
-            <td class="actions"></td>
+            <td class="actions">
+                <span data-action="delete" class="fa fa-lg fa-trash-o" title="{tr:delete}"></span>
+                <?php if($extend) { ?><span data-action="extend" class="fa fa-lg fa-calendar-plus-o"></span><?php } ?>
+                <span data-action="add_recipient" class="fa fa-lg fa-envelope-o" title="{tr:add_recipient}"></span>
+                <span data-action="remind" class="fa fa-lg fa-repeat" title="{tr:send_reminder}"></span>
+            </td>
             <?php } ?>
         </tr>
         
         <tr class="transfer_details" data-id="<?php echo $transfer->id ?>">
             <td colspan="<?php echo ($status == 'available') ? 7 : 5 ?>">
-                <div class="actions"></div>
+                <div class="actions">
+                    <span data-action="delete" class="fa fa-lg fa-trash-o" title="{tr:delete}"></span>
+                    <?php if($extend) { ?><span data-action="extend" class="fa fa-lg fa-calendar-plus-o"></span><?php } ?>
+                    <span data-action="add_recipient" class="fa fa-lg fa-envelope-o" title="{tr:add_recipient}"></span>
+                    <span data-action="remind" class="fa fa-lg fa-repeat" title="{tr:send_reminder}"></span>
+                </div>
                 
                 <div class="collapse">
                     <span class="clickable fa fa-minus-circle fa-lg" title="{tr:hide_details}"></span>
@@ -154,14 +166,13 @@
                         </ul>
                         <?php } else echo Lang::tr('none') ?>
                     </div>
-                    <?php
-                    if($transfer->hasOption(TransferOptions::GET_A_LINK)) {
-                        $recipients = array_values($transfer->recipients)
-                    ?>
+                    
+                    <?php if($transfer->hasOption(TransferOptions::GET_A_LINK)) { ?>
                     <div class="download_link">
                         {tr:download_link} : <input readonly="readonly" type="text" value="<?php echo $transfer->first_recipient->download_link ?>" />
                     </div>
                     <?php } ?>
+                    
                     <div class="transfer_id">
                         {tr:transfer_id} : <?php echo $transfer->id ?>
                     </div>
@@ -184,10 +195,16 @@
                             return Lang::tr('recipient_error_' . $type);
                         }, array_unique(array_map(function($error) {
                             return $error->type;
-                        }, $recipient->errors)))) . '</span>';
+                        }, $recipient->errors)))) . ' <span data-action="details" class="fa fa-lg fa-info-circle" title="{tr:details}"></span></span>';
                         
                         echo ' : '.count($recipient->downloads).' '.Lang::tr('downloads');
                         ?>
+                        
+                        <span data-action="delete" class="fa fa-lg fa-trash-o" title="{tr:delete}"></span>
+                        
+                        <span data-action="auditlog" class="fa fa-lg fa-history" title="{tr:open_recipient_auditlog}"></span>
+                        
+                        <span data-action="remind" class="fa fa-lg fa-repeat" title="{tr:send_reminder}"></span>
                     </div>
                     <?php } ?>
                 </div>
@@ -198,10 +215,30 @@
                     
                     <?php foreach($transfer->files as $file) { ?>
                         <div class="file" data-id="<?php echo $file->id ?>">
-                            <?php echo Template::sanitizeOutput($file->name) ?> (<?php echo Utilities::formatBytes($file->size) ?>) : <?php echo count($file->downloads) ?> {tr:downloads} <a class="fa fa-lg fa-download" title="{tr:download}" href="download.php?files_ids=<?php echo $file->id ?>"></a>
+                            <?php echo Template::sanitizeOutput($file->name) ?> (<?php echo Utilities::formatBytes($file->size) ?>) : <?php echo count($file->downloads) ?> {tr:downloads}
+                            
+                            <?php if(!$transfer->is_expired) { ?>
+                            <a class="fa fa-lg fa-download" title="{tr:download}" href="download.php?files_ids=<?php echo $file->id ?>"></a>
+                            <?php } ?>
+                            
+                            <span data-action="delete" class="fa fa-lg fa-trash-o" title="{tr:delete}"></span>
+                            
+                            <?php if(Config::get('auditlog_lifetime')) { ?>
+                            <span data-action="auditlog" class="fa fa-lg fa-history" title="{tr:open_file_auditlog}"></span>
+                            <?php } ?>
                         </div>
                     <?php } ?>
                 </div>
+                
+                <?php if(Config::get('auditlog_lifetime')) { ?>
+                <div class="auditlog">
+                    <h2>{tr:auditlog}</h2>
+                    <a href="#">
+                        <span class="fa fa-lg fa-history"></span>
+                        {tr:open_auditlog}
+                    </a>
+                </div>
+                <?php } ?>
             </td>
         </tr>
         <?php } ?>
