@@ -111,6 +111,13 @@ $config['transfer_options'] = array(
 		
 );
 
+// --------------------------------------------------
+//    TeraSender high speed upload module             
+// --------------------------------------------------
+
+$config['terasender_enabled'] = true;    				// 
+$config['terasender_advanced'] = true;    				// 
+
 
 
 // --------------------------------------------------
