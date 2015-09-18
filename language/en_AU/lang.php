@@ -41,7 +41,7 @@
  * Page names / main links
  */
 $lang['upload_page'] = 'Upload';
-$lang['transfers_page'] = 'Transfers';
+$lang['transfers_page'] = 'My Transfers';
 $lang['guests_page'] = 'Guests';
 $lang['admin_page'] = 'Admin';
 $lang['download_page'] = 'Download';
