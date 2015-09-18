@@ -1,0 +1,568 @@
+
+#How to read this document
+
+* 18 September 2015: I'm in the process of moving this page from the WYSIWYMG editor to markdown syntax.  This is the markdown page.  If you are missing a directive, consult the old page [Configuration directives v2-0-alpha old](https://www.assembla.com/spaces/file_sender/wiki/Configuration_directives_v2-0-alpha_old) where it most likely can be found.
+* 17 September 2015: this document is a work in progress.  If you are keen on seeing FileSender 2.0 released offer to help with (testing) the documentation.
+* mandatory configuration settings are <span style="background-color:red">marked in red</style>
+* sections <span style="background-color:orange">marked in orange</style> need to be double checked.
+
+#Table of contents
+
+##General settings
+* [admin_email](#admin_email)
+* [admin](#admin)
+* [site_name](#site_name)
+* [force_ssl](#force_ssl)
+* [session_cookie_path](#session_cookie_path)
+* [auth_remote_signature_algorithm](#auth_remote_signature_algorithm)
+* [default_timezone](#default_timezone)
+* [default_language](#default_language)
+* [site_url](#site_url)
+* [site_logouturl](#site_logouturl)
+* [about_url](#about_url)
+* [help_url](#help_url)
+
+##Backend storage
+* [storage_type](#storage_type)
+* [storage_filesystem_path](#storage_filesystem_path)
+* [storage_filesystem_df_command](#storage_filesystem_df_command)
+* [storage_filesystem_file_deletion_command](#storage_filesystem_file_deletion_command)
+* [storage_usage_warning](#storage_usage_warning)
+* [storage_filesystem_hashing](#storage_filesystem_hashing)
+
+##Language and internationalisation
+* [lang_browser_enabled](#lang_browser_enabled)
+* [lang_url_enabled](#lang_url_enabled)
+* [lang_userpref_enabled](#lang_userpref_enabled)
+* [lang_selector_enabled](#lang_selector_enabled)
+* [lang_save_url_switch_in_userpref](#lang_save_url_switch_in_userpref)
+
+##Email
+* [email_from](#email_from)
+* [email_from_name](#email_from_name)
+* [email_reply_to](#email_reply_to)
+* [email_reply_to_name](#email_reply_to_name)
+* [email_return_path](#email_return_path)
+* [email_use_html](#email_use_html)
+* [email_newline](#email_newline)
+* [relay_unknown_feedbacks](#relay_unknown_feedbacks)
+
+##Upload form
+* [aup_default](#aup_default)
+* [aup_enabled](#aup_enabled)
+* [autocomplete](#autocomplete)
+* [autocomplete_max_pool](#autocomplete_max_pool)
+* [autocomplete_min_characters](#autocomplete_min_characters)
+* [](#)
+* [](#)
+* [force_legacy_mode](#force_legacy_mode)
+* [legacy_upload_progress_refresh_period](#)
+* [](#)
+* [transfer_options](#transfer_options) (email receipt control)
+* [](#)
+* [](#)
+* [](#)
+* [](#)
+* [](#)
+
+
+
+##TeraSender (high speed upload module)
+* [terasender_enabled](#terasender_enabled)
+* [terasender_advanced](#terasender_advanced)
+* [terasender_worker_count](#terasender_worker_count)
+* [terasender_start_mode](#terasender_start_mode)
+
+
+##Download
+
+##Guest use
+
+
+##Authentication
+
+
+#Configuration directives
+
+##General settings
+
+###admin_email
+* __description:__ email address of FileSender administrator(s).  Separate multiple addresses with a comma (',').  
+Emails regarding disk full etc. are sent here. You should use a role-address here.
+* <span style="background-color:red">__mandatory:__ yes.  There must be at least one email address defined.</style>
+* __type:__ string.
+* __default:__ -
+* __available:__ since version 1.0
+* __1.x name:__ adminEmail
+		
+###admin
+* __description:__ UIDs (as per the configured saml_uid_attribute) of FileSender administrators. Accounts with these UIDs can access the Admin page through the web UI.  <span style="background-color:orange">Separate multiple entries with a comma (',').</span>
+* <span style="background-color:red">__mandatory:__ yes.  Can be empty but then no-one has access to the admin page.</style>
+* __type:__ string
+* __default:__ -
+* __available:__ since version 1.0
+
+###site_name
+* __description:__ friendly name for your FileSender instance. Used in site header in browser and in email templates.
+* __mandatory:__ no. If you don't define it, every place it's used will initialise to NULL which results in an empty string being displayed. 
+* __type:__ string
+* __default:__ FileSender
+* __available:__ since version 1.0
+
+
+###force_ssl
+* __description:__ enforce use of SSL. Set this to true and FileSender won't work if the user doesn't have a SSL session. Useful to retain security in case of web server misconfigurations.
+* __mandatory:__ no. <span style="background-color:orange">if you don't set it it will be evaluated to false?  What about the default of 'true'?)</style>
+* __type:__ boolean
+* __default:__ true
+* __available:__ since version 1.0
+* __1.x name:__ forceSSL
+
+###session_cookie_path
+* __description:__ Explicitly sets the session.cookie.path parameter for the authentication cookies.  You typically need this if you use SimpleSAMLphp for authentication and have multiple FileSender instances using the same SimpleSAMLphp installation.  Shibboleth has its own session identifier mechanism and you probably won't need to change the session_cookie_path when using Shibboleth. 
+* __mandatory:__ no
+* __type:__ string
+* __default:__ if(!$session_cookie_path) $session_cookie_path = $site_url_parts['path'];
+* __available:__ since version 2.0
+* __1.x name:__
+* __comment:__ Testing, ticket #1198
+* __comment:__ Be careful to include the entire URL path, like http://yourdomain.dom/!
+* __comment:__ When do you set this?  If you use SimpleSAMLphp for authentication there is one common scenario where you need to set this parameter: the URL space for your FileSender instance and your SimpleSAMLphp instance do not overlap.  This happens when you have multiple FileSender instances (one production, one beta) sharing the same SimpleSAMLphp installation. For example: http://yourdomain.dom/filesender-beta and http://yourdomain.dom/simplesamlphp.  Because SimpleSAMLphp and FileSender are both written in PHP they use the same mechanism for session identifiers.  They can share session identifiers but only if this is allowed by the session_cookie_path.  When you log on with SimpleSAMLphp a session identifier is created.  If this can not be shared with your FileSender instance you will notice a user can log on, only to be presented with the same logon form again.  A silent failure.  In this scenario you will either need to ensure your SimpleSAMLphp instance is available within the FileSender URL space, or you set the session cookie parameter to for example "http://yourdomain.dom/".  Another workaround is to use memcache for SimpleSAMLphp's session identifiers but that would mean an extra package on your server.  
+    
+
+###auth_remote_signature_algorithm
+* __description:__ <span style="background-color:orange">which remote signature algorithm to use.  Used in API? Should be in API section probably?  Which other permissible values?</span>
+* __mandatory:__ no
+* __type:__ string, permissible values: "sha1".
+* __default:__ "sha1"
+* __available:__ since version 2.0
+
+###default_timezone
+* __description:__ used to set default timezone of PHP. Used to convert dates. Dates are loaded from database and converted to PHP timestamps on the fly. Times in database are stored in GMT dates. Used to present localised time information. <span style="background-color:orange">Audit logs use time?  Also: include link to PHP timezone values</style>
+* __mandatory:__ yes (<span style="background-color:orange">doublecheck</span>)
+* __type:__ string
+* __default:__ Europe/London
+* __available:__ since version 1.0
+* __1.x name:__ Default_TimeZone
+
+###default_language
+* __description:__ if there are no end-user overrides then this is the default language to use in the UI <span style="background-color:orange">(and email?).</span>  If the user picks a language that doesn't exist, or if a language directive isn't translated in the language served up to the user, the directive will in stead be taken from the language defined here as default_language. If all else fails, English (en) is a hard coded default.
+* __mandatory:__ no. Hard-coded default of last resort: English ("en")
+* __type:__ string
+* __default:__ en
+* __available:__ since version 1.6
+* __1.x name:__ site_defaultlanguage
+* __comment:__ if the default_language is not one of the available (configured) languages, the configuration validator will thrown an error.
+
+###site_url
+* __description:__ Site URL. Used in emails, to build URLs for logging in, logging out, build URL for upload endpoint for web workers, to include scripts etc.
+* <span style="background-color:red">__mandatory:__ yes</style>
+* __type:__ string
+* __default:__ -
+* __available:__ since version 1.0
+
+###site_logouturl
+* __description:__ $_GET parameters for the logout page;  this is where user gets redirected to after logout. Is given to the SP logout end-point.
+* __mandatory:__ <span style="background-color:orange">?</style>
+* __type:__ string
+* __default:__ $config['site_url'].'?s=logout'
+* __available:__ since version 1.6
+
+###about_url
+* __description:__ if set to "", a modal inline popup dialogue is shown with the contents of _ABOUT_TEXT from the relevant language file. Alternatively a URL can be used to point to a specific (local or external) HTML page. <span style="background-color:orange">check if this is a modal inline popup</style>
+* __mandatory:__ no
+* __type:__ string
+* __default:__ not set = empty string = popup
+* __available:__ since version 1.0
+* __1.x name:__ aboutURL
+
+###help_url
+* __description:__ if set to "", a modal inline popup dialogue is shown with the contents of _HELP_TEXT from the relevant language file. If set to an URL it will open the referenced (local or external) HTML page in a new tab. <span style="background-color:orange">check if this is a modal inline popup</style>
+* __mandatory:__ no <span style="background-color:orange">doublecheck</style>
+* __type:__ string
+* __default:__ not set = empty string = popup
+* __available:__ since version 1.0
+* __1.x name:__ helpURL
+* __comment:__ when configured with a mailto: address that points to e.g. support@yourdomain.dom the email bounce handler will use this address to send unprocessable email bounces to. <span style="background-color:orange">include link to email bounce handling config directives/help</style>
+
+
+
+
+##Backend storage
+
+###storage_type
+* __description:__  type of storage you used for storing files uploaded to FileSender. 
+* __mandatory:__ no
+* __type:__ string.  Permissible values: **filesystem**.
+* __default:__ filesystem
+* __available:__ since version 2.0
+* __comment:__ each supported storage type will have a specific class defined in classes/storage.  Each is named Storage<Foo>.class.php, for example StorageFilesystem.class.php for the type filesystem.  The values for "Foo" are the permissible values for this directive. For now the only permissible value and supported storage type is filesystem.  Future storage types could include e.g. **object**, **amazon_s3** and others.
+
+###storage_filesystem_path
+* __description:__ when using storage type **filesystem** this is the absolute path to the file system where uploaded files are stored until they expire.  Your FileSender storage root.
+* __mandatory:__ no
+* __type:__ string
+* __default:__ ['filesenderbase'].'/files'
+* __available:__ since version 1.0
+* __1.x name:__ site_filestore
+* __comment:__
+
+###storage_filesystem_df_command
+* __description:__ Command used to determine available disk space on file system.  Used to perform per-transfer check for sufficient disk space and to trigger disk space usage warnings to the FileSender Admin
+* __mandatory:__ <span style="background-color:orange">?</span>
+* __type:__ string
+* __default:__ <span style="background-color:orange">?</span>?
+* __available:__ since version 2.0
+* __1.x name:__ 
+* __comment:__
+
+###storage_filesystem_file_deletion_command
+* __description:__ Command used to delete files, when they expire or are cleaned in routine cleaning of stale files.
+* __mandatory:__ <span style="background-color:orange">?</span>
+* __type:__ string
+* __default:__ <span style="background-color:orange">?</span>
+* __available:__ since version 1.1
+* __1.x name:__ cron_shred_command
+* __comment:__
+
+###storage_usage_warning
+* __description:__ percentage of drive space left that will trigger an email warning to the admin.
+* __mandatory:__ no.  If not set, evaluates to zero and you get no warnings.
+* __type:__ int
+* __default:__ 20
+* __available:__ since version 1.0
+* __1.x name:__ server_drivespace_warning
+* __comment:__
+
+
+<span style="background-color:orange">###storage_filesystem_hashing
+* __description:__ Aggregate several directories into a virtual FileSender file store without using LVM.  Directories can be on different file systems which can be on different block devices and hard drives.  Allows you to pool several hard drives into one virtual FileSender file store without any external software.  
+* __mandatory:__ no 
+* __type:__ **int** or **callable**.  When integer indicates number of characters used in hash.  When callable "file que l'on veit stocker et doit retourner le chemin dans le stockage"
+* __default:__ 0
+* __available:__ since version 20
+* __1.x name:__
+* __comment:__ not tested
+* __comment:__ basically integer. use fileUID (which is used to create name on hard drive) + as many characters as the hashing value (if you set hashing to 2 you take the 2 first letters of the fileUID (big random string) and use these two characters to create a directory structure under the storage path. This avoids having all files in the same directory. If you set this to 1 you have 16 possible different values for the directory structure under the storage root. You'll have 16 folders under your storage root under which you'll have the files. This allows you to spread files over different file systems / hard drives. You can aggregate storage space without using things like LVM. If you set this to two you have 2 levels of subdirectories. For directory naming: first level, directory names has one letter. Second level has two: letter from upper level + own level. Temporary chunks are stored directly in the final file. No temp folder (!!) Benchmarking between writing small file in potentially huge directory and opening big file and seeking in it was negligable. Can just open final file, seek to location of chunk offset and write data. Removes need to move file in the end.  It can also be "callable". We call the function giving it the file object which hold all properties of the file. Reference to the transfer as well. The function has to return a path under the storage root. This is a path related to storage root. For example: if you want to store small files in a small file directory and big files in big directory. F.ex. if file->size < 100 MB store on fast small disk, if > 100 MB store on big slow disk. Can also be used for functions to store new files on new storage while the existing files remain on existing storage. Note: we need contributions for useful functions here :) 
+</style>
+
+
+
+
+##Language and internationalisation
+
+FileSender includes a translation engine which allows for flexible user language detection and customisation.  For more details check the [Translating FileSender 2.0 documentation](https://www.assembla.com/spaces/file_sender/wiki/Translating_FileSender)
+
+User language detection is done in the following order:
+1. From the url (`lang` url parameter) : allows for user language switching (only if `lang_url_enabled` set to true in config), if `lang_save_url_switch_in_userpref` is enabled in config and a user session exists the new language is saved in the user preferences so that he doesn't need to switch it again the nex time. If no user session is found the new choice is saved in the PhP session.
+2. From the browser's `Accept-Language` header : allows for automatic language detection base on the browser config (if `lang_browser_enabled` set to true in config)
+3. From `default_language` config parameter
+4. From the hard-coded absolute default `en`
+  
+###lang_browser_enabled](#lang_browser_enabled)
+* __description:__ detect user's preferred language from browser's Accept-Language header if this header is provided.  If a language a user requests is not available, falls back to the default language.  If no default language is configured, falls back to English.  If a language directive is not available in the selected language, it is taken from the default language file.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ true
+* __available:__ since version 2.0
+* __1.x name:__
+* __comment:__ requires lang_url_enabled to be true.
+
+###lang_url_enabled
+* __description:__ allow explicit language switching via URL (example: ?lang=en)
+* __mandatory:__ no (required when using lang_browser_enabled)
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 2.0
+* __1.x name:__
+* __comment:__
+
+###lang_userpref_enabled
+* __description:__ take user's preferred language from user's stored preferences.  These preferences are stored in the FileSender database. 
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 2.0
+* __1.x name:__
+* __comment:__
+
+###lang_selector_enabled
+* __description:__ display language selector in UI .  If your FileSender instance only supports 1 language no selector is displayed and no "translate this email" link is present in emails.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 2.0
+* __1.x name:__
+* __comment:__ requires lang_url_enabled to be true.
+* __comment:__ <span style="background-color:orange">if the lang_selector is disabled a user can still select different translations in the email translation page</style>
+* __comment:__ <span style="background-color:orange">how is determined which language the lang selector defaults to when a user enters a page?  Browser setting?  Order in locale.php? </style>
+
+###lang_save_url_switch_in_userpref
+* __description:__ save language switching in user preferences on change (requires lang_url_enabled = true and lang_userpref_enabled = true)
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 2.0
+* __1.x name:__
+* __comment:__
+
+
+
+
+##Email
+
+###email_from
+* __description:__ <span style="background-color:orange">sets the email From: header to either an explicit value or fills it with the sender's email address as received from the identity service provider in the "mail" attribute.  Is this the body From:?</style>
+* __mandatory:__ no
+* __type:__ string or keyword. Permissible value for keyword: "sender"
+* __default:__ -
+* __available:__ since version 2.0
+* __1.x name:__
+* __comment:__ To be SPF compliant set this to an address like "filesender-bounces@yourdomain.dom" and use the bounce-handler script to deal with email bounces.
+
+###email_from_name
+* __description:__ pretty name for the email_from address.  Use when you explicitly set email_from to an email address like "no-reply@domain.dom".
+* __mandatory:__ no
+* __type:__ string
+* __default:__ -
+* __available:__ since version 2.0
+* __1.x name:__
+* __comment:__
+
+###email_reply_to
+* __description:__ <span style="background-color:orange">adds a reply-to: header to emails sent by FileSender.  When users reply to such an email usually the reply is then sent to the reply_to address.  A user would typically reply to an email to ask a question about a file transfer which should go directly to the sender as the sender is the only one who knows.</style>
+* __mandatory:__ no
+* __type:__ string or keyword.  Permissible values for keyword: "sender"
+* __default:__ - 
+* __available:__ since version 2.0
+* __1.x name:__
+* __comment:__ To be SPF compliant set this to "sender"
+
+###email_reply_to_name
+* __description:__  pretty name for the email_reply_to address.  Use when you explicitly set email_reply_to to an email address like "no-reply@domain.dom".
+* __mandatory:__ no
+* __type:__ string
+* __default:__ -
+* __available:__ since version 2.0
+* __1.x name:__
+* __comment:__
+
+###email_return_path
+* __description:__ <span style="background-color:orange">sets the return_path email header to either an explicit value or fills it with the sender's email address as received from the identity service provider in the "mail" attribute. Is this the envelope from??</style>
+* __mandatory:__ <span style="background-color:orange">no</style>
+* __type:__ string or keyword. Permissible value for keyword: "sender"
+* __default:__ -
+* __available:__ since version 2.0
+* __1.x name:__
+* __comment:__ To be SPF compliant set this to an address like "filesender-bounces@yourdomain.dom" and use the bounce-handler script to deal with email bounces.
+</style>
+
+###email_use_html
+* __description:__ if true all emails sent by FileSender will include both HTML and plaintext.  For most users this means they will see HTML emails. If false only plain-text emails are sent.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ true
+* __available:__ <span style="background-color:orange">since version 2.0 (?)</style>
+* __1.x name:__
+* __comment:__
+
+###email_newline
+* __description:__ specify a different new line character for use in emails. If your FileSender emails look garbled (display raw MIME and HTML source) try setting this to \n as an alternative to reconfiguring your mail server.
+* __mandatory:__ no
+* __type:__ string
+* __default:__ \r\n (as per RFC 2822)
+* __available:__ since version 1.0
+* __1.x name:__ crlf
+* __comment:__ the default value in version 1.x was "\n".
+
+###relay_unknown_feedbacks
+* __description:__ tells the bounce handler where to forward those messages it can not identify as email bounces but can be related to a specific target (recipient, guest). The received message is forwarded as message/rfc822 attachment.
+* __mandatory:__ no
+* __type:__ string or keyword
+* __permissible values:__ "sender": relay to recipient's transfer owner or guest owner. "admin": relay to admin email address. "support": relay to help_url if the latter is in the form of a mailto: URL ("mailto:someaddress@domain.tld"), "someaddress@domain.tld": an explicit email address to forward these types of mails to.
+* __default:__ "sender"
+* __available:__ since version 2.0
+* __1.x name:__
+* __comment:__ <span style="background-color:orange">this parameter will get a different name</style>
+
+
+##Upload form
+* [aup_default](#aup_default)
+* [aup_enabled](#aup_enabled)
+* [autocomplete](#autocomplete)
+* [autocomplete_max_pool](#autocomplete_max_pool)
+* [autocomplete_min_characters](#autocomplete_min_characters)
+* [](#)
+* [](#)
+* [force_legacy_mode](#force_legacy_mode)
+* [legacy_upload_progress_refresh_period](#)
+
+###aup_enabled
+* __description:__ If set to 'true' the AuP (terms of service) checkbox is visible AND mandatory for the user to tick.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 1.0
+* __1.x name:__ AuP
+* __comment:__
+
+###aup_default
+* __description:__ if set to 'true' the AuP (terms of service) checkbox (if enabled) is already pre-ticked for the user
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 1.0
+* __1.x name:__ AuP_default
+* __comment:__
+
+###autocomplete
+* __description:__ provide autocomplete for email input fields.  If set to a positive integer autocomplete is enabled and the value dictates how many results are returned to a user in the autocomplete popup.  The result list is limited to recipients this particular user has used.
+* __mandatory:__ no
+* __type:__ integer/boolean
+* __default:__ false
+* __available:__ since version 1.6
+* __1.x name:__
+* __comment:__ Checks the frequent recipient field (array) in the user preference table. Holds different recipients the user did use. The first one is the last used one. Every time the user sends a file or guest voucher we take recipiients and add them at the top of the array. If they already exist in the array the address is put to the top. We limit array to max length defined in config. 
+
+###autocomplete_max_pool
+* __description:__ how many of the user's recipients are stored in the user's preferences in the database.  Should be between 2 and ca. 15 times the "autocomplete" value.
+* __mandatory:__ no
+* __type:__ int
+* __default:__ 5 times the value set for autocomplete
+* __available:__ since version 1.6
+* __1.x name:__ autocompleteHistoryMax
+* __comment:__ the higher this number the larger the number of email recipients you will store over time.  This increases your privacy footprint.
+
+###autocomplete_min_characters
+* __description:__ how many characters the user needs to type in an email address field to trigger the autocomplete popup.
+* __mandatory:__ no
+* __type:__ int
+* __default:__ 3 <span style="background-color:orange">(might 2 be better?)</style>
+* __available:__ since version 2.0
+* __1.x name:__
+* __comment:__
+
+##force_legacy_mode
+* __description:__ Force FileSender into legacy non-HTML5 mode. Multi-file uploads are still possible, but each file is limited to max. 2GB.  The help file and certain text labels change as well. For testing purposes: FileSender will detect automatically if a user's browser supports the necessary HTML5 functionality or not.   
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 2.0
+* __1.x name:__
+* __comment:__ for testing purposes.
+
+###legacy_upload_progress_refresh_period
+* __description:__ when uploading in legacy mode (non-HTML5 uploads) this indicates in seconds how often the client-side progress bar is refreshed.
+* __mandatory:__ 
+* __type:__
+* __default:__
+* __available:__
+* __1.x name:__
+* __comment:__ Normally FileSender will use the browser's HTML5 FileAPI functionality for uploading, splitting files in chunks and uploading these chunks.  This allows for uploads of any size.  Older browsers which you may find in a locked-down environment do not support the necessary HTML5 functionality.  For these browsers a legacy fallback upload method is provided.  Before version 2.0 a flash component was used for legacy uploads.  As of version 2.0 this is replaced by a native HTML upload with a limit of 2GB per file.  A user **can** select multiple files but in a less smooth way than with the HTML5 drag & drop box.  The upload progress for legacy uploads is polled from the server (via PHP) based on what has arrived (how many bytes) server side.  <span style="background-color:orange">This only became possible as of PHP version 5.x, released in x</style>
+
+###transfer_options
+* __description:__ this parameter controls which transfer options are available to the user in the Upload form and how these options behave.  Options show up in the right hand side block in the Upload form.  Options appear in the order they are specified in the config file.  Most options control which email receipts are sent out when and to whom.  See below for details.  
+* __mandatory:__ no
+* __type:__ array
+* __default:__
+* __available:__ since version 2.0
+* __1.x name:__
+* __comment:__ 
+* __*Standard parameters for all options:*__
+	* __available__(boolean): if set to true then this option shown in the upload form
+	* __advanced__ (boolean): if set to true the option is hidden under an "Advanced options" click-out.  The user must click "Advanced" to make the option visible.
+	* __default__ (boolean): if set to true then this option is ticked by default.  If set to true while __*available*__ is set to false the option is mandatory for all users, it can not be switched off by the user.
+* __*Available options:*__
+	* __email\_me\_copies:__ the sender receives copies (Cc:) of all emails concerning this transfer.  This is the "spam-me-plenty" option.
+	* __email\_upload\_complete:__ send the sender an email once the sender's upload is finished.  This allows a sender to start a long upload on a workstation when leaving work and check with a smartphone whether the upload was completed some hours afterwards.
+	* __email\_download\_complete:__ notify the sender (owner) of a transfer that someone has downloaded it immediately after the download completes.
+	* __email\_daily\_statistics:__ send the sender an overview of all activity on that sender's transfers.  Who downloaded what when.
+	* __email\_report\_on\_closing:__ send the sender an overview of all activity on this particular transfer after that transfer is closed.  This is the audit report for that particular transfer.  When a sender receives this, the server's audit logs can (in principle) be purged for the records pertaining to this particular transfer thus reducing FileSender's privacy footprint.
+	* __enable\_recipient\_download\_complete:__ this gives the downloader a tick box in the download window which in turn lets the downloader indicate they would like to receive an email once the download is finished.  If you want this option available for all downloaders and do not want to bother the uploader with it, simply configure it with 'default' => false as the only parameter. __Warning:__ if the recipient of a file is a mailinglist and someone ticks the "send me a message on download complete" box, then all members of that mailinglist will receive that message.  That might be a reason why you don't want to make this option available to your users.
+	* __add\_me\_to\_recipients:__ include the sender as one of the recipients.
+	* __get\_a\_link:__ if checked it will not send any emails, only present the uploader with a download link once the upload is complete.  This is useful when sending files to mailinglists, newsletters etc.  When ticked the message subject and message text box disappear from the UI.  Under the hood it creates an anonymous recipient with a token for download.  You can se the download count, but not who downloaded it (obviously, as there are no recipients defined).  
+* __*Configuration example:*__
+<PRE>
+	$config['transfer_options'] = array(
+		'email_upload_complete' => array(
+			'available' => true,
+			'advanced' => false,
+			'default' => false
+		),
+		'email_me_copies' => array(
+			'available' => true,
+			'advanced' => true,
+			'default' => false
+		);
+</PRE> 
+
+
+
+
+##TeraSender (high speed upload module)
+###terasender_enabled
+* __description:__ if set to true, enables TeraSender high speed upload module.  This leverages client-side webworkers to parallelise uploads; each chunk is sent by a webworker allowing us to send many chunks in parallel.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ true
+* __available:__ since version 1.6
+* __1.x name:__ terasender
+* __comment:__ the default value in version 1.6 was false
+
+###terasender_advanced
+* __description:__ if set to yes the advanced terasender settings (worker count, chunk size) become available for a user in the UI.  Use this to easily test which workercount vs. chunk size settings work best for a very specific very demanding user/use case.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 1.6
+* __1.x name:__ terasenderadvanced
+* __comment:__
+
+###terasender_worker_count
+* __description:__ how many client-side workers FileSender fires up when starting a terasender upload.  Note that different browsers have different maximum webworker settings which also change over time.  As CPU power increases your users will typically be able to support higher number.
+* __mandatory:__ no 
+* __type:__ int
+* __default:__ 6
+* __available:__ since version 1.6
+* __1.x name:__ terasender_workerCount
+* __comment:__ <span style="background-color:orange">we need to check maximum webworker counts for standard browsers and possibly increase the default number</style>
+
+###terasender_start_mode
+* __description:__ progress sequentially or parallel through the file list.
+* __mandatory:__ no
+* __type:__ string, keyword
+* __permissible values:__ "single" or "multiple".  When single all workers will work on one single file and move sequentially through the file list.  When set to multiple all workers will be spread over all files.  The difference is in user experience; in the latter case a user sees progress on all files at once.  In reality the total upload time should remain the same.  So question is do you want the status to light up light a christmas tree or not. 
+* __default:__ multiple
+* __available:__ since version 2.0
+* __1.x name:__
+* __comment:__ when looking for a file to put a worker on in multiple mode we look at file which has compbination of least worker and least progress.  Try to put available worker on file that is the slowest.  In multiple-mode we try to make all files progress at about the same speed.
+
+
+##Download
+
+##Guest use
+
+
+##Authentication
+
+
+###
+* __description:__ 
+* __mandatory:__ 
+* __type:__
+* __default:__
+* __available:__
+* __1.x name:__
+* __comment:__
+
+<span style="background-color:orange">
+
+#Available in 1.x, not in 2.0
+cron_shred: consolidated by having a parameter to specify which delete command to use.
+terasender_chunksize: chunksize is now consolidated in 1 parameter for all uploads?
+terasender_jobsPerWorker: didn't have any practical meaning (doublecheck with Etienne)
+
+
+#Changed defaults from 1.x to 2.0
+email_newline is now "\r\n", before \n
+terasender_enabled is now "true", before false
