@@ -89,7 +89,7 @@ class AuthRemote {
                 if(!is_array($applications) || !array_key_exists($application, $applications))
                     throw new AuthRemoteUknownApplicationException($application);
                 
-                $app_cfg = $applications[$application];
+                $application = new RemoteApplication($application, $applications[$application]);
             }
             
             // Check request time to avoid replays
@@ -116,7 +116,7 @@ class AuthRemote {
             
             // Check signature
             if($application) {
-                $secret = $app_cfg['secret'];
+                $secret = $application->secret;
                 
             } else {
                 // Get user, fail if unknown or no user secret
@@ -142,10 +142,10 @@ class AuthRemote {
             
             // Register admin level if asked for and enabled
             if($application) {
-                if(array_key_exists('isAdmin', $app_cfg) && $app_cfg['isAdmin']) self::$isAdmin = true;
+                self::$isAdmin = $application->isAdmin;
                 
                 self::$application = $application;
-                self::$attributes['remote_application'] = $application;
+                self::$attributes['remote_application'] = $application->name;
             }
             
             self::$isAuthenticated = true;
@@ -181,5 +181,93 @@ class AuthRemote {
      */
     public static function application() {
         return self::$application;
+    }
+}
+
+/**
+ * Remote application
+ */
+class RemoteApplication {
+    /**
+     * Application name
+     */
+    private $name = '';
+    
+    /**
+     * Secret
+     */
+    private $secret = '';
+    
+    /**
+     * ACLs
+     */
+    private $acl = array();
+    
+    /**
+     * Admin status
+     */
+    private $isAdmin = false;
+    
+    /**
+     * Constructor
+     * 
+     * @param string $name
+     * @param array $cfg application as defined in config
+     */
+    public function __construct($name, $cfg) {
+        $this->name = $name;
+        
+        if(!array_key_exists('secret', $cfg))
+            throw new ConfigBadParameterException('auth_remote_applications['.$name.'][secret]');
+        
+        $this->secret = $cfg['secret'];
+        
+        if(!array_key_exists('acl', $cfg) || !is_array($cfg['acl']))
+            throw new ConfigBadParameterException('auth_remote_applications['.$name.'][acl]');
+        
+        $this->acl = $cfg['acl'];
+        
+        if(array_key_exists('isAdmin', $cfg) && $cfg['isAdmin'])
+            $this->isAdmin = true;
+    }
+    
+    /**
+     * Check access right
+     * 
+     * @param string $method
+     * @param string $endpoint
+     * 
+     * @return bool
+     */
+    public function allowedTo($method, $endpoint) {
+        $acl = false;
+        
+        if(array_key_exists($endpoint, $this->acl))
+            $acls = $this->acl[$endpoint];
+        
+        if(!$acl && array_key_exists('*', $this->acl))
+            $acl = $this->acl['*'];
+        
+        if(!is_array($acl)) return (bool)$acl;
+        
+        if(array_key_exists($method, $acl))
+            return (bool)$acl[$method];
+        
+        if(array_key_exists('*', $acl))
+            return (bool)$acl['*'];
+        
+        return false;
+    }
+    
+    /**
+     * Getter
+     * 
+     * @param string $property
+     */
+    public function __get($property) {
+        if(in_array($property, array('name', 'secret', 'acl', 'isAdmin')))
+            return $this->$property;
+        
+        throw new PropertyAccessException($this, $property);        
     }
 }
