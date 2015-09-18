@@ -121,22 +121,9 @@ class RestServer {
             if(Auth::isRemoteApplication()) {
                 // Remote applications must honor ACLs
                 $application = AuthRemote::application();
-                if(array_key_exists($endpoint, $application['acl'])) {
-                    $acl = $application['acl'][$endpoint];
-                }else if(array_key_exists('*', $application['acl'])) {
-                    $acl = $application['acl']['*'];
-                }else throw new RestException('rest_access_forbidden', 403);
                 
-                if(is_array($acl)) {
-                    $macl = false;
-                    if(array_key_exists($method, $acl)) {
-                        $macl = $acl[$method];
-                    }else if(array_key_exists('*', $acl)) {
-                        $macl = $acl['*'];
-                    }
-                    
-                    if(!$macl) throw new RestException('rest_method_not_allowed', 403);
-                }else if(!$acl) throw new RestException('rest_access_forbidden', 403);
+                if(!$application->allowedTo($method, $endpoint))
+                    throw new RestException('rest_access_forbidden', 403);
                 
             } else if(Auth::isRemoteUser()) {
                 // Nothing peculiar to do
