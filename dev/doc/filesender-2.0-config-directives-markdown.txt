@@ -13,7 +13,6 @@
 * [admin](#admin)
 * [site_name](#site_name)
 * [force_ssl](#force_ssl)
-* [session_cookie_path](#session_cookie_path)
 * [auth_remote_signature_algorithm](#auth_remote_signature_algorithm)
 * [default_timezone](#default_timezone)
 * [default_language](#default_language)
@@ -29,6 +28,15 @@
 * [storage_filesystem_file_deletion_command](#storage_filesystem_file_deletion_command)
 * [storage_usage_warning](#storage_usage_warning)
 * [storage_filesystem_hashing](#storage_filesystem_hashing)
+
+##Database
+* [db_type](#db_type)
+* [db_host](#db_host)
+* [db_port](#db_port)
+* [db_username](#db_username)
+* [db_password](#db_password)
+* [db_database](#db_database)
+* [db_table_prefix](#db_table_prefix)
 
 ##Language and internationalisation
 * [lang_browser_enabled](#lang_browser_enabled)
@@ -47,25 +55,31 @@
 * [email_newline](#email_newline)
 * [relay_unknown_feedbacks](#relay_unknown_feedbacks)
 
-##Upload form
-* [aup_default](#aup_default)
-* [aup_enabled](#aup_enabled)
+##General UI
 * [autocomplete](#autocomplete)
 * [autocomplete_max_pool](#autocomplete_max_pool)
 * [autocomplete_min_characters](#autocomplete_min_characters)
+
+
+##Transfers
+* [aup_default](#aup_default)
+* [aup_enabled](#aup_enabled)
 * [](#)
-* [](#)
+* [chunk_upload_security](#chunk_upload_security)
+* [default_days_valid](#default_days_valid)
+* [max_days_valid](#max_days_valid)
 * [force_legacy_mode](#force_legacy_mode)
 * [legacy_upload_progress_refresh_period](#)
-* [](#)
+* [max_legacy_file_size](#max_legacy_file_size)
+* [max_transfer_size](#max_transfer_size)
+* [max_transfer_files](#max_transfer_files)
+* [max_transfer_recipients](#max_transfer_recipients)
 * [transfer_options](#transfer_options) (email receipt control)
+* [upload_chunk_size](#upload_chunk_size)
 * [](#)
 * [](#)
 * [](#)
 * [](#)
-* [](#)
-
-
 
 ##TeraSender (high speed upload module)
 * [terasender_enabled](#terasender_enabled)
@@ -73,13 +87,37 @@
 * [terasender_worker_count](#terasender_worker_count)
 * [terasender_start_mode](#terasender_start_mode)
 
-
 ##Download
+* [download_chunk_size](#download_chunk_size)
+* [mac_unzip_name](#mac_unzip_name)
+* [mac_unzip_link)(#mac_unzip_link)
+
 
 ##Guest use
-
+* [default_guest_days_valid](#default_guest_days_valid) !!
+* [guest_options](#guest_options) !!
+* [max_guest_days_valid](#max_guest_days_valid) !!
+* [max_guest_recipients](#max_guest_recipients) !!
 
 ##Authentication
+* [auth_sp_type](#auth_sp_type)
+* [session_cookie_path](#session_cookie_path)
+* <span style="background-color:orange">[auth_sp_set_idp_as_user_organization](#auth_sp_set_idp_as_user_organization)</style>
+* __SimpleSAMLphp__
+	* [auth_sp_saml_authentication_source](#auth_sp_saml_authentication_source)
+	* [auth_sp_saml_simplesamlphp_url](#auth_sp_saml_simplesamlphp_url)
+	* [auth_sp_saml_simplesamlphp_location](#auth_sp_saml_simplesamlphp_location)
+	* [auth_sp_saml_email_attribute](#auth_sp_saml_email_attribute)
+	* [auth_sp_saml_name_attribute](#auth_sp_saml_name_attribute)
+	* [auth_sp_saml_uid_attribute](#auth_sp_saml_uid_attribute)
+* __Shibboleth__
+* [](#)
+
+* __SP_Fake__	
+	* [auth_sp_fake_authenticated](#auth_sp_fake_authenticated)
+	* [auth_sp_fake_uid](#auth_sp_fake_uid)
+	* [auth_sp_fake_email](#auth_sp_fake_email)
+	* [auth_sp_fake_name](#auth_sp_fake_name)
 
 
 #Configuration directives
@@ -249,6 +287,66 @@ Emails regarding disk full etc. are sent here. You should use a role-address her
 
 
 
+##Database
+
+###db_type
+* __description:__ type of database
+* __mandatory:__ <span style="background-color:red">yes</style>
+* __type:__ string, keyword
+* __permissible values__: mysql, pgsql, sqlite (<span style="background-color:orange">taken from PDO drivers documentation, need to check with Etienne)</style>
+* __default:__ pgsql
+* __available:__ since version 1.0
+* __1.x name:__ 
+* __comment:__
+
+###db_host
+* __description:__ database host address or name. Typically 127.0.0.1 or localhost.
+* __mandatory:__ <span style="background-color:red">yes</style>
+* __type:__ string
+* __default:__ -
+* __available:__ since version 1.0
+* __1.x name:__
+* __comment:__
+
+###db_port
+* __description:__ port used by database server 
+* __mandatory:__  <span style="background-color:red">yes</style>
+* __type:__ string
+* __default:__ -
+* __available:__ since version 1.0
+* __1.x name:__
+* __comment:__
+
+###db_username
+* __description:__ database username 
+* __mandatory:__ <span style="background-color:red">yes</style>
+* __type:__ string
+* __default:__ -
+* __available:__ since version 1.0
+* __1.x name:__
+* __comment:__
+
+###db_password
+* __description:__ database password 
+* __mandatory:__ <span style="background-color:red">yes</style>
+* __type:__ string
+* __default:__ -
+* __available:__ since version 1.0
+* __1.x name:__
+* __comment:__
+
+###db_table_prefix
+* __description:__ table prefix to use.  Allows you to have several filesender instances in one database.  For example if you buy hosting with 1 database and still want multiple filesender instances. 
+* __mandatory:__ <span style="background-color:orange">?  Would think not?</yes>
+* __type:__ string
+* __default:__ -
+* __available:__ since version 2.0
+* __1.x name:__
+* __comment:__
+
+
+
+
 ##Language and internationalisation
 
 FileSender includes a translation engine which allows for flexible user language detection and customisation.  For more details check the [Translating FileSender 2.0 documentation](https://www.assembla.com/spaces/file_sender/wiki/Translating_FileSender)
@@ -385,8 +483,38 @@ User language detection is done in the following order:
 * __1.x name:__
 * __comment:__ <span style="background-color:orange">this parameter will get a different name</style>
 
+##General UI
+###autocomplete
+* __description:__ provide autocomplete for email input fields.  If set to a positive integer autocomplete is enabled and the value dictates how many results are returned to a user in the autocomplete popup.  The result list is limited to recipients this particular user has used.
+* __mandatory:__ no
+* __type:__ integer/boolean
+* __default:__ false
+* __available:__ since version 1.6
+* __1.x name:__
+* __comment:__ Checks the frequent recipient field (array) in the user preference table. Holds different recipients the user did use. The first one is the last used one. Every time the user sends a file or guest voucher we take recipiients and add them at the top of the array. If they already exist in the array the address is put to the top. We limit array to max length defined in config. 
 
-##Upload form
+###autocomplete_max_pool
+* __description:__ how many of the user's recipients are stored in the user's preferences in the database.  Should be between 2 and ca. 15 times the "autocomplete" value.
+* __mandatory:__ no
+* __type:__ int
+* __default:__ 5 times the value set for autocomplete
+* __available:__ since version 1.6
+* __1.x name:__ autocompleteHistoryMax
+* __comment:__ the higher this number the larger the number of email recipients you will store over time.  This increases your privacy footprint.
+
+###autocomplete_min_characters
+* __description:__ how many characters the user needs to type in an email address field to trigger the autocomplete popup.
+* __mandatory:__ no
+* __type:__ int
+* __default:__ 3 <span style="background-color:orange">(might 2 be better?)</style>
+* __available:__ since version 2.0
+* __1.x name:__
+* __comment:__
+
+
+
+
+##Transfers
 * [aup_default](#aup_default)
 * [aup_enabled](#aup_enabled)
 * [autocomplete](#autocomplete)
@@ -415,32 +543,40 @@ User language detection is done in the following order:
 * __1.x name:__ AuP_default
 * __comment:__
 
-###autocomplete
-* __description:__ provide autocomplete for email input fields.  If set to a positive integer autocomplete is enabled and the value dictates how many results are returned to a user in the autocomplete popup.  The result list is limited to recipients this particular user has used.
+###chunk_upload_security
+* <span style="background-color:orange">this entire parameter needs to be checked with Etienne</style>
+* __description:__ controls how FileSender behaves when an upload lasts longer than an authenticated user session.  If set to "key" the web client will use FileUID as a transfer session key.  This transfer session key is valid for as long as the upload lasts independent from the user's login session.  So if a user logs in at some identity provider and that session expires after e.g. 8 hours but the upload lasts for 10 hours, the upload will complete.  If set to "auth" the user will be required to re-logon if their logon session has expired before an upload completed.  
+  
+If set to "key" and the user's login session expires before the upload is completed, the user will need to be logged on before redirected to their "My Transfers" page.
 * __mandatory:__ no
-* __type:__ integer/boolean
-* __default:__ false
-* __available:__ since version 1.6
-* __1.x name:__
-* __comment:__ Checks the frequent recipient field (array) in the user preference table. Holds different recipients the user did use. The first one is the last used one. Every time the user sends a file or guest voucher we take recipiients and add them at the top of the array. If they already exist in the array the address is put to the top. We limit array to max length defined in config. 
-
-###autocomplete_max_pool
-* __description:__ how many of the user's recipients are stored in the user's preferences in the database.  Should be between 2 and ca. 15 times the "autocomplete" value.
-* __mandatory:__ no
-* __type:__ int
-* __default:__ 5 times the value set for autocomplete
-* __available:__ since version 1.6
-* __1.x name:__ autocompleteHistoryMax
-* __comment:__ the higher this number the larger the number of email recipients you will store over time.  This increases your privacy footprint.
-
-###autocomplete_min_characters
-* __description:__ how many characters the user needs to type in an email address field to trigger the autocomplete popup.
-* __mandatory:__ no
-* __type:__ int
-* __default:__ 3 <span style="background-color:orange">(might 2 be better?)</style>
+* __type:__ string keyword
+* __permissible values:__ "key" or "auth"
+* __default:__ key
 * __available:__ since version 2.0
 * __1.x name:__
-* __comment:__
+* __comment:__ When you upload a file it is uploaded in chunks.  For each chunk there is a check whether the chunk belongs to a valid session and it ensures the right chunks are appended to the right files.  You don't want others to be able to insert chunks in a user's file as it would lead to file corruption.  In version 1.x this check was done with the user's session (login) identifier which from a security point of view worked well.  The only problem is that sometimes uploads take a long time, depending on file size and upload speeds.  A user's login session can then expire before the upload is complete.  Most FileSender installations in national research networks use SAML-based authentication.  A user logs in to an Identity Provider (IdP), this IdP sends a SAML-token to the Service Provider (SP, your FileSender instance) containing information like the session authentication token.  This SAML-token also contains a timestamp which indicates exactly when the user's login session expires. FileSender CAN NOT change this session expiry time as the authentication libraries it uses honour this value.  It's the Identiy Provider that makes this choice.  In Norwegian higher education for example a login session with the national authentication infrastructure expires after 8 hours.  We have seen uploads that last longer than that.  
+   
+To solve this we introduced a transfer key in FileSender 2.0. When you start an upload you use the FileUID as a unique transfer session key. If the user session times out before the upload is done, the upload will still continue.  The transfer session key expires immediately once the upload is done. The upload is secure: you need an authenticated session to start an upload, only the server and the uploading client have knowledge of the FileUID. Third parties can not inject chunks.  
+  
+If you want to find out the expiry timer for your SAML Identity Provider install [the SAML tracer add-on in FireFox](https://addons.mozilla.org/en-us/firefox/addon/saml-tracer/) and log in to your FileSender install.  Click on the "SAML" message in SAML tracer.
+
+###default_transfer_days_valid
+* __description:__ specifies the default expiry date value in the "Expiry date" date picker in the Upload form.  If a user doesn't do anything this becomes the expiry date for the transfer.
+* __mandatory:__ no
+* __type:__ int
+* __default:__ 10
+* __available:__ since version 1.0
+* __1.x name:__ default_daysvalid
+* __comment:__ Be aware of the changed semantic from 1.6 to 2.0.
+
+###max_transfer_days_valid
+* __description:__ specifies the maximum expiry date for a transfer.  A user can not choose a larger value than this. 
+* __mandatory:__ no
+* __type:__ int
+* __default:__ 20
+* __available:__ since version 1.0
+* __1.x name:__ default_daysvalid
+* __comment:__ experience shows the vast majority of users simply go with the default expiry time.  For some users having a maximum value a long time in the future makes sense, e.g. papers sent out to a research proposal evaluation committee that need to be evaluated by a certain date.  Downloads typically start not too long before the due date, but the actual due date can be over a month in the future. 
 
 ##force_legacy_mode
 * __description:__ Force FileSender into legacy non-HTML5 mode. Multi-file uploads are still possible, but each file is limited to max. 2GB.  The help file and certain text labels change as well. For testing purposes: FileSender will detect automatically if a user's browser supports the necessary HTML5 functionality or not.   
@@ -453,12 +589,50 @@ User language detection is done in the following order:
 
 ###legacy_upload_progress_refresh_period
 * __description:__ when uploading in legacy mode (non-HTML5 uploads) this indicates in seconds how often the client-side progress bar is refreshed.
-* __mandatory:__ 
-* __type:__
-* __default:__
-* __available:__
+* __mandatory:__ no
+* __type:__ int (seconds)
+* __default:__ 5.  Setting this to 0 is not a wise choice as it will make the timer refresh every millisecond (the min. value for a JavaScript timer)
+* __available:__ since version 2.0
 * __1.x name:__
 * __comment:__ Normally FileSender will use the browser's HTML5 FileAPI functionality for uploading, splitting files in chunks and uploading these chunks.  This allows for uploads of any size.  Older browsers which you may find in a locked-down environment do not support the necessary HTML5 functionality.  For these browsers a legacy fallback upload method is provided.  Before version 2.0 a flash component was used for legacy uploads.  As of version 2.0 this is replaced by a native HTML upload with a limit of 2GB per file.  A user **can** select multiple files but in a less smooth way than with the HTML5 drag & drop box.  The upload progress for legacy uploads is polled from the server (via PHP) based on what has arrived (how many bytes) server side.  <span style="background-color:orange">This only became possible as of PHP version 5.x, released in x</style>
+
+###max_legacy_file_size
+* __description:__ maximum size per file for a legacy upload.  <span style="background-color:orange">With a legacy upload users can upload x files per transfer.</style>.     
+* __mandatory:__ no
+* __type:__ int
+* __default:__ 2147483648 (2GB)
+* __available:__ since version 1.0
+* __1.x name:__ max_flash_upload_size
+* __comment:__ Files are uploaded serially.  A hidden iframe and hidden form is created for each file, containing the required data (session key for upload etc.).  A single file element is cloned into each hidden form.  This form is submitted to the hidden iframe which then uploads the file.  At the end of the upload the server sends a bit of javascript which triggers the next upload in the queue.  Each file is an "entire file at once" upload rather then the chunked upload used to get over the 2GB limit of 32 bit browsers.
+
+###max_transfer_size
+* __description:__ maximum total size for any transfer (both html5 and legacy transfers) 
+* __mandatory:__ no
+* __type:__ int
+* __default:__ 107374182400 (100 GB)
+* __available:__ since version 1.0
+* __1.x name:__ max_html5_upload_size
+* __comment:__
+
+###max_transfer_files
+* __description:__ maximum number of files that can be sent in one transfer 
+* __mandatory:__ no
+* __type:__ int
+* __default:__ 30
+* __available:__ since version 2.0
+* __1.x name:__
+* __comment:__
+
+###max_transfer_recipients
+* __description:__ maximum number of recipients a transfer can have.
+* __mandatory:__ no
+* __type:__ int
+* __default:__ 50
+* __available:__ since version 1.0
+* __1.x name:__ max_email_recipients
+* __comment:__ 
+
+
 
 ###transfer_options
 * __description:__ this parameter controls which transfer options are available to the user in the Upload form and how these options behave.  Options show up in the right hand side block in the Upload form.  Options appear in the order they are specified in the config file.  Most options control which email receipts are sent out when and to whom.  See below for details.  
@@ -495,6 +669,15 @@ User language detection is done in the following order:
 			'default' => false
 		);
 </PRE> 
+
+###upload_chunk_size
+* __description:__ standard upload for FileSender is chunked upload.  This indicates how big each chunk is.  There is a certain optimal chunk size which depends largely on your bandwidth-delay product.  Usually you shouldn't have to touch this but if you're trying to serve special use cases you might want to experiment with this and see which value gives you the fastest upload times..
+* __mandatory:__ no
+* __type:__ int (bytes)
+* __default:__ 5 * 1024 * 1024 (5242880 bytes (5MB))
+* __available:__ since version 1.5
+* __1.x name:__
+* __comment:__ Please note that as of version 2.0 the terasender_chunksize and upload_chunk-size have been merged into one parameter.
 
 
 
@@ -538,12 +721,222 @@ User language detection is done in the following order:
 * __comment:__ when looking for a file to put a worker on in multiple mode we look at file which has compbination of least worker and least progress.  Try to put available worker on file that is the slowest.  In multiple-mode we try to make all files progress at about the same speed.
 
 
+
+
 ##Download
+###download_chunk_size
+* __description:__ the maximum amount of data that will be read into <span style="background-color:orange">(server or client side?)</style> memory at once during multi-file downloads (not single file?)
+* __mandatory:__ <span style="background-color:orange">?<span style="background-color:orange">
+* __type:__ int
+* __default:__ 5242880 (5MB)
+* __available:__ since version 2.0
+* __1.x name:__
+* __comment:__
+
+###mac_unzip_name
+* __description:__ <span style="background-color:orange">per oktober 2014 the default Mac built-in unzip client is still 32 bits. This leads to problems if the zip file that's downloaded when downloading multiple-files-as-an-archive is larger than 2 GB: a user can click on the zip file but it won't expand into a folder. To prevent help desk calls we alert a user to this problem and give them a place where they can go for the solution. (need double check for Yosemite)</style>
+* __mandatory:__ <span style="background-color:orange">? Should be?)</style>
+* __type:__ string
+* __default:__ The Unarchiver
+* __available:__ since version 2.0
+* __1.x name:__
+* __comment:__
+
+###mac_unzip_link
+* __description:__ link in download form where user can download a 64 bit unzip utility for Mac OS-X
+* __mandatory:__ <span style="background-color:orange">? </style>
+* __type:__ string
+* __default:__ http://unarchiver.c3.cx/unarchiver
+* __available:__ since version 2.0
+* __1.x name:__
+* __comment:__
+
+
+
 
 ##Guest use
+###guest_options
+* __description:__ 
+* __mandatory:__ 
+* __type:__
+* __default:__
+* __available:__
+* __1.x name:__
+* __comment:__
+
+
+$lang['email_upload_page_access'] = 'Notify me when guests access the upload page';
+$lang['email_upload_started'] = 'Notify me when upload starts';
+$lang['can_only_send_to_me'] = 'Can only send to me';
+$lang['valid_only_one_time'] = 'Valid for one upload only';
+$lang['does_not_expire'] = 'Does not expire';
+
+###default_guest_days_valid
+* __description:__ 
+* __mandatory:__ 
+* __type:__
+* __default:__
+* __available:__
+* __1.x name:__
+* __comment:__
+
+###max_guest_days_valid
+* __description:__ 
+* __mandatory:__ 
+* __type:__
+* __default:__
+* __available:__
+* __1.x name:__
+* __comment:__
+
+###max_guest_recipients
+* __description:__ 
+* __mandatory:__ 
+* __type:__
+* __default:__
+* __available:__
+* __1.x name:__
+* __comment:__
+
+
 
 
 ##Authentication
+###auth_sp_type
+* __description:__ which authentication library to use.  saml=SimpleSAMLphp, shibboleth=shibboleth, fake uses a local file.  Do not use the fakesp in production!
+* __mandatory:__ no
+* __type:__ string, keyword
+* __permissible values:__ "saml", "shibboleth", "fake"
+* __default:__ saml
+* __available:__ since version 2.0
+* __1.x name:__
+* __comment:__ <span style="background-color:orange">to use type "fake" you need ...</style>
+
+###session_cookie_path
+* __description:__ Explicitly sets the session.cookie.path parameter for the authentication cookies.  You typically need this if you use SimpleSAMLphp for authentication and have multiple FileSender instances using the same SimpleSAMLphp installation.  Shibboleth has its own session identifier mechanism and you probably won't need to change the session_cookie_path when using Shibboleth. 
+* __mandatory:__ no
+* __type:__ string
+* __default:__ if(!$session_cookie_path) $session_cookie_path = $site_url_parts['path'];
+* __available:__ since version 2.0
+* __1.x name:__
+* __comment:__ Testing, ticket #1198
+* __comment:__ Be careful to include the entire URL path, like http://yourdomain.dom/!
+* __comment:__ When do you set this?  If you use SimpleSAMLphp for authentication there is one common scenario where you need to set this parameter: the URL space for your FileSender instance and your SimpleSAMLphp instance do not overlap.  This happens when you have multiple FileSender instances (one production, one beta) sharing the same SimpleSAMLphp installation. For example: http://yourdomain.dom/filesender-beta and http://yourdomain.dom/simplesamlphp.  Because SimpleSAMLphp and FileSender are both written in PHP they use the same mechanism for session identifiers.  They can share session identifiers but only if this is allowed by the session_cookie_path.  When you log on with SimpleSAMLphp a session identifier is created.  If this can not be shared with your FileSender instance you will notice a user can log on, only to be presented with the same logon form again.  A silent failure.  In this scenario you will either need to ensure your SimpleSAMLphp instance is available within the FileSender URL space, or you set the session cookie parameter to for example "http://yourdomain.dom/".  Another workaround is to use memcache for SimpleSAMLphp's session identifiers but that would mean an extra package on your server.
+
+###auth_sp_set_idp_as_user_organization
+* __description:__ saml_sp_idp (simplesaml), shib: (shib_identity_provider environment variable) takes sp identifier from sp if provided and save it in user preferences as organisation property.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 2.0
+* __1.x name:__
+* __comment:__ <span style="background-color:orange">is this still in use?  There is no code associated with it as far as I can tell</style>
+
+##Authentication: SimpleSAMLphp 
+###auth_sp_saml_authentication_source
+* __description:__ which authentication source service provider to use. In SimpleSAMLphp you configure these in the configuration file <simplesamlphp>/config/authsources.php.
+* __mandatory:__ no
+* __type:__ string
+* __default:__ default-sp
+* __available:__ since version 1.0
+* __1.x name:__ site_authenticationSource
+* __comment:__
+
+###auth_sp_saml_simplesamlphp_url
+* __description:__ which URL to find SimpleSAMLphp.  
+* __mandatory:__ yes, if auth_sp_type is set to 'saml'
+* __type:__ string
+* __default:__ -
+* __available:__ since version 1.0
+* __1.x name:__ site_simplesamlurl
+* __comment:__ You will usually have something like 'http://<your-filesender-server>/simplesaml' here where 'simplesaml' is an alias defined as "Alias /simplesaml /usr/local/filesender/simplesaml/www" in your web server config.
+
+###auth_sp_saml_simplesamlphp_location
+* __description:__ file system path to SimpleSAMLphp location
+* __mandatory:__ yes, if auth_sp_type is set to 'saml'
+* __type:__ string
+* __default:__ -
+* __available:__ since version 1.0
+* __1.x name:__ site_simplesamllocation
+* __comment:__
+
+###auth_sp_saml_uid_attribute
+* __description:__ attribute for user's unique user identifier to get from authentication service provider.  Usually you would use either *eduPersonTargetedID* or *eduPersonPrincipalName* (watch the spelling!).  ePTID is an anonymous identifier making it hard to link FileSender logging to a specific user which may or may not be what you want.  ePTID will protect your users against rogue IdPs.  eduPersonPrincipalName will usually give you an identifier like <username>@<domain>.  
+* __mandatory:__ no explicit configuration is needed when the default is used.  However, this value MUST be received from the Identity Provider, otherwise a user can not log on.
+* __type:__ string
+* __default:__ <span style="background-color:orange">eduPersonTargetedId (doublecheck spelling!)</style>
+* __available:__ since version 1.0
+* __1.x name:__ saml_uid_attribute
+* __comment:__
+
+###auth_sp_saml_email_attribute
+* __description:__ attribute for user's mail address to get from authentication service provider
+* __mandatory:__ no explicit configuration is needed when the default is used.  However, this value MUST be received from the Identity Provider, otherwise a user can not log on.
+* __type:__ string
+* __default:__ mail
+* __available:__ since version 1.0
+* __1.x name:__ saml_email_attribute
+* __comment:__ 
+
+###auth_sp_saml_name_attribute
+* __description:__ attribute for user's name to get from authentication service provider
+* __mandatory:__ no
+* __type:__ string
+* __default:__ cn
+* __available:__ since version 1.0
+* __1.x name:__ saml_name_attribute
+* __comment:__
+
+
+
+##Authentication: Shibboleth
+
+###
+* __description:__ 
+* __mandatory:__ 
+* __type:__
+* __default:__
+* __available:__
+* __1.x name:__
+* __comment:__
+
+##Authentication: SP_fake
+###auth_sp_fake_authenticated
+* __description:__ 
+* __mandatory:__ 
+* __type:__ boolean
+* __default:__
+* __available:__
+* __1.x name:__
+* __comment:__
+
+###auth_sp_fake_uid
+* __description:__ UID you want to have
+* __mandatory:__ 
+* __type:__ string
+* __default:__
+* __available:__
+* __1.x name:__
+* __comment:__
+
+###auth_sp_fake_email
+* __description:__ 
+* __mandatory:__ 
+* __type:__
+* __default:__
+* __available:__
+* __1.x name:__
+* __comment:__
+
+###auth_sp_fake_name
+* __description:__ 
+* __mandatory:__ 
+* __type:__
+* __default:__
+* __available:__
+* __1.x name:__
+* __comment:__
+
 
 
 ###
@@ -554,6 +947,7 @@ User language detection is done in the following order:
 * __available:__
 * __1.x name:__
 * __comment:__
+
 
 <span style="background-color:orange">
 
