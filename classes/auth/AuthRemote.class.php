@@ -243,7 +243,7 @@ class RemoteApplication {
         $acl = false;
         
         if(array_key_exists($endpoint, $this->acl))
-            $acls = $this->acl[$endpoint];
+            $acl = $this->acl[$endpoint];
         
         if(!$acl && array_key_exists('*', $this->acl))
             $acl = $this->acl['*'];
@@ -268,6 +268,6 @@ class RemoteApplication {
         if(in_array($property, array('name', 'secret', 'acl', 'isAdmin')))
             return $this->$property;
         
-        throw new PropertyAccessException($this, $property);        
+        throw new PropertyAccessException($this, $property);
     }
 }
