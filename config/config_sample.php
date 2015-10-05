@@ -87,7 +87,7 @@
 // // Get name attribute from authentication service
 // $config['auth_sp_saml_name_attribute'] = 'cn';
 // 
-// // Get uid attribute from authentication service.  Usually eduPersonTargetedId or eduPersonPrincipalName
+// // Get uid attribute from authentication service.  Usually eduPersonTargetedID or eduPersonPrincipalName
 // $config['auth_sp_saml_uid_attribute'] = 'eduPersonTargetedId';
 // 
 // // Get path  attribute from authentication service
