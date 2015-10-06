@@ -50,11 +50,11 @@ $config['site_url'] = 'https://terasender.uninett.no/branches/filesender-2.0/'; 
 // 
 $config['admin'] = 'meijer@rnd.feide.no';            // String, UID's (from  $config['saml_uid_attribute']) 
                                     // that have Administrator permissions
-
 $config['admin_email'] ='jan.meijer@uninett.no';       // String, email  address(es, separated by ,) 
                                     			// to receive administrative messages (low disk  space warning)
 
-$config['session_cookie_path'] = 'https://terasender.uninett.no/';
+$config['session_cookie_path'] = '/';
+
 
 // ---------------------------------------------
 //              Language settings
@@ -62,7 +62,6 @@ $config['session_cookie_path'] = 'https://terasender.uninett.no/';
 $config['lang_browser_enabled'] = true;    				// default is false.  Shows language based on user's browser setting.
 $config['lang_selector_enabled'] = true;    				// default is false.  Enables explicit language selection in UI
 $config['lang_url_enabled'] = true;    				// default is false.  Needed to make lang_selector_enabled and lang_browser_enabled to work. Also needed to allow translation of emails. 
-
 
 
 
@@ -77,6 +76,8 @@ $config['email_reply_to'] ='sender';    			// either 'sender' or an email addres
 // $config['email_reply_to_name'] = 'pretty name';    		// pretty name in case email_reply_to is a configured email address
 $config['email_return_path'] = 'no-reply@uninett.no';				// either 'sender' or an email address
 
+
+
 // --------------------------------------------------
 //              Web UI settings
 // --------------------------------------------------
@@ -86,37 +87,91 @@ $config['force_legacy_mode'] = false;			// for testing legacy non-HTML5 mode
 $config['autocomplete'] = 10;					// show previously used email addresses in To: fields.  Set to positive number to enable.  Number indicates how many hits are shown to user.  Addresses are stored in user preferences.  When you sent to another set of recipients, will remove from list and add them at beginning of list.  So the more you write to them the longer they stay.  The longer you don't write to someone the lower they get on the list until they drop off.  Seems to work pretty well at RENATER.  
 $config['autocomplete_max_pool'] = 100;				// how many values are stored in database.  Default is 5.
 $config['autocomplete_min_characters'] = 2;		// Optional.  Default 3.  How many characters to type before autocomplete list is triggered 
+$config['upload_display_bits_per_sec'] = false;		
+
+
+
+// --------------------------------------------------
+//              Transfer settings
+// --------------------------------------------------
 
 $config['transfer_options'] = array(
-		'add_me_to_recipients' => array(
+
+		// Sender gets copies of all emails sent to everyone.  "spam me plenty" option.
+		'email_me_copies' => array(
 			'available' => true,
-			'advanced' => false,
-			'default' => true
-		),
-		'get_a_link' => array(
-			'available' => true,
-			'advanced' => false,
+			'advanced' => true,
 			'default' => false
 		),
+
+		// Sender gets an email once an upload is complete.  Practical for long uploads
 		'email_upload_complete' => array(
 			'available' => true,
 			'advanced' => false,
 			'default' => true
 		),
-		'email_me_copies' => array(
+
+		// By default send the Sender a daily overview of what happened to his/her transfers
+		// rather than sending individual emails for each event (download).
+		'email_daily_statistics' => array(
+			'available' => true,
+			'advanced' => false,
+			'default' => true
+		),
+
+		// Sender gets an email when someone has downloaded (parts of) a transfer
+		'email_download_complete' => array(
 			'available' => true,
 			'advanced' => true,
 			'default' => false
-		)
+		),
 		
+		// Always send the sender an audit report when a transfer expires
+		// Because "default" is set to "true" and "available" to "false" the user can not untick this.
+		// If you want this to be a user choice, set 'available' to 'true'
+		//
+		// I made this choice because I want to be able to delete the audit logs pertaining to a transfer
+		// after a relatively short time.  So I want to be able to tell a user "here is your audit log, this
+		// shows who downloaded your files when.  I will now delete this information, if you wish to keep it
+		// then do not delete this email.
+		'email_email_report_on_closing' => array(
+			'available' => false,
+			'advanced' => false,
+			'default' => true
+		),
+
+		// Never allow a recipient to receive an email once their download is complete
+		'email_enable_recipient_download_complete' => array(
+			'available' => false,
+			'advanced' => false,
+			'default' => false
+		),
+		
+		// include the sender as a recipient
+		'add_me_to_recipients' => array(
+			'available' => true,
+			'advanced' => false,
+			'default' => true
+		),
+
+		// Allow a user to only upload a file and take care of download URL distribution him/herself.
+		'get_a_link' => array(
+			'available' => true,
+			'advanced' => false,
+			'default' => false
+		)
 );
 
 // --------------------------------------------------
 //    TeraSender high speed upload module             
 // --------------------------------------------------
 
-$config['terasender_enabled'] = true;    				// 
-$config['terasender_advanced'] = true;    				// 
+$config['terasender_enabled'] = true;    	// 
+$config['terasender_advanced'] = true;    	// Make #webworkers configurable in UI.  Switched this on to make it easy 
+						// to determine optimal number for terasender_worker_count when going in production.  
+						// The useful number of maximum webworkers per browser changes nearly for each browser release.
+$config['terasender_worker_count'] = 10;   	// Number of web workers to launch simultaneously client-side when starting upload
+//$config['terasender_worker_count'] = single;	// I think I prefer to show a nice serial predictable upload process
 
 
 
@@ -137,8 +192,49 @@ $config['default_transfer_days_valid'] = 5;    				// Default expiry date as per
 
 //$config['default_guest_days_valid'] = ;    				// if not set, this defaults default_transfer_days_valid
 //$config['max_guest_days_valid'] = ;    				// if not set, this defaults to max_days_valid
-//$config['guest_options'] = ;    				// set of options available for guest users
+//$config['guest_options'] = '';    				// set of options available for guest users
 //$config['max_guest_recipients'] = 50;    				// max no. of recipients a transfer can have.  Defaults to 50.
+
+$config['guest_options'] = array(
+
+                // Guest invitation creator gets an email when guest starts upload.
+                'email_upload_started' => array(
+                        'available' => true,
+                        'advanced' => true,
+                        'default' => false
+                ),
+
+                // Guest invitation creator gets an email when guest accesses upload page.
+                'email_upload_page_access' => array(
+                        'available' => true,
+                        'advanced' => true,
+                        'default' => false
+                ),
+
+		// A guest invitation can only be used for one transfer
+                'valid_only_one_time' => array(
+                        'available' => true,
+                        'advanced' => false,
+                        'default' => true
+		),
+
+		// This guest invitation will not expire and can be used for unlimited transfers.
+		// Combine with "can_only_send_to_me" to create a permanent upload link users can 
+		// include in email signatures
+                'does_not_expire' => array(
+                        'available' => true,
+                        'advanced' => true,
+                        'default' => false
+		),
+
+		// Guests can only use their access to send transfers to the creator of the guest invitation
+                'can_only_send_to_me' => array(
+                        'available' => true,
+                        'advanced' => false,
+                        'default' => true
+		),
+);
+
 
 
 // ---------------------------------------------
@@ -154,8 +250,10 @@ $config['db_password'] ='yourdatabasepassword';   // String, database password
 //              SAML configuration
 // ---------------------------------------------
 
-$config['auth_sp_saml_simplesamlphp_url'] ='/branches/filesender-2.0/simplesaml/';        // Url of simplesamlphp
-$config['auth_sp_saml_simplesamlphp_location'] ='/usr/local/filesender/fs20-simplesaml/';   // Location of simplesamlphp libraries
+//$config['auth_sp_saml_simplesamlphp_url'] ='/branches/filesender-2.0/simplesaml/';        // Url of simplesamlphp
+$config['auth_sp_saml_simplesamlphp_url'] ='/simplesaml/';        // Url of simplesamlphp
+//$config['auth_sp_saml_simplesamlphp_location'] ='/usr/local/filesender/fs20-simplesaml/';   // Location of simplesamlphp libraries
+$config['auth_sp_saml_simplesamlphp_location'] ='/usr/local/filesender/simplesaml/';   // Location of simplesamlphp libraries
 
 
 // ---------------------------------------------
