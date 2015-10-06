@@ -98,10 +98,10 @@
 
 
 ##Guest use
-* [default_guest_days_valid](#default_guest_days_valid) !!
-* [guest_options](#guest_options) !!
-* [max_guest_days_valid](#max_guest_days_valid) !!
-* [max_guest_recipients](#max_guest_recipients) !!
+* [guest_options](#guest_options)
+* [default_guest_days_valid](#default_guest_days_valid)
+* [max_guest_days_valid](#max_guest_days_valid)
+* [max_guest_recipients](#max_guest_recipients)
 
 ##Authentication
 * [auth_sp_type](#auth_sp_type)
@@ -776,45 +776,64 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 ##Guest use
 ---
 ###guest_options
-* __description:__ 
-* __mandatory:__ 
-* __type:__
-* __default:__
-* __available:__
+* __description:__ <span style="background-color:orange">are transfer options for guest invitations inherited from transfer_options?</style>this parameter controls which options a user has available in the Guest form to control the behaviour of guest invitations.  Options show up in the right hand side block in the Guest form. Options appear in the order they are specified in the config file. See below for details.
+* __mandatory:__ no
+* __type:__ array
+* __default:__ 
+* __available:__ since version 2.0
 * __1.x name:__
 * __comment:__
+* __*Standard parameters for all options:*__
+	* __available__(boolean): if set to true then this option shown in the Guest form
+	* __advanced__ (boolean): if set to true the option is hidden under an "Advanced options" click-out.  The user must click "Advanced" to make the option visible.
+	* __default__ (boolean): if set to true then this option is ticked by default.  If set to true while __*available*__ is set to false the option is mandatory for all users, it can not be switched off by the user.
+* __*Available options:*__
+	* __email\_upload\_started:__ send the guest invitation owner an email when the guest upload is complete.
+	* __email\_upload\_page_access:__ send the guest invitation owner an email when the guest accesses the upload page.
+	* __valid\_only\_one_time:__ the guest invitation can be used for one transfer only.
+	* __does\_not\_expire:__ the guest invitation can be used until it is explicitly expired by the owner.  Combine with can_only_send_to_me to create a permanent file upload link that can be put in an email signature.
+	* __can\_only\_send\_to_me:__ the recipient for this guest invitation is fixed, the guest can not choose their own recipients.
 
+* __*Configuration example:*__
+<PRE>
+	$config['guest_options'] = array(
+		'email_upload_started' => array(
+			'available' => true,
+			'advanced' => false,
+			'default' => false
+		),
+		'email_upload_page_access' => array(
+			'available' => true,
+			'advanced' => true,
+			'default' => false
+		);
+</PRE> 
 
-$lang['email_upload_page_access'] = 'Notify me when guests access the upload page';
-$lang['email_upload_started'] = 'Notify me when upload starts';
-$lang['can_only_send_to_me'] = 'Can only send to me';
-$lang['valid_only_one_time'] = 'Valid for one upload only';
-$lang['does_not_expire'] = 'Does not expire';
 
 ###default_guest_days_valid
-* __description:__ 
-* __mandatory:__ 
-* __type:__
-* __default:__
-* __available:__
+* __description:__ specifies the default expiry date value in the "Expiry date" date picker in the Guest form.  If a user doesn't do anything this becomes the expiry date for the guest invitation.  If this value is not configured, it is set to default_transfer_days_valid
+* __mandatory:__ no
+* __type:__ int
+* __default:__ same as default_transfer_days_valid
+* __available:__ since version 2.0
 * __1.x name:__
 * __comment:__
 
 ###max_guest_days_valid
-* __description:__ 
-* __mandatory:__ 
-* __type:__
-* __default:__
-* __available:__
+* __description:__ specifies the maximum expiry date for a guest invitation.  A user can not choose a larger value than this.
+* __mandatory:__ no
+* __type:__ int
+* __default:__ same as max_transfer_days_valid
+* __available:__ since version 2.0
 * __1.x name:__
 * __comment:__
 
 ###max_guest_recipients
-* __description:__ 
-* __mandatory:__ 
-* __type:__
-* __default:__
-* __available:__
+* __description:__ specifies how many recipients a guest can specify
+* __mandatory:__ no
+* __type:__ int
+* __default:__ 50
+* __available:__ since version 2.0
 * __1.x name:__
 * __comment:__
 
