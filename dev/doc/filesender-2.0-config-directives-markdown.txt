@@ -1,13 +1,16 @@
 
 #How to read this document
-
+---
 * 18 September 2015: I'm in the process of moving this page from the WYSIWYMG editor to markdown syntax.  This is the markdown page.  If you are missing a directive, consult the old page [Configuration directives v2-0-alpha old](https://www.assembla.com/spaces/file_sender/wiki/Configuration_directives_v2-0-alpha_old) where it most likely can be found.
 * 17 September 2015: this document is a work in progress.  If you are keen on seeing FileSender 2.0 released offer to help with (testing) the documentation.
 * mandatory configuration settings are <span style="background-color:red">marked in red</style>
 * sections <span style="background-color:orange">marked in orange</style> need to be double checked.
 
-#Table of contents
 
+
+
+#Table of contents
+---
 ##General settings
 * [admin_email](#admin_email)
 * [admin](#admin)
@@ -59,6 +62,7 @@
 * [autocomplete](#autocomplete)
 * [autocomplete_max_pool](#autocomplete_max_pool)
 * [autocomplete_min_characters](#autocomplete_min_characters)
+* [upload_display_bits_per_sec](#upload_display_bits_per_sec)!!
 
 
 ##Transfers
@@ -111,18 +115,30 @@
 	* [auth_sp_saml_name_attribute](#auth_sp_saml_name_attribute)
 	* [auth_sp_saml_uid_attribute](#auth_sp_saml_uid_attribute)
 * __Shibboleth__
-* [](#)
-
+	* [auth_sp_shibboleth_uid_attribute](#auth_sp_shibboleth_uid_attribute)
+	* [auth_sp_shibboleth_email_attribute](#auth_sp_shibboleth_email_attribute)
+	* [auth_sp_shibboleth_name_attribute](#auth_sp_shibboleth_name_attribute)
+	* [auth_sp_shibboleth_login_url](#auth_sp_shibboleth_login_url)
+	* [auth_sp_shibboleth_logout_url](#auth_sp_shibboleth_logout_url)
 * __SP_Fake__	
-	* [auth_sp_fake_authenticated](#auth_sp_fake_authenticated)
-	* [auth_sp_fake_uid](#auth_sp_fake_uid)
-	* [auth_sp_fake_email](#auth_sp_fake_email)
-	* [auth_sp_fake_name](#auth_sp_fake_name)
+	* [auth_sp_fake_authenticated](#auth_sp_fake_authenticated)!!
+	* [auth_sp_fake_uid](#auth_sp_fake_uid)!!
+	* [auth_sp_fake_email](#auth_sp_fake_email)!!
+	* [auth_sp_fake_name](#auth_sp_fake_name)!!
+
+##Webservices API
+* [auth_remote_application_enabled](#auth_remote_application_enabled)
+* [remote_applications](#remote_applications)
+* [auth_remote_user_autogenerate_secret](#auth_remote_user_autogenerate_secret)
 
 
+---
+---
 #Configuration directives
-
+---
+---
 ##General settings
+---
 
 ###admin_email
 * __description:__ email address of FileSender administrator(s).  Separate multiple addresses with a comma (',').  
@@ -224,10 +240,10 @@ Emails regarding disk full etc. are sent here. You should use a role-address her
 * __comment:__ when configured with a mailto: address that points to e.g. support@yourdomain.dom the email bounce handler will use this address to send unprocessable email bounces to. <span style="background-color:orange">include link to email bounce handling config directives/help</style>
 
 
-
-
+---
+---
 ##Backend storage
-
+---
 ###storage_type
 * __description:__  type of storage you used for storing files uploaded to FileSender. 
 * __mandatory:__ no
@@ -285,10 +301,10 @@ Emails regarding disk full etc. are sent here. You should use a role-address her
 </style>
 
 
-
-
+---
+---
 ##Database
-
+---
 ###db_type
 * __description:__ type of database
 * __mandatory:__ <span style="background-color:red">yes</style>
@@ -345,10 +361,10 @@ Emails regarding disk full etc. are sent here. You should use a role-address her
 * __comment:__
 
 
-
-
+---
+---
 ##Language and internationalisation
-
+---
 FileSender includes a translation engine which allows for flexible user language detection and customisation.  For more details check the [Translating FileSender 2.0 documentation](https://www.assembla.com/spaces/file_sender/wiki/Translating_FileSender)
 
 User language detection is done in the following order:
@@ -405,10 +421,10 @@ User language detection is done in the following order:
 * __comment:__
 
 
-
-
+---
+---
 ##Email
-
+---
 ###email_from
 * __description:__ <span style="background-color:orange">sets the email From: header to either an explicit value or fills it with the sender's email address as received from the identity service provider in the "mail" attribute.  Is this the body From:?</style>
 * __mandatory:__ no
@@ -511,20 +527,20 @@ User language detection is done in the following order:
 * __1.x name:__
 * __comment:__
 
+###upload_display_bits_per_sec
+* __description:__ <span style="background-color:orange">if true display upload speed in MBps (megabytes/second).  If false display upload speeds as Mbps (megabits/second) Need to test, reality seems different from documentation</style>
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 2.0
+* __1.x name:__
+* __comment:__ does this actually work?
 
 
-
+---
+---
 ##Transfers
-* [aup_default](#aup_default)
-* [aup_enabled](#aup_enabled)
-* [autocomplete](#autocomplete)
-* [autocomplete_max_pool](#autocomplete_max_pool)
-* [autocomplete_min_characters](#autocomplete_min_characters)
-* [](#)
-* [](#)
-* [force_legacy_mode](#force_legacy_mode)
-* [legacy_upload_progress_refresh_period](#)
-
+---
 ###aup_enabled
 * __description:__ If set to 'true' the AuP (terms of service) checkbox is visible AND mandatory for the user to tick.
 * __mandatory:__ no
@@ -680,9 +696,10 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __comment:__ Please note that as of version 2.0 the terasender_chunksize and upload_chunk-size have been merged into one parameter.
 
 
-
-
+---
+---
 ##TeraSender (high speed upload module)
+---
 ###terasender_enabled
 * __description:__ if set to true, enables TeraSender high speed upload module.  This leverages client-side webworkers to parallelise uploads; each chunk is sent by a webworker allowing us to send many chunks in parallel.
 * __mandatory:__ no
@@ -719,11 +736,13 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __available:__ since version 2.0
 * __1.x name:__
 * __comment:__ when looking for a file to put a worker on in multiple mode we look at file which has compbination of least worker and least progress.  Try to put available worker on file that is the slowest.  In multiple-mode we try to make all files progress at about the same speed.
+<span style="background-color:orange">when set to "single" uploads don't work?  Bug?</style>
 
 
-
-
+---
+---
 ##Download
+---
 ###download_chunk_size
 * __description:__ the maximum amount of data that will be read into <span style="background-color:orange">(server or client side?)</style> memory at once during multi-file downloads (not single file?)
 * __mandatory:__ <span style="background-color:orange">?<span style="background-color:orange">
@@ -752,9 +771,10 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __comment:__
 
 
-
-
+---
+---
 ##Guest use
+---
 ###guest_options
 * __description:__ 
 * __mandatory:__ 
@@ -799,9 +819,10 @@ $lang['does_not_expire'] = 'Does not expire';
 * __comment:__
 
 
-
-
+---
+---
 ##Authentication
+---
 ###auth_sp_type
 * __description:__ which authentication library to use.  saml=SimpleSAMLphp, shibboleth=shibboleth, fake uses a local file.  Do not use the fakesp in production!
 * __mandatory:__ no
@@ -832,7 +853,8 @@ $lang['does_not_expire'] = 'Does not expire';
 * __1.x name:__
 * __comment:__ <span style="background-color:orange">is this still in use?  There is no code associated with it as far as I can tell</style>
 
-##Authentication: SimpleSAMLphp 
+##Authentication: SimpleSAMLphp
+---
 ###auth_sp_saml_authentication_source
 * __description:__ which authentication source service provider to use. In SimpleSAMLphp you configure these in the configuration file <simplesamlphp>/config/authsources.php.
 * __mandatory:__ no
@@ -864,7 +886,7 @@ $lang['does_not_expire'] = 'Does not expire';
 * __description:__ attribute for user's unique user identifier to get from authentication service provider.  Usually you would use either *eduPersonTargetedID* or *eduPersonPrincipalName* (watch the spelling!).  ePTID is an anonymous identifier making it hard to link FileSender logging to a specific user which may or may not be what you want.  ePTID will protect your users against rogue IdPs.  eduPersonPrincipalName will usually give you an identifier like <username>@<domain>.  
 * __mandatory:__ no explicit configuration is needed when the default is used.  However, this value MUST be received from the Identity Provider, otherwise a user can not log on.
 * __type:__ string
-* __default:__ <span style="background-color:orange">eduPersonTargetedId (doublecheck spelling!)</style>
+* __default:__ eduPersonTargetedId
 * __available:__ since version 1.0
 * __1.x name:__ saml_uid_attribute
 * __comment:__
@@ -888,17 +910,54 @@ $lang['does_not_expire'] = 'Does not expire';
 * __comment:__
 
 
-
 ##Authentication: Shibboleth
-
-###
-* __description:__ 
-* __mandatory:__ 
-* __type:__
-* __default:__
-* __available:__
+---
+###auth_sp_shibboleth_uid_attribute
+* __description:__ attribute for user's unique user identifier to get from authentication service provider.  Usually you would use either *eduPersonTargetedID* or *eduPersonPrincipalName* (watch the spelling!).  ePTID is an anonymous identifier making it hard to link FileSender logging to a specific user which may or may not be what you want.  ePTID will protect your users against rogue IdPs.  eduPersonPrincipalName will usually give you an identifier like <username>@<domain>.
+* __mandatory:__ no explicit configuration is needed when the default is used.  However, this value MUST be received from the Identity Provider, otherwise a user can not log on.
+* __type:__ string
+* __default:__ 
+* __available:__ since version 2.0
 * __1.x name:__
 * __comment:__
+
+###auth_sp_shibboleth_email_attribute
+* __description:__ attribute for user's mail address to get from authentication service provider
+* __mandatory:__ no explicit configuration is needed when the default is used.  However, this value MUST be received from the Identity Provider, otherwise a user can not log on.
+* __type:__ string
+* __default:__ mail
+* __available:__ since version 2.0
+* __1.x name:__
+* __comment:__
+
+###auth_sp_shibboleth_name_attribute
+* __description:__ attribute for user's name to get from authentication service provider
+* __mandatory:__ no
+* __type:__ string
+* __default:__ cn
+* __available:__ since version 2.0
+* __1.x name:__
+* __comment:__
+
+###auth_sp_shibboleth_login_url
+* __description:__ where to find the Shibboleth login URL
+* __mandatory:__ yes when using Shibboleth as authentication library
+* __type:__ string
+* __default:__ -
+* __available:__ since version 2.0
+* __1.x name:__
+* __comment:__
+* __example:__ $prot.$_SERVER['SERVER_NAME'].'/Shibboleth.sso/Login?target={target}';
+
+###auth_sp_shibboleth_logout_url
+* __description:__ where to find the Shibboleth logout URL 
+* __mandatory:__ yes when using Shibboleth as authentication library
+* __type:__ string
+* __default:__ -
+* __available:__ since version 2.0
+* __1.x name:__
+* __comment:__
+* __example:__ $prot.$_SERVER['SERVER_NAME'].'/Shibboleth.sso/Logout?return={target}';
 
 ##Authentication: SP_fake
 ###auth_sp_fake_authenticated
@@ -937,6 +996,38 @@ $lang['does_not_expire'] = 'Does not expire';
 * __1.x name:__
 * __comment:__
 
+
+---
+---
+##Webservices API
+---
+###auth_remote_application_enabled
+* __description:__ enable or disable remote application authentication.  Needed to let remote applications (API applications) authenticate
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ false (not explicit)
+* __available:__ since version 2.0
+* __1.x name:__
+* __comment:__ <span style="background-color:orange">needs to be elaborated more.  Consequences of setting to true</style>
+
+###remote_applications
+* __description:__  list of remote applications.  This is an array where each entry includes an authentication secret, whether or not the application has admin rights and what methods the application is allowed to use: 
+* __mandatory:__ no
+* __type:__ array
+* __default:__
+* __available:__ since version 2.0
+* __1.x name:__
+* __comment:__ <span style="background-color:orange">needs more work.  Example:
+array (idApp => secret(string), isAdmin(bool), acl (array (endpoint(ou *) => boolean OU array (pair de nom de méthode et de valeurs d'accès.  ex: get => TRUE, post => FALSE      Explained in more detail in API documentation page.</style>
+
+###auth_remote_user_autogenerate_secret
+* __description:__ <span style="background-color:orange">ask etienne how this works</style>
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 2.0
+* __1.x name:__
+* __comment:__
 
 
 ###
