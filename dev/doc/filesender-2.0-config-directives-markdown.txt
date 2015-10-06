@@ -126,6 +126,13 @@
 	* [auth_sp_fake_email](#auth_sp_fake_email)!!
 	* [auth_sp_fake_name](#auth_sp_fake_name)!!
 
+##Maintenance and logging
+* [failed_transfer_cleanup_days](#failed_transfer_cleanup_days)
+* [log_facilities](#log_facilities)
+* [statlog_lifetime](#statlog_lifetime)
+* [auditlog_lifetime](#auditlog_lifetime)
+* [report_format](#report_format)
+
 ##Webservices API
 * [auth_remote_application_enabled](#auth_remote_application_enabled)
 * [remote_applications](#remote_applications)
@@ -1018,6 +1025,56 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 
 ---
 ---
+##Maintenance and logging
+---
+###failed_transfer_cleanup_days
+* __description:__ number of days after which chunks belonging to failed or interrupted uploads will be deleted from disk on the server. If some transfer was created say 7 days ago and still not completed, the associated data is removed after 7 days.
+* __mandatory:__ no
+* __type:__ int (days)
+* __default:__ 7
+* __available:__ since version 1.5
+* __1.x name:__ cron_cleanuptempdays
+* __comment:__
+
+###log_facilities
+* __description:__ defines where FileSender logging is sent.  You can sent logging to a file, to syslog or to the default PHP log facility as configured through your webserver's PHP module.  The directive takes an array of one or more logging targets, logging can be sent to multiple targets simultaneously.  Each logging target is a list containing the name of the logging target and a number of attributes which vary per log target.  See below for the exact definiation of each log target.
+* __mandatory:__ no
+* __type:__ 
+* __default:__
+* __available:__ since version 2.0
+* __1.x name:__
+* __comment:__
+
+###statlog_lifetime
+* __description:__ The statlog is kept in the database and contains everything needed to produce usage statistics.  This directive defines maximum lifetime of statslog entries (in days) after which they get deleted.  <span style="background-color:orange">point to more text detailing what is actuallly logged in the statlog!</style>
+* __mandatory:__ no
+* __type:__ int (days)
+* __default:__ 0
+* __available:__ since version 2.0
+* __1.x name:__
+* __comment:__ The statlog is always enabled.  If you don't want anything logged, set this lifetime to 0.  Use this setting to control the privacy footprint of your FileSender service.
+
+###auditlog_lifetime
+* __description:__ The auditlog is kept in the database and contains all events for a transfer.  This information can be used to tell the user what happened to their transfer when.  This directive specifies the maximum lifetime of auditlog entries (in days).  If set to 0 we remove data when the transfer is closed, after sending reports (if user indicated they wanted).  As long as transfer is live you have this data, as soon as transfer expires the log disappears.  If you set it to "false" we don't log anything and a user can't even see the logs when a transfer is live.
+* __mandatory:__ no
+* __type:__ boolean/int (days).  Set to false to disable.
+* __default:__ 31
+* __available:__ since version 2.0
+* __1.x name:__
+* __comment:__ Use this setting to control the privacy footprint of your FileSender service.  
+
+###report_format
+* __description:__ A user can ask for an audit report specifying what happened to a transfer when.  This can be done when initiating a transfer by ticking the checkbox or explicitly through MyTransfers (view audit log).  This setting specifies what type of report will be generated.
+* __mandatory:__ no
+* __type:__ keyword (string).
+* __permissible values:__ inline, PDF.
+* __default:__ inline
+* __available:__ since version 2.0
+* __1.x name:__
+* __comment:__ The same information is sent regardless of format.  Inline sends an email in plain text and HTML, with all information inline.  If PDF is chosen, the report is sent as PDF attachment.  Building a PDF is somewhat heavier on the server but won't matter unless you would have a heavily used server.  The library used is "dom pdf", included in the code.
+
+---
+---
 ##Webservices API
 ---
 ###auth_remote_application_enabled
@@ -1070,3 +1127,6 @@ terasender_jobsPerWorker: didn't have any practical meaning (doublecheck with Et
 #Changed defaults from 1.x to 2.0
 email_newline is now "\r\n", before \n
 terasender_enabled is now "true", before false
+
+#Relevant for security audits
+library included, dom pdf.
