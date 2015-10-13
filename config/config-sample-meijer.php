@@ -75,6 +75,7 @@ $config['email_from_name'] = 'UNINETT FileSender - beta 2.0';	// pretty name wit
 $config['email_reply_to'] ='sender';    			// either 'sender' or an email address
 // $config['email_reply_to_name'] = 'pretty name';    		// pretty name in case email_reply_to is a configured email address
 $config['email_return_path'] = 'no-reply@uninett.no';				// either 'sender' or an email address
+$config['email_newline'] = "\r\n";				// if emails are mangled replace this with \n.  Make sure to put it in double quotes!!
 
 
 
@@ -265,6 +266,13 @@ $config['storage_filesystem_path'] = '/data/branches/filesender-2.0/files';
 
     //'storage_filesystem_df_command' => 'df {path}',
 
+// ---------------------------------------------
+//              Multi-site configs
+// ---------------------------------------------
+
+//
+// Can't write to datbase?  Functionality still exists?
+//$config['config_overrides'] = array( 'site_name_in_header' => 'bool', 'site_name' => array('type' => 'string', 'validator' => 'is_string'));
 
 
 //      ----------------------------
