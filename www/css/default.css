@@ -729,6 +729,11 @@ table.transfers .collapse {
     text-align: center;
 }
 
+table.transfers .transfer_id {
+    width: 7em;
+    text-align: center;
+}
+
 table.transfers .downloads{
     width: 10em;
     text-align: center;
@@ -784,10 +789,6 @@ table.transfers .transfer_details .actions {
 table.transfers .transfer_details .general .options ul {
     list-style-type: disc;
     margin-left: 2em;
-}
-
-table.transfers .transfer_details .general .transfer_id {
-    color: silver;
 }
 
 table.transfers .transfer_details h2 {
