@@ -586,7 +586,7 @@ $(function() {
             average_speed: form.find('.files_actions .stats .average_speed')
         }
     };
-    form.find('.basic_options input, .advanced_options input, input[name="get_a_link"]').each(function() {
+    form.find('.basic_options input, .advanced_options input').each(function() {
         var i = $(this);
         filesender.ui.nodes.options[i.attr('name')] = i;
     });
@@ -697,7 +697,7 @@ $(function() {
     });
     
     // Make options label toggle checkboxes
-    form.find('.basic_options label, .advanced_options label, .fieldcontainer[data-related-to="get_a_link"] label').on('click', function() {
+    form.find('.basic_options label, .advanced_options label').on('click', function() {
         var checkbox = $(this).closest('.fieldcontainer').find(':checkbox');
         checkbox.prop('checked', !checkbox.prop('checked'));
         checkbox.change();

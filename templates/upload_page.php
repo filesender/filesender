@@ -98,12 +98,6 @@ if(Auth::isGuest()) {
                         <textarea name="message" rows="4"></textarea>
                     </div>
                     
-                    <?php if(!Auth::isGuest() && $option = Transfer::availableOption('get_a_link')) { ?>
-                    <div class="fieldcontainer" data-related-to="get_a_link">
-                        <input name="get_a_link" type="checkbox" <?php if($option['default']) echo 'checked="checked"' ?> /> <label for="get_a_link">{tr:get_a_link}</label>
-                    </div>
-                    <?php } ?>
-                    
                     <div>
                         <?php if(Auth::isGuest()) { ?>
                         <input type="hidden" name="guest_token" value="<?php echo AuthGuest::getGuest()->token ?>" />
@@ -115,8 +109,6 @@ if(Auth::isGuest()) {
                 <td class="box">
                     <?php
                         $displayoption = function($name, $cfg) {
-                            if($name == 'get_a_link') return;
-                            
                             $checked = $cfg['default'] ? 'checked="checked"' : '';
                             
                             echo '<div class="fieldcontainer" data-option="'.$name.'">';
