@@ -434,6 +434,10 @@ $(function() {
         return false;
     });
     
+    $('[data-action="auditlog"]').on('click', function(e) {
+        auditlogs($(this).closest('tr').attr('data-id'));
+    });
+    
     $('.transfer_details .recipient [data-action="auditlog"]').on('click', function() {
         auditlogs($(this).closest('tr').attr('data-id'), 'author/recipient/' + $(this).closest('.recipient').attr('data-id'));
     });
