@@ -13,6 +13,10 @@
                 <span class="clickable fa fa-plus-circle fa-lg"></span>
             </th>
             
+            <th class="transfer_id">
+                {tr:transfer_id}
+            </th>
+            
             <?php if($show_guest) { ?>
             <th class="guest">
                 {tr:guest}
@@ -55,6 +59,10 @@
         >
             <td class="expand">
                 <span class="clickable fa fa-plus-circle fa-lg" title="{tr:show_details}"></span>
+            </td>
+            
+            <td class="transfer_id">
+                <?php echo $transfer->id ?>
             </td>
             
             <?php if($show_guest) { ?>
@@ -121,7 +129,7 @@
         </tr>
         
         <tr class="transfer_details" data-id="<?php echo $transfer->id ?>">
-            <td colspan="7">
+            <td colspan="8">
                 <div class="actions">
                     <span data-action="delete" class="fa fa-lg fa-trash-o" title="{tr:delete}"></span>
                     <?php if($extend) { ?><span data-action="extend" class="fa fa-lg fa-calendar-plus-o"></span><?php } ?>
@@ -135,6 +143,9 @@
                 </div>
                 
                 <div class="general">
+                    <div class="transfer_id">
+                        {tr:transfer_id} : <?php echo $transfer->id ?>
+                    </div>
                     <div>
                         {tr:created} : <?php echo Utilities::formatDate($transfer->created) ?>
                     </div>
@@ -170,10 +181,6 @@
                         {tr:download_link} : <input readonly="readonly" type="text" value="<?php echo $transfer->first_recipient->download_link ?>" />
                     </div>
                     <?php } ?>
-                    
-                    <div class="transfer_id">
-                        {tr:transfer_id} : <?php echo $transfer->id ?>
-                    </div>
                 </div>
                 
                 <?php if($audit) { ?>
