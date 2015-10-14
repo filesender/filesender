@@ -164,6 +164,7 @@ $lang['user_quota'] = 'User quota';
 $lang['dialog_autoclose'] = 'Dialog will close in {seconds} seconds';
 $lang['extend'] = 'Extend';
 $lang['extend_and_remind'] = 'Extend and send reminder';
+$lang['translate_to'] = 'Translate to :';
 
 
 /**

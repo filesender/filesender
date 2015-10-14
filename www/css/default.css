@@ -299,11 +299,14 @@ input.invalid, textarea.invalid {
     text-align: center;
 }
 
-.buttons a {
+.buttons a, .buttons .spaced {
     display: table-cell;
     padding: 0.7em;
-    font-weight: bold;
     font-size: 1em;
+}
+
+.buttons a {
+    font-weight: bold;
 }
 
 .buttons a.not_displayed {
