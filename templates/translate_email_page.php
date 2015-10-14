@@ -19,9 +19,11 @@
     if(count($available) > 1) {
         echo '<div class="buttons">';
         
+        echo '<span class="spaced">'.Lang::tr('translate_to').'</span>';
+        
         foreach($available as $id => $dfn) {
             if($id == $lang) {
-                echo '<span class="selected">'.Utilities::sanitizeOutput($dfn['name']).'</span>';
+                echo '<span class="spaced selected">'.Utilities::sanitizeOutput($dfn['name']).'</span>';
             } else {
                 echo '<a href="'.$url.$id.'">'.Utilities::sanitizeOutput($dfn['name']).'</a>';
             }
@@ -43,6 +45,8 @@
     $subject = array_filter($translation->subject->out());
     
     ?>
+    
+    <hr />
     
     <dl>
         <dt data-property="subject">{tr:subject} :</dt>

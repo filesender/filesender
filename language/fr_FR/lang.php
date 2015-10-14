@@ -163,6 +163,7 @@ $lang['user_quota'] = 'Quota utilisateur';
 $lang['dialog_autoclose'] = 'Ce message disparaitra dans {seconds} secondes';
 $lang['extend'] = 'Etendre';
 $lang['extend_and_remind'] = 'Etendre et envoyer un rappel';
+$lang['translate_to'] = 'Traduire en :';
 
 
 /**
