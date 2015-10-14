@@ -162,7 +162,7 @@ filesender.ui.files = {
         var uploaded = 0;
         for(var i=0; i<this.files.length; i++) {
             size += this.files[i].size;
-            uploaded += this.files[i].uploaded;
+            uploaded += this.files[i].fine_progress ? this.files[i].fine_progress : this.files[i].uploaded;
         }
         
         var currentTime = (new Date()).getTime();
@@ -183,7 +183,7 @@ filesender.ui.files = {
             filesender.ui.nodes.stats.average_speed.find('.value').text(filesender.ui.formatSpeed(speed));
         
         var bar = filesender.ui.nodes.files.list.find('[data-cid="' + file.cid + '"] .progressbar');
-        bar.progressbar('value', Math.round(1000 * file.uploaded / file.size));
+        bar.progressbar('value', Math.round(1000 * (file.fine_progress ? file.fine_progress : file.uploaded) / file.size));
     },
     
     // Clear the file box

@@ -12,6 +12,7 @@ var terasender_worker = {
     job: { // Current job
         file: null, // File data (id, key, size, blob)
         chunk: null, // Chunk coordinates (start, end)
+        fine_progress: 0
     },
     
     /**
@@ -74,6 +75,11 @@ var terasender_worker = {
         
         var worker = this;
         
+        if(xhr.upload) xhr.upload.onprogress = function(e) {
+            if(!e.lengthComputable) return;
+            worker.reportProgress(e.loaded / e.total);
+        };
+        
         xhr.onreadystatechange = function() {
             worker.uploadRequestChange(xhr);
         };
@@ -107,6 +113,15 @@ var terasender_worker = {
         try { return new XMLHttpRequest(); } catch(e) {}
         try { return new ActiveXObject('Msxml2.XMLHTTP'); } catch (e) {}
         return null;
+    },
+    
+    /**
+     * Report progress of current job
+     */
+    reportProgress: function(ratio) {
+        this.log('Job file:' + this.job.file.id + '[' + this.job.chunk.start + '...' + this.job.chunk.end + '] is ' + (100 * ratio).toFixed(1) + '% done');
+        this.job.fine_progress = Math.floor(ratio * (this.job.chunk.end - this.job.chunk.start));
+        this.sendCommand('jobProgress', this.job);
     },
     
     /**

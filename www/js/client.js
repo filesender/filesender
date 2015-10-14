@@ -312,9 +312,11 @@ window.filesender.client = {
      * @param object file
      * @param blob chunk
      * @param int offset
-     * @param callable callback
+     * @param callable progress
+     * @param callable done
+     * @param callable error
      */
-    putChunk: function(file, blob, offset, callback, onerror) {
+    putChunk: function(file, blob, offset, progress, done, error) {
         var opts = {
             contentType: 'application/octet-stream',
             rawdata: true,
@@ -322,12 +324,22 @@ window.filesender.client = {
                 'X-Filesender-File-Size': file.size,
                 'X-Filesender-Chunk-Offset': offset,
                 'X-Filesender-Chunk-Size': blob.size
+            },
+            xhr: function() {
+                uxhr = $.ajaxSettings.xhr();
+                
+                if(uxhr.upload) uxhr.upload.addEventListener('progress', function(e) {
+                    if(!e.lengthComputable) return;
+                    if(progress) progress(e.loaded / e.total);
+                }, false);
+                
+                return uxhr;
             }
         };
         
-        if(onerror) opts.error = onerror;
+        if(error) opts.error = error;
         
-        return this.put(file.transfer.authenticatedEndpoint('/file/' + file.id + '/chunk/' + offset, file), blob, callback, opts);
+        return this.put(file.transfer.authenticatedEndpoint('/file/' + file.id + '/chunk/' + offset, file), blob, done, opts);
     },
     
     /**
