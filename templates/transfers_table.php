@@ -4,7 +4,7 @@
     if(!isset($transfers) || !is_array($transfers)) $transfers = array();
     $show_guest = isset($show_guest) ? (bool)$show_guest : false;
     $extend = (bool)Config::get('allow_transfer_expiry_date_extension');
-    $audit = (($status == 'available') || (bool)Config::get('auditlog_lifetime')) ? '1' : '';
+    $audit = (bool)Config::get('auditlog_lifetime') ? '1' : '';
 ?>
 <table class="transfers list" data-status="<?php echo $status ?>" data-mode="<?php echo $mode ?>" data-audit="<?php echo $audit ?>">
     <thead>
@@ -35,7 +35,6 @@
                 {tr:downloads}
             </th>
             
-            <?php if($status == 'available') { ?>
             <th class="expires">
                 {tr:expires}
             </th>
@@ -43,7 +42,6 @@
             <th class="actions">
                 {tr:actions}
             </th>
-            <?php } ?>
         </tr>
     </thead>
     
@@ -109,7 +107,6 @@
                 <?php $dc = count($transfer->downloads); echo $dc; if($dc) { ?> (<span class="clickable expand">{tr:see_all}</span>)<?php } ?>
             </td>
             
-            <?php if($status == 'available') { ?>
             <td class="expires" data-rel="expires">
                 <?php echo Utilities::formatDate($transfer->expires) ?>
             </td>
@@ -119,17 +116,18 @@
                 <?php if($extend) { ?><span data-action="extend" class="fa fa-lg fa-calendar-plus-o"></span><?php } ?>
                 <span data-action="add_recipient" class="fa fa-lg fa-envelope-o" title="{tr:add_recipient}"></span>
                 <span data-action="remind" class="fa fa-lg fa-repeat" title="{tr:send_reminder}"></span>
+                <?php if($audit) { ?><span data-action="auditlog" class="fa fa-lg fa-history" title="{tr:open_auditlog}"></span><?php } ?>
             </td>
-            <?php } ?>
         </tr>
         
         <tr class="transfer_details" data-id="<?php echo $transfer->id ?>">
-            <td colspan="<?php echo ($status == 'available') ? 7 : 5 ?>">
+            <td colspan="7">
                 <div class="actions">
                     <span data-action="delete" class="fa fa-lg fa-trash-o" title="{tr:delete}"></span>
                     <?php if($extend) { ?><span data-action="extend" class="fa fa-lg fa-calendar-plus-o"></span><?php } ?>
                     <span data-action="add_recipient" class="fa fa-lg fa-envelope-o" title="{tr:add_recipient}"></span>
                     <span data-action="remind" class="fa fa-lg fa-repeat" title="{tr:send_reminder}"></span>
+                    <?php if($audit) { ?><span data-action="auditlog" class="fa fa-lg fa-history" title="{tr:open_auditlog}"></span><?php } ?>
                 </div>
                 
                 <div class="collapse">
@@ -178,6 +176,16 @@
                     </div>
                 </div>
                 
+                <?php if($audit) { ?>
+                <div class="auditlog">
+                    <h2>{tr:auditlog}</h2>
+                    <a href="#">
+                        <span class="fa fa-lg fa-history"></span>
+                        {tr:open_auditlog}
+                    </a>
+                </div>
+                <?php } ?>
+                
                 <?php if(!$transfer->hasOption(TransferOptions::GET_A_LINK)) { ?>
                 <div class="recipients">
                     <h2>{tr:recipients}</h2>
@@ -223,29 +231,19 @@
                             
                             <span data-action="delete" class="fa fa-lg fa-trash-o" title="{tr:delete}"></span>
                             
-                            <?php if(Config::get('auditlog_lifetime')) { ?>
+                            <?php if($audit) { ?>
                             <span data-action="auditlog" class="fa fa-lg fa-history" title="{tr:open_file_auditlog}"></span>
                             <?php } ?>
                         </div>
                     <?php } ?>
                 </div>
-                
-                <?php if(Config::get('auditlog_lifetime')) { ?>
-                <div class="auditlog">
-                    <h2>{tr:auditlog}</h2>
-                    <a href="#">
-                        <span class="fa fa-lg fa-history"></span>
-                        {tr:open_auditlog}
-                    </a>
-                </div>
-                <?php } ?>
             </td>
         </tr>
         <?php } ?>
         
         <?php if(!count($transfers)) { ?>
         <tr>
-            <td colspan="<?php echo ($status == 'available') ? 7 : 5 ?>">{tr:no_transfers}</td>
+            <td colspan="7">{tr:no_transfers}</td>
         </tr>
         <?php } ?>
     </tbody>
