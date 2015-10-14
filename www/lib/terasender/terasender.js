@@ -199,11 +199,11 @@ window.filesender.terasender = {
      * @param worker_id worker that reported the progress
      * @param object data progress data
      */
-    evalProgress: function(worker_id, data) {
+    evalProgress: function(worker_id, job, ratio) {
         var file = null;
         var chunks_pending = false;
         for(var i=0; i<this.transfer.files.length; i++) {
-            if(this.transfer.files[i].id == data.file.id)
+            if(this.transfer.files[i].id == job.file.id)
                 file = this.transfer.files[i];
             
             if(this.transfer.files[i].uploaded < this.transfer.files[i].size)
@@ -211,30 +211,41 @@ window.filesender.terasender = {
         }
         
         if(!file) {
-            this.error({message: 'unknown_file', details: {id: data.file.id}});
+            this.error({message: 'unknown_file', details: {id: job.file.id}});
             this.stop();
         }
         
         var workers_on_same_file = 0;
         var workers_running = 0;
         var min_offset = file.uploaded;
+        var fine_progress = 0;
         
         for(var i=0; i<this.workers.length; i++) {
             if(this.workers[i].status != 'running') continue;
             
-            if(this.workers[i].file_id == data.file.id)
+            if(this.workers[i].id == worker_id) {
+                this.workers[i].fine_progress = job.fine_progress;
+            }
+            
+            if(this.workers[i].file_id == job.file.id) {
                 min_offset = Math.min(min_offset, this.workers[i].offset);
+                fine_progress += this.workers[i].fine_progress;
+            }
                 
             if(this.workers[i].id == worker_id) continue;
             
             workers_running++;
-            if(this.workers[i].file_id == data.file.id)
+            if(this.workers[i].file_id == job.file.id)
                 workers_on_same_file++;
         }
         
         file.min_uploaded_offset = Math.max(0, min_offset - filesender.config.upload_chunk_size);
         
-        this.transfer.reportProgress(file, (file.uploaded >= file.size) && (workers_on_same_file == 0));
+        var done = (file.uploaded >= file.size) && (workers_on_same_file == 0);
+        
+        file.fine_progress = done ? file.size : file.min_uploaded_offset + fine_progress;
+        
+        this.transfer.reportProgress(file, done);
         
         if(!chunks_pending && !workers_running) { // Notify all done
             this.transfer.reportComplete();
@@ -256,10 +267,15 @@ window.filesender.terasender = {
         if(!command) return;
         
         switch(command) {
+            case 'jobProgress' :
+                this.log('Worker job progressed', 'worker:' + worker_id);
+                this.evalProgress(worker_id, data);
+                break;
+                
             case 'jobExecuted' :
                 this.log('Worker executed job', 'worker:' + worker_id);
                 this.transfer.recordUploadedInWatchdog('worker:' + worker_id);
-                this.evalProgress(worker_id, data);
+                this.evalProgress(worker_id, data, 1);
                 // No break here as we give new job asap
                 
             case 'requestJob' :
@@ -296,6 +312,7 @@ window.filesender.terasender = {
         workerinterface.id = id;
         workerinterface.file_id = null;
         workerinterface.offset = 0;
+        workerinterface.fine_progress = 0;
         workerinterface.status = 'running';
         
         var terasender = this;

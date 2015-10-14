@@ -608,10 +608,17 @@ window.filesender.transfer = function() {
      * @param bool complete is file done
      */
     this.reportProgress = function(file, complete) {
+        var now = (new Date()).getTime();
+        if(!complete && this.progress_reported && this.progress_reported > (now - 500))
+            return; // No need to report progress more than 2 times per sec (especially if fine_progreee)
+        
+        this.progress_reported = now;
+        
         if (complete) {
             filesender.ui.log('File ' + file.name + ' (' + file.size + ' bytes) uploaded');
         } else {
-            filesender.ui.log('Uploading ' + file.name + ' (' + file.size + ' bytes) : ' + (100 * file.uploaded / file.size).toFixed(2) + '%');
+            var uploaded = file.fine_progress ? file.fine_progress : file.uploaded;
+            filesender.ui.log('Uploading ' + file.name + ' (' + file.size + ' bytes) : ' + (100 * uploaded / file.size).toFixed(2) + '%');
         }
         
         if (complete) {
@@ -870,23 +877,32 @@ window.filesender.transfer = function() {
         
         this.recordUploadStartedInWatchdog('main');
         
-        this.uploader = filesender.client.putChunk(file, blob, offset, function() {
-            transfer.recordUploadedInWatchdog('main');
-            
-            if (last) { // File done
-                transfer.reportProgress(file, true);
-            } else {
+        this.uploader = filesender.client.putChunk(
+            file, blob, offset,
+            function(ratio) { // Progress
+                var chunk_size = Math.min(file.size - file.uploaded, filesender.config.upload_chunk_size);
+                file.fine_progress = Math.floor(file.uploaded + ratio * chunk_size);
                 transfer.reportProgress(file);
+            },
+            function() { // Done
+                transfer.recordUploadedInWatchdog('main');
+                
+                if (last) { // File done
+                    transfer.reportProgress(file, true);
+                } else {
+                    transfer.reportProgress(file);
+                }
+                
+                if(! last || transfer.file_index < transfer.files.length) {
+                    transfer.uploadChunk();
+                } else {
+                    transfer.reportComplete();
+                }
+            },
+            function(error) {
+                transfer.reportError(error);
             }
-            
-            if(! last || transfer.file_index < transfer.files.length) {
-                transfer.uploadChunk();
-            } else {
-                transfer.reportComplete();
-            }
-        }, function(error) {
-            transfer.reportError(error);
-        });
+        );
     };
 
     /**
