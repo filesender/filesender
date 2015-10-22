@@ -1,6 +1,7 @@
 
 #How to read this document
 ---
+* 22 October 2015: I'm now mostly done with moving the information from the old page to this page.  Most of the directives have been checked against the current code and in a live installation.  The bits marked in orange need to be double checked or finished.
 * 18 September 2015: I'm in the process of moving this page from the WYSIWYMG editor to markdown syntax.  This is the markdown page.  If you are missing a directive, consult the old page [Configuration directives v2-0-alpha old](https://www.assembla.com/spaces/file_sender/wiki/Configuration_directives_v2-0-alpha_old) where it most likely can be found.
 * 17 September 2015: this document is a work in progress.  If you are keen on seeing FileSender 2.0 released offer to help with (testing) the documentation.
 * mandatory configuration settings are <span style="background-color:red">marked in red</style>
@@ -62,13 +63,13 @@
 * [autocomplete](#autocomplete)
 * [autocomplete_max_pool](#autocomplete_max_pool)
 * [autocomplete_min_characters](#autocomplete_min_characters)
-* [upload_display_bits_per_sec](#upload_display_bits_per_sec)!!
+* [upload_display_bits_per_sec](#upload_display_bits_per_sec)
 
 
 ##Transfers
 * [aup_default](#aup_default)
 * [aup_enabled](#aup_enabled)
-* [](#)
+* [ban_extension](#ban_extension)
 * [chunk_upload_security](#chunk_upload_security)
 * [default_days_valid](#default_days_valid)
 * [max_days_valid](#max_days_valid)
@@ -80,10 +81,7 @@
 * [max_transfer_recipients](#max_transfer_recipients)
 * [transfer_options](#transfer_options) (email receipt control)
 * [upload_chunk_size](#upload_chunk_size)
-* [](#)
-* [](#)
-* [](#)
-* [](#)
+* [user_quota](#user_quota)
 
 ##TeraSender (high speed upload module)
 * [terasender_enabled](#terasender_enabled)
@@ -128,7 +126,7 @@
 
 ##Maintenance and logging
 * [failed_transfer_cleanup_days](#failed_transfer_cleanup_days)
-* [log_facilities](#log_facilities)
+* [log_facilities](#log_facilities)!!
 * [statlog_lifetime](#statlog_lifetime)
 * [auditlog_lifetime](#auditlog_lifetime)
 * [report_format](#report_format)
@@ -137,6 +135,9 @@
 * [auth_remote_application_enabled](#auth_remote_application_enabled)
 * [remote_applications](#remote_applications)
 * [auth_remote_user_autogenerate_secret](#auth_remote_user_autogenerate_secret)
+
+##Other
+* [host_quota](#host_quota)
 
 
 ---
@@ -491,10 +492,11 @@ User language detection is done in the following order:
 * __description:__ specify a different new line character for use in emails. If your FileSender emails look garbled (display raw MIME and HTML source) try setting this to \n as an alternative to reconfiguring your mail server.
 * __mandatory:__ no
 * __type:__ string
-* __default:__ \r\n (as per RFC 2822)
+* __default:__ "\r\n" (as per RFC 2822)
 * __available:__ since version 1.0
 * __1.x name:__ crlf
 * __comment:__ the default value in version 1.x was "\n".
+* __comment:__ Make sure you use double quotes to configure this value in the config file.  If you use single quotes the \r and \n will NOT be interpreted!
 
 ###relay_unknown_feedbacks
 * __description:__ tells the bounce handler where to forward those messages it can not identify as email bounces but can be related to a specific target (recipient, guest). The received message is forwarded as message/rfc822 attachment.
@@ -566,6 +568,15 @@ User language detection is done in the following order:
 * __1.x name:__ AuP_default
 * __comment:__
 
+###ban_extension
+* __description:__ disallow files with the extensions specified here.
+* __mandatory:__ no
+* __type:__ string
+* __default:__ exe, bat
+* __available:__ since version 1.0
+* __1.x name:__
+* __comment:__
+
 ###chunk_upload_security
 * <span style="background-color:orange">this entire parameter needs to be checked with Etienne</style>
 * __description:__ controls how FileSender behaves when an upload lasts longer than an authenticated user session.  If set to "key" the web client will use FileUID as a transfer session key.  This transfer session key is valid for as long as the upload lasts independent from the user's login session.  So if a user logs in at some identity provider and that session expires after e.g. 8 hours but the upload lasts for 10 hours, the upload will complete.  If set to "auth" the user will be required to re-logon if their logon session has expired before an upload completed.  
@@ -602,7 +613,7 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __comment:__ experience shows the vast majority of users simply go with the default expiry time.  For some users having a maximum value a long time in the future makes sense, e.g. papers sent out to a research proposal evaluation committee that need to be evaluated by a certain date.  Downloads typically start not too long before the due date, but the actual due date can be over a month in the future. 
 
 ##force_legacy_mode
-* __description:__ Force FileSender into legacy non-HTML5 mode. Multi-file uploads are still possible, but each file is limited to max. 2GB.  The help file and certain text labels change as well. For testing purposes: FileSender will detect automatically if a user's browser supports the necessary HTML5 functionality or not.   
+* __description:__ Force FileSender into legacy non-HTML5 mode. Multi-file uploads are still possible, but each file is limited to max. 2GB.  The help file and certain text labels change as well. The max. number of files and total transfer size limit is the same as for HTML5 mode.  This function is available for testing purposes: FileSender will detect automatically if a user's browser supports the necessary HTML5 functionality or not.   
 * __mandatory:__ no
 * __type:__ boolean
 * __default:__ false
@@ -701,6 +712,16 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __available:__ since version 1.5
 * __1.x name:__
 * __comment:__ Please note that as of version 2.0 the terasender_chunksize and upload_chunk-size have been merged into one parameter.
+
+###user_quota
+* __description:__ set to 0 to disable.  If set to a positive value it sets the per-user maximum storage usage. A transfer requiring more space than remains in the user's quota are rejected with an error message in the web-UI.
+* __mandatory:__ no 
+* __type:__ int (bytes) or function
+* __default:__ 0
+* __available:__ since version 2.0
+* __1.x name:__
+* __comment:__ user quote can be implemented in a much more flexible way as well.  As we're doing lazy loading of configuration parameters we can change this value (and max. file size) based on user profile.  In stead of defining this config parameter with a number you can give a function to it.  The value returned by this function is cached for a login session.  For example a function that uses eduPersonAffiliation can give a "student" 10 GB and "faculty" 1 TB.  You could also change max. days valid based on user profile.  The function can use the current application state and user session to compute the value for a logged in user, because the function would run after everything else.  <span style="background-color:orange">Calculated maximum values should have its own chapter to explain, with examples especially for using eduPersonAffiliation.</style>
+
 
 
 ---
@@ -1037,14 +1058,28 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __comment:__
 
 ###log_facilities
-* __description:__ defines where FileSender logging is sent.  You can sent logging to a file, to syslog or to the default PHP log facility as configured through your webserver's PHP module.  The directive takes an array of one or more logging targets, logging can be sent to multiple targets simultaneously.  Each logging target is a list containing the name of the logging target and a number of attributes which vary per log target.  See below for the exact definiation of each log target.
+* __description:__ defines where FileSender logging is sent.  You can sent logging to a file, to syslog or to the default PHP log facility (as configured through your webserver's PHP module).  The directive takes an array of one or more logging targets. Logging can be sent to multiple targets simultaneously.  Each logging target is a list containing the name of the logging target and a number of attributes which vary per log target.  See below for the exact definiation of each log target.
 * __mandatory:__ no
-* __type:__ 
-* __default:__
+* __type:__ array of log targets.  Each target has a type and a number of parameters
+* __default:__  array('type' => 'file', 'path' => FILESENDER_BASE.'/log/', 'rotate' => 'hourly'))
 * __available:__ since version 2.0
 * __1.x name:__
-* __comment:__
+* __comment:__ if you define your own log_facilities, you will overwrite the default setting.  Make sure to include all log targets you wish to log to.
+* __*General format of log target:*__ array(('type' => string, <attribute1 => <value>, <attribute2> => <value>
+* __*Standard parameters for all options:*__
+	* __'level' (optional):*__ restricts loglevel of current facility.  Permissible values: debug, warning, info, error
+	* __'process' (optional): allows you to separate logs from different parts of FileSender into separate logfiles, for example the REST logfile gets huge.  Permissible values: <span style="background-color:orange">CLI, GUI, REST, WEB, CRON, FEEDBACK, MISC, INSTALL, UPGRADE.  Comma-separated list.</style>
+	* __'
+*__*Available targets:*__ 
+	* __'type' => 'file'__ logs to a file.  You must specify a path.  You can optionally specify log file rotation with 'rotate' => '<value>', where value can be hourly, daily, weekly, monthly, yearly. 
+	* __'type' => 'syslog'__ logs to syslog.  
+	* __'type' => 'errror_log'__ logs to the default PHP log facility as defined in your webserver's PHP module.
+	
+* __*Examples:*__
+examples for tpye file with different log rotations
+examles for type syslog
 
+	
 ###statlog_lifetime
 * __description:__ The statlog is kept in the database and contains everything needed to produce usage statistics.  This directive defines maximum lifetime of statslog entries (in days) after which they get deleted.  <span style="background-color:orange">point to more text detailing what is actuallly logged in the statlog!</style>
 * __mandatory:__ no
@@ -1105,7 +1140,42 @@ array (idApp => secret(string), isAdmin(bool), acl (array (endpoint(ou *) => boo
 * __1.x name:__
 * __comment:__
 
+###disclosed
+* __description:__ the webservice has an endpoint called "info" which discloses information about the FileSender instance.  By default it gives the URL of the FileSender instance.  This parameter allows you to add more info from the configuration file.  E.g. when using a remote client this client needs the chunk size.  
+* __mandatory:__ no
+* __type:__ boolean/array of strings
+* __default:__ - (disclose nothing)
+* __available:__ since version 2
+* __1.x name:__
+* __comment:__ the parameter needs an array of strings.  The strings are configuration parameters you want to appear in the "info" webservice endpoint.  You can also give it static strings that have a specific meaning for you, like "version 2.0".
+* __example:__ <span style="background-color:orange">example comes here.</style>
 
+
+---
+---
+##Other
+---
+###host_quota
+* __description:__ use this when your FileSender instance needs to share its storage with other applications.  If set to a positive value it defines the total amount of storage your FileSender instance can use for storing files.  New transfers that require more space than is available are rejected with an error message in the Web-UI.  Set to 0 to disable.  
+* __mandatory:__ no
+* __type:__ int (in bytes)
+* __default:__ 0
+* __available:__ since version 2.0
+* __1.x name:__
+* __comment:__
+
+
+###
+* __description:__ 
+* __mandatory:__ 
+* __type:__
+* __default:__
+* __available:__
+* __1.x name:__
+* __comment:__
+
+
+---
 ###
 * __description:__ 
 * __mandatory:__ 
