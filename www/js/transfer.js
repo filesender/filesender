@@ -859,15 +859,16 @@ window.filesender.transfer = function() {
         }
         
         var file = this.files[this.file_index];
+        var offset = file.uploaded;
+        var end = offset + filesender.config.upload_chunk_size;
         
-        filesender.ui.log('Uploading chunk [' + offset + ' .. ' + offset + filesender.config.upload_chunk_size + '] from file ' + file.name);
+        filesender.ui.log('Uploading chunk [' + offset + ' .. ' + end + '] from file ' + file.name);
         
         var slicer = file.blob.slice ? 'slice' : (file.blob.mozSlice ? 'mozSlice' : (file.blob.webkitSlice ? 'webkitSlice' : 'slice'));
         
-        var offset = file.uploaded;
-        var blob = file.blob[slicer](offset, offset + filesender.config.upload_chunk_size);
+        var blob = file.blob[slicer](offset, end);
         
-        file.uploaded += filesender.config.upload_chunk_size;
+        file.uploaded = end;
         if (file.uploaded > file.size)
             file.uploaded = file.size;
         
