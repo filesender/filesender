@@ -56,8 +56,7 @@ class RestEndpointUser extends RestEndpoint {
             'created' => RestUtilities::formatDate($user->created),
             'last_activity' => RestUtilities::formatDate($user->last_activity),
             'lang' => $user->lang,
-            'frequent_recipients' => $user->frequent_recipients,
-            'remote_config' => Config::get('auth_remote_user_enabled') ? $user->remote_config : null
+            'frequent_recipients' => $user->frequent_recipients
         );
     }
     
@@ -152,6 +151,29 @@ class RestEndpointUser extends RestEndpoint {
                 'used' => $used,
                 'available' => max(0, $user_quota - $used)
             );
+        }
+        
+        if($property == 'remote_auth_config') {
+            $perm = array_key_exists('remote_auth_sync_request', $_SESSION) ? $_SESSION['remote_auth_sync_request'] : null;
+            if(!$perm)
+                throw new RestAuthenticationRequiredException();
+            
+            unset($_SESSION['remote_auth_sync_request']);
+            
+            if($perm['expires'] < time())
+                throw new RestAuthenticationRequiredException();
+            
+            $code = func_get_arg(2);
+            if(!$code || $code !== $perm['code'])
+                throw new RestAuthenticationRequiredException();
+            
+            if(!Config::get('auth_remote_user_enabled'))
+                throw new AuthRemoteUserRejectedException($user->id, 'remote auth disabled');
+            
+            if(!$user->auth_secret)
+                throw new AuthRemoteUserRejectedException($user->id, 'no secret set');
+            
+            return array('remote_config' => $user->remote_config);
         }
         
         if(!$property) return self::cast($user);

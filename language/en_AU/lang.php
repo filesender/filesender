@@ -333,6 +333,7 @@ $lang['user_id'] = 'Identifiant';
 $lang['user_created'] = 'First login';
 $lang['get_full_user_remote_config'] = 'Get full remote configuration';
 $lang['preferences_updated'] = 'User preferences updated';
+$lang['remote_auth_sync_request'] = '<p><strong>{remote}</strong> requested your remote authentication details.</p><p>To allow access please give the following code to <strong>{remote}</strong> : <strong>{code}</strong> (code is valid for the next 2 minutes only).</p><p>If you don\'t know what this is about just disregard this message.</p>';
 
 
 /**
