@@ -196,6 +196,9 @@ filesender.ui.files = {
         
         filesender.ui.nodes.files.clear.button('disable');
         
+        filesender.ui.nodes.stats.number_of_files.hide().find('.value').text('');
+        filesender.ui.nodes.stats.size.hide().find('.value').text('');
+        
         filesender.ui.evalUploadEnabled();
     },
 };
