@@ -78,7 +78,7 @@
             </a>
         </div>
         
-        <div class='transfer' data-id="<?php echo $transfer->id ?>"></div>
+        <div class="transfer" data-id="<?php echo $transfer->id ?>"></div>
     </div>
 </div>
 
