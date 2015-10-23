@@ -69,7 +69,7 @@
             <div class="archive_message">{tr:archive_message}</div>
             
             <div class="mac_archive_message">
-                {tr:mac_archive_message} : <a href="<?php echo Config::get('mac_unzip_link'); ?>" target="_blank"><?php echo Config::get('mac_unzip_name'); ?></a>.
+                {tr:mac_archive_message}
             </div>
             
             <a href="#" class="archive_download" title="{tr:archive_download}">
