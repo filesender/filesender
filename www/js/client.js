@@ -56,6 +56,25 @@ window.filesender.client = {
     // Handling authentication required
     authentication_required: false,
     
+    updateSecurityToken: function(source) {
+        if(typeof source !== 'string') {
+            if(!source.getResponseHeader)
+                return;
+            
+            source = source.getResponseHeader('X-Filesender-Security-Token');
+        }
+        
+        if(!source || source == this.security_token)
+            return;
+        
+        filesender.ui.log('Security token update');
+        this.security_token = source;
+        $('body').attr({'data-security-token': source});
+        
+        if(filesender.terasender && filesender.terasender.security_token != source)
+            filesender.terasender.security_token = source;
+    },
+    
     // Send a request to the webservice
     call: function(method, resource, data, callback, options) {
         if(!this.base_path) {
@@ -108,11 +127,12 @@ window.filesender.client = {
             beforeSend: function(xhr) {
                 for(var k in headers) xhr.setRequestHeader(k, headers[k]);
             },
-            success: callback,
-            complete: function(xhr, status) { // Update security token if it was changed
-                var new_security_token = xhr.getResponseHeader('X-Filesender-Security-Token');
-                if(new_security_token) filesender.client.security_token = new_security_token;
-                
+            success: function(data, status, xhr) {
+                filesender.client.updateSecurityToken(xhr); // Update security token if it was changed (do this before callback since callback may trigger another request)
+                callback.apply(null, arguments);
+            },
+            complete: function(xhr) {
+                filesender.client.updateSecurityToken(xhr); // Update security token if it was changed
             },
             type: method.toUpperCase(),
             url: this.base_path + resource

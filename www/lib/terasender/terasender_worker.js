@@ -133,12 +133,27 @@ var terasender_worker = {
     },
     
     /**
+     * Report that security token changed
+     */
+    reportSecurityTokenChange: function(new_security_token) {
+        this.log('Security token changed, propagating');
+        this.sendCommand('securityTokenChanged', new_security_token);
+    },
+    
+    /**
      * Upload xhr onreadystatechange callback
      * 
      * @param object xhr
      */
     uploadRequestChange: function(xhr){
         if(xhr.readyState != 4) return; // Not a progress update
+        
+        // Did security token change ?
+        var new_security_token = xhr.getResponseHeader('X-Filesender-Security-Token');
+        if(new_security_token && new_security_token != this.security_token) {
+            this.security_token = new_security_token;
+            this.reportSecurityTokenChange(new_security_token);
+        }
         
         // Ignore 40x and 50x if undergoing maintenance
         if(xhr.status >= 400 && this.maintenance) {

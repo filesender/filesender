@@ -27,6 +27,11 @@ window.filesender.terasender = {
     transfer: null,
     
     /**
+     * Security token
+     */
+    security_token: null,
+    
+    /**
      * Send command to worker
      * 
      * @param worker workerinterface
@@ -115,9 +120,11 @@ window.filesender.terasender = {
                 blob: file.blob,
                 endpoint: file.endpoint
             };
-            job.security_token = filesender.client.security_token;
             worker.file_id = file.id;
         }
+        
+        job.security_token = this.security_token;
+        
         worker.offset = file.uploaded;
         
         return job;
@@ -283,6 +290,11 @@ window.filesender.terasender = {
                 if(gave) this.transfer.recordUploadStartedInWatchdog('worker:' + worker_id);
                 break;
             
+            case 'securityTokenChanged' :
+                this.security_token = data; // Will be sent to workers along with next jobs
+                filesender.client.updateSecurityToken(data);
+                break;
+                
             case 'log' :
                 this.log(data, 'worker:' + worker_id);
                 break;
@@ -340,6 +352,8 @@ window.filesender.terasender = {
             this.error({message: 'no_transfer'});
             return;
         }
+        
+        this.security_token = filesender.client.security_token;
         
         this.log('Starting transfer ' + transfer.id + ' with ' + transfer.files.length + ' files (' + transfer.size + ' bytes)');
         

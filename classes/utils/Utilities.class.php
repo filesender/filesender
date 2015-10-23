@@ -41,6 +41,8 @@ class Utilities {
     /**
      * CSRF token
      */
+    const SECURITY_TOKEN_LIFETIME = 3600; // seconds
+    const OLD_SECURITY_TOKEN_LIFETIME = 60; // seconds
     private static $security_token = null;
     
     /**
@@ -382,20 +384,25 @@ class Utilities {
         if(!$token) { // First access
             $token = array(
                 'value' => Utilities::generateUID(),
-                'valid_until' => time() + 3600,
-                'old_value' => null
+                'valid_until' => time() + self::SECURITY_TOKEN_LIFETIME,
+                'old' => null
             );
-        
+            
         } else if($token['valid_until'] < time()) { // Must renew
-            $token['old_value'] = $token['value'];
+            $token['old'] = array(
+                'value' => $token['value'],
+                'valid_until' => time() + self::OLD_SECURITY_TOKEN_LIFETIME
+            );
+            
             $token['value'] = Utilities::generateUID();
-            $token['valid_until'] = time() + 3600;
-        
+            $token['valid_until'] = time() + self::SECURITY_TOKEN_LIFETIME;
+            
         } else { // Still valid, scrape old value from any previous changes
-            $token['old_value'] = null;
+            if($token['old'] && $token['old']['valid_until'] < time())
+                $token['old'] = null;
         }
         
-        if($token['old_value']) // Send new value as header if changed
+        if($token['old']) // Send new value as header if changed
             header('X-Filesender-Security-Token: '.$token['value']);
         
         // Store in session
@@ -421,9 +428,9 @@ class Utilities {
         if($token_to_check === $token) return true;
         
         // If no direct match and no previous token value, no match
-        if(!self::$security_token['old_value']) return false;
+        if(!self::$security_token['old']) return false;
         
         // Previous value matches
-        return $token_to_check === self::$security_token['old_value'];
+        return $token_to_check === self::$security_token['old']['value'];
     }
 }
