@@ -527,7 +527,7 @@ filesender.ui.startUpload = function() {
     var twc = $('#terasender_worker_count');
     if(twc.length) {
         twc = parseInt(twc.val());
-        if(!isNaN(twc) && twc > 0 && twc <= 128)
+        if(!isNaN(twc) && twc > 0 && twc <= 30)
             filesender.config.terasender_worker_count = twc;
     }
     
