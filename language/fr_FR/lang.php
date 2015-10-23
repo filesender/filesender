@@ -313,7 +313,7 @@ $lang['report_guest_event_transfer_sent'] = 'Les liens de téléchargement ont �
 $lang['archive_download'] = 'Télécharger l\'archive';
 $lang['download_disclamer'] = 'Voici vos fichiers. Vous pouvez les télécharger indépendamment les uns des autres ou rassemblés sous forme d\'archive ZIP.';
 $lang['download_file'] = 'Télécharger';
-$lang['mac_archive_message'] = 'Si vous utilisez OSX vous pourrez trouver un utilitaire permettant d\'ouvrir l\'archive en suivant le lien suivant';
+$lang['mac_archive_message'] = 'Si vous utilisez OSX vous pourrez trouver un utilitaire permettant d\'ouvrir l\'archive en suivant le lien suivant : <a href="{cfg:mac_unzip_link}" target="_blank">{cfg:mac_unzip_name}</a>.';
 $lang['select_all_for_archive_download'] = 'Sélectionner tous les fichiers';
 $lang['select_for_archive_download'] = 'Sélectionner pour le téléchargement groupé';
 $lang['archive_message'] = 'Téléchargement en tant qu\'archive ZIP.';
