@@ -104,7 +104,6 @@
 ##Authentication
 * [auth_sp_type](#auth_sp_type)
 * [session_cookie_path](#session_cookie_path)
-* <span style="background-color:orange">[auth_sp_set_idp_as_user_organization](#auth_sp_set_idp_as_user_organization)</style>
 * __SimpleSAMLphp__
 	* [auth_sp_saml_authentication_source](#auth_sp_saml_authentication_source)
 	* [auth_sp_saml_simplesamlphp_url](#auth_sp_saml_simplesamlphp_url)
@@ -128,6 +127,10 @@
 * [failed_transfer_cleanup_days](#failed_transfer_cleanup_days)
 * [log_facilities](#log_facilities)!!
 * [statlog_lifetime](#statlog_lifetime)
+* [auth_sp_additional_attributes](#auth_sp_additional_attributes)
+* [auth_sp_save_user_additional_attributes](#auth_sp_save_user_additional_attributes)
+* [statlog_log_user_additional_attributes](#statlog_log_user_additional_attributes)
+* [auth_sp_fake_additional_attributes_values](#auth_sp_fake_additional_attributes_values)
 * [auditlog_lifetime](#auditlog_lifetime)
 * [report_format](#report_format)
 
@@ -887,8 +890,6 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __default:__ if(!$session_cookie_path) $session_cookie_path = $site_url_parts['path'];
 * __available:__ since version 2.0
 * __1.x name:__
-* __comment:__ Testing, ticket #1198
-* __comment:__ Be careful to include the entire URL path, like http://yourdomain.dom/!
 * __comment:__ When do you set this?  If you use SimpleSAMLphp for authentication there is one common scenario where you need to set this parameter: the URL space for your FileSender instance and your SimpleSAMLphp instance do not overlap.  This happens when you have multiple FileSender instances (one production, one beta) sharing the same SimpleSAMLphp installation. For example: http://yourdomain.dom/filesender-beta and http://yourdomain.dom/simplesamlphp.  Because SimpleSAMLphp and FileSender are both written in PHP they use the same mechanism for session identifiers.  They can share session identifiers but only if this is allowed by the session_cookie_path.  When you log on with SimpleSAMLphp a session identifier is created.  If this can not be shared with your FileSender instance you will notice a user can log on, only to be presented with the same logon form again.  A silent failure.  In this scenario you will either need to ensure your SimpleSAMLphp instance is available within the FileSender URL space, or you set the session cookie parameter to for example "http://yourdomain.dom/".  Another workaround is to use memcache for SimpleSAMLphp's session identifiers but that would mean an extra package on your server.
 
 ###auth_sp_set_idp_as_user_organization
@@ -1088,6 +1089,49 @@ examles for type syslog
 * __available:__ since version 2.0
 * __1.x name:__
 * __comment:__ The statlog is always enabled.  If you don't want anything logged, set this lifetime to 0.  Use this setting to control the privacy footprint of your FileSender service.
+
+###auth_sp_additional_attributes
+* __description:__ Allows to define additional user attributes that will be asked for, such as organisation, that can then be propagated to the statistic log table in the database for use in creating statistics.  This configuration parameter defines the additional attributes to get.  
+definition of additional attributes to get, array of either attributes names or
+final name to raw attribute name pair or final name to callable getter pair
+* __mandatory:__ no
+* __type:__ array of attribute names or name to raw attribute pair or name to callable getter pair
+* __default:__ - (which means do not get any additional attributes)
+* __available:__ since version 2.0
+* __1.x name:__
+* __comment:__
+* __example:__ <span style="background-color:orange">need an example here!</style>
+
+###auth_sp_save_user_additional_attributes
+* __description:__ if set to true, the additional user attributes are saved in the userpreferences table.  
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 2.0
+* __1.x name:__ 
+* __comment:__ <span style="background-color:orange">what was the point of this again?</style>
+* __example:__ ...
+
+###statlog_log_user_additional_attributes
+* __description:__ if set to yes, the additional attributes defined in auth_sp_additional_attributes are logged in the statlog table.  This allows you to do e.g. per organisation statistics or show the use for students, employees, researchers.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 2.0
+* __1.x name:__
+* __comment:__
+* __example:__ ...
+
+###auth_sp_fake_additional_attributes_values
+* __description:__ array of name to value pairs for fake sp authentication (testing
+only)
+* __mandatory:__ no
+* __type:__ array of name-value pairs
+* __default:__ -
+* __available:__ since version 2.0
+* __1.x name:__
+* __comment:__
+* __example:__ <span style="background-color:orange">needs example!</style>
 
 ###auditlog_lifetime
 * __description:__ The auditlog is kept in the database and contains all events for a transfer.  This information can be used to tell the user what happened to their transfer when.  This directive specifies the maximum lifetime of auditlog entries (in days).  If set to 0 we remove data when the transfer is closed, after sending reports (if user indicated they wanted).  As long as transfer is live you have this data, as soon as transfer expires the log disappears.  If you set it to "false" we don't log anything and a user can't even see the logs when a transfer is live.
