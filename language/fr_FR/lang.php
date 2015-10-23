@@ -333,6 +333,7 @@ $lang['user_id'] = 'Identité';
 $lang['user_created'] = 'Première connexion';
 $lang['get_full_user_remote_config'] = 'Obtenir la configuration complète pour l\'authentification distante';
 $lang['preferences_updated'] = 'Préférences utilisateur sauvegardées';
+$lang['remote_auth_sync_request'] = '<p><strong>{remote}</strong> requiert vos informations pour l\'authentification distante.</p><p>Pour autoriser l\'accès veuiller donner le code suivant à <strong>{remote}</strong> : <strong>{code}</strong> (ce code est utilisable dans les prochaines 2 minutes seulement).</p><p>Si vous n\'êtes pas à l\'origine de cette demande merci d\'ignorer de message.</p>';
 
 
 /**

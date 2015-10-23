@@ -479,6 +479,15 @@ table.list .date {
     padding: 0.25em;
 }
 
+.ui-dialog-content strong {
+    font-weight: bold;
+}
+
+.ui-dialog-content p {
+    margin-bottom: 0.75em;
+}
+
+
 
 /* Upload page */
 
@@ -1077,6 +1086,10 @@ table.guests .guest .to .errors .details {
 }
 
 .user_page span[data-info="remote_config"] {
+    display: none;
+}
+
+.user_page span[data-remote-auth-sync-request] {
     display: none;
 }
 

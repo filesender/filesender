@@ -58,4 +58,12 @@ $(function() {
         var t = $('<textarea class="wide" />').val(rc.html()).appendTo(p);
         t.focus().select();
     }).insertAfter(rc);
+    
+    var rasr = page.find('[data-remote-auth-sync-request]');
+    if(rasr.length) {
+        filesender.ui.alert('info', lang.tr('remote_auth_sync_request').r({
+            remote: rasr.text(),
+            code: rasr.attr('data-remote-auth-sync-request')
+        }));
+    }
 });
