@@ -100,4 +100,11 @@ ConfigValidator::addCheck('allow_transfer_expiry_date_extension', function($patt
     return true;
 });
 
+ConfigValidator::addCheck('terasender_worker_count', 'int', function($value, &$error) {
+    if($value > 0 && $value <= 30) return true;
+    
+    $error = 'terasender_worker_count must be an integer between 1 and 30';
+    return false;
+});
+
 ConfigValidator::run();

@@ -348,6 +348,11 @@ window.filesender.terasender = {
         
         this.transfer = transfer;
         
+        // Safety
+        var wcnt = parseInt(filesender.config.terasender_worker_count);
+        if(isNaN(wcnt) || wcnt < 1 || wcnt > 30)
+            wcnt = 3;
+        
         for(i=0; i<filesender.config.terasender_worker_count; i++)
             this.createWorker();
         
