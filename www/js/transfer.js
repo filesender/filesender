@@ -693,7 +693,7 @@ window.filesender.transfer = function() {
         
         var today = Math.floor((new Date()).getTime() / (24 * 3600 * 1000));
         var minexpires = today - 1;
-        var maxexpires = today + filesender.config.default_days_valid + 1;
+        var maxexpires = today + filesender.config.max_transfer_days_valid + 1;
         var exp = this.expires / (24 * 3600);
         
         if (exp < minexpires || exp > maxexpires) {
