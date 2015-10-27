@@ -71,7 +71,22 @@
             echo '</div>';
         }
     }
+    
+    if(
+        array_key_exists('remote_auth_sync_request', $_REQUEST) &&
+        Config::get('auth_remote_user_enabled') &&
+        Auth::user()->auth_secret
+    ) {
+        $code = substr(Utilities::generateUID(), -6);
         
+        $_SESSION['remote_auth_sync_request'] = array(
+            'code' => $code,
+            'expires' => time() + 60
+        );
+        
+        echo '<span data-remote-auth-sync-request="'.$code.'">'.Utilities::sanitizeOutput($_REQUEST['remote_auth_sync_request']).'</span>';
+    }
+    
     ?>
 </div>
 
