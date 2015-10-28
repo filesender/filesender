@@ -64,6 +64,8 @@ $(function() {
         filesender.ui.alert('info', lang.tr('remote_auth_sync_request').r({
             remote: rasr.text(),
             code: rasr.attr('data-remote-auth-sync-request')
-        }));
+        }), function() {
+            filesender.ui.goToPage('home');
+        });
     }
 });
