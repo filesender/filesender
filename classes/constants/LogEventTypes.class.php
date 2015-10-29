@@ -78,4 +78,9 @@ class LogEventTypes extends Enum {
    /* ARCHIVE DOWNLOAD */
    const ARCHIVE_DOWNLOAD_STARTED = 'archive_download_started';     // Download started
    const ARCHIVE_DOWNLOAD_ENDED   = 'archive_download_ended';       // Download ended
+   
+   /* Global */
+   const GLOBAL_STORAGE_USAGE       = 'global_storage_usage';
+   const GLOBAL_ACTIVE_USERS        = 'global_active_users';
+   const GLOBAL_AVAILABLE_TRANSFERS = 'global_available_transfers';
 }

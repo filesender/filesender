@@ -36,6 +36,19 @@ Logger::setProcess(ProcessTypes::CRON);
 
 Logger::info('Cron started');
 
+// Log some daily statistics first
+$storage_usage = Storage::getUsage();
+if(!is_null($storage_usage)) {
+    $used = 0;
+    foreach($storage_usage as $info)
+        $used += $info['total_space'] - $info['free_space'];
+    
+    StatLog::createGlobal(LogEventTypes::GLOBAL_STORAGE_USAGE, $used);
+}
+
+StatLog::createGlobal(LogEventTypes::GLOBAL_ACTIVE_USERS, count(User::getActive()));
+
+StatLog::createGlobal(LogEventTypes::GLOBAL_AVAILABLE_TRANSFERS, count(Transfer::all(Transfer::AVAILABLE)));
 
 // Close expired transfers
 foreach(Transfer::allExpired() as $transfer) {
