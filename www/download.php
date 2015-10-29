@@ -277,7 +277,7 @@ function downloadSingleFile($transfer, $recipient, $file_id) {
     if ($ranges) {
         Logger::info('User restarted download of File#' . $file->id . ' from offset ' . $ranges[0]['start']);
         
-        Logger::logActivity(LogEventTypes::DOWNLOAD_RESUMED);
+        Logger::logActivity(LogEventTypes::DOWNLOAD_RESUMED, $file);
         
         if (count($ranges) == 1) { // Single range
             $range = array_shift($ranges);
