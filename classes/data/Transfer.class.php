@@ -754,6 +754,8 @@ class Transfer extends DBObject {
      * This function does stuffs when a transfer become available
      */
     public function makeAvailable() {
+        if($this->status == TransferStatuses::AVAILABLE) return; // Already available
+        
         // Log to audit/stats that upload ended
         Logger::logActivity(LogEventTypes::UPLOAD_ENDED, $this);
         

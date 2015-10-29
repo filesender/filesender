@@ -211,6 +211,8 @@ class File extends DBObject
      * End file upload
      */
     public function complete() {
+        if($this->upload_end) return true; // Already completed
+        
         $r = Storage::completeFile($this);
         
         $this->upload_end = time();
