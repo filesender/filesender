@@ -183,6 +183,35 @@ class StatLog extends DBObject {
     }
     
     /**
+     * Create a new global stat log
+     * 
+     * @param StatEvent $event the event to be logged
+     * @param integer $size
+     * 
+     * @return StatLog
+     */
+    public static function createGlobal($event, $size = 0) {
+        // Check if statlog is enabled
+        $lt = Config::get('statlog_lifetime');
+        if(is_null($lt) || (is_bool($lt) && !$lt)) return; // statlog disabled
+        
+        // Check type
+        if(!LogEventTypes::isValidValue($event) || !preg_match('`^global_`', $event))
+            throw new StatLogUnknownEventException($event);
+        
+        // Create entry
+        $log = new self();
+        $log->event = $event;
+        $log->created = time();
+        $log->target_type = 'global';
+        $log->size = $size;
+        
+        $log->save();
+        
+        return $log;
+    }
+    
+    /**
      * Count events of a given type over a period of time
      * 
      * @param string $event
