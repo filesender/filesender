@@ -4,7 +4,7 @@ $lines = array();
 foreach($report->logs as $entry) {
     echo '<tr>';
     
-    echo '<td>'.Utilities::formatDate($entry->created).'</td>';
+    echo '<td>'.Utilities::formatDate($entry->created, true).'</td>';
     
     $lid = 'report_';
     

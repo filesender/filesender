@@ -2,7 +2,7 @@
 
 $lines = array();
 foreach($report->logs as $entry) {
-    $date = Utilities::formatDate($entry->created);
+    $date = Utilities::formatDate($entry->created, true);
     
     $lid = 'report_';
     if($report->target_type == 'Recipient')
