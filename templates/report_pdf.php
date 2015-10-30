@@ -39,6 +39,7 @@
         <tr>
             <th>{tr:date}</th>
             <th>{tr:action}</th>
+            <th>{tr:ip}</th>
         </tr>
 <?php
 
@@ -72,6 +73,8 @@ foreach($report->logs as $entry) {
     );
     
     echo '<td>'.$action.'</td>';
+    
+    echo '<td>'.$entry->ip.'</td>';
     
     echo '</tr>';
 }

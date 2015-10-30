@@ -1,6 +1,7 @@
 <?php
 
 $lines = array();
+
 foreach($report->logs as $entry) {
     $date = Utilities::formatDate($entry->created, true);
     
@@ -27,16 +28,47 @@ foreach($report->logs as $entry) {
         $entry->target
     );
     
-    $lines[] = array('date' => $date, 'action' => $action);
+    $lines[] = array('date' => $date, 'action' => $action, 'ip' => $entry->ip);
 }
 
 // Find longest date to compute first column width
-$dw = max(array_map(function($line) {
-    return strlen($line['date']);
+$date_length = max(array_map(function($line) {
+    return mb_strlen($line['date']);
 }, $lines));
 
-foreach($lines as $line) {
-    echo $line['date'].str_repeat(' ', $dw - strlen($line['date'])).' : ';
+$line_length = 76;
+
+$date = (string)Lang::tr('date');
+echo $date.str_repeat(' ', $date_length - mb_strlen($date) + 2).Lang::tr('action')."\n\n";
+
+$line_spacer = str_repeat(' ', $date_length + 3);
+
+$line_text_length = $line_length - $date_length - 3;
+
+$print_action = function($action) use($line_spacer, $line_text_length) {
+    $words = preg_split('`(\s+)`', trim($action), -1, PREG_SPLIT_DELIM_CAPTURE);
     
-    echo chunk_split($line['action'], 76, GlobalConstants::NEW_LINE.str_repeat(' ', $dw + 3));
+    $first = true;
+    while($words) {
+        $line = array_shift($words);
+        while($words && mb_strlen($line.$words[0].(count($words) > 1 ? $words[1]: '')) < $line_text_length)
+            $line .= array_shift($words).array_shift($words);
+        
+        $line = trim($line);
+        if(!$line) continue;
+        
+        echo ($first ? '' : $line_spacer).$line."\n";
+        $first = false;
+    }
+};
+
+foreach($lines as $line) {
+    echo $line['date'].str_repeat(' ', $date_length - mb_strlen($line['date'])).'  ';
+    
+    $print_action($line['action']);
+    
+    if(array_key_exists('ip', $line))
+        echo $line_spacer.Lang::tr('ip').' '.$line['ip']."\n";
+    
+    echo "\n";
 }
