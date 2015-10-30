@@ -119,6 +119,12 @@ var terasender_worker = {
      * Report progress of current job
      */
     reportProgress: function(ratio) {
+        var now = (new Date()).getTime();
+        if(this.progress_reported && this.progress_reported > (now - 1000))
+            return; // No need to report progress more than 1 time per sec (especially if fine_progress)
+        
+        this.progress_reported = now;
+        
         this.log('Job file:' + this.job.file.id + '[' + this.job.chunk.start + '...' + this.job.chunk.end + '] is ' + (100 * ratio).toFixed(1) + '% done');
         this.job.fine_progress = Math.floor(ratio * (this.job.chunk.end - this.job.chunk.start));
         this.sendCommand('jobProgress', this.job);
