@@ -371,6 +371,11 @@ class Mail {
         $plain = quoted_printable_encode($plain);
         $html = quoted_printable_encode($html);
         
+        if(!preg_match('`\r`', $this->nl)) {
+            $plain = str_replace("\r", '', $plain);
+            $html = str_replace("\r", '', $html);
+        }
+        
         if ($mixed && $this->html && $related) {
             // Mail with attachments, embedded attachments and HTML part
             
