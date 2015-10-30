@@ -27,7 +27,7 @@ Here is the full log of what happened to the transfer :
 {raw:content.plain}
 
 Best regards,
-{cfg:siteName}
+{cfg:site_name}
 
 {alternative:html}
 
@@ -57,10 +57,11 @@ Best regards,
 
 <p>
     Here is the full log of what happened to the transfer :
-    <table rules="rows">
+    <table class="auditlog" rules="rows">
         <thead>
             <th>Date</th>
             <th>Event</th>
+            <th>IP address</th>
         </thead>
         <tbody>
             {raw:content.html}

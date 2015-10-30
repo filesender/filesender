@@ -274,6 +274,7 @@ $lang['transfer_extended_reminded'] = 'Expiry date extended until {expires}, a r
 // Reports
 $lang['date'] = 'Date';
 $lang['action'] = 'Action that happened';
+$lang['ip'] = 'IP address';
 
 $lang['report_event_transfer_started'] = 'Transfer was created';
 $lang['report_event_transfer_available'] = 'Transfer became available (took {time:time_taken})';

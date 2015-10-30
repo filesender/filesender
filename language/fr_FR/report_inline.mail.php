@@ -25,7 +25,7 @@ Voici tous les évènements survenus durant la durée de vie du {if:target.type=
 {raw:content.plain}
 
 Cordialement,
-{cfg:siteName}
+{cfg:site_name}
 
 {alternative:html}
 
@@ -57,6 +57,7 @@ Cordialement,
         <thead>
             <th>Date</th>
             <th>Evènement</th>
+            <th>Adresse IP</th>
         </thead>
         <tbody>
             {raw:content.html}

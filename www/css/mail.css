@@ -30,3 +30,12 @@ p.message {
     border: 1px solid #bbb;
     padding: 3px;
 }
+
+.auditlog th:first-child, .auditlog td:first-child {
+    width: 12em;
+}
+
+.auditlog th:nth-child(3), .auditlog td:nth-child(3) {
+    width: 7em;
+}
+

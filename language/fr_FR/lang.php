@@ -274,6 +274,7 @@ $lang['transfer_extended_reminded'] = 'Date d\'expiration étendue jusqu\'au {ex
 // Reports
 $lang['date'] = 'Date';
 $lang['action'] = 'Action';
+$lang['ip'] = 'Adresse IP';
 
 $lang['report_event_transfer_started'] = 'Le dépôt a été créé';
 $lang['report_event_transfer_available'] = 'Le dépôt est devenu disponible pour les destinataires (temps total {time:time_taken})';

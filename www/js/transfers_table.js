@@ -364,6 +364,7 @@ $(function() {
             var th = $('<tr />').appendTo($('<thead />').appendTo(tbl));
             $('<th class="date" />').text(lang.tr('date')).appendTo(th);
             $('<th />').text(lang.tr('action')).appendTo(th);
+            $('<th />').text(lang.tr('ip')).appendTo(th);
             
             if(filter) {
                 filter = filter.split('/');
@@ -404,6 +405,8 @@ $(function() {
                 rpl[log[i].target.type.toLowerCase()] = log[i].target;
                 
                 $('<td />').html(lang.tr(lid).r(rpl).out()).appendTo(tr);
+                
+                $('<td />').text(log[i].author.ip).appendTo(tr);
                 
             }
             
