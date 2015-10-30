@@ -609,8 +609,8 @@ window.filesender.transfer = function() {
      */
     this.reportProgress = function(file, complete) {
         var now = (new Date()).getTime();
-        if(!complete && this.progress_reported && this.progress_reported > (now - 500))
-            return; // No need to report progress more than 2 times per sec (especially if fine_progreee)
+        if(!complete && this.progress_reported && this.progress_reported > (now - 1000))
+            return; // No need to report progress more than 1 time per sec (especially if fine_progress)
         
         this.progress_reported = now;
         
