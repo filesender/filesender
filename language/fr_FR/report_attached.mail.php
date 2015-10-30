@@ -7,7 +7,7 @@ Madame, Monsieur,
 Veuillez trouver en pièce-jointe le rapport sur le {if:target.type=="Transfer"}dépôt{endif}{if:target.type=="File"}fichier{endif}{if:target.type=="Recipient"}destinataire{endif} n°{target.id}.
 
 Cordialement,
-{cfg:siteName}
+{cfg:site_name}
 
 {alternative:html}
 

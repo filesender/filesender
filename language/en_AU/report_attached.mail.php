@@ -7,7 +7,7 @@ Dear Sir or Madam,
 Please find the report about transfer #{target.id} attached to this email.
 
 Best regards,
-{cfg:siteName}
+{cfg:site_name}
 
 {alternative:html}
 
