@@ -50,7 +50,7 @@ filesender.ui.recipients = {
                 var s = email[i].replace(/^\s+/g, '').replace(/\s+$/g, '');
                 if(!s) continue;
                 
-                if(!this.add(s, function(error) {
+                if(this.add(s, function(error) {
                     if(error.message == 'guest_too_many_recipients')
                         too_much = error;
                 }))
