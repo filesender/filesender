@@ -582,6 +582,8 @@ class Transfer extends DBObject {
         
         if($property == 'upload_time') return $this->upload_end - $this->upload_start;
         
+        if($property == 'link') return AuthSP::logonURL(Config::get('site_url').'index.php?s=transfers#transfer_'.$this->id);
+        
         throw new PropertyAccessException($this, $property);
     }
     
