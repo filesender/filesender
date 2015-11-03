@@ -4,7 +4,7 @@ subject: File(s) expired
 
 Dear Sir or Madam,
 
-Your file shipment n°{transfer.id} has expired and is no longer available for download.
+Your transfer n°{transfer.id} has expired and is no longer available for download ({transfer.link}).
 
 Best regards,
 {cfg:site_name}
@@ -16,7 +16,7 @@ Best regards,
 </p>
 
 <p>
-    Your file shipment n°{transfer.id} has expired and is no longer available for download.
+    Your <a href="{transfer.link}">transfer n°{transfer.id}</a> has expired and is no longer available for download.
 </p>
 
 <p>

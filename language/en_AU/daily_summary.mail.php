@@ -14,7 +14,7 @@ Please find below a summary of downloads for your transfer {transfer.id} (upload
 No downloads
 {endif}
 
-You may find additionnal details at {cfg:site_url}?s=transfers#transfer_{transfer.id}
+You may find additionnal details at {transfer.link}
 
 Best regards,
 {cfg:site_name}
@@ -42,7 +42,7 @@ Best regards,
 {endif}
 
 <p>
-    You may find additionnal details at <a href="{cfg:site_url}?s=transfers#transfer_{transfer.id}">{cfg:site_url}?s=transfers#transfer_{transfer.id}</a>
+    You may find additionnal details at <a href="{transfer.link}">{transfer.link}</a>
 </p>
 
 <p>

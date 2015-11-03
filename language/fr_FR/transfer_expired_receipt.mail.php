@@ -4,7 +4,7 @@ subject: Fichiers expirés
 
 Madame, Monsieur,
 
-Votre dépôt n°{transfer.id} sur {cfg:site_name} a expiré, ses fichiers ne sont donc plus disponibles au téléchargement.
+Votre dépôt n°{transfer.id} sur {cfg:site_name} a expiré, ses fichiers ne sont donc plus disponibles au téléchargement ({transfer.link}).
 
 Cordialement,
 {cfg:site_name}
@@ -16,7 +16,7 @@ Cordialement,
 </p>
 
 <p>
-    Votre dépôt n°{transfer.id} sur <a href="{cfg:site_url}">{cfg:site_name}</a> a expiré, ses fichiers ne sont donc plus disponibles au téléchargement.
+    Votre <a href="{transfer.link}">dépôt n°{transfer.id}</a> sur <a href="{cfg:site_url}">{cfg:site_name}</a> a expiré, ses fichiers ne sont donc plus disponibles au téléchargement.
 </p>
 
 <p>

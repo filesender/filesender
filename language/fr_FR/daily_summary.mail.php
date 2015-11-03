@@ -14,7 +14,7 @@ Veuillez trouver ci-dessous un résumé des téléchargements pour votre dépôt
 Aucun téléchargement
 {endif}
 
-Vous pourrez trouver plus de détails sur {cfg:site_url}?s=transfers#transfer_{transfer.id}
+Vous pourrez trouver plus de détails sur {transfer.link}
 
 Cordialement,
 {cfg:site_name}
@@ -42,7 +42,7 @@ Cordialement,
 {endif}
 
 <p>
-    Vous pourrez trouver plus de détails sur <a href="{cfg:site_url}?s=transfers#transfer_{transfer.id}">{cfg:site_url}?s=transfers#transfer_{transfer.id}</a>
+    Vous pourrez trouver plus de détails sur <a href="{transfer.link}">{transfer.link}</a>
 </p>
 
 <p>

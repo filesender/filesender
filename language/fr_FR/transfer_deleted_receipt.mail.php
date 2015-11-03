@@ -4,7 +4,7 @@ subject: Fichiers supprimés
 
 Madame, Monsieur,
 
-Votre dépôt n°{transfer.id} a été supprimé de {cfg:site_name}, ses fichiers ne sont donc plus disponibles au téléchargement.
+Votre dépôt n°{transfer.id} a été supprimé de {cfg:site_name}, ses fichiers ne sont donc plus disponibles au téléchargement ({transfer.link}).
 
 Cordialement,
 {cfg:site_name}
@@ -16,7 +16,7 @@ Cordialement,
 </p>
 
 <p>
-    Votre dépôt n°{transfer.id} a été supprimé de <a href="{cfg:site_url}">{cfg:site_name}</a>, ses fichiers ne sont donc plus disponibles au téléchargement.
+    Votre <a href="{transfer.link}">dépôt n°{transfer.id}</a> a été supprimé de <a href="{cfg:site_url}">{cfg:site_name}</a>, ses fichiers ne sont donc plus disponibles au téléchargement.
 </p>
 
 <p>

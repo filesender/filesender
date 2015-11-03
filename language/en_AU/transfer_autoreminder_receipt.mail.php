@@ -4,7 +4,7 @@ subject: Automatic reminders sent for file shipment n°{transfer.id}
 
 Dear Sir or Madam,
 
-An automatic reminder was sent to recipients that did not download files from your shipment n°{transfer.id} on {cfg:site_name} :
+An automatic reminder was sent to recipients that did not download files from your transfer n°{transfer.id} on {cfg:site_name} ({transfer.link}) :
 
 {each:recipients as recipient}
   - {recipient.email}
@@ -20,7 +20,7 @@ Best regards,
 </p>
 
 <p>
-    An automatic reminder was sent to recipients that did not download files from your shipment n°{transfer.id} on <a href="{cfg:site_url}">{cfg:site_name}</a> :
+    An automatic reminder was sent to recipients that did not download files from your <a href="{transfer.link}">transfer n°{transfer.id}</a> on <a href="{cfg:site_url}">{cfg:site_name}</a> :
 </p>
 
 <p>

@@ -12,7 +12,7 @@ Madame, Monsieur,
 {transfer.files.first().name} ({size:transfer.files.first().size})
 {endif}
 
-Vous pourrez trouver plus de détails sur {cfg:site_url}?s=transfers
+Plus d'informations : {transfer.link}
 
 Cordialement,
 {cfg:site_name}
@@ -51,6 +51,10 @@ Cordialement,
         <tr>
             <td>Taille totale</td>
             <td>{size:transfer.size}</td>
+        </tr>
+        <tr>
+            <td>Plus d'informations</td>
+            <td><a href="{transfer.link}">{transfer.link}</a></td>
         </tr>
     </tbody>
 </table>
