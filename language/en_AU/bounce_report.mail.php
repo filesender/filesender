@@ -8,7 +8,7 @@ One or more of your recipients failed to receive your message(s) :
 
 {each:bounces as bounce}
 {if:bounce.target_type=="Recipient"}
-  - Transfer #{bounce.target.transfer.id} recipient {bounce.target.email} on {datetime:bounce.date}
+  - Transfer #{bounce.target.transfer.id} recipient {bounce.target.email} on {datetime:bounce.date} ({bounce.target.transfer.link})
 {endif}{if:bounce.target_type=="Guest"}
   - Guest {bounce.target.email} on {datetime:bounce.date}
 {endif}
@@ -33,7 +33,7 @@ Best regards,
 {each:bounces as bounce}
     <li>
     {if:bounce.target_type=="Recipient"}
-        Transfer #{bounce.target.transfer.id} recipient {bounce.target.email} on {datetime:bounce.date}
+        <a href="{bounce.target.transfer.link}">Transfer #{bounce.target.transfer.id}</a> recipient {bounce.target.email} on {datetime:bounce.date}
     {endif}{if:bounce.target_type=="Guest"}
         Guest {bounce.target.email} on {datetime:bounce.date}
     {endif}

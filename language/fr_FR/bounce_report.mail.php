@@ -8,7 +8,7 @@ Certains de vos destinataires n'ont pas pû reçevoir votre message :
 
 {each:bounces as bounce}
 {if:bounce.target_type=="Recipient"}
-  - Dépôt #{bounce.target.transfer.id} : destinataire {bounce.target.email} le {datetime:bounce.date}
+  - Dépôt #{bounce.target.transfer.id} : destinataire {bounce.target.email} le {datetime:bounce.date} ({bounce.target.transfer.link})
 {endif}{if:bounce.target_type=="Guest"}
   - Invité {bounce.target.email} le {datetime:bounce.date}
 {endif}
@@ -33,7 +33,7 @@ Cordialement,
 {each:bounces as bounce}
     <li>
     {if:bounce.target_type=="Recipient"}
-        Dépôt #{bounce.target.transfer.id} : destinataire {bounce.target.email} le {datetime:bounce.date}
+        <a href="{bounce.target.transfer.link}">Dépôt #{bounce.target.transfer.id}</a> : destinataire {bounce.target.email} le {datetime:bounce.date}
     {endif}{if:bounce.target_type=="Guest"}
         Invité {bounce.target.email} le {datetime:bounce.date}
     {endif}

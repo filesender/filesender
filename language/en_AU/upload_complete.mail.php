@@ -12,7 +12,7 @@ The following {if:transfer.files>1}files have{else}file has{endif} been successf
 {transfer.files.first().name} ({size:transfer.files.first().size})
 {endif}
 
-Your transfers list: {cfg:site_url}?s=transfers
+More information: {transfer.link}
 
 Best regards,
 {cfg:site_name}
@@ -53,8 +53,8 @@ Best regards,
             <td>{size:transfer.size}</td>
         </tr>
         <tr>
-            <td>Your transfers list</td>
-            <td><a href="{cfg:site_url}?s=transfers">{cfg:site_url}?s=transfers</a></td>
+            <td>More information</td>
+            <td><a href="{transfer.link}">{transfer.link}</a></td>
         </tr>
     </tbody>
 </table>

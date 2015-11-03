@@ -12,7 +12,7 @@ Dear Sir or Madam,
 {files.first().name} ({size:files.first().size})
 {endif}
 
-You can access your files and view detailed download statistics on the transfers page at {cfg:site_url}?s=transfers.
+You can access your files and view detailed download statistics on the transfers page at {files.0.transfer.link}.
 
 Best regards,
 {cfg:site_name}
@@ -40,7 +40,7 @@ Best regards,
 </p>
 
 <p>
-    You can access your files and view detailed download statistics on the transfers page at {cfg:site_url}?s=transfers.
+    You can access your files and view detailed download statistics on the transfers page at <a href="{files.0.transfer.link}">{files.0.transfer.link}</a>.
 </p>
 
 <p>
