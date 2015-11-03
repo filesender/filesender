@@ -614,6 +614,10 @@ window.filesender.transfer = function() {
         
         this.progress_reported = now;
         
+        if(complete && file.status == 'done') return; // Already reported
+        
+        if(complete) file.status = 'done';
+        
         if (complete) {
             filesender.ui.log('File ' + file.name + ' (' + file.size + ' bytes) uploaded');
         } else {
@@ -639,6 +643,8 @@ window.filesender.transfer = function() {
      * Report transfer complete
      */
     this.reportComplete = function() {
+        if(this.status == 'done') return; // Already reported
+        
         this.status = 'done';
         
         var time = (new Date()).getTime() - this.time; // ms
