@@ -121,6 +121,7 @@ window.filesender.terasender = {
                 endpoint: file.endpoint
             };
             worker.file_id = file.id;
+            worker.fine_progress = 0;
         }
         
         job.security_token = this.security_token;
