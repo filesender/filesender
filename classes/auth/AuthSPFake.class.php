@@ -136,7 +136,7 @@ class AuthSPFake {
             $target = Config::get('site_url').'index.php?s='.$landing_page;
         }
         
-        return '#logon-'.urlencode($target);
+        return Config::get('site_url').'#logon-'.urlencode($target);
     }
     
     /**
@@ -150,6 +150,6 @@ class AuthSPFake {
         if(!$target)
             $target = Config::get('site_logouturl');
         
-        return '#logoff-'.urlencode($target);
+        return Config::get('site_url').'#logoff-'.urlencode($target);
     }
 }
