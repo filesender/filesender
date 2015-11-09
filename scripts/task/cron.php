@@ -54,7 +54,7 @@ StatLog::createGlobal(LogEventTypes::GLOBAL_AVAILABLE_TRANSFERS, count(Transfer:
 foreach(Transfer::allExpired() as $transfer) {
     if($transfer->status == TransferStatuses::CLOSED) continue;
     Logger::info('Transfer#'.$transfer->id.' expired, closing it');
-    $transfer->close();
+    $transfer->close(false);
 }
 
 // Delete failed transfers
@@ -68,7 +68,7 @@ foreach(Guest::allExpired() as $guest) {
     if($guest->status == GuestStatuses::CLOSED) continue;
     if($guest->hasOption(GuestOptions::DOES_NOT_EXPIRE)) continue;
     Logger::info('Guest#'.$guest->id.' expired, closing it');
-    $guest->close();
+    $guest->close(false);
 }
 
 // Delete expired audit logs and related data
