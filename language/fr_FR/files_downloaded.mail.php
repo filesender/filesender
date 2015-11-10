@@ -12,7 +12,7 @@ Madame, Monsieur,
 {files.first().name} ({size:files.first().size})
 {endif}
 
-Vous trouverez des statistiques détaillées sur {files.0.transfer.link}.
+Vous trouverez des statistiques détaillées sur {files.first().transfer.link}.
 
 Cordialement,
 {cfg:site_name}
@@ -40,7 +40,7 @@ Cordialement,
 </p>
 
 <p>
-    Vous trouverez des statistiques détaillées sur <a href="{files.0.transfer.link}">{files.0.transfer.link}</a>.
+    Vous trouverez des statistiques détaillées sur <a href="{files.first().transfer.link}">{files.first().transfer.link}</a>.
 </p>
 
 <p>
