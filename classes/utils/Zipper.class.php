@@ -418,8 +418,13 @@ class Zipper {
      * Send the HTTP headers necessary to inform the browser of an incoming download.
      */
     private function sendHttpHeaders(){
+        $fuid = substr(hash('sha1', implode('+', array_keys($this->files))), -8);
+        
+        $file = reset($this->files);
+        $tid = $file['data']->transfer_id;
+        
         header('Content-Type: application/octet-stream');
-        header('Content-Disposition: attachment; filename="' . Config::get('site_name') . '-files.zip"');
+        header('Content-Disposition: attachment; filename="transfer_'.$tid.'_files_'.$fuid.'.zip"');
         header('Content-Transfer-Encoding: binary');
         header('Content-Length: ' . $this->calculateTotalFileSize());
         header('Connection: Keep-Alive');
