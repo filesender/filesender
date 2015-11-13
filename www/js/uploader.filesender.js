@@ -14,7 +14,7 @@ var uploadFileSingle = (function($){
             };
 
             xhr.open("POST", uri, true);
-            xhr.setRequestHeader("Content-Disposition", " attachment; name='fileToUpload'");
+            xhr.setRequestHeader("Content-Disposition", "attachment; name='fileToUpload'");
             xhr.setRequestHeader("Content-Type", "application/octet-stream");
             xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 
