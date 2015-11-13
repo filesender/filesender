@@ -32,7 +32,7 @@
 
 class FileSender_Version
 {
-	const VERSION = '1.6-crypto-beta1';
+	const VERSION = '1.6.1-crypto-beta1';
 
 	//-------------------------------------------------------
 	// Compare the specified version with the current version.
