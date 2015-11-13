@@ -84,7 +84,7 @@ var Tsunami = function(opts) {
             }
         };
         xhr.open("POST", $.opts.uri, true); //Open a request to the web address set
-        xhr.setRequestHeader("Content-Disposition"," attachment; name='fileToUpload'"); 
+        xhr.setRequestHeader("Content-Disposition","attachment; name='fileToUpload'"); 
         xhr.setRequestHeader("Content-Type", "application/octet-stream");
         xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
         xhr.setRequestHeader('X-Start-Byte', 0);

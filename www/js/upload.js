@@ -286,7 +286,7 @@ function uploadFile() {
 	xhr.onreadystatechange = processReqChange;
 	xhr.upload.addEventListener("progress", uploadProgress, false);
 	xhr.open("POST", uri, true); //Open a request to the web address set
-	xhr.setRequestHeader("Content-Disposition"," attachment; name='fileToUpload'"); 
+	xhr.setRequestHeader("Content-Disposition","attachment; name='fileToUpload'"); 
 	xhr.setRequestHeader("Content-Type", "application/octet-stream");
 	xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
     //Set up the body of the POST data includes the name & file data.
