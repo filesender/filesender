@@ -55,9 +55,6 @@ try {
     
     if(array_key_exists('token', $_REQUEST)) {
         // Token on get request
-        if(!array_key_exists('token', $_REQUEST))
-            throw new TokenIsMissingException();
-        
         $token = $_REQUEST['token'];
         
         if(!Utilities::isValidUID($token))
@@ -85,7 +82,7 @@ try {
         $recipient = null;
                 
     } else
-        throw new DownloadMissingTokenException();
+        throw new TokenIsMissingException();
     
     // Are all files from the transfer ?
     $not_from_transfer = array();
