@@ -155,12 +155,13 @@ class RestEndpointTransfer extends RestEndpoint {
                 
                 // ... to be returned, aggregate it
                 return array_values(array_map(function($log) {
+                    $author = $log->author;
                     
                     // Build action author data
                     $author_data = array(
                         'type' => $log->author_type,
                         'id' => $log->author_id,
-                        'identity' => (string)$log->author->identity,
+                        'identity' => $author ? (string)$author->identity : null,
                         'ip' => $log->ip
                     );
                     if($log->author_type == 'Recipient')
