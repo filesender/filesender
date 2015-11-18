@@ -582,7 +582,23 @@ class Transfer extends DBObject {
         
         if($property == 'upload_time') return $this->upload_end - $this->upload_start;
         
-        if($property == 'link') return AuthSP::logonURL(Config::get('site_url').'index.php?s=transfers#transfer_'.$this->id);
+        if($property == 'link') {
+            $tr_url = Config::get('site_url').'index.php?s=transfers#transfer_'.$this->id;
+            $auth_url = AuthSP::logonURL($tr_url);
+            
+            if(!preg_match('`^(https?://[^/])`', $auth_url, $m)) {
+                if(substr($auth_url, 0, 1) == '/') {
+                    // Absolute => from server root
+                    $auth_url = $m[1].$auth_url;
+                    
+                } else {
+                    // Relative to site_url
+                    $auth_url = Config::get('site_url').$auth_url;
+                }
+            }
+            
+            return $auth_url;
+        }
         
         throw new PropertyAccessException($this, $property);
     }
