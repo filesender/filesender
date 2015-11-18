@@ -590,7 +590,7 @@ class Transfer extends DBObject {
                 $base = Config::get('site_url');
                 
                 if(substr($auth_url, 0, 1) == '/') // Absolute url
-                    $base = preg_replace('`^(https?://[^/]+).*$`', '$1', $base;
+                    $base = preg_replace('`^(https?://[^/]+).*$`', '$1', $base);
                 
                 $auth_url = $base.$auth_url;
             }
