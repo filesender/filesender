@@ -586,15 +586,13 @@ class Transfer extends DBObject {
             $tr_url = Config::get('site_url').'index.php?s=transfers#transfer_'.$this->id;
             $auth_url = AuthSP::logonURL($tr_url);
             
-            if(!preg_match('`^(https?://[^/])`', $auth_url, $m)) {
-                if(substr($auth_url, 0, 1) == '/') {
-                    // Absolute => from server root
-                    $auth_url = $m[1].$auth_url;
-                    
-                } else {
-                    // Relative to site_url
-                    $auth_url = Config::get('site_url').$auth_url;
-                }
+            if(!preg_match('`^https?://[^/]+`', $auth_url)) {
+                $base = Config::get('site_url');
+                
+                if(substr($auth_url, 0, 1) == '/') // Absolute url
+                    $base = preg_replace('`^(https?://[^/]+).*$`', '$1', $base;
+                
+                $auth_url = $base.$auth_url;
             }
             
             return $auth_url;
