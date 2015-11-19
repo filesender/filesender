@@ -735,6 +735,10 @@ table.list .date {
 
 /* transfers table */
 
+table.transfers {
+    margin-bottom: 1.5em;
+}
+
 table.transfers .expand,
 table.transfers .collapse {
     width: 2em;
@@ -773,12 +777,15 @@ table.transfers tbody .transfer[data-errors="1"] td {
     background-color: #faa;
 }
 
+table.transfers[data-status="uploading"] tbody tr .actions [data-action],
 table.transfers[data-status="closed"] tbody tr .actions [data-action] {
     display: none;
 }
 
+table.transfers[data-status="uploading"] tbody tr .actions [data-action="delete"],
+table.transfers[data-status="uploading"][data-audit="1"] tbody tr .actions [data-action="auditlog"],
 table.transfers[data-status="closed"][data-audit="1"] tbody tr .actions [data-action="auditlog"] {
-    display: inherit;
+    display: inline;
 }
 
 table.transfers tbody tr.transfer_details {

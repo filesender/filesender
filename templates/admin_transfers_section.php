@@ -7,6 +7,13 @@
     'transfers' => Transfer::all(Transfer::AVAILABLE)
 )) ?>
 
+<?php if(Config::get('auditlog_lifetime') > 0) { ?><h3>{tr:uploading_transfers}</h3><?php } ?>
+<?php Template::display('transfers_table', array(
+    'status' => 'uploading',
+    'mode' => 'admin',
+    'transfers' => Transfer::all(Transfer::UPLOADING)
+)) ?>
+
 <?php if(Config::get('auditlog_lifetime') > 0) { ?>
 <h3>{tr:closed_transfers}</h3>
 <?php Template::display('transfers_table', array(
