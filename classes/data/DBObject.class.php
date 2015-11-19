@@ -194,14 +194,16 @@ class DBObject {
     /**
      * Get a set objects
      * 
-     * @param string $criteria sql criteria
+     * @param string $criteria sql criteria and/or pagination options
      * @param array $placeholders
      * @param callable $run will be applied to all objects, return values will replace objects and result will be filtered to remove nulls
      * 
-     * @return array of objects
+     * @return array of objects or page object
      */
     public static function all($criteria = null, $placeholders = array(), $run = null){
         $query = 'SELECT * FROM '.static::getDBTable();
+        $count = null;
+        $offset = null;
         
         // Build filters if required
         if($criteria) {
@@ -210,9 +212,11 @@ class DBObject {
             $group = null;
             
             if(is_array($criteria)) {
-                if(array_key_exists('where', $criteria)) $where = $criteria['where'];
-                if(array_key_exists('order', $criteria)) $order = $criteria['order'];
-                if(array_key_exists('group', $criteria)) $group = $criteria['group'];
+                if(array_key_exists('where',  $criteria)) $where  = $criteria['where'];
+                if(array_key_exists('order',  $criteria)) $order  = $criteria['order'];
+                if(array_key_exists('group',  $criteria)) $group  = $criteria['group'];
+                if(array_key_exists('count',  $criteria)) $count  = (int)$criteria['count'];
+                if(array_key_exists('offset', $criteria)) $offset = (int)$criteria['offset'];
             }else $where = $criteria;
                 
             if($where) $query .= ' WHERE '.$where;
@@ -237,8 +241,16 @@ class DBObject {
         $statement->execute($placeholders);
         
         // Fetch records, register them with id build from primary key(s) value(s)
+        $records = $statement->fetchAll();
         $objects = array();
-        foreach($statement->fetchAll() as $r) {
+        $page = null;
+        
+        if($count) {
+            $page = (object)array('total_count' => count($records), 'entries' => array());
+            $records = array_slice($records, $offset, $count);
+        }
+        
+        foreach($records as $r) {
             $id = array();
             foreach($pk as $k) $id[] = $r[$k];
             $id = implode('-', $id);
@@ -257,7 +269,11 @@ class DBObject {
             });
         }
         
-        return $objects;
+        if(!$page) return $objects;
+        
+        $page->entries = $objects;
+        
+        return $page;
     }
     
     /**
