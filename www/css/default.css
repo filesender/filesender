@@ -735,10 +735,6 @@ table.list .date {
 
 /* transfers table */
 
-table.transfers {
-    margin-bottom: 1.5em;
-}
-
 table.transfers .expand,
 table.transfers .collapse {
     width: 2em;
@@ -838,6 +834,24 @@ table.transfers .transfer_details .download_link input {
     display: block;
     width: 80%;
     margin: 0.4em auto;
+}
+
+.transfers_list_page_navigation {
+    margin: 0.25em;
+    text-align: center;
+    font-size: 1.2em;
+}
+
+.transfers_list_page_navigation span,
+.transfers_list_page_navigation a {
+    margin: 0 0.25em;
+}
+
+.transfers_list_page_navigation a {
+    text-decoration: underline;
+}
+.transfers_list_page_navigation span {
+    font-weight: bold;
 }
 
 

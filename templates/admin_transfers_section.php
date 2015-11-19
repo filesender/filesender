@@ -1,24 +1,80 @@
-<h2>{tr:admin_transfers_section}</h2>
+<?php
 
-<?php if(Config::get('auditlog_lifetime') > 0) { ?><h3>{tr:available_transfers}</h3><?php } ?>
-<?php Template::display('transfers_table', array(
-    'status' => 'available',
-    'mode' => 'admin',
-    'transfers' => Transfer::all(Transfer::AVAILABLE)
-)) ?>
+$auditlogs = Config::get('auditlog_lifetime') > 0;
 
-<?php if(Config::get('auditlog_lifetime') > 0) { ?><h3>{tr:uploading_transfers}</h3><?php } ?>
-<?php Template::display('transfers_table', array(
-    'status' => 'uploading',
-    'mode' => 'admin',
-    'transfers' => Transfer::all(Transfer::UPLOADING)
-)) ?>
+$transfers_page = function($status) {
+    $page_size = 15;
+    
+    switch($status) {
+        case 'available': $selector = Transfer::AVAILABLE; break;
+        case 'uploading': $selector = Transfer::UPLOADING; break;
+        case 'closed':    $selector = Transfer::CLOSED;    break;
+        default: return;
+    }
+        
+    $offset = array_key_exists($status.'_tpo', $_REQUEST) ? (int)$_REQUEST[$status.'_tpo'] : 0;
+    $offset = max(0, $offset);
+    
+    $page = Transfer::all(array('where' => $selector, 'count' => $page_size, 'offset' => $offset));
+    
+    $navigation = '<div class="transfers_list_page_navigation">'."\n";
+    
+    if($offset) {
+        $po = max(0, $offset - $page_size);
+        $navigation .= '<a href="?s=admin&as=transfers&'.$status.'_tpo=0#'.$status.'_transfers">&lt;&lt;</a>'."\n";
+        $navigation .= '<a href="?s=admin&as=transfers&'.$status.'_tpo='.$po.'#'.$status.'_transfers">&lt;</a>'."\n";
+    }
+    
+    $p = 1;
+    for($o=0; $o<$page->total_count; $o+=$page_size) {
+        if($o >= $offset && $o < $offset + $page_size) {
+            $navigation .= '<span>'.$p.'</span>'."\n";
+        } else {
+            $navigation .= '<a href="?s=admin&as=transfers&'.$status.'_tpo='.$o.'#'.$status.'_transfers">'.$p.'</a>'."\n";
+        }
+        
+        $p++;
+    }
+    
+    if($offset + $page_size < $page->total_count) {
+        $no = $offset + $page_size;
+        $lo = $page->total_count - ($page->total_count % $page_size);
+        $navigation .= '<a href="?s=admin&as=transfers&'.$status.'_tpo='.$no.'#'.$status.'_transfers">&gt;</a>'."\n";
+        $navigation .= '<a href="?s=admin&as=transfers&'.$status.'_tpo='.$lo.'#'.$status.'_transfers">&gt;&gt;</a>'."\n";
+    }
+    
+    $navigation .= '</div>'."\n";
+    
+    if($page->total_count > $page_size)
+        echo $navigation;
+    
+    Template::display('transfers_table', array(
+        'status' => $status,
+        'mode' => 'admin',
+        'transfers' => $page->entries
+    ));
+    
+    if($page->total_count > $page_size)
+        echo $navigation;
+};
 
-<?php if(Config::get('auditlog_lifetime') > 0) { ?>
-<h3>{tr:closed_transfers}</h3>
-<?php Template::display('transfers_table', array(
-    'status' => 'closed',
-    'mode' => 'user',
-    'transfers' => Transfer::all(Transfer::CLOSED)
-)) ?>
-<?php } ?>
+echo '<h2>{tr:admin_transfers_section}</h2>'."\n";
+
+echo '<span id="available_transfers"></span>'."\n";
+if($auditlogs)
+    echo '<h3>{tr:available_transfers}</h3>'."\n";
+
+$transfers_page('available');
+
+echo '<span id="uploading_transfers"></span>'."\n";
+if($auditlogs)
+    echo '<h3>{tr:uploading_transfers}</h3>'."\n";
+
+$transfers_page('uploading');
+
+if($auditlogs) {
+    echo '<span id="closed_transfers"></span>'."\n";
+    echo '<h3>{tr:closed_transfers}</h3>'."\n";
+    
+    $transfers_page('closed');
+}
