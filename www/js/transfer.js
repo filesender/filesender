@@ -68,12 +68,12 @@ window.filesender.transfer = function() {
     /**
      * Max count divergence (the maximum chunk count a process can be late over the global average)
      */
-    this.watchdog_max_count_divergence = 7;
+    this.watchdog_max_count_divergence = 10;
     
     /**
      * Max duration divergence (the maximum ratio between a process's current upload time and the global average)
      */
-    this.watchdog_max_duration_divergence = 5;
+    this.watchdog_max_duration_divergence = 7;
     
     /**
      * Max automatic retries
@@ -541,6 +541,8 @@ window.filesender.transfer = function() {
         avg_count /= pcnt;
         avg_duration /= dcnt;
         
+        var way_too_late = false;
+        
         // Look for processes that seems "late"
         for(var id in this.watchdog_processes) {
             if(this.watchdog_processes[id].count < avg_count - this.watchdog_max_count_divergence) {
@@ -553,10 +555,33 @@ window.filesender.transfer = function() {
             
             var duration = (new Date()).getTime() - this.watchdog_processes[id].started;
             
+            if(duration > 3600 * 1000) // 1h, CSRF token lifetime
+                way_too_late++;
+            
             if(duration > avg_duration * this.watchdog_max_duration_divergence) {
                 // Process is too late in terms of number of upload duration
                 stalled.push(id);
                 continue;
+            }
+        }
+        
+        if(way_too_late == pcnt) { // All processes are did nothing during the last hour, CSRF token may have expired
+            filesender.ui.log('Nothing happened over more than 1h, refreshing security token the hard way');
+            
+            filesender.client.get('', function(html) {
+                var m = html.match(/<body\s[^>]*data-security-token="([0-9a-f-]+)"/);
+                if(!m) return;
+                
+                filesender.client.updateSecurityToken(m[1]);
+            }, {
+                url: window.location.href,
+                dataType: 'html',
+                async: false
+            });
+            
+            if(filesender.ui.transfer) {
+                filesender.ui.transfer.retry();
+                return null; // Avoid default stalled message => silent restart
             }
         }
         
