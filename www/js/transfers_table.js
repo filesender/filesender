@@ -89,7 +89,7 @@ $(function() {
         var id = $(this).closest('[data-transfer]').attr('data-id');
         if(!id || isNaN(id)) return;
         
-        if($(this).closest('table').is('[data-mode="admin"]')) {
+        if($(this).closest('table').is('[data-mode="admin"][data-status="available"]')) {
             var d = filesender.ui.chooseAction(['delete_transfer_nicely', 'delete_transfer_roughly'], function(choosen) {
                 var messages = {
                     delete_nicely: 'transfer_deleted',
@@ -106,6 +106,13 @@ $(function() {
                     }); break;
                     case 'delete' : filesender.client.deleteTransfer(id, done); break;
                 }
+            });
+        } else if($(this).closest('table').is('[data-mode="admin"][data-status="uploading"]')) {
+            filesender.ui.confirm(lang.tr('stop_transfer_upload'), function() {
+                filesender.client.deleteTransfer(id, function() {
+                    $('[data-transfer][data-id="' + id + '"]').remove();
+                    filesender.ui.notify('success', lang.tr('transfer_upload_stopped'));
+                });
             });
         } else {
             filesender.ui.confirm(lang.tr('confirm_close_transfer'), function() {

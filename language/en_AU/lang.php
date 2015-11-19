@@ -362,6 +362,8 @@ $lang['storage_main'] = 'All';
 
 $lang['delete_transfer_nicely'] = 'Delete transfer and notify recipients';
 $lang['delete_transfer_roughly'] = 'Delete transfer without notifications';
+$lang['stop_transfer_upload'] = 'Stop transfer upload (will generate errors on the uploader side) ?';
+$lang['transfer_upload_stopped'] = 'Transfer upload stopped';
 
 $lang['is_default'] = 'This is the default value';
 $lang['make_default'] = 'Go back to default value';
