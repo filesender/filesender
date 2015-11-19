@@ -362,6 +362,8 @@ $lang['storage_main'] = 'Principal';
 
 $lang['delete_transfer_nicely'] = 'Supprimer le dépôt et notifier les destinataires';
 $lang['delete_transfer_roughly'] = 'Supprimer le dépôt sans notifications';
+$lang['stop_transfer_upload'] = 'Stopper le téléversement (entrainera un affichage d\'erreurs coté client) ?';
+$lang['transfer_upload_stopped'] = 'Téléversement stoppé';
 
 $lang['is_default'] = 'Valeur par défaut';
 $lang['make_default'] = 'Revenir à la valeur par défaut';

@@ -457,8 +457,16 @@ window.filesender.client = {
         var opts = {};
         if(onerror) opts.error = onerror;
         
-        if(typeof transfer == 'object')
+        if(typeof transfer == 'object') {
             id = transfer.id;
+            
+        } else {
+            transfer = {
+                authenticatedEndpoint: function(res) {
+                    return res;
+                }
+            };
+        }
         
         return this.delete(transfer.authenticatedEndpoint('/transfer/' + id), callback, opts);
     },
