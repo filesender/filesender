@@ -305,8 +305,8 @@ $(function() {
     
     // Bind picker
     filesender.ui.nodes.expires.datepicker({
-        minDate: new Date(),
-        maxDate: new Date((new Date()).getTime() + 24*3600*1000 * filesender.config.max_guest_days_valid)
+        minDate: 1,
+        maxDate: filesender.config.max_guest_days_valid
     });
     filesender.ui.nodes.expires.on('change', function() {
         filesender.ui.nodes.expires.datepicker('setDate', $(this).val());
