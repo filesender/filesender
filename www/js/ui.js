@@ -442,7 +442,7 @@ window.filesender.ui = {
      * Validators for form fields
      */
     validators: {
-        email: /^[a-z0-9!#$%&'*+\/=?^_\`\{|\}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_\`\{|\}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+(?:[a-zA-Z]{2}|com|org|net|gov|mil|biz|info|mobi|name|aero|jobs|museum)$/i,
+        email: /^[a-z0-9!#$%&'*+\/=?^_\`\{|\}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_\`\{|\}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+(?:[a-z]{2,})$/i,
         filled: function() { return (this.replace(/(^\s+|\s+$)/, '') != ''); },
         int: /^[0-9]*$/,
         float: /^[0-9]*(\.[0-9]+)?$/,
