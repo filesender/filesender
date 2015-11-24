@@ -715,7 +715,7 @@ $(function() {
     form.find('input[name="get_a_link"]').on('change', function() {
         var choice = $(this).is(':checked');
         form.find(
-            '.fieldcontainer[data-related-to="message"],' +
+            '.fieldcontainer[data-related-to="message"], .recipients,' +
             ' .fieldcontainer[data-option="add_me_to_recipients"],' +
             ' .fieldcontainer[data-option="email_me_copies"],' +
             ' .fieldcontainer[data-option="enable_recipient_email_download_complete"]'
