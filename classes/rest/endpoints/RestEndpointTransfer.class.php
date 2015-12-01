@@ -205,7 +205,7 @@ class RestEndpointTransfer extends RestEndpoint {
                         'target' => $target_data,
                         'time_taken' => array(
                             'raw' => $time_taken,
-                            'formatted' => $time_taken ? Utilities::formatTime($time_taken) : '0'
+                            'formatted' => $time_taken ? Utilities::formatTime($time_taken) : '0s'
                         ),
                     );
                 }, $transfer->auditlogs));
