@@ -52,8 +52,16 @@
                     </div>
                     
                     <?php
-                        $displayoption = function($name, $cfg) {
-                            $checked = $cfg['default'] ? 'checked="checked"' : '';
+                        $displayoption = function($name, $cfg, $transfer = false) {
+                            $default = $cfg['default'];
+                            if(Auth::isSP()) {
+                                if($transfer) {
+                                    $default = Auth::user()->defaultTransferOptionState($name);
+                                } else {
+                                    $default = Auth::user()->defaultGuestOptionState($name);
+                                }
+                            }
+                            $checked = $default ? 'checked="checked"' : '';
                             
                             echo '<div class="fieldcontainer">';
                             echo '  <input name="'.$name.'" type="checkbox" '.$checked.' />';
@@ -66,7 +74,7 @@
                         <h3>{tr:guest_options}</h3>
                         
                         <div class="basic_options">
-                            <?php foreach(Guest::availableOptions(false) as $name => $cfg) $displayoption($name, $cfg) ?>
+                            <?php foreach(Guest::availableOptions(false) as $name => $cfg) $displayoption($name, $cfg, false) ?>
                         </div>
                         
                         <?php if(count(Guest::availableOptions(true))) { ?>
@@ -75,7 +83,7 @@
                         </div>
                         
                          <div class="advanced_options">
-                            <?php foreach(Guest::availableOptions(true) as $name => $cfg) $displayoption($name, $cfg) ?>
+                            <?php foreach(Guest::availableOptions(true) as $name => $cfg) $displayoption($name, $cfg, false) ?>
                          </div>     
                         <?php } ?>
                     </div>
@@ -84,7 +92,7 @@
                         <h3>{tr:guest_transfer_options}</h3>
                         
                         <div class="basic_options">
-                            <?php foreach(Transfer::availableOptions(false) as $name => $cfg) $displayoption($name, $cfg) ?>
+                            <?php foreach(Transfer::availableOptions(false) as $name => $cfg) $displayoption($name, $cfg, true) ?>
                         </div>
                         
                         <?php if(count(Transfer::availableOptions(true))) { ?>
@@ -93,7 +101,7 @@
                         </div>
                         
                          <div class="advanced_options">
-                            <?php foreach(Transfer::availableOptions(true) as $name => $cfg) $displayoption($name, $cfg) ?>
+                            <?php foreach(Transfer::availableOptions(true) as $name => $cfg) $displayoption($name, $cfg, true) ?>
                          </div>     
                         <?php } ?>
                     </div>

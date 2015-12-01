@@ -109,7 +109,8 @@ if(Auth::isGuest()) {
                 <td class="box">
                     <?php
                         $displayoption = function($name, $cfg) {
-                            $checked = $cfg['default'] ? 'checked="checked"' : '';
+                            $default = Auth::isSP() ? Auth::user()->defaultTransferOptionState($name) : $cfg['default'];
+                            $checked = $default ? 'checked="checked"' : '';
                             
                             echo '<div class="fieldcontainer" data-option="'.$name.'">';
                             echo '  <input name="'.$name.'" type="checkbox" '.$checked.' />';
