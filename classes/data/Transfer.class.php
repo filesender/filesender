@@ -811,7 +811,7 @@ class Transfer extends DBObject {
                 TranslatableEmail::quickSend('upload_complete', $this->owner, $this);
             
             // Save transfer's recipient in the user's frequent recipients
-            Auth::user()->saveFrequentRecipients($this->recipients);
+            $this->owner->saveFrequentRecipients($this->recipients);
         }
         
         if(!$this->hasOption(TransferOptions::GET_A_LINK)) {
