@@ -288,6 +288,9 @@ class Guest extends DBObject {
         // Update sender's frequent recipient list
         Auth::user()->saveFrequentRecipients(array($this->email));
         
+        // Save choosen guest options in user preferences
+        $this->owner->saveGuestOptions($this->options);
+        
         // Log to audit/stat
         Logger::logActivity(LogEventTypes::GUEST_CREATED, $this);
         

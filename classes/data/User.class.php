@@ -321,6 +321,123 @@ class User extends DBObject {
     }
     
     /**
+     * Save choosen options
+     * 
+     * @param string $target "transfer" or "guest"
+     * @param array $options
+     */
+    private function saveOptions($target, $options = array()) {
+        $prop = $target.'_preferences';
+        if(!property_exists($this, $prop)) return;
+        
+        $prefs = $this->$prop ? (array)$this->$prop : array();
+        
+        // Analyse options
+        foreach(Transfer::allOptions() as $name => $dfn) {
+            if(
+                in_array(TransferOptions::GET_A_LINK, $options) && 
+                in_array($name, array(
+                        TransferOptions::EMAIL_ME_COPIES,
+                        TransferOptions::ENABLE_RECIPIENT_EMAIL_DOWNLOAD_COMPLETE,
+                        TransferOptions::ADD_ME_TO_RECIPIENTS
+                ))
+            ) continue;
+            
+            if($dfn['available']) {
+                if(!array_key_exists($name, $prefs))
+                    $prefs[$name] = 0;
+                
+                $default = $this->defaultOptionState($target, $name);
+                
+                if(in_array($name, $options) == $default)
+                    continue; // User did not change what we proposed
+                
+                $prefs[$name] += in_array($name, $options) ? 1 : -1;
+                
+            } else { // Remove options that are not available (anymore) from prefs
+                if(array_key_exists($name, $prefs))
+                    unset($prefs[$name]);
+            }
+        }
+        
+        $prefs = array_filter($prefs);
+        
+        // Save if something changed
+        if($prefs !== $this->$prop) {
+            $this->$prop = $prefs;
+            $this->save();
+        }
+    }
+    
+    /**
+     * Save choosen transfer options
+     * 
+     * @param array $options
+     */
+    public function saveTransferOptions($options = array()) {
+        $this->saveOptions('transfer', $options);
+    }
+    
+    /**
+     * Save choosen guest options
+     * 
+     * @param array $options
+     */
+    public function saveGuestOptions($options = array()) {
+        $this->saveOptions('guest', $options);
+    }
+    
+    /**
+     * Get defaut state for option
+     * 
+     * @param string $target "transfer" or "guest"
+     * @param string $option
+     * 
+     * @return bool
+     */
+    private function defaultOptionState($target, $option) {
+        $defaults = call_user_func(ucfirst($target).'::availableOptions');
+        
+        $default = array_key_exists($option, $defaults) ? $defaults[$option]['default'] : false;
+        
+        $prop = $target.'_preferences';
+        if(
+            !property_exists($this, $prop)
+            || !$this->$prop
+            || !property_exists($this->$prop, $option)
+        ) return $default;
+        
+        $score = $this->$prop->$option;
+        
+        if(abs($score) < 3)
+            return $default;
+        
+        return $score > 0;
+    }
+    
+    /**
+     * Get defaut state for transfer option
+     * 
+     * @param string $option
+     * 
+     * @return bool
+     */
+    public function defaultTransferOptionState($option) {
+        return $this->defaultOptionState('transfer', $option);
+    }
+    
+    /**
+     * Get defaut state for guest option
+     * 
+     * @param string $option
+     * 
+     * @return bool
+     */
+    public function defaultGuestOptionState($option) {
+        return $this->defaultOptionState('guest', $option);
+    }
+    
+    /**
      * Getter
      * 
      * @param string $property property to get

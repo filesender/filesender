@@ -812,6 +812,9 @@ class Transfer extends DBObject {
             
             // Save transfer's recipient in the user's frequent recipients
             $this->owner->saveFrequentRecipients($this->recipients);
+            
+            // Save choosen transfer options in user preferences
+            $this->owner->saveTransferOptions($this->options);
         }
         
         if(!$this->hasOption(TransferOptions::GET_A_LINK)) {
