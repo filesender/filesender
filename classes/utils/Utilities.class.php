@@ -227,9 +227,12 @@ class Utilities {
         $time_format = str_replace('\\', '', $time_format);
         
         // Strip leading 0s
-        $time_format = preg_replace('`^[\s0]+`', '', $time_format);
+        $time_format = preg_replace('`^[\s0]+`', '', trim($time_format));
         
-        return trim($time_format);
+        if(!$time_format)
+            $time_format = '0s';
+        
+        return $time_format;
     }
     
     /**
