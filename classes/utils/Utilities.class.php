@@ -180,6 +180,10 @@ class Utilities {
      * @return string formatted date
      */
     public static function formatDate($timestamp = null, $with_time = false) {
+        if(is_null($timestamp)) $timestamp = time();
+        
+        if(!$timestamp) return '';
+        
         $lid = $with_time ? 'datetime_format' : 'date_format';
         $dateFormat = Lang::tr($lid);
         if ($dateFormat == '{date_format}')
@@ -187,7 +191,7 @@ class Utilities {
         if ($dateFormat == '{datetime_format}')
             $dateFormat = 'Y-m-d H:i:s';
         
-        return date($dateFormat, is_null($timestamp) ? time() : $timestamp);
+        return date($dateFormat, $timestamp);
     }
     
     /**
@@ -198,6 +202,8 @@ class Utilities {
      * @return string formatted time
      */
     public static function formatTime($time) {
+        if(!$time) return '0s';
+        
         // Get time format
         $time_format = Lang::tr('time_format');
         if($time_format == '{time_format}')
