@@ -184,12 +184,31 @@ class AuditLog extends DBObject {
             'ip', 
         ))) return $this->$property;
         
-        if($property == 'target') return call_user_func($this->target_type.'::fromId', $this->target_id);
+        if($property == 'target') {
+            try {
+                return call_user_func($this->target_type.'::fromId', $this->target_id);
+            } catch(Exception $e) {
+                return (object)array(
+                    'made_available_time' => 1,
+                    'upload_time' => 1,
+                    'name' => 'unknown',
+                    'size' => 1,
+                    'email' => 'unknown'
+                );
+            }
+        }
         
         if($property == 'author') {
             if(!$this->author_type || !$this->author_id) return null;
             
-            return call_user_func($this->author_type.'::fromId', $this->author_id);
+            try {
+                return call_user_func($this->author_type.'::fromId', $this->author_id);
+            } catch(Exception $e) {
+                return (object)array(
+                    'identity' => 'unknown',
+                    'email' => 'unknown'
+                );
+            }
         }
         
         if($property == 'time_taken') {
