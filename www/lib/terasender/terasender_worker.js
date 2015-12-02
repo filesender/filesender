@@ -63,6 +63,19 @@ var terasender_worker = {
             return;
         }
         
+        if(!this.job.chunk.start)
+            this.job.chunk.start = 0;
+        
+        if(
+            !this.job.chunk.end ||
+            isNaN(this.job.chunk.end) ||
+            isNaN(this.job.chunk.start) ||
+            (this.job.chunk.end <= this.job.chunk.starte)
+        ) {
+            this.error({message: 'bad_chunk_boundaries'});
+            return;
+        }
+        
         var file = this.job.file;
         
         this.log('Starting job file:' + file.id + '[' + this.job.chunk.start + '...' + this.job.chunk.end + ']');
