@@ -348,7 +348,7 @@ window.filesender.client = {
             xhr: function() {
                 uxhr = $.ajaxSettings.xhr();
                 
-                if(uxhr.upload) uxhr.upload.addEventListener('progress', function(e) {
+                if((typeof uxhr.upload != 'unknown') && uxhr.upload) uxhr.upload.addEventListener('progress', function(e) {
                     if(!e.lengthComputable) return;
                     if(progress) progress(e.loaded / e.total);
                 }, false);
