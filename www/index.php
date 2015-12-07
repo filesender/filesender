@@ -35,11 +35,9 @@ try {
     
     Logger::setProcess(ProcessTypes::GUI);
     
-    ob_start();
-    
-    Template::display('!header');
-    
     try { // At that point we can render exceptions using nice html
+        Template::display('!!header');
+        
         $page = GUI::currentPage();
         $vars = array();
         
@@ -58,13 +56,11 @@ try {
         
         Template::display('page', array('vars' => $vars));
         
-        Template::display('!footer');
-        
     } catch(Exception $e) {
         Template::display('exception', array('exception' => $e));
     }
     
-    ob_end_flush();
+    Template::display('!!footer');
     
 } catch(Exception $e) {
     // If all exceptions are catched as expected we should not get there

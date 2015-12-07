@@ -65,37 +65,49 @@ class Auth {
     private static $type = null;
     
     /**
+     * Last authentication exception for systematic rethrow
+     */
+    private static $exception = null;
+    
+    /**
      * Return current user if it exists.
      * 
      * @return User instance or false
      */
     public static function user() {
+        if(self::$exception)
+            throw self::$exception;
+        
         if(is_null(self::$user)) { // Not already cached
             self::$user = false;
             
-            // Authentication logic
-            
-            if(AuthGuest::isAuthenticated()) { // Guest
-                self::$attributes = AuthGuest::attributes();
-                self::$type = 'guest';
-                
-            }else if(AuthLocal::isAuthenticated()) { // Local (script)
-                self::$attributes = AuthLocal::attributes();
-                self::$type = 'local';
-                
-            }else if((Config::get('auth_remote_application_enabled') || Config::get('auth_remote_user_enabled')) && AuthRemote::isAuthenticated()) { // Remote application/user
-                if(
-                    (AuthRemote::application() && Config::get('auth_remote_application_enabled')) ||
-                    (!AuthRemote::application() && Config::get('auth_remote_user_enabled'))
-                ) {
-                    self::$attributes = AuthRemote::attributes();
-                    if(AuthRemote::application() && AuthRemote::isAdmin()) self::$isAdmin = true;
-                    self::$type = 'remote';
+            // Authentication logic with exception memory
+            try {
+                if(AuthGuest::isAuthenticated()) { // Guest
+                    self::$attributes = AuthGuest::attributes();
+                    self::$type = 'guest';
+                    
+                }else if(AuthLocal::isAuthenticated()) { // Local (script)
+                    self::$attributes = AuthLocal::attributes();
+                    self::$type = 'local';
+                    
+                }else if((Config::get('auth_remote_application_enabled') || Config::get('auth_remote_user_enabled')) && AuthRemote::isAuthenticated()) { // Remote application/user
+                    if(
+                        (AuthRemote::application() && Config::get('auth_remote_application_enabled')) ||
+                        (!AuthRemote::application() && Config::get('auth_remote_user_enabled'))
+                    ) {
+                        self::$attributes = AuthRemote::attributes();
+                        if(AuthRemote::application() && AuthRemote::isAdmin()) self::$isAdmin = true;
+                        self::$type = 'remote';
+                    }
+                    
+                }else if(AuthSP::isAuthenticated()) { // SP
+                    self::$attributes = AuthSP::attributes();
+                    self::$type = 'sp';
                 }
-                
-            }else if(AuthSP::isAuthenticated()) { // SP
-                self::$attributes = AuthSP::attributes();
-                self::$type = 'sp';
+            } catch(Exception $e) {
+                self::$exception = $e;
+                throw $e;
             }
             
             if(self::$attributes && array_key_exists('uid', self::$attributes)) {
@@ -144,10 +156,15 @@ class Auth {
      * 
      * @retrun bool
      */
-    public static function isAuthenticated() {
+    public static function isAuthenticated($critical = true) {
         if(!self::$allowed) throw new AuthUserNotAllowedException();
         
-        return (bool)self::user();
+        try {
+            return (bool)self::user();
+        } catch(Exception $e) {
+            if($critical) throw $e;
+            return false;
+        }
     }
     
     /**
