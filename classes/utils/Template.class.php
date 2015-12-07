@@ -75,6 +75,12 @@ class Template {
             $id = substr($id, 1);
         }
         
+        $important = false;
+        if(substr($id, 0, 1) == '!') {
+            $important = true;
+            $id = substr($id, 1);
+        }
+        
         // Resolve template file path
         $path = self::resolve($id);
         
@@ -117,6 +123,9 @@ class Template {
         // Add context as a html comment if required
         if($addctx) $content = "\n".'<!-- template:'.$id.' start -->'."\n".$content."\n".'<!-- template:'.$id.' end -->'."\n";
         
+        if($important && $exception)
+            return (object)array('content' => $content, 'exception' => $exception);
+        
         // If rendering threw rethrow
         if($exception) throw $exception;
         
@@ -156,6 +165,13 @@ class Template {
      * @return string parsed template content
      */
     public static function display($id, $vars = array()) {
-        echo self::process($id, $vars);
+        $content = self::process($id, $vars);
+        
+        if(is_object($content)) {
+            echo $content->content;
+            throw $content->exception;
+        }
+        
+        echo $content;
     }
 }

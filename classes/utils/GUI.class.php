@@ -273,7 +273,7 @@ class GUI {
             self::$allowed_pages = array();
             
             // Authenticated users have access to lots ...
-            if(Auth::isAuthenticated()) {
+            if(Auth::isAuthenticated(false)) {
                 if(Auth::isGuest()) {
                     self::$allowed_pages = array('upload');
                 } else {
