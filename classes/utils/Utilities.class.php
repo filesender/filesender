@@ -41,8 +41,8 @@ class Utilities {
     /**
      * CSRF token
      */
-    const SECURITY_TOKEN_LIFETIME = 3600; // seconds
-    const OLD_SECURITY_TOKEN_LIFETIME = 60; // seconds
+    const SECURITY_TOKEN_LIFETIME = 7200; // seconds
+    const OLD_SECURITY_TOKEN_LIFETIME = 900; // seconds
     private static $security_token = null;
     
     /**
@@ -396,8 +396,11 @@ class Utilities {
                 'valid_until' => time() + self::SECURITY_TOKEN_LIFETIME,
                 'old' => null
             );
+            Logger::debug('Generated security token, value is '.$token['value'].', valid until '.date('Y-m-d H:i:s', $token['valid_until']));
             
         } else if($token['valid_until'] < time()) { // Must renew
+            Logger::debug('Security token expired, value was '.$token['value']);
+            
             $token['old'] = array(
                 'value' => $token['value'],
                 'valid_until' => time() + self::OLD_SECURITY_TOKEN_LIFETIME
@@ -406,9 +409,13 @@ class Utilities {
             $token['value'] = Utilities::generateUID();
             $token['valid_until'] = time() + self::SECURITY_TOKEN_LIFETIME;
             
+            Logger::debug('Generated new security token, value is '.$token['value'].', valid until '.date('Y-m-d H:i:s', $token['valid_until']));
+            
         } else { // Still valid, scrape old value from any previous changes
-            if($token['old'] && $token['old']['valid_until'] < time())
+            if($token['old'] && $token['old']['valid_until'] < time()) {
+                Logger::debug('Old security token expired, value was '.$token['old']['value']);
                 $token['old'] = null;
+            }
         }
         
         if($token['old']) // Send new value as header if changed
