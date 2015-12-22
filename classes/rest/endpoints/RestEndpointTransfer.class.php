@@ -69,6 +69,35 @@ class RestEndpointTransfer extends RestEndpoint {
     }
     
     /**
+     * Check wether security token match is needed
+     * 
+     * @param
+     * 
+     * @return bool
+     */
+    public function requireSecurityTokenMatch($method, $path) {
+        $security = Config::get('chunk_upload_security');
+        $path = implode('/', $path);
+        
+        if($security == 'auth') // Need token if auth mode
+            return true;
+        
+        if(!array_key_exists('key', $_GET)) // No key, need token
+            return true;
+        
+        if(!$_GET['key']) // No key, need token
+            return true;
+        
+        if(($method == 'put') && preg_match('`^[0-9]+$`', $path)) // No need if key and transfer properties set
+            return false;
+        
+        if(($method == 'delete') && preg_match('`^[0-9]+$`', $path)) // No need if key and transfer delete
+            return false;
+        
+        return true; // Need token for every other situation
+    }
+    
+    /**
      * Get info about a transfer
      * 
      * Call examples :
@@ -490,11 +519,8 @@ class RestEndpointTransfer extends RestEndpoint {
         
         // Evaluate security type depending on config and auth
         $security = Config::get('chunk_upload_security');
-        if(Auth::isAuthenticated()) {
-            $security = 'auth';
-        }else if($security != 'key') {
+        if(($security == 'auth') && !Auth::isAuthenticated())
             throw new RestAuthenticationRequiredException();
-        }
         
         // Get transfer to update and current user
         $transfer = Transfer::fromId($id);
@@ -560,11 +586,8 @@ class RestEndpointTransfer extends RestEndpoint {
         
         // Evaluate security type depending on config and auth
         $security = Config::get('chunk_upload_security');
-        if(Auth::isAuthenticated()) {
-            $security = 'auth';
-        }else if($security != 'key') {
+        if(($security == 'auth') && !Auth::isAuthenticated())
             throw new RestAuthenticationRequiredException();
-        }
         
         $transfer = Transfer::fromId($id);
         

@@ -57,6 +57,35 @@ class RestEndpointFile extends RestEndpoint {
     }
     
     /**
+     * Check wether security token match is needed
+     * 
+     * @param
+     * 
+     * @return bool
+     */
+    public function requireSecurityTokenMatch($method, $path) {
+        $security = Config::get('chunk_upload_security');
+        $path = implode('/', $path);
+        
+        if($security == 'auth') // Need token if auth mode
+            return true;
+        
+        if(!array_key_exists('key', $_GET)) // No key, need token
+            return true;
+        
+        if(!$_GET['key']) // No key, need token
+            return true;
+        
+        if(($method == 'post') && preg_match('`^[0-9]+/whole$`', $path)) // No need if key and whole file upload
+            return false;
+        
+        if(($method == 'put') && preg_match('`^[0-9]+/chunk(/.*)?$`', $path)) // No need if key and chunk upload
+            return false;
+        
+        return true; // Need token for every other situation
+    }
+
+    /**
      * Get info about a file
      * 
      * Call examples :
@@ -109,11 +138,8 @@ class RestEndpointFile extends RestEndpoint {
         
         // Evaluate security type depending on config and auth
         $security = Config::get('chunk_upload_security');
-        if(Auth::isAuthenticated()) {
-            $security = 'auth';
-        }else if($security != 'key') {
+        if(($security == 'auth') && !Auth::isAuthenticated())
             throw new RestAuthenticationRequiredException();
-        }
         
         // Get related file object
         $file = File::fromId($id);
@@ -200,11 +226,8 @@ class RestEndpointFile extends RestEndpoint {
         
         // Evaluate security type depending on config and auth
         $security = Config::get('chunk_upload_security');
-        if(Auth::isAuthenticated()) {
-            $security = 'auth';
-        }else if($security != 'key') {
+        if(($security == 'auth') && !Auth::isAuthenticated())
             throw new RestAuthenticationRequiredException();
-        }
         
         // Get file we need to add data to or update
         $file = File::fromId($id);

@@ -115,6 +115,9 @@ class RestServer {
                     $request->input = json_decode(trim(Utilities::sanitizeInput($input)));
             }
             
+            $security_token = null;
+            $security_token_matches = false;
+            
             // Get authentication state (fills auth data in relevant classes)
             Auth::isAuthenticated();
             
@@ -131,13 +134,13 @@ class RestServer {
             } else if(in_array($method, array('post', 'put', 'delete'))) {
                 // SP or Guest, lets do XSRF check
                 $token_name = 'HTTP_X_FILESENDER_SECURITY_TOKEN';
-                $token = array_key_exists($token_name, $_SERVER) ? $_SERVER[$token_name] : '';
+                $security_token = array_key_exists($token_name, $_SERVER) ? $_SERVER[$token_name] : '';
                 
                 if($method == 'post' && array_key_exists('security-token', $_POST))
-                    $token = $_POST['security-token'];
+                    $security_token = $_POST['security-token'];
                 
-                if(!$token || !Utilities::checkSecurityToken($token))
-                    throw new RestException('rest_xsrf_token_did_not_match', 400, 'session token = '.Utilities::getSecurityToken().' and token = '.$token);
+                // Do not fail now since some endpoints may not require it
+                $security_token_matches = $security_token && Utilities::checkSecurityToken($security_token);
             }
             
             // JSONP specifics
@@ -195,6 +198,13 @@ class RestServer {
                 
             $handler = new $class($request);
             if(!method_exists($handler, $method)) throw new RestException('rest_method_not_implemented', 501);
+            
+            if(
+                in_array($method, array('post', 'put', 'delete')) &&
+                $handler->requireSecurityTokenMatch($method, $path) &&
+                !$security_token_matches
+            )
+                throw new RestException('rest_xsrf_token_did_not_match', 400, 'session token = '.Utilities::getSecurityToken().' and token = '.$security_token);
             
             Logger::debug('Forwarding call to '.$class.'::'.$method.'() handler');
             
