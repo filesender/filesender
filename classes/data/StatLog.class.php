@@ -163,12 +163,14 @@ class StatLog extends DBObject {
         }
         
         // Add user aditionnal attributes if enabled
-        if(Config::get('statlog_log_user_additional_attributes') && Auth::isAuthenticated()) {
+        if(Config::get('statlog_log_user_additional_attributes')) {
             $additional_attributes = null;
             
-            if(Auth::isSP()) $additional_attributes = Auth::user()->additional_attributes;
-            
-            if(Auth::isGuest()) $additional_attributes = AuthGuest::getGuest()->owner->additional_attributes;
+            if(Auth::isAuthenticated()) {
+                if(Auth::isSP()) $additional_attributes = Auth::user()->additional_attributes;
+                
+                if(Auth::isGuest()) $additional_attributes = AuthGuest::getGuest()->owner->additional_attributes;
+            }
             
             if($log->target_type == 'File') $additional_attributes = $target->transfer->owner->additional_attributes;
             
