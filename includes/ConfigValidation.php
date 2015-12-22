@@ -48,6 +48,14 @@ ConfigValidator::addCheck('db_database', 'string');
 ConfigValidator::addCheck('db_username', 'string');
 ConfigValidator::addCheck('db_password', 'string');
 
+ConfigValidator::addCheck('chunk_upload_security', 'string', function($value, &$error) {
+    if(in_array($value, array('auth', 'key'), true))
+        return true;
+    
+    $error = 'chunk_upload_security must be either "auth" or "key"';
+    return false;
+});
+
 ConfigValidator::addCheck('lang_selector_enabled', function($value, &$error) {
     if(!$value) return true;
     if(Config::get('lang_url_enabled')) return true;
