@@ -49,4 +49,13 @@ class RestEndpoint {
     public function __construct($request) {
         $this->request = $request;
     }
+    
+    /**
+     * Is security token match required
+     * 
+     * @return bool
+     */
+    public function requireSecurityTokenMatch($method, $path) {
+        return true;
+    }
 }
