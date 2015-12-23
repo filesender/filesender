@@ -67,6 +67,9 @@ class RestEndpointFile extends RestEndpoint {
         $security = Config::get('chunk_upload_security');
         $path = implode('/', $path);
         
+        if(Auth::isRemote()) // Remote auth doesn't need token
+            return false;
+        
         if($security == 'auth') // Need token if auth mode
             return true;
         
@@ -138,6 +141,7 @@ class RestEndpointFile extends RestEndpoint {
         
         // Evaluate security type depending on config and auth
         $security = Config::get('chunk_upload_security');
+        if(Auth::isAuthenticated()) $security = 'auth';
         if(($security == 'auth') && !Auth::isAuthenticated())
             throw new RestAuthenticationRequiredException();
         
@@ -226,6 +230,7 @@ class RestEndpointFile extends RestEndpoint {
         
         // Evaluate security type depending on config and auth
         $security = Config::get('chunk_upload_security');
+        if(Auth::isAuthenticated()) $security = 'auth';
         if(($security == 'auth') && !Auth::isAuthenticated())
             throw new RestAuthenticationRequiredException();
         
