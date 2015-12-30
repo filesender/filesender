@@ -1,4 +1,11 @@
-Last update: 25 July 2014
+Last update: 30 December 2015
+
+Version 1.6.1 <30 December 2015>
+
+   * Changes since 1.6
+     - Fix: upload problem with Safari 9.0.x (#1217)
+     - Change: new HEAnet and UNINETT logo (#1218)
+     - Security: escape PHP_SELF variable in admin page (#1240)
 
 Version 1.6 <26 July 2014>
 
