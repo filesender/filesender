@@ -1,8 +1,8 @@
-Last update: 17 Februari 2015
+Last update: 30 December 2015
 
-Version 1.6+crypto-beta1 <17 Februari 2015>
+Version 1.6.1+crypto-beta1 <tbd>
 
-   * Major changes since 1.6
+   * Major changes since 1.6(.x)
      - New: experimental crypto module for end-to-end encryption
        - Upgrade notes:
          - you MUST manually add one additional column to the
@@ -14,6 +14,13 @@ Version 1.6+crypto-beta1 <17 Februari 2015>
          - Changes in the default mail templates
          - Changes in the default en_AU and nl_NL language files
          - Default not enabled, enable in config.php
+
+Version 1.6.1 <30 December 2015>
+
+   * Changes since 1.6+crypto-beta1
+     - Fix: upload problem with Safari 9.0.x (#1217)
+     - Change: new HEAnet and UNINETT logo (#1218)
+     - Security: escape PHP_SELF variable in admin page (#1240)
 
 Version 1.6 <26 July 2014>
 
