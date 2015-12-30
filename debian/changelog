@@ -6,7 +6,7 @@ filesender (1.6.1) stable; urgency=medium
      - Change: new HEAnet and UNINETT logo (#1218)
      - Security: escape PHP_SELF variable in admin page (#1240)
 
- -- Filesender Development <filesender-dev@filesender.org>  Wed, 30 Dec 2015 18:00:00 +0100
+ -- Filesender Development <filesender-dev@filesender.org>  Wed, 30 Dec 2015 12:41:49 +0100
 
 filesender (1.6) stable; urgency=medium
    * Release 1.6
