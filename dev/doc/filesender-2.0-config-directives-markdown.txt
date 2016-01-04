@@ -126,6 +126,7 @@
 ##Maintenance and logging
 * [failed_transfer_cleanup_days](#failed_transfer_cleanup_days)
 * [log_facilities](#log_facilities)!!
+* [maintenance mode](#maintenance)!!
 * [statlog_lifetime](#statlog_lifetime)
 * [auth_sp_additional_attributes](#auth_sp_additional_attributes)
 * [auth_sp_save_user_additional_attributes](#auth_sp_save_user_additional_attributes)
@@ -1078,6 +1079,23 @@ User language detection is done in the following order:
 examples for tpye file with different log rotations
 examles for type syslog
 
+	
+###maintenance
+* __description:__ when true, switches the FileSender instance in maintenance mode.  This allows to interrupt the service for a database upgrade or webserver restart without breaking ongoing uploads.
+
+   When switched on:  
+  * all pages are replaced with the maintenance page
+  * webservice returns specific exception to all requests
+  * clients display a popup explaining what happens
+  * clients pause uploads and put all requests they were about to make in a stack
+  * clients starts to query the server on a regular basis to see if maintenance ended (server responding with no exception status)
+  * when server exits maintenance mode clients restart uploading and run stacked requests and remove maintenance popup
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 2.0
+* __1.x name:__
+* __comment:__
 	
 ###statlog_lifetime
 * __description:__ The statlog is kept in the database and contains everything needed to produce usage statistics.  This directive defines maximum lifetime of statslog entries (in days) after which they get deleted.  <span style="background-color:orange">point to more text detailing what is actuallly logged in the statlog!</style>
