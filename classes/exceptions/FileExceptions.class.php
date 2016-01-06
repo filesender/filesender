@@ -102,3 +102,20 @@ class FileChunkOutOfBoundsException extends LoggingException {
         );
     }
 }
+
+/**
+ * File integrity check failed
+ */
+class FileIntegrityCheckFailedException extends DetailedException {
+    /**
+     * Constructor
+     * 
+     * @param string $reason
+     */
+    public function __construct($reason) {
+        parent::__construct(
+            'file_integrity_check_failed', // Message to give to the user
+            $reason
+        );
+    }
+}
