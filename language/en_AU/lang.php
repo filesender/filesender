@@ -443,6 +443,7 @@ $lang['file_not_found'] = 'File not found';
 $lang['file_extension_not_allowed'] = 'File extension not allowed';
 $lang['file_bad_hash'] = 'Invalid file hash';
 $lang['file_chunk_out_of_bounds'] = 'File chunk out of bounds';
+$lang['file_integrity_check_failed'] = 'File integrity check failed';
 $lang['file_size_does_not_match'] = 'File size does not match';
 $lang['cannot_open_input_file'] = 'Cannot open input file';
 
@@ -528,6 +529,7 @@ $lang['transfer_host_quota_exceeded'] = 'Host quota exceeded';
 $lang['transfer_user_quota_exceeded'] = 'User quota exceeded';
 $lang['transfer_expiry_extension_not_allowed'] = 'Transfer expiry date extension is not allowed';
 $lang['transfer_expiry_extension_count_exceeded'] = 'Transfer expiry date extension maximum reached';
+$lang['transfer_files_incomplete'] = 'Transfer\'s files are not done uploading';
 
 // User related exceptions
 $lang['user_not_found'] = 'User not found';
