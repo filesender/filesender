@@ -360,6 +360,21 @@ class StorageFilesystem {
     }
     
     /**
+     * Handles file completion checks
+     * 
+     * @param File $file
+     */
+    public static function completeFile(File $file) {
+        self::setup();
+        
+        $file_path = self::buildPath($file).$file->uid;
+        $size = filesize($file_path);
+        
+        if($size != $file->size)
+            throw new FileIntegrityCheckFailedException('Expected size was '.$file->size.' but size on disk is '.$size);
+    }
+    
+    /**
      * Deletes a file
      * 
      * @param File $file
@@ -441,5 +456,23 @@ class StorageFilesystem {
         // ... and copy file (removal up to caller), fail if couldn't copy
         if(!copy($source_path, $file_path))
             throw new StorageFilesystemCannotWriteException($file_path);
+    }
+    
+    /**
+     * Tells wether storage support linking
+     * 
+     * @return bool
+     */
+    public static function supportsLinking() {
+        return true;
+    }
+    
+    /**
+     * Handle direct file linking
+     * 
+     * @return bool
+     */
+    public static function storeAsLink(File $file, $source_path) {
+        symlink($source_path, self::buildPath($file).$file->uid);
     }
 }
