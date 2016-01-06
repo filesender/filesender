@@ -1,6 +1,7 @@
-filesender (1.6.1+crypto~beta1) experimental; urgency=medium
+filesender (1.7~beta1) experimental; urgency=medium
+   * Release 1.7-beta1 (= 1.6.1 + end-to-end crypto module)
 
-   * Major changes since 1.6
+   * Major changes since 1.6(.x)
      - New: experimental crypto module for end-to-end encryption
        - Upgrade notes:
          - you MUST manually add one additional column to the

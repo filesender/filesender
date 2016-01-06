@@ -1,6 +1,6 @@
-Last update: 30 December 2015
+Last update: 6 January 2016
 
-Version 1.6.1+crypto-beta1 <tbd>
+Version 1.7-beta1 <6 January 2016>
 
    * Major changes since 1.6(.x)
      - New: experimental crypto module for end-to-end encryption
