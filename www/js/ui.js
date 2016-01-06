@@ -376,7 +376,7 @@ window.filesender.ui = {
      * @return string
      */
     formatBytes: function (bytes, precision) {
-        return filesender.ui.formatBinarySize(bytes,precision)+lang.tr('size_unit');
+        return filesender.ui.formatBinarySize(bytes, precision) + lang.tr('size_unit');
     },
     
     
@@ -389,7 +389,8 @@ window.filesender.ui = {
      * @return string
      */
     formatSpeed : function (bytes,precision) {
-        return filesender.ui.formatBinarySize(bytes,precision)+lang.tr('speed_unit');
+        var unit = lang.tr('speed_unit_' + (filesender.config.upload_display_bits_per_sec ? 'bits' : 'bytes'));
+        return filesender.ui.formatBinarySize(bytes, precision) + unit;
     },
     
     
