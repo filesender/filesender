@@ -233,4 +233,27 @@ class Storage {
         
         call_user_func(self::$class.'::storeWholeFile', $file, $source_path);
     }
+    
+    /**
+     * Delegates linking support check
+     * 
+     * @return bool
+     */
+    public static function supportsLinking() {
+        self::setup();
+        
+        call_user_func(self::$class.'::supportsLinking');
+    }
+    
+    /**
+     * Delegates file linking
+     * 
+     * @param File $file
+     * @param string $source_path path to file data
+     */
+    public static function storeAsLink(File $file, $source_path) {
+        self::setup();
+        
+        call_user_func(self::$class.'::storeAsLink', $file, $source_path);
+    }
 }
