@@ -85,7 +85,8 @@ $lang['dp_year_suffix'] = '';
 
 // Sizes and speeds
 $lang['size_unit'] = 'o';
-$lang['speed_unit'] = 'o/s';
+$lang['speed_unit_bits'] = 'b/s';
+$lang['speed_unit_bytes'] = 'o/s';
 
 /**
  * General terms (used in several places)
