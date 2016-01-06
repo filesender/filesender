@@ -779,6 +779,11 @@ class Transfer extends DBObject {
         if(!count($this->files))
             throw new TransferNoFilesException();
         
+        // Fail if any file not complete
+        foreach($this->files as $file)
+            if(!$file->upload_end)
+                throw new TransferFilesIncompleteException();
+        
         // Fail if no recipients
         if(!count($this->recipients))
             throw new TransferNoRecipientsException();

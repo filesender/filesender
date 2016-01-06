@@ -122,6 +122,18 @@ class TransferNoFilesException extends DetailedException {
 }
 
 /**
+ * Files incomplete exception
+ */
+class TransferFilesIncompleteException extends DetailedException {
+    /**
+     * Constructor
+     */
+    public function __construct() {
+        parent::__construct('transfer_files_incomplete');
+    }
+}
+
+/**
  * Maximum size exeeded exception
  */
 class TransferMaximumSizeExceededException extends DetailedException {
