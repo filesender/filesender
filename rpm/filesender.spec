@@ -103,6 +103,9 @@ rm -rf %{buildroot}
 * %(date '+%a %b %d %Y') FileSender Development <filesender-dev@filesender.org> %{version}-%{release}
 - Release %{version}%{?fsprerel}
 
+* Wed Jan 06 2016 FileSender Development <filesender-dev@filesender.org> 1.7-0.1.beta1
+- Release 1.7-beta1
+
 * Wed Dec 30 2015 FileSender Development <filesender-dev@filesender.org> 1.6.1-1
 - Release 1.6.1
 
