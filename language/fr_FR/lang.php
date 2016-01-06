@@ -443,6 +443,7 @@ $lang['file_not_found'] = 'Fichier introuvable';
 $lang['file_extension_not_allowed'] = 'Extension de fichier non-acceptée';
 $lang['file_bad_hash'] = 'Condensat de fichier erroné';
 $lang['file_chunk_out_of_bounds'] = 'Portion de fichier au-delà des limites';
+$lang['file_integrity_check_failed'] = 'Le test d\'intégrité du fichier à échoué';
 $lang['file_size_does_not_match'] = 'La taille du fichier ne correspond pas';
 $lang['cannot_open_input_file'] = 'Impossible d\'ouvrir le fichier en entrée';
 
@@ -529,6 +530,7 @@ $lang['transfer_host_quota_exceeded'] = 'Quota du service dépassé';
 $lang['transfer_user_quota_exceeded'] = 'Quota utilisateur dépassé';
 $lang['transfer_expiry_extension_not_allowed'] = 'Extension de la date d\'expiration non-autorisée';
 $lang['transfer_expiry_extension_count_exceeded'] = 'Nombre maximum d\'extensions de la date d\'expiration atteint';
+$lang['transfer_files_incomplete'] = 'Certains fichiers ne sont pas complets';
 
 // User related exceptions
 $lang['user_not_found'] = 'Utilisateur introuvable';
