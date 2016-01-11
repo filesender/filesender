@@ -86,7 +86,7 @@ $config['email_newline'] = "\r\n";				// if emails are mangled replace this with
 $config['force_legacy_mode'] = false;			// for testing legacy non-HTML5 mode
 
 $config['autocomplete'] = 10;					// show previously used email addresses in To: fields.  Set to positive number to enable.  Number indicates how many hits are shown to user.  Addresses are stored in user preferences.  When you sent to another set of recipients, will remove from list and add them at beginning of list.  So the more you write to them the longer they stay.  The longer you don't write to someone the lower they get on the list until they drop off.  Seems to work pretty well at RENATER.  
-$config['autocomplete_max_pool'] = 100;				// how many values are stored in database.  Default is 5.
+$config['autocomplete_max_pool'] = 1;				// how many values are stored in database.  Default is 5.
 $config['autocomplete_min_characters'] = 2;		// Optional.  Default 3.  How many characters to type before autocomplete list is triggered 
 $config['upload_display_bits_per_sec'] = false;		
 
@@ -95,6 +95,8 @@ $config['upload_display_bits_per_sec'] = false;
 // --------------------------------------------------
 //              Transfer settings
 // --------------------------------------------------
+
+$config['max_transfer_size'] = 2107374182400;
 
 $config['transfer_options'] = array(
 
@@ -108,7 +110,7 @@ $config['transfer_options'] = array(
 		// Sender gets an email once an upload is complete.  Practical for long uploads
 		'email_upload_complete' => array(
 			'available' => true,
-			'advanced' => false,
+			'advanced' => true,
 			'default' => true
 		),
 
@@ -135,7 +137,7 @@ $config['transfer_options'] = array(
 		// after a relatively short time.  So I want to be able to tell a user "here is your audit log, this
 		// shows who downloaded your files when.  I will now delete this information, if you wish to keep it
 		// then do not delete this email.
-		'email_email_report_on_closing' => array(
+		'email_report_on_closing' => array(
 			'available' => false,
 			'advanced' => false,
 			'default' => true
@@ -172,7 +174,7 @@ $config['terasender_advanced'] = true;    	// Make #webworkers configurable in U
 						// to determine optimal number for terasender_worker_count when going in production.  
 						// The useful number of maximum webworkers per browser changes nearly for each browser release.
 $config['terasender_worker_count'] = 10;   	// Number of web workers to launch simultaneously client-side when starting upload
-//$config['terasender_worker_count'] = single;	// I think I prefer to show a nice serial predictable upload process
+$config['terasender_start_mode'] = single;	// I think I prefer to show a nice serial predictable upload process
 
 
 
@@ -295,4 +297,4 @@ $config['storage_filesystem_path'] = '/data/branches/filesender-2.0/files';
 $config['auth_sp_saml_uid_attribute'] = 'eduPersonPrincipalName';
 // 
 // // Get path  attribute from authentication service
-// $config['auth_sp_saml_authentication_source'] = 'default-sp';
+$config['auth_sp_saml_authentication_source'] = 'default-sp';
