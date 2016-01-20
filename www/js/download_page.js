@@ -117,6 +117,8 @@ $(function() {
         return false;
     });
     
-    if(parseInt($('[data-transfer-size]').attr('data-transfer-size')) < 4 * 1024 * 1024 * 1024)
+    var bigger_than_4gb = parseInt($('[data-transfer-size]').attr('data-transfer-size')) > 4 * 1024 * 1024 * 1024;
+    var macos = navigator.platform.match(/Mac/);
+    if(!bigger_than_4gb || !macos)
         $('.mac_archive_message').hide();
 });
