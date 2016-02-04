@@ -386,6 +386,13 @@ class StorageFilesystem {
         
         if(!file_exists($file_path)) return;
         
+        if(is_link($file_path)) {
+            if(!unlink($file_path))
+                throw new CoreCannotDeleteFileException($file_path);
+            
+            return;
+        }
+        
         $rm_command = Config::get('storage_filesystem_file_deletion_command');
         
         if($rm_command) {
