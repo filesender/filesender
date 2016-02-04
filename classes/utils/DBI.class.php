@@ -40,6 +40,16 @@ if(!defined('FILESENDER_BASE')) die('Missing environment');
  */
 class DBI {
     /**
+     * Connexion data
+     */
+    private static $config = null;
+    
+    /**
+     * Last request timestamp for ping
+     */
+    private static $last_request = null;
+    
+    /**
      * Connection instance (PDO)
      */
     private static $instance = null;
@@ -50,9 +60,7 @@ class DBI {
      * @throws DBIConnexionMissingParameterException
      * @throws DBIConnexionException
      */
-    private static function connect() {
-        if(!is_null(self::$instance)) return;
-        
+    private static function load() {
         // Get config, check mandatory parameters
         $config = Config::get('db_*');
         $config['dsn'] = Config::get('dsn');
@@ -83,27 +91,84 @@ class DBI {
         
         if(!$config['driver_options']) $config['driver_options'] = array();
         
+        self::$config = $config;
+    }
+    
+    /**
+     * Connect to database
+     * 
+     * @param boolean $force_reconnect
+     * 
+     * @throws DBIConnexionMissingParameterException
+     * @throws DBIConnexionException
+     */
+    private static function connect($force_reconnect = false) {
+        if(!$force_reconnect && self::$instance) return;
+        
+        // Close any existing connexion
+        self::$instance = null;
+        
+        if(is_null(self::$config)) self::load();
+        
         // Try to connect, cast any thrown exception
         try {
             // Connect
-            self::$instance = new PDO($config['dsn'], $config['username'], $config['password'], $config['driver_options']);
+            self::$instance = new PDO(
+                self::$config['dsn'],
+                self::$config['username'],
+                self::$config['password'],
+                self::$config['driver_options']
+            );
             
             // Set options : throw if error, do not cast returned values to string, fetch as associative array by default
             self::$instance->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             self::$instance->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, false);
             self::$instance->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
             
+            self::$last_request = time();
+            
             // db_charset given in config ?
-            if($config['charset']) {
-                if($config['collation']) {
-                    self::prepare('SET NAMES :charset COLLATE :collation')->execute(array(':charset' => $config['charset'], ':collation' => $config['collation']));
+            if(self::$config['charset']) {
+                if(self::$config['collation']) {
+                    self::prepare('SET NAMES :charset COLLATE :collation')->execute(array(
+                        ':charset' => self::$config['charset'],
+                        ':collation' => self::$config['collation']
+                    ));
                 }else{
-                    self::prepare('SET NAMES :charset')->execute(array(':charset' => $config['charset']));
+                    self::prepare('SET NAMES :charset')->execute(array(
+                        ':charset' => self::$config['charset']
+                    ));
                 }
             }
+            
         } catch(Exception $e) {
             throw new DBIConnexionException('DBI connect error : '.$e->getMessage());
         }
+    }
+    
+    /**
+     * Ping connection
+     */
+    private static function ping() {
+        // Do not ping if last request less than Xmin ago
+        $timeout = array_key_exists('timeout', self::$config) ? (int)self::$config['timeout'] : null;
+        if(!$timeout) $timeout = 900;
+        
+        if(self::$instance && (microtime(true) - self::$last_request < $timeout))
+            return;
+        
+        if(self::$instance) {
+            try {
+                self::$instance->query('SELECT 1');
+                return;
+            } catch(PDOException $e) {}
+        }
+        
+        // Ping failed, reconnect
+        self::connect(true);
+        
+        // Only log after as logger may use DBI
+        Logger::info('Connection to database was lost, restored');
     }
     
     /**
@@ -130,7 +195,11 @@ class DBI {
         
         // Try to call, cast any thrown exception
         try {
+            self::ping();
+            
             $r = call_user_func_array(array(self::$instance, $name), $args);
+            
+            self::$last_request = time();
             
             // Cast any returned PDOStatment to a DBIStatment so that fetches and such may be logged
             if(is_object($r) && ($r instanceof PDOStatement))
