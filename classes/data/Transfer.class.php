@@ -562,7 +562,7 @@ class Transfer extends DBObject {
         
         if($property == 'downloads') {
             return array_filter($this->auditlogs, function($log) {
-                return $log->event == LogEventTypes::DOWNLOAD_ENDED;
+                return in_array($log->event, array(LogEventTypes::DOWNLOAD_ENDED, LogEventTypes::ARCHIVE_DOWNLOAD_ENDED));
             });
         }
         
@@ -874,7 +874,7 @@ class Transfer extends DBObject {
         
         foreach(self::all(self::AVAILABLE) as $transfer) {
             $recipients_downloaded_ids = array_map(function($l) {
-                return $l->target_id;
+                return $l->author_id;
             }, $transfer->downloads);
             
             // Get recipients that did not download
