@@ -215,7 +215,7 @@ class Storage {
     public static function supportsWholeFile() {
         self::setup();
         
-        call_user_func(self::$class.'::supportsWholeFile');
+        return call_user_func(self::$class.'::supportsWholeFile');
     }
     
     /**
@@ -242,7 +242,7 @@ class Storage {
     public static function supportsLinking() {
         self::setup();
         
-        call_user_func(self::$class.'::supportsLinking');
+        return call_user_func(self::$class.'::supportsLinking');
     }
     
     /**
