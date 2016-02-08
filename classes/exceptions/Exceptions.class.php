@@ -129,10 +129,10 @@ class DetailedException extends LoggingException {
             $key = is_int($key) ? '' : $key.' = ';
             
             if (is_scalar($detail)) {
-                if(is_bool($details)) {
-                    $details = $details ? 'true' : 'false';
-                } else if(!is_int($details) && !is_float($details)) {
-                    $details = '"'.$details.'"';
+                if(is_bool($detail)) {
+                    $detail = $details ? 'true' : 'false';
+                } else if(!is_int($detail) && !is_float($detail)) {
+                    $detail = '"'.$detail.'"';
                 }
                 
                 $log['details'][] = $key.$detail;
