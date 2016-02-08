@@ -144,7 +144,30 @@ class RestServer {
             }
             
             // JSONP specifics
-            if(array_key_exists('callback', $_GET) && ($method != 'get')) throw new RestException('rest_jsonp_get_only', 405);
+            if(array_key_exists('callback', $_GET)) {
+                if($method != 'get') throw new RestException('rest_jsonp_get_only', 405);
+            }
+                
+            if(array_key_exists('callback', $_GET) || array_key_exists('iframe_callback', $_REQUEST)) {
+                $allowed_by_default = array('/info', '/lang', '/file/[0-9]+/whole');
+                
+                if(Config::get('auth_remote_user_enabled'))
+                    $allowed_by_default[] = '/user/@me/remote_auth_config';
+
+                $allow_jsonp = array_filter(array_merge((array)Config::get('rest_allow_jsonp'), $allowed_by_default));
+                
+                $res = '/'.$endpoint.'/'.implode('/', $path);
+                
+                $allowed = false;
+                foreach($allow_jsonp as $a) {
+                    $a = str_replace('`', '\\`', $a);
+                    if(!preg_match('`'.$a.'`', $res)) continue;
+                    $allowed = true;
+                    break;
+                }
+                
+                if(!$allowed) throw new RestException('rest_jsonp_not_allowed', 405);
+            }
             
             // Get response filters
             foreach($_GET as $k => $v) switch($k) {
