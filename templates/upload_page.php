@@ -14,10 +14,23 @@ if(Auth::isGuest()) {
     }
 }
 
+$need_recipients = true;
+$allow_recipients = true;
+foreach(Transfer::allOptions() as $name => $dfn)  {
+    if($dfn['available']) continue;
+    if(!$dfn['default']) continue;
+    
+    if($name == TransferOptions::ADD_ME_TO_RECIPIENTS)
+        $need_recipients = false;
+    
+    if($name == TransferOptions::GET_A_LINK)
+        $allow_recipients = false;
+}
+
 ?>
 
 <div class="box">
-    <form id="upload_form" enctype="multipart/form-data" accept-charset="utf-8" method="post">
+    <form id="upload_form" enctype="multipart/form-data" accept-charset="utf-8" method="post" data-need-recipients="<?php echo $need_recipients ? '1' : '' ?>">
         <div class="box">
             <div class="files"></div>
             
@@ -74,6 +87,7 @@ if(Auth::isGuest()) {
                         <?php } else echo $emails[0] ?>
                     </div>
                     
+                    <?php if($allow_recipients) { ?>
                     <div class="fieldcontainer" data-related-to="message">
                         <label for="to" class="mandatory">{tr:to} :</label>
                         
@@ -97,6 +111,7 @@ if(Auth::isGuest()) {
                         
                         <textarea name="message" rows="4"></textarea>
                     </div>
+                    <?php } ?>
                     
                     <div>
                         <?php if(Auth::isGuest()) { ?>
