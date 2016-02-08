@@ -312,7 +312,23 @@ function downloadSingleFile($transfer, $recipient, $file_id) {
         }
     } else {
         header('Content-Type: ' . $file->mime_type);
-        header('Content-Disposition: attachment; filename="' . $file->name . '"');
+        
+        // UTF8 filename handling
+        $ua = array_key_exists('HTTP_USER_AGENT', $_SERVER) ? $_SERVER['HTTP_USER_AGENT'] : '';
+        if(preg_match('`msie (7|8)`i', $ua) && !preg_match('`opera`i', $ua)) {
+            // IE7, IE8 but not opera that MAY match
+            header('Content-Disposition: attachment; filename='.rawurlencode($file->name));
+            
+        } else if(preg_match('`android`i', $ua)) {
+            // Android OS
+            $name = preg_replace('`[^a-z0-9\._\-\+,@£\$€!½§~\'=\(\)\[\]\{\}]`i', '_', $file->name);
+            header('Content-Disposition: attachment; filename="'.$name.'"');
+            
+        } else {
+            // All others, see RFC 5987
+            header('Content-Disposition: attachment; filename="'.$file->name.'"; filename*=UTF-8\'\''.rawurlencode($file->name));
+        }
+        
         header('Content-Length: ' . $file->size);
         header('Accept-Ranges: bytes');
 
