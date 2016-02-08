@@ -73,6 +73,7 @@
 * [chunk_upload_security](#chunk_upload_security)
 * [default_days_valid](#default_days_valid)
 * [max_days_valid](#max_days_valid)
+* [allow_transfer_expiry_date_extension](#allow_transfer_expiry_date_extension)
 * [force_legacy_mode](#force_legacy_mode)
 * [legacy_upload_progress_refresh_period](#)
 * [max_legacy_file_size](#max_legacy_file_size)
@@ -126,7 +127,7 @@
 ##Maintenance and logging
 * [failed_transfer_cleanup_days](#failed_transfer_cleanup_days)
 * [log_facilities](#log_facilities)!!
-* [maintenance mode](#maintenance)!!
+* [maintenance mode](#maintenance)
 * [statlog_lifetime](#statlog_lifetime)
 * [auth_sp_additional_attributes](#auth_sp_additional_attributes)
 * [auth_sp_save_user_additional_attributes](#auth_sp_save_user_additional_attributes)
@@ -613,6 +614,23 @@ User language detection is done in the following order:
 * __available:__ since version 1.0
 * __1.x name:__ default_daysvalid
 * __comment:__ experience shows the vast majority of users simply go with the default expiry time.  For some users having a maximum value a long time in the future makes sense, e.g. papers sent out to a research proposal evaluation committee that need to be evaluated by a certain date.  Downloads typically start not too long before the due date, but the actual due date can be over a month in the future. 
+
+
+###allow_transfer_expiry_date_extension
+* __description:__ allows a user to extend the expiry date.  
+* __mandatory:__ 
+* __type:__ an array of integers containing possible extensions in days.
+* __default:__ - (= not activated)
+* __available:__ since version 2.0
+* __1.x name:__
+* __comment:__  
+* __Examples:__
+<PRE>
+   $config['allow_transfer_expiry_date_extension'] = array(5); // Allows a single extension of 5 days
+   $config['allow_transfer_expiry_date_extension'] = 5; // Same as above
+   $config['allow_transfer_expiry_date_extension'] = array(5, 3); // Allows 2 successive extensions, the first is by 5 days the second is by 3 days
+   $config['allow_transfer_expiry_date_extension'] = array(5, 3, 1, true); // Allows infinite extensions, the first is by 5 days the second is by 3 days, the third and above are by 1 day
+</PRE>
 
 ##force_legacy_mode
 * __description:__ Force FileSender into legacy non-HTML5 mode. Multi-file uploads are still possible, but each file is limited to max. 2GB.  The help file and certain text labels change as well. The max. number of files and total transfer size limit is the same as for HTML5 mode.  This function is available for testing purposes: FileSender will detect automatically if a user's browser supports the necessary HTML5 functionality or not.   
