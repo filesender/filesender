@@ -48,7 +48,7 @@ class CoreFileNotFoundException extends DetailedException
     {
         parent::__construct(
             'core_file_not_found', // Message to give to the user
-            'file : '.$file // Details to log
+            array('file' => $file) // Details to log
         );
     }
 }
@@ -67,7 +67,7 @@ class CoreCannotReadFileException extends DetailedException
     {
         parent::__construct(
             'core_cannot_read_file', // Message to give to the user
-            'file : '.$file // Details to log
+            array('file' => $file) // Details to log
         );
     }
 }
@@ -86,7 +86,7 @@ class CoreCannotWriteFileException extends DetailedException
     {
         parent::__construct(
             'core_cannot_write_file', // Message to give to the user
-            'file : '.$file // Details to log
+            array('file' => $file) // Details to log
         );
     }
 }
@@ -105,7 +105,7 @@ class CoreCannotDeleteFileException extends DetailedException
     {
         parent::__construct(
             'core_cannot_delete_file', // Message to give to the user
-            'file : '.$file // Details to log
+            array('file' => $file) // Details to log
         );
     }
 }

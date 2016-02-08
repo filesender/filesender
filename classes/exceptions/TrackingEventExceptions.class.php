@@ -36,7 +36,7 @@ if (!defined('FILESENDER_BASE'))        // Require environment (fatal)
 /**
  * Unknown tracking event exception
  */
-class TrackingEventNotFoundException extends LoggingException {
+class TrackingEventNotFoundException extends DetailedException {
     /**
      * Constructor
      * 
@@ -45,7 +45,7 @@ class TrackingEventNotFoundException extends LoggingException {
     public function __construct($selector) {
         parent::__construct(
             'tracking_event_not_found', // Message to give to the user
-            $selector // Real message to log
+            array('selector' => $selector) // Real message to log
         );
     }
 }
@@ -62,7 +62,7 @@ class TrackingUnknownEventException extends DetailedException {
     public function __construct($event) {
         parent::__construct(
             'tracking_unknown_event', // Message to give to the user
-            $event // Real message to log
+            array('event' => $event) // Real message to log
         );
     }
 }

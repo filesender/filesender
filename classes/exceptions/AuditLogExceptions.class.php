@@ -42,24 +42,7 @@ class AuditLogNotFoundException extends DetailedException {
     public function __construct($selector) {
         parent::__construct(
             'auditlog_not_found', // Message to give to the user
-            $selector // Real message to log
-        );
-    }
-}
-
-/**
- * Unknown AuditLog exception
- */
-class AuditLogNotEnabledException extends DetailedException {
-    /**
-     * Constructor
-     * 
-     * @param string $selector column used to select user
-     */
-    public function __construct($selector) {
-        parent::__construct(
-            'auditlog_not_enabled', // Message to give to the user
-            $selector // Real message to log
+            array('selector' => $selector) // Real message to log
         );
     }
 }
@@ -71,12 +54,12 @@ class AuditLogUnknownEventException extends DetailedException {
     /**
      * Constructor
      * 
-     * @param string $selector column used to select user
+     * @param string $event
      */
-    public function __construct($selector) {
+    public function __construct($event) {
         parent::__construct(
             'auditlog_unknown_event', // Message to give to the user
-            $selector // Real message to log
+            array('event' => $event) // Real message to log
         );
     }
 }

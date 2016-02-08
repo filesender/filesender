@@ -36,7 +36,7 @@ if (!defined('FILESENDER_BASE'))        // Require environment (fatal)
 /**
  * Unknown file exception
  */
-class FileNotFoundException extends LoggingException {
+class FileNotFoundException extends DetailedException {
     /**
      * Constructor
      * 
@@ -45,7 +45,7 @@ class FileNotFoundException extends LoggingException {
     public function __construct($selector) {
         parent::__construct(
             'file_not_found', // Message to give to the user
-            $selector // Real message to log
+            array('selector' => $selector) // Real message to log
         );
     }
 }
@@ -53,7 +53,7 @@ class FileNotFoundException extends LoggingException {
 /**
  * Unknown file extension exception
  */
-class FileExtensionNotAllowedException extends LoggingException {
+class FileExtensionNotAllowedException extends DetailedException {
     /**
      * Constructor
      * 
@@ -62,60 +62,75 @@ class FileExtensionNotAllowedException extends LoggingException {
     public function __construct($selector) {
         parent::__construct(
             'file_extension_not_allowed', // Message to give to the user
-            $selector // Real message to log
+            array('selector' => $selector) // Real message to log
         );
+    }
+}
+
+/**
+ * Generic identified file exception
+ */
+class FileException extends DetailedException {
+    /**
+     * Constructor
+     * 
+     * @param File $file
+     * @param string $msg_code message code to be used to present error
+     * @param mixed $internal_details details to log
+     * @param mixed $public_details details to give to the user (logged as well)
+     */
+    public function __construct($file, $msg_code, $internal_details = null, $public_details = null) {
+        $internal_details = $internal_details ? (array)$internal_details : array();
+        $internal_details['file'] = (string)$file;
+        $internal_details['transfer'] = (string)$file->transfer;
+        
+        parent::__construct('file_'.$msg_code, $internal_details, $public_details);
     }
 }
 
 /**
  * Unknown file exception
  */
-class FileBadHashException extends LoggingException {
+class FileBadHashException extends FileException {
     /**
      * Constructor
      * 
+     * @param File $file
      * @param string $hash the bad hash
      */
-    public function __construct($hash) {
-        parent::__construct(
-            'file_bad_hash', // Message to give to the user
-            $hash // Real message to log
-        );
+    public function __construct($file, $hash) {
+        parent::__construct($file, 'bad_hash', array('hash' => $hash));
     }
 }
 
 /**
  * Chunk out of bounds exception
  */
-class FileChunkOutOfBoundsException extends LoggingException {
+class FileChunkOutOfBoundsException extends FileException {
     /**
      * Constructor
      * 
+     * @param File $file
      * @param int $offset
      * @param int $length
      * @param int $max
      */
-    public function __construct($offset, $length, $max) {
-        parent::__construct(
-            'file_chunk_out_of_bounds',
-            'offset='.$offset.' length='.$length.' max='.$max
-        );
+    public function __construct($file, $offset, $length, $max) {
+        parent::__construct($file, 'chunk_out_of_bounds', array('offset' => $offset, 'length' => $length, 'max' => $max));
     }
 }
 
 /**
  * File integrity check failed
  */
-class FileIntegrityCheckFailedException extends DetailedException {
+class FileIntegrityCheckFailedException extends FileException {
     /**
      * Constructor
      * 
+     * @param File $file
      * @param string $reason
      */
-    public function __construct($reason) {
-        parent::__construct(
-            'file_integrity_check_failed', // Message to give to the user
-            $reason
-        );
+    public function __construct($file, $reason) {
+        parent::__construct($file, 'integrity_check_failed', array('reason' => $reason));
     }
 }

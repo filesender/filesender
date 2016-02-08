@@ -45,7 +45,7 @@ class BadEmailException extends DetailedException {
     public function __construct($email) {
         parent::__construct(
             'bad_email', // Message to give to the user
-            $email // Real message to log
+            array('email' => $email) // Real message to log
         );
     }
 }
@@ -64,7 +64,7 @@ class BadIPFormatException extends DetailedException {
     public function __construct($ip, $protocol = null) {
         parent::__construct(
             $protocol == null ? 'bad_ip_format' :'bad_ip_format_'.$protocol, // Message to give to the user
-            $ip // Real message to log
+            array('ip' => $ip) // Real message to log
         );
     }
 }
@@ -82,7 +82,7 @@ class BadExpireException extends DetailedException {
     public function __construct($expire) {
         parent::__construct(
             'bad_expire', // Message to give to the user
-            $expire // Real message to log
+            array('expire' => $expire) // Real message to log
         );
     }
 }
@@ -99,7 +99,7 @@ class BadSizeFormatException extends DetailedException {
     public function __construct($size) {
         parent::__construct(
             'bad_size_format', // Message to give to the user
-            'size : '.$size // Details to log
+            array('size' => $size) // Details to log
         );
     }
 }
@@ -116,7 +116,7 @@ class BadLangCodeException extends DetailedException {
     public function __construct($code) {
         parent::__construct(
             'bad_lang_code', // Message to give to the user
-            'code : '.$code // Details to log
+            array('code' => $code) // Details to log
         );
     }
 }

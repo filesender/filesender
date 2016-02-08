@@ -554,4 +554,13 @@ class DBObject {
     public static function getClassName(){
         return get_called_class();
     }
+    
+    /**
+     * String caster
+     * 
+     * @return string
+     */
+    public function __toString() {
+        return static::getClassName().'#'.($this->id ? $this->id : 'unsaved');
+    }
 }

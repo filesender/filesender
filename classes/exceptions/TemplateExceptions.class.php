@@ -36,7 +36,7 @@ if (!defined('FILESENDER_BASE'))        // Require environment (fatal)
 /**
  * Unknown template exception
  */
-class TemplateNotFoundException extends LoggingException {
+class TemplateNotFoundException extends DetailedException {
     /**
      * Constructor
      * 
@@ -45,7 +45,7 @@ class TemplateNotFoundException extends LoggingException {
     public function __construct($id) {
         parent::__construct(
             'template_not_found', // Message to give to the user
-            'id = '.$id // Real message to log
+            array('id' => $id) // Real message to log
         );
     }
 }

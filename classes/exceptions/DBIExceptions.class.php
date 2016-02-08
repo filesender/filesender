@@ -53,7 +53,7 @@ class DBIConnexionException extends DetailedException {
 /**
  * Missing configuration parameter exception
  */
-class DBIConnexionMissingParameterException extends DBIConnexionException {
+class DBIConnexionMissingParameterException extends DetailedException {
     /**
      * Constructor
      * 
@@ -62,7 +62,7 @@ class DBIConnexionMissingParameterException extends DBIConnexionException {
     public function __construct($parameter) {
         parent::__construct(
             'dbi_missing_parameter',
-            'Parameter: '.$parameter
+            array('parameter' => $parameter)
         );
     }
 }

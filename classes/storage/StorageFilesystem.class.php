@@ -253,10 +253,10 @@ class StorageFilesystem {
                     $p .= $sub;
                     
                     if(!is_dir($p) && !mkdir($p))
-                        throw new StorageFilesystemCannotCreatePathException($p);
+                        throw new StorageFilesystemCannotCreatePathException($p, $file);
                     
                     if(!is_writable($p))
-                        throw new StorageFilesystemCannotWriteException($p);
+                        throw new StorageFilesystemCannotWriteException($p, $file);
                     
                     $p .= '/';
                 }
@@ -284,7 +284,7 @@ class StorageFilesystem {
         $file_path = self::buildPath($file).$file->uid;
         
         if(!file_exists($file_path))
-            throw new StorageFilesystemFileNotFoundException($file_path);
+            throw new StorageFilesystemFileNotFoundException($file_path, $file);
         
         // Open file for reading
         if($fh = fopen($file_path, 'rb')) {
@@ -301,7 +301,7 @@ class StorageFilesystem {
             
             return $chunk_data;
             
-        }else throw new CoreCannotReadFileException($file_path);
+        }else throw new StorageFilesystemCannotReadException($file_path, $file);
     }
     
     /**
@@ -347,7 +347,7 @@ class StorageFilesystem {
                 fflush($fh); // Flush file buffer before releasing lock
                 
                 flock($fh, LOCK_UN); // Unlock file
-            } else throw new CoreCannotWriteFileException($file_path.' (lock)');
+            } else throw new StorageFilesystemCannotWriteException($file_path.' (lock)', $file);
             
             // Close writer
             fclose($fh);
@@ -356,7 +356,7 @@ class StorageFilesystem {
                 'offset' => $offset,
                 'written' => $written
             );
-        }else throw new CoreCannotWriteFileException($file_path);
+        }else throw new StorageFilesystemCannotWriteException($file_path, $file);
     }
     
     /**
@@ -371,7 +371,7 @@ class StorageFilesystem {
         $size = filesize($file_path);
         
         if($size != $file->size)
-            throw new FileIntegrityCheckFailedException('Expected size was '.$file->size.' but size on disk is '.$size);
+            throw new FileIntegrityCheckFailedException($file, 'Expected size was '.$file->size.' but size on disk is '.$size);
     }
     
     /**
@@ -388,7 +388,7 @@ class StorageFilesystem {
         
         if(is_link($file_path)) {
             if(!unlink($file_path))
-                throw new CoreCannotDeleteFileException($file_path);
+                throw new StorageFilesystemCannotDeleteException($file_path, $file);
             
             return;
         }
@@ -400,11 +400,11 @@ class StorageFilesystem {
             exec($cmd, $out, $ret);
             
             if($ret)
-                throw new CoreCannotDeleteFileException($file_path);
+                throw new StorageFilesystemCannotDeleteException($file_path, $file);
             
         } else {
             if(!unlink($file_path))
-                throw new CoreCannotDeleteFileException($file_path);
+                throw new StorageFilesystemCannotDeleteException($file_path, $file);
         }
     }
     
@@ -462,7 +462,7 @@ class StorageFilesystem {
         
         // ... and copy file (removal up to caller), fail if couldn't copy
         if(!copy($source_path, $file_path))
-            throw new StorageFilesystemCannotWriteException($file_path);
+            throw new StorageFilesystemCannotWriteException($file_path, $file);
     }
     
     /**

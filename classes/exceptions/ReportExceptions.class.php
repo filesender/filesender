@@ -42,7 +42,7 @@ class ReportUnknownTargetTypeException extends DetailedException {
     public function __construct($type) {
         parent::__construct(
             'report_unknown_target_type', // Message to give to the user
-             $type // Real message to log
+             array('type' => $type) // Real message to log
         );
     }
 }
@@ -59,7 +59,7 @@ class ReportOwnershipRequiredException extends DetailedException {
     public function __construct($selector) {
         parent::__construct(
             'report_ownership_required', // Message to give to the user
-             $selector // Real message to log
+             array('selector' => $selector) // Real message to log
         );
     }
 }
@@ -76,7 +76,7 @@ class ReportUnknownFormatException extends DetailedException {
     public function __construct($format) {
         parent::__construct(
             'report_unknown_format', // Message to give to the user
-             $format // Real message to log
+             array('format' => $format) // Real message to log
         );
     }
 }
@@ -107,7 +107,7 @@ class ReportFormatNotAvailableException extends DetailedException {
     public function __construct($reason) {
         parent::__construct(
             'report_format_not_available', // Message to give to the user
-            'reason = '.$reason
+            array('reason' => $reason)
         );
     }
 }

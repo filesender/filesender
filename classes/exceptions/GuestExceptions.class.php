@@ -36,7 +36,7 @@ if (!defined('FILESENDER_BASE'))        // Require environment (fatal)
 /**
  * Unknown guest exception
  */
-class GuestNotFoundException extends LoggingException {
+class GuestNotFoundException extends DetailedException {
     /**
      * Constructor
      * 
@@ -45,7 +45,7 @@ class GuestNotFoundException extends LoggingException {
     public function __construct($selector) {
         parent::__construct(
             'guest_not_found', // Message to give to the user
-            $selector // Real message to log
+            array('selector' => $selector) // Real message to log
         );
     }
 }
@@ -62,7 +62,7 @@ class GuestBadStatusException extends DetailedException {
     public function __construct($status) {
         parent::__construct(
             'bad_guest_status', // Message to give to the user
-            'status : '.$status // Details to log
+            array('status' => $status) // Details to log
         );
     }
 }

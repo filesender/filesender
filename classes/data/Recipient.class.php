@@ -271,4 +271,13 @@ class Recipient extends DBObject {
             $this->options = $value;
         }else throw new PropertyAccessException($this, $property);
     }
+    
+    /**
+     * String caster
+     * 
+     * @return string
+     */
+    public function __toString() {
+        return static::getClassName().'#'.($this->id ? $this->id : 'unsaved').'('.($this->email ? $this->email : 'anonymous').')';
+    }
 }

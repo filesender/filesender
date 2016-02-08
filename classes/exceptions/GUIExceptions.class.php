@@ -45,7 +45,7 @@ class GUIUnknownPageException extends DetailedException {
     public function __construct($page) {
         parent::__construct(
             'unknown_page',
-            'page = '.$page
+            array('page' => $page)
         );
     }
 }
@@ -62,7 +62,7 @@ class GUIAccessForbiddenException extends DetailedException {
     public function __construct($page) {
         parent::__construct(
             'access_forbidden',
-            'page = '.$page
+            array('page' => $page)
         );
     }
 }
@@ -79,7 +79,7 @@ class GUIUnknownAdminSectionException extends DetailedException {
     public function __construct($section) {
         parent::__construct(
             'gui_unknown_admin_section',
-            'section = '.$section
+            array('section' => $section)
         );
     }
 }

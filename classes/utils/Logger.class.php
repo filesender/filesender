@@ -389,5 +389,7 @@ class Logger {
     public static function logActivity($logEvent, $target, $author = null){
         AuditLog::create($logEvent, $target, $author);
         StatLog::create($logEvent, $target);
+        
+        self::info('Event#'.$logEvent.' on '.(string)$target.($author ? ' by '.(string)$author : ''));
     }
 }

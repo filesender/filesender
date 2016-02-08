@@ -34,87 +34,102 @@ if (!defined('FILESENDER_BASE'))        // Require environment (fatal)
     die('Missing environment');
 
 /**
+ * Generic path related filesystem based storage exception
+ */
+class StorageFilesystemException extends DetailedException {
+    /**
+     * Constructor
+     * 
+     * @param string $msg_code message code to be used to present error
+     * @param string $path
+     * @param mixed $file
+     */
+    public function __construct($msg_code, $path, $file = null) {
+        $info = array('path' => $path);
+        
+        if($file) {
+            $info['file'] = (string)$file;
+            
+            if(is_object($file) && ($file instanceof $file))
+                $info['transfer'] = (sting)$file->transfer;
+        }
+        
+        parent::__construct('storage_filesystem_'.$msg_code, $info);
+    }
+}
+
+/**
  * Cannot create path exception
  */
-class StorageFilesystemCannotCreatePathException extends DetailedException {
+class StorageFilesystemCannotCreatePathException extends StorageFilesystemException {
     /**
      * Constructor
      * 
      * @param string $path
+     * @param File $file
      */
-    public function __construct($path) {
-        parent::__construct(
-            'storage_filesystem_cannot_create_path', // Message to give to the user
-            'path = '.$path // Details to log
-        );
+    public function __construct($path, $file = null) {
+        parent::__construct('cannot_create_path', $path, $file);
     }
 }
 
 /**
  * File not found
  */
-class StorageFilesystemFileNotFoundException extends DetailedException {
+class StorageFilesystemFileNotFoundException extends StorageFilesystemException {
     /**
      * Constructor
      * 
      * @param string $path
+     * @param File $file
      */
-    public function __construct($path) {
-        parent::__construct(
-            'storage_filesystem_file_not_found', // Message to give to the user
-            'path = '.$path // Details to log
-        );
+    public function __construct($path, $file = null) {
+        parent::__construct('file_not_found', $path, $file);
     }
 }
 
 /**
  * Cannot read exception
  */
-class StorageFilesystemCannotReadException extends DetailedException {
+class StorageFilesystemCannotReadException extends StorageFilesystemException {
     /**
      * Constructor
      * 
      * @param string $path
+     * @param File $file
      */
-    public function __construct($path) {
-        parent::__construct(
-            'storage_filesystem_cannot_read', // Message to give to the user
-            'path = '.$path // Details to log
-        );
+    public function __construct($path, $file = null) {
+        parent::__construct('cannot_read', $path, $file);
     }
 }
 
 /**
  * Cannot delete exception
  */
-class StorageFilesystemCannotDeleteException extends DetailedException {
+class StorageFilesystemCannotDeleteException extends StorageFilesystemException {
     /**
      * Constructor
      * 
      * @param string $path
+     * @param File $file
      */
-    public function __construct($path) {
-        parent::__construct(
-            'storage_filesystem_cannot_delete', // Message to give to the user
-            'path = '.$path // Details to log
-        );
+    public function __construct($path, $file = null) {
+        parent::__construct('cannot_delete', $path, $file);
     }
 }
 
 /**
  * Cannot write exception
  */
-class StorageFilesystemCannotWriteException extends DetailedException {
+class StorageFilesystemCannotWriteException extends StorageFilesystemException {
     /**
      * Constructor
      * 
      * @param string $path
+     * @param File $file
      */
-    public function __construct($path) {
-        parent::__construct(
-            'storage_filesystem_cannot_write', // Message to give to the user
-            'path = '.$path // Details to log
-        );
+    public function __construct($path, $file = null) {
+        parent::__construct('cannot_write', $path, $file);
     }
 }
 
@@ -130,7 +145,7 @@ class StorageFilesystemOutOfSpaceException extends DetailedException {
     public function __construct($needed_space, $free_space) {
         parent::__construct(
             'storage_filesystem_out_of_space', // Message to give to the user
-            'needed space = '.$needed_space.', free space = '.$free_space // Details to log
+            array('needed' => $needed_space, 'free' => $free_space) // Details to log
         );
     }
 }
@@ -147,7 +162,7 @@ class StorageFilesystemBadResolverTargetException extends DetailedException {
     public function __construct($what) {
         parent::__construct(
             'storage_filesystem_bad_resolver_target', // Message to give to the user
-            'what = '.str_replace(array("\n", "\t"), ' ', print_r($what, true))
+            array('what' => str_replace(array("\n", "\t"), ' ', print_r($what, true)))
         );
     }
 }
@@ -166,7 +181,7 @@ class StorageFilesystemCannotResolveException extends DetailedException {
     public function __construct($cmd, $ret, $out) {
         parent::__construct(
             'storage_filesystem_cannot_get_usage', // Message to give to the user
-            'cmd = '.$cmd.', ret = '.$ret.', out = '.implode('<nl>', $out) // Details to log
+            array('cmd' => $cmd, 'ret' => $ret, 'out' => implode('<nl>', $out)) // Details to log
         );
     }
 }
@@ -184,7 +199,7 @@ class StorageFilesystemBadResolverOutputException extends DetailedException {
     public function __construct($cmd, $line) {
         parent::__construct(
             'storage_filesystem_bad_usage_output', // Message to give to the user
-            'cmd = '.$cmd.', line = '.$line
+            array('cmd' => $cmd, 'line' => $line)
         );
     }
 }
