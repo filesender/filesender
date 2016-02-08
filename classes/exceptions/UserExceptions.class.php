@@ -45,7 +45,7 @@ class UserNotFoundException extends DetailedException {
     public function __construct($selector) {
         parent::__construct(
             'user_not_found', // Message to give to the user
-            $selector // Real message to log
+            array('selector' => $selector) // Real message to log
         );
     }
 }

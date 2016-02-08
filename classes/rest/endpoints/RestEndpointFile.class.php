@@ -289,7 +289,7 @@ class RestEndpointFile extends RestEndpoint {
             
             // Check that chunk offset is inside the file bounds
             if($offset + strlen($data) > $file->size)
-                throw new FileChunkOutOfBoundsException($offset, strlen($data), $file->size);
+                throw new FileChunkOutOfBoundsException($file, $offset, strlen($data), $file->size);
             
             // Write data to file
             $write_info = $file->writeChunk($data, $offset);

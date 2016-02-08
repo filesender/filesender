@@ -45,7 +45,7 @@ class TranslatableEmailNotFoundException extends DetailedException {
     public function __construct($selector) {
         parent::__construct(
             'translatable_email_not_found', // Message to give to the user
-            $selector // Real message to log
+            array('selector' => $selector) // Real message to log
         );
     }
 }
@@ -62,7 +62,7 @@ class TranslatableEmailUnknownContextException extends DetailedException {
     public function __construct($source) {
         parent::__construct(
             'translatable_email_unknown_context', // Message to give to the user
-            'source = '.$source // Real message to log
+            array('source' => $source) // Real message to log
         );
     }
 }

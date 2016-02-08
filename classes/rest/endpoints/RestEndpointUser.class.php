@@ -110,7 +110,7 @@ class RestEndpointUser extends RestEndpoint {
         if(!Auth::isAuthenticated()) throw new RestAuthenticationRequiredException();
         
         // ... and not guest
-        if(Auth::isGuest()) throw new RestOwnershipRequiredException('guest#'.AuthGuest::getGuest()->id, 'user_info');
+        if(Auth::isGuest()) throw new RestOwnershipRequiredException((string)AuthGuest::getGuest(), 'user_info');
         
         $user = Auth::user();
         

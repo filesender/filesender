@@ -49,7 +49,7 @@ class PropertyAccessException extends DetailedException {
         $name = is_object($object) ? get_class($object) : (string)$object;
         parent::__construct(
             'no_such_property', // Message to give to the user
-            'class='.$name.', property='.$property // Real message to log
+            array('class' => $name, 'property' => $property) // Real message to log
         );
     }
 }

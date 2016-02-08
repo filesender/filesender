@@ -483,7 +483,7 @@ class RestEndpointTransfer extends RestEndpoint {
                 
                 try {
                     $ok = call_user_func($validator, $transfer);
-                    if(is_bool($ok) && !$ok) throw new Exception();
+                    if(is_bool($ok) && !$ok) throw new Exception('no reason given');
                 } catch(Exception $e) { // Catch any, delete and re-throw as typed exception
                     $transfer->delete();
                     throw new TransferRejectedException($e->getMessage());

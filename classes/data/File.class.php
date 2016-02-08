@@ -153,7 +153,7 @@ class File extends DBObject
     public function beforeDelete() {
         Storage::deleteFile($this);
         
-        Logger::info('File#'.$this->id.' deleted');
+        Logger::info($this.' deleted');
     }
     
     /**
@@ -202,7 +202,7 @@ class File extends DBObject
         
         $res = Storage::writeChunk($this, $chunk, $offset);
         
-        Logger::info('File#'.$this->id.' chunk['.((int)$offset).'..'.((int)$offset + strlen($chunk)).'] written'.(Auth::isGuest() ? ' by guest: '.AuthGuest::getGuest()->email : ''));
+        Logger::info($this.' chunk['.((int)$offset).'..'.((int)$offset + strlen($chunk)).'] written'.(Auth::isGuest() ? ' by '.AuthGuest::getGuest() : ''));
         
         return $res;
     }
@@ -219,7 +219,7 @@ class File extends DBObject
         $this->save();
         
         Logger::logActivity(LogEventTypes::FILE_UPLOADED, $this);
-        Logger::info('File#'.$this->id.' fully uploaded, took '.$this->upload_time.'s');
+        Logger::info($this.' fully uploaded, took '.$this->upload_time.'s');
         
         return $r;
     }
@@ -297,8 +297,17 @@ class File extends DBObject
         }else if($property == 'size') {
             $this->size = (int)$value;
         }else if($property == 'sha1') {
-            if(!preg_match('`^[0-9a-f]{40}$`', $value)) throw new FileBadHashException($value);
+            if(!preg_match('`^[0-9a-f]{40}$`', $value)) throw new FileBadHashException($this, $value);
             $this->sha1 = (string)$value;
         }else throw new PropertyAccessException($this, $property);
+    }
+    
+    /**
+     * String caster
+     * 
+     * @return string
+     */
+    public function __toString() {
+        return static::getClassName().'#'.($this->id ? $this->id : 'unsaved').'('.$this->name.', '.$this->size.' bytes)';
     }
 }

@@ -45,7 +45,7 @@ class AuthSPMissingDelegationClassException extends DetailedException {
     public function __construct($name) {
         parent::__construct(
             'auth_sp_missing_delegation_class', // Message to give to the user
-            'class : '.$name // Details to log
+            array('class' => $name) // Details to log
         );
     }
 }
@@ -74,11 +74,13 @@ class AuthSPMissingAttributeException extends DetailedException {
      * @param string $name name of the attribute
      */
     public function __construct($name) {
-        parent::__construct(
-            'auth_sp_missing_attribute', // Message to give to the user
-            '',
-            'Attribute : '.$name // real message to log    
-        );
+        $info = array('attribute' => $name);
+        
+        $lid = 'auth_sp_attribute_'.$name.'_hint';
+        $hint = (string)Lang::tr($lid);
+        if($hint != '{'.$lid.'}') $info['hint'] = $hint;
+        
+        parent::__construct('auth_sp_missing_attribute', null, $info);
     }
 }
 
@@ -92,9 +94,12 @@ class AuthSPBadAttributeException extends DetailedException {
      * @param string $name name of the attribute
      */
     public function __construct($name) {
-        parent::__construct(
-            'auth_sp_bad_attribute', // Message to give to the user
-            'Attribute : '.$name // real message to log    
-        );
+        $info = array('attribute' => $name);
+        
+        $lid = 'auth_sp_attribute_'.$name.'_hint';
+        $hint = (string)Lang::tr($lid);
+        if($hint != '{'.$lid.'}') $info['hint'] = $hint;
+        
+        parent::__construct('auth_sp_bad_attribute', null, $info);
     }
 }

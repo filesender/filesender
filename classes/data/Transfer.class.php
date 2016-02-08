@@ -348,7 +348,7 @@ class Transfer extends DBObject {
         
         foreach(TranslatableEmail::fromContext($this) as $translatable_email) $translatable_email->delete();
         
-        Logger::info('Transfer#'.$this->id.' deleted');
+        Logger::info($this.' deleted');
     }
     
     /**
@@ -404,7 +404,7 @@ class Transfer extends DBObject {
                 Storage::deleteFile($file);
         }
         
-        Logger::info('Transfer#'.$this->id.' '.($manualy ? 'closed manually' : ' expired'));
+        Logger::info($this.' '.($manualy ? 'closed manually' : 'expired'));
     }
     
     /**
@@ -683,7 +683,7 @@ class Transfer extends DBObject {
         // Update local cache
         if(!is_null($this->filesCache)) $this->filesCache[$file->id] = $file;
         
-        Logger::info('File#'.$file->id.' ('.$file->name.', '.$file->size.' bytes) added to Transfer#'.$this->id);
+        Logger::info($file.' added to '.$this);
         
         return $file;
     }
@@ -702,7 +702,7 @@ class Transfer extends DBObject {
         // Update local cache
         if(!is_null($this->filesCache) && array_key_exists($file->id, $this->filesCache)) unset($this->filesCache[$file->id]);
         
-        Logger::info('File#'.$file->id.' ('.$file->name.', '.$file->size.' bytes) removed from Transfer#'.$this->id);
+        Logger::info($file.' removed from '.$this);
     }
     
     /**
@@ -729,7 +729,7 @@ class Transfer extends DBObject {
         // Update local cache
         if(!is_null($this->recipientsCache)) $this->recipientsCache[$recipient->id] = $recipient;
         
-        Logger::info('Recipient#'.$recipient->id.' ('.$recipient->email.') added to Transfer#'.$this->id);
+        Logger::info($recipient.' added to '.$this);
         
         return $recipient;
     }
@@ -763,7 +763,7 @@ class Transfer extends DBObject {
         // Update local cache
         if(!is_null($this->recipientsCache) && array_key_exists($recipient->id, $this->recipientsCache)) unset($this->recipientsCache[$recipient->id]);
         
-        Logger::info('Recipient#'.$recipient->id.' ('.$recipient->email.') removed from Transfer#'.$this->id);
+        Logger::info($recipient.' removed from '.$this);
     }
     
     /**
@@ -782,7 +782,7 @@ class Transfer extends DBObject {
         // Fail if any file not complete
         foreach($this->files as $file)
             if(!$file->upload_end)
-                throw new TransferFilesIncompleteException();
+                throw new TransferFilesIncompleteException($this);
         
         // Fail if no recipients
         if(!count($this->recipients))
@@ -837,7 +837,7 @@ class Transfer extends DBObject {
             Logger::logActivity(LogEventTypes::TRANSFER_SENT, $this, Auth::isGuest() ? AuthGuest::getGuest() : null);
         }
         
-        Logger::info('Transfer#'.$this->id.' made available'.(Auth::isGuest() ? ' by guest: '.AuthGuest::getGuest()->email : '').', took '.$this->made_available_time.'s');
+        Logger::info($this.' made available'.(Auth::isGuest() ? ' by '.AuthGuest::getGuest() : '').', took '.$this->made_available_time.'s');
     }
     
     /**
@@ -854,7 +854,7 @@ class Transfer extends DBObject {
         foreach($recipients as $recipient)
             $this->sendToRecipient('transfer_reminder', $recipient);
         
-        Logger::info('Transfer#'.$this->id.' reminded to recipient(s)');
+        Logger::info($this.' reminded to recipient(s)');
     }
     
     /**
@@ -928,7 +928,7 @@ class Transfer extends DBObject {
         }
         
         Logger::logActivity(LogEventTypes::TRANSFER_STARTED, $this,Auth::isGuest()?AuthGuest::getGuest():null);
-        Logger::info('Transfer#'.$this->id.' started'.(Auth::isGuest() ? ' by guest: '.AuthGuest::getGuest()->email : ''));
+        Logger::info($this.' started'.(Auth::isGuest() ? ' by '.AuthGuest::getGuest() : ''));
     }
     
     /**
@@ -940,7 +940,7 @@ class Transfer extends DBObject {
         $this->status = TransferStatuses::UPLOADING;
         $this->save();
         Logger::logActivity(LogEventTypes::UPLOAD_STARTED, $this);
-        Logger::info('Transfer#'.$this->id.' upload started');
+        Logger::info($this.' upload started');
     }
     
     /**
@@ -957,7 +957,7 @@ class Transfer extends DBObject {
         $pattern = Config::get('allow_transfer_expiry_date_extension');
         
         if(!$pattern) {
-            if($throw) throw new TransferExpiryExtensionNotAllowedException();
+            if($throw) throw new TransferExpiryExtensionNotAllowedException($this);
             return 0;
         }
         
@@ -996,7 +996,7 @@ class Transfer extends DBObject {
         $duration = $this->expiryDateExtension(); // throws
         
         if(!$duration) // Should not happend unless config is garbled
-            throw new TransferExpiryExtensionNotAllowedException();
+            throw new TransferExpiryExtensionNotAllowedException($this);
         
         $this->expires += $duration * 24 * 3600;
         
@@ -1023,6 +1023,6 @@ class Transfer extends DBObject {
         
         $mail->send();
         
-        Logger::info('Mail#'.$translation_id.' sent to Recipient#'.$recipient->id);
+        Logger::info('Mail#'.$translation_id.' sent to '.$recipient);
     }
 }

@@ -300,7 +300,7 @@ class Guest extends DBObject {
         // Send receipt to owner
         TranslatableEmail::quickSend('guest_created_receipt', $this->owner, $this);
         
-        Logger::info('Guest#'.$this->id.' ('.$this->email.') created');
+        Logger::info($this.' created');
     }
     
     /**
@@ -309,7 +309,7 @@ class Guest extends DBObject {
     public function remind() {
         TranslatableEmail::quickSend('guest_reminder', $this);
         
-        Logger::info('Guest#'.$this->id.' ('.$this->email.') reminded');
+        Logger::info($this.' reminded');
     }
     
     /**
@@ -331,7 +331,7 @@ class Guest extends DBObject {
         // Sending notification to recipient
         TranslatableEmail::quickSend($manualy ? 'guest_cancelled' : 'guest_expired', $this);
         
-        Logger::info('Guest#'.$this->id.' ('.$this->email.') '.($manualy ? 'removed' : 'expired'));
+        Logger::info($this.' '.($manualy ? 'removed' : 'expired'));
     }
     
     
@@ -510,5 +510,14 @@ class Guest extends DBObject {
             $this->$property = (string)$value;
             
         }else throw new PropertyAccessException($this, $property);
+    }
+    
+    /**
+     * String caster
+     * 
+     * @return string
+     */
+    public function __toString() {
+        return static::getClassName().'#'.($this->id ? $this->id : 'unsaved').'('.$this->email.')';
     }
 }

@@ -53,13 +53,13 @@ StatLog::createGlobal(LogEventTypes::GLOBAL_AVAILABLE_TRANSFERS, count(Transfer:
 // Close expired transfers
 foreach(Transfer::allExpired() as $transfer) {
     if($transfer->status == TransferStatuses::CLOSED) continue;
-    Logger::info('Transfer#'.$transfer->id.' expired, closing it');
+    Logger::info($transfer.' expired, closing it');
     $transfer->close(false);
 }
 
 // Delete failed transfers
 foreach(Transfer::allFailed() as $transfer) {
-    Logger::info('Transfer#'.$transfer->id.' failed, deleting it');
+    Logger::info($transfer.' failed, deleting it');
     $transfer->delete();
 }
 
@@ -67,13 +67,13 @@ foreach(Transfer::allFailed() as $transfer) {
 foreach(Guest::allExpired() as $guest) {
     if($guest->status == GuestStatuses::CLOSED) continue;
     if($guest->hasOption(GuestOptions::DOES_NOT_EXPIRE)) continue;
-    Logger::info('Guest#'.$guest->id.' expired, closing it');
+    Logger::info($guest.' expired, closing it');
     $guest->close(false);
 }
 
 // Delete expired audit logs and related data
 foreach(Transfer::allExpiredAuditlogs() as $transfer) {
-    Logger::info('Transfer#'.$transfer->id.' auditlogs expired, deleting them and deleting transfer data');
+    Logger::info($transfer.' auditlogs expired, deleting them and deleting transfer data');
     AuditLog::clean($transfer);
     $transfer->delete();
 }
@@ -82,7 +82,7 @@ foreach(Transfer::allExpiredAuditlogs() as $transfer) {
 foreach(Transfer::all(Transfer::AVAILABLE) as $transfer) {
     if(!$transfer->hasOption(TransferOptions::EMAIL_DAILY_STATISTICS)) continue;
     
-    Logger::info('Sending daily report for Transfer#'.$transfer->id);
+    Logger::info('Sending daily report for '.$transfer);
     
     $start_time = time() - 24 * 3600;
     $events = array();

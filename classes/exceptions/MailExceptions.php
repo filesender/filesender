@@ -30,43 +30,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
-/**
- * Invalid address format exception
- * @todo rename
- */
-class InvalidAddressFormatException extends DetailedException {
-    /**
-     * Constructor
-     * 
-     * @param string $selector column used to select user
-     */
-    public function __construct($selector) {
-        parent::__construct(
-            'invalid_address_format', // Message to give to the user
-            $selector // Real message to log
-        );
-    }
-}
-
-
-/**
- * Invalid address format exception
- * @todo rename
- */
-class NoAddressesFoundException extends DetailedException {
-    /**
-     * Constructor
-     * 
-     * @param string $selector column used to select user
-     */
-    public function __construct() {
-        parent::__construct(
-            'no_addresses_found' // Message to give to the user
-        );
-    }
-}
-
 /**
  * Bad attachment disposition
  */
@@ -79,7 +42,7 @@ class MailAttachmentBadDispositionException extends DetailedException {
     public function __construct($disposition) {
         parent::__construct(
             'mail_attachment_bad_disposition', // Message to give to the user
-            'disposition = '.$disposition // Real message to log
+            array('disposition' => $disposition) // Real message to log
         );
     }
 }
@@ -96,7 +59,7 @@ class MailAttachmentBadTransferEncodingException extends DetailedException {
     public function __construct($transfer_encoding) {
         parent::__construct(
             'mail_attachment_bad_transfer_encoding', // Message to give to the user
-            'transfer_encoding = '.$transfer_encoding // Real message to log
+            array('transfer_encoding' => $transfer_encoding) // Real message to log
         );
     }
 }
@@ -113,7 +76,7 @@ class MailAttachmentNoContentException extends DetailedException {
     public function __construct($path) {
         parent::__construct(
             'mail_attachment_no_content', // Message to give to the user
-            'path = '.$path // Real message to log
+            array('path' => $path) // Real message to log
         );
     }
 }

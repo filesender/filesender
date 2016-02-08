@@ -272,7 +272,7 @@ function downloadSingleFile($transfer, $recipient, $file_id) {
     header('Expires: 0');
     
     if ($ranges) {
-        Logger::info('User restarted download of File#' . $file->id . ' from offset ' . $ranges[0]['start']);
+        Logger::info('User restarted download of '.$file.' from offset '.$ranges[0]['start']);
         
         Logger::logActivity(LogEventTypes::DOWNLOAD_RESUMED, $file);
         
@@ -317,7 +317,7 @@ function downloadSingleFile($transfer, $recipient, $file_id) {
         header('Accept-Ranges: bytes');
 
         // Read data (no range means all file)
-        Logger::info('User started to download file#' . $file->id);
+        Logger::info('User started to download '.$file);
         
         Logger::logActivity(LogEventTypes::DOWNLOAD_STARTED, $file, $recipient);
         

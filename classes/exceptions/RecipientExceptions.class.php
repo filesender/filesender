@@ -36,7 +36,7 @@ if (!defined('FILESENDER_BASE'))        // Require environment (fatal)
 /**
  * Unknown recipient exception
  */
-class RecipientNotFoundException extends LoggingException {
+class RecipientNotFoundException extends DetailedException {
     /**
      * Constructor
      * 
@@ -45,13 +45,10 @@ class RecipientNotFoundException extends LoggingException {
     public function __construct($selector) {
         parent::__construct(
             'recipient_not_found', // Message to give to the user
-            $selector // Real message to log
+            array('selector' => $selector) // Real message to log
         );
     }
 }
-
-
-
 
 /**
  * Invalid recipeint exception
@@ -65,7 +62,7 @@ class InvalidRecipientException extends DetailedException {
     public function __construct($selector) {
         parent::__construct(
             'invalid_recipient', // Message to give to the user
-            $selector // Real message to log
+            array('selector' => $selector) // Real message to log
         );
     }
 }

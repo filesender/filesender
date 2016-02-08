@@ -57,7 +57,7 @@ class TokenHasBadFormatException extends DetailedException {
     public function __construct($token) {
         parent::__construct(
             'token_has_bad_format', // Message to give to the user
-            'token : '.$token // Details to log
+            array('token' => $token) // Details to log
         );
     }
 }

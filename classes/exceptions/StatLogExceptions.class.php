@@ -42,7 +42,7 @@ class StatLogNotFoundException extends DetailedException {
     public function __construct($selector) {
         parent::__construct(
             'statlog_not_found', // Message to give to the user
-            $selector // Real message to log
+            array('selector' => $selector) // Real message to log
         );
     }
 }
@@ -59,7 +59,7 @@ class StatLogUnknownEventException extends DetailedException {
     public function __construct($selector) {
         parent::__construct(
             'statlog_unknown_event', // Message to give to the user
-            $selector // Real message to log
+            array('selector' => $selector) // Real message to log
         );
     }
 }
