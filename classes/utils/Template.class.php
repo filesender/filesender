@@ -107,17 +107,17 @@ class Template {
         
         // Config syntax
         $content = preg_replace_callback('`\{(cfg|conf|config):([^}]+)\}`', function($m) {
-            return Config::get($m[2]);
+            return Utilities::sanitizeOutput(Config::get($m[2]));
         }, $content);
         
         // Image syntax
         $content = preg_replace_callback('`\{(img|image):([^}]+)\}`', function($m) {
-            return GUI::path('res/images/'.$m[2]);
+            return Utilities::sanitizeOutput(GUI::path('res/images/'.$m[2]));
         }, $content);
         
         // Path syntax
         $content = preg_replace_callback('`\{(path):([^}]*)\}`', function($m) {
-            return GUI::path($m[2]);
+            return Utilities::sanitizeOutput(GUI::path($m[2]));
         }, $content);
         
         // Add context as a html comment if required
