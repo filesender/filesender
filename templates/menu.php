@@ -53,12 +53,12 @@ $pagemenuitem = function($page) {
             if (Auth::isAuthenticated() && Auth::isSP()) {
                 $url = AuthSP::logoffURL();
                 if($url)
-                    echo '<li><a href="'.$url.'" id="topmenu_logoff">'.Lang::tr('logoff').'</a></li>';
+                    echo '<li><a href="'.Utilities::sanitizeOutput($url).'" id="topmenu_logoff">'.Lang::tr('logoff').'</a></li>';
             }else if (!Auth::isGuest()){
                 if(Config::get('auth_sp_embedded')) {
                     $menupage('logon');
                 }else{
-                    echo '<li><a href="'.AuthSP::logonURL().'" id="topmenu_logon">'.Lang::tr('logon').'</a></li>';
+                    echo '<li><a href="'.Utilities::sanitizeOutput(AuthSP::logonURL()).'" id="topmenu_logon">'.Lang::tr('logon').'</a></li>';
                 }
             }
         ?>
