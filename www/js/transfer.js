@@ -538,8 +538,8 @@ window.filesender.transfer = function() {
                 dcnt++;
             }
         }
-        avg_count /= pcnt;
-        avg_duration /= dcnt;
+        if(pcnt) avg_count /= pcnt;
+        if(dcnt) avg_duration /= dcnt;
         
         var way_too_late = false;
         
@@ -634,10 +634,10 @@ window.filesender.transfer = function() {
      */
     this.reportProgress = function(file, complete) {
         var now = (new Date()).getTime();
-        if(!complete && this.progress_reported && this.progress_reported > (now - 1000))
+        if(!complete && file.progress_reported && file.progress_reported > (now - 1000))
             return; // No need to report progress more than 1 time per sec (especially if fine_progress)
         
-        this.progress_reported = now;
+        file.progress_reported = now;
         
         if(complete && file.status == 'done') return; // Already reported
         
@@ -652,12 +652,14 @@ window.filesender.transfer = function() {
         
         if (complete) {
             var transfer = this;
-            filesender.client.fileComplete(file, undefined, function(data) {
-                transfer.updateFileInRestartTracker(file);
-                
-                if (transfer.onprogress)
-                    transfer.onprogress.call(transfer, file, true);
-            });
+            window.setTimeout(function() {
+                filesender.client.fileComplete(file, undefined, function(data) {
+                    transfer.updateFileInRestartTracker(file);
+                    
+                    if (transfer.onprogress)
+                        transfer.onprogress.call(transfer, file, true);
+                });
+            }, 1000);
         } else if (this.onprogress) {
             this.updateFileInRestartTracker(file);
             this.onprogress.call(this, file, false);
@@ -677,13 +679,14 @@ window.filesender.transfer = function() {
         filesender.ui.log('Transfer ' + this.id + ' (' + this.size + ' bytes) complete, took ' + (time / 1000) + 's');
         
         var transfer = this;
-        
-        filesender.client.transferComplete(this, undefined, function(data) {
-            transfer.removeFromRestartTracker();
-            
-            if (transfer.oncomplete)
-                transfer.oncomplete.call(transfer, time);
-        });
+        window.setTimeout(function() {
+            filesender.client.transferComplete(transfer, undefined, function(data) {
+                transfer.removeFromRestartTracker();
+                
+                if (transfer.oncomplete)
+                    transfer.oncomplete.call(transfer, time);
+            });
+        }, 2000);
     };
     
     /**
@@ -871,6 +874,12 @@ window.filesender.transfer = function() {
         if(state && !this.maintenance_status) {
             this.maintenance_status = this.status;
             this.status = 'maintenance';
+            
+            // Wipe watchdog as timings won't be relevant upon restart
+            for(var id in this.watchdog_processes) {
+                this.watchdog_processes[id].count = 0;
+                this.watchdog_processes[id].durations = [];
+            }
         }
     };
     
