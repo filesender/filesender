@@ -253,12 +253,15 @@ window.filesender.terasender = {
         
         file.fine_progress = done ? file.size : file.min_uploaded_offset + fine_progress;
         
-        this.transfer.reportProgress(file, done);
+        var t = this;
+        var complete = done ? function() {
+            if(!chunks_pending && !workers_running) { // Notify all done
+                t.transfer.reportComplete();
+                t.status = 'done';
+            }
+        } : false;
         
-        if(!chunks_pending && !workers_running) { // Notify all done
-            this.transfer.reportComplete();
-            this.status = 'done';
-        }
+        this.transfer.reportProgress(file, complete);
     },
     
     /**
