@@ -368,6 +368,7 @@ class StorageFilesystem {
         self::setup();
         
         $file_path = self::buildPath($file).$file->uid;
+        clearstatcache(true, $file_path);
         $size = filesize($file_path);
         
         if($size != $file->size)

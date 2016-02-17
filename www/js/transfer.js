@@ -630,7 +630,7 @@ window.filesender.transfer = function() {
      * Report progress
      * 
      * @param object file
-     * @param bool complete is file done
+     * @param callable complete is file done
      */
     this.reportProgress = function(file, complete) {
         var now = (new Date()).getTime();
@@ -658,6 +658,8 @@ window.filesender.transfer = function() {
                     
                     if (transfer.onprogress)
                         transfer.onprogress.call(transfer, file, true);
+                    
+                    complete();
                 });
             }, 1000);
         } else if (this.onprogress) {
@@ -929,16 +931,18 @@ window.filesender.transfer = function() {
                 transfer.recordUploadedInWatchdog('main');
                 
                 if (last) { // File done
-                    transfer.reportProgress(file, true);
+                    transfer.reportProgress(file, function() {
+                        if(transfer.file_index >= transfer.files.length)
+                            transfer.reportComplete();                            
+                    });
+                    
+                    
                 } else {
                     transfer.reportProgress(file);
                 }
                 
-                if(! last || transfer.file_index < transfer.files.length) {
+                if(!last || transfer.file_index < transfer.files.length)
                     transfer.uploadChunk();
-                } else {
-                    transfer.reportComplete();
-                }
             },
             function(error) {
                 transfer.reportError(error);
