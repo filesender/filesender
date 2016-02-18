@@ -661,7 +661,7 @@ window.filesender.transfer = function() {
                     
                     complete();
                 });
-            }, 1000);
+            }, 750);
         } else if (this.onprogress) {
             this.updateFileInRestartTracker(file);
             this.onprogress.call(this, file, false);
@@ -688,7 +688,7 @@ window.filesender.transfer = function() {
                 if (transfer.oncomplete)
                     transfer.oncomplete.call(transfer, time);
             });
-        }, 2000);
+        }, 1500);
     };
     
     /**
