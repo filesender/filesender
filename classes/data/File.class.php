@@ -137,10 +137,11 @@ class File extends DBObject
         $file->transfer_id = $transfer->id;
         
         // Generate uid until it is indeed unique
-        $file->uid = Utilities::generateUID(function($uid) {
+        $file->uid = Utilities::generateUID(function($uid, $tries) {
             $statement = DBI::prepare('SELECT * FROM '.File::getDBTable().' WHERE uid = :uid');
             $statement->execute(array(':uid' => $uid));
             $data = $statement->fetch();
+            if(!$data) Logger::info('File uid generation took '.$tries.' tries');
             return !$data;
         });
         

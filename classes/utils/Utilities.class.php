@@ -68,7 +68,7 @@ class Utilities {
             do {
                 $uid = self::generateUID();
                 $tries++;
-            } while(!call_user_func($unicity_checker, $uid) && ($tries <= $max_tries));
+            } while(!call_user_func($unicity_checker, $uid, $tries) && ($tries <= $max_tries));
             
             // Fail if max tries reached
             if($tries > $max_tries)
