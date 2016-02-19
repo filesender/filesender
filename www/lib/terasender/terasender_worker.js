@@ -70,7 +70,7 @@ var terasender_worker = {
             !this.job.chunk.end ||
             isNaN(this.job.chunk.end) ||
             isNaN(this.job.chunk.start) ||
-            (this.job.chunk.end <= this.job.chunk.starte)
+            (this.job.chunk.end <= this.job.chunk.start)
         ) {
             this.error({message: 'bad_chunk_boundaries'});
             return;

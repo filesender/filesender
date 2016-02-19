@@ -209,22 +209,17 @@ window.filesender.terasender = {
      */
     evalProgress: function(worker_id, job, ratio) {
         var file = null;
-        var chunks_pending = false;
-        for(var i=0; i<this.transfer.files.length; i++) {
+        for(var i=0; i<this.transfer.files.length; i++)
             if(this.transfer.files[i].id == job.file.id)
                 file = this.transfer.files[i];
-            
-            if(this.transfer.files[i].uploaded < this.transfer.files[i].size)
-                chunks_pending = true;
-        }
         
         if(!file) {
             this.error({message: 'unknown_file', details: {id: job.file.id}});
             this.stop();
+            return;
         }
         
-        var workers_on_same_file = 0;
-        var workers_running = 0;
+        var workers_on_same_file = false;
         var min_offset = file.uploaded;
         var fine_progress = 0;
         
@@ -242,23 +237,33 @@ window.filesender.terasender = {
                 
             if(this.workers[i].id == worker_id) continue;
             
-            workers_running++;
             if(this.workers[i].file_id == job.file.id)
-                workers_on_same_file++;
+                workers_on_same_file = true;
         }
         
         file.min_uploaded_offset = Math.max(0, min_offset - filesender.config.upload_chunk_size);
         
-        var done = (file.uploaded >= file.size) && (workers_on_same_file == 0);
+        var done = (file.uploaded >= file.size) && !workers_on_same_file;
         
         file.fine_progress = done ? file.size : file.min_uploaded_offset + fine_progress;
         
         var t = this;
         var complete = done ? function() {
-            if(!chunks_pending && !workers_running) { // Notify all done
-                t.transfer.reportComplete();
-                t.status = 'done';
-            }
+            var chunks_pending = false;
+            for(var i=0; i<t.transfer.files.length; i++)
+                if(t.transfer.files[i].uploaded < t.transfer.files[i].size)
+                    chunks_pending = true;
+            
+            var workers_running = false;
+            for(var i=0; i<t.workers.length; i++)
+                if(t.workers[i].status == 'running')
+                    workers_running = true;
+            
+            if(chunks_pending || workers_running) return;
+            
+            // Notify all done
+            t.transfer.reportComplete();
+            t.status = 'done';
         } : false;
         
         this.transfer.reportProgress(file, complete);
