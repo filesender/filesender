@@ -70,7 +70,7 @@ class AuthRemoteSignatureCheckFailedException extends DetailedException {
                 'secret' => $secret,
                 'received_signature' => $received_signature,
                 'signature' => $signature
-            );
+            )
         );
     }
 }
