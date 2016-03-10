@@ -52,15 +52,14 @@ if(!session_id()) {
         Config::get('force_ssl') || Utilities::httpsInUse(),    // It uses secure mode if ssl forced or in use
         true                                                    // and is httpOnly (not reachable through javascript)
     );
-        
-    session_start();            // Start the session
-    $_SESSION['valid'] = true;  // Set session as valid TODO do we we still need this ?
 }
 
 
 // Ensure HTTPS if needed
 GUI::forceHTTPS();
 
+session_start();            // Start the session
+$_SESSION['valid'] = true;  // Set session as valid TODO do we we still need this ?
 // Handle magic quoting (TODO maybe deprecated now ?)
 if(get_magic_quotes_gpc()) {
     $_POST = array_map('stripslashes', $_POST);
