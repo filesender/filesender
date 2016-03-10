@@ -206,7 +206,7 @@ class AuthSPSaml {
             
             self::$simplesamlphp_auth_simple = new SimpleSAML_Auth_Simple(self::$config['authentication_source']);
             
-            $session_data = $_SESSION;
+            $session_data = isset($_SESSION) ? $_SESSION : array();
             self::$simplesamlphp_auth_simple->isAuthenticated();
             foreach($session_data as $k => $v) $_SESSION[$k] = $v;
         }
