@@ -451,26 +451,7 @@ filesender.ui.startUpload = function() {
             $('<p />').appendTo(p).html(lang.tr('done_uploading_guest').out());
         }
         
-        var autoclose = 15; // seconds
-        var btnpane = p.closest('.ui-dialog').find('.ui-dialog-buttonpane .ui-dialog-buttonset');
-        
-        var txt = lang.tr('dialog_autoclose').replace({seconds: '<span class="seconds">' + autoclose + '</span>'}).out();
-        var seconds = $('<span class="autoclose" />').prependTo(btnpane).html(txt).find('.seconds');
-        
-        var cltimer = window.setTimeout(close, autoclose * 1000);
-        var cntimer = window.setInterval(function() {
-            if(!autoclose) return;
-            
-            autoclose--;
-            seconds.text(autoclose);
-            
-            if(!autoclose) close();
-        }, 1000);
-        
         if(t) t.on('click', function() {
-            window.clearTimeout(cltimer);
-            window.clearInterval(cntimer);
-            seconds.closest('.autoclose').remove();
             $(this).focus().select();
         });
     };
