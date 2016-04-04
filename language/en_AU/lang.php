@@ -162,7 +162,6 @@ $lang['guest'] = 'Guest';
 $lang['quota_usage'] = '{size:used} out of {size:total} used, {size:available} remaining';
 $lang['host_quota'] = 'Host quota';
 $lang['user_quota'] = 'User quota';
-$lang['dialog_autoclose'] = 'Dialog will close in {seconds} seconds';
 $lang['extend'] = 'Extend';
 $lang['extend_and_remind'] = 'Extend and send reminder';
 $lang['translate_to'] = 'Translate to :';
