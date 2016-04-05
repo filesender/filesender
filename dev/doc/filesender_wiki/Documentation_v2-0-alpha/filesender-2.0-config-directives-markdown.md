@@ -1090,11 +1090,14 @@ User language detection is done in the following order:
 * __default:__  array('type' => 'file', 'path' => FILESENDER_BASE.'/log/', 'rotate' => 'hourly'))
 * __available:__ since version 2.0
 * __1.x name:__
-* __comment:__ if you define your own log_facilities, you will overwrite the default setting.  Make sure to include all log targets you wish to log to.
+* __comment:__ 
+
+
+<span style="background-color:orange">if you define your own log_facilities, you will overwrite the default setting.  Make sure to include all log targets you wish to log to.
 * __*General format of log target:*__ array(('type' => string, <attribute1 => <value>, <attribute2> => <value>
 * __*Standard parameters for all options:*__
 	* __'level' (optional):*__ restricts loglevel of current facility.  Permissible values: debug, warning, info, error
-	* __'process' (optional): allows you to separate logs from different parts of FileSender into separate logfiles, for example the REST logfile gets huge.  Permissible values: <span style="background-color:orange">CLI, GUI, REST, WEB, CRON, FEEDBACK, MISC, INSTALL, UPGRADE.  Comma-separated list.</style>
+	* __'process' (optional): allows you to separate logs from different parts of FileSender into separate logfiles, for example the REST logfile gets huge.  Permissible values: CLI, GUI, REST, WEB, CRON, FEEDBACK, MISC, INSTALL, UPGRADE.  Comma-separated list.
 	* __'
 *__*Available targets:*__ 
 	* __'type' => 'file'__ logs to a file.  You must specify a path.  You can optionally specify log file rotation with 'rotate' => '<value>', where value can be hourly, daily, weekly, monthly, yearly. 
@@ -1105,6 +1108,28 @@ User language detection is done in the following order:
 examples for tpye file with different log rotations
 examles for type syslog
 
+OR 
+Array( array ( type => String (errorlog,syslog,file,callable) path => String rotate => String ) )
+mandatory: no
+type: array of arrays.  Each one is definition of a target.  Each target has a type and if needed optional parameters.
+default: type file.  
+Note: if you define your own, it will _overwrite_ the default setting, not add it to the array.  If you want to keep basic logging and add syslog you must add _both_.
+array (
+    'type' => 'file', (permissible values?) (file, syslog, error_log (log using default php facility, puts logs in apache error logs, callable
+    'path' => '<something>/logs/'
+    'rotate' => hourly (permissible values?) (
+' process' => CLI, GUI or REST (can ask to only get logs from specific parts of FileSender, so you can separate your logs between different componentes.  Maybe hourly logs with REST service (they get huge)
+
+mandatory parameter is 'type'.  Permissible values file, syslog, error_log
+
+
+
+
+type syslog.  indent, facility.  Facility sets the syslog facility used.  Standard PHP syslog function parameters 
+
+callable (advanced): "I give you something you can call to log".  There is one mandatory parameter "callback" which must be a php function.  That will be called every time you want to log something. Level and process can be set as well.  When it's called it will get the message to log and the current process.  1st argument will be message, 2nd argument process type.  Can name them A and B.  CAn be useful if you're searching for a particular error or for example use remote log facility.  Search for particular error: write specific function to catch specific errors and drop an email when it happens.
+
+different options for different types.</style>
 	
 ###maintenance
 * __description:__ when true, switches the FileSender instance in maintenance mode.  This allows to interrupt the service for a database upgrade or webserver restart without breaking ongoing uploads.
