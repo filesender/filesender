@@ -1,9 +1,7 @@
 
 #How to read this document
 ---
-* 22 October 2015: I'm now mostly done with moving the information from the old page to this page.  Most of the directives have been checked against the current code and in a live installation.  The bits marked in orange need to be double checked or finished.
-* 18 September 2015: I'm in the process of moving this page from the WYSIWYMG editor to markdown syntax.  This is the markdown page.  If you are missing a directive, consult the old page [Configuration directives v2-0-alpha old](https://www.assembla.com/spaces/file_sender/wiki/Configuration_directives_v2-0-alpha_old) where it most likely can be found.
-* 17 September 2015: this document is a work in progress.  If you are keen on seeing FileSender 2.0 released offer to help with (testing) the documentation.
+* This document is a work in progress.  If you are keen on seeing FileSender 2.0 released offer to help with (testing) the documentation.
 * mandatory configuration settings are <span style="background-color:red">marked in red</style>
 * sections <span style="background-color:orange">marked in orange</style> need to be double checked.
 
@@ -143,6 +141,7 @@
 
 ##Other
 * [host_quota](#host_quota)
+* [config_overrides (experimental feature, not tested)](#config_overrides)
 
 
 ---
@@ -1251,6 +1250,22 @@ array (idApp => secret(string), isAdmin(bool), acl (array (endpoint(ou *) => boo
 * __1.x name:__
 * __comment:__
 
+###config_overrides
+* experimental feature in 2.0, not tested
+* __description:__ <span style="background-color:orange">In version 2.0 you can create virtual FileSender instances (see the administrator guide.  Todo: write how to do this in the admin guide!)</style>.  With the config_overrides directive you specify the list of parameters an admin for a virtual FileSender instance you can override from admin interface.  When you set this parameter a "Config" tab becomes visible in the Admin tab in your FileSender UI. If you have one instance you can use this to separate roles between system admin and filesender admin.  You can also use this to automate FileSender virtual instance deployment.
+* __mandatory:__ no
+* __type:__ array of key-value pairs
+* __default:__ 0, null, empty string: you won't get the config tab in the admin interface.  Any previously done override will be ignored.  They're not lost but no longer applied.
+* __available:__ since version 2.0
+* __1.x name:__
+* __comment:__ example:
+	* $config['config_overrides'] = array( 'site_name_in_header' => 'bool', 'site_name' =&gt; array('type' =&gt; 'string', 'validator' =&gt; 'is_string'), 'terasender_start_mode' =&gt; array('single', 'multiple'), );
+
+	In this example the "site_name_in_header" is a checkbox in the UI.  For the override "site_name", type string: displays a text field, and runs validator "is_string".  You can use existing validators or any other function. The override "terasender_start_mode" displays a dropdown in which you can choose from different predefined values.  
+
+Changes are saved in config_overrides.json in the config directory.  The config.php file is NOT modified.  This keeps overrides separated from the site config.  is_string, is_numeric (standard php validators) or a function of your own which returns a boolean indicating if the value is good or not.  
+
+ 
 
 ###
 * __description:__ 
