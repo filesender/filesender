@@ -223,6 +223,7 @@ class RestServer {
             if(!method_exists($handler, $method)) throw new RestException('rest_method_not_implemented', 501);
             
             if(
+                !AuthRemote::isAuthenticated() &&
                 in_array($method, array('post', 'put', 'delete')) &&
                 $handler->requireSecurityTokenMatch($method, $path) &&
                 !$security_token_matches

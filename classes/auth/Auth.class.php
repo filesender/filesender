@@ -99,6 +99,9 @@ class Auth {
                         self::$attributes = AuthRemote::attributes();
                         if(AuthRemote::application() && AuthRemote::isAdmin()) self::$isAdmin = true;
                         self::$type = 'remote';
+                        self::$attributes = array(
+                            'uid' => AuthRemote::application()->name,
+                        );
                     }
                     
                 }else if(AuthSP::isAuthenticated()) { // SP
