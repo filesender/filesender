@@ -78,13 +78,14 @@ class RestEndpointGuest extends RestEndpoint {
      *  /guest/17 : info about guest with id 17
      * 
      * @param int $id guest id to get info about
+     * @param string $extra extra elements to retrieve, such as transfers
      * 
      * @return mixed
      * 
      * @throws RestAuthenticationRequiredException
      * @throws RestOwnershipRequiredException
      */
-    public function get($id = null) {
+    public function get($id = null, $extra = null) {
         // Need to be authenticated
         if(!Auth::isAuthenticated()) throw new RestAuthenticationRequiredException();
         
@@ -93,11 +94,21 @@ class RestEndpointGuest extends RestEndpoint {
         // check ownership if info about a specific guest is requested
         if(is_numeric($id)) {
             $guest = Guest::fromId($id);
-            
+
             if(!$guest->isOwner($user) && !Auth::isAdmin())
                 throw new RestOwnershipRequiredException($user->id, 'guest = '.$guest->id);
+
+            if(!is_null($extra)) {
+                if ($extra !== 'transfers')
+                    throw new RestBadParameterException('guest_extra');
+                
+                return array_map('RestEndpointTransfer::cast', Transfer::fromGuest($guest));
+            }
+            
             
             return self::cast($guest);
+        } elseif(!is_null($extra)) {
+            throw new RestBadParameterException('guest_extra');
         }
         
         // Check parameters
