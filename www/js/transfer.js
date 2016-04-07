@@ -719,7 +719,7 @@ window.filesender.transfer = function() {
         
         // Redo sanity checks
         
-        if (this.files.length >= filesender.config.max_transfer_files) {
+        if (this.files.length > filesender.config.max_transfer_files) {
             return errorhandler({message: 'transfer_too_many_files', details: {max: filesender.config.max_transfer_files}});
         }
         
