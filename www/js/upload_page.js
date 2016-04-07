@@ -840,6 +840,7 @@ $(function() {
     if(auth == 'guest') {
         var transfer_options = JSON.parse($('#guest_transfer_options').val());
         for(option in filesender.ui.nodes.options) {
+            if(option == 'undefined' || option == 'expires') continue;
             filesender.ui.nodes.options[option].prop('checked', transfer_options[option] == 1);
             filesender.ui.nodes.options[option].val(transfer_options[option]);
         }
