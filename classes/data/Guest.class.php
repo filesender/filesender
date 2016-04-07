@@ -296,10 +296,12 @@ class Guest extends DBObject {
         Logger::logActivity(LogEventTypes::GUEST_CREATED, $this);
         
         // Send notification to recipient
-        TranslatableEmail::quickSend('guest_created', $this);
+        if($this->hasOption(GuestOptions::EMAIL_GUEST_CREATED))
+            TranslatableEmail::quickSend('guest_created', $this);
         
         // Send receipt to owner
-        TranslatableEmail::quickSend('guest_created_receipt', $this->owner, $this);
+        if($this->hasOption(GuestOptions::EMAIL_GUEST_CREATED_RECEIPT))
+            TranslatableEmail::quickSend('guest_created_receipt', $this->owner, $this);
         
         Logger::info($this.' created');
     }
