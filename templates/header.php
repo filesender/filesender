@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<?php Auth::isAuthenticated(); ?><!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="<?php echo Lang::getCode() ?>" xml:lang="<?php echo Lang::getCode() ?>">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
