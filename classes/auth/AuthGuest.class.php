@@ -71,11 +71,13 @@ class AuthGuest {
                     Utilities::isValidUID($vid)
                 ) {
                     self::$guest = Guest::fromToken($vid);
-                    self::$isAuthenticated = true;
-                    
-                    // Update last guest activity
-                    self::$guest->last_activity = time();
-                    self::$guest->save();
+                    if(self::$guest->expires > time() && self::$guest->status === 'available') {
+                        self::$isAuthenticated = true;
+                        
+                        // Update last guest activity
+                        self::$guest->last_activity = time();
+                        self::$guest->save();
+                    }
                 }else{
                     throw new TokenHasBadFormatException($vid);
                 }
