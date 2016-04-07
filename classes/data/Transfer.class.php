@@ -433,10 +433,11 @@ class Transfer extends DBObject {
                     $options[$name] = array(
                         'available' => false,
                         'advanced' => false,
-                        'default' => false
+                        'default' => false,
+                        'complex' => false,
                     );
                 
-                foreach(array('available', 'advanced', 'default') as $p) {
+                foreach(array('available', 'advanced', 'default', 'complex') as $p) {
                     if(!array_key_exists($p, $options[$name]))
                         $options[$name][$p] = false;
                     

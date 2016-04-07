@@ -53,6 +53,7 @@
                     
                     <?php
                         $displayoption = function($name, $cfg, $transfer = false) {
+                            if(isset($cfg['complex']) && $cfg['complex']) return;
                             $default = $cfg['default'];
                             if(Auth::isSP()) {
                                 if($transfer) {
@@ -103,6 +104,13 @@
                          <div class="advanced_options">
                             <?php foreach(Transfer::availableOptions(true) as $name => $cfg) $displayoption($name, $cfg, true) ?>
                          </div>     
+                        <?php if (Transfer::availableOptions('redirect_url_on_complete')) { ?>
+                        <div class="fieldcontainer" data-option="redirect_url_on_complete">
+                            <label for="redirect_url_on_complete"><?= Lang::tr('redirect_url_on_complete') ?></label>
+                            <input name="redirect_url_on_complete" type="text">
+                            <br/>
+                        </div>
+                        <?php } ?>
                         <?php } ?>
                     </div>
                 </td>

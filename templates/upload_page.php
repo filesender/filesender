@@ -126,6 +126,7 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
                 <td class="box">
                     <?php
                         $displayoption = function($name, $cfg, $disable = false) {
+                            if($cfg['complex']) return;
                             $default = Auth::isSP() ? Auth::user()->defaultTransferOptionState($name) : $cfg['default'];
                             $checked = $default ? ' checked="checked"' : '';
                             $disabled = $disable ? ' disabled="disabled"' : '';
@@ -174,6 +175,14 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
                     
                     <div class="advanced_options">
                         <?php foreach(Transfer::availableOptions(true) as $name => $cfg) $displayoption($name, $cfg, Auth::isGuest()) ?>
+                        
+                        <?php if (Transfer::availableOptions('redirect_url_on_complete')) { ?>
+                        <div class="fieldcontainer" data-option="redirect_url_on_complete">
+                            <label for="redirect_url_on_complete"><?= Lang::tr('redirect_url_on_complete') ?></label>
+                            <input name="redirect_url_on_complete" type="text">
+                            <br/>
+                        </div>
+                        <?php } ?>
                         
                         <?php if (Config::get('terasender_enabled') && Config::get('terasender_advanced')) { ?>
                         <div class="fieldcontainer">

@@ -432,6 +432,15 @@ filesender.ui.startUpload = function() {
     this.transfer.onprogress = filesender.ui.files.progress;
     
     this.transfer.oncomplete = function(time) {
+        if(filesender.ui.transfer.options.redirect_url_on_complete) {
+            document.location = filesender.ui.transfer.options.redirect_url_on_complete;
+            var redirect_loop = function(f) {
+                filesender.ui.alert('success', lang.tr('done_uploading_redirect').replace(/\{url\}/g, filesender.ui.transfer.options.redirect_url_on_complete), f);
+            }
+            setTimeout(redirect_loop, 5000);
+            return;
+        }
+
         var close = function() {
             filesender.ui.goToPage(
                 filesender.ui.transfer.guest_token ? 'home' : 'transfers',

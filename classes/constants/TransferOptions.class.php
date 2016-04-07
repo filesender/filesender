@@ -45,4 +45,6 @@ class TransferOptions extends Enum {
     const ADD_ME_TO_RECIPIENTS                      = 'add_me_to_recipients';
     
     const GET_A_LINK                                = 'get_a_link';
+
+    const REDIRECT_URL_ON_COMPLETE                  = 'redirect_url_on_complete';
 }

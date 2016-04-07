@@ -205,6 +205,7 @@ $lang['click_to_delete_file'] = 'Remove file';
 $lang['click_to_delete_recipient'] = 'Remove recipient';
 $lang['done_uploading'] = 'Done uploading';
 $lang['done_uploading_guest'] = 'Thank you for using {cfg:site_name}. If your guest is enabled for multiple uploads you may use your upload link again to send other files.';
+$lang['done_uploading_redirect'] = 'Your upload is completed and you are being redirected to {url}. The redirect is taking longer than expected.';
 $lang['stalled_transfer'] = 'Stalled upload';
 $lang['retry_later'] = 'Save progress and try again later';
 $lang['transfer_seems_to_be_stalled'] = 'Upload seems to be stalled (way slower than expected), do you want to try restarting it or stop it ?';
