@@ -326,7 +326,9 @@ class User extends DBObject {
      * @param string $target "transfer" or "guest"
      * @param array $options
      */
-    private function saveOptions($target, $options = array()) {
+    private function saveOptions($target, $options) {
+        if(is_null($options)) $options = new stdClass;
+	if(!is_object($options)) die(var_export([$options, debug_backtrace()], true));
         $prop = $target.'_preferences';
         if(!property_exists($this, $prop)) return;
         
@@ -335,7 +337,7 @@ class User extends DBObject {
         // Analyse options
         foreach(Transfer::allOptions() as $name => $dfn) {
             if(
-                in_array(TransferOptions::GET_A_LINK, $options) && 
+                property_exists($options, TransferOptions::GET_A_LINK) &&
                 in_array($name, array(
                         TransferOptions::EMAIL_ME_COPIES,
                         TransferOptions::ENABLE_RECIPIENT_EMAIL_DOWNLOAD_COMPLETE,
@@ -349,10 +351,10 @@ class User extends DBObject {
                 
                 $default = $this->defaultOptionState($target, $name);
                 
-                if(in_array($name, $options) == $default)
+                if(property_exists($options, $name) == $default)
                     continue; // User did not change what we proposed
                 
-                $prefs[$name] += in_array($name, $options) ? 1 : -1;
+                $prefs[$name] += property_exists($options, $name) ? 1 : -1;
                 
             } else { // Remove options that are not available (anymore) from prefs
                 if(array_key_exists($name, $prefs))
@@ -374,7 +376,7 @@ class User extends DBObject {
      * 
      * @param array $options
      */
-    public function saveTransferOptions($options = array()) {
+    public function saveTransferOptions($options = null) {
         $this->saveOptions('transfer', $options);
     }
     
@@ -383,7 +385,7 @@ class User extends DBObject {
      * 
      * @param array $options
      */
-    public function saveGuestOptions($options = array()) {
+    public function saveGuestOptions($options = null) {
         $this->saveOptions('guest', $options);
     }
     

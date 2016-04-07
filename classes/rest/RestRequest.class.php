@@ -129,6 +129,15 @@ class RestInput {
     public function __get($key) {
         if($key == 'data') return $this->data;
         
-        return array_key_exists($key, $this->data) ? $this->data[$key] : null;
+        return $this->__isset($key) ? $this->data[$key] : null;
+    }
+
+    /**
+     * Isset handler
+     */
+    public function __isset($key) {
+        if($key == 'data') return true;
+
+        return array_key_exists($key, $this->data);
     }
 }

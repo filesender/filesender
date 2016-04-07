@@ -150,26 +150,28 @@ class RestEndpointGuest extends RestEndpoint {
         if($data->message) $guest->message = $data->message;
         
         // Set options based on provided ones and defaults
-        $options = array();
+        $options = new stdClass;
         foreach(Guest::allOptions() as $name => $dfn)  {
-            $value = $dfn['default'];
+            $options->$name = $dfn['default'];
             
-            if($dfn['available'])
-                $value = in_array($name, $data->options->guest);
-            
-            if($value) $options[] = $name;
+            if($dfn['available'] && isset($data->options->guest->$name))
+                $options->$name = $data->options->guest->$name;
+
+            if(!$options->$name)
+                unset($options->$name);
         }
         $guest->options = $options;
         
         // Set to-be-created transfers options based on provided ones and defaults
-        $transfer_options = array();
+        $transfer_options = new stdClass;
         foreach(Transfer::allOptions() as $name => $dfn)  {
-            $value = $dfn['default'];
+            $transfer_options->$name = $dfn['default'];
             
-            if($dfn['available'])
-                $value = in_array($name, $data->options->transfer);
+            if($dfn['available'] && isset($data->options->transfer->$name))
+                $transfer_options->$name = $data->options->transfer->$name;
             
-            if($value) $transfer_options[] = $name;
+            if(!$transfer_options->$name)
+                unset($transfer_options->$name);
         }
         $guest->transfer_options = $transfer_options;
         

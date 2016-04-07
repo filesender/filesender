@@ -140,7 +140,7 @@ class RestEndpointTransfer extends RestEndpoint {
             // Check relationship between the two
             if(!$recipient->transfer->is($transfer)) throw new RestAuthenticationRequiredException();
             
-            return in_array($property_id, $transfer->options);
+            return property_exists($transfer->options, $property_id);
         }
         
         // If key was provided we validate it and return the transfer (guest restart)
@@ -345,37 +345,33 @@ class RestEndpointTransfer extends RestEndpoint {
                 throw new TransferTooManyFilesException(count($data->files), $maxfiles);
             
             // Build options from provided data and defaults
-            $options = array();
+            $options = new stdClass;
             foreach(Transfer::allOptions() as $name => $dfn)  {
                 $value = $dfn['default'];
                 
                 if($dfn['available'])
-                    $value = in_array($name, $data->options);
+                    $value = isset($data->options->$name);
                 
-                if($value) $options[] = $name;
+                if($value) $options->$name = $data->options->$name;
             }
             
             // Get_a_link transfers have no recipients so mail related options make no sense, remove them if set
-            if(in_array(TransferOptions::GET_A_LINK, $options)) {
-                $options = array_values(array_filter($options, function($o) {
-                    return !in_array($o, array(
-                        TransferOptions::EMAIL_ME_COPIES,
-                        TransferOptions::ENABLE_RECIPIENT_EMAIL_DOWNLOAD_COMPLETE,
-                        TransferOptions::ADD_ME_TO_RECIPIENTS
-                    ));
-                }));
+            if(property_exists($options, TransferOptions::GET_A_LINK)) {
+                unset($options->{TransferOptions::EMAIL_ME_COPIES});
+                unset($options->{TransferOptions::ENABLE_RECIPIENT_EMAIL_DOWNLOAD_COMPLETE});
+                unset($options->{TransferOptions::ADD_ME_TO_RECIPIENTS});
             }
             
             // No recipients, not get_a_link and no way to get a recipient from options ? Fail if so
             if(
                 !count($data->recipients) &&
-                !in_array(TransferOptions::GET_A_LINK, $options) &&
-                !in_array(TransferOptions::ADD_ME_TO_RECIPIENTS, $options) &&
+                !property_exists($options, TransferOptions::GET_A_LINK) &&
+                !property_exists($options, TransferOptions::ADD_ME_TO_RECIPIENTS) &&
                 (
                     !$guest ||
                     (
-                        !in_array(TransferOptions::ADD_ME_TO_RECIPIENTS, $guest->transfer_options) &&
-                        !in_array(GuestOptions::CAN_ONLY_SEND_TO_ME, $guest->options)
+                        !property_exists($guest->transfer_options, TransferOptions::ADD_ME_TO_RECIPIENTS) &&
+                        !property_exists($guest->options, GuestOptions::CAN_ONLY_SEND_TO_ME)
                     )
                 )
             )

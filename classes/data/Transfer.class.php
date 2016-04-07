@@ -489,7 +489,7 @@ class Transfer extends DBObject {
      * @return bool
      */
     public function hasOption($option) {
-        return is_array($this->options) && in_array($option, $this->options);
+        return is_object($this->options) && isset($this->options->$option);
     }
     
     /**
@@ -515,8 +515,19 @@ class Transfer extends DBObject {
         if(in_array($property, array(
             'id', 'status', 'user_id', 'user_email', 'guest_id',
             'subject', 'message', 'created', 'made_available',
-            'expires', 'expiry_extensions', 'options', 'lang'
+            'expires', 'expiry_extensions', 'lang'
         ))) return $this->$property;
+        
+        if($property == 'options' || $property == 'transfer_options') {
+            if(!is_object($this->$property)) {
+                $options = new stdClass;
+                foreach($this->$property as $option) {
+                    $options->$option = 1;
+                }
+                $this->$property = $options;
+            }
+            return $this->$property;
+        }
         
         if($property == 'user' || $property == 'owner') {
             $user = User::fromId($this->user_id);

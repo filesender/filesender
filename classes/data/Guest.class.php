@@ -392,7 +392,7 @@ class Guest extends DBObject {
      * @return bool
      */
     public function hasOption($option) {
-        return is_array($this->options) && in_array($option, $this->options);
+        return is_object($this->options) && property_exists($this->options, $option);
     }
     
     /**
@@ -416,8 +416,19 @@ class Guest extends DBObject {
     public function __get($property) {
         if(in_array($property, array(
             'id', 'user_id', 'user_email', 'token', 'email', 'transfer_count',
-            'subject', 'message', 'options', 'transfer_options', 'status', 'created', 'expires', 'last_activity'
+            'subject', 'message', 'status', 'created', 'expires', 'last_activity'
         ))) return $this->$property;
+        
+        if($property == 'options' || $property == 'transfer_options') {
+            if(!is_object($this->$property)) {
+                $options = new stdClass;
+                foreach($this->$property as $option) {
+                    $options->$option = 1;
+                }
+                $this->$property = $options;
+            }
+            return $this->$property;
+        }
         
         if($property == 'user' || $property == 'owner') {
             $user = User::fromId($this->user_id);

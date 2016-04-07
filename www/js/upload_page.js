@@ -423,8 +423,10 @@ filesender.ui.startUpload = function() {
             this.transfer.lang = filesender.ui.nodes.lang.val();
         
         for(var o in filesender.ui.nodes.options)
-            if(filesender.ui.nodes.options[o].is(':checked'))
-                this.transfer.options.push(o);
+            if(!filesender.ui.nodes.options[o].is(':checkbox'))
+                this.transfer.options[o] = filesender.ui.nodes.options[o].val();
+            else if(filesender.ui.nodes.options[o].is(':checked'))
+                this.transfer.options[o] = 1;
     }
     
     this.transfer.onprogress = filesender.ui.files.progress;
