@@ -387,7 +387,8 @@ class Transfer extends DBObject {
         }
         
         // Send notification to owner
-        TranslatableEmail::quickSend($manualy ? 'transfer_deleted_receipt' : 'transfer_expired_receipt', $this->owner, $this);
+        if($this->hasOption(TransferOptions::EMAIL_ME_ON_EXPIRE))
+	        TranslatableEmail::quickSend($manualy ? 'transfer_deleted_receipt' : 'transfer_expired_receipt', $this->owner, $this);
         
         // Send report if needed
         if(!is_null(Config::get('auditlog_lifetime')) && $this->hasOption(TransferOptions::EMAIL_REPORT_ON_CLOSING)) {
