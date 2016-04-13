@@ -94,7 +94,10 @@ try {
         throw new DownloadBadFilesIDsException($not_from_transfer);
     
     // Needed to prevent the download from timing out.
-    set_time_limit(0); 
+    set_time_limit(0);
+    
+    // Close session to avoid simultaneous requests from being locked
+    session_write_close();
     
     if(count($files_ids) > 1) { 
         // Archive download
