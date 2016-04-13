@@ -50,7 +50,7 @@ class StorageFilesystemException extends DetailedException {
         if($file) {
             $info['file'] = (string)$file;
             
-            if(is_object($file) && ($file instanceof $file))
+            if(is_object($file) && ($file instanceof File))
                 $info['transfer'] = (string)$file->transfer;
         }
         
