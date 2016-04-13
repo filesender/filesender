@@ -155,6 +155,8 @@ window.filesender.terasender = {
         
         if(job) {
             this.log('Found job file:' + (job.file ? job.file.id : worker.file_id) + '[' + job.chunk.start + '...' + job.chunk.end + ']');
+            
+            workerinterface.status = 'uploading';
             this.sendCommand(workerinterface, 'executeJob', job);
         }else{
             this.log('No jobs remaining, terminating');
@@ -224,9 +226,12 @@ window.filesender.terasender = {
         var fine_progress = 0;
         
         for(var i=0; i<this.workers.length; i++) {
-            if(this.workers[i].status != 'running') continue;
+            if(!this.workers[i].status.match(/^(running|uploading)$/)) continue;
             
             if(this.workers[i].id == worker_id) {
+                if(ratio >= 1)
+                    this.workers[i].status = 'running';
+                
                 this.workers[i].fine_progress = job.fine_progress;
             }
             
@@ -254,12 +259,12 @@ window.filesender.terasender = {
                 if(t.transfer.files[i].uploaded < t.transfer.files[i].size)
                     chunks_pending = true;
             
-            var workers_running = false;
+            var workers_uploading = false;
             for(var i=0; i<t.workers.length; i++)
-                if(t.workers[i].status == 'running')
-                    workers_running = true;
+                if(t.workers[i].status == 'uploading')
+                    workers_uploading = true;
             
-            if(chunks_pending || workers_running) return;
+            if(chunks_pending || workers_uploading) return;
             
             // Notify all done
             t.transfer.reportComplete();
