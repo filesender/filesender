@@ -144,7 +144,12 @@ class Recipient extends DBObject {
     public static function create(Transfer $transfer, $email) {
         $recipient = new self();
         
+        // Init caches to empty to avoid db queries
+        $recipient->logsCache = array();
+        $recipient->trackingEventsCache = array();
+        
         $recipient->transfer_id = $transfer->id;
+        $recipient->transferCache = $transfer;
         
         if($email && !filter_var($email, FILTER_VALIDATE_EMAIL)) throw new BadEmailException($email);
         $recipient->email = $email;
@@ -270,6 +275,10 @@ class Recipient extends DBObject {
     public function __set($property, $value) {
         if($property == 'options') {
             $this->options = $value;
+        }else if($property == 'auditlogs') {
+            $this->logsCache = (array)$value;
+        }else if($property == 'trackingevents') {
+            $this->trackingEventsCache = (array)$value;
         }else throw new PropertyAccessException($this, $property);
     }
     

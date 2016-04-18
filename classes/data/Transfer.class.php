@@ -223,6 +223,11 @@ class Transfer extends DBObject {
     public static function create($expires, $user_email = null) {
         $transfer = new self();
         
+        // Init caches to empty to avoid db queries
+        $transfer->filesCache = array();
+        $transfer->recipientsCache = array();
+        $transfer->logsCache = array();
+        
         $transfer->user_id = Auth::user()->id;
         
         if(!$user_email) $user_email = Auth::user()->email;
@@ -876,7 +881,7 @@ class Transfer extends DBObject {
             $recipients_downloaded_ids = array_map(function($l) {
                 return $l->author_id;
             }, $transfer->downloads);
-            
+            print_r($recipients_downloaded_ids);
             // Get recipients that did not download
             $recipients_no_download = array_filter(
                 $transfer->recipients,
@@ -884,7 +889,7 @@ class Transfer extends DBObject {
                     return !in_array($recipient->id, $recipients_downloaded_ids) && (bool)$recipient->email;
                 }
             );
-            
+            print_r($recipients_no_download);
             if(!count($recipients_no_download)) continue; // Nothing to notify
             
             $today = floor(time() / 86400);

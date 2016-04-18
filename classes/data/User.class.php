@@ -212,7 +212,12 @@ class User extends DBObject {
      * Record activity
      */
     public function recordActivity() {
-        $this->last_activity = time();
+        $now = time();
+        
+        // Do not record more than once per 1h => reduces number of writes
+        if(abs($now - $this->last_activity) < 3600) return;
+        
+        $this->last_activity = $now;
         $this->save();
     }
     

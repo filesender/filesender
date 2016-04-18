@@ -134,7 +134,11 @@ class File extends DBObject
     public static function create(Transfer $transfer) {
         $file = new self();
         
+        // Init cache to empty to avoid db queries
+        $file->logsCache = array();
+        
         $file->transfer_id = $transfer->id;
+        $file->transferCache = $transfer;
         
         // Generate uid until it is indeed unique
         $file->uid = Utilities::generateUID(function($uid, $tries) {
@@ -293,6 +297,8 @@ class File extends DBObject
     public function __set($property, $value) {
         if($property == 'name') {
             $this->name = (string)$value;
+        }else if($property == 'auditlogs') {
+            $this->logsCache = (array)$value;
         }else if($property == 'mime_type') {
             $this->mime_type = (string)$value;
         }else if($property == 'size') {

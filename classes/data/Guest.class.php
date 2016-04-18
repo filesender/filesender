@@ -164,6 +164,9 @@ class Guest extends DBObject {
         $guest = new self();
         $time = time();
         
+        // Init cache to empty to avoid db queries
+        $guest->trackingEventsCache = array();
+        
         if(!$from) $from = Auth::user()->email;
         
         // If not remote user from address must be one of the user addresses
