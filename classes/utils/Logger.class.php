@@ -351,7 +351,14 @@ class Logger {
         
         // Write to file, log with PHP internal logger if any problem to avoid loops
         if($fh = fopen($file, 'a')) {
-            fwrite($fh, '['.date('Y-m-d H:i:s').'] '.trim($message)."\n");
+            if(flock($fh, LOCK_EX)) { // Try to lock for writing
+                fwrite($fh, '['.date('Y-m-d H:i:s').'] '.trim($message)."\n");
+                
+                flock($fh, LOCK_UN); // Unlock file
+            } else {
+                self::logErrorLog(null, 'error', '[Filesender logging error] Could not aquire lock on '.$file);
+            }
+            
             fclose($fh);
         }else{
             self::logErrorLog(null, 'error', '[Filesender logging error] Could not log to '.$file);
