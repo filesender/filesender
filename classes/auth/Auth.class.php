@@ -129,15 +129,17 @@ class Auth {
                     }
                 }
                 
+                if(!array_key_exists('additional', self::$attributes))
+                    self::$attributes['additional'] = array();
+                
+                // Add name to additional attributes by default so that we can use it when sending out emails
+                self::$attributes['additional']['name'] = self::$attributes['name'];
+                
                 // Set user if got uid attribute
                 self::$user = User::fromAttributes(self::$attributes);
                 
                 // Save user additionnal attributes if enabled
-                if(
-                    self::isSP()
-                    && Config::get('auth_sp_save_user_additional_attributes')
-                    && array_key_exists('additional', self::$attributes)
-                )
+                if(self::isSP() && Config::get('auth_sp_save_user_additional_attributes'))
                     self::$user->additional_attributes = self::$attributes['additional'];
                 
                 // Save user quota for guest uploads

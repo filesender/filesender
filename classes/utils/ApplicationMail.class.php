@@ -127,14 +127,14 @@ class ApplicationMail extends Mail {
         parent::to($this->to['email'], $this->to['name']);
         
         // Get sender from recipient data
-        $sender = '';
+        $sender = null;
         if($this->to['object']) {
             switch(get_class($this->to['object'])) {
-                case 'Recipient' : $sender = $this->to['object']->transfer->user->email; break;
-                case 'Guest' : $sender = $this->to['object']->user->email; break;
+                case 'Recipient' : $sender = $this->to['object']->transfer->user; break;
+                case 'Guest' : $sender = $this->to['object']->user; break;
             }
         }
-        if(!$sender) $sender = $this->to['email']; // Own action
+        if(!$sender) $sender = (object)array('email' => $this->to['email']); // Own action
         
         // Context identifier
         $context = $this->to['object'] ? strtolower(get_class($this->to['object'])).'-'.$this->to['object']->id : 'no_context';
@@ -145,7 +145,7 @@ class ApplicationMail extends Mail {
             if($from != 'sender' && !filter_var($from, FILTER_VALIDATE_EMAIL))
                 throw new ConfigBadParameterException('email_from');
             
-            if($from == 'sender') $from = $sender;
+            if($from == 'sender') $from = $sender->email;
             
             // Got one, validate and set header
             if($from) {
@@ -153,7 +153,18 @@ class ApplicationMail extends Mail {
                     throw new BadEmailException($from);
                 
                 $from_name = Config::get('email_from_name');
-                if($from_name) $from = '"'.mb_encode_mimeheader($from_name).'" <'.$from.'>';
+                if($from_name) {
+                    if($sender instanceof User) {
+                        $attributes = (array)$sender->additional_attributes;
+                        $attributes['email'] = $sender->email;
+                        
+                        foreach($sender->additional_attributes as $k => $v)
+                            $from_name = str_replace('{'.$k.'}', $v, $from_name);
+                    }
+                    
+                    $from = '"'.mb_encode_mimeheader($from_name).'" <'.$from.'>';
+                }
+                
                 $this->addHeader('From', $from);
             }
         }
@@ -164,7 +175,7 @@ class ApplicationMail extends Mail {
             if($reply_to != 'sender' && !filter_var($reply_to, FILTER_VALIDATE_EMAIL))
                 throw new ConfigBadParameterException('email_reply_to');
             
-            if($reply_to == 'sender') $reply_to = $sender;
+            if($reply_to == 'sender') $reply_to = $sender->email;
             
             // Got one, validate and set header
             if($reply_to) {
@@ -183,7 +194,7 @@ class ApplicationMail extends Mail {
             if($return_path != 'sender' && !filter_var(str_replace('<verp>', 'verp', $return_path), FILTER_VALIDATE_EMAIL))
                 throw new ConfigBadParameterException('email_return_path');
             
-            if($return_path == 'sender') $return_path = $sender;
+            if($return_path == 'sender') $return_path = $sender->email;
             
             // Got one, validate and set property to be passed to PHP's mail internal
             if($return_path) {
