@@ -287,8 +287,8 @@ class AuditLog extends DBObject {
         }, $transfer->files))) as $log) $logs[] = $log;
         
         // Add events related to the transfer's recipients
-        foreach(self::all('target_type=\'Recipient\' AND target_id IN :ids', array(':ids' => array_map(function($file) {
-            return $file->id;
+        foreach(self::all('target_type=\'Recipient\' AND target_id IN :ids', array(':ids' => array_map(function($recipient) {
+            return $recipient->id;
         }, $transfer->recipients))) as $log) $logs[] = $log;
         
         // Sort by event date
