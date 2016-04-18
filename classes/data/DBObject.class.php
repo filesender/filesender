@@ -231,7 +231,7 @@ class DBObject {
                 $pk[] = $k;
         
         // Prepare query depending on contents
-        if(preg_match('`\s+[^\s]+\s+IN\s+:[^\s]+(\s+|$)`i', $query)) {
+        if(preg_match('`\s+[^\s]+\s+IN\s+:[^\s]+\b`i', $query)) {
             $statement = DBI::prepareInQuery($query, array_filter($placeholders, 'is_array'));
         } else {
             $statement = DBI::prepare($query);
