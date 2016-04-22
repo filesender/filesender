@@ -138,6 +138,8 @@
 * [auth_remote_application_enabled](#auth_remote_application_enabled)
 * [remote_applications](#remote_applications)
 * [auth_remote_user_autogenerate_secret](#auth_remote_user_autogenerate_secret)
+* [rest_allow_jsonp](#rest_allow_jsonp)
+
 
 ##Other
 * [host_quota](#host_quota)
@@ -1102,13 +1104,13 @@ User language detection is done in the following order:
 *__*Available targets:*__ 
 	* __'type' => 'file'__ logs to a file.  You must specify a path.  You can optionally specify log file rotation with 'rotate' => '<value>', where value can be hourly, daily, weekly, monthly, yearly. 
 	* __'type' => 'syslog'__ logs to syslog.  
-	* __'type' => 'errror_log'__ logs to the default PHP log facility as defined in your webserver's PHP module.
+	* __'type' => 'errror_log'__ logs to the default PHP log facility as defined in your webserver's PHP module.</style>
 	
-* __*Examples:*__
+<span style="background-color:orange">* __*Examples:*__</style>
 examples for tpye file with different log rotations
 examles for type syslog
 
-OR 
+<span style="background-color:orange"> OR 
 Array( array ( type => String (errorlog,syslog,file,callable) path => String rotate => String ) )
 mandatory: no
 type: array of arrays.  Each one is definition of a target.  Each target has a type and if needed optional parameters.
@@ -1260,6 +1262,29 @@ array (idApp => secret(string), isAdmin(bool), acl (array (endpoint(ou *) => boo
 * __1.x name:__
 * __comment:__ the parameter needs an array of strings.  The strings are configuration parameters you want to appear in the "info" webservice endpoint.  You can also give it static strings that have a specific meaning for you, like "version 2.0".
 * __example:__ <span style="background-color:orange">example comes here.</style>
+
+###rest_allow_jsonp
+* __description:__ Allow using the REST-API through the older and lesser secure JSONP format. Some special setups may require this, turn it off otherwise because it causes minor privacy issues  
+* __mandatory:__ no
+* __type:__ boolean/array of strings
+* __default:__ /info, /lang, /file/[0-9]+/whole, /user/@me/remote_auth_config (if remote user authentication is enabled)
+* __available:__ since version 2
+* __1.x name:__
+* __comment:__ 
+* __example:__ Autorized by default are :
+
+/info : public infos about the instance (name, login url ...)
+/lang : UI translations getter
+/file/[0-9]+/whole : legacy upload endpoint
+/user/@me/remote_auth_config : enabled only if remote user authentication is enabled
+
+Additionnal allowed endpoints can be added through the "rest_allow_jsonp"
+configuration parameter (array of regexp to match the resource path
+under rest.php), example :
+
+$config['rest_allow_jsonp'] = array(
+'/transfer/[0-9]+/auditlog'
+);
 
 
 ---
