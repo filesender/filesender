@@ -1264,10 +1264,10 @@ array (idApp => secret(string), isAdmin(bool), acl (array (endpoint(ou *) => boo
 * __example:__ <span style="background-color:orange">example comes here.</style>
 
 ###rest_allow_jsonp
-* __description:__ Allow using the REST-API through the older and lesser secure JSONP format. Some special setups may require this, turn it off otherwise because it causes minor privacy issues  
+* __description:__ Define additional REST-API end points JSONP can be called upon. JSONP is typically used when using FileSender in an iframe. We limit which API end points you can reach in such a scenario but give you the option of enlarging that set of API end points in case you need this.  
 * __mandatory:__ no
 * __type:__ boolean/array of strings
-* __default:__ /info, /lang, /file/[0-9]+/whole, /user/@me/remote_auth_config (if remote user authentication is enabled)
+* __default:__ Authorised by default are these api end points: /info, /lang, /file/[0-9]+/whole and /user/@me/remote_auth_config (if remote user authentication is enabled).
 * __available:__ since version 2
 * __1.x name:__
 * __comment:__ 
