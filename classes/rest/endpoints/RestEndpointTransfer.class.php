@@ -344,38 +344,37 @@ class RestEndpointTransfer extends RestEndpoint {
             if($maxfiles && count($data->files) > $maxfiles)
                 throw new TransferTooManyFilesException(count($data->files), $maxfiles);
             
+            // Allow any options for remote applications, check against allowed options otherwise
+            $allowed_options = array_keys(Auth::isRemoteApplication() ? Transfer::allOptions() : Transfer::availableOptions());
+            
             // Build options from provided data and defaults
             $options = array();
             foreach(Transfer::allOptions() as $name => $dfn)  {
                 $value = $dfn['default'];
                 
-                if($dfn['available'])
-                    $value = in_array($name, $data->options);
+                if(in_array($name, $allowed_options) && $data->options->exists($name))
+                    $value = $data->options->$name;
                 
-                if($value) $options[] = $name;
+                $options[$name] = $value;
             }
-            
+            Logger::info($options);
             // Get_a_link transfers have no recipients so mail related options make no sense, remove them if set
-            if(in_array(TransferOptions::GET_A_LINK, $options)) {
-                $options = array_values(array_filter($options, function($o) {
-                    return !in_array($o, array(
-                        TransferOptions::EMAIL_ME_COPIES,
-                        TransferOptions::ENABLE_RECIPIENT_EMAIL_DOWNLOAD_COMPLETE,
-                        TransferOptions::ADD_ME_TO_RECIPIENTS
-                    ));
-                }));
+            if($options[TransferOptions::GET_A_LINK]) {
+                unset($options[TransferOptions::EMAIL_ME_COPIES]);
+                unset($options[TransferOptions::ENABLE_RECIPIENT_EMAIL_DOWNLOAD_COMPLETE]);
+                unset($options[TransferOptions::ADD_ME_TO_RECIPIENTS]);
             }
             
             // No recipients, not get_a_link and no way to get a recipient from options ? Fail if so
             if(
                 !count($data->recipients) &&
-                !in_array(TransferOptions::GET_A_LINK, $options) &&
-                !in_array(TransferOptions::ADD_ME_TO_RECIPIENTS, $options) &&
+                !$options[TransferOptions::GET_A_LINK] &&
+                !$options[TransferOptions::ADD_ME_TO_RECIPIENTS] &&
                 (
                     !$guest ||
                     (
-                        !in_array(TransferOptions::ADD_ME_TO_RECIPIENTS, $guest->transfer_options) &&
-                        !in_array(GuestOptions::CAN_ONLY_SEND_TO_ME, $guest->options)
+                        !$guest->transfer_options[TransferOptions::ADD_ME_TO_RECIPIENTS] &&
+                        !$guest->options[TransferOptions::CAN_ONLY_SEND_TO_ME]
                     )
                 )
             )
@@ -455,10 +454,10 @@ class RestEndpointTransfer extends RestEndpoint {
             }
             
             // Add recipient(s) depending on options
-            if($transfer->hasOption(TransferOptions::GET_A_LINK)) {
+            if($transfer->getOption(TransferOptions::GET_A_LINK)) {
                 $transfer->addRecipient(''); // Anonymous recipient = without email
                 
-            } else if($guest && $guest->hasOption(GuestOptions::CAN_ONLY_SEND_TO_ME)) {
+            } else if($guest && $guest->getOption(GuestOptions::CAN_ONLY_SEND_TO_ME)) {
                 $transfer->addRecipient($guest->user_email);
                 
             } else {
@@ -466,7 +465,7 @@ class RestEndpointTransfer extends RestEndpoint {
                     $transfer->addRecipient($email);
                 
                 $email = $guest ? $guest->user_email : ($data->from ? $data->from : Auth::user()->email);
-                if($transfer->hasOption(TransferOptions::ADD_ME_TO_RECIPIENTS) && !$transfer->isRecipient($email))
+                if($transfer->getOption(TransferOptions::ADD_ME_TO_RECIPIENTS) && !$transfer->isRecipient($email))
                     $transfer->addRecipient($email);
             }
             
