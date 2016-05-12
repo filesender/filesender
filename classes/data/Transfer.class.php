@@ -162,6 +162,21 @@ class Transfer extends DBObject {
     }
     
     /**
+     * Related to legacy options support
+     */
+    protected function fillFromDBData($data, $transforms = array()) {
+        parent::fillFromDBData($data, $transforms);
+        
+        // Legacy option format conversion, will be transformed to object by json conversion
+        if(is_array($this->options)) $this->options = array_merge(
+            array_fill_keys(array_keys(self::allOptions()), false),
+            array_fill_keys($this->options, true)
+        );
+        
+        if(is_object($this->options)) $this->options = (array)$this->options;
+    }
+    
+    /**
      * Get transfers from user
      * 
      * @param mixed $user User or user id
@@ -385,17 +400,18 @@ class Transfer extends DBObject {
         // Log action
         Logger::logActivity($manualy ? LogEventTypes::TRANSFER_CLOSED : LogEventTypes::TRANSFER_EXPIRED, $this);
         
-        if(!$this->hasOption(TransferOptions::GET_A_LINK)) {
+        if(!$this->getOption(TransferOptions::GET_A_LINK)) {
             // Send notification to all recipients 
             foreach($this->recipients as $recipient)
                 $this->sendToRecipient($manualy ? 'transfer_deleted' : 'transfer_expired', $recipient);
         }
         
         // Send notification to owner
-        TranslatableEmail::quickSend($manualy ? 'transfer_deleted_receipt' : 'transfer_expired_receipt', $this->owner, $this);
+        if($this->getOption(TransferOptions::EMAIL_ME_ON_EXPIRE))
+            TranslatableEmail::quickSend($manualy ? 'transfer_deleted_receipt' : 'transfer_expired_receipt', $this->owner, $this);
         
         // Send report if needed
-        if(!is_null(Config::get('auditlog_lifetime')) && $this->hasOption(TransferOptions::EMAIL_REPORT_ON_CLOSING)) {
+        if(!is_null(Config::get('auditlog_lifetime')) && $this->getOption(TransferOptions::EMAIL_REPORT_ON_CLOSING)) {
             $report = new Report($this);
             $report->sendTo($this->owner);
         }
@@ -445,7 +461,7 @@ class Transfer extends DBObject {
                     if(!array_key_exists($p, $options[$name]))
                         $options[$name][$p] = false;
                     
-                    $options[$name][$p] = (bool)$options[$name][$p];
+                    $options[$name][$p] = $options[$name][$p];
                 }
             }
             
@@ -487,14 +503,15 @@ class Transfer extends DBObject {
     }
     
     /**
-     * Check if transfer has option
+     * Get option value
      * 
      * @param string $option
      * 
-     * @return bool
+     * @return mixed
      */
-    public function hasOption($option) {
-        return is_array($this->options) && in_array($option, $this->options);
+    public function getOption($option) {if(gettype($this->options) == 'object') file_put_contents('/tmp/trace.log', print_r(debug_backtrace(), true));
+        if(!array_key_exists($option, $this->options)) return false;
+        return $this->options[$option];
     }
     
     /**
@@ -505,6 +522,37 @@ class Transfer extends DBObject {
     public function isExpired() {
         $today = (24 * 3600) * floor(time() / (24 * 3600));
         return $this->expires < $today;
+    }
+    
+    /**
+     * Validate and format options
+     * 
+     * @param mixed $raw_options
+     * 
+     * @return array
+     */
+    public static function validateOptions($raw_options) {
+        $options = array();
+        foreach((array)$raw_options as $name => $value) {
+            if(!TransferOptions::isValidValue($name))
+                throw new BadOptionNameException($name);
+            
+            if($name == TransferOptions::REDIRECT_URL_ON_COMPLETE) {
+                if($value) {
+                    if(!filter_var($value, FILTER_VALIDATE_URL))
+                        throw new BadURLException($value);
+                    
+                } else {
+                    $value = null;
+                }
+            } else {
+                $value = (bool)$value;
+            }
+            
+            $options[$name] = $value;
+        }
+        
+        return $options;
     }
     
     /**
@@ -655,7 +703,7 @@ class Transfer extends DBObject {
             $this->expires = (string)$value;
             
         }else if($property == 'options') {
-            $this->options = $value;
+            $this->options = self::validateOptions($value);
             
         }else throw new PropertyAccessException($this, $property);
     }
@@ -806,18 +854,18 @@ class Transfer extends DBObject {
             $guest->transfer_count++;
             
             // Send notification if required
-            if($this->hasOption(TransferOptions::EMAIL_UPLOAD_COMPLETE))
+            if($this->getOption(TransferOptions::EMAIL_UPLOAD_COMPLETE))
                 TranslatableEmail::quickSend('guest_upload_complete', $guest->owner, $guest);
             
             // Remove guest rights if valid for one upload only
-            if($guest->hasOption(GuestOptions::VALID_ONLY_ONE_TIME))
+            if($guest->getOption(GuestOptions::VALID_ONLY_ONE_TIME))
                 $guest->status = GuestStatuses::CLOSED;
             
             $guest->save();
             
         } else {
             // If not guest send upload complete notification if required
-            if($this->hasOption(TransferOptions::EMAIL_UPLOAD_COMPLETE))
+            if($this->getOption(TransferOptions::EMAIL_UPLOAD_COMPLETE))
                 TranslatableEmail::quickSend('upload_complete', $this->owner, $this);
             
             // Save transfer's recipient in the user's frequent recipients
@@ -827,10 +875,10 @@ class Transfer extends DBObject {
             $this->owner->saveTransferOptions($this->options);
         }
         
-        if(!$this->hasOption(TransferOptions::GET_A_LINK)) {
+        if(!$this->getOption(TransferOptions::GET_A_LINK)) {
             // Unless get_a_link mode process options
             
-            if($this->hasOption(TransferOptions::ADD_ME_TO_RECIPIENTS) && !$this->isRecipient($this->user_email))
+            if($this->getOption(TransferOptions::ADD_ME_TO_RECIPIENTS) && !$this->isRecipient($this->user_email))
                 $this->addRecipient($this->user_email);
             
             // Send notification of availability to recipients
@@ -851,7 +899,7 @@ class Transfer extends DBObject {
      * @param mixed $recipients single recipient or array of recipients (defaults to transfer recipients if not provided)
      */
     public function remind($recipients = null) {
-        if($this->hasOption(TransferOptions::GET_A_LINK)) return;
+        if($this->getOption(TransferOptions::GET_A_LINK)) return;
         
         if(!$recipients) $recipients = $this->recipients;
         if(!is_array($recipients)) $recipients = array($recipients);
@@ -928,7 +976,7 @@ class Transfer extends DBObject {
             // Send upload started notification if guest and guest owner required it
             $guest = AuthGuest::getGuest();
             
-            if($guest->hasOption(GuestOptions::EMAIL_UPLOAD_STARTED))
+            if($guest->getOption(GuestOptions::EMAIL_UPLOAD_STARTED))
                 TranslatableEmail::quickSend('guest_upload_start', $guest->owner, $guest);
         }
         
@@ -1023,7 +1071,7 @@ class Transfer extends DBObject {
         
         $mail = call_user_func_array('TranslatableEmail::prepare', $args);
         
-        if($this->hasOption(TransferOptions::EMAIL_ME_COPIES))
+        if($this->getOption(TransferOptions::EMAIL_ME_COPIES))
             $mail->bcc($this->user_email);
         
         $mail->send();

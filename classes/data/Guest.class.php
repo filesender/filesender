@@ -153,6 +153,29 @@ class Guest extends DBObject {
     }
     
     /**
+     * Related to legacy options support
+     */
+    protected function fillFromDBData($data, $transforms = array()) {
+        parent::fillFromDBData($data, $transforms);
+        
+        // Legacy option format conversion, will be transformed to object by json conversion
+        if(is_array($this->options)) $this->options = array_merge(
+            array_fill_keys(array_keys(self::allOptions()), false),
+            array_fill_keys($this->options, true)
+        );
+        
+        if(is_object($this->options)) $this->options = (array)$this->options;
+        
+        // Legacy option format conversion, will be transformed to object by json conversion
+        if(is_array($this->transfer_options)) $this->transfer_options = array_merge(
+            array_fill_keys(array_keys(Transfer::allOptions()), false),
+            array_fill_keys($this->transfer_options, true)
+        );
+        
+        if(is_object($this->transfer_options)) $this->transfer_options = (array)$this->transfer_options;
+    }
+    
+    /**
      * Create a new guest
      * 
      * @param integer $recipient recipient email, mandatory
@@ -272,6 +295,16 @@ class Guest extends DBObject {
     }
     
     /**
+     * Tells wether the guest is expired
+     * 
+     * @return bool
+     */
+    public function isExpired() {
+        $today = (24 * 3600) * floor(time() / (24 * 3600));
+        return $this->expires < $today;
+    }
+    
+    /**
      * Check if user owns current gueest
      * 
      * @param miwed $user User or user id to compare with
@@ -299,10 +332,12 @@ class Guest extends DBObject {
         Logger::logActivity(LogEventTypes::GUEST_CREATED, $this);
         
         // Send notification to recipient
-        TranslatableEmail::quickSend('guest_created', $this);
+        if($this->getOption(GuestOptions::EMAIL_GUEST_CREATED))
+            TranslatableEmail::quickSend('guest_created', $this);
         
         // Send receipt to owner
-        TranslatableEmail::quickSend('guest_created_receipt', $this->owner, $this);
+        if($this->getOption(GuestOptions::EMAIL_GUEST_CREATED_RECEIPT))
+            TranslatableEmail::quickSend('guest_created_receipt', $this->owner, $this);
         
         Logger::info($this.' created');
     }
@@ -333,7 +368,8 @@ class Guest extends DBObject {
         );
         
         // Sending notification to recipient
-        TranslatableEmail::quickSend($manualy ? 'guest_cancelled' : 'guest_expired', $this);
+        if($this->hasOption(GuestOptions::EMAIL_GUEST_EXPIRED))
+            TranslatableEmail::quickSend($manualy ? 'guest_cancelled' : 'guest_expired', $this);
         
         Logger::info($this.' '.($manualy ? 'removed' : 'expired'));
     }
@@ -362,7 +398,7 @@ class Guest extends DBObject {
                 if(!array_key_exists($p, $options[$name]))
                     $options[$name][$p] = false;
                 
-                $options[$name][$p] = (bool)$options[$name][$p];
+                $options[$name][$p] = $options[$name][$p];
             }
         }
         
@@ -388,14 +424,15 @@ class Guest extends DBObject {
     }
     
     /**
-     * Check if guest has option
+     * Get option value
      * 
      * @param string $option
      * 
-     * @return bool
+     * @return mixed
      */
-    public function hasOption($option) {
-        return is_array($this->options) && in_array($option, $this->options);
+    public function getOption($option) {
+        if(!array_key_exists($option, $this->options)) return false;
+        return $this->options[$option];
     }
     
     /**
@@ -405,6 +442,27 @@ class Guest extends DBObject {
         foreach(TrackingEvent::fromGuest($this) as $tracking_event) $tracking_event->delete();
         
         foreach(TranslatableEmail::fromContext($this) as $translatable_email) $translatable_email->delete();
+    }
+    
+    /**
+     * Validate and format options
+     * 
+     * @param mixed $raw_options
+     * 
+     * @return array
+     */
+    public static function validateOptions($raw_options) {
+        $options = array();
+        foreach((array)$raw_options as $name => $value) {
+            if(!GuestOptions::isValidValue($name))
+                throw new BadOptionNameException($name);
+            
+            $value = (bool)$value;
+            
+            $options[$name] = $value;
+        }
+        
+        return $options;
     }
     
     /**
@@ -488,10 +546,10 @@ class Guest extends DBObject {
             $this->message = (string)$value;
             
         }else if($property == 'options') {
-            $this->options = $value;
+            $this->options = self::validateOptions($value);
             
         }else if($property == 'transfer_options') {
-            $this->transfer_options = $value;
+            $this->transfer_options = Transfer::validateOptions($value);
             
         }else if($property == 'transfer_count') {
             $this->transfer_count = (int)$value;

@@ -340,7 +340,7 @@ class User extends DBObject {
         // Analyse options
         foreach(Transfer::allOptions() as $name => $dfn) {
             if(
-                in_array(TransferOptions::GET_A_LINK, $options) && 
+                $options[TransferOptions::GET_A_LINK] && 
                 in_array($name, array(
                         TransferOptions::EMAIL_ME_COPIES,
                         TransferOptions::ENABLE_RECIPIENT_EMAIL_DOWNLOAD_COMPLETE,
