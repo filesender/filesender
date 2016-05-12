@@ -422,14 +422,28 @@ filesender.ui.startUpload = function() {
         if(filesender.ui.nodes.lang.length)
             this.transfer.lang = filesender.ui.nodes.lang.val();
         
-        for(var o in filesender.ui.nodes.options)
-            if(filesender.ui.nodes.options[o].is(':checked'))
-                this.transfer.options.push(o);
+        for(var o in filesender.ui.nodes.options) {
+            var i = filesender.ui.nodes.options[o];
+            var v = i.is('[type="checkbox"]') ? i.is(':checked') : i.val();
+            this.transfer.options[o] = v;
+        }
     }
     
     this.transfer.onprogress = filesender.ui.files.progress;
     
     this.transfer.oncomplete = function(time) {
+        var redirect_url = filesender.ui.transfer.options.redirect_url_on_complete;
+        if(redirect_url) {
+            filesender.ui.redirect(redirect_url);
+            
+            window.setTimeout(function(f) {
+                filesender.ui.redirect(redirect_url);
+                filesender.ui.alert('success', lang.tr('done_uploading_redirect').replace({url: redirect_url}));
+            }, 5000);
+            
+            return;
+        }
+        
         var close = function() {
             filesender.ui.goToPage(
                 filesender.ui.transfer.guest_token ? 'home' : 'transfers',
@@ -578,7 +592,7 @@ $(function() {
         },
         need_recipients: form.attr('data-need-recipients') == '1'
     };
-    form.find('.basic_options input, .advanced_options input').each(function() {
+    form.find('.basic_options [data-option] input, .advanced_options [data-option] input').each(function() {
         var i = $(this);
         filesender.ui.nodes.options[i.attr('name')] = i;
     });
@@ -826,7 +840,18 @@ $(function() {
     var failed = filesender.ui.transfer.isThereFailedInRestartTracker();
     var auth = $('body').attr('data-auth-type');
     
-    if(failed) {
+    if(auth == 'guest') {
+        var transfer_options = JSON.parse(form.find('input[name="guest_transfer_options').val());
+        for(option in filesender.ui.nodes.options) {
+            if(option == 'undefined' || option == 'expires') continue;
+            var i = filesender.ui.nodes.options[option];
+            if(i.is('[type="checkbox"]')) {
+                i.prop('checked', transfer_options[option]);
+            } else {
+                i.val(transfer_options[option]);
+            }
+        }
+    } else if(failed) {
         var id = failed.id;
         if(filesender.config.chunk_upload_security == 'key') {
             id += '?key=' + failed.files[0].uid;
@@ -872,8 +897,14 @@ $(function() {
                 
                 filesender.ui.nodes.expires.datepicker('setDate', new Date(failed.expires * 1000));
                 
-                for(var i=0; i<failed.options.length; i++)
-                    filesender.ui.nodes.options[failed.options[i]].prop('checked', true);
+                for(var o in failed.options) {
+                    var i = filesender.ui.nodes.options[o];
+                    if(i.is('[type="checkbox"]')) {
+                        i.prop('checked', failed.options[o]);
+                    } else {
+                        i.val(failed.options[o]);
+                    }
+                }
                 
                 filesender.ui.nodes.form.find(':input').prop('disabled', true);
                 $('#terasender_worker_count').prop('disabled', false);

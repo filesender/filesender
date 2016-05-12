@@ -206,7 +206,7 @@ filesender.ui.evalSendEnabled = function() {
 };
 
 filesender.ui.send = function() {
-    var options = {guest: [], transfer: []};
+    var options = {guest: {}, transfer: {}};
     
     var expires = filesender.ui.nodes.expires.datepicker('getDate').getTime() / 1000;
     
@@ -217,10 +217,13 @@ filesender.ui.send = function() {
     var subject = filesender.ui.nodes.subject.val();
     var message = filesender.ui.nodes.message.val();
     
-    for(var c in filesender.ui.nodes.options)
-        for(var o in filesender.ui.nodes.options[c])
-        if(filesender.ui.nodes.options[c][o].is(':checked'))
-            options[c].push(o);
+    for(var c in filesender.ui.nodes.options) {
+        for(var o in filesender.ui.nodes.options[c]) {
+            var i = filesender.ui.nodes.options[c][o];
+            var v = i.is('[type="checkbox"]') ? i.is(':checked') : i.val();
+            options[c][o] = v;
+        }
+    }
     
     var emails = filesender.ui.recipients.list;
     var sent = 0;

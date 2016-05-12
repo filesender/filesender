@@ -51,7 +51,7 @@ window.filesender.transfer = function() {
     this.message = null;
     this.lang = null;
     this.expires = null;
-    this.options = [];
+    this.options = {};
     this.time = 0;
     this.pause_time = 0;
     this.pause_length = 0;
@@ -719,7 +719,7 @@ window.filesender.transfer = function() {
         
         // Redo sanity checks
         
-        if (this.files.length >= filesender.config.max_transfer_files) {
+        if (this.files.length > filesender.config.max_transfer_files) {
             return errorhandler({message: 'transfer_too_many_files', details: {max: filesender.config.max_transfer_files}});
         }
         
@@ -765,7 +765,7 @@ window.filesender.transfer = function() {
                     return errorhandler({message: 'file_not_in_response', details: {file: transfer.files[i]}});
             }
             
-            if((',' + transfer.options.join(',') + ',').match(/,get_a_link,/))
+            if('get_a_link' in transfer.options && transfer.options.get_a_link)
                 transfer.download_link = data.recipients[0].download_url;
             
             transfer.createRestartTracker();
