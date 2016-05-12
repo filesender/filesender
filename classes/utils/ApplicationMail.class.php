@@ -51,7 +51,9 @@ class ApplicationMail extends Mail {
         if($subject instanceof Translation) $subject = $subject->out();
         
         if(is_array($subject)) {
-            $subject = array_filter($subject);
+            $subject = array_filter($subject, function($s) { // Drop subjects with remaining placeholders
+                return !preg_match('`\{([a-z_]+:)?[a-z][a-z0-9_\.\(\)]\}`i', $s);
+            });
             $subject = $subject['prefix'].' '.array_pop($subject);
         }
         
@@ -93,17 +95,39 @@ class ApplicationMail extends Mail {
         $tr = Lang::translateEmail($translation_id, $lang);
         if($vars) $tr = call_user_func_array(array($tr, 'replace'), $vars);
         
+        $ctx = $vars ? self::getContext($vars) : null;
+        
         // Create email and send it right away
         $mail = new self($tr);
         $mail->to($to);
-        $mail->send();
+        $mail->send($ctx);
+    }
+    
+    /**
+     * Get context from set of variables by order of priority
+     * 
+     * @param array $vars
+     * 
+     * @return DBObject
+     */
+    public static function getContext($vars) {
+        $dbos = array();
+        foreach($vars as $var)
+            if(is_object($var) && ($var instanceof DBObject))
+                $dbos[get_class($var)] = $var;
+        
+        foreach(array('Recipient', 'Guest', 'File', 'Transfer') as $p)
+            if(array_key_exists($p, $dbos))
+                return $dbos[$p];
+        
+        return null;
     }
     
     /**
      * Adds to
      * 
      * @param mixed $who DBObject or email address
-     * @param string $name optionnal name
+     * @param string $name optional name
      */
     public function to($who, $name = '') {
         if(is_object($who)) {
@@ -120,20 +144,24 @@ class ApplicationMail extends Mail {
     /**
      * Sends the mail
      * 
+     * @param DBObject $context
+     * 
      * @return bool success
      */
-    public function send() {
+    public function send($context = null) {
         // Add registered recipient
         parent::to($this->to['email'], $this->to['name']);
         
         // Get sender from recipient data
         $sender = null;
+        if(!$this->to['object'] && $context && ($context instanceof DBObject))
+            $this->to['object'] = $context;
+        
         if($this->to['object']) {
-            switch(get_class($this->to['object'])) {
-                case 'Recipient' : $sender = $this->to['object']->transfer->user; break;
-                case 'Guest' : $sender = $this->to['object']->user; break;
-            }
+            if(in_array(get_class($this->to['object']), array('Recipient', 'Guest', 'File', 'Transfer')))
+                $sender = $this->to['object']->owner;
         }
+        
         if(!$sender) $sender = (object)array('email' => $this->to['email']); // Own action
         
         // Context identifier
@@ -141,6 +169,16 @@ class ApplicationMail extends Mail {
         
         // Build from field depending on config
         $from = Config::get('email_from');
+        if(is_array($from)) {
+            if(!($sender instanceof User)) {
+                $from = array_filter($from, function($f) {
+                    return $f !== 'sender';
+                });
+            }
+            
+            $from = array_shift($from);
+        }
+        
         if($from) {
             if($from != 'sender' && !filter_var($from, FILTER_VALIDATE_EMAIL))
                 throw new ConfigBadParameterException('email_from');
@@ -153,14 +191,23 @@ class ApplicationMail extends Mail {
                     throw new BadEmailException($from);
                 
                 $from_name = Config::get('email_from_name');
+                if(is_array($from_name))
+                    $from_name = ($sender instanceof User) ? array_shift($from_name) : array_pop($from_name);
+                
                 if($from_name) {
-                    if($sender instanceof User) {
+                    $attributes = array();
+                    if($sender instanceof User)
                         $attributes = (array)$sender->additional_attributes;
-                        $attributes['email'] = $sender->email;
-                        
-                        foreach($sender->additional_attributes as $k => $v)
-                            $from_name = str_replace('{'.$k.'}', $v, $from_name);
-                    }
+                    
+                    $attributes['email'] = $sender->email;
+                    
+                    list($loc, $dom) = explode('@', $sender->email);
+                    
+                    if(!array_key_exists('name', $attributes)) // Default name
+                        $attributes['name'] = $loc;
+                    
+                    foreach($attributes as $k => $v)
+                        $from_name = str_replace('{'.$k.'}', $v, $from_name);
                     
                     $from = '"'.mb_encode_mimeheader($from_name).'" <'.$from.'>';
                 }
