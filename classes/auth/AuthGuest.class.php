@@ -70,8 +70,13 @@ class AuthGuest {
                 if(
                     Utilities::isValidUID($vid)
                 ) {
-                    self::$guest = Guest::fromToken($vid);
+                    $guest = Guest::fromToken($vid);
+                    
+                    if($guest->status != GuestStatuses::AVAILABLE || $guest->isExpired())
+                        throw new GuestExpiredException($guest);
+                    
                     self::$isAuthenticated = true;
+                    self::$guest = $guest;
                     
                     // Update last guest activity
                     self::$guest->last_activity = time();
