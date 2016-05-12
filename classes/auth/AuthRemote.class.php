@@ -137,16 +137,18 @@ class AuthRemote {
             if($received_signature !== $signature)
                 throw new AuthRemoteSignatureCheckFailedException($signed, $secret, $received_signature, $signature);
             
-            // Register user id if given
-            if($uid) self::$attributes['uid'] = $uid;
-            
             // Register admin level if asked for and enabled
             if($application) {
                 self::$isAdmin = $application->isAdmin;
                 
                 self::$application = $application;
                 self::$attributes['remote_application'] = $application->name;
+                
+                if(!$uid) $uid = $application->name;
             }
+            
+            // Register user id if given
+            if($uid) self::$attributes['uid'] = $uid;
             
             self::$isAuthenticated = true;
         }
