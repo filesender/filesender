@@ -124,6 +124,20 @@ class RestInput {
     }
     
     /**
+     * Checker
+     */
+    public function exists($key) {
+        return array_key_exists($key, $this->data);
+    }
+    
+    /**
+     * Checker
+     */
+    public function __isset($key) {
+        return $this->exists($key);
+    }
+    
+    /**
      * Getter
      */
     public function __get($key) {
