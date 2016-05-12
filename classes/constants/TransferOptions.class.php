@@ -37,6 +37,7 @@
 
 class TransferOptions extends Enum {
     const EMAIL_ME_COPIES                           = 'email_me_copies';
+    const EMAIL_ME_ON_EXPIRE                        = 'email_me_on_expire';
     const EMAIL_UPLOAD_COMPLETE                     = 'email_upload_complete';
     const EMAIL_DOWNLOAD_COMPLETE                   = 'email_download_complete';
     const EMAIL_DAILY_STATISTICS                    = 'email_daily_statistics';
@@ -45,4 +46,6 @@ class TransferOptions extends Enum {
     const ADD_ME_TO_RECIPIENTS                      = 'add_me_to_recipients';
     
     const GET_A_LINK                                = 'get_a_link';
+    
+    const REDIRECT_URL_ON_COMPLETE                  = 'redirect_url_on_complete';
 }
