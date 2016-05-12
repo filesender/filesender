@@ -65,6 +65,26 @@ class Config {
     private static $cached_parameters = array();
     
     /**
+     * Merge down
+     * 
+     * @param array $target
+     * @param array $set
+     */
+    private static function merge(&$target, $set) {
+        foreach($set as $k => $v) {
+            if(is_array($v) && array_filter(array_keys($v), function($sk) {
+                return !is_int($sk);
+            }) && array_key_exists($k, $target)) {
+                // Sub keys, merge
+                self::merge($target[$k], $v);
+                
+            } else {
+                $target[$k] = $v;
+            }
+        }
+    }
+    
+    /**
      * Main loader, loads defaults, main config and virtualhost config if it exists
      * 
      * @param string $virtualhost the name of a particular virtualhost to load
@@ -97,14 +117,15 @@ class Config {
             throw new ConfigFileMissingException($main_config_file);
         
         // Default config
-        $config = self::$defaults;
+        self::$parameters = self::$defaults;
         
         // Load base config
+        $config = array();
         include_once($main_config_file);
         if ($virtualhost != null)
             $config['virtualhost'] = $virtualhost;
-        foreach ($config as $key => $value)
-            self::$parameters[$key] = $value; // Merge
+        
+        self::merge(self::$parameters, $config);
         
         // Load virtualhost config if used
         if ($virtualhost === null)
@@ -120,8 +141,8 @@ class Config {
             
             $config = array();
             include_once $config_file;
-            foreach ($config as $key => $value)
-                self::$parameters[$key] = $value; // Merge
+            
+            self::merge(self::$parameters, $config);
         }
         
         // Load config overrides if any
