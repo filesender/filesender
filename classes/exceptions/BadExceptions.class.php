@@ -120,3 +120,37 @@ class BadLangCodeException extends DetailedException {
         );
     }
 }
+
+/**
+ * Bad option name exception
+ */
+class BadOptionNameException extends DetailedException {
+    /**
+     * Constructor
+     * 
+     * @param string $name
+     */
+    public function __construct($name) {
+        parent::__construct(
+            'bad_option_name', // Message to give to the user
+            array('name' => $name) // Details to log
+        );
+    }
+}
+
+/**
+ * Bad URL exception
+ */
+class BadURLException extends DetailedException {
+    /**
+     * Constructor
+     * 
+     * @param string $url
+     */
+    public function __construct($url) {
+        parent::__construct(
+            'bad_url_code', // Message to give to the user
+            array('url' => $url) // Details to log
+        );
+    }
+}

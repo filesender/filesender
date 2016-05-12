@@ -66,3 +66,37 @@ class GuestBadStatusException extends DetailedException {
         );
     }
 }
+
+/**
+ * Generic identified guest exception
+ */
+class GuestException extends DetailedException {
+    /**
+     * Constructor
+     * 
+     * @param Guest $guest
+     * @param string $msg_code message code to be used to present error
+     * @param mixed $internal_details details to log
+     * @param mixed $public_details details to give to the user (logged as well)
+     */
+    public function __construct($guest, $msg_code, $internal_details = null, $public_details = null) {
+        $internal_details = $internal_details ? (array)$internal_details : array();
+        $internal_details['guest'] = (string)$guest;
+        
+        parent::__construct('guest_'.$msg_code, $internal_details, $public_details);
+    }
+}
+
+/**
+ * Expired
+ */
+class GuestExpiredException extends GuestException {
+    /**
+     * Constructor
+     * 
+     * @param Guest $guest
+     */
+    public function __construct($guest) {
+        parent::__construct($guest, 'expired');
+    }
+}
