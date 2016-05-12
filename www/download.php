@@ -356,14 +356,14 @@ function downloadSingleFile($transfer, $recipient, $file_id) {
 
 
 function manageOptions($ret, $transfer, $recipient) {
-    if ($transfer->hasOption(TransferOptions::ENABLE_RECIPIENT_EMAIL_DOWNLOAD_COMPLETE)) {
+    if ($transfer->getOption(TransferOptions::ENABLE_RECIPIENT_EMAIL_DOWNLOAD_COMPLETE)) {
         if (array_key_exists('notify_upon_completion', $_REQUEST) && (bool) $_REQUEST['notify_upon_completion']) {
             // Notify file download
             ApplicationMail::quickSend('download_complete', $recipient, $ret);
         }
     }
     
-    if ($transfer->hasOption(TransferOptions::EMAIL_DOWNLOAD_COMPLETE)) {
+    if ($transfer->getOption(TransferOptions::EMAIL_DOWNLOAD_COMPLETE)) {
         ApplicationMail::quickSend('files_downloaded', $transfer->owner, $ret, array('recipient' => $recipient));
     }
 }
