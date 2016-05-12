@@ -1,4 +1,5 @@
 subject: Fichiers supprimés
+subject: (fichiers supprimés) {transfer.subject}
 
 {alternative:plain}
 

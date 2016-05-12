@@ -1,4 +1,5 @@
 subject: File(s) no longer available for download
+subject: (files no longer available) {transfer.subject}
 
 {alternative:plain}
 

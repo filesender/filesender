@@ -1,4 +1,5 @@
 subject: File(s) deleted
+subject: (files deleted) {transfer.subject}
 
 {alternative:plain}
 

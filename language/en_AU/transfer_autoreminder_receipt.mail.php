@@ -1,4 +1,5 @@
 subject: Automatic reminders sent for file shipment n°{transfer.id}
+subject: (automatic reminders sent) {transfer.subject}
 
 {alternative:plain}
 
