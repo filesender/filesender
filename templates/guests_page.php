@@ -63,10 +63,19 @@
                             }
                             $checked = $default ? 'checked="checked"' : '';
                             
-                            echo '<div class="fieldcontainer">';
-                            echo '  <input name="'.$name.'" type="checkbox" '.$checked.' />';
-                            echo '  <label for="'.$name.'">'.Lang::tr($name).'</label>';
-                            echo '</div>';
+                            if($transfer && in_array($name, array(TransferOptions::REDIRECT_URL_ON_COMPLETE))) {
+                                echo '<div class="fieldcontainer" data-option="'.$name.'">';
+                                echo '    <label for="'.$name.'">'.Lang::tr($name).'</label>';
+                                echo '    <input name="'.$name.'" type="text">';
+                                echo '    <br/>';
+                                echo '</div>';
+                                
+                            } else {
+                                echo '<div class="fieldcontainer">';
+                                echo '  <input name="'.$name.'" type="checkbox" '.$checked.' />';
+                                echo '  <label for="'.$name.'">'.Lang::tr($name).'</label>';
+                                echo '</div>';
+                            }
                         };
                     ?>
                     

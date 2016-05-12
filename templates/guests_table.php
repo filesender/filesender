@@ -48,7 +48,7 @@
             
             <td class="created"><?php echo Utilities::formatDate($guest->created) ?></td>
             
-            <td class="expires"><?php echo $guest->hasOption(GuestOptions::DOES_NOT_EXPIRE) ? Lang::tr('never') : Utilities::formatDate($guest->expires) ?></td>
+            <td class="expires"><?php echo $guest->getOption(GuestOptions::DOES_NOT_EXPIRE) ? Lang::tr('never') : Utilities::formatDate($guest->expires) ?></td>
             
             <td class="actions"></td>
         </tr>

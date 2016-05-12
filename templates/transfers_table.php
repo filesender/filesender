@@ -53,7 +53,7 @@
         <?php foreach($transfers as $transfer) { ?>
         <tr class="transfer" id="transfer_<?php echo $transfer->id ?>"
             data-id="<?php echo $transfer->id ?>"
-            data-recipients-enabled="<?php echo $transfer->hasOption(TransferOptions::GET_A_LINK) ? '' : '1' ?>"
+            data-recipients-enabled="<?php echo $transfer->getOption(TransferOptions::GET_A_LINK) ? '' : '1' ?>"
             data-errors="<?php echo count($transfer->recipients_with_error) ? '1' : '' ?>"
             data-expiry-extension="<?php echo $transfer->expiry_date_extension ?>"
         >
@@ -170,13 +170,13 @@
                             <li>
                             <?php echo implode('</li><li>', array_map(function($o) {
                                 return Lang::tr($o);
-                            }, $transfer->options)) ?>
+                            }, array_keys(array_filter($transfer->options)))) ?>
                             </li>
                         </ul>
                         <?php } else echo Lang::tr('none') ?>
                     </div>
                     
-                    <?php if($transfer->hasOption(TransferOptions::GET_A_LINK)) { ?>
+                    <?php if($transfer->getOption(TransferOptions::GET_A_LINK)) { ?>
                     <div class="download_link">
                         {tr:download_link} : <input readonly="readonly" type="text" value="<?php echo $transfer->first_recipient->download_link ?>" />
                     </div>
@@ -193,7 +193,7 @@
                 </div>
                 <?php } ?>
                 
-                <?php if(!$transfer->hasOption(TransferOptions::GET_A_LINK)) { ?>
+                <?php if(!$transfer->getOption(TransferOptions::GET_A_LINK)) { ?>
                 <div class="recipients">
                     <h2>{tr:recipients}</h2>
                     

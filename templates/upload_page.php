@@ -3,7 +3,7 @@
 if(Auth::isGuest()) {
     $guest = AuthGuest::getGuest();
     
-    if($guest->hasOption(GuestOptions::EMAIL_UPLOAD_PAGE_ACCESS)) {
+    if($guest->getOption(GuestOptions::EMAIL_UPLOAD_PAGE_ACCESS)) {
         if(!$guest->last_activity || $guest->last_activity < strtotime('-1 hour')) {
             // Send mail to guest the owner of the voucher
             ApplicationMail::quickSend('guest_access_upload_page', $guest->owner, $guest);
@@ -91,7 +91,7 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
                     <div class="fieldcontainer" data-related-to="message">
                         <label for="to" class="mandatory">{tr:to} :</label>
                         
-                        <?php if(Auth::isGuest() && AuthGuest::getGuest()->hasOption(GuestOptions::CAN_ONLY_SEND_TO_ME)) { ?>
+                        <?php if(Auth::isGuest() && AuthGuest::getGuest()->getOption(GuestOptions::CAN_ONLY_SEND_TO_ME)) { ?>
                         <?php echo AuthGuest::getGuest()->user_email ?>
                         <?php } else { ?>
                         <div class="recipients"></div>
@@ -116,6 +116,8 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
                     <div>
                         <?php if(Auth::isGuest()) { ?>
                         <input type="hidden" name="guest_token" value="<?php echo AuthGuest::getGuest()->token ?>" />
+                        <input type="hidden" name="guest_options" value="<?php echo Utilities::sanitizeOutput(json_encode(AuthGuest::getGuest()->options)) ?>" />
+                        <input type="hidden" name="guest_transfer_options" value="<?php echo Utilities::sanitizeOutput(json_encode(AuthGuest::getGuest()->transfer_options)) ?>" />
                         <?php } ?>
                         
                     </div>
@@ -123,13 +125,25 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
                 
                 <td class="box">
                     <?php
-                        $displayoption = function($name, $cfg) {
-                            $default = Auth::isSP() ? Auth::user()->defaultTransferOptionState($name) : $cfg['default'];
+                        $displayoption = function($name, $cfg, $disable = false) {
+                            $text = in_array($name, array(TransferOptions::REDIRECT_URL_ON_COMPLETE));
+                            
+                            $default = $cfg['default'];
+                            if(Auth::isSP() && !$text)
+                                $default = Auth::user()->defaultTransferOptionState($name);
+                            
                             $checked = $default ? 'checked="checked"' : '';
+                            $disabled = $disable ? 'disabled="disabled"' : '';
                             
                             echo '<div class="fieldcontainer" data-option="'.$name.'">';
-                            echo '  <input name="'.$name.'" type="checkbox" '.$checked.' />';
-                            echo '  <label for="'.$name.'">'.Lang::tr($name).'</label>';
+                            if($text) {
+                                echo '    <label for="'.$name.'">'.Lang::tr($name).'</label>';
+                                echo '    <input name="'.$name.'" type="text" value="'.htmlspecialchars($default).'" '.$disabled.'>';
+                                
+                            } else {
+                                echo '  <input name="'.$name.'" type="checkbox" '.$checked.' '.$disabled.' />';
+                                echo '  <label for="'.$name.'">'.Lang::tr($name).'</label>';
+                            }
                             
                             if($name == TransferOptions::ENABLE_RECIPIENT_EMAIL_DOWNLOAD_COMPLETE)
                                 echo '<div class="info message">'.Lang::tr('enable_recipient_email_download_complete_warning').'</div>';
@@ -161,16 +175,16 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
                             }
                         ?>
                         
-                        <?php if(!Auth::isGuest()) foreach(Transfer::availableOptions(false) as $name => $cfg) $displayoption($name, $cfg) ?>
+                        <?php foreach(Transfer::availableOptions(false) as $name => $cfg) $displayoption($name, $cfg, Auth::isGuest()) ?>
                     </div>
                     
-                    <?php if((!Auth::isGuest() && count(Transfer::availableOptions(true))) || (Config::get('terasender_enabled') && Config::get('terasender_advanced'))) { ?>
+                    <?php if(count(Transfer::availableOptions(true))) || (Config::get('terasender_enabled') && Config::get('terasender_advanced'))) { ?>
                     <div class="fieldcontainer">
                         <a class="toggle_advanced_options" href="#">{tr:advanced_settings}</a>
                     </div>
                     
                     <div class="advanced_options">
-                        <?php if(!Auth::isGuest()) foreach(Transfer::availableOptions(true) as $name => $cfg) $displayoption($name, $cfg) ?>
+                        <?php foreach(Transfer::availableOptions(true) as $name => $cfg) $displayoption($name, $cfg, Auth::isGuest()) ?>
                         
                         <?php if (Config::get('terasender_enabled') && Config::get('terasender_advanced')) { ?>
                         <div class="fieldcontainer">
