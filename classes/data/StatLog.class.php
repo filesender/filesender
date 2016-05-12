@@ -167,16 +167,28 @@ class StatLog extends DBObject {
             $additional_attributes = null;
             
             if(Auth::isAuthenticated()) {
-                if(Auth::isSP()) $additional_attributes = Auth::user()->additional_attributes;
+                if(Auth::isSP())
+                    $additional_attributes = Auth::user()->additional_attributes;
                 
-                if(Auth::isGuest()) $additional_attributes = AuthGuest::getGuest()->owner->additional_attributes;
+                if(Auth::isGuest())
+                    $additional_attributes = AuthGuest::getGuest()->owner->additional_attributes;
             }
             
-            if($log->target_type == 'File') $additional_attributes = $target->transfer->owner->additional_attributes;
+            if($log->target_type == 'File')
+                $additional_attributes = $target->transfer->owner->additional_attributes;
             
-            if($log->target_type == 'Transfer') $additional_attributes = $target->owner->additional_attributes;
+            if($log->target_type == 'Transfer')
+                $additional_attributes = $target->owner->additional_attributes;
             
-            if($additional_attributes) $log->additional_attributes = $additional_attributes;
+            $additional_attributes = (array)$additional_attributes;
+            
+            $attrs = Config::get('auth_sp_additional_attributes');
+            if(!$attrs || !array_key_exists('name', $attrs))
+                if(array_key_exists('name', $additional_attributes))
+                    unset($additional_attributes['name']);
+            
+            if(count($additional_attributes))
+                $log->additional_attributes = $additional_attributes;
         }
         
         $log->save();
