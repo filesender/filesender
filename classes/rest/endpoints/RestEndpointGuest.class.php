@@ -59,6 +59,7 @@ class RestEndpointGuest extends RestEndpoint {
             'transfer_options' => $guest->transfer_options,
             'created' => RestUtilities::formatDate($guest->created),
             'expires' => RestUtilities::formatDate($guest->expires),
+            'upload_url' => $guest->upload_link,
             'errors' => array_values(array_map(function($error) {
                 return array(
                     'type' => $error->type,
@@ -76,15 +77,17 @@ class RestEndpointGuest extends RestEndpoint {
      *  /guest : list of user guests (same as /guest/@me)
      *  /guest/@all : list of all available guests (admin only)
      *  /guest/17 : info about guest with id 17
+     *  /guest/17/transfers : get transfers created by guest with id 17
      * 
      * @param int $id guest id to get info about
+     * @param string $property related to get info about
      * 
      * @return mixed
      * 
      * @throws RestAuthenticationRequiredException
      * @throws RestOwnershipRequiredException
      */
-    public function get($id = null) {
+    public function get($id = null, $property = null) {
         // Need to be authenticated
         if(!Auth::isAuthenticated()) throw new RestAuthenticationRequiredException();
         
@@ -96,6 +99,13 @@ class RestEndpointGuest extends RestEndpoint {
             
             if(!$guest->isOwner($user) && !Auth::isAdmin())
                 throw new RestOwnershipRequiredException($user->id, 'guest = '.$guest->id);
+            
+            if($property) {
+                if($property == 'transfers')
+                    return array_map('RestEndpointTransfer::cast', Transfer::fromGuest($guest));
+                
+                throw new RestBadParameterException('property');
+            }
             
             return self::cast($guest);
         }
@@ -149,27 +159,35 @@ class RestEndpointGuest extends RestEndpoint {
         if($data->subject) $guest->subject = $data->subject;
         if($data->message) $guest->message = $data->message;
         
+        // Allow any options for remote applications, check against allowed options otherwise
+        $allowed_options = array_keys(Auth::isRemoteApplication() ? Guest::allOptions() : Guest::availableOptions());
+        
         // Set options based on provided ones and defaults
         $options = array();
         foreach(Guest::allOptions() as $name => $dfn)  {
             $value = $dfn['default'];
             
-            if($dfn['available'])
-                $value = in_array($name, $data->options->guest);
+            if(in_array($name, $allowed_options) && $data->options->guest->exists($name))
+                $value = $data->options->guest->$name;
             
-            if($value) $options[] = $name;
+            $options[$name] = $value;
         }
         $guest->options = $options;
         
         // Set to-be-created transfers options based on provided ones and defaults
+        $data_options_transfer = (array)$data->options->transfer;
+        
+        // Allow any options for remote applications, check against allowed options otherwise
+        $allowed_transfer_options = array_keys(Auth::isRemoteApplication() ? Transfer::allOptions() : Transfer::availableOptions());
+        
         $transfer_options = array();
         foreach(Transfer::allOptions() as $name => $dfn)  {
             $value = $dfn['default'];
             
-            if($dfn['available'])
-                $value = in_array($name, $data->options->transfer);
+            if(in_array($name, $allowed_options) && $data->options->transfer->exists($name))
+                $value = $data->options->transfer->$name;
             
-            if($value) $transfer_options[] = $name;
+            $transfer_options[$name] = $value;
         }
         $guest->transfer_options = $transfer_options;
         
