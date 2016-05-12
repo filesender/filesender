@@ -66,7 +66,7 @@ foreach(Transfer::allFailed() as $transfer) {
 // Close expired guests
 foreach(Guest::allExpired() as $guest) {
     if($guest->status == GuestStatuses::CLOSED) continue;
-    if($guest->hasOption(GuestOptions::DOES_NOT_EXPIRE)) continue;
+    if($guest->getOption(GuestOptions::DOES_NOT_EXPIRE)) continue;
     Logger::info($guest.' expired, closing it');
     $guest->close(false);
 }
@@ -80,7 +80,7 @@ foreach(Transfer::allExpiredAuditlogs() as $transfer) {
 
 // Send daily summaries
 foreach(Transfer::all(Transfer::AVAILABLE) as $transfer) {
-    if(!$transfer->hasOption(TransferOptions::EMAIL_DAILY_STATISTICS)) continue;
+    if(!$transfer->getOption(TransferOptions::EMAIL_DAILY_STATISTICS)) continue;
     
     Logger::info('Sending daily report for '.$transfer);
     
