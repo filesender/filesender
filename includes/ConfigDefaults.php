@@ -128,4 +128,100 @@ $default = array(
     },
     
     'show_storage_statistics_in_admin' => true,
+    
+    'transfer_options' => array(
+        'email_upload_complete' => array(
+            'available' => true,
+            'advanced' => false,
+            'default' => false
+        ),
+        'email_me_on_expire' => array(
+            'available' => true,
+            'advanced' => false,
+            'default' => true
+        ),
+        'email_download_complete' => array(
+            'available' => true,
+            'advanced' => false,
+            'default' => true
+        ),
+        'enable_recipient_email_download_complete' => array(
+            'available' => true,
+            'advanced' => true,
+            'default' => true
+        ),
+        'email_daily_statistics' => array(
+            'available' => true,
+            'advanced' => true,
+            'default' => false
+        ),
+        'email_me_copies' => array(
+            'available' => true,
+            'advanced' => true,
+            'default' => false
+        ),
+        'email_report_on_closing' => array(
+            'available' => true,
+            'advanced' => false,
+            'default' => true
+        ),
+        'add_me_to_recipients' => array(
+            'available' => true,
+            'advanced' => false,
+            'default' => false
+        ),
+        'get_a_link' => array(
+            'available' => true,
+            'advanced' => false,
+            'default' => true
+        ),
+        'redirect_url_on_complete' => array(
+            'available' => false,
+            'advanced' => true,
+            'default' => ''
+        ),
+    ),
+    
+    'guest_options' => array(
+        'email_upload_started' => array(
+            'available' => true,
+            'advanced' => false,
+            'default' => true
+        ),
+        'email_upload_page_access' => array(
+            'available' => true,
+            'advanced' => false,
+            'default' => false
+        ),
+        'valid_only_one_time' => array(
+            'available' => true,
+            'advanced' => true,
+            'default' => false
+        ),
+        'does_not_expire' => array(
+            'available' => true,
+            'advanced' => true,
+            'default' => false
+        ),
+        'add_me_to_recipients' => array(
+            'available' => true,
+            'advanced' => true,
+            'default' => false
+        ),
+        'can_only_send_to_me' => array(
+            'available' => true,
+            'advanced' => false,
+            'default' => false
+        ),
+        'email_guest_created' => array(
+            'available' => false,
+            'advanced' => true,
+            'default' => true
+        ),
+        'email_guest_created_receipt' => array(
+            'available' => false,
+            'advanced' => true,
+            'default' => true
+        ),
+    ),
 );
