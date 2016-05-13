@@ -841,7 +841,7 @@ $(function() {
     var auth = $('body').attr('data-auth-type');
     
     if(auth == 'guest') {
-        var transfer_options = JSON.parse(form.find('input[name="guest_transfer_options').val());
+        var transfer_options = JSON.parse(form.find('input[id="guest_transfer_options"]').val());
         for(option in filesender.ui.nodes.options) {
             if(option == 'undefined' || option == 'expires') continue;
             var i = filesender.ui.nodes.options[option];
