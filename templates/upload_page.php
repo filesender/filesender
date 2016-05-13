@@ -116,8 +116,8 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
                     <div>
                         <?php if(Auth::isGuest()) { ?>
                         <input type="hidden" name="guest_token" value="<?php echo AuthGuest::getGuest()->token ?>" />
-                        <input type="hidden" name="guest_options" value="<?php echo Utilities::sanitizeOutput(json_encode(AuthGuest::getGuest()->options)) ?>" />
-                        <input type="hidden" name="guest_transfer_options" value="<?php echo Utilities::sanitizeOutput(json_encode(AuthGuest::getGuest()->transfer_options)) ?>" />
+                        <input type="hidden" id="guest_options" value="<?php echo Utilities::sanitizeOutput(json_encode(AuthGuest::getGuest()->options)) ?>" />
+                        <input type="hidden" id="guest_transfer_options" value="<?php echo Utilities::sanitizeOutput(json_encode(AuthGuest::getGuest()->transfer_options)) ?>" />
                         <?php } ?>
                         
                     </div>
