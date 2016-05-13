@@ -178,7 +178,7 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
                         <?php foreach(Transfer::availableOptions(false) as $name => $cfg) $displayoption($name, $cfg, Auth::isGuest()) ?>
                     </div>
                     
-                    <?php if(count(Transfer::availableOptions(true))) || (Config::get('terasender_enabled') && Config::get('terasender_advanced'))) { ?>
+                    <?php if(count(Transfer::availableOptions(true)) || (Config::get('terasender_enabled') && Config::get('terasender_advanced'))) { ?>
                     <div class="fieldcontainer">
                         <a class="toggle_advanced_options" href="#">{tr:advanced_settings}</a>
                     </div>
