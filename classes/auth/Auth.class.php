@@ -133,7 +133,20 @@ class Auth {
                     self::$attributes['additional'] = array();
                 
                 // Add name to additional attributes by default so that we can use it when sending out emails
-                self::$attributes['additional']['name'] = self::$attributes['name'];
+                if(!array_key_exists('name', self::$attributes['additional'])) {
+                    if(array_key_exists('name', self::$attributes)) {
+                        self::$attributes['additional']['name'] = self::$attributes['name'];
+                        
+                    } else if(array_key_exists('remote_application', self::$attributes)) {
+                        self::$attributes['additional']['name'] = self::$attributes['remote_application'];
+                        
+                    } else if(array_key_exists('uid', self::$attributes)) {
+                        self::$attributes['additional']['name'] = self::$attributes['uid'];
+                        
+                    } else {
+                        throw new AuthAuthenticationNotFoundException();
+                    }
+                }
                 
                 // Set user if got uid attribute
                 self::$user = User::fromAttributes(self::$attributes);
