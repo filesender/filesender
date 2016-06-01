@@ -99,6 +99,9 @@ try {
     // Close session to avoid simultaneous requests from being locked
     session_write_close();
     
+    // Check if file set has already been downloaded over the last hour
+    $recently_downloaded = AuditLog::clientRecentlyDownloaded($files_ids);
+    
     if(count($files_ids) > 1) { 
         // Archive download
         $ret = downloadArchive($transfer, $recipient, $files_ids);
@@ -108,7 +111,7 @@ try {
     }
     
     if($ret['result'] && $recipient)
-        manageOptions($ret, $transfer, $recipient);
+        manageOptions($ret, $transfer, $recipient, $recently_downloaded);
     
 } catch (Exception $e) {
     $storable = new StorableException($e);
@@ -355,7 +358,7 @@ function downloadSingleFile($transfer, $recipient, $file_id) {
 }
 
 
-function manageOptions($ret, $transfer, $recipient) {
+function manageOptions($ret, $transfer, $recipient, $recently_downloaded = false) {
     if ($transfer->getOption(TransferOptions::ENABLE_RECIPIENT_EMAIL_DOWNLOAD_COMPLETE)) {
         if (array_key_exists('notify_upon_completion', $_REQUEST) && (bool) $_REQUEST['notify_upon_completion']) {
             // Notify file download
@@ -363,7 +366,9 @@ function manageOptions($ret, $transfer, $recipient) {
         }
     }
     
-    if ($transfer->getOption(TransferOptions::EMAIL_DOWNLOAD_COMPLETE)) {
+    // Only notify owner if client did not download the same set of files over the last
+    // period to avoid multiple notifications in case of multiple resume from dumb downloader
+    if ($transfer->getOption(TransferOptions::EMAIL_DOWNLOAD_COMPLETE) && !$recently_downloaded) {
         ApplicationMail::quickSend('files_downloaded', $transfer->owner, $ret, array('recipient' => $recipient));
     }
 }

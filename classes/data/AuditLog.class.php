@@ -309,6 +309,29 @@ class AuditLog extends DBObject {
     }
     
     /**
+     * Tells wether the client already downloaded the file set over a past range
+     * 
+     * @param array $files_ids
+     * @param int $range in seconds
+     * 
+     * @return bool
+     */
+    public static function clientRecentlyDownloaded($files_ids, $range = 3600) {
+        // Get a single download for each file if it exists over the range
+        $downloaded = self::all(
+            'target_type=\'File\' AND target_id IN :ids AND ip = :ip AND event="download_ended" AND created > :since GROUP BY target_id',
+            array(
+                ':ids' => $files_ids,
+                ':ip' => Utilities::getClientIP(),
+                ':since' => date('Y-m-d H:i:s', time() - $range)
+            )
+        );
+        
+        // Same number of items means all files where downloaded (individually or not) over the range
+        return count($downloaded) == count($files_ids);
+    }
+    
+    /**
      * Remove entries related to a transfer
      * 
      * @param Transfer $transfer
