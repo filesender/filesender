@@ -100,14 +100,14 @@ try {
     session_write_close();
     
     // Check if file set has already been downloaded over the last hour
-    $recently_downloaded = AuditLog::clientRecentlyDownloaded($files_ids);
+    $recently_downloaded = $recipient ? AuditLog::clientRecentlyDownloaded($recipient, $files_ids) : false;
     
     if(count($files_ids) > 1) { 
         // Archive download
-        $ret = downloadArchive($transfer, $recipient, $files_ids);
+        $ret = downloadArchive($transfer, $recipient, $files_ids, $recently_downloaded);
     } else {
         // Single file download
-        $ret = downloadSingleFile($transfer, $recipient, $files_ids[0]);
+        $ret = downloadSingleFile($transfer, $recipient, $files_ids[0], $recently_downloaded);
     }
     
     if($ret['result'] && $recipient)
@@ -129,7 +129,7 @@ try {
  * 
  * @return boolean: true if succes, false otherwise
  */
-function downloadArchive($transfer, $recipient, $files_ids) {
+function downloadArchive($transfer, $recipient, $files_ids, $recently_downloaded) {
     // Creating the zipper
     $zipper = new Zipper();
     
@@ -147,11 +147,13 @@ function downloadArchive($transfer, $recipient, $files_ids) {
     Logger::info('User started archive download ('.count($files).' files, '.$size.' bytes)');
     
     // Send the ZIP
-    Logger::logActivity(LogEventTypes::ARCHIVE_DOWNLOAD_STARTED, $transfer, $recipient);
+    if(!$recently_downloaded)
+        Logger::logActivity(LogEventTypes::ARCHIVE_DOWNLOAD_STARTED, $transfer, $recipient);
     
     $result = $zipper->sendZip($recipient);
     
-    Logger::logActivity(LogEventTypes::ARCHIVE_DOWNLOAD_ENDED, $transfer, $recipient);
+    if(!$recently_downloaded)
+        Logger::logActivity(LogEventTypes::ARCHIVE_DOWNLOAD_ENDED, $transfer, $recipient);
     
     Logger::info('User download archive ('.count($files).' files, '.$size.' bytes, '.(time() - $time).' seconds)');
     
@@ -168,7 +170,7 @@ function downloadArchive($transfer, $recipient, $files_ids) {
  * 
  * @return boolean: true if succes, false otherwise
  */
-function downloadSingleFile($transfer, $recipient, $file_id) {
+function downloadSingleFile($transfer, $recipient, $file_id, $recently_downloaded) {
     
     $file = File::fromId($file_id);
     
@@ -280,7 +282,8 @@ function downloadSingleFile($transfer, $recipient, $file_id) {
     if ($ranges) {
         Logger::info('User restarted download of '.$file.' from offset '.$ranges[0]['start']);
         
-        Logger::logActivity(LogEventTypes::DOWNLOAD_RESUMED, $file);
+        if(!$recently_downloaded)
+            Logger::logActivity(LogEventTypes::DOWNLOAD_RESUMED, $file);
         
         if (count($ranges) == 1) { // Single range
             $range = array_shift($ranges);
@@ -341,7 +344,8 @@ function downloadSingleFile($transfer, $recipient, $file_id) {
         // Read data (no range means all file)
         Logger::info('User started to download '.$file);
         
-        Logger::logActivity(LogEventTypes::DOWNLOAD_STARTED, $file, $recipient);
+        if(!$recently_downloaded)
+            Logger::logActivity(LogEventTypes::DOWNLOAD_STARTED, $file, $recipient);
         
         $read_range();
         $done = true;
@@ -351,7 +355,8 @@ function downloadSingleFile($transfer, $recipient, $file_id) {
     if($done) {
         Logger::info('User downloaded file or file ranges ('.$size.' bytes, '.(time() - $time).' seconds)');
         
-        Logger::logActivity(LogEventTypes::DOWNLOAD_ENDED, $file, $recipient);
+        if(!$recently_downloaded)
+            Logger::logActivity(LogEventTypes::DOWNLOAD_ENDED, $file, $recipient);
     }
     
     return array('result' => $done, 'files' => array($file));
