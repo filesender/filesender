@@ -65,22 +65,31 @@ window.filesender.transfer = function() {
     this.failed_transfer_restart = false;
     this.uploader = null;
 
-    /**
-     * Max count divergence (the maximum chunk count a process can be late over the global average)
-     */
-    this.watchdog_max_count_divergence = 10;
-    
-    /**
-     * Max duration divergence (the maximum ratio between a process's current upload time and the global average)
-     */
-    this.watchdog_max_duration_divergence = 7;
-    
-    /**
-     * Max automatic retries
-     */
-    this.max_automatic_retries = 3;
-    
     this.watchdog_processes = {};
+    
+    // Load and analyse stalling detection config
+    var cfg = filesender.config.stalling_detection;
+    if(cfg) {
+        if(typeof cfg != 'object') cfg = {};
+        
+        /**
+         * Max count divergence (the maximum chunk count a process can be late over the global average)
+         */
+        if(!cfg.count_divergence) cfg.count_divergence = 10;
+        
+        /**
+         * Max duration divergence (the maximum ratio between a process's current upload time and the global average)
+         */
+        if(!cfg.duration_divergence) cfg.duration_divergence = 7;
+        
+        /**
+         * Max automatic retries
+         */
+        if(!cfg.automatic_retries) cfg.automatic_retries = 3;
+    }
+    
+    this.stalling_detection = cfg;
+    
     
     /**
      * Add a file to the file list
@@ -523,6 +532,8 @@ window.filesender.transfer = function() {
     this.getStalledProcesses = function() {
         if(this.status != 'running') return null;
         
+        if(!this.stalling_detection) return null;
+        
         var stalled = [];
         
         // Compute average upload time and progress
@@ -545,7 +556,7 @@ window.filesender.transfer = function() {
         
         // Look for processes that seems "late"
         for(var id in this.watchdog_processes) {
-            if(this.watchdog_processes[id].count < avg_count - this.watchdog_max_count_divergence) {
+            if(this.watchdog_processes[id].count < avg_count - this.stalling_detection.count_divergence) {
                 // Process is too late in terms of number of uploaded chunks
                 stalled.push(id);
                 continue;
@@ -558,7 +569,7 @@ window.filesender.transfer = function() {
             if(duration > 3600 * 1000) // 1h, CSRF token lifetime
                 way_too_late++;
             
-            if(duration > avg_duration * this.watchdog_max_duration_divergence) {
+            if(duration > avg_duration * this.stalling_detection.duration_divergence) {
                 // Process is too late in terms of number of upload duration
                 stalled.push(id);
                 continue;
@@ -844,8 +855,14 @@ window.filesender.transfer = function() {
      */
     this.retries = 0;
     this.retry = function(manual) {
-        if(manual) this.retries = 0;
-        if(this.retries >= this.max_automatic_retries) return false;
+        if(manual) {
+            this.retries = 0;
+            
+        } else {
+            if(this.stalling_detection)
+                if(this.retries >= this.stalling_detection.automatic_retries)
+                    return false;
+        }
         this.retries++;
         
         filesender.ui.log('Data sending failed, retrying from last known offsets');
