@@ -164,13 +164,15 @@ class RestEndpointGuest extends RestEndpoint {
         
         // Set options based on provided ones and defaults
         $options = array();
-        foreach(Guest::allOptions() as $name => $dfn)  {
-            $value = $dfn['default'];
-            
-            if(in_array($name, $allowed_options) && $data->options->guest->exists($name))
-                $value = $data->options->guest->$name;
-            
-            $options[$name] = $value;
+        if($data->options->guest) {
+            foreach(Guest::allOptions() as $name => $dfn)  {
+                $value = $dfn['default'];
+                
+                if(in_array($name, $allowed_options) && $data->options->guest->exists($name))
+                    $value = $data->options->guest->$name;
+                
+                $options[$name] = $value;
+            }
         }
         $guest->options = $options;
         
@@ -181,13 +183,15 @@ class RestEndpointGuest extends RestEndpoint {
         $allowed_transfer_options = array_keys(Auth::isRemoteApplication() ? Transfer::allOptions() : Transfer::availableOptions());
         
         $transfer_options = array();
-        foreach(Transfer::allOptions() as $name => $dfn)  {
-            $value = $dfn['default'];
-            
-            if(in_array($name, $allowed_options) && $data->options->transfer->exists($name))
-                $value = $data->options->transfer->$name;
-            
-            $transfer_options[$name] = $value;
+        if($data->options->transfer) {
+            foreach(Transfer::allOptions() as $name => $dfn)  {
+                $value = $dfn['default'];
+                
+                if(in_array($name, $allowed_options) && $data->options->transfer->exists($name))
+                    $value = $data->options->transfer->$name;
+                
+                $transfer_options[$name] = $value;
+            }
         }
         $guest->transfer_options = $transfer_options;
         
