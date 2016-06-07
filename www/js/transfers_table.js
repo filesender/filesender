@@ -91,20 +91,21 @@ $(function() {
         
         if($(this).closest('table').is('[data-mode="admin"][data-status="available"]')) {
             var d = filesender.ui.chooseAction(['delete_transfer_nicely', 'delete_transfer_roughly'], function(choosen) {
-                var messages = {
-                    delete_nicely: 'transfer_deleted',
-                    delete: 'transfer_deleted'
-                };
                 var done = function() {
                     $('[data-transfer][data-id="' + id + '"]').remove();
-                    filesender.ui.notify('success', lang.tr(messages[choosen]));
+                    filesender.ui.notify('success', lang.tr('transfer_deleted'));
                 };
                 
                 switch(choosen) {
-                    case 'delete_nicely' : filesender.client.closeTransfer(id, function() {
+                    case 'delete_transfer_nicely' :
+                        filesender.client.closeTransfer(id, function() {
+                            filesender.client.deleteTransfer(id, done);
+                        });
+                        break;
+                    
+                    case 'delete_transfer_roughly' :
                         filesender.client.deleteTransfer(id, done);
-                    }); break;
-                    case 'delete' : filesender.client.deleteTransfer(id, done); break;
+                        break;
                 }
             });
         } else if($(this).closest('table').is('[data-mode="admin"][data-status="uploading"]')) {
