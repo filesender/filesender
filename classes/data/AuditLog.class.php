@@ -320,7 +320,7 @@ class AuditLog extends DBObject {
     public static function clientRecentlyDownloaded($recipient, $files_ids, $range = 3600) {
         // Get a single download for each file if it exists over the range
         $downloaded = self::all(
-            'target_type=\'File\' AND target_id IN :ids AND author_type="Recipient" AND author_id=:rcptid AND ip = :ip AND event="download_ended" AND created > :since GROUP BY target_id',
+            'target_type=\'File\' AND target_id IN :ids AND author_type=\'Recipient\' AND author_id=:rcptid AND ip = :ip AND event=\'download_ended\' AND created > :since GROUP BY target_id',
             array(
                 ':ids' => $files_ids,
                 ':rcptid' => $recipient->id,
