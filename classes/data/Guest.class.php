@@ -385,23 +385,6 @@ class Guest extends DBObject {
         $options = Config::get('guest_options');
         if(!is_array($options)) $options = array();
         
-        // Add to-be-created transfers options
-        foreach(TransferOptions::all() as $d => $name) {
-            if(!array_key_exists($name, $options))
-                $options[$name] = array(
-                    'available' => false,
-                    'advanced' => false,
-                    'default' => false
-                );
-            
-            foreach(array('available', 'advanced', 'default') as $p) {
-                if(!array_key_exists($p, $options[$name]))
-                    $options[$name][$p] = false;
-                
-                $options[$name][$p] = $options[$name][$p];
-            }
-        }
-        
         return $options;
     }
     
