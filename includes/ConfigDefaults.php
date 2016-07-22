@@ -130,9 +130,9 @@ $default = array(
     'show_storage_statistics_in_admin' => true,
     
     'transfer_options' => array(
-        'email_upload_complete' => array(
+        'email_me_copies' => array(
             'available' => true,
-            'advanced' => false,
+            'advanced' => true,
             'default' => false
         ),
         'email_me_on_expire' => array(
@@ -140,14 +140,14 @@ $default = array(
             'advanced' => false,
             'default' => true
         ),
+        'email_upload_complete' => array(
+            'available' => true,
+            'advanced' => false,
+            'default' => false
+        ),
         'email_download_complete' => array(
             'available' => true,
             'advanced' => false,
-            'default' => true
-        ),
-        'enable_recipient_email_download_complete' => array(
-            'available' => true,
-            'advanced' => true,
             'default' => true
         ),
         'email_daily_statistics' => array(
@@ -155,14 +155,14 @@ $default = array(
             'advanced' => true,
             'default' => false
         ),
-        'email_me_copies' => array(
-            'available' => true,
-            'advanced' => true,
-            'default' => false
-        ),
         'email_report_on_closing' => array(
             'available' => true,
             'advanced' => false,
+            'default' => true
+        ),
+        'enable_recipient_email_download_complete' => array(
+            'available' => true,
+            'advanced' => true,
             'default' => true
         ),
         'add_me_to_recipients' => array(
@@ -203,11 +203,6 @@ $default = array(
             'advanced' => true,
             'default' => false
         ),
-        'add_me_to_recipients' => array(
-            'available' => true,
-            'advanced' => true,
-            'default' => false
-        ),
         'can_only_send_to_me' => array(
             'available' => true,
             'advanced' => false,
@@ -219,6 +214,11 @@ $default = array(
             'default' => true
         ),
         'email_guest_created_receipt' => array(
+            'available' => false,
+            'advanced' => true,
+            'default' => true
+        ),
+        'email_guest_expired' => array(
             'available' => false,
             'advanced' => true,
             'default' => true
