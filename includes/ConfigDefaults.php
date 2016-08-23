@@ -86,6 +86,7 @@ $default = array(
     'terasender_enabled' => true,
     'terasender_start_mode' => 'multiple',
     'terasender_worker_count' => 6,
+    'stalling_detection' => true,
     
     'storage_type' => 'filesystem',
     
