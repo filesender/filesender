@@ -62,4 +62,23 @@ class AuditLogUnknownEventException extends DetailedException {
             array('event' => $event) // Real message to log
         );
     }
+
+}
+
+/**
+ * Log not enabled exception
+ */
+class AuditLogNotEnabledException extends DetailedException {
+
+    /**
+     * Constructor
+     *
+     * @param string $message
+     */
+    public function __construct($message) {
+        parent::__construct(
+                'auditlog_not_enabled', // Message to give to the user
+                array('message' => $message) // Real message to log
+        );
+    }
 }

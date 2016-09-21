@@ -52,9 +52,11 @@ class AuditlogTest extends CommonUnitTestCase {
      */
 
     protected function setUp() {
-        echo "@ " . date("Y-m-d H:i:s") . "\n\n";
+        echo "AuditlogTest@ " . date("Y-m-d H:i:s") . "\n\n";
 
         $configs = Config::get('auditlog_*');
+
+        echo "Auditlog config data: " . print_r($configs, true) . "\n";
 
         if (!isset($configs['enable']) || !$configs['enable']) {
             throw new AuditLogNotEnabledException('Cannot test auditlog if not enabled in config.php');
