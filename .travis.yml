@@ -4,6 +4,6 @@ php:
     - 5.5
     - 5.6
     - 7.0
-script: phpunit --configuration config_tests_filesender.xml
+script: phpunit --configuration unittests/config_tests_filesender.xml
 notifications:
     - email: true
