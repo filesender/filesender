@@ -7,6 +7,7 @@ php:
 script:
     - ls
     - cd unittests
+    - ls
     - launcher.sh -c config_tests_filesender.xml -ts FileSenderUtilities
     - cd
 notifications:
