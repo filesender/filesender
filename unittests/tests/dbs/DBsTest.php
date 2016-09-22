@@ -59,6 +59,7 @@ class DBsTest extends CommonUnitTestCase {
             $statement = DBI::prepare('SELECT 1;');
             $statement->execute(['*']);
             $data = $statement->fetch();
+            echo "Database fetch data: " . print_r($data,true) . "\n";
             $this->assertTrue($data[1] == 1);
 
             $this->displayInfo(get_class(), __FUNCTION__, 'Connexion DB OK');
