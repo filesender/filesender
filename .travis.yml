@@ -7,7 +7,7 @@ php:
 services:
     - mysql
 before_install:
-    - cp ./travis/config.travis.php project/laravel/api/v1/.env
+    - cp ./travis/config.travis.php ./config/config.php
 script:
     - ./travis/scripts/mysql-setup.sh
     - phpunit --configuration ./unittests/config_tests_filesender.xml
