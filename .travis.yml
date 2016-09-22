@@ -4,11 +4,6 @@ php:
     - 5.5
     - 5.6
     - 7.0
-script:
-    - ls
-    - cd unittests
-    - ls
-    - launcher.sh -c config_tests_filesender.xml -ts FileSenderUtilities
-    - cd
+script: phpunit --configuration config_tests_filesender.xml
 notifications:
     - email: true
