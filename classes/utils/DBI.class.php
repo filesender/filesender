@@ -69,6 +69,8 @@ class DBI {
             if(!array_key_exists($p, $config)) $config[$p] = null;
         }
         
+        echo "DBI load config variables: " . print_r($config,true) . " \n";
+        
         // Build dsn from individual components if not defined
         if(!$config['dsn']) {
             if(!$config['type']) $config['type'] = 'pgsql';
@@ -93,6 +95,7 @@ class DBI {
         if(!$config['driver_options']) $config['driver_options'] = array();
         
         self::$config = $config;
+        echo "DBI load config set! \n";
     }
     
     /**
