@@ -6,6 +6,8 @@ php:
     - 7.0
 script:
     - ls
-    - cd unittests && ./launcher.sh -d
+    - cd unittests
+    - launcher.sh -c config_tests_filesender.xml -ts FileSenderUtilities
+    - cd
 notifications:
     - email: true
