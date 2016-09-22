@@ -42,6 +42,7 @@ class DatabasePgsql {
      * Check if a table exists
      */
     public static function tableExists($table) {
+        echo 'Look if table exists '.$table."\n";
         $s = DBI::prepare('SELECT * FROM pg_tables WHERE tablename=:table');
         $s->execute(array(':table' => strtolower($table)));
         return (bool)$s->fetch();
