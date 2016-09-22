@@ -61,6 +61,7 @@ class DBI {
      * @throws DBIConnexionException
      */
     private static function load() {
+        echo "DBI load called! \n";
         // Get config, check mandatory parameters
         $config = Config::get('db_*');
         $config['dsn'] = Config::get('dsn');
