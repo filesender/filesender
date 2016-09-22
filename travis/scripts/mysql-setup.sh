@@ -1,3 +1,3 @@
 #!/bin/bash
 set -ev
-CREATE DATABASE `filesender` DEFAULT CHARACTER SET utf8;
+mysql -e "create database IF NOT EXISTS filesender;" -uroot;
