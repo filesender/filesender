@@ -245,7 +245,7 @@ $config["db_type"]      =       'pgsql';        // String, pgsql or mysql
 $config['db_host']      =       '127.0.0.1';    // String, database host
 $config['db_database']  =       'filesender';   // String, database name
 $config['db_username']  =       'postgres';     // String, database username
-$config['db_password']  =       '';             // String, database password
+$config['db_password']  =       'password';     // String, database password
 
 // ---------------------------------------------
 //              SAML configuration
