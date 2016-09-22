@@ -2,13 +2,12 @@ language: php
 php:
     - 5.4
 services:
-    - mysql
+    - postgresql
 before_install:
     - cp ./travis/config.travis.php ./config/config.php
-    - chmod a+x ./travis/scripts/mysql-setup.sh
+    - chmod a+x ./travis/scripts/postgresql-setup.sh
 script:
-    - ./travis/scripts/mysql-setup.sh
-    - phpunit --configuration ./unittests/config_tests_filesender.xml
+    - ./travis/scripts/postgresql-setup.sh
 notifications:
     email:
         recipients:
