@@ -93,7 +93,7 @@ class DBI {
         // Check that required parameters are not empty
         if(!$config['username']) throw new DBIConnexionMissingParameterException('username');
             echo "DBI load username set! \n";
-        if(!$config['password']) throw new DBIConnexionMissingParameterException('password');
+        //if(!$config['password']) throw new DBIConnexionMissingParameterException('password');
             echo "DBI load password set! \n";
         
         if(!$config['driver_options']) $config['driver_options'] = array();
