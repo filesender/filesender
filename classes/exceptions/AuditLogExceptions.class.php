@@ -33,7 +33,9 @@
 /*
  * Unknown AuditLog exception
  */
+
 class AuditLogNotFoundException extends DetailedException {
+
     /**
      * Constructor
      * 
@@ -41,16 +43,18 @@ class AuditLogNotFoundException extends DetailedException {
      */
     public function __construct($selector) {
         parent::__construct(
-            'auditlog_not_found', // Message to give to the user
-            array('selector' => $selector) // Real message to log
+                'auditlog_not_found', // Message to give to the user
+                array('selector' => $selector) // Real message to log
         );
     }
+
 }
 
 /**
  * Unknown event exception
  */
 class AuditLogUnknownEventException extends DetailedException {
+
     /**
      * Constructor
      * 
@@ -58,8 +62,28 @@ class AuditLogUnknownEventException extends DetailedException {
      */
     public function __construct($event) {
         parent::__construct(
-            'auditlog_unknown_event', // Message to give to the user
-            array('event' => $event) // Real message to log
+                'auditlog_unknown_event', // Message to give to the user
+                array('event' => $event) // Real message to log
         );
     }
+
+}
+
+/**
+ * Log not enabled exception
+ */
+class AuditLogNotEnabledException extends DetailedException {
+
+    /**
+     * Constructor
+     * 
+     * @param string $message
+     */
+    public function __construct($message) {
+        parent::__construct(
+                'auditlog_not_enabled', // Message to give to the user
+                array('message' => $message) // Real message to log
+        );
+    }
+
 }
