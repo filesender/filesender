@@ -8,6 +8,7 @@ services:
     - mysql
 before_install:
     - cp ./travis/config.travis.php ./config/config.php
+    - chmod a+x ./travis/scripts/mysql-setup.sh
 script:
     - ./travis/scripts/mysql-setup.sh
     - phpunit --configuration ./unittests/config_tests_filesender.xml
