@@ -57,7 +57,7 @@ class DBsTest extends CommonUnitTestCase {
     public function testConnexion() {
         try {
             $statement = DBI::prepare('SELECT 1;');
-            $statement->execute();
+            $statement->execute([]);
             $data = $statement->fetch();
             $this->assertTrue($data[1] == 1);
 
