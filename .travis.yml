@@ -1,13 +1,19 @@
 language: php
 php:
     - 5.4
-services:
-    - postgresql
+env:
+    - DB=pgsql
+    - DB=mysql
 before_install:
-    - cp ./travis/config.travis.php ./config/config.php
-    - chmod a+x ./travis/scripts/postgresql-setup.sh
+    - sh -c "if [ '$DB' = 'pgsql' ]; then cp ./travis/config.travis.pgsql.php ./config/config.php; fi"
+    - sh -c "if [ '$DB' = 'mysql' ]; then cp ./travis/config.travis.mysql.php ./config/config.php; fi"
+    - sh -c "if [ '$DB' = 'pgsql' ]; then chmod a+x ./travis/scripts/postgresql-setup.sh; fi"
+    - sh -c "if [ '$DB' = 'mysql' ]; then chmod a+x ./travis/scripts/mysql-setup.sh; fi"
+before_script:
+    - sh -c "if [ '$DB' = 'pgsql' ]; then ./travis/scripts/postgresql-setup.sh; fi"
+    - sh -c "if [ '$DB' = 'mysql' ]; then ./travis/scripts/mysql-setup.sh; fi"
 script:
-    - ./travis/scripts/postgresql-setup.sh
+    - phpunit --configuration ./unittests/config_tests_filesender.xml
 notifications:
     email:
         recipients:
