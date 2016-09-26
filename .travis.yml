@@ -17,5 +17,5 @@ notifications:
     email:
         recipients:
             - emiel@codebridge.nl
-        on_success: [always]
-        on_failure: [always]
+        on_success: always
+        on_failure: always
