@@ -201,9 +201,10 @@ class AuthSPSaml {
                 throw new ConfigMissingParameterException('auth_sp_saml_'.$key);
         }
         
+        echo "Config values:" . print_r(self::$config, true) . "\n";
+        
         if(is_null(self::$simplesamlphp_auth_simple)) {
-            //require_once(self::$config['simplesamlphp_location'] . 'lib/_autoload.php');
-            require_once(self::$config['auth_sp_saml_simplesamlphp_location'] . 'lib/_autoload.php');
+            require_once(self::$config['simplesamlphp_location'] . 'lib/_autoload.php');
             
             self::$simplesamlphp_auth_simple = new SimpleSAML_Auth_Simple(self::$config['authentication_source']);
             
