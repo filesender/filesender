@@ -254,7 +254,7 @@ $config['db_password']  =       'password';     // String, database password
 //$config['auth_sp_saml_simplesamlphp_url'] ='/branches/filesender-2.0/simplesaml/';        // Url of simplesamlphp
 $config['auth_sp_saml_simplesamlphp_url']       =       '/simplesaml/';        // Url of simplesamlphp
 //$config['auth_sp_saml_simplesamlphp_location'] ='/usr/local/filesender/fs20-simplesaml/';   // Location of simplesamlphp libraries
-$config['auth_sp_saml_simplesamlphp_location']  =       '/usr/local/filesender/simplesaml/';   // Location of simplesamlphp libraries
+$config['auth_sp_saml_simplesamlphp_location']  =       '/opt/simplesaml/';   // Location of simplesamlphp libraries
 
 
 // ---------------------------------------------
