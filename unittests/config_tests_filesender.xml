@@ -43,7 +43,7 @@
 >
     <testsuites>
         <testsuite name="FileSenderUtilities" >
-            <file>tests/dbobject/DBOPbjectTest.php</file>
+            <file>tests/dbobject/DBObjectTest.php</file>
         </testsuite>
     </testsuites> 
 </phpunit>
