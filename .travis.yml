@@ -9,7 +9,8 @@ before_install:
 before_script:
     - ./travis/scripts/postgresql-setup.sh
 script:
-    - phpunit --configuration ./unittests/config_tests_filesender.xml
+    #tests
+    #- phpunit --configuration ./unittests/config_tests_filesender.xml
 notifications:
     email:
         recipients:
