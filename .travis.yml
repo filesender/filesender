@@ -5,9 +5,10 @@ service:
     - postgresql
 before_install:
     - cp ./travis/config.travis.pgsql.php ./config/config.php
-    - chmod a+x ./travis/scripts/postgresql-setup.sh
+    - chmod a+x ./travis/scripts/
 install:
     - ./travis/scripts/postgresql-setup.sh
+    - ./travis/scripts/simplesamlphp-setup.sh
 before_script: null
 script: phpunit --version
 notifications:
