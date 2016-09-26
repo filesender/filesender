@@ -43,7 +43,7 @@
 >
     <testsuites>
         <testsuite name="FileSenderUtilities" >
-            <file>tests/file/FileTest.php</file>
+            <file>tests/mail/MailTest.php</file>
         </testsuite>
     </testsuites> 
 </phpunit>
