@@ -251,10 +251,8 @@ $config['db_password']  =       'password';     // String, database password
 //              SAML configuration
 // ---------------------------------------------
 
-//$config['auth_sp_saml_simplesamlphp_url'] ='/branches/filesender-2.0/simplesaml/';        // Url of simplesamlphp
-$config['auth_sp_saml_simplesamlphp_url']       =       '/simplesaml/';        // Url of simplesamlphp
-//$config['auth_sp_saml_simplesamlphp_location'] ='/usr/local/filesender/fs20-simplesaml/';   // Location of simplesamlphp libraries
-$config['auth_sp_saml_simplesamlphp_location']  =       '/usr/local/filesender/simplesaml/';   // Location of simplesamlphp libraries
+$config['auth_sp_saml_simplesamlphp_url']           =       '/simplesaml/';        // Url of simplesamlphp
+$config['auth_sp_saml_simplesamlphp_location']      =       '/opt/simplesaml/';   // Location of simplesamlphp libraries
 
 
 // ---------------------------------------------
@@ -283,13 +281,13 @@ $config['storage_filesystem_path']  =       '/data/branches/filesender-2.0/files
 // uncoment and edit the following lines
 // 
 // // Authentification type ('saml' or 'shibboleth')
-// $config['auth_sp_type']                      =       'saml';
+ $config['auth_sp_type']                        =       'saml';
 // 
 // // Get email attribute from authentication service
-// $config['auth_sp_saml_email_attribute']      =       'mail';
+ $config['auth_sp_saml_email_attribute']        =       'mail';
 // 
 // // Get name attribute from authentication service
-// $config['auth_sp_saml_name_attribute']       =       'cn';
+ $config['auth_sp_saml_name_attribute']         =       'cn';
 // 
 // // Get uid attribute from authentication service.  Usually eduPersonTargetedId or eduPersonPrincipalName
 $config['auth_sp_saml_uid_attribute']           =       'eduPersonPrincipalName';
