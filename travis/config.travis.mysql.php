@@ -70,12 +70,12 @@ $config['lang_url_enabled']         =   true;    				// default is false.  Neede
 // ---------------------------------------------
 
 $config['email_use_html']       =       true;    				// true or false
-$config['email_from']           =       'no-reply@uninett.no';    		// either 'sender' or an email address
-$config['email_from_name']      =       'UNINETT FileSender - beta 2.0';	// pretty name with the From: address
-$config['email_reply_to']       =       'sender';    			// either 'sender' or an email address
-// $config['email_reply_to_name'] = 'pretty name';    		// pretty name in case email_reply_to is a configured email address
-$config['email_return_path']    =       'no-reply@uninett.no';				// either 'sender' or an email address
-$config['email_newline']        =       "\r\n";				// if emails are mangled replace this with \n.  Make sure to put it in double quotes!!
+$config['email_from']           =       'emiel@codebridge.nl';    		// either 'sender' or an email address
+$config['email_from_name']      =       'Emiel Codebridge';                     // pretty name with the From: address
+$config['email_reply_to']       =       'sender';                               // either 'sender' or an email address
+$config['email_reply_to_name']  =       'Emiel Codebridge Reply';               // pretty name in case email_reply_to is a configured email address
+$config['email_return_path']    =       'emiel@codebridge.nl';                  // either 'sender' or an email address
+$config['email_newline']        =       "\r\n";                                 // if emails are mangled replace this with \n.  Make sure to put it in double quotes!!
 
 
 
