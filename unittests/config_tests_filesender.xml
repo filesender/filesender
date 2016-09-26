@@ -43,7 +43,7 @@
 >
     <testsuites>
         <testsuite name="FileSenderUtilities" >
-            <file>tests/report/ReportTest.php</file>
+            <file>tests/transfer/TransferTest.php</file>
         </testsuite>
     </testsuites> 
 </phpunit>
