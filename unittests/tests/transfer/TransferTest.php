@@ -56,8 +56,8 @@ class TransferTest extends CommonUnitTestCase {
         $this->transferSubject = "Subject test FOR CRON";
         $this->transferMessage = "Message test FOR CRON";
 
-        $this->recipient1 = "damien.bruchet@renater.fr";
-        $this->recipient2 = "damien.bruchet@infotel.com";
+        $this->recipient1 = "emiel@codebridge.nl";
+        $this->recipient2 = "emiel@codebridge.nl";
     }
 
     /**

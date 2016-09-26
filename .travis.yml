@@ -6,6 +6,7 @@ service:
 before_install:
     - cp ./travis/config.travis.pgsql.php ./config/config.php
     - chmod -R a+x ./travis/scripts
+    - phpenv config-add ./travis/myconfig.ini
 install:
     - ./travis/scripts/postgresql-setup.sh
     - ./travis/scripts/simplesamlphp-setup.sh
