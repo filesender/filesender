@@ -10,7 +10,8 @@ install:
     - ./travis/scripts/postgresql-setup.sh
     - ./travis/scripts/simplesamlphp-setup.sh
 before_script: null
-script: phpunit --version
+script:
+    - phpunit --configuration ./unittests/config_tests_filesender.xml
 notifications:
     email:
         recipients:
