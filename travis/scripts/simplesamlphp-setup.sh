@@ -20,5 +20,6 @@ cp -r metadata-templates/*.php metadata/
 ls
 cd lib
 ls
-cd ../
+readlink -f _autoload.php
+cd ../../..
 ls
