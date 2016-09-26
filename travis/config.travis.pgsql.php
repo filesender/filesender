@@ -252,7 +252,7 @@ $config['db_password']  =       'password';     // String, database password
 // ---------------------------------------------
 
 $config['auth_sp_saml_simplesamlphp_url']           =       '/simplesaml/';        // Url of simplesamlphp
-$config['auth_sp_saml_simplesamlphp_location']      =       '/opt/simplesaml/';   // Location of simplesamlphp libraries
+$config['auth_sp_saml_simplesamlphp_location']      =       '/home/travis/build/Emiel-Codebridge/filesender/opt/simplesaml/';   // Location of simplesamlphp libraries
 
 
 // ---------------------------------------------
