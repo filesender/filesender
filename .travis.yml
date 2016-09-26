@@ -8,9 +8,6 @@ before_install:
     - chmod a+x ./travis/scripts/postgresql-setup.sh
 before_script:
     - ./travis/scripts/postgresql-setup.sh
-script:
-    #tests
-    #- phpunit --configuration ./unittests/config_tests_filesender.xml
 notifications:
     email:
         recipients:
