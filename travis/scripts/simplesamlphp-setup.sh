@@ -3,7 +3,7 @@ set -ev
 # Create temp folder to download library:
 mkdir downloads
 cd downloads
-wget https://simplesamlphp.org/res/downloads/simplesamlphp-1.14.2.tar.gz
+wget https://simplesamlphp.org/res/downloads/simplesamlphp-1.14.2.tar.gz --no-check-certificate
 # Extract it in a suitable directory and create symlink:
 cd ../
 mkdir opt
