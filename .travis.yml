@@ -5,7 +5,7 @@ service:
     - postgresql
 before_install:
     - cp ./travis/config.travis.pgsql.php ./config/config.php
-    - chmod a+x ./travis/scripts/
+    - chmod -R a+x ./travis/scripts
 install:
     - ./travis/scripts/postgresql-setup.sh
     - ./travis/scripts/simplesamlphp-setup.sh
