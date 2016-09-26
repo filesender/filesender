@@ -18,3 +18,7 @@ cd simplesaml
 cp -r config-templates/*.php config/
 cp -r metadata-templates/*.php metadata/
 ls
+cd lib
+ls
+cd ../
+ls
