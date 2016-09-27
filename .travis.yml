@@ -35,6 +35,8 @@ before_script:
   - sudo cat /var/log/apache2/error.log
   - sudo service postgresql restart
   - sudo service apache2 restart
+after_failure: "sudo cat /var/log/apache2/error.log"
+
 script:
     - ls -la /etc/postgresql/
     #- phpunit --configuration ./unittests/config_tests_filesender.xml
