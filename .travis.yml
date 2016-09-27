@@ -22,6 +22,8 @@ before_script:
   - sudo sed -i "s/host    all             all             127.0.0.1\/32            trust/host    all             all             127.0.0.1\/32            md5/" /etc/postgresql/9.1/main/pg_hba.conf
   - sudo sed -i "s/host    all             all             ::1\/128                 trust/host    all             all             ::1\/128                 md5/" /etc/postgresql/9.1/main/pg_hba.conf
   - sudo cat /etc/postgresql/9.1/main/pg_hba.conf
+  - sudo cat /etc/apache2/apache2.conf
+  - sudo cat /etc/apache2/ports.conf
   - ~/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm
   # configure apache virtual hosts
   - sudo cp -f travis/config.travis.apache2.conf /etc/apache2/sites-available/default
