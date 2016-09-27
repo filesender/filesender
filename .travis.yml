@@ -32,6 +32,7 @@ before_script:
   - sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-available/default
   - sudo ls /var/log/
   - sudo ls /var/log/apache2
+  - sudo ls -la /usr/sbin/apache*
   - sudo cat /var/log/apache2/error.log
   - sudo sed -i "s/\techo The Apache error log may have more information./\techo The Apache err0r l0g may have more information./" /usr/sbin/apachectl
   - sudo sed -i "s/exit \$ERROR/cat \/var\/log\/apache2\/error.log/" /usr/sbin/apachectl
