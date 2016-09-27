@@ -56,6 +56,8 @@ class AuditlogTest extends CommonUnitTestCase {
 
         $configs = Config::get('auditlog_*');
 
+        echo "Auditlog config data: " . print_r($configs, true) . "\n";
+
         if (!isset($configs['enable']) || !$configs['enable']) {
             throw new AuditLogNotEnabledException('Cannot test auditlog if not enabled in config.php');
         } else {
@@ -74,23 +76,22 @@ class AuditlogTest extends CommonUnitTestCase {
     public function testCreate() {
         // Creating transfert object
         $currentDate = date('Y-m-d H:i:s');
-        $transfer = Transfer::create(date('Y-m-d',  strtotime("+5 days")));
+        $transfer = Transfer::create(date('Y-m-d', strtotime("+5 days")));
         $transfer->subject = $this->transfertSubject;
         $transfer->message = $this->transfertMessage;
         $transfer->save();
 
         Logger::logActivity(LogEventTypes::TRANSFER_START, $transfer);
 
-
-        $res = AuditLog::all('created <= :created', array('created' => date('Y-m-d H:0:0',  strtotime($currentDate))));
+        $res = AuditLog::all('created <= :created', array('created' => date('Y-m-d H:0:0', strtotime($currentDate))));
         $this->assertTrue(sizeof($res) > 0);
 
-        $timestamp = strtotime($currentDate) + 60*60;
-        $res = StatLog::all('created <= :created', array('created' => date('Y-m-d H:0:0',  strtotime("+10 days"))));
+        $timestamp = strtotime($currentDate) + 60 * 60;
+        $res = StatLog::all('created <= :created', array('created' => date('Y-m-d H:0:0', strtotime("+10 days"))));
         $this->assertTrue(sizeof($res) > 0);
 
         $this->assertNotNull($transfer->id);
-        
+
         $this->displayInfo(get_class(), __FUNCTION__, ' -- AuditLog created');
 
         return $transfer->id;
@@ -114,7 +115,7 @@ class AuditlogTest extends CommonUnitTestCase {
         $this->assertNotNull($auditLog);
         $this->assertTrue($auditLog->id > 0);
 
-        $this->displayInfo(get_class(), __FUNCTION__, ' -- AuditLog got:'.$auditLog->id);
+        $this->displayInfo(get_class(), __FUNCTION__, ' -- AuditLog got:' . $auditLog->id);
 
         return $transferId;
     }
@@ -130,13 +131,13 @@ class AuditlogTest extends CommonUnitTestCase {
 
         $transfer = Transfer::fromId($transferId);
         $this->assertNotNull($transfer);
-        $this->assertTrue($transfer->id > 0 );
+        $this->assertTrue($transfer->id > 0);
 
         $this->assertNotNull(AuditLog::fromTarget($transfer));
         $transfer->close();
         $this->assertNull(AuditLog::fromTarget($transfer));
-        
-        $this->displayInfo(get_class(), __FUNCTION__, ' -- AuditLog deleted from transfer:'.$transferId);
+
+        $this->displayInfo(get_class(), __FUNCTION__, ' -- AuditLog deleted from transfer:' . $transferId);
 
         return true;
     }

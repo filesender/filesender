@@ -14,8 +14,4 @@ before_script: null
 script:
     - phpunit --configuration ./unittests/config_tests_filesender.xml
 notifications:
-    email:
-        recipients:
-            - emiel@codebridge.nl
-        on_success: always
-        on_failure: always
+    email: false
