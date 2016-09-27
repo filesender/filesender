@@ -1,5 +1,7 @@
 <?php
 
+use DBObject;
+
 /*
  * FileSender www.filesender.org
  * 
