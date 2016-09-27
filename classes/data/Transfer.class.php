@@ -236,7 +236,7 @@ class Transfer extends DBObject {
      * @return Transfer
      */
     public static function create($expires, $user_email = null) {
-        $transfer = new static();
+        $transfer = new self();
         
         // Init caches to empty to avoid db queries
         $transfer->filesCache = array();
