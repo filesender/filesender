@@ -51,7 +51,7 @@ class TransferTest extends CommonUnitTestCase {
      */
 
     protected function setUp() {
-        echo "@ " . date("Y-m-d H:i:s") . "\n\n";
+        echo "TransferTest@ " . date("Y-m-d H:i:s") . "\n\n";
 
         $this->transferSubject = "Subject test FOR CRON";
         $this->transferMessage = "Message test FOR CRON";
