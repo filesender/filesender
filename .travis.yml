@@ -35,9 +35,9 @@ before_script:
   - sudo cat /etc/init.d/apache2
   - sudo ls -la /usr/sbin/apache*
   - sudo cat /var/log/apache2/error.log
-  - sudo sed -i "s/\techo The Apache error log may have more information./\techo The Apache err0r l0g may have more information./" /usr/sbin/apachectl
-  - sudo sed -i "s/exit \$ERROR/cat \/var\/log\/apache2\/error.log/" /usr/sbin/apachectl
-  - sudo cat /usr/sbin/apachectl
+  - sudo sed -i "s/\techo The Apache error log may have more information./\techo The Apache err0r l0g may have more information./" /usr/sbin/apache2ctl
+  - sudo sed -i "s/exit \$ERROR/cat \/var\/log\/apache2\/error.log/" /usr/sbin/apache2ctl
+  - sudo cat /usr/sbin/apache2ctl
   - sudo service postgresql restart
   - sudo service apache2 restart
 
