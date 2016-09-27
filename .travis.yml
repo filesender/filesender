@@ -21,9 +21,11 @@ before_script:
   # configure apache virtual hosts
   - sudo cp -f travis/config.travis.apache2.conf /etc/apache2/sites-available/default
   - sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-available/default
+  - ls -la /etc/postgresql/
+  - netstat -lpn | grep 9000
   - sudo service apache2 restart
 script:
-    ls -la /etc/postgresql/
+    - ls -la /etc/postgresql/
     #- phpunit --configuration ./unittests/config_tests_filesender.xml
 notifications:
     email: false
