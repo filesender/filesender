@@ -52,7 +52,7 @@ class AuditlogTest extends CommonUnitTestCase {
      */
 
     protected function setUp() {
-        echo "@ " . date("Y-m-d H:i:s") . "\n\n";
+        echo "AuditlogTest@ " . date("Y-m-d H:i:s") . "\n\n";
 
         $configs = Config::get('auditlog_*');
 
