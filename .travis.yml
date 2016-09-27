@@ -33,7 +33,7 @@ before_script:
   - sudo ls /var/log/
   - sudo ls /var/log/apache2
   - sudo cat /var/log/apache2/error.log
-  - sudo sed 's/170/&\ncat /usr/sbin/apachectl/' /usr/sbin/apachectl
+  - sudo sed 's/170/&\ncat /var/log/apache2/error.log/' /usr/sbin/apachectl
   - sudo sed -i "s/exit \$ERROR/exit 0/" /usr/sbin/apachectl
   - sudo cat /usr/sbin/apachectl
   - sudo service postgresql restart
