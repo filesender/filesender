@@ -6,7 +6,7 @@ cd /opt/filesender
 
 wget https://simplesamlphp.org/res/downloads/simplesamlphp-1.14.2.tar.gz --no-check-certificate
 
-SHA_DOWNLOAD_HASH=sha256sum https://simplesamlphp.org/res/downloads/simplesamlphp-1.14.2.tar.gz
+SHA_DOWNLOAD_HASH=sha256sum simplesamlphp-1.14.2.tar.gz
 SHA_CHECK_HASH='19b849065cdc8b96d74570b2ef91a08e72d0a4c0d9c30fa9526163ff6684c83e'
 
 
