@@ -294,3 +294,10 @@ $config['auth_sp_saml_uid_attribute']           =       'eduPersonPrincipalName'
 // 
 // // Get path  attribute from authentication service
 $config['auth_sp_saml_authentication_source']   =       'default-sp';
+
+// ---------------------------------------------
+//              Auditlog configs
+// ---------------------------------------------
+
+// Set auditlog for transfers on or off
+$config['auditlog_enable'] = true;
