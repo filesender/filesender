@@ -1,6 +1,13 @@
 language: php
 php:
     - 5.4
+addons:
+  sauce_connect:
+    username: DraughtGlbFileSender
+    direct_domains: file_sender.app
+  jwt:
+    secure: "QjP0WIqwk5oj2/xrz1aBfYIvT5lhZcdzAobfQyAUHbgjEY3RUfSJodwo+HKyjYVxk/3nESu8l4CexI4Tv/sFvkwoRS8lWFWNZd+XIdYvTQSVtAWu3YQ3iuTN2Ms9Pstj/Bv0b0AfOIH8CqVFUbPkY9WTtYczpye/gJbPChOv9J5HYcqBx4PSXICJsrvRLEF+PaBmfNgMWA5XRK/R9Fo+IA1RSLeBoNxqr7nowJOqr1RoMHR47LE9Gcyexq/KcLA9KmwXBGVdBfmG3mNX3A54ly06rPrn4IRHoLL2rfeH0zPiw79gtBWcmwP/OfS05Xdtr4VqIzSKNRjENhJPvwu3YFbi0XcesULR4D7LFJLtKQrb5h/ei0uhUmwMDX4StlfdZBYBIZOlba+mADpc4LKqnFSw+f3Snqga6k+02b8JXFOof9BItaeiXbEE0fE3I1avJtrS1BeuwDwep52JT5O2Z44Cp6Vvy/cX/oXgbzkICHl0+bw5KrZMKKYiOTLqxYukLlNhK4vOHxKe+96Sz3c4KkhOV0j/GdrQB1CHepKZzjgEbEgmDD7gVELwpudp4lcnpwkzn7YPCEq9wtvdo5W66ZJz9yw2gOO/jnRedwA5546cR7qxBPgA9+jVBHckeonzLyEIqRW7baWq9FI/7vmUGp01If38/9rvPa7UnJt4vSw="
+
 service:
     - postgresql
 before_install:
@@ -12,13 +19,12 @@ install:
     - ./travis/scripts/simplesamlphp-setup.sh
 before_script:
   - sudo apt-get update
-  - sudo apt-get install apache2 libapache2-mod-fastcgi
+  - sudo apt-get install apache2 libapache2-mod-fastcgi php php-pgsql
   # enable php-fpm
   - sudo cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf.default ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
   - cat ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
   - sudo a2enmod rewrite actions fastcgi alias ssl headers
   - echo "cgi.fix_pathinfo = 1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-  - sudo cat /etc/postgresql/9.1/main/pg_hba.conf
   - sudo sed -i "s/host    all             all             127.0.0.1\/32            trust/host    all             all             127.0.0.1\/32            md5/" /etc/postgresql/9.1/main/pg_hba.conf
   - sudo sed -i "s/host    all             all             ::1\/128                 trust/host    all             all             ::1\/128                 md5/" /etc/postgresql/9.1/main/pg_hba.conf
   - sudo cat /etc/postgresql/9.1/main/pg_hba.conf
@@ -29,25 +35,16 @@ before_script:
   - ~/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm
   # configure apache virtual hosts
   - sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/certs/filesender_test.key -out /etc/ssl/certs/filesender_test.crt -subj "/C=US/ST=Denial/L=Springfield/O=Dis/CN=file_sender.app"
-  - echo "127.0.0.1       file_sender.app" >> /etc/hosts
+  - sudo echo "127.0.0.1       file_sender.app" >> /etc/hosts
   - sudo cp -f travis/config.travis.apache2.conf /etc/apache2/sites-available/default
   - sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-available/default
-  - sudo ls /var/log/
-  - sudo ls /var/log/apache2
-  - sudo cat /etc/init.d/apache2
-  - sudo ls -la /usr/sbin/apache*
-  - sudo cat /var/log/apache2/error.log
   - sudo sed -i "s/exit \$ERROR/cat \/var\/log\/apache2\/error.log/" /usr/sbin/apache2ctl
-  - sudo cat /usr/sbin/apache2ctl
   - sudo service postgresql restart
   - sudo service apache2 restart
+  - php /opt/filesender/filesender/scripts/upgrade/database.php
 
   - sudo cat /var/log/apache2/error.log
-after_failure:
-
-
 script:
-    - ls -la /etc/postgresql/
-    #- phpunit --configuration ./unittests/config_tests_filesender.xml
+    - phpunit --configuration ./unittests/config_tests_filesender.xml
 notifications:
     email: false
