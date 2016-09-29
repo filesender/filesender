@@ -20,7 +20,7 @@ before_install:
 install:
     - ./travis/scripts/postgresql-setup.sh
     - ./travis/scripts/simplesamlphp-setup.sh
-    - composer install --no-interaction
+    - composer require sauce/sausage --no-interaction
 before_script:
   - sudo apt-get update
   - sudo apt-get install apache2 libapache2-mod-fastcgi
