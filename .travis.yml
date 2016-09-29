@@ -6,7 +6,9 @@ addons:
     username: DraughtGlbFileSender
     direct_domains: file_sender.app
   jwt:
-    secure: "QjP0WIqwk5oj2/xrz1aBfYIvT5lhZcdzAobfQyAUHbgjEY3RUfSJodwo+HKyjYVxk/3nESu8l4CexI4Tv/sFvkwoRS8lWFWNZd+XIdYvTQSVtAWu3YQ3iuTN2Ms9Pstj/Bv0b0AfOIH8CqVFUbPkY9WTtYczpye/gJbPChOv9J5HYcqBx4PSXICJsrvRLEF+PaBmfNgMWA5XRK/R9Fo+IA1RSLeBoNxqr7nowJOqr1RoMHR47LE9Gcyexq/KcLA9KmwXBGVdBfmG3mNX3A54ly06rPrn4IRHoLL2rfeH0zPiw79gtBWcmwP/OfS05Xdtr4VqIzSKNRjENhJPvwu3YFbi0XcesULR4D7LFJLtKQrb5h/ei0uhUmwMDX4StlfdZBYBIZOlba+mADpc4LKqnFSw+f3Snqga6k+02b8JXFOof9BItaeiXbEE0fE3I1avJtrS1BeuwDwep52JT5O2Z44Cp6Vvy/cX/oXgbzkICHl0+bw5KrZMKKYiOTLqxYukLlNhK4vOHxKe+96Sz3c4KkhOV0j/GdrQB1CHepKZzjgEbEgmDD7gVELwpudp4lcnpwkzn7YPCEq9wtvdo5W66ZJz9yw2gOO/jnRedwA5546cR7qxBPgA9+jVBHckeonzLyEIqRW7baWq9FI/7vmUGp01If38/9rvPa7UnJt4vSw="
+    secure: "QjP0WIqwk5oj2/xrz1aBfYIvT5lhZcdzAobfQyAUHbgjEY3RfSJodwo+HKyjYVxk/3nESu8l4CexI4Tv/sFvkwoRS8lWFWNZd+XIdYvTQSVtAWu3YQ3iuTN2Ms9Pstj/Bv0b0AfOIH8CqVFUbPkY9WTtYczpye/gJbPChOv9J5HYcqBx4PSXICJsrvRLEF+PaBmfNgMWA5XRK/R9Fo+IA1RSLeBoNxqr7nowJOqr1RoMHR47LE9Gcyexq/KcLA9KmwXBGVdBfmG3mNX3A54ly06rPrn4IRHoLL2rfeH0zPiw79gtBWcmwP/OfS05Xdtr4VqIzSKNRjENhJPvwu3YFbi0XcesULR4D7LFJLtKQrb5h/ei0uhUmwMDX4StlfdZBYBIZOlba+mADpc4LKqnFSw+f3Snqga6k+02b8JXFOof9BItaeiXbEE0fE3I1avJtrS1BeuwDwep52JT5O2Z44Cp6Vvy/cX/oXgbzkICHl0+bw5KrZMKKYiOTLqxYukLlNhK4vOHxKe+96Sz3c4KkhOV0j/GdrQB1CHepKZzjgEbEgmDD7gVELwpudp4lcnpwkzn7YPCEq9wtvdo5W66ZJz9yw2gOO/jnRedwA5546cR7qxBPgA9+jVBHckeonzLyEIqRW7baWq9FI/7vmUGp01If38/9rvPa7UnJt4vSw="
+  hosts:
+    - file_sender.app
 
 service:
     - postgresql
@@ -35,7 +37,6 @@ before_script:
   - ~/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm
   # configure apache virtual hosts
   - sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/certs/filesender_test.key -out /etc/ssl/certs/filesender_test.crt -subj "/C=US/ST=Denial/L=Springfield/O=Dis/CN=file_sender.app"
-  - sudo echo "127.0.0.1       file_sender.app" >> /etc/hosts
   - sudo cp -f travis/config.travis.apache2.conf /etc/apache2/sites-available/default
   - sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-available/default
   - sudo sed -i "s/exit \$ERROR/cat \/var\/log\/apache2\/error.log/" /usr/sbin/apache2ctl
