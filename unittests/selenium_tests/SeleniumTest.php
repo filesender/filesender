@@ -50,6 +50,9 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
     {
         require_once('includes/init.php');
 
+        print_r(['debug: ', getenv('SAUCE_USERNAME'), Config::get('sauce_username'), Config::get('sauce_access_key')]);
+        die();
+
         if(getenv('SAUCE_USERNAME') === false)
         {
 
