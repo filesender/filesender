@@ -14,6 +14,7 @@ service:
     - postgresql
 before_install:
     - cp ./travis/config.travis.pgsql.php ./config/config.php
+    - sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place ./config/config.php
     - chmod -R a+x ./travis/scripts
     - phpenv config-add ./travis/myconfig.ini
 install:
