@@ -12,7 +12,14 @@ class LanguageSelectTest extends SeleniumTest
     {
         extract($this->getKeyBindings());
 
-        sleep(1);
+        for ($second = 0; ; $second++) {
+            if ($second >= 60) $this->fail("timeout");
+            try {
+                if ($this->byId("language_selector")!=null  ? true : false) break;
+
+            } catch (Exception $e) {}
+            sleep(1);
+        }
 
         $this->select($this->byId("language_selector"))->selectOptionByLabel("nl-nl");
 
