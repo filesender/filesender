@@ -1,8 +1,5 @@
 #!/bin/bash
 set -ev
-# Create temp folder to download library:
-mkdir -p /opt/filesender/
-cd /opt/filesender
 
 wget https://simplesamlphp.org/res/downloads/simplesamlphp-1.14.2.tar.gz --no-check-certificate
 

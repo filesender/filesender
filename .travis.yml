@@ -42,7 +42,7 @@ before_script:
   - sudo sed -i "s/exit \$ERROR/cat \/var\/log\/apache2\/error.log/" /usr/sbin/apache2ctl
   - sudo service postgresql restart
   - sudo service apache2 restart
-  - php /opt/filesender/filesender/scripts/upgrade/database.php
+  - php scripts/upgrade/database.php
 
   - sudo cat /var/log/apache2/error.log
 script:
