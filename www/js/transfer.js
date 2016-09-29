@@ -164,7 +164,7 @@ window.filesender.transfer = function() {
         
         if (typeof filesender.config.ban_extension == 'string') {
             var banned = filesender.config.ban_extension.replace(/\s+/g, '');
-            banned = new RegExp('^(' + banned.replace(',', '|') + ')$', 'g');
+            banned = new RegExp('^(' + banned.replace(/,/g, '|') + ')$', 'g');
             var extension = file.name.split('.').pop();
             if (extension.match(banned)) {
                 errorhandler({message: 'banned_extension', details: {extension: extension, filename: file.name, banned: filesender.config.ban_extension}});

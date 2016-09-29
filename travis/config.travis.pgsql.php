@@ -281,7 +281,7 @@ $config['storage_filesystem_path']  =       '/data/branches/filesender-2.0/files
 // uncoment and edit the following lines
 // 
 // // Authentification type ('saml' or 'shibboleth')
- $config['auth_sp_type']                        =       'saml';
+$config['auth_sp_type'] = 'saml';
 // 
 // // Get email attribute from authentication service
  $config['auth_sp_saml_email_attribute']        =       'mail';
@@ -294,6 +294,11 @@ $config['auth_sp_saml_uid_attribute']           =       'eduPersonPrincipalName'
 // 
 // // Get path  attribute from authentication service
 $config['auth_sp_saml_authentication_source']   =       'default-sp';
+
+$config['auth_sp_fake_authenticated'] = true;
+$config['auth_sp_fake_uid'] = '1';
+$config['auth_sp_fake_email'] = 'peter@codebridge.nl';
+$config['auth_sp_fake_name'] = 'Peter';
 
 // ---------------------------------------------
 //              Auditlog configs
