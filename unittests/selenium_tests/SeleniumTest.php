@@ -61,7 +61,7 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
 
         }
 
-        $this->base_url = Config::get('site_url') . '/';
+        $this->start_url = Config::get('site_url');
 
         if($this->start_url_path != '') {
             $this->start_url = Config::get('site_url') . '/' . $this->start_url_path;
