@@ -51,3 +51,5 @@ script:
     - phpunit --configuration ./unittests/config_tests_filesender.xml
 notifications:
     email: false
+env:
+  - SAUCE_TUNNEL_IDENTIFIER=$TRAVIS_JOB_NUMBER SAUCE_DONT_VERIFY_CERTS=1
