@@ -48,7 +48,7 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
 
     public function __construct($name = NULL, array $data = array(), $dataName = '')
     {
-        require_once('../../includes/init.php');
+        require_once('includes/init.php');
 
         if(getenv('SAUCE_USERNAME') === false)
         {
