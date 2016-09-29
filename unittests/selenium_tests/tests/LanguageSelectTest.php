@@ -1,5 +1,7 @@
 <?php
 
+require_once 'unittests/SeleniumTest.php';
+
 class LanguageSelectTest extends SeleniumTest
 {
 
