@@ -24,12 +24,19 @@ class LanguageSelectTest extends SeleniumTest
         $this->select($this->byId("language_selector"))->selectOptionByLabel("nl-nl");
 
         $this->waitUntil(function(){
-            return $this->assertEquals($this->byCssSelector("#page .box")->value(), '     Welkom bij FileSender  FileSender is een veilige manier om bestanden te delen met iedereen! Meld u aan om een bestand te versturen of om iemand uit te nodigen om een bestand te sturen.          ');
+            return $this->assertEquals($this->byCssSelector("#page .box")->text(), '
+    Welkom bij FileSender
+
+FileSender is een veilige manier om bestanden te delen met iedereen! Meld u aan om een bestand te versturen of om iemand uit te nodigen om een bestand te sturen.
+    
+    ');
         }, 2000);
 
         $this->select($this->byId("language_selector"))->selectOptionByLabel("English (US)");
         $this->waitUntil(function(){
-            return $this->assertEquals($this->byCssSelector("#page .box p")->value(), '     FileSender is a secure way to share large files with anyone !     Logon to upload your files or invite people to send you a file. ');
+            return $this->assertEquals($this->byCssSelector("#page .box p")->text(), '
+    FileSender is a secure way to share large files with anyone !
+    Logon to upload your files or invite people to send you a file.');
         }, 2000);
 
     }
