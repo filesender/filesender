@@ -46,6 +46,10 @@ before_script:
   - php scripts/upgrade/database.php
 
   - sudo cat /var/log/apache2/error.log
+after_failure:
+  - sudo cat /var/log/apache2/error.log
+  - sudo cat /var/log/apache2/access.log
+
 script:
     - phpunit --configuration ./unittests/config_tests_filesender.xml
 notifications:
