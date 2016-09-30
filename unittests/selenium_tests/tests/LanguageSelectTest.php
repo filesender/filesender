@@ -25,6 +25,7 @@ class LanguageSelectTest extends SeleniumTest
 
         $this->waitUntil(function(){
             echo '1: '.$this->byCssSelector("#page .box")->text()."\n";
+            echo '1b: '.(strpos($this->byCssSelector("#page .box")->text(), 'FileSender is een veilige manier om bestanden te delen met iedereen!') !== false)."\n";
             return $this->assertEquals(strpos($this->byCssSelector("#page .box")->text(), 'FileSender is een veilige manier om bestanden te delen met iedereen!') !== false, true);
         }, 2000);
 
@@ -33,6 +34,7 @@ class LanguageSelectTest extends SeleniumTest
         $this->select($this->byId("language_selector"))->selectOptionByLabel("English (US)");
         $this->waitUntil(function(){
             echo '2: '.$this->byCssSelector("#page .box p")->text()."\n";
+            echo '2b: '.(strpos($this->byCssSelector("#page .box p")->text(), 'FileSender is a secure way to share large files with anyone !') !== false)."\n";
             return $this->assertEquals(strpos($this->byCssSelector("#page .box p")->text(), 'FileSender is a secure way to share large files with anyone !') !== false, true);
         }, 2000);
 
