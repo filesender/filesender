@@ -12,8 +12,6 @@ class LanguageSelectTest extends SeleniumTest
     {
         extract($this->getKeyBindings());
 
-        sleep(400);
-
         for ($second = 0; ; $second++) {
             if ($second >= 60) $this->fail("timeout");
             try {
