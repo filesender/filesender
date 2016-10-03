@@ -7,7 +7,7 @@ class TemplatingTest extends SeleniumTest
 
     protected $start_url_path = '';
 
-    protected $skin_folder = '../../www/skin';
+    protected $skin_folder = '../../../www/skin';
     protected $css_file = 'styles.css';
     protected $javascript_file = 'script.js';
 
