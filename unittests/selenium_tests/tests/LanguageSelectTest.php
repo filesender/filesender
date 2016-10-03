@@ -12,6 +12,8 @@ class LanguageSelectTest extends SeleniumTest
     {
         extract($this->getKeyBindings());
 
+        $this->setupUnauthenticated();
+
         for ($second = 0; ; $second++) {
             if ($second >= 60) $this->fail("timeout");
             try {
@@ -23,16 +25,14 @@ class LanguageSelectTest extends SeleniumTest
 
         $this->select($this->byId("language_selector"))->selectOptionByLabel("nl-nl");
         $this->waitUntil(function(){
-            $a = (strpos($this->byCssSelector("#page .box")->text(), 'FileSender is een veilige manier om bestanden te delen met iedereen!') !== false);
-            return $a;
+            return (strpos($this->byCssSelector("#page .box")->text(), 'FileSender is een veilige manier om bestanden te delen met iedereen!') !== false);
         }, 2000);
 
 
 
         $this->select($this->byId("language_selector"))->selectOptionByLabel("English (US)");
         $this->waitUntil(function(){
-            $a = (strpos($this->byCssSelector("#page .box p")->text(), 'FileSender is a secure way to share large files with anyone !') !== false);
-            return $a;
+            return (strpos($this->byCssSelector("#page .box p")->text(), 'FileSender is a secure way to share large files with anyone !') !== false);
         }, 2000);
 
     }

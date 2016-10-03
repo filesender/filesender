@@ -107,5 +107,28 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
         return $key_bindings;
     }
 
+    protected function setupUnauthenticated()
+    {
+        $this->changeAuthSPType('saml');
+        $this->refresh();
+    }
+
+    protected function setupAuthenticated()
+    {
+        $this->changeAuthSPType('fake');
+        $this->refresh();
+    }
+
+    private function changeAuthSPType($type)
+    {
+        //read the entire string
+        $str=file_get_contents('../../config.php');
+
+        //replace something in the file string
+        $str=preg_replace("/\$config\['auth_sp_type'\] = '(.*)';/", "$config\['auth_sp_type'\] = '$type';",$str);
+
+        //write the entire string
+        file_put_contents('msghistory.txt', $str);
+    }
 
 }
