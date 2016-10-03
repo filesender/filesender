@@ -125,7 +125,7 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
         $str=file_get_contents('config/config.php');
 
         //replace something in the file string
-        $str=preg_replace("/\$config\['auth_sp_type'\] = '(.*)';/", "$config\['auth_sp_type'\] = '$type';",$str);
+        $str=preg_replace("/\$config\['auth_sp_type'\] = '(.*)';/", "\$config\['auth_sp_type'\] = '$type';",$str);
 
         //write the entire string
         file_put_contents('msghistory.txt', $str);
