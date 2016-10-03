@@ -122,7 +122,7 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
     private function changeAuthSPType($type)
     {
         //read the entire string
-        $str=file_get_contents('../../config/config.php');
+        $str=file_get_contents('../config/config.php');
 
         //replace something in the file string
         $str=preg_replace("/\$config\['auth_sp_type'\] = '(.*)';/", "$config\['auth_sp_type'\] = '$type';",$str);
