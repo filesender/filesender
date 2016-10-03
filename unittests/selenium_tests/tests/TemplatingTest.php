@@ -32,7 +32,7 @@ class TemplatingTest extends SeleniumTest
             mkdir($this->skin_folder);
         }
 
-        $current_background_color = $this->byCssSelector('body')->getCssValue('backgound-color');
+        $current_background_color = $this->byCssSelector('body')->css('backgound-color');
         echo 'CssTest: Current background color found: '.$current_background_color."\n";
 
         // invert
@@ -46,7 +46,7 @@ class TemplatingTest extends SeleniumTest
         $this->refresh();
 
         $this->waitUntil(function() use ($new_background_color){
-            echo 'CssTest: new background color found: '.$this->byCssSelector('body')->getCssValue('backgound-color')."\n";
+            echo 'CssTest: new background color found: '.$this->byCssSelector('body')->css('backgound-color')."\n";
             return $this->assertEquals($this->byCssSelector('body')->getCssValue('backgound-color'), $new_background_color);
         }, 2000);
     }
@@ -75,7 +75,10 @@ class TemplatingTest extends SeleniumTest
         $this->refresh();
 
         $this->waitUntil(function() use ($test_div_id, $test_div_message){
-            echo 'Javascript test: Content of div: '.$test_div_id.' is: '. $test_div_message."\n";
+            echo 'Javascript test: Content of div: '.$test_div_id.' is: '. $this->byCssSelector('#'.$test_div_id)->text()."\n";
+            print_r($this->assertEquals($this->byCssSelector('#'.$test_div_id)->text(), $test_div_message));
+            print_r((bool)$this->assertEquals($this->byCssSelector('#'.$test_div_id)->text(), $test_div_message));
+            echo ($this->byCssSelector('#'.$test_div_id)->text() == $test_div_message?'Yes':'No')."\n";
             return $this->assertEquals($this->byCssSelector('#'.$test_div_id)->text(), $test_div_message);
         }, 2000);
 
