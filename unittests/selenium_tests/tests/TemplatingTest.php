@@ -15,6 +15,8 @@ class TemplatingTest extends SeleniumTest
     protected $javascript_exists = false;
     protected $css_exists = false;
 
+    protected $teardown_function = null;
+
 
     public function testCss()
     {
@@ -32,12 +34,16 @@ class TemplatingTest extends SeleniumTest
             mkdir($this->skin_folder);
         }
 
-        $current_background_color = $this->byCssSelector('body')->css('backgound-color');
-        echo 'CssTest: Current background color found: '.$current_background_color."\n";
+        $current_background_color = $this->byCssSelector('body')->css('background-color');
+//        echo 'CssTest: Current background color found: '.$current_background_color."\n";
 
         // invert
-        $new_background_color = $this->color_inverse($current_background_color);
-        echo 'CssTest: New background color to check: '.$new_background_color."\n";
+        $new_background_color = preg_replace_callback('/rgba\((\d{1,3}), (\d{1,3}), (\d{1,3}), (.*)\)/', function($matches){
+            return 'rgba('.(255-$matches[1]).', '.(255-$matches[2]).', '.(255-$matches[3]).', '.$matches[4].')';
+        }, $current_background_color);
+
+
+//        echo 'CssTest: New background color to check: '.$new_background_color."\n";
 
 
         // put in file
@@ -45,10 +51,9 @@ class TemplatingTest extends SeleniumTest
 
         $this->refresh();
 
-        $this->waitUntil(function() use ($new_background_color){
-            echo 'CssTest: new background color found: '.$this->byCssSelector('body')->css('backgound-color')."\n";
-            return $this->assertEquals($this->byCssSelector('body')->getCssValue('backgound-color'), $new_background_color);
-        }, 2000);
+        $this->assertEquals($this->byCssSelector('body')->css('background-color'), $new_background_color);
+
+        $this->teardown_function = array($this, 'tearDownCss');
     }
 
     public function testJavascript()
@@ -74,55 +79,44 @@ class TemplatingTest extends SeleniumTest
 
         $this->refresh();
 
-        $this->waitUntil(function() use ($test_div_id, $test_div_message){
-            echo 'Javascript test: Content of div: '.$test_div_id.' is: '. $this->byCssSelector('#'.$test_div_id)->text()."\n";
-            print_r($this->assertEquals($this->byCssSelector('#'.$test_div_id)->text(), $test_div_message));
-            print_r((bool)$this->assertEquals($this->byCssSelector('#'.$test_div_id)->text(), $test_div_message));
-            echo ($this->byCssSelector('#'.$test_div_id)->text() == $test_div_message?'Yes':'No')."\n";
-            return $this->assertEquals($this->byCssSelector('#'.$test_div_id)->text(), $test_div_message);
-        }, 2000);
+        $this->assertEquals($this->byCssSelector('#'.$test_div_id)->text(), $test_div_message);
 
+        $this->teardown_function = array($this, 'tearDownJavascript');
+    }
+
+    public function tearDown()
+    {
+        if($this->teardown_function !== null)
+        {
+            call_user_func($this->teardown_function);
+        }
+
+        if($this->skin_folder_created)
+        {
+            rmdir($this->skin_folder);
+        }
+
+
+        parent::tearDown();
     }
 
 
-    public function tearDown()
+    public function tearDownCss()
     {
         unlink($this->skin_folder.DIRECTORY_SEPARATOR.$this->css_file);
         if($this->css_exists)
         {
             rename($this->skin_folder.DIRECTORY_SEPARATOR.$this->css_file.'_old', $this->skin_folder.DIRECTORY_SEPARATOR.$this->css_file);
         }
+    }
 
-
+    public function tearDownJavascript()
+    {
         unlink($this->skin_folder.DIRECTORY_SEPARATOR.$this->javascript_file);
         if($this->javascript_exists)
         {
             rename($this->skin_folder.DIRECTORY_SEPARATOR.$this->javascript_file.'_old', $this->skin_folder.DIRECTORY_SEPARATOR.$this->javascript_file);
         }
-
-        if($this->skin_folder_created)
-        {
-            unlink($this->skin_folder);
-        }
-
-        parent::tearDown();
-    }
-
-    /**
-     * Found at: http://www.jonasjohn.de/snippets/php/color-inverse.htm
-     * @param $color
-     * @return string
-     */
-    private function color_inverse($color) {
-        $color = str_replace('#', '', $color);
-        if (strlen($color) != 6){ return '000000'; }
-        $rgb = '';
-        for ($x=0;$x<3;$x++){
-            $c = 255 - hexdec(substr($color,(2*$x),2));
-            $c = ($c < 0) ? 0 : dechex($c);
-            $rgb .= (strlen($c) < 2) ? '0'.$c : $c;
-        }
-        return '#'.$rgb;
     }
 
     /**
