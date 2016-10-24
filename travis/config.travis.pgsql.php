@@ -48,7 +48,7 @@
 // 
 $config['site_url']             =   'https://file_sender.app/filesender';                // String, URL of the application
 // 
-$config['admin']                =   'emiel';            // String, UID's (from  $config['saml_uid_attribute']) 
+$config['admin']                =   '0';            // String, UID's (from  $config['saml_uid_attribute'])
                                     // that have Administrator permissions
 $config['admin_email']          =   'emiel@codebridge.nl';       // String, email  address(es, separated by ,) 
                                     			// to receive administrative messages (low disk  space warning)

@@ -196,11 +196,13 @@ while($inputs) {
                 switch($relay_to) {
                     case 'sender':
                         $mail = new ApplicationMail(Lang::translateEmail('recipient_feedback')->r($args));
+                        $mail->setDebugTemplate('recipient_feedback');
                         $mail->to($target->owner->email);
                         break;
                         
                     case 'admin':
                         $mail = new SystemMail(Lang::translateEmail('email_feedback')->r($args));
+                        $mail->setDebugTemplate('email_feedback');
                         break;
                         
                     case 'support':
@@ -210,12 +212,14 @@ while($inputs) {
                             if(!filter_var($support, FILTER_VALIDATE_EMAIL)) throw new BadEmailException($support);
                             
                             $mail = new ApplicationMail(Lang::translateEmail('email_feedback')->r($args));
+                            $mail->setDebugTemplate('email_feedback');
                             $mail->to($support);
                         } else throw new ConfigBadParameterException('help_url');
                         
                     default:
                         if(filter_var($relay_to, FILTER_VALIDATE_EMAIL)) {
                             $mail = new ApplicationMail(Lang::translateEmail('email_feedback')->r($args));
+                            $mail->setDebugTemplate('email_feedback');
                             $mail->to($relay_to);
                         } else throw new ConfigBadParameterException('relay_unknown_feedbacks');
                 }

@@ -22,28 +22,14 @@ class TemplatingTest extends SeleniumTest
     {
         $this->setupUnauthenticated();
 
-        if(file_exists($this->skin_folder))
-        {
-            if(file_exists($this->skin_folder.DIRECTORY_SEPARATOR.$this->css_file))
-            {
-                $this->css_exists = true;
-                rename($this->skin_folder.DIRECTORY_SEPARATOR.$this->css_file, $this->skin_folder.DIRECTORY_SEPARATOR.$this->css_file.'_old');
-            }
-        } else {
-            $this->skin_folder_created = true;
-            mkdir($this->skin_folder);
-        }
+        $this->moveAwayOldSkinCss();
 
         $current_background_color = $this->byCssSelector('body')->css('background-color');
-//        echo 'CssTest: Current background color found: '.$current_background_color."\n";
 
         // invert
         $new_background_color = preg_replace_callback('/rgba\((\d{1,3}), (\d{1,3}), (\d{1,3}), (.*)\)/', function($matches){
             return 'rgba('.(255-$matches[1]).', '.(255-$matches[2]).', '.(255-$matches[3]).', '.$matches[4].')';
         }, $current_background_color);
-
-
-//        echo 'CssTest: New background color to check: '.$new_background_color."\n";
 
 
         // put in file
@@ -53,24 +39,14 @@ class TemplatingTest extends SeleniumTest
 
         $this->assertEquals($this->byCssSelector('body')->css('background-color'), $new_background_color);
 
-        $this->teardown_function = array($this, 'tearDownCss');
+        $this->teardown_function = array($this, 'moveBackOldSkinCss');
     }
 
     public function testJavascript()
     {
         $this->setupUnauthenticated();
 
-        if(file_exists($this->skin_folder))
-        {
-            if(file_exists($this->skin_folder.DIRECTORY_SEPARATOR.$this->javascript_file))
-            {
-                $this->javascript_exists = true;
-                rename($this->skin_folder.DIRECTORY_SEPARATOR.$this->javascript_file, $this->skin_folder.DIRECTORY_SEPARATOR.$this->javascript_file.'_old');
-            }
-        } else {
-            mkdir($this->skin_folder);
-            $this->skin_folder_created = true;
-        }
+        $this->moveAwayOldSkinJavascript();
 
         $test_div_id = 'test-div-'.$this->generateRandomString();
         $test_div_message = 'This is a test div';
@@ -81,7 +57,7 @@ class TemplatingTest extends SeleniumTest
 
         $this->assertEquals($this->byCssSelector('#'.$test_div_id)->text(), $test_div_message);
 
-        $this->teardown_function = array($this, 'tearDownJavascript');
+        $this->teardown_function = array($this, 'moveBackOldSkinJavascript');
     }
 
     public function tearDown()
@@ -100,22 +76,51 @@ class TemplatingTest extends SeleniumTest
         parent::tearDown();
     }
 
-
-    public function tearDownCss()
+    private function moveAwayOldSkinJavascript()
     {
-        unlink($this->skin_folder.DIRECTORY_SEPARATOR.$this->css_file);
-        if($this->css_exists)
+        if(file_exists($this->skin_folder))
         {
-            rename($this->skin_folder.DIRECTORY_SEPARATOR.$this->css_file.'_old', $this->skin_folder.DIRECTORY_SEPARATOR.$this->css_file);
+            if(file_exists($this->skin_folder.DIRECTORY_SEPARATOR.$this->javascript_file))
+            {
+                $this->javascript_exists = true;
+                rename($this->skin_folder.DIRECTORY_SEPARATOR.$this->javascript_file, $this->skin_folder.DIRECTORY_SEPARATOR.$this->javascript_file.'_old');
+            }
+        } else {
+            mkdir($this->skin_folder);
+            $this->skin_folder_created = true;
         }
     }
 
-    public function tearDownJavascript()
+    private function moveBackOldSkinJavascript()
     {
         unlink($this->skin_folder.DIRECTORY_SEPARATOR.$this->javascript_file);
         if($this->javascript_exists)
         {
             rename($this->skin_folder.DIRECTORY_SEPARATOR.$this->javascript_file.'_old', $this->skin_folder.DIRECTORY_SEPARATOR.$this->javascript_file);
+        }
+    }
+
+    private function moveAwayOldSkinCss()
+    {
+        if(file_exists($this->skin_folder))
+        {
+            if(file_exists($this->skin_folder.DIRECTORY_SEPARATOR.$this->css_file))
+            {
+                $this->css_exists = true;
+                rename($this->skin_folder.DIRECTORY_SEPARATOR.$this->css_file, $this->skin_folder.DIRECTORY_SEPARATOR.$this->css_file.'_old');
+            }
+        } else {
+            $this->skin_folder_created = true;
+            mkdir($this->skin_folder);
+        }
+    }
+
+    private function moveBackOldSkinCss()
+    {
+        unlink($this->skin_folder.DIRECTORY_SEPARATOR.$this->css_file);
+        if($this->css_exists)
+        {
+            rename($this->skin_folder.DIRECTORY_SEPARATOR.$this->css_file.'_old', $this->skin_folder.DIRECTORY_SEPARATOR.$this->css_file);
         }
     }
 
