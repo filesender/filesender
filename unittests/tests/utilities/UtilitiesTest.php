@@ -43,7 +43,7 @@ class UtilitiesTest extends CommonUnitTestCase {
      * Init variables, first function called
      */
     protected function setUp() {
-        echo "@ " . date("Y-m-d H:i:s") . "\n\n";
+        echo "UtilitiesTest@ " . date("Y-m-d H:i:s") . "\n\n";
     }
 
     /**
@@ -58,7 +58,7 @@ class UtilitiesTest extends CommonUnitTestCase {
         $timestamp = strtotime($strDate);
 
         try {
-            $this->assertTrue(Utilities::formatDate($timestamp) == "04-09-2014");
+            $this->assertTrue(Utilities::formatDate($timestamp) == "04/09/2014");
 
             $this->displayInfo(get_class(), __FUNCTION__, '');
         } catch (PHPUnit_Framework_AssertionFailedError $ex) {

@@ -45,7 +45,7 @@ class DBsTest extends CommonUnitTestCase {
      * Init variables, first function called
      */
     protected function setUp() {
-        echo "@ " . date("Y-m-d H:i:s") . "\n\n";
+        echo "DBsTest@ " . date("Y-m-d H:i:s") . "\n\n";
     }
 
     /**
@@ -57,9 +57,9 @@ class DBsTest extends CommonUnitTestCase {
     public function testConnexion() {
         try {
             $statement = DBI::prepare('SELECT 1;');
-            $statement->execute();
+            $statement->execute([]);
             $data = $statement->fetch();
-            $this->assertTrue($data[1] == 1);
+            $this->assertTrue($data['?column?'] == 1);
 
             $this->displayInfo(get_class(), __FUNCTION__, 'Connexion DB OK');
         } catch (Exception $ex) {

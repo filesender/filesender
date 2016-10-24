@@ -43,7 +43,7 @@ class Mailtest extends CommonUnitTestCase {
      * Init variables, first function called
      */
     protected function setUp() {
-        echo "@ " . date("Y-m-d H:i:s") . "\n\n";
+        echo "Mailtest@ " . date("Y-m-d H:i:s") . "\n\n";
     }
 
     /**
@@ -53,9 +53,9 @@ class Mailtest extends CommonUnitTestCase {
      */
     public function testSendMail() {
         // Creating transfert object
-        $mail = new Mail('sub test', 'tes@dam.fr', 'TESTER', $html = false);
-        $mail->to("damien.bruchet@renater.fr");
-        $mail->cc("damien.bruchet@infotel.com");
+        $mail = new Mail('emiel@codebridge.nl', 'Test mail SURFnet filesender', $html = false);
+        //$mail->to("emiel@codebridge.nl");
+        $mail->cc("emiel@codebridge.nl");
 
         $this->assertTrue($mail->send());
 

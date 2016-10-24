@@ -52,7 +52,7 @@ class FileTest extends CommonDatabaseTestCase {
      */
 
     protected function setUp() {
-        echo "@ " . date("Y-m-d H:i:s") . "\n\n";
+        echo "FileTest@ " . date("Y-m-d H:i:s") . "\n\n";
 
         $this->transferSubject = "Subject test";
         $this->transferMessage = "Message test";

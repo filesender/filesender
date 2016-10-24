@@ -169,10 +169,12 @@ class Report {
             ),
             'content' => $content,
         ));
-        
+
+        $mail->setDebugTemplate($lid);
+
         // Attach report file if any
         if($attachment) $mail->attach($attachment);
-        
+
         // Send the report
         $mail->send();
     }

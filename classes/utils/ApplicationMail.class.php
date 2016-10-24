@@ -96,9 +96,10 @@ class ApplicationMail extends Mail {
         if($vars) $tr = call_user_func_array(array($tr, 'replace'), $vars);
         
         $ctx = $vars ? self::getContext($vars) : null;
-        
+
         // Create email and send it right away
         $mail = new self($tr);
+        $mail->setDebugTemplate($translation_id);
         $mail->to($to);
         $mail->send($ctx);
     }

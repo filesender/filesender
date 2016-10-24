@@ -63,6 +63,7 @@ class SystemMail extends ApplicationMail {
         if($vars) $tr = call_user_func_array(array($tr, 'replace'), $vars);
         
         $mail = new self($tr);
+        $mail->setDebugTemplate($translation_id);
         $mail->send();
     }
 }

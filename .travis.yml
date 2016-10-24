@@ -1,0 +1,52 @@
+language: php
+php:
+    - 5.4
+addons:
+  sauce_connect:
+    username: DraughtGlbFileSender
+    no-ssl-bump-domains: file_sender.app
+    access_key: aa041391-271c-496d-bbdd-c496a9037fcc
+  hosts:
+    - file_sender.app
+
+service:
+    - postgresql
+before_install:
+    - cp ./travis/config.travis.pgsql.php ./config/config.php
+    - sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place ./config/config.php
+    - chmod -R a+x ./travis/scripts
+    - phpenv config-add ./travis/myconfig.ini
+install:
+    - ./travis/scripts/postgresql-setup.sh
+    - ./travis/scripts/simplesamlphp-setup.sh
+    - composer require sauce/sausage --no-interaction
+before_script:
+  - sudo apt-get update
+  - sudo apt-get install apache2 libapache2-mod-fastcgi
+  # enable php-fpm
+  - sudo cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf.default ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
+  - sudo a2enmod rewrite actions fastcgi alias ssl headers
+  - echo "cgi.fix_pathinfo = 1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  - sudo sed -i "s/error_reporting = E_ALL/error_reporting = E_ALL \& ~E_DEPRECATED \& ~E_STRICT/" ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  - sudo sed -i "s/host    all             all             127.0.0.1\/32            trust/host    all             all             127.0.0.1\/32            md5/" /etc/postgresql/9.1/main/pg_hba.conf
+  - sudo sed -i "s/host    all             all             ::1\/128                 trust/host    all             all             ::1\/128                 md5/" /etc/postgresql/9.1/main/pg_hba.conf
+  - sudo sed -i "s/NameVirtualHost \*:80/# NameVirtualHost \*:80/" /etc/apache2/ports.conf
+  - sudo sed -i "s/Listen 80/# Listen 80/" /etc/apache2/ports.conf
+  - ~/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm
+  # configure apache virtual hosts
+  - sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/certs/filesender_test.key -out /etc/ssl/certs/filesender_test.crt -subj "/C=US/ST=Denial/L=Springfield/O=Dis/CN=file_sender.app"
+  - sudo cp -f travis/config.travis.apache2.conf /etc/apache2/sites-available/default
+  - sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-available/default
+  - sudo service postgresql restart
+  - sudo service apache2 restart
+  - php scripts/upgrade/database.php
+after_failure:
+  - sudo cat /var/log/apache2/error.log
+  - sudo cat /var/log/apache2/access.log
+
+script:
+    - phpunit --configuration ./unittests/config_tests_filesender.xml
+notifications:
+    email: false
+env:
+  - SAUCE_TUNNEL_IDENTIFIER=$TRAVIS_JOB_NUMBER SAUCE_DONT_VERIFY_CERTS=1

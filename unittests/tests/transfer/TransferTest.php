@@ -51,13 +51,13 @@ class TransferTest extends CommonUnitTestCase {
      */
 
     protected function setUp() {
-        echo "@ " . date("Y-m-d H:i:s") . "\n\n";
+        echo "TransferTest@ " . date("Y-m-d H:i:s") . "\n\n";
 
         $this->transferSubject = "Subject test FOR CRON";
         $this->transferMessage = "Message test FOR CRON";
 
-        $this->recipient1 = "damien.bruchet@renater.fr";
-        $this->recipient2 = "damien.bruchet@infotel.com";
+        $this->recipient1 = "emiel@codebridge.nl";
+        $this->recipient2 = "emiel@codebridge.nl";
     }
 
     /**
