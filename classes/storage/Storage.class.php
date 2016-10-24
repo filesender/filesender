@@ -152,7 +152,7 @@ class Storage {
         self::setup();
         
         // Forbid to write chunks whose size is over upload_chunk_size config parameter's value
-        if(strlen($data) > (int)Config::get('upload_chunk_size'))
+        if(strlen($data) > (int)Config::get('upload_crypted_chunk_size'))
             throw new StorageChunkTooLargeException(strlen($data), (int)Config::get('upload_chunk_size'));
         
         // Ask underlying class to write data

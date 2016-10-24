@@ -276,9 +276,10 @@ window.filesender.client = {
                 cid: transfer.files[i].cid
             });
         }
-
+        console.log(transfer);
         return this.post(transfer.authenticatedEndpoint('/transfer'), {
             from: transfer.from,
+            encryption: transfer.encryption,
             files: files,
             recipients: transfer.recipients,
             subject: transfer.subject,
@@ -336,14 +337,15 @@ window.filesender.client = {
      * @param callable done
      * @param callable error
      */
-    putChunk: function(file, blob, offset, progress, done, error) {
+    putChunk: function(file, blob, offset, progress, done, error, encrypted, password) {
         var opts = {
             contentType: 'application/octet-stream',
             rawdata: true,
             headers: {
                 'X-Filesender-File-Size': file.size,
                 'X-Filesender-Chunk-Offset': offset,
-                'X-Filesender-Chunk-Size': blob.size
+                'X-Filesender-Chunk-Size': blob.size,
+                'X-Filesender-Encrypted': '1'
             },
             xhr: function() {
                 uxhr = $.ajaxSettings.xhr();
@@ -357,9 +359,24 @@ window.filesender.client = {
             }
         };
         
-        if(error) opts.error = error;
+        if(encrypted){
+            var cryptedBlob = null;
+            var $this = this;
+            blobReader = window.filesender.crypto_blob_reader().createReader(blob, function(blob){
+                // nothing todo here.. 
+            });
+            blobReader.blobSlice = blob;
+
+            blobReader.readArrayBuffer(function(arrayBuffer){
+                window.filesender.crypto_app().encryptBlob(arrayBuffer, password, function (encrypted_blob) {
+                    var result = $this.put(file.transfer.authenticatedEndpoint('/file/' + file.id + '/chunk/' + offset, file), encrypted_blob, done, opts);
+                });
+            });
+        }else{
+            var result = $this.put(file.transfer.authenticatedEndpoint('/file/' + file.id + '/chunk/' + offset, file), blob, done, opts);
+        }
         
-        return this.put(file.transfer.authenticatedEndpoint('/file/' + file.id + '/chunk/' + offset, file), blob, done, opts);
+        if(error) opts.error = error;
     },
     
     /**

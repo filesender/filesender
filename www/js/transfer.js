@@ -53,6 +53,8 @@ window.filesender.transfer = function() {
     this.expires = null;
     this.options = {};
     this.time = 0;
+    this.encryption = 0;
+    this.encryption_password = '';
     this.pause_time = 0;
     this.pause_length = 0;
     this.file_index = 0;
@@ -728,8 +730,9 @@ window.filesender.transfer = function() {
             return this.restartFailedTransfer(errorhandler);
         }
         
-        // Redo sanity checks
+        console.log('starting transfer');
         
+        // Redo sanity checks
         if (this.files.length > filesender.config.max_transfer_files) {
             return errorhandler({message: 'transfer_too_many_files', details: {max: filesender.config.max_transfer_files}});
         }
@@ -936,7 +939,7 @@ window.filesender.transfer = function() {
             this.file_index++;
         
         this.recordUploadStartedInWatchdog('main');
-        
+        console.log(transfer);
         this.uploader = filesender.client.putChunk(
             file, blob, offset,
             function(ratio) { // Progress
@@ -963,7 +966,9 @@ window.filesender.transfer = function() {
             },
             function(error) {
                 transfer.reportError(error);
-            }
+            },
+            transfer.encryption,
+            transfer.encryption_password
         );
     };
 

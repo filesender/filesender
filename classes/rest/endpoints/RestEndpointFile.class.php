@@ -262,11 +262,35 @@ class RestEndpointFile extends RestEndpoint {
             
             // Get integrity check data sent from the client
             $client = array();
-            foreach(array('X-Filesender-File-Size', 'X-Filesender-Chunk-Offset', 'X-Filesender-Chunk-Size') as $h) {
-                $k = 'HTTP_'.strtoupper(str_replace('-', '_', $h));
-                $client[$h] = array_key_exists($k, $_SERVER) ? (int)$_SERVER[$k] : null;
+            foreach (array('X-Filesender-File-Size', 'X-Filesender-Chunk-Offset', 'X-Filesender-Chunk-Size', 'X-Filesender-Encrypted') as $h) {
+                $k = 'HTTP_' . strtoupper(str_replace('-', '_', $h));
+                $client[$h] = array_key_exists($k, $_SERVER) ? (int) $_SERVER[$k] : null;
+            }
+
+            if ($file->transfer->options['encryption']) {
+                // get rid of the base64
+                $data = base64_decode($data);
+                // Calculate the correct length
+                $chunkLength = strlen($data);
+                // The encryption adds padding and a checksum
+                $paddedLength = 16 - $client['X-Filesender-Chunk-Size'] % 16;
+                if ($paddedLength == 0) {
+                    $paddedLength = 16;
+                }
+                // The initialization vector
+                $ivLength = 16;
+                $crypted_length = strlen($data);
+                // Content length
+                $data_length = ($chunkLength - $paddedLength - $ivLength);
+            } else {
+                $data_length = strlen($data);
+                $crypted_length = 0;
             }
             
+            // keep track of each encrypted chunk so we know the actual final size;
+            $file->encrypted_size = $file->encrypted_size + $crypted_length;
+            $file->save();
+
             // Check that the client sent file size the same as the loaded file if given
             if(!is_null($client['X-Filesender-File-Size']))
                 if($file->size != $client['X-Filesender-File-Size'])
@@ -279,20 +303,30 @@ class RestEndpointFile extends RestEndpoint {
             
             // Check that the sent data size is the one givent by the client
             if(!is_null($client['X-Filesender-Chunk-Size']))
-                if(strlen($data) != $client['X-Filesender-Chunk-Size'])
-                    throw new RestSanityCheckFailedException('chunk_size', strlen($data), $client['X-Filesender-Chunk-Size']);
-            
+                if($data_length != $client['X-Filesender-Chunk-Size'])
+                    throw new RestSanityCheckFailedException('chunk_size', $data_length, $client['X-Filesender-Chunk-Size']);
+
             // Check that data length does not exceed upload_chunk_size (can be smaller at the end of the file)
             $upload_chunk_size = Config::get('upload_chunk_size');
-            if(strlen($data) > $upload_chunk_size)
-                throw new RestSanityCheckFailedException('chunk_size', strlen($data), 'max '.Config::get('upload_chunk_size'));
-            
+            $upload_crypted_chunk_size = Config::get('upload_crypted_chunk_size');
+
+            if ($data_length > $upload_chunk_size) {
+                if (( $file->transfer->options['encryption'] && $data_length > $upload_crypted_chunk_size )) {
+                    throw new RestSanityCheckFailedException('chunk_size', $data_length, 'max ' . Config::get('upload_chunk_size'));
+                }
+            }
+
             // Check that chunk offset is inside the file bounds
-            if($offset + strlen($data) > $file->size)
-                throw new FileChunkOutOfBoundsException($file, $offset, strlen($data), $file->size);
+            if($offset + $data_length > $file->size) {
+                throw new FileChunkOutOfBoundsException($file, $offset, $data_length, $file->size);
+            }
             
             // Write data to file
-            $write_info = $file->writeChunk($data, $offset);
+            if ($file->transfer->options['encryption']) {
+                $offset = $offset / $data_length * $crypted_length;
+            }
+
+            $write_info = $file->writeChunk($data, $offset, $crypted_length);
             $file->transfer->isUploading();
             
             return $write_info;

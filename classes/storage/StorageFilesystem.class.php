@@ -370,9 +370,14 @@ class StorageFilesystem {
         $file_path = self::buildPath($file).$file->uid;
         clearstatcache(true, $file_path);
         $size = filesize($file_path);
-        
-        if($size != $file->size)
-            throw new FileIntegrityCheckFailedException($file, 'Expected size was '.$file->size.' but size on disk is '.$size);
+
+        if($file->transfer->options['encryption']){
+            if($size != $file->encrypted_size)
+                throw new FileIntegrityCheckFailedException($file, 'Expected size was '.$file->size.' but size on disk is '.$size);
+        }else{
+            if($size != $file->size)
+                throw new FileIntegrityCheckFailedException($file, 'Expected size was '.$file->size.' but size on disk is '.$size);
+        }
     }
     
     /**

@@ -69,6 +69,10 @@ class File extends DBObject
             'type' => 'uint',
             'size' => 'big'
         ),
+        'encrypted_size' => array(
+            'type' => 'uint',
+            'size' => 'big'
+        ),
         'upload_start' => array(
             'type' => 'datetime',
             'null' => true
@@ -93,6 +97,7 @@ class File extends DBObject
     protected $name = null;
     protected $mime_type = null;
     protected $size = 0;
+    protected $encrypted_size = 0;
     protected $upload_start = 0;
     protected $upload_end = 0;
     protected $sha1 = null;
@@ -252,7 +257,7 @@ class File extends DBObject
      */
     public function __get($property) {
         if(in_array($property, array(
-            'id', 'transfer_id', 'uid', 'name', 'mime_type', 'size', 'upload_start', 'upload_end', 'sha1'
+            'id', 'transfer_id', 'uid', 'name', 'mime_type', 'size', 'encrypted_size', 'upload_start', 'upload_end', 'sha1'
         ))) return $this->$property;
         
         if($property == 'transfer') {
@@ -303,6 +308,8 @@ class File extends DBObject
             $this->mime_type = (string)$value;
         }else if($property == 'size') {
             $this->size = (int)$value;
+        }else if($property == 'encrypted_size') {
+            $this->encrypted_size = (int)$value;
         }else if($property == 'sha1') {
             if(!preg_match('`^[0-9a-f]{40}$`', $value)) throw new FileBadHashException($this, $value);
             $this->sha1 = (string)$value;

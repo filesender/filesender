@@ -80,6 +80,7 @@ $default = array(
     'max_legacy_file_size' => 2147483648,
     'legacy_upload_progress_refresh_period' => 5,
     'upload_chunk_size' => 5 * 1024 * 1024,
+    'upload_crypted_chunk_size' => 5 * 1024 * 1024 + 16 + 16, // the 2times 16 are the padding added by the crypto algorithm, and the IV needed
     'chunk_upload_security' => 'key',
     'download_chunk_size' => 5 * 1024 * 1024,
     
