@@ -3,3 +3,6 @@
 /config/config.php
 /log
 /www/doc
+/nbproject/private/
+nbproject/project.properties
+nbproject/project.xml

@@ -52,7 +52,9 @@ $lang['from'] = 'Van';
 $lang['size'] = 'Grootte';
 $lang['created'] = 'Aangemaakt';
 $lang['subject'] = 'Onderwerp';
-$lang['message'] = 'Bericht';
+$lang['file_encryption'] = 'Bestands encryptie';
+$lang['file_encryption_password'] = 'Wachtwoord';
+$lang['file_encryption_show_password'] = 'Toon / Verberg wachtwoord';
 $lang['optional'] = 'Optioneel';
 $lang['expiry_date'] = 'Vervaldatum';
 

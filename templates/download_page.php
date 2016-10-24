@@ -45,7 +45,10 @@
         </div>
         <?php } ?>
     </div>
-    
+<!--     <a id='download_test' href="#" class="download" title="{tr:download_file}">
+            <span class="fa fa-2x fa-download"></span>
+            {tr:download}
+        </a>-->
     <div class="files box" data-count="<?php echo count($transfer->files) ?>">
         <div class="select_all">
             <span class="fa fa-lg fa-mail-reply fa-rotate-270"></span>
@@ -55,7 +58,7 @@
             </span>
         </div>
     <?php foreach($transfer->files as $file) { ?>
-        <div class="file" data-id="<?php echo $file->id ?>" >
+        <div class="file" data-id="<?php echo $file->id ?>" data-encrypted="<?php echo isset($transfer->options['encryption'])?$transfer->options['encryption']:'false'; ?>" data-mime="<?php echo $file->mime_type; ?>" data-name="<?php echo $file->name; ?>">
             <span class="select clickable fa fa-2x fa-square-o" title="{tr:select_for_archive_download}"></span>
             <span class="name"><?php echo Utilities::sanitizeOutput($file->name) ?></span>
             <span class="size"><?php echo Utilities::formatBytes($file->size) ?></span>

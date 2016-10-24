@@ -357,6 +357,9 @@ class RestEndpointTransfer extends RestEndpoint {
                 
                 $options[$name] = $value;
             }
+            
+            $options['encryption'] = $data->encryption;
+            
             Logger::info($options);
             // Get_a_link transfers have no recipients so mail related options make no sense, remove them if set
             if($options[TransferOptions::GET_A_LINK]) {

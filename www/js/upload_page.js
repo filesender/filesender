@@ -428,6 +428,8 @@ filesender.ui.startUpload = function() {
             this.transfer.options[o] = v;
         }
     }
+    this.transfer.encryption = filesender.ui.nodes.encryption.toggle.value;
+    this.transfer.encryption_password = filesender.ui.nodes.encryption.password.val();
     
     this.transfer.onprogress = filesender.ui.files.progress;
     
@@ -545,6 +547,11 @@ filesender.ui.startUpload = function() {
     
     filesender.ui.nodes.form.find(':input:not(.file input[type="file"])').prop('disabled', true);
     
+    //console.log(filesender.ui.nodes.encryption.toggle[0].value);
+    if(filesender.ui.nodes.encryption.toggle[0].value == 'on'){
+        this.transfer.encryption = 1;
+    }
+    
     return this.transfer.start(errorHandler);
 };
 
@@ -571,6 +578,11 @@ $(function() {
         },
         from: form.find('select[name="from"]'),
         subject: form.find('input[name="subject"]'),
+        encryption: {
+                toggle: form.find('input[name="encryption"]'),
+                password: form.find('input[name="encryption_password"]'),
+                show_hide: form.find('#encryption_show_password')
+            },
         message: form.find('textarea[name="message"]'),
         guest_token: form.find('input[type="hidden"][name="guest_token"]'),
         lang: form.find('input[name="lang"]'),
@@ -739,6 +751,22 @@ $(function() {
     filesender.ui.nodes.aup.on('change', function() {
         filesender.ui.evalUploadEnabled();
     });
+    
+    // Bind encryption
+    filesender.ui.nodes.encryption.toggle.on('change', function() {
+        $('#encryption_password_container').slideToggle();
+        $('#encryption_password_show_container').slideToggle();
+        return false;
+    });
+    filesender.ui.nodes.encryption.show_hide.on('change', function() {
+        if(filesender.ui.nodes.encryption.password.attr('type') === 'password'){
+            filesender.ui.nodes.encryption.password.attr('type','text');
+        }else{
+            filesender.ui.nodes.encryption.password.attr('type','password');
+        }
+        return false;
+    });
+    
     
     // Bind buttons
     filesender.ui.nodes.buttons.start.on('click', function() {

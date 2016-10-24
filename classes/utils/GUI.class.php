@@ -89,6 +89,10 @@ class GUI {
             'js/client.js',
             'js/transfer.js',
             'js/ui.js',
+            'js/FileSaver.js',
+            'js/crypter/crypto_common.js',
+            'js/crypter/crypto_blob_reader.js',
+            'js/crypter/crypto_app.js'
         );
         
         if(Config::get('terasender_enabled')) $sources[] = 'lib/terasender/terasender.js';

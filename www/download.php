@@ -241,7 +241,11 @@ function downloadSingleFile($transfer, $recipient, $file_id, $recently_downloade
         if (!$chunk_size)
             $chunk_size = 1024 * 1024;
 
-        $end = $file->size;
+        if($file->encrypted_size){
+            $end = $file->encrypted_size;
+        }else{
+            $end = $file->size;
+        }
         if ($range)
             $end = $range['end'];
         
@@ -338,7 +342,12 @@ function downloadSingleFile($transfer, $recipient, $file_id, $recently_downloade
             header('Content-Disposition: attachment; filename="'.$file->name.'"; filename*=UTF-8\'\''.rawurlencode($file->name));
         }
         
-        header('Content-Length: ' . $file->size);
+        if($file->encrypted_size){
+            header('Content-Length: ' . $file->encrypted_size);
+        }else{
+            header('Content-Length: ' . $file->size);
+        }
+        
         header('Accept-Ranges: bytes');
 
         // Read data (no range means all file)

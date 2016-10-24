@@ -46,14 +46,14 @@ $default = array(
     'email_use_html' => true,   // By default, use HTML on mails
     'relay_unknown_feedbacks' => 'sender',   // Report email feedbacks with unknown type but with identified target (recipient or guest) to target owner
     'upload_display_bits_per_sec' => false, // By default, do not show bits per seconds 
-    'force_ssl' => true,
+    'force_ssl' => false,
     
     'auth_sp_type' => 'saml',  // Authentification type
     'auth_sp_set_idp_as_user_organization' => false,
     'auth_sp_saml_email_attribute' => 'mail', // Get email attribute from authentification service
     'auth_sp_saml_name_attribute' => 'cn', // Get name attribute from authentification service
     'auth_sp_saml_uid_attribute' => 'eduPersonTargetID', // Get uid attribute from authentification service
-    'auth_sp_saml_authentication_source' => 'default-sp', // Get path  attribute from authentification service
+    'auth_sp_saml_authentication_source' => 'example-static', // Get path  attribute from authentification service
     'auth_sp_shibboleth_email_attribute' => 'mail', // Get email attribute from authentification service
     'auth_sp_shibboleth_name_attribute' => 'cn', // Get name attribute from authentification service
     'auth_sp_shibboleth_uid_attribute' => 'eduPersonTargetId', // Get uid attribute from authentification service
@@ -80,6 +80,7 @@ $default = array(
     'max_legacy_file_size' => 2147483648,
     'legacy_upload_progress_refresh_period' => 5,
     'upload_chunk_size' => 5 * 1024 * 1024,
+    'upload_crypted_chunk_size' => 5 * 1024 * 1024 + 16 + 16, // the 2times 16 are the padding added by the crypto algorithm, and the IV needed
     'chunk_upload_security' => 'key',
     'download_chunk_size' => 5 * 1024 * 1024,
     

@@ -1215,3 +1215,11 @@ table.guests .guest .to .errors .details {
 #dialog-help strong {
     font-weight: bold;
 }
+
+
+#encryption_password_container{
+    display: none;
+}
+#encryption_password_show_container{
+    display: none;
+}

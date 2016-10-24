@@ -31,7 +31,7 @@
  */
 
 if(PHP_INT_SIZE !== 8) {
-    die('FileSender requires a 64-bit PHP installation to work. Please contact your administrator.');
+    //die('FileSender requires a 64-bit PHP installation to work. Please contact your administrator.');
 }
 
 define('FILESENDER_BASE', dirname(dirname(__FILE__)));
