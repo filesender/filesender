@@ -99,6 +99,7 @@ class ApplicationMail extends Mail {
         
         // Create email and send it right away
         $mail = new self($tr);
+        $mail->setDebugTemplate($translation_id);
         $mail->to($to);
         $mail->send($ctx);
     }

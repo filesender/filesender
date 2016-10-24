@@ -280,6 +280,8 @@ class TranslatableEmail extends DBObject {
     public static function quickSend($translation_id, DBObject $to) {
         $mail = call_user_func_array(get_called_class().'::prepare', func_get_args());
         
+        $mail->setDebugTemplate($translation_id);
+
         $mail->send();
     }
     

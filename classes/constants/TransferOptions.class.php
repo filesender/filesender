@@ -48,4 +48,6 @@ class TransferOptions extends Enum {
     const GET_A_LINK                                = 'get_a_link';
     
     const REDIRECT_URL_ON_COMPLETE                  = 'redirect_url_on_complete';
+
+    const EMAIL_ENABLE_RECIPIENT_DOWNLOAD_COMPLETE  = 'email_enable_recipient_download_complete';
 }

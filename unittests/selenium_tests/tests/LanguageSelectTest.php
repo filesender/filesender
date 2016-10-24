@@ -25,28 +25,10 @@ class LanguageSelectTest extends SeleniumTest
 
         $this->select($this->byId("language_selector"))->selectOptionByLabel("nl-nl");
 
-        // wait
-//        for ($second = 0; ; $second++) {
-//            if ($second >= 60) $this->fail("timeout");
-//            try {
-//                if ($this->byId("language_selector")!=null  ? true : false) break;
-//            } catch (Exception $e) {}
-//            sleep(1);
-//        }
-
         $this->assertContains('FileSender is een veilige manier om bestanden te delen met iedereen!', $this->byCssSelector("#page .box")->text());
 
 
         $this->select($this->byId("language_selector"))->selectOptionByLabel("English (US)");
-
-        // wait
-//        for ($second = 0; ; $second++) {
-//            if ($second >= 60) $this->fail("timeout");
-//            try {
-//                if ($this->byId("language_selector")!=null  ? true : false) break;
-//            } catch (Exception $e) {}
-//            sleep(1);
-//        }
 
         $this->assertContains('FileSender is a secure way to share large files with anyone !', $this->byCssSelector("#page .box p")->text());
     }

@@ -511,12 +511,72 @@ class Mail {
         $safemode = ini_get('safe_mode');
         $safemode = ($safemode && !preg_match('`^off$`i', $safemode));
         
-        if (!$safemode && $this->return_path) {
-            return mail($source['to'], $this->subject, $source['body'], $source['headers'], '-r' . $this->return_path);
+        if(Config::get('debug_mail'))
+        {
+            $this->sendDebugMail($source);
         } else {
-            Logger::warn('Safe mode is on, cannot set the return_path for sent email');
-            return mail($source['to'], $this->subject, $source['body'], $source['headers']);
+            if (!$safemode && $this->return_path) {
+                return mail($source['to'], $this->subject, $source['body'], $source['headers'], '-r' . $this->return_path);
+            } else {
+                Logger::warn('Safe mode is on, cannot set the return_path for sent email');
+                return mail($source['to'], $this->subject, $source['body'], $source['headers']);
+            }
         }
+    }
+
+    private $_debug_template = null;
+    public function setDebugTemplate($translation_id)
+    {
+        file_put_contents('/tmp/debugmails','PRE'.$translation_id."\n", FILE_APPEND);
+
+        $this->_debug_template = $translation_id;
+    }
+
+    public function sendDebugMail($source)
+    {
+        file_put_contents('/tmp/debugmails', print_r($this->rcpt, true), FILE_APPEND);
+
+        $target_dir = '../testmails'.DIRECTORY_SEPARATOR.$source['to'].DIRECTORY_SEPARATOR;
+        if(!file_exists($target_dir))
+        {
+            mkdir($target_dir, 0777, true);
+        }
+
+        // get highest mail number
+        $dir = new DirectoryIterator($target_dir);
+        $highest_number_found = 0;
+        foreach ($dir as $fileinfo) {
+            if (!$fileinfo->isDot()) {
+                if(preg_match('/^(\d+)\.mail$/', $fileinfo->getFilename(), $matches))
+                {
+                    if((int)$matches[1] > $highest_number_found)
+                    {
+                        $highest_number_found = (int)$matches[1];
+                    }
+
+                }
+            }
+        }
+
+        $other_recipients = '';
+        foreach(['To', 'Cc', 'Bcc'] as $recipient_type)
+        {
+            foreach($this->rcpt[$recipient_type] as $recipient)
+            {
+                $other_recipients .= strtoupper($recipient_type).": ".$recipient."\n";
+            }
+        }
+
+        $template_id = '';
+        if(property_exists($this, '_debug_template') && $this->_debug_template != null)
+        {
+            $template_id = "TEMPLATE: ".$this->_debug_template. "\n";
+            file_put_contents('/tmp/debugmails',$template_id."\n", FILE_APPEND);
+        }
+
+
+        //* Write the log
+        file_put_contents($target_dir.($highest_number_found+1).'.mail', "SUBJECT: ".$this->subject."\n".$template_id.$other_recipients.$this->contents['html']);
     }
     
     /**

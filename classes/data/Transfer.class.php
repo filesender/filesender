@@ -1074,6 +1074,7 @@ class Transfer extends DBObject {
         if($this->getOption(TransferOptions::EMAIL_ME_COPIES))
             $mail->bcc($this->user_email);
         
+        $mail->setDebugTemplate($translation_id);
         $mail->send();
         
         Logger::info('Mail#'.$translation_id.' sent to '.$recipient);
