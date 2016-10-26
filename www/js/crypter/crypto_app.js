@@ -131,7 +131,6 @@ window.filesender.crypto_app = function () {
         },
         decryptDownload: function (link, mime, name) {
             var $this = this;
-            var downloadedBlob = null;
 
             // Decrypt the contents of the file
             var oReq = new XMLHttpRequest();
@@ -141,7 +140,7 @@ window.filesender.crypto_app = function () {
             oReq.onload = function (oEvent) {
                 // hands over to the decrypter
                 var arrayBuffer = new Uint8Array(oReq.response);
-                console.log(arrayBuffer.length);
+                // Create a prompt to ask for the password
                 var prompt = filesender.ui.prompt('Geef een wachtwoord op', function(password){
                      $this.decryptBlob(
                         window.filesender.crypto_blob_reader().sliceForDownloadBuffers(arrayBuffer),
@@ -154,14 +153,14 @@ window.filesender.crypto_app = function () {
                 }, function(){
                     filesender.ui.notify('info', 'Zonder wachtwoord kan dit bestand niet worden geopend');
                 });
+                
+                // Add a field to the prompt
                 var input = $('<input type="text" class="wide" />').appendTo(prompt);
                 input.focus();
-               
             };
-
+            
+            // create download
             oReq.send();
-
-
         }
     };
 };

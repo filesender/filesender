@@ -321,9 +321,9 @@ class RestEndpointFile extends RestEndpoint {
                 throw new FileChunkOutOfBoundsException($file, $offset, $data_length, $file->size);
             }
             
-            // Write data to file
+            // Write data to file and calculate the offset with crypted size in mind
             if ($file->transfer->options['encryption']) {
-                $offset = $offset / $data_length * $crypted_length;
+                $offset = $offset / Config::get('upload_chunk_size') * Config::get('upload_crypted_chunk_size');
             }
 
             $write_info = $file->writeChunk($data, $offset, $crypted_length);
