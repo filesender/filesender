@@ -527,14 +527,14 @@ class Mail {
     private $_debug_template = null;
     public function setDebugTemplate($translation_id)
     {
-        file_put_contents('/tmp/debugmails','PRE'.$translation_id."\n", FILE_APPEND);
+        //file_put_contents('/tmp/debugmails','PRE'.$translation_id."\n", FILE_APPEND);
 
         $this->_debug_template = $translation_id;
     }
 
     public function sendDebugMail($source)
     {
-        file_put_contents('/tmp/debugmails', print_r($this->rcpt, true), FILE_APPEND);
+        //file_put_contents('/tmp/debugmails', print_r($this->rcpt, true), FILE_APPEND);
 
         $target_dir = '../testmails'.DIRECTORY_SEPARATOR.$source['to'].DIRECTORY_SEPARATOR;
         if(!file_exists($target_dir))
@@ -571,7 +571,7 @@ class Mail {
         if(property_exists($this, '_debug_template') && $this->_debug_template != null)
         {
             $template_id = "TEMPLATE: ".$this->_debug_template. "\n";
-            file_put_contents('/tmp/debugmails',$template_id."\n", FILE_APPEND);
+            //file_put_contents('/tmp/debugmails',$template_id."\n", FILE_APPEND);
         }
 
 

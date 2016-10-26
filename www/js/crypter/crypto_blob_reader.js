@@ -81,15 +81,12 @@ window.filesender.crypto_blob_reader = function () {
         
         readArrayBuffer: function (callback) {
             var $this = this;
-            
             this.in_progess = true;
            
             // If we use onloadend, we need to check the readyState.
             this.reader.onloadend = function (evt) {
-                console.log($this.blobSlice);
                 if (evt.target.readyState === FileReader.DONE) { // DONE == 2                  
                     $this.in_progess = false;
-                    console.log(evt.target.result);
                     callback(evt.target.result);
                 }
             };

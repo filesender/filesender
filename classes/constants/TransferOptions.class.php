@@ -49,7 +49,4 @@ class TransferOptions extends Enum {
     const REDIRECT_URL_ON_COMPLETE                  = 'redirect_url_on_complete';
 
     const ENCRYPTION                                = 'encryption';
-
-    const EMAIL_ENABLE_RECIPIENT_DOWNLOAD_COMPLETE  = 'email_enable_recipient_download_complete';
-
 }
