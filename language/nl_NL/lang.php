@@ -55,6 +55,9 @@ $lang['subject'] = 'Onderwerp';
 $lang['file_encryption'] = 'Bestands encryptie';
 $lang['file_encryption_password'] = 'Wachtwoord';
 $lang['file_encryption_show_password'] = 'Toon / Verberg wachtwoord';
+$lang['file_encryption_wrong_password'] = 'Foutief wachtwoord';
+$lang['file_encryption_enter_password'] = 'Geef een wachtwoord op';
+$lang['file_encryption_need_password'] = 'Zonder wachtwoord kan dit bestand niet worden geopend';
 $lang['optional'] = 'Optioneel';
 $lang['expiry_date'] = 'Vervaldatum';
 

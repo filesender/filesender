@@ -3,7 +3,7 @@ if(!('filesender' in window)) window.filesender = {};
 
 window.filesender.crypto_common = function () {
     return {
-        crypto_chunk_size: 5 * 1024 * 1024,
+        crypto_chunk_size: window.filesender.config.upload_chunk_size,//MD 5 * 1024 * 1024,
         crypto_iv_len: 16,
         separateIvFromData: function (buf) {
             var $this = this;

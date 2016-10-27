@@ -129,7 +129,7 @@ $lang['details'] = 'Details';
 $lang['showhide'] = 'Show/Hide';
 $lang['downloads'] = 'Downloads';
 $lang['download'] = 'Download';
-$lang['logon'] = 'Logon';
+$lang['logon'] = 'Login';
 $lang['files'] = 'Files';
 $lang['optional'] = 'optional';
 $lang['select_file'] = 'Select your file';
@@ -166,6 +166,12 @@ $lang['extend'] = 'Extend';
 $lang['extend_and_remind'] = 'Extend and send reminder';
 $lang['translate_to'] = 'Translate to :';
 
+$lang['file_encryption'] = 'File Encryption';
+$lang['file_encryption_password'] = 'Password';
+$lang['file_encryption_show_password'] = 'Show / Hide Password';
+$lang['file_encryption_wrong_password'] = 'Incorrect Password';
+$lang['file_encryption_enter_password'] = 'Enter a password';
+$lang['file_encryption_need_password'] = 'You must enter a password to download';
 
 /**
  * Transfer specific

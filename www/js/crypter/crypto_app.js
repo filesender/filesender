@@ -6,7 +6,7 @@ if (!('filesender' in window))
 window.filesender.crypto_app = function () {
     return {
         crypto_is_supported: true,
-        crypto_chunk_size: 5 * 1024 * 1024,
+        crypto_chunk_size: window.filesender.config.upload_chunk_size,//MD 5 * 1024 * 1024,
         crypto_iv_len: 16,
         crypto_crypt_name: "AES-CBC",
         crypto_hash_name: "SHA-256",
@@ -72,7 +72,7 @@ window.filesender.crypto_app = function () {
                             callback(window.filesender.crypto_common().convertArrayBufferViewtoString(new Uint8Array(result)));
                         },
                         function (e) {
-                            alert('wrong password');
+                            alert(window.filesender.config.language.file_encryption_wrong_password);
                         });
             });
         },
@@ -110,6 +110,7 @@ window.filesender.crypto_app = function () {
 
             this.generateKey(password, function (key) {
                 console.log(encryptedData.length);
+		var wrongPassword = false;
                 for (var i = 0; i < encryptedData.length; i++) {
                     var value = window.filesender.crypto_common().separateIvFromData(encryptedData[i]);
                     crypto.subtle.decrypt({name: $this.crypto_crypt_name, iv: value.iv}, key, value.data).then(
@@ -122,10 +123,11 @@ window.filesender.crypto_app = function () {
                                 }
                             },
                             function (e) {
-                                alert('Foutief wachtwoord');
+				if (!wrongPassword) {
+					wrongPassword=true;
+	                                alert(window.filesender.config.language.file_encryption_wrong_password);
+				}
                             });
-                  
-
                 }
             });
         },
@@ -141,7 +143,7 @@ window.filesender.crypto_app = function () {
                 // hands over to the decrypter
                 var arrayBuffer = new Uint8Array(oReq.response);
                 // Create a prompt to ask for the password
-                var prompt = filesender.ui.prompt('Geef een wachtwoord op', function(password){
+                var prompt = filesender.ui.prompt(window.filesender.config.language.file_encryption_enter_password, function(password){
                      $this.decryptBlob(
                         window.filesender.crypto_blob_reader().sliceForDownloadBuffers(arrayBuffer),
                         $(this).find('input').val(),
@@ -151,7 +153,7 @@ window.filesender.crypto_app = function () {
                         }
                     );
                 }, function(){
-                    filesender.ui.notify('info', 'Zonder wachtwoord kan dit bestand niet worden geopend');
+                    filesender.ui.notify('info', window.filesender.config.language.file_encryption_need_password);
                 });
                 
                 // Add a field to the prompt
