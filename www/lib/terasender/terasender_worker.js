@@ -3,6 +3,13 @@
  * See http://filesender.org
  */
 
+importScripts(
+	'../../filesender-config.js.php',
+	'../../js/crypter/crypto_common.js',
+	'../../js/crypter/crypto_blob_reader.js',
+	'../../js/crypter/crypto_app.js'
+);
+
 var terasender_worker = {
     /**
      * Worker properties
@@ -83,7 +90,7 @@ var terasender_worker = {
         var slicer = file.blob.slice ? 'slice' : (file.blob.mozSlice ? 'mozSlice' : (file.blob.webkitSlice ? 'webkitSlice' : 'slice'));
         
         var blob = file.blob[slicer](this.job.chunk.start, this.job.chunk.end);
-        
+
         var xhr = this.createXhr();
         
         var worker = this;
@@ -113,7 +120,20 @@ var terasender_worker = {
         xhr.setRequestHeader('X-Filesender-Security-Token', this.security_token);
         
         try {
-            xhr.send(blob);
+		if (job.encryption) { //MD
+			var cryptedBlob = null;
+			var $this = this;
+			blobReader = window.filesender.crypto_blob_reader().createReader(blob, function(blob){});
+			blobReader.blobSlice = blob;
+			blobReader.readArrayBuffer(function(arrayBuffer){
+				window.filesender.crypto_app().encryptBlob(arrayBuffer, job.encryption_password, function (encrypted_blob) {
+					xhr.setRequestHeader('X-Filesender-Encrypted', '1');
+					xhr.send(encrypted_blob);
+				});
+			});
+		} else {
+			xhr.send(blob);
+		}
         } catch(err) {
             this.error({message: 'source_file_not_available', details: {job: this.job}});
         }

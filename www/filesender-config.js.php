@@ -43,7 +43,10 @@ $banned = Config::get('ban_extension');
 $amc = Config::get('autocomplete_min_characters');
 
 ?>
-if(!('filesender' in window)) window.filesender = {};
+if (typeof window === 'undefined') {
+	window = {};
+}
+if (!('filesender' in window)) window.filesender = {};
 
 window.filesender.config = {
     log: true,
@@ -92,6 +95,12 @@ window.filesender.config = {
     auditlog_lifetime: <?php $lt = Config::get('auditlog_lifetime'); echo is_null($lt) ? 'null' : $lt ?>,
     
     logon_url: '<?php echo AuthSP::logonURL() ?>',
+
+	language: {
+		file_encryption_wrong_password : "<?php echo Lang::tr('file_encryption_wrong_password')->out(); ?>",
+		file_encryption_enter_password : "<?php echo Lang::tr('file_encryption_enter_password')->out(); ?>",
+		file_encryption_need_password : "<?php echo Lang::tr('file_encryption_need_password')->out(); ?>"
+	}
 };
 
 <?php if(Config::get('force_legacy_mode')) { ?>

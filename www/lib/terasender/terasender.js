@@ -106,7 +106,9 @@ window.filesender.terasender = {
             chunk: {
                 start: file.uploaded,
                 end: file.uploaded + filesender.config.upload_chunk_size
-            }
+            },
+	    encryption: this.transfer.encryption, //MD
+	    encryption_password: this.transfer.encryption_password //MD
         };
         
         file.uploaded += filesender.config.upload_chunk_size;
