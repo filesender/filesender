@@ -8,8 +8,9 @@ window.filesender.crypto_blob_reader = function () {
         file_size: null,
         blobSlice: null,
         blob: null,
-        chunkSize: window.filesender.config.upload_chunk_size,//MD (5 * 1024 * 1024), // 5 MB default
-        cryptedChunkSize: window.filesender.config.upload_chunk_size+16+16,//MD (5 * 1024 * 1024) + 16 + 16, // 5mb + chemsum + IV
+        chunkSize: window.filesender.config.upload_chunk_size, // 5 MB default
+        cryptedChunkSize: window.filesender.config.upload_crypted_chunk_size, // 5mb + checksum + IV
+        
         completed: 0,
         numberOfChunks: 0,
         size: null,

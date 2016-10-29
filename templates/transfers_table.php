@@ -233,7 +233,15 @@
                             <?php echo Template::sanitizeOutput($file->name) ?> (<?php echo Utilities::formatBytes($file->size) ?>) : <?php echo count($file->downloads) ?> {tr:downloads}
                             
                             <?php if(!$transfer->is_expired) { ?>
+                               
+                                <?php if(isset($transfer->options['encryption']) && $transfer->options['encryption'] === true) { ?>
+                                <span class="fa fa-lg fa-download transfer-file transfer-download" title="{tr:download}" data-id="<?php echo $file->id ?>" 
+                                        data-encrypted="<?php echo isset($transfer->options['encryption'])?$transfer->options['encryption']:'false'; ?>" 
+                                        data-mime="<?php echo $file->mime_type; ?>" 
+                                        data-name="<?php echo $file->name; ?>"></span>
+                                <?php } else {?>
                             <a class="fa fa-lg fa-download" title="{tr:download}" href="download.php?files_ids=<?php echo $file->id ?>"></a>
+                                <?php } ?>
                             <?php } ?>
                             
                             <span data-action="delete" class="fa fa-lg fa-trash-o" title="{tr:delete}"></span>

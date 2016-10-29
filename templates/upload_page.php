@@ -111,19 +111,20 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
                         
                         <textarea name="message" rows="4"></textarea>
                     </div>
-                    
-                    <div class="fieldcontainer" data-related-to="encryption">  
-                        <input id="encryption" name="encryption" type="checkbox">  
-                        <label for="encryption" style="cursor: pointer;">{tr:file_encryption}</label>
-                    </div>
-                    <div class="fieldcontainer" id="encryption_password_container">  
-                        <label for="encryption_password" style="cursor: pointer;">{tr:file_encryption_password} : </label>
-                        <input name="encryption_password" type="password"/>
-                    </div>
-                    <div class="fieldcontainer" id="encryption_password_show_container">  
-                        <input id="encryption_show_password" name="encryption_show_password" type="checkbox">  
-                        <label for="encryption_show_password" style="cursor: pointer;">{tr:file_encryption_show_password}</label>
-                    </div>
+                        <?php if(Config::get('encryption_enabled')) { ?>
+                            <div class="fieldcontainer" data-related-to="encryption">  
+                                <input id="encryption" name="encryption" type="checkbox">  
+                                <label for="encryption" style="cursor: pointer;">{tr:file_encryption}</label>
+                            </div>
+                            <div class="fieldcontainer" id="encryption_password_container">  
+                                <label for="encryption_password" style="cursor: pointer;">{tr:file_encryption_password} : </label>
+                                <input name="encryption_password" type="password"/>
+                            </div>
+                            <div class="fieldcontainer" id="encryption_password_show_container">  
+                                <input id="encryption_show_password" name="encryption_show_password" type="checkbox">  
+                                <label for="encryption_show_password" style="cursor: pointer;">{tr:file_encryption_show_password}</label>
+                            </div>
+                        <?php } ?>
                     <?php } ?>
                     
                     <div>

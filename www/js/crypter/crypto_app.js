@@ -6,17 +6,17 @@ if (!('filesender' in window))
 window.filesender.crypto_app = function () {
     return {
         crypto_is_supported: true,
-        crypto_chunk_size: window.filesender.config.upload_chunk_size,//MD 5 * 1024 * 1024,
-        crypto_iv_len: 16,
-        crypto_crypt_name: "AES-CBC",
-        crypto_hash_name: "SHA-256",
+        crypto_chunk_size: window.filesender.config.upload_chunk_size,
+        crypto_iv_len: window.filesender.config.crypto_iv_len,
+        crypto_crypt_name: window.filesender.config.crypto_crypt_name,
+        crypto_hash_name: window.filesender.config.crypto_hash_name,
+        
         init: function () {
             if (crypto.subtle)
             {
-                alert("Cryptography API Supported");
             } else
             {
-                alert("Cryptography API not Supported");
+                filesender.ui.notify('info', lang.tr('encryption_api_unsupported'));
                 this.crypto_is_supported = false;
             }
         },
@@ -38,44 +38,6 @@ window.filesender.crypto_app = function () {
                 console.log(e);
             };
         },
-        encrypt: function (value, password, callback) {
-            var $this = this;
-            this.generateKey(password, function (key, iv) {
-                crypto.subtle.encrypt({name: $this.crypto_crypt_name, iv: iv}, key, window.filesender.crypto_common().convertStringToArrayBufferView(value)).then(
-                        function (result) {
-                            callback(
-                                    btoa(
-                                            window.filesender.crypto_common().convertArrayBufferViewtoString(
-                                            window.filesender.crypto_common().joinIvAndData(iv, new Uint8Array(result))
-                                            )
-                                            )
-                                    );
-                        },
-                        function (e) {
-                            // error occured during crypt
-                            console.log(e);
-                        }
-                );
-            });
-        },
-        decrypt: function (value, password, callback) {
-            var $this = this;
-            var encryptedData = value;
-            this.generateKey(password, function (key) {
-                var value = window.filesender.crypto_common().separateIvFromData(
-                        window.filesender.crypto_common().convertStringToArrayBufferView(
-                            atob(encryptedData)
-                        )
-                    );
-                crypto.subtle.decrypt({name: $this.crypto_crypt_name, iv: value.iv}, key, value.data).then(
-                        function (result) {
-                            callback(window.filesender.crypto_common().convertArrayBufferViewtoString(new Uint8Array(result)));
-                        },
-                        function (e) {
-                            alert(window.filesender.config.language.file_encryption_wrong_password);
-                        });
-            });
-        },
         encryptBlob: function (value, password, callback) {
             var $this = this;
             this.generateKey(password, function (key, iv) {
@@ -88,9 +50,9 @@ window.filesender.crypto_app = function () {
                             var btoaData = btoa(
                                     // This string contains all kind of weird characters
                                     window.filesender.crypto_common().convertArrayBufferViewtoString(
-                                            joinedData
-                                        )
-                                    );
+                                        joinedData
+                                    )
+                                );
 
                             callback(btoaData);
                         },
@@ -107,14 +69,20 @@ window.filesender.crypto_app = function () {
             var $this = this;
             var encryptedData = value; // array buffers array
             var blobArray = [];
-
+            var error = false;
             this.generateKey(password, function (key) {
                 console.log(encryptedData.length);
 		var wrongPassword = false;
                 for (var i = 0; i < encryptedData.length; i++) {
+                    if (error) {
+                        break;
+                    }
+                    //console.log('chunk ' + i + ' pre prepared');
                     var value = window.filesender.crypto_common().separateIvFromData(encryptedData[i]);
+                    //console.log('chunk ' + i + ' prepared');
                     crypto.subtle.decrypt({name: $this.crypto_crypt_name, iv: value.iv}, key, value.data).then(
                             function (result) {
+                                //console.log('chunk' + i + 'done');
                                 var blobArrayBuffer = new Uint8Array(result);
                                 blobArray.push(blobArrayBuffer);
                                 // done
@@ -123,11 +91,13 @@ window.filesender.crypto_app = function () {
                                 }
                             },
                             function (e) {
-				if (!wrongPassword) {
-					wrongPassword=true;
-	                                alert(window.filesender.config.language.file_encryption_wrong_password);
-				}
+                                if (!error) {
+                                    filesender.ui.notify('info', lang.tr('encryption_incorrect_password'));
+                                    error = true;
+                                }
                             });
+                    //console.log('chunk ' + i + ' done preparing');
+
                 }
             });
         },
@@ -139,25 +109,35 @@ window.filesender.crypto_app = function () {
             oReq.open("GET", link, true);
             oReq.responseType = "arraybuffer";
 
+            oReq.onprogress = function update_progress(e)
+            {
+                if (e.lengthComputable)
+                {
+                    var percentage = Math.round((e.loaded / e.total) * 100);
+                    console.log("percent " + percentage + '%');
+                } else
+                {
+                    console.log("Unable to compute progress information since the total size is unknown");
+                }
+            };
+
             oReq.onload = function (oEvent) {
-                // hands over to the decrypter
-                var arrayBuffer = new Uint8Array(oReq.response);
                 // Create a prompt to ask for the password
-                var prompt = filesender.ui.prompt(window.filesender.config.language.file_encryption_enter_password, function(password){
-                     $this.decryptBlob(
-                        window.filesender.crypto_blob_reader().sliceForDownloadBuffers(arrayBuffer),
-                        $(this).find('input').val(),
-                        function (decrypted) {
-                            var blob = new Blob(decrypted, {type: mime});
-                            saveAs(blob, name);
-                        }
+                var prompt = filesender.ui.prompt('Geef een wachtwoord op', function (password) {
+                    $this.decryptBlob(
+                            window.filesender.crypto_blob_reader().sliceForDownloadBuffers(new Uint8Array(oReq.response)),
+                            $(this).find('input').val(),
+                            function (decrypted) {
+                                var blob = new Blob(decrypted, {type: mime});
+                                saveAs(blob, name);
+                            }
                     );
-                }, function(){
-                    filesender.ui.notify('info', window.filesender.config.language.file_encryption_need_password);
+                }, function () {
+                    filesender.ui.notify('info', lang.tr('encryption_missing_password'));
                 });
-                
+
                 // Add a field to the prompt
-                var input = $('<input type="text" class="wide" />').appendTo(prompt);
+                var input = $('<input type="password" class="wide" />').appendTo(prompt);
                 input.focus();
             };
             

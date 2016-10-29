@@ -358,6 +358,25 @@ $(function() {
         });
     });
     
+    // File download buttons when the files are encrypted
+    $('.transfer-download').on('click', function () {
+        
+        console.log('download clicked');
+        
+        var id = $(this).attr('data-id');
+        var encrypted = $(this).attr('data-encrypted');
+        var filename = $(this).attr('data-name');
+        var mime = $(this).attr('data-mime');
+
+        if (typeof id == 'string'){
+            id = [id];
+        }
+        
+        window.filesender.crypto_app().decryptDownload(filesender.config.base_path + 'download.php?files_ids=' + id.join(','), mime, name);
+
+        return false;
+    });
+
     // Add auditlogs triggers
     var auditlogs = function(transfer_id, filter) {
         filesender.client.getTransferAuditlog(transfer_id, function(log) {

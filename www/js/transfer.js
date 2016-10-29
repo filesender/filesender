@@ -730,8 +730,6 @@ window.filesender.transfer = function() {
             return this.restartFailedTransfer(errorhandler);
         }
         
-        console.log('starting transfer');
-        
         // Redo sanity checks
         if (this.files.length > filesender.config.max_transfer_files) {
             return errorhandler({message: 'transfer_too_many_files', details: {max: filesender.config.max_transfer_files}});
@@ -939,7 +937,7 @@ window.filesender.transfer = function() {
             this.file_index++;
         
         this.recordUploadStartedInWatchdog('main');
-        console.log(transfer);
+        
         this.uploader = filesender.client.putChunk(
             file, blob, offset,
             function(ratio) { // Progress
