@@ -69,6 +69,12 @@ window.filesender.config = {
     
     chunk_upload_security: '<?php echo Config::get('chunk_upload_security') ?>',
     
+    encryption_enabled: '<?php echo Config::get('encryption_enabled') ?>',
+    upload_crypted_chunk_size: '<?php echo Config::get('upload_crypted_chunk_size') ?>',
+    crypto_iv_len: '<?php echo Config::get('crypto_iv_len') ?>',
+    crypto_crypt_name: '<?php echo Config::get('crypto_crypt_name') ?>',
+    crypto_hash_name: '<?php echo Config::get('crypto_hash_name') ?>',
+    
     terasender_enabled: <?php echo Config::get('terasender_enabled') ? 'true' : 'false' ?>,
     terasender_advanced: <?php echo Config::get('terasender_advanced') ? 'true' : 'false' ?>,
     terasender_worker_count: <?php echo Config::get('terasender_worker_count') != null ? Config::get('terasender_worker_count') : 1 ?>,

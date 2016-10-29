@@ -3,30 +3,21 @@ if(!('filesender' in window)) window.filesender = {};
 
 window.filesender.crypto_common = function () {
     return {
-        crypto_chunk_size: 5 * 1024 * 1024,
-        crypto_iv_len: 16,
+        crypto_chunk_size: window.filesender.config.upload_chunk_size, // 5 MB default
+        crypto_iv_len: window.filesender.config.crypto_iv_len, // default 16 bytes
+                
         separateIvFromData: function (buf) {
-            var $this = this;
-            var iv = new Uint8Array(this.crypto_iv_len);
-            var data = new Uint8Array(buf.length - this.crypto_iv_len);
-            Array.prototype.forEach.call(buf, function (byte, i) {
-                if (i < $this.crypto_iv_len) {
-                    iv[i] = byte;
-                } else {
-                    data[i - $this.crypto_iv_len] = byte;
-                }
-            });
+            var iv = buf.subarray(0, this.crypto_iv_len);
+            var data = buf.subarray(this.crypto_iv_len, buf.length);
+            
             return {iv: iv, data: data};
         },
         joinIvAndData: function (iv, data) {
-            var $this = this;
             var buf = new Uint8Array(iv.length + data.length);
-            Array.prototype.forEach.call(iv, function (byte, i) {
-                buf[i] = byte;
-            });
-            Array.prototype.forEach.call(data, function (byte, i) {
-                buf[$this.crypto_iv_len + i] = byte;
-            });
+            
+            buf.set(iv, 0);
+            buf.set(data, this.crypto_iv_len);
+
             return buf;
         },
         convertStringToArrayBufferView: function (str)

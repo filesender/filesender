@@ -816,6 +816,9 @@ table.transfers .transfer_details .recipients .recipient [data-action],
 table.transfers .transfer_details .files .file [data-action] {
     margin: 0 0.15em;
 }
+.transfer-download {
+    cursor: pointer;
+}
 
 table.transfers .transfer_details .recipients .recipient .errors {
     background-color: #faa;
@@ -830,6 +833,7 @@ table.transfers[data-status="closed"] .transfer_details .recipients .recipient [
 table.transfers[data-status="closed"] .transfer_details .files .file [data-action="delete"] {
     display: none;
 }
+
 
 table.transfers .transfer_details .download_link input {
     display: block;
