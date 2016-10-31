@@ -12,10 +12,7 @@ window.filesender.crypto_app = function () {
         crypto_hash_name: window.filesender.config.crypto_hash_name,
         
         init: function () {
-            if (crypto.subtle)
-            {
-            } else
-            {
+            if (!crypto.subtle){
                 filesender.ui.notify('info', lang.tr('encryption_api_unsupported'));
                 this.crypto_is_supported = false;
             }
@@ -72,6 +69,7 @@ window.filesender.crypto_app = function () {
             var error = false;
             this.generateKey(password, function (key) {
                 console.log(encryptedData.length);
+		var wrongPassword = false;
                 for (var i = 0; i < encryptedData.length; i++) {
                     if (error) {
                         break;
@@ -95,7 +93,6 @@ window.filesender.crypto_app = function () {
                                     error = true;
                                 }
                             });
-                    //console.log('chunk ' + i + ' done preparing');
 
                 }
             });
@@ -122,7 +119,7 @@ window.filesender.crypto_app = function () {
 
             oReq.onload = function (oEvent) {
                 // Create a prompt to ask for the password
-                var prompt = filesender.ui.prompt('Geef een wachtwoord op', function (password) {
+                var prompt = filesender.ui.prompt(window.filesender.config.language.file_encryption_enter_password, function (password) {
                     $this.decryptBlob(
                             window.filesender.crypto_blob_reader().sliceForDownloadBuffers(new Uint8Array(oReq.response)),
                             $(this).find('input').val(),

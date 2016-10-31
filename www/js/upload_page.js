@@ -428,7 +428,7 @@ filesender.ui.startUpload = function() {
             this.transfer.options[o] = v;
         }
     }
-    this.transfer.encryption = filesender.ui.nodes.encryption.toggle.value;
+    this.transfer.encryption = filesender.ui.nodes.encryption.toggle.is(':checked'); //MD
     this.transfer.encryption_password = filesender.ui.nodes.encryption.password.val();
     
     this.transfer.onprogress = filesender.ui.files.progress;
@@ -546,11 +546,6 @@ filesender.ui.startUpload = function() {
     filesender.ui.nodes.stats.average_speed.show();
     
     filesender.ui.nodes.form.find(':input:not(.file input[type="file"])').prop('disabled', true);
-    
-    //console.log(filesender.ui.nodes.encryption.toggle[0].value);
-    if(filesender.ui.nodes.encryption.toggle[0].value == 'on'){
-        this.transfer.encryption = 1;
-    }
     
     return this.transfer.start(errorHandler);
 };

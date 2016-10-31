@@ -87,7 +87,7 @@ $(function() {
                 var filename = $($this).find("[data-id='" + ids[0] + "']").attr('data-name');
                 var mime = $($this).find("[data-id='" + ids[0] + "']").attr('data-mime');
 
-                window.filesender.crypto_app().decryptDownload(filesender.config.base_path + 'download.php?token=' + token + '&files_ids=' + ids.join(','), mime, name);
+                window.filesender.crypto_app().decryptDownload(filesender.config.base_path + 'download.php?token=' + token + '&files_ids=' + ids.join(','), mime, filename);
             }else{
                 filesender.ui.redirect(filesender.config.base_path + 'download.php?token=' + token + '&files_ids=' + ids.join(','));
             }
