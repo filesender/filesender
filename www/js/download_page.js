@@ -69,7 +69,7 @@ $(function() {
     var m = window.location.search.match(/token=([0-9a-f-]+)/);
     var token = m[1];
     var $this = this;
-    var dl = function(ids, confirm, encrypted) {
+    var dl = function(ids, confirm, encrypted, progress) {
         if(typeof ids == 'string') ids = [ids];
         
         var dlcb = function(notify) {
@@ -78,16 +78,16 @@ $(function() {
                 filesender.ui.redirect(filesender.config.base_path + 'download.php?token=' + token + '&files_ids=' + ids.join(',') + notify);
             };
         };
-        console.log(encrypted);
+        //console.log(encrypted);
         if (!encrypted && confirm){
             filesender.ui.confirm(lang.tr('confirm_download_notify'), dlcb(true), dlcb(false), true);
         }else{
-            console.log(encrypted);
+            //console.log(encrypted);
             if(encrypted){
                 var filename = $($this).find("[data-id='" + ids[0] + "']").attr('data-name');
                 var mime = $($this).find("[data-id='" + ids[0] + "']").attr('data-mime');
 
-                window.filesender.crypto_app().decryptDownload(filesender.config.base_path + 'download.php?token=' + token + '&files_ids=' + ids.join(','), mime, filename);
+                window.filesender.crypto_app().decryptDownload(filesender.config.base_path + 'download.php?token=' + token + '&files_ids=' + ids.join(','), mime, filename, progress);
             }else{
                 filesender.ui.redirect(filesender.config.base_path + 'download.php?token=' + token + '&files_ids=' + ids.join(','));
             }
@@ -98,10 +98,12 @@ $(function() {
     page.find('.file .download').button().on('click', function() {
         var id = $(this).closest('.file').attr('data-id');
         var encrypted = $(this).closest('.file').attr('data-encrypted');
+        var progress = $(this).closest('.file').find('.downloadprogress');
         var transferid = $('.transfer').attr('data-id');
-        console.log(encrypted);
+        //console.log(encrypted);
+	//if (encrypted) $(this).html($(this).html().replace('fa-download','fa-spinner fa-spin'));
         filesender.client.getTransferOption(transferid, 'enable_recipient_email_download_complete', token, function(dl_complete_enabled){
-            dl(id, dl_complete_enabled, encrypted);
+            dl(id, dl_complete_enabled, encrypted, progress);
         });
         
         return false;
@@ -124,7 +126,7 @@ $(function() {
         var transferid = $('.transfer').attr('data-id');
         
         filesender.client.getTransferOption(transferid, 'enable_recipient_email_download_complete', token, function(dl_complete_enabled){
-            dl(ids, dl_complete_enabled);
+            dl(ids, dl_complete_enabled, null);
         });
         
         return false;

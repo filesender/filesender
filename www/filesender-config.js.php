@@ -103,6 +103,8 @@ window.filesender.config = {
     logon_url: '<?php echo AuthSP::logonURL() ?>',
 
 	language: {
+		downloading : "<?php echo Lang::tr('downloading')->out(); ?>",
+		decrypting : "<?php echo Lang::tr('decrypting')->out(); ?>",
 		file_encryption_wrong_password : "<?php echo Lang::tr('file_encryption_wrong_password')->out(); ?>",
 		file_encryption_enter_password : "<?php echo Lang::tr('file_encryption_enter_password')->out(); ?>",
 		file_encryption_need_password : "<?php echo Lang::tr('file_encryption_need_password')->out(); ?>"

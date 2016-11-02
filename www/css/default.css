@@ -1045,6 +1045,12 @@ table.guests .guest .to .errors .details {
     display: none;
 }
 
+.downloadprogress {
+       float:right;
+       font-size:1.7em;
+       padding-right:20px;
+       min-width: 100px;
+}
 
 /* Admin sections */
 
