@@ -129,6 +129,7 @@ $lang['details'] = 'Details';
 $lang['showhide'] = 'Show/Hide';
 $lang['downloads'] = 'Downloads';
 $lang['download'] = 'Download';
+$lang['downloading'] = 'Downloading';
 $lang['logon'] = 'Login';
 $lang['files'] = 'Files';
 $lang['optional'] = 'optional';
@@ -166,12 +167,15 @@ $lang['extend'] = 'Extend';
 $lang['extend_and_remind'] = 'Extend and send reminder';
 $lang['translate_to'] = 'Translate to :';
 
+$lang['encryption'] = 'Encryption';
+$lang['decrypting'] = 'Decrypting';
 $lang['file_encryption'] = 'File Encryption';
 $lang['file_encryption_password'] = 'Password';
 $lang['file_encryption_show_password'] = 'Show / Hide Password';
 $lang['file_encryption_wrong_password'] = 'Incorrect Password';
 $lang['file_encryption_enter_password'] = 'Enter a password';
 $lang['file_encryption_need_password'] = 'You must enter a password to download';
+$lang['file_encryption_description'] = '<i class="fa fa-exclamation-triangle" style="color:#FFAA00" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp; File Encryption is end to end. Your files are encrypted in your web browser. It is up to you to send the encryption password to the recipient(s) as we do not store any passwords. File Encryption will significantly impact performance of your browser and/or device for the sender and receiver(s).';
 
 /**
  * Transfer specific

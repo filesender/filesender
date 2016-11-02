@@ -5,19 +5,15 @@ window.filesender.crypto_common = function () {
     return {
         crypto_chunk_size: window.filesender.config.upload_chunk_size, // 5 MB default
         crypto_iv_len: window.filesender.config.crypto_iv_len, // default 16 bytes
-                
         separateIvFromData: function (buf) {
             var iv = buf.subarray(0, this.crypto_iv_len);
             var data = buf.subarray(this.crypto_iv_len, buf.length);
-            
             return {iv: iv, data: data};
         },
         joinIvAndData: function (iv, data) {
             var buf = new Uint8Array(iv.length + data.length);
-            
             buf.set(iv, 0);
             buf.set(data, this.crypto_iv_len);
-
             return buf;
         },
         convertStringToArrayBufferView: function (str)
@@ -56,25 +52,3 @@ window.filesender.crypto_common = function () {
         }
     };
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

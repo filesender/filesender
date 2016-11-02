@@ -71,7 +71,7 @@ window.filesender.config = {
     default_guest_days_valid: <?php echo Config::get('default_guest_days_valid') ?>,
     
     chunk_upload_security: '<?php echo Config::get('chunk_upload_security') ?>',
-    
+
     encryption_enabled: '<?php echo Config::get('encryption_enabled') ?>',
     upload_crypted_chunk_size: '<?php echo Config::get('upload_crypted_chunk_size') ?>',
     crypto_iv_len: '<?php echo Config::get('crypto_iv_len') ?>',
@@ -103,6 +103,8 @@ window.filesender.config = {
     logon_url: '<?php echo AuthSP::logonURL() ?>',
 
 	language: {
+		downloading : "<?php echo Lang::tr('downloading')->out(); ?>",
+		decrypting : "<?php echo Lang::tr('decrypting')->out(); ?>",
 		file_encryption_wrong_password : "<?php echo Lang::tr('file_encryption_wrong_password')->out(); ?>",
 		file_encryption_enter_password : "<?php echo Lang::tr('file_encryption_enter_password')->out(); ?>",
 		file_encryption_need_password : "<?php echo Lang::tr('file_encryption_need_password')->out(); ?>"

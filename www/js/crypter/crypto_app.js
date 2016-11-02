@@ -10,7 +10,7 @@ window.filesender.crypto_app = function () {
         crypto_iv_len: window.filesender.config.crypto_iv_len,
         crypto_crypt_name: window.filesender.config.crypto_crypt_name,
         crypto_hash_name: window.filesender.config.crypto_hash_name,
-        
+
         init: function () {
             if (!crypto.subtle){
                 filesender.ui.notify('info', lang.tr('encryption_api_unsupported'));
@@ -47,9 +47,9 @@ window.filesender.crypto_app = function () {
                             var btoaData = btoa(
                                     // This string contains all kind of weird characters
                                     window.filesender.crypto_common().convertArrayBufferViewtoString(
-                                        joinedData
-                                    )
-                                );
+                                            joinedData
+                                        )
+                                    );
 
                             callback(btoaData);
                         },
@@ -62,83 +62,95 @@ window.filesender.crypto_app = function () {
 
             });
         },
-        decryptBlob: function (value, password, callback) {
+        decryptBlob: function (value, password, callbackDone, callbackProgress, callbackError) {
             var $this = this;
             var encryptedData = value; // array buffers array
             var blobArray = [];
-            var error = false;
+
             this.generateKey(password, function (key) {
-                console.log(encryptedData.length);
+                //console.log(encryptedData.length);
 		var wrongPassword = false;
-                for (var i = 0; i < encryptedData.length; i++) {
-                    if (error) {
-                        break;
-                    }
-                    //console.log('chunk ' + i + ' pre prepared');
+                //for (var i = 0; i < encryptedData.length; i++) {
+		var decryptLoop = function(i) {
+		    callbackProgress(i,encryptedData.length); //once per chunk
                     var value = window.filesender.crypto_common().separateIvFromData(encryptedData[i]);
-                    //console.log('chunk ' + i + ' prepared');
                     crypto.subtle.decrypt({name: $this.crypto_crypt_name, iv: value.iv}, key, value.data).then(
                             function (result) {
-                                //console.log('chunk' + i + 'done');
                                 var blobArrayBuffer = new Uint8Array(result);
                                 blobArray.push(blobArrayBuffer);
                                 // done
                                 if (blobArray.length === encryptedData.length) {
-                                    callback(blobArray);
-                                }
+					callbackDone(blobArray);
+				} else {
+		    			if (i<encryptedData.length)
+						setTimeout(decryptLoop(i+1),300);
+				}
                             },
                             function (e) {
-                                if (!error) {
-                                    filesender.ui.notify('info', lang.tr('encryption_incorrect_password'));
-                                    error = true;
-                                }
-                            });
-
+				if (!wrongPassword) {
+					wrongPassword=true;
+	                                //alert(window.filesender.config.language.file_encryption_wrong_password);
+					callbackError(e);
+				}
+                            }
+		    );
                 }
+		decryptLoop(0);
             });
         },
-        decryptDownload: function (link, mime, name) {
-            var $this = this;
+        decryptDownload: function (link, mime, name, progress) {
+		var $this = this;
 
-            // Decrypt the contents of the file
-            var oReq = new XMLHttpRequest();
-            oReq.open("GET", link, true);
-            oReq.responseType = "arraybuffer";
+		var prompt = filesender.ui.prompt(window.filesender.config.language.file_encryption_enter_password, function(password){
+			var pass = $(this).find('input').val();
 
-            oReq.onprogress = function update_progress(e)
-            {
-                if (e.lengthComputable)
-                {
-                    var percentage = Math.round((e.loaded / e.total) * 100);
-                    console.log("percent " + percentage + '%');
-                } else
-                {
-                    console.log("Unable to compute progress information since the total size is unknown");
-                }
-            };
+			// Decrypt the contents of the file
+			var oReq = new XMLHttpRequest();
+			oReq.open("GET", link, true);
+			oReq.responseType = "arraybuffer";
 
-            oReq.onload = function (oEvent) {
-                // Create a prompt to ask for the password
-                var prompt = filesender.ui.prompt(window.filesender.config.language.file_encryption_enter_password, function (password) {
-                    $this.decryptBlob(
-                            window.filesender.crypto_blob_reader().sliceForDownloadBuffers(new Uint8Array(oReq.response)),
-                            $(this).find('input').val(),
-                            function (decrypted) {
-                                var blob = new Blob(decrypted, {type: mime});
-                                saveAs(blob, name);
-                            }
-                    );
-                }, function () {
-                    filesender.ui.notify('info', lang.tr('encryption_missing_password'));
-                });
+			//Download progress
+			oReq.addEventListener("progress", function(evt){
+				if (evt.lengthComputable) {
+					var percentComplete = Math.round(evt.loaded / evt.total *10000)/100;
+					if (progress) progress.html(window.filesender.config.language.downloading+": "+percentComplete.toFixed(2)+" %");
+				}
+			}, false);
 
-                // Add a field to the prompt
-                var input = $('<input type="password" class="wide" />').appendTo(prompt);
-                input.focus();
-            };
+			//on file arrived
+			oReq.onload = function (oEvent) {
+				if (progress) progress.html(window.filesender.config.language.decrypting+"...");
+				// hands over to the decrypter
+				var arrayBuffer = new Uint8Array(oReq.response);
+				setTimeout(function(){
+					$this.decryptBlob(
+						window.filesender.crypto_blob_reader().sliceForDownloadBuffers(arrayBuffer),
+						pass,
+						function (decrypted) {
+							var blob = new Blob(decrypted, {type: mime});
+							saveAs(blob, name);
+							if (progress) progress.html("");
+						},
+						function (i,c) {
+							var percentComplete = Math.round(i / c *10000)/100;
+							if (progress) progress.html(window.filesender.config.language.decrypting+": "+percentComplete.toFixed(2)+" %");
+						},
+						function (error) {
+	        	                        	alert(window.filesender.config.language.file_encryption_wrong_password);
+							if (progress) progress.html(window.filesender.config.language.file_encryption_wrong_password);
+						}
+					);
+				},300);
+			};
+			// create download
+			oReq.send();
 
-            // create download
-            oReq.send();
+		}, function(){
+			filesender.ui.notify('info', window.filesender.config.language.file_encryption_need_password);
+		});
+		// Add a field to the prompt
+		var input = $('<input type="text" class="wide" />').appendTo(prompt);
+		input.focus();
         }
     };
 };

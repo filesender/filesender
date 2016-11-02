@@ -937,7 +937,6 @@ window.filesender.transfer = function() {
             this.file_index++;
         
         this.recordUploadStartedInWatchdog('main');
-        
         this.uploader = filesender.client.putChunk(
             file, blob, offset,
             function(ratio) { // Progress

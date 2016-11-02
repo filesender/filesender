@@ -45,7 +45,7 @@
         </div>
         <?php } ?>
     </div>
-    <div class="files box" data-count="<?php echo count($transfer->files) ?>">
+    <div class="files box" data-count="<?php echo (isset($transfer->options['encryption']) && $transfer->options['encryption'])?'1':count($transfer->files) ?>">
         <div class="select_all">
             <span class="fa fa-lg fa-mail-reply fa-rotate-270"></span>
             <span class="select clickable">
@@ -54,11 +54,11 @@
             </span>
         </div>
     <?php foreach($transfer->files as $file) { ?>
-        <div class="file" data-id="<?php echo $file->id ?>" 
-             data-encrypted="<?php echo isset($transfer->options['encryption'])?$transfer->options['encryption']:'false'; ?>" 
-             data-mime="<?php echo $file->mime_type; ?>" 
+        <div class="file" data-id="<?php echo $file->id ?>"
+             data-encrypted="<?php echo isset($transfer->options['encryption'])?$transfer->options['encryption']:'false'; ?>"
+             data-mime="<?php echo $file->mime_type; ?>"
              data-name="<?php echo $file->name; ?>">
-            
+
             <span class="select clickable fa fa-2x fa-square-o" title="{tr:select_for_archive_download}"></span>
             <span class="name"><?php echo Utilities::sanitizeOutput($file->name) ?></span>
             <span class="size"><?php echo Utilities::formatBytes($file->size) ?></span>
@@ -66,7 +66,7 @@
                 <span class="fa fa-2x fa-download"></span>
                 {tr:download}
             </a>
-            
+            <span class="downloadprogress"></span>
         </div>
     <?php } ?>
     <?php if(!isset($transfer->options['encryption']) || $transfer->options['encryption'] === 'false') { ?>
@@ -82,8 +82,9 @@
                 <span class="fa fa-2x fa-download"></span>
                 {tr:archive_download}
             </a>
+            <span class="downloadprogress"></span>
         </div>
-    <?php } ?>    
+    <?php } ?>
         <div class="transfer" data-id="<?php echo $transfer->id ?>"></div>
     </div>
 </div>

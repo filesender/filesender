@@ -177,7 +177,7 @@ filesender.ui.files = {
         if (filesender.config.upload_display_bits_per_sec)
             speed *= 8;
         
-        filesender.ui.nodes.stats.uploaded.find('.value').text(filesender.ui.formatBytes(uploaded) + '/' + filesender.ui.formatBytes(size));
+	filesender.ui.nodes.stats.uploaded.find('.value').html(uploaded.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + ' bytes<br/>' + filesender.ui.formatBytes(uploaded) + ' /' + filesender.ui.formatBytes(size));
         
         if(this.status != 'paused')
             filesender.ui.nodes.stats.average_speed.find('.value').text(filesender.ui.formatSpeed(speed));
@@ -531,8 +531,11 @@ filesender.ui.startUpload = function() {
     var twc = $('#terasender_worker_count');
     if(twc.length) {
         twc = parseInt(twc.val());
-        if(!isNaN(twc) && twc > 0 && twc <= 30)
-            filesender.config.terasender_worker_count = twc;
+        if(!isNaN(twc) && twc > 0 && twc <= 30) {
+		if (this.transfer.encryption)
+			twc = Math.max(Math.round(twc/2),3);
+		filesender.config.terasender_worker_count = twc;
+	}
     }
     
     filesender.ui.nodes.files.list.find('.file').addClass('uploading');
