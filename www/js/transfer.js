@@ -92,6 +92,23 @@ window.filesender.transfer = function() {
     
     this.stalling_detection = cfg;
     
+    this.canUseTerasender = function() {
+	var enable = filesender.config.terasender_enabled && filesender.supports.workers;
+
+	var ua = window.navigator.userAgent;
+	var ie = (ua.indexOf('MSIE ')!=-1 || ua.indexOf('Trident/')!=-1 || ua.indexOf('Edge/')!=-1);
+
+	if (enable && ie && this.encryption)
+		enable = false;
+
+//console.log("canUseTerasender:"+(enable?"true":"false"));
+//console.log("UA:"+ua);
+//console.log("IE:"+(ie?"true":"false"));
+//console.log("Encryption:"+(this.encryption?"true":"false"));
+
+	return enable;
+    };
+
     
     /**
      * Add a file to the file list
@@ -477,7 +494,7 @@ window.filesender.transfer = function() {
         this.time = (new Date()).getTime();
         
         // Start uploading chunks
-        if (filesender.config.terasender_enabled && filesender.supports.workers) {
+        if (this.canUseTerasender()) {
             filesender.terasender.start(this);
         } else {
             // Chunk by chunk upload
@@ -786,7 +803,7 @@ window.filesender.transfer = function() {
             
             if(filesender.supports.reader) {
                 // Start uploading chunks
-                if (filesender.config.terasender_enabled && filesender.supports.workers) {
+                if (transfer.canUseTerasender()) {
                     filesender.terasender.start(transfer);
                 } else {
                     // Chunk by chunk upload
@@ -813,7 +830,7 @@ window.filesender.transfer = function() {
         
         this.status = 'paused';
         
-        if (filesender.config.terasender_enabled && filesender.supports.workers)
+        if (this.canUseTerasender())
             filesender.terasender.pause();
     };
 
@@ -828,7 +845,7 @@ window.filesender.transfer = function() {
         
         this.status = 'running';
         
-        if (filesender.config.terasender_enabled && filesender.supports.workers)
+        if (this.canUseTerasender())
             filesender.terasender.restart();
     };
 
@@ -838,7 +855,7 @@ window.filesender.transfer = function() {
     this.stop = function(callback) {
         this.status = 'stopped';
         
-        if (filesender.config.terasender_enabled && filesender.supports.workers)
+        if (this.canUseTerasender())
             filesender.terasender.stop();
         
         this.removeFromRestartTracker();
@@ -868,7 +885,7 @@ window.filesender.transfer = function() {
         
         filesender.ui.log('Data sending failed, retrying from last known offsets');
         
-        if (filesender.config.terasender_enabled && filesender.supports.workers) {
+        if (this.canUseTerasender()) {
             filesender.terasender.retry();
         } else {
             this.uploader.abort();
