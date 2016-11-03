@@ -359,9 +359,9 @@ window.filesender.client = {
             }
         };
         
+        var $this = this;
         if(encrypted){
             var cryptedBlob = null;
-            var $this = this;
             blobReader = window.filesender.crypto_blob_reader().createReader(blob, function(blob){
                 // nothing todo here.. 
             });
