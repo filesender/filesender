@@ -258,9 +258,7 @@ class RestEndpointFile extends RestEndpoint {
 
         // Get file we need to add data to or update
         $file = File::fromId($id);
-        
-        
-        
+
         // Check access rights depending on config
         if ($security == 'key') {
             if (!array_key_exists('key', $_GET) || !$_GET['key'] || ($_GET['key'] != $file->uid)) {

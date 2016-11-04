@@ -2,10 +2,10 @@
 
 /*
  * FileSender www.filesender.org
- * 
+ *
  * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  * 
@@ -17,7 +17,7 @@
  * *    Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -33,7 +33,7 @@
 // ---------------------------------------------
 //             README / 2014-09-11
 // ---------------------------------------------
-// 
+//
 // This is a sample of configuration file for Filesender
 // --
 // The configuration list is available at [todo: wiki URL]
@@ -45,13 +45,12 @@
 // ---------------------------------------------
 //              General settings
 // ---------------------------------------------
-// 
+//
 $config['site_url']             =   'https://file_sender.app';                // String, URL of the application
-// 
 $config['admin']                =   '0';            // String, UID's (from  $config['saml_uid_attribute'])
                                     // that have Administrator permissions
-$config['admin_email']          =   'emiel@codebridge.nl';       // String, email  address(es, separated by ,) 
-                                    			// to receive administrative messages (low disk  space warning)
+$config['admin_email']          =   'emiel@codebridge.nl';       // String, email  address(es, separated by ,)
+                                    // to receive administrative messages (low disk  space warning)
 
 $config['session_cookie_path']  =   '/';
 
@@ -88,7 +87,7 @@ $config['force_legacy_mode']            =       false;			// for testing legacy n
 $config['autocomplete']                 =       10;					// show previously used email addresses in To: fields.  Set to positive number to enable.  Number indicates how many hits are shown to user.  Addresses are stored in user preferences.  When you sent to another set of recipients, will remove from list and add them at beginning of list.  So the more you write to them the longer they stay.  The longer you don't write to someone the lower they get on the list until they drop off.  Seems to work pretty well at RENATER.  
 $config['autocomplete_max_pool']        =       1;				// how many values are stored in database.  Default is 5.
 $config['autocomplete_min_characters']  =       2;		// Optional.  Default 3.  How many characters to type before autocomplete list is triggered 
-$config['upload_display_bits_per_sec']  =       false;		
+$config['upload_display_bits_per_sec']  =       false;
 
 
 
@@ -128,7 +127,7 @@ $config['transfer_options'] = array(
 			'advanced' => true,
 			'default' => false
 		),
-		
+
 		// Always send the sender an audit report when a transfer expires
 		// Because "default" is set to "true" and "available" to "false" the user can not untick this.
 		// If you want this to be a user choice, set 'available' to 'true'
@@ -149,7 +148,7 @@ $config['transfer_options'] = array(
 			'advanced' => false,
 			'default' => false
 		),
-		
+
 		// include the sender as a recipient
 		'add_me_to_recipients' => array(
 			'available' => true,
@@ -166,12 +165,12 @@ $config['transfer_options'] = array(
 );
 
 // --------------------------------------------------
-//    TeraSender high speed upload module             
+//    TeraSender high speed upload module
 // --------------------------------------------------
 
-$config['terasender_enabled']       =       true;    	// 
-$config['terasender_advanced']      =       true;    	// Make #webworkers configurable in UI.  Switched this on to make it easy 
-                                                        // to determine optimal number for terasender_worker_count when going in production.  
+$config['terasender_enabled']       =       true;    	//
+$config['terasender_advanced']      =       true;    	// Make #webworkers configurable in UI.  Switched this on to make it easy
+                                                        // to determine optimal number for terasender_worker_count when going in production.
                                                         // The useful number of maximum webworkers per browser changes nearly for each browser release.
 $config['terasender_worker_count']  =       10;   	// Number of web workers to launch simultaneously client-side when starting upload
 $config['terasender_start_mode']    =       'single';	// I think I prefer to show a nice serial predictable upload process
@@ -222,7 +221,7 @@ $config['guest_options'] = array(
 		),
 
 		// This guest invitation will not expire and can be used for unlimited transfers.
-		// Combine with "can_only_send_to_me" to create a permanent upload link users can 
+		// Combine with "can_only_send_to_me" to create a permanent upload link users can
 		// include in email signatures
                 'does_not_expire' => array(
                         'available' => true,
@@ -279,19 +278,19 @@ $config['storage_filesystem_path']  =       '/data/branches/filesender-2.0/files
 //
 // If you want to overide the SAML simplephp configuration defaults parameter,
 // uncoment and edit the following lines
-// 
+//
 // // Authentification type ('saml' or 'shibboleth')
  $config['auth_sp_type']                        =       'saml';
-// 
+//
 // // Get email attribute from authentication service
  $config['auth_sp_saml_email_attribute']        =       'mail';
-// 
+//
 // // Get name attribute from authentication service
  $config['auth_sp_saml_name_attribute']         =       'cn';
-// 
+//
 // // Get uid attribute from authentication service.  Usually eduPersonTargetedId or eduPersonPrincipalName
 $config['auth_sp_saml_uid_attribute']           =       'eduPersonPrincipalName';
-// 
+//
 // // Get path  attribute from authentication service
 $config['auth_sp_saml_authentication_source']   =       'default-sp';
 
@@ -302,5 +301,5 @@ $config['auth_sp_saml_authentication_source']   =       'default-sp';
 // Set auditlog for transfers on or off
 $config['auditlog_enable'] = true;
 
-$config['sauce_username']  =       'DraughtGlbFileSender';                      // String, Sauce Labs username
-$config['sauce_access_key']  =       'aa041391-271c-496d-bbdd-c496a9037fcc';     // String, Sauce Labs access key
+$config['sauce_username']  =       'filesender';                      // String, Sauce Labs username
+$config['sauce_access_key']  =       '2242660d-13d3-44f5-bc73-68d6bcf80711';     // String, Sauce Labs access key

@@ -16,11 +16,10 @@ class ConfigurationOptionsTest extends SeleniumTest {
         if ($checkbox->selected()) {
             $checkbox->click();
         }
-        
-       //$this->checkCheckbox('toggle_advanced_options', true);
+
         $this->byClassName('toggle_advanced_options')->click();
         sleep(10);
-        
+
         $this->checkCheckBox('add_me_to_recipients', false);
        // sleep(2);
         $this->checkCheckBox('email_me_on_expire', true);
@@ -47,7 +46,6 @@ class ConfigurationOptionsTest extends SeleniumTest {
         $content = 'testContent_' . rand(0, 100);
 
         $file_data_contents = $this->uploadFiles();
-
 
         $this->sendMessageToRecipients($recipients, $subject, $content);
     }
@@ -225,17 +223,20 @@ class ConfigurationOptionsTest extends SeleniumTest {
     }
 
     private function yieldRecipientMails($recipient_id) {
-        
+
+        $folder_names = [];
         $folder_name = getcwd() . '\\testmails\\' . $recipient_id . '\\';
         //print_r($folder_name); exit;
         $dir = new DirectoryIterator($folder_name);
         foreach ($dir as $fileinfo) {
             if (!$fileinfo->isDot()) {
                 if (preg_match('/^(\d+)\.mail$/', $fileinfo->getFilename(), $matches)) {
-                    yield $folder_name . $fileinfo->getFilename();
+                    $folder_names[] = $folder_name . $fileinfo->getFilename();
                 }
             }
         }
+
+        return $folder_names;
     }
 
 

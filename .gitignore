@@ -5,4 +5,5 @@
 /www/doc
 /nbproject/
 /vendor/
-/testmails/
+.idea
+/testmails

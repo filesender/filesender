@@ -64,7 +64,7 @@ You can also manage invididual instance without impacting the other instances by
 
     # This won't affect the other instances
     $ sudo systemctl restart 'sc@8000.service'
-    
+
 ```
 Systemd Tips and Tricks
 =====================

@@ -3,9 +3,9 @@ php:
     - 5.4
 addons:
   sauce_connect:
-    username: DraughtGlbFileSender
+    username: filesender
     no-ssl-bump-domains: file_sender.app
-    access_key: aa041391-271c-496d-bbdd-c496a9037fcc
+    access_key: 2242660d-13d3-44f5-bc73-68d6bcf80711
   hosts:
     - file_sender.app
 
@@ -19,7 +19,7 @@ before_install:
 install:
     - ./travis/scripts/postgresql-setup.sh
     - ./travis/scripts/simplesamlphp-setup.sh
-    - composer require sauce/sausage --no-interaction
+    - composer update --no-interaction
 before_script:
   - sudo apt-get update
   - sudo apt-get install apache2 libapache2-mod-fastcgi
