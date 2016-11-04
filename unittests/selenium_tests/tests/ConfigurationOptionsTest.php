@@ -223,17 +223,20 @@ class ConfigurationOptionsTest extends SeleniumTest {
     }
 
     private function yieldRecipientMails($recipient_id) {
-        
+
+        $folder_names = [];
         $folder_name = getcwd() . '\\testmails\\' . $recipient_id . '\\';
         //print_r($folder_name); exit;
         $dir = new DirectoryIterator($folder_name);
         foreach ($dir as $fileinfo) {
             if (!$fileinfo->isDot()) {
                 if (preg_match('/^(\d+)\.mail$/', $fileinfo->getFilename(), $matches)) {
-                    yield $folder_name . $fileinfo->getFilename();
+                    $folder_names[] = $folder_name . $fileinfo->getFilename();
                 }
             }
         }
+
+        return $folder_names;
     }
 
 
