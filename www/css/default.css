@@ -1232,7 +1232,10 @@ table.guests .guest .to .errors .details {
 }
 
 
-#encryption_password_container{
+#encryption_password_container {
+    display: none;
+}
+#encryption_password_container_generate {
     display: none;
 }
 #encryption_password_show_container{
