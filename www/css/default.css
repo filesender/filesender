@@ -1014,6 +1014,12 @@ table.guests .guest .to .errors .details {
 
 .download_page .files .file .name {
     font-size: 1.7em;
+    text-overflow: ellipsis;
+    width: 345px;
+    display: inline-block;
+    height: 1em;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 .download_page .files .file .size {
