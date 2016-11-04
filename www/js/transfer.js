@@ -230,8 +230,12 @@ window.filesender.transfer = function() {
      * @param int file index
      */
     this.removeFile = function(cid) {
+        console.log('removing file');
         for (var i = 0; i < this.files.length; i++) {
             if (this.files[i].cid == cid) {
+                console.log(this.size);
+                this.size -= this.files[i].size;
+                console.log(this.size);
                 this.files.splice(i, 1);
                 return;
             }

@@ -103,7 +103,7 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
                     <div class="fieldcontainer" data-related-to="message">
                         <label for="subject">{tr:subject} ({tr:optional}) :</label>
                         
-                        <input name="subject" type="text"/>
+                        <input id="subject" name="subject" type="text"/>
                     </div>
                     
                     <div class="fieldcontainer" data-related-to="message">

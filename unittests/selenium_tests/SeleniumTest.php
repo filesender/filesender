@@ -71,9 +71,11 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
 
         if($this->use_mails)
         {
-            $this->deleteDirectory('testmails');
+            //$this->deleteDirectory('testmails');
         }
 
+        // load config
+        //DBI::connect();
 
         parent::__construct($name, $data, $dataName);
 
@@ -300,6 +302,41 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
 
         return $data_ids;
 
+    }
+    
+    private function IndividualEncryptedDownloadsTest($token, $file_datas_to_check)
+    {
+        stream_context_set_default(["ssl"=>["allow_self_signed"=>true]]);
+        // the download class is for encrypted direct downloads
+        $elements = $this->elements($this->using('css selector')->value('.files.box .file.download'));
+        $data_ids = [];
+
+        foreach($elements as $element)
+        {
+            //  starts a download
+            $element->click();
+            
+            // wait untill decryption key is asked
+            
+            // fill in key
+            
+            // check for progress
+            
+            // confirm download not possible..            
+        }
+
+        $this->assertEmpty($file_datas_to_check);
+
+
+        return $data_ids;
+
+    }
+    
+    protected function toggleAdvanceOption($name){
+        $elements  = $this->elements($this->using('css selector')->value('[data-option="'.$name.'"]'));
+        foreach($elements as $element){
+            $element->click();
+        }
     }
 
 

@@ -88,9 +88,12 @@ filesender.ui.files = {
                     
                     var iidx = filesender.ui.files.invalidFiles.indexOf(name);
                     if (iidx === -1){
-                        total_size -= parseInt(size);
+                        var size = 0;
+                        for(var j=0; j<filesender.ui.transfer.files.length; j++)
+                            size += filesender.ui.transfer.files[j].size;
                         filesender.ui.nodes.stats.number_of_files.show().find('.value').text(filesender.ui.transfer.files.length + '/' + filesender.config.max_transfer_files);
-                        filesender.ui.nodes.stats.size.show().find('.value').text(filesender.ui.formatBytes(total_size) + '/' + filesender.ui.formatBytes(filesender.config.max_transfer_size));
+                        filesender.ui.nodes.stats.size.show().find('.value').text(filesender.ui.formatBytes(size) + '/' + filesender.ui.formatBytes(filesender.config.max_transfer_size));
+                        
                     } else {
                         filesender.ui.files.invalidFiles.splice(iidx, 1);
                     }

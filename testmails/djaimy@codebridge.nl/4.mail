@@ -1,0 +1,44 @@
+SUBJECT: FileSender: File successfully uploaded
+TEMPLATE: upload_complete
+<p>
+    Dear Sir or Madam,
+</p>
+
+<p>
+    The following file has been successfully uploaded to <a href="http://filesender.app/">FileSender</a>.
+</p>
+
+<table rules="rows">
+    <thead>
+        <tr>
+            <th colspan="2">Transaction details</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>File</td>
+            <td>
+                
+                Katy Perry - Dark Horse (Official) ft. Juicy J.mp3 (3.4 MB)
+                
+            </td>
+        </tr>
+        <tr>
+            <td>Size</td>
+            <td>3.4 MB</td>
+        </tr>
+        <tr>
+            <td>More information</td>
+            <td><a href="http://filesender.app/#logon-http%3A%2F%2Ffilesender.app%2Findex.php%3Fs%3Dtransfers%23transfer_178">http://filesender.app/#logon-http%3A%2F%2Ffilesender.app%2Findex.php%3Fs%3Dtransfers%23transfer_178</a></td>
+        </tr>
+    </tbody>
+</table>
+
+<p>
+    Best regards,<br />
+    FileSender
+</p>
+
+<p>
+    Translate this email : <a href="http://filesender.app/?s=translate_email&amp;token=b44d5657-4eca-baa9-daa8-0f589369d6a3">http://filesender.app/?s=translate_email&amp;token=b44d5657-4eca-baa9-daa8-0f589369d6a3</a>
+</p>

@@ -507,7 +507,7 @@ class Mail {
      */
     public function send() {
         $source = $this->build();
-        
+        Logger::warn('Sending mail');
         $safemode = ini_get('safe_mode');
         $safemode = ($safemode && !preg_match('`^off$`i', $safemode));
 
@@ -535,7 +535,7 @@ class Mail {
     public function sendDebugMail($source)
     {
         //file_put_contents('/tmp/debugmails', print_r($this->rcpt, true), FILE_APPEND);
-
+        Logger::error($source);
         $target_dir = '../testmails'.DIRECTORY_SEPARATOR.$source['to'].DIRECTORY_SEPARATOR;
         if(!file_exists($target_dir))
         {

@@ -1,0 +1,24 @@
+SUBJECT: FileSender: Download receipt
+TEMPLATE: files_downloaded
+<p>
+    Dear Sir or Madam,
+</p>
+
+<p>
+    A file you uploaded has been downloaded from FileSender by .
+</p>
+
+<p>
+    
+    124bytes.txt (125 B)
+    
+</p>
+
+<p>
+    You can access your files and view detailed download statistics on the transfers page at <a href="http://filesender.app/#logon-http%3A%2F%2Ffilesender.app%2Findex.php%3Fs%3Dtransfers%23transfer_176">http://filesender.app/#logon-http%3A%2F%2Ffilesender.app%2Findex.php%3Fs%3Dtransfers%23transfer_176</a>.
+</p>
+
+<p>
+    Best regards,<br />
+    FileSender
+</p>
