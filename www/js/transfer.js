@@ -101,11 +101,6 @@ window.filesender.transfer = function() {
 	if (enable && ie && this.encryption)
 		enable = false;
 
-//console.log("canUseTerasender:"+(enable?"true":"false"));
-//console.log("UA:"+ua);
-//console.log("IE:"+(ie?"true":"false"));
-//console.log("Encryption:"+(this.encryption?"true":"false"));
-
 	return enable;
     };
 
@@ -233,6 +228,7 @@ window.filesender.transfer = function() {
     this.removeFile = function(cid) {
         for (var i = 0; i < this.files.length; i++) {
             if (this.files[i].cid == cid) {
+                this.size -= this.files[i].size;
                 this.files.splice(i, 1);
                 return;
             }

@@ -14,7 +14,7 @@ class MaxUploadSizeTest extends SeleniumTest
 
         $this->setupAuthenticated();
 
-        $this->setMaxTransferFileSize(124);
+        $this->setMaxTransferFileSize(125);
 
         $this->showFileUploader();
 
@@ -40,7 +40,7 @@ class MaxUploadSizeTest extends SeleniumTest
 
         $this->setupAuthenticated();
 
-        $this->setMaxTransferFileSize(124);
+        $this->setMaxTransferFileSize(125);
 
         $this->showFileUploader();
 
@@ -57,7 +57,7 @@ class MaxUploadSizeTest extends SeleniumTest
 
         $this->setupAuthenticated();
 
-        $this->setMaxTransferFileSize(124);
+        $this->setMaxTransferFileSize(125);
 
         $this->showFileUploader();
 

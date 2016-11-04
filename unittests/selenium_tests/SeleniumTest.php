@@ -2,12 +2,6 @@
 
 require_once 'vendor/autoload.php';
 
-/**
- * Created by PhpStorm.
- * User: peter
- * Date: 30-5-16
- * Time: 15:42
- */
 class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
 {
     protected $start_url_path = '';
@@ -71,7 +65,7 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
 
         if($this->use_mails)
         {
-            $this->deleteDirectory('testmails');
+            //$this->deleteDirectory('testmails');
         }
 
 
@@ -302,6 +296,31 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
 
     }
 
+    private function IndividualEncryptedDownloadsTest($token, $file_datas_to_check)
+    {
+        stream_context_set_default(["ssl"=>["allow_self_signed"=>true]]);
+        // the download class is for encrypted direct downloads
+        $elements = $this->elements($this->using('css selector')->value('.files.box .file.download'));
+        $data_ids = [];
 
+        foreach($elements as $element)
+        {
+            //  starts a download
+            $element->click();
+
+        }
+
+        $this->assertEmpty($file_datas_to_check);
+
+
+        return $data_ids;
+    }
+
+    protected function toggleAdvanceOption($name){
+        $elements  = $this->elements($this->using('css selector')->value('[data-option="'.$name.'"]'));
+        foreach($elements as $element){
+            $element->click();
+        }
+    }
 
 }
