@@ -358,9 +358,11 @@ window.filesender.ui = {
         
         return error.message;
     },
-    
-    rawError: function(text) {
-        alert('Error : ' + (text.match(/^[a-z][a-z0-9_]+$/i) ? lang.tr(text) : text));
+    rawError: function (text) {
+	text = (text.match(/^[a-z][a-z0-9_]+$/i) ? lang.tr(text) : text).trim();
+	if (text!='') {
+	        alert('Error : ' + text);
+	}
     },
     
     
