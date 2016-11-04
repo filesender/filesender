@@ -1,5 +1,7 @@
-if(typeof window === 'undefined') window = {}; // dummy window
-if(!('filesender' in window)) window.filesender = {};
+if (typeof window === 'undefined')
+    window = {}; // dummy window
+if (!('filesender' in window))
+    window.filesender = {};
 
 window.filesender.crypto_blob_reader = function () {
     return {
@@ -24,7 +26,7 @@ window.filesender.crypto_blob_reader = function () {
             if (this.completed >= this.blob.size) {
                 return false;
             }
-            
+
             var start = this.completed;
             var end = Math.min(this.completed + this.chunkSize, this.blob.size);
 
@@ -37,10 +39,10 @@ window.filesender.crypto_blob_reader = function () {
             this.completed = Math.min(this.blob.size, this.completed + this.chunkSize);
 
             this.numberOfChunks++;
-            
+
             return true;
         },
-        createReader: function(file, callback){
+        createReader: function (file, callback) {
             this.setBlob(file);
             this.reader = new FileReader();
             this.reader.onerror = function (evt) {
@@ -55,34 +57,33 @@ window.filesender.crypto_blob_reader = function () {
                         break; // noop
                     default:
                         alert('An error occurred reading this file.');
-                };
+                }
             };
             this.reader.onprogress = function (evt) {
                 if (evt.lengthComputable) {
                     var percentLoaded = Math.round((evt.loaded / evt.total) * 100);
                 }
             };
-            
+
             this.reader.onabort = function (e) {
-                console.log('File read cancelled');
+                filesender.ui.log(e);
             };
             this.reader.onload = function (e) {
-                console.log('file loaded');
+                filesender.ui.log(e);
             };
-            
+
             function abortRead() {
                 this.reader.abort();
             }
 
             callback(this);
-            
+
             return this;
         },
-        
         readArrayBuffer: function (callback) {
             var $this = this;
             this.in_progess = true;
-           
+
             // If we use onloadend, we need to check the readyState.
             this.reader.onloadend = function (evt) {
                 if (evt.target.readyState === FileReader.DONE) { // DONE == 2                  
@@ -90,19 +91,18 @@ window.filesender.crypto_blob_reader = function () {
                     callback(evt.target.result);
                 }
             };
-            
+
             this.reader.readAsArrayBuffer($this.blobSlice);
         },
-        
         readAllArrayBuffer: function (callback) {
             var $this = this;
-            
+
             this.in_progess = true;
-            
-            if(!this.blobSlice){
+
+            if (!this.blobSlice) {
                 var more = this.nextBlobSlice();
             }
-            
+
             // If we use onloadend, we need to check the readyState.
             this.reader.onloadend = function (evt) {
                 if (evt.target.readyState === FileReader.DONE) { // DONE == 2               
@@ -111,29 +111,28 @@ window.filesender.crypto_blob_reader = function () {
                     var more = $this.nextBlobSlice();
                     callback(evt.target.result, !more);
                     // repeat
-                    if(more){
+                    if (more) {
                         $this.readAllArrayBuffer(callback);
                     }
                 }
             };
-            
+
             this.reader.readAsArrayBuffer($this.blobSlice);
         },
-        
-        sliceForDownload: function(largeBlob) {
-            
+        sliceForDownload: function (largeBlob) {
+
             var largeBlobSize = largeBlob.size;
             var completed = 0;
-            
+
             var returnBlobArray = [];
-            
+
             // get the slice function
             largeBlob.slice = largeBlob.slice || largeBlob.mozSlice || largeBlob.webkitSlice;
-            
+
             var done = false;
-            
+
             var i = 0;
-            while(!done){
+            while (!done) {
                 var start = completed;
                 var end = Math.min(completed + this.cryptedChunkSize, largeBlobSize);
                 var blobSlice = null;
@@ -143,28 +142,27 @@ window.filesender.crypto_blob_reader = function () {
                     blobSlice = largeBlob.slice(start, end);
                 }
                 returnBlobArray.push(blobSlice);
-                
+
                 completed = Math.min(largeBlobSize, completed + this.cryptedChunkSize);
-                if(completed === largeBlobSize){
+                if (completed === largeBlobSize) {
                     done = true;
                 }
             }
-            
+
             var reader = new FileReader();
-            
-            return returnBlobArray;    
+
+            return returnBlobArray;
         },
-        
-        sliceForDownloadBuffers: function(largeBuffer) {
-           var buffers = [];
-           var number = Math.ceil(largeBuffer.length / (this.cryptedChunkSize)); 
-           
-           for(var x = 0; x < number; x++){
-               var start = (x * (this.cryptedChunkSize));
-               var end = Math.min((x + 1) * (this.cryptedChunkSize), largeBuffer.length);
-               buffers.push(largeBuffer.slice(start, end));
-           }
-           return buffers;
+        sliceForDownloadBuffers: function (largeBuffer) {
+            var buffers = [];
+            var number = Math.ceil(largeBuffer.length / (this.cryptedChunkSize));
+
+            for (var x = 0; x < number; x++) {
+                var start = (x * (this.cryptedChunkSize));
+                var end = Math.min((x + 1) * (this.cryptedChunkSize), largeBuffer.length);
+                buffers.push(largeBuffer.slice(start, end));
+            }
+            return buffers;
         }
     };
 };

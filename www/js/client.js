@@ -276,7 +276,7 @@ window.filesender.client = {
                 cid: transfer.files[i].cid
             });
         }
-        console.log(transfer);
+       
         return this.post(transfer.authenticatedEndpoint('/transfer'), {
             from: transfer.from,
             encryption: transfer.encryption,

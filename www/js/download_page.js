@@ -78,12 +78,10 @@ $(function() {
                 filesender.ui.redirect(filesender.config.base_path + 'download.php?token=' + token + '&files_ids=' + ids.join(',') + notify);
             };
         };
-        //console.log(encrypted);
         if (!encrypted && confirm){
             filesender.ui.confirm(lang.tr('confirm_download_notify'), dlcb(true), dlcb(false), true);
         }else{
-            //console.log(encrypted);
-            if(encrypted){
+             if(encrypted){
                 var filename = $($this).find("[data-id='" + ids[0] + "']").attr('data-name');
                 var mime = $($this).find("[data-id='" + ids[0] + "']").attr('data-mime');
 
@@ -100,12 +98,11 @@ $(function() {
         var encrypted = $(this).closest('.file').attr('data-encrypted');
         var progress = $(this).closest('.file').find('.downloadprogress');
         var transferid = $('.transfer').attr('data-id');
-        //console.log(encrypted);
-	//if (encrypted) $(this).html($(this).html().replace('fa-download','fa-spinner fa-spin'));
+
         filesender.client.getTransferOption(transferid, 'enable_recipient_email_download_complete', token, function(dl_complete_enabled){
             dl(id, dl_complete_enabled, encrypted, progress);
         });
-        
+
         return false;
     });
     
