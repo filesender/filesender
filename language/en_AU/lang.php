@@ -176,6 +176,7 @@ $lang['file_encryption_wrong_password'] = 'Incorrect Password';
 $lang['file_encryption_enter_password'] = 'Enter a password';
 $lang['file_encryption_need_password'] = 'You must enter a password to download';
 $lang['file_encryption_description'] = '<i class="fa fa-exclamation-triangle" style="color:#FFAA00" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp; File Encryption is end to end. Your files are encrypted in your web browser. It is up to you to send the encryption password to the recipient(s) as we do not store any passwords.<br/><i class="fa fa-exclamation-triangle" style="color:#FFAA00" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp; File Encryption will significantly impact performance of your browser and/or device for the sender and receiver(s).<br/><i class="fa fa-exclamation-triangle" style="color:#FFAA00" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp; Encrypted Files equal to or greater than 4GB may not be downloadable due to the limitations of the web browser.';
+$lang['file_encryption_generate_password'] = 'Generate password';
 
 /**
  * Transfer specific

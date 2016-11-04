@@ -582,7 +582,8 @@ $(function() {
         encryption: {
                 toggle: form.find('input[name="encryption"]'),
                 password: form.find('input[name="encryption_password"]'),
-                show_hide: form.find('#encryption_show_password')
+                show_hide: form.find('#encryption_show_password'),
+                generate: form.find('#encryption_generate_password')
             },
         message: form.find('textarea[name="message"]'),
         guest_token: form.find('input[type="hidden"][name="guest_token"]'),
@@ -756,8 +757,12 @@ $(function() {
     // Bind encryption
     filesender.ui.nodes.encryption.toggle.on('change', function() {
         $('#encryption_password_container').slideToggle();
+        $('#encryption_password_container_generate').slideToggle();
         $('#encryption_password_show_container').slideToggle();
         return false;
+    });
+    filesender.ui.nodes.encryption.generate.on('click', function() {
+        filesender.ui.nodes.encryption.password.val(Math.random().toString(36).substr(2, 8));
     });
     filesender.ui.nodes.encryption.show_hide.on('change', function() {
         if(filesender.ui.nodes.encryption.password.attr('type') === 'password'){
