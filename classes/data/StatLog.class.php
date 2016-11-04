@@ -143,8 +143,10 @@ class StatLog extends DBObject {
             case File::getClassName():
                 $log->size = $target->size;
                 
-                if($event == LogEventTypes::FILE_UPLOADED)
+                if($event == LogEventTypes::FILE_UPLOADED) {
                     $log->time_taken = $target->upload_time;
+		    $log->additional_attributes = array('encryption'=>$target->transfer->options['encryption']);
+		}
                 break;
             
             case Transfer::getClassName():
@@ -155,6 +157,7 @@ class StatLog extends DBObject {
                 
                 if($event == LogEventTypes::TRANSFER_AVAILABLE)
                     $log->time_taken = $target->made_available_time;
+
                 break;
             
             default:
