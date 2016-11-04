@@ -2,12 +2,6 @@
 
 require_once 'vendor/autoload.php';
 
-/**
- * Created by PhpStorm.
- * User: peter
- * Date: 30-5-16
- * Time: 15:42
- */
 class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
 {
     protected $start_url_path = '';
@@ -74,12 +68,7 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
             //$this->deleteDirectory('testmails');
         }
 
-        // load config
-        //DBI::connect();
-
         parent::__construct($name, $data, $dataName);
-
-
     }
 
     public function setUpPage()
@@ -100,7 +89,7 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
     protected function getKeyBindings()
     {
         $key_bindings = [];
-        
+
         $refl = new ReflectionClass('PHPUnit_Extensions_Selenium2TestCase_Keys');
         foreach ($refl->getConstants() as $constant_key=>$constant_value)
         {
@@ -303,7 +292,7 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
         return $data_ids;
 
     }
-    
+
     private function IndividualEncryptedDownloadsTest($token, $file_datas_to_check)
     {
         stream_context_set_default(["ssl"=>["allow_self_signed"=>true]]);
@@ -315,30 +304,20 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
         {
             //  starts a download
             $element->click();
-            
-            // wait untill decryption key is asked
-            
-            // fill in key
-            
-            // check for progress
-            
-            // confirm download not possible..            
+
         }
 
         $this->assertEmpty($file_datas_to_check);
 
 
         return $data_ids;
-
     }
-    
+
     protected function toggleAdvanceOption($name){
         $elements  = $this->elements($this->using('css selector')->value('[data-option="'.$name.'"]'));
         foreach($elements as $element){
             $element->click();
         }
     }
-
-
 
 }

@@ -16,11 +16,10 @@ class ConfigurationOptionsTest extends SeleniumTest {
         if ($checkbox->selected()) {
             $checkbox->click();
         }
-        
-       //$this->checkCheckbox('toggle_advanced_options', true);
+
         $this->byClassName('toggle_advanced_options')->click();
         sleep(10);
-        
+
         $this->checkCheckBox('add_me_to_recipients', false);
        // sleep(2);
         $this->checkCheckBox('email_me_on_expire', true);
@@ -47,7 +46,6 @@ class ConfigurationOptionsTest extends SeleniumTest {
         $content = 'testContent_' . rand(0, 100);
 
         $file_data_contents = $this->uploadFiles();
-
 
         $this->sendMessageToRecipients($recipients, $subject, $content);
     }
