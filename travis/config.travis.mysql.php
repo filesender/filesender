@@ -302,5 +302,5 @@ $config['auth_sp_saml_authentication_source']   =       'default-sp';
 // Set auditlog for transfers on or off
 $config['auditlog_enable'] = true;
 
-$config['sauce_username']  =       'DraughtGlbFileSender';                      // String, Sauce Labs username
-$config['sauce_access_key']  =       'aa041391-271c-496d-bbdd-c496a9037fcc';     // String, Sauce Labs access key
+$config['sauce_username']  =       'filesender';                      // String, Sauce Labs username
+$config['sauce_access_key']  =       '2242660d-13d3-44f5-bc73-68d6bcf80711';     // String, Sauce Labs access key
