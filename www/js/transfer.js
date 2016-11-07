@@ -93,15 +93,20 @@ window.filesender.transfer = function() {
     this.stalling_detection = cfg;
     
     this.canUseTerasender = function() {
-	var enable = filesender.config.terasender_enabled && filesender.supports.workers;
+        var enable = filesender.config.terasender_enabled && filesender.supports.workers;
+        if (!enable)
+                return false;
 
-	var ua = window.navigator.userAgent;
-	var ie = (ua.indexOf('MSIE ')!=-1 || ua.indexOf('Trident/')!=-1 || ua.indexOf('Edge/')!=-1);
+        var ua = window.navigator.userAgent.toLowerCase();
+        var ie = (ua.indexOf('msie ')!=-1 || ua.indexOf('trident/')!=-1 || ua.indexOf('edge/')!=-1);
+        var ff = ua.toLowerCase().indexOf('firefox') != -1;
+        var mac = ua.indexOf('mac os x') != -1;
 
-	if (enable && ie && this.encryption)
-		enable = false;
+        if ((ie && this.encryption) ||
+            (ff && mac)
+           ) return false;
 
-	return enable;
+        return true;
     };
 
     
