@@ -302,5 +302,9 @@ $config['auth_sp_saml_authentication_source']   =       'default-sp';
 // Set auditlog for transfers on or off
 $config['auditlog_enable'] = true;
 
-$config['sauce_username']  =       'filesender';                      // String, Sauce Labs username
-$config['sauce_access_key']  =       '2242660d-13d3-44f5-bc73-68d6bcf80711';     // String, Sauce Labs access key
+// These vars come from the travis-ci enviroment, they shouldnt be in the repos; the previous access key that was added is invalidated
+$config['sauce_username'] = getenv('sauce_username'); // String, Sauce Labs username
+$config['sauce_access_key'] = getenv('sauce_access_key');     // String, Sauce Labs access key
+
+$config['ban_extension'] = 'exe,bat';
+$config['user_page'] = [];
