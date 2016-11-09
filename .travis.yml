@@ -21,6 +21,7 @@ install:
     - ./travis/scripts/simplesamlphp-setup.sh
     - mkdir ./log
     - mkdir ./tmp
+    - mkdir ./files
     - composer update --no-interaction
 before_script:
   - sudo apt-get update
