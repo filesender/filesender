@@ -311,6 +311,6 @@ $config['auditlog_enable'] = true;
 $config['sauce_username'] = getenv('sauce_username'); // String, Sauce Labs username
 $config['sauce_access_key'] = getenv('sauce_access_key');     // String, Sauce Labs access key
 
-$config['ban_extension'] = 'exe,bat'; 
+$config['ban_extension'] = 'exe,bat';
 $config['user_page'] = [];
 
