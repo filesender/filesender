@@ -115,7 +115,7 @@ class EncryptionTest extends SeleniumTest {
             
             $this->assertTrue(false);
         }
-        catch(PHPUnit_Extensions_Selenium2TestCase_WebDriverException $e){
+        catch(Exception $e){
             $this->assertTrue(true);
         }
         
