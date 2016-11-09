@@ -759,6 +759,7 @@ $(function() {
         $('#encryption_password_container').slideToggle();
         $('#encryption_password_container_generate').slideToggle();
         $('#encryption_password_show_container').slideToggle();
+	$('#encryption_description_container').slideToggle();
         return false;
     });
     filesender.ui.nodes.encryption.generate.on('click', function() {
