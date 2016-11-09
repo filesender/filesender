@@ -260,7 +260,7 @@ $config['auth_sp_saml_simplesamlphp_location']      =       '%TRAVIS_BUILD_DIR%/
 // ---------------------------------------------
 
 $config['storage_type']             =       'filesystem';
-$config['storage_filesystem_path']  =       '/data/branches/filesender-2.0/files';
+$config['storage_filesystem_path']  =       '%TRAVIS_BUILD_DIR%/files';
 
     //'storage_filesystem_df_command' => 'df {path}',
 
@@ -311,6 +311,6 @@ $config['auditlog_enable'] = true;
 $config['sauce_username'] = getenv('sauce_username'); // String, Sauce Labs username
 $config['sauce_access_key'] = getenv('sauce_access_key');     // String, Sauce Labs access key
 
-$config['ban_extension'] = 'exe,bat'; 
+$config['ban_extension'] = 'exe,bat';
 $config['user_page'] = [];
 

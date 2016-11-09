@@ -13,9 +13,16 @@ class TransferExpiredTest extends SeleniumTest
         extract($this->getKeyBindings());
 
         $this->setupAuthenticated();
-
+        
+        $checkbox = $this->byCssSelector('[name="get_a_link"]');
+        if (!$checkbox->selected()) {
+            $checkbox->click();
+        }
+        
         ${"temp"} = $this->execute(array('script' => "var file_upload_container = document.getElementsByClassName('file_selector')[0];file_upload_container.style.display='block';", 'args' => array()));
 
+        $this->setMaxTransferFileSize(1024);
+        
         $test1_file = "unittests/selenium_tests/assets/124bytes.txt";
         $test1_file_data = file_get_contents($test1_file);
         $this->sendKeys($this->byCssSelector(".file_selector input[name=\"files\"]"), $test1_file);
