@@ -127,7 +127,7 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
                                 <input id="encryption_show_password" name="encryption_show_password" type="checkbox">  
                                 <label for="encryption_show_password" style="cursor: pointer;">{tr:file_encryption_show_password}</label>
                             </div>
-                            <div class="fieldcontainer" data-related-to="encryption_description">
+                            <div class="fieldcontainer" id="encryption_description_container">
                                 {tr:file_encryption_description}
                             </div>
                         <?php } ?>

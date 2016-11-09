@@ -1231,13 +1231,10 @@ table.guests .guest .to .errors .details {
     font-weight: bold;
 }
 
-
-#encryption_password_container {
-    display: none;
-}
-#encryption_password_container_generate {
-    display: none;
-}
-#encryption_password_show_container{
+/* Encryption */
+#encryption_password_container,
+#encryption_password_container_generate,
+#encryption_password_show_container,
+#encryption_description_container {
     display: none;
 }
