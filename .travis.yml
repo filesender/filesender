@@ -5,7 +5,7 @@ addons:
   sauce_connect:
     username: $SAUCE_USERNAME
     no-ssl-bump-domains: file_sender.app
-    access_key: $SAUCE_ACCESS_KEY
+    access_key: $SAUCE_ACCESS_KEY 
   hosts:
     - file_sender.app
 
