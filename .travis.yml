@@ -46,6 +46,7 @@ before_script:
 after_failure:
   - sudo cat /var/log/apache2/error.log
   - sudo cat /var/log/apache2/access.log
+  - find ./log -type f -exec cat {} +
 
 script:
     - phpunit --configuration ./unittests/config_tests_filesender.xml
