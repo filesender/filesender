@@ -37,13 +37,15 @@ class EncryptionTest extends SeleniumTest {
                 return true;
             }
         }, 10000);
+        // the popup is not instant.. sleep a bit
+        sleep(2);
         
         // check for success
         $this->assertContains('Success', $this->byCssSelector('.ui-dialog-title')->text());
         
         // check db for encryption
-        $statement = DBI::prepare('SELECT * FROM files ORDER BY id DESC LIMIT 1');
-        $statement->execute(['a' => 0]);
+        $statement = DBI::prepare('SELECT * FROM files ORDER BY id DESC LIMIT :a');
+        $statement->execute(['a' => 1]);
         $data = $statement->fetch();
         
         $encrypted_succes = false;
