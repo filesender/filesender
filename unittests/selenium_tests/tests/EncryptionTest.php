@@ -11,6 +11,11 @@ class EncryptionTest extends SeleniumTest {
     public function testEncryptionTest() {
         extract($this->getKeyBindings());
         
+        $checkbox = $this->byCssSelector('[name="get_a_link"]');
+        if (!$checkbox->selected()) {
+            $checkbox->click();
+        }
+        
         // Turn on encrption
         $this->byId("encryption")->click();
         
