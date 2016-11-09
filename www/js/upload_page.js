@@ -759,10 +759,12 @@ $(function() {
         $('#encryption_password_container').slideToggle();
         $('#encryption_password_container_generate').slideToggle();
         $('#encryption_password_show_container').slideToggle();
+	$('#encryption_description_container').slideToggle();
         return false;
     });
     filesender.ui.nodes.encryption.generate.on('click', function() {
         filesender.ui.nodes.encryption.password.val(Math.random().toString(36).substr(2, 8));
+	filesender.ui.nodes.encryption.password.effect('highlight',{},500);
     });
     filesender.ui.nodes.encryption.show_hide.on('change', function() {
         if(filesender.ui.nodes.encryption.password.attr('type') === 'password'){
@@ -770,6 +772,7 @@ $(function() {
         }else{
             filesender.ui.nodes.encryption.password.attr('type','password');
         }
+	filesender.ui.nodes.encryption.password.effect('highlight',{},500);
         return false;
     });
     
