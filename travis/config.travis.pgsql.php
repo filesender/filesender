@@ -260,7 +260,7 @@ $config['auth_sp_saml_simplesamlphp_location']      =       '%TRAVIS_BUILD_DIR%/
 // ---------------------------------------------
 
 $config['storage_type']             =       'filesystem';
-$config['storage_filesystem_path']  =       './files';
+$config['storage_filesystem_path']  =       '%TRAVIS_BUILD_DIR%/files';
 
     //'storage_filesystem_df_command' => 'df {path}',
 
