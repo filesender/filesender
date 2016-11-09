@@ -3,9 +3,9 @@ php:
     - 5.4
 addons:
   sauce_connect:
-    username: filesender
+    username: $SAUCE_USERNAME
     no-ssl-bump-domains: file_sender.app
-    access_key: 2242660d-13d3-44f5-bc73-68d6bcf80711
+    access_key: $SAUCE_ACCESS_KEY
   hosts:
     - file_sender.app
 

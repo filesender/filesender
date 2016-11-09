@@ -311,9 +311,6 @@ $config['auditlog_enable'] = true;
 $config['sauce_username'] = getenv('sauce_username'); // String, Sauce Labs username
 $config['sauce_access_key'] = getenv('sauce_access_key');     // String, Sauce Labs access key
 
-var_dump($config['sauce_username']); // just for debugging in travis
-var_dump($config['sauce_access_key']); // just for debugging in travis
-
 $config['ban_extension'] = 'exe,bat';
 $config['user_page'] = [];
 
