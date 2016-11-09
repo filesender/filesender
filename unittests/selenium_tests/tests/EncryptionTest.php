@@ -28,9 +28,9 @@ class EncryptionTest extends SeleniumTest {
         
         $this->byCssSelector('.start.ui-button')->click();
 
-
+        // wait for the dialog
         $this->waitUntil(function(){
-            $elements = $this->elements($this->using('css selector')->value('.ui-dialog-content.ui-widget-content.success'));
+            $elements = $this->elements($this->using('css selector')->value('.ui-dialog-title'));
             $count = count($elements);
             if($count > 0)
             {
@@ -38,11 +38,10 @@ class EncryptionTest extends SeleniumTest {
             }
         }, 10000);
         
-        // check for progress
-        //$this->assertContains('%', $this->byCssSelector("#page .box")->text());
+        // check for success
+        $this->assertContains('Success', $this->byCssSelector('.ui-dialog-title')->text());
         
-        //sleep(10);
-        
+        // check db for encryption
         $statement = DBI::prepare('SELECT * FROM files ORDER BY id DESC LIMIT 1');
         $statement->execute(['a' => 0]);
         $data = $statement->fetch();
