@@ -19,6 +19,8 @@ before_install:
 install:
     - ./travis/scripts/postgresql-setup.sh
     - ./travis/scripts/simplesamlphp-setup.sh
+    - mkdir ./log
+    - mkdir ./tmp
     - composer update --no-interaction
 before_script:
   - sudo apt-get update
