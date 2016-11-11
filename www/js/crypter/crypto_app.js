@@ -1,8 +1,13 @@
 if (typeof window === 'undefined')
     window = {}; // dummy window for use in webworkers
-
 if (!('filesender' in window))
     window.filesender = {};
+if (!('ui' in window.filesender)) {
+    window.filesender.ui = {};
+    window.filesender.ui.log = function(e) {
+        console.log(e);
+    }
+}
 
 window.filesender.crypto_app = function () {
     return {
