@@ -358,8 +358,6 @@ class RestEndpointTransfer extends RestEndpoint {
                 $options[$name] = $value;
             }
 
-            $options['encryption'] = $data->encryption;
-
             Logger::info($options);
             // Get_a_link transfers have no recipients so mail related options make no sense, remove them if set
             if($options[TransferOptions::GET_A_LINK]) {
@@ -433,10 +431,11 @@ class RestEndpointTransfer extends RestEndpoint {
             
             // Guest owner decides about guest options
             if($guest) {
-                $transfer->options = $guest->transfer_options;
-            } else {
-                $transfer->options = $options;
-            }
+		$options = $guest->transfer_options;
+	    }
+	    $options['encryption'] = $data->encryption;
+            Logger::info($options);
+            $transfer->options = $options;
             
             $transfer->save(); // Mandatory to add recipients and files
             
