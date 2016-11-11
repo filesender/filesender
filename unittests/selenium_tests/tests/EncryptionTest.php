@@ -11,6 +11,11 @@ class EncryptionTest extends SeleniumTest {
     public function testEncryptionTest() {
         extract($this->getKeyBindings());
         
+        $checkbox = $this->byCssSelector('[name="get_a_link"]');
+        if (!$checkbox->selected()) {
+            $checkbox->click();
+        }
+        
         // Turn on encrption
         $this->byId("encryption")->click();
         
@@ -21,13 +26,26 @@ class EncryptionTest extends SeleniumTest {
         // Upload files
         $this->uploadFiles();
         
-        // check for progress
-        //$this->assertContains('%', $this->byCssSelector("#page .box")->text());
+        $this->byCssSelector('.start.ui-button')->click();
+
+        // wait for the dialog
+        $this->waitUntil(function(){
+            $elements = $this->elements($this->using('css selector')->value('.ui-dialog-title'));
+            $count = count($elements);
+            if($count > 0)
+            {
+                return true;
+            }
+        }, 10000);
+        // the popup is not instant.. sleep a bit
+        sleep(2);
         
-        sleep(10);
+        // check for success
+        $this->assertContains('Success', $this->byCssSelector('.ui-dialog-title')->text());
         
-        $statement = DBI::prepare('SELECT * FROM files ORDER BY id DESC LIMIT 1');
-        $statement->execute(['a' => 0]);
+        // check db for encryption
+        $statement = DBI::prepare('SELECT * FROM files ORDER BY id DESC LIMIT :a');
+        $statement->execute(['a' => 1]);
         $data = $statement->fetch();
         
         $encrypted_succes = false;
@@ -97,7 +115,7 @@ class EncryptionTest extends SeleniumTest {
             
             $this->assertTrue(false);
         }
-        catch(PHPUnit_Extensions_Selenium2TestCase_WebDriverException $e){
+        catch(Exception $e){
             $this->assertTrue(true);
         }
         

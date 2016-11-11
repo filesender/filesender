@@ -48,7 +48,7 @@
 //
 $config['site_url']             =   'https://file_sender.app/filesender';                // String, URL of the application
 //
-$config['admin']                =   '0';            // String, UID's (from  $config['saml_uid_attribute'])
+$config['admin'] = '0';            // String, UID's (from  $config['saml_uid_attribute'])
                                     // that have Administrator permissions
 $config['admin_email']          =   'emiel@codebridge.nl';       // String, email  address(es, separated by ,)
                                     // to receive administrative messages (low disk  space warning)
@@ -260,7 +260,7 @@ $config['auth_sp_saml_simplesamlphp_location']      =       '%TRAVIS_BUILD_DIR%/
 // ---------------------------------------------
 
 $config['storage_type']             =       'filesystem';
-$config['storage_filesystem_path']  =       '/data/branches/filesender-2.0/files';
+$config['storage_filesystem_path']  =       '%TRAVIS_BUILD_DIR%/files';
 
     //'storage_filesystem_df_command' => 'df {path}',
 
@@ -310,8 +310,6 @@ $config['auditlog_enable'] = true;
 // These vars come from the travis-ci enviroment, they shouldnt be in the repos; the previous access key that was added is invalidated
 $config['sauce_username'] = getenv('sauce_username'); // String, Sauce Labs username
 $config['sauce_access_key'] = getenv('sauce_access_key');     // String, Sauce Labs access key
-
-var_dump($config); // just for debugging in travis
 
 $config['ban_extension'] = 'exe,bat';
 $config['user_page'] = [];
