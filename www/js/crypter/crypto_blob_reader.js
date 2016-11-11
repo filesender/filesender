@@ -1,7 +1,13 @@
 if (typeof window === 'undefined')
-    window = {}; // dummy window
+    window = {}; // dummy window for use in webworkers
 if (!('filesender' in window))
     window.filesender = {};
+if (!('ui' in window.filesender)) {
+    window.filesender.ui = {};
+    window.filesender.ui.log = function(e) {
+        console.log(e);
+    }
+}
 
 window.filesender.crypto_blob_reader = function () {
     return {
@@ -67,10 +73,10 @@ window.filesender.crypto_blob_reader = function () {
             };
             
             this.reader.onabort = function (e) {
-                filesender.ui.log(e);
+	        window.filesender.ui.log(e);
             };
             this.reader.onload = function (e) {
-                filesender.ui.log(e);
+	        window.filesender.ui.log(e);
             };
             
             function abortRead() {
