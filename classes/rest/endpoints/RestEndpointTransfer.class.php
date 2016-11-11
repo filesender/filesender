@@ -433,10 +433,11 @@ class RestEndpointTransfer extends RestEndpoint {
             
             // Guest owner decides about guest options
             if($guest) {
-                $transfer->options = $guest->transfer_options;
-            } else {
-                $transfer->options = $options;
-            }
+		$options = $guest->transfer_options;
+	    }
+	    $options['encryption'] = $data->encryption;
+            Logger::info($options);
+            $transfer->options = $options;
             
             $transfer->save(); // Mandatory to add recipients and files
             
