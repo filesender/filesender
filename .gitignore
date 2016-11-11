@@ -1,5 +1,8 @@
 /tmp
 /files
 /config/config.php
+/config/templates
+/config/language
 /log
 /www/doc
+/www/skin
