@@ -28,7 +28,7 @@
 
                         <div class="recipients"></div>
 
-                        <input name="to" type="text" title="{tr:email_separator_msg}" value="" placeholder="{tr:enter_to_email}" />
+                        <input name="to" type="email" multiple title="{tr:email_separator_msg}" value="" placeholder="{tr:enter_to_email}" />
                     </div>
 
                     <div class="fieldcontainer">
