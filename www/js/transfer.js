@@ -717,7 +717,7 @@ window.filesender.transfer = function() {
                 if (transfer.oncomplete)
                     transfer.oncomplete.call(transfer, time);
             });
-        }, 1500);
+        }, 750);
     };
     
     /**
