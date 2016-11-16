@@ -717,7 +717,7 @@ window.filesender.transfer = function() {
                 if (transfer.oncomplete)
                     transfer.oncomplete.call(transfer, time);
             });
-        }, 750);
+        }, 1500); //so it doesnt miss the last chunk?
     };
     
     /**
