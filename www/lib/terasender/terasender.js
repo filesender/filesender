@@ -105,14 +105,14 @@ window.filesender.terasender = {
         var job = {
             chunk: {
                 start: file.uploaded,
-                end: file.uploaded + filesender.config.upload_chunk_size
+                end: Math.min(file.uploaded + filesender.config.upload_chunk_size, file.size) //MD last chunk was too big
             },
 	    encryption: this.transfer.encryption, //MD
 	    encryption_password: this.transfer.encryption_password //MD
         };
         
         file.uploaded += filesender.config.upload_chunk_size;
-        if(file.uploaded > file.size) file.uploaded = file.size ? file.size : 1; // Protect against empty files creating loops
+        if(file.uploaded >= file.size) file.uploaded = file.size ? file.size : 1; // Protect against empty files creating loops
         
         if(file.id != worker.file_id) {
             job.file = {
@@ -252,7 +252,7 @@ window.filesender.terasender = {
         
         var done = (file.uploaded >= file.size) && !workers_on_same_file;
         
-        file.fine_progress = done ? file.size : file.min_uploaded_offset + fine_progress;
+        file.fine_progress = done ? file.size : /*file.min_uploaded_offset +*/ fine_progress; //MD not sure why we are adding file.min_uploaded_offset
         
         var t = this;
         var complete = done ? function() {
