@@ -58,8 +58,6 @@ if(!session_id()) {
 // Ensure HTTPS if needed
 GUI::forceHTTPS();
 
-session_start();            // Start the session
-$_SESSION['valid'] = true;  // Set session as valid TODO do we we still need this ?
 // Handle magic quoting (TODO maybe deprecated now ?)
 if(get_magic_quotes_gpc()) {
     $_POST = array_map('stripslashes', $_POST);

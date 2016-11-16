@@ -72,6 +72,7 @@ class LegacyUploadProgress {
     public static function getTrackingData($key) {
         $session_key = self::getSessionKey($key);
         if(is_null($session_key)) return null;
+        if(!isset($_SESSION)) return null;
         if(!array_key_exists($session_key, $_SESSION)) return null;
         
         $data = $_SESSION[$session_key]['files'][0];

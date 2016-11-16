@@ -154,7 +154,7 @@ class RestEndpointUser extends RestEndpoint {
         }
         
         if($property == 'remote_auth_config') {
-            $perm = array_key_exists('remote_auth_sync_request', $_SESSION) ? $_SESSION['remote_auth_sync_request'] : null;
+            $perm = isset($_SESSION) && array_key_exists('remote_auth_sync_request', $_SESSION) ? $_SESSION['remote_auth_sync_request'] : null;
             if(!$perm)
                 throw new RestAuthenticationRequiredException();
             
@@ -227,7 +227,7 @@ class RestEndpointUser extends RestEndpoint {
             $user->save();
             
             // Remove lang from session if there was one, we don't need it anymore as it was saved in user profile
-            if(array_key_exists('lang', $_SESSION))
+            if(isset($_SESSION) && array_key_exists('lang', $_SESSION))
                 unset($_SESSION['lang']);
         }
         

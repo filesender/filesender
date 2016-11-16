@@ -385,7 +385,7 @@ class Utilities {
             return self::$security_token['value'];
         
         // Fetch existing token
-        $token = array_key_exists('security_token', $_SESSION) ? $_SESSION['security_token'] : null;
+        $token = isset($_SESSION) && array_key_exists('security_token', $_SESSION) ? $_SESSION['security_token'] : null;
         
         // Old token style, cancel it
         if(!is_array($token)) $token = null;
