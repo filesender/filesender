@@ -69,7 +69,7 @@
             <span class="downloadprogress"></span>
         </div>
     <?php } ?>
-    <?php if(!isset($transfer->options['encryption']) || $transfer->options['encryption'] === 'false') { ?>
+    <?php if(!isset($transfer->options['encryption']) || $transfer->options['encryption'] === false) { ?>
     <?php // It is not possible to download archives of the encrypted files since there is no unzip -> decrypt -> zip process in the current filesender ?>
         <div class="archive">
             <div class="archive_message">{tr:archive_message}</div>
