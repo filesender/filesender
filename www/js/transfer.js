@@ -102,8 +102,8 @@ window.filesender.transfer = function() {
         var ff = ua.toLowerCase().indexOf('firefox') != -1;
         var mac = ua.indexOf('mac os x') != -1;
 
-        if ((ie && this.encryption) ||
-            (ff && mac)
+        if ((ie && this.encryption)  	//IE doesnt expose crypto lib to workers.
+           || (ff && mac)		//FF sometimes crashs the tab. My guess is the workers dont always end gracefully.
            ) return false;
 
         return true;
@@ -719,7 +719,7 @@ window.filesender.transfer = function() {
                 if (transfer.oncomplete)
                     transfer.oncomplete.call(transfer, time);
             });
-        }, 1500); //so it doesnt miss the last chunk?
+        }, 1500); //so it doesnt miss the last chunk
     };
     
     /**
