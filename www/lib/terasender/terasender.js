@@ -130,6 +130,8 @@ window.filesender.terasender = {
         
         worker.offset = file.uploaded;
         
+	if (typeof file.fine_progress_done === 'undefined') file.fine_progress_done=0; //missing from file
+
         return job;
     },
     
@@ -231,9 +233,10 @@ window.filesender.terasender = {
             if(!this.workers[i].status.match(/^(running|uploading)$/)) continue;
             
             if(this.workers[i].id == worker_id) {
-                if(ratio >= 1)
+                if(ratio >= 1) {
                     this.workers[i].status = 'running';
-                
+                    file.fine_progress_done += job.fine_progress;
+		}
                 this.workers[i].fine_progress = job.fine_progress;
             }
             
@@ -252,7 +255,7 @@ window.filesender.terasender = {
         
         var done = (file.uploaded >= file.size) && !workers_on_same_file;
         
-        file.fine_progress = done ? file.size : /*file.min_uploaded_offset +*/ fine_progress; //MD not sure why we are adding file.min_uploaded_offset
+        file.fine_progress = done ? file.size : (file.fine_progress, fine_progress + file.fine_progress_done);
         
         var t = this;
         var complete = done ? function() {
