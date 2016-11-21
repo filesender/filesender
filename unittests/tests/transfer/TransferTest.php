@@ -156,19 +156,17 @@ class TransferTest extends CommonUnitTestCase {
         $this->assertTrue($transferId > 0);
 
         $transfer = Transfer::fromId($transferId);
+        $this->assertNotNull($transfer);
 
         $statement = DBI::prepare("UPDATE " . $transfer->getDBTable() . " SET expires = :expire WHERE id = :id ");
         $statement->execute(array('expire' => date('Y-m-d', strtotime("-1 days")), 'id' => $transfer->id));
-
-        $this->assertNotNull($transfer);
-
-        require_once dirname(__FILE__) . '/../../../cron/auditLogHandler.php';
 
         DBObject::purgeCache($transfer->getClassName());
 
         $isDeleted = false;
         try {
-            Transfer::fromId($transferId);
+            $t = Transfer::fromId($transferId);
+            if ($t->isExpired()) $isDeleted = true;
         } catch (TransferNotFoundException $e) {
             $this->displayInfo(get_class(), __FUNCTION__, ' -- Transfer deleted:' . $transferId);
             $isDeleted = true;
