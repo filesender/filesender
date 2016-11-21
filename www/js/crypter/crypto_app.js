@@ -134,6 +134,7 @@ window.filesender.crypto_app = function () {
                         }
                         // hands over to the decrypter
                         var arrayBuffer = new Uint8Array(oReq.response);
+                        oReq.response = null; //free some memory
                         setTimeout(function(){
                             $this.decryptBlob(
                                 window.filesender.crypto_blob_reader().sliceForDownloadBuffers(arrayBuffer),
