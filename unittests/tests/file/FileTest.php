@@ -56,8 +56,9 @@ class FileTest extends CommonDatabaseTestCase {
 
         $this->transferSubject = "Subject test";
         $this->transferMessage = "Message test";
-        $this->fileName = "file01.txt";
-        $this->fileSize = "100";
+        $this->srcFile = __DIR__ . DIRECTORY_SEPARATOR . 'file01.txt';
+        $this->fileName = basename($this->srcFile);
+        $this->fileSize = filesize($this->srcFile);
     }
 
     /**
@@ -83,8 +84,8 @@ class FileTest extends CommonDatabaseTestCase {
         $this->assertTrue($file->id > 0);
 
         // uploading fake file
-        $dest = Config::get('storage_filesystem_path');
-        copy('/Volumes/Perso/tmp/' . $this->fileName, $dest . $file->uid);
+        $dest = rtrim(Config::get('storage_filesystem_path'), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+        copy($this->srcFile, $dest . $file->uid);
 
         $this->displayInfo(get_class(), __FUNCTION__, ' -- File created:'.$file->id);
 
@@ -194,13 +195,16 @@ class FileTest extends CommonDatabaseTestCase {
 
         // Clean cache
         $cachePurged = DBObject::purgeCache(get_class($file), $fileId);
-        $this->assertTrue($cachePurged);
 
+        $isDeleted = false;
         try {
             $oldFile = File::fromId($fileId);
         } catch (FileNotFoundException $ex) {
+            $isDeleted = true;
             $this->displayInfo(get_class(), __FUNCTION__, ' -- File deleted:' . $fileId);
         }
+
+        $this->assertTrue($isDeleted);
 
         return true;
     }
