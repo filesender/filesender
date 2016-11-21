@@ -4,7 +4,7 @@ subject: Download complete
 
 Dear Sir or Madam,
 
-Your download of the {if:files>1}files{else}file{endif} bellow has ended :
+Your download of the {if:files>1}files{else}file{endif} below has ended :
 
 {if:files>1}{each:files as file}
   - {file.name} ({size:file.size})
@@ -22,7 +22,7 @@ Best regards,
 </p>
 
 <p>
-    Your download of the {if:files>1}files{else}file{endif} bellow has ended :
+    Your download of the {if:files>1}files{else}file{endif} below has ended :
 </p>
 
 <p>
