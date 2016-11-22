@@ -17,7 +17,6 @@ window.filesender.crypto_app = function () {
         crypto_iv_len: window.filesender.config.crypto_iv_len,
         crypto_crypt_name: window.filesender.config.crypto_crypt_name,
         crypto_hash_name: window.filesender.config.crypto_hash_name,
-        
         init: function () {
             if (window.msCrypto) {
                 window.crypto = window.msCrypto;
@@ -44,7 +43,6 @@ window.filesender.crypto_app = function () {
                 filesender.ui.log(e);
             };
         },
-        
         encryptBlob: function (value, password, callback) {
             var $this = this;
             
@@ -75,7 +73,6 @@ window.filesender.crypto_app = function () {
 
             });
         },
-        
         decryptBlob: function (value, password, callbackDone, callbackProgress, callbackError) {
             var $this = this;
             
@@ -113,7 +110,6 @@ window.filesender.crypto_app = function () {
 		decryptLoop(0);
             });
         },
-        
         decryptDownload: function (link, mime, name, progress) {
             var $this = this;
             
