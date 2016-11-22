@@ -96,7 +96,7 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
                         <?php } else { ?>
                         <div class="recipients"></div>
                         
-                        <input name="to" id="to" type="text" title="{tr:email_separator_msg}" value="" placeholder="{tr:enter_to_email}" />
+                        <input name="to" id="to" type="email" multiple title="{tr:email_separator_msg}" value="" placeholder="{tr:enter_to_email}" />
                         <?php } ?>
                     </div>
                     

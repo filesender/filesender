@@ -105,14 +105,14 @@ window.filesender.terasender = {
         var job = {
             chunk: {
                 start: file.uploaded,
-                end: file.uploaded + filesender.config.upload_chunk_size
+                end: Math.min(file.uploaded + filesender.config.upload_chunk_size, file.size) //MD last chunk was too big
             },
 	    encryption: this.transfer.encryption, //MD
 	    encryption_password: this.transfer.encryption_password //MD
         };
         
         file.uploaded += filesender.config.upload_chunk_size;
-        if(file.uploaded > file.size) file.uploaded = file.size ? file.size : 1; // Protect against empty files creating loops
+        if(file.uploaded >= file.size) file.uploaded = file.size ? file.size : 1; // Protect against empty files creating loops
         
         if(file.id != worker.file_id) {
             job.file = {
@@ -130,6 +130,8 @@ window.filesender.terasender = {
         
         worker.offset = file.uploaded;
         
+	if (typeof file.fine_progress_done === 'undefined') file.fine_progress_done=0; //missing from file
+
         return job;
     },
     
@@ -231,9 +233,10 @@ window.filesender.terasender = {
             if(!this.workers[i].status.match(/^(running|uploading)$/)) continue;
             
             if(this.workers[i].id == worker_id) {
-                if(ratio >= 1)
+                if(ratio >= 1) {
                     this.workers[i].status = 'running';
-                
+                    file.fine_progress_done += job.fine_progress;
+		}
                 this.workers[i].fine_progress = job.fine_progress;
             }
             
@@ -247,12 +250,13 @@ window.filesender.terasender = {
             if(this.workers[i].file_id == job.file.id)
                 workers_on_same_file = true;
         }
-        
+
         file.min_uploaded_offset = Math.max(0, min_offset - filesender.config.upload_chunk_size);
         
         var done = (file.uploaded >= file.size) && !workers_on_same_file;
         
-        file.fine_progress = done ? file.size : file.min_uploaded_offset + fine_progress;
+        //file.fine_progress = done ? file.size : file.min_uploaded_offset + fine_progress;
+        file.fine_progress = done ? file.size : (file.fine_progress, fine_progress + file.fine_progress_done);
         
         var t = this;
         var complete = done ? function() {
@@ -265,7 +269,7 @@ window.filesender.terasender = {
             for(var i=0; i<t.workers.length; i++)
                 if(t.workers[i].status == 'uploading')
                     workers_uploading = true;
-            
+
             if(chunks_pending || workers_uploading) return;
             
             // Notify all done

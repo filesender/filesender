@@ -97,7 +97,7 @@ var terasender_worker = {
         
         if((typeof xhr.upload != 'unknown') && xhr.upload) xhr.upload.onprogress = function(e) {
             if(!e.lengthComputable) return;
-            worker.reportProgress(e.loaded / e.total);
+            worker.reportProgress(e.loaded, e.total);
         };
         
         xhr.onreadystatechange = function() {
@@ -151,15 +151,17 @@ var terasender_worker = {
     /**
      * Report progress of current job
      */
-    reportProgress: function(ratio) {
+    reportProgress: function(loaded,total) {
+	var ratio = loaded/total;
         var now = (new Date()).getTime();
-        if(this.progress_reported && this.progress_reported > (now - 1000))
-            return; // No need to report progress more than 1 time per sec (especially if fine_progress)
+//        if(this.progress_reported && this.progress_reported > (now - 1000))
+//            return; // No need to report progress more than 1 time per sec (especially if fine_progress)
         
         this.progress_reported = now;
-        
+	
         this.log('Job file:' + this.job.file.id + '[' + this.job.chunk.start + '...' + this.job.chunk.end + '] is ' + (100 * ratio).toFixed(1) + '% done');
-        this.job.fine_progress = Math.floor(ratio * (this.job.chunk.end - this.job.chunk.start));
+        //this.job.fine_progress = Math.floor(ratio * (this.job.chunk.end - this.job.chunk.start));
+        this.job.fine_progress = loaded;
         this.sendCommand('jobProgress', this.job);
     },
     
@@ -330,6 +332,8 @@ var terasender_worker = {
 /**
  * Register message handler
  */
-self.addEventListener('message' , function(e) {
+//self.addEventListener('message' , function(e) {
+self.onmessage = function(e) {
     terasender_worker.onMessage(e.data);
-});
+}
+//});
