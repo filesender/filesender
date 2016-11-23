@@ -43,8 +43,18 @@ class TransferExpiredTest extends SeleniumTest
             }
         }, 10000);
 
+       
+        $this->waitUntil(function(){
 
-        $url = trim($this->byCssSelector('.ui-dialog-content.ui-widget-content.success textarea')->value());
+            $elements = $this->elements($this->using('css selector')->value('.ui-dialog-content.ui-widget-content.success textarea'));
+
+            if(count($elements) > 0){
+                $container = array_pop($elements);
+                $url = $container->value();
+
+                return true;
+            }   
+        }, 10000);
 
         $this->checkDownloadUrl($url, [$test1_file_data, $test2_file_data]);
     }
