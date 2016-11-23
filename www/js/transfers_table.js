@@ -361,6 +361,10 @@ $(function() {
     // File download buttons when the files are encrypted
     $('.transfer-download').on('click', function () {
         
+        if(!window.crypto_support){
+            return;
+        }
+        
         var id = $(this).attr('data-id');
         var encrypted = $(this).attr('data-encrypted');
         var filename = $(this).attr('data-name');

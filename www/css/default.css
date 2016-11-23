@@ -1235,6 +1235,10 @@ table.guests .guest .to .errors .details {
 #encryption_password_container,
 #encryption_password_container_generate,
 #encryption_password_show_container,
+#encryption_description_container_disabled,
+#encryption_description_not_supported,
+.download_decryption_disabled,
+#encryption_description_disabled_container,
 #encryption_description_container {
     display: none;
 }

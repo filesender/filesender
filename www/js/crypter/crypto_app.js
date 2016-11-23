@@ -18,12 +18,30 @@ window.filesender.crypto_app = function () {
         crypto_crypt_name: window.filesender.config.crypto_crypt_name,
         crypto_hash_name: window.filesender.config.crypto_hash_name,
         init: function () {
-            if (window.msCrypto) {
-                window.crypto = window.msCrypto;
-            }
-            if (window.crypto && !window.crypto.subtle && window.crypto.webkitSubtle) {
-                window.crypto.subtle = window.crypto.webkitSubtle;
-            } 
+            $(function () {
+                window.crypto_support = true;
+                if (window.msCrypto) {
+                    window.crypto = window.msCrypto;
+                }
+                if (window.crypto && !window.crypto.subtle && window.crypto.webkitSubtle) {
+                    window.crypto.subtle = window.crypto.webkitSubtle;
+                }
+                if (typeof window.crypto === 'undefined') {
+                    window.crypto_support = false;
+                    // Disable the upload fields
+                    $("#encryption").attr("disabled", "disabled");
+                    $("#encryption_description_container_disabled").show();
+
+                    // Disable the transfer buttons
+                    $('#encryption_description_not_supported').show();
+                    $('.transfer-download').css({'color': 'rgba(173, 173, 173, 1)', 'cursor': 'default'});
+
+                    // Disable the download buttons
+                    $(".files.box .file[data-encrypted='1']").css({'height': '3.5em'});
+                    $(".files.box .file[data-encrypted='1'] .download").hide();
+                    $(".download_decryption_disabled").show();
+                }
+            });
         },
         generateVector: function () {
             return crypto.getRandomValues(new Uint8Array(16));

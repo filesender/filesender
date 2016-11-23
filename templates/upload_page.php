@@ -112,8 +112,8 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
                         <textarea name="message" rows="4"></textarea>
                     </div>
                         <?php if(Config::get('encryption_enabled')) { ?>
-                            <div class="fieldcontainer" data-related-to="encryption">  
-                                <input id="encryption" name="encryption" type="checkbox">  
+                            <div class="fieldcontainer" id="encrypt_checkbox" data-related-to="encryption">
+                                <input id="encryption" name="encryption" type="checkbox">
                                 <label for="encryption" style="cursor: pointer;">{tr:file_encryption}</label>
                             </div>
                             <div class="fieldcontainer" id="encryption_password_container">  
@@ -130,6 +130,13 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
                             <div class="fieldcontainer" id="encryption_description_container">
                                 {tr:file_encryption_description}
                             </div>
+                            <div class="fieldcontainer" id="encryption_description_disabled_container">
+                                {tr:file_encryption_description_disabled}
+                            </div>
+                            <script>
+                                // check for compatability
+                                window.filesender.crypto_app().init();
+                            </script>
                         <?php } ?>
                     <?php } ?>
                     

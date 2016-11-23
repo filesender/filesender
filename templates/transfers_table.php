@@ -252,6 +252,9 @@
                         </div>
                     <?php } ?>
                 </div>
+                <div class="fieldcontainer" id="encryption_description_not_supported">
+                    {tr:file_encryption_disabled}
+                </div>
             </td>
         </tr>
         <?php } ?>
@@ -263,5 +266,10 @@
         <?php } ?>
     </tbody>
 </table>
+
+<script>
+    // check for compatability
+    window.filesender.crypto_app().init();
+</script>
 
 <script type="text/javascript" src="{path:js/transfers_table.js}"></script>

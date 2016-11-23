@@ -135,9 +135,6 @@ window.filesender.crypto_blob_reader = function () {
             
             var returnBlobArray = [];
             
-            // get the slice function
-            largeBlob.slice = largeBlob.slice || largeBlob.mozSlice || largeBlob.webkitSlice;
-            
             var done = false;
             
             var i = 0;
@@ -163,6 +160,9 @@ window.filesender.crypto_blob_reader = function () {
             return returnBlobArray;
         },
         sliceForDownloadBuffers: function (largeBuffer) {
+            if(typeof largeBuffer.slice === 'undefined'){
+                largeBuffer.slice = largeBuffer.subarray;
+            }
             var buffers = [];
             var number = Math.ceil(largeBuffer.length / (this.cryptedChunkSize));
 
