@@ -67,7 +67,7 @@ window.filesender.crypto_blob_reader = function () {
             };
             this.reader.onprogress = function (evt) {
                 if (evt.lengthComputable) {
-                    var percentLoaded = Math.round((evt.loaded / evt.total) * 100);
+                    var percentLoaded = Math.floor((evt.loaded / evt.total) * 100);
                 }
             };
 

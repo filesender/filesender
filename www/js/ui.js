@@ -501,7 +501,7 @@ window.filesender.ui = {
                 $(document).trigger({type: 'filesender.quotabar.setup', quota: quota, bar: bar});
             }
 
-            bar.progressbar('value', Math.round(1000 * quota.used / quota.total));
+            bar.progressbar('value', Math.floor(1000 * quota.used / quota.total));
 
             var info = lang.tr('quota_usage').r(quota);
 

@@ -101,37 +101,34 @@ window.filesender.terasender = {
         if(!file) return null; // Nothing to do
         
         if(!file.endpoint) file.endpoint = this.transfer.authenticatedEndpoint(filesender.config.terasender_upload_endpoint.replace('{file_id}', file.id), file);
-        
+
+	if (typeof file.fine_progress_done === 'undefined') file.fine_progress_done=0; //missing from file
         var job = {
             chunk: {
                 start: file.uploaded,
                 end: Math.min(file.uploaded + filesender.config.upload_chunk_size, file.size) //MD last chunk was too big
             },
 	    encryption: this.transfer.encryption, //MD
-	    encryption_password: this.transfer.encryption_password //MD
-        };
-        
-        file.uploaded += filesender.config.upload_chunk_size;
-        if(file.uploaded >= file.size) file.uploaded = file.size ? file.size : 1; // Protect against empty files creating loops
-        
-        if(file.id != worker.file_id) {
-            job.file = {
+	    encryption_password: this.transfer.encryption_password, //MD
+            file: {
                 id: file.id,
                 name: file.name,
                 size: file.size,
                 blob: file.blob,
                 endpoint: file.endpoint
-            };
-            worker.file_id = file.id;
-            worker.fine_progress = 0;
-        }
+            },
+            security_token: this.security_token
+        };
         
-        job.security_token = this.security_token;
+        file.fine_progress = 0;
+        file.uploaded = file.uploaded + filesender.config.upload_chunk_size;
         
+        worker.file_id = file.id;
+        worker.fine_progress = 0;
         worker.offset = file.uploaded;
-        
-	if (typeof file.fine_progress_done === 'undefined') file.fine_progress_done=0; //missing from file
 
+        if(file.uploaded >= file.size) file.uploaded = file.size ? file.size : 1; // Protect against empty files creating loops
+        
         return job;
     },
     
@@ -166,7 +163,8 @@ window.filesender.terasender = {
             this.log('No jobs remaining, terminating');
             
             workerinterface.status = 'done';
-            this.sendCommand(workerinterface, 'done'); // Or workerinterface.terminate()
+            //this.sendCommand(workerinterface, 'done'); // Or workerinterface.terminate()
+	    workerinterface.terminate(); //sending done seems to crash FF v52+ on windows and FF on mac?
         }
         
         this.jobAllocationLocked = false;
@@ -215,9 +213,12 @@ window.filesender.terasender = {
      */
     evalProgress: function(worker_id, job, ratio) {
         var file = null;
-        for(var i=0; i<this.transfer.files.length; i++)
-            if(this.transfer.files[i].id == job.file.id)
+        for(var i=0; i<this.transfer.files.length; i++) {
+            if(this.transfer.files[i].id == job.file.id) {
                 file = this.transfer.files[i];
+                break;
+            }
+        }
         
         if(!file) {
             this.error({message: 'unknown_file', details: {id: job.file.id}});
@@ -236,6 +237,7 @@ window.filesender.terasender = {
                 if(ratio >= 1) {
                     this.workers[i].status = 'running';
                     file.fine_progress_done += job.fine_progress;
+                    fine_progress -= job.fine_progress;
 		}
                 this.workers[i].fine_progress = job.fine_progress;
             }
@@ -253,25 +255,30 @@ window.filesender.terasender = {
 
         file.min_uploaded_offset = Math.max(0, min_offset - filesender.config.upload_chunk_size);
         
-        var done = (file.uploaded >= file.size) && !workers_on_same_file;
+        //var done = (file.uploaded >= file.size) && !workers_on_same_file;
+        var done = (file.fine_progress_done >= file.size) && !workers_on_same_file;
         
         //file.fine_progress = done ? file.size : file.min_uploaded_offset + fine_progress;
-        file.fine_progress = done ? file.size : (file.fine_progress, fine_progress + file.fine_progress_done);
+        file.fine_progress = done ? file.size : (fine_progress + file.fine_progress_done);
         
         var t = this;
         var complete = done ? function() {
             var chunks_pending = false;
             for(var i=0; i<t.transfer.files.length; i++)
-                if(t.transfer.files[i].uploaded < t.transfer.files[i].size)
+                if(t.transfer.files[i].uploaded < t.transfer.files[i].size) {
                     chunks_pending = true;
+		    break;
+		}
             
             var workers_uploading = false;
             for(var i=0; i<t.workers.length; i++)
-                if(t.workers[i].status == 'uploading')
+                if(t.workers[i].status == 'uploading') {
                     workers_uploading = true;
+		    break;
+		}
 
             if(chunks_pending || workers_uploading) return;
-            
+          
             // Notify all done
             t.transfer.reportComplete();
             t.status = 'done';

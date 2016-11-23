@@ -102,7 +102,7 @@ window.filesender.transfer = function() {
         var mac = ua.indexOf('mac os x') != -1;
 
         if ((ie && this.encryption)  	//IE doesnt expose crypto lib to workers.
-           || (ff && mac)		//FF sometimes crashs the tab. My guess is the workers dont always end gracefully.
+//           || (ff && mac)		//FF sometimes crashs the tab. My guess is the workers dont always end gracefully. //FIXED, worker.terminate is better than close().
            ) return false;
 
         return true;
@@ -663,8 +663,8 @@ window.filesender.transfer = function() {
      */
     this.reportProgress = function(file, complete) {
         var now = (new Date()).getTime();
-        if(!complete && file.progress_reported && file.progress_reported > (now - 1000))
-            return; // No need to report progress more than 1 time per sec (especially if fine_progress)
+//        if(!complete && file.progress_reported && file.progress_reported > (now - 1000))
+//            return; // No need to report progress more than 1 time per sec (especially if fine_progress)
         
         file.progress_reported = now;
         
@@ -690,11 +690,13 @@ window.filesender.transfer = function() {
                     
                     complete();
                 });
-            }, 750);
+            }, 100);//750);
         } else if (this.onprogress) {
             this.updateFileInRestartTracker(file);
             this.onprogress.call(this, file, false);
-        }
+        } else {
+	    console.log("transfer has not onprogress");
+	}
     };
     
     /**
@@ -717,7 +719,7 @@ window.filesender.transfer = function() {
                 if (transfer.oncomplete)
                     transfer.oncomplete.call(transfer, time);
             });
-        }, 1500); //so it doesnt miss the last chunk
+        }, 300);//1500); //so it doesnt miss the last chunk
     };
     
     /**
@@ -968,7 +970,6 @@ window.filesender.transfer = function() {
                         if(transfer.file_index >= transfer.files.length)
                             transfer.reportComplete();                            
                     });
-                    
                     
                 } else {
                     transfer.reportProgress(file);
