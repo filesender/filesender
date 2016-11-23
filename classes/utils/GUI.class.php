@@ -84,6 +84,8 @@ class GUI {
         $sources = array(
             'lib/jquery/jquery-1.9.1.min.js',
             'lib/jquery/jquery-ui-1.10.2.custom.min.js',
+            'vendor/node_modules/promise-polyfill/promise-polyfill.js',
+            'vendor/node_modules/webcrypto-shim/webcrypto-shim.js',
             'js/filesender.js',
             'js/lang.js',
             'js/client.js',
