@@ -12,10 +12,10 @@ class ConfigurationOptionsTest extends SeleniumTest {
 
         $current_email_address = Config::get('auth_sp_fake_email');
 
-        $checkbox = $this->byCssSelector('[name="get_a_link"]');
-        if ($checkbox->selected()) {
-            $checkbox->click();
+        if ($this->isCheckBoxSelected('[name="get_a_link"]')) {
+            $this->clickCheckbox('[name="get_a_link"]');
         }
+
 
         $this->byClassName('toggle_advanced_options')->click();
         sleep(10);
@@ -36,10 +36,10 @@ class ConfigurationOptionsTest extends SeleniumTest {
         //sleep(2);
 
         // check expired
-        $checkbox = $this->byCssSelector('[name="add_me_to_recipients"]');
-        if ($checkbox->selected()) {
-            $checkbox->click();
+        if ($this->isCheckBoxSelected('[name="add_me_to_recipients"]')) {
+            $this->clickCheckbox('[name="add_me_to_recipients"]');
         }
+
 
         $recipients = ['usera@filetestertest.test', 'userb@filetestertest.test', 'userc@filetestertest.test'];
         $subject = 'testSubject_' . rand(0, 100);
@@ -54,12 +54,11 @@ class ConfigurationOptionsTest extends SeleniumTest {
         $this->setupAuthenticated();
 
         $current_email_address = Config::get('auth_sp_fake_email');
-        
-        $checkbox = $this->byCssSelector('[name="get_a_link"]');
-        if ($checkbox->selected()) {
-            $checkbox->click();
+
+        if ($this->isCheckBoxSelected('[name="get_a_link"]')) {
+            $this->clickCheckbox('[name="get_a_link"]');
         }
-        
+
         //$this->checkCheckbox('toggle_advanced_options', true);
         $this->byClassName('toggle_advanced_options')->click();
         sleep(10);
@@ -95,13 +94,12 @@ class ConfigurationOptionsTest extends SeleniumTest {
         $this->setupAuthenticated();
 
         $current_email_address = Config::get('auth_sp_fake_email');
-        
-        $checkbox = $this->byCssSelector('[name="get_a_link"]');
-        if ($checkbox->selected()) {
-            $checkbox->click();
+
+        if ($this->isCheckBoxSelected('[name="get_a_link"]')) {
+            $this->clickCheckbox('[name="get_a_link"]');
         }
-        
-       //$this->checkCheckbox('toggle_advanced_options', true);
+
+        //$this->checkCheckbox('toggle_advanced_options', true);
         $this->byClassName('toggle_advanced_options')->click();
         sleep(10);
 
@@ -120,10 +118,10 @@ class ConfigurationOptionsTest extends SeleniumTest {
         $this->checkCheckbox('enable_recipient_email_download_complete', false);
 
         // check expired
-        $checkbox = $this->byCssSelector('[name="add_me_to_recipients"]');
-        if ($checkbox->selected()) {
-            $checkbox->click();
+        if ($this->isCheckBoxSelected('[name="add_me_to_recipients"]')) {
+            $this->clickCheckbox('[name="add_me_to_recipients"]');
         }
+
 
         $recipients = ['usera@filetestertest.test', 'userb@filetestertest.test', 'userc@filetestertest.test'];
         $subject = 'testSubject_' . rand(0, 100);
@@ -137,9 +135,8 @@ class ConfigurationOptionsTest extends SeleniumTest {
 
     private function sendMessageToRecipients(array $recipients, $subject, $content) {
 
-        $checkbox = $this->byCssSelector('[name="get_a_link"]');
-        if ($checkbox->selected()) {
-            $checkbox->click();
+        if ($this->isCheckBoxSelected('[name="get_a_link"]')) {
+            $this->clickCheckbox('[name="get_a_link"]');
         }
 
         foreach ($recipients as $recipient) {
@@ -179,9 +176,13 @@ class ConfigurationOptionsTest extends SeleniumTest {
     }
 
     private function checkCheckbox($name, $checked = true) {
-        $checkbox = $this->byCssSelector('[name="' . $name . '"]');
-        if ($checkbox->selected() != $checked) {
-            $checkbox->click();
+//        $checkbox = $this->byCssSelector('[name="' . $name . '"]');
+//        if ($checkbox->selected() != $checked) {
+//            $checkbox->click();
+//        }
+
+        if ($checked != $this->isCheckBoxSelected('[name="'.$name.'"]')) {
+            $this->clickCheckbox('[name="'.$name.'"]');
         }
     }
 

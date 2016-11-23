@@ -42,6 +42,25 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
         //)
     );
 
+    public function setUp()
+    {
+        $caps = $this->getDesiredCapabilities();
+        $this->setBrowserUrl('');
+        if (!isset($caps['name'])) {
+            $caps['name'] = get_called_class().'::'.$this->getName();
+            $this->setDesiredCapabilities($caps);
+        }
+
+        $tunnelId = getenv('SAUCE_TUNNEL_IDENTIFIER');
+        if ($tunnelId) {
+            $caps = $this->getDesiredCapabilities();
+            $caps['tunnel-identifier'] = $tunnelId;
+            $this->setDesiredCapabilities($caps);
+        }
+
+        $this->setSeleniumServerRequestsTimeout(120);
+    }
+
     public function __construct($name = NULL, array $data = array(), $dataName = '')
     {
         require_once('includes/init.php');
@@ -116,14 +135,14 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
     {
         $this->changeConfigValue('auth_sp_type', "'saml'");
         $this->refresh();
-        sleep(2);
+        sleep(5);
     }
 
     protected function setupAuthenticated()
     {
         $this->changeConfigValue('auth_sp_type', "'fake'");
         $this->refresh();
-        sleep(2);
+        sleep(5);
     }
 
     protected function setAdmin()
@@ -227,6 +246,7 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
         $recipient->transfer->save();
 
         $this->refresh();
+        sleep(10);
 
         $elements = $this->elements($this->using('css selector')->value('.exception .message'));
         $count = count($elements);
@@ -320,6 +340,17 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
         foreach($elements as $element){
             $element->click();
         }
+    }
+
+    protected function isCheckBoxSelected($css_selector) {
+        $var = $this->execute(array('script' => "return document.querySelector('".$css_selector."').checked;", 'args' => array()));
+        Logger::debug('The checkbox with selector '.$css_selector.', was it checked? '. gettype($var). ': '.($var?'y':'n'));
+        return $var;
+    }
+
+
+    protected function clickCheckbox($css_selector) {
+        $this->execute(array('script' => "document.querySelector('".$css_selector."').click();", 'args' => array()));
     }
 
 }

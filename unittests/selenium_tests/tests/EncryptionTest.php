@@ -10,12 +10,13 @@ class EncryptionTest extends SeleniumTest {
      */
     public function testEncryptionTest() {
         extract($this->getKeyBindings());
-        
-        $checkbox = $this->byCssSelector('[name="get_a_link"]');
-        if (!$checkbox->selected()) {
-            $checkbox->click();
+
+        $this->setupAuthenticated();
+
+        if (!$this->isCheckBoxSelected('[name="get_a_link"]')) {
+            $this->clickCheckbox('[name="get_a_link"]');
         }
-        
+
         // Turn on encrption
         $this->byId("encryption")->click();
         
@@ -25,7 +26,8 @@ class EncryptionTest extends SeleniumTest {
         
         // Upload files
         $this->uploadFiles();
-        
+
+        sleep(10);
         $this->byCssSelector('.start.ui-button')->click();
 
         // wait for the dialog
@@ -36,7 +38,7 @@ class EncryptionTest extends SeleniumTest {
             {
                 return true;
             }
-        }, 10000);
+        }, 30000);
         // the popup is not instant.. sleep a bit
         sleep(2);
         
@@ -44,8 +46,8 @@ class EncryptionTest extends SeleniumTest {
         $this->assertContains('Success', $this->byCssSelector('.ui-dialog-title')->text());
         
         // check db for encryption
-        $statement = DBI::prepare('SELECT * FROM files ORDER BY id DESC LIMIT :a');
-        $statement->execute(['a' => 1]);
+        $statement = DBI::prepare('SELECT * FROM files where \'a\'=:a ORDER BY id DESC LIMIT 1');
+        $statement->execute(['a' => 'a']);
         $data = $statement->fetch();
         
         $encrypted_succes = false;
@@ -72,6 +74,8 @@ class EncryptionTest extends SeleniumTest {
      */
     public function testDecryptionTest() {
         extract($this->getKeyBindings());
+
+        $this->setupAuthenticated();
         
         // Turn on encrption
         $this->url(Config::get('site_url') . '?s=transfers');
@@ -79,7 +83,7 @@ class EncryptionTest extends SeleniumTest {
         sleep(10);
         
         $this->byCss(".expand")->click();
-        sleep(2);
+        sleep(10);
         
         // click download
         $this->byCss(".transfer-download")->click();
