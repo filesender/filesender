@@ -1,5 +1,6 @@
 if (typeof window === 'undefined')
     window = {}; // dummy window for use in webworkers
+
 if (!('filesender' in window))
     window.filesender = {};
 if (!('ui' in window.filesender)) {
@@ -18,13 +19,12 @@ window.filesender.crypto_app = function () {
         crypto_hash_name: window.filesender.config.crypto_hash_name,
         
         init: function () {
-            if (crypto.subtle)
-            {
-            } else
-            {
-                filesender.ui.notify('info', lang.tr('encryption_api_unsupported'));
-                this.crypto_is_supported = false;
+            if (window.msCrypto) {
+                window.crypto = window.msCrypto;
             }
+            if (window.crypto && !window.crypto.subtle && window.crypto.webkitSubtle) {
+                window.crypto.subtle = window.crypto.webkitSubtle;
+            } 
         },
         generateVector: function () {
             return crypto.getRandomValues(new Uint8Array(16));
@@ -47,6 +47,9 @@ window.filesender.crypto_app = function () {
         
         encryptBlob: function (value, password, callback) {
             var $this = this;
+            
+            $this.init();
+            
             this.generateKey(password, function (key, iv) {
                 crypto.subtle.encrypt({name: $this.crypto_crypt_name, iv: iv}, key, value).then(
                         function (result) {
@@ -75,6 +78,9 @@ window.filesender.crypto_app = function () {
         
         decryptBlob: function (value, password, callbackDone, callbackProgress, callbackError) {
             var $this = this;
+            
+            $this.init();
+            
             var encryptedData = value; // array buffers array
             var blobArray = [];
 
@@ -110,8 +116,10 @@ window.filesender.crypto_app = function () {
         
         decryptDownload: function (link, mime, name, progress) {
             var $this = this;
-
-            var prompt = filesender.ui.prompt(window.filesender.config.language.file_encryption_enter_password, function(password){
+            
+            $this.init();
+            
+            var prompt = filesender.ui.prompt(window.filesender.config.language.file_encryption_enter_password, function (password) {
                 var pass = $(this).find('input').val();
 
                 // Decrypt the contents of the file
@@ -134,7 +142,6 @@ window.filesender.crypto_app = function () {
                         }
                         // hands over to the decrypter
                         var arrayBuffer = new Uint8Array(oReq.response);
-                        oReq.response = null; //free some memory
                         setTimeout(function(){
                             $this.decryptBlob(
                                 window.filesender.crypto_blob_reader().sliceForDownloadBuffers(arrayBuffer),

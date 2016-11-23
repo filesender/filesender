@@ -67,7 +67,7 @@ $(function() {
         }
     });
     
-    bar.progressbar('value', Math.round(1000 * quota.used / quota.total));
+    bar.progressbar('value', Math.floor(1000 * quota.used / quota.total));
     
     var info = lang.tr('quota_usage').r(quota);
     bar.find('.progress-label').text(info);
