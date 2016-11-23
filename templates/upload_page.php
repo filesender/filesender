@@ -112,7 +112,7 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
                         <textarea name="message" rows="4"></textarea>
                     </div>
                         <?php if(Config::get('encryption_enabled')) { ?>
-                            <div class="fieldcontainer" data-related-to="encryption">
+                            <div class="fieldcontainer" id="encrypt_checkbox" data-related-to="encryption">
                                 <input id="encryption" name="encryption" type="checkbox">
                                 <label for="encryption" style="cursor: pointer;">{tr:file_encryption}</label>
                             </div>
@@ -130,6 +130,13 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
                             <div class="fieldcontainer" id="encryption_description_container">
                                 {tr:file_encryption_description}
                             </div>
+                            <div class="fieldcontainer" id="encryption_description_disabled_container">
+                                {tr:file_encryption_description_disabled}
+                            </div>
+                            <script>
+                                // check for compatability
+                                window.filesender.crypto_app().init();
+                            </script>
                         <?php } ?>
                     <?php } ?>
                     
@@ -149,8 +156,9 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
                             $text = in_array($name, array(TransferOptions::REDIRECT_URL_ON_COMPLETE));
                             
                             $default = $cfg['default'];
-                            if(Auth::isSP() && !$text)
+                            if(Auth::isSP() && !$text){
                                 $default = Auth::user()->defaultTransferOptionState($name);
+                            }
                             
                             $checked = $default ? 'checked="checked"' : '';
                             $disabled = $disable ? 'disabled="disabled"' : '';

@@ -62,6 +62,7 @@
             <span class="select clickable fa fa-2x fa-square-o" title="{tr:select_for_archive_download}"></span>
             <span class="name"><?php echo Utilities::sanitizeOutput($file->name) ?></span>
             <span class="size"><?php echo Utilities::formatBytes($file->size) ?></span>
+            <span class="download_decryption_disabled"><br/>{tr:file_encryption_disabled}</span>
             <a href="#" class="download" title="{tr:download_file}">
                 <span class="fa fa-2x fa-download"></span>
                 {tr:download}
@@ -88,5 +89,10 @@
         <div class="transfer" data-id="<?php echo $transfer->id ?>"></div>
     </div>
 </div>
+
+<script>
+    // check for compatability
+    window.filesender.crypto_app().init();
+</script>
 
 <script type="text/javascript" src="{path:js/download_page.js}"></script>

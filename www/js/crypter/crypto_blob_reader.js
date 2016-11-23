@@ -126,17 +126,16 @@ window.filesender.crypto_blob_reader = function () {
             this.reader.readAsArrayBuffer($this.blobSlice);
         },
         sliceForDownload: function (largeBlob) {
-
+            
             var largeBlobSize = largeBlob.size;
             var completed = 0;
 
             var returnBlobArray = [];
 
             // get the slice function
-            largeBlob.slice = largeBlob.slice || largeBlob.mozSlice || largeBlob.webkitSlice;
+            //largeBlob.slice = largeBlob.slice || largeBlob.mozSlice || largeBlob.webkitSlice;
 
             var done = false;
-
             var i = 0;
             while (!done) {
                 var start = completed;
@@ -160,6 +159,9 @@ window.filesender.crypto_blob_reader = function () {
             return returnBlobArray;
         },
         sliceForDownloadBuffers: function (largeBuffer) {
+            if(typeof largeBuffer.slice === 'undefined'){
+                largeBuffer.slice = largeBuffer.subarray;
+            }
             var buffers = [];
             var number = Math.ceil(largeBuffer.length / (this.cryptedChunkSize));
 
