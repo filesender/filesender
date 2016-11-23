@@ -42,6 +42,25 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
         //)
     );
 
+    public function setUp()
+    {
+        $caps = $this->getDesiredCapabilities();
+        $this->setBrowserUrl('');
+        if (!isset($caps['name'])) {
+            $caps['name'] = get_called_class().'::'.$this->getName();
+            $this->setDesiredCapabilities($caps);
+        }
+
+        $tunnelId = getenv('SAUCE_TUNNEL_IDENTIFIER');
+        if ($tunnelId) {
+            $caps = $this->getDesiredCapabilities();
+            $caps['tunnel-identifier'] = $tunnelId;
+            $this->setDesiredCapabilities($caps);
+        }
+
+        $this->setSeleniumServerRequestsTimeout(120);
+    }
+
     public function __construct($name = NULL, array $data = array(), $dataName = '')
     {
         require_once('includes/init.php');

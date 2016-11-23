@@ -44,8 +44,8 @@ class EncryptionTest extends SeleniumTest {
         $this->assertContains('Success', $this->byCssSelector('.ui-dialog-title')->text());
         
         // check db for encryption
-        $statement = DBI::prepare('SELECT * FROM files ORDER BY id DESC LIMIT :a');
-        $statement->execute(['a' => 1]);
+        $statement = DBI::prepare('SELECT * FROM files where \'a\'=:a ORDER BY id DESC LIMIT 1');
+        $statement->execute(['a' => 'a']);
         $data = $statement->fetch();
         
         $encrypted_succes = false;
