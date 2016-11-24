@@ -165,6 +165,7 @@ window.filesender.terasender = {
             workerinterface.status = 'done';
             //this.sendCommand(workerinterface, 'done'); // Or workerinterface.terminate()
 	    workerinterface.terminate(); //sending done seems to crash FF v52+ on windows and FF on mac?
+
         }
         
         this.jobAllocationLocked = false;
@@ -236,6 +237,9 @@ window.filesender.terasender = {
             if(this.workers[i].id == worker_id) {
                 if(ratio >= 1) {
                     this.workers[i].status = 'running';
+                    if (job.fine_progress==0) { //IE 11 doesnt report fine_progress, so lets make it up
+                        job.fine_progress = job.chunk.end - job.chunk.start;
+                    }
                     file.fine_progress_done += job.fine_progress;
                     fine_progress -= job.fine_progress;
 		}
@@ -257,7 +261,7 @@ window.filesender.terasender = {
         
         //var done = (file.uploaded >= file.size) && !workers_on_same_file;
         var done = (file.fine_progress_done >= file.size) && !workers_on_same_file;
-        
+
         //file.fine_progress = done ? file.size : file.min_uploaded_offset + fine_progress;
         file.fine_progress = done ? file.size : (fine_progress + file.fine_progress_done);
         
