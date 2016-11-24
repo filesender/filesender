@@ -163,7 +163,7 @@ window.filesender.terasender = {
             this.log('No jobs remaining, terminating');
             
             workerinterface.status = 'done';
-	    workerinterface.terminate(); //sending done seems to crash FF v52+ on windows and FF on mac?
+            workerinterface.terminate(); //sending done seems to crash FF v52+ on windows and FF on mac?
         }
         
         this.jobAllocationLocked = false;
@@ -234,6 +234,9 @@ window.filesender.terasender = {
             if(this.workers[i].id == worker_id) {
                 if(ratio >= 1) {
                     this.workers[i].status = 'running';
+                    if (job.fine_progress==0) { //IE 11 doesnt report fine_progress, so lets make it up
+                        job.fine_progress = job.chunk.end - job.chunk.start;
+                    }
                     file.fine_progress_done += job.fine_progress;
                     fine_progress -= job.fine_progress;
 		}

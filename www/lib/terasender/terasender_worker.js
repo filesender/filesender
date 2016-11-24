@@ -95,7 +95,7 @@ var terasender_worker = {
         
         var worker = this;
         
-        if((typeof xhr.upload != 'unknown') && xhr.upload) xhr.upload.onprogress = function(e) {
+        if((typeof xhr.upload != 'unknown') && xhr.upload) xhr.upload.onprogress = function(e) { //IE11 seems to skip this only in workers
             if(!e.lengthComputable) return;
             worker.reportProgress(e.loaded, e.total);
         };
