@@ -11,6 +11,8 @@ class EncryptionTest extends SeleniumTest {
     public function testEncryptionTest() {
         extract($this->getKeyBindings());
 
+        $this->setupAuthenticated();
+
         if (!$this->isCheckBoxSelected('[name="get_a_link"]')) {
             $this->clickCheckbox('[name="get_a_link"]');
         }
@@ -72,6 +74,8 @@ class EncryptionTest extends SeleniumTest {
      */
     public function testDecryptionTest() {
         extract($this->getKeyBindings());
+
+        $this->setupAuthenticated();
         
         // Turn on encrption
         $this->url(Config::get('site_url') . '?s=transfers');
