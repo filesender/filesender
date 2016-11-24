@@ -129,7 +129,7 @@ var terasender_worker = {
 				window.filesender.crypto_app().encryptBlob(arrayBuffer, job.encryption_password, function (encrypted_blob) {
 					xhr.setRequestHeader('X-Filesender-Encrypted', '1');
 					xhr.send(encrypted_blob);
-				});
+				}, false);
 			});
 		} else {
 			xhr.send(blob);

@@ -61,10 +61,17 @@ window.filesender.crypto_app = function () {
                 filesender.ui.log(e);
             };
         },
-        encryptBlob: function (value, password, callback) {
+        encryptBlob: function (value, password, callback, do_init) {
+
+            if(typeof do_init === 'undefined') { // optional parameter, default to true
+                do_init = true;
+            }
+
             var $this = this;
             
-            $this.init();
+            if(do_init) {
+                $this.init();
+            }
             
             this.generateKey(password, function (key, iv) {
                 crypto.subtle.encrypt({name: $this.crypto_crypt_name, iv: iv}, key, value).then(
