@@ -13,13 +13,6 @@ class EncryptionTest extends SeleniumTest {
 
         $this->setupAuthenticated();
 
-        // DEBUG: SLEEP SO WE CAN TEST IN SAUCELABS USING THE CURRENT TUNNEL
-        for($i = 0; $i < 3000; $i++) {
-            // Set encryption password
-            $this->byName("encryption_password")->clear();
-            sleep(1);
-        }
-
         if (!$this->isCheckBoxSelected('[name="get_a_link"]')) {
             $this->clickCheckbox('[name="get_a_link"]');
         }
