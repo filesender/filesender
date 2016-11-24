@@ -11,6 +11,9 @@ class EncryptionTest extends SeleniumTest {
     public function testEncryptionTest() {
         extract($this->getKeyBindings());
 
+        // DEBUG: SLEEP SO WE CAN TEST IN SAUCELABS USING THE CURRENT TUNNEL
+        sleep(30000);
+
         $this->setupAuthenticated();
 
         if (!$this->isCheckBoxSelected('[name="get_a_link"]')) {
