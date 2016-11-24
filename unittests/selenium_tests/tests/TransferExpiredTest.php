@@ -13,10 +13,9 @@ class TransferExpiredTest extends SeleniumTest
         extract($this->getKeyBindings());
 
         $this->setupAuthenticated();
-        
-        $checkbox = $this->byCssSelector('[name="get_a_link"]');
-        if (!$checkbox->selected()) {
-            $checkbox->click();
+
+        if (!$this->isCheckBoxSelected('[name="get_a_link"]')) {
+            $this->clickCheckbox('[name="get_a_link"]');
         }
         
         ${"temp"} = $this->execute(array('script' => "var file_upload_container = document.getElementsByClassName('file_selector')[0];file_upload_container.style.display='block';", 'args' => array()));

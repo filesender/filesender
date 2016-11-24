@@ -243,6 +243,7 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
         $recipient->transfer->save();
 
         $this->refresh();
+        sleep(10);
 
         $elements = $this->elements($this->using('css selector')->value('.exception .message'));
         $count = count($elements);
@@ -336,6 +337,15 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
         foreach($elements as $element){
             $element->click();
         }
+    }
+
+    protected function isCheckBoxSelected($css_selector) {
+        return $this->execute(array('script' => "return document.querySelector('".$css_selector."').checked;", 'args' => array()));
+    }
+
+
+    protected function clickCheckbox($css_selector) {
+        $this->execute(array('script' => "document.querySelector('".$css_selector."').click();", 'args' => array()));
     }
 
 }
