@@ -22,7 +22,9 @@
             <file>tests/transfer/TransferTest.php</file>    <!-- Failed -->
         </testsuite>
         <testsuite name="selenium">
-            <directory>./selenium_tests/tests</directory>
+            <!--<directory>./selenium_tests/tests</directory>-->
+            <file>selenium_tests/tests/EncryptionTest.php</file>
+            <file>selenium_tests/tests/TransferExpiredTest.php</file>
         </testsuite>
     </testsuites>
 </phpunit>

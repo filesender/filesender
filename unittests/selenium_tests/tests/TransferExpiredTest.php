@@ -13,6 +13,7 @@ class TransferExpiredTest extends SeleniumTest
         extract($this->getKeyBindings());
 
         $this->setupAuthenticated();
+        sleep(8);
 
         if (!$this->isCheckBoxSelected('[name="get_a_link"]')) {
             $this->clickCheckbox('[name="get_a_link"]');

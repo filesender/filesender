@@ -340,7 +340,9 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
     }
 
     protected function isCheckBoxSelected($css_selector) {
-        return $this->execute(array('script' => "return document.querySelector('".$css_selector."').checked;", 'args' => array()));
+        $var = $this->execute(array('script' => "return document.querySelector('".$css_selector."').checked;", 'args' => array()));
+        Logger::debug('The checkbox with selector '.$css_selector.', was it checked? '. gettype($var). ': '.($var?'y':'n'));
+        return $var;
     }
 
 

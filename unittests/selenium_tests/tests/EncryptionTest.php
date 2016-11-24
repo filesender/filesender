@@ -24,7 +24,8 @@ class EncryptionTest extends SeleniumTest {
         
         // Upload files
         $this->uploadFiles();
-        
+
+        sleep(10);
         $this->byCssSelector('.start.ui-button')->click();
 
         // wait for the dialog
@@ -78,7 +79,7 @@ class EncryptionTest extends SeleniumTest {
         sleep(10);
         
         $this->byCss(".expand")->click();
-        sleep(2);
+        sleep(10);
         
         // click download
         $this->byCss(".transfer-download")->click();
