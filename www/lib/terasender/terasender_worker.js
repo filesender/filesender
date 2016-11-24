@@ -63,6 +63,10 @@ var terasender_worker = {
             }
             
             this.job.chunk = job.chunk;
+
+            if('encryption' in job) {
+                this.job.encryption = job.encryption;
+            }
         }
         
         if(!this.job.file) {
@@ -129,7 +133,7 @@ var terasender_worker = {
 				window.filesender.crypto_app().encryptBlob(arrayBuffer, job.encryption_password, function (encrypted_blob) {
 					xhr.setRequestHeader('X-Filesender-Encrypted', '1');
 					xhr.send(encrypted_blob);
-				}, false);
+				},false);
 			});
 		} else {
 			xhr.send(blob);
@@ -152,13 +156,19 @@ var terasender_worker = {
      * Report progress of current job
      */
     reportProgress: function(loaded,total) {
-    var ratio = loaded/total;
         var now = (new Date()).getTime();
+        var ratio = loaded/total;
+        if (ratio < 0.95 && this.progress_reported && this.progress_reported > (now - 300))
+            return; // No need to report progress more than 1 time per 300ms (especially if fine_progress)
         
         this.progress_reported = now;
         
         this.log('Job file:' + this.job.file.id + '[' + this.job.chunk.start + '...' + this.job.chunk.end + '] is ' + (100 * ratio).toFixed(1) + '% done');
-        this.job.fine_progress = loaded;
+        if (this.job.encryption) { 
+            this.job.fine_progress = Math.floor(ratio * (this.job.chunk.end - this.job.chunk.start));
+        } else {
+            this.job.fine_progress = loaded;
+        }
         this.sendCommand('jobProgress', this.job);
     },
     
