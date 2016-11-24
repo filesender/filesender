@@ -431,9 +431,9 @@ filesender.ui.startUpload = function() {
             this.transfer.options[o] = v;
         }
     }
-    this.transfer.encryption = filesender.ui.nodes.encryption.toggle.is(':checked'); //MD
+    this.transfer.encryption = filesender.ui.nodes.encryption.toggle.is(':checked'); 
     this.transfer.encryption_password = filesender.ui.nodes.encryption.password.val();
-    
+
     this.transfer.onprogress = filesender.ui.files.progress;
     
     this.transfer.oncomplete = function(time) {
