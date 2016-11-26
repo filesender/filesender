@@ -133,10 +133,6 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
                             <div class="fieldcontainer" id="encryption_description_disabled_container">
                                 {tr:file_encryption_description_disabled}
                             </div>
-                            <script>
-                                // check for compatability
-                                window.filesender.crypto_app().init();
-                            </script>
                         <?php } ?>
                     <?php } ?>
                     

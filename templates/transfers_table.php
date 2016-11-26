@@ -268,9 +268,4 @@
     </tbody>
 </table>
 
-<script>
-    // check for compatability
-    window.filesender.crypto_app().init();
-</script>
-
 <script type="text/javascript" src="{path:js/transfers_table.js}"></script>
