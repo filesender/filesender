@@ -6,7 +6,6 @@ if(!('filesender' in window)) window.filesender = {};
 window.filesender.supports = {
     localStorage: false,
     workers: false,
-    digest: false,
     crypto: false,
     workerCrypto: false,
 };
