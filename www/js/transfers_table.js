@@ -361,7 +361,7 @@ $(function() {
     // File download buttons when the files are encrypted
     $('.transfer-download').on('click', function () {
         
-        if(!window.crypto_support){
+        if(!filesender.supports.crypto){
             return;
         }
         

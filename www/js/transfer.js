@@ -94,19 +94,8 @@ window.filesender.transfer = function() {
     
     this.canUseTerasender = function() {
         var enable = filesender.config.terasender_enabled && filesender.supports.workers;
-        if (!enable)
-                return false;
-
-        var ua = window.navigator.userAgent.toLowerCase();
-        var ie = (ua.indexOf('msie ')!=-1 || ua.indexOf('trident/')!=-1 || ua.indexOf('edge/')!=-1);
-        var ff = ua.toLowerCase().indexOf('firefox') != -1;
-        var mac = ua.indexOf('mac os x') != -1;
-
-        if ((ie && this.encryption)  	//IE doesnt expose crypto lib to workers.
-//           || (ff && mac)		//FF sometimes crashs the tab. My guess is the workers dont always end gracefully. //FIXED, worker.terminate is better than close().
-           ) return false;
-
-        return true;
+        enable &= !this.encryption || filesender.supports.workerCrypto;
+        return enable;
     };
 
     
