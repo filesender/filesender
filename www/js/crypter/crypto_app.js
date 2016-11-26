@@ -17,32 +17,6 @@ window.filesender.crypto_app = function () {
         crypto_iv_len: window.filesender.config.crypto_iv_len,
         crypto_crypt_name: window.filesender.config.crypto_crypt_name,
         crypto_hash_name: window.filesender.config.crypto_hash_name,
-        init: function () {
-            $(function () {
-                window.crypto_support = true;
-                if (window.msCrypto) {
-                    window.crypto = window.msCrypto;
-                }
-                if (window.crypto && !window.crypto.subtle && window.crypto.webkitSubtle) {
-                    window.crypto.subtle = window.crypto.webkitSubtle;
-                }
-                if (typeof window.crypto === 'undefined') {
-                    window.crypto_support = false;
-                    // Disable the upload fields
-                    $("#encryption").attr("disabled", "disabled");
-                    $("#encryption_description_container_disabled").show();
-
-                    // Disable the transfer buttons
-                    $('#encryption_description_not_supported').show();
-                    $('.transfer-download').css({'color': 'rgba(173, 173, 173, 1)', 'cursor': 'default'});
-
-                    // Disable the download buttons
-                    $(".files.box .file[data-encrypted='1']").css({'height': '3.5em'});
-                    $(".files.box .file[data-encrypted='1'] .download").hide();
-                    $(".download_decryption_disabled").show();
-                }
-            });
-        },
         generateVector: function () {
             return crypto.getRandomValues(new Uint8Array(16));
         },
@@ -61,17 +35,8 @@ window.filesender.crypto_app = function () {
                 filesender.ui.log(e);
             };
         },
-        encryptBlob: function (value, password, callback, do_init) {
-
-            if(typeof do_init === 'undefined') { // optional parameter, default to true
-                do_init = true;
-            }
-
+        encryptBlob: function (value, password, callback) {
             var $this = this;
-            
-            if(do_init) {
-                $this.init();
-            }
             
             this.generateKey(password, function (key, iv) {
                 crypto.subtle.encrypt({name: $this.crypto_crypt_name, iv: iv}, key, value).then(
@@ -100,8 +65,6 @@ window.filesender.crypto_app = function () {
         },
         decryptBlob: function (value, password, callbackDone, callbackProgress, callbackError) {
             var $this = this;
-            
-            $this.init();
             
             var encryptedData = value; // array buffers array
             var blobArray = [];
@@ -137,8 +100,6 @@ window.filesender.crypto_app = function () {
         },
         decryptDownload: function (link, mime, name, progress) {
             var $this = this;
-            
-            $this.init();
             
             var prompt = filesender.ui.prompt(window.filesender.config.language.file_encryption_enter_password, function (password) {
                 var pass = $(this).find('input').val();
