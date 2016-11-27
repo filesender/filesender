@@ -101,9 +101,9 @@ window.filesender.transfer = function() {
         var ff = ua.toLowerCase().indexOf('firefox') != -1;
         var mac = ua.indexOf('mac os x') != -1;
 
-        if ((ie && this.encryption)  	//IE doesnt expose crypto lib to workers.
-//           || (ff && mac)		//FF sometimes crashs the tab. My guess is the workers dont always end gracefully. //FIXED, worker.terminate is better than close().
-           ) return false;
+        if (this.encryption){
+            return false; // window.crypto works poorly in any other browser than chrome latest due to lack of support for crypto in webworkers, it's not a 'safe environment' according to a lot of browsers
+        }
 
         return true;
     };
