@@ -11,3 +11,4 @@ Howto: Installation of Filesender 2.0
 Note: ensure you have created the database user, password and the database name.
 
 5. Try the web application
+6. Test the Saucelabs buuilds
