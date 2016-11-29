@@ -433,6 +433,7 @@ filesender.ui.startUpload = function() {
     }
     this.transfer.encryption = filesender.ui.nodes.encryption.toggle.is(':checked'); 
     this.transfer.encryption_password = filesender.ui.nodes.encryption.password.val();
+    this.transfer.slowconnection = filesender.ui.nodes.slowconnection.is(':checked');
 
     this.transfer.onprogress = filesender.ui.files.progress;
     
@@ -585,6 +586,7 @@ $(function() {
                 show_hide: form.find('#encryption_show_password'),
                 generate: form.find('#encryption_generate_password')
             },
+	slowconnection: form.find('input[name="terasender_slowconnection"]'),
         message: form.find('textarea[name="message"]'),
         guest_token: form.find('input[type="hidden"][name="guest_token"]'),
         lang: form.find('input[name="lang"]'),
