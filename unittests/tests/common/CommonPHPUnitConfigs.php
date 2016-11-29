@@ -38,4 +38,6 @@
 date_default_timezone_set("Europe/Paris");
 
 require_once(dirname(__FILE__).'/../../../classes/autoload.php');
-//require_once(dirname(__FILE__).'/../../../classes/_includes.php');
+
+// Make sure we're not stopped by the authentication system
+AuthLocal::setUser(1, 'phpunit@filesender.org', 'phpunit');

@@ -537,4 +537,19 @@ $(function () {
     });
 
     filesender.ui.updateUserQuotaBar();
+
+    if (!filesender.supports.crypto) {
+        // Disable the upload fields
+        $("#encryption").attr("disabled", "disabled");
+        $("#encryption_description_container_disabled").show();
+
+        // Disable the transfer buttons
+        $('#encryption_description_not_supported').show();
+        $('.transfer-download').css({'color': 'rgba(173, 173, 173, 1)', 'cursor': 'default'});
+
+        // Disable the download buttons
+        $(".files.box .file[data-encrypted='1']").css({'height': '3.5em'});
+        $(".files.box .file[data-encrypted='1'] .download").hide();
+        $(".download_decryption_disabled").show();
+    }
 });
