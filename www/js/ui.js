@@ -402,7 +402,7 @@ window.filesender.ui = {
         if (!precision || isNaN(precision))
             precision = 1;
 
-        var multipliers = ['', 'k', 'M', 'G', 'T'];
+        var multipliers = ['', 'K', 'M', 'G', 'T'];
 
         var bytes = Math.max(bytes, 0);
         var pow = Math.floor((bytes ? Math.log(bytes) : 0) / Math.log(1024));

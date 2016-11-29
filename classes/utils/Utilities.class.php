@@ -281,7 +281,7 @@ class Utilities {
         $unit = Lang::tr('size_unit')->out();
         if($unit == '{size_unit}') $unit = 'b';
         
-        $multipliers = array('', 'k', 'M', 'G', 'T');
+        $multipliers = array('', 'K', 'M', 'G', 'T');
         
         // Compute multiplier
         $bytes = max($bytes, 0);
