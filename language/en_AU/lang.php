@@ -231,6 +231,7 @@ $lang['invalid_file'] = 'Invalid File';
 $lang['add_recipient'] = 'Add a recipient';
 $lang['confirm_leave_upload_page'] = 'Do you really want to leave this page ?';
 $lang['recipients_notifications_language'] = 'Recipients\' language';
+$lang['terasender_slowconnection'] = 'Disable parallel upload (Tick if you are on a slow connection)';
 
 
 /**
