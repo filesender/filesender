@@ -30,7 +30,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-if (!defined('FILESENDER_BASE')) define('FILESENDER_BASE', dirname(dirname(__FILE__)));
+if (!defined('FILESENDER_BASE')) die('autoload.php was called without init.php.');
 
 /**
  * Autoloading helper
