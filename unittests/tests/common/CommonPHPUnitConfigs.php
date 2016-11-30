@@ -37,6 +37,8 @@
 
 date_default_timezone_set("Europe/Paris");
 
+require_once dirname(dirname(dirname(dirname(__FILE__)))) . implode(DIRECTORY_SEPARATOR, ['', 'includes', 'init.php']);
+
 require_once(dirname(__FILE__).'/../../../classes/autoload.php');
 
 // Make sure we're not stopped by the authentication system
