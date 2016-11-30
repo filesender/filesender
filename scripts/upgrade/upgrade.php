@@ -82,7 +82,7 @@ if($config && preg_match('`class\s+config\s+\{`i', $config)) {
 
 // Init once old config has been taken care of
 
-include dirname(__FILE__).'/../../includes/init.php';
+require_once dirname(__FILE__).'/../../includes/init.php';
 
 Logger::setProcess(ProcessTypes::UPGRADE);
 
