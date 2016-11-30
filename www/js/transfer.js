@@ -55,7 +55,7 @@ window.filesender.transfer = function() {
     this.time = 0;
     this.encryption = 0;
     this.encryption_password = '';
-    this.slowconnection = 0;
+    this.disable_terasender = 0;
     this.pause_time = 0;
     this.pause_length = 0;
     this.file_index = 0;
@@ -96,7 +96,7 @@ window.filesender.transfer = function() {
     this.canUseTerasender = function() {
         var enable = filesender.config.terasender_enabled && filesender.supports.workers;
         enable &= !this.encryption || filesender.supports.workerCrypto;
-        enable &= !this.slowconnection;
+        enable &= !this.disable_terasender;
         return enable;
     };
 

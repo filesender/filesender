@@ -217,7 +217,7 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
                             <br />
                         </div>
                         <?php } ?>
-                        <?php $displayoption('terasender_slowconnection', array('default'=>false), false); ?>
+                        <?php if (Config::get('terasender_enabled') && Config::get('terasender_disableable')) $displayoption('disable_terasender', array('default'=>false), false); ?>
                     </div>
                     <?php } /* End of advanced settings div. */ ?>
                 </td>
