@@ -432,6 +432,7 @@ filesender.ui.startUpload = function() {
     }
     this.transfer.encryption = filesender.ui.nodes.encryption.toggle.is(':checked'); 
     this.transfer.encryption_password = filesender.ui.nodes.encryption.password.val();
+    this.transfer.disable_terasender = filesender.ui.nodes.disable_terasender.is(':checked');
     
     this.transfer.onprogress = filesender.ui.files.progress;
     
@@ -584,6 +585,7 @@ $(function() {
                 show_hide: form.find('#encryption_show_password'),
                 generate: form.find('#encryption_generate_password')
             },
+        disable_terasender: form.find('input[name="disable_terasender"]'),
         message: form.find('textarea[name="message"]'),
         guest_token: form.find('input[type="hidden"][name="guest_token"]'),
         lang: form.find('input[name="lang"]'),
@@ -762,9 +764,9 @@ $(function() {
         return false;
     });
     filesender.ui.nodes.encryption.generate.on('click', function() {
-    filesender.ui.nodes.encryption.password.val(Math.random().toString(36).substr(2, 14));
-    filesender.ui.nodes.encryption.show_hide.prop('checked',true);
-    filesender.ui.nodes.encryption.show_hide.trigger('change');
+        filesender.ui.nodes.encryption.password.val(Math.random().toString(36).substr(2, 14));
+        filesender.ui.nodes.encryption.show_hide.prop('checked',true);
+        filesender.ui.nodes.encryption.show_hide.trigger('change');
     });
     filesender.ui.nodes.encryption.show_hide.on('change', function() {
         if (filesender.ui.nodes.encryption.show_hide.is(':checked')) {

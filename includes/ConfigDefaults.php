@@ -92,6 +92,7 @@ $default = array(
     'crypto_hash_name' => "SHA-256", // The hash used to convert password to hashencryption_enabled
 
     'terasender_enabled' => true,
+    'terasender_disableable' => true,
     'terasender_start_mode' => 'multiple',
     'terasender_worker_count' => 6,
     'stalling_detection' => true,
