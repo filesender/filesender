@@ -41,7 +41,7 @@ class ConfigurationOptionsTest extends SeleniumTest {
         }
 
 
-        $recipients = ['usera@filetestertest.test', 'userb@filetestertest.test', 'userc@filetestertest.test'];
+        $recipients = array('usera@filetestertest.test', 'userb@filetestertest.test', 'userc@filetestertest.test');
         $subject = 'testSubject_' . rand(0, 100);
         $content = 'testContent_' . rand(0, 100);
 
@@ -78,7 +78,7 @@ class ConfigurationOptionsTest extends SeleniumTest {
         $this->checkCheckbox('enable_recipient_email_download_complete', true);
 
 
-        $recipients = ['usera@filetestertest.test', 'userb@filetestertest.test', 'userc@filetestertest.test'];
+        $recipients = array('usera@filetestertest.test', 'userb@filetestertest.test', 'userc@filetestertest.test');
         $subject = 'testSubject_' . rand(0, 100);
         $content = 'testContent_' . rand(0, 100);
 
@@ -123,7 +123,7 @@ class ConfigurationOptionsTest extends SeleniumTest {
         }
 
 
-        $recipients = ['usera@filetestertest.test', 'userb@filetestertest.test', 'userc@filetestertest.test'];
+        $recipients = array('usera@filetestertest.test', 'userb@filetestertest.test', 'userc@filetestertest.test');
         $subject = 'testSubject_' . rand(0, 100);
         $content = 'testContent_' . rand(0, 100);
 
@@ -172,7 +172,7 @@ class ConfigurationOptionsTest extends SeleniumTest {
         $test2_file_data = file_get_contents($test2_file);
         $this->sendKeys($this->byCssSelector(".file_selector input[name=\"files\"]"), $test2_file);
 
-        return [$test1_file_data, $test2_file_data];
+        return array($test1_file_data, $test2_file_data);
     }
 
     private function checkCheckbox($name, $checked = true) {
@@ -225,7 +225,7 @@ class ConfigurationOptionsTest extends SeleniumTest {
 
     private function yieldRecipientMails($recipient_id) {
 
-        $folder_names = [];
+        $folder_names = array();
         $folder_name = getcwd() . '\\testmails\\' . $recipient_id . '\\';
         //print_r($folder_name); exit;
         $dir = new DirectoryIterator($folder_name);

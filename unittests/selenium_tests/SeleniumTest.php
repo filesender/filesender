@@ -110,7 +110,7 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
 
     protected function getKeyBindings()
     {
-        $key_bindings = [];
+        $key_bindings = array();
         
         $refl = new ReflectionClass('PHPUnit_Extensions_Selenium2TestCase_Keys');
         foreach ($refl->getConstants() as $constant_key=>$constant_value)
@@ -161,14 +161,14 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
 
     protected function setUserPage()
     {
-        $this->changeConfigValue('user_page', '[\'lang\'=>true,\'auth_secret\'=>true,\'id\'=>true,\'created\'=>true]');
+        $this->changeConfigValue('user_page', 'array(\'lang\'=>true,\'auth_secret\'=>true,\'id\'=>true,\'created\'=>true)');
         $this->refresh();
         sleep(2);
     }
 
     protected function unsetUserPage()
     {
-        $this->changeConfigValue('user_page', '[]');
+        $this->changeConfigValue('user_page', 'array()');
         $this->refresh();
         sleep(2);
     }
@@ -256,7 +256,7 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
 
     public function downloadZip($token, $data_ids)
     {
-        stream_context_set_default(["ssl"=>["allow_self_signed"=>true]]);
+        stream_context_set_default(array("ssl"=>array("allow_self_signed"=>true)));
 
         //https://file_sender.app/filesender/download.php?token=36c2120e-44b1-c06e-8c32-27e3c4285ee6&files_ids=
         $zip_location = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'testzip-' . $token . '.zip';
@@ -292,10 +292,10 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
 
     private function IndividualDownloadsTest($token, $file_datas_to_check)
     {
-        stream_context_set_default(["ssl"=>["allow_self_signed"=>true]]);
+        stream_context_set_default(array("ssl"=>array("allow_self_signed"=>true)));
 
         $elements = $this->elements($this->using('css selector')->value('.files.box .file'));
-        $data_ids = [];
+        $data_ids = array();
 
         foreach($elements as $element)
         {
@@ -317,10 +317,10 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
 
     private function IndividualEncryptedDownloadsTest($token, $file_datas_to_check)
     {
-        stream_context_set_default(["ssl"=>["allow_self_signed"=>true]]);
+        stream_context_set_default(array("ssl"=>array("allow_self_signed"=>true)));
         // the download class is for encrypted direct downloads
         $elements = $this->elements($this->using('css selector')->value('.files.box .file.download'));
-        $data_ids = [];
+        $data_ids = array();
 
         foreach($elements as $element)
         {

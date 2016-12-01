@@ -28,7 +28,7 @@ class MaxFilesTest extends SeleniumTest
 
         ${"temp"} = $this->execute(array(  'script' => "var file_upload_container = document.getElementsByClassName('file_selector')[0];file_upload_container.style.display='block';", 'args'   => array() ));
 
-        $test_files_created = [];
+        $test_files_created = array();
         for($i = 0; $i < $number_of_files; $i++)
         {
             $test_file = sys_get_temp_dir().DIRECTORY_SEPARATOR.'no'.($i+1).'.txt';

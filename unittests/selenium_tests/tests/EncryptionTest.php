@@ -47,7 +47,7 @@ class EncryptionTest extends SeleniumTest {
         
         // check db for encryption
         $statement = DBI::prepare('SELECT * FROM files where \'a\'=:a ORDER BY id DESC LIMIT 1');
-        $statement->execute(['a' => 'a']);
+        $statement->execute(array('a' => 'a'));
         $data = $statement->fetch();
         
         $encrypted_succes = false;
@@ -65,7 +65,7 @@ class EncryptionTest extends SeleniumTest {
         $test1_file_data = file_get_contents($test1_file);
         $this->sendKeys($this->byCssSelector(".file_selector input[name=\"files\"]"), $test1_file);
 
-        return [$test1_file_data];
+        return array($test1_file_data);
     }
     
     /**

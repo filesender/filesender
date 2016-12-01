@@ -45,6 +45,6 @@ class TransferExpiredTest extends SeleniumTest
 
         $url = trim($this->byCssSelector('.ui-dialog-content.ui-widget-content.success textarea')->value());
 
-        $this->checkDownloadUrl($url, [$test1_file_data, $test2_file_data]);
+        $this->checkDownloadUrl($url, array($test1_file_data, $test2_file_data));
     }
 }
