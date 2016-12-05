@@ -167,17 +167,6 @@ class DBObject {
     }
     
     /**
-     * Default creator
-     * 
-     * Creates empty object
-     * 
-     * @return object instance
-     */
-    public static function create() {
-        return new static();
-    }
-    
-    /**
      * Object comparison
      * 
      * @param object $other other object or id
