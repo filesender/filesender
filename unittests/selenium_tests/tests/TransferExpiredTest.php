@@ -32,9 +32,9 @@ class TransferExpiredTest extends SeleniumTest
 
         $this->byCssSelector('.start.ui-button')->click();
 
-
-        $this->waitUntil(function(){
-            $elements = $this->elements($this->using('css selector')->value('.ui-dialog-content.ui-widget-content.success'));
+        $test = $this;
+        $this->waitUntil(function() use ($test){
+            $elements = $test->elements($test->using('css selector')->value('.ui-dialog-content.ui-widget-content.success'));
             $count = count($elements);
             if($count > 0)
             {

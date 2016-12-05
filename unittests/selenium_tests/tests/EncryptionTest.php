@@ -31,8 +31,9 @@ class EncryptionTest extends SeleniumTest {
         $this->byCssSelector('.start.ui-button')->click();
 
         // wait for the dialog
-        $this->waitUntil(function(){
-            $elements = $this->elements($this->using('css selector')->value('.ui-dialog-title'));
+        $test = $this;
+        $this->waitUntil(function() use ($test){
+            $elements = $test->elements($test->using('css selector')->value('.ui-dialog-title'));
             $count = count($elements);
             if($count > 0)
             {
