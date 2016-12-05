@@ -76,7 +76,7 @@ class Logger {
     private static function setup() {
         if(!is_null(self::$facilities)) return;
 
-        self::$facilities = array(array('type' => 'error_log')); // Failsafe facility so we have at least one if no valid ones defined in config
+        self::$facilities = array(array('type' => 'error_log', 'method' => 'logErrorLog')); // Failsafe facility so we have at least one if no valid ones defined in config
         
         // Get facilities from config, cast to single type
         $facilities = Config::get('log_facilities');
