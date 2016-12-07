@@ -71,6 +71,7 @@ class File extends DBObject
         ),
         'encrypted_size' => array(
             'type' => 'uint',
+            'null' => true,
             'size' => 'big'
         ),
         'upload_start' => array(
