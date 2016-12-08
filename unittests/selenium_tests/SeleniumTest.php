@@ -198,7 +198,7 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
 
         if($count == 0)
         {
-            die($type .' config could not be set to value '. $value ."Regex: /\\\$config\['".$type."'\] = (.*);/\n");
+            throw new \Exception($type .' config could not be set to value '. $value ."Regex: /\\\$config\['".$type."'\] = (.*);/\n");
         }
 
         //write the entire string
