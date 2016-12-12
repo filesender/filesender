@@ -1,7 +1,6 @@
 # FileSender
 
 [![Build Status](https://travis-ci.org/filesender/filesender.svg?branch=master)](https://travis-ci.org/filesender/filesender)
-[![Build Status](https://saucelabs.com/buildstatus/filesender)](https://saucelabs.com/beta/builds/f9a65a9c84de42dcad66ded1d49684a9)
 
 ## Introduction
 
