@@ -12,7 +12,7 @@ Currently, the core team members are:
 
 		… todo …
 
-We've been lucky to have the help of many people through the years. SimpleSAMLphp wouldn't have reached so far without
+We've been lucky to have the help of many people through the years. FileSender wouldn't have reached so far without
 them, and we want to thank them from here. Unfortunately, they are so many it is nearly impossible to mention all of
 them. [Github can offer a good summary on who has contributed to the project](https://github.com/filesender/filesender/graphs/contributors?from=2007-09-09&to=2015-09-06&type=c).
 Big thanks to you all!
@@ -98,6 +98,6 @@ Good documentation is key to make things easier for our users!
 
 ## Community
 
-You don't feel capable of contributing with your code, but are using SimpleSAMLphp and can share your knowledge and
-experience? Please, do so! Join our [users mailing list](http://groups.google.com/group/simplesamlphp) and help other
-users when you can. Your experience might be valuable for many!
+You don't feel capable of contributing with your code, but are using FileSender and can share your knowledge and
+experience? Please, do so! Join our [users mailing list](https://sympa.uninett.no/lists/filesender.org/info/filesender-dev)
+and help other users when you can. Your experience might be valuable for many!
