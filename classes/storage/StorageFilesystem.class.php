@@ -278,7 +278,7 @@ class StorageFilesystem {
      * @throws StorageFilesystemFileNotFoundException
      * @throws StorageFilesystemCannotReadException
      */
-    public function readChunk(File $file, $offset, $length) {
+    public static function readChunk(File $file, $offset, $length) {
         $chunk_size = (int)Config::get('download_chunk_size');
         
         $file_path = self::buildPath($file).$file->uid;
@@ -316,7 +316,7 @@ class StorageFilesystem {
      * @throws StorageFilesystemOutOfSpaceException
      * @throws StorageFilesystemCannotWriteException
      */
-    public function writeChunk(File $file, $data, $offset = null) {
+    public static function writeChunk(File $file, $data, $offset = null) {
         $chunk_size = strlen($data);
         
         $path = self::buildPath($file);
@@ -387,7 +387,7 @@ class StorageFilesystem {
      * 
      * @throws StorageFilesystemCannotDeleteException
      */
-    public function deleteFile(File $file) {
+    public static function deleteFile(File $file) {
         $file_path = self::buildPath($file).$file->uid;
         
         if(!file_exists($file_path)) return;

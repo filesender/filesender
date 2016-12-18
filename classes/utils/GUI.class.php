@@ -236,7 +236,7 @@ class GUI {
      * 
      * @return string
      */
-    public function currentPage($page = null) {
+    public static function currentPage($page = null) {
         if(!is_null($page)) self::$current_page = $page;
         
         // Already cached ?

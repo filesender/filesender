@@ -561,7 +561,7 @@ class Mail {
         }
 
         $other_recipients = '';
-        foreach(['To', 'Cc', 'Bcc'] as $recipient_type)
+        foreach(array('To', 'Cc', 'Bcc') as $recipient_type)
         {
             foreach($this->rcpt[$recipient_type] as $recipient)
             {

@@ -1,6 +1,6 @@
 language: php
 php:
-- 5.4
+- 5.3
 addons:
   sauce_connect:
     username: "$SAUCE_USERNAME"

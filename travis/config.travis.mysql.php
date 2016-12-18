@@ -307,4 +307,4 @@ $config['sauce_username'] = getenv('sauce_username'); // String, Sauce Labs user
 $config['sauce_access_key'] = getenv('sauce_access_key');     // String, Sauce Labs access key
 
 $config['ban_extension'] = 'exe,bat';
-$config['user_page'] = [];
+$config['user_page'] = array();

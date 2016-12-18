@@ -109,6 +109,10 @@ class Auth {
                 self::$exception = $e;
                 throw $e;
             }
+
+            // If no session has been made at this point, we make one ourselves.
+            // Only types 'guest' and 'sp' are browsers.
+            if(in_array(self::$type, array('sp', 'guest'))) session_start();
             
             if(self::$attributes && array_key_exists('uid', self::$attributes)) {
                 $user_filter = Config::get('auth_user_filter');

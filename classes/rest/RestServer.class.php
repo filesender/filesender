@@ -45,8 +45,11 @@ class RestServer {
      */
     public static function process() {
         try {
-            @session_start();
-            
+            // Get authentication state (fills auth data in relevant classes)
+            // Will also start a session using the authentication handler.
+            // This prevents problems caused by duplicate sessions.
+            Auth::isAuthenticated();
+
             // If undergoing maintenance report it as an error
             if(Config::get('maintenance')) throw new RestException('undergoing_maintenance', 503);
             
@@ -117,9 +120,6 @@ class RestServer {
             
             $security_token = null;
             $security_token_matches = false;
-            
-            // Get authentication state (fills auth data in relevant classes)
-            Auth::isAuthenticated();
             
             if(Auth::isRemoteApplication()) {
                 // Remote applications must honor ACLs
