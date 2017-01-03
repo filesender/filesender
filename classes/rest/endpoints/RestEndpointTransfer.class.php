@@ -377,7 +377,7 @@ class RestEndpointTransfer extends RestEndpoint {
                     !$guest ||
                     (
                         !$guest->transfer_options[TransferOptions::ADD_ME_TO_RECIPIENTS] &&
-                        !$guest->options[TransferOptions::CAN_ONLY_SEND_TO_ME]
+                        !$guest->options[GuestOptions::CAN_ONLY_SEND_TO_ME]
                     )
                 )
             )
