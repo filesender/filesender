@@ -16,6 +16,23 @@
     if($transfer->isExpired()) throw new TransferExpiredException($transfer);
     
     if($transfer->status != TransferStatuses::AVAILABLE) throw new TransferNotAvailableException($transfer);
+
+    $downloadLinks = array();
+    $archiveDownloadLink = '#';
+    if(empty($transfer->options['encryption'])) {
+        $fileIds = array();
+        foreach($transfer->files as $file) {
+            $downloadLinks[$file->id] = GUI::path('download.php?' . http_build_query(array(
+                'token' => $token,
+                'files_ids' => $file->id,
+            )));
+            $fileIds[] = $file->id;
+        }
+        $archiveDownloadLink = GUI::path('download.php?' . http_build_query(array(
+            'token' => $token,
+            'files_ids' => implode(',', $fileIds),
+        )));
+    }
     
     ?>
     
@@ -63,7 +80,7 @@
             <span class="name"><?php echo Utilities::sanitizeOutput($file->name) ?></span>
             <span class="size"><?php echo Utilities::formatBytes($file->size) ?></span>
             <span class="download_decryption_disabled"><br/>{tr:file_encryption_disabled}</span>
-            <a href="#" class="download" title="{tr:download_file}">
+            <a href="<?php echo empty($downloadLinks[$file->id]) ? '#' : htmlspecialchars($downloadLinks[$file->id]) ?>" class="download" title="{tr:download_file}">
                 <span class="fa fa-2x fa-download"></span>
                 {tr:download}
             </a>
@@ -79,7 +96,7 @@
                 {tr:mac_archive_message}
             </div>
             
-            <a href="#" class="archive_download" title="{tr:archive_download}">
+            <a href="<?php echo htmlspecialchars($archiveDownloadLink) ?>" class="archive_download" title="{tr:archive_download}">
                 <span class="fa fa-2x fa-download"></span>
                 {tr:archive_download}
             </a>
