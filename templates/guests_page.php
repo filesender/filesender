@@ -129,7 +129,7 @@
 <div class="box">
     <h1>{tr:guests}</h1>
     
-    <?php Template::display('guests_table', array('guests' => Guest::fromUser(Auth::user()))) ?>
+    <?php Template::display('guests_table', array('guests' => Guest::fromUserAvailable(Auth::user()))) ?>
 </div>
 
 <div class="box">
