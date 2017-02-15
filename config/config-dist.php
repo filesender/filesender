@@ -426,4 +426,3 @@ function let_to_num($v){ //This function transforms the php.ini notation for num
     }
       return $ret;
 }
-?>
