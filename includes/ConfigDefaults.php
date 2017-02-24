@@ -219,7 +219,7 @@ $default = array(
             'default' => false
         ),
         'email_guest_created' => array(
-            'available' => false,
+            'available' => true,
             'advanced' => true,
             'default' => true
         ),
