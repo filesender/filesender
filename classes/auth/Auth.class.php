@@ -277,4 +277,17 @@ class Auth {
     public static function isGuest() {
         return self::$type == 'guest';
     }
+
+    /**
+     * Tells if a session is started.
+     *
+     * @return bool
+     */
+     public static function isSessionStarted() {
+        if ( version_compare(phpversion(), '5.4.0', '>=') ) {
+            return session_status() === PHP_SESSION_ACTIVE ? true : false;
+        } else {
+            return session_id() === '' ? false : true;
+        }
+    }
 }
