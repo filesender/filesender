@@ -719,9 +719,11 @@ $(function() {
     
     // Make options label toggle checkboxes
     form.find('.basic_options label, .advanced_options label').on('click', function() {
-        var checkbox = $(this).closest('.fieldcontainer').find(':checkbox');
-        checkbox.prop('checked', !checkbox.prop('checked'));
-        checkbox.change();
+        if($('body:not([data-auth-type=guest])').length > 0) {        
+            var checkbox = $(this).closest('.fieldcontainer').find(':checkbox');
+            checkbox.prop('checked', !checkbox.prop('checked'));
+            checkbox.change();
+        }
     }).css('cursor', 'pointer');
     
     // Bind advanced options display toggle
