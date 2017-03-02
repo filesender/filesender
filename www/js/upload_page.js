@@ -717,13 +717,6 @@ $(function() {
         filesender.ui.nodes.expires.datepicker('setDate', $(this).val());
     });
     
-    // Make options label toggle checkboxes
-    form.find('.basic_options label, .advanced_options label').on('click', function() {
-        var checkbox = $(this).closest('.fieldcontainer').find(':checkbox');
-        checkbox.prop('checked', !checkbox.prop('checked'));
-        checkbox.change();
-    }).css('cursor', 'pointer');
-    
     // Bind advanced options display toggle
     form.find('.toggle_advanced_options').on('click', function() {
         $('.advanced_options').slideToggle();
