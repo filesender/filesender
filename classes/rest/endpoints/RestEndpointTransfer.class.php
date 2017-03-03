@@ -350,12 +350,11 @@ class RestEndpointTransfer extends RestEndpoint {
             // Build options from provided data and defaults
             $options = array();
             foreach(Transfer::allOptions() as $name => $dfn)  {
-                $value = $dfn['default'];
-                
-                if(in_array($name, $allowed_options) && $data->options->exists($name))
-                    $value = $data->options->$name;
-                
-                $options[$name] = $value;
+                if(in_array($name, $allowed_options)
+                    && $data->options->exists($name))
+                {
+                    $options[$name] = $data->options->$name;
+                }
             }
             
             $options['encryption'] = $data->encryption;
