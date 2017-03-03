@@ -1,3 +1,7 @@
+---
+title: Configuration directives
+---
+
 * This document is a work in progress.  If you are keen on seeing FileSender 2.0 released offer to help with (testing) the documentation.
 * mandatory configuration settings are <span style="background-color:red">marked in red</span>
 * sections <span style="background-color:orange">marked in orange</span> need to be double checked.
@@ -937,8 +941,8 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 	* __valid\_only\_one_time:__ the guest invitation can be used for one transfer only.
 	* __does\_not\_expire:__ the guest invitation can be used until it is explicitly expired by the owner.  Combine with can_only_send_to_me to create a permanent file upload link that can be put in an email signature.
 	* __can\_only\_send\_to_me:__ the recipient for this guest invitation is fixed, the guest can not choose their own recipients.
-	* __email_guest_created:__ send the guest invitation owner an email when the guest voucher is created.
-	* __email_guest_created_receipt:__ send the guest an email when the guest voucher is created.
+	* __email_guest_created:__ send the guest an email when the guest voucher is created.
+	* __email_guest_created_receipt:__ send the guest invitation owner an email when the guest voucher is created.
 	* __email_guest_expired:__ send the guest an email when the guest voucher is expired.
 
 * __*Configuration example:*__

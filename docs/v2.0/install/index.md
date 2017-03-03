@@ -1,3 +1,7 @@
+---
+title: Installation - Linux Source 2.0-alpha from Git
+---
+
 # Installation FileSender 2.0 Alpha
 
 _This documentation is under development. It was created by installing FileSender on a CentOS 7 and Debian 8 machine._
@@ -108,7 +112,7 @@ Copy standard configuration files to the right places:
 	cp -r config-templates/*.php config/
 	cp -r metadata-templates/*.php metadata/
 
-To tailor your [SimpleSAMLphp](http://simplesamlphp.org/) installation to match your local site's needs please check its [installation and configuration documentation](http://simplesamlphp.org/docs). When connecting to an Identity provider make sure all the required attributes are sent by the identity provider. See the section on [IdP attributes](../admin/reference/README.md#idp_attributes) in the Reference Manual for details.
+To tailor your [SimpleSAMLphp](http://simplesamlphp.org/) installation to match your local site's needs please check its [installation and configuration documentation](http://simplesamlphp.org/docs). When connecting to an Identity provider make sure all the required attributes are sent by the identity provider. See the section on [IdP attributes](../admin/reference/#idp_attributes) in the Reference Manual for details.
 
 * **NOTE**: It's outside the scope of this document to explain how to configure an authentication backend. The software has built-in support for [SAML](https://simplesamlphp.org/docs/stable/ldap:ldap), [LDAP](https://simplesamlphp.org/docs/stable/ldap:ldap), [Radius](https://simplesamlphp.org/docs/stable/radius:radius) and [many more](https://simplesamlphp.org/docs/stable/simplesamlphp-idp#section_2).
 

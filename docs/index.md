@@ -1,3 +1,7 @@
+---
+title: FileSender Documentation
+---
+
 # The problem
 
 You know the problem.  You need to send a file larger than a couple of megabytes to someone and the email comes back: attachment too big.  Then what?
@@ -18,7 +22,7 @@ The latest production release is [1.6.1, released on December 30th 2015](https:/
 
 ## Development status
 
-The version currently under development is version 2.0. The alpha version can be installed from Git, see [the documentation for 2.0](v2.0/install/README.md) for details. Check the [Release Schedule](https://app.assembla.com/wiki/show/file_sender/Release_Schedule) for the planning.
+The version currently under development is version 2.0. The alpha version can be installed from Git, see [the documentation for 2.0](v2.0/install/) for details. Check the [Release Schedule](https://app.assembla.com/wiki/show/file_sender/Release_Schedule) for the planning.
 
 ## Blog
 

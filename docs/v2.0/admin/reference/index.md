@@ -1,3 +1,7 @@
+---
+title: Reference guide
+---
+
 # 1. Key concepts
 
 FileSender 2.0 is built around the following concepts:

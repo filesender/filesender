@@ -1,3 +1,7 @@
+---
+title: Language handling and localisation reference
+---
+
 # Translation logic
 
 Filesender includes a translation engine which allows for flexible user language detection and customization.

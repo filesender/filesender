@@ -1,3 +1,7 @@
+---
+title: RESTful API
+---
+
 # Endpoints
 
 All data sent to the REST server (except if mentionned) must be valid JSON with a `Content-Type: application/json`.
