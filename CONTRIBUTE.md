@@ -10,7 +10,8 @@ quality standards and making it easier for your contributions to make through.
 
 Currently, the core team members are:
 
-		… todo …
+* Jan Meijer
+* Guido Aben
 
 We've been lucky to have the help of many people through the years. FileSender wouldn't have reached so far without
 them, and we want to thank them from here. Unfortunately, they are so many it is nearly impossible to mention all of
@@ -32,9 +33,7 @@ and the [pull requests](https://github.com/filesender/filesender/pulls) to verif
 New features are always welcome provided they will be useful to someone apart from yourself. Please take a look at the
 [list of issues](https://github.com/filesender/filesender/issues) to see what people are demanding.
 
-When contributing your code, please make sure to:
-
-		… coding style …
+When contributing your code, please follow these guidelines:
 
 * Do not include many changes in every commit. Commits should be focused and address one single problem or feature. By
 having **multiple, small commits** instead of few large ones, it is easier to track what you are doing, revert changes
