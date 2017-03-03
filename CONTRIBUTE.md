@@ -10,8 +10,11 @@ quality standards and making it easier for your contributions to make through.
 
 Currently, the core team members are:
 
-* Jan Meijer
-* Guido Aben
+* Chris Richter
+* [Guido Aben](https://github.com/guidoaben)
+* [Jan Meijer](https://github.com/meijer)
+* Wendy Mason
+* Xander Jansen
 
 We've been lucky to have the help of many people through the years. FileSender wouldn't have reached so far without
 them, and we want to thank them from here. Unfortunately, they are so many it is nearly impossible to mention all of
