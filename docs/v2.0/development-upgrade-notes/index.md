@@ -1,3 +1,7 @@
+---
+title: Development upgrade notes
+---
+
 Development notes on all changes that happened in version 2.0.  These will be taken as input for the upgrade notes which will be the condensed version.
 
 # Database handling
