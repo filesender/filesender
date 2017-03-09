@@ -58,7 +58,7 @@
              data-encrypted="<?php echo isset($transfer->options['encryption'])?$transfer->options['encryption']:'false'; ?>"
              data-mime="<?php echo $file->mime_type; ?>"
              data-name="<?php echo $file->name; ?>">
-            
+
             <span class="select clickable fa fa-2x fa-square-o" title="{tr:select_for_archive_download}"></span>
             <span class="name"><?php echo Utilities::sanitizeOutput($file->name) ?></span>
             <span class="size"><?php echo Utilities::formatBytes($file->size) ?></span>
@@ -68,6 +68,16 @@
                 {tr:download}
             </a>
             <span class="downloadprogress"></span>
+	<br>
+            <span class="directlink">
+    <?php
+	if (isSet($transfer->options['encryption']) && $transfer->options['encryption']) {
+		echo 'Direct Links are not avaliable for encrypted files';
+	} else {
+		echo 'Direct Link: '.Config::get('site_url').'download.php?token='.$token.'&files_ids='.$file->id;
+	}
+    ?>
+	    </span>
         </div>
     <?php } ?>
     <?php if(!isset($transfer->options['encryption']) || $transfer->options['encryption'] === false) { ?>
@@ -85,7 +95,7 @@
             </a>
             <span class="downloadprogress"></span>
         </div>
-    <?php } ?>    
+    <?php } ?>
         <div class="transfer" data-id="<?php echo $transfer->id ?>"></div>
     </div>
 </div>
