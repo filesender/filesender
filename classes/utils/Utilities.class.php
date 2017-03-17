@@ -102,11 +102,11 @@ class Utilities {
      */
     public static function generateRandomHexString($nearly = false) {
         // Random length
-        $len = mt_rand(16, 32);
+        $len =(unpack("N", openssl_random_pseudo_bytes(4)) % 16) + 16;// mt_rand(16, 32); //should consider random_int when php5 support ends
         
         // Random data
         $rnd = '';
-        for($i=0; $i<$len; $i++) $rnd .= sprintf('%04d', mt_rand(0, 9999));
+        for($i=0; $i<$len; $i++) $rnd .= sprintf('%04d', (unpack("N", openssl_random_pseudo_bytes(4)) % 9999)/* mt_rand(0, 9999)*/); //should consider random_int when php5 support ends
         
         // No need for an super-random, just hash
         if($nearly) return hash('sha1', $rnd);
