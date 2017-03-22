@@ -96,17 +96,34 @@ class Utilities {
     }
     
     /**
+     * Generate random number
+     * 
+     * @param int $min
+     * @param int $max
+     * 
+     * @return int
+     */
+    public static function random_number($min,$max) {
+        if (function_exists('random_int')) {
+            return random_int($min,$max);
+	} else if (function_exists('openssl_random_pseudo_bytes')) {
+            return (unpack("N", openssl_random_pseudo_bytes(4)) % ($max - $min)) + $min;
+	}
+	return mt_rand($min,$max);
+    }
+
+    /**
      * Generate (pseudo) (super-)random hex string
      * 
      * @return string
      */
     public static function generateRandomHexString($nearly = false) {
         // Random length
-        $len =(unpack("N", openssl_random_pseudo_bytes(4)) % 16) + 16;// mt_rand(16, 32); //should consider random_int when php5 support ends
+        $len = self::random_number(16, 32);
         
         // Random data
         $rnd = '';
-        for($i=0; $i<$len; $i++) $rnd .= sprintf('%04d', (unpack("N", openssl_random_pseudo_bytes(4)) % 9999)/* mt_rand(0, 9999)*/); //should consider random_int when php5 support ends
+        for($i=0; $i<$len; $i++) $rnd .= sprintf('%04d', self::random_number(0, 9999));
         
         // No need for an super-random, just hash
         if($nearly) return hash('sha1', $rnd);
