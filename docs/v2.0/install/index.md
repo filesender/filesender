@@ -192,7 +192,8 @@ On Debian, run:
 
 Create the filesender database:
 
-	mysql -u root -p CREATE DATABASE `filesender` DEFAULT CHARACTER SET utf8;
+	mysql -u root -p
+	CREATE DATABASE `filesender` DEFAULT CHARACTER SET utf8;
 	GRANT USAGE ON *.* TO 'filesender'@'localhost' IDENTIFIED BY '<your password>';
 	GRANT CREATE, ALTER, SELECT, INSERT, UPDATE, DELETE ON `filesender`.* TO 'filesender'@'localhost';
 	FLUSH PRIVILEGES;
