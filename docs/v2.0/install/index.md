@@ -72,7 +72,7 @@ On RedHat/CentOS, run:
 	chgrp apache config/config.php
 	semanage fcontext -a -t httpd_sys_content_t '/opt/filesender(/.*)?'
 	semanage fcontext -a -t httpd_sys_rw_content_t '/opt/filesender/(log|tmp|files)(/.*)?'
-	setsebool httpd_can_sendmail on
+	setsebool -P httpd_can_sendmail on
 	restorecon -R /opt/filesender
 
 On Debian, run:
@@ -82,7 +82,7 @@ On Debian, run:
 
 * **NOTE**: We ship the FileSender tarball with `config_sample.php` rather than `config.php` to make life easier when building RPMs and DEBs.
 * **NOTE**: If you use NFS storage for user files on RedHat/CentOS, mount it with the following option: `context=system_u:object_r:httpd_sys_rw_content_t:s0`.
-* **DO NOT** enable `httpd_use_nfs`. If you did so before, roll back using `setsebool httpd_use_nfs off`.
+* **DO NOT** enable `httpd_use_nfs`. If you did so before, roll back using `setsebool -P httpd_use_nfs off`.
 
 # Step 3 - Install and configure SimpleSAMLphp
 
@@ -290,7 +290,7 @@ If you use RedHat/CentOS, you have SElinux installed. SElinux protects your syst
 
 If you want to store files on another location, set the context of this location to `httpd_sys_rw_content_t`, otherwise FileSender will fail trying to write there. If the other location is on an NFS share, be sure to set the following mount flag:
 
-	context=system_u:object_r:httpd_sys_rw_content_t:s0
+* `context=system_u:object_r:httpd_sys_rw_content_t:s0`
 
 Example `/etc/fstab` line:
 
@@ -302,20 +302,20 @@ Example `/etc/fstab` line:
 
 MUST be on for Apache to be able to send mail.
 
-	setsebool httpd_can_sendmail on
+* `setsebool -P httpd_can_sendmail on`
 
 #### httpd_use_nfs
 
 MUST be off, use `context=system_u:object_r:httpd_sys_rw_content_t:s0` as a mount option instead if you use NFS.
 
-	setsebool httpd_use_nfs off
+* `setsebool -P httpd_use_nfs off`
 
 #### httpd_can_network_connect_db
 
 MAY be on, if you do not run the database on the local host.
 
-	setsebool httpd_can_network_connect_db on
-	setsebool httpd_can_network_connect_db off
+* `setsebool -P httpd_can_network_connect_db on` (database is on another host)
+* `setsebool -P httpd_can_network_connect_db off` (database is on localhost)
 
 ## HTTPS Only
 
