@@ -104,7 +104,7 @@ class Guest extends DBObject {
      * Set selectors
      */
     const AVAILABLE = "status = 'available' ORDER BY created DESC";
-    const EXPIRED = "expires < :date ORDER BY expires ASC";
+    const EXPIRED = "expires <= :date ORDER BY expires ASC";
     const FROM_USER = "user_id = :user_id AND status = 'available' ORDER BY created DESC";
     
     /**

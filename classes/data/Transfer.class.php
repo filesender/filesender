@@ -108,9 +108,9 @@ class Transfer extends DBObject {
     const UPLOADING = "status = 'uploading' ORDER BY created DESC";
     const AVAILABLE = "status = 'available' ORDER BY created DESC";
     const CLOSED = "status = 'closed' ORDER BY created DESC";
-    const EXPIRED = "expires < :date ORDER BY expires ASC";
+    const EXPIRED = "expires <= :date ORDER BY expires ASC";
     const FAILED = "created < :date AND (status = 'created' OR status = 'started' OR status = 'uploading') ORDER BY expires ASC";
-    const AUDITLOG_EXPIRED = "expires < :date ORDER BY expires ASC";
+    const AUDITLOG_EXPIRED = "expires <= :date ORDER BY expires ASC";
     const FROM_USER = "user_id = :user_id AND status='available' ORDER BY created DESC";
     const FROM_USER_CLOSED = "user_id = :user_id AND status='closed' ORDER BY created DESC";
     const FROM_GUEST = "guest_id = :guest_id AND status='available' ORDER BY created DESC";
