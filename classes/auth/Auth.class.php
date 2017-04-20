@@ -112,7 +112,7 @@ class Auth {
 
             // If no session has been made at this point, we make one ourselves.
             // Only types 'guest' and 'sp' are browsers.
-            if(in_array(self::$type, array('sp', 'guest'))) session_start();
+            if(in_array(self::$type, array('sp', 'guest')) && self::isSessionStarted() === false ) session_start();
             
             if(self::$attributes && array_key_exists('uid', self::$attributes)) {
                 $user_filter = Config::get('auth_user_filter');
@@ -276,5 +276,18 @@ class Auth {
      */
     public static function isGuest() {
         return self::$type == 'guest';
+    }
+
+    /**
+     * Tells if a session is started.
+     *
+     * @return bool
+     */
+     public static function isSessionStarted() {
+        if ( version_compare(phpversion(), '5.4.0', '>=') ) {
+            return session_status() === PHP_SESSION_ACTIVE ? true : false;
+        } else {
+            return session_id() === '' ? false : true;
+        }
     }
 }

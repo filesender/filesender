@@ -105,7 +105,8 @@ class Guest extends DBObject {
      */
     const AVAILABLE = "status = 'available' ORDER BY created DESC";
     const EXPIRED = "expires < :date ORDER BY expires ASC";
-    const FROM_USER = "user_id = :user_id AND status = 'available' ORDER BY created DESC";
+    const FROM_USER = "user_id = :user_id AND expires > :date ORDER BY created DESC";
+    const FROM_USER_AVAILABLE = "user_id = :user_id AND expires > :date AND status = 'available' ORDER BY created DESC";
     
     /**
      * Properties
@@ -271,7 +272,20 @@ class Guest extends DBObject {
     public static function fromUser($user) {
         if($user instanceof User) $user = $user->id;
         
-        return self::all(self::FROM_USER, array(':user_id' => $user));
+        return self::all(self::FROM_USER, array(':user_id' => $user, ':date' => date('Y-m-d')));
+    }
+
+    /**
+     * Get available guests from user
+     * 
+     * @param mixed $user User or user id
+     * 
+     * @return array of Guests
+     */
+    public static function fromUserAvailable($user) {
+        if($user instanceof User) $user = $user->id;
+        
+        return self::all(self::FROM_USER_AVAILABLE, array(':user_id' => $user, ':date' => date('Y-m-d')));
     }
     
     /**
@@ -368,7 +382,7 @@ class Guest extends DBObject {
         );
         
         // Sending notification to recipient
-        if($this->hasOption(GuestOptions::EMAIL_GUEST_EXPIRED))
+        if($this->getOption(GuestOptions::EMAIL_GUEST_EXPIRED))
             TranslatableEmail::quickSend($manualy ? 'guest_cancelled' : 'guest_expired', $this);
         
         Logger::info($this.' '.($manualy ? 'removed' : 'expired'));
