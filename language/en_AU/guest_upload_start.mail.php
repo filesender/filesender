@@ -1,10 +1,10 @@
-subject: Guest start to upload files
+subject: Guest started to upload files
 
 {alternative:plain}
 
 Dear Sir or Madam,
 
-The following guest started to upload files from your voucher :
+The following guest started to upload files from your voucher:
 
 Guest: {guest.email}
 Voucher link: {cfg:site_url}?s=upload&vid={guest.token}
@@ -21,7 +21,7 @@ Best regards,
 </p>
 
 <p>
-    The following guest started to upload files from your voucher :
+    The following guest started to upload files from your voucher:
 </p>
 
 <table rules="rows">

@@ -382,7 +382,7 @@ class Guest extends DBObject {
         );
         
         // Sending notification to recipient
-        if($this->hasOption(GuestOptions::EMAIL_GUEST_EXPIRED))
+        if($this->getOption(GuestOptions::EMAIL_GUEST_EXPIRED))
             TranslatableEmail::quickSend($manualy ? 'guest_cancelled' : 'guest_expired', $this);
         
         Logger::info($this.' '.($manualy ? 'removed' : 'expired'));
