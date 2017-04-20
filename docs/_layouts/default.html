@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<title>{{ page.title }}</title>
+<link rel="stylesheet" href="{{site.baseurl}}/assets/css/bootstrap.min.css" media="screen">
+<style type="text/css">
+nav > ul {
+	padding-left: 0;
+}
+nav li ul {
+	padding-left: 1em;
+}
+nav li {
+	list-style: none;
+	margin: 1em 0;
+}
+@media print {
+	.jumbotron, nav {
+		display: none;
+	}
+}
+</style>
+
+{% include header.html %}
+
+<div class="container">
+	<div class="row">
+		<div class="col-lg-9 col-md-9 col-sm-8 col-xs-12 push-lg-3 push-md-3 push-sm-4">
+			<main>
+				{{ content }}
+			</main>
+		</div>
+
+		<nav class="pull-lg-9 pull-md-9 pull-sm-8 col-lg-3 col-md-3 col-sm-4 col-xs-12">
+			{% include menu.html %}
+		</nav>
+	</div>
+</div>
