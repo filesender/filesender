@@ -352,9 +352,16 @@ class RestEndpointTransfer extends RestEndpoint {
             foreach(Transfer::allOptions() as $name => $dfn)  {
                 $value = $dfn['default'];
                 
-                if(in_array($name, $allowed_options) && $data->options->exists($name))
-                    $value = $data->options->$name;
-                
+                if (in_array($name, $allowed_options)) {
+                    if (method_exists($data->options,'exists')) {
+                        if ($data->options->exists($name))
+                            $value = $data->options->$name;
+                    } else {
+                        if (array_search($name,$data->options) !== FALSE)
+                            $value = 1;
+                    }
+                }
+
                 $options[$name] = $value;
             }
             
