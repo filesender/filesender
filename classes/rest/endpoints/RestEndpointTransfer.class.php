@@ -451,15 +451,21 @@ class RestEndpointTransfer extends RestEndpoint {
             // Get banned extensions
             $banned_exts = Config::get('ban_extension');
             if(is_string($banned_exts)) $banned_exts = array_map('trim', explode(',', $banned_exts));
+            $extension_whitelist_regex = Config::get('extension_whitelist_regex');
             
             // Add files after checking that they do not have a banned extension, fail otherwise
             $files_cids = array();
             foreach($data->files as $filedata) {
                 $ext = pathinfo($filedata->name, PATHINFO_EXTENSION);
-                
+
+		if( $extension_whitelist_regex != ''
+                    && preg_match( '/' . $extension_whitelist_regex . '/', $ext ) === 0 ) {
+		    throw new FileExtensionNotAllowedException($ext);
+		}
+		    
                 if(!is_null($banned_exts) && in_array($ext, $banned_exts))
-                    throw new FileExtensionNotAllowedException($ext);
-                
+		    throw new FileExtensionNotAllowedException($ext);
+                    
                 $file = $transfer->addFile($filedata->name, $filedata->size, $filedata->mime_type);
                 $files_cids[$file->id] = $filedata->cid;
             }
