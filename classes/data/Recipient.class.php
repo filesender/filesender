@@ -151,7 +151,6 @@ class Recipient extends DBObject {
         $recipient->transfer_id = $transfer->id;
         $recipient->transferCache = $transfer;
         
-	Logger::error('recipient::create email: ' . $email);
         if($email && !Utilities::validateEmail($email)) throw new BadEmailException($email);
         $recipient->email = $email;
         
