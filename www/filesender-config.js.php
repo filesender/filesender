@@ -39,6 +39,7 @@ require_once('../includes/init.php');
 header('Content-Type: text/javascript; charset=UTF-8');
 
 $banned = Config::get('ban_extension');
+$extension_whitelist_regex = Config::get('extension_whitelist_regex');
 
 $amc = Config::get('autocomplete_min_characters');
 
@@ -61,6 +62,7 @@ window.filesender.config = {
     max_transfer_files: <?php echo Config::get('max_transfer_files') ?>,
     
     ban_extension: <?php echo is_string($banned) ? "'".$banned."'" : 'null' ?>,
+    extension_whitelist_regex: <?php echo is_string($extension_whitelist_regex) ? "'".$extension_whitelist_regex."'" : 'null' ?>,
     
     max_transfer_recipients: <?php echo Config::get('max_transfer_recipients') ?>,
     max_guest_recipients: <?php echo Config::get('max_guest_recipients') ?>,
