@@ -94,6 +94,17 @@ class Utilities {
     public static function isValidUID($uid) {
         return preg_match('/^[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}$/i', $uid);
     }
+
+    public static function validateEmail( $email ) {
+        $ret = filter_var( $email, FILTER_VALIDATE_EMAIL );
+	if( !$ret )
+	    return FALSE;
+        if(preg_match('/"@/', $email))
+	    return FALSE;
+        if(preg_match('/\\\\/', $email))
+	    return FALSE;
+	return $ret;
+    }
     
     /**
      * Generate (pseudo) (super-)random hex string

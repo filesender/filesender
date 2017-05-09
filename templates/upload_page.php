@@ -80,11 +80,11 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
                         
                         <select name="from">
                             <?php foreach ($emails as $email) { ?>
-                            <option><?php echo $email ?></option>
+                            <option><?php echo Template::sanitizeOutputEmail($email) ?></option>
                             <?php } ?>
                         </select>
                         
-                        <?php } else echo $emails[0] ?>
+                        <?php } else echo Template::sanitizeOutputEmail($emails[0]) ?>
                     </div>
                     
                     <?php if($allow_recipients) { ?>

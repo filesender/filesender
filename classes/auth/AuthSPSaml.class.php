@@ -110,7 +110,7 @@ class AuthSPSaml {
             if(!$attributes['email']) throw new AuthSPMissingAttributeException('email');
             
             foreach($attributes['email'] as $email) {
-                if(!filter_var($email, FILTER_VALIDATE_EMAIL)) throw new AuthSPBadAttributeException('email');
+                if(!Utilities::validateEmail($email)) throw new AuthSPBadAttributeException('email');
             }
             
             if(!$attributes['name']) $attributes['name'] = substr($attributes['email'][0], 0, strpos($attributes['email'][0], '@'));
@@ -129,7 +129,7 @@ class AuthSPSaml {
                     } else {
                         $value = null;
                     }
-                        
+                    
                     $attributes['additional'][is_numeric($key) ? $from : $key] = $value;
                 }
             }
@@ -198,7 +198,7 @@ class AuthSPSaml {
                 'name_attribute',
                 'email_attribute'
             ) as $key) if(!array_key_exists($key, self::$config))
-                throw new ConfigMissingParameterException('auth_sp_saml_'.$key);
+            throw new ConfigMissingParameterException('auth_sp_saml_'.$key);
         }
         
         if(is_null(self::$simplesamlphp_auth_simple)) {

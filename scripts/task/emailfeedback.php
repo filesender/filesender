@@ -209,7 +209,7 @@ while($inputs) {
                         $support = Config::get('help_url');
                         if(substr($support, 0, 7) == 'mailto:') {
                             $support = substr($support, 7);
-                            if(!filter_var($support, FILTER_VALIDATE_EMAIL)) throw new BadEmailException($support);
+                            if(!Utilities::validateEmail($support)) throw new BadEmailException($support);
                             
                             $mail = new ApplicationMail(Lang::translateEmail('email_feedback')->r($args));
                             $mail->setDebugTemplate('email_feedback');
@@ -217,7 +217,7 @@ while($inputs) {
                         } else throw new ConfigBadParameterException('help_url');
                         
                     default:
-                        if(filter_var($relay_to, FILTER_VALIDATE_EMAIL)) {
+                        if(Utilities::validateEmail($relay_to)) {
                             $mail = new ApplicationMail(Lang::translateEmail('email_feedback')->r($args));
                             $mail->setDebugTemplate('email_feedback');
                             $mail->to($relay_to);

@@ -150,7 +150,7 @@ try {
     // Sender address
     $from = $getarg('from');
     if(!$from) $from = $uid;
-    if(!filter_var($from, FILTER_VALIDATE_EMAIL))
+    if(!Utilities::validateEmail($from))
         throw new Exception('Not a valid from (email address expected) : '.$from);
     $verbose('From : '.$from);
     
@@ -181,7 +181,7 @@ try {
     // Recipients
     $recipients = $getarg('recipient', true, true);
     foreach($recipients as $recipient)
-        if(!filter_var($recipient, FILTER_VALIDATE_EMAIL))
+        if(!Utilities::validateEmail($recipient))
             throw new Exception('Not a valid recipient (email address expected) : '.$recipient);
     
     if(count($recipients) > Config::get('max_transfer_recipients'))
