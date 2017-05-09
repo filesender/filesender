@@ -6,6 +6,7 @@
         "phpunit/phpunit-selenium": "2.0.2",
         "phpunit/phpunit-mock-objects": "2.3.8",
         "phpunit/php-code-coverage": "2.2.4",
-        "sebastian/version": "1.0.6"
+        "sebastian/version": "1.0.6",
+        "paragonie/random_compat": "^2.0"
     }
 }

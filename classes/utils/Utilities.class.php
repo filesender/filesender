@@ -113,11 +113,11 @@ class Utilities {
      */
     public static function generateRandomHexString($nearly = false) {
         // Random length
-        $len = mt_rand(16, 32);
-        
+        $len = random_int(16, 32);
+
         // Random data
         $rnd = '';
-        for($i=0; $i<$len; $i++) $rnd .= sprintf('%04d', mt_rand(0, 9999));
+        for($i=0; $i<$len; $i++) $rnd .= sprintf('%04d', random_int(0, 9999));
         
         // No need for an super-random, just hash
         if($nearly) return hash('sha1', $rnd);
