@@ -214,8 +214,7 @@ filesender.ui.recipients = {
         };
         
         var too_much = null;
-//        if(email.match(/[,;\s]/)) { // Multiple values
-        if(email.match(/[,]/)) { // Multiple values
+        if(email.match(/[,;\s]/)) { // Multiple values
             email = email.split(/[,;\s]/);
             var invalid = [];
             for(var i=0; i<email.length; i++) {
