@@ -533,7 +533,7 @@ class Guest extends DBObject {
             $this->status = (string)$value;
             
         }else if($property == 'user_email') {
-            if(!filter_var($value, FILTER_VALIDATE_EMAIL)) throw new BadEmailException($value);
+            if(!Utilities::validateEmail($value)) throw new BadEmailException($value);
             $this->user_email = (string)$value;
             
         }else if($property == 'subject') {
@@ -552,7 +552,7 @@ class Guest extends DBObject {
             $this->transfer_count = (int)$value;
             
         }else if($property == 'email') {
-            if(!filter_var($value, FILTER_VALIDATE_EMAIL)) throw new BadEmailException($value);
+            if(!Utilities::validateEmail($value)) throw new BadEmailException($value);
             $this->email = (string)$value;
             
         }else if($property == 'expires' || $property == 'last_activity') {

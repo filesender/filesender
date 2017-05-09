@@ -4,9 +4,9 @@
     {tr:created} : <?php echo Utilities::formatDate($report->transfer->created) ?><br />
     {tr:expires} : <?php echo Utilities::formatDate($report->transfer->expires) ?><br />
     {tr:size} : <?php echo Utilities::formatBytes($report->transfer->size) ?><br />
-    {tr:with_identity} : <?php echo Utilities::sanitizeOutput($report->transfer->user_email) ?><br />
+    {tr:with_identity} : <?php echo Template::sanitizeOutputEmail($report->transfer->user_email) ?><br />
     <?php if($report->transfer->guest) { ?>
-    {tr:guest} : <?php echo Utilities::sanitizeOutput($report->transfer->guest->email) ?><br />
+    {tr:guest} : <?php echo Template::sanitizeOutputEmail($report->transfer->guest->email) ?><br />
     <?php } ?>
     {tr:options} : <?php echo implode(', ', array_map(function($o) {
         return Lang::tr($o);

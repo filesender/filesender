@@ -151,7 +151,7 @@ class Recipient extends DBObject {
         $recipient->transfer_id = $transfer->id;
         $recipient->transferCache = $transfer;
         
-        if($email && !filter_var($email, FILTER_VALIDATE_EMAIL)) throw new BadEmailException($email);
+        if($email && !Utilities::validateEmail($email)) throw new BadEmailException($email);
         $recipient->email = $email;
         
         $recipient->created = time();

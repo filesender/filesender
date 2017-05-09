@@ -672,7 +672,7 @@ class Transfer extends DBObject {
             $this->status = (string)$value;
             
         }else if($property == 'user_email') {
-            if(!filter_var($value, FILTER_VALIDATE_EMAIL)) throw new BadEmailException($value);
+            if(!Utilities::validateEmail($value)) throw new BadEmailException($value);
             $this->user_email = (string)$value;
             
         }else if($property == 'guest') {
