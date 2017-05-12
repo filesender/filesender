@@ -725,7 +725,11 @@ class Transfer extends DBObject {
             
             if(count($matches)) return array_shift($matches);
         }
-        
+
+        if( !Utilities::isValidFileName( $name )) {
+            throw new TransferFileNameInvalidException( $name );
+        }
+
         // Create and save new recipient
         $file = File::create($this);
         $file->name = $name;

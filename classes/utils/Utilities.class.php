@@ -107,6 +107,18 @@ class Utilities {
     }
     
     /**
+     * Validates a filename
+     * 
+     * @param string $filename
+     * 
+     * @return bool
+     */
+    public static function isValidFileName($filename) {
+        return preg_match('/' .  Config::get('valid_filename_regex') . '/', $filename);
+    }
+
+
+    /*
      * Generate (pseudo) (super-)random hex string
      * 
      * @return string
