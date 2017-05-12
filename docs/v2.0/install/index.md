@@ -88,21 +88,22 @@ On Debian, run:
 
 SimpleSAMLphp helps you use nearly any authentication mechanism you can imagine. Following these instructions will set you up with a SimpleSAMLphp installation that uses Feide RnD's OpenIdP to authenticate users. When you move to a production service you probably want to change that to only support authentication sources of your choice.
 
-[Download SimpleSamlPhp 1.14.2](https://simplesamlphp.org/res/downloads/simplesamlphp-1.14.2.tar.gz). Other [(later or older) versions](https://simplesamlphp.org/archive) will probably work but we tested with version 1.14.2.
+[Download SimpleSamlPhp](https://simplesamlphp.org/download).
+Other [(later or older) versions](https://simplesamlphp.org/archive) will probably work. For the FileSender 2.0 release we tested with version 1.14.13.
 
 	cd /root
 	mkdir filesender
 	cd filesender
-	wget https://simplesamlphp.org/res/downloads/simplesamlphp-1.14.2.tar.gz
+	wget https://simplesamlphp.org/res/downloads/simplesamlphp-1.14.13.tar.gz
 
-* **NOTE**: you will of course remember to check [the sha1 hash of the tar file](https://simplesamlphp.org/archive), right?
+* **NOTE**: you will of course remember to check [the sha256 hash of the tar file](https://simplesamlphp.org/archive), right?
 
 Extract it in a suitable directory and create symlink:
 
 	mkdir /opt/filesender/
 	cd /opt/filesender
-	tar xvzf /root/filesender/simplesamlphp-1.14.2.tar.gz
-	ln -s simplesamlphp-1.14.2/ simplesaml
+	tar xvzf /root/filesender/simplesamlphp-1.14.13.tar.gz
+	ln -s simplesamlphp-1.14.13/ simplesaml
 
 * **SECURITY NOTE**: we only want *the user interface files* to be directly accessible for the world through the web server, not any of the other files. We will not extract the SimpleSAMLphp package in the `/var/www` directory (the standard Apache document root) but rather in a specific `/opt` tree. We'll point to the SimpleSAML web root with a web server alias.
 
