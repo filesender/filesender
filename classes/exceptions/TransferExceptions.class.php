@@ -68,6 +68,21 @@ class TransferBadStatusException extends DetailedException {
 }
 
 /**
+ * File name has bad characters
+ */
+class TransferFileNameInvalidException extends DetailedException {
+    /**
+     * Constructor
+     * 
+     * @param int $wanted
+     * @param int $max
+     */
+    public function __construct($name) {
+        parent::__construct('transfer_file_name_invalid', array('name' => $name));
+    }
+}
+
+/**
  * Missing too many recipients exception
  */
 class TransferTooManyRecipientsException extends DetailedException {

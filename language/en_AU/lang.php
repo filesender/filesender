@@ -550,6 +550,7 @@ $lang['transfer_user_quota_exceeded'] = 'User quota exceeded';
 $lang['transfer_expiry_extension_not_allowed'] = 'Transfer expiry date extension is not allowed';
 $lang['transfer_expiry_extension_count_exceeded'] = 'Transfer expiry date extension maximum reached';
 $lang['transfer_files_incomplete'] = 'Transfer\'s files are not done uploading';
+$lang['transfer_file_name_invalid'] = 'File name contains bad characters';
 
 // User related exceptions
 $lang['user_not_found'] = 'User not found';

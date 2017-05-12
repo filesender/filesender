@@ -117,7 +117,9 @@ $default = array(
     'storage_usage_warning' => 20,
     
     'report_format' => ReportFormats::INLINE,
-    
+
+    'valid_filename_regex' => '^[a-zA-Z0-9_\-\.,;:!@#$%^&*)(\]\[_-]+$',
+
     'user_page' => false,
     //'user_page' => array(
     //    'lang' => 'write',
