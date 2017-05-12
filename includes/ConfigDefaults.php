@@ -118,7 +118,7 @@ $default = array(
     
     'report_format' => ReportFormats::INLINE,
 
-    'valid_filename_regex' => '^[a-zA-Z0-9_\-\.,;:!@#$%^&*)(\]\[_-]+$',
+    'valid_filename_regex' => '^[\p{L}\p{N}_\-\.,;:!@#$%^&*)(\]\[_-]+$',
 
     'user_page' => false,
     //'user_page' => array(
