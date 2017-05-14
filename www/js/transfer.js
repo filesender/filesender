@@ -161,6 +161,16 @@ window.filesender.transfer = function() {
             errorhandler({message: 'transfer_too_many_files', details: {max: filesender.config.max_transfer_files}});
             return false;
         }
+
+        if (typeof filesender.config.valid_filename_regex == 'string') {
+            var regexstr = filesender.config.valid_filename_regex;
+            if (!XRegExp(regexstr).test(file.name)) {
+                errorhandler({ message: 'invalid_file_name2',
+                               details: { filename: file.name }});
+                
+                return false;
+            }
+        }
         
         if (!/^[^\\\/:;\*\?\"<>|]+(\.[^\\\/:;\*\?\"<>|]+)*$/.test(file.name)) {
             errorhandler({message: 'invalid_file_name', details: {filename: file.name}});
@@ -185,7 +195,7 @@ window.filesender.transfer = function() {
 
         if (typeof filesender.config.extension_whitelist_regex == 'string') {
             var extension_whitelist = filesender.config.extension_whitelist_regex;
-            regex = new RegExp(extension_whitelist);
+            var regex = new RegExp(extension_whitelist);
             var extension = file.name.split('.').pop();
             if (!extension.match(regex)) {
                 errorhandler({ message: 'banned_extension_includes_bad_characters',
@@ -196,7 +206,7 @@ window.filesender.transfer = function() {
                 return false;
             }
         }
-	
+        
         if (this.size + file.size > filesender.config.max_transfer_size) {
             errorhandler({message: 'transfer_maximum_size_exceeded', details: {size: file.size, max: filesender.config.max_transfer_size}});
             return false;
