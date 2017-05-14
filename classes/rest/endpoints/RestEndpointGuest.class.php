@@ -151,6 +151,12 @@ class RestEndpointGuest extends RestEndpoint {
         
         // Raw guest data
         $data = $this->request->input;
+
+        // Check Guest creation limits
+        $existingGuests = Guest::fromUserAvailable($user);
+        if( count($existingGuests) >= Config::get('guest_limit_per_user')) {
+            throw new UserHitGuestLimitException();
+        }
         
         // Create new guest object
         $guest = Guest::create($data->recipient, $data->from);
