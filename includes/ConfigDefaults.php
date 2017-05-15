@@ -118,7 +118,7 @@ $default = array(
     
     'report_format' => ReportFormats::INLINE,
 
-    'valid_filename_regex' => '^[\p{L}\p{N}_\-\.,;:!@#$%^&*)(\]\[_-]+$',
+    'valid_filename_regex' => '^[\\p{L}\\p{N}_\\.,;:!@#$%^&*)(\\]\\[_-]+$',
 
     'guest_limit_per_user' => 50,
     'guest_reminder_limit' => 50,
