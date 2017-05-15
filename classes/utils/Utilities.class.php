@@ -34,6 +34,8 @@
 if (!defined('FILESENDER_BASE'))
     die('Missing environment');
 
+require_once(FILESENDER_BASE.'/lib/random_compat/lib/random.php');
+
 /**
  * Utility functions holder
  */
@@ -153,7 +155,7 @@ class Utilities {
                 fclose($fh);
             } else throw new CoreCannotWriteFileException($sfile);
         }
-        
+        Logger::error('BBBBB generateRandomHexString() done.');
         // return hmac signature of random data with secret => super-random !
         return hash_hmac('sha1', $rnd, $secret);
     }
