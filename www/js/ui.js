@@ -508,6 +508,32 @@ window.filesender.ui = {
             bar.attr({title: lang.tr('user_quota')});
         });
     },
+
+    /**
+     * add a handler to show the error message invalidlabelobj when the text
+     * in inputtextareaobj matches the regular expression rexstr
+     * 
+     * @param inputtextareaobj input to attach check on
+     */
+    handleFlagInvalidOnRegexMatch: function(inputtextareaobj,invalidlabelobj,rexstr) {
+
+        if( rexstr.length ) {
+            banned = new RegExp(rexstr, 'g');
+        
+            inputtextareaobj.on('keyup', function(e) {
+                var v = $(this).val();
+                if (v.match(banned)) {
+                    $(this).addClass('invalid');
+                    invalidlabelobj.show();
+                }else{
+                    $(this).removeClass('invalid');
+                    invalidlabelobj.hide();
+                }
+            });
+        }
+    
+    },
+    
 };
 
 $(function() {

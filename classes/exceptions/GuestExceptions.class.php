@@ -51,6 +51,20 @@ class GuestNotFoundException extends DetailedException {
 }
 
 /**
+ * We filter out URLs in the personal message
+ */
+class GuestMessageBodyCanNotIncludeURLsException extends DetailedException {
+    /**
+     * Constructor
+     * 
+     * @param Transfer $transfer
+     */
+    public function __construct() {
+        parent::__construct('message_can_not_contain_urls');
+    }
+}
+
+/**
  * Bad status exception
  */
 class GuestBadStatusException extends DetailedException {

@@ -435,7 +435,12 @@ class RestEndpointTransfer extends RestEndpoint {
             
             // Set additionnal data
             if($data->subject) $transfer->subject = $data->subject;
-            if($data->message) $transfer->message = $data->message;
+            if($data->message) {
+                $transfer->message = $data->message;
+                if(!Utilities::isValidMessage($transfer->message)) {
+                   throw new TransferMessageBodyCanNotIncludeURLsException();
+                }
+            }
             if(Config::get('transfer_recipients_lang_selector_enabled') && $data->lang) $transfer->lang = $data->lang;
             
             // Guest owner decides about guest options

@@ -85,7 +85,20 @@ class Utilities {
         
         return substr($rnd, 0, 8).'-'.substr($rnd, 8, 4).'-'.substr($rnd, 12, 4).'-'.substr($rnd, 16, 4).'-'.substr($rnd, 20, 12);
     }
+
+    /**
+     * Validates a personal message
+     *
+     */
+    public static function isValidMessage($msg) {
+        $r = Config::get('message_can_not_contain_urls_regex');
+        if($r.length && preg_match('/' . $r . '/', $msg )) {
+            return false;
+        }
+        return true;
+    }
     
+
     /**
      * Validates unique ID format
      * 

@@ -80,3 +80,4 @@ class MailAttachmentNoContentException extends DetailedException {
         );
     }
 }
+
