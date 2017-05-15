@@ -68,6 +68,22 @@ class GuestBadStatusException extends DetailedException {
 }
 
 /**
+ * Hit the limit of reminders
+ */
+class GuestReminderLimitReachedException extends DetailedException {
+    /**
+     * Constructor
+     * 
+     * @param string $status the bad status
+     */
+    public function __construct() {
+        parent::__construct(
+            'guest_reminder_limit_reached'
+        );
+    }
+}
+
+/**
  * Generic identified guest exception
  */
 class GuestException extends DetailedException {
