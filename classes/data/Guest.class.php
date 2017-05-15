@@ -97,6 +97,13 @@ class Guest extends DBObject {
         ),
         'last_activity' => array(
             'type' => 'datetime'
+        ),
+        'reminder_count' => array(
+            'type' => 'uint',
+            'size' => 'medium'
+        ),
+        'last_reminder' => array(
+            'type' => 'datetime'
         )
     );
     
@@ -125,7 +132,9 @@ class Guest extends DBObject {
     protected $created = 0;
     protected $expires = 0;
     protected $last_activity = 0;
-    
+    protected $reminder_count = 0;
+    protected $last_reminder = 0;
+
     /**
      * Cache
      */
@@ -360,8 +369,16 @@ class Guest extends DBObject {
      * Send reminder to recipients
      */
     public function remind() {
-        TranslatableEmail::quickSend('guest_reminder', $this);
         
+        // Limit reminders
+        if( $this->reminder_count >= Config::get('guest_reminder_limit')) {
+            throw new GuestReminderLimitReachedException();
+        }
+        $this->reminder_count++;
+        $this->save();
+        
+        TranslatableEmail::quickSend('guest_reminder', $this);
+            
         Logger::info($this.' reminded');
     }
     

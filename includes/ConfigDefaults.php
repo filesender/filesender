@@ -120,6 +120,10 @@ $default = array(
 
     'valid_filename_regex' => '^[\\p{L}\\p{N}_\\.,;:!@#$%^&*)(\\]\\[_-]+$',
 
+    'guest_limit_per_user' => 50,
+    'guest_reminder_limit' => 50,
+    'recipient_reminder_limit' => 50,
+
     'user_page' => false,
     //'user_page' => array(
     //    'lang' => 'write',
