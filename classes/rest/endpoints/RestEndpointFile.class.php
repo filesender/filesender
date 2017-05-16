@@ -161,6 +161,15 @@ class RestEndpointFile extends RestEndpoint {
         
         // Get chunk data
         $data = $this->request->input;
+
+        // File's Transfer must be uploading or just started, fail otherwise
+        if(
+            $file->transfer->status != TransferStatuses::STARTED &&
+            $file->transfer->status != TransferStatuses::UPLOADING
+        ) {
+            throw new RestCannotAddDataToCompleteTransferException('File', $file->id);
+        }
+
         
         if($mode == 'whole') {
             // Process uploaded file, split into chunks and push to storage
@@ -333,7 +342,6 @@ class RestEndpointFile extends RestEndpoint {
         
         }else if(is_null($mode) && $data && $data->complete) {
             // Client signals that the file's body has been fully uploaded, flag the file as complete
-            
             $file->complete();
             
             return true;
