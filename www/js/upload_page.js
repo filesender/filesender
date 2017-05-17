@@ -684,6 +684,12 @@ $(function() {
         var files = filesender.ui.nodes.files.input[0].files;
         if(files && files.length) filesender.ui.files.add(files);
     }
+
+    // validate message as it is typed
+    window.filesender.ui.handleFlagInvalidOnRegexMatch(
+        filesender.ui.nodes.message,
+        $('#message_can_not_contain_urls'),
+        filesender.config.message_can_not_contain_urls_regex );
     
     // Setup date picker
     $.datepicker.setDefaults({

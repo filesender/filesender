@@ -255,6 +255,7 @@ $lang['guest_deleted'] = 'Guest deleted';
 $lang['guest_reminded'] = 'Guest reminded';
 $lang['confirm_delete_guest'] = 'Do you really want to delete this guest (the recipient won\'t be able to upload files anymore) ?';
 $lang['confirm_remind_guest'] = 'Do you really want to send a reminder to this guest ?';
+$lang['message_can_not_contain_urls'] = 'Message can not contain things that look like URLs';
 
 
 /**

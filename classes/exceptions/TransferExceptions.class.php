@@ -224,6 +224,20 @@ class TransferFilesIncompleteException extends TransferException {
 }
 
 /**
+ * We filter out URLs in the personal message
+ */
+class TransferMessageBodyCanNotIncludeURLsException extends TransferException {
+    /**
+     * Constructor
+     * 
+     * @param Transfer $transfer
+     */
+    public function __construct($transfer) {
+        parent::__construct($transfer, 'message_can_not_contain_urls');
+    }
+}
+
+/**
  * Expired
  */
 class TransferExpiredException extends TransferException {
@@ -278,3 +292,4 @@ class TransferExpiryExtensionCountExceededException extends TransferException {
         parent::__construct($transfer, 'expiry_extension_count_exceeded');
     }
 }
+

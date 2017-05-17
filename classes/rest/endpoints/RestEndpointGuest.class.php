@@ -163,7 +163,12 @@ class RestEndpointGuest extends RestEndpoint {
         
         // Set provided metadata
         if($data->subject) $guest->subject = $data->subject;
-        if($data->message) $guest->message = $data->message;
+        if($data->message) {
+            $guest->message = $data->message;
+            if(!Utilities::isValidMessage($guest->message)) {
+                throw new GuestMessageBodyCanNotIncludeURLsException();
+            }
+        }
         
         // Allow any options for remote applications, check against allowed options otherwise
         $allowed_options = array_keys(Auth::isRemoteApplication() ? Guest::allOptions() : Guest::availableOptions());
