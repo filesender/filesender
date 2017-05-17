@@ -119,6 +119,8 @@ $default = array(
     'report_format' => ReportFormats::INLINE,
 
     'valid_filename_regex' => '^[\\p{L}\\p{N}_\\.,;:!@#$%^&*)(\\]\\[_-]+$',
+    'message_can_not_contain_urls_regex' => '',
+//    'message_can_not_contain_urls_regex' => '(ftp:|http[s]*:|[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})',
 
     'guest_limit_per_user' => 50,
     'guest_reminder_limit' => 50,

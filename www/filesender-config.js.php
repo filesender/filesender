@@ -100,7 +100,8 @@ window.filesender.config = {
         enabled: <?php echo Config::get('autocomplete') ? 'true' : 'false' ?>,
         min_characters: <?php echo (is_int($amc) && $amc) ? $amc : 3 ?>
     },
-    
+    message_can_not_contain_urls_regex: '<?php $v = Config::get('message_can_not_contain_urls_regex'); $v = str_replace('\\', '\\\\', $v); echo $v; ?>',
+
     auditlog_lifetime: <?php $lt = Config::get('auditlog_lifetime'); echo is_null($lt) ? 'null' : $lt ?>,
     
     logon_url: '<?php echo AuthSP::logonURL() ?>',
