@@ -617,22 +617,10 @@ class RestEndpointTransfer extends RestEndpoint {
         
         $transfer = Transfer::fromId($id);
         
-        // Check access rights depending on config
-        if($security == 'key') {
-            try {
-                if(!array_key_exists('key', $_GET)) throw new Exception();
-                if(!$_GET['key']) throw new Exception();
-                if(!File::fromUid($_GET['key'])->transfer->is($transfer)) throw new Exception();
-                if(!in_array($transfer->status, array(TransferStatuses::CREATED, TransferStatuses::STARTED, TransferStatuses::UPLOADING))) throw new Exception();
-            } catch(Exception $e) {
-                throw new RestAuthenticationRequiredException();
-            }
-        }else{
-            $user = Auth::user();
+        $user = Auth::user();
             
-            if(!$transfer->isOwner($user) && !Auth::isAdmin())
-                throw new RestOwnershipRequiredException($user->id, 'transfer = '.$transfer->id);
-        }
+        if(!$transfer->isOwner($user) && !Auth::isAdmin())
+            throw new RestOwnershipRequiredException($user->id, 'transfer = '.$transfer->id);
         
         // Delete the transfer (not recoverable)
         $transfer->delete();
