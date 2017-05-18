@@ -1083,4 +1083,33 @@ class Transfer extends DBObject {
         
         Logger::info('Mail#'.$translation_id.' sent to '.$recipient);
     }
+
+    /**
+     * uploading has completed. This is true for complete and closed 
+     * transfers and this method allows functions to check of an upload
+     * is still in progress or not.
+     */
+    public function isStatusAtleastUploaded() {
+        return $this->status == TransferStatuses::AVAILABLE ||
+               $this->status == TransferStatuses::CLOSED;
+    }
+    
+    /**
+     * closed transfer.
+     */
+    public function isStatusClosed() {
+        return $this->status == TransferStatuses::CLOSED;
+    }
+    
+    /**
+     * Call here when you want to deny state changes to already complete
+     * transfers. Note that states 'less than' UPLOADING are considered OK
+     * for this. We only want to deny changes to 'available' or closed transfers.
+     */
+    public function isStatusUploading() {
+        return $this->status == TransferStatuses::CREATED ||
+               $this->status == TransferStatuses::STARTED ||
+               $this->status == TransferStatuses::UPLOADING;
+    }
+
 }
