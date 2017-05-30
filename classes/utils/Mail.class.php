@@ -112,7 +112,7 @@ class Mail {
             $this->subject = mb_encode_mimeheader(trim(str_replace(array("\n", "\r"), ' ', $value)), mb_internal_encoding(), 'Q', $this->nl);
             
         }else if($property == 'return_path') {
-            if(!filter_var($value, FILTER_VALIDATE_EMAIL)) throw new BadEmailException($value);
+            if(!Utilities::validateEmail($value)) throw new BadEmailException($value);
             $this->return_path = (string)$value;
             
         }else if($property == 'html') {

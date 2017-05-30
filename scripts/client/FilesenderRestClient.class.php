@@ -351,13 +351,12 @@ class FilesenderRestClient {
      * Signal file completion (along with checking data)
      * 
      * @param object file
-     * @param object data check data
      */
-    public function fileComplete($file, $data = null) {
+    public function fileComplete($file) {
         return $this->put(
-            '/file/'.$file->id.'/complete',
+            '/file/'.$file->id,
             array('key' => $file->uid),
-            $data
+            array('complete' => true)
         );
     }
     
@@ -365,13 +364,12 @@ class FilesenderRestClient {
      * Signal transfer completion (along with checking data)
      * 
      * @param object transfer
-     * @param object data check data
      */
-    public function transferComplete($transfer, $data = null) {
+    public function transferComplete($transfer) {
         return $this->put(
-            '/transfer/'.$transfer->id.'/complete',
+            '/transfer/'.$transfer->id,
             array('key' => $transfer->files[0]->uid),
-            $data
+            array('complete' => true)
         );
     }
     

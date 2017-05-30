@@ -80,11 +80,11 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
                         
                         <select name="from">
                             <?php foreach ($emails as $email) { ?>
-                            <option><?php echo $email ?></option>
+                            <option><?php echo Template::sanitizeOutputEmail($email) ?></option>
                             <?php } ?>
                         </select>
                         
-                        <?php } else echo $emails[0] ?>
+                        <?php } else echo Template::sanitizeOutputEmail($emails[0]) ?>
                     </div>
                     
                     <?php if($allow_recipients) { ?>
@@ -108,7 +108,7 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
                     
                     <div class="fieldcontainer" data-related-to="message">
                         <label for="message">{tr:message} ({tr:optional}) : </label>
-                        
+                        <label class="invalid" id="message_can_not_contain_urls" style="display:none;">{tr:message_can_not_contain_urls}</label>                        
                         <textarea name="message" rows="4"></textarea>
                     </div>
                         <?php if(Config::get('encryption_enabled')) { ?>
