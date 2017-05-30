@@ -348,8 +348,12 @@ class RestEndpointTransfer extends RestEndpoint {
             $allowed_options = array_keys(Auth::isRemoteApplication() ? Transfer::allOptions() : Transfer::availableOptions());
             
             // Build options from provided data and defaults
-            $options = array();
-            foreach(Transfer::allOptions() as $name => $dfn)  {
+            $allOptions = Transfer::allOptions();
+            $options = array(
+                TransferOptions::GET_A_LINK => $allOptions[TransferOptions::GET_A_LINK]['default'],
+                TransferOptions::ADD_ME_TO_RECIPIENTS => $allOptions[TransferOptions::ADD_ME_TO_RECIPIENTS]['default'],
+            );
+            foreach($allOptions as $name => $dfn)  {
                 if(in_array($name, $allowed_options)
                     && $data->options->exists($name))
                 {
