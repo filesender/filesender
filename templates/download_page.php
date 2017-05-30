@@ -80,7 +80,7 @@
             <span class="name"><?php echo Utilities::sanitizeOutput($file->name) ?></span>
             <span class="size"><?php echo Utilities::formatBytes($file->size) ?></span>
             <span class="download_decryption_disabled"><br/>{tr:file_encryption_disabled}</span>
-            <a href="<?php echo empty($downloadLinks[$file->id]) ? '#' : Utilities::sanitizeOutput($downloadLinks[$file->id]) ?>" class="download" title="{tr:download_file}">
+            <a rel="nofollow" href="<?php echo empty($downloadLinks[$file->id]) ? '#' : Utilities::sanitizeOutput($downloadLinks[$file->id]) ?>" class="download" title="{tr:download_file}">
                 <span class="fa fa-2x fa-download"></span>
                 {tr:download}
             </a>
@@ -96,7 +96,7 @@
                 {tr:mac_archive_message}
             </div>
             
-            <a href="<?php echo Utilities::sanitizeOutput($archiveDownloadLink) ?>" class="archive_download" title="{tr:archive_download}">
+            <a rel="nofollow" href="<?php echo Utilities::sanitizeOutput($archiveDownloadLink) ?>" class="archive_download" title="{tr:archive_download}">
                 <span class="fa fa-2x fa-download"></span>
                 {tr:archive_download}
             </a>
