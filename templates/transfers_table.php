@@ -76,9 +76,9 @@
                 $items = array();
                 foreach(array_slice($transfer->recipients, 0, 3) as $recipient) {
                     if(in_array($recipient->email, Auth::user()->email_addresses)) {
-                        $items[] = '<abbr title="'.Template::sanitizeOutput($recipient->email).'">'.Lang::tr('me').'</abbr>';
+                        $items[] = '<abbr title="'.Template::sanitizeOutputEmail($recipient->email).'">'.Lang::tr('me').'</abbr>';
                     } else if($recipient->email) {
-                        $items[] = '<a href="mailto:'.Template::sanitizeOutput($recipient->email).'">'.Template::sanitizeOutput($recipient->identity).'</a>';
+                        $items[] = '<a href="mailto:'.Template::sanitizeOutputEmail($recipient->email).'">'.Template::sanitizeOutput($recipient->identity).'</a>';
                     } else {
                         $items[] = '<abbr title="'.Lang::tr('anonymous_details').'">'.Lang::tr('anonymous').'</abbr>';
                     }
@@ -156,11 +156,11 @@
                         {tr:size} : <?php echo Utilities::formatBytes($transfer->size) ?>
                     </div>
                     <div>
-                        {tr:with_identity} : <?php echo Template::sanitizeOutput($transfer->user_email) ?>
+                        {tr:with_identity} : <?php echo Template::sanitizeOutputEmail($transfer->user_email) ?>
                     </div>
                     <?php if($show_guest) { ?>
                     <div>
-                        {tr:guest} : <?php if($transfer->guest) echo Template::sanitizeOutput($transfer->guest->email) ?>
+                        {tr:guest} : <?php if($transfer->guest) echo Template::sanitizeOutputEmail($transfer->guest->email) ?>
                     </div>
                     <?php } ?>
                     <div class="options">
@@ -198,12 +198,12 @@
                     <h2>{tr:recipients}</h2>
                     
                     <?php foreach($transfer->recipients as $recipient) { ?>
-                    <div class="recipient" data-id="<?php echo $recipient->id ?>" data-email="<?php echo Template::sanitizeOutput($recipient->email) ?>" data-errors="<?php echo count($recipient->errors) ? '1' : '' ?>">
+                    <div class="recipient" data-id="<?php echo $recipient->id ?>" data-email="<?php echo Template::sanitizeOutputEmail($recipient->email) ?>" data-errors="<?php echo count($recipient->errors) ? '1' : '' ?>">
                         <?php
                         if(in_array($recipient->email, Auth::user()->email_addresses)) {
-                            echo '<abbr title="'.Template::sanitizeOutput($recipient->email).'">'.Lang::tr('me').'</abbr>';
+                            echo '<abbr title="'.Template::sanitizeOutputEmail($recipient->email).'">'.Lang::tr('me').'</abbr>';
                         } else {
-                            echo '<a href="mailto:'.$recipient->email.'">'.Template::sanitizeOutput($recipient->identity).'</a>';
+                            echo '<a href="mailto:'.Template::sanitizeOutputEmail($recipient->email).'">'.Template::sanitizeOutput($recipient->identity).'</a>';
                         }
                         
                         if ($recipient->errors) echo '<span class="errors">' . implode(', ', array_map(function($type) {
@@ -237,8 +237,9 @@
                                 <?php if(isset($transfer->options['encryption']) && $transfer->options['encryption'] === true) { ?>
                                 <span class="fa fa-lg fa-download transfer-file transfer-download" title="{tr:download}" data-id="<?php echo $file->id ?>" 
                                         data-encrypted="<?php echo isset($transfer->options['encryption'])?$transfer->options['encryption']:'false'; ?>" 
-                                        data-mime="<?php echo $file->mime_type; ?>" 
-                                        data-name="<?php echo $file->name; ?>"></span>
+                                        data-mime="<?php echo Template::sanitizeOutput($file->mime_type); ?>" 
+                                        data-name="<?php echo Template::sanitizeOutput($file->name); ?>"></span>
+                                        
                                 <?php } else {?>
                             <a class="fa fa-lg fa-download" title="{tr:download}" href="download.php?files_ids=<?php echo $file->id ?>"></a>
                                 <?php } ?>

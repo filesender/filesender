@@ -12,6 +12,7 @@ addons:
 service:
 - postgresql
 before_install:
+- composer update --no-interaction
 - cp ./travis/config.travis.pgsql.php ./config/config.php
 - sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place ./config/config.php
 - chmod -R a+x ./travis/scripts
@@ -22,7 +23,6 @@ install:
 - mkdir ./log
 - mkdir ./tmp
 - mkdir ./files
-- composer update --no-interaction
 before_script:
 - sudo apt-get update
 - sudo apt-get install apache2 libapache2-mod-fastcgi

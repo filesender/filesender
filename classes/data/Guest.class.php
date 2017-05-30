@@ -97,6 +97,13 @@ class Guest extends DBObject {
         ),
         'last_activity' => array(
             'type' => 'datetime'
+        ),
+        'reminder_count' => array(
+            'type' => 'uint',
+            'size' => 'medium'
+        ),
+        'last_reminder' => array(
+            'type' => 'datetime'
         )
     );
     
@@ -105,7 +112,8 @@ class Guest extends DBObject {
      */
     const AVAILABLE = "status = 'available' ORDER BY created DESC";
     const EXPIRED = "expires < :date ORDER BY expires ASC";
-    const FROM_USER = "user_id = :user_id AND status = 'available' ORDER BY created DESC";
+    const FROM_USER = "user_id = :user_id AND expires > :date ORDER BY created DESC";
+    const FROM_USER_AVAILABLE = "user_id = :user_id AND expires > :date AND status = 'available' ORDER BY created DESC";
     
     /**
      * Properties
@@ -124,7 +132,9 @@ class Guest extends DBObject {
     protected $created = 0;
     protected $expires = 0;
     protected $last_activity = 0;
-    
+    protected $reminder_count = 0;
+    protected $last_reminder = 0;
+
     /**
      * Cache
      */
@@ -271,7 +281,20 @@ class Guest extends DBObject {
     public static function fromUser($user) {
         if($user instanceof User) $user = $user->id;
         
-        return self::all(self::FROM_USER, array(':user_id' => $user));
+        return self::all(self::FROM_USER, array(':user_id' => $user, ':date' => date('Y-m-d')));
+    }
+
+    /**
+     * Get available guests from user
+     * 
+     * @param mixed $user User or user id
+     * 
+     * @return array of Guests
+     */
+    public static function fromUserAvailable($user) {
+        if($user instanceof User) $user = $user->id;
+        
+        return self::all(self::FROM_USER_AVAILABLE, array(':user_id' => $user, ':date' => date('Y-m-d')));
     }
     
     /**
@@ -346,8 +369,16 @@ class Guest extends DBObject {
      * Send reminder to recipients
      */
     public function remind() {
-        TranslatableEmail::quickSend('guest_reminder', $this);
         
+        // Limit reminders
+        if( $this->reminder_count >= Config::get('guest_reminder_limit')) {
+            throw new GuestReminderLimitReachedException();
+        }
+        $this->reminder_count++;
+        $this->save();
+        
+        TranslatableEmail::quickSend('guest_reminder', $this);
+            
         Logger::info($this.' reminded');
     }
     
@@ -368,7 +399,7 @@ class Guest extends DBObject {
         );
         
         // Sending notification to recipient
-        if($this->hasOption(GuestOptions::EMAIL_GUEST_EXPIRED))
+        if($this->getOption(GuestOptions::EMAIL_GUEST_EXPIRED))
             TranslatableEmail::quickSend($manualy ? 'guest_cancelled' : 'guest_expired', $this);
         
         Logger::info($this.' '.($manualy ? 'removed' : 'expired'));
@@ -527,7 +558,7 @@ class Guest extends DBObject {
             $this->status = (string)$value;
             
         }else if($property == 'user_email') {
-            if(!filter_var($value, FILTER_VALIDATE_EMAIL)) throw new BadEmailException($value);
+            if(!Utilities::validateEmail($value)) throw new BadEmailException($value);
             $this->user_email = (string)$value;
             
         }else if($property == 'subject') {
@@ -546,7 +577,7 @@ class Guest extends DBObject {
             $this->transfer_count = (int)$value;
             
         }else if($property == 'email') {
-            if(!filter_var($value, FILTER_VALIDATE_EMAIL)) throw new BadEmailException($value);
+            if(!Utilities::validateEmail($value)) throw new BadEmailException($value);
             $this->email = (string)$value;
             
         }else if($property == 'expires' || $property == 'last_activity') {

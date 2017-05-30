@@ -145,7 +145,10 @@ class Template {
     }
     
     /**
-     * Sanitize data to avoid tag replacement
+     * Sanitize data to avoid tag replacement.
+     *
+     * This differs from Utilities::sanitizeOutput because we also escape
+     * the { and } characters to HTML entities.
      * 
      * @param mixed data
      * 
@@ -155,7 +158,20 @@ class Template {
     public static function sanitizeOutput($data) {
         return self::sanitize(Utilities::sanitizeOutput($data));
     }
+
+    /**
+     * Sanitize data to avoid tag replacement for email addresses
+     * 
+     * @param mixed data
+     * 
+     * @return string
+     * 
+     */
+    public static function sanitizeOutputEmail($data) {
+        return self::sanitize(Utilities::sanitizeOutput($data));
+    }
     
+
     /**
      * Display a template (catch displayed content)
      * 

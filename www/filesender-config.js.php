@@ -39,6 +39,7 @@ require_once('../includes/init.php');
 header('Content-Type: text/javascript; charset=UTF-8');
 
 $banned = Config::get('ban_extension');
+$extension_whitelist_regex = Config::get('extension_whitelist_regex');
 
 $amc = Config::get('autocomplete_min_characters');
 
@@ -61,6 +62,7 @@ window.filesender.config = {
     max_transfer_files: <?php echo Config::get('max_transfer_files') ?>,
     
     ban_extension: <?php echo is_string($banned) ? "'".$banned."'" : 'null' ?>,
+    extension_whitelist_regex: <?php echo is_string($extension_whitelist_regex) ? "'".$extension_whitelist_regex."'" : 'null' ?>,
     
     max_transfer_recipients: <?php echo Config::get('max_transfer_recipients') ?>,
     max_guest_recipients: <?php echo Config::get('max_guest_recipients') ?>,
@@ -91,13 +93,15 @@ window.filesender.config = {
     legacy_upload_endpoint: '<?php echo Config::get('site_url') ?>rest.php/file/{file_id}/whole',
     legacy_upload_progress_refresh_period: <?php echo Config::get('legacy_upload_progress_refresh_period') ?>,
     
+    valid_filename_regex: '<?php $v = Config::get('valid_filename_regex'); $v = str_replace('\\', '\\\\', $v); echo $v; ?>',
     base_path: '<?php echo GUI::path() ?>',
     support_email: '<?php echo Config::get('support_email') ?>',
     autocomplete: {
         enabled: <?php echo Config::get('autocomplete') ? 'true' : 'false' ?>,
         min_characters: <?php echo (is_int($amc) && $amc) ? $amc : 3 ?>
     },
-    
+    message_can_not_contain_urls_regex: '<?php $v = Config::get('message_can_not_contain_urls_regex'); $v = str_replace('\\', '\\\\', $v); echo $v; ?>',
+
     auditlog_lifetime: <?php $lt = Config::get('auditlog_lifetime'); echo is_null($lt) ? 'null' : $lt ?>,
     
     logon_url: '<?php echo AuthSP::logonURL() ?>',

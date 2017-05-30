@@ -504,7 +504,7 @@ class User extends DBObject {
         }else if($property == 'email_addresses') {
             if(!is_array($value)) $value = array($value);
             foreach($value as $email)
-                if(!filter_var($email, FILTER_VALIDATE_EMAIL))
+                if(!Utilities::validateEmail($email))
                     throw new BadEmailException($value);
             $this->email_addresses = $value;
             

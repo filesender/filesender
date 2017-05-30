@@ -51,6 +51,20 @@ class GuestNotFoundException extends DetailedException {
 }
 
 /**
+ * We filter out URLs in the personal message
+ */
+class GuestMessageBodyCanNotIncludeURLsException extends DetailedException {
+    /**
+     * Constructor
+     * 
+     * @param Transfer $transfer
+     */
+    public function __construct() {
+        parent::__construct('message_can_not_contain_urls');
+    }
+}
+
+/**
  * Bad status exception
  */
 class GuestBadStatusException extends DetailedException {
@@ -63,6 +77,22 @@ class GuestBadStatusException extends DetailedException {
         parent::__construct(
             'bad_guest_status', // Message to give to the user
             array('status' => $status) // Details to log
+        );
+    }
+}
+
+/**
+ * Hit the limit of reminders
+ */
+class GuestReminderLimitReachedException extends DetailedException {
+    /**
+     * Constructor
+     * 
+     * @param string $status the bad status
+     */
+    public function __construct() {
+        parent::__construct(
+            'guest_reminder_limit_reached'
         );
     }
 }

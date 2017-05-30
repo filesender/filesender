@@ -151,13 +151,24 @@ class RestEndpointGuest extends RestEndpoint {
         
         // Raw guest data
         $data = $this->request->input;
+
+        // Check Guest creation limits
+        $existingGuests = Guest::fromUserAvailable($user);
+        if( count($existingGuests) >= Config::get('guest_limit_per_user')) {
+            throw new UserHitGuestLimitException();
+        }
         
         // Create new guest object
         $guest = Guest::create($data->recipient, $data->from);
         
         // Set provided metadata
         if($data->subject) $guest->subject = $data->subject;
-        if($data->message) $guest->message = $data->message;
+        if($data->message) {
+            $guest->message = $data->message;
+            if(!Utilities::isValidMessage($guest->message)) {
+                throw new GuestMessageBodyCanNotIncludeURLsException();
+            }
+        }
         
         // Allow any options for remote applications, check against allowed options otherwise
         $allowed_options = array_keys(Auth::isRemoteApplication() ? Guest::allOptions() : Guest::availableOptions());

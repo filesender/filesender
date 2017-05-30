@@ -24,7 +24,7 @@
     </div>
     
     <div class="general box" data-transfer-size="<?php echo $transfer->size ?>">
-        <div class="from">{tr:from} : <?php echo Utilities::sanitizeOutput($transfer->user_email) ?></div>
+        <div class="from">{tr:from} : <?php echo Template::sanitizeOutputEmail($transfer->user_email) ?></div>
         
         <div class="created">{tr:created} : <?php echo Utilities::sanitizeOutput(Utilities::formatDate($transfer->created)) ?></div>
         
