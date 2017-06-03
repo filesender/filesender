@@ -92,7 +92,7 @@ class Utilities {
      */
     public static function isValidMessage($msg) {
         $r = Config::get('message_can_not_contain_urls_regex');
-        if($r.length && preg_match('/' . $r . '/', $msg )) {
+        if( strlen($r) && preg_match('/' . $r . '/', $msg )) {
             return false;
         }
         return true;
