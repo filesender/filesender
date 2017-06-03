@@ -100,10 +100,12 @@ class Guest extends DBObject {
         ),
         'reminder_count' => array(
             'type' => 'uint',
-            'size' => 'medium'
+            'size' => 'medium',
+            'default' => 0
         ),
         'last_reminder' => array(
-            'type' => 'datetime'
+            'type' => 'datetime',
+            'null' => true
         )
     );
     
