@@ -33,11 +33,27 @@
             'files_ids' => implode(',', $fileIds),
         )));
     }
-    
+
+    $isEncrypted = isset($transfer->options['encryption']) && $transfer->options['encryption'];
+    $canDownloadArchive = count($transfer->files) > 1;
+    if($isEncrypted) {
+        // It is not possible to download archives of the encrypted files. 
+        // since there is no unzip -> decrypt -> zip process in the current filesender 
+        $canDownloadArchive = false;
+    }
     ?>
     
     <div class="disclamer">
         {tr:download_disclamer}
+        <?php if(!$isEncrypted) { ?>
+            {tr:download_disclamer_nocrypto_message}
+        <?php } ?>
+        <?php if($isEncrypted) { ?>
+            {tr:download_disclamer_crypto_message}
+        <?php } ?>
+        <?php if($canDownloadArchive) { ?>
+            {tr:download_disclamer_archive}
+        <?php } ?>
     </div>
     
     <div class="general box" data-transfer-size="<?php echo $transfer->size ?>">
@@ -50,19 +66,19 @@
         <div class="size">{tr:size} : <?php echo Utilities::sanitizeOutput(Utilities::formatBytes($transfer->size)) ?></div>
         
         <?php if($transfer->subject) { ?>
-        <div class="subject">{tr:subject} : <?php echo Utilities::sanitizeOutput($transfer->subject) ?></div>
+            <div class="subject">{tr:subject} : <?php echo Utilities::sanitizeOutput($transfer->subject) ?></div>
         <?php } ?>
         
         <?php if($transfer->message) { ?>
-        <div class="message">
-            {tr:message} :
-            <p>
-                <?php echo Utilities::sanitizeOutput($transfer->message) ?>
-            </p>
-        </div>
+            <div class="message">
+                {tr:message} :
+                <p>
+                    <?php echo Utilities::sanitizeOutput($transfer->message) ?>
+                </p>
+            </div>
         <?php } ?>
     </div>
-    <div class="files box" data-count="<?php echo (isset($transfer->options['encryption']) && $transfer->options['encryption'])?'1':count($transfer->files) ?>">
+    <div class="files box" data-count="<?php echo ($isEncrypted)?'1':count($transfer->files) ?>">
         <div class="select_all">
             <span class="fa fa-lg fa-mail-reply fa-rotate-270"></span>
             <span class="select clickable">
@@ -87,9 +103,8 @@
             <span class="downloadprogress"></span>
         </div>
     <?php } ?>
-    <?php if(!isset($transfer->options['encryption']) || $transfer->options['encryption'] === false) { ?>
-    <?php // It is not possible to download archives of the encrypted files since there is no unzip -> decrypt -> zip process in the current filesender ?>
-        <div class="archive">
+        <?php if($canDownloadArchive) { ?>
+            <div class="archive">
             <div class="archive_message">{tr:archive_message}</div>
             
             <div class="mac_archive_message">

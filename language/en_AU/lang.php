@@ -333,7 +333,10 @@ $lang['report_guest_event_transfer_sent'] = 'Download link sent to recipient(s)'
  * Download page specific
  */
 $lang['archive_download'] = 'Download as single (.zip) file';
-$lang['download_disclamer'] = 'You can download all files at once as a single compressed archive (.zip) file.  Click on the downloaded file to uncompress it and access individual files.';
+$lang['download_disclamer'] = '';
+$lang['download_disclamer_nocrypto_message'] = 'You can right click on the download button and "Copy Link Location" to download the file using another tool.';
+$lang['download_disclamer_crypto_message'] = 'Click on a file to download the data and decrypt it on your computer.';
+$lang['download_disclamer_archive'] = 'You can download all files at once as a single compressed archive (.zip) file.  Click on the downloaded file to uncompress it and access individual files.';
 $lang['download_file'] = 'Download file';
 $lang['mac_archive_message'] = 'This compressed archive (.zip file) will be too big for the standard uncompress utility of Apple OS X.<br />  You\'ll find a alternative uncompress software here: <a href="{cfg:mac_unzip_link}" target="_blank">{cfg:mac_unzip_name}</a>.';
 $lang['select_all_for_archive_download'] = 'Select all files to download them as an archive';
