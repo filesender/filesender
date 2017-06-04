@@ -83,7 +83,10 @@ class Auth {
             
             // Authentication logic with exception memory
             try {
-                if(AuthGuest::isAuthenticated()) { // Guest
+                if(Logger::isLocalProcess()) {
+                    self::$attributes = array();
+                    self::$type = 'localprocess';
+                }else if(AuthGuest::isAuthenticated()) { // Guest
                     self::$attributes = AuthGuest::attributes();
                     self::$type = 'guest';
                     
@@ -177,6 +180,11 @@ class Auth {
      */
     public static function isAuthenticated($critical = true) {
         if(!self::$allowed) throw new AuthUserNotAllowedException();
+
+        // command line cron, install, upgrade etc do not need a session
+        if(Logger::isLocalProcess()) {
+            return true;
+        }
         
         try {
             return (bool)self::user();

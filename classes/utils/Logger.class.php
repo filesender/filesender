@@ -69,6 +69,18 @@ class Logger {
         if (!ProcessTypes::isValidValue($process)) $process = ProcessTypes::MISC; 
         self::$process = $process;
     }
+
+    /**
+     * True if we are a local process such as ProcessTypes::CRON
+     * for which SAML is unlikely to work
+     */
+    public static function isLocalProcess() {
+        return in_array( self::$process,
+                         array( ProcessTypes::CRON,
+                                ProcessTypes::FEEDBACK,
+                                ProcessTypes::INSTALL,
+                                ProcessTypes::UPGRADE ));
+    }
     
     /**
      * Setup logging facilities
@@ -110,7 +122,7 @@ class Logger {
                     
                     $facility['method'] = 'logFile';
                     break;
-                
+                    
                 case 'syslog' :
                     // PHP syslog arguments may be given
                     $i = false;
@@ -129,12 +141,12 @@ class Logger {
                     
                     $facility['method'] = 'logSyslog';
                     break;
-                
+                    
                 case 'error_log' :
                     // PHP error_log needs no argument
                     $facility['method'] = 'logErrorLog';
                     break;
-                
+                    
                 case 'callable' :
                     // Callback based facilities need at least a callback ...
                     if(!array_key_exists('callback', $facility))
@@ -146,7 +158,7 @@ class Logger {
                     
                     $facility['method'] = 'logCallable';
                     break;
-                
+                    
                 default :
                     // Unknown facilities are reported
                     throw new ConfigBadParameterException('log_facilities['.$index.'][type]');
@@ -207,9 +219,9 @@ class Logger {
     public static function log($level, $message) {
         // If message is other than scalar (object, array) then print_r it and log individual lines
         if(!is_scalar($message)) {
-            foreach(explode("\n", print_r($message, true)) as $line)
+            foreach(explode("\n", print_r($message, true)) as $line) {
                 self::log($level, $line);
-            
+            }
             return;
         }
         

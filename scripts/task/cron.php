@@ -33,16 +33,15 @@
 require_once(dirname(__FILE__).'/../../includes/init.php');
 
 Logger::setProcess(ProcessTypes::CRON);
-
 Logger::info('Cron started');
 
 // Log some daily statistics first
 $storage_usage = Storage::getUsage();
 if(!is_null($storage_usage)) {
     $used = 0;
-    foreach($storage_usage as $info)
+    foreach($storage_usage as $info) {
         $used += $info['total_space'] - $info['free_space'];
-    
+    }
     StatLog::createGlobal(LogEventTypes::GLOBAL_STORAGE_USAGE, $used);
 }
 
@@ -52,7 +51,9 @@ StatLog::createGlobal(LogEventTypes::GLOBAL_AVAILABLE_TRANSFERS, count(Transfer:
 
 // Close expired transfers
 foreach(Transfer::allExpired() as $transfer) {
-    if($transfer->status == TransferStatuses::CLOSED) continue;
+    if($transfer->status == TransferStatuses::CLOSED) {
+        continue;
+    }
     Logger::info($transfer.' expired, closing it');
     $transfer->close(false);
 }
@@ -112,8 +113,9 @@ $report = Config::get('report_bounces');
 if(in_array($report, array('daily', 'asap_then_daily'))) {
     Logger::info('Bounces reporting in effect, gathering bounces and reporting them');
     
-    foreach(TrackingEvent::getNonReported(TrackingEventTypes::BOUNCE) as $set)
+    foreach(TrackingEvent::getNonReported(TrackingEventTypes::BOUNCE) as $set) {
         TrackingEvent::reportSet($set);
+    }
 }
 
 // Storage warning ?
