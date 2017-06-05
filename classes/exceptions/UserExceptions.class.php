@@ -63,3 +63,17 @@ class UserMissingUIDException extends DetailedException {
         );
     }
 }
+
+/**
+ * Too many guests
+ */
+class UserHitGuestLimitException extends DetailedException {
+    /**
+     * Constructor
+     */
+    public function __construct() {
+        parent::__construct(
+            'user_hit_guest_limit'
+        );
+    }
+}

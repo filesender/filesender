@@ -94,7 +94,8 @@ class GUI {
             'js/FileSaver.js',
             'js/crypter/crypto_common.js',
             'js/crypter/crypto_blob_reader.js',
-            'js/crypter/crypto_app.js'
+            'js/crypter/crypto_app.js',
+            'vendor/node_modules/xregexp/xregexp-all.js'
         );
         
         if(Config::get('terasender_enabled')) $sources[] = 'lib/terasender/terasender.js';

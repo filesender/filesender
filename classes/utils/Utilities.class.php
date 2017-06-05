@@ -34,6 +34,8 @@
 if (!defined('FILESENDER_BASE'))
     die('Missing environment');
 
+require_once(FILESENDER_BASE.'/lib/random_compat/lib/random.php');
+
 /**
  * Utility functions holder
  */
@@ -83,7 +85,20 @@ class Utilities {
         
         return substr($rnd, 0, 8).'-'.substr($rnd, 8, 4).'-'.substr($rnd, 12, 4).'-'.substr($rnd, 16, 4).'-'.substr($rnd, 20, 12);
     }
+
+    /**
+     * Validates a personal message
+     *
+     */
+    public static function isValidMessage($msg) {
+        $r = Config::get('message_can_not_contain_urls_regex');
+        if( strlen($r) && preg_match('/' . $r . '/', $msg )) {
+            return false;
+        }
+        return true;
+    }
     
+
     /**
      * Validates unique ID format
      * 
@@ -107,6 +122,18 @@ class Utilities {
     }
     
     /**
+     * Validates a filename
+     * 
+     * @param string $filename
+     * 
+     * @return bool
+     */
+    public static function isValidFileName($filename) {
+        return preg_match('/' .  Config::get('valid_filename_regex') . '/u', $filename);
+    }
+
+
+    /*
      * Generate (pseudo) (super-)random hex string
      * 
      * @return string
@@ -141,7 +168,6 @@ class Utilities {
                 fclose($fh);
             } else throw new CoreCannotWriteFileException($sfile);
         }
-        
         // return hmac signature of random data with secret => super-random !
         return hash_hmac('sha1', $rnd, $secret);
     }

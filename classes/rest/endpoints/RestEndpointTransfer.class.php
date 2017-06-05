@@ -148,7 +148,7 @@ class RestEndpointTransfer extends RestEndpoint {
             $transfer = Transfer::fromId($id);
             try {
                 if(!File::fromUid($_GET['key'])->transfer->is($transfer)) throw new Exception();
-                if(!in_array($transfer->status, array(TransferStatuses::CREATED, TransferStatuses::STARTED, TransferStatuses::UPLOADING))) throw new Exception();
+                if(!$transfer->isStatusUploading()) throw new Exception();
             } catch(Exception $e) {
                 throw new RestAuthenticationRequiredException();
             }
@@ -387,8 +387,9 @@ class RestEndpointTransfer extends RestEndpoint {
                         !$guest->options[GuestOptions::CAN_ONLY_SEND_TO_ME]
                     )
                 )
-            )
+            ) {
                 throw new TransferNoRecipientsException();
+            }     
             
             // Check if not too much recipients
             $maxrecipients = Config::get('max_transfer_recipients');
@@ -435,7 +436,12 @@ class RestEndpointTransfer extends RestEndpoint {
             
             // Set additionnal data
             if($data->subject) $transfer->subject = $data->subject;
-            if($data->message) $transfer->message = $data->message;
+            if($data->message) {
+                $transfer->message = $data->message;
+                if(!Utilities::isValidMessage($transfer->message)) {
+                   throw new TransferMessageBodyCanNotIncludeURLsException();
+                }
+            }
             if(Config::get('transfer_recipients_lang_selector_enabled') && $data->lang) $transfer->lang = $data->lang;
             
             // Guest owner decides about guest options
@@ -555,6 +561,15 @@ class RestEndpointTransfer extends RestEndpoint {
                 if(!array_key_exists('key', $_GET)) throw new Exception();
                 if(!$_GET['key']) throw new Exception();
                 if(!File::fromUid($_GET['key'])->transfer->is($transfer)) throw new Exception();
+                if($transfer->isStatusClosed()) throw new Exception();
+                
+                if($data->complete && $transfer->isStatusUploading()) {
+                    // this block means we are ok
+                    // these are the options that we allow
+                } else {
+                    // bad attempt
+                    throw new Exception();
+                }
             } catch(Exception $e) {
                 throw new RestAuthenticationRequiredException();
             }
@@ -612,22 +627,10 @@ class RestEndpointTransfer extends RestEndpoint {
         
         $transfer = Transfer::fromId($id);
         
-        // Check access rights depending on config
-        if($security == 'key') {
-            try {
-                if(!array_key_exists('key', $_GET)) throw new Exception();
-                if(!$_GET['key']) throw new Exception();
-                if(!File::fromUid($_GET['key'])->transfer->is($transfer)) throw new Exception();
-                if(!in_array($transfer->status, array(TransferStatuses::CREATED, TransferStatuses::STARTED, TransferStatuses::UPLOADING))) throw new Exception();
-            } catch(Exception $e) {
-                throw new RestAuthenticationRequiredException();
-            }
-        }else{
-            $user = Auth::user();
+        $user = Auth::user();
             
-            if(!$transfer->isOwner($user) && !Auth::isAdmin())
-                throw new RestOwnershipRequiredException($user->id, 'transfer = '.$transfer->id);
-        }
+        if(!$transfer->isOwner($user) && !Auth::isAdmin())
+            throw new RestOwnershipRequiredException($user->id, 'transfer = '.$transfer->id);
         
         // Delete the transfer (not recoverable)
         $transfer->delete();
