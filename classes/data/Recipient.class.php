@@ -71,6 +71,15 @@ class Recipient extends DBObject {
         'options' => array(
             'type' => 'text',
             'transform' => 'json'
+        ),
+        'reminder_count' => array(
+            'type' => 'uint',
+            'size' => 'medium',
+            'default' => 0
+        ),
+        'last_reminder' => array(
+            'type' => 'datetime',
+            'null' => true
         )
     );
     
@@ -84,6 +93,8 @@ class Recipient extends DBObject {
     protected $created = 0;
     protected $last_activity = null;
     protected $options = null;
+    protected $reminder_count = 0;
+    protected $last_reminder = 0;
     
     /**
      * Related objects cache
@@ -151,7 +162,7 @@ class Recipient extends DBObject {
         $recipient->transfer_id = $transfer->id;
         $recipient->transferCache = $transfer;
         
-        if($email && !filter_var($email, FILTER_VALIDATE_EMAIL)) throw new BadEmailException($email);
+        if($email && !Utilities::validateEmail($email)) throw new BadEmailException($email);
         $recipient->email = $email;
         
         $recipient->created = time();
@@ -195,6 +206,14 @@ class Recipient extends DBObject {
      * Send reminder
      */
     public function remind() {
+    
+        // Limit reminders
+        if( $this->reminder_count >= Config::get('guest_reminder_limit')) {
+            throw new GuestReminderLimitReachedException();
+        }
+        $this->reminder_count++;
+        $this->save();
+
         $this->transfer->remind($this);
     }
     

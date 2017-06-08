@@ -68,6 +68,7 @@ $default = array(
     'mac_unzip_name' => 'The Unarchiver',
     'mac_unzip_link' => 'http://unarchiver.c3.cx/unarchiver',
     'ban_extension' => 'exe,bat',
+    'extension_whitelist_regex' => '^[a-zA-Z0-9]*$', // a valid file extension must match this regex
     
     'max_transfer_size' => 107374182400,
     'max_transfer_recipients' => 50,
@@ -116,7 +117,15 @@ $default = array(
     'storage_usage_warning' => 20,
     
     'report_format' => ReportFormats::INLINE,
-    
+
+    'valid_filename_regex' => '^[\\p{L}\\p{N}_\\.,;:!@#$%^&*)(\\]\\[_-]+$',
+    'message_can_not_contain_urls_regex' => '',
+//    'message_can_not_contain_urls_regex' => '(ftp:|http[s]*:|[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})',
+
+    'guest_limit_per_user' => 50,
+    'guest_reminder_limit' => 50,
+    'recipient_reminder_limit' => 50,
+
     'user_page' => false,
     //'user_page' => array(
     //    'lang' => 'write',

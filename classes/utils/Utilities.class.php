@@ -34,6 +34,8 @@
 if (!defined('FILESENDER_BASE'))
     die('Missing environment');
 
+require_once(FILESENDER_BASE.'/lib/random_compat/lib/random.php');
+
 /**
  * Utility functions holder
  */
@@ -83,7 +85,20 @@ class Utilities {
         
         return substr($rnd, 0, 8).'-'.substr($rnd, 8, 4).'-'.substr($rnd, 12, 4).'-'.substr($rnd, 16, 4).'-'.substr($rnd, 20, 12);
     }
+
+    /**
+     * Validates a personal message
+     *
+     */
+    public static function isValidMessage($msg) {
+        $r = Config::get('message_can_not_contain_urls_regex');
+        if( strlen($r) && preg_match('/' . $r . '/', $msg )) {
+            return false;
+        }
+        return true;
+    }
     
+
     /**
      * Validates unique ID format
      * 
@@ -94,19 +109,42 @@ class Utilities {
     public static function isValidUID($uid) {
         return preg_match('/^[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}$/i', $uid);
     }
+
+    public static function validateEmail( $email ) {
+        $ret = filter_var( $email, FILTER_VALIDATE_EMAIL );
+	if( !$ret )
+	    return FALSE;
+        if(preg_match('/"@/', $email))
+	    return FALSE;
+        if(preg_match('/\\\\/', $email))
+	    return FALSE;
+	return $ret;
+    }
     
     /**
+     * Validates a filename
+     * 
+     * @param string $filename
+     * 
+     * @return bool
+     */
+    public static function isValidFileName($filename) {
+        return preg_match('/' .  Config::get('valid_filename_regex') . '/u', $filename);
+    }
+
+
+    /*
      * Generate (pseudo) (super-)random hex string
      * 
      * @return string
      */
     public static function generateRandomHexString($nearly = false) {
         // Random length
-        $len = mt_rand(16, 32);
-        
+        $len = random_int(16, 32);
+
         // Random data
         $rnd = '';
-        for($i=0; $i<$len; $i++) $rnd .= sprintf('%04d', mt_rand(0, 9999));
+        for($i=0; $i<$len; $i++) $rnd .= sprintf('%04d', random_int(0, 9999));
         
         // No need for an super-random, just hash
         if($nearly) return hash('sha1', $rnd);
@@ -130,7 +168,6 @@ class Utilities {
                 fclose($fh);
             } else throw new CoreCannotWriteFileException($sfile);
         }
-        
         // return hmac signature of random data with secret => super-random !
         return hash_hmac('sha1', $rnd, $secret);
     }
