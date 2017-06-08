@@ -104,7 +104,7 @@ class AuthSPShibboleth {
             if(!$attributes['email']) throw new AuthSPMissingAttributeException('email');
             
             foreach($attributes['email'] as $email) {
-                if(!filter_var($email, FILTER_VALIDATE_EMAIL)) throw new AuthSPBadAttributeException('email');
+                if(!Utilities::validateEmail($email)) throw new AuthSPBadAttributeException('email');
             }
             
             if(!$attributes['name']) $attributes['name'] = substr($attributes['email'][0], 0, strpos($attributes['email'][0], '@'));

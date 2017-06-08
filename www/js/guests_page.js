@@ -255,6 +255,7 @@ $(function() {
         expires: send_voucher.find('input[name="expires"]'),
         options: {guest: {}, transfer: {}},
         sendbutton: send_voucher.find('.send'),
+        message_can_not_contain_urls: send_voucher.find('textarea[name="message_can_not_contain_urls"]'),
     };
     send_voucher.find('.guest_options input').each(function() {
         var i = $(this);
@@ -305,6 +306,12 @@ $(function() {
         
         filesender.ui.recipients.addFromInput($(this));
     });
+
+    // validate message as it is typed
+    window.filesender.ui.handleFlagInvalidOnRegexMatch(
+        filesender.ui.nodes.message,
+        $('#message_can_not_contain_urls'),
+        filesender.config.message_can_not_contain_urls_regex );
     
     // Bind picker
     filesender.ui.nodes.expires.datepicker({

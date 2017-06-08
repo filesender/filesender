@@ -16,11 +16,11 @@
 
                         <select id="from" name="from">
                             <?php foreach ($emails as $email) { ?>
-                            <option><?php echo $email ?></option>
+                            <option><?php echo Template::sanitizeOutputEmail($email) ?></option>
                             <?php } ?>
                         </select>
 
-                        <?php } else echo $emails[0] ?>
+                        <?php } else echo Template::sanitizeOutputEmail($emails[0]) ?>
                     </div>
 
                     <div class="fieldcontainer">
@@ -40,6 +40,7 @@
                     <div class="fieldcontainer">
                         <label for="message">{tr:message} ({tr:optional}) : </label>
 
+                        <label class="invalid" id="message_can_not_contain_urls" style="display:none;">{tr:message_can_not_contain_urls}</label>
                         <textarea id="message" name="message" rows="4"></textarea>
                     </div>
                 </td>
@@ -129,7 +130,7 @@
 <div class="box">
     <h1>{tr:guests}</h1>
     
-    <?php Template::display('guests_table', array('guests' => Guest::fromUser(Auth::user()))) ?>
+    <?php Template::display('guests_table', array('guests' => Guest::fromUserAvailable(Auth::user()))) ?>
 </div>
 
 <div class="box">

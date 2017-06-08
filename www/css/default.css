@@ -292,6 +292,11 @@ input.invalid, textarea.invalid {
     border: 1px solid #f00;
 }
 
+label.invalid {
+    color: #f00;
+}
+
+
 .buttons {
     display: table;
     border-collapse: separate;

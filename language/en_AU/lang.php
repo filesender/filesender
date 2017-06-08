@@ -165,7 +165,7 @@ $lang['host_quota'] = 'Host quota';
 $lang['user_quota'] = 'User quota';
 $lang['extend'] = 'Extend';
 $lang['extend_and_remind'] = 'Extend and send reminder';
-$lang['translate_to'] = 'Translate to :';
+$lang['translate_to'] = 'Translate to:';
 
 $lang['encryption'] = 'Encryption';
 $lang['decrypting'] = 'Decrypting';
@@ -255,6 +255,7 @@ $lang['guest_deleted'] = 'Guest deleted';
 $lang['guest_reminded'] = 'Guest reminded';
 $lang['confirm_delete_guest'] = 'Do you really want to delete this guest (the recipient won\'t be able to upload files anymore) ?';
 $lang['confirm_remind_guest'] = 'Do you really want to send a reminder to this guest ?';
+$lang['message_can_not_contain_urls'] = 'Message can not contain things that look like URLs';
 
 
 /**
@@ -332,9 +333,12 @@ $lang['report_guest_event_transfer_sent'] = 'Download link sent to recipient(s)'
  * Download page specific
  */
 $lang['archive_download'] = 'Download as single (.zip) file';
-$lang['download_disclamer'] = 'You can download all files at once as a single compressed archive (.zip) file.  Click on the downloaded file to uncompress it and access individual files.';
+$lang['download_disclamer'] = '';
+$lang['download_disclamer_nocrypto_message'] = 'You can right click on the download button and "Copy Link Location" to download the file using another tool.';
+$lang['download_disclamer_crypto_message'] = 'Click on a file to download the data and decrypt it on your computer.';
+$lang['download_disclamer_archive'] = 'You can download all files at once as a single compressed archive (.zip) file.  Click on the downloaded file to uncompress it and access individual files.';
 $lang['download_file'] = 'Download file';
-$lang['mac_archive_message'] = 'This compressed archive (.zip file) will be too big for the standard uncompress utility of Apple OS X.<br />  You\'ll find a alternative uncompress software here : <a href="{cfg:mac_unzip_link}" target="_blank">{cfg:mac_unzip_name}</a>.';
+$lang['mac_archive_message'] = 'This compressed archive (.zip file) will be too big for the standard uncompress utility of Apple OS X.<br />  You\'ll find a alternative uncompress software here: <a href="{cfg:mac_unzip_link}" target="_blank">{cfg:mac_unzip_name}</a>.';
 $lang['select_all_for_archive_download'] = 'Select all files to download them as an archive';
 $lang['select_for_archive_download'] = 'Select for archive download';
 $lang['archive_message'] = 'You can download selected files as an archive.';
@@ -354,7 +358,7 @@ $lang['user_id'] = 'Identifiant';
 $lang['user_created'] = 'First login';
 $lang['get_full_user_remote_config'] = 'Get full remote configuration';
 $lang['preferences_updated'] = 'User preferences updated';
-$lang['remote_auth_sync_request'] = '<p><strong>{remote}</strong> requested your remote authentication details.</p><p>To allow access please give the following code to <strong>{remote}</strong> : <strong>{code}</strong> (code is valid for the next 2 minutes only).</p><p>If you don\'t know what this is about just disregard this message.</p>';
+$lang['remote_auth_sync_request'] = '<p><strong>{remote}</strong> requested your remote authentication details.</p><p>To allow access please give the following code to <strong>{remote}</strong>: <strong>{code}</strong> (code is valid for the next 2 minutes only).</p><p>If you don\'t know what this is about just disregard this message.</p>';
 
 
 /**
@@ -444,9 +448,9 @@ $lang['core_file_not_found'] = 'Core file not found';
 $lang['core_class_not_found'] = 'Core class not found';
 
 // DBI related exceptions
-$lang['failed_to_connect_to_database'] = 'Fail to connect database';
+$lang['failed_to_connect_to_database'] = 'Failed to connect to database';
 $lang['dbi_missing_parameter'] = 'Missing DBI configuration parameter';
-$lang['database_access_failure'] = 'Fail to access database';
+$lang['database_access_failure'] = 'Failed to access database';
 
 // DBO related exceptions
 $lang['no_such_property'] = 'Property not found';
@@ -550,6 +554,7 @@ $lang['transfer_user_quota_exceeded'] = 'User quota exceeded';
 $lang['transfer_expiry_extension_not_allowed'] = 'Transfer expiry date extension is not allowed';
 $lang['transfer_expiry_extension_count_exceeded'] = 'Transfer expiry date extension maximum reached';
 $lang['transfer_files_incomplete'] = 'Transfer\'s files are not done uploading';
+$lang['transfer_file_name_invalid'] = 'File name contains bad characters';
 
 // User related exceptions
 $lang['user_not_found'] = 'User not found';

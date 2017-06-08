@@ -181,14 +181,14 @@ class ApplicationMail extends Mail {
         }
         
         if($from) {
-            if($from != 'sender' && !filter_var($from, FILTER_VALIDATE_EMAIL))
+            if($from != 'sender' && !Utilities::validateEmail($from))
                 throw new ConfigBadParameterException('email_from');
             
             if($from == 'sender') $from = $sender->email;
             
             // Got one, validate and set header
             if($from) {
-                if(!filter_var($from, FILTER_VALIDATE_EMAIL))
+                if(!Utilities::validateEmail($from))
                     throw new BadEmailException($from);
                 
                 $from_name = Config::get('email_from_name');
@@ -220,14 +220,14 @@ class ApplicationMail extends Mail {
         // Build reply-to field depending on config
         $reply_to = Config::get('email_reply_to');
         if($reply_to) {
-            if($reply_to != 'sender' && !filter_var($reply_to, FILTER_VALIDATE_EMAIL))
+            if($reply_to != 'sender' && !Utilities::validateEmail($reply_to))
                 throw new ConfigBadParameterException('email_reply_to');
             
             if($reply_to == 'sender') $reply_to = $sender->email;
             
             // Got one, validate and set header
             if($reply_to) {
-                if(!filter_var($reply_to, FILTER_VALIDATE_EMAIL))
+                if(!Utilities::validateEmail($reply_to))
                     throw new BadEmailException($reply_to);
                 
                 $reply_to_name = Config::get('email_reply_to_name');
@@ -239,7 +239,7 @@ class ApplicationMail extends Mail {
         // Build return path field depending on config
         $return_path = Config::get('email_return_path');
         if($return_path) {
-            if($return_path != 'sender' && !filter_var(str_replace('<verp>', 'verp', $return_path), FILTER_VALIDATE_EMAIL))
+            if($return_path != 'sender' && !Utilities::validateEmail(str_replace('<verp>', 'verp', $return_path)))
                 throw new ConfigBadParameterException('email_return_path');
             
             if($return_path == 'sender') $return_path = $sender->email;
@@ -250,7 +250,7 @@ class ApplicationMail extends Mail {
                 if(preg_match('`^(.+)<verp>(.+)$`i', $return_path, $match))
                     $return_path = $match[1].$context.$match[2];
                 
-                if(!filter_var($return_path, FILTER_VALIDATE_EMAIL))
+                if(!Utilities::validateEmail($return_path))
                     throw new BadEmailException($return_path);
                 
                 $this->return_path = $return_path;
