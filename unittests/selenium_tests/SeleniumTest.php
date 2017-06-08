@@ -194,7 +194,7 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
         $str=file_get_contents('config/config.php');
 
         //replace something in the file string
-        $str=preg_replace("/\\\$config\['".$type."'\]\s*=\s*(.*);/", "\$config['".$type."'] = $value;",$str, -1, $count);
+        $str=preg_replace("/\\\$config\['".$type."'\] = (.*);/", "\$config['".$type."'] = $value;",$str, -1, $count);
 
         if($count == 0)
         {
