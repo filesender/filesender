@@ -723,11 +723,13 @@ $(function() {
         filesender.ui.nodes.expires.datepicker('setDate', $(this).val());
     });
     
-    // Make options label toggle checkboxes
+    // Make options label toggle checkboxes when the user is connected
     form.find('.basic_options label, .advanced_options label').on('click', function() {
-        var checkbox = $(this).closest('.fieldcontainer').find(':checkbox');
-        checkbox.prop('checked', !checkbox.prop('checked'));
-        checkbox.change();
+        if($('body:not([data-auth-type=guest])').length > 0) {        
+            var checkbox = $(this).closest('.fieldcontainer').find(':checkbox');
+            checkbox.prop('checked', !checkbox.prop('checked'));
+            checkbox.change();
+        }
     }).css('cursor', 'pointer');
     
     // Bind advanced options display toggle
