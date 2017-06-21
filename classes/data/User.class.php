@@ -354,10 +354,12 @@ class User extends DBObject {
                 
                 $default = $this->defaultOptionState($target, $name);
                 
-                if(in_array($name, $options) == $default)
+                if(array_key_exists($name, $options) && $options[$name] == $default)
                     continue; // User did not change what we proposed
+                if(!$default && !array_key_exists($name, $options))
+                    continue; // Option doesn't exist, assume false - user choose false, too
                 
-                $prefs[$name] += in_array($name, $options) && $options[$name]!=null ? 1 : -1;
+                $prefs[$name] += array_key_exists($name, $options) && $options[$name]!=null ? 1 : -1;
                 
             } else { // Remove options that are not available (anymore) from prefs
                 if(array_key_exists($name, $prefs))

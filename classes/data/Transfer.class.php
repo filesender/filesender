@@ -509,9 +509,17 @@ class Transfer extends DBObject {
      * 
      * @return mixed
      */
-    public function getOption($option) {if(gettype($this->options) == 'object') file_put_contents('/tmp/trace.log', print_r(debug_backtrace(), true));
-        if(!array_key_exists($option, $this->options)) return false;
-        return $this->options[$option];
+    public function getOption($option) {
+        if(array_key_exists($option, $this->options)) {
+            return $this->options[$option];
+        }
+        $options = static::allOptions();
+        if(array_key_exists($option, $options)) {
+            if(array_key_exists('default', $options[$option])) {
+                return $options[$option]['default'];
+            }
+        }
+        return false;
     }
     
     /**

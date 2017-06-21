@@ -447,8 +447,16 @@ class Guest extends DBObject {
      * @return mixed
      */
     public function getOption($option) {
-        if(!array_key_exists($option, $this->options)) return false;
-        return $this->options[$option];
+        if(array_key_exists($option, $this->options)) {
+            return $this->options[$option];
+        }
+        $options = static::allOptions();
+        if(array_key_exists($option, $options)) {
+            if(array_key_exists('default', $options[$option])) {
+                return $options[$option]['default'];
+            }
+        }
+        return false;
     }
     
     /**
