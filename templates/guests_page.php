@@ -14,7 +14,7 @@
 
                         <?php if (count($emails) > 1) { ?>
 
-                        <select name="from">
+                        <select id="from" name="from">
                             <?php foreach ($emails as $email) { ?>
                             <option><?php echo Template::sanitizeOutputEmail($email) ?></option>
                             <?php } ?>
@@ -28,20 +28,20 @@
 
                         <div class="recipients"></div>
 
-                        <input name="to" type="email" multiple title="{tr:email_separator_msg}" value="" placeholder="{tr:enter_to_email}" />
+                        <input id="to" name="to" type="email" multiple title="{tr:email_separator_msg}" value="" placeholder="{tr:enter_to_email}" />
                     </div>
 
                     <div class="fieldcontainer">
                         <label for="subject">{tr:subject} ({tr:optional}) :</label>
 
-                        <input name="subject" type="text"/>
+                        <input id="subject" name="subject" type="text"/>
                     </div>
 
                     <div class="fieldcontainer">
                         <label for="message">{tr:message} ({tr:optional}) : </label>
 
                         <label class="invalid" id="message_can_not_contain_urls" style="display:none;">{tr:message_can_not_contain_urls}</label>
-                        <textarea name="message" rows="4"></textarea>
+                        <textarea id="message" name="message" rows="4"></textarea>
                     </div>
                 </td>
 
@@ -67,13 +67,13 @@
                             if($transfer && in_array($name, array(TransferOptions::REDIRECT_URL_ON_COMPLETE))) {
                                 echo '<div class="fieldcontainer" data-option="'.$name.'">';
                                 echo '    <label for="'.$name.'">'.Lang::tr($name).'</label>';
-                                echo '    <input name="'.$name.'" type="text">';
+                                echo '    <input id="'.$name.'" name="'.$name.'" type="text">';
                                 echo '    <br/>';
                                 echo '</div>';
                                 
                             } else {
                                 echo '<div class="fieldcontainer">';
-                                echo '  <input name="'.$name.'" type="checkbox" '.$checked.' />';
+                                echo '  <input id="'.$name.'" name="'.$name.'" type="checkbox" '.$checked.' />';
                                 echo '  <label for="'.$name.'">'.Lang::tr($name).'</label>';
                                 echo '</div>';
                             }

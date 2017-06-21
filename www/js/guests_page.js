@@ -322,12 +322,6 @@ $(function() {
         filesender.ui.nodes.expires.datepicker('setDate', $(this).val());
     });
     
-    // Make options label toggle checkboxes
-    send_voucher.find('.basic_options label, .advanced_options label').on('click', function() {
-        var checkbox = $(this).closest('.fieldcontainer').find(':checkbox');
-        checkbox.prop('checked', !checkbox.prop('checked'));
-    }).css('cursor', 'pointer');
-    
     // Bind advanced options display toggle
     send_voucher.find('.toggle_advanced_options').on('click', function() {
         $(this).closest('.options_box').find('.advanced_options').slideToggle();
