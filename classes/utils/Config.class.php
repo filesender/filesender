@@ -130,7 +130,7 @@ class Config {
         // Load virtualhost config if used
         if ($virtualhost === null)
             $virtualhost = self::get('virtualhost');
-            
+        
         if ($virtualhost) {
             if (!is_string($virtualhost))
                 throw new ConfigBadParameterException('virtualhost');
@@ -159,8 +159,9 @@ class Config {
                     $dfn = array('type' => $dfn);
                 } else if(is_array($dfn) && !array_key_exists('type', $dfn)) {
                     $dfn = array('type' => 'enum', 'values' => $dfn);
-                } else if(!is_array($dfn))
+                } else if(!is_array($dfn)) {
                     throw new ConfigBadParameterException('config_overrides');
+                }
                 
                 $dfn['value'] = property_exists($overrides, $key) ? $overrides->$key : null;
                 
@@ -169,7 +170,12 @@ class Config {
         }
         
         // Special parameter checks and sets
-        
+        if( self::get('encryption_enabled')) {
+            if( self::get('upload_chunk_size') < 262144 ) {
+                throw new ConfigBadParameterException('upload_chunk_size must be >= 262144 if encryption is available');
+            }
+        }   
+
         // update max_flash_upload_size if php.ini post_max_size and upload_max_filesize is set lower
         $max_system_upload_size = min(
             Utilities::sizeToBytes(ini_get('post_max_size')) - 2048,
@@ -198,7 +204,7 @@ class Config {
         if(!self::get('default_guest_days_valid'))
             self::$parameters['default_guest_days_valid'] = self::get('max_guest_days_valid');
     }
-    
+            
     /**
      * Get virtualhosts list
      * 
@@ -269,12 +275,12 @@ class Config {
             $search = substr($key, 0, -1);
             $set = array();
             array_unshift($args, null); // Prepare place for key for sub-calls
-            foreach(array_keys(self::$parameters) as $key)
+            foreach(array_keys(self::$parameters) as $key) {
                 if(substr($key, 0, strlen($search)) == $search) {
                     $args[0] = $key;
                     $set[substr($key, strlen($search))] = call_user_func_array(get_class().'::get', $args);
                 }
-            
+            }
             return $set;
         }
         
@@ -502,7 +508,7 @@ class ConfigValidator {
                             case 'array':       $pass |= is_array($value);              break;
                             case 'callable':    $pass |= is_callable($value);           break;
                         }
-                            
+                        
                         if($pass) break; // Stop on first true or component
                     }
                     
