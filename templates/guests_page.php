@@ -63,16 +63,20 @@
                                 }
                             }
                             $checked = $default ? 'checked="checked"' : '';
-                            
+                            $extraDivAttrs = '';
+                            $hidden = '';
+                            if( $name == 'get_a_link' ) {
+                                $extraDivAttrs .= ' hidden="true" ';
+                            }
                             if($transfer && in_array($name, array(TransferOptions::REDIRECT_URL_ON_COMPLETE))) {
-                                echo '<div class="fieldcontainer" data-option="'.$name.'">';
+                                echo '<div class="fieldcontainer" data-option="'.$name.'" '. $extraDivAttrs .'>';
                                 echo '    <label for="'.$name.'">'.Lang::tr($name).'</label>';
                                 echo '    <input id="'.$name.'" name="'.$name.'" type="text">';
                                 echo '    <br/>';
                                 echo '</div>';
                                 
                             } else {
-                                echo '<div class="fieldcontainer">';
+                                echo '<div class="fieldcontainer" '. $extraDivAttrs .'>';
                                 echo '  <input id="'.$name.'" name="'.$name.'" type="checkbox" '.$checked.' />';
                                 echo '  <label for="'.$name.'">'.Lang::tr($name).'</label>';
                                 echo '</div>';
