@@ -221,7 +221,7 @@ class Transfer extends DBObject {
         
         // Sort by date
         uasort($transfers, function($a, $b) {
-            return $a->created - $b->created;
+            return $b->created - $a->created;
         });
         
         return $transfers;
