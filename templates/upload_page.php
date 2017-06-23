@@ -157,8 +157,13 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
                             
                             $checked = $default ? 'checked="checked"' : '';
                             $disabled = $disable ? 'disabled="disabled"' : '';
-                            
-                            echo '<div class="fieldcontainer" data-option="'.$name.'">';
+                            $extraDivAttrs = '';
+                            if(Auth::isGuest() && $disable) {
+                                if( Config::get('guest_upload_page_hide_unchangable_options')) {
+                                    $extraDivAttrs .= ' hidden="true" ';
+                                }
+                            }
+                            echo '<div class="fieldcontainer" data-option="'.$name.'" '. $extraDivAttrs .'>';
                             if($text) {
                                 echo '    <label for="'.$name.'">'.Lang::tr($name).'</label>';
                                 echo '    <input id="'.$name.'" name="'.$name.'" type="text" value="'.htmlspecialchars($default).'" '.$disabled.'>';
