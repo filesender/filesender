@@ -108,6 +108,7 @@ title: Configuration directives
 * [default_guest_days_valid](#defaultguestdaysvalid)
 * [max_guest_days_valid](#maxguestdaysvalid)
 * [max_guest_recipients](#maxguestrecipients)
+* [guest_upload_page_hide_unchangable_options](#guest_upload_page_hide_unchangable_options)
 
 ## Authentication
 
@@ -986,6 +987,16 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __mandatory:__ no
 * __type:__ int
 * __default:__ 50
+* __available:__ since version 2.0
+* __1.x name:__
+* __comment:__
+
+### guest_upload_page_hide_unchangable_options
+
+* __description:__ when true checkboxes that the guest can not interact with are hidden
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ false
 * __available:__ since version 2.0
 * __1.x name:__
 * __comment:__

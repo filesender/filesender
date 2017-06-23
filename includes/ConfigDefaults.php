@@ -200,7 +200,9 @@ $default = array(
             'default' => ''
         ),
     ),
-    
+
+    'guest_upload_page_hide_unchangable_options' => false,
+
     'guest_options' => array(
         'email_upload_started' => array(
             'available' => true,
