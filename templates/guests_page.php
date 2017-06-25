@@ -65,9 +65,6 @@
                             $checked = $default ? 'checked="checked"' : '';
                             $extraDivAttrs = '';
                             $hidden = '';
-                            if( $name == 'get_a_link' ) {
-                                $extraDivAttrs .= ' hidden="true" ';
-                            }
                             if($transfer && in_array($name, array(TransferOptions::REDIRECT_URL_ON_COMPLETE))) {
                                 echo '<div class="fieldcontainer" data-option="'.$name.'" '. $extraDivAttrs .'>';
                                 echo '    <label for="'.$name.'">'.Lang::tr($name).'</label>';

@@ -889,6 +889,8 @@ $(function() {
                 i.val(transfer_options[option]);
             }
         }
+        form.find('input[name="get_a_link"]').trigger('change');
+        
     } else if(failed) {
         var id = failed.id;
         if(filesender.config.chunk_upload_security == 'key') {

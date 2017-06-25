@@ -154,7 +154,7 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
                             $default = $cfg['default'];
                             if(Auth::isSP() && !$text)
                                 $default = Auth::user()->defaultTransferOptionState($name);
-                            
+
                             $checked = $default ? 'checked="checked"' : '';
                             $disabled = $disable ? 'disabled="disabled"' : '';
                             $extraDivAttrs = '';
@@ -162,9 +162,6 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
                                 if( Config::get('guest_upload_page_hide_unchangable_options')) {
                                     $extraDivAttrs .= ' hidden="true" ';
                                 }
-                            }
-                            if(Auth::isGuest() && $name == 'get_a_link' ) {
-                                $extraDivAttrs .= ' hidden="true" ';
                             }
                             echo '<div class="fieldcontainer" data-option="'.$name.'" '. $extraDivAttrs .'>';
                             if($text) {
