@@ -163,6 +163,9 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
                                     $extraDivAttrs .= ' hidden="true" ';
                                 }
                             }
+                            if(Auth::isGuest() && $name == 'get_a_link' ) {
+                                $extraDivAttrs .= ' hidden="true" ';
+                            }
                             echo '<div class="fieldcontainer" data-option="'.$name.'" '. $extraDivAttrs .'>';
                             if($text) {
                                 echo '    <label for="'.$name.'">'.Lang::tr($name).'</label>';
