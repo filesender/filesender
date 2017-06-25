@@ -145,7 +145,6 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
                         
                     </div>
                 </td>
-                
                 <td class="box">
                     <?php
                         $displayoption = function($name, $cfg, $disable = false) {
