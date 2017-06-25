@@ -179,12 +179,14 @@ class Guest extends DBObject {
         if(is_object($this->options)) $this->options = (array)$this->options;
         
         // Legacy option format conversion, will be transformed to object by json conversion
-        if(is_array($this->transfer_options)) $this->transfer_options = array_merge(
-            array_fill_keys(array_keys(Transfer::allOptions()), false),
-            array_fill_keys($this->transfer_options, true)
-        );
-        
-        if(is_object($this->transfer_options)) $this->transfer_options = (array)$this->transfer_options;
+        if(is_array($this->transfer_options)) {
+            $this->transfer_options = array_merge(
+                array_fill_keys(array_keys(Transfer::allOptions()), false),
+                array_fill_keys($this->transfer_options, true)
+            );
+        }
+        if(is_object($this->transfer_options))
+            $this->transfer_options = (array)$this->transfer_options;
     }
     
     /**

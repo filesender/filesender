@@ -658,7 +658,10 @@ class Transfer extends DBObject {
             
             return $auth_url;
         }
-        
+        if($property == 'download_link') {
+            $recipients = array_values($this->recipients);
+            return $recipients[0]->download_link;
+        }
         throw new PropertyAccessException($this, $property);
     }
     
@@ -868,6 +871,9 @@ class Transfer extends DBObject {
             // Send notification if required
             if($this->getOption(TransferOptions::EMAIL_UPLOAD_COMPLETE))
                 TranslatableEmail::quickSend('guest_upload_complete', $guest->owner, $guest);
+
+            // Let the guest know the upload is complete too
+            TranslatableEmail::quickSend('guest_upload_complete_confirmation_to_guest', $guest, $this);
             
             // Remove guest rights if valid for one upload only
             if($guest->getOption(GuestOptions::VALID_ONLY_ONE_TIME))
