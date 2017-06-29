@@ -873,7 +873,9 @@ class Transfer extends DBObject {
                 TranslatableEmail::quickSend('guest_upload_complete', $guest->owner, $guest);
 
             // Let the guest know the upload is complete too
-            TranslatableEmail::quickSend('guest_upload_complete_confirmation_to_guest', $guest, $this);
+            // but if they can only 'send to me' then do not leak the download link
+            if(!$guest->getOption(GuestOptions::CAN_ONLY_SEND_TO_ME))
+                TranslatableEmail::quickSend('guest_upload_complete_confirmation_to_guest', $guest, $this);
             
             // Remove guest rights if valid for one upload only
             if($guest->getOption(GuestOptions::VALID_ONLY_ONE_TIME))
