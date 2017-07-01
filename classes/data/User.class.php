@@ -48,7 +48,7 @@ class User extends DBObject {
     protected static $dataMap = array(
         'id' => array(
             'type' => 'string',
-            'size' => 255,
+            'size' => 190,
             'primary' => true
         ),
         'additional_attributes' => array(
