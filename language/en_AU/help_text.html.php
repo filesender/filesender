@@ -1,11 +1,67 @@
-<h3>Login</h3> 
-<ul class="fa-ul">
-    <li><i class="fa-li fa fa-caret-right"></i>You log in through one of the listed Identity Providers using your standard institutional account. If you do not see your institution in the list, or your login fails, please contact your local IT support</li>
-</ul>
+<h3>Welcome to FileSender</h3>
+
+<p>
+    FileSender is a web based application that allows authenticated
+    users to securely and easily send arbitrarily large files to other
+    users. Users without an account can be sent a guest upload voucher by an
+    authenticated user. FileSender is developed to the requirements of
+    the higher education and research community.
+</p>
+
+<h4>For guests...</h4>
+
+<p>
+    If you have been sent a guest voucher from this site you have been
+    invited to upload files one or more times. The simplest way to do
+    that is using the information contained in the invitation email.
+    When uploading as guest, be sure to verify that any links in the
+    guest invitation email are to a FileSender that is running on a
+    research facility you trust. If you are not expecting a guest link
+    from a facility you know then the email might not be legitimate.
+</p>
+<p>
+    The user who invited you to this system might have done so
+    allowing you to upload files and get a link to allow other folks
+    to download those files. If you can not get a link then you will
+    have to provide email address(es) of the people who you wish to
+    invite to download the uploaded files. 
+</p>
+
+<h4>For authenticated users...</h4>
+
+<p>
+    If this installation of FileSender is on your research facility
+    the login button on the top right of the page should let you login
+    using standard institutional account. If you are unsure
+    about what login credentials to use to access this FileSender then
+    please contact your local IT support.
+</p>
+
+<p>
+    As an authenticated user you should be able to upload files one or
+    more times and either have FileSender email the recipients after
+    your upload completes or provide you with a link to allow file
+    download. You should also be able to invite other researchers to
+    the system to upload one or more files as a guest. 
+</p>
+
+<h3>Possible Download Size Limitations</h3>
+<p>
+    Any modern browser will download files of any size from the site.
+    Nothing special is required for downloads.
+</p>
+
+<h3>Possible Upload Size Limitations</h3>
+
+<p>
+    If your browser supports HTML5 then you should be able to upload
+    files of any size up to {size:cfg:max_transfer_size}. Current versions of Firefox and Chrome on
+    Windows, Mac OS X and Linux are known to have HTML5 support.
+</p>
 
 <h3>Your browser's features</h3>
 <ul class="fa-ul">
-    <li data-feature="html5"><img src="images/html5_installed.png" alt="HTML5 upload enabled" /> You can upload files of any size up to {size:cfg:max_transfer_size} per transfer.</li>
+    <li data-feature="html5"><img src="images/html5_installed.png" alt="HTML5 upload enabled" /> You can upload files of any size up to {size:cfg:max_transfer_size} per transfer and you can resume uploads.</li>
     <li data-feature="nohtml5"><img src="images/html5_none.png" alt="HTML5 upload disabled" /> You can upload files of at most {size:cfg:max_legacy_file_size} each and up to {size:cfg:max_transfer_size} per transfer.</li>
 </ul>
 
@@ -25,11 +81,6 @@
 <ul class="fa-ul">
     <li><i class="fa-li fa fa-caret-right"></i>FileSender will warn you should you try to upload a file that is too big for this method.</li>
     <li><i class="fa-li fa fa-caret-right"></i>Resuming uploads is not supported with this method.</li>
-</ul>
-
-<h3>Downloads of any size</h3>
-<ul class="fa-ul">
-    <li><i class="fa-li fa fa-caret-right"></i>Any modern browser will do just fine, nothing special is required for downloads</li>
 </ul>
 
 <h3>Configured service constraints</h3>

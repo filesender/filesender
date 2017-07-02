@@ -48,6 +48,10 @@ a {
     color: #333333;
 }
 
+p {
+  margin: 1em;
+}
+
 th, td {
     vertical-align: top;
     padding: 0.5em;
