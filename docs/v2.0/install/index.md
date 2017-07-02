@@ -275,7 +275,27 @@ Run:
 	EOF
 	chmod +x /etc/cron.daily/filesender
 
-# Step 10 - Start using FileSender
+# Step 10 - Optional local about, help, and landing pages
+
+FileSender has provisions to allow you to have a local page for about,
+help, and the landing (splash) page the user sees on your FileSender
+site. While you could directly edit the page template for your language
+doing that would not preserve your changes when you upgrade FileSender.
+
+If you want a local about, help, or splash page create and edit a file
+with the postfix ".local.php" and that local page will be served to
+the user instead of the default. 
+
+For example, the default help page for English language users might be from
+
+/opt/filesender/language/en_AU/help_text.html.php
+
+So you create a new page at the following location with your site
+specific help text in it which would be served instead of the default.
+
+/opt/filesender/language/en_AU/help_text.html.php.local.php
+
+# Step 11 - Start using FileSender
 
 Visit the URL to your FileSender instance.
 
