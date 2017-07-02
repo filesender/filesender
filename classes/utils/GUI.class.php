@@ -282,9 +282,11 @@ class GUI {
             // Authenticated users have access to lots ...
             if(Auth::isAuthenticated(false)) {
                 if(Auth::isGuest()) {
-                    self::$allowed_pages = array('upload');
+                    self::$allowed_pages = array('upload',
+                                                 GUIPages::HELP, GUIPages::ABOUT );
                 } else {
-                    self::$allowed_pages = array('upload', 'transfers', 'guests', 'download');
+                    self::$allowed_pages = array('upload', 'transfers', 'guests', 'download',
+                                                 GUIPages::HELP, GUIPages::ABOUT );
                     
                     // ... and admin to even more !
                     if(Auth::isAdmin()) self::$allowed_pages[] = 'admin';
@@ -295,7 +297,7 @@ class GUI {
             }
             
             // Always accessible pages
-            foreach(array('home', 'download', 'translate_email', 'logout', 'exception') as $p)
+            foreach(array('home', 'download', 'translate_email', 'logout', 'exception', GUIPages::HELP, GUIPages::ABOUT) as $p)
                 self::$allowed_pages[] = $p;
             
                 if(Config::get('maintenance')) self::$allowed_pages = array('maintenance');
