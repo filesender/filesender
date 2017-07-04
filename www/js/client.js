@@ -272,6 +272,7 @@ window.filesender.client = {
             files.push({
                 name: transfer.files[i].name,
                 size: transfer.files[i].size,
+                fingerprint: transfer.files[i].fingerprint,
                 mime_type: transfer.files[i].mime_type,
                 cid: transfer.files[i].cid
             });
@@ -316,6 +317,7 @@ window.filesender.client = {
             rawdata: true,
             headers: {
                 'X-Filesender-File-Size': file.size,
+                'X-Filesender-Fingerprint': file.fingerprint,
                 'X-Filesender-Chunk-Offset': -1,
                 'X-Filesender-Chunk-Size': blob.size
             }
@@ -342,6 +344,7 @@ window.filesender.client = {
             rawdata: true,
             headers: {
                 'X-Filesender-File-Size': file.size,
+                'X-Filesender-Fingerprint': file.fingerprint,
                 'X-Filesender-Chunk-Offset': offset,
                 'X-Filesender-Chunk-Size': blob.size,
                 'X-Filesender-Encrypted': '1'

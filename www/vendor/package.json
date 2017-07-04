@@ -11,6 +11,7 @@
   "dependencies": {
     "promise-polyfill": "^6.0.2",
     "webcrypto-shim": "^0.1.1",
-    "xregexp": "^3.2.0"
+    "xregexp": "^3.2.0",
+    "jssha": "^2.2.0"
   }
 }

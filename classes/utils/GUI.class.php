@@ -86,6 +86,7 @@ class GUI {
             'lib/jquery/jquery-ui-1.10.2.custom.min.js',
             'vendor/node_modules/promise-polyfill/promise.js',
             'vendor/node_modules/webcrypto-shim/webcrypto-shim.js',
+            'vendor/node_modules/jssha/src/fingerprint.js',
             'js/filesender.js',
             'js/lang.js',
             'js/client.js',

@@ -86,6 +86,11 @@ class File extends DBObject
             'type' => 'string',
             'size' => 40,
             'null' => true
+        ),
+        'fingerprint' => array(
+            'type' => 'string',
+            'size' => 64,
+            'null' => true
         )
     );
     
@@ -102,6 +107,7 @@ class File extends DBObject
     protected $upload_start = 0;
     protected $upload_end = 0;
     protected $sha1 = null;
+    protected $fingerprint = null;
    
     /**
      * Related objects cache
@@ -258,7 +264,7 @@ class File extends DBObject
      */
     public function __get($property) {
         if(in_array($property, array(
-            'id', 'transfer_id', 'uid', 'name', 'mime_type', 'size', 'encrypted_size', 'upload_start', 'upload_end', 'sha1'
+            'id', 'transfer_id', 'uid', 'name', 'mime_type', 'size', 'encrypted_size', 'upload_start', 'upload_end', 'sha1', 'fingerprint'
         ))) return $this->$property;
         
         if($property == 'transfer') {
@@ -314,7 +320,16 @@ class File extends DBObject
         }else if($property == 'sha1') {
             if(!preg_match('`^[0-9a-f]{40}$`', $value)) throw new FileBadHashException($this, $value);
             $this->sha1 = (string)$value;
+        }else if($property == 'fingerprint') {
+            if(!preg_match('`^[0-9a-f]{64}$`', $value)) throw new FileBadHashException($this, $value);
+            $this->fingerprint = (string)$value;
         }else throw new PropertyAccessException($this, $property);
+    }
+
+    public function haveFingerprint() {
+        if(preg_match('`^[0-9a-f]{64}$`', $this->fingerprint))
+            return true;
+        return false;
     }
     
     /**
