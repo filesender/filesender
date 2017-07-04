@@ -153,7 +153,69 @@ class DatabasePgsql {
             self::createSequence($table, $column);
         }
     }
-    
+
+    public static function dropTableSecondaryIndex(   $table, $index ) {
+        if(!$logger || !is_callable($logger)) $logger = function() {};
+        $query = 'DROP INDEX '.$index;
+        DBI::exec($query);
+    }
+    public static function createTableSecondaryIndex( $table, $index, $definition ) {
+        if(!$logger || !is_callable($logger)) $logger = function() {};
+
+        $coldefs = '';
+        foreach( $definition as $dk => $dm ) {
+            if( $coldefs != '' )
+                $coldefs .= ',';
+            $coldefs .= $dk;
+        }
+        $query = 'CREATE INDEX '.$index.' on '.$table.' (' . $coldefs . ')';
+        DBI::exec($query);
+    }
+
+    /**
+     * Table columns format checking.
+     * 
+     * @param string $table table name
+     * @param string $index index name
+     * @param string $definition index columns definition
+     * 
+     * @return string reason if a problem or false if no problems
+     */
+    public static function checkTableSecondaryIndexFormat($table, $index, $definition, $logger = null) {
+        if(!$logger || !is_callable($logger)) $logger = function() {};
+
+        $expected = array();
+        foreach( $definition as $dk => $dm ) {
+            $expected[] = $dk;
+        }
+
+        // Get current definition
+        $s = DBI::prepare('SELECT a.attname, pg_catalog.format_type(a.atttypid, a.atttypmod), a.attnotnull, a.attnum,'
+                . ' pg_catalog.pg_get_indexdef(a.attrelid, a.attnum, TRUE) AS indexdef '
+                . ' FROM pg_catalog.pg_attribute a '
+                . ' WHERE a.attrelid = '
+                . ' ( SELECT c.oid FROM pg_catalog.pg_class c LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace '
+                . "    WHERE c.relname ~ '^(" . strtolower($index) . ")\$' "
+                . '      AND pg_catalog.pg_table_is_visible(c.oid) '
+                . '    LIMIT 1 ) '
+                . ' AND a.attnum > 0 AND NOT a.attisdropped '
+                . 'ORDER BY a.attnum');
+        $s->execute(array());
+
+        $existingCols = array();
+        foreach($s->fetchAll() as $r) {
+            $existingCols[] = $r['attname'];
+        }
+
+        rsort($existingCols);
+        rsort($expected);
+        if( !count($existingCols))
+            return DatabaseSecondaryIndexStatuses::NOTFOUND;
+            
+        return $existingCols != $expected ? DatabaseSecondaryIndexStatuses::INCORRECT_DEFINITION : false;
+    }
+
+
     /**
      * Table columns format checking.
      * 

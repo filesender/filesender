@@ -101,7 +101,62 @@ class DatabaseMysql {
         $query = 'ALTER TABLE '.$table.' ADD '.$column.' '.self::columnDefinition($definition);
         DBI::exec($query);
     }
-    
+
+
+    public static function dropTableSecondaryIndex(   $table, $index ) {
+        if(!$logger || !is_callable($logger)) $logger = function() {};
+        $query = 'DROP INDEX '.$index.' on '.$table.'';
+        DBI::exec($query);
+    }
+    public static function createTableSecondaryIndex( $table, $index, $definition ) {
+        if(!$logger || !is_callable($logger)) $logger = function() {};
+
+        $coldefs = '';
+        foreach( $definition as $dk => $dm ) {
+            if( $coldefs != '' )
+                $coldefs .= ',';
+            $coldefs .= $dk;
+        }
+        $query = 'CREATE INDEX '.$index.' on '.$table.' (' . $coldefs . ')';
+        DBI::exec($query);
+    }
+
+    /**
+     * Table columns format checking.
+     * 
+     * @param string $table table name
+     * @param string $index index name
+     * @param string $definition index columns definition
+     * 
+     * @return string reason if a problem or false if no problems
+     */
+    public static function checkTableSecondaryIndexFormat($table, $index, $definition, $logger = null) {
+        if(!$logger || !is_callable($logger)) $logger = function() {};
+
+        $expected = array();
+        foreach( $definition as $dk => $dm ) {
+            $expected[] = $dk;
+        }
+
+        // Get current definition
+        $s = DBI::prepare('SHOW INDEX FROM '.$table.'');
+        $s->execute(array(':key_name' => $index));
+
+        $existingCols = array();
+        foreach($s->fetchAll() as $r) {
+            if( $r['Key_name'] == $index) {
+                $existingCols[] = $r['Column_name'];
+            }
+        }
+
+        rsort($existingCols);
+        rsort($expected);
+        if( !count($existingCols))
+            return DatabaseSecondaryIndexStatuses::NOTFOUND;
+            
+        return $existingCols != $expected ? DatabaseSecondaryIndexStatuses::INCORRECT_DEFINITION : false;
+    }
+
     /**
      * Table columns format checking.
      * 
