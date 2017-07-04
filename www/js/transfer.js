@@ -237,7 +237,7 @@ window.filesender.transfer = function() {
             if( filesender.config.protect_upload_with_fingerprint ) {
                 var bytesToRead = Math.min( file.size, 1*1024*1024 );
                 var slicer = file.blob.slice ? 'slice' : (file.blob.mozSlice ? 'mozSlice' : (file.blob.webkitSlice ? 'webkitSlice' : 'slice'));
-                var data = blobToString(file.blob[slicer](0,file.size));
+                var data = blobToString(file.blob[slicer](0,bytesToRead));
                 var shaObj = new jsSHA("SHA-256", "BYTES");
                 shaObj.update(data);
                 file.fingerprint = shaObj.getHash("HEX");
