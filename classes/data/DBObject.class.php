@@ -62,7 +62,20 @@ class DBObject {
      *   - default : default value for this field
      */
     protected static $dataMap = array();
-    
+
+    /**
+     * Defines secondary indexes for this table
+     *
+     * Note that the IndexName you give will have the tablename_ prepended to it for you.
+     * So you can just say key1_key2 to define the IndexName if you like.
+     *
+     * Associative array of <IndexName> => IndexDefinition
+     * Where IndexDefinition is an associative array of <field> => <field_def>
+     *   <field_def> associative array of field definition entries in :
+     *     - notused : This is an associative array to allow later expansion.
+     */
+    protected static $secondaryIndexMap = array();
+
     /**
      * DataMap getter
      * 
@@ -71,6 +84,17 @@ class DBObject {
     public static function getDataMap() {
         return static::$dataMap;
     }
+
+    /**
+     * Secondary Index map getter
+     * 
+     * @return array the class SecondaryIndexMap
+     */
+    public static function getSecondaryIndexMap() {
+        return static::$secondaryIndexMap;
+    }
+
+
     
     /**
      * Check if object is cached

@@ -57,6 +57,7 @@ try {
         echo 'Checking class '.$class."\n";
         
         $datamap = call_user_func($class.'::getDataMap');
+        $secindexmap = call_user_func($class.'::getSecondaryIndexMap');
         $table = call_user_func($class.'::getDBTable');
         
         // Check if table exists
@@ -74,7 +75,7 @@ try {
             foreach($required_columns as $c) if(!in_array($c, $existing_columns)) $missing[] = $c;
             if(count($missing)) {
                 echo 'Found '.count($missing).' missing columns in existing table : '.implode(', ', $missing)."\n";
-                 foreach($missing as $column) Database::createTableColumn($table, $column, $datamap[$column]);
+                foreach($missing as $column) Database::createTableColumn($table, $column, $datamap[$column]);
             }
             
             $useless = array();
@@ -97,17 +98,38 @@ try {
                     Database::updateTableColumnFormat($table, $column, $datamap[$column], $problems);
                 }
             }
+            
         }else{
             echo 'Table is missing, create it'."\n";
             Database::createTable($table, $datamap);
         }
         
         echo 'Done for table '.$table."\n";
+
+        echo 'Checkindex secondary indexes for table '.$table."\n";
+        foreach($secindexmap as $index => $definition) {
+            $index = $table . '_' . $index;
+            echo 'checking ' . $index . "\n";
+            $problems = Database::checkTableSecondaryIndexFormat( $table, $index, $definition, function($message) {
+                    echo "\t".$message."\n";
+            });
+            if( $problems ) {
+                echo "update index " . $index . " on table " . $table . "\n";
+                if( $problems != DatabaseSecondaryIndexStatuses::NOTFOUND ) {
+                    echo "drop index " . $index . " on table " . $table . "\n";
+                    Database::dropTableSecondaryIndex(   $table, $index );
+                }
+                echo "create index " . $index . " on table " . $table . "\n";
+                Database::createTableSecondaryIndex( $table, $index, $definition );
+            }
+        } 
+
+        
+        }
+        
+        echo 'Everything went well'."\n";
+        echo 'Database structure is up to date'."\n";
+    } catch(Exception $e) {
+        $uid = ($e instanceof LoggingException) ? $e->getUid() : 'no available uid';
+        die('Encountered exception : '.$e->getMessage().', see logs for details (uid: '.$uid.') ...');
     }
-    
-    echo 'Everything went well'."\n";
-    echo 'Database structure is up to date'."\n";
-} catch(Exception $e) {
-    $uid = ($e instanceof LoggingException) ? $e->getUid() : 'no available uid';
-    die('Encountered exception : '.$e->getMessage().', see logs for details (uid: '.$uid.') ...');
-}

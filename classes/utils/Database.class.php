@@ -93,7 +93,22 @@ class Database {
         
         return call_user_func($class.'::createTableColumn', $table, $column, $definition);
     }
-    
+
+
+    public static function dropTableSecondaryIndex($table, $index, $logger = null) {
+        $class = self::getDelegationClass();
+        return call_user_func($class.'::dropTableSecondaryIndex', $table, $index, $logger);
+    }
+    public static function createTableSecondaryIndex($table, $index, $definition, $logger = null) {
+        $class = self::getDelegationClass();
+        return call_user_func($class.'::createTableSecondaryIndex', $table, $index, $definition, $logger);
+    }
+    public static function checkTableSecondaryIndexFormat($table, $index, $definition, $logger = null) {
+        $class = self::getDelegationClass();
+        return call_user_func($class.'::checkTableSecondaryIndexFormat', $table, $index, $definition, $logger);
+    }
+
+
     /**
      * Delegates table columns format checking.
      * 
