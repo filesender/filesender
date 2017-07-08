@@ -55,7 +55,7 @@ class Recipient extends DBObject {
         ),
         'email' => array(
             'type' => 'string',
-            'size' => 255
+            'size' => 190
         ),
         'token' => array(
             'type' => 'string',

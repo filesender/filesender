@@ -49,7 +49,7 @@ class Guest extends DBObject {
         ),
         'user_id' => array(
             'type' => 'string',
-            'size' => 255
+            'size' => 190
         ),
         'user_email' => array(
             'type' => 'string',
@@ -62,7 +62,7 @@ class Guest extends DBObject {
         ),
         'email' => array(
             'type' => 'string',
-            'size' => 255
+            'size' => 190
         ),
         'transfer_count' => array(
             'type' => 'uint',
@@ -70,7 +70,7 @@ class Guest extends DBObject {
         ),
         'subject' => array(
             'type' => 'string',
-            'size' => 255,
+            'size' => 190,
             'null' => true
         ),
         'message' => array(

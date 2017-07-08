@@ -51,11 +51,11 @@ class TranslatableEmail extends DBObject {
         ),
         'context_type' => array(
             'type' => 'string',
-            'size' => 255
+            'size' => 190
         ),
         'context_id' => array(
             'type' => 'string',
-            'size' => 255
+            'size' => 190
         ),
         'token' => array(
             'type' => 'string',
@@ -63,7 +63,7 @@ class TranslatableEmail extends DBObject {
         ),
         'translation_id' => array(
             'type' => 'string',
-            'size' => 255
+            'size' => 190
         ),
         'variables' => array(
             'type' => 'text',

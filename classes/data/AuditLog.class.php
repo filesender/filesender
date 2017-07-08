@@ -53,20 +53,20 @@ class AuditLog extends DBObject {
         ),
         'target_type' => array(
             'type' => 'string',
-            'size' => 255
+            'size' => 190
         ),
         'target_id' => array(
             'type' => 'string',
-            'size' => 255
+            'size' => 190
         ),
         'author_type' => array(
             'type' => 'string',
-            'size' => 255,
+            'size' => 190,
             'null' => true
         ),
         'author_id' => array(
             'type' => 'string',
-            'size' => 255,
+            'size' => 190,
             'null' => true
         ),
         'ip' => array(
