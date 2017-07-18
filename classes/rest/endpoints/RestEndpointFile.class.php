@@ -334,7 +334,7 @@ class RestEndpointFile extends RestEndpoint {
                 $offset = $offset / Config::get('upload_chunk_size') * Config::get('upload_crypted_chunk_size');
             }
 
-            $write_info = $file->writeChunk($data, $offset, $crypted_length);
+            $write_info = $file->writeChunk($data, $offset);
             $file->transfer->isUploading();
             
             return $write_info;
