@@ -287,12 +287,10 @@ class RestEndpointFile extends RestEndpoint {
                 }
                 // The initialization vector
                 $ivLength = 16;
-                $crypted_length = strlen($data);
                 // Content length
                 $data_length = ($chunkLength - $paddedLength - $ivLength);
             } else {
                 $data_length = strlen($data);
-                $crypted_length = 0;
             }
             
             // Check that the client sent file size the same as the loaded file if given
