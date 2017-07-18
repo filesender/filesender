@@ -746,8 +746,18 @@ class Transfer extends DBObject {
         $file->name = $name;
         $file->size = $size;
         $file->mime_type = $mime_type ? $mime_type : 'application/binary';
+
+        //calculate encrypted size
+        $echunkdiff = Config::get('upload_crypted_chunk_size') - Config::get('upload_chunk_size');
+        $chunksMinusOne = ceil($file->size / Config::get('upload_chunk_size'))-1;
+        $lastChunkSize = $file->size - ($chunksMinusOne * Config::get('upload_chunk_size'));
+        $lastChunkPadding = 16 - $lastChunkSize % 16;
+        if ($lastChunkPadding == 0)
+            $lastChunkPadding = 16;
+        $file->encrypted_size = $file->size + ($chunksMinusOne * $echunkdiff) + $lastChunkPadding + 16;
+
         $file->save();
-        
+ 
         // Update local cache
         if(!is_null($this->filesCache)) $this->filesCache[$file->id] = $file;
         

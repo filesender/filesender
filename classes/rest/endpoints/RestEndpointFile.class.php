@@ -295,10 +295,6 @@ class RestEndpointFile extends RestEndpoint {
                 $crypted_length = 0;
             }
             
-            // keep track of each encrypted chunk so we know the actual final size;
-            $file->encrypted_size = $file->encrypted_size + $crypted_length;
-            $file->save();
-
             // Check that the client sent file size the same as the loaded file if given
             if(!is_null($client['X-Filesender-File-Size']))
                 if($file->size != $client['X-Filesender-File-Size'])
