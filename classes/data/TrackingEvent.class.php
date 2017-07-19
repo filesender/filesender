@@ -78,7 +78,7 @@ class TrackingEvent extends DBObject
             'id'          => array()
         )
     );
-    
+
     /**
      * Properties
      */

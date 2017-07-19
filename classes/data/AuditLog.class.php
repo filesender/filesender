@@ -97,7 +97,6 @@ class AuditLog extends DBObject {
 //            'event'       => array(),
 //            'created'     => array()
 //        ),
-
     );
 
     /**
