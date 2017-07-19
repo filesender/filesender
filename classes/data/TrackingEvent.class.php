@@ -71,7 +71,14 @@ class TrackingEvent extends DBObject
             'null' => true
         )
     );
-    
+
+    protected static $secondaryIndexMap = array(
+        'type_id' => array( 
+            'target_type' => array(),
+            'id'          => array()
+        )
+    );
+
     /**
      * Properties
      */

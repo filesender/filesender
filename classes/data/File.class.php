@@ -88,7 +88,13 @@ class File extends DBObject
             'null' => true
         )
     );
-    
+
+    protected static $secondaryIndexMap = array(
+        'transfer_id' => array( 
+            'transfer_id' => array()
+        )
+    );
+
     /**
      * Properties
      */
