@@ -82,7 +82,14 @@ class Recipient extends DBObject {
             'null' => true
         )
     );
+
+    protected static $secondaryIndexMap = array(
+        'token' => array( 
+            'token' => array()
+        )
+    );
     
+
     /**
      * Properties
      */

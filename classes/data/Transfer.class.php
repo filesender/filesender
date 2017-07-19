@@ -101,7 +101,13 @@ class Transfer extends DBObject {
             'transform' => 'json'
         )
     );
-    
+
+    protected static $secondaryIndexMap = array(
+        'user_id' => array( 
+            'user_id' => array()
+        )
+    );
+
     /**
      * Set selectors
      */
