@@ -43,13 +43,10 @@ $pagemenuitem = function($page) {
                 
                 echo '<li><select id="language_selector">'.implode('', $opts).'</select></li>';
             }
-            
-            $helpurl = Config::get('help_url');
-            echo '<li><a href="'.($helpurl ? $helpurl : '#').'" target="_blank" id="topmenu_help">'.Lang::tr('help').'</a></li>';
-            
-            $abouturl = Config::get('about_url');
-            echo '<li><a href="'.($abouturl ? $abouturl : '#').'" target="_blank" id="topmenu_about">'.Lang::tr('about').'</a></li>';
-            
+
+            $pagemenuitem('help');
+            $pagemenuitem('about');
+
             if (Auth::isAuthenticated() && Auth::isSP()) {
                 $url = AuthSP::logoffURL();
                 if($url)

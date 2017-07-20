@@ -684,6 +684,12 @@ $(function() {
         var files = filesender.ui.nodes.files.input[0].files;
         if(files && files.length) filesender.ui.files.add(files);
     }
+
+    // validate message as it is typed
+    window.filesender.ui.handleFlagInvalidOnRegexMatch(
+        filesender.ui.nodes.message,
+        $('#message_can_not_contain_urls'),
+        filesender.config.message_can_not_contain_urls_regex );
     
     // Setup date picker
     $.datepicker.setDefaults({
@@ -716,13 +722,6 @@ $(function() {
     filesender.ui.nodes.expires.on('change', function() {
         filesender.ui.nodes.expires.datepicker('setDate', $(this).val());
     });
-    
-    // Make options label toggle checkboxes
-    form.find('.basic_options label, .advanced_options label').on('click', function() {
-        var checkbox = $(this).closest('.fieldcontainer').find(':checkbox');
-        checkbox.prop('checked', !checkbox.prop('checked'));
-        checkbox.change();
-    }).css('cursor', 'pointer');
     
     // Bind advanced options display toggle
     form.find('.toggle_advanced_options').on('click', function() {
@@ -890,6 +889,8 @@ $(function() {
                 i.val(transfer_options[option]);
             }
         }
+        form.find('input[name="get_a_link"]').trigger('change');
+        
     } else if(failed) {
         var id = failed.id;
         if(filesender.config.chunk_upload_security == 'key') {

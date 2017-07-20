@@ -77,7 +77,29 @@ class AuditLog extends DBObject {
             'type' => 'datetime'
         )
     );
-    
+
+    protected static $secondaryIndexMap = array(
+        'Type_ID' => array( 
+            'target_type' => array(),
+            'target_id'   => array()
+        ),
+        'Author_ID' => array( 
+            'author_type' => array(),
+            'author_id'   => array()
+        )
+        
+//        'Type_ID_AType_AID_IP_Event_Created' => array(
+//            'target_type' => array(),
+//            'target_id'   => array(),
+//            'author_type' => array(),
+//            'author_id'   => array(),
+//            'ip'          => array(),
+//            'event'       => array(),
+//            'created'     => array()
+//        ),
+        
+    );
+
     /**
      * Set selectors
      */

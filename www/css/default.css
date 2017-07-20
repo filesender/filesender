@@ -48,6 +48,10 @@ a {
     color: #333333;
 }
 
+p {
+  margin: 1em;
+}
+
 th, td {
     vertical-align: top;
     padding: 0.5em;
@@ -291,6 +295,11 @@ span.invalid {
 input.invalid, textarea.invalid {
     border: 1px solid #f00;
 }
+
+label.invalid {
+    color: #f00;
+}
+
 
 .buttons {
     display: table;

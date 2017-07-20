@@ -97,6 +97,15 @@ class Guest extends DBObject {
         ),
         'last_activity' => array(
             'type' => 'datetime'
+        ),
+        'reminder_count' => array(
+            'type' => 'uint',
+            'size' => 'medium',
+            'default' => 0
+        ),
+        'last_reminder' => array(
+            'type' => 'datetime',
+            'null' => true
         )
     );
     
@@ -125,7 +134,9 @@ class Guest extends DBObject {
     protected $created = 0;
     protected $expires = 0;
     protected $last_activity = 0;
-    
+    protected $reminder_count = 0;
+    protected $last_reminder = 0;
+
     /**
      * Cache
      */
@@ -168,12 +179,14 @@ class Guest extends DBObject {
         if(is_object($this->options)) $this->options = (array)$this->options;
         
         // Legacy option format conversion, will be transformed to object by json conversion
-        if(is_array($this->transfer_options)) $this->transfer_options = array_merge(
-            array_fill_keys(array_keys(Transfer::allOptions()), false),
-            array_fill_keys($this->transfer_options, true)
-        );
-        
-        if(is_object($this->transfer_options)) $this->transfer_options = (array)$this->transfer_options;
+        if(is_array($this->transfer_options)) {
+            $this->transfer_options = array_merge(
+                array_fill_keys(array_keys(Transfer::allOptions()), false),
+                array_fill_keys($this->transfer_options, true)
+            );
+        }
+        if(is_object($this->transfer_options))
+            $this->transfer_options = (array)$this->transfer_options;
     }
     
     /**
@@ -360,8 +373,16 @@ class Guest extends DBObject {
      * Send reminder to recipients
      */
     public function remind() {
-        TranslatableEmail::quickSend('guest_reminder', $this);
         
+        // Limit reminders
+        if( $this->reminder_count >= Config::get('guest_reminder_limit')) {
+            throw new GuestReminderLimitReachedException();
+        }
+        $this->reminder_count++;
+        $this->save();
+        
+        TranslatableEmail::quickSend('guest_reminder', $this);
+            
         Logger::info($this.' reminded');
     }
     
@@ -428,8 +449,16 @@ class Guest extends DBObject {
      * @return mixed
      */
     public function getOption($option) {
-        if(!array_key_exists($option, $this->options)) return false;
-        return $this->options[$option];
+        if(array_key_exists($option, $this->options)) {
+            return $this->options[$option];
+        }
+        $options = static::allOptions();
+        if(array_key_exists($option, $options)) {
+            if(array_key_exists('default', $options[$option])) {
+                return $options[$option]['default'];
+            }
+        }
+        return false;
     }
     
     /**

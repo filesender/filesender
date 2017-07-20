@@ -60,9 +60,6 @@ $(function() {
         selectors.push(el.find('.fa'));
         selectors.toggleClass('fa-square-o', !selected).toggleClass('fa-check-square-o', selected);
     });
-    page.find('#download_test').on('click', function() { 
-        window.filesender.crypto_app().decryptDownload('https://filesender.app/download.php?files_ids=97', 'text/plain');
-    });
     
     
     // Get recipient token

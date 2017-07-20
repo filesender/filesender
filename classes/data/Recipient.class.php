@@ -71,9 +71,25 @@ class Recipient extends DBObject {
         'options' => array(
             'type' => 'text',
             'transform' => 'json'
+        ),
+        'reminder_count' => array(
+            'type' => 'uint',
+            'size' => 'medium',
+            'default' => 0
+        ),
+        'last_reminder' => array(
+            'type' => 'datetime',
+            'null' => true
+        )
+    );
+
+    protected static $secondaryIndexMap = array(
+        'token' => array( 
+            'token' => array()
         )
     );
     
+
     /**
      * Properties
      */
@@ -84,6 +100,8 @@ class Recipient extends DBObject {
     protected $created = 0;
     protected $last_activity = null;
     protected $options = null;
+    protected $reminder_count = 0;
+    protected $last_reminder = 0;
     
     /**
      * Related objects cache
@@ -195,6 +213,14 @@ class Recipient extends DBObject {
      * Send reminder
      */
     public function remind() {
+    
+        // Limit reminders
+        if( $this->reminder_count >= Config::get('guest_reminder_limit')) {
+            throw new GuestReminderLimitReachedException();
+        }
+        $this->reminder_count++;
+        $this->save();
+
         $this->transfer->remind($this);
     }
     

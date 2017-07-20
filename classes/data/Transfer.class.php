@@ -101,7 +101,13 @@ class Transfer extends DBObject {
             'transform' => 'json'
         )
     );
-    
+
+    protected static $secondaryIndexMap = array(
+        'user_id' => array( 
+            'user_id' => array()
+        )
+    );
+
     /**
      * Set selectors
      */
@@ -221,7 +227,7 @@ class Transfer extends DBObject {
         
         // Sort by date
         uasort($transfers, function($a, $b) {
-            return $a->created - $b->created;
+            return $b->created - $a->created;
         });
         
         return $transfers;
@@ -509,9 +515,17 @@ class Transfer extends DBObject {
      * 
      * @return mixed
      */
-    public function getOption($option) {if(gettype($this->options) == 'object') file_put_contents('/tmp/trace.log', print_r(debug_backtrace(), true));
-        if(!array_key_exists($option, $this->options)) return false;
-        return $this->options[$option];
+    public function getOption($option) {
+        if(array_key_exists($option, $this->options)) {
+            return $this->options[$option];
+        }
+        $options = static::allOptions();
+        if(array_key_exists($option, $options)) {
+            if(array_key_exists('default', $options[$option])) {
+                return $options[$option]['default'];
+            }
+        }
+        return false;
     }
     
     /**
@@ -650,7 +664,10 @@ class Transfer extends DBObject {
             
             return $auth_url;
         }
-        
+        if($property == 'download_link') {
+            $recipients = array_values($this->recipients);
+            return $recipients[0]->download_link;
+        }
         throw new PropertyAccessException($this, $property);
     }
     
@@ -725,7 +742,11 @@ class Transfer extends DBObject {
             
             if(count($matches)) return array_shift($matches);
         }
-        
+
+        if( !Utilities::isValidFileName( $name )) {
+            throw new TransferFileNameInvalidException( $name );
+        }
+
         // Create and save new recipient
         $file = File::create($this);
         $file->name = $name;
@@ -856,6 +877,11 @@ class Transfer extends DBObject {
             // Send notification if required
             if($this->getOption(TransferOptions::EMAIL_UPLOAD_COMPLETE))
                 TranslatableEmail::quickSend('guest_upload_complete', $guest->owner, $guest);
+
+            // Let the guest know the upload is complete too
+            // but if they can only 'send to me' then do not leak the download link
+            if(!$guest->getOption(GuestOptions::CAN_ONLY_SEND_TO_ME))
+                TranslatableEmail::quickSend('guest_upload_complete_confirmation_to_guest', $guest, $this);
             
             // Remove guest rights if valid for one upload only
             if($guest->getOption(GuestOptions::VALID_ONLY_ONE_TIME))
@@ -1079,4 +1105,33 @@ class Transfer extends DBObject {
         
         Logger::info('Mail#'.$translation_id.' sent to '.$recipient);
     }
+
+    /**
+     * uploading has completed. This is true for complete and closed 
+     * transfers and this method allows functions to check of an upload
+     * is still in progress or not.
+     */
+    public function isStatusAtleastUploaded() {
+        return $this->status == TransferStatuses::AVAILABLE ||
+               $this->status == TransferStatuses::CLOSED;
+    }
+    
+    /**
+     * closed transfer.
+     */
+    public function isStatusClosed() {
+        return $this->status == TransferStatuses::CLOSED;
+    }
+    
+    /**
+     * Call here when you want to deny state changes to already complete
+     * transfers. Note that states 'less than' UPLOADING are considered OK
+     * for this. We only want to deny changes to 'available' or closed transfers.
+     */
+    public function isStatusUploading() {
+        return $this->status == TransferStatuses::CREATED ||
+               $this->status == TransferStatuses::STARTED ||
+               $this->status == TransferStatuses::UPLOADING;
+    }
+
 }

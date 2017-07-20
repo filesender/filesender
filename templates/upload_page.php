@@ -37,7 +37,7 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
             <div class="file_selector">
                 <label for="files" class="mandatory">{tr:select_file} :</label>
                 
-                <input name="files" type="file" multiple />
+                <input id="files" name="files" type="file" multiple />
                 
                 <?php echo LegacyUploadProgress::getTrackingInput() ?>
             </div>
@@ -78,7 +78,7 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
                         
                         <?php if (count($emails) > 1) { ?>
                         
-                        <select name="from">
+                        <select id="from" name="from">
                             <?php foreach ($emails as $email) { ?>
                             <option><?php echo Template::sanitizeOutputEmail($email) ?></option>
                             <?php } ?>
@@ -89,7 +89,7 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
                     
                     <?php if($allow_recipients) { ?>
                     <div class="fieldcontainer" data-related-to="message">
-                        <label for="to" class="mandatory">{tr:to} :</label>
+                        <label id="to" for="to" class="mandatory">{tr:to} :</label>
                         
                         <?php if(Auth::isGuest() && AuthGuest::getGuest()->getOption(GuestOptions::CAN_ONLY_SEND_TO_ME)) { ?>
                         <?php echo AuthGuest::getGuest()->user_email ?>
@@ -108,8 +108,8 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
                     
                     <div class="fieldcontainer" data-related-to="message">
                         <label for="message">{tr:message} ({tr:optional}) : </label>
-                        
-                        <textarea name="message" rows="4"></textarea>
+                        <label class="invalid" id="message_can_not_contain_urls" style="display:none;">{tr:message_can_not_contain_urls}</label>                        
+                        <textarea id="message" name="message" rows="4"></textarea>
                     </div>
                         <?php if(Config::get('encryption_enabled')) { ?>
                             <div class="fieldcontainer" id="encrypt_checkbox" data-related-to="encryption">
@@ -118,7 +118,7 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
                             </div>
                             <div class="fieldcontainer" id="encryption_password_container">  
                                 <label for="encryption_password" style="cursor: pointer;">{tr:file_encryption_password} : </label>
-                                <input name="encryption_password" type="password"/>
+                                <input id="encryption_password" name="encryption_password" type="password"/>
                             </div>
                             <div class="fieldcontainer" id="encryption_password_container_generate">
                                 <a id='encryption_generate_password' href="#">{tr:file_encryption_generate_password}</a>
@@ -145,7 +145,6 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
                         
                     </div>
                 </td>
-                
                 <td class="box">
                     <?php
                         $displayoption = function($name, $cfg, $disable = false) {
@@ -154,17 +153,22 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
                             $default = $cfg['default'];
                             if(Auth::isSP() && !$text)
                                 $default = Auth::user()->defaultTransferOptionState($name);
-                            
+
                             $checked = $default ? 'checked="checked"' : '';
                             $disabled = $disable ? 'disabled="disabled"' : '';
-                            
-                            echo '<div class="fieldcontainer" data-option="'.$name.'">';
+                            $extraDivAttrs = '';
+                            if(Auth::isGuest() && $disable) {
+                                if( Config::get('guest_upload_page_hide_unchangable_options')) {
+                                    $extraDivAttrs .= ' hidden="true" ';
+                                }
+                            }
+                            echo '<div class="fieldcontainer" data-option="'.$name.'" '. $extraDivAttrs .'>';
                             if($text) {
                                 echo '    <label for="'.$name.'">'.Lang::tr($name).'</label>';
-                                echo '    <input name="'.$name.'" type="text" value="'.htmlspecialchars($default).'" '.$disabled.'>';
+                                echo '    <input id="'.$name.'" name="'.$name.'" type="text" value="'.htmlspecialchars($default).'" '.$disabled.'>';
                                 
                             } else {
-                                echo '  <input name="'.$name.'" type="checkbox" '.$checked.' '.$disabled.' />';
+                                echo '  <input id="'.$name.'" name="'.$name.'" type="checkbox" '.$checked.' '.$disabled.' />';
                                 echo '  <label for="'.$name.'">'.Lang::tr($name).'</label>';
                             }
                             
@@ -193,7 +197,7 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
                                 
                                 echo '<div class="fieldcontainer">';
                                 echo '  <label for="lang">{tr:recipients_notifications_language}:</label>';
-                                echo '  <select name="lang">'.implode('', $opts).'</select>';
+                                echo '  <select id="lang" name="lang">'.implode('', $opts).'</select>';
                                 echo '</div>';
                             }
                         ?>
@@ -211,7 +215,7 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
                         
                         <?php if (Config::get('terasender_enabled') && Config::get('terasender_advanced')) { ?>
                         <div class="fieldcontainer">
-                            <label for="workerCount">{tr:terasender_worker_count}</label>
+                            <label for="terasender_worker_count">{tr:terasender_worker_count}</label>
                             
                             <input id="terasender_worker_count" type="text" value="<?php echo Config::get('terasender_worker_count') ?>"/>
                             <br />

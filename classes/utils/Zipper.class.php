@@ -106,6 +106,8 @@ class Zipper {
 
             // Set up metadata and send the local header.
             $name = preg_replace('/^\\/+/', '', $file->name); // Strip leading slashes from filename.
+            $name = preg_replace('/\\.\\.\\//', '', $name);   // strip ../
+            $name = preg_replace('/\\/\\.\\./', '', $name);   // strip /..
             
             //timestamps
             $timestamp = $this->unixToDosTime(strtotime($transfer->created));

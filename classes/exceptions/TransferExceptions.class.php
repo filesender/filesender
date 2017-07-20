@@ -68,6 +68,21 @@ class TransferBadStatusException extends DetailedException {
 }
 
 /**
+ * File name has bad characters
+ */
+class TransferFileNameInvalidException extends DetailedException {
+    /**
+     * Constructor
+     * 
+     * @param int $wanted
+     * @param int $max
+     */
+    public function __construct($name) {
+        parent::__construct('transfer_file_name_invalid', array('name' => $name));
+    }
+}
+
+/**
  * Missing too many recipients exception
  */
 class TransferTooManyRecipientsException extends DetailedException {
@@ -209,6 +224,20 @@ class TransferFilesIncompleteException extends TransferException {
 }
 
 /**
+ * We filter out URLs in the personal message
+ */
+class TransferMessageBodyCanNotIncludeURLsException extends TransferException {
+    /**
+     * Constructor
+     * 
+     * @param Transfer $transfer
+     */
+    public function __construct($transfer) {
+        parent::__construct($transfer, 'message_can_not_contain_urls');
+    }
+}
+
+/**
  * Expired
  */
 class TransferExpiredException extends TransferException {
@@ -263,3 +292,4 @@ class TransferExpiryExtensionCountExceededException extends TransferException {
         parent::__construct($transfer, 'expiry_extension_count_exceeded');
     }
 }
+

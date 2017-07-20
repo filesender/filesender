@@ -93,13 +93,15 @@ window.filesender.config = {
     legacy_upload_endpoint: '<?php echo Config::get('site_url') ?>rest.php/file/{file_id}/whole',
     legacy_upload_progress_refresh_period: <?php echo Config::get('legacy_upload_progress_refresh_period') ?>,
     
+    valid_filename_regex: '<?php $v = Config::get('valid_filename_regex'); $v = str_replace('\\', '\\\\', $v); echo $v; ?>',
     base_path: '<?php echo GUI::path() ?>',
     support_email: '<?php echo Config::get('support_email') ?>',
     autocomplete: {
         enabled: <?php echo Config::get('autocomplete') ? 'true' : 'false' ?>,
         min_characters: <?php echo (is_int($amc) && $amc) ? $amc : 3 ?>
     },
-    
+    message_can_not_contain_urls_regex: '<?php $v = Config::get('message_can_not_contain_urls_regex'); $v = str_replace('\\', '\\\\', $v); echo $v; ?>',
+
     auditlog_lifetime: <?php $lt = Config::get('auditlog_lifetime'); echo is_null($lt) ? 'null' : $lt ?>,
     
     logon_url: '<?php echo AuthSP::logonURL() ?>',

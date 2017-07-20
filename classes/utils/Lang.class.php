@@ -395,8 +395,14 @@ class Lang {
         
         // File based ? Then loads it up and cache contents
         if(is_null($tr['text']) && array_key_exists('file', $tr)) {
+
+            $filepath = $tr['file'];
+            if(file_exists($filepath.'.local.php')) {
+                $filepath = $filepath.'.local.php';
+            }
+            
             ob_start(); // Allows for php inside translations
-            include $tr['file'];
+            include $filepath;
             $s = ob_get_clean();
             
             $tr['text'] = $s;

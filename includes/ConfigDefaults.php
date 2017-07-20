@@ -117,7 +117,15 @@ $default = array(
     'storage_usage_warning' => 20,
     
     'report_format' => ReportFormats::INLINE,
-    
+
+    'valid_filename_regex' => '^[ \\p{L}\\p{N}_\\.,;:!@#$%^&*)(\\]\\[_-]+$',
+    'message_can_not_contain_urls_regex' => '',
+//    'message_can_not_contain_urls_regex' => '(ftp:|http[s]*:|[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})',
+
+    'guest_limit_per_user' => 50,
+    'guest_reminder_limit' => 50,
+    'recipient_reminder_limit' => 50,
+
     'user_page' => false,
     //'user_page' => array(
     //    'lang' => 'write',
@@ -192,7 +200,9 @@ $default = array(
             'default' => ''
         ),
     ),
-    
+
+    'guest_upload_page_hide_unchangable_options' => false,
+
     'guest_options' => array(
         'email_upload_started' => array(
             'available' => true,

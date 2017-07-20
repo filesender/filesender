@@ -88,21 +88,22 @@ On Debian, run:
 
 SimpleSAMLphp helps you use nearly any authentication mechanism you can imagine. Following these instructions will set you up with a SimpleSAMLphp installation that uses Feide RnD's OpenIdP to authenticate users. When you move to a production service you probably want to change that to only support authentication sources of your choice.
 
-[Download SimpleSamlPhp 1.14.2](https://simplesamlphp.org/res/downloads/simplesamlphp-1.14.2.tar.gz). Other [(later or older) versions](https://simplesamlphp.org/archive) will probably work but we tested with version 1.14.2.
+[Download SimpleSamlPhp](https://simplesamlphp.org/download).
+Other [(later or older) versions](https://simplesamlphp.org/archive) will probably work. For the FileSender 2.0 release we tested with version 1.14.13.
 
 	cd /root
 	mkdir filesender
 	cd filesender
-	wget https://simplesamlphp.org/res/downloads/simplesamlphp-1.14.2.tar.gz
+	wget https://simplesamlphp.org/res/downloads/simplesamlphp-1.14.13.tar.gz
 
-* **NOTE**: you will of course remember to check [the sha1 hash of the tar file](https://simplesamlphp.org/archive), right?
+* **NOTE**: you will of course remember to check [the sha256 hash of the tar file](https://simplesamlphp.org/archive), right?
 
 Extract it in a suitable directory and create symlink:
 
 	mkdir /opt/filesender/
 	cd /opt/filesender
-	tar xvzf /root/filesender/simplesamlphp-1.14.2.tar.gz
-	ln -s simplesamlphp-1.14.2/ simplesaml
+	tar xvzf /root/filesender/simplesamlphp-1.14.13.tar.gz
+	ln -s simplesamlphp-1.14.13/ simplesaml
 
 * **SECURITY NOTE**: we only want *the user interface files* to be directly accessible for the world through the web server, not any of the other files. We will not extract the SimpleSAMLphp package in the `/var/www` directory (the standard Apache document root) but rather in a specific `/opt` tree. We'll point to the SimpleSAML web root with a web server alias.
 
@@ -274,7 +275,27 @@ Run:
 	EOF
 	chmod +x /etc/cron.daily/filesender
 
-# Step 10 - Start using FileSender
+# Step 10 - Optional local about, help, and landing pages
+
+FileSender has provisions to allow you to have a local page for about,
+help, and the landing (splash) page the user sees on your FileSender
+site. While you could directly edit the page template for your language
+doing that would not preserve your changes when you upgrade FileSender.
+
+If you want a local about, help, or splash page create and edit a file
+with the postfix ".local.php" and that local page will be served to
+the user instead of the default. 
+
+For example, the default help page for English language users might be from
+
+/opt/filesender/language/en_AU/help_text.html.php
+
+So you create a new page at the following location with your site
+specific help text in it which would be served instead of the default.
+
+/opt/filesender/language/en_AU/help_text.html.php.local.php
+
+# Step 11 - Start using FileSender
 
 Visit the URL to your FileSender instance.
 
