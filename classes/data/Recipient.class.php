@@ -87,7 +87,7 @@ class Recipient extends DBObject {
         'token' => array( 
             'token' => array()
         )
-    );    
+    );
 
     /**
      * Properties
