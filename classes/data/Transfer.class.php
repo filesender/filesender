@@ -757,6 +757,7 @@ class Transfer extends DBObject {
         $echunkdiff = Config::get('upload_crypted_chunk_size') - Config::get('upload_chunk_size');
         $chunksMinusOne = ceil($file->size / Config::get('upload_chunk_size'))-1;
         $lastChunkSize = $file->size - ($chunksMinusOne * Config::get('upload_chunk_size'));
+        //padding on the last chunk of the file may not be a full chunk so need to calculate
         $lastChunkPadding = 16 - $lastChunkSize % 16;
         if ($lastChunkPadding == 0)
             $lastChunkPadding = 16;
