@@ -118,7 +118,7 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
                             </div>
                             <div class="fieldcontainer" id="encryption_password_container">  
                                 <label for="encryption_password" style="cursor: pointer;">{tr:file_encryption_password} : </label>
-                                <input id="encryption_password" name="encryption_password" type="password"/>
+                                <input id="encryption_password" name="encryption_password" type="password" autocomplete="off"/>
                             </div>
                             <div class="fieldcontainer" id="encryption_password_container_generate">
                                 <a id='encryption_generate_password' href="#">{tr:file_encryption_generate_password}</a>
