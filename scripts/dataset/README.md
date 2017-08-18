@@ -93,3 +93,5 @@ hours to complete.
 To export a created MySQL/MariaDB database
 mysqldump -p --user filesender --databases filesender > dumps/filesender-version-me.mysqldump
 
+To export a created PostgreSQL database
+pg_dump --no-owner filesender | bzip2 -9 > filesender-version-me.pg.bz2

@@ -301,6 +301,9 @@ class Config {
         if($key == 'site_url')
             if (substr($value, -1) != '/')
                 $value .= '/';
+
+echo "--------------\n\n";
+print_r(self::$override);
         
         // Apply override if any
         if(
@@ -363,7 +366,13 @@ class Config {
         
         return self::$override['parameters'];
     }
-    
+
+
+    public static function localOverride( $k, $v ) {
+                self::$parameters[$k] = $v;
+                self::$cached_parameters[] = $key;
+    }
+
     /**
      * Set override
      * 
@@ -376,13 +385,16 @@ class Config {
     public static function override(/* $set [, $value] [, $save = true] */) {
         // Load if not already done
         self::load();
+
+
         
         // If override allowed ?
         if(!self::$override)
             throw new ConfigOverrideDisabledException();
-        
+
         $args = func_get_args();
         $set = array_shift($args);
+
         
         // Apply any changes
         if($set) {
@@ -391,7 +403,7 @@ class Config {
             foreach($set as $k => $v) {
                 // Is override of this parameter allowed ?
                 if(!array_key_exists($k, self::$override['parameters']))
-                    throw new ConfigOverrideNotAllowedException($k);
+                     throw new ConfigOverrideNotAllowedException($k);
                 
                 // Apply any defined validators, throw if failure
                 if(array_key_exists('validator', self::$override['parameters'][$k])) {
