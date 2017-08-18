@@ -370,7 +370,7 @@ print_r(self::$override);
 
     public static function localOverride( $k, $v ) {
                 self::$parameters[$k] = $v;
-                self::$cached_parameters[] = $key;
+                self::$cached_parameters[] = $k;
     }
 
     /**
