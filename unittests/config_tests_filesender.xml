@@ -51,7 +51,7 @@
 <!--            <file>tests/mail/MailTest.php</file>            <! - Failed -->
 <!--            <file>tests/report/ReportTest.php</file>        <! - Failed -->
             <file>tests/transfer/TransferTest.php</file>    <!-- Failed -->
-            <file>tests/dataset/DatasetTest.php</file>      <!-- Success -->
+<!--           <file>tests/dataset/DatasetTest.php</file>  -->      <!-- Success -->
         </testsuite>
         <testsuite name="selenium">
             <directory>./selenium_tests/tests</directory>
