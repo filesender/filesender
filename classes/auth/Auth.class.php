@@ -172,7 +172,26 @@ class Auth {
         
         return self::$user;
     }
-    
+
+    /**
+     * Reset the current user to the given data, creating database records if needed.
+     * This function should only be called from testing code that is executed locally.
+     * 
+     * @return User instance or false
+     */
+    public static function testingForceToUser( $uid, $email, $name = null ) {
+        
+        $userAttributes['uid']   = $uid;
+        $userAttributes['email'] = $email;
+        $userAttributes['name']  = $name;
+        AuthLocal::setUser(null,null);
+        AuthLocal::setUser($uid, $email, $name);
+        $user = User::fromAttributes($userAttributes);
+        $user->recordActivity();
+        self::$user = $user;
+        return $user;
+    }
+
     /**
      * Tells if an user is connected.
      * 
@@ -291,7 +310,7 @@ class Auth {
      *
      * @return bool
      */
-     public static function isSessionStarted() {
+    public static function isSessionStarted() {
         if ( version_compare(phpversion(), '5.4.0', '>=') ) {
             return session_status() === PHP_SESSION_ACTIVE ? true : false;
         } else {

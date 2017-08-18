@@ -39,7 +39,18 @@ class Mail {
      * Message-Id header value
      */
     private $msg_id = null;
-    
+
+
+    /**
+     * Setting this will force sending emails to off for group testing.
+     * Do not call this setting unless you are bulk testing FileSender.
+     */
+    private static $TESTING_MODE_SO_DO_NOT_SEND_EMAIL = false;
+    public static function TESTING_SET_DO_NOT_SEND_EMAIL() {
+        self::$TESTING_MODE_SO_DO_NOT_SEND_EMAIL = true;
+    }
+
+
     /**
      * Return path value
      */
@@ -507,7 +518,10 @@ class Mail {
      */
     public function send() {
         $source = $this->build();
-        
+
+        if( self::$TESTING_MODE_SO_DO_NOT_SEND_EMAIL ) {
+            return true;
+        }        
         Logger::warn('Sending mail');
         $safemode = ini_get('safe_mode');
         $safemode = ($safemode && !preg_match('`^off$`i', $safemode));
@@ -779,4 +793,6 @@ class MailAttachment {
             $this->cid = $value;
         }
     }
+
+
 }
