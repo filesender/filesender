@@ -66,7 +66,6 @@ if( $db_database ) {
     echo "newly set db_database is " . Config::get('db_database') . "\n";
 }
 echo "current db_database is " . Config::get('db_database') . "\n";
-exit(0);
 
 // Get data classes
 $classes = array();
