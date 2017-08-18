@@ -302,9 +302,6 @@ class Config {
             if (substr($value, -1) != '/')
                 $value .= '/';
 
-echo "--------------\n\n";
-print_r(self::$override);
-        
         // Apply override if any
         if(
             is_array(self::$override) &&
