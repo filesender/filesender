@@ -6,4 +6,4 @@ psql -U postgres -c "alter user postgres with password 'password';"
 php ./scripts/upgrade/database.php;
 
 psql -c 'create database filesenderdataset;' -U postgres
-bzcat ./scripts/dataset/dumps/filesender-2.0beta1.pg.bz2 | pg_restore -d filesenderdataset 
+bzcat ./scripts/dataset/dumps/filesender-2.0beta1.pg.bz2 | psql -d filesenderdataset 
