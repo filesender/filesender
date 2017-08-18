@@ -73,7 +73,11 @@ class Autoloader {
         
         'Mail*' => 'utils/Mail',
         
-        '*' => 'utils/'
+
+        'TestDatabase*' => 'test/database/',
+
+        // Must be last
+        '*' => 'utils/' 
     );
     
     /**
