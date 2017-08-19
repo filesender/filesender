@@ -144,13 +144,12 @@ class DatasetTest extends CommonUnitTestCase {
 
 
     /**
-     * Function to test that there are the right number of users and guests
      * 
      * @depends testDatasetSimple
      * 
      * @return int: true test succeed
      */
-    public function testDatasetUserAndGuestCount() {
+    public function testDatasetTransactionCount() {
 
         $userCount = 0;
         $guestCount = 0;
