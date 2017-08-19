@@ -53,7 +53,7 @@
             <file>tests/transfer/TransferTest.php</file>    <!-- Failed -->
         </testsuite>
         <testsuite name="dataset" >
-<!--            <file>tests/dataset/DatasetTest.php</file> -->      <!-- Success -->
+            <file>tests/dataset/DatasetTest.php</file>      <!-- Success -->
         </testsuite>
         <testsuite name="selenium">
             <directory>./selenium_tests/tests</directory>
