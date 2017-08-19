@@ -96,12 +96,12 @@ class DatasetTest extends CommonUnitTestCase {
             $statement = DBI::prepare('select count(*) as c from UserPreferences;');
             $statement->execute(array());
             $data = $statement->fetch();
-            $userCount = $data['c']
+            $userCount = $data['c'];
 
             $statement = DBI::prepare('select count(*) as c from Guests;');
             $statement->execute(array());
             $data = $statement->fetch();
-            $guestCount = $data['c']
+            $guestCount = $data['c'];
             
             $this->assertTrue($userCount  > 10000);
             $this->assertTrue($guestCount >  3000);
@@ -116,5 +116,66 @@ class DatasetTest extends CommonUnitTestCase {
         return true;
     }
 
+    /**
+     * Function to switch to a created user in the synth dataset
+     * 
+     * @depends testDatasetUserAndGuestCount
+     * 
+     * @return int: true test succeed
+     */
+    public function testDatasetDefaultUser() {
+
+        $email = '';
+        
+        try {
+            $cred->forceCredentialsToDefaultUser();
+            $user = Auth::user();
+            $email = $user['email'];
+            $this->assertTrue($email == 'testdriver@localhost.localdomain');
+            
+        } catch (Exception $ex) {
+            $this->displayError(get_class(), __FUNCTION__, $ex->getMessage());
+            throw new PHPUnit_Framework_AssertionFailedError();
+        }
+        $this->displayInfo(get_class(), __FUNCTION__, ' -- email: $email' );
+        
+        return true;
+    }
+
+
+    /**
+     * Function to test that there are the right number of users and guests
+     * 
+     * @depends testDatasetSimple
+     * 
+     * @return int: true test succeed
+     */
+    public function testDatasetUserAndGuestCount() {
+
+        $userCount = 0;
+        $guestCount = 0;
+
+        try {
+            $statement = DBI::prepare("select count(*) as c,translation_id "
+                                    . " from  TranslatableEmails "
+                                    . " where translation_id = 'transfer_available' "
+                                    . " group by translation_id;");
+            $statement->execute(array());
+            $data = $statement->fetch();
+            $count = $data['c'];
+
+            $this->assertTrue($count  > 60000);
+            
+        } catch (Exception $ex) {
+            $this->displayError(get_class(), __FUNCTION__, $ex->getMessage());
+            throw new PHPUnit_Framework_AssertionFailedError();
+        }
+        
+        $this->displayInfo(get_class(), __FUNCTION__, ' -- count: $count' );
+
+        return true;
+    }
+
+    
     
 }
