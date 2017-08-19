@@ -42,6 +42,9 @@ class DatasetTest extends CommonUnitTestCase {
      * Some variables used in tests case
      */
     private $test1;    // test1
+    private creator = null;
+    private cred    = null;
+    private tc      = null;
 
     /**
      * Init variables, first function called
@@ -52,10 +55,45 @@ class DatasetTest extends CommonUnitTestCase {
         Config::localOverride('db_database','filesenderdataset' );
 
         $this->test1 = 4;
+        $this->creator  = new TestDatabaseCreator();
+        $this->cred     = $this->creator->getTestDatabaseCredentials();
+        $this->tc       = $this->creator->getTestDatabaseTransfers();
+
+        echo "current db_database is " . Config::get('db_database') . "\n";
+        
     }
 
     /**
      * Really simple database test
+     * 
+     * @return
+     */
+    public function testDatasetDBName() {
+
+        $dbname = 'unknown';
+        
+        try {
+            $statement = DBI::prepare('select current_database() as c;');
+            $statement->execute(array());
+            $data = $statement->fetch();
+            $dbname = $data['c'];
+            
+            $this->displayInfo(get_class(), __FUNCTION__, ' -- dbname:' . $dbname);
+            $this->assertTrue( $dbname == 'filesenderdataset' );
+            
+        } catch (Exception $ex) {
+            $this->displayError(get_class(), __FUNCTION__, $ex->getMessage());
+            throw new PHPUnit_Framework_AssertionFailedError();
+        }
+        
+        return true;
+    }
+    select current_database() as c;
+    
+    /**
+     * Really simple database test
+     * 
+     * @depends testDatasetDBName
      * 
      * @return
      */
@@ -129,7 +167,7 @@ class DatasetTest extends CommonUnitTestCase {
         $email = '';
         
         try {
-            $cred->forceCredentialsToDefaultUser();
+            $this->cred->forceCredentialsToDefaultUser();
             $user = Auth::user();
             $email = $user['email'];
             $this->displayInfo(get_class(), __FUNCTION__, " -- email: $email" );
