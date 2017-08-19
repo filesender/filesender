@@ -141,8 +141,8 @@ class DatasetTest extends CommonUnitTestCase {
             $guestCount = $data['c'];
             $this->displayInfo(get_class(), __FUNCTION__, " -- userCount: $userCount  guestCount: $guestCount " );
             
-            $this->assertTrue($userCount  > 10000);
-            $this->assertTrue($guestCount >  3000);
+            $this->assertTrue($userCount  >  10000);
+            $this->assertTrue($guestCount >=  3000);
             
         } catch (Exception $ex) {
             $this->displayError(get_class(), __FUNCTION__, $ex->getMessage());
