@@ -102,7 +102,7 @@ class DatasetTest extends CommonUnitTestCase {
             $statement->execute(array());
             $data = $statement->fetch();
             $guestCount = $data['c'];
-            $this->displayInfo(get_class(), __FUNCTION__, ' -- userCount: $userCount  guestCount: $guestCount ' );
+            $this->displayInfo(get_class(), __FUNCTION__, " -- userCount: $userCount  guestCount: $guestCount " );
             
             $this->assertTrue($userCount  > 10000);
             $this->assertTrue($guestCount >  3000);
@@ -112,7 +112,7 @@ class DatasetTest extends CommonUnitTestCase {
             throw new PHPUnit_Framework_AssertionFailedError();
         }
         
-        $this->displayInfo(get_class(), __FUNCTION__, ' -- userCount: $userCount' );
+        $this->displayInfo(get_class(), __FUNCTION__, " -- userCount: $userCount" );
 
         return true;
     }
@@ -120,7 +120,7 @@ class DatasetTest extends CommonUnitTestCase {
     /**
      * Function to switch to a created user in the synth dataset
      * 
-     * @depends testDatasetUserAndGuestCount
+     * @depends testDatasetSimple
      * 
      * @return int: true test succeed
      */
@@ -132,13 +132,14 @@ class DatasetTest extends CommonUnitTestCase {
             $cred->forceCredentialsToDefaultUser();
             $user = Auth::user();
             $email = $user['email'];
+            $this->displayInfo(get_class(), __FUNCTION__, " -- email: $email" );
             $this->assertTrue($email == 'testdriver@localhost.localdomain');
             
         } catch (Exception $ex) {
             $this->displayError(get_class(), __FUNCTION__, $ex->getMessage());
             throw new PHPUnit_Framework_AssertionFailedError();
         }
-        $this->displayInfo(get_class(), __FUNCTION__, ' -- email: $email' );
+        $this->displayInfo(get_class(), __FUNCTION__, " -- email: $email" );
         
         return true;
     }
@@ -163,6 +164,7 @@ class DatasetTest extends CommonUnitTestCase {
             $statement->execute(array());
             $data = $statement->fetch();
             $count = $data['c'];
+            $this->displayInfo(get_class(), __FUNCTION__, " -- count: $count" );
 
             $this->assertTrue($count  > 60000);
             
@@ -171,7 +173,7 @@ class DatasetTest extends CommonUnitTestCase {
             throw new PHPUnit_Framework_AssertionFailedError();
         }
         
-        $this->displayInfo(get_class(), __FUNCTION__, ' -- count: $count' );
+        $this->displayInfo(get_class(), __FUNCTION__, " -- count: $count" );
 
         return true;
     }
