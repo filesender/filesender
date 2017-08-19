@@ -83,8 +83,26 @@ For this reason exports of the created database have been created to
 allow people to import the dataset for testing. These are in the dumps
 directory and have been created with the commands shown below.
 
+DB setup
+--------
+
+If you are using PostgreSQL you might consider running an instance that could
+sustain some loss of data in power out in order to gain a huge performance boost
+for running the dataset creator by setting the following. Note that you shouldn't
+do this on a production machine, we can only really do it here because we are creating
+synthetic data so worst case could erase the database after a power failure and
+recreate it.
+
+# postgresql.conf
+fsync = off
+synchronous_commit = off
+
+
+
 To run the data creator
 php /opt/filesender/scripts/dataset/create.php
+
+
 
 You might also like to use the --scale parameter to generate between
 1.0 (100%) and 0.01 (1%) of the dataset as the full generation can take
@@ -94,4 +112,4 @@ To export a created MySQL/MariaDB database
 mysqldump -p --user filesender --databases filesender > dumps/filesender-version-me.mysqldump
 
 To export a created PostgreSQL database
-pg_dump --no-owner filesender | bzip2 -9 > filesender-version-me.pg.bz2
+pg_dump --no-owner -U filesender filesender | bzip2 -9 > filesender-version-me.pg.bz2

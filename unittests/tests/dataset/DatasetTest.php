@@ -55,11 +55,11 @@ class DatasetTest extends CommonUnitTestCase {
     }
 
     /**
-     * Function used to test creation of transfer in database
+     * Really simple database test
      * 
-     * @return int: transfer->id if test succeed
+     * @return
      */
-    public function testSizes() {
+    public function testDatasetSimple() {
 
         $this->assertNotNull($this->test1);
         $this->assertTrue($this->test1 > 0);
@@ -69,9 +69,6 @@ class DatasetTest extends CommonUnitTestCase {
             $statement->execute(array());
             $data = $statement->fetch();
             $this->assertTrue($data['c'] == 1);
-
-            $this->displayInfo(get_class(), __FUNCTION__, 'DatasetTest OK');
-
             
         } catch (Exception $ex) {
             $this->displayError(get_class(), __FUNCTION__, $ex->getMessage());
@@ -82,4 +79,42 @@ class DatasetTest extends CommonUnitTestCase {
 
         return true;
     }
+
+    /**
+     * Function to test that there are the right number of users and guests
+     * 
+     * @depends testDatasetSimple
+     * 
+     * @return int: true test succeed
+     */
+    public function testDatasetUserAndGuestCount() {
+
+        $userCount = 0;
+        $guestCount = 0;
+
+        try {
+            $statement = DBI::prepare('select count(*) as c from UserPreferences;');
+            $statement->execute(array());
+            $data = $statement->fetch();
+            $userCount = $data['c']
+
+            $statement = DBI::prepare('select count(*) as c from Guests;');
+            $statement->execute(array());
+            $data = $statement->fetch();
+            $guestCount = $data['c']
+            
+            $this->assertTrue($userCount  > 10000);
+            $this->assertTrue($guestCount >  3000);
+            
+        } catch (Exception $ex) {
+            $this->displayError(get_class(), __FUNCTION__, $ex->getMessage());
+            throw new PHPUnit_Framework_AssertionFailedError();
+        }
+        
+        $this->displayInfo(get_class(), __FUNCTION__, ' -- userCount: $userCount' );
+
+        return true;
+    }
+
+    
 }
