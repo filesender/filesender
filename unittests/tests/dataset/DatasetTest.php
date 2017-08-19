@@ -60,7 +60,7 @@ class DatasetTest extends CommonUnitTestCase {
         $this->tc       = $this->creator->getTestDatabaseTransfers();
 
         echo "current db_database is " . Config::get('db_database') . "\n";
-        
+        DBI::forceReconnect();
     }
 
     /**

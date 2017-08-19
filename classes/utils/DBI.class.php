@@ -93,7 +93,16 @@ class DBI {
         
         self::$config = $config;
     }
-    
+
+    /**
+     * Reconnect to the database, flushing all cached config
+     * parameters first to allow override()s in the config to take effect.
+     */
+    public static function forceReconnect() {
+         self::$config = null;
+         self::connect(true);
+    }
+
     /**
      * Connect to database
      * 
