@@ -168,7 +168,7 @@ class DatasetTest extends CommonUnitTestCase {
         try {
             $this->cred->forceCredentialsToDefaultUser();
             $user = Auth::user();
-            $email = $user['email'];
+            $email = $user->email;
             $this->displayInfo(get_class(), __FUNCTION__, " -- email: $email" );
             $this->assertTrue($email == 'testdriver@localhost.localdomain');
             
