@@ -42,9 +42,9 @@ class DatasetTest extends CommonUnitTestCase {
      * Some variables used in tests case
      */
     private $test1;    // test1
-    private creator = null;
-    private cred    = null;
-    private tc      = null;
+    private $creator = null;
+    private $cred    = null;
+    private $tc      = null;
 
     /**
      * Init variables, first function called
@@ -88,7 +88,6 @@ class DatasetTest extends CommonUnitTestCase {
         
         return true;
     }
-    select current_database() as c;
     
     /**
      * Really simple database test
