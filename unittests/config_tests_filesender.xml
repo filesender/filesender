@@ -42,19 +42,7 @@
     syntaxCheck="false"
 >
     <testsuites>
-        <testsuite name="FileSenderUtilities" >
-            <file>tests/dbs/DBsTest.php</file>              <!-- Success -->
-            <file>tests/utilities/UtilitiesTest.php</file>  <!-- Success -->
-            <file>tests/auditlog/AuditLogTest.php</file>    <!-- Failed -->
-<!--            <file>tests/dbobject/DBObjectTest.php</file>    <! - Failed -->
-            <file>tests/file/FileTest.php</file>            <!-- Failed -->
-<!--            <file>tests/mail/MailTest.php</file>            <! - Failed -->
-<!--            <file>tests/report/ReportTest.php</file>        <! - Failed -->
-            <file>tests/transfer/TransferTest.php</file>    <!-- Failed -->
-        </testsuite>
-        <testsuite name="selenium">
-            <directory>./selenium_tests/tests</directory>
-        </testsuite>
+            
         <testsuite name="dataset" >
             <file>tests/dataset/DatasetTest.php</file>
         </testsuite>

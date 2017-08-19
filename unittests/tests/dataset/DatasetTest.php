@@ -210,11 +210,123 @@ class DatasetTest extends CommonUnitTestCase {
             throw new PHPUnit_Framework_AssertionFailedError();
         }
         
-        $this->displayInfo(get_class(), __FUNCTION__, " -- count: $count" );
-
         return true;
     }
 
+    
+    /**
+     * 
+     * @depends testDatasetSimple
+     * 
+     * @return int: true test succeed
+     */
+    public function testDatasetTransactionInspection() {
+
+        $a = 1;
+        $f = File::fromUid('7f123114-0ad2-d937-5bc6-f136695877cd');
+        $t = $f->transfer;
+        $a = $t->id;
+
+        $this->assertEquals( 35518,    $t->id     );
+        $this->assertEquals( 'closed', $t->status );
+        
+        $this->displayInfo(get_class(), __FUNCTION__, " -- a: $a" );
+        
+        return true;        
+    }
+
+    /**
+     * 
+     * @depends testDatasetTransactionInspection
+     * 
+     * @return int: true test succeed
+     */
+    public function testDatasetTransactionInspectionOpen() {
+
+        $a = 1;
+        $f = File::fromUid('dadf8767-07ee-eafa-2e38-3fbc70945bbd');
+        $t = $f->transfer;
+        $a = $t->id;
+
+        $this->assertEquals( 35517,        $t->id     );
+        $this->assertEquals( 'available',  $t->status );
+
+        $alog = $t->auditlogs;
+        $this->assertEquals( 22,  count($alog)    );
+        $this->assertEquals( 'testdriver@localhost.localdomain', $alog[0]->author_id );
+        $this->assertEquals( 'testdriver@localhost.localdomain', $alog[1]->author_id );
+        $this->assertEquals( 'testdriver@localhost.localdomain', $alog[2]->author_id );
+        $this->assertEquals( 'testdriver@localhost.localdomain', $alog[3]->author_id );
+
+        $this->assertEquals( 'file_uploaded', $alog[1]->event );
+        $this->assertEquals( 'File',          $alog[1]->target_type );
+        $this->assertEquals( 45386,           $alog[1]->target_id );
+
+        $this->assertEquals( 'transfer_available', $alog[12]->event );
+        $this->assertEquals( 'Transfer'          , $alog[12]->target_type );
+        $this->assertEquals( 35517               , $alog[12]->target_id );
+        
+        $this->displayInfo(get_class(), __FUNCTION__, " -- a: $a" );        
+        return true;
+    }
+
+
+    /**
+     * 
+     * @depends testDatasetTransactionInspectionOpen
+     * 
+     * @return int: true test succeed
+     */
+    public function testDatasetTranslatableEmails() {
+        $a = 1;
+        $f = File::fromUid('dadf8767-07ee-eafa-2e38-3fbc70945bbd');
+        $t = $f->transfer;
+
+        $e = TranslatableEmail::fromContext($t);
+        $uploadcomplete = $e[171545];
+        $travail = $e[171546];
+        
+        $this->assertEquals( 'Transfer',        $uploadcomplete->context_type );
+        $this->assertEquals( $t->id,            $uploadcomplete->context_id   );
+        $this->assertEquals( 'upload_complete', $uploadcomplete->translation_id );
+        
+        $this->assertEquals( 'Transfer',        $travail->context_type );
+        $this->assertEquals( $t->id,            $travail->context_id   );
+        $this->assertEquals( 'transfer_available', $travail->translation_id );
+        
+        
+        $this->displayInfo(get_class(), __FUNCTION__, " -- a: $a" );        
+        return true;
+    }
+
+
+    /**
+     * 
+     * @depends testDatasetTranslatableEmails
+     * 
+     * @return int: true test succeed
+     */
+    public function testDatasetRecipients() {
+        $a = 1;
+        $f = File::fromUid('dadf8767-07ee-eafa-2e38-3fbc70945bbd');
+        $t = $f->transfer;
+        $r = $t->recipients;
+
+        $r1 = $r[64485];
+        $r2 = $r[64486];
+
+        $this->assertEquals( 'tester@localhost.localdomain',         $r1->email );
+        $this->assertEquals( 'afc198dd-606a-2e9a-191d-62c3fee9729d', $r1->token );
+        $this->assertEquals( $t->id, $r1->transfer_id );
+
+        $this->assertEquals( 'tester2@localhost.localdomain',         $r2->email );
+        $this->assertEquals( '02dd46d6-ebcc-c597-3b9a-0b3e228881ba',  $r2->token );
+        $this->assertEquals( $t->id, $r2->transfer_id );
+        
+        
+        $this->displayInfo(get_class(), __FUNCTION__, " -- a: $a" );        
+        return true;
+    }
     
     
 }
