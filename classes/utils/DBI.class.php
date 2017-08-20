@@ -97,6 +97,11 @@ class DBI {
     /**
      * Reconnect to the database, flushing all cached config
      * parameters first to allow override()s in the config to take effect.
+     *
+     * You might like to use this method after using
+     * Config::localOverride() to change the database connection settings
+     * which might be useful if you are testing and want to use another database
+     * than the one in the real config settings.
      */
     public static function forceReconnect() {
          self::$config = null;

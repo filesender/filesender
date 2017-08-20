@@ -365,6 +365,12 @@ class Config {
     }
 
 
+    /**
+     * Force set a key-value that is for this session only
+     *
+     * @param k key to set
+     * @param v value to set
+     */  
     public static function localOverride( $k, $v ) {
                 self::$parameters[$k] = $v;
                 self::$cached_parameters[] = $k;
@@ -383,15 +389,12 @@ class Config {
         // Load if not already done
         self::load();
 
-
-        
         // If override allowed ?
         if(!self::$override)
             throw new ConfigOverrideDisabledException();
 
         $args = func_get_args();
         $set = array_shift($args);
-
         
         // Apply any changes
         if($set) {
