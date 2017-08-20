@@ -46,6 +46,7 @@ before_script:
 - sudo service postgresql restart
 - sudo service apache2 restart
 - php scripts/upgrade/database.php
+- php scripts/upgrade/database.php --db_database filesenderdataset
 after_failure:
 - sudo cat /var/log/apache2/error.log
 - sudo cat /var/log/apache2/access.log

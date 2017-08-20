@@ -52,8 +52,13 @@
 <!--            <file>tests/report/ReportTest.php</file>        <! - Failed -->
             <file>tests/transfer/TransferTest.php</file>    <!-- Failed -->
         </testsuite>
+
         <testsuite name="selenium">
             <directory>./selenium_tests/tests</directory>
+        </testsuite>
+        
+        <testsuite name="dataset" >
+          <file>tests/dataset/DatasetTest.php</file>
         </testsuite>
     </testsuites>
 </phpunit>
