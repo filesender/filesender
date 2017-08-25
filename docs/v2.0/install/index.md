@@ -1,8 +1,8 @@
 ---
-title: Installation - Linux Source 2.0-alpha from Git
+title: Installation - Linux Source 2.0-Beta1 from Git
 ---
 
-# Installation FileSender 2.0 Alpha
+# Installation FileSender 2.0 Beta1
 
 _This documentation is under development. It was created by installing FileSender on a CentOS 7 and Debian 8 machine._
 
@@ -10,13 +10,13 @@ _This documentation is under development. It was created by installing FileSende
 
 We've all used more time than we wanted on a first time install of a piece of open source software, just to see whether it does something interesting. We do not want FileSender to be like that.
 
-This documentation is a work in progress and will be cleaned up as the software progresses from alpha to beta quality. The documentation itself might also contain mistakes.
+This documentation is a work in progress and will be cleaned up as the software progresses from beta to full release quality. The documentation itself might also contain mistakes.
 
 If you notice mistakes in this documentation, or if it took you more than an hour to install FileSender, please let us know on filesender-dev@filesender.org and help us improve the documentation for those that come after you!
 
 ## About this documentation
 
-This is the installation documentation for installing the **FileSender 2.0-alpha Git snapshot** on Linux. This guide is written for installation from source on the RedHat/CentOS or Debian platform but any Linux variant should work with some modifications (most notably about installing the required additional software packages).
+This is the installation documentation for installing the **FileSender 2.0-beta version Git snapshots** on Linux. See the [releases](https://github.com/filesender/filesender/releases) page for up to date information about recent releases. This guide is written for installation from source on the RedHat/CentOS or Debian platform but any Linux variant `should work with some modifications (most notably about installing the required additional software packages).
 
 ### This documentation was tested with
 
@@ -52,10 +52,17 @@ Or install the Git package on Debian:
 
 	apt-get install -y git
 
-Install the FileSender 2.0-alpha branch from the GIT repository:
+Install the FileSender 2.0 beta branch from the GIT repository use the
+following commands. Note that you can use beta2, beta3 etc if there
+are more beta releases. See
+[Releases](https://github.com/filesender/filesender/releases) for
+information about recent releases.
 
 	cd /opt/filesender/
 	git clone https://github.com/filesender/filesender.git filesender-2.0
+        cd filesender-2.0
+        git checkout filesender-2.0-beta1
+        cd ..
 	ln -s filesender-2.0/ filesender
 
 Initialise config file and set permissions right. Make the files, tmp and log directories writable by the web daemon user (`apache` on RedHat/CentOS, `www-data` on Debian), copy the config file in place from the template and allow the web daemon user to read the config.php configuration file:
