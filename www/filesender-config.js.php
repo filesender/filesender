@@ -87,7 +87,7 @@ window.filesender.config = {
     terasender_worker_file: 'lib/terasender/terasender_worker.js?v=<?php echo Utilities::runningInstanceUID() ?>',
     terasender_upload_endpoint: '<?php echo Config::get('site_url') ?>rest.php/file/{file_id}/chunk/{offset}',
     
-    stalling_detection: <?php $cfg = Config::get('stalling_detection'); echo json_encode(is_null($cfg) ? true : $cfg) ?>,
+    stalling_detection: <?php $cfg = Config::get('stalling_detection'); echo json_encode(is_null($cfg) ? false : $cfg) ?>,
     
     max_legacy_file_size: <?php echo Config::get('max_legacy_file_size') ?>,
     legacy_upload_endpoint: '<?php echo Config::get('site_url') ?>rest.php/file/{file_id}/whole',
