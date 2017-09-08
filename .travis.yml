@@ -1,6 +1,8 @@
+dist: precise
+sudo: required
 language: php
 php:
-- 5.6
+- 5.3
 addons:
   sauce_connect:
     username: "$SAUCE_USERNAME"
@@ -33,9 +35,9 @@ before_script:
 - sudo sed -i "s/error_reporting = E_ALL/error_reporting = E_ALL \& ~E_DEPRECATED
   \& ~E_STRICT/" ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
 - sudo sed -i "s/host    all             all             127.0.0.1\/32            trust/host    all             all             127.0.0.1\/32            md5/"
-  /etc/postgresql/9.3/main/pg_hba.conf
+  /etc/postgresql/9.1/main/pg_hba.conf
 - sudo sed -i "s/host    all             all             ::1\/128                 trust/host    all             all             ::1\/128                 md5/"
-  /etc/postgresql/9.3/main/pg_hba.conf
+  /etc/postgresql/9.1/main/pg_hba.conf
 - sudo sed -i "s/NameVirtualHost \*:80/# NameVirtualHost \*:80/" /etc/apache2/ports.conf
 - sudo sed -i "s/Listen 80/# Listen 80/" /etc/apache2/ports.conf
 - "~/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm"
