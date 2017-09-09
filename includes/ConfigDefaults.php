@@ -126,6 +126,7 @@ $default = array(
     'guest_reminder_limit' => 50,
     'recipient_reminder_limit' => 50,
 
+    'autocomplete' => false, 
     'autocomplete_min_characters' => 3,
 
     'user_page' => false,
