@@ -103,7 +103,7 @@ window.filesender.config = {
     support_email: '<?php echo Config::get('support_email') ?>',
     autocomplete: {
         enabled: <?php echo value_to_TF(Config::get('autocomplete')) ?>,
-        min_characters: <?php echo Config::get('autocomplete_min_characters') ?>
+        min_characters: <?php echo (is_int($amc) && $amc) ? $amc : 3 ?>
     },
     message_can_not_contain_urls_regex: '<?php $v = Config::get('message_can_not_contain_urls_regex'); $v = str_replace('\\', '\\\\', $v); echo $v; ?>',
 
