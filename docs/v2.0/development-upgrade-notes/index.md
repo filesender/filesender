@@ -31,10 +31,29 @@ You will likely want to use pg_dump or mysqldump for this step.
 
 ### Backup your filesender installation
 
-For example
+For example using one of the following. Note that filesender/logs and
+filesender/files might be very large directories so you might like to
+omit them from the backup as shown below. This should result in an
+archive that is in the order of 50Mb in size.
 
 ```
 cd /opt/
+tar -czvf ~/filesender-old.tar.gz \
+   --exclude files \
+   --exclude .git  \
+   --exclude logs  \
+   --dereference   \
+   filesender
+```
+
+The below is a more complete backup but might also consume a lot of
+disk space to backup each file that has been uploaded to FileSender.
+So depending on what the du command gives you then you might be
+consuming a bunch of disk space for the backup.
+
+```
+cd /opt/
+du -sh ./filesender/files
 cp -avL filesender filesender-2.0alpha
 ```
 
@@ -52,6 +71,8 @@ php /opt/filesender/scripts/upgrade/database.php
 
 ### Install your config.php into your new FileSender
 
+The old config shouldn't have been replaced by the above, but making
+it explicit can't be a bad thing.
 For example, using
 
 ```
