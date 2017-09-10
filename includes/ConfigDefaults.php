@@ -96,7 +96,7 @@ $default = array(
     'terasender_disableable' => true,
     'terasender_start_mode' => 'multiple',
     'terasender_worker_count' => 6,
-    'stalling_detection' => true,
+    'stalling_detection' => false,
     
     'storage_type' => 'filesystem',
     
@@ -125,6 +125,9 @@ $default = array(
     'guest_limit_per_user' => 50,
     'guest_reminder_limit' => 50,
     'recipient_reminder_limit' => 50,
+
+    'autocomplete' => false, 
+    'autocomplete_min_characters' => 3,
 
     'user_page' => false,
     //'user_page' => array(

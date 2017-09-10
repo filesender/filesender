@@ -877,7 +877,7 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __description:__ detect whether an upload stalls
 * __mandatory:__ no
 * __type:__ boolean
-* __default:__ true
+* __default:__ false
 * __available:__ since version 2.0
 * __comment:__ Has effect on the JavaScript-variables given to the client-side of Terasender.
 
