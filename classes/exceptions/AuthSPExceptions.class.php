@@ -78,7 +78,7 @@ class AuthSPMissingAttributeException extends DetailedException {
      * @param string $name name of the attribute
      * @param array  $attributes array of key-value where a key of $name should have been found
      */
-    public function __construct($name,$attributes,$attrname='not given') {
+    public function __construct($name,$attributes,$attrkey,$attrname='') {
         $info = array('attribute' => $name);
         
         $lid = 'auth_sp_attribute_'.$name.'_hint';
@@ -88,6 +88,7 @@ class AuthSPMissingAttributeException extends DetailedException {
         // Give the system admin some information to help them fix things
         $internalLog = DetailedException::convertArrayToLogArray($attributes,'    ');
         $this->log( 'attributes', (string)Lang::tr('serverlog_auth_sp_attribute_not_found'));
+        $this->log( 'attributes', Lang::tr('serverlog_config_directive')->r('key',$attrkey));
         $this->log( 'attributes', Lang::tr('serverlog_wanted_key_in_array')->r('key',$attrname));
         $this->logArray( 'attributes', $internalLog );
 

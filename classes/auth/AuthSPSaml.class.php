@@ -108,9 +108,12 @@ class AuthSPSaml {
             if(!$attributes['uid'])
                 throw new AuthSPMissingAttributeException(
                     'uid', $raw_attributes,
-                    self::$config['uid_attribute']);
+                    'uid_attribute',self::$config['uid_attribute']);
             
-            if(!$attributes['email']) throw new AuthSPMissingAttributeException('email',$attributes);
+            if(!$attributes['email'])
+                throw new AuthSPMissingAttributeException(
+                    'email',$raw_attributes,
+                    'email_attribute',self::$config['email_attribute']);
             
             foreach($attributes['email'] as $email) {
                 if(!Utilities::validateEmail($email)) throw new AuthSPBadAttributeException('email');
