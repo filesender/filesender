@@ -53,7 +53,8 @@ class LoggingException extends Exception {
      * @param mixed $log lines to log by categories
      */
     public function __construct($msg_code, $log = null) {
-        $this->uid = uniqid();
+        if( !$this->uid )
+             $this->uid = uniqid();
         
         // normalize arguments
         if(!$log) $log = $msg_code;
@@ -61,27 +62,53 @@ class LoggingException extends Exception {
             $log = array('exception' => $log);
         
         // Log info
-        if ($log) 
+        if ($log) {
             foreach ($log as $category => $lines) {
                 if (!is_array($lines)) 
                     $lines = array($lines);
                 
-                foreach ($lines as $line) 
-                    Logger::error(
-                        '['.get_class($this).' '.
-                        $category.' uid:'.$this->uid.'] '.$line
-                    ); //insert get_class($this) before $category (concatenate them)
+                foreach ($lines as $line)
+                    $this->log( $category, $line );
             }
+        }
         
         parent::__construct($msg_code);
     }
-    
+
+    /**
+     * Log an exception line with the detail message groupmsg.
+     * You can use groupmsg to cluster data from a single array into
+     * a block in the log so folks know where the dump starts and ends.
+     *
+     * @param string $groupmsg something about the line
+     * @param string $line     the line to log
+     */
+    function log($groupmsg,$line)
+    {
+        Logger::error(
+            '['.get_class($this).' '.
+            $groupmsg.' uid:'.$this->getUid().'] '.$line
+        );
+    }
+
+    /**
+     * Log the whole array as a series of lines with log($groupmsg,$line)
+     */
+    function logArray($groupmsg,$arr)
+    {
+        foreach ($arr as $line) {
+           LoggingException::log($groupmsg,$line);
+        }
+    }
+     
     /**
      * Uid getter
      * 
      * @return string the exception uid
      */
     public function getUid() {
+        if( !$this->uid )
+             $this->uid = uniqid();
         return $this->uid;
     }
 }
@@ -123,9 +150,24 @@ class DetailedException extends LoggingException {
             'trace' => explode("\n", $this->getTraceAsString()),
             'details' => array(),
         );
-        
-        // Cast to string(s)
-        foreach ($internal_details as $key => $detail) {
+
+        $log['details'] = $this->convertArrayToLogArray($internal_details);
+        parent::__construct($msg_code, $log);
+    }
+
+    /**
+     * Convert the array $arr to a logable array which is suitable
+     * to be passed to LoggingException::__construct()
+     *
+     * @param array arr the array to convert to something that can be logged
+     * @param string prefix optional prefix for each key so you can indent in the log
+     *
+     * @return array the same data as $arr but in a log friendly format
+     */
+    public static function convertArrayToLogArray($arr,$prefix='')
+    {
+        $ret = array();
+        foreach ($arr as $key => $detail) {
             $key = is_int($key) ? '' : $key.' = ';
             
             if (is_scalar($detail)) {
@@ -135,14 +177,14 @@ class DetailedException extends LoggingException {
                     $detail = '"'.$detail.'"';
                 }
                 
-                $log['details'][] = $key.$detail;
+                $ret[] = $prefix.$key.$detail;
             } else {
                 foreach (explode("\n", print_r($detail, true)) as $line) {
-                    $log['details'][] = $key.$line;
+                    $ret[] = $prefix.$key.$line;
                 }
             }
         }
-        parent::__construct($msg_code, $log);
+        return $ret;
     }
     
     /**

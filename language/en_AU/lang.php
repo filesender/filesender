@@ -426,6 +426,8 @@ $lang['auth_sp_missing_delegation_class'] = 'SP authentification delegation clas
 $lang['auth_sp_authentication_not_found'] = 'SP authentification class not found';
 $lang['auth_sp_missing_attribute'] = 'SP authentification attribute not found';
 $lang['auth_sp_bad_attribute'] = 'SP authentification bad attribute';
+$lang['serverlog_auth_sp_attribute_not_found'] = 'These are the attributes that are available at auth time. Perhaps double check that the spelling of the attribute name is correct. Maybe the configuration is looking for the wrong attribute?';
+$lang['serverlog_wanted_key_in_array'] = 'Wanted an attribute with key \'{key}\'';
 
 // Bad exceptions
 $lang['bad_email'] = 'Invalid email format';
