@@ -115,6 +115,7 @@ window.filesender.terasender = {
                 name: file.name,
                 size: file.size,
                 blob: file.blob,
+                fingerprint: file.fingerprint,
                 endpoint: file.endpoint
             },
             security_token: this.security_token

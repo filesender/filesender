@@ -733,7 +733,7 @@ class Transfer extends DBObject {
      * 
      * @return File
      */
-    public function addFile($name, $size, $mime_type = null) {
+    public function addFile($name, $size, $mime_type = null, $fingerprint = null) {
         // Check if already exists
         if(!is_null($this->filesCache)) {
             $matches = array_filter($this->filesCache, function($file) use($name, $size) {
@@ -752,6 +752,7 @@ class Transfer extends DBObject {
         $file->name = $name;
         $file->size = $size;
         $file->mime_type = $mime_type ? $mime_type : 'application/binary';
+        $file->fingerprint = $fingerprint;
         $file->save();
         
         // Update local cache

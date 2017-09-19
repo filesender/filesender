@@ -78,6 +78,7 @@ window.filesender.config = {
     default_guest_days_valid: <?php echo Config::get('default_guest_days_valid') ?>,
     
     chunk_upload_security: '<?php echo Config::get('chunk_upload_security') ?>',
+    protect_upload_with_fingerprint: '<?php echo Config::get('protect_upload_with_fingerprint') ?>',
     
     encryption_enabled: '<?php echo Config::get('encryption_enabled') ?>',
     upload_crypted_chunk_size: '<?php echo Config::get('upload_crypted_chunk_size') ?>',

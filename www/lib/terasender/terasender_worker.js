@@ -120,6 +120,7 @@ var terasender_worker = {
         xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
         xhr.setRequestHeader('X-Filesender-File-Size', file.size);
         xhr.setRequestHeader('X-Filesender-Chunk-Offset', this.job.chunk.start);
+        xhr.setRequestHeader('X-Filesender-Fingerprint', file.fingerprint);
         xhr.setRequestHeader('X-Filesender-Chunk-Size', blob.size);
         xhr.setRequestHeader('X-Filesender-Security-Token', this.security_token);
         

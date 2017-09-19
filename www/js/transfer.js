@@ -146,6 +146,7 @@ window.filesender.transfer = function() {
             name: blob.name,
             mime_type: blob.type,
             node: source_node,
+            fingerprint: null,
             transfer: this
         };
         
@@ -217,6 +218,29 @@ window.filesender.transfer = function() {
             if (this.size + file.size > filesender.config.quota.available) {
                 errorhandler({message: 'transfer_user_quota_exceeded', details: {available: filesender.config.quota.available}});
                 return false;
+            }
+        }
+
+        function blobToString(b) {
+            var u, x;
+            u = URL.createObjectURL(b);
+            x = new XMLHttpRequest();
+            x.open('GET', u, false);
+            x.send();
+            URL.revokeObjectURL(u);
+            return x.responseText;
+        }
+        
+        // if using 'key' security then we must tell the server the
+        // fingerprint for each file so we can upload again later using the key.
+        if( filesender.config.chunk_upload_security == 'key' ) {
+            if( filesender.config.protect_upload_with_fingerprint ) {
+                var bytesToRead = Math.min( file.size, 1*1024*1024 );
+                var slicer = file.blob.slice ? 'slice' : (file.blob.mozSlice ? 'mozSlice' : (file.blob.webkitSlice ? 'webkitSlice' : 'slice'));
+                var data = blobToString(file.blob[slicer](0,bytesToRead));
+                var shaObj = new jsSHA("SHA-256", "BYTES");
+                shaObj.update(data);
+                file.fingerprint = shaObj.getHash("HEX");
             }
         }
         
@@ -816,7 +840,7 @@ window.filesender.transfer = function() {
             
             transfer.createRestartTracker();
             
-            filesender.ui.log('Transfer created, staring upload');
+            filesender.ui.log('Transfer created, starting upload');
             
             if(filesender.supports.reader) {
                 // Start uploading chunks

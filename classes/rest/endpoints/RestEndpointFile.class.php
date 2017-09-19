@@ -179,6 +179,9 @@ class RestEndpointFile extends RestEndpoint {
             // Check size
             if((int)$input['size'] != $file->size)
                 throw new RestException('file_size_does_not_match', 400);
+
+            // check fingerprint
+            $sentFingerprint = $this->verifySentFingerprint( $file );
             
             // Check that storage backend supports whole file mode
             if(Storage::supportsWholeFile()) {
@@ -212,7 +215,48 @@ class RestEndpointFile extends RestEndpoint {
             'data' => $data
         );
     }
-    
+
+    /**
+     * THROWS AN EXCEPTION IF CHECK FAILS. 
+     *
+     * Verify that the sent FINGERPRINT matches that for the given $file. 
+     * If the data is not sent, is invalid as sent, or the hash does 
+     * not match then throw an exception.
+     * 
+     * @return the FINGERPRINT sent by the caller after sanitization
+     * 
+     * @throws RestSanityCheckFailedException if the supplied fingerprint does not match the file fingerprint
+     */
+    public function verifySentFingerprint( $file )
+    {
+        if( !Config::get('protect_upload_with_fingerprint' )) {
+            return '';
+        }
+        
+        $h = 'X-Filesender-Fingerprint';
+        $k = 'HTTP_' . strtoupper(str_replace('-', '_', $h));
+        $tmp = array_key_exists($k, $_SERVER) ? $_SERVER[$k] : null;
+        $sentFingerprint = null;
+        if( preg_match('/^[0-9a-f]{64}$/', $tmp)) {
+            $client[$h] = $tmp;
+            $sentFingerprint = $tmp;
+        }
+        
+        // make sure we have the fingerprint to compare with
+        if( !$file->haveFingerprint() ) {
+            throw new RestSanityCheckFailedException('file_hash', $sentFingerprint, $file->fingerprint );
+        }
+
+        // check that the uploader knows the fingerprint of the entire file
+        // we already know that we have a file with fingerprint and they sent a fingerprint.
+        if( $sentFingerprint != $file->fingerprint ) {
+            throw new RestSanityCheckFailedException('file_hash', $sentFingerprint, $file->fingerprint );
+        }
+
+        // everything is ok so we can let the calling code continue.
+        return $sentFingerprint;
+    }
+
     /**
      * Add chunk to a file at offset
      * 
@@ -270,6 +314,10 @@ class RestEndpointFile extends RestEndpoint {
             
             // Get integrity check data sent from the client
             $client = array();
+
+            // Check that client knows what they are talking about
+            $sentFingerprint = $this->verifySentFingerprint( $file );
+            
             foreach (array('X-Filesender-File-Size', 'X-Filesender-Chunk-Offset', 'X-Filesender-Chunk-Size', 'X-Filesender-Encrypted') as $h) {
                 $k = 'HTTP_' . strtoupper(str_replace('-', '_', $h));
                 $client[$h] = array_key_exists($k, $_SERVER) ? (int) $_SERVER[$k] : null;
