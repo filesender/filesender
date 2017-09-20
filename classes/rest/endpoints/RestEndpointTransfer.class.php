@@ -353,16 +353,21 @@ class RestEndpointTransfer extends RestEndpoint {
                 TransferOptions::GET_A_LINK => $allOptions[TransferOptions::GET_A_LINK]['default'],
                 TransferOptions::ADD_ME_TO_RECIPIENTS => $allOptions[TransferOptions::ADD_ME_TO_RECIPIENTS]['default'],
             );
+            
             foreach($allOptions as $name => $dfn)  {
-                if(in_array($name, $allowed_options)
-                    && $data->options->exists($name))
-                {
-                    $options[$name] = $data->options->$name;
+                if(in_array($name, $allowed_options)) {
+                    if (method_exists($data->options,'exists')) {
+                        if ($data->options->exists($name))
+                            $options[$name] = $data->options->$name;
+                    } else {
+                        if (array_search($name,$data->options) !== FALSE)
+                            $options[$name] = 1;
+                    }
                 }
             }
             
             $options['encryption'] = $data->encryption;
-            
+
             Logger::info($options);
             // Get_a_link transfers have no recipients so mail related options make no sense, remove them if set
             if($options[TransferOptions::GET_A_LINK]) {
