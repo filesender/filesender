@@ -1,11 +1,11 @@
 ---
-title: Documentation v2.0-alpha
+title: Documentation v2.0-beta
 ---
 
 # FileSender 2.0
 
-<span style="background-color:orange">This is the documentation for FileSender 2.0-alpha.
-FileSender 2.0-alpha is a work in progress, so is
+<span style="background-color:orange">This is the documentation for FileSender 2.0-beta.
+FileSender 2.0-beta is a work in progress, so is
 this documentation.  If you find anything you'd like to improve, please improve it and send
 the new text to filesender-dev@filesender.org</span>
 
@@ -17,7 +17,7 @@ the new text to filesender-dev@filesender.org</span>
 
 ## Installation
 
-* [Linux source (from Git for the alpha)](install/)
+* [Linux source (from Git for the Beta)](install/)
 * [Upgrade notes](development-upgrade-notes/)
 
 ## Administration

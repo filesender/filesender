@@ -84,9 +84,13 @@ class AuthSPFake {
             }
             
             // Check attributes
-            if(!$attributes['uid']) throw new AuthSPMissingAttributeException('uid');
+            if(!$attributes['uid'])
+                throw new AuthSPMissingAttributeException(
+                    'uid',$attributes,'uid','uid');
             
-            if(!$attributes['email']) throw new AuthSPMissingAttributeException('email');
+            if(!$attributes['email'])
+                throw new AuthSPMissingAttributeException(
+                     'email',$attributes,'email','email');
             
             if(!is_array($attributes['email'])) $attributes['email'] = array($attributes['email']);
             

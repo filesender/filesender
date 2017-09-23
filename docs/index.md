@@ -12,7 +12,7 @@ This is the home for Filesender documentation.  For more information about the p
 
 ### Documentation
 
-Installation and documentation for the v2 Alpha release is available [here](http://docs.filesender.org/v2.0/).
+Installation and documentation for the v2.0 Beta release is available [here](http://docs.filesender.org/v2.0/).
 
 Installation and administrator documentation for the latest 1.6(.x) release is provided at [Documentation_v1-6](https://app.assembla.com/wiki/show/file_sender/Documentation_v1-6) (documentation for the previous 1.1(.x) release at [Documentation_v1-1](https://app.assembla.com/wiki/show/file_sender/Documentation_v1-1)).
 
