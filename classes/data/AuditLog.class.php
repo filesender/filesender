@@ -87,7 +87,7 @@ class AuditLog extends DBObject {
             'author_type' => array(),
             'author_id'   => array()
         )
-
+        
 //        'Type_ID_AType_AID_IP_Event_Created' => array(
 //            'target_type' => array(),
 //            'target_id'   => array(),
@@ -97,6 +97,7 @@ class AuditLog extends DBObject {
 //            'event'       => array(),
 //            'created'     => array()
 //        ),
+        
     );
 
     /**
