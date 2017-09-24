@@ -287,18 +287,12 @@ class RestEndpointFile extends RestEndpoint {
                 }
                 // The initialization vector
                 $ivLength = 16;
-                $crypted_length = strlen($data);
                 // Content length
                 $data_length = ($chunkLength - $paddedLength - $ivLength);
             } else {
                 $data_length = strlen($data);
-                $crypted_length = 0;
             }
             
-            // keep track of each encrypted chunk so we know the actual final size;
-            $file->encrypted_size = $file->encrypted_size + $crypted_length;
-            $file->save();
-
             // Check that the client sent file size the same as the loaded file if given
             if(!is_null($client['X-Filesender-File-Size']))
                 if($file->size != $client['X-Filesender-File-Size'])
@@ -334,7 +328,7 @@ class RestEndpointFile extends RestEndpoint {
                 $offset = $offset / Config::get('upload_chunk_size') * Config::get('upload_crypted_chunk_size');
             }
 
-            $write_info = $file->writeChunk($data, $offset, $crypted_length);
+            $write_info = $file->writeChunk($data, $offset);
             $file->transfer->isUploading();
             
             return $write_info;
