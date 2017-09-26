@@ -97,11 +97,16 @@ $default = array(
     'terasender_start_mode' => 'multiple',
     'terasender_worker_count' => 6,
     'stalling_detection' => false,
-    
+
+    // There are not so many options here, so they are listed
+    // to make it easy for users to know what values might be interesting
     'storage_type' => 'filesystem',
+//    'storage_type' => 'filesystemChunked',
     
     'storage_filesystem_path' => FILESENDER_BASE.'/files',
     'storage_filesystem_df_command' => 'df {path}',
+    'storage_filesystem_tree_deletion_command' => 'rm -rf {path}',
+    'storage_filesystem_ignore_disk_full_check' => false,
     
     'email_from' => 'sender',
     'email_return_path' => 'sender',
