@@ -30,6 +30,7 @@
 * [storage_filesystem_path](#storage_filesystem_path)
 * [storage_filesystem_df_command](#storage_filesystem_df_command)
 * [storage_filesystem_file_deletion_command](#storage_filesystem_file_deletion_command)
+* [storage_filesystem_tree_deletion_command](#storage_filesystem_tree_deletion_command)
 * [storage_usage_warning](#storage_usage_warning)
 * [storage_filesystem_hashing](#storage_filesystem_hashing)
 
@@ -290,6 +291,14 @@ Emails regarding disk full etc. are sent here. You should use a role-address her
 * __default:__ <span style="background-color:orange">?</span>
 * __available:__ since version 1.1
 * __1.x name:__ cron_shred_command
+* __comment:__
+
+###storage_filesystem_tree_deletion_command
+* __description:__ Command used to delete whole directories and the contents, when they expire or are cleaned in routine cleaning of stale files.
+* __mandatory:__ no.  If not set, default used
+* __type:__ string
+* __default:__ rm -rf
+* __available:__ since version 2.0
 * __comment:__
 
 ###storage_usage_warning

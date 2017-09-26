@@ -38,17 +38,17 @@ class StorageFilesystem {
     /**
      * Storage path
      */
-    private static $path = null;
+    protected static $path = null;
     
     /**
      * Folder hashing
      */
-    private static $hashing = null;
+    protected static $hashing = null;
     
     /**
      * Storage setup, loads options from config
      */
-    private static function setup() {
+    protected static function setup() {
         if(!is_null(self::$path)) return;
         
         // Check required config parameters
@@ -75,7 +75,7 @@ class StorageFilesystem {
      * 
      * @return string
      */
-    private static function getFilesystem($what) {
+    protected static function getFilesystem($what) {
         self::setup();
         
         // Get File path in case we got a File object
@@ -111,8 +111,14 @@ class StorageFilesystem {
      */
     public static function canStore(Transfer $transfer) {
         self::setup();
-        
         $filesystems = array();
+
+        // If the user is doing something with FUSE
+        // then they might not want to check disk space.
+        if( Config::get('storage_filesystem_ignore_disk_full_check')) {
+                return true;
+        }
+        
         
         // Organize files by their storage path, get free space for each path
         foreach($transfer->files as $file) {
@@ -162,14 +168,15 @@ class StorageFilesystem {
      * 
      * @return array
      */
-    private static function getHashedPaths($level, $prefix = '') {
+    protected static function getHashedPaths($level, $prefix = '') {
         $paths = array();
         
         for($i=0; $i<=15; $i++) {
             $p = $prefix.dechex($i);
             if($level > 1) {
-                foreach(self::getHashedPaths($level - 1, $p) as $sp)
+                foreach(self::getHashedPaths($level - 1, $p) as $sp) {
                     $paths[] = $p.'/'.$sp;
+                }
             } else {
                 $paths[] = $p;
             }
@@ -228,7 +235,7 @@ class StorageFilesystem {
      * 
      * @return string path
      */
-    private static function buildPath(File $file) {
+    protected static function buildPath(File $file) {
         self::setup();
         
         $path = self::$path;
@@ -488,4 +495,5 @@ class StorageFilesystem {
     public static function storeAsLink(File $file, $source_path) {
         symlink($source_path, self::buildPath($file).$file->uid);
     }
+
 }

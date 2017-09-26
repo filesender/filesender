@@ -30,8 +30,10 @@ title: Configuration directives
 * [storage_filesystem_path](#storagefilesystempath)
 * [storage_filesystem_df_command](#storagefilesystemdfcommand)
 * [storage_filesystem_file_deletion_command](#storagefilesystemfiledeletioncommand)
+* [storage_filesystem_tree_deletion_command](#storagefilesystemtreedeletioncommand)
 * [storage_usage_warning](#storageusagewarning)
 * [storage_filesystem_hashing](#storagefilesystemhashing)
+* [storage_filesystem_ignore_disk_full_check](#storagefilesystemignorediskfullcheck)
 
 ## Database
 
@@ -289,7 +291,7 @@ title: Configuration directives
 * __type:__ string.  Permissible values: **filesystem**.
 * __default:__ filesystem
 * __available:__ since version 2.0
-* __comment:__ each supported storage type will have a specific class defined in classes/storage.  Each is named Storage<Foo>.class.php, for example StorageFilesystem.class.php for the type filesystem.  The values for "Foo" are the permissible values for this directive. For now the only permissible value and supported storage type is filesystem.  Future storage types could include e.g. **object**, **amazon_s3** and others.
+* __comment:__ each supported storage type will have a specific class defined in classes/storage.  Each is named Storage<Foo>.class.php, for example StorageFilesystem.class.php for the type filesystem.  The values for "Foo" are the permissible values for this directive. For now the only permissible value and supported storage types are filesystem and filesystemChunked. Note that you need to respect the non leading capital letters in the class name such as the "C" in filesystemChunked. Future storage types could include e.g. **object**, **amazon_s3** and others.
 
 ### storage_filesystem_path
 
@@ -321,6 +323,14 @@ title: Configuration directives
 * __1.x name:__ cron_shred_command
 * __comment:__
 
+###storage_filesystem_tree_deletion_command
+* __description:__ Command used to delete whole directories and the contents, when they expire or are cleaned in routine cleaning of stale files.
+* __mandatory:__ no.  If not set, default used
+* __type:__ string
+* __default:__ rm -rf
+* __available:__ since version 2.0
+* __comment:__
+
 ### storage_usage_warning
 
 * __description:__ percentage of drive space left that will trigger an email warning to the admin.
@@ -341,6 +351,17 @@ title: Configuration directives
 * __1.x name:__
 * __comment:__ not tested
 * __comment:__ basically integer. use fileUID (which is used to create name on hard drive) + as many characters as the hashing value (if you set hashing to 2 you take the 2 first letters of the fileUID (big random string) and use these two characters to create a directory structure under the storage path. This avoids having all files in the same directory. If you set this to 1 you have 16 possible different values for the directory structure under the storage root. You'll have 16 folders under your storage root under which you'll have the files. This allows you to spread files over different file systems / hard drives. You can aggregate storage space without using things like LVM. If you set this to two you have 2 levels of subdirectories. For directory naming: first level, directory names has one letter. Second level has two: letter from upper level + own level. Temporary chunks are stored directly in the final file. No temp folder (!!) Benchmarking between writing small file in potentially huge directory and opening big file and seeking in it was negligable. Can just open final file, seek to location of chunk offset and write data. Removes need to move file in the end.  It can also be "callable". We call the function giving it the file object which hold all properties of the file. Reference to the transfer as well. The function has to return a path under the storage root. This is a path related to storage root. For example: if you want to store small files in a small file directory and big files in big directory. F.ex. if file->size < 100 MB store on fast small disk, if > 100 MB store on big slow disk. Can also be used for functions to store new files on new storage while the existing files remain on existing storage. Note: we need contributions for useful functions here :)
+
+
+### storage_filesystem_ignore_disk_full_check
+
+* __description:__ Ignore tests to see if new files will fit onto the filesystem.
+* __mandatory:__ no.  
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 2.0
+* __comment:__ If you are using FUSE to interface with some other storage such as EOS then you might like to set this to true to avoid having to do a distributed search to find out of there is storage for each upload
+
 
 ---
 
