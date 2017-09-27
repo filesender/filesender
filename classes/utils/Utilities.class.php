@@ -434,9 +434,15 @@ class Utilities {
             }
         }
         $ret = $path;
-        $ret .= http_build_query( $q, '',
-                                  config::get('filesender_arg_separator_output'),
-                                  PHP_QUERY_RFC3986 );
+        if( phpversion() < 5.4 ) {
+            // CIFIXME remove this branch when CI php is upgraded.
+            $ret .= http_build_query( $q, '',
+                                      config::get('filesender_arg_separator_output'));
+        } else {
+            $ret .= http_build_query( $q, '',
+                                      config::get('filesender_arg_separator_output'),
+                                      PHP_QUERY_RFC3986 );
+        }        
         return $ret;
     }
     
