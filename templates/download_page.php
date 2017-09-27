@@ -22,16 +22,16 @@
     if(empty($transfer->options['encryption'])) {
         $fileIds = array();
         foreach($transfer->files as $file) {
-            $downloadLinks[$file->id] = GUI::path('download.php?' . http_build_query(array(
+            $downloadLinks[$file->id] = Utilities::http_build_query(array(
                 'token' => $token,
                 'files_ids' => $file->id,
-            )));
+            ), 'download.php?' );
             $fileIds[] = $file->id;
         }
-        $archiveDownloadLink = GUI::path('download.php?' . http_build_query(array(
+        $archiveDownloadLink = Utilities::http_build_query(array(
             'token' => $token,
             'files_ids' => implode(',', $fileIds),
-        )));
+        ), 'download.php?' );
     }
 
     $isEncrypted = isset($transfer->options['encryption']) && $transfer->options['encryption'];

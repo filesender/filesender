@@ -402,6 +402,49 @@ class Utilities {
     public static function sanitizeOutput($output) {
         return htmlentities($output, ENT_QUOTES, 'UTF-8');
     }
+
+    public static function startsWith($haystack, $needle)
+    {
+         $length = strlen($needle);
+         return (substr($haystack, 0, $length) === $needle);
+    }
+
+    /**
+     * This is a wrapper around the PHP http_build_query with some
+     * smarts. $path is optional and if not given will be the site itself.
+     * If path is given and is ^http then it is taken as the site url prefix.
+     * On the other hand if path is relative then it is converted to absolute
+     * by this call.
+     *
+     * CGI parameters are given in $q which can be an array like;
+     * array( 'foo' => 'bar', 'baz' => 7 )
+     *
+     * @param array q the CGI parameters
+     * @param string path either nothing (default), a relative prefox, or absolute url
+     *
+     * @return string full URL using path and query params using the user's specified
+     *                path separator (; can be useful here).
+     */
+    public static function http_build_query( $q, $path = null ) {
+        if( $path == null ) {
+            $path = Config::get('site_url') . '?';
+        } else {
+            if( !Utilities::startsWith($path, 'http' )) {
+                $path = Config::get('site_url') . $path;
+            }
+        }
+        $ret = $path;
+        if( phpversion() < 5.4 ) {
+            // CIFIXME remove this branch when CI php is upgraded.
+            $ret .= http_build_query( $q, '',
+                                      config::get('filesender_arg_separator_output'));
+        } else {
+            $ret .= http_build_query( $q, '',
+                                      config::get('filesender_arg_separator_output'),
+                                      PHP_QUERY_RFC3986 );
+        }        
+        return $ret;
+    }
     
     /**
      * Check if HTTPS is in use

@@ -23,6 +23,7 @@ title: Configuration directives
 * [site_logouturl](#sitelogouturl)
 * [about_url](#abouturl)
 * [help_url](#helpurl)
+* [filesender_arg_separator_output](#filesenderargseparatoroutput)
 
 ## Backend storage
 
@@ -277,6 +278,19 @@ title: Configuration directives
 * __available:__ since version 1.0
 * __1.x name:__ helpURL
 * __comment:__ when configured with a mailto: address that points to e.g. support@yourdomain.dom the email bounce handler will use this address to send unprocessable email bounces to. <span style="background-color:orange">include link to email bounce handling config directives/help</span>
+
+
+### filesender_arg_separator_output
+
+* __description:__ separator to use for CGI parameters.
+* __mandatory:__ no
+* __type:__ string
+* __default:__ &
+* __available:__ since version 2.0
+* __comment:__ You might like to set this to ";" and edit your site php.ini to include the setting arg_separator.input = ";&"
+
+
+
 
 ---
 
