@@ -134,6 +134,8 @@ $default = array(
     'autocomplete' => false, 
     'autocomplete_min_characters' => 3,
 
+    'filesender_arg_separator_output' => '&', 
+
     'user_page' => false,
     //'user_page' => array(
     //    'lang' => 'write',

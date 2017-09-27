@@ -208,11 +208,11 @@ class TranslatableEmail extends DBObject {
             case 'Recipient': // Recipient context is it's transfer
                 $context = $to->transfer;
                 break;
-            
+                
             case 'Guest' : // Guest is a context by itself
                 $context = $to;
                 break;
-            
+                
             case 'User' : // If recipient is user try to find Transfer, File or Guest in variables
                 foreach($vars as $v) {
                     if(!is_object($v)) continue;
@@ -327,7 +327,10 @@ class TranslatableEmail extends DBObject {
         if($property == 'context') return call_user_func($this->context_type.'::fromId', $this->context_id);
         
         if($property == 'link') {
-            return Config::get('site_url').'?s=translate_email&token='.$this->token;
+            return Utilities::http_build_query(
+                array( 's'     => 'translate_email',
+                       'token' => $this->token ));
+            
         }
         
         throw new PropertyAccessException($this, $property);
