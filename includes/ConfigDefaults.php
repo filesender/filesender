@@ -136,6 +136,10 @@ $default = array(
 
     'filesender_arg_separator_output' => '&', 
 
+    'upload_graph_bulk_display' => false, 
+    'upload_graph_bulk_min_file_size_to_consider' => 1024*1024*1024, 
+
+
     'user_page' => false,
     //'user_page' => array(
     //    'lang' => 'write',
