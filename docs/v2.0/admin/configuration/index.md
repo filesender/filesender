@@ -91,6 +91,11 @@ title: Configuration directives
 * [upload_chunk_size](#uploadchunksize)
 * [user_quota](#userquota)
 
+## Graphs
+
+* [upload_graph_bulk_display](#uploadgraphbulkdisplay)
+* [upload_graph_bulk_min_file_size_to_consider](#uploadgraphbulkminfilesizetoconsider)
+
 ## TeraSender (high speed upload module)
 
 * [terasender_enabled](#terasenderenabled)
@@ -857,6 +862,31 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __available:__ since version 2.0
 * __1.x name:__
 * __comment:__ user quote can be implemented in a much more flexible way as well.  As we're doing lazy loading of configuration parameters we can change this value (and max. file size) based on user profile.  In stead of defining this config parameter with a number you can give a function to it.  The value returned by this function is cached for a login session.  For example a function that uses eduPersonAffiliation can give a "student" 10 GB and "faculty" 1 TB.  You could also change max. days valid based on user profile.  The function can use the current application state and user session to compute the value for a logged in user, because the function would run after everything else.  <span style="background-color:orange">Calculated maximum values should have its own chapter to explain, with examples especially for using eduPersonAffiliation.</span>
+
+---
+
+## Graphs
+
+---
+
+### upload_graph_bulk_display
+
+* __description:__ Enable bulk upload speed graphs on the uploads page (MySQL database backend only).
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 2.0
+* __comment:__ Note: MySQL database backend only
+
+### upload_graph_bulk_min_file_size_to_consider
+
+* __description:__ only consider files above this size in bulk transfer speed calculation.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ 1024 * 1024 * 1024
+* __available:__ since version 2.0
+* __comment:__ only useful when you enable upload_graph_bulk_display
+
 
 ---
 
