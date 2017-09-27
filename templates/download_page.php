@@ -101,6 +101,16 @@
                 {tr:download}
             </a>
             <span class="downloadprogress"></span>
+            <br>
+            <span class="directlink">
+    <?php
+	if (isSet($transfer->options['encryption']) && $transfer->options['encryption']) {
+		echo 'Direct Links are not avaliable for encrypted files';
+	} else {
+		echo 'Direct Link: '.Config::get('site_url').'download.php?token='.$token.'&files_ids='.$file->id;
+	}
+    ?>
+	    </span>
         </div>
     <?php } ?>
         <?php if($canDownloadArchive) { ?>

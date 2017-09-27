@@ -1067,6 +1067,13 @@ table.guests .guest .to .errors .details {
        min-width: 100px;
 }
 
+.directlink {
+       float: right;
+       padding-right: 10px;
+       color: #999999;
+       font-size: 0.7em;
+}
+
 /* Admin sections */
 
 .admin_page .section h2 {
