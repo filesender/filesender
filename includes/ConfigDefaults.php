@@ -114,7 +114,9 @@ $default = array(
     
     'report_bounces' => 'asap',
     'report_bounces_asap_then_daily_range' => 15 * 60,
-    
+
+    'reports_show_ip_addr' => true,
+
     'statlog_lifetime' => 0,
     'statlog_log_user_organization' => false,
     'auditlog_lifetime' => 31,

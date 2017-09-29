@@ -27,8 +27,12 @@ foreach($report->logs as $entry) {
         ),
         $entry->target
     );
-    
-    $lines[] = array('date' => $date, 'action' => $action, 'ip' => $entry->ip);
+
+    $nextline = array('date' => $date, 'action' => $action );
+    if( Config::get('reports_show_ip_addr')) {
+        $nextline += array('ip' => $entry->ip);
+    }
+    $lines[] = $nextline;
 }
 
 // Find longest date to compute first column width
