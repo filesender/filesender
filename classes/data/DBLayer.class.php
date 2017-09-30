@@ -41,44 +41,5 @@ if(!defined('FILESENDER_BASE')) die('Missing environment');
  */
 class DBLayer {
 
-    public static function isMySQL() {
-        return Config::get('db_type') == "mysql";
-    }
-    public static function isPostgress() {
-        return Config::get('db_type') == "pgsql";
-    }
-
-    /**
-     * number of days between timestamp f1 and f2 
-     * 
-     * @return string SQL fragment
-     */
-    public static function datediff( $f1, $f2 ) {
-        if(self::isPostgress()) {
-            return "extract(day from " . $f1 . "-" . $f2 . " )";
-        }
-        if(self::isMySQL()) {
-            return "DATEDIFF(" . $f1 . "," . $f2 . ")";
-        }
-        throw new DBIBackendExplicitHandlerUnimplementedException(
-            'SQLUNIMP datediff() called on unsupported backend');
-    }
-    
-    /**
-     * Given an SQL timestamp field $f convert that value to the 
-     * number of seconds since unix epoch
-     * 
-     * @return string SQL fragment
-     */
-    public static function timeStampToEpoch( $f ){
-        if(self::isPostgress()) {
-            return "extract(epoch from " . $f . ")";
-        }
-        if(self::isMySQL()) {
-            return "UNIX_TIMESTAMP(" . $f .")";
-        }
-        throw new DBIBackendExplicitHandlerUnimplementedException(
-            'SQLUNIMP timeStampToEpoch() called on unsupported backend');
-    }
     
 }
