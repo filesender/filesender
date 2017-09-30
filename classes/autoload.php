@@ -56,6 +56,7 @@ class Autoloader {
         'Storage*' => 'storage/',
         
         'DBObject' => 'data/',
+        'DBLayer' => 'data/',
         'Transfer' => 'data/',
         'File' => 'data/',
         'Recipient' => 'data/',
