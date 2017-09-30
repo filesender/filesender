@@ -77,8 +77,9 @@ if(Config::get('show_storage_statistics_in_admin')) {
     </tbody>
 </table>
 <?php
-    }
+}
 }
 ?>
+
 
 <script type="text/javascript" src="{path:js/admin_statistics.js}"></script>

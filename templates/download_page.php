@@ -101,6 +101,7 @@
                 {tr:download}
             </a>
             <span class="downloadprogress"></span>
+            
         </div>
     <?php } ?>
         <?php if($canDownloadArchive) { ?>
