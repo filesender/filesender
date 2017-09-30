@@ -24,6 +24,7 @@ title: Configuration directives
 * [about_url](#abouturl)
 * [help_url](#helpurl)
 * [filesender_arg_separator_output](#filesenderargseparatoroutput)
+* [reports_show_ip_addr](#reportsshowipaddr)
 
 ## Backend storage
 
@@ -293,6 +294,16 @@ title: Configuration directives
 * __default:__ &
 * __available:__ since version 2.0
 * __comment:__ You might like to set this to ";" and edit your site php.ini to include the setting arg_separator.input = ";&"
+
+
+### reports_show_ip_addr
+
+* __description:__ Show the IP addresses used in reports
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ true
+* __available:__ since version 2.0
+* __comment:__ If you want to hide IP addresses from reports set it to false
 
 
 
