@@ -529,4 +529,27 @@ class Utilities {
         // Previous value matches
         return $token_to_check === self::$security_token['old']['value'];
     }
+
+
+    /**
+     * Read the config $configkey and if it is set then regex
+     * match it to see if needle matches and return the result. 
+     * This function handles empty configkey values and may cache results.
+     *
+     * So if you have a possible config key
+     *    mykey_regex => 'foo.*',
+     *
+     * you can see if you match in code with
+     * if( Utilities::configMatch( 'mykey_regex', 'bar' )) {
+     *    ...
+     * }
+     */
+    public static function configMatch( $configkey, $needle ) {
+        $cfg = Config::get( $configkey );
+        if( !strlen($cfg) )
+            return false;
+        if( preg_match('/' . $cfg . '/', $needle ))     
+            return true;  
+        return false;
+    }
 }

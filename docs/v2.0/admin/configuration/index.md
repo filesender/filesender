@@ -153,6 +153,8 @@ title: Configuration directives
 * [auth_sp_fake_additional_attributes_values](#authspfakeadditionalattributesvalues)
 * [auditlog_lifetime](#auditloglifetime)
 * [report_format](#reportformat)
+* [exception_additional_logging_regex](#exceptionadditionalloggingregex)
+
 
 ## Webservices API
 
@@ -1418,6 +1420,19 @@ different options for different types.</span>
 * __available:__ since version 2.0
 * __1.x name:__
 * __comment:__ The same information is sent regardless of format.  Inline sends an email in plain text and HTML, with all information inline.  If PDF is chosen, the report is sent as PDF attachment.  Building a PDF is somewhat heavier on the server but won't matter unless you would have a heavily used server.  The library used is "dom pdf", included in the code.
+
+
+### exception_additional_logging_regex
+
+* __description:__ Exception names that additional logging is desired for
+* __mandatory:__ no
+* __type:__ string regex
+* __default:__ 
+* __available:__ since version 2.0
+* __comment:__ Sometimes a site might want to capture down extra logging for some exception types. This configuration is a regular expression to match the name of an exception against to see if you want this extra log info. This allows extra log info to be turned on and off fairly easily without having to edit code and possibly break something. Note that only some exceptions can give extra info.
+
+
+
 
 ---
 

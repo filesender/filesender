@@ -147,8 +147,27 @@ class RestSanityCheckFailedException extends RestException {
      * @param string $check name of the check
      * @param mixed $value value of the bad data
      * @param mixed $expected expected value
+     * @param file   the file   that caused to error (optional, log only)
+     * @param client the client that caused to error (optional, log only)
      */
-    public function __construct($check, $value, $expected) {
+    public function __construct($check, $value, $expected, $file = null, $client = null) {
+
+        // extra logging options for the admin
+        if( self::additionalLoggingDesired( 'RestSanityCheckFailedException' )) {
+            if( $file ) {
+                $this->log('EXCEPT-REST-CHUNK-SIZE','file size:' . $file->size );
+                $this->log('EXCEPT-REST-CHUNK-SIZE','file name:' . $file->name );
+                $this->log('EXCEPT-REST-CHUNK-SIZE','file uid:' . $file->uid );
+            }
+            if( $client ) {
+                if( $client['X-Filesender-Chunk-Offset'] ) 
+                    $this->log('EXCEPT-REST-CHUNK-SIZE','chunk offset:' . $client['X-Filesender-Chunk-Offset'] );
+                if( $client['X-Filesender-Chunk-Size'] ) 
+                    $this->log('EXCEPT-REST-CHUNK-SIZE','chunk size:' . $client['X-Filesender-Chunk-Size'] );
+                if( $_SERVER['HTTP_USER_AGENT'] )
+                    $this->log('EXCEPT-REST-CHUNK-SIZE','user agent:' . $_SERVER['HTTP_USER_AGENT'] );
+            }
+        }
         parent::__construct('rest_sanity_check_failed', 400, 'check "'.$check.'", "'.$expected.'" value was expected but got "'.$value.'" instead');
     }
 }
