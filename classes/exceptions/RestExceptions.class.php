@@ -148,7 +148,20 @@ class RestSanityCheckFailedException extends RestException {
      * @param mixed $value value of the bad data
      * @param mixed $expected expected value
      */
-    public function __construct($check, $value, $expected) {
+    public function __construct($check, $value, $expected, $file = null, $client = null ) {
+        if( $file ) {
+            $this->log('guts','file size:' . $file->size );
+            $this->log('guts','file name:' . $file->name );
+            $this->log('guts','file uid:' . $file->uid );
+        }
+        if( $client ) {
+            if( $client['X-Filesender-Chunk-Offset'] ) 
+                $this->log('guts','chunk offset:' . $client['X-Filesender-Chunk-Offset'] );
+            if( $client['X-Filesender-Chunk-Size'] ) 
+                $this->log('guts','chunk size:' . $client['X-Filesender-Chunk-Size'] );
+            if( $_SERVER['HTTP_USER_AGENT'] )
+                $this->log('guts','user agent:' . $_SERVER['HTTP_USER_AGENT'] );
+        }
         parent::__construct('rest_sanity_check_failed', 400, 'check "'.$check.'", "'.$expected.'" value was expected but got "'.$value.'" instead');
     }
 }
