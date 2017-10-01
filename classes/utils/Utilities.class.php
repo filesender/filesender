@@ -313,6 +313,8 @@ class Utilities {
         // Default
         if(!$precision || !is_numeric($precision))
             $precision = 2;
+        // allow sloppy $bytes
+        $bytes = floor($bytes);
         
         // Variants
         $unit = Lang::tr('size_unit')->out();
@@ -375,7 +377,7 @@ class Utilities {
             || is_null($input)
             || is_object($input) // How can that be ?
         )
-            return $input;
+        return $input;
         
         if(is_string($input)) {
             // Convert to UTF-8
@@ -405,8 +407,8 @@ class Utilities {
 
     public static function startsWith($haystack, $needle)
     {
-         $length = strlen($needle);
-         return (substr($haystack, 0, $length) === $needle);
+        $length = strlen($needle);
+        return (substr($haystack, 0, $length) === $needle);
     }
 
     /**
