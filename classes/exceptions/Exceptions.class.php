@@ -54,7 +54,7 @@ class LoggingException extends Exception {
      */
     public function __construct($msg_code, $log = null) {
         if( !$this->uid )
-             $this->uid = uniqid();
+            $this->uid = uniqid();
         
         // normalize arguments
         if(!$log) $log = $msg_code;
@@ -68,7 +68,7 @@ class LoggingException extends Exception {
                     $lines = array($lines);
                 
                 foreach ($lines as $line)
-                    $this->log( $category, $line );
+                $this->log( $category, $line );
             }
         }
         
@@ -97,10 +97,10 @@ class LoggingException extends Exception {
     function logArray($groupmsg,$arr)
     {
         foreach ($arr as $line) {
-           LoggingException::log($groupmsg,$line);
+            LoggingException::log($groupmsg,$line);
         }
     }
-     
+    
     /**
      * Uid getter
      * 
@@ -108,7 +108,7 @@ class LoggingException extends Exception {
      */
     public function getUid() {
         if( !$this->uid )
-             $this->uid = uniqid();
+            $this->uid = uniqid();
         return $this->uid;
     }
 }
@@ -195,6 +195,18 @@ class DetailedException extends LoggingException {
     public function getDetails() {
         return $this->details;
     }
+
+    /**
+     * return true if the needle (exception name) matches the config
+     * for additional verbose logging
+     */
+    public static function additionalLoggingDesired( $needle ) {
+        if( Utilities::configMatch( 'exception_additional_logging_regex',
+                                    $needle )) {
+            return true;
+        }
+        return false;
+    }
 }
 
 /**
@@ -225,8 +237,8 @@ class StorableException {
         if(is_array($exception)) {
             // Got array, extract data from specific keys
             foreach(array('message', 'uid', 'details') as $p)
-                if(array_key_exists($p, $exception))
-                    $this->$p = $exception[$p];
+            if(array_key_exists($p, $exception))
+                $this->$p = $exception[$p];
             
             return;
         }
