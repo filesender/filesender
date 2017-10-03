@@ -49,6 +49,21 @@ class DBLayer {
     }
 
     /**
+     * 
+     * @return string SQL fragment
+     */
+    public static function toIntervalDays( $exp ) {
+        if(self::isPostgress()) {
+            return "(($exp) || ' DAYS')::INTERVAL";
+        }
+        if(self::isMySQL()) {
+            return "INTERVAL $exp DAY";
+        }
+        throw new DBIBackendExplicitHandlerUnimplementedException(
+            'SQLUNIMP toIntervalDays() called on unsupported backend');
+    }
+
+    /**
      * number of days between timestamp f1 and f2 
      * 
      * @return string SQL fragment
