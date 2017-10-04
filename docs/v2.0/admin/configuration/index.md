@@ -875,12 +875,12 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 
 ### upload_graph_bulk_display
 
-* __description:__ Enable bulk upload speed graphs on the uploads page (MySQL database backend only).
+* __description:__ Enable or disable bulk upload speed graphs on the uploads page.
 * __mandatory:__ no
 * __type:__ boolean
-* __default:__ false
+* __default:__ true
 * __available:__ since version 2.0
-* __comment:__ Note: MySQL database backend only
+* __comment:__ Note: 
 
 ### upload_graph_bulk_min_file_size_to_consider
 

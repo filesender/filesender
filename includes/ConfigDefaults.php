@@ -136,7 +136,7 @@ $default = array(
     'autocomplete' => false, 
     'autocomplete_min_characters' => 3,
 
-    'upload_graph_bulk_display' => false, 
+    'upload_graph_bulk_display' => true, 
     'upload_graph_bulk_min_file_size_to_consider' => 1024*1024*1024, 
 
 
