@@ -119,9 +119,13 @@ class StorageFilesystemChunked extends StorageFilesystem {
         }
         if($fh !== false) {
 
-            $written = fwrite($fh, $data);
-
+            $written = fwrite($fh, $data, $chunk_size);
             fclose($fh);
+
+            if( $chunk_size != $written ) {
+                Logger::info('writeChunk() Can not write to : '.$chunkFile);
+                throw new StorageFilesystemCannotWriteException('writeChunk( '.$file_path, $file, $data, $offset, $written );
+            }
 
             return array(
                 'offset' => $offset,

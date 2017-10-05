@@ -207,6 +207,16 @@ class DetailedException extends LoggingException {
         }
         return false;
     }
+
+    /**
+     */
+    public function additionalLogFile( $msg, $file ) {
+            if( $file ) {
+                $this->log($msg,'file size:' . $file->size );
+                $this->log($msg,'file name:' . $file->name );
+                $this->log($msg,'file uid:'  . $file->uid );
+            }
+    }
 }
 
 /**
