@@ -45,52 +45,8 @@ class StorageFilesystemChunked extends StorageFilesystem {
     
     
     
-    private static function getChunkFilename($file_path,$offset,$encrypt=false) {
-	return $file_path.'/'.str_pad($offset,24,'0',STR_PAD_LEFT).($encrypt?'.crypt':'');
-    }
-
-    private static function genKey(File $file) { //needs to be 32*8bits!!
-	$a = str_replace('-','',strtolower($file->uid));
-	$b = str_replace('0123456789abcdef','fedcba9876543210',$a);
-	$c = $a.$b;
-	$key='';
-	for($i=0;$i<strlen($c);$i+=2) $key.=chr(hexdec(substr($c,$i,2)));
-	return $key;
-    }
-
-    private static function encrypt($message, $key) {
-        if (mb_strlen($key, '8bit') !== 32) {
-            throw new Exception("Needs a 256-bit key!");
-        }
-        $ivsize = openssl_cipher_iv_length(Config::get('encrypt_method'));
-        $iv = openssl_random_pseudo_bytes($ivsize);
-        
-        $ciphertext = openssl_encrypt(
-            $message,
-            Config::get('encrypt_method'),
-            $key,
-            OPENSSL_RAW_DATA,
-            $iv
-        );
-        
-        return $iv . $ciphertext;
-    }
-
-    private static function decrypt($message, $key) {
-        if (mb_strlen($key, '8bit') !== 32) {
-            throw new Exception("Needs a 256-bit key!");
-        }
-        $ivsize = openssl_cipher_iv_length(Config::get('encrypt_method'));
-        $iv = mb_substr($message, 0, $ivsize, '8bit');
-        $ciphertext = mb_substr($message, $ivsize, null, '8bit');
-        
-        return openssl_decrypt(
-            $ciphertext,
-            Config::get('encrypt_method'),
-            $key,
-            OPENSSL_RAW_DATA,
-            $iv
-        );
+    private static function getChunkFilename($file_path,$offset) {
+	return $file_path.'/'.str_pad($offset,24,'0',STR_PAD_LEFT));
     }
 
     /**
@@ -112,16 +68,13 @@ class StorageFilesystemChunked extends StorageFilesystem {
 
         $file_path = self::buildPath($file).$file->uid;
 
-	$decrypt = false;//$file->transfer->getOption(TransferOptions::ENCRYPT);
-	$chunkFile=self::getChunkFilename($file_path,$offset,$decrypt);
+	$chunkFile=self::getChunkFilename($file_path,$offset);
 
         if(!file_exists($chunkFile))
             throw new StorageFilesystemFileNotFoundException($file_path, $file);
 
 	$data = file_get_contents($chunkFile);
 	if ($data === FALSE) return null;
-	if ($decrypt)		
-	    $data = self::decrypt($data,self::genKey($file));
 
 	return $data;
     }
@@ -156,8 +109,7 @@ class StorageFilesystemChunked extends StorageFilesystem {
             //Logger::info('MD Chunked: Chunk folder missing for file. Creating');
 	    mkdir($file_path, 0770, true);
 	}
-	$encrypt = false;//$file->transfer->getOption(TransferOptions::ENCRYPT);
-	$chunkFile=self::getChunkFilename($file_path,$offset,$encrypt);
+	$chunkFile=self::getChunkFilename($file_path,$offset);
         $i=0;
         $fh = fopen($chunkFile, 'wb');
         while ($fh === false && $i<100) {
@@ -166,9 +118,6 @@ class StorageFilesystemChunked extends StorageFilesystem {
             $i++;
         }
         if($fh !== false) {
-
-            if ($encrypt)
-                $data = self::encrypt($data,self::genKey($file));
 
             $written = fwrite($fh, $data, $chunk_size);
             fclose($fh);
