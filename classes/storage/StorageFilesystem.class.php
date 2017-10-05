@@ -349,7 +349,7 @@ class StorageFilesystem {
                 $offset = ftell($fh);
                 
                 // Try to write chunk
-                $written = fwrite($fh, $data);
+                $written = fwrite($fh, $data, $chunk_size);
                 
                 fflush($fh); // Flush file buffer before releasing lock
                 
@@ -358,7 +358,12 @@ class StorageFilesystem {
             
             // Close writer
             fclose($fh);
-            
+
+            if( $chunk_size != $written ) {
+                Logger::info('writeChunk() Can not write to : '.$chunkFile);
+                throw new StorageFilesystemCannotWriteException('writeChunk( '.$file_path, $file, $data, $offset, $written );
+            }
+
             return array(
                 'offset' => $offset,
                 'written' => $written

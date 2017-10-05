@@ -128,7 +128,16 @@ class StorageFilesystemCannotWriteException extends StorageFilesystemException {
      * @param string $path
      * @param File $file
      */
-    public function __construct($path, $file = null) {
+    public function __construct($path, $file = null, $data = null, $offset = 0, $written = 0 ) {
+        if( self::additionalLoggingDesired( 'StorageFilesystemCannotWriteException' )) {
+            $msg = 'StorageFilesystemCannotWriteException';
+            $this->additionalLogFile( $msg, $file );
+            if( $data ) {
+                $this->log($msg,'data size:' . strlen($data));
+            }
+            $this->log($msg,'offset:  ' . $offset );
+            $this->log($msg,'written: ' . $written );
+        }
         parent::__construct('cannot_write', $path, $file);
     }
 }
