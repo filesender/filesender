@@ -64,8 +64,8 @@ class DBStorageType extends Enum {
     }
     
     public static function defaultClassName() {
-        if( $configClass ) {
-            return $configClass;
+        if( self::$configClass ) {
+            return self::$configClass;
         }
         $type = Config::get('storage_type');
         if(!$type)
@@ -77,8 +77,8 @@ class DBStorageType extends Enum {
         if(!class_exists($class))
             throw new ConfigBadParameterException('storage_type');
 
-        $configClass = $class;
-        return $configClass;
+        self::$configClass = $class;
+        return self::$configClass;
     }
     
     public static function toClassName( $v ) {
