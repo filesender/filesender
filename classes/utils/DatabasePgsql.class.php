@@ -215,6 +215,9 @@ class DatabasePgsql {
         return $existingCols != $expected ? DatabaseSecondaryIndexStatuses::INCORRECT_DEFINITION : false;
     }
 
+    private static function quoteString( $v ) {
+        return "'".str_replace("'", "\\'", $v)."'";
+    }
 
     /**
      * Table columns format checking.
@@ -298,7 +301,8 @@ class DatabasePgsql {
                     $logger($column.' default is not '.($definition['default'] ? '1' : '0'));
                     $non_respected[] = 'default';
                 }
-            }else if($column_dfn['column_default'] != $definition['default']) {
+            }else if($column_dfn['column_default'] != $definition['default']
+            && $column_dfn['column_default'] != self::quoteString($definition['default']).'::character varying') {
                 $logger($column.' default is not "'.$definition['default'].'"');
                 $non_respected[] = 'default';
             }
@@ -520,7 +524,7 @@ class DatabasePgsql {
                 $sql .= $default ? '1' : '0';
             }else if(is_numeric($default) && in_array($definition['type'], array('int', 'uint'))) {
                 $sql .= $default;
-            }else $sql .= '"'.str_replace('"', '\\"', $default).'"';
+            }else $sql .= "'".str_replace("'", "\\'", $default)."'";
         }
         
         // Add options

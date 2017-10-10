@@ -84,7 +84,7 @@ class Storage {
      * @return String
      */
     public static function getStorageClass(File $file) {
-        return DBStorageType::toClassName( $file->storage_type );
+        return $file->storage_class_name;
     }    
 
     /**
@@ -93,7 +93,8 @@ class Storage {
      * @return String
      */
     public static function getDefaultStorageClass() {
-        return DBStorageType::defaultClassName();
+        self::setup();
+        return self::$class;
     }    
     
     
@@ -277,4 +278,7 @@ class Storage {
         
         call_user_func(self::getStorageClass($file).'::storeAsLink', $file, $source_path);
     }
+
+
+
 }

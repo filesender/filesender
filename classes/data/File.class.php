@@ -38,9 +38,6 @@ if (!defined('FILESENDER_BASE'))
  */
 class File extends DBObject
 {
-    public static function test() {
-           $storage_type = DBStorageType::getDatamap();
-           }
 
     /**
      * Database map
@@ -91,14 +88,11 @@ class File extends DBObject
             'size' => 40,
             'null' => true
         ),
-        // FIXME: move access to this to a get() function
-        // so that we can easily build it in fragments
-//        'storage_type' => DBStorageType::getDatamap()
-        'storage_type' => array(
-            'type' => 'int',
-            'size' => 'small',
+        'storage_class_name' => array(
+            'type' => 'string',
+            'size' => 60,
             'null' => true,
-            'default' => DBStorageType::FILESYSTEM
+            'default' => 'StorageFilesystem'
         )
     );
 
@@ -127,7 +121,8 @@ class File extends DBObject
      */
     private $transferCache = null;
     private $logsCache = null;
-    
+
+
     /**
      * Constructor
      * 
@@ -138,7 +133,7 @@ class File extends DBObject
      */
     public function __construct($id = null, $data = null) {
     
-        $this->storage_type = DBStorageType::defaultValue();
+        $this->storage_class_name = Storage::getDefaultStorageClass();
         
         if(!is_null($id)) {
             // Load from database if id given
@@ -177,7 +172,7 @@ class File extends DBObject
             return !$data;
         });
 
-        $file->storage_type = DBStorageType::defaultValue();
+        $file->storage_class_name = Storage::getDefaultStorageClass();
         
         return $file;
     }
@@ -282,7 +277,7 @@ class File extends DBObject
      */
     public function __get($property) {
         if(in_array($property, array(
-            'id', 'transfer_id', 'uid', 'name', 'mime_type', 'size', 'encrypted_size', 'upload_start', 'upload_end', 'sha1', 'storage_type'
+            'id', 'transfer_id', 'uid', 'name', 'mime_type', 'size', 'encrypted_size', 'upload_start', 'upload_end', 'sha1', 'storage_class_name'
         ))) return $this->$property;
         
         if($property == 'transfer') {
@@ -338,8 +333,8 @@ class File extends DBObject
         }else if($property == 'sha1') {
             if(!preg_match('`^[0-9a-f]{40}$`', $value)) throw new FileBadHashException($this, $value);
             $this->sha1 = (string)$value;
-        }else if($property == 'storage_type') {
-            $this->storage_type = (string)$value;
+        }else if($property == 'storage_class_name') {
+            $this->storage_class_name = (string)$value;
         }else throw new PropertyAccessException($this, $property);
     }
     
