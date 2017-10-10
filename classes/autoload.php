@@ -51,7 +51,6 @@ class Autoloader {
         'GUIPages' => 'constants/',
         'LogLevels' => 'constants/',
         'ReportFormats' => 'constants/',
-        'DBStorageType' => 'constants/',
         
         'Storage' => 'storage/',
         'Storage*' => 'storage/',

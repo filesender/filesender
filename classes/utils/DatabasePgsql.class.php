@@ -520,7 +520,7 @@ class DatabasePgsql {
                 $sql .= $default ? '1' : '0';
             }else if(is_numeric($default) && in_array($definition['type'], array('int', 'uint'))) {
                 $sql .= $default;
-            }else $sql .= '"'.str_replace('"', '\\"', $default).'"';
+            }else $sql .= "'".str_replace("'", "\\'", $default)."'";
         }
         
         // Add options
