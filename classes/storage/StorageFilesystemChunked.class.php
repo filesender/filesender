@@ -46,7 +46,7 @@ class StorageFilesystemChunked extends StorageFilesystem {
     
     
     private static function getChunkFilename($file_path,$offset) {
-	return $file_path.'/'.str_pad($offset,24,'0',STR_PAD_LEFT));
+	return $file_path.'/'.str_pad($offset,24,'0',STR_PAD_LEFT);
     }
 
     /**
