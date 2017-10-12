@@ -100,6 +100,13 @@ window.filesender.transfer = function() {
         return enable;
     };
 
+    this.getExtention = function(file) {
+        var fileSplit = file.name.split('.');
+        if (fileSplit.length>1) {
+            return fileSplit.pop();
+        }
+        return '';
+    };
     
     /**
      * Add a file to the file list
@@ -176,7 +183,7 @@ window.filesender.transfer = function() {
         if (typeof filesender.config.ban_extension == 'string') {
             var banned = filesender.config.ban_extension.replace(/\s+/g, '');
             banned = new RegExp('^(' + banned.replace(/,/g, '|') + ')$', 'g');
-            var extension = file.name.split('.').pop();
+            var extension = this.getExtention(file);
             if (extension.match(banned)) {
                 errorhandler({message: 'banned_extension', details: {extension: extension, filename: file.name, banned: filesender.config.ban_extension}});
                 
@@ -187,7 +194,7 @@ window.filesender.transfer = function() {
         if (typeof filesender.config.extension_whitelist_regex == 'string') {
             var extension_whitelist = filesender.config.extension_whitelist_regex;
             var regex = new RegExp(extension_whitelist);
-            var extension = file.name.split('.').pop();
+            var extension = this.getExtention(file);
             if (!extension.match(regex)) {
                 errorhandler({ message: 'banned_extension_includes_bad_characters',
 			       details: { extension: extension,
