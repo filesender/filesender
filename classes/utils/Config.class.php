@@ -176,6 +176,14 @@ class Config {
             }
         }   
 
+        // If we are to store files in chunks then we need to make sure that
+        // the size of uploaded chunks is the same as the download chunk size
+        if( Config::get('storage_type') == 'filesystemChunked' ) {
+            if( self::get('upload_chunk_size') != self::get('download_chunk_size') ) {
+                throw new ConfigBadParameterException('When storing files as chunks then upload_chunk_size must be the same as download_chunk_size');
+            }
+        }   
+
         // update max_flash_upload_size if php.ini post_max_size and upload_max_filesize is set lower
         $max_system_upload_size = min(
             Utilities::sizeToBytes(ini_get('post_max_size')) - 2048,
@@ -301,7 +309,7 @@ class Config {
         if($key == 'site_url')
             if (substr($value, -1) != '/')
                 $value .= '/';
-        
+
         // Apply override if any
         if(
             is_array(self::$override) &&
@@ -363,7 +371,19 @@ class Config {
         
         return self::$override['parameters'];
     }
-    
+
+
+    /**
+     * Force set a key-value that is for this session only
+     *
+     * @param k key to set
+     * @param v value to set
+     */  
+    public static function localOverride( $k, $v ) {
+                self::$parameters[$k] = $v;
+                self::$cached_parameters[] = $k;
+    }
+
     /**
      * Set override
      * 
@@ -376,11 +396,11 @@ class Config {
     public static function override(/* $set [, $value] [, $save = true] */) {
         // Load if not already done
         self::load();
-        
+
         // If override allowed ?
         if(!self::$override)
             throw new ConfigOverrideDisabledException();
-        
+
         $args = func_get_args();
         $set = array_shift($args);
         
@@ -391,7 +411,7 @@ class Config {
             foreach($set as $k => $v) {
                 // Is override of this parameter allowed ?
                 if(!array_key_exists($k, self::$override['parameters']))
-                    throw new ConfigOverrideNotAllowedException($k);
+                     throw new ConfigOverrideNotAllowedException($k);
                 
                 // Apply any defined validators, throw if failure
                 if(array_key_exists('validator', self::$override['parameters'][$k])) {

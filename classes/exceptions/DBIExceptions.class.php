@@ -83,3 +83,25 @@ class DBIUsageException extends DetailedException {
         );
     }
 }
+
+
+
+
+/**
+ * Unimplemented case exception, these are thrown by DBLayer when a database
+ * backend is being used where there is no explicit code to do something for that
+ * database type.
+ */
+class DBIBackendExplicitHandlerUnimplementedException extends DetailedException {
+    /**
+     * Constructor
+     * 
+     * @param string $message error message
+     */
+    public function __construct($message, $details = null) {
+        parent::__construct(
+            'database_access_failure', // Message to give to the user
+            array($message, $details) // Details to log
+        );
+    }
+}

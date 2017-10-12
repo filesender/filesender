@@ -101,7 +101,13 @@ class Transfer extends DBObject {
             'transform' => 'json'
         )
     );
-    
+
+    protected static $secondaryIndexMap = array(
+        'user_id' => array( 
+            'user_id' => array()
+        )
+    );
+
     /**
      * Set selectors
      */
@@ -409,7 +415,7 @@ class Transfer extends DBObject {
         // Send notification to owner
         if($this->getOption(TransferOptions::EMAIL_ME_ON_EXPIRE))
             TranslatableEmail::quickSend($manualy ? 'transfer_deleted_receipt' : 'transfer_expired_receipt', $this->owner, $this);
-        
+      
         // Send report if needed
         if(!is_null(Config::get('auditlog_lifetime')) && $this->getOption(TransferOptions::EMAIL_REPORT_ON_CLOSING)) {
             $report = new Report($this);
@@ -718,7 +724,30 @@ class Transfer extends DBObject {
             
         }else throw new PropertyAccessException($this, $property);
     }
-    
+
+    /**
+     * Calculate the encrypted file size
+     *
+     * @param File file the file we are working on
+     * @return int What $file->encrypted_size should be for this file.
+     */
+    private function calculateEncryptedFileSize( $file ) {
+
+        $upload_chunk_size = Config::get('upload_chunk_size');
+        
+        $echunkdiff = Config::get('upload_crypted_chunk_size') - $upload_chunk_size;
+        $chunksMinusOne = ceil($file->size / $upload_chunk_size)-1;
+        $lastChunkSize = $file->size - ($chunksMinusOne * $upload_chunk_size);
+
+        // padding on the last chunk of the file
+        // may not be a full chunk so need to calculate
+        $lastChunkPadding = 16 - $lastChunkSize % 16;
+        if ($lastChunkPadding == 0)
+            $lastChunkPadding = 16;
+            
+        return $file->size + ($chunksMinusOne * $echunkdiff) + $lastChunkPadding + 16;
+    }
+
     /**
      * Adds a file
      * 
@@ -746,8 +775,10 @@ class Transfer extends DBObject {
         $file->name = $name;
         $file->size = $size;
         $file->mime_type = $mime_type ? $mime_type : 'application/binary';
+        $file->encrypted_size = $this->calculateEncryptedFileSize( $file );
+
         $file->save();
-        
+ 
         // Update local cache
         if(!is_null($this->filesCache)) $this->filesCache[$file->id] = $file;
         

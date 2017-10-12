@@ -313,6 +313,8 @@ class Utilities {
         // Default
         if(!$precision || !is_numeric($precision))
             $precision = 2;
+        // allow sloppy $bytes
+        $bytes = floor($bytes);
         
         // Variants
         $unit = Lang::tr('size_unit')->out();
@@ -375,7 +377,7 @@ class Utilities {
             || is_null($input)
             || is_object($input) // How can that be ?
         )
-            return $input;
+        return $input;
         
         if(is_string($input)) {
             // Convert to UTF-8
@@ -401,6 +403,47 @@ class Utilities {
      */
     public static function sanitizeOutput($output) {
         return htmlentities($output, ENT_QUOTES, 'UTF-8');
+    }
+
+    public static function startsWith($haystack, $needle)
+    {
+        $length = strlen($needle);
+        return (substr($haystack, 0, $length) === $needle);
+    }
+
+    /**
+     * This is a wrapper around the PHP http_build_query with some
+     * smarts. $path is optional and if not given will be the site itself.
+     * If path is given and is ^http then it is taken as the site url prefix.
+     * On the other hand if path is relative then it is converted to absolute
+     * by this call.
+     *
+     * CGI parameters are given in $q which can be an array like;
+     * array( 'foo' => 'bar', 'baz' => 7 )
+     *
+     * @param array q the CGI parameters
+     * @param string path either nothing (default), a relative prefox, or absolute url
+     *
+     * @return string full URL using path and query params using the user's specified
+     *                path separator (; can be useful here).
+     */
+    public static function http_build_query( $q, $path = null ) {
+        if( $path == null ) {
+            $path = Config::get('site_url') . '?';
+        } else {
+            if( !Utilities::startsWith($path, 'http' )) {
+                $path = Config::get('site_url') . $path;
+            }
+        }
+        $ret = $path;
+        $sep = ini_get('arg_separator.output');
+        if( phpversion() < 5.4 ) {
+            // CIFIXME remove this branch when CI php is upgraded.
+            $ret .= http_build_query( $q, '', $sep );
+        } else {
+            $ret .= http_build_query( $q, '', $sep, PHP_QUERY_RFC3986 );
+        }        
+        return $ret;
     }
     
     /**
@@ -485,5 +528,28 @@ class Utilities {
         
         // Previous value matches
         return $token_to_check === self::$security_token['old']['value'];
+    }
+
+
+    /**
+     * Read the config $configkey and if it is set then regex
+     * match it to see if needle matches and return the result. 
+     * This function handles empty configkey values and may cache results.
+     *
+     * So if you have a possible config key
+     *    mykey_regex => 'foo.*',
+     *
+     * you can see if you match in code with
+     * if( Utilities::configMatch( 'mykey_regex', 'bar' )) {
+     *    ...
+     * }
+     */
+    public static function configMatch( $configkey, $needle ) {
+        $cfg = Config::get( $configkey );
+        if( !strlen($cfg) )
+            return false;
+        if( preg_match('/' . $cfg . '/', $needle ))     
+            return true;  
+        return false;
     }
 }

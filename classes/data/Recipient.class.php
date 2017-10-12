@@ -82,7 +82,14 @@ class Recipient extends DBObject {
             'null' => true
         )
     );
+
+    protected static $secondaryIndexMap = array(
+        'token' => array( 
+            'token' => array()
+        )
+    );
     
+
     /**
      * Properties
      */
@@ -251,7 +258,9 @@ class Recipient extends DBObject {
         }
         
         if($property == 'download_link') {
-            return Config::get('site_url').'?s=download&token='.$this->token;
+            return Utilities::http_build_query(
+                array( 's'     => 'download',
+                       'token' => $this->token ));
         }
         
         if($property == 'downloads') {

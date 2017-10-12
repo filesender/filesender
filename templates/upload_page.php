@@ -118,7 +118,7 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
                             </div>
                             <div class="fieldcontainer" id="encryption_password_container">  
                                 <label for="encryption_password" style="cursor: pointer;">{tr:file_encryption_password} : </label>
-                                <input id="encryption_password" name="encryption_password" type="password"/>
+                                <input id="encryption_password" name="encryption_password" type="password" autocomplete="off"/>
                             </div>
                             <div class="fieldcontainer" id="encryption_password_container_generate">
                                 <a id='encryption_generate_password' href="#">{tr:file_encryption_generate_password}</a>
@@ -262,6 +262,15 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
             </a>
         </div>
     </form>
+
+    <?php if (Config::get('upload_graph_bulk_display')) { ?>
+        <div id="graph" class="uploadbulkgraph"><div id="graphDiv" style="width:400px; height:200px; margin:0 auto"><canvas id="speedChart"></canvas></div></div>
+        <div id="host"><?php echo substr(gethostname(),0,strpos(gethostname(),'.')); ?></div>
+        <div id="terrasenderInUse"></div>
+
+        <script type="text/javascript" src="{path:lib/chartjs/Chart.bundle.min.js}"></script>
+        <script type="text/javascript" src="{path:js/graph.js}"></script>
+    <?php } ?>
     
     <script type="text/javascript" src="{path:js/upload_page.js}"></script>
 </div>

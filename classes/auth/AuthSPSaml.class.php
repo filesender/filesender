@@ -105,9 +105,15 @@ class AuthSPSaml {
             if(is_array($attributes['uid'])) $attributes['uid'] = array_shift($attributes['uid']);
             if(is_array($attributes['name'])) $attributes['name'] = array_shift($attributes['name']);
             
-            if(!$attributes['uid']) throw new AuthSPMissingAttributeException('uid');
+            if(!$attributes['uid'])
+                throw new AuthSPMissingAttributeException(
+                    'uid', $raw_attributes,
+                    'uid_attribute',self::$config['uid_attribute']);
             
-            if(!$attributes['email']) throw new AuthSPMissingAttributeException('email');
+            if(!$attributes['email'])
+                throw new AuthSPMissingAttributeException(
+                    'email',$raw_attributes,
+                    'email_attribute',self::$config['email_attribute']);
             
             foreach($attributes['email'] as $email) {
                 if(!Utilities::validateEmail($email)) throw new AuthSPBadAttributeException('email');
@@ -156,10 +162,11 @@ class AuthSPSaml {
             $target = Config::get('site_url').'index.php?s='.$landing_page;
         }
         
-        $url = self::$config['simplesamlphp_url'].'module.php/core/as_login.php?';
-        $url .= 'AuthId='.self::$config['authentication_source'];
-        $url .= '&ReturnTo='.urlencode($target);
-        
+        $url = Utilities::http_build_query(array(
+            'AuthId' => self::$config['authentication_source'],
+            'ReturnTo' => $target,
+        ), self::$config['simplesamlphp_url'].'module.php/core/as_login.php?' );
+
         return $url;
     }
     

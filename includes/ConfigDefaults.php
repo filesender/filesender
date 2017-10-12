@@ -96,12 +96,17 @@ $default = array(
     'terasender_disableable' => true,
     'terasender_start_mode' => 'multiple',
     'terasender_worker_count' => 6,
-    'stalling_detection' => true,
-    
+    'stalling_detection' => false,
+
+    // There are not so many options here, so they are listed
+    // to make it easy for users to know what values might be interesting
     'storage_type' => 'filesystem',
+//    'storage_type' => 'filesystemChunked',
     
     'storage_filesystem_path' => FILESENDER_BASE.'/files',
     'storage_filesystem_df_command' => 'df {path}',
+    'storage_filesystem_tree_deletion_command' => 'rm -rf {path}',
+    'storage_filesystem_ignore_disk_full_check' => false,
     
     'email_from' => 'sender',
     'email_return_path' => 'sender',
@@ -109,7 +114,9 @@ $default = array(
     
     'report_bounces' => 'asap',
     'report_bounces_asap_then_daily_range' => 15 * 60,
-    
+
+    'reports_show_ip_addr' => true,
+
     'statlog_lifetime' => 0,
     'statlog_log_user_organization' => false,
     'auditlog_lifetime' => 31,
@@ -125,6 +132,13 @@ $default = array(
     'guest_limit_per_user' => 50,
     'guest_reminder_limit' => 50,
     'recipient_reminder_limit' => 50,
+
+    'autocomplete' => false, 
+    'autocomplete_min_characters' => 3,
+
+    'upload_graph_bulk_display' => true, 
+    'upload_graph_bulk_min_file_size_to_consider' => 1024*1024*1024, 
+
 
     'user_page' => false,
     //'user_page' => array(

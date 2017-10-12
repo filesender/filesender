@@ -54,7 +54,10 @@ class Autoloader {
         
         'Storage' => 'storage/',
         'Storage*' => 'storage/',
-        
+
+        // WARNING
+        // WARNING, the migration script uses things in data in a special way
+        // WARNING
         'DBObject' => 'data/',
         'Transfer' => 'data/',
         'File' => 'data/',
@@ -64,7 +67,9 @@ class Autoloader {
         'TrackingEvent' => 'data/',
         'TranslatableEmail' => 'data/',
         '*Log' => 'data/',
-        
+
+        'DBLayer' => 'utils/',
+
         'Auth*' => 'auth/',
         
         'RestEndpoint' => 'rest/',
@@ -73,7 +78,11 @@ class Autoloader {
         
         'Mail*' => 'utils/Mail',
         
-        '*' => 'utils/'
+
+        'TestDatabase*' => 'test/database/',
+
+        // Must be last
+        '*' => 'utils/' 
     );
     
     /**

@@ -52,7 +52,7 @@ class DBObject {
      * 
      * <field_def> associative array of field definition entries in :
      *   - type : int, uint, string, bool, enum, text, date, datetime, time
-     *   - size (for int types) : tiny, medium, big (defaults to medium)
+     *   - size (for int types) : small, medium, big (defaults to medium)
      *   - size (for string types) : string length
      *   - values (for enum types) : array of possible values
      *   - null : bool indicating if field can be null

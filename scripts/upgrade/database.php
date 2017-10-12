@@ -44,6 +44,29 @@ set_error_handler(function($no, $str, $file = '', $line = '') {
     Logger::error('['.$no.'] '.$str.' in '.$file.' at line '.$line);
 });
 
+
+$args = new Args(
+    array(
+        'h' => 'help',
+        'd:' => 'db_database:',
+    ));
+
+$args->getopts();
+$args->maybeDisplayHelpAndExit(
+    'Create or upgrade the database schema for FileSender....'."\n\n" .
+    'Usage '.basename(__FILE__).' [-d|--db_database=<name>] '."\n" .
+    "\t".'-d|--db_database Name of the database to connect to'."\n" .
+    "\t\n"
+);
+$args->MergeShortToLong();
+$db_database = $args->getArg('db_database', false, null );
+if( $db_database ) {
+    echo "originally set db_database is " . Config::get('db_database') . "\n";
+    Config::localOverride('db_database',$db_database );
+    echo "newly set db_database is " . Config::get('db_database') . "\n";
+}
+echo "current db_database is " . Config::get('db_database') . "\n";
+
 // Get data classes
 $classes = array();
 foreach(scandir(FILESENDER_BASE.'/classes/data') as $i) {
@@ -111,7 +134,7 @@ try {
             $index = $table . '_' . $index;
             echo 'checking ' . $index . "\n";
             $problems = Database::checkTableSecondaryIndexFormat( $table, $index, $definition, function($message) {
-                    echo "\t".$message."\n";
+                echo "\t".$message."\n";
             });
             if( $problems ) {
                 echo "update index " . $index . " on table " . $table . "\n";
@@ -125,11 +148,11 @@ try {
         } 
 
         
-        }
-        
-        echo 'Everything went well'."\n";
-        echo 'Database structure is up to date'."\n";
-    } catch(Exception $e) {
-        $uid = ($e instanceof LoggingException) ? $e->getUid() : 'no available uid';
-        die('Encountered exception : '.$e->getMessage().', see logs for details (uid: '.$uid.') ...');
     }
+    
+    echo 'Everything went well'."\n";
+    echo 'Database structure is up to date'."\n";
+} catch(Exception $e) {
+    $uid = ($e instanceof LoggingException) ? $e->getUid() : 'no available uid';
+    die('Encountered exception : '.$e->getMessage().', see logs for details (uid: '.$uid.') ...');
+}

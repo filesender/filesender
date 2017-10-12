@@ -42,6 +42,11 @@ $banned = Config::get('ban_extension');
 $extension_whitelist_regex = Config::get('extension_whitelist_regex');
 
 $amc = Config::get('autocomplete_min_characters');
+function value_to_TF( $v )
+{
+    return json_encode( ($v ? true : false) );
+}
+
 
 ?>
 if (typeof window === 'undefined') {
@@ -56,8 +61,8 @@ window.filesender.config = {
     
     upload_chunk_size: <?php echo Config::get('upload_chunk_size') ?>,
     
-    upload_display_bits_per_sec: <?php echo Config::get('upload_display_bits_per_sec') ? 'true' : 'false' ?>,
-    
+    upload_display_bits_per_sec: <?php echo value_to_TF(Config::get('upload_display_bits_per_sec')) ?>,
+
     max_transfer_size: <?php echo Config::get('max_transfer_size') ?>,
     max_transfer_files: <?php echo Config::get('max_transfer_files') ?>,
     
@@ -79,16 +84,16 @@ window.filesender.config = {
     crypto_iv_len: '<?php echo Config::get('crypto_iv_len') ?>',
     crypto_crypt_name: '<?php echo Config::get('crypto_crypt_name') ?>',
     crypto_hash_name: '<?php echo Config::get('crypto_hash_name') ?>',
-    
-    terasender_enabled: <?php echo Config::get('terasender_enabled') ? 'true' : 'false' ?>,
-    terasender_advanced: <?php echo Config::get('terasender_advanced') ? 'true' : 'false' ?>,
-    terasender_worker_count: <?php echo Config::get('terasender_worker_count') != null ? Config::get('terasender_worker_count') : 1 ?>,
+
+    terasender_enabled: <?php  echo value_to_TF(Config::get('terasender_enabled')) ?>,
+    terasender_advanced: <?php echo value_to_TF(Config::get('terasender_advanced')) ?>,
+    terasender_worker_count: <?php echo Config::get('terasender_worker_count') ?>,
     terasender_start_mode: '<?php echo Config::get('terasender_start_mode') ?>',
     terasender_worker_file: 'lib/terasender/terasender_worker.js?v=<?php echo Utilities::runningInstanceUID() ?>',
     terasender_upload_endpoint: '<?php echo Config::get('site_url') ?>rest.php/file/{file_id}/chunk/{offset}',
-    
-    stalling_detection: <?php $cfg = Config::get('stalling_detection'); echo json_encode(is_null($cfg) ? true : $cfg) ?>,
-    
+
+    stalling_detection: <?php echo value_to_TF(Config::get('stalling_detection')); ?>,
+
     max_legacy_file_size: <?php echo Config::get('max_legacy_file_size') ?>,
     legacy_upload_endpoint: '<?php echo Config::get('site_url') ?>rest.php/file/{file_id}/whole',
     legacy_upload_progress_refresh_period: <?php echo Config::get('legacy_upload_progress_refresh_period') ?>,
@@ -97,8 +102,9 @@ window.filesender.config = {
     base_path: '<?php echo GUI::path() ?>',
     support_email: '<?php echo Config::get('support_email') ?>',
     autocomplete: {
-        enabled: <?php echo Config::get('autocomplete') ? 'true' : 'false' ?>,
-        min_characters: <?php echo (is_int($amc) && $amc) ? $amc : 3 ?>
+        enabled:  <?php echo value_to_TF(Config::get('autocomplete')) ?>,
+        min_characters: <?php echo Config::get('autocomplete_min_characters') ?>
+
     },
     message_can_not_contain_urls_regex: '<?php $v = Config::get('message_can_not_contain_urls_regex'); $v = str_replace('\\', '\\\\', $v); echo $v; ?>',
 

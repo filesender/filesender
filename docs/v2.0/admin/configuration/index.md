@@ -23,6 +23,7 @@ title: Configuration directives
 * [site_logouturl](#sitelogouturl)
 * [about_url](#abouturl)
 * [help_url](#helpurl)
+* [reports_show_ip_addr](#reportsshowipaddr)
 
 ## Backend storage
 
@@ -30,8 +31,10 @@ title: Configuration directives
 * [storage_filesystem_path](#storagefilesystempath)
 * [storage_filesystem_df_command](#storagefilesystemdfcommand)
 * [storage_filesystem_file_deletion_command](#storagefilesystemfiledeletioncommand)
+* [storage_filesystem_tree_deletion_command](#storagefilesystemtreedeletioncommand)
 * [storage_usage_warning](#storageusagewarning)
 * [storage_filesystem_hashing](#storagefilesystemhashing)
+* [storage_filesystem_ignore_disk_full_check](#storagefilesystemignorediskfullcheck)
 
 ## Database
 
@@ -87,6 +90,11 @@ title: Configuration directives
 * [transfer_options](#transferoptions) (email receipt control)
 * [upload_chunk_size](#uploadchunksize)
 * [user_quota](#userquota)
+
+## Graphs
+
+* [upload_graph_bulk_display](#uploadgraphbulkdisplay)
+* [upload_graph_bulk_min_file_size_to_consider](#uploadgraphbulkminfilesizetoconsider)
 
 ## TeraSender (high speed upload module)
 
@@ -145,6 +153,8 @@ title: Configuration directives
 * [auth_sp_fake_additional_attributes_values](#authspfakeadditionalattributesvalues)
 * [auditlog_lifetime](#auditloglifetime)
 * [report_format](#reportformat)
+* [exception_additional_logging_regex](#exceptionadditionalloggingregex)
+
 
 ## Webservices API
 
@@ -276,6 +286,21 @@ title: Configuration directives
 * __1.x name:__ helpURL
 * __comment:__ when configured with a mailto: address that points to e.g. support@yourdomain.dom the email bounce handler will use this address to send unprocessable email bounces to. <span style="background-color:orange">include link to email bounce handling config directives/help</span>
 
+
+
+
+### reports_show_ip_addr
+
+* __description:__ Show the IP addresses used in reports
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ true
+* __available:__ since version 2.0
+* __comment:__ If you want to hide IP addresses from reports set it to false
+
+
+
+
 ---
 
 ## Backend storage
@@ -289,7 +314,7 @@ title: Configuration directives
 * __type:__ string.  Permissible values: **filesystem**.
 * __default:__ filesystem
 * __available:__ since version 2.0
-* __comment:__ each supported storage type will have a specific class defined in classes/storage.  Each is named Storage<Foo>.class.php, for example StorageFilesystem.class.php for the type filesystem.  The values for "Foo" are the permissible values for this directive. For now the only permissible value and supported storage type is filesystem.  Future storage types could include e.g. **object**, **amazon_s3** and others.
+* __comment:__ each supported storage type will have a specific class defined in classes/storage.  Each is named Storage<Foo>.class.php, for example StorageFilesystem.class.php for the type filesystem.  The values for "Foo" are the permissible values for this directive. For now the only permissible value and supported storage types are filesystem and filesystemChunked. Note that you need to respect the non leading capital letters in the class name such as the "C" in filesystemChunked. Future storage types could include e.g. **object**, **amazon_s3** and others.
 
 ### storage_filesystem_path
 
@@ -321,6 +346,14 @@ title: Configuration directives
 * __1.x name:__ cron_shred_command
 * __comment:__
 
+###storage_filesystem_tree_deletion_command
+* __description:__ Command used to delete whole directories and the contents, when they expire or are cleaned in routine cleaning of stale files.
+* __mandatory:__ no.  If not set, default used
+* __type:__ string
+* __default:__ rm -rf
+* __available:__ since version 2.0
+* __comment:__
+
 ### storage_usage_warning
 
 * __description:__ percentage of drive space left that will trigger an email warning to the admin.
@@ -341,6 +374,17 @@ title: Configuration directives
 * __1.x name:__
 * __comment:__ not tested
 * __comment:__ basically integer. use fileUID (which is used to create name on hard drive) + as many characters as the hashing value (if you set hashing to 2 you take the 2 first letters of the fileUID (big random string) and use these two characters to create a directory structure under the storage path. This avoids having all files in the same directory. If you set this to 1 you have 16 possible different values for the directory structure under the storage root. You'll have 16 folders under your storage root under which you'll have the files. This allows you to spread files over different file systems / hard drives. You can aggregate storage space without using things like LVM. If you set this to two you have 2 levels of subdirectories. For directory naming: first level, directory names has one letter. Second level has two: letter from upper level + own level. Temporary chunks are stored directly in the final file. No temp folder (!!) Benchmarking between writing small file in potentially huge directory and opening big file and seeking in it was negligable. Can just open final file, seek to location of chunk offset and write data. Removes need to move file in the end.  It can also be "callable". We call the function giving it the file object which hold all properties of the file. Reference to the transfer as well. The function has to return a path under the storage root. This is a path related to storage root. For example: if you want to store small files in a small file directory and big files in big directory. F.ex. if file->size < 100 MB store on fast small disk, if > 100 MB store on big slow disk. Can also be used for functions to store new files on new storage while the existing files remain on existing storage. Note: we need contributions for useful functions here :)
+
+
+### storage_filesystem_ignore_disk_full_check
+
+* __description:__ Ignore tests to see if new files will fit onto the filesystem.
+* __mandatory:__ no.  
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 2.0
+* __comment:__ If you are using FUSE to interface with some other storage such as EOS then you might like to set this to true to avoid having to do a distributed search to find out of there is storage for each upload
+
 
 ---
 
@@ -825,6 +869,31 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 
 ---
 
+## Graphs
+
+---
+
+### upload_graph_bulk_display
+
+* __description:__ Enable or disable bulk upload speed graphs on the uploads page.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ true
+* __available:__ since version 2.0
+* __comment:__ Note: 
+
+### upload_graph_bulk_min_file_size_to_consider
+
+* __description:__ only consider files above this size in bulk transfer speed calculation.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ 1024 * 1024 * 1024
+* __available:__ since version 2.0
+* __comment:__ only useful when you enable upload_graph_bulk_display
+
+
+---
+
 ## TeraSender (high speed upload module)
 
 ---
@@ -877,7 +946,7 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __description:__ detect whether an upload stalls
 * __mandatory:__ no
 * __type:__ boolean
-* __default:__ true
+* __default:__ false
 * __available:__ since version 2.0
 * __comment:__ Has effect on the JavaScript-variables given to the client-side of Terasender.
 
@@ -1351,6 +1420,19 @@ different options for different types.</span>
 * __available:__ since version 2.0
 * __1.x name:__
 * __comment:__ The same information is sent regardless of format.  Inline sends an email in plain text and HTML, with all information inline.  If PDF is chosen, the report is sent as PDF attachment.  Building a PDF is somewhat heavier on the server but won't matter unless you would have a heavily used server.  The library used is "dom pdf", included in the code.
+
+
+### exception_additional_logging_regex
+
+* __description:__ Exception names that additional logging is desired for
+* __mandatory:__ no
+* __type:__ string regex
+* __default:__ 
+* __available:__ since version 2.0
+* __comment:__ Sometimes a site might want to capture down extra logging for some exception types. This configuration is a regular expression to match the name of an exception against to see if you want this extra log info. This allows extra log info to be turned on and off fairly easily without having to edit code and possibly break something. Note that only some exceptions can give extra info.
+
+
+
 
 ---
 

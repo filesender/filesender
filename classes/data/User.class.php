@@ -406,15 +406,17 @@ class User extends DBObject {
         $defaults = call_user_func(ucfirst($target).'::availableOptions');
         
         $default = array_key_exists($option, $defaults) ? $defaults[$option]['default'] : false;
-        
         $prop = $target.'_preferences';
+        $props = $this->$prop;
+        $props = (object)$props;
+        
         if(
             !property_exists($this, $prop)
             || !$this->$prop
-            || !property_exists($this->$prop, $option)
+            || !property_exists($props, $option)
         ) return $default;
         
-        $score = $this->$prop->$option;
+        $score = $props->$option;
         
         if(abs($score) < 3)
             return $default;
