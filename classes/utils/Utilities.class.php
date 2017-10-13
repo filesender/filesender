@@ -173,42 +173,6 @@ class Utilities {
     }
     
     /**
-     * Get instance uid
-     * 
-     * @return string
-     */
-    public static function instanceUID() {
-        // Get uid from file, generate it if not found
-        $sfile = FILESENDER_BASE.'/tmp/instance.uid';
-        if(file_exists($sfile)) {
-            $ctn = array_filter(array_map('trim', explode("\n", file_get_contents($sfile))), function($line) {
-                return substr($line, 0, 1) != '#';
-            });
-            
-            $uid = array_shift($ctn);
-        } else {
-            $uid = self::generateRandomHexString(true);
-            
-            if($fh = fopen($sfile, 'w')) {
-                fwrite($fh, '# Automatically generated'."\n");
-                fwrite($fh, $uid);
-                fclose($fh);
-            } else throw new CoreCannotWriteFileException($sfile);
-        }
-        
-        return $uid;
-    }
-    
-    /**
-     * Get running instance uid
-     * 
-     * @return string
-     */
-    public static function runningInstanceUID() {
-        return substr(self::instanceUID(), -8).'-'.filemtime(FILESENDER_BASE.'/config/config.php');
-    }
-    
-    /**
      * Format a date according to configuration
      * 
      * @param integer $timestamp php timestamp to format to date or null to use current date
