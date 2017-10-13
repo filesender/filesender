@@ -1,4 +1,6 @@
-# Known installs 
+# Known FileSender installalations 
+
+If you want to add your FileSender installation to this list, send an email to filesender-dev@filesender.org or edit the file from [the FileSender Github repository](https://github.com/filesender/filesender/tree/master/docs) and create a pull request.
 
 ## 
 ## HE&R Community installations - Europe & Middle-East
