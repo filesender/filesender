@@ -5,15 +5,11 @@
 
 | Country |NREN  | Service URL | Known since|
 | --- | --- | --- |---|
-
-
 | Armenia	| ASNET-AM	| https://filesender.as.net.am/filesender/	| February 2016 | 
 | Austria	| ACOnet	| https://filesender.aco.net/			| November 2012 |
 | Belgium	| BELNET	| https://filesender.belnet.be/			| March 2010	| 
 | Czech Republic| CESNET	| https://filesender.cesnet.cz			| February 2012	| 
 | Denmark	| DeiC		| https://filesender.deic.dk			| March 2012	| 
-
-| | | | | 
 | Portugal	| FCCN		| https://filesender.fccn.pt			| January 2011	| 
 | Serbia	| AMRES | https://filesender.amres.ac.rs/ | July 2014 |
 | Slovenia	| ARNES | https://filesender.arnes.si/ | May 2011 | 
