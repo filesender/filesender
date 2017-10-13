@@ -71,7 +71,8 @@
 
 
 ## Other
-| Country/Region|NREN  | Service URL | Known since|
+| Country/Region| Organisation | Service URL | Known since|
+| --- | --- | --- |---|
 | Netherlands	| Pleio - Dutch government | https://bestandendelen.pleio.nl/filesender | Oct 2013|
 | Philippines	| Government	| https://pakete.gov.ph 			| Jul 2013|
 
