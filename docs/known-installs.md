@@ -58,6 +58,7 @@
 | Equador 	| CEDIA		| https://filesender.cedia.org.ec/filesender/	| Jun 2017| 
 | Latin-America	| ELCIRA	| https://filesender.redclara.net/filesender/	| Oct 2013|
 | USA		| Internet2	| https://filesender.internet2.edu/		| Jul 2012|
+| USA 		| Adelphi University | https://filesender.adelphi.edu/filesender/ | Dec 2013 |
 
 
 ## 
@@ -70,6 +71,7 @@
 
 
 ## Other
-
-| USA | Adelphi University | https://filesender.adelphi.edu/filesender/ | Dec 2013 |
+| Country/Region|NREN  | Service URL | Known since|
+| Netherlands	| Pleio - Dutch government | https://bestandendelen.pleio.nl/filesender | Oct 2013|
+| Philippines	| Government	| https://pakete.gov.ph 			| Jul 2013|
 
