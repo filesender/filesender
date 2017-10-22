@@ -312,6 +312,7 @@ class AuditLog extends DBObject {
         foreach(self::all('target_type=\'Recipient\' AND target_id IN :ids', array(':ids' => array_map(function($recipient) {
             return $recipient->id;
         }, $transfer->recipients))) as $log) $logs[] = $log;
+         
         
         // Sort by event date
         usort($logs, function($a, $b) {

@@ -14,8 +14,9 @@ $transfers_page = function($status) {
         
     $offset = array_key_exists($status.'_tpo', $_REQUEST) ? (int)$_REQUEST[$status.'_tpo'] : 0;
     $offset = max(0, $offset);
-    
-    $page = Transfer::all(array('where' => $selector, 'count' => $page_size, 'offset' => $offset));
+
+    $total_count = 100;
+    $entries = Transfer::all(array('where' => $selector, 'count' => $page_size, 'offset' => $offset));
     
     $navigation = '<div class="transfers_list_page_navigation">'."\n";
     
@@ -26,7 +27,7 @@ $transfers_page = function($status) {
     }
     
     $p = 1;
-    for($o=0; $o<$page->total_count; $o+=$page_size) {
+    for($o=0; $o<$total_count; $o+=$page_size) {
         if($o >= $offset && $o < $offset + $page_size) {
             $navigation .= '<span>'.$p.'</span>'."\n";
         } else {
@@ -36,25 +37,25 @@ $transfers_page = function($status) {
         $p++;
     }
     
-    if($offset + $page_size < $page->total_count) {
+    if($offset + $page_size < $total_count) {
         $no = $offset + $page_size;
-        $lo = $page->total_count - ($page->total_count % $page_size);
+        $lo = $total_count - ($total_count % $page_size);
         $navigation .= '<a href="?s=admin&as=transfers&'.$status.'_tpo='.$no.'#'.$status.'_transfers">&gt;</a>'."\n";
         $navigation .= '<a href="?s=admin&as=transfers&'.$status.'_tpo='.$lo.'#'.$status.'_transfers">&gt;&gt;</a>'."\n";
     }
     
     $navigation .= '</div>'."\n";
     
-    if($page->total_count > $page_size)
+    if($total_count > $page_size)
         echo $navigation;
     
     Template::display('transfers_table', array(
         'status' => $status,
         'mode' => 'admin',
-        'transfers' => $page->entries
+        'transfers' => $entries
     ));
     
-    if($page->total_count > $page_size)
+    if($total_count > $page_size)
         echo $navigation;
 };
 

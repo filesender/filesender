@@ -1252,4 +1252,23 @@ table.guests .guest .to .errors .details {
     display: none;
 }
 
-
+table.paginator .pageprev0 {
+    width: 2em;
+    text-align: center;
+}
+table.paginator .pageprev {
+    width: 1em;
+    text-align: center;
+}
+table.paginator .pagenext {
+    width: 1em;
+    text-align: center;
+}
+table.paginator .pageheader {
+    text-align: left;
+    font-size: 1.15em;
+    font-weight: bold;
+}
+table.paginator a {
+    text-decoration: none;
+}
