@@ -289,6 +289,8 @@ $lang['extend_expiry_date'] = 'Extend expiry date by {days} days';
 $lang['confirm_extend_expiry'] = 'Do you really want to extend the expiry date by {days} days ?';
 $lang['transfer_extended'] = 'Expiry date extended until {expires}';
 $lang['transfer_extended_reminded'] = 'Expiry date extended until {expires}, a reminder was sent to recipients';
+$lang['pager_more'] = 'More...';
+$lang['pager_has_no_more'] = 'No more records.';
 
 /**
  * Reports

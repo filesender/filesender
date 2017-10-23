@@ -24,6 +24,8 @@
         $base = '?s=' . $_GET['s'];
         $cgioffset = $pagerprefix . 'offset';
         $cgilimit  = $pagerprefix . 'limit';
+        $nextPage  = $offset+$limit;
+        $nextLink  = "$base&$cgioffset=$nextPage&$cgilimit=$limit";
         
         if( $havePrev ) {
            $prevPage = max(0,$offset-$limit);
@@ -34,8 +36,7 @@
         }
 
         if( $haveNext ) {
-           $nextPage = $offset+$limit;
-           echo "<td class='pagenext'><a href='$base&$cgioffset=$nextPage&$cgilimit=$limit'>&gt;</a></td>";
+           echo "<td class='pagenext'><a href='$nextLink'>&gt;</a></td>";
         } else {
            echo "<td class='pagenext'>&nbsp;</td>";
         }
@@ -306,7 +307,22 @@
             <td colspan="7">{tr:no_transfers}</td>
         </tr>
         <?php } ?>
+
+        <tr class="pager_bottom_nav">
+            <td colspan="8" class="nextColumn">
+                <?php if($haveNext) { ?>
+                    <?php echo "<a href='$nextLink'>"; ?>
+                    {tr:pager_more}
+                    </a>
+                <?php } else { ?>
+                    {tr:pager_has_no_more}
+                <?php } ?>
+            </td>
+        </tr>
+
     </tbody>
 </table>
+
+
 
 <script type="text/javascript" src="{path:js/transfers_table.js}"></script>
