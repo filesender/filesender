@@ -13,7 +13,6 @@
 
 ?>
 <div class="box">
-    <?php if(0&&Config::get('auditlog_lifetime') > 0) { ?><h2>{tr:available_transfers}</h2><?php } ?>
     <?php Template::display('transfers_table', array(
         'status' => 'available',
         'mode' => 'user',
