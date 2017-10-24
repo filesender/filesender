@@ -114,11 +114,7 @@ class Logger {
                 case 'file' :
                     // Log to file needs at least a path
                     if(!array_key_exists('path', $facility)) {
-                        // we can get here if the user has set $config['log_facilities'] to
-                        // just an array instead of an array of array.
-                        
-                        throw new ConfigMissingParameterException('log_facilities['.$index.'][path]',
-                           'Maybe you have set $config["log_facilities"] = array("type" => "file",...) instead of $config["log_facilities"] = array(array("type" => "file",...))' );
+                        throw new ConfigMissingParameterException('log_facilities['.$index.'][path]');
                     }
                     
                     // If defined rotation rate must be valid
