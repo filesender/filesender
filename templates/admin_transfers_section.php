@@ -15,6 +15,9 @@ $transfers_page = function($status) {
     $offset = array_key_exists($status.'_tpo', $_REQUEST) ? (int)$_REQUEST[$status.'_tpo'] : 0;
     $offset = max(0, $offset);
 
+    // FIXME: move the code away from wanting to know the total.
+    //       if the user has 1000 tuples do we really want to show 1000/15 direct page links
+    //       or should we instead allow queries on timeframe etc.
     $total_count = 100;
     $entries = Transfer::all(array('where' => $selector, 'count' => $page_size, 'offset' => $offset));
     
