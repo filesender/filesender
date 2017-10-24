@@ -124,7 +124,8 @@ class Config {
         include_once($main_config_file);
         if ($virtualhost != null)
             $config['virtualhost'] = $virtualhost;
-        
+
+
         self::merge(self::$parameters, $config);
         
         // Load virtualhost config if used
@@ -211,6 +212,15 @@ class Config {
         
         if(!self::get('default_guest_days_valid'))
             self::$parameters['default_guest_days_valid'] = self::get('max_guest_days_valid');
+
+        // verify user settings
+        if( array_key_exists("log_facilities",$config)
+            && !is_array(array_shift(array_slice($config["log_facilities"],0,1))))
+        {
+            throw new ConfigMissingParameterException('log_facilities[]',
+            'Maybe you have set $config["log_facilities"] = array("type" => "file",...) instead of $config["log_facilities"] = array(array("type" => "file",...))' );
+        }
+
     }
             
     /**
