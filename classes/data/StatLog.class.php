@@ -74,7 +74,17 @@ class StatLog extends DBObject {
             'type' => 'datetime'
         )
     );
-    
+
+    protected static $secondaryIndexMap = array(
+        'created' => array( 
+            'created' => array()
+        ),
+        'event_tt' => array( 
+            'event' => array(),
+            'target_type' => array()
+        )
+    );
+
     /**
      * Properties
      */
