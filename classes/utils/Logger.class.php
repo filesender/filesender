@@ -113,8 +113,9 @@ class Logger {
             switch(strtolower($facility['type'])) {
                 case 'file' :
                     // Log to file needs at least a path
-                    if(!array_key_exists('path', $facility))
+                    if(!array_key_exists('path', $facility)) {
                         throw new ConfigMissingParameterException('log_facilities['.$index.'][path]');
+                    }
                     
                     // If defined rotation rate must be valid
                     if(array_key_exists('rotate', $facility) && !in_array($facility['rotate'], array('hourly', 'daily', 'weekly', 'monthly', 'yearly')))
