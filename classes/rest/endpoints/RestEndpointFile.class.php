@@ -147,7 +147,7 @@ class RestEndpointFile extends RestEndpoint {
         
         // Get related file object
         $file = File::fromId($id);
-        
+
         // Check access rights depending on config
         if($security == 'key') {
             if(!array_key_exists('key', $_GET) || !$_GET['key'] || ($_GET['key'] != $file->uid))
@@ -235,15 +235,32 @@ class RestEndpointFile extends RestEndpoint {
         if(!in_array($mode, array(null, 'chunk'))) throw new RestBadParameterException('mode');
         if($offset && !is_numeric($offset)) throw new RestBadParameterException('offset');
         if(!$offset) $offset = 0;
-        
+
+        logger::error('put(1) key: ' . $_GET['key'] );
+
         // Evaluate security type depending on config and auth
         $security = Config::get('chunk_upload_security');
-        if(Auth::isAuthenticated()) $security = 'auth';
-        if(($security == 'auth') && !Auth::isAuthenticated())
-            throw new RestAuthenticationRequiredException();
-        
-        // Get file we need to add data to or update
-        $file = File::fromId($id);
+        if($security == 'key') {
+
+            // Get file we need to add data to or update
+            $file = File::fromId($id);
+            if(!array_key_exists('key', $_GET) || !$_GET['key'] || ($_GET['key'] != $file->uid)) {
+                throw new RestAuthenticationRequiredException();
+            }
+            logger::error('put(2) short cut passed for key: ' . $_GET['key'] );
+            
+        } else {
+            
+            if(Auth::isAuthenticated()) {
+                $security = 'auth';
+            }
+            if(($security == 'auth') && !Auth::isAuthenticated())
+                throw new RestAuthenticationRequiredException();
+            
+            // Get file we need to add data to or update
+            // we only bother to do this if auth has passed.
+            $file = File::fromId($id);
+        }
         
         // Check access rights depending on config
         if($security == 'key') {
@@ -340,7 +357,7 @@ class RestEndpointFile extends RestEndpoint {
             $file->transfer->isUploading();
             
             return $write_info;
-        
+            
         }else if(is_null($mode) && $data && $data->complete) {
             // Client signals that the file's body has been fully uploaded, flag the file as complete
             
