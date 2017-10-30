@@ -8,6 +8,8 @@
     $show_guest = isset($show_guest) ? (bool)$show_guest : false;
     $extend = (bool)Config::get('allow_transfer_expiry_date_extension');
     $audit = (bool)Config::get('auditlog_lifetime') ? '1' : '';
+    $haveNext = 0;
+    $havePrev = 0;
 
     if( count($transfers) > $limit ) {
         $haveNext = 1;

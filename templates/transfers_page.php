@@ -1,16 +1,10 @@
 <?php
 
-    $openoffset   = $_GET['openoffset'];
-    $openlimit    = $_GET['openlimit'];
-    $closedoffset = $_GET['closedoffset'];
-    $closedlimit  = $_GET['closedlimit'];
-
-    if(!isset($openoffset))   $openoffset   = 0;
-    if(!isset($openlimit))    $openlimit    = 10;
-    if(!isset($closedoffset)) $closedoffset = 0;
-    if(!isset($closedlimit))  $closedlimit  = 5;
-
-
+    $openoffset   = Utilities::arrayKeyOrDefault( $_GET, 'openoffset',    0, FILTER_VALIDATE_INT  );
+    $openlimit    = Utilities::arrayKeyOrDefault( $_GET, 'openlimit',    10, FILTER_VALIDATE_INT  );
+    $closedoffset = Utilities::arrayKeyOrDefault( $_GET, 'closedoffset',  0, FILTER_VALIDATE_INT  );
+    $closedlimit  = Utilities::arrayKeyOrDefault( $_GET, 'closedlimit',   5, FILTER_VALIDATE_INT  );
+    
 ?>
 <div class="box">
     <?php Template::display('transfers_table', array(
