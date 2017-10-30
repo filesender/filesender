@@ -169,12 +169,6 @@ window.filesender.transfer = function() {
             return false;
         }
 
-        
-        if (!/^[^\\\/:;\*\?\"<>|]+(\.[^\\\/:;\*\?\"<>|]+)*$/.test(file.name)) {
-            errorhandler({message: 'invalid_file_name', details: {filename: file.name}});
-            return false;
-        }
-        
         if (!file.size) {
             errorhandler({message: 'empty_file'});
             return false;
