@@ -66,8 +66,8 @@ $data = array(
 	    'yAxes' => array(
 		array(
 		    'ticks' => array( 'min' => 0 ),
-                    'scaleLabel' => array( display => true,
-                                            labelString => 'MB/sec'
+                    'scaleLabel' => array( 'display' => true,
+                                            'labelString' => 'MB/sec'
                                          ),
 		),
                 

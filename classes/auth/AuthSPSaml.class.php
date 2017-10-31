@@ -92,9 +92,11 @@ class AuthSPSaml {
                 
                 $values = array();
                 foreach($keys as $key) { // For all possible keys for attribute
-                    $value = $raw_attributes[$key];
-                    if(!is_array($value)) $value = array($value);
-                    foreach($value as $v) $values[] = $v; // Gather values of all successive possible keys as array
+                    if( array_key_exists($key,$raw_attributes)) {
+                       $value = $raw_attributes[$key];
+                       if(!is_array($value)) $value = array($value);
+                       foreach($value as $v) $values[] = $v; // Gather values of all successive possible keys as array
+                    }
                 }
                 $values = array_filter(array_map('trim', $values)); // Remove empty values
                 
