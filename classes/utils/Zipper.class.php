@@ -210,7 +210,7 @@ class Zipper {
         $bytesSent = 0;
         $chunkSize = Config::get('download_chunk_size');
         
-        for ($offset=0 ; $offset <= $file->size; $offset+=$chunkSize){
+        for ($offset=0 ; $offset < $file->size; $offset+=$chunkSize){
             $data = $file->readChunk($offset);
             echo $data;
             hash_update($hashContext, $data);
