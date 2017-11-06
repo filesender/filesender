@@ -34,7 +34,8 @@
 if (!defined('FILESENDER_BASE'))
     die('Missing environment');
 
-require_once(FILESENDER_BASE.'/lib/random_compat/lib/random.php');
+if (!function_exists('random_bytes'))
+    require_once(FILESENDER_BASE.'/lib/random_compat/lib/random.php');
 
 /**
  * Utility functions holder
@@ -79,11 +80,19 @@ class Utilities {
             return $uid;
         }
         
-        // Generate a simple random UID
-        
-        $rnd = self::generateRandomHexString();
-        
-        return substr($rnd, 0, 8).'-'.substr($rnd, 8, 4).'-'.substr($rnd, 12, 4).'-'.substr($rnd, 16, 4).'-'.substr($rnd, 20, 12);
+        // Generate a simple random UUID
+        $bytes = random_bytes(16);
+        $bytes{8} = chr((ord($bytes{8}) & 0x3F) | 0x80);
+        $bytes = bin2hex($bytes);
+        $bytes{12} = '4';
+        $parts = str_split($bytes, 4);
+        return implode('-', array(
+                $parts[0] . $parts[1],
+                $parts[2],
+                $parts[3],
+                $parts[4],
+                $parts[5] . $parts[6] . $parts[7]
+        ));
     }
 
     /**
