@@ -10,7 +10,7 @@ schedule.
 * Make a tag in git.
 
 ```
-$ git tag filesender-release-version-2.0beta1
+$ git tag filesender-2.0-beta2
 ```
 
 * Edit the files containing version numbers and changelogs. Commit this to the branch.
@@ -20,7 +20,7 @@ $ git tag filesender-release-version-2.0beta1
 * The release title and description should follow the style of the last release on
   the [release page](https://github.com/filesender/filesender/releases).
 * Do not worry about attaching files, github will take tar.gz snapshots from the repository for you.
-* Record the link to this new release. For example: https://github.com/filesender/filesender/releases/tag/filesender-2.0-beta1
+* Record the link to this new release. For example: https://github.com/filesender/filesender/releases/tag/filesender-2.0-beta2
 * Edit the Development Status section on the home page to reflect the current release number and release date.
 * Send the release announcement email as plain text (NO HTML!) using the following email template:
 
