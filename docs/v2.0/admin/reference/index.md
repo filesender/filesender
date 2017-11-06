@@ -87,13 +87,8 @@ no longer flash: now normal html post.  User can still select multiple files, wh
 <filesender>/tmp
 used for following tmp files:
 
-*  instance.secret which is the seed value used in the secure generation of random values used for fileUID, download link etc.
 *  used by dompdf to store tmp files when generating audit report
 *  NOT used for tmp storage of chunks: those are written directly in actual file on disk
-
-xsrf token and instance.secret
-if instance.secret disappears a user session might break.
-question: do we need to implement auto-refresh of the instance.secret?
 
 ## Difference html5 and non-html5 browsers
 
