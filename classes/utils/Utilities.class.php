@@ -577,4 +577,19 @@ class Utilities {
         $r = filter_var( $r, $filter, $options);
         return $r;
     }
+
+    /**
+     * true if $v is array( array( ... ) )
+     */
+    public static function is_array_of_array( $v ) {
+            if( !is_array($v)) {
+                return false;
+            }
+            $sl = array_slice($v,0,1);
+            if( is_array(array_shift($sl))) {
+                return true;
+            }
+            return false;
+    }
+
 }

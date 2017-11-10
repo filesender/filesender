@@ -215,7 +215,7 @@ class Config {
 
         // verify user settings
         if( array_key_exists("log_facilities",$config)
-            && !is_array(array_shift(array_slice($config["log_facilities"],0,1))))
+            && !Utilities::is_array_of_array($config["log_facilities"]))
         {
             throw new ConfigMissingParameterException('log_facilities[]',
             'Maybe you have set $config["log_facilities"] = array("type" => "file",...) instead of $config["log_facilities"] = array(array("type" => "file",...))' );
