@@ -79,11 +79,23 @@ class Utilities {
             return $uid;
         }
         
-        // Generate a simple random UID
-        
-        $rnd = self::generateRandomHexString();
-        
-        return substr($rnd, 0, 8).'-'.substr($rnd, 8, 4).'-'.substr($rnd, 12, 4).'-'.substr($rnd, 16, 4).'-'.substr($rnd, 20, 12);
+        // Generate 16 bytes of random data (128 bits)
+        $bytes = random_bytes(16);
+        // Set bits required for a valid UUIDv4
+        $bytes{8} = chr((ord($bytes{8}) & 0x3F) | 0x80); // Eat 2 bits of entropy
+        $bytes{6} = chr((ord($bytes{6}) & 0x4F) | 0x40); // Eat 4 bits of entropy
+        // $bytes has now 122 bits of entropy
+
+        // Convert bytes to hex and split in 4-char strings (hex, so 2 bytes per string)
+        $parts = str_split(bin2hex($bytes), 4);
+        // Add dashes where UUIDs should have dashes
+        return implode('-', array(
+                $parts[0] . $parts[1],
+                $parts[2],
+                $parts[3],
+                $parts[4],
+                $parts[5] . $parts[6] . $parts[7]
+        ));
     }
 
     /**
