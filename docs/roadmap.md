@@ -30,7 +30,13 @@ Current priorities for the post 2.0 Filesender Roadmap are:
 * Address-book: link with group info sources
 
 
-## Ideas that are on the radar
+## Community Proposals
+
+These are specific things that might help the project in the future.
+They are not "officially" on the roadmap but the ideas seem
+interesting and in the interest of being an open project the ideas are
+freely contributed here for anybody to see, take an interest in,
+implement, suggest better ideas etc.
 
 ### app
 
@@ -158,4 +164,75 @@ Which PHP versions are in stock Debian + Red Hat?
 Add Travis work, Update Travis to newer Ubuntu to newer php, Fix
 Selenium tests, More selenium tests!
 
+### Better documentation and email handling
+
+Clearly documentation is an issue for this. It seems that the bounce
+handling is a great example of an area that documentation can still
+improve. The current http://docs.filesender.org/v2.0/
+admin/configuration/ page still has much orange "to be checked" areas
+relating to email.
+
+It seems that the cited bounce script is this one scripts/task/
+emailfeedback.php. The emailfeedback.php script is looking at incoming
+emails and acting on content type message/delivery-status containing
+'failed' as bounces.
+
+At any rate the documentation shouldn't be leaving folks in a place that they 
+have to search around to work out where the bounce related script is.
+
+So to the the ball rolling there needs to be a new "email handling" page to 
+document things we want bounce handling on there and SPF so that folks do not 
+have to get to this thread for that.
+
+What are the other email related things that are the most important for 
+FileSender to start doing? From previous email we have: DMARC, SPF, SRS.
+
+### Command line tools
+
+Basic command line tool(s) that make using FileSender scriptable.
+Check what Owncloud / Nextcloud etc have for this and consider maybe
+FUSE or coreutils clones. It could be quite useful in many a
+scenario.
+
+### Local Area Network FileSender
+
+It might be interesting to have an 'Local Area Network FileSender'
+capability, such as offered by https://github.com/warner/magic-wormhole
+
+magic-wormhole uses really cool and unusual end-to-end crypto to send unlimited size
+files to people after a real-time magic keyword is shared, does local
+discovery etc.
+
+### organisation slide show
+
+Ability to show a slide show with cool stuff an organisation hosting filesender has in
+the pipeline w.r.t. new services while downloading (e.g. similar to
+WeTransfer). Could also be used to showcase cool open source stuff from
+the outside, charities, the coolest scientific imagery of the day, etc.
+People are waiting, they can get an 'experience' for free. FileSender
+should be fun too ;)
+
+### Theme emails
+
+better themability of the emails sent out. Perhaps have a designer look
+at freshening up the templates.
+
+### accessibility optimisations
+
+### chat
+
+integrate a chat option when sender is still online while receiver
+goes to pick up their file.
+
+### quick preview
+
+prioritize download of specific chunks of zip files etc.
+Perhaps include previews of files?
+
+### best practices badge
+
+Have a look at the following to see if there are best practices not
+yet followed.
+
+https://github.com/coreinfrastructure/best-practices-badge/blob/master/doc/criteria.md
 
