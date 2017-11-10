@@ -17,29 +17,98 @@ window.filesender.crypto_app = function () {
         crypto_iv_len: window.filesender.config.crypto_iv_len,
         crypto_crypt_name: window.filesender.config.crypto_crypt_name,
         crypto_hash_name: window.filesender.config.crypto_hash_name,
-        generateVector: function () {
-            return crypto.getRandomValues(new Uint8Array(16));
+
+        // Shameless copy from:
+        // https://git.daplie.com/Daplie/unibabel-js/blob/master/index.js
+        utf8ToBuffer: function utf8ToBuffer(str) {
+            var binstr = this.utf8ToBinaryString(str);
+            var buf = this.binaryStringToBuffer(binstr);
+            return buf;
         },
-        generateKey: function (password, callback) {
-            var iv = this.generateVector();
+        utf8ToBinaryString: function utf8ToBinaryString(str) {
+            var escstr = encodeURIComponent(str);
+            // replaces any uri escape sequence, such as %0A,
+            // with binary escape, such as 0x0A
+            var binstr = escstr.replace(/%([0-9A-F]{2})/g, function(match, p1) {
+                return String.fromCharCode(parseInt(p1, 16));
+            });
+
+            return binstr;
+        },
+        binaryStringToBuffer: function binaryStringToBuffer(binstr) {
+            var buf;
+
+            if ('undefined' !== typeof Uint8Array) {
+                buf = new Uint8Array(binstr.length);
+            } else {
+                buf = [];
+            }
+
+            Array.prototype.forEach.call(binstr, function (ch, i) {
+                buf[i] = ch.charCodeAt(0);
+            });
+
+            return buf;
+        },
+
+        generateKey: function generateKey(password, callback) {
             var $this = this;
-            crypto.subtle.digest({name: this.crypto_hash_name}, window.filesender.crypto_common().convertStringToArrayBufferView(password)).then(function (key) {
-                crypto.subtle.importKey("raw", key, {name: $this.crypto_crypt_name, iv: iv}, false, ["encrypt", "decrypt"]).then(function (key) {
-                    callback(key, iv);
-                }, function (e) {
-                    // error making a key
-                    filesender.ui.log(e);
-                });
-            }), function (e) {
-                // error making a hash
-                filesender.ui.log(e);
-            };
+
+            // TODO BAD CODE ALL NULL SALT!!!!!!!!!!!!!!
+            var saltBuffer = new Uint8Array(16);
+
+            var passphraseKey = this.utf8ToBuffer(password);
+
+            crypto.subtle.importKey(
+                'raw', // format
+                passphraseKey, // keyData
+                { // algo
+                    name: 'PBKDF2'
+                },
+                false, // extractable
+                [ // usages
+                    'deriveBits', 'deriveKey'
+                ]
+            ).then(function(key) {
+                return crypto.subtle.deriveKey(
+                    { // algorithm
+                        name: 'PBKDF2',
+                        salt: saltBuffer,
+                        // don't get too ambitious, or at least remember
+                        // that low-power phones will access your app
+                        iterations: 100,
+                        hash: 'SHA-256'
+                    },
+                    key, // masterKey
+
+                    // Note: for this demo we don't actually need a cipher suite,
+                    // but the api requires that it must be specified.
+
+                    // For AES the length required to be 128 or 256 bits (not bytes)
+                    { // derivedKeyAlgorithm
+                        name: 'AES-CBC',
+                        length: 128,
+                    },
+
+                    // Whether or not the key is extractable (less secure) or not (more secure)
+                    // when false, the key can only be passed as a web crypto object, not inspected
+                    false, // extractable
+
+                    // this web crypto object will only be allowed for these functions
+                    [ // keyUsages
+                        'encrypt',
+                        'decrypt',
+                    ]
+                )
+            }, filesender.ui.log).then(callback, filesender.ui.log);
         },
-        encryptBlob: function (value, password, callback) {
+        encryptBlob: function encryptBlob(value, password, callback) {
             var $this = this;
             
-            this.generateKey(password, function (key, iv) {
-                crypto.subtle.encrypt({name: $this.crypto_crypt_name, iv: iv}, key, value).then(
+            this.generateKey(password, function (key) {
+                // Use 32 bytes, or 256 bits, because SHA-256.
+                var iv = crypto.getRandomValues(new Uint8Array(16));
+                crypto.subtle.encrypt({name: 'AES-CBC', iv: iv}, key, value).then(
                         function (result) {
 
                             var joinedData = window.filesender.crypto_common().joinIvAndData(iv, new Uint8Array(result));
