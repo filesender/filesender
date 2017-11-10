@@ -577,4 +577,5 @@ class Utilities {
         $r = filter_var( $r, $filter, $options);
         return $r;
     }
+
 }
