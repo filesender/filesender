@@ -763,7 +763,17 @@ $(function() {
         return false;
     });
     filesender.ui.nodes.encryption.generate.on('click', function() {
-        filesender.ui.nodes.encryption.password.val(Math.random().toString(36).substr(2, 14));
+        // Use 9 bytes of entropy (72 bits),
+        // using base64 this yields 9/,75=12 character passwords.
+        // Users can choose a stronger (or weaker) password themselves
+        // if they so choose.
+        var buf = new Uint8Array(9);
+        window.crypto.getRandomValues(buf);
+        // btoa and String.fromCharCode.apply are probably not constant time
+        // implementations, but I'll assume they're good enough for locally
+        // generating a random password.
+        var password = btoa(String.fromCharCode.apply(null, buf));
+        filesender.ui.nodes.encryption.password.val(password);
         filesender.ui.nodes.encryption.show_hide.prop('checked',true);
         filesender.ui.nodes.encryption.show_hide.trigger('change');
     });
