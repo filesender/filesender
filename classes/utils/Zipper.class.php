@@ -85,12 +85,7 @@ class Zipper {
      */
     public function sendZip($recipient = null, $withHeaders = true)
     {
-        $zip = new ZipStreamer\ZipStreamer( array(
-                'outstream' => NULL,                
-                'zip64' => False,
-                'compress' => 0x0000, // COMPR::STORE,
-                'level' => 1, // COMPR::NORMAL,
-                )); 
+        $zip = new ZipStreamer\ZipStreamer();
 
         // set headers
         $fuid = substr(hash('sha1', implode('+', array_keys($this->files))), -8);
