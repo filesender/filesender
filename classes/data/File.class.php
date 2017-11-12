@@ -346,4 +346,9 @@ class File extends DBObject
     public function __toString() {
         return static::getClassName().'#'.($this->id ? $this->id : 'unsaved').'('.$this->name.', '.$this->size.' bytes)';
     }
+
+    public function getStream() {
+        return Storage::getStream($this);
+    }
+
 }

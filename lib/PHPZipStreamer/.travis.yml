@@ -1,0 +1,37 @@
+language: php
+sudo: false
+
+env:
+ - PECL_HTTP_VERSION=1.7.6
+ - PECL_HTTP_VERSION=2.5.0
+ - PECL_HTTP_VERSION=3.0.0RC1
+
+php:
+  - 7.0
+  - 5.6
+  - 5.5
+  - 5.4
+  - 5.3
+
+before_install:
+  - sh -c "mkdir -p ${TRAVIS_BUILD_DIR}/travis/module-cache/`php-config --vernum`"
+
+before_script:
+ - ./test/travis/php-modules-install.sh
+
+script:
+ - phpunit --configuration test/phpunit.xml
+
+cache:
+  directories:
+  - ${TRAVIS_BUILD_DIR}/travis/module-cache
+
+matrix:
+  fast_finish: true
+  exclude:
+    - php: 5.5
+      env: PECL_HTTP_VERSION=1.7.6
+    - php: 5.6
+      env: PECL_HTTP_VERSION=1.7.6
+    - php: 7.0
+      env: PECL_HTTP_VERSION=1.7.6
