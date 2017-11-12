@@ -261,6 +261,9 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
         //https://file_sender.app/filesender/download.php?token=36c2120e-44b1-c06e-8c32-27e3c4285ee6&files_ids=
         $zip_location = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'testzip-' . $token . '.zip';
         copy(Config::get('site_url') . "download.php?token=" . $token . "&files_ids=" . implode(',', $data_ids), $zip_location);
+        echo "ids " . implode(',', $data_ids) . "\n";
+        echo "zip_location $zip_location\n";
+        echo print_r(stat('$zip_location'),false);
 
         return $zip_location;
 
