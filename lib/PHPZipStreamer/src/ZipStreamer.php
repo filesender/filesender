@@ -167,7 +167,7 @@ class ZipStreamer {
         header('Connection: Keep-Alive');
         header('Content-Type: ' . $contentType);
         // Use UTF-8 filenames when not using Internet Explorer
-        if(strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') > 0) {
+        if(array_key_exists('HTTP_USER_AGENT',$_SERVER) && strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') > 0) {
           header('Content-Disposition: attachment; filename="' . rawurlencode($archiveName) . '"' );
         }  else  {
           header( 'Content-Disposition: attachment; filename*=UTF-8\'\'' . rawurlencode($archiveName)
