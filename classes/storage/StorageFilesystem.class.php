@@ -235,7 +235,7 @@ class StorageFilesystem {
      * 
      * @return string path
      */
-    protected static function buildPath(File $file) {
+    public static function buildPath(File $file) {
         self::setup();
         
         $path = self::$path;
@@ -497,4 +497,9 @@ class StorageFilesystem {
         symlink($source_path, self::buildPath($file).$file->uid);
     }
 
+    public static function getStream(File $file) {
+        $file_path = self::buildPath($file).$file->uid;
+        $stream = fopen($file_path,'r');
+        return $stream;
+    }
 }
