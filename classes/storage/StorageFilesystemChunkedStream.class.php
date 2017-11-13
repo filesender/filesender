@@ -42,6 +42,9 @@ class StorageFilesystemChunkedStream {
     protected $offset = 0;
     protected $uid    = null;
     protected $file   = null;
+    protected $fh     = null;
+    protected $currentChunkFile = null;
+    protected $gameOver = false;
     
     function stream_open($path, $mode, $options, &$opened_path)
     {
@@ -57,23 +60,39 @@ class StorageFilesystemChunkedStream {
         $file   = $this->file;
         $offset = $this->offset;
 
+        if( $this->gameOver )
+            return FALSE;
         
         $file_path = StorageFilesystem::buildPath($file).$file->uid;
-	$chunkFile=StorageFilesystemChunked::getChunkFilename($file_path,$offset);
+	$chunkFile = StorageFilesystemChunked::getChunkFilename($file_path,$offset);
 
-        // Logger::error('stream_read  offset ' . $offset . ' count ' . $count . ' file ' . $chunkFile );
-        $fh = fopen($chunkFile,'r');
-        if( $fh == FALSE ) {
-            return FALSE;
+
+        if( strcmp( $this->currentChunkFile, $chunkFile )) {
+
+            // if we try to open the file after the last chunk then we return FALSE
+            $fh = fopen($chunkFile,'r');
+            if( $fh == FALSE ) {
+                $this->gameOver = true;
+                return FALSE;
+            }
+            
+            $rc = fseek($fh,StorageFilesystemChunked::getOffsetWithinChunkedFile($file_path,$offset));
+            if( $rc == -1 ) {
+                $this->gameOver = true;
+                if( $this->fh )
+                    fclose($this->fh);
+                return FALSE;
+            }
+            
+            $this->fh = $fh;
+            $this->currentChunkFile = $chunkFile;
         }
-        
-        $rc = fseek($fh,StorageFilesystemChunked::getOffsetWithinChunkedFile($file_path,$offset));
-        if( $rc == -1 ) {
-            return FALSE;
-        }
-        
-        $data = fread( $fh, $count );
+
+        $data = fread( $this->fh, $count );
         if( $data == FALSE ) {
+            $this->gameOver = true;
+            if( $this->fh )
+                fclose($this->fh);
             return FALSE;
         }
         
