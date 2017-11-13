@@ -30,6 +30,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+require_once(FILESENDER_BASE.'/lib/PHPZipStreamer/src/ZipStreamer.php');
+require_once(FILESENDER_BASE.'/lib/PHPZipStreamer/src/lib/Count64.php');
 
 
 /**
@@ -83,16 +85,16 @@ class Zipper {
      */
     public function sendZip($recipient = null, $withHeaders = true)
     {
+        $zip = new ZipStreamer\ZipStreamer();
 
         // set headers
         $fuid = substr(hash('sha1', implode('+', array_keys($this->files))), -8);
         $file = reset($this->files);
         $tid = $file['data']->transfer_id;
         $filename = 'transfer_' . $tid . '_files_' . $fuid . '.zip';
-
-        $zip = new ZipStream\ZipStream($filename,
-            array( ZipStream\ZipStream::OPTION_LARGE_FILE_SIZE => 1,
-                   ZipStream\ZipStream::OPTION_SEND_HTTP_HEADERS => $withHeaders ));
+        if( $withHeaders ) {
+            $zip->sendHeaders( $filename, "application/octet-stream" );
+        }
         
         // send each file
         foreach ($this->files as $k => $data) {
@@ -108,12 +110,12 @@ class Zipper {
             $name = preg_replace('/\\/\\.\\./', '', $name);   // strip /..
             
             $stream = $file->getStream();
-            $zip->addFileFromStream($name, $stream, array(), 'store');
+            $zip->addFileFromStream($stream, $name);
             fclose($stream);
         }
 
         // finish up and log everything
-        $zip->finish();
+        $zip->finalize();
         if($recipient) foreach ($this->files as $data) {
             $file = $data['data'];
             Logger::logActivity(LogEventTypes::DOWNLOAD_ENDED, $file, $recipient);
