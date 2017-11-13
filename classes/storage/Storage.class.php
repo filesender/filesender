@@ -281,4 +281,16 @@ class Storage {
 
 
 
+    /**
+     * get a file as a stream. The stream only needs to support reading all bytes
+     * in order, start to finish.
+     * 
+     * @param File $file
+     */
+    public static function getStream(File $file) {
+        self::setup();
+        return call_user_func(self::getStorageClass($file).'::getStream', $file);
+    }
+
+
 }
