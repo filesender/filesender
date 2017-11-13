@@ -81,7 +81,7 @@ class Autoloader {
 
         'TestDatabase*' => 'test/database/',
 
-        'PHPZipStreamer*' => '/PHPZipStreamer/src/',
+        'ZipStream*'      => '/ZipStream-PHP/src/',
 
         // Must be last
         '*' => 'utils/' 
@@ -105,7 +105,7 @@ class Autoloader {
                 $file = FILESENDER_BASE.'/classes/'.$path;
                 if(!$path || substr($path, -1) == '/') $file .= $class;
                 $file .= '.class.php';
-                
+
                 if(!file_exists($file)) {
 
                     $file = FILESENDER_BASE.'/lib/'.$path;
