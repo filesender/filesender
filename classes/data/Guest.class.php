@@ -569,7 +569,15 @@ class Guest extends DBObject {
             $this->subject = (string)$value;
             
         }else if($property == 'message') {
-            $this->message = (string)$value;
+            $words = explode(' ',(string)$value);
+            $message = '';
+            foreach($words as $word) {
+                if (preg_match("/https?:\/\/[^\s]+/", $word)) {
+                    $word = preg_replace("/(:\/\/|\/|\.)/", " $1 ", $word);
+                }
+                $message.=$word.' ';
+            }
+            $this->message = $message;
             
         }else if($property == 'options') {
             $this->options = self::validateOptions($value);

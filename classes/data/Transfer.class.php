@@ -709,7 +709,15 @@ class Transfer extends DBObject {
             $this->subject = (string)$value;
             
         }else if($property == 'message') {
-            $this->message = (string)$value;
+            $words = explode(' ',(string)$value);
+            $message = '';
+            foreach($words as $word) {
+                if (preg_match("/https?:\/\/[^\s]+/", $word)) {
+                    $word = preg_replace("/(:\/\/|\/|\.)/", " $1 ", $word);
+                }
+                $message.=$word.' ';
+            }
+            $this->message = $message;
             
         }else if($property == 'expires') {
             if(preg_match('`^[0-9]{4}-[0-9]{2}-[0-9]{2}$`', $value)) {
