@@ -45,7 +45,7 @@
         echo "<td class='pageheader'>$header</td>";
         echo '</tr></tbody></table>';
     } else {
-        if( strlen($header) )
+        if(isSet($header) && strlen($header))
             echo "<h2>$header</h2>";
     }
 ?>
