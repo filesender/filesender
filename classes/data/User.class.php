@@ -347,7 +347,7 @@ class User extends DBObject {
                         TransferOptions::ADD_ME_TO_RECIPIENTS
                 ))
             ) continue;
-            
+           
             if($dfn['available']) {
                 if(!array_key_exists($name, $prefs))
                     $prefs[$name] = 0;
