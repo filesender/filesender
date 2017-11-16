@@ -25,8 +25,8 @@ $transfers_page = function($status) {
     
     if($offset) {
         $po = max(0, $offset - $page_size);
-        $navigation .= '<a href="?s=admin&as=transfers&'.$status.'_tpo=0#'.$status.'_transfers">&lt;&lt;</a>'."\n";
-        $navigation .= '<a href="?s=admin&as=transfers&'.$status.'_tpo='.$po.'#'.$status.'_transfers">&lt;</a>'."\n";
+        $navigation .= '<a href="?s=admin&as=transfers&'.$status.'_tpo=0#'.$status.'_transfers"><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i class="fa fa-angle-double-left fa-stack-1x fa-inverse"></i></span></a>'."\n";
+        $navigation .= '<a href="?s=admin&as=transfers&'.$status.'_tpo='.$po.'#'.$status.'_transfers"><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i class="fa fa-angle-left fa-stack-1x fa-inverse"></i></span></a>'."\n";
     }
     
     $p = 1;
@@ -43,8 +43,8 @@ $transfers_page = function($status) {
     if($offset + $page_size < $total_count) {
         $no = $offset + $page_size;
         $lo = $total_count - ($total_count % $page_size);
-        $navigation .= '<a href="?s=admin&as=transfers&'.$status.'_tpo='.$no.'#'.$status.'_transfers">&gt;</a>'."\n";
-        $navigation .= '<a href="?s=admin&as=transfers&'.$status.'_tpo='.$lo.'#'.$status.'_transfers">&gt;&gt;</a>'."\n";
+        $navigation .= '<a href="?s=admin&as=transfers&'.$status.'_tpo='.$no.'#'.$status.'_transfers"><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i class="fa fa-angle-right fa-stack-1x fa-inverse"></i></span></a>'."\n";
+        $navigation .= '<a href="?s=admin&as=transfers&'.$status.'_tpo='.$lo.'#'.$status.'_transfers"><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i class="fa fa-angle-double-right fa-stack-1x fa-inverse"></i></span></a>'."\n";
     }
     
     $navigation .= '</div>'."\n";
