@@ -31,21 +31,21 @@
         
         if( $havePrev ) {
            $prevPage = max(0,$offset-$limit);
-           echo "<td class='pageprev0'><a href='$base&$cgioffset=0&$cgilimit=$limit'>&lt;&lt;</a></td>";
-           echo "<td class='pageprev'><a href='$base&$cgioffset=$prevPage&$cgilimit=$limit'>&lt;</a></td>";
+           echo "<td class='pageprev0'><a href='$base&$cgioffset=0&$cgilimit=$limit'><span class='fa-stack fa-lg'><i class='fa fa-square fa-stack-2x'></i><i class='fa fa-angle-double-left fa-stack-1x fa-inverse'></i></span></a></td>";
+           echo "<td class='pageprev'><a href='$base&$cgioffset=$prevPage&$cgilimit=$limit'><span class='fa-stack fa-lg'><i class='fa fa-square fa-stack-2x'></i><i class='fa fa-angle-left fa-stack-1x fa-inverse'></i></span></a></td>";
         } else {
            echo "<td class='pageprev0'>&nbsp;&nbsp;</td><td class='pageprev'>&nbsp;</td>";
         }
 
         if( $haveNext ) {
-           echo "<td class='pagenext'><a href='$nextLink'>&gt;</a></td>";
+           echo "<td class='pagenext'><a href='$nextLink'><span class='fa-stack fa-lg'><i class='fa fa-square fa-stack-2x'></i><i class='fa fa-angle-right fa-stack-1x fa-inverse'></i></span></a></td>";
         } else {
            echo "<td class='pagenext'>&nbsp;</td>";
         }
         echo "<td class='pageheader'>$header</td>";
         echo '</tr></tbody></table>';
     } else {
-        if( strlen($header) )
+        if(isSet($header) && strlen($header))
             echo "<h2>$header</h2>";
     }
 ?>

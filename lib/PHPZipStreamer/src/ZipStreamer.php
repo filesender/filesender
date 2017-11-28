@@ -525,7 +525,7 @@ class ZipStreamer {
   private function buildEndOfCentralDirectoryRecord($cdRecLength) {
     if ($this->zip64) {
       $diskNumber = -1;
-      $cdRecCount = -1;
+      $cdRecCount = min(sizeof($this->cdRec), 0xffff);
       $cdRecLength = -1;
       $offset = -1;
     } else {
