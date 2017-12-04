@@ -763,11 +763,11 @@ $(function() {
         return false;
     });
     filesender.ui.nodes.encryption.generate.on('click', function() {
-        // Use 9 bytes of entropy (72 bits),
-        // using base64 this yields 9/,75=12 character passwords.
+        // Use 12 bytes of entropy (128 bits),
+        // using base64 this yields 12/,75=16 character passwords.
         // Users can choose a stronger (or weaker) password themselves
         // if they so choose.
-        var buf = new Uint8Array(9);
+        var buf = new Uint8Array(12);
         window.crypto.getRandomValues(buf);
         // btoa and String.fromCharCode.apply are probably not constant time
         // implementations, but I'll assume they're good enough for locally
