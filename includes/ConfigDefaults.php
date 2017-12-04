@@ -88,9 +88,11 @@ $default = array(
     
     'encryption_enabled' => true,
     'upload_crypted_chunk_size' => 5 * 1024 * 1024 + 32 + 16, // 32 for IV, 16 checksum for AES-GCM/AES-CBC
-    'crypto_iv_len' => 32,
+    'crypto_iv_len' => 32, // IV length
+    'crypto_crypt_length' => 256, // The block length of the algorithm, 256 because SHA-256
     'crypto_crypt_name' => 'AES-GCM', // The encryption algorithm used
     'crypto_hash_name' => 'SHA-256', // The hash used to convert password to hash
+    'crypto_hash_iterations' => 100, // How many hashing iterations must be done
 
     'terasender_enabled' => true,
     'terasender_disableable' => true,
