@@ -97,7 +97,7 @@ window.filesender.crypto_app = function () {
                         'decrypt',
                     ]
                 )
-            }, filesender.ui.log).then(callback, filesender.ui.log);
+            }, window.filesender.ui.log).then(callback, window.filesender.ui.log);
         },
         encryptBlob: function encryptBlob(value, password, callback) {
             // NOTE: This function is used per chunk.
@@ -110,7 +110,7 @@ window.filesender.crypto_app = function () {
             // Derive key from password and use it for encryption
             this.generateKey(password, function (key) {
                 // Use 32 bytes, or 256 bits, because SHA-256.
-                var iv = crypto.getRandomValues(new Uint8Array($this.crypto_crypt_length/8));
+                var iv = crypto.getRandomValues(new Uint8Array($this.crypto_iv_len));
                 // Do the actual encryption
                 // Will call the callback with a bytestring consisting of the IV and the ciphertext
                 crypto.subtle.encrypt(
@@ -139,7 +139,7 @@ window.filesender.crypto_app = function () {
                         // encrypt failed
                         function (e) {
                             // error occured during crypt
-                            filesender.ui.log(e);
+                            window.filesender.ui.log(e);
                         }
                 );
 
