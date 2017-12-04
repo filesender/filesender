@@ -79,11 +79,23 @@ class Utilities {
             return $uid;
         }
         
-        // Generate a simple random UID
-        
-        $rnd = self::generateRandomHexString();
-        
-        return substr($rnd, 0, 8).'-'.substr($rnd, 8, 4).'-'.substr($rnd, 12, 4).'-'.substr($rnd, 16, 4).'-'.substr($rnd, 20, 12);
+        // Generate 16 bytes of random data (128 bits)
+        $bytes = random_bytes(16);
+        // Set bits required for a valid UUIDv4
+        $bytes{8} = chr((ord($bytes{8}) & 0x3F) | 0x80); // Eat 2 bits of entropy
+        $bytes{6} = chr((ord($bytes{6}) & 0x4F) | 0x40); // Eat 4 bits of entropy
+        // $bytes has now 122 bits of entropy
+
+        // Convert bytes to hex and split in 4-char strings (hex, so 2 bytes per string)
+        $parts = str_split(bin2hex($bytes), 4);
+        // Add dashes where UUIDs should have dashes
+        return implode('-', array(
+                $parts[0] . $parts[1],
+                $parts[2],
+                $parts[3],
+                $parts[4],
+                $parts[5] . $parts[6] . $parts[7]
+        ));
     }
 
     /**
@@ -132,82 +144,6 @@ class Utilities {
         return preg_match('/' .  Config::get('valid_filename_regex') . '/u', $filename);
     }
 
-
-    /*
-     * Generate (pseudo) (super-)random hex string
-     * 
-     * @return string
-     */
-    public static function generateRandomHexString($nearly = false) {
-        // Random length
-        $len = random_int(16, 32);
-
-        // Random data
-        $rnd = '';
-        for($i=0; $i<$len; $i++) $rnd .= sprintf('%04d', random_int(0, 9999));
-        
-        // No need for an super-random, just hash
-        if($nearly) return hash('sha1', $rnd);
-        
-        // Need for an super-random
-        
-        // Get secret, generate it if not found
-        $sfile = FILESENDER_BASE.'/tmp/instance.secret';
-        if(file_exists($sfile)) {
-            $ctn = array_filter(array_map('trim', explode("\n", file_get_contents($sfile))), function($line) {
-                return substr($line, 0, 1) != '#';
-            });
-            
-            $secret = array_shift($ctn);
-        } else {
-            $secret = self::generateRandomHexString(true);
-            
-            if($fh = fopen($sfile, 'w')) {
-                fwrite($fh, '# Automatically generated'."\n");
-                fwrite($fh, $secret);
-                fclose($fh);
-            } else throw new CoreCannotWriteFileException($sfile);
-        }
-        // return hmac signature of random data with secret => super-random !
-        return hash_hmac('sha1', $rnd, $secret);
-    }
-    
-    /**
-     * Get instance uid
-     * 
-     * @return string
-     */
-    public static function instanceUID() {
-        // Get uid from file, generate it if not found
-        $sfile = FILESENDER_BASE.'/tmp/instance.uid';
-        if(file_exists($sfile)) {
-            $ctn = array_filter(array_map('trim', explode("\n", file_get_contents($sfile))), function($line) {
-                return substr($line, 0, 1) != '#';
-            });
-            
-            $uid = array_shift($ctn);
-        } else {
-            $uid = self::generateRandomHexString(true);
-            
-            if($fh = fopen($sfile, 'w')) {
-                fwrite($fh, '# Automatically generated'."\n");
-                fwrite($fh, $uid);
-                fclose($fh);
-            } else throw new CoreCannotWriteFileException($sfile);
-        }
-        
-        return $uid;
-    }
-    
-    /**
-     * Get running instance uid
-     * 
-     * @return string
-     */
-    public static function runningInstanceUID() {
-        return substr(self::instanceUID(), -8).'-'.filemtime(FILESENDER_BASE.'/config/config.php');
-    }
-    
     /**
      * Format a date according to configuration
      * 

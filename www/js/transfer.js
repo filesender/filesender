@@ -224,12 +224,13 @@ window.filesender.transfer = function() {
         var files_cids = {};
         for(var i=0; i<this.files.length; i++) files_cids[this.files[i].cid] = true;
         
-        var cid = 'file_' + (new Date()).getTime() + '_' + file.name.length + '_' + file.size + '_';
-        var rnd = null;
         do {
-            rnd = Math.round(Math.random() * 999999);
-        } while(files_cids[cid + rnd]);
-        cid += rnd;
+            // When adding multiple files, sometimes getTime() will return the
+            // same value two times in a row.  When that happens, just keep
+            // retrying until enough time has passed.  It's a rare case, but not
+            // so rare that we don't want to handle it.
+            var cid = 'file_' + (new Date()).getTime() + '_' + file.name.length + '_' + file.size + '_';
+        } while(files_cids[cid]);
         
         file.cid = cid;
         

@@ -83,13 +83,15 @@ window.filesender.config = {
     upload_crypted_chunk_size: '<?php echo Config::get('upload_crypted_chunk_size') ?>',
     crypto_iv_len: '<?php echo Config::get('crypto_iv_len') ?>',
     crypto_crypt_name: '<?php echo Config::get('crypto_crypt_name') ?>',
+    crypto_crypt_length: '<?php echo Config::get('crypto_crypt_length') ?>',
     crypto_hash_name: '<?php echo Config::get('crypto_hash_name') ?>',
+    crypto_hash_iterations: '<?php echo Config::get('crypto_hash_iterations') ?>',
 
     terasender_enabled: <?php  echo value_to_TF(Config::get('terasender_enabled')) ?>,
     terasender_advanced: <?php echo value_to_TF(Config::get('terasender_advanced')) ?>,
     terasender_worker_count: <?php echo Config::get('terasender_worker_count') ?>,
     terasender_start_mode: '<?php echo Config::get('terasender_start_mode') ?>',
-    terasender_worker_file: 'lib/terasender/terasender_worker.js?v=<?php echo Utilities::runningInstanceUID() ?>',
+    terasender_worker_file: 'lib/terasender/terasender_worker.js',
     terasender_upload_endpoint: '<?php echo Config::get('site_url') ?>rest.php/file/{file_id}/chunk/{offset}',
 
     stalling_detection: <?php echo value_to_TF(Config::get('stalling_detection')); ?>,

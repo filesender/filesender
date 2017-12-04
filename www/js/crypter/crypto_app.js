@@ -16,30 +16,112 @@ window.filesender.crypto_app = function () {
         crypto_chunk_size: window.filesender.config.upload_chunk_size,
         crypto_iv_len: window.filesender.config.crypto_iv_len,
         crypto_crypt_name: window.filesender.config.crypto_crypt_name,
+        crypto_crypt_length: window.filesender.config.crypto_crypt_length,
         crypto_hash_name: window.filesender.config.crypto_hash_name,
-        generateVector: function () {
-            return crypto.getRandomValues(new Uint8Array(16));
+        crypto_hash_iterations: window.filesender.config.crypto_hash_iterations,
+
+        // Shameless copy from:
+        // https://git.daplie.com/Daplie/unibabel-js/blob/master/index.js
+        utf8ToBuffer: function utf8ToBuffer(str) {
+            var binstr = this.utf8ToBinaryString(str);
+            var buf = this.binaryStringToBuffer(binstr);
+            return buf;
         },
-        generateKey: function (password, callback) {
-            var iv = this.generateVector();
-            var $this = this;
-            crypto.subtle.digest({name: this.crypto_hash_name}, window.filesender.crypto_common().convertStringToArrayBufferView(password)).then(function (key) {
-                crypto.subtle.importKey("raw", key, {name: $this.crypto_crypt_name, iv: iv}, false, ["encrypt", "decrypt"]).then(function (key) {
-                    callback(key, iv);
-                }, function (e) {
-                    // error making a key
-                    filesender.ui.log(e);
-                });
-            }), function (e) {
-                // error making a hash
-                filesender.ui.log(e);
-            };
+        utf8ToBinaryString: function utf8ToBinaryString(str) {
+            var escstr = encodeURIComponent(str);
+            // replaces any uri escape sequence, such as %0A,
+            // with binary escape, such as 0x0A
+            var binstr = escstr.replace(/%([0-9A-F]{2})/g, function(match, p1) {
+                return String.fromCharCode(parseInt(p1, 16));
+            });
+
+            return binstr;
         },
-        encryptBlob: function (value, password, callback) {
+        binaryStringToBuffer: function binaryStringToBuffer(binstr) {
+            var buf;
+
+            if ('undefined' !== typeof Uint8Array) {
+                buf = new Uint8Array(binstr.length);
+            } else {
+                buf = [];
+            }
+
+            Array.prototype.forEach.call(binstr, function (ch, i) {
+                buf[i] = ch.charCodeAt(0);
+            });
+
+            return buf;
+        },
+
+        generateKey: function generateKey(password, callback) {
             var $this = this;
-            
-            this.generateKey(password, function (key, iv) {
-                crypto.subtle.encrypt({name: $this.crypto_crypt_name, iv: iv}, key, value).then(
+
+            // TODO BAD CODE ALL NULL SALT!!!!!!!!!!!!!!
+            var saltBuffer = new Uint8Array(0);
+
+            var passphraseKey = this.utf8ToBuffer(password);
+
+            crypto.subtle.importKey(
+                'raw', // format
+                passphraseKey, // keyData
+                { // algo
+                    name: 'PBKDF2'
+                },
+                false, // extractable
+                [ // usages
+                    'deriveBits', 'deriveKey'
+                ]
+            ).then(function(key) {
+                return crypto.subtle.deriveKey(
+                    { // algorithm
+                        name: 'PBKDF2',
+                        salt: saltBuffer,
+                        iterations: $this.crypto_hash_iterations,
+                        hash: $this.crypto_hash_name
+                    },
+                    key, // masterKey
+
+                    // For AES the length required to be 128 or 256 bits (not bytes)
+                    { // derivedKeyAlgorithm
+                        name: $this.crypto_crypt_name,
+                        length: $this.crypto_crypt_length,
+                    },
+
+                    // Whether or not the key is extractable (less secure) or not (more secure)
+                    // when false, the key can only be passed as a web crypto object, not inspected
+                    false, // extractable
+
+                    // this web crypto object will only be allowed for these functions
+                    [ // keyUsages
+                        'encrypt',
+                        'decrypt',
+                    ]
+                )
+            }, window.filesender.ui.log).then(callback, window.filesender.ui.log);
+        },
+        encryptBlob: function encryptBlob(value, password, callback) {
+            // NOTE: This function is used per chunk.
+            // FileSender separates file uploads in chunks of a few megabytes each.
+            // Each chunk will thus have its own initialization vector,
+            // which is included in the output.
+
+            var $this = this;
+
+            // Derive key from password and use it for encryption
+            this.generateKey(password, function (key) {
+                // Use 32 bytes, or 256 bits, because SHA-256.
+                var iv = crypto.getRandomValues(new Uint8Array($this.crypto_iv_len));
+                // Do the actual encryption
+                // Will call the callback with a bytestring consisting of the IV and the ciphertext
+                crypto.subtle.encrypt(
+                    { // Algorithm
+                        name: $this.crypto_crypt_name,
+                        iv: iv
+                    },
+                    key, // The derived key
+                    value // The plaintext to encrypt
+                ).then(
+                        // encrypt success
                         function (result) {
 
                             var joinedData = window.filesender.crypto_common().joinIvAndData(iv, new Uint8Array(result));
@@ -54,9 +136,10 @@ window.filesender.crypto_app = function () {
 
                             callback(btoaData);
                         },
+                        // encrypt failed
                         function (e) {
                             // error occured during crypt
-                            filesender.ui.log(e);
+                            window.filesender.ui.log(e);
                         }
                 );
 
@@ -64,29 +147,45 @@ window.filesender.crypto_app = function () {
             });
         },
         decryptBlob: function (value, password, callbackDone, callbackProgress, callbackError) {
+            // NOTE: This function is used per chunk.
+            // FileSender separates file uploads in chunks of a few megabytes each.
+            // Each chunk will thus have its own initialization vector,
+            // which is included in the output.
+
             var $this = this;
             
-            var encryptedData = value; // array buffers array
-            var blobArray = [];
+            var encryptedChunks = value; // array of buffers, each starting with their own IV
+            var blobArray = []; // array of buffers containing plaintext data
 
+            // Derive key from password and use it for encryption
             this.generateKey(password, function (key) {
 		var wrongPassword = false;
-		var decryptLoop = function(i) {
-		    callbackProgress(i,encryptedData.length); //once per chunk
-                    var value = window.filesender.crypto_common().separateIvFromData(encryptedData[i]);
-                    crypto.subtle.decrypt({name: $this.crypto_crypt_name, iv: value.iv}, key, value.data).then(
+		function decryptLoop(chunk) {
+                    // Show progress once per chunk
+		    callbackProgress(chunk, encryptedChunks.length);
+                    // Explode IV and ciphertext from chunk
+                    var value = window.filesender.crypto_common().separateIvFromData(encryptedChunks[chunk]);
+                    // Decrypt the chunk
+                    crypto.subtle.decrypt(
+                        { // Algorithm
+                            name: $this.crypto_crypt_name,
+                            iv: value.iv
+                        },
+                        key, // The derived key
+                        value.data // The ciphertext
+                    ).then(
+                        // decrypt success
                         function (result) {
                             var blobArrayBuffer = new Uint8Array(result);
                             blobArray.push(blobArrayBuffer);
-                            // done
-                            if (blobArray.length === encryptedData.length) {
+                            // Was this the last chunk?
+                            if (blobArray.length === encryptedChunks.length) {
                                 callbackDone(blobArray);
-                            } else {
-                                if (i<encryptedData.length){
-                                    setTimeout(decryptLoop(i+1),300);
-                                }
+                            } else if (chunk<encryptedChunks.length) {
+                                decryptLoop(chunk+1);
                             }
                         },
+                        // decrypt failed
                         function (e) {
                             if (!wrongPassword) {
                                     wrongPassword=true;
