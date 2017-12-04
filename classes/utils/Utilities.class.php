@@ -89,13 +89,13 @@ class Utilities {
         // Convert bytes to hex and split in 4-char strings (hex, so 2 bytes per string)
         $parts = str_split(bin2hex($bytes), 4);
         // Add dashes where UUIDs should have dashes
-        return implode('-', [
+        return implode('-', array(
                 $parts[0] . $parts[1],
                 $parts[2],
                 $parts[3],
                 $parts[4],
                 $parts[5] . $parts[6] . $parts[7]
-        ]);
+        ));
     }
 
     /**
