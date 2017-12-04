@@ -289,7 +289,7 @@ class RestEndpointFile extends RestEndpoint {
                     $paddedLength = 16;
                 }
                 // The initialization vector
-                $ivLength = 16;
+                $ivLength = Config::get('crypto_iv_len');
                 // Content length
                 $data_length = ($chunkLength - $paddedLength - $ivLength);
             } else {

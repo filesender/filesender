@@ -87,10 +87,10 @@ $default = array(
     'download_chunk_size' => 5 * 1024 * 1024,
     
     'encryption_enabled' => true,
-    'upload_crypted_chunk_size' => 5 * 1024 * 1024 + 16 + 16, // the 2 times 16 are the padding added by the crypto algorithm, and the IV needed
-    'crypto_iv_len' => 16, // i dont think this will ever change, but lets just leave it as a config
-    'crypto_crypt_name' => "AES-CBC", // The encryption algorithm used
-    'crypto_hash_name' => "SHA-256", // The hash used to convert password to hashencryption_enabled
+    'upload_crypted_chunk_size' => 5 * 1024 * 1024 + 32 + 16, // 32 for IV, 16 checksum for AES-GCM/AES-CBC
+    'crypto_iv_len' => 32,
+    'crypto_crypt_name' => 'AES-GCM', // The encryption algorithm used
+    'crypto_hash_name' => 'SHA-256', // The hash used to convert password to hash
 
     'terasender_enabled' => true,
     'terasender_disableable' => true,

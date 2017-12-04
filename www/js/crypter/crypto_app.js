@@ -86,8 +86,8 @@ window.filesender.crypto_app = function () {
 
                     // For AES the length required to be 128 or 256 bits (not bytes)
                     { // derivedKeyAlgorithm
-                        name: 'AES-CBC',
-                        length: 128,
+                        name: 'AES-GCM',
+                        length: 256,
                     },
 
                     // Whether or not the key is extractable (less secure) or not (more secure)
@@ -103,12 +103,20 @@ window.filesender.crypto_app = function () {
             }, filesender.ui.log).then(callback, filesender.ui.log);
         },
         encryptBlob: function encryptBlob(value, password, callback) {
+            // NOTE: This function is used per blob.
+            // FileSender separates file uploads in blobs of a few megabytes each.
+            // Each blob will thus have its own initialization vector,
+            // which is included in the output.
+
             var $this = this;
-            
+
+            // Derive key from password and use it for encryption
             this.generateKey(password, function (key) {
                 // Use 32 bytes, or 256 bits, because SHA-256.
-                var iv = crypto.getRandomValues(new Uint8Array(16));
-                crypto.subtle.encrypt({name: 'AES-CBC', iv: iv}, key, value).then(
+                var iv = crypto.getRandomValues(new Uint8Array(32));
+                // Do the actual encryption
+                // Will call the callback with a bytestring consisting of the IV and the ciphertext
+                crypto.subtle.encrypt({name: 'AES-GCM', iv}, key, value).then(
                         function (result) {
 
                             var joinedData = window.filesender.crypto_common().joinIvAndData(iv, new Uint8Array(result));
@@ -143,7 +151,7 @@ window.filesender.crypto_app = function () {
 		var decryptLoop = function(i) {
 		    callbackProgress(i,encryptedData.length); //once per chunk
                     var value = window.filesender.crypto_common().separateIvFromData(encryptedData[i]);
-                    crypto.subtle.decrypt({name: $this.crypto_crypt_name, iv: value.iv}, key, value.data).then(
+                    crypto.subtle.decrypt({name: 'AES-GCM', iv: value.iv}, key, value.data).then(
                         function (result) {
                             var blobArrayBuffer = new Uint8Array(result);
                             blobArray.push(blobArrayBuffer);
