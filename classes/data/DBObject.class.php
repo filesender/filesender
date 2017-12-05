@@ -540,7 +540,7 @@ class DBObject {
         $values = array();
         
         // Filter
-        $key_names = is_array($key_name) ? $key_name : array($key_name);
+        $key_names = (array) $key_name;
         $key_names = array_filter($key_names);
         
         // Build update pairs

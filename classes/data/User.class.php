@@ -175,7 +175,7 @@ class User extends DBObject {
         $user = self::fromId($attributes['uid']);
         
         // Add metadata from attributes
-        if(array_key_exists('email', $attributes)) $user->email_addresses = is_array($attributes['email']) ? $attributes['email'] : array($attributes['email']);
+        if(array_key_exists('email', $attributes)) $user->email_addresses = (array) $attributes['email'];
         if(array_key_exists('name', $attributes)) $user->name = $attributes['name'];
         
         return $user;
