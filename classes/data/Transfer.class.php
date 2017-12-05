@@ -712,11 +712,11 @@ class Transfer extends DBObject {
             $this->message = (string)$value;
             
         }else if($property == 'expires') {
-            if(preg_match('`^[0-9]{4}-[0-9]{2}-[0-9]{2}$`', $value)) {
+            if(preg_match('`^\d{4}-\d{2}-\d{2}$`', $value)) {
                 $value = strtotime($value);
             }
             
-            if(!preg_match('`^[0-9]+$`', $value)) throw new BadExpireException($value);
+            if(!preg_match('`^\d+$`', $value)) throw new BadExpireException($value);
             
             $value = (int)$value;
             if($value < floor(time() / (24 * 3600)) || $value > self::getMaxExpire()) {

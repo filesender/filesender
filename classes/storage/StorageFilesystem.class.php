@@ -96,7 +96,7 @@ class StorageFilesystem {
         
         // Output should be similar to standard "du" output, that is with results on last line and filesystem name in first column
         $line = array_pop($out);
-        if(!preg_match('`^(/[^\s]+)`', $line, $match))
+        if(!preg_match('`^(/[^\S]+)`', $line, $match))
             throw new StorageFilesystemBadResolverOutputException($cmd, $line);
         
         return $match[1];

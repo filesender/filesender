@@ -79,13 +79,13 @@ class RestEndpointFile extends RestEndpoint {
         if(!$_GET['key']) // No key, need token
             return true;
 
-        if(($method == 'put') && preg_match('`^[0-9]+$`', $path)) // No need if key and signal upload complete
+        if(($method == 'put') && preg_match('`^\d+$`', $path)) // No need if key and signal upload complete
             return false;
 
-        if(($method == 'post') && preg_match('`^[0-9]+/whole$`', $path)) // No need if key and whole file upload
+        if(($method == 'post') && preg_match('`^\d+/whole$`', $path)) // No need if key and whole file upload
             return false;
         
-        if(($method == 'put') && preg_match('`^[0-9]+/chunk(/.*)?$`', $path)) // No need if key and chunk upload
+        if(($method == 'put') && preg_match('`^\d+/chunk(/.*)?$`', $path)) // No need if key and chunk upload
             return false;
         
         return true; // Need token for every other situation

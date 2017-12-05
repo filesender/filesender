@@ -287,7 +287,7 @@ class Utilities {
      */
     public static function sizeToBytes($size) {
         // Check format
-        if(!preg_match('`^([0-9]+)([ptgmk])?$`i', trim($size), $parts))
+        if(!preg_match('`^(\d+)([ptgmk])?$`i', trim($size), $parts))
             throw new BadSizeFormatException($size);
         
         $size = (int)$parts[1];
@@ -385,7 +385,7 @@ class Utilities {
             
             // Render potential tags useless by putting a space immediatelly after < which does not already have one
             $input = html_entity_decode($input, ENT_QUOTES, 'UTF-8');
-            $input = preg_replace('`<([^\s])`', '< $1', $input);
+            $input = preg_replace('`<([^\S])`', '< $1', $input);
             
             return $input;
         }

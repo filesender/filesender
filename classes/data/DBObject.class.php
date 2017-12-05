@@ -249,7 +249,7 @@ class DBObject {
             }
         }
         // Prepare query depending on contents
-        if(preg_match('`\s+[^\s]+\s+IN\s+:[^\s]+\b`i', $query)) {
+        if(preg_match('`\S+[^\S]+\s+IN\s+:[^\S]+\b`i', $query)) {
             $statement = DBI::prepareInQuery($query, array_filter($placeholders, 'is_array'));
         } else {
             $statement = DBI::prepare($query);
