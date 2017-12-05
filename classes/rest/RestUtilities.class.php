@@ -65,7 +65,7 @@ class RestUtilities {
      */
     public static function sendResponseCode($code = 200) {
         if(function_exists('http_response_code'))
-            return call_user_func('http_response_code', $code);
+            return http_response_code( $code );
             
         $messages = array(
             100 => 'Continue',
