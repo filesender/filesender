@@ -50,7 +50,7 @@ class Upgrader {
         $path = FILESENDER_BASE.'/scripts/upgrade/versions/';
         $files = array();
         foreach(scandir($path) as $i) {
-            if(!preg_match('`^upgrade_(\d+(?:\.\d+(?:[abr]c?)?)?)_(\d+(?:\.\d+(?:[abr]c?)?)?)\.php$`', $i, $m)) continue;
+            if(!preg_match('`^upgrade_([0-9]+(?:\.[0-9]+(?:[abr]c?)?)?)_([0-9]+(?:\.[0-9]+(?:[abr]c?)?)?)\.php$`', $i, $m)) continue;
             
             if(version_compare($m[1], $from) < 0) continue; // Starting below from
             if(version_compare($m[2], $to) > 0) continue; // Starting below from

@@ -123,7 +123,7 @@ class FeedbackMailHeaders {
         // Parse individual headers
         foreach($entries as $entry) {
             // Skip if bad format
-            if(preg_match('/^([^\S]+):(.+)$/', $entry, $m)) {
+            if(preg_match('/^([^\s]+):(.+)$/', $entry, $m)) {
                 $key = str_replace('-', '_', strtolower($m[1]));
                 $value = trim(mb_decode_mimeheader($m[2]));
                 
