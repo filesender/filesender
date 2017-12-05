@@ -123,7 +123,7 @@ class RestEndpointTransfer extends RestEndpoint {
      */
     public function get($id = null, $property = null, $property_id = null) {
         // Special case when checking if enable_recipient_email_download_complete option is enabled for a specific transfer 
-        if($property == 'options' && in_array($property_id, array('enable_recipient_email_download_complete'))) {
+        if($property == 'options' && 'enable_recipient_email_download_complete' == $property_id ) {
             
             // Check that we have a valid token in the url
             if(!array_key_exists('token', $_GET)) throw new RestBadParameterException('token');
