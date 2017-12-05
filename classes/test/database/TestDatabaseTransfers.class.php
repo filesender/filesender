@@ -112,7 +112,7 @@ class TestDatabaseTransfers {
     {
         if( strlen($path)) {
             if( $path[0] != '/' ) {
-                $dataset = dirname(__FILE__) . '/../../../unittests/data/dataset/';
+                $dataset = __DIR__ . '/../../../unittests/data/dataset/';
                 $path = $dataset . $path;
             }
         }

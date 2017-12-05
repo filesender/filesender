@@ -34,7 +34,7 @@ if(PHP_INT_SIZE !== 8) {
     die('FileSender requires a 64-bit PHP installation to work. Please contact your administrator.');
 }
 
-define('FILESENDER_BASE', dirname(dirname(__FILE__)));
+define('FILESENDER_BASE', dirname( __DIR__ ));
 
 // Include classes autoloader
 require_once(FILESENDER_BASE.'/classes/autoload.php');
@@ -47,10 +47,10 @@ mb_internal_encoding('UTF-8');
 
 if (php_sapi_name() === 'cli'){
     // Command Line Interface
-    include dirname(dirname(__FILE__)).'/includes/init/init_cli.php';
+    include dirname( __DIR__ ) . '/includes/init/init_cli.php';
     Logger::setProcess(ProcessTypes::CLI);
 }else{
     // Default, web server
-    include dirname(dirname(__FILE__)).'/includes/init/init_web.php';
+    include dirname( __DIR__ ) . '/includes/init/init_web.php';
     Logger::setProcess(ProcessTypes::WEB);
 }
