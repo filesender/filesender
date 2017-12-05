@@ -91,10 +91,10 @@ class RestEndpointTransfer extends RestEndpoint {
         if(!$_GET['key']) // No key, need token
             return true;
         
-        if(($method == 'put') && preg_match('`^[0-9]+$`', $path)) // No need if key and transfer properties set
+        if(($method == 'put') && preg_match('`^\d+$`', $path)) // No need if key and transfer properties set
             return false;
         
-        if(($method == 'delete') && preg_match('`^[0-9]+$`', $path)) // No need if key and transfer delete
+        if(($method == 'delete') && preg_match('`^\d+$`', $path)) // No need if key and transfer delete
             return false;
         
         return true; // Need token for every other situation

@@ -197,7 +197,7 @@ class RestServer {
             foreach($_GET as $k => $v) switch($k) {
                 case 'count' :
                 case 'startIndex' :
-                    if(preg_match('`^[0-9]+$`', $v)) $request->$k = (int)$v;
+                    if(preg_match('`^\d+$`', $v)) $request->$k = (int)$v;
                     break;
                 
                 case 'format' :
@@ -221,15 +221,15 @@ class RestServer {
                 case 'updatedSince' :
                     // updatedSince takes ISO date, relative N days|weeks|months|years format and epoch timestamp (UTC)
                     $updatedSince = null;
-                    if(preg_match('`^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(Z|[+-][0-9]{2}:[0-9]{2})$`', $v)) {
+                    if(preg_match('`^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(Z|[+-]\d{2}:\d{2})$`', $v)) {
                         // ISO date
                         $localetz = new DateTimeZone(Config::get('default_timezone'));
                         $offset = $localetz->getOffset(new DateTime($v));
                         $updatedSince = strtotime($v) + $offset;
-                    }else if(preg_match('`^([0-9]+)\s*(hour|day|week|month|year)s?$`', $v, $m)) {
+                    }else if(preg_match('`^(\d+)\s*(hour|day|week|month|year)s?$`', $v, $m)) {
                         // Relative N day|days|week|weeks|month|months|year|years format
                         $updatedSince = strtotime('-'.$m[1].' '.$m[2]);
-                    }else if(preg_match('`^[0-9]+$`', $v)) $updatedSince = (int)$v; // Epoch timestamp
+                    }else if(preg_match('`^\d+$`', $v)) $updatedSince = (int)$v; // Epoch timestamp
                     
                     if(!$updatedSince || !is_numeric($updatedSince))
                         throw new RestException('rest_updatedsince_bad_format', 400, array('since' => $updatedSince));

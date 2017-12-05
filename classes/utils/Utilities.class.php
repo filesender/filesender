@@ -287,7 +287,7 @@ class Utilities {
      */
     public static function sizeToBytes($size) {
         // Check format
-        if(!preg_match('`^([0-9]+)([ptgmk])?$`i', trim($size), $parts))
+        if(!preg_match('`^(\d+)([ptgmk])?$`i', trim($size), $parts))
             throw new BadSizeFormatException($size);
         
         $size = (int)$parts[1];
