@@ -190,7 +190,7 @@ class Lang {
                             $part = array_map('trim', explode(';', $part));
                             $code = array_shift($part);
                             foreach($part as $p)
-                                if(preg_match('`^q=(\d+\.\d+)$`', $p, $m))
+                                if(preg_match('`^q=([0-9]+\.[0-9]+)$`', $p, $m))
                                     $weight = (float)$m[1];
                         }
                         $codes[$code] = $weight;
@@ -687,7 +687,7 @@ class Translation {
                     if(is_numeric($entry) && !is_float($entry))
                         $entry = (int)$entry;
                     
-                    if(preg_match('`^(first|nth|last)\((\d*\))`', $entry, $m)) {
+                    if(preg_match('`^(first|nth|last)\(([0-9]*\))`', $entry, $m)) {
                         $keys = array_keys($value);
                         switch($m[1]) {
                             case 'first': $entry = reset($keys); break;

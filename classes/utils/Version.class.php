@@ -60,7 +60,7 @@ class Version {
         foreach(explode("\n", file_get_contents($file)) as $line) {
             $line = strtolower(trim($line));
             if(substr($line, 0, 1) == '#') continue;
-            if(!preg_match('`^(\d+(?:\.\d+(?:[abr]c?)?)?)`', $line, $m)) continue;
+            if(!preg_match('`^([0-9]+(?:\.[0-9]+(?:[abr]c?)?)?)`', $line, $m)) continue;
             return $m[1];
         }
         
