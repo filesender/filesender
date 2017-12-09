@@ -296,7 +296,10 @@ class DatabaseMysql {
      * @param array $problems problematic options
      */
     public static function updateTableColumnFormat($table, $column, $definition, $problems) {
-        $query = 'ALTER TABLE '.$table.' MODIFY '.$column.' '.self::columnDefinition($definition);
+        $localdef = $definition;
+        if(array_key_exists('primary', $localdef) && $localdef['primary'])
+            $localdef['primary'] = false;
+        $query = 'ALTER TABLE '.$table.' MODIFY '.$column.' '.self::columnDefinition($localdef);
         DBI::exec($query);
     }
     

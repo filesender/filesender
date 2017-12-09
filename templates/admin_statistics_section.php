@@ -190,7 +190,7 @@ foreach($result as $row) {
     
     //echo '<tr><td colspan="11">'.nl2br(str_replace(' ','&nbsp;',json_encode($a,JSON_PRETTY_PRINT))).'</td></tr>';
     $transfered+=$row['transfered'];
-    $transfers+=$row['Count'];
+    $transfers+=$row['count'];
     $firstTransfer=min($firstTransfer,$row['firsttransfer']);    
 }
 echo '</table>';

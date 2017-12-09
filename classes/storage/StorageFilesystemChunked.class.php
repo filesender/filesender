@@ -33,6 +33,7 @@
 
 if (!defined('FILESENDER_BASE')) die('Missing environment');
 
+
 /**
  *  Gives access to a file on the filesystem 
  *
@@ -44,8 +45,14 @@ if (!defined('FILESENDER_BASE')) die('Missing environment');
 class StorageFilesystemChunked extends StorageFilesystem {
     
     
+    public static function getOffsetWithinChunkedFile($file_path,$offset) {
+        $file_chunk_size = Config::get('upload_chunk_size');
+        return ($offset % $file_chunk_size);
+    }
     
-    private static function getChunkFilename($file_path,$offset) {
+    public static function getChunkFilename($file_path,$offset) {
+        $file_chunk_size = Config::get('upload_chunk_size');
+        $offset = $offset - ($offset % $file_chunk_size);
 	return $file_path.'/'.str_pad($offset,24,'0',STR_PAD_LEFT);
     }
 
@@ -192,5 +199,12 @@ class StorageFilesystemChunked extends StorageFilesystem {
     public static function storeWholeFile(File $file, $source_path) {
 	return self::writeChunk($file, file_get_contents($source_path), 0);
     }
-    
+
+    public static function getStream(File $file) {
+        StorageFilesystemChunkedStream::ensureRegistered();
+        $path = "StorageFilesystemChunkedStream://" . $file->uid;
+        $fp = fopen( $path, "r+");
+        return $fp;
+    }
+
 }
