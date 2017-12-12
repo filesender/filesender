@@ -82,7 +82,7 @@ class Mail {
     private $attachments = array();
     
     /**
-     * Additionnal headers
+     * Additional headers
      */
     private $headers = array();
     
@@ -302,7 +302,7 @@ class Mail {
      * @return mixed
      */
     public function build($raw = false) {
-        // Additionnal headers
+        // Additional headers
         $headers = $this->headers;
         
         // Generate Message-Id if none
