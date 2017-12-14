@@ -221,6 +221,9 @@ class Config {
             'Maybe you have set $config["log_facilities"] = array("type" => "file",...) instead of $config["log_facilities"] = array(array("type" => "file",...))' );
         }
 
+        // verify classes are happy
+        Guest::validateConfig();
+        
     }
             
     /**
