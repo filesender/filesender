@@ -96,7 +96,10 @@ class StorageFilesystem {
         
         // Output should be similar to standard "du" output, that is with results on last line and filesystem name in first column
         $line = array_pop($out);
-        if(!preg_match('`^(/[^\s]+)`', $line, $match))
+        // We match local and remove paths like the following examples:
+        //      /something
+        //      nfsserver:/path
+        if(!preg_match('`^(/[^\s]+|[^:\s]+:[^\s]+)`', $line, $match))
             throw new StorageFilesystemBadResolverOutputException($cmd, $line);
         
         return $match[1];
@@ -116,7 +119,7 @@ class StorageFilesystem {
         // If the user is doing something with FUSE
         // then they might not want to check disk space.
         if( Config::get('storage_filesystem_ignore_disk_full_check')) {
-                return true;
+            return true;
         }
         
         
@@ -209,17 +212,23 @@ class StorageFilesystem {
         }
         
         // Get space usage for each possible path
+        // but if the path isn't used yet, don't try to df that path
         $filesystems = array();
         foreach($paths as $path) {
-            $filesystem = self::getFilesystem(self::$path.$path);
-            
-            if(!array_key_exists($filesystem, $filesystems)) $filesystems[$filesystem] = array(
-                'total_space' => disk_total_space(self::$path.$path),
-                'free_space' => disk_free_space(self::$path.$path),
-                'paths' => array()
-            );
-            
-            $filesystems[$filesystem]['paths'][] = $path;
+            $subdirPath = self::$path.$path;
+            if( is_dir($subdirPath)) {
+                $filesystem = self::getFilesystem( $subdirPath );
+                
+                if(!array_key_exists($filesystem, $filesystems)) {
+                    $filesystems[$filesystem] = array(
+                        'total_space' => disk_total_space( $subdirPath ),
+                        'free_space'  => disk_free_space(  $subdirPath ),
+                        'paths' => array()
+                    );
+                }
+                
+                $filesystems[$filesystem]['paths'][] = $path;
+            }
         }
         
         // Sort by filesystem name
@@ -268,6 +277,9 @@ class StorageFilesystem {
                     $p .= '/';
                 }
             }
+
+            // caller is expecting the subpath to be in the return value
+            $path = $p;
         }
         
         return $path;
@@ -327,7 +339,7 @@ class StorageFilesystem {
         $chunk_size = strlen($data);
         
         $path = self::buildPath($file);
-        
+
         $free_space = disk_free_space($path);
         if($free_space <= $chunk_size)
             throw new StorageNotEnoughSpaceLeftException($chunk_size);
