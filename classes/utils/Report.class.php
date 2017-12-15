@@ -35,8 +35,6 @@ if (!defined('FILESENDER_BASE'))
     die('Missing environment');
 
 
-require_once(FILESENDER_BASE.'/lib/dompdf/dompdf_config.inc.php');
-
 /**
  * Report class
  */

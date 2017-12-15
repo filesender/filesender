@@ -158,7 +158,7 @@ class Auth {
                 // Set user if got uid attribute
                 self::$user = User::fromAttributes(self::$attributes);
                 
-                // Save user additionnal attributes if enabled
+                // Save user additional attributes if enabled
                 if(self::isSP() && Config::get('auth_sp_save_user_additional_attributes'))
                     self::$user->additional_attributes = self::$attributes['additional'];
                 

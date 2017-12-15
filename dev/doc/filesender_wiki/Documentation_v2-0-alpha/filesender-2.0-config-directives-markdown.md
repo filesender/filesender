@@ -1278,7 +1278,7 @@ array (idApp => secret(string), isAdmin(bool), acl (array (endpoint(ou *) => boo
 /file/[0-9]+/whole : legacy upload endpoint
 /user/@me/remote_auth_config : enabled only if remote user authentication is enabled
 
-Additionnal allowed endpoints can be added through the "rest_allow_jsonp"
+Additional allowed endpoints can be added through the "rest_allow_jsonp"
 configuration parameter (array of regexp to match the resource path
 under rest.php), example :
 
