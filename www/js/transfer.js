@@ -307,7 +307,15 @@ window.filesender.transfer = function() {
      * Check if restart is supported (local storage is available and html5 upload as well)
      */
     this.isRestartSupported = function() {
-        return ('localStorage' in window) && (window['localStorage'] !== null) && filesender.supports.reader;
+        try {
+            return ('localStorage' in window) && (window['localStorage'] !== null) && filesender.supports.reader;
+        } catch (e) {
+            // Internet Explorer may throw an exception when trying to use localStorage
+            // while it is forbidden for security reasons.  Returning false will keep
+            // FileSender running, just disabling features that Internet Explorer won't
+            // let us use.
+            return false;
+        }
     };
     
     /**
