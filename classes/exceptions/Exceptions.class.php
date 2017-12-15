@@ -172,7 +172,7 @@ class DetailedException extends LoggingException {
             
             if (is_scalar($detail)) {
                 if(is_bool($detail)) {
-                    $detail = $details ? 'true' : 'false';
+                    $detail = $detail ? 'true' : 'false';
                 } else if(!is_int($detail) && !is_float($detail)) {
                     $detail = '"'.$detail.'"';
                 }
