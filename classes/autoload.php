@@ -81,6 +81,8 @@ class Autoloader {
 
         'TestDatabase*' => 'test/database/',
 
+        'PHPZipStreamer*' => '/PHPZipStreamer/src/',
+
         // Must be last
         '*' => 'utils/' 
     );
@@ -105,8 +107,15 @@ class Autoloader {
                 $file .= '.class.php';
                 
                 if(!file_exists($file)) {
-                    Logger::debug('Looking for class '.$class.', expecting it at '.$file.' but nothing found, may (or may not) be a problem ...');
-                    return;
+
+                    $file = FILESENDER_BASE.'/lib/'.$path;
+                    if(!$path || substr($path, -1) == '/') $file .= str_replace('\\','/',$class);
+                    $file .= '.php';
+
+                    if(!file_exists($file)) {
+                        Logger::error('Looking for class '.$class.', expecting it at '.$file.' but nothing found, may (or may not) be a problem ...');
+                        return;
+                    }
                 }
                 
                 require_once $file;

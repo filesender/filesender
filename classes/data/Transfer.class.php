@@ -190,10 +190,15 @@ class Transfer extends DBObject {
      * 
      * @return array of Transfer
      */
-    public static function fromUser($user, $closed = false) {
+    public static function fromUser($user, $closed = false, $limit = null, $offset = null ) {
         if($user instanceof User) $user = $user->id;
-        
-        return self::all($closed ? self::FROM_USER_CLOSED : self::FROM_USER, array(':user_id' => $user));
+
+        return self::all(array('where' => $closed ? self::FROM_USER_CLOSED : self::FROM_USER
+                               ,'limit' => $limit
+                               ,'offset' => $offset
+                               )
+                         , array(':user_id' => $user)
+                         );
     }
     
     /**

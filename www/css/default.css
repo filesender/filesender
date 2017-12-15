@@ -337,6 +337,11 @@ table.list thead tr {
     font-weight: bold;
 }
 
+.pager_bottom_nav {
+    background-color: #eee;
+    text-align: right;
+}
+
 table.list th {
     text-align: center;
 }
@@ -1252,4 +1257,24 @@ table.guests .guest .to .errors .details {
     display: none;
 }
 
-
+table.paginator .pageprev0 {
+    width: 2em;
+    text-align: center;
+}
+table.paginator .pageprev {
+    width: 1em;
+    text-align: center;
+}
+table.paginator .pagenext {
+    width: 1em;
+    text-align: center;
+}
+table.paginator .pageheader {
+    text-align: left;
+    font-size: 1.15em;
+    font-weight: bold;
+    vertical-align: middle;
+}
+table.paginator a {
+    text-decoration: none;
+}

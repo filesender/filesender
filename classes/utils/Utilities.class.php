@@ -552,4 +552,44 @@ class Utilities {
             return true;  
         return false;
     }
+
+    /**
+     * Read a value from an array validating the result. 
+     * If the array doesn't have the key or validation fails
+     * then return a default value.
+     *
+     * filtering is optional but highly recommended. If you want an int then
+     * ask for one to be validated as such
+     * 
+     * filter is from http://php.net/manual/en/filter.filters.validate.php
+     */
+    public static function arrayKeyOrDefault( $array, $key, $def, $filter = FILTER_DEFAULT ) {
+        $r = $def;
+        if( array_key_exists($key,$array)) {
+            $t = $array[$key];
+            if(isset($t))
+                $r = $t;
+        }
+
+        $options = array(
+            'options' => array( 'default' => $def ),
+        );
+        $r = filter_var( $r, $filter, $options);
+        return $r;
+    }
+
+    /**
+     * true if $v is array( array( ... ) )
+     */
+    public static function is_array_of_array( $v ) {
+            if( !is_array($v)) {
+                return false;
+            }
+            $sl = array_slice($v,0,1);
+            if( is_array(array_shift($sl))) {
+                return true;
+            }
+            return false;
+    }
+
 }

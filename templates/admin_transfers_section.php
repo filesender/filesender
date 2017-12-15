@@ -14,19 +14,23 @@ $transfers_page = function($status) {
         
     $offset = array_key_exists($status.'_tpo', $_REQUEST) ? (int)$_REQUEST[$status.'_tpo'] : 0;
     $offset = max(0, $offset);
-    
-    $page = Transfer::all(array('where' => $selector, 'count' => $page_size, 'offset' => $offset));
+
+    // FIXME: move the code away from wanting to know the total.
+    //       if the user has 1000 tuples do we really want to show 1000/15 direct page links
+    //       or should we instead allow queries on timeframe etc.
+    $total_count = 100;
+    $entries = Transfer::all(array('where' => $selector, 'count' => $page_size, 'offset' => $offset));
     
     $navigation = '<div class="transfers_list_page_navigation">'."\n";
     
     if($offset) {
         $po = max(0, $offset - $page_size);
-        $navigation .= '<a href="?s=admin&as=transfers&'.$status.'_tpo=0#'.$status.'_transfers">&lt;&lt;</a>'."\n";
-        $navigation .= '<a href="?s=admin&as=transfers&'.$status.'_tpo='.$po.'#'.$status.'_transfers">&lt;</a>'."\n";
+        $navigation .= '<a href="?s=admin&as=transfers&'.$status.'_tpo=0#'.$status.'_transfers"><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i class="fa fa-angle-double-left fa-stack-1x fa-inverse"></i></span></a>'."\n";
+        $navigation .= '<a href="?s=admin&as=transfers&'.$status.'_tpo='.$po.'#'.$status.'_transfers"><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i class="fa fa-angle-left fa-stack-1x fa-inverse"></i></span></a>'."\n";
     }
     
     $p = 1;
-    for($o=0; $o<$page->total_count; $o+=$page_size) {
+    for($o=0; $o<$total_count; $o+=$page_size) {
         if($o >= $offset && $o < $offset + $page_size) {
             $navigation .= '<span>'.$p.'</span>'."\n";
         } else {
@@ -36,25 +40,25 @@ $transfers_page = function($status) {
         $p++;
     }
     
-    if($offset + $page_size < $page->total_count) {
+    if($offset + $page_size < $total_count) {
         $no = $offset + $page_size;
-        $lo = $page->total_count - ($page->total_count % $page_size);
-        $navigation .= '<a href="?s=admin&as=transfers&'.$status.'_tpo='.$no.'#'.$status.'_transfers">&gt;</a>'."\n";
-        $navigation .= '<a href="?s=admin&as=transfers&'.$status.'_tpo='.$lo.'#'.$status.'_transfers">&gt;&gt;</a>'."\n";
+        $lo = $total_count - ($total_count % $page_size);
+        $navigation .= '<a href="?s=admin&as=transfers&'.$status.'_tpo='.$no.'#'.$status.'_transfers"><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i class="fa fa-angle-right fa-stack-1x fa-inverse"></i></span></a>'."\n";
+        $navigation .= '<a href="?s=admin&as=transfers&'.$status.'_tpo='.$lo.'#'.$status.'_transfers"><span class="fa-stack"><i class="fa fa-square fa-stack-2x"></i><i class="fa fa-angle-double-right fa-stack-1x fa-inverse"></i></span></a>'."\n";
     }
     
     $navigation .= '</div>'."\n";
     
-    if($page->total_count > $page_size)
+    if($total_count > $page_size)
         echo $navigation;
     
     Template::display('transfers_table', array(
         'status' => $status,
         'mode' => 'admin',
-        'transfers' => $page->entries
+        'transfers' => $entries
     ));
     
-    if($page->total_count > $page_size)
+    if($total_count > $page_size)
         echo $navigation;
 };
 

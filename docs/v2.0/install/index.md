@@ -1,8 +1,8 @@
 ---
-title: Installation - Linux Source 2.0-Beta1 from Git
+title: Installation - Linux Source 2.0-Beta2 from Git
 ---
 
-# Installation FileSender 2.0 Beta1
+# Installation FileSender 2.0 Beta2
 
 _This documentation is under development. It was created by installing FileSender on a CentOS 7 and Debian 8 machine._
 
@@ -16,7 +16,7 @@ If you notice mistakes in this documentation, or if it took you more than an hou
 
 ## About this documentation
 
-This is the installation documentation for installing the **FileSender 2.0-beta version Git snapshots** on Linux. See the [releases](https://github.com/filesender/filesender/releases) page for up to date information about recent releases. This guide is written for installation from source on the RedHat/CentOS or Debian platform but any Linux variant `should work with some modifications (most notably about installing the required additional software packages).
+This is the installation documentation for installing the **FileSender 2.0-beta version Git snapshots** on Linux. See the [releases](https://github.com/filesender/filesender/releases) page for up to date information about recent releases. This guide is written for installation from source on the RedHat/CentOS or Debian platform but any Linux variant should work with some modifications (most notably about installing the required additional software packages).
 
 ### This documentation was tested with
 
@@ -25,7 +25,7 @@ This is the installation documentation for installing the **FileSender 2.0-beta 
 
 ### Dependencies
 
-* SimpleSamlPhp 1.13 or newer.
+* SimpleSamlPhp 1.14.16 or newer.
 * Apache and PHP from your distribution.
 * A PostgreSQL or MySQL database.
 * A big filesystem.
@@ -60,9 +60,9 @@ information about recent releases.
 
 	cd /opt/filesender/
 	git clone https://github.com/filesender/filesender.git filesender-2.0
-        cd filesender-2.0
-        git checkout filesender-2.0-beta1
-        cd ..
+		cd filesender-2.0
+		git checkout filesender-2.0-beta2
+		cd ..
 	ln -s filesender-2.0/ filesender
 
 Initialise config file and set permissions right. Make the files, tmp and log directories writable by the web daemon user (`apache` on RedHat/CentOS, `www-data` on Debian), copy the config file in place from the template and allow the web daemon user to read the config.php configuration file:
@@ -101,7 +101,7 @@ Other [(later or older) versions](https://simplesamlphp.org/archive) will probab
 	cd /root
 	mkdir filesender
 	cd filesender
-	wget https://simplesamlphp.org/res/downloads/simplesamlphp-1.14.13.tar.gz
+	wget https://simplesamlphp.org/res/downloads/simplesamlphp-1.14.16.tar.gz
 
 * **NOTE**: you will of course remember to check [the sha256 hash of the tar file](https://simplesamlphp.org/archive), right?
 
@@ -109,8 +109,8 @@ Extract it in a suitable directory and create symlink:
 
 	mkdir /opt/filesender/
 	cd /opt/filesender
-	tar xvzf /root/filesender/simplesamlphp-1.14.13.tar.gz
-	ln -s simplesamlphp-1.14.13/ simplesaml
+	tar xvzf /root/filesender/simplesamlphp-1.14.16.tar.gz
+	ln -s simplesamlphp-1.14.16/ simplesaml
 
 * **SECURITY NOTE**: we only want *the user interface files* to be directly accessible for the world through the web server, not any of the other files. We will not extract the SimpleSAMLphp package in the `/var/www` directory (the standard Apache document root) but rather in a specific `/opt` tree. We'll point to the SimpleSAML web root with a web server alias.
 
@@ -203,7 +203,7 @@ Create the filesender database:
 	mysql -u root -p
 	CREATE DATABASE `filesender` DEFAULT CHARACTER SET utf8;
 	GRANT USAGE ON *.* TO 'filesender'@'localhost' IDENTIFIED BY '<your password>';
-	GRANT CREATE, ALTER, SELECT, INSERT, UPDATE, DELETE ON `filesender`.* TO 'filesender'@'localhost';
+	GRANT CREATE, ALTER, SELECT, INSERT, INDEX, UPDATE, DELETE ON `filesender`.* TO 'filesender'@'localhost';
 	FLUSH PRIVILEGES;
 	exit
 
