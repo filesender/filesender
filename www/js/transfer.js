@@ -976,11 +976,13 @@ window.filesender.transfer = function() {
             file.uploaded = file.size;
         
         var last = file.uploaded >= file.size;
+        var fncache = file.name;
         if (last)
             this.file_index++;
+        var was_last_file = transfer.file_index >= transfer.files.length;
         
         this.recordUploadStartedInWatchdog('main');
-        
+
         this.uploader = filesender.client.putChunk(
             file, blob, offset,
             function(ratio) { // Progress
@@ -993,8 +995,9 @@ window.filesender.transfer = function() {
                 
                 if (last) { // File done
                     transfer.reportProgress(file, function() {
-                        if(transfer.file_index >= transfer.files.length)
-                            transfer.reportComplete();                            
+                        if(was_last_file) {
+                            transfer.reportComplete();
+                        }
                     });
                     
                     
