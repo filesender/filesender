@@ -746,11 +746,20 @@ class Transfer extends DBObject {
 
         // padding on the last chunk of the file
         // may not be a full chunk so need to calculate
-        $lastChunkPadding = 16 - $lastChunkSize % 16;
-        if ($lastChunkPadding == 0)
-            $lastChunkPadding = 16;
-            
-        return $file->size + ($chunksMinusOne * $echunkdiff) + $lastChunkPadding + 16;
+        switch(Config::get('crypto_crypt_name')) {
+            case 'AES-CBC': {
+                $lastChunkPadding = 16 - $lastChunkSize % 16;
+                if ($lastChunkPadding == 0)
+                    $lastChunkPadding = 16;
+                break;
+            }
+            case 'AES-GCM': {
+                $lastChunkPadding = 16;
+                break;
+            }
+            default: throw new ConfigBadParameterException('crypto_crypt_name');
+        }
+        return $file->size + ($chunksMinusOne * $echunkdiff) + $lastChunkPadding + Config::get('crypto_iv_len');
     }
 
     /**

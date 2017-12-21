@@ -284,12 +284,22 @@ class RestEndpointFile extends RestEndpoint {
                 // Calculate the correct length
                 $chunkLength = strlen($data);
                 // The encryption adds padding and a checksum
-                $paddedLength = 16 - $client['X-Filesender-Chunk-Size'] % 16;
-                if ($paddedLength == 0) {
-                    $paddedLength = 16;
+                switch(Config::get('crypto_crypt_name')) {
+                    case 'AES-CBC': {
+                        $paddedLength = 16 - $client['X-Filesender-Chunk-Size'] % 16;
+                        if ($paddedLength == 0) {
+                            $paddedLength = 16;
+                        }
+                        break;
+                    }
+                    case 'AES-GCM': {
+                        $paddedLength = 16;
+                        break;
+                    }
+                    default: throw new ConfigBadParameterException('crypto_crypt_name');
                 }
                 // The initialization vector
-                $ivLength = 16;
+                $ivLength = Config::get('crypto_iv_len');
                 // Content length
                 $data_length = ($chunkLength - $paddedLength - $ivLength);
             } else {

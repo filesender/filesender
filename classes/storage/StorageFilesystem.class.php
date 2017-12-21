@@ -393,7 +393,7 @@ class StorageFilesystem {
 
         if($file->transfer->options['encryption']){
             if($size != $file->encrypted_size)
-                throw new FileIntegrityCheckFailedException($file, 'Expected size was '.$file->size.' but size on disk is '.$size);
+                throw new FileIntegrityCheckFailedException($file, 'Expected size was '.$file->encrypted_size.' but size on disk is '.$size);
         }else{
             if($size != $file->size)
                 throw new FileIntegrityCheckFailedException($file, 'Expected size was '.$file->size.' but size on disk is '.$size);

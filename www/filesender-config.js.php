@@ -83,7 +83,9 @@ window.filesender.config = {
     upload_crypted_chunk_size: '<?php echo Config::get('upload_crypted_chunk_size') ?>',
     crypto_iv_len: '<?php echo Config::get('crypto_iv_len') ?>',
     crypto_crypt_name: '<?php echo Config::get('crypto_crypt_name') ?>',
+    crypto_crypt_length: '<?php echo Config::get('crypto_crypt_length') ?>',
     crypto_hash_name: '<?php echo Config::get('crypto_hash_name') ?>',
+    crypto_hash_iterations: '<?php echo Config::get('crypto_hash_iterations') ?>',
 
     terasender_enabled: <?php  echo value_to_TF(Config::get('terasender_enabled')) ?>,
     terasender_advanced: <?php echo value_to_TF(Config::get('terasender_advanced')) ?>,
