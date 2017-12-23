@@ -82,6 +82,12 @@ window.filesender.transfer = function() {
         
         /**
          * Max duration divergence (the maximum ratio between a process's current upload time and the global average)
+         * 
+         * Assume the workers current duration is 'd' then a worker is late if:
+         * 'd' is > d*average(worker duration history in durations_horizon) * duration_divergence
+         *
+         * there are extra provisions added to allow more time scope for workers when there isn't a full 
+         * collection of durations_horizon as startup might be more volatile than later chunk uploads.
          */
         if(!cfg.duration_divergence) cfg.duration_divergence = 7;
         
@@ -89,6 +95,11 @@ window.filesender.transfer = function() {
          * Max automatic retries
          */
         if(!cfg.automatic_retries) cfg.automatic_retries = 3;
+
+        /**
+         * number of durations to keep for each worker
+         */
+        if(!cfg.durations_horizon) cfg.durations_horizon = 5;
     }
     
     this.stalling_detection = cfg;
@@ -566,8 +577,9 @@ window.filesender.transfer = function() {
         
         this.watchdog_processes[id].count++;
         this.watchdog_processes[id].durations.push((new Date()).getTime() - this.watchdog_processes[id].started);
-        while(this.watchdog_processes[id].durations.length > 5) this.watchdog_processes[id].durations.shift();
-        
+        while(this.watchdog_processes[id].durations.length > this.stalling_detection.durations_horizon) {
+            this.watchdog_processes[id].durations.shift();
+        }
         this.watchdog_processes[id].started = null;
     };
     
@@ -580,32 +592,39 @@ window.filesender.transfer = function() {
         if(!this.stalling_detection) return null;
         
         var stalled = [];
-        
+
         // Compute average upload time and progress
         var avg_count = 0;
         var pcnt = 0;
-        var avg_duration = 0;
-        var dcnt = 0;
         for(var id in this.watchdog_processes) {
             pcnt++;
             avg_count += this.watchdog_processes[id].count;
+        }        
+        for(var id in this.watchdog_processes) {
+            // clear old caches
+            this.watchdog_processes[id].durations_average = 0;
+            this.watchdog_processes[id].durations_count   = 0;
+            this.watchdog_processes[id].durations_max     = 0;
+
+            // prepare to calc average for process
+            // keep the max time a recent chunk took as well
             for(var i=0; i<this.watchdog_processes[id].durations.length; i++) {
-                avg_duration += this.watchdog_processes[id].durations[i];
-                dcnt++;
+                this.watchdog_processes[id].durations_average += this.watchdog_processes[id].durations[i];
+                this.watchdog_processes[id].durations_max = Math.max(this.watchdog_processes[id].durations_max,
+                                                                     this.watchdog_processes[id].durations[i]);
+            }
+            
+            // convert the sum to the mean
+            if( this.watchdog_processes[id].durations.length ) {
+                this.watchdog_processes[id].durations_average /= this.watchdog_processes[id].durations.length;
             }
         }
         if(pcnt) avg_count /= pcnt;
-        if(dcnt) avg_duration /= dcnt;
         
         var way_too_late = false;
         
         // Look for processes that seems "late"
         for(var id in this.watchdog_processes) {
-            if(this.watchdog_processes[id].count < avg_count - this.stalling_detection.count_divergence) {
-                // Process is too late in terms of number of uploaded chunks
-                stalled.push(id);
-                continue;
-            }
             
             if(this.watchdog_processes[id].started == null) continue;
             
@@ -613,11 +632,32 @@ window.filesender.transfer = function() {
             
             if(duration > 3600 * 1000) // 1h, CSRF token lifetime
                 way_too_late++;
+
+            //
+            // the purpose of early_scale is to allow the system to be
+            // more open to the duration varying when we do not
+            // already have time data for a lot of chunks.
+            //
+            // On the first chunk or two we allow multiple times the
+            // stalling_detection.duration_divergence to pass before
+            // we think something is wrong because we have little
+            // support to know if current performance is a divergence
+            // from the past.
+            //
+            // over time early_scale will tend towards being "1" this
+            // will be when we have all entries up to
+            // durations_horizon so at that time we do not add any
+            // extra slack to the system
+            //
+            var early_scale = this.stalling_detection.durations_horizon - this.watchdog_processes[id].durations.length + 1;
+            var duration_divergence = this.stalling_detection.duration_divergence * early_scale;
             
-            if(duration > avg_duration * this.stalling_detection.duration_divergence) {
-                // Process is too late in terms of number of upload duration
-                stalled.push(id);
-                continue;
+            if( this.watchdog_processes[id].durations_count ) {
+                if(duration > this.watchdog_processes[id].durations_average * duration_divergence) {
+                    // Process is too late in terms of number of upload duration
+                    stalled.push(id);
+                    continue;
+                }
             }
         }
         
