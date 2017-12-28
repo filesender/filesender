@@ -1,6 +1,6 @@
 <?php
 /*
- * Store the file as chunks instead of as a single file on disk.
+ * Store the file using external script
  *
  * FileSender www.filesender.org
  *
@@ -37,9 +37,9 @@ if (!defined('FILESENDER_BASE')) die('Missing environment');
 /**
  *  Gives access to a file on the filesystem 
  *
- *  This class stores the chunks that are sent as individual files 
+ *  This class stores the file using external script
  *
- *  One use case for this is to use FUSE to efficiently hand the data off to EOS
+ *  One use case for this is to use python xroot to efficiently hand the data off to EOS
  *  https://twiki.cern.ch/twiki/bin/view/EOS/WebHome 
  */
 class StorageFilesystemExternal extends StorageFilesystem {
@@ -112,9 +112,7 @@ class StorageFilesystemExternal extends StorageFilesystem {
 
 	$out=self::run('fs_readChunk "'.$file->uid.'" '.$offset.' '.$length);
 	if ($out['status']!=0) {
-		//something bad
-        	//if(!file_exists($chunkFile))
-	        //    throw new StorageFilesystemFileNotFoundException($file_path, $file);
+	        throw new StorageFilesystemFileNotFoundException($file->uid, $file);
 	} else {
 		$data = $out['stdout'];
 	}

@@ -1,6 +1,6 @@
 <?php
 /*
- * Store the file as chunks instead of as a single file on disk.
+ * Store the file using external script
  *
  * FileSender www.filesender.org
  *
@@ -34,7 +34,7 @@
 if (!defined('FILESENDER_BASE')) die('Missing environment');
 
 /**
- * Allow reading a chunked file as a normal php stream
+ * Allow reading a file as a normal php stream
  * only in order start to finish reading is supported as yet.
  */
 class StorageFilesystemExternalStream {
