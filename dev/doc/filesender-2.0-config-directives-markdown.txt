@@ -65,6 +65,7 @@
 * [autocomplete_max_pool](#autocomplete_max_pool)
 * [autocomplete_min_characters](#autocomplete_min_characters)
 * [upload_display_bits_per_sec](#upload_display_bits_per_sec)
+* [upload_display_per_file_stats](#upload_display_per_file_stats)
 
 
 ##Transfers
@@ -558,6 +559,17 @@ User language detection is done in the following order:
 * __available:__ since version 2.0
 * __1.x name:__
 * __comment:__ does this actually work?
+
+
+###upload_display_per_file_stats
+* __description:__ show the duration of the current chunk for each worker to the user during uploads
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 2.0
+* __1.x name:__
+
+
 
 
 ---
