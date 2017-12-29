@@ -336,7 +336,7 @@ window.filesender.terasender = {
                 
             case 'requestJob' :
                 var gave = this.giveJob(worker_id, workerinterface);
-                if(gave) this.transfer.recordUploadStartedInWatchdog('worker:' + worker_id);
+                if(gave) this.transfer.recordUploadStartedInWatchdog('worker:' + worker_id, gave.file);
                 break;
             
             case 'securityTokenChanged' :

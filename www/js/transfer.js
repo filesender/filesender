@@ -550,7 +550,8 @@ window.filesender.transfer = function() {
         this.watchdog_processes[id] = {
             count: 0,
             durations: [],
-            started: null
+            started: null,
+            file: null
         };
     };
     
@@ -559,10 +560,12 @@ window.filesender.transfer = function() {
      * 
      * @param string id process identifier
      */
-    this.recordUploadStartedInWatchdog = function(id) {
+    this.recordUploadStartedInWatchdog = function(id,file) {
         if(!(id in this.watchdog_processes)) this.registerProcessInWatchdog(id);
         
         this.watchdog_processes[id].started = (new Date()).getTime();
+        this.watchdog_processes[id].file = file;
+        
     };
     
     /**
@@ -582,6 +585,35 @@ window.filesender.transfer = function() {
         }
         this.watchdog_processes[id].started = null;
     };
+
+    /**
+     * for a nominated file
+     * return an array with entries for each worker 
+     * (only one "worker" for non terasender)
+     *
+     * each item is either -1 if the worker is not active on the file
+     * or the duraction that the worker has been active on the current
+     * chunk for the nominated file
+     * 
+     * the return value will be "stable" for an active transfer.
+     * So that worker 0 will always be the first worker in the return value 
+     * this helps you present the information to the UI.
+     */
+    this.getMostRecentChunkDurations = function(file) {
+        d = [];
+        i = 0;
+        for(var id in this.watchdog_processes) {
+            d[i] = -1;
+            if(this.watchdog_processes[id].started != null) {
+                if( this.watchdog_processes[id].file.name == file.name ) {
+                    var duration = (new Date()).getTime() - this.watchdog_processes[id].started;
+                    d[i] = duration;
+                }
+            }
+            i++;
+        }
+        return d;
+    }
     
     /**
      * Look for stalled processes
@@ -1021,7 +1053,7 @@ window.filesender.transfer = function() {
             this.file_index++;
         var was_last_file = transfer.file_index >= transfer.files.length;
         
-        this.recordUploadStartedInWatchdog('main');
+        this.recordUploadStartedInWatchdog('main',file);
 
         this.uploader = filesender.client.putChunk(
             file, blob, offset,
