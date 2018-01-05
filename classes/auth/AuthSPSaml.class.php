@@ -59,7 +59,12 @@ class AuthSPSaml {
      * Cache attributes
      */
     private static $attributes = null;
-    
+
+    /**
+     * Cache authentication status
+     */
+    private static $SimpleSAMLphpVersion = null;
+
     /**
      * Authentication check.
      * 
@@ -211,7 +216,23 @@ class AuthSPSaml {
         }
         
         if(is_null(self::$simplesamlphp_auth_simple)) {
-            require_once(self::$config['simplesamlphp_location'] . 'lib/_autoload.php');
+            $saml_auto_load_path = self::$config['simplesamlphp_location'] . 'lib/_autoload.php';
+            if( !file_exists($saml_auto_load_path)) {
+                Logger::haltWithErorr('SimpleSAMLphp not found at expected path ' . $saml_auto_load_path);
+            }
+            if( !is_readable($saml_auto_load_path)) { 
+                Logger::haltWithErorr('SimpleSAMLphp can not read file at path ' . $saml_auto_load_path);
+            }
+
+            // actually bring in the autoload file
+            if ((include_once($saml_auto_load_path)) == FALSE) {
+                Logger::haltWithErorr('Failed to include SimpleSAMLphp from path ' . $saml_auto_load_path);
+            }
+
+            // grab the version of the library that is in use.
+            $samlConfig = SimpleSAML_Configuration::getInstance();
+            self::$SimpleSAMLphpVersion = $samlConfig->getVersion();
+            // Logger::info('Loaded SimpleSAMLphp version is ' . self::$SimpleSAMLphpVersion);
             
             self::$simplesamlphp_auth_simple = new SimpleSAML_Auth_Simple(self::$config['authentication_source']);
         }

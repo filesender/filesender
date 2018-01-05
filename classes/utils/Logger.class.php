@@ -175,7 +175,16 @@ class Logger {
         // Remove failsafe facility if everything went well
         if(count(self::$facilities) >= 2) array_shift(self::$facilities);
     }
-    
+
+    /**
+     * Log terminating error. This does not return.
+     * 
+     * @param string $message
+     */
+    public static function haltWithErorr($message) {
+        self::log(LogLevels::ERROR, $message);
+        exit('An error has occurred');    
+    }
     /**
      * Log error
      * 
@@ -184,7 +193,7 @@ class Logger {
     public static function error($message) {
         self::log(LogLevels::ERROR, $message);
     }
-    
+
     /**
      * Log warn
      * 
