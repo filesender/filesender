@@ -214,20 +214,11 @@ class AuthSPSaml {
             ) as $key) if(!array_key_exists($key, self::$config))
             throw new ConfigMissingParameterException('auth_sp_saml_'.$key);
         }
-        
+
+        Auth::$authClassLoadingCount++;
         if(is_null(self::$simplesamlphp_auth_simple)) {
             $saml_auto_load_path = self::$config['simplesamlphp_location'] . 'lib/_autoload.php';
-            if( !file_exists($saml_auto_load_path)) {
-                Logger::haltWithErorr('SimpleSAMLphp not found at expected path ' . $saml_auto_load_path);
-            }
-            if( !is_readable($saml_auto_load_path)) { 
-                Logger::haltWithErorr('SimpleSAMLphp can not read file at path ' . $saml_auto_load_path);
-            }
-
-            // actually bring in the autoload file
-            if ((include_once($saml_auto_load_path)) == FALSE) {
-                Logger::haltWithErorr('Failed to include SimpleSAMLphp from path ' . $saml_auto_load_path);
-            }
+            Utilities::include_once_or_halt( $saml_auto_load_path, 'Failed to include SimpleSAMLphp' );
 
             // grab the version of the library that is in use.
             $samlConfig = SimpleSAML_Configuration::getInstance();
@@ -237,6 +228,7 @@ class AuthSPSaml {
             self::$simplesamlphp_auth_simple = new SimpleSAML_Auth_Simple(self::$config['authentication_source']);
         }
         
+        Auth::$authClassLoadingCount--;
         return self::$simplesamlphp_auth_simple;
     }
 }

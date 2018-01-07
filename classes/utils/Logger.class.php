@@ -202,7 +202,7 @@ class Logger {
     public static function warn($message) {
         self::log(LogLevels::WARN, $message);
     }
-    
+
     /**
      * Log info
      * 
