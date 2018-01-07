@@ -1000,7 +1000,7 @@ This mode is intended towards giving access to applications FileSender can fully
 
 This mode expects a [signed request](#signed_request) and a `remote_application` URL argument.
 
-Additionnaly if a `remote_user` argument is provided all opérations will be conducted with this identity.
+Additionally if a `remote_user` argument is provided all opérations will be conducted with this identity.
 
 
 ## Remote user

@@ -524,8 +524,8 @@ table.list .date {
     overflow-y: scroll;
 }
 
-#upload_form .files .file,
-#upload_form .required_files .file {
+.upload_form_regular .files .file,
+.upload_form_regular .required_files .file {
     position: relative;
     margin: 0.2em;
     padding: 0.5em;
@@ -535,6 +535,18 @@ table.list .date {
     background-color: #dedede;
     line-height: 1.8em;
     /*height: 1.8em;*/
+}
+
+.upload_form_stats .files .file,
+.upload_form_stats .required_files .file {
+    position: relative;
+    margin: 0.2em;
+    padding: 0.5em;
+    border: 1px solid #ccc;
+    border-radius: 0.5em;
+    -moz-border-radius: 0.5em;
+    background-color: #dedede;
+    line-height: 3.6em;
 }
 
 #upload_form .required_files .file {
@@ -1273,7 +1285,44 @@ table.paginator .pageheader {
     text-align: left;
     font-size: 1.15em;
     font-weight: bold;
+    vertical-align: middle;
 }
 table.paginator a {
     text-decoration: none;
+}
+
+.good {
+    background: #1cff1c;
+}
+
+.middle {
+    background: #ffff1c;
+}
+
+.slow {
+    background: #ff1c1c;
+}
+
+.bad {
+    background: #ff0000;
+}
+
+.uploadthread {
+    font-family: monospace;
+    font: "Lucida Console", Monaco, monospace;
+    font-size: 10px;
+    width: 4em;
+    height: 10px;
+}
+
+.workercrust {
+    width: 100%;
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+    padding: 3px;
+}
+
+.crust {
+       float:right;
 }

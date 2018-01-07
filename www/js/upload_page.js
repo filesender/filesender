@@ -33,13 +33,13 @@
 // Manage files
 filesender.ui.files = {
     invalidFiles: [],
+
     
     // File selection (browse / drop) handler
     add: function(files, source_node) {
         var node = null;
         for(var i=0; i<files.length; i++) {
             var info = files[i].name + ' : ' + filesender.ui.formatBytes(files[i].size);
-            
             node = $('<div class="file" />').attr({
                 'data-name': files[i].name,
                 'data-size': files[i].size
@@ -117,7 +117,7 @@ filesender.ui.files = {
                 
             filesender.ui.evalUploadEnabled();
             node.attr('data-cid', added_cid);
-            
+
             var bar = $('<div class="progressbar" />').appendTo(node);
             $('<div class="progress-label" />').appendTo(bar);
             bar.progressbar({
@@ -135,10 +135,34 @@ filesender.ui.files = {
             });
             
             $('<span class="fa fa-lg fa-check done_icon" />').appendTo(node);
+
+            if (filesender.config.upload_display_per_file_stats) {
+                var p = $('<span class="workercrust"/>');
+                p.appendTo(node);
+
+                var makeCrust = function( p, idx ) {
+                    var crust_meter = $('<div class="crust crust' + idx + '">'
+                                        + '<a class="crust_meter" href="#">'
+                                        + '<div class="label uploadthread">   </div></a></div>');
+                    crust_meter.appendTo(p);
+                    crust_meter.button({disabled: true});
+                    return crust_meter;
+                };
+
+                if( filesender.config.terasender_enabled ) {
+                    for( idx=0; idx < filesender.config.terasender_worker_count; idx++ ) {
+                        var crust_meter = makeCrust( p, idx );
+                    }
+                }
+                else {
+                    var crust_meter = makeCrust( p, 0 );
+                }
+
+            }
             
             if(filesender.ui.nodes.required_files) {
                 if(file) {
-                    bar.show().progressbar('value', Math.floor(1000 * file.uploaded / file.size)); 
+                    bar.show().progressbar('value', Math.floor(1000 * file.uploaded / file.size));
                 }
                 
             } else {
@@ -156,6 +180,72 @@ filesender.ui.files = {
         filesender.ui.nodes.files.list.scrollTop(filesender.ui.nodes.files.list.prop('scrollHeight'));
         
         return node;
+    },
+
+    update_crust_meter_for_worker: function(file,idx,v) {
+
+        var crust_indicator = filesender.ui.nodes.files.list.find('[data-cid="' + file.cid + '"] .crust' + idx);
+        if( crust_indicator ) {
+            var vd = v / 1000;
+            if( v == -1 ) {
+                crust_indicator.find('.label').text( "" );
+            } else {
+                crust_indicator.find('.label').text( vd.toFixed(2) );
+            }
+
+            // filesender.config.upload_chunk_size [ def = 5 * 1024 * 1024 ]
+/*            
+            var baseline_upload_bps = 20 * 1024 * 1024;
+            var cutoff = filesender.config.upload_chunk_size / baseline_upload_bps * 1000;
+            if( v < cutoff ) {
+                crust_indicator.removeClass('middle');
+                crust_indicator.removeClass('slow');
+                crust_indicator.removeClass('bad');
+                crust_indicator.addClass('good');
+            } else if( v < (cutoff*1.1) ) {
+                crust_indicator.removeClass('good');
+                crust_indicator.removeClass('slow');
+                crust_indicator.removeClass('bad');
+                crust_indicator.addClass('middle');
+            } else if( v < (cutoff*1.2) ) {
+                crust_indicator.removeClass('good');
+                crust_indicator.removeClass('middle');
+                crust_indicator.removeClass('bad');
+                crust_indicator.addClass('slow');
+            } else {
+                crust_indicator.removeClass('good');
+                crust_indicator.removeClass('middle');
+                crust_indicator.removeClass('slow');
+                crust_indicator.addClass('bad');
+            }
+*/
+        }
+    },
+    
+    update_crust_meter: function( file ) {
+        if (!filesender.config.upload_display_per_file_stats) {
+            return;
+        }
+
+        if( filesender.config.terasender_enabled ) {
+            var durations = filesender.ui.transfer.getMostRecentChunkDurations( file );
+            for( i=0; i < filesender.config.terasender_worker_count; i++ ) {
+                v = -1;
+                if( i < durations.length ) {
+                    v = durations[i];
+                }
+                filesender.ui.files.update_crust_meter_for_worker( file, i, v );
+            }
+        }
+        else
+        {
+            var durations = filesender.ui.transfer.getMostRecentChunkDurations( file );
+            v = -1;
+            if( durations.length > 0 ) {
+                v = durations[0];
+            }
+            filesender.ui.files.update_crust_meter_for_worker( file, 0, v );
+        }
     },
     
     // Update progress bar, run in transfer context
@@ -435,6 +525,15 @@ filesender.ui.startUpload = function() {
     this.transfer.disable_terasender = filesender.ui.nodes.disable_terasender.is(':checked');
     
     this.transfer.onprogress = filesender.ui.files.progress;
+
+    if( filesender.config.upload_display_per_file_stats ) {
+        window.setInterval(function() {
+            for (var i = 0; i < filesender.ui.transfer.files.length; i++) {
+                file = filesender.ui.transfer.files[i];
+                filesender.ui.files.update_crust_meter( file );
+            }
+        }, 1000);
+    }
     
     this.transfer.oncomplete = function(time) {
         var redirect_url = filesender.ui.transfer.options.redirect_url_on_complete;
@@ -445,7 +544,7 @@ filesender.ui.startUpload = function() {
                 filesender.ui.redirect(redirect_url);
                 filesender.ui.alert('success', lang.tr('done_uploading_redirect').replace({url: redirect_url}));
             }, 5000);
-            
+                    
             return;
         }
         
@@ -611,6 +710,9 @@ $(function() {
         var i = $(this);
         filesender.ui.nodes.options[i.attr('name')] = i;
     });
+
+    
+
     
     // Bind file list clear button
     filesender.ui.nodes.files.clear.on('click', function() {
@@ -973,6 +1075,7 @@ $(function() {
                 finfo += ', ' + (100 * failed.files[i].uploaded / failed.files[i].size).toFixed(0) + '% ' + lang.tr('done');
                 $('<li />').text(finfo).appendTo(fctn);
             }
+
             
             $('<div class="recipients" />').text(lang.tr('recipients') + ' : ' + failed.recipients.join(', ')).appendTo(tctn);
             

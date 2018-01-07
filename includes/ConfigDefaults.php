@@ -46,6 +46,7 @@ $default = array(
     'email_use_html' => true,   // By default, use HTML on mails
     'relay_unknown_feedbacks' => 'sender',   // Report email feedbacks with unknown type but with identified target (recipient or guest) to target owner
     'upload_display_bits_per_sec' => false, // By default, do not show bits per seconds 
+    'upload_display_per_file_stats' => false, //
     'force_ssl' => true,
     
     'auth_sp_type' => 'saml',  // Authentification type

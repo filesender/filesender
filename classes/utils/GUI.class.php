@@ -285,7 +285,7 @@ class GUI {
                     self::$allowed_pages = array('upload',
                                                  GUIPages::HELP, GUIPages::ABOUT );
                 } else {
-                    self::$allowed_pages = array('upload', 'transfers', 'guests', 'download',
+                    self::$allowed_pages = array('home', 'upload', 'transfers', 'guests', 'download',
                                                  GUIPages::HELP, GUIPages::ABOUT );
                     
                     // ... and admin to even more !
@@ -297,10 +297,10 @@ class GUI {
             }
             
             // Always accessible pages
-            foreach(array('home', 'download', 'translate_email', 'logout', 'exception', GUIPages::HELP, GUIPages::ABOUT) as $p)
+            foreach(array('download', 'translate_email', 'logout', 'exception', GUIPages::HELP, GUIPages::ABOUT) as $p)
                 self::$allowed_pages[] = $p;
             
-                if(Config::get('maintenance')) self::$allowed_pages = array('maintenance');
+            if(Config::get('maintenance')) self::$allowed_pages = array('maintenance');
         }
         
         return self::$allowed_pages;

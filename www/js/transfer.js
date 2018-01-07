@@ -82,6 +82,12 @@ window.filesender.transfer = function() {
         
         /**
          * Max duration divergence (the maximum ratio between a process's current upload time and the global average)
+         * 
+         * Assume the workers current duration is 'd' then a worker is late if:
+         * 'd' is > d*average(worker duration history in durations_horizon) * duration_divergence
+         *
+         * there are extra provisions added to allow more time scope for workers when there isn't a full 
+         * collection of durations_horizon as startup might be more volatile than later chunk uploads.
          */
         if(!cfg.duration_divergence) cfg.duration_divergence = 7;
         
@@ -89,6 +95,11 @@ window.filesender.transfer = function() {
          * Max automatic retries
          */
         if(!cfg.automatic_retries) cfg.automatic_retries = 3;
+
+        /**
+         * number of durations to keep for each worker
+         */
+        if(!cfg.durations_horizon) cfg.durations_horizon = 5;
     }
     
     this.stalling_detection = cfg;
@@ -307,7 +318,15 @@ window.filesender.transfer = function() {
      * Check if restart is supported (local storage is available and html5 upload as well)
      */
     this.isRestartSupported = function() {
-        return ('localStorage' in window) && (window['localStorage'] !== null) && filesender.supports.reader;
+        try {
+            return ('localStorage' in window) && (window['localStorage'] !== null) && filesender.supports.reader;
+        } catch (e) {
+            // Internet Explorer may throw an exception when trying to use localStorage
+            // while it is forbidden for security reasons.  Returning false will keep
+            // FileSender running, just disabling features that Internet Explorer won't
+            // let us use.
+            return false;
+        }
     };
     
     /**
@@ -531,7 +550,8 @@ window.filesender.transfer = function() {
         this.watchdog_processes[id] = {
             count: 0,
             durations: [],
-            started: null
+            started: null,
+            file: null
         };
     };
     
@@ -540,10 +560,12 @@ window.filesender.transfer = function() {
      * 
      * @param string id process identifier
      */
-    this.recordUploadStartedInWatchdog = function(id) {
+    this.recordUploadStartedInWatchdog = function(id,file) {
         if(!(id in this.watchdog_processes)) this.registerProcessInWatchdog(id);
         
         this.watchdog_processes[id].started = (new Date()).getTime();
+        this.watchdog_processes[id].file = file;
+        
     };
     
     /**
@@ -558,10 +580,40 @@ window.filesender.transfer = function() {
         
         this.watchdog_processes[id].count++;
         this.watchdog_processes[id].durations.push((new Date()).getTime() - this.watchdog_processes[id].started);
-        while(this.watchdog_processes[id].durations.length > 5) this.watchdog_processes[id].durations.shift();
-        
+        while(this.watchdog_processes[id].durations.length > this.stalling_detection.durations_horizon) {
+            this.watchdog_processes[id].durations.shift();
+        }
         this.watchdog_processes[id].started = null;
     };
+
+    /**
+     * for a nominated file
+     * return an array with entries for each worker 
+     * (only one "worker" for non terasender)
+     *
+     * each item is either -1 if the worker is not active on the file
+     * or the duraction that the worker has been active on the current
+     * chunk for the nominated file
+     * 
+     * the return value will be "stable" for an active transfer.
+     * So that worker 0 will always be the first worker in the return value 
+     * this helps you present the information to the UI.
+     */
+    this.getMostRecentChunkDurations = function(file) {
+        d = [];
+        i = 0;
+        for(var id in this.watchdog_processes) {
+            d[i] = -1;
+            if(this.watchdog_processes[id].started != null) {
+                if( this.watchdog_processes[id].file.name == file.name ) {
+                    var duration = (new Date()).getTime() - this.watchdog_processes[id].started;
+                    d[i] = duration;
+                }
+            }
+            i++;
+        }
+        return d;
+    }
     
     /**
      * Look for stalled processes
@@ -572,32 +624,39 @@ window.filesender.transfer = function() {
         if(!this.stalling_detection) return null;
         
         var stalled = [];
-        
+
         // Compute average upload time and progress
         var avg_count = 0;
         var pcnt = 0;
-        var avg_duration = 0;
-        var dcnt = 0;
         for(var id in this.watchdog_processes) {
             pcnt++;
             avg_count += this.watchdog_processes[id].count;
+        }        
+        for(var id in this.watchdog_processes) {
+            // clear old caches
+            this.watchdog_processes[id].durations_average = 0;
+            this.watchdog_processes[id].durations_count   = 0;
+            this.watchdog_processes[id].durations_max     = 0;
+
+            // prepare to calc average for process
+            // keep the max time a recent chunk took as well
             for(var i=0; i<this.watchdog_processes[id].durations.length; i++) {
-                avg_duration += this.watchdog_processes[id].durations[i];
-                dcnt++;
+                this.watchdog_processes[id].durations_average += this.watchdog_processes[id].durations[i];
+                this.watchdog_processes[id].durations_max = Math.max(this.watchdog_processes[id].durations_max,
+                                                                     this.watchdog_processes[id].durations[i]);
+            }
+            
+            // convert the sum to the mean
+            if( this.watchdog_processes[id].durations.length ) {
+                this.watchdog_processes[id].durations_average /= this.watchdog_processes[id].durations.length;
             }
         }
         if(pcnt) avg_count /= pcnt;
-        if(dcnt) avg_duration /= dcnt;
         
         var way_too_late = false;
         
         // Look for processes that seems "late"
         for(var id in this.watchdog_processes) {
-            if(this.watchdog_processes[id].count < avg_count - this.stalling_detection.count_divergence) {
-                // Process is too late in terms of number of uploaded chunks
-                stalled.push(id);
-                continue;
-            }
             
             if(this.watchdog_processes[id].started == null) continue;
             
@@ -605,11 +664,32 @@ window.filesender.transfer = function() {
             
             if(duration > 3600 * 1000) // 1h, CSRF token lifetime
                 way_too_late++;
+
+            //
+            // the purpose of early_scale is to allow the system to be
+            // more open to the duration varying when we do not
+            // already have time data for a lot of chunks.
+            //
+            // On the first chunk or two we allow multiple times the
+            // stalling_detection.duration_divergence to pass before
+            // we think something is wrong because we have little
+            // support to know if current performance is a divergence
+            // from the past.
+            //
+            // over time early_scale will tend towards being "1" this
+            // will be when we have all entries up to
+            // durations_horizon so at that time we do not add any
+            // extra slack to the system
+            //
+            var early_scale = this.stalling_detection.durations_horizon - this.watchdog_processes[id].durations.length + 1;
+            var duration_divergence = this.stalling_detection.duration_divergence * early_scale;
             
-            if(duration > avg_duration * this.stalling_detection.duration_divergence) {
-                // Process is too late in terms of number of upload duration
-                stalled.push(id);
-                continue;
+            if( this.watchdog_processes[id].durations_count ) {
+                if(duration > this.watchdog_processes[id].durations_average * duration_divergence) {
+                    // Process is too late in terms of number of upload duration
+                    stalled.push(id);
+                    continue;
+                }
             }
         }
         
@@ -968,11 +1048,13 @@ window.filesender.transfer = function() {
             file.uploaded = file.size;
         
         var last = file.uploaded >= file.size;
+        var fncache = file.name;
         if (last)
             this.file_index++;
+        var was_last_file = transfer.file_index >= transfer.files.length;
         
-        this.recordUploadStartedInWatchdog('main');
-        
+        this.recordUploadStartedInWatchdog('main',file);
+
         this.uploader = filesender.client.putChunk(
             file, blob, offset,
             function(ratio) { // Progress
@@ -985,8 +1067,9 @@ window.filesender.transfer = function() {
                 
                 if (last) { // File done
                     transfer.reportProgress(file, function() {
-                        if(transfer.file_index >= transfer.files.length)
-                            transfer.reportComplete();                            
+                        if(was_last_file) {
+                            transfer.reportComplete();
+                        }
                     });
                     
                     

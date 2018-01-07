@@ -108,14 +108,8 @@ class Autoloader {
                 
                 if(!file_exists($file)) {
 
-                    $file = FILESENDER_BASE.'/lib/'.$path;
-                    if(!$path || substr($path, -1) == '/') $file .= str_replace('\\','/',$class);
-                    $file .= '.php';
-
-                    if(!file_exists($file)) {
-                        Logger::error('Looking for class '.$class.', expecting it at '.$file.' but nothing found, may (or may not) be a problem ...');
-                        return;
-                    }
+                    Logger::debug('Looking for class '.$class.', expecting it at '.$file.' but nothing found, may (or may not) be a problem ...');
+                    return;
                 }
                 
                 require_once $file;

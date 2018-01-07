@@ -102,4 +102,23 @@ abstract class Enum {
     public static function all() {
         return self::getConstants();
     }
+
+    /**
+     * get an array of the config keys from all()
+     */
+    public static function getConfigKeys() {
+        $constants = self::getConstants();
+        $keys = array_map('strtolower', array_keys($constants));
+        return $keys;        
+    }
+
+    /**
+     * helper function for logging invalid keys. This returns the prefix
+     * string and all the possible config keys for this enum type to help
+     * the administrator.
+     */
+    public static function getConfigKeysAsLogString( $msgprefix = ' possible keys are: ') {
+        $vv = implode(' ',GuestOptions::getConfigKeys());
+        return $msgprefix . print_r($vv,true);
+    }
 }

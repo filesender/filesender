@@ -10,7 +10,7 @@ The storage usage of {cfg:site_name} is warning :
   - {warning.filesystem} ({size:warning.total_space}) only has {size:warning.free_space} left ({warning.free_space_pct}%)
 {endeach}
 
-You may find additionnal details at {cfg:site_url}
+You may find additional details at {cfg:site_url}
 
 Best regards,
 {cfg:site_name}
@@ -32,7 +32,7 @@ Best regards,
 </ul>
 
 <p>
-    You may find additionnal details at <a href="{cfg:site_url}">{cfg:site_url}</a>
+    You may find additional details at <a href="{cfg:site_url}">{cfg:site_url}</a>
 </p>
 
 <p>
