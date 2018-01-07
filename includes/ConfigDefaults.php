@@ -108,6 +108,7 @@ $default = array(
     'storage_filesystem_df_command' => 'df {path}',
     'storage_filesystem_tree_deletion_command' => 'rm -rf {path}',
     'storage_filesystem_ignore_disk_full_check' => false,
+    'storage_filesystem_external_script' => FILESENDER_BASE.'/scripts/StorageFilesystemExternal/external.py',
     
     'email_from' => 'sender',
     'email_return_path' => 'sender',
