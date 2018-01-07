@@ -46,51 +46,6 @@ class StorageFilesystemExternalStream {
     protected $currentChunkFile = null;
     protected $gameOver = false;
 
-    function run($cmdOptions='',$data='') {
-        $cmd=Config::get('storage_filesystem_external_script');
-        if ($cmdOptions!='') {
-                $cmd.=' '.$cmdOptions;
-        }
-
-        $output=array();
-        $descriptorspec = array(
-           0 => array("pipe", "r"),
-           1 => array("pipe", "w"),
-           2 => array("pipe", "w")
-        );
-        $process = proc_open(
-                $cmd,
-                $descriptorspec,
-                $pipes
-        );
-
-        if ($data!='') {
-                fwrite($pipes[0], $data);
-        }
-        fclose($pipes[0]);
-
-        $stdout = stream_get_contents($pipes[1]);
-        $stderr = stream_get_contents($pipes[2]);
-
-        fclose($pipes[1]);
-        fclose($pipes[2]);
-        $exit_status = proc_close($process);
-
-        if ($exit_status!=0) {
-                Logger::info('StorageFilesystemExternal: stdout'.str_replace(array("\r\n","\n"),"\n",$stdout));
-                Logger::info('StorageFilesystemExternal: stderror'.str_replace(array("\r\n","\n"),"\n",$stderr));
-        }
-        if ($stderr!='') {
-                Logger::info('StorageFilesystemExternal: stderror'.str_replace(array("\r\n","\n"),"\n",$stderr));
-        }
-
-        return array(
-                'stdout' => $stdout,
-                'stderror' => $stderr,
-                'status' => $exit_status
-        );
-    }
-    
     function stream_open($path, $mode, $options, &$opened_path)
     {
         $url = parse_url($path);
@@ -107,7 +62,7 @@ class StorageFilesystemExternalStream {
         if( $this->gameOver )
             return FALSE;
     
-	$out=self::run('fs_readChunk "'.$file->uid.'" '.$offset.' '.$count);
+	$out = StorageFilesystemExternal::run('fs_readChunk "'.$file->uid.'" '.$offset.' '.$count);
         if ($out['status']!=0) {
                 //something bad
                 $this->gameOver = true;
@@ -132,5 +87,5 @@ class StorageFilesystemExternalStream {
     }
 };
 
-stream_wrapper_register("StorageFilesystemChunkedStream", "StorageFilesystemChunkedStream")
+stream_wrapper_register("StorageFilesystemExternalStream", "StorageFilesystemExternalStream")
 or die("Failed to register protocol");
