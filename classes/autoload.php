@@ -108,7 +108,7 @@ class Autoloader {
                 
                 if(!file_exists($file)) {
 
-                    Logger::error('Looking for class '.$class.', expecting it at '.$file.' but nothing found, may (or may not) be a problem ...');
+                    Logger::debug('Looking for class '.$class.', expecting it at '.$file.' but nothing found, may (or may not) be a problem ...');
                     return;
                 }
                 
