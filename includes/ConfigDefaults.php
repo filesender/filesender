@@ -46,6 +46,7 @@ $default = array(
     'email_use_html' => true,   // By default, use HTML on mails
     'relay_unknown_feedbacks' => 'sender',   // Report email feedbacks with unknown type but with identified target (recipient or guest) to target owner
     'upload_display_bits_per_sec' => false, // By default, do not show bits per seconds 
+    'upload_display_per_file_stats' => false, //
     'force_ssl' => true,
     
     'auth_sp_type' => 'saml',  // Authentification type
@@ -107,6 +108,7 @@ $default = array(
     'storage_filesystem_df_command' => 'df {path}',
     'storage_filesystem_tree_deletion_command' => 'rm -rf {path}',
     'storage_filesystem_ignore_disk_full_check' => false,
+    'storage_filesystem_external_script' => FILESENDER_BASE.'/scripts/StorageFilesystemExternal/external.py',
     
     'email_from' => 'sender',
     'email_return_path' => 'sender',

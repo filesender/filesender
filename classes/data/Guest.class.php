@@ -419,8 +419,19 @@ class Guest extends DBObject {
         // Get defaults
         $options = Config::get('guest_options');
         if(!is_array($options)) $options = array();
-        
+
+        self::validateOptions($options);
         return $options;
+    }
+
+    /**
+     * Perform reasonably fast validation of config options.
+     * This allows the global config loader to check with many classes
+     * by calling class::validateConfig() so that particular pages do not
+     * have to be loaded to find configuration issues.
+     */
+    public static function validateConfig() {
+        self::allOptions();
     }
     
     /**
@@ -471,7 +482,8 @@ class Guest extends DBObject {
     }
     
     /**
-     * Validate and format options
+     * Validate and format options.
+     * throws an exception if the raw_options contain invalid data
      * 
      * @param mixed $raw_options
      * 
@@ -480,9 +492,12 @@ class Guest extends DBObject {
     public static function validateOptions($raw_options) {
         $options = array();
         foreach((array)$raw_options as $name => $value) {
-            if(!GuestOptions::isValidValue($name))
-                throw new BadOptionNameException($name);
-            
+            if(!GuestOptions::isValidValue($name)) {
+                throw new BadOptionNameException($name,
+                   'Please check if you have an invalid key in your guest_options configuration. '
+                   . GuestOptions::getConfigKeysAsLogString()
+                );
+            }
             $value = (bool)$value;
             
             $options[$name] = $value;

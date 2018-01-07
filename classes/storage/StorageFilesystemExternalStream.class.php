@@ -1,14 +1,15 @@
 <?php
-
 /*
+ * Store the file using external script
+ *
  * FileSender www.filesender.org
- * 
+ *
  * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * *    Redistributions of source code must retain the above copyright
  *     notice, this list of conditions and the following disclaimer.
  * *    Redistributions in binary form must reproduce the above copyright
@@ -17,7 +18,7 @@
  * *    Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -30,40 +31,61 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-// Require environment (fatal)
-if (!defined('FILESENDER_BASE'))
-    die('Missing environment');
+if (!defined('FILESENDER_BASE')) die('Missing environment');
 
-class SystemMail extends ApplicationMail {
-    /**
-     * Constructor
-     * 
-     * @param mixed $content Lang instance or subject as string
-     */
-    public function __construct($content = 'No subject') {
-        parent::__construct($content);
-        
-        $admins = Config::get('admin_email');
-        if(!is_array($admins))
-            $admins = array_filter(array_map('trim', explode(',', $admins)));
-        
-        foreach($admins as $email) $this->to($email);
+/**
+ * Allow reading a file as a normal php stream
+ * only in order start to finish reading is supported as yet.
+ */
+class StorageFilesystemExternalStream {
+
+    protected $offset = 0;
+    protected $uid    = null;
+    protected $file   = null;
+    protected $fh     = null;
+    protected $currentChunkFile = null;
+    protected $gameOver = false;
+
+    function stream_open($path, $mode, $options, &$opened_path)
+    {
+        $url = parse_url($path);
+        $this->offset = 0;
+        $this->uid = $url["host"];
+        $this->file = File::fromUid($this->uid);
+        return true;
     }
+
+    function stream_read($count) {
+        $file   = $this->file;
+        $offset = $this->offset;
+
+        if( $this->gameOver )
+            return FALSE;
     
-    /**
-     * Quick translated sending
-     * 
-     * @param string $translation_id
-     * @param mixed ... additional translation variables
-     */
-    public static function quickSend($translation_id /*, ... */) {
-        $vars = array_slice(func_get_args(), 1);
-        
-        $tr = Lang::translateEmail($translation_id);
-        if($vars) $tr = call_user_func_array(array($tr, 'replace'), $vars);
-        
-        $mail = new self($tr);
-        $mail->setDebugTemplate($translation_id);
-        $mail->send();
+	$out = StorageFilesystemExternal::run('fs_readChunk "'.$file->uid.'" '.$offset.' '.$count);
+        if ($out['status']!=0) {
+                //something bad
+                $this->gameOver = true;
+        } else {
+                $data = $out['stdout'];
+        }
+
+        if ($data === FALSE) {
+                $this->gameOver = true;
+		return FALSE;
+	}
+        $this->offset += strlen($data);
+        return $data;
     }
-}
+
+    function stream_eof() {
+        return $this->offset >= $this->file->size;
+    }
+
+    static function ensureRegistered() {
+        // this happens when the file is parsed
+    }
+};
+
+stream_wrapper_register("StorageFilesystemExternalStream", "StorageFilesystemExternalStream")
+or die("Failed to register protocol");

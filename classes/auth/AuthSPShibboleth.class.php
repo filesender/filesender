@@ -113,7 +113,7 @@ class AuthSPShibboleth {
             
             if(!$attributes['name']) $attributes['name'] = substr($attributes['email'][0], 0, strpos($attributes['email'][0], '@'));
             
-            // Gather additionnal attributes if required
+            // Gather additional attributes if required
             $additional_attributes = Config::get('auth_sp_additional_attributes');
             if($additional_attributes) {
                 $attributes['additional'] = array();

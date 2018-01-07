@@ -207,7 +207,7 @@ class RestEndpointTransfer extends RestEndpoint {
                     );
                     $time_taken = null;
                     
-                    // Add additionnal data depending on target type
+                    // Add additional data depending on target type
                     switch($log->target_type) {
                         case 'Transfer': // Actions on transfer gets time taken added (like time between start and end of upload)
                             if($log->event == LogEventTypes::TRANSFER_AVAILABLE)
@@ -435,7 +435,7 @@ class RestEndpointTransfer extends RestEndpoint {
             $expires = $data->expires ? $data->expires : Transfer::getDefaultExpire();
             $transfer = Transfer::create($expires, $guest ? $guest->email : $data->from);
             
-            // Set additionnal data
+            // Set additional data
             if($data->subject) $transfer->subject = $data->subject;
             if($data->message) {
                 $transfer->message = $data->message;

@@ -35,7 +35,7 @@
                 echo '<span data-info="remote_config">'.Auth::user()->remote_config.'</span>';
             },
         ),
-        'additionnal' => array(
+        'additional' => array(
             'id' => $readonly,
             'created' => function($info) use($readonly) {
                 $info['value'] = Utilities::formatDate($info['value']);

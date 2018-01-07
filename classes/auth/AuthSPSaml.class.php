@@ -59,7 +59,12 @@ class AuthSPSaml {
      * Cache attributes
      */
     private static $attributes = null;
-    
+
+    /**
+     * Cache authentication status
+     */
+    private static $SimpleSAMLphpVersion = null;
+
     /**
      * Authentication check.
      * 
@@ -123,7 +128,7 @@ class AuthSPSaml {
             
             if(!$attributes['name']) $attributes['name'] = substr($attributes['email'][0], 0, strpos($attributes['email'][0], '@'));
             
-            // Gather additionnal attributes if required
+            // Gather additional attributes if required
             $additional_attributes = Config::get('auth_sp_additional_attributes');
             if($additional_attributes) {
                 $attributes['additional'] = array();
@@ -209,13 +214,21 @@ class AuthSPSaml {
             ) as $key) if(!array_key_exists($key, self::$config))
             throw new ConfigMissingParameterException('auth_sp_saml_'.$key);
         }
-        
+
+        Auth::$authClassLoadingCount++;
         if(is_null(self::$simplesamlphp_auth_simple)) {
-            require_once(self::$config['simplesamlphp_location'] . 'lib/_autoload.php');
+            $saml_auto_load_path = self::$config['simplesamlphp_location'] . 'lib/_autoload.php';
+            Utilities::include_once_or_halt( $saml_auto_load_path, 'Failed to include SimpleSAMLphp' );
+
+            // grab the version of the library that is in use.
+            $samlConfig = SimpleSAML_Configuration::getInstance();
+            self::$SimpleSAMLphpVersion = $samlConfig->getVersion();
+            // Logger::info('Loaded SimpleSAMLphp version is ' . self::$SimpleSAMLphpVersion);
             
             self::$simplesamlphp_auth_simple = new SimpleSAML_Auth_Simple(self::$config['authentication_source']);
         }
         
+        Auth::$authClassLoadingCount--;
         return self::$simplesamlphp_auth_simple;
     }
 }

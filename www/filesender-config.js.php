@@ -112,6 +112,8 @@ window.filesender.config = {
     
     logon_url: '<?php echo AuthSP::logonURL() ?>',
 
+    upload_display_per_file_stats: '<?php echo Config::get('upload_display_per_file_stats') ?>',
+
 	language: {
 		downloading : "<?php echo Lang::tr('downloading')->out(); ?>",
 		decrypting : "<?php echo Lang::tr('decrypting')->out(); ?>",

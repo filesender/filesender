@@ -1,5 +1,10 @@
 <?php
 
+$formClasses = "upload_form_regular";
+if (Config::get('upload_display_per_file_stats')) {
+   $formClasses = "upload_form_stats";
+}
+
 if(Auth::isGuest()) {
     $guest = AuthGuest::getGuest();
     
@@ -30,7 +35,7 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
 ?>
 
 <div class="box">
-    <form id="upload_form" enctype="multipart/form-data" accept-charset="utf-8" method="post" data-need-recipients="<?php echo $need_recipients ? '1' : '' ?>">
+    <form id="upload_form" class="<?php echo $formClasses; ?>" enctype="multipart/form-data" accept-charset="utf-8" method="post" data-need-recipients="<?php echo $need_recipients ? '1' : '' ?>">
         <div class="box">
             <div class="files"></div>
             

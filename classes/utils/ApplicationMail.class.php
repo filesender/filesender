@@ -74,10 +74,10 @@ class ApplicationMail extends Mail {
      * 
      * @param string $translation_id
      * @param mixed $to recipient / guest / email
-     * @param mixed ... additionnal translation variables
+     * @param mixed ... additional translation variables
      */
     public static function quickSend($translation_id, $to /*, ... */) {
-        // Get additionnal arguments
+        // Get additional arguments
         $vars = array_slice(func_get_args(), 2);
         
         // Manage recipient if object given, get language if possible

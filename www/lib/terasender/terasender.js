@@ -227,6 +227,12 @@ window.filesender.terasender = {
         var workers_on_same_file = false;
         var min_offset = file.uploaded;
         var fine_progress = 0;
+
+        var uploading_count = 0;
+        for(var i=0; i<this.workers.length; i++) {
+            if(this.workers[i].status.match(/^(uploading)$/)) 
+                uploading_count++;
+        }
         
         for(var i=0; i<this.workers.length; i++) {
             if(!this.workers[i].status.match(/^(running|uploading)$/)) continue;
@@ -276,7 +282,24 @@ window.filesender.terasender = {
                     break;
                 }
 
-        if(chunks_pending || workers_uploading) return;
+            if(chunks_pending || workers_uploading) return;
+            
+            //
+            // If the final chunks of the final two files are
+            // uploading it is possible that we can get here for the
+            // second last file and that would present a race
+            // condition between this reportComplete() whih itself
+            // calls transferComplete() which is not the case until we
+            // are finishing the last chunk of the last file.
+            //
+            // NOTE that we can not simply place the uploading_count
+            // test above and set 'var complete = false' because
+            // reportProgress() uses the callable complete as a
+            // boolean to indicate if we are on the last chunk of the
+            // file, which we are, but maybe not the last file as
+            // well.
+            //
+            if( uploading_count > 1 ) return;
           
             // Notify all done
             t.transfer.reportComplete();
@@ -313,7 +336,7 @@ window.filesender.terasender = {
                 
             case 'requestJob' :
                 var gave = this.giveJob(worker_id, workerinterface);
-                if(gave) this.transfer.recordUploadStartedInWatchdog('worker:' + worker_id);
+                if(gave) this.transfer.recordUploadStartedInWatchdog('worker:' + worker_id, gave.file);
                 break;
             
             case 'securityTokenChanged' :

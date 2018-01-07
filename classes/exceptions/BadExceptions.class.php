@@ -130,10 +130,10 @@ class BadOptionNameException extends DetailedException {
      * 
      * @param string $name
      */
-    public function __construct($name) {
+    public function __construct($name,$notetoadmin = '') {
         parent::__construct(
             'bad_option_name', // Message to give to the user
-            array('name' => $name) // Details to log
+            array('name' => $name,'noteToAdmin' => $notetoadmin) // Details to log
         );
     }
 }
