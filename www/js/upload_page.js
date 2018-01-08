@@ -499,6 +499,7 @@ filesender.ui.evalUploadEnabled = function() {
 };
 
 filesender.ui.startUpload = function() {
+    
     if(!filesender.ui.nodes.required_files) {
         this.transfer.expires = filesender.ui.nodes.expires.datepicker('getDate').getTime() / 1000;
         
@@ -1001,8 +1002,9 @@ $(function() {
         } else if(!auth || auth == 'guest') {
             id = null; // Cancel
         }
+
         
-        if(id) filesender.client.getTransfer(id, function() {
+        if(id) filesender.client.getTransfer(id, function(xdata) {
             // Transfer still exists on server, lets ask the user what to do with it
             
             var load = function() {
@@ -1062,6 +1064,20 @@ $(function() {
             };
             
             var later = function() {};
+
+
+            // maybe we want to force filesender to forget the transfer
+            var force_forget = false;
+
+            if( filesender.config.upload_force_transfer_resume_forget_if_encrypted
+                && xdata.options.encryption )
+            {
+                force_forget = true;
+            }
+            
+            if( force_forget ) {
+                forget();
+            } else {
             
             var prompt = filesender.ui.popup(lang.tr('restart_failed_transfer'), {'load': load, 'forget': forget, 'later': later}, {onclose: later});
             $('<p />').text(lang.tr('failed_transfer_found')).appendTo(prompt);
@@ -1084,7 +1100,7 @@ $(function() {
             
             if(failed.message)
                 $('<div class="message" />').text(lang.tr('message') + ' : ' + failed.message).appendTo(tctn);
-            
+            }            
         }, function(error) {
             if(error.message == 'transfer_not_found') {
                 // Transfer does not exist anymore on server side, remove from tracker
