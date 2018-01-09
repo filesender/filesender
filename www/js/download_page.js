@@ -78,7 +78,12 @@ $(function() {
         if (!encrypted && confirm){
             filesender.ui.confirm(lang.tr('confirm_download_notify'), dlcb(true), dlcb(false), true);
         }else{
-             if(encrypted){
+            if(encrypted){
+                if(!filesender.supports.crypto ) {
+                    filesender.ui.alert('error', lang.tr('file_encryption_description_disabled'));
+                    return;
+                }
+                
                 var filename = $($this).find("[data-id='" + ids[0] + "']").attr('data-name');
                 var mime = $($this).find("[data-id='" + ids[0] + "']").attr('data-mime');
 
@@ -128,6 +133,12 @@ $(function() {
     
     var bigger_than_4gb = parseInt($('[data-transfer-size]').attr('data-transfer-size')) > 4 * 1024 * 1024 * 1024;
     var macos = navigator.platform.match(/Mac/);
-    if(!bigger_than_4gb || !macos)
+    if( !bigger_than_4gb || !macos )
         $('.mac_archive_message').hide();
+
+    // only worry the user with this banner if any files are encrypted
+    // and they will not be able to download them.
+    var transfer_is_encrypted = $('.transfer_is_encrypted').text()==1;
+    if( transfer_is_encrypted && !filesender.supports.crypto ) 
+        $('.crypto_not_supported_message').show();
 });
