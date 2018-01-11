@@ -41,6 +41,34 @@ window.filesender.progresstracker = function() {
     this.mem = [];
     this.memToKeep = 5;
     this.disabled = false;
+
+    this.clear: function() {
+        this.mem = [];
+        this.disabled = false;
+        this.stamp = (new Date()).getTime();
+    },
+
+    this.remember: function( fine_progress ) {
+        if( !this.mem.length ) {
+            this.mem[0] = 0;
+        }
+        var d = fine_progress - this.mem[this.mem.length-1];
+        this.mem.push( d );
+        if( this.mem.length >= this.memToKeep )
+            this.mem.pop();
+        
+        this.stamp = (new Date()).getTime();
+    },
+
+    
+    this.latest: function() {
+        return this.mem[this.mem.length-1];
+    },
+
+    this.log: function(message, origin='') {
+        filesender.ui.log('[progressTracker ' + origin + '] ' + message);
+    },
+    
 };
 
 
