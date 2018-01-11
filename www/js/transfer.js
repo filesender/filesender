@@ -44,10 +44,11 @@ window.filesender.progresstracker = function() {
     this.disabled = false;
 
     this.clear = function() {
+        this.mem = [];
+        this.disabled = false;
+        this.stamp = (new Date()).getTime();
     };
 
-    this.remember = function( fine_progress ) {
-    };
     
 };
 
