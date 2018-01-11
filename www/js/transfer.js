@@ -547,32 +547,36 @@ window.filesender.transfer = function() {
      * @param string id process identifier
      */
     this.registerProcessInWatchdog = function(id) {
+
+        
         this.watchdog_processes[id] = {
             count: 0,
             durations: [],
             started: null,
             file: null,
-
-            progressTracker: {
-                stamp: (new Date()).getTime(),
-                mem: [],
-                memToKeep: 5,
-                disabled: false,
+            progressTracker: null,
+        };
+        
+        this.watchdog_processes[id].progressTracker = function() {
+            stamp: (new Date()).getTime();
+            mem: [];
+            memToKeep: 5;
+            disabled: false;
 
                 /**
                  * Reset the tracker for a fresh chunk
                  */
-                clear: function() {
+            this.clear = function() {
                     mem = [];
                     disabled = false;
                     this.stamp = (new Date()).getTime();
-                },
+            };
                 
                 /**
                  * remember the reported fine_progress and take a timestamp
                  * when this is called.
                  */
-                remember: function( fine_progress ) {
+            this.remember = function( fine_progress ) {
                     if( !this.mem.length ) {
                         this.mem[0] = 0;
                         
@@ -583,22 +587,22 @@ window.filesender.transfer = function() {
                         this.mem.pop();
 
                     this.stamp = (new Date()).getTime();
-                },
+            };
 
                 /**
                  * This disables isOffending() from ever returning true.
                  */
-                setDisabled: function() {
+          this.setDisabled = function() {
                     this.disabled = true;
-                },
+          };
 
                 /**
                  * How many bytes were transfered between the last two
                  * calls to remember().
                  */
-                latest: function() {
+                this.latest = function() {
                     return this.mem[this.mem.length-1];
-                },
+                };
 
                 /**
                  * For the current configuration is this worker
@@ -609,7 +613,7 @@ window.filesender.transfer = function() {
                  * seconds it might have stalled. Or the number of
                  * bytes transfered could also be considered.
                  */
-                isOffending: function() {
+                this.isOffending = function() {
                     if( this.disabled )
                         return false;
 
@@ -624,16 +628,15 @@ window.filesender.transfer = function() {
                     // play with bytes?
 //                    var sum = this.mem.reduce(function(a, b) { return a + b; }, 0);
 //                    return sum == 0;
-                },
+                };
 
                 /**
                  * Just makes this.log() available.
                  */
-                log: function(message, origin='') {
+                this.log = function(message, origin='') {
                     filesender.ui.log('[progressTracker ' + origin + '] ' + message);
-                },
-            },
-        };
+                };
+           };
     };
     
     /**
