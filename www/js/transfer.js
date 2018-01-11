@@ -36,7 +36,7 @@
 
 if(!('filesender' in window)) window.filesender = {};
 
-function ProgressTracker() {
+window.filesender.progresstracker = function() {
     this.stamp = (new Date()).getTime();
     this.mem = [];
     this.memToKeep = 5;
@@ -635,7 +635,7 @@ window.filesender.transfer = function() {
             durations: [],
             started: null,
             file: null,
-            progressTracker: new ProgressTracker(),
+            progressTracker: new window.filesender.progresstracker(),
         };
         
     };
