@@ -561,7 +561,7 @@ window.filesender.transfer = function() {
             durations: [],
             started: null,
             file: null,
-//            progressTracker: new window.filesender.progresstracker(),
+            progressTracker: new window.filesender.progresstracker(),
         };
         
     };
