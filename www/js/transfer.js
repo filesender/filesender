@@ -41,29 +41,6 @@ window.filesender.progresstracker = function() {
     this.mem = [];
     this.memToKeep = 5;
     this.disabled = false;
-
-    /**
-     * Reset the tracker for a fresh chunk
-     */
-    this.clear = function() {
-        this.mem = [];
-        this.disabled = false;
-        this.stamp = (new Date()).getTime();
-    };
-    
-    this.remember = function( fine_progress ) {
-    };
-
-    this.setDisabled = function() {
-    };
-
-    this.latest = function() {
-    };
-
-    this.isOffending = function() {
-    };
-    this.log = function(message, origin='') {
-    };
 };
 
 
@@ -584,7 +561,7 @@ window.filesender.transfer = function() {
             durations: [],
             started: null,
             file: null,
-            progressTracker: new window.filesender.progresstracker(),
+//            progressTracker: new window.filesender.progresstracker(),
         };
         
     };
