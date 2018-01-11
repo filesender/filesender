@@ -46,6 +46,8 @@ window.filesender.progresstracker = function() {
     this.clear = function() {
     };
 
+    this.remember = function( fine_progress ) {
+    };
     
 };
 
