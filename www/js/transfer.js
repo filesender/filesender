@@ -551,7 +551,12 @@ window.filesender.transfer = function() {
             count: 0,
             durations: [],
             started: null,
-            file: null
+            file: null,
+
+            progressTracker: {
+                stamp: (new Date()).getTime(),
+                mem: [],                
+            },
         };
     };
     
