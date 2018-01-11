@@ -1326,3 +1326,11 @@ table.paginator a {
 .crust {
        float:right;
 }
+
+div.not_displayed {
+    display: none;
+}
+
+.crypto_not_supported_message {
+    display: none;
+}
