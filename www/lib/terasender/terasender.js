@@ -203,6 +203,16 @@ window.filesender.terasender = {
             filesender.ui.error(error);
         }
     },
+
+    ensureBareWorkerID: function(wid) {
+        if( wid.includes('worker:')) {
+            wid = wid.substr( 'worker:'.length );
+        }
+        return wid;
+    },
+    
+    
+    
     
     /**
      * Evaluate progress and report to transfer
@@ -223,7 +233,7 @@ window.filesender.terasender = {
             this.stop();
             return;
         }
-        
+
         var workers_on_same_file = false;
         var min_offset = file.uploaded;
         var fine_progress = 0;
@@ -325,6 +335,7 @@ window.filesender.terasender = {
         switch(command) {
             case 'jobProgress' :
                 this.log('Worker job progressed', 'worker:' + worker_id);
+                this.transfer.recordUploadProgressInWatchdog('worker:' + worker_id,data.fine_progress);
                 this.evalProgress(worker_id, data);
                 break;
                 
@@ -385,7 +396,7 @@ window.filesender.terasender = {
         this.sendCommand(workerinterface, 'start', id);
         
         this.log('Worker ' + id + ' created');
-        
+
         this.workers.push(workerinterface);
     },
     

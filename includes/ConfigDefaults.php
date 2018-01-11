@@ -48,6 +48,7 @@ $default = array(
     'upload_display_bits_per_sec' => false, // By default, do not show bits per seconds 
     'upload_display_per_file_stats' => false, //
     'upload_force_transfer_resume_forget_if_encrypted' => false, //
+    'upload_considered_too_slow_if_no_progress_for_seconds' => 0, // seconds
     'force_ssl' => true,
     
     'auth_sp_type' => 'saml',  // Authentification type

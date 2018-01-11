@@ -67,6 +67,7 @@
 * [upload_display_bits_per_sec](#upload_display_bits_per_sec)
 * [upload_display_per_file_stats](#upload_display_per_file_stats)
 * [upload_force_transfer_resume_forget_if_encrypted](#upload_force_transfer_resume_forget_if_encrypted)
+* [upload_considered_too_slow_if_no_progress_for_seconds](#upload_considered_too_slow_if_no_progress_for_seconds)
 
 
 ##Transfers
@@ -577,6 +578,14 @@ User language detection is done in the following order:
 * __mandatory:__ no
 * __type:__ boolean
 * __default:__ false
+* __available:__ since version 2.0
+
+
+###upload_considered_too_slow_if_no_progress_for_seconds
+* __description:__ If 0 this is disabled. If an uploading chunk has not reported any progress in this number of seconds then it is considered in trouble and some action may be taken (eg. force stop and resend of chunk) to try to recover.
+* __mandatory:__ no
+* __type:__ int
+* __default:__ 0
 * __available:__ since version 2.0
 
 
