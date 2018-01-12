@@ -79,8 +79,6 @@ window.filesender.progresstracker = function() {
         if( !tooSlow )
             return false;
         
-        if( (new Date()).getTime() - this.stamp > (tooSlow*1000) )
-            return true;
         return false;
     };
 
