@@ -65,7 +65,7 @@ window.filesender.progresstracker = function() {
 
     this.setDisabled = function() {
         this.disabled = true;
-    },
+    };
 
     /**
      * How many bytes were transfered between the last two
@@ -73,7 +73,7 @@ window.filesender.progresstracker = function() {
      */
     this.latest = function() {
         return this.mem[this.mem.length-1];
-    },
+    };
     
     
 };
