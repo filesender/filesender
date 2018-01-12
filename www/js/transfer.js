@@ -67,6 +67,10 @@ window.filesender.progresstracker = function() {
         this.disabled = true;
     };
 
+    this.latest = function() {
+        return this.mem[this.mem.length-1];
+    };
+
     
     
 };
