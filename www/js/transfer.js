@@ -75,7 +75,7 @@ window.filesender.progresstracker = function() {
         if( this.disabled )
             return false;
 
-        var tooSlow = filesender.config.upload_considered_too_slow_if_no_progress_for_seconds;
+        var tooSlow = false;
         if( !tooSlow )
             return false;
         
@@ -84,9 +84,6 @@ window.filesender.progresstracker = function() {
         return false;
     };
 
-    this.log = function(message, origin='') {
-        filesender.ui.log('[progressTracker ' + origin + '] ' + message);
-    };
 
 };
 
