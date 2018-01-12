@@ -62,6 +62,19 @@ window.filesender.progresstracker = function() {
         this.stamp = (new Date()).getTime();
     };
 
+
+    this.setDisabled = function() {
+        this.disabled = true;
+    },
+
+    /**
+     * How many bytes were transfered between the last two
+     * calls to remember().
+     */
+    this.latest = function() {
+        return this.mem[this.mem.length-1];
+    },
+    
     
 };
 
