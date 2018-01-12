@@ -74,6 +74,24 @@ window.filesender.progresstracker = function() {
     this.latest = function() {
         return this.mem[this.mem.length-1];
     };
+
+
+    this.isOffending = function() {
+        if( this.disabled )
+            return false;
+
+        var tooSlow = filesender.config.upload_considered_too_slow_if_no_progress_for_seconds;
+        if( !tooSlow )
+            return false;
+        
+        if( (new Date()).getTime() - this.stamp > (tooSlow*1000) )
+            return true;
+        return false;
+    };
+
+    this.log = function(message, origin='') {
+        filesender.ui.log('[progressTracker ' + origin + '] ' + message);
+    };
     
     
 };
