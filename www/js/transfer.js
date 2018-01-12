@@ -73,7 +73,8 @@ window.filesender.progresstracker = function() {
 
     this.isOffending = function() {
 
-        var tooSlow = false;
+        var tooSlow = filesender.config.upload_considered_too_slow_if_no_progress_for_seconds;
+        
         if( !tooSlow )
             return false;
         
