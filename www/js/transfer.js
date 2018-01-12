@@ -87,7 +87,7 @@ window.filesender.progresstracker = function() {
     };
 
     this.log = function(message, origin) {
-//        filesender.ui.log('[progressTracker ' + origin + '] ' + message);
+        filesender.ui.log('[progressTracker ' + origin + '] ' + message);
     };
 
 };
