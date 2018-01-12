@@ -645,7 +645,7 @@ window.filesender.transfer = function() {
                 /**
                  * Just makes this.log() available.
                  */
-                log: function(message, origin='') {
+                log: function(message, origin) {
                     filesender.ui.log('[progressTracker ' + origin + '] ' + message);
                 },
             },
