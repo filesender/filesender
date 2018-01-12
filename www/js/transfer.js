@@ -72,8 +72,6 @@ window.filesender.progresstracker = function() {
     };
 
     this.isOffending = function() {
-        if( this.disabled )
-            return false;
 
         var tooSlow = false;
         if( !tooSlow )
