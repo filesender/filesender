@@ -82,7 +82,6 @@ window.filesender.progresstracker = function() {
     };
 
     this.latest = function() {
-        return this.mem[this.mem.length-1];
     };
 
     this.isOffending = function() {
