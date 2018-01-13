@@ -670,7 +670,7 @@ window.filesender.transfer = function() {
      * Record chunk upload progress for worker
      */
     this.recordUploadProgressInWatchdog = function(id,fine_progress) {
-        this.watchdog_processes[id].progressTracker.remember( fine_progress );
+//        this.watchdog_processes[id].progressTracker.remember( fine_progress );
     };
     
     /**
