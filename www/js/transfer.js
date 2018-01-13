@@ -579,8 +579,8 @@ window.filesender.transfer = function() {
                  * Reset the tracker for a fresh chunk
                  */
                 clear: function() {
-                    mem = [];
-                    disabled = false;
+                    this.mem = [];
+                    this.disabled = false;
                     this.stamp = (new Date()).getTime();
                 },
                 
