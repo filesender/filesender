@@ -78,7 +78,6 @@ window.filesender.progresstracker = function() {
     };
 
     this.setDisabled = function() {
-        this.disabled = true;
     };
 
     this.latest = function() {
