@@ -196,18 +196,6 @@ filesender.ui.files = {
                 crust_indicator.find('.crustage').text( vd.toFixed(2) );
             }
 
-            crust_indicator.find('.crustbytes').text( '' );
-            if( b ) {
-                crust_indicator.removeClass('good');
-                crust_indicator.removeClass('middle');
-                crust_indicator.removeClass('slow');
-                crust_indicator.addClass('bad');
-            } else {
-                crust_indicator.removeClass('middle');
-                crust_indicator.removeClass('slow');
-                crust_indicator.removeClass('bad');
-                crust_indicator.addClass('good');
-            }
             
             // filesender.config.upload_chunk_size [ def = 5 * 1024 * 1024 ]
 /*            
