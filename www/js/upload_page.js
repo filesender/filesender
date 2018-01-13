@@ -227,29 +227,9 @@ filesender.ui.files = {
     },
 
     clear_crust_meter_all: function() {
-        for (var i = 0; i < filesender.ui.transfer.files.length; i++) {
-            file = filesender.ui.transfer.files[i];
-            filesender.ui.files.clear_crust_meter( file );
-        }
     },
     
     clear_crust_meter: function( file ) {
-        var imax = 1;
-        if( filesender.config.terasender_enabled ) {
-            imax = filesender.config.terasender_worker_count;
-        }
-
-        for( var i = 0; i < imax; i++ ) {
-            var crust_indicator = filesender.ui.nodes.files.list.find('[data-cid="' + file.cid + '"] .crust' + i);
-            if( crust_indicator ) {
-                crust_indicator.find('.crustage').text( '' );
-                crust_indicator.find('.crustbytes').text( '' );
-                crust_indicator.removeClass('middle');
-                crust_indicator.removeClass('slow');
-                crust_indicator.removeClass('bad');
-                crust_indicator.addClass('good');
-            }
-        }
     },
     
     update_crust_meter: function( file ) {
