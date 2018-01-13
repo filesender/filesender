@@ -233,43 +233,6 @@ filesender.ui.files = {
     },
     
     update_crust_meter: function( file ) {
-        if (!filesender.config.upload_display_per_file_stats) {
-            return;
-        }
-        
-        if (filesender.ui.transfer.status != 'running') {
-            this.clear_crust_meter( file );
-            return;
-        }
-
-        var durations = filesender.ui.transfer.getMostRecentChunkDurations( file );
-        var bytes     = filesender.ui.transfer.getMostRecentChunkFineBytes( file );
-        var offending = filesender.ui.transfer.getIsWorkerOffending( file );
-        if( durations.length != bytes.length || bytes.length != offending.length ) {
-            filesender.ui.log('WARNING worker tracking stats are wrong' );
-            return;
-        }
-        if( durations.length < 1 ) {
-            filesender.ui.log('WARNING worker tracking stats are missing' );
-            return;
-        }
-        var imax = durations.length;
-        if( filesender.config.terasender_enabled && imax != filesender.config.terasender_worker_count ) {
-            filesender.ui.log('WARNING ts worker tracking stats are too few' );
-            return;
-        }
-        
-        for( i=0; i < imax; i++ ) {
-            v = -1;
-            if( i < durations.length ) {
-                v = durations[i];
-            }
-            b = false;
-            if( i < offending.length ) {
-                b = offending[i];
-            }
-            filesender.ui.files.update_crust_meter_for_worker( file, i, v, b );
-        }
     },
     
     // Update progress bar, run in transfer context
