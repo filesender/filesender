@@ -626,20 +626,6 @@ window.filesender.transfer = function() {
                  * bytes transfered could also be considered.
                  */
                 isOffending: function() {
-                    if( this.disabled )
-                        return false;
-
-                    var tooSlow = filesender.config.upload_considered_too_slow_if_no_progress_for_seconds;
-                    if( !tooSlow )
-                        return false;
-                    
-                    if( (new Date()).getTime() - this.stamp > (tooSlow*1000) )
-                        return true;
-                    return false;
-
-                    // play with bytes?
-//                    var sum = this.mem.reduce(function(a, b) { return a + b; }, 0);
-//                    return sum == 0;
                 },
 
                 /**
