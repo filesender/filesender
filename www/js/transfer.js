@@ -36,6 +36,102 @@
 
 if(!('filesender' in window)) window.filesender = {};
 
+/**
+ * Track progress of an active chunk upload. This collects
+ * information as an xhr call is progressing to send a
+ * chunk of data that is (upload_chunk_size or equiv)
+ * bytes. The idea is that we can track the bytes as they
+ * go over and allow the user or FileSender itself to do
+ * something smart if a chunk has not sent much or any
+ * data for a chunk for a given time. 
+ * 
+ * you will want to call clear() when a chunk starts,
+ * remember() or setDisabled() when progress on a chunk is
+ * reported, and isOffending() to check if this chunk is
+ * deemed to have not enough recent transfer activity
+ * ("the danger zone").
+ */
+window.filesender.progresstracker = function() {
+
+    stamp: (new Date()).getTime();
+    mem: [];
+    memToKeep: 5;
+    disabled: false;
+
+    /**
+     * Reset the tracker for a fresh chunk
+     */
+    this.clear = function() {
+        this.mem = [];
+        this.disabled = false;
+        this.stamp = (new Date()).getTime();
+    };
+                
+    /**
+     * remember the reported fine_progress and take a timestamp
+     * when this is called.
+     */
+    this.remember = function( fine_progress ) {
+        if( !this.mem.length ) {
+            this.mem[0] = 0;
+            
+        }
+        var d = fine_progress - this.mem[this.mem.length-1];
+        this.mem.push( d );
+        if( this.mem.length >= this.memToKeep )
+            this.mem.pop();
+
+        this.stamp = (new Date()).getTime();
+    };
+
+    /**
+     * This disables isOffending() from ever returning true.
+     */
+    this.setDisabled = function() {
+        this.disabled = true;
+    };
+
+    /**
+     * How many bytes were transfered between the last two
+     * calls to remember().
+     */
+    this.latest = function() {
+        return this.mem[this.mem.length-1];
+    };
+
+    /**
+     * For the current configuration is this worker
+     * "offending"ly slow.
+     * 
+     * The implementation could taken many forms, a simple
+     * one being if no progress has been reported for 10
+     * seconds it might have stalled. Or the number of
+     * bytes transfered could also be considered.
+     */
+    this.isOffending = function() {
+        if( this.disabled )
+            return false;
+
+        var tooSlow = filesender.config.upload_considered_too_slow_if_no_progress_for_seconds;
+        if( !tooSlow )
+            return false;
+        
+        if( (new Date()).getTime() - this.stamp > (tooSlow*1000) )
+            return true;
+        return false;
+
+        // play with bytes?
+        // var sum = this.mem.reduce(function(a, b) { return a + b; }, 0);
+        // return sum == 0;
+    };
+
+    /**
+     * Just makes this.log() available.
+     */
+    this.log = function(message, origin) {
+        filesender.ui.log('[progressTracker ' + origin + '] ' + message);
+    };
+};
 
 /**
  * Transfer pseudoclass
@@ -552,47 +648,7 @@ window.filesender.transfer = function() {
             durations: [],
             started: null,
             file: null,
-
-            /**
-             * Track progress of an active chunk upload. This collects
-             * information as an xhr call is progressing to send a
-             * chunk of data that is (upload_chunk_size or equiv)
-             * bytes. The idea is that we can track the bytes as they
-             * go over and allow the user or FileSender itself to do
-             * something smart if a chunk has not sent much or any
-             * data for a chunk for a given time. 
-             * 
-             * you will want to call clear() when a chunk starts,
-             * remember() or setDisabled() when progress on a chunk is
-             * reported, and isOffending() to check if this chunk is
-             * deemed to have not enough recent transfer activity
-             * ("the danger zone").
-             */
-            progressTracker: {
-
-                stamp: (new Date()).getTime(),
-                mem: [],
-                memToKeep: 5,
-                disabled: false,
-
-                clear: function() {
-                },
-                
-                remember: function( fine_progress ) {
-                },
-
-                setDisabled: function() {
-                },
-
-                latest: function() {
-                },
-
-                isOffending: function() {
-                },
-
-                log: function(message, origin) {
-                },
-            },
+            progressTracker: new window.filesender.progresstracker(),
         };
     };
     
@@ -606,6 +662,7 @@ window.filesender.transfer = function() {
         
         this.watchdog_processes[id].started = (new Date()).getTime();
         this.watchdog_processes[id].file = file;
+        this.watchdog_processes[id].progressTracker.clear();
         
     };
 
@@ -613,6 +670,7 @@ window.filesender.transfer = function() {
      * Record chunk upload progress for worker
      */
     this.recordUploadProgressInWatchdog = function(id,fine_progress) {
+        this.watchdog_processes[id].progressTracker.remember( fine_progress );
     };
     
     /**
