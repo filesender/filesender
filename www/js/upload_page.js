@@ -185,7 +185,7 @@ filesender.ui.files = {
         return node;
     },
 
-    update_crust_meter_for_worker: function(file,idx,v,b=false) {
+    update_crust_meter_for_worker: function(file,idx,v,b) {
 
         var crust_indicator = filesender.ui.nodes.files.list.find('[data-cid="' + file.cid + '"] .crust' + idx);
         if( crust_indicator ) {
