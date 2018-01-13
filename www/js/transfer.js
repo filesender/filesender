@@ -662,7 +662,7 @@ window.filesender.transfer = function() {
         
         this.watchdog_processes[id].started = (new Date()).getTime();
         this.watchdog_processes[id].file = file;
-        this.watchdog_processes[id].progressTracker.clear();
+//        this.watchdog_processes[id].progressTracker.clear();
         
     };
 
