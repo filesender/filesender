@@ -65,16 +65,6 @@ window.filesender.progresstracker = function() {
     };
                 
     this.remember = function( fine_progress ) {
-        if( !this.mem.length ) {
-            this.mem[0] = 0;
-            
-        }
-        var d = fine_progress - this.mem[this.mem.length-1];
-        this.mem.push( d );
-        if( this.mem.length >= this.memToKeep )
-            this.mem.pop();
-
-        this.stamp = (new Date()).getTime();
     };
 
     this.setDisabled = function() {
