@@ -575,47 +575,21 @@ window.filesender.transfer = function() {
                 memToKeep: 5,
                 disabled: false,
 
-                /**
-                 * Reset the tracker for a fresh chunk
-                 */
                 clear: function() {
                 },
                 
-                /**
-                 * remember the reported fine_progress and take a timestamp
-                 * when this is called.
-                 */
                 remember: function( fine_progress ) {
                 },
 
-                /**
-                 * This disables isOffending() from ever returning true.
-                 */
                 setDisabled: function() {
                 },
 
-                /**
-                 * How many bytes were transfered between the last two
-                 * calls to remember().
-                 */
                 latest: function() {
                 },
 
-                /**
-                 * For the current configuration is this worker
-                 * "offending"ly slow.
-                 * 
-                 * The implementation could taken many forms, a simple
-                 * one being if no progress has been reported for 10
-                 * seconds it might have stalled. Or the number of
-                 * bytes transfered could also be considered.
-                 */
                 isOffending: function() {
                 },
 
-                /**
-                 * Just makes this.log() available.
-                 */
                 log: function(message, origin) {
                 },
             },
