@@ -589,23 +589,12 @@ window.filesender.transfer = function() {
                  * when this is called.
                  */
                 remember: function( fine_progress ) {
-                    if( !this.mem.length ) {
-                        this.mem[0] = 0;
-                        
-                    }
-                    var d = fine_progress - this.mem[this.mem.length-1];
-                    this.mem.push( d );
-                    if( this.mem.length >= this.memToKeep )
-                        this.mem.pop();
-
-                    this.stamp = (new Date()).getTime();
                 },
 
                 /**
                  * This disables isOffending() from ever returning true.
                  */
                 setDisabled: function() {
-                    this.disabled = true;
                 },
 
                 /**
