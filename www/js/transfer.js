@@ -662,7 +662,6 @@ window.filesender.transfer = function() {
         
         this.watchdog_processes[id].started = (new Date()).getTime();
         this.watchdog_processes[id].file = file;
-        this.watchdog_processes[id].progressTracker.clear();
         
     };
 
@@ -670,7 +669,6 @@ window.filesender.transfer = function() {
      * Record chunk upload progress for worker
      */
     this.recordUploadProgressInWatchdog = function(id,fine_progress) {
-        this.watchdog_processes[id].progressTracker.remember( fine_progress );
     };
     
     /**
