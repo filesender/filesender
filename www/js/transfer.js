@@ -769,8 +769,8 @@ window.filesender.transfer = function() {
             d[i] = -1;
             if(this.watchdog_processes[id].started != null) {
                 if( this.watchdog_processes[id].file.name == file.name ) {
-                    var v = this.watchdog_processes[id].progressTracker.isOffending();
-                    d[i] = v;
+//                    var v = this.watchdog_processes[id].progressTracker.isOffending();
+//                    d[i] = v;
                 }
             }
             i++;
