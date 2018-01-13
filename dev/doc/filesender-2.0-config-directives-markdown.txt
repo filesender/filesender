@@ -582,7 +582,7 @@ User language detection is done in the following order:
 
 
 ###upload_considered_too_slow_if_no_progress_for_seconds
-* __description:__ If 0 this is disabled. If an uploading chunk has not reported any progress in this number of seconds then it is considered in trouble and some action may be taken (eg. force stop and resend of chunk) to try to recover.
+* __description:__ If 0 this is disabled. If an uploading chunk has not reported any progress in this number of seconds then it is considered in trouble and some action may be taken (eg. force stop and resend of chunk) to try to recover. Note that this relies on the browser to report progress messages for ongoing uploads which might only happen every few seconds if a single request is active and maybe for terasender_worker_count=5 you might like to set this to 20 or 30 to avoid thinking a chunk is stalled when it is not.
 * __mandatory:__ no
 * __type:__ int
 * __default:__ 0

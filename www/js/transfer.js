@@ -72,6 +72,7 @@ window.filesender.progresstracker = function() {
      * when this is called.
      */
     this.remember = function( fine_progress ) {
+        this.stamp = (new Date()).getTime();
         if( !this.mem.length ) {
             this.mem[0] = 0;
             
@@ -81,7 +82,6 @@ window.filesender.progresstracker = function() {
         if( this.mem.length >= this.memToKeep )
             this.mem.pop();
 
-        this.stamp = (new Date()).getTime();
     };
 
     /**
@@ -113,7 +113,7 @@ window.filesender.progresstracker = function() {
             return false;
 
         var tooSlow = filesender.config.upload_considered_too_slow_if_no_progress_for_seconds;
-        if( !tooSlow )
+        if( tooSlow==0 )
             return false;
         
         if( (new Date()).getTime() - this.stamp > (tooSlow*1000) )
