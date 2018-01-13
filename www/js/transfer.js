@@ -58,19 +58,12 @@ window.filesender.progresstracker = function() {
     memToKeep: 5;
     disabled: false;
 
-    /**
-     * Reset the tracker for a fresh chunk
-     */
     this.clear = function() {
         this.mem = [];
         this.disabled = false;
         this.stamp = (new Date()).getTime();
     };
                 
-    /**
-     * remember the reported fine_progress and take a timestamp
-     * when this is called.
-     */
     this.remember = function( fine_progress ) {
         if( !this.mem.length ) {
             this.mem[0] = 0;
@@ -84,30 +77,14 @@ window.filesender.progresstracker = function() {
         this.stamp = (new Date()).getTime();
     };
 
-    /**
-     * This disables isOffending() from ever returning true.
-     */
     this.setDisabled = function() {
         this.disabled = true;
     };
 
-    /**
-     * How many bytes were transfered between the last two
-     * calls to remember().
-     */
     this.latest = function() {
         return this.mem[this.mem.length-1];
     };
 
-    /**
-     * For the current configuration is this worker
-     * "offending"ly slow.
-     * 
-     * The implementation could taken many forms, a simple
-     * one being if no progress has been reported for 10
-     * seconds it might have stalled. Or the number of
-     * bytes transfered could also be considered.
-     */
     this.isOffending = function() {
         if( this.disabled )
             return false;
@@ -125,9 +102,6 @@ window.filesender.progresstracker = function() {
         // return sum == 0;
     };
 
-    /**
-     * Just makes this.log() available.
-     */
     this.log = function(message, origin) {
         filesender.ui.log('[progressTracker ' + origin + '] ' + message);
     };
