@@ -613,7 +613,6 @@ window.filesender.transfer = function() {
                  * calls to remember().
                  */
                 latest: function() {
-                    return this.mem[this.mem.length-1];
                 },
 
                 /**
