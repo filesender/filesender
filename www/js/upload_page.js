@@ -593,6 +593,9 @@ filesender.ui.startUpload = function() {
     }
     
     this.transfer.oncomplete = function(time) {
+
+        filesender.ui.files.clear_crust_meter_all();
+        
         var redirect_url = filesender.ui.transfer.options.redirect_url_on_complete;
         if(redirect_url) {
             filesender.ui.redirect(redirect_url);
@@ -613,7 +616,6 @@ filesender.ui.startUpload = function() {
             );
         };
 
-        filesender.ui.files.clear_crust_meter_all();
         
         var p = filesender.ui.alert('success', lang.tr('done_uploading'), close);
         
