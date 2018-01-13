@@ -740,8 +740,8 @@ window.filesender.transfer = function() {
             d[i] = -1;
             if(this.watchdog_processes[id].started != null) {
                 if( this.watchdog_processes[id].file.name == file.name ) {
-                    var bc = this.watchdog_processes[id].progressTracker.latest();
-                    d[i] = bc;
+//                    var bc = this.watchdog_processes[id].progressTracker.latest();
+//                    d[i] = bc;
                 }
             }
             i++;
