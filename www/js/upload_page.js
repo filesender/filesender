@@ -543,6 +543,11 @@ filesender.ui.evalUploadEnabled = function() {
     
     if(filesender.ui.nodes.aup.length)
         if(!filesender.ui.nodes.aup.is(':checked')) ok = false;
+
+    var invalid_nodes = filesender.ui.nodes.files.list.find('.invalid');
+    if( invalid_nodes.length ) {
+        ok = false;
+    }
     
     if(filesender.ui.nodes.required_files) {
         if(ok) filesender.ui.nodes.required_files.hide();
@@ -916,13 +921,37 @@ $(function() {
     filesender.ui.nodes.aup.on('change', function() {
         filesender.ui.evalUploadEnabled();
     });
-    
+
     // Bind encryption
     filesender.ui.nodes.encryption.toggle.on('change', function() {
         $('#encryption_password_container').slideToggle();
         $('#encryption_password_container_generate').slideToggle();
         $('#encryption_password_show_container').slideToggle();
         $('#encryption_description_container').slideToggle();
+        filesender.ui.transfer.encryption = filesender.ui.nodes.encryption.toggle.is(':checked');
+
+        for(var i=0; i<filesender.ui.transfer.files.length; i++) {
+            var file = filesender.ui.transfer.files[i];
+            
+            var node = filesender.ui.nodes.files.list.find('.file[data-name="' + file.name + '"][data-size="' + file.size + '"]');            
+            filesender.ui.transfer.checkFileAsStillValid(
+                file,
+                function(ok) {
+                    node.removeClass('invalid');
+                    node.find('.invalid').remove();
+                    node.find('.invalid_reason').remove();
+                },
+                function(error) {
+                    var tt = 1;
+                    if(error.details && error.details.filename) filesender.ui.files.invalidFiles.push(error.details.filename);
+                    node.addClass('invalid');
+                    node.addClass(error.message);
+                    $('<span class="invalid fa fa-exclamation-circle fa-lg" />').prependTo(node.find('.info'))
+                    $('<div class="invalid_reason" />').text(lang.tr(error.message)).appendTo(node);
+                });
+        }
+        filesender.ui.evalUploadEnabled();
+        
         return false;
     });
     filesender.ui.nodes.encryption.generate.on('click', function() {

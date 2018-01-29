@@ -65,7 +65,10 @@ window.filesender.config = {
 
     max_transfer_size: <?php echo Config::get('max_transfer_size') ?>,
     max_transfer_files: <?php echo Config::get('max_transfer_files') ?>,
-    
+
+    max_transfer_file_size: <?php echo Config::get('max_transfer_file_size') ?>,
+    max_transfer_encrypted_file_size: <?php echo Config::get('max_transfer_encrypted_file_size') ?>,
+
     ban_extension: <?php echo is_string($banned) ? "'".$banned."'" : 'null' ?>,
     extension_whitelist_regex: <?php echo is_string($extension_whitelist_regex) ? "'".$extension_whitelist_regex."'" : 'null' ?>,
     

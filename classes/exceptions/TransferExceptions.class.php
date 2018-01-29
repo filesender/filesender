@@ -152,6 +152,36 @@ class TransferMaximumSizeExceededException extends DetailedException {
 }
 
 /**
+ * Maximum file size exeeded exception
+ */
+class TransferMaximumFileSizeExceededException extends DetailedException {
+    /**
+     * Constructor
+     * 
+     * @param int $size
+     * @param int $max
+     */
+    public function __construct($size, $max) {
+        parent::__construct('transfer_maximum_file_size_exceeded', 'size='.$wanted.' max='.$max);
+    }
+}
+
+/**
+ * Maximum file size exeeded exception
+ */
+class TransferMaximumEncryptedFileSizeExceededException extends DetailedException {
+    /**
+     * Constructor
+     * 
+     * @param int $size
+     * @param int $max
+     */
+    public function __construct($size, $max) {
+        parent::__construct('transfer_maximum_encrypted_file_size_exceeded', 'size='.$wanted.' max='.$max);
+    }
+}
+
+/**
  * Validation failed exception
  */
 class TransferRejectedException extends DetailedException {

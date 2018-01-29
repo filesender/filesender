@@ -214,6 +214,37 @@ window.filesender.transfer = function() {
         }
         return '';
     };
+
+    /**
+     * Check if a file is still considered "valid"
+     *
+     * Things can change, for example, if you turn on/off encryption then the 
+     * maximum file size can change.
+     *
+     * Instead of purely using the return value, an ok and fail callback are used
+     * so that the error callback can be called with additional information about
+     * the violation.
+     */
+    this.checkFileAsStillValid = function(file, okHandler, errorhandler) {
+        
+        if( !this.encryption ) {
+            var v = filesender.config.max_transfer_file_size;
+            
+            if( v && file.size > v ) {
+                errorhandler({message: 'maximum_file_size_exceeded', details: {size: file.size, max: v  }});
+                return false;
+            }
+        } else {
+            var v = filesender.config.max_transfer_encrypted_file_size;
+            
+            if( v && file.size > v ) {
+                errorhandler({message: 'maximum_encrypted_file_size_exceeded', details: {size: file.size, max: v  }});
+                return false;
+            }
+        }
+        okHandler(true);
+        return true;
+    };
     
     /**
      * Add a file to the file list
@@ -320,6 +351,10 @@ window.filesender.transfer = function() {
             errorhandler({message: 'transfer_maximum_size_exceeded', details: {size: file.size, max: filesender.config.max_transfer_size}});
             return false;
         }
+
+        var t = this.checkFileAsStillValid(file, function() {}, errorhandler);
+        if( t === false )
+            return t;
         
         if(filesender.config.quota && filesender.config.quota.available) {
             if (this.size + file.size > filesender.config.quota.available) {
