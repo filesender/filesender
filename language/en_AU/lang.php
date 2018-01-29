@@ -173,6 +173,7 @@ $lang['encryption'] = 'Encryption';
 $lang['decrypting'] = 'Decrypting';
 $lang['file_encryption'] = 'File Encryption (beta)';
 $lang['file_encryption_password'] = 'Password';
+$lang['file_encryption_password_too_short'] = 'Sorry, your password is too short';
 $lang['file_encryption_show_password'] = 'Show / Hide Password';
 $lang['file_encryption_wrong_password'] = 'Incorrect Password';
 $lang['file_encryption_enter_password'] = 'Enter a password';
