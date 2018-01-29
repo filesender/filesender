@@ -233,7 +233,7 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
             </tr>
         </table>
         
-        <?php if (Config::get('AuP')) { ?>
+        <?php if (Config::get('aup_enabled')) { ?>
         <div class="aup fieldcontainer box">
             <label for="aup" title="{tr:showhide}">
                 {tr:accepttoc} [<span>{tr:showhide}</span>]
