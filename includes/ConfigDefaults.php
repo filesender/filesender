@@ -80,6 +80,8 @@ $default = array(
     'default_transfer_days_valid' => 10,
     'failed_transfer_cleanup_days' => 7,
     'transfer_recipients_lang_selector_enabled' => false,
+    'max_transfer_file_size' => 0,
+    'max_transfer_encrypted_file_size' => 0,
     
     'max_guest_recipients' => 50,
     
