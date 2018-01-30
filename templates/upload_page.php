@@ -125,6 +125,9 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
                                 <label for="encryption_password" style="cursor: pointer;">{tr:file_encryption_password} : </label>
                                 <input id="encryption_password" name="encryption_password" type="password" autocomplete="off"/>
                             </div>
+                            <div class="fieldcontainer" id="encryption_password_container_too_short_message">
+                                {tr:file_encryption_password_too_short}
+                            </div>
                             <div class="fieldcontainer" id="encryption_password_container_generate">
                                 <a id='encryption_generate_password' href="#">{tr:file_encryption_generate_password}</a>
                             </div>
@@ -233,7 +236,7 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
             </tr>
         </table>
         
-        <?php if (Config::get('AuP')) { ?>
+        <?php if (Config::get('aup_enabled')) { ?>
         <div class="aup fieldcontainer box">
             <label for="aup" title="{tr:showhide}">
                 {tr:accepttoc} [<span>{tr:showhide}</span>]

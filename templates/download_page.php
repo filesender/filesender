@@ -1,4 +1,4 @@
-<div class="box">
+<div class="boxnoframe">
     <h1>{tr:download_page}</h1>
     
     <?php
@@ -54,6 +54,9 @@
         <?php if($canDownloadArchive) { ?>
             {tr:download_disclamer_archive}
         <?php } ?>
+    </div>
+    <div class="crypto_not_supported_message">
+         {tr:file_encryption_disabled}
     </div>
     
     <div class="general box" data-transfer-size="<?php echo $transfer->size ?>">
@@ -121,5 +124,9 @@
         <div class="transfer" data-id="<?php echo $transfer->id ?>"></div>
     </div>
 </div>
+
+    <div class="transfer_is_encrypted not_displayed">
+        <?php echo $isEncrypted ? 1 : 0;  ?>
+    </div>
 
 <script type="text/javascript" src="{path:js/download_page.js}"></script>

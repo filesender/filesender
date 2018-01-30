@@ -33,7 +33,6 @@
 // Manage files
 filesender.ui.files = {
     invalidFiles: [],
-
     
     // File selection (browse / drop) handler
     add: function(files, source_node) {
@@ -142,10 +141,14 @@ filesender.ui.files = {
 
                 var makeCrust = function( p, idx ) {
                     var crust_meter = $('<div class="crust crust' + idx + '">'
-                                        + '<a class="crust_meter" href="#">'
-                                        + '<div class="label uploadthread">   </div></a></div>');
+                                        + '  <a class="crust_meter" href="#">'
+                                        + '  <div class="label crustage   uploadthread">   </div></a>'
+                                        + '  <a class="crust_meter_bytes" href="#">'
+                                        + '  <div class="label crustbytes uploadthread">   </div></a>'
+                                        + '</div>');
                     crust_meter.appendTo(p);
                     crust_meter.button({disabled: true});
+
                     return crust_meter;
                 };
 
@@ -182,17 +185,30 @@ filesender.ui.files = {
         return node;
     },
 
-    update_crust_meter_for_worker: function(file,idx,v) {
+    update_crust_meter_for_worker: function(file,idx,v,b) {
 
         var crust_indicator = filesender.ui.nodes.files.list.find('[data-cid="' + file.cid + '"] .crust' + idx);
         if( crust_indicator ) {
             var vd = v / 1000;
             if( v == -1 ) {
-                crust_indicator.find('.label').text( "" );
+                crust_indicator.find('.crustage').text( "" );
             } else {
-                crust_indicator.find('.label').text( vd.toFixed(2) );
+                crust_indicator.find('.crustage').text( vd.toFixed(2) );
             }
 
+            crust_indicator.find('.crustbytes').text( '' );
+            if( b ) {
+                crust_indicator.removeClass('good');
+                crust_indicator.removeClass('middle');
+                crust_indicator.removeClass('slow');
+                crust_indicator.addClass('bad');
+            } else {
+                crust_indicator.removeClass('middle');
+                crust_indicator.removeClass('slow');
+                crust_indicator.removeClass('bad');
+                crust_indicator.addClass('good');
+            }
+            
             // filesender.config.upload_chunk_size [ def = 5 * 1024 * 1024 ]
 /*            
             var baseline_upload_bps = 20 * 1024 * 1024;
@@ -221,30 +237,70 @@ filesender.ui.files = {
 */
         }
     },
+
+    clear_crust_meter_all: function() {
+        for (var i = 0; i < filesender.ui.transfer.files.length; i++) {
+            file = filesender.ui.transfer.files[i];
+            filesender.ui.files.clear_crust_meter( file );
+        }
+    },
+    
+    clear_crust_meter: function( file ) {
+        var imax = 1;
+        if( filesender.config.terasender_enabled ) {
+            imax = filesender.config.terasender_worker_count;
+        }
+
+        for( var i = 0; i < imax; i++ ) {
+            var crust_indicator = filesender.ui.nodes.files.list.find('[data-cid="' + file.cid + '"] .crust' + i);
+            if( crust_indicator ) {
+                crust_indicator.find('.crustage').text( '' );
+                crust_indicator.find('.crustbytes').text( '' );
+                crust_indicator.removeClass('middle');
+                crust_indicator.removeClass('slow');
+                crust_indicator.removeClass('bad');
+                crust_indicator.addClass('good');
+            }
+        }
+    },
     
     update_crust_meter: function( file ) {
         if (!filesender.config.upload_display_per_file_stats) {
             return;
         }
-
-        if( filesender.config.terasender_enabled ) {
-            var durations = filesender.ui.transfer.getMostRecentChunkDurations( file );
-            for( i=0; i < filesender.config.terasender_worker_count; i++ ) {
-                v = -1;
-                if( i < durations.length ) {
-                    v = durations[i];
-                }
-                filesender.ui.files.update_crust_meter_for_worker( file, i, v );
-            }
+        
+        if (filesender.ui.transfer.status != 'running') {
+            this.clear_crust_meter( file );
+            return;
         }
-        else
-        {
-            var durations = filesender.ui.transfer.getMostRecentChunkDurations( file );
+
+        var durations = filesender.ui.transfer.getMostRecentChunkDurations( file );
+        var bytes     = filesender.ui.transfer.getMostRecentChunkFineBytes( file );
+        var offending = filesender.ui.transfer.getIsWorkerOffending( file );
+        if( durations.length != bytes.length || bytes.length != offending.length ) {
+            filesender.ui.log('WARNING worker tracking stats are wrong' );
+            return;
+        }
+        if( durations.length < 1 ) {
+            filesender.ui.log('WARNING worker tracking stats are missing' );
+            return;
+        }
+        var imax = durations.length;
+        if( filesender.config.terasender_enabled && imax != filesender.config.terasender_worker_count ) {
+            filesender.ui.log('WARNING ts worker tracking stats are too few' );
+            return;
+        }
+        
+        for( i=0; i < imax; i++ ) {
             v = -1;
-            if( durations.length > 0 ) {
-                v = durations[0];
+            if( i < durations.length ) {
+                v = durations[i];
             }
-            filesender.ui.files.update_crust_meter_for_worker( file, 0, v );
+            b = false;
+            if( i < offending.length ) {
+                b = offending[i];
+            }
+            filesender.ui.files.update_crust_meter_for_worker( file, i, v, b );
         }
     },
     
@@ -292,6 +348,33 @@ filesender.ui.files = {
         filesender.ui.nodes.stats.size.hide().find('.value').text('');
         
         filesender.ui.evalUploadEnabled();
+    },
+
+    checkEncryptionPassword: function(input) {
+        input = $(input);
+
+        var invalid = false;
+        var pass = input.val();
+        var minLength = filesender.config.encryption_min_password_length;
+        if( minLength > 0 ) {
+            if( !pass || pass.length < minLength ) {
+                invalid = true;
+            }
+        }
+        
+        var msg = $('#encryption_password_container_too_short_message');
+        
+        if(invalid) {
+            input.addClass('invalid');
+            if( msg.css('display')=='none') {
+                msg.slideToggle();
+            }
+        }else{
+            input.removeClass('invalid');
+            if( msg.css('display')!='none') {
+                msg.slideToggle();
+            }
+        }
     },
 };
 
@@ -487,6 +570,11 @@ filesender.ui.evalUploadEnabled = function() {
     
     if(filesender.ui.nodes.aup.length)
         if(!filesender.ui.nodes.aup.is(':checked')) ok = false;
+
+    var invalid_nodes = filesender.ui.nodes.files.list.find('.invalid');
+    if( invalid_nodes.length ) {
+        ok = false;
+    }
     
     if(filesender.ui.nodes.required_files) {
         if(ok) filesender.ui.nodes.required_files.hide();
@@ -499,6 +587,7 @@ filesender.ui.evalUploadEnabled = function() {
 };
 
 filesender.ui.startUpload = function() {
+    
     if(!filesender.ui.nodes.required_files) {
         this.transfer.expires = filesender.ui.nodes.expires.datepicker('getDate').getTime() / 1000;
         
@@ -536,6 +625,9 @@ filesender.ui.startUpload = function() {
     }
     
     this.transfer.oncomplete = function(time) {
+
+        filesender.ui.files.clear_crust_meter_all();
+        
         var redirect_url = filesender.ui.transfer.options.redirect_url_on_complete;
         if(redirect_url) {
             filesender.ui.redirect(redirect_url);
@@ -555,6 +647,7 @@ filesender.ui.startUpload = function() {
                 filesender.ui.transfer.guest_token ? null : 'transfer_' + filesender.ui.transfer.id
             );
         };
+
         
         var p = filesender.ui.alert('success', lang.tr('done_uploading'), close);
         
@@ -760,6 +853,13 @@ $(function() {
         
         filesender.ui.recipients.addFromInput($(this));
     });
+
+
+    // Bind encryption password events
+    filesender.ui.nodes.encryption.password.on('keyup', function(e) {
+        filesender.ui.files.checkEncryptionPassword($(this));
+    });
+
     
     // Bind file list select button
     filesender.ui.nodes.files.input.on('change', function() {
@@ -855,19 +955,57 @@ $(function() {
     filesender.ui.nodes.aup.on('change', function() {
         filesender.ui.evalUploadEnabled();
     });
-    
+
     // Bind encryption
     filesender.ui.nodes.encryption.toggle.on('change', function() {
         $('#encryption_password_container').slideToggle();
         $('#encryption_password_container_generate').slideToggle();
         $('#encryption_password_show_container').slideToggle();
         $('#encryption_description_container').slideToggle();
+        filesender.ui.transfer.encryption = filesender.ui.nodes.encryption.toggle.is(':checked');
+        
+        if( filesender.ui.transfer.encryption ) {
+            filesender.ui.files.checkEncryptionPassword(filesender.ui.nodes.encryption.password );
+        } else {
+            var msg = $('#encryption_password_container_too_short_message');
+            msg.hide();
+        }
+        
+        for(var i=0; i<filesender.ui.transfer.files.length; i++) {
+            var file = filesender.ui.transfer.files[i];
+            
+            var node = filesender.ui.nodes.files.list.find('.file[data-name="' + file.name + '"][data-size="' + file.size + '"]');            
+            filesender.ui.transfer.checkFileAsStillValid(
+                file,
+                function(ok) {
+                    node.removeClass('invalid');
+                    node.find('.invalid').remove();
+                    node.find('.invalid_reason').remove();
+                },
+                function(error) {
+                    var tt = 1;
+                    if(error.details && error.details.filename) filesender.ui.files.invalidFiles.push(error.details.filename);
+                    node.addClass('invalid');
+                    node.addClass(error.message);
+                    $('<span class="invalid fa fa-exclamation-circle fa-lg" />').prependTo(node.find('.info'))
+                    $('<div class="invalid_reason" />').text(lang.tr(error.message)).appendTo(node);
+                });
+        }
+        filesender.ui.evalUploadEnabled();
+        
         return false;
     });
     filesender.ui.nodes.encryption.generate.on('click', function() {
-        filesender.ui.nodes.encryption.password.val(Math.random().toString(36).substr(2, 14));
+        var genp = function() { return Math.random().toString(36).substr(2, 14); }
+        var pass = genp();
+        for( var i=0; i < filesender.config.encryption_min_password_length; i++ ) {
+            pass = pass + genp();
+        }
+        pass = pass.substr(0,filesender.config.encryption_min_password_length);
+        filesender.ui.nodes.encryption.password.val(pass);
         filesender.ui.nodes.encryption.show_hide.prop('checked',true);
         filesender.ui.nodes.encryption.show_hide.trigger('change');
+        filesender.ui.files.checkEncryptionPassword(filesender.ui.nodes.encryption.password );
     });
     filesender.ui.nodes.encryption.show_hide.on('change', function() {
         if (filesender.ui.nodes.encryption.show_hide.is(':checked')) {
@@ -1001,8 +1139,9 @@ $(function() {
         } else if(!auth || auth == 'guest') {
             id = null; // Cancel
         }
+
         
-        if(id) filesender.client.getTransfer(id, function() {
+        if(id) filesender.client.getTransfer(id, function(xdata) {
             // Transfer still exists on server, lets ask the user what to do with it
             
             var load = function() {
@@ -1062,6 +1201,20 @@ $(function() {
             };
             
             var later = function() {};
+
+
+            // maybe we want to force filesender to forget the transfer
+            var force_forget = false;
+
+            if( filesender.config.upload_force_transfer_resume_forget_if_encrypted
+                && xdata.options.encryption )
+            {
+                force_forget = true;
+            }
+            
+            if( force_forget ) {
+                forget();
+            } else {
             
             var prompt = filesender.ui.popup(lang.tr('restart_failed_transfer'), {'load': load, 'forget': forget, 'later': later}, {onclose: later});
             $('<p />').text(lang.tr('failed_transfer_found')).appendTo(prompt);
@@ -1084,7 +1237,7 @@ $(function() {
             
             if(failed.message)
                 $('<div class="message" />').text(lang.tr('message') + ' : ' + failed.message).appendTo(tctn);
-            
+            }            
         }, function(error) {
             if(error.message == 'transfer_not_found') {
                 // Transfer does not exist anymore on server side, remove from tracker
