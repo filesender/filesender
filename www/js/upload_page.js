@@ -349,6 +349,33 @@ filesender.ui.files = {
         
         filesender.ui.evalUploadEnabled();
     },
+
+    checkEncryptionPassword: function(input) {
+        input = $(input);
+
+        var invalid = false;
+        var pass = input.val();
+        var minLength = filesender.config.encryption_min_password_length;
+        if( minLength > 0 ) {
+            if( !pass || pass.length < minLength ) {
+                invalid = true;
+            }
+        }
+        
+        var msg = $('#encryption_password_container_too_short_message');
+        
+        if(invalid) {
+            input.addClass('invalid');
+            if( msg.css('display')=='none') {
+                msg.slideToggle();
+            }
+        }else{
+            input.removeClass('invalid');
+            if( msg.css('display')!='none') {
+                msg.slideToggle();
+            }
+        }
+    },
 };
 
 // Manage recipients
@@ -826,6 +853,13 @@ $(function() {
         
         filesender.ui.recipients.addFromInput($(this));
     });
+
+
+    // Bind encryption password events
+    filesender.ui.nodes.encryption.password.on('keyup', function(e) {
+        filesender.ui.files.checkEncryptionPassword($(this));
+    });
+
     
     // Bind file list select button
     filesender.ui.nodes.files.input.on('change', function() {
@@ -929,7 +963,14 @@ $(function() {
         $('#encryption_password_show_container').slideToggle();
         $('#encryption_description_container').slideToggle();
         filesender.ui.transfer.encryption = filesender.ui.nodes.encryption.toggle.is(':checked');
-
+        
+        if( filesender.ui.transfer.encryption ) {
+            filesender.ui.files.checkEncryptionPassword(filesender.ui.nodes.encryption.password );
+        } else {
+            var msg = $('#encryption_password_container_too_short_message');
+            msg.hide();
+        }
+        
         for(var i=0; i<filesender.ui.transfer.files.length; i++) {
             var file = filesender.ui.transfer.files[i];
             
@@ -955,9 +996,16 @@ $(function() {
         return false;
     });
     filesender.ui.nodes.encryption.generate.on('click', function() {
-        filesender.ui.nodes.encryption.password.val(Math.random().toString(36).substr(2, 14));
+        var genp = function() { return Math.random().toString(36).substr(2, 14); }
+        var pass = genp();
+        for( var i=0; i < filesender.config.encryption_min_password_length; i++ ) {
+            pass = pass + genp();
+        }
+        pass = pass.substr(0,filesender.config.encryption_min_password_length);
+        filesender.ui.nodes.encryption.password.val(pass);
         filesender.ui.nodes.encryption.show_hide.prop('checked',true);
         filesender.ui.nodes.encryption.show_hide.trigger('change');
+        filesender.ui.files.checkEncryptionPassword(filesender.ui.nodes.encryption.password );
     });
     filesender.ui.nodes.encryption.show_hide.on('change', function() {
         if (filesender.ui.nodes.encryption.show_hide.is(':checked')) {
