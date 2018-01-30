@@ -240,6 +240,11 @@ div.exception .details {
     margin: 0 0.25em 0.5em 0.25em;
 }
 
+.boxnoframe {
+    padding: 0.5em;
+    margin: 0 0.25em 0.5em 0.25em;
+}
+
 .clickable, [data-action] {
     cursor: pointer;
 }
@@ -998,13 +1003,16 @@ table.guests .guest .to .errors .details {
 
 /* Download page */
 
+.download_page {
+    margin: 1em;
+}
+
 .download_page .disclamer {
     margin: 1em;
 }
 
 .download_page .general div {
     margin-bottom: 0.8em;
-    font-size: 1.2em;
 }
 
 .download_page .files .select_all {
@@ -1026,9 +1034,6 @@ table.guests .guest .to .errors .details {
 .download_page .files .file {
     height: 2.5em;
     margin: 0.25em;
-    border: 1px solid #ccc;
-    border-radius: 0.5em;
-    -moz-border-radius: 0.5em;
     padding: 1.2em 0.5em 0.5em 0.5em;
 }
 
@@ -1038,7 +1043,6 @@ table.guests .guest .to .errors .details {
 }
 
 .download_page .files .file .name {
-    font-size: 1.7em;
     text-overflow: ellipsis;
     width: 345px;
     display: inline-block;
