@@ -1,10 +1,5 @@
 <?php
 
-$formClasses = "upload_form_regular";
-if (Config::get('upload_display_per_file_stats')) {
-   $formClasses = "upload_form_stats";
-}
-
 if(Auth::isGuest()) {
     $guest = AuthGuest::getGuest();
     
@@ -35,7 +30,7 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
 ?>
 
 <div class="box">
-    <form id="upload_form" class="<?php echo $formClasses; ?>" enctype="multipart/form-data" accept-charset="utf-8" method="post" data-need-recipients="<?php echo $need_recipients ? '1' : '' ?>">
+    <form id="upload_form" enctype="multipart/form-data" accept-charset="utf-8" method="post" data-need-recipients="<?php echo $need_recipients ? '1' : '' ?>">
         <div class="box">
             <div class="files"></div>
             
@@ -124,9 +119,6 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
                             <div class="fieldcontainer" id="encryption_password_container">  
                                 <label for="encryption_password" style="cursor: pointer;">{tr:file_encryption_password} : </label>
                                 <input id="encryption_password" name="encryption_password" type="password" autocomplete="off"/>
-                            </div>
-                            <div class="fieldcontainer" id="encryption_password_container_too_short_message">
-                                {tr:file_encryption_password_too_short}
                             </div>
                             <div class="fieldcontainer" id="encryption_password_container_generate">
                                 <a id='encryption_generate_password' href="#">{tr:file_encryption_generate_password}</a>
