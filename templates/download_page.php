@@ -1,4 +1,4 @@
-<div class="box">
+<div class="boxnoframe">
     <h1>{tr:download_page}</h1>
     
     <?php
