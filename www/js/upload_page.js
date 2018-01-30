@@ -1058,15 +1058,30 @@ $(function() {
             return false;
         }).button({disabled: true});
     }
+
+
     
     filesender.ui.nodes.buttons.stop.on('click', function() {
-        filesender.ui.confirm(lang.tr('confirm_stop_upload'), function() {
-            filesender.ui.transfer.stop(function() {
-                filesender.ui.goToPage('upload');
-            });
-        });
+        if(filesender.supports.reader) {
+            filesender.ui.transfer.pause();
+            filesender.ui.nodes.buttons.pause.addClass('not_displayed');
+            filesender.ui.nodes.buttons.resume.removeClass('not_displayed');
+            filesender.ui.nodes.stats.average_speed.find('.value').text(lang.tr('paused'));
+        }
+        filesender.ui.confirm(lang.tr('confirm_stop_upload'),
+                              function() { // ok
+                                  filesender.ui.transfer.stop(function() {
+                                      filesender.ui.goToPage('upload');
+                                  });
+                              },
+                              function() { // cancel
+                                  filesender.ui.transfer.resume();
+                                  filesender.ui.nodes.buttons.pause.removeClass('not_displayed');
+                                  filesender.ui.nodes.buttons.resume.addClass('not_displayed');
+                              });
         return false;
     }).button();
+    
     
     // MUST BE AFTER BUTTONS SETUP otherwise event propagation ends up
     // trying to change button state but button is still not initialized ...
