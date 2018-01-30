@@ -1263,6 +1263,7 @@ table.guests .guest .to .errors .details {
 
 /* Encryption */
 #encryption_password_container,
+#encryption_password_container_too_short_message,
 #encryption_password_container_generate,
 #encryption_password_show_container,
 #encryption_description_container_disabled,
@@ -1271,6 +1272,10 @@ table.guests .guest .to .errors .details {
 #encryption_description_disabled_container,
 #encryption_description_container {
     display: none;
+}
+
+#encryption_password_container_too_short_message {
+    color: #f00;
 }
 
 table.paginator .pageprev0 {

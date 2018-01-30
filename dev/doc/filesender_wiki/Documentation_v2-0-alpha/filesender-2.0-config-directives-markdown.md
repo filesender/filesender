@@ -83,6 +83,7 @@
 * [user_quota](#user_quota)
 * [max_transfer_file_size](#max_transfer_file_size)
 * [max_transfer_encrypted_file_size](#max_transfer_encrypted_file_size)
+* [encryption_min_password_length](#encryption_min_password_length)
 
 
 ##TeraSender (high speed upload module)
@@ -772,6 +773,17 @@ User language detection is done in the following order:
 * __default:__ 0
 * __available:__ since version 2.0
 * __comment:__ 
+
+
+###encryption_min_password_length
+* __description:__ set to 0 to disable. If set to a positive value it is the minimum number of characters needed in a password for encryption. Note that since the encryption is fully client side, this value could be ignored by a determined user, though they would do that at the loss of their own security not of others.
+* __mandatory:__ no 
+* __type:__ int
+* __default:__ 0
+* __available:__ since version 2.0
+* __comment:__ 
+
+
 
 
 
