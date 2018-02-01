@@ -998,10 +998,10 @@ $(function() {
     filesender.ui.nodes.encryption.generate.on('click', function() {
         var genp = function() { return Math.random().toString(36).substr(2, 14); }
         var pass = genp();
-        for( var i=0; i < filesender.config.encryption_min_password_length; i++ ) {
+        for( var i=0; i < filesender.config.encryption_generated_password_length; i++ ) {
             pass = pass + genp();
         }
-        pass = pass.substr(0,filesender.config.encryption_min_password_length);
+        pass = pass.substr(0,filesender.config.encryption_generated_password_length);
         filesender.ui.nodes.encryption.password.val(pass);
         filesender.ui.nodes.encryption.show_hide.prop('checked',true);
         filesender.ui.nodes.encryption.show_hide.trigger('change');
