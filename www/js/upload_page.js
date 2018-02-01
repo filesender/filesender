@@ -1254,6 +1254,7 @@ $(function() {
                 $('<div class="message" />').text(lang.tr('message') + ' : ' + failed.message).appendTo(tctn);
             }            
         }, function(error) {
+            console.log('getTransfer() msg: ' + error.message);
             if(error.message == 'transfer_not_found') {
                 // Transfer does not exist anymore on server side, remove from tracker
                 filesender.ui.transfer.removeFromRestartTracker(failed.id);
