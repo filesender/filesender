@@ -84,6 +84,7 @@
 * [max_transfer_file_size](#max_transfer_file_size)
 * [max_transfer_encrypted_file_size](#max_transfer_encrypted_file_size)
 * [encryption_min_password_length](#encryption_min_password_length)
+* [encryption_generated_password_length](#encryption_generated_password_length)
 
 
 ##TeraSender (high speed upload module)
@@ -780,6 +781,15 @@ User language detection is done in the following order:
 * __mandatory:__ no 
 * __type:__ int
 * __default:__ 0
+* __available:__ since version 2.0
+* __comment:__ 
+
+
+###encryption_generated_password_length
+* __description:__ The exact number of characters used in a generated password for encryption. This must be equal or greater than encryption_min_password_length.
+* __mandatory:__ no 
+* __type:__ int
+* __default:__ encryption_min_password_length
 * __available:__ since version 2.0
 * __comment:__ 
 
