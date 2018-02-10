@@ -84,8 +84,7 @@ no longer flash: now normal html post.  User can still select multiple files, wh
 
 ## Use of temporary files
 
-<filesender>/tmp
-used for following tmp files:
+The directory `<filesender>/tmp` used for following tmp files:
 
 *  instance.secret which is the seed value used in the secure generation of random values used for fileUID, download link etc.
 *  used by dompdf to store tmp files when generating audit report
@@ -171,6 +170,11 @@ Related config parameter is "relay_unknown_feedbacks" (string, defaults to "send
 
 Received feedback is forwarded as a message/rfc822 attachment.
 
+###Email address validation: uses the PHP built-in facility for checking email address validity 
+which these days works well.  The PHPfunction used is filter_var with the 
+filter FILTER_VALIDATE_EMAIL. 
+
+
 # 9. Multi-tenant hosting
 
 ## Installation
@@ -237,6 +241,11 @@ PHP cannot magically consider a class to be part of a software from its name, no
 * clickjacking
 	* secure webserver config
 
+# Unique ID generation
+
+Using random_uid_generation (6 calls to mt_rand , build X-string, put dashes.  
+Unique IDs were generated before without collision checking.  Now we check for that 
+until we get a real unique one.
 
 
 
