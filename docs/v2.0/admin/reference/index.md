@@ -65,9 +65,7 @@ FileSender has no user database and has no concept of user accounts.
 
 There are two expiry timers on a user logon session.  One controlled by FileSender on its side, in its simplesamlphp or shibboleth configuration.  The other is controlled by the IdP the user uses to authenticate against.
 
-The <...> is set in the SAML2 message received by .
-
-<span style="background-color:#ff0">..</span>
+The <...> is set in the SAML2 message received by
 
 * Any uploads started during an active logon session get their own "upload session" authentication token.  This allows the upload to finish even if the user's logon session should expire.
 * When a login session is expired and a user tries do do something, a message pops up informing the user of the expired session and inviting to re-logon
@@ -143,7 +141,7 @@ Checks to ensure file integrity
 
 ## skinning using style sheets
 
-<filesender>/www/skin
+See the directory `<filesender>/www/skin`
 
 Each template uses "Foundation".  There are template overrides.
 
