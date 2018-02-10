@@ -24,6 +24,9 @@ schedule.
   the [release page](https://github.com/filesender/filesender/releases). It is best
   to "edit" the page for the previous release and copy that markdown to the new release
   page as a template.
+
+* The configuration directives differences can be found by doing a git diff to the previous
+  release.
   
 * Do not worry about attaching files, github will take tar.gz
   snapshots from the repository for you.
@@ -43,19 +46,19 @@ schedule.
   the following email template:
 
 ```
-    To: filesender-announce@filesender.org
-    Cc: filesender-dev@filesender.org
-    Subject: New FileSender Released: version N.nn 
+To: filesender-announce@filesender.org
+Cc: filesender-dev@filesender.org
+Subject: New FileSender Released: version N.nn 
 
-    Hi,
+Hi,
 
-    A new FileSender release is now available for download.
-    Please see the releases page for full details and information
-    on how to obtain, install, and migrate to this release
-    
-    https://github.com/filesender/filesender/releases/
+A new FileSender release is now available for download.
+Please see the releases page for full details and information
+on how to obtain, install, and migrate to this release
 
-    Cheers.
+https://github.com/filesender/filesender/releases/
+
+Cheers.
 ```
     
 
