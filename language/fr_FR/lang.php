@@ -168,6 +168,9 @@ $lang['extend'] = 'Etendre';
 $lang['extend_and_remind'] = 'Etendre et envoyer un rappel';
 $lang['translate_to'] = 'Traduire en :';
 
+/**
+* File Encryption
+*/
 $lang['encryption'] = 'Chiffrement';
 $lang['decrypting'] = 'Déchiffrement';
 $lang['file_encryption'] = 'Fichier Chiffré (beta)';
@@ -289,9 +292,9 @@ $lang['extend_expiry_date'] = 'Etendre la date d\'expiration de {days} jours';
 $lang['confirm_extend_expiry'] = 'Voulez-vous étendre la date d\'expiration de {days} jours ?';
 $lang['transfer_extended'] = 'Date d\'expiration étendue jusqu\'au {expires}';
 $lang['transfer_extended_reminded'] = 'Date d\'expiration étendue jusqu\'au {expires}, un rappel a été envoyé aux destinataires';
+$lang['download_link'] = 'Lien de téléchargement';
 $lang['pager_more'] = 'Plus...';
 $lang['pager_has_no_more'] = 'Rien de plus.';
-
 
 /**
  * Reports

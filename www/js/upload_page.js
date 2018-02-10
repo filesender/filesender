@@ -998,10 +998,10 @@ $(function() {
     filesender.ui.nodes.encryption.generate.on('click', function() {
         var genp = function() { return Math.random().toString(36).substr(2, 14); }
         var pass = genp();
-        for( var i=0; i < filesender.config.encryption_min_password_length; i++ ) {
+        for( var i=0; i < filesender.config.encryption_generated_password_length; i++ ) {
             pass = pass + genp();
         }
-        pass = pass.substr(0,filesender.config.encryption_min_password_length);
+        pass = pass.substr(0,filesender.config.encryption_generated_password_length);
         filesender.ui.nodes.encryption.password.val(pass);
         filesender.ui.nodes.encryption.show_hide.prop('checked',true);
         filesender.ui.nodes.encryption.show_hide.trigger('change');
@@ -1058,15 +1058,30 @@ $(function() {
             return false;
         }).button({disabled: true});
     }
+
+
     
     filesender.ui.nodes.buttons.stop.on('click', function() {
-        filesender.ui.confirm(lang.tr('confirm_stop_upload'), function() {
-            filesender.ui.transfer.stop(function() {
-                filesender.ui.goToPage('upload');
-            });
-        });
+        if(filesender.supports.reader) {
+            filesender.ui.transfer.pause();
+            filesender.ui.nodes.buttons.pause.addClass('not_displayed');
+            filesender.ui.nodes.buttons.resume.removeClass('not_displayed');
+            filesender.ui.nodes.stats.average_speed.find('.value').text(lang.tr('paused'));
+        }
+        filesender.ui.confirm(lang.tr('confirm_stop_upload'),
+                              function() { // ok
+                                  filesender.ui.transfer.stop(function() {
+                                      filesender.ui.goToPage('upload');
+                                  });
+                              },
+                              function() { // cancel
+                                  filesender.ui.transfer.resume();
+                                  filesender.ui.nodes.buttons.pause.removeClass('not_displayed');
+                                  filesender.ui.nodes.buttons.resume.addClass('not_displayed');
+                              });
         return false;
     }).button();
+    
     
     // MUST BE AFTER BUTTONS SETUP otherwise event propagation ends up
     // trying to change button state but button is still not initialized ...
@@ -1239,6 +1254,7 @@ $(function() {
                 $('<div class="message" />').text(lang.tr('message') + ' : ' + failed.message).appendTo(tctn);
             }            
         }, function(error) {
+            console.log('getTransfer() msg: ' + error.message);
             if(error.message == 'transfer_not_found') {
                 // Transfer does not exist anymore on server side, remove from tracker
                 filesender.ui.transfer.removeFromRestartTracker(failed.id);
