@@ -46,10 +46,12 @@ $lang['admin_page'] = 'Admin';
 $lang['download_page'] = 'Télécharger';
 $lang['unknown_page'] = 'Page inconnue';
 $lang['about'] = 'A propos';
+$lang['about_page'] = 'A propos';
 $lang['help'] = 'Aide';
+$lang['help_page'] = 'Aide';
 $lang['logoff'] = 'Déconnexion';
 
-$lang['undergoing_maintenance'] = 'Cette application est en maintenance';
+$lang['undergoing_maintenance'] = 'Cette application est en cours de maintenance.';
 $lang['maintenance_autoresume'] = 'Les opérations en cours redémarreront automatiquement après la fin de la maintenance.';
 
 $lang['authentication_required'] = 'Authentification requise';
@@ -128,6 +130,7 @@ $lang['details'] = 'Details';
 $lang['showhide'] = 'Afficher/Cacher';
 $lang['downloads'] = 'Téléchargements';
 $lang['download'] = 'Téléchargement';
+$lang['downloading'] = 'Téléchargement';
 $lang['logon'] = 'Connexion';
 $lang['files'] = 'Fichiers';
 $lang['optional'] = 'optionnel';
@@ -165,6 +168,21 @@ $lang['extend'] = 'Etendre';
 $lang['extend_and_remind'] = 'Etendre et envoyer un rappel';
 $lang['translate_to'] = 'Traduire en :';
 
+/**
+* File Encryption
+*/
+$lang['encryption'] = 'Chiffrement';
+$lang['decrypting'] = 'Déchiffrement';
+$lang['file_encryption'] = 'Fichier Chiffré (beta)';
+$lang['file_encryption_password'] = 'Mot de passe';
+$lang['file_encryption_show_password'] = 'Voir / Cacher le mot de passe';
+$lang['file_encryption_wrong_password'] = 'Mot de passe incorrect';
+$lang['file_encryption_enter_password'] = 'Entrer un mot de passe';
+$lang['file_encryption_need_password'] = 'Vous devez entrer un mot de passe pour télécharger';
+$lang['file_encryption_description'] = '<i class="fa fa-exclamation-triangle" style="color:#FFAA00" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp; Chiffrement de bout en bout. Vos fichiers sont chiffrés dans votre navigateur. C\'est à vous de communiquer le mot de passe aux destinataires, nous ne stockons pas les mots de passe.<br/><i class="fa fa-exclamation-triangle" style="color:#FFAA00" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp; Le chiffrement des fichiers impactera significativement les performances de votre navigateur, tant pour l\'émetteur que pour les destinataires.<br/><i class="fa fa-exclamation-triangle" style="color:#FFAA00" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp; Les fichiers chiffrés d\'une taille égale ou supérieure à 4Go peuvent ne pas être téléversé correctement, ceci est dû aux limitations du navigateur.';
+$lang['file_encryption_description_disabled'] = '<i class="fa fa-exclamation-triangle" style="color:#FFAA00" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp; Fonctionnalité non supportée par ce navigateur. Veuillez réessayer avec une version récente de Firefox, Internet Explorer, Edge, Safari ou Chrome';
+$lang['file_encryption_disabled'] = '<i class="fa fa-exclamation-triangle" style="color:#FFAA00" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp;Déchiffrement de fichier non supportée par ce navigateur. Veuillez réessayer avec une version récente de Firefox, Internet Explorer, Edge, Safari ou Chrome';
+$lang['file_encryption_generate_password'] = 'Générer un mot de passe';
 
 /**
  * Transfer specific
@@ -218,6 +236,7 @@ $lang['add_recipient'] = 'Ajouter un destinataire';
 $lang['confirm_leave_upload_page'] = 'Voulez-vous vraiment quitter cette page et perdre la progression en cours ?';
 $lang['download_link'] = 'Lien de téléchargement';
 $lang['recipients_notifications_language'] = 'Langue des destinataires';
+$lang['disable_terasender'] = 'Désactive l\'envoi en paralèlle (Cochez si votre connexion est limitée)';
 
 
 /**
@@ -241,6 +260,7 @@ $lang['guest_deleted'] = 'Invité supprimé';
 $lang['guest_reminded'] = 'Rappel envoyé à l\'invité';
 $lang['confirm_delete_guest'] = 'Souhaitez-vous vraiment supprimer cet invité (il ne pourra plus déposer de fichiers) ?';
 $lang['confirm_remind_guest'] = 'Envoyer un rappel à cet invité ?';
+$lang['message_can_not_contain_urls'] = 'Le message ne peut pas contenir d\'URLs ou quelque chose qui y ressemble.';
 
 
 /**
@@ -267,11 +287,14 @@ $lang['view_full_log'] = 'Voir l\'audit dans son ensemble';
 $lang['send_to_my_email'] = 'M\'envoyer ces informations par email';
 $lang['confirm_remind_transfer'] = 'Envoyer le rappel aux destinataires ?';
 $lang['confirm_remind_recipient'] = 'Envoyer le rappel à ce destinataire ?';
+$lang['download_link'] = 'Lien de téléchargement';
 $lang['extend_expiry_date'] = 'Etendre la date d\'expiration de {days} jours';
 $lang['confirm_extend_expiry'] = 'Voulez-vous étendre la date d\'expiration de {days} jours ?';
 $lang['transfer_extended'] = 'Date d\'expiration étendue jusqu\'au {expires}';
 $lang['transfer_extended_reminded'] = 'Date d\'expiration étendue jusqu\'au {expires}, un rappel a été envoyé aux destinataires';
-
+$lang['download_link'] = 'Lien de téléchargement';
+$lang['pager_more'] = 'Plus...';
+$lang['pager_has_no_more'] = 'Rien de plus.';
 
 /**
  * Reports
@@ -318,6 +341,9 @@ $lang['report_guest_event_transfer_sent'] = 'Les liens de téléchargement ont �
  * Download page specific
  */
 $lang['archive_download'] = 'Télécharger l\'archive';
+$lang['download_disclamer'] = '';
+$lang['download_disclamer_nocrypto_message'] = 'Vous pouvez faire un clic droit sur le bouton de téléchargement et "Copier l\'emplacement du lien" pour télécharger le fichier en utilisant un autre outil.';
+$lang['download_disclamer_crypto_message'] = 'Cliquez sur un fichier pour télécharger les données et déchiffrer sur votre ordinateur.';
 $lang['download_disclamer_archive'] = 'Voici vos fichiers. Vous pouvez les télécharger indépendamment les uns des autres ou rassemblés sous forme d\'archive ZIP.';
 $lang['download_file'] = 'Télécharger';
 $lang['mac_archive_message'] = 'Si vous utilisez OSX vous pourrez trouver un utilitaire permettant d\'ouvrir l\'archive en suivant le lien suivant : <a href="{cfg:mac_unzip_link}" target="_blank">{cfg:mac_unzip_name}</a>.';
@@ -335,7 +361,7 @@ $lang['user_preferences'] = 'Préférences';
 $lang['user_lang'] = 'Langue préférée';
 $lang['user_remote_authentication'] = 'Authentification distante';
 $lang['user_auth_secret'] = 'Secret';
-$lang['user_additional'] = 'Informations additionnelles';
+$lang['user_additionnal'] = 'Informations additionnelles';
 $lang['user_id'] = 'Identité';
 $lang['user_created'] = 'Première connexion';
 $lang['get_full_user_remote_config'] = 'Obtenir la configuration complète pour l\'authentification distante';
@@ -406,6 +432,9 @@ $lang['auth_sp_missing_delegation_class'] = 'Classe de délégation d\'authentif
 $lang['auth_sp_authentication_not_found'] = 'Classe de délégation d\'authentification de type "Fournisseur de Service" introuvable';
 $lang['auth_sp_missing_attribute'] = 'Attribut manquant pour l\'authentification de type "Fournisseur de Service"';
 $lang['auth_sp_bad_attribute'] = 'Attribut erroné pour l\'authentification de type "Fournisseur de Service"';
+$lang['serverlog_auth_sp_attribute_not_found'] = 'Il y a eu des problèmes pour trouver un attribut d\'authentification "Fournisseur de Service". Ce sont les attributs disponibles au moment de l\'authentification. Peut-être re-vérifier que l\'orthographe du nom de l\'attribut est correct. Peut-être que la configuration recherche le mauvais attribut ?';
+$lang['serverlog_config_directive'] = 'Directive de configuration associée \'{key}\'';
+$lang['serverlog_wanted_key_in_array'] = 'Attribut demandé avec la clé \'{key}\'';
 
 // Bad exceptions
 $lang['bad_email'] = 'Format d\'adresse email erroné';
@@ -537,6 +566,7 @@ $lang['transfer_user_quota_exceeded'] = 'Quota utilisateur dépassé';
 $lang['transfer_expiry_extension_not_allowed'] = 'Extension de la date d\'expiration non-autorisée';
 $lang['transfer_expiry_extension_count_exceeded'] = 'Nombre maximum d\'extensions de la date d\'expiration atteint';
 $lang['transfer_files_incomplete'] = 'Certains fichiers ne sont pas complets';
+$lang['transfer_file_name_invalid'] = 'Nom de fichier contenant des caractères interdits';
 
 // User related exceptions
 $lang['user_not_found'] = 'Utilisateur introuvable';

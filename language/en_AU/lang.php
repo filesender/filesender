@@ -173,6 +173,7 @@ $lang['encryption'] = 'Encryption';
 $lang['decrypting'] = 'Decrypting';
 $lang['file_encryption'] = 'File Encryption (beta)';
 $lang['file_encryption_password'] = 'Password';
+$lang['file_encryption_password_too_short'] = 'Sorry, your password is too short';
 $lang['file_encryption_show_password'] = 'Show / Hide Password';
 $lang['file_encryption_wrong_password'] = 'Incorrect Password';
 $lang['file_encryption_enter_password'] = 'Enter a password';
@@ -562,6 +563,8 @@ $lang['transfer_expiry_extension_not_allowed'] = 'Transfer expiry date extension
 $lang['transfer_expiry_extension_count_exceeded'] = 'Transfer expiry date extension maximum reached';
 $lang['transfer_files_incomplete'] = 'Transfer\'s files are not done uploading';
 $lang['transfer_file_name_invalid'] = 'File name contains bad characters';
+$lang['maximum_file_size_exceeded'] = 'Maximum size of a single file is exceeded';
+$lang['maximum_encrypted_file_size_exceeded'] = 'Maximum size of a single file with encryption is exceeded';
 
 // User related exceptions
 $lang['user_not_found'] = 'User not found';

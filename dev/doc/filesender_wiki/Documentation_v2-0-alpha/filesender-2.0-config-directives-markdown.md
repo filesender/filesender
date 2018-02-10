@@ -81,6 +81,11 @@
 * [transfer_options](#transfer_options) (email receipt control)
 * [upload_chunk_size](#upload_chunk_size)
 * [user_quota](#user_quota)
+* [max_transfer_file_size](#max_transfer_file_size)
+* [max_transfer_encrypted_file_size](#max_transfer_encrypted_file_size)
+* [encryption_min_password_length](#encryption_min_password_length)
+* [encryption_generated_password_length](#encryption_generated_password_length)
+
 
 ##TeraSender (high speed upload module)
 * [terasender_enabled](#terasender_enabled)
@@ -751,6 +756,46 @@ User language detection is done in the following order:
 * __available:__ since version 2.0
 * __1.x name:__
 * __comment:__ user quote can be implemented in a much more flexible way as well.  As we're doing lazy loading of configuration parameters we can change this value (and max. file size) based on user profile.  In stead of defining this config parameter with a number you can give a function to it.  The value returned by this function is cached for a login session.  For example a function that uses eduPersonAffiliation can give a "student" 10 GB and "faculty" 1 TB.  You could also change max. days valid based on user profile.  The function can use the current application state and user session to compute the value for a logged in user, because the function would run after everything else.  <span style="background-color:orange">Calculated maximum values should have its own chapter to explain, with examples especially for using eduPersonAffiliation.</style>
+
+
+###max_transfer_file_size
+* __description:__ set to 0 to disable. If set to a positive value it sets the maximum file size for a not encrypted file that the user can upload. Attempts to upload a larger file is rejected with an error message in the web-UI.
+* __mandatory:__ no 
+* __type:__ int (bytes) or function
+* __default:__ 0
+* __available:__ since version 2.0
+* __comment:__ 
+
+
+###max_transfer_encrypted_file_size
+* __description:__ set to 0 to disable. If set to a positive value it sets the maximum file size for an encrypted file that the user can upload. Attempts to upload a larger file is rejected with an error message in the web-UI.
+* __mandatory:__ no 
+* __type:__ int (bytes) or function
+* __default:__ 0
+* __available:__ since version 2.0
+* __comment:__ 
+
+
+###encryption_min_password_length
+* __description:__ set to 0 to disable. If set to a positive value it is the minimum number of characters needed in a password for encryption. Note that since the encryption is fully client side, this value could be ignored by a determined user, though they would do that at the loss of their own security not of others.
+* __mandatory:__ no 
+* __type:__ int
+* __default:__ 0
+* __available:__ since version 2.0
+* __comment:__ 
+
+
+###encryption_generated_password_length
+* __description:__ The exact number of characters used in a generated password for encryption. This must be equal or greater than encryption_min_password_length.
+* __mandatory:__ no 
+* __type:__ int
+* __default:__ encryption_min_password_length
+* __available:__ since version 2.0
+* __comment:__ 
+
+
+
+
 
 
 

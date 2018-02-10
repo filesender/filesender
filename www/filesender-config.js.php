@@ -65,7 +65,10 @@ window.filesender.config = {
 
     max_transfer_size: <?php echo Config::get('max_transfer_size') ?>,
     max_transfer_files: <?php echo Config::get('max_transfer_files') ?>,
-    
+
+    max_transfer_file_size: <?php echo Config::get('max_transfer_file_size') ?>,
+    max_transfer_encrypted_file_size: <?php echo Config::get('max_transfer_encrypted_file_size') ?>,
+
     ban_extension: <?php echo is_string($banned) ? "'".$banned."'" : 'null' ?>,
     extension_whitelist_regex: <?php echo is_string($extension_whitelist_regex) ? "'".$extension_whitelist_regex."'" : 'null' ?>,
     
@@ -80,6 +83,8 @@ window.filesender.config = {
     chunk_upload_security: '<?php echo Config::get('chunk_upload_security') ?>',
     
     encryption_enabled: '<?php echo Config::get('encryption_enabled') ?>',
+    encryption_min_password_length: '<?php echo Config::get('encryption_min_password_length') ?>',
+    encryption_generated_password_length: '<?php echo Config::get('encryption_generated_password_length') ?>',
     upload_crypted_chunk_size: '<?php echo Config::get('upload_crypted_chunk_size') ?>',
     crypto_iv_len: '<?php echo Config::get('crypto_iv_len') ?>',
     crypto_crypt_name: '<?php echo Config::get('crypto_crypt_name') ?>',
@@ -113,6 +118,8 @@ window.filesender.config = {
     logon_url: '<?php echo AuthSP::logonURL() ?>',
 
     upload_display_per_file_stats: '<?php echo Config::get('upload_display_per_file_stats') ?>',
+    upload_force_transfer_resume_forget_if_encrypted: '<?php echo Config::get('upload_force_transfer_resume_forget_if_encrypted') ?>',
+    upload_considered_too_slow_if_no_progress_for_seconds: '<?php echo Config::get('upload_considered_too_slow_if_no_progress_for_seconds') ?>',
 
 	language: {
 		downloading : "<?php echo Lang::tr('downloading')->out(); ?>",

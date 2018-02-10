@@ -47,6 +47,8 @@ $default = array(
     'relay_unknown_feedbacks' => 'sender',   // Report email feedbacks with unknown type but with identified target (recipient or guest) to target owner
     'upload_display_bits_per_sec' => false, // By default, do not show bits per seconds 
     'upload_display_per_file_stats' => false, //
+    'upload_force_transfer_resume_forget_if_encrypted' => false, //
+    'upload_considered_too_slow_if_no_progress_for_seconds' => 0, // seconds
     'force_ssl' => true,
     
     'auth_sp_type' => 'saml',  // Authentification type
@@ -78,6 +80,8 @@ $default = array(
     'default_transfer_days_valid' => 10,
     'failed_transfer_cleanup_days' => 7,
     'transfer_recipients_lang_selector_enabled' => false,
+    'max_transfer_file_size' => 0,
+    'max_transfer_encrypted_file_size' => 0,
     
     'max_guest_recipients' => 50,
     
@@ -88,6 +92,8 @@ $default = array(
     'download_chunk_size' => 5 * 1024 * 1024,
     
     'encryption_enabled' => true,
+    'encryption_min_password_length' => 0,
+    'encryption_generated_password_length' => 0,
     'upload_crypted_chunk_size' => 5 * 1024 * 1024 + 16 + 16, // the 2 times 16 are the padding added by the crypto algorithm, and the IV needed
     'crypto_iv_len' => 16, // i dont think this will ever change, but lets just leave it as a config
     'crypto_crypt_name' => "AES-CBC", // The encryption algorithm used

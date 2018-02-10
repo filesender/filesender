@@ -264,7 +264,8 @@ class RestEndpointFile extends RestEndpoint {
         
         if($mode == 'chunk') {
             // Need to put a chunk of data
-            
+
+
             // File's Transfer must be uploading or just started, fail otherwise
             if(
                 $file->transfer->status != TransferStatuses::STARTED &&

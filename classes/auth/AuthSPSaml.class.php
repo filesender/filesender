@@ -220,9 +220,10 @@ class AuthSPSaml {
             $saml_auto_load_path = self::$config['simplesamlphp_location'] . 'lib/_autoload.php';
             Utilities::include_once_or_halt( $saml_auto_load_path, 'Failed to include SimpleSAMLphp' );
 
-            // grab the version of the library that is in use.
-            $samlConfig = SimpleSAML_Configuration::getInstance();
-            self::$SimpleSAMLphpVersion = $samlConfig->getVersion();
+            // WARNING: grab the version of the library that is in use.
+            // WARNING: this can cause big problems
+            // $samlConfig = SimpleSAML_Configuration::getInstance();
+            // self::$SimpleSAMLphpVersion = $samlConfig->getVersion();
             // Logger::info('Loaded SimpleSAMLphp version is ' . self::$SimpleSAMLphpVersion);
             
             self::$simplesamlphp_auth_simple = new SimpleSAML_Auth_Simple(self::$config['authentication_source']);
