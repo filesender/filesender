@@ -51,7 +51,7 @@ $lang['help'] = 'Aide';
 $lang['help_page'] = 'Aide';
 $lang['logoff'] = 'Déconnexion';
 
-$lang['undergoing_maintenance'] = 'Cette application est en maintenance';
+$lang['undergoing_maintenance'] = 'Cette application est en cours de maintenance.';
 $lang['maintenance_autoresume'] = 'Les opérations en cours redémarreront automatiquement après la fin de la maintenance.';
 
 $lang['authentication_required'] = 'Authentification requise';
@@ -173,7 +173,7 @@ $lang['translate_to'] = 'Traduire en :';
 */
 $lang['encryption'] = 'Chiffrement';
 $lang['decrypting'] = 'Déchiffrement';
-$lang['file_encryption'] = 'Chiffrement des fichiers (beta)';
+$lang['file_encryption'] = 'Fichier Chiffré (beta)';
 $lang['file_encryption_password'] = 'Mot de passe';
 $lang['file_encryption_show_password'] = 'Voir / Cacher le mot de passe';
 $lang['file_encryption_wrong_password'] = 'Mot de passe incorrect';
@@ -238,6 +238,7 @@ $lang['download_link'] = 'Lien de téléchargement';
 $lang['recipients_notifications_language'] = 'Langue des destinataires';
 $lang['disable_terasender'] = 'Désactive l\'envoi en paralèlle (Cochez si votre connexion est limitée)';
 
+
 /**
  * Guest page spacific
  */
@@ -260,6 +261,7 @@ $lang['guest_reminded'] = 'Rappel envoyé à l\'invité';
 $lang['confirm_delete_guest'] = 'Souhaitez-vous vraiment supprimer cet invité (il ne pourra plus déposer de fichiers) ?';
 $lang['confirm_remind_guest'] = 'Envoyer un rappel à cet invité ?';
 $lang['message_can_not_contain_urls'] = 'Le message ne peut pas contenir d\'URLs ou quelque chose qui y ressemble.';
+
 
 /**
  * Transfer page specific
@@ -285,6 +287,7 @@ $lang['view_full_log'] = 'Voir l\'audit dans son ensemble';
 $lang['send_to_my_email'] = 'M\'envoyer ces informations par email';
 $lang['confirm_remind_transfer'] = 'Envoyer le rappel aux destinataires ?';
 $lang['confirm_remind_recipient'] = 'Envoyer le rappel à ce destinataire ?';
+$lang['download_link'] = 'Lien de téléchargement';
 $lang['extend_expiry_date'] = 'Etendre la date d\'expiration de {days} jours';
 $lang['confirm_extend_expiry'] = 'Voulez-vous étendre la date d\'expiration de {days} jours ?';
 $lang['transfer_extended'] = 'Date d\'expiration étendue jusqu\'au {expires}';
@@ -338,6 +341,9 @@ $lang['report_guest_event_transfer_sent'] = 'Les liens de téléchargement ont �
  * Download page specific
  */
 $lang['archive_download'] = 'Télécharger l\'archive';
+$lang['download_disclamer'] = '';
+$lang['download_disclamer_nocrypto_message'] = 'Vous pouvez faire un clic droit sur le bouton de téléchargement et "Copier l\'emplacement du lien" pour télécharger le fichier en utilisant un autre outil.';
+$lang['download_disclamer_crypto_message'] = 'Cliquez sur un fichier pour télécharger les données et déchiffrer sur votre ordinateur.';
 $lang['download_disclamer_archive'] = 'Voici vos fichiers. Vous pouvez les télécharger indépendamment les uns des autres ou rassemblés sous forme d\'archive ZIP.';
 $lang['download_file'] = 'Télécharger';
 $lang['mac_archive_message'] = 'Si vous utilisez OSX vous pourrez trouver un utilitaire permettant d\'ouvrir l\'archive en suivant le lien suivant : <a href="{cfg:mac_unzip_link}" target="_blank">{cfg:mac_unzip_name}</a>.';
@@ -355,7 +361,7 @@ $lang['user_preferences'] = 'Préférences';
 $lang['user_lang'] = 'Langue préférée';
 $lang['user_remote_authentication'] = 'Authentification distante';
 $lang['user_auth_secret'] = 'Secret';
-$lang['user_additional'] = 'Informations additionnelles';
+$lang['user_additionnal'] = 'Informations additionnelles';
 $lang['user_id'] = 'Identité';
 $lang['user_created'] = 'Première connexion';
 $lang['get_full_user_remote_config'] = 'Obtenir la configuration complète pour l\'authentification distante';
