@@ -227,7 +227,7 @@ class Transfer extends DBObject {
         // Gather user's guests transfers
         $transfers = array();
         foreach(Guest::fromUser($user) as $gv) {
-        	$transfers += $gv->transfers;
+            $transfers = array_merge($transfers, $gv->transfers); 
         }
         
         // Sort by date
