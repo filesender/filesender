@@ -2,7 +2,10 @@
 title: Configuration directives
 ---
 
-* This document is a work in progress.  If you are keen on seeing FileSender 2.0 released offer to help with (testing) the documentation.
+This document is a work in progress. You can [contribute updates](patchdocs/) to the documentation or file [an issue](https://github.com/filesender/filesender/issues) to get the ball rolling on an update.
+
+A note about colours;
+
 * mandatory configuration settings are <span style="background-color:red">marked in red</span>
 * sections <span style="background-color:orange">marked in orange</span> need to be double checked.
 
@@ -12,39 +15,39 @@ title: Configuration directives
 
 ## General settings
 
-* [admin_email](#adminemail)
+* [admin_email](#admin_email)
 * [admin](#admin)
-* [site_name](#sitename)
-* [force_ssl](#forcessl)
-* [auth_remote_signature_algorithm](#authremotesignaturealgorithm)
-* [default_timezone](#defaulttimezone)
-* [default_language](#defaultlanguage)
-* [site_url](#siteurl)
-* [site_logouturl](#sitelogouturl)
-* [about_url](#abouturl)
-* [help_url](#helpurl)
-* [reports_show_ip_addr](#reportsshowipaddr)
+* [site_name](#site_name)
+* [force_ssl](#force_ssl)
+* [auth_remote_signature_algorithm](#auth_remote_signature_algorithm)
+* [default_timezone](#default_timezone)
+* [default_language](#default_language)
+* [site_url](#site_url)
+* [site_logouturl](#site_logouturl)
+* [about_url](#about_url)
+* [help_url](#help_url)
+* [reports_show_ip_addr](#reports_show_ip_addr)
 
 ## Backend storage
 
-* [storage_type](#storagetype)
-* [storage_filesystem_path](#storagefilesystempath)
-* [storage_filesystem_df_command](#storagefilesystemdfcommand)
-* [storage_filesystem_file_deletion_command](#storagefilesystemfiledeletioncommand)
-* [storage_filesystem_tree_deletion_command](#storagefilesystemtreedeletioncommand)
-* [storage_usage_warning](#storageusagewarning)
-* [storage_filesystem_hashing](#storagefilesystemhashing)
-* [storage_filesystem_ignore_disk_full_check](#storagefilesystemignorediskfullcheck)
+* [storage_type](#storage_type)
+* [storage_filesystem_path](#storage_filesystem_path)
+* [storage_filesystem_df_command](#storage_filesystem_df_command)
+* [storage_filesystem_file_deletion_command](#storage_filesystem_file_deletion_command)
+* [storage_filesystem_tree_deletion_command](#storage_filesystem_tree_deletion_command)
+* [storage_usage_warning](#storage_usage_warning)
+* [storage_filesystem_hashing](#storage_filesystem_hashing)
+* [storage_filesystem_ignore_disk_full_check](#storage_filesystem_ignore_disk_full_check)
 
 ## Database
 
-* [db_type](#dbtype)
-* [db_host](#dbhost)
-* [db_port](#dbport)
-* [db_username](#dbusername)
-* [db_password](#dbpassword)
-* [db_database](#dbdatabase)
-* [db_table_prefix](#dbtableprefix)
+* [db_type](#db_type)
+* [db_host](#db_host)
+* [db_port](#db_port)
+* [db_username](#db_username)
+* [db_password](#db_password)
+* [db_database](#db_database)
+* [db_table_prefix](#db_table_prefix)
 
 ## Language and internationalisation
 
@@ -71,6 +74,9 @@ title: Configuration directives
 * [autocomplete_max_pool](#autocompletemaxpool)
 * [autocomplete_min_characters](#autocompletemincharacters)
 * [upload_display_bits_per_sec](#uploaddisplaybitspersec)
+* [upload_display_per_file_stats](#upload_display_per_file_stats)
+* [upload_force_transfer_resume_forget_if_encrypted](#upload_force_transfer_resume_forget_if_encrypted)
+* [upload_considered_too_slow_if_no_progress_for_seconds](#upload_considered_too_slow_if_no_progress_for_seconds)
 
 ## Transfers
 
@@ -90,6 +96,10 @@ title: Configuration directives
 * [transfer_options](#transferoptions) (email receipt control)
 * [upload_chunk_size](#uploadchunksize)
 * [user_quota](#userquota)
+* [max_transfer_file_size](#max_transfer_file_size)
+* [max_transfer_encrypted_file_size](#max_transfer_encrypted_file_size)
+* [encryption_min_password_length](#encryption_min_password_length)
+* [encryption_generated_password_length](#encryption_generated_password_length)
 
 ## Graphs
 
@@ -659,6 +669,33 @@ User language detection is done in the following order:
 * __1.x name:__
 * __comment:__ does this actually work?
 
+###upload_display_per_file_stats
+* __description:__ show the duration of the current chunk for each worker to the user during uploads
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 2.0
+* __1.x name:__
+
+
+
+###upload_force_transfer_resume_forget_if_encrypted
+* __description:__ forget partial transfers when upload page is revisited if they were encrypted.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 2.0
+
+
+###upload_considered_too_slow_if_no_progress_for_seconds
+* __description:__ If 0 this is disabled. If an uploading chunk has not reported any progress in this number of seconds then it is considered in trouble and some action may be taken (eg. force stop and resend of chunk) to try to recover. Note that this relies on the browser to report progress messages for ongoing uploads which might only happen every few seconds if a single request is active and maybe for terasender_worker_count=5 you might like to set this to 20 or 30 to avoid thinking a chunk is stalled when it is not.
+* __mandatory:__ no
+* __type:__ int
+* __default:__ 0
+* __available:__ since version 2.0
+
+
+
 ---
 
 ## Transfers
@@ -867,6 +904,43 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __1.x name:__
 * __comment:__ user quote can be implemented in a much more flexible way as well.  As we're doing lazy loading of configuration parameters we can change this value (and max. file size) based on user profile.  In stead of defining this config parameter with a number you can give a function to it.  The value returned by this function is cached for a login session.  For example a function that uses eduPersonAffiliation can give a "student" 10 GB and "faculty" 1 TB.  You could also change max. days valid based on user profile.  The function can use the current application state and user session to compute the value for a logged in user, because the function would run after everything else.  <span style="background-color:orange">Calculated maximum values should have its own chapter to explain, with examples especially for using eduPersonAffiliation.</span>
 
+
+###max_transfer_file_size
+* __description:__ set to 0 to disable. If set to a positive value it sets the maximum file size for a not encrypted file that the user can upload. Attempts to upload a larger file is rejected with an error message in the web-UI.
+* __mandatory:__ no 
+* __type:__ int (bytes) or function
+* __default:__ 0
+* __available:__ since version 2.0
+* __comment:__ 
+
+
+###max_transfer_encrypted_file_size
+* __description:__ set to 0 to disable. If set to a positive value it sets the maximum file size for an encrypted file that the user can upload. Attempts to upload a larger file is rejected with an error message in the web-UI.
+* __mandatory:__ no 
+* __type:__ int (bytes) or function
+* __default:__ 0
+* __available:__ since version 2.0
+* __comment:__ 
+
+
+###encryption_min_password_length
+* __description:__ set to 0 to disable. If set to a positive value it is the minimum number of characters needed in a password for encryption. Note that since the encryption is fully client side, this value could be ignored by a determined user, though they would do that at the loss of their own security not of others.
+* __mandatory:__ no 
+* __type:__ int
+* __default:__ 0
+* __available:__ since version 2.0
+* __comment:__ 
+
+
+###encryption_generated_password_length
+* __description:__ The exact number of characters used in a generated password for encryption. This must be equal or greater than encryption_min_password_length.
+* __mandatory:__ no 
+* __type:__ int
+* __default:__ encryption_min_password_length
+* __available:__ since version 2.0
+* __comment:__ 
+
+
 ---
 
 ## Graphs
@@ -890,6 +964,9 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __default:__ 1024 * 1024 * 1024
 * __available:__ since version 2.0
 * __comment:__ only useful when you enable upload_graph_bulk_display
+
+
+
 
 
 ---
