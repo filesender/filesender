@@ -221,7 +221,7 @@ class TranslatableEmail extends DBObject {
                         $context = $v;
                     }
                     
-                    if(in_array(get_class($v), array('File'))) {
+                    if( 'File' == get_class( $v ) ) {
                         $context = $v->transfer;
                     }
                 }

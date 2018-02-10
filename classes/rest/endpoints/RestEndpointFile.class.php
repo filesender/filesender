@@ -140,7 +140,7 @@ class RestEndpointFile extends RestEndpoint {
         // Check parameters
         if(!$id) throw new RestMissingParameterException('file_id');
         if(!is_numeric($id)) throw new RestBadParameterException('file_id');
-        if(!in_array($mode, array('whole'))) throw new RestBadParameterException('mode');
+        if( 'whole' != $mode ) throw new RestBadParameterException('mode');
         
         // Evaluate security type depending on config and auth
         $security = Config::get('chunk_upload_security');

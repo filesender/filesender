@@ -293,10 +293,11 @@ class DBIStatement {
             foreach($args[0] as $key => $value) {
                 if(is_array($value)) {
                     $values = array_values($value);
-                    for($i=0; $i<count($values); $i++)
-                        $args[0][$key.'___'.$i] = $values[$i];
-                    
-                    unset($args[0][$key]);
+	                foreach ( $values as $i => $iValue ) {
+		                $args[0][ $key . '___' . $i ] = $iValue;
+	                }
+
+	                unset($args[0][$key]);
                 }
             }
         }
