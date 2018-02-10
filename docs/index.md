@@ -26,7 +26,10 @@ The latest production release is [1.6.1, released on December 30th 2015](https:/
 
 ### Development status
 
-The version currently under development is version 2.0. The alpha version can be installed from Git, see [the documentation for 2.0](v2.0/install/) for details. Check the [Release Schedule](https://app.assembla.com/wiki/show/file_sender/Release_Schedule) for the planning.
+The version currently under development is version 2.0. A series of
+beta releases have been made and you are encouraged to use the latest
+beta if possible. See [the documentation for 2.0](v2.0/install/) for
+details. 
 
 
 ### Feature Requests

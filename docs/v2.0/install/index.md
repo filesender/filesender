@@ -1,8 +1,8 @@
 ---
-title: Installation - Linux Source 2.0-Beta2 from Git
+title: Installation - Linux Source 2.0-Beta3 from Git
 ---
 
-# Installation FileSender 2.0 Beta2
+# Installation FileSender 2.0 Beta3
 
 _This documentation is under development. It was created by installing FileSender on a CentOS 7 and Debian 8 machine._
 
@@ -53,7 +53,7 @@ Or install the Git package on Debian:
 	apt-get install -y git
 
 Install the FileSender 2.0 beta branch from the GIT repository use the
-following commands. Note that you can use beta2, beta3 etc if there
+following commands. Note that you can use beta3, beta4 etc if there
 are more beta releases. See
 [Releases](https://github.com/filesender/filesender/releases) for
 information about recent releases.
@@ -61,7 +61,7 @@ information about recent releases.
 	cd /opt/filesender/
 	git clone https://github.com/filesender/filesender.git filesender-2.0
 		cd filesender-2.0
-		git checkout filesender-2.0-beta2
+		git checkout filesender-2.0-beta3
 		cd ..
 	ln -s filesender-2.0/ filesender
 
