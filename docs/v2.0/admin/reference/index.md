@@ -151,7 +151,6 @@ When you want to override css or add script, like for Fonts: create skin directo
 
 # 8. Email bounce handling and SPF
 
-<Etienne to write>
 examples of sendmail and postfix
 
 Add possibility to forward feedback with non-detectable type but identified related target (recipient, guest) to person of choice.
