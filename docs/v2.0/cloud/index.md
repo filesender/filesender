@@ -10,6 +10,12 @@ Amazon S3 is another possible cloud target.
 
 ## Azure
 
+At the moment a new container is created for each file and files are
+uploaded to multiple blobs which are upload_chunk_size bytes in size.
+This is the CloudAzure storage_type. If other styles of
+upload/download are desired there might be other Azure storage types
+created for FileSender to allow easy choice of schema.
+
 ### Setup
 
 Azure support uses the PHP bindings. These bindings can be installed
@@ -65,9 +71,9 @@ $ ./start.sh
 
 The main configuration keys for Azure are the connection string to use
 to connect and maybe other settings to use to store your data. You
-might like to store the first in the optioanl config-passwords.php
+might like to store the first in the optional config-passwords.php
 file to keep it separate from your config.php file and reduce the risk
-of accidentially sharing sensitive information.
+of accidentally sharing sensitive information.
 
 The config-passwords.php has the same format as config.php but allows
 you to keep passwords (databases, clouds, etc) out of the main
@@ -86,7 +92,9 @@ to use Config::get() to access your sysadmin_setting_testcloud setting in
 config-passwords.php.
 
 This has the added plus of not having to open config-passwords.php to
-see the local only test connection settings.
+see the local only test connection settings. Note that there should be
+no closing `?>` in either the config.php or config-passwords.php
+files.
 
 ```
 # cat config.php
@@ -104,9 +112,9 @@ $config['sysadmin_setting_testcloud'] = true;
 if( !Config::get('sysadmin_setting_testcloud') ) {
   $config['cloud_azure_connection_string'] = 'DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://myrealazure-provider:10000/devstoreaccount1;';
 }
+```
 
 
-?>
 
 ### Running a test
 
@@ -130,9 +138,8 @@ Now that you know that your configuration and software setup can talk
 to your cloud provider you can switch over your storage_type to start
 storing the file content in the cloud.
 
-At the moment a new container is created for each file and files are
-uploaded to multiple blobs which are upload_chunk_size bytes in size.
 
 ```
 $config['storage_type'] = 'CloudAzure';
 ```
+
