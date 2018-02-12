@@ -127,7 +127,17 @@ class Config {
 
 
         self::merge(self::$parameters, $config);
+
+
+        // load password file if it is there
+        $pass_config_file = FILESENDER_BASE.'/config/config-passwords.php';
+        if (file_exists($pass_config_file)) {
         
+            $config = array();
+            include_once($pass_config_file);
+            self::merge(self::$parameters, $config);
+        }
+
         // Load virtualhost config if used
         if ($virtualhost === null)
             $virtualhost = self::get('virtualhost');
@@ -169,6 +179,9 @@ class Config {
                 self::$override['parameters'][$key] = $dfn;
             }
         }
+
+        // shorter access again for checks
+        $config = self::$parameters;
         
         // Special parameter checks and sets
         if( self::get('encryption_enabled')) {
