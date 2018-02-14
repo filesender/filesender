@@ -190,9 +190,10 @@ class AuthSPSaml {
         if(!$target)
             $target = Config::get('site_logouturl');
         
-        $url = self::$config['simplesamlphp_url'].'module.php/core/as_logout.php?';
-        $url .= 'AuthId='.self::$config['authentication_source'];
-        $url .= '&ReturnTo='.urlencode($target);
+        $url = Utilities::http_build_query(array(
+            'AuthId' => self::$config['authentication_source'],
+            'ReturnTo' => $target,
+        ), self::$config['simplesamlphp_url'].'module.php/core/as_logout.php?' );
         
         return $url;
     }
