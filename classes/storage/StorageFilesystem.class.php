@@ -79,7 +79,7 @@ class StorageFilesystem {
         self::setup();
         
         // Get File path in case we got a File object
-        if($what instanceof File) $what = self::buildPath($what);
+        if($what instanceof File) $what = static::buildPath($what);
         
         // Check argument
         if(!is_string($what) || (!is_dir($what) && !is_file($what)))
@@ -125,7 +125,7 @@ class StorageFilesystem {
         
         // Organize files by their storage path, get free space for each path
         foreach($transfer->files as $file) {
-            $path = self::buildPath($file);
+            $path = static::buildPath($file);
             $filesystem = self::$hashing ? self::getFilesystem($path) : 'main';
             
             if(!array_key_exists($filesystem, $filesystems)) $filesystems[$filesystem] = array(
@@ -139,13 +139,13 @@ class StorageFilesystem {
         // Substract space reserved by uploading transfers (except what is already done) from free space
         foreach(Transfer::allUploading() as $transfer) {
             foreach($transfer->files as $file) {
-                $path = self::buildPath($file);
+                $path = static::buildPath($file);
                 $filesystem = self::$hashing ? self::getFilesystem($path) : 'main';
                 
                 if(!array_key_exists($filesystem, $filesystems)) continue; // Not in a filesystem related to new transfer
                 
                 $remaining_to_upload = $file->size;
-                if(file_exists($path.$file->uid)) $remaining_to_upload -= filesize($path.$file->uid);
+                if(file_exists($path.static::buildFilename($file))) $remaining_to_upload -= filesize($path.static::buildFilename($file));
                 
                 $filesystems[$filesystem]['free_space'] -= $remaining_to_upload;
             }
@@ -236,9 +236,21 @@ class StorageFilesystem {
         
         return $filesystems;
     }
-    
+  
     /**
-     * Build file storage path (without file uid)
+     * Build file storage name (without base path)
+     * 
+     * @param File $file
+     * 
+     * @return string filename
+     */
+    public static function buildFilename(File $file) {
+        self::setup();
+        return $file->uid;
+    }
+  
+    /**
+     * Build file storage path (without filename)
      * 
      * @param File $file
      * 
@@ -300,7 +312,7 @@ class StorageFilesystem {
     public static function readChunk(File $file, $offset, $length) {
         $chunk_size = (int)Config::get('download_chunk_size');
         
-        $file_path = self::buildPath($file).$file->uid;
+        $file_path = static::buildPath($file).static::buildFilename($file);
         
         if(!file_exists($file_path))
             throw new StorageFilesystemFileNotFoundException($file_path, $file);
@@ -338,13 +350,13 @@ class StorageFilesystem {
     public static function writeChunk(File $file, $data, $offset = null) {
         $chunk_size = strlen($data);
         
-        $path = self::buildPath($file);
+        $path = static::buildPath($file);
 
         $free_space = disk_free_space($path);
         if($free_space <= $chunk_size)
             throw new StorageNotEnoughSpaceLeftException($chunk_size);
         
-        $file_path = $path.$file->uid;
+        $file_path = $path.static::buildFilename($file);
         
         // Open file for writing
         $mode = file_exists($file_path) ? 'rb+' : 'wb+'; // Create file if it does not exist
@@ -387,7 +399,7 @@ class StorageFilesystem {
     public static function completeFile(File $file) {
         self::setup();
         
-        $file_path = self::buildPath($file).$file->uid;
+        $file_path = static::buildPath($file).static::buildFilename($file);
         clearstatcache(true, $file_path);
         $size = filesize($file_path);
 
@@ -408,7 +420,7 @@ class StorageFilesystem {
      * @throws StorageFilesystemCannotDeleteException
      */
     public static function deleteFile(File $file) {
-        $file_path = self::buildPath($file).$file->uid;
+        $file_path = static::buildPath($file).static::buildFilename($file);
         
         if(!file_exists($file_path)) return;
         
@@ -451,7 +463,7 @@ class StorageFilesystem {
      * @return string hex digest
      */
     public static function getDigest(File $file) {
-        $file_path = self::buildPath($file).$file->uid;
+        $file_path = static::buildPath($file).static::buildFilename($file);
         
         return sha1_file($file_path);
     }
@@ -476,7 +488,7 @@ class StorageFilesystem {
      * @throws StorageFilesystemOutOfSpaceException
      */
     public static function storeWholeFile(File $file, $source_path) {
-        $path = self::buildPath($file);
+        $path = static::buildPath($file);
         
         // Do we have enough space ?
         $free_space = disk_free_space($path);
@@ -484,7 +496,7 @@ class StorageFilesystem {
             throw new StorageNotEnoughSpaceLeftException(filesize($source_path));
         
         // Build path ...
-        $file_path = $path.$file->uid;
+        $file_path = $path.static::buildFilename($file);
         
         // ... and copy file (removal up to caller), fail if couldn't copy
         if(!copy($source_path, $file_path))
@@ -506,11 +518,11 @@ class StorageFilesystem {
      * @return bool
      */
     public static function storeAsLink(File $file, $source_path) {
-        symlink($source_path, self::buildPath($file).$file->uid);
+        symlink($source_path, static::buildPath($file).static::buildFilename($file));
     }
 
     public static function getStream(File $file) {
-        $file_path = self::buildPath($file).$file->uid;
+        $file_path = static::buildPath($file).static::buildFilename($file);
         $stream = fopen($file_path,'r');
         return $stream;
     }
