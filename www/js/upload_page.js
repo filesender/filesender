@@ -30,31 +30,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-//FOLDERUPLOAD
-// from https://stackoverflow.com/questions/4565112/javascript-how-to-find-out-if-the-user-browser-is-chrome
-function isChrome() {
-  var isChromium = window.chrome,
-    winNav = window.navigator,
-    vendorName = winNav.vendor,
-    isOpera = winNav.userAgent.indexOf("OPR") > -1,
-    isIEedge = winNav.userAgent.indexOf("Edge") > -1,
-    isIOSChrome = winNav.userAgent.match("CriOS");
-
-  if (isIOSChrome) {
-    return true;
-  } else if (
-    isChromium !== null &&
-    typeof isChromium !== "undefined" &&
-    vendorName === "Google Inc." &&
-    isOpera === false &&
-    isIEedge === false
-  ) {
-    return true;
-  } else { 
-    return false;
-  }
-}
-
 // Manage files
 filesender.ui.files = {
     invalidFiles: [],
@@ -402,34 +377,6 @@ filesender.ui.files = {
         }
     },
 };
-
-//FOLDERUPLOAD
-// from https://stackoverflow.com/questions/3590058/does-html5-allow-drag-drop-upload-of-folders-or-a-folder-tree
-function traverseFileTree(fileList, item, path) {
-  console.log(typeof fileList);
-  path = path || "";
-  if (item.isFile) {
-    // Get file
-    //filesender.ui.files.add(item.file.name);
-    item.file(function(file) {
-       console.log("File:", path + file.name);
-       console.log("Type:", file.type);
-       console.log("Size:", file.size);
-       fileList.item(0).name = path + file.name;
-       fileList.item(0).type = file.type;
-       fileList.item(0).size = file.syze;
-       filesender.ui.files.add(fileList);
-    });
-  } else if (item.isDirectory) {
-    // Get folder contents
-    var dirReader = item.createReader();
-    dirReader.readEntries(function(entries) {
-      for (var i=0; i<entries.length; i++) {
-        traverseFileTree(fileList, entries[i], path + item.name + "/");
-      }
-    });
-  }
-}
 
 // Manage recipients
 filesender.ui.recipients = {
@@ -886,31 +833,10 @@ $(function() {
         if(!e.originalEvent.dataTransfer.files.length) return;
         
         e.preventDefault();
-        //e.stopPropagation();
-
-        // FOLDERUPLOAD
-        // From https://stackoverflow.com/questions/3590058/does-html5-allow-drag-drop-upload-of-folders-or-a-folder-tree
-        console.log("File:", e.originalEvent.dataTransfer.items.length);
-        console.log("FOLDERUPLOAD");
-
-        if (isChrome()) {
-            //var fileInput = document.querySelector('input');
-            //fileInput.files = e.originalEvent.dataTransfer.files;
-            var fileInput = Object.assign({}, e.originalEvent.dataTransfer.files);
-            console.log(typeof fileInput);
-            var items = e.originalEvent.dataTransfer.items;
-            for (var i=0; i<items.length; i++) {
-              // webkitGetAsEntry is where the magic happens
-              var item = items[i].webkitGetAsEntry();
-              if (item) {
-                traverseFileTree(fileInput, item);
-              }
-            }
-         }
-         else {
-           filesender.ui.files.add(e.originalEvent.dataTransfer.files);
-         }
-       });
+        e.stopPropagation();
+        
+        filesender.ui.files.add(e.originalEvent.dataTransfer.files);
+    });
     
     // Bind recipients events
     filesender.ui.nodes.recipients.input.on('keydown', function(e) {
@@ -1193,7 +1119,7 @@ $(function() {
             var sel = $(this)
             var file = sel.clone();
             
-            // TODO check file size, reject if over filesender.config.max_legacy_file_size // FOLDERUPLOAD
+            // TODO check file size, reject if over filesender.config.max_legacy_file_size
             
             var node = filesender.ui.files.add(this.files, file.get(0));
             if(!node) return;
