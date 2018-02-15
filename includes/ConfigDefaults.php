@@ -169,7 +169,15 @@ $default = array(
     },
     
     'show_storage_statistics_in_admin' => true,
-    
+
+    'cloud_s3_region'   => 'us-east-1',
+    'cloud_s3_version'  => 'latest',
+    'cloud_s3_endpoint' => 'http://localhost:8000',
+    'cloud_s3_use_path_style_endpoint' => true,
+    'cloud_s3_key'    => 'accessKey1',
+    'cloud_s3_secret' => 'verySecretKey1',
+
+
     'transfer_options' => array(
         'email_me_copies' => array(
             'available' => true,
