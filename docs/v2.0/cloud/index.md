@@ -143,3 +143,89 @@ storing the file content in the cloud.
 $config['storage_type'] = 'CloudAzure';
 ```
 
+## Amazon S3
+
+
+### Setup
+
+Amazon S3 support uses the PHP bindings. These bindings can be installed
+through composer into the subdirectory of optional-dependencies which
+is already prepared to help you. FileSender is setup to look into the
+optional-dependencies/s3 directory for these supporting files if
+you enable S3 in your configuration.
+
+```
+cd optional-dependencies/s3
+.. download composer.phar and check it    ...
+.. see https://getcomposer.org/download/  ...
+php composer.phar install
+```
+
+For more information on installing these bindings see (Amazon's page)[https://docs.aws.amazon.com/aws-sdk-php/v3/guide/getting-started/installation.html#installing-via-composer].
+
+
+### Zenko CloudServer: your local S3 server
+
+(Zenko CloudServer)[https://github.com/scality/S3] is an open source
+S3 server implementation. This can be useful for testing and to see
+that the FileSender code is working as you expect. (Installation)[http://s3-server.readthedocs.io/en/latest/GETTING_STARTED/#installation] of CloudServer is fairly simple and is also
+shown below.
+
+```
+git clone https://github.com/scality/S3.git
+cd ./S3
+npm install
+npm start
+```
+
+### Configuration
+
+The main configuration keys for S3 are the connection string to use
+to connect and maybe other settings to use to store your data. You
+might like to store the first in the optional config-passwords.php
+file to keep it separate from your config.php file and reduce the risk
+of accidentally sharing sensitive information.
+
+The config-passwords.php has the same format as config.php but allows
+you to keep passwords (databases, clouds, etc) out of the main
+config.php file. If the config-passwords.php file exists then it is
+loaded after config.php.
+
+See the configuration section for Azure above for information about how
+you might setup the config.php and config-passwords.php so that you can
+avoid opening the later file.
+
+```
+$config['cloud_s3_endpoint'] = 'http://localhost:8000';
+$config['cloud_s3_key']      = 'accessKey1';
+$config['cloud_s3_secret']   = 'verySecretKey1';
+```
+
+### Running a test
+
+To help check if your setup can connect to a cloud server and do
+something of use a small test script has been created. This script
+will create the bucket if it does not exist already and write a 30
+byte test data packet to the server before reading the data back
+again.
+
+It is recommended to run this test against a local CloudServer server first and
+then turn on your real credentials to run it against your real cloud
+provider.
+
+```
+cd scripts/cloud/s3
+php test-s3-simple.php
+```
+
+
+### Use as a storage provider in FileSender
+
+Now that you know that your configuration and software setup can talk
+to your cloud provider you can switch over your storage_type to start
+storing the file content in the cloud.
+
+
+```
+$config['storage_type'] = 'CloudS3';
+```
