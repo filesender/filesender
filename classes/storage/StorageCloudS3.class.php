@@ -33,20 +33,8 @@
 
 if (!defined('FILESENDER_BASE')) die('Missing environment');
 
-require_once dirname(__FILE__).'/../../optional-dependencies/azure/vendor/autoload.php';
-
-use MicrosoftAzure\Storage\Blob\Models\CreateContainerOptions;
-use MicrosoftAzure\Storage\Blob\Models\PublicAccessType;
-use MicrosoftAzure\Storage\Blob\Models\CreateBlobOptions;
-use MicrosoftAzure\Storage\Blob\Models\GetBlobOptions;
-use MicrosoftAzure\Storage\Common\Exceptions\ServiceException;
-use MicrosoftAzure\Storage\Common\Exceptions\InvalidArgumentTypeException;
-use MicrosoftAzure\Storage\Common\Internal\Resources;
-use MicrosoftAzure\Storage\Common\Internal\StorageServiceSettings;
-use MicrosoftAzure\Storage\Common\Models\RetentionPolicy;
-use MicrosoftAzure\Storage\Common\Models\ServiceProperties;
-use MicrosoftAzure\Storage\Common\SharedAccessSignatureHelper;
-use MicrosoftAzure\Storage\Common\ServicesBuilder;
+require_once dirname(__FILE__).'/../../optional-dependencies/s3/vendor/autoload.php';
+use Aws\S3\S3Client;
 
 
 /**
@@ -55,14 +43,27 @@ use MicrosoftAzure\Storage\Common\ServicesBuilder;
  *  This class stores the chunks that are sent as individual blobs
  *
  */
-class StorageCloudAzure extends StorageFilesystem {
+class StorageCloudS3 extends StorageFilesystem {
 
+    private static $client = null;
 
-    public static function getBlobService() {
+    public static function getClient() {
+
+        if( self::$client ) {
+            return self::$client;
+        }
         
-        $connectionString = Config::get('cloud_azure_connection_string');
-        $blobClient = ServicesBuilder::getInstance()->createBlobService($connectionString);
-        return $blobClient;
+        self::$client = S3Client::factory([
+            'region'   => Config::get('cloud_s3_region'),
+            'version'  => Config::get('cloud_s3_version'),
+            'endpoint' => Config::get('cloud_s3_endpoint'),
+            'use_path_style_endpoint' => Config::get('cloud_s3_use_path_style_endpoint'),
+            'credentials' => [
+                'key'    => Config::get('cloud_s3_key'),
+                'secret' => Config::get('cloud_s3_secret'),
+            ]
+        ]);
+        return self::$client;
     }
     
     public static function getOffsetWithinBlob($offset) {
@@ -70,7 +71,7 @@ class StorageCloudAzure extends StorageFilesystem {
         return ($offset % $file_chunk_size);
     }
     
-    public static function getBlobName($offset) {
+    public static function getObjectName($offset) {
         $file_chunk_size = Config::get('upload_chunk_size');
         $offset = $offset - ($offset % $file_chunk_size);
 	return str_pad($offset,24,'0',STR_PAD_LEFT);
@@ -93,20 +94,24 @@ class StorageCloudAzure extends StorageFilesystem {
 	if ($file->transfer->options['encryption'])
 	    $offset=$offset/Config::get('upload_chunk_size')*Config::get('upload_crypted_chunk_size');
 
-        $container_name = $file->uid;
-        $blob_name      = self::getBlobName($offset);
+        $bucket_name = $file->uid;
+        $object_name = self::getObjectName($offset);
         
         try {
-            $az = self::getBlobService();
-            $res = $az->getBlob($container_name, $blob_name);
-            $data = stream_get_contents($res->getContentStream());
+            $client = self::getClient();
 
+            $result = $client->getObject(array(
+                'Bucket' => $bucket_name,
+                'Key'    => $object_name,
+            ));
+            
+            $data = $result['Body'];
             if ($data === FALSE) return null;
 	    return $data;
         }
         catch (ServiceException $e)
         {
-            $msg = 'Azure: readChunk() Can not read to blob: ' . $blob_name . ' offset ' . $offset;
+            $msg = 'S3: readChunk() Can not read to object_name: ' . $object_name . ' offset ' . $offset;
             Logger::info($msg);
             throw new StorageFilesystemCannotReadException($msg);
         }
@@ -129,28 +134,28 @@ class StorageCloudAzure extends StorageFilesystem {
     public static function writeChunk(File $file, $data, $offset = null) {
 
         $chunk_size     = strlen($data);
-        $container_name = $file->uid;
-        $blob_name      = self::getBlobName($offset);
+        $bucket_name = $file->uid;
+        $object_name = self::getObjectName($offset);
 
         try {
-            $az = self::getBlobService();
+            $client = self::getClient();
+
+            $client->createBucket(array(
+                'Bucket' => $bucket_name,
+            ));
+
+            $result = $client->putObject(array(
+                'Bucket' => $bucket_name,
+                'Key'    => $object_name,
+                'Body'   => $data,
+            ));
             
-            try {
-                $az->createBlockBlob($container_name, $blob_name, $data);
-            } catch (ServiceException $e) {
-                if( $e->getCode() == 404 ) {
-                    // make container and try again
-                    $opts = new CreateContainerOptions();
-                    $az->createContainer($container_name, $opts);
-                    $az->createBlockBlob($container_name, $blob_name, $data);
-                }
-            }
             return array(
                 'offset' => $offset,
                 'written' => $written
             );
-        } catch (ServiceException $e) {
-            $msg = 'Azure: writeChunk() Can not write to blob: ' . $blob_name . ' offset ' . $offset;
+        } catch (Exception $e) {
+            $msg = 'S3: writeChunk() Can not write to object_name: ' . $object_name . ' offset ' . $offset;
             Logger::info($msg);
             throw new StorageFilesystemCannotWriteException($msg);
         }
@@ -175,18 +180,27 @@ class StorageCloudAzure extends StorageFilesystem {
      * @throws StorageFilesystemCannotDeleteException
      */
     public static function deleteFile(File $file) {
-        $chunk_size     = strlen($data);
-        $container_name = $file->uid;
+        $file_path = self::buildPath($file).$file->uid;
+        $bucket_name = $file->uid;
+        $object_name = self::getObjectName($offset);
 
         try {
-            $az = self::getBlobService();
-            
-            $az->deleteContainer($container_name);
-        } catch (ServiceException $e) {
-            $msg = 'Azure: deleteFile() Can not delete container: ' . $container_name
-                 . ' ' . $e->getMessage();
-            Logger::info($msg);
-            throw new StorageFilesystemCannotDeleteException($msg, $file);
+            $client = self::getClient();
+
+            $objects = $client->getIterator('ListObjects', array('Bucket' => $bucket_name));
+
+            foreach ($objects as $object) {
+                $result = $client->deleteObject(array(
+                    'Bucket' => $bucket_name,
+                    'Key'    => $object['Key']
+                ));  
+            }
+            $result = $client->deleteBucket(array(
+                'Bucket' => $bucket_name,
+            ));  
+        } catch (Exception $e) {
+            Logger::info('deleteFile() error ' . $e);
+            throw new StorageFilesystemCannotDeleteException($file_path, $file);
         }
     }
 
@@ -208,8 +222,8 @@ class StorageCloudAzure extends StorageFilesystem {
     }
 
     public static function getStream(File $file) {
-        StorageCloudAzureStream::ensureRegistered();
-        $path = "StorageCloudAzureStream://" . $file->uid;
+        StorageCloudS3Stream::ensureRegistered();
+        $path = "StorageCloudS3Stream://" . $file->uid;
         $fp = fopen( $path, "r+");
         return $fp;
     }

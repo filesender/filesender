@@ -30,45 +30,44 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+
 require_once dirname(__FILE__).'/../../../includes/init.php';
-require_once dirname(__FILE__).'/../../../optional-dependencies/azure/vendor/autoload.php';
+require_once dirname(__FILE__).'/../../../optional-dependencies/s3/vendor/autoload.php';
 
-use MicrosoftAzure\Storage\Blob\Models\CreateContainerOptions;
-use MicrosoftAzure\Storage\Blob\Models\PublicAccessType;
-use MicrosoftAzure\Storage\Blob\Models\CreateBlobOptions;
-use MicrosoftAzure\Storage\Blob\Models\GetBlobOptions;
-use MicrosoftAzure\Storage\Common\Exceptions\ServiceException;
-use MicrosoftAzure\Storage\Common\Exceptions\InvalidArgumentTypeException;
-use MicrosoftAzure\Storage\Common\Internal\Resources;
-use MicrosoftAzure\Storage\Common\Internal\StorageServiceSettings;
-use MicrosoftAzure\Storage\Common\Models\RetentionPolicy;
-use MicrosoftAzure\Storage\Common\Models\ServiceProperties;
-use MicrosoftAzure\Storage\Common\SharedAccessSignatureHelper;
-use MicrosoftAzure\Storage\Common\ServicesBuilder;
+use Aws\S3\S3Client;
 
+$bucket_name = '5b264219-57e2-447d-c9c6-0a8d602f1ba5';
+$object_name = '000000000000000000';
 
-$connectionString = Config::get('cloud_azure_connection_string');
-$containerName    = 'filesender-test-container';
+$client = S3Client::factory([
+    'region'   => Config::get('cloud_s3_region'),
+    'version'  => Config::get('cloud_s3_version'),
+    'endpoint' => Config::get('cloud_s3_endpoint'),
+    'use_path_style_endpoint' => Config::get('cloud_s3_use_path_style_endpoint'),
+    'credentials' => [
+         'key'    => Config::get('cloud_s3_key'),
+         'secret' => Config::get('cloud_s3_secret'),
+    ]
+]);
 
-$blobClient = ServicesBuilder::getInstance()->createBlobService($connectionString);
+$client->createBucket(array(
+    'Bucket' => $bucket_name,
+));
 
+$result = $client->putObject(array(
+    'Bucket' => $bucket_name,
+    'Key'    => $object_name,
+    'Body'   => 'Hello, world!'     
+));
+     
+echo 'uploaded url is at ' . $result['ObjectURL'] . "\n";
 
-$content = "test string 125";
-$blob_name = "myblob";
+$result = $client->getObject(array(
+    'Bucket' => $bucket_name,
+    'Key'    => $object_name,
+));
 
-try {
-    $blobClient->createBlockBlob($containerName, $blob_name, $content);
-} catch (ServiceException $e) {
-    if( $e->getCode() == 404 ) {
-        // make container and try again
-        $createContainerOptions = new CreateContainerOptions();
-        $blobClient->createContainer($containerName, $createContainerOptions);
-        $blobClient->createBlockBlob($containerName, $blob_name, $content);
-    }
-}
-
-$getBlobResult = $blobClient->getBlob($containerName, "myblob");
-echo 'result: ' . stream_get_contents($getBlobResult->getContentStream());
+echo 'downloaded result: ' . $result['Body'];
 
 ?>
 
