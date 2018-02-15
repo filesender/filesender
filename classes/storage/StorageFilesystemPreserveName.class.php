@@ -64,36 +64,40 @@ class StorageFilesystemPreserveName extends StorageFilesystem {
         static::setup();
 
         $owner = $file->__get('owner');
-        $path = self::$path;
+        $storage_root_path = self::$path;
 
         if (empty($owner)) {
             $owner = 'guest';
         }
 
-        // $owner may be prefixed with # by filesender
-        $pos = strrpos($owner, '#');
-
         $subpath = '/'.$owner;
+
+        // $owner may be prefixed with text ending in # by filesender, need to remove
+        $pos = strrpos($owner, '#');
       
         if (!($pos === false)) {
           $subpath = '/'.substr($owner, $pos + 1);
         }
+
+        // For archive systems such as archivematica, any set of files belonging
+        // to an archival set needs to be in an enclosing directory.
+        // defaulting to naming the directory "uid=name", which also
+        // should guarentee unique folder name
+        $subpath .= '/'.$file->uid.'='.$file->name;
         
-        // validate owner subpath, creating dir if needed
-        $p = $path;
+        // validate owner/uid=name subpath, creating dirs if needed
+        $path = $storage_root_path;
         foreach(array_filter(explode('/', $subpath)) as $sub) {
-            $p .= $sub;
+            $path .= $sub;
             
-            if(!is_dir($p) && !mkdir($p))
-                throw new StorageFilesystemCannotCreatePathException($p, $file);
+            if(!is_dir($path) && !mkdir($path))
+                throw new StorageFilesystemCannotCreatePathException($path, $file);
             
-            if(!is_writable($p))
-                throw new StorageFilesystemCannotWriteException($p, $file);
+            if(!is_writable($path))
+                throw new StorageFilesystemCannotWriteException($path, $file);
             
-            $p .= '/';
+            $path .= '/';
         }
-        $path = $p;
-        
         return $path;
     }
 }
