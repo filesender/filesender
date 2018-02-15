@@ -59,10 +59,8 @@ class StorageCloudAzure extends StorageFilesystem {
 
 
     public static function getBlobService() {
- 
-        $connectionString = Config::get('cloud_azure_connection_string');
-        $containerName    = Config::get('cloud_azure_container_name');
         
+        $connectionString = Config::get('cloud_azure_connection_string');
         $blobClient = ServicesBuilder::getInstance()->createBlobService($connectionString);
         return $blobClient;
     }
@@ -177,8 +175,19 @@ class StorageCloudAzure extends StorageFilesystem {
      * @throws StorageFilesystemCannotDeleteException
      */
     public static function deleteFile(File $file) {
-        $file_path = self::buildPath($file).$file->uid;
-        throw new StorageFilesystemCannotDeleteException($file_path, $file);
+        $chunk_size     = strlen($data);
+        $container_name = $file->uid;
+
+        try {
+            $az = self::getBlobService();
+            
+            $az->deleteContainer($container_name);
+        } catch (ServiceException $e) {
+            $msg = 'Azure: deleteFile() Can not delete container: ' . $container_name
+                 . ' ' . $e->getMessage();
+            Logger::info($msg);
+            throw new StorageFilesystemCannotDeleteException($msg, $file);
+        }
     }
 
 

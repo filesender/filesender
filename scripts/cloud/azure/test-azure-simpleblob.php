@@ -48,7 +48,7 @@ use MicrosoftAzure\Storage\Common\ServicesBuilder;
 
 
 $connectionString = Config::get('cloud_azure_connection_string');
-$containerName    = Config::get('cloud_azure_container_name');
+$containerName    = 'filesender-test-container';
 
 $blobClient = ServicesBuilder::getInstance()->createBlobService($connectionString);
 
