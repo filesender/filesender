@@ -405,21 +405,27 @@ filesender.ui.files = {
 
 //FOLDERUPLOAD
 // from https://stackoverflow.com/questions/3590058/does-html5-allow-drag-drop-upload-of-folders-or-a-folder-tree
-function traverseFileTree(item, path) {
+function traverseFileTree(fileList, item, path) {
+  console.log(typeof fileList);
   path = path || "";
   if (item.isFile) {
     // Get file
     //filesender.ui.files.add(item.file.name);
     item.file(function(file) {
-      console.log("File:", path + file.name);
-   
+       console.log("File:", path + file.name);
+       console.log("Type:", file.type);
+       console.log("Size:", file.size);
+       fileList.item(0).name = path + file.name;
+       fileList.item(0).type = file.type;
+       fileList.item(0).size = file.syze;
+       filesender.ui.files.add(fileList);
     });
   } else if (item.isDirectory) {
     // Get folder contents
     var dirReader = item.createReader();
     dirReader.readEntries(function(entries) {
       for (var i=0; i<entries.length; i++) {
-        traverseFileTree(entries[i], path + item.name + "/");
+        traverseFileTree(fileList, entries[i], path + item.name + "/");
       }
     });
   }
@@ -888,21 +894,22 @@ $(function() {
         console.log("FOLDERUPLOAD");
 
         if (isChrome()) {
+            //var fileInput = document.querySelector('input');
+            //fileInput.files = e.originalEvent.dataTransfer.files;
+            var fileInput = Object.assign({}, e.originalEvent.dataTransfer.files);
+            console.log(typeof fileInput);
             var items = e.originalEvent.dataTransfer.items;
-        console.log("FOLDERUPLOAD1");
             for (var i=0; i<items.length; i++) {
-        console.log("FOLDERUPLOAD2");
               // webkitGetAsEntry is where the magic happens
               var item = items[i].webkitGetAsEntry();
-        console.log("FOLDERUPLOAD3");
               if (item) {
-        console.log("FOLDERUPLOAD4");
-                traverseFileTree(item);
+                traverseFileTree(fileInput, item);
               }
             }
          }
-
-        filesender.ui.files.add(e.originalEvent.dataTransfer.files);
+         else {
+           filesender.ui.files.add(e.originalEvent.dataTransfer.files);
+         }
        });
     
     // Bind recipients events
