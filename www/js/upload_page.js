@@ -58,158 +58,163 @@ function isChrome() {
 // Manage files
 filesender.ui.files = {
     invalidFiles: [],
-    
+
     // File selection (browse / drop) handler
-    add: function(files, source_node) {
+    add: function(filename, filesize, source_node) {
         var node = null;
-        for(var i=0; i<files.length; i++) {
-            var info = files[i].name + ' : ' + filesender.ui.formatBytes(files[i].size);
-            node = $('<div class="file" />').attr({
-                'data-name': files[i].name,
-                'data-size': files[i].size
-            }).appendTo(filesender.ui.nodes.files.list);
+        var info = filename + ' : ' + filesender.ui.formatBytes(filesize);
+        node = $('<div class="file" />').attr({
+            'data-name': filename,
+            'data-size': filesize
+        }).appendTo(filesender.ui.nodes.files.list);
+        
+        $('<span class="info" />').text(info).attr({title: info}).appendTo(node);
+        
+        if(filesender.ui.nodes.required_files) {
+            // Upload restart mode
+            var req = filesender.ui.nodes.required_files.find('.file[data-name="' + filename + '"][data-size="' + filesize + '"]');
             
-            $('<span class="info" />').text(info).attr({title: info}).appendTo(node);
-            
-            if(filesender.ui.nodes.required_files) {
-                // Upload restart mode
-                var req = filesender.ui.nodes.required_files.find('.file[data-name="' + files[i].name + '"][data-size="' + files[i].size + '"]');
-                
-                if(!req.length) {
-                    filesender.ui.alert('error', lang.tr('unexpected_file'));
-                    node.remove();
-                    return null;
-                }
-                
-                var file = req.data('file');
-                var added_cid = req.attr('data-cid');
-                file.cid = added_cid;
-                file.blob = files[i];
-                
-                filesender.ui.transfer.files.push(file);
-                
-                req.remove();
-                
-            } else {
-                // Normal upload mode
-                $('<span class="remove fa fa-minus-square fa-lg" />').attr({
-                    title: lang.tr('click_to_delete_file')
-                }).on('click', function() {
-                    var el = $(this).parent();
-                    var cid = el.attr('data-cid');
-                    var name = el.attr('data-name');
-                    
-                    var total_size = 0;
-                    for(var j=0; j<filesender.ui.transfer.files.length; j++)
-                        total_size += filesender.ui.transfer.files[j].size;
-                    
-                    if(cid) filesender.ui.transfer.removeFile(cid);
-                    
-                    $(this).parent().remove();
-                    
-                    if(!filesender.ui.nodes.files.list.find('div').length)
-                        filesender.ui.nodes.files.clear.button('disable');
-                    
-                    var iidx = filesender.ui.files.invalidFiles.indexOf(name);
-                    if (iidx === -1){
-                        var size = 0;
-                        for(var j=0; j<filesender.ui.transfer.files.length; j++)
-                            size += filesender.ui.transfer.files[j].size;
-                        filesender.ui.nodes.stats.number_of_files.show().find('.value').text(filesender.ui.transfer.files.length + '/' + filesender.config.max_transfer_files);
-                        filesender.ui.nodes.stats.size.show().find('.value').text(filesender.ui.formatBytes(size) + '/' + filesender.ui.formatBytes(filesender.config.max_transfer_size));
-                        
-                    } else {
-                        filesender.ui.files.invalidFiles.splice(iidx, 1);
-                    }
-                    
-                    filesender.ui.evalUploadEnabled();
-                }).appendTo(node);
-                
-                var added_cid = filesender.ui.transfer.addFile(files[i], function(error) {
-                    var tt = 1;
-                    if(error.details && error.details.filename) filesender.ui.files.invalidFiles.push(error.details.filename);
-                    node.addClass('invalid');
-                    node.addClass(error.message);
-                    $('<span class="invalid fa fa-exclamation-circle fa-lg" />').prependTo(node.find('.info'))
-                    $('<div class="invalid_reason" />').text(lang.tr(error.message)).appendTo(node);
-                }, source_node);
-                
-                filesender.ui.nodes.files.clear.button('enable');
-                
-                if(added_cid === false) continue;
-            }
-                
-            filesender.ui.evalUploadEnabled();
-            node.attr('data-cid', added_cid);
-
-            var bar = $('<div class="progressbar" />').appendTo(node);
-            $('<div class="progress-label" />').appendTo(bar);
-            bar.progressbar({
-                value: false,
-                max: 1000,
-                change: function() {
-                    var bar = $(this);
-                    var v = bar.progressbar('value');
-                    bar.find('.progress-label').text((v / 10).toFixed(1) + '%');
-                },
-                complete: function() {
-                    var bar = $(this);
-                    bar.closest('.file').addClass('done');
-                }
-            });
-            
-            $('<span class="fa fa-lg fa-check done_icon" />').appendTo(node);
-
-            if (filesender.config.upload_display_per_file_stats) {
-                var p = $('<span class="workercrust"/>');
-                p.appendTo(node);
-
-                var makeCrust = function( p, idx ) {
-                    var crust_meter = $('<div class="crust crust' + idx + '">'
-                                        + '  <a class="crust_meter" href="#">'
-                                        + '  <div class="label crustage   uploadthread">   </div></a>'
-                                        + '  <a class="crust_meter_bytes" href="#">'
-                                        + '  <div class="label crustbytes uploadthread">   </div></a>'
-                                        + '</div>');
-                    crust_meter.appendTo(p);
-                    crust_meter.button({disabled: true});
-
-                    return crust_meter;
-                };
-
-                if( filesender.config.terasender_enabled ) {
-                    for( idx=0; idx < filesender.config.terasender_worker_count; idx++ ) {
-                        var crust_meter = makeCrust( p, idx );
-                    }
-                }
-                else {
-                    var crust_meter = makeCrust( p, 0 );
-                }
-
+            if(!req.length) {
+                filesender.ui.alert('error', lang.tr('unexpected_file'));
+                node.remove();
+                return null;
             }
             
-            if(filesender.ui.nodes.required_files) {
-                if(file) {
-                    bar.show().progressbar('value', Math.floor(1000 * file.uploaded / file.size));
-                }
+            var file = req.data('file');
+            var added_cid = req.attr('data-cid');
+            file.cid = added_cid;
+            file.blob = files[i];
+            
+            filesender.ui.transfer.files.push(file);
+            
+            req.remove();
+            
+        } else {
+            // Normal upload mode
+            $('<span class="remove fa fa-minus-square fa-lg" />').attr({
+                title: lang.tr('click_to_delete_file')
+            }).on('click', function() {
+                var el = $(this).parent();
+                var cid = el.attr('data-cid');
+                var name = el.attr('data-name');
                 
-            } else {
-                var size = 0;
+                var total_size = 0;
                 for(var j=0; j<filesender.ui.transfer.files.length; j++)
-                    size += filesender.ui.transfer.files[j].size;
+                    total_size += filesender.ui.transfer.files[j].size;
                 
-                filesender.ui.nodes.stats.number_of_files.show().find('.value').text(filesender.ui.transfer.files.length + '/' + filesender.config.max_transfer_files);
-                filesender.ui.nodes.stats.size.show().find('.value').text(filesender.ui.formatBytes(size) + '/' + filesender.ui.formatBytes(filesender.config.max_transfer_size));
+                if(cid) filesender.ui.transfer.removeFile(cid);
+                
+                $(this).parent().remove();
+                
+                if(!filesender.ui.nodes.files.list.find('div').length)
+                    filesender.ui.nodes.files.clear.button('disable');
+                
+                var iidx = filesender.ui.files.invalidFiles.indexOf(name);
+                if (iidx === -1){
+                    var size = 0;
+                    for(var j=0; j<filesender.ui.transfer.files.length; j++)
+                        size += filesender.ui.transfer.files[j].size;
+                    filesender.ui.nodes.stats.number_of_files.show().find('.value').text(filesender.ui.transfer.files.length + '/' + filesender.config.max_transfer_files);
+                    filesender.ui.nodes.stats.size.show().find('.value').text(filesender.ui.formatBytes(size) + '/' + filesender.ui.formatBytes(filesender.config.max_transfer_size));
+                    
+                } else {
+                    filesender.ui.files.invalidFiles.splice(iidx, 1);
+                }
+                
+                filesender.ui.evalUploadEnabled();
+            }).appendTo(node);
+            
+            var added_cid = filesender.ui.transfer.addFile(files[i], function(error) {
+                var tt = 1;
+                if(error.details && error.details.filename) filesender.ui.files.invalidFiles.push(error.details.filename);
+                node.addClass('invalid');
+                node.addClass(error.message);
+                $('<span class="invalid fa fa-exclamation-circle fa-lg" />').prependTo(node.find('.info'))
+                $('<div class="invalid_reason" />').text(lang.tr(error.message)).appendTo(node);
+            }, source_node);
+            
+            filesender.ui.nodes.files.clear.button('enable');
+            
+            if(added_cid === false) continue;
+        }
+            
+        filesender.ui.evalUploadEnabled();
+        node.attr('data-cid', added_cid);
+
+        var bar = $('<div class="progressbar" />').appendTo(node);
+        $('<div class="progress-label" />').appendTo(bar);
+        bar.progressbar({
+            value: false,
+            max: 1000,
+            change: function() {
+                var bar = $(this);
+                var v = bar.progressbar('value');
+                bar.find('.progress-label').text((v / 10).toFixed(1) + '%');
+            },
+            complete: function() {
+                var bar = $(this);
+                bar.closest('.file').addClass('done');
+            }
+        });
+        
+        $('<span class="fa fa-lg fa-check done_icon" />').appendTo(node);
+
+        if (filesender.config.upload_display_per_file_stats) {
+            var p = $('<span class="workercrust"/>');
+            p.appendTo(node);
+
+            var makeCrust = function( p, idx ) {
+                var crust_meter = $('<div class="crust crust' + idx + '">'
+                                    + '  <a class="crust_meter" href="#">'
+                                    + '  <div class="label crustage   uploadthread">   </div></a>'
+                                    + '  <a class="crust_meter_bytes" href="#">'
+                                    + '  <div class="label crustbytes uploadthread">   </div></a>'
+                                    + '</div>');
+                crust_meter.appendTo(p);
+                crust_meter.button({disabled: true});
+
+                return crust_meter;
+            };
+
+            if( filesender.config.terasender_enabled ) {
+                for( idx=0; idx < filesender.config.terasender_worker_count; idx++ ) {
+                    var crust_meter = makeCrust( p, idx );
+                }
+            }
+            else {
+                var crust_meter = makeCrust( p, 0 );
+            }
+
+        }
+        
+        if(filesender.ui.nodes.required_files) {
+            if(file) {
+                bar.show().progressbar('value', Math.floor(1000 * file.uploaded / file.size));
             }
             
-            node.attr('index', filesender.ui.transfer.files.length - 1);
+        } else {
+            var size = 0;
+            for(var j=0; j<filesender.ui.transfer.files.length; j++)
+                size += filesender.ui.transfer.files[j].size;
+            
+            filesender.ui.nodes.stats.number_of_files.show().find('.value').text(filesender.ui.transfer.files.length + '/' + filesender.config.max_transfer_files);
+            filesender.ui.nodes.stats.size.show().find('.value').text(filesender.ui.formatBytes(size) + '/' + filesender.ui.formatBytes(filesender.config.max_transfer_size));
         }
+        
+        node.attr('index', filesender.ui.transfer.files.length - 1);
         
         filesender.ui.nodes.files.list.scrollTop(filesender.ui.nodes.files.list.prop('scrollHeight'));
         
         return node;
     },
 
+    // File selection (browse / drop) handler to add a list of files
+    addList: function(files, source_node) {
+        for(var i=0; i<files.length; i++) {
+            add(files[i].name, files[i].size, source_node);
+        }
+    }
+    
     update_crust_meter_for_worker: function(file,idx,v,b) {
 
         var crust_indicator = filesender.ui.nodes.files.list.find('[data-cid="' + file.cid + '"] .crust' + idx);
