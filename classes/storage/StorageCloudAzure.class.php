@@ -106,7 +106,8 @@ class StorageCloudAzure extends StorageFilesystem {
         }
         catch (ServiceException $e)
         {
-            $msg = 'Azure: readChunk() Can not read to blob: ' . $blob_name . ' offset ' . $offset;
+            $msg = 'Azure: readChunk() Can not read to blob: ' . $blob_name . ' offset ' . $offset
+                 . $e->getErrorText() . ' ' . $e->getErrorReason();
             Logger::info($msg);
             throw new StorageFilesystemCannotReadException($msg);
         }
@@ -150,7 +151,8 @@ class StorageCloudAzure extends StorageFilesystem {
                 'written' => $written
             );
         } catch (ServiceException $e) {
-            $msg = 'Azure: writeChunk() Can not write to blob: ' . $blob_name . ' offset ' . $offset;
+            $msg = 'Azure: writeChunk() Can not write to blob: ' . $blob_name . ' offset ' . $offset
+               . $e->getErrorText() . ' ' . $e->getErrorReason();
             Logger::info($msg);
             throw new StorageFilesystemCannotWriteException($msg);
         }
