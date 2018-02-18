@@ -39,6 +39,12 @@ A note about colours;
 * [storage_filesystem_hashing](#storage_filesystem_hashing)
 * [storage_filesystem_ignore_disk_full_check](#storage_filesystem_ignore_disk_full_check)
 
+## Shredding
+
+* [storage_filesystem_shred_path](#storage_filesystem_shred_path)
+* [storage_filesystem_file_shred_command](#storage_filesystem_file_shred_command)
+
+
 ## Database
 
 * [db_type](#db_type)
@@ -394,6 +400,33 @@ A note about colours;
 * __default:__ false
 * __available:__ since version 2.0
 * __comment:__ If you are using FUSE to interface with some other storage such as EOS then you might like to set this to true to avoid having to do a distributed search to find out of there is storage for each upload
+
+
+---
+
+## Shredding
+
+---
+
+### storage_filesystem_shred_path
+
+* __description:__ Path to store files that should be fed to shred.
+* __mandatory:__ no.  
+* __type:__ string
+* __default:__ ['filesenderbase'].'/shredfiles'
+* __available:__ since version 2.0 beta 4
+* __comment:__ This should be on the same filesystem as storage_filesystem_path
+       so that a 'mv' of a file between the two paths does not require new files
+       to be made.
+
+### storage_filesystem_file_shred_command
+
+* __description:__ command to shred files
+* __mandatory:__ no.  
+* __type:__ string
+* __default:__ nothing
+* __available:__ since version 2.0 beta 4
+* __comment:__ If this is set then file shredding will be enabled. See the [shredding page](http://docs.filesender.org/v2.0/shredding) for more information.
 
 
 ---

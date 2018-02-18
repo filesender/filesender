@@ -61,6 +61,7 @@ class Autoloader {
         'DBObject' => 'data/',
         'Transfer' => 'data/',
         'File' => 'data/',
+        'ShredFile' => 'data/',
         'Recipient' => 'data/',
         'Guest' => 'data/',
         'User' => 'data/',
