@@ -587,13 +587,13 @@ Sent to a transfer owner when it's transfer is made available.
 
 ## How to import translations from poeditor to github
 
-Early 2018 scripts were created to import langauge translations from
+Early 2018 scripts were created to import language translations from
 poeditor into a local checkout of the source from github. The intended
-workflow is that you create a local git branch, import the translation
+work flow is that you create a local git branch, import the translation
 for one or more a languages, and then push up to github to make a pull
-requst to have the changes integrated into git master.
+request to have the changes integrated into git master.
 
-To get started you should login to poeditor.com and export the langauges
+To get started you should login to poeditor.com and export the languages
 of interest as php files.
 
 The below command will then import a language file for the en_au translation.
@@ -609,6 +609,25 @@ $ php import-translation-for-language.php  en_AU /tmp/FileSender_2.0_English_AU.
 Once you are happy with the update, by using git diff for example, you
 should commit the branch and push to github to make a pull request to
 merge the changes to the main repository.
+
+### Adding more single translation files
+
+Some translations are stored in the lang.php file and some are stored
+into individual files in the language/en_AU (or similar) directory. To
+cater for this the language/master directory contains a file for every
+translation that should be placed in an individual file. These files
+are named after the name of the translation they should contain. If a
+translation does not go into a file then it will be stored into
+lang.php.
+
+The take away here is if you create a new file for mail etc then you
+should also touch and commit an empty file in the language/master
+directory to store that translation into the new file.
+
+For example, a new transfer_shredded mail file would need a new file
+in language/master called transfer_shredded.mail.php. The FileSender
+codebase can then refer to that file and the translation scripts will
+place the transfer_shredded translation into that file.
 
 ### Future directions
 
