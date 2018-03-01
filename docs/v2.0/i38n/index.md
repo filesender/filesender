@@ -584,3 +584,39 @@ Sent to a transfer owner when it's transfer is made available.
 * `email` : user first email address as returned by authentication (array)
 * `remote_config` : user remote access config if enabled (string)
 * `identity` : alias to `email` (string)
+
+## How to import translations from poeditor to github
+
+Early 2018 scripts were created to import langauge translations from
+poeditor into a local checkout of the source from github. The intended
+workflow is that you create a local git branch, import the translation
+for one or more a languages, and then push up to github to make a pull
+requst to have the changes integrated into git master.
+
+To get started you should login to poeditor.com and export the langauges
+of interest as php files.
+
+The below command will then import a language file for the en_au translation.
+You should be in the scripts/language directory of your FileSender git checkout.
+The import script will override files in the language directory of your FileSender
+git checkout with the information from the exported translation file.
+
+```
+$ cd ./scripts/language/
+$ php import-translation-for-language.php  en_AU /tmp/FileSender_2.0_English_AU.php
+```
+
+Once you are happy with the update, by using git diff for example, you
+should commit the branch and push to github to make a pull request to
+merge the changes to the main repository.
+
+### Future directions
+
+It is possible that the translation system might move to gettext or
+something similar that can directly use the translation files that
+poeditor can export. Shorter term it might be that the php exports are
+automatically exported from poeditor to the github repository. This
+step would allow a single execution of a script to convert those
+exports into the formats expected by FileSender and would make
+bringing in all language updates able to be done by running a single
+script.

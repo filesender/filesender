@@ -58,12 +58,13 @@ function write_translation_lang_file( $code, $lang ) {
     $fn = "$BASE/language/$code/lang.php";
     $data = '';
 
+    ksort( $lang );
     foreach( $lang as $k => $v ) {
         $data .= "\$lang['" . $k . "'] = '" . squote($v) . "'\n";
     }
 
-    echo "$data \n";
-    //    file_put_contents( $fn, $data );
+    echo "writing general translations to file at $fn \n";
+    file_put_contents( $fn, $data );
     
 }
 
@@ -78,7 +79,7 @@ function write_translation_term_file( $code, $term, $data ) {
         }
     }
     echo "translation file for $term at $fn \n";
-    // file_put_contents( $fn, $data );
+    file_put_contents( $fn, $data );
 }
 
 
@@ -93,7 +94,7 @@ foreach($LANG as $ti => $t) {
     }
 }
 
-//write_translation_lang_file( $code, $lang );
+write_translation_lang_file( $code, $lang );
 
 
 
