@@ -10,9 +10,11 @@ function loadLang( $code ) {
     foreach(explode("\n", file_get_contents("$BASE/language/$code/lang.php")) as $line) {
         $n++;
         
-        if(!preg_match('`\$lang\[[\'"]([^\'"]+)[\'"]\]\s*=\s*[\'"]([^\'"]+)[\'"];`', $line, $m)) continue;
+        if(!preg_match('`\$lang\[[\'"]([^\'"]+)[\'"]\]\s*=\s*[\'"](.*)[\'"];`', $line, $m)) continue;
         $kn++;
+        $k = $m[1];
         $v = $m[2];
+        echo "$k \n";
         if(array_key_exists($m[1], $keys)) {
             echo $m[1].' ('.$n.') already found at '.$keys[$m[1]]."\n";
         } else {
