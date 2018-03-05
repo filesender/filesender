@@ -18,6 +18,6 @@
     have that file available for download for a certain number of
     downloads and/or a certain amount of time, and after that
     automatically delete the file. The software is not intended as a
-    permanent file publishing platform
-    
+    permanent file publishing platform.
 </p>
+
