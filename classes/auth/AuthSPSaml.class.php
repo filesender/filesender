@@ -227,7 +227,12 @@ class AuthSPSaml {
             // self::$SimpleSAMLphpVersion = $samlConfig->getVersion();
             // Logger::info('Loaded SimpleSAMLphp version is ' . self::$SimpleSAMLphpVersion);
             
-            self::$simplesamlphp_auth_simple = new SimpleSAML_Auth_Simple(self::$config['authentication_source']);
+            if (class_exists("\SimpleSAML\Auth\Simple")) {
+                self::$simplesamlphp_auth_simple = new SimpleSAML\Auth\Simple(self::$config['authentication_source']);
+            } else {
+                //For old SSP
+                self::$simplesamlphp_auth_simple = new SimpleSAML_Auth_Simple(self::$config['authentication_source']);
+            }
         }
         
         Auth::$authClassLoadingCount--;
