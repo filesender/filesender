@@ -47,6 +47,40 @@ echo "lang size ", count($lang), "\n";
 $langdir = loadLangDirectory( $code );
 echo "lang dir size ", count($langdir), "\n";
 
+function squote( $s ) {
+    $s = str_replace( '\\', '\\\\', $s );
+    $s = str_replace( "'", "\'", $s );
+    return $s;
+}
+
+function write_translation_lang_file( $code, $lang ) {
+    global $BASE;
+    $fn = "$BASE/language/$code/lang.php";
+    $data = '';
+
+    ksort( $lang );
+    foreach( $lang as $k => $v ) {
+        $data .= "\$lang['" . $k . "'] = '" . squote($v) . "'\n";
+    }
+
+    echo "writing general translations to file at $fn \n";
+    file_put_contents( $fn, $data );
+    
+}
+
+
+function write_translation_term_file( $code, $term, $data ) {
+    global $BASE;
+    $p = "$BASE/language/$code/";
+    $fn = '';
+    foreach( array('html','mail','text') as $type ) {
+        if( file_exists( "$BASE/language/master/$term.$type.php" )) {
+            $fn = "$p/$term.$type.php";
+        }
+    }
+    echo "translation file for $term at $fn \n";
+    file_put_contents( $fn, $data );
+}
 
 
 foreach($LANG as $ti => $t) {
@@ -64,3 +98,5 @@ write_translation_lang_file( $code, $lang );
 
 
 
+
+?>
