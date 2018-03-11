@@ -1,3 +1,6 @@
-Vítejte na {cfg:site_name}
+<h1>Vítejte na Filesenderu {cfg:site_name}</h1>
 
-{cfg:site_name} je bezpečná cesta pro sdílení velkých souborů mezi všemi! Přihlaš se a nahraj své soubory nebo pozvi ostatní, ať soubory nahrají oni.
+<p>
+    {cfg:site_name} je bezpečný způsob sdílení velkých souborů s kýmkoliv!
+    Přihlašte se k nahrání svých souborů nebo pozvání ostatních k zaslání souboru.
+</p>
