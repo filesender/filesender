@@ -208,13 +208,14 @@ filesender.ui.files = {
         return node;
     },
 
+    //DIRTREE_UPLOAD
     // File selection (browse / drop) handler to add a list of files
     addList: function(files, source_node) {
         for(var i=0; i<files.length; i++) {
             add(files[i].name, files[i].size, source_node);
         }
-    }
-    
+    },
+
     update_crust_meter_for_worker: function(file,idx,v,b) {
 
         var crust_indicator = filesender.ui.nodes.files.list.find('[data-cid="' + file.cid + '"] .crust' + idx);
@@ -409,32 +410,32 @@ filesender.ui.files = {
 };
 
 //DIRTREE_UPLOAD
-// from https://stackoverflow.com/questions/3590058/does-html5-allow-drag-drop-upload-of-folders-or-a-folder-tree
-function traverseFileTree(fileList, item, path) {
-  console.log(typeof fileList);
+// From https://stackoverflow.com/questions/3590058/does-html5-allow-drag-drop-upload-of-folders-or-a-folder-tree
+function traverseTree(item, path) {
   path = path || "";
   if (item.isFile) {
     // Get file
     //filesender.ui.files.add(item.file.name);
     item.file(function(file) {
+    console.log("TRAVERSE_ITEM: ");
        console.log("File:", path + file.name);
        console.log("Type:", file.type);
        console.log("Size:", file.size);
-       fileList.item(0).name = path + file.name;
-       fileList.item(0).type = file.type;
-       fileList.item(0).size = file.syze;
-       filesender.ui.files.add(fileList);
+       filesender.ui.files.add(path + file.name, file.size);
     });
-  } else if (item.isDirectory) {
+  }
+  else if (item.isDirectory) {
     // Get folder contents
-    var dirReader = item.createReader();
+    let dirReader = item.createReader();
+    console.log("TRAVERSE_TREE: DIRECTORY");
     dirReader.readEntries(function(entries) {
-      for (var i=0; i<entries.length; i++) {
-        traverseFileTree(fileList, entries[i], path + item.name + "/");
+      for (let i=0; i<entries.length; i++) {
+        console.log("TRAVERSE_TREE: " + path + item.name + "/");
+        traverseTree(entries[i], path + item.name + "/");
       }
     });
   }
-}
+};
 
 // Manage recipients
 filesender.ui.recipients = {
@@ -899,21 +900,21 @@ $(function() {
         console.log("DIRTREE_UPLOAD");
 
         if (isChrome()) {
-            //var fileInput = document.querySelector('input');
-            //fileInput.files = e.originalEvent.dataTransfer.files;
-            var fileInput = Object.assign({}, e.originalEvent.dataTransfer.files);
-            console.log(typeof fileInput);
-            var items = e.originalEvent.dataTransfer.items;
-            for (var i=0; i<items.length; i++) {
+        console.log("DIRTREE_UPLOAD0");
+            let items = e.originalEvent.dataTransfer.items;
+            console.log("DIRTREE_UPLOAD0 - items.length=" + items.length);
+            for (let i=0; i<items.length; i++) {
               // webkitGetAsEntry is where the magic happens
-              var item = items[i].webkitGetAsEntry();
-              if (item) {
-                traverseFileTree(fileInput, item);
+              let entry = items[i].webkitGetAsEntry();
+              console.log("DIRTREE_UPLOAD1: " + entry);
+              if (entry) {
+         console.log("DIRTREE_UPLOAD2");
+                traverseTree(entry);
               }
             }
          }
          else {
-           filesender.ui.files.add(e.originalEvent.dataTransfer.files);
+           filesender.ui.files.addList(e.originalEvent.dataTransfer.files);
          }
        });
     
@@ -1200,7 +1201,7 @@ $(function() {
             
             // TODO check file size, reject if over filesender.config.max_legacy_file_size // DIRTREE_UPLOAD
             
-            var node = filesender.ui.files.add(this.files, file.get(0));
+            var node = filesender.ui.files.addList(this.files, file.get(0));
             if(!node) return;
             
             file.appendTo(node);
