@@ -123,7 +123,10 @@ filesender.ui.files = {
                 
                 filesender.ui.evalUploadEnabled();
             }).appendTo(node);
-            
+
+            //DIRTREE_UPLOAD - current devel -
+            //DIRTREE_UPLOAD - change addFile(entry,...) to addFile(node,...)
+            //DIRTREE_UPLOAD - update transfer.addFile to work with node type.
             var added_cid = filesender.ui.transfer.addFile(entry, function(error) {
                 var tt = 1;
                 if(error.details && error.details.filename) filesender.ui.files.invalidFiles.push(error.details.filename);
