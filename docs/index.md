@@ -15,7 +15,7 @@ This is the home for Filesender documentation.  For more information about the p
 The latest production release is [1.6.1, released on December 30th
 2015](https://downloads.filesender.org/filesender-1.6.1.tar.gz). There
 have been a series of beta releases for version 2.0 the most recent
-being [beta3, released on 10th February
+being [beta4, released on 14th March
 2018](https://github.com/filesender/filesender/releases). You are
 encouraged to use the latest 2.0 beta release if possible as migration to later
 beta releases and the final 2.0 release will be much simpler.
