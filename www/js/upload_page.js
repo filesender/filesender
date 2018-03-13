@@ -59,13 +59,8 @@ function isChrome() {
 filesender.ui.files = {
     invalidFiles: [],
 
-    // File selection (browse / drop) handler
-    addDebug: function(filename, filesize, source_node) {
-       console.log("File:", filename);
-       console.log("Size:", filesize);
-    },
-
-    add: function(filename, filesize, source_node) {
+    add: function(filename, entry, source_node) {
+        var filesize = entry.size;
         var node = null;
         var info = filename + ' : ' + filesender.ui.formatBytes(filesize);
         node = $('<div class="file" />').attr({
@@ -88,7 +83,7 @@ filesender.ui.files = {
             var file = req.data('file');
             var added_cid = req.attr('data-cid');
             file.cid = added_cid;
-            file.blob = files[i];
+            file.blob = entry;
             
             filesender.ui.transfer.files.push(file);
             
@@ -129,7 +124,7 @@ filesender.ui.files = {
                 filesender.ui.evalUploadEnabled();
             }).appendTo(node);
             
-            var added_cid = filesender.ui.transfer.addFile(files[i], function(error) {
+            var added_cid = filesender.ui.transfer.addFile(entry, function(error) {
                 var tt = 1;
                 if(error.details && error.details.filename) filesender.ui.files.invalidFiles.push(error.details.filename);
                 node.addClass('invalid');
@@ -140,7 +135,7 @@ filesender.ui.files = {
             
             filesender.ui.nodes.files.clear.button('enable');
             
-            if(added_cid === false) continue;
+            if(added_cid === false) return;
         }
             
         filesender.ui.evalUploadEnabled();
@@ -213,11 +208,18 @@ filesender.ui.files = {
         return node;
     },
 
+    // File selection (browse / drop) handler
+    addDebug: function(filename, entry, source_node) {
+       console.log("File:", filename);
+       console.log("Size:", entry.size);
+       filesender.ui.files.add( filename, entry );
+    },
+
     //DIRTREE_UPLOAD
     // File selection (browse / drop) handler to add a list of files
     addList: function(files, source_node) {
         for(var i=0; i<files.length; i++) {
-            add(files[i].name, files[i].size, source_node);
+            add(file[i].name, files[i], source_node);
         }
     },
 
@@ -422,8 +424,8 @@ function traverseTree(addFile, item, path) {
     // Get file
     //filesender.ui.files.add(item.file.name);
     item.file(function(file) {
-    console.log("TRAVERSE_ITEM: ");
-       addFile(path + file.name, file.size);
+       console.log("TRAVERSE_ITEM: ");
+       addFile(path + file.name, file);
     });
   } else if (item.isDirectory) {
     // Get folder contents
