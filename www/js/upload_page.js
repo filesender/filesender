@@ -411,7 +411,7 @@ filesender.ui.files = {
 
 //DIRTREE_UPLOAD
 // From https://stackoverflow.com/questions/3590058/does-html5-allow-drag-drop-upload-of-folders-or-a-folder-tree
-function traverseTree(item, path) {
+function traverseTree(filesender, item, path) {
   path = path || "";
   if (item.isFile) {
     // Get file
@@ -421,17 +421,16 @@ function traverseTree(item, path) {
        console.log("File:", path + file.name);
        console.log("Type:", file.type);
        console.log("Size:", file.size);
-       filesender.ui.files.add(path + file.name, file.size);
+       //filesender.ui.files.add(path + file.name, file.size);
     });
-  }
-  else if (item.isDirectory) {
+  } else if (item.isDirectory) {
     // Get folder contents
     let dirReader = item.createReader();
     console.log("TRAVERSE_TREE: DIRECTORY");
     dirReader.readEntries(function(entries) {
       for (let i=0; i<entries.length; i++) {
         console.log("TRAVERSE_TREE: " + path + item.name + "/");
-        traverseTree(entries[i], path + item.name + "/");
+        traverseTree(filesender, entries[i], path + item.name + "/");
       }
     });
   }
@@ -909,7 +908,7 @@ $(function() {
               console.log("DIRTREE_UPLOAD1: " + entry);
               if (entry) {
          console.log("DIRTREE_UPLOAD2");
-                traverseTree(entry);
+                traverseTree(filesender, entry);
               }
             }
          }
@@ -951,7 +950,7 @@ $(function() {
 
         if(typeof this.files == 'undefined') return;
         
-        filesender.ui.files.add(this.files);
+        filesender.ui.files.addList(this.files);
         
         // Forget (cloned) selection for webkit
         this.value = null;
@@ -964,7 +963,7 @@ $(function() {
     // Handle "back" browser action
     if(filesender.supports.reader) {
         var files = filesender.ui.nodes.files.input[0].files;
-        if(files && files.length) filesender.ui.files.add(files);
+        if(files && files.length) filesender.ui.files.addList(files);
     }
 
     // validate message as it is typed
