@@ -60,6 +60,11 @@ filesender.ui.files = {
     invalidFiles: [],
 
     // File selection (browse / drop) handler
+    addDebug: function(filename, filesize, source_node) {
+       console.log("File:", filename);
+       console.log("Size:", filesize);
+    },
+
     add: function(filename, filesize, source_node) {
         var node = null;
         var info = filename + ' : ' + filesender.ui.formatBytes(filesize);
@@ -411,17 +416,14 @@ filesender.ui.files = {
 
 //DIRTREE_UPLOAD
 // From https://stackoverflow.com/questions/3590058/does-html5-allow-drag-drop-upload-of-folders-or-a-folder-tree
-function traverseTree(filesender, item, path) {
+function traverseTree(addFile, item, path) {
   path = path || "";
   if (item.isFile) {
     // Get file
     //filesender.ui.files.add(item.file.name);
     item.file(function(file) {
     console.log("TRAVERSE_ITEM: ");
-       console.log("File:", path + file.name);
-       console.log("Type:", file.type);
-       console.log("Size:", file.size);
-       //filesender.ui.files.add(path + file.name, file.size);
+       addFile(path + file.name, file.size);
     });
   } else if (item.isDirectory) {
     // Get folder contents
@@ -430,7 +432,7 @@ function traverseTree(filesender, item, path) {
     dirReader.readEntries(function(entries) {
       for (let i=0; i<entries.length; i++) {
         console.log("TRAVERSE_TREE: " + path + item.name + "/");
-        traverseTree(filesender, entries[i], path + item.name + "/");
+        traverseTree(addFile, entries[i], path + item.name + "/");
       }
     });
   }
@@ -908,7 +910,7 @@ $(function() {
               console.log("DIRTREE_UPLOAD1: " + entry);
               if (entry) {
          console.log("DIRTREE_UPLOAD2");
-                traverseTree(filesender, entry);
+                traverseTree(filesender.ui.files.addDebug, entry);
               }
             }
          }
