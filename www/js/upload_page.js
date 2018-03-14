@@ -59,8 +59,8 @@ function isChrome() {
 filesender.ui.files = {
     invalidFiles: [],
 
-    add: function(filename, entry, source_node) {
-        var filesize = entry.size;
+    addBlob: function(filename, blob, source_node) {
+        var filesize = blob.size;
         var node = null;
         var info = filename + ' : ' + filesender.ui.formatBytes(filesize);
         node = $('<div class="file" />').attr({
@@ -83,7 +83,7 @@ filesender.ui.files = {
             var file = req.data('file');
             var added_cid = req.attr('data-cid');
             file.cid = added_cid;
-            file.blob = entry;
+            file.blob = blob;
             
             filesender.ui.transfer.files.push(file);
             
@@ -125,9 +125,9 @@ filesender.ui.files = {
             }).appendTo(node);
 
             //DIRTREE_UPLOAD - current devel -
-            //DIRTREE_UPLOAD - change addFile(entry,...) to addFile(node,...)
+            //DIRTREE_UPLOAD - change addFile(blob,...) to addFile(node,...)
             //DIRTREE_UPLOAD - update transfer.addFile to work with node type.
-            var added_cid = filesender.ui.transfer.addFile(entry, function(error) {
+            var added_cid = filesender.ui.transfer.addFile(filename, blob, function(error) {
                 var tt = 1;
                 if(error.details && error.details.filename) filesender.ui.files.invalidFiles.push(error.details.filename);
                 node.addClass('invalid');
@@ -215,14 +215,14 @@ filesender.ui.files = {
     addDebug: function(filename, entry, source_node) {
        console.log("File:", filename);
        console.log("Size:", entry.size);
-       filesender.ui.files.add( filename, entry );
+       addBlob( filename, entry );
     },
 
     //DIRTREE_UPLOAD
     // File selection (browse / drop) handler to add a list of files
     addList: function(files, source_node) {
         for(var i=0; i<files.length; i++) {
-            add(file[i].name, files[i], source_node);
+            addBlob(file[i].name, files[i], source_node);
         }
     },
 
