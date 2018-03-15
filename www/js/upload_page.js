@@ -59,7 +59,7 @@ function isChrome() {
 filesender.ui.files = {
     invalidFiles: [],
 
-    addBlob: function(filename, blob, source_node) {
+    add: function(filename, blob, source_node) {
         var filesize = blob.size;
         var node = null;
         var info = filename + ' : ' + filesender.ui.formatBytes(filesize);
@@ -123,10 +123,7 @@ filesender.ui.files = {
                 
                 filesender.ui.evalUploadEnabled();
             }).appendTo(node);
-
-            //DIRTREE_UPLOAD - current devel -
-            //DIRTREE_UPLOAD - change addFile(blob,...) to addFile(node,...)
-            //DIRTREE_UPLOAD - update transfer.addFile to work with node type.
+            
             var added_cid = filesender.ui.transfer.addFile(filename, blob, function(error) {
                 var tt = 1;
                 if(error.details && error.details.filename) filesender.ui.files.invalidFiles.push(error.details.filename);
@@ -212,17 +209,17 @@ filesender.ui.files = {
     },
 
     // File selection (browse / drop) handler
-    addDebug: function(filename, entry, source_node) {
+    addDebug: function(filename, blob, source_node) {
        console.log("File:", filename);
-       console.log("Size:", entry.size);
-       addBlob( filename, entry );
+       console.log("Size:", blob.size);
+       filesender.ui.files.add( filename, blob );
     },
 
     //DIRTREE_UPLOAD
     // File selection (browse / drop) handler to add a list of files
     addList: function(files, source_node) {
         for(var i=0; i<files.length; i++) {
-            addBlob(file[i].name, files[i], source_node);
+            add(file[i].name, files[i], source_node);
         }
     },
 

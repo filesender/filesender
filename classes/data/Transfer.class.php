@@ -771,6 +771,7 @@ class Transfer extends DBObject {
             if(count($matches)) return array_shift($matches);
         }
 
+        //DIRTREE
         if( !Utilities::isValidFileName( $name )) {
             throw new TransferFileNameInvalidException( $name );
         }
