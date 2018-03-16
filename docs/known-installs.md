@@ -19,6 +19,7 @@ If you want to add your FileSender installation to this list, send an email to f
 | Europe	| GEANT		| https://filesender.geant.org/			| Sep 2010|
 | Finland	| FUNET/CSC	| https://filesender.funet.fi/			| Sep 2012|
 | France	| RENATER	| https://filesender.renater.fr/		| Nov 2013|
+| Greece  | Athens University of Applied Science | https://filesender.teiath.gr/ | Mar 2018|
 | Hungary	| NIIF		| https://filesender.niif.hu			| Feb 2012|
 | Ireland	| HEAnet	| https://filesender.heanet.ie			| 2009 |
 | Iran		| IPM/IRANET	| https://filesender.ipm.ir			| Aug 2016|
@@ -33,6 +34,7 @@ If you want to add your FileSender installation to this list, send an email to f
 | Norway	| UNINETT	| https://filesender.uninett.no/		| 2009|
 | Poland	| PIONIER	| https://files.pionier.net.pl/			| Apr 2013|
 | Portugal	| FCCN		| https://filesender.fccn.pt			| Jan 2011| 
+| Russian FEderation | RUNNet |  https://filesender.runnet.ru/ | Mar 2018|
 | Serbia	| AMRES		| https://filesender.amres.ac.rs/		| Jul 2014|
 | Slovenia	| ARNES		| https://filesender.arnes.si/ 			| May 2011| 
 | Spain		| RedIRIS	| https://filesender.rediris.es			| Mar 2017|
@@ -40,12 +42,14 @@ If you want to add your FileSender installation to this list, send an email to f
 | Spain/Sevilla	| Universidad "Pablo de Olavide"	| https://filesender.upo.es/	| May 2014|
 | Switzerland	| SWITCH	| https://filesender.switch.ch			| Sep 2012|
 | UK/Kent	| GOETEC	| https://send.goetec.ac.uk			| Aug 2014|
+| Ukraine | URAN | https://filesender.uran.ua/filesender/ | Mar 2018|
 
 ## 
 ## HE&R Community installations - Asia - Pacific
 | Country/Region|NREN  | Service URL | Known since|
 | --- | --- | --- |---|
 | Australia	| AARNet	| https://cloudstor.aarnet.edu.au/		| 2009 |
+| Japan | NII/GakuNin | https://filesender.nii.ac.jp/ | Oct 2017|
 | Japan / Okinawa| Okinawa Institute of Science and Technology	| https://filesender.oist.jp	| Sep 2013|
 | Korea		| KREONET	| https://filesender.kreonet.net		| Mar 2014|
 | Malaysia	| MYREN		| https://filesender.myren.net.my		| Oct 2017| 
@@ -66,14 +70,17 @@ If you want to add your FileSender installation to this list, send an email to f
 ## HE&R Community installations - Africa
 | Country/Region|NREN  | Service URL | Known since|
 | --- | --- | --- |---|
+| East Africa | UBUNTUNET | https://filesender.ubuntunet.net/ | March 2018|
 | Morocco	| MARWAN	| https://filesender.marwan.ma/filesender	| Feb 2015|
 | South Africa	| SANReN	| https://filesender.sanren.ac.za/filesender	| Apr 2014|
+| Uganda | RENU | https://filesender.renu.ac.ug/ | Mar 2018|
 
 
 
 ## Other
 | Country/Region| Organisation | Service URL | Known since|
 | --- | --- | --- |---|
+| Australia | BARNET - Legal sector ISP | https://filesender.barnet.com.au/ | March 2018 |
 | Netherlands	| Pleio - Dutch government | https://bestandendelen.pleio.nl/filesender | Oct 2013|
 | Philippines	| Government	| https://pakete.gov.ph 			| Jul 2013|
 
