@@ -50,7 +50,17 @@ class StorageFilesystemPreserveName extends StorageFilesystem {
      */
     public static function buildFilename(File $file) {
         static::setup();
-        return $file->name;
+        
+        // To support dirtree upload, see if $file->name has a basepath
+        $filename = $file->name;
+
+        $pos = strrpos($filename, '/');
+      
+        if (!($pos === false)) {
+          $filename = substr($file->name, $pos + 1);
+        }
+
+        return $filename;
     }
   
     /**
@@ -79,11 +89,20 @@ class StorageFilesystemPreserveName extends StorageFilesystem {
           $subpath = '/'.substr($owner, $pos + 1);
         }
 
+        // To support dirtree upload, see if $file->name has a basepath
+        $basepath = $file->name;
+
+        $pos = strrpos($basepath, '/');
+      
+        if (!($pos === false)) {
+          $basepath = substr($file->name, 0, $pos);
+        }
+        
         // For archive systems such as archivematica, any set of files belonging
         // to an archival set needs to be in an enclosing directory.
         // defaulting to naming the directory "uid=name", which also
         // should guarentee unique folder name
-        $subpath .= '/'.$file->uid.'='.$file->name;
+        $subpath .= '/'.$file->uid.'='.$basepath;
         
         // validate owner/uid=name subpath, creating dirs if needed
         $path = $storage_root_path;
