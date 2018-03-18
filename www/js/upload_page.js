@@ -59,12 +59,12 @@ function isChrome() {
 filesender.ui.files = {
     invalidFiles: [],
 
-    add: function(filename, blob, source_node) {
+    add: function(filepath, blob, source_node) {
         var filesize = blob.size;
         var node = null;
-        var info = filename + ' : ' + filesender.ui.formatBytes(filesize);
+        var info = filepath + ' : ' + filesender.ui.formatBytes(filesize);
         node = $('<div class="file" />').attr({
-            'data-name': filename,
+            'data-name': filepath,
             'data-size': filesize
         }).appendTo(filesender.ui.nodes.files.list);
         
@@ -72,7 +72,7 @@ filesender.ui.files = {
         
         if(filesender.ui.nodes.required_files) {
             // Upload restart mode
-            var req = filesender.ui.nodes.required_files.find('.file[data-name="' + filename + '"][data-size="' + filesize + '"]');
+            var req = filesender.ui.nodes.required_files.find('.file[data-name="' + filepath + '"][data-size="' + filesize + '"]');
             
             if(!req.length) {
                 filesender.ui.alert('error', lang.tr('unexpected_file'));
@@ -124,7 +124,7 @@ filesender.ui.files = {
                 filesender.ui.evalUploadEnabled();
             }).appendTo(node);
             
-            var added_cid = filesender.ui.transfer.addFile(filename, blob, function(error) {
+            var added_cid = filesender.ui.transfer.addFile(filepath, blob, function(error) {
                 var tt = 1;
                 if(error.details && error.details.filename) filesender.ui.files.invalidFiles.push(error.details.filename);
                 node.addClass('invalid');
@@ -209,10 +209,10 @@ filesender.ui.files = {
     },
 
     // File selection (browse / drop) handler
-    addDebug: function(filename, blob, source_node) {
-       console.log("File:", filename);
+    addDebug: function(filepath, blob, source_node) {
+       console.log("File:", filepath);
        console.log("Size:", blob.size);
-       filesender.ui.files.add( filename, blob );
+       filesender.ui.files.add( filepath, blob );
     },
 
     //DIRTREE_UPLOAD
