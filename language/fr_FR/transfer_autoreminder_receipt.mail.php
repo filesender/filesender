@@ -1,5 +1,4 @@
 subject: Rappels automatiques envoyés pour le dépôt n°{transfer.id}
-subject: (rappels envoyés) {transfer.subject}
 
 {alternative:plain}
 
