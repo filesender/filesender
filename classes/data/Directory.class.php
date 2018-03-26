@@ -34,79 +34,35 @@ if (!defined('FILESENDER_BASE'))
     die('Missing environment');
 
 /**
- *  Represents file in the database
+ *  Represents path in the database
  */
-class File extends DBObject
+class Directory extends DBObject
 {
 
     /**
      * Database map
      */
     protected static $dataMap = array(
-        //file id, as in the database
+        //directory id, as in the database
         'id' => array(
             'type' => 'uint',   //data type of 'id'
             'size' => 'medium', //size of the integer stored in 'id' (in bytes, or otherwise)
             'primary' => true,  //indicates that 'id' is the primary key in the DB
             'autoinc' => true,   //indicates that 'id' is auto-incremented
         ),
-        'transfer_id' => array(
+        'root_id' => array(
             'type' => 'uint',
             'size' => 'medium',
         ),
-        'uid' => array(
+        'path' => array(
             'type' => 'string',
-            'size' => 60
-        ),
-        'name' => array(
-            'type' => 'string',
-            'size' => 255,
-        ),
-        'mime_type' => array(
-            'type' => 'string',
-            'size' => 255
-        ),
-        'size' => array(
-            'type' => 'uint',
-            'size' => 'big'
-        ),
-        'encrypted_size' => array(
-            'type' => 'uint',
-            'null' => true,
-            'size' => 'big'
-        ),
-        'upload_start' => array(
-            'type' => 'datetime',
-            'null' => true
-        ),
-        'upload_end' => array(
-            'type' => 'datetime',
-            'null' => true
-        ),
-        'sha1' => array(
-            'type' => 'string',
-            'size' => 40,
-            'null' => true
-        ),
-        'directory_id' => array(
-            'type' => 'uint',
-            'size' => 'medium',
-            'null' => true
-        ),
-        'storage_class_name' => array(
-            'type' => 'string',
-            'size' => 60,
-            'null' => true,
-            'default' => 'StorageFilesystem'
+            'size' => 2048,
         )
     );
 
     protected static $secondaryIndexMap = array(
-        'transfer_id' => array( 
-            'transfer_id' => array()
-        ),
-        'directory_id' => array( 
-            'directory_id' => array()
+        'root_id' => array( 
+            'root_id' => array()
         )
     );
 
@@ -114,59 +70,24 @@ class File extends DBObject
      * Properties
      */
     protected $id = null;
-    protected $transfer_id = null;
-    protected $directory_id = null;
-    protected $uid = null;
-    protected $name = null;
-    protected $mime_type = null;
-    protected $size = 0;
-    protected $encrypted_size = 0;
-    protected $upload_start = 0;
-    protected $upload_end = 0;
-    protected $sha1 = null;
+    protected $root_id = null;
+    protected $path = null;
    
     /**
      * Related objects cache
      */
-    private $directoryCache = null;
-    private $transferCache = null;
-    private $logsCache = null;
+    private $rootCache = null;
 
-    /**
-     * Set the name of a File, optionally creating a Path
-     * object internally if pathedName contains slashes
-     * 
-     * @param string $directoryedName a potentially fully pathed name for the File
-     */
-    protected function setName($directoryedName) {
-        $this->name = $directoryedName;
-        $pos = strrpos($directoryedName, '/');
-        $directory = null;
-      
-        if (!($pos === false)) {
-           $this->name = substr($directoryedName, $pos + 1);
-           $directory = substr($directoryedName, $pos - 1);
-        }
-
-        if ($directory != null) {
-           $directoryCache = Path::create($transferCache, $directory);
-           $this->$directory_id = $directoryCache->__get('id');
-        }
-        $this->save();
-    }
-    
     /**
      * Constructor
      * 
-     * @param integer $id identifier of file to load from database (null if loading not wanted)
-     * @param array $data data to create the file from (if already fetched from database)
+     * @param integer $id identifier of directory to load from database (null if loading not wanted)
+     * @param array $data data to create the directory from (if already fetched from database)
      * 
      * @throws FileNotFoundException
      */
     public function __construct($id = null, $data = null) {
     
-        $this->storage_class_name = Storage::getDefaultStorageClass();
-        
         if(!is_null($id)) {
             // Load from database if id given
             $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE id = :id');
@@ -180,57 +101,51 @@ class File extends DBObject
     }
     
     /**
-     * Create a new file (for upload)
+     * Create a new Directory (for upload)
      * 
      * @param Transfer $transfer the relater transfer
      * 
-     * @return File
+     * @return Directory
      */
-    public static function create(Transfer $transfer) {
-        $file = new self();
+    public static function create(Transfer $transfer, string $path) {
+        $directory = new self();
         
-        // Init cache to empty to avoid db queries
-        $file->logsCache = array();
-        
-        $file->transfer_id = $transfer->id;
-        $file->transferCache = $transfer;
-        
-        // Generate uid until it is indeed unique
-        $file->uid = Utilities::generateUID(function($uid, $tries) {
-            $statement = DBI::prepare('SELECT * FROM '.File::getDBTable().' WHERE uid = :uid');
-            $statement->execute(array(':uid' => $uid));
-            $data = $statement->fetch();
-            if(!$data) Logger::info('File uid generation took '.$tries.' tries');
-            return !$data;
-        });
+        $pos = strpos($path, '/');
+        $directory->$path = $path;
+        $root = $path;
+      
+        if (!($pos === false)) {
+           $root = substr($path, $pos - 1);
+        }
 
-        $file->storage_class_name = Storage::getDefaultStorageClass();
-        
-        return $file;
+        $rootCache = File::createTree($transfer, $root);
+        $this->root_id = $rootCache->__get('id');
+
+        return $directory;
     }
     
     /**
-     * Delete the file
+     * Delete the directory
      */
     public function beforeDelete() {
-        Storage::deleteFile($this);
+        Storage::deleteDirectory($this);
         
         Logger::info($this.' deleted');
     }
     
     /**
-     * Get file from uid
+     * Get directory from uid
      * 
      * @param string $uid
      * 
-     * @return File
+     * @return Directory
      */
     public static function fromUid($uid) {
         $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE uid = :uid');
         $s->execute(array('uid' => $uid));
         $data = $s->fetch();
         
-        if(!$data) throw FileNotFoundException('uid = '.$uid);
+        if(!$data) throw DirectoryNotFoundException('uid = '.$uid);
         
         return self::fromData($data['id'], $data); // Don't query twice, use loaded data
     }
@@ -240,11 +155,11 @@ class File extends DBObject
      * 
      * @param Transfer $transfer the relater transfer
      * 
-     * @return array of File
+     * @return array of Directory
      */
     public static function fromTransfer(Transfer $transfer) {
-        $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE transfer_id = :transfer_id');
-        $s->execute(array('transfer_id' => $transfer->id));
+        $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE root_id = :root_id');
+        $s->execute(array('root_id' => $transfer->id));
         $files = array();
         foreach($s->fetchAll() as $data) $files[$data['id']] = self::fromData($data['id'], $data); // Don't query twice, use loaded data
         return $files;
@@ -254,7 +169,7 @@ class File extends DBObject
      * Store a chunk at offset
      * 
      * @param mixed $chunk the chunk data (binary)
-     * @param int $offset the chunk offset in the file, if null appends at end of file
+     * @param int $offset the chunk offset in the directory, if null appends at end of directory
      */
     public function writeChunk($chunk, $offset = null) {
         if(!$this->upload_start) {
@@ -270,17 +185,17 @@ class File extends DBObject
     }
     
     /**
-     * End file upload
+     * End directory upload
      */
     public function complete() {
         if($this->upload_end) return true; // Already completed
         
-        $r = Storage::completeFile($this);
+        $r = Storage::completeDirectory($this);
         
         $this->upload_end = time();
         $this->save();
         
-        Logger::logActivity(LogEventTypes::FILE_UPLOADED, $this);
+        Logger::logActivity(LogEventTypes::DIRECTORY_UPLOADED, $this);
         Logger::info($this.' fully uploaded, took '.$this->upload_time.'s');
         
         return $r;
@@ -289,7 +204,7 @@ class File extends DBObject
     /**
      * Read a chunk at offset
      * 
-     * @param int $offset the chunk offset in the file, if null reads next chunk (Storage keeps track of it)
+     * @param int $offset the chunk offset in the directory, if null reads next chunk (Storage keeps track of it)
      * @param int $length the chunk length, if null will use download_chunk_size from config
      * 
      * @return mixed chunk data or null if no more data is available
@@ -309,17 +224,12 @@ class File extends DBObject
      */
     public function __get($property) {
         if(in_array($property, array(
-            'id', 'transfer_id', 'uid', 'name', 'mime_type', 'size', 'encrypted_size', 'upload_start', 'upload_end', 'sha1', 'storage_class_name'
+            'id', 'root_id', 'uid', 'name', 'mime_type', 'size', 'encrypted_size', 'upload_start', 'upload_end', 'sha1', 'filedirectory_id', 'storage_class_name'
         ))) return $this->$property;
         
         if($property == 'transfer') {
-            if(is_null($this->transferCache)) $this->transferCache = Transfer::fromId($this->transfer_id);
+            if(is_null($this->transferCache)) $this->transferCache = Transfer::fromId($this->root_id);
             return $this->transferCache;
-        }
-        
-        if($property == 'directory') {
-            if(is_null($this->directoryCache)) $this->directoryCache = Directory::fromId($this->directory_id);
-            return $this->directoryCache;
         }
         
         if($property == 'owner') {
@@ -353,12 +263,12 @@ class File extends DBObject
      * @param string $property property to get
      * @param mixed $value value to set property to
      * 
-     * @throws FileBadHashException
+     * @throws DirectoryBadHashException
      * @throws PropertyAccessException
      */
     public function __set($property, $value) {
         if($property == 'name') {
-            $this->setName((string)$value);
+            $this->name = (string)$value;
         }else if($property == 'auditlogs') {
             $this->logsCache = (array)$value;
         }else if($property == 'mime_type') {
@@ -368,7 +278,7 @@ class File extends DBObject
         }else if($property == 'encrypted_size') {
             $this->encrypted_size = (int)$value;
         }else if($property == 'sha1') {
-            if(!preg_match('`^[0-9a-f]{40}$`', $value)) throw new FileBadHashException($this, $value);
+            if(!preg_match('`^[0-9a-f]{40}$`', $value)) throw new DirectoryBadHashException($this, $value);
             $this->sha1 = (string)$value;
         }else if($property == 'storage_class_name') {
             $this->storage_class_name = (string)$value;
