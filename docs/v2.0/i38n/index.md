@@ -629,6 +629,31 @@ in language/master called transfer_shredded.mail.php. The FileSender
 codebase can then refer to that file and the translation scripts will
 place the transfer_shredded translation into that file.
 
+### Exporting new terms from the github code to poeditor
+
+The poeditor.com site allows you to import files that contain existing
+terms and will only add the terms that are only in the import file and
+do not already exist. So the process to add any new terms that are in
+the github code but not on poeditor is to export all terms and then
+convert that file to a format that poeditor understands (json) and
+upload it.
+
+The json file for all terms used in translations for any language
+in the github code can be generated with the below commands
+
+```
+cd scripts/language
+php ./export-all-terms.php                    /tmp/allterms
+php ./convert-one-per-line-terms-to-json.php  /tmp/allterms /tmp/allterms.json
+```
+
+The allterms.json file can them be imported using the "Import terms"
+menu item on poeditor. This option is about the third icon on the
+right menu of the poeditor web site as of 2018. After selecting the
+allterms.json file you will see how many terms were parsed and how
+many new terms were added by poeditor.
+
+
 ### Future directions
 
 It is possible that the translation system might move to gettext or
