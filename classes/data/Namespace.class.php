@@ -36,7 +36,7 @@ if (!defined('FILESENDER_BASE'))
 /**
  *  Represents path in the database
  */
-class FilePath extends DBObject
+class Namespace extends DBObject
 {
 
     /**
@@ -50,7 +50,7 @@ class FilePath extends DBObject
             'primary' => true,  //indicates that 'id' is the primary key in the DB
             'autoinc' => true,   //indicates that 'id' is auto-incremented
         ),
-        'path' => array(
+        'name' => array(
             'type' => 'string',
             'size' => 2048,
         )
@@ -60,7 +60,7 @@ class FilePath extends DBObject
      * Properties
      */
     protected $id = null;
-    protected $path = null;
+    protected $name = null;
    
     /**
      * Constructor
@@ -68,7 +68,7 @@ class FilePath extends DBObject
      * @param integer $id identifier of filepath to load from database (null if loading not wanted)
      * @param array $data data to create the filepath from (if already fetched from database)
      * 
-     * @throws FileNotFoundException
+     * @throws NamespaceNotFoundException
      */
     public function __construct($id = null, $data = null) {
     
@@ -77,7 +77,7 @@ class FilePath extends DBObject
             $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE id = :id');
             $statement->execute(array(':id' => $id));
             $data = $statement->fetch();
-            if(!$data) throw new FileNotFoundException('id = '.$id);
+            if(!$data) throw new NamespaceNotFoundException('id = '.$id);
         }
 
         // Fill properties from provided data
@@ -85,21 +85,21 @@ class FilePath extends DBObject
     }
     
     /**
-     * Create a new FilePath (for upload)
+     * Create a new Namespace (for upload)
      * 
      * @param Transfer $transfer the relater transfer
      * 
-     * @return FilePath
+     * @return Namespace
      */
-    public static function create(Transfer $transfer, string $path) {
+    public static function create(Transfer $transfer, string $name) {
         $filepath = new self();
         
-        $pos = strpos($path, '/');
-        $filepath->$path = $path;
-        $root = $path;
+        $pos = strpos($name, '/');
+        $filepath->$name = $name;
+        $root = $name;
       
         if (!($pos === false)) {
-           $root = substr($path, $pos - 1);
+           $root = substr($name, $pos - 1);
         }
 
         $rootCache = File::createTree($transfer, $root);
@@ -112,7 +112,7 @@ class FilePath extends DBObject
      * Delete the filepath
      */
     public function beforeDelete() {
-        Storage::deleteFilePath($this);
+        Storage::deleteNamespace($this);
         
         Logger::info($this.' deleted');
     }
@@ -124,11 +124,11 @@ class FilePath extends DBObject
      * 
      * @throws PropertyAccessException
      * 
-     * @return property value
+     * @return property name
      */
     public function __get($property) {
         if(in_array($property, array(
-            'id', 'path'
+            'id', 'name'
         ))) return $this->$property;
         
         throw new PropertyAccessException($this, $property);
@@ -138,13 +138,13 @@ class FilePath extends DBObject
      * Setter
      * 
      * @param string $property property to get
-     * @param mixed $value value to set property to
+     * @param mixed $name name to set property to
      * 
      * @throws PropertyAccessException
      */
-    public function __set($property, $value) {
-        if($property == 'path') {
-            $this->name = (string)$value;
+    public function __set($property, $name) {
+        if($property == 'name') {
+            $this->name = (string)$name;
         }else throw new PropertyAccessException($this, $property);
     }
     
@@ -154,6 +154,6 @@ class FilePath extends DBObject
      * @return string
      */
     public function __toString() {
-        return static::getClassName().'#'.($this->id ? $this->id : 'unsaved').'('.$this->path.', '.strlen($this->path).' bytes)';
+        return static::getClassName().'#'.($this->id ? $this->id : 'unsaved').'('.$this->name.', '.strlen($this->name).' bytes)';
     }
 }

@@ -34,26 +34,26 @@ if (!defined('FILESENDER_BASE'))        // Require environment (fatal)
     die('Missing environment');
 
 /**
- * Unknown recipient exception
+ * Unknown namespace exception
  */
-class RecipientNotFoundException extends DetailedException {
+class NamespaceNotFoundException extends DetailedException {
     /**
      * Constructor
      * 
-     * @param string $selector column used to select recipient
+     * @param string $selector column used to select namespace
      */
     public function __construct($selector) {
         parent::__construct(
-            'recipient_not_found', // Message to give to the user
+            'namespace_not_found', // Message to give to the user
             array('selector' => $selector) // Real message to log
         );
     }
 }
 
 /**
- * Invalid recipient exception
+ * Invalid namespace exception
  */
-class InvalidRecipientException extends DetailedException {
+class InvalidNamespaceException extends DetailedException {
     /**
      * Constructor
      * 
@@ -61,7 +61,7 @@ class InvalidRecipientException extends DetailedException {
      */
     public function __construct($selector) {
         parent::__construct(
-            'invalid_recipient', // Message to give to the user
+            'invalid_namespace', // Message to give to the user
             array('selector' => $selector) // Real message to log
         );
     }

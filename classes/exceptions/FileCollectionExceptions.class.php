@@ -34,26 +34,26 @@ if (!defined('FILESENDER_BASE'))        // Require environment (fatal)
     die('Missing environment');
 
 /**
- * Unknown recipient exception
+ * Unknown FileCollection exception
  */
-class RecipientNotFoundException extends DetailedException {
+class FileCollectionNotFoundException extends DetailedException {
     /**
      * Constructor
      * 
-     * @param string $selector column used to select recipient
+     * @param string $selector column used to select FileCollection
      */
     public function __construct($selector) {
         parent::__construct(
-            'recipient_not_found', // Message to give to the user
+            'filecollection_not_found', // Message to give to the user
             array('selector' => $selector) // Real message to log
         );
     }
 }
 
 /**
- * Invalid recipient exception
+ * Invalid FileCollection exception
  */
-class InvalidRecipientException extends DetailedException {
+class InvalidFileCollectionException extends DetailedException {
     /**
      * Constructor
      * 
@@ -61,7 +61,7 @@ class InvalidRecipientException extends DetailedException {
      */
     public function __construct($selector) {
         parent::__construct(
-            'invalid_recipient', // Message to give to the user
+            'invalid_filecollection', // Message to give to the user
             array('selector' => $selector) // Real message to log
         );
     }
