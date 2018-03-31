@@ -37,6 +37,7 @@ if(!defined('FILESENDER_BASE')) die('Missing environment');
  * Represents a transfer in database
  * 
  * @property array $filesCache related filesCache
+ * @property array $collectionsCache related collectionsCache
  * @property array $recipientsCache related recipientsCache
  */
 class Transfer extends DBObject {
@@ -142,6 +143,7 @@ class Transfer extends DBObject {
      * Related objects cache
      */
     private $filesCache = null;
+    private $collectionsCache = null;
     private $recipientsCache = null;
     private $logsCache = null;
     private static $optionsCache = null;
@@ -251,6 +253,7 @@ class Transfer extends DBObject {
         
         // Init caches to empty to avoid db queries
         $transfer->filesCache = array();
+        $transfer->collectionsCache = array();
         $transfer->recipientsCache = array();
         $transfer->logsCache = array();
         
@@ -372,6 +375,8 @@ class Transfer extends DBObject {
      */
     public function beforeDelete() {
         AuditLog::clean($this);
+        
+        foreach($this->collections as $collection) $this->removeCollection($collection);
         
         foreach($this->files as $file) $this->removeFile($file);
         
@@ -604,7 +609,12 @@ class Transfer extends DBObject {
             if(is_null($this->filesCache)) $this->filesCache = File::fromTransfer($this);
             return $this->filesCache;
         }
-        
+
+        if($property == 'collections') {
+            if(is_null($this->collectionsCache)) $this->collectionsCache = File::fromTransfer($this);
+            return $this->collectionsCache;
+        }
+
         if($property == 'size') {
             return array_sum(array_map(function($file) {
                 return $file->size;
@@ -754,6 +764,38 @@ class Transfer extends DBObject {
     }
 
     /**
+     * Adds a collection
+     * 
+     * @param string $name the collection name
+     * @param string $description the collection description
+     * 
+     * @return Collection
+     */
+    public function addCollection($name, $description = null) {
+        // Check if already exists
+        if(!is_null($this->collectionsCache)) {
+            $matches = array_filter($this->collectionsCache, function($collection) use($name) {
+                return ($collection->name == $name);
+            });
+            
+            if(count($matches)) return array_shift($matches);
+        }
+
+        // Create and save new recipient
+        $collection->name = $name;
+        $collection->description = $description;
+
+        $collection->save();
+ 
+        // Update local cache
+        if(!is_null($this->collectionsCache)) $this->collectionsCache[$collection->id] = $collection;
+        
+        Logger::info($collection.' added to '.$this);
+        
+        return $collection;
+    }
+
+    /**
      * Adds a file
      * 
      * @param string $name the file name
@@ -761,7 +803,7 @@ class Transfer extends DBObject {
      * 
      * @return File
      */
-    public function addFile($name, $size, $mime_type = null) {
+    public function addFile($name, $size, $mime_type = null)  {
         // Check if already exists
         if(!is_null($this->filesCache)) {
             $matches = array_filter($this->filesCache, function($file) use($name, $size) {
@@ -771,13 +813,11 @@ class Transfer extends DBObject {
             if(count($matches)) return array_shift($matches);
         }
 
-        //DIRTREE
         if( !Utilities::isValidFileName( $name )) {
             throw new TransferFileNameInvalidException( $name );
         }
 
         // Create and save new recipient
-        $file = File::create($this);
         $file->name = $name;
         $file->size = $size;
         $file->mime_type = $mime_type ? $mime_type : 'application/binary';
