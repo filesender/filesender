@@ -1,8 +1,11 @@
+---
+title: Known FileSender installations
+---
+
 # Known FileSender installalations 
 
 If you want to add your FileSender installation to this list, send an email to filesender-dev@filesender.org or edit the file from [the FileSender Github repository](https://github.com/filesender/filesender/tree/master/docs) and create a pull request.
-
-## 
+ 
 ## HE&R Community installations - Europe & Middle-East
 
 | Country/Region|NREN/Org	| Service URL					| Known since|
@@ -44,8 +47,8 @@ If you want to add your FileSender installation to this list, send an email to f
 | UK/Kent	| GOETEC	| https://send.goetec.ac.uk			| Aug 2014|
 | Ukraine | URAN | https://filesender.uran.ua/filesender/ | Mar 2018|
 
-## 
 ## HE&R Community installations - Asia - Pacific
+
 | Country/Region|NREN  | Service URL | Known since|
 | --- | --- | --- |---|
 | Australia	| AARNet	| https://cloudstor.aarnet.edu.au/		| 2009 |
@@ -54,9 +57,9 @@ If you want to add your FileSender installation to this list, send an email to f
 | Korea		| KREONET	| https://filesender.kreonet.net		| Mar 2014|
 | Malaysia	| MYREN		| https://filesender.myren.net.my		| Oct 2017| 
 | Singapore	| SingAREN	| https://filesender.singaren.net.sg/filesender	| Jun 2016|
-
-## 
+ 
 ## HE&R Community installations - Americas
+
 | Country/Region|NREN  | Service URL | Known since|
 | --- | --- | --- |---|
 | Brazil	| RNP		| https://filesender.rnp.br			| Oct 2014|
@@ -65,9 +68,8 @@ If you want to add your FileSender installation to this list, send an email to f
 | Latin-America	| ELCIRA	| https://filesender.redclara.net/filesender/	| Oct 2013|
 | USA		| Internet2	| https://filesender.internet2.edu/		| Jul 2012|
 
-
-## 
 ## HE&R Community installations - Africa
+
 | Country/Region|NREN  | Service URL | Known since|
 | --- | --- | --- |---|
 | East Africa | UBUNTUNET | https://filesender.ubuntunet.net/ | March 2018|
@@ -78,6 +80,7 @@ If you want to add your FileSender installation to this list, send an email to f
 
 
 ## Other
+
 | Country/Region| Organisation | Service URL | Known since|
 | --- | --- | --- |---|
 | Australia | BARNET - Legal sector ISP | https://filesender.barnet.com.au/ | March 2018 |
