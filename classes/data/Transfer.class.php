@@ -743,23 +743,23 @@ class Transfer extends DBObject {
     /**
      * Adds a collection
      * 
-     * @param string $name the collection name
+     * @param string $path the collection name
      * @param string $description the collection description
      * 
      * @return Collection
      */
-    public function addCollection($name, $description = null) {
+    public function addCollection($path, $description = null) {
         // Check if already exists
         if(!is_null($this->collectionsCache)) {
-            $matches = array_filter($this->collectionsCache, function($collection) use($name) {
-                return ($collection->name == $name);
+            $matches = array_filter($this->collectionsCache, function($collection) use($path) {
+                return ($collection->name == $path);
             });
             
             if(count($matches)) return array_shift($matches);
         }
 
         // Create and save new recipient
-        $collection->name = $name;
+        $collection->name = $path;
         $collection->description = $description;
 
         $collection->save();
@@ -775,27 +775,28 @@ class Transfer extends DBObject {
     /**
      * Adds a file
      * 
-     * @param string $name the file name
+     * @param string $path the file name
      * @param string $size the file size
+     * @param string $mime_type the optional file mime_type
      * 
      * @return File
      */
-    public function addFile($name, $size, $mime_type = null)  {
+    public function addFile($path, $size, $mime_type = null)  {
         // Check if already exists
         if(!is_null($this->filesCache)) {
-            $matches = array_filter($this->filesCache, function($file) use($name, $size) {
-                return ($file->name == $name) && ($file->size == $size);
+            $matches = array_filter($this->filesCache, function($file) use($path, $size) {
+                return ($file->name == $path) && ($file->size == $size);
             });
             
             if(count($matches)) return array_shift($matches);
         }
 
-        if( !Utilities::isValidFileName( $name )) {
-            throw new TransferFileNameInvalidException( $name );
+        if( !Utilities::isValidFileName( $path )) {
+            throw new TransferFileNameInvalidException( $path );
         }
 
         // Create and save new file
-        $file = File::add($this, $name, $size, $mime_type);
+        $file = File::add($this, $path, $size, $mime_type);
  
         // Update local cache
         if(!is_null($this->filesCache)) $this->filesCache[$file->id] = $file;
@@ -822,6 +823,39 @@ class Transfer extends DBObject {
         Logger::info($file.' removed from '.$this);
     }
     
+    /**
+     * Adds a collection
+     * 
+     * @param string $path the collection name
+     * @param string $file the collection size
+     * 
+     * @return Collection
+     */
+    public function addCollection($path, $file)  {
+        // Check if already exists
+        if(!is_null($this->collectionsCache)) {
+            $matches = array_filter($this->collectionsCache, function($collection) use($path) {
+                return ($collection->$info == $path);
+            });
+            
+            if(count($matches)) return array_shift($matches);
+        }
+
+        if( !Utilities::isValidFileName( $path )) {
+            throw new TransferCollectionNameInvalidException( $path );
+        }
+
+        // Create and save new collection
+        $collection = Collection::add($this, $path, $file);
+ 
+        // Update local cache
+        if(!is_null($this->collectionsCache)) $this->collectionsCache[$collection->id] = $collection;
+        
+        Logger::info($collection.' added to '.$this);
+        
+        return $collection;
+    }
+
     /**
      * Adds a recipient
      * 

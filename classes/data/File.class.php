@@ -128,7 +128,7 @@ class File extends DBObject
     /**
      * Related objects cache
      */
-    private $directoryCache = null;
+    private $collectionCache = null;
     private $transferCache = null;
     private $logsCache = null;
 
@@ -136,21 +136,20 @@ class File extends DBObject
      * Set the name of a File, optionally creating a Path
      * object internally if pathedName contains slashes
      * 
-     * @param string $directoryedName a potentially fully pathed name for the File
+     * @param string $pathName a potentially fully pathed name for the File
      */
-    protected function setName($directoryedName) {
-        $this->name = $directoryedName;
-        $pos = strrpos($directoryedName, '/');
-        $directory = null;
+    protected function setName($pathName) {
+        $this->name = $pathName;
+        $pos = strrpos($pathName, '/');
+        $collection = null;
       
         if (!($pos === false)) {
-           $this->name = substr($directoryedName, $pos + 1);
-           $directory = substr($directoryedName, $pos - 1);
+           $this->name = substr($pathName, $pos + 1);
+           $collection = $transferCache->addCollection(substr($pathName, $pos - 1), $this);
         }
 
-        if ($directory != null) {
-           $directoryCache = Collection::create($transferCache, $directory);
-           $this->$directory_id = $directoryCache->__get('id');
+        if ($collection != null) {
+           $collectionCache[$collection->id] = $collection
         }
         $this->save();
     }
@@ -233,6 +232,7 @@ class File extends DBObject
         
         // Init cache to empty to avoid db queries
         $file->logsCache = array();
+        $file->collectionCache = array();
         
         $file->transfer_id = $transfer->id;
         $file->transferCache = $transfer;
