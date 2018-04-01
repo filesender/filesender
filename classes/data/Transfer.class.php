@@ -741,29 +741,6 @@ class Transfer extends DBObject {
     }
 
     /**
-     * Calculate the encrypted file size
-     *
-     * @param File file the file we are working on
-     * @return int What $file->encrypted_size should be for this file.
-     */
-    private function calculateEncryptedFileSize( $file ) {
-
-        $upload_chunk_size = Config::get('upload_chunk_size');
-        
-        $echunkdiff = Config::get('upload_crypted_chunk_size') - $upload_chunk_size;
-        $chunksMinusOne = ceil($file->size / $upload_chunk_size)-1;
-        $lastChunkSize = $file->size - ($chunksMinusOne * $upload_chunk_size);
-
-        // padding on the last chunk of the file
-        // may not be a full chunk so need to calculate
-        $lastChunkPadding = 16 - $lastChunkSize % 16;
-        if ($lastChunkPadding == 0)
-            $lastChunkPadding = 16;
-            
-        return $file->size + ($chunksMinusOne * $echunkdiff) + $lastChunkPadding + 16;
-    }
-
-    /**
      * Adds a collection
      * 
      * @param string $name the collection name
@@ -817,13 +794,8 @@ class Transfer extends DBObject {
             throw new TransferFileNameInvalidException( $name );
         }
 
-        // Create and save new recipient
-        $file->name = $name;
-        $file->size = $size;
-        $file->mime_type = $mime_type ? $mime_type : 'application/binary';
-        $file->encrypted_size = $this->calculateEncryptedFileSize( $file );
-
-        $file->save();
+        // Create and save new file
+        $file = File::add($this, $name, $size, $mime_type);
  
         // Update local cache
         if(!is_null($this->filesCache)) $this->filesCache[$file->id] = $file;

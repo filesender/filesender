@@ -149,12 +149,34 @@ class File extends DBObject
         }
 
         if ($directory != null) {
-           $directoryCache = Path::create($transferCache, $directory);
+           $directoryCache = Collection::create($transferCache, $directory);
            $this->$directory_id = $directoryCache->__get('id');
         }
         $this->save();
     }
     
+    /**
+     * Calculate the encrypted file size
+     *
+     * @return int What $file->encrypted_size should be for this file.
+     */
+    private function calculateEncryptedFileSize() {
+
+        $upload_chunk_size = Config::get('upload_chunk_size');
+        
+        $echunkdiff = Config::get('upload_crypted_chunk_size') - $upload_chunk_size;
+        $chunksMinusOne = ceil($this->size / $upload_chunk_size)-1;
+        $lastChunkSize = $this->size - ($chunksMinusOne * $upload_chunk_size);
+
+        // padding on the last chunk of the file
+        // may not be a full chunk so need to calculate
+        $lastChunkPadding = 16 - $lastChunkSize % 16;
+        if ($lastChunkPadding == 0)
+            $lastChunkPadding = 16;
+            
+        return $this->size + ($chunksMinusOne * $echunkdiff) + $lastChunkPadding + 16;
+    }
+
     /**
      * Constructor
      * 
@@ -177,6 +199,26 @@ class File extends DBObject
 
         // Fill properties from provided data
         if($data) $this->fillFromDBData($data);
+    }
+    
+    /**
+     * Creates and saves a new file
+     * 
+     * @param string $name the file name
+     * @param string $size the file size
+     * @param string $size the file size
+     * 
+     * @return File
+     */
+    public static function add($transfer, $name, $size, $mime_type = null)  {
+        $file = File::create($transfer);
+        
+        $file->__set('name', $name);
+        $file->__set('size', $size);
+        $file->__set('mime_type', $mime_type ? $mime_type : 'application/binary' );
+        $file->__set('encrypted_size', $file->calculateEncryptedFileSize());
+        $file->save();
+        return $file;
     }
     
     /**

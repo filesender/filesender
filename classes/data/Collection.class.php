@@ -54,23 +54,32 @@ class Collection extends DBObject
             'type' => 'uint',
             'size' => 'medium',
         ),
-        'uid' => array(
-            'type' => 'string',
-            'size' => 60
+        'owner_id' => array(
+            'type' => 'uint',
+            'size' => 'medium',
         ),
         'name' => array(
             'type' => 'string',
             'size' => 255,
         ),
-        'description' => array(
+        'uid' => array(
             'type' => 'string',
-            'size' => 255
+            'null' => true,
+            'size' => 60
+        ),
+        'info' => array(
+            'type' => 'string',
+            'null' => true,
+            'size' => 2048
         ),
     );
 
     protected static $secondaryIndexMap = array(
         'transfer_id' => array( 
             'transfer_id' => array()
+        ),
+        'owner_id' => array( 
+            'owner_id' => array()
         ),
     );
 
@@ -79,9 +88,10 @@ class Collection extends DBObject
      */
     protected $id = null;
     protected $transfer_id = null;
+    protected $owner_id = null;
     protected $uid = null;
     protected $name = null;
-    protected $description = null;
+    protected $info = null;
    
     /**
      * Related objects cache
@@ -190,7 +200,7 @@ class Collection extends DBObject
      */
     public function __get($property) {
         if(in_array($property, array(
-            'id', 'transfer_id', 'uid', 'name', 'description'
+            'id', 'transfer_id', 'uid', 'name', 'info'
         ))) return $this->$property;
         
         if($property == 'transfer') {
@@ -217,8 +227,8 @@ class Collection extends DBObject
     public function __set($property, $value) {
         if($property == 'name') {
             $this->name = (string)$value;
-        }else if($property == 'description') {
-            $this->description = (string)$value;
+        }else if($property == 'info') {
+            $this->info = (string)$value;
         }else throw new PropertyAccessException($this, $property);
     }
     
@@ -228,6 +238,6 @@ class Collection extends DBObject
      * @return string
      */
     public function __toString() {
-        return static::getClassName().'#'.($this->id ? $this->id : 'unsaved').'('.$this->name.', '.strlen($this->name)+strlen($this->description)+1.' bytes)';
+        return static::getClassName().'#'.($this->id ? $this->id : 'unsaved').'('.$this->name.', '.strlen($this->name)+strlen($this->info)+1.' bytes)';
     }
 }
