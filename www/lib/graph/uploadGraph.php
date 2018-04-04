@@ -39,13 +39,13 @@ $data = array(
 	'labels' => array(),
 	'datasets' => array(
 	    array(
-		'label' => 'Encryption in transit & rest',
+                'label' => Lang::tr('upload_page_graph_encryption_in_transit_and_rest')->out(),
 		'data' => array(),
 		'backgroundColor' => 'rgba(10,220,10,0.6)',
 		'spanGaps' => true
 	    ),
 	    array(
-		'label' => 'Encryption in transit',
+                'label' => Lang::tr('upload_page_graph_encryption_in_transit')->out(),
 		'data' => array(),
 		'backgroundColor' => 'rgba(255,147,02,0.6)',
 		'spanGaps' => true
@@ -57,7 +57,7 @@ $data = array(
 	'maintainAspectRatio' => false,
 	'title' => array(
 	    'display' => true,
-	    'text' => 'Global Average Upload Speed of Files over ' . Utilities::formatBytes($minSz)
+	    'text' => Lang::tr('upload_page_graph_title_upload_speed_of_files_over')->r('size',Utilities::formatBytes($minSz))->out()
 	),
 	'legend' => array(
 	    'position' => 'bottom'
@@ -67,11 +67,16 @@ $data = array(
 		array(
 		    'ticks' => array( 'min' => 0 ),
                     'scaleLabel' => array( 'display' => true,
-                                            'labelString' => 'MB/sec'
+                                            'labelString' => Lang::tr('upload_page_graph_mb_per_second')->out()
                                          ),
 		),
-                
-	    )
+	    ),
+            'xAxes' => array(
+                array(
+                    'type' => 'time',
+		    'ticks' => array( 'min' => 0 ),
+                ),
+            ),
 	)
     )
 );

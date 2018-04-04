@@ -390,6 +390,10 @@ $lang['undergoing_maintenance'] = 'This application is under maintenance';
 $lang['unexpected_file'] = 'This file is not part of the restarting transfer';
 $lang['unknown_page'] = 'Unknown page';
 $lang['upload_page'] = 'Upload';
+$lang['upload_page_graph_title_upload_speed_of_files_over'] = 'Global Average Upload Speed of Files over {size}';
+$lang['upload_page_graph_mb_per_second'] = 'MB/sec';
+$lang['upload_page_graph_encryption_in_transit_and_rest'] = 'Encryption in transit & rest';
+$lang['upload_page_graph_encryption_in_transit'] = 'Encryption in transit';
 $lang['uploaded'] = 'Uploaded';
 $lang['uploading_transfers'] = 'Currently uploading transfers';
 $lang['user_additional'] = 'Additional information';
@@ -413,3 +417,5 @@ $lang['with_identity'] = 'Sender email';
 $lang['yes'] = 'Yes';
 $lang['you_can_report_exception'] = 'When reporting this error please give the following code to help the support finding out details';
 $lang['you_can_report_exception_by_email'] = 'You can report this error by email';
+
+
