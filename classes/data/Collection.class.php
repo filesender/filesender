@@ -58,14 +58,9 @@ class Collection extends DBObject
             'type' => 'uint',
             'size' => 'medium',
         ),
-        'name' => array(
-            'type' => 'string',
-            'size' => 255,
-        ),
-        'uid' => array(
-            'type' => 'string',
-            'null' => true,
-            'size' => 60
+        'type_id' => array(
+            'type' => 'uint',
+            'size' => 'medium',
         ),
         'info' => array(
             'type' => 'string',
@@ -78,6 +73,9 @@ class Collection extends DBObject
         'transfer_id' => array( 
             'transfer_id' => array()
         ),
+        'type_id' => array( 
+            'type_id' => array()
+        ),
         'owner_id' => array( 
             'owner_id' => array()
         ),
@@ -89,14 +87,15 @@ class Collection extends DBObject
     protected $id = null;
     protected $transfer_id = null;
     protected $owner_id = null;
-    protected $uid = null;
-    protected $name = null;
+    protected $type_id = null;
     protected $info = null;
    
     /**
      * Related objects cache
      */
     private $transferCache = null;
+    private $ownerCache = null;
+    private $typeCache = null;
 
     /**
      * Constructor
@@ -133,48 +132,11 @@ class Collection extends DBObject
         $collection->transfer_id = $transfer->id;
         $collection->transferCache = $transfer;
         
-        // Generate uid until it is indeed unique
-        $collection->uid = Utilities::generateUID(function($uid, $tries) {
-            $statement = DBI::prepare('SELECT * FROM '.Collection::getDBTable().' WHERE uid = :uid');
-            $statement->execute(array(':uid' => $uid));
-            $data = $statement->fetch();
-            if(!$data) Logger::info('Collection uid generation took '.$tries.' tries');
-            return !$data;
-        });
-
         return $collection;
     }
     
     /**
-     * Delete the collection
-     */
-    public function Storage() {
-        //TODO: referentially delete all Files & Namespaces belonging
-        //TODO: to this collection
-        beforeDelete::deleteClassification($this);
-        
-        Logger::info($this.' deleted');
-    }
-    
-    /**
-     * Get collection from uid
-     * 
-     * @param string $uid
-     * 
-     * @return Collection
-     */
-    public static function fromUid($uid) {
-        $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE uid = :uid');
-        $s->execute(array('uid' => $uid));
-        $data = $s->fetch();
-        
-        if(!$data) throw ClassificationNotFoundException('uid = '.$uid);
-        
-        return self::fromData($data['id'], $data); // Don't query twice, use loaded data
-    }
-    
-    /**
-     * Get classifications from Transfer
+     * Get collections from Transfer
      * 
      * @param Transfer $transfer the relater transfer
      * 
@@ -183,9 +145,9 @@ class Collection extends DBObject
     public static function fromTransfer(Transfer $transfer) {
         $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE transfer_id = :transfer_id');
         $s->execute(array('transfer_id' => $transfer->id));
-        $classifications = array();
-        foreach($s->fetchAll() as $data) $classifications[$data['id']] = self::fromData($data['id'], $data); // Don't query twice, use loaded data
-        return $classifications;
+        $collections = array();
+        foreach($s->fetchAll() as $data) $collections[$data['id']] = self::fromData($data['id'], $data); // Don't query twice, use loaded data
+        return $collections;
     }
     
     
@@ -200,7 +162,7 @@ class Collection extends DBObject
      */
     public function __get($property) {
         if(in_array($property, array(
-            'id', 'transfer_id', 'uid', 'name', 'info'
+            'id', 'transfer_id', 'type_id', 'owner_id', 'info'
         ))) return $this->$property;
         
         if($property == 'transfer') {
@@ -209,7 +171,11 @@ class Collection extends DBObject
         }
         
         if($property == 'owner') {
-            return $this->transfer->owner;
+            return $this->ownerCache;
+        }
+
+        if($property == 'type') {
+            return $this->typeCache;
         }
         
         throw new PropertyAccessException($this, $property);
@@ -225,9 +191,7 @@ class Collection extends DBObject
      * @throws PropertyAccessException
      */
     public function __set($property, $value) {
-        if($property == 'name') {
-            $this->name = (string)$value;
-        }else if($property == 'info') {
+        if($property == 'info') {
             $this->info = (string)$value;
         }else throw new PropertyAccessException($this, $property);
     }
@@ -238,6 +202,6 @@ class Collection extends DBObject
      * @return string
      */
     public function __toString() {
-        return static::getClassName().'#'.($this->id ? $this->id : 'unsaved').'('.$this->name.', '.strlen($this->name)+strlen($this->info)+1.' bytes)';
+        return static::getClassName().'#'.($this->id ? $this->id : 'unsaved').'('.$this->info.', '.strlen($this->info)+1.' bytes)';
     }
 }
