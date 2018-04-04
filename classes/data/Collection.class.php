@@ -54,7 +54,7 @@ class Collection extends DBObject
             'type' => 'uint',
             'size' => 'medium',
         ),
-        'owner_id' => array(
+        'parent_id' => array(
             'type' => 'uint',
             'size' => 'medium',
         ),
@@ -76,8 +76,8 @@ class Collection extends DBObject
         'type_id' => array( 
             'type_id' => array()
         ),
-        'owner_id' => array( 
-            'owner_id' => array()
+        'parent_id' => array( 
+            'parent_id' => array()
         ),
     );
 
@@ -86,7 +86,7 @@ class Collection extends DBObject
      */
     protected $id = null;
     protected $transfer_id = null;
-    protected $owner_id = null;
+    protected $parent_id = null;
     protected $type_id = null;
     protected $info = null;
    
@@ -94,9 +94,56 @@ class Collection extends DBObject
      * Related objects cache
      */
     private $transferCache = null;
-    private $ownerCache = null;
+    private $parentCache = null;
     private $typeCache = null;
 
+    /**
+     * Set the info for a DirTree collection
+     * 
+     * @param string $path the root path name for the dirtree
+     */
+    protected function setDirtreeInfo($path) {
+        $this->name = $pathName;
+        $pos = strrpos($pathName, '/');
+        $collection = null;
+      
+        if (!($pos === false)) {
+           $this->name = substr($pathName, $pos + 1);
+           $collection = $transferCache->addCollection(substr($pathName, $pos - 1), $this);
+        }
+
+        if ($collection != null) {
+           $collectionCache[$collection->id] = $collection
+        }
+    }
+
+    /**
+     * Set the info of a Collection, which may cause further processing
+     * dependant on the collection's type
+     * 
+     * @param string $info specific information about this instance of a collection
+     * 
+     * @throws PropertyAccessException
+     */
+    protected function setInfo($info) {
+        if (($this->info != null) &&
+           (($type = CollectionType::$DIRTREE) ||
+            ($type = CollectionType::$DIRECTORY))) {
+           throw new PropertyAccessException($this, $type->$name.' '.$info);
+        }
+            
+        if ($type = CollectionType::$DIRTREE) {
+            setDirtreeInfo($info);
+        }
+        else
+        if ($type = CollectionType::$DIRECTORY) {
+            setDirectoryInfo($info);
+        }
+        else {
+            $this->$info = $info;
+        }
+    }
+    
     /**
      * Constructor
      * 
@@ -106,7 +153,9 @@ class Collection extends DBObject
      * @throws ClassificationNotFoundException
      */
     public function __construct($id = null, $data = null) {
-    
+
+        CollectionType::initialize();
+        
         if(!is_null($id)) {
             // Load from database if id given
             $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE id = :id');
@@ -120,17 +169,24 @@ class Collection extends DBObject
     }
     
     /**
-     * Create a new collection (for upload)
+     * Create a new Collection
      * 
      * @param Transfer $transfer the relater transfer
+     * @param CollectionType $type the type of collection
+     * @param $info specific information about this collection instance
      * 
      * @return Collection
      */
-    public static function create(Transfer $transfer) {
+    public static function create(Transfer $transfer, CollectionType $type, $info) {
         $collection = new self();
         
         $collection->transfer_id = $transfer->id;
         $collection->transferCache = $transfer;
+        
+        $collection->type_id = $type->id;
+        $collection->typeCache = $type;
+
+        $collection->__set('info', $info);
         
         return $collection;
     }
@@ -162,7 +218,7 @@ class Collection extends DBObject
      */
     public function __get($property) {
         if(in_array($property, array(
-            'id', 'transfer_id', 'type_id', 'owner_id', 'info'
+            'id', 'transfer_id', 'type_id', 'parent_id', 'info'
         ))) return $this->$property;
         
         if($property == 'transfer') {
@@ -170,8 +226,8 @@ class Collection extends DBObject
             return $this->transferCache;
         }
         
-        if($property == 'owner') {
-            return $this->ownerCache;
+        if($property == 'parent') {
+            return $this->parentCache;
         }
 
         if($property == 'type') {
@@ -192,7 +248,7 @@ class Collection extends DBObject
      */
     public function __set($property, $value) {
         if($property == 'info') {
-            $this->info = (string)$value;
+            setInfo((string)$value);
         }else throw new PropertyAccessException($this, $property);
     }
     

@@ -764,7 +764,8 @@ class Transfer extends DBObject {
         }
 
         // Create and save new file
-        $file = File::add($this, $path, $size, $mime_type);
+        $file = File::create($this, $path, $size, $mime_type);
+        $file->save();
  
         // Update local cache
         if(!is_null($this->filesCache)) $this->filesCache[$file->id] = $file;

@@ -151,7 +151,6 @@ class File extends DBObject
         if ($collection != null) {
            $collectionCache[$collection->id] = $collection
         }
-        $this->save();
     }
     
     /**
@@ -201,33 +200,16 @@ class File extends DBObject
     }
     
     /**
-     * Creates and saves a new file
-     * 
-     * @param string $name the file name
-     * @param string $size the file size
-     * @param string $size the file size
-     * 
-     * @return File
-     */
-    public static function add($transfer, $name, $size, $mime_type = null)  {
-        $file = File::create($transfer);
-        
-        $file->__set('name', $name);
-        $file->__set('size', $size);
-        $file->__set('mime_type', $mime_type ? $mime_type : 'application/binary' );
-        $file->__set('encrypted_size', $file->calculateEncryptedFileSize());
-        $file->save();
-        return $file;
-    }
-    
-    /**
-     * Create a new file (for upload)
+     * Create a file (for upload)
      * 
      * @param Transfer $transfer the relater transfer
+     * @param string $name the file name
+     * @param string $size the file size
+     * @param string $mime_type the optional file mime_type
      * 
      * @return File
      */
-    public static function create(Transfer $transfer) {
+    public static function create(Transfer $transfer, $name, $size, $mime_type = null) {
         $file = new self();
         
         // Init cache to empty to avoid db queries
@@ -247,6 +229,11 @@ class File extends DBObject
         });
 
         $file->storage_class_name = Storage::getDefaultStorageClass();
+        
+        $file->__set('name', $name);
+        $file->__set('size', $size);
+        $file->__set('mime_type', $mime_type ? $mime_type : 'application/binary' );
+        $file->__set('encrypted_size', $file->calculateEncryptedFileSize());
         
         return $file;
     }

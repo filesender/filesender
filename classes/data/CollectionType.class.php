@@ -67,14 +67,21 @@ class CollectionType extends DBObject
     protected $name = null;
     protected $description = null;
     
-   
     /**
      * Predefined Enums
      */
-    const INVALID     = 0; //"Undefined collection type";
-    const DIRTREE     = 1; //"Root directory collection";
-    const DIRECTORY   = 2; //"Pathed directory collection";
-    const LASTSTATIC  = 100; //"Last static enum id";
+    const INVALID_ID     = 0; //"Undefined collection type";
+    const DIRTREE_ID     = 1; //"Root directory collection";
+    const DIRECTORY_ID   = 2; //"Pathed directory collection";
+    const LASTSTATIC_ID  = 100; //"Last static enum id";
+
+    /**
+     * Predefined Types
+     */
+    static CollectionType $INVALID;
+    static CollectionType $DIRTREE;
+    static CollectionType $DIRECTORY;
+    static CollectionType $LASTSTATIC;
 
     /**
      * Constructor
@@ -103,13 +110,21 @@ class CollectionType extends DBObject
      * 
      */
     public static function initialize() {
-        fromData( INVALID, array('name' => 'INVALID', 'description' =>
+
+        static $initialized = false;
+
+        if ($initialized) {
+            return;
+        }
+        $initialized = true;
+        
+        $INVALID = fromData( INVALID_ID, array('name' => 'INVALID', 'description' =>
                                  'undefined or invalid collection type' );
-        fromData( DIRTREE, array('name' => 'DIRTREE', 'description' =>
+        $DIRTREE = fromData( DIRTREE_ID, array('name' => 'DIRTREE', 'description' =>
                                  'directory tree collection' );
-        fromData( DIRECTORY, array('name' => 'DIRECTORY', 'description' =>
+        $DIRECTORY = fromData( DIRECTORY_ID, array('name' => 'DIRECTORY', 'description' =>
                                  'directory path collection' );
-        fromData( LASTSTATIC, array('name' => 'LASTSTATIC', 'description' =>
+        $LASTSTATIC = fromData( LASTSTATIC_ID, array('name' => 'LASTSTATIC', 'description' =>
                                  'last static collection type' );
     }
     
