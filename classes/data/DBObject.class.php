@@ -93,8 +93,6 @@ class DBObject {
     public static function getSecondaryIndexMap() {
         return static::$secondaryIndexMap;
     }
-
-
     
     /**
      * Check if object is cached

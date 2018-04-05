@@ -128,7 +128,6 @@ class File extends DBObject
     /**
      * Related objects cache
      */
-    private $collectionCache = null;
     private $transferCache = null;
     private $logsCache = null;
 
