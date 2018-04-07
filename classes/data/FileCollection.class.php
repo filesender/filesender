@@ -46,19 +46,19 @@ class Namespace extends DBObject
         //primary key pair <collection_id,file_id>
         'collection_id' => array(
             'type' => 'uint',   //data type of 'id'
-            'size' => 'medium', //size of the integer stored in 'id' (in bytes, or otherwise)
-            'primary' => true,  //indicates that 'id' is the primary key in the DB
+            'size' => 'medium',
+            'primary' => true,
         ),
         'file_id' => array(
             'type' => 'uint',   //data type of 'id'
-            'size' => 'medium', //size of the integer stored in 'id' (in bytes, or otherwise)
-            'primary' => true,  //indicates that 'id' is the primary key in the DB
+            'size' => 'medium',
+            'primary' => true,
         ),
     );
 
     // the primary key pair<collection_id, file_id>
     // should implicitly create a secondary index on just
-    // collection_id
+    // collection_id, but we also want to quickly sort on file_id
     protected static $secondaryIndexMap = array(
         'file_id' => array( 
             'file_id' => array()
@@ -141,19 +141,75 @@ class Namespace extends DBObject
     }
 
     /**
-     * Get files from Collection
+     * Get Files belonging to a Collection. The returned <key,value> array is <file_id, FileCollection>
      * 
      * @param Collection $collection the relater collection
+     * @param bool full_load, default false, also fully loads the file
+     * objects rather than lazy loading them if they are actually accessed.
      * 
      * @return array of File
      */
-    public static function fromCollection(Collection $collection) {
+    public static function fromCollection(Collection $collection, bool $full_load = false) {
         $owner_id = $collection->__get('id');
-        $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE collection_id = :collection_id');
-        $s->execute(array('collection_id' => $owner_id));
         $files = array();
-        foreach($s->fetchAll() as $data) $files[$data['file_id']] = self::create($owner_id, $data['file_id']);
+        
+        if ($full_load) {
+           $s = DBI::prepare('SELECT * FROM '.File::getDBTable().' WHERE id IN (SELECT file_id FROM '.self::getDBTable().' WHERE collection_id = :collection_id)');
+           $s->execute(array('collection_id' => $owner_id));
+           foreach($s->fetchAll() as $data) {
+              $file_id = $data['id']
+              $filecollection = self::create($owner_id, $file_id);
+              $files[$file_id] = $filecollection;
+              $filecollection->$collectionCache = $collection;
+              $filecollection->$fileCache = File::fromData($file_id, $data);
+           }
+        }
+        else {
+           $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE collection_id = :collection_id');
+           $s->execute(array('collection_id' => $owner_id));
+           foreach($s->fetchAll() as $data) {
+              $file_id = $data['file_id']
+              $filecollection = self::create($owner_id, $file_id);
+              $files[$file_id] = $filecollection;
+           }
+        }
         return $files;
+    }
+    
+    /**
+     * Get the Collections that a File belongs to. The returned <key,value> array is <collection_id, FileCollection>
+     * 
+     * @param File $file the relater file
+     * @param bool full_load, default false, also fully loads the collection
+     * objects rather than lazy loading them if they are actually accessed.
+     * 
+     * @return array of Collection
+     */
+    public static function fromFile(File $file, bool $full_load = false) {
+        $file_id = $file->__get('id');
+        $collections = array();
+        
+        if ($full_load) {
+           $s = DBI::prepare('SELECT * FROM '.Collection::getDBTable().' WHERE id IN (SELECT collection_id FROM '.self::getDBTable().' WHERE file_id = :file_id)');
+           $s->execute(array('file_id' => $file_id));
+           foreach($s->fetchAll() as $data) {
+              $collection_id = $data['id']
+              $filecollection = self::create($collection_id, $file_id);
+              $collections[$collection_id] = $filecollection;
+              $filecollection->$fileCache = $file;
+              $filecollection->$collectionCache = Collection::fromData($collection_id, $data);
+           }
+        }
+        else {
+           $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE file_id = :file_id');
+           $s->execute(array('file_id' => $file_id));
+           foreach($s->fetchAll() as $data) {
+              $collection_id = $data['collection_id']
+              $filecollection = self::create($collection_id, $file_id);
+              $collections[$collection_id] = $filecollection;
+           }
+        }
+        return $collections;
     }
     
     /**
