@@ -48,7 +48,6 @@ class CollectionType extends DBObject
             'type' => 'uint',   //data type of 'id'
             'size' => 'medium', //size of the integer stored in 'id' (in bytes, or otherwise)
             'primary' => true,  //indicates that 'id' is the primary key in the DB
-            'autoinc' => true,   //indicates that 'id' is auto-incremented
         ),
         'name' => array(
             'type' => 'string',
@@ -73,7 +72,7 @@ class CollectionType extends DBObject
     const INVALID_ID     = 0; //"Undefined collection type";
     const DIRTREE_ID     = 1; //"Root directory collection";
     const DIRECTORY_ID   = 2; //"Pathed directory collection";
-    const LASTSTATIC_ID  = 100; //"Last static enum id";
+    const LASTSTATIC_ID  = 1000; //"Last static enum id";
 
     /**
      * Predefined Types
