@@ -34,7 +34,7 @@ if (!defined('FILESENDER_BASE'))
     die('Missing environment');
 
 /**
- *  Represents collection in the database
+ *  Represents a collection of objects in the database
  */
 class Collection extends DBObject
 {
@@ -98,50 +98,14 @@ class Collection extends DBObject
     private $typeCache = null;
 
     /**
-     * Set the info for a DirTree collection
-     * 
-     * @param string $path the root path name for the dirtree
-     */
-    protected function setDirtreeInfo($path) {
-        $this->name = $pathName;
-        $pos = strrpos($pathName, '/');
-        $collection = null;
-      
-        if (!($pos === false)) {
-           $this->name = substr($pathName, $pos + 1);
-           $collection = $transferCache->addCollection(substr($pathName, $pos - 1), $this);
-        }
-
-        if ($collection != null) {
-           $collectionCache[$collection->id] = $collection
-        }
-    }
-
-    /**
      * Set the info of a Collection, which may cause further processing
      * dependant on the collection's type
      * 
+     * @param Collection $this the Collection instance who's info is being set
      * @param string $info specific information about this instance of a collection
-     * 
-     * @throws PropertyAccessException
      */
-    protected function setInfo($info) {
-        if (($this->info != null) &&
-           (($type = CollectionType::$DIRTREE) ||
-            ($type = CollectionType::$DIRECTORY))) {
-           throw new PropertyAccessException($this, $type->$name.' '.$info);
-        }
-            
-        if ($type = CollectionType::$DIRTREE) {
-            setDirtreeInfo($info);
-        }
-        else
-        if ($type = CollectionType::$DIRECTORY) {
-            setDirectoryInfo($info);
-        }
-        else {
-            $this->$info = $info;
-        }
+    protected static function setInfo(Collection $what, $info) {
+        $what->$info = $info;
     }
     
     /**
@@ -186,7 +150,7 @@ class Collection extends DBObject
         $collection->type_id = $type->id;
         $collection->typeCache = $type;
 
-        $collection->__set('info', $info);
+        static::setInfo($collection, $info);
         
         return $collection;
     }
@@ -248,7 +212,7 @@ class Collection extends DBObject
      */
     public function __set($property, $value) {
         if($property == 'info') {
-            setInfo((string)$value);
+            static::setInfo($this, (string)$value);
         }else throw new PropertyAccessException($this, $property);
     }
     
@@ -259,5 +223,73 @@ class Collection extends DBObject
      */
     public function __toString() {
         return static::getClassName().'#'.($this->id ? $this->id : 'unsaved').'('.$this->info.', '.strlen($this->info)+1.' bytes)';
+    }
+}
+
+/**
+ *  Represents a ollection of objects in the database
+ */
+class CollectionTree extends Collection
+{
+    /**
+     * Set the info of a Collection, which may cause further processing
+     * dependant on the collection's type
+     * 
+     * @param Collection $this the Collection instance who's info is being set
+     * @param string $info specific information about this instance of a collection
+     * 
+     * @throws PropertyAccessException
+     */
+    protected static function setInfo(Collection $what, $pathInfo) {
+        if (($what->info != null) &&
+           throw new PropertyAccessException($what, $type->$name.' '.$info);
+        }
+        
+        $what->$info = $pathInfo;
+        $pos = strrpos($pathInfo, '/');
+        $collection = null;
+      
+        if (!($pos === false)) {
+           $what->$info = substr($pathInfo, $pos + 1);
+           $collection = $transferCache->addCollection(substr($pathInfo, $pos - 1), $what);
+        }
+
+        if ($collection != null) {
+           $collectionCache[$collection->id] = $collection
+        }
+    }
+}
+
+/**
+ *  Represents a ollection of objects in the database
+ */
+class CollectionDirectory extends Collection
+{
+    /**
+     * Set the info of a Collection, which may cause further processing
+     * dependant on the collection's type
+     * 
+     * @param Collection $what the Collection instance who's info is being set
+     * @param string $info specific information about this instance of a collection
+     * 
+     * @throws PropertyAccessException
+     */
+    protected static function setInfo(Collection $what, $pathInfo) {
+        if (($what->info != null) &&
+           throw new PropertyAccessException($what, $type->$name.' '.$info);
+        }
+            
+        $what->$info = $pathInfo;
+        $pos = strrpos($pathInfo, '/');
+        $collection = null;
+      
+        if (!($pos === false)) {
+           $what->$info = substr($pathInfo, $pos + 1);
+           $collection = $transferCache->addCollection(substr($pathInfo, $pos - 1), $what);
+        }
+
+        if ($collection != null) {
+           $collectionCache[$collection->id] = $collection
+        }
     }
 }
