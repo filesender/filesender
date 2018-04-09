@@ -142,13 +142,12 @@ class File extends DBObject
         $pos = strrpos($pathName, '/');
         $collection = null;
       
+        // If the name for this file appears to be a path because it
+        // contains a '/' (slash), add the file to a CollectionDirectory
         if (!($pos === false)) {
            $this->name = substr($pathName, $pos + 1);
-           $collection = $transferCache->addCollection(substr($pathName, $pos - 1), $this);
-        }
-
-        if ($collection != null) {
-           $collectionCache[$collection->id] = $collection
+           $collection = $transferCache->addCollection(CollectionType::$DIRECTORY, substr($pathName, 0, $pos - 1));
+           FileCollection::add($collection, $this);
         }
     }
     

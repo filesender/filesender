@@ -796,15 +796,17 @@ class Transfer extends DBObject {
     /**
      * Adds a collection
      * 
-     * @param string $path the collection name
-     * @param string $description the collection description
+     * @param CollectionType $type the collection type
+     * @param string $info unique information about the collection
      * 
      * @return Collection
      */
-    public function addCollection($type, $info) {
+    public function addCollection(CollectionType $type, $info) {
         // Check if already exists
-        if(!is_null($this->collectionsCache[$type])) {
-            $matches = array_filter($this->collectionsCache[$type], function($collection) use($info) {
+        $type_id = $type->__get('id');
+        
+        if(!is_null($this->collectionsCache[$type_id])) {
+            $matches = array_filter($this->collectionsCache[$type_id], function($collection) use($info) {
                 return ($collection->$info == $info);
             });
             
@@ -815,11 +817,11 @@ class Transfer extends DBObject {
         $collection = Collection::add($this, $type, $info);
  
         // Update local cache
-        if(is_null($this->collectionsCache[$type])) {
-            $this->collectionsCache[$type] = array();
+        if(is_null($this->collectionsCache[$type_id])) {
+            $this->collectionsCache[$type_id] = array();
         }
         
-        $this->collectionsCache[$type][$collection->id] = $collection;
+        $this->collectionsCache[$type_id][$collection->id] = $collection;
         
         Logger::info($collection.' added to '.$this);
         
