@@ -122,7 +122,11 @@ class Namespace extends DBObject
 
     /**
      * Add (create and save) a new FileCollection from existing
-     * Collection and File objects
+     * Collection and File objects. Note this is an expensive
+     * DB operation because all three involved objects
+     * (File, Collection, FileCollection) may have their save()
+     * method called to guarentee existance and persistance of the
+     * three object's $id.
      * 
      * @param Collection $collection the reference Collection
      * @param File $file the reference File
@@ -130,6 +134,7 @@ class Namespace extends DBObject
      * @return FileCollection
      */
     public static function add(Collection $collection, File $file) {
+        // Need to guarentee $file->$id and $collection->$id are not null
         $filecollection = FileCollection::create($collection->__get('id'), $file->__get('id'));
 
         $this->$collectionCache = $collection;

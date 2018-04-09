@@ -147,7 +147,7 @@ class File extends DBObject
         if (!($pos === false)) {
            $this->name = substr($pathName, $pos + 1);
            $collection = $transferCache->addCollection(CollectionType::$DIRECTORY, substr($pathName, 0, $pos - 1));
-           FileCollection::add($collection, $this);
+           $collection->addFile($this);
         }
     }
     
@@ -187,6 +187,7 @@ class File extends DBObject
         
         if(!is_null($id)) {
             // Load from database if id given
+            // TODO: table join with FileCollection to get path
             $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE id = :id');
             $statement->execute(array(':id' => $id));
             $data = $statement->fetch();
@@ -228,10 +229,10 @@ class File extends DBObject
 
         $file->storage_class_name = Storage::getDefaultStorageClass();
         
-        $file->__set('name', $name);
         $file->__set('size', $size);
         $file->__set('mime_type', $mime_type ? $mime_type : 'application/binary' );
         $file->__set('encrypted_size', $file->calculateEncryptedFileSize());
+        $file->__set('name', $name);
         
         return $file;
     }
@@ -253,6 +254,7 @@ class File extends DBObject
      * @return File
      */
     public static function fromUid($uid) {
+        // TODO: table join with FileCollection to get path
         $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE uid = :uid');
         $s->execute(array('uid' => $uid));
         $data = $s->fetch();
@@ -270,6 +272,7 @@ class File extends DBObject
      * @return array of File
      */
     public static function fromTransfer(Transfer $transfer) {
+        // TODO: table join with FileCollection to get path
         $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE transfer_id = :transfer_id');
         $s->execute(array('transfer_id' => $transfer->id));
         $files = array();
@@ -336,8 +339,15 @@ class File extends DBObject
      */
     public function __get($property) {
         if(in_array($property, array(
-            'id', 'transfer_id', 'uid', 'name', 'mime_type', 'size', 'encrypted_size', 'upload_start', 'upload_end', 'sha1', 'storage_class_name'
+            'transfer_id', 'uid', 'name', 'mime_type', 'size', 'encrypted_size', 'upload_start', 'upload_end', 'sha1', 'storage_class_name'
         ))) return $this->$property;
+
+        if($property == 'id') {
+            if (is_null($this->$id)) {
+                save();
+            }
+            return $this->$id;
+        }
         
         if($property == 'transfer') {
             if(is_null($this->transferCache)) $this->transferCache = Transfer::fromId($this->transfer_id);

@@ -157,6 +157,8 @@ class Transfer extends DBObject {
      * @throws TransferNotFoundException
      */
     protected function __construct($id = null, $data = null) {
+        CollectionType::initialize();
+        
         if(!is_null($id)) {
             // Load from database if id given
             $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE id = :id');
@@ -751,6 +753,7 @@ class Transfer extends DBObject {
      */
     public function addFile($path, $size, $mime_type = null)  {
         // Check if already exists
+        // TODO: Must create full path of child
         if(!is_null($this->filesCache)) {
             $matches = array_filter($this->filesCache, function($file) use($path, $size) {
                 return ($file->name == $path) && ($file->size == $size);
@@ -791,7 +794,6 @@ class Transfer extends DBObject {
         
         Logger::info($file.' removed from '.$this);
     }
-    
 
     /**
      * Adds a collection
@@ -814,8 +816,9 @@ class Transfer extends DBObject {
         }
 
         // Create and save new recipient
-        $collection = Collection::add($this, $type, $info);
- 
+        $collection = Collection::create($this, $type, $info);
+        $collection->save();
+
         // Update local cache
         if(is_null($this->collectionsCache[$type_id])) {
             $this->collectionsCache[$type_id] = array();

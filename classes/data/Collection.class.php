@@ -56,6 +56,7 @@ class Collection extends DBObject
         ),
         'parent_id' => array(
             'type' => 'uint',
+            'null' => true,
             'size' => 'medium',
         ),
         'type_id' => array(
@@ -117,9 +118,6 @@ class Collection extends DBObject
      * @throws ClassificationNotFoundException
      */
     public function __construct($id = null, $data = null) {
-
-        CollectionType::initialize();
-        
         if(!is_null($id)) {
             // Load from database if id given
             $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE id = :id');
@@ -142,7 +140,16 @@ class Collection extends DBObject
      * @return Collection
      */
     public static function create(Transfer $transfer, CollectionType $type, $info) {
-        $collection = new self();
+        if ($type === CollectionType::$TREE) {
+            $collection = new CollectionTree();
+        }
+        else
+        if ($type === CollectionType::$DIRECTORY) {
+            $collection = new CollectionDirectory();
+        }
+        else {
+            $collection = new self();
+        }
         
         $collection->transfer_id = $transfer->id;
         $collection->transferCache = $transfer;
@@ -170,6 +177,33 @@ class Collection extends DBObject
         return $collections;
     }
     
+    /**
+     * Add a File to this collection, creating a FileCollection object via
+     * FileCollection::add.
+     * 
+     * @param File $file to add
+     * 
+     * @return FileCollection instance
+     */
+    public function addFile(File $file) {
+        return FileCollection::add($this, $file);
+    }
+    
+    /**
+     * Add a child collection to this collection. Note this will call
+     * $child->save() and may call $this->save() to persist valid $id.
+     * 
+     * @param Collection $child to add
+     * 
+     * @return previous child's parent_id
+     */
+    public function addCollection(Collection $child) {
+        $old_parent_id = $child->$parent_id;
+        $child->$parent_id = $this->__get('id');
+        $child->save();
+        
+        return $old_parent_id;
+    }
     
     /**
      * Getter
@@ -182,8 +216,15 @@ class Collection extends DBObject
      */
     public function __get($property) {
         if(in_array($property, array(
-            'id', 'transfer_id', 'type_id', 'parent_id', 'info'
+            'transfer_id', 'type_id', 'parent_id', 'info'
         ))) return $this->$property;
+        
+        if($property == 'id') {
+            if (is_null($this->$id)) {
+                save();
+            }
+            return $this->$id;
+        }
         
         if($property == 'transfer') {
             if(is_null($this->transferCache)) $this->transferCache = Transfer::fromId($this->transfer_id);
