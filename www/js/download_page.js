@@ -131,9 +131,9 @@ $(function() {
         return false;
     });
     
-    var bigger_than_4gb = parseInt($('[data-transfer-size]').attr('data-transfer-size')) > 4 * 1024 * 1024 * 1024;
+    var needszip64extractor = parseInt($('[data-transfer-size]').attr('data-transfer-size')) > 2 * 1024 * 1024 * 1024;
     var macos = navigator.platform.match(/Mac/);
-    if( !bigger_than_4gb || !macos )
+    if( !needszip64extractor || !macos )
         $('.mac_archive_message').hide();
 
     // only worry the user with this banner if any files are encrypted
