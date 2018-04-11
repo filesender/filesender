@@ -70,7 +70,7 @@ class CollectionType extends DBObject
      * Predefined Enums
      */
     const INVALID_ID     = 0; //"Undefined collection type";
-    const TREE_ID     = 1; //"Root directory collection";
+    const TREE_ID        = 1; //"Root directory collection";
     const DIRECTORY_ID   = 2; //"Pathed directory collection";
     const LASTSTATIC_ID  = 1000; //"Last static enum id";
 
@@ -117,14 +117,18 @@ class CollectionType extends DBObject
         }
         $initialized = true;
         
-        $INVALID = fromData( INVALID_ID, array('name' => 'INVALID', 'description' =>
-                                 'undefined or invalid collection type' );
-        $TREE = fromData( TREE_ID, array('name' => 'TREE', 'description' =>
-                                 'directory tree collection' );
-        $DIRECTORY = fromData( DIRECTORY_ID, array('name' => 'DIRECTORY', 'description' =>
-                                 'directory path collection' );
-        $LASTSTATIC = fromData( LASTSTATIC_ID, array('name' => 'LASTSTATIC', 'description' =>
-                                 'last static collection type' );
+        $INVALID = fromData( INVALID_ID,
+                             array('name' => 'INVALID',
+                                   'description' => 'undefined or invalid collection type' ));
+        $TREE = fromData( TREE_ID,
+                          array('name' => 'TREE',
+                                'description' => 'directory tree collection' ));
+        $DIRECTORY = fromData( DIRECTORY_ID,
+                               array('name' => 'DIRECTORY',
+                                     'description' => 'directory path collection' ));
+        $LASTSTATIC = fromData( LASTSTATIC_ID,
+                                array('name' => 'LASTSTATIC',
+                                      'description' => 'last static collection type' ));
     }
     
     /**

@@ -66,3 +66,20 @@ class InvalidCollectionException extends DetailedException {
         );
     }
 }
+
+/**
+ * Overwrite collection exception
+ */
+class OverwriteCollectionException extends DetailedException {
+    /**
+     * Constructor
+     * 
+     * @param string $selector column used to select user
+     */
+    public function __construct($selector) {
+        parent::__construct(
+            'overwrite_collection', // Message to give to the user
+            array('selector' => $selector) // Real message to log
+        );
+    }
+}

@@ -753,10 +753,9 @@ class Transfer extends DBObject {
      */
     public function addFile($path, $size, $mime_type = null)  {
         // Check if already exists
-        // TODO: Must create full path of child
         if(!is_null($this->filesCache)) {
             $matches = array_filter($this->filesCache, function($file) use($path, $size) {
-                return ($file->name == $path) && ($file->size == $size);
+                return ($file->__get('path') == $path) && ($file->size == $size);
             });
             
             if(count($matches)) return array_shift($matches);
@@ -804,10 +803,10 @@ class Transfer extends DBObject {
      * @return Collection
      */
     public function addCollection(CollectionType $type, $info) {
-        // Check if already exists
         $type_id = $type->__get('id');
         
-        if(!is_null($this->collectionsCache[$type_id])) {
+        // Check if already exists
+        if(!Is_null($this->collectionsCache[$type_id])) {
             $matches = array_filter($this->collectionsCache[$type_id], function($collection) use($info) {
                 return ($collection->$info == $info);
             });

@@ -38,7 +38,6 @@ if (!defined('FILESENDER_BASE'))
  */
 class Collection extends DBObject
 {
-
     /**
      * Database map
      */
@@ -151,10 +150,10 @@ class Collection extends DBObject
             $collection = new self();
         }
         
-        $collection->transfer_id = $transfer->id;
+        $collection->transfer_id = $transfer->__get('id');
         $collection->transferCache = $transfer;
         
-        $collection->type_id = $type->id;
+        $collection->type_id = $type->__get('id');
         $collection->typeCache = $type;
 
         static::setInfo($collection, $info);
@@ -167,7 +166,7 @@ class Collection extends DBObject
      * 
      * @param Transfer $transfer the relater transfer
      * 
-     * @return array of Collection
+     * @return array of <Collection.id, Collection>
      */
     public static function fromTransfer(Transfer $transfer) {
         $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE transfer_id = :transfer_id');
@@ -268,41 +267,67 @@ class Collection extends DBObject
 }
 
 /**
- *  Represents a ollection of objects in the database
+ *  Represents a Collection directory tree of subdirs and files
+ *  It creates a File of mime type 'text/directory' so
+ *  a uuid can be associated with a CollectionTree
  */
 class CollectionTree extends Collection
 {
     /**
+     * Properties
+     */
+    protected $file_id = null;
+   
+    /**
+     * Related objects cache
+     */
+    private $fileCache = null;
+    
+    /**
      * Set the info of a Collection, which may cause further processing
      * dependant on the collection's type
      * 
-     * @param Collection $this the Collection instance who's info is being set
+     * @param Collection $what the Collection instance who's info is being set
      * @param string $info specific information about this instance of a collection
      * 
-     * @throws PropertyAccessException
+     * @throws OverwriteCollectionException
      */
     protected static function setInfo(Collection $what, $pathInfo) {
-        if (($what->info != null) &&
-           throw new PropertyAccessException($what, $type->$name.' '.$info);
-        }
-        
-        $what->$info = $pathInfo;
-        $pos = strrpos($pathInfo, '/');
-        $collection = null;
-      
-        if (!($pos === false)) {
-           $what->$info = substr($pathInfo, $pos + 1);
-           $collection = $transferCache->addCollection(substr($pathInfo, $pos - 1), $what);
+        // Throw an error if attempting to change after already created.
+        if ($what->info != null) {
+           throw new OverwriteCollectionException($what, $type->$name.' '.$info);
         }
 
-        if ($collection != null) {
-           $collectionCache[$collection->id] = $collection
+        $what->info = $pathInfo;
+        $what->fileCache = $what->$transferCache->addFile($pathInfo, 0, 'text/directory');
+        $what->file_id = $what->fileCache->__get('id');
+    }
+
+    /**
+     * Getter
+     * 
+     * @param string $property property to get
+     * 
+     * @throws PropertyAccessException
+     * 
+     * @return property value
+     */
+    public function __get($property) {
+        if(in_array($property, array(
+            'file_id'
+        ))) return $this->$property;
+        
+        if($property == 'file') {
+            if(is_null($this->fileCache)) $this->fileCache = File::fromId($this->file_id);
+            return $this->fileCache;
         }
+        
+        return parent::__get($property);
     }
 }
 
 /**
- *  Represents a ollection of objects in the database
+ *  Represents a Collection of Files underneath a directory path
  */
 class CollectionDirectory extends Collection
 {
@@ -313,24 +338,23 @@ class CollectionDirectory extends Collection
      * @param Collection $what the Collection instance who's info is being set
      * @param string $info specific information about this instance of a collection
      * 
-     * @throws PropertyAccessException
+     * @throws OverwriteCollectionException
      */
     protected static function setInfo(Collection $what, $pathInfo) {
-        if (($what->info != null) &&
-           throw new PropertyAccessException($what, $type->$name.' '.$info);
+        // Throw an error if attempting to change after already created.
+        if ($what->info != null) {
+           throw new OverwriteCollectionException($what, $type->$name.' '.$info);
         }
             
+        $parent_path = $pathInfo;
         $what->$info = $pathInfo;
-        $pos = strrpos($pathInfo, '/');
-        $collection = null;
+        $pos = strpos($pathInfo, '/');
       
         if (!($pos === false)) {
-           $what->$info = substr($pathInfo, $pos + 1);
-           $collection = $transferCache->addCollection(substr($pathInfo, $pos - 1), $what);
+           $parent_path = substr($pathInfo, $pos - 1);
         }
 
-        if ($collection != null) {
-           $collectionCache[$collection->id] = $collection
-        }
+        $what->parentCache = $transferCache->addCollection(CollectionType::$TREE, $parent_path);
+        $what->parent_id = $what->parentCache->__get('id');
     }
 }

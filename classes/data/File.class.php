@@ -88,11 +88,6 @@ class File extends DBObject
             'size' => 40,
             'null' => true
         ),
-        'directory_id' => array(
-            'type' => 'uint',
-            'size' => 'medium',
-            'null' => true
-        ),
         'storage_class_name' => array(
             'type' => 'string',
             'size' => 60,
@@ -105,9 +100,6 @@ class File extends DBObject
         'transfer_id' => array( 
             'transfer_id' => array()
         ),
-        'directory_id' => array( 
-            'directory_id' => array()
-        )
     );
 
     /**
@@ -115,7 +107,6 @@ class File extends DBObject
      */
     protected $id = null;
     protected $transfer_id = null;
-    protected $directory_id = null;
     protected $uid = null;
     protected $name = null;
     protected $mime_type = null;
@@ -130,6 +121,8 @@ class File extends DBObject
      */
     private $transferCache = null;
     private $logsCache = null;
+    private $pathCache = null;
+    private $directoryCache = null;
 
     /**
      * Set the name of a File, optionally creating a Path
@@ -140,15 +133,49 @@ class File extends DBObject
     protected function setName($pathName) {
         $this->name = $pathName;
         $pos = strrpos($pathName, '/');
-        $collection = null;
       
         // If the name for this file appears to be a path because it
         // contains a '/' (slash), add the file to a CollectionDirectory
         if (!($pos === false)) {
            $this->name = substr($pathName, $pos + 1);
-           $collection = $transferCache->addCollection(CollectionType::$DIRECTORY, substr($pathName, 0, $pos - 1));
+           $this->pathCache = $pathName;
+           $directoryCache = $transferCache->addCollection(CollectionType::$DIRECTORY, substr($pathName, 0, $pos - 1));
            $collection->addFile($this);
         }
+    }
+
+    /**
+     * Get a File's full path, which may just be the File's name
+     * if it does not belong to a CollectionDirectory
+     * 
+     * @return string the File's full path
+     * 
+     * @throws FileMultiplePathException
+     */
+    protected function getPath() {
+        // Taking advantage of two $pathCache states:
+        // 1. null -> need to see if File belongs to a CollectionDirectory
+        // 2. !null -> files does belong to a CollectionDirectory
+        if (isset($this->pathCache)) {
+            return $this->pathCache;
+        }
+        // Default that the path is just the name
+        $this->pathCache = $this->name;
+
+        // Set path info if it exists
+        $t = DBI::prepare('SELECT c.id AS dir_id, c.info AS dirpath FROM FileCollection fc, Collection c WHERE fc.file_id = :file_id AND c.id = fc.collection_id AND c.collection_type = :collection_type');
+        $t->execute(array('file_id' => $this->$id,
+                          'collection_type' => CollectionType::DIRECTORY_ID));
+        foreach($t->fetchAll() as $data) {
+            if (!is_null($this->directoryCache)) {
+                throw new FileMultiplePathException('id = '.$this->id);
+            }
+            
+            $this->pathCache = $data['dirpath'].'/'.$this->name;
+            $this->directoryCache = Collection::fromTransfer($this->transferCache)[$data['dir_id']];
+        }
+
+        return $this->pathCache;
     }
     
     /**
@@ -187,7 +214,6 @@ class File extends DBObject
         
         if(!is_null($id)) {
             // Load from database if id given
-            // TODO: table join with FileCollection to get path
             $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE id = :id');
             $statement->execute(array(':id' => $id));
             $data = $statement->fetch();
@@ -254,7 +280,6 @@ class File extends DBObject
      * @return File
      */
     public static function fromUid($uid) {
-        // TODO: table join with FileCollection to get path
         $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE uid = :uid');
         $s->execute(array('uid' => $uid));
         $data = $s->fetch();
@@ -272,11 +297,28 @@ class File extends DBObject
      * @return array of File
      */
     public static function fromTransfer(Transfer $transfer) {
-        // TODO: table join with FileCollection to get path
         $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE transfer_id = :transfer_id');
         $s->execute(array('transfer_id' => $transfer->id));
         $files = array();
-        foreach($s->fetchAll() as $data) $files[$data['id']] = self::fromData($data['id'], $data); // Don't query twice, use loaded data
+        foreach($s->fetchAll() as $data) {
+            $file = self::fromData($data['id'], $data); // Don't query twice, use loaded dat
+            // getPath(): Default that there is no path
+            $file->$pathCache = $file->$name; 
+            $files[$data['id']] = $file;
+        }
+
+        $directories = Collection::fromTransfer($this->transferCache);
+        
+        // Set path info if it exists
+        $t = DBI::prepare('SELECT fc.file_id AS id, c.info, c.id as dir_id AS dirpath FROM FileCollection fc, Collection c WHERE c.transfer_id = :transfer_id1 AND c.collection_type = :collection_type AND fc.collection_id = c.id collection AND fc.file_id IN (SELECT id FROM File WHERE transfer_id = :transfer_id2)');
+        $t->execute(array('transfer_id1' => $transfer->id,
+                          'collection_type' => CollectionType::DIRECTORY_ID,
+                          'transfer_id2' => $transfer->id,));
+        foreach($t->fetchAll() as $data) {
+            $file = $files[$data['id']];
+            $file->$pathCache = $data['dirpath'].'/'.$file->$name;
+            $file->$directoryCache = $directories[$data['dir_id']];
+        }
         return $files;
     }
     
@@ -354,8 +396,11 @@ class File extends DBObject
             return $this->transferCache;
         }
         
+        if($property == 'path') {
+            return $this->getPath();
+        }
+        
         if($property == 'directory') {
-            if(is_null($this->directoryCache)) $this->directoryCache = Directory::fromId($this->directory_id);
             return $this->directoryCache;
         }
         
