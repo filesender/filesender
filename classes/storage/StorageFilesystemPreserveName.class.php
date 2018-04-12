@@ -85,15 +85,15 @@ class StorageFilesystemPreserveName extends StorageFilesystem {
         
         if (!is_null($directory)) {
             $tree = $directory->__get('parent');
-            $tree_uuid = $tree->__get('
-            
+            $tree_uuid = $tree->__get('uuid');
+            $subpath .= '/'.$tree_uid.'='.$directory->__get('info');
         }
         else {
             // For archive systems such as archivematica, any set of files 
             // belonging to an archival set needs to be in an enclosing 
             // directory. Defaulting to naming the directory "uid=name",
             // which also should guarentee unique folder name
-            $subpath .= '/'.$file->uid.'='.$file->name;
+            $subpath .= '/'.$file->uid.'='.$file->__get('name');
         }
         
         // validate owner/uid=name subpath, creating dirs if needed

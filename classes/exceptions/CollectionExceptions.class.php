@@ -83,3 +83,20 @@ class OverwriteCollectionException extends DetailedException {
         );
     }
 }
+
+/**
+ * TreeFile collection exception
+ */
+class TreeFileCollectionException extends DetailedException {
+    /**
+     * Constructor
+     * 
+     * @param string $selector column used to select user
+     */
+    public function __construct($selector) {
+        parent::__construct(
+            'treefile_collection', // Message to give to the user
+            array('selector' => $selector) // Real message to log
+        );
+    }
+}

@@ -308,13 +308,33 @@ class CollectionTree extends Collection
     /**
      * Properties
      */
-    protected $file_id = null;
+    protected $uuid = null;
    
     /**
      * Related objects cache
      */
     private $fileCache = null;
     
+    /**
+     * Loads the File object associated with the CollectionTree
+     * 
+     * @throws TreeFileCollectionException
+     */
+    protected function loadTreeFile() {
+        // Throw an error if attempting to change after already created.
+        if (is_null($file_id)) {
+            $this->filesCache = FileCollection::fromCollection($this->id, true);
+;
+            $fileCollectionCount = count($this->filesCache);
+
+            if (1 != $fileCollectionCount) {
+                throw new TreeFileCollectionException($this, $fileCollectionCount);
+            }
+            $this->fileCache = reset($this->filesCache)->__get('file');
+            $this->uuid = $this->fileCache->__get('uuid');
+        }
+    }
+
     /**
      * Set the info of a Collection, which may cause further processing
      * dependant on the collection's type
@@ -333,7 +353,7 @@ class CollectionTree extends Collection
         $tree->info = $pathInfo;
 
         $tree->fileCache = $tree->$transferCache->addFile($pathInfo, 0, 'text/directory');
-        $tree->file_id = $tree->fileCache->__get('id');
+        $tree->uuid = $tree->fileCache->__get('uuid');
         $tree->addFile($fileCache);
     }
 
@@ -347,12 +367,13 @@ class CollectionTree extends Collection
      * @return property value
      */
     public function __get($property) {
-        if(in_array($property, array(
-            'file_id'
-        ))) return $this->$property;
+        if($property == 'uuid') {
+            loadTreeFile();
+            return $this->$property;
+        }
         
         if($property == 'file') {
-            if(is_null($this->fileCache)) $this->fileCache = File::fromId($this->file_id);
+            loadTreeFile();
             return $this->fileCache;
         }
         
