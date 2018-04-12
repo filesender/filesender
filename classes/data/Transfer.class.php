@@ -613,7 +613,7 @@ class Transfer extends DBObject {
         }
 
         if($property == 'collections') {
-            if(is_null($this->collectionsCache)) $this->collectionsCache = File::fromTransfer($this);
+            if(is_null($this->collectionsCache)) $this->collectionsCache = Collection::fromTransfer($this);
             return $this->collectionsCache;
         }
 
@@ -752,14 +752,16 @@ class Transfer extends DBObject {
      * @return File
      */
     public function addFile($path, $size, $mime_type = null)  {
-        // Check if already exists
-        if(!is_null($this->filesCache)) {
-            $matches = array_filter($this->filesCache, function($file) use($path, $size) {
-                return ($file->__get('path') == $path) && ($file->size == $size);
-            });
-            
-            if(count($matches)) return array_shift($matches);
+        if(is_null($this->filesCache)) {
+            $this->filesCache = File::fromTransfer($this);
         }
+
+        // Check if already exists
+        $matches = array_filter($this->filesCache, function($file) use($path, $size) {
+            return ($file->__get('path') == $path) && ($file->size == $size);
+        });
+        
+        if(count($matches)) return array_shift($matches);
 
         if( !Utilities::isValidFileName( $path )) {
             throw new TransferFileNameInvalidException( $path );
@@ -770,7 +772,7 @@ class Transfer extends DBObject {
         $file->save();
  
         // Update local cache
-        if(!is_null($this->filesCache)) $this->filesCache[$file->id] = $file;
+        $this->filesCache[$file->id] = $file;
         
         Logger::info($file.' added to '.$this);
         
@@ -804,9 +806,13 @@ class Transfer extends DBObject {
      */
     public function addCollection(CollectionType $type, $info) {
         $type_id = $type->__get('id');
+
+        if(is_null($this->collectionsCache)) {
+            $this->collectionsCache = Collection::fromTransfer($this);
+        }
         
         // Check if already exists
-        if(!Is_null($this->collectionsCache[$type_id])) {
+        if(!is_null($this->collectionsCache[$type_id])) {
             $matches = array_filter($this->collectionsCache[$type_id], function($collection) use($info) {
                 return ($collection->$info == $info);
             });

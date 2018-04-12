@@ -168,13 +168,18 @@ class Collection extends DBObject
      * 
      * @param Transfer $transfer the relater transfer
      * 
-     * @return array of <Collection.id, Collection>
+     * @return 2d array of <Collection.type_id, <Collection.id, Collection>>
      */
     public static function fromTransfer(Transfer $transfer) {
-        $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE transfer_id = :transfer_id');
+        $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE transfer_id = :transfer_id SORT BY type_id');
         $s->execute(array('transfer_id' => $transfer->id));
         $collections = array();
-        foreach($s->fetchAll() as $data) $collections[$data['id']] = self::fromData($data['id'], $data); // Don't query twice, use loaded data
+        foreach($s->fetchAll() as $data) {
+            if(is_null(collections[$data[$type_id]])) {
+                collectionsCache[$data[$type_id]] = array();
+            }
+            $collections[$data['type_id']][$data['id']] = self::fromData($data['id'], $data);
+        }
         return $collections;
     }
     
@@ -188,7 +193,7 @@ class Collection extends DBObject
      */
     public function addFile(File $file) {
         if(is_null($this->filesCache)) {
-            __get('files');
+            $this->filesCache = FileCollection::fromCollection($this->id);
         }
 
         // Check if already exists
