@@ -95,6 +95,7 @@ class Collection extends DBObject
      */
     private $transferCache = null;
     private $parentCache = null;
+    private $filesCache = null;
     private $typeCache = null;
 
     /**
@@ -155,7 +156,8 @@ class Collection extends DBObject
         
         $collection->type_id = $type->__get('id');
         $collection->typeCache = $type;
-
+        $collection->filesCache = array();
+ 
         static::setInfo($collection, $info);
         
         return $collection;
@@ -185,7 +187,23 @@ class Collection extends DBObject
      * @return FileCollection instance
      */
     public function addFile(File $file) {
-        return FileCollection::add($this, $file);
+        // Check if already exists
+        if(!is_null($this->filesCache)) {
+            $matches = array_filter($this->filesCache, function($exist) use($id) {
+                return ($exist->id == $file->id);
+            });
+            
+            if(count($matches)) return array_shift($matches);
+        }
+
+        $fc = FileCollection::add($this, $file);
+        
+        // Update local cache
+        if(!is_null($this->filesCache)) $this->filesCache[$file->id] = $fc;
+        
+        Logger::info($file.' added to '.$this);
+
+        return $fc;
     }
     
     /**
@@ -219,10 +237,10 @@ class Collection extends DBObject
         ))) return $this->$property;
         
         if($property == 'id') {
-            if (is_null($this->$id)) {
+            if (is_null($this->id)) {
                 save();
             }
-            return $this->$id;
+            return $this->id;
         }
         
         if($property == 'transfer') {
@@ -231,11 +249,18 @@ class Collection extends DBObject
         }
         
         if($property == 'parent') {
+            if(is_null($this->parentCache)) $this->parentCache = Collection::fromId($this->parent_id);
             return $this->parentCache;
         }
-
+        
         if($property == 'type') {
+            if(is_null($this->typeCache)) $this->typeCache = CollectionType::fromId($this->type_id);
             return $this->typeCache;
+        }
+        
+        if($property == 'files') {
+            if(is_null($this->filesCache)) $this->filesCache = FileCollection::fromCollection($this->id);
+            return $this->filesCache;
         }
         
         throw new PropertyAccessException($this, $property);
@@ -292,15 +317,17 @@ class CollectionTree extends Collection
      * 
      * @throws OverwriteCollectionException
      */
-    protected static function setInfo(Collection $what, $pathInfo) {
+    protected static function setInfo(Collection $tree, $pathInfo) {
         // Throw an error if attempting to change after already created.
-        if ($what->info != null) {
-           throw new OverwriteCollectionException($what, $type->$name.' '.$info);
+        if ($tree->info != null) {
+           throw new OverwriteCollectionException($tree, $type->$name.' '.$info);
         }
 
-        $what->info = $pathInfo;
-        $what->fileCache = $what->$transferCache->addFile($pathInfo, 0, 'text/directory');
-        $what->file_id = $what->fileCache->__get('id');
+        $tree->info = $pathInfo;
+
+        $tree->fileCache = $tree->$transferCache->addFile($pathInfo, 0, 'text/directory');
+        $tree->file_id = $tree->fileCache->__get('id');
+        $tree->addFile($fileCache);
     }
 
     /**
@@ -340,21 +367,21 @@ class CollectionDirectory extends Collection
      * 
      * @throws OverwriteCollectionException
      */
-    protected static function setInfo(Collection $what, $pathInfo) {
+    protected static function setInfo(Collection $dir, $pathInfo) {
         // Throw an error if attempting to change after already created.
-        if ($what->info != null) {
-           throw new OverwriteCollectionException($what, $type->$name.' '.$info);
+        if ($dir->info != null) {
+           throw new OverwriteCollectionException($dir, $type->$name.' '.$info);
         }
             
         $parent_path = $pathInfo;
-        $what->$info = $pathInfo;
+        $dir->$info = $pathInfo;
         $pos = strpos($pathInfo, '/');
       
         if (!($pos === false)) {
            $parent_path = substr($pathInfo, $pos - 1);
         }
 
-        $what->parentCache = $transferCache->addCollection(CollectionType::$TREE, $parent_path);
-        $what->parent_id = $what->parentCache->__get('id');
+        $dir->parentCache = $transferCache->addCollection(CollectionType::$TREE, $parent_path);
+        $dir->parent_id = $dir->parentCache->__get('id');
     }
 }

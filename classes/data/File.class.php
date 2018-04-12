@@ -139,7 +139,7 @@ class File extends DBObject
         if (!($pos === false)) {
            $this->name = substr($pathName, $pos + 1);
            $this->pathCache = $pathName;
-           $directoryCache = $transferCache->addCollection(CollectionType::$DIRECTORY, substr($pathName, 0, $pos - 1));
+           $this->directoryCache = $transferCache->addCollection(CollectionType::$DIRECTORY, substr($pathName, 0, $pos - 1));
            $collection->addFile($this);
         }
     }
@@ -255,10 +255,10 @@ class File extends DBObject
 
         $file->storage_class_name = Storage::getDefaultStorageClass();
         
-        $file->__set('size', $size);
-        $file->__set('mime_type', $mime_type ? $mime_type : 'application/binary' );
-        $file->__set('encrypted_size', $file->calculateEncryptedFileSize());
-        $file->__set('name', $name);
+        $file->size = $size;
+        $file->mime_type = $mime_type ? $mime_type : 'application/binary';
+        $file->encrypted_size = $file->calculateEncryptedFileSize();
+        $file->setName($name);
         
         return $file;
     }

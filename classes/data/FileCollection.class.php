@@ -38,7 +38,6 @@ if (!defined('FILESENDER_BASE'))
  */
 class Namespace extends DBObject
 {
-
     /**
      * Database map
      */

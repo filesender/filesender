@@ -50,17 +50,7 @@ class StorageFilesystemPreserveName extends StorageFilesystem {
      */
     public static function buildFilename(File $file) {
         static::setup();
-        
-        // To support dirtree upload, see if $file->name has a basepath
-        $filename = $file->name;
-
-        $pos = strrpos($filename, '/');
-      
-        if (!($pos === false)) {
-          $filename = substr($file->name, $pos + 1);
-        }
-
-        return $filename;
+        return $file->__get('name');
     }
   
     /**
@@ -89,20 +79,22 @@ class StorageFilesystemPreserveName extends StorageFilesystem {
           $subpath = '/'.substr($owner, $pos + 1);
         }
 
-        // To support dirtree upload, see if $file->name has a basepath
-        $basepath = $file->name;
-
-        $pos = strrpos($basepath, '/');
-      
-        if (!($pos === false)) {
-          $basepath = substr($file->name, 0, $pos);
-        }
+        // Check if the file belongs to a directory tree. If so, have
+        // file reside under "uid=dirtree/path/to/file/filename"
+        $directory = $file->__get('directory');
         
-        // For archive systems such as archivematica, any set of files belonging
-        // to an archival set needs to be in an enclosing directory.
-        // defaulting to naming the directory "uid=name", which also
-        // should guarentee unique folder name
-        $subpath .= '/'.$file->uid.'='.$basepath;
+        if (!is_null($directory)) {
+            $tree = $directory->__get('parent');
+            $tree_uuid = $tree->__get('
+            
+        }
+        else {
+            // For archive systems such as archivematica, any set of files 
+            // belonging to an archival set needs to be in an enclosing 
+            // directory. Defaulting to naming the directory "uid=name",
+            // which also should guarentee unique folder name
+            $subpath .= '/'.$file->uid.'='.$file->name;
+        }
         
         // validate owner/uid=name subpath, creating dirs if needed
         $path = $storage_root_path;
