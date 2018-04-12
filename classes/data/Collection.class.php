@@ -187,19 +187,21 @@ class Collection extends DBObject
      * @return FileCollection instance
      */
     public function addFile(File $file) {
-        // Check if already exists
-        if(!is_null($this->filesCache)) {
-            $matches = array_filter($this->filesCache, function($exist) use($id) {
-                return ($exist->id == $file->id);
-            });
-            
-            if(count($matches)) return array_shift($matches);
+        if(is_null($this->filesCache)) {
+            __get('files');
         }
+
+        // Check if already exists
+        $matches = array_filter($this->filesCache, function($exist) use($id) {
+            return ($exist->id == $file->id);
+        });
+        
+        if(count($matches)) return array_shift($matches);
 
         $fc = FileCollection::add($this, $file);
         
         // Update local cache
-        if(!is_null($this->filesCache)) $this->filesCache[$file->id] = $fc;
+        $this->filesCache[$file->id] = $fc;
         
         Logger::info($file.' added to '.$this);
 
