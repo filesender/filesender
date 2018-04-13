@@ -80,6 +80,7 @@ class CollectionType extends DBObject
     static $TREE = null;
     static $DIRECTORY = null;
     static $LASTSTATIC = null;
+    static $LATEST = null;
 
     /**
      * Constructor
@@ -109,25 +110,60 @@ class CollectionType extends DBObject
      */
     public static function initialize() {
 
-        static $initialized = false;
-
-        if ($initialized) {
+        if (!is_null(self::$INVALID)) {
             return;
         }
-        $initialized = true;
-        
-        $INVALID = fromData( INVALID_ID,
-                             array('name' => 'INVALID',
-                                   'description' => 'undefined or invalid collection type' ));
-        $TREE = fromData( TREE_ID,
-                          array('name' => 'TREE',
-                                'description' => 'directory tree collection' ));
-        $DIRECTORY = fromData( DIRECTORY_ID,
-                               array('name' => 'DIRECTORY',
-                                     'description' => 'directory path collection' ));
-        $LASTSTATIC = fromData( LASTSTATIC_ID,
-                                array('name' => 'LASTSTATIC',
-                                      'description' => 'last static collection type' ));
+
+        // Load all CollectionTypes from database
+        $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' ORDER BY id');
+        $s->execute();
+        $types = array();
+        foreach($s->fetchAll() as $data) {
+            $type = self::fromData($data['id'], $data);
+            $types[$data['id']] = $type;
+            self::$LATEST = $type;
+        }
+
+        if (!is_null($types[self::INVALID_ID]))
+            self::$INVALID = $types[self::INVALID_ID];
+        else {
+            self::$INVALID = new self();
+            self::$INVALID->id = self::INVALID_ID;
+            self::$INVALID->name = 'INVALID';
+            self::$INVALID->description = 'undefined collection type';
+            self::$INVALID->add();
+        }
+
+        if (!is_null($types[self::TREE_ID]))
+            self::$TREE = $types[self::TREE_ID];
+        else {
+            self::$TREE = new self();
+            self::$TREE->id = self::TREE_ID;
+            self::$TREE->name = 'TREE';
+            self::$TREE->description = 'directory tree collection';
+            self::$TREE->add();
+        }
+
+
+        if (!is_null($types[self::DIRECTORY_ID]))
+            self::$DIRECTORY = $types[self::DIRECTORY_ID];
+        else {
+            self::$DIRECTORY = new self();
+            self::$DIRECTORY->id = self::DIRECTORY_ID;
+            self::$DIRECTORY->name = 'DIRECTORY';
+            self::$DIRECTORY->description = 'directory path collection';
+            self::$DIRECTORY->add();
+        }
+
+        if (!is_null($types[self::LASTSTATIC_ID]))
+            self::$LASTSTATIC = $types[self::LASTSTATIC_ID];
+        else {
+            self::$LASTSTATIC = new self();
+            self::$LASTSTATIC->id = self::LASTSTATIC_ID;
+            self::$LASTSTATIC->name = 'LASTSTATIC';
+            self::$LASTSTATIC->description = 'last static collection type';
+            self::$LASTSTATIC->add();
+        }
     }
 
     /**

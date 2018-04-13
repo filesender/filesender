@@ -274,13 +274,10 @@ class Transfer extends DBObject {
                 throw new BadEmailException($user_email);
         }
         
-        $transfer->__set('user_email', $user_email);
-        
-        $transfer->__set('expires', $expires);
-        
+        $transfer->user_email = $user_email;
+        $transfer->expires = $expires;
         $transfer->created = time();
         $transfer->status = TransferStatuses::CREATED;
-        
         $transfer->lang = Lang::getCode();
         
         return $transfer;
@@ -758,7 +755,7 @@ class Transfer extends DBObject {
 
         // Check if already exists
         $matches = array_filter($this->filesCache, function($file) use($path, $size) {
-            return ($file->__get('path') == $path) && ($file->size == $size);
+            return ($file->path == $path) && ($file->size == $size);
         });
         
         if(count($matches)) return array_shift($matches);
@@ -805,7 +802,7 @@ class Transfer extends DBObject {
      * @return Collection
      */
     public function addCollection(CollectionType $type, $info) {
-        $type_id = $type->__get('id');
+        $type_id = $type->id;
 
         if(is_null($this->collectionsCache)) {
             $this->collectionsCache = Collection::fromTransfer($this);
@@ -814,7 +811,7 @@ class Transfer extends DBObject {
         // Check if already exists
         if(!is_null($this->collectionsCache[$type_id])) {
             $matches = array_filter($this->collectionsCache[$type_id], function($collection) use($info) {
-                return ($collection->$info == $info);
+                return ($collection->info == $info);
             });
             
             if(count($matches)) return array_shift($matches);

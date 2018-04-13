@@ -106,7 +106,7 @@ class Collection extends DBObject
      * @param string $info specific information about this instance of a collection
      */
     protected static function setInfo(Collection $what, $info) {
-        $what->$info = $info;
+        $what->info = $info;
     }
     
     /**
@@ -151,10 +151,10 @@ class Collection extends DBObject
             $collection = new self();
         }
         
-        $collection->transfer_id = $transfer->__get('id');
+        $collection->transfer_id = $transfer->id;
         $collection->transferCache = $transfer;
         
-        $collection->type_id = $type->__get('id');
+        $collection->type_id = $type->id;
         $collection->typeCache = $type;
         $collection->filesCache = array();
  
@@ -222,8 +222,8 @@ class Collection extends DBObject
      * @return previous child's parent_id
      */
     public function addCollection(Collection $child) {
-        $old_parent_id = $child->$parent_id;
-        $child->$parent_id = $this->__get('id');
+        $old_parent_id = $child->parent_id;
+        $child->parent_id = $this->id;
         $child->save();
         
         return $old_parent_id;
@@ -331,8 +331,8 @@ class CollectionTree extends Collection
             if (1 != $fileCollectionCount) {
                 throw new TreeFileCollectionException($this, $fileCollectionCount);
             }
-            $this->fileCache = reset($this->filesCache)->__get('file');
-            $this->uuid = $this->fileCache->__get('uuid');
+            $this->fileCache = reset($this->filesCache)->file;
+            $this->uuid = $this->fileCache->uuid;
         }
     }
 
@@ -348,13 +348,13 @@ class CollectionTree extends Collection
     protected static function setInfo(Collection $tree, $pathInfo) {
         // Throw an error if attempting to change after already created.
         if ($tree->info != null) {
-           throw new OverwriteCollectionException($tree, $type->$name.' '.$info);
+           throw new OverwriteCollectionException($tree, $type->name.' '.$info);
         }
 
         $tree->info = $pathInfo;
 
-        $tree->fileCache = $tree->$transferCache->addFile($pathInfo, 0, 'text/directory');
-        $tree->uuid = $tree->fileCache->__get('uuid');
+        $tree->fileCache = $tree->transferCache->addFile($pathInfo, 0, 'text/directory');
+        $tree->uuid = $tree->fileCache->uuid;
         $tree->addFile($fileCache);
     }
 
@@ -370,7 +370,7 @@ class CollectionTree extends Collection
     public function __get($property) {
         if($property == 'uuid') {
             loadTreeFile();
-            return $this->$property;
+            return $this->uuid;
         }
         
         if($property == 'file') {
@@ -399,11 +399,11 @@ class CollectionDirectory extends Collection
     protected static function setInfo(Collection $dir, $pathInfo) {
         // Throw an error if attempting to change after already created.
         if ($dir->info != null) {
-           throw new OverwriteCollectionException($dir, $type->$name.' '.$info);
+           throw new OverwriteCollectionException($dir, $type->name.' '.$info);
         }
             
         $parent_path = $pathInfo;
-        $dir->$info = $pathInfo;
+        $dir->info = $pathInfo;
         $pos = strpos($pathInfo, '/');
       
         if (!($pos === false)) {
@@ -411,6 +411,6 @@ class CollectionDirectory extends Collection
         }
 
         $dir->parentCache = $transferCache->addCollection(CollectionType::$TREE, $parent_path);
-        $dir->parent_id = $dir->parentCache->__get('id');
+        $dir->parent_id = $dir->parentCache->id;
     }
 }

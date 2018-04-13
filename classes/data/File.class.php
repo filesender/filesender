@@ -164,7 +164,7 @@ class File extends DBObject
 
         // Set path info if it exists
         $t = DBI::prepare('SELECT c.id AS dir_id, c.info AS dirpath FROM FileCollection fc, Collection c WHERE fc.file_id = :file_id AND c.id = fc.collection_id AND c.collection_type = :collection_type');
-        $t->execute(array('file_id' => $this->$id,
+        $t->execute(array('file_id' => $this->id,
                           'collection_type' => CollectionType::DIRECTORY_ID));
         foreach($t->fetchAll() as $data) {
             if (!is_null($this->directoryCache)) {
@@ -239,8 +239,6 @@ class File extends DBObject
         
         // Init cache to empty to avoid db queries
         $file->logsCache = array();
-        $file->collectionCache = array();
-        
         $file->transfer_id = $transfer->id;
         $file->transferCache = $transfer;
         
@@ -303,11 +301,11 @@ class File extends DBObject
         foreach($s->fetchAll() as $data) {
             $file = self::fromData($data['id'], $data); // Don't query twice, use loaded dat
             // getPath(): Default that there is no path
-            $file->$pathCache = $file->$name; 
+            $file->pathCache = $file->name; 
             $files[$data['id']] = $file;
         }
 
-        $directories = Collection::fromTransfer($this->transferCache);
+        $directories = Collection::fromTransfer($transfer);
         
         // Set path info if it exists
         $t = DBI::prepare('SELECT fc.file_id AS id, c.info, c.id as dir_id AS dirpath FROM FileCollection fc, Collection c WHERE c.transfer_id = :transfer_id1 AND c.collection_type = :collection_type AND fc.collection_id = c.id collection AND fc.file_id IN (SELECT id FROM File WHERE transfer_id = :transfer_id2)');
@@ -316,8 +314,8 @@ class File extends DBObject
                           'transfer_id2' => $transfer->id,));
         foreach($t->fetchAll() as $data) {
             $file = $files[$data['id']];
-            $file->$pathCache = $data['dirpath'].'/'.$file->$name;
-            $file->$directoryCache = $directories[$data['dir_id']];
+            $file->pathCache = $data['dirpath'].'/'.$file->name;
+            $file->directoryCache = $directories[$data['dir_id']];
         }
         return $files;
     }
@@ -385,10 +383,10 @@ class File extends DBObject
         ))) return $this->$property;
 
         if($property == 'id') {
-            if (is_null($this->$id)) {
+            if (is_null($this->id)) {
                 save();
             }
-            return $this->$id;
+            return $this->id;
         }
         
         if($property == 'transfer') {

@@ -57,10 +57,17 @@ class DatabasePgsql {
     public static function createTable($table, $definition) {
         $columns = array();
         
+        $primary_keys = null;
         foreach($definition as $column => $def) {
             $columns[] = $column.' '.self::columnDefinition($def);
+            
+            if(array_key_exists('primary', $def) && $def['primary']) {
+                if (is_null($primary_keys)) $primary_keys = $column;
+                else $primary_keys .= ', '.$column;
+            }
         }
-        $query = 'CREATE TABLE '.$table.' ('.implode(', ', $columns).')';
+        $query = 'CREATE TABLE '.$table.' ('.implode(', ', $columns).', PRIMARY KEY('.$primary_keys.'))';
+
         DBI::exec($query);
         
         foreach($definition as $column => $def) {
@@ -529,7 +536,6 @@ class DatabasePgsql {
         
         // Add options
         if(array_key_exists('unique', $definition) && $definition['unique']) $sql .= ' UNIQUE';
-        if(array_key_exists('primary', $definition) && $definition['primary']) $sql .= ' PRIMARY KEY';
         
         // Return statment
         return $sql;

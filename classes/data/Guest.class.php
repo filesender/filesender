@@ -213,8 +213,8 @@ class Guest extends DBObject {
         }
         
         $guest->user_id = Auth::user()->id;
-        $guest->__set('user_email', $from);
-        $guest->__set('email', $recipient); // Throws
+        $guest->user_email = $from;
+        $guest->email = $recipient; // Throws
         
         $guest->status = GuestStatuses::CREATED;
         $guest->created = $time;

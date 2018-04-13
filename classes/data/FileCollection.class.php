@@ -113,8 +113,8 @@ class FileCollection extends DBObject
     public static function create($collection_id, $file_id) {
         $filecollection = new self();
         
-        $this->$collection_id = $collection_id;
-        $this->$file_id = $file_id;
+        $this->collection_id = $collection_id;
+        $this->file_id = $file_id;
 
         return $filecollection;
     }
@@ -133,11 +133,11 @@ class FileCollection extends DBObject
      * @return FileCollection
      */
     public static function add(Collection $collection, File $file) {
-        // Need to guarentee $file->$id and $collection->$id are not null
-        $filecollection = FileCollection::create($collection->__get('id'), $file->__get('id'));
+        // Need to guarentee $file->id and $collection->id are not null
+        $filecollection = FileCollection::create($collection->id, $file->id);
 
-        $this->$collectionCache = $collection;
-        $this->$fileCache = $file;
+        $this->collectionCache = $collection;
+        $this->fileCache = $file;
 
         $filecollection->save();
 
@@ -154,7 +154,7 @@ class FileCollection extends DBObject
      * @return array of File
      */
     public static function fromCollection(Collection $collection, bool $full_load = false) {
-        $owner_id = $collection->__get('id');
+        $owner_id = $collection->id;
         $files = array();
         
         if ($full_load) {
@@ -164,8 +164,8 @@ class FileCollection extends DBObject
                $file_id = $data['id'];
                $filecollection = self::create($owner_id, $file_id);
                $files[$file_id] = $filecollection;
-               $filecollection->$collectionCache = $collection;
-               $filecollection->$fileCache = File::fromData($file_id, $data);
+               $filecollection->collectionCache = $collection;
+               $filecollection->fileCache = File::fromData($file_id, $data);
            }
         }
         else {
@@ -190,7 +190,7 @@ class FileCollection extends DBObject
      * @return array of Collection
      */
     public static function fromFile(File $file, bool $full_load = false) {
-        $file_id = $file->__get('id');
+        $file_id = $file->id;
         $collections = array();
         
         if ($full_load) {
@@ -200,8 +200,8 @@ class FileCollection extends DBObject
                $collection_id = $data['id'];
                $filecollection = self::create($collection_id, $file_id);
                $collections[$collection_id] = $filecollection;
-               $filecollection->$fileCache = $file;
-               $filecollection->$collectionCache = Collection::fromData($collection_id, $data);
+               $filecollection->fileCache = $file;
+               $filecollection->collectionCache = Collection::fromData($collection_id, $data);
            }
         }
         else {

@@ -68,7 +68,7 @@ class DatabaseMysql {
         }
 
         $query = 'CREATE TABLE '.$table.' ('.implode(', ', $columns).', PRIMARY KEY('.$primary_keys.'))';
-        
+
         DBI::exec($query);
     }
     

@@ -309,6 +309,16 @@ class DBObject {
     }
     
     /**
+     * Add to database
+     */
+    public function add() {
+        // Add object
+        $this->insertRecord($this->toDBData());
+        // Cache object
+        self::$objectCache[get_called_class()][$this->id] = $this;
+    }
+    
+    /**
      * Delete from database
      */
     public function delete() {
