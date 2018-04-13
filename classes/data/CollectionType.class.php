@@ -38,7 +38,6 @@ if (!defined('FILESENDER_BASE'))
  */
 class CollectionType extends DBObject
 {
-
     /**
      * Database map
      */
@@ -77,10 +76,10 @@ class CollectionType extends DBObject
     /**
      * Predefined Types
      */
-    static CollectionType $INVALID;
-    static CollectionType $TREE;
-    static CollectionType $DIRECTORY;
-    static CollectionType $LASTSTATIC;
+    static $INVALID = null;
+    static $TREE = null;
+    static $DIRECTORY = null;
+    static $LASTSTATIC = null;
 
     /**
      * Constructor
@@ -130,7 +129,7 @@ class CollectionType extends DBObject
                                 array('name' => 'LASTSTATIC',
                                       'description' => 'last static collection type' ));
     }
-    
+
     /**
      * Getter
      * 
@@ -170,6 +169,6 @@ class CollectionType extends DBObject
      * @return string
      */
     public function __toString() {
-        return static::getClassName().'#'.($this->id ? $this->id : 'unsaved').'('.$this->name.', '.strlen($this->name)+strlen($this->description)+1.' bytes)';
+        return static::getClassName().'#'.($this->id ? $this->id : 'unsaved').'('.$this->name.', '.(strlen($this->name)+strlen($this->description)+1).' bytes)';
     }
 }

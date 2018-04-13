@@ -36,7 +36,7 @@ if (!defined('FILESENDER_BASE'))
 /**
  *  Represents path in the database
  */
-class Namespace extends DBObject
+class FileCollection extends DBObject
 {
     /**
      * Database map
@@ -51,7 +51,7 @@ class Namespace extends DBObject
         'file_id' => array(
             'type' => 'uint',   //data type of 'id'
             'size' => 'medium',
-            'primary' => true,
+                        'primary' => true,
         ),
     );
 
@@ -161,20 +161,20 @@ class Namespace extends DBObject
            $s = DBI::prepare('SELECT * FROM '.File::getDBTable().' WHERE id IN (SELECT file_id FROM '.self::getDBTable().' WHERE collection_id = :collection_id)');
            $s->execute(array('collection_id' => $owner_id));
            foreach($s->fetchAll() as $data) {
-              $file_id = $data['id']
-              $filecollection = self::create($owner_id, $file_id);
-              $files[$file_id] = $filecollection;
-              $filecollection->$collectionCache = $collection;
-              $filecollection->$fileCache = File::fromData($file_id, $data);
+               $file_id = $data['id'];
+               $filecollection = self::create($owner_id, $file_id);
+               $files[$file_id] = $filecollection;
+               $filecollection->$collectionCache = $collection;
+               $filecollection->$fileCache = File::fromData($file_id, $data);
            }
         }
         else {
            $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE collection_id = :collection_id');
            $s->execute(array('collection_id' => $owner_id));
            foreach($s->fetchAll() as $data) {
-              $file_id = $data['file_id']
-              $filecollection = self::create($owner_id, $file_id);
-              $files[$file_id] = $filecollection;
+               $file_id = $data['file_id'];
+               $filecollection = self::create($owner_id, $file_id);
+               $files[$file_id] = $filecollection;
            }
         }
         return $files;
@@ -197,20 +197,20 @@ class Namespace extends DBObject
            $s = DBI::prepare('SELECT * FROM '.Collection::getDBTable().' WHERE id IN (SELECT collection_id FROM '.self::getDBTable().' WHERE file_id = :file_id)');
            $s->execute(array('file_id' => $file_id));
            foreach($s->fetchAll() as $data) {
-              $collection_id = $data['id']
-              $filecollection = self::create($collection_id, $file_id);
-              $collections[$collection_id] = $filecollection;
-              $filecollection->$fileCache = $file;
-              $filecollection->$collectionCache = Collection::fromData($collection_id, $data);
+               $collection_id = $data['id'];
+               $filecollection = self::create($collection_id, $file_id);
+               $collections[$collection_id] = $filecollection;
+               $filecollection->$fileCache = $file;
+               $filecollection->$collectionCache = Collection::fromData($collection_id, $data);
            }
         }
         else {
            $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE file_id = :file_id');
            $s->execute(array('file_id' => $file_id));
            foreach($s->fetchAll() as $data) {
-              $collection_id = $data['collection_id']
-              $filecollection = self::create($collection_id, $file_id);
-              $collections[$collection_id] = $filecollection;
+               $collection_id = $data['collection_id'];
+               $filecollection = self::create($collection_id, $file_id);
+               $collections[$collection_id] = $filecollection;
            }
         }
         return $collections;

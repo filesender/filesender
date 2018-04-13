@@ -78,7 +78,7 @@ class Collection extends DBObject
         ),
         'parent_id' => array( 
             'parent_id' => array()
-        ),
+        )
     );
 
     /**
@@ -175,8 +175,8 @@ class Collection extends DBObject
         $s->execute(array('transfer_id' => $transfer->id));
         $collections = array();
         foreach($s->fetchAll() as $data) {
-            if(is_null(collections[$data[$type_id]])) {
-                collectionsCache[$data[$type_id]] = array();
+            if(is_null($collections[$data[$type_id]])) {
+                $collections[$data[$type_id]] = array();
             }
             $collections[$data['type_id']][$data['id']] = self::fromData($data['id'], $data);
         }
@@ -294,8 +294,9 @@ class Collection extends DBObject
      * @return string
      */
     public function __toString() {
-        return static::getClassName().'#'.($this->id ? $this->id : 'unsaved').'('.$this->info.', '.strlen($this->info)+1.' bytes)';
+        return static::getClassName().'#'.($this->id ? $this->id : 'unsaved').'('.$this->info.', '.(strlen($this->info)+1).' bytes)';
     }
+
 }
 
 /**

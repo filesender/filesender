@@ -99,7 +99,7 @@ class File extends DBObject
     protected static $secondaryIndexMap = array(
         'transfer_id' => array( 
             'transfer_id' => array()
-        ),
+        )
     );
 
     /**

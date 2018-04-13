@@ -59,6 +59,9 @@ class Autoloader {
         // WARNING, the migration script uses things in data in a special way
         // WARNING
         'DBObject' => 'data/',
+        'CollectionType' => 'data/',
+        'FileCollection' => 'data/',
+        'Collection' => 'data/',
         'Transfer' => 'data/',
         'File' => 'data/',
         'Recipient' => 'data/',
