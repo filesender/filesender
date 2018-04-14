@@ -93,7 +93,7 @@ window.filesender.config = {
     <?php
        $terasender_enabled = Config::get('terasender_enabled');
        $ua = array_key_exists('HTTP_USER_AGENT', $_SERVER) ? $_SERVER['HTTP_USER_AGENT'] : '';
-       Logger::info($ua);
+//       Logger::info($ua);
        if(preg_match('/Windows NT 6\.3.*Trident\/7\./', $ua)) {
             $terasender_enabled = false;
        }
