@@ -90,7 +90,15 @@ window.filesender.config = {
     crypto_crypt_name: '<?php echo Config::get('crypto_crypt_name') ?>',
     crypto_hash_name: '<?php echo Config::get('crypto_hash_name') ?>',
 
-    terasender_enabled: <?php  echo value_to_TF(Config::get('terasender_enabled')) ?>,
+    <?php
+       $terasender_enabled = Config::get('terasender_enabled');
+       $ua = array_key_exists('HTTP_USER_AGENT', $_SERVER) ? $_SERVER['HTTP_USER_AGENT'] : '';
+       Logger::info($ua);
+       if(preg_match('/Windows NT 6\.3.*Trident\/7\./', $ua)) {
+            $terasender_enabled = false;
+       }
+    ?>
+    terasender_enabled: <?php  echo value_to_TF($terasender_enabled) ?>,
     terasender_advanced: <?php echo value_to_TF(Config::get('terasender_advanced')) ?>,
     terasender_worker_count: <?php echo Config::get('terasender_worker_count') ?>,
     terasender_start_mode: '<?php echo Config::get('terasender_start_mode') ?>',
