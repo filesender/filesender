@@ -169,6 +169,11 @@ class Transfer extends DBObject {
         
         // Fill properties from provided data
         if($data) $this->fillFromDBData($data);
+
+        // Load collections if they exist
+        if ($transfer->getOptions('collection')) {
+            $this->collectionsCache = Collection::fromTransfer($this);
+        }
     }
     
     /**
@@ -254,8 +259,6 @@ class Transfer extends DBObject {
         $transfer = new self();
         
         // Init caches to empty to avoid db queries
-        $transfer->filesCache = array();
-        $transfer->collectionsCache = array();
         $transfer->recipientsCache = array();
         $transfer->logsCache = array();
         
@@ -610,7 +613,6 @@ class Transfer extends DBObject {
         }
 
         if($property == 'collections') {
-            if(is_null($this->collectionsCache)) $this->collectionsCache = Collection::fromTransfer($this);
             return $this->collectionsCache;
         }
 
@@ -802,14 +804,19 @@ class Transfer extends DBObject {
      * @return Collection
      */
     public function addCollection(CollectionType $type, $info) {
-        $type_id = $type->id;
-
+        $collections_added = false;
+        
         if(is_null($this->collectionsCache)) {
-            $this->collectionsCache = Collection::fromTransfer($this);
+            $this->collectionsCache = array();
+            $collections_added = true;
         }
         
+        $type_id = $type->id;
+        $type_exists = array_key_exists($type_id, $this->collectionsCache);
+
+        
         // Check if already exists
-        if(!is_null($this->collectionsCache[$type_id])) {
+        if($type_exists) {
             $matches = array_filter($this->collectionsCache[$type_id], function($collection) use($info) {
                 return ($collection->info == $info);
             });
@@ -821,8 +828,13 @@ class Transfer extends DBObject {
         $collection = Collection::create($this, $type, $info);
         $collection->save();
 
+        if ($collections_added) {
+            $transfer->options['collection'] = true;
+            $transfer->save();
+        }
+        
         // Update local cache
-        if(is_null($this->collectionsCache[$type_id])) {
+        if(!$type_exists)
             $this->collectionsCache[$type_id] = array();
         }
         

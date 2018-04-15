@@ -311,8 +311,8 @@ class DBObject {
     /**
      * Add to database
      */
-    public function add() {
-        // Add object
+    public function insert() {
+        // Insert object
         $this->insertRecord($this->toDBData());
         // Cache object
         self::$objectCache[get_called_class()][$this->id] = $this;

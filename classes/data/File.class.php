@@ -140,7 +140,7 @@ class File extends DBObject
            $this->name = substr($pathName, $pos + 1);
            $this->pathCache = $pathName;
            $this->directoryCache = $transferCache->addCollection(CollectionType::$DIRECTORY, substr($pathName, 0, $pos - 1));
-           $collection->addFile($this);
+           $this->directoryCache->addFile($this);
         }
     }
 
@@ -305,17 +305,19 @@ class File extends DBObject
             $files[$data['id']] = $file;
         }
 
-        $directories = Collection::fromTransfer($transfer);
-        
-        // Set path info if it exists
-        $t = DBI::prepare('SELECT fc.file_id AS id, c.info, c.id as dir_id AS dirpath FROM FileCollection fc, Collection c WHERE c.transfer_id = :transfer_id1 AND c.collection_type = :collection_type AND fc.collection_id = c.id collection AND fc.file_id IN (SELECT id FROM File WHERE transfer_id = :transfer_id2)');
-        $t->execute(array('transfer_id1' => $transfer->id,
-                          'collection_type' => CollectionType::DIRECTORY_ID,
-                          'transfer_id2' => $transfer->id,));
-        foreach($t->fetchAll() as $data) {
-            $file = $files[$data['id']];
-            $file->pathCache = $data['dirpath'].'/'.$file->name;
-            $file->directoryCache = $directories[$data['dir_id']];
+        $directories = $transfer->collections;
+
+        if (!is_null($directories) && count($directories) > 0) {
+            // Set path info if it exists
+            $t = DBI::prepare('SELECT fc.file_id AS id, c.info, c.id as dir_id AS dirpath FROM FileCollection fc, Collection c WHERE c.transfer_id = :transfer_id1 AND c.collection_type = :collection_type AND fc.collection_id = c.id collection AND fc.file_id IN (SELECT id FROM File WHERE transfer_id = :transfer_id2)');
+            $t->execute(array('transfer_id1' => $transfer->id,
+                              'collection_type' => CollectionType::DIRECTORY_ID,
+                              'transfer_id2' => $transfer->id,));
+            foreach($t->fetchAll() as $data) {
+                $file = $files[$data['id']];
+                $file->pathCache = $data['dirpath'].'/'.$file->name;
+                $file->directoryCache = $directories[$data['dir_id']];
+            }
         }
         return $files;
     }
