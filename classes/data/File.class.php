@@ -162,19 +162,18 @@ class File extends DBObject
         // Default that the path is just the name
         $this->pathCache = $this->name;
 
-        // Set path info if it exists
-        $t = DBI::prepare('SELECT c.id AS dir_id, c.info AS dirpath FROM FileCollection fc, Collection c WHERE fc.file_id = :file_id AND c.id = fc.collection_id AND c.collection_type = :collection_type');
-        $t->execute(array('file_id' => $this->id,
-                          'collection_type' => CollectionType::DIRECTORY_ID));
-        foreach($t->fetchAll() as $data) {
-            if (!is_null($this->directoryCache)) {
-                throw new FileMultiplePathException('id = '.$this->id);
-            }
-            
-            $this->pathCache = $data['dirpath'].'/'.$this->name;
-            $this->directoryCache = Collection::fromTransfer($this->transferCache)[$data['dir_id']];
-        }
+        $directories = $transfer->collections;
 
+        if (!is_null($directories) && count($directories) > 0) {
+            foreach ($directories as $dir) {
+                if (array_key_exists($this->id, $dir->files)) {
+                    $this->pathCache = $dir->info.'/'.$this->name;
+                    $this->directoryCache = $dir;
+                    break;
+                }
+            }
+        }
+        
         return $this->pathCache;
     }
     
@@ -300,7 +299,7 @@ class File extends DBObject
         $files = array();
         foreach($s->fetchAll() as $data) {
             $file = self::fromData($data['id'], $data); // Don't query twice, use loaded dat
-            // getPath(): Default that there is no path
+            // mirror getPath(): Default that path and filename are the same
             $file->pathCache = $file->name; 
             $files[$data['id']] = $file;
         }

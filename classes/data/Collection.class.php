@@ -300,7 +300,7 @@ class Collection extends DBObject
 }
 
 /**
- *  Represents a Collection directory tree of subdirs and files
+ *  Represents a directory tree Collection of subdirs and files
  *  It creates a File of mime type 'text/directory' so
  *  a uuid can be associated with a CollectionTree
  */
@@ -383,7 +383,8 @@ class CollectionTree extends Collection
 }
 
 /**
- *  Represents a Collection of Files underneath a directory path
+ *  Represents a Collection of Files underneath a directory path,
+ *  which belongs to a CollectionTree.
  */
 class CollectionDirectory extends Collection
 {

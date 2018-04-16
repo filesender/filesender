@@ -119,6 +119,7 @@ class CollectionType extends DBObject
         $c = DBI::prepare('SELECT COUNT(*) AS num_types FROM '.self::getDBTable());
         $c->execute();
         foreach($c->fetchAll() as $count) {
+            error_log('CollectionType::num_types='.$count['num_types']);
             if ($count['num_types'] > 0) {
                 // Load all CollectionTypes from database
                 $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' ORDER BY id');
@@ -128,6 +129,7 @@ class CollectionType extends DBObject
                     $types[$data['id']] = $type;
                     self::$LATEST = $type;
                 }
+                break;
             }
         }
 

@@ -171,7 +171,7 @@ class Transfer extends DBObject {
         if($data) $this->fillFromDBData($data);
 
         // Load collections if they exist
-        if ($transfer->getOptions('collection')) {
+        if ($this->getOption(TransferOptions::COLLECTION)) {
             $this->collectionsCache = Collection::fromTransfer($this);
         }
     }
@@ -829,12 +829,12 @@ class Transfer extends DBObject {
         $collection->save();
 
         if ($collections_added) {
-            $transfer->options['collection'] = true;
+            $transfer->options[TransferOptions::COLLECTION] = true;
             $transfer->save();
         }
         
         // Update local cache
-        if(!$type_exists)
+        if(!$type_exists) {
             $this->collectionsCache[$type_id] = array();
         }
         
