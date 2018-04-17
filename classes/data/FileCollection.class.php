@@ -113,8 +113,8 @@ class FileCollection extends DBObject
     public static function create($collection_id, $file_id) {
         $filecollection = new self();
         
-        $this->collection_id = $collection_id;
-        $this->file_id = $file_id;
+        $filecollection->collection_id = $collection_id;
+        $filecollection->file_id = $file_id;
 
         return $filecollection;
     }
@@ -136,8 +136,8 @@ class FileCollection extends DBObject
         // Need to guarentee $file->id and $collection->id are not null
         $filecollection = FileCollection::create($collection->id, $file->id);
 
-        $this->collectionCache = $collection;
-        $this->fileCache = $file;
+        $filecollection->collectionCache = $collection;
+        $filecollection->fileCache = $file;
 
         $filecollection->save();
 
@@ -216,6 +216,13 @@ class FileCollection extends DBObject
         return $collections;
     }
     
+    /**
+     * (Overload DBObject::save) Save into database
+     */
+    public function save() {
+        $this->insertRecord($this->toDBData());
+    }
+
     /**
      * Delete the filecollection
      */

@@ -140,7 +140,7 @@ class File extends DBObject
            CollectionType::initialize();
            $this->name = substr($pathName, $pos + 1);
            $this->pathCache = $pathName;
-           $this->directoryCache = $transferCache->addCollection(CollectionType::$DIRECTORY, substr($pathName, 0, $pos - 1));
+           $this->directoryCache = $this->transferCache->addCollection(CollectionType::$DIRECTORY, substr($pathName, 0, $pos));
            $this->directoryCache->addFile($this);
         }
     }
@@ -386,7 +386,7 @@ class File extends DBObject
 
         if($property == 'id') {
             if (is_null($this->id)) {
-                save();
+                $this->save();
             }
             return $this->id;
         }

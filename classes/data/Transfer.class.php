@@ -829,8 +829,8 @@ class Transfer extends DBObject {
         $collection->save();
 
         if ($collections_added) {
-            $transfer->options[TransferOptions::COLLECTION] = true;
-            $transfer->save();
+            $this->options[TransferOptions::COLLECTION] = true;
+            $this->save();
         }
         
         // Update local cache
