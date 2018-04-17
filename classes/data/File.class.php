@@ -137,6 +137,7 @@ class File extends DBObject
         // If the name for this file appears to be a path because it
         // contains a '/' (slash), add the file to a CollectionDirectory
         if (!($pos === false)) {
+           CollectionType::initialize();
            $this->name = substr($pathName, $pos + 1);
            $this->pathCache = $pathName;
            $this->directoryCache = $transferCache->addCollection(CollectionType::$DIRECTORY, substr($pathName, 0, $pos - 1));

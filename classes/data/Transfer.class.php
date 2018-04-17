@@ -157,7 +157,6 @@ class Transfer extends DBObject {
      * @throws TransferNotFoundException
      */
     protected function __construct($id = null, $data = null) {
-        CollectionType::initialize();
         
         if(!is_null($id)) {
             // Load from database if id given
@@ -172,6 +171,7 @@ class Transfer extends DBObject {
 
         // Load collections if they exist
         if ($this->getOption(TransferOptions::COLLECTION)) {
+            CollectionType::initialize();
             $this->collectionsCache = Collection::fromTransfer($this);
         }
     }
