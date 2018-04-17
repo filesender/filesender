@@ -30,8 +30,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-//DIRTREE_UPLOAD
-// from https://stackoverflow.com/questions/4565112/javascript-how-to-find-out-if-the-user-browser-is-chrome
 function isChrome() {
   var isChromium = window.chrome,
     winNav = window.navigator,
@@ -59,8 +57,8 @@ function isChrome() {
 filesender.ui.files = {
     invalidFiles: [],
 
-    add: function(filepath, blob, source_node) {
-        var filesize = blob.size;
+    addFile: function(filepath, fileblob, source_node) {
+        var filesize = fileblob.size;
         var node = null;
         var info = filepath + ' : ' + filesender.ui.formatBytes(filesize);
         node = $('<div class="file" />').attr({
@@ -83,7 +81,7 @@ filesender.ui.files = {
             var file = req.data('file');
             var added_cid = req.attr('data-cid');
             file.cid = added_cid;
-            file.blob = blob;
+            file.blob = fileblob;
             
             filesender.ui.transfer.files.push(file);
             
@@ -124,7 +122,7 @@ filesender.ui.files = {
                 filesender.ui.evalUploadEnabled();
             }).appendTo(node);
             
-            var added_cid = filesender.ui.transfer.addFile(filepath, blob, function(error) {
+            var added_cid = filesender.ui.transfer.addFile(filepath, fileblob, function(error) {
                 var tt = 1;
                 if(error.details && error.details.filename) filesender.ui.files.invalidFiles.push(error.details.filename);
                 node.addClass('invalid');
@@ -208,18 +206,27 @@ filesender.ui.files = {
         return node;
     },
 
-    // File selection (browse / drop) handler
-    addDebug: function(filepath, blob, source_node) {
-       console.log("File:", filepath);
-       console.log("Size:", blob.size);
-       filesender.ui.files.add( filepath, blob );
-    },
-
-    //DIRTREE_UPLOAD
-    // File selection (browse / drop) handler to add a list of files
     addList: function(files, source_node) {
         for(var i=0; i<files.length; i++) {
-            add(file[i].name, files[i], source_node);
+            filesender.ui.files.addFile(files[i].name, files[i], source_node);
+        }
+    },
+
+    addTree: function (item, path) {
+        path = path || "";
+        if (item.isFile) {
+            item.file(function(file) {
+              filesender.ui.files.addFile(path + file.name, file);
+            });
+        }
+        else if (item.isDirectory) {
+            // Get folder contents
+            let dirReader = item.createReader();
+            dirReader.readEntries(function(entries) {
+                for (let i=0; i<entries.length; i++) {
+                    filesender.ui.files.addTree(entries[i], path + item.name + "/");
+                }
+            });
         }
     },
 
@@ -414,30 +421,6 @@ filesender.ui.files = {
             }
         }
     },
-};
-
-//DIRTREE_UPLOAD
-// From https://stackoverflow.com/questions/3590058/does-html5-allow-drag-drop-upload-of-folders-or-a-folder-tree
-function traverseTree(addFile, item, path) {
-  path = path || "";
-  if (item.isFile) {
-    // Get file
-    //filesender.ui.files.add(item.file.name);
-    item.file(function(file) {
-       console.log("TRAVERSE_ITEM: ");
-       addFile(path + file.name, file);
-    });
-  } else if (item.isDirectory) {
-    // Get folder contents
-    let dirReader = item.createReader();
-    console.log("TRAVERSE_TREE: DIRECTORY");
-    dirReader.readEntries(function(entries) {
-      for (let i=0; i<entries.length; i++) {
-        console.log("TRAVERSE_TREE: " + path + item.name + "/");
-        traverseTree(addFile, entries[i], path + item.name + "/");
-      }
-    });
-  }
 };
 
 // Manage recipients
@@ -895,31 +878,22 @@ $(function() {
         if(!e.originalEvent.dataTransfer.files.length) return;
         
         e.preventDefault();
-        //e.stopPropagation();
-
-        // DIRTREE_UPLOAD
-        // From https://stackoverflow.com/questions/3590058/does-html5-allow-drag-drop-upload-of-folders-or-a-folder-tree
-        console.log("File:", e.originalEvent.dataTransfer.items.length);
-        console.log("DIRTREE_UPLOAD");
+        e.stopPropagation();
 
         if (isChrome()) {
-        console.log("DIRTREE_UPLOAD0");
             let items = e.originalEvent.dataTransfer.items;
-            console.log("DIRTREE_UPLOAD0 - items.length=" + items.length);
             for (let i=0; i<items.length; i++) {
-              // webkitGetAsEntry is where the magic happens
-              let entry = items[i].webkitGetAsEntry();
-              console.log("DIRTREE_UPLOAD1: " + entry);
-              if (entry) {
-         console.log("DIRTREE_UPLOAD2");
-                traverseTree(filesender.ui.files.addDebug, entry);
-              }
+                // webkitGetAsEntry is where the magic happens
+                let tree = items[i].webkitGetAsEntry();
+                if (tree) {
+                    filesender.ui.files.addTree(tree);
+                }
             }
-         }
-         else {
-           filesender.ui.files.addList(e.originalEvent.dataTransfer.files);
-         }
-       });
+        }
+        else {
+            filesender.ui.files.addList(e.originalEvent.dataTransfer.files);
+        }
+    });
     
     // Bind recipients events
     filesender.ui.nodes.recipients.input.on('keydown', function(e) {
