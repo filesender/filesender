@@ -163,9 +163,16 @@ class File extends DBObject
         // Default that the path is just the name
         $this->pathCache = $this->name;
 
-        $directories = $transfer->collections;
+        $collections = $this->transfer->collections;
 
-        if (!is_null($directories) && count($directories) > 0) {
+        if (is_null($collections) || count($collections) < 1) {
+            return $this->pathCache;
+        }
+        
+        foreach ($collections as $collection_type => $directories) {
+            if ($collection_type != CollectionType::DIRECTORY_ID) {
+                continue;
+            }
             foreach ($directories as $dir) {
                 if (array_key_exists($this->id, $dir->files)) {
                     $this->pathCache = $dir->info.'/'.$this->name;
@@ -305,14 +312,14 @@ class File extends DBObject
             $files[$data['id']] = $file;
         }
 
-        $directories = $transfer->collections;
+        $collections = $transfer->collections;
 
-        if (!is_null($directories) && count($directories) > 0) {
+        if (!is_null($collections) && array_key_exists(CollectionType::DIRECTORY_ID, $collections)) {
+            $directories = $collections[CollectionType::DIRECTORY_ID];
             // Set path info if it exists
-            $t = DBI::prepare('SELECT fc.file_id AS id, c.info, c.id as dir_id AS dirpath FROM FileCollection fc, Collection c WHERE c.transfer_id = :transfer_id1 AND c.collection_type = :collection_type AND fc.collection_id = c.id collection AND fc.file_id IN (SELECT id FROM File WHERE transfer_id = :transfer_id2)');
-            $t->execute(array('transfer_id1' => $transfer->id,
-                              'collection_type' => CollectionType::DIRECTORY_ID,
-                              'transfer_id2' => $transfer->id,));
+            $t = DBI::prepare('SELECT fc.file_id AS id, c.info AS dirpath, c.id as dir_id FROM FileCollections fc, Collections c WHERE c.transfer_id = :transfer_id AND c.type_id = :collection_type AND fc.collection_id = c.id');
+            $t->execute(array('transfer_id' => $transfer->id,
+                              'collection_type' => CollectionType::DIRECTORY_ID));
             foreach($t->fetchAll() as $data) {
                 $file = $files[$data['id']];
                 $file->pathCache = $data['dirpath'].'/'.$file->name;

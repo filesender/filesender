@@ -130,6 +130,29 @@ class Collection extends DBObject
         // Fill properties from provided data
         if($data) $this->fillFromDBData($data);
     }
+
+    /**
+     * Create an empty Collection of the proper type
+     * 
+     * @param CollectionType.id the collection type id
+     * 
+     * @return Collection
+     */
+    protected static function createFactoryType($type_id) {
+        if ($type_id == CollectionType::TREE_ID) {
+        Logger::info(get_called_class().' CREATING CollectionTree');
+            return new CollectionTree();
+        }
+        else
+        if ($type_id == CollectionType::DIRECTORY_ID) {
+        Logger::info(get_called_class().' CREATING CollectionDirectory');
+            return new CollectionDirectory();
+        }
+        else {
+        Logger::info(get_called_class().' CREATING Collection');
+            return new self();
+        }
+    }
     
     /**
      * Create a new Collection
@@ -141,20 +164,7 @@ class Collection extends DBObject
      * @return Collection
      */
     public static function create(Transfer $transfer, CollectionType $type, $info) {
-        if ($type === CollectionType::$TREE) {
-        Logger::info(get_called_class().' CREATING CollectionTree');
-            $collection = new CollectionTree();
-        }
-        else
-        if ($type === CollectionType::$DIRECTORY) {
-        Logger::info(get_called_class().' CREATING CollectionDirectory');
-            $collection = new CollectionDirectory();
-        }
-        else {
-        Logger::info(get_called_class().' CREATING Collection');
-            $collection = new self();
-        }
-        
+        $collection = static::createFactoryType($type->id);
         $collection->transfer_id = $transfer->id;
         $collection->transferCache = $transfer;
         
@@ -179,10 +189,15 @@ class Collection extends DBObject
         $s->execute(array('transfer_id' => $transfer->id));
         $collections = array();
         foreach($s->fetchAll() as $data) {
-            if(is_null($collections[$data[$type_id]])) {
-                $collections[$data[$type_id]] = array();
+            $type_id = $data['type_id'];
+            $id = $data['id'];
+            if(!array_key_exists($type_id, $collections)) {
+                $collections[$type_id] = array();
             }
-            $collections[$data['type_id']][$data['id']] = self::fromData($data['id'], $data);
+            $collections[$type_id][$id] = static::createFactoryType($type_id)->fillFromDBData($id, $data);
+            
+            // Mirror caching functionality from DBObject::fromData
+            self::$objectCache[get_called_class()][$id] = $collections[$type_id][$id];
         }
         return $collections;
     }
@@ -244,55 +259,41 @@ class Collection extends DBObject
      * 
      * @return property value
      */
-    protected static function getProperty($c, $property) {
+    public function __get($property) {
         if(in_array($property, array(
             'transfer_id', 'type_id', 'parent_id', 'info'
-        ))) return $c->$property;
+        ))) return $this->$property;
         
         if($property == 'id') {
-            if (is_null($c->id)) {
-                save();
+            if (is_null($this->id)) {
+                $this->save();
             }
-            return $c->id;
+            return $this->id;
         }
         
         if($property == 'transfer') {
-            if(is_null($c->transferCache)) $c->transferCache = Transfer::fromId($c->transfer_id);
-            return $c->transferCache;
+            if(is_null($this->transferCache)) $this->transferCache = Transfer::fromId($this->transfer_id);
+            return $this->transferCache;
         }
         
         if($property == 'parent') {
-            if(is_null($c->parentCache)) $c->parentCache = Collection::fromId($c->parent_id);
-            return $c->parentCache;
+            if(is_null($this->parentCache)) $this->parentCache = Collection::fromId($this->parent_id);
+            return $this->parentCache;
         }
         
         if($property == 'type') {
-            if(is_null($c->typeCache)) $c->typeCache = CollectionType::fromId($c->type_id);
-            return $c->typeCache;
+            if(is_null($this->typeCache)) $this->typeCache = CollectionType::fromId($this->type_id);
+            return $this->typeCache;
         }
         
         if($property == 'files') {
-            if(is_null($c->filesCache)) $c->filesCache = FileCollection::fromCollection($c->id);
-            return $c->filesCache;
+            if(is_null($this->filesCache)) $this->filesCache = FileCollection::fromCollection($this->id);
+            return $this->filesCache;
         }
         
-        throw new PropertyAccessException($c, $property);
+        throw new PropertyAccessException($this, $property);
     }
 
-    /**
-     * Getter
-     * 
-     * @param string $property property to get
-     * 
-     * @throws PropertyAccessException
-     * 
-     * @return property value
-     */
-    public function __get($property) {
-        Logger::info(get_called_class().'::getPROP('.$property.')');
-        return static::getProperty($this, $property);
-    }
-    
     /**
      * Setter
      * 
@@ -304,8 +305,12 @@ class Collection extends DBObject
      */
     public function __set($property, $value) {
         if($property == 'info') {
-            static::setInfo($this, (string)$value);
-        }else throw new PropertyAccessException($this, $property);
+            $this->setInfo((string)$value);
+        }
+        else if($property == 'parent') {
+            $this->parentCache = $value;
+        }
+        else throw new PropertyAccessException($this, $property);
     }
     
     /**
@@ -334,7 +339,7 @@ class CollectionTree extends Collection
     /**
      * Properties
      */
-    protected $uuid = null;
+    protected $uid = null;
    
     /**
      * Related objects cache
@@ -348,7 +353,7 @@ class CollectionTree extends Collection
      */
     protected function loadTreeFile() {
         // Throw an error if attempting to change after already created.
-        if (is_null($file_id)) {
+        if (is_null($this->uid)) {
             $this->filesCache = FileCollection::fromCollection($this->id, true);
 ;
             $fileCollectionCount = count($this->files);
@@ -357,7 +362,7 @@ class CollectionTree extends Collection
                 throw new TreeFileCollectionException($this, $fileCollectionCount);
             }
             $this->fileCache = reset($this->files)->file;
-            $this->uuid = $this->files->uuid;
+            $this->uid = $this->files->uid;
         }
     }
 
@@ -380,8 +385,8 @@ class CollectionTree extends Collection
         $this->info = $pathInfo;
 
         $this->fileCache = $this->transfer->addFile($pathInfo, 0, 'text/directory');
-        $this->uuid = $this->fileCache->uuid;
-        $this->addFile($fileCache);
+        $this->uid = $this->fileCache->uid;
+        $this->addFile($this->fileCache);
     }
 
     /**
@@ -393,18 +398,18 @@ class CollectionTree extends Collection
      * 
      * @return property value
      */
-    protected static function getProperty($c, $property) {
-        if($property == 'uuid') {
-            $c->loadTreeFile();
-            return $c->uuid;
+    public function __get($property) {
+        if($property == 'uid') {
+            $this->loadTreeFile();
+            return $this->uid;
         }
         
         if($property == 'file') {
-            $c->loadTreeFile();
-            return $c->fileCache;
+            $this->loadTreeFile();
+            return $this->fileCache;
         }
         
-        return parent::getProperty($c, $property);
+        return parent::__get($property);
     }
 }
 
@@ -444,7 +449,7 @@ class CollectionDirectory extends Collection
         }
 
         Logger::info(get_called_class().' CREATE CollectionTree');
-        $this->parentCache = $this->transfer->addCollection(CollectionType::$TREE, $parent_path);
+        $this->parent = $this->transfer->addCollection(CollectionType::$TREE, $parent_path);
         $this->parent_id = $this->parent->id;
     }
 }

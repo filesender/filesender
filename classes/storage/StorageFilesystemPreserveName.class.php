@@ -85,7 +85,7 @@ class StorageFilesystemPreserveName extends StorageFilesystem {
         
         if (!is_null($directory)) {
             $tree = $directory->parent;
-            $tree_uuid = $tree->uuid;
+            $tree_uid = $tree->uid;
             $subpath .= '/'.$tree_uid.'='.$directory->info;
         }
         else {
