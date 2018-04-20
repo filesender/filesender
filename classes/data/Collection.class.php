@@ -129,6 +129,10 @@ class Collection extends DBObject
 
         // Fill properties from provided data
         if($data) $this->fillFromDBData($data);
+
+        $info = $this->info;
+        unset($this->info);
+        $this->setInfo($info);
     }
 
     /**
@@ -287,6 +291,7 @@ class Collection extends DBObject
         }
         
         if($property == 'files') {
+            Logger::info(get_called_class().' checking PROPERTY files');
             if(is_null($this->filesCache)) $this->filesCache = FileCollection::fromCollection($this->id);
             return $this->filesCache;
         }
@@ -400,12 +405,12 @@ class CollectionTree extends Collection
      */
     public function __get($property) {
         if($property == 'uid') {
-            $this->loadTreeFile();
+            if(is_null($this->uid)) $this->loadTreeFile();
             return $this->uid;
         }
         
         if($property == 'file') {
-            $this->loadTreeFile();
+            if(is_null($this->fileCache)) $this->loadTreeFile();
             return $this->fileCache;
         }
         

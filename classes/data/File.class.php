@@ -153,10 +153,10 @@ class File extends DBObject
      * 
      * @throws FileMultiplePathException
      */
-    protected function getPath() {
+    protected function loadDirectoryPath() {
         // Taking advantage of two $pathCache states:
         // 1. null -> need to see if File belongs to a CollectionDirectory
-        // 2. !null -> files does belong to a CollectionDirectory
+        // 2. !null -> we have checked whether a FIle belongs to a CollectionDirectory
         if (isset($this->pathCache)) {
             return $this->pathCache;
         }
@@ -169,8 +169,8 @@ class File extends DBObject
             return $this->pathCache;
         }
         
-        foreach ($collections as $collection_type => $directories) {
-            if ($collection_type != CollectionType::DIRECTORY_ID) {
+        foreach ($collections as $collection_type_id => $directories) {
+            if ($collection_type_id != CollectionType::DIRECTORY_ID) {
                 continue;
             }
             foreach ($directories as $dir) {
@@ -307,7 +307,7 @@ class File extends DBObject
         $files = array();
         foreach($s->fetchAll() as $data) {
             $file = self::fromData($data['id'], $data); // Don't query twice, use loaded dat
-            // mirror getPath(): Default that path and filename are the same
+            // mirror loadDirectoryPath(): Default that path and filename are the same
             $file->pathCache = $file->name; 
             $files[$data['id']] = $file;
         }
@@ -404,10 +404,13 @@ class File extends DBObject
         }
         
         if($property == 'path') {
-            return $this->getPath();
+            if(is_null($this->pathCache)) $this->loadDirectoryPath();
+            return $this->pathCache;
         }
         
         if($property == 'directory') {
+            // $pathCache controls if $directoryCache was initialized.
+            if(is_null($this->pathCache)) $this->loadDirectoryPath();
             return $this->directoryCache;
         }
         
