@@ -164,19 +164,23 @@ class File extends DBObject
         $this->pathCache = $this->name;
 
         $collections = $this->transfer->collections;
+        Logger::info('File::loadDirectoryPath1:'.$this->name);
 
         if (is_null($collections) || count($collections) < 1) {
             return $this->pathCache;
         }
         
+        Logger::info('File::loadDirectoryPath2:'.$this->name);
         foreach ($collections as $collection_type_id => $directories) {
             if ($collection_type_id != CollectionType::DIRECTORY_ID) {
                 continue;
             }
             foreach ($directories as $dir) {
+        Logger::info('File::loadDirectoryPath3::dir:'.$dir->info);
                 if (array_key_exists($this->id, $dir->files)) {
                     $this->pathCache = $dir->info.'/'.$this->name;
                     $this->directoryCache = $dir;
+        Logger::info('File::loadDirectoryPath4:MATCH:'.$this->pathCahe);
                     break;
                 }
             }
@@ -217,7 +221,7 @@ class File extends DBObject
      */
     public function __construct($id = null, $data = null) {
     
-        Logger::info('File::__construct'.$id);
+        Logger::info('File::__construct:'.$id);
         $this->storage_class_name = Storage::getDefaultStorageClass();
         
         if(!is_null($id)) {

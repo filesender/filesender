@@ -203,6 +203,8 @@ class Collection extends DBObject
             }
             $collection = static::createFactoryType($type_id);
             $collection->fillFromDBData($id, $data);
+        Logger::info('Collection::fromTransfer.create:'.$collection->info);
+        Logger::info('Collection::fromTransfer.create:'.$data['id']);
             $collections[$type_id][$id] = $collection;
 
         $info = $collection->info;
@@ -259,7 +261,7 @@ class Collection extends DBObject
      */
     public function addCollection(Collection $child) {
         $old_parent_id = $child->parent_id;
-        $child->parent_id = $this->id;
+         $child->parent_id = $this->id;
         $child->save();
         
         return $old_parent_id;
@@ -303,7 +305,7 @@ class Collection extends DBObject
         
         if($property == 'files') {
             Logger::info(get_called_class().' checking PROPERTY files');
-            if(is_null($this->filesCache)) $this->filesCache = FileCollection::fromCollection($this->id);
+            if(is_null($this->filesCache)) $this->filesCache = FileCollection::fromCollection($this);
             return $this->filesCache;
         }
         
