@@ -217,6 +217,7 @@ class File extends DBObject
      */
     public function __construct($id = null, $data = null) {
     
+        Logger::info('File::__construct'.$id);
         $this->storage_class_name = Storage::getDefaultStorageClass();
         
         if(!is_null($id)) {
@@ -302,6 +303,7 @@ class File extends DBObject
      * @return array of File
      */
     public static function fromTransfer(Transfer $transfer) {
+        Logger::info('File::fromTransfer:'.$transfer->id);
         $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE transfer_id = :transfer_id');
         $s->execute(array('transfer_id' => $transfer->id));
         $files = array();
@@ -315,6 +317,7 @@ class File extends DBObject
         $collections = $transfer->collections;
 
         if (!is_null($collections) && array_key_exists(CollectionType::DIRECTORY_ID, $collections)) {
+        Logger::info('File::fromTransfer.setPath:'.$transfer->id);
             $directories = $collections[CollectionType::DIRECTORY_ID];
             // Set path info if it exists
             $t = DBI::prepare('SELECT fc.file_id AS id, c.info AS dirpath, c.id as dir_id FROM FileCollections fc, Collections c WHERE c.transfer_id = :transfer_id AND c.type_id = :collection_type AND fc.collection_id = c.id');

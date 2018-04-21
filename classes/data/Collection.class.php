@@ -106,7 +106,7 @@ class Collection extends DBObject
      * @param string $info specific information about this instance of a collection
      */
     protected function setInfo($info) {
-        Logger::info('Collection::setInfo');
+        Logger::info('Collection::setInfo:'.$info);
         $this->info = $info;
     }
     
@@ -131,8 +131,10 @@ class Collection extends DBObject
         if($data) $this->fillFromDBData($data);
 
         $info = $this->info;
-        unset($this->info);
-        $this->setInfo($info);
+        if (!is_null($info)) {
+            unset($this->info);
+            $this->setInfo($info);
+        }
     }
 
     /**
@@ -189,6 +191,7 @@ class Collection extends DBObject
      * @return 2d array of <Collection.type_id, <Collection.id, Collection>>
      */
     public static function fromTransfer(Transfer $transfer) {
+        Logger::info('Collection::fromTransfer:'.$transfer->id);
         $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE transfer_id = :transfer_id ORDER BY type_id');
         $s->execute(array('transfer_id' => $transfer->id));
         $collections = array();
@@ -198,10 +201,18 @@ class Collection extends DBObject
             if(!array_key_exists($type_id, $collections)) {
                 $collections[$type_id] = array();
             }
-            $collections[$type_id][$id] = static::createFactoryType($type_id)->fillFromDBData($id, $data);
+            $collection = static::createFactoryType($type_id);
+            $collection->fillFromDBData($id, $data);
+            $collections[$type_id][$id] = $collection;
+
+        $info = $collection->info;
+        if (!is_null($info)) {
+            unset($collection->info);
+            $collection->setInfo($info);
+        }
             
             // Mirror caching functionality from DBObject::fromData
-            self::$objectCache[get_called_class()][$id] = $collections[$type_id][$id];
+            self::$objectCache[get_called_class()][$id] = $collection;
         }
         return $collections;
     }
@@ -382,7 +393,7 @@ class CollectionTree extends Collection
      */
     protected function setInfo($pathInfo) {
         // Throw an error if attempting to change after already created.
-        Logger::info('CollectionTree::setInfo');
+        Logger::info('CollectionTree::setInfo:'.$pathInfo);
         if ($this->info != null) {
            throw new OverwriteCollectionException($this, $info);
         }
@@ -440,7 +451,7 @@ class CollectionDirectory extends Collection
      */
     protected function setInfo($pathInfo) {
         // Throw an error if attempting to change after already created.
-        Logger::info('CollectionDirectory::setInfo');
+        Logger::info('CollectionDirectory::setInfo:'.$pathInfo);
         if ($this->info != null) {
            throw new OverwriteCollectionException($this, $info);
         }
@@ -456,5 +467,18 @@ class CollectionDirectory extends Collection
         Logger::info(get_called_class().' CREATE CollectionTree');
         $this->parent = $this->transfer->addCollection(CollectionType::$TREE, $parent_path);
         $this->parent_id = $this->parent->id;
+    }
+
+    /**
+     * Getter
+     * 
+     * @param string $property property to get
+     * 
+     * @throws PropertyAccessException
+     * 
+     * @return property value
+     */
+    public function __get($property) {
+        return parent::__get($property);
     }
 }
