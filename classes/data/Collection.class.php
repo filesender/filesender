@@ -93,11 +93,21 @@ class Collection extends DBObject
     /**
      * Related objects cache
      */
-    private $transferCache = null;
-    private $parentCache = null;
-    private $filesCache = null;
-    private $typeCache = null;
+    protected $transferCache = null;
+    protected $parentCache = null;
+    protected $filesCache = null;
+    protected $typeCache = null;
 
+    /**
+     * Overriding so children of Collection will still belong
+     * to the Collection DBObject cache.
+     * 
+     * @return type String: the class name that should be used for caching
+     */
+    public static function getCacheClassName(){
+        return self::get_called_class();
+    }
+    
     /**
      * Set the info of a Collection, which may cause further processing
      * dependant on the collection's type
@@ -202,9 +212,14 @@ class Collection extends DBObject
                 $collections[$type_id] = array();
             }
             $collection = static::createFactoryType($type_id);
-            $collection->fillFromDBData($id, $data);
-        Logger::info('Collection::fromTransfer.create:'.$collection->info);
-        Logger::info('Collection::fromTransfer.create:'.$data['id']);
+            $collection->fillFromDBData($data);
+            // Mirror caching functionality from DBObject::fromData
+            self::$objectCache[get_called_class()][$id] = $collection;
+            
+        Logger::info('Collection::fromTransfer.create_id:'.$collection->id);
+        Logger::info('Collection::fromTransfer.create_info:'.$collection->info);
+        Logger::info('Collection::fromTransfer.data_id:'.$data['id']);
+        Logger::info('Collection::fromTransfer.data_info:'.$data['info']);
             $collections[$type_id][$id] = $collection;
 
         $info = $collection->info;
@@ -213,8 +228,6 @@ class Collection extends DBObject
             $collection->setInfo($info);
         }
             
-            // Mirror caching functionality from DBObject::fromData
-            self::$objectCache[get_called_class()][$id] = $collection;
         }
         return $collections;
     }
@@ -294,7 +307,7 @@ class Collection extends DBObject
         }
         
         if($property == 'parent') {
-            if(is_null($this->parentCache)) $this->parentCache = Collection::fromId($this->parent_id);
+            if(is_null($this->parentCache)) $this->parentCache = static::fromId($this->parent_id);
             return $this->parentCache;
         }
         
@@ -323,6 +336,7 @@ class Collection extends DBObject
      */
     public function __set($property, $value) {
         if($property == 'info') {
+            Logger::info('Collection::__set.info:'.$value);
             $this->setInfo((string)$value);
         }
         else if($property == 'parent') {
@@ -362,7 +376,7 @@ class CollectionTree extends Collection
     /**
      * Related objects cache
      */
-    private $fileCache = null;
+    protected $fileCache = null;
     
     /**
      * Loads the File object associated with the CollectionTree

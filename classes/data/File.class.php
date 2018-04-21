@@ -166,7 +166,9 @@ class File extends DBObject
         $collections = $this->transfer->collections;
         Logger::info('File::loadDirectoryPath1:'.$this->name);
 
-        if (is_null($collections) || count($collections) < 1) {
+        if (is_null($collections) ||
+            count($collections) < 1 ||
+            $this->mime_type === 'text/directory') {
             return $this->pathCache;
         }
         

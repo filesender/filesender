@@ -155,12 +155,12 @@ class DBObject {
      * @return object instance
      */
     public static function fromId($id) {
-        $class = get_called_class();
+        $class = static::getCacheClassName();
         
         $object = self::getFromCache($class, $id);
         if($object) return $object;
         
-        $object = new static($id);
+        $object = static::createFactory($id);
         self::$objectCache[$class][$id] = $object;
         return $object;
     }
@@ -177,10 +177,10 @@ class DBObject {
      * @return object instance
      */
     public static function fromData($id, $data = null, $transforms = array()) {
-        $class = get_called_class();
+        $class = static::getCacheClassName();
         
         $object = self::getFromCache($class, $id);
-        if(!$object) $object = new static(null, $data);
+        if(!$object) $object = static::createFactory(null, $data);
         
         $object->fillFromDBData($data, $transforms);
         
@@ -305,7 +305,7 @@ class DBObject {
         }
         
         // Cache object
-        self::$objectCache[get_called_class()][$this->id] = $this;
+        self::$objectCache[static::getCacheClassName()][$this->id] = $this;
     }
     
     /**
@@ -315,7 +315,7 @@ class DBObject {
         // Insert object
         $this->insertRecord($this->toDBData());
         // Cache object
-        self::$objectCache[get_called_class()][$this->id] = $this;
+        self::$objectCache[static::getCacheClassName()][$this->id] = $this;
     }
     
     /**
@@ -568,11 +568,29 @@ class DBObject {
     }
     
     /**
+     * Allows overloaded creation of an object based off of it's properties
+     * 
+     * @return type DBObject based object
+     */
+    public static function createFactory($id = null, $data = null) {
+        return new static($id, $data);
+    }
+    
+    /**
      * Allows to get the class name
      * 
      * @return type String: the class name
      */
     public static function getClassName(){
+        return get_called_class();
+    }
+    
+    /**
+     * Allows overloading the DBObject cache class name
+     * 
+     * @return type String: the class name that should be used for caching
+     */
+    public static function getCacheClassName(){
         return get_called_class();
     }
     
