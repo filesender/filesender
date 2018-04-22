@@ -99,25 +99,32 @@ class Collection extends DBObject
     protected $typeCache = null;
 
     /**
+     * Force database Table to use with all Collection children types
+     */
+    protected static $dataTable = 'Collections';
+    
+    /**
      * Overriding so children of Collection will still belong
      * to the Collection DBObject cache.
      * 
      * @return type String: the class name that should be used for caching
      */
     public static function getCacheClassName(){
-        return self::get_called_class();
+        return self::getClassName();
     }
     
     /**
-     * Set the info of a Collection, which may cause further processing
-     * dependant on the collection's type
-     * 
-     * @param Collection $this the Collection instance who's info is being set
-     * @param string $info specific information about this instance of a collection
+     * Process the info value set on a newly created Collection of type
      */
-    protected function setInfo($info) {
-        Logger::info('Collection::setInfo:'.$info);
-        $this->info = $info;
+    protected function processInfo() {
+        Logger::info(static::getClassName().'::processInfo:'.$this->info);
+    }
+    
+    /**
+     * Loads the extra objects associated with a Collection of type
+     */
+    protected function loadInfo() {
+        Logger::info(static::getClassName().'::loadInfo:'.$this->info);
     }
     
     /**
@@ -129,6 +136,20 @@ class Collection extends DBObject
      * @throws ClassificationNotFoundException
      */
     public function __construct($id = null, $data = null) {
+        // Fill properties from provided data
+        if($data) $this->fillFromDBData($data);
+
+        if (!is_null($this->info)) $this->loadInfo();
+    }
+
+    /**
+     * Allows overloaded creation of an object based off of it's properties
+     * 
+     * @return type DBObject based object
+     */
+    public static function createFactory($id = null, $data = null) {
+        $type_id = CollectionType::UNKNOWN_ID;
+
         if(!is_null($id)) {
             // Load from database if id given
             $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE id = :id');
@@ -136,37 +157,32 @@ class Collection extends DBObject
             $data = $statement->fetch();
             if(!$data) throw new ClassificationNotFoundException('id = '.$id);
         }
-
-        // Fill properties from provided data
-        if($data) $this->fillFromDBData($data);
-
-        $info = $this->info;
-        if (!is_null($info)) {
-            unset($this->info);
-            $this->setInfo($info);
-        }
+        if (!is_null($data)) $type_id = $data['type_id'];
+        
+        return self::createFactoryType($type_id, $data);
     }
-
+    
     /**
      * Create an empty Collection of the proper type
      * 
      * @param CollectionType.id the collection type id
+     * @param $data the array of properties to initialize the collection with
      * 
-     * @return Collection
+     * @return Collection or one of it's children types
      */
-    protected static function createFactoryType($type_id) {
+    protected static function createFactoryType($type_id, $data = null) {
         if ($type_id == CollectionType::TREE_ID) {
-        Logger::info(get_called_class().' CREATING CollectionTree');
-            return new CollectionTree();
+        Logger::info('createFactoryType CREATING CollectionTree');
+            return new CollectionTree(null, $data);
         }
         else
         if ($type_id == CollectionType::DIRECTORY_ID) {
-        Logger::info(get_called_class().' CREATING CollectionDirectory');
-            return new CollectionDirectory();
+        Logger::info('createFactoryType CREATING CollectionDirectory');
+            return new CollectionDirectory(null, $data);
         }
         else {
-        Logger::info(get_called_class().' CREATING Collection');
-            return new self();
+        Logger::info('createFactoryType CREATING Collection');
+            return new static(null, $data);
         }
     }
     
@@ -187,8 +203,8 @@ class Collection extends DBObject
         $collection->type_id = $type->id;
         $collection->typeCache = $type;
         $collection->filesCache = array();
- 
-        $collection->setInfo($info);
+        $collection->info = $info;
+        $collection->processInfo();
         
         return $collection;
     }
@@ -211,23 +227,13 @@ class Collection extends DBObject
             if(!array_key_exists($type_id, $collections)) {
                 $collections[$type_id] = array();
             }
-            $collection = static::createFactoryType($type_id);
-            $collection->fillFromDBData($data);
-            // Mirror caching functionality from DBObject::fromData
-            self::$objectCache[get_called_class()][$id] = $collection;
+            $collection = static::fromData($id, $data);
             
         Logger::info('Collection::fromTransfer.create_id:'.$collection->id);
         Logger::info('Collection::fromTransfer.create_info:'.$collection->info);
         Logger::info('Collection::fromTransfer.data_id:'.$data['id']);
         Logger::info('Collection::fromTransfer.data_info:'.$data['info']);
             $collections[$type_id][$id] = $collection;
-
-        $info = $collection->info;
-        if (!is_null($info)) {
-            unset($collection->info);
-            $collection->setInfo($info);
-        }
-            
         }
         return $collections;
     }
@@ -274,7 +280,8 @@ class Collection extends DBObject
      */
     public function addCollection(Collection $child) {
         $old_parent_id = $child->parent_id;
-         $child->parent_id = $this->id;
+        $child->parent_id = $this->id;
+        $child->parentCache = $this; 
         $child->save();
         
         return $old_parent_id;
@@ -307,7 +314,7 @@ class Collection extends DBObject
         }
         
         if($property == 'parent') {
-            if(is_null($this->parentCache)) $this->parentCache = static::fromId($this->parent_id);
+            if(is_null($this->parentCache) && !is_null($this->parent_id)) $this->parentCache = static::fromId($this->parent_id);
             return $this->parentCache;
         }
         
@@ -335,14 +342,7 @@ class Collection extends DBObject
      * @throws PropertyAccessException
      */
     public function __set($property, $value) {
-        if($property == 'info') {
-            Logger::info('Collection::__set.info:'.$value);
-            $this->setInfo((string)$value);
-        }
-        else if($property == 'parent') {
-            $this->parentCache = $value;
-        }
-        else throw new PropertyAccessException($this, $property);
+        throw new PropertyAccessException($this, $property);
     }
     
     /**
@@ -364,11 +364,6 @@ class Collection extends DBObject
 class CollectionTree extends Collection
 {
     /**
-     * Override database Table to use
-     */
-    protected static $dataTable = 'Collections';
-    
-    /**
      * Properties
      */
     protected $uid = null;
@@ -379,14 +374,14 @@ class CollectionTree extends Collection
     protected $fileCache = null;
     
     /**
-     * Loads the File object associated with the CollectionTree
+     * Loads the extra objects associated with a Collection of type
      * 
      * @throws TreeFileCollectionException
      */
-    protected function loadTreeFile() {
+    protected function loadInfo() {
         // Throw an error if attempting to change after already created.
         if (is_null($this->uid)) {
-            $this->filesCache = FileCollection::fromCollection($this->id, true);
+            $this->filesCache = FileCollection::fromCollection($this, true);
 ;
             $fileCollectionCount = count($this->files);
 
@@ -399,24 +394,13 @@ class CollectionTree extends Collection
     }
 
     /**
-     * Set the info of a Collection, which may cause further processing
-     * dependant on the collection's type
-     * 
-     * @param Collection $what the Collection instance who's info is being set
-     * @param string $info specific information about this instance of a collection
-     * 
-     * @throws OverwriteCollectionException
+     * Process the info value on a newly created CollectionTree
      */
-    protected function setInfo($pathInfo) {
+    protected function processInfo() {
         // Throw an error if attempting to change after already created.
-        Logger::info('CollectionTree::setInfo:'.$pathInfo);
-        if ($this->info != null) {
-           throw new OverwriteCollectionException($this, $info);
-        }
+        Logger::info('CollectionTree::setInfo:'.$this->info);
 
-        $this->info = $pathInfo;
-
-        $this->fileCache = $this->transfer->addFile($pathInfo, 0, 'text/directory');
+        $this->fileCache = $this->transfer->addFile($this->info, 0, 'text/directory');
         $this->uid = $this->fileCache->uid;
         $this->addFile($this->fileCache);
     }
@@ -431,6 +415,10 @@ class CollectionTree extends Collection
      * @return property value
      */
     public function __get($property) {
+        if(in_array($property, array(
+            'uid', 'file'
+        ))) return $this->$property;
+        /*        
         if($property == 'uid') {
             if(is_null($this->uid)) $this->loadTreeFile();
             return $this->uid;
@@ -440,7 +428,7 @@ class CollectionTree extends Collection
             if(is_null($this->fileCache)) $this->loadTreeFile();
             return $this->fileCache;
         }
-        
+        */        
         return parent::__get($property);
     }
 }
@@ -452,49 +440,21 @@ class CollectionTree extends Collection
 class CollectionDirectory extends Collection
 {
     /**
-     * Override database Table to use
+     * Processing of the info dependant on the collection's type
      */
-    protected static $dataTable = 'Collections';
-        
-    /**
-     * Set the info of a Collection, which may cause further processing
-     * dependant on the collection's type
-     * 
-     * @param Collection $what the Collection instance who's info is being set
-     * @param string $info specific information about this instance of a collection
-     * 
-     * @throws OverwriteCollectionException
-     */
-    protected function setInfo($pathInfo) {
+    protected function processInfo() {
         // Throw an error if attempting to change after already created.
-        Logger::info('CollectionDirectory::setInfo:'.$pathInfo);
-        if ($this->info != null) {
-           throw new OverwriteCollectionException($this, $info);
-        }
-            
-        $parent_path = $pathInfo;
-        $this->info = $pathInfo;
+        Logger::info('CollectionDirectory::setInfo:'.$this->info);
+        $pathInfo = $this->info;
+        $tree_path = $pathInfo;
         $pos = strpos($pathInfo, '/');
       
         if (!($pos === false)) {
-           $parent_path = substr($pathInfo, $pos);
+           $tree_path = substr($pathInfo, $pos);
         }
 
         Logger::info(get_called_class().' CREATE CollectionTree');
-        $this->parent = $this->transfer->addCollection(CollectionType::$TREE, $parent_path);
-        $this->parent_id = $this->parent->id;
-    }
-
-    /**
-     * Getter
-     * 
-     * @param string $property property to get
-     * 
-     * @throws PropertyAccessException
-     * 
-     * @return property value
-     */
-    public function __get($property) {
-        return parent::__get($property);
+        $tree = $this->transfer->addCollection(CollectionType::$TREE, $tree_path);
+        $tree->addCollection($this);
     }
 }

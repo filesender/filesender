@@ -68,7 +68,7 @@ class CollectionType extends DBObject
     /**
      * Predefined Enums
      */
-    const INVALID_ID     = 0; //"Undefined collection type";
+    const UNKNOWN_ID     = 0; //"Undefined collection type";
     const TREE_ID        = 1; //"Root directory collection";
     const DIRECTORY_ID   = 2; //"Pathed directory collection";
     const LASTSTATIC_ID  = 1000; //"Last static enum id";
@@ -76,7 +76,7 @@ class CollectionType extends DBObject
     /**
      * Predefined Types
      */
-    static $INVALID = null;
+    static $UNKNOWN = null;
     static $TREE = null;
     static $DIRECTORY = null;
     static $LASTSTATIC = null;
@@ -110,7 +110,7 @@ class CollectionType extends DBObject
      */
     public static function initialize() {
 
-        if (!is_null(self::$INVALID)) {
+        if (!is_null(self::$UNKNOWN)) {
             return;
         }
         $types = array();
@@ -124,14 +124,14 @@ class CollectionType extends DBObject
             self::$LATEST = $type;
         }
         
-        if (array_key_exists(self::INVALID_ID, $types))
-            self::$INVALID = $types[self::INVALID_ID];
+        if (array_key_exists(self::UNKNOWN_ID, $types))
+            self::$UNKNOWN = $types[self::UNKNOWN_ID];
         else {
-            self::$INVALID = new self();
-            self::$INVALID->id = self::INVALID_ID;
-            self::$INVALID->name = 'INVALID';
-            self::$INVALID->description = 'undefined collection type';
-            self::$INVALID->insert();
+            self::$UNKNOWN = new self();
+            self::$UNKNOWN->id = self::UNKNOWN_ID;
+            self::$UNKNOWN->name = 'UNKNOWN';
+            self::$UNKNOWN->description = 'undefined collection type';
+            self::$UNKNOWN->insert();
         }
 
         if (array_key_exists(self::TREE_ID, $types))

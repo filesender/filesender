@@ -591,7 +591,7 @@ class DBObject {
      * @return type String: the class name that should be used for caching
      */
     public static function getCacheClassName(){
-        return get_called_class();
+        return static::getClassName();
     }
     
     /**

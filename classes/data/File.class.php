@@ -182,7 +182,7 @@ class File extends DBObject
                 if (array_key_exists($this->id, $dir->files)) {
                     $this->pathCache = $dir->info.'/'.$this->name;
                     $this->directoryCache = $dir;
-        Logger::info('File::loadDirectoryPath4:MATCH:'.$this->pathCahe);
+        Logger::info('File::loadDirectoryPath4:MATCH:'.$this->pathCache);
                     break;
                 }
             }
@@ -314,7 +314,7 @@ class File extends DBObject
         $s->execute(array('transfer_id' => $transfer->id));
         $files = array();
         foreach($s->fetchAll() as $data) {
-            $file = self::fromData($data['id'], $data); // Don't query twice, use loaded dat
+            $file = self::fromData(null, $data); // Don't query twice, use loaded dat
             // mirror loadDirectoryPath(): Default that path and filename are the same
             $file->pathCache = $file->name; 
             $files[$data['id']] = $file;
