@@ -381,15 +381,16 @@ class CollectionTree extends Collection
     protected function loadInfo() {
         // Throw an error if attempting to change after already created.
         if (is_null($this->uid)) {
-            $this->filesCache = FileCollection::fromCollection($this, true);
+            $filesCache = FileCollection::fromCollection($this, true);
+            $this->filesCache = $filesCache;
 ;
-            $fileCollectionCount = count($this->files);
+            $fileCollectionCount = count($filesCache);
 
             if (1 != $fileCollectionCount) {
                 throw new TreeFileCollectionException($this, $fileCollectionCount);
             }
-            $this->fileCache = reset($this->files)->file;
-            $this->uid = $this->files->uid;
+            $this->fileCache = reset($filesCache)->file;
+            $this->uid = $this->fileCache->uid;
         }
     }
 
@@ -418,17 +419,7 @@ class CollectionTree extends Collection
         if(in_array($property, array(
             'uid', 'file'
         ))) return $this->$property;
-        /*        
-        if($property == 'uid') {
-            if(is_null($this->uid)) $this->loadTreeFile();
-            return $this->uid;
-        }
         
-        if($property == 'file') {
-            if(is_null($this->fileCache)) $this->loadTreeFile();
-            return $this->fileCache;
-        }
-        */        
         return parent::__get($property);
     }
 }
@@ -450,7 +441,7 @@ class CollectionDirectory extends Collection
         $pos = strpos($pathInfo, '/');
       
         if (!($pos === false)) {
-           $tree_path = substr($pathInfo, $pos);
+            $tree_path = substr($pathInfo, 0, $pos);
         }
 
         Logger::info(get_called_class().' CREATE CollectionTree');
