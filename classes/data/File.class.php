@@ -310,7 +310,7 @@ class File extends DBObject
      */
     public static function fromTransfer(Transfer $transfer) {
         Logger::info('File::fromTransfer:'.$transfer->id);
-        $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE transfer_id = :transfer_id');
+        $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE transfer_id = :transfer_id AND size != 0');
         $s->execute(array('transfer_id' => $transfer->id));
         $files = array();
         foreach($s->fetchAll() as $data) {
