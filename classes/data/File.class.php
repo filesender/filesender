@@ -314,7 +314,7 @@ class File extends DBObject
         $s->execute(array('transfer_id' => $transfer->id));
         $files = array();
         foreach($s->fetchAll() as $data) {
-            $file = self::fromData(null, $data); // Don't query twice, use loaded dat
+            $file = self::fromData($data['id'], $data); // Don't query twice, use loaded dat
             // mirror loadDirectoryPath(): Default that path and filename are the same
             $file->pathCache = $file->name; 
             $files[$data['id']] = $file;
