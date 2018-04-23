@@ -412,6 +412,8 @@ class File extends DBObject
         
         if($property == 'name') {
         Logger::info('File::get.name:'.$this->name);
+        $e = new Exception;
+        error_log(var_export($e->getTraceAsString(), true));
             return $this->name;
         }
         

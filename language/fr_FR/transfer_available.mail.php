@@ -8,7 +8,7 @@ Madame, Monsieur,
 {if:transfer.files>1}Les fichiers suivants ont été déposés{else}Le fichier suivant a été déposé{endif} sur {cfg:site_name} par {transfer.user_email} et {if:transfer.files>1}sont disponibles{else}est disponible{endif} au téléchargement :
 
 {if:transfer.files>1}{each:transfer.files as file}
-  - {file.name} ({size:file.size})
+  - {file.path} ({size:file.size})
 {endeach}{else}
 {transfer.files.first().name} ({size:transfer.files.first().size})
 {endif}
@@ -49,7 +49,7 @@ Cordialement,
                 {if:transfer.files>1}
                 <ul>
                     {each:transfer.files as file}
-                        <li>{file.name} ({size:file.size})</li>
+                        <li>{file.path} ({size:file.size})</li>
                     {endeach}
                 </ul>
                 {else}

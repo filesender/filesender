@@ -105,7 +105,7 @@ class Zipper {
                 Logger::logActivity(LogEventTypes::DOWNLOAD_STARTED, $file, $recipient);
             
             // Set up metadata and send the local header.
-            $name = preg_replace('/^\\/+/', '', $file->name); // Strip leading slashes from filename.
+            $name = preg_replace('/^\\/+/', '', $file->path); // Strip leading slashes from filename.
             $name = preg_replace('/\\.\\.\\//', '', $name);   // strip ../
             $name = preg_replace('/\\/\\.\\./', '', $name);   // strip /..
             

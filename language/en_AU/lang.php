@@ -311,22 +311,22 @@ $lang['report_event_transfer_deleted'] = 'Transfer data was deleted';
 $lang['report_event_upload_started'] = 'Upload started';
 $lang['report_event_upload_resumed'] = 'Upload was resumed';
 $lang['report_event_upload_ended'] = 'Upload ended';
-$lang['report_event_file_uploaded'] = 'File {file.name} ({size:file.size}) uploaded (took {time:time_taken})';
-$lang['report_event_download_started'] = 'Recipient {author.identity} started downloading {file.name} ({size:file.size})';
-$lang['report_event_download_resumed'] = 'Recipient {author.identity} resumed download of {file.name} ({size:file.size})';
-$lang['report_event_download_ended'] = 'Recipient {author.identity} finished downloading {file.name} ({size:file.size})';
+$lang['report_event_file_uploaded'] = 'File {file.path} ({size:file.size}) uploaded (took {time:time_taken})';
+$lang['report_event_download_started'] = 'Recipient {author.identity} started downloading {file.path} ({size:file.size})';
+$lang['report_event_download_resumed'] = 'Recipient {author.identity} resumed download of {file.path} ({size:file.size})';
+$lang['report_event_download_ended'] = 'Recipient {author.identity} finished downloading {file.path} ({size:file.size})';
 $lang['report_event_archive_download_started'] = 'Recipient {author.identity} started downloading archive of transfer';
 $lang['report_event_archive_download_ended'] = 'Recipient {author.identity} finished downloading archive of transfer';
 
-$lang['report_recipient_event_download_started'] = 'Recipient started downloading {file.name} ({size:file.size})';
-$lang['report_recipient_event_download_resumed'] = 'Recipient resumed download of {file.name} ({size:file.size})';
-$lang['report_recipient_event_download_ended'] = 'Recipient finished downloading {file.name} ({size:file.size})';
+$lang['report_recipient_event_download_started'] = 'Recipient started downloading {file.path} ({size:file.size})';
+$lang['report_recipient_event_download_resumed'] = 'Recipient resumed download of {file.path} ({size:file.size})';
+$lang['report_recipient_event_download_ended'] = 'Recipient finished downloading {file.path} ({size:file.size})';
 $lang['report_recipient_event_archive_download_started'] = 'Recipient started downloading archive of transfer';
 $lang['report_recipient_event_archive_download_ended'] = 'Recipient finished downloading archive of transfer';
 
-$lang['report_owner_event_download_started'] = 'Owner started downloading {file.name} ({size:file.size})';
-$lang['report_owner_event_download_resumed'] = 'Owner resumed download of {file.name} ({size:file.size})';
-$lang['report_owner_event_download_ended'] = 'Owner finished downloading {file.name} ({size:file.size})';
+$lang['report_owner_event_download_started'] = 'Owner started downloading {file.path} ({size:file.size})';
+$lang['report_owner_event_download_resumed'] = 'Owner resumed download of {file.path} ({size:file.size})';
+$lang['report_owner_event_download_ended'] = 'Owner finished downloading {file.path} ({size:file.size})';
 $lang['report_owner_event_archive_download_started'] = 'Owner started downloading archive of transfer';
 $lang['report_owner_event_archive_download_ended'] = 'Owner finished downloading archive of transfer';
 

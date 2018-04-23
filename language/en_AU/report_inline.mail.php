@@ -16,7 +16,7 @@ This transfer is/was available until {date:transfer.expires}.
 This transfer was sent to {transfer.recipients} recipients.
 {endif}
 {if:target.type == "File"}
-This file is named {file.name}, has a size of {size:file.size} and is/was available until {date:file.transfer.expires}.
+This file is named {file.path}, has a size of {size:file.size} and is/was available until {date:file.transfer.expires}.
 {endif}
 {if:target.type == "Recipient"}
 This recipient has email address {recipient.email} and is/was valid until {date:recipient.expires}.
@@ -48,7 +48,7 @@ Best regards,
     This transfer was sent to {transfer.recipients} recipients.
     {endif}
     {if:target.type == "File"}
-    This file is named {file.name}, has a size of {size:file.size} and is/was available until {date:file.transfer.expires}.
+    This file is named {file.path}, has a size of {size:file.size} and is/was available until {date:file.transfer.expires}.
     {endif}
     {if:target.type == "Recipient"}
     This recipient has email address {recipient.email} and is/was valid until {date:recipient.expires}.

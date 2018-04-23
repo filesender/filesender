@@ -314,22 +314,22 @@ $lang['report_event_transfer_deleted'] = 'Le dépôt a été supprimé';
 $lang['report_event_upload_started'] = 'Le téléversement a démarré';
 $lang['report_event_upload_resumed'] = 'Le téléversement a repris';
 $lang['report_event_upload_ended'] = 'Le téléversement a été terminé';
-$lang['report_event_file_uploaded'] = 'Le fichier {file.name} ({size:file.size}) a été téléversé en {time:time_taken}';
-$lang['report_event_download_started'] = 'Le destinataire {author.identity} a commencé à télécharger le fichier {file.name} ({size:file.size})';
-$lang['report_event_download_resumed'] = 'Le destinataire {author.identity} a repris le téléchargement du fichier {file.name} ({size:file.size})';
-$lang['report_event_download_ended'] = 'Le destinataire {author.identity} a fini de télécharger le fichier {file.name} ({size:file.size})';
+$lang['report_event_file_uploaded'] = 'Le fichier {file.path} ({size:file.size}) a été téléversé en {time:time_taken}';
+$lang['report_event_download_started'] = 'Le destinataire {author.identity} a commencé à télécharger le fichier {file.path} ({size:file.size})';
+$lang['report_event_download_resumed'] = 'Le destinataire {author.identity} a repris le téléchargement du fichier {file.path} ({size:file.size})';
+$lang['report_event_download_ended'] = 'Le destinataire {author.identity} a fini de télécharger le fichier {file.path} ({size:file.size})';
 $lang['report_event_archive_download_started'] = 'Le destinataire {author.identity} a commencé à télécharger un ensemble de fichiers sous forme d\'archive';
 $lang['report_event_archive_download_ended'] = 'Le destinataire {author.identity} a fini de télécharger un ensemble de fichiers sous forme d\'archive';
 
-$lang['report_recipient_event_download_started'] = 'Le destinataire a commencé à télécharger le fichier {file.name} ({size:file.size})';
-$lang['report_recipient_event_download_resumed'] = 'Le destinataire a repris le téléchargement du fichier {file.name} ({size:file.size})';
-$lang['report_recipient_event_download_ended'] = 'Le destinataire a fini de télécharger le fichier {file.name} ({size:file.size})';
+$lang['report_recipient_event_download_started'] = 'Le destinataire a commencé à télécharger le fichier {file.path} ({size:file.size})';
+$lang['report_recipient_event_download_resumed'] = 'Le destinataire a repris le téléchargement du fichier {file.path} ({size:file.size})';
+$lang['report_recipient_event_download_ended'] = 'Le destinataire a fini de télécharger le fichier {file.path} ({size:file.size})';
 $lang['report_recipient_event_archive_download_started'] = 'Le destinataire a commencé à télécharger un ensemble de fichiers sous forme d\'archive';
 $lang['report_recipient_event_archive_download_ended'] = 'Le destinataire a fini de télécharger un ensemble de fichiers sous forme d\'archive';
 
-$lang['report_owner_event_download_started'] = 'Le propiétaire a commencé à télécharger le fichier {file.name} ({size:file.size})';
-$lang['report_owner_event_download_resumed'] = 'Le propiétaire a repris le téléchargement du fichier {file.name} ({size:file.size})';
-$lang['report_owner_event_download_ended'] = 'Le propiétaire a fini de télécharger le fichier {file.name} ({size:file.size})';
+$lang['report_owner_event_download_started'] = 'Le propiétaire a commencé à télécharger le fichier {file.path} ({size:file.size})';
+$lang['report_owner_event_download_resumed'] = 'Le propiétaire a repris le téléchargement du fichier {file.path} ({size:file.size})';
+$lang['report_owner_event_download_ended'] = 'Le propiétaire a fini de télécharger le fichier {file.path} ({size:file.size})';
 $lang['report_owner_event_archive_download_started'] = 'Le propiétaire a commencé à télécharger un ensemble de fichiers sous forme d\'archive';
 $lang['report_owner_event_archive_download_ended'] = 'Le propiétaire a fini de télécharger un ensemble de fichiers sous forme d\'archive';
 
