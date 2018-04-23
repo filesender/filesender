@@ -71,7 +71,7 @@ class CollectionType extends DBObject
     const UNKNOWN_ID     = 0; //"Undefined collection type";
     const TREE_ID        = 1; //"Root directory collection";
     const DIRECTORY_ID   = 2; //"Pathed directory collection";
-    const LASTSTATIC_ID  = 1000; //"Last static enum id";
+    const LASTSTATIC_ID  = 999; //"Last static enum id";
 
     /**
      * Predefined Types
