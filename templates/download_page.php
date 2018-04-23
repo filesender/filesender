@@ -93,10 +93,10 @@
         <div class="file" data-id="<?php echo $file->id ?>"
              data-encrypted="<?php echo isset($transfer->options['encryption'])?$transfer->options['encryption']:'false'; ?>"
              data-mime="<?php echo $file->mime_type; ?>"
-             data-name="<?php echo $file->name; ?>">
+             data-name="<?php echo $file->path; ?>">
             
             <span class="select clickable fa fa-2x fa-square-o" title="{tr:select_for_archive_download}"></span>
-            <span class="name"><?php echo Utilities::sanitizeOutput($file->name) ?></span>
+            <span class="name"><?php echo Utilities::sanitizeOutput($file->path) ?></span>
             <span class="size"><?php echo Utilities::formatBytes($file->size) ?></span>
             <span class="download_decryption_disabled"><br/>{tr:file_encryption_disabled}</span>
             <a rel="nofollow" href="<?php echo empty($downloadLinks[$file->id]) ? '#' : Utilities::sanitizeOutput($downloadLinks[$file->id]) ?>" class="download" title="{tr:download_file}">

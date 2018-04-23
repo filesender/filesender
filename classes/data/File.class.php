@@ -330,6 +330,9 @@ class File extends DBObject
             $t->execute(array('transfer_id' => $transfer->id,
                               'collection_type' => CollectionType::DIRECTORY_ID));
             foreach($t->fetchAll() as $data) {
+        Logger::info('File::fromTransfer::setPath.id:'.$data['id']);
+        Logger::info('File::fromTransfer::setPath.dirpath:'.$data['dirpath']);
+        Logger::info('File::fromTransfer::setPath.dir_id:'.$data['dir_id']);
                 $file = $files[$data['id']];
                 $file->pathCache = $data['dirpath'].'/'.$file->name;
                 $file->directoryCache = $directories[$data['dir_id']];
@@ -397,7 +400,7 @@ class File extends DBObject
      */
     public function __get($property) {
         if(in_array($property, array(
-            'transfer_id', 'uid', 'name', 'mime_type', 'size', 'encrypted_size', 'upload_start', 'upload_end', 'sha1', 'storage_class_name'
+            'transfer_id', 'uid', 'mime_type', 'size', 'encrypted_size', 'upload_start', 'upload_end', 'sha1', 'storage_class_name'
         ))) return $this->$property;
 
         if($property == 'id') {
@@ -407,6 +410,11 @@ class File extends DBObject
             return $this->id;
         }
         
+        if($property == 'name') {
+        Logger::info('File::get.name:'.$this->name);
+            return $this->name;
+        }
+        
         if($property == 'transfer') {
             if(is_null($this->transferCache)) $this->transferCache = Transfer::fromId($this->transfer_id);
             return $this->transferCache;
@@ -414,6 +422,7 @@ class File extends DBObject
         
         if($property == 'path') {
             if(is_null($this->pathCache)) $this->loadDirectoryPath();
+        Logger::info('File::get.path:'.$this->pathCache);
             return $this->pathCache;
         }
         

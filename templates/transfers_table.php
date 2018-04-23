@@ -143,9 +143,9 @@
                 <?php
                 $items = array();
                 foreach(array_slice($transfer->files, 0, 3) as $file) {
-                    $name = $file->name;
+                    $name = $file->path;
                     if(strlen($name) > 28) $name = substr($name, 0, 25).'...';
-                    $items[] = '<span title="'.Template::sanitizeOutput($file->name).'">'.Template::sanitizeOutput($name).'</span>';
+                    $items[] = '<span title="'.Template::sanitizeOutput($file->path).'">'.Template::sanitizeOutput($name).'</span>';
                 }
                 
                 if(count($transfer->files) > 3)
@@ -274,7 +274,7 @@
                     
                     <?php foreach($transfer->files as $file) { ?>
                         <div class="file" data-id="<?php echo $file->id ?>">
-                            <?php echo Template::sanitizeOutput($file->name) ?> (<?php echo Utilities::formatBytes($file->size) ?>) : <?php echo count($file->downloads) ?> {tr:downloads}
+                            <?php echo Template::sanitizeOutput($file->path) ?> (<?php echo Utilities::formatBytes($file->size) ?>) : <?php echo count($file->downloads) ?> {tr:downloads}
                             
                             <?php if(!$transfer->is_expired) { ?>
                                
@@ -282,7 +282,7 @@
                                 <span class="fa fa-lg fa-download transfer-file transfer-download" title="{tr:download}" data-id="<?php echo $file->id ?>" 
                                         data-encrypted="<?php echo isset($transfer->options['encryption'])?$transfer->options['encryption']:'false'; ?>" 
                                         data-mime="<?php echo Template::sanitizeOutput($file->mime_type); ?>" 
-                                        data-name="<?php echo Template::sanitizeOutput($file->name); ?>"></span>
+                                        data-name="<?php echo Template::sanitizeOutput($file->path); ?>"></span>
                                         
                                 <?php } else {?>
                             <a class="fa fa-lg fa-download" title="{tr:download}" href="download.php?files_ids=<?php echo $file->id ?>"></a>
