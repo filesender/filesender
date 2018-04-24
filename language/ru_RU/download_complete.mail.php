@@ -7,7 +7,7 @@ subject: Скачивание завершено
 Скачивание {if:files>1}Файлов{else}файла{endif} завершено:
 
 {if:files>1}{each:files as file}
-  - {file.name} ({size:file.size})
+  - {file.path} ({size:file.size})
 {endeach}{else}
 {files.first().name} ({size:files.first().size})
 {endif}
@@ -29,7 +29,7 @@ subject: Скачивание завершено
     {if:files>1}
     <ul>
         {each:files as file}
-            <li>{file.name} ({size:file.size})</li>
+            <li>{file.path} ({size:file.size})</li>
         {endeach}
     </ul>
     {else}

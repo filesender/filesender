@@ -7,7 +7,7 @@ Sehr geehrte Damen und Herren,
 ihr Download von {if:files>1}files{else}file{endif} ist beendet:
 
 {if:files>1}{each:files as file}
-  - {file.name} ({size:file.size})
+  - {file.path} ({size:file.size})
 {endeach}{else}
 {files.first().name} ({size:files.first().size})
 {endif}
@@ -29,7 +29,7 @@ Mit freundlichen Grüßen,
     {if:files>1}
     <ul>
         {each:files as file}
-            <li>{file.name} ({size:file.size})</li>
+            <li>{file.path} ({size:file.size})</li>
         {endeach}
     </ul>
     {else}

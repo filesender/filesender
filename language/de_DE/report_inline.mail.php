@@ -16,7 +16,7 @@ Diese Übertragung ist/war verfügbar, bis {date:transfer.expires}.
 Sie wurde an {transfer.recipients} Empfänger verschickt.
 {endif}
 {if:target.type == "File"}
-Diese Datei heißt {file.name}. Sie hat eine Größe von {size:file.size} und ist/war verfügbar bis zum {date:file.transfer.expires}.
+Diese Datei heißt {file.path}. Sie hat eine Größe von {size:file.size} und ist/war verfügbar bis zum {date:file.transfer.expires}.
 {endif}
 {if:target.type == "Recipient"}
 Dieser E-Mail-Adresse des Empfängers lautet {recipient.email} und ist/war gültig bis zum {date:recipient.expires}.
@@ -49,7 +49,7 @@ Diese Übertragung ist/war verfügbar, bis {date:transfer.expires}.<br /><br />
 Sie wurde an {transfer.recipients} Empfänger verschickt.
 {endif}
 {if:target.type == "File"}
-Diese Datei heißt {file.name}. Sie hat eine Größe von {size:file.size} und ist/war verfügbar bis zum {date:file.transfer.expires}.
+Diese Datei heißt {file.path}. Sie hat eine Größe von {size:file.size} und ist/war verfügbar bis zum {date:file.transfer.expires}.
 {endif}
 {if:target.type == "Recipient"}
 Dieser E-Mail-Adresse des Empfängers lautet {recipient.email} und ist/war gültig bis zum {date:recipient.expires}.
