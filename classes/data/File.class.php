@@ -162,9 +162,7 @@ class File extends DBObject
         }
         // Default that the path is just the name
         $this->pathCache = $this->name;
-
         $collections = $this->transfer->collections;
-        Logger::info('File::loadDirectoryPath1:'.$this->name);
 
         if (is_null($collections) ||
             count($collections) < 1 ||
@@ -172,17 +170,14 @@ class File extends DBObject
             return $this->pathCache;
         }
         
-        Logger::info('File::loadDirectoryPath2:'.$this->name);
         foreach ($collections as $collection_type_id => $directories) {
             if ($collection_type_id != CollectionType::DIRECTORY_ID) {
                 continue;
             }
             foreach ($directories as $dir) {
-        Logger::info('File::loadDirectoryPath3::dir:'.$dir->info);
                 if (array_key_exists($this->id, $dir->files)) {
                     $this->pathCache = $dir->info.'/'.$this->name;
                     $this->directoryCache = $dir;
-        Logger::info('File::loadDirectoryPath4:MATCH:'.$this->pathCache);
                     break;
                 }
             }
@@ -223,7 +218,6 @@ class File extends DBObject
      */
     public function __construct($id = null, $data = null) {
     
-        Logger::info('File::__construct:'.$id);
         $this->storage_class_name = Storage::getDefaultStorageClass();
         
         if(!is_null($id)) {
@@ -309,7 +303,6 @@ class File extends DBObject
      * @return array of File
      */
     public static function fromTransfer(Transfer $transfer) {
-        Logger::info('File::fromTransfer:'.$transfer->id);
         $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE transfer_id = :transfer_id');
         $s->execute(array('transfer_id' => $transfer->id));
         $tree_files = array();
@@ -330,16 +323,12 @@ class File extends DBObject
         $collections = $transfer->collections;
 
         if (!is_null($collections) && array_key_exists(CollectionType::DIRECTORY_ID, $collections)) {
-        Logger::info('File::fromTransfer.setPath:'.$transfer->id);
             $directories = $collections[CollectionType::DIRECTORY_ID];
             // Set path info if it exists
             $t = DBI::prepare('SELECT fc.file_id AS id, c.info AS dirpath, c.id as dir_id FROM FileCollections fc, Collections c WHERE c.transfer_id = :transfer_id AND c.type_id = :collection_type AND fc.collection_id = c.id');
             $t->execute(array('transfer_id' => $transfer->id,
                               'collection_type' => CollectionType::DIRECTORY_ID));
             foreach($t->fetchAll() as $data) {
-        Logger::info('File::fromTransfer::setPath.id:'.$data['id']);
-        Logger::info('File::fromTransfer::setPath.dirpath:'.$data['dirpath']);
-        Logger::info('File::fromTransfer::setPath.dir_id:'.$data['dir_id']);
                 $file = $files[$data['id']];
                 $file->pathCache = $data['dirpath'].'/'.$file->name;
                 $file->directoryCache = $directories[$data['dir_id']];
@@ -407,7 +396,7 @@ class File extends DBObject
      */
     public function __get($property) {
         if(in_array($property, array(
-            'transfer_id', 'uid', 'mime_type', 'size', 'encrypted_size', 'upload_start', 'upload_end', 'sha1', 'storage_class_name'
+            'transfer_id', 'uid', 'name', 'mime_type', 'size', 'encrypted_size', 'upload_start', 'upload_end', 'sha1', 'storage_class_name'
         ))) return $this->$property;
 
         if($property == 'id') {
@@ -417,13 +406,6 @@ class File extends DBObject
             return $this->id;
         }
         
-        if($property == 'name') {
-        Logger::info('File::get.name:'.$this->name);
-        $e = new Exception;
-        error_log(var_export($e->getTraceAsString(), true));
-            return $this->name;
-        }
-        
         if($property == 'transfer') {
             if(is_null($this->transferCache)) $this->transferCache = Transfer::fromId($this->transfer_id);
             return $this->transferCache;
@@ -431,7 +413,6 @@ class File extends DBObject
         
         if($property == 'path') {
             if(is_null($this->pathCache)) $this->loadDirectoryPath();
-        Logger::info('File::get.path:'.$this->pathCache);
             return $this->pathCache;
         }
         

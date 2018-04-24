@@ -172,7 +172,6 @@ class Transfer extends DBObject {
         // Load collections if they exist
         if ($this->getOption(TransferOptions::COLLECTION)) {
             CollectionType::initialize();
-            Logger::info('Transfer::__construct:'.$this->id.':'.$data['id']);
             $this->collectionsCache = Collection::fromTransfer($this);
         }
     }
@@ -202,7 +201,6 @@ class Transfer extends DBObject {
      */
     public static function fromUser($user, $closed = false, $limit = null, $offset = null ) {
         if($user instanceof User) $user = $user->id;
-        Logger::info('Transfer::fromUser:'.$user);
 
         return self::all(array('where' => $closed ? self::FROM_USER_CLOSED : self::FROM_USER
                                ,'limit' => $limit
@@ -221,7 +219,6 @@ class Transfer extends DBObject {
      */
     public static function fromGuest($guest) {
         if($guest instanceof Guest) $guest = $guest->id;
-        Logger::info('Transfer::fromGuest:'.$guest);
         
         return self::all(self::FROM_GUEST, array(':guest_id' => $guest));
     }
@@ -235,7 +232,6 @@ class Transfer extends DBObject {
      */
     public static function fromGuestsOf($user) {
         if($user instanceof User) $user = $user->id;
-        Logger::info('Transfer::fromGuestsOf:'.$user);
         
         // Gather user's guests transfers
         $transfers = array();
@@ -342,7 +338,6 @@ class Transfer extends DBObject {
      * @return array of Transfer
      */
     public static function allUploading() {
-        Logger::info('Transfer::allUploading:');
         return self::all(self::UPLOADING);
     }
     
@@ -352,7 +347,6 @@ class Transfer extends DBObject {
      * @return array of Transfer
      */
     public static function allExpired() {
-        Logger::info('Transfer::allExpired:');
         return self::all(self::EXPIRED, array(':date' => date('Y-m-d')));
     }
     
@@ -362,7 +356,6 @@ class Transfer extends DBObject {
      * @return array of Transfer
      */
     public static function allFailed() {
-        Logger::info('Transfer::allFailed:');
         $days = Config::get('failed_transfer_cleanup_days');
         if(!$days) return array();
         return self::all(self::FAILED, array(':date' => date('Y-m-d', time() - ($days * 24 * 3600))));
@@ -374,7 +367,6 @@ class Transfer extends DBObject {
      * @return array of Transfer
      */
     public static function allExpiredAuditlogs() {
-        Logger::info('Transfer::allExpiredAuditLogs:');
         $days = Config::get('auditlog_lifetime');
         if(is_null($days)) $days = 0;
         return self::all(self::EXPIRED, array(':date' => date('Y-m-d', time() - ($days * 24 * 3600))));

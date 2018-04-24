@@ -117,7 +117,6 @@ class Collection extends DBObject
      * Process the info value set on a newly created Collection of type
      */
     protected function processInfo() {
-        Logger::info(static::getClassName().'::processInfo:'.$this->info);
     }
     
     /**
@@ -163,16 +162,13 @@ class Collection extends DBObject
      */
     protected static function createFactoryType($type_id, $data = null) {
         if ($type_id == CollectionType::TREE_ID) {
-        Logger::info('createFactoryType CREATING CollectionTree');
             return new CollectionTree(null, $data);
         }
         else
         if ($type_id == CollectionType::DIRECTORY_ID) {
-        Logger::info('createFactoryType CREATING CollectionDirectory');
             return new CollectionDirectory(null, $data);
         }
         else {
-        Logger::info('createFactoryType CREATING Collection');
             return new static(null, $data);
         }
     }
@@ -208,7 +204,6 @@ class Collection extends DBObject
      * @return 2d array of <Collection.type_id, <Collection.id, Collection>>
      */
     public static function fromTransfer(Transfer $transfer) {
-        Logger::info('Collection::fromTransfer:'.$transfer->id);
         $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE transfer_id = :transfer_id ORDER BY type_id');
         $s->execute(array('transfer_id' => $transfer->id));
         $collections = array();
@@ -220,11 +215,6 @@ class Collection extends DBObject
                 $collections[$type_id] = array();
             }
             $collection = static::fromData($id, $data);
-            
-        Logger::info('Collection::fromTransfer.create_id:'.$collection->id);
-        Logger::info('Collection::fromTransfer.create_info:'.$collection->info);
-        Logger::info('Collection::fromTransfer.data_id:'.$data['id']);
-        Logger::info('Collection::fromTransfer.data_info:'.$data['info']);
             $collections[$type_id][$id] = $collection;
             $collectionIds[] = $id;
         }
@@ -329,7 +319,6 @@ class Collection extends DBObject
         }
         
         if($property == 'files') {
-            Logger::info(get_called_class().' checking PROPERTY files');
             if(is_null($this->filesCache)) $this->filesCache = FileCollection::fromCollection($this);
             return $this->filesCache;
         }
@@ -394,9 +383,6 @@ class CollectionTree extends Collection
      * Process the info value on a newly created CollectionTree
      */
     protected function processInfo() {
-        // Throw an error if attempting to change after already created.
-        Logger::info('CollectionTree::setInfo:'.$this->info);
-
         $this->fileCache = $this->transfer->addFile($this->info, 0, CollectionTree::FILE_MIME_TYPE);
         $this->uid = $this->fileCache->uid;
         $this->addFile($this->fileCache);
@@ -432,8 +418,6 @@ class CollectionDirectory extends Collection
      * Processing of the info dependant on the collection's type
      */
     protected function processInfo() {
-        // Throw an error if attempting to change after already created.
-        Logger::info('CollectionDirectory::setInfo:'.$this->info);
         $pathInfo = $this->info;
         $tree_path = $pathInfo;
         $pos = strpos($pathInfo, '/');
@@ -442,7 +426,6 @@ class CollectionDirectory extends Collection
             $tree_path = substr($pathInfo, 0, $pos);
         }
 
-        Logger::info(get_called_class().' CREATE CollectionTree');
         $tree = $this->transfer->addCollection(CollectionType::$TREE, $tree_path);
         $tree->addCollection($this);
     }
