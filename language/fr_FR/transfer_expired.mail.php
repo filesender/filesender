@@ -1,5 +1,4 @@
 subject: Fichiers expirés
-subject: (fichiers expirés) {transfer.subject}
 
 {alternative:plain}
 

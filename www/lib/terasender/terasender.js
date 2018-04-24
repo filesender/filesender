@@ -102,7 +102,7 @@ window.filesender.terasender = {
         
         if(!file.endpoint) file.endpoint = this.transfer.authenticatedEndpoint(filesender.config.terasender_upload_endpoint.replace('{file_id}', file.id), file);
         
-	if (typeof file.fine_progress_done === 'undefined') file.fine_progress_done=0; //missing from file
+	if (typeof file.fine_progress_done === 'undefined') file.fine_progress_done=file.uploaded; //missing from file
         var job = {
             chunk: {
                 start: file.uploaded,

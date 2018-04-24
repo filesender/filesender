@@ -1,3 +1,1 @@
-Pomocí pozvánky Vám může jiná osoba zaslat soubor.<br />
-Pro vytvoření pozvánky vložte emailovou adresu a vyberte Odeslat pozvánku.<br />
-Email s odkazem na pozvánku bude odeslán příjemci.
+Pozvánka umožňuje hostovi poslat Vám soubor. <br /> Pro vytvoření pozvánky vložte emailovou adresu a klikněte Odeslat pozvánku.<br /> Příjemci bude odeslán email s odkazem na pozvánku.

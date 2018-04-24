@@ -81,9 +81,6 @@ class StorageFilesystemPreserveName extends StorageFilesystem {
 
         // Check if the file belongs to a directory tree. If so, have
         // file reside under "uid=dirtree/path/to/file/filename"
-        Logger::info('BUILDPATH::File.name='.$file->name);
-        Logger::info('BUILDPATH::File.path='.$file->path);
-        Logger::info('BUILDPATH::File.directory='.$file->directory);
         $directory = $file->directory;
         
         if (!is_null($directory)) {

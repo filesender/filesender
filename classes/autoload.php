@@ -64,6 +64,7 @@ class Autoloader {
         'Collection' => 'data/',
         'Transfer' => 'data/',
         'File' => 'data/',
+        'ShredFile' => 'data/',
         'Recipient' => 'data/',
         'Guest' => 'data/',
         'User' => 'data/',

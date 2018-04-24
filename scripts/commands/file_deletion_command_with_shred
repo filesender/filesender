@@ -1,0 +1,3 @@
+#!/bin/bash
+
+shred -zu -n 2 $1;

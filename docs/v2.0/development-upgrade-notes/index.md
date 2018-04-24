@@ -8,7 +8,7 @@ Development notes on all changes that happened in version 2.0. These
 will be taken as input for the upgrade notes which will be the
 condensed version.
 
-## Upgrading from v2.0 alpha to v2.0 beta3
+## Upgrading from v2.0 alpha to v2.0 beta4
 
 You should already have Apache and your choice of database (PostgreSQL
 or MariaDB etc). If you are going to bring the same database forward

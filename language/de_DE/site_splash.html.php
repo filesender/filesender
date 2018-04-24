@@ -1,3 +1,6 @@
-Willkommen bei {cfg:site_name}
+<h1>Willkommen zu {cfg:site_name}</h1>
 
-{cfg:site_name} ist eine sichere Methode grosse Dateien mit jedermann zu teilen! Verbinden Sie sich um Dateien zu verschicken oder um jemanden aufzufordern Ihnen eine Datei zu schicken.
+<p>
+    {cfg:site_name} ist eine sichere Möglichkeit, große Dateien mit jemanden zu teilen!
+    Anmelden zum hochladen Ihrer Dateien oder lassen Sie sich Dateien von Personen senden.
+</p>

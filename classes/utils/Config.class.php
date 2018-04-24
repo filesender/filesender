@@ -198,6 +198,13 @@ class Config {
             }
         }   
 
+        // see the error message for info
+        if( Utilities::startsWith(Config::get('storage_type'),'Cloud' )) {
+            if( self::get('upload_chunk_size') != self::get('download_chunk_size') ) {
+                throw new ConfigBadParameterException('When storing files using the Cloud storage the upload_chunk_size must be the same as download_chunk_size');
+            }
+        }   
+
         // update max_flash_upload_size if php.ini post_max_size and upload_max_filesize is set lower
         $max_system_upload_size = min(
             Utilities::sizeToBytes(ini_get('post_max_size')) - 2048,

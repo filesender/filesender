@@ -1,8 +1,8 @@
 ---
-title: Installation - Linux Source 2.0-Beta3 from Git
+title: Installation - Linux Source 2.0-Beta4 from Git
 ---
 
-# Installation FileSender 2.0 Beta3
+# Installation FileSender 2.0 Beta4
 
 _This documentation is under development. It was created by installing FileSender on a CentOS 7 and Debian 8 machine._
 
@@ -22,17 +22,23 @@ This is the installation documentation for installing the **FileSender 2.0-beta 
 
 * RedHat/CentOS (7)
 * Debian (8, Jessie)
+* Fedora
 
 ### Dependencies
 
 * SimpleSamlPhp 1.14.16 or newer.
-* Apache and PHP from your distribution.
+* Apache (or nginx) and PHP from your distribution.
 * A PostgreSQL or MySQL database.
-* A big filesystem.
+* A big filesystem (or cloud backed).
 
-See [Requirements](https://www.assembla.com/wiki/show/file_sender/Requirements) for all requirements.
+# Step 0 - Choose your options
 
-# Step 1 - Install Apache and PHP
+For the Web server you can use either Apache or NGINX. For a database
+you can use PostgreSQL or MySQL. There are multiple versions of the steps
+for the Web server setup, one for each supported server.
+
+
+# Step 1-apache - Install Apache and PHP
 
 On RedHat/CentOS, run:
 
@@ -41,6 +47,14 @@ On RedHat/CentOS, run:
 On Debian, run:
 
 	apt-get install -y apache2 php5 libapache2-mod-php5
+
+# Step 1-nginx - Install NGINX and PHP
+
+Its for Debian/Ubuntu use a modern Nginx (after v.0.8) and php-fpm (PHP 5.5.9 (fpm-fcgi)).
+
+	sudo apt-get install nginx php5-fpm 
+
+
 
 # Step 2 - Install the FileSender package
 
@@ -53,7 +67,7 @@ Or install the Git package on Debian:
 	apt-get install -y git
 
 Install the FileSender 2.0 beta branch from the GIT repository use the
-following commands. Note that you can use beta3, beta4 etc if there
+following commands. Note that you can use beta4, beta5 etc if there
 are more beta releases. See
 [Releases](https://github.com/filesender/filesender/releases) for
 information about recent releases.
@@ -61,7 +75,7 @@ information about recent releases.
 	cd /opt/filesender/
 	git clone https://github.com/filesender/filesender.git filesender-2.0
 		cd filesender-2.0
-		git checkout filesender-2.0-beta3
+		git checkout filesender-2.0-beta4
 		cd ..
 	ln -s filesender-2.0/ filesender
 
@@ -124,7 +138,7 @@ To tailor your [SimpleSAMLphp](http://simplesamlphp.org/) installation to match 
 
 * **NOTE**: It's outside the scope of this document to explain how to configure an authentication backend. The software has built-in support for [SAML](https://simplesamlphp.org/docs/stable/ldap:ldap), [LDAP](https://simplesamlphp.org/docs/stable/ldap:ldap), [Radius](https://simplesamlphp.org/docs/stable/radius:radius) and [many more](https://simplesamlphp.org/docs/stable/simplesamlphp-idp#section_2).
 
-# Step 4 - Configure Apache
+# Step 4-apache - Configure Apache
 
 Create a configuration file for FileSender. This file is located in one of these locations:
 
@@ -151,6 +165,116 @@ On Debian you must enable your configuration, run:
 
 	a2enmod alias headers ssl
 	a2ensite default-ssl filesender
+
+# Step 4-nginx - Configure NGINX
+
+
+Edit file /etc/nginx/nginx.conf
+
+```
+user www-data;
+worker_processes 4;
+pid /run/nginx.pid;
+events {
+        worker_connections 1024;
+        use epoll;
+}
+http {
+        sendfile on;
+        tcp_nopush on;
+        tcp_nodelay on;
+        keepalive_timeout 65;
+        types_hash_max_size 2048;
+        include /etc/nginx/mime.types;
+        default_type application/octet-stream;
+        access_log /var/log/nginx/access.log;
+        error_log /var/log/nginx/error.log;
+        gzip on;
+        gzip_disable "MSIE [1-6]\.(?!.*SV1)";
+        include /etc/nginx/conf.d/*.conf;
+        include /etc/nginx/sites-enabled/*;
+}
+```
+
+Then setup your site file similar to the below. This
+would be in a file such as /etc/nginx/sites-enabled/filesender.example.com.
+
+```
+server {
+        client_body_buffer_size 256k;
+        client_max_body_size 32m;
+        server_name filesender.domain.tld;
+        index index.php;
+        error_page 500 502 503 504 /50x.html;
+        root /opt/filesender/www;
+        location = /50x.html {
+            root   /usr/share/nginx/html;
+        }
+        location / {
+            try_files $uri $uri/ /index.php?args;
+        }
+        location ~ [^/]\.php(/|$) {
+            fastcgi_split_path_info  ^(.+\.php)(/.+)$;
+            fastcgi_pass  localhost:9090;
+            include       fastcgi_params;
+            fastcgi_intercept_errors on;
+            fastcgi_param PATH_INFO       $fastcgi_path_info;
+            fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        }
+        location ^~ /saml {
+            alias /opt/filesender/saml/www;
+            location ~ ^(?<prefix>/saml)(?<phpfile>.+?\.php)(?<pathinfo>/.*)?$ {
+                include fastcgi_params;
+                fastcgi_pass  localhost:9090;
+                fastcgi_param SCRIPT_FILENAME $document_root$phpfile;
+                fastcgi_param PATH_INFO       $pathinfo if_not_empty;
+            }
+        }
+        location ~* \.(ico|docx|doc|xls|xlsx|rar|zip|jpg|jpeg|txt|xml|pdf|gif|png|css|js)$ {
+            root   /opt/filesender/www/;
+        }
+        location ~ /\. {
+                deny all;
+        }
+}
+```
+
+And sure that your fastcgi_params file ( /etc/nginx/fastcgi_params ) looks like the following:
+
+```
+fastcgi_param   QUERY_STRING            $query_string;
+fastcgi_param   REQUEST_METHOD          $request_method;
+fastcgi_param   CONTENT_TYPE            $content_type;
+fastcgi_param   CONTENT_LENGTH          $content_length;
+
+fastcgi_param   SCRIPT_FILENAME         $request_filename;
+fastcgi_param   SCRIPT_NAME             $fastcgi_script_name;
+fastcgi_param   REQUEST_URI             $request_uri;
+fastcgi_param   DOCUMENT_URI            $document_uri;
+fastcgi_param   DOCUMENT_ROOT           $document_root;
+fastcgi_param   SERVER_PROTOCOL         $server_protocol;
+
+fastcgi_param   GATEWAY_INTERFACE       CGI/1.1;
+fastcgi_param   SERVER_SOFTWARE         nginx/$nginx_version;
+
+fastcgi_param   REMOTE_ADDR             $remote_addr;
+fastcgi_param   REMOTE_PORT             $remote_port;
+fastcgi_param   SERVER_ADDR             $server_addr;
+fastcgi_param   SERVER_PORT             $server_port;
+fastcgi_param   SERVER_NAME             $server_name;
+fastcgi_param   HTTPS                   $https if_not_empty;
+fastcgi_param   REDIRECT_STATUS         200;
+```
+
+
+And just set correct port ( for example port 9090 ) at file /etc/php5/fpm/pool.d/www.conf
+
+```
+...
+listen = 127.0.0.1:9090
+...
+```
+
 
 # Step 5 - Install and configure database
 

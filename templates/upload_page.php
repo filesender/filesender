@@ -94,7 +94,7 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
                     
                     <?php if($allow_recipients) { ?>
                     <div class="fieldcontainer" data-related-to="message">
-                        <label id="to" for="to" class="mandatory">{tr:to} :</label>
+                        <label for="to" class="mandatory">{tr:to} :</label>
                         
                         <?php if(Auth::isGuest() && AuthGuest::getGuest()->getOption(GuestOptions::CAN_ONLY_SEND_TO_ME)) { ?>
                         <?php echo AuthGuest::getGuest()->user_email ?>
@@ -189,9 +189,9 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
                     
                     <div class="basic_options">
                         <div class="fieldcontainer">
-                            <label for="datepicker" id="datepicker_label" class="mandatory">{tr:expiry_date}:</label>
+                            <label for="expires" id="datepicker_label" class="mandatory">{tr:expiry_date}:</label>
                             
-                            <input name="expires" type="text" autocomplete="off" title="<?php echo Lang::tr('dp_date_format_hint')->r(array('max' => Config::get('max_transfer_days_valid'))) ?>" value="<?php echo Utilities::formatDate(Transfer::getDefaultExpire()) ?>"/>
+                            <input id="expires" name="expires" type="text" autocomplete="off" title="<?php echo Lang::tr('dp_date_format_hint')->r(array('max' => Config::get('max_transfer_days_valid'))) ?>" value="<?php echo Utilities::formatDate(Transfer::getDefaultExpire()) ?>"/>
                         </div>
                         
                         <?php

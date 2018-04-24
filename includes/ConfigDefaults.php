@@ -115,6 +115,8 @@ $default = array(
     'storage_filesystem_tree_deletion_command' => 'rm -rf {path}',
     'storage_filesystem_ignore_disk_full_check' => false,
     'storage_filesystem_external_script' => FILESENDER_BASE.'/scripts/StorageFilesystemExternal/external.py',
+
+    'storage_filesystem_shred_path' => FILESENDER_BASE.'/shredfiles',
     
     'email_from' => 'sender',
     'email_return_path' => 'sender',
