@@ -121,13 +121,6 @@ class Collection extends DBObject
     }
     
     /**
-     * Loads the extra objects associated with a Collection of type
-     */
-    protected function loadInfo() {
-        Logger::info(static::getClassName().'::loadInfo:'.$this->info);
-    }
-    
-    /**
      * Constructor
      * 
      * @param integer $id identifier of collection to load from database (null if loading not wanted)
@@ -138,8 +131,6 @@ class Collection extends DBObject
     public function __construct($id = null, $data = null) {
         // Fill properties from provided data
         if($data) $this->fillFromDBData($data);
-
-        if (!is_null($this->info)) $this->loadInfo();
     }
 
     /**
@@ -221,6 +212,7 @@ class Collection extends DBObject
         $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE transfer_id = :transfer_id ORDER BY type_id');
         $s->execute(array('transfer_id' => $transfer->id));
         $collections = array();
+        $collectionIds = array();
         foreach($s->fetchAll() as $data) {
             $type_id = $data['type_id'];
             $id = $data['id'];
@@ -234,6 +226,19 @@ class Collection extends DBObject
         Logger::info('Collection::fromTransfer.data_id:'.$data['id']);
         Logger::info('Collection::fromTransfer.data_info:'.$data['info']);
             $collections[$type_id][$id] = $collection;
+            $collectionIds[] = $id;
+        }
+
+        $set = FileCollection::fromCollectionIds($collectionIds);
+        foreach($collections as $collectionTypes) {
+            foreach($collectionTypes as $id => $collection) {
+                if (array_key_exists($id, $set)) {
+                    $collection->filesCache = $set[$id];
+                }
+                else {
+                    $collection->filesCache = array();
+                }
+            }
         }
         return $collections;
     }
@@ -363,6 +368,8 @@ class Collection extends DBObject
  */
 class CollectionTree extends Collection
 {
+    const FILE_MIME_TYPE = 'text/directory';
+    
     /**
      * Properties
      */
@@ -379,19 +386,8 @@ class CollectionTree extends Collection
      * @throws TreeFileCollectionException
      */
     protected function loadInfo() {
-        // Throw an error if attempting to change after already created.
-        if (is_null($this->uid)) {
-            $filesCache = FileCollection::fromCollection($this, true);
-            $this->filesCache = $filesCache;
-;
-            $fileCollectionCount = count($filesCache);
-
-            if (1 != $fileCollectionCount) {
-                throw new TreeFileCollectionException($this, $fileCollectionCount);
-            }
-            $this->fileCache = reset($filesCache)->file;
-            $this->uid = $this->fileCache->uid;
-        }
+        $this->fileCache = File::fromId(key($this->filesCache));
+        $this->uid = $this->fileCache->uid;
     }
 
     /**
@@ -401,7 +397,7 @@ class CollectionTree extends Collection
         // Throw an error if attempting to change after already created.
         Logger::info('CollectionTree::setInfo:'.$this->info);
 
-        $this->fileCache = $this->transfer->addFile($this->info, 0, 'text/directory');
+        $this->fileCache = $this->transfer->addFile($this->info, 0, CollectionTree::FILE_MIME_TYPE);
         $this->uid = $this->fileCache->uid;
         $this->addFile($this->fileCache);
     }
@@ -418,8 +414,10 @@ class CollectionTree extends Collection
     public function __get($property) {
         if(in_array($property, array(
             'uid', 'file'
-        ))) return $this->$property;
-        
+        ))) {
+            if (is_null($this->uid)) $this->loadInfo();
+            return $this->$property;
+        }
         return parent::__get($property);
     }
 }

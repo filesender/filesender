@@ -181,6 +181,37 @@ class FileCollection extends DBObject
     }
     
     /**
+     * Get FileCollection sets belonging to an array of Collection ids.
+     * 
+     * @param $collectionIds - array of collection_id values, ie array[] = $collection_id
+     * 
+     * @return 2d array[collection_id][file_id]=FileCollection
+     */
+    public static function fromCollectionIds($collectionIds) {
+        $owner_id = $collection->id;
+        $files = array();
+        
+        $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE collection_id IN (:collection_id) ORDER BY collection_id, file_id');
+        $s->execute(array('collection_id' => implode("', '", $collectionIds)));
+        $set = array();
+        $current = null;
+        $current_id = -1;
+        foreach($s->fetchAll() as $data) {
+            $file_id = $data['file_id'];
+            $collection_id = $data['collection_id'];
+
+            if ($current_id != $collection_id) {
+                if (!is_null($current)) $set[$current_id] = $current;
+                $current = array();
+                $current_id = $collection_id;
+            }
+            $current[$file_id] = self::create($collection_id, $file_id);
+        }
+        if (!is_null($current)) $set[$current_id] = $current;
+        return $set;
+    }
+
+    /**
      * Get the Collections that a File belongs to. The returned <key,value> array is <collection_id, FileCollection>
      * 
      * @param File $file the relater file

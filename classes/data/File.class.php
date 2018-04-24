@@ -310,14 +310,21 @@ class File extends DBObject
      */
     public static function fromTransfer(Transfer $transfer) {
         Logger::info('File::fromTransfer:'.$transfer->id);
-        $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE transfer_id = :transfer_id AND size != 0');
+        $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE transfer_id = :transfer_id');
         $s->execute(array('transfer_id' => $transfer->id));
+        $tree_files = array();
         $files = array();
         foreach($s->fetchAll() as $data) {
             $file = self::fromData($data['id'], $data); // Don't query twice, use loaded dat
             // mirror loadDirectoryPath(): Default that path and filename are the same
-            $file->pathCache = $file->name; 
-            $files[$data['id']] = $file;
+            $file->pathCache = $file->name;
+            if ($file->size == 0 &&
+                $file->mime_type === CollectionTree::FILE_MIME_TYPE) {
+                $tree_files[$data['id']] = $file;
+            }
+            else {
+                $files[$data['id']] = $file;
+            }
         }
 
         $collections = $transfer->collections;
