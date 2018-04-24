@@ -153,11 +153,11 @@ class FileCollection extends DBObject
      * 
      * @return array of File
      */
-    public static function fromCollection(Collection $collection, bool $full_load = false) {
+    public static function fromCollection(Collection $collection, $full_load = null) {
         $owner_id = $collection->id;
         $files = array();
         
-        if ($full_load) {
+        if (!is_null($full_load)) {
            $s = DBI::prepare('SELECT * FROM '.File::getDBTable().' WHERE id IN (SELECT file_id FROM '.self::getDBTable().' WHERE collection_id = :collection_id)');
            $s->execute(array('collection_id' => $owner_id));
            foreach($s->fetchAll() as $data) {
@@ -220,11 +220,11 @@ class FileCollection extends DBObject
      * 
      * @return array of Collection
      */
-    public static function fromFile(File $file, bool $full_load = false) {
+    public static function fromFile(File $file, $full_load = null) {
         $file_id = $file->id;
         $collections = array();
         
-        if ($full_load) {
+        if (!is_null($full_load)) {
            $s = DBI::prepare('SELECT * FROM '.Collection::getDBTable().' WHERE id IN (SELECT collection_id FROM '.self::getDBTable().' WHERE file_id = :file_id)');
            $s->execute(array('file_id' => $file_id));
            foreach($s->fetchAll() as $data) {
