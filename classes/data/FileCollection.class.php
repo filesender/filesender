@@ -191,8 +191,8 @@ class FileCollection extends DBObject
         $owner_id = $collection->id;
         $files = array();
         
-        $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE collection_id IN (:collection_id) ORDER BY collection_id, file_id');
-        $s->execute(array('collection_id' => implode("', '", $collectionIds)));
+        $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE collection_id IN ('.implode(", ", $collectionIds).') ORDER BY collection_id, file_id');
+        $s->execute();
         $set = array();
         $current = null;
         $current_id = -1;
