@@ -277,8 +277,8 @@ class Transfer extends DBObject {
                 throw new BadEmailException($user_email);
         }
         
-        $transfer->user_email = $user_email;
-        $transfer->expires = $expires;
+        $transfer->__set('user_email', $user_email);
+        $transfer->__set('expires', $expires);
         $transfer->created = time();
         $transfer->status = TransferStatuses::CREATED;
         $transfer->lang = Lang::getCode();
