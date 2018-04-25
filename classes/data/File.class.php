@@ -131,6 +131,7 @@ class File extends DBObject
      * @param string $pathName a potentially fully pathed name for the File
      */
     protected function setName($pathName) {
+        if (is_null($pathName)) return;
         $this->name = $pathName;
         $pos = strrpos($pathName, '/');
       
@@ -242,7 +243,7 @@ class File extends DBObject
      * 
      * @return File
      */
-    public static function create(Transfer $transfer, $name, $size, $mime_type = null) {
+    public static function create(Transfer $transfer, $name = null, $size = null, $mime_type = null) {
         $file = new self();
         
         // Init cache to empty to avoid db queries
@@ -260,10 +261,12 @@ class File extends DBObject
         });
 
         $file->storage_class_name = Storage::getDefaultStorageClass();
-        
-        $file->size = $size;
+
+        if (!is_null($size)) {      
+            $file->size = $size;
+            $file->encrypted_size = $file->calculateEncryptedFileSize();
+        }
         $file->mime_type = $mime_type ? $mime_type : 'application/binary';
-        $file->encrypted_size = $file->calculateEncryptedFileSize();
         $file->setName($name);
         
         return $file;

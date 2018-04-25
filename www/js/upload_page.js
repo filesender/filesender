@@ -1176,7 +1176,7 @@ $(function() {
             var sel = $(this)
             var file = sel.clone();
             
-            // TODO check file size, reject if over filesender.config.max_legacy_file_size // DIRTREE_UPLOAD
+            // TODO check file size, reject if over filesender.config.max_legacy_file_size
             
             var node = filesender.ui.files.addList(this.files, file.get(0));
             if(!node) return;
