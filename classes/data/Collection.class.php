@@ -197,6 +197,19 @@ class Collection extends DBObject
     }
     
     /**
+     * Delete the collection
+     */
+    public function beforeDelete() {
+        if (!is_null($this->filesCache)) {
+            foreach ($this->filesCache as $file_id => $filecollection) {
+                $this->removeFile($filecollection);
+            }
+        }
+        
+        Logger::info($this.' deleted');
+    }
+    
+    /**
      * Get collections from Transfer
      * 
      * @param Transfer $transfer the relater transfer
@@ -263,6 +276,37 @@ class Collection extends DBObject
         Logger::info($file.' added to '.$this);
 
         return $fc;
+    }
+
+    /**
+     * Removes a file from this collection
+     * 
+     * @param mixed $filecollection FileCollection, File, or file id
+     */
+    public function removeFile($filecollection) {
+        if(!is_object($filecollection)) {
+            $filecollection = FileCollection::create($this->id, $filecollection);
+        }
+        else {
+            if ('File' === get_class($filecollection)) {
+n               $filecollection = FileCollection::create($this->id, $filecollection->id);
+            }
+            else if ('FileCollection' !== get_class($filecollection)) {
+                throw new InvalidFileCollectionException($this, $filecollection);
+            }
+        }
+        $file_id = $filecollection->file_id;
+
+        // Delete
+        $filecollection->delete();
+        
+        // Update local cache
+        if(!is_null($this->filesCache) &&
+           array_key_exists($file_id, $this->filesCache)) {
+            unset($this->filesCache[$file_id]);
+        }
+        
+        Logger::info($filecollection.' removed from '.$this);
     }
     
     /**

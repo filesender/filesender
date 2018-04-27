@@ -66,3 +66,20 @@ class InvalidCollectionException extends DetailedException {
         );
     }
 }
+
+/**
+ * Invalid FileCollection exception
+ */
+class InvalidFileCollectionException extends DetailedException {
+    /**
+     * Constructor
+     * 
+     * @param string $selector column used to select user
+     */
+    public function __construct($selector) {
+        parent::__construct(
+            'invalid_filecollection', // Message to give to the user
+            array('selector' => $selector) // Real message to log
+        );
+    }
+}

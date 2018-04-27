@@ -378,7 +378,13 @@ class Transfer extends DBObject {
     public function beforeDelete() {
         AuditLog::clean($this);
         
-        foreach($this->collections as $collection) $this->removeCollection($collection);
+        if (!is_null($this->collections)) {
+            foreach ($collections as $collection_type_id => $collectionList) {
+                foreach ($collectionList as $collection) {
+                    $this->removeCollection($collection);
+                }
+            }
+        }
         
         foreach($this->files as $file) $this->removeFile($file);
         
@@ -845,6 +851,29 @@ class Transfer extends DBObject {
         return $collection;
     }
 
+    /**
+     * Removes a collection
+     * 
+     * @param mixed $collection Collection or collection id
+     */
+    public function removeCollection($collection) {
+        if(!is_object($collection)) $collection = Collection::fromId($collection);
+        $type_id = $collection->type_id;
+        $id = $collection->id;
+
+        // Delete
+        $collection->delete();
+        
+        // Update local cache
+        if(!is_null($this->collectionsCache) &&
+           array_key_exists($type_id, $this->collectionsCache) &&
+           array_key_exists($id, $this->collectionsCache[$type_id])) {
+            unset($this->collectionsCache[$type_id][$id]);
+        }
+        
+        Logger::info($collection.' removed from '.$this);
+    }
+    
     /**
      * Adds a recipient
      * 

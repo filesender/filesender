@@ -257,8 +257,11 @@ class FileCollection extends DBObject
     /**
      * Delete the filecollection
      */
-    public function beforeDelete() {
-        Logger::info($this.' deleted');
+    public function delete() {
+        // Remove from database
+        $s = DBI::prepare('DELETE FROM '.static::getDBTable().' WHERE collection_id = :collection_id AND file_id = :file_id');
+        $s->execute(array('collection_id' => $this->collection_id,
+                          'file_id' => $this->file_id));
     }
     
     /**
