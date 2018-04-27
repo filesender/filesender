@@ -289,7 +289,7 @@ class Collection extends DBObject
         }
         else {
             if ('File' === get_class($filecollection)) {
-n               $filecollection = FileCollection::create($this->id, $filecollection->id);
+                $filecollection = FileCollection::create($this->id, $filecollection->id);
             }
             else if ('FileCollection' !== get_class($filecollection)) {
                 throw new InvalidFileCollectionException($this, $filecollection);
