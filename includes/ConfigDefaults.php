@@ -55,11 +55,11 @@ $default = array(
     'auth_sp_set_idp_as_user_organization' => false,
     'auth_sp_saml_email_attribute' => 'mail', // Get email attribute from authentification service
     'auth_sp_saml_name_attribute' => 'cn', // Get name attribute from authentification service
-    'auth_sp_saml_uid_attribute' => 'eduPersonTargetID', // Get uid attribute from authentification service
+    'auth_sp_saml_uid_attribute' => 'eduPersonTargetedID', // Get uid attribute from authentification service
     'auth_sp_saml_authentication_source' => 'default-sp', // Get path  attribute from authentification service
     'auth_sp_shibboleth_email_attribute' => 'mail', // Get email attribute from authentification service
     'auth_sp_shibboleth_name_attribute' => 'cn', // Get name attribute from authentification service
-    'auth_sp_shibboleth_uid_attribute' => 'eduPersonTargetId', // Get uid attribute from authentification service
+    'auth_sp_shibboleth_uid_attribute' => 'eduPersonTargetedID', // Get uid attribute from authentification service
     
     'auth_remote_user_autogenerate_secret' => false,
     'auth_remote_signature_algorithm' => 'sha1',
