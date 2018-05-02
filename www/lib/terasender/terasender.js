@@ -189,11 +189,9 @@ window.filesender.terasender = {
      * @param string origin "driver" (default) or "worker"
      */
     error: function(error, origin) {
-        if(filesender.config.log) {
-            console.log('[terasender ' + (origin ? origin : 'driver') + ' error] ' + error.message + (error.details ? ', details follow :' : ''));
-            if(error.details) console.log(error.details); // Whatever type it is ...
-        }
-        
+        console.log('[terasender ' + (origin ? origin : 'driver') + ' error] ' + error.message + (error.details ? ', details follow :' : ''));
+        if(error.details) console.log(error.details); // Whatever type it is ...
+
         error.message = 'terasender_' + error.message;
         
         // Trigger global error

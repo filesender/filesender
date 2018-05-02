@@ -47,7 +47,7 @@ window.filesender.ui = {
      * @param mixed message
      */
     log: function(message) {
-        if(filesender.config.log) console.log('[' + (new Date()).toLocaleTimeString() + '] ' + message);
+        console.log('[' + (new Date()).toLocaleTimeString() + '] ' + message);
     },
     
     /**
