@@ -152,6 +152,18 @@ class ClientLog extends DBObject {
     }
     
     /**
+     * Clean old entries
+     */
+    public static function clean() {
+        $days = Config::get('clientlogs_lifetime');
+        if(!$days || !is_int($days) || $days <= 0) $days = 10;
+        
+        /** @var PDOStatement $statement */
+        $statement = DBI::prepare('DELETE FROM '.self::getDBTable().' WHERE created < :date');
+        $statement->execute(array(':date' => date('Y-m-d', time() - $days * 86400)));
+    }
+    
+    /**
      * Getter
      * 
      * @param string $property property to get
