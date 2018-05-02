@@ -41,7 +41,6 @@ if(!('filesender' in window)) window.filesender = {};
 
 window.filesender.logger = {
     // Log stash (memory)
-    stash_len: 10,
     stash: [],
 
     /**
@@ -50,8 +49,10 @@ window.filesender.logger = {
      * @param {String} msg
      */
     log: function(msg) {
+        var len = filesender.config ? filesender.config.clientlogs.stash_len : 10;
+
         this.stash.push(msg);
-        this.stash = this.stash.slice(-1 * this.stash_len);
+        this.stash = this.stash.slice(-1 * len);
 
         if(filesender.supports.localStorage) {
             window.localStorage.setItem('client_logs', JSON.stringify(this.stash))

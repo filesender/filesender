@@ -37,8 +37,6 @@ if(!defined('FILESENDER_BASE')) die('Missing environment');
  * Represents a client log entry in database
  */
 class ClientLog extends DBObject {
-    const STASH_LEN = 10;
-    
     /**
      * Database map
      */
@@ -137,7 +135,8 @@ class ClientLog extends DBObject {
      */
     public static function stash(User $user, $logs) {
         $stash = self::fromUser($user);
-        while($logs && (count($stash) + count($logs) > self::STASH_LEN)) {
+        $len = self::stashSize();
+        while($logs && (count($stash) + count($logs) > $len)) {
             $log = array_shift($stash);
             $log->delete();
         }
@@ -149,6 +148,16 @@ class ClientLog extends DBObject {
         }
         
         return $stash;
+    }
+    
+    /**
+     * Get stash size
+     *
+     * @return int
+     */
+    public static function stashSize() {
+        $size = Config::get('clientlogs_stashsize');
+        return (is_int($size) && ($size > 0)) ? $size : 10;
     }
     
     /**
