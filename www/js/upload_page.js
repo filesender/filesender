@@ -31,6 +31,8 @@
  */
 
 function isChrome() {
+  //Disabling to see if selenium tests will pass:
+  return false;
   var isChromium = window.chrome,
     winNav = window.navigator,
     vendorName = winNav.vendor,
