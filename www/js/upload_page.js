@@ -34,7 +34,7 @@
 filesender.ui.files = {
     invalidFiles: [],
 
-    addList: function(files, source_node) {
+    add: function(files, source_node) {
         var node = null;
         for(var i=0; i<files.length; i++) {
             var latest_node = filesender.ui.files.addFile(files[i].name, files[i], source_node);
@@ -896,7 +896,7 @@ $(function() {
             }
         }
         else {
-            filesender.ui.files.addList(e.originalEvent.dataTransfer.files);
+            filesender.ui.files.add(e.originalEvent.dataTransfer.files);
         }
     });
     
@@ -933,7 +933,7 @@ $(function() {
 
         if(typeof this.files == 'undefined') return;
         
-        filesender.ui.files.addList(this.files);
+        filesender.ui.files.add(this.files);
         
         // Forget (cloned) selection for webkit
         this.value = null;
@@ -946,7 +946,7 @@ $(function() {
     // Handle "back" browser action
     if(filesender.supports.reader) {
         var files = filesender.ui.nodes.files.input[0].files;
-        if(files && files.length) filesender.ui.files.addList(files);
+        if(files && files.length) filesender.ui.files.add(files);
     }
 
     // validate message as it is typed
@@ -1183,7 +1183,7 @@ $(function() {
             
             // TODO check file size, reject if over filesender.config.max_legacy_file_size
             
-            var node = filesender.ui.files.addList(this.files, file.get(0));
+            var node = filesender.ui.files.add(this.files, file.get(0));
             if(!node) return;
             
             file.appendTo(node);
