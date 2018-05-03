@@ -46,23 +46,23 @@ filesender.ui.files = {
         return node;
     },
 
-    addTree: function (item, path) {
-        path = path || "";
-        if (item.isFile) {
-            item.file(function(file) {
-              filesender.ui.files.addFile(path + file.name, file);
-            });
-        }
-        else if (item.isDirectory) {
-            // Get folder contents
-            let dirReader = item.createReader();
-            dirReader.readEntries(function(entries) {
-                for (let i=0; i<entries.length; i++) {
-                    filesender.ui.files.addTree(entries[i], path + item.name + "/");
-                }
-            });
-        }
-    },
+//    addTree: function (item, path) {
+//        path = path || "";
+//        if (item.isFile) {
+//            item.file(function(file) {
+//              filesender.ui.files.addFile(path + file.name, file);
+//            });
+//        }
+//        else if (item.isDirectory) {
+//            // Get folder contents
+//            let dirReader = item.createReader();
+//            dirReader.readEntries(function(entries) {
+//                for (let i=0; i<entries.length; i++) {
+//                    filesender.ui.files.addTree(entries[i], path + item.name + "/");
+//                }
+//            });
+//        }
+//    },
     
     addFile: function(filepath, fileblob, source_node) {
         var filesize = fileblob.size;
