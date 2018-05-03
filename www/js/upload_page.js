@@ -140,7 +140,7 @@ filesender.ui.files = {
                 
                 filesender.ui.nodes.files.clear.button('enable');
                 
-                if(added_cid === false) return null;
+                if(added_cid === false) return node;
             }
                 
             filesender.ui.evalUploadEnabled();
