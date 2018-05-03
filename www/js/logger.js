@@ -49,6 +49,9 @@ window.filesender.logger = {
      * @param {String} msg
      */
     log: function(msg) {
+        if(!(typeof msg).match(/^(number|string)$/))
+            msg = JSON.stringify(msg);
+
         var len = filesender.config ? filesender.config.clientlogs.stash_len : 10;
 
         this.stash.push(msg);
