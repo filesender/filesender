@@ -183,7 +183,7 @@ class ClientLog extends DBObject {
      */
     public function __get($property) {
         if(in_array($property, array(
-            'id', 'user_id', 'message'
+            'id', 'user_id', 'message', 'created'
         ))) return $this->$property;
         
         if($property == 'user' || $property == 'owner')
