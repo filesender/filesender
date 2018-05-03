@@ -355,6 +355,13 @@ window.filesender.ui = {
         } else if(error.uid) {
             r.append(lang.tr('you_can_report_exception') + ' : "' + error.uid + '"');
         }
+
+        r.append('<br /><br />' + lang.tr('you_can_send_client_logs') + ' ');
+        r.append($('<button class="send_client_logs" />').text(lang.tr('send_client_logs').out()).on('click', function() {
+            filesender.logger.send(function() {
+                filesender.ui.notify('success', lang.tr('client_logs_sent'));
+            });
+        }));
         
         return error.message;
     },
