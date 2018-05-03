@@ -171,6 +171,7 @@ A note about colours;
 * [report_format](#reportformat)
 * [exception_additional_logging_regex](#exceptionadditionalloggingregex)
 * [clientlogs_stashsize](#clientlogsstashsize)
+* [clientlogs_lifetime](#clientlogslifetime)
 
 
 ## Webservices API
@@ -1552,6 +1553,15 @@ different options for different types.</span>
 * __available:__ since version 2.0
 * __comment:__ Number of last client console entries that are to be back-fed to the server in case there is a client error.
 
+
+### clientlogs_lifetime
+
+* __description:__ Client log backfeed lifetime
+* __mandatory:__ no
+* __type:__ positive integer
+* __default:__ 10
+* __available:__ since version 2.0
+* __comment:__ Number of days after which collected client logs are automatically deleted.
 
 
 ---
