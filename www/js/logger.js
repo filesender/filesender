@@ -85,6 +85,70 @@ window.filesender.logger = {
     }
 };
 
+filesender.logger.nopwatcher = {
+    time_since_last_progress: 0,
+    max_time: 180,
+    msg: null,
+
+    /**
+     * Rests watchdog counter
+     */
+    reset: function() {
+        this.time_since_last_progress = 0;
+
+        if(this.msg) this.msg.hide();
+    },
+
+    /**
+     * Report that noting happened over the last second
+     */
+    nop: function() {
+        this.time_since_last_progress++;
+
+        if(this.time_since_last_progress > this.max_time) {
+            // More than 3min without any kind of progress
+
+            if(this.msg) {
+                this.msg.show();
+
+            } else {
+                this.msg = $('<div class="nothing_happened_as_of_late_you_can_send_client_logs" />').appendTo('#upload_form');
+                this.msg.append(lang.tr('nothing_happened_as_of_late_you_can_send_client_logs') + ' ');
+                this.msg.append($('<button class="send_client_logs" />').text(lang.tr('send_client_logs').out()).on('click', function () {
+                    filesender.logger.send(function () {
+                        filesender.ui.notify('success', lang.tr('client_logs_sent'));
+                    });
+                }));
+            }
+        }
+    },
+
+    /**
+     * Start watchdog
+     */
+    start: function() {
+        var nop = this;
+
+        // Catch file progress updates, bit hackish, may need better plug-in solution
+        var pgr = filesender.ui.files.progress;
+        filesender.ui.files.progress = function(file, complete) {
+            nop.reset();
+
+            pgr.call(filesender.ui.transfer, file, complete);
+        };
+
+        // Watchdog
+        window.setInterval(function() {
+            if(filesender.ui.transfer && filesender.ui.transfer.status === 'running') {
+                nop.nop();
+
+            } else {
+                // done / paused / stopped, reset counter
+                nop.reset();
+            }
+        }, 1000);        }
+};
+
 filesender.logger.load();
 
 // Wrap console utilities
@@ -105,4 +169,12 @@ $(wrap).each(function() {
 // Capture js errors
 window.addEventListener('error', function(e) {
     filesender.logger.log('[' + (new Date()).toLocaleTimeString() + '] JS ERROR in ' + e.filename + '@' + e.lineno + ':' + e.colno + ' ' + e.message);
+});
+
+// Setup "nothing happens" detection
+$(function() {
+    if(!filesender.ui.files) return; // not upload page
+
+    // last progress update watcher
+    filesender.logger.nopwatcher.start();
 });
