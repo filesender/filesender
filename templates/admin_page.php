@@ -1,7 +1,7 @@
 <div class="box">
     <?php
     
-    $sections = array('statistics', 'transfers', 'guests');
+    $sections = array('statistics', 'users', 'transfers', 'guests');
     
     if(Config::get('config_overrides'))
         $sections[] = 'config';
