@@ -136,11 +136,14 @@ class ClientLog extends DBObject {
     public static function stash(User $user, $logs) {
         $stash = self::fromUser($user);
         $len = self::stashSize();
-        while($logs && (count($stash) + count($logs) > $len)) {
+        while($stash && (count($stash) + count($logs) > $len)) {
             $log = array_shift($stash);
             $log->delete();
         }
-        
+    
+        while(count($logs) > $len) // stash is empty if this runs
+            array_shift($logs);
+    
         foreach($logs as $message) {
             $log = self::create($user, $message);
             $log->save();

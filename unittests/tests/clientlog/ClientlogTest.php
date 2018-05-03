@@ -145,9 +145,29 @@ class ClientlogTest extends CommonUnitTestCase {
     }
     
     /**
-     * Function to test cleanup of Clientlogs
+     * Function to test over-stashing of Clientlogs
      *
      * @depends testStash
+     *
+     * @return boolean: true if test succeed
+     */
+    public function testOverStash() {
+        $size = ClientLog::stashSize();
+        
+        ClientLog::stash(Auth::user(), array_fill(0, 2 * $size, 'message'));
+        
+        $logs = ClientLog::fromUser(Auth::user());
+        $this->assertLessThanOrEqual($size, count($logs));
+        
+        $this->displayInfo(get_class(), __FUNCTION__, ' -- '.self::CREATE.' ClientLog stash size applied');
+        
+        return true;
+    }
+    
+    /**
+     * Function to test cleanup of Clientlogs
+     *
+     * @depends testOverStash
      *
      * @return boolean: true if test succeed
      */
