@@ -212,6 +212,29 @@ filesender.ui.files = {
         
         return node;
     },
+    
+    isChrome: function () {
+      var isChromium = window.chrome,
+        winNav = window.navigator,
+        vendorName = winNav.vendor,
+        isOpera = winNav.userAgent.indexOf("OPR") > -1,
+        isIEedge = winNav.userAgent.indexOf("Edge") > -1,
+        isIOSChrome = winNav.userAgent.match("CriOS");
+    
+      if (isIOSChrome) {
+        return true;
+      } else if (
+        isChromium !== null &&
+        typeof isChromium !== "undefined" &&
+        vendorName === "Google Inc." &&
+        isOpera === false &&
+        isIEedge === false
+      ) {
+        return true;
+      } else { 
+        return false;
+      }
+    },
 
     update_crust_meter_for_worker: function(file,idx,v,b) {
 
@@ -776,29 +799,6 @@ filesender.ui.startUpload = function() {
     return this.transfer.start(errorHandler);
 };
 
-function isChrome() {
-  var isChromium = window.chrome,
-    winNav = window.navigator,
-    vendorName = winNav.vendor,
-    isOpera = winNav.userAgent.indexOf("OPR") > -1,
-    isIEedge = winNav.userAgent.indexOf("Edge") > -1,
-    isIOSChrome = winNav.userAgent.match("CriOS");
-
-  if (isIOSChrome) {
-    return true;
-  } else if (
-    isChromium !== null &&
-    typeof isChromium !== "undefined" &&
-    vendorName === "Google Inc." &&
-    isOpera === false &&
-    isIEedge === false
-  ) {
-    return true;
-  } else { 
-    return false;
-  }
-}
-
 $(function() {
     var form = $('#upload_form');
     if(!form.length) return;
@@ -886,7 +886,7 @@ $(function() {
         e.preventDefault();
         e.stopPropagation();
         
-        if (isChrome()) {
+        if (filesender.ui.files.isChrome()) {
             let items = e.originalEvent.dataTransfer.items;
             for (let i=0; i<items.length; i++) {
                 // webkitGetAsEntry enables the recursive dirtree magic
