@@ -38,17 +38,46 @@ filesender.ui.files = {
     add: function(files, source_node) {
         var node = null;
         for(var i=0; i<files.length; i++) {
-            var info = files[i].name + ' : ' + filesender.ui.formatBytes(files[i].size);
+            var latest_node = filesender.ui.files.addFile(files[i].name, files[i], source_node);
+            if (latest_node) {
+                node = latest_node;
+            }
+        }
+        return node;
+    },
+
+    addTree: function (item, path) {
+        path = path || "";
+        if (item.isFile) {
+            item.file(function(file) {
+              filesender.ui.files.addFile(path + file.name, file);
+            });
+        }
+        else if (item.isDirectory) {
+            // Get folder contents
+            let dirReader = item.createReader();
+            dirReader.readEntries(function(entries) {
+                for (let i=0; i<entries.length; i++) {
+                    filesender.ui.files.addTree(entries[i], path + item.name + "/");
+                }
+            });
+        }
+    },
+    
+    addFile: function(filepath, fileblob, source_node) {
+        var filesize = fileblob.size;
+        var node = null;
+            var info = filepath + ' : ' + filesender.ui.formatBytes(filesize);
             node = $('<div class="file" />').attr({
-                'data-name': files[i].name,
-                'data-size': files[i].size
+                'data-name': filepath,
+                'data-size': filesize
             }).appendTo(filesender.ui.nodes.files.list);
             
             $('<span class="info" />').text(info).attr({title: info}).appendTo(node);
             
             if(filesender.ui.nodes.required_files) {
                 // Upload restart mode
-                var req = filesender.ui.nodes.required_files.find('.file[data-name="' + files[i].name + '"][data-size="' + files[i].size + '"]');
+                var req = filesender.ui.nodes.required_files.find('.file[data-name="' + filepath + '"][data-size="' + filesize + '"]');
                 
                 if(!req.length) {
                     filesender.ui.alert('error', lang.tr('unexpected_file'));
@@ -59,7 +88,7 @@ filesender.ui.files = {
                 var file = req.data('file');
                 var added_cid = req.attr('data-cid');
                 file.cid = added_cid;
-                file.blob = files[i];
+                file.blob = fileblob;
                 
                 filesender.ui.transfer.files.push(file);
                 
@@ -100,7 +129,7 @@ filesender.ui.files = {
                     filesender.ui.evalUploadEnabled();
                 }).appendTo(node);
                 
-                var added_cid = filesender.ui.transfer.addFile(files[i].name, files[i], function(error) {
+                var added_cid = filesender.ui.transfer.addFile(filepath, fileblob, function(error) {
                     var tt = 1;
                     if(error.details && error.details.filename) filesender.ui.files.invalidFiles.push(error.details.filename);
                     node.addClass('invalid');
@@ -111,7 +140,7 @@ filesender.ui.files = {
                 
                 filesender.ui.nodes.files.clear.button('enable');
                 
-                if(added_cid === false) continue;
+                if(added_cid === false) return null;
             }
                 
             filesender.ui.evalUploadEnabled();
@@ -178,7 +207,6 @@ filesender.ui.files = {
             }
             
             node.attr('index', filesender.ui.transfer.files.length - 1);
-        }
         
         filesender.ui.nodes.files.list.scrollTop(filesender.ui.nodes.files.list.prop('scrollHeight'));
         
@@ -748,6 +776,29 @@ filesender.ui.startUpload = function() {
     return this.transfer.start(errorHandler);
 };
 
+function isChrome() {
+  var isChromium = window.chrome,
+    winNav = window.navigator,
+    vendorName = winNav.vendor,
+    isOpera = winNav.userAgent.indexOf("OPR") > -1,
+    isIEedge = winNav.userAgent.indexOf("Edge") > -1,
+    isIOSChrome = winNav.userAgent.match("CriOS");
+
+  if (isIOSChrome) {
+    return true;
+  } else if (
+    isChromium !== null &&
+    typeof isChromium !== "undefined" &&
+    vendorName === "Google Inc." &&
+    isOpera === false &&
+    isIEedge === false
+  ) {
+    return true;
+  } else { 
+    return false;
+  }
+}
+
 $(function() {
     var form = $('#upload_form');
     if(!form.length) return;
@@ -835,8 +886,20 @@ $(function() {
         e.preventDefault();
         e.stopPropagation();
         
-        filesender.ui.files.add(e.originalEvent.dataTransfer.files);
-    });
+        if (isChrome()) {
+            let items = e.originalEvent.dataTransfer.items;
+            for (let i=0; i<items.length; i++) {
+                // webkitGetAsEntry enables the recursive dirtree magic
+                let tree = items[i].webkitGetAsEntry();
+                if (tree) {
+                    filesender.ui.files.addTree(tree);
+                }
+            }
+        }
+        else {
+            filesender.ui.files.add(e.originalEvent.dataTransfer.files);
+        }
+      });
     
     // Bind recipients events
     filesender.ui.nodes.recipients.input.on('keydown', function(e) {
