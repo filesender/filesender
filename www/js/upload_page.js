@@ -35,11 +35,34 @@ filesender.ui.files = {
     invalidFiles: [],
 
     addList: function(files, source_node) {
+        var node = null;
         for(var i=0; i<files.length; i++) {
-            filesender.ui.files.addFile(files[i].name, files[i], source_node);
+            var latest_node = filesender.ui.files.addFile(files[i].name, files[i], source_node);
+            if (latest_node != null) {
+                node = latest_node;
+            }
         }
+        return node;
     },
 
+    addTree: function (item, path) {
+        path = path || "";
+        if (item.isFile) {
+            item.file(function(file) {
+              filesender.ui.files.addFile(path + file.name, file);
+            });
+        }
+        else if (item.isDirectory) {
+            // Get folder contents
+            let dirReader = item.createReader();
+            dirReader.readEntries(function(entries) {
+                for (let i=0; i<entries.length; i++) {
+                    filesender.ui.files.addTree(entries[i], path + item.name + "/");
+                }
+            });
+        }
+    },
+    
     addFile: function(filepath, fileblob, source_node) {
         var filesize = fileblob.size;
         var node = null;
@@ -116,7 +139,7 @@ filesender.ui.files = {
             
             filesender.ui.nodes.files.clear.button('enable');
             
-            if(added_cid === false) return;
+            if(added_cid === false) return null;
         }
             
         filesender.ui.evalUploadEnabled();
@@ -187,24 +210,6 @@ filesender.ui.files = {
         filesender.ui.nodes.files.list.scrollTop(filesender.ui.nodes.files.list.prop('scrollHeight'));
         
         return node;
-    },
-
-    addTree: function (item, path) {
-        path = path || "";
-        if (item.isFile) {
-            item.file(function(file) {
-              filesender.ui.files.addFile(path + file.name, file);
-            });
-        }
-        else if (item.isDirectory) {
-            // Get folder contents
-            let dirReader = item.createReader();
-            dirReader.readEntries(function(entries) {
-                for (let i=0; i<entries.length; i++) {
-                    filesender.ui.files.addTree(entries[i], path + item.name + "/");
-                }
-            });
-        }
     },
 
     update_crust_meter_for_worker: function(file,idx,v,b) {
@@ -880,8 +885,7 @@ $(function() {
         e.preventDefault();
         e.stopPropagation();
 
-        //if (isChrome()) {
-        if (false) {
+        if (isChrome()) {
             let items = e.originalEvent.dataTransfer.items;
             for (let i=0; i<items.length; i++) {
                 // webkitGetAsEntry is where the magic happens
@@ -1177,7 +1181,7 @@ $(function() {
             var sel = $(this)
             var file = sel.clone();
             
-            // TODO check file size, reject if over filesender.config.max_legacy_file_size // DIRTREE_UPLOAD
+            // TODO check file size, reject if over filesender.config.max_legacy_file_size
             
             var node = filesender.ui.files.addList(this.files, file.get(0));
             if(!node) return;
