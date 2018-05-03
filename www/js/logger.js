@@ -104,5 +104,5 @@ $(wrap).each(function() {
 
 // Capture js errors
 window.addEventListener('error', function(e) {
-    filesender.logger.log('[js error] ' + e.filename + '@' + e.lineno + ':' + e.colno + ' ' + e.message);
+    filesender.logger.log('[' + (new Date()).toLocaleTimeString() + '] JS ERROR in ' + e.filename + '@' + e.lineno + ':' + e.colno + ' ' + e.message);
 });
