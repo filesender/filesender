@@ -48,7 +48,8 @@ class RestEndpointClientlogs extends RestEndpoint {
     public static function cast(ClientLog $log) {
         return array(
             'id' => $log->id,
-            'message' => $log->message
+            'message' => $log->message,
+            'created' => RestUtilities::formatDate($log->created, true)
         );
     }
     
@@ -85,7 +86,7 @@ class RestEndpointClientlogs extends RestEndpoint {
     
         return array_map(function($log) {
             return self::cast($log);
-        }, ClientLog::fromUser($user));
+        }, array_values(ClientLog::fromUser($user)));
     }
     
     /**
