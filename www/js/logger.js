@@ -98,3 +98,8 @@ $(wrap).each(function() {
         f(msg);
     };
 });
+
+// Capture js errors
+window.addEventListener('error', function(e) {
+    filesender.logger.log('[js error] ' + e.filename + '@' + e.lineno + ':' + e.colno + ' ' + e.message);
+});
