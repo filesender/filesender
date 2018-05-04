@@ -46,8 +46,8 @@ filesender.ui.files = {
         return node;
     },
 
-//    addTree: function(tree_item, built_path) {
-//        if (!tree_item) return;
+    addTree: function(tree_item, built_path) {
+        if (!tree_item) return;
 //        built_path = typeof built_path === 'string' ? built_path || "";
 //        if (tree_item.isFile && typeof tree_item.file === "function") {
 //            tree_item.file(function(fileblob) {
@@ -66,7 +66,7 @@ filesender.ui.files = {
 //                }, function errorHandler(fileError) {});
 //            }
 //        }
-//    },
+    },
     
     addFile: function(filepath, fileblob, source_node) {
         var filesize = fileblob.size;
@@ -867,21 +867,21 @@ $(function() {
         e.preventDefault();
         e.stopPropagation();
         
-//        if (typeof e.originalEvent.dataTransfer.items === "object" &&
-//            e.originalEvent.dataTransfer.items.length > 0 &&
-//            typeof e.originalEvent.dataTransfer.items[0].webkitGetAsEntry === "function") {
-//            let items = e.originalEvent.dataTransfer.items;
-//            for (let i=0; i<items.length; i++) {
-//                // webkitGetAsEntry enables the recursive dirtree magic
-//                let tree = items[i].webkitGetAsEntry();
-//                if (tree) {
-//                    filesender.ui.files.addTree(tree);
-//                }
-//            }
-//        }
-//        else {
+        if (typeof e.originalEvent.dataTransfer.items === "object" &&
+            e.originalEvent.dataTransfer.items.length > 0 &&
+            typeof e.originalEvent.dataTransfer.items[0].webkitGetAsEntry === "function") {
+            let items = e.originalEvent.dataTransfer.items;
+            for (let i=0; i<items.length; i++) {
+                // webkitGetAsEntry enables the recursive dirtree magic
+                let tree = items[i].webkitGetAsEntry();
+                if (tree) {
+                    filesender.ui.files.addTree(tree);
+                }
+            }
+        }
+        else {
             filesender.ui.files.add(e.originalEvent.dataTransfer.files);
-//        }
+        }
       });
     
     // Bind recipients events

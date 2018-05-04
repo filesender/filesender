@@ -21,6 +21,7 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
         array(
             'browserName' => 'chrome',
             'desiredCapabilities' => array(
+                'version' => '60',
                 'platform' => 'Linux'
             )
         ),
