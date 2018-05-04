@@ -35,7 +35,7 @@ filesender.ui.files = {
     invalidFiles: [],
     
     // File selection (browse / drop) handler
-    add: function(files, source_node) {
+    addList: function(files, source_node) {
         var node = null;
         for(var i=0; i<files.length; i++) {
             var latest_node = filesender.ui.files.addFile(files[i].name, files[i], source_node);
@@ -45,28 +45,6 @@ filesender.ui.files = {
         }
         return node;
     },
-
-//    addTree: function(tree_item, built_path) {
-//        if (!tree_item) return;
-//        built_path = typeof built_path === 'string' ? built_path : "";
-//        if (tree_item.isFile && typeof tree_item.file === "function") {
-//            tree_item.file(function(fileblob) {
-//              filesender.ui.files.addFile(built_path + fileblob.name, fileblob);
-//            }, function errorHandler(fileError) {});
-//        }
-//        else if (tree_item.isDirectory && typeof tree_item.createReader === "function") {
-//            // Get folder contents
-//            var dirReader = tree_item.createReader();
-//            
-//            if (dirReader && typeof dirReader.readEntries === "function") {
-//                dirReader.readEntries(function(entries) {
-//                    for (let i=0; i<entries.length; i++) {
-//                        filesender.ui.files.addTree(entries[i], built_path + tree_item.name + "/");
-//                    }
-//                }, function errorHandler(fileError) {});
-//            }
-//        }
-//    },
     
     addFile: function(filepath, fileblob, source_node) {
         var filesize = fileblob.size;
@@ -867,21 +845,7 @@ $(function() {
         e.preventDefault();
         e.stopPropagation();
         
-//        if (typeof e.originalEvent.dataTransfer.items === "object" &&
-//            e.originalEvent.dataTransfer.items.length > 0 &&
-//            typeof e.originalEvent.dataTransfer.items[0].webkitGetAsEntry === "function") {
-//            let items = e.originalEvent.dataTransfer.items;
-//            for (let i=0; i<items.length; i++) {
-//                // webkitGetAsEntry enables the recursive dirtree magic
-//                let tree = items[i].webkitGetAsEntry();
-//                if (tree) {
-//                    filesender.ui.files.addTree(tree);
-//                }
-//            }
-//        }
-//        else {
-            filesender.ui.files.add(e.originalEvent.dataTransfer.files);
-//        }
+        filesender.ui.files.addList(e.originalEvent.dataTransfer.files);
       });
     
     // Bind recipients events
@@ -917,7 +881,7 @@ $(function() {
 
         if(typeof this.files == 'undefined') return;
         
-        filesender.ui.files.add(this.files);
+        filesender.ui.files.addList(this.files);
         
         // Forget (cloned) selection for webkit
         this.value = null;
@@ -930,7 +894,7 @@ $(function() {
     // Handle "back" browser action
     if(filesender.supports.reader) {
         var files = filesender.ui.nodes.files.input[0].files;
-        if(files && files.length) filesender.ui.files.add(files);
+        if(files && files.length) filesender.ui.files.addList(files);
     }
 
     // validate message as it is typed
@@ -1167,7 +1131,7 @@ $(function() {
             
             // TODO check file size, reject if over filesender.config.max_legacy_file_size
             
-            var node = filesender.ui.files.add(this.files, file.get(0));
+            var node = filesender.ui.files.addList(this.files, file.get(0));
             if(!node) return;
             
             file.appendTo(node);

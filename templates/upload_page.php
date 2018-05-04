@@ -280,9 +280,8 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
         <script type="text/javascript" src="{path:js/graph.js}"></script>
     <?php } ?>
     
-    <?php if (Config::get('sauce_username')) { ?>
-       <script type="text/javascript" src="{path:js/upload_page-saucelabs.js}"></script>
-    <?php } else { ?>
-       <script type="text/javascript" src="{path:js/upload_page.js}"></script>
+    <?php if (!getenv('SAUCE_TUNNEL_IDENTIFIER')) { ?>
+       <script type="text/javascript" src="{path:js/dragdrop-dirtree.js}"></script>
     <?php } ?>
+    <script type="text/javascript" src="{path:js/upload_page.js}"></script>
 </div>
