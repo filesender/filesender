@@ -869,7 +869,8 @@ $(function() {
         
         if (typeof e.originalEvent.dataTransfer.items === "object" &&
             e.originalEvent.dataTransfer.items.length > 0 &&
-            typeof e.originalEvent.dataTransfer.items[0].webkitGetAsEntry === "function") {
+            typeof e.originalEvent.dataTransfer.items[0].webkitGetAsEntry === "function" &&
+            1 === 0) {
             let items = e.originalEvent.dataTransfer.items;
             for (let i=0; i<items.length; i++) {
                 // webkitGetAsEntry enables the recursive dirtree magic
