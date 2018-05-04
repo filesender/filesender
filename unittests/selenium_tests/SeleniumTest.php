@@ -10,21 +10,20 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
 
     public static $browsers = array(
         // run FF15 on Windows 8 on Sauce
-        array(
-            'browserName' => 'firefox',
-            'desiredCapabilities' => array(
-                'version' => '52',
-                'platform' => 'Linux',
-//                'platform' => 'Windows 2012',
-            )
-        ),
-        // run Chrome on Linux on Sauce
 //        array(
-//            'browserName' => 'chrome',
+//            'browserName' => 'firefox',
 //            'desiredCapabilities' => array(
-//                'platform' => 'Linux'
+//                'version' => '15',
+//                'platform' => 'Windows 2012',
 //            )
 //        ),
+        // run Chrome on Linux on Sauce
+        array(
+            'browserName' => 'chrome',
+            'desiredCapabilities' => array(
+                'platform' => 'Linux'
+            )
+        ),
         // run Mobile Safari on iOS
         //array(
         //'browserName' => '',
