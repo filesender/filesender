@@ -50,8 +50,8 @@ filesender.ui.files = {
         if (!item) return;
         path = path || "";
         if (item.isFile && typeof item.file === "function") {
-            item.file(function(file) {
-              filesender.ui.files.addFile(path + file.name, file);
+            item.file(function(fileblob) {
+              filesender.ui.files.addFile(path + fileblob.name, fileblob);
             });
         }
         else if (item.isDirectory && typeof item.createReader === "function") {
@@ -217,28 +217,28 @@ filesender.ui.files = {
         return node;
     },
     
-//    isChrome: function () {
-//      var isChromium = window.chrome,
-//        winNav = window.navigator,
-//        vendorName = winNav.vendor,
-//        isOpera = winNav.userAgent.indexOf("OPR") > -1,
-//        isIEedge = winNav.userAgent.indexOf("Edge") > -1,
-//        isIOSChrome = winNav.userAgent.match("CriOS");
-//    
-//      if (isIOSChrome) {
-//        return true;
-//      } else if (
-//        isChromium !== null &&
-//        typeof isChromium !== "undefined" &&
-//        vendorName === "Google Inc." &&
-//        isOpera === false &&
-//        isIEedge === false
-//      ) {
-//        return true;
-//      } else { 
-//        return false;
-//      }
-//    },
+    isChrome: function () {
+      var isChromium = window.chrome,
+        winNav = window.navigator,
+        vendorName = winNav.vendor,
+        isOpera = winNav.userAgent.indexOf("OPR") > -1,
+        isIEedge = winNav.userAgent.indexOf("Edge") > -1,
+        isIOSChrome = winNav.userAgent.match("CriOS");
+    
+      if (isIOSChrome) {
+        return true;
+      } else if (
+        isChromium !== null &&
+        typeof isChromium !== "undefined" &&
+        vendorName === "Google Inc." &&
+        isOpera === false &&
+        isIEedge === false
+      ) {
+        return true;
+      } else { 
+        return false;
+      }
+    },
 
     update_crust_meter_for_worker: function(file,idx,v,b) {
 
@@ -890,19 +890,21 @@ $(function() {
         e.preventDefault();
         e.stopPropagation();
         
-//        if (filesender.ui.files.isChrome()) {
-//            let items = e.originalEvent.dataTransfer.items;
-//            for (let i=0; i<items.length; i++) {
-//                // webkitGetAsEntry enables the recursive dirtree magic
-//                let tree = items[i].webkitGetAsEntry();
-//                if (tree) {
-//                    filesender.ui.files.addTree(tree);
-//                }
-//            }
-//        }
-//        else {
+        if (typeof e.originalEvent.dataTransfer.items === "object" &&
+            e.originalEvent.dataTransfer.items.length > 0 &&
+            typeof e.originalEvent.dataTransfer.items[0].webkitGetAsEntry === "function") {
+            let items = e.originalEvent.dataTransfer.items;
+            for (let i=0; i<items.length; i++) {
+                // webkitGetAsEntry enables the recursive dirtree magic
+                let tree = items[i].webkitGetAsEntry();
+                if (tree) {
+                    filesender.ui.files.addTree(tree);
+                }
+            }
+        }
+        else {
             filesender.ui.files.add(e.originalEvent.dataTransfer.files);
-//        }
+        }
       });
     
     // Bind recipients events
