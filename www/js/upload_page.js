@@ -47,6 +47,7 @@ filesender.ui.files = {
     },
 
     addTree: function (item, path) {
+        if (!item) return;
         path = path || "";
         if (item.isFile && typeof item.file === "function") {
             item.file(function(file) {
