@@ -46,9 +46,9 @@ filesender.ui.files = {
         return node;
     },
 
-    addTree: function (tree_item, built_path) {
-        if (!tree_item) return;
-//        built_path = built_path || "";
+//    addTree: function (tree_item, built_path) {
+//        if (!tree_item) return;
+//        built_path = typeof built_path === 'string' ? built_path || "";
 //        if (tree_item.isFile && typeof tree_item.file === "function") {
 //            tree_item.file(function(fileblob) {
 //              filesender.ui.files.addFile(built_path + fileblob.name, fileblob);
@@ -66,7 +66,7 @@ filesender.ui.files = {
 //                }, function errorHandler(fileError) {});
 //            }
 //        }
-    },
+//    },
     
     addFile: function(filepath, fileblob, source_node) {
         var filesize = fileblob.size;
@@ -898,7 +898,7 @@ $(function() {
                 // webkitGetAsEntry enables the recursive dirtree magic
                 let tree = items[i].webkitGetAsEntry();
                 if (tree) {
-                    filesender.ui.files.addTree(tree);
+//                    filesender.ui.files.addTree(tree);
                 }
             }
         }
