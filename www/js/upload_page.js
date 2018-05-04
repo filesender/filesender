@@ -870,14 +870,14 @@ $(function() {
         if (typeof e.originalEvent.dataTransfer.items === "object" &&
             e.originalEvent.dataTransfer.items.length > 0 &&
             typeof e.originalEvent.dataTransfer.items[0].webkitGetAsEntry === "function") {
-            let items = e.originalEvent.dataTransfer.items;
-            for (let i=0; i<items.length; i++) {
-                // webkitGetAsEntry enables the recursive dirtree magic
-                let tree = items[i].webkitGetAsEntry();
-                if (tree) {
+//            let items = e.originalEvent.dataTransfer.items;
+//            for (let i=0; i<items.length; i++) {
+//                // webkitGetAsEntry enables the recursive dirtree magic
+//                let tree = items[i].webkitGetAsEntry();
+//                if (tree) {
                     filesender.ui.files.addTree(tree);
-                }
-            }
+//                }
+//            }
         }
         else {
             filesender.ui.files.add(e.originalEvent.dataTransfer.files);
