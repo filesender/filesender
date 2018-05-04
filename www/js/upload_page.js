@@ -844,8 +844,16 @@ $(function() {
         
         e.preventDefault();
         e.stopPropagation();
+
+        addtree_success = false;
         
-        filesender.ui.files.addList(e.originalEvent.dataTransfer.files);
+        if (typeof filesender.dragdrop.addTree === "function") {
+          addtree_success = filesender.dragdrop.addTree(e.originalEvent.dataTransfer);
+        }
+
+        if (!addtree_success) {
+            filesender.ui.files.addList(e.originalEvent.dataTransfer.files);
+        }
       });
     
     // Bind recipients events
