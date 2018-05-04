@@ -46,7 +46,7 @@ filesender.ui.files = {
         return node;
     },
 
-//    addTree: function (tree_item, built_path) {
+//    addTree: function(tree_item, built_path) {
 //        if (!tree_item) return;
 //        built_path = typeof built_path === 'string' ? built_path || "";
 //        if (tree_item.isFile && typeof tree_item.file === "function") {
@@ -217,29 +217,6 @@ filesender.ui.files = {
         return node;
     },
     
-    isChrome: function () {
-      var isChromium = window.chrome,
-        winNav = window.navigator,
-        vendorName = winNav.vendor,
-        isOpera = winNav.userAgent.indexOf("OPR") > -1,
-        isIEedge = winNav.userAgent.indexOf("Edge") > -1,
-        isIOSChrome = winNav.userAgent.match("CriOS");
-    
-      if (isIOSChrome) {
-        return true;
-      } else if (
-        isChromium !== null &&
-        typeof isChromium !== "undefined" &&
-        vendorName === "Google Inc." &&
-        isOpera === false &&
-        isIEedge === false
-      ) {
-        return true;
-      } else { 
-        return false;
-      }
-    },
-
     update_crust_meter_for_worker: function(file,idx,v,b) {
 
         var crust_indicator = filesender.ui.nodes.files.list.find('[data-cid="' + file.cid + '"] .crust' + idx);
