@@ -46,24 +46,24 @@ filesender.ui.files = {
         return node;
     },
 
-    addTree: function (item, path) {
-        if (!item) return;
-        path = path || "";
-//        if (item.isFile && typeof item.file === "function") {
-//            item.file(function(fileblob) {
-//              filesender.ui.files.addFile(path + fileblob.name, fileblob);
-//            });
+    addTree: function (tree_item, built_path) {
+        if (!tree_item) return;
+//        built_path = built_path || "";
+//        if (tree_item.isFile && typeof tree_item.file === "function") {
+//            tree_item.file(function(fileblob) {
+//              filesender.ui.files.addFile(built_path + fileblob.name, fileblob);
+//            }, function errorHandler(fileError) {});
 //        }
-//        else if (item.isDirectory && typeof item.createReader === "function") {
+//        else if (tree_item.isDirectory && typeof tree_item.createReader === "function") {
 //            // Get folder contents
-//            var dirReader = item.createReader();
+//            var dirReader = tree_item.createReader();
 //            
 //            if (dirReader && typeof dirReader.readEntries === "function") {
 //                dirReader.readEntries(function(entries) {
 //                    for (let i=0; i<entries.length; i++) {
-//                        filesender.ui.files.addTree(entries[i], path + item.name + "/");
+//                        filesender.ui.files.addTree(entries[i], built_path + tree_item.name + "/");
 //                    }
-//                });
+//                }, function errorHandler(fileError) {});
 //            }
 //        }
     },
