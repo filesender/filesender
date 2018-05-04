@@ -48,19 +48,22 @@ filesender.ui.files = {
 
     addTree: function (item, path) {
         path = path || "";
-        if (item.isFile) {
+        if (item.isFile && typeof item.file === "function") {
             item.file(function(file) {
               filesender.ui.files.addFile(path + file.name, file);
             });
         }
-        else if (item.isDirectory) {
+        else if (item.isDirectory && typeof item.createReader === "function") {
             // Get folder contents
             var dirReader = item.createReader();
-            dirReader.readEntries(function(entries) {
-                for (let i=0; i<entries.length; i++) {
-                    filesender.ui.files.addTree(entries[i], path + item.name + "/");
-                }
-            });
+            
+            if (dirReader && typeof dirReader.readEntries === "function") {
+                dirReader.readEntries(function(entries) {
+                    for (let i=0; i<entries.length; i++) {
+                        filesender.ui.files.addTree(entries[i], path + item.name + "/");
+                    }
+                });
+            }
         }
     },
     
