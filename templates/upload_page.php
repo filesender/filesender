@@ -280,5 +280,9 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
         <script type="text/javascript" src="{path:js/graph.js}"></script>
     <?php } ?>
     
-    <script type="text/javascript" src="{path:js/upload_page.js}"></script>
+    <?php if (Config::get('sauce_access_key')) { ?>
+       <script type="text/javascript" src="{path:js/upload_page-saucelabs.js}"></script>
+    <?php } else { ?>
+       <script type="text/javascript" src="{path:js/upload_page.js}"></script>
+    <?php } ?>
 </div>
