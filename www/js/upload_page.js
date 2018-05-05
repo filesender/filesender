@@ -46,6 +46,42 @@ filesender.ui.files = {
         return node;
     },
     
+    recurseTree: function(item, path) {
+        path = path || "";
+        if (item.isFile) {
+            item.file(function(file) {
+              filesender.ui.files.addFile(path + file.name, file);
+            });
+        }
+        else if (item.isDirectory) {
+            // Get folder contents
+            let dirReader = item.createReader();
+            dirReader.readEntries(function(entries) {
+                for (let i=0; i<entries.length; i++) {
+                    filesender.ui.files.recurseTree(entries[i], path + item.name + "/");
+                }
+            });
+        }
+    },
+
+    addTree: function(dataTransfer) {
+        if(typeof dataTransfer.items !== "object") return false;
+
+        let items = dataTransfer.items;
+        
+        if(!items.length) return false;
+        if(typeof items[0].webkitGetAsEntry !== "function") return false;
+        
+        for (let i=0; i<items.length; i++) {
+            // webkitGetAsEntry enables the recursive dirtree magic
+            let tree = items[i].webkitGetAsEntry();
+            if (tree) {
+                filesender.ui.files.recurseTree(tree);
+            }
+        }
+        return true;
+    },
+    
     addFile: function(filepath, fileblob, source_node) {
         var filesize = fileblob.size;
         var node = null;
@@ -847,8 +883,8 @@ $(function() {
 
         addtree_success = false;
         
-        if (typeof filesender.dragdrop.addTree === "function") {
-          addtree_success = filesender.dragdrop.addTree(e.originalEvent.dataTransfer);
+        if (typeof filesender.ui.files.addTree === "function") {
+          addtree_success = filesender.ui.files.addTree(e.originalEvent.dataTransfer);
         }
 
         if (!addtree_success) {
