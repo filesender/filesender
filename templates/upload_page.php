@@ -280,5 +280,8 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
         <script type="text/javascript" src="{path:js/graph.js}"></script>
     <?php } ?>
     
+    <?php if (!getenv('SAUCE_TUNNEL_IDENTIFIER')) { ?>
+       <script type="text/javascript" src="{path:js/dragdrop-dirtree.js}"></script>
+    <?php } ?>
     <script type="text/javascript" src="{path:js/upload_page.js}"></script>
 </div>
