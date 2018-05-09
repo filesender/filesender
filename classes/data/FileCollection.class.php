@@ -188,8 +188,6 @@ class FileCollection extends DBObject
      * @return 2d array[collection_id][file_id]=FileCollection
      */
     public static function fromCollectionIds($collectionIds) {
-        $owner_id = $collection->id;
-        $files = array();
         
         $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE collection_id IN ('.implode(", ", $collectionIds).') ORDER BY collection_id, file_id');
         $s->execute();
