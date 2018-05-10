@@ -1410,6 +1410,7 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __*General format of log target:*__ array(('type' => string, <attribute1 => <value>, <attribute2> => <value>
 * __*Standard parameters for all options:*__
 	* __'level'__ (optional): restricts loglevel of current facility.  Permissible values: debug, warning, info, error
+	* __'output'__ (optional): sets the output mode of log messages.  Permissible values: text, json 
 	* __'process'__ (optional): allows you to separate logs from different parts of FileSender into separate logfiles, for example the REST logfile gets huge.  Permissible values: CLI, GUI, REST, WEB, CRON, FEEDBACK, MISC, INSTALL, UPGRADE.  Comma-separated list.
 * __*Available targets:*__
 	* __'type' => 'file'__ logs to a file.  You must specify a path.  You can optionally specify log file rotation with 'rotate' => '<value>', where value can be hourly, daily, weekly, monthly, yearly.
