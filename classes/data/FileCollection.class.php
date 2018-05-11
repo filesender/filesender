@@ -159,7 +159,7 @@ class FileCollection extends DBObject
         
         if (!is_null($full_load)) {
            $s = DBI::prepare('SELECT * FROM '.File::getDBTable().' WHERE id IN (SELECT file_id FROM '.self::getDBTable().' WHERE collection_id = :collection_id)');
-           $s->execute(array('collection_id' => $owner_id));
+           $s->execute(array(':collection_id' => $owner_id));
            foreach($s->fetchAll() as $data) {
                $file_id = $data['id'];
                $filecollection = self::create($owner_id, $file_id);
@@ -170,7 +170,7 @@ class FileCollection extends DBObject
         }
         else {
            $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE collection_id = :collection_id');
-           $s->execute(array('collection_id' => $owner_id));
+           $s->execute(array(':collection_id' => $owner_id));
            foreach($s->fetchAll() as $data) {
                $file_id = $data['file_id'];
                $filecollection = self::create($owner_id, $file_id);
@@ -189,8 +189,9 @@ class FileCollection extends DBObject
      */
     public static function fromCollectionIds($collectionIds) {
         
-        $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE collection_id IN ('.implode(", ", $collectionIds).') ORDER BY collection_id, file_id');
-        $s->execute();
+        $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE collection_id IN ('.implode(", ", $collectionIds).') ORDER BY :order1, :order2');
+        $s->execute(array(':order1' => 'collection_id',
+                          ':order2' => 'file_id'));
         $set = array();
         $current = null;
         $current_id = -1;
@@ -224,7 +225,7 @@ class FileCollection extends DBObject
         
         if (!is_null($full_load)) {
            $s = DBI::prepare('SELECT * FROM '.Collection::getDBTable().' WHERE id IN (SELECT collection_id FROM '.self::getDBTable().' WHERE file_id = :file_id)');
-           $s->execute(array('file_id' => $file_id));
+           $s->execute(array(':file_id' => $file_id));
            foreach($s->fetchAll() as $data) {
                $collection_id = $data['id'];
                $filecollection = self::create($collection_id, $file_id);
@@ -235,7 +236,7 @@ class FileCollection extends DBObject
         }
         else {
            $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE file_id = :file_id');
-           $s->execute(array('file_id' => $file_id));
+           $s->execute(array(':file_id' => $file_id));
            foreach($s->fetchAll() as $data) {
                $collection_id = $data['collection_id'];
                $filecollection = self::create($collection_id, $file_id);
@@ -258,8 +259,8 @@ class FileCollection extends DBObject
     public function delete() {
         // Remove from database
         $s = DBI::prepare('DELETE FROM '.static::getDBTable().' WHERE collection_id = :collection_id AND file_id = :file_id');
-        $s->execute(array('collection_id' => $this->collection_id,
-                          'file_id' => $this->file_id));
+        $s->execute(array(':collection_id' => $this->collection_id,
+                          ':file_id' => $this->file_id));
     }
     
     /**

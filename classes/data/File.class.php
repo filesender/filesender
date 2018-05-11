@@ -290,7 +290,7 @@ class File extends DBObject
      */
     public static function fromUid($uid) {
         $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE uid = :uid');
-        $s->execute(array('uid' => $uid));
+        $s->execute(array(':uid' => $uid));
         $data = $s->fetch();
         
         if(!$data) throw FileNotFoundException('uid = '.$uid);
@@ -307,7 +307,7 @@ class File extends DBObject
      */
     public static function fromTransfer(Transfer $transfer) {
         $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE transfer_id = :transfer_id');
-        $s->execute(array('transfer_id' => $transfer->id));
+        $s->execute(array(':transfer_id' => $transfer->id));
         $tree_files = array();
         $files = array();
         foreach($s->fetchAll() as $data) {
@@ -329,8 +329,8 @@ class File extends DBObject
             $directories = $collections[CollectionType::DIRECTORY_ID];
             // Set path info if it exists
             $t = DBI::prepare('SELECT fc.file_id AS id, c.info AS dirpath, c.id as dir_id FROM FileCollections fc, Collections c WHERE c.transfer_id = :transfer_id AND c.type_id = :collection_type AND fc.collection_id = c.id');
-            $t->execute(array('transfer_id' => $transfer->id,
-                              'collection_type' => CollectionType::DIRECTORY_ID));
+            $t->execute(array(':transfer_id' => $transfer->id,
+                              ':collection_type' => CollectionType::DIRECTORY_ID));
             foreach($t->fetchAll() as $data) {
                 $file = $files[$data['id']];
                 $file->pathCache = $data['dirpath'].'/'.$file->name;

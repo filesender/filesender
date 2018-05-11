@@ -328,7 +328,7 @@ class DBObject {
         
         // Remove from database
         $s = DBI::prepare('DELETE FROM '.static::getDBTable().' WHERE id = :id');
-        $s->execute(array('id' => $this->id));
+        $s->execute(array(':id' => $this->id));
         
         // Remove from object cache
         self::purgeCache(get_called_class(), $this->id);
