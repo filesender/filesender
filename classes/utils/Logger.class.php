@@ -109,6 +109,9 @@ class Logger {
                 $facility['level'] = LogLevels::INFO;
             }
             
+            if(!array_key_exists('output', $facility))
+                $facility['output'] = 'text';
+
             // Facility type based parameter checks
             switch(strtolower($facility['type'])) {
                 case 'file' :
@@ -292,6 +295,13 @@ class Logger {
             }
         }
         
+        $messageArray = array(
+            'app' => 'FileSender',
+            'process' => self::$process,
+            'level' => $level,
+            'message' => $message
+        );
+
         // Add authenticated user id if any, except in debug mode as line is already long
         try {
             // No user id in log if we are recording a low level exception
@@ -302,12 +312,9 @@ class Logger {
             }));
             
             if($level != LogLevels::DEBUG && !$risky_exception && Auth::user())
-                $message = '[user '.Auth::user()->id.'] '.$message;
+                $messageArray['user'] = Auth::user()->id;
             
         } catch(Exception $e) {}
-        
-        // Build final message ...
-        $message = '['.self::$process.':'.$level.'] '.$message;
         
         // ... and give it to defined facilities
         foreach(self::$facilities as $facility) {
@@ -324,6 +331,13 @@ class Logger {
                 if(self::$levels[$level] > $max) continue;
             }
             
+            // Build final message ...
+            if ($facility['output'] == 'json') {
+                $message = json_encode($messageArray);
+            } else { //text
+                $message = (array_key_exists('user', $messageArray)?'[user '.$messageArray['user'].'] ':'').'['.$messageArray['process'].':'.$messageArray['level'].'] '.$message;
+            }
+
             // Forward to facility related method with config
             $method = get_called_class().'::'.$facility['method'];
             call_user_func($method, $facility, $level, $message);
