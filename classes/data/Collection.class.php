@@ -218,7 +218,7 @@ class Collection extends DBObject
      */
     public static function fromTransfer(Transfer $transfer) {
         $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE transfer_id = :transfer_id ORDER BY type_id');
-        $s->execute(array('transfer_id' => $transfer->id));
+        $s->execute(array(':transfer_id' => $transfer->id));
         $collections = array();
         $collectionIds = array();
         foreach($s->fetchAll() as $data) {
