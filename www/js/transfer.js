@@ -657,6 +657,9 @@ window.filesender.transfer = function() {
         
         // From here we should have everything we need to restart
         filesender.ui.log('Restarting failed transfer #' + this.id);
+        for(var i=0; i<tracker.files.length; i++) {
+            filesender.ui.log('uploaded: ' + tracker.files[i].uploaded);
+        }
         
         this.time = (new Date()).getTime();
         
@@ -1239,12 +1242,11 @@ window.filesender.transfer = function() {
         var slicer = file.blob.slice ? 'slice' : (file.blob.mozSlice ? 'mozSlice' : (file.blob.webkitSlice ? 'webkitSlice' : 'slice'));
         
         var blob = file.blob[slicer](offset, end);
+        var file_uploaded_when_chunk_complete = end;
+        if (file_uploaded_when_chunk_complete > file.size)
+            file_uploaded_when_chunk_complete = file.size;
         
-        file.uploaded = end;
-        if (file.uploaded > file.size)
-            file.uploaded = file.size;
-        
-        var last = file.uploaded >= file.size;
+        var last = file_uploaded_when_chunk_complete >= file.size;
         var fncache = file.name;
         if (last)
             this.file_index++;
@@ -1257,13 +1259,14 @@ window.filesender.transfer = function() {
         this.uploader = filesender.client.putChunk(
             file, blob, offset,
             function(ratio) { // Progress
-                var chunk_size = Math.min(file.size - file.uploaded, filesender.config.upload_chunk_size);
-                file.fine_progress = Math.floor(file.uploaded + ratio * chunk_size);
+                var chunk_size = Math.min(file.size - file_uploaded_when_chunk_complete, filesender.config.upload_chunk_size);
+                file.fine_progress = Math.floor(file_uploaded_when_chunk_complete + ratio * chunk_size);
                 transfer.recordUploadProgressInWatchdog(worker_id,ratio * chunk_size);
                 transfer.reportProgress(file);
             },
             function() { // Done
                 transfer.recordUploadedInWatchdog(worker_id);
+                file.uploaded = file_uploaded_when_chunk_complete;
                 
                 if (last) { // File done
                     transfer.reportProgress(file, function() {
