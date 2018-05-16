@@ -106,6 +106,9 @@ $default = array(
     'terasender_worker_max_chunk_retries' => 20,    
     'stalling_detection' => false,
 
+    'testing_terasender_worker_uploadRequestChange_function_name' => '',
+
+
     // There are not so many options here, so they are listed
     // to make it easy for users to know what values might be interesting
     'storage_type' => 'filesystem',

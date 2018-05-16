@@ -122,13 +122,17 @@ window.filesender.config = {
     upload_force_transfer_resume_forget_if_encrypted: '<?php echo Config::get('upload_force_transfer_resume_forget_if_encrypted') ?>',
     upload_considered_too_slow_if_no_progress_for_seconds: '<?php echo Config::get('upload_considered_too_slow_if_no_progress_for_seconds') ?>',
 
+    testing_terasender_worker_uploadRequestChange_function_name: '<?php echo Config::get('testing_terasender_worker_uploadRequestChange_function_name') ?>',
+
+
 	language: {
 		downloading : "<?php echo Lang::tr('downloading')->out(); ?>",
 		decrypting : "<?php echo Lang::tr('decrypting')->out(); ?>",
 		file_encryption_wrong_password : "<?php echo Lang::tr('file_encryption_wrong_password')->out(); ?>",
 		file_encryption_enter_password : "<?php echo Lang::tr('file_encryption_enter_password')->out(); ?>",
 		file_encryption_need_password : "<?php echo Lang::tr('file_encryption_need_password')->out(); ?>"
-	}
+	},
+
 };
 
 <?php if(Config::get('force_legacy_mode')) { ?>

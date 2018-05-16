@@ -10,6 +10,7 @@ importScripts(
 	'../../js/crypter/crypto_app.js'
 );
 
+
 var terasender_worker = {
     /**
      * Worker properties
@@ -192,6 +193,27 @@ var terasender_worker = {
         this.log('Security token changed, propagating');
         this.sendCommand('securityTokenChanged', new_security_token);
     },
+
+    testing_uploadRequestChange_xhr_fail_on_third_finally_succeed: function(xhr) {
+        var worker = this;
+        var upload_chunk_size = window.filesender.config.upload_chunk_size;
+        var ret = xhr.status;
+        
+        this.log('testing_xhr_fail_on_third( called )');
+        
+        if( xhr.status == 200
+            && this.send_attempts < (window.filesender.config.terasender_worker_max_chunk_retries-1)
+            && worker.job
+            && worker.job.chunk
+            && worker.job.chunk.start==(3*upload_chunk_size))
+        {
+            ret = 0;
+            this.log('force the status to zero for testing! XXX this.send_attempts ' + this.send_attempts);
+        }
+        return ret;
+    },
+
+    
     
     /**
      * Upload xhr onreadystatechange callback
@@ -200,6 +222,16 @@ var terasender_worker = {
      */
     uploadRequestChange: function(xhr){
         if(xhr.readyState != 4) return; // Not a progress update
+
+        var status = xhr.status;
+
+        // call testing mutilation function if set
+        {
+            var fname = window.filesender.config.testing_terasender_worker_uploadRequestChange_function_name;
+            if( fname.length && fname.startsWith('testing_uploadRequestChange_')) {
+                status = this[fname](xhr);
+            }
+        }
         
         // Did security token change ?
         var new_security_token = xhr.getResponseHeader('X-Filesender-Security-Token');
@@ -209,7 +241,7 @@ var terasender_worker = {
         }
         
         // Ignore 40x and 50x if undergoing maintenance
-        if(xhr.status >= 400 && this.maintenance) {
+        if(status >= 400 && this.maintenance) {
             var worker = this;
             this.maintenance = setTimeout(function() {
                 worker.executeJob();
@@ -219,7 +251,7 @@ var terasender_worker = {
 
         var worker = this;
         
-        if(xhr.status == 200) { // All went well
+        if(status == 200) { // All went well
             if(this.maintenance) {
                 this.log('Webservice maintenance mode ended, pending chunk has been uploaded');
                 clearTimeout(this.maintenance);
@@ -228,14 +260,14 @@ var terasender_worker = {
             }
             
             this.reportDone();
-        }else if(xhr.status == 0) { // Request cancelled (browser refresh or such)
+        }else if(status == 0) { // Request cancelled (browser refresh or such)
 
             this.send_attempts++;
             
             setTimeout(function() {
                 if( worker.send_attempts < window.filesender.config.terasender_worker_max_chunk_retries ) {
                     // try, try again
-                    worker.log('worker attempting to retry chunk upload at offset ' + worker.job.chunk.start);
+                    worker.log('worker attempt ' + worker.send_attempts + ' to retry chunk upload at offset ' + worker.job.chunk.start);
                     worker.executeJob(worker.job);
                 }
                 else {
