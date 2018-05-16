@@ -103,6 +103,7 @@ $default = array(
     'terasender_disableable' => true,
     'terasender_start_mode' => 'multiple',
     'terasender_worker_count' => 6,
+    'terasender_worker_max_chunk_retries' => 20,    
     'stalling_detection' => false,
 
     // There are not so many options here, so they are listed

@@ -118,6 +118,7 @@ A note about colours;
 * [terasender_advanced](#terasenderadvanced)
 * [terasender_worker_count](#terasenderworkercount)
 * [terasender_start_mode](#terasenderstartmode)
+* [terasender_worker_max_chunk_retries](#terasender_worker_max_chunk_retries)
 * [stalling_detection](#stallingdetection)
 
 ## Download
@@ -1048,6 +1049,17 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __available:__ since version 2.0
 * __1.x name:__
 * __comment:__ when looking for a file to put a worker on in multiple mode we look at file which has compbination of least worker and least progress.  Try to put available worker on file that is the slowest.  In multiple-mode we try to make all files progress at about the same speed.
+
+
+### terasender_worker_max_chunk_retries
+
+* __description:__ number of times a terasender worker retries to upload a chunk
+* __mandatory:__ no
+* __type:__ int
+* __default:__ 20
+* __available:__ since version 2.0 beta5
+* __comment:__ The terasender worker will perform this many retries to upload a chunk before considering that it is a failure. Having 5 or more here will greatly improve the chances of an upload completing without user interaction.
+
 
 <span style="background-color:orange">when set to "single" uploads don't work?  Bug?</span>
 

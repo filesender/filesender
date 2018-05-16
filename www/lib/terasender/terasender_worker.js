@@ -31,6 +31,11 @@ var terasender_worker = {
      * Maintenance flag / timer
      */
     maintenance: null,
+
+    /**
+     * Number of retries that have happened for this chunk
+     */
+    send_attempts: 0,
     
     /**
      * Start the worker
@@ -96,7 +101,7 @@ var terasender_worker = {
         var blob = file.blob[slicer](this.job.chunk.start, this.job.chunk.end);
 
         var xhr = this.createXhr();
-        
+
         var worker = this;
         
         if((typeof xhr.upload != 'unknown') && xhr.upload) xhr.upload.onprogress = function(e) { //IE11 seems to skip this only in workers
@@ -211,6 +216,8 @@ var terasender_worker = {
             }, 60 * 1000);
             return;
         }
+
+        var worker = this;
         
         if(xhr.status == 200) { // All went well
             if(this.maintenance) {
@@ -222,8 +229,25 @@ var terasender_worker = {
             
             this.reportDone();
         }else if(xhr.status == 0) { // Request cancelled (browser refresh or such)
-            this.log('broken, exiting');
-            close();
+
+            this.send_attempts++;
+            
+            setTimeout(function() {
+                if( worker.send_attempts < window.filesender.config.terasender_worker_max_chunk_retries ) {
+                    // try, try again
+                    worker.log('worker attempting to retry chunk upload at offset ' + worker.job.chunk.start);
+                    worker.executeJob(worker.job);
+                }
+                else {
+                    // Let the manager know something has really hit the fan
+                    worker.sendCommand('jobFailed', worker.job);
+                }
+            }, 1000);
+
+            // We have scheduled upload halt
+            // or another attempt already
+            return;
+            
         }else{ // We have an error
             var msg = xhr.responseText.replace(/^\s+/, '').replace(/\s+$/, '');
             
@@ -318,6 +342,9 @@ var terasender_worker = {
                 break;
             
             case 'executeJob' :
+                // setting this has to be here rather than in executeJob()
+                // because the retry handling code also calls executeJob()
+                this.send_attempts = 0;
                 this.executeJob(data);
                 break;
             
