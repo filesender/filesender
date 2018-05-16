@@ -2,13 +2,13 @@
 
 /*
  * FileSender www.filesender.org
- * 
+ *
  * Copyright (c) 2009-2017, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * *	Redistributions of source code must retain the above copyright
  * 	notice, this list of conditions and the following disclaimer.
  * *	Redistributions in binary form must reproduce the above copyright
@@ -17,7 +17,7 @@
  * *	Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
  * 	names of its contributors may be used to endorse or promote products
  * 	derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 'AS IS'
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -31,14 +31,15 @@
  */
 
 // Require environment (fatal)
-if (!defined('FILESENDER_BASE'))
+if (!defined('FILESENDER_BASE')) {
     die('Missing environment');
+}
 
 /**
  * A wrapper for getopt() based command line argument handling.
  *
  * A use case might be;
- * 
+ *
  *   $args = new Args(
  *     array(
  *      'h' => 'help',
@@ -52,26 +53,29 @@ if (!defined('FILESENDER_BASE'))
  *     "\t".'-s|--scale Amount of data to create 1.0 is full dataset 0.01 is 1% of data'."\n" .
  *     "\t\n"
  *   );
- * 
+ *
  *   $args->MergeShortToLong();
  *   $scaleFactor = $args->getArg('scale', false, 1.00 );
  *   $scaleFactor = $args->clamp( $scaleFactor, 0.01, 1.00 );
  */
-class Args {
+class Args
+{
     private $args;
     private $opts = null;
 
     /**
      * @param args the array() with short => long options
      */
-    public function __construct($args) {
+    public function __construct($args)
+    {
         $this->args = $args;
     }
 
     /**
      * Call getopt()
      */
-    public function getopts() {
+    public function getopts()
+    {
         $this->opts = getopt(implode('', array_keys($this->args)), $this->args);
         return $this->opts;
     }
@@ -79,15 +83,16 @@ class Args {
     /**
      * Handle -h --help and zero args if args are needed cases.
      */
-    public function maybeDisplayHelpAndExit( $msg, $zeroArgsAllowed = true ) {
+    public function maybeDisplayHelpAndExit($msg, $zeroArgsAllowed = true)
+    {
         global $argv;
         
         // Print help if no args or help wanted
-        if(array_key_exists('h', $this->opts) || array_key_exists('help', $this->opts)) {
+        if (array_key_exists('h', $this->opts) || array_key_exists('help', $this->opts)) {
             echo $msg;
             exit(1);
         }
-        if( !$zeroArgsAllowed && !count(array_slice($argv, 1))) {
+        if (!$zeroArgsAllowed && !count(array_slice($argv, 1))) {
             echo $msg;
             exit(1);
         }
@@ -97,24 +102,27 @@ class Args {
      * Merge short options into long ones
      * works on global $args
      */
-    public function MergeShortToLong() {
-
-        foreach($this->args as $short => $long) {
+    public function MergeShortToLong()
+    {
+        foreach ($this->args as $short => $long) {
             $short = str_replace(':', '', $short);
             $long = str_replace(':', '', $long);
             
-            if(!array_key_exists($short, $this->opts)) continue;
+            if (!array_key_exists($short, $this->opts)) {
+                continue;
+            }
             
-            if(array_key_exists($long, $this->opts)) {
-                $this->opts[$long] = array_merge((array)$this->opts[$long],
-                                                 (array)$this->opts[$short]);
-                
+            if (array_key_exists($long, $this->opts)) {
+                $this->opts[$long] = array_merge(
+                    (array)$this->opts[$long],
+                    (array)$this->opts[$short]
+                );
             } else {
                 $this->opts[$long] = $this->opts[$short];
             }
             
             unset($this->opts[$short]);
-        }        
+        }
     }
 
     /**
@@ -123,66 +131,70 @@ class Args {
      *
      * If !fatal then return $def if nothing was passed by the user.
      */
-    public function getArg( $name, $fatal = false, $def = null) {
-
-        if(!array_key_exists($name, $this->opts) || (!is_bool($this->opts[$name] && !$this->opts[$name]))) {
-            if($fatal)
+    public function getArg($name, $fatal = false, $def = null)
+    {
+        if (!array_key_exists($name, $this->opts) || (!is_bool($this->opts[$name] && !$this->opts[$name]))) {
+            if ($fatal) {
                 throw new Exception('No '.$name.' provided');
+            }
             
             return $def;
         }
         
-        $value = array_map(function($v) {
+        $value = array_map(function ($v) {
             return is_bool($v) ? true : $v;
         }, (array)$this->opts[$name]);
         
-        if(!count(array_filter($value))) {
-            if($fatal)
+        if (!count(array_filter($value))) {
+            if ($fatal) {
                 throw new Exception('No '.$name.' provided');
+            }
             
             return $def;
         }
         
         $value = array_shift($value);
         return $value;
-        
     }
     
     /**
      * Get an option with possible multiple values. If nothing was given
      * by the user and fatal is set then display an error message and exit();
      */
-    public function getArgument( $name, $multiple = false, $fatal = false ) {
-
-        if(!array_key_exists($name, $this->opts) || (!is_bool($this->opts[$name] && !$this->opts[$name]))) {
-            if($fatal)
+    public function getArgument($name, $multiple = false, $fatal = false)
+    {
+        if (!array_key_exists($name, $this->opts) || (!is_bool($this->opts[$name] && !$this->opts[$name]))) {
+            if ($fatal) {
                 throw new Exception('No '.$name.' provided');
+            }
             
             return $multiple ? array() : null;
         }
         
-        $value = array_map(function($v) {
+        $value = array_map(function ($v) {
             return is_bool($v) ? true : $v;
         }, (array)$this->opts[$name]);
         
-        if(!count(array_filter($value))) {
-            if($fatal)
+        if (!count(array_filter($value))) {
+            if ($fatal) {
                 throw new Exception('No '.$name.' provided');
+            }
             
             return $multiple ? array() : null;
         }
         
-        if(!$multiple)
+        if (!$multiple) {
             $value = array_shift($value);
+        }
         
         return $value;
-        
     }
 
     /**
      * return $current clamped to be within the range [$min,$max].
      */
-    public function clamp($current, $min, $max) {
+    public function clamp($current, $min, $max)
+    {
         return max($min, min($max, $current));
     }
 }

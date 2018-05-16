@@ -2,13 +2,13 @@
 
 /*
  * FileSender www.filesender.org
- * 
+ *
  * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * *    Redistributions of source code must retain the above copyright
  *     notice, this list of conditions and the following disclaimer.
  * *    Redistributions in binary form must reproduce the above copyright
@@ -17,7 +17,7 @@
  * *    Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -31,14 +31,17 @@
  */
 
 // Require environment (fatal)
-if(!defined('FILESENDER_BASE')) die('Missing environment');
+if (!defined('FILESENDER_BASE')) {
+    die('Missing environment');
+}
 
 /**
  * Represents a recipient in database
- * 
+ *
  * @property array $transfer related transfer
  */
-class TranslatableEmail extends DBObject {
+class TranslatableEmail extends DBObject
+{
     /**
      * Database map
      */
@@ -87,39 +90,47 @@ class TranslatableEmail extends DBObject {
     
     /**
      * Constructor
-     * 
+     *
      * @param integer $id identifier of translatable email to load from database (null if loading not wanted)
      * @param array $data data to create the translatable email from (if already fetched from database)
-     * 
+     *
      * @throws TranslatableEmailNotFoundException
      */
-    protected function __construct($id = null, $data = null) {
-        if(!is_null($id)) {
+    protected function __construct($id = null, $data = null)
+    {
+        if (!is_null($id)) {
             // Load from database if id given
             $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE id = :id');
             $statement->execute(array(':id' => $id));
             $data = $statement->fetch();
-            if(!$data) throw new TranslatableEmailNotFoundException('id = '.$id);
+            if (!$data) {
+                throw new TranslatableEmailNotFoundException('id = '.$id);
+            }
         }
         
         // Fill properties from provided data
-        if($data) $this->fillFromDBData($data);
+        if ($data) {
+            $this->fillFromDBData($data);
+        }
     }
     
     /**
      * Loads translatable email from token
-     * 
+     *
      * @param string $token the token
-     * 
+     *
      * @throws TranslatableEmailNotFoundException
-     * 
+     *
      * @return TranslatableEmail
      */
-    public static function fromToken($token) {
+    public static function fromToken($token)
+    {
         $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE token = :token');
         $statement->execute(array(':token' => $token));
         $data = $statement->fetch();
-        if(!$data) throw new TranslatableEmailNotFoundException('token = '.$token);
+        if (!$data) {
+            throw new TranslatableEmailNotFoundException('token = '.$token);
+        }
         
         $email = self::fromData($data['id'], $data);
         
@@ -128,31 +139,35 @@ class TranslatableEmail extends DBObject {
     
     /**
      * Loads translatable email from context
-     * 
+     *
      * @param DBObject $context
-     * 
+     *
      * @return array
      */
-    public static function fromContext(DBObject $context) {
+    public static function fromContext(DBObject $context)
+    {
         $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE context_type = :type AND context_id = :id');
         $statement->execute(array(':type' => get_class($context), ':id' => $context->id));
         
         $emails = array();
-        foreach($statement->fetchAll() as $data) $emails[$data['id']] = self::fromData($data['id'], $data); // Don't query twice, use loaded data
+        foreach ($statement->fetchAll() as $data) {
+            $emails[$data['id']] = self::fromData($data['id'], $data);
+        } // Don't query twice, use loaded data
         
         return $emails;
     }
     
     /**
      * Create a new translatable email
-     * 
+     *
      * @param DBObject $context
      * @param string $translation_id
      * @param array $variables
-     * 
+     *
      * @return TranslatableEmail
      */
-    public static function create(DBObject $context, $translation_id, $variables) {
+    public static function create(DBObject $context, $translation_id, $variables)
+    {
         $email = new self();
         
         // Get context (caller)
@@ -163,24 +178,30 @@ class TranslatableEmail extends DBObject {
         $email->translation_id = $translation_id;
         
         $email->variables = array();
-        if($variables) foreach($variables as $k => $v) {
-            // Convert DBObject types to type/id pairs for saving
-            if($v instanceof DBObject) $v = array(
-                'dbobject_type' => get_class($v),
-                'dbobject_id' => $v->id
-            );
-            $email->variables[$k] = $v;
+        if ($variables) {
+            foreach ($variables as $k => $v) {
+                // Convert DBObject types to type/id pairs for saving
+                if ($v instanceof DBObject) {
+                    $v = array(
+                    'dbobject_type' => get_class($v),
+                    'dbobject_id' => $v->id
+                    );
+                }
+                $email->variables[$k] = $v;
+            }
         }
         
         // Add meta
         $email->created = time();
         
         // Generate token until it is indeed unique
-        $email->token = Utilities::generateUID(function($token, $tries) {
+        $email->token = Utilities::generateUID(function ($token, $tries) {
             $statement = DBI::prepare('SELECT * FROM '.TranslatableEmail::getDBTable().' WHERE token = :token');
             $statement->execute(array(':token' => $token));
             $data = $statement->fetch();
-            if(!$data) Logger::info('TranslatableEmail uid generation took '.$tries.' tries');
+            if (!$data) {
+                Logger::info('TranslatableEmail uid generation took '.$tries.' tries');
+            }
             return !$data;
         });
         
@@ -191,53 +212,61 @@ class TranslatableEmail extends DBObject {
     
     /**
      * Prepare mail to be sent to recipient (be it Guest, Recipient ...)
-     * 
+     *
      * @param string $translation_id
      * @param DBObject $to recipient is also used to get the context
      * @param mixed * translation args
-     * 
+     *
      * @return ApplicationMail
      */
-    public static function prepare($translation_id, DBObject $to) {
+    public static function prepare($translation_id, DBObject $to)
+    {
         $vars = array_slice(func_get_args(), 2);
         array_unshift($vars, $to);
         
         // Extract context info from arguments
         $context = null;
-        switch(get_class($to)) {
+        switch (get_class($to)) {
             case 'Recipient': // Recipient context is it's transfer
                 $context = $to->transfer;
                 break;
                 
-            case 'Guest' : // Guest is a context by itself
+            case 'Guest': // Guest is a context by itself
                 $context = $to;
                 break;
                 
-            case 'User' : // If recipient is user try to find Transfer, File or Guest in variables
-                foreach($vars as $v) {
-                    if(!is_object($v)) continue;
+            case 'User': // If recipient is user try to find Transfer, File or Guest in variables
+                foreach ($vars as $v) {
+                    if (!is_object($v)) {
+                        continue;
+                    }
                     
-                    if(in_array(get_class($v), array('Transfer', 'Guest'))) {
+                    if (in_array(get_class($v), array('Transfer', 'Guest'))) {
                         $context = $v;
                     }
                     
-                    if( 'File' == get_class( $v ) ) {
+                    if ('File' == get_class($v)) {
                         $context = $v->transfer;
                     }
                 }
-                if($context) break;
+                if ($context) {
+                    break;
+                }
                 
+                // no break
             default:
                 throw new TranslatableEmailUnknownContextException(get_class($to));
         }
         
         // compute lang from arguments
         $lang = null;
-        if($to instanceof User) {
+        if ($to instanceof User) {
             $lang = $to->lang;
             $to = $to->email;
         }
-        if($to instanceof Recipient) $lang = $to->transfer->lang;
+        if ($to instanceof Recipient) {
+            $lang = $to->transfer->lang;
+        }
         
         // Translate mail parts
         $email_translation = call_user_func_array(array(Lang::translateEmail($translation_id, $lang), 'replace'), $vars);
@@ -247,7 +276,7 @@ class TranslatableEmail extends DBObject {
         $html = $email_translation->html->out();
         
         // No need for translatable emails if only one language available ...
-        if(count(Lang::getAvailableLanguages()) > 1) {
+        if (count(Lang::getAvailableLanguages()) > 1) {
             // Create object
             $translatable = self::create($context, $translation_id, $vars);
             
@@ -272,12 +301,13 @@ class TranslatableEmail extends DBObject {
     
     /**
      * Send to recipient (be it Guest, Recipient ...)
-     * 
+     *
      * @param string $translation_id
      * @param DBObject $to recipient is also used to get the context
      * @param mixed * translation args
      */
-    public static function quickSend($translation_id, DBObject $to) {
+    public static function quickSend($translation_id, DBObject $to)
+    {
         $mail = call_user_func_array(get_called_class().'::prepare', func_get_args());
         
         $mail->setDebugTemplate($translation_id);
@@ -287,22 +317,28 @@ class TranslatableEmail extends DBObject {
     
     /**
      * Translate stored in given language
-     * 
+     *
      * @param string $lang lang code (use current env lang if null given)
-     * 
+     *
      * @return Translation
      */
-    public function translate($lang = null) {
+    public function translate($lang = null)
+    {
         // Recreate translation variables
         $variables = array();
-        if($this->variables) foreach($this->variables as $k => $v) {
-            if(is_object($v)) $v = (array)$v;
+        if ($this->variables) {
+            foreach ($this->variables as $k => $v) {
+                if (is_object($v)) {
+                    $v = (array)$v;
+                }
             
-            // Reverse DBObject conversion
-            if(array_key_exists('dbobject_type', $v) && array_key_exists('dbobject_id', $v))
-                $v = call_user_func($v['dbobject_type'].'::fromId', $v['dbobject_id']);
+                // Reverse DBObject conversion
+                if (array_key_exists('dbobject_type', $v) && array_key_exists('dbobject_id', $v)) {
+                    $v = call_user_func($v['dbobject_type'].'::fromId', $v['dbobject_id']);
+                }
             
-            $variables[$k] = $v;
+                $variables[$k] = $v;
+            }
         }
         
         // Translate mail
@@ -314,23 +350,28 @@ class TranslatableEmail extends DBObject {
     
     /**
      * Getter
-     * 
+     *
      * @param string $property property to get
-     * 
+     *
      * @throws PropertyAccessException
-     * 
+     *
      * @return property value
      */
-    public function __get($property) {
-        if(in_array($property, array('id', 'context_type', 'context_id', 'token', 'translation_id', 'variables', 'created'))) return $this->$property;
+    public function __get($property)
+    {
+        if (in_array($property, array('id', 'context_type', 'context_id', 'token', 'translation_id', 'variables', 'created'))) {
+            return $this->$property;
+        }
         
-        if($property == 'context') return call_user_func($this->context_type.'::fromId', $this->context_id);
+        if ($property == 'context') {
+            return call_user_func($this->context_type.'::fromId', $this->context_id);
+        }
         
-        if($property == 'link') {
+        if ($property == 'link') {
             return Utilities::http_build_query(
                 array( 's'     => 'translate_email',
-                       'token' => $this->token ));
-            
+                       'token' => $this->token )
+            );
         }
         
         throw new PropertyAccessException($this, $property);
@@ -338,13 +379,14 @@ class TranslatableEmail extends DBObject {
     
     /**
      * Setter
-     * 
+     *
      * @param string $property property to get
      * @param mixed $value value to set property to
-     * 
+     *
      * @throws PropertyAccessException
      */
-    public function __set($property, $value) {
+    public function __set($property, $value)
+    {
         throw new PropertyAccessException($this, $property);
     }
 }

@@ -2,13 +2,13 @@
 
 /*
  * FileSender www.filesender.org
- * 
+ *
  * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * *    Redistributions of source code must retain the above copyright
  *     notice, this list of conditions and the following disclaimer.
  * *    Redistributions in binary form must reproduce the above copyright
@@ -17,7 +17,7 @@
  * *    Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -31,41 +31,50 @@
  */
 
 // Require environment (fatal)
-if (!defined('FILESENDER_BASE')) 
+if (!defined('FILESENDER_BASE')) {
     die('Missing environment');
+}
 
 /**
  * REST server
  */
-class RestUtilities {
+class RestUtilities
+{
     
     /**
      * Flatten arguments (recursive)
-     * 
+     *
      * @param $a array multi-dimensionnal array
      * @param $p string parent key stack
-     * 
+     *
      * @return array single dimension array
      */
-    public static function flatten($a, $p = null) {
+    public static function flatten($a, $p = null)
+    {
         $o = array();
         ksort($a);
-        foreach($a as $k => $v) {
-            if(is_array($v)) {
-                foreach(self::flatten($v, $p ? $p.'['.$k.']' : $k) as $s) $o[] = $s;
-            }else $o[] = ($p ? $p.'['.$k.']' : $k).'='.$v;
+        foreach ($a as $k => $v) {
+            if (is_array($v)) {
+                foreach (self::flatten($v, $p ? $p.'['.$k.']' : $k) as $s) {
+                    $o[] = $s;
+                }
+            } else {
+                $o[] = ($p ? $p.'['.$k.']' : $k).'='.$v;
+            }
         }
         return $o;
     }
     
     /**
      * Send HTTP response code (supports)
-     * 
+     *
      * @param $code int http code
      */
-    public static function sendResponseCode($code = 200) {
-        if(function_exists('http_response_code'))
-            return http_response_code( $code );
+    public static function sendResponseCode($code = 200)
+    {
+        if (function_exists('http_response_code')) {
+            return http_response_code($code);
+        }
             
         $messages = array(
             100 => 'Continue',
@@ -115,13 +124,14 @@ class RestUtilities {
     
     /**
      * Format a date to multiple types
-     * 
+     *
      * @param int $date the date
      * @param bool $with_time
-     * 
+     *
      * @return array
      */
-    public static function formatDate($date, $with_time = false) {
+    public static function formatDate($date, $with_time = false)
+    {
         return array(
             'raw' => $date,
             'formatted' => Utilities::formatDate($date, $with_time)

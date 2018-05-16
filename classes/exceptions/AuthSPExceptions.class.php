@@ -2,13 +2,13 @@
 
 /*
  * FileSender www.filesender.org
- * 
+ *
  * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * *    Redistributions of source code must retain the above copyright
  *     notice, this list of conditions and the following disclaimer.
  * *    Redistributions in binary form must reproduce the above copyright
@@ -17,7 +17,7 @@
  * *    Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -30,19 +30,22 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-if (!defined('FILESENDER_BASE'))        // Require environment (fatal)
+if (!defined('FILESENDER_BASE')) {        // Require environment (fatal)
     die('Missing environment');
+}
 
 /**
  * Missing service provider delegation class.
  */
-class AuthSPMissingDelegationClassException extends DetailedException {
+class AuthSPMissingDelegationClassException extends DetailedException
+{
     /**
      * Constructor
-     * 
+     *
      * @param string $name name of the delegation class
      */
-    public function __construct($name) {
+    public function __construct($name)
+    {
         parent::__construct(
             'auth_sp_missing_delegation_class', // Message to give to the user
             array('class' => $name) // Details to log
@@ -53,11 +56,13 @@ class AuthSPMissingDelegationClassException extends DetailedException {
 /**
  * Authentication no found.
  */
-class AuthSPAuthenticationNotFoundException extends DetailedException {
+class AuthSPAuthenticationNotFoundException extends DetailedException
+{
     /**
      * Constructor
      */
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct(
             'auth_sp_authentication_not_found'
         );
@@ -67,7 +72,8 @@ class AuthSPAuthenticationNotFoundException extends DetailedException {
 /**
  * Missing attribute.
  */
-class AuthSPMissingAttributeException extends DetailedException {
+class AuthSPMissingAttributeException extends DetailedException
+{
     /**
      * Constructor
      *
@@ -78,19 +84,22 @@ class AuthSPMissingAttributeException extends DetailedException {
      * @param string $name name of the attribute
      * @param array  $attributes array of key-value where a key of $name should have been found
      */
-    public function __construct($name,$attributes,$attrkey,$attrname='') {
+    public function __construct($name, $attributes, $attrkey, $attrname = '')
+    {
         $info = array('attribute' => $name);
         
         $lid = 'auth_sp_attribute_'.$name.'_hint';
         $hint = (string)Lang::tr($lid);
-        if($hint != '{'.$lid.'}') $info['hint'] = $hint;
+        if ($hint != '{'.$lid.'}') {
+            $info['hint'] = $hint;
+        }
 
         // Give the system admin some information to help them fix things
-        $internalLog = DetailedException::convertArrayToLogArray($attributes,'    ');
-        $this->log( 'attributes', (string)Lang::tr('serverlog_auth_sp_attribute_not_found'));
-        $this->log( 'attributes', Lang::tr('serverlog_config_directive')->r('key',$attrkey));
-        $this->log( 'attributes', Lang::tr('serverlog_wanted_key_in_array')->r('key',$attrname));
-        $this->logArray( 'attributes', $internalLog );
+        $internalLog = DetailedException::convertArrayToLogArray($attributes, '    ');
+        $this->log('attributes', (string)Lang::tr('serverlog_auth_sp_attribute_not_found'));
+        $this->log('attributes', Lang::tr('serverlog_config_directive')->r('key', $attrkey));
+        $this->log('attributes', Lang::tr('serverlog_wanted_key_in_array')->r('key', $attrname));
+        $this->logArray('attributes', $internalLog);
 
         parent::__construct('auth_sp_missing_attribute', null, $info);
     }
@@ -99,18 +108,22 @@ class AuthSPMissingAttributeException extends DetailedException {
 /**
  * Bad attribute.
  */
-class AuthSPBadAttributeException extends DetailedException {
+class AuthSPBadAttributeException extends DetailedException
+{
     /**
      * Constructor
-     * 
+     *
      * @param string $name name of the attribute
      */
-    public function __construct($name) {
+    public function __construct($name)
+    {
         $info = array('attribute' => $name);
         
         $lid = 'auth_sp_attribute_'.$name.'_hint';
         $hint = (string)Lang::tr($lid);
-        if($hint != '{'.$lid.'}') $info['hint'] = $hint;
+        if ($hint != '{'.$lid.'}') {
+            $info['hint'] = $hint;
+        }
         
         parent::__construct('auth_sp_bad_attribute', null, $info);
     }

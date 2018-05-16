@@ -2,13 +2,13 @@
 
 /*
  * FileSender www.filesender.org
- * 
+ *
  * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * *    Redistributions of source code must retain the above copyright
  *     notice, this list of conditions and the following disclaimer.
  * *    Redistributions in binary form must reproduce the above copyright
@@ -17,7 +17,7 @@
  * *    Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -30,15 +30,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-if (!defined('FILESENDER_BASE'))        // Require environment (fatal)
+if (!defined('FILESENDER_BASE')) {        // Require environment (fatal)
     die('Missing environment');
+}
 
 /**
  * Service provider authentication class
- * 
+ *
  * Handles service provider authentication delegation.
  */
-class AuthSP {
+class AuthSP
+{
     /**
      * Cache if delegation class was loaded.
      */
@@ -46,10 +48,11 @@ class AuthSP {
     
     /**
      * Delegates authentication check.
-     * 
+     *
      * @return bool
      */
-    public static function isAuthenticated() {
+    public static function isAuthenticated()
+    {
         $class = self::loadDelegationClass();
         
         return call_user_func($class.'::isAuthenticated');
@@ -57,10 +60,11 @@ class AuthSP {
     
     /**
      * Retreive user attributes from delegated class.
-     * 
+     *
      * @retrun array
      */
-    public static function attributes() {
+    public static function attributes()
+    {
         $class = self::loadDelegationClass();
         
         return call_user_func($class.'::attributes');
@@ -68,12 +72,13 @@ class AuthSP {
     
     /**
      * Get the logon URL from delegated class.
-     * 
+     *
      * @param $target
-     * 
+     *
      * @retrun string
      */
-    public static function logonURL($target = null) {
+    public static function logonURL($target = null)
+    {
         $class = self::loadDelegationClass();
         
         return call_user_func($class.'::logonURL', $target);
@@ -81,12 +86,13 @@ class AuthSP {
     
     /**
      * Get the logoff URL from delegated class.
-     * 
+     *
      * @param $target
-     * 
+     *
      * @retrun string
      */
-    public static function logoffURL($target = null) {
+    public static function logoffURL($target = null)
+    {
         $class = self::loadDelegationClass();
         
         return call_user_func($class.'::logoffURL', $target);
@@ -95,9 +101,12 @@ class AuthSP {
     /**
      * Trigger authentication
      */
-    public static function trigger() {
+    public static function trigger()
+    {
         $url = self::logonURL();
-        if(!$url) return;
+        if (!$url) {
+            return;
+        }
         
         header('Location: '.$url);
         exit;
@@ -105,19 +114,26 @@ class AuthSP {
     
     /**
      * Load selected service provider delegation class and return its class name.
-     * 
+     *
      * @return string delegation class name
      */
-    private static function loadDelegationClass() {
-        if(self::$loaded) return self::$loaded;
+    private static function loadDelegationClass()
+    {
+        if (self::$loaded) {
+            return self::$loaded;
+        }
         
         $type = Config::get('auth_sp_type');
         
-        if(!$type) throw new ConfigBadParameterException('auth_sp_type');
+        if (!$type) {
+            throw new ConfigBadParameterException('auth_sp_type');
+        }
         $class = 'AuthSP'.ucfirst($type);
         $file = FILESENDER_BASE.'/classes/auth/'.$class.'.class.php';
         
-        if(!file_exists($file)) throw new AuthSPMissingDelegationClassException($class);
+        if (!file_exists($file)) {
+            throw new AuthSPMissingDelegationClassException($class);
+        }
         
         require_once $file;
         

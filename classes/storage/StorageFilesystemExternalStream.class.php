@@ -31,14 +31,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-if (!defined('FILESENDER_BASE')) die('Missing environment');
+if (!defined('FILESENDER_BASE')) {
+    die('Missing environment');
+}
 
 /**
  * Allow reading a file as a normal php stream
  * only in order start to finish reading is supported as yet.
  */
-class StorageFilesystemExternalStream {
-
+class StorageFilesystemExternalStream
+{
     protected $offset = 0;
     protected $uid    = null;
     protected $file   = null;
@@ -46,7 +48,7 @@ class StorageFilesystemExternalStream {
     protected $currentChunkFile = null;
     protected $gameOver = false;
 
-    function stream_open($path, $mode, $options, &$opened_path)
+    public function stream_open($path, $mode, $options, &$opened_path)
     {
         $url = parse_url($path);
         $this->offset = 0;
@@ -55,34 +57,38 @@ class StorageFilesystemExternalStream {
         return true;
     }
 
-    function stream_read($count) {
+    public function stream_read($count)
+    {
         $file   = $this->file;
         $offset = $this->offset;
 
-        if( $this->gameOver )
-            return FALSE;
+        if ($this->gameOver) {
+            return false;
+        }
     
-	$out = StorageFilesystemExternal::run('fs_readChunk "'.$file->uid.'" '.$offset.' '.$count);
+        $out = StorageFilesystemExternal::run('fs_readChunk "'.$file->uid.'" '.$offset.' '.$count);
         if ($out['status']!=0) {
-                //something bad
-                $this->gameOver = true;
+            //something bad
+            $this->gameOver = true;
         } else {
-                $data = $out['stdout'];
+            $data = $out['stdout'];
         }
 
-        if ($data === FALSE) {
-                $this->gameOver = true;
-		return FALSE;
-	}
+        if ($data === false) {
+            $this->gameOver = true;
+            return false;
+        }
         $this->offset += strlen($data);
         return $data;
     }
 
-    function stream_eof() {
+    public function stream_eof()
+    {
         return $this->offset >= $this->file->size;
     }
 
-    static function ensureRegistered() {
+    public static function ensureRegistered()
+    {
         // this happens when the file is parsed
     }
 };
