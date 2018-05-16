@@ -55,8 +55,6 @@ if (typeof window === 'undefined') {
 if (!('filesender' in window)) window.filesender = {};
 
 window.filesender.config = {
-    log: true,
-    
     site_name: '<?php echo Config::get('site_name') ?>',
     
     upload_chunk_size: <?php echo Config::get('upload_chunk_size') ?>,
@@ -127,7 +125,11 @@ window.filesender.config = {
 		file_encryption_wrong_password : "<?php echo Lang::tr('file_encryption_wrong_password')->out(); ?>",
 		file_encryption_enter_password : "<?php echo Lang::tr('file_encryption_enter_password')->out(); ?>",
 		file_encryption_need_password : "<?php echo Lang::tr('file_encryption_need_password')->out(); ?>"
-	}
+	},
+    
+    clientlogs: {
+        stash_len: <?php echo ClientLog::stashSize() ?>
+    }
 };
 
 <?php if(Config::get('force_legacy_mode')) { ?>

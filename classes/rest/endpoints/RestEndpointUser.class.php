@@ -96,7 +96,8 @@ class RestEndpointUser extends RestEndpoint {
      * Call examples :
      *  /user/@me/frequent_recipients : list of all frequent recipients of the current user
      *  /user/17/frequent_recipients : list of all frequent recipients of the user 
-     * 
+     *  /user?search=foo : searc user with matching id/email (restricted to admin)
+     *
      * @param int $id user id to get info about
      * @param string $property to get info about ("file" or "recipient")
      * 
@@ -104,6 +105,9 @@ class RestEndpointUser extends RestEndpoint {
      * 
      * @throws RestAuthenticationRequiredException
      * @throws RestBadParameterException
+     * @throws RestMissingParameterException
+     * @throws RestOwnershipRequiredException
+     * @throws AuthRemoteUserRejectedException
      */
     public function get($id = null, $property = null) {
         // Need to be authenticated ...
@@ -120,6 +124,22 @@ class RestEndpointUser extends RestEndpoint {
             
             if(!$user->is(Auth::user()) && !Auth::isAdmin())
                 throw new RestOwnershipRequiredException(Auth::user()->id, 'user = '.$user->id);
+        }
+        
+        if(!$id) {
+            // Search user
+            if(!Auth::isAdmin())
+                throw new RestOwnershipRequiredException(Auth::user()->id, 'user = '.$user->id);
+            
+            if(!array_key_exists('match', $_REQUEST))
+                throw new RestMissingParameterException('match');
+    
+            $match = Utilities::sanitizeInput($_REQUEST['match']);
+            if(strlen($match) < 3) return [];
+            
+            return array_map(function($user) {
+                return self::cast($user);
+            }, array_values(User::search($match)));
         }
         
         if($property == 'frequent_recipients') {
