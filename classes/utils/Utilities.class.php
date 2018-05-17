@@ -132,7 +132,6 @@ class Utilities {
         return preg_match('/' .  Config::get('valid_filename_regex') . '/u', $filename);
     }
 
-
     /*
      * Generate (pseudo) (super-)random hex string
      * 

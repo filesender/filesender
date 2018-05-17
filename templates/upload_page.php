@@ -280,5 +280,8 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
         <script type="text/javascript" src="{path:js/graph.js}"></script>
     <?php } ?>
     
+    <?php if (!Config::get('disable_directory_upload')) { ?>
+       <script type="text/javascript" src="{path:js/dragdrop-dirtree.js}"></script>
+    <?php } ?>
     <script type="text/javascript" src="{path:js/upload_page.js}"></script>
 </div>

@@ -6,9 +6,141 @@ $lang['action'] = 'Action that happened';
 $lang['actions'] = 'Actions';
 $lang['add_me_to_recipients'] = 'Include me as a recipient';
 $lang['add_recipient'] = 'Add a recipient';
-$lang['admin_config_section'] = 'Config';
-$lang['admin_guests_section'] = 'Guests';
-$lang['admin_page'] = 'Admin';
+$lang['confirm_leave_upload_page'] = 'Do you really want to leave this page ?';
+$lang['recipients_notifications_language'] = 'Recipients\' language';
+$lang['disable_terasender'] = 'Disable parallel upload (Tick if you are on a slow connection)';
+
+
+/**
+ * Guest page spacific
+ */
+$lang['guest_options'] = 'Guest options';
+$lang['email_upload_page_access'] = 'Notify me when guests access the upload page';
+$lang['email_upload_started'] = 'Notify me when upload starts';
+$lang['can_only_send_to_me'] = 'Can only send to me';
+$lang['valid_only_one_time'] = 'Valid for one upload only';
+$lang['does_not_expire'] = 'Does not expire';
+$lang['email_guest_created'] = 'Notify creation to guest';
+$lang['email_guest_created_receipt'] = 'Notify me of the guest creation';
+$lang['email_guest_expired'] = 'Notify expiry to guest';
+$lang['guest_transfer_options'] = 'Created transfers options';
+$lang['guests_transfers'] = 'Guests transfers';
+$lang['guest_vouchers_sent'] = 'Guest vouchers sent';
+$lang['no_guests'] = 'No guests';
+$lang['forward_guest_voucher'] = 'Forward guest voucher';
+$lang['guest_deleted'] = 'Guest deleted';
+$lang['guest_reminded'] = 'Guest reminded';
+$lang['confirm_delete_guest'] = 'Do you really want to delete this guest (the recipient won\'t be able to upload files anymore) ?';
+$lang['confirm_remind_guest'] = 'Do you really want to send a reminder to this guest ?';
+$lang['message_can_not_contain_urls'] = 'Message can not contain things that look like URLs';
+
+
+/**
+ * Transfer page specific
+ */
+$lang['no_transfers'] = 'No transfers';
+$lang['with_identity'] = 'Sender email';
+$lang['transfer_id'] = 'Transfer ID';
+$lang['auditlog'] = 'Transfer audit';
+$lang['confirm_close_transfer'] = 'Do you really want to close this transfer ? Files cannot be downloaded after transfer is closed. You cannot open a closed transfer again.';
+$lang['confirm_delete_file'] = 'Are you sure you want to delete this file ? The transfer will be closed if all its files are deleted.';
+$lang['confirm_delete_recipient'] = 'Are you sure you want to delete this recipient ? The transfer will be closed if all its recipients are deleted.';
+$lang['recipient_deleted'] = 'The recipient has been deleted.';
+$lang['file_deleted'] = 'The file has been deleted.';
+$lang['no_auditlog'] = 'Not audit logs found';
+$lang['recipient_added'] = 'Recipient added';
+$lang['transfer_reminded'] = 'Transfer reminded to recipients';
+$lang['recipient_reminded'] = 'Transfer reminded to recipient';
+$lang['open_auditlog'] = 'See the transfer logs';
+$lang['open_recipient_auditlog'] = 'See what this recipient did';
+$lang['open_file_auditlog'] = 'See what happened to this file';
+$lang['filtered_transfer_log'] = 'This is a filtered view of the transfer logs.';
+$lang['view_full_log'] = 'View the full log';
+$lang['send_to_my_email'] = 'Send to my email';
+$lang['confirm_remind_transfer'] = 'Do you really want to send a reminder to this transfer\'s recipients ?';
+$lang['confirm_remind_recipient'] = 'Do you really want to send a reminder to this recipient ?';
+$lang['download_link'] = 'Download link';
+$lang['extend_expiry_date'] = 'Extend expiry date by {days} days';
+$lang['confirm_extend_expiry'] = 'Do you really want to extend the expiry date by {days} days ?';
+$lang['transfer_extended'] = 'Expiry date extended until {expires}';
+$lang['transfer_extended_reminded'] = 'Expiry date extended until {expires}, a reminder was sent to recipients';
+$lang['pager_more'] = 'More...';
+$lang['pager_has_no_more'] = 'No more records.';
+
+/**
+ * Reports
+ */
+$lang['date'] = 'Date';
+$lang['action'] = 'Action that happened';
+$lang['ip'] = 'IP address';
+
+$lang['report_event_transfer_started'] = 'Transfer was created';
+$lang['report_event_transfer_available'] = 'Transfer became available (took {time:time_taken})';
+$lang['report_event_transfer_sent'] = 'Download link sent to recipient(s)';
+$lang['report_event_transfer_expired'] = 'Transfer expired';
+$lang['report_event_transfer_closed'] = 'Transfer was closed on request';
+$lang['report_event_transfer_deleted'] = 'Transfer data was deleted';
+$lang['report_event_upload_started'] = 'Upload started';
+$lang['report_event_upload_resumed'] = 'Upload was resumed';
+$lang['report_event_upload_ended'] = 'Upload ended';
+$lang['report_event_file_uploaded'] = 'File {file.path} ({size:file.size}) uploaded (took {time:time_taken})';
+$lang['report_event_download_started'] = 'Recipient {author.identity} started downloading {file.path} ({size:file.size})';
+$lang['report_event_download_resumed'] = 'Recipient {author.identity} resumed download of {file.path} ({size:file.size})';
+$lang['report_event_download_ended'] = 'Recipient {author.identity} finished downloading {file.path} ({size:file.size})';
+$lang['report_event_archive_download_started'] = 'Recipient {author.identity} started downloading archive of transfer';
+$lang['report_event_archive_download_ended'] = 'Recipient {author.identity} finished downloading archive of transfer';
+
+$lang['report_recipient_event_download_started'] = 'Recipient started downloading {file.path} ({size:file.size})';
+$lang['report_recipient_event_download_resumed'] = 'Recipient resumed download of {file.path} ({size:file.size})';
+$lang['report_recipient_event_download_ended'] = 'Recipient finished downloading {file.path} ({size:file.size})';
+$lang['report_recipient_event_archive_download_started'] = 'Recipient started downloading archive of transfer';
+$lang['report_recipient_event_archive_download_ended'] = 'Recipient finished downloading archive of transfer';
+
+$lang['report_owner_event_download_started'] = 'Owner started downloading {file.path} ({size:file.size})';
+$lang['report_owner_event_download_resumed'] = 'Owner resumed download of {file.path} ({size:file.size})';
+$lang['report_owner_event_download_ended'] = 'Owner finished downloading {file.path} ({size:file.size})';
+$lang['report_owner_event_archive_download_started'] = 'Owner started downloading archive of transfer';
+$lang['report_owner_event_archive_download_ended'] = 'Owner finished downloading archive of transfer';
+
+$lang['report_guest_event_transfer_started'] = 'Transfer was created by guest {author.identity}';
+$lang['report_guest_event_transfer_sent'] = 'Download link sent to recipient(s)';
+
+
+/**
+ * Download page specific
+ */
+$lang['archive_download'] = 'Download as single (.zip) file';
+$lang['download_disclamer'] = '';
+$lang['download_disclamer_nocrypto_message'] = 'You can right click on the download button and "Copy Link Location" to download the file using another tool.';
+$lang['download_disclamer_crypto_message'] = 'Click on a file to download the data and decrypt it on your computer.';
+$lang['download_disclamer_archive'] = 'You can download all files at once as a single compressed archive (.zip) file.  Click on the downloaded file to uncompress it and access individual files.';
+$lang['download_file'] = 'Download file';
+$lang['mac_archive_message'] = 'This compressed archive (.zip file) will be too big for the standard uncompress utility of Apple OS X.<br />  You\'ll find a alternative uncompress software here: <a href="{cfg:mac_unzip_link}" target="_blank">{cfg:mac_unzip_name}</a>.';
+$lang['select_all_for_archive_download'] = 'Select all files to download them as an archive';
+$lang['select_for_archive_download'] = 'Select for archive download';
+$lang['archive_message'] = 'You can download selected files as an archive.';
+$lang['confirm_download_notify'] = 'Do you want to be notified by mail when download is complete ?';
+
+
+/**
+ * User profile specifics
+ */
+$lang['user_page'] = 'My profile';
+$lang['user_preferences'] = 'Preferences';
+$lang['user_lang'] = 'Prefered language';
+$lang['user_remote_authentication'] = 'Remote authentication';
+$lang['user_auth_secret'] = 'Secret';
+$lang['user_additional'] = 'Additional information';
+$lang['user_id'] = 'Identifiant';
+$lang['user_created'] = 'First login';
+$lang['get_full_user_remote_config'] = 'Get full remote configuration';
+$lang['preferences_updated'] = 'User preferences updated';
+$lang['remote_auth_sync_request'] = '<p><strong>{remote}</strong> requested your remote authentication details.</p><p>To allow access please give the following code to <strong>{remote}</strong>: <strong>{code}</strong> (code is valid for the next 2 minutes only).</p><p>If you don\'t know what this is about just disregard this message.</p>';
+
+
+/**
+ * Admin page specific
+ */
 $lang['admin_statistics_section'] = 'Statistics';
 $lang['admin_transfers_section'] = 'Transfers';
 $lang['advanced_settings'] = 'Advanced settings';
@@ -261,10 +393,10 @@ $lang['remote_auth_sync_request'] = '<p><strong>{remote}</strong> requested your
 $lang['report_cannot_write_file'] = 'Cannot store report file';
 $lang['report_event_archive_download_ended'] = 'Recipient {author.identity} finished downloading archive of transfer';
 $lang['report_event_archive_download_started'] = 'Recipient {author.identity} started downloading archive of transfer';
-$lang['report_event_download_ended'] = 'Recipient {author.identity} finished downloading {file.name} ({size:file.size})';
-$lang['report_event_download_resumed'] = 'Recipient {author.identity} resumed download of {file.name} ({size:file.size})';
-$lang['report_event_download_started'] = 'Recipient {author.identity} started downloading {file.name} ({size:file.size})';
-$lang['report_event_file_uploaded'] = 'File {file.name} ({size:file.size}) uploaded (took {time:time_taken})';
+$lang['report_event_download_ended'] = 'Recipient {author.identity} finished downloading {file.path} ({size:file.size})';
+$lang['report_event_download_resumed'] = 'Recipient {author.identity} resumed download of {file.path} ({size:file.size})';
+$lang['report_event_download_started'] = 'Recipient {author.identity} started downloading {file.path} ({size:file.size})';
+$lang['report_event_file_uploaded'] = 'File {file.path} ({size:file.size}) uploaded (took {time:time_taken})';
 $lang['report_event_transfer_available'] = 'Transfer became available (took {time:time_taken})';
 $lang['report_event_transfer_closed'] = 'Transfer was closed on request';
 $lang['report_event_transfer_deleted'] = 'Transfer data was deleted';
@@ -281,15 +413,15 @@ $lang['report_guest_event_transfer_started'] = 'Transfer was created by guest {a
 $lang['report_nothing_found'] = 'Found nothing to report';
 $lang['report_owner_event_archive_download_ended'] = 'Owner finished downloading archive of transfer';
 $lang['report_owner_event_archive_download_started'] = 'Owner started downloading archive of transfer';
-$lang['report_owner_event_download_ended'] = 'Owner finished downloading {file.name} ({size:file.size})';
-$lang['report_owner_event_download_resumed'] = 'Owner resumed download of {file.name} ({size:file.size})';
-$lang['report_owner_event_download_started'] = 'Owner started downloading {file.name} ({size:file.size})';
+$lang['report_owner_event_download_ended'] = 'Owner finished downloading {file.path} ({size:file.size})';
+$lang['report_owner_event_download_resumed'] = 'Owner resumed download of {file.path} ({size:file.size})';
+$lang['report_owner_event_download_started'] = 'Owner started downloading {file.path} ({size:file.size})';
 $lang['report_ownership_required'] = 'You must be owner of the report target';
 $lang['report_recipient_event_archive_download_ended'] = 'Recipient finished downloading archive of transfer';
 $lang['report_recipient_event_archive_download_started'] = 'Recipient started downloading archive of transfer';
-$lang['report_recipient_event_download_ended'] = 'Recipient finished downloading {file.name} ({size:file.size})';
-$lang['report_recipient_event_download_resumed'] = 'Recipient resumed download of {file.name} ({size:file.size})';
-$lang['report_recipient_event_download_started'] = 'Recipient started downloading {file.name} ({size:file.size})';
+$lang['report_recipient_event_download_ended'] = 'Recipient finished downloading {file.path} ({size:file.size})';
+$lang['report_recipient_event_download_resumed'] = 'Recipient resumed download of {file.path} ({size:file.size})';
+$lang['report_recipient_event_download_started'] = 'Recipient started downloading {file.path} ({size:file.size})';
 $lang['report_unknown_format'] = 'Unknown report format';
 $lang['report_unknown_target_type'] = 'Unknown report target type';
 $lang['rest_access_forbidden'] = 'REST server denied access';

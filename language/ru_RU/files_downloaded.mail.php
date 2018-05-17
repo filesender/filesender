@@ -7,7 +7,7 @@ subject: Файлы скачаны
 {if:files>1}Файлы{else}Файл{endif}, которые ты загрузил на сервер, {if:files>1}были скачаны{else}был скачан{endif} с {cfg:site_name} пользователем {recipient.email}
 
 {if:files>1}{each:files as file}
-  - {file.name} ({size:file.size})
+  - {file.path} ({size:file.size})
 {endeach}{else}
 {files.first().name} ({size:files.first().size})
 {endif}
@@ -31,7 +31,7 @@ subject: Файлы скачаны
     {if:files>1}
     <ul>
         {each:files as file}
-            <li>{file.name} ({size:file.size})</li>
+            <li>{file.path} ({size:file.size})</li>
         {endeach}
     </ul>
     {else}

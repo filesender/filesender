@@ -4,7 +4,7 @@ subject: File no longer available for download
 
 Dear Sir or Madam,
 
-The file {file.name} ({size:file.size}) has been deleted from transfer n°{transfer.id} and is no longer available for download.
+The file {file.path} ({size:file.size}) has been deleted from transfer n°{transfer.id} and is no longer available for download.
 
 Best regards,
 {cfg:site_name}
@@ -16,7 +16,7 @@ Best regards,
 </p>
 
 <p>
-    The file {file.name} ({size:file.size}) has been deleted from transfer n°{transfer.id} and is no longer available for download.
+    The file {file.path} ({size:file.size}) has been deleted from transfer n°{transfer.id} and is no longer available for download.
 </p>
 
 <p>
