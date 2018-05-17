@@ -96,7 +96,8 @@ window.filesender.config = {
     terasender_start_mode: '<?php echo Config::get('terasender_start_mode') ?>',
     terasender_worker_file: 'lib/terasender/terasender_worker.js?v=<?php echo Utilities::runningInstanceUID() ?>',
     terasender_upload_endpoint: '<?php echo Config::get('site_url') ?>rest.php/file/{file_id}/chunk/{offset}',
-
+    terasender_worker_max_chunk_retries: <?php echo Config::get('terasender_worker_max_chunk_retries')  ?>,
+    
     stalling_detection: <?php echo value_to_TF(Config::get('stalling_detection')); ?>,
 
     max_legacy_file_size: <?php echo Config::get('max_legacy_file_size') ?>,
@@ -121,13 +122,17 @@ window.filesender.config = {
     upload_force_transfer_resume_forget_if_encrypted: '<?php echo Config::get('upload_force_transfer_resume_forget_if_encrypted') ?>',
     upload_considered_too_slow_if_no_progress_for_seconds: '<?php echo Config::get('upload_considered_too_slow_if_no_progress_for_seconds') ?>',
 
+    testing_terasender_worker_uploadRequestChange_function_name: '<?php echo Config::get('testing_terasender_worker_uploadRequestChange_function_name') ?>',
+
+
 	language: {
 		downloading : "<?php echo Lang::tr('downloading')->out(); ?>",
 		decrypting : "<?php echo Lang::tr('decrypting')->out(); ?>",
 		file_encryption_wrong_password : "<?php echo Lang::tr('file_encryption_wrong_password')->out(); ?>",
 		file_encryption_enter_password : "<?php echo Lang::tr('file_encryption_enter_password')->out(); ?>",
 		file_encryption_need_password : "<?php echo Lang::tr('file_encryption_need_password')->out(); ?>"
-	}
+	},
+
 };
 
 <?php if(Config::get('force_legacy_mode')) { ?>

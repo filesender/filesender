@@ -118,6 +118,7 @@ A note about colours;
 * [terasender_advanced](#terasenderadvanced)
 * [terasender_worker_count](#terasenderworkercount)
 * [terasender_start_mode](#terasenderstartmode)
+* [terasender_worker_max_chunk_retries](#terasender_worker_max_chunk_retries)
 * [stalling_detection](#stallingdetection)
 
 ## Download
@@ -1049,6 +1050,17 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __1.x name:__
 * __comment:__ when looking for a file to put a worker on in multiple mode we look at file which has compbination of least worker and least progress.  Try to put available worker on file that is the slowest.  In multiple-mode we try to make all files progress at about the same speed.
 
+
+### terasender_worker_max_chunk_retries
+
+* __description:__ number of times a terasender worker retries to upload a chunk
+* __mandatory:__ no
+* __type:__ int
+* __default:__ 20
+* __available:__ since version 2.0 beta5
+* __comment:__ The terasender worker will perform this many retries to upload a chunk before considering that it is a failure. Having 5 or more here will greatly improve the chances of an upload completing without user interaction. Note that this is the number of times a single chunk upload attempt can be retried, not the number of times a worker might try to retry in total. So if the value is 10 and the first chunk takes 8 attempts that is fine, the next chunk given to the worker can itself take up to the 10 times to upload. So a value of 20 would need *each* chunk to be retried up to 20 times and finally one chunk to push over that 20 in order to fail.
+
+
 <span style="background-color:orange">when set to "single" uploads don't work?  Bug?</span>
 
 ### stalling_detection
@@ -1669,6 +1681,21 @@ Changes are saved in config_overrides.json in the config directory.  The config.
 * __available:__
 * __1.x name:__
 * __comment:__
+
+---
+
+### testing_terasender_worker_uploadRequestChange_function_name
+
+* __description:__ the name of a javascript method to call to mutilate the state for testing.
+* __mandatory:__ no
+* __type:__ string
+* __default:__ 
+* __available:__ since version 2.0 beta5
+* __comment:__ Putting these in the config allows testing to be optionally turned on for select cases without the risk
+     of leaving those testing code paths turned on during a git commit. Usable values for this are methods that start with
+     testing_uploadRequestChange_ in the terasender worker object. These will selectively enable failure states on the client
+     to test that it recovers from those if it is intended to do so.
+
 
 <span style="background-color:orange">
 

@@ -10,6 +10,7 @@ importScripts(
 	'../../js/crypter/crypto_app.js'
 );
 
+
 var terasender_worker = {
     /**
      * Worker properties
@@ -31,6 +32,11 @@ var terasender_worker = {
      * Maintenance flag / timer
      */
     maintenance: null,
+
+    /**
+     * Number of retries that have happened for this chunk
+     */
+    send_attempts: 0,
     
     /**
      * Start the worker
@@ -96,7 +102,7 @@ var terasender_worker = {
         var blob = file.blob[slicer](this.job.chunk.start, this.job.chunk.end);
 
         var xhr = this.createXhr();
-        
+
         var worker = this;
         
         if((typeof xhr.upload != 'unknown') && xhr.upload) xhr.upload.onprogress = function(e) { //IE11 seems to skip this only in workers
@@ -187,6 +193,27 @@ var terasender_worker = {
         this.log('Security token changed, propagating');
         this.sendCommand('securityTokenChanged', new_security_token);
     },
+
+    testing_uploadRequestChange_xhr_fail_on_third_finally_succeed: function(xhr) {
+        var worker = this;
+        var upload_chunk_size = window.filesender.config.upload_chunk_size;
+        var ret = xhr.status;
+        
+        this.log('testing_xhr_fail_on_third( called )');
+        
+        if( xhr.status == 200
+            && this.send_attempts < (window.filesender.config.terasender_worker_max_chunk_retries-1)
+            && worker.job
+            && worker.job.chunk
+            && worker.job.chunk.start==(3*upload_chunk_size))
+        {
+            ret = 0;
+            this.log('force the status to zero for testing! XXX this.send_attempts ' + this.send_attempts);
+        }
+        return ret;
+    },
+
+    
     
     /**
      * Upload xhr onreadystatechange callback
@@ -195,6 +222,16 @@ var terasender_worker = {
      */
     uploadRequestChange: function(xhr){
         if(xhr.readyState != 4) return; // Not a progress update
+
+        var status = xhr.status;
+
+        // call testing mutilation function if set
+        {
+            var fname = window.filesender.config.testing_terasender_worker_uploadRequestChange_function_name;
+            if( fname.length && fname.startsWith('testing_uploadRequestChange_')) {
+                status = this[fname](xhr);
+            }
+        }
         
         // Did security token change ?
         var new_security_token = xhr.getResponseHeader('X-Filesender-Security-Token');
@@ -204,15 +241,17 @@ var terasender_worker = {
         }
         
         // Ignore 40x and 50x if undergoing maintenance
-        if(xhr.status >= 400 && this.maintenance) {
+        if(status >= 400 && this.maintenance) {
             var worker = this;
             this.maintenance = setTimeout(function() {
                 worker.executeJob();
             }, 60 * 1000);
             return;
         }
+
+        var worker = this;
         
-        if(xhr.status == 200) { // All went well
+        if(status == 200) { // All went well
             if(this.maintenance) {
                 this.log('Webservice maintenance mode ended, pending chunk has been uploaded');
                 clearTimeout(this.maintenance);
@@ -221,9 +260,26 @@ var terasender_worker = {
             }
             
             this.reportDone();
-        }else if(xhr.status == 0) { // Request cancelled (browser refresh or such)
-            this.log('broken, exiting');
-            close();
+        }else if(status == 0) { // Request cancelled (browser refresh or such)
+
+            this.send_attempts++;
+            
+            setTimeout(function() {
+                if( worker.send_attempts < window.filesender.config.terasender_worker_max_chunk_retries ) {
+                    // try, try again
+                    worker.log('worker attempt ' + worker.send_attempts + ' to retry chunk upload at offset ' + worker.job.chunk.start);
+                    worker.executeJob(worker.job);
+                }
+                else {
+                    // Let the manager know something has really hit the fan
+                    worker.sendCommand('jobFailed', worker.job);
+                }
+            }, 1000);
+
+            // We have scheduled upload halt
+            // or another attempt already
+            return;
+            
         }else{ // We have an error
             var msg = xhr.responseText.replace(/^\s+/, '').replace(/\s+$/, '');
             
@@ -318,6 +374,9 @@ var terasender_worker = {
                 break;
             
             case 'executeJob' :
+                // setting this has to be here rather than in executeJob()
+                // because the retry handling code also calls executeJob()
+                this.send_attempts = 0;
                 this.executeJob(data);
                 break;
             
