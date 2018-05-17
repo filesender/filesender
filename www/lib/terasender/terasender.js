@@ -30,6 +30,7 @@ window.filesender.terasender = {
      * Security token
      */
     security_token: null,
+
     
     /**
      * Send command to worker
@@ -318,6 +319,44 @@ window.filesender.terasender = {
         
         this.transfer.reportProgress(file, complete);
     },
+
+    /**
+     * Look through all the workers for the file that job is working
+     * on and set the transfer.files starting upload offsets so that
+     * chunks that are currently in flight will always be resent on 
+     * a resume. 
+     * 
+     * Note that the worker that has failed 'job' might not
+     * have the lowest file offset of the currently running workers.
+     * So you can not simply use job.chunk.start as the minimal offset.
+     */
+    setMinUploadedOffsetFromActiveWorkers: function( job ) {
+
+        var files = this.transfer.files;
+        var min_offset = -1;
+        for(var i=0; i<files.length; i++) {
+            if(files[i].id == job.file.id) {
+                min_offset = files[i].uploaded;
+            }
+        }
+                
+        for(var i=0; i<this.workers.length; i++) {
+            if(!this.workers[i].status.match(/^(running|uploading)$/)) continue;
+            
+            if(this.workers[i].file_id == job.file.id) {
+                min_offset = Math.min(min_offset, this.workers[i].offset);
+            }
+        }
+
+        var min_uploaded = Math.max(0, min_offset - filesender.config.upload_chunk_size);
+                
+        for(var i=0; i<files.length; i++) {
+            if(files[i].id == job.file.id) {
+                this.transfer.files[i].min_uploaded_offset = min_uploaded;
+                this.transfer.files[i].uploaded = files[i].min_uploaded_offset;
+            }
+        }
+    },
     
     /**
      * Handle messages from workers
@@ -349,6 +388,20 @@ window.filesender.terasender = {
                 var gave = this.giveJob(worker_id, workerinterface);
                 if(gave) this.transfer.recordUploadStartedInWatchdog('worker:' + worker_id, gave.file);
                 break;
+
+            // This happens after the worker has already
+            // tried many times to upload the chunk
+            case 'jobFailed':
+            {
+                var workerUploaded = data.chunk.start;
+                var job = data;
+
+                this.setMinUploadedOffsetFromActiveWorkers( job );
+                
+                this.error({message: 'failed_after_many_retries offset ' + data.chunk.start + ' fileid ' + data.file.id });
+                this.stop();
+                
+            } break;
             
             case 'securityTokenChanged' :
                 this.security_token = data; // Will be sent to workers along with next jobs
