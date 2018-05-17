@@ -10,7 +10,7 @@ This is a reminder, the following {if:transfer.files>1}files have{else}file has{
 {if:transfer.files>1}{each:transfer.files as file}
   - {file.path} ({size:file.size})
 {endeach}{else}
-{transfer.files.first().name} ({size:transfer.files.first().size})
+{transfer.files.first().path} ({size:transfer.files.first().size})
 {endif}
 
 Download link: {recipient.download_link}
@@ -53,7 +53,7 @@ Best regards,
                     {endeach}
                 </ul>
                 {else}
-                {transfer.files.first().name} ({size:transfer.files.first().size})
+                {transfer.files.first().path} ({size:transfer.files.first().size})
                 {endif}
             </td>
         </tr>

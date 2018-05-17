@@ -9,7 +9,7 @@ ihr Download von {if:files>1}files{else}file{endif} ist beendet:
 {if:files>1}{each:files as file}
   - {file.path} ({size:file.size})
 {endeach}{else}
-{files.first().name} ({size:files.first().size})
+{files.first().path} ({size:files.first().size})
 {endif}
 
 Mit freundlichen Grüßen,
@@ -33,7 +33,7 @@ Mit freundlichen Grüßen,
         {endeach}
     </ul>
     {else}
-    {files.first().name} ({size:files.first().size})
+    {files.first().path} ({size:files.first().size})
     {endif}
 </p>
 

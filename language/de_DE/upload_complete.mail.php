@@ -9,7 +9,7 @@ die {if:transfer.files>1}folgenden Dateien wurden{else}folgende Datei wurde{endi
 {if:transfer.files>1}{each:transfer.files as file}
   - {file.path} ({size:file.size})
 {endeach}{else}
-{transfer.files.first().name} ({size:transfer.files.first().size})
+{transfer.files.first().path} ({size:transfer.files.first().size})
 {endif}
 
 Weitere Informationen: {transfer.link}
@@ -44,7 +44,7 @@ Mit freundlichen Grüßen,
                     {endeach}
                 </ul>
                 {else}
-                {transfer.files.first().name} ({size:transfer.files.first().size})
+                {transfer.files.first().path} ({size:transfer.files.first().size})
                 {endif}
             </td>
         </tr>

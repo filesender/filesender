@@ -38,7 +38,16 @@ if(!is_file($transfile)) die("please supply the PHP exported translation as argu
 
 include_once($transfile);
  
-
+// filter NULLs
+echo "LANG size1 ", count($LANG), "\n";
+foreach($LANG as $ti => $t) {
+    $term = $t['term'];
+    $data = $t['definition'];
+    if( $data == NULL ) {
+       unset($LANG[$ti]);
+    }
+}
+echo "LANG size2 ", count($LANG), "\n";
 
 
 $lang = loadLang( $code );
@@ -46,6 +55,10 @@ echo "lang size ", count($lang), "\n";
 
 $langdir = loadLangDirectory( $code );
 echo "lang dir size ", count($langdir), "\n";
+
+
+
+
 
 
 
