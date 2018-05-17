@@ -2,6 +2,16 @@
 
 $BASE = __DIR__ . '/../../';
 
+$warningAboutChangingFile = "\n";
+$warningAboutChangingFile .= " WARNING, this is a read only file created by import scripts\n";
+$warningAboutChangingFile .= " WARNING\n";
+$warningAboutChangingFile .= " WARNING,  Changes made to this file will be clobbered\n";
+$warningAboutChangingFile .= " WARNING\n";
+$warningAboutChangingFile .= " WARNING,  Please make changes on poeditor instead of here\n";
+$warningAboutChangingFile .= "\n";
+$warningAboutChangingFile .= "\n";
+$warningAboutChangingFile .= "\n";
+
 function loadLang( $code ) {
     global $BASE;
     $n = 0; $kn = 0;
@@ -62,7 +72,7 @@ function write_translation_lang_file( $code, $lang ) {
     }
 
     echo "writing general translations to file at $fn \n";
-    file_put_contents( $fn, "<?php\n" . $data );
+    file_put_contents( $fn, $warningAboutChangingFile . "<?php\n" . $data );
     
 }
 
@@ -77,5 +87,5 @@ function write_translation_term_file( $code, $term, $data ) {
         }
     }
     echo "translation file for $term at $fn \n";
-    file_put_contents( $fn, $data );
+    file_put_contents( $fn, $warningAboutChangingFile . $data );
 }
