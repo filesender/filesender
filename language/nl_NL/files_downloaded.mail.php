@@ -9,7 +9,7 @@ Geachte mevrouw, heer,
 {if:files>1}{each:files as file}
   - {file.path} ({size:file.size})
 {endeach}{else}
-{files.first().name} ({size:files.first().size})
+{files.first().path} ({size:files.first().size})
 {endif}
 
 U kunt uw bestanden benaderen en meer details over downloadstatistieken voor deze transfers bekijken op de transfers-pagina op {files.first().transfer.link}.
@@ -35,7 +35,7 @@ Hoogachtend,
         {endeach}
     </ul>
     {else}
-    {files.first().name} ({size:files.first().size})
+    {files.first().path} ({size:files.first().size})
     {endif}
 </p>
 

@@ -10,7 +10,7 @@ dies ist eine Erinnerung, dass die {if:transfer.files>1}folgenden Dateien{else}f
 {if:transfer.files>1}{each:transfer.files as file}
   - {file.path} ({size:file.size})
 {endeach}{else}
-{transfer.files.first().name} ({size:transfer.files.first().size})
+{transfer.files.first().path} ({size:transfer.files.first().size})
 {endif}
 
 Download-Link: {recipient.download_link}
@@ -53,7 +53,7 @@ Mit freundlichen Grüßen,
                     {endeach}
                 </ul>
                 {else}
-                {transfer.files.first().name} ({size:transfer.files.first().size})
+                {transfer.files.first().path} ({size:transfer.files.first().size})
                 {endif}
             </td>
         </tr>

@@ -9,7 +9,7 @@ Dear Sir or Madam,
 {if:files>1}{each:files as file}
   - {file.path} ({size:file.size})
 {endeach}{else}
-{files.first().name} ({size:files.first().size})
+{files.first().path} ({size:files.first().size})
 {endif}
 
 You can access your files and view detailed download statistics on the transfers page at {files.first().transfer.link}.
@@ -35,7 +35,7 @@ Best regards,
         {endeach}
     </ul>
     {else}
-    {files.first().name} ({size:files.first().size})
+    {files.first().path} ({size:files.first().size})
     {endif}
 </p>
 

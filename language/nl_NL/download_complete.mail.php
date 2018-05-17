@@ -9,7 +9,7 @@ Uw download van onderstaande {if:files>1}bestanden{else}bestand{endif} is voltoo
 {if:files>1}{each:files as file}
   - {file.path} ({size:file.size})
 {endeach}{else}
-{files.first().name} ({size:files.first().size})
+{files.first().path} ({size:files.first().size})
 {endif}
 
 Hoogachtend,
@@ -31,7 +31,7 @@ Hoogachtend,
             {endeach}
     </ul>
     {else}
-    {files.first().name} ({size:files.first().size})
+    {files.first().path} ({size:files.first().size})
     {endif}
 </p>
 

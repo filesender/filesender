@@ -6,145 +6,9 @@ $lang['action'] = 'Action';
 $lang['actions'] = 'Actions';
 $lang['add_me_to_recipients'] = 'M\'ajouter aux destinataires';
 $lang['add_recipient'] = 'Ajouter un destinataire';
-$lang['confirm_leave_upload_page'] = 'Voulez-vous vraiment quitter cette page et perdre la progression en cours ?';
-$lang['download_link'] = 'Lien de téléchargement';
-$lang['recipients_notifications_language'] = 'Langue des destinataires';
-$lang['disable_terasender'] = 'Désactive l\'envoi en paralèlle (Cochez si votre connexion est limitée)';
-
-
-/**
- * Guest page spacific
- */
-$lang['guest_options'] = 'Options d\'invité';
-$lang['email_upload_page_access'] = 'Me notifier lorsque l\'invité accède à la page de dépôt';
-$lang['email_upload_started'] = 'Me notifier lorsque le téléversement démarre';
-$lang['can_only_send_to_me'] = 'Être seul et unique destinataire';
-$lang['valid_only_one_time'] = 'Valable pour un seul dépôt';
-$lang['does_not_expire'] = 'N\'expire pas dans le temps';
-$lang['email_guest_created'] = 'Notifier l\'invité de la création';
-$lang['email_guest_created_receipt'] = 'Me notifier de la création de l\'invité';
-$lang['email_guest_expired'] = 'Notifier l\'invité de l\'expiration';
-$lang['guest_transfer_options'] = 'Options du dépôt créé';
-$lang['guests_transfers'] = 'Dépôts des invités';
-$lang['guest_vouchers_sent'] = 'Invitation envoyée';
-$lang['no_guests'] = 'Aucun invité';
-$lang['forward_guest_voucher'] = 'Faire suivre l\'invitation';
-$lang['guest_deleted'] = 'Invité supprimé';
-$lang['guest_reminded'] = 'Rappel envoyé à l\'invité';
-$lang['confirm_delete_guest'] = 'Souhaitez-vous vraiment supprimer cet invité (il ne pourra plus déposer de fichiers) ?';
-$lang['confirm_remind_guest'] = 'Envoyer un rappel à cet invité ?';
-$lang['message_can_not_contain_urls'] = 'Le message ne peut pas contenir d\'URLs ou quelque chose qui y ressemble.';
-
-
-/**
- * Transfer page specific
- */
-$lang['no_transfers'] = 'Aucun dépôt';
-$lang['with_identity'] = 'Adresse d\'expéditeur';
-$lang['transfer_id'] = 'Identifiant';
-$lang['auditlog'] = 'Audit du dépôt';
-$lang['confirm_close_transfer'] = 'Souhaitez-vous vraiment fermer ce dépôt ? Les fichiers d\'un dépôt ne peuvent plus être téléchargés après la fermeture.';
-$lang['confirm_delete_file'] = 'Souhaitez-vous vraiment supprimer ce fichier ? Le dépôt sera fermé s\'il ne comporte plus de fichiers.';
-$lang['confirm_delete_recipient'] = 'Souhaitez-vous vraiment supprimer ce destinataire ? Le dépôt sera fermé s\'il ne comporte plus de destinataires.';
-$lang['recipient_deleted'] = 'Le destinataire a été supprimé.';
-$lang['file_deleted'] = 'Le fichier a été supprimé.';
-$lang['no_auditlog'] = 'Aucune information d\'audit n\'a été trouvée';
-$lang['recipient_added'] = 'Destinataire ajouté';
-$lang['transfer_reminded'] = 'Rappel envoyé aux destinataires';
-$lang['recipient_reminded'] = 'Rappel envoyé aux destinataire';
-$lang['open_auditlog'] = 'Consulter l\'audit';
-$lang['open_recipient_auditlog'] = 'Voir l\'activité de ce destinataire';
-$lang['open_file_auditlog'] = 'Voir l\'activité de ce fichier';
-$lang['filtered_transfer_log'] = 'Ceci est une vue filtrée de l\'audit.';
-$lang['view_full_log'] = 'Voir l\'audit dans son ensemble';
-$lang['send_to_my_email'] = 'M\'envoyer ces informations par email';
-$lang['confirm_remind_transfer'] = 'Envoyer le rappel aux destinataires ?';
-$lang['confirm_remind_recipient'] = 'Envoyer le rappel à ce destinataire ?';
-$lang['download_link'] = 'Lien de téléchargement';
-$lang['extend_expiry_date'] = 'Etendre la date d\'expiration de {days} jours';
-$lang['confirm_extend_expiry'] = 'Voulez-vous étendre la date d\'expiration de {days} jours ?';
-$lang['transfer_extended'] = 'Date d\'expiration étendue jusqu\'au {expires}';
-$lang['transfer_extended_reminded'] = 'Date d\'expiration étendue jusqu\'au {expires}, un rappel a été envoyé aux destinataires';
-$lang['download_link'] = 'Lien de téléchargement';
-$lang['pager_more'] = 'Plus...';
-$lang['pager_has_no_more'] = 'Rien de plus.';
-
-/**
- * Reports
- */
-
-// Reports
-$lang['date'] = 'Date';
-$lang['action'] = 'Action';
-$lang['ip'] = 'Adresse IP';
-
-$lang['report_event_transfer_started'] = 'Le dépôt a été créé';
-$lang['report_event_transfer_available'] = 'Le dépôt est devenu disponible pour les destinataires (temps total {time:time_taken})';
-$lang['report_event_transfer_sent'] = 'Les liens de téléchargement ont été envoyés aux destinataires';
-$lang['report_event_transfer_expired'] = 'Le dépôt a expiré';
-$lang['report_event_transfer_closed'] = 'Le dépôt a été fermé sur demande';
-$lang['report_event_transfer_deleted'] = 'Le dépôt a été supprimé';
-$lang['report_event_upload_started'] = 'Le téléversement a démarré';
-$lang['report_event_upload_resumed'] = 'Le téléversement a repris';
-$lang['report_event_upload_ended'] = 'Le téléversement a été terminé';
-$lang['report_event_file_uploaded'] = 'Le fichier {file.path} ({size:file.size}) a été téléversé en {time:time_taken}';
-$lang['report_event_download_started'] = 'Le destinataire {author.identity} a commencé à télécharger le fichier {file.path} ({size:file.size})';
-$lang['report_event_download_resumed'] = 'Le destinataire {author.identity} a repris le téléchargement du fichier {file.path} ({size:file.size})';
-$lang['report_event_download_ended'] = 'Le destinataire {author.identity} a fini de télécharger le fichier {file.path} ({size:file.size})';
-$lang['report_event_archive_download_started'] = 'Le destinataire {author.identity} a commencé à télécharger un ensemble de fichiers sous forme d\'archive';
-$lang['report_event_archive_download_ended'] = 'Le destinataire {author.identity} a fini de télécharger un ensemble de fichiers sous forme d\'archive';
-
-$lang['report_recipient_event_download_started'] = 'Le destinataire a commencé à télécharger le fichier {file.path} ({size:file.size})';
-$lang['report_recipient_event_download_resumed'] = 'Le destinataire a repris le téléchargement du fichier {file.path} ({size:file.size})';
-$lang['report_recipient_event_download_ended'] = 'Le destinataire a fini de télécharger le fichier {file.path} ({size:file.size})';
-$lang['report_recipient_event_archive_download_started'] = 'Le destinataire a commencé à télécharger un ensemble de fichiers sous forme d\'archive';
-$lang['report_recipient_event_archive_download_ended'] = 'Le destinataire a fini de télécharger un ensemble de fichiers sous forme d\'archive';
-
-$lang['report_owner_event_download_started'] = 'Le propiétaire a commencé à télécharger le fichier {file.path} ({size:file.size})';
-$lang['report_owner_event_download_resumed'] = 'Le propiétaire a repris le téléchargement du fichier {file.path} ({size:file.size})';
-$lang['report_owner_event_download_ended'] = 'Le propiétaire a fini de télécharger le fichier {file.path} ({size:file.size})';
-$lang['report_owner_event_archive_download_started'] = 'Le propiétaire a commencé à télécharger un ensemble de fichiers sous forme d\'archive';
-$lang['report_owner_event_archive_download_ended'] = 'Le propiétaire a fini de télécharger un ensemble de fichiers sous forme d\'archive';
-
-$lang['report_guest_event_transfer_started'] = 'Le dépôt a été créé par l\'invité {author.identity}';
-$lang['report_guest_event_transfer_sent'] = 'Les liens de téléchargement ont été envoyés aux destinataires';
-
-
-/**
- * Download page specific
- */
-$lang['archive_download'] = 'Télécharger l\'archive';
-$lang['download_disclamer'] = '';
-$lang['download_disclamer_nocrypto_message'] = 'Vous pouvez faire un clic droit sur le bouton de téléchargement et "Copier l\'emplacement du lien" pour télécharger le fichier en utilisant un autre outil.';
-$lang['download_disclamer_crypto_message'] = 'Cliquez sur un fichier pour télécharger les données et déchiffrer sur votre ordinateur.';
-$lang['download_disclamer_archive'] = 'Voici vos fichiers. Vous pouvez les télécharger indépendamment les uns des autres ou rassemblés sous forme d\'archive ZIP.';
-$lang['download_file'] = 'Télécharger';
-$lang['mac_archive_message'] = 'Si vous utilisez OSX vous pourrez trouver un utilitaire permettant d\'ouvrir l\'archive en suivant le lien suivant : <a href="{cfg:mac_unzip_link}" target="_blank">{cfg:mac_unzip_name}</a>.';
-$lang['select_all_for_archive_download'] = 'Sélectionner tous les fichiers';
-$lang['select_for_archive_download'] = 'Sélectionner pour le téléchargement groupé';
-$lang['archive_message'] = 'Téléchargement en tant qu\'archive ZIP.';
-$lang['confirm_download_notify'] = 'Souhaitez-vous recevoir un email de notification lorsque le téléchargement est terminé ?';
-
-
-/**
- * User profile specifics
- */
-$lang['user_page'] = 'Mon profil';
-$lang['user_preferences'] = 'Préférences';
-$lang['user_lang'] = 'Langue préférée';
-$lang['user_remote_authentication'] = 'Authentification distante';
-$lang['user_auth_secret'] = 'Secret';
-$lang['user_additionnal'] = 'Informations additionnelles';
-$lang['user_id'] = 'Identité';
-$lang['user_created'] = 'Première connexion';
-$lang['get_full_user_remote_config'] = 'Obtenir la configuration complète pour l\'authentification distante';
-$lang['preferences_updated'] = 'Préférences utilisateur sauvegardées';
-$lang['remote_auth_sync_request'] = '<p><strong>{remote}</strong> requiert vos informations pour l\'authentification distante.</p><p>Pour autoriser l\'accès veuillez donner le code suivant à <strong>{remote}</strong> : <strong>{code}</strong> (ce code est utilisable dans les prochaines 2 minutes seulement).</p><p>Si vous n\'êtes pas à l\'origine de cette demande merci d\'ignorer de message.</p>';
-
-
-/**
- * Admin page specific
- */
+$lang['admin_config_section'] = 'Configuration';
+$lang['admin_guests_section'] = 'Invités';
+$lang['admin_page'] = 'Admin';
 $lang['admin_statistics_section'] = 'Statistiques';
 $lang['admin_transfers_section'] = 'Dépôts';
 $lang['advanced_settings'] = 'Paramètres avancés';
@@ -225,7 +89,7 @@ $lang['delete_transfer_nicely'] = 'Supprimer le dépôt et notifier les destinat
 $lang['delete_transfer_roughly'] = 'Supprimer le dépôt sans notifications';
 $lang['details'] = 'Details';
 $lang['dialog_autoclose'] = 'Ce message disparaitra dans {seconds} secondes';
-$lang['disable_terasender'] = 'Désactive l\\\\\\\'envoi en paralèlle (Cochez si votre connexion est limitée)';
+$lang['disable_terasender'] = 'Désactive l\\\'envoi en paralèlle (Cochez si votre connexion est limitée)';
 $lang['does_not_expire'] = 'N\'expire pas dans le temps';
 $lang['done'] = 'Fait';
 $lang['done_uploading'] = 'Téléversement effectué';
@@ -235,9 +99,9 @@ $lang['download'] = 'Téléchargement';
 $lang['download_bad_files_ids'] = 'Identifiants des fichiers à télécharger erronés';
 $lang['download_bad_token_format'] = 'Format du code de téléchargement erroné';
 $lang['download_disclamer'] = 'Voici vos fichiers. Vous pouvez les télécharger indépendamment les uns des autres ou rassemblés sous forme d\'archive ZIP.';
-$lang['download_disclamer_archive'] = 'Voici vos fichiers. Vous pouvez les télécharger indépendamment les uns des autres ou rassemblés sous forme d\\\\\\\'archive ZIP.';
+$lang['download_disclamer_archive'] = 'Voici vos fichiers. Vous pouvez les télécharger indépendamment les uns des autres ou rassemblés sous forme d\\\'archive ZIP.';
 $lang['download_disclamer_crypto_message'] = 'Cliquez sur un fichier pour télécharger les données et déchiffrer sur votre ordinateur.';
-$lang['download_disclamer_nocrypto_message'] = 'Vous pouvez faire un clic droit sur le bouton de téléchargement et "Copier l\\\\\\\'emplacement du lien" pour télécharger le fichier en utilisant un autre outil.';
+$lang['download_disclamer_nocrypto_message'] = 'Vous pouvez faire un clic droit sur le bouton de téléchargement et "Copier l\\\'emplacement du lien" pour télécharger le fichier en utilisant un autre outil.';
 $lang['download_file'] = 'Télécharger';
 $lang['download_invalid_range'] = 'Plage de téléchargement erronée';
 $lang['download_link'] = 'Lien de téléchargement';
@@ -266,11 +130,11 @@ $lang['drag_and_drop'] = 'Glisser-déposer vos fichiers ici';
 $lang['duplicate_recipient'] = 'Un des destinataires existe déjà';
 $lang['email_daily_statistics'] = 'M\'envoyer des statistiques quotidiennement';
 $lang['email_download_complete'] = 'Me notifier à chaque téléchargement';
-$lang['email_guest_created'] = 'Notifier l\\\\\\\'invité de la création';
-$lang['email_guest_created_receipt'] = 'Me notifier de la création de l\\\\\\\'invité';
-$lang['email_guest_expired'] = 'Notifier l\\\\\\\'invité de l\\\\\\\'expiration';
+$lang['email_guest_created'] = 'Notifier l\\\'invité de la création';
+$lang['email_guest_created_receipt'] = 'Me notifier de la création de l\\\'invité';
+$lang['email_guest_expired'] = 'Notifier l\\\'invité de l\\\'expiration';
 $lang['email_me_copies'] = 'Me mettre en copie de toutes les notifications';
-$lang['email_me_on_expire'] = 'Me notifier à l\\\\\\\'expiration';
+$lang['email_me_on_expire'] = 'Me notifier à l\\\\\\\\\\\\\\\'expiration';
 $lang['email_report_on_closing'] = 'M\'envoyer un rapport à l\'expiration du dépôt';
 $lang['email_sent'] = 'Message envoyé';
 $lang['email_separator_msg'] = 'Adresses multiples séparées par , ou ;';
@@ -298,7 +162,7 @@ $lang['file_bad_hash'] = 'Condensat de fichier erroné';
 $lang['file_chunk_out_of_bounds'] = 'Portion de fichier au-delà des limites';
 $lang['file_deleted'] = 'Le fichier a été supprimé.';
 $lang['file_encryption'] = 'Fichier Chiffré (beta)';
-$lang['file_encryption_description'] = '<i class="fa fa-exclamation-triangle" style="color:#FFAA00" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp; Chiffrement de bout en bout. Vos fichiers sont chiffrés dans votre navigateur. C\\\\\\\'est à vous de communiquer le mot de passe aux destinataires, nous ne stockons pas les mots de passe.<br/><i class="fa fa-exclamation-triangle" style="color:#FFAA00" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp; Le chiffrement des fichiers impactera significativement les performances de votre navigateur, tant pour l\\\\\\\'émetteur que pour les destinataires.<br/><i class="fa fa-exclamation-triangle" style="color:#FFAA00" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp; Les fichiers chiffrés d\\\\\\\'une taille égale ou supérieure à 4Go peuvent ne pas être téléversé correctement, ceci est dû aux limitations du navigateur.';
+$lang['file_encryption_description'] = '<i class="fa fa-exclamation-triangle" style="color:#FFAA00" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp; Chiffrement de bout en bout. Vos fichiers sont chiffrés dans votre navigateur. C\\\\\\\\\\\\\\\'est à vous de communiquer le mot de passe aux destinataires, nous ne stockons pas les mots de passe.<br/><i class="fa fa-exclamation-triangle" style="color:#FFAA00" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp; Le chiffrement des fichiers impactera significativement les performances de votre navigateur, tant pour l\\\\\\\\\\\\\\\'émetteur que pour les destinataires.<br/><i class="fa fa-exclamation-triangle" style="color:#FFAA00" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp; Les fichiers chiffrés d\\\\\\\\\\\\\\\'une taille égale ou supérieure à 4Go peuvent ne pas être téléversé correctement, ceci est dû aux limitations du navigateur.';
 $lang['file_encryption_description_disabled'] = '<i class="fa fa-exclamation-triangle" style="color:#FFAA00" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp; Fonctionnalité non supportée par ce navigateur. Veuillez réessayer avec une version récente de Firefox, Internet Explorer, Edge, Safari ou Chrome';
 $lang['file_encryption_disabled'] = '<i class="fa fa-exclamation-triangle" style="color:#FFAA00" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp;Déchiffrement de fichier non supportée par ce navigateur. Veuillez réessayer avec une version récente de Firefox, Internet Explorer, Edge, Safari ou Chrome';
 $lang['file_encryption_enter_password'] = 'Entrer un mot de passe';
@@ -354,7 +218,7 @@ $lang['make_default'] = 'Revenir à la valeur par défaut';
 $lang['max_email_recipients_exceeded'] = 'Nombre maximum de destinataires dépassé';
 $lang['me'] = 'Moi';
 $lang['message'] = 'Message';
-$lang['message_can_not_contain_urls'] = 'Le message ne peut pas contenir d\\\\\\\'URLs ou quelque chose qui y ressemble.';
+$lang['message_can_not_contain_urls'] = 'Le message ne peut pas contenir d\\\'URLs ou quelque chose qui y ressemble.';
 $lang['missing_files_for_restart'] = 'Certains fichiers sont manquants, impossible de re-démarrer';
 $lang['n_more'] = '{n} autres';
 $lang['need_to_readd_files'] = 'Vous devez sélectionner les fichiers ci-dessous à nouveau afin de pouvoir re-démarrer votre dépôt';
@@ -455,9 +319,9 @@ $lang['send'] = 'Envoyer';
 $lang['send_reminder'] = 'Envoyer un rappel';
 $lang['send_to_my_email'] = 'M\'envoyer ces informations par email';
 $lang['send_voucher'] = 'Envoyer l\'invitation';
-$lang['serverlog_auth_sp_attribute_not_found'] = 'Il y a eu des problèmes pour trouver un attribut d\\\\\\\'authentification "Fournisseur de Service". Ce sont les attributs disponibles au moment de l\\\\\\\'authentification. Peut-être re-vérifier que l\\\\\\\'orthographe du nom de l\\\\\\\'attribut est correct. Peut-être que la configuration recherche le mauvais attribut ?';
-$lang['serverlog_config_directive'] = 'Directive de configuration associée \\\\\\\'{key}\\\\\\\'';
-$lang['serverlog_wanted_key_in_array'] = 'Attribut demandé avec la clé \\\\\\\'{key}\\\\\\\'';
+$lang['serverlog_auth_sp_attribute_not_found'] = 'Il y a eu des problèmes pour trouver un attribut d\\\\\\\\\\\\\\\'authentification "Fournisseur de Service". Ce sont les attributs disponibles au moment de l\\\\\\\\\\\\\\\'authentification. Peut-être re-vérifier que l\\\\\\\\\\\\\\\'orthographe du nom de l\\\\\\\\\\\\\\\'attribut est correct. Peut-être que la configuration recherche le mauvais attribut ?';
+$lang['serverlog_config_directive'] = 'Directive de configuration associée \\\\\\\\\\\\\\\'{key}\\\\\\\\\\\\\\\'';
+$lang['serverlog_wanted_key_in_array'] = 'Attribut demandé avec la clé \\\\\\\\\\\\\\\'{key}\\\\\\\\\\\\\\\'';
 $lang['show_details'] = 'Afficher les détails';
 $lang['showhide'] = 'Afficher/Cacher';
 $lang['size'] = 'Taille';

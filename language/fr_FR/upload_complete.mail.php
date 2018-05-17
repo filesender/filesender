@@ -9,7 +9,7 @@ Madame, Monsieur,
 {if:transfer.files>1}{each:transfer.files as file}
   - {file.path} ({size:file.size})
 {endeach}{else}
-{transfer.files.first().name} ({size:transfer.files.first().size})
+{transfer.files.first().path} ({size:transfer.files.first().size})
 {endif}
 
 Plus d'informations : {transfer.link}
@@ -44,7 +44,7 @@ Cordialement,
                     {endeach}
                 </ul>
                 {else}
-                {transfer.files.first().name} ({size:transfer.files.first().size})
+                {transfer.files.first().path} ({size:transfer.files.first().size})
                 {endif}
             </td>
         </tr>
