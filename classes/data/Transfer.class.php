@@ -39,6 +39,7 @@ if (!defined('FILESENDER_BASE')) {
  * Represents a transfer in database
  *
  * @property array $filesCache related filesCache
+ * @property array $collectionsCache related collectionsCache
  * @property array $recipientsCache related recipientsCache
  */
 class Transfer extends DBObject
@@ -145,6 +146,7 @@ class Transfer extends DBObject
      * Related objects cache
      */
     private $filesCache = null;
+    private $collectionsCache = null;
     private $recipientsCache = null;
     private $logsCache = null;
     private static $optionsCache = null;
@@ -157,9 +159,10 @@ class Transfer extends DBObject
      *
      * @throws TransferNotFoundException
      */
-    protected function __construct($id = null, $data = null)
+    protected function __construct($id = null, $data = null) 
     {
-        if (!is_null($id)) {
+        
+        if(!is_null($id)) {
             // Load from database if id given
             $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE id = :id');
             $statement->execute(array(':id' => $id));
@@ -172,6 +175,12 @@ class Transfer extends DBObject
         // Fill properties from provided data
         if ($data) {
             $this->fillFromDBData($data);
+        }
+
+        // Load collections if they exist
+        if ($this->getOption(TransferOptions::COLLECTION)) {
+            CollectionType::initialize();
+            $this->collectionsCache = Collection::fromTransfer($this);
         }
     }
     
@@ -274,7 +283,6 @@ class Transfer extends DBObject
         $transfer = new self();
         
         // Init caches to empty to avoid db queries
-        $transfer->filesCache = array();
         $transfer->recipientsCache = array();
         $transfer->logsCache = array();
         
@@ -296,12 +304,9 @@ class Transfer extends DBObject
         }
         
         $transfer->__set('user_email', $user_email);
-        
         $transfer->__set('expires', $expires);
-        
         $transfer->created = time();
         $transfer->status = TransferStatuses::CREATED;
-        
         $transfer->lang = Lang::getCode();
         
         return $transfer;
@@ -411,8 +416,16 @@ class Transfer extends DBObject
     public function beforeDelete()
     {
         AuditLog::clean($this);
+
+        if (!is_null($this->collections)) {
+            foreach ($collections as $collection_type_id => $collectionList) {
+                foreach ($collectionList as $collection) {
+                    $this->removeCollection($collection);
+                }
+            }
+        }
         
-        foreach ($this->files as $file) {
+        foreach($this->files as $file) {
             $this->removeFile($file);
         }
         
@@ -675,9 +688,13 @@ class Transfer extends DBObject
             }
             return $this->filesCache;
         }
-        
-        if ($property == 'size') {
-            return array_sum(array_map(function ($file) {
+
+        if($property == 'collections') {
+            return $this->collectionsCache;
+        }
+
+        if($property == 'size') {
+            return array_sum(array_map(function($file) {
                 return $file->size;
             }, $this->files));
         }
@@ -824,67 +841,37 @@ class Transfer extends DBObject
     }
 
     /**
-     * Calculate the encrypted file size
-     *
-     * @param File file the file we are working on
-     * @return int What $file->encrypted_size should be for this file.
-     */
-    private function calculateEncryptedFileSize($file)
-    {
-        $upload_chunk_size = Config::get('upload_chunk_size');
-        
-        $echunkdiff = Config::get('upload_crypted_chunk_size') - $upload_chunk_size;
-        $chunksMinusOne = ceil($file->size / $upload_chunk_size)-1;
-        $lastChunkSize = $file->size - ($chunksMinusOne * $upload_chunk_size);
-
-        // padding on the last chunk of the file
-        // may not be a full chunk so need to calculate
-        $lastChunkPadding = 16 - $lastChunkSize % 16;
-        if ($lastChunkPadding == 0) {
-            $lastChunkPadding = 16;
-        }
-            
-        return $file->size + ($chunksMinusOne * $echunkdiff) + $lastChunkPadding + 16;
-    }
-
-    /**
      * Adds a file
-     *
-     * @param string $name the file name
+     * 
+     * @param string $path the file name
      * @param string $size the file size
-     *
+     * @param string $mime_type the optional file mime_type
+     * 
      * @return File
      */
-    public function addFile($name, $size, $mime_type = null)
+    public function addFile($path, $size, $mime_type = null)
     {
+        if(is_null($this->filesCache)) {
+            $this->filesCache = File::fromTransfer($this);
+        }
+
         // Check if already exists
-        if (!is_null($this->filesCache)) {
-            $matches = array_filter($this->filesCache, function ($file) use ($name, $size) {
-                return ($file->name == $name) && ($file->size == $size);
-            });
-            
-            if (count($matches)) {
-                return array_shift($matches);
-            }
+        $matches = array_filter($this->filesCache, function($file) use($path, $size) {
+            return ($file->path == $path) && ($file->size == $size);
+        });
+        
+        if(count($matches)) return array_shift($matches);
+
+        if( !Utilities::isValidFileName( $path )) {
+            throw new TransferFileNameInvalidException( $path );
         }
 
-        if (!Utilities::isValidFileName($name)) {
-            throw new TransferFileNameInvalidException($name);
-        }
-
-        // Create and save new recipient
-        $file = File::create($this);
-        $file->name = $name;
-        $file->size = $size;
-        $file->mime_type = $mime_type ? $mime_type : 'application/binary';
-        $file->encrypted_size = $this->calculateEncryptedFileSize($file);
-
+        // Create and save new file
+        $file = File::create($this, $path, $size, $mime_type);
         $file->save();
  
         // Update local cache
-        if (!is_null($this->filesCache)) {
-            $this->filesCache[$file->id] = $file;
-        }
+        $this->filesCache[$file->id] = $file;
         
         Logger::info($file.' added to '.$this);
         
@@ -911,6 +898,79 @@ class Transfer extends DBObject
         }
         
         Logger::info($file.' removed from '.$this);
+    }
+
+    /**
+     * Adds a collection
+     * 
+     * @param CollectionType $type the collection type
+     * @param string $info unique information about the collection
+     * 
+     * @return Collection
+     */
+    public function addCollection(CollectionType $type, $info) {
+        $collections_added = false;
+        
+        if(is_null($this->collectionsCache)) {
+            $this->collectionsCache = array();
+            $collections_added = true;
+        }
+        
+        $type_id = $type->id;
+        $type_exists = array_key_exists($type_id, $this->collectionsCache);
+
+        
+        // Check if already exists
+        if($type_exists) {
+            $matches = array_filter($this->collectionsCache[$type_id], function($collection) use($info) {
+                return ($collection->info == $info);
+            });
+            
+            if(count($matches)) return array_shift($matches);
+        }
+
+        // Create and save new recipient
+        $collection = Collection::create($this, $type, $info);
+        $collection->save();
+
+        if ($collections_added) {
+            $this->options[TransferOptions::COLLECTION] = true;
+            $this->save();
+        }
+        
+        // Update local cache
+        if(!$type_exists) {
+            $this->collectionsCache[$type_id] = array();
+        }
+        
+        $this->collectionsCache[$type_id][$collection->id] = $collection;
+        
+        Logger::info($collection.' added to '.$this);
+        
+        return $collection;
+    }
+
+    /**
+     * Removes a collection
+     * 
+     * @param mixed $collection Collection or collection id
+     */
+    public function removeCollection($collection) {
+        if(!is_object($collection)) $collection = Collection::fromId($collection);
+        $type_id = $collection->type_id;
+        $id = $collection->id;
+
+        // Delete
+        $collection->delete();
+        
+        // Update local cache
+        if(!is_null($this->collectionsCache) &&
+           array_key_exists($type_id, $this->collectionsCache) &&
+           array_key_exists($id, $this->collectionsCache[$type_id])) {
+            unset($this->collectionsCache[$type_id][$id]);
+        }
+        
+        Logger::info($collection.' removed from '.$this);
     }
     
     /**

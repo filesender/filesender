@@ -122,7 +122,93 @@ class File extends DBObject
      */
     private $transferCache = null;
     private $logsCache = null;
+    private $pathCache = null;
+    private $directoryCache = null;
 
+    /**
+     * Set the name of a File, optionally creating a Path
+     * object internally if pathedName contains slashes
+     * 
+     * @param string $pathName a potentially fully pathed name for the File
+     */
+    protected function setName($pathName) {
+        if (is_null($pathName)) return;
+        $this->name = $pathName;
+        $pos = strrpos($pathName, '/');
+      
+        // If the name for this file appears to be a path because it
+        // contains a '/' (slash), add the file to a CollectionDirectory
+        if (!($pos === false)) {
+           CollectionType::initialize();
+           $this->name = substr($pathName, $pos + 1);
+           $this->pathCache = $pathName;
+           $this->directoryCache = $this->transferCache->addCollection(CollectionType::$DIRECTORY, substr($pathName, 0, $pos));
+           $this->directoryCache->addFile($this);
+        }
+    }
+
+    /**
+     * Get a File's full path, which may just be the File's name
+     * if it does not belong to a CollectionDirectory
+     * 
+     * @return string the File's full path
+     * 
+     * @throws FileMultiplePathException
+     */
+    protected function loadDirectoryPath() {
+        // Taking advantage of two $pathCache states:
+        // 1. null -> need to see if File belongs to a CollectionDirectory
+        // 2. !null -> we have checked whether a FIle belongs to a CollectionDirectory
+        if (isset($this->pathCache)) {
+            return $this->pathCache;
+        }
+        // Default that the path is just the name
+        $this->pathCache = $this->name;
+        $collections = $this->transfer->collections;
+
+        if (is_null($collections) ||
+            count($collections) < 1 ||
+            $this->mime_type === 'text/directory') {
+            return $this->pathCache;
+        }
+        
+        foreach ($collections as $collection_type_id => $directories) {
+            if ($collection_type_id != CollectionType::DIRECTORY_ID) {
+                continue;
+            }
+            foreach ($directories as $dir) {
+                if (array_key_exists($this->id, $dir->files)) {
+                    $this->pathCache = $dir->info.'/'.$this->name;
+                    $this->directoryCache = $dir;
+                    break;
+                }
+            }
+        }
+        
+        return $this->pathCache;
+    }
+    
+    /**
+     * Calculate the encrypted file size
+     *
+     * @return int What $file->encrypted_size should be for this file.
+     */
+    private function calculateEncryptedFileSize() {
+
+        $upload_chunk_size = Config::get('upload_chunk_size');
+        
+        $echunkdiff = Config::get('upload_crypted_chunk_size') - $upload_chunk_size;
+        $chunksMinusOne = ceil($this->size / $upload_chunk_size)-1;
+        $lastChunkSize = $this->size - ($chunksMinusOne * $upload_chunk_size);
+
+        // padding on the last chunk of the file
+        // may not be a full chunk so need to calculate
+        $lastChunkPadding = 16 - $lastChunkSize % 16;
+        if ($lastChunkPadding == 0)
+            $lastChunkPadding = 16;
+            
+        return $this->size + ($chunksMinusOne * $echunkdiff) + $lastChunkPadding + 16;
+    }
 
     /**
      * Constructor
@@ -153,19 +239,21 @@ class File extends DBObject
     }
     
     /**
-     * Create a new file (for upload)
-     *
+     * Create a file (for upload)
+     * 
      * @param Transfer $transfer the relater transfer
-     *
+     * @param string $name the file name
+     * @param string $size the file size
+     * @param string $mime_type the optional file mime_type
+     * 
      * @return File
      */
-    public static function create(Transfer $transfer)
+    public static function create(Transfer $transfer, $name = null, $size = null, $mime_type = null)
     {
         $file = new self();
         
         // Init cache to empty to avoid db queries
         $file->logsCache = array();
-        
         $file->transfer_id = $transfer->id;
         $file->transferCache = $transfer;
         
@@ -181,6 +269,13 @@ class File extends DBObject
         });
 
         $file->storage_class_name = Storage::getDefaultStorageClass();
+
+        if (!is_null($size)) {      
+            $file->size = $size;
+            $file->encrypted_size = $file->calculateEncryptedFileSize();
+        }
+        $file->mime_type = $mime_type ? $mime_type : 'application/binary';
+        $file->setName($name);
         
         return $file;
     }
@@ -205,7 +300,7 @@ class File extends DBObject
     public static function fromUid($uid)
     {
         $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE uid = :uid');
-        $s->execute(array('uid' => $uid));
+        $s->execute(array(':uid' => $uid));
         $data = $s->fetch();
         
         if (!$data) {
@@ -225,11 +320,36 @@ class File extends DBObject
     public static function fromTransfer(Transfer $transfer)
     {
         $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE transfer_id = :transfer_id');
-        $s->execute(array('transfer_id' => $transfer->id));
+        $s->execute(array(':transfer_id' => $transfer->id));
+        $tree_files = array();
         $files = array();
-        foreach ($s->fetchAll() as $data) {
-            $files[$data['id']] = self::fromData($data['id'], $data);
-        } // Don't query twice, use loaded data
+        foreach($s->fetchAll() as $data) {
+            $file = self::fromData($data['id'], $data); // Don't query twice, use loaded dat
+            // mirror loadDirectoryPath(): Default that path and filename are the same
+            $file->pathCache = $file->name;
+            if ($file->size == 0 &&
+                $file->mime_type === CollectionTree::FILE_MIME_TYPE) {
+                $tree_files[$data['id']] = $file;
+            }
+            else {
+                $files[$data['id']] = $file;
+            }
+        }
+
+        $collections = $transfer->collections;
+
+        if (!is_null($collections) && array_key_exists(CollectionType::DIRECTORY_ID, $collections)) {
+            $directories = $collections[CollectionType::DIRECTORY_ID];
+            // Set path info if it exists
+            $t = DBI::prepare('SELECT fc.file_id AS id, c.info AS dirpath, c.id as dir_id FROM FileCollections fc, Collections c WHERE c.transfer_id = :transfer_id AND c.type_id = :collection_type AND fc.collection_id = c.id');
+            $t->execute(array(':transfer_id' => $transfer->id,
+                              ':collection_type' => CollectionType::DIRECTORY_ID));
+            foreach($t->fetchAll() as $data) {
+                $file = $files[$data['id']];
+                $file->pathCache = $data['dirpath'].'/'.$file->name;
+                $file->directoryCache = $directories[$data['dir_id']];
+            }
+        }
         return $files;
     }
     
@@ -295,12 +415,17 @@ class File extends DBObject
      *
      * @return property value
      */
-    public function __get($property)
+    public function __get($property) 
     {
-        if (in_array($property, array(
-            'id', 'transfer_id', 'uid', 'name', 'mime_type', 'size', 'encrypted_size', 'upload_start', 'upload_end', 'sha1', 'storage_class_name'
-        ))) {
-            return $this->$property;
+        if(in_array($property, array(
+            'transfer_id', 'uid', 'name', 'mime_type', 'size', 'encrypted_size', 'upload_start', 'upload_end', 'sha1', 'storage_class_name'
+        ))) return $this->$property;
+
+        if($property == 'id') {
+            if (is_null($this->id)) {
+                $this->save();
+            }
+            return $this->id;
         }
         
         if ($property == 'transfer') {
@@ -309,8 +434,19 @@ class File extends DBObject
             }
             return $this->transferCache;
         }
+      
+        if($property == 'path') {
+            if(is_null($this->pathCache)) $this->loadDirectoryPath();
+            return $this->pathCache;
+        }
         
-        if ($property == 'owner') {
+        if($property == 'directory') {
+            // $pathCache controls if $directoryCache was initialized.
+            if(is_null($this->pathCache)) $this->loadDirectoryPath();
+            return $this->directoryCache;
+        }
+        
+        if($property == 'owner') {
             return $this->transfer->owner;
         }
         
@@ -347,11 +483,11 @@ class File extends DBObject
      * @throws FileBadHashException
      * @throws PropertyAccessException
      */
-    public function __set($property, $value)
+    public function __set($property, $value) 
     {
-        if ($property == 'name') {
-            $this->name = (string)$value;
-        } elseif ($property == 'auditlogs') {
+        if($property == 'name') {
+            $this->setName((string)$value);
+        }else if($property == 'auditlogs') {
             $this->logsCache = (array)$value;
         } elseif ($property == 'mime_type') {
             $this->mime_type = (string)$value;

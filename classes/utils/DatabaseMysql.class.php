@@ -61,11 +61,18 @@ class DatabaseMysql
     {
         $columns = array();
         
-        foreach ($definition as $column => $def) {
+        $primary_keys = null;
+        foreach($definition as $column => $def) {
             $columns[] = $column.' '.self::columnDefinition($def);
+            
+            if(array_key_exists('primary', $def) && $def['primary']) {
+                if (is_null($primary_keys)) $primary_keys = $column;
+                else $primary_keys .= ', '.$column;
+            }
         }
-        $query = 'CREATE TABLE '.$table.' ('.implode(', ', $columns).')';
-        
+
+        $query = 'CREATE TABLE '.$table.' ('.implode(', ', $columns).', PRIMARY KEY('.$primary_keys.'))';
+
         DBI::exec($query);
     }
     
@@ -424,9 +431,6 @@ class DatabaseMysql
         }
         if (array_key_exists('unique', $definition) && $definition['unique']) {
             $mysql .= ' UNIQUE KEY';
-        }
-        if (array_key_exists('primary', $definition) && $definition['primary']) {
-            $mysql .= ' PRIMARY KEY';
         }
         
         // Return statment

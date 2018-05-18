@@ -14,7 +14,7 @@ Ce dépôt est/était disponible jusqu'au {date:transfer.expires}.
 Ce dépôt a été envoyé à {transfer.recipients} destinataires.
 {endif}
 {if:target.type == "File"}
-Ce fichier nommé {file.name} a une taille de {size:file.size} et est/était disponible jusqu'au {date:file.transfer.expires}.
+Ce fichier nommé {file.path} a une taille de {size:file.size} et est/était disponible jusqu'au {date:file.transfer.expires}.
 {endif}
 {if:target.type == "Recipient"}
 Ce destinataire a pour adresse email {recipient.email} et est/était autorisé à télécharger les fichiers jusqu'au {date:recipient.expires}.
@@ -44,7 +44,7 @@ Cordialement,
     Ce dépôt a été envoyé à {transfer.recipients} destinataires.
     {endif}
     {if:target.type == "File"}
-    Ce fichier nommé {file.name} a une taille de {size:file.size} et est/était disponible jusqu'au {date:file.transfer.expires}.
+    Ce fichier nommé {file.path} a une taille de {size:file.size} et est/était disponible jusqu'au {date:file.transfer.expires}.
     {endif}
     {if:target.type == "Recipient"}
     Ce destinataire a pour adresse email {recipient.email} et est/était autorisé à télécharger les fichiers jusqu'au {date:recipient.expires}.

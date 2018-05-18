@@ -308,8 +308,9 @@ $config['auth_sp_fake_name'] = 'Peter';
 $config['auditlog_enable'] = true;
 
 // These vars come from the travis-ci enviroment, they shouldnt be in the repos; the previous access key that was added is invalidated
-$config['sauce_username'] = getenv('sauce_username'); // String, Sauce Labs username
+$config['sauce_username'] = getenv('SAUCE_USERNAME'); // String, Sauce Labs username
 $config['sauce_access_key'] = getenv('sauce_access_key');     // String, Sauce Labs access key
+$config['disable_directory_upload'] = true;     // String, dirtree upload does not work with Sauce automated testing.
 
 $config['ban_extension'] = 'exe,bat';
 $config['user_page'] = array();

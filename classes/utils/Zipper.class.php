@@ -109,7 +109,7 @@ class Zipper
             }
             
             // Set up metadata and send the local header.
-            $name = preg_replace('/^\\/+/', '', $file->name); // Strip leading slashes from filename.
+            $name = preg_replace('/^\\/+/', '', $file->path); // Strip leading slashes from filename.
             $name = preg_replace('/\\.\\.\\//', '', $name);   // strip ../
             $name = preg_replace('/\\/\\.\\./', '', $name);   // strip /..
             
@@ -149,7 +149,7 @@ class Zipper
 
         foreach ($this->files as $data) {
             $file = $data['data'];
-            $fileSize += 92 + strlen($file->name) * 2; // Size of the local file header, descriptor and per-file CDR entry.
+            $fileSize += 92 + strlen($file->path) * 2; // Size of the local file header, descriptor and per-file CDR entry.
             $fileSize += $file->size; // File contents size.
 
             $fileSize += 48; // Extra file data for ZIP64 format.

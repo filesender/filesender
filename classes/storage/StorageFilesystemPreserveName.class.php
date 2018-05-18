@@ -68,7 +68,7 @@ class StorageFilesystemPreserveName extends StorageFilesystem
     {
         static::setup();
 
-        $owner = $file->__get('owner');
+        $owner = $file->owner;
         $storage_root_path = self::$path;
 
         if (empty($owner)) {
@@ -84,11 +84,22 @@ class StorageFilesystemPreserveName extends StorageFilesystem
             $subpath = '/'.substr($owner, $pos + 1);
         }
 
-        // For archive systems such as archivematica, any set of files belonging
-        // to an archival set needs to be in an enclosing directory.
-        // defaulting to naming the directory "uid=name", which also
-        // should guarentee unique folder name
-        $subpath .= '/'.$file->uid.'='.$file->name;
+        // Check if the file belongs to a directory tree. If so, have
+        // file reside under "uid=dirtree/path/to/file/filename"
+        $directory = $file->directory;
+        
+        if (!is_null($directory)) {
+            $tree = $directory->parent;
+            $tree_uid = $tree->uid;
+            $subpath .= '/'.$tree_uid.'='.$directory->info;
+        }
+        else {
+            // For archive systems such as archivematica, any set of files 
+            // belonging to an archival set needs to be in an enclosing 
+            // directory. Defaulting to naming the directory "uid=name",
+            // which also should guarentee unique folder name
+            $subpath .= '/'.$file->uid.'='.$file->name;
+        }
         
         // validate owner/uid=name subpath, creating dirs if needed
         $path = $storage_root_path;

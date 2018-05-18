@@ -7,9 +7,9 @@ Sehr geehrte Damen und Herren,
 {if:files>1}mehrere Dateien{else}eine Datei{endif} die Sie hochgeladen haben {if:files>1}wurden{else}wurde{endif} von {cfg:site_name} über {recipient.email} heruntergeladen:
 
 {if:files>1}{each:files as file}
-  - {file.name} ({size:file.size})
+  - {file.path} ({size:file.size})
 {endeach}{else}
-{files.first().name} ({size:files.first().size})
+{files.first().path} ({size:files.first().size})
 {endif}
 
 Sie können auf Ihre Dateien zugreifen und sich eine detaillierte Download-Statistik auf der Übertragungsseite anzeigen lassen {files.first().transfer.link}.
@@ -31,11 +31,11 @@ Mit freundlichen Grüßen,
     {if:files>1}
     <ul>
         {each:files as file}
-            <li>{file.name} ({size:file.size})</li>
+            <li>{file.path} ({size:file.size})</li>
         {endeach}
     </ul>
     {else}
-    {files.first().name} ({size:files.first().size})
+    {files.first().path} ({size:files.first().size})
     {endif}
 </p>
 

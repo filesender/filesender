@@ -54,7 +54,7 @@ class RecipientNotFoundException extends DetailedException
 }
 
 /**
- * Invalid recipeint exception
+ * Invalid recipient exception
  */
 class InvalidRecipientException extends DetailedException
 {

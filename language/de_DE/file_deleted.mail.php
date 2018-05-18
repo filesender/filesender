@@ -4,7 +4,7 @@ Betreff: Datei steht nicht mehr zum Download zur Verfügung
 
 Sehr geehrte Damen und Herren,
 
-die Datei {file.name} ({size:file.size}) wurde vom Empfänger n°{transfer.id} gelöscht und steht nicht mehr zum Download zur Verfügung.
+die Datei {file.path} ({size:file.size}) wurde vom Empfänger n°{transfer.id} gelöscht und steht nicht mehr zum Download zur Verfügung.
 
 Mit freundliche Grüßen,
 {cfg:site_name}
@@ -16,7 +16,7 @@ Mit freundliche Grüßen,
 </p>
 
 <p>
-    die Datei {file.name} ({size:file.size}) wurde vom Empfänger n°{transfer.id}  gelöscht und steht nicht mehr zum Download zur Verfügung.
+    die Datei {file.path} ({size:file.size}) wurde vom Empfänger n°{transfer.id}  gelöscht und steht nicht mehr zum Download zur Verfügung.
 </p>
 
 <p>

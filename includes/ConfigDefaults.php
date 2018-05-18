@@ -39,7 +39,7 @@ $default = array(
     'default_language' => 'en', // Default language to user
     'lang_browser_enabled' => true, // Take language from user's browser's accept-language header if provided
     'lang_userpref_enabled' => false, // Take lang from user profile
-    'lang_url_enabled' => false, // Allow URL language switching (?lang=en for example)
+   'lang_url_enabled' => false, // Allow URL language switching (?lang=en for example)
     'lang_selector_enabled' => false, // Display language selector (requires lang_url_enabled = true)
     'lang_save_url_switch_in_userpref' => false, // Save lang switching in user preferences (requires lang_url_enabled = true and lang_userpref_enabled = true)
     'site_name' => 'FileSender', // Default site name to user
@@ -139,7 +139,7 @@ $default = array(
     
     'report_format' => ReportFormats::INLINE,
 
-    'valid_filename_regex' => '^[ \\p{L}\\p{N}_\\.,;:!@#$%^&*)(\\]\\[_-]+$',
+    'valid_filename_regex' => '^[ \\/\\p{L}\\p{N}_\\.,;:!@#$%^&*)(\\]\\[_-]+$',
     'message_can_not_contain_urls_regex' => '',
 //    'message_can_not_contain_urls_regex' => '(ftp:|http[s]*:|[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})',
 
