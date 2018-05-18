@@ -183,6 +183,7 @@ $default = array(
     'cloud_s3_key'    => 'accessKey1',
     'cloud_s3_secret' => 'verySecretKey1',
 
+    'disable_directory_upload' => true,
 
     'transfer_options' => array(
         'email_me_copies' => array(
