@@ -10,3 +10,6 @@
 /www/skin
 /vendor/
 /testmails
+/git-switch-to-current-latest-master.sh
+/push.sh
+/sync.sh
