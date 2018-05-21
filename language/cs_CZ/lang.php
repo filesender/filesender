@@ -1,5 +1,6 @@
 <?php
 $lang['about'] = 'O systému';
+$lang['about_page'] = ' ';
 $lang['access_forbidden'] = 'Nemáte oprávnění přistupovat na tuto stránku';
 $lang['action'] = 'Provedená akce';
 $lang['actions'] = 'Akce';
@@ -323,6 +324,7 @@ $lang['subject'] = 'Předmět';
 $lang['success_dialog'] = 'Úspěch';
 $lang['template_not_found'] = 'Šablona nenalezena';
 $lang['terasender_worker_count'] = 'Počítadlo TeraSender ';
+$lang['testterm'] = 'test value';
 $lang['time_format'] = '{h:H\\h} {i:i\\m\\i\\n} {s:s\\s}';
 $lang['to'] = 'Příjemce';
 $lang['tracking_event_not_found'] = 'Událost sledování nenalezena';

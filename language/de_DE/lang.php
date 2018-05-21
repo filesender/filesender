@@ -1,5 +1,6 @@
 <?php
 $lang['about'] = 'Impressum';
+$lang['about_page'] = 'Impressum';
 $lang['access_forbidden'] = 'Sie haben keine Berechtigung für diese Seite';
 $lang['action'] = 'Durchgeführte Aktion';
 $lang['actions'] = 'Aktion';
@@ -322,6 +323,8 @@ $lang['subject'] = 'Betreff';
 $lang['success_dialog'] = 'Erfolgreich';
 $lang['template_not_found'] = 'Template nicht gefunden';
 $lang['terasender_worker_count'] = 'Anzahl der TeraSender-Worker';
+$lang['testterm'] = 'test value
+';
 $lang['time_format'] = '{h:H\\h} {i:i\\m\\i\\n} {s:s\\s}';
 $lang['to'] = 'An';
 $lang['tracking_event_not_found'] = 'Tracking-Event nicht gefunden';
