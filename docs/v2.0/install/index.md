@@ -138,6 +138,10 @@ To tailor your [SimpleSAMLphp](http://simplesamlphp.org/) installation to match 
 
 * **NOTE**: It's outside the scope of this document to explain how to configure an authentication backend. The software has built-in support for [SAML](https://simplesamlphp.org/docs/stable/ldap:ldap), [LDAP](https://simplesamlphp.org/docs/stable/ldap:ldap), [Radius](https://simplesamlphp.org/docs/stable/radius:radius) and [many more](https://simplesamlphp.org/docs/stable/simplesamlphp-idp#section_2).
 
+There is also [some information](../faq/#SimpleSAMLphp-for-local-users-for-small-scale-setup-or-testing) if you would prefer to setup some
+username and passwords for local authentication for development and
+testing.
+
 # Step 4-apache - Configure Apache
 
 Create a configuration file for FileSender. This file is located in one of these locations:
