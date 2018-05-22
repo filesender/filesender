@@ -30,32 +30,32 @@ Some smaller installations do not have access to a SAML server and
 might like to authenticate without setting one up. To have some static
 users and passwords to test things out with you can use the below commands.
 
-      cd /opt/filesender/simplesaml
-      touch ./modules/exampleauth/enable
+	cd /opt/filesender/simplesaml
+	touch ./modules/exampleauth/enable
 
 and then setup some users and passwords. In the below a user 'tester' can login
 and testdriver can login.
 
-    // userpass	
-   'example-userpass' => array(
-                   	'exampleauth:UserPass',
-        	'tester:testerpassword' => array(
-        		'uid' => array('tester'),
-                		'email' => array('tester@localhost.localdomain'),
-                                'eduPersonTargetedID' => array('uid'),
-                		'eduPersonAffiliation' => array('member', 'student'),
-                	),
-        	'testdriver:testdriver' => array(
-        		'uid' => array('testdriver'),
-                		'email' => array('testdriver@localhost.localdomain'),
-                                'eduPersonTargetedID' => array('uid'),
-                		'eduPersonAffiliation' => array('member', 'student'),
-                	),
-        	'employee:employeepass' => array(
-        		'uid' => array('employee'),
-                		'eduPersonAffiliation' => array('member', 'employee'),
-                	),
-        ),
+	// userpass	
+	'example-userpass' => array(
+	      'exampleauth:UserPass',
+	      'tester:testerpassword' => array(
+	            'uid' => array('tester'),
+	            'email' => array('tester@localhost.localdomain'),
+	            'eduPersonTargetedID' => array('uid'),
+	            'eduPersonAffiliation' => array('member', 'student'),
+	      ),
+	      'testdriver:testdriver' => array(
+	            'uid' => array('testdriver'),
+	            'email' => array('testdriver@localhost.localdomain'),
+	            'eduPersonTargetedID' => array('uid'),
+	            'eduPersonAffiliation' => array('member', 'student'),
+	      ),
+	      'employee:employeepass' => array(
+	            'uid' => array('employee'),
+	            'eduPersonAffiliation' => array('member', 'employee'),
+	      ),
+	),
 
 If you have tested things and want to provide access to more than a
 few users you might like to consider more [real world authentication with simplesamlphp](https://simplesamlphp.org/samlidp)
