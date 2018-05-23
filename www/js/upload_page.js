@@ -847,7 +847,8 @@ $(function() {
 
         addtree_success = false;
         
-        if (typeof filesender.dragdrop.addTree === "function") {
+        if (filesender.dragdrop &&
+            typeof filesender.dragdrop.addTree === "function") {
           addtree_success = filesender.dragdrop.addTree(e.originalEvent.dataTransfer);
         }
 
