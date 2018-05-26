@@ -2,13 +2,13 @@
 
 /*
  * FileSender www.filesender.org
- * 
+ *
  * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * *    Redistributions of source code must retain the above copyright
  *     notice, this list of conditions and the following disclaimer.
  * *    Redistributions in binary form must reproduce the above copyright
@@ -17,7 +17,7 @@
  * *    Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
  *     names of its contributors may be used to endorse or promote products
  *     derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -31,13 +31,15 @@
  */
 
 // Require environment (fatal)
-if (!defined('FILESENDER_BASE'))
+if (!defined('FILESENDER_BASE')) {
     die('Missing environment');
+}
 
 /**
  * Database managing
  */
-class Database {
+class Database
+{
     /**
      * Cache if delegation class was loaded.
      */
@@ -45,12 +47,13 @@ class Database {
     
     /**
      * Delegates table exists check.
-     * 
+     *
      * @param string $table table name
-     * 
+     *
      * @return bool
      */
-    public static function tableExists($table) {
+    public static function tableExists($table)
+    {
         $class = self::getDelegationClass();
         
         return call_user_func($class.'::tableExists', $table);
@@ -58,12 +61,13 @@ class Database {
     
     /**
      * Delegates table columns getter.
-     * 
+     *
      * @param string $table table name
-     * 
+     *
      * @return array of column names
      */
-    public static function getTableColumns($table) {
+    public static function getTableColumns($table)
+    {
         $class = self::getDelegationClass();
         
         return call_user_func($class.'::getTableColumns', $table);
@@ -71,11 +75,12 @@ class Database {
     
     /**
      * Delegates table columns removing.
-     * 
+     *
      * @param string $table table name
      * @param string $column column name
      */
-    public static function removeTableColumn($table, $column) {
+    public static function removeTableColumn($table, $column)
+    {
         $class = self::getDelegationClass();
         
         return call_user_func($class.'::removeTableColumn', $table, $column);
@@ -83,27 +88,31 @@ class Database {
     
     /**
      * Delegates table columns creation.
-     * 
+     *
      * @param string $table table name
      * @param string $column column name
      * @param string $definition column definition
      */
-    public static function createTableColumn($table, $column, $definition) {
+    public static function createTableColumn($table, $column, $definition)
+    {
         $class = self::getDelegationClass();
         
         return call_user_func($class.'::createTableColumn', $table, $column, $definition);
     }
 
 
-    public static function dropTableSecondaryIndex($table, $index, $logger = null) {
+    public static function dropTableSecondaryIndex($table, $index, $logger = null)
+    {
         $class = self::getDelegationClass();
         return call_user_func($class.'::dropTableSecondaryIndex', $table, $index, $logger);
     }
-    public static function createTableSecondaryIndex($table, $index, $definition, $logger = null) {
+    public static function createTableSecondaryIndex($table, $index, $definition, $logger = null)
+    {
         $class = self::getDelegationClass();
         return call_user_func($class.'::createTableSecondaryIndex', $table, $index, $definition, $logger);
     }
-    public static function checkTableSecondaryIndexFormat($table, $index, $definition, $logger = null) {
+    public static function checkTableSecondaryIndexFormat($table, $index, $definition, $logger = null)
+    {
         $class = self::getDelegationClass();
         return call_user_func($class.'::checkTableSecondaryIndexFormat', $table, $index, $definition, $logger);
     }
@@ -111,14 +120,15 @@ class Database {
 
     /**
      * Delegates table columns format checking.
-     * 
+     *
      * @param string $table table name
      * @param string $column column name
      * @param string $definition column definition
-     * 
+     *
      * @return bool
      */
-    public static function checkTableColumnFormat($table, $column, $definition, $logger = null) {
+    public static function checkTableColumnFormat($table, $column, $definition, $logger = null)
+    {
         $class = self::getDelegationClass();
         
         return call_user_func($class.'::checkTableColumnFormat', $table, $column, $definition, $logger);
@@ -126,13 +136,14 @@ class Database {
     
     /**
      * Delegates table columns format update.
-     * 
+     *
      * @param string $table table name
      * @param string $column column name
      * @param array $definition column definition
      * @param array $problems problematic options
      */
-    public static function updateTableColumnFormat($table, $column, $definition, $problems) {
+    public static function updateTableColumnFormat($table, $column, $definition, $problems)
+    {
         $class = self::getDelegationClass();
         
         return call_user_func($class.'::updateTableColumnFormat', $table, $column, $definition, $problems);
@@ -140,12 +151,13 @@ class Database {
     
     /**
      * Create a table
-     * 
+     *
      * @param string $table the table name
      * @param array $definition dataMap entry
-     * 
+     *
      */
-    public static function createTable($table, $definition) {
+    public static function createTable($table, $definition)
+    {
         $class = self::getDelegationClass();
         
         return call_user_func($class.'::createTable', $table, $definition);
@@ -153,18 +165,23 @@ class Database {
     
     /**
      * Get selected database delegation class
-     * 
+     *
      * @return string delegation class name
      */
-    private static function getDelegationClass() {
-        if(is_null(self::$class)) {
+    private static function getDelegationClass()
+    {
+        if (is_null(self::$class)) {
             $type = Config::get('db_type');
             
-            if(!$type) throw new ConfigBadParameterException('db_type');
+            if (!$type) {
+                throw new ConfigBadParameterException('db_type');
+            }
             $class = 'Database'.ucfirst($type);
             $file = FILESENDER_BASE.'/classes/utils/'.$class.'.class.php';
             
-            if(!file_exists($file)) throw new CoreFileNotFoundException($file);
+            if (!file_exists($file)) {
+                throw new CoreFileNotFoundException($file);
+            }
             
             self::$class = $class;
         }

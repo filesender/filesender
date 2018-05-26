@@ -31,7 +31,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-if (!defined('FILESENDER_BASE')) die('Missing environment');
+if (!defined('FILESENDER_BASE')) {
+    die('Missing environment');
+}
 
 require_once dirname(__FILE__).'/../../optional-dependencies/azure/vendor/autoload.php';
 
@@ -48,32 +50,32 @@ use MicrosoftAzure\Storage\Common\Models\ServiceProperties;
 use MicrosoftAzure\Storage\Common\SharedAccessSignatureHelper;
 use MicrosoftAzure\Storage\Common\ServicesBuilder;
 
-
 /**
- *  Gives access to a file on azure cloud 
+ *  Gives access to a file on azure cloud
  *
  *  This class stores the chunks that are sent as individual blobs
  *
  */
-class StorageCloudAzure extends StorageFilesystem {
-
-
-    public static function getBlobService() {
-        
+class StorageCloudAzure extends StorageFilesystem
+{
+    public static function getBlobService()
+    {
         $connectionString = Config::get('cloud_azure_connection_string');
         $blobClient = ServicesBuilder::getInstance()->createBlobService($connectionString);
         return $blobClient;
     }
     
-    public static function getOffsetWithinBlob($offset) {
+    public static function getOffsetWithinBlob($offset)
+    {
         $file_chunk_size = Config::get('upload_chunk_size');
         return ($offset % $file_chunk_size);
     }
     
-    public static function getBlobName($offset) {
+    public static function getBlobName($offset)
+    {
         $file_chunk_size = Config::get('upload_chunk_size');
         $offset = $offset - ($offset % $file_chunk_size);
-	return str_pad($offset,24,'0',STR_PAD_LEFT);
+        return str_pad($offset, 24, '0', STR_PAD_LEFT);
     }
 
     /**
@@ -82,16 +84,17 @@ class StorageCloudAzure extends StorageFilesystem {
      * @param File $file
      * @param uint $offset offset in bytes
      * @param uint $length length in bytes
-     * 
+     *
      * @return mixed chunk data encoded as string or null if no chunk remaining
-     * 
+     *
      * @throws StorageFilesystemFileNotFoundException
      * @throws StorageFilesystemCannotReadException
      */
-    public static function readChunk(File $file, $offset, $length) {
-
-	if ($file->transfer->options['encryption'])
-	    $offset=$offset/Config::get('upload_chunk_size')*Config::get('upload_crypted_chunk_size');
+    public static function readChunk(File $file, $offset, $length)
+    {
+        if ($file->transfer->options['encryption']) {
+            $offset=$offset/Config::get('upload_chunk_size')*Config::get('upload_crypted_chunk_size');
+        }
 
         $container_name = $file->uid;
         $blob_name      = self::getBlobName($offset);
@@ -101,34 +104,34 @@ class StorageCloudAzure extends StorageFilesystem {
             $res = $az->getBlob($container_name, $blob_name);
             $data = stream_get_contents($res->getContentStream());
 
-            if ($data === FALSE) return null;
-	    return $data;
-        }
-        catch (ServiceException $e)
-        {
+            if ($data === false) {
+                return null;
+            }
+            return $data;
+        } catch (ServiceException $e) {
             $msg = 'Azure: readChunk() Can not read to blob: ' . $blob_name . ' offset ' . $offset
                  . $e->getErrorText() . ' ' . $e->getErrorReason();
             Logger::info($msg);
             throw new StorageFilesystemCannotReadException($msg);
         }
 
-	return null;
+        return null;
     }
     
     /**
      * Write a chunk of data to file at offset
-     * 
+     *
      * @param File $file
      * @param string $data the chunk data
      * @param uint $offset offset in bytes
-     * 
+     *
      * @return array with offset and written amount of bytes
-     * 
+     *
      * @throws StorageFilesystemOutOfSpaceException
      * @throws StorageFilesystemCannotWriteException
      */
-    public static function writeChunk(File $file, $data, $offset = null) {
-
+    public static function writeChunk(File $file, $data, $offset = null)
+    {
         $chunk_size     = strlen($data);
         $container_name = $file->uid;
         $blob_name      = self::getBlobName($offset);
@@ -139,7 +142,7 @@ class StorageCloudAzure extends StorageFilesystem {
             try {
                 $az->createBlockBlob($container_name, $blob_name, $data);
             } catch (ServiceException $e) {
-                if( $e->getCode() == 404 ) {
+                if ($e->getCode() == 404) {
                     // make container and try again
                     $opts = new CreateContainerOptions();
                     $az->createContainer($container_name, $opts);
@@ -160,23 +163,24 @@ class StorageCloudAzure extends StorageFilesystem {
 
     /**
      * Handles file completion checks
-     * 
+     *
      * @param File $file
      */
-    public static function completeFile(File $file) {
+    public static function completeFile(File $file)
+    {
         self::setup();
         $file_path = self::buildPath($file).$file->uid;
-        
     }
 
     /**
      * Deletes a file
-     * 
+     *
      * @param File $file
-     * 
+     *
      * @throws StorageFilesystemCannotDeleteException
      */
-    public static function deleteFile(File $file) {
+    public static function deleteFile(File $file)
+    {
         $chunk_size     = strlen($data);
         $container_name = $file->uid;
 
@@ -197,23 +201,24 @@ class StorageCloudAzure extends StorageFilesystem {
 
     /**
      * Store a whole file
-     * 
+     *
      * @param File $file
      * @param string $source_path path to file data
-     * 
+     *
      * @return bool
-     * 
+     *
      * @throws StorageFilesystemOutOfSpaceException
      */
-    public static function storeWholeFile(File $file, $source_path) {
+    public static function storeWholeFile(File $file, $source_path)
+    {
         return self::writeChunk($file, file_get_contents($source_path), 0);
     }
 
-    public static function getStream(File $file) {
+    public static function getStream(File $file)
+    {
         StorageCloudAzureStream::ensureRegistered();
         $path = "StorageCloudAzureStream://" . $file->uid;
-        $fp = fopen( $path, "r+");
+        $fp = fopen($path, "r+");
         return $fp;
     }
-
 }

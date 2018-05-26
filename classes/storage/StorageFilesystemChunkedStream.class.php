@@ -31,14 +31,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-if (!defined('FILESENDER_BASE')) die('Missing environment');
+if (!defined('FILESENDER_BASE')) {
+    die('Missing environment');
+}
 
 /**
  * Allow reading a chunked file as a normal php stream
  * only in order start to finish reading is supported as yet.
  */
-class StorageFilesystemChunkedStream {
-
+class StorageFilesystemChunkedStream
+{
     protected $offset = 0;
     protected $uid    = null;
     protected $file   = null;
@@ -46,7 +48,7 @@ class StorageFilesystemChunkedStream {
     protected $currentChunkFile = null;
     protected $gameOver = false;
     
-    function stream_open($path, $mode, $options, &$opened_path)
+    public function stream_open($path, $mode, $options, &$opened_path)
     {
         $url = parse_url($path);
         $this->offset = 0;
@@ -56,55 +58,60 @@ class StorageFilesystemChunkedStream {
     }
 
 
-    function stream_read($count) {
+    public function stream_read($count)
+    {
         $file   = $this->file;
         $offset = $this->offset;
 
-        if( $this->gameOver )
-            return FALSE;
+        if ($this->gameOver) {
+            return false;
+        }
         
         $file_path = StorageFilesystem::buildPath($file).$file->uid;
-	$chunkFile = StorageFilesystemChunked::getChunkFilename($file_path,$offset);
+        $chunkFile = StorageFilesystemChunked::getChunkFilename($file_path, $offset);
 
 
-        if( strcmp( $this->currentChunkFile, $chunkFile )) {
-
+        if (strcmp($this->currentChunkFile, $chunkFile)) {
             // if we try to open the file after the last chunk then we return FALSE
-            $fh = fopen($chunkFile,'r');
-            if( $fh == FALSE ) {
+            $fh = fopen($chunkFile, 'r');
+            if ($fh == false) {
                 $this->gameOver = true;
-                return FALSE;
+                return false;
             }
             
-            $rc = fseek($fh,StorageFilesystemChunked::getOffsetWithinChunkedFile($file_path,$offset));
-            if( $rc == -1 ) {
+            $rc = fseek($fh, StorageFilesystemChunked::getOffsetWithinChunkedFile($file_path, $offset));
+            if ($rc == -1) {
                 $this->gameOver = true;
-                if( $this->fh )
+                if ($this->fh) {
                     fclose($this->fh);
-                return FALSE;
+                }
+                return false;
             }
             
             $this->fh = $fh;
             $this->currentChunkFile = $chunkFile;
         }
 
-        $data = fread( $this->fh, $count );
-        if( $data == FALSE ) {
+        $data = fread($this->fh, $count);
+        if ($data == false) {
             $this->gameOver = true;
-            if( $this->fh )
+            if ($this->fh) {
                 fclose($this->fh);
-            return FALSE;
+            }
+            return false;
         }
         
         $this->offset += strlen($data);
         return $data;
     }
 
-    function stream_eof() {
+    public function stream_eof()
+    {
         return $this->offset >= $this->file->size;
     }
 
-    static function ensureRegistered() {
+    public static function ensureRegistered()
+    {
         // this happens when the file is parsed
     }
 };

@@ -2,13 +2,13 @@
 
 /*
  * FileSender www.filesender.org
- * 
+ *
  * Copyright (c) 2009-2014, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * *	Redistributions of source code must retain the above copyright
  * 	notice, this list of conditions and the following disclaimer.
  * *	Redistributions in binary form must reproduce the above copyright
@@ -17,7 +17,7 @@
  * *	Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
  * 	names of its contributors may be used to endorse or promote products
  * 	derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 'AS IS'
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -33,57 +33,58 @@
 /**
  * Class containing all tags (constants) for audit logs
  */
-class LogEventTypes extends Enum {
+class LogEventTypes extends Enum
+{
     /* GENERAL */
-   const LOG_CREATED              = 'log_created';    // Log created
+    const LOG_CREATED              = 'log_created';    // Log created
    
-   /* USER */
-   const USER_CREATED             = 'user_created'; // User become active
-   const USER_INACTIVED           = 'user_inactived';  // User become inactive
-   const USER_PURGED              = 'user_purged';    // User purged
+    /* USER */
+    const USER_CREATED             = 'user_created'; // User become active
+    const USER_INACTIVED           = 'user_inactived';  // User become inactive
+    const USER_PURGED              = 'user_purged';    // User purged
    
    /* FILE */
-   const FILE_CREATED             = 'file_created';   // File has been updated
-   const FILE_UPLOADED            = 'file_uploaded';  // File has been uploaded
-   const FILE_UPDATED             = 'file_updated';   // File has been updated
-   const FILE_MOVED               = 'file_moved';     // File has been moved
-   const FILE_DELETED             = 'file_deleted';   // File has been deleted
+    const FILE_CREATED             = 'file_created';   // File has been updated
+    const FILE_UPLOADED            = 'file_uploaded';  // File has been uploaded
+    const FILE_UPDATED             = 'file_updated';   // File has been updated
+    const FILE_MOVED               = 'file_moved';     // File has been moved
+    const FILE_DELETED             = 'file_deleted';   // File has been deleted
    
    /* GUEST */
-   const GUEST_CREATED            = 'guest_created';   // Guest created
-   const GUEST_SENT               = 'guest_sent';      // Guest send to recipients
-   const GUEST_USED               = 'guest_used';      // Guest has been used
-   const GUEST_EXPIRED            = 'guest_expired';   // Guest expired
-   const GUEST_CLOSED             = 'guest_closed';    // Guest closed
-   const GUEST_DELETED            = 'guest_deleted';   // Guest canceled
+    const GUEST_CREATED            = 'guest_created';   // Guest created
+    const GUEST_SENT               = 'guest_sent';      // Guest send to recipients
+    const GUEST_USED               = 'guest_used';      // Guest has been used
+    const GUEST_EXPIRED            = 'guest_expired';   // Guest expired
+    const GUEST_CLOSED             = 'guest_closed';    // Guest closed
+    const GUEST_DELETED            = 'guest_deleted';   // Guest canceled
    
    /* TRANSFER */
-   const TRANSFER_STARTED         = 'transfer_started';         // Transfer started
-   const TRANSFER_AVAILABLE       = 'transfer_available';     // Transfer started
-   const TRANSFER_SENT            = 'transfer_sent';     // Transfer started
-   const TRANSFER_EXPIRED         = 'transfer_expired';       // Transfer expired
-   const TRANSFER_CLOSED          = 'transfer_closed';        // Transfer closed
-   const TRANSFER_DELETED         = 'transfer_deleted';       // Transfer deleted
+    const TRANSFER_STARTED         = 'transfer_started';         // Transfer started
+    const TRANSFER_AVAILABLE       = 'transfer_available';     // Transfer started
+    const TRANSFER_SENT            = 'transfer_sent';     // Transfer started
+    const TRANSFER_EXPIRED         = 'transfer_expired';       // Transfer expired
+    const TRANSFER_CLOSED          = 'transfer_closed';        // Transfer closed
+    const TRANSFER_DELETED         = 'transfer_deleted';       // Transfer deleted
    
    /* UPLOAD */
-   const UPLOAD_STARTED           = 'upload_started';   // Upload stated
-   const UPLOAD_RESUMED           = 'upload_resumed';  // Upload resumed
-   const UPLOAD_ENDED             = 'upload_ended';     // Upload ended
+    const UPLOAD_STARTED           = 'upload_started';   // Upload stated
+    const UPLOAD_RESUMED           = 'upload_resumed';  // Upload resumed
+    const UPLOAD_ENDED             = 'upload_ended';     // Upload ended
    
    /* DOWNLOAD */
-   const DOWNLOAD_STARTED         = 'download_started';     // Download started
-   const DOWNLOAD_RESUMED         = 'download_resumed';    // Download resumed
-   const DOWNLOAD_ENDED           = 'download_ended';       // Download ended
+    const DOWNLOAD_STARTED         = 'download_started';     // Download started
+    const DOWNLOAD_RESUMED         = 'download_resumed';    // Download resumed
+    const DOWNLOAD_ENDED           = 'download_ended';       // Download ended
    
    /* ARCHIVE DOWNLOAD */
-   const ARCHIVE_DOWNLOAD_STARTED = 'archive_download_started';     // Download started
-   const ARCHIVE_DOWNLOAD_ENDED   = 'archive_download_ended';       // Download ended
+    const ARCHIVE_DOWNLOAD_STARTED = 'archive_download_started';     // Download started
+    const ARCHIVE_DOWNLOAD_ENDED   = 'archive_download_ended';       // Download ended
    
    /* Global */
-   const GLOBAL_STORAGE_USAGE       = 'global_storage_usage';
-   const GLOBAL_ACTIVE_USERS        = 'global_active_users';
-   const GLOBAL_AVAILABLE_TRANSFERS = 'global_available_transfers';
+    const GLOBAL_STORAGE_USAGE       = 'global_storage_usage';
+    const GLOBAL_ACTIVE_USERS        = 'global_active_users';
+    const GLOBAL_AVAILABLE_TRANSFERS = 'global_available_transfers';
 
-   /* Testing */
-   const TESTING_SIMPLELOG_ENTRY = 'testing_simplelog_entry'; // ability to log some test data
+    /* Testing */
+    const TESTING_SIMPLELOG_ENTRY = 'testing_simplelog_entry'; // ability to log some test data
 }
