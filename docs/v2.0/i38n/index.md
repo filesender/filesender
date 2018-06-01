@@ -631,26 +631,48 @@ place the transfer_shredded translation into that file.
 
 ### Exporting new terms from the github code to poeditor
 
-The poeditor.com site allows you to import files that contain existing
-terms and will only add the terms that are only in the import file and
-do not already exist. So the process to add any new terms that are in
-the github code but not on poeditor is to export all terms and then
-convert that file to a format that poeditor understands (json) and
-upload it.
+The poeditor.com site allows you to import files that describe new terms.
+It was found that although it appeared that if the import file contained existing
+terms that the system would only add the terms that are only in the import file there
+were undesired side effects including some duplicate terms and some terms having their
+values reset.
 
-The json file for all terms used in translations for any language
-in the github code can be generated with the below commands
+So the process to add any new terms that are in the github code but
+not on poeditor is to first create a list of only the new terms and a
+list of terms that have been deleted since the last import.
+
+To keep things simple it is recommended to do term exports at around
+release time and also store the list of terms that existed at the time
+of the new term upload in git along with the source so you know what
+can be used as the list of 'old terms' to create the new and deleted
+list. Currently this exported term list is stored in allterms.txt in
+the scripts directory as shown below.
+
+Once a list of new terms is created it can be converted to
+that poeditor understands (json) and uploaded to poeditor.
+Deleted terms are a less common occurance and have to be found and
+deleted manually thorugh the web interface.
+
+The json file for new terms used in translations for any language in
+the github code can be generated with the below commands. Notice that
+the generated file is cached in the git repo for storage to help work
+out the new terms the next time around.
+
+The output of this run will be /tmp/deletedterms.txt with all the
+terms that used to exist and no longer do and /tmp/newterms.json which
+has only the new terms. Note that this script updates oldterms.txt
+which should be committed to git so the next run knows exactly the
+list of terms that were considered in the last execution.
 
 ```
 cd scripts/language
-php ./export-all-terms.php                    /tmp/allterms
-php ./convert-one-per-line-terms-to-json.php  /tmp/allterms /tmp/allterms.json
+./export-terms-to-new-and-deleted-lists.sh
 ```
 
-The allterms.json file can them be imported using the "Import terms"
+The newterms.json file can them be imported using the "Import terms"
 menu item on poeditor. This option is about the third icon on the
 right menu of the poeditor web site as of 2018. After selecting the
-allterms.json file you will see how many terms were parsed and how
+newterms.json file you will see how many terms were parsed and how
 many new terms were added by poeditor.
 
 
