@@ -1,8 +1,8 @@
 ---
-title: Installation - Linux Source 2.0-Beta4 from Git
+title: Installation - Linux Source 2.0-rc1 from Git
 ---
 
-# Installation FileSender 2.0 Beta4
+# Installation FileSender 2.0 rc1
 
 _This documentation is under development. It was created by installing FileSender on a CentOS 7 and Debian 8 machine._
 
@@ -67,7 +67,7 @@ Or install the Git package on Debian:
 	apt-get install -y git
 
 Install the FileSender 2.0 beta branch from the GIT repository use the
-following commands. Note that you can use beta4, beta5 etc if there
+following commands. Note that you can use rc1, beta5 etc if there
 are more beta releases. See
 [Releases](https://github.com/filesender/filesender/releases) for
 information about recent releases.
@@ -75,7 +75,7 @@ information about recent releases.
 	cd /opt/filesender/
 	git clone https://github.com/filesender/filesender.git filesender-2.0
 		cd filesender-2.0
-		git checkout filesender-2.0-beta4
+		git checkout filesender-2.0-rc1
 		cd ..
 	ln -s filesender-2.0/ filesender
 
@@ -137,6 +137,10 @@ Copy standard configuration files to the right places:
 To tailor your [SimpleSAMLphp](http://simplesamlphp.org/) installation to match your local site's needs please check its [installation and configuration documentation](http://simplesamlphp.org/docs). When connecting to an Identity provider make sure all the required attributes are sent by the identity provider. See the section on [IdP attributes](../admin/reference/#idp_attributes) in the Reference Manual for details.
 
 * **NOTE**: It's outside the scope of this document to explain how to configure an authentication backend. The software has built-in support for [SAML](https://simplesamlphp.org/docs/stable/ldap:ldap), [LDAP](https://simplesamlphp.org/docs/stable/ldap:ldap), [Radius](https://simplesamlphp.org/docs/stable/radius:radius) and [many more](https://simplesamlphp.org/docs/stable/simplesamlphp-idp#section_2).
+
+There is also [some information](../faq/#simplesamlphp-for-local-users-for-small-scale-setup-or-testing) if you would prefer to setup some
+username and passwords for local authentication for development and
+testing.
 
 # Step 4-apache - Configure Apache
 

@@ -16,7 +16,7 @@ Přenos je/byl dostupný do {date:transfer.expires}.
 Počet notifikovaných příjemců:  {transfer.recipients} .
 {endif}
 {if:target.type == "File"}
-Jméno souboru: {file.name}, velikost: {size:file.size}, soubor je/byl dostupný do {date:file.transfer.expires}.
+Jméno souboru: {file.path}, velikost: {size:file.size}, soubor je/byl dostupný do {date:file.transfer.expires}.
 {endif}
 {if:target.type == "Recipient"}
 Příjemce {recipient.email}  je/byl dostupný do {date:recipient.expires}.
@@ -48,7 +48,7 @@ S pozdravem,
     Počet notifikovaných příjemců: {transfer.recipients}.
     {endif}
     {if:target.type == "File"}
-    Jméno souboru: {file.name}, velikost: {size:file.size}, soubor je/byl dostupný do {date:file.transfer.expires}.
+    Jméno souboru: {file.path}, velikost: {size:file.size}, soubor je/byl dostupný do {date:file.transfer.expires}.
     {endif}
     {if:target.type == "Recipient"}
     Příjemce {recipient.email} je/byl dostupný do {date:recipient.expires}.

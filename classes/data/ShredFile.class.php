@@ -171,8 +171,8 @@ class ShredFile extends DBObject
      * @return File
      */
     public static function fromName($name) {
-        $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE name = :uid');
-        $s->execute(array('name' => $name));
+        $s = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE name = :name');
+        $s->execute(array(':name' => $name));
         $data = $s->fetch();
         
         if(!$data) throw FileNotFoundException('name = '.$name);

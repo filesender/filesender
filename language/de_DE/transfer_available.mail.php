@@ -8,9 +8,9 @@ Sehr geehrte Damen und Herren,
 {if:transfer.files>1}die folgenden Dateien wurden von{else}die folgende Datei wurde von{endif} {cfg:site_name} über {transfer.user_email} hochgeladen und Sie haben die Erlaubnis diese {if:transfer.files>1}Dateien{else}Datei{endif} herunterzuladen :
 
 {if:transfer.files>1}{each:transfer.files as file}
-  - {file.name} ({size:file.size})
+  - {file.path} ({size:file.size})
 {endeach}{else}
-{transfer.files.first().name} ({size:transfer.files.first().size})
+{transfer.files.first().path} ({size:transfer.files.first().size})
 {endif}
 
 Download-Link: {recipient.download_link}
@@ -49,11 +49,11 @@ Mit freundlichen Grüßen,
                 {if:transfer.files>1}
                 <ul>
                     {each:transfer.files as file}
-                        <li>{file.name} ({size:file.size})</li>
+                        <li>{file.path} ({size:file.size})</li>
                     {endeach}
                 </ul>
                 {else}
-                {transfer.files.first().name} ({size:transfer.files.first().size})
+                {transfer.files.first().path} ({size:transfer.files.first().size})
                 {endif}
             </td>
         </tr>

@@ -18,7 +18,7 @@
  * 	names of its contributors may be used to endorse or promote products
  * 	derived from this software without specific prior written permission.
  * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS'
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 'AS IS'
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
@@ -253,34 +253,33 @@ window.filesender.transfer = function() {
      * 
      * @return mixed int file index or false if it was a duplicate or that there was an error
      */
-    this.addFile = function(file, errorhandler, source_node) {
+    this.addFile = function(file_name, blob, errorhandler, source_node) {
         if (!errorhandler)
             errorhandler = filesender.ui.error;
         
-        if (!file)
+        if (!blob)
             return errorhandler({message: 'no_file_given'});
         
-        if ('parentNode' in file) // HTML file input
-            file = file.files;
+        if ('parentNode' in blob) // HTML file input
+            blob = blob.files;
         
-        if ('length' in file) { // FileList
-            if (!file.length) {
+        if ('length' in blob) { // FileList
+            if (!blob.length) {
                 errorhandler({message: 'no_file_given'});
                 return false;
             }
             
-            for (var i = 0; i < file.length; i++)
-                this.addFile(file[i]);
+            for (var i = 0; i < blob.length; i++)
+                this.addFile(blob[i].name, blob[i]);
 
             return;
         }
         
-        if (!('type' in file)) {
+        if (!('type' in blob)) {
             errorhandler({message: 'no_file_given'});
             return false;
         }
         
-        var blob = file;
         var file = {
             id: null,
             key: null,
@@ -288,7 +287,7 @@ window.filesender.transfer = function() {
             size: blob.size,
             uploaded: 0,
             complete: false,
-            name: blob.name,
+            name: file_name,
             mime_type: blob.type,
             node: source_node,
             transfer: this

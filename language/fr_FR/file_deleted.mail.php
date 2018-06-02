@@ -4,7 +4,7 @@ subject: Un fichier n'est plus disponible au téléchargement
 
 Madame, Monsieur,
 
-Le fichier {file.name} ({size:file.size}) a été supprimé du dépôt n°{transfer.id} et n'est plus disponible au téléchargement.
+Le fichier {file.path} ({size:file.size}) a été supprimé du dépôt n°{transfer.id} et n'est plus disponible au téléchargement.
 
 Cordialement,
 {cfg:site_name}
@@ -16,7 +16,7 @@ Cordialement,
 </p>
 
 <p>
-    Le fichier {file.name} ({size:file.size}) a été supprimé du dépôt n°{transfer.id} et n'est plus disponible au téléchargement.
+    Le fichier {file.path} ({size:file.size}) a été supprimé du dépôt n°{transfer.id} et n'est plus disponible au téléchargement.
 </p>
 
 <p>

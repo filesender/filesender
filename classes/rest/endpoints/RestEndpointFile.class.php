@@ -50,7 +50,7 @@ class RestEndpointFile extends RestEndpoint {
             'id' => $file->id,
             'transfer_id' => $file->transfer_id,
             'uid' => $file->uid,
-            'name' => $file->name,
+            'name' => $file->path,
             'size' => $file->size,
             'sha1' => $file->sha1
         );

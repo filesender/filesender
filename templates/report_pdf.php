@@ -28,7 +28,7 @@
     
     <?php foreach($report->transfer->files as $file) { ?>
         <div class="file" data-id="<?php echo $file->id ?>">
-            <?php echo Utilities::sanitizeOutput($file->name) ?> (<?php echo Utilities::formatBytes($file->size) ?>) : <?php echo count($file->downloads) ?> {tr:downloads}
+            <?php echo Utilities::sanitizeOutput($file->path) ?> (<?php echo Utilities::formatBytes($file->size) ?>) : <?php echo count($file->downloads) ?> {tr:downloads}
         </div>
     <?php } ?>
 </div>

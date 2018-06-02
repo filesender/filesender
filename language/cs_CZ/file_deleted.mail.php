@@ -4,7 +4,7 @@ subject: Soubor již není dostupný ke stažení
 
 Vážený uživateli,
 
-Soubor {file.name} ({size:file.size}) byl vymazán z přenosu č. {transfer.id} a již není dostupný pro stažení.
+Soubor {file.path} ({size:file.size}) byl vymazán z přenosu č. {transfer.id} a již není dostupný pro stažení.
 
 S pozdravem,
 {cfg:site_name}
@@ -16,7 +16,7 @@ S pozdravem,
 </p>
 
 <p>
-    Soubor {file.name} ({size:file.size}) byl vymazán z přenosu č. {transfer.id} a již není dostupný pro stažení.
+    Soubor {file.path} ({size:file.size}) byl vymazán z přenosu č. {transfer.id} a již není dostupný pro stažení.
 </p>
 
 <p>

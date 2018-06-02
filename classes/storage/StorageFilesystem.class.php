@@ -421,8 +421,29 @@ class StorageFilesystem {
      */
     public static function deleteFile(File $file) {
         $file_path = static::buildPath($file).static::buildFilename($file);
-
-        Filesystem::deleteFile( $file_path, $file );
+        
+        if(!file_exists($file_path)) return;
+        
+        if(is_link($file_path)) {
+            if(!unlink($file_path))
+                throw new StorageFilesystemCannotDeleteException($file_path, $file);
+            
+            return;
+        }
+        
+        $rm_command = Config::get('storage_filesystem_file_deletion_command');
+        
+        if($rm_command) {
+            $cmd = str_replace('{path}', escapeshellarg($file_path), $rm_command);
+            exec($cmd, $out, $ret);
+            
+            if($ret)
+                throw new StorageFilesystemCannotDeleteException($file_path, $file);
+            
+        } else {
+            if(!unlink($file_path))
+                throw new StorageFilesystemCannotDeleteException($file_path, $file);
+        }
     }
     
     /**

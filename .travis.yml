@@ -20,11 +20,13 @@ before_install:
 - chmod -R a+x ./travis/scripts
 - phpenv config-add ./travis/myconfig.ini
 install:
-- "./travis/scripts/postgresql-setup.sh"
-- "./travis/scripts/simplesamlphp-setup.sh"
 - mkdir ./log
 - mkdir ./tmp
 - mkdir ./files
+- "./travis/scripts/postgresql-setup.sh"
+- "./travis/scripts/simplesamlphp-setup.sh"
+- php scripts/upgrade/database.php
+- php scripts/upgrade/database.php --db_database filesenderdataset
 before_script:
 - sudo apt-get update
 - sudo apt-get install apache2 libapache2-mod-fastcgi
@@ -47,8 +49,6 @@ before_script:
 - sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-available/default
 - sudo service postgresql restart
 - sudo service apache2 restart
-- php scripts/upgrade/database.php
-- php scripts/upgrade/database.php --db_database filesenderdataset
 after_failure:
 - sudo cat /var/log/apache2/error.log
 - sudo cat /var/log/apache2/access.log

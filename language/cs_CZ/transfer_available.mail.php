@@ -8,7 +8,7 @@ Vážený uživateli,
 Následující {if:transfer.files>1}soubory byly nahrány{else}soubor byl nahrán{endif} na {cfg:site_name} uživatelem {transfer.user_email} a Vám bylo uděleno oprávnění ke stažení {if:transfer.files>1}jejich{else}jeho{endif} obsahu:
 
 {if:transfer.files>1}{each:transfer.files as file}
-  - {file.name} ({size:file.size})
+  - {file.path} ({size:file.size})
 {endeach}{else}
 {transfer.files.first().name} ({size:transfer.files.first().size})
 {endif}
@@ -49,7 +49,7 @@ S pozdravem,
                 {if:transfer.files>1}
                 <ul>
                     {each:transfer.files as file}
-                        <li>{file.name} ({size:file.size})</li>
+                        <li>{file.path} ({size:file.size})</li>
                     {endeach}
                 </ul>
                 {else}
