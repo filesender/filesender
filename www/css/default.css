@@ -1237,7 +1237,44 @@ table.guests .guest .to .errors .details {
 }
 
 
-/* Popups */
+/** Admin users */
+
+.admin_page .users_section .searching,
+.admin_page .users_section .no_results,
+.admin_page .users_section .client-logs,
+.admin_page .users_section .tpl {
+    display: none;
+}
+
+.admin_page .users_section .searching .searching,
+.admin_page .users_section .no_results .no_results {
+    display: table-row;
+    text-align: center;
+}
+
+.admin_page .users_section table {
+    margin: 0.5rem 0;
+    width: 100%;
+}
+
+.admin_page .users_section th {
+    border: 1px solid silver;
+    text-align: center;
+    font-weight: bold;
+}
+
+.admin_page .users_section td {
+    border: 1px solid silver;
+}
+
+.admin_page .users_section .results th+th,
+.admin_page .users_section .results td+td,
+.admin_page .users_section .client-logs th:first-child,
+.admin_page .users_section .client-logs td:first-child {
+    width: 8rem;
+}
+
+    /* Popups */
 #dialog-help h4 {
     font-size: 1.2em;
     margin: 0.5em 1em;
