@@ -56,20 +56,41 @@
 
 //$config['email_reply_to'] ='';    // String, default no-reply email  address
 
+// -----------------------------------------------------------------
+// -----------------------------------------------------------------
+// -----------------------------------------------------------------
+// -----------------------------------------------------------------
+//   DB: use one of the below depending on your database preference
+// -----------------------------------------------------------------
+
 // ---------------------------------------------
-//              DB configuration
+// MariaDB/MySQL DB configuration
 // ---------------------------------------------
-//$config["db_type"] ='';       // String, pgsql or mysql
-//$config['db_host'] ='';       // String, database host 
-//$config['db_database'] ='';   // String, database name
-//$config['db_username'] ='';   // String, database username
-//$config['db_password'] ='';   // String, database password
+//$config["db_type"] ='mysql';
+//$config['db_host'] ='localhost';
+//$config['db_database'] ='filesender';
+//$config['db_username'] ='filesender';
+//$config['db_password'] ='';
+
+// ---------------------------------------------
+// PostgreSQL DB configuration
+// ---------------------------------------------
+//$config["db_type"] ='pgsql';     
+//$config['db_host'] ='localhost';       
+//$config['db_database'] ='filesender';  
+//$config['db_username'] ='filesender';  
+//$config['db_password'] ='';            
+
+// -----------------------------------------------------------------
+// -----------------------------------------------------------------
+// -----------------------------------------------------------------
 
 // ---------------------------------------------
 //              SAML configuration
 // ---------------------------------------------
-//$config['auth_sp_saml_simplesamlphp_url'] ='';        // Url of simplesamlphp
-//$config['auth_sp_saml_simplesamlphp_location'] ='';   // Location of simplesamlphp libraries
+// NOTE: These MUST have trailing slash
+//$config['auth_sp_saml_simplesamlphp_url'] ='https://127.0.0.1/simplesaml/';     // Url of simplesamlphp
+//$config['auth_sp_saml_simplesamlphp_location'] ='/opt/filesender/simplesaml/';   // Location of simplesamlphp libraries
 
 //      ----------------------------
 //      -------- [optional] --------
@@ -92,3 +113,22 @@
 // 
 // // Get path  attribute from authentication service
 // $config['auth_sp_saml_authentication_source'] = 'default-sp';
+
+// --------------------------------------------------
+//    TeraSender high speed upload module             
+// --------------------------------------------------
+
+$config['terasender_enabled'] = true;    	// 
+$config['terasender_advanced'] = true;    	// Make #webworkers configurable in UI.  Switched this on to make it easy 
+						// to determine optimal number for terasender_worker_count when going in production.  
+						// The useful number of maximum webworkers per browser changes nearly for each browser release.
+$config['terasender_worker_count'] = 5;   	// Number of web workers to launch simultaneously client-side when starting upload
+$config['terasender_start_mode'] = single;	// I think I prefer to show a nice serial predictable upload process
+
+
+// ---------------------------------------------
+//              File locations (or storage?)
+// ---------------------------------------------
+
+$config['storage_type'] = 'filesystem';
+$config['storage_filesystem_path'] = '/opt/filesender/filesender/files';
