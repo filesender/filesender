@@ -123,7 +123,7 @@ $config['terasender_advanced'] = true;    	// Make #webworkers configurable in U
 						// to determine optimal number for terasender_worker_count when going in production.  
 						// The useful number of maximum webworkers per browser changes nearly for each browser release.
 $config['terasender_worker_count'] = 5;   	// Number of web workers to launch simultaneously client-side when starting upload
-$config['terasender_start_mode'] = single;	// I think I prefer to show a nice serial predictable upload process
+$config['terasender_start_mode'] = 'single';	// I think I prefer to show a nice serial predictable upload process
 
 
 // ---------------------------------------------
