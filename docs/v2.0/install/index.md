@@ -26,7 +26,7 @@ you can report issues with and update the documentation.
 ### This documentation was tested with
 
 * RedHat/CentOS (7)
-* Debian (8, Jessie)
+* Debian (9, Stretch with [apache and postgresql] and [apache and mariadb])
 * Fedora (28 with apache and postgresql)
 
 ### Dependencies
@@ -47,17 +47,21 @@ for the Web server setup, one for each supported server.
 
 On RedHat/CentOS, run:
 
-	dnf install -y httpd mod_ssl php php-mbstring php-xml php-json
+```
+dnf install -y httpd mod_ssl php php-mbstring php-xml php-json
+```
 
 On Debian, run:
 
-	apt-get install -y apache2 php7.0 libapache2-mod-php7
+```
+apt-get install -y apache2 php7.0 php7.0-mbstring php7.0-xml php7.0-json libapache2-mod-php7.0
+```
 
 # Step 1-nginx - Install NGINX and PHP
 
-Its for Debian/Ubuntu use a modern Nginx (after v.0.8) and php-fpm (PHP 5.5.9 (fpm-fcgi)).
+Its for Debian/Ubuntu use a modern Nginx (after v.0.8) and php-fpm (fpm-fcgi).
 
-	sudo apt-get install nginx php5-fpm 
+	sudo apt-get install nginx php7.0-fpm 
 
 
 
@@ -104,8 +108,8 @@ might like. So in the below the filesender directory is renamed.
 
 ```
 su -l
-mkdir /opt/filesender
-cd    /opt/filesender
+mkdir -p /opt/filesender
+cd       /opt/filesender
 tar xzvf /root/src/filesender-2.0.tar.gz
 mv filesender-filesender-2.0  filesender
 ```
@@ -206,7 +210,7 @@ wants to authenticate a user. SimpleSAMLphp provides many different
 mechanisms to authenticate users and can handle large amounts of
 users.
 
-DUBIOUS: Following these instructions will set you up with a
+Following these instructions will set you up with a
 SimpleSAMLphp installation that uses Feide RnD's OpenIdP to
 authenticate users. When you move to a production service you probably
 want to change that to only support authentication sources of your
@@ -277,6 +281,7 @@ cd /opt/filesender/filesender/
 cp config-templates/apache/filesender.conf /etc/apache2/sites-available/
 a2enmod alias headers ssl
 a2ensite default-ssl filesender
+systemctl restart apache2
 ```
 
 # Step 5-nginx - Configure NGINX
@@ -399,7 +404,7 @@ On RedHat/CentOS, run:
 
 On Debian, run:
 
-	apt-get install -y postgresql php5-pgsql
+	apt-get install -y postgresql php7.0-pgsql
 
 FileSender uses password based database logins and by default assumes
 that PostgreSQL is configured to accept password based sessions on
@@ -460,20 +465,20 @@ On RedHat/CentOS, run:
 
 On Debian, run:
 
-	apt-get install -y mysql-server php5-mysql dpkg-reconfigure mysql-server
+	apt-get install -y mariadb-server php7.0-mysql 
 
 Create the filesender database:
 
-	mysql -u root -p
-	CREATE DATABASE `filesender` DEFAULT CHARACTER SET utf8;
-	GRANT USAGE ON *.* TO 'filesender'@'localhost' IDENTIFIED BY '<your password>';
-	GRANT CREATE, ALTER, SELECT, INSERT, INDEX, UPDATE, DELETE ON `filesender`.* TO 'filesender'@'localhost';
-	FLUSH PRIVILEGES;
-	exit
+```
+mysql -u root -p
+CREATE DATABASE `filesender` DEFAULT CHARACTER SET utf8;
+GRANT USAGE ON *.* TO 'filesender'@'localhost' IDENTIFIED BY '<your password>';
+GRANT CREATE, ALTER, SELECT, INSERT, INDEX, UPDATE, DELETE ON `filesender`.* TO 'filesender'@'localhost';
+FLUSH PRIVILEGES;
+exit
+```
 
-**Change from FileSender 1.x:** you now configure FileSender first and then use a FileSender script to initialise the database. See step 9 for initialising the database. Make sure you configure the correct database in the config file.
-
-# Step 7 - Configure PHP5
+# Step 7 - Configure PHP
 
 ## Automatic
 
@@ -481,7 +486,7 @@ A sample settings file is provided with FileSender in
 **config-templates/filesender-php.ini**. If you don't feel like
 manually editing your php.ini file, copy the filesender-php.ini file
 to your **/etc/php.d/** (RedHat/CentOS) or
-**/etc/php5/apache2/conf.d/** (Debian) directory to activate those
+**/etc/php/7.0/apache2/conf.d/** (Debian) directory to activate those
 settings.
 
 On **RedHat/CentOS**, run:
@@ -554,12 +559,13 @@ Run:
 
 FileSender has provisions to allow you to have a local page for about,
 help, and the landing (splash) page the user sees on your FileSender
-site. While you could directly edit the page template for your language
-doing that would not preserve your changes when you upgrade FileSender.
+site. While you could directly edit the page template for your
+language doing that would not preserve your changes when you upgrade
+FileSender.
 
 If you want a local about, help, or splash page create and edit a file
 with the postfix ".local.php" and that local page will be served to
-the user instead of the default. 
+the user instead of the default.
 
 For example, the default help page for English language users might be from
 
@@ -576,8 +582,9 @@ Visit the URL to your FileSender instance.
 
 	https://<your site>/filesender/
 
-If you get an error you might like to check your php log files /var/log/php-fpm and apache logs, then the filesender logs at
-/opt/filesender/filesender/log. 
+If you get an error you might like to check your php log files
+/var/log/php-fpm and apache logs, then the filesender logs at
+/opt/filesender/filesender/log.
 
 
 * **NOTE**: If you want your site to be available on `https://<your site>/`, without the /filesender, set `DocumentRoot /opt/filesender/filesender/www` in Apache and remember to update your `$config['site_url']` accordingly.
@@ -586,9 +593,16 @@ If you get an error you might like to check your php log files /var/log/php-fpm 
 
 ## SElinux
 
-If you use RedHat/CentOS, you have SElinux installed. SElinux protects your system from unauthorised changes by attackers. FileSender supports SElinux, and if you followed this guide you have set up SElinux correctly with file storage in the same directory as FileSender.
+If you use RedHat/CentOS, you have SElinux installed. SElinux protects
+your system from unauthorised changes by attackers. FileSender
+supports SElinux, and if you followed this guide you have set up
+SElinux correctly with file storage in the same directory as
+FileSender.
 
-If you want to store files on another location, set the context of this location to `httpd_sys_rw_content_t`, otherwise FileSender will fail trying to write there. If the other location is on an NFS share, be sure to set the following mount flag:
+If you want to store files on another location, set the context of
+this location to `httpd_sys_rw_content_t`, otherwise FileSender will
+fail trying to write there. If the other location is on an NFS share,
+be sure to set the following mount flag:
 
 * `context=system_u:object_r:httpd_sys_rw_content_t:s0`
 
@@ -648,4 +662,7 @@ If you don't want your users to have to type `/filesender` after the hostname, y
 
 # Support and Feedback
 
-See [Support and Mailing lists](https://www.assembla.com/wiki/show/file_sender/Support_and_Mailinglists) and [Feature requests](https://www.assembla.com/wiki/show/file_sender/Feature_requests).
+See [Support and Mailing
+lists](https://www.assembla.com/wiki/show/file_sender/Support_and_Mailinglists)
+and [Feature
+requests](https://www.assembla.com/wiki/show/file_sender/Feature_requests).
