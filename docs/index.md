@@ -4,49 +4,57 @@ title: FileSender Documentation
 
 ## FileSender project
 
-FileSender is a web based application that allows authenticated users to securely and easily send arbitrarily large files to other users. Authentication of users is provided through [SimpleSAMLphp, supporting SAML2, LDAP and RADIUS and more](http://simplesamlphp.org/docs/stable/simplesamlphp-idp#section_2). Users without an account can be sent an upload voucher by an authenticated user. FileSender is developed to the requirements of the higher education and research community.
+FileSender is a web based application that allows authenticated users
+to securely and easily send arbitrarily large files to other users.
+Authentication of users is provided through [SimpleSAMLphp, supporting
+SAML2, LDAP and RADIUS and
+more](http://simplesamlphp.org/docs/stable/simplesamlphp-idp#section_2).
+Users without an account can be sent an upload voucher by an
+authenticated user. FileSender is developed to the requirements of the
+higher education and research community.
 
-The purpose of the software is to send a large file to someone, have that file available for download for a certain number of downloads and/or a certain amount of time, and after that automatically delete the file. The software is not intended as a permanent file publishing platform.
+The purpose of the software is to send a large file to someone, have
+that file available for download for a certain number of downloads
+and/or a certain amount of time, and after that automatically delete
+the file. The software is not intended as a permanent file publishing
+platform.
 
-This is the home for Filesender documentation.  For more information about the project [please visit our homepage](http://filesender.org).
+This is the home for Filesender documentation. For more information
+about the project [please visit our homepage](http://filesender.org).
 
 ### Which version should you choose
 
-The latest production release is [1.6.1, released on December 30th
-2015](https://downloads.filesender.org/filesender-1.6.1.tar.gz). There
-have been a series of beta releases for version 2.0 the most recent
-being [rc1, released on 21th May
-2018](https://github.com/filesender/filesender/releases). You are
-encouraged to use the latest 2.0 beta release if possible as migration to later
-beta releases and the final 2.0 release will be much simpler.
+Version 2.0 has been released in June 2018 and is the recommended
+choice.
+
+Following the 2.0 release there will be subsequent releases in the
+pattern 2.1, 2.2, 2.30 etc. Each of these releases will build on
+version 2.0 adding bugfixes and features. It is planend that you can
+migrate from 2.0 upwards in the 2.x series.
+
+The previos production release is [1.6.1, released on December 30th
+2015](https://downloads.filesender.org/filesender-1.6.1.tar.gz). 
 
 ### Documentation
 
-If you are looking to install and use the v2.0 beta start looking at the [documentation for 2.0](http://docs.filesender.org/v2.0/).
-
-FileSender version 1.6 documentation is being migrated to github [here](http://docs.filesender.org/v1.6/).
+Please see the [documentation for 2.0](http://docs.filesender.org/v2.0/).
 
 ### License
 
-FileSender is released under the [BSD license](http://opensource.org/licenses/BSD-3-Clause). It is open source software and available for free.
+FileSender is released under the [BSD
+license](http://opensource.org/licenses/BSD-3-Clause). It is open
+source software and available for free.
 
 ### Availability and download
 
-The latest production release is [1.6.1, released on December 30th 2015](https://downloads.filesender.org/filesender-1.6.1.tar.gz). The previous major release [1.5, released on March 3rd 2013](https://downloads.filesender.org/filesender-1.5.tar.gz) is still supported.
-
-Visit the [Releases page](https://github.com/filesender/filesender/releases) for details about the general availability of the FileSender software.
-
-### Development status
-
-The version currently under development is version 2.0. A series of
-beta releases have been made and you are encouraged to use the latest
-beta if possible. See [the documentation for 2.0](v2.0/install/) for
-details. 
-
+Visit the [Releases
+page](https://github.com/filesender/filesender/releases) for details
+about the general availability of the FileSender software.
 
 ### Feature Requests
 
-Go to the [Issues](https://github.com/filesender/filesender/issues) page if you have a feature you would like to see added to FileSender.
+Go to the [Issues](https://github.com/filesender/filesender/issues)
+page if you have a feature you would like to see added to FileSender.
 
 ### Features
 
@@ -75,6 +83,7 @@ A snapshot of features for the latest 1.6(.x) release is located at [Features](v
 
 ### Requirements
 
-A snapshot of requirements for the latest 1.6(.x) release is located at [Requirements](v1.6/requirements). 
+Some storage, either MariaDB or PostgreSQL for database, either Apache
+or nginx for web server and SimpleSamlPhp.
 
 
