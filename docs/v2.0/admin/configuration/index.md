@@ -105,7 +105,7 @@ A note about colours;
 * [max_transfer_file_size](#max_transfer_file_size)
 * [max_transfer_encrypted_file_size](#max_transfer_encrypted_file_size)
 * [encryption_min_password_length](#encryption_min_password_length)
-* [encryption_generated_password_length](#encryption_generated_password_length)
+* [encryption_generated_password_bits](#encryption_generated_password_bits)
 
 ## Graphs
 
@@ -966,12 +966,12 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __comment:__ 
 
 
-###encryption_generated_password_length
-* __description:__ The exact number of characters used in a generated password for encryption. This must be equal or greater than encryption_min_password_length.
+###encryption_generated_password_bits
+* __description:__ The exact number of bits used in a generated password for encryption.
 * __mandatory:__ no 
 * __type:__ int
-* __default:__ encryption_min_password_length
-* __available:__ since version 2.0
+* __default:__ 9
+* __available:__ since version 2.1
 * __comment:__ 
 
 

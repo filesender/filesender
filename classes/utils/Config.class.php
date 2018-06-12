@@ -241,10 +241,7 @@ class Config {
             'Maybe you have set $config["log_facilities"] = array("type" => "file",...) instead of $config["log_facilities"] = array(array("type" => "file",...))' );
         }
 
-        if(!self::get('encryption_generated_password_length')) {
-            self::$parameters['encryption_generated_password_length'] = self::get('encryption_min_password_length');
-        }
-        if(self::get('encryption_min_password_length') > self::get('encryption_generated_password_length')) {
+        if(self::get('encryption_min_password_length') > self::get('encryption_generated_password_bits')) {
             throw new ConfigBadParameterException('Generated password length must be equal or greater than encryption_min_password_length');
         }
 

@@ -1018,7 +1018,7 @@ $(function() {
         // Use 9 bytes of entropy (72 bits),
         // using base64 this yields 9/,75=12 character passwords.
         // Users can choose a stronger password themselves if they so choose.
-        var buf = new Uint8Array(9);
+        var buf = new Uint8Array(filesender.config.encryption_generated_password_bits);
         window.crypto.getRandomValues(buf);
         // btoa and String.fromCharCode.apply are probably not constant time
         // implementations, but I'll assume they're good enough for locally
