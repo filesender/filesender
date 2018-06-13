@@ -966,7 +966,7 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __comment:__ 
 
 
-###encryption_generated_password_bits
+###encryption_generated_password_bytes
 * __description:__ The exact number of bits used in a generated password for encryption.
 * __mandatory:__ no 
 * __type:__ int
