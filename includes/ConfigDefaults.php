@@ -93,7 +93,7 @@ $default = array(
     
     'encryption_enabled' => true,
     'encryption_min_password_length' => 0,
-    'encryption_generated_password_bits' => 9,
+    'encryption_generated_password_bytes' => 9,
     'upload_crypted_chunk_size' => 5 * 1024 * 1024 + 16 + 16, // the 2 times 16 are the padding added by the crypto algorithm, and the IV needed
     'crypto_iv_len' => 16, // i dont think this will ever change, but lets just leave it as a config
     'crypto_crypt_name' => "AES-CBC", // The encryption algorithm used

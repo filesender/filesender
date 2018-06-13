@@ -105,7 +105,7 @@ A note about colours;
 * [max_transfer_file_size](#max_transfer_file_size)
 * [max_transfer_encrypted_file_size](#max_transfer_encrypted_file_size)
 * [encryption_min_password_length](#encryption_min_password_length)
-* [encryption_generated_password_bits](#encryption_generated_password_bits)
+* [encryption_generated_password_bytes](#encryption_generated_password_bytes)
 
 ## Graphs
 
