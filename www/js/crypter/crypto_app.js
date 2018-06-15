@@ -244,7 +244,7 @@ window.filesender.crypto_app = function () {
          * @param bindata Uint8Array containing data binary data to convert. 
          * @param encoding ascii85 or base64 as a string
          */
-        encodeToString: function( bindata, encoding = "base64" ) {
+        encodeToString: function( bindata, encoding ) {
             var $this = this;
             if( encoding == "ascii85" ) {
                 return $this.encodeToAscii85( bindata );
