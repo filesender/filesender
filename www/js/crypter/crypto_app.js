@@ -160,6 +160,96 @@ window.filesender.crypto_app = function () {
             // Add a field to the prompt
             var input = $('<input type="text" class="wide" />').appendTo(prompt);
             input.focus();
+        },
+        /**
+         * Get secure random bytes of a given length
+         * @param number of octets of random data to get
+         * @return Uint8Array containing your random data of random data
+         */
+        generateSecureRandomBytes: function( len ) {
+            var entropybuf = new Uint8Array(len);
+            window.crypto.getRandomValues(entropybuf);
+            return entropybuf;
+        },
+        /**
+         * This should encode to 'HelloWorld'
+         */
+//        encodeToAscii85( [0x86, 0x4F, 0xD2, 0x6F, 0xB5, 0x59, 0xF7, 0x5B] );
+        /**
+         * binary data to ascii 85 converter using the Z85 encoding. 
+         * This encodes 4 octets into 5 bytes of presentable text.
+         *
+         * Note that bindata will be padded with 0 bytes if it was not an even
+         * multiple of 4 bytes.
+         *
+         * https://en.wikipedia.org/wiki/Ascii85
+         * 
+         * @param bindata Uint8Array containing data binary data to convert. 
+         * @return a Z85 encoded string containing bindata 
+         * @see encodeToString() for a dispatch function
+         */
+        encodeToAscii85: function (bindata) {
+
+            var a85encTable = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.-:+=^!/*?&<>()[]{}@%$#";
+
+            // allow for zero padding to cater for
+            // data that is not an array length of mulitples of 4
+            var datalen = bindata.length;
+            var paddinglength = 0;
+            if( datalen % 4 ) {
+                paddinglength = 4 - ( datalen % 4 );
+                datalen += paddinglength;
+            }
+
+            // allocate with padding (zeros) and copy
+            // bindata over the start of the array
+            var data = new Uint8Array(datalen);
+            data.set( bindata );
+            
+            var size = data.length;
+            var encodedSize = data.length * 5/4;
+            var encoded = "";
+            var value = 0;
+            var i = 0;
+
+            // transform 4 bytes of data at a time to 5 bytes of output
+            for( i=0; i<size; i+= 4 ) {
+
+                value = data[i]*256*256*256 + data[i+1]*256*256 + data[i+2]*256 + data[i+3];
+                var divisor = 85 * 85 * 85 * 85;
+                while (divisor >= 1) {
+                    encoded += a85encTable[ Math.floor(value / divisor) % 85 ];
+
+                    // do not go fractional
+                    if( divisor==1 ) {
+                        break;
+                    }
+                    divisor /= 85;
+                }
+            }
+
+            return encoded;
+        },
+        /**
+         * convert array to base64 encoded string
+         * @param bindata Uint8Array containing data binary data to convert. 
+         * @return a base64 encoded string containing bindata 
+         * @see encodeToString() for a dispatch function
+         */
+        encodeToBase64: function (bindata) {
+            return btoa(String.fromCharCode.apply(null, bindata)); 
+        },
+        /**
+         * encode the bindata using the named encoding or base64 by default.
+         * @param bindata Uint8Array containing data binary data to convert. 
+         * @param encoding ascii85 or base64 as a string
+         */
+        encodeToString: function( bindata, encoding ) {
+            var $this = this;
+            if( encoding == "ascii85" ) {
+                return $this.encodeToAscii85( bindata );
+            }
+            return $this.encodeToBase64( bindata );
         }
     };
 };
