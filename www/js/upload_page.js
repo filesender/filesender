@@ -1015,13 +1015,14 @@ $(function() {
         return false;
     });
     filesender.ui.nodes.encryption.generate.on('click', function() {
-        var genp = function() { return Math.random().toString(36).substr(2, 14); }
-        var pass = genp();
-        for( var i=0; i < filesender.config.encryption_generated_password_length; i++ ) {
-            pass = pass + genp();
-        }
-        pass = pass.substr(0,filesender.config.encryption_generated_password_length);
-        filesender.ui.nodes.encryption.password.val(pass);
+        var encoding = filesender.config.encryption_generated_password_encoding;
+        var desiredPassLen = filesender.config.encryption_generated_password_length;
+        var crypto = window.filesender.crypto_app();
+
+        var entropybuf = crypto.generateSecureRandomBytes( desiredPassLen );
+        password = crypto.encodeToString( entropybuf, encoding );
+        password = password.substr(0,desiredPassLen);
+        filesender.ui.nodes.encryption.password.val(password);
         filesender.ui.nodes.encryption.show_hide.prop('checked',true);
         filesender.ui.nodes.encryption.show_hide.trigger('change');
         filesender.ui.files.checkEncryptionPassword(filesender.ui.nodes.encryption.password );
