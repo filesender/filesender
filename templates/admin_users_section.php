@@ -49,4 +49,3 @@
     </tr>
 </table>
 
-<script type="text/javascript" src="{path:js/admin_users.js}"></script>
