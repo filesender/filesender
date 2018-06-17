@@ -96,7 +96,7 @@ class RestEndpointUser extends RestEndpoint {
      * Call examples :
      *  /user/@me/frequent_recipients : list of all frequent recipients of the current user
      *  /user/17/frequent_recipients : list of all frequent recipients of the user 
-     *  /user?search=foo : searc user with matching id/email (restricted to admin)
+     *  /user?search=foo : search for user with matching id/email (restricted to admin)
      *
      * @param int $id user id to get info about
      * @param string $property to get info about ("file" or "recipient")

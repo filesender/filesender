@@ -49,7 +49,7 @@ class ClientLog extends DBObject {
         ),
         'user_id' => array(
             'type' => 'string',
-            'size' => 250
+            'size' => 190
         ),
         'created' => array(
             'type' => 'datetime'
@@ -61,6 +61,10 @@ class ClientLog extends DBObject {
 
     protected static $secondaryIndexMap = array(
         'user_id' => array( 
+            'user_id' => array()
+        ),
+        'created_and_user_id' => array( 
+            'created' => array(),
             'user_id' => array()
         )
     );
@@ -159,8 +163,7 @@ class ClientLog extends DBObject {
      * @return int
      */
     public static function stashSize() {
-        $size = Config::get('clientlogs_stashsize');
-        return (is_int($size) && ($size > 0)) ? $size : 10;
+        return Config::get('clientlogs_stashsize');
     }
     
     /**
@@ -168,7 +171,6 @@ class ClientLog extends DBObject {
      */
     public static function clean() {
         $days = Config::get('clientlogs_lifetime');
-        if(!$days || !is_int($days) || $days <= 0) $days = 10;
         
         /** @var PDOStatement $statement */
         $statement = DBI::prepare('DELETE FROM '.self::getDBTable().' WHERE created < :date');
@@ -194,7 +196,26 @@ class ClientLog extends DBObject {
         
         throw new PropertyAccessException($this, $property);
     }
-    
+
+    /**
+     * Perform reasonably fast validation of config options.
+     * This allows the global config loader to check with many classes
+     * by calling class::validateConfig() so that particular pages do not
+     * have to be loaded to find configuration issues.
+     */
+    public static function validateConfig() {
+        $days = Config::get('clientlogs_lifetime');
+        if(!$days || !is_int($days) || $days <= 0) {
+             throw new ConfigBadParameterException('clientlogs_lifetime must be a positive integer');
+        }
+
+        $size = Config::get('clientlogs_stashsize');
+        if (!is_int($size) || ($size <= 0)) {
+             throw new ConfigBadParameterException('clientlogs_stashsize must be a positive integer');
+        }
+        
+    }
+
     /**
      * Setter
      * 
