@@ -967,6 +967,14 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __available:__ since version 2.0
 * __comment:__ 
 
+###encryption_generated_password_encoding
+* __description:__ which encoding to use to encode generated passwords. Since the random information obtained during password generation is completely random it is useful to encode that into text characters, for example in the range a,b,c etc. By doing this one single byte of random data (0 to 255 inclusive) will likely be encoded to more than one character of output. The base64 encoding turns x bytes of input into 1.33 times as long output. Because ascii85 uses more possible characters it turns each 4 bytes into 5 bytes. This means that for the same length of encoded string the ascii85 will have more entropy. Note that the ascii85 used is the Z85 from ZeroMQ to avoid the use of the quote character in output.
+* __mandatory:__ no 
+* __type:__ string
+* __default:__ base64
+* __available:__ since version 2.1
+* __comment:__ either base64 or ascii85 
+
 
 ###encryption_generated_password_length
 * __description:__ The exact number of characters used in a generated password for encryption. This must be equal or greater than encryption_min_password_length.

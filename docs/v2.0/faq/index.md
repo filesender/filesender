@@ -33,8 +33,9 @@ users and passwords to test things out with you can use the below commands.
 	cd /opt/filesender/simplesaml
 	touch ./modules/exampleauth/enable
 
-and then setup some users and passwords. In the below a user 'tester' can login
-and testdriver can login.
+and then setup some users and passwords by editing
+config/authsources.php. In the below a user 'tester' can login and
+testdriver can login.
 
 	// userpass	
 	'example-userpass' => array(
@@ -56,6 +57,15 @@ and testdriver can login.
 	            'eduPersonAffiliation' => array('member', 'employee'),
 	      ),
 	),
+
+You will also have to edit your config/config.php file in your FileSender installation
+to include the below configuration directives.
+
+```
+$config['auth_sp_saml_authentication_source'] ="example-userpass";
+$config['auth_sp_saml_email_attribute'] = 'email';
+```
+
 
 If you have tested things and want to provide access to more than a
 few users you might like to consider more [real world authentication with simplesamlphp](https://simplesamlphp.org/samlidp)
