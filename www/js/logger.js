@@ -155,9 +155,10 @@ filesender.logger.load();
 var wrap = ['log', 'info' ,'warn', 'error'];
 if(!window.console) window.console = {};
 
-$(wrap).each(function() {
-    var f = (this in window.console) ? window.console[this] : function() {};
-    window.console[this] = function(msg) {
+jQuery.each( wrap, function(i,val) {
+    var f = (val in window.console) ? window.console.val : function() {};
+    window.console.val = function(msg) {
+
         // Custom log
         filesender.logger.log(msg);
 
