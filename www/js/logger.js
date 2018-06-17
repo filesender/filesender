@@ -150,31 +150,3 @@ filesender.logger.nopwatcher = {
 };
 
 filesender.logger.load();
-
-// Wrap console utilities
-var wrap = ['log', 'info' ,'warn', 'error'];
-if(!window.console) window.console = {};
-
-$(wrap).each(function() {
-    var f = (this in window.console) ? window.console[this] : function() {};
-    window.console[this] = function(msg) {
-        // Custom log
-        filesender.logger.log(msg);
-
-        // Forward to internal
-        f(msg);
-    };
-});
-
-// Capture js errors
-window.addEventListener('error', function(e) {
-    filesender.logger.log('[' + (new Date()).toLocaleTimeString() + '] JS ERROR in ' + e.filename + '@' + e.lineno + ':' + e.colno + ' ' + e.message);
-});
-
-// Setup "nothing happens" detection
-$(function() {
-    if(!filesender.ui.files) return; // not upload page
-
-    // last progress update watcher
-    filesender.logger.nopwatcher.start();
-});
