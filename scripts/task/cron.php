@@ -139,3 +139,6 @@ if((int)$level) {
 
 // Remove inactive users preferences
 User::removeInactive();
+
+// Clean old client logs
+ClientLog::clean();

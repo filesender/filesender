@@ -155,9 +155,11 @@ WHERE event='file_uploaded'
 GROUP BY "encryption","os","browser"
 ORDER BY COUNT(ID) DESC, maxsize DESC
 EOF;
+
 $statement = DBI::prepare($sql);
 $statement->execute(array());
 $result = $statement->fetchAll();
+
 $transfered=0;
 $transfers=0;
 $now=time();

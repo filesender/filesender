@@ -597,7 +597,7 @@ filesender.ui.evalUploadEnabled = function() {
 };
 
 filesender.ui.startUpload = function() {
-    
+
     if(!filesender.ui.nodes.required_files) {
         this.transfer.expires = filesender.ui.nodes.expires.datepicker('getDate').getTime() / 1000;
         

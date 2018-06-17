@@ -171,6 +171,8 @@ A note about colours;
 * [auditlog_lifetime](#auditloglifetime)
 * [report_format](#reportformat)
 * [exception_additional_logging_regex](#exceptionadditionalloggingregex)
+* [clientlogs_stashsize](#clientlogsstashsize)
+* [clientlogs_lifetime](#clientlogslifetime)
 
 
 ## Webservices API
@@ -1621,6 +1623,24 @@ $config['log_facilities'] =
 * __comment:__ Sometimes a site might want to capture down extra logging for some exception types. This configuration is a regular expression to match the name of an exception against to see if you want this extra log info. This allows extra log info to be turned on and off fairly easily without having to edit code and possibly break something. Note that only some exceptions can give extra info.
 
 
+### clientlogs_stashsize
+
+* __description:__ Client log backfeed stash size
+* __mandatory:__ no
+* __type:__ positive integer
+* __default:__ 10
+* __available:__ since version 2.0
+* __comment:__ Number of last client console entries that are to be back-fed to the server in case there is a client error.
+
+
+### clientlogs_lifetime
+
+* __description:__ Client log backfeed lifetime
+* __mandatory:__ no
+* __type:__ positive integer
+* __default:__ 10
+* __available:__ since version 2.0
+* __comment:__ Number of days after which collected client logs are automatically deleted.
 
 
 ---
