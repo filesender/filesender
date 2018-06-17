@@ -90,7 +90,6 @@ class GUI {
             'js/lang.js',
             'js/client.js',
             'js/transfer.js',
-            'js/logger.js',
             'js/ui.js',
             'js/FileSaver.js',
             'js/crypter/crypto_common.js',
