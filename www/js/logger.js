@@ -57,6 +57,9 @@ window.filesender.logger = {
         this.stash.push(msg);
         this.stash = this.stash.slice(-1 * len);
 
+        if(filesender.supports.localStorage) {
+            window.localStorage.setItem('client_logs', JSON.stringify(this.stash))
+        }
     },
 
     /**
@@ -153,12 +156,12 @@ var wrap = ['log', 'info' ,'warn', 'error'];
 if(!window.console) window.console = {};
 
 jQuery.each( wrap, function(i,val) {
-    var f = (val in window.console) ? window.console[val] : function() {};
-    window.console[val] = function(msg) {
+    var f = (val in window.console) ? window.console.val : function() {};
+    window.console.val = function(msg) {
         // Custom log
-        filesender.logger.log(msg);
+//        filesender.logger.log(msg);
 
         // Forward to internal
-        f(msg);
+//        f(msg);
     };
 });
