@@ -186,6 +186,9 @@ $default = array(
 
     'disable_directory_upload' => true,
 
+    'clientlogs_stashsize' => 10,
+    'clientlogs_lifetime' => 10,
+
     'transfer_options' => array(
         'email_me_copies' => array(
             'available' => true,

@@ -222,6 +222,19 @@ class User extends DBObject {
     }
     
     /**
+     * Search users
+     *
+     * @param string $match
+     *
+     * @return self[]
+     */
+    public static function search($match) {
+        $match = str_replace('\\', '', $match); // Remove to-be-used escape char
+        $match = str_replace(array('%', '_'), array('\\%', '\\_'), $match); // Escape special chars
+        return self::all("id LIKE :match ESCAPE '\\\\'", array(':match' => '%'.$match.'%'));
+    }
+    
+    /**
      * Get active users
      * 
      * @return array of User
