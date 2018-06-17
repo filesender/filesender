@@ -54,6 +54,9 @@ window.filesender.logger = {
 
         var len = filesender.config ? filesender.config.clientlogs.stash_len : 10;
 
+        this.stash.push(msg);
+        this.stash = this.stash.slice(-1 * len);
+
     },
 
     /**
