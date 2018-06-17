@@ -165,3 +165,16 @@ jQuery.each( wrap, function(i,val) {
         f(msg);
     };
 });
+
+// Capture js errors
+window.addEventListener('error', function(e) {
+    filesender.logger.log('[' + (new Date()).toLocaleTimeString() + '] JS ERROR in ' + e.filename + '@' + e.lineno + ':' + e.colno + ' ' + e.message);
+});
+
+// Setup "nothing happens" detection
+$(function() {
+    if(!filesender.ui.files) return; // not upload page
+
+    // last progress update watcher
+    filesender.logger.nopwatcher.start();
+});
