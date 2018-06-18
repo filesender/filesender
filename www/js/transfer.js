@@ -73,6 +73,7 @@ window.filesender.progresstracker = function() {
      */
     this.remember = function( fine_progress ) {
         this.stamp = (new Date()).getTime();
+        this.disabled = false;
         if( !this.mem.length ) {
             this.mem[0] = 0;
             
@@ -83,6 +84,17 @@ window.filesender.progresstracker = function() {
             this.mem.pop();
 
     };
+
+    /**
+     * A chunkCompleted call can be made after a chunk is uploaded
+     * to stop this worker being considered slow when there are no
+     * more chunks to upload.
+     */
+    this.chunkCompleted = function() {
+        this.stamp = (new Date()).getTime();
+        this.disabled = true;
+        this.mem = [];
+    }
 
     /**
      * This disables isOffending() from ever returning true.
@@ -115,9 +127,11 @@ window.filesender.progresstracker = function() {
         var tooSlow = filesender.config.upload_considered_too_slow_if_no_progress_for_seconds;
         if( tooSlow==0 )
             return false;
+
         
-        if( (new Date()).getTime() - this.stamp > (tooSlow*1000) )
+        if( (new Date()).getTime() - this.stamp > (tooSlow*1000) ) {
             return true;
+        }
         return false;
 
         // play with bytes?
@@ -720,6 +734,8 @@ window.filesender.transfer = function() {
         if(!(id in this.watchdog_processes)) this.registerProcessInWatchdog(id);
         
         if(this.watchdog_processes[id].started == null) return;
+
+        this.watchdog_processes[id].progressTracker.chunkCompleted();
         
         this.watchdog_processes[id].count++;
         this.watchdog_processes[id].durations.push((new Date()).getTime() - this.watchdog_processes[id].started);
@@ -803,7 +819,7 @@ window.filesender.transfer = function() {
         d = [];
         i = 0;
         for(var id in this.watchdog_processes) {
-            d[i] = -1;
+            d[i] = false;
             if(this.watchdog_processes[id].started != null) {
                 if( this.watchdog_processes[id].file.name == file.name ) {
                     var v = this.watchdog_processes[id].progressTracker.isOffending();
