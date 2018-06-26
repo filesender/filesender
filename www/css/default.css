@@ -635,6 +635,69 @@ table.list .date {
     text-align: center;
 }
 
+#upload_form .files_uploadlogtop {
+    border: 1px dashed #666;
+    border-radius: 0.5em;
+    -moz-border-radius: 0.5em;
+    padding: 0.5em 0;
+    background-color: #FFF;
+}
+
+#upload_form .uploadlogheader {
+    font-weight: bold;
+    background-color: #FFF;
+    text-align: center;
+    width: 100%;
+}
+
+#upload_form .files_uploadlogtop .uploadlogbox {
+    font-size: 1.2em;
+    color: #666;
+    font-weight: bold;
+    padding: 0.3em;
+    padding-bottom: 0.4em;
+    height: 5em;
+    text-align: center;
+    max-height: 300em;
+    overflow-y: scroll;   
+}
+
+
+.uploadlog .tpl {
+    display: none;
+}
+
+
+#upload_form .uploading_actions {
+    display: table;
+    width: 100%;
+    margin: 0.25em 1em 0 0;
+}
+
+#upload_form .uploading_actions div {
+    display: table-cell;
+    width: 33%;
+}
+
+#upload_form .uploading_actions .msg {
+    display: table-cell;
+    width: 66%;
+}
+
+.uploading_actions .auto_resume_timer_top {
+    background-color: #fcc;
+}
+
+.uploading_actions .auto_resume_timer_top .auto_resume_timer {
+    font-size: 1.0em;
+    font-weight: bold;
+}
+
+#upload_form .uploading_actions .stats {
+    display: table-cell;
+    width: 33%;
+}
+
 #upload_form .files_actions {
     display: table;
     width: 100%;
@@ -654,17 +717,33 @@ table.list .date {
     text-align: center;
 }
 
+#upload_form .files_actions .stats {
+    width: 33%;
+}
+
 #upload_form .files_actions .stats div {
     text-align: right;
-    font-size: 0.8em;
+    font-size: 1em;
     vertical-align: middle;
     width: 100%;
 }
 
 #upload_form .files_actions .stats .number_of_files,
-#upload_form .files_actions .stats .size,
-#upload_form .files_actions .stats .uploaded,
-#upload_form .files_actions .stats .average_speed {
+#upload_form .files_actions .stats .size
+{
+    display: none;
+}
+
+#upload_form .uploading_actions .stats div {
+    text-align: right;
+    font-size: 1em;
+    vertical-align: middle;
+    width: 100%;
+}
+
+#upload_form .uploading_actions .stats .uploaded,
+#upload_form .uploading_actions .stats .average_speed
+{
     display: none;
 }
 
