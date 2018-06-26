@@ -31,7 +31,6 @@ window.filesender.terasender = {
      */
     security_token: null,
 
-    
     /**
      * Send command to worker
      * 
@@ -141,7 +140,8 @@ window.filesender.terasender = {
      */
     giveJob: function(worker_id, workerinterface) {
         if(this.jobAllocationLocked || (this.status == 'paused')) {
-            this.log('Asking worker:' + worker_id + ' to come back later');
+            this.log('Asking worker:' + worker_id + ' to come back later' +
+                     ' status ' + this.status + ' jobAllocationLocked ' + this.jobAllocationLocked );
             this.sendCommand(workerinterface, 'comeBackLater');
             return false;
         }
@@ -474,7 +474,7 @@ window.filesender.terasender = {
         this.workers = [];
         
         this.transfer = transfer;
-        
+
         // Safety
         var wcnt = parseInt(filesender.config.terasender_worker_count);
         if(isNaN(wcnt) || wcnt < 1 || wcnt > 30)
@@ -493,13 +493,20 @@ window.filesender.terasender = {
         for(var i=0; i<this.workers.length; i++)
             this.workers[i].terminate();
         
-        for(var i=0; i<this.transfer.files.length; i++)
+        for(var i=0; i<this.transfer.files.length; i++) {
             this.transfer.files[i].uploaded = this.transfer.files[i].min_uploaded_offset;
+            if( isNaN(this.transfer.files[i].uploaded))
+                this.transfer.files[i].uploaded = 0;
+        }
         
         this.workers = [];
         
         for(i=0; i<filesender.config.terasender_worker_count; i++)
             this.createWorker();
+
+        var ts = this;
+        this.status = 'running';
+        
     },
     
     /**

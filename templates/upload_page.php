@@ -50,6 +50,27 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
             <div class="files_dragdrop">
                 <div class="instructions">{tr:drag_and_drop}</div>
             </div>
+
+            <div class="files_uploadlogtop" hidden="true">
+                <div class="uploadlogbox">
+                    <div class="uploadlogheader">{tr:upload_log_header}</div>
+                    <table class="uploadlog">
+                        <thead hidden="true">
+                            <tr>
+                                <th>{tr:date}</th>
+                                <th>{tr:message}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="tpl">
+                                <td class="date"></td>
+                                <td class="message"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
             
             <div class="files_actions">
                 <div>
@@ -63,14 +84,28 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
                         {tr:select_files}
                     </a>
                 </div>
+
                 
                 <div class="stats">
                     <div class="number_of_files">{tr:number_of_files} : <span class="value"></span></div>
                     <div class="size">{tr:size} : <span class="value"></span></div>
+                </div>
+            </div>
+
+            <div class="uploading_actions" hidden="true">
+                <div class="msg">
+                    <div class="auto_resume_timer_top">
+                        <div class="auto_resume_timer">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="stats">
                     <div class="uploaded">{tr:uploaded} : <span class="value"></span></div>
                     <div class="average_speed">{tr:average_speed} : <span class="value"></span></div>
                 </div>
             </div>
+            
         </div>
         
         <table class="two_columns">
