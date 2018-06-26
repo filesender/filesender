@@ -189,8 +189,8 @@ $default = array(
     'clientlogs_stashsize' => 10,
     'clientlogs_lifetime' => 10,
 
-    'automatic_resume_number_of_retries' => 10,
-    'automatic_resume_delay_to_resume'   =>  5,
+    'automatic_resume_number_of_retries' =>  10,
+    'automatic_resume_delay_to_resume'   => 360,
 
 
     'transfer_options' => array(
