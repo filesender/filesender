@@ -1418,3 +1418,8 @@ $(function() {
         }, {auth_prompt: false});
     }
 });
+
+$('.instructions').on('click', function(){
+    filesender.ui.nodes.files.input.click();
+    return false;
+});
