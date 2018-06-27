@@ -607,10 +607,10 @@ filesender.ui.retryingErrorHandler = function(error,callback) {
     var msg = lang.tr(error.message);
     msg += " retry attempt " + filesender.ui.automatic_resume_retries;
     if(error.details) {
-        var i = $('<div class="details" />').appendTo(d);
+        msg += ' details: ';
         $.each(error.details, function(k, v) {
             if(isNaN(k)) v = lang.tr(k) + ': ' + v;
-            msg += "<br/>" + v;
+            msg += " " + v;
         });
     }
 
