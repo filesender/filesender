@@ -19,7 +19,7 @@ class UploadAutoResumeTest extends SeleniumTest
             $this->showFileUploader();
             sleep(1);
             
-            $this->fileUploadTest('file50mb.txt', false);
+            $this->fileUploadTest('file10mb.txt', false);
             sleep(1);
             
             $this->byCssSelector('.start.ui-button')->click();
