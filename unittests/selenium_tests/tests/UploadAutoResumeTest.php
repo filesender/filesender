@@ -15,6 +15,10 @@ class UploadAutoResumeTest extends SeleniumTest
         $this->setupAuthenticated();
         $this->setMaxTransferFileSize();
 
+        if (!$this->isCheckBoxSelected('[name="get_a_link"]')) {
+            $this->clickCheckbox('[name="get_a_link"]');
+        }
+        
         if( 1 ) {
             $this->showFileUploader();
             sleep(1);
