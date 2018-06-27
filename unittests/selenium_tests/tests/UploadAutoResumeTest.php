@@ -15,7 +15,7 @@ class UploadAutoResumeTest extends SeleniumTest
         $this->setupAuthenticated();
         $this->setMaxTransferFileSize();
 
-        if( 0 ) {
+        if( 1 ) {
             $this->showFileUploader();
             sleep(1);
             
@@ -23,6 +23,7 @@ class UploadAutoResumeTest extends SeleniumTest
             sleep(1);
             
             $this->byCssSelector('.start.ui-button')->click();
+            sleep(1);
             
             // wait for the dialog
             $url = $this->waitForUploadCompleteDialog();
