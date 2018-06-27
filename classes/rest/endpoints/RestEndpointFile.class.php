@@ -172,7 +172,7 @@ class RestEndpointFile extends RestEndpoint {
             throw new RestCannotAddDataToCompleteTransferException('File', $file->id);
         }
 
-        
+
         if($mode == 'whole') {
             // Process uploaded file, split into chunks and push to storage
             if(!array_key_exists('file', $_FILES)) throw new RestBadParameterException('file');
@@ -215,7 +215,32 @@ class RestEndpointFile extends RestEndpoint {
             'data' => $data
         );
     }
-    
+
+    public function testsuite_guard_prefix() {
+          $fn = "/tmp/testsute-guards/";
+          if(!file_exists($fn))
+              mkdir($fn);
+          return $fn;
+    }
+
+    public function testsuite_guard_first_call( $fn )  {
+        if( file_exists($fn))
+            return false;
+        touch( $fn );
+        return true;
+    }
+
+    /**
+     * This is a stub that can have code injected into it for the test suite.
+     * in production this is just an empty method.
+     */
+    public function put_perform_testsuite( $data, $file, $id = null, $mode = null, $offset = null) {
+
+    //PUT_PERFORM_TESTSUITE
+        
+    }
+
+
     /**
      * Add chunk to a file at offset
      * 
@@ -261,7 +286,9 @@ class RestEndpointFile extends RestEndpoint {
         
         // Get request data
         $data = $this->request->input;
-        
+
+        $this->put_perform_testsuite( $data, $file, $id, $mode, $offset );        
+
         if($mode == 'chunk') {
             // Need to put a chunk of data
 
