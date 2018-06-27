@@ -15,27 +15,20 @@ class UploadAutoResumeTest extends SeleniumTest
         $this->setupAuthenticated();
         $this->setMaxTransferFileSize();
 
-        if (!$this->isCheckBoxSelected('[name="get_a_link"]')) {
-            $this->clickCheckbox('[name="get_a_link"]');
-        }
-        
-        if( 1 ) {
-            $this->showFileUploader();
-            sleep(1);
+        $this->showFileUploader();
+        sleep(1);
             
-            $this->fileUploadTest('file10mb.txt', false);
-            sleep(1);
+        $this->fileUploadTest('file10mb.txt', false);
+        sleep(1);
             
-            $this->byCssSelector('.start.ui-button')->click();
-            sleep(1);
+        $this->byCssSelector('.start.ui-button')->click();
+        sleep(1);
             
-            // wait for the dialog
-            $url = $this->waitForUploadCompleteDialog();
+        // wait for the dialog
+        $url = $this->waitForUploadCompleteDialog();
             
-            // echo "url $url \n";
-            $this->assertGreaterThan( 20, strlen($url), "bad upload url" );
-        }
-        
+        // echo "url $url \n";
+        $this->assertGreaterThan( 20, strlen($url), "bad upload url" );
     }
 
     public function waitForUploadCompleteDialog() {
@@ -55,6 +48,10 @@ class UploadAutoResumeTest extends SeleniumTest
 
     private function showFileUploader()
     {
+        if (!$this->isCheckBoxSelected('[name="get_a_link"]')) {
+            $this->clickCheckbox('[name="get_a_link"]');
+        }
+        
         ${"temp"} = $this->execute(array(  'script' => "var file_upload_container = document.getElementsByClassName('file_selector')[0];file_upload_container.style.display='block';", 'args'   => array() ));
     }
 
