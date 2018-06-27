@@ -379,7 +379,7 @@ class Transfer extends DBObject {
         AuditLog::clean($this);
         
         if (!is_null($this->collections)) {
-            foreach ($collections as $collection_type_id => $collectionList) {
+            foreach ($this->collections as $collection_type_id => $collectionList) {
                 foreach ($collectionList as $collection) {
                     $this->removeCollection($collection);
                 }
