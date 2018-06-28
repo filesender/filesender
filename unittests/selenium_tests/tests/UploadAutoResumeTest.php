@@ -1,12 +1,19 @@
 <?php
 
-require_once 'unittests/selenium_tests/SeleniumTest.php';
+include_once('unittests/selenium_tests/SeleniumTest.php');
 
 class UploadAutoResumeTest extends SeleniumTest
 {
 
     protected $start_url_path = '';
-    
+
+    public static function cb_testGoodFileUpload($data, $file, $id = null, $mode = null, $offset = null) {
+        if( $file->name == "file10mb.txt" ) {
+            if( SeleniumTest::ts_guard_first_call( "put_perform_testsuite_file10mb.txt" )) {
+                throw new RestCannotAddDataToCompleteTransferException("File", $file->id);
+            }    
+        }
+    }
 
     public function testGoodFileUpload()
     {
@@ -15,18 +22,24 @@ class UploadAutoResumeTest extends SeleniumTest
         $this->setupAuthenticated();
         $this->setMaxTransferFileSize();
 
+        $this->ts_clear( "put_perform_testsuite_file10mb.txt" );
+        $this->TESTSUITE_env_clear_all();
+        $this->TESTSUITE_env_set('PUT_PERFORM_TESTSUITE','UploadAutoResumeTest::cb_testGoodFileUpload($data,$file,$id,$mode,$offset);');
+
         $this->showFileUploader();
         sleep(1);
-            
+        
         $this->fileUploadTest('file10mb.txt', false);
         sleep(1);
-            
+        
         $this->byCssSelector('.start.ui-button')->click();
         sleep(1);
-            
+        
         // wait for the dialog
         $url = $this->waitForUploadCompleteDialog();
-            
+
+        $this->TESTSUITE_env_clear_all();
+        
         // echo "url $url \n";
         $this->assertGreaterThan( 20, strlen($url), "bad upload url" );
     }

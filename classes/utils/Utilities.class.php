@@ -410,6 +410,11 @@ class Utilities {
         return (substr($haystack, 0, $length) === $needle);
     }
 
+    public static function isTrue( $v ) 
+    {
+         return $v == '1' || $v == 'true';
+    }
+
     /**
      * This is a wrapper around the PHP http_build_query with some
      * smarts. $path is optional and if not given will be the site itself.
