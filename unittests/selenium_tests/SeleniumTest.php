@@ -1,6 +1,6 @@
 <?php
 
-require_once 'vendor/autoload.php';
+include_once('vendor/autoload.php');
 
 class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
 {
@@ -10,13 +10,13 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
 
     public static $browsers = array(
         // run FF15 on Windows 8 on Sauce
-//        array(
-//            'browserName' => 'firefox',
-//            'desiredCapabilities' => array(
-//                'version' => '15',
-//                'platform' => 'Windows 2012',
-//            )
-//        ),
+        //        array(
+        //            'browserName' => 'firefox',
+        //            'desiredCapabilities' => array(
+        //                'version' => '15',
+        //                'platform' => 'Windows 2012',
+        //            )
+        //        ),
         // run Chrome on Linux on Sauce
         array(
             'browserName' => 'chrome',
@@ -61,9 +61,30 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
         $this->setSeleniumServerRequestsTimeout(120);
     }
 
+    public static function browsers() {
+        require_once('includes/init.php');
+
+        if( Config::get('testsuite_run_locally') == '1' || Config::get('testsuite_run_locally') == 'true' ) {
+        echo "running test suite locally\n";
+            return array(
+                // run Chrome on Linux locally
+                array(          
+                    'browserName            ' => 'chrome',
+                    'local' => true,        
+                    'desiredCapabilities' =>         array(
+                        'platform' => 'Linux'
+                    )
+                )
+            );
+        }
+
+        return parent::browsers();
+    }
+    
     public function __construct($name = NULL, array $data = array(), $dataName = '')
     {
         require_once('includes/init.php');
+        
 
         if(getenv('SAUCE_USERNAME') === false)
         {
@@ -180,6 +201,46 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
         sleep(2);
     }
 
+    public static function ts_guard_prefix() {
+          $fn = "/opt/filesendertest/tmp/testsute-guards/";
+          if(!is_dir($fn)) {
+              // This has to be widely writable so the web server and user
+              // running the test suite can both access the path
+              $old = umask(0);
+              mkdir($fn,0777);
+              umask($old);
+          }
+          return $fn;
+    }
+
+    public static function ts_clear( $fn )  {
+        $fn = self::ts_guard_prefix() . $fn;
+        if( file_exists($fn))
+            unlink($fn);
+    }
+
+    public static function ts_guard_first_call( $fn )  {
+        $fn = self::ts_guard_prefix() . $fn;
+        if( file_exists($fn))
+            return false;
+        touch( $fn );
+        return true;
+    }
+
+    protected function TESTSUITE_env_clear_all()
+    {
+        $this->changeConfigValue("PUT_PERFORM_TESTSUITE", "''");
+        $this->refresh();
+        sleep(2);
+    }
+
+    protected function TESTSUITE_env_set( $k, $v )
+    {
+        $this->changeConfigValue($k, "'" . $v . "'");
+        $this->refresh();
+        sleep(2);
+    }
+
 
     protected function setInvalidExtensions($invalid_extensions = "'exe,bat'")
     {
@@ -210,7 +271,7 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
         if(file_exists($dir)) {
             $it = new RecursiveDirectoryIterator($dir, RecursiveDirectoryIterator::SKIP_DOTS);
             $files = new RecursiveIteratorIterator($it,
-                RecursiveIteratorIterator::CHILD_FIRST);
+                                                   RecursiveIteratorIterator::CHILD_FIRST);
             foreach ($files as $file) {
                 if ($file->isDir()) {
                     rmdir($file->getRealPath());

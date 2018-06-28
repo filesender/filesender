@@ -216,19 +216,6 @@ class RestEndpointFile extends RestEndpoint {
         );
     }
 
-    public function testsuite_guard_prefix() {
-          $fn = "/tmp/testsute-guards/";
-          if(!file_exists($fn))
-              mkdir($fn);
-          return $fn;
-    }
-
-    public function testsuite_guard_first_call( $fn )  {
-        if( file_exists($fn))
-            return false;
-        touch( $fn );
-        return true;
-    }
 
     /**
      * This is a stub that can have code injected into it for the test suite.
@@ -236,8 +223,12 @@ class RestEndpointFile extends RestEndpoint {
      */
     public function put_perform_testsuite( $data, $file, $id = null, $mode = null, $offset = null) {
 
-    //PUT_PERFORM_TESTSUITE
-        
+       if( Utilities::isTrue( Config::get('testsuite_run_locally'))) {
+            include_once(FILESENDER_BASE . "/vendor/autoload.php");
+            include_once(FILESENDER_BASE . "/unittests/selenium_tests/SeleniumTest.php");
+            include_once(FILESENDER_BASE . "/unittests/selenium_tests/tests/UploadAutoResumeTest.php");
+            eval(Config::get("PUT_PERFORM_TESTSUITE"));
+       }
     }
 
 

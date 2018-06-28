@@ -192,6 +192,7 @@ $default = array(
     'automatic_resume_number_of_retries' =>  10,
     'automatic_resume_delay_to_resume'   => 360,
 
+    'testsuite_run_locally' => false,
 
     'transfer_options' => array(
         'email_me_copies' => array(
