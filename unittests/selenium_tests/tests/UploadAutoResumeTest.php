@@ -22,7 +22,7 @@ class UploadAutoResumeTest extends SeleniumTest
         $this->setupAuthenticated();
         $this->setMaxTransferFileSize();
 
-        $this->ts_clear( "put_perform_testsuite_file10mb.txt" );
+//        $this->ts_clear( "put_perform_testsuite_file10mb.txt" );
         $this->TESTSUITE_env_clear_all();
         $this->TESTSUITE_env_set('PUT_PERFORM_TESTSUITE','UploadAutoResumeTest::cb_testGoodFileUpload($data,$file,$id,$mode,$offset);');
 
