@@ -217,7 +217,7 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
 
     private function deleteDirectory($dir)
     {
-        TestSuiteSupport::changeConfigValue($dir);
+        TestSuiteSupport::deleteDirectory($dir);
     }
 
     protected function checkDownloadUrl($url, $test_files_data)
