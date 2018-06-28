@@ -1,6 +1,7 @@
 <?php
 
 include_once('vendor/autoload.php');
+include_once('classes/utils/TestSuiteSupport.class.php');
 
 class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
 {
@@ -201,45 +202,6 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
         sleep(2);
     }
 
-    public static function ts_guard_prefix() {
-          $fn = "/opt/filesendertest/tmp/testsute-guards/";
-          if(!is_dir($fn)) {
-              // This has to be widely writable so the web server and user
-              // running the test suite can both access the path
-              $old = umask(0);
-              mkdir($fn,0777);
-              umask($old);
-          }
-          return $fn;
-    }
-
-    public static function ts_clear( $fn )  {
-        $fn = self::ts_guard_prefix() . $fn;
-        if( file_exists($fn))
-            unlink($fn);
-    }
-
-    public static function ts_guard_first_call( $fn )  {
-        $fn = self::ts_guard_prefix() . $fn;
-        if( file_exists($fn))
-            return false;
-        touch( $fn );
-        return true;
-    }
-
-    protected function TESTSUITE_env_clear_all()
-    {
-        $this->changeConfigValue("PUT_PERFORM_TESTSUITE", "''");
-        $this->refresh();
-        sleep(2);
-    }
-
-    protected function TESTSUITE_env_set( $k, $v )
-    {
-        $this->changeConfigValue($k, "'" . $v . "'");
-        $this->refresh();
-        sleep(2);
-    }
 
 
     protected function setInvalidExtensions($invalid_extensions = "'exe,bat'")
@@ -249,38 +211,13 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
         sleep(2);
     }
 
-    private function changeConfigValue($type, $value)
-    {
-        //read the entire string
-        $str=file_get_contents('config/config.php');
-
-        //replace something in the file string
-        $str=preg_replace("/\\\$config\['".$type."'\]\s*=\s*(.*);/", "\$config['".$type."'] = $value;",$str, -1, $count);
-
-        if($count == 0)
-        {
-            throw new \Exception($type .' config could not be set to value '. $value ."Regex: /\\\$config\['".$type."'\] = (.*);/\n");
-        }
-
-        //write the entire string
-        file_put_contents('config/config.php', $str);
+    public function changeConfigValue($type, $value) {
+        TestSuiteSupport::changeConfigValue($type, $value);
     }
 
     private function deleteDirectory($dir)
     {
-        if(file_exists($dir)) {
-            $it = new RecursiveDirectoryIterator($dir, RecursiveDirectoryIterator::SKIP_DOTS);
-            $files = new RecursiveIteratorIterator($it,
-                                                   RecursiveIteratorIterator::CHILD_FIRST);
-            foreach ($files as $file) {
-                if ($file->isDir()) {
-                    rmdir($file->getRealPath());
-                } else {
-                    unlink($file->getRealPath());
-                }
-            }
-            rmdir($dir);
-        }
+        TestSuiteSupport::deleteDirectory($dir);
     }
 
     protected function checkDownloadUrl($url, $test_files_data)
