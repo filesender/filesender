@@ -106,6 +106,8 @@ A note about colours;
 * [max_transfer_encrypted_file_size](#max_transfer_encrypted_file_size)
 * [encryption_min_password_length](#encryption_min_password_length)
 * [encryption_generated_password_length](#encryption_generated_password_length)
+* [automatic_resume_number_of_retries](#automatic_resume_number_of_retries)
+* [automatic_resume_delay_to_resume](#automatic_resume_delay_to_resume)
 
 ## Graphs
 
@@ -983,6 +985,24 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __default:__ encryption_min_password_length
 * __available:__ since version 2.0
 * __comment:__ 
+
+###automatic_resume_number_of_retries
+* __description:__ Number of times to automatically resume an upload if a major error has happened. Set this to 0 to disable automatic resume.
+* __mandatory:__ no 
+* __type:__ int
+* __default:__ 10
+* __available:__ since version 2.1
+* __comment:__ 
+
+
+###automatic_resume_delay_to_resume
+* __description:__ Delay in seconds to wait after a major failure before an automatic resume is performed.
+* __mandatory:__ no 
+* __type:__ int
+* __default:__ 360
+* __available:__ since version 2.1
+* __comment:__ 
+
 
 
 ---
