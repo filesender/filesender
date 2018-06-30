@@ -2,15 +2,15 @@
 
 $BASE = __DIR__ . '/../../';
 
-$warningAboutChangingFile = "\n";
-$warningAboutChangingFile .= " WARNING, this is a read only file created by import scripts\n";
-$warningAboutChangingFile .= " WARNING\n";
-$warningAboutChangingFile .= " WARNING,  Changes made to this file will be clobbered\n";
-$warningAboutChangingFile .= " WARNING\n";
-$warningAboutChangingFile .= " WARNING,  Please make changes on poeditor instead of here\n";
-$warningAboutChangingFile .= "\n";
-$warningAboutChangingFile .= "\n";
-$warningAboutChangingFile .= "\n";
+$warningAboutChangingFile = "<?php \n";
+$warningAboutChangingFile .= "// WARNING, this is a read only file created by import scripts\n";
+$warningAboutChangingFile .= "// WARNING\n";
+$warningAboutChangingFile .= "// WARNING,  Changes made to this file will be clobbered\n";
+$warningAboutChangingFile .= "// WARNING\n";
+$warningAboutChangingFile .= "// WARNING,  Please make changes on poeditor instead of here\n";
+$warningAboutChangingFile .= "// \n";
+$warningAboutChangingFile .= "// \n";
+$warningAboutChangingFile .= "?>\n";
 
 function loadLang( $code ) {
     global $BASE;
