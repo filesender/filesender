@@ -12,6 +12,7 @@ admin_guests_section
 admin_page
 admin_statistics_section
 admin_transfers_section
+admin_users_section
 advanced_settings
 anonymous
 anonymous_details
@@ -34,6 +35,7 @@ auth_sp_missing_delegation_class
 auth_user_not_allowed
 authentication_required
 authentication_required_explanation
+auto_resume_timer_seconds
 available_transfers
 average_speed
 bad_email
@@ -53,6 +55,7 @@ cannot_open_input_file
 clear_all
 click_to_delete_file
 click_to_delete_recipient
+client_logs_sent
 close
 closed_transfers
 config_bad_parameter
@@ -226,6 +229,7 @@ invalid_file
 invalid_recipient
 ip
 is_default
+last_activity
 later
 load
 logoff
@@ -249,10 +253,12 @@ no
 no_addresses_found
 no_auditlog
 no_guests
+no_results
 no_such_property
 no_transfers
 none
 noscript
+nothing_happened_as_of_late_you_can_send_client_logs
 number_of_files
 ok
 open_auditlog
@@ -336,12 +342,16 @@ resume
 retry
 retry_later
 save
+search
+search_user
+searching
 see_all
 select_all_for_archive_download
 select_file
 select_files
 select_for_archive_download
 send
+send_client_logs
 send_new_voucher
 send_reminder
 send_to_my_email
@@ -349,6 +359,7 @@ send_voucher
 serverlog_auth_sp_attribute_not_found
 serverlog_config_directive
 serverlog_wanted_key_in_array
+show_client_logs
 show_details
 showhide
 site_footer
@@ -385,7 +396,7 @@ subject
 success_dialog
 template_not_found
 terasender_worker_count
-testterm4
+testterm
 time_format
 to
 tracking_event_not_found
@@ -425,11 +436,15 @@ undergoing_maintenance
 unexpected_file
 unknown_page
 upload_complete
+upload_log_header
 upload_page
 upload_page_graph_encryption_in_transit
 upload_page_graph_encryption_in_transit_and_rest
 upload_page_graph_mb_per_second
 upload_page_graph_title_upload_speed_of_files_over
+upload_stalled_and_resumed
+upload_stalled_due_to_testing
+upload_started
 uploaded
 uploading_transfers
 user_additional
@@ -444,6 +459,7 @@ user_page
 user_preferences
 user_quota
 user_remote_authentication
+users
 utilities_uid_generator_bad_unicity_checker
 utilities_uid_generator_tried_too_much
 valid_only_one_time
@@ -453,3 +469,4 @@ with_identity
 yes
 you_can_report_exception
 you_can_report_exception_by_email
+you_can_send_client_logs
