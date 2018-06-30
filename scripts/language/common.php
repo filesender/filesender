@@ -56,13 +56,15 @@ function loadLangDirectory( $code ) {
 
 
 function squote( $s ) {
-    $s = str_replace( '\\', '\\\\', $s );
-    $s = str_replace( "'", "\'", $s );
+
+    $s = preg_replace( '![^\\\\]\\\\[^\\\\\']!' , '\\\\' , $s );
+    $s = preg_replace( "![^\\\\]\'!", "\\\'", $s );
     return $s;
 }
 
 function write_translation_lang_file( $code, $lang ) {
     global $BASE;
+    global $warningAboutChangingFile;
     $fn = "$BASE/language/$code/lang.php";
     $data = '';
 
@@ -79,6 +81,7 @@ function write_translation_lang_file( $code, $lang ) {
 
 function write_translation_term_file( $code, $term, $data ) {
     global $BASE;
+    global $warningAboutChangingFile;
     $p = "$BASE/language/$code/";
     $fn = '';
     foreach( array('html','mail','text') as $type ) {
