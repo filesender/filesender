@@ -132,3 +132,19 @@ $config['terasender_start_mode'] = 'single';	// I think I prefer to show a nice 
 
 $config['storage_type'] = 'filesystem';
 $config['storage_filesystem_path'] = '/opt/filesender/filesender/files';
+
+// ---------------------------------------------
+//       this is how the test suite wants things.
+// ---------------------------------------------
+
+$testing = false;
+if( $testing ) {
+  $config['testsuite_run_locally'] = true;
+  $config['TESTSUITE_LOCAL'] = '1';
+  $config['auth_sp_type'] = 'fake';
+  $config['auth_sp_fake_authenticated'] = true;
+  $config['auth_sp_fake_uid'] = 1;
+  $config['auth_sp_fake_email'] = 'root@localhost.localdomain';
+  $config['PUT_PERFORM_TESTSUITE'] = '';
+
+}
