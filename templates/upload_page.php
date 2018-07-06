@@ -35,7 +35,7 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
 ?>
 
 <div class="box">
-    <form id="upload_form" class="<?php echo $formClasses; ?>" enctype="multipart/form-data" accept-charset="utf-8" method="post" data-need-recipients="<?php echo $need_recipients ? '1' : '' ?>">
+    <form id="upload_form" class="<?php echo $formClasses; ?>" enctype="multipart/form-data" accept-charset="utf-8" method="post" autocomplete="off" data-need-recipients="<?php echo $need_recipients ? '1' : '' ?>">
         <div class="box">
             <div class="files"></div>
             
@@ -158,7 +158,7 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
                             </div>
                             <div class="fieldcontainer" id="encryption_password_container">  
                                 <label for="encryption_password" style="cursor: pointer;">{tr:file_encryption_password} : </label>
-                                <input id="encryption_password" name="encryption_password" type="password" autocomplete="off"/>
+                                <input id="encryption_password" name="encryption_password" type="password" autocomplete="new-password"/>
                             </div>
                             <div class="fieldcontainer" id="encryption_password_container_too_short_message">
                                 {tr:file_encryption_password_too_short}
