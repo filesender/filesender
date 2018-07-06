@@ -7,20 +7,20 @@
 // 
 // 
 ?>
-subject: Ein Gast hat das Hochladen von Dateien beendet
+subject: Gast hat den Upload von Dateien beendet
 
 {alternative:plain}
 
 Sehr geehrte Damen und Herren,
 
-der folgende Gast hat das Hochladen von Dateien mit Ihrer Einladung beendet:
+Der folgende Gast hat den Upload von Dateien durch Verwendung einer Einladung abgeschlossen:
 
 Gast: {guest.email}
-Ling Einladung: {cfg:site_url}?s=upload&vid={guest.token}
+Einladungslink: {cfg:site_url}?s=upload&vid={guest.token}
 
-Die Einladung ist bis zum {date:guest.expires} gültig, nach Ablauf des Datums wird er automatisch gelöscht.
+Die Einladung ist bis zum {date:guest.expires} verfügbar. Danach wird sie automatisch gelöscht.
 
-Mit freundlichen Grüßen,
+Mit freundlichen Größen,
 {cfg:site_name}
 
 {alternative:html}
@@ -30,13 +30,13 @@ Mit freundlichen Grüßen,
 </p>
 
 <p>
-    der folgende Gast hat das Hochladen von Dateien mit Ihrer Einladung beendet:
+Der folgende Gast hat den Upload von Dateien durch Verwendung einer Einladung abgeschlossen:
 </p>
 
 <table rules="rows">
     <thead>
         <tr>
-            <th colspan="2">Details Einladung</th>
+            <th colspan="2">Details der Einladung</th>
         </tr>
     </thead>
     <tbody>
@@ -45,7 +45,7 @@ Mit freundlichen Grüßen,
             <td><a href="mailto:{guest.email}">{guest.email}</a></td>
         </tr>
         <tr>
-            <td>Link Einladung</td>
+            <td>Einladungslink</td>
             <td><a href="{cfg:site_url}?s=upload&vid={guest.token}">{cfg:site_url}?s=upload&vid={guest.token}</a></td>
         </tr>
         <tr>
@@ -59,3 +59,4 @@ Mit freundlichen Grüßen,
     Mit freundlichen Grüßen,<br />
     {cfg:site_name}
 </p>
+',

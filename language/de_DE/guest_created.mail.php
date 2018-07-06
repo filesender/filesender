@@ -1,5 +1,14 @@
-Betreff: Gast-Einladung erhalten
-Betreff: {guest.subject}
+<?php 
+// WARNING, this is a read only file created by import scripts
+// WARNING
+// WARNING,  Changes made to this file will be clobbered
+// WARNING
+// WARNING,  Please make changes on poeditor instead of here
+// 
+// 
+?>
+subject: Gast-Einladung erhalten
+subject: {guest.subject}
 
 {alternative:plain}
 
@@ -30,7 +39,7 @@ Mit freundlichen Grüßen,
 <table rules="rows">
     <thead>
         <tr>
-            <th colspan="2">Details Einladung</th>
+            <th colspan="2">Details zur Einladung</th>
         </tr>
     </thead>
     <tbody>

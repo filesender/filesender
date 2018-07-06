@@ -1,10 +1,19 @@
-Betreff: Zusammenfassung der täglichen Übertragungen
+<?php 
+// WARNING, this is a read only file created by import scripts
+// WARNING
+// WARNING,  Changes made to this file will be clobbered
+// WARNING
+// WARNING,  Please make changes on poeditor instead of here
+// 
+// 
+?>
+subject: Zusammenfassung der täglichen Dateitransfers
 
 {alternative:plain}
 
 Sehr geehrte Damen und Herren,
 
-hier finden Sie eine Zusammenfassung der Downloads Ihrer Übertragungen  {transfer.id} (uploaded {date:transfer.created}) :
+hier finden Sie eine Zusammenfassung der Downloads Ihres Dateitransfers Nr. {transfer.id} (uploaded {date:transfer.created}) :
 
 {if:events}
 {each:events as event}
@@ -26,7 +35,7 @@ Mit freundlichen Grüßen,
 </p>
 
 <p>
-    hier finden Sie eine Zusammenfassung der Downloads Ihrer Übertragungen  {transfer.id} (uploaded {date:transfer.created}) :
+    hier finden Sie eine Zusammenfassung der Downloads Ihres Dateitransfers Nr. {transfer.id} (uploaded {date:transfer.created}) :
 </p>
 
 {if:events}
