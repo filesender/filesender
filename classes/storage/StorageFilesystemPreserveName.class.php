@@ -98,6 +98,7 @@ class StorageFilesystemPreserveName extends StorageFilesystem {
         
         // validate owner/uid=name subpath, creating dirs if needed
         $path = $storage_root_path;
+
         foreach(array_filter(explode('/', $subpath)) as $sub) {
             $path .= $sub;
             
