@@ -450,7 +450,7 @@ class CollectionTree extends Collection
             'uid', 'file'
         ))) {
             if (is_null($this->uid)) $this->loadInfo();
-            if ($property === 'file') 
+            if ($property == 'file') 
                return $this->fileCache;
             else
                return $this->$property;
