@@ -53,7 +53,7 @@ class StatLog extends DBObject {
         ),
         'target_type' => array(
             'type' => 'string',
-            'size' => 255
+            'size' => 190
         ),
         'size' => array(
             'type' => 'int',

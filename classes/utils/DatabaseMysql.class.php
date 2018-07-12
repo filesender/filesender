@@ -331,7 +331,7 @@ class DatabaseMysql {
                 break;
             
             case 'string':
-                $size = array_key_exists('size', $definition) ? $definition['size'] : '255';
+                $size = array_key_exists('size', $definition) ? $definition['size'] : '190';
                 $mysql = 'VARCHAR('.$size.')';
                 break;
             

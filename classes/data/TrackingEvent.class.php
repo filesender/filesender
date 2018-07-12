@@ -54,11 +54,11 @@ class TrackingEvent extends DBObject
         ),
         'target_type' => array(
             'type' => 'string',
-            'size' => 255
+            'size' => 190
         ),
         'target_id' => array(
             'type' => 'string',
-            'size' => 255
+            'size' => 190
         ),
         'details' => array(
             'type' => 'text'

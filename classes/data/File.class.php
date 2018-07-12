@@ -60,11 +60,11 @@ class File extends DBObject
         ),
         'name' => array(
             'type' => 'string',
-            'size' => 255,
+            'size' => 190,
         ),
         'mime_type' => array(
             'type' => 'string',
-            'size' => 255
+            'size' => 190
         ),
         'size' => array(
             'type' => 'uint',
