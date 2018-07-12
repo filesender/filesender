@@ -315,3 +315,5 @@ $config['disable_directory_upload'] = true;     // String, dirtree upload does n
 $config['ban_extension'] = 'exe,bat';
 $config['user_page'] = array();
 
+$config['PUT_PERFORM_TESTSUITE'] = '';
+

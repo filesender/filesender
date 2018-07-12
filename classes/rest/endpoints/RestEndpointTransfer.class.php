@@ -122,9 +122,10 @@ class RestEndpointTransfer extends RestEndpoint {
      * @throws RestOwnershipRequiredException
      */
     public function get($id = null, $property = null, $property_id = null) {
+
         // Special case when checking if enable_recipient_email_download_complete option is enabled for a specific transfer 
         if($property == 'options' && 'enable_recipient_email_download_complete' == $property_id ) {
-            
+
             // Check that we have a valid token in the url
             if(!array_key_exists('token', $_GET)) throw new RestBadParameterException('token');
             $token = $_GET['token'];
@@ -136,11 +137,12 @@ class RestEndpointTransfer extends RestEndpoint {
             // Get transfer and recipient from above data
             $transfer = Transfer::fromId($id);
             $recipient = Recipient::fromToken($token);
-            
+
             // Check relationship between the two
             if(!$recipient->transfer->is($transfer)) throw new RestAuthenticationRequiredException();
-            
-            return in_array($property_id, $transfer->options);
+
+            $rc = $transfer->getOption(TransferOptions::ENABLE_RECIPIENT_EMAIL_DOWNLOAD_COMPLETE);
+            return $rc;
         }
         
         // If key was provided we validate it and return the transfer (guest restart)

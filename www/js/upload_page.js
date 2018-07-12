@@ -596,8 +596,82 @@ filesender.ui.evalUploadEnabled = function() {
     return ok;
 };
 
-filesender.ui.startUpload = function() {
+filesender.ui.automatic_resume_retries = 0;
+filesender.ui.automatic_resume_timer = 0;
+
+/**
+ * Report and possibly resume the upload
+ */
+filesender.ui.retryingErrorHandler = function(error,callback) {
+
+    var msg = lang.tr(error.message);
+    msg += " retry attempt " + filesender.ui.automatic_resume_retries;
+    if(error.details) {
+        msg += ' details: ';
+        $.each(error.details, function(k, v) {
+            if(isNaN(k)) v = lang.tr(k) + ': ' + v;
+            msg += " " + v;
+        });
+    }
+
+    filesender.ui.automatic_resume_retries++;
+    if( filesender.ui.automatic_resume_retries > filesender.config.automatic_resume_number_of_retries ) {
+        filesender.ui.errorOriginal( error, callback );
+        return;
+    }
+    filesender.ui.uploadLogPrepend(msg);
+    filesender.ui.transfer.pause();
+
+    filesender.ui.nodes.stats.average_speed.find('.value').text('0');
+
+    //
+    // switch the pause button to a play button to give the user an override
+    // to resume right now rather than waiting for the timer
+    //
+    filesender.ui.nodes.buttons.pause.addClass('not_displayed');
+    filesender.ui.nodes.buttons.resume.removeClass('not_displayed');
+    filesender.ui.nodes.buttons.resume.button('enable');
+
     
+    filesender.ui.automatic_resume_timer =
+        window.setTimeout(
+            function() {
+                filesender.ui.nodes.buttons.pause.removeClass('not_displayed');
+                filesender.ui.nodes.buttons.resume.addClass('not_displayed');
+                filesender.ui.automatic_resume_timer = 0;
+                filesender.ui.cancelAutomaticResume();
+                filesender.ui.transfer.retry(true);
+                
+            },
+            filesender.config.automatic_resume_delay_to_resume * 1000
+        );
+    filesender.ui.automatic_resume_timer_seconds = filesender.config.automatic_resume_delay_to_resume+1;
+    var countDownFunc = function() {
+        filesender.ui.automatic_resume_timer_seconds--;
+        filesender.config.automatic_resume_timer_seconds = filesender.ui.automatic_resume_timer_seconds;
+        filesender.ui.nodes.auto_resume_timer.text(lang.tr('auto_resume_timer_seconds'));
+    }
+    countDownFunc();
+    filesender.ui.automatic_resume_timer_countdown = window.setInterval( countDownFunc, 1000 );
+    filesender.ui.nodes.auto_resume_timer_top.show();
+    
+}
+
+filesender.ui.cancelAutomaticResume = function() {
+    
+    window.clearTimeout(filesender.ui.automatic_resume_timer_countdown);
+    filesender.ui.automatic_resume_timer_countdown = 0;
+    window.clearTimeout(filesender.ui.automatic_resume_timer);
+    filesender.ui.automatic_resume_timer = 0;
+    
+    filesender.ui.nodes.auto_resume_timer_top.hide();
+    
+}
+
+
+
+filesender.ui.startUpload = function() {
+
     if(!filesender.ui.nodes.required_files) {
         this.transfer.expires = filesender.ui.nodes.expires.datepicker('getDate').getTime() / 1000;
         
@@ -685,6 +759,7 @@ filesender.ui.startUpload = function() {
     };
     
     this.transfer.onerror = errorHandler;
+
     
     // Setup watchdog to look for stalled clients (only in html5 and terasender modes)
     if(filesender.supports.reader) {
@@ -747,6 +822,9 @@ filesender.ui.startUpload = function() {
     filesender.ui.nodes.files.list.find('.file .remove').hide();
     filesender.ui.nodes.recipients.list.find('.recipient .remove').hide();
     filesender.ui.nodes.files.list.find('.file .progressbar').show();
+
+    filesender.ui.nodes.files_actions.hide();
+    filesender.ui.nodes.uploading_actions.show();
     
     filesender.ui.nodes.stats.number_of_files.hide();
     filesender.ui.nodes.stats.size.hide();
@@ -754,13 +832,42 @@ filesender.ui.startUpload = function() {
     filesender.ui.nodes.stats.average_speed.show();
     
     filesender.ui.nodes.form.find(':input:not(.file input[type="file"])').prop('disabled', true);
+
+    // Report and possibly resume the upload
+    if( filesender.config.automatic_resume_number_of_retries ) {
+        filesender.ui.error = filesender.ui.retryingErrorHandler;
+    }
     
     return this.transfer.start(errorHandler);
 };
 
+filesender.ui.uploadLogPrepend = function( msg, dt ) {
+//    msg = lang.tr(msg);
+    var l = filesender.ui.nodes.files.uploadlog.find('.tpl').clone().removeClass('tpl').addClass('log');
+    var d = new Date();
+    l.find('.date').text( d.toLocaleString() );
+    l.find('.message').text(msg);
+    l.prependTo(filesender.ui.nodes.files.uploadlog.find('tbody'));
+}
+
+
+filesender.ui.switchToUloadingPageConfiguration = function() {
+
+    filesender.ui.nodes.files_actions.hide();
+    filesender.ui.nodes.uploading_actions.show();
+    filesender.ui.nodes.files.dragdrop.hide();
+
+    if( filesender.config.automatic_resume_number_of_retries ) {
+        filesender.ui.nodes.files.uploadlogtop.show();
+        filesender.ui.uploadLogPrepend(lang.tr("upload_started"));
+    }    
+}
+
 $(function() {
     var form = $('#upload_form');
     if(!form.length) return;
+
+    filesender.ui.errorOriginal = filesender.ui.error;
     
     // Transfer
     filesender.ui.transfer = new filesender.transfer();
@@ -772,6 +879,8 @@ $(function() {
             input: form.find(':file'),
             list: form.find('.files'),
             dragdrop: form.find('.files_dragdrop'),
+            uploadlogtop: form.find('.files_uploadlogtop'),
+            uploadlog: form.find('.uploadlog'),
             select: form.find('.files_actions .select_files'),
             clear: form.find('.files_actions .clear_all'),
         },
@@ -786,7 +895,9 @@ $(function() {
                 password: form.find('input[name="encryption_password"]'),
                 show_hide: form.find('#encryption_show_password'),
                 generate: form.find('#encryption_generate_password')
-            },
+        },
+        auto_resume_timer:form.find('.uploading_actions .auto_resume_timer'),
+        auto_resume_timer_top:form.find('.uploading_actions .auto_resume_timer_top'),
         disable_terasender: form.find('input[name="disable_terasender"]'),
         message: form.find('textarea[name="message"]'),
         guest_token: form.find('input[type="hidden"][name="guest_token"]'),
@@ -801,11 +912,13 @@ $(function() {
             resume: form.find('.buttons .resume'),
             stop: form.find('.buttons .stop')
         },
+        files_actions: form.find('.files_actions'),
+        uploading_actions: form.find('.uploading_actions'),
         stats: {
             number_of_files: form.find('.files_actions .stats .number_of_files'),
             size: form.find('.files_actions .stats .size'),
-            uploaded: form.find('.files_actions .stats .uploaded'),
-            average_speed: form.find('.files_actions .stats .average_speed')
+            uploaded: form.find('.uploading_actions .stats .uploaded'),
+            average_speed: form.find('.uploading_actions .stats .average_speed')
         },
         need_recipients: form.attr('data-need-recipients') == '1'
     };
@@ -847,7 +960,8 @@ $(function() {
 
         addtree_success = false;
         
-        if (typeof filesender.dragdrop.addTree === "function") {
+        if (filesender.dragdrop &&
+            typeof filesender.dragdrop.addTree === "function") {
           addtree_success = filesender.dragdrop.addTree(e.originalEvent.dataTransfer);
         }
 
@@ -1014,13 +1128,14 @@ $(function() {
         return false;
     });
     filesender.ui.nodes.encryption.generate.on('click', function() {
-        var genp = function() { return Math.random().toString(36).substr(2, 14); }
-        var pass = genp();
-        for( var i=0; i < filesender.config.encryption_generated_password_length; i++ ) {
-            pass = pass + genp();
-        }
-        pass = pass.substr(0,filesender.config.encryption_generated_password_length);
-        filesender.ui.nodes.encryption.password.val(pass);
+        var encoding = filesender.config.encryption_generated_password_encoding;
+        var desiredPassLen = filesender.config.encryption_generated_password_length;
+        var crypto = window.filesender.crypto_app();
+
+        var entropybuf = crypto.generateSecureRandomBytes( desiredPassLen );
+        password = crypto.encodeToString( entropybuf, encoding );
+        password = password.substr(0,desiredPassLen);
+        filesender.ui.nodes.encryption.password.val(password);
         filesender.ui.nodes.encryption.show_hide.prop('checked',true);
         filesender.ui.nodes.encryption.show_hide.trigger('change');
         filesender.ui.files.checkEncryptionPassword(filesender.ui.nodes.encryption.password );
@@ -1040,7 +1155,10 @@ $(function() {
     filesender.ui.nodes.buttons.start.on('click', function() {
         $(this).focus(); // Get out of email field / datepicker so inputs are updated
         $(this).blur();
+        
         if(filesender.ui.transfer.status == 'new' && $(this).is('[aria-disabled="false"]')) {
+
+            filesender.ui.switchToUloadingPageConfiguration();
             filesender.ui.startUpload();
             filesender.ui.nodes.buttons.start.addClass('not_displayed');
             if(filesender.supports.reader) filesender.ui.nodes.buttons.pause.removeClass('not_displayed');
@@ -1051,6 +1169,8 @@ $(function() {
     
     if(filesender.supports.reader) {
         filesender.ui.nodes.buttons.pause.on('click', function() {
+            filesender.ui.cancelAutomaticResume();
+            
             filesender.ui.transfer.pause();
             filesender.ui.nodes.buttons.pause.addClass('not_displayed');
             filesender.ui.nodes.buttons.resume.removeClass('not_displayed');
@@ -1059,7 +1179,18 @@ $(function() {
         }).button();
         
         filesender.ui.nodes.buttons.resume.on('click', function() {
-            filesender.ui.transfer.resume();
+            //
+            // We don't want to have the auto resume coming
+            // and restarting too on top of us
+            //
+            filesender.ui.cancelAutomaticResume();
+
+            if( filesender.ui.automatic_resume_retries ) {
+                filesender.ui.automatic_resume_retries = 0;
+                filesender.ui.transfer.retry(true);
+            } else {
+                filesender.ui.transfer.resume();
+            }
             filesender.ui.nodes.buttons.pause.removeClass('not_displayed');
             filesender.ui.nodes.buttons.resume.addClass('not_displayed');
             return false;
@@ -1286,4 +1417,9 @@ $(function() {
             }
         }, {auth_prompt: false});
     }
+});
+
+$('.instructions').on('click', function(){
+    filesender.ui.nodes.files.input.click();
+    return false;
 });

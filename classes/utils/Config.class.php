@@ -250,6 +250,7 @@ class Config {
 
         // verify classes are happy
         Guest::validateConfig();
+        ClientLog::validateConfig();
         
     }
             

@@ -337,7 +337,7 @@ class Utilities {
      * @return string
      */
     public static function getClientIP(){
-        return isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '';
+        return isset($_SERVER[Config::get('client_ip_key')]) ? $_SERVER[Config::get('client_ip_key')] : '';
     }
     
     /**
@@ -408,6 +408,11 @@ class Utilities {
     {
         $length = strlen($needle);
         return (substr($haystack, 0, $length) === $needle);
+    }
+
+    public static function isTrue( $v ) 
+    {
+         return $v == '1' || $v == 'true';
     }
 
     /**

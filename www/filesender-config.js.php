@@ -85,6 +85,8 @@ window.filesender.config = {
     encryption_enabled: '<?php echo Config::get('encryption_enabled') ?>',
     encryption_min_password_length: '<?php echo Config::get('encryption_min_password_length') ?>',
     encryption_generated_password_length: '<?php echo Config::get('encryption_generated_password_length') ?>',
+    encryption_generated_password_encoding: '<?php echo Config::get('encryption_generated_password_encoding') ?>',
+    
     upload_crypted_chunk_size: '<?php echo Config::get('upload_crypted_chunk_size') ?>',
     crypto_iv_len: '<?php echo Config::get('crypto_iv_len') ?>',
     crypto_crypt_name: '<?php echo Config::get('crypto_crypt_name') ?>',
@@ -132,6 +134,14 @@ window.filesender.config = {
 		file_encryption_enter_password : "<?php echo Lang::tr('file_encryption_enter_password')->out(); ?>",
 		file_encryption_need_password : "<?php echo Lang::tr('file_encryption_need_password')->out(); ?>"
 	},
+    
+    clientlogs: {
+        stash_len: <?php echo ClientLog::stashSize() ?>
+    },
+
+    automatic_resume_number_of_retries: <?php echo Config::get('automatic_resume_number_of_retries') ?>,
+    automatic_resume_delay_to_resume:   <?php echo Config::get('automatic_resume_delay_to_resume') ?>,
+
 
 };
 

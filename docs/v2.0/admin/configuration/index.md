@@ -106,6 +106,8 @@ A note about colours;
 * [max_transfer_encrypted_file_size](#max_transfer_encrypted_file_size)
 * [encryption_min_password_length](#encryption_min_password_length)
 * [encryption_generated_password_length](#encryption_generated_password_length)
+* [automatic_resume_number_of_retries](#automatic_resume_number_of_retries)
+* [automatic_resume_delay_to_resume](#automatic_resume_delay_to_resume)
 
 ## Graphs
 
@@ -171,6 +173,8 @@ A note about colours;
 * [auditlog_lifetime](#auditloglifetime)
 * [report_format](#reportformat)
 * [exception_additional_logging_regex](#exceptionadditionalloggingregex)
+* [clientlogs_stashsize](#clientlogsstashsize)
+* [clientlogs_lifetime](#clientlogslifetime)
 
 
 ## Webservices API
@@ -965,6 +969,14 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __available:__ since version 2.0
 * __comment:__ 
 
+###encryption_generated_password_encoding
+* __description:__ which encoding to use to encode generated passwords. Since the random information obtained during password generation is completely random it is useful to encode that into text characters, for example in the range a,b,c etc. By doing this one single byte of random data (0 to 255 inclusive) will likely be encoded to more than one character of output. The base64 encoding turns x bytes of input into 1.33 times as long output. Because ascii85 uses more possible characters it turns each 4 bytes into 5 bytes. This means that for the same length of encoded string the ascii85 will have more entropy. Note that the ascii85 used is the Z85 from ZeroMQ to avoid the use of the quote character in output.
+* __mandatory:__ no 
+* __type:__ string
+* __default:__ base64
+* __available:__ since version 2.1
+* __comment:__ either base64 or ascii85 
+
 
 ###encryption_generated_password_length
 * __description:__ The exact number of characters used in a generated password for encryption. This must be equal or greater than encryption_min_password_length.
@@ -973,6 +985,24 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __default:__ encryption_min_password_length
 * __available:__ since version 2.0
 * __comment:__ 
+
+###automatic_resume_number_of_retries
+* __description:__ Number of times to automatically resume an upload if a major error has happened. Set this to 0 to disable automatic resume.
+* __mandatory:__ no 
+* __type:__ int
+* __default:__ 10
+* __available:__ since version 2.1
+* __comment:__ 
+
+
+###automatic_resume_delay_to_resume
+* __description:__ Delay in seconds to wait after a major failure before an automatic resume is performed.
+* __mandatory:__ no 
+* __type:__ int
+* __default:__ 360
+* __available:__ since version 2.1
+* __comment:__ 
+
 
 
 ---
@@ -1417,7 +1447,7 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __1.x name:__
 * __comment:__
 
-<span style="background-color:orange">if you define your own log_facilities, you will overwrite the default setting.  Make sure to include all log targets you wish to log to.
+<span style="background-color:orange">if you define your own log_facilities, you will overwrite the default setting.  Make sure to include all log targets you wish to log to.</span>
 
 * __*General format of log target:*__ array(('type' => string, <attribute1 => <value>, <attribute2> => <value>
 * __*Standard parameters for all options:*__
@@ -1427,31 +1457,89 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __*Available targets:*__
 	* __'type' => 'file'__ logs to a file.  You must specify a path.  You can optionally specify log file rotation with 'rotate' => '<value>', where value can be hourly, daily, weekly, monthly, yearly.
 	* __'type' => 'syslog'__ logs to syslog.
-	* __'type' => 'errror_log'__ logs to the default PHP log facility as defined in your webserver's PHP module.</span>
+	* __'type' => 'errror_log'__ logs to the default PHP log facility as defined in your webserver's PHP module.
+
+The general format is an array of arrays. If you only have a single
+place you want to log to you only need to remember to have two array
+words in there or the system should complain.
+
+Being an array of array you can have multiple places take log information
+and all of them process it.
+
+<pre><code>
+Array( array (
+  type => String (errorlog,syslog,file,callable)
+  path => String
+  rotate => String ) )
+</code></pre>
+
+The default type is 'file'. If you define your own log_facilities it
+will override the default configuration so if you want to include the
+default you have to explicitly add it to your new setting.
+
+The only top level mandatory parameter is 'type'. If you optionally set output
+to json then logs will be structured in JSON format.
+
+<pre><code>
+array (
+  'type' => 'file',     // possible = file, syslog, error_log, callable
+  'output' => 'text',   // possible = text, json
+  'path' => '&lt;something>/logs/',
+  'rotate' => hourly,   // possible = hourly, daily, weekly, monthly, yearly
+  'process' => REST,    // possible = MISC, WEB, CLI, GUI, REST, CRON, FEEDBACK, INSTALL, UPGRADE
+</code></pre>
+
+The type setting lets you choose where the log will be sent. The error
+log setting error_log will log using default php facility which puts
+logs in apache error logs. The callable allows you to set a php
+function to call to log the data.
+
+The process setting allows you to ask to only get logs from specific
+parts of FileSender. This way you can separate your logs between
+different components.
+
+Note that REST process logs can be very large so you might like to
+rotate every hour if you are keeping them.
+
+Sometimes a setting does nothing for a type. For example the rotate
+setting will have no meaning if you have a type=callable.
+
+For a type of syslog you can also supply the indent and facility.
+Facility sets the syslog facility used.  Standard PHP syslog function parameters
+
+When using a type of callable (which is an advanced application): "I
+give you something you can call to log". There is one mandatory
+parameter "callback" which must be a php function. That will be called
+every time you want to log something. Level and process can be set as
+well. When it's called it will get the message to log and the current
+process. 1st argument will be message, 2nd argument process type. Can
+name them A and B. This can be useful if you're searching for a particular
+error or for example use remote log facility. Search for particular
+error: write specific function to catch specific errors and drop an
+email when it happens.
 
 <span style="background-color:orange">* __*Examples:*__</span>
-examples for tpye file with different log rotations
-examles for type syslog
 
-<span style="background-color:orange"> OR
-Array( array ( type => String (errorlog,syslog,file,callable) path => String rotate => String ) )
-mandatory: no
-type: array of arrays.  Each one is definition of a target.  Each target has a type and if needed optional parameters.
-default: type file.
-Note: if you define your own, it will _overwrite_ the default setting, not add it to the array.  If you want to keep basic logging and add syslog you must add _both_.
-array (
-'type' => 'file', (permissible values?) (file, syslog, error_log (log using default php facility, puts logs in apache error logs, callable
-'path' => '<something>/logs/'
-'rotate' => hourly (permissible values?) (
-'process' => CLI, GUI or REST (can ask to only get logs from specific parts of FileSender, so you can separate your logs between different componentes.  Maybe hourly logs with REST service (they get huge)
+This will log everything to a file in log that is rotated every hour
+<pre><code>
+$config['log_facilities'] =
+        array(array(
+            'type' => 'file',
+            'path' => FILESENDER_BASE.'/log/',
+            'rotate' => 'hourly'
+        ));
+</code></pre>
 
-mandatory parameter is 'type'.  Permissible values file, syslog, error_log
+This will do no logging:
+<pre><code>
+$config['log_facilities'] =
+        array(array(
+            'type' => 'callable',
+            'callback' => function() {},
+        ));
+</code></pre>
 
-type syslog.  indent, facility.  Facility sets the syslog facility used.  Standard PHP syslog function parameters
 
-callable (advanced): "I give you something you can call to log".  There is one mandatory parameter "callback" which must be a php function.  That will be called every time you want to log something. Level and process can be set as well.  When it's called it will get the message to log and the current process.  1st argument will be message, 2nd argument process type.  Can name them A and B.  CAn be useful if you're searching for a particular error or for example use remote log facility.  Search for particular error: write specific function to catch specific errors and drop an email when it happens.
-
-different options for different types.</span>
 
 ### maintenance
 
@@ -1555,6 +1643,24 @@ different options for different types.</span>
 * __comment:__ Sometimes a site might want to capture down extra logging for some exception types. This configuration is a regular expression to match the name of an exception against to see if you want this extra log info. This allows extra log info to be turned on and off fairly easily without having to edit code and possibly break something. Note that only some exceptions can give extra info.
 
 
+### clientlogs_stashsize
+
+* __description:__ Client log backfeed stash size
+* __mandatory:__ no
+* __type:__ positive integer
+* __default:__ 10
+* __available:__ since version 2.0
+* __comment:__ Number of last client console entries that are to be back-fed to the server in case there is a client error.
+
+
+### clientlogs_lifetime
+
+* __description:__ Client log backfeed lifetime
+* __mandatory:__ no
+* __type:__ positive integer
+* __default:__ 10
+* __available:__ since version 2.0
+* __comment:__ Number of days after which collected client logs are automatically deleted.
 
 
 ---

@@ -1,6 +1,7 @@
 <?php
 
-require_once 'vendor/autoload.php';
+include_once('vendor/autoload.php');
+include_once('classes/utils/TestSuiteSupport.class.php');
 
 class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
 {
@@ -10,13 +11,13 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
 
     public static $browsers = array(
         // run FF15 on Windows 8 on Sauce
-//        array(
-//            'browserName' => 'firefox',
-//            'desiredCapabilities' => array(
-//                'version' => '15',
-//                'platform' => 'Windows 2012',
-//            )
-//        ),
+        //        array(
+        //            'browserName' => 'firefox',
+        //            'desiredCapabilities' => array(
+        //                'version' => '15',
+        //                'platform' => 'Windows 2012',
+        //            )
+        //        ),
         // run Chrome on Linux on Sauce
         array(
             'browserName' => 'chrome',
@@ -61,9 +62,30 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
         $this->setSeleniumServerRequestsTimeout(120);
     }
 
+    public static function browsers() {
+        require_once('includes/init.php');
+
+        if( Config::get('testsuite_run_locally') == '1' || Config::get('testsuite_run_locally') == 'true' ) {
+        echo "running test suite locally\n";
+            return array(
+                // run Chrome on Linux locally
+                array(          
+                    'browserName            ' => 'chrome',
+                    'local' => true,        
+                    'desiredCapabilities' =>         array(
+                        'platform' => 'Linux'
+                    )
+                )
+            );
+        }
+
+        return parent::browsers();
+    }
+    
     public function __construct($name = NULL, array $data = array(), $dataName = '')
     {
         require_once('includes/init.php');
+        
 
         if(getenv('SAUCE_USERNAME') === false)
         {
@@ -181,6 +203,7 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
     }
 
 
+
     protected function setInvalidExtensions($invalid_extensions = "'exe,bat'")
     {
         $this->changeConfigValue('ban_extension', $invalid_extensions);
@@ -188,38 +211,13 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
         sleep(2);
     }
 
-    private function changeConfigValue($type, $value)
-    {
-        //read the entire string
-        $str=file_get_contents('config/config.php');
-
-        //replace something in the file string
-        $str=preg_replace("/\\\$config\['".$type."'\]\s*=\s*(.*);/", "\$config['".$type."'] = $value;",$str, -1, $count);
-
-        if($count == 0)
-        {
-            throw new \Exception($type .' config could not be set to value '. $value ."Regex: /\\\$config\['".$type."'\] = (.*);/\n");
-        }
-
-        //write the entire string
-        file_put_contents('config/config.php', $str);
+    public function changeConfigValue($type, $value) {
+        TestSuiteSupport::changeConfigValue($type, $value);
     }
 
     private function deleteDirectory($dir)
     {
-        if(file_exists($dir)) {
-            $it = new RecursiveDirectoryIterator($dir, RecursiveDirectoryIterator::SKIP_DOTS);
-            $files = new RecursiveIteratorIterator($it,
-                RecursiveIteratorIterator::CHILD_FIRST);
-            foreach ($files as $file) {
-                if ($file->isDir()) {
-                    rmdir($file->getRealPath());
-                } else {
-                    unlink($file->getRealPath());
-                }
-            }
-            rmdir($dir);
-        }
+        TestSuiteSupport::deleteDirectory($dir);
     }
 
     protected function checkDownloadUrl($url, $test_files_data)

@@ -635,6 +635,69 @@ table.list .date {
     text-align: center;
 }
 
+#upload_form .files_uploadlogtop {
+    border: 1px dashed #666;
+    border-radius: 0.5em;
+    -moz-border-radius: 0.5em;
+    padding: 0.5em 0;
+    background-color: #FFF;
+}
+
+#upload_form .uploadlogheader {
+    font-weight: bold;
+    background-color: #FFF;
+    text-align: center;
+    width: 100%;
+}
+
+#upload_form .files_uploadlogtop .uploadlogbox {
+    font-size: 1.2em;
+    color: #666;
+    font-weight: bold;
+    padding: 0.3em;
+    padding-bottom: 0.4em;
+    height: 5em;
+    text-align: center;
+    max-height: 300em;
+    overflow-y: scroll;   
+}
+
+
+.uploadlog .tpl {
+    display: none;
+}
+
+
+#upload_form .uploading_actions {
+    display: table;
+    width: 100%;
+    margin: 0.25em 1em 0 0;
+}
+
+#upload_form .uploading_actions div {
+    display: table-cell;
+    width: 33%;
+}
+
+#upload_form .uploading_actions .msg {
+    display: table-cell;
+    width: 66%;
+}
+
+.uploading_actions .auto_resume_timer_top {
+    background-color: #fcc;
+}
+
+.uploading_actions .auto_resume_timer_top .auto_resume_timer {
+    font-size: 1.0em;
+    font-weight: bold;
+}
+
+#upload_form .uploading_actions .stats {
+    display: table-cell;
+    width: 33%;
+}
+
 #upload_form .files_actions {
     display: table;
     width: 100%;
@@ -654,17 +717,33 @@ table.list .date {
     text-align: center;
 }
 
+#upload_form .files_actions .stats {
+    width: 33%;
+}
+
 #upload_form .files_actions .stats div {
     text-align: right;
-    font-size: 0.8em;
+    font-size: 1em;
     vertical-align: middle;
     width: 100%;
 }
 
 #upload_form .files_actions .stats .number_of_files,
-#upload_form .files_actions .stats .size,
-#upload_form .files_actions .stats .uploaded,
-#upload_form .files_actions .stats .average_speed {
+#upload_form .files_actions .stats .size
+{
+    display: none;
+}
+
+#upload_form .uploading_actions .stats div {
+    text-align: right;
+    font-size: 1em;
+    vertical-align: middle;
+    width: 100%;
+}
+
+#upload_form .uploading_actions .stats .uploaded,
+#upload_form .uploading_actions .stats .average_speed
+{
     display: none;
 }
 
@@ -1237,7 +1316,44 @@ table.guests .guest .to .errors .details {
 }
 
 
-/* Popups */
+/** Admin users */
+
+.admin_page .users_section .searching,
+.admin_page .users_section .no_results,
+.admin_page .users_section .client-logs,
+.admin_page .users_section .tpl {
+    display: none;
+}
+
+.admin_page .users_section .searching .searching,
+.admin_page .users_section .no_results .no_results {
+    display: table-row;
+    text-align: center;
+}
+
+.admin_page .users_section table {
+    margin: 0.5rem 0;
+    width: 100%;
+}
+
+.admin_page .users_section th {
+    border: 1px solid silver;
+    text-align: center;
+    font-weight: bold;
+}
+
+.admin_page .users_section td {
+    border: 1px solid silver;
+}
+
+.admin_page .users_section .results th+th,
+.admin_page .users_section .results td+td,
+.admin_page .users_section .client-logs th:first-child,
+.admin_page .users_section .client-logs td:first-child {
+    width: 8rem;
+}
+
+    /* Popups */
 #dialog-help h4 {
     font-size: 1.2em;
     margin: 0.5em 1em;

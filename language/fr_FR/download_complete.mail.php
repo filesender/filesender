@@ -9,7 +9,7 @@ Votre téléchargement {if:files>1}des fichiers{else}du fichier{endif} suivant{i
 {if:files>1}{each:files as file}
   - {file.path} ({size:file.size})
 {endeach}{else}
-{files.first().name} ({size:files.first().size})
+{files.first().path} ({size:files.first().size})
 {endif}
 
 Cordialement,
@@ -33,7 +33,7 @@ Cordialement,
         {endeach}
     </ul>
     {else}
-    {files.first().name} ({size:files.first().size})
+    {files.first().path} ({size:files.first().size})
     {endif}
 </p>
 

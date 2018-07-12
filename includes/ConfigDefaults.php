@@ -50,6 +50,7 @@ $default = array(
     'upload_force_transfer_resume_forget_if_encrypted' => false, //
     'upload_considered_too_slow_if_no_progress_for_seconds' => 0, // seconds
     'force_ssl' => true,
+    'client_ip_key' => 'REMOTE_ADDR',
     
     'auth_sp_type' => 'saml',  // Authentification type
     'auth_sp_set_idp_as_user_organization' => false,
@@ -94,6 +95,7 @@ $default = array(
     'encryption_enabled' => true,
     'encryption_min_password_length' => 0,
     'encryption_generated_password_length' => 0,
+    'encryption_generated_password_encoding' => 'base64',
     'upload_crypted_chunk_size' => 5 * 1024 * 1024 + 16 + 16, // the 2 times 16 are the padding added by the crypto algorithm, and the IV needed
     'crypto_iv_len' => 16, // i dont think this will ever change, but lets just leave it as a config
     'crypto_crypt_name' => "AES-CBC", // The encryption algorithm used
@@ -183,6 +185,15 @@ $default = array(
     'cloud_s3_key'    => 'accessKey1',
     'cloud_s3_secret' => 'verySecretKey1',
 
+    'disable_directory_upload' => true,
+
+    'clientlogs_stashsize' => 10,
+    'clientlogs_lifetime' => 10,
+
+    'automatic_resume_number_of_retries' =>  10,
+    'automatic_resume_delay_to_resume'   => 360,
+
+    'testsuite_run_locally' => false,
 
     'transfer_options' => array(
         'email_me_copies' => array(

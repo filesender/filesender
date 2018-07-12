@@ -419,6 +419,10 @@ class CollectionTree extends Collection
      * @throws TreeFileCollectionException
      */
     protected function loadInfo() {
+        if(is_null($this->filesCache)) {
+            $this->filesCache = FileCollection::fromCollection($this);
+        }
+    
         $this->fileCache = File::fromId(key($this->filesCache));
         $this->uid = $this->fileCache->uid;
     }
@@ -446,7 +450,10 @@ class CollectionTree extends Collection
             'uid', 'file'
         ))) {
             if (is_null($this->uid)) $this->loadInfo();
-            return $this->$property;
+            if ($property === 'file') 
+               return $this->fileCache;
+            else
+               return $this->$property;
         }
         return parent::__get($property);
     }
