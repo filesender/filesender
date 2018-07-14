@@ -66,6 +66,12 @@ filesender.dragdrop = {
                 filesender.dragdrop.recurseTree(tree);
             }
         }
+
+        // calling this directly doesn't seem to sort on Firefox/Linux 2018
+        window.setTimeout(
+            function() { filesender.ui.files.sortErrorLinesToTop(); },
+            1000 );
+        
         return true;
     },
 };
