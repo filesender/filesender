@@ -155,7 +155,22 @@ class Config {
             
             self::merge(self::$parameters, $config);
         }
+
+        // ensure mandatory config settings file exists
+        $mandatory_config_file = FILESENDER_BASE.'/includes/ConfigMandatorySettings.php';
+        if (!file_exists($mandatory_config_file)) {
+            throw new ConfigBadParameterException('Mandatory config settings file is missing. '
+                                                + 'Please recheck your filesender php code is all installed. '
+                                                + 'Looking for ' . $mandatory_config_file );
+        }
         
+        // load mandatory config settings
+        $config = array();
+        include_once($mandatory_config_file);
+        self::merge(self::$parameters, $config);
+        
+
+
         // Load config overrides if any
         $overrides_cfg = self::get('config_overrides');
         if ($overrides_cfg) {
