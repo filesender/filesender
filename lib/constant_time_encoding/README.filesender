@@ -1,0 +1,3 @@
+Autoloader generated using [phpab](https://github.com/theseer/Autoload).
+
+$ phpab -o src/autoload.php src
