@@ -41,7 +41,7 @@ require_once(FILESENDER_BASE.'/lib/constant_time_encoding/src/autoload.php');
  * Utility functions holder
  */
 class Utilities {
-    const RANDOM_STR_LENGTH_BYTES = 16;    /* 128 bits */
+    const RANDOM_STR_LENGTH_BYTES = 32;    /* 256 bits */
 
     /**
      * CSRF token
