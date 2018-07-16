@@ -35,11 +35,14 @@ if (!defined('FILESENDER_BASE'))
     die('Missing environment');
 
 require_once(FILESENDER_BASE.'/lib/random_compat/lib/random.php');
+require_once(FILESENDER_BASE.'/lib/constant_time_encoding/src/autoload.php');
 
 /**
  * Utility functions holder
  */
 class Utilities {
+    const RANDOM_STR_LENGTH_BYTES = 16;    /* 128 bits */
+
     /**
      * CSRF token
      */
@@ -133,42 +136,12 @@ class Utilities {
     }
 
     /*
-     * Generate (pseudo) (super-)random hex string
+     * Generate a random constant time hex encoded string.
      * 
      * @return string
      */
-    public static function generateRandomHexString($nearly = false) {
-        // Random length
-        $len = random_int(16, 32);
-
-        // Random data
-        $rnd = '';
-        for($i=0; $i<$len; $i++) $rnd .= sprintf('%04d', random_int(0, 9999));
-        
-        // No need for an super-random, just hash
-        if($nearly) return hash('sha1', $rnd);
-        
-        // Need for an super-random
-        
-        // Get secret, generate it if not found
-        $sfile = FILESENDER_BASE.'/tmp/instance.secret';
-        if(file_exists($sfile)) {
-            $ctn = array_filter(array_map('trim', explode("\n", file_get_contents($sfile))), function($line) {
-                return substr($line, 0, 1) != '#';
-            });
-            
-            $secret = array_shift($ctn);
-        } else {
-            $secret = self::generateRandomHexString(true);
-            
-            if($fh = fopen($sfile, 'w')) {
-                fwrite($fh, '# Automatically generated'."\n");
-                fwrite($fh, $secret);
-                fclose($fh);
-            } else throw new CoreCannotWriteFileException($sfile);
-        }
-        // return hmac signature of random data with secret => super-random !
-        return hash_hmac('sha1', $rnd, $secret);
+    public static function generateRandomHexString() {
+        return ParagonIE\ConstantTime::Hex(random_bytes(self::RANDOM_STR_LENGTH_BYTES));
     }
     
     /**
@@ -186,7 +159,7 @@ class Utilities {
             
             $uid = array_shift($ctn);
         } else {
-            $uid = self::generateRandomHexString(true);
+            $uid = self::generateRandomHexString();
             
             if($fh = fopen($sfile, 'w')) {
                 fwrite($fh, '# Automatically generated'."\n");
