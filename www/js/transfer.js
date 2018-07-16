@@ -165,6 +165,8 @@ window.filesender.transfer = function() {
     this.time = 0;
     this.encryption = 0;
     this.encryption_password = '';
+    this.encryption_key_version = 0;
+    this.encryption_salt = '';
     this.disable_terasender = 0;
     this.pause_time = 0;
     this.pause_length = 0;
@@ -227,6 +229,14 @@ window.filesender.transfer = function() {
             return fileSplit.pop();
         }
         return '';
+    };
+
+    this.getEncryptionMetadata = function() {
+	return {
+            password:    this.encryption_password,
+            key_version: this.encryption_key_version,
+            salt:        this.encryption_salt
+        };
     };
 
     /**
@@ -1086,6 +1096,7 @@ window.filesender.transfer = function() {
         var transfer = this;
         filesender.client.postTransfer(this, function(path, data) {
             transfer.id = data.id;
+            transfer.encryption_salt = data.salt;
             
             for (var i = 0; i < transfer.files.length; i++) {
                 for (var j = 0; j < data.files.length; j++) {
@@ -1303,7 +1314,7 @@ window.filesender.transfer = function() {
                 transfer.reportError(error);
             },
             transfer.encryption,
-            transfer.encryption_password
+            transfer.getEncryptionMetadata()
         );
     };
 
