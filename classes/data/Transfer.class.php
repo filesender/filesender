@@ -708,7 +708,7 @@ class Transfer extends DBObject {
             if( strlen($this->salt)) {
                 return $this->salt;
             }
-            $this->salt = substr(Utilities::generateRandomHexString(),0,32);
+            $this->salt = Crypto::generateSaltString(32);
             $this->save();
             return $this->salt;
         }
