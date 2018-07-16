@@ -141,7 +141,7 @@ class Utilities {
      * @return string
      */
     public static function generateRandomHexString() {
-        return ParagonIE\ConstantTime::Hex(random_bytes(self::RANDOM_STR_LENGTH_BYTES));
+        return ParagonIE\ConstantTime\Hex::encode(random_bytes(self::RANDOM_STR_LENGTH_BYTES));
     }
     
     /**
