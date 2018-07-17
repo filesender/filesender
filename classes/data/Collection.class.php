@@ -449,8 +449,13 @@ class CollectionTree extends Collection
         if(in_array($property, array(
             'uid', 'file'
         ))) {
-            if (is_null($this->uid)) $this->loadInfo();
-            return $this->$property;
+            if (is_null($this->uid))
+               $this->loadInfo();
+               
+            if ($property == 'file') 
+               return $this->fileCache;
+            else
+               return $this->$property;
         }
         return parent::__get($property);
     }
