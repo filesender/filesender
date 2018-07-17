@@ -1,10 +1,19 @@
-Betreff: Datei(en) gelöscht
+<?php 
+// WARNING, this is a read only file created by import scripts
+// WARNING
+// WARNING,  Changes made to this file will be clobbered
+// WARNING
+// WARNING,  Please make changes on poeditor instead of here
+// 
+// 
+?>
+subject: Datei(en) gelöscht
 
 {alternative:plain}
 
 Sehr geehrte Damen und Herren,
 
-ihre Übertragung n°{transfer.id} wurde von {cfg:site_name} gelöscht und steht nicht mehr zum Download bereit ({transfer.link}).
+ihrr Dateitransfer Nr. {transfer.id} wurde von {cfg:site_name} gelöscht und steht nicht mehr zum Download bereit ({transfer.link}).
 
 Mit freundlichen Grüßen,
 {cfg:site_name}
@@ -16,7 +25,7 @@ Mit freundlichen Grüßen,
 </p>
 
 <p>
-    ihre <a href="{transfer.link}">Übertragung n°{transfer.id}</a> wurde von <a href="{cfg:site_url}">{cfg:site_name}</a> gelöscht und steht nicht mehr zum Download bereit.
+    ihr <a href="{transfer.link}">Dateitransfer Nr. {transfer.id}</a> wurde von <a href="{cfg:site_url}">{cfg:site_name}</a> gelöscht und steht nicht mehr zum Download bereit.
 </p>
 
 <p>

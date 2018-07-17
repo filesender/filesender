@@ -1,11 +1,20 @@
-Betreff: (Erinnerung) {if:transfer.files>1}Dateien stehen{else}Datei steht{endif} zum Download bereit
-Betreff: (Erinnerung) {transfer.subject}
+<?php 
+// WARNING, this is a read only file created by import scripts
+// WARNING
+// WARNING,  Changes made to this file will be clobbered
+// WARNING
+// WARNING,  Please make changes on poeditor instead of here
+// 
+// 
+?>
+subject: (Erinnerung) {if:transfer.files>1}Dateien stehen{else}Datei steht{endif} zum Download bereit
+subject: (Erinnerung) {transfer.subject}
 
 {alternative:plain}
 
 Sehr geehrte Damen und Herren,
 
-dies ist eine Erinnerung, dass die {if:transfer.files>1}folgenden Dateien{else}folgende Datei{endif} {cfg:site_name} über {transfer.user_email} hochgeladen {if:transfer.files>1}wurden{else}wurde{endif} und Ihnen die Erlaubnis zum herunterladen der Inhalte dieser {if:transfer.files>1}Dateien{else}Datei{endif} erteilt wurde :
+dies ist eine Erinnerung, dass die {if:transfer.files>1}folgenden Dateien{else}folgende Datei{endif} von {transfer.user_email} auf {cfg:site_name} hochgeladen {if:transfer.files>1}wurden{else}wurde{endif} und Ihnen die Erlaubnis zum herunterladen der Inhalte dieser {if:transfer.files>1}Dateien{else}Datei{endif} erteilt wurde:
 
 {if:transfer.files>1}{each:transfer.files as file}
   - {file.path} ({size:file.size})
@@ -33,7 +42,7 @@ Mit freundlichen Grüßen,
 </p>
 
 <p>
-    dies ist eine Erinnerung, dass die {if:transfer.files>1}folgenden Dateien{else}folgende Datei{endif} <a href="{cfg:site_url}">{cfg:site_name}</a> über <a href="mailto:{transfer.user_email}">{transfer.user_email}</a> hochgeladen {if:transfer.files>1}wurden{else}wurde{endif} und Ihnen die Erlaubnis zum herunterladen der Inhalte dieser {if:transfer.files>1}Dateien{else}Datei{endif} erteilt wurde.
+    dies ist eine Erinnerung, dass die {if:transfer.files>1}folgenden Dateien{else}folgende Datei{endif} von <a href="mailto:{transfer.user_email}">{transfer.user_email}</a> auf <a href="{cfg:site_url}">{cfg:site_name}</a> hochgeladen {if:transfer.files>1}wurden{else}wurde{endif} und Ihnen die Erlaubnis zum herunterladen der Inhalte dieser {if:transfer.files>1}Dateien{else}Datei{endif} erteilt wurde.
 </p>
 
 <table rules="rows">
@@ -64,7 +73,7 @@ Mit freundlichen Grüßen,
         </tr>
         {endif}
         <tr>
-            <td>Expiry date</td>
+            <td>Gültigkeitsdatums</td>
             <td>{date:transfer.expires}</td>
         </tr>
         <tr>
@@ -79,7 +88,6 @@ Mit freundlichen Grüßen,
     Persönliche Nachricht von {transfer.user_email}:
 </p>
 <p class="message">
-    <span class="subject">{transfer.subject}</span>
     {transfer.message}
 </p>
 {endif}
