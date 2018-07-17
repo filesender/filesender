@@ -100,6 +100,8 @@
             data-recipients-enabled="<?php echo $transfer->getOption(TransferOptions::GET_A_LINK) ? '' : '1' ?>"
             data-errors="<?php echo count($transfer->recipients_with_error) ? '1' : '' ?>"
             data-expiry-extension="<?php echo $transfer->expiry_date_extension ?>"
+            data-key-version="<?php echo $transfer->key_version; ?>"
+            data-key-salt="<?php echo $transfer->salt; ?>"
         >
             <td class="expand">
                 <span class="clickable fa fa-plus-circle fa-lg" title="{tr:show_details}"></span>
@@ -273,7 +275,10 @@
                     <h2>{tr:files}</h2>
                     
                     <?php foreach($transfer->files as $file) { ?>
-                        <div class="file" data-id="<?php echo $file->id ?>">
+                        <div class="file" data-id="<?php echo $file->id ?>"
+                             data-key-version="<?php echo $transfer->key_version; ?>"
+                             data-key-salt="<?php echo $transfer->salt; ?>"
+                        >
                             <?php echo Template::sanitizeOutput($file->path) ?> (<?php echo Utilities::formatBytes($file->size) ?>) : <?php echo count($file->downloads) ?> {tr:downloads}
                             
                             <?php if(!$transfer->is_expired) { ?>
@@ -282,7 +287,10 @@
                                 <span class="fa fa-lg fa-download transfer-file transfer-download" title="{tr:download}" data-id="<?php echo $file->id ?>" 
                                         data-encrypted="<?php echo isset($transfer->options['encryption'])?$transfer->options['encryption']:'false'; ?>" 
                                         data-mime="<?php echo Template::sanitizeOutput($file->mime_type); ?>" 
-                                        data-name="<?php echo Template::sanitizeOutput($file->path); ?>"></span>
+                                        data-name="<?php echo Template::sanitizeOutput($file->path); ?>"
+                                        data-key-version="<?php echo $transfer->key_version; ?>"
+                                        data-key-salt="<?php echo $transfer->salt; ?>"
+                                ></span>
                                         
                                 <?php } else {?>
                             <a class="fa fa-lg fa-download" title="{tr:download}" href="download.php?files_ids=<?php echo $file->id ?>"></a>

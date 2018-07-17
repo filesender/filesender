@@ -108,8 +108,8 @@ window.filesender.terasender = {
                 start: file.uploaded,
                 end: Math.min(file.uploaded + filesender.config.upload_chunk_size, file.size) //MD last chunk was too big
             },
-	    encryption: this.transfer.encryption, //MD
-	    encryption_password: this.transfer.encryption_password, //MD
+	    encryption: this.transfer.encryption,
+	    encryption_details: this.transfer.getEncryptionMetadata(),
             file: {
                 id: file.id,
                 name: file.name,
