@@ -13,16 +13,68 @@ if (!('ui' in window.filesender)) {
 window.filesender.crypto_app = function () {
     return {
         crypto_is_supported: true,
-        crypto_chunk_size: window.filesender.config.upload_chunk_size,
-        crypto_iv_len: window.filesender.config.crypto_iv_len,
-        crypto_crypt_name: window.filesender.config.crypto_crypt_name,
-        crypto_hash_name: window.filesender.config.crypto_hash_name,
+        crypto_chunk_size:   window.filesender.config.upload_chunk_size,
+        crypto_iv_len:       window.filesender.config.crypto_iv_len,
+        crypto_crypt_name:   window.filesender.config.crypto_crypt_name,
+        crypto_hash_name:    window.filesender.config.crypto_hash_name,
+        crypto_key_version:  1,
+        // constant values for crypto_key_version
+        // newest version first, some metadata about the process
+        // taken. The year (and maybe month) should give indication
+        // that the later years are also the most desired version.
+        crypto_key_version_const_2018_importKey_deriveKey: 1,
+        crypto_key_version_const_2017_digest_importKey:    0,
+        
         generateVector: function () {
             return crypto.getRandomValues(new Uint8Array(16));
         },
-        generateKey: function (password, callback) {
+        generateKey: function (encryption_details, callback) {
             var iv = this.generateVector();
             var $this = this;
+            var password    = encryption_details.password;
+            var key_version = encryption_details.key_version;
+            var salt        = encryption_details.salt;
+
+            if( key_version == $this.crypto_key_version_const_2018_importKey_deriveKey ) {
+
+                var efunc = function (e) {
+                    // error making a hash
+                    filesender.ui.log(e);
+                };
+
+                var saltBuffer = window.filesender.crypto_common().convertStringToArrayBufferView(salt);
+                
+                crypto.subtle.importKey(
+                    'raw', 
+                    window.filesender.crypto_common().convertStringToArrayBufferView(password), 
+                    {name: 'PBKDF2'}, 
+                    false, 
+                    ['deriveBits', 'deriveKey']
+                ).then(function(dkey) {
+
+                    crypto.subtle.deriveKey(
+                        { "name": 'PBKDF2',
+                          "hash": 'SHA-256',
+                          "iterations": 150000,
+                          "salt":       saltBuffer,
+                        },
+                        dkey,
+                        { "name":   'AES-CBC',
+                          "length": 256,
+                          iv:       iv
+                        },
+                        false,                   // key is not extractable
+                        [ "encrypt", "decrypt" ] // features desired
+                    ).then(function (key) {
+                    
+                        callback(key, iv);
+                    }, efunc );
+                }, efunc );
+            }
+
+            if( key_version == $this.crypto_key_version_const_2017_digest_importKey ) {
+                // yes, the formatting is jumbled, this is on purpose to show it is not changed from previous
+                // it will be reformatted in a subsequent PR
             crypto.subtle.digest({name: this.crypto_hash_name}, window.filesender.crypto_common().convertStringToArrayBufferView(password)).then(function (key) {
                 crypto.subtle.importKey("raw", key, {name: $this.crypto_crypt_name, iv: iv}, false, ["encrypt", "decrypt"]).then(function (key) {
                     callback(key, iv);
@@ -34,11 +86,12 @@ window.filesender.crypto_app = function () {
                 // error making a hash
                 filesender.ui.log(e);
             };
+            }
         },
-        encryptBlob: function (value, password, callback) {
+        encryptBlob: function (value, encryption_details, callback) {
             var $this = this;
             
-            this.generateKey(password, function (key, iv) {
+            this.generateKey(encryption_details, function (key, iv) {
                 crypto.subtle.encrypt({name: $this.crypto_crypt_name, iv: iv}, key, value).then(
                         function (result) {
 
@@ -63,13 +116,13 @@ window.filesender.crypto_app = function () {
 
             });
         },
-        decryptBlob: function (value, password, callbackDone, callbackProgress, callbackError) {
+        decryptBlob: function (value, encryption_details, callbackDone, callbackProgress, callbackError) {
             var $this = this;
-            
+
             var encryptedData = value; // array buffers array
             var blobArray = [];
 
-            this.generateKey(password, function (key) {
+            this.generateKey(encryption_details, function (key) {
 		var wrongPassword = false;
 		var decryptLoop = function(i) {
 		    callbackProgress(i,encryptedData.length); //once per chunk
@@ -98,7 +151,7 @@ window.filesender.crypto_app = function () {
 		decryptLoop(0);
             });
         },
-        decryptDownload: function (link, mime, name, progress) {
+        decryptDownload: function (link, mime, name, key_version, salt, progress) {
             var $this = this;
             
             var prompt = filesender.ui.prompt(window.filesender.config.language.file_encryption_enter_password, function (password) {
@@ -127,7 +180,7 @@ window.filesender.crypto_app = function () {
                         setTimeout(function(){
                             $this.decryptBlob(
                                 window.filesender.crypto_blob_reader().sliceForDownloadBuffers(arrayBuffer),
-                                pass,
+                                { password: pass, key_version: key_version, salt: salt },
                                 function (decrypted) {
                                     var blob = new Blob(decrypted, {type: mime});
                                     saveAs(blob, name);

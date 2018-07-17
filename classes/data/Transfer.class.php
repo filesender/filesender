@@ -100,7 +100,19 @@ class Transfer extends DBObject {
         'options' => array(
             'type' => 'text',
             'transform' => 'json'
-        )
+        ),
+        'key_version' => array(
+            'type'    => 'uint',
+            'size'    => 'small',
+            'null'    => false,
+            'default' => 0
+        ),
+        'salt' => array(
+            'type'    => 'string',
+            'size'    => '32',
+            'null'    => true,
+        ),
+        
     );
 
     protected static $secondaryIndexMap = array(
@@ -138,6 +150,8 @@ class Transfer extends DBObject {
     protected $expires = 0;
     protected $expiry_extensions = 0;
     protected $options = array();
+    protected $key_version = 0;
+    protected $salt = '';
     
     /**
      * Related objects cache
@@ -600,7 +614,7 @@ class Transfer extends DBObject {
         if(in_array($property, array(
             'id', 'status', 'user_id', 'user_email', 'guest_id',
             'subject', 'message', 'created', 'made_available',
-            'expires', 'expiry_extensions', 'options', 'lang'
+            'expires', 'expiry_extensions', 'options', 'lang', 'key_version'
         ))) return $this->$property;
         
         if($property == 'user' || $property == 'owner') {
@@ -690,6 +704,14 @@ class Transfer extends DBObject {
             $recipients = array_values($this->recipients);
             return $recipients[0]->download_link;
         }
+        if($property == 'salt') {
+            if( strlen($this->salt)) {
+                return $this->salt;
+            }
+            $this->salt = Crypto::generateSaltString(32);
+            $this->save();
+            return $this->salt;
+        }
         throw new PropertyAccessException($this, $property);
     }
     
@@ -743,7 +765,10 @@ class Transfer extends DBObject {
             
         }else if($property == 'options') {
             $this->options = self::validateOptions($value);
-            
+
+        }else if($property == 'key_version') {
+            $this->key_version = $value;
+
         }else throw new PropertyAccessException($this, $property);
     }
 

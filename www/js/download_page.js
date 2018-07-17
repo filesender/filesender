@@ -86,8 +86,10 @@ $(function() {
                 
                 var filename = $($this).find("[data-id='" + ids[0] + "']").attr('data-name');
                 var mime = $($this).find("[data-id='" + ids[0] + "']").attr('data-mime');
+                var key_version = $($this).find("[data-id='" + ids[0] + "']").attr('data-key-version');
+                var salt = $($this).find("[data-id='" + ids[0] + "']").attr('data-key-salt');
 
-                window.filesender.crypto_app().decryptDownload(filesender.config.base_path + 'download.php?token=' + token + '&files_ids=' + ids.join(','), mime, filename, progress);
+                window.filesender.crypto_app().decryptDownload(filesender.config.base_path + 'download.php?token=' + token + '&files_ids=' + ids.join(','), mime, filename, key_version, salt, progress);
             }else{
                 filesender.ui.redirect(filesender.config.base_path + 'download.php?token=' + token + '&files_ids=' + ids.join(','));
             }

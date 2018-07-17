@@ -37,7 +37,7 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
 <div class="box">
     <form id="upload_form" class="<?php echo $formClasses; ?>" enctype="multipart/form-data" accept-charset="utf-8" method="post" autocomplete="off" data-need-recipients="<?php echo $need_recipients ? '1' : '' ?>">
         <div class="box">
-            <div class="files"></div>
+            <div class="files" id="fileslist"></div>
             
             <div class="file_selector">
                 <label for="files" class="mandatory">{tr:select_file} :</label>

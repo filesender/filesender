@@ -279,6 +279,7 @@ window.filesender.client = {
         return this.post(transfer.authenticatedEndpoint('/transfer'), {
             from: transfer.from,
             encryption: transfer.encryption,
+            encryption_key_version: transfer.encryption_key_version,
             files: files,
             recipients: transfer.recipients,
             subject: transfer.subject,
@@ -336,7 +337,7 @@ window.filesender.client = {
      * @param callable done
      * @param callable error
      */
-    putChunk: function(file, blob, offset, progress, done, error, encrypted, password) {
+    putChunk: function(file, blob, offset, progress, done, error, encrypted, encryption_details ) {
         var opts = {
             contentType: 'application/octet-stream',
             rawdata: true,
@@ -367,9 +368,16 @@ window.filesender.client = {
             blobReader.blobSlice = blob;
 
             blobReader.readArrayBuffer(function(arrayBuffer){
-                window.filesender.crypto_app().encryptBlob(arrayBuffer, password, function (encrypted_blob) {
-                    var result = $this.put(file.transfer.authenticatedEndpoint('/file/' + file.id + '/chunk/' + offset, file), encrypted_blob, done, opts);
-                });
+                window.filesender.crypto_app().encryptBlob(
+                    arrayBuffer,
+                    encryption_details,
+                    function(encrypted_blob) {
+                        var result = $this.put(
+                            file.transfer.authenticatedEndpoint(
+                                '/file/' + file.id + '/chunk/' + offset,
+                                file), encrypted_blob, done, opts);
+                    }
+                );
             });
         }else{
             var result = $this.put(file.transfer.authenticatedEndpoint('/file/' + file.id + '/chunk/' + offset, file), blob, done, opts);
