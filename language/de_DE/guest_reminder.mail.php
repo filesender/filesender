@@ -1,18 +1,28 @@
-Betreff: (Erinnerung) Gast Einladung erhalten
-Betreff: (Erinnerung) {guest.subject}
+<?php 
+// WARNING, this is a read only file created by import scripts
+// WARNING
+// WARNING,  Changes made to this file will be clobbered
+// WARNING
+// WARNING,  Please make changes on poeditor instead of here
+// 
+// 
+?>
+subject: (Erinnerung) Gast Einladung erhalten
+subject: (Erinnerung) {guest.subject}
 
 {alternative:plain}
 
 Sehr geehrte Damen und Herren,
 
-dies ist eine Erinnerung, für eine Einladung die den Zugang auf {cfg:site_name} gewährt. Sie können die Einladung verwenden um einen Satz von Dateien hochzuladen und anschließend einer Gruppe von Personen zum Download zur Verfügung stellen.
+dies ist eine Erinnerung, für eine Einladung die den Zugang auf {cfg:site_name} gewährt. Sie können die Einladung verwenden um einen Satz von Dateien hochzuladen und anschließend einer Gruppe von Personen zum Download zur Verfügung zu stellen.
 
 Aussteller/in: {guest.user_email}
 Link Einladung: {guest.upload_link}
 
 Die Einladung ist bis zum {date:guest.expires} gültig, nach Ablauf des Datums wird die Einladung automatisch gelöscht.
 
-{if:guest.message}Persönliche Nachricht von {guest.user_email}: {guest.message}{endif}
+{if:guest.message}Persönliche Nachricht von {guest.user_email}:
+{guest.message}{endif}
 
 Mit freundlichen Grüßen,
 {cfg:site_name}

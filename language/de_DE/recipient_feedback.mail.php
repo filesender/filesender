@@ -1,4 +1,13 @@
-Betreff: Feedback von Ihrem {if:target_type=="recipient"}Empfänger{endif}{if:target_type=="guest"}Gast{endif} {target.email}
+<?php 
+// WARNING, this is a read only file created by import scripts
+// WARNING
+// WARNING,  Changes made to this file will be clobbered
+// WARNING
+// WARNING,  Please make changes on poeditor instead of here
+// 
+// 
+?>
+subject: Feedback von Ihrem {if:target_type=="recipient"}Empfänger{endif}{if:target_type=="guest"}Gast{endif} {target.email}
 
 {alternative:plain}
 

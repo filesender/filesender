@@ -1,10 +1,19 @@
-Betreff: Gast begann das Hochladen von Dateien
+<?php 
+// WARNING, this is a read only file created by import scripts
+// WARNING
+// WARNING,  Changes made to this file will be clobbered
+// WARNING
+// WARNING,  Please make changes on poeditor instead of here
+// 
+// 
+?>
+subject: Gast hat das Hochladen von Dateien begonnen
 
 {alternative:plain}
 
 Sehr geehrte Damen und Herren,
 
-Der folgende Gast begann das Hochladen von Dateien mit Ihrer Einladung:
+Der folgende Gast hat das Hochladen von Dateien mit Ihrer Einladung  begonnen:
 
 Gast: {guest.email}
 Link Einladung: {cfg:site_url}?s=upload&vid={guest.token}
@@ -21,7 +30,7 @@ Mit freundlichen Grüßen,
 </p>
 
 <p>
-    Der folgende Gast begann das Hochladen von Dateien mit Ihrer Einladung:
+    Der folgende Gast hat das Hochladen von Dateien mit Ihrer Einladung  begonnen:
 </p>
 
 <table rules="rows">
