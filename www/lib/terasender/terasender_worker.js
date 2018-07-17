@@ -130,15 +130,19 @@ var terasender_worker = {
         xhr.setRequestHeader('X-Filesender-Security-Token', this.security_token);
         
         try {
+            
 		if (job.encryption) { //MD
 			var cryptedBlob = null;
 			var $this = this;
 			blobReader = window.filesender.crypto_blob_reader().createReader(blob, function(blob){});
 			blobReader.blobSlice = blob;
 			blobReader.readArrayBuffer(function(arrayBuffer){
-				window.filesender.crypto_app().encryptBlob(arrayBuffer, job.encryption_password, function (encrypted_blob) {
-					xhr.setRequestHeader('X-Filesender-Encrypted', '1');
-					xhr.send(encrypted_blob);
+			    window.filesender.crypto_app().encryptBlob(
+                                arrayBuffer,
+                                job.encryption_details,
+                                function (encrypted_blob) {
+				    xhr.setRequestHeader('X-Filesender-Encrypted', '1');
+				    xhr.send(encrypted_blob);
 				});
 			});
 		} else {

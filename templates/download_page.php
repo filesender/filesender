@@ -93,7 +93,10 @@
         <div class="file" data-id="<?php echo $file->id ?>"
              data-encrypted="<?php echo isset($transfer->options['encryption'])?$transfer->options['encryption']:'false'; ?>"
              data-mime="<?php echo $file->mime_type; ?>"
-             data-name="<?php echo $file->path; ?>">
+             data-name="<?php echo $file->path; ?>"
+             data-key-version="<?php echo $transfer->key_version; ?>"
+             data-key-salt="<?php echo $transfer->salt; ?>"
+        >
             
             <span class="select clickable fa fa-2x fa-square-o" title="{tr:select_for_archive_download}"></span>
             <span class="name"><?php echo Utilities::sanitizeOutput($file->path) ?></span>

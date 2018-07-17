@@ -471,7 +471,7 @@ Create the filesender database:
 
 ```
 mysql -u root -p
-CREATE DATABASE `filesender` DEFAULT CHARACTER SET utf8;
+CREATE DATABASE `filesender` DEFAULT CHARACTER SET utf8mb4;
 GRANT USAGE ON *.* TO 'filesender'@'localhost' IDENTIFIED BY '<your password>';
 GRANT CREATE, ALTER, SELECT, INSERT, INDEX, UPDATE, DELETE ON `filesender`.* TO 'filesender'@'localhost';
 FLUSH PRIVILEGES;

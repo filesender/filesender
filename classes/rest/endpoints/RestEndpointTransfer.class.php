@@ -57,6 +57,7 @@ class RestEndpointTransfer extends RestEndpoint {
             'expires' => RestUtilities::formatDate($transfer->expires),
             'expiry_date_extension' => $transfer->expiry_date_extension,
             'options' => $transfer->options,
+            'salt' => $transfer->salt,
             
             'files' => array_map(function($file) use($files_cids) {
                 $file = RestEndpointFile::cast($file);
@@ -177,7 +178,11 @@ class RestEndpointTransfer extends RestEndpoint {
             // Only want transfer options
             if($property == 'options')
                 return $transfer->options;
-            
+
+            // get encryption salt
+            if($property == 'salt')
+                return $transfer->salt;
+
             // Want auditlog data ...
             if($property == 'auditlog') {
                 if($property_id == 'mail') {
@@ -473,7 +478,13 @@ class RestEndpointTransfer extends RestEndpoint {
 	    $options['encryption'] = $data->encryption;
             Logger::info($options);
             $transfer->options = $options;
-            
+            if( $data->encryption_key_version ) {
+                $transfer->key_version = $data->encryption_key_version;
+            }
+            if( Utilities::isTrue( $data->encryption )) {
+                // reading the salt will ensure it is made
+                $dummy1 = $transfer->salt;
+            }
             $transfer->save(); // Mandatory to add recipients and files
             
             // Get banned extensions

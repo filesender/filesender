@@ -1,14 +1,14 @@
-// JavaScript Document
+<?php
 
 /*
  * FileSender www.filesender.org
- * 
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
+ *
+ * Copyright (c) 2009-2014, AARNet, Belnet, HEAnet, SURFnet, UNINETT
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * *	Redistributions of source code must retain the above copyright
  * 	notice, this list of conditions and the following disclaimer.
  * *	Redistributions in binary form must reproduce the above copyright
@@ -17,7 +17,7 @@
  * *	Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
  * 	names of its contributors may be used to endorse or promote products
  * 	derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -30,48 +30,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-// Recursive drag-n-drop files
-filesender.dragdrop = {
+$config['config_mandatory_settings_file_loaded'] = true;
 
-    recurseTree: function(item, path) {
-        path = path || "";
-        if (item.isFile) {
-            item.file(function(file) {
-              filesender.ui.files.addFile(path + file.name, file);
-            });
-        }
-        else if (item.isDirectory) {
-            // Get folder contents
-            let dirReader = item.createReader();
-            dirReader.readEntries(function(entries) {
-                for (let i=0; i<entries.length; i++) {
-                    filesender.dragdrop.recurseTree(entries[i], path + item.name + "/");
-                }
-            });
-        }
-    },
 
-    addTree: function(dataTransfer) {
-        if(typeof dataTransfer.items !== "object") return false;
-
-        let items = dataTransfer.items;
-        
-        if(!items.length) return false;
-        if(typeof items[0].webkitGetAsEntry !== "function") return false;
-        
-        for (let i=0; i<items.length; i++) {
-            // webkitGetAsEntry enables the recursive dirtree magic
-            let tree = items[i].webkitGetAsEntry();
-            if (tree) {
-                filesender.dragdrop.recurseTree(tree);
-            }
-        }
-
-        // calling this directly doesn't seem to sort on Firefox/Linux 2018
-        window.setTimeout(
-            function() { filesender.ui.files.sortErrorLinesToTop(); },
-            1000 );
-        
-        return true;
-    },
-};

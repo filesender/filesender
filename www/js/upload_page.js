@@ -33,6 +33,26 @@
 // Manage files
 filesender.ui.files = {
     invalidFiles: [],
+
+    // Sort error cases to the top
+    sortErrorLinesToTop: function() {
+        var $selector = $("#fileslist");
+        var $element = $selector.children(".file");
+        
+        $element.sort(function(a, b) {
+            var ainv = a.className.includes('invalid');
+            var binv = b.className.includes('invalid');
+            // no difference for files in same group
+            if( (ainv && binv) || (!ainv && !binv )) {
+                return 0;
+            }
+            if( ainv ) return -1;
+            if( binv ) return  1;
+            return 0;
+        });
+        
+        $element.detach().appendTo($selector);
+    },
     
     // File selection (browse / drop) handler
     addList: function(files, source_node) {
@@ -43,6 +63,7 @@ filesender.ui.files = {
                 node = latest_node;
             }
         }
+        this.sortErrorLinesToTop();
         return node;
     },
     
@@ -695,6 +716,8 @@ filesender.ui.startUpload = function() {
     }
     this.transfer.encryption = filesender.ui.nodes.encryption.toggle.is(':checked'); 
     this.transfer.encryption_password = filesender.ui.nodes.encryption.password.val();
+    var crypto = window.filesender.crypto_app();
+    this.transfer.encryption_key_version = crypto.crypto_key_version;
     this.transfer.disable_terasender = filesender.ui.nodes.disable_terasender.is(':checked');
     
     this.transfer.onprogress = filesender.ui.files.progress;
