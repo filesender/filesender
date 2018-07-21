@@ -108,7 +108,23 @@ class Guest extends DBObject {
             'null' => true
         )
     );
-    
+
+    public static function getViewMap() {
+        $a = array();
+        foreach(array('mysql','pgsql') as $dbtype) {
+            $a[$dbtype] = 'select *'
+                        . DBView::columnDefinition_age($dbtype,'created')
+                        . DBView::columnDefinition_age($dbtype,'expires')
+                        . DBView::columnDefinition_age($dbtype,'last_activity','last_activity_days_ago')
+                        . DBView::columnDefinition_age($dbtype,'last_reminder','last_reminder_days_ago')
+                        . ' , expires < now() as expired '
+                        . " , status = 'available' as is_available "
+                        . '  from ' . self::getDBTable();
+        }
+        return array( strtolower(self::getDBTable()) . 'view' => $a );
+        
+    }
+
     /**
      * Set selectors
      */

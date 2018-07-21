@@ -63,6 +63,8 @@ class DBObject {
      */
     protected static $dataMap = array();
 
+    protected static $viewMap = array();
+    
     /**
      * Defines secondary indexes for this table
      *
@@ -85,6 +87,10 @@ class DBObject {
         return static::$dataMap;
     }
 
+    public static function getViewMap() {
+        return static::$viewMap;
+    }
+    
     /**
      * Secondary Index map getter
      * 

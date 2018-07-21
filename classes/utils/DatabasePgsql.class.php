@@ -76,6 +76,12 @@ class DatabasePgsql {
             }
         }
     }
+
+    public static function createView($table, $viewname, $definitionsql) {
+        DBI::exec('DROP VIEW IF EXISTS '.$viewname);
+        $query = 'CREATE OR REPLACE VIEW '.$viewname.' as '.$definitionsql;
+        DBI::exec($query);
+    }
     
     /**
      * Table columns getter.

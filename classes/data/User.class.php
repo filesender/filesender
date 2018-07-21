@@ -98,6 +98,22 @@ class User extends DBObject {
             'null' => true
         ),
     );
+
+
+    public static function getViewMap() {
+        $a = array();
+        foreach(array('mysql','pgsql') as $dbtype) {
+            $a[$dbtype] = 'select *'
+                        . DBView::columnDefinition_age($dbtype,'created')
+                        . DBView::columnDefinition_is_encrypted('transfer_preferences','prefers_enceyption')
+                        . DBView::columnDefinition_age($dbtype,'last_activity','last_activity_days_ago')
+                        . DBView::columnDefinition_age($dbtype,'aup_last_ticked_date','aup_last_ticked_days_ago')
+                        . ' , id as email_address '
+                        . ' , id is not null as is_active '
+                        . '  from ' . self::getDBTable();
+        }
+        return array( strtolower(self::getDBTable()) . 'view' => $a );
+    }
     
     /**
      * Properties

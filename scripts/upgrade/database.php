@@ -80,6 +80,7 @@ try {
         echo 'Checking class '.$class."\n";
         
         $datamap = call_user_func($class.'::getDataMap');
+        $viewmap = call_user_func($class.'::getViewMap');
         $secindexmap = call_user_func($class.'::getSecondaryIndexMap');
         $table = call_user_func($class.'::getDBTable');
         
@@ -146,7 +147,18 @@ try {
                 Database::createTableSecondaryIndex( $table, $index, $definition );
             }
         } 
+        echo 'Done for secondary indexes for table '.$table."\n";
 
+        echo 'Updating views for table '.$table."\n";
+        foreach($viewmap as $viewname => $maker) {
+            foreach($maker as $dbtype => $def) {
+                if( $dbtype == Config::get('db_type')) {
+                    echo "Updating views $dbtype $def \n";
+                    Database::createView($table,$viewname,$def);
+                }
+            }
+        }
+        echo 'Done updating views for table '.$table."\n";
         
     }
     
