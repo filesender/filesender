@@ -141,8 +141,8 @@ class Database {
     /**
      * Create a table
      * 
-     * @param string $table the table name
-     * @param array $definition dataMap entry
+     * @param string $table     the table name
+     * @param array $definition the datamap to define the table
      * 
      */
     public static function createTable($table, $definition) {
@@ -151,6 +151,20 @@ class Database {
         return call_user_func($class.'::createTable', $table, $definition);
     }
     
+    /**
+     * Create a table
+     * 
+     * @param string $table    the table name
+     * @param string $viewname the table name
+     * @param array $definitionsql the SQL query to back the view
+     * 
+     */
+    public static function createView($table, $viewname, $definitionsql) {
+        $class = self::getDelegationClass();
+        
+        return call_user_func($class.'::createView', $table, $viewname, $definitionsql);
+    }
+
     /**
      * Get selected database delegation class
      * 

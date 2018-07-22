@@ -115,6 +115,19 @@ class Transfer extends DBObject {
         
     );
 
+    public static function getViewMap() {
+        $a = array();
+        foreach(array('mysql','pgsql') as $dbtype) {
+            $a[$dbtype] = 'select *'
+                        . DBView::columnDefinition_age($dbtype,'created')
+                        . DBView::columnDefinition_age($dbtype,'expires')
+                        . DBView::columnDefinition_age($dbtype,'made_available')
+                        . DBView::columnDefinition_is_encrypted('options','is_encrypted')
+                        . '  from ' . self::getDBTable();
+        }
+        return array( strtolower(self::getDBTable()) . 'view' => $a );
+    }
+
     protected static $secondaryIndexMap = array(
         'user_id' => array( 
             'user_id' => array()
