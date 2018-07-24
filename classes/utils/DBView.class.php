@@ -57,4 +57,19 @@ class DBView {
     {
         return "  , " . $basecolname . " LIKE '%encryption\":true%' as " . $viewcolname . " ";
     }
+    public static function columnDefinition_as_number( $dbtype,
+                                                       $basecolname,
+                                                       $viewcolname = '' )
+    {
+        if( !strlen($viewcolname)) {
+            $viewcolname = $basecolname . "_as_number";
+        }
+        if( $dbtype == 'pgsql' ) {
+            return ', cast( '. $basecolname . ' as bigint) as ' . $viewcolname;
+        }
+        if( $dbtype == 'mysql' ) {
+            return ', cast( '. $basecolname . ' as integer) as ' . $viewcolname;
+        }
+        
+    }    
 };

@@ -329,4 +329,6 @@ class StatLog extends DBObject {
         $s = DBI::prepare('DELETE FROM '.self::getDBTable().' WHERE created < DATE_SUB(NOW(), INTERVAL :days DAY)');
         $s->execute(array(':days' => (int)$lt));
     }
+
+    
 }

@@ -608,4 +608,8 @@ class DBObject {
     public function __toString() {
         return static::getClassName().'#'.($this->id ? $this->id : 'unsaved');
     }
+
+    public function getViewName() {
+        return strtolower(self::getDBTable()) . 'view';
+    }
 }
