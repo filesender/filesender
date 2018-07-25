@@ -346,6 +346,17 @@ class Guest extends DBObject {
         $today = (24 * 3600) * floor(time() / (24 * 3600));
         return $this->expires < $today;
     }
+
+    /**
+     * Tells wether the guest has expired before a given number of days 
+     * from now
+     * 
+     * @return bool
+     */
+    public function isExpiredDaysAgo( $days ) {
+        $d = (24 * 3600) * floor(time() / (24 * 3600) - ($days * (24*3600)));
+        return $this->expires < $d;
+    }
     
     /**
      * Check if user owns current gueest

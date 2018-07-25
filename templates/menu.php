@@ -46,6 +46,7 @@ $pagemenuitem = function($page) {
 
             $pagemenuitem('help');
             $pagemenuitem('about');
+            $pagemenuitem('privacy');
 
             if (Auth::isAuthenticated() && Auth::isSP()) {
                 $url = AuthSP::logoffURL();

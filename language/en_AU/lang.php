@@ -446,3 +446,13 @@ $lang['you_can_report_exception'] = 'When reporting this error please give the f
 $lang['you_can_report_exception_by_email'] = 'You can report this error by email';
 $lang['you_can_send_client_logs'] = 'In order to help your support team to find out what happened you can send the last log entries from your user interface by clicking this button :';
 $lang['empty_file'] = 'Empty file';
+
+$lang['privacy_page'] = 'Privacy';
+$lang['privacy_page_days_old_table_text'] = 'Number of days information is retained';
+$lang['value'] = 'Value';
+$lang['description'] = 'Description';
+$lang['privacy_page_max_transfer_days_valid'] = 'Maximum number of days until a transfer expires';
+$lang['privacy_page_clientlogs_lifetime'] = 'If a transfer fails you might be offered the ability to report the issue directly through this web interface. That report will be removed from the server database after this many days have passed.';
+$lang['privacy_page_translatable_emails_lifetime'] = 'Number of days emails sent to a user will be retained';
+$lang['privacy_page_guests_expired_lifetime'] = 'Once a guest has expired they are removed after this many days';
+$lang['privacy_page_auditlog_lifetime'] = 'Days that a log of what actions have happened is retained.';

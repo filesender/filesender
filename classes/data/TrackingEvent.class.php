@@ -281,4 +281,16 @@ class TrackingEvent extends DBObject
     public function __set($property, $value) {
         throw new PropertyAccessException($this, $property);
     }
+
+    /**
+     * Clean old entries
+     */
+    public static function clean() {
+        $days = Config::get('trackingevents_lifetime');
+        
+        /** @var PDOStatement $statement */
+        $statement = DBI::prepare('DELETE FROM '.self::getDBTable().' WHERE created < :date');
+        $statement->execute(array(':date' => date('Y-m-d', time() - $days * 86400)));
+    }
+    
 }

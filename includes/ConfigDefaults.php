@@ -193,6 +193,10 @@ $default = array(
     'automatic_resume_number_of_retries' =>  10,
     'automatic_resume_delay_to_resume'   => 360,
 
+    'guests_expired_lifetime' => 0,
+    'translatable_emails_lifetime' => 30,
+    'trackingevents_lifetime' => 90,
+    
     'testsuite_run_locally' => false,
 
     'transfer_options' => array(
