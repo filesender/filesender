@@ -68,13 +68,20 @@ if( $db_database ) {
 echo "current db_database is " . Config::get('db_database') . "\n";
 
 // Get data classes
-$classes = array();
-foreach(scandir(FILESENDER_BASE.'/classes/data') as $i) {
-    if(substr($i, -10) != '.class.php') continue;
-    $class = substr($i, 0, -10);
-    if($class == 'DBObject') continue;
-    $classes[] = $class;
+function getClasses() {
+    $classes = array();
+    foreach(scandir(FILESENDER_BASE.'/classes/data') as $i) {
+        if(substr($i, -10) != '.class.php') continue;
+        $class = substr($i, 0, -10);
+        if($class == 'DBObject') continue;
+        $classes[] = $class;
+    }
+    return $classes;
 }
+
+$classes = getClasses();
+
+
 
 
 $currentSchemaVersion = Metadata::getLatestUsedSchemaVersion();
@@ -91,11 +98,13 @@ echo "running database update script on existing schema version $currentSchemaVe
 
 
 
+//
+// Main updates
+//
 function ensureAllTables()
 {
-    //
-    // Main updates
-    //
+    $classes = getClasses();
+    
     foreach($classes as $class) {
         echo 'Checking class '.$class."\n";
         
