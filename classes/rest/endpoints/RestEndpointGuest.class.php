@@ -48,7 +48,7 @@ class RestEndpointGuest extends RestEndpoint {
     public static function cast(Guest $guest) {
         return array(
             'id' => $guest->id,
-            'user_id' => $guest->user_id,
+            'userid' => $guest->userid,
             'user_email' => $guest->user_email,
             'email' => $guest->email,
             'token' => $guest->token,

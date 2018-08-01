@@ -47,9 +47,10 @@ class ClientLog extends DBObject {
             'primary' => true,
             'autoinc' => true
         ),
-        'user_id' => array(
-            'type' => 'string',
-            'size' => 190
+        'userid' => array(
+            'type' => 'uint',
+            'size' => 'big',
+            'null' => true
         ),
         'created' => array(
             'type' => 'datetime'
@@ -70,12 +71,12 @@ class ClientLog extends DBObject {
     }
     
     protected static $secondaryIndexMap = array(
-        'user_id' => array( 
-            'user_id' => array()
+        'userid' => array( 
+            'userid' => array()
         ),
-        'created_and_user_id' => array( 
+        'created_and_userid' => array( 
             'created' => array(),
-            'user_id' => array()
+            'userid' => array()
         )
     );
 
@@ -83,7 +84,7 @@ class ClientLog extends DBObject {
      * Properties
      */
     protected $id = null;
-    protected $user_id = null;
+    protected $userid = null;
     protected $created = 0;
     protected $message = null;
     
@@ -119,7 +120,7 @@ class ClientLog extends DBObject {
     public static function fromUser($user) {
         if($user instanceof User) $user = $user->id;
 
-        return self::all('user_id = :user_id ORDER BY id ASC', array(':user_id' => $user));
+        return self::all('userid = :userid ORDER BY id ASC', array(':userid' => $user));
     }
     
     /**
@@ -132,7 +133,7 @@ class ClientLog extends DBObject {
      */
     public static function create(User $user, $message) {
         $log = new self();
-        $log->user_id = $user->id;
+        $log->userid = $user->id;
         $log->message = $message;
         $log->created = time();
         
@@ -198,11 +199,11 @@ class ClientLog extends DBObject {
      */
     public function __get($property) {
         if(in_array($property, array(
-            'id', 'user_id', 'message', 'created'
+            'id', 'userid', 'message', 'created'
         ))) return $this->$property;
         
         if($property == 'user' || $property == 'owner')
-            return User::fromId($this->user_id);
+            return User::fromId($this->userid);
         
         throw new PropertyAccessException($this, $property);
     }

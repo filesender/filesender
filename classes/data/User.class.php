@@ -47,9 +47,15 @@ class User extends DBObject {
      */
     protected static $dataMap = array(
         'id' => array(
-            'type' => 'string',
-            'size' => 190,
-            'primary' => true
+            'type' => 'uint',
+            'size' => 'big',
+            'primary' => true,
+            'autoinc' => true
+        ),
+        'authid' => array(
+            'type' => 'uint',
+            'size' => 'big',
+            'null' => false
         ),
         'additional_attributes' => array(
             'type' => 'text',
@@ -102,6 +108,7 @@ class User extends DBObject {
 
     public static function getViewMap() {
         $a = array();
+        $userauthviewdef = array();
         foreach(array('mysql','pgsql') as $dbtype) {
             $a[$dbtype] = 'select *'
                         . DBView::columnDefinition_age($dbtype,'created')
@@ -110,15 +117,22 @@ class User extends DBObject {
                         . DBView::columnDefinition_age($dbtype,'aup_last_ticked_date','aup_last_ticked_days_ago')
                         . ' , id as email_address '
                         . ' , id is not null as is_active '
-                        . '  from ' . self::getDBTable();
+                                . '  from ' . self::getDBTable();
+            $userauthviewdef[$dbtype] = 'select up.id as id,authid,a.saml_user_identification_uid as user_id,up.last_activity,up.aup_ticked,up.created from '
+                                       .self::getDBTable().' up, '.call_user_func('Authentication::getDBTable').' a where up.authid = a.id ';
         }
-        return array( strtolower(self::getDBTable()) . 'view' => $a );
+        
+        
+        return array( strtolower(self::getDBTable()) . 'view' => $a,
+                      'userauthview' => $userauthviewdef
+        );
     }
     
     /**
      * Properties
      */
     protected $id = null;
+    protected $authid = null;
     protected $additional_attributes = null;
     protected $lang = null;
     protected $aup_ticked = false;
@@ -156,6 +170,7 @@ class User extends DBObject {
             $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE id = :id');
             $statement->execute(array(':id' => $id));
             $data = $statement->fetch();
+            $this->id = $id;
         }
         
         if($data) {
@@ -188,13 +203,34 @@ class User extends DBObject {
         if(!is_array($attributes) || !array_key_exists('uid', $attributes) || !$attributes['uid']) throw new UserMissingUIDException();
         
         // Get matching user
-        $user = self::fromId($attributes['uid']);
+        $authid = Authentication::ensureAuthIDFromAuthUID( $attributes['uid']);
+        $user = self::fromAuthId( $authid );
         
         // Add metadata from attributes
         if(array_key_exists('email', $attributes)) $user->email_addresses = (array) $attributes['email'];
         if(array_key_exists('name', $attributes)) $user->name = $attributes['name'];
         
         return $user;
+    }
+
+    public static function fromAuthID( $authid ) {
+        $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE authid = :authid');
+        $statement->execute(array(':authid' => $authid));
+        $data = $statement->fetch();
+
+        if( !$data ) {
+            $data = array();
+            $data['authid'] = $authid;
+            $ret = static::createFactory(null,$data);
+            $ret->authid = $authid;
+            $ret->insert();
+            return $ret;
+            
+        }
+
+        $id = $data['id'];
+//        Logger::info('fromAuthID() found authid ' . $authid . ' at id ' . $id );
+        return self::fromId( $id );
     }
     
     /**
@@ -486,11 +522,11 @@ class User extends DBObject {
      */
     public function __get($property) {
         if(in_array($property, array(
-            'id', 'additional_attributes', 'lang', 'aup_ticked', 'aup_last_ticked_date', 'auth_secret',
+            'id','additional_attributes', 'lang', 'aup_ticked', 'aup_last_ticked_date', 'auth_secret',
             'transfer_preferences', 'guest_preferences', 'frequent_recipients', 'created', 'last_activity',
-            'email_addresses', 'name', 'quota'
+            'email_addresses', 'name', 'quota', 'authid'
         ))) return $this->$property;
-        
+
         if($property == 'email') return count($this->email_addresses) ? $this->email_addresses[0] : null;
         
         if($property == 'remote_config') return $this->auth_secret ? Config::get('site_url').'|'.$this->id.'|'.$this->auth_secret : '';

@@ -164,6 +164,11 @@ class Database {
         
         return call_user_func($class.'::createView', $table, $viewname, $definitionsql);
     }
+    public static function dropView($table, $viewname) {
+        $class = self::getDelegationClass();
+        
+        return call_user_func($class.'::dropView', $table, $viewname);
+    }
 
     /**
      * Get selected database delegation class

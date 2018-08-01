@@ -40,6 +40,8 @@ if( $testingMode ) {
     Mail::TESTING_SET_DO_NOT_SEND_EMAIL();
 }
 
+
+
 // Log some daily statistics first
 $storage_usage = Storage::getUsage();
 if(!is_null($storage_usage)) {
