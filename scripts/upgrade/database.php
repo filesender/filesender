@@ -90,6 +90,47 @@ Metadata::add('running database update script on existing schema version ' . $cu
 echo "running database update script on existing schema version $currentSchemaVersion \n";
 
 
+
+function ensureAllTables()
+{
+    //
+    // Main updates
+    //
+    foreach($classes as $class) {
+        echo 'Checking class '.$class."\n";
+        
+        $datamap = call_user_func($class.'::getDataMap');
+        $viewmap = call_user_func($class.'::getViewMap');
+        $secindexmap = call_user_func($class.'::getSecondaryIndexMap');
+        $table = call_user_func($class.'::getDBTable');
+        
+        // Check if table exists
+        echo 'Working on table '.$table."\n";
+        updateTable( $table, $datamap );
+        echo 'Done for table '.$table."\n";
+
+        echo 'Checkindex secondary indexes for table '.$table."\n";
+        foreach($secindexmap as $index => $definition) {
+            $index = $table . '_' . $index;
+            echo 'checking ' . $index . "\n";
+            $problems = Database::checkTableSecondaryIndexFormat( $table, $index, $definition, function($message) {
+                echo "\t".$message."\n";
+            });
+            if( $problems ) {
+                echo "update index " . $index . " on table " . $table . "\n";
+                if( $problems != DatabaseSecondaryIndexStatuses::NOTFOUND ) {
+                    echo "drop index " . $index . " on table " . $table . "\n";
+                    Database::dropTableSecondaryIndex(   $table, $index );
+                }
+                echo "create index " . $index . " on table " . $table . "\n";
+                Database::createTableSecondaryIndex( $table, $index, $definition );
+            }
+        } 
+        echo 'Done for secondary indexes for table '.$table."\n";
+    }
+}
+
+
 function renameColumn( $tableName, $oldname, $newname, $mysqltypestring  )
 {
     $dbtype = Config::get('db_type');
@@ -201,213 +242,184 @@ try {
 
     
 
-echo "test1\n";
-    // Perform larger migrations
-    if( $currentSchemaVersion != DatabaseSchemaVersions::VERSION_CURRENT ) {
-        $schemaVersion = $currentSchemaVersion;
-        $dbtype = Config::get('db_type');
-echo "test2 $schemaVersion \n";
-        while( $schemaVersion <= DatabaseSchemaVersions::VERSION_CURRENT ) {
+    echo "checking for major schema migrations\n";
+    //
+    // If there is no userpreferences table then we
+    // consider it an empty database and do not need
+    // to 'migrate' to a newer schema.
+    //
+    if( Database::tableExists($tbl_user)) {
+        
+        // Perform larger migrations
+        if( $currentSchemaVersion != DatabaseSchemaVersions::VERSION_CURRENT ) {
+            $schemaVersion = $currentSchemaVersion;
+            $dbtype = Config::get('db_type');
+            echo "test2 $schemaVersion \n";
+            for( ; $schemaVersion <= DatabaseSchemaVersions::VERSION_CURRENT; $schemaVersion++ ) {
 
-echo "test3 $schemaVersion \n";
-            //
-            // Version 22
-            // ----------
-            // The UserPreferences table had the 'id' as a varchar which was the saml auth id
-            // and also the primary key. Other tables stored user_id which was also a large
-            // varchar and referenced the same saml auth id. In addition to being a slower design
-            // and not enforcing RI, this stored personal information around in various places
-            // in the database.
-            //
-            // This update migrated the user_id to an Authentications table
-            // and made the old user_id references a link to the UserPreferences.id for that user.
-            // The saml information is then associated with a specific user using UserPreferences.authid.
-            // These id columns are bigint (8 byte numbers) and should index a lot better than email addresses.
-            //
-            if( $schemaVersion == DatabaseSchemaVersions::VERSION_22 )
-            {
-                echo "Migrating database schema to version 22.\n";
-                echo "this will take some time to perform...\n";
-                $tbl_auth      = call_user_func('Authentication::getDBTable');
-                $tbl_transfers = call_user_func('Transfer::getDBTable');
-                $tbl_guests    = call_user_func('Guest::getDBTable');
-                $tbl_clientlog = call_user_func('ClientLog::getDBTable');
-                $tbl_user      = call_user_func('User::getDBTable');
+                echo "checking for $schemaVersion \n";
+                //
+                // Version 22
+                // ----------
+                // The UserPreferences table had the 'id' as a varchar which was the saml auth id
+                // and also the primary key. Other tables stored user_id which was also a large
+                // varchar and referenced the same saml auth id. In addition to being a slower design
+                // and not enforcing RI, this stored personal information around in various places
+                // in the database.
+                //
+                // This update migrated the user_id to an Authentications table
+                // and made the old user_id references a link to the UserPreferences.id for that user.
+                // The saml information is then associated with a specific user using UserPreferences.authid.
+                // These id columns are bigint (8 byte numbers) and should index a lot better than email addresses.
+                //
+                if( $schemaVersion == DatabaseSchemaVersions::VERSION_22 )
+                {
+                    echo "Migrating database schema to version 22.\n";
+                    echo "this will take some time to perform...\n";
+                    $tbl_auth      = call_user_func('Authentication::getDBTable');
+                    $tbl_transfers = call_user_func('Transfer::getDBTable');
+                    $tbl_guests    = call_user_func('Guest::getDBTable');
+                    $tbl_clientlog = call_user_func('ClientLog::getDBTable');
+                    $tbl_user      = call_user_func('User::getDBTable');
 
-                echo "tbl_clientlog $tbl_clientlog\n";
-                echo "clientlogs table already exists? " . Database::tableExists($tbl_clientlog) . "\n";
-                if( !Database::tableExists($tbl_clientlog)) {
-                    echo "Making old clientlogs so it can be migrated\n";
-                    updateTable( $tbl_clientlog,
-                                 array(
-                                     'id' => array(
-                                         'type' => 'uint',
-                                         'size' => 'big',
-                                         'primary' => true,
-                                         'autoinc' => true
-                                     ),
-                                     'user_id' => array(
-                                         'type' => 'string',
-                                         'size' => 190
-                                     ),
-                                     'created' => array(
-                                         'type' => 'datetime'
-                                     ),
-                                     'message' => array(
-                                         'type' => 'text'
+                    
+                    echo "tbl_clientlog $tbl_clientlog\n";
+                    echo "clientlogs table already exists? " . Database::tableExists($tbl_clientlog) . "\n";
+                    if( !Database::tableExists($tbl_clientlog)) {
+                        echo "Making old clientlogs so it can be migrated\n";
+                        updateTable( $tbl_clientlog,
+                                     array(
+                                         'id' => array(
+                                             'type' => 'uint',
+                                             'size' => 'big',
+                                             'primary' => true,
+                                             'autoinc' => true
+                                         ),
+                                         'user_id' => array(
+                                             'type' => 'string',
+                                             'size' => 190
+                                         ),
+                                         'created' => array(
+                                             'type' => 'datetime'
+                                         ),
+                                         'message' => array(
+                                             'type' => 'text'
+                                         )
                                      )
-                                 )
                         );
-                }
-                
-                $class = 'Authentication';
-                // add new authentication table
-                echo "Adding Authentications table...\n";
-                updateTable( call_user_func($class.'::getDBTable'),
-                             call_user_func($class.'::getDataMap'));
-                // First, ensure the dbid column exists using the same mechanism that would
-                // normally create it
-                $classes = array('User','Guest','ClientLog','Transfer');
-                foreach($classes as $class) {
+                    }
+                    
+                    $class = 'Authentication';
+                    // add new authentication table
+                    echo "Adding Authentications table...\n";
+                    updateTable( call_user_func($class.'::getDBTable'),
+                                 call_user_func($class.'::getDataMap'));
+                    // First, ensure the dbid column exists using the same mechanism that would
+                    // normally create it
+                    $classes = array('User','Guest','ClientLog','Transfer');
+                    foreach($classes as $class) {
+                        $datamap = call_user_func($class.'::getDataMap');
+                        $table   = call_user_func($class.'::getDBTable');
+                        if( $class == 'User' ) {
+                            $column = 'authid';
+                        } else {
+                            $column = 'userid';
+                        }
+                        echo "Adding new column $column to $class table...\n";
+                        Database::createTableColumn($table, $column, array('type' => 'uint','size' => 'big','null'=>true));
+                    }
+
+                    // rename the UserPreferences table id column to user_id and create new
+                    // autoinc integer 'id' column in UserPreferences
+                    renameColumn( $tbl_user, 'id', 'user_id', 'varchar(190)' );
+                    echo "Changing primary primary key column in $tbl_user\n";
+                    $class = 'User';
                     $datamap = call_user_func($class.'::getDataMap');
                     $table   = call_user_func($class.'::getDBTable');
-                    if( $class == 'User' ) {
-                        $column = 'authid';
+                    $column  = 'authid';
+                    if( $dbtype == 'pgsql' ) {
+                        DBI::exec( 'ALTER TABLE '.$table.' DROP CONSTRAINT '.$table.'_pkey ' . "\n" );
                     } else {
-                        $column = 'userid';
+                        DBI::exec( 'ALTER TABLE '.$table.' drop primary key ');
                     }
-                    echo "Adding new column $column to $class table...\n";
-                    Database::createTableColumn($table, $column, array('type' => 'uint','size' => 'big','null'=>true));
+                    
+                    echo "Adding new auto inc primary key column to $tbl_user\n";
+                    Database::createTableColumn($tbl_user, 'id', array('type' => 'uint','size' => 'big','addprimary' => true,'autoinc'=>true));
+
+
+                    
+                    
+                    echo "Adding entries to Authentications table with user_id auth information...\n";
+                    $q = 'insert into '.$tbl_auth.' (saml_user_identification_uid) select distinct user_id from '
+                       . '( (select user_id from '.$tbl_transfers.') UNION '
+                       . '  (select user_id from '.$tbl_guests.')    UNION '
+                       . '  (select user_id from '.$tbl_clientlog.') UNION '
+                       . '  (select user_id from '.$tbl_user.') '
+                       . ' ) as dd ';
+                    echo $q;
+                    DBI::exec($q);
+
+                    echo "Setting timestamps to something valid in Authentications table...\n";
+                    DBI::exec('update '.$tbl_auth.' set created = now(), last_activity = now();');
+
+                    // link user.authid to the auth table
+                    updateIntoTable( $tbl_user,      $tbl_auth,
+                                     'SET authid      = fromtable.id',
+                                     'WHERE fromtable.saml_user_identification_uid = totable.user_id' );
+
+                    // make sure every entry in the auth table
+                    // has an entry in the userprefs table
+                    echo "Ensuring every auth entry has a matching entry in the users table...\n";
+                    $q = 'INSERT into '.$tbl_user.' '
+                       . ' (user_id,aup_ticked,guest_preferences,transfer_preferences,frequent_recipients,created,authid) '
+                       . " (select saml_user_identification_uid,false,'','','',now(),id from ".$tbl_auth.' where id not in (select authid from '.$tbl_user.' where authid is not null));';
+                    echo "SQL $q\n";
+                    DBI::exec($q);
+
+                    // remake links to userpreferences.id
+                    // based on the old auth information scattered
+                    // through the old columns in the tables
+                    updateIntoTable( $tbl_transfers, $tbl_user, 'SET userid      = fromtable.id', 'WHERE fromtable.user_id = totable.user_id' );
+                    updateIntoTable( $tbl_guests,    $tbl_user, 'SET userid      = fromtable.id', 'WHERE fromtable.user_id = totable.user_id' );
+                    updateIntoTable( $tbl_clientlog, $tbl_user, 'SET userid      = fromtable.id', 'WHERE fromtable.user_id = totable.user_id' );
+                    
+                    
+                    // now we want to convert the userpreferences column
+                    // over to a primary key, not null for future enjoyment.
+                    $class = 'User';
+                    $datamap = call_user_func($class.'::getDataMap');
+                    $table = call_user_func($class.'::getDBTable');
+                    $column = 'authid';
+                    if( $dbtype == 'pgsql' ) {
+
+                        DBI::exec( 'CREATE UNIQUE INDEX '.$table.'_id_idx ON '.$table.' (id);');
+                        DBI::exec( 'ALTER TABLE '.$table. "\n"
+                                 . ' ADD CONSTRAINT '.$table.'_pkey PRIMARY KEY USING INDEX '.$table.'_id_idx ');
+
+                    } else {
+                        DBI::exec( 'ALTER TABLE '.$table.' drop primary key, add primary key( id )');
+                    }
+                    
+                    DBI::exec( 'ALTER TABLE '.$tbl_user.     ' ADD FOREIGN KEY (authid) REFERENCES '.$tbl_auth.' (id)  on delete cascade on update restrict ;');
+                    DBI::exec( 'ALTER TABLE '.$tbl_transfers.' ADD FOREIGN KEY (userid) REFERENCES '.$tbl_user.' (id)  on delete cascade on update restrict ;');
+                    DBI::exec( 'ALTER TABLE '.$tbl_guests.   ' ADD FOREIGN KEY (userid) REFERENCES '.$tbl_user.' (id)  on delete cascade on update restrict ;');
+                    DBI::exec( 'ALTER TABLE '.$tbl_clientlog.' ADD FOREIGN KEY (userid) REFERENCES '.$tbl_user.' (id)  on delete cascade on update restrict ;');
+
+                    Database::removeTableColumn($tbl_user,      'user_id');
+                    Database::removeTableColumn($tbl_transfers, 'user_id');
+                    Database::removeTableColumn($tbl_guests,    'user_id');
+                    Database::removeTableColumn($tbl_clientlog, 'user_id');
                 }
-
-                // rename the UserPreferences table id column to user_id and create new
-                // autoinc integer 'id' column in UserPreferences
-                renameColumn( $tbl_user, 'id', 'user_id', 'varchar(190)' );
-                echo "Changing primary primary key column in $tbl_user\n";
-                $class = 'User';
-                $datamap = call_user_func($class.'::getDataMap');
-                $table   = call_user_func($class.'::getDBTable');
-                $column  = 'authid';
-                if( $dbtype == 'pgsql' ) {
-                    DBI::exec( 'ALTER TABLE '.$table.' DROP CONSTRAINT '.$table.'_pkey ' . "\n" );
-                } else {
-                    DBI::exec( 'ALTER TABLE '.$table.' drop primary key ');
-                }
-                
-                echo "Adding new auto inc primary key column to $tbl_user\n";
-                Database::createTableColumn($tbl_user, 'id', array('type' => 'uint','size' => 'big','addprimary' => true,'autoinc'=>true));
-
-
-                
-                
-                echo "Adding entries to Authentications table with user_id auth information...\n";
-                $q = 'insert into '.$tbl_auth.' (saml_user_identification_uid) select distinct user_id from '
-                   . '( (select user_id from '.$tbl_transfers.') UNION '
-                   . '  (select user_id from '.$tbl_guests.')    UNION '
-                   . '  (select user_id from '.$tbl_clientlog.') UNION '
-                   . '  (select user_id from '.$tbl_user.') '
-                   . ' ) as dd ';
-                echo $q;
-                DBI::exec($q);
-
-                echo "Setting timestamps to something valid in Authentications table...\n";
-                DBI::exec('update '.$tbl_auth.' set created = now(), last_activity = now();');
-
-                // link user.authid to the auth table
-                updateIntoTable( $tbl_user,      $tbl_auth,
-                                 'SET authid      = fromtable.id',
-                                 'WHERE fromtable.saml_user_identification_uid = totable.user_id' );
-
-                // make sure every entry in the auth table
-                // has an entry in the userprefs table
-                echo "Ensuring every auth entry has a matching entry in the users table...\n";
-                $q = 'INSERT into '.$tbl_user.' '
-                   . ' (user_id,aup_ticked,guest_preferences,transfer_preferences,frequent_recipients,created,authid) '
-                   . " (select saml_user_identification_uid,false,'','','',now(),id from ".$tbl_auth.' where id not in (select authid from '.$tbl_user.' where authid is not null));';
-                echo "SQL $q\n";
-                DBI::exec($q);
-
-                // remake links to userpreferences.id
-                // based on the old auth information scattered
-                // through the old columns in the tables
-                updateIntoTable( $tbl_transfers, $tbl_user, 'SET userid      = fromtable.id', 'WHERE fromtable.user_id = totable.user_id' );
-                updateIntoTable( $tbl_guests,    $tbl_user, 'SET userid      = fromtable.id', 'WHERE fromtable.user_id = totable.user_id' );
-                updateIntoTable( $tbl_clientlog, $tbl_user, 'SET userid      = fromtable.id', 'WHERE fromtable.user_id = totable.user_id' );
-                
-                
-                // now we want to convert the userpreferences column
-                // over to a primary key, not null for future enjoyment.
-                $class = 'User';
-                $datamap = call_user_func($class.'::getDataMap');
-                $table = call_user_func($class.'::getDBTable');
-                $column = 'authid';
-                if( $dbtype == 'pgsql' ) {
-
-                    DBI::exec( 'CREATE UNIQUE INDEX '.$table.'_id_idx ON '.$table.' (id);');
-                    DBI::exec( 'ALTER TABLE '.$table. "\n"
-                             . ' ADD CONSTRAINT '.$table.'_pkey PRIMARY KEY USING INDEX '.$table.'_id_idx ');
-
-                } else {
-                    DBI::exec( 'ALTER TABLE '.$table.' drop primary key, add primary key( id )');
-                }
-                
-                DBI::exec( 'ALTER TABLE '.$tbl_user.     ' ADD FOREIGN KEY (authid) REFERENCES '.$tbl_auth.' (id)  on delete cascade on update restrict ;');
-                DBI::exec( 'ALTER TABLE '.$tbl_transfers.' ADD FOREIGN KEY (userid) REFERENCES '.$tbl_user.' (id)  on delete cascade on update restrict ;');
-                DBI::exec( 'ALTER TABLE '.$tbl_guests.   ' ADD FOREIGN KEY (userid) REFERENCES '.$tbl_user.' (id)  on delete cascade on update restrict ;');
-                DBI::exec( 'ALTER TABLE '.$tbl_clientlog.' ADD FOREIGN KEY (userid) REFERENCES '.$tbl_user.' (id)  on delete cascade on update restrict ;');
-
-                Database::removeTableColumn($tbl_user,      'user_id');
-                Database::removeTableColumn($tbl_transfers, 'user_id');
-                Database::removeTableColumn($tbl_guests,    'user_id');
-                Database::removeTableColumn($tbl_clientlog, 'user_id');
             }
-
-            $schemaVersion++;
+            
+            echo "Major updates completed, normal updates will now be performed....\n";
         }
-        
-        echo "Major updates completed, normal updates will now be performed....\n";
     }
-
-
-
-
-
 
     //
     // Main updates
     //
-    foreach($classes as $class) {
-        echo 'Checking class '.$class."\n";
-        
-        $datamap = call_user_func($class.'::getDataMap');
-        $viewmap = call_user_func($class.'::getViewMap');
-        $secindexmap = call_user_func($class.'::getSecondaryIndexMap');
-        $table = call_user_func($class.'::getDBTable');
-        
-        // Check if table exists
-        echo 'Working on table '.$table."\n";
-        updateTable( $table, $datamap );
-        echo 'Done for table '.$table."\n";
-
-        echo 'Checkindex secondary indexes for table '.$table."\n";
-        foreach($secindexmap as $index => $definition) {
-            $index = $table . '_' . $index;
-            echo 'checking ' . $index . "\n";
-            $problems = Database::checkTableSecondaryIndexFormat( $table, $index, $definition, function($message) {
-                echo "\t".$message."\n";
-            });
-            if( $problems ) {
-                echo "update index " . $index . " on table " . $table . "\n";
-                if( $problems != DatabaseSecondaryIndexStatuses::NOTFOUND ) {
-                    echo "drop index " . $index . " on table " . $table . "\n";
-                    Database::dropTableSecondaryIndex(   $table, $index );
-                }
-                echo "create index " . $index . " on table " . $table . "\n";
-                Database::createTableSecondaryIndex( $table, $index, $definition );
-            }
-        } 
-        echo 'Done for secondary indexes for table '.$table."\n";
-    }
+    ensureAllTables();
 
     //
     // Remake all the views. This is done last because the view might reference other
