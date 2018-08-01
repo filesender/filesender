@@ -149,7 +149,8 @@ class Authentication extends DBObject {
     }
 
     private function updateHash() {
-        $h = password_hash( $this->saml_user_identification_uid, PASSWORD_DEFAULT );
+//        $h = password_hash( $this->saml_user_identification_uid, PASSWORD_DEFAULT );
+        $h = sha1($this->saml_user_identification_uid);
         $this->saml_user_identification_uid_hash = $h;
         return $h;
     }
