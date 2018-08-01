@@ -257,6 +257,7 @@ try {
     // consider it an empty database and do not need
     // to 'migrate' to a newer schema.
     //
+    $tbl_user = call_user_func('User::getDBTable');
     if( Database::tableExists($tbl_user)) {
         
         // Perform larger migrations

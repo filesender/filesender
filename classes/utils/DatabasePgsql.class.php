@@ -196,12 +196,12 @@ class DatabasePgsql {
         
     }
 
-    public static function dropTableSecondaryIndex(   $table, $index ) {
+    public static function dropTableSecondaryIndex(   $table, $index, $logger = null ) {
         if(!$logger || !is_callable($logger)) $logger = function() {};
         $query = 'DROP INDEX '.$index;
         DBI::exec($query);
     }
-    public static function createTableSecondaryIndex( $table, $index, $definition ) {
+    public static function createTableSecondaryIndex( $table, $index, $definition, $logger = null ) {
         if(!$logger || !is_callable($logger)) $logger = function() {};
 
         $preamble = '';
