@@ -91,6 +91,7 @@ class AuthLocal {
             $authid = Authentication::ensure($user_id, 'auth local')->id;
             $user = User::fromAuthId( $authid );
             $user->email_addresses = $email;
+            $user->name = $name;
             
             Auth::setUserObject( $user );
         }

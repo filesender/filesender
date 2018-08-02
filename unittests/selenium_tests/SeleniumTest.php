@@ -169,7 +169,7 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
 
     protected function setAdmin()
     {
-        $this->changeConfigValue('admin', "'filesender-phpunit@localhost.localdomain'");
+        $this->changeConfigValue('admin', "'1'");
         $this->refresh();
         sleep(2);
     }
