@@ -44,6 +44,7 @@ set_error_handler(function($no, $str, $file = '', $line = '') {
     Logger::error('['.$no.'] '.$str.' in '.$file.' at line '.$line);
 });
 
+DBI::beginTransaction();
 
 $args = new Args(
     array(
@@ -500,12 +501,18 @@ try {
         }
         echo 'Done updating views for table '.$table."\n";
     }
+
     
 } catch(Exception $e) {
+    echo "Error, Rolling database changes back....\n";
+    echo " This should leave the database state as it was before you started the script\n";
+    DBI::rollBack();
     $uid = ($e instanceof LoggingException) ? $e->getUid() : 'no available uid';
     die('Encountered exception : '.$e->getMessage().', see logs for details (uid: '.$uid.') ...');
 }
 
 echo "\n\n";
+echo "All code worked, commit to database starting...\n";
+DBI::commit();
 echo "Everything went well\n";
 echo "Database structure is up to date\n";
