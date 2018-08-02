@@ -44,6 +44,7 @@ set_error_handler(function($no, $str, $file = '', $line = '') {
     Logger::error('['.$no.'] '.$str.' in '.$file.' at line '.$line);
 });
 
+$currentSchemaVersion = Metadata::getLatestUsedSchemaVersion();
 DBI::beginTransaction();
 
 $args = new Args(
@@ -86,7 +87,6 @@ $classes = getClasses();
 
 
 
-$currentSchemaVersion = Metadata::getLatestUsedSchemaVersion();
 echo "You currently have database major version " . $currentSchemaVersion . "\n";
 echo "This execution will move also move to major version " . DatabaseSchemaVersions::VERSION_CURRENT . "\n";
 echo "Note that a major migration will only be needed when more advanced SQL is used to migrate\n\n";
