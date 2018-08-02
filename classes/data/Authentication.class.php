@@ -65,7 +65,11 @@ class Authentication extends DBObject {
             'type' => 'datetime',
             'null' => true
         ),
-        
+        'comment' => array(
+            'type' => 'string',
+            'size' => 100,
+            'null' => true
+        ),
     );
     protected static $secondaryIndexMap = array(
         'saml_user_identification_uid' => array( 
@@ -87,6 +91,7 @@ class Authentication extends DBObject {
     protected $saml_user_identification_uid_hash = 0;
     protected $created = 0;
     protected $last_activity = 0;
+    protected $comment = null;
     
     
     /**
@@ -113,16 +118,11 @@ class Authentication extends DBObject {
     }
 
     /**
-     * Create or read the record for this authenticated user
-     *
-     * @param Auth $auth the auth information or the current user will be used
-     *
-     * @return self
+     * Create or return the auth object
      */
-    public static function ensureAuthIDFromAuthUID( $saml_auth_uid )
-    {
+    public static function ensure($saml_auth_uid, $comment = null) {
         $saml_uid = $saml_auth_uid;
-        Logger::info('authentication::ensureID(1) saml_uid ' . $saml_uid );
+        Logger::info('authentication::create(1) saml_uid ' . $saml_uid );
 
         $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE saml_user_identification_uid = :samluid');
         $statement->execute(array(':samluid' => $saml_uid));
@@ -131,21 +131,33 @@ class Authentication extends DBObject {
         {
             $ret = static::createFactory(null,$data);
             $ret->fillFromDBData($data);
-            Logger::info('authentication::ensureID(2) FOUND AND RETURNING ' . $data['id'] );
-            return $ret->id;
+            Logger::info('authentication::create(2) FOUND AND RETURNING ' . $data['id'] );
+            return $ret;
         }
         
         $ret = static::createFactory();
         $ret->saml_user_identification_uid = $saml_uid;
-        Logger::info('authentication::ensureID(2) NOT FOUND! ' . $saml_uid );
+        Logger::info('authentication::create(2) NOT FOUND! ' . $saml_uid );
         $ret->created = time();
         $ret->last_activity = $ret->created;
-        Logger::info('authentication::ensureID(3) ' . $saml_uid );
+        Logger::info('authentication::create(3) ' . $saml_uid );
         $ret->updateHash();
-        Logger::info('authentication::ensureID(4) ' . $ret->id );
-        Logger::info('authentication::ensureID(5) ' . $ret->saml_user_identification_uid_hash );
+        Logger::info('authentication::create(4) ' . $ret->id );
+        Logger::info('authentication::create(5) ' . $ret->saml_user_identification_uid_hash );
         $ret->save();
-        return $ret->id;
+        return $ret;
+    }
+    
+    /**
+     * Create or read the record for this authenticated user
+     *
+     * @param Auth $auth the auth information or the current user will be used
+     *
+     * @return self
+     */
+    public static function ensureAuthIDFromAuthUID( $saml_auth_uid )
+    {
+        return self::ensure( $saml_auth_uid )->id;
     }
 
     private function updateHash() {

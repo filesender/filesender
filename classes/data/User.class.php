@@ -165,6 +165,8 @@ class User extends DBObject {
      * @throws UserNotFoundException
      */
     protected function __construct($id = null, $data = null) {
+        echo "User::User()\n";
+        
         if(!is_null($id)) {
             // Load from database if id given
             $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' WHERE id = :id');

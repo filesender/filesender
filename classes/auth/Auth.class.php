@@ -42,7 +42,14 @@ class Auth {
     /**
      * The curent user cache.
      */
-    private static $user = null;
+    protected static $user = null;
+
+    /**
+     * LIMITED USE: only Auth classes should call this!
+     */
+    public static function setUserObject( $user ) {
+        self::$user = $user;
+    }
     
     /**
      * Current user allowed state

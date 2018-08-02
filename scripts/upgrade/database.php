@@ -70,6 +70,7 @@ echo "current db_database is " . Config::get('db_database') . "\n";
 // Get data classes
 function getClasses() {
     $classes = array();
+    $classes[] = 'User'; // This must be before Authentication so users can be setup too
     foreach(scandir(FILESENDER_BASE.'/classes/data') as $i) {
         if(substr($i, -10) != '.class.php') continue;
         $class = substr($i, 0, -10);
@@ -96,7 +97,44 @@ if( $currentSchemaVersion == 0 ) {
 Metadata::add('running database update script on existing schema version ' . $currentSchemaVersion);
 echo "running database update script on existing schema version $currentSchemaVersion \n";
 
+function execToColumnValue( $q, $col )
+{
+    $s = DBI::prepare($q);
+    $s->execute(array());
+    $r = $s->fetch();
+    return $r ? $r[$col] : -1;
+}
 
+function ensureAuthSetup( $saml_uid, $comment )
+{
+    $a = Authentication::ensure( $saml_uid, $comment );
+    $user = User::fromAuthId( $a->id );
+}
+
+//
+// Reserve some auth entries for system specific use
+//
+function ensureAuthenticationsTableHasReservedIDs()
+{
+    $tbl_auth = call_user_func('Authentication::getDBTable');
+    $q = 'select count(*) as c from ' . $tbl_auth . ' ';
+    if( execToColumnValue( $q, 'c' ) < 1) {
+        ensureAuthSetup('filesender-upgrade@localhost.localdomain',   'local upgrade script');
+        ensureAuthSetup('filesender-cronjob@localhost.localdomain',   'cron job');
+        ensureAuthSetup('filesender-authlocal@localhost.localdomain', 'local auth job');
+        ensureAuthSetup('filesender-phpunit@localhost.localdomain',   'unit test job');
+        ensureAuthSetup('filesender-reserved1@localhost.localdomain', 'reserved job 1');
+        ensureAuthSetup('filesender-reserved2@localhost.localdomain', 'reserved job 2');
+        ensureAuthSetup('filesender-reserved3@localhost.localdomain', 'reserved job 3');
+        ensureAuthSetup('filesender-reserved4@localhost.localdomain', 'reserved job 4');
+        ensureAuthSetup('filesender-reserved5@localhost.localdomain', 'reserved job 5');
+        ensureAuthSetup('filesender-reserved6@localhost.localdomain', 'reserved job 6');
+        ensureAuthSetup('filesender-reserved7@localhost.localdomain', 'reserved job 7');
+        ensureAuthSetup('filesender-reserved8@localhost.localdomain', 'reserved job 8');
+        ensureAuthSetup('filesender-reserved9@localhost.localdomain', 'reserved job 9');
+    }
+    
+}
 
 //
 // Main updates
@@ -116,6 +154,11 @@ function ensureAllTables()
         // Check if table exists
         echo 'Working on table '.$table."\n";
         updateTable( $table, $datamap );
+
+        // reserve some IDs if we might have just made the auths table
+        if( $class == 'Authentication' ) {
+            ensureAuthenticationsTableHasReservedIDs();
+        }
         echo 'Done for table '.$table."\n";
 
         echo 'Checkindex secondary indexes for table '.$table."\n";
@@ -324,6 +367,7 @@ try {
                     echo "Adding Authentications table...\n";
                     updateTable( call_user_func($class.'::getDBTable'),
                                  call_user_func($class.'::getDataMap'));
+                    ensureAuthenticationsTableHasReservedIDs();
                     // First, ensure the dbid column exists using the same mechanism that would
                     // normally create it
                     $classes = array('User','Guest','ClientLog','Transfer');
