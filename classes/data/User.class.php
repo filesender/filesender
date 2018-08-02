@@ -528,6 +528,11 @@ class User extends DBObject {
             'email_addresses', 'name', 'quota', 'authid'
         ))) return $this->$property;
 
+        if($property == 'saml_user_identification_uid') {
+            $a = Authentication::fromId( $this->authid );
+            return $a->saml_user_identification_uid;
+        }
+        
         if($property == 'email') return count($this->email_addresses) ? $this->email_addresses[0] : null;
         
         if($property == 'remote_config') return $this->auth_secret ? Config::get('site_url').'|'.$this->id.'|'.$this->auth_secret : '';

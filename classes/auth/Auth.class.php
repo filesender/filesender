@@ -290,7 +290,7 @@ class Auth {
                 $admin = Config::get('admin');
                 if(!is_array($admin)) $admin = array_filter(array_map('trim', preg_split('`[,;\s]+`', (string)$admin)));
                 
-                self::$isAdmin = in_array(self::user()->id, $admin);
+                self::$isAdmin = in_array(self::user()->saml_user_identification_uid, $admin);
             }
         }
         

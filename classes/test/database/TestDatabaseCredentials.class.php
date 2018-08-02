@@ -82,8 +82,8 @@ class TestDatabaseCredentials {
      */
     function forceCredentialsToDefaultUser()
     {
-        $this->forceCredentialsToUser( 'testdriver@localhost.localdomain',
-                                       'testdriver@localhost.localdomain',
+        $this->forceCredentialsToUser( 'filesender-testdriver@localhost.localdomain',
+                                       'filesender-testdriver@localhost.localdomain',
                                        'testdriver' );
     }
 

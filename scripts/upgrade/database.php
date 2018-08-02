@@ -124,6 +124,7 @@ function ensureAuthenticationsTableHasReservedIDs()
         ensureAuthSetup('filesender-cronjob@localhost.localdomain',   'cron job');
         ensureAuthSetup('filesender-authlocal@localhost.localdomain', 'local auth job');
         ensureAuthSetup('filesender-phpunit@localhost.localdomain',   'unit test job');
+        ensureAuthSetup('filesender-testdriver@localhost.localdomain',   'a user that runs system tests');
         ensureAuthSetup('filesender-reserved1@localhost.localdomain', 'reserved job 1');
         ensureAuthSetup('filesender-reserved2@localhost.localdomain', 'reserved job 2');
         ensureAuthSetup('filesender-reserved3@localhost.localdomain', 'reserved job 3');

@@ -170,7 +170,7 @@ class DatasetTest extends CommonUnitTestCase {
             $user = Auth::user();
             $email = $user->email;
             $this->displayInfo(get_class(), __FUNCTION__, " -- email: $email" );
-            $this->assertTrue($email == 'testdriver@localhost.localdomain');
+            $this->assertTrue($email == 'filesender-testdriver@localhost.localdomain');
             
         } catch (Exception $ex) {
             $this->displayError(get_class(), __FUNCTION__, $ex->getMessage());
@@ -253,10 +253,10 @@ class DatasetTest extends CommonUnitTestCase {
 
         $alog = $t->auditlogs;
         $this->assertEquals( 22,  count($alog)    );
-        $this->assertEquals( 'testdriver@localhost.localdomain', $alog[0]->author_id );
-        $this->assertEquals( 'testdriver@localhost.localdomain', $alog[1]->author_id );
-        $this->assertEquals( 'testdriver@localhost.localdomain', $alog[2]->author_id );
-        $this->assertEquals( 'testdriver@localhost.localdomain', $alog[3]->author_id );
+        $this->assertEquals( 'filesender-testdriver@localhost.localdomain', $alog[0]->author_id );
+        $this->assertEquals( 'filesender-testdriver@localhost.localdomain', $alog[1]->author_id );
+        $this->assertEquals( 'filesender-testdriver@localhost.localdomain', $alog[2]->author_id );
+        $this->assertEquals( 'filesender-testdriver@localhost.localdomain', $alog[3]->author_id );
 
         $this->assertEquals( 'file_uploaded', $alog[1]->event );
         $this->assertEquals( 'File',          $alog[1]->target_type );
