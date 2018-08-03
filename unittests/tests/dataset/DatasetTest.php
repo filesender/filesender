@@ -163,20 +163,20 @@ class DatasetTest extends CommonUnitTestCase {
      */
     public function testDatasetDefaultUser() {
 
-        $email = '';
+        $user_id = '';
         
         try {
             $this->cred->forceCredentialsToDefaultUser();
             $user = Auth::user();
-            $email = $user->email;
-            $this->displayInfo(get_class(), __FUNCTION__, " -- email: $email" );
-            $this->assertTrue($email == 'filesender-testdriver@localhost.localdomain');
+            $user_id = $user->saml_user_identification_uid;
+            $this->displayInfo(get_class(), __FUNCTION__, " -- user_id: $user_id" );
+            $this->assertTrue($user_id == 'filesender-testdriver@localhost.localdomain');
             
         } catch (Exception $ex) {
             $this->displayError(get_class(), __FUNCTION__, $ex->getMessage());
             throw new PHPUnit_Framework_AssertionFailedError();
         }
-        $this->displayInfo(get_class(), __FUNCTION__, " -- email: $email" );
+        $this->displayInfo(get_class(), __FUNCTION__, " -- user_id: $user_id" );
         
         return true;
     }
@@ -253,10 +253,10 @@ class DatasetTest extends CommonUnitTestCase {
 
         $alog = $t->auditlogs;
         $this->assertEquals( 22,  count($alog)    );
-        $this->assertEquals( 'filesender-testdriver@localhost.localdomain', $alog[0]->author_id );
-        $this->assertEquals( 'filesender-testdriver@localhost.localdomain', $alog[1]->author_id );
-        $this->assertEquals( 'filesender-testdriver@localhost.localdomain', $alog[2]->author_id );
-        $this->assertEquals( 'filesender-testdriver@localhost.localdomain', $alog[3]->author_id );
+        $this->assertEquals( 'testdriver@localhost.localdomain', $alog[0]->author_id );
+        $this->assertEquals( 'testdriver@localhost.localdomain', $alog[1]->author_id );
+        $this->assertEquals( 'testdriver@localhost.localdomain', $alog[2]->author_id );
+        $this->assertEquals( 'testdriver@localhost.localdomain', $alog[3]->author_id );
 
         $this->assertEquals( 'file_uploaded', $alog[1]->event );
         $this->assertEquals( 'File',          $alog[1]->target_type );

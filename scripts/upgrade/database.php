@@ -109,7 +109,8 @@ function execToColumnValue( $q, $col )
 function ensureAuthSetup( $saml_uid, $comment )
 {
     $a = Authentication::ensure( $saml_uid, $comment );
-    $user = User::fromAuthId( $a->id );
+    // this is hard to do during the migration when user_id might be still around.
+//    $user = User::fromAuthId( $a->id );
 }
 
 //
@@ -369,7 +370,6 @@ try {
                     echo "Adding Authentications table...\n";
                     updateTable( call_user_func($class.'::getDBTable'),
                                  call_user_func($class.'::getDataMap'));
-                    ensureAuthenticationsTableHasReservedIDs();
                     // First, ensure the dbid column exists using the same mechanism that would
                     // normally create it
                     $classes = array('User','Guest','ClientLog','Transfer');
@@ -397,12 +397,15 @@ try {
                         DBI::exec( 'ALTER TABLE '.$table.' DROP CONSTRAINT '.$table.'_pkey ' . "\n" );
                     } else {
                         DBI::exec( 'ALTER TABLE '.$table.' drop primary key ');
+
                     }
                     
                     echo "Adding new auto inc primary key column to $tbl_user\n";
                     Database::createTableColumn($tbl_user, 'id', array('type' => 'uint','size' => 'big','addprimary' => true,'autoinc'=>true));
 
 
+                    // now we can create the few system default users
+                    ensureAuthenticationsTableHasReservedIDs();
                     
                     
                     echo "Adding entries to Authentications table with user_id auth information...\n";

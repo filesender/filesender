@@ -96,6 +96,10 @@ class Metadata extends DBObject {
 
     public static function getLatestUsedSchemaVersion() {
 
+        if( !Database::tableExists(self::getDBTable())) {
+            return DatabaseSchemaVersions::VERSION_MIN;
+        }
+        
         try {
             $statement = DBI::prepare('SELECT * FROM '.self::getDBTable().' order by schemaversion desc limit 1');
             $statement->execute(array());
