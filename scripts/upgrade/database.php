@@ -44,8 +44,6 @@ set_error_handler(function($no, $str, $file = '', $line = '') {
     Logger::error('['.$no.'] '.$str.' in '.$file.' at line '.$line);
 });
 
-$currentSchemaVersion = Metadata::getLatestUsedSchemaVersion();
-DBI::beginTransaction();
 
 $args = new Args(
     array(
@@ -68,6 +66,9 @@ if( $db_database ) {
     echo "newly set db_database is " . Config::get('db_database') . "\n";
 }
 echo "current db_database is " . Config::get('db_database') . "\n";
+
+$currentSchemaVersion = Metadata::getLatestUsedSchemaVersion();
+DBI::beginTransaction();
 
 // Get data classes
 function getClasses() {
