@@ -70,6 +70,7 @@ echo "current db_database is " . Config::get('db_database') . "\n";
 $currentSchemaVersion = Metadata::getLatestUsedSchemaVersion();
 DBI::beginTransaction();
 
+
 // Get data classes
 function getClasses() {
     $classes = array();
@@ -107,17 +108,19 @@ function execToColumnValue( $q, $col )
     return $r ? $r[$col] : -1;
 }
 
-function ensureAuthSetup( $saml_uid, $comment )
+function ensureAuthSetup( $saml_uid, $comment, $addUser )
 {
     $a = Authentication::ensure( $saml_uid, $comment );
     // this is hard to do during the migration when user_id might be still around.
-//    $user = User::fromAuthId( $a->id );
+    if( $addUser ) {
+        $user = User::fromAuthId( $a->id );
+    }
 }
 
 //
 // Reserve some auth entries for system specific use
 //
-function ensureAuthenticationsTableHasReservedIDs()
+function ensureAuthenticationsTableHasReservedIDs( $addUser = false )
 {
     $tbl_auth = call_user_func('Authentication::getDBTable');
     $q = 'select count(*) as c from ' . $tbl_auth . ' ';
@@ -161,7 +164,10 @@ function ensureAllTables()
 
         // reserve some IDs if we might have just made the auths table
         if( $class == 'Authentication' ) {
-            ensureAuthenticationsTableHasReservedIDs();
+            // We are ok to make new recrods in the UserPreferences table as it should be handled
+            // before the Authentication table and will have the right schema.
+            $createUserPreferencesRecordToo = true;
+            ensureAuthenticationsTableHasReservedIDs( $createUserPreferencesRecordToo );
         }
         echo 'Done for table '.$table."\n";
 

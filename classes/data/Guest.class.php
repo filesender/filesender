@@ -553,6 +553,12 @@ class Guest extends DBObject {
             $user->email_addresses = $this->user_email;
             return $user;
         }
+
+        if($property == 'saml_user_identification_uid') {
+            $user = User::fromId($this->userid);
+            return $user->saml_user_identification_uid;
+        }
+        
         
         if($property == 'upload_link') {
             return Config::get('site_url').'?s=upload&vid='.$this->token;

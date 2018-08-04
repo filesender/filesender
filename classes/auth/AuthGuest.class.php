@@ -100,7 +100,7 @@ class AuthGuest {
             if(!self::isAuthenticated()) throw new AuthAuthenticationNotFoundException();
             
             self::$attributes = array(
-                'uid' => self::$guest->user_id,
+                'uid' => self::$guest->saml_user_identification_uid,
                 'email' => self::$guest->owner->email,
                 'name' => null,
                 'guest' => self::$guest
