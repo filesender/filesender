@@ -49,7 +49,7 @@ class RestEndpointTransfer extends RestEndpoint {
     public static function cast(Transfer $transfer, $files_cids = null) {
         return array(
             'id' => $transfer->id,
-            'user_id' => $transfer->user_id,
+            'userid' => $transfer->userid,
             'user_email' => $transfer->user_email,
             'subject' => $transfer->subject,
             'message' => $transfer->message,

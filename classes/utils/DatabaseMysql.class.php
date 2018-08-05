@@ -77,6 +77,9 @@ class DatabaseMysql {
         $query = 'CREATE OR REPLACE VIEW '.$viewname.' as '.$definitionsql;
         DBI::exec($query);
     }
+    public static function dropView($table, $viewname) {
+        DBI::exec('DROP VIEW IF EXISTS '.$viewname);
+    }
     
     /**
      * Table columns getter.
@@ -124,13 +127,19 @@ class DatabaseMysql {
     public static function createTableSecondaryIndex( $table, $index, $definition ) {
         if(!$logger || !is_callable($logger)) $logger = function() {};
 
+        $preamble = '';
         $coldefs = '';
         foreach( $definition as $dk => $dm ) {
+            if( $dk == 'UNIQUE' ) {
+                $preamble .= ' UNIQUE ';
+                continue;
+            }
             if( $coldefs != '' )
                 $coldefs .= ',';
             $coldefs .= $dk;
         }
-        $query = 'CREATE INDEX '.$index.' on '.$table.' (' . $coldefs . ')';
+        $query = 'CREATE '.$preamble.' INDEX '.$index.' on '.$table.' (' . $coldefs . ')';
+        echo " $query \n";
         DBI::exec($query);
     }
 
@@ -370,6 +379,11 @@ class DatabaseMysql {
         $null = 'NOT NULL';
         if(array_key_exists('null', $definition) && $definition['null']) $null = 'NULL';
         $mysql .= ' '.$null;
+
+        // add primary key constraint
+        if(array_key_exists('addprimary', $definition) && $definition['addprimary']) {
+            $mysql .= ' PRIMARY KEY ';
+        }
         
         // Add default
         if(array_key_exists('default', $definition)) {

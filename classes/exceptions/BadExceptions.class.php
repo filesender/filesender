@@ -154,3 +154,21 @@ class BadURLException extends DetailedException {
         );
     }
 }
+
+
+/**
+ * Bad authid exception
+ */
+class BadAuthIDException extends DetailedException {
+    /**
+     * Constructor
+     * 
+     * @param string $url
+     */
+    public function __construct($aid) {
+        parent::__construct(
+            'bad_url_code', // Message to give to the user
+            array('aid' => $aid) // Details to log
+        );
+    }
+}

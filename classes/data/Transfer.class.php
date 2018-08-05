@@ -51,9 +51,9 @@ class Transfer extends DBObject {
             'primary' => true,
             'autoinc' => true
         ),
-        'user_id' => array(
-            'type' => 'string',
-            'size' => 250
+        'userid' => array(
+            'type' => 'uint',
+            'size' => 'big',
         ),
         'user_email' => array(
             'type' => 'string',
@@ -117,20 +117,27 @@ class Transfer extends DBObject {
 
     public static function getViewMap() {
         $a = array();
+        $authviewdef = array();
         foreach(array('mysql','pgsql') as $dbtype) {
             $a[$dbtype] = 'select *'
                         . DBView::columnDefinition_age($dbtype,'created')
                         . DBView::columnDefinition_age($dbtype,'expires')
                         . DBView::columnDefinition_age($dbtype,'made_available')
                         . DBView::columnDefinition_is_encrypted('options','is_encrypted')
-                        . '  from ' . self::getDBTable();
+                                . '  from ' . self::getDBTable();
+            
+            $authviewdef[$dbtype] = 'select t.id as id,t.userid as userid,u.authid as authid,a.saml_user_identification_uid as user_id,'
+                                      . 't.made_available,t.expires,t.created FROM '
+                                      . self::getDBTable().' t, '
+                                            . call_user_func('User::getDBTable').' u, '
+                                            . call_user_func('Authentication::getDBTable').' a where t.userid = u.id and u.authid = a.id ';
         }
-        return array( strtolower(self::getDBTable()) . 'view' => $a );
+        return array( strtolower(self::getDBTable()) . 'view' => $a, 'transfersauthview' => $authviewdef );
     }
 
     protected static $secondaryIndexMap = array(
-        'user_id' => array( 
-            'user_id' => array()
+        'userid' => array(
+            'userid' => array()
         )
     );
 
@@ -143,14 +150,15 @@ class Transfer extends DBObject {
     const EXPIRED = "expires < :date ORDER BY expires ASC";
     const FAILED = "created < :date AND (status = 'created' OR status = 'started' OR status = 'uploading') ORDER BY expires ASC";
     const AUDITLOG_EXPIRED = "expires < :date ORDER BY expires ASC";
-    const FROM_USER = "user_id = :user_id AND status='available' ORDER BY created DESC";
-    const FROM_USER_CLOSED = "user_id = :user_id AND status='closed' ORDER BY created DESC";
+    const FROM_USER = "userid = :userid AND status='available' ORDER BY created DESC";
+    const FROM_USER_CLOSED = "userid = :userid AND status='closed' ORDER BY created DESC";
     const FROM_GUEST = "guest_id = :guest_id AND status='available' ORDER BY created DESC";
     
     /**
      * Properties
      */
     protected $id = null;
+    protected $userid = null;
     protected $status = null;
     protected $user_id = null;
     protected $user_email = null;
@@ -233,7 +241,7 @@ class Transfer extends DBObject {
                                ,'limit' => $limit
                                ,'offset' => $offset
                                )
-                         , array(':user_id' => $user)
+                         , array(':userid' => $user)
                          );
     }
     
@@ -289,8 +297,8 @@ class Transfer extends DBObject {
         $transfer->recipientsCache = array();
         $transfer->logsCache = array();
         
-        $transfer->user_id = Auth::user()->id;
-        
+        $transfer->userid = Auth::user()->id;
+
         if(!$user_email) $user_email = Auth::user()->email;
         
         if(Auth::isGuest()) {
@@ -625,13 +633,13 @@ class Transfer extends DBObject {
      */
     public function __get($property) {
         if(in_array($property, array(
-            'id', 'status', 'user_id', 'user_email', 'guest_id',
+            'id','status', 'user_id', 'user_email', 'guest_id',
             'subject', 'message', 'created', 'made_available',
-            'expires', 'expiry_extensions', 'options', 'lang', 'key_version'
+            'expires', 'expiry_extensions', 'options', 'lang', 'key_version', 'userid'
         ))) return $this->$property;
-        
+
         if($property == 'user' || $property == 'owner') {
-            $user = User::fromId($this->user_id);
+            $user = User::fromID($this->userid);
             $user->email_addresses = $this->user_email;
             return $user;
         }

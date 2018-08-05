@@ -82,6 +82,9 @@ class DatabasePgsql {
         $query = 'CREATE OR REPLACE VIEW '.$viewname.' as '.$definitionsql;
         DBI::exec($query);
     }
+    public static function dropView($table, $viewname) {
+        DBI::exec('DROP VIEW IF EXISTS '.$viewname);
+    }
     
     /**
      * Table columns getter.
@@ -117,6 +120,24 @@ class DatabasePgsql {
         
         return $sequence;
     }
+    private static function createSequenceOnly($table, $column) {
+        $sequence = self::sequenceExists($table, $column, false);
+        if(!$sequence) {
+            $sequence = strtolower($table.'_'.$column.'_seq');
+            DBI::exec('CREATE SEQUENCE '.$sequence);
+        }
+        
+        return $sequence;
+    }
+    private static function changeSequenceOwnership($table, $column, $sequence) {
+        DBI::exec('ALTER SEQUENCE '.$sequence.' OWNED BY '.$table.'.'.$column);
+        return $sequence;
+    }
+    
+    private static function createSequenceReference($table, $column, $sequence) {
+        return ' DEFAULT nextval(\''.$sequence.'\')';
+    }
+    
     
     /**
      * Check if sequence exists
@@ -159,29 +180,42 @@ class DatabasePgsql {
      * @param string $definition column definition
      */
     public static function createTableColumn($table, $column, $definition) {
-        $query = 'ALTER TABLE '.$table.' ADD '.$column.' '.self::columnDefinition($definition);
-        DBI::exec($query);
-        
         if(array_key_exists('autoinc', $definition) && $definition['autoinc']) {
-            self::createSequence($table, $column);
+            $sequence = self::createSequenceOnly($table, $column);
         }
+        
+        $query = 'ALTER TABLE '.$table.' ADD '.$column.' '.self::columnDefinition($definition);
+        if(array_key_exists('autoinc', $definition) && $definition['autoinc']) {
+            $query .= self::createSequenceReference($table, $column, $sequence);
+        }
+        DBI::exec($query);
+
+        if(array_key_exists('autoinc', $definition) && $definition['autoinc']) {
+            self::changeSequenceOwnership($table, $column, $sequence);
+        }
+        
     }
 
-    public static function dropTableSecondaryIndex(   $table, $index ) {
+    public static function dropTableSecondaryIndex(   $table, $index, $logger = null ) {
         if(!$logger || !is_callable($logger)) $logger = function() {};
         $query = 'DROP INDEX '.$index;
         DBI::exec($query);
     }
-    public static function createTableSecondaryIndex( $table, $index, $definition ) {
+    public static function createTableSecondaryIndex( $table, $index, $definition, $logger = null ) {
         if(!$logger || !is_callable($logger)) $logger = function() {};
 
+        $preamble = '';
         $coldefs = '';
         foreach( $definition as $dk => $dm ) {
+            if( $dk == 'UNIQUE' ) {
+                $preamble .= ' UNIQUE ';
+                continue;
+            }
             if( $coldefs != '' )
                 $coldefs .= ',';
             $coldefs .= $dk;
         }
-        $query = 'CREATE INDEX '.$index.' on '.$table.' (' . $coldefs . ')';
+        $query = 'CREATE '.$preamble.' INDEX '.$index.' on '.$table.' (' . $coldefs . ')';
         DBI::exec($query);
     }
 

@@ -51,6 +51,7 @@ class Autoloader {
         'GUIPages' => 'constants/',
         'LogLevels' => 'constants/',
         'ReportFormats' => 'constants/',
+        'DatabaseSchemaVersions' => 'constants/',
         
         'Storage' => 'storage/',
         'Storage*' => 'storage/',
@@ -70,6 +71,8 @@ class Autoloader {
         'User' => 'data/',
         'TrackingEvent' => 'data/',
         'TranslatableEmail' => 'data/',
+        'Metadata' => 'data/',
+        'Authentication' => 'data/',
         '*Log' => 'data/',
 
         'DBLayer' => 'utils/',

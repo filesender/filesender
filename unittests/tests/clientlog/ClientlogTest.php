@@ -81,7 +81,7 @@ class ClientlogTest extends CommonUnitTestCase {
 
         $this->assertNotNull($log->id);
         $this->assertEquals($message, $log->message);
-        $this->assertEquals(Auth::user()->id, $log->user_id);
+        $this->assertEquals(Auth::user()->id, $log->userid);
         
         $this->displayInfo(get_class(), __FUNCTION__, ' -- ClientLog created');
         
