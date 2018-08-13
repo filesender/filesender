@@ -161,12 +161,7 @@ class Authentication extends DBObject {
     }
 
     private function updateHash() {
-        if( phpversion() < 5.4 ) {
-            // CIFIXME remove this branch when CI php is upgraded.
-            $h = sha1($this->saml_user_identification_uid);
-        } else {
-            $h = password_hash( $this->saml_user_identification_uid, PASSWORD_DEFAULT );
-        }
+        $h = sha1($this->saml_user_identification_uid);
         $this->saml_user_identification_uid_hash = $h;
         return $h;
     }
