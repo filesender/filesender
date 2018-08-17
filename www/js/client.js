@@ -653,7 +653,7 @@ window.filesender.client = {
     },
 
     /**
-     * Delete a recipient
+     * Delete a user account
      * 
      * @param userid user to delete (can be '@me')
      * @param callable callback
