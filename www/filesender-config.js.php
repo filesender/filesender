@@ -119,6 +119,7 @@ window.filesender.config = {
     auditlog_lifetime: <?php $lt = Config::get('auditlog_lifetime'); echo is_null($lt) ? 'null' : $lt ?>,
     
     logon_url: '<?php echo AuthSP::logonURL() ?>',
+    logoff_url: '<?php echo AuthSP::logoffURL() ?>',
 
     upload_display_per_file_stats: '<?php echo Config::get('upload_display_per_file_stats') ?>',
     upload_force_transfer_resume_forget_if_encrypted: '<?php echo Config::get('upload_force_transfer_resume_forget_if_encrypted') ?>',

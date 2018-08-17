@@ -650,5 +650,24 @@ window.filesender.client = {
     
     getUserQuota: function(callback, onerror) {
         this.get('/user/@me/quota', callback, {ignore_authentication_required: true});
-    }
+    },
+
+    /**
+     * Delete a user account
+     * 
+     * @param userid user to delete (can be '@me')
+     * @param callable callback
+     */
+    deleteUserAccount: function(user, callback, onerror) {
+        var id = user;
+        var opts = {};
+        
+        if(typeof user == 'object')
+            id = user.id;
+        
+        if(onerror) opts.error = onerror;
+        
+        return this.delete('/user/' + id, callback, opts);
+    },
+    
 };

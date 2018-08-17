@@ -1,4 +1,16 @@
 <div class="box">
+
+    <h2>Actions</h2>
+
+        {tr:user_profile_delete_about_description_text}
+    
+    <div class="delete_my_account">
+        <a href="#">
+            <span class="fa fa-lg fa-times"></span>
+            {tr:delete_my_account}
+        </a>
+    </div>
+    
     <?php
     
     $readonly = function($info) {

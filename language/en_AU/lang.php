@@ -456,3 +456,7 @@ $lang['privacy_page_clientlogs_lifetime'] = 'If a transfer fails you might be of
 $lang['privacy_page_translatable_emails_lifetime'] = 'Number of days emails sent to a user will be retained';
 $lang['privacy_page_guests_expired_lifetime'] = 'Once a guest has expired they are removed after this many days';
 $lang['privacy_page_auditlog_lifetime'] = 'Days that a log of what actions have happened is retained.';
+
+$lang['delete_my_account'] = 'Delete my account';
+$lang['confirm_delete_my_account'] = 'This will delete your files, guests, and other information from the FileSender installation. Continue?';
+$lang['user_deleted'] = 'You have been removed from the server. Have a nice day!';

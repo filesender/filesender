@@ -589,4 +589,31 @@ class User extends DBObject {
             
         }else throw new PropertyAccessException($this, $property);
     }
+
+    /**
+     * Delete the user related objects that the database delete will not remove.
+     * for example, all the files on the disk for transfers owned by this user 
+     * or their guests.
+     */
+    public function beforeDelete() {
+
+        $user = $this;
+        $transfers = Transfer::fromGuestsOf($user);
+        foreach($transfers as $t) {
+            $t->delete();
+        }
+        $transfers = Transfer::fromUser($user);
+        foreach($transfers as $t) {
+            $t->delete();
+        }
+
+        // The RI from translatable emails to guests is not 100%
+        // so we have to remove the guests manually to also get that
+        // associated information
+        $guests = Guest::fromUser($user);
+        foreach($guests as $g) {
+            $g->delete();
+        }
+        
+    }    
 }
