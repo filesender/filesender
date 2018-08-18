@@ -223,6 +223,7 @@ class User extends DBObject {
             $data = array();
             $data['authid'] = $authid;
             $ret = static::createFactory(null,$data);
+            $ret->created = time();
             $ret->authid = $authid;
             $ret->insert();
             return $ret;
