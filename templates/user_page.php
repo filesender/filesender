@@ -21,7 +21,6 @@
         'preferences' => array(
             'lang' => function($info) use($readonly) {
                 if(!Config::get('lang_userpref_enabled')) return;
-                
                 if($info['mode'] == 'write') {
                     $opts = array();
                     foreach(Lang::getAvailableLanguages() as $id => $language) {
@@ -48,7 +47,9 @@
             },
         ),
         'additional' => array(
-            'id' => $readonly,
+            'saml_user_identification_uid' => function($info) use($readonly) {
+                $readonly($info);
+            },
             'created' => function($info) use($readonly) {
                 $info['value'] = Utilities::formatDate($info['value']);
                 $readonly($info);
@@ -57,7 +58,11 @@
     );
     
     $page = (array)Config::get('user_page');
+    if( $page['id'] ) {
+        $page['saml_user_identification_uid'] = $page['id'];
+    }
     foreach($infos as $category => $set) {
+
         $displayed = array();
         foreach($set as $id => $generator) {
             if(array_key_exists($id, $page)) {
@@ -75,10 +80,14 @@
         if(!count($displayed)) continue;
         
         echo '<h2>'.Lang::tr('user_'.$category).'</h2>'."\n";
-        
+        echo '<p>'.Lang::tr('user_'.$category.'_body').'</p>'."\n";
         foreach($displayed as $info) {
-            echo '<div class="info" data-info="'.$info['id'].'">';
-            echo '  <h3>'.Lang::tr('user_'.$info['id']).'</h3>'."\n";
+            $tag = $info['id'];
+            if( $tag == 'saml_user_identification_uid' ) {
+                $tag = 'id';
+            }
+            echo '<div class="info" data-info="'.$tag.'">';
+            echo '  <h3>'.Lang::tr('user_'.$tag).'</h3>'."\n";
             $info['generator']($info);
             echo '</div>';
         }
