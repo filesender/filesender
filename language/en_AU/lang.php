@@ -460,3 +460,7 @@ $lang['privacy_page_auditlog_lifetime'] = 'Days that a log of what actions have 
 $lang['delete_my_account'] = 'Delete my account';
 $lang['confirm_delete_my_account'] = 'This will delete your files, guests, and other information from the FileSender installation. Continue?';
 $lang['user_deleted'] = 'You have been removed from the server. Have a nice day!';
+
+$lang['user_preferences_body'] = 'Some preferences for your account that you might like to change.';
+$lang['user_remote_authentication_body'] = 'Use this information to authenticate with the system if you are developing REST clients.';
+$lang['user_additional_body'] = 'This is the information that we have about your account.';
