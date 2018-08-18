@@ -125,20 +125,20 @@ function ensureAuthenticationsTableHasReservedIDs( $addUser = false )
     $tbl_auth = call_user_func('Authentication::getDBTable');
     $q = 'select count(*) as c from ' . $tbl_auth . ' ';
     if( execToColumnValue( $q, 'c' ) < 1) {
-        ensureAuthSetup('filesender-upgrade@localhost.localdomain',   'local upgrade script');
-        ensureAuthSetup('filesender-cronjob@localhost.localdomain',   'cron job');
-        ensureAuthSetup('filesender-authlocal@localhost.localdomain', 'local auth job');
-        ensureAuthSetup('filesender-phpunit@localhost.localdomain',   'unit test job');
-        ensureAuthSetup('filesender-testdriver@localhost.localdomain',   'a user that runs system tests');
-        ensureAuthSetup('filesender-reserved1@localhost.localdomain', 'reserved job 1');
-        ensureAuthSetup('filesender-reserved2@localhost.localdomain', 'reserved job 2');
-        ensureAuthSetup('filesender-reserved3@localhost.localdomain', 'reserved job 3');
-        ensureAuthSetup('filesender-reserved4@localhost.localdomain', 'reserved job 4');
-        ensureAuthSetup('filesender-reserved5@localhost.localdomain', 'reserved job 5');
-        ensureAuthSetup('filesender-reserved6@localhost.localdomain', 'reserved job 6');
-        ensureAuthSetup('filesender-reserved7@localhost.localdomain', 'reserved job 7');
-        ensureAuthSetup('filesender-reserved8@localhost.localdomain', 'reserved job 8');
-        ensureAuthSetup('filesender-reserved9@localhost.localdomain', 'reserved job 9');
+        ensureAuthSetup('filesender-upgrade@localhost.localdomain',   'local upgrade script', $addUser );
+        ensureAuthSetup('filesender-cronjob@localhost.localdomain',   'cron job', $addUser );
+        ensureAuthSetup('filesender-authlocal@localhost.localdomain', 'local auth job', $addUser );
+        ensureAuthSetup('filesender-phpunit@localhost.localdomain',   'unit test job', $addUser );
+        ensureAuthSetup('filesender-testdriver@localhost.localdomain',   'a user that runs system tests', $addUser );
+        ensureAuthSetup('filesender-reserved1@localhost.localdomain', 'reserved job 1', $addUser );
+        ensureAuthSetup('filesender-reserved2@localhost.localdomain', 'reserved job 2', $addUser );
+        ensureAuthSetup('filesender-reserved3@localhost.localdomain', 'reserved job 3', $addUser );
+        ensureAuthSetup('filesender-reserved4@localhost.localdomain', 'reserved job 4', $addUser );
+        ensureAuthSetup('filesender-reserved5@localhost.localdomain', 'reserved job 5', $addUser );
+        ensureAuthSetup('filesender-reserved6@localhost.localdomain', 'reserved job 6', $addUser );
+        ensureAuthSetup('filesender-reserved7@localhost.localdomain', 'reserved job 7', $addUser );
+        ensureAuthSetup('filesender-reserved8@localhost.localdomain', 'reserved job 8', $addUser );
+        ensureAuthSetup('filesender-reserved9@localhost.localdomain', 'reserved job 9', $addUser );
     }
     
 }
