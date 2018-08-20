@@ -473,10 +473,32 @@ Create the filesender database:
 mysql -u root -p
 CREATE DATABASE `filesender` DEFAULT CHARACTER SET utf8mb4;
 GRANT USAGE ON *.* TO 'filesender'@'localhost' IDENTIFIED BY '<your password>';
-GRANT CREATE, ALTER, SELECT, INSERT, INDEX, UPDATE, DELETE ON `filesender`.* TO 'filesender'@'localhost';
+GRANT CREATE, CREATE VIEW, ALTER, SELECT, INSERT, INDEX, UPDATE, DELETE ON `filesender`.* TO 'filesender'@'localhost';
+GRANT DROP ON `filesender`.* TO 'filesender'@'localhost';
 FLUSH PRIVILEGES;
 exit
 ```
+
+Note that the drop permissions are only needed by the database setup
+and upgrade script (scripts/upgrade/database.php). Unfortunately the
+permission to drop a view is not separate from the normal drop
+permission which also allows a table to be deleted. It is recommended
+to run to following during production to remove this ability to drop
+views (and tables) from the filesender database user.
+
+```
+mysql -u root -p
+REVOKE DROP ON `filesender`.* FROM 'filesender'@'localhost';
+FLUSH PRIVILEGES;
+```
+
+Remember to allow drop again when you are upgrading your FileSender
+installation by running the upgrade script
+(scripts/upgrade/database.php).
+
+In the future two database users might be created so that the admin
+script can enjoy higher privledges to modify the database while the
+regular filesender user can not make these larger changes.
 
 # Step 7 - Configure PHP
 
