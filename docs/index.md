@@ -24,7 +24,7 @@ about the project [please visit our homepage](http://filesender.org).
 
 ### Which version should you choose
 
-Version 2.0 has been released in June 2018 and is the recommended
+Version 2.2 has been released in August 2018 and is the recommended
 choice.
 
 Following the 2.0 release there will be subsequent releases in the
@@ -37,7 +37,7 @@ The previos production release is [1.6.1, released on December 30th
 
 ### Documentation
 
-Please see the [documentation for 2.0](http://docs.filesender.org/v2.0/).
+Please see the [documentation for versions 2.x](http://docs.filesender.org/v2.0/).
 
 ### License
 
