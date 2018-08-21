@@ -35,18 +35,20 @@ if (!defined('FILESENDER_BASE')) die('Missing environment');
 
 require_once dirname(__FILE__).'/../../optional-dependencies/azure/vendor/autoload.php';
 
+use MicrosoftAzure\Storage\Blob\BlobRestProxy;
+//use MicrosoftAzure\Storage\Common\ServiceException;
+use MicrosoftAzure\Storage\Common\Exceptions\ServiceException;
+
 use MicrosoftAzure\Storage\Blob\Models\CreateContainerOptions;
 use MicrosoftAzure\Storage\Blob\Models\PublicAccessType;
 use MicrosoftAzure\Storage\Blob\Models\CreateBlobOptions;
 use MicrosoftAzure\Storage\Blob\Models\GetBlobOptions;
-use MicrosoftAzure\Storage\Common\Exceptions\ServiceException;
 use MicrosoftAzure\Storage\Common\Exceptions\InvalidArgumentTypeException;
 use MicrosoftAzure\Storage\Common\Internal\Resources;
 use MicrosoftAzure\Storage\Common\Internal\StorageServiceSettings;
 use MicrosoftAzure\Storage\Common\Models\RetentionPolicy;
 use MicrosoftAzure\Storage\Common\Models\ServiceProperties;
 use MicrosoftAzure\Storage\Common\SharedAccessSignatureHelper;
-use MicrosoftAzure\Storage\Common\ServicesBuilder;
 
 
 /**
@@ -61,7 +63,7 @@ class StorageCloudAzure extends StorageFilesystem {
     public static function getBlobService() {
         
         $connectionString = Config::get('cloud_azure_connection_string');
-        $blobClient = ServicesBuilder::getInstance()->createBlobService($connectionString);
+        $blobClient = BlobRestProxy::createBlobService($connectionString);
         return $blobClient;
     }
     

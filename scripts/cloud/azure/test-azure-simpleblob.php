@@ -33,6 +33,7 @@
 require_once dirname(__FILE__).'/../../../includes/init.php';
 require_once dirname(__FILE__).'/../../../optional-dependencies/azure/vendor/autoload.php';
 
+use MicrosoftAzure\Storage\Blob\BlobRestProxy;
 use MicrosoftAzure\Storage\Blob\Models\CreateContainerOptions;
 use MicrosoftAzure\Storage\Blob\Models\PublicAccessType;
 use MicrosoftAzure\Storage\Blob\Models\CreateBlobOptions;
@@ -44,13 +45,13 @@ use MicrosoftAzure\Storage\Common\Internal\StorageServiceSettings;
 use MicrosoftAzure\Storage\Common\Models\RetentionPolicy;
 use MicrosoftAzure\Storage\Common\Models\ServiceProperties;
 use MicrosoftAzure\Storage\Common\SharedAccessSignatureHelper;
-use MicrosoftAzure\Storage\Common\ServicesBuilder;
 
 
 $connectionString = Config::get('cloud_azure_connection_string');
 $containerName    = 'filesender-test-container';
 
-$blobClient = ServicesBuilder::getInstance()->createBlobService($connectionString);
+$blobClient = BlobRestProxy::createBlobService($connectionString);
+
 
 
 $content = "test string 125";
