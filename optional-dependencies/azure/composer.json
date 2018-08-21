@@ -1,5 +1,8 @@
 {
-    "require": {
-        "microsoft/windowsazure": "^0.5"
-    }
+  "require": {
+    "microsoft/azure-storage-blob": "*",
+    "microsoft/azure-storage-table": "*",
+    "microsoft/azure-storage-queue": "*",
+    "microsoft/azure-storage-file": "*"
+  }
 }
