@@ -2,6 +2,6 @@
     "require": {
         "sauce/sausage": ">=0.15.2",
         "appium/php-client": "@dev",
-        "phpunit/phpunit-selenium": "^4.1",
+        "phpunit/phpunit-selenium": "^4.1"
     }
 }
