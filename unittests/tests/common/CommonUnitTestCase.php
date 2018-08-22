@@ -32,11 +32,12 @@
 
 require_once('CommonPHPUnitConfigs.php');
 
+use PHPUnit\Framework\TestCase;
 
 /**
  * Common unit test case file
  */
-abstract class CommonUnitTestCase extends PHPUnit_Framework_TestCase{
+abstract class CommonUnitTestCase extends TestCase {
     
     
     /**
