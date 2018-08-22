@@ -177,8 +177,14 @@ class Storage {
         if(strlen($data) > (int)Config::get('upload_crypted_chunk_size'))
             throw new StorageChunkTooLargeException(strlen($data), (int)Config::get('upload_chunk_size'));
         
+        $bench = new Benchmark('writeChunk','benchmark_writeChunk');
+        $bench->start();
+        
         // Ask underlying class to write data
-        return call_user_func(self::getStorageClass($file).'::writeChunk', $file, $data, $offset);
+        $ret = call_user_func(self::getStorageClass($file).'::writeChunk', $file, $data, $offset);
+        
+        $bench->log();
+        return $ret;
     }
     
     /**

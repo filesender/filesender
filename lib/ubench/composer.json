@@ -1,0 +1,32 @@
+{
+    "name": "devster/ubench",
+    "description": "Micro PHP library for benchmarking",
+    "keywords": ["benchmark", "bench", "library", "micro"],
+    "homepage": "https://github.com/devster/ubench",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jeremy Perret",
+            "email": "jeremy@devster.org"
+        }
+    ],
+
+    "autoload": {
+        "psr-0": { "Ubench": "src/" }
+    },
+
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.0.x-dev"
+        }
+    },
+
+    "require-dev": {
+        "phpunit/phpunit": "*"
+    },
+  
+    "scripts": {
+        "test": "vendor/bin/phpunit"
+    }
+}
