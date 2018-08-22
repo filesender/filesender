@@ -33,7 +33,7 @@ before_script:
 - sudo apt-get install apache2 libapache2-mod-fastcgi
 - sudo cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf.default ~/.phpenv/versions/$(phpenv
   version-name)/etc/php-fpm.conf
-- sudo cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d ~/.phpenv/versions/$(phpenv version-name)/etc/
+- sudo cp -a ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d ~/.phpenv/versions/$(phpenv version-name)/etc/
 - sudo ls -l ~/.phpenv/versions/$(phpenv version-name)/etc/
 - sudo a2enmod rewrite actions fastcgi alias ssl headers
 - echo "cgi.fix_pathinfo = 1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
