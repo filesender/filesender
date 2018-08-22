@@ -33,6 +33,8 @@
 
 require_once('CommonPHPUnitConfigs.php');
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * Class containing DB operations constants
  */
@@ -82,7 +84,7 @@ class DBErrors {
 /**
  * Abstract class containing common function to test CRUD operations on database
  */
-abstract class CommonDatabaseTestCase extends PHPUnit_Framework_TestCase {
+abstract class CommonDatabaseTestCase extends TestCase {
 
     /**
      * Function used to test CREATE operation
