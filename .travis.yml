@@ -33,9 +33,12 @@ before_script:
 - sudo apt-get install apache2 libapache2-mod-fastcgi
 - sudo cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf.default ~/.phpenv/versions/$(phpenv
   version-name)/etc/php-fpm.conf
-- sudo ls -l ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d
+- ls -l   ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d/
+- sudo cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d/www.conf.default ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d/www.conf
 - sudo a2enmod rewrite actions fastcgi alias ssl headers
 - echo "cgi.fix_pathinfo = 1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+#- sudo sed -i -e "s,www-data,travis,g" /etc/apache2/envvars
+#- sudo chown -R travis:travis /var/lib/apache2/fastcgi
 - sudo sed -i "s/error_reporting = E_ALL/error_reporting = E_ALL \& ~E_DEPRECATED
   \& ~E_STRICT/" ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
 - sudo sed -i "s/host    all             all             127.0.0.1\/32            trust/host    all             all             127.0.0.1\/32            md5/"
