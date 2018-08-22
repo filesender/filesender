@@ -1,8 +1,10 @@
-dist: precise
+dist: trusty
 sudo: required
 language: php
 php:
-- 5.3
+  - 7.0
+services:
+  - postgresql
 addons:
   sauce_connect:
     username: "$SAUCE_USERNAME"
@@ -11,8 +13,6 @@ addons:
   - file_sender.app
   jwt:
     secure: Dfap55GeoeDedJPwqtX3o7AEdZ48gGdOcgYOKNDZu4+9xKsuxFG4n9UKbF7H378XCuoS+og+vpdJ+PZhmbsvd09/zdNw8HWoRRixGG1sDLg97NOX3ImjCoeSPcOVoiYwH/uVP22NnW2orhBwzeYo6OaX9Eb7Q9soXgoNRuPC3i7lsHVx7duB3lfc1bv1Bay6RmxtBfGXj4Q7mwMseoejL0PiYICWJ2H5KFt2Cd3qTIXhl2moMREyovwji97bQXv45XW2n7pUfEgSQJvdxd5tJvcu8ngYQq7YIeOmhYf3QyYVB8NIgI/iOI1CldGCE9pTSEfMGzkATi2OKJHrHurETHEhWEgFzNheYxlh/eTZqGuHN767r1XQID/lQ/kNiOjZyvTkGw2oCwpz9G3exNTo95AaG52OB1vb8MwnupmDXk+ozm3ZECsfnad1UAawVvTYB6CgUF1sg2RQH7quhmYyDQB5j9SLJ9xMsYo06ttBtABgiAzs9P/73gVKO9f13Qvy+ZSF2elzpCBO23B1gm9j/zmi3NW8cPmYEq/6spGV4K2T7RGATAPgeX98+QHAOLMWUo7TWl/oJVH4P+ocMgdSgGpp9cyE0kAFQyZ62vU29Z4xIua1t1gDr/LbrpMj5LJls5YfhFwuNYLACKDJto+AlGj4vqWyDi0kivVqsrdGqx4=
-service:
-- postgresql
 before_install:
 - composer self-update
 - composer update --no-interaction
