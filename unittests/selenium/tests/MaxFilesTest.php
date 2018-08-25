@@ -1,6 +1,9 @@
 <?php
 
-require_once 'unittests/selenium_tests/SeleniumTest.php';
+require_once 'unittests/selenium/SeleniumTest.php';
+
+// requires a config
+// Config::set( 'max_transfer_files', 30 );
 
 class MaxFilesTest extends SeleniumTest
 {
@@ -33,7 +36,7 @@ class MaxFilesTest extends SeleniumTest
         {
             $test_file = sys_get_temp_dir().DIRECTORY_SEPARATOR.'no'.($i+1).'.txt';
             $test_files_created[] = $test_file;
-            copy("unittests/selenium_tests/assets/124bytes.txt", $test_file);
+            copy("unittests/selenium/assets/124bytes.txt", $test_file);
             $this->sendKeys($this->byCssSelector(".file_selector input[name=\"files\"]"), $test_file);
         }
 

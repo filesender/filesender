@@ -1,6 +1,6 @@
 <?php
 
-require_once 'unittests/selenium_tests/SeleniumTest.php';
+require_once 'unittests/selenium/SeleniumTest.php';
 
 class TemplatingTest extends SeleniumTest
 {

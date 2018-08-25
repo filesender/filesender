@@ -1,6 +1,6 @@
 <?php
 
-include_once('unittests/selenium_tests/SeleniumTest.php');
+include_once('unittests/selenium/SeleniumTest.php');
 
 class UploadAutoResumeTest extends SeleniumTest
 {
@@ -78,7 +78,7 @@ class UploadAutoResumeTest extends SeleniumTest
     private function fileUploadTest($file_name, $error_expected)
     {
         echo "file_name $file_name \n";
-        $this->sendKeys($this->byCssSelector(".file_selector input[name=\"files\"]"), "unittests/selenium_tests/assets/".$file_name);
+        $this->sendKeys($this->byCssSelector(".file_selector input[name=\"files\"]"), "unittests/selenium/assets/".$file_name);
 
         $elements = $this->elements($this->using('css selector')->value('*[class="file invalid transfer_maximum_size_exceeded"]'));
         $count = count($elements);

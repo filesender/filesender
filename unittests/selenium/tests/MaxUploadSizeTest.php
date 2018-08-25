@@ -1,6 +1,6 @@
 <?php
 
-require_once 'unittests/selenium_tests/SeleniumTest.php';
+require_once 'unittests/selenium/SeleniumTest.php';
 
 class MaxUploadSizeTest extends SeleniumTest
 {
@@ -75,7 +75,7 @@ class MaxUploadSizeTest extends SeleniumTest
 
     private function fileUploadTest($file_name, $error_expected)
     {
-        $this->sendKeys($this->byCssSelector(".file_selector input[name=\"files\"]"), "unittests/selenium_tests/assets/".$file_name);
+        $this->sendKeys($this->byCssSelector(".file_selector input[name=\"files\"]"), "unittests/selenium/assets/".$file_name);
 
         $elements = $this->elements($this->using('css selector')->value('*[class="file invalid transfer_maximum_size_exceeded"]'));
         $count = count($elements);
