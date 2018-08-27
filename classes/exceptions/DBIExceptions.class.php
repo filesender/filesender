@@ -105,3 +105,19 @@ class DBIBackendExplicitHandlerUnimplementedException extends DetailedException 
         );
     }
 }
+
+// duplicate object
+class DBIDuplicateException extends DetailedException {
+    /**
+     * Constructor
+     * 
+     * @param string $message error message
+     */
+    public function __construct($message, $details = null) {
+        parent::__construct(
+            'duplicate_object', // Message to give to the user
+            array($message, $details) // Details to log
+        );
+    }
+}
+
