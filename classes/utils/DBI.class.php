@@ -221,6 +221,14 @@ class DBI {
                 
             return $r;
         } catch(Exception $e) {
+            $dbtype = Config::get('db_type');
+            $code = $e->getCode();
+            if( $dbtype == 'pgsql' ) {
+                // print_r($e,false);
+                if( $code == 42710 ) {
+                    throw new DBIDuplicateException($e->getMessage(), array('name' => $name, 'args' => $args));
+                }
+            }
             throw new DBIUsageException($e->getMessage(), array('name' => $name, 'args' => $args));
         }
     }

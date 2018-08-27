@@ -225,6 +225,44 @@ function updateIntoTable( $updateTable, $fromTable, $setClause, $whereClause )
     DBI::exec( $q );
 }
 
+//
+// Create forign keys if they are not there already
+//
+function ensureFK()
+{
+    $dbtype = Config::get('db_type');
+    $tbl_auth      = call_user_func('Authentication::getDBTable');
+    $tbl_transfers = call_user_func('Transfer::getDBTable');
+    $tbl_guests    = call_user_func('Guest::getDBTable');
+    $tbl_clientlog = call_user_func('ClientLog::getDBTable');
+    $tbl_user      = call_user_func('User::getDBTable');
+
+    $if_not_exists = '';
+    if( $dbtype == 'mysql' ) {
+        $if_not_exists = ' IF NOT EXISTS ';
+    }
+
+    $a = array();
+    array_push( $a,'ALTER TABLE '.$tbl_user.     ' ADD CONSTRAINT UserPreferences_authid FOREIGN KEY ' . $if_not_exists . ' (authid) REFERENCES '.$tbl_auth.' (id)  on delete cascade on update restrict ;');
+    array_push( $a, 'ALTER TABLE '.$tbl_transfers.' ADD CONSTRAINT Transfers_userid       FOREIGN KEY ' . $if_not_exists . ' (userid) REFERENCES '.$tbl_user.' (id)  on delete cascade on update restrict ;');
+    array_push( $a, 'ALTER TABLE '.$tbl_guests.   ' ADD CONSTRAINT Guests_userid          FOREIGN KEY ' . $if_not_exists . ' (userid) REFERENCES '.$tbl_user.' (id)  on delete cascade on update restrict ;');
+    array_push( $a, 'ALTER TABLE '.$tbl_clientlog.' ADD CONSTRAINT ClientLog_userid       FOREIGN KEY ' . $if_not_exists . ' (userid) REFERENCES '.$tbl_user.' (id)  on delete cascade on update restrict ;');
+
+    // There is no if not exists for psql so we just make
+    // all the fks and ignore the duplicate error coming back.
+    // Other errors are left to hit top level as fatal
+    foreach ($a as $key => $sql)
+    {
+        try {
+            echo $sql . "\n";
+            DBI::exec( $sql );
+        } catch(DBIDuplicateException $e ) {
+            echo "... already there!\n";
+        }
+    }
+}
+
+
 function updateTable( $table, $datamap )
 {
     // Check if table exists
@@ -465,11 +503,11 @@ try {
                     } else {
                         DBI::exec( 'ALTER TABLE '.$table.' drop primary key, add primary key( id )');
                     }
-                    
-                    DBI::exec( 'ALTER TABLE '.$tbl_user.     ' ADD FOREIGN KEY (authid) REFERENCES '.$tbl_auth.' (id)  on delete cascade on update restrict ;');
-                    DBI::exec( 'ALTER TABLE '.$tbl_transfers.' ADD FOREIGN KEY (userid) REFERENCES '.$tbl_user.' (id)  on delete cascade on update restrict ;');
-                    DBI::exec( 'ALTER TABLE '.$tbl_guests.   ' ADD FOREIGN KEY (userid) REFERENCES '.$tbl_user.' (id)  on delete cascade on update restrict ;');
-                    DBI::exec( 'ALTER TABLE '.$tbl_clientlog.' ADD FOREIGN KEY (userid) REFERENCES '.$tbl_user.' (id)  on delete cascade on update restrict ;');
+
+                    // NOTE NOTE NOTE
+                    //
+                    // FOREIGN KEY constraints are added at the end of the script
+                    // so that column types might change, eg, add not null after migration
 
                     Database::removeTableColumn($tbl_user,      'user_id');
                     Database::removeTableColumn($tbl_transfers, 'user_id');
@@ -523,7 +561,15 @@ try {
 }
 
 echo "\n\n";
-echo "All code worked, commit to database starting...\n";
+echo "All core code worked (leaving foreign keys), commit to database starting...\n";
 DBI::commit();
+echo "Commit went well, those changes are now permanent\n";
+
+
+
+echo "Performing FOREIGN KEY creation...\n";
+ensureFK();
+
+
 echo "Everything went well\n";
 echo "Database structure is up to date\n";
