@@ -64,8 +64,8 @@ before_script:
 - sudo service apache2 restart
 - curl -k http://localhost:443/ || sudo cat /var/log/apache2/error.log
 - curl -k https://localhost/    || echo 'no'
-- curl -k http://localhost:443/filesender || sudo cat /var/log/apache2/error.log
-- curl -k http://localhost:443/filesender/info.php || sudo cat /var/log/apache2/error.log
+- curl -k https://localhost:443/filesender || sudo cat /var/log/apache2/error.log
+- curl -k https://localhost:443/filesender/info.php || sudo cat /var/log/apache2/error.log
 - sudo cat /var/log/apache2/error.log
 - sudo cat /var/log/apache2/access.log
 - exit 1
