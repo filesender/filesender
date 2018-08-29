@@ -59,7 +59,7 @@ before_script:
 - sudo cp -f travis/config.travis.apache2.conf /etc/apache2/sites-available/default
 - sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-available/default
 - sudo service postgresql restart
-- sudo a2ensite 
+- sudo a2ensite default-ssl
 - sudo service apache2 restart
 - curl -k https://localhost/filesender/info.php || sudo cat /var/log/apache2/error.log
 - exit 1
