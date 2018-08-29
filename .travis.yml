@@ -51,9 +51,9 @@ before_script:
 - sudo sed -i "s/NameVirtualHost \*:80/# NameVirtualHost \*:80/" /etc/apache2/ports.conf
 - sudo sed -i "s/Listen 80/# Listen 80/" /etc/apache2/ports.conf
 #- "~/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm"
-- sudo echo '<?php'      >| $TRAVIS_BUILD_DIR/info.php
-- sudo echo 'phpinfo();' >> $TRAVIS_BUILD_DIR/info.php
-- sudo chown www-data       $TRAVIS_BUILD_DIR/info.php
+- sudo echo '<?php'      >| $TRAVIS_BUILD_DIR/www/info.php
+- sudo echo 'phpinfo();' >> $TRAVIS_BUILD_DIR/www/info.php
+- sudo chown www-data       $TRAVIS_BUILD_DIR/www/info.php
 - sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/certs/filesender_test.key
   -out /etc/ssl/certs/filesender_test.crt -subj "/C=US/ST=Denial/L=Springfield/O=Dis/CN=file_sender.app"
 - sudo cp -f travis/config.travis.apache2.conf /etc/apache2/sites-enabled/000-default.conf
@@ -62,10 +62,11 @@ before_script:
 #- sudo a2ensite default-ssl
 - sudo cat /etc/apache2/sites-enabled/000-default.conf
 - sudo ls -l /etc/apache2/sites-enabled
+- sudo ls -l /home/travis/build/filesender/filesender
 - sudo service apache2 restart
 - curl -k http://localhost:443/ || sudo cat /var/log/apache2/error.log
 - curl -k https://localhost/    || echo 'no'
-- curl -k https://localhost/filesender || sudo cat /var/log/apache2/error.log
+- curl -k https://localhost/filesender/ || sudo cat /var/log/apache2/error.log
 - curl -k https://localhost/filesender/info.php || sudo cat /var/log/apache2/error.log
 - sudo cat /var/log/apache2/error.log
 - sudo cat /var/log/apache2/access.log
