@@ -64,6 +64,7 @@ before_script:
 - sudo ls -l /etc/apache2/sites-enabled
 - sudo ls -l /home/travis/build/filesender/filesender
 - sudo ls -l /etc/apache2/mods-enabled
+- sudo ls -l /etc/apache2/mods-available
 - sudo service apache2 restart
 - curl -k http://localhost:443/ || sudo cat /var/log/apache2/error.log
 - curl -k https://localhost/    || echo 'no'
