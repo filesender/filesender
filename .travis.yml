@@ -60,13 +60,14 @@ before_script:
 - sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-available/default
 - sudo service postgresql restart
 - sudo service apache2 restart
-- curl http://localhost/filesender/info.php 
+- curl http://localhost/filesender/info.php
+- exit 1
 after_failure:
 - sudo cat /var/log/apache2/error.log
 - sudo cat /var/log/apache2/access.log
 - find ./log -type f -exec cat {} +
 script:
-- phpunit --configuration ./unittests/config_tests_filesender.xml
+- phpunit --configuration ./unittests/config_tests_filesender.xml--FAIL
 notifications:
   email: false
 env:
