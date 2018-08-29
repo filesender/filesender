@@ -59,6 +59,15 @@ before_script:
 - sudo cp -f travis/config.travis.apache2.conf /etc/apache2/sites-enabled/000-default.conf
 - sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-enabled/000-default.conf
 - sudo service postgresql restart
+# enable php-fpm
+- sudo cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf.default ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
+- sudo a2enmod rewrite actions fastcgi alias
+- echo "cgi.fix_pathinfo = 1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+- sudo sed -i -e "s,www-data,travis,g" /etc/apache2/envvars
+- sudo cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d/www.conf.default ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d/www.conf
+- sudo sed -i -e "s,nobody,www-data,g " ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d/www.conf
+- sudo chown -R travis:travis /var/lib/apache2/fastcgi
+- ~/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm
 #- sudo a2ensite default-ssl
 - sudo cat /etc/apache2/sites-enabled/000-default.conf
 - sudo ls -l /etc/apache2/sites-enabled
