@@ -60,12 +60,13 @@ before_script:
 - sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-enabled/000-default.conf
 - sudo service postgresql restart
 #- sudo a2ensite default-ssl
+- sudo cat /etc/apache2/sites-enabled/000-default.conf
 - sudo ls -l /etc/apache2/sites-enabled
 - sudo service apache2 restart
 - curl -k http://localhost:443/ || sudo cat /var/log/apache2/error.log
 - curl -k https://localhost/    || echo 'no'
-- curl -k https://localhost:443/filesender || sudo cat /var/log/apache2/error.log
-- curl -k https://localhost:443/filesender/info.php || sudo cat /var/log/apache2/error.log
+- curl -k https://localhost/filesender || sudo cat /var/log/apache2/error.log
+- curl -k https://localhost/filesender/info.php || sudo cat /var/log/apache2/error.log
 - sudo cat /var/log/apache2/error.log
 - sudo cat /var/log/apache2/access.log
 - exit 1
