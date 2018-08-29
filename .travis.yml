@@ -31,6 +31,7 @@ install:
 before_script:
 - sudo apt-get update
 - sudo apt-get install apache2 libapache2-mod-fastcgi
+- sudo cat build/travis-ci-apache
 - sudo ls -l /usr/lib/cgi-bin
 - sudo cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf.default ~/.phpenv/versions/$(phpenv
   version-name)/etc/php-fpm.conf
