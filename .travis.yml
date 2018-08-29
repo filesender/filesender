@@ -36,7 +36,7 @@ before_script:
   version-name)/etc/php-fpm.conf
 - ls -l   ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d/
 - sudo cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d/www.conf.default ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d/www.conf
-- sudo sed -e -e "s,nobody,www-data,g " ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d/www.conf
+- sudo sed -i -e "s,nobody,www-data,g " ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d/www.conf
 - sudo a2enmod rewrite actions fastcgi alias ssl headers
 - echo "cgi.fix_pathinfo = 1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
 - sudo sed -i -e "s,www-data,travis,g" /etc/apache2/envvars
