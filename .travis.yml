@@ -30,8 +30,8 @@ install:
 - php scripts/upgrade/database.php --db_database filesenderdataset
 before_script:
 - sudo apt-get update
+- sudo apt-get install wget
 - sudo apt-get install apache2 libapache2-mod-fastcgi
-- sudo cat build/travis-ci-apache
 - sudo ls -l /usr/lib/cgi-bin
 - sudo cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf.default ~/.phpenv/versions/$(phpenv
   version-name)/etc/php-fpm.conf
@@ -51,6 +51,10 @@ before_script:
 - sudo sed -i "s/NameVirtualHost \*:80/# NameVirtualHost \*:80/" /etc/apache2/ports.conf
 - sudo sed -i "s/Listen 80/# Listen 80/" /etc/apache2/ports.conf
 - "~/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm"
+- sudo echo '<?php' >| /var/www/html/info.php
+- sudo echo 'phpinfo();' >> /var/www/html/info.php
+- sudo chown www-data /var/www/html/info.php
+- wget http://localhost/info.php
 - sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/certs/filesender_test.key
   -out /etc/ssl/certs/filesender_test.crt -subj "/C=US/ST=Denial/L=Springfield/O=Dis/CN=file_sender.app"
 - sudo cp -f travis/config.travis.apache2.conf /etc/apache2/sites-available/default
