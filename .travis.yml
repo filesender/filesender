@@ -56,12 +56,11 @@ before_script:
 - sudo chown www-data       $TRAVIS_BUILD_DIR/info.php
 - sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/certs/filesender_test.key
   -out /etc/ssl/certs/filesender_test.crt -subj "/C=US/ST=Denial/L=Springfield/O=Dis/CN=file_sender.app"
-- sudo cp -f travis/config.travis.apache2.conf /etc/apache2/sites-enabled/default
-- sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-enabled/default
+- sudo cp -f travis/config.travis.apache2.conf /etc/apache2/sites-enabled/000-default.conf
+- sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-enabled/000-default.conf
 - sudo service postgresql restart
 #- sudo a2ensite default-ssl
 - sudo ls -l /etc/apache2/sites-enabled
-- sudo rm -f /etc/apache2/sites-enabled/000-default.conf
 - sudo service apache2 restart
 - curl -k http://localhost:443/ || sudo cat /var/log/apache2/error.log
 - curl -k https://localhost/    || echo 'no'
