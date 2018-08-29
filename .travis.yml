@@ -54,7 +54,7 @@ before_script:
 - sudo echo '<?php'      >| $TRAVIS_BUILD_DIR/info.php
 - sudo echo 'phpinfo();' >> $TRAVIS_BUILD_DIR/info.php
 - sudo chown www-data       $TRAVIS_BUILD_DIR/info.php
-- curl http://localhost/filesender/info.php
+- curl http://localhost/filesender/info.php 
 - sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/certs/filesender_test.key
   -out /etc/ssl/certs/filesender_test.crt -subj "/C=US/ST=Denial/L=Springfield/O=Dis/CN=file_sender.app"
 - sudo cp -f travis/config.travis.apache2.conf /etc/apache2/sites-available/default
