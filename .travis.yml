@@ -53,10 +53,10 @@ before_script:
 - sudo cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf.default ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
 - sudo a2enmod rewrite actions fastcgi alias
 - echo "cgi.fix_pathinfo = 1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-#- sudo sed -i -e "s,www-data,travis,g" /etc/apache2/envvars
+- sudo sed -i -e "s,www-data,travis,g" /etc/apache2/envvars
+- sudo chown -R travis:travis /var/lib/apache2/fastcgi
 - sudo cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d/www.conf.default ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d/www.conf
 - sudo sed -i -e "s,nobody,www-data,g " ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d/www.conf
-#- sudo chown -R travis:travis /var/lib/apache2/fastcgi
 - ~/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm
 - sudo cat /etc/apache2/sites-enabled/000-default.conf
 - sudo service apache2 restart
