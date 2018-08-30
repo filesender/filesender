@@ -33,11 +33,6 @@ before_script:
 - sudo apt-get install curl
 - sudo apt-get install apache2 libapache2-mod-fastcgi
 - sudo a2enmod rewrite actions fastcgi alias ssl headers
-- echo "cgi.fix_pathinfo = 1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-- sudo sed -i -e "s,www-data,travis,g" /etc/apache2/envvars
-- sudo chown -R travis:travis /var/lib/apache2/fastcgi
-- sudo sed -i "s/error_reporting = E_ALL/error_reporting = E_ALL \& ~E_DEPRECATED
-  \& ~E_STRICT/" ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
 - sudo sed -i "s/host    all             all             127.0.0.1\/32            trust/host    all             all             127.0.0.1\/32            md5/"
   /etc/postgresql/9.2/main/pg_hba.conf
 - sudo sed -i "s/host    all             all             ::1\/128                 trust/host    all             all             ::1\/128                 md5/"
@@ -53,13 +48,15 @@ before_script:
 - sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-enabled/000-default.conf
 - sudo service postgresql restart
 # enable php-fpm
+- sudo sed -i "s/error_reporting = E_ALL/error_reporting = E_ALL \& ~E_DEPRECATED
+  \& ~E_STRICT/" ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
 - sudo cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf.default ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
 - sudo a2enmod rewrite actions fastcgi alias
 - echo "cgi.fix_pathinfo = 1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-- sudo sed -i -e "s,www-data,travis,g" /etc/apache2/envvars
+#- sudo sed -i -e "s,www-data,travis,g" /etc/apache2/envvars
 - sudo cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d/www.conf.default ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d/www.conf
 - sudo sed -i -e "s,nobody,www-data,g " ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d/www.conf
-- sudo chown -R travis:travis /var/lib/apache2/fastcgi
+#- sudo chown -R travis:travis /var/lib/apache2/fastcgi
 - ~/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm
 - sudo cat /etc/apache2/sites-enabled/000-default.conf
 - sudo service apache2 restart
