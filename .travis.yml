@@ -56,7 +56,7 @@ before_script:
 - sudo sed -i -e "s,www-data,travis,g" /etc/apache2/envvars
 - sudo chown -R travis:travis /var/lib/apache2/fastcgi
 - sudo cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d/www.conf.default ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d/www.conf
-- sudo sed -i -e "s,nobody,www-data,g " ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d/www.conf
+#- sudo sed -i -e "s,nobody,travis,g " ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d/www.conf
 - ~/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm
 - sudo cat /etc/apache2/sites-enabled/000-default.conf
 - sudo service apache2 restart
