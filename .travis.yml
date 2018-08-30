@@ -6,9 +6,9 @@ php:
 services:
   - postgresql
 addons:
-#  sauce_connect:
-#    username: "$SAUCE_USERNAME"
-#    no-ssl-bump-domains: file_sender.app
+  sauce_connect:
+    username: "$SAUCE_USERNAME"
+    no-ssl-bump-domains: file_sender.app
   hosts:
   - file_sender.app
   jwt:
@@ -26,18 +26,12 @@ install:
 - mkdir ./files
 - "./travis/scripts/postgresql-setup.sh"
 - "./travis/scripts/simplesamlphp-setup.sh"
-#- php scripts/upgrade/database.php
-#- php scripts/upgrade/database.php --db_database filesenderdataset
+- php scripts/upgrade/database.php
+- php scripts/upgrade/database.php --db_database filesenderdataset
 before_script:
 - sudo apt-get update
 - sudo apt-get install curl
 - sudo apt-get install apache2 libapache2-mod-fastcgi
-- sudo ls -l /usr/lib/cgi-bin
-#- sudo cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf.default ~/.phpenv/versions/$(phpenv
-#  version-name)/etc/php-fpm.conf
-#- ls -l   ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d/
-#- sudo cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d/www.conf.default ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d/www.conf
-#- sudo sed -i -e "s,nobody,www-data,g " ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d/www.conf
 - sudo a2enmod rewrite actions fastcgi alias ssl headers
 - echo "cgi.fix_pathinfo = 1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
 - sudo sed -i -e "s,www-data,travis,g" /etc/apache2/envvars
@@ -50,10 +44,9 @@ before_script:
   /etc/postgresql/9.2/main/pg_hba.conf
 - sudo sed -i "s/NameVirtualHost \*:80/# NameVirtualHost \*:80/" /etc/apache2/ports.conf
 - sudo sed -i "s/Listen 80/# Listen 80/" /etc/apache2/ports.conf
-#- "~/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm"
-- sudo echo '<?php'      >| $TRAVIS_BUILD_DIR/www/info.php
-- sudo echo 'phpinfo();' >> $TRAVIS_BUILD_DIR/www/info.php
-- sudo chown www-data       $TRAVIS_BUILD_DIR/www/info.php
+#- sudo echo '<?php'      >| $TRAVIS_BUILD_DIR/www/info.php
+#- sudo echo 'phpinfo();' >> $TRAVIS_BUILD_DIR/www/info.php
+#- sudo chown www-data       $TRAVIS_BUILD_DIR/www/info.php
 - sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/certs/filesender_test.key
   -out /etc/ssl/certs/filesender_test.crt -subj "/C=US/ST=Denial/L=Springfield/O=Dis/CN=file_sender.app"
 - sudo cp -f travis/config.travis.apache2.conf /etc/apache2/sites-enabled/000-default.conf
@@ -68,26 +61,15 @@ before_script:
 - sudo sed -i -e "s,nobody,www-data,g " ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d/www.conf
 - sudo chown -R travis:travis /var/lib/apache2/fastcgi
 - ~/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm
-#- sudo a2ensite default-ssl
 - sudo cat /etc/apache2/sites-enabled/000-default.conf
-- sudo ls -l /etc/apache2/sites-enabled
-- sudo ls -l /home/travis/build/filesender/filesender
-- sudo ls -l /etc/apache2/mods-enabled
-- sudo ls -l /etc/apache2/mods-available
 - sudo service apache2 restart
-- curl -k http://localhost:443/ || sudo cat /var/log/apache2/error.log
-- curl -k https://localhost/    || echo 'no'
-- curl -k https://localhost/filesender/ || sudo cat /var/log/apache2/error.log
-- curl -k https://localhost/filesender/info.php || sudo cat /var/log/apache2/error.log
-- sudo cat /var/log/apache2/error.log
-- sudo cat /var/log/apache2/access.log
-- exit 1
+#- curl -k https://localhost/filesender/info.php || sudo cat /var/log/apache2/*.log
 after_failure:
 - sudo cat /var/log/apache2/error.log
 - sudo cat /var/log/apache2/access.log
 - find ./log -type f -exec cat {} +
 script:
-- phpunit --configuration ./unittests/config_tests_filesender.xml--FAIL
+- phpunit --configuration ./unittests/config_tests_filesender.xml
 notifications:
   email: false
 env:
