@@ -21,19 +21,19 @@ class ConfigurationOptionsTest extends SeleniumTest {
         sleep(10);
 
         $this->checkCheckBox('add_me_to_recipients', false);
-       // sleep(2);
+        sleep(2);
         $this->checkCheckBox('email_me_on_expire', true);
-        //sleep(2);
+        sleep(2);
         $this->checkCheckBox('email_daily_statistics', true);
-        //sleep(2);
+        sleep(2);
         $this->checkCheckbox('email_me_copies', false);
-        //sleep(2);
+        sleep(2);
         $this->checkCheckbox('email_upload_complete', true);
-        //sleep(2);
-        $this->checkCheckbox('email_download_complete', true);
-        //sleep(2);
+        sleep(2);
+        his->checkCheckbox('email_download_complete', true);
+        sleep(2);
         $this->checkCheckbox('enable_recipient_email_download_complete', false);
-        //sleep(2);
+        sleep(2);
 
         // check expired
         if ($this->isCheckBoxSelected('[name="add_me_to_recipients"]')) {
