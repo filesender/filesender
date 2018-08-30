@@ -156,6 +156,7 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
     protected function setupUnauthenticated()
     {
         $this->changeConfigValue('auth_sp_type', "'saml'");
+        sleep(2);
         $this->refresh();
         sleep(5);
     }
@@ -163,6 +164,7 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
     protected function setupAuthenticated()
     {
         $this->changeConfigValue('auth_sp_type', "'fake'");
+        sleep(2);
         $this->refresh();
         sleep(5);
     }
