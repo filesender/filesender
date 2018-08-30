@@ -30,7 +30,7 @@ class ConfigurationOptionsTest extends SeleniumTest {
         sleep(2);
         $this->checkCheckbox('email_upload_complete', true);
         sleep(2);
-        his->checkCheckbox('email_download_complete', true);
+        $this->checkCheckbox('email_download_complete', true);
         sleep(2);
         $this->checkCheckbox('enable_recipient_email_download_complete', false);
         sleep(2);
