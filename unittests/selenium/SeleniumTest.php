@@ -172,6 +172,7 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
     protected function setAdmin()
     {
         $this->changeConfigValue('admin', "'1'");
+        sleep(2);
         $this->refresh();
         sleep(2);
     }
@@ -179,6 +180,7 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
     protected function unsetAdmin()
     {
         $this->changeConfigValue('admin', "'0'");
+        sleep(2);
         $this->refresh();
         sleep(2);
     }
@@ -186,6 +188,7 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
     protected function setUserPage()
     {
         $this->changeConfigValue('user_page', 'array(\'lang\'=>true,\'auth_secret\'=>true,\'id\'=>true,\'created\'=>true)');
+        sleep(2);
         $this->refresh();
         sleep(2);
     }
@@ -193,6 +196,7 @@ class SeleniumTest extends Sauce\Sausage\WebDriverTestCase
     protected function unsetUserPage()
     {
         $this->changeConfigValue('user_page', 'array()');
+        sleep(2);
         $this->refresh();
         sleep(2);
     }
