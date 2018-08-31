@@ -68,7 +68,7 @@ class DBView {
             return ', cast( '. $basecolname . ' as bigint) as ' . $viewcolname;
         }
         if( $dbtype == 'mysql' ) {
-            return ', cast( '. $basecolname . ' as integer) as ' . $viewcolname;
+            return ', cast( '. $basecolname . ' as unsigned) as ' . $viewcolname;
         }
         
     }    
