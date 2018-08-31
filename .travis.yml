@@ -8,9 +8,9 @@ services:
   - mariadb
 addons:
   mariadb: '10.2'
-  sauce_connect:
-    username: "$SAUCE_USERNAME"
-    no-ssl-bump-domains: file_sender.app
+#  sauce_connect:
+#    username: "$SAUCE_USERNAME"
+#    no-ssl-bump-domains: file_sender.app
   hosts:
   - file_sender.app
   jwt:
