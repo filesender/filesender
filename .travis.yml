@@ -5,7 +5,9 @@ php:
   - 7.0
 services:
   - postgresql
+  - mariadb
 addons:
+  mariadb: '10.2'
   sauce_connect:
     username: "$SAUCE_USERNAME"
     no-ssl-bump-domains: file_sender.app
@@ -16,15 +18,17 @@ addons:
 before_install:
 - composer self-update
 - composer update --no-interaction
-- cp ./travis/config.travis.pgsql.php ./config/config.php
+- cp ./travis/filesender-config.php ./config/config.php
+- sh -c "if [ '$DB' = 'mysql' ]; then sudo sed -e "s?usemysql=0?usemysql=1?g" --in-place ./config/config.php  ; fi "
 - sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place ./config/config.php
 - chmod -R a+x ./travis/scripts
-- phpenv config-add ./travis/myconfig.ini
+- phpenv config-add ./travis/php-config.ini
 install:
 - mkdir ./log
 - mkdir ./tmp
 - mkdir ./files
-- "./travis/scripts/postgresql-setup.sh"
+- sh -c "if [ '$DB' = 'pgsql' ]; then ./travis/scripts/postgresql-setup.sh ; fi "
+- sh -c "if [ '$DB' = 'mysql' ]; then ./travis/scripts/mariadb-setup.sh ; fi "
 - "./travis/scripts/simplesamlphp-setup.sh"
 - php scripts/upgrade/database.php
 - php scripts/upgrade/database.php --db_database filesenderdataset
@@ -44,7 +48,7 @@ before_script:
 #- sudo chown www-data       $TRAVIS_BUILD_DIR/www/info.php
 - sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/certs/filesender_test.key
   -out /etc/ssl/certs/filesender_test.crt -subj "/C=US/ST=Denial/L=Springfield/O=Dis/CN=file_sender.app"
-- sudo cp -f travis/config.travis.apache2.conf /etc/apache2/sites-enabled/000-default.conf
+- sudo cp -f travis/apache2.conf /etc/apache2/sites-enabled/000-default.conf
 - sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-enabled/000-default.conf
 - sudo service postgresql restart
 # enable php-fpm
@@ -69,5 +73,8 @@ script:
 - phpunit --configuration ./unittests/config_tests_filesender.xml
 notifications:
   email: false
+##
+## I have used DB as pgsql and mysql as this is what filesender uses for config db_type
 env:
-- SAUCE_TUNNEL_IDENTIFIER=$TRAVIS_JOB_NUMBER SAUCE_DONT_VERIFY_CERTS=1
+- DB=pgsql SAUCE_TUNNEL_IDENTIFIER=$TRAVIS_JOB_NUMBER SAUCE_DONT_VERIFY_CERTS=1
+- DB=mysql SAUCE_TUNNEL_IDENTIFIER=$TRAVIS_JOB_NUMBER SAUCE_DONT_VERIFY_CERTS=1
