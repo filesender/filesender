@@ -42,4 +42,4 @@ require_once dirname(dirname(dirname(dirname(__FILE__)))) . implode(DIRECTORY_SE
 require_once(dirname(__FILE__).'/../../../classes/autoload.php');
 
 // Make sure we're not stopped by the authentication system
-AuthLocal::setUser(1, 'phpunit@filesender.org', 'phpunit');
+AuthLocal::setUser('filesender-phpunit@localhost.localdomain', 'phpunit@filesender.org', 'phpunit');

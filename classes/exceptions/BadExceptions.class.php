@@ -130,10 +130,10 @@ class BadOptionNameException extends DetailedException {
      * 
      * @param string $name
      */
-    public function __construct($name) {
+    public function __construct($name,$notetoadmin = '') {
         parent::__construct(
             'bad_option_name', // Message to give to the user
-            array('name' => $name) // Details to log
+            array('name' => $name,'noteToAdmin' => $notetoadmin) // Details to log
         );
     }
 }
@@ -151,6 +151,24 @@ class BadURLException extends DetailedException {
         parent::__construct(
             'bad_url_code', // Message to give to the user
             array('url' => $url) // Details to log
+        );
+    }
+}
+
+
+/**
+ * Bad authid exception
+ */
+class BadAuthIDException extends DetailedException {
+    /**
+     * Constructor
+     * 
+     * @param string $url
+     */
+    public function __construct($aid) {
+        parent::__construct(
+            'bad_url_code', // Message to give to the user
+            array('aid' => $aid) // Details to log
         );
     }
 }

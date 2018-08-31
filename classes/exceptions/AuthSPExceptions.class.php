@@ -70,16 +70,28 @@ class AuthSPAuthenticationNotFoundException extends DetailedException {
 class AuthSPMissingAttributeException extends DetailedException {
     /**
      * Constructor
-     * 
+     *
+     * The $attributes array is used to furnish the server only log
+     * file with the current data to allow the system admin to see
+     * possible key mismatches.
+     *
      * @param string $name name of the attribute
+     * @param array  $attributes array of key-value where a key of $name should have been found
      */
-    public function __construct($name) {
+    public function __construct($name,$attributes,$attrkey,$attrname='') {
         $info = array('attribute' => $name);
         
         $lid = 'auth_sp_attribute_'.$name.'_hint';
         $hint = (string)Lang::tr($lid);
         if($hint != '{'.$lid.'}') $info['hint'] = $hint;
-        
+
+        // Give the system admin some information to help them fix things
+        $internalLog = DetailedException::convertArrayToLogArray($attributes,'    ');
+        $this->log( 'attributes', (string)Lang::tr('serverlog_auth_sp_attribute_not_found'));
+        $this->log( 'attributes', Lang::tr('serverlog_config_directive')->r('key',$attrkey));
+        $this->log( 'attributes', Lang::tr('serverlog_wanted_key_in_array')->r('key',$attrname));
+        $this->logArray( 'attributes', $internalLog );
+
         parent::__construct('auth_sp_missing_attribute', null, $info);
     }
 }

@@ -57,10 +57,17 @@ class DatabasePgsql {
     public static function createTable($table, $definition) {
         $columns = array();
         
+        $primary_keys = null;
         foreach($definition as $column => $def) {
             $columns[] = $column.' '.self::columnDefinition($def);
+            
+            if(array_key_exists('primary', $def) && $def['primary']) {
+                if (is_null($primary_keys)) $primary_keys = $column;
+                else $primary_keys .= ', '.$column;
+            }
         }
-        $query = 'CREATE TABLE '.$table.' ('.implode(', ', $columns).')';
+        $query = 'CREATE TABLE '.$table.' ('.implode(', ', $columns).', PRIMARY KEY('.$primary_keys.'))';
+
         DBI::exec($query);
         
         foreach($definition as $column => $def) {
@@ -68,6 +75,15 @@ class DatabasePgsql {
                 self::createSequence($table, $column);
             }
         }
+    }
+
+    public static function createView($table, $viewname, $definitionsql) {
+        DBI::exec('DROP VIEW IF EXISTS '.$viewname);
+        $query = 'CREATE OR REPLACE VIEW '.$viewname.' as '.$definitionsql;
+        DBI::exec($query);
+    }
+    public static function dropView($table, $viewname) {
+        DBI::exec('DROP VIEW IF EXISTS '.$viewname);
     }
     
     /**
@@ -104,6 +120,24 @@ class DatabasePgsql {
         
         return $sequence;
     }
+    private static function createSequenceOnly($table, $column) {
+        $sequence = self::sequenceExists($table, $column, false);
+        if(!$sequence) {
+            $sequence = strtolower($table.'_'.$column.'_seq');
+            DBI::exec('CREATE SEQUENCE '.$sequence);
+        }
+        
+        return $sequence;
+    }
+    private static function changeSequenceOwnership($table, $column, $sequence) {
+        DBI::exec('ALTER SEQUENCE '.$sequence.' OWNED BY '.$table.'.'.$column);
+        return $sequence;
+    }
+    
+    private static function createSequenceReference($table, $column, $sequence) {
+        return ' DEFAULT nextval(\''.$sequence.'\')';
+    }
+    
     
     /**
      * Check if sequence exists
@@ -146,14 +180,92 @@ class DatabasePgsql {
      * @param string $definition column definition
      */
     public static function createTableColumn($table, $column, $definition) {
-        $query = 'ALTER TABLE '.$table.' ADD '.$column.' '.self::columnDefinition($definition);
-        DBI::exec($query);
-        
         if(array_key_exists('autoinc', $definition) && $definition['autoinc']) {
-            self::createSequence($table, $column);
+            $sequence = self::createSequenceOnly($table, $column);
         }
+        
+        $query = 'ALTER TABLE '.$table.' ADD '.$column.' '.self::columnDefinition($definition);
+        if(array_key_exists('autoinc', $definition) && $definition['autoinc']) {
+            $query .= self::createSequenceReference($table, $column, $sequence);
+        }
+        DBI::exec($query);
+
+        if(array_key_exists('autoinc', $definition) && $definition['autoinc']) {
+            self::changeSequenceOwnership($table, $column, $sequence);
+        }
+        
     }
-    
+
+    public static function dropTableSecondaryIndex(   $table, $index, $logger = null ) {
+        if(!$logger || !is_callable($logger)) $logger = function() {};
+        $query = 'DROP INDEX '.$index;
+        DBI::exec($query);
+    }
+    public static function createTableSecondaryIndex( $table, $index, $definition, $logger = null ) {
+        if(!$logger || !is_callable($logger)) $logger = function() {};
+
+        $preamble = '';
+        $coldefs = '';
+        foreach( $definition as $dk => $dm ) {
+            if( $dk == 'UNIQUE' ) {
+                $preamble .= ' UNIQUE ';
+                continue;
+            }
+            if( $coldefs != '' )
+                $coldefs .= ',';
+            $coldefs .= $dk;
+        }
+        $query = 'CREATE '.$preamble.' INDEX '.$index.' on '.$table.' (' . $coldefs . ')';
+        DBI::exec($query);
+    }
+
+    /**
+     * Table columns format checking.
+     * 
+     * @param string $table table name
+     * @param string $index index name
+     * @param string $definition index columns definition
+     * 
+     * @return string reason if a problem or false if no problems
+     */
+    public static function checkTableSecondaryIndexFormat($table, $index, $definition, $logger = null) {
+        if(!$logger || !is_callable($logger)) $logger = function() {};
+
+        $expected = array();
+        foreach( $definition as $dk => $dm ) {
+            $expected[] = $dk;
+        }
+
+        // Get current definition
+        $s = DBI::prepare('SELECT a.attname, pg_catalog.format_type(a.atttypid, a.atttypmod), a.attnotnull, a.attnum,'
+                . ' pg_catalog.pg_get_indexdef(a.attrelid, a.attnum, TRUE) AS indexdef '
+                . ' FROM pg_catalog.pg_attribute a '
+                . ' WHERE a.attrelid = '
+                . ' ( SELECT c.oid FROM pg_catalog.pg_class c LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace '
+                . "    WHERE c.relname ~ '^(" . strtolower($index) . ")\$' "
+                . '      AND pg_catalog.pg_table_is_visible(c.oid) '
+                . '    LIMIT 1 ) '
+                . ' AND a.attnum > 0 AND NOT a.attisdropped '
+                . 'ORDER BY a.attnum');
+        $s->execute(array());
+
+        $existingCols = array();
+        foreach($s->fetchAll() as $r) {
+            $existingCols[] = $r['attname'];
+        }
+
+        rsort($existingCols);
+        rsort($expected);
+        if( !count($existingCols))
+            return DatabaseSecondaryIndexStatuses::NOTFOUND;
+            
+        return $existingCols != $expected ? DatabaseSecondaryIndexStatuses::INCORRECT_DEFINITION : false;
+    }
+
+    private static function quoteString( $v ) {
+        return "'".str_replace("'", "\\'", $v)."'";
+    }
+
     /**
      * Table columns format checking.
      * 
@@ -236,7 +348,8 @@ class DatabasePgsql {
                     $logger($column.' default is not '.($definition['default'] ? '1' : '0'));
                     $non_respected[] = 'default';
                 }
-            }else if($column_dfn['column_default'] != $definition['default']) {
+            }else if($column_dfn['column_default'] != $definition['default']
+            && $column_dfn['column_default'] != self::quoteString($definition['default']).'::character varying') {
                 $logger($column.' default is not "'.$definition['default'].'"');
                 $non_respected[] = 'default';
             }
@@ -458,12 +571,11 @@ class DatabasePgsql {
                 $sql .= $default ? '1' : '0';
             }else if(is_numeric($default) && in_array($definition['type'], array('int', 'uint'))) {
                 $sql .= $default;
-            }else $sql .= '"'.str_replace('"', '\\"', $default).'"';
+            }else $sql .= "'".str_replace("'", "\\'", $default)."'";
         }
         
         // Add options
         if(array_key_exists('unique', $definition) && $definition['unique']) $sql .= ' UNIQUE';
-        if(array_key_exists('primary', $definition) && $definition['primary']) $sql .= ' PRIMARY KEY';
         
         // Return statment
         return $sql;

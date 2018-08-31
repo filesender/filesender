@@ -73,6 +73,18 @@ class TranslatableEmail extends DBObject {
             'type' => 'datetime'
         ),
     );
+
+    public static function getViewMap() {
+
+        $a = array();
+        foreach(array('mysql','pgsql') as $dbtype) {
+            $a[$dbtype] = 'select *'
+                        . DBView::columnDefinition_age($dbtype,'created')
+                        . '  from ' . self::getDBTable();
+        }
+        return array( strtolower(self::getDBTable()) . 'view' => $a );
+
+    }
     
     /**
      * Properties
@@ -208,11 +220,11 @@ class TranslatableEmail extends DBObject {
             case 'Recipient': // Recipient context is it's transfer
                 $context = $to->transfer;
                 break;
-            
+                
             case 'Guest' : // Guest is a context by itself
                 $context = $to;
                 break;
-            
+                
             case 'User' : // If recipient is user try to find Transfer, File or Guest in variables
                 foreach($vars as $v) {
                     if(!is_object($v)) continue;
@@ -221,7 +233,7 @@ class TranslatableEmail extends DBObject {
                         $context = $v;
                     }
                     
-                    if(in_array(get_class($v), array('File'))) {
+                    if( 'File' == get_class( $v ) ) {
                         $context = $v->transfer;
                     }
                 }
@@ -327,7 +339,10 @@ class TranslatableEmail extends DBObject {
         if($property == 'context') return call_user_func($this->context_type.'::fromId', $this->context_id);
         
         if($property == 'link') {
-            return Config::get('site_url').'?s=translate_email&token='.$this->token;
+            return Utilities::http_build_query(
+                array( 's'     => 'translate_email',
+                       'token' => $this->token ));
+            
         }
         
         throw new PropertyAccessException($this, $property);
@@ -344,4 +359,17 @@ class TranslatableEmail extends DBObject {
     public function __set($property, $value) {
         throw new PropertyAccessException($this, $property);
     }
+
+
+    /**
+     * Clean old entries
+     */
+    public static function clean() {
+        $days = Config::get('translatable_emails_lifetime');
+        
+        /** @var PDOStatement $statement */
+        $statement = DBI::prepare('DELETE FROM '.self::getDBTable().' WHERE created < :date');
+        $statement->execute(array(':date' => date('Y-m-d', time() - $days * 86400)));
+    }
+    
 }

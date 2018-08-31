@@ -48,7 +48,7 @@ class RestEndpointGuest extends RestEndpoint {
     public static function cast(Guest $guest) {
         return array(
             'id' => $guest->id,
-            'user_id' => $guest->user_id,
+            'userid' => $guest->userid,
             'user_email' => $guest->user_email,
             'email' => $guest->email,
             'token' => $guest->token,
@@ -151,27 +151,38 @@ class RestEndpointGuest extends RestEndpoint {
         
         // Raw guest data
         $data = $this->request->input;
+
+        // Check Guest creation limits
+        $existingGuests = Guest::fromUserAvailable($user);
+        if( count($existingGuests) >= Config::get('guest_limit_per_user')) {
+            throw new UserHitGuestLimitException();
+        }
         
         // Create new guest object
         $guest = Guest::create($data->recipient, $data->from);
         
         // Set provided metadata
         if($data->subject) $guest->subject = $data->subject;
-        if($data->message) $guest->message = $data->message;
+        if($data->message) {
+            $guest->message = $data->message;
+            if(!Utilities::isValidMessage($guest->message)) {
+                throw new GuestMessageBodyCanNotIncludeURLsException();
+            }
+        }
         
         // Allow any options for remote applications, check against allowed options otherwise
         $allowed_options = array_keys(Auth::isRemoteApplication() ? Guest::allOptions() : Guest::availableOptions());
         
         // Set options based on provided ones and defaults
         $guest_options = array();
-        foreach(Guest::allOptions() as $name => $dfn)  {
-            $value = $dfn['default'];
-
-            if($data->options->guest && $data->options->guest->exists($name))
-                $value = $data->options->guest->$name;
-
-            if(in_array($name, $allowed_options) && ($value || $dfn['default']))
-                $guest_options[$name] = $value;
+        if (isset($data->options->guest)) {
+            foreach(Guest::allOptions() as $name => $dfn)  {
+                if(in_array($name, $allowed_options)
+                    && $data->options->guest->exists($name))
+                {
+                    $guest_options[$name] = $data->options->guest->$name;
+                }
+            }
         }
         $guest->options = $guest_options;
         
@@ -182,14 +193,14 @@ class RestEndpointGuest extends RestEndpoint {
         $allowed_transfer_options = array_keys(Auth::isRemoteApplication() ? Transfer::allOptions() : Transfer::availableOptions());
         
         $transfer_options = array();
-        foreach(Transfer::allOptions() as $name => $dfn)  {
-            $value = $dfn['default'];
-
-            if($data->options->transfer && $data->options->transfer->exists($name))
-                $value = $data->options->transfer->$name;
-
-            if(in_array($name, $allowed_transfer_options) && ($value || $dfn['default']))
-                $transfer_options[$name] = $value;
+        if (isset($data->options->transfer)) {
+            foreach(Transfer::allOptions() as $name => $dfn)  {
+                if(in_array($name, $allowed_transfer_options)
+                    && $data->options->transfer->exists($name))
+                {
+                    $transfer_options[$name] = $data->options->transfer->$name;
+                }
+            }
         }
         $guest->transfer_options = $transfer_options;
         

@@ -7,9 +7,9 @@ Madame, Monsieur,
 {if:files>1}Plusieurs fichiers{else}Un fichier{endif} que vous avez déposé {if:files>1}ont{else}a{endif} été téléchargé{if:files>1}s{endif} depuis {cfg:site_name} par {recipient.identity} :
 
 {if:files>1}{each:files as file}
-  - {file.name} ({size:file.size})
+  - {file.path} ({size:file.size})
 {endeach}{else}
-{files.first().name} ({size:files.first().size})
+{files.first().path} ({size:files.first().size})
 {endif}
 
 Vous trouverez des statistiques détaillées sur {files.first().transfer.link}.
@@ -31,11 +31,11 @@ Cordialement,
     {if:files>1}
     <ul>
         {each:files as file}
-            <li>{file.name} ({size:file.size})</li>
+            <li>{file.path} ({size:file.size})</li>
         {endeach}
     </ul>
     {else}
-    {files.first().name} ({size:files.first().size})
+    {files.first().path} ({size:files.first().size})
     {endif}
 </p>
 

@@ -47,9 +47,9 @@ class Guest extends DBObject {
             'primary' => true,
             'autoinc' => true
         ),
-        'user_id' => array(
-            'type' => 'string',
-            'size' => 255
+        'userid' => array(
+            'type' => 'uint',
+            'size' => 'big',
         ),
         'user_email' => array(
             'type' => 'string',
@@ -97,23 +97,48 @@ class Guest extends DBObject {
         ),
         'last_activity' => array(
             'type' => 'datetime'
+        ),
+        'reminder_count' => array(
+            'type' => 'uint',
+            'size' => 'medium',
+            'default' => 0
+        ),
+        'last_reminder' => array(
+            'type' => 'datetime',
+            'null' => true
         )
     );
-    
+
+    public static function getViewMap() {
+        $a = array();
+        foreach(array('mysql','pgsql') as $dbtype) {
+            $a[$dbtype] = 'select *'
+                        . DBView::columnDefinition_age($dbtype,'created')
+                        . DBView::columnDefinition_age($dbtype,'expires')
+                        . DBView::columnDefinition_age($dbtype,'last_activity','last_activity_days_ago')
+                        . DBView::columnDefinition_age($dbtype,'last_reminder','last_reminder_days_ago')
+                        . ' , expires < now() as expired '
+                        . " , status = 'available' as is_available "
+                        . '  from ' . self::getDBTable();
+        }
+        return array( strtolower(self::getDBTable()) . 'view' => $a );
+        
+    }
+
     /**
      * Set selectors
      */
     const AVAILABLE = "status = 'available' ORDER BY created DESC";
-    const EXPIRED = "expires <= :date ORDER BY expires ASC";
-    const FROM_USER = "user_id = :user_id AND expires > :date ORDER BY created DESC";
-    const FROM_USER_AVAILABLE = "user_id = :user_id AND expires > :date AND status = 'available' ORDER BY created DESC";
+    const EXPIRED = "expires < :date ORDER BY expires ASC";
+    const FROM_USER = "userid = :userid AND expires > :date ORDER BY created DESC";
+    const FROM_USER_AVAILABLE = "userid = :userid AND expires > :date AND status = 'available' ORDER BY created DESC";
     
     /**
      * Properties
      */
     protected $id = null;
-    protected $user_id = null;
     protected $user_email = null;
+    protected $userid = null;
     protected $token = null;
     protected $email = null;
     protected $transfer_count = 0;
@@ -125,7 +150,9 @@ class Guest extends DBObject {
     protected $created = 0;
     protected $expires = 0;
     protected $last_activity = 0;
-    
+    protected $reminder_count = 0;
+    protected $last_reminder = 0;
+
     /**
      * Cache
      */
@@ -168,12 +195,14 @@ class Guest extends DBObject {
         if(is_object($this->options)) $this->options = (array)$this->options;
         
         // Legacy option format conversion, will be transformed to object by json conversion
-        if(is_array($this->transfer_options)) $this->transfer_options = array_merge(
-            array_fill_keys(array_keys(Transfer::allOptions()), false),
-            array_fill_keys($this->transfer_options, true)
-        );
-        
-        if(is_object($this->transfer_options)) $this->transfer_options = (array)$this->transfer_options;
+        if(is_array($this->transfer_options)) {
+            $this->transfer_options = array_merge(
+                array_fill_keys(array_keys(Transfer::allOptions()), false),
+                array_fill_keys($this->transfer_options, true)
+            );
+        }
+        if(is_object($this->transfer_options))
+            $this->transfer_options = (array)$this->transfer_options;
     }
     
     /**
@@ -199,7 +228,7 @@ class Guest extends DBObject {
                 throw new BadEmailException($from);
         }
         
-        $guest->user_id = Auth::user()->id;
+        $guest->userid = Auth::user()->id;
         $guest->__set('user_email', $from);
         $guest->__set('email', $recipient); // Throws
         
@@ -272,7 +301,7 @@ class Guest extends DBObject {
     public static function fromUser($user) {
         if($user instanceof User) $user = $user->id;
         
-        return self::all(self::FROM_USER, array(':user_id' => $user, ':date' => date('Y-m-d')));
+        return self::all(self::FROM_USER, array(':userid' => $user, ':date' => date('Y-m-d')));
     }
 
     /**
@@ -285,7 +314,7 @@ class Guest extends DBObject {
     public static function fromUserAvailable($user) {
         if($user instanceof User) $user = $user->id;
         
-        return self::all(self::FROM_USER_AVAILABLE, array(':user_id' => $user, ':date' => date('Y-m-d')));
+        return self::all(self::FROM_USER_AVAILABLE, array(':userid' => $user, ':date' => date('Y-m-d')));
     }
     
     /**
@@ -316,6 +345,17 @@ class Guest extends DBObject {
     public function isExpired() {
         $today = (24 * 3600) * floor(time() / (24 * 3600));
         return $this->expires < $today;
+    }
+
+    /**
+     * Tells wether the guest has expired before a given number of days 
+     * from now
+     * 
+     * @return bool
+     */
+    public function isExpiredDaysAgo( $days ) {
+        $d = (24 * 3600) * floor(time() / (24 * 3600) - ($days * (24*3600)));
+        return $this->expires < $d;
     }
     
     /**
@@ -360,8 +400,16 @@ class Guest extends DBObject {
      * Send reminder to recipients
      */
     public function remind() {
-        TranslatableEmail::quickSend('guest_reminder', $this);
         
+        // Limit reminders
+        if( $this->reminder_count >= Config::get('guest_reminder_limit')) {
+            throw new GuestReminderLimitReachedException();
+        }
+        $this->reminder_count++;
+        $this->save();
+        
+        TranslatableEmail::quickSend('guest_reminder', $this);
+            
         Logger::info($this.' reminded');
     }
     
@@ -398,8 +446,19 @@ class Guest extends DBObject {
         // Get defaults
         $options = Config::get('guest_options');
         if(!is_array($options)) $options = array();
-        
+
+        self::validateOptions($options);
         return $options;
+    }
+
+    /**
+     * Perform reasonably fast validation of config options.
+     * This allows the global config loader to check with many classes
+     * by calling class::validateConfig() so that particular pages do not
+     * have to be loaded to find configuration issues.
+     */
+    public static function validateConfig() {
+        self::allOptions();
     }
     
     /**
@@ -428,8 +487,16 @@ class Guest extends DBObject {
      * @return mixed
      */
     public function getOption($option) {
-        if(!array_key_exists($option, $this->options)) return false;
-        return $this->options[$option];
+        if(array_key_exists($option, $this->options)) {
+            return $this->options[$option];
+        }
+        $options = static::allOptions();
+        if(array_key_exists($option, $options)) {
+            if(array_key_exists('default', $options[$option])) {
+                return $options[$option]['default'];
+            }
+        }
+        return false;
     }
     
     /**
@@ -442,7 +509,8 @@ class Guest extends DBObject {
     }
     
     /**
-     * Validate and format options
+     * Validate and format options.
+     * throws an exception if the raw_options contain invalid data
      * 
      * @param mixed $raw_options
      * 
@@ -451,9 +519,12 @@ class Guest extends DBObject {
     public static function validateOptions($raw_options) {
         $options = array();
         foreach((array)$raw_options as $name => $value) {
-            if(!GuestOptions::isValidValue($name))
-                throw new BadOptionNameException($name);
-            
+            if(!GuestOptions::isValidValue($name)) {
+                throw new BadOptionNameException($name,
+                   'Please check if you have an invalid key in your guest_options configuration. '
+                   . GuestOptions::getConfigKeysAsLogString()
+                );
+            }
             $value = (bool)$value;
             
             $options[$name] = $value;
@@ -473,15 +544,21 @@ class Guest extends DBObject {
      */
     public function __get($property) {
         if(in_array($property, array(
-            'id', 'user_id', 'user_email', 'token', 'email', 'transfer_count',
-            'subject', 'message', 'options', 'transfer_options', 'status', 'created', 'expires', 'last_activity'
+            'id', 'user_email', 'token', 'email', 'transfer_count',
+            'subject', 'message', 'options', 'transfer_options', 'status', 'created', 'expires', 'last_activity', 'userid'
         ))) return $this->$property;
         
         if($property == 'user' || $property == 'owner') {
-            $user = User::fromId($this->user_id);
+            $user = User::fromId($this->userid);
             $user->email_addresses = $this->user_email;
             return $user;
         }
+
+        if($property == 'saml_user_identification_uid') {
+            $user = User::fromId($this->userid);
+            return $user->saml_user_identification_uid;
+        }
+        
         
         if($property == 'upload_link') {
             return Config::get('site_url').'?s=upload&vid='.$this->token;
@@ -533,7 +610,7 @@ class Guest extends DBObject {
             $this->status = (string)$value;
             
         }else if($property == 'user_email') {
-            if(!filter_var($value, FILTER_VALIDATE_EMAIL)) throw new BadEmailException($value);
+            if(!Utilities::validateEmail($value)) throw new BadEmailException($value);
             $this->user_email = (string)$value;
             
         }else if($property == 'subject') {
@@ -552,7 +629,7 @@ class Guest extends DBObject {
             $this->transfer_count = (int)$value;
             
         }else if($property == 'email') {
-            if(!filter_var($value, FILTER_VALIDATE_EMAIL)) throw new BadEmailException($value);
+            if(!Utilities::validateEmail($value)) throw new BadEmailException($value);
             $this->email = (string)$value;
             
         }else if($property == 'expires' || $property == 'last_activity') {

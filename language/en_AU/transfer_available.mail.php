@@ -8,9 +8,9 @@ Dear Sir or Madam,
 The following {if:transfer.files>1}files have{else}file has{endif} been uploaded to {cfg:site_name} by {transfer.user_email} and you have been granted permission to download {if:transfer.files>1}their{else}its{endif} contents :
 
 {if:transfer.files>1}{each:transfer.files as file}
-  - {file.name} ({size:file.size})
+  - {file.path} ({size:file.size})
 {endeach}{else}
-{transfer.files.first().name} ({size:transfer.files.first().size})
+{transfer.files.first().path} ({size:transfer.files.first().size})
 {endif}
 
 Download link: {recipient.download_link}
@@ -49,11 +49,11 @@ Best regards,
                 {if:transfer.files>1}
                 <ul>
                     {each:transfer.files as file}
-                        <li>{file.name} ({size:file.size})</li>
+                        <li>{file.path} ({size:file.size})</li>
                     {endeach}
                 </ul>
                 {else}
-                {transfer.files.first().name} ({size:transfer.files.first().size})
+                {transfer.files.first().path} ({size:transfer.files.first().size})
                 {endif}
             </td>
         </tr>

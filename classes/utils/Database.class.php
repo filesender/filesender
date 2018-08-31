@@ -93,7 +93,22 @@ class Database {
         
         return call_user_func($class.'::createTableColumn', $table, $column, $definition);
     }
-    
+
+
+    public static function dropTableSecondaryIndex($table, $index, $logger = null) {
+        $class = self::getDelegationClass();
+        return call_user_func($class.'::dropTableSecondaryIndex', $table, $index, $logger);
+    }
+    public static function createTableSecondaryIndex($table, $index, $definition, $logger = null) {
+        $class = self::getDelegationClass();
+        return call_user_func($class.'::createTableSecondaryIndex', $table, $index, $definition, $logger);
+    }
+    public static function checkTableSecondaryIndexFormat($table, $index, $definition, $logger = null) {
+        $class = self::getDelegationClass();
+        return call_user_func($class.'::checkTableSecondaryIndexFormat', $table, $index, $definition, $logger);
+    }
+
+
     /**
      * Delegates table columns format checking.
      * 
@@ -126,8 +141,8 @@ class Database {
     /**
      * Create a table
      * 
-     * @param string $table the table name
-     * @param array $definition dataMap entry
+     * @param string $table     the table name
+     * @param array $definition the datamap to define the table
      * 
      */
     public static function createTable($table, $definition) {
@@ -136,6 +151,25 @@ class Database {
         return call_user_func($class.'::createTable', $table, $definition);
     }
     
+    /**
+     * Create a table
+     * 
+     * @param string $table    the table name
+     * @param string $viewname the table name
+     * @param array $definitionsql the SQL query to back the view
+     * 
+     */
+    public static function createView($table, $viewname, $definitionsql) {
+        $class = self::getDelegationClass();
+        
+        return call_user_func($class.'::createView', $table, $viewname, $definitionsql);
+    }
+    public static function dropView($table, $viewname) {
+        $class = self::getDelegationClass();
+        
+        return call_user_func($class.'::dropView', $table, $viewname);
+    }
+
     /**
      * Get selected database delegation class
      * 

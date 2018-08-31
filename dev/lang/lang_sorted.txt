@@ -327,7 +327,7 @@ unknown_page
 upload_page
 uploaded
 uploading_transfers
-user_additionnal
+user_additional
 user_auth_secret
 user_created
 user_id

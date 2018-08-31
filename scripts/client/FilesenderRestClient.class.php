@@ -128,7 +128,17 @@ class FilesenderRestClient {
      * 
      * @throws Exception
      */
-    private function call($method, $path, $args = array(), $content = null, $options = array()) {
+    private function call($method, $path, $args = array(), $content = null, $options = array())
+    {
+        // be a little flexible with null options,
+        // convert them to empty array for user
+        if( is_null($options)) {
+            $options = array();
+        }
+        if( is_null($args)) {
+            $args = array();
+        }
+    
         if(!in_array($method, array('get', 'post', 'put', 'delete'))) throw new Exception('Method is not allowed', 405);
         
         if(substr($path, 0, 1) != '/') $path = '/'.$path;
@@ -237,6 +247,14 @@ class FilesenderRestClient {
      * @return mixed the response
      */
     public function get($path, $args = array(), $options = array()) {
+        // be a little flexible with null options,
+        // convert them to empty array for user
+        if( is_null($options)) {
+            $options = array();
+        }
+        if( is_null($args)) {
+            $args = array();
+        }
         return $this->call('get', $path, $args, $options);
     }
     
@@ -250,6 +268,14 @@ class FilesenderRestClient {
      * @return mixed the response
      */
     public function post($path, $args = array(), $content = null, $options = array()) {
+        // be a little flexible with null options,
+        // convert them to empty array for user
+        if( is_null($options)) {
+            $options = array();
+        }
+        if( is_null($args)) {
+            $args = array();
+        }
         return $this->call('post', $path, $args, $content, $options);
     }
     
@@ -263,6 +289,14 @@ class FilesenderRestClient {
      * @return mixed the response
      */
     public function put($path, $args = array(), $content = null, $options = array()) {
+        // be a little flexible with null options,
+        // convert them to empty array for user
+        if( is_null($options)) {
+            $options = array();
+        }
+        if( is_null($args)) {
+            $args = array();
+        }
         return $this->call('put', $path, $args, $content, $options);
     }
     
@@ -275,6 +309,14 @@ class FilesenderRestClient {
      * @return mixed the response
      */
     public function delete($path, $args = array(), $options = array()) {
+        // be a little flexible with null options,
+        // convert them to empty array for user
+        if( is_null($options)) {
+            $options = array();
+        }
+        if( is_null($args)) {
+            $args = array();
+        }
         return $this->call('delete', $path, $args, $options);
     }
     
@@ -297,7 +339,16 @@ class FilesenderRestClient {
      * @param string $expires expiry date (yyyy-mm-dd or unix timestamp)
      * @param array $options array of selected option identifiers
      */
-    public function postTransfer($user_id, $from, $files, $recipients, $subject = null, $message = null, $expires = null, $options = array()) {
+    public function postTransfer($user_id, $from, $files, $recipients, $subject = null, $message = null, $expires = null, $options = array())
+    {
+        // be a little flexible with null options,
+        // convert them to empty array for user
+        if( is_null($options)) {
+            $options = array();
+        }
+        if(!is_array($recipients)) $recipients = array($recipients);
+        
+    
         if(!$expires) {
             $info = $this->getInfo();
             if(!property_exists($info, 'default_transfer_days_valid'))
@@ -395,12 +446,22 @@ class FilesenderRestClient {
      * @param string $from sender email
      * @param mixed $files file path or array of files path
      * @param array $recipients array of recipients addresses
-     * @param string $subject optionnal subject
-     * @param string $message optionnal message
+     * @param string $subject optional subject
+     * @param string $message optional message
      * @param string $expires expiry date (yyyy-mm-dd or unix timestamp)
      * @param array $options array of selected option identifiers
+     *
+     * recipients and options are converted to an array for you if you pass a single entry
+     * or null respectively.
      */
-    public function sendFiles($user_id, $from, $filespath, $recipients, $subject = null, $message = null, $expires = null, $options = array()) {
+    public function sendFiles($user_id, $from, $filespath, $recipients, $subject = null, $message = null, $expires = null, $options = array())
+    {
+        // be a little flexible with null options,
+        // convert them to empty array for user
+        if( is_null($options)) {
+            $options = array();
+        }
+        
         $info = $this->getInfo();
         if(!$this->chunk_size || !$expires) {
             

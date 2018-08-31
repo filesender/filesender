@@ -39,7 +39,18 @@ class Mail {
      * Message-Id header value
      */
     private $msg_id = null;
-    
+
+
+    /**
+     * Setting this will force sending emails to off for group testing.
+     * Do not call this setting unless you are bulk testing FileSender.
+     */
+    private static $TESTING_MODE_SO_DO_NOT_SEND_EMAIL = false;
+    public static function TESTING_SET_DO_NOT_SEND_EMAIL() {
+        self::$TESTING_MODE_SO_DO_NOT_SEND_EMAIL = true;
+    }
+
+
     /**
      * Return path value
      */
@@ -71,7 +82,7 @@ class Mail {
     private $attachments = array();
     
     /**
-     * Additionnal headers
+     * Additional headers
      */
     private $headers = array();
     
@@ -112,7 +123,7 @@ class Mail {
             $this->subject = mb_encode_mimeheader(trim(str_replace(array("\n", "\r"), ' ', $value)), mb_internal_encoding(), 'Q', $this->nl);
             
         }else if($property == 'return_path') {
-            if(!filter_var($value, FILTER_VALIDATE_EMAIL)) throw new BadEmailException($value);
+            if(!Utilities::validateEmail($value)) throw new BadEmailException($value);
             $this->return_path = (string)$value;
             
         }else if($property == 'html') {
@@ -291,7 +302,7 @@ class Mail {
      * @return mixed
      */
     public function build($raw = false) {
-        // Additionnal headers
+        // Additional headers
         $headers = $this->headers;
         
         // Generate Message-Id if none
@@ -507,7 +518,11 @@ class Mail {
      */
     public function send() {
         $source = $this->build();
-        
+
+        if( self::$TESTING_MODE_SO_DO_NOT_SEND_EMAIL ) {
+            // Logger::warn('testing mode so not really sending mail');
+            return true;
+        }        
         Logger::warn('Sending mail');
         $safemode = ini_get('safe_mode');
         $safemode = ($safemode && !preg_match('`^off$`i', $safemode));
@@ -779,4 +794,6 @@ class MailAttachment {
             $this->cid = $value;
         }
     }
+
+
 }

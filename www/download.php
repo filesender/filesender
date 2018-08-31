@@ -232,7 +232,7 @@ function downloadSingleFile($transfer, $recipient, $file_id, $recently_downloade
     };
     register_shutdown_function($abort_handler);
 
-    $read_range = function($range = null) use($file, $recipient, $abort_handler) {
+    $read_range = function($range = null) use($file, $recipient, $abort_handler, $transfer) {
         $abort_handler();
 
         $offset = $range ? $range['start'] : 0;
@@ -241,7 +241,7 @@ function downloadSingleFile($transfer, $recipient, $file_id, $recently_downloade
         if (!$chunk_size)
             $chunk_size = 1024 * 1024;
 
-        if($file->encrypted_size){
+        if($transfer->options['encryption'] == 1){
             $end = $file->encrypted_size;
         }else{
             $end = $file->size;
@@ -342,7 +342,7 @@ function downloadSingleFile($transfer, $recipient, $file_id, $recently_downloade
             header('Content-Disposition: attachment; filename="'.$file->name.'"; filename*=UTF-8\'\''.rawurlencode($file->name));
         }
         
-        if($file->encrypted_size){
+        if($transfer->options['encryption'] == 1){
             header('Content-Length: ' . $file->encrypted_size);
         }else{
             header('Content-Length: ' . $file->size);

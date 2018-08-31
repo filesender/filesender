@@ -75,6 +75,28 @@ class Storage {
         // Cache name
         self::$class = $class;
     }
+
+    /**
+     * Get the storage class that was used with this file
+     * 
+     * @param File $file
+     * 
+     * @return String
+     */
+    public static function getStorageClass(File $file) {
+        return $file->storage_class_name;
+    }    
+
+    /**
+     * Get the storage class to use for new files
+     * 
+     * @return String
+     */
+    public static function getDefaultStorageClass() {
+        self::setup();
+        return self::$class;
+    }    
+    
     
     /**
      * Delegates transfer storable check
@@ -86,7 +108,7 @@ class Storage {
     public static function canStore(Transfer $transfer) {
         self::setup();
         
-        return call_user_func(self::$class.'::canStore', $transfer);
+        return call_user_func(self::getDefaultStorageClass().'::canStore', $transfer);
     }
     
     /**
@@ -97,9 +119,9 @@ class Storage {
     public static function getUsage() {
         self::setup();
         
-        if(!method_exists(self::$class, 'getUsage')) return null;
+        if(!method_exists(self::getDefaultStorageClass(), 'getUsage')) return null;
         
-        return call_user_func(self::$class.'::getUsage');
+        return call_user_func(self::getDefaultStorageClass().'::getUsage');
     }
     
     /**
@@ -129,7 +151,7 @@ class Storage {
         }
         
         // Ask underlying class to read data
-        $data = call_user_func(self::$class.'::readChunk', $file, $offset, $length);
+        $data = call_user_func(self::getStorageClass($file).'::readChunk', $file, $offset, $length);
         
         // Update read offset
         self::$reading_offsets[$file->id] = $offset + $length;
@@ -155,8 +177,14 @@ class Storage {
         if(strlen($data) > (int)Config::get('upload_crypted_chunk_size'))
             throw new StorageChunkTooLargeException(strlen($data), (int)Config::get('upload_chunk_size'));
         
+        $bench = new Benchmark('writeChunk','benchmark_writeChunk');
+        $bench->start();
+        
         // Ask underlying class to write data
-        return call_user_func(self::$class.'::writeChunk', $file, $data, $offset);
+        $ret = call_user_func(self::getStorageClass($file).'::writeChunk', $file, $data, $offset);
+        
+        $bench->log();
+        return $ret;
     }
     
     /**
@@ -167,9 +195,9 @@ class Storage {
     public static function completeFile(File $file) {
         self::setup();
         
-        if(!method_exists(self::$class, 'completeFile')) return;
+        if(!method_exists(self::getStorageClass($file), 'completeFile')) return;
         
-        return call_user_func(self::$class.'::completeFile', $file);
+        return call_user_func(self::getStorageClass($file).'::completeFile', $file);
     }
     
     /**
@@ -180,7 +208,7 @@ class Storage {
     public static function deleteFile(File $file) {
         self::setup();
         
-        call_user_func(self::$class.'::deleteFile', $file);
+        call_user_func(self::getStorageClass($file).'::deleteFile', $file);
     }
     
     /**
@@ -191,7 +219,7 @@ class Storage {
     public static function supportsDigest() {
         self::setup();
         
-        call_user_func(self::$class.'::supportsDigest');
+        call_user_func(self::getDefaultStorageClass().'::supportsDigest');
     }
     
     /**
@@ -204,7 +232,7 @@ class Storage {
     public static function getDigest(File $file) {
         self::setup();
         
-        call_user_func(self::$class.'::getDigest', $file);
+        call_user_func(self::getStorageClass($file).'::getDigest', $file);
     }
     
     /**
@@ -215,7 +243,7 @@ class Storage {
     public static function supportsWholeFile() {
         self::setup();
         
-        return call_user_func(self::$class.'::supportsWholeFile');
+        return call_user_func(self::getDefaultStorageClass().'::supportsWholeFile');
     }
     
     /**
@@ -231,7 +259,7 @@ class Storage {
     public static function storeWholeFile(File $file, $source_path) {
         self::setup();
         
-        call_user_func(self::$class.'::storeWholeFile', $file, $source_path);
+        call_user_func(self::getStorageClass($file).'::storeWholeFile', $file, $source_path);
     }
     
     /**
@@ -242,7 +270,7 @@ class Storage {
     public static function supportsLinking() {
         self::setup();
         
-        return call_user_func(self::$class.'::supportsLinking');
+        return call_user_func(self::getDefaultStorageClass().'::supportsLinking');
     }
     
     /**
@@ -254,6 +282,21 @@ class Storage {
     public static function storeAsLink(File $file, $source_path) {
         self::setup();
         
-        call_user_func(self::$class.'::storeAsLink', $file, $source_path);
+        call_user_func(self::getStorageClass($file).'::storeAsLink', $file, $source_path);
     }
+
+
+
+    /**
+     * get a file as a stream. The stream only needs to support reading all bytes
+     * in order, start to finish.
+     * 
+     * @param File $file
+     */
+    public static function getStream(File $file) {
+        self::setup();
+        return call_user_func(self::getStorageClass($file).'::getStream', $file);
+    }
+
+
 }

@@ -38,6 +38,30 @@ if (!defined('FILESENDER_BASE'))
  * REST server
  */
 class RestServer {
+
+
+    public static function sanitizeCallback( $cb ) {
+        $callback = preg_replace('`[^a-z0-9_\.-]`i', '', $cb );
+	return $callback;
+    }
+
+    public static function validateCallback_iframe_callback( $cb ) {
+	$acceptable = array("legacyUploadResultHandler");
+	if (in_array($cb, $acceptable)) {
+	    return $cb;
+	}
+	return '';
+    }
+    
+    public static function validateCallback_callback( $cb ) {
+	$acceptable = array("lang.setTranslations");
+	if (in_array($cb, $acceptable)) {
+	    return $cb;
+	}
+	return '';
+    }
+    
+
     /**
      * Process the request
      * 
@@ -240,15 +264,22 @@ class RestServer {
             
             if(array_key_exists('callback', $_GET)) {
                 header('Content-Type: text/javascript');
-                $callback = preg_replace('`[^a-z0-9_\.-]`i', '', $_GET['callback']);
-                echo $callback.'('.json_encode($data).');';
+                $callback = self::sanitizeCallback($_GET['callback']);
+                $callback = self::validateCallback_callback($callback);
+                
+                if( $callback ) {
+                    echo $callback.'('.json_encode($data).');';
+                }
                 exit;
             }
             
             if(array_key_exists('iframe_callback', $_GET)) {
                 header('Content-Type: text/html');
-                $callback = preg_replace('`[^a-z0-9_\.-]`i', '', $_GET['iframe_callback']);
-                echo '<html><body><script type="text/javascript">window.parent.'.$callback.'('.json_encode($data).');</script></body></html>';
+                $callback = self::sanitizeCallback($_GET['iframe_callback']);
+                $callback = self::validateCallback_iframe_callback($callback);
+                if( $callback ) {
+                    echo '<html><body><script type="text/javascript">window.parent.'.$callback.'('.json_encode($data).');</script></body></html>';
+                }
                 exit;
             }
             

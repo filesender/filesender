@@ -1,0 +1,5 @@
+#!/bin/bash
+
+sleep 240
+echo 'rm -f $1' >> /tmp/deletes
+

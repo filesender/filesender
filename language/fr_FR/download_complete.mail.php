@@ -7,9 +7,9 @@ Madame, Monsieur,
 Votre téléchargement {if:files>1}des fichiers{else}du fichier{endif} suivant{if:files>1}s{endif} est maintenant terminé :
 
 {if:files>1}{each:files as file}
-  - {file.name} ({size:file.size})
+  - {file.path} ({size:file.size})
 {endeach}{else}
-{files.first().name} ({size:files.first().size})
+{files.first().path} ({size:files.first().size})
 {endif}
 
 Cordialement,
@@ -29,11 +29,11 @@ Cordialement,
     {if:files>1}
     <ul>
         {each:files as file}
-            <li>{file.name} ({size:file.size})</li>
+            <li>{file.path} ({size:file.size})</li>
         {endeach}
     </ul>
     {else}
-    {files.first().name} ({size:files.first().size})
+    {files.first().path} ({size:files.first().size})
     {endif}
 </p>
 

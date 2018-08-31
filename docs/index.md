@@ -2,43 +2,65 @@
 title: FileSender Documentation
 ---
 
-# The problem
+## FileSender project
 
-You know the problem.  You need to send a file larger than a couple of megabytes to someone and the email comes back: attachment too big.  Then what?
+FileSender is a web based application that allows authenticated users
+to securely and easily send arbitrarily large files to other users.
+Authentication of users is provided through [SimpleSAMLphp, supporting
+SAML2, LDAP and RADIUS and
+more](http://simplesamlphp.org/docs/stable/simplesamlphp-idp#section_2).
+Users without an account can be sent an upload voucher by an
+authenticated user. FileSender is developed to the requirements of the
+higher education and research community.
 
-# FileSender project
+The purpose of the software is to send a large file to someone, have
+that file available for download for a certain number of downloads
+and/or a certain amount of time, and after that automatically delete
+the file. The software is not intended as a permanent file publishing
+platform.
 
-FileSender is a web based application that allows authenticated users to securely and easily send arbitrarily large files to other users. Authentication of users is provided through [SimpleSAMLphp, supporting SAML2, LDAP and RADIUS and more](http://simplesamlphp.org/docs/stable/simplesamlphp-idp#section_2). Users without an account can be sent an upload voucher by an authenticated user. FileSender is developed to the requirements of the higher education and research community.
+This is the home for Filesender documentation. For more information
+about the project [please visit our homepage](http://filesender.org).
 
-The purpose of the software is to send a large file to someone, have that file available for download for a certain number of downloads and/or a certain amount of time, and after that automatically delete the file. The software is not intended as a permanent file publishing platform.
+### Which version should you choose
 
-## License
+Version 2.2 has been released in August 2018 and is the recommended
+choice.
 
-FileSender is released under the [BSD license](http://opensource.org/licenses/BSD-3-Clause). It is open source software and available for free.
+Following the 2.0 release there will be subsequent releases in the
+pattern 2.1, 2.2, 2.30 etc. Each of these releases will build on
+version 2.0 adding bugfixes and features. It is planend that you can
+migrate from 2.0 upwards in the 2.x series.
 
-## Availability and download
+The previos production release is [1.6.1, released on December 30th
+2015](https://downloads.filesender.org/filesender-1.6.1.tar.gz). 
 
-The latest production release is [1.6.1, released on December 30th 2015](https://app.assembla.com/wiki/show/file_sender/Release_1-6-1). The previous major release [1.5, released on March 3rd 2013](https://app.assembla.com/wiki/show/file_sender/Release_1-5) is still supported. Releases [1.1.1, released on May 31st 2012](https://app.assembla.com/wiki/show/file_sender/Release_1-1-1) using a Flash based UI for large uploads and [1.0.1, released on 18 May 2011](https://app.assembla.com/wiki/show/file_sender/Release_1-0-1) using the deprecated Gears plugin are not supported anymore. Visit the [Download page](https://app.assembla.com/wiki/show/file_sender/Download) for details about the general availability of the FileSender software.
+### Documentation
 
-## Development status
+Please see the [documentation for versions 2.x](http://docs.filesender.org/v2.0/).
 
-The version currently under development is version 2.0. The alpha version can be installed from Git, see [the documentation for 2.0](v2.0/install/) for details. Check the [Release Schedule](https://app.assembla.com/wiki/show/file_sender/Release_Schedule) for the planning.
+### License
 
-## Blog
+FileSender is released under the [BSD
+license](http://opensource.org/licenses/BSD-3-Clause). It is open
+source software and available for free.
 
-The FileSender project has a [Blog](https://app.assembla.com/spaces/file_sender/wiki/Blog_and_News), where news and status updates are posted.
+### Availability and download
 
-## Mailing Lists
+Visit the [Releases
+page](https://github.com/filesender/filesender/releases) for details
+about the general availability of the FileSender software.
 
-The FileSender project uses a number of mailinglists to support people deploying FileSender software and to coordinate development. Please go to the [Support and Mailinglists](https://app.assembla.com/wiki/show/file_sender/Support_and_Mailinglists) page and subscribe yourself to those lists relevant for you.
+### Feature Requests
 
-## Feature Requests
+Go to the [Issues](https://github.com/filesender/filesender/issues)
+page if you have a feature you would like to see added to FileSender.
 
-Go to [Feature requests](https://app.assembla.com/wiki/show/file_sender/Feature_requests) if you have a feature you would like to see added to FileSender.
+### Features
 
-## Features
+Version 2.0 features are [described here](v2.0/features/).
 
-A snapshot of features for the latest 1.6(.x) release is located at [Features](https://app.assembla.com/wiki/show/file_sender/Features). A snapshot of features for the previous 1.1(.x) release is located at [Features_v1-1](https://app.assembla.com/wiki/show/file_sender/Features_v1-1).
+A snapshot of features for the latest 1.6(.x) release is located at [Features](v1.6/features). 
 
 * light-weight server footprint, optimized for least possible dependencies
 * share arbitrarily large files from standard desktop environments, no client-side deployment required
@@ -57,16 +79,11 @@ A snapshot of features for the latest 1.6(.x) release is located at [Features](h
 * Multi-language support. Out-of-the-box FileSender 1.6 supports Czech, Croatian, Dutch, English (Australian), Finnish, French, German, Hungarian, Italian, Norwegian (Bokmål), Serbian, Slovenian and Spanish. You can easily adapt relevant language labels to your local needs in an upgrade-friendly way, for example to localise the splash screen text. You can also easily modify which languages you make available to your users
 * PDO-based multi-database support for PostgreSQL, MySQL and sqlite
 
-FileSender's functionality is also described in [End_User_Documentation_for_v1-6](https://app.assembla.com/wiki/show/file_sender/End_User_Documentation_for_v1-6) snapshot of features for the previous 1.1(.x) release at [End_User_Documentation_for_v1-1](https://app.assembla.com/wiki/show/file_sender/End_User_Documentation_for_v1-1) and [Specifications](https://app.assembla.com/wiki/show/file_sender/Specifications).
 
-## Requirements
 
-A snapshot of requirements for the latest 1.6(.x) release is located at [Requirements](https://app.assembla.com/wiki/show/file_sender/Requirements). A snapshot of requirements for the previous 1.1(.x) release is located at [Requirements_for_v1-1](https://app.assembla.com/wiki/show/file_sender/Requirements_for_v1-1).
+### Requirements
 
-## Documentation
+Some storage, either MariaDB or PostgreSQL for database, either Apache
+or nginx for web server and SimpleSamlPhp.
 
-Installation and administrator documentation for the latest 1.6(.x) release is provided at [Documentation_v1-6](https://app.assembla.com/wiki/show/file_sender/Documentation_v1-6) (documentation for the previous 1.1(.x) release at [Documentation_v1-1](https://app.assembla.com/wiki/show/file_sender/Documentation_v1-1)).
 
-## Developer
-
-Development documentation is provided in the [Developer section](https://app.assembla.com/wiki/show/file_sender/Developer).

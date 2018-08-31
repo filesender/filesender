@@ -1,0 +1,6 @@
+This script should be run as root from the root directory
+of the souce tree and will copy the source code to
+/opt/filesenderetest
+and modify the config file to enable local testing.
+
+

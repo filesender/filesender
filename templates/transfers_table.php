@@ -2,10 +2,54 @@
     if(!isset($status)) $status = 'available';
     if(!isset($mode)) $mode = 'user';
     if(!isset($transfers) || !is_array($transfers)) $transfers = array();
+    if(!isset($limit)) $limit = 100000;
+    if(!isset($offset)) $offset = 0;
+    if(!isset($pagerprefix)) $pagerprefix = '';
     $show_guest = isset($show_guest) ? (bool)$show_guest : false;
     $extend = (bool)Config::get('allow_transfer_expiry_date_extension');
     $audit = (bool)Config::get('auditlog_lifetime') ? '1' : '';
+    $haveNext = 0;
+    $havePrev = 0;
+
+    if( count($transfers) > $limit ) {
+        $haveNext = 1;
+        $transfers = array_slice($transfers,0,$limit);
+    }
+    if( $offset > 0 ) {
+        $havePrev = 1;
+    }
+
+    $showPager = $havePrev || $haveNext;
+    
+    if( $havePrev || $haveNext ) {
+        echo '<table class="paginator" border="1"><tr>';
+        $base = '?s=' . $_GET['s'];
+        $cgioffset = $pagerprefix . 'offset';
+        $cgilimit  = $pagerprefix . 'limit';
+        $nextPage  = $offset+$limit;
+        $nextLink  = "$base&$cgioffset=$nextPage&$cgilimit=$limit";
+        
+        if( $havePrev ) {
+           $prevPage = max(0,$offset-$limit);
+           echo "<td class='pageprev0'><a href='$base&$cgioffset=0&$cgilimit=$limit'><span class='fa-stack fa-lg'><i class='fa fa-square fa-stack-2x'></i><i class='fa fa-angle-double-left fa-stack-1x fa-inverse'></i></span></a></td>";
+           echo "<td class='pageprev'><a href='$base&$cgioffset=$prevPage&$cgilimit=$limit'><span class='fa-stack fa-lg'><i class='fa fa-square fa-stack-2x'></i><i class='fa fa-angle-left fa-stack-1x fa-inverse'></i></span></a></td>";
+        } else {
+           echo "<td class='pageprev0'>&nbsp;&nbsp;</td><td class='pageprev'>&nbsp;</td>";
+        }
+
+        if( $haveNext ) {
+           echo "<td class='pagenext'><a href='$nextLink'><span class='fa-stack fa-lg'><i class='fa fa-square fa-stack-2x'></i><i class='fa fa-angle-right fa-stack-1x fa-inverse'></i></span></a></td>";
+        } else {
+           echo "<td class='pagenext'>&nbsp;</td>";
+        }
+        echo "<td class='pageheader'>$header</td>";
+        echo '</tr></tbody></table>';
+    } else {
+        if(isSet($header) && strlen($header))
+            echo "<h2>$header</h2>";
+    }
 ?>
+
 <table class="transfers list" data-status="<?php echo $status ?>" data-mode="<?php echo $mode ?>" data-audit="<?php echo $audit ?>">
     <thead>
         <tr>
@@ -56,6 +100,8 @@
             data-recipients-enabled="<?php echo $transfer->getOption(TransferOptions::GET_A_LINK) ? '' : '1' ?>"
             data-errors="<?php echo count($transfer->recipients_with_error) ? '1' : '' ?>"
             data-expiry-extension="<?php echo $transfer->expiry_date_extension ?>"
+            data-key-version="<?php echo $transfer->key_version; ?>"
+            data-key-salt="<?php echo $transfer->salt; ?>"
         >
             <td class="expand">
                 <span class="clickable fa fa-plus-circle fa-lg" title="{tr:show_details}"></span>
@@ -76,9 +122,9 @@
                 $items = array();
                 foreach(array_slice($transfer->recipients, 0, 3) as $recipient) {
                     if(in_array($recipient->email, Auth::user()->email_addresses)) {
-                        $items[] = '<abbr title="'.Template::sanitizeOutput($recipient->email).'">'.Lang::tr('me').'</abbr>';
+                        $items[] = '<abbr title="'.Template::sanitizeOutputEmail($recipient->email).'">'.Lang::tr('me').'</abbr>';
                     } else if($recipient->email) {
-                        $items[] = '<a href="mailto:'.Template::sanitizeOutput($recipient->email).'">'.Template::sanitizeOutput($recipient->identity).'</a>';
+                        $items[] = '<a href="mailto:'.Template::sanitizeOutputEmail($recipient->email).'">'.Template::sanitizeOutput($recipient->identity).'</a>';
                     } else {
                         $items[] = '<abbr title="'.Lang::tr('anonymous_details').'">'.Lang::tr('anonymous').'</abbr>';
                     }
@@ -99,9 +145,9 @@
                 <?php
                 $items = array();
                 foreach(array_slice($transfer->files, 0, 3) as $file) {
-                    $name = $file->name;
+                    $name = $file->path;
                     if(strlen($name) > 28) $name = substr($name, 0, 25).'...';
-                    $items[] = '<span title="'.Template::sanitizeOutput($file->name).'">'.Template::sanitizeOutput($name).'</span>';
+                    $items[] = '<span title="'.Template::sanitizeOutput($file->path).'">'.Template::sanitizeOutput($name).'</span>';
                 }
                 
                 if(count($transfer->files) > 3)
@@ -114,7 +160,7 @@
             <td class="downloads">
                 <?php $dc = count($transfer->downloads); echo $dc; if($dc) { ?> (<span class="clickable expand">{tr:see_all}</span>)<?php } ?>
             </td>
-            
+           
             <td class="expires" data-rel="expires">
                 <?php echo Utilities::formatDate($transfer->expires) ?>
             </td>
@@ -156,11 +202,11 @@
                         {tr:size} : <?php echo Utilities::formatBytes($transfer->size) ?>
                     </div>
                     <div>
-                        {tr:with_identity} : <?php echo Template::sanitizeOutput($transfer->user_email) ?>
+                        {tr:with_identity} : <?php echo Template::sanitizeOutputEmail($transfer->user_email) ?>
                     </div>
                     <?php if($show_guest) { ?>
                     <div>
-                        {tr:guest} : <?php if($transfer->guest) echo Template::sanitizeOutput($transfer->guest->email) ?>
+                        {tr:guest} : <?php if($transfer->guest) echo Template::sanitizeOutputEmail($transfer->guest->email) ?>
                     </div>
                     <?php } ?>
                     <div class="options">
@@ -198,12 +244,12 @@
                     <h2>{tr:recipients}</h2>
                     
                     <?php foreach($transfer->recipients as $recipient) { ?>
-                    <div class="recipient" data-id="<?php echo $recipient->id ?>" data-email="<?php echo Template::sanitizeOutput($recipient->email) ?>" data-errors="<?php echo count($recipient->errors) ? '1' : '' ?>">
+                    <div class="recipient" data-id="<?php echo $recipient->id ?>" data-email="<?php echo Template::sanitizeOutputEmail($recipient->email) ?>" data-errors="<?php echo count($recipient->errors) ? '1' : '' ?>">
                         <?php
                         if(in_array($recipient->email, Auth::user()->email_addresses)) {
-                            echo '<abbr title="'.Template::sanitizeOutput($recipient->email).'">'.Lang::tr('me').'</abbr>';
+                            echo '<abbr title="'.Template::sanitizeOutputEmail($recipient->email).'">'.Lang::tr('me').'</abbr>';
                         } else {
-                            echo '<a href="mailto:'.$recipient->email.'">'.Template::sanitizeOutput($recipient->identity).'</a>';
+                            echo '<a href="mailto:'.Template::sanitizeOutputEmail($recipient->email).'">'.Template::sanitizeOutput($recipient->identity).'</a>';
                         }
                         
                         if ($recipient->errors) echo '<span class="errors">' . implode(', ', array_map(function($type) {
@@ -229,16 +275,23 @@
                     <h2>{tr:files}</h2>
                     
                     <?php foreach($transfer->files as $file) { ?>
-                        <div class="file" data-id="<?php echo $file->id ?>">
-                            <?php echo Template::sanitizeOutput($file->name) ?> (<?php echo Utilities::formatBytes($file->size) ?>) : <?php echo count($file->downloads) ?> {tr:downloads}
+                        <div class="file" data-id="<?php echo $file->id ?>"
+                             data-key-version="<?php echo $transfer->key_version; ?>"
+                             data-key-salt="<?php echo $transfer->salt; ?>"
+                        >
+                            <?php echo Template::sanitizeOutput($file->path) ?> (<?php echo Utilities::formatBytes($file->size) ?>) : <?php echo count($file->downloads) ?> {tr:downloads}
                             
                             <?php if(!$transfer->is_expired) { ?>
                                
                                 <?php if(isset($transfer->options['encryption']) && $transfer->options['encryption'] === true) { ?>
                                 <span class="fa fa-lg fa-download transfer-file transfer-download" title="{tr:download}" data-id="<?php echo $file->id ?>" 
                                         data-encrypted="<?php echo isset($transfer->options['encryption'])?$transfer->options['encryption']:'false'; ?>" 
-                                        data-mime="<?php echo $file->mime_type; ?>" 
-                                        data-name="<?php echo $file->name; ?>"></span>
+                                        data-mime="<?php echo Template::sanitizeOutput($file->mime_type); ?>" 
+                                        data-name="<?php echo Template::sanitizeOutput($file->path); ?>"
+                                        data-key-version="<?php echo $transfer->key_version; ?>"
+                                        data-key-salt="<?php echo $transfer->salt; ?>"
+                                ></span>
+                                        
                                 <?php } else {?>
                             <a class="fa fa-lg fa-download" title="{tr:download}" href="download.php?files_ids=<?php echo $file->id ?>"></a>
                                 <?php } ?>
@@ -264,7 +317,22 @@
             <td colspan="7">{tr:no_transfers}</td>
         </tr>
         <?php } ?>
+
+        <tr class="pager_bottom_nav">
+            <td colspan="8" class="nextColumn">
+                <?php if($haveNext) { ?>
+                    <?php echo "<a href='$nextLink'>"; ?>
+                    {tr:pager_more}
+                    </a>
+                <?php } else { ?>
+                    {tr:pager_has_no_more}
+                <?php } ?>
+            </td>
+        </tr>
+
     </tbody>
 </table>
+
+
 
 <script type="text/javascript" src="{path:js/transfers_table.js}"></script>

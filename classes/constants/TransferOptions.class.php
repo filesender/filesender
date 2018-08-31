@@ -50,4 +50,5 @@ class TransferOptions extends Enum {
     const REDIRECT_URL_ON_COMPLETE                  = 'redirect_url_on_complete';
 
     const ENCRYPTION                                = 'encryption';
+    const COLLECTION                                = 'collection';
 }

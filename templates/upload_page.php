@@ -1,5 +1,10 @@
 <?php
 
+$formClasses = "upload_form_regular";
+if (Config::get('upload_display_per_file_stats')) {
+   $formClasses = "upload_form_stats";
+}
+
 if(Auth::isGuest()) {
     $guest = AuthGuest::getGuest();
     
@@ -30,14 +35,14 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
 ?>
 
 <div class="box">
-    <form id="upload_form" enctype="multipart/form-data" accept-charset="utf-8" method="post" data-need-recipients="<?php echo $need_recipients ? '1' : '' ?>">
+    <form id="upload_form" class="<?php echo $formClasses; ?>" enctype="multipart/form-data" accept-charset="utf-8" method="post" autocomplete="off" data-need-recipients="<?php echo $need_recipients ? '1' : '' ?>">
         <div class="box">
-            <div class="files"></div>
+            <div class="files" id="fileslist"></div>
             
             <div class="file_selector">
                 <label for="files" class="mandatory">{tr:select_file} :</label>
                 
-                <input name="files" type="file" multiple />
+                <input id="files" name="files" type="file" multiple />
                 
                 <?php echo LegacyUploadProgress::getTrackingInput() ?>
             </div>
@@ -45,6 +50,27 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
             <div class="files_dragdrop">
                 <div class="instructions">{tr:drag_and_drop}</div>
             </div>
+
+            <div class="files_uploadlogtop" hidden="true">
+                <div class="uploadlogbox">
+                    <div class="uploadlogheader">{tr:upload_log_header}</div>
+                    <table class="uploadlog">
+                        <thead hidden="true">
+                            <tr>
+                                <th>{tr:date}</th>
+                                <th>{tr:message}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="tpl">
+                                <td class="date"></td>
+                                <td class="message"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
             
             <div class="files_actions">
                 <div>
@@ -58,14 +84,28 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
                         {tr:select_files}
                     </a>
                 </div>
+
                 
                 <div class="stats">
                     <div class="number_of_files">{tr:number_of_files} : <span class="value"></span></div>
                     <div class="size">{tr:size} : <span class="value"></span></div>
+                </div>
+            </div>
+
+            <div class="uploading_actions" hidden="true">
+                <div class="msg">
+                    <div class="auto_resume_timer_top">
+                        <div class="auto_resume_timer">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="stats">
                     <div class="uploaded">{tr:uploaded} : <span class="value"></span></div>
                     <div class="average_speed">{tr:average_speed} : <span class="value"></span></div>
                 </div>
             </div>
+            
         </div>
         
         <table class="two_columns">
@@ -78,13 +118,13 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
                         
                         <?php if (count($emails) > 1) { ?>
                         
-                        <select name="from">
+                        <select id="from" name="from">
                             <?php foreach ($emails as $email) { ?>
-                            <option><?php echo $email ?></option>
+                            <option><?php echo Template::sanitizeOutputEmail($email) ?></option>
                             <?php } ?>
                         </select>
                         
-                        <?php } else echo $emails[0] ?>
+                        <?php } else echo Template::sanitizeOutputEmail($emails[0]) ?>
                     </div>
                     
                     <?php if($allow_recipients) { ?>
@@ -108,8 +148,8 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
                     
                     <div class="fieldcontainer" data-related-to="message">
                         <label for="message">{tr:message} ({tr:optional}) : </label>
-                        
-                        <textarea name="message" rows="4"></textarea>
+                        <label class="invalid" id="message_can_not_contain_urls" style="display:none;">{tr:message_can_not_contain_urls}</label>                        
+                        <textarea id="message" name="message" rows="4"></textarea>
                     </div>
                         <?php if(Config::get('encryption_enabled')) { ?>
                             <div class="fieldcontainer" id="encrypt_checkbox" data-related-to="encryption">
@@ -118,7 +158,10 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
                             </div>
                             <div class="fieldcontainer" id="encryption_password_container">  
                                 <label for="encryption_password" style="cursor: pointer;">{tr:file_encryption_password} : </label>
-                                <input name="encryption_password" type="password"/>
+                                <input id="encryption_password" name="encryption_password" type="password" autocomplete="new-password"/>
+                            </div>
+                            <div class="fieldcontainer" id="encryption_password_container_too_short_message">
+                                {tr:file_encryption_password_too_short}
                             </div>
                             <div class="fieldcontainer" id="encryption_password_container_generate">
                                 <a id='encryption_generate_password' href="#">{tr:file_encryption_generate_password}</a>
@@ -145,7 +188,6 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
                         
                     </div>
                 </td>
-                
                 <td class="box">
                     <?php
                         $displayoption = function($name, $cfg, $disable = false) {
@@ -154,17 +196,22 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
                             $default = $cfg['default'];
                             if(Auth::isSP() && !$text)
                                 $default = Auth::user()->defaultTransferOptionState($name);
-                            
+
                             $checked = $default ? 'checked="checked"' : '';
                             $disabled = $disable ? 'disabled="disabled"' : '';
-                            
-                            echo '<div class="fieldcontainer" data-option="'.$name.'">';
+                            $extraDivAttrs = '';
+                            if(Auth::isGuest() && $disable) {
+                                if( Config::get('guest_upload_page_hide_unchangable_options')) {
+                                    $extraDivAttrs .= ' hidden="true" ';
+                                }
+                            }
+                            echo '<div class="fieldcontainer" data-option="'.$name.'" '. $extraDivAttrs .'>';
                             if($text) {
                                 echo '    <label for="'.$name.'">'.Lang::tr($name).'</label>';
-                                echo '    <input name="'.$name.'" type="text" value="'.htmlspecialchars($default).'" '.$disabled.'>';
+                                echo '    <input id="'.$name.'" name="'.$name.'" type="text" value="'.htmlspecialchars($default).'" '.$disabled.'>';
                                 
                             } else {
-                                echo '  <input name="'.$name.'" type="checkbox" '.$checked.' '.$disabled.' />';
+                                echo '  <input id="'.$name.'" name="'.$name.'" type="checkbox" '.$checked.' '.$disabled.' />';
                                 echo '  <label for="'.$name.'">'.Lang::tr($name).'</label>';
                             }
                             
@@ -177,9 +224,9 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
                     
                     <div class="basic_options">
                         <div class="fieldcontainer">
-                            <label for="datepicker" id="datepicker_label" class="mandatory">{tr:expiry_date}:</label>
+                            <label for="expires" id="datepicker_label" class="mandatory">{tr:expiry_date}:</label>
                             
-                            <input name="expires" type="text" autocomplete="off" title="<?php echo Lang::tr('dp_date_format_hint')->r(array('max' => Config::get('max_transfer_days_valid'))) ?>" value="<?php echo Utilities::formatDate(Transfer::getDefaultExpire()) ?>"/>
+                            <input id="expires" name="expires" type="text" autocomplete="off" title="<?php echo Lang::tr('dp_date_format_hint')->r(array('max' => Config::get('max_transfer_days_valid'))) ?>" value="<?php echo Utilities::formatDate(Transfer::getDefaultExpire()) ?>"/>
                         </div>
                         
                         <?php
@@ -193,7 +240,7 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
                                 
                                 echo '<div class="fieldcontainer">';
                                 echo '  <label for="lang">{tr:recipients_notifications_language}:</label>';
-                                echo '  <select name="lang">'.implode('', $opts).'</select>';
+                                echo '  <select id="lang" name="lang">'.implode('', $opts).'</select>';
                                 echo '</div>';
                             }
                         ?>
@@ -211,7 +258,7 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
                         
                         <?php if (Config::get('terasender_enabled') && Config::get('terasender_advanced')) { ?>
                         <div class="fieldcontainer">
-                            <label for="workerCount">{tr:terasender_worker_count}</label>
+                            <label for="terasender_worker_count">{tr:terasender_worker_count}</label>
                             
                             <input id="terasender_worker_count" type="text" value="<?php echo Config::get('terasender_worker_count') ?>"/>
                             <br />
@@ -224,7 +271,7 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
             </tr>
         </table>
         
-        <?php if (Config::get('AuP')) { ?>
+        <?php if (Config::get('aup_enabled')) { ?>
         <div class="aup fieldcontainer box">
             <label for="aup" title="{tr:showhide}">
                 {tr:accepttoc} [<span>{tr:showhide}</span>]
@@ -258,6 +305,16 @@ foreach(Transfer::allOptions() as $name => $dfn)  {
             </a>
         </div>
     </form>
+
+    <?php if (Config::get('upload_graph_bulk_display')) { ?>
+        <div id="graph" class="uploadbulkgraph"><div id="graphDiv" style="width:400px; height:200px; margin:0 auto"><canvas id="speedChart"></canvas></div></div>
+
+        <script type="text/javascript" src="{path:lib/chartjs/Chart.bundle.min.js}"></script>
+        <script type="text/javascript" src="{path:js/graph.js}"></script>
+    <?php } ?>
     
+    <?php if (!Config::get('disable_directory_upload')) { ?>
+       <script type="text/javascript" src="{path:js/dragdrop-dirtree.js}"></script>
+    <?php } ?>
     <script type="text/javascript" src="{path:js/upload_page.js}"></script>
 </div>

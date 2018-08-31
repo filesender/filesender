@@ -69,6 +69,18 @@ class Logger {
         if (!ProcessTypes::isValidValue($process)) $process = ProcessTypes::MISC; 
         self::$process = $process;
     }
+
+    /**
+     * True if we are a local process such as ProcessTypes::CRON
+     * for which SAML is unlikely to work
+     */
+    public static function isLocalProcess() {
+        return in_array( self::$process,
+                         array( ProcessTypes::CRON,
+                                ProcessTypes::FEEDBACK,
+                                ProcessTypes::INSTALL,
+                                ProcessTypes::UPGRADE ));
+    }
     
     /**
      * Setup logging facilities
@@ -97,12 +109,16 @@ class Logger {
                 $facility['level'] = LogLevels::INFO;
             }
             
+            if(!array_key_exists('output', $facility))
+                $facility['output'] = 'text';
+
             // Facility type based parameter checks
             switch(strtolower($facility['type'])) {
                 case 'file' :
                     // Log to file needs at least a path
-                    if(!array_key_exists('path', $facility))
+                    if(!array_key_exists('path', $facility)) {
                         throw new ConfigMissingParameterException('log_facilities['.$index.'][path]');
+                    }
                     
                     // If defined rotation rate must be valid
                     if(array_key_exists('rotate', $facility) && !in_array($facility['rotate'], array('hourly', 'daily', 'weekly', 'monthly', 'yearly')))
@@ -110,7 +126,7 @@ class Logger {
                     
                     $facility['method'] = 'logFile';
                     break;
-                
+                    
                 case 'syslog' :
                     // PHP syslog arguments may be given
                     $i = false;
@@ -129,12 +145,12 @@ class Logger {
                     
                     $facility['method'] = 'logSyslog';
                     break;
-                
+                    
                 case 'error_log' :
                     // PHP error_log needs no argument
                     $facility['method'] = 'logErrorLog';
                     break;
-                
+                    
                 case 'callable' :
                     // Callback based facilities need at least a callback ...
                     if(!array_key_exists('callback', $facility))
@@ -146,7 +162,7 @@ class Logger {
                     
                     $facility['method'] = 'logCallable';
                     break;
-                
+                    
                 default :
                     // Unknown facilities are reported
                     throw new ConfigBadParameterException('log_facilities['.$index.'][type]');
@@ -162,7 +178,16 @@ class Logger {
         // Remove failsafe facility if everything went well
         if(count(self::$facilities) >= 2) array_shift(self::$facilities);
     }
-    
+
+    /**
+     * Log terminating error. This does not return.
+     * 
+     * @param string $message
+     */
+    public static function haltWithErorr($message) {
+        self::log(LogLevels::ERROR, $message);
+        exit('An error has occurred');    
+    }
     /**
      * Log error
      * 
@@ -171,7 +196,7 @@ class Logger {
     public static function error($message) {
         self::log(LogLevels::ERROR, $message);
     }
-    
+
     /**
      * Log warn
      * 
@@ -180,7 +205,7 @@ class Logger {
     public static function warn($message) {
         self::log(LogLevels::WARN, $message);
     }
-    
+
     /**
      * Log info
      * 
@@ -207,9 +232,9 @@ class Logger {
     public static function log($level, $message) {
         // If message is other than scalar (object, array) then print_r it and log individual lines
         if(!is_scalar($message)) {
-            foreach(explode("\n", print_r($message, true)) as $line)
+            foreach(explode("\n", print_r($message, true)) as $line) {
                 self::log($level, $line);
-            
+            }
             return;
         }
         
@@ -270,6 +295,13 @@ class Logger {
             }
         }
         
+        $messageArray = array(
+            'app' => 'FileSender',
+            'process' => self::$process,
+            'level' => $level,
+            'message' => $message
+        );
+
         // Add authenticated user id if any, except in debug mode as line is already long
         try {
             // No user id in log if we are recording a low level exception
@@ -280,12 +312,9 @@ class Logger {
             }));
             
             if($level != LogLevels::DEBUG && !$risky_exception && Auth::user())
-                $message = '[user '.Auth::user()->id.'] '.$message;
+                $messageArray['user'] = Auth::user()->id;
             
         } catch(Exception $e) {}
-        
-        // Build final message ...
-        $message = '['.self::$process.':'.$level.'] '.$message;
         
         // ... and give it to defined facilities
         foreach(self::$facilities as $facility) {
@@ -302,6 +331,13 @@ class Logger {
                 if(self::$levels[$level] > $max) continue;
             }
             
+            // Build final message ...
+            if ($facility['output'] == 'json') {
+                $message = json_encode($messageArray);
+            } else { //text
+                $message = (array_key_exists('user', $messageArray)?'[user '.$messageArray['user'].'] ':'').'['.$messageArray['process'].':'.$messageArray['level'].'] '.$message;
+            }
+
             // Forward to facility related method with config
             $method = get_called_class().'::'.$facility['method'];
             call_user_func($method, $facility, $level, $message);

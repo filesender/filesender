@@ -84,6 +84,16 @@ class AuthLocal {
                 'email' => $email,
                 'name' => $name
             );
+            /* $authid = Authentication::ensure('filesender-authlocal@localhost.localdomain', 'auth local')->id;
+             * $user = User::fromAuthId( $authid );
+             * $user->email_addresses = 'filesender-authlocal@localhost.localdomain';
+             */
+            $authid = Authentication::ensure($user_id, 'auth local')->id;
+            $user = User::fromAuthId( $authid );
+            $user->email_addresses = $email;
+            $user->name = $name;
+            
+            Auth::setUserObject( $user );
         }
     }
 }

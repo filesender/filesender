@@ -99,17 +99,21 @@ class AuthSPShibboleth {
             if(is_array($attributes['uid'])) $attributes['uid'] = array_shift($attributes['uid']);
             if(is_array($attributes['name'])) $attributes['name'] = array_shift($attributes['name']);
             
-            if(!$attributes['uid']) throw new AuthSPMissingAttributeException('uid');
+            if(!$attributes['uid'])
+                throw new AuthSPMissingAttributeException(
+                    'uid',$attributes,'uid_attribute',self::$config['uid_attribute']);
             
-            if(!$attributes['email']) throw new AuthSPMissingAttributeException('email');
+            if(!$attributes['email'])
+                throw new AuthSPMissingAttributeException(
+                     'email',$attributes,'email_attribute',self::$config['email_attribute']);
             
             foreach($attributes['email'] as $email) {
-                if(!filter_var($email, FILTER_VALIDATE_EMAIL)) throw new AuthSPBadAttributeException('email');
+                if(!Utilities::validateEmail($email)) throw new AuthSPBadAttributeException('email');
             }
             
             if(!$attributes['name']) $attributes['name'] = substr($attributes['email'][0], 0, strpos($attributes['email'][0], '@'));
             
-            // Gather additionnal attributes if required
+            // Gather additional attributes if required
             $additional_attributes = Config::get('auth_sp_additional_attributes');
             if($additional_attributes) {
                 $attributes['additional'] = array();

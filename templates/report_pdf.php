@@ -4,9 +4,9 @@
     {tr:created} : <?php echo Utilities::formatDate($report->transfer->created) ?><br />
     {tr:expires} : <?php echo Utilities::formatDate($report->transfer->expires) ?><br />
     {tr:size} : <?php echo Utilities::formatBytes($report->transfer->size) ?><br />
-    {tr:with_identity} : <?php echo Utilities::sanitizeOutput($report->transfer->user_email) ?><br />
+    {tr:with_identity} : <?php echo Template::sanitizeOutputEmail($report->transfer->user_email) ?><br />
     <?php if($report->transfer->guest) { ?>
-    {tr:guest} : <?php echo Utilities::sanitizeOutput($report->transfer->guest->email) ?><br />
+    {tr:guest} : <?php echo Template::sanitizeOutputEmail($report->transfer->guest->email) ?><br />
     <?php } ?>
     {tr:options} : <?php echo implode(', ', array_map(function($o) {
         return Lang::tr($o);
@@ -28,7 +28,7 @@
     
     <?php foreach($report->transfer->files as $file) { ?>
         <div class="file" data-id="<?php echo $file->id ?>">
-            <?php echo Utilities::sanitizeOutput($file->name) ?> (<?php echo Utilities::formatBytes($file->size) ?>) : <?php echo count($file->downloads) ?> {tr:downloads}
+            <?php echo Utilities::sanitizeOutput($file->path) ?> (<?php echo Utilities::formatBytes($file->size) ?>) : <?php echo count($file->downloads) ?> {tr:downloads}
         </div>
     <?php } ?>
 </div>
@@ -74,7 +74,9 @@ foreach($report->logs as $entry) {
     
     echo '<td>'.$action.'</td>';
     
-    echo '<td>'.$entry->ip.'</td>';
+    if( Config::get('reports_show_ip_addr')) {
+        echo '<td>'.$entry->ip.'</td>';
+    }
     
     echo '</tr>';
 }

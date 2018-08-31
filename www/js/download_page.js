@@ -60,9 +60,6 @@ $(function() {
         selectors.push(el.find('.fa'));
         selectors.toggleClass('fa-square-o', !selected).toggleClass('fa-check-square-o', selected);
     });
-    page.find('#download_test').on('click', function() { 
-        window.filesender.crypto_app().decryptDownload('https://filesender.app/download.php?files_ids=97', 'text/plain');
-    });
     
     
     // Get recipient token
@@ -81,11 +78,18 @@ $(function() {
         if (!encrypted && confirm){
             filesender.ui.confirm(lang.tr('confirm_download_notify'), dlcb(true), dlcb(false), true);
         }else{
-             if(encrypted){
+            if(encrypted){
+                if(!filesender.supports.crypto ) {
+                    filesender.ui.alert('error', lang.tr('file_encryption_description_disabled'));
+                    return;
+                }
+                
                 var filename = $($this).find("[data-id='" + ids[0] + "']").attr('data-name');
                 var mime = $($this).find("[data-id='" + ids[0] + "']").attr('data-mime');
+                var key_version = $($this).find("[data-id='" + ids[0] + "']").attr('data-key-version');
+                var salt = $($this).find("[data-id='" + ids[0] + "']").attr('data-key-salt');
 
-                window.filesender.crypto_app().decryptDownload(filesender.config.base_path + 'download.php?token=' + token + '&files_ids=' + ids.join(','), mime, filename, progress);
+                window.filesender.crypto_app().decryptDownload(filesender.config.base_path + 'download.php?token=' + token + '&files_ids=' + ids.join(','), mime, filename, key_version, salt, progress);
             }else{
                 filesender.ui.redirect(filesender.config.base_path + 'download.php?token=' + token + '&files_ids=' + ids.join(','));
             }
@@ -129,8 +133,14 @@ $(function() {
         return false;
     });
     
-    var bigger_than_4gb = parseInt($('[data-transfer-size]').attr('data-transfer-size')) > 4 * 1024 * 1024 * 1024;
+    var needszip64extractor = parseInt($('[data-transfer-size]').attr('data-transfer-size')) > 2 * 1024 * 1024 * 1024;
     var macos = navigator.platform.match(/Mac/);
-    if(!bigger_than_4gb || !macos)
+    if( !needszip64extractor || !macos )
         $('.mac_archive_message').hide();
+
+    // only worry the user with this banner if any files are encrypted
+    // and they will not be able to download them.
+    var transfer_is_encrypted = $('.transfer_is_encrypted').text()==1;
+    if( transfer_is_encrypted && !filesender.supports.crypto ) 
+        $('.crypto_not_supported_message').show();
 });

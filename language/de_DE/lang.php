@@ -1,91 +1,444 @@
+<?php 
+// WARNING, this is a read only file created by import scripts
+// WARNING
+// WARNING,  Changes made to this file will be clobbered
+// WARNING
+// WARNING,  Please make changes on poeditor instead of here
+// 
+// 
+?>
 <?php
-
-/*
- * FileSender www.filesender.org
- *
- * Copyright (c) 2009-2012, AARNet, Belnet, HEAnet, SURFnet, UNINETT
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * *	Redistributions of source code must retain the above copyright
- * 	notice, this list of conditions and the following disclaimer.
- * *	Redistributions in binary form must reproduce the above copyright
- * 	notice, this list of conditions and the following disclaimer in the
- * 	documentation and/or other materials provided with the distribution.
- * *	Neither the name of AARNet, Belnet, HEAnet, SURFnet and UNINETT nor the
- * 	names of its contributors may be used to endorse or promote products
- * 	derived from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
-/* ---------------------------------
- * de_DE Language File
- * Contributed by Claude Tompers (RESTENA)
- * ---------------------------------
- */
-$lang['logon'] = 'Einloggen';
-
 $lang['about'] = 'Impressum';
-$lang['help'] = 'Hilfe';
-$lang['download'] = 'Herunterladen';
-
-$lang['files'] = 'Dateien';
-
-$lang['downloads'] = 'Heruntergeladene Dateien';
-
-
-$lang['to'] = 'An';
-$lang['from'] = 'Von';
-$lang['size'] = 'Größe';
-$lang['created'] = 'Erstellt';
-$lang['subject'] = 'Betreff';
-$lang['message'] = 'Nachricht';
-
-$lang['showhide'] = 'Anzeigen/Verstecken';
-
+$lang['about_page'] = 'Impressum';
+$lang['access_forbidden'] = 'Sie haben keine Berechtigung für diese Seite';
+$lang['action'] = 'Durchgeführte Aktion';
+$lang['actions'] = 'Aktion';
+$lang['add_me_to_recipients'] = 'Füge mich als Empfänger hinzu';
+$lang['add_recipient'] = 'Empfänger hinzufügen';
+$lang['admin_config_section'] = 'Konfiguration';
+$lang['admin_guests_section'] = 'Gast einladen';
+$lang['admin_page'] = 'Administration';
+$lang['admin_statistics_section'] = 'Statistik';
+$lang['admin_transfers_section'] = 'Dateitransfer';
+$lang['admin_users_section'] = 'Benutzer';
+$lang['advanced_settings'] = 'Erweiterte Einstellungen';
+$lang['anonymous'] = 'Anonym';
+$lang['anonymous_details'] = 'Direkt-Link zur Verfügung gestellt';
+$lang['archive_download'] = 'Als eine Datei (.zip) herunterladen';
+$lang['archive_message'] = 'Sie können ausgewählte Dateien als Archive herunterladen.';
+$lang['auditlog'] = 'Dateitransferprotokoll';
+$lang['auditlog_not_enabled'] = 'Dateitransferprotokollierung ist nicht aktiviert';
+$lang['auditlog_not_found'] = 'Dateitransferprotokollierung nicht gefunden';
+$lang['auditlog_unknown_event'] = 'Unbekanntes Dateitransferprotokollierungsereignis';
+$lang['auth_authentication_not_found'] = 'Authentifizierungs-System nicht gefunden.';
+$lang['auth_remote_signature_check_failed'] = 'Fernsignaturprüfung fehlgeschlagen';
+$lang['auth_remote_too_late'] = 'Authentifizierung dauerte zu lang';
+$lang['auth_remote_unknown_application'] = 'Unbekannte Remote-Appklikation';
+$lang['auth_remote_user_rejected'] = 'Der Benutzer erlaubt keine Remote-Applikation';
+$lang['auth_sp_authentication_not_found'] = 'SP Authentifizierungs-Klasse nicht gefunden';
+$lang['auth_sp_bad_attribute'] = 'Falsche Attribute bei der SP Authentifizierung';
+$lang['auth_sp_missing_attribute'] = 'Attribut zur SP Authentifizierung nicht gefunden';
+$lang['auth_sp_missing_delegation_class'] = 'SP Authentifizierungsdelegierungsklasse nicht gefunden';
+$lang['auth_user_not_allowed'] = 'Sie dürfen diese Applikation nicht nutzen';
+$lang['authentication_required'] = 'Authentifizierung benötigt';
+$lang['authentication_required_explanation'] = 'Sie müssen authentifiziert werden, um das zu tun. Vielleicht ist Ihre Sitzung abgelaufen? Bitte klicken Sie auf OK um sich erneut zu authentifizieren.';
+$lang['auto_resume_timer_seconds'] = 'In {cfg:automatic_resume_timer_seconds} Sekunden automatisch fortsetzen';
+$lang['available_transfers'] = 'Aktuell verfügbare Dateitransfers';
+$lang['average_speed'] = 'Durchschnittsgeschwindigkeit';
+$lang['bad_email'] = 'Ungültiges E-Mail-Format';
+$lang['bad_expire'] = 'Ungültiges Ablaufdatum';
+$lang['bad_guest_status'] = 'Ungültiger Gast-Status';
+$lang['bad_ip_format'] = 'Ungültiges IP-Format';
+$lang['bad_ip_format_ipv4'] = 'Ungültiges IPv4-Format';
+$lang['bad_ip_format_ipv6'] = 'Ungültiges IPv6-Format';
+$lang['bad_lang_code'] = 'Ungültiger Sprachcode';
+$lang['bad_size_format'] = 'Ungültiges Größenformat';
+$lang['bad_transfer_status'] = 'Ungültiger Dateitransferstatus';
+$lang['can_only_send_to_me'] = 'Kann nur an mich verschicken';
 $lang['cancel'] = 'Abbrechen';
+$lang['cannot_alter_closed_transfer'] = 'Kann einen abgeschlossenen Dateitransfer nicht ändern';
+$lang['cannot_open_input_file'] = 'Die Datei kann nicht geöffnet werden';
+$lang['clear_all'] = 'Alles entfernen';
+$lang['click_to_delete_file'] = 'Entferne Datei';
+$lang['click_to_delete_recipient'] = 'Empfänger entfernen';
+$lang['client_logs_sent'] = 'Logs erfolgreich verschickt';
 $lang['close'] = 'Schließen';
-$lang['ok'] = 'OK';
-$lang['send'] = 'Senden';
+$lang['closed_transfers'] = 'Dateitransfer abschließen';
+$lang['config_bad_parameter'] = 'Ungültiger Konfigurationsparameter';
+$lang['config_file_missing'] = 'Konfigurationsdatei nicht gefunden';
+$lang['config_missing_parameter'] = 'Konfigurationsparameter nicht gefunden';
+$lang['config_override_cannot_save'] = 'Die neue Konfiguration konnte nicht gespeichert werden';
+$lang['config_override_disabled'] = 'Überschreiben der Konfiguration ist deaktiviert';
+$lang['config_override_not_allowed'] = 'Überschreiben der Konfiguration ist nicht erlaubt';
+$lang['config_override_validation_failed'] = 'Übergeordnete Konfiguration Validierung fehlgeschlagen';
+$lang['config_overriden'] = 'Konfiguration überschrieben';
+$lang['confirm_close_transfer'] = 'Wollen Sie wirklich diesen Dateitransfer schließen? Dateien können nicht mehr heruntergeladen werden, nachdem der Dateitransfer geschlossen ist. Sie können einen geschlossenen Dateitransfer nicht erneut öffnen.';
+$lang['confirm_delete_file'] = 'Sind Sie sicher, dass Sie diese Datei löschen wollen? Der Dateitransfer wird geschlossen, wenn die Datei gelöscht wird.';
+$lang['confirm_delete_guest'] = 'Wollen Sie wirklich diesen Gast löschen (der Empfänger ist dann nicht mehr in der Lage Dateien hochzuladen)?';
+$lang['confirm_delete_recipient'] = 'Sind Sie sicher, dass Sie diesen Empfänger löschen wollen? Der Dateitransfer wird geschlossen, wenn der Empfänger gelöscht wird.';
+$lang['confirm_dialog'] = 'Bestätigen';
+$lang['confirm_download_notify'] = 'Möchten Sie per E-Mail benachrichtigt werden, wenn der Download abgeschlossen ist?';
+$lang['confirm_extend_expiry'] = 'Wollen Sie wirklich das Gültigkeitsdatums um {days} Tage verlängern?';
+$lang['confirm_leave_upload_page'] = 'Wollen Sie diese Seite wirklich verlassen?';
+$lang['confirm_remind_guest'] = 'Wollen Sie wirklich eine Erinnerung an diesen Gast verschicken?';
+$lang['confirm_remind_recipient'] = 'Wollen Sie wirklich eine Erinnerung an diesen Empfänger verschicken?';
+$lang['confirm_remind_transfer'] = 'Wollen sie wirklich eine Erinnerung an diesen Dateitransferempfänger senden?';
+$lang['confirm_stop_upload'] = 'Wollen Sie wirklich den Upload stoppen und bereits hochgeladene Daten entfernen?';
+$lang['copy_text'] = 'Kopiert den Text unterhalb';
+$lang['core_class_not_found'] = 'Kern-Klasse nicht gefunden';
+$lang['core_file_not_found'] = 'Kern-Datei nicht gefunden';
+$lang['count_from_date_to_date'] = '{count} vom {date:start} bis zum {date:end}';
+$lang['created'] = 'Erstellt';
+$lang['created_transfers'] = 'Erstellte Dateitransfers';
+$lang['database_access_failure'] = 'Fehler beim Zugriff auf die Datenbank';
+$lang['date'] = 'Datum';
+$lang['date_format'] = 'd.m.Y';
+$lang['datetime_format'] = 'd.m.Y H:i:s';
+$lang['dbi_missing_parameter'] = 'DBI-Konfigurationsparameter fehlt';
+$lang['decrypting'] = 'Entschlüssel';
 $lang['delete'] = 'Löschen';
-$lang['yes'] = 'Ja';
-$lang['no'] = 'Nein';
-$lang['invalid_file'] = 'Ungültige Datei';
-$lang['select_file'] = 'Datei wählen';
-
-$lang['email_separator_msg'] = 'Mehrere E-Mail Adressen trennen durch , oder ;';
-$lang['email_sent'] = 'E-Mail wurde versandt';
-$lang['expiry_date'] = 'Ablaufdatum';
-$lang['send_voucher'] = 'Voucher senden';
-
-
-$lang['optional'] = 'optional';
-
-
+$lang['delete_transfer_nicely'] = 'Lösche den Dateitransfer und informiere die Empfänger';
+$lang['delete_transfer_roughly'] = 'Lösche den Dateitransfer ohne Benachrichtigungen';
+$lang['details'] = 'Details';
+$lang['dialog_autoclose'] = 'Diese Meldung schließt in {seconds} Sekunden';
+$lang['disable_terasender'] = 'Deaktiviere parallelen Upload (Häkchen setzen, wenn Sie eine langsame Internetverbindung haben)';
+$lang['does_not_expire'] = 'Läuft nicht ab';
+$lang['done'] = 'Fertig';
+$lang['done_uploading'] = 'Hochladen abgeschlossen';
+$lang['done_uploading_guest'] = 'Danke, dass Sie {cfg:site_name} nutzen. Wenn bei Ihrem Gast-Zugang die Möglichkeit aktiviert wurde, mehrere Uploads durchführen zu können, haben Sie die Möglichkeit, über den Link weitere Dateien zu verschicken.';
+$lang['done_uploading_redirect'] = 'Ihr Upload ist fertig und Sie werden zu <a href="{url}">{url}</a> weitergeleitet. Die Weiterleitung dauert länger als gewöhnlich.';
+$lang['download'] = 'Download';
+$lang['download_bad_files_ids'] = 'Ungültige Downloaddatei-ID';
+$lang['download_bad_token_format'] = 'Ungültiges Token-Format';
+$lang['download_disclamer'] = 'Sie können alle Dateien mit einem mal als einzelne gepackte Archiv-Datei (.zip) herunterladen. Entpacken Sie nach dem Download die Datei um auf die einzelnen Dateien zugreifen zu können.';
+$lang['download_disclamer_archive'] = 'Sie können alle Dateien auf einmal als komprimierte ZIP-Datei herunterladen. Entpacken Sie dann diese heruntergeladene Datei um Zugriff auf die einzelnen Dateien zu erhalten.';
+$lang['download_disclamer_crypto_message'] = 'Klicken Sie auf eine Datei, um die Daten herunterzuladen und auf Ihrem Computer zu entschlüsseln.';
+$lang['download_disclamer_nocrypto_message'] = 'Sie können durch einen Klick mit der rechten Maustaste auf den Download-Knopf und dann "Kopiere Link" ein anderes Tool nutzen, um die Datei herunterzuladen.';
+$lang['download_file'] = 'Datei herunterladen';
+$lang['download_invalid_range'] = 'Ungültige Download Auswahl';
+$lang['download_link'] = 'Downloadlink';
+$lang['download_missing_files_ids'] = 'Datei-IDs für den Download nicht gefunden';
+$lang['download_missing_token'] = 'Download Token nicht gefunden';
+$lang['download_page'] = 'Download';
+$lang['downloading'] = 'Lade herunter';
+$lang['downloads'] = 'Downloads';
 $lang['dp_close_text'] = 'OK';
-$lang['dp_prev_text'] = 'Zurück';
-$lang['dp_next_text'] = 'Weiter';
 $lang['dp_current_text'] = 'Heute';
+$lang['dp_date_format'] = 'dd.mm.yy';
+$lang['dp_date_format_hint'] = 'Format dd.mm.yy, max. {max} Tage';
+$lang['dp_day_names'] = 'Sonntag,Montag,Dienstag,Mittwoch,Donnerstag,Freitag,Samstag';
+$lang['dp_day_names_min'] = 'So,Mo,Di,Mi,Do,Fr,Sa';
+$lang['dp_day_names_short'] = 'Son,Mon,Die,Mit,Don,Fre,Sam';
+$lang['dp_first_day'] = '1';
+$lang['dp_is_rtl'] = 'Falsch';
 $lang['dp_month_names'] = 'Januar,Februar,März,April,Mai,Juni,Juli,August,September,Oktober,November,Dezember';
 $lang['dp_month_names_short'] = 'Jan,Feb,Mar,Apr,Mai,Jun,Jul,Aug,Sep,Okt,Nov,Dez';
-$lang['dp_day_names'] = 'Sonntag,Montag,Dienstag,Mittwoch,Donnerstag,Freitag,Samstag';
-$lang['dp_day_names_short'] = 'Son,Mon,Die,Mit,Don,Fre,Sam';
-$lang['dp_day_names_min'] = 'So,Mo,Di,Mi,Do,Fr,Sa';
+$lang['dp_next_text'] = 'Weiter';
+$lang['dp_prev_text'] = 'Zurück';
+$lang['dp_show_month_after_year'] = 'Falsch';
 $lang['dp_week_header'] = 'Wo';
-$lang['dp_date_format'] = 'dd.mm.yy';
-$lang['dp_first_day'] = '1';
-$lang['dp_is_rtl'] = 'false';
-$lang['dp_show_month_after_year'] = 'false';
 $lang['dp_year_suffix'] = '';
+$lang['drag_and_drop'] = 'Ihre Dateien per drag &amp; drop hier ablegen';
+$lang['duplicate_recipient'] = 'Ein Empfänger ist schon vorhanden';
+$lang['email_daily_statistics'] = 'Schicke mir täglich die Statistik';
+$lang['email_download_complete'] = 'Informiere mich über Downloads';
+$lang['email_guest_created'] = 'Erstellungsbenachrichtigung an den Gast';
+$lang['email_guest_created_receipt'] = 'Benachrichtige mich über die Gasterstellung';
+$lang['email_guest_expired'] = 'Benachrichtige den Gast über das ungültig werden';
+$lang['email_me_copies'] = 'Sende mir eine Kopie aller Benachrichtigungen';
+$lang['email_me_on_expire'] = 'Benachrichtige mich bei Ablauf der Gültigkeit';
+$lang['email_report_on_closing'] = 'Sende mir einen Bericht, bei Ablauf';
+$lang['email_sent'] = 'Nachricht gesendet';
+$lang['email_separator_msg'] = 'Mehrere E-Mail-Adresse getrennt durch Komma oder Semikolon';
+$lang['email_upload_complete'] = 'Benachrichtige mich, wenn der Upload abgeschlossen ist';
+$lang['email_upload_page_access'] = 'Benachrichtige mich, wenn ein Gast die Upload-Seite öffnet';
+$lang['email_upload_started'] = 'Benachrichtige mich, wenn der Upload beginnt';
+$lang['enable_recipient_email_download_complete'] = 'Erlaube Empfängern, E-Mails zu empfangen, wenn der Download abgeschlossen wurde';
+$lang['enable_recipient_email_download_complete_warning'] = 'Sie können diese Option nicht verwenden, wenn sie eine Mailing-Liste senden, sonst kann jeder Download zur Folge haben, dass eine E-Mail an die Liste geschickt wird.';
+$lang['encountered_exception'] = 'Während der Bearbeitung Ihrer Anfrage ist ein Fehler aufgetreten';
+$lang['encryption'] = 'Verschlüsselung';
+$lang['enter_to_email'] = 'E-Mail-Adressen der Empfänger eingeben';
+$lang['error_date'] = 'Fehlerdatum';
+$lang['error_details'] = 'Technische Fehlerdetails';
+$lang['error_dialog'] = 'Fehler';
+$lang['error_type'] = 'Fehlertyp';
+$lang['expand_all'] = 'Alle erweitern';
+$lang['expires'] = 'Ablauf';
+$lang['expiry_date'] = 'Gültigkeitsdatums';
+$lang['extend'] = 'Erweitern';
+$lang['extend_and_remind'] = 'Erweitern und Erinnerung schicken';
+$lang['extend_expiry_date'] = 'Das Gültigkeitsdatum um {days} Tag(e) verlängern';
+$lang['failed_to_connect_to_database'] = 'Fehler beim Verbinden mit der Datenbank';
+$lang['failed_transfer_found'] = 'Es scheint, dass eine Ihrer vorherigen Dateitransfers nicht hochgeladen wurde, wollen Sie dort starten wo sie aufgehört haben (Sie müssen die Datei erneut hinzufügen) ?';
+$lang['file_bad_hash'] = 'Ungültiger Datei-Hash';
+$lang['file_chunk_out_of_bounds'] = 'Datei Chunk außerhalb der Grenze';
+$lang['file_encryption'] = 'Dateiverschlüsselung (Beta)';
+$lang['file_encryption_description'] = ' <i class="fa fa-exclamation-triangle" style="color:#FFAA00" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp; Die Dateiverschlüsselung ist Ende zu Ende. Ihre Dateien werden im Browser verschlüsselt. Es liegt an Ihnen, das Verschlüsselungspasswort an den/die Empfänger zu senden, denn wir speichern keine Passwörtert.<br/><i class="fa fa-exclamation-triangle" style="color:#FFAA00" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp; Dateiverschlüsselung hat starken Einfluss auf die Performance Ihres Browsers und/oder Geräts für den/die Sender und Empfänger.<br/><i class="fa fa-exclamation-triangle" style="color:#FFAA00" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp; Dateiverschlüsselung gleich oder größer als  4GB ist möglicherweise nicht möglich, da der Browser dies nicht unterstützen muss.';
+$lang['file_encryption_description_disabled'] = '<i class="fa fa-exclamation-triangle" style="color:#FFAA00" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp; In Ihrem Browser nicht unterstützt. Bitte versuchen Sie es erneut mit der letzten Version von Firefox, Internet Explorer, Safari oder Chrome.';
+$lang['file_encryption_disabled'] = '<i class="fa fa-exclamation-triangle" style="color:#FFAA00" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp; Dateiverschlüsselung wird von Ihrem Browser nicht unterstützt. Bitte versuchen Sie es erneut mit der letzten Version von Firefox, Internet Explorer, Safari oder Chrome.';
+$lang['file_encryption_enter_password'] = 'Passwort eingeben';
+$lang['file_encryption_generate_password'] = 'Passwort generieren';
+$lang['file_encryption_need_password'] = 'Sie müssen für den Download das Passwort eingeben';
+$lang['file_encryption_password'] = 'Passwort';
+$lang['file_encryption_password_too_short'] = 'Entschuldigung, Ihr Passwort ist zu kurz';
+$lang['file_encryption_show_password'] = 'Zeige / Verstecke das Passwort';
+$lang['file_encryption_wrong_password'] = 'Falsches Passwort';
+$lang['file_extension_not_allowed'] = 'Dateierweiterung nicht erlaubt';
+$lang['file_integrity_check_failed'] = 'Dateiintegritätscheck fehlgeschlagen';
+$lang['file_not_found'] = 'Datei nicht gefunden';
+$lang['file_size_does_not_match'] = 'Dateigröße stimmt nicht';
+$lang['files'] = 'Dateien';
+$lang['filtered_transfer_log'] = 'Dies ist eine gefilterte Ansicht der Dateitransferprotokolle.';
+$lang['forget'] = 'Vergiss es';
+$lang['forward'] = 'Weiterleiten';
+$lang['forward_guest_voucher'] = 'Gast-Einladung weiterleiten';
+$lang['from'] = 'Von';
+$lang['get_a_link'] = 'Sie erhalten einen Link, statt einer automatischen E-Mail an den Empfänger';
+$lang['get_full_user_remote_config'] = 'Sie erhalten volle Remote-Konfiguration';
+$lang['global_statistics'] = 'Globale Statistik';
+$lang['guest'] = 'Gast';
+$lang['guest_deleted'] = 'Gast gelöscht';
+$lang['guest_not_found'] = 'Gast nicht gefunden';
+$lang['guest_options'] = 'Einladungsoptionen';
+$lang['guest_reminded'] = 'Erinnerung an eine Einladung';
+$lang['guest_too_many_recipients'] = 'Maximale Anzahl an Empfängern erreicht';
+$lang['guest_transfer_options'] = 'Erstellt Dateitransfer-Optionen';
+$lang['guest_vouchers_sent'] = 'Gast-Einladung verschicken';
+$lang['guests'] = 'Gast';
+$lang['guests_page'] = 'Gäste';
+$lang['guests_transfers'] = 'Gäste-Dateitransfer';
+$lang['gui_unknown_admin_section'] = 'Unbekannter Adminbereich';
+$lang['help'] = 'Hilfe';
+$lang['help_page'] = 'Hilfe';
+$lang['hide_details'] = 'Verstecke Details';
+$lang['host_quota'] = 'Host Quota';
+$lang['host_quota_usage'] = 'Host Quota Verwendung';
+$lang['ignore'] = 'Ignorieren';
+$lang['info_dialog'] = 'Information';
+$lang['invalid_address_format'] = 'Ungültiges E-Mail-Adressen-Format';
+$lang['invalid_file'] = 'Ungültige Datei';
+$lang['invalid_recipient'] = 'Ungültiger Empfänger';
+$lang['ip'] = 'IP-Adresse';
+$lang['is_default'] = 'Dies ist der Standardwert';
+$lang['last_activity'] = 'Letzte Aktivität';
+$lang['later'] = 'Fragen Sie mich später nochmal';
+$lang['load'] = 'Laden des Dateitransfers fehlgeschlagen';
+$lang['logoff'] = 'Abmelden';
+$lang['logon'] = 'Anmelden';
+$lang['mac_archive_message'] = 'Die gepackte Archiv-Datei (.zip) wird zu groß für die Standardentpackprogramme von Apple OS X.<br /> Ein alternatives Programm zum Entpacken können Sie hier finden: <a href="{cfg:mac_unzip_link}" target="_blank">{cfg:mac_unzip_name}</a>. ';
+$lang['maintenance_autoresume'] = 'Ihre Operationen werden automatisch fortgesetzt, wenn die Wartung beendet ist.';
+$lang['make_default'] = 'Gehen Sie zurück auf den Standardwert';
+$lang['max_email_recipients_exceeded'] = 'Die maximale Anzahl an Empfängern wurde erreicht';
+$lang['maximum_encrypted_file_size_exceeded'] = 'Die maximale Größe für eine verschlüsselte Einzeldatei wurde überschritten';
+$lang['maximum_file_size_exceeded'] = 'Die maximale Größe einer einzelnen Datei wurde errreicht';
+$lang['me'] = 'mir';
+$lang['message'] = 'Nachricht';
+$lang['message_can_not_contain_urls'] = 'Nachrichten können dürfen keine Inhalte haben, die wie eine URL aussehen';
+$lang['missing_files_for_restart'] = 'Fehlende Datei(en), kann ohne sie nicht neu starten';
+$lang['n_more'] = 'noch {n}';
+$lang['need_to_readd_files'] = 'Sie müssen die folgenden Dateien wieder hinzufügen, so dass Sie Ihren Upload neu starten können';
+$lang['never'] = 'niemals';
+$lang['no'] = 'Nein';
+$lang['no_addresses_found'] = 'Keine Mail-Adresse gefunden';
+$lang['no_auditlog'] = 'Dateitransfer-Protokolleintrag nicht gefunden';
+$lang['no_guests'] = 'Kein Gast';
+$lang['no_results'] = 'Kein Ergebnis';
+$lang['no_such_property'] = 'Eigenschaft nicht gefunden';
+$lang['no_transfers'] = 'Keine Dateitransfers';
+$lang['none'] = 'keiner';
+$lang['noscript'] = 'Diese Anwendung basiert auf Javascript, sie müssen es ermöglichen starten zu lassen.';
+$lang['nothing_happened_as_of_late_you_can_send_client_logs'] = 'Für die aktuell hochladende Übertragung wurde für einige Zeit kein Fortschritt beobachtet. Wenn Sie annehmen, dass es ein Problem gibt, und bevor Sie es Ihrem Support-Team mitteilen, senden Sie bitte den letzten Log-Eintrag durch Klick auf den folgenden Knopf:';
+$lang['number_of_files'] = 'Anzahl der Dateien';
+$lang['ok'] = 'OK';
+$lang['open_auditlog'] = 'Dateitransferprotokoll öffnen';
+$lang['open_file_auditlog'] = 'Anschauen, was ist mit dieser Datei passierte';
+$lang['open_recipient_auditlog'] = 'Dateitransferprotokoll des Empfängers öffnen';
+$lang['optional'] = 'optional';
+$lang['options'] = 'Optionen';
+$lang['pager_has_no_more'] = 'Keine weiteren Einträge';
+$lang['pager_more'] = 'Weitere...';
+$lang['pause'] = 'Pause';
+$lang['paused'] = 'pausiert';
+$lang['preferences_updated'] = 'Benutzereinstellungen aktualisiert';
+$lang['quota_usage'] = '{size:used} aus {size:total} benutzt, {size:available} übrig';
+$lang['reader_not_supported'] = 'Sie verwenden eine alten Browser ohne Unterstützung für HTML5.<br /><br />Wo Drag & Drop Auswahl für Dateien nicht verfügbar ist.<br /><br />Sie können bis zu {size} Dateien hochladen.';
+$lang['reason'] = 'Grund';
+$lang['recipient_added'] = 'Empfänger hinzugefügt';
+$lang['recipient_error_bounce'] = 'E-Mail Zustellung fehlgeschlagen';
+$lang['recipient_errors'] = 'Empfänger Fehler';
+$lang['recipient_not_found'] = 'Empfänger nicht gefunden';
+$lang['recipient_reminded'] = 'Erinnerung an einn Dateitransfer zum Empfänger';
+$lang['recipients'] = 'Empfänger';
+$lang['recipients_notifications_language'] = 'Sprache des Empfängers';
+$lang['redirect_url_on_complete'] = 'Nach dem Upload weiterleiten ';
+$lang['remote_auth_sync_request'] = '<p><strong>{remote}</strong> fordert, Ihre Remote-Authentifizierungsdetails.</p><p> Um Zugang zu ermöglichen, bitte den folgenden Code <strong>{remote}</strong> : <strong>{code}</strong> eingeben. (Code ist nur für die nächsten 2 Minuten gültig).</p><p>Wenn Sie nicht wissen worum es geht, ignorieren sie diese Meldung.</p>';
+$lang['report_cannot_write_file'] = 'Report-Datei kann nicht gespeichert werden';
+$lang['report_event_archive_download_ended'] = 'Empfänger {author.identity} beendete Download von Dateitransfer Nr. {target.id}';
+$lang['report_event_archive_download_started'] = 'Empfänger {author.identity} begann Download von Dateitransfer Nr. {target.id}';
+$lang['report_event_download_ended'] = 'Empfänger {author.identity} beendete Download {file.path} ({size:file.size})';
+$lang['report_event_download_resumed'] = 'Empfänger {author.identity} hat Download von {file.path} ({size:file.size}) wiederaufgenommen';
+$lang['report_event_download_started'] = 'Empfänger {author.identity} begann Download {file.path} ({size:file.size})';
+$lang['report_event_file_uploaded'] = 'Die Datei {file.path} ({size:file.size}) wurde hochgeladen (took {time:time_taken})';
+$lang['report_event_transfer_available'] = 'Dateitransfer steht nun zur Verfügung (es dauerte {time:time_taken})';
+$lang['report_event_transfer_closed'] = 'Der Dateitransfer wurde auf Wunsch geschlossen';
+$lang['report_event_transfer_deleted'] = 'Dateitransfer wurde gelöscht';
+$lang['report_event_transfer_expired'] = 'Dateitransfer abgelaufen';
+$lang['report_event_transfer_sent'] = 'Download-Link an den/die Empfänger gesendet';
+$lang['report_event_transfer_started'] = 'Dateitransfer gestartet';
+$lang['report_event_upload_ended'] = 'Hochladen beendet';
+$lang['report_event_upload_resumed'] = 'Hochladen fortgesetzt';
+$lang['report_event_upload_started'] = 'Hochladen gestartet';
+$lang['report_exception'] = 'Fehlerbericht';
+$lang['report_format_not_available'] = 'Berichtsformat nicht verfügbar';
+$lang['report_guest_event_transfer_sent'] = 'Download-Link an den/die Empfänger gesendet';
+$lang['report_guest_event_transfer_started'] = 'Der Dateitransfer wurde von Gast {author.identity} erstellt';
+$lang['report_nothing_found'] = 'Nichts zu berichten gefunden';
+$lang['report_owner_event_archive_download_ended'] = 'Ersteller beendete Download von Dateitransfer Nr. {target.id}';
+$lang['report_owner_event_archive_download_started'] = 'Ersteller begann Download von Dateitransfer Nr. {target.id}';
+$lang['report_owner_event_download_ended'] = 'Ersteller beendete den Download von {file.path} ({size:file.size})';
+$lang['report_owner_event_download_resumed'] = 'Ersteller setzte den Download von {file.path} ({size:file.size}) fort';
+$lang['report_owner_event_download_started'] = 'Ersteller begann den Download von {file.path} ({size:file.size})';
+$lang['report_ownership_required'] = 'Sie müssen Eigentümer des Berichts sein';
+$lang['report_recipient_event_archive_download_ended'] = 'Empfänger beendete Download von Dateitransfer Nr. {target.id}';
+$lang['report_recipient_event_archive_download_started'] = 'Empfänger begann Download von Dateitransfer Nr. {target.id}';
+$lang['report_recipient_event_download_ended'] = 'Empfänger beendete den Download {file.path} ({size:file.size})';
+$lang['report_recipient_event_download_resumed'] = 'Empfänger setzte den Download von  {file.path} ({size:file.size}) fort';
+$lang['report_recipient_event_download_started'] = 'Empfänger begann den Download von {file.path} ({size:file.size})';
+$lang['report_unknown_format'] = 'Unbekanntes Berichtsformat';
+$lang['report_unknown_target_type'] = 'Unbekannter Bericht (Dateitransfer)';
+$lang['rest_access_forbidden'] = 'REST Server Zugriff verweigert';
+$lang['rest_admin_required'] = 'Admin-Rechte erforderlich';
+$lang['rest_authentication_required'] = 'REST Authentifizierung erforderlich';
+$lang['rest_bad_parameter'] = 'Schlechter REST Parameter';
+$lang['rest_endpoint_missing'] = 'REST Server konnte Endpunkt in URL nicht finden';
+$lang['rest_endpoint_not_implemented'] = 'REST Endpunkt nicht implementiert';
+$lang['rest_jsonp_get_only'] = 'REST Server akzeptiert nur GET-Anforderungen für JSONP Ausgang';
+$lang['rest_method_not_allowed'] = 'REST Server übernimmt diese Methode nicht';
+$lang['rest_method_not_implemented'] = 'REST Verfahren nicht in Endpunkt implementiert';
+$lang['rest_missing_parameter'] = 'Fehlende REST Parameter';
+$lang['rest_ownership_required'] = 'REST Ressourcenbesitz erforderlich';
+$lang['rest_sanity_check_failed'] = 'REST Plausibilitätsprüfung fehlgeschlagen';
+$lang['rest_updatedsince_bad_format'] = 'REST aktualisiert, da Parameter falsch formatiert war';
+$lang['rest_xsrf_token_did_not_match'] = 'Sicherheitszeichen stimmt nicht überein';
+$lang['restart'] = 'Neustarten';
+$lang['restart_failed_transfer'] = 'Denr fehlgeschlagenen Dateitransfer neu starten?';
+$lang['resume'] = 'Vorfahren';
+$lang['retry'] = 'Erneut versuchen';
+$lang['retry_later'] = 'Den Fortschritt speichern und später noch einmal versuchen';
+$lang['save'] = 'Speichern';
+$lang['search'] = 'Suchen';
+$lang['search_user'] = 'Nach Benutzer suchen (basierend auf der Benutzer-ID)';
+$lang['searching'] = 'Suche...';
+$lang['see_all'] = 'Alle anzeigen';
+$lang['select_all_for_archive_download'] = 'Alle Dateien auswählen, um sie als Archive herunterzuladen';
+$lang['select_file'] = 'Datei auswählen';
+$lang['select_files'] = 'Dateien auswählen';
+$lang['select_for_archive_download'] = 'Wählen für Archiv herunterladen';
+$lang['send'] = 'Abschicken';
+$lang['send_client_logs'] = 'Schicke Log-Informationen';
+$lang['send_reminder'] = 'Erinnerung verschicken';
+$lang['send_to_my_email'] = 'An meine E-Mail-Adresse schicken';
+$lang['send_voucher'] = 'Einladung verschicken';
+$lang['serverlog_auth_sp_attribute_not_found'] = 'Es gab Probleme beim Finden des "SP auth attribute". Diese Attribute werden normalerweise durch das Anmelden bereit gestellt. Möglicherweise sollten Sie die korrekte Schreibweise des Attribute-Names noch einmal prüfen. Oder die Konfiguration verweist auf ein falsches Attribut.';
+$lang['serverlog_config_directive'] = 'Verwandter Konfigurationsschlüssel \\\'{key}\\\'';
+$lang['serverlog_wanted_key_in_array'] = 'Erwartet ein Attribut mit dem Schlüssel \\\'{key}\\\'';
+$lang['show_client_logs'] = 'Zeige Client-Log-Informationen';
+$lang['show_details'] = 'Zeige Details';
+$lang['showhide'] = 'Zeigen/Verstecken';
+$lang['size'] = 'Größe';
+$lang['size_unit'] = 'B';
+$lang['speed_unit_bits'] = 'b/s';
+$lang['speed_unit_bytes'] = 'B/s';
+$lang['stalled_transfer'] = 'Upload blockiert';
+$lang['statlog_not_found'] = 'Stat-log nicht gefunden';
+$lang['statlog_unknown_event'] = 'Unbekanntes Ereignis';
+$lang['stop'] = 'Anhalten';
+$lang['stop_transfer_upload'] = 'Soll der Upload dieses Dateitransfers wirklich gestoppt werden (es werden Fehler auf der Uploader Seite generiert)?';
+$lang['storage_available'] = 'Freier Speicher';
+$lang['storage_block'] = 'Block';
+$lang['storage_chunk_too_large'] = 'Chunk zu groß zum abspeichern';
+$lang['storage_filesystem_bad_resolver_target'] = 'Fehler bei Abspeicherung von DNS-Auflöser';
+$lang['storage_filesystem_bad_usage_output'] = 'Speicherbelegung hat Fehler';
+$lang['storage_filesystem_cannot_create_path'] = 'Es kann kein Pfad im Dateisystem erstellt werden';
+$lang['storage_filesystem_cannot_delete'] = 'Kann nicht auf Dateisystem gelöscht werden';
+$lang['storage_filesystem_cannot_get_usage'] = 'Speicherbelegung hat Fehler';
+$lang['storage_filesystem_cannot_read'] = 'Vom Dateisystem konnte nicht geladen werden';
+$lang['storage_filesystem_cannot_write'] = 'Auf das Dateisystem konnte nicht geschrieben werden';
+$lang['storage_filesystem_file_not_found'] = 'Speicher von Dateisystem nicht gefunden';
+$lang['storage_filesystem_out_of_space'] = 'Das Dateisystem hat keinen Speicher mehr frei';
+$lang['storage_main'] = 'Alle';
+$lang['storage_not_enough_space_left'] = 'Nicht genug Speicherplatz verfügbar';
+$lang['storage_paths'] = 'Zugehörige Pfade';
+$lang['storage_total'] = 'Gesamtspeicher';
+$lang['storage_usage'] = 'Verwendeter Speicherplatz';
+$lang['storage_used'] = 'Verwendeter Speicherplatz';
+$lang['subject'] = 'Betreff';
+$lang['success_dialog'] = 'Erfolgreich';
+$lang['template_not_found'] = 'Template nicht gefunden';
+$lang['terasender_worker_count'] = 'Anzahl der TeraSender-Worker';
+$lang['testterm'] = 'test value
+';
+$lang['time_format'] = '{h:\} {i:\\\} {s:\}';
+$lang['to'] = 'An';
+$lang['tracking_event_not_found'] = 'Tracking-Event nicht gefunden';
+$lang['tracking_unknown_event'] = 'Unbekanntes Tracking-Event';
+$lang['transfer_closed'] = 'Dateitransfer abgeschlossen';
+$lang['transfer_expiry_extension_count_exceeded'] = 'Verlängerung des Gültigkeitsdatums des Dateitransfers hat sein Maximum erreicht';
+$lang['transfer_expiry_extension_not_allowed'] = 'Verlängerung des Gültigkeitsdatums des Dateitransfers ist nicht erlaubt';
+$lang['transfer_extended'] = 'Gültig bis / Verlängert bis {expires}';
+$lang['transfer_extended_reminded'] = 'Gültig bis / Verlängert bis {expires}, es wurde eine Erinnerung an den Empfänger gesendet';
+$lang['transfer_file_name_invalid'] = 'Der Dateiname enthält ungültige Zeichen';
+$lang['transfer_files_incomplete'] = 'Die zu übertragenen Dateien wurden nicht fertig hochgeladen';
+$lang['transfer_host_quota_exceeded'] = 'Host-Quota wurde überschritten';
+$lang['transfer_id'] = 'Lfd. Nr.';
+$lang['transfer_maximum_size_exceeded'] = 'Maximale Dateitransfergröße überschritten';
+$lang['transfer_no_files'] = 'Dateitransfer hat keine Dateien';
+$lang['transfer_no_recipients'] = 'Dateitransfer hat keinen Empfänger';
+$lang['transfer_not_availabe'] = 'Dateitransfer ist nicht verfügbar';
+$lang['transfer_not_found'] = 'Dateitransfer wurde nicht gefunden';
+$lang['transfer_rejected'] = 'Erstellung des Dateitransfers abgelehnt';
+$lang['transfer_reminded'] = 'Erinnerung an den Dateitransfer an den Empfänger';
+$lang['transfer_seems_to_be_stalled'] = 'Das Hochladen scheint abzubrechen, versuchen Sie es neu zu starten, oder stoppen Sie es!';
+$lang['transfer_too_many_files'] = 'Die maximale Anzahl an Dateien wurde erreicht';
+$lang['transfer_too_many_recipients'] = 'Die maximale Anzahl an Empfängern wurde erreicht';
+$lang['transfer_upload_stopped'] = 'Hochladen des Dateitransfers gestoppt';
+$lang['transfer_user_quota_exceeded'] = 'Benutzerkontingent überschritten';
+$lang['transfers_page'] = 'Meine Dateitransfers';
+$lang['translate_to'] = 'übersetzen ins:';
+$lang['undergoing_maintenance'] = 'Diese Anwendung befindet sich im Moment in Wartung';
+$lang['unexpected_file'] = 'Diese Datei ist nicht Teil des Neustarts des Dateitransfers';
+$lang['unknown_page'] = 'Unbekannte Seite';
+$lang['upload_log_header'] = 'Informationen zum Upload';
+$lang['upload_page'] = 'Hochladen';
+$lang['upload_page_graph_encryption_in_transit'] = 'Verschlüsselung während der Übertragung';
+$lang['upload_page_graph_encryption_in_transit_and_rest'] = 'Verschlüsselgung während der Übertragung und in REST';
+$lang['upload_page_graph_mb_per_second'] = 'MB/sek';
+$lang['upload_page_graph_title_upload_speed_of_files_over'] = 'Gesamtdurchschnittliche Upload-Geschwindigkeit für Dateien größer als 1GB';
+$lang['upload_stalled_and_resumed'] = 'Der Upload war hängen geblieben und wurde fortgesetzt...';
+$lang['upload_stalled_due_to_testing'] = 'Der Upload war hängen geblieben durch einen Test...';
+$lang['upload_started'] = 'Der Upload wurde gestartet...';
+$lang['uploaded'] = 'Hochgeladen';
+$lang['uploading_transfers'] = 'Aktuell hochladende Dateitransfers';
+$lang['user_additional'] = 'Zusätzliche Information';
+$lang['user_additionnal'] = 'Zusätzliche Informationen';
+$lang['user_auth_secret'] = 'Geheimnis';
+$lang['user_created'] = 'Erster Login';
+$lang['user_id'] = 'Benutzer-ID';
+$lang['user_lang'] = 'Bevorzugte Sprache';
+$lang['user_missing_uid'] = 'Benutzer-UID nicht gefunden';
+$lang['user_not_found'] = 'Benutzer nicht gefunden';
+$lang['user_page'] = 'Mein Profil';
+$lang['user_preferences'] = 'Einstellungen';
+$lang['user_quota'] = 'Benutzer Quota';
+$lang['user_remote_authentication'] = 'Remote Authentifizierung';
+$lang['users'] = 'Benutzer';
+$lang['utilities_uid_generator_bad_unicity_checker'] = 'Ungültige "unicity"-Prüfung im GUID-Generator';
+$lang['utilities_uid_generator_tried_too_much'] = 'Der UID-Generator wurde zu oft verwendet';
+$lang['valid_only_one_time'] = 'Nur für einen Upload gültig';
+$lang['view_full_log'] = 'Zeige das ganze Log';
+$lang['what_to_do'] = 'Was tun?';
+$lang['with_identity'] = 'E-Mail-Adresse des Absenders';
+$lang['yes'] = 'Ja';
+$lang['you_can_report_exception'] = 'Wenn diese Fehlerberichterstattung erscheint geben Sie bitte den folgenden Code ein, um bei der Unterstützung zu helfen weitere Details herauszufinden.';
+$lang['you_can_report_exception_by_email'] = 'Sie können diesen Fehler per E-Mail melden';
+$lang['you_can_send_client_logs'] = 'Um Ihrem Support Team zu helfen, herauszufinden, was mit Ihrer Übertragung passiert ist, senden Sie bitte den letzten Log-Eintrag über Ihre Benutzerinterface durch Klicken auf diesen Knopf:';

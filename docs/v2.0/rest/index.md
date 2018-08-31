@@ -199,6 +199,7 @@ Response example :
 			"raw": 1422365666,
 			"formatted": "27/01/2015"
 		},
+                "expiry_date_extension": 1,
 		"options": ["email_download_complete", "email_report_on_closing"],
 		"files": [
 			{
@@ -268,9 +269,10 @@ Request body fields :
 
 * `complete` : (`boolean`) if set to `true` this signals the server that every file has been uploaded and that the [Transfer](#transfer) should be made available and sent to [Recipients](#recipient) (optionnal)
 * `closed` : (`boolean`) if set to `true` this signals the server that the [Transfer](#transfer) should be closed (optionnal)
+* `extend_expiry_date` : (`boolean`) if set to `true` this asks the server to extend the [Transfer](#transfer)'s expiry date as allowed by the configuration (optionnal)
 * `remind` : (`boolean`) if set to `true` this asks the server to send a reminder of the [Transfer](#transfer) availability to its [Recipients](#recipient) (optionnal)
 
-Returns `true`.
+Returns the [Transfer](#transfer).
 
 Request example :
 
@@ -282,7 +284,59 @@ Request example :
 
 Response example :
 
-	true
+    {
+        "id": 42,
+        "user_id": "145879@idp.tld",
+        "user_email": "foo@bar.tld",
+        "subject": "Here is the promished files",
+        "message": null,
+        "created": {
+            "raw": 1421328866,
+            "formatted": "15/01/2015"
+        },
+        "expires": {
+            "raw": 1422365666,
+            "formatted": "27/01/2015"
+        },
+        "expiry_date_extension": 1,
+        "options": ["email_download_complete", "email_report_on_closing"],
+        "files": [
+            {
+                "id": 25,
+                "transfer_id": 42,
+                "uid": "7ecab9c0-9abf-eee9-9ab4-00000cc39816",
+                "name": "report.doc",
+                "size": 102598,
+                "sha1": null
+            },
+            {
+                "id": 31,
+                "transfer_id": 42,
+                "uid": "179558c7-c5be-5428-0b2e-00007ce9c792",
+                "name": "funny.ppt",
+                "size": 23589654,
+                "sha1": null
+            }
+        ],
+        "recipients": [
+            {
+                "id": 59,
+                "transfer_id": 42,
+                "token": "0c27af59-72d1-0349-aa59-00000a8076d9",
+                "email": "globi@bar.tld",
+                "created": {
+                    "raw": 1421328866,
+                    "formatted": "15/01/2015"
+                }
+                "last_activity": null,
+                "options": null,
+                "download_url": "https://filesender.org/?s=download&token=0c27af59-72d1-0349-aa59-00000a8076d9",
+                "errors": []
+            }
+        ]
+    }
+
+
 
 ### DELETE /transfer/{id}
 
@@ -417,6 +471,25 @@ Parameters :
 
 Returns a [Recipient](#recipient).
 
+
+### PUT /recipient/{id}
+
+Update a [File](#recipient).
+
+Accessible to : [owner](#owner).
+
+Parameters :
+
+  * `id` (`integer`) recipient unique identifier
+
+Request body fields :
+
+  * `remind` : (`boolean`) if set to `true` this asks the server to send a reminder of the [Transfer](#transfer) availability to the [Recipient](#recipient) (optionnal)
+
+Returns the [Recipient](#recipient).
+
+
+
 ### DELETE /recipient/{id}
 
 Delete a specific [Recipient](#recipient).
@@ -540,7 +613,7 @@ Returns `true`.
 
 Request example :
 
-	PUT /transfer/42
+	PUT /guest/42
 
 	{
 		"remind": true
@@ -565,6 +638,79 @@ The [Guest](#guest) will be notified.
 Returns `true`.
 
 ## User
+
+### GET /user
+
+Same as `GET /user/@me`
+
+Get preferences of the current user.
+
+Accessible to : [users](#user).
+
+Returns an `object`.
+
+Response example :
+
+    {
+        "id": "foo@bar.org",
+        "additional_attributes": { // Depends on configured additional attributes
+            "idp": "https://idp.domain.tld/",
+            "other_attribute": "value"
+        },
+        "aup_ticked": true,
+        "transfer_preferences": ["email_download_complete", "email_report_on_closing"],
+        "guest_preferences": ["valid_only_one_time"],
+        "created": {
+            "raw": 1421328866,
+            "formatted": "15/01/2015"
+        },
+        "last_activity": {
+            "raw": 1422365666,
+            "formatted": "27/01/2015"
+        },
+        "lang": "en",
+        "frequent_recipients": [],
+        "remote_config": "https://filesender.domain.tld/|foo@bar.org|df6g17cs6g87df6g3cs7d3gvdf7cf0ds3v" // Set if remote user enabled, null otherwise
+    }
+
+
+### GET /user/{id}
+
+Get preferences of a specific user.
+
+Accessible to : [admin](#admin).
+
+Returns an `object`.
+
+Request example :
+
+    GET /user/foo@bar.org
+
+Response example :
+
+    {
+        "id": "foo@bar.org",
+        "additional_attributes": { // Depends on configured additional attributes
+            "idp": "https://idp.domain.tld/",
+            "other_attribute": "value"
+        },
+        "aup_ticked": true,
+        "transfer_preferences": ["email_download_complete", "email_report_on_closing"],
+        "guest_preferences": ["valid_only_one_time"],
+        "created": {
+            "raw": 1421328866,
+            "formatted": "15/01/2015"
+        },
+        "last_activity": {
+            "raw": 1422365666,
+            "formatted": "27/01/2015"
+        },
+        "lang": "en",
+        "frequent_recipients": [],
+        "remote_config": "https://filesender.domain.tld/|foo@bar.org|df6g17cs6g87df6g3cs7d3gvdf7cf0ds3v" // Set if remote user enabled, null otherwise
+    }
+
+
 
 ### GET /user/@me/frequent_recipients
 
@@ -708,6 +854,7 @@ Example :
 * `message` : (`string`) message sent to recipients
 * `created` : (`Date`) creation [Date](#date)
 * `expires` : (`Date`) expiry [Date](#date)
+* `expiry_date_extension` : (`integer`) number of expiry date extensions that remains
 * `options` : (`array of string`) options (values defined in `classes/constants/TransferOptions.class.php`)
 * `files` : (`array of File`) see [File](#file)
 * `recipients` : (`array of Recipient`) see [Recipient](#recipient)
@@ -819,7 +966,7 @@ This mode is intended towards giving access to applications FileSender can fully
 
 This mode expects a [signed request](#signed-request) and a `remote_application` URL argument.
 
-Additionnaly if a `remote_user` argument is provided all opérations will be conducted with this identity.
+Additionally if a `remote_user` argument is provided all opérations will be conducted with this identity.
 
 ## Remote user
 

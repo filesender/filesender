@@ -59,7 +59,12 @@ class AuthSPSaml {
      * Cache attributes
      */
     private static $attributes = null;
-    
+
+    /**
+     * Cache authentication status
+     */
+    private static $SimpleSAMLphpVersion = null;
+
     /**
      * Authentication check.
      * 
@@ -92,9 +97,11 @@ class AuthSPSaml {
                 
                 $values = array();
                 foreach($keys as $key) { // For all possible keys for attribute
-                    $value = $raw_attributes[$key];
-                    if(!is_array($value)) $value = array($value);
-                    foreach($value as $v) $values[] = $v; // Gather values of all successive possible keys as array
+                    if( array_key_exists($key,$raw_attributes)) {
+                       $value = $raw_attributes[$key];
+                       if(!is_array($value)) $value = array($value);
+                       foreach($value as $v) $values[] = $v; // Gather values of all successive possible keys as array
+                    }
                 }
                 $values = array_filter(array_map('trim', $values)); // Remove empty values
                 
@@ -105,17 +112,23 @@ class AuthSPSaml {
             if(is_array($attributes['uid'])) $attributes['uid'] = array_shift($attributes['uid']);
             if(is_array($attributes['name'])) $attributes['name'] = array_shift($attributes['name']);
             
-            if(!$attributes['uid']) throw new AuthSPMissingAttributeException('uid');
+            if(!$attributes['uid'])
+                throw new AuthSPMissingAttributeException(
+                    'uid', $raw_attributes,
+                    'uid_attribute',self::$config['uid_attribute']);
             
-            if(!$attributes['email']) throw new AuthSPMissingAttributeException('email');
+            if(!$attributes['email'])
+                throw new AuthSPMissingAttributeException(
+                    'email',$raw_attributes,
+                    'email_attribute',self::$config['email_attribute']);
             
             foreach($attributes['email'] as $email) {
-                if(!filter_var($email, FILTER_VALIDATE_EMAIL)) throw new AuthSPBadAttributeException('email');
+                if(!Utilities::validateEmail($email)) throw new AuthSPBadAttributeException('email');
             }
             
             if(!$attributes['name']) $attributes['name'] = substr($attributes['email'][0], 0, strpos($attributes['email'][0], '@'));
             
-            // Gather additionnal attributes if required
+            // Gather additional attributes if required
             $additional_attributes = Config::get('auth_sp_additional_attributes');
             if($additional_attributes) {
                 $attributes['additional'] = array();
@@ -129,7 +142,7 @@ class AuthSPSaml {
                     } else {
                         $value = null;
                     }
-                        
+                    
                     $attributes['additional'][is_numeric($key) ? $from : $key] = $value;
                 }
             }
@@ -156,10 +169,11 @@ class AuthSPSaml {
             $target = Config::get('site_url').'index.php?s='.$landing_page;
         }
         
-        $url = self::$config['simplesamlphp_url'].'module.php/core/as_login.php?';
-        $url .= 'AuthId='.self::$config['authentication_source'];
-        $url .= '&ReturnTo='.urlencode($target);
-        
+        $url = Utilities::http_build_query(array(
+            'AuthId' => self::$config['authentication_source'],
+            'ReturnTo' => $target,
+        ), self::$config['simplesamlphp_url'].'module.php/core/as_login.php?' );
+
         return $url;
     }
     
@@ -176,9 +190,10 @@ class AuthSPSaml {
         if(!$target)
             $target = Config::get('site_logouturl');
         
-        $url = self::$config['simplesamlphp_url'].'module.php/core/as_logout.php?';
-        $url .= 'AuthId='.self::$config['authentication_source'];
-        $url .= '&ReturnTo='.urlencode($target);
+        $url = Utilities::http_build_query(array(
+            'AuthId' => self::$config['authentication_source'],
+            'ReturnTo' => $target,
+        ), self::$config['simplesamlphp_url'].'module.php/core/as_logout.php?' );
         
         return $url;
     }
@@ -198,15 +213,29 @@ class AuthSPSaml {
                 'name_attribute',
                 'email_attribute'
             ) as $key) if(!array_key_exists($key, self::$config))
-                throw new ConfigMissingParameterException('auth_sp_saml_'.$key);
+            throw new ConfigMissingParameterException('auth_sp_saml_'.$key);
         }
-        
+
+        Auth::$authClassLoadingCount++;
         if(is_null(self::$simplesamlphp_auth_simple)) {
-            require_once(self::$config['simplesamlphp_location'] . 'lib/_autoload.php');
+            $saml_auto_load_path = self::$config['simplesamlphp_location'] . 'lib/_autoload.php';
+            Utilities::include_once_or_halt( $saml_auto_load_path, 'Failed to include SimpleSAMLphp' );
+
+            // WARNING: grab the version of the library that is in use.
+            // WARNING: this can cause big problems
+            // $samlConfig = SimpleSAML_Configuration::getInstance();
+            // self::$SimpleSAMLphpVersion = $samlConfig->getVersion();
+            // Logger::info('Loaded SimpleSAMLphp version is ' . self::$SimpleSAMLphpVersion);
             
-            self::$simplesamlphp_auth_simple = new SimpleSAML_Auth_Simple(self::$config['authentication_source']);
+            if (class_exists("\SimpleSAML\Auth\Simple")) {
+                self::$simplesamlphp_auth_simple = new SimpleSAML\Auth\Simple(self::$config['authentication_source']);
+            } else {
+                //For old SSP
+                self::$simplesamlphp_auth_simple = new SimpleSAML_Auth_Simple(self::$config['authentication_source']);
+            }
         }
         
+        Auth::$authClassLoadingCount--;
         return self::$simplesamlphp_auth_simple;
     }
 }

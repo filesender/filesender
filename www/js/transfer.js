@@ -18,7 +18,7 @@
  * 	names of its contributors may be used to endorse or promote products
  * 	derived from this software without specific prior written permission.
  * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS'
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 'AS IS'
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
@@ -36,6 +36,116 @@
 
 if(!('filesender' in window)) window.filesender = {};
 
+/**
+ * Track progress of an active chunk upload. This collects
+ * information as an xhr call is progressing to send a
+ * chunk of data that is (upload_chunk_size or equiv)
+ * bytes. The idea is that we can track the bytes as they
+ * go over and allow the user or FileSender itself to do
+ * something smart if a chunk has not sent much or any
+ * data for a chunk for a given time. 
+ * 
+ * you will want to call clear() when a chunk starts,
+ * remember() or setDisabled() when progress on a chunk is
+ * reported, and isOffending() to check if this chunk is
+ * deemed to have not enough recent transfer activity
+ * ("the danger zone").
+ */
+window.filesender.progresstracker = function() {
+
+    stamp: (new Date()).getTime();
+    mem: [];
+    memToKeep: 5;
+    disabled: false;
+
+    /**
+     * Reset the tracker for a fresh chunk
+     */
+    this.clear = function() {
+        this.mem = [];
+        this.disabled = false;
+        this.stamp = (new Date()).getTime();
+    };
+                
+    /**
+     * remember the reported fine_progress and take a timestamp
+     * when this is called.
+     */
+    this.remember = function( fine_progress ) {
+        this.stamp = (new Date()).getTime();
+        this.disabled = false;
+        if( !this.mem.length ) {
+            this.mem[0] = 0;
+            
+        }
+        var d = fine_progress - this.mem[this.mem.length-1];
+        this.mem.push( d );
+        if( this.mem.length >= this.memToKeep )
+            this.mem.pop();
+
+    };
+
+    /**
+     * A chunkCompleted call can be made after a chunk is uploaded
+     * to stop this worker being considered slow when there are no
+     * more chunks to upload.
+     */
+    this.chunkCompleted = function() {
+        this.stamp = (new Date()).getTime();
+        this.disabled = true;
+        this.mem = [];
+    }
+
+    /**
+     * This disables isOffending() from ever returning true.
+     */
+    this.setDisabled = function() {
+        this.disabled = true;
+    };
+
+    /**
+     * How many bytes were transfered between the last two
+     * calls to remember().
+     */
+    this.latest = function() {
+        return this.mem[this.mem.length-1];
+    };
+
+    /**
+     * For the current configuration is this worker
+     * "offending"ly slow.
+     * 
+     * The implementation could taken many forms, a simple
+     * one being if no progress has been reported for 10
+     * seconds it might have stalled. Or the number of
+     * bytes transfered could also be considered.
+     */
+    this.isOffending = function() {
+        if( this.disabled )
+            return false;
+
+        var tooSlow = filesender.config.upload_considered_too_slow_if_no_progress_for_seconds;
+        if( tooSlow==0 )
+            return false;
+
+        
+        if( (new Date()).getTime() - this.stamp > (tooSlow*1000) ) {
+            return true;
+        }
+        return false;
+
+        // play with bytes?
+        // var sum = this.mem.reduce(function(a, b) { return a + b; }, 0);
+        // return sum == 0;
+    };
+
+    /**
+     * Just makes this.log() available.
+     */
+    this.log = function(message, origin) {
+        filesender.ui.log('[progressTracker ' + origin + '] ' + message);
+    };
+};
 
 /**
  * Transfer pseudoclass
@@ -55,6 +165,8 @@ window.filesender.transfer = function() {
     this.time = 0;
     this.encryption = 0;
     this.encryption_password = '';
+    this.encryption_key_version = 0;
+    this.encryption_salt = '';
     this.disable_terasender = 0;
     this.pause_time = 0;
     this.pause_length = 0;
@@ -82,6 +194,12 @@ window.filesender.transfer = function() {
         
         /**
          * Max duration divergence (the maximum ratio between a process's current upload time and the global average)
+         * 
+         * Assume the workers current duration is 'd' then a worker is late if:
+         * 'd' is > d*average(worker duration history in durations_horizon) * duration_divergence
+         *
+         * there are extra provisions added to allow more time scope for workers when there isn't a full 
+         * collection of durations_horizon as startup might be more volatile than later chunk uploads.
          */
         if(!cfg.duration_divergence) cfg.duration_divergence = 7;
         
@@ -89,6 +207,11 @@ window.filesender.transfer = function() {
          * Max automatic retries
          */
         if(!cfg.automatic_retries) cfg.automatic_retries = 3;
+
+        /**
+         * number of durations to keep for each worker
+         */
+        if(!cfg.durations_horizon) cfg.durations_horizon = 5;
     }
     
     this.stalling_detection = cfg;
@@ -100,6 +223,52 @@ window.filesender.transfer = function() {
         return enable;
     };
 
+    this.getExtention = function(file) {
+        var fileSplit = file.name.split('.');
+        if (fileSplit.length>1) {
+            return fileSplit.pop();
+        }
+        return '';
+    };
+
+    this.getEncryptionMetadata = function() {
+	return {
+            password:    this.encryption_password,
+            key_version: this.encryption_key_version,
+            salt:        this.encryption_salt
+        };
+    };
+
+    /**
+     * Check if a file is still considered "valid"
+     *
+     * Things can change, for example, if you turn on/off encryption then the 
+     * maximum file size can change.
+     *
+     * Instead of purely using the return value, an ok and fail callback are used
+     * so that the error callback can be called with additional information about
+     * the violation.
+     */
+    this.checkFileAsStillValid = function(file, okHandler, errorhandler) {
+        
+        if( !this.encryption ) {
+            var v = filesender.config.max_transfer_file_size;
+            
+            if( v && file.size > v ) {
+                errorhandler({message: 'maximum_file_size_exceeded', details: {size: file.size, max: v  }});
+                return false;
+            }
+        } else {
+            var v = filesender.config.max_transfer_encrypted_file_size;
+            
+            if( v && file.size > v ) {
+                errorhandler({message: 'maximum_encrypted_file_size_exceeded', details: {size: file.size, max: v  }});
+                return false;
+            }
+        }
+        okHandler(true);
+        return true;
+    };
     
     /**
      * Add a file to the file list
@@ -108,34 +277,33 @@ window.filesender.transfer = function() {
      * 
      * @return mixed int file index or false if it was a duplicate or that there was an error
      */
-    this.addFile = function(file, errorhandler, source_node) {
+    this.addFile = function(file_name, blob, errorhandler, source_node) {
         if (!errorhandler)
             errorhandler = filesender.ui.error;
         
-        if (!file)
+        if (!blob)
             return errorhandler({message: 'no_file_given'});
         
-        if ('parentNode' in file) // HTML file input
-            file = file.files;
+        if ('parentNode' in blob) // HTML file input
+            blob = blob.files;
         
-        if ('length' in file) { // FileList
-            if (!file.length) {
+        if ('length' in blob) { // FileList
+            if (!blob.length) {
                 errorhandler({message: 'no_file_given'});
                 return false;
             }
             
-            for (var i = 0; i < file.length; i++)
-                this.addFile(file[i]);
+            for (var i = 0; i < blob.length; i++)
+                this.addFile(blob[i].name, blob[i]);
 
             return;
         }
         
-        if (!('type' in file)) {
+        if (!('type' in blob)) {
             errorhandler({message: 'no_file_given'});
             return false;
         }
         
-        var blob = file;
         var file = {
             id: null,
             key: null,
@@ -143,7 +311,7 @@ window.filesender.transfer = function() {
             size: blob.size,
             uploaded: 0,
             complete: false,
-            name: blob.name,
+            name: file_name,
             mime_type: blob.type,
             node: source_node,
             transfer: this
@@ -161,12 +329,7 @@ window.filesender.transfer = function() {
             errorhandler({message: 'transfer_too_many_files', details: {max: filesender.config.max_transfer_files}});
             return false;
         }
-        
-        if (!/^[^\\\/:;\*\?\"<>|]+(\.[^\\\/:;\*\?\"<>|]+)*$/.test(file.name)) {
-            errorhandler({message: 'invalid_file_name', details: {filename: file.name}});
-            return false;
-        }
-        
+
         if (!file.size) {
             errorhandler({message: 'empty_file'});
             return false;
@@ -175,9 +338,33 @@ window.filesender.transfer = function() {
         if (typeof filesender.config.ban_extension == 'string') {
             var banned = filesender.config.ban_extension.replace(/\s+/g, '');
             banned = new RegExp('^(' + banned.replace(/,/g, '|') + ')$', 'g');
-            var extension = file.name.split('.').pop();
+            var extension = this.getExtention(file);
             if (extension.match(banned)) {
                 errorhandler({message: 'banned_extension', details: {extension: extension, filename: file.name, banned: filesender.config.ban_extension}});
+                
+                return false;
+            }
+        }
+
+        if (typeof filesender.config.extension_whitelist_regex == 'string') {
+            var extension_whitelist = filesender.config.extension_whitelist_regex;
+            var regex = new RegExp(extension_whitelist);
+            var extension = this.getExtention(file);
+            if (!extension.match(regex)) {
+                errorhandler({ message: 'banned_extension_includes_bad_characters',
+			       details: { extension: extension,
+					  filename: file.name,
+					  banned: filesender.config.extension_whitelist_regex}});
+                
+                return false;
+            }
+        }
+
+        if (typeof filesender.config.valid_filename_regex == 'string') {
+            var regexstr = filesender.config.valid_filename_regex;
+            if (!XRegExp(regexstr).test(file.name)) {
+                errorhandler({ message: 'invalid_file_name',
+                               details: { filename: file.name }});
                 
                 return false;
             }
@@ -187,6 +374,10 @@ window.filesender.transfer = function() {
             errorhandler({message: 'transfer_maximum_size_exceeded', details: {size: file.size, max: filesender.config.max_transfer_size}});
             return false;
         }
+
+        var t = this.checkFileAsStillValid(file, function() {}, errorhandler);
+        if( t === false )
+            return t;
         
         if(filesender.config.quota && filesender.config.quota.available) {
             if (this.size + file.size > filesender.config.quota.available) {
@@ -281,7 +472,15 @@ window.filesender.transfer = function() {
      * Check if restart is supported (local storage is available and html5 upload as well)
      */
     this.isRestartSupported = function() {
-        return ('localStorage' in window) && (window['localStorage'] !== null) && filesender.supports.reader;
+        try {
+            return ('localStorage' in window) && (window['localStorage'] !== null) && filesender.supports.reader;
+        } catch (e) {
+            // Internet Explorer may throw an exception when trying to use localStorage
+            // while it is forbidden for security reasons.  Returning false will keep
+            // FileSender running, just disabling features that Internet Explorer won't
+            // let us use.
+            return false;
+        }
     };
     
     /**
@@ -482,6 +681,9 @@ window.filesender.transfer = function() {
         
         // From here we should have everything we need to restart
         filesender.ui.log('Restarting failed transfer #' + this.id);
+        for(var i=0; i<tracker.files.length; i++) {
+            filesender.ui.log('uploaded: ' + tracker.files[i].uploaded);
+        }
         
         this.time = (new Date()).getTime();
         
@@ -505,36 +707,138 @@ window.filesender.transfer = function() {
         this.watchdog_processes[id] = {
             count: 0,
             durations: [],
-            started: null
+            started: null,
+            file: null,
+            progressTracker: new window.filesender.progresstracker(),
         };
     };
     
     /**
-     * Record chunk upload started from process
+     * Record chunk upload started for worker
      * 
      * @param string id process identifier
      */
-    this.recordUploadStartedInWatchdog = function(id) {
+    this.recordUploadStartedInWatchdog = function(id,file) {
         if(!(id in this.watchdog_processes)) this.registerProcessInWatchdog(id);
         
         this.watchdog_processes[id].started = (new Date()).getTime();
+        this.watchdog_processes[id].file = file;
+        this.watchdog_processes[id].progressTracker.clear();
+        
+    };
+
+    /**
+     * Record chunk upload progress for worker
+     */
+    this.recordUploadProgressInWatchdog = function(id,fine_progress) {
+        this.watchdog_processes[id].progressTracker.remember( fine_progress );
     };
     
     /**
-     * Record chunk upload from process
+     * Record chunk upload from worker
      * 
      * @param string id process identifier
      */
     this.recordUploadedInWatchdog = function(id) {
+        
         if(!(id in this.watchdog_processes)) this.registerProcessInWatchdog(id);
         
         if(this.watchdog_processes[id].started == null) return;
+
+        this.watchdog_processes[id].progressTracker.chunkCompleted();
         
         this.watchdog_processes[id].count++;
         this.watchdog_processes[id].durations.push((new Date()).getTime() - this.watchdog_processes[id].started);
-        while(this.watchdog_processes[id].durations.length > 5) this.watchdog_processes[id].durations.shift();
-        
-        this.watchdog_processes[id].started = null;
+        while(this.watchdog_processes[id].durations.length > this.stalling_detection.durations_horizon) {
+            this.watchdog_processes[id].durations.shift();
+        }
+        this.watchdog_processes[id].started = null;    
+    };
+
+    /**
+     * for a nominated file
+     * return an array with entries for each worker 
+     * (only one "worker" for non terasender)
+     *
+     * each item is either -1 if the worker is not active on the file
+     * or the duraction that the worker has been active on the current
+     * chunk for the nominated file
+     * 
+     * the return value will be "stable" for an active transfer. So
+     * that worker 0 will always be the first worker in the return
+     * value this helps you present the information to the UI.
+     */
+    this.getMostRecentChunkDurations = function(file) {
+        d = [];
+        i = 0;
+        for(var id in this.watchdog_processes) {
+            d[i] = -1;
+            if(this.watchdog_processes[id].started != null) {
+                if( this.watchdog_processes[id].file.name == file.name ) {
+                    var duration = (new Date()).getTime() - this.watchdog_processes[id].started;
+                    d[i] = duration;
+                }
+            }
+            i++;
+        }
+        return d;
+    };
+
+    /**
+     * for a nominated file
+     * return an array with entries for each worker 
+     * (only one "worker" for non terasender)
+     *
+     * each item is the number of bytes transfered between the current and previous progress reported
+     * by the worker
+     * 
+     * the return value will be "stable" for an active transfer. So
+     * that worker 0 will always be the first worker in the return
+     * value this helps you present the information to the UI.
+     */
+    this.getMostRecentChunkFineBytes = function(file) {
+        d = [];
+        i = 0;
+        for(var id in this.watchdog_processes) {
+            d[i] = -1;
+            if(this.watchdog_processes[id].started != null) {
+                if( this.watchdog_processes[id].file.name == file.name ) {
+                    var bc = this.watchdog_processes[id].progressTracker.latest();
+                    d[i] = bc;
+                }
+            }
+            i++;
+        }
+        return d;
+    };
+
+    /**
+     * for a nominated file
+     * return an array with entries for each worker 
+     * (only one "worker" for non terasender)
+     *
+     * each item is true if the worker has not progressed enough
+     * recently. the user might like to know or the whole chunk could
+     * be restarted for the user.
+     * 
+     * the return value will be "stable" for an active transfer. So
+     * that worker 0 will always be the first worker in the return
+     * value this helps you present the information to the UI.
+     */
+    this.getIsWorkerOffending = function(file) {
+        d = [];
+        i = 0;
+        for(var id in this.watchdog_processes) {
+            d[i] = false;
+            if(this.watchdog_processes[id].started != null) {
+                if( this.watchdog_processes[id].file.name == file.name ) {
+                    var v = this.watchdog_processes[id].progressTracker.isOffending();
+                    d[i] = v;
+                }
+            }
+            i++;
+        }
+        return d;
     };
     
     /**
@@ -546,32 +850,39 @@ window.filesender.transfer = function() {
         if(!this.stalling_detection) return null;
         
         var stalled = [];
-        
+
         // Compute average upload time and progress
         var avg_count = 0;
         var pcnt = 0;
-        var avg_duration = 0;
-        var dcnt = 0;
         for(var id in this.watchdog_processes) {
             pcnt++;
             avg_count += this.watchdog_processes[id].count;
+        }        
+        for(var id in this.watchdog_processes) {
+            // clear old caches
+            this.watchdog_processes[id].durations_average = 0;
+            this.watchdog_processes[id].durations_count   = 0;
+            this.watchdog_processes[id].durations_max     = 0;
+
+            // prepare to calc average for process
+            // keep the max time a recent chunk took as well
             for(var i=0; i<this.watchdog_processes[id].durations.length; i++) {
-                avg_duration += this.watchdog_processes[id].durations[i];
-                dcnt++;
+                this.watchdog_processes[id].durations_average += this.watchdog_processes[id].durations[i];
+                this.watchdog_processes[id].durations_max = Math.max(this.watchdog_processes[id].durations_max,
+                                                                     this.watchdog_processes[id].durations[i]);
+            }
+            
+            // convert the sum to the mean
+            if( this.watchdog_processes[id].durations.length ) {
+                this.watchdog_processes[id].durations_average /= this.watchdog_processes[id].durations.length;
             }
         }
         if(pcnt) avg_count /= pcnt;
-        if(dcnt) avg_duration /= dcnt;
         
         var way_too_late = false;
         
         // Look for processes that seems "late"
         for(var id in this.watchdog_processes) {
-            if(this.watchdog_processes[id].count < avg_count - this.stalling_detection.count_divergence) {
-                // Process is too late in terms of number of uploaded chunks
-                stalled.push(id);
-                continue;
-            }
             
             if(this.watchdog_processes[id].started == null) continue;
             
@@ -579,11 +890,32 @@ window.filesender.transfer = function() {
             
             if(duration > 3600 * 1000) // 1h, CSRF token lifetime
                 way_too_late++;
+
+            //
+            // the purpose of early_scale is to allow the system to be
+            // more open to the duration varying when we do not
+            // already have time data for a lot of chunks.
+            //
+            // On the first chunk or two we allow multiple times the
+            // stalling_detection.duration_divergence to pass before
+            // we think something is wrong because we have little
+            // support to know if current performance is a divergence
+            // from the past.
+            //
+            // over time early_scale will tend towards being "1" this
+            // will be when we have all entries up to
+            // durations_horizon so at that time we do not add any
+            // extra slack to the system
+            //
+            var early_scale = this.stalling_detection.durations_horizon - this.watchdog_processes[id].durations.length + 1;
+            var duration_divergence = this.stalling_detection.duration_divergence * early_scale;
             
-            if(duration > avg_duration * this.stalling_detection.duration_divergence) {
-                // Process is too late in terms of number of upload duration
-                stalled.push(id);
-                continue;
+            if( this.watchdog_processes[id].durations_count ) {
+                if(duration > this.watchdog_processes[id].durations_average * duration_divergence) {
+                    // Process is too late in terms of number of upload duration
+                    stalled.push(id);
+                    continue;
+                }
             }
         }
         
@@ -764,6 +1096,7 @@ window.filesender.transfer = function() {
         var transfer = this;
         filesender.client.postTransfer(this, function(path, data) {
             transfer.id = data.id;
+            transfer.encryption_salt = data.salt;
             
             for (var i = 0; i < transfer.files.length; i++) {
                 for (var j = 0; j < data.files.length; j++) {
@@ -936,31 +1269,37 @@ window.filesender.transfer = function() {
         var slicer = file.blob.slice ? 'slice' : (file.blob.mozSlice ? 'mozSlice' : (file.blob.webkitSlice ? 'webkitSlice' : 'slice'));
         
         var blob = file.blob[slicer](offset, end);
+        var file_uploaded_when_chunk_complete = end;
+        if (file_uploaded_when_chunk_complete > file.size)
+            file_uploaded_when_chunk_complete = file.size;
         
-        file.uploaded = end;
-        if (file.uploaded > file.size)
-            file.uploaded = file.size;
-        
-        var last = file.uploaded >= file.size;
+        var last = file_uploaded_when_chunk_complete >= file.size;
+        var fncache = file.name;
         if (last)
             this.file_index++;
-        
-        this.recordUploadStartedInWatchdog('main');
-        
+        var was_last_file = transfer.file_index >= transfer.files.length;
+
+        // this saves having to think about the id for the watchdog calls.
+        var worker_id = 'main';
+        this.recordUploadStartedInWatchdog(worker_id,file);
+
         this.uploader = filesender.client.putChunk(
             file, blob, offset,
             function(ratio) { // Progress
-                var chunk_size = Math.min(file.size - file.uploaded, filesender.config.upload_chunk_size);
-                file.fine_progress = Math.floor(file.uploaded + ratio * chunk_size);
+                var chunk_size = Math.min(file.size - file_uploaded_when_chunk_complete, filesender.config.upload_chunk_size);
+                file.fine_progress = Math.floor(file_uploaded_when_chunk_complete + ratio * chunk_size);
+                transfer.recordUploadProgressInWatchdog(worker_id,ratio * chunk_size);
                 transfer.reportProgress(file);
             },
             function() { // Done
-                transfer.recordUploadedInWatchdog('main');
+                transfer.recordUploadedInWatchdog(worker_id);
+                file.uploaded = file_uploaded_when_chunk_complete;
                 
                 if (last) { // File done
                     transfer.reportProgress(file, function() {
-                        if(transfer.file_index >= transfer.files.length)
-                            transfer.reportComplete();                            
+                        if(was_last_file) {
+                            transfer.reportComplete();
+                        }
                     });
                     
                     
@@ -975,7 +1314,7 @@ window.filesender.transfer = function() {
                 transfer.reportError(error);
             },
             transfer.encryption,
-            transfer.encryption_password
+            transfer.getEncryptionMetadata()
         );
     };
 

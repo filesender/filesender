@@ -57,12 +57,28 @@ class DatabaseMysql {
     public static function createTable($table, $definition) {
         $columns = array();
         
+        $primary_keys = null;
         foreach($definition as $column => $def) {
             $columns[] = $column.' '.self::columnDefinition($def);
+            
+            if(array_key_exists('primary', $def) && $def['primary']) {
+                if (is_null($primary_keys)) $primary_keys = $column;
+                else $primary_keys .= ', '.$column;
+            }
         }
-        $query = 'CREATE TABLE '.$table.' ('.implode(', ', $columns).')';
-        
+
+        $query = 'CREATE TABLE '.$table.' ('.implode(', ', $columns).', PRIMARY KEY('.$primary_keys.'))';
+
         DBI::exec($query);
+    }
+
+    public static function createView($table, $viewname, $definitionsql) {
+        DBI::exec('DROP VIEW IF EXISTS '.$viewname);
+        $query = 'CREATE OR REPLACE VIEW '.$viewname.' as '.$definitionsql;
+        DBI::exec($query);
+    }
+    public static function dropView($table, $viewname) {
+        DBI::exec('DROP VIEW IF EXISTS '.$viewname);
     }
     
     /**
@@ -101,7 +117,68 @@ class DatabaseMysql {
         $query = 'ALTER TABLE '.$table.' ADD '.$column.' '.self::columnDefinition($definition);
         DBI::exec($query);
     }
-    
+
+
+    public static function dropTableSecondaryIndex(   $table, $index ) {
+        if(!$logger || !is_callable($logger)) $logger = function() {};
+        $query = 'DROP INDEX '.$index.' on '.$table.'';
+        DBI::exec($query);
+    }
+    public static function createTableSecondaryIndex( $table, $index, $definition ) {
+        if(!$logger || !is_callable($logger)) $logger = function() {};
+
+        $preamble = '';
+        $coldefs = '';
+        foreach( $definition as $dk => $dm ) {
+            if( $dk == 'UNIQUE' ) {
+                $preamble .= ' UNIQUE ';
+                continue;
+            }
+            if( $coldefs != '' )
+                $coldefs .= ',';
+            $coldefs .= $dk;
+        }
+        $query = 'CREATE '.$preamble.' INDEX '.$index.' on '.$table.' (' . $coldefs . ')';
+        echo " $query \n";
+        DBI::exec($query);
+    }
+
+    /**
+     * Table columns format checking.
+     * 
+     * @param string $table table name
+     * @param string $index index name
+     * @param string $definition index columns definition
+     * 
+     * @return string reason if a problem or false if no problems
+     */
+    public static function checkTableSecondaryIndexFormat($table, $index, $definition, $logger = null) {
+        if(!$logger || !is_callable($logger)) $logger = function() {};
+
+        $expected = array();
+        foreach( $definition as $dk => $dm ) {
+            $expected[] = $dk;
+        }
+
+        // Get current definition
+        $s = DBI::prepare('SHOW INDEX FROM '.$table.'');
+        $s->execute(array(':key_name' => $index));
+
+        $existingCols = array();
+        foreach($s->fetchAll() as $r) {
+            if( $r['Key_name'] == $index) {
+                $existingCols[] = $r['Column_name'];
+            }
+        }
+
+        rsort($existingCols);
+        rsort($expected);
+        if( !count($existingCols))
+            return DatabaseSecondaryIndexStatuses::NOTFOUND;
+            
+        return $existingCols != $expected ? DatabaseSecondaryIndexStatuses::INCORRECT_DEFINITION : false;
+    }
+
     /**
      * Table columns format checking.
      * 
@@ -241,7 +318,10 @@ class DatabaseMysql {
      * @param array $problems problematic options
      */
     public static function updateTableColumnFormat($table, $column, $definition, $problems) {
-        $query = 'ALTER TABLE '.$table.' MODIFY '.$column.' '.self::columnDefinition($definition);
+        $localdef = $definition;
+        if(array_key_exists('primary', $localdef) && $localdef['primary'])
+            $localdef['primary'] = false;
+        $query = 'ALTER TABLE '.$table.' MODIFY '.$column.' '.self::columnDefinition($localdef);
         DBI::exec($query);
     }
     
@@ -299,6 +379,11 @@ class DatabaseMysql {
         $null = 'NOT NULL';
         if(array_key_exists('null', $definition) && $definition['null']) $null = 'NULL';
         $mysql .= ' '.$null;
+
+        // add primary key constraint
+        if(array_key_exists('addprimary', $definition) && $definition['addprimary']) {
+            $mysql .= ' PRIMARY KEY ';
+        }
         
         // Add default
         if(array_key_exists('default', $definition)) {
@@ -317,7 +402,6 @@ class DatabaseMysql {
         // Add options
         if(array_key_exists('autoinc', $definition) && $definition['autoinc']) $mysql .= ' AUTO_INCREMENT';
         if(array_key_exists('unique', $definition) && $definition['unique']) $mysql .= ' UNIQUE KEY';
-        if(array_key_exists('primary', $definition) && $definition['primary']) $mysql .= ' PRIMARY KEY';
         
         // Return statment
         return $mysql;

@@ -65,9 +65,7 @@ FileSender has no user database and has no concept of user accounts.
 
 There are two expiry timers on a user logon session.  One controlled by FileSender on its side, in its simplesamlphp or shibboleth configuration.  The other is controlled by the IdP the user uses to authenticate against.
 
-The <...> is set in the SAML2 message received by .
-
-<span style="background-color:#ff0">..</span>
+The <...> is set in the SAML2 message received by
 
 * Any uploads started during an active logon session get their own "upload session" authentication token.  This allows the upload to finish even if the user's logon session should expire.
 * When a login session is expired and a user tries do do something, a message pops up informing the user of the expired session and inviting to re-logon
@@ -84,8 +82,7 @@ no longer flash: now normal html post.  User can still select multiple files, wh
 
 ## Use of temporary files
 
-<filesender>/tmp
-used for following tmp files:
+The directory `<filesender>/tmp` used for following tmp files:
 
 *  instance.secret which is the seed value used in the secure generation of random values used for fileUID, download link etc.
 *  used by dompdf to store tmp files when generating audit report
@@ -144,7 +141,7 @@ Checks to ensure file integrity
 
 ## skinning using style sheets
 
-<filesender>/www/skin
+See the directory `<filesender>/www/skin`
 
 Each template uses "Foundation".  There are template overrides.
 
@@ -154,7 +151,6 @@ When you want to override css or add script, like for Fonts: create skin directo
 
 # 8. Email bounce handling and SPF
 
-<Etienne to write>
 examples of sendmail and postfix
 
 Add possibility to forward feedback with non-detectable type but identified related target (recipient, guest) to person of choice.
@@ -170,6 +166,11 @@ Related config parameter is "relay_unknown_feedbacks" (string, defaults to "send
 - "someaddress@domain.tld" : choosen email address
 
 Received feedback is forwarded as a message/rfc822 attachment.
+
+###Email address validation: uses the PHP built-in facility for checking email address validity 
+which these days works well.  The PHPfunction used is filter_var with the 
+filter FILTER_VALIDATE_EMAIL. 
+
 
 # 9. Multi-tenant hosting
 
@@ -237,6 +238,11 @@ PHP cannot magically consider a class to be part of a software from its name, no
 * clickjacking
 	* secure webserver config
 
+# Unique ID generation
+
+Using random_uid_generation (6 calls to mt_rand , build X-string, put dashes.  
+Unique IDs were generated before without collision checking.  Now we check for that 
+until we get a real unique one.
 
 
 

@@ -83,4 +83,7 @@ class LogEventTypes extends Enum {
    const GLOBAL_STORAGE_USAGE       = 'global_storage_usage';
    const GLOBAL_ACTIVE_USERS        = 'global_active_users';
    const GLOBAL_AVAILABLE_TRANSFERS = 'global_available_transfers';
+
+   /* Testing */
+   const TESTING_SIMPLELOG_ENTRY = 'testing_simplelog_entry'; // ability to log some test data
 }

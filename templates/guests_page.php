@@ -14,13 +14,13 @@
 
                         <?php if (count($emails) > 1) { ?>
 
-                        <select name="from">
+                        <select id="from" name="from">
                             <?php foreach ($emails as $email) { ?>
-                            <option><?php echo $email ?></option>
+                            <option><?php echo Template::sanitizeOutputEmail($email) ?></option>
                             <?php } ?>
                         </select>
 
-                        <?php } else echo $emails[0] ?>
+                        <?php } else echo Template::sanitizeOutputEmail($emails[0]) ?>
                     </div>
 
                     <div class="fieldcontainer">
@@ -28,27 +28,28 @@
 
                         <div class="recipients"></div>
 
-                        <input name="to" type="email" multiple title="{tr:email_separator_msg}" value="" placeholder="{tr:enter_to_email}" />
+                        <input id="to" name="to" type="email" multiple title="{tr:email_separator_msg}" value="" placeholder="{tr:enter_to_email}" />
                     </div>
 
                     <div class="fieldcontainer">
                         <label for="subject">{tr:subject} ({tr:optional}) :</label>
 
-                        <input name="subject" type="text"/>
+                        <input id="subject" name="subject" type="text"/>
                     </div>
 
                     <div class="fieldcontainer">
                         <label for="message">{tr:message} ({tr:optional}) : </label>
 
-                        <textarea name="message" rows="4"></textarea>
+                        <label class="invalid" id="message_can_not_contain_urls" style="display:none;">{tr:message_can_not_contain_urls}</label>
+                        <textarea id="message" name="message" rows="4"></textarea>
                     </div>
                 </td>
 
                 <td class="box">
                     <div class="fieldcontainer">
-                        <label for="datepicker" id="datepicker_label" class="mandatory">{tr:expiry_date}:</label>
+                        <label for="expires" id="datepicker_label" class="mandatory">{tr:expiry_date}:</label>
                         
-                        <input name="expires" type="text" autocomplete="off" title="<?php echo Lang::tr('dp_date_format_hint')->r(array('max' => Config::get('max_guest_days_valid'))) ?>" value="<?php echo Utilities::formatDate(Guest::getDefaultExpire()) ?>"/>
+                        <input id="expires" name="expires" type="text" autocomplete="off" title="<?php echo Lang::tr('dp_date_format_hint')->r(array('max' => Config::get('max_guest_days_valid'))) ?>" value="<?php echo Utilities::formatDate(Guest::getDefaultExpire()) ?>"/>
                     </div>
                     
                     <?php
@@ -62,17 +63,18 @@
                                 }
                             }
                             $checked = $default ? 'checked="checked"' : '';
-                            
+                            $extraDivAttrs = '';
+                            $hidden = '';
                             if($transfer && in_array($name, array(TransferOptions::REDIRECT_URL_ON_COMPLETE))) {
-                                echo '<div class="fieldcontainer" data-option="'.$name.'">';
+                                echo '<div class="fieldcontainer" data-option="'.$name.'" '. $extraDivAttrs .'>';
                                 echo '    <label for="'.$name.'">'.Lang::tr($name).'</label>';
-                                echo '    <input name="'.$name.'" type="text">';
+                                echo '    <input id="'.$name.'" name="'.$name.'" type="text">';
                                 echo '    <br/>';
                                 echo '</div>';
                                 
                             } else {
-                                echo '<div class="fieldcontainer">';
-                                echo '  <input name="'.$name.'" type="checkbox" '.$checked.' />';
+                                echo '<div class="fieldcontainer" '. $extraDivAttrs .'>';
+                                echo '  <input id="'.$name.'" name="'.$name.'" type="checkbox" '.$checked.' />';
                                 echo '  <label for="'.$name.'">'.Lang::tr($name).'</label>';
                                 echo '</div>';
                             }

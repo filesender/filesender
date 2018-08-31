@@ -43,7 +43,7 @@ class StatLog extends DBObject {
     protected static $dataMap = array(
         'id' => array(
             'type' => 'uint',
-            'size' => 'medium',
+            'size' => 'big',
             'primary' => true,
             'autoinc' => true
         ),
@@ -74,6 +74,27 @@ class StatLog extends DBObject {
             'type' => 'datetime'
         )
     );
+
+    protected static $secondaryIndexMap = array(
+        'created' => array( 
+            'created' => array()
+        ),
+        'event_tt' => array( 
+            'event' => array(),
+            'target_type' => array()
+        )
+    );
+
+    public static function getViewMap() {
+        $a = array();
+        foreach(array('mysql','pgsql') as $dbtype) {
+            $a[$dbtype] = 'select *'
+                        . DBView::columnDefinition_age($dbtype,'created')
+                        . DBView::columnDefinition_is_encrypted()
+                        . '  from ' . self::getDBTable();
+        }
+        return array( strtolower(self::getDBTable()) . 'view' => $a );
+    }
     
     /**
      * Properties
@@ -308,4 +329,6 @@ class StatLog extends DBObject {
         $s = DBI::prepare('DELETE FROM '.self::getDBTable().' WHERE created < DATE_SUB(NOW(), INTERVAL :days DAY)');
         $s->execute(array(':days' => (int)$lt));
     }
+
+    
 }

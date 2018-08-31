@@ -43,7 +43,7 @@ class AuditLog extends DBObject {
     protected static $dataMap = array(
         'id' => array(
             'type' => 'uint',
-            'size' => 'medium',
+            'size' => 'big',
             'primary' => true,
             'autoinc' => true
         ),
@@ -77,6 +77,41 @@ class AuditLog extends DBObject {
             'type' => 'datetime'
         )
     );
+
+    protected static $secondaryIndexMap = array(
+        'Type_ID' => array( 
+            'target_type' => array(),
+            'target_id'   => array()
+        ),
+        'Author_ID' => array( 
+            'author_type' => array(),
+            'author_id'   => array()
+        )
+        
+//        'Type_ID_AType_AID_IP_Event_Created' => array(
+//            'target_type' => array(),
+//            'target_id'   => array(),
+//            'author_type' => array(),
+//            'author_id'   => array(),
+//            'ip'          => array(),
+//            'event'       => array(),
+//            'created'     => array()
+//        ),
+        
+    );
+
+    public static function getViewMap() {
+
+        $a = array();
+        foreach(array('mysql','pgsql') as $dbtype) {
+            $a[$dbtype] = 'select *'
+                        . DBView::columnDefinition_age($dbtype,'created')
+                        . DBView::columnDefinition_as_number($dbtype,'target_id')
+                        . '  from ' . self::getDBTable();
+        }
+        return array( strtolower(self::getDBTable()) . 'view' => $a );
+        
+    }
     
     /**
      * Set selectors
@@ -290,6 +325,7 @@ class AuditLog extends DBObject {
         foreach(self::all('target_type=\'Recipient\' AND target_id IN :ids', array(':ids' => array_map(function($recipient) {
             return $recipient->id;
         }, $transfer->recipients))) as $log) $logs[] = $log;
+         
         
         // Sort by event date
         usort($logs, function($a, $b) {
@@ -342,4 +378,30 @@ class AuditLog extends DBObject {
         foreach(self::fromTransfer($transfer) as $log)
             $log->delete();
     }
+
+    public static function cleanup() {
+        
+        // delete auditlogs entries for guests who have
+        // already been removed from the system
+        DBI::exec(
+            ""
+           ."delete from ".self::getDBTable()." where id in ("
+           ."   select al.id from ".self::getViewName()." al"
+           ."   left outer join ".Guest::getDBTable()." g"
+           ."      on g.id = target_id_as_number "
+           ."   where target_type = 'Guest' and g.id is null"
+           ." )"
+        );
+        
+        // if there is a sunset lifetime for the auditlog 
+        // then cleanup records that are too old.
+        $lifetime = Config::get('auditlog_lifetime');
+        if( !is_null($lifetime) && $lifetime > 0 ) {
+            // delete auditlogs entries that are too old
+            $statement = DBI::prepare("delete from ".self::getDBTable()." where created < :cutoff ");
+            $statement->execute(array(':cutoff' => date('Y-m-d H:i:s', time() - ($lifetime*24*3600))));
+        }
+        
+    }
+    
 }

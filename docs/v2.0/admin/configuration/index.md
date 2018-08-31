@@ -2,7 +2,10 @@
 title: Configuration directives
 ---
 
-* This document is a work in progress.  If you are keen on seeing FileSender 2.0 released offer to help with (testing) the documentation.
+This document is a work in progress. You can [contribute updates](patchdocs/) to the documentation or file [an issue](https://github.com/filesender/filesender/issues) to get the ball rolling on an update.
+
+A note about colours;
+
 * mandatory configuration settings are <span style="background-color:red">marked in red</span>
 * sections <span style="background-color:orange">marked in orange</span> need to be double checked.
 
@@ -12,36 +15,45 @@ title: Configuration directives
 
 ## General settings
 
-* [admin_email](#adminemail)
+* [admin_email](#admin_email)
 * [admin](#admin)
-* [site_name](#sitename)
-* [force_ssl](#forcessl)
-* [auth_remote_signature_algorithm](#authremotesignaturealgorithm)
-* [default_timezone](#defaulttimezone)
-* [default_language](#defaultlanguage)
-* [site_url](#siteurl)
-* [site_logouturl](#sitelogouturl)
-* [about_url](#abouturl)
-* [help_url](#helpurl)
+* [site_name](#site_name)
+* [force_ssl](#force_ssl)
+* [auth_remote_signature_algorithm](#auth_remote_signature_algorithm)
+* [default_timezone](#default_timezone)
+* [default_language](#default_language)
+* [site_url](#site_url)
+* [site_logouturl](#site_logouturl)
+* [about_url](#about_url)
+* [help_url](#help_url)
+* [reports_show_ip_addr](#reports_show_ip_addr)
 
 ## Backend storage
 
-* [storage_type](#storagetype)
-* [storage_filesystem_path](#storagefilesystempath)
-* [storage_filesystem_df_command](#storagefilesystemdfcommand)
-* [storage_filesystem_file_deletion_command](#storagefilesystemfiledeletioncommand)
-* [storage_usage_warning](#storageusagewarning)
-* [storage_filesystem_hashing](#storagefilesystemhashing)
+* [storage_type](#storage_type)
+* [storage_filesystem_path](#storage_filesystem_path)
+* [storage_filesystem_df_command](#storage_filesystem_df_command)
+* [storage_filesystem_file_deletion_command](#storage_filesystem_file_deletion_command)
+* [storage_filesystem_tree_deletion_command](#storage_filesystem_tree_deletion_command)
+* [storage_usage_warning](#storage_usage_warning)
+* [storage_filesystem_hashing](#storage_filesystem_hashing)
+* [storage_filesystem_ignore_disk_full_check](#storage_filesystem_ignore_disk_full_check)
+
+## Shredding
+
+* [storage_filesystem_shred_path](#storage_filesystem_shred_path)
+* [storage_filesystem_file_shred_command](#storage_filesystem_file_shred_command)
+
 
 ## Database
 
-* [db_type](#dbtype)
-* [db_host](#dbhost)
-* [db_port](#dbport)
-* [db_username](#dbusername)
-* [db_password](#dbpassword)
-* [db_database](#dbdatabase)
-* [db_table_prefix](#dbtableprefix)
+* [db_type](#db_type)
+* [db_host](#db_host)
+* [db_port](#db_port)
+* [db_username](#db_username)
+* [db_password](#db_password)
+* [db_database](#db_database)
+* [db_table_prefix](#db_table_prefix)
 
 ## Language and internationalisation
 
@@ -68,6 +80,9 @@ title: Configuration directives
 * [autocomplete_max_pool](#autocompletemaxpool)
 * [autocomplete_min_characters](#autocompletemincharacters)
 * [upload_display_bits_per_sec](#uploaddisplaybitspersec)
+* [upload_display_per_file_stats](#upload_display_per_file_stats)
+* [upload_force_transfer_resume_forget_if_encrypted](#upload_force_transfer_resume_forget_if_encrypted)
+* [upload_considered_too_slow_if_no_progress_for_seconds](#upload_considered_too_slow_if_no_progress_for_seconds)
 
 ## Transfers
 
@@ -87,6 +102,17 @@ title: Configuration directives
 * [transfer_options](#transferoptions) (email receipt control)
 * [upload_chunk_size](#uploadchunksize)
 * [user_quota](#userquota)
+* [max_transfer_file_size](#max_transfer_file_size)
+* [max_transfer_encrypted_file_size](#max_transfer_encrypted_file_size)
+* [encryption_min_password_length](#encryption_min_password_length)
+* [encryption_generated_password_length](#encryption_generated_password_length)
+* [automatic_resume_number_of_retries](#automatic_resume_number_of_retries)
+* [automatic_resume_delay_to_resume](#automatic_resume_delay_to_resume)
+
+## Graphs
+
+* [upload_graph_bulk_display](#uploadgraphbulkdisplay)
+* [upload_graph_bulk_min_file_size_to_consider](#uploadgraphbulkminfilesizetoconsider)
 
 ## TeraSender (high speed upload module)
 
@@ -94,6 +120,7 @@ title: Configuration directives
 * [terasender_advanced](#terasenderadvanced)
 * [terasender_worker_count](#terasenderworkercount)
 * [terasender_start_mode](#terasenderstartmode)
+* [terasender_worker_max_chunk_retries](#terasender_worker_max_chunk_retries)
 * [stalling_detection](#stallingdetection)
 
 ## Download
@@ -108,6 +135,7 @@ title: Configuration directives
 * [default_guest_days_valid](#defaultguestdaysvalid)
 * [max_guest_days_valid](#maxguestdaysvalid)
 * [max_guest_recipients](#maxguestrecipients)
+* [guest_upload_page_hide_unchangable_options](#guest_upload_page_hide_unchangable_options)
 
 ## Authentication
 
@@ -144,6 +172,10 @@ title: Configuration directives
 * [auth_sp_fake_additional_attributes_values](#authspfakeadditionalattributesvalues)
 * [auditlog_lifetime](#auditloglifetime)
 * [report_format](#reportformat)
+* [exception_additional_logging_regex](#exceptionadditionalloggingregex)
+* [clientlogs_stashsize](#clientlogsstashsize)
+* [clientlogs_lifetime](#clientlogslifetime)
+
 
 ## Webservices API
 
@@ -275,6 +307,21 @@ title: Configuration directives
 * __1.x name:__ helpURL
 * __comment:__ when configured with a mailto: address that points to e.g. support@yourdomain.dom the email bounce handler will use this address to send unprocessable email bounces to. <span style="background-color:orange">include link to email bounce handling config directives/help</span>
 
+
+
+
+### reports_show_ip_addr
+
+* __description:__ Show the IP addresses used in reports
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ true
+* __available:__ since version 2.0
+* __comment:__ If you want to hide IP addresses from reports set it to false
+
+
+
+
 ---
 
 ## Backend storage
@@ -288,7 +335,7 @@ title: Configuration directives
 * __type:__ string.  Permissible values: **filesystem**.
 * __default:__ filesystem
 * __available:__ since version 2.0
-* __comment:__ each supported storage type will have a specific class defined in classes/storage.  Each is named Storage<Foo>.class.php, for example StorageFilesystem.class.php for the type filesystem.  The values for "Foo" are the permissible values for this directive. For now the only permissible value and supported storage type is filesystem.  Future storage types could include e.g. **object**, **amazon_s3** and others.
+* __comment:__ each supported storage type will have a specific class defined in classes/storage.  Each is named Storage<Foo>.class.php, for example StorageFilesystem.class.php for the type filesystem.  The values for "Foo" are the permissible values for this directive. For now the only permissible value and supported storage types are filesystem and filesystemChunked. Note that you need to respect the non leading capital letters in the class name such as the "C" in filesystemChunked. Future storage types could include e.g. **object**, **amazon_s3** and others.
 
 ### storage_filesystem_path
 
@@ -320,6 +367,14 @@ title: Configuration directives
 * __1.x name:__ cron_shred_command
 * __comment:__
 
+###storage_filesystem_tree_deletion_command
+* __description:__ Command used to delete whole directories and the contents, when they expire or are cleaned in routine cleaning of stale files.
+* __mandatory:__ no.  If not set, default used
+* __type:__ string
+* __default:__ rm -rf
+* __available:__ since version 2.0
+* __comment:__
+
 ### storage_usage_warning
 
 * __description:__ percentage of drive space left that will trigger an email warning to the admin.
@@ -340,6 +395,44 @@ title: Configuration directives
 * __1.x name:__
 * __comment:__ not tested
 * __comment:__ basically integer. use fileUID (which is used to create name on hard drive) + as many characters as the hashing value (if you set hashing to 2 you take the 2 first letters of the fileUID (big random string) and use these two characters to create a directory structure under the storage path. This avoids having all files in the same directory. If you set this to 1 you have 16 possible different values for the directory structure under the storage root. You'll have 16 folders under your storage root under which you'll have the files. This allows you to spread files over different file systems / hard drives. You can aggregate storage space without using things like LVM. If you set this to two you have 2 levels of subdirectories. For directory naming: first level, directory names has one letter. Second level has two: letter from upper level + own level. Temporary chunks are stored directly in the final file. No temp folder (!!) Benchmarking between writing small file in potentially huge directory and opening big file and seeking in it was negligable. Can just open final file, seek to location of chunk offset and write data. Removes need to move file in the end.  It can also be "callable". We call the function giving it the file object which hold all properties of the file. Reference to the transfer as well. The function has to return a path under the storage root. This is a path related to storage root. For example: if you want to store small files in a small file directory and big files in big directory. F.ex. if file->size < 100 MB store on fast small disk, if > 100 MB store on big slow disk. Can also be used for functions to store new files on new storage while the existing files remain on existing storage. Note: we need contributions for useful functions here :)
+
+
+### storage_filesystem_ignore_disk_full_check
+
+* __description:__ Ignore tests to see if new files will fit onto the filesystem.
+* __mandatory:__ no.  
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 2.0
+* __comment:__ If you are using FUSE to interface with some other storage such as EOS then you might like to set this to true to avoid having to do a distributed search to find out of there is storage for each upload
+
+
+---
+
+## Shredding
+
+---
+
+### storage_filesystem_shred_path
+
+* __description:__ Path to store files that should be fed to shred.
+* __mandatory:__ no.  
+* __type:__ string
+* __default:__ ['filesenderbase'].'/shredfiles'
+* __available:__ since version 2.0 beta 4
+* __comment:__ This should be on the same filesystem as storage_filesystem_path
+       so that a 'mv' of a file between the two paths does not require new files
+       to be made.
+
+### storage_filesystem_file_shred_command
+
+* __description:__ command to shred files
+* __mandatory:__ no.  
+* __type:__ string
+* __default:__ nothing
+* __available:__ since version 2.0 beta 4
+* __comment:__ If this is set then file shredding will be enabled. See the [shredding page](http://docs.filesender.org/v2.0/shredding) for more information.
+
 
 ---
 
@@ -614,6 +707,33 @@ User language detection is done in the following order:
 * __1.x name:__
 * __comment:__ does this actually work?
 
+###upload_display_per_file_stats
+* __description:__ show the duration of the current chunk for each worker to the user during uploads
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 2.0
+* __1.x name:__
+
+
+
+###upload_force_transfer_resume_forget_if_encrypted
+* __description:__ forget partial transfers when upload page is revisited if they were encrypted.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ false
+* __available:__ since version 2.0
+
+
+###upload_considered_too_slow_if_no_progress_for_seconds
+* __description:__ If 0 this is disabled. If an uploading chunk has not reported any progress in this number of seconds then it is considered in trouble and some action may be taken (eg. force stop and resend of chunk) to try to recover. Note that this relies on the browser to report progress messages for ongoing uploads which might only happen every few seconds if a single request is active and maybe for terasender_worker_count=5 you might like to set this to 20 or 30 to avoid thinking a chunk is stalled when it is not.
+* __mandatory:__ no
+* __type:__ int
+* __default:__ 0
+* __available:__ since version 2.0
+
+
+
 ---
 
 ## Transfers
@@ -822,6 +942,97 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __1.x name:__
 * __comment:__ user quote can be implemented in a much more flexible way as well.  As we're doing lazy loading of configuration parameters we can change this value (and max. file size) based on user profile.  In stead of defining this config parameter with a number you can give a function to it.  The value returned by this function is cached for a login session.  For example a function that uses eduPersonAffiliation can give a "student" 10 GB and "faculty" 1 TB.  You could also change max. days valid based on user profile.  The function can use the current application state and user session to compute the value for a logged in user, because the function would run after everything else.  <span style="background-color:orange">Calculated maximum values should have its own chapter to explain, with examples especially for using eduPersonAffiliation.</span>
 
+
+###max_transfer_file_size
+* __description:__ set to 0 to disable. If set to a positive value it sets the maximum file size for a not encrypted file that the user can upload. Attempts to upload a larger file is rejected with an error message in the web-UI.
+* __mandatory:__ no 
+* __type:__ int (bytes) or function
+* __default:__ 0
+* __available:__ since version 2.0
+* __comment:__ 
+
+
+###max_transfer_encrypted_file_size
+* __description:__ set to 0 to disable. If set to a positive value it sets the maximum file size for an encrypted file that the user can upload. Attempts to upload a larger file is rejected with an error message in the web-UI.
+* __mandatory:__ no 
+* __type:__ int (bytes) or function
+* __default:__ 0
+* __available:__ since version 2.0
+* __comment:__ 
+
+
+###encryption_min_password_length
+* __description:__ set to 0 to disable. If set to a positive value it is the minimum number of characters needed in a password for encryption. Note that since the encryption is fully client side, this value could be ignored by a determined user, though they would do that at the loss of their own security not of others.
+* __mandatory:__ no 
+* __type:__ int
+* __default:__ 0
+* __available:__ since version 2.0
+* __comment:__ 
+
+###encryption_generated_password_encoding
+* __description:__ which encoding to use to encode generated passwords. Since the random information obtained during password generation is completely random it is useful to encode that into text characters, for example in the range a,b,c etc. By doing this one single byte of random data (0 to 255 inclusive) will likely be encoded to more than one character of output. The base64 encoding turns x bytes of input into 1.33 times as long output. Because ascii85 uses more possible characters it turns each 4 bytes into 5 bytes. This means that for the same length of encoded string the ascii85 will have more entropy. Note that the ascii85 used is the Z85 from ZeroMQ to avoid the use of the quote character in output.
+* __mandatory:__ no 
+* __type:__ string
+* __default:__ base64
+* __available:__ since version 2.1
+* __comment:__ either base64 or ascii85 
+
+
+###encryption_generated_password_length
+* __description:__ The exact number of characters used in a generated password for encryption. This must be equal or greater than encryption_min_password_length.
+* __mandatory:__ no 
+* __type:__ int
+* __default:__ encryption_min_password_length
+* __available:__ since version 2.0
+* __comment:__ 
+
+###automatic_resume_number_of_retries
+* __description:__ Number of times to automatically resume an upload if a major error has happened. Set this to 0 to disable automatic resume.
+* __mandatory:__ no 
+* __type:__ int
+* __default:__ 10
+* __available:__ since version 2.1
+* __comment:__ 
+
+
+###automatic_resume_delay_to_resume
+* __description:__ Delay in seconds to wait after a major failure before an automatic resume is performed.
+* __mandatory:__ no 
+* __type:__ int
+* __default:__ 360
+* __available:__ since version 2.1
+* __comment:__ 
+
+
+
+---
+
+## Graphs
+
+---
+
+### upload_graph_bulk_display
+
+* __description:__ Enable or disable bulk upload speed graphs on the uploads page.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ true
+* __available:__ since version 2.0
+* __comment:__ Note: 
+
+### upload_graph_bulk_min_file_size_to_consider
+
+* __description:__ only consider files above this size in bulk transfer speed calculation.
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ 1024 * 1024 * 1024
+* __available:__ since version 2.0
+* __comment:__ only useful when you enable upload_graph_bulk_display
+
+
+
+
+
 ---
 
 ## TeraSender (high speed upload module)
@@ -869,6 +1080,17 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __1.x name:__
 * __comment:__ when looking for a file to put a worker on in multiple mode we look at file which has compbination of least worker and least progress.  Try to put available worker on file that is the slowest.  In multiple-mode we try to make all files progress at about the same speed.
 
+
+### terasender_worker_max_chunk_retries
+
+* __description:__ number of times a terasender worker retries to upload a chunk
+* __mandatory:__ no
+* __type:__ int
+* __default:__ 20
+* __available:__ since version 2.0 beta5
+* __comment:__ The terasender worker will perform this many retries to upload a chunk before considering that it is a failure. Having 5 or more here will greatly improve the chances of an upload completing without user interaction. Note that this is the number of times a single chunk upload attempt can be retried, not the number of times a worker might try to retry in total. So if the value is 10 and the first chunk takes 8 attempts that is fine, the next chunk given to the worker can itself take up to the 10 times to upload. So a value of 20 would need *each* chunk to be retried up to 20 times and finally one chunk to push over that 20 in order to fail.
+
+
 <span style="background-color:orange">when set to "single" uploads don't work?  Bug?</span>
 
 ### stalling_detection
@@ -876,7 +1098,7 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __description:__ detect whether an upload stalls
 * __mandatory:__ no
 * __type:__ boolean
-* __default:__ true
+* __default:__ false
 * __available:__ since version 2.0
 * __comment:__ Has effect on the JavaScript-variables given to the client-side of Terasender.
 
@@ -986,6 +1208,16 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __mandatory:__ no
 * __type:__ int
 * __default:__ 50
+* __available:__ since version 2.0
+* __1.x name:__
+* __comment:__
+
+### guest_upload_page_hide_unchangable_options
+
+* __description:__ when true checkboxes that the guest can not interact with are hidden
+* __mandatory:__ no
+* __type:__ boolean
+* __default:__ false
 * __available:__ since version 2.0
 * __1.x name:__
 * __comment:__
@@ -1215,40 +1447,99 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __1.x name:__
 * __comment:__
 
-<span style="background-color:orange">if you define your own log_facilities, you will overwrite the default setting.  Make sure to include all log targets you wish to log to.
+<span style="background-color:orange">if you define your own log_facilities, you will overwrite the default setting.  Make sure to include all log targets you wish to log to.</span>
 
 * __*General format of log target:*__ array(('type' => string, <attribute1 => <value>, <attribute2> => <value>
 * __*Standard parameters for all options:*__
 	* __'level'__ (optional): restricts loglevel of current facility.  Permissible values: debug, warning, info, error
+	* __'output'__ (optional): sets the output mode of log messages.  Permissible values: text, json 
 	* __'process'__ (optional): allows you to separate logs from different parts of FileSender into separate logfiles, for example the REST logfile gets huge.  Permissible values: CLI, GUI, REST, WEB, CRON, FEEDBACK, MISC, INSTALL, UPGRADE.  Comma-separated list.
 * __*Available targets:*__
 	* __'type' => 'file'__ logs to a file.  You must specify a path.  You can optionally specify log file rotation with 'rotate' => '<value>', where value can be hourly, daily, weekly, monthly, yearly.
 	* __'type' => 'syslog'__ logs to syslog.
-	* __'type' => 'errror_log'__ logs to the default PHP log facility as defined in your webserver's PHP module.</span>
+	* __'type' => 'errror_log'__ logs to the default PHP log facility as defined in your webserver's PHP module.
+
+The general format is an array of arrays. If you only have a single
+place you want to log to you only need to remember to have two array
+words in there or the system should complain.
+
+Being an array of array you can have multiple places take log information
+and all of them process it.
+
+<pre><code>
+Array( array (
+  type => String (errorlog,syslog,file,callable)
+  path => String
+  rotate => String ) )
+</code></pre>
+
+The default type is 'file'. If you define your own log_facilities it
+will override the default configuration so if you want to include the
+default you have to explicitly add it to your new setting.
+
+The only top level mandatory parameter is 'type'. If you optionally set output
+to json then logs will be structured in JSON format.
+
+<pre><code>
+array (
+  'type' => 'file',     // possible = file, syslog, error_log, callable
+  'output' => 'text',   // possible = text, json
+  'path' => '&lt;something>/logs/',
+  'rotate' => hourly,   // possible = hourly, daily, weekly, monthly, yearly
+  'process' => REST,    // possible = MISC, WEB, CLI, GUI, REST, CRON, FEEDBACK, INSTALL, UPGRADE
+</code></pre>
+
+The type setting lets you choose where the log will be sent. The error
+log setting error_log will log using default php facility which puts
+logs in apache error logs. The callable allows you to set a php
+function to call to log the data.
+
+The process setting allows you to ask to only get logs from specific
+parts of FileSender. This way you can separate your logs between
+different components.
+
+Note that REST process logs can be very large so you might like to
+rotate every hour if you are keeping them.
+
+Sometimes a setting does nothing for a type. For example the rotate
+setting will have no meaning if you have a type=callable.
+
+For a type of syslog you can also supply the indent and facility.
+Facility sets the syslog facility used.  Standard PHP syslog function parameters
+
+When using a type of callable (which is an advanced application): "I
+give you something you can call to log". There is one mandatory
+parameter "callback" which must be a php function. That will be called
+every time you want to log something. Level and process can be set as
+well. When it's called it will get the message to log and the current
+process. 1st argument will be message, 2nd argument process type. Can
+name them A and B. This can be useful if you're searching for a particular
+error or for example use remote log facility. Search for particular
+error: write specific function to catch specific errors and drop an
+email when it happens.
 
 <span style="background-color:orange">* __*Examples:*__</span>
-examples for tpye file with different log rotations
-examles for type syslog
 
-<span style="background-color:orange"> OR
-Array( array ( type => String (errorlog,syslog,file,callable) path => String rotate => String ) )
-mandatory: no
-type: array of arrays.  Each one is definition of a target.  Each target has a type and if needed optional parameters.
-default: type file.
-Note: if you define your own, it will _overwrite_ the default setting, not add it to the array.  If you want to keep basic logging and add syslog you must add _both_.
-array (
-'type' => 'file', (permissible values?) (file, syslog, error_log (log using default php facility, puts logs in apache error logs, callable
-'path' => '<something>/logs/'
-'rotate' => hourly (permissible values?) (
-'process' => CLI, GUI or REST (can ask to only get logs from specific parts of FileSender, so you can separate your logs between different componentes.  Maybe hourly logs with REST service (they get huge)
+This will log everything to a file in log that is rotated every hour
+<pre><code>
+$config['log_facilities'] =
+        array(array(
+            'type' => 'file',
+            'path' => FILESENDER_BASE.'/log/',
+            'rotate' => 'hourly'
+        ));
+</code></pre>
 
-mandatory parameter is 'type'.  Permissible values file, syslog, error_log
+This will do no logging:
+<pre><code>
+$config['log_facilities'] =
+        array(array(
+            'type' => 'callable',
+            'callback' => function() {},
+        ));
+</code></pre>
 
-type syslog.  indent, facility.  Facility sets the syslog facility used.  Standard PHP syslog function parameters
 
-callable (advanced): "I give you something you can call to log".  There is one mandatory parameter "callback" which must be a php function.  That will be called every time you want to log something. Level and process can be set as well.  When it's called it will get the message to log and the current process.  1st argument will be message, 2nd argument process type.  Can name them A and B.  CAn be useful if you're searching for a particular error or for example use remote log facility.  Search for particular error: write specific function to catch specific errors and drop an email when it happens.
-
-different options for different types.</span>
 
 ### maintenance
 
@@ -1341,6 +1632,37 @@ different options for different types.</span>
 * __1.x name:__
 * __comment:__ The same information is sent regardless of format.  Inline sends an email in plain text and HTML, with all information inline.  If PDF is chosen, the report is sent as PDF attachment.  Building a PDF is somewhat heavier on the server but won't matter unless you would have a heavily used server.  The library used is "dom pdf", included in the code.
 
+
+### exception_additional_logging_regex
+
+* __description:__ Exception names that additional logging is desired for
+* __mandatory:__ no
+* __type:__ string regex
+* __default:__ 
+* __available:__ since version 2.0
+* __comment:__ Sometimes a site might want to capture down extra logging for some exception types. This configuration is a regular expression to match the name of an exception against to see if you want this extra log info. This allows extra log info to be turned on and off fairly easily without having to edit code and possibly break something. Note that only some exceptions can give extra info.
+
+
+### clientlogs_stashsize
+
+* __description:__ Client log backfeed stash size
+* __mandatory:__ no
+* __type:__ positive integer
+* __default:__ 10
+* __available:__ since version 2.0
+* __comment:__ Number of last client console entries that are to be back-fed to the server in case there is a client error.
+
+
+### clientlogs_lifetime
+
+* __description:__ Client log backfeed lifetime
+* __mandatory:__ no
+* __type:__ positive integer
+* __default:__ 10
+* __available:__ since version 2.0
+* __comment:__ Number of days after which collected client logs are automatically deleted.
+
+
 ---
 
 ## Webservices API
@@ -1404,7 +1726,7 @@ different options for different types.</span>
 /file/[0-9]+/whole : legacy upload endpoint
 /user/@me/remote_auth_config : enabled only if remote user authentication is enabled
 
-Additionnal allowed endpoints can be added through the "rest_allow_jsonp"
+Additional allowed endpoints can be added through the "rest_allow_jsonp"
 configuration parameter (array of regexp to match the resource path
 under rest.php), example :
 
@@ -1465,6 +1787,21 @@ Changes are saved in config_overrides.json in the config directory.  The config.
 * __available:__
 * __1.x name:__
 * __comment:__
+
+---
+
+### testing_terasender_worker_uploadRequestChange_function_name
+
+* __description:__ the name of a javascript method to call to mutilate the state for testing.
+* __mandatory:__ no
+* __type:__ string
+* __default:__ 
+* __available:__ since version 2.0 beta5
+* __comment:__ Putting these in the config allows testing to be optionally turned on for select cases without the risk
+     of leaving those testing code paths turned on during a git commit. Usable values for this are methods that start with
+     testing_uploadRequestChange_ in the terasender worker object. These will selectively enable failure states on the client
+     to test that it recovers from those if it is intended to do so.
+
 
 <span style="background-color:orange">
 

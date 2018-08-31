@@ -124,13 +124,24 @@ class Config {
         include_once($main_config_file);
         if ($virtualhost != null)
             $config['virtualhost'] = $virtualhost;
-        
+
+
         self::merge(self::$parameters, $config);
+
+
+        // load password file if it is there
+        $pass_config_file = FILESENDER_BASE.'/config/config-passwords.php';
+        if (file_exists($pass_config_file)) {
         
+            $config = array();
+            include_once($pass_config_file);
+            self::merge(self::$parameters, $config);
+        }
+
         // Load virtualhost config if used
         if ($virtualhost === null)
             $virtualhost = self::get('virtualhost');
-            
+        
         if ($virtualhost) {
             if (!is_string($virtualhost))
                 throw new ConfigBadParameterException('virtualhost');
@@ -144,7 +155,22 @@ class Config {
             
             self::merge(self::$parameters, $config);
         }
+
+        // ensure mandatory config settings file exists
+        $mandatory_config_file = FILESENDER_BASE.'/includes/ConfigMandatorySettings.php';
+        if (!file_exists($mandatory_config_file)) {
+            throw new ConfigBadParameterException('Mandatory config settings file is missing. '
+                                                + 'Please recheck your filesender php code is all installed. '
+                                                + 'Looking for ' . $mandatory_config_file );
+        }
         
+        // load mandatory config settings
+        $config = array();
+        include_once($mandatory_config_file);
+        self::merge(self::$parameters, $config);
+        
+
+
         // Load config overrides if any
         $overrides_cfg = self::get('config_overrides');
         if ($overrides_cfg) {
@@ -159,17 +185,41 @@ class Config {
                     $dfn = array('type' => $dfn);
                 } else if(is_array($dfn) && !array_key_exists('type', $dfn)) {
                     $dfn = array('type' => 'enum', 'values' => $dfn);
-                } else if(!is_array($dfn))
+                } else if(!is_array($dfn)) {
                     throw new ConfigBadParameterException('config_overrides');
+                }
                 
                 $dfn['value'] = property_exists($overrides, $key) ? $overrides->$key : null;
                 
                 self::$override['parameters'][$key] = $dfn;
             }
         }
+
+        // shorter access again for checks
+        $config = self::$parameters;
         
         // Special parameter checks and sets
-        
+        if( self::get('encryption_enabled')) {
+            if( self::get('upload_chunk_size') < 262144 ) {
+                throw new ConfigBadParameterException('upload_chunk_size must be >= 262144 if encryption is available');
+            }
+        }   
+
+        // If we are to store files in chunks then we need to make sure that
+        // the size of uploaded chunks is the same as the download chunk size
+        if( Config::get('storage_type') == 'filesystemChunked' ) {
+            if( self::get('upload_chunk_size') != self::get('download_chunk_size') ) {
+                throw new ConfigBadParameterException('When storing files as chunks then upload_chunk_size must be the same as download_chunk_size');
+            }
+        }   
+
+        // see the error message for info
+        if( Utilities::startsWith(Config::get('storage_type'),'Cloud' )) {
+            if( self::get('upload_chunk_size') != self::get('download_chunk_size') ) {
+                throw new ConfigBadParameterException('When storing files using the Cloud storage the upload_chunk_size must be the same as download_chunk_size');
+            }
+        }   
+
         // update max_flash_upload_size if php.ini post_max_size and upload_max_filesize is set lower
         $max_system_upload_size = min(
             Utilities::sizeToBytes(ini_get('post_max_size')) - 2048,
@@ -197,8 +247,28 @@ class Config {
         
         if(!self::get('default_guest_days_valid'))
             self::$parameters['default_guest_days_valid'] = self::get('max_guest_days_valid');
+
+        // verify user settings
+        if( array_key_exists("log_facilities",$config)
+            && !Utilities::is_array_of_array($config["log_facilities"]))
+        {
+            throw new ConfigMissingParameterException('log_facilities[]',
+            'Maybe you have set $config["log_facilities"] = array("type" => "file",...) instead of $config["log_facilities"] = array(array("type" => "file",...))' );
+        }
+
+        if(!self::get('encryption_generated_password_length')) {
+            self::$parameters['encryption_generated_password_length'] = self::get('encryption_min_password_length');
+        }
+        if(self::get('encryption_min_password_length') > self::get('encryption_generated_password_length')) {
+            throw new ConfigBadParameterException('Generated password length must be equal or greater than encryption_min_password_length');
+        }
+
+        // verify classes are happy
+        Guest::validateConfig();
+        ClientLog::validateConfig();
+        
     }
-    
+            
     /**
      * Get virtualhosts list
      * 
@@ -269,12 +339,12 @@ class Config {
             $search = substr($key, 0, -1);
             $set = array();
             array_unshift($args, null); // Prepare place for key for sub-calls
-            foreach(array_keys(self::$parameters) as $key)
+            foreach(array_keys(self::$parameters) as $key) {
                 if(substr($key, 0, strlen($search)) == $search) {
                     $args[0] = $key;
                     $set[substr($key, strlen($search))] = call_user_func_array(get_class().'::get', $args);
                 }
-            
+            }
             return $set;
         }
         
@@ -295,7 +365,7 @@ class Config {
         if($key == 'site_url')
             if (substr($value, -1) != '/')
                 $value .= '/';
-        
+
         // Apply override if any
         if(
             is_array(self::$override) &&
@@ -357,7 +427,19 @@ class Config {
         
         return self::$override['parameters'];
     }
-    
+
+
+    /**
+     * Force set a key-value that is for this session only
+     *
+     * @param k key to set
+     * @param v value to set
+     */  
+    public static function localOverride( $k, $v ) {
+                self::$parameters[$k] = $v;
+                self::$cached_parameters[] = $k;
+    }
+
     /**
      * Set override
      * 
@@ -370,11 +452,11 @@ class Config {
     public static function override(/* $set [, $value] [, $save = true] */) {
         // Load if not already done
         self::load();
-        
+
         // If override allowed ?
         if(!self::$override)
             throw new ConfigOverrideDisabledException();
-        
+
         $args = func_get_args();
         $set = array_shift($args);
         
@@ -385,7 +467,7 @@ class Config {
             foreach($set as $k => $v) {
                 // Is override of this parameter allowed ?
                 if(!array_key_exists($k, self::$override['parameters']))
-                    throw new ConfigOverrideNotAllowedException($k);
+                     throw new ConfigOverrideNotAllowedException($k);
                 
                 // Apply any defined validators, throw if failure
                 if(array_key_exists('validator', self::$override['parameters'][$k])) {
@@ -502,7 +584,7 @@ class ConfigValidator {
                             case 'array':       $pass |= is_array($value);              break;
                             case 'callable':    $pass |= is_callable($value);           break;
                         }
-                            
+                        
                         if($pass) break; // Stop on first true or component
                     }
                     

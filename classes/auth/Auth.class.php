@@ -42,7 +42,14 @@ class Auth {
     /**
      * The curent user cache.
      */
-    private static $user = null;
+    protected static $user = null;
+
+    /**
+     * LIMITED USE: only Auth classes should call this!
+     */
+    public static function setUserObject( $user ) {
+        self::$user = $user;
+    }
     
     /**
      * Current user allowed state
@@ -68,13 +75,23 @@ class Auth {
      * Last authentication exception for systematic rethrow
      */
     private static $exception = null;
-    
+
+    /**
+     * There can be call loops when setting up classes. For example
+     * if some code calls Auth::user() indirectly while the auth system
+     * is being setup then that can cause troubles.
+     * 
+     * While this is public it should be only used by classes inside
+     * the auth system
+     */
+    public static $authClassLoadingCount = 0;
+
     /**
      * Return current user if it exists.
      * 
      * @return User instance or false
      */
-    public static function user() {
+    private static function user_protected() {
         if(self::$exception)
             throw self::$exception;
         
@@ -83,7 +100,10 @@ class Auth {
             
             // Authentication logic with exception memory
             try {
-                if(AuthGuest::isAuthenticated()) { // Guest
+                if(Logger::isLocalProcess()) {
+                    self::$attributes = array();
+                    self::$type = 'localprocess';
+                }else if(AuthGuest::isAuthenticated()) { // Guest
                     self::$attributes = AuthGuest::attributes();
                     self::$type = 'guest';
                     
@@ -155,7 +175,7 @@ class Auth {
                 // Set user if got uid attribute
                 self::$user = User::fromAttributes(self::$attributes);
                 
-                // Save user additionnal attributes if enabled
+                // Save user additional attributes if enabled
                 if(self::isSP() && Config::get('auth_sp_save_user_additional_attributes'))
                     self::$user->additional_attributes = self::$attributes['additional'];
                 
@@ -169,7 +189,64 @@ class Auth {
         
         return self::$user;
     }
-    
+
+    /**
+     * Return current user if it exists.
+     *
+     * see the private user_protected() for implementation.
+     *
+     * implementation note: this nests a call to user_protected() so that
+     * authClassLoadingCount can be incr/decr paired around the auth work
+     *
+     * This allows code to call other methods that might themselves want
+     * to indirectly call auth::user(). This can happen for example if 
+     * any code calls Logger::info() or the like as that code might well 
+     * call user() on your behalf. Note that if user() is called from code 
+     * inside user() then the nested call will return false, which is better 
+     * than infinite recursion but might not be quite what you expected.
+     * 
+     * @return User instance or false
+     */
+    public static function user() {
+        if(self::$exception)
+            throw self::$exception;
+
+        if( self::$authClassLoadingCount ) {
+            return false;
+        }
+
+        try {
+            self::$authClassLoadingCount++;
+
+            $ret = self::user_protected();
+            self::$authClassLoadingCount--;
+            return $ret;
+        } catch(Exception $e) {
+            self::$authClassLoadingCount--;
+            self::$exception = $e;
+            throw $e;
+        }
+    }
+
+    /**
+     * Reset the current user to the given data, creating database records if needed.
+     * This function should only be called from testing code that is executed locally.
+     * 
+     * @return User instance or false
+     */
+    public static function testingForceToUser( $uid, $email, $name = null ) {
+        
+        $userAttributes['uid']   = $uid;
+        $userAttributes['email'] = $email;
+        $userAttributes['name']  = $name;
+        AuthLocal::setUser(null,null);
+        AuthLocal::setUser($uid, $email, $name);
+        $user = User::fromAttributes($userAttributes);
+        $user->recordActivity();
+        self::$user = $user;
+        return $user;
+    }
+
     /**
      * Tells if an user is connected.
      * 
@@ -177,6 +254,11 @@ class Auth {
      */
     public static function isAuthenticated($critical = true) {
         if(!self::$allowed) throw new AuthUserNotAllowedException();
+
+        // command line cron, install, upgrade etc do not need a session
+        if(Logger::isLocalProcess()) {
+            return true;
+        }
         
         try {
             return (bool)self::user();
@@ -208,7 +290,7 @@ class Auth {
                 $admin = Config::get('admin');
                 if(!is_array($admin)) $admin = array_filter(array_map('trim', preg_split('`[,;\s]+`', (string)$admin)));
                 
-                self::$isAdmin = in_array(self::user()->id, $admin);
+                self::$isAdmin = in_array(self::user()->saml_user_identification_uid, $admin);
             }
         }
         
@@ -283,7 +365,7 @@ class Auth {
      *
      * @return bool
      */
-     public static function isSessionStarted() {
+    public static function isSessionStarted() {
         if ( version_compare(phpversion(), '5.4.0', '>=') ) {
             return session_status() === PHP_SESSION_ACTIVE ? true : false;
         } else {

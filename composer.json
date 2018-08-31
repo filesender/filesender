@@ -1,11 +1,7 @@
 {
     "require": {
-        "sauce/sausage": "0.14.0",
+        "sauce/sausage": ">=0.15.2",
         "appium/php-client": "@dev",
-        "phpunit/phpunit": "4.8.27",
-        "phpunit/phpunit-selenium": "2.0.2",
-        "phpunit/phpunit-mock-objects": "2.3.8",
-        "phpunit/php-code-coverage": "2.2.4",
-        "sebastian/version": "1.0.6"
+        "phpunit/phpunit-selenium": "^4.1"
     }
 }

@@ -584,3 +584,105 @@ Sent to a transfer owner when it's transfer is made available.
 * `email` : user first email address as returned by authentication (array)
 * `remote_config` : user remote access config if enabled (string)
 * `identity` : alias to `email` (string)
+
+## How to import translations from poeditor to github
+
+Early 2018 scripts were created to import language translations from
+poeditor into a local checkout of the source from github. The intended
+work flow is that you create a local git branch, import the translation
+for one or more a languages, and then push up to github to make a pull
+request to have the changes integrated into git master.
+
+To get started you should login to poeditor.com and export the languages
+of interest as php files.
+
+The below command will then import a language file for the en_au translation.
+You should be in the scripts/language directory of your FileSender git checkout.
+The import script will override files in the language directory of your FileSender
+git checkout with the information from the exported translation file.
+
+```
+$ cd ./scripts/language/
+$ php import-translation-for-language.php  en_AU /tmp/FileSender_2.0_English_AU.php
+```
+
+Once you are happy with the update, by using git diff for example, you
+should commit the branch and push to github to make a pull request to
+merge the changes to the main repository.
+
+### Adding more single translation files
+
+Some translations are stored in the lang.php file and some are stored
+into individual files in the language/en_AU (or similar) directory. To
+cater for this the language/master directory contains a file for every
+translation that should be placed in an individual file. These files
+are named after the name of the translation they should contain. If a
+translation does not go into a file then it will be stored into
+lang.php.
+
+The take away here is if you create a new file for mail etc then you
+should also touch and commit an empty file in the language/master
+directory to store that translation into the new file.
+
+For example, a new transfer_shredded mail file would need a new file
+in language/master called transfer_shredded.mail.php. The FileSender
+codebase can then refer to that file and the translation scripts will
+place the transfer_shredded translation into that file.
+
+### Exporting new terms from the github code to poeditor
+
+The poeditor.com site allows you to import files that describe new terms.
+It was found that although it appeared that if the import file contained existing
+terms that the system would only add the terms that are only in the import file there
+were undesired side effects including some duplicate terms and some terms having their
+values reset.
+
+So the process to add any new terms that are in the github code but
+not on poeditor is to first create a list of only the new terms and a
+list of terms that have been deleted since the last import.
+
+To keep things simple it is recommended to do term exports at around
+release time and also store the list of terms that existed at the time
+of the new term upload in git along with the source so you know what
+can be used as the list of 'old terms' to create the new and deleted
+list. Currently this exported term list is stored in allterms.txt in
+the scripts directory as shown below.
+
+Once a list of new terms is created it can be converted to
+that poeditor understands (json) and uploaded to poeditor.
+Deleted terms are a less common occurance and have to be found and
+deleted manually thorugh the web interface.
+
+The json file for new terms used in translations for any language in
+the github code can be generated with the below commands. Notice that
+the generated file is cached in the git repo for storage to help work
+out the new terms the next time around.
+
+The output of this run will be /tmp/deletedterms.txt with all the
+terms that used to exist and no longer do and /tmp/newterms.json which
+has only the new terms. Note that this script updates oldterms.txt
+which should be committed to git so the next run knows exactly the
+list of terms that were considered in the last execution.
+
+```
+cd scripts/language
+./export-terms-to-new-and-deleted-lists.sh
+```
+
+The newterms.json file can them be imported using the "Import terms"
+menu item on poeditor. This option is about the third icon on the
+right menu of the poeditor web site as of 2018. After selecting the
+newterms.json file you will see how many terms were parsed and how
+many new terms were added by poeditor.
+
+
+### Future directions
+
+It is possible that the translation system might move to gettext or
+something similar that can directly use the translation files that
+poeditor can export. Shorter term it might be that the php exports are
+automatically exported from poeditor to the github repository. This
+step would allow a single execution of a script to convert those
+exports into the formats expected by FileSender and would make
+bringing in all language updates able to be done by running a single
+script.

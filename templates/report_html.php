@@ -31,8 +31,10 @@ foreach($report->logs as $entry) {
     );
     
     echo '<td>'.$action.'</td>';
-    
-    echo '<td>'.$entry->ip.'</td>';
+
+    if( Config::get('reports_show_ip_addr')) {
+        echo '<td>'.$entry->ip.'</td>';
+    }
     
     echo '</tr>';
 }

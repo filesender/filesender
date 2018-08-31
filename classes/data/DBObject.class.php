@@ -52,7 +52,7 @@ class DBObject {
      * 
      * <field_def> associative array of field definition entries in :
      *   - type : int, uint, string, bool, enum, text, date, datetime, time
-     *   - size (for int types) : tiny, medium, big (defaults to medium)
+     *   - size (for int types) : small, medium, big (defaults to medium)
      *   - size (for string types) : string length
      *   - values (for enum types) : array of possible values
      *   - null : bool indicating if field can be null
@@ -62,7 +62,22 @@ class DBObject {
      *   - default : default value for this field
      */
     protected static $dataMap = array();
+
+    protected static $viewMap = array();
     
+    /**
+     * Defines secondary indexes for this table
+     *
+     * Note that the IndexName you give will have the tablename_ prepended to it for you.
+     * So you can just say key1_key2 to define the IndexName if you like.
+     *
+     * Associative array of <IndexName> => IndexDefinition
+     * Where IndexDefinition is an associative array of <field> => <field_def>
+     *   <field_def> associative array of field definition entries in :
+     *     - notused : This is an associative array to allow later expansion.
+     */
+    protected static $secondaryIndexMap = array();
+
     /**
      * DataMap getter
      * 
@@ -70,6 +85,19 @@ class DBObject {
      */
     public static function getDataMap() {
         return static::$dataMap;
+    }
+
+    public static function getViewMap() {
+        return static::$viewMap;
+    }
+    
+    /**
+     * Secondary Index map getter
+     * 
+     * @return array the class SecondaryIndexMap
+     */
+    public static function getSecondaryIndexMap() {
+        return static::$secondaryIndexMap;
     }
     
     /**
@@ -133,12 +161,12 @@ class DBObject {
      * @return object instance
      */
     public static function fromId($id) {
-        $class = get_called_class();
+        $class = static::getCacheClassName();
         
         $object = self::getFromCache($class, $id);
         if($object) return $object;
         
-        $object = new static($id);
+        $object = static::createFactory($id);
         self::$objectCache[$class][$id] = $object;
         return $object;
     }
@@ -155,10 +183,10 @@ class DBObject {
      * @return object instance
      */
     public static function fromData($id, $data = null, $transforms = array()) {
-        $class = get_called_class();
+        $class = static::getCacheClassName();
         
         $object = self::getFromCache($class, $id);
-        if(!$object) $object = new static(null, $data);
+        if(!$object) $object = static::createFactory(null, $data);
         
         $object->fillFromDBData($data, $transforms);
         
@@ -201,24 +229,29 @@ class DBObject {
             $group = null;
             
             if(is_array($criteria)) {
+                if(array_key_exists('query',  $criteria)) $query  = $criteria['query'];
                 if(array_key_exists('where',  $criteria)) $where  = $criteria['where'];
                 if(array_key_exists('order',  $criteria)) $order  = $criteria['order'];
                 if(array_key_exists('group',  $criteria)) $group  = $criteria['group'];
                 if(array_key_exists('count',  $criteria)) $count  = (int)$criteria['count'];
+                if(array_key_exists('limit',  $criteria)) $count  = (int)$criteria['limit'];
                 if(array_key_exists('offset', $criteria)) $offset = (int)$criteria['offset'];
             }else $where = $criteria;
-                
-            if($where) $query .= ' WHERE '.$where;
-            if($group) $query .= ' GROUP BY '.$group;
-            if($order) $query .= ' ORDER BY '.$order;
+            
+            if($where)  $query .= ' WHERE '    . $where;
+            if($group)  $query .= ' GROUP BY ' . $group;
+            if($order)  $query .= ' ORDER BY ' . $order;
+            if($count)  $query .= ' LIMIT '    . $count;
+            if($offset) $query .= ' OFFSET '   . $offset;
         }
         
         // Look for primary key(s) name(s)
         $pk = array();
-        foreach(static::getDataMap() as $k => $d)
-            if(array_key_exists('primary', $d) && $d['primary'])
+        foreach(static::getDataMap() as $k => $d) {
+            if(array_key_exists('primary', $d) && $d['primary']) {
                 $pk[] = $k;
-        
+            }
+        }
         // Prepare query depending on contents
         if(preg_match('`\s+[^\s]+\s+IN\s+:[^\s]+\b`i', $query)) {
             $statement = DBI::prepareInQuery($query, array_filter($placeholders, 'is_array'));
@@ -232,12 +265,6 @@ class DBObject {
         // Fetch records, register them with id build from primary key(s) value(s)
         $records = $statement->fetchAll();
         $objects = array();
-        $page = null;
-        
-        if($count) {
-            $page = (object)array('total_count' => count($records), 'entries' => array());
-            $records = array_slice($records, $offset, $count);
-        }
         
         foreach($records as $r) {
             $id = array();
@@ -258,11 +285,7 @@ class DBObject {
             });
         }
         
-        if(!$page) return $objects;
-        
-        $page->entries = $objects;
-        
-        return $page;
+        return $objects;
     }
     
     /**
@@ -288,7 +311,17 @@ class DBObject {
         }
         
         // Cache object
-        self::$objectCache[get_called_class()][$this->id] = $this;
+        self::$objectCache[static::getCacheClassName()][$this->id] = $this;
+    }
+    
+    /**
+     * Add to database
+     */
+    public function insert() {
+        // Insert object
+        $this->insertRecord($this->toDBData());
+        // Cache object
+        self::$objectCache[static::getCacheClassName()][$this->id] = $this;
     }
     
     /**
@@ -301,7 +334,7 @@ class DBObject {
         
         // Remove from database
         $s = DBI::prepare('DELETE FROM '.static::getDBTable().' WHERE id = :id');
-        $s->execute(array('id' => $this->id));
+        $s->execute(array(':id' => $this->id));
         
         // Remove from object cache
         self::purgeCache(get_called_class(), $this->id);
@@ -334,11 +367,11 @@ class DBObject {
                     case 'uint':
                         $value = (int)$value;
                         break;
-                    
+                        
                     case 'float':
                         $value = (float)$value;
                         break;
-                    
+                        
                     case 'datetime':
                     case 'date':
                         if(!$value && array_key_exists('null', $dfn) && $dfn['null']) {
@@ -349,11 +382,11 @@ class DBObject {
                             $value = (int)strtotime($value); // UNIX timestamp
                         }
                         break;
-                    
+                        
                     case 'time':
                         $value = (int)(strtotime($value) % (24 * 3600)); // Offset since 0h00
                         break;
-                    
+                        
                     case 'bool':
                         $value = (bool)$value;
                         break;
@@ -437,15 +470,15 @@ class DBObject {
                     case 'datetime':
                         $value = date('Y-m-d H:i:s', $value); // UNIX timestamp
                         break;
-                    
+                        
                     case 'date':
                         $value = date('Y-m-d', $value); // UNIX timestamp
                         break;
-                    
+                        
                     case 'time':
                         $value = date('H:i:s', $value); // Offset since 0h00
                         break;
-                    
+                        
                     case 'bool':
                         $value = $value ? '1' : '0';
                         break;
@@ -483,9 +516,13 @@ class DBObject {
         $table = static::getDBTable();
         
         // Remove autoinc keys
-        foreach(static::$dataMap as $field_name => $dfn)
-            if(array_key_exists('autoinc', $dfn) && $dfn['autoinc'])
-                if(array_key_exists($field_name, $data)) unset($data[$field_name]);
+        foreach(static::$dataMap as $field_name => $dfn) {
+            if(array_key_exists('autoinc', $dfn) && $dfn['autoinc']) {
+                if(array_key_exists($field_name, $data)) {
+                    unset($data[$field_name]);
+                }
+            }
+        }
         
         // Insert data
         $values = array();
@@ -495,10 +532,11 @@ class DBObject {
         
         // Get primary key(s) back
         $pks = array();
-        foreach(static::$dataMap as $field_name => $dfn)
-            if(array_key_exists('autoinc', $dfn) && $dfn['autoinc'])
+        foreach(static::$dataMap as $field_name => $dfn) {
+            if(array_key_exists('autoinc', $dfn) && $dfn['autoinc']) {
                 $pks[$field_name] = DBI::lastInsertId($table.'_'.$field_name.'_seq');
-        
+            }
+        }
         return $pks;
     }
     
@@ -516,7 +554,7 @@ class DBObject {
         $values = array();
         
         // Filter
-        $key_names = is_array($key_name) ? $key_name : array($key_name);
+        $key_names = (array) $key_name;
         $key_names = array_filter($key_names);
         
         // Build update pairs
@@ -536,6 +574,15 @@ class DBObject {
     }
     
     /**
+     * Allows overloaded creation of an object based off of it's properties
+     * 
+     * @return type DBObject based object
+     */
+    public static function createFactory($id = null, $data = null) {
+        return new static($id, $data);
+    }
+    
+    /**
      * Allows to get the class name
      * 
      * @return type String: the class name
@@ -545,11 +592,24 @@ class DBObject {
     }
     
     /**
+     * Allows overloading the DBObject cache class name
+     * 
+     * @return type String: the class name that should be used for caching
+     */
+    public static function getCacheClassName(){
+        return static::getClassName();
+    }
+    
+    /**
      * String caster
      * 
      * @return string
      */
     public function __toString() {
         return static::getClassName().'#'.($this->id ? $this->id : 'unsaved');
+    }
+
+    public function getViewName() {
+        return strtolower(self::getDBTable()) . 'view';
     }
 }

@@ -76,10 +76,10 @@ class ConfigMissingParameterException extends DetailedException {
      * 
      * @param string $key name of the missing parameter
      */
-    public function __construct($key) {
+    public function __construct($key,$notetoadmin = '') {
         parent::__construct(
             'config_missing_parameter', // Message to give to the user
-            array('parameter' => $key) // Details to log
+            array('parameter' => $key, 'noteToAdmin' => $notetoadmin) // Details to log
         );
     }
 }

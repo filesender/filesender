@@ -253,8 +253,11 @@ $(function() {
         subject: send_voucher.find('input[name="subject"]'),
         message: send_voucher.find('textarea[name="message"]'),
         expires: send_voucher.find('input[name="expires"]'),
+        get_a_link: send_voucher.find('input[name="get_a_link"]'),
+        can_only_send_to_me: send_voucher.find('input[name="can_only_send_to_me"]'),
         options: {guest: {}, transfer: {}},
         sendbutton: send_voucher.find('.send'),
+        message_can_not_contain_urls: send_voucher.find('textarea[name="message_can_not_contain_urls"]'),
     };
     send_voucher.find('.guest_options input').each(function() {
         var i = $(this);
@@ -305,6 +308,12 @@ $(function() {
         
         filesender.ui.recipients.addFromInput($(this));
     });
+
+    // validate message as it is typed
+    window.filesender.ui.handleFlagInvalidOnRegexMatch(
+        filesender.ui.nodes.message,
+        $('#message_can_not_contain_urls'),
+        filesender.config.message_can_not_contain_urls_regex );
     
     // Bind picker
     filesender.ui.nodes.expires.datepicker({
@@ -315,11 +324,24 @@ $(function() {
         filesender.ui.nodes.expires.datepicker('setDate', $(this).val());
     });
     
-    // Make options label toggle checkboxes
-    send_voucher.find('.basic_options label, .advanced_options label').on('click', function() {
-        var checkbox = $(this).closest('.fieldcontainer').find(':checkbox');
-        checkbox.prop('checked', !checkbox.prop('checked'));
-    }).css('cursor', 'pointer');
+    /**
+     * It doesn't make sense to allow only send to me when the guest is getting a link
+     * This is a function so it can be called on click and also right now to update the UI.
+     */
+    var get_a_link_updates = function() {
+        var checked = filesender.ui.nodes.get_a_link.is(':checked');
+        var onlyToMe = filesender.ui.nodes.can_only_send_to_me;
+        if( checked ) {
+            onlyToMe.prop('checked', false );
+            onlyToMe.prop('disabled', true);
+        } else {
+            onlyToMe.prop('disabled', false);
+        }
+    }
+    filesender.ui.nodes.get_a_link.on('click', function() {
+        get_a_link_updates();
+    });
+    get_a_link_updates();
     
     // Bind advanced options display toggle
     send_voucher.find('.toggle_advanced_options').on('click', function() {

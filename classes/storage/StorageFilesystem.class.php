@@ -38,17 +38,17 @@ class StorageFilesystem {
     /**
      * Storage path
      */
-    private static $path = null;
+    protected static $path = null;
     
     /**
      * Folder hashing
      */
-    private static $hashing = null;
+    protected static $hashing = null;
     
     /**
      * Storage setup, loads options from config
      */
-    private static function setup() {
+    protected static function setup() {
         if(!is_null(self::$path)) return;
         
         // Check required config parameters
@@ -75,11 +75,11 @@ class StorageFilesystem {
      * 
      * @return string
      */
-    private static function getFilesystem($what) {
+    protected static function getFilesystem($what) {
         self::setup();
         
         // Get File path in case we got a File object
-        if($what instanceof File) $what = self::buildPath($what);
+        if($what instanceof File) $what = static::buildPath($what);
         
         // Check argument
         if(!is_string($what) || (!is_dir($what) && !is_file($what)))
@@ -96,7 +96,10 @@ class StorageFilesystem {
         
         // Output should be similar to standard "du" output, that is with results on last line and filesystem name in first column
         $line = array_pop($out);
-        if(!preg_match('`^(/[^\s]+)`', $line, $match))
+        // We match local and remove paths like the following examples:
+        //      /something
+        //      nfsserver:/path
+        if(!preg_match('`^(/[^\s]+|[^:\s]+:[^\s]+)`', $line, $match))
             throw new StorageFilesystemBadResolverOutputException($cmd, $line);
         
         return $match[1];
@@ -111,12 +114,18 @@ class StorageFilesystem {
      */
     public static function canStore(Transfer $transfer) {
         self::setup();
-        
         $filesystems = array();
+
+        // If the user is doing something with FUSE
+        // then they might not want to check disk space.
+        if( Config::get('storage_filesystem_ignore_disk_full_check')) {
+            return true;
+        }
+        
         
         // Organize files by their storage path, get free space for each path
         foreach($transfer->files as $file) {
-            $path = self::buildPath($file);
+            $path = static::buildPath($file);
             $filesystem = self::$hashing ? self::getFilesystem($path) : 'main';
             
             if(!array_key_exists($filesystem, $filesystems)) $filesystems[$filesystem] = array(
@@ -130,13 +139,13 @@ class StorageFilesystem {
         // Substract space reserved by uploading transfers (except what is already done) from free space
         foreach(Transfer::allUploading() as $transfer) {
             foreach($transfer->files as $file) {
-                $path = self::buildPath($file);
+                $path = static::buildPath($file);
                 $filesystem = self::$hashing ? self::getFilesystem($path) : 'main';
                 
                 if(!array_key_exists($filesystem, $filesystems)) continue; // Not in a filesystem related to new transfer
                 
                 $remaining_to_upload = $file->size;
-                if(file_exists($path.$file->uid)) $remaining_to_upload -= filesize($path.$file->uid);
+                if(file_exists($path.static::buildFilename($file))) $remaining_to_upload -= filesize($path.static::buildFilename($file));
                 
                 $filesystems[$filesystem]['free_space'] -= $remaining_to_upload;
             }
@@ -162,14 +171,15 @@ class StorageFilesystem {
      * 
      * @return array
      */
-    private static function getHashedPaths($level, $prefix = '') {
+    protected static function getHashedPaths($level, $prefix = '') {
         $paths = array();
         
         for($i=0; $i<=15; $i++) {
             $p = $prefix.dechex($i);
             if($level > 1) {
-                foreach(self::getHashedPaths($level - 1, $p) as $sp)
+                foreach(self::getHashedPaths($level - 1, $p) as $sp) {
                     $paths[] = $p.'/'.$sp;
+                }
             } else {
                 $paths[] = $p;
             }
@@ -202,17 +212,23 @@ class StorageFilesystem {
         }
         
         // Get space usage for each possible path
+        // but if the path isn't used yet, don't try to df that path
         $filesystems = array();
         foreach($paths as $path) {
-            $filesystem = self::getFilesystem(self::$path.$path);
-            
-            if(!array_key_exists($filesystem, $filesystems)) $filesystems[$filesystem] = array(
-                'total_space' => disk_total_space(self::$path.$path),
-                'free_space' => disk_free_space(self::$path.$path),
-                'paths' => array()
-            );
-            
-            $filesystems[$filesystem]['paths'][] = $path;
+            $subdirPath = self::$path.$path;
+            if( is_dir($subdirPath)) {
+                $filesystem = self::getFilesystem( $subdirPath );
+                
+                if(!array_key_exists($filesystem, $filesystems)) {
+                    $filesystems[$filesystem] = array(
+                        'total_space' => disk_total_space( $subdirPath ),
+                        'free_space'  => disk_free_space(  $subdirPath ),
+                        'paths' => array()
+                    );
+                }
+                
+                $filesystems[$filesystem]['paths'][] = $path;
+            }
         }
         
         // Sort by filesystem name
@@ -220,15 +236,27 @@ class StorageFilesystem {
         
         return $filesystems;
     }
-    
+  
     /**
-     * Build file storage path (without file uid)
+     * Build file storage name (without base path)
+     * 
+     * @param File $file
+     * 
+     * @return string filename
+     */
+    public static function buildFilename(File $file) {
+        self::setup();
+        return $file->uid;
+    }
+  
+    /**
+     * Build file storage path (without filename)
      * 
      * @param File $file
      * 
      * @return string path
      */
-    private static function buildPath(File $file) {
+    public static function buildPath(File $file) {
         self::setup();
         
         $path = self::$path;
@@ -261,6 +289,9 @@ class StorageFilesystem {
                     $p .= '/';
                 }
             }
+
+            // caller is expecting the subpath to be in the return value
+            $path = $p;
         }
         
         return $path;
@@ -281,7 +312,7 @@ class StorageFilesystem {
     public static function readChunk(File $file, $offset, $length) {
         $chunk_size = (int)Config::get('download_chunk_size');
         
-        $file_path = self::buildPath($file).$file->uid;
+        $file_path = static::buildPath($file).static::buildFilename($file);
         
         if(!file_exists($file_path))
             throw new StorageFilesystemFileNotFoundException($file_path, $file);
@@ -319,39 +350,40 @@ class StorageFilesystem {
     public static function writeChunk(File $file, $data, $offset = null) {
         $chunk_size = strlen($data);
         
-        $path = self::buildPath($file);
-        
+        $path = static::buildPath($file);
+
         $free_space = disk_free_space($path);
         if($free_space <= $chunk_size)
             throw new StorageNotEnoughSpaceLeftException($chunk_size);
         
-        $file_path = $path.$file->uid;
+        $file_path = $path.static::buildFilename($file);
         
         // Open file for writing
         $mode = file_exists($file_path) ? 'rb+' : 'wb+'; // Create file if it does not exist
         if($fh = fopen($file_path, $mode)) {
-            if(flock($fh, LOCK_EX)) { // Try to lock for writing
-                // Sets position of file pointer
-                if($offset) {
-                    fseek($fh, $offset); // Known offset
-                }else if(is_null($offset)) {
-                    fseek($fh, 0, SEEK_END); // End of file if no offset given
-                }
-                
-                // Get offset
-                $offset = ftell($fh);
-                
-                // Try to write chunk
-                $written = fwrite($fh, $data);
-                
-                fflush($fh); // Flush file buffer before releasing lock
-                
-                flock($fh, LOCK_UN); // Unlock file
-            } else throw new StorageFilesystemCannotWriteException($file_path.' (lock)', $file);
-            
+            // Sets position of file pointer
+            if($offset) {
+                fseek($fh, $offset); // Known offset
+            }else if(is_null($offset)) {
+                fseek($fh, 0, SEEK_END); // End of file if no offset given
+            }
+
+            // Get offset
+            $offset = ftell($fh);
+
+            // Try to write chunk
+            $written = fwrite($fh, $data, $chunk_size);
+
             // Close writer
-            fclose($fh);
-            
+            if (!fclose($fh)) {
+                throw new StorageFilesystemCannotWriteException($file_path.' (lock)', $file);
+            }
+
+            if( $chunk_size != $written ) {
+                Logger::info('writeChunk() Can not write to : '.$chunkFile);
+                throw new StorageFilesystemCannotWriteException('writeChunk( '.$file_path, $file, $data, $offset, $written );
+            }
+
             return array(
                 'offset' => $offset,
                 'written' => $written
@@ -367,7 +399,7 @@ class StorageFilesystem {
     public static function completeFile(File $file) {
         self::setup();
         
-        $file_path = self::buildPath($file).$file->uid;
+        $file_path = static::buildPath($file).static::buildFilename($file);
         clearstatcache(true, $file_path);
         $size = filesize($file_path);
 
@@ -388,7 +420,7 @@ class StorageFilesystem {
      * @throws StorageFilesystemCannotDeleteException
      */
     public static function deleteFile(File $file) {
-        $file_path = self::buildPath($file).$file->uid;
+        $file_path = static::buildPath($file).static::buildFilename($file);
         
         if(!file_exists($file_path)) return;
         
@@ -431,7 +463,7 @@ class StorageFilesystem {
      * @return string hex digest
      */
     public static function getDigest(File $file) {
-        $file_path = self::buildPath($file).$file->uid;
+        $file_path = static::buildPath($file).static::buildFilename($file);
         
         return sha1_file($file_path);
     }
@@ -456,7 +488,7 @@ class StorageFilesystem {
      * @throws StorageFilesystemOutOfSpaceException
      */
     public static function storeWholeFile(File $file, $source_path) {
-        $path = self::buildPath($file);
+        $path = static::buildPath($file);
         
         // Do we have enough space ?
         $free_space = disk_free_space($path);
@@ -464,7 +496,7 @@ class StorageFilesystem {
             throw new StorageNotEnoughSpaceLeftException(filesize($source_path));
         
         // Build path ...
-        $file_path = $path.$file->uid;
+        $file_path = $path.static::buildFilename($file);
         
         // ... and copy file (removal up to caller), fail if couldn't copy
         if(!copy($source_path, $file_path))
@@ -486,6 +518,12 @@ class StorageFilesystem {
      * @return bool
      */
     public static function storeAsLink(File $file, $source_path) {
-        symlink($source_path, self::buildPath($file).$file->uid);
+        symlink($source_path, static::buildPath($file).static::buildFilename($file));
+    }
+
+    public static function getStream(File $file) {
+        $file_path = static::buildPath($file).static::buildFilename($file);
+        $stream = fopen($file_path,'r');
+        return $stream;
     }
 }
