@@ -51,6 +51,11 @@ class DatasetTest extends CommonUnitTestCase {
      */
 
     protected function setUp() {
+        if (Config::get('db_type') == 'mysql' ) {
+            $this->markTestSkipped(
+                'The dataset test only runs on pgsql at the moment.'
+            );
+        }        
         echo "DatasetTest@ " . date("Y-m-d H:i:s") . "\n\n";
         Config::localOverride('db_database','filesenderdataset' );
 
