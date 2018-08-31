@@ -27,6 +27,8 @@ install:
 - mkdir ./log
 - mkdir ./tmp
 - mkdir ./files
+# FIXME: we know that pgsql works, no need to waste cycles while working out mariadb setup.
+- sh -c "if [ '$DB' = 'pgsql' ]; then exit 1; fi "
 - sh -c "if [ '$DB' = 'pgsql' ]; then ./travis/scripts/postgresql-setup.sh ; fi "
 - sh -c "if [ '$DB' = 'mysql' ]; then ./travis/scripts/mariadb-setup.sh ; fi "
 - "./travis/scripts/simplesamlphp-setup.sh"
