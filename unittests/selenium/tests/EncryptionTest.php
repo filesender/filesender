@@ -1,6 +1,6 @@
 <?php
 
-require_once 'unittests/selenium_tests/SeleniumTest.php';
+require_once 'unittests/selenium/SeleniumTest.php';
 
 class EncryptionTest extends SeleniumTest {
 
@@ -47,8 +47,9 @@ class EncryptionTest extends SeleniumTest {
         $this->assertContains('Success', $this->byCssSelector('.ui-dialog-title')->text());
         
         // check db for encryption
-        $statement = DBI::prepare('SELECT * FROM files where \'a\'=:a ORDER BY id DESC LIMIT 1');
-        $statement->execute(array('a' => 'a'));
+        $filesTable = call_user_func('File::getDBTable');
+        $statement = DBI::prepare('SELECT * FROM ' . $filesTable . ' ORDER BY id DESC LIMIT 1');
+        $statement->execute(array());
         $data = $statement->fetch();
         
         $encrypted_succes = false;
@@ -62,7 +63,7 @@ class EncryptionTest extends SeleniumTest {
     {
         ${"temp"} = $this->execute(array('script' => "var file_upload_container = document.getElementsByClassName('file_selector')[0];file_upload_container.style.display='block';", 'args' => array()));
 
-        $test1_file = "unittests/selenium_tests/assets/124bytes.txt";
+        $test1_file = "unittests/selenium/assets/124bytes.txt";
         $test1_file_data = file_get_contents($test1_file);
         $this->sendKeys($this->byCssSelector(".file_selector input[name=\"files\"]"), $test1_file);
 

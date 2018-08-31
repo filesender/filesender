@@ -145,8 +145,8 @@ $config['transfer_options'] = array(
 
 		// Never allow a recipient to receive an email once their download is complete
 		'enable_recipient_email_download_complete' => array(
-			'available' => false,
-			'advanced' => false,
+			'available' => true,
+			'advanced' => true,
 			'default' => false
 		),
 		

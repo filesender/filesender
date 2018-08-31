@@ -1,6 +1,6 @@
 <?php
 
-require_once 'unittests/selenium_tests/SeleniumTest.php';
+require_once 'unittests/selenium/SeleniumTest.php';
 
 class InvalidExtensionsTest extends SeleniumTest
 {
@@ -49,7 +49,7 @@ class InvalidExtensionsTest extends SeleniumTest
         ${"temp"} = $this->execute(array(  'script' => "var file_upload_container = document.getElementsByClassName('file_selector')[0];file_upload_container.style.display='block';", 'args'   => array() ));
 
         $test_file = sys_get_temp_dir().DIRECTORY_SEPARATOR.'invalidextension.'.$file_extension;
-        copy("unittests/selenium_tests/assets/124bytes.txt", $test_file);
+        copy("unittests/selenium/assets/124bytes.txt", $test_file);
         $this->sendKeys($this->byCssSelector(".file_selector input[name=\"files\"]"), $test_file);
 
 

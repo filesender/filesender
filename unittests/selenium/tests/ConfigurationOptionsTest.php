@@ -1,6 +1,6 @@
 <?php
 
-require_once 'unittests/selenium_tests/SeleniumTest.php';
+require_once 'unittests/selenium/SeleniumTest.php';
 
 class ConfigurationOptionsTest extends SeleniumTest {
 
@@ -21,19 +21,19 @@ class ConfigurationOptionsTest extends SeleniumTest {
         sleep(10);
 
         $this->checkCheckBox('add_me_to_recipients', false);
-       // sleep(2);
+        sleep(2);
         $this->checkCheckBox('email_me_on_expire', true);
-        //sleep(2);
+        sleep(2);
         $this->checkCheckBox('email_daily_statistics', true);
-        //sleep(2);
+        sleep(2);
         $this->checkCheckbox('email_me_copies', false);
-        //sleep(2);
+        sleep(2);
         $this->checkCheckbox('email_upload_complete', true);
-        //sleep(2);
+        sleep(2);
         $this->checkCheckbox('email_download_complete', true);
-        //sleep(2);
+        sleep(2);
         $this->checkCheckbox('enable_recipient_email_download_complete', false);
-        //sleep(2);
+        sleep(2);
 
         // check expired
         if ($this->isCheckBoxSelected('[name="add_me_to_recipients"]')) {
@@ -164,11 +164,11 @@ class ConfigurationOptionsTest extends SeleniumTest {
     private function uploadFiles() {
         ${"temp"} = $this->execute(array('script' => "var file_upload_container = document.getElementsByClassName('file_selector')[0];file_upload_container.style.display='block';", 'args' => array()));
 
-        $test1_file = "unittests/selenium_tests/assets/124bytes.txt";
+        $test1_file = "unittests/selenium/assets/124bytes.txt";
         $test1_file_data = file_get_contents($test1_file);
         $this->sendKeys($this->byCssSelector(".file_selector input[name=\"files\"]"), $test1_file);
 
-        $test2_file = "unittests/selenium_tests/assets/125bytes.txt";
+        $test2_file = "unittests/selenium/assets/125bytes.txt";
         $test2_file_data = file_get_contents($test2_file);
         $this->sendKeys($this->byCssSelector(".file_selector input[name=\"files\"]"), $test2_file);
 

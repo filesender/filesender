@@ -17,7 +17,7 @@ docker run -d -p 4444:4444 \
 
 This will also let you login over VNC to see the browser run in the test session
 which is extremely handy when you are developing new unit tests. The password
-to connect to vnc is the word secret by default.
+to connect to vnc is the word _secret_ by default.
 
 ```
 vncviewer localhost:5902
