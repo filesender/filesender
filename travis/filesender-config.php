@@ -247,6 +247,18 @@ $config['db_database']  =       'filesender';   // String, database name
 $config['db_username']  =       'postgres';     // String, database username
 $config['db_password']  =       'password';     // String, database password
 
+$usemysql=0;
+
+if( $usemysql ) {
+
+    $config["db_type"]      =       'mysql';        // String, pgsql or mysql
+    $config['db_host']      =       '127.0.0.1';    // String, database host
+    $config['db_database']  =       'filesender';   // String, database name
+    $config['db_username']  =       'travis';       // String, database username
+    $config['db_password']  =       'password';     // String, database password
+}
+
+
 // ---------------------------------------------
 //              SAML configuration
 // ---------------------------------------------
