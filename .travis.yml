@@ -84,14 +84,10 @@ matrix:
       env:  DB=pgsql TESTSUITE=core      TRAVIS_SAUCE_CONNECT=false SAUCE_USERNAME= 
     - name: pgsql-selenium1
       env:  DB=pgsql TESTSUITE=selenium  SAUCE_TUNNEL_IDENTIFIER=$TRAVIS_JOB_NUMBER SAUCE_DONT_VERIFY_CERTS=1
-    - name: pgsql-selenium2
-      env:  DB=pgsql TESTSUITE=selenium2 SAUCE_TUNNEL_IDENTIFIER=$TRAVIS_JOB_NUMBER SAUCE_DONT_VERIFY_CERTS=1
     - name: pgsql-dataset
       env:  DB=pgsql TESTSUITE=dataset   TRAVIS_SAUCE_CONNECT=false SAUCE_USERNAME= 
     - name: mysql-core 
       env:  DB=mysql TESTSUITE=core      TRAVIS_SAUCE_CONNECT=false SAUCE_USERNAME= 
     - name: mysql-selemium1
       env:  DB=mysql TESTSUITE=selenium  SAUCE_TUNNEL_IDENTIFIER=$TRAVIS_JOB_NUMBER SAUCE_DONT_VERIFY_CERTS=1
-    - name: mysql-selemium2
-      env:  DB=mysql TESTSUITE=selenium2 SAUCE_TUNNEL_IDENTIFIER=$TRAVIS_JOB_NUMBER SAUCE_DONT_VERIFY_CERTS=1
 

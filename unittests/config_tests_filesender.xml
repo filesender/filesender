@@ -54,21 +54,8 @@
             <file>tests/clientlog/ClientlogTest.php</file>    <!-- Success -->
         </testsuite>
 
-        <!--
-            There are two selenium directories so that the tests can
-            run in parallel on Travis CI / Sauce connect.
-
-            As time goes by and new tests are added it is likely that
-            tests might have to move from one subdirectory into the
-            other to equal out the build times of the two parallel
-            runs that complete both selenium and selenium2.
-        -->
         <testsuite name="selenium">
             <directory>./selenium/tests</directory>
-        </testsuite>
-
-        <testsuite name="selenium2">
-            <directory>./selenium2/tests</directory>
         </testsuite>
 
         <testsuite name="dataset" >
