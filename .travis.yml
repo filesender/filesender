@@ -8,9 +8,6 @@ services:
   - mariadb
 addons:
   mariadb: '10.2'
-  sauce_connect:
-    username: "$SAUCE_USERNAME"
-    no-ssl-bump-domains: file_sender.app
   hosts:
   - file_sender.app
   jwt:
@@ -75,9 +72,23 @@ notifications:
   email: false
 ##
 ## I have used DB as pgsql and mysql as this is what filesender uses for config db_type
-env:
-- DB=pgsql TESTSUITE=core     SAUCE_TUNNEL_IDENTIFIER=$TRAVIS_JOB_NUMBER SAUCE_DONT_VERIFY_CERTS=1
-- DB=pgsql TESTSUITE=selenium SAUCE_TUNNEL_IDENTIFIER=$TRAVIS_JOB_NUMBER SAUCE_DONT_VERIFY_CERTS=1
-- DB=pgsql TESTSUITE=dataset  SAUCE_TUNNEL_IDENTIFIER=$TRAVIS_JOB_NUMBER SAUCE_DONT_VERIFY_CERTS=1
-- DB=mysql TESTSUITE=core     SAUCE_TUNNEL_IDENTIFIER=$TRAVIS_JOB_NUMBER SAUCE_DONT_VERIFY_CERTS=1
-- DB=mysql TESTSUITE=selenium SAUCE_TUNNEL_IDENTIFIER=$TRAVIS_JOB_NUMBER SAUCE_DONT_VERIFY_CERTS=1
+matrix:
+  include:
+    - name: pgsql-core
+      env:  DB=pgsql TESTSUITE=core     SAUCE_TUNNEL_IDENTIFIER=$TRAVIS_JOB_NUMBER SAUCE_DONT_VERIFY_CERTS=1
+    - name: pgsql-selenium1
+      env:  DB=pgsql TESTSUITE=selenium SAUCE_TUNNEL_IDENTIFIER=$TRAVIS_JOB_NUMBER SAUCE_DONT_VERIFY_CERTS=1
+      addons:
+        sauce_connect:
+          username: "$SAUCE_USERNAME"
+          no-ssl-bump-domains: file_sender.app
+    - name: pgsql-dataset
+      env:  DB=pgsql TESTSUITE=dataset  SAUCE_TUNNEL_IDENTIFIER=$TRAVIS_JOB_NUMBER SAUCE_DONT_VERIFY_CERTS=1
+    - name: mysql-core 
+      env:  DB=mysql TESTSUITE=core     SAUCE_TUNNEL_IDENTIFIER=$TRAVIS_JOB_NUMBER SAUCE_DONT_VERIFY_CERTS=1
+    - name: mysql-selemium1
+      env:  DB=mysql TESTSUITE=selenium SAUCE_TUNNEL_IDENTIFIER=$TRAVIS_JOB_NUMBER SAUCE_DONT_VERIFY_CERTS=1
+      addons:
+         sauce_connect:
+           username: "$SAUCE_USERNAME"
+           no-ssl-bump-domains: file_sender.app
