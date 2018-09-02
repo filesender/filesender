@@ -42,7 +42,7 @@
     syntaxCheck="false"
 >
     <testsuites>
-        <testsuite name="FileSenderUtilities" >
+        <testsuite name="core" >
             <file>tests/dbs/DBsTest.php</file>              <!-- Success -->
             <file>tests/utilities/UtilitiesTest.php</file>  <!-- Success -->
             <file>tests/auditlog/AuditLogTest.php</file>    <!-- Failed -->

@@ -31,7 +31,7 @@ install:
 - sh -c "if [ '$DB' = 'mysql' ]; then ./travis/scripts/mariadb-setup.sh ; fi "
 - "./travis/scripts/simplesamlphp-setup.sh"
 - php scripts/upgrade/database.php
-- php scripts/upgrade/database.php --db_database filesenderdataset
+- sh -c "if [ '$TESTSUITE' = 'dataset' ]; then php scripts/upgrade/database.php --db_database filesenderdataset ; fi "
 before_script:
 - sudo apt-get update
 - sudo apt-get install curl
@@ -70,11 +70,14 @@ after_failure:
 - sudo cat /var/log/apache2/access.log
 - find ./log -type f -exec cat {} +
 script:
-- phpunit --configuration ./unittests/config_tests_filesender.xml
+- phpunit --configuration ./unittests/config_tests_filesender.xml --testsute=$TESTSUITE
 notifications:
   email: false
 ##
 ## I have used DB as pgsql and mysql as this is what filesender uses for config db_type
 env:
-- DB=pgsql SAUCE_TUNNEL_IDENTIFIER=$TRAVIS_JOB_NUMBER SAUCE_DONT_VERIFY_CERTS=1
-- DB=mysql SAUCE_TUNNEL_IDENTIFIER=$TRAVIS_JOB_NUMBER SAUCE_DONT_VERIFY_CERTS=1
+- DB=pgsql TESTSUITE=core     SAUCE_TUNNEL_IDENTIFIER=$TRAVIS_JOB_NUMBER SAUCE_DONT_VERIFY_CERTS=1
+- DB=pgsql TESTSUITE=selenium SAUCE_TUNNEL_IDENTIFIER=$TRAVIS_JOB_NUMBER SAUCE_DONT_VERIFY_CERTS=1
+- DB=pgsql TESTSUITE=dataset  SAUCE_TUNNEL_IDENTIFIER=$TRAVIS_JOB_NUMBER SAUCE_DONT_VERIFY_CERTS=1
+- DB=mysql TESTSUITE=core     SAUCE_TUNNEL_IDENTIFIER=$TRAVIS_JOB_NUMBER SAUCE_DONT_VERIFY_CERTS=1
+- DB=mysql TESTSUITE=selenium SAUCE_TUNNEL_IDENTIFIER=$TRAVIS_JOB_NUMBER SAUCE_DONT_VERIFY_CERTS=1
