@@ -31,7 +31,10 @@ install:
 - sh -c "if [ '$DB' = 'mysql' ]; then ./travis/scripts/mariadb-setup.sh ; fi "
 - "./travis/scripts/simplesamlphp-setup.sh"
 - php scripts/upgrade/database.php
-- php scripts/upgrade/database.php --db_database filesenderdataset
+- sh -c "if [ '$TESTSUITE' = 'dataset' ]; then php scripts/upgrade/database.php --db_database filesenderdataset ; fi "
+- echo "Sauce connect will start soon if this is a browser test session"
+- echo " otherwise it will close early, "
+- echo "  but that is ok as we will not need it in this VM "
 before_script:
 - sudo apt-get update
 - sudo apt-get install curl
@@ -65,16 +68,30 @@ before_script:
 - sudo cat /etc/apache2/sites-enabled/000-default.conf
 - sudo service apache2 restart
 #- curl -k https://localhost/filesender/info.php || sudo cat /var/log/apache2/*.log
+# stop the database we are not planning to use
+# to catch bad configurations that might use the wrong database by mistake
+- sh -c "if [ '$DB' = 'pgsql' ]; then sudo service mysql stop  ; fi "
+- sh -c "if [ '$DB' = 'mysql' ]; then sudo service postgresql stop  ; fi "
 after_failure:
 - sudo cat /var/log/apache2/error.log
 - sudo cat /var/log/apache2/access.log
 - find ./log -type f -exec cat {} +
 script:
-- phpunit --configuration ./unittests/config_tests_filesender.xml
+- phpunit --configuration ./unittests/config_tests_filesender.xml --testsuite=$TESTSUITE
 notifications:
   email: false
 ##
 ## I have used DB as pgsql and mysql as this is what filesender uses for config db_type
-env:
-- DB=pgsql SAUCE_TUNNEL_IDENTIFIER=$TRAVIS_JOB_NUMBER SAUCE_DONT_VERIFY_CERTS=1
-- DB=mysql SAUCE_TUNNEL_IDENTIFIER=$TRAVIS_JOB_NUMBER SAUCE_DONT_VERIFY_CERTS=1
+matrix:
+  include:
+    - name: pgsql-core
+      env:  DB=pgsql TESTSUITE=core      TRAVIS_SAUCE_CONNECT=false SAUCE_USERNAME= 
+    - name: pgsql-selenium1
+      env:  DB=pgsql TESTSUITE=selenium  SAUCE_TUNNEL_IDENTIFIER=$TRAVIS_JOB_NUMBER SAUCE_DONT_VERIFY_CERTS=1
+    - name: pgsql-dataset
+      env:  DB=pgsql TESTSUITE=dataset   TRAVIS_SAUCE_CONNECT=false SAUCE_USERNAME= 
+    - name: mysql-core 
+      env:  DB=mysql TESTSUITE=core      TRAVIS_SAUCE_CONNECT=false SAUCE_USERNAME= 
+    - name: mysql-selemium1
+      env:  DB=mysql TESTSUITE=selenium  SAUCE_TUNNEL_IDENTIFIER=$TRAVIS_JOB_NUMBER SAUCE_DONT_VERIFY_CERTS=1
+
