@@ -50,7 +50,7 @@ class Authentication extends DBObject {
         ),
         'saml_user_identification_uid' => array(
             'type' => 'string',
-            'size' => 255,
+            'size' => 170,
         ),
         'saml_user_identification_uid_hash' => array(
             'type' => 'string',
