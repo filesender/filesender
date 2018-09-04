@@ -74,7 +74,8 @@ DBI::beginTransaction();
 // Get data classes
 function getClasses() {
     $classes = array();
-    $classes[] = 'User'; // This must be before Authentication so users can be setup too
+	// Those classes must be before everything else and in this order to create filesbywhoview
+	array_push($classes, 'User', 'Authentication', 'Guest', 'Transfer');
     foreach(scandir(FILESENDER_BASE.'/classes/data') as $i) {
         if(substr($i, -10) != '.class.php') continue;
         $class = substr($i, 0, -10);
