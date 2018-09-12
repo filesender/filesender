@@ -36,7 +36,7 @@ Als u tussentijds het bestand <b><i>gewijzigd</i></b> hebt, hernoem het dan eers
     <li><strong>Maximum aantal bestanden per upload:</strong> &eacute;&eacute;n - om meerdere bestanden ineens te versturen, kunt u ze eerst samenpakken in een archiefbestand zoals zip</li>
     <li><strong>Maximum bestandsgrootte per upload, alleen gebruikmakend van Adobe Flash:</strong> {size:cfg:max_legacy_file_size}</li>
     <li><strong>Maximum bestandsgrootte per upload, via HTML5:</strong> {size:cfg:max_html5_upload_size}</li>
-    <li><strong>Maximum geldigheidsduur van bestanden en uitnodigingen:</strong> {cfg:default_days_valid} dagen</li>
+    <li><strong>Maximum geldigheidsduur van bestanden en uitnodigingen:</strong> {cfg:default_transfer_days_valid} dagen</li>
 </ul>
 
 <h4>Technische details</h4>
