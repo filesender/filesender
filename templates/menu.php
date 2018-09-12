@@ -54,7 +54,7 @@ $pagemenuitem = function($page) {
                     echo '<li><a href="'.Utilities::sanitizeOutput($url).'" id="topmenu_logoff">'.Lang::tr('logoff').'</a></li>';
             }else if (!Auth::isGuest()){
                 if(Config::get('auth_sp_embedded')) {
-                    $menupage('logon');
+                    $pagemenuitem('logon');
                 }else{
                     echo '<li><a href="'.Utilities::sanitizeOutput(AuthSP::logonURL()).'" id="topmenu_logon">'.Lang::tr('logon').'</a></li>';
                 }
