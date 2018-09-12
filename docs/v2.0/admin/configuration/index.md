@@ -219,7 +219,7 @@ A note about colours;
 ### site_name
 
 * __description:__ friendly name for your FileSender instance. Used in site header in browser and in email templates.
-* __mandatory:__ no. If you don't define it, every place it's used will initialise to NULL which results in an empty string being displayed.
+* __mandatory:__ no. Falls back to the default if not set.
 * __type:__ string
 * __default:__ FileSender
 * __available:__ since version 1.0
@@ -484,6 +484,16 @@ A note about colours;
 ### db_password
 
 * __description:__ database password
+* __mandatory:__ <span style="background-color:red">yes</span>
+* __type:__ string
+* __default:__ -
+* __available:__ since version 1.0
+* __1.x name:__
+* __comment:__
+
+### db_database
+
+* __description:__ database name
 * __mandatory:__ <span style="background-color:red">yes</span>
 * __type:__ string
 * __default:__ -
