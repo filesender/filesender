@@ -19,7 +19,7 @@ A note about colours;
 * [admin](#admin)
 * [site_name](#site_name)
 * [force_ssl](#force_ssl)
-* [auth_remote_signature_algorithm](#auth_remote_signature_algorithm)
+* [session_cookie_path](#session_cookie_path)
 * [default_timezone](#default_timezone)
 * [default_language](#default_language)
 * [site_url](#site_url)
@@ -140,7 +140,6 @@ A note about colours;
 ## Authentication
 
 * [auth_sp_type](#authsptype)
-* [session_cookie_path](#sessioncookiepath)
 * __SimpleSAMLphp__
 	* [auth_sp_saml_authentication_source](#authspsamlauthenticationsource)
 	* [auth_sp_saml_simplesamlphp_url](#authspsamlsimplesamlphpurl)
@@ -180,6 +179,7 @@ A note about colours;
 ## Webservices API
 
 * [auth_remote_application_enabled](#authremoteapplicationenabled)
+* [auth_remote_signature_algorithm](#auth_remote_signature_algorithm)
 * [remote_applications](#remoteapplications)
 * [auth_remote_user_autogenerate_secret](#authremoteuserautogeneratesecret)
 * [rest_allow_jsonp](#restallowjsonp)
@@ -244,14 +244,6 @@ A note about colours;
 * __comment:__ Testing, ticket #1198
 * __comment:__ Be careful to include the entire URL path, like `http://yourdomain.dom/`!
 * __comment:__ When do you set this?  If you use SimpleSAMLphp for authentication there is one common scenario where you need to set this parameter: the URL space for your FileSender instance and your SimpleSAMLphp instance do not overlap.  This happens when you have multiple FileSender instances (one production, one beta) sharing the same SimpleSAMLphp installation. For example: `http://yourdomain.dom/filesender-beta` and `http://yourdomain.dom/simplesamlphp`.  Because SimpleSAMLphp and FileSender are both written in PHP they use the same mechanism for session identifiers.  They can share session identifiers but only if this is allowed by the session_cookie_path.  When you log on with SimpleSAMLphp a session identifier is created.  If this can not be shared with your FileSender instance you will notice a user can log on, only to be presented with the same logon form again.  A silent failure.  In this scenario you will either need to ensure your SimpleSAMLphp instance is available within the FileSender URL space, or you set the session cookie parameter to for example `http://yourdomain.dom/`.  Another workaround is to use memcache for SimpleSAMLphp's session identifiers but that would mean an extra package on your server.
-
-### auth_remote_signature_algorithm
-
-* __description:__ <span style="background-color:orange">which remote signature algorithm to use.  Used in API? Should be in API section probably?  Which other permissible values?</span>
-* __mandatory:__ no
-* __type:__ string, permissible values: "sha1".
-* __default:__ "sha1"
-* __available:__ since version 2.0
 
 ### default_timezone
 
@@ -1688,6 +1680,14 @@ $config['log_facilities'] =
 * __available:__ since version 2.0
 * __1.x name:__
 * __comment:__ <span style="background-color:orange">needs to be elaborated more.  Consequences of setting to true</span>
+
+### auth_remote_signature_algorithm
+
+* __description:__ <span style="background-color:orange">which remote signature algorithm to use.  Which other permissible values?</span>
+* __mandatory:__ no
+* __type:__ string, permissible values: "sha1".
+* __default:__ "sha1"
+* __available:__ since version 2.0
 
 ### remote_applications
 
