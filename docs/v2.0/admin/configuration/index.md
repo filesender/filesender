@@ -57,51 +57,51 @@ A note about colours;
 
 ## Language and internationalisation
 
-* [lang_browser_enabled](#langbrowserenabled)
-* [lang_url_enabled](#langurlenabled)
-* [lang_userpref_enabled](#languserprefenabled)
-* [lang_selector_enabled](#langselectorenabled)
-* [lang_save_url_switch_in_userpref](#langsaveurlswitchinuserpref)
+* [lang_browser_enabled](#lang_browser_enabled)
+* [lang_url_enabled](#lang_url_enabled)
+* [lang_userpref_enabled](#lang_userpref_enabled)
+* [lang_selector_enabled](#lang_selector_enabled)
+* [lang_save_url_switch_in_userpref](#lang_save_url_switch_in_userpref)
 
 ## Email
 
-* [email_from](#emailfrom)
-* [email_from_name](#emailfromname)
-* [email_reply_to](#emailreplyto)
-* [email_reply_to_name](#emailreplytoname)
-* [email_return_path](#emailreturnpath)
-* [email_use_html](#emailusehtml)
-* [email_newline](#emailnewline)
-* [relay_unknown_feedbacks](#relayunknownfeedbacks)
+* [email_from](#email_from)
+* [email_from_name](#email_from_name)
+* [email_reply_to](#email_reply_to)
+* [email_reply_to_name](#email_reply_to_name)
+* [email_return_path](#email_return_path)
+* [email_use_html](#email_use_html)
+* [email_newline](#email_newline)
+* [relay_unknown_feedbacks](#relay_unknown_feedbacks)
 
 ## General UI
 
 * [autocomplete](#autocomplete)
-* [autocomplete_max_pool](#autocompletemaxpool)
-* [autocomplete_min_characters](#autocompletemincharacters)
-* [upload_display_bits_per_sec](#uploaddisplaybitspersec)
+* [autocomplete_max_pool](#autocomplete_max_pool)
+* [autocomplete_min_characters](#autocomplete_min_characters)
+* [upload_display_bits_per_sec](#upload_display_bits_per_sec)
 * [upload_display_per_file_stats](#upload_display_per_file_stats)
 * [upload_force_transfer_resume_forget_if_encrypted](#upload_force_transfer_resume_forget_if_encrypted)
 * [upload_considered_too_slow_if_no_progress_for_seconds](#upload_considered_too_slow_if_no_progress_for_seconds)
 
 ## Transfers
 
-* [aup_default](#aupdefault)
-* [aup_enabled](#aupenabled)
-* [ban_extension](#banextension)
-* [chunk_upload_security](#chunkuploadsecurity)
-* [default_transfer_days_valid](#defaultdaysvalid)
-* [max_transfer_days_valid](#maxdaysvalid)
-* [allow_transfer_expiry_date_extension](#allowtransferexpirydateextension)
-* [force_legacy_mode](#forcelegacymode)
-* [legacy_upload_progress_refresh_period](#)
-* [max_legacy_file_size](#maxlegacyfilesize)
-* [max_transfer_size](#maxtransfersize)
-* [max_transfer_files](#maxtransferfiles)
-* [max_transfer_recipients](#maxtransferrecipients)
-* [transfer_options](#transferoptions) (email receipt control)
-* [upload_chunk_size](#uploadchunksize)
-* [user_quota](#userquota)
+* [aup_default](#aup_default)
+* [aup_enabled](#aup_enabled)
+* [ban_extension](#ban_extension)
+* [chunk_upload_security](#chunk_upload_security)
+* [default_transfer_days_valid](#default_transfer_days_valid)
+* [max_transfer_days_valid](#max_transfer_days_valid)
+* [allow_transfer_expiry_date_extension](#allow_transfer_expiry_date_extension)
+* [force_legacy_mode](#force_legacy_mode)
+* [legacy_upload_progress_refresh_period](#legacy_upload_progress_refresh_period)
+* [max_legacy_file_size](#max_legacy_file_size)
+* [max_transfer_size](#max_transfer_size)
+* [max_transfer_files](#max_transfer_files)
+* [max_transfer_recipients](#max_transfer_recipients)
+* [transfer_options](#transfer_options) (email receipt control)
+* [upload_chunk_size](#upload_chunk_size)
+* [user_quota](#user_quota)
 * [max_transfer_file_size](#max_transfer_file_size)
 * [max_transfer_encrypted_file_size](#max_transfer_encrypted_file_size)
 * [encryption_min_password_length](#encryption_min_password_length)
@@ -111,83 +111,83 @@ A note about colours;
 
 ## Graphs
 
-* [upload_graph_bulk_display](#uploadgraphbulkdisplay)
-* [upload_graph_bulk_min_file_size_to_consider](#uploadgraphbulkminfilesizetoconsider)
+* [upload_graph_bulk_display](#upload_graph_bulk_display)
+* [upload_graph_bulk_min_file_size_to_consider](#upload_graph_bulk_min_file_size_to_consider)
 
 ## TeraSender (high speed upload module)
 
-* [terasender_enabled](#terasenderenabled)
-* [terasender_advanced](#terasenderadvanced)
-* [terasender_worker_count](#terasenderworkercount)
-* [terasender_start_mode](#terasenderstartmode)
+* [terasender_enabled](#terasender_enabled)
+* [terasender_advanced](#terasender_advanced)
+* [terasender_worker_count](#terasender_worker_count)
+* [terasender_start_mode](#terasender_start_mode)
 * [terasender_worker_max_chunk_retries](#terasender_worker_max_chunk_retries)
-* [stalling_detection](#stallingdetection)
+* [stalling_detection](#stalling_detection)
 
 ## Download
 
-* [download_chunk_size](#downloadchunksize)
-* [mac_unzip_name](#macunzipname)
-* [mac_unzip_link)(#macunziplink)
+* [download_chunk_size](#download_chunk_size)
+* [mac_unzip_name](#mac_unzip_name)
+* [mac_unzip_link](#mac_unzip_link)
 
 ## Guest use
 
-* [guest_options](#guestoptions)
-* [default_guest_days_valid](#defaultguestdaysvalid)
-* [max_guest_days_valid](#maxguestdaysvalid)
-* [max_guest_recipients](#maxguestrecipients)
+* [guest_options](#guest_options)
+* [default_guest_days_valid](#default_guest_days_valid)
+* [max_guest_days_valid](#max_guest_days_valid)
+* [max_guest_recipients](#max_guest_recipients)
 * [guest_upload_page_hide_unchangable_options](#guest_upload_page_hide_unchangable_options)
 
 ## Authentication
 
-* [auth_sp_type](#authsptype)
+* [auth_sp_type](#auth_sp_type)
 * __SimpleSAMLphp__
-	* [auth_sp_saml_authentication_source](#authspsamlauthenticationsource)
-	* [auth_sp_saml_simplesamlphp_url](#authspsamlsimplesamlphpurl)
-	* [auth_sp_saml_simplesamlphp_location](#authspsamlsimplesamlphplocation)
-	* [auth_sp_saml_email_attribute](#authspsamlemailattribute)
-	* [auth_sp_saml_name_attribute](#authspsamlnameattribute)
-	* [auth_sp_saml_uid_attribute](#authspsamluidattribute)
+	* [auth_sp_saml_authentication_source](#auth_sp_saml_authentication_source)
+	* [auth_sp_saml_simplesamlphp_url](#auth_sp_saml_simplesamlphp_url)
+	* [auth_sp_saml_simplesamlphp_location](#auth_sp_saml_simplesamlphp_location)
+	* [auth_sp_saml_email_attribute](#auth_sp_saml_email_attribute)
+	* [auth_sp_saml_name_attribute](#auth_sp_saml_name_attribute)
+	* [auth_sp_saml_uid_attribute](#auth_sp_saml_uid_attribute)
 * __Shibboleth__
-	* [auth_sp_shibboleth_uid_attribute](#authspshibbolethuidattribute)
-	* [auth_sp_shibboleth_email_attribute](#authspshibbolethemailattribute)
-	* [auth_sp_shibboleth_name_attribute](#authspshibbolethnameattribute)
-	* [auth_sp_shibboleth_login_url](#authspshibbolethloginurl)
-	* [auth_sp_shibboleth_logout_url](#authspshibbolethlogouturl)
+	* [auth_sp_shibboleth_uid_attribute](#auth_sp_shibboleth_uid_attribute)
+	* [auth_sp_shibboleth_email_attribute](#auth_sp_shibboleth_email_attribute)
+	* [auth_sp_shibboleth_name_attribute](#auth_sp_shibboleth_name_attribute)
+	* [auth_sp_shibboleth_login_url](#auth_sp_shibboleth_login_url)
+	* [auth_sp_shibboleth_logout_url](#auth_sp_shibboleth_logout_url)
 * __SP_Fake__
-	* [auth_sp_fake_authenticated](#authspfakeauthenticated)!!
-	* [auth_sp_fake_uid](#authspfakeuid)!!
-	* [auth_sp_fake_email](#authspfakeemail)!!
-	* [auth_sp_fake_name](#authspfakename)!!
+	* [auth_sp_fake_authenticated](#auth_sp_fake_authenticated)!!
+	* [auth_sp_fake_uid](#auth_sp_fake_uid)!!
+	* [auth_sp_fake_email](#auth_sp_fake_email)!!
+	* [auth_sp_fake_name](#auth_sp_fake_name)!!
 
 ## Maintenance and logging
 
-* [failed_transfer_cleanup_days](#failedtransfercleanupdays)
-* [log_facilities](#logfacilities)!!
-* [maintenance mode](#maintenance)
-* [statlog_lifetime](#statloglifetime)
-* [auth_sp_additional_attributes](#authspadditionalattributes)
-* [auth_sp_save_user_additional_attributes](#authspsaveuseradditionalattributes)
-* [statlog_log_user_additional_attributes](#statlogloguseradditionalattributes)
-* [auth_sp_fake_additional_attributes_values](#authspfakeadditionalattributesvalues)
-* [auditlog_lifetime](#auditloglifetime)
-* [report_format](#reportformat)
-* [exception_additional_logging_regex](#exceptionadditionalloggingregex)
-* [clientlogs_stashsize](#clientlogsstashsize)
-* [clientlogs_lifetime](#clientlogslifetime)
+* [failed_transfer_cleanup_days](#failed_transfer_cleanup_days)
+* [log_facilities](#log_facilities)!!
+* [maintenance](#maintenance)
+* [statlog_lifetime](#statlog_lifetime)
+* [auth_sp_additional_attributes](#auth_sp_additional_attributes)
+* [auth_sp_save_user_additional_attributes](#auth_sp_save_user_additional_attributes)
+* [statlog_log_user_additional_attributes](#statlog_log_user_additional_attributes)
+* [auth_sp_fake_additional_attributes_values](#auth_sp_fake_additional_attributes_values)
+* [auditlog_lifetime](#auditlog_lifetime)
+* [report_format](#report_format)
+* [exception_additional_logging_regex](#exception_additional_logging_regex)
+* [clientlogs_stashsize](#clientlogs_stashsize)
+* [clientlogs_lifetime](#clientlogs_lifetime)
 
 
 ## Webservices API
 
-* [auth_remote_application_enabled](#authremoteapplicationenabled)
+* [auth_remote_application_enabled](#auth_remote_application_enabled)
 * [auth_remote_signature_algorithm](#auth_remote_signature_algorithm)
-* [remote_applications](#remoteapplications)
-* [auth_remote_user_autogenerate_secret](#authremoteuserautogeneratesecret)
-* [rest_allow_jsonp](#restallowjsonp)
+* [remote_applications](#remote_applications)
+* [auth_remote_user_autogenerate_secret](#auth_remote_user_autogenerate_secret)
+* [rest_allow_jsonp](#rest_allow_jsonp)
 
 ## Other
 
-* [host_quota](#hostquota)
-* [config_overrides (experimental feature, not tested)](#configoverrides)
+* [host_quota](#host_quota)
+* [config_overrides](#config_overrides) (experimental feature, not tested)
 
 ---
 
@@ -359,7 +359,7 @@ A note about colours;
 * __1.x name:__ cron_shred_command
 * __comment:__
 
-###storage_filesystem_tree_deletion_command
+### storage_filesystem_tree_deletion_command
 * __description:__ Command used to delete whole directories and the contents, when they expire or are cleaned in routine cleaning of stale files.
 * __mandatory:__ no.  If not set, default used
 * __type:__ string
@@ -517,7 +517,7 @@ User language detection is done in the following order:
 3. From `default_language` config parameter
 4. From the hard-coded absolute default `en`
 
-### lang_browser_enabled](#langbrowserenabled)
+### lang_browser_enabled
 
 * __description:__ detect user's preferred language from browser's Accept-Language header if this header is provided.  If a language a user requests is not available, falls back to the default language.  If no default language is configured, falls back to English.  If a language directive is not available in the selected language, it is taken from the default language file.
 * __mandatory:__ no
@@ -709,7 +709,7 @@ User language detection is done in the following order:
 * __1.x name:__
 * __comment:__ does this actually work?
 
-###upload_display_per_file_stats
+### upload_display_per_file_stats
 * __description:__ show the duration of the current chunk for each worker to the user during uploads
 * __mandatory:__ no
 * __type:__ boolean
@@ -719,7 +719,7 @@ User language detection is done in the following order:
 
 
 
-###upload_force_transfer_resume_forget_if_encrypted
+### upload_force_transfer_resume_forget_if_encrypted
 * __description:__ forget partial transfers when upload page is revisited if they were encrypted.
 * __mandatory:__ no
 * __type:__ boolean
@@ -727,7 +727,7 @@ User language detection is done in the following order:
 * __available:__ since version 2.0
 
 
-###upload_considered_too_slow_if_no_progress_for_seconds
+### upload_considered_too_slow_if_no_progress_for_seconds
 * __description:__ If 0 this is disabled. If an uploading chunk has not reported any progress in this number of seconds then it is considered in trouble and some action may be taken (eg. force stop and resend of chunk) to try to recover. Note that this relies on the browser to report progress messages for ongoing uploads which might only happen every few seconds if a single request is active and maybe for terasender_worker_count=5 you might like to set this to 20 or 30 to avoid thinking a chunk is stalled when it is not.
 * __mandatory:__ no
 * __type:__ int
@@ -945,7 +945,7 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __comment:__ user quote can be implemented in a much more flexible way as well.  As we're doing lazy loading of configuration parameters we can change this value (and max. file size) based on user profile.  In stead of defining this config parameter with a number you can give a function to it.  The value returned by this function is cached for a login session.  For example a function that uses eduPersonAffiliation can give a "student" 10 GB and "faculty" 1 TB.  You could also change max. days valid based on user profile.  The function can use the current application state and user session to compute the value for a logged in user, because the function would run after everything else.  <span style="background-color:orange">Calculated maximum values should have its own chapter to explain, with examples especially for using eduPersonAffiliation.</span>
 
 
-###max_transfer_file_size
+### max_transfer_file_size
 * __description:__ set to 0 to disable. If set to a positive value it sets the maximum file size for a not encrypted file that the user can upload. Attempts to upload a larger file is rejected with an error message in the web-UI.
 * __mandatory:__ no 
 * __type:__ int (bytes) or function
@@ -954,7 +954,7 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __comment:__ 
 
 
-###max_transfer_encrypted_file_size
+### max_transfer_encrypted_file_size
 * __description:__ set to 0 to disable. If set to a positive value it sets the maximum file size for an encrypted file that the user can upload. Attempts to upload a larger file is rejected with an error message in the web-UI.
 * __mandatory:__ no 
 * __type:__ int (bytes) or function
@@ -963,7 +963,7 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __comment:__ 
 
 
-###encryption_min_password_length
+### encryption_min_password_length
 * __description:__ set to 0 to disable. If set to a positive value it is the minimum number of characters needed in a password for encryption. Note that since the encryption is fully client side, this value could be ignored by a determined user, though they would do that at the loss of their own security not of others.
 * __mandatory:__ no 
 * __type:__ int
@@ -971,7 +971,7 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __available:__ since version 2.0
 * __comment:__ 
 
-###encryption_generated_password_encoding
+### encryption_generated_password_encoding
 * __description:__ which encoding to use to encode generated passwords. Since the random information obtained during password generation is completely random it is useful to encode that into text characters, for example in the range a,b,c etc. By doing this one single byte of random data (0 to 255 inclusive) will likely be encoded to more than one character of output. The base64 encoding turns x bytes of input into 1.33 times as long output. Because ascii85 uses more possible characters it turns each 4 bytes into 5 bytes. This means that for the same length of encoded string the ascii85 will have more entropy. Note that the ascii85 used is the Z85 from ZeroMQ to avoid the use of the quote character in output.
 * __mandatory:__ no 
 * __type:__ string
@@ -980,7 +980,7 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __comment:__ either base64 or ascii85 
 
 
-###encryption_generated_password_length
+### encryption_generated_password_length
 * __description:__ The exact number of characters used in a generated password for encryption. This must be equal or greater than encryption_min_password_length.
 * __mandatory:__ no 
 * __type:__ int
@@ -988,7 +988,7 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __available:__ since version 2.0
 * __comment:__ 
 
-###automatic_resume_number_of_retries
+### automatic_resume_number_of_retries
 * __description:__ Number of times to automatically resume an upload if a major error has happened. Set this to 0 to disable automatic resume.
 * __mandatory:__ no 
 * __type:__ int
@@ -997,7 +997,7 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __comment:__ 
 
 
-###automatic_resume_delay_to_resume
+### automatic_resume_delay_to_resume
 * __description:__ Delay in seconds to wait after a major failure before an automatic resume is performed.
 * __mandatory:__ no 
 * __type:__ int
