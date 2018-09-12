@@ -1133,7 +1133,7 @@ If you want to find out the expiry timer for your SAML Identity Provider install
 * __description:__ link in download form where user can download a 64 bit unzip utility for Mac OS-X
 * __mandatory:__ <span style="background-color:orange">? </span>
 * __type:__ string
-* __default:__ [http://unarchiver.c3.cx/unarchiver](http://unarchiver.c3.cx/unarchiver)
+* __default:__ https://theunarchiver.com/
 * __available:__ since version 2.0
 * __1.x name:__
 * __comment:__
