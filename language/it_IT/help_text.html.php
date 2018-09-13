@@ -36,7 +36,7 @@
     <li><strong>Massimo numero di file per upload:</strong> uno - per caricare più file contemporaeamente, prima compirimili in un unico archivio</li>
     <li><strong>Massima dimensione del file per upload, con Adobe Flash: </strong>{size:cfg:max_legacy_file_size} </li>
     <li><strong>Massima dimensione del file per upload, con HTML5: </strong>{size:cfg:max_html5_upload_size}</li>
-    <li><strong>Massimo numero di giorni per la scadenza del file / voucher: </strong>{cfg:default_days_valid} </li>
+    <li><strong>Massimo numero di giorni per la scadenza del file / voucher: </strong>{cfg:default_transfer_days_valid} </li>
 </ul>
 <p>Per maggiori informazioni visita <a href="http://www.filesender.org/" target="_blank">www.filesender.org</a></p>
 </div>

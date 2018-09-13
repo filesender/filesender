@@ -70,7 +70,7 @@ $default = array(
     'aup_default' => false,
     'aup_enabled' => false,
     'mac_unzip_name' => 'The Unarchiver',
-    'mac_unzip_link' => 'http://unarchiver.c3.cx/unarchiver',
+    'mac_unzip_link' => 'https://theunarchiver.com/',
     'ban_extension' => 'exe,bat',
     'extension_whitelist_regex' => '^[a-zA-Z0-9]*$', // a valid file extension must match this regex
     
@@ -156,12 +156,8 @@ $default = array(
     'upload_graph_bulk_min_file_size_to_consider' => 1024*1024*1024, 
 
 
-    'user_page' => false,
-    //'user_page' => array(
-    //    'lang' => 'write',
-    //    'auth_secret' => 'read',
-    //    'created' => 'read'
-    //),
+    //'user_page' => false,
+    'user_page' => array('auth_secret'=>true,'id'=>true,'created'=>true),
 
     // Logging
     'log_facilities' => array(
@@ -196,7 +192,9 @@ $default = array(
     'guests_expired_lifetime' => 0,
     'translatable_emails_lifetime' => 30,
     'trackingevents_lifetime' => 90,
-    
+
+    'user_quota' => 0,
+
     'testsuite_run_locally' => false,
 
     'transfer_options' => array(

@@ -194,7 +194,7 @@ $config['default_transfer_days_valid'] = 5;    				// Default expiry date as per
 // ---------------------------------------------
 
 //$config['default_guest_days_valid'] = ;    				// if not set, this defaults default_transfer_days_valid
-//$config['max_guest_days_valid'] = ;    				// if not set, this defaults to max_days_valid
+//$config['max_guest_days_valid'] = ;    				// if not set, this defaults to max_transfer_days_valid
 //$config['guest_options'] = '';    				// set of options available for guest users
 //$config['max_guest_recipients'] = 50;    				// max no. of recipients a transfer can have.  Defaults to 50.
 

@@ -174,6 +174,9 @@ class Auth {
                 
                 // Set user if got uid attribute
                 self::$user = User::fromAttributes(self::$attributes);
+                // if we change anything interesting we want to subvert the
+                // too frequent save check in recordActivity
+                $forceSave = false;
                 
                 // Save user additional attributes if enabled
                 if(self::isSP() && Config::get('auth_sp_save_user_additional_attributes'))
@@ -181,9 +184,14 @@ class Auth {
                 
                 // Save user quota for guest uploads
                 $user_quota = Config::get('user_quota');
-                if($user_quota) self::$user->quota = $user_quota;
+                if($user_quota) {
+                    if(self::$user->quota != $user_quota ) {
+                        $forceSave = true;
+                        self::$user->quota = $user_quota;
+                    }
+                }
                 
-                self::$user->recordActivity(); // Saves preferences and all above changes
+                self::$user->recordActivity( $forceSave ); // Saves preferences and all above changes
             }
         }
         

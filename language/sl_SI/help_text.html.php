@@ -33,7 +33,7 @@
     <li><strong>Največje število dokumentov, ki jih lahko pošljete:</strong> eden - za prenos več dokumentov hkrati, dokumente najprej arhivirajte (npr. zip)</li>
     <li><strong>Največja velikost dokumenta, ki ga lahko naložite na strežnik z uporabo Adobe Flash: </strong>{size:cfg:max_legacy_file_size} </li>
     <li><strong>Največja velikost dokumenta, ki ga lahko naložite na strežnik z uporabo HTML5: </strong>{size:cfg:max_html5_upload_size}</li>
-    <li>      <strong>Najdaljši čas veljavnosti dokumenta / vavčerja: </strong>{cfg:default_days_valid} </li>
+    <li>      <strong>Najdaljši čas veljavnosti dokumenta / vavčerja: </strong>{cfg:default_transfer_days_valid} </li>
 </ul>
 <p>Za več informacij obiščite spletno stran <a href="http://www.filesender.org/" target="_blank">www.filesender.org</a></p>
 </div>
