@@ -70,7 +70,7 @@ $default = array(
     'aup_default' => false,
     'aup_enabled' => false,
     'mac_unzip_name' => 'The Unarchiver',
-    'mac_unzip_link' => 'http://unarchiver.c3.cx/unarchiver',
+    'mac_unzip_link' => 'https://theunarchiver.com/',
     'ban_extension' => 'exe,bat',
     'extension_whitelist_regex' => '^[a-zA-Z0-9]*$', // a valid file extension must match this regex
     

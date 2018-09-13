@@ -35,7 +35,7 @@
     <li><strong>Maksimalan broj fajlova po prenosu:</strong> jedna - za prenos više fajlova odjednom, prethodno ih zapakujte u arhivu</li>
     <li><strong>Maksimalna veličina fajla po prenosu, sa Adobe Flash-om samo: </strong>{size:cfg:max_legacy_file_size} </li>
     <li><strong>Maksimalna veličina fajla po prenosu, sa HTML5: </strong>{size:cfg:max_html5_upload_size}</li>
-    <li><strong>Maksimalan broj dana nakon kog fajlovi/vaučeri ističu: </strong>{cfg:default_days_valid} </li>
+    <li><strong>Maksimalan broj dana nakon kog fajlovi/vaučeri ističu: </strong>{cfg:default_transfer_days_valid} </li>
 </ul>
 <p>Za više informacija molimo posetite <a href="http://www.filesender.org/" target="_blank">www.filesender.org</a></p>
 </div>
