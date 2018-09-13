@@ -229,7 +229,6 @@ class User extends DBObject {
             return $ret;
             
         }
-
         $id = $data['id'];
 //        Logger::info('fromAuthID() found authid ' . $authid . ' at id ' . $id );
         return self::fromId( $id );
@@ -265,11 +264,15 @@ class User extends DBObject {
     /**
      * Record activity
      */
-    public function recordActivity() {
+    public function recordActivity( $forceSave = false ) {
         $now = time();
         
         // Do not record more than once per 1h => reduces number of writes
-        if(abs($now - $this->last_activity) < 3600) return;
+        if( !$forceSave ) {
+            if(abs($now - $this->last_activity) < 3600) {
+                return;
+            }
+        }
         
         $this->last_activity = $now;
         $this->save();
