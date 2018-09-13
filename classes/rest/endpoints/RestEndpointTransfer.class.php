@@ -444,10 +444,12 @@ class RestEndpointTransfer extends RestEndpoint {
             
             // ... check if it exceeds user quota (if enabled)
             $user_quota = Config::get('user_quota');
-            if($user_quota || ($user_quota === 0)) {
-                // If guest use saved owner quota
-                if($guest)
-                    $user_quota = $guest->owner->quota;
+
+            // If guest use saved owner quota
+            if($guest)
+                $user_quota = $guest->owner->quota;
+            
+            if($user_quota) {
 
                 $remaining = $user_quota - array_sum(array_map(function($t) {
                     return $t->size;
