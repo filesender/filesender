@@ -50,6 +50,7 @@ class Guest extends DBObject {
         'userid' => array(
             'type' => 'uint',
             'size' => 'big',
+            'null' => true
         ),
         'user_email' => array(
             'type' => 'string',

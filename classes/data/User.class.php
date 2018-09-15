@@ -55,7 +55,7 @@ class User extends DBObject {
         'authid' => array(
             'type' => 'uint',
             'size' => 'big',
-            'null' => false
+            'null' => true
         ),
         'additional_attributes' => array(
             'type' => 'text',

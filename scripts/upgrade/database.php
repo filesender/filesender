@@ -74,7 +74,8 @@ DBI::beginTransaction();
 // Get data classes
 function getClasses() {
     $classes = array();
-    $classes[] = 'User'; // This must be before Authentication so users can be setup too
+	// Those classes must be before everything else and in this order to create filesbywhoview
+	array_push($classes, 'User', 'Authentication', 'Guest', 'Transfer');
     foreach(scandir(FILESENDER_BASE.'/classes/data') as $i) {
         if(substr($i, -10) != '.class.php') continue;
         $class = substr($i, 0, -10);
@@ -226,40 +227,49 @@ function updateIntoTable( $updateTable, $fromTable, $setClause, $whereClause )
 }
 
 //
-// Create forign keys if they are not there already
+// Create foreign keys if they are not there already
 //
 function ensureFK()
 {
     $dbtype = Config::get('db_type');
-    $tbl_auth      = call_user_func('Authentication::getDBTable');
-    $tbl_transfers = call_user_func('Transfer::getDBTable');
-    $tbl_guests    = call_user_func('Guest::getDBTable');
-    $tbl_clientlog = call_user_func('ClientLog::getDBTable');
-    $tbl_user      = call_user_func('User::getDBTable');
+	$tbl_auth       = call_user_func('Authentication::getDBTable');
+	$tbl_user       = array(
+		'tbName' => call_user_func('User::getDBTable'),
+		'indexName' => 'UserPreferences_authid',
+		'reference' => $tbl_auth
+	);
+	$tbl_transfers    = array(
+		'tbName' => call_user_func('Transfer::getDBTable'),
+		'indexName' => 'Transfers_userid',
+		'reference' => $tbl_user
+	);
+	$tbl_guests      = array(
+		'tbName' => call_user_func('Guest::getDBTable'),
+		'indexName' => 'Guests_userid',
+		'reference' => $tbl_user
+	);
+	$tbl_clientlog    = array(
+		'tbName' => call_user_func('ClientLog::getDBTable'),
+		'indexName' => 'ClientLog_userid',
+		'reference' => $tbl_user
+	);
 
-    $if_not_exists = '';
-    if( $dbtype == 'mysql' ) {
-        $if_not_exists = ' IF NOT EXISTS ';
-    }
-
+	$tbls = array($tbl_user, $tbl_transfers, $tbl_guests, $tbl_clientlog);
     $a = array();
-    array_push( $a,'ALTER TABLE '.$tbl_user.     ' ADD CONSTRAINT UserPreferences_authid FOREIGN KEY ' . $if_not_exists . ' (authid) REFERENCES '.$tbl_auth.' (id)  on delete cascade on update restrict ;');
-    array_push( $a, 'ALTER TABLE '.$tbl_transfers.' ADD CONSTRAINT Transfers_userid       FOREIGN KEY ' . $if_not_exists . ' (userid) REFERENCES '.$tbl_user.' (id)  on delete cascade on update restrict ;');
-    array_push( $a, 'ALTER TABLE '.$tbl_guests.   ' ADD CONSTRAINT Guests_userid          FOREIGN KEY ' . $if_not_exists . ' (userid) REFERENCES '.$tbl_user.' (id)  on delete cascade on update restrict ;');
-    array_push( $a, 'ALTER TABLE '.$tbl_clientlog.' ADD CONSTRAINT ClientLog_userid       FOREIGN KEY ' . $if_not_exists . ' (userid) REFERENCES '.$tbl_user.' (id)  on delete cascade on update restrict ;');
 
-    // There is no if not exists for psql so we just make
-    // all the fks and ignore the duplicate error coming back.
-    // Other errors are left to hit top level as fatal
-    foreach ($a as $key => $sql)
-    {
-        try {
-            echo $sql . "\n";
-            DBI::exec( $sql );
-        } catch(DBIDuplicateException $e ) {
-            echo "... already there!\n";
-        }
-    }
+	foreach ( $tbls as $tbl ) {
+		// We check the presence of the foreign key
+		if( $dbtype == 'pgsql' ) {
+			$checkQuery = DBI::query("SELECT COUNT(1) FROM INFORMATION_SCHEMA.table_constraints WHERE constraint_name='".$tbl['indexName']."' AND table_name='".$tbl['tbName']."';");
+		}
+		else {
+			$checkQuery = DBI::query("SELECT COUNT(1) indexExists FROM INFORMATION_SCHEMA.STATISTICS WHERE table_schema='".Config::get('db_database')."' AND table_name='".$tbl['tbName']."' AND index_name='".$tbl['indexName']."';");
+		}
+
+		if ( $checkQuery->rowCount() === 0) {
+			array_push( $a,'ALTER TABLE '.$tbl['tbName'].' ADD CONSTRAINT '.$tbl['indexName'].' FOREIGN KEY (authid) REFERENCES '.$tbl['reference'].' (id)  on delete cascade on update restrict ;');
+		}
+	}
 }
 
 
