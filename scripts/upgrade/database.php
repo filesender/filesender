@@ -292,24 +292,30 @@ function ensureFK()
     $dbname = Config::get('db_database');
     foreach ( $tbls as $tbl )
     {
-        
 	// We check the presence of the foreign key
 	if( $dbtype == 'pgsql' )
         {
-	    $checkQuery = DBI::query("SELECT COUNT(1) FROM INFORMATION_SCHEMA.table_constraints "
-                                    ." WHERE constraint_name='".$tbl['indexname']
-                                    ."' AND table_name='".$tbl['tablename']."';");
+	    $statement = DBI::prepare("SELECT COUNT(1) as c FROM INFORMATION_SCHEMA.table_constraints "
+                                    ." WHERE lower(constraint_name)=lower('".$tbl['indexname']."')"
+                                    ." AND lower(table_name)=lower('".$tbl['tablename']."');");
 	}
 	else
         {
-	    $checkQuery = DBI::query("SELECT COUNT(1) indexExists FROM INFORMATION_SCHEMA.STATISTICS "
-                                   . " WHERE table_schema='".$dbname
-                                    ."' AND table_name='".$tbl['tablename']
-                                    ."' AND index_name='".$tbl['indexname']."';");
+	    $statement = DBI::prepare("SELECT COUNT(1) as c FROM INFORMATION_SCHEMA.STATISTICS "
+                                     . " WHERE table_schema='".$dbname."'"
+                                     ." AND table_name='".$tbl['tablename']."'"
+                                     ." AND index_name='".$tbl['indexname']."';");
 	}
 
-        echo 'fk ' . $tbl['description'] . ' fk count ' . $checkQuery->rowCount() . "\n";
-	if ( $checkQuery->rowCount() === 0)
+        $haveFK = 0;
+        $statement->execute();
+        $data = $statement->fetch();
+        if( $data ) {
+            $haveFK = $data['c'];
+        }
+        
+        echo 'fk ' . $tbl['description'] . ' already have fk ' . $haveFK . "\n";
+	if ( !$haveFK )
         {
 	    array_push( $a,'ALTER TABLE '.$tbl['tablename'].' ADD CONSTRAINT '
                           .$tbl['indexname'].' FOREIGN KEY (' . $tbl['basecolumns'] . ') '
