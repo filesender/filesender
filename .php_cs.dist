@@ -1,0 +1,14 @@
+<?php
+
+$finder = PhpCsFixer\Finder::create()
+    ->in(__DIR__ . '/classes')
+;
+
+return PhpCsFixer\Config::create()
+    ->setRules([
+        '@PSR1' => true,
+        '@PSR2' => true,
+        'array_syntax' => ['syntax' => 'short'],
+    ])
+    ->setFinder($finder)
+;
