@@ -107,24 +107,26 @@ class File extends DBObject
         $a = array();
         $filesbywhodef = array();
         foreach(array('mysql','pgsql') as $dbtype) {
+            
             $a[$dbtype] = 'select *'
                         . DBView::columnDefinition_age($dbtype,'upload_start')
                         . DBView::columnDefinition_age($dbtype,'upload_end')
-                                . '  from ' . self::getDBTable();
-            /* $filesbywhodef[$dbtype] = 'select t.id as transferid,name,upload_end,f.id as fileid,mime_type,size,'
-             *                         . ' t.* from '.self::getDBTable().' f, '
-             *                                            . '(select t.id as id,t.userid as userid,u.authid as authid,a.saml_user_identification_uid as user_id,'
-             *                                            . 't.made_available,t.expires,t.created FROM '
-             *                                            . call_user_func('Transfer::getDBTable').' t, '
-             *                                            . call_user_func('User::getDBTable').' u, '
-             *                                            . call_user_func('Authentication::getDBTable')
-             *                                             .' a where t.userid = u.id and u.authid = a.id )'
-             *                                           .  ' t '
-             *                                            . ' where f.transfer_id = t.id order by t.id';*/
+                        . '  from ' . self::getDBTable();
+
+            // This view exists only to allow mariadb 10.0 and older database
+            // to work where they do not allow subqueries in view definitions.
+            $transferviewdef[$dbtype] = Transfer::getPrimaryViewDefinition($dbtype);
+
+            $filesbywhodef[$dbtype] = 'select t.id as transferid,name,upload_end,f.id as fileid,mime_type,size,'
+	                            . ' t.* from '.self::getDBTable().' f, '
+                                    . ' filestranferviewcopy t '
+                                    . ' where f.transfer_id = t.id order by t.id';
         }
         
         
-        return array( strtolower(self::getDBTable()) . 'view' => $a //, 'filesbywhoview' => $filesbywhodef
+        return array( strtolower(self::getDBTable()) . 'view' => $a ,
+                      'filestranferviewcopy' => $transferviewdef    ,
+                      'filesbywhoview'       => $filesbywhodef
         );
     }
     
