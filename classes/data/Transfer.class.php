@@ -53,7 +53,7 @@ class Transfer extends DBObject {
         ),
         'userid' => array(
             'type' => 'uint',
-            'size' => 'big',
+            'size' => 'big'
         ),
         'user_email' => array(
             'type' => 'string',
@@ -115,16 +115,24 @@ class Transfer extends DBObject {
         
     );
 
+    /**
+     * This is the SQL view definition of the main view for transfers.
+     * This method is here to allow File to use this view in it's own view
+     * without needing an explicit ordering between classes during database upgrades.
+     */
+    public static function getPrimaryViewDefinition( $dbtype ) {
+        return 'select *'
+             . DBView::columnDefinition_age($dbtype,'created')
+             . DBView::columnDefinition_age($dbtype,'expires')
+             . DBView::columnDefinition_age($dbtype,'made_available')
+             . DBView::columnDefinition_is_encrypted('options','is_encrypted')
+             . '  from ' . self::getDBTable();
+    }
     public static function getViewMap() {
         $a = array();
         $authviewdef = array();
         foreach(array('mysql','pgsql') as $dbtype) {
-            $a[$dbtype] = 'select *'
-                        . DBView::columnDefinition_age($dbtype,'created')
-                        . DBView::columnDefinition_age($dbtype,'expires')
-                        . DBView::columnDefinition_age($dbtype,'made_available')
-                        . DBView::columnDefinition_is_encrypted('options','is_encrypted')
-                                . '  from ' . self::getDBTable();
+            $a[$dbtype] = self::getPrimaryViewDefinition( $dbtype );
             
             $authviewdef[$dbtype] = 'select t.id as id,t.userid as userid,u.authid as authid,a.saml_user_identification_uid as user_id,'
                                       . 't.made_available,t.expires,t.created FROM '
@@ -132,7 +140,8 @@ class Transfer extends DBObject {
                                             . call_user_func('User::getDBTable').' u, '
                                             . call_user_func('Authentication::getDBTable').' a where t.userid = u.id and u.authid = a.id ';
         }
-        return array( strtolower(self::getDBTable()) . 'view' => $a, 'transfersauthview' => $authviewdef );
+        return array( strtolower(self::getDBTable()) . 'view' => $a,
+                      'transfersauthview' => $authviewdef );
     }
 
     protected static $secondaryIndexMap = array(

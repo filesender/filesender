@@ -78,12 +78,12 @@ class DatabasePgsql {
     }
 
     public static function createView($table, $viewname, $definitionsql) {
-        DBI::exec('DROP VIEW IF EXISTS '.$viewname);
+        DBI::exec('DROP VIEW IF EXISTS CASCADE'.$viewname);
         $query = 'CREATE OR REPLACE VIEW '.$viewname.' as '.$definitionsql;
         DBI::exec($query);
     }
     public static function dropView($table, $viewname) {
-        DBI::exec('DROP VIEW IF EXISTS '.$viewname);
+        DBI::exec('DROP VIEW IF EXISTS CASCADE'.$viewname);
     }
     
     /**

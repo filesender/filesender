@@ -243,10 +243,26 @@ function ensureFK()
     }
 
     $a = array();
-    array_push( $a,'ALTER TABLE '.$tbl_user.     ' ADD CONSTRAINT UserPreferences_authid FOREIGN KEY ' . $if_not_exists . ' (authid) REFERENCES '.$tbl_auth.' (id)  on delete cascade on update restrict ;');
-    array_push( $a, 'ALTER TABLE '.$tbl_transfers.' ADD CONSTRAINT Transfers_userid       FOREIGN KEY ' . $if_not_exists . ' (userid) REFERENCES '.$tbl_user.' (id)  on delete cascade on update restrict ;');
-    array_push( $a, 'ALTER TABLE '.$tbl_guests.   ' ADD CONSTRAINT Guests_userid          FOREIGN KEY ' . $if_not_exists . ' (userid) REFERENCES '.$tbl_user.' (id)  on delete cascade on update restrict ;');
-    array_push( $a, 'ALTER TABLE '.$tbl_clientlog.' ADD CONSTRAINT ClientLog_userid       FOREIGN KEY ' . $if_not_exists . ' (userid) REFERENCES '.$tbl_user.' (id)  on delete cascade on update restrict ;');
+    array_push( $a,'ALTER TABLE '.$tbl_user
+                 . ' ADD CONSTRAINT UserPreferences_authid FOREIGN KEY '
+                 . $if_not_exists
+                 . ' (authid) REFERENCES '.$tbl_auth.' (id) '
+                 . ' on delete cascade on update restrict ;');
+    array_push( $a, 'ALTER TABLE '.$tbl_transfers
+                  . ' ADD CONSTRAINT Transfers_userid       FOREIGN KEY '
+                  . $if_not_exists
+                  . ' (userid) REFERENCES '.$tbl_user.' (id) '
+                  . ' on delete cascade on update restrict ;');
+    array_push( $a, 'ALTER TABLE '.$tbl_guests
+                  . ' ADD CONSTRAINT Guests_userid FOREIGN KEY '
+                  . $if_not_exists
+                  . ' (userid) REFERENCES '.$tbl_user.' (id)  '
+                  . ' on delete cascade on update restrict ;');
+    array_push( $a, 'ALTER TABLE '.$tbl_clientlog
+                   .' ADD CONSTRAINT ClientLog_userid       FOREIGN KEY '
+                  . $if_not_exists
+                  . ' (userid) REFERENCES '.$tbl_user.' (id)  '
+                  . ' on delete cascade on update restrict ;');
 
     // There is no if not exists for psql so we just make
     // all the fks and ignore the duplicate error coming back.
