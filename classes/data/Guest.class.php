@@ -49,7 +49,7 @@ class Guest extends DBObject {
         ),
         'userid' => array(
             'type' => 'uint',
-            'size' => 'big',
+            'size' => 'big'
         ),
         'user_email' => array(
             'type' => 'string',
